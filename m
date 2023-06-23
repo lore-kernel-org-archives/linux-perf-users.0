@@ -2,216 +2,133 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9705CEB64D7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 22:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A49EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 23:02:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232856AbjFWW6h (ORCPT
+        id S231292AbjFWXCy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Jun 2023 18:58:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38620 "EHLO
+        Fri, 23 Jun 2023 19:02:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231532AbjFWW5w (ORCPT
+        with ESMTP id S232083AbjFWXCk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Jun 2023 18:57:52 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 151592978
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 15:56:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1687560971;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xQVg0pnXVfTxPUpA8yd29SmocczyZN6S+xS0BIA8ljI=;
-        b=YRx+TK09xa3bxvoaF/acH8dIHNQPHfFwRb0vprWucSx0Oh0M0EMAQp1odUDp0iPJ6ur2TN
-        L28mC61qCy2A6p5K+ENqCEgMiBvr5Ccmdkd1j4RWuuLCYaYtOkuihxScB4Ncs41GRMr+yZ
-        MUjsHl7k/UxKg9AN4dwVStBzzmvPqn4=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-392-ui08z6zkOsOzsb7oEUVtzw-1; Fri, 23 Jun 2023 18:56:05 -0400
-X-MC-Unique: ui08z6zkOsOzsb7oEUVtzw-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2C7B7185A78B;
-        Fri, 23 Jun 2023 22:56:04 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 240AF492C13;
-        Fri, 23 Jun 2023 22:56:01 +0000 (UTC)
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        David Ahern <dsahern@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        dccp@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-hams@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-x25@vger.kernel.org,
-        mptcp@lists.linux.dev, rds-devel@oss.oracle.com,
-        tipc-discussion@lists.sourceforge.net,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH net-next v5 16/16] net: Kill MSG_SENDPAGE_NOTLAST
-Date:   Fri, 23 Jun 2023 23:55:13 +0100
-Message-ID: <20230623225513.2732256-17-dhowells@redhat.com>
-In-Reply-To: <20230623225513.2732256-1-dhowells@redhat.com>
-References: <20230623225513.2732256-1-dhowells@redhat.com>
+        Fri, 23 Jun 2023 19:02:40 -0400
+Received: from mail-oa1-x2f.google.com (mail-oa1-x2f.google.com [IPv6:2001:4860:4864:20::2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91D7930DB;
+        Fri, 23 Jun 2023 16:02:04 -0700 (PDT)
+Received: by mail-oa1-x2f.google.com with SMTP id 586e51a60fabf-1a991886254so1048592fac.2;
+        Fri, 23 Jun 2023 16:02:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687561302; x=1690153302;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=ur4PISebzJfqwZslWwEXi2dOwIZMAqoVShCyP/LEfOI=;
+        b=ADTYNTAxCknYejnqoyrfkvIf+OR88AEZftkZI90qNuwgNY+nzWdaUNfM5FMpTBqJUW
+         4L0pO8PnoQ6e4SbU2xRTfquN99lOJuGnHbZshFnSJbjJLCldPYMTuHILNJyQY9yFIUV+
+         y9aDP/T3U/RoGh7TmnnRYMkFvDBIq5UMY060n9rehlErXm9YYMZDp4lr0jRC4OnvuH6a
+         /hYzUnF8s8di59f1kQ+srHYjKZPhG2gWWm+2b6jW0DygsYjlECyKlaT9jb0qdndKB1gS
+         D0iUXRJfjedfiBT+pCuUU5FhcjA0va9Y7ERGrJJGmOh0ubldfxj0GUdPH5zHGsoKjOwr
+         5fuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687561302; x=1690153302;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ur4PISebzJfqwZslWwEXi2dOwIZMAqoVShCyP/LEfOI=;
+        b=Aybn9uoa2m/MdpxDnRg14Csjq789gsMisJdG7jh40nDUpiapvtnqDYRp0kyzc6p+zf
+         7h1di+/0dIGiTOpTojCCjEvvJBhvFDc+YQdrzcvmDQ/mgXCH7RoFZEHV5xFLCbJa77w6
+         1eSXnQTB8waws+IWa7OjAUx/m0dO77cNkRFSduNeY5/u1oyj6zBKgO8pviuxccBML6eQ
+         3tFozGfyEZDYBYfzhF0Y2JBiQrdUgjrpgj4NtU4gdpiWUM3YF4Mr7VPC3zwPIzR+gBCS
+         E9WVds93QoU2PR+Bo4PraB9lFF3wH4TenBOgTVA766kVzwulY+7RTE2mg69ACTu0vHG8
+         adRQ==
+X-Gm-Message-State: AC+VfDxDSQCfFTTwydDnHDxWSqq7mcVN87lRjkIP141gWKn203bqRg8v
+        e6FCSPJnxdng2rDnDLNvTRE=
+X-Google-Smtp-Source: ACHHUZ4BWq3L6whBrMObUP3weBv1/0RTRnYlhEoBEgnTRYjjP4AS4tMtZNPmt1sF6oGgOvQA8798Aw==
+X-Received: by 2002:a05:6808:21a4:b0:3a0:61a1:5ef0 with SMTP id be36-20020a05680821a400b003a061a15ef0mr7331808oib.39.1687561302531;
+        Fri, 23 Jun 2023 16:01:42 -0700 (PDT)
+Received: from moohyul.svl.corp.google.com ([2620:15c:2a3:200:24b9:8f4e:fcc6:150a])
+        by smtp.gmail.com with ESMTPSA id x11-20020aa793ab000000b00659af3079d3sm70723pff.16.2023.06.23.16.01.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Jun 2023 16:01:42 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH 1/2] perf test: Reorder event name checks in stat STD output linter
+Date:   Fri, 23 Jun 2023 16:01:38 -0700
+Message-ID: <20230623230139.985594-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Now that ->sendpage() has been removed, MSG_SENDPAGE_NOTLAST can be cleaned
-up.  Things were converted to use MSG_MORE instead, but the protocol
-sendpage stubs still convert MSG_SENDPAGE_NOTLAST to MSG_MORE, which is now
-unnecessary.
+On AMD machines, the perf stat STD output test failed like below:
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: "David S. Miller" <davem@davemloft.net>
-cc: Eric Dumazet <edumazet@google.com>
-cc: Jakub Kicinski <kuba@kernel.org>
-cc: Paolo Abeni <pabeni@redhat.com>
-cc: Jens Axboe <axboe@kernel.dk>
-cc: Matthew Wilcox <willy@infradead.org>
-cc: bpf@vger.kernel.org
-cc: dccp@vger.kernel.org
-cc: linux-afs@lists.infradead.org
-cc: linux-arm-msm@vger.kernel.org
-cc: linux-can@vger.kernel.org
-cc: linux-crypto@vger.kernel.org
-cc: linux-doc@vger.kernel.org
-cc: linux-hams@vger.kernel.org
-cc: linux-perf-users@vger.kernel.org
-cc: linux-rdma@vger.kernel.org
-cc: linux-sctp@vger.kernel.org
-cc: linux-wpan@vger.kernel.org
-cc: linux-x25@vger.kernel.org
-cc: mptcp@lists.linux.dev
-cc: netdev@vger.kernel.org
-cc: rds-devel@oss.oracle.com
-cc: tipc-discussion@lists.sourceforge.net
-cc: virtualization@lists.linux-foundation.org
+  $ sudo ./perf test -v 98
+   98: perf stat STD output linter                                     :
+  --- start ---
+  test child forked, pid 1841901
+  Checking STD output: no argswrong event metric.
+    expected 'GHz' in 108,121 stalled-cycles-frontend  # 10.88% frontend cycles idle
+  test child finished with -1
+  ---- end ----
+  perf stat STD output linter: FAILED!
+
+This is because there are stalled-cycles-{frontend,backend} events are
+used by default.  The current logic checks the event_name array to find
+which event it's running.  But 'cycles' event comes before those stalled
+cycles event and it matches first.  So it tries to find 'GHz' metric
+in the output (which is for the 'cycles') and fails.
+
+Move the stalled-cycles-{frontend,backend} events before 'cycles' so
+that it can find the stalled cycles events first.
+
+Also add a space after 'no args' test name for consistency.
+
+Fixes: 99a04a48f225 ("perf test: Add test case for the standard 'perf stat' output")
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
+ tools/perf/tests/shell/lib/stat_output.sh | 2 +-
+ tools/perf/tests/shell/stat+std_output.sh | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-Notes:
-    ver #3)
-     - tcp_bpf is now handled by an earlier patch.
-
- include/linux/socket.h                         | 4 +---
- net/tls/tls_device.c                           | 3 +--
- net/tls/tls_main.c                             | 2 +-
- net/tls/tls_sw.c                               | 2 +-
- tools/perf/trace/beauty/include/linux/socket.h | 1 -
- tools/perf/trace/beauty/msg_flags.c            | 5 +----
- 6 files changed, 5 insertions(+), 12 deletions(-)
-
-diff --git a/include/linux/socket.h b/include/linux/socket.h
-index 58204700018a..39b74d83c7c4 100644
---- a/include/linux/socket.h
-+++ b/include/linux/socket.h
-@@ -319,7 +319,6 @@ struct ucred {
- #define MSG_MORE	0x8000	/* Sender will send more */
- #define MSG_WAITFORONE	0x10000	/* recvmmsg(): block until 1+ packets avail */
- #define MSG_SENDPAGE_NOPOLICY 0x10000 /* sendpage() internal : do no apply policy */
--#define MSG_SENDPAGE_NOTLAST 0x20000 /* sendpage() internal : not the last page */
- #define MSG_BATCH	0x40000 /* sendmmsg(): more messages coming */
- #define MSG_EOF         MSG_FIN
- #define MSG_NO_SHARED_FRAGS 0x80000 /* sendpage() internal : page frags are not shared */
-@@ -341,8 +340,7 @@ struct ucred {
- 
- /* Flags to be cleared on entry by sendmsg and sendmmsg syscalls */
- #define MSG_INTERNAL_SENDMSG_FLAGS \
--	(MSG_SPLICE_PAGES | MSG_SENDPAGE_NOPOLICY | MSG_SENDPAGE_NOTLAST | \
--	 MSG_SENDPAGE_DECRYPTED)
-+	(MSG_SPLICE_PAGES | MSG_SENDPAGE_NOPOLICY | MSG_SENDPAGE_DECRYPTED)
- 
- /* Setsockoptions(2) level. Thanks to BSD these must match IPPROTO_xxx */
- #define SOL_IP		0
-diff --git a/net/tls/tls_device.c b/net/tls/tls_device.c
-index 840ee06f1708..2021fe557e50 100644
---- a/net/tls/tls_device.c
-+++ b/net/tls/tls_device.c
-@@ -441,8 +441,7 @@ static int tls_push_data(struct sock *sk,
- 	long timeo;
- 
- 	if (flags &
--	    ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL | MSG_SENDPAGE_NOTLAST |
--	      MSG_SPLICE_PAGES))
-+	    ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL | MSG_SPLICE_PAGES))
- 		return -EOPNOTSUPP;
- 
- 	if (unlikely(sk->sk_err))
-diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
-index d5ed4d47b16e..b6896126bb92 100644
---- a/net/tls/tls_main.c
-+++ b/net/tls/tls_main.c
-@@ -127,7 +127,7 @@ int tls_push_sg(struct sock *sk,
+diff --git a/tools/perf/tests/shell/lib/stat_output.sh b/tools/perf/tests/shell/lib/stat_output.sh
+index 363979b1123d..698343f0ecf9 100644
+--- a/tools/perf/tests/shell/lib/stat_output.sh
++++ b/tools/perf/tests/shell/lib/stat_output.sh
+@@ -9,7 +9,7 @@ function ParanoidAndNotRoot()
+ # $1 name $2 extra_opt
+ check_no_args()
  {
- 	struct bio_vec bvec;
- 	struct msghdr msg = {
--		.msg_flags = MSG_SENDPAGE_NOTLAST | MSG_SPLICE_PAGES | flags,
-+		.msg_flags = MSG_SPLICE_PAGES | flags,
- 	};
- 	int ret = 0;
- 	struct page *p;
-diff --git a/net/tls/tls_sw.c b/net/tls/tls_sw.c
-index 9b3aa89a4292..53f944e6d8ef 100644
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -1194,7 +1194,7 @@ int tls_sw_sendmsg(struct sock *sk, struct msghdr *msg, size_t size)
+-        echo -n "Checking $1 output: no args"
++        echo -n "Checking $1 output: no args "
+         perf stat $2 true
+         commachecker --no-args
+         echo "[Success]"
+diff --git a/tools/perf/tests/shell/stat+std_output.sh b/tools/perf/tests/shell/stat+std_output.sh
+index 98cc3356a04a..1f70aab45184 100755
+--- a/tools/perf/tests/shell/stat+std_output.sh
++++ b/tools/perf/tests/shell/stat+std_output.sh
+@@ -10,8 +10,8 @@ set -e
  
- 	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL |
- 			       MSG_CMSG_COMPAT | MSG_SPLICE_PAGES |
--			       MSG_SENDPAGE_NOTLAST | MSG_SENDPAGE_NOPOLICY))
-+			       MSG_SENDPAGE_NOPOLICY))
- 		return -EOPNOTSUPP;
+ stat_output=$(mktemp /tmp/__perf_test.stat_output.std.XXXXX)
  
- 	ret = mutex_lock_interruptible(&tls_ctx->tx_lock);
-diff --git a/tools/perf/trace/beauty/include/linux/socket.h b/tools/perf/trace/beauty/include/linux/socket.h
-index 13c3a237b9c9..3bef212a24d7 100644
---- a/tools/perf/trace/beauty/include/linux/socket.h
-+++ b/tools/perf/trace/beauty/include/linux/socket.h
-@@ -318,7 +318,6 @@ struct ucred {
- #define MSG_MORE	0x8000	/* Sender will send more */
- #define MSG_WAITFORONE	0x10000	/* recvmmsg(): block until 1+ packets avail */
- #define MSG_SENDPAGE_NOPOLICY 0x10000 /* sendpage() internal : do no apply policy */
--#define MSG_SENDPAGE_NOTLAST 0x20000 /* sendpage() internal : not the last page */
- #define MSG_BATCH	0x40000 /* sendmmsg(): more messages coming */
- #define MSG_EOF         MSG_FIN
- #define MSG_NO_SHARED_FRAGS 0x80000 /* sendpage() internal : page frags are not shared */
-diff --git a/tools/perf/trace/beauty/msg_flags.c b/tools/perf/trace/beauty/msg_flags.c
-index ea68db08b8e7..5cdebd7ece7e 100644
---- a/tools/perf/trace/beauty/msg_flags.c
-+++ b/tools/perf/trace/beauty/msg_flags.c
-@@ -8,9 +8,6 @@
- #ifndef MSG_WAITFORONE
- #define MSG_WAITFORONE		   0x10000
- #endif
--#ifndef MSG_SENDPAGE_NOTLAST
--#define MSG_SENDPAGE_NOTLAST	   0x20000
--#endif
- #ifndef MSG_FASTOPEN
- #define MSG_FASTOPEN		0x20000000
- #endif
-@@ -50,7 +47,7 @@ static size_t syscall_arg__scnprintf_msg_flags(char *bf, size_t size,
- 	P_MSG_FLAG(NOSIGNAL);
- 	P_MSG_FLAG(MORE);
- 	P_MSG_FLAG(WAITFORONE);
--	P_MSG_FLAG(SENDPAGE_NOTLAST);
-+	P_MSG_FLAG(SPLICE_PAGES);
- 	P_MSG_FLAG(FASTOPEN);
- 	P_MSG_FLAG(CMSG_CLOEXEC);
- #undef P_MSG_FLAG
+-event_name=(cpu-clock task-clock context-switches cpu-migrations page-faults cycles instructions branches branch-misses stalled-cycles-frontend stalled-cycles-backend)
+-event_metric=("CPUs utilized" "CPUs utilized" "/sec" "/sec" "/sec" "GHz" "insn per cycle" "/sec" "of all branches" "frontend cycles idle" "backend cycles idle")
++event_name=(cpu-clock task-clock context-switches cpu-migrations page-faults stalled-cycles-frontend stalled-cycles-backend cycles instructions branches branch-misses)
++event_metric=("CPUs utilized" "CPUs utilized" "/sec" "/sec" "/sec" "frontend cycles idle" "backend cycles idle" "GHz" "insn per cycle" "/sec" "of all branches")
+ 
+ metricgroup_name=(TopdownL1 TopdownL2)
+ 
+-- 
+2.41.0.162.gfafddb0af9-goog
 
