@@ -2,93 +2,99 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9A0EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 17:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68951EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 17:50:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229775AbjFWRFH (ORCPT
+        id S230426AbjFWRtv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Jun 2023 13:05:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36166 "EHLO
+        Fri, 23 Jun 2023 13:49:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229712AbjFWRFE (ORCPT
+        with ESMTP id S229666AbjFWRtu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Jun 2023 13:05:04 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF84E26AF
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 10:05:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687539903; x=1719075903;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=o+WNH4Qu/aBBi4QEMDxnOmy9qo813NM8sh7+WC0fPc4=;
-  b=FYpUmTh3HvAL493Hf5AJ+R8NFBkD8y4YZdoeJWGhyLt4BZEiIui3MSeD
-   4DCEduj4mVFJ88SvrSDnZQtD0x7xczjs8CUBYePnqwi3Qk1XGK97lLXPM
-   WUjr5D6LrdyQWXFW6hUQSWooVzG9Mf9XMlqoxxhAaQjOjDZadBqMrcMxs
-   KFdnY2SdNdRDUXrUVdAKrDK+G2GCNy4Li6+3aLBEczm1+Hf1zuTtrHxl5
-   FF+zo77X6CUzuvFFVzrLg3QyZwIuw/JCLVwITF5t6rFGvbbr8K+1tYGwP
-   sGLiG1cEd+50M+QxD05DzgZ9MBlyMhd8DjUTmE+9t+wDJpYHbNvN1Q/ND
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10750"; a="447191208"
-X-IronPort-AV: E=Sophos;i="6.01,152,1684825200"; 
-   d="scan'208";a="447191208"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2023 10:04:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10750"; a="1045710418"
-X-IronPort-AV: E=Sophos;i="6.01,152,1684825200"; 
-   d="scan'208";a="1045710418"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2023 10:04:58 -0700
-Date:   Fri, 23 Jun 2023 10:04:57 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Subject: Re: Perf stat regression from d15480a3d67
-Message-ID: <ZJXQuWyDKbL8Psre@tassilo>
-References: <ZJOmXU/41HMzanM9@tassilo>
- <CAP-5=fWZAcXcE3CP-V7t=gSehO-AacHJWhjHjtA5nCd5B2-n1A@mail.gmail.com>
- <ZJQSUHLe9Cqpw21n@tassilo>
- <CAM9d7cgpegLH9QpUhHQy0ckMpO6CaKaYrAeHKNm4CT01R4bhGw@mail.gmail.com>
- <ZJSr2PbOrpFrSIaL@tassilo>
- <CAM9d7cj1XXpuaPss7qa7eSD8LJCQZ1KorviOxxnt2Hpk_J3ugQ@mail.gmail.com>
+        Fri, 23 Jun 2023 13:49:50 -0400
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F0BF2136
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 10:49:49 -0700 (PDT)
+Received: by mail-qt1-x82a.google.com with SMTP id d75a77b69052e-3fde9bfb3c8so22781cf.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 10:49:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1687542588; x=1690134588;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r04BHlizhRZLGJ1YZnjcXjNiI+FB4SYaUpufMSPzSIE=;
+        b=Gcp3kwGQyU3wA/vQ7aCv7MRv0XTVapDae5NZtzgFVedTbdrcJUaJz/bZdQC/JTySlY
+         /WyOUT9NJOrfv6gibmSVPo+2sU7pFYNem1RtsBEtbpUja0NfbYrbFnVQsHq5XJrVLoyp
+         KcmkPbP3C8RCXpxCu1M2SUHkVDSaUsIPqn99FEPpxTnorn4/s0wYGsgvE+8YyzNCS4Y8
+         gTrG7ySEQHxqD5roj6JWDnnMwej3hqCstHziPKOP82pbctAuqupXqp3O+iZqCzDJJCF6
+         b+NcF4197s9B1ZxKzE7+nH7vJn3UyytaLhzEa1xGdB0r+1AIZq1bQ6glV5swngbEosUu
+         fEJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687542588; x=1690134588;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r04BHlizhRZLGJ1YZnjcXjNiI+FB4SYaUpufMSPzSIE=;
+        b=UQL55SRu8MkAaaqUujEDVH5Sgmp4YBhlSdKMDkbWb90uEOHqRKX1qNGAmdL3vjEixV
+         xyqAGQkBKl15TF6WUap/hhMRMKkjBHCXVcr2+peoE7Xs9ymiRYRpXMm5CEe9fNM87S9u
+         uv8Y9ay4tPKuSO39V8K9mVveP2LS1YiGj3Afzyncl+ww7KaNFyYkuK8zzXwzKBDYP5l2
+         uJLNgDCmEJiup4BOC2r//IqBhDUuj1Av9CGYLctqQDmhWAGlyclQNRN6lqAktGQYAJA4
+         uEIZNIaTfnOG67YKjm7nX5LOzZPER8ydCWjOiNubWNxvbrkdbKN7iOKvw/sg5ZHE+/C5
+         jkZw==
+X-Gm-Message-State: AC+VfDwi0xV2N0W2quA1lArHXgncEpUja/2aACTrtG0yJr+nixl/BwTH
+        uj+YOTVfH9rbN8JBbaxHPYvwQHbRORSqSQqgHzOYmQ==
+X-Google-Smtp-Source: ACHHUZ6m/vWb35pDLix63PiACTwBXg9BkP9Fk2MLVjV9iOth64o30KyhWZFkO7nM6JqfHIAfxUoZnjZzPMfCx0PFqn8=
+X-Received: by 2002:a05:622a:18a4:b0:3f8:99c1:52a1 with SMTP id
+ v36-20020a05622a18a400b003f899c152a1mr191040qtc.10.1687542588054; Fri, 23 Jun
+ 2023 10:49:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7cj1XXpuaPss7qa7eSD8LJCQZ1KorviOxxnt2Hpk_J3ugQ@mail.gmail.com>
+References: <20230623043107.4077510-1-irogers@google.com> <64741e8e-e81a-afb9-9ce3-9c2d6baab44a@web.de>
+In-Reply-To: <64741e8e-e81a-afb9-9ce3-9c2d6baab44a@web.de>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 23 Jun 2023 10:49:36 -0700
+Message-ID: <CAP-5=fVwhiGJEqTST2bfX8cUALpnTxELSHrvKtyJEPjqQjOacQ@mail.gmail.com>
+Subject: Re: [PATCH v2] perf unwind: Fix map reference counts
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-perf-users@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Ivan Babrou <ivan@cloudflare.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-> > Okay so the skipping can just be removed?
-> 
-> The existing use case was system-wide --per-thread mode.
-> It would generate too much noise without it.
+On Fri, Jun 23, 2023 at 9:18=E2=80=AFAM Markus Elfring <Markus.Elfring@web.=
+de> wrote:
+>
+> > v2. Add missing map__put when dso is missing.
+> > ---
+>
+> Please omit such version information from the change suggestion.
+>
+> See also:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/D=
+ocumentation/process/submitting-patches.rst?h=3Dv6.4-rc7#n698
 
-Hmm I guess we could make it default for per thread mode, but add an
-option to turn it on again if it's needed
+ah, tldr. Will correct in the future.
 
-(my tool currently doesn't do per thread, but I can could imagine
-adding that at some point)
+>
+> How do you think about to add the tag =E2=80=9CFixes=E2=80=9D?
 
-> > > Didn't you say you only have problems in uncore events?
-> >
-> > For this test case I only hit it with the uncore, but I would have a general
-> > problem for any event if it was hidden.
-> 
-> stat-display.c::should_skip_zero_counter() specifically checks
-> uncore PMU events, so I don't think core events have problems.
-> 
-> Also it only skips when aggregation id doesn't match, which means
-> the (default) global aggregation mode should not skip any uncore
-> events.
-> 
-> Can you please help me to find a minimal repro?
+In general we've not been adding Fixes as there is a danger a backport
+will introduce a use-after-free.
 
-I'll run delta[1] over it later today.
-But you may need a SKX.
+Thanks,
+Ian
 
--Andi
-
-[1] https://github.com/dsw/delta
+> Regards,
+> Markus
