@@ -2,93 +2,108 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 566C4EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 05:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94416EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 05:45:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231137AbjFWF1T (ORCPT
+        id S230348AbjFWFp2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Jun 2023 01:27:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55786 "EHLO
+        Fri, 23 Jun 2023 01:45:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230050AbjFWF1S (ORCPT
+        with ESMTP id S230351AbjFWFp1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Jun 2023 01:27:18 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8089A1FF7;
-        Thu, 22 Jun 2023 22:27:16 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4QnQj372FRz1GF2P;
-        Fri, 23 Jun 2023 13:27:03 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Fri, 23 Jun 2023 13:27:12 +0800
-Subject: Re: [PATCH RESEND v4 1/4] perf trace-event-info: Add
- tracepoint_id_to_name() helper
-To:     Namhyung Kim <namhyung@kernel.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <anshuman.khandual@arm.com>,
-        <jesussanp@google.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20230613033946.103515-1-yangjihong1@huawei.com>
- <20230613033946.103515-2-yangjihong1@huawei.com>
- <CAM9d7cjyVgJiVT4Lf+qGd+d2es6NcoN3H42onpN_t4Ed0JHgig@mail.gmail.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <f1a428a5-add2-1c1e-df32-78ee4a1cbe7c@huawei.com>
-Date:   Fri, 23 Jun 2023 13:27:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAM9d7cjyVgJiVT4Lf+qGd+d2es6NcoN3H42onpN_t4Ed0JHgig@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+        Fri, 23 Jun 2023 01:45:27 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 430141FEF
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 22:45:26 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-bc9483b506fso421523276.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 22:45:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1687499125; x=1690091125;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xG7S9EdmjVVI6rCoFSNq3FA5xO2SVwNz93G04XmDDpE=;
+        b=68Z680TG3vm/v6niWksrjQzjzAkc3G3TDkGOKUG0WoHhGqC0SVX7RPuBg0oh4W0yb7
+         ruNpsGw1efaC8IOZv/zZjsG+odZmV5qqfWTC4ql2/Er/UraJSmAkvga43/PK4zjlQyXb
+         tSvt3LUqCBpryJG57liUyDuOKaG8D+Uhv3Z6Nr5boOIqM96NRC/3C/HgjXblgkomnHLy
+         hF+R8tXRjk3uMduojw203VtZx7lk9zo3aWz0GTQD4bGV6M44b24akj34EIa2YkRGTg0b
+         iA+7hLoMGQ0bRwqnNF1LuWNInTPRS8bC6D6/oD5brKW73tBJxNGSD64EwCK7tl2JpyG1
+         BLmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687499125; x=1690091125;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xG7S9EdmjVVI6rCoFSNq3FA5xO2SVwNz93G04XmDDpE=;
+        b=j8VQuJTwwYzdEJT5QXr6eQJJ0f14yhiUdgQl2X4ULehfz7Xdh41lBpesVwKqRYrGPv
+         j7oxu3U3SWwY80N1yij6MparwWwoT3c/Qtm82w0sQDhsr9sUUC9vkMssm+GUNEB6IYjT
+         iiaqTxyyy7bBtzUjgmRx+ZD+4VvttU3QJm2MHCbtjl7KMbw21AkIDdmtmxTDURBVU/lM
+         A9OlOVk0rvBsIqvGpES1z1XoX5liENhzJ58GuAOFaIYAost+hfXOefllpUMGoY7ZiRsm
+         s1PObs0/Glkr7cDQIA1rPRce30c+/maVNHW9qn0kj+ej+QMnjTIWNWbKQdykUBC0vkQx
+         BxAg==
+X-Gm-Message-State: AC+VfDypfTPNBSbwKEtK4mrWSzYL2lp2fniV4O+Z0Zv7LGr4w9huVlVj
+        1oxt5B6pH9/JmT5tN9rajethLetWkXAE
+X-Google-Smtp-Source: ACHHUZ6g4NeBMT1mM78S4L8pcMUlh/TQSBMVetvWi1J1ml1BVg/J0qxr8XORzrMCJstmlNR0jN9tcog3h5X7
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6559:8968:cdfe:35b6])
+ (user=irogers job=sendgmr) by 2002:a25:ce11:0:b0:bc3:9cd9:6e0e with SMTP id
+ x17-20020a25ce11000000b00bc39cd96e0emr3015289ybe.10.1687499125559; Thu, 22
+ Jun 2023 22:45:25 -0700 (PDT)
+Date:   Thu, 22 Jun 2023 22:45:17 -0700
+Message-Id: <20230623054520.4118442-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
+Subject: [PATCH v3 0/3] Remove symbol_name_rb_node
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Carsten Haitzler <carsten.haitzler@arm.com>,
+        Changbin Du <changbin.du@huawei.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Jason Wang <wangborong@cdjrlc.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Use a sorted array of symbol pointers to avoid the potentially
+unnecessary 3 pointers (rb_node) for the name sorted symbols. Saves
+been 24 and 16 bytes per symbol.
 
-On 2023/6/21 6:35, Namhyung Kim wrote:
-> Hello,
-> 
-> On Mon, Jun 12, 2023 at 8:41 PM Yang Jihong <yangjihong1@huawei.com> wrote:
->>
->> Add tracepoint_id_to_name() helper to search for the trace events directory
->> by given event id and return the corresponding tracepoint.
->>
->> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
->> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
->> ---
->>   tools/perf/util/trace-event-info.c | 11 +++++++++++
->>   tools/perf/util/trace-event.h      |  6 ++++++
->>   2 files changed, 17 insertions(+)
->>
->> diff --git a/tools/perf/util/trace-event-info.c b/tools/perf/util/trace-event-info.c
->> index c24b3a15e319..a7901f4a6654 100644
->> --- a/tools/perf/util/trace-event-info.c
->> +++ b/tools/perf/util/trace-event-info.c
->> @@ -466,6 +466,17 @@ static struct tracepoint_path *tracepoint_id_to_path(u64 config)
->>          return NULL;
->>   }
->>
->> +char *tracepoint_id_to_name(u64 config)
->> +{
->> +       struct tracepoint_path *path = tracepoint_id_to_path(config);
->> +       char *buf = NULL;
->> +
->> +       if (path && asprintf(&buf, "%s:%s", path->system, path->name) > 0)
->> +               return buf;
-> 
-> I think we need to call put_tracepoints_path() before return.
+v3. Move sort by name dso lock into its own patch.
+v2. map__find_symbol_by_name_idx so that map__find_symbol_by_name
+    doesn't need an optional parameter. Separate out
+    symbol_conf.sort_by_name removal.
 
-Yes, here need to free tracepoints path, will fix in next version.
+Ian Rogers (3):
+  perf dso: Sort symbols under lock
+  perf symbol: Remove symbol_name_rb_node
+  perf symbol_conf: Remove now unused sort_by_name
 
-Thanks,
-Yang
+ tools/perf/builtin-kallsyms.c    |   1 -
+ tools/perf/builtin-lock.c        |   2 -
+ tools/perf/builtin-report.c      |   1 -
+ tools/perf/tests/builtin-test.c  |   1 -
+ tools/perf/util/dso.c            |   7 +-
+ tools/perf/util/dso.h            |   3 +-
+ tools/perf/util/map.c            |  14 +++-
+ tools/perf/util/map.h            |  12 +--
+ tools/perf/util/probe-event.c    |  16 ++--
+ tools/perf/util/symbol.c         | 131 ++++++++++++++++---------------
+ tools/perf/util/symbol.h         |  12 +--
+ tools/perf/util/symbol_conf.h    |   1 -
+ tools/perf/util/symbol_fprintf.c |  10 +--
+ 13 files changed, 106 insertions(+), 105 deletions(-)
+
+-- 
+2.41.0.162.gfafddb0af9-goog
+
