@@ -2,254 +2,221 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7E0C001B0
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 00:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F36B9EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 00:56:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231631AbjFWAfP (ORCPT
+        id S230426AbjFWA4s (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Jun 2023 20:35:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47410 "EHLO
+        Thu, 22 Jun 2023 20:56:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231520AbjFWAey (ORCPT
+        with ESMTP id S230504AbjFWA4r (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Jun 2023 20:34:54 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88E122D50
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 17:34:06 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-57325434999so80109907b3.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 17:34:06 -0700 (PDT)
+        Thu, 22 Jun 2023 20:56:47 -0400
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C5622689
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 17:56:43 -0700 (PDT)
+Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-4007b5bafceso56521cf.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 17:56:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687480444; x=1690072444;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NjmwL8WseP3HzYigt6canmDc/9LLjtw4UlWBwZCWzrI=;
-        b=104OjS28NAxzSh+UbZQ/HMIODIw+4bjHdTaAeb5MHnzkMRHRvYLNp5ALaKgQsD0mOQ
-         V0Ye1HNxpPIq53bo0MM3NkJgedM3zgrjmE0c2ZQGZQ1+wIrjqFm1zO/JLRhofeKYzLfz
-         xWrBb3t5oOPMGdqIM9Xl78JaA2blrZqRazudYn5/5p1VB8fXQZYBUoj9RG2VJ6DD4RcL
-         Ifu+0JyNgXmt7ggWRp9t8fZVM9IRTaahXy+fr8wxBc/udhCQDMG+eCw/f2tMLmcg8jKn
-         EGA+fU1ScB7sbt/LMr5AS0086pufluaJ9twvqRgqSvxRMSQUKv0SBboXp2j80FUBVyh0
-         9ynQ==
+        d=google.com; s=20221208; t=1687481802; x=1690073802;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ikq5b9kgTceT+X+WpMJVM1coIwpvRfiKLd0ATl6S7OQ=;
+        b=JUAI62BobRApovyUny4rN/CIgEhRU64qfCjg7BoeX/mTynRJsLfPpsZSOElY1GBU6b
+         4Cg2dAlChBeV5KCkC1a2zCVf7i+EpSe0nPoFHNcb3TiTgkrR2ywCeCbEH+GakIAfs0d4
+         +eIEAF3ufXOyt2GXc2o6Ne07aX5VIvKmPKtyWk2lMv6JkcaylwzxKPZ6TMNAEhe6Dt13
+         dMOl6AyO/JCbkK21Rs2lY79wQkWqiLX18brhTk6/iXRvw45RCAuSZkRdXbrYEiPLfGrm
+         160tU0FbtVi9xuDEZ0rG0QJ2JY3dqL7EXukQAGdMDWrgvnw/H0exCAStJcaMyN9jmfCY
+         VVAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687480444; x=1690072444;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NjmwL8WseP3HzYigt6canmDc/9LLjtw4UlWBwZCWzrI=;
-        b=ARtVUvBuvXZ2WdgTfVNJEkapUqQauyCgV7sVn0e04Q5y++BOyxqRHwWR28YjR/sgj3
-         lzTkL02zuHzraDsaxerI4fBun48vSaJ5WOpoZZ1WpDW0Y8JnjcYm16kBYZ9zhRJjEaXW
-         w0oj8c68al30RLDCADVd+uLZgK6osPGOZ3oc32B5IoNps9N0MZqq+bDlDZXyEdp8JdN1
-         zTu2GaWVSJR+BpCtMsCUYO9JmuH9s7/JhmR1EHHrr/8OjaLwvY+he4tSGA26vFoI62tn
-         4P0dTE5SH9RbYotqNx3olYh5IoEHI/DtNAnckDiz6UZifY1n+PW6vGsketg+dbXN0gXd
-         WHDw==
-X-Gm-Message-State: AC+VfDxYr8Z1ACcqpFBnGq9kjjlCQo8ny8fbVVt971Ge4VfzTAj7gBrN
-        bmuxomMMe7Y9HKoflR1qgqthcx5UsJ2h
-X-Google-Smtp-Source: ACHHUZ7Gf9nTu7zfrA63AKxzZgOs+LEhNs1GRe29X4qW2k0kP6FJ/kj7ZoqqsIfr84UgxWdnmxYuM6LuNF56
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6559:8968:cdfe:35b6])
- (user=irogers job=sendgmr) by 2002:a81:e346:0:b0:565:bb48:2b57 with SMTP id
- w6-20020a81e346000000b00565bb482b57mr8209121ywl.0.1687480443764; Thu, 22 Jun
- 2023 17:34:03 -0700 (PDT)
-Date:   Thu, 22 Jun 2023 17:33:12 -0700
-In-Reply-To: <20230623003312.3981075-1-irogers@google.com>
-Message-Id: <20230623003312.3981075-13-irogers@google.com>
-Mime-Version: 1.0
-References: <20230623003312.3981075-1-irogers@google.com>
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v1 12/12] perf vendor events intel: Update tigerlake to 1.13
+        d=1e100.net; s=20221208; t=1687481802; x=1690073802;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ikq5b9kgTceT+X+WpMJVM1coIwpvRfiKLd0ATl6S7OQ=;
+        b=AjL4b/RyuOer1IO5lbJu9uoGIc9sRirC7tXCLAy4ht003ho5PawLtOz96/g2F3Y98i
+         UmY+Oa2WHymfWIdNtAkB9wfDhxn2NUc+PJqdj1IRIkQhRIQy0275p/YqBIg0uuj0WCBf
+         AR/liTINcmo5NHZs/C9L62RGmonxbzJhh8VMORcKy9B8qnlioxxDWEj301Et44fxQq/i
+         KO8jYBVs9RQ0BNKKNdG8xIwcIuDMCTuSsSSVeHIW7mLWmgGIb7Yb0DdIZI/SpGQwERjz
+         CIOPLlWIBYkQuZii26fvOdlELqQCQt25Rk+G6ks6D7quN0oU6KIrgWrpoy9Oa9bgG/CB
+         X0gw==
+X-Gm-Message-State: AC+VfDwV8KZRN6WyKD92mp1ULxz74D5DYZRYmrzHPBIuSkGT6VEnFTql
+        iXE2q7SPMPNA/QKw6Ibix8v8FE/jU0eUBexbNfOzmQ==
+X-Google-Smtp-Source: ACHHUZ5+4WAa4iuwtTStbNTVmHUKj2RWDXvJqcEsOKPMfHsa8pq/mwhCbgeDKx7ifa9n3ihbIa4FsDhCM2n3c/UvbLM=
+X-Received: by 2002:a05:622a:138f:b0:3fd:aaef:3807 with SMTP id
+ o15-20020a05622a138f00b003fdaaef3807mr21214qtk.16.1687481802209; Thu, 22 Jun
+ 2023 17:56:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230525220927.3544192-1-namhyung@kernel.org> <CAP-5=fWOji8vCQfO-y4HnmFk2k+F70BtGHTjCg6XyORNfYNcww@mail.gmail.com>
+ <CAM9d7cgnOzVV7ww-+4N_mccgn9r_xYX1LeExgxDOo0x5NG=Zqw@mail.gmail.com>
+In-Reply-To: <CAM9d7cgnOzVV7ww-+4N_mccgn9r_xYX1LeExgxDOo0x5NG=Zqw@mail.gmail.com>
 From:   Ian Rogers <irogers@google.com>
-To:     eter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+Date:   Thu, 22 Jun 2023 17:56:30 -0700
+Message-ID: <CAP-5=fXPpWgs6JXpQgvwrWmAFCVFwP3a_dq95YwnYuUbo+GQaA@mail.gmail.com>
+Subject: Re: [PATCH] tools lib subcmd: Show parent options in help
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Sohom Datta <sohomdatta1@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Perry Taylor <perry.taylor@intel.com>,
-        Samantha Alt <samantha.alt@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Weilin Wang <weilin.wang@intel.com>,
-        Edward Baker <edward.baker@intel.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Updates were released in:
-https://github.com/intel/perfmon/commit/9a3cd5ad68aee46078c663fe0cd9484e395=
-6fd88
-Adds the events ICACHE_DATA.STALLS, ICACHE_TAG.STALLS and
-DECODE.LCP. Descriptions are also updated.
+On Thu, Jun 22, 2023 at 3:28=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Wed, Jun 21, 2023 at 12:05=E2=80=AFAM Ian Rogers <irogers@google.com> =
+wrote:
+> >
+> > On Thu, May 25, 2023 at 3:09=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > >
+> > > I've just realized that help message in a subcommand didn't show one
+> > > in the parent command.  Since the option parser understands the paren=
+t,
+> > > display code should do the same.  For example, `perf ftrace latency -=
+h`
+> > > should show options in the `perf ftrace` command too.
+> > >
+> > > Before:
+> > >
+> > >   $ perf ftrace latency -h
+> > >
+> > >    Usage: perf ftrace [<options>] [<command>]
+> > >       or: perf ftrace [<options>] -- [<command>] [<options>]
+> > >       or: perf ftrace {trace|latency} [<options>] [<command>]
+> > >       or: perf ftrace {trace|latency} [<options>] -- [<command>] [<op=
+tions>]
+> > >
+> > >       -b, --use-bpf         Use BPF to measure function latency
+> > >       -n, --use-nsec        Use nano-second histogram
+> > >       -T, --trace-funcs <func>
+> > >                             Show latency of given function
+> > >
+> > > After:
+> > >
+> > >   $ perf ftrace latency -h
+> > >
+> > >    Usage: perf ftrace [<options>] [<command>]
+> > >       or: perf ftrace [<options>] -- [<command>] [<options>]
+> > >       or: perf ftrace {trace|latency} [<options>] [<command>]
+> > >       or: perf ftrace {trace|latency} [<options>] -- [<command>] [<op=
+tions>]
+> > >
+> > >       -a, --all-cpus        System-wide collection from all CPUs
+> > >       -b, --use-bpf         Use BPF to measure function latency
+> > >       -C, --cpu <cpu>       List of cpus to monitor
+> > >       -n, --use-nsec        Use nano-second histogram
+> > >       -p, --pid <pid>       Trace on existing process id
+> > >       -T, --trace-funcs <func>
+> > >                             Show latency of given function
+> > >       -v, --verbose         Be more verbose
+> > >           --tid <tid>       Trace on existing thread id (exclusive to=
+ --pid)
+> > >
+> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > > ---
+> > >  tools/lib/subcmd/parse-options.c | 26 ++++++++++++++++++--------
+> > >  1 file changed, 18 insertions(+), 8 deletions(-)
+> > >
+> > > diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/pars=
+e-options.c
+> > > index 9fa75943f2ed..41de97671c72 100644
+> > > --- a/tools/lib/subcmd/parse-options.c
+> > > +++ b/tools/lib/subcmd/parse-options.c
+> > > @@ -806,18 +806,28 @@ static int option__cmp(const void *va, const vo=
+id *vb)
+> > >
+> > >  static struct option *options__order(const struct option *opts)
+> > >  {
+> > > -       int nr_opts =3D 0, nr_group =3D 0, len;
+> > > -       const struct option *o =3D opts;
+> > > -       struct option *opt, *ordered, *group;
+> > > +       int nr_opts =3D 0, nr_group =3D 0, nr_parent =3D 0, len;
+> > > +       const struct option *o, *p =3D opts;
+> > > +       struct option *opt, *ordered =3D NULL, *group;
+> > >
+> > > -       for (o =3D opts; o->type !=3D OPTION_END; o++)
+> > > +retry:
+> >
+> > Why use "goto retry" and not compute the size with the parent upfront?
+>
+> No specific reason, just followed the same pattern as in
+> parse_{short,long}_opt(). :)
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
- .../arch/x86/tigerlake/frontend.json          | 32 ++++++++++++++++---
- .../arch/x86/tigerlake/pipeline.json          |  6 ++--
- 3 files changed, 32 insertions(+), 8 deletions(-)
+:-) Could those loops not be:
 
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
-ents/arch/x86/mapfile.csv
-index 7c6598a9b240..6650100830c4 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -30,7 +30,7 @@ GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
- GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v57,skylake,core
- GenuineIntel-6-55-[01234],v1.31,skylakex,core
- GenuineIntel-6-86,v1.21,snowridgex,core
--GenuineIntel-6-8[CD],v1.12,tigerlake,core
-+GenuineIntel-6-8[CD],v1.13,tigerlake,core
- GenuineIntel-6-2C,v4,westmereep-dp,core
- GenuineIntel-6-25,v3,westmereep-sp,core
- GenuineIntel-6-2F,v3,westmereex,core
-diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/frontend.json b/tools=
-/perf/pmu-events/arch/x86/tigerlake/frontend.json
-index 23b8528590b3..d7b972452c0e 100644
---- a/tools/perf/pmu-events/arch/x86/tigerlake/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/tigerlake/frontend.json
-@@ -7,6 +7,14 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Stalls caused by changing prefix length of th=
-e instruction. [This event is alias to ILD_STALL.LCP]",
-+        "EventCode": "0x87",
-+        "EventName": "DECODE.LCP",
-+        "PublicDescription": "Counts cycles that the Instruction Length de=
-coder (ILD) stalls occurred due to dynamically changing prefix length of th=
-e decoded instruction (by operand size prefix instruction 0x66, address siz=
-e prefix instruction 0x67 or REX.W for Intel64). Count is proportional to t=
-he number of prefixes in a 16B-line. This may result in a three-cycle penal=
-ty for each LCP (Length changing prefix) in a 16-byte chunk. [This event is=
- alias to ILD_STALL.LCP]",
-+        "SampleAfterValue": "500009",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Decode Stream Buffer (DSB)-to-MITE transition=
-s count.",
-         "CounterMask": "1",
-@@ -213,10 +221,10 @@
-         "UMask": "0x1"
-     },
-     {
--        "BriefDescription": "Cycles where a code fetch is stalled due to L=
-1 instruction cache miss.",
-+        "BriefDescription": "Cycles where a code fetch is stalled due to L=
-1 instruction cache miss. [This event is alias to ICACHE_DATA.STALLS]",
-         "EventCode": "0x80",
-         "EventName": "ICACHE_16B.IFDATA_STALL",
--        "PublicDescription": "Counts cycles where a code line fetch is sta=
-lled due to an L1 instruction cache miss. The legacy decode pipeline works =
-at a 16 Byte granularity.",
-+        "PublicDescription": "Counts cycles where a code line fetch is sta=
-lled due to an L1 instruction cache miss. The legacy decode pipeline works =
-at a 16 Byte granularity. [This event is alias to ICACHE_DATA.STALLS]",
-         "SampleAfterValue": "500009",
-         "UMask": "0x4"
-     },
-@@ -237,10 +245,26 @@
-         "UMask": "0x2"
-     },
-     {
--        "BriefDescription": "Cycles where a code fetch is stalled due to L=
-1 instruction cache tag miss.",
-+        "BriefDescription": "Cycles where a code fetch is stalled due to L=
-1 instruction cache tag miss. [This event is alias to ICACHE_TAG.STALLS]",
-         "EventCode": "0x83",
-         "EventName": "ICACHE_64B.IFTAG_STALL",
--        "PublicDescription": "Counts cycles where a code fetch is stalled =
-due to L1 instruction cache tag miss.",
-+        "PublicDescription": "Counts cycles where a code fetch is stalled =
-due to L1 instruction cache tag miss. [This event is alias to ICACHE_TAG.ST=
-ALLS]",
-+        "SampleAfterValue": "200003",
-+        "UMask": "0x4"
-+    },
-+    {
-+        "BriefDescription": "Cycles where a code fetch is stalled due to L=
-1 instruction cache miss. [This event is alias to ICACHE_16B.IFDATA_STALL]"=
-,
-+        "EventCode": "0x80",
-+        "EventName": "ICACHE_DATA.STALLS",
-+        "PublicDescription": "Counts cycles where a code line fetch is sta=
-lled due to an L1 instruction cache miss. The legacy decode pipeline works =
-at a 16 Byte granularity. [This event is alias to ICACHE_16B.IFDATA_STALL]"=
-,
-+        "SampleAfterValue": "500009",
-+        "UMask": "0x4"
-+    },
-+    {
-+        "BriefDescription": "Cycles where a code fetch is stalled due to L=
-1 instruction cache tag miss. [This event is alias to ICACHE_64B.IFTAG_STAL=
-L]",
-+        "EventCode": "0x83",
-+        "EventName": "ICACHE_TAG.STALLS",
-+        "PublicDescription": "Counts cycles where a code fetch is stalled =
-due to L1 instruction cache tag miss. [This event is alias to ICACHE_64B.IF=
-TAG_STALL]",
-         "SampleAfterValue": "200003",
-         "UMask": "0x4"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json b/tools=
-/perf/pmu-events/arch/x86/tigerlake/pipeline.json
-index 020801cbd7e3..541bf1dd1679 100644
---- a/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json
-@@ -335,10 +335,10 @@
-         "UMask": "0x80"
-     },
-     {
--        "BriefDescription": "Stalls caused by changing prefix length of th=
-e instruction.",
-+        "BriefDescription": "Stalls caused by changing prefix length of th=
-e instruction. [This event is alias to DECODE.LCP]",
-         "EventCode": "0x87",
-         "EventName": "ILD_STALL.LCP",
--        "PublicDescription": "Counts cycles that the Instruction Length de=
-coder (ILD) stalls occurred due to dynamically changing prefix length of th=
-e decoded instruction (by operand size prefix instruction 0x66, address siz=
-e prefix instruction 0x67 or REX.W for Intel64). Count is proportional to t=
-he number of prefixes in a 16B-line. This may result in a three-cycle penal=
-ty for each LCP (Length changing prefix) in a 16-byte chunk.",
-+        "PublicDescription": "Counts cycles that the Instruction Length de=
-coder (ILD) stalls occurred due to dynamically changing prefix length of th=
-e decoded instruction (by operand size prefix instruction 0x66, address siz=
-e prefix instruction 0x67 or REX.W for Intel64). Count is proportional to t=
-he number of prefixes in a 16B-line. This may result in a three-cycle penal=
-ty for each LCP (Length changing prefix) in a 16-byte chunk. [This event is=
- alias to DECODE.LCP]",
-         "SampleAfterValue": "500009",
-         "UMask": "0x1"
-     },
-@@ -564,7 +564,7 @@
-         "BriefDescription": "TMA slots wasted due to incorrect speculation=
- by branch mispredictions",
-         "EventCode": "0xa4",
-         "EventName": "TOPDOWN.BR_MISPREDICT_SLOTS",
--        "PublicDescription": "Number of TMA slots that were wasted due to =
-incorrect speculation by branch mispredictions. This event estimates number=
- of operations that were issued but not retired from the specualtive path a=
-s well as the out-of-order engine recovery past a branch misprediction.",
-+        "PublicDescription": "Number of TMA slots that were wasted due to =
-incorrect speculation by branch mispredictions. This event estimates number=
- of operations that were issued but not retired from the speculative path a=
-s well as the out-of-order engine recovery past a branch misprediction.",
-         "SampleAfterValue": "10000003",
-         "UMask": "0x8"
-     },
---=20
-2.41.0.162.gfafddb0af9-goog
+for (; options; options =3D options->parent) {
+...
+}
 
+rather than using a goto?
+
+> >
+> > > +       for (o =3D p; o->type !=3D OPTION_END; o++)
+> > >                 ++nr_opts;
+> > >
+> > > -       len =3D sizeof(*o) * (nr_opts + 1);
+> > > -       ordered =3D malloc(len);
+> > > -       if (!ordered)
+> > > +       len =3D sizeof(*o) * (nr_opts + !o->parent);
+> >
+> > It'd be nice to comment on why the "!o->parent" here.
+>
+> What about this?
+>
+> /* It needs a terminating NULL entry when there's no parent */
+
+Perhaps:
+the length is given by the number of options plus a null terminator
+for the last loop iteration.
+
+It may be cleaner to just compute this after nr_opts settles. perhaps
+something along the lines of:
+
+for (p =3D .. ; p; p =3D p->parent)
+   for (o =3D p; o->type !=3D OPTION_END; o++)
+                 ++nr_opts;
+len =3D sizeof(*o) * (nr_opts + 1); /* +1 for terminator */
+
+Thanks,
+Ian
+
+> Thanks,
+> Namhyung
+>
+>
+> >
+> > Thanks,
+> > Ian
+> >
+> > > +       group =3D realloc(ordered, len);
+> > > +       if (!group)
+> > >                 goto out;
+> > > -       memcpy(ordered, opts, len);
+> > > +       ordered =3D group;
+> > > +       memcpy(&ordered[nr_parent], p, sizeof(*o) * (nr_opts - nr_par=
+ent));
+> > > +
+> > > +       if (o->parent) {
+> > > +               p =3D o->parent;
+> > > +               nr_parent =3D nr_opts;
+> > > +               goto retry;
+> > > +       }
+> > > +       /* copy the last OPTION_END */
+> > > +       memcpy(&ordered[nr_opts], o, sizeof(*o));
+> > >
+> > >         /* sort each option group individually */
+> > >         for (opt =3D group =3D ordered; opt->type !=3D OPTION_END; op=
+t++) {
+> > > --
+> > > 2.41.0.rc0.172.g3f132b7071-goog
+> > >
