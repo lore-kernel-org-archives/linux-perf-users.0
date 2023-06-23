@@ -2,170 +2,70 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDC6EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 18:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1212EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 18:36:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231784AbjFWSYc (ORCPT
+        id S231728AbjFWSgM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Jun 2023 14:24:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42142 "EHLO
+        Fri, 23 Jun 2023 14:36:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231873AbjFWSYb (ORCPT
+        with ESMTP id S231817AbjFWSf5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Jun 2023 14:24:31 -0400
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50CD02724;
-        Fri, 23 Jun 2023 11:24:26 -0700 (PDT)
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35NHWJIV005753;
-        Fri, 23 Jun 2023 11:24:02 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=pfpt0220;
- bh=C+8iNnRd9R1P9pZPr3gdmOM33uf0tje+koUUR4wUYsM=;
- b=fHFEkx0KHGIMErnzR58luqEnRFq2+djJRkXcAqjB6hMK/tF2mEHxe+Lr7ytLzDvm6+/r
- lT4h4wUZBF8Gt62nq77gZ2g56RKt/UuRPGy4aFlBIJGZcWClaFci5qYRTohqnPB8KBLp
- MrDI952hBzS8Th23xnWqTyWF2aG7e2iNkeZ7QEZZogNVnW9GcDmu06tj2SAijXOTu9Xj
- CzPWt6XMUJvM7m0wdpKJQnfgM35JFsoHA6qbf+j+Ui7O0HRe6J97m46w76PyZ/WYYtoB
- jR44ZrRQNTv271w4CN0hJCVkaJiLEVD44rfYZ/ckszGIdwykcIJVjOIEavOG1kLIJA/m 7A== 
-Received: from dc5-exch01.marvell.com ([199.233.59.181])
-        by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3rcuqvbc0h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 23 Jun 2023 11:24:02 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Fri, 23 Jun
- 2023 11:24:00 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
- Transport; Fri, 23 Jun 2023 11:24:00 -0700
-Received: from TJ-POWEREDGE.marvell.com (TJ-POWEREDGE.marvell.com [10.28.8.3])
-        by maili.marvell.com (Postfix) with ESMTP id 1F39E3F7045;
-        Fri, 23 Jun 2023 11:23:54 -0700 (PDT)
-From:   Tanmay Jagdale <tanmay@marvell.com>
-To:     <john.g.garry@oracle.com>, <will@kernel.org>,
-        <mike.leach@linaro.org>, <suzuki.poulose@arm.com>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <irogers@google.com>,
-        <adrian.hunter@intel.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sgoutham@marvell.com>, <gcherian@marvell.com>,
-        <lcherian@marvell.com>, <areddy3@marvell.com>,
-        Tanmay Jagdale <tanmay@marvell.com>
-Subject: [PATCH 1/1] perf: cs-etm: Fixes in instruction sample synthesis
-Date:   Fri, 23 Jun 2023 23:52:04 +0530
-Message-ID: <20230623182204.25199-2-tanmay@marvell.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230623182204.25199-1-tanmay@marvell.com>
-References: <20230623182204.25199-1-tanmay@marvell.com>
+        Fri, 23 Jun 2023 14:35:57 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FC0830D2
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 11:35:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1687545332; x=1719081332;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jK7PG349QeATavwoDayij62cAR9WTDsYnMjDePmf+No=;
+  b=KH4PAueMyc46UT9pkGG7oB42ZA/0LLBR5CdZhkuD9dYJMYxpd79Nts8c
+   fbh9T93gXOaTyU9AehzQGciChe5C4pZ8plhdo7wPQeuA6Nsl7JIDJoHvd
+   0HgkzYvM3Sl8zEfK9Q4xtWfJBtK9ZT+MilNbprY65OnMsKcJSryc7AIcR
+   hHwcNyRp0Ngc7ingmVtz9L6wcm5FjQ3mhkfoQx5jcfX88nQ6cTAyVLoVm
+   K9xEd2H2Uaxjh4RNKYAOYkJLvzU+Y5hP7To4rQ7ZCAsUbYkTWEqR42KVa
+   LjszjjA26YrRavfimKeHYi9pK+QYDTFAP+svEKldsjlsUHI5pe2n2iDrV
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10750"; a="390865408"
+X-IronPort-AV: E=Sophos;i="6.01,152,1684825200"; 
+   d="scan'208";a="390865408"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2023 11:35:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10750"; a="805290569"
+X-IronPort-AV: E=Sophos;i="6.01,152,1684825200"; 
+   d="scan'208";a="805290569"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2023 11:35:20 -0700
+Date:   Fri, 23 Jun 2023 11:35:18 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Subject: Re: Perf stat regression from d15480a3d67
+Message-ID: <ZJXl5vdhxPnVBRze@tassilo>
+References: <ZJOmXU/41HMzanM9@tassilo>
+ <CAP-5=fWZAcXcE3CP-V7t=gSehO-AacHJWhjHjtA5nCd5B2-n1A@mail.gmail.com>
+ <ZJQSUHLe9Cqpw21n@tassilo>
+ <CAM9d7cgpegLH9QpUhHQy0ckMpO6CaKaYrAeHKNm4CT01R4bhGw@mail.gmail.com>
+ <ZJSr2PbOrpFrSIaL@tassilo>
+ <CAM9d7cj1XXpuaPss7qa7eSD8LJCQZ1KorviOxxnt2Hpk_J3ugQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: lRf39lGJPR6WXVfwyGbxk36MSepJ_T2X
-X-Proofpoint-GUID: lRf39lGJPR6WXVfwyGbxk36MSepJ_T2X
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-23_10,2023-06-22_02,2023-05-22_02
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM9d7cj1XXpuaPss7qa7eSD8LJCQZ1KorviOxxnt2Hpk_J3ugQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The existing method of synthesizing instruction samples has the
-following issues:
-1. Non-branch instructions have mnemonics of branch instructions.
-2. Branch target address is missing.
+> Can you please help me to find a minimal repro?
 
-Set the sample flags only when we reach the last instruction in
-the tidq (which would be a branch instruction) to solve issue 1).
+Here's a smaller test case (works on SKX):
 
-To fix issue 2), start synthesizing the instructions from the
-previous packet (tidq->prev_packet) instead of current packet
-(tidq->packet). This way, it is easy to figure out the target
-address of the branch instruction in tidq->prev_packet which
-is the current packet's (tidq->packet) first executed instruction.
+perf stat -a -e uncore_imc/event=0x4,umask=0x3/,uncore_imc/event=0x4,umask=0xc/,cycles <something the doesn't idle for 1s>
 
-After the switch to processing the previous packet first, we no
-longer need to swap the packets during cs_etm__flush().
 
-Signed-off-by: Tanmay Jagdale <tanmay@marvell.com>
----
- tools/perf/util/cs-etm.c | 32 +++++++++++++++++++++++++-------
- 1 file changed, 25 insertions(+), 7 deletions(-)
-
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 91299cc56bf7..446e00d98fd5 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -1418,10 +1418,26 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
- 	sample.stream_id = etmq->etm->instructions_id;
- 	sample.period = period;
- 	sample.cpu = tidq->packet->cpu;
--	sample.flags = tidq->prev_packet->flags;
- 	sample.cpumode = event->sample.header.misc;
- 
--	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->packet, &sample);
-+	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->prev_packet, &sample);
-+
-+	/* Populate branch target information only when we encounter
-+	 * branch instruction, which is at the end of tidq->prev_packet.
-+	 */
-+	if (addr == (tidq->prev_packet->end_addr - 4)) {
-+		/* Update the perf_sample flags using the prev_packet
-+		 * since that is the queue we are synthesizing.
-+		 */
-+		sample.flags = tidq->prev_packet->flags;
-+
-+		/* The last instruction of the previous queue would be a
-+		 * branch operation. Get the target of that branch by looking
-+		 * into the first executed instruction of the current packet
-+		 * queue.
-+		 */
-+		sample.addr = cs_etm__first_executed_instr(tidq->packet);
-+	}
- 
- 	if (etm->synth_opts.last_branch)
- 		sample.branch_stack = tidq->last_branch;
-@@ -1641,7 +1657,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
- 	/* Get instructions remainder from previous packet */
- 	instrs_prev = tidq->period_instructions;
- 
--	tidq->period_instructions += tidq->packet->instr_count;
-+	tidq->period_instructions += tidq->prev_packet->instr_count;
- 
- 	/*
- 	 * Record a branch when the last instruction in
-@@ -1721,8 +1737,11 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
- 			 * been executed, but PC has not advanced to next
- 			 * instruction)
- 			 */
-+			/* Get address from prev_packet since we are synthesizing
-+			 * that in cs_etm__synth_instruction_sample()
-+			 */
- 			addr = cs_etm__instr_addr(etmq, trace_chan_id,
--						  tidq->packet, offset - 1);
-+						  tidq->prev_packet, offset - 1);
- 			ret = cs_etm__synth_instruction_sample(
- 				etmq, tidq, addr,
- 				etm->instructions_sample_period);
-@@ -1786,7 +1805,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
- 
- 	/* Handle start tracing packet */
- 	if (tidq->prev_packet->sample_type == CS_ETM_EMPTY)
--		goto swap_packet;
-+		goto reset_last_br;
- 
- 	if (etmq->etm->synth_opts.last_branch &&
- 	    etmq->etm->synth_opts.instructions &&
-@@ -1822,8 +1841,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
- 			return err;
- 	}
- 
--swap_packet:
--	cs_etm__packet_swap(etm, tidq);
-+reset_last_br:
- 
- 	/* Reset last branches after flush the trace */
- 	if (etm->synth_opts.last_branch)
--- 
-2.34.1
-
+-Andi
