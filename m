@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEEAEB64DD
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 15:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6C4EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 15:12:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232268AbjFWPMl (ORCPT
+        id S232603AbjFWPMm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Jun 2023 11:12:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59672 "EHLO
+        Fri, 23 Jun 2023 11:12:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232544AbjFWPLa (ORCPT
+        with ESMTP id S232566AbjFWPLl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Jun 2023 11:11:30 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDCB030D4
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 08:11:03 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-bb2202e0108so990349276.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 08:11:03 -0700 (PDT)
+        Fri, 23 Jun 2023 11:11:41 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65603358C
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 08:11:06 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5704995f964so10396467b3.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 08:11:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687533054; x=1690125054;
+        d=google.com; s=20221208; t=1687533059; x=1690125059;
         h=content-transfer-encoding:to:from:subject:references:mime-version
          :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=IH93V5eIpnR2f14b4ZM+Ftn03PloFxrPP2IsbOx78io=;
-        b=6tkCJbVnTb3RbhEhWfNrcbBleyTdLKcoH8NxrgI6w7nekLZmENgfS3c5q9jhBBHuTu
-         iOTX6pePyvOtTYb8HD1K+j8YBNuqGfguWzNkUweGqAzyYeEqpCzHkT8Y8PX+EgazWAYk
-         HaMTfKkFuo+60ken5pcC6J7OHVsUf6EAkWDjhoEZL106YiQF0R2pFgjTTfX7TxJx6+UZ
-         Q/xfgWvYk503yvpF+87pWcyhZdhUZZii6ZxSvunC0IYYgqAIgBA9JDAyCEFtTiACmEbz
-         p2dmlOG/5mEeXKW8dlHv56lszM8yq3nv6QtCHQ0j1FXvKCXgNG2Zl5nmF/C5Q2k7iujQ
-         0BqQ==
+        bh=jhkdSyMhMNyUWrs1ZBCpoFwWPpdU98HpFzjjfUuXr6w=;
+        b=5k8KmnYkv37E2sQ+CDcAJEYxMggzjSfSxn/qF7Tdy0tuRh8Z/fYdUWeuymvDqQTAxh
+         nwxkip8SOxicfWhcJOM6OFAK/qn4WfREzLPjliq8BZErwUW07s7oor6x5JaCDwJMAPto
+         O1SDBiJK46hr7Kn6+LJIN6fb6M49SO3ARuGjEiw+WDYjfukKUbysqhEY+0Z8+PhzFtYM
+         WqZDeDOfntcEXGflkp451NcvwvqJt4NgPoFiVPFPxzoU6MmH5s/lFK+RTiMrn3W0XGAJ
+         XEvFCgJWYqxNoRr+LJA0xO7dUoiXf6rZQ03mEwiSUfiCmyePLxICfZa+JNgQhNKS+7M1
+         iDgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687533054; x=1690125054;
+        d=1e100.net; s=20221208; t=1687533059; x=1690125059;
         h=content-transfer-encoding:to:from:subject:references:mime-version
          :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=IH93V5eIpnR2f14b4ZM+Ftn03PloFxrPP2IsbOx78io=;
-        b=feGEXM3PClZQbzxl9XzOpVOuxKhSi6w3nOFn9w9LyJnTLrtAHj9wydYfK9pxwR8kX5
-         jhaX7J7oiceReArwssoog774AE3oikaQJimHIFmFvFjQx7AfOVMt1AS7zI+TOlqXViu4
-         iTuxiYaWZsBYYF767aKddh1CSmPCWZZ0+36L4/6ZNSolg2XsRpKKk5pCZLAJ4oh3TWDr
-         KOMKfU4y1LceYBDn6DoeRccOBJkTHGcV8PiI5HcCn4AptSpq/PFa1kXFuLpc0hwYSdm7
-         +YA61MdXBJKrb/KYdTOKjqUInfPPnjtFHIF/eA/f1EQS71eUR4R38+BfIsNrflS+oEI4
-         /DVw==
-X-Gm-Message-State: AC+VfDxZ8v2ZB5VrMbrNjhXjrxEofu6hnDIC8VlzqJbs6IjADUoBGMSS
-        woh4Yq+BWnueIo+1PuPKK+8jGSFTOHuq
-X-Google-Smtp-Source: ACHHUZ71YtrP9eh5uIUH9igGT/qEm2g0LFTYHAxBkIZbIHRYVa/8joz40XdnhBaCuGE4JQq7/AsUsZwZRbeo
+        bh=jhkdSyMhMNyUWrs1ZBCpoFwWPpdU98HpFzjjfUuXr6w=;
+        b=hE2owIuryto/bjKFK7yqybXGwZtDxg0igHPAqLhLo7d7N/M9aEKmmmakhTUNQ2ItMO
+         Vd5UMe3L7wKV8Kl2xIRKMQ+y2L1wZ0n09w5aZbCqEwvtdrr0hRD4kxZ+XHaDdqA63zJd
+         DYPQvizkTR7NYJPcclewCCPkfCpnp5AlvSUWiSOM0EhC/D/bO5ZlKTAUaIaM1T2gWsyl
+         ySV2zzc2aruODnqfv5PaVI10knvB7xFvXKWAe2Z7tV4N3cB2/fmEBpFqx2haIVfA/yok
+         slKgLZ3aZQZST8tIyUiGsM66nut8KOf/ZDLmvb2E28wT3LQ25PGw4uVDWCT28sn8h8Au
+         KNCg==
+X-Gm-Message-State: AC+VfDx5AU5LTF0LKXoiAg8mH7xHzbWgEaJ+JOV4T7B3iPQ5lQETY3FM
+        FLXNytWwU2vrXC6y3vxYb18BpYG4qE7w
+X-Google-Smtp-Source: ACHHUZ7xs4izjdtsD2KbdhcXVHURYkBVoNoMVyXL+1fVhzFm6+yzeTXxYnifvTeXt9pBErB+ddtpuE4Jtett
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6559:8968:cdfe:35b6])
- (user=irogers job=sendgmr) by 2002:a25:3444:0:b0:ba1:d0:7f7c with SMTP id
- b65-20020a253444000000b00ba100d07f7cmr3638441yba.2.1687533053943; Fri, 23 Jun
- 2023 08:10:53 -0700 (PDT)
-Date:   Fri, 23 Jun 2023 08:10:12 -0700
+ (user=irogers job=sendgmr) by 2002:a81:af59:0:b0:573:3897:c925 with SMTP id
+ x25-20020a81af59000000b005733897c925mr6372531ywj.6.1687533059320; Fri, 23 Jun
+ 2023 08:10:59 -0700 (PDT)
+Date:   Fri, 23 Jun 2023 08:10:14 -0700
 In-Reply-To: <20230623151016.4193660-1-irogers@google.com>
-Message-Id: <20230623151016.4193660-9-irogers@google.com>
+Message-Id: <20230623151016.4193660-11-irogers@google.com>
 Mime-Version: 1.0
 References: <20230623151016.4193660-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v2 08/12] perf vendor events intel: Update icelakex to 1.21
+Subject: [PATCH v2 10/12] perf vendor events intel: Update skylake to 57
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -87,24 +87,38 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Updates were released in:
-https://github.com/intel/perfmon/commit/78d47cbbae48a0297a507ae4fea234ff37f=
-f9960
-Adds the events ICACHE_DATA.STALLS, ICACHE_TAG.STALLS and
-DECODE.LCP. Descriptions are also updated.
+https://github.com/intel/perfmon/commit/1c3042c13bbfea05abe1ebb6910ae58b217=
+2e9ef
+Adds the events IDQ.DSB_CYCLES_OK, IDQ.DSB_CYCLES_ANY,
+ICACHE_TAG.STALLS, DECODE.LCP, LSD.CYCLES_OK. Descriptions are also
+updated.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../arch/x86/icelakex/frontend.json           | 32 ++++++++++++++++---
- .../arch/x86/icelakex/pipeline.json           |  4 +--
- .../x86/icelakex/uncore-interconnect.json     |  2 +-
  tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
- 4 files changed, 32 insertions(+), 8 deletions(-)
+ .../pmu-events/arch/x86/skylake/frontend.json | 43 ++++++++++++++++---
+ .../pmu-events/arch/x86/skylake/pipeline.json | 17 ++++++--
+ 3 files changed, 52 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/icelakex/frontend.json b/tools/=
-perf/pmu-events/arch/x86/icelakex/frontend.json
-index 71498044f1cb..f6edc4222f42 100644
---- a/tools/perf/pmu-events/arch/x86/icelakex/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/icelakex/frontend.json
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
+ents/arch/x86/mapfile.csv
+index f321b2cd83da..5104b93d57ab 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -27,7 +27,7 @@ GenuineIntel-6-2A,v19,sandybridge,core
+ GenuineIntel-6-(8F|CF),v1.14,sapphirerapids,core
+ GenuineIntel-6-AF,v1.00,sierraforest,core
+ GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
+-GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v56,skylake,core
++GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v57,skylake,core
+ GenuineIntel-6-55-[01234],v1.30,skylakex,core
+ GenuineIntel-6-86,v1.21,snowridgex,core
+ GenuineIntel-6-8[CD],v1.12,tigerlake,core
+diff --git a/tools/perf/pmu-events/arch/x86/skylake/frontend.json b/tools/p=
+erf/pmu-events/arch/x86/skylake/frontend.json
+index 04f08e4d2402..095904c77001 100644
+--- a/tools/perf/pmu-events/arch/x86/skylake/frontend.json
++++ b/tools/perf/pmu-events/arch/x86/skylake/frontend.json
 @@ -7,6 +7,14 @@
          "SampleAfterValue": "100003",
          "UMask": "0x1"
@@ -121,33 +135,13 @@ e prefix instruction 0x67 or REX.W for Intel64). Count is proportional to t=
 he number of prefixes in a 16B-line. This may result in a three-cycle penal=
 ty for each LCP (Length changing prefix) in a 16-byte chunk. [This event is=
  alias to ILD_STALL.LCP]",
-+        "SampleAfterValue": "500009",
++        "SampleAfterValue": "2000003",
 +        "UMask": "0x1"
 +    },
      {
-         "BriefDescription": "Decode Stream Buffer (DSB)-to-MITE transition=
-s count.",
-         "CounterMask": "1",
-@@ -213,10 +221,10 @@
-         "UMask": "0x1"
-     },
-     {
--        "BriefDescription": "Cycles where a code fetch is stalled due to L=
-1 instruction cache miss.",
-+        "BriefDescription": "Cycles where a code fetch is stalled due to L=
-1 instruction cache miss. [This event is alias to ICACHE_DATA.STALLS]",
-         "EventCode": "0x80",
-         "EventName": "ICACHE_16B.IFDATA_STALL",
--        "PublicDescription": "Counts cycles where a code line fetch is sta=
-lled due to an L1 instruction cache miss. The legacy decode pipeline works =
-at a 16 Byte granularity.",
-+        "PublicDescription": "Counts cycles where a code line fetch is sta=
-lled due to an L1 instruction cache miss. The legacy decode pipeline works =
-at a 16 Byte granularity. [This event is alias to ICACHE_DATA.STALLS]",
-         "SampleAfterValue": "500009",
-         "UMask": "0x4"
-     },
-@@ -237,10 +245,26 @@
+         "BriefDescription": "Decode Stream Buffer (DSB)-to-MITE switches",
+         "EventCode": "0xAB",
+@@ -245,27 +253,34 @@
          "UMask": "0x2"
      },
      {
@@ -157,46 +151,95 @@ at a 16 Byte granularity. [This event is alias to ICACHE_DATA.STALLS]",
 1 instruction cache tag miss. [This event is alias to ICACHE_TAG.STALLS]",
          "EventCode": "0x83",
          "EventName": "ICACHE_64B.IFTAG_STALL",
--        "PublicDescription": "Counts cycles where a code fetch is stalled =
-due to L1 instruction cache tag miss.",
-+        "PublicDescription": "Counts cycles where a code fetch is stalled =
-due to L1 instruction cache tag miss. [This event is alias to ICACHE_TAG.ST=
-ALLS]",
-+        "SampleAfterValue": "200003",
-+        "UMask": "0x4"
-+    },
-+    {
-+        "BriefDescription": "Cycles where a code fetch is stalled due to L=
-1 instruction cache miss. [This event is alias to ICACHE_16B.IFDATA_STALL]"=
-,
-+        "EventCode": "0x80",
-+        "EventName": "ICACHE_DATA.STALLS",
-+        "PublicDescription": "Counts cycles where a code line fetch is sta=
-lled due to an L1 instruction cache miss. The legacy decode pipeline works =
-at a 16 Byte granularity. [This event is alias to ICACHE_16B.IFDATA_STALL]"=
-,
-+        "SampleAfterValue": "500009",
-+        "UMask": "0x4"
-+    },
-+    {
+         "SampleAfterValue": "200003",
+         "UMask": "0x4"
+     },
+     {
+-        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
+ng 4 Uops",
 +        "BriefDescription": "Cycles where a code fetch is stalled due to L=
 1 instruction cache tag miss. [This event is alias to ICACHE_64B.IFTAG_STAL=
 L]",
 +        "EventCode": "0x83",
 +        "EventName": "ICACHE_TAG.STALLS",
-+        "PublicDescription": "Counts cycles where a code fetch is stalled =
-due to L1 instruction cache tag miss. [This event is alias to ICACHE_64B.IF=
-TAG_STALL]",
-         "SampleAfterValue": "200003",
-         "UMask": "0x4"
++        "SampleAfterValue": "200003",
++        "UMask": "0x4"
++    },
++    {
++        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
+ng 4 Uops [This event is alias to IDQ.DSB_CYCLES_OK]",
+         "CounterMask": "4",
+         "EventCode": "0x79",
+         "EventName": "IDQ.ALL_DSB_CYCLES_4_UOPS",
+-        "PublicDescription": "Counts the number of cycles 4 uops were deli=
+vered to Instruction Decode Queue (IDQ) from the Decode Stream Buffer (DSB)=
+ path. Count includes uops that may 'bypass' the IDQ.",
++        "PublicDescription": "Counts the number of cycles 4 uops were deli=
+vered to Instruction Decode Queue (IDQ) from the Decode Stream Buffer (DSB)=
+ path. Count includes uops that may 'bypass' the IDQ. [This event is alias =
+to IDQ.DSB_CYCLES_OK]",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x18"
      },
-diff --git a/tools/perf/pmu-events/arch/x86/icelakex/pipeline.json b/tools/=
-perf/pmu-events/arch/x86/icelakex/pipeline.json
-index 442a4c7539dd..176e5ef2a24a 100644
---- a/tools/perf/pmu-events/arch/x86/icelakex/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/icelakex/pipeline.json
-@@ -318,10 +318,10 @@
-         "UMask": "0x40"
+     {
+-        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
+ng any Uop",
++        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
+ng any Uop [This event is alias to IDQ.DSB_CYCLES_ANY]",
+         "CounterMask": "1",
+         "EventCode": "0x79",
+         "EventName": "IDQ.ALL_DSB_CYCLES_ANY_UOPS",
+-        "PublicDescription": "Counts the number of cycles uops were delive=
+red to Instruction Decode Queue (IDQ) from the Decode Stream Buffer (DSB) p=
+ath. Count includes uops that may 'bypass' the IDQ.",
++        "PublicDescription": "Counts the number of cycles uops were delive=
+red to Instruction Decode Queue (IDQ) from the Decode Stream Buffer (DSB) p=
+ath. Count includes uops that may 'bypass' the IDQ. [This event is alias to=
+ IDQ.DSB_CYCLES_ANY]",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x18"
+     },
+@@ -296,6 +311,24 @@
+         "SampleAfterValue": "2000003",
+         "UMask": "0x8"
+     },
++    {
++        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
+ng any Uop [This event is alias to IDQ.ALL_DSB_CYCLES_ANY_UOPS]",
++        "CounterMask": "1",
++        "EventCode": "0x79",
++        "EventName": "IDQ.DSB_CYCLES_ANY",
++        "PublicDescription": "Counts the number of cycles uops were delive=
+red to Instruction Decode Queue (IDQ) from the Decode Stream Buffer (DSB) p=
+ath. Count includes uops that may 'bypass' the IDQ. [This event is alias to=
+ IDQ.ALL_DSB_CYCLES_ANY_UOPS]",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x18"
++    },
++    {
++        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
+ng 4 Uops [This event is alias to IDQ.ALL_DSB_CYCLES_4_UOPS]",
++        "CounterMask": "4",
++        "EventCode": "0x79",
++        "EventName": "IDQ.DSB_CYCLES_OK",
++        "PublicDescription": "Counts the number of cycles 4 uops were deli=
+vered to Instruction Decode Queue (IDQ) from the Decode Stream Buffer (DSB)=
+ path. Count includes uops that may 'bypass' the IDQ. [This event is alias =
+to IDQ.ALL_DSB_CYCLES_4_UOPS]",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x18"
++    },
+     {
+         "BriefDescription": "Uops delivered to Instruction Decode Queue (I=
+DQ) from the Decode Stream Buffer (DSB) path",
+         "EventCode": "0x79",
+diff --git a/tools/perf/pmu-events/arch/x86/skylake/pipeline.json b/tools/p=
+erf/pmu-events/arch/x86/skylake/pipeline.json
+index cc800fb8180a..cd3e737bf4a1 100644
+--- a/tools/perf/pmu-events/arch/x86/skylake/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/skylake/pipeline.json
+@@ -352,10 +352,10 @@
+         "UMask": "0x1"
      },
      {
 -        "BriefDescription": "Stalls caused by changing prefix length of th=
@@ -218,39 +261,46 @@ e prefix instruction 0x67 or REX.W for Intel64). Count is proportional to t=
 he number of prefixes in a 16B-line. This may result in a three-cycle penal=
 ty for each LCP (Length changing prefix) in a 16-byte chunk. [This event is=
  alias to DECODE.LCP]",
-         "SampleAfterValue": "500009",
+         "SampleAfterValue": "2000003",
          "UMask": "0x1"
      },
-diff --git a/tools/perf/pmu-events/arch/x86/icelakex/uncore-interconnect.js=
-on b/tools/perf/pmu-events/arch/x86/icelakex/uncore-interconnect.json
-index 8ac5907762e1..f87ea3f66d1b 100644
---- a/tools/perf/pmu-events/arch/x86/icelakex/uncore-interconnect.json
-+++ b/tools/perf/pmu-events/arch/x86/icelakex/uncore-interconnect.json
-@@ -9311,7 +9311,7 @@
-         "EventCode": "0x50",
-         "EventName": "UNC_M3UPI_RxC_HELD.PARALLEL_SUCCESS",
-         "PerPkg": "1",
--        "PublicDescription": "Message Held : Parallel Success : ad and bl =
-messages were actually slotted into the same flit in paralle",
-+        "PublicDescription": "Message Held : Parallel Success : ad and bl =
-messages were actually slotted into the same flit in parallel",
-         "UMask": "0x8",
-         "Unit": "M3UPI"
+@@ -479,11 +479,11 @@
+         "UMask": "0x1"
      },
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
-ents/arch/x86/mapfile.csv
-index d63c9df8f65d..98828c3a9cde 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -14,7 +14,7 @@ GenuineIntel-6-A[DE],v1.01,graniterapids,core
- GenuineIntel-6-(3C|45|46),v33,haswell,core
- GenuineIntel-6-3F,v27,haswellx,core
- GenuineIntel-6-7[DE],v1.19,icelake,core
--GenuineIntel-6-6[AC],v1.20,icelakex,core
-+GenuineIntel-6-6[AC],v1.21,icelakex,core
- GenuineIntel-6-3A,v24,ivybridge,core
- GenuineIntel-6-3E,v23,ivytown,core
- GenuineIntel-6-2D,v23,jaketown,core
+     {
+-        "BriefDescription": "Cycles 4 Uops delivered by the LSD, but didn'=
+t come from the decoder.",
++        "BriefDescription": "Cycles 4 Uops delivered by the LSD, but didn'=
+t come from the decoder. [This event is alias to LSD.CYCLES_OK]",
+         "CounterMask": "4",
+         "EventCode": "0xA8",
+         "EventName": "LSD.CYCLES_4_UOPS",
+-        "PublicDescription": "Counts the cycles when 4 uops are delivered =
+by the LSD (Loop-stream detector).",
++        "PublicDescription": "Counts the cycles when 4 uops are delivered =
+by the LSD (Loop-stream detector). [This event is alias to LSD.CYCLES_OK]",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x1"
+     },
+@@ -496,6 +496,15 @@
+         "SampleAfterValue": "2000003",
+         "UMask": "0x1"
+     },
++    {
++        "BriefDescription": "Cycles 4 Uops delivered by the LSD, but didn'=
+t come from the decoder. [This event is alias to LSD.CYCLES_4_UOPS]",
++        "CounterMask": "4",
++        "EventCode": "0xA8",
++        "EventName": "LSD.CYCLES_OK",
++        "PublicDescription": "Counts the cycles when 4 uops are delivered =
+by the LSD (Loop-stream detector). [This event is alias to LSD.CYCLES_4_UOP=
+S]",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x1"
++    },
+     {
+         "BriefDescription": "Number of Uops delivered by the LSD.",
+         "EventCode": "0xA8",
 --=20
 2.41.0.162.gfafddb0af9-goog
 
