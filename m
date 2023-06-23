@@ -2,163 +2,209 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304E2EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 23:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DA4EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 23:19:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230421AbjFWXLZ convert rfc822-to-8bit (ORCPT
+        id S229512AbjFWXS4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Jun 2023 19:11:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48066 "EHLO
+        Fri, 23 Jun 2023 19:18:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230118AbjFWXLY (ORCPT
+        with ESMTP id S229509AbjFWXS4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Jun 2023 19:11:24 -0400
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04187EA
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 16:11:23 -0700 (PDT)
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-bd77424c886so1140914276.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 16:11:22 -0700 (PDT)
+        Fri, 23 Jun 2023 19:18:56 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E393F1FCC;
+        Fri, 23 Jun 2023 16:18:54 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id 3f1490d57ef6-bd5f59fb71dso1136022276.3;
+        Fri, 23 Jun 2023 16:18:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687562334; x=1690154334;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o5h2Fku8APXH3iOdYKNWdhjGBKRm3o6/JPRIVNrW9qA=;
+        b=QFfPEzgVXYAeQa/6a5IBaDl9QfzWAr6OxLdvn4H9sUUu1YPmlx9TYMKYcOkzf8Dri+
+         I+EW41qX0D4ZLpiWpESkGo34UvdXh1t4YXWQjbcFDqWssJDjt7mcSlWmal0Io/ON+E4J
+         QYEv3qDTt/TaPxDICboK4LH8hXpS/ZaV3vealWnFLolM7YMeOqg7dpU8bsTECkoLaCAe
+         vdvmxkAQUYI0zrdjEpHv3RFRNQsZzBzcLy4T+Lo0cXVco+/1cQdBdoa9TMn4Az3qKXYR
+         R/2Xy40EeDFEzF5J83APlgmNUsCx/Bt4V/JP3RTpBKSMDAA/ziEa/sGACVr25XR1AUJ8
+         X54g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687561882; x=1690153882;
+        d=1e100.net; s=20221208; t=1687562334; x=1690154334;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YwmigcEEESvOYD+x372yFpLKh6lHO297GOtcjzBMVLY=;
-        b=VUHZ3u4DJK8l1nSNYzrOTPv+0q1mEW3VBZfWuukdTypv+C1DgERjY/mycT+2f7DiuE
-         sFK7BGBh8Sjq31KwR0LVPvcbtZaGBGsq8mPMCqxNzJGY8N7zkgqsjioI1hHjTpq1D7iQ
-         uJdVBuZLyPbRaxkom/INzDl4siWn1FyPIRubrk6Iw3wsRESUx5JZucPpWj37RsOxQ0S5
-         14N4AUMj4DJx/fqZSAFsgMYAQIYgU+54SMQYsT43v6L6HqkXycq+KfPgqo2g0o9QZk3T
-         kkvmzkQ2HqWN0JtSXe7DeYWhn/ZQHsYt2Gj6KKMlImYlBJBsbw+KSHaZSDOu5+eZga+T
-         k1gw==
-X-Gm-Message-State: AC+VfDz1VkuddtaFdfgwbBwZNAdsxaOohqyEFc2aW4EkMwt9llxduqD2
-        VyMgvW0BJckHwWSJoLtIY/QgjSm032a4HREPz/0=
-X-Google-Smtp-Source: ACHHUZ5t8GihsmR3Ov20If3Bon5OlbqGAkJKblrWwfE1YAH6V6f+YIni54il9aoP0qvOo5B1b/MJXPyzZVbmN4Niv9k=
-X-Received: by 2002:a25:ef12:0:b0:bec:9efe:100e with SMTP id
- g18-20020a25ef12000000b00bec9efe100emr20772059ybd.14.1687561882002; Fri, 23
- Jun 2023 16:11:22 -0700 (PDT)
+        bh=o5h2Fku8APXH3iOdYKNWdhjGBKRm3o6/JPRIVNrW9qA=;
+        b=JkxSxKdNcNey6TEw6A9tN86RTXM7XhAzn9qYm2+VFZVBHF8uRze+KeYKVhQoGTMCmb
+         ok0voCJIYsf/VQe7TSaQeSmxhMotHe4ws7YpHAtGwOfJRq+V3KV9TGULDwvlCrsobz3t
+         fvgw1nS7RC5RWoHWl+HDg8EGP2KNJckOVpGoLJBcnoeSbzhQTM7QjE5Yq691TNX2Stc4
+         Ch5G5xUoDiHJG2E9BnFYRtJZliU3cc6+otF5pdA8+TLVk2Yn5AHTOm/sRQIoh9GOrmqR
+         z80EQgntGlBt9q5Oog2Ma9zReB+8RUJwjAQ29jwYwTWUc6FKDch3MGTeZC0o0rIqrFLt
+         Pk0Q==
+X-Gm-Message-State: AC+VfDwy4Fh3MuB24B6QLJp7oyPGRrHr38OBTl7sAgJb8C+408crE5mU
+        v0AW61W7B0Q53nkgmPXO53L//5UAebToHch1QMw=
+X-Google-Smtp-Source: ACHHUZ64Ie2Q4TyVcEiEZZRvHCNcp3rrPGp7VLcfz4WgjiET7zv1uOAZWjP5DPConbdo8r3WXueFReyEKBSOKG0ki6g=
+X-Received: by 2002:a25:4050:0:b0:bfe:9259:8f1a with SMTP id
+ n77-20020a254050000000b00bfe92598f1amr10554353yba.50.1687562333975; Fri, 23
+ Jun 2023 16:18:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230613164145.50488-1-atrajeev@linux.vnet.ibm.com>
- <20230613164145.50488-16-atrajeev@linux.vnet.ibm.com> <ZIjMWUk/axKfMCM4@kernel.org>
- <CAM9d7cjrpaNk0UC22ntBSP+LzQwT2YAHwQ2o3z1aayAZNQ329g@mail.gmail.com>
- <5ab5cc25-03b0-ef7f-3dc0-be1b59a4147d@linux.ibm.com> <CAM9d7cgcETpnNgvgJ8a966bwc0phQuVMwABHzA8APk6Z9Er=OQ@mail.gmail.com>
- <ee0bd9de-c2c7-010f-5a4d-40e07ded8a3e@linux.ibm.com> <CAM9d7cgopOAyL0QgHs+x_O9A6v020Jyaju+EOv8ymS_cg1Sarg@mail.gmail.com>
- <CAM9d7cgUXf6ew8_jK5P83QMCcQw5EVOUbHq561==qzUrf9tujQ@mail.gmail.com> <89f3889b-7d1e-0b04-34a0-f6eb8d9309c8@linux.ibm.com>
-In-Reply-To: <89f3889b-7d1e-0b04-34a0-f6eb8d9309c8@linux.ibm.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 23 Jun 2023 16:11:10 -0700
-Message-ID: <CAM9d7cjL0ddXSNej2KWuPBqCbgGP8kjLwzt9yX9CnA05jsfBtQ@mail.gmail.com>
-Subject: Re: [PATCH 15/17] perf tests task_analyzer: fix bad substitution ${$1}
-To:     Aditya Gupta <adityag@linux.ibm.com>
-Cc:     irogers@google.com, Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        john.g.garry@oracle.com, kjain@linux.ibm.com,
-        Hagen Paul Pfeifer <hagen@jauu.net>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org, ravi.bangoria@amd.com,
-        maddy@linux.ibm.com, jolsa@kernel.org,
-        Petar Gligoric <petar.gligoric@rohde-schwarz.com>,
-        disgoel@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org
+References: <CAKwvOdnrHErOK+w878izVauHUKaX3eD-HXgigq2Ogm3iSj-fHA@mail.gmail.com>
+ <76CB17D0-5A66-4D49-A389-8F40EC830DC0@sladewatkins.net> <CAP-5=fXVgwMO_CpS-EHN6PFhLB-J5Ft7qHz7oQd-WOMnTj72Cw@mail.gmail.com>
+ <CAM9d7chvZjZ4YVc6j3w7OkdHteyJ0GUZboieu9G7jAWBevoZqA@mail.gmail.com>
+ <e553c4f8-ed3d-0755-cc8a-b5ffe43b2c2f@amd.com> <CAKwvOdk6TTNhu_+FdONTXPo9Z8u5D4-5kf-rMN8oK4+6fMyc-w@mail.gmail.com>
+ <CABPqkBQVfQFJKCdHXEMGFcupzvy8zq14F52eLW5s9vr2Shmi6w@mail.gmail.com>
+ <85822c3c-2254-52cc-e6b1-9c89adb63771@amd.com> <CAKwvOdkfEexsE07XXGW3FF+nMt-pR8uv2EA7QzsPbEZsSQBO-Q@mail.gmail.com>
+ <85aabdc8-07cd-3285-1f3f-605f9ebbab18@amd.com> <b6a503b7-b421-a5c0-1cc8-4f1567b8d9de@amd.com>
+ <CAKwvOdmY7qoSG61f7UouWFz+gNN531FhpHbqawrAKCNKNDJHnw@mail.gmail.com>
+In-Reply-To: <CAKwvOdmY7qoSG61f7UouWFz+gNN531FhpHbqawrAKCNKNDJHnw@mail.gmail.com>
+From:   Namhyung Kim <namhyung@gmail.com>
+Date:   Fri, 23 Jun 2023 16:18:42 -0700
+Message-ID: <CAM9d7cg=HzWGgHvTUkkuRM+Y2tZgVACEV52a=vWqqa1mBMzuBw@mail.gmail.com>
+Subject: Re: Invalid event (cycles:pp) in per-thread mode, enable system wide
+ with '-a'.
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Ravi Bangoria <ravi.bangoria@amd.com>,
+        Stephane Eranian <eranian@google.com>,
+        Slade Watkins <srw@sladewatkins.net>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Kees Cook <keescook@chromium.org>, sandipan.das@amd.com,
+        Bill Wendling <morbo@google.com>,
+        clang-built-linux <llvm@lists.linux.dev>,
+        Yonghong Song <yhs@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello Aditya,
+Hi Nick,
 
-On Fri, Jun 23, 2023 at 11:19 AM Aditya Gupta <adityag@linux.ibm.com> wrote:
+On Fri, Jun 23, 2023 at 9:23=E2=80=AFAM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
 >
-> Hello, Namhyung,
+> On Tue, Oct 11, 2022 at 10:05=E2=80=AFPM Ravi Bangoria <ravi.bangoria@amd=
+.com> wrote:
+> >
+> > On 12-Oct-22 9:36 AM, Ravi Bangoria wrote:
+> > > On 12-Oct-22 3:02 AM, Nick Desaulniers wrote:
+> > >> On Thu, Oct 6, 2022 at 8:56 PM Ravi Bangoria <ravi.bangoria@amd.com>=
+ wrote:
+> > >>>
+> > >>> +cc: PeterZ
+> > >>>
+> > >>>>>>>> +Ravi who may be able to say if there are any issues with the =
+precise
+> > >>>>>>>> sampling on AMD.
+> > >>>>>>>
+> > >>>>>>> Afaik cvcles:pp will use IBS but it doesn't support per-task pr=
+ofiling
+> > >>>>>>> since it has no task context.  Ravi is working on it..
+> > >>>>>>
+> > >>>>>> Right.
+> > >>>>>> https://lore.kernel.org/lkml/20220829113347.295-1-ravi.bangoria@=
+amd.com
+> > >>>>>
+> > >>>>> Cool, thanks for working on this Ravi.
+> > >>>>>
+> > >>>>> I'm not sure yet whether I may replace the kernel on my corporate
+> > >>>>> provided workstation, so I'm not sure yet I can help test that pa=
+tch.
+> > >>>>>
+> > >>>>> Can you confirm that
+> > >>>>> $ perf record -e cycles:pp --freq=3D128 --call-graph lbr -- <comm=
+and to profile>
+> > >>>>>
+> > >>>>> works with just that patch applied? Or is there more work require=
+d?
+> > >>>>> What is the status of that patch?
+> > >>>>>
+> > >>>>> For context, we had difficulty upstreaming support for instrument=
+ation
+> > >>>>> based profile guided optimizations in the Linux kernel.
+> > >>>>> https://lore.kernel.org/lkml/CAHk-=3DwhqCT0BeqBQhW8D-YoLLgp_eFY=
+=3D8Y=3D9ieREM5xx0ef08w@mail.gmail.com/
+> > >>>>> We'd like to be able to use either instrumentation or sampling to
+> > >>>>> optimize our builds.  The major barrier to sample based approache=
+s are
+> > >>>>> architecture / micro architecture issues with sample based profil=
+e
+> > >>>>> data collection, and bitrot of data processing utilities.
+> > >>>>> https://github.com/google/autofdo/issues/144
+> > >>>>
+> > >>>> On existing AMD Zen2, Zen3 the following cmdline:
+> > >>>> $ perf record -e cycles:pp --freq=3D128 --call-graph lbr -- <comma=
+nd to profile>
+> > >>>>
+> > >>>> does not work. I see two reasons:
+> > >>>>
+> > >>>> 1. cycles:pp is likely converted into IBS op in cycle mode.
+> > >>>>     Current kernels do not support IBS in per-thread mode.
+> > >>>>     This is purely a kernel limitation
+> > >>>
+> > >>> Right, it's purely a kernel limitation. And below simple patch on t=
+op
+> > >>> of event-context rewrite patch[1] should be sufficient to make cycl=
+es:pp
+> > >>> working in per-process mode on AMD Zen.
+> > >>>
+> > >>> ---
+> > >>> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+> > >>> index c251bc44c088..de01b5d27e40 100644
+> > >>> --- a/arch/x86/events/amd/ibs.c
+> > >>> +++ b/arch/x86/events/amd/ibs.c
+> > >>> @@ -665,7 +665,7 @@ static struct perf_ibs perf_ibs_fetch =3D {
+> > >>>
+> > >>>  static struct perf_ibs perf_ibs_op =3D {
+> > >>>         .pmu =3D {
+> > >>> -               .task_ctx_nr    =3D perf_invalid_context,
+> > >>> +               .task_ctx_nr    =3D perf_hw_context,
+> > >>>
+> > >>>                 .event_init     =3D perf_ibs_init,
+> > >>>                 .add            =3D perf_ibs_add,
+> > >>> ---
+> > >>>
+> > >>> [1]: https://lore.kernel.org/lkml/20220829113347.295-1-ravi.bangori=
+a@amd.com
+> > >>
+> > >> Hi Ravi,
+> > >> I didn't see the above diff in
+> > >> https://lore.kernel.org/lkml/20221008062424.313-1-ravi.bangoria@amd.=
+com/
+> > >> Was there another distinct patch you were going to send for the abov=
+e?
+> > >
+> > > Yes Nick. I was planning to send it once the rewrite stuff goes in.
+> >
+> > Hi Nick,
+> >
+> > Since you have practical use case, would it be possible to run your wor=
+kflow
+> > with perf rewrite and IBS patches applied? It will help us in finding/f=
+ixing
+> > more bugs and upstreaming these changes.
 >
-> On 23/06/23 04:55, Namhyung Kim wrote:
-> > Ok, I found two problems.
-> >
-> > ...
-> >
-> > The first one is related to this message.  It couldn't find the script
-> > (task-analyzer.py) because PERF_EXEC_PATH is not set.
-> > Running with --exec-path=$PWD was ok, but I got a segfault.
-> >
-> > The other problem is in set_regs_in_dict().  It tries to capture
-> > register values in the sample and save them to a dictionary.
-> > The sample doesn't have registers so it should have no problem.
-> > But the 'bf' was not initialized properly when size is 0, and it led
-> > PyUnicode_FromString() returning NULL.
-> >
-> > After the changes, it ran ok:
-> >
-> > $ sudo ./perf test -v task
-> > 116: perf script task-analyzer tests                                 :
-> > --- start ---
-> > test child forked, pid 204088
-> > PASS: "test_basic"
-> > PASS: "test_ns_rename"
-> > PASS: "test_ms_filtertasks_highlight"
-> > PASS: "test_extended_times_timelimit_limittasks"
-> > PASS: "test_summary"
-> > PASS: "test_summaryextended"
-> > PASS: "test_summaryonly"
-> > PASS: "test_extended_times_summary_ns"
-> > PASS: "test_extended_times_summary_ns"
-> > PASS: "test_csv"
-> > PASS: "test_csvsummary"
-> > PASS: "test_csv_extended_times"
-> > PASS: "test_csvsummary_extended"
-> > test child finished with 0
-> > ---- end ----
-> > perf script task-analyzer tests: Ok
-> This is interesting. I did not encounter these earlier.
+> Hi Ravi,
+> Sorry, I'm not able to load a custom kernel image on my employer
+> provided workstation, and I never got approval to expense hardware for
+> testing this otherwise.
 >
-> > I'll send the fixes soon.
-> >
-> Thanks for fixing it.
-
-No problem.
-
-> >>> You can try the perf-tools-next branch in the perf/perft-tools-next.git repo.
-> >>>
-> >>>    git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git
-> >>>
-> >>>    $ make clean all
-> >>>    $ sudo ./perf test -v task
-> >>>
->
-> I tested with the steps provided, i.e.. clone, /*apply patch 15 (added
-> this step myself)*/, clean, make, ./perf test -v test. But still- test
-> passed:
->
-> '''
-> ~/temp_clones/perf-tools-next/tools/perf git:(master) sudo ./perf test
-> -v test
->
+> Was there ever any update on this? I'm on 6.1.25 now and still cant run
+> $ perf record -e cycles:pp --call-graph lbr <any command to profile>
+> $ cat /proc/cpuinfo
 > ...
->
-> --- start ---
-> test child forked, pid 75261
-> PASS: "test_basic"
-> PASS: "test_ns_rename"
-> PASS: "test_ms_filtertasks_highlight"
-> PASS: "test_extended_times_timelimit_limittasks"
-> PASS: "test_summary"
-> PASS: "test_summaryextended"
-> PASS: "test_summaryonly"
-> PASS: "test_extended_times_summary_ns"
-> PASS: "test_extended_times_summary_ns"
-> PASS: "test_csv"
-> PASS: "test_csvsummary"
-> PASS: "test_csv_extended_times"
-> PASS: "test_csvsummary_extended"
-> test child finished with 0
-> ---- end ----
-> '''
->
-> Maybe my environment had that other things set in a way that, I did not
-> face any issue (I don't recall doing any special thing with my
-> environment though, and these patches have been tested multiple times by
-> more people also).
-> But thanks for your efforts to debug and fix the issue.
+> model name      : AMD Ryzen Threadripper PRO 3995WX 64-Cores
+> ...
 
-I don't know but you might either set PERF_EXEC_PATH env or
-install the scripts somewhere that can be found by default.
+The commit 30093056f7b2 ("perf/amd/ibs: Make IBS a core pmu") in v6.2.
+
+  $ git name-rev --tags --refs=3Dv[2-6].* 30093056f7b2
+  30093056f7b2 v6.2-rc1~176^2~16
+
+https://git.kernel.org/torvalds/c/30093056f7b2
 
 Thanks,
 Namhyung
