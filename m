@@ -2,120 +2,185 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0E6EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 00:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA84EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 00:33:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231393AbjFWASB (ORCPT
+        id S230050AbjFWAdk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Jun 2023 20:18:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42516 "EHLO
+        Thu, 22 Jun 2023 20:33:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231392AbjFWAR4 (ORCPT
+        with ESMTP id S230445AbjFWAdi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Jun 2023 20:17:56 -0400
-Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD1AB2126
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 17:17:55 -0700 (PDT)
-Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-3fde9bfb3c8so106441cf.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 17:17:55 -0700 (PDT)
+        Thu, 22 Jun 2023 20:33:38 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAE0A172D
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 17:33:35 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-be47a3b3a01so99936276.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 17:33:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687479475; x=1690071475;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tHoAe9cIDc1QJuWRtysL5UB6OfB9G0bH9MDuVg4W10k=;
-        b=MbvhppHtjitG1PHoBVIsJl9V7O55xbc93l3YrjeBUBnHDttRI0JfDMreVgCAlaMvIy
-         rMgXtEHooNwzOFO2gbGFrgm3LFYlj4aBYYbl8nKTcE6g2GgoYnRjSyz9gijrSyAcJh4m
-         ayRDeasTifPGsDSgBUaNZI91qdiXhHaDKkK5jToyVWuCJhrys9pJysT5DWwQk3JEM4hr
-         /zSCQd3uuvxA5mGE/NmZXx3as7PLIOBiN5vfexImULSR/vhpuKdULr9BldN9NhcEooDL
-         a+G6rAlmCDG9pehdwTTWUzPu7sWa1nKxnvIkFoG5BHc4h3Rhu5r5ozp+UEaTACpvLsD3
-         89yw==
+        d=google.com; s=20221208; t=1687480415; x=1690072415;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=eM+aKH9lx0VNyUToM/Shhk5AIsdd6V2G7v2LKCRcFvg=;
+        b=5cf3stIZxi42dscGr8FOua/ouInJosegVhGTY1kxgHwpsW6EZecakTyIoKb1G9rSSK
+         7OpZFpcHjXuy8otP2GqjePkPmJ3Ke+1HpGOtDt8eq1+lAxACoa0un65V3XMtMoR6d1Ne
+         bCQV8JZtd9ageSTvxB01Y7E9TskgwluKk5z0YktA8CHIXxcDk6Zoqpnc+zJ/hzWUMMMR
+         1FAcvnVZUbDf1btJwyRsGi2KJSzs8K0vTvnr52J0rpPqa7ppSDDel55POHFfhVOAefc2
+         lLE1S4+xBM4LXkT9gte/VC5P2Jcmcjw3Bm/SbkFSZorDBlH0LJV4R1MIPZICZ+Ru2T3K
+         uJZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687479475; x=1690071475;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tHoAe9cIDc1QJuWRtysL5UB6OfB9G0bH9MDuVg4W10k=;
-        b=D8Ol6Jkiua0gjo/Z4Nj6MCFpiotxxlo4K/H/0CS+TcFK6AQedZ97ifbOztBmrnA/nD
-         4ZyY6jZI7xM5YXgXqUD8CjTxpD93yvEvMZqoLg2cZXMVwK4vkW/ZhPG5v1ifrQf9Tiiz
-         FLZd8ly1XpvxArmOPlRB7jrd1T37DDDmWfOtnPlB6Lm6ZCDljSHlPvD2pCjDSNwOgBGF
-         b2sjnYJeCmWZr2MSDlP/m4bxI5Bw3C66SfL5Tght6c7B9dIlO1T30ZuSpMBZvSQ1IQs/
-         Gcrste0rYybpDNAZKbUfdJqFILR4lfVDl9S4u6975UEFRNF2fq4T1L0u2vk07SK5xBTV
-         SuNw==
-X-Gm-Message-State: AC+VfDyWde9lV/+IjxFlotl9W86J2MsqZq0DBzKGr9Zjfz6rYmipyPQk
-        nSiOr+OYcdN+UD5bpzu6URV97anRZrJdCJ5JDIaaSQ==
-X-Google-Smtp-Source: ACHHUZ5gEBL3gZineWBwKnYJQZCyd+5F5WfEERGV7oaGZj4IT5RZkTPMcCF7wS/OPxxkaXsZXnJ98+uL/TIccxv9xAU=
-X-Received: by 2002:a05:622a:1309:b0:3ed:6bde:9681 with SMTP id
- v9-20020a05622a130900b003ed6bde9681mr23282qtk.0.1687479474878; Thu, 22 Jun
- 2023 17:17:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230622235357.225190-1-namhyung@kernel.org> <20230622235357.225190-2-namhyung@kernel.org>
-In-Reply-To: <20230622235357.225190-2-namhyung@kernel.org>
+        d=1e100.net; s=20221208; t=1687480415; x=1690072415;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eM+aKH9lx0VNyUToM/Shhk5AIsdd6V2G7v2LKCRcFvg=;
+        b=HXxUs6xPfYiU/wmezkdrjRSwHWQKMAbonVL259cFGX+vvIE/ZUXZ4iqUBp9IC0iDsY
+         YT+F7oT+PxY7q2+1fqalLr8Bx65hgdpfFrp8/rDcUEgkeTpzwOyK4s+UMWa6xnIndSJ3
+         H4OO5L2vxOzWl6+uEjNCSEFohflHaKKeD7UlHQojKIPzDFfssw5QVO9A8fH3CBq1kw/3
+         zjZJAXn2jx2slCoSLCqQsrP2vgiqHSxIuaEi3qn5vfIdNziHNFW1BNSHdO3FwIzeG71I
+         eyurwDa7OX8w+d+RxLCp8g+xTOrh5WeOVPN7Mn8Vm/GohUSSdmH2TljkCXaA5ZXDhdMx
+         u7aw==
+X-Gm-Message-State: AC+VfDyVU/dNekgJoPmeFbi5sZrHJzQAKtUCSeE+707TWtpJjT+aEtOF
+        OFpSbMaxbg50RmazLUFoM9nH20J0ARYo
+X-Google-Smtp-Source: ACHHUZ6rdrFsvxyUoY+WIMkoDSELok7Es78J5HoR5wcIkyIkUaRMfRpWzzcZjnoiaFcVn2R55ACsXlLMQiqE
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6559:8968:cdfe:35b6])
+ (user=irogers job=sendgmr) by 2002:a05:6902:1363:b0:bea:918f:2ef6 with SMTP
+ id bt3-20020a056902136300b00bea918f2ef6mr2523829ybb.0.1687480415021; Thu, 22
+ Jun 2023 17:33:35 -0700 (PDT)
+Date:   Thu, 22 Jun 2023 17:33:00 -0700
+Message-Id: <20230623003312.3981075-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
+Subject: [PATCH v1 00/12] Add metric has_event, update intel vendor events
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 22 Jun 2023 17:17:43 -0700
-Message-ID: <CAP-5=fVAsy5GWmvys6+EyeLPcDdbFpJD+EnzPUgh-P_jtnvsdw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf test: Set PERF_EXEC_PATH for script execution
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+To:     eter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Aditya Gupta <adityag@linux.ibm.com>,
-        Petar Gligoric <petar.gligoric@rohde-schwarz.com>,
-        Hagen Paul Pfeifer <hagen@jauu.net>
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Sohom Datta <sohomdatta1@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Perry Taylor <perry.taylor@intel.com>,
+        Samantha Alt <samantha.alt@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Weilin Wang <weilin.wang@intel.com>,
+        Edward Baker <edward.baker@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 22, 2023 at 4:54=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> The task-analyzer.py script (actually every other scripts too) requires
-> PERF_EXEC_PATH env to find dependent libraries and scripts. For scripts
-> test to run correctly, it needs to set PERF_EXEC_PATH to the perf tool
-> source directory.
->
-> Instead of blindly update the env, let's check the directory structure
-> to make sure it points to the correct location.
->
-> Fixes: e8478b84d6ba ("perf test: add new task-analyzer tests")
-> Cc: Petar Gligoric <petar.gligoric@rohde-schwarz.com>
-> Cc: Hagen Paul Pfeifer <hagen@jauu.net>
-> Cc: Aditya Gupta <adityag@linux.ibm.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Add a new has_event function for metrics so that events that can be
+disabled by the kernel/firmware don't cause metrics to fail. Use this
+function for Intel transaction metrics fixing "perf all metrics test"
+on systems with TSX disabled. The update conversion script is posted in:
+https://github.com/intel/perfmon/pull/90
 
-Acked-by: Ian Rogers <irogers@google.com>
+Re-generate Intel vendor events using:
+https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+Adding rocketlake support, uncore and many core events for meteorlake,
+and smaller updates for cascakelakex, icelake, icelakex,
+sapphirerapids, skylake, skylakex and tigerlake.
 
-Thanks,
-Ian
+Ian Rogers (12):
+  perf expr: Add has_event function
+  perf jevents: Support for has_event function
+  perf vendor metrics intel: Make transaction metrics conditional
+  perf vendor events intel: Add rocketlake events/metrics
+  perf vendor events intel: Update meteorlake to 1.03
+  perf vendor events intel: Update cascadelakex to 1.19
+  perf vendor events intel: Update icelake to 1.19
+  perf vendor events intel: Update icelakex to 1.21
+  perf vendor events intel: Update sapphirerapids to 1.14
+  perf vendor events intel: Update skylake to 57
+  perf vendor events intel: Update skylakex to 1.31
+  perf vendor events intel: Update tigerlake to 1.13
 
-> ---
->  tools/perf/tests/shell/test_task_analyzer.sh | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/tools/perf/tests/shell/test_task_analyzer.sh b/tools/perf/te=
-sts/shell/test_task_analyzer.sh
-> index 59785dfc11f8..0095abbe20ca 100755
-> --- a/tools/perf/tests/shell/test_task_analyzer.sh
-> +++ b/tools/perf/tests/shell/test_task_analyzer.sh
-> @@ -5,6 +5,12 @@
->  tmpdir=3D$(mktemp -d /tmp/perf-script-task-analyzer-XXXXX)
->  err=3D0
->
-> +# set PERF_EXEC_PATH to find scripts in the source directory
-> +perfdir=3D$(dirname "$0")/../..
-> +if [ -e "$perfdir/scripts/python/Perf-Trace-Util" ]; then
-> +  export PERF_EXEC_PATH=3D$perfdir
-> +fi
-> +
->  cleanup() {
->    rm -f perf.data
->    rm -f perf.data.old
-> --
-> 2.41.0.162.gfafddb0af9-goog
->
+ .../arch/x86/alderlake/adl-metrics.json       |    8 +-
+ .../arch/x86/cascadelakex/clx-metrics.json    |    8 +-
+ .../arch/x86/cascadelakex/frontend.json       |   43 +-
+ .../arch/x86/cascadelakex/pipeline.json       |   17 +-
+ .../x86/cascadelakex/uncore-interconnect.json |    2 +-
+ .../arch/x86/cascadelakex/uncore-memory.json  |    2 +-
+ .../pmu-events/arch/x86/icelake/cache.json    |    8 +-
+ .../pmu-events/arch/x86/icelake/frontend.json |   32 +-
+ .../arch/x86/icelake/icl-metrics.json         |    8 +-
+ .../pmu-events/arch/x86/icelake/pipeline.json |    6 +-
+ .../arch/x86/icelakex/frontend.json           |   32 +-
+ .../arch/x86/icelakex/icx-metrics.json        |    8 +-
+ .../arch/x86/icelakex/pipeline.json           |    4 +-
+ .../x86/icelakex/uncore-interconnect.json     |    2 +-
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |   17 +-
+ .../pmu-events/arch/x86/meteorlake/cache.json |  811 +++++++++
+ .../arch/x86/meteorlake/floating-point.json   |  143 ++
+ .../arch/x86/meteorlake/frontend.json         |  410 +++++
+ .../arch/x86/meteorlake/memory.json           |  142 +-
+ .../pmu-events/arch/x86/meteorlake/other.json |   57 +-
+ .../arch/x86/meteorlake/pipeline.json         | 1211 ++++++++++++-
+ .../arch/x86/meteorlake/uncore-cache.json     |   18 +
+ .../x86/meteorlake/uncore-interconnect.json   |   42 +
+ .../arch/x86/meteorlake/uncore-memory.json    |  126 ++
+ .../arch/x86/meteorlake/virtual-memory.json   |  257 +++
+ .../pmu-events/arch/x86/rocketlake/cache.json |  894 ++++++++++
+ .../arch/x86/rocketlake/floating-point.json   |  105 ++
+ .../arch/x86/rocketlake/frontend.json         |  377 ++++
+ .../arch/x86/rocketlake/memory.json           |  394 +++++
+ .../arch/x86/rocketlake/metricgroups.json     |  113 ++
+ .../pmu-events/arch/x86/rocketlake/other.json |  242 +++
+ .../arch/x86/rocketlake/pipeline.json         |  801 +++++++++
+ .../arch/x86/rocketlake/rkl-metrics.json      | 1571 +++++++++++++++++
+ .../x86/rocketlake/uncore-interconnect.json   |   74 +
+ .../arch/x86/rocketlake/uncore-other.json     |    9 +
+ .../arch/x86/rocketlake/virtual-memory.json   |  165 ++
+ .../arch/x86/sapphirerapids/pipeline.json     |    2 +-
+ .../arch/x86/sapphirerapids/spr-metrics.json  |    8 +-
+ .../arch/x86/sapphirerapids/uncore-cache.json |  308 ++++
+ .../sapphirerapids/uncore-interconnect.json   |    2 +-
+ .../pmu-events/arch/x86/skylake/frontend.json |   43 +-
+ .../pmu-events/arch/x86/skylake/pipeline.json |   17 +-
+ .../arch/x86/skylake/skl-metrics.json         |    8 +-
+ .../arch/x86/skylakex/frontend.json           |   43 +-
+ .../arch/x86/skylakex/pipeline.json           |   17 +-
+ .../arch/x86/skylakex/skx-metrics.json        |    8 +-
+ .../x86/skylakex/uncore-interconnect.json     |    2 +-
+ .../arch/x86/skylakex/uncore-memory.json      |    2 +-
+ .../arch/x86/tigerlake/frontend.json          |   32 +-
+ .../arch/x86/tigerlake/pipeline.json          |    6 +-
+ .../arch/x86/tigerlake/tgl-metrics.json       |    8 +-
+ tools/perf/pmu-events/metric.py               |    8 +-
+ tools/perf/tests/expr.c                       |    4 +
+ tools/perf/util/expr.c                        |   19 +
+ tools/perf/util/expr.h                        |    1 +
+ tools/perf/util/expr.l                        |    1 +
+ tools/perf/util/expr.y                        |    8 +-
+ 57 files changed, 8504 insertions(+), 202 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/floating-point.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/uncore-cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/uncore-interconnect.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/uncore-memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/rocketlake/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/rocketlake/floating-point.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/rocketlake/frontend.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/rocketlake/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/rocketlake/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/rocketlake/other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/rocketlake/pipeline.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/rocketlake/rkl-metrics.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/rocketlake/uncore-interconnect.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/rocketlake/uncore-other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/rocketlake/virtual-memory.json
+
+-- 
+2.41.0.162.gfafddb0af9-goog
+
