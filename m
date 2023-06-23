@@ -2,134 +2,95 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0409EEB64D7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 15:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7E0EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 16:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231539AbjFWPsY (ORCPT
+        id S231493AbjFWQEW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Jun 2023 11:48:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53986 "EHLO
+        Fri, 23 Jun 2023 12:04:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230348AbjFWPsY (ORCPT
+        with ESMTP id S231965AbjFWQEV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Jun 2023 11:48:24 -0400
-Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D09691992
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 08:48:22 -0700 (PDT)
-Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-40079620a83so276801cf.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 08:48:22 -0700 (PDT)
+        Fri, 23 Jun 2023 12:04:21 -0400
+Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 579EE271B
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 09:04:19 -0700 (PDT)
+Received: by mail-qv1-xf30.google.com with SMTP id 6a1803df08f44-630074df712so7617496d6.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 09:04:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687535302; x=1690127302;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EO6SynvDn3OzRWZeh6Y6I9PLRzw90cIdMvq1TvAG1lE=;
-        b=XNfL+IvqTPhEayZh8TUqs8sbjtBoiL2cVXMhE+IQqmhUstgrzCvxxnDQ9ZZTEXiNoL
-         OSiwZjLHqJayefoCIf/m+ZY6jZsJcuH86EAoPZIVHxaE/vzDlrplWDetx+TvGxLNi823
-         LNzl1MT9fb4CBN9/4BA4UP+gYpaWQZoCaqlKtbS+PXngfiw2MO4s0kMYsHUxN0hRlLhL
-         TegwkEO8G0/L5ylg3cHFfShxCFbN9RurNn7lb5AWU/X7l5mwulUMvQpCuXDBLVjWdTvu
-         qZ/DQH8ifQLWRq5TecUs30MITLsRPM0wOCpfCEcHrHaeKpf/C9zrHoZPjS3XI0MXZHfO
-         mhLA==
+        d=maine.edu; s=google; t=1687536258; x=1690128258;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jkCU27YeWYPr1I8vi2zgnQGLek516NQOwJppe/zcLRQ=;
+        b=adyk15Rey22YW24kQvynUdQZpNYqgF7LlhsDAWedX+3rCdpjtOLZ8DFTsDSozH2N35
+         typD0VRNKPBMXizi1O93czEa68cFdaLH4Qnu6bfhx+xDr5BpOvdxqXSfQVHzjHpCrN7b
+         5DIu1BGKHJiA0WF1DumHBLLRu3XV8yuMZBSdY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687535302; x=1690127302;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EO6SynvDn3OzRWZeh6Y6I9PLRzw90cIdMvq1TvAG1lE=;
-        b=fth3u6iko8k95BcJXp1QMzWEeTf4f7OD1lRK5bR3CLLT08Tn0jSYEoS/NRJHWEbb7c
-         LCVPy2W9v0urYCdZTGayRVniB4GTpWoi9x5EkoC0jsHMEKwudqbl0Sdt59S3D/2AopJS
-         Rc+50Q4JpFwqctXiepusjHjPvV+b8uez9EG9rs73JhtZXSxLMCeWZFLZlabXJPTO1yYN
-         RHsxeQdagX+fTRjoB9u2kDsJdlyPWdEMA4VQyaX4ZKiomr4Fs5gYKOFJDRBoPozQkiVG
-         4OyMT8gTMm6+gXEYDFOqRjdbIapW+4GTIZLnlXXzR1p/JYoig4Bg4kJhKDcTgJqtk02a
-         LVFQ==
-X-Gm-Message-State: AC+VfDziM63MgNAAnPtoJvu0Xj4J6aI58jdKHOXRjlEC7j1KBdUORvcz
-        ORNSAVhI/GOwTkeOJ5l+oPkSlMOTmsXfazrmg2HkHA==
-X-Google-Smtp-Source: ACHHUZ4u/h8F6A8tOpO+LDivCm5tM6rBWGHMgWLvab898rSjVn941KaIjNwcgCxVpZ7dkZxqVAFkzESMbcXAQodPgn8=
-X-Received: by 2002:a05:622a:1051:b0:3f7:ff4a:eae5 with SMTP id
- f17-20020a05622a105100b003f7ff4aeae5mr154232qte.12.1687535301890; Fri, 23 Jun
- 2023 08:48:21 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1687536258; x=1690128258;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jkCU27YeWYPr1I8vi2zgnQGLek516NQOwJppe/zcLRQ=;
+        b=IN9xuxNd9Yc3zLdVtT3qF4+1LbMwWKTu1pCq+ptlqhB5V0X0bvOsa5wjDnx/1cXlO4
+         l1ZlLX0AqWa2vhyhKQ2inomCVCM0W2o1R14mdp8QmvvCPQ3R7sDAnCo4HC/YK017nmeu
+         RlgGtDS5Sc5g2XF8hS7IeRYaBDugZkdlzbdclHzIz2KCbBi/wNRb1stEMfFr45fWRZ0h
+         NCnvQqV/j9MC0EsEv5yLkpYdevpt/B55Z+ZZwsg3wAHxPzQ53rtmtBFZ6nBSiH9somJG
+         /GyPMezu3e0DyOyQ4dss/EN8AweChS8rVnJuATqWXA/IpsnWQwbhPN/N5pwtpM+wsULK
+         fofA==
+X-Gm-Message-State: AC+VfDyH8w1Pz25GujUe6KOve80/ov8XkHVPCQArVR9sJhURJ3lOia0t
+        OsCwr6LnGL4qvbKsyc7t0QjPFA==
+X-Google-Smtp-Source: ACHHUZ54R98ZBjwGvQadwUU6bIFsyMXtmyOo/WfF0ahv3XFa+m6/YpMz+OenWDUllWtc8BgqaqEIwg==
+X-Received: by 2002:ad4:5b81:0:b0:626:94f:6044 with SMTP id 1-20020ad45b81000000b00626094f6044mr25988971qvp.2.1687536258328;
+        Fri, 23 Jun 2023 09:04:18 -0700 (PDT)
+Received: from macbook-air.local (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id z14-20020a0cda8e000000b006255bcfca88sm5192184qvj.7.2023.06.23.09.04.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Jun 2023 09:04:17 -0700 (PDT)
+From:   Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date:   Fri, 23 Jun 2023 12:04:13 -0400 (EDT)
+To:     Ian Rogers <irogers@google.com>
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Sohom Datta <sohomdatta1@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Perry Taylor <perry.taylor@intel.com>,
+        Samantha Alt <samantha.alt@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Weilin Wang <weilin.wang@intel.com>,
+        Edward Baker <edward.baker@intel.com>
+Subject: Re: [PATCH v2 07/12] perf vendor events intel: Update icelake to
+ 1.19
+In-Reply-To: <20230623151016.4193660-8-irogers@google.com>
+Message-ID: <ac3b4a0c-7984-8b15-a7ed-9c0428bdb027@maine.edu>
+References: <20230623151016.4193660-1-irogers@google.com> <20230623151016.4193660-8-irogers@google.com>
 MIME-Version: 1.0
-References: <151a8677-3259-0586-03f3-fb751782daa9@oracle.com>
-In-Reply-To: <151a8677-3259-0586-03f3-fb751782daa9@oracle.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 23 Jun 2023 08:48:10 -0700
-Message-ID: <CAP-5=fXDVUToBbS6z8YY9K0vh5Z=PHh83RZXX3=NugTEqFeXzQ@mail.gmail.com>
-Subject: Re: perf test pmu-events question
-To:     John Garry <john.g.garry@oracle.com>
-Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 23, 2023 at 8:20=E2=80=AFAM John Garry <john.g.garry@oracle.com=
-> wrote:
->
-> Hi Ian,
->
-> I was doing some re-write for pmu sys events metric support and I want
-> to add more testcases - we don't really have any.
->
-> So I noticed that tests/pmu-events.c::test__parsing() can pick up on an
-> invalid metric for the test CPU, like M3 as it references itself.
-> However we can't detect whether event aliases referenced in the metric
-> exist for the CPU. Is it worth testing for this? Would it be sane to
-> scan the associated CPU event tables to see if we can find the event
-> there? Or do we already have some per-non-test-CPU metric validator
-> already in the testcases (I could not see it)?
+On Fri, 23 Jun 2023, Ian Rogers wrote:
 
+> Updates were released in:
+> https://github.com/intel/perfmon/commit/f3d841189f8964bc240c86301f4c849845630b5b
+> A number of events are deprecated and event descriptions updated. Adds
+> events ICACHE_DATA.STALLS, ICACHE_TAG.STALLS and DECODE.LCP.
 
-Hi John,
+why are the events marked as deprecated rather than just being removed?
 
-we always need more tests :-) For Intel there has historically been a
-problem that the names in metrics and the event data will get out of
-alignment. There is a best effort test during the metric generation
-that this doesn't happen any more here:
-https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py#L117=
-1-L1188
-But still things get messed up, such as PMU names being mismatched -
-when this happens the JSON events just don't appear at runtime. We
-could try to replicate the event matching logic at creation time in
-jevents.py and that should do what you mention and be
-multi-architecture. The metric test tests every metric produces an
-output, and this fails when event parsing fails, so this has
-traditionally been the way to find bad metrics. We do have build time
-tests like:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/pmu-events/Build?h=3Dperf-tools-next#n30
-
-Intel don't have JSON encodings for the TSX events and so they use
-sysfs events and this is what motivated the has_event test:
-https://lore.kernel.org/linux-perf-users/20230623151016.4193660-1-irogers@g=
-oogle.com/
-
-Some other thoughts in this area:
-1) I'd like to get sysfs snapshots so that we can get things like
-parse-events coverage of heterogeneous PMUs without needing such a
-system.
-2) The largest part of the perf binary is the json data. I'd like to
-convert the json data to a sysfs style, then compress it in a way
-where we benefit from duplication between files (zip can't do this,
-but tgz or 7zip can). libarchive can load these formats from memory.
-The current json data on x86 converts to about 7MB of read-only data,
-but the same json files compress down to about 1.5MB. The perf binary
-is about 3MB of code, so doing the compression should hopefully make
-the file size about half what it currently is and do something to stem
-the problem of the binary slowly growing over time with new
-architecture releases.
-3) I'm hoping we can do something like a unionfs with the in memory
-sysfs, on disk sysfs tar balls and the like, and the machine's actual
-sysfs so that we can just have one consistent view in the tool.
-4) I want to make PMUs lazier so that we don't need to eagerly load
-all the events. The cycles event doesn't need json or sysfs data, but
-it is all still loaded due to wanting the PMU. This faults in a lot of
-JSON data on x86 that is then never used.
-
-Thanks,
-Ian
-
-> Thanks,
-> John
->
->
+Vince Weaver
+vincent.weaver@maine.edu
