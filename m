@@ -2,58 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8247FEB64DD
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 00:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EE5EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 00:34:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230373AbjFWAdu (ORCPT
+        id S231484AbjFWAeP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Jun 2023 20:33:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46720 "EHLO
+        Thu, 22 Jun 2023 20:34:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230480AbjFWAdp (ORCPT
+        with ESMTP id S231332AbjFWAeL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Jun 2023 20:33:45 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E00BF1FFD
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 17:33:42 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-bacfa4ef059so112838276.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 17:33:42 -0700 (PDT)
+        Thu, 22 Jun 2023 20:34:11 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ABB7269E
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 17:33:51 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-56942667393so90521577b3.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 17:33:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687480422; x=1690072422;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hhUg6THmJuFZLCBhVQKBQ1G3lLVIgP2+QL9ajb1oVfg=;
-        b=k3LCLn/+kUr/ufttzlkARrHkWSYCCgeTY5Q3rgoI/4g3L+JThSuVNw88TzXpttbj+l
-         sa3AjymwWUHQ+r/FA+QBm9oGt/rCs1itvI32kizQ2S5gqe9b5o5kO55dsLWwcZHU7PAL
-         H5ltXALURZLfFwAa7jm6wrcaEhdcu1ZuOj2NyQtLyyZbncUfeyAWVoLXqYLeOVlimYLT
-         ZkJu/jQRvXtdQ1iwKW5j6nzjTJK15R05XA+9V1LLejMxkGFfe5m2iK92RlpnClRLtwid
-         GNqNFZ3kop4hbm5vb1io3mMzq+Oshc5KubBqz6ZinM1NYk1HEhvSp/ecNPSDHg3HS0qZ
-         5b/g==
+        d=google.com; s=20221208; t=1687480430; x=1690072430;
+        h=content-transfer-encoding:to:from:subject:references:mime-version
+         :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UkFMXyFQYP5SYg4k6mH76+89v0Urrn2j4UzJ4DERFYE=;
+        b=MbrmpWIN9XQtlYXSOYnElXUyz3HdGpAFyPccLKnRrtfd5EC2KeIXggRJbe5M/Olc/r
+         v5EC+Ye3hEwK9cYVqNZP5bViIWShWLNGIS+2UOUBsLrgY5OWFOE3yXGJ0WvKFWkSVPX4
+         EZWNwensdCHn6h6hdwU3afjIgT4erj/TdTa2IDaOFH2KVP6hd4XSZ8QVwS+qp5i9SPgB
+         iOUvEw2iy6z2ux+75IPUd7hvI3TULYPOLdDV8qvwzYnn4T7fCDjk3if4dqciMY1LhYki
+         zmQ8IFIiSY4vJ+nOwQSCHTVhUXirP3ien79ULA2yqaivfvRXGJDWE4JrH5ezhmLsC735
+         n9NA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687480422; x=1690072422;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hhUg6THmJuFZLCBhVQKBQ1G3lLVIgP2+QL9ajb1oVfg=;
-        b=CTWB+M1GSWAnv7K9dX/WYnYZJ8C8c9WipupbKkVTVc3pFfoNOZpGi10++lAKtugsFG
-         UvEoCP1WWfDAjVCpR/KX1ahm+aDdd1owvtYHH3CE7ANg4ePTg3wuEHZ3iQRZ5XgMDCeR
-         BsLhi9ThP3LqzZPJMnTPS84ByUU1MmVd9yk7f8drRJkE0S4HQUS6bbyLsmyXlfNI8AQi
-         R9GVE/uMtolm7Y65XerlY9vrmIgAaB+BRDxRcJWcGQ60AkOQcUr6qTCUckAwyAThl8vY
-         4hmWo6Iwh+qatmq0OD9a/al9np/nHNsTsT5Yjt0HCg3p8lMWd7296TTF5dFQ52OY/XXn
-         jzBQ==
-X-Gm-Message-State: AC+VfDw2B4Jjns8FJ/0JngwgvO+mIlxG7Kpjj1Z5pKzHgAoUTK+HYL3h
-        jsZS2pTHU42zsVEujDU19EARwfaUA29K
-X-Google-Smtp-Source: ACHHUZ6uJb46O9f34KF58iFEzOSuzO05TB19ys9fiE8YI0cbFUQYoV3M0i7ChEpkCxKYBXpp93a8ZkKb3U/Y
+        d=1e100.net; s=20221208; t=1687480430; x=1690072430;
+        h=content-transfer-encoding:to:from:subject:references:mime-version
+         :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UkFMXyFQYP5SYg4k6mH76+89v0Urrn2j4UzJ4DERFYE=;
+        b=EBIxbMikpPKQb7uY06Ka6atAr2H0rXpFqQyvAbblSr+m0AAhk63XyqNS+piMQboi8T
+         mdli5ooK8GE1icnpVFuEIREiVftt3Z/Q/Y/YzhwLq/sELCoQTP4qrYtSw/y71MSAs2PG
+         X8MhM8zsw27rd3U2O5oqAW48UK1zLy7OCdW6g2QtQVZCIK5x/tWh0KJfKMNKZKQN05t9
+         ChcYcn7vyZEuznjStrz/kFdugIpmvR7d2Eu2K5HpIIf2sweBpZqmt4Gw/U+LfVW+jwhc
+         BL7kcuJ9KDpOnYZlvM+GnpmME7Bme8fJYCigzcZq8CwfPQPi8PPLvRj5edV44LDMeKhT
+         j9Ng==
+X-Gm-Message-State: AC+VfDx1tyQKarecPRCHZoxJdQr/jQGihwXpwNi2EDy8beZQk8LOataS
+        q4NgB1b3D0etHSJ5mVjRSZo1DnF2hftR
+X-Google-Smtp-Source: ACHHUZ4qZRPpCqWAHfqd7cbSNpPMQwcvV6wOIc/x+DIixxabyibdsTxtOo/QQJhp7AjO2F0KMNts00G22AZb
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6559:8968:cdfe:35b6])
- (user=irogers job=sendgmr) by 2002:a25:69d2:0:b0:bab:a276:caac with SMTP id
- e201-20020a2569d2000000b00baba276caacmr8512729ybc.3.1687480422105; Thu, 22
- Jun 2023 17:33:42 -0700 (PDT)
-Date:   Thu, 22 Jun 2023 17:33:03 -0700
+ (user=irogers job=sendgmr) by 2002:a81:b717:0:b0:570:8a30:767f with SMTP id
+ v23-20020a81b717000000b005708a30767fmr6487798ywh.10.1687480430343; Thu, 22
+ Jun 2023 17:33:50 -0700 (PDT)
+Date:   Thu, 22 Jun 2023 17:33:06 -0700
 In-Reply-To: <20230623003312.3981075-1-irogers@google.com>
-Message-Id: <20230623003312.3981075-4-irogers@google.com>
+Message-Id: <20230623003312.3981075-7-irogers@google.com>
 Mime-Version: 1.0
 References: <20230623003312.3981075-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v1 03/12] perf vendor metrics intel: Make transaction metrics conditional
+Subject: [PATCH v1 06/12] perf vendor events intel: Update cascadelakex to 1.19
 From:   Ian Rogers <irogers@google.com>
 To:     eter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -79,322 +81,296 @@ To:     eter Zijlstra <peterz@infradead.org>,
         Weilin Wang <weilin.wang@intel.com>,
         Edward Baker <edward.baker@intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Make the transaction metrics conditional on the cycles-tx event being
-present. This event may not be present when TSX extensions have been
-disabled.
+Updates were released in:
+https://github.com/intel/perfmon/commit/e4f83534f23a69e6da55c672c4d92991968=
+8c9b6
+Adds the events IDQ.DSB_CYCLES_OK, IDQ.DSB_CYCLES_ANY,
+ICACHE_TAG.STALLS, DECODE.LCP, LSD.CYCLES_OK. Descriptions are also
+updated.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json | 8 ++++----
- .../pmu-events/arch/x86/cascadelakex/clx-metrics.json     | 8 ++++----
- tools/perf/pmu-events/arch/x86/icelake/icl-metrics.json   | 8 ++++----
- tools/perf/pmu-events/arch/x86/icelakex/icx-metrics.json  | 8 ++++----
- .../pmu-events/arch/x86/sapphirerapids/spr-metrics.json   | 8 ++++----
- tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json   | 8 ++++----
- tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json  | 8 ++++----
- tools/perf/pmu-events/arch/x86/tigerlake/tgl-metrics.json | 8 ++++----
- 8 files changed, 32 insertions(+), 32 deletions(-)
+ .../arch/x86/cascadelakex/frontend.json       | 43 ++++++++++++++++---
+ .../arch/x86/cascadelakex/pipeline.json       | 17 ++++++--
+ .../x86/cascadelakex/uncore-interconnect.json |  2 +-
+ .../arch/x86/cascadelakex/uncore-memory.json  |  2 +-
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
+ 5 files changed, 54 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json b/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
-index 85fb975b6f56..daf9458f0b77 100644
---- a/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
-@@ -92,28 +92,28 @@
+diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/frontend.json b/to=
+ols/perf/pmu-events/arch/x86/cascadelakex/frontend.json
+index 04f08e4d2402..095904c77001 100644
+--- a/tools/perf/pmu-events/arch/x86/cascadelakex/frontend.json
++++ b/tools/perf/pmu-events/arch/x86/cascadelakex/frontend.json
+@@ -7,6 +7,14 @@
+         "SampleAfterValue": "100003",
+         "UMask": "0x1"
+     },
++    {
++        "BriefDescription": "Stalls caused by changing prefix length of th=
+e instruction. [This event is alias to ILD_STALL.LCP]",
++        "EventCode": "0x87",
++        "EventName": "DECODE.LCP",
++        "PublicDescription": "Counts cycles that the Instruction Length de=
+coder (ILD) stalls occurred due to dynamically changing prefix length of th=
+e decoded instruction (by operand size prefix instruction 0x66, address siz=
+e prefix instruction 0x67 or REX.W for Intel64). Count is proportional to t=
+he number of prefixes in a 16B-line. This may result in a three-cycle penal=
+ty for each LCP (Length changing prefix) in a 16-byte chunk. [This event is=
+ alias to ILD_STALL.LCP]",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x1"
++    },
+     {
+         "BriefDescription": "Decode Stream Buffer (DSB)-to-MITE switches",
+         "EventCode": "0xAB",
+@@ -245,27 +253,34 @@
+         "UMask": "0x2"
      },
      {
-         "BriefDescription": "Percentage of cycles in aborted transactions.",
--        "MetricExpr": "max(cpu@cycles\\-t@ - cpu@cycles\\-ct@, 0) / cycles",
-+        "MetricExpr": "(max(cycles\\-t - cycles\\-ct, 0) / cycles if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_aborted_cycles",
-         "ScaleUnit": "100%"
+-        "BriefDescription": "Cycles where a code fetch is stalled due to L=
+1 instruction cache tag miss.",
++        "BriefDescription": "Cycles where a code fetch is stalled due to L=
+1 instruction cache tag miss. [This event is alias to ICACHE_TAG.STALLS]",
+         "EventCode": "0x83",
+         "EventName": "ICACHE_64B.IFTAG_STALL",
+         "SampleAfterValue": "200003",
+         "UMask": "0x4"
      },
      {
-         "BriefDescription": "Number of cycles within a transaction divided by the number of elisions.",
--        "MetricExpr": "cpu@cycles\\-t@ / cpu@el\\-start@",
-+        "MetricExpr": "(cycles\\-t / el\\-start if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_cycles_per_elision",
-         "ScaleUnit": "1cycles / elision"
+-        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
+ng 4 Uops",
++        "BriefDescription": "Cycles where a code fetch is stalled due to L=
+1 instruction cache tag miss. [This event is alias to ICACHE_64B.IFTAG_STAL=
+L]",
++        "EventCode": "0x83",
++        "EventName": "ICACHE_TAG.STALLS",
++        "SampleAfterValue": "200003",
++        "UMask": "0x4"
++    },
++    {
++        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
+ng 4 Uops [This event is alias to IDQ.DSB_CYCLES_OK]",
+         "CounterMask": "4",
+         "EventCode": "0x79",
+         "EventName": "IDQ.ALL_DSB_CYCLES_4_UOPS",
+-        "PublicDescription": "Counts the number of cycles 4 uops were deli=
+vered to Instruction Decode Queue (IDQ) from the Decode Stream Buffer (DSB)=
+ path. Count includes uops that may 'bypass' the IDQ.",
++        "PublicDescription": "Counts the number of cycles 4 uops were deli=
+vered to Instruction Decode Queue (IDQ) from the Decode Stream Buffer (DSB)=
+ path. Count includes uops that may 'bypass' the IDQ. [This event is alias =
+to IDQ.DSB_CYCLES_OK]",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x18"
      },
      {
-         "BriefDescription": "Number of cycles within a transaction divided by the number of transactions.",
--        "MetricExpr": "cpu@cycles\\-t@ / cpu@tx\\-start@",
-+        "MetricExpr": "(cycles\\-t / tx\\-start if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_cycles_per_transaction",
-         "ScaleUnit": "1cycles / transaction"
+-        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
+ng any Uop",
++        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
+ng any Uop [This event is alias to IDQ.DSB_CYCLES_ANY]",
+         "CounterMask": "1",
+         "EventCode": "0x79",
+         "EventName": "IDQ.ALL_DSB_CYCLES_ANY_UOPS",
+-        "PublicDescription": "Counts the number of cycles uops were delive=
+red to Instruction Decode Queue (IDQ) from the Decode Stream Buffer (DSB) p=
+ath. Count includes uops that may 'bypass' the IDQ.",
++        "PublicDescription": "Counts the number of cycles uops were delive=
+red to Instruction Decode Queue (IDQ) from the Decode Stream Buffer (DSB) p=
+ath. Count includes uops that may 'bypass' the IDQ. [This event is alias to=
+ IDQ.DSB_CYCLES_ANY]",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x18"
+     },
+@@ -296,6 +311,24 @@
+         "SampleAfterValue": "2000003",
+         "UMask": "0x8"
+     },
++    {
++        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
+ng any Uop [This event is alias to IDQ.ALL_DSB_CYCLES_ANY_UOPS]",
++        "CounterMask": "1",
++        "EventCode": "0x79",
++        "EventName": "IDQ.DSB_CYCLES_ANY",
++        "PublicDescription": "Counts the number of cycles uops were delive=
+red to Instruction Decode Queue (IDQ) from the Decode Stream Buffer (DSB) p=
+ath. Count includes uops that may 'bypass' the IDQ. [This event is alias to=
+ IDQ.ALL_DSB_CYCLES_ANY_UOPS]",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x18"
++    },
++    {
++        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
+ng 4 Uops [This event is alias to IDQ.ALL_DSB_CYCLES_4_UOPS]",
++        "CounterMask": "4",
++        "EventCode": "0x79",
++        "EventName": "IDQ.DSB_CYCLES_OK",
++        "PublicDescription": "Counts the number of cycles 4 uops were deli=
+vered to Instruction Decode Queue (IDQ) from the Decode Stream Buffer (DSB)=
+ path. Count includes uops that may 'bypass' the IDQ. [This event is alias =
+to IDQ.ALL_DSB_CYCLES_4_UOPS]",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x18"
++    },
+     {
+         "BriefDescription": "Uops delivered to Instruction Decode Queue (I=
+DQ) from the Decode Stream Buffer (DSB) path",
+         "EventCode": "0x79",
+diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/pipeline.json b/to=
+ols/perf/pmu-events/arch/x86/cascadelakex/pipeline.json
+index 31a1663d57f8..66d686cc933e 100644
+--- a/tools/perf/pmu-events/arch/x86/cascadelakex/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/cascadelakex/pipeline.json
+@@ -361,10 +361,10 @@
+         "UMask": "0x1"
      },
      {
-         "BriefDescription": "Percentage of cycles within a transaction region.",
--        "MetricExpr": "cpu@cycles\\-t@ / cycles",
-+        "MetricExpr": "(cycles\\-t / cycles if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_transactional_cycles",
-         "ScaleUnit": "100%"
-diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-index 0e2e446ced7a..fbb111e40829 100644
---- a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-@@ -1830,28 +1830,28 @@
+-        "BriefDescription": "Stalls caused by changing prefix length of th=
+e instruction.",
++        "BriefDescription": "Stalls caused by changing prefix length of th=
+e instruction. [This event is alias to DECODE.LCP]",
+         "EventCode": "0x87",
+         "EventName": "ILD_STALL.LCP",
+-        "PublicDescription": "Counts cycles that the Instruction Length de=
+coder (ILD) stalls occurred due to dynamically changing prefix length of th=
+e decoded instruction (by operand size prefix instruction 0x66, address siz=
+e prefix instruction 0x67 or REX.W for Intel64). Count is proportional to t=
+he number of prefixes in a 16B-line. This may result in a three-cycle penal=
+ty for each LCP (Length changing prefix) in a 16-byte chunk.",
++        "PublicDescription": "Counts cycles that the Instruction Length de=
+coder (ILD) stalls occurred due to dynamically changing prefix length of th=
+e decoded instruction (by operand size prefix instruction 0x66, address siz=
+e prefix instruction 0x67 or REX.W for Intel64). Count is proportional to t=
+he number of prefixes in a 16B-line. This may result in a three-cycle penal=
+ty for each LCP (Length changing prefix) in a 16-byte chunk. [This event is=
+ alias to DECODE.LCP]",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x1"
+     },
+@@ -488,11 +488,11 @@
+         "UMask": "0x1"
      },
      {
-         "BriefDescription": "Percentage of cycles in aborted transactions.",
--        "MetricExpr": "max(cpu@cycles\\-t@ - cpu@cycles\\-ct@, 0) / cycles",
-+        "MetricExpr": "(max(cycles\\-t - cycles\\-ct, 0) / cycles if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_aborted_cycles",
-         "ScaleUnit": "100%"
+-        "BriefDescription": "Cycles 4 Uops delivered by the LSD, but didn'=
+t come from the decoder.",
++        "BriefDescription": "Cycles 4 Uops delivered by the LSD, but didn'=
+t come from the decoder. [This event is alias to LSD.CYCLES_OK]",
+         "CounterMask": "4",
+         "EventCode": "0xA8",
+         "EventName": "LSD.CYCLES_4_UOPS",
+-        "PublicDescription": "Counts the cycles when 4 uops are delivered =
+by the LSD (Loop-stream detector).",
++        "PublicDescription": "Counts the cycles when 4 uops are delivered =
+by the LSD (Loop-stream detector). [This event is alias to LSD.CYCLES_OK]",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x1"
+     },
+@@ -505,6 +505,15 @@
+         "SampleAfterValue": "2000003",
+         "UMask": "0x1"
+     },
++    {
++        "BriefDescription": "Cycles 4 Uops delivered by the LSD, but didn'=
+t come from the decoder. [This event is alias to LSD.CYCLES_4_UOPS]",
++        "CounterMask": "4",
++        "EventCode": "0xA8",
++        "EventName": "LSD.CYCLES_OK",
++        "PublicDescription": "Counts the cycles when 4 uops are delivered =
+by the LSD (Loop-stream detector). [This event is alias to LSD.CYCLES_4_UOP=
+S]",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x1"
++    },
+     {
+         "BriefDescription": "Number of Uops delivered by the LSD.",
+         "EventCode": "0xA8",
+diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-interconnec=
+t.json b/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-interconnect.js=
+on
+index 725780fb3990..1a342dff1503 100644
+--- a/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-interconnect.json
++++ b/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-interconnect.json
+@@ -6606,7 +6606,7 @@
+         "EventCode": "0x52",
+         "EventName": "UNC_M3UPI_RxC_HELD.PARALLEL_SUCCESS",
+         "PerPkg": "1",
+-        "PublicDescription": "ad and bl messages were actually slotted int=
+o the same flit in paralle",
++        "PublicDescription": "ad and bl messages were actually slotted int=
+o the same flit in parallel",
+         "UMask": "0x8",
+         "Unit": "M3UPI"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-memory.json=
+ b/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-memory.json
+index f761856d738e..d82d2cca6f0a 100644
+--- a/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-memory.json
++++ b/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-memory.json
+@@ -2735,7 +2735,7 @@
+         "EventCode": "0x81",
+         "EventName": "UNC_M_WPQ_OCCUPANCY",
+         "PerPkg": "1",
+-        "PublicDescription": "Counts the number of entries in the Write Pe=
+nding Queue (WPQ) at each cycle.  This can then be used to calculate both t=
+he average queue occupancy (in conjunction with the number of cycles not em=
+pty) and the average latency (in conjunction with the number of allocations=
+).  The WPQ is used to schedule writes out to the memory controller and to =
+track the requests.  Requests allocate into the WPQ soon after they enter t=
+he memory controller, and need credits for an entry in this buffer before b=
+eing sent from the CHA to the iMC (memory controller).  They deallocate aft=
+er being issued to DRAM.  Write requests themselves are able to complete (f=
+rom the perspective of the rest of the system) as soon they have 'posted' t=
+o the iMC.  This is not to be confused with actually performing the write t=
+o DRAM.  Therefore, the average latency for this queue is actually not usef=
+ul for deconstruction intermediate write latencies.  So, we provide filteri=
+ng based on if the request has posted or not.  By using the 'not posted' fi=
+lter, we can track how long writes spent in the iMC before completions were=
+ sent to the HA.  The 'posted' filter, on the other hand, provides informat=
+ion about how much queueing is actually happening in the iMC for writes bef=
+ore they are actually issued to memory.  High average occupancies will gene=
+rally coincide with high write major mode counts. Is there a filter of sort=
+s?",
++        "PublicDescription": "Counts the number of entries in the Write Pe=
+nding Queue (WPQ) at each cycle.  This can then be used to calculate both t=
+he average queue occupancy (in conjunction with the number of cycles not em=
+pty) and the average latency (in conjunction with the number of allocations=
+).  The WPQ is used to schedule writes out to the memory controller and to =
+track the requests.  Requests allocate into the WPQ soon after they enter t=
+he memory controller, and need credits for an entry in this buffer before b=
+eing sent from the CHA to the iMC (memory controller).  They deallocate aft=
+er being issued to DRAM.  Write requests themselves are able to complete (f=
+rom the perspective of the rest of the system) as soon they have 'posted' t=
+o the iMC.  This is not to be confused with actually performing the write t=
+o DRAM.  Therefore, the average latency for this queue is actually not usef=
+ul for deconstruction intermediate write latencies.  So, we provide filteri=
+ng based on if the request has posted or not.  By using the 'not posted' fi=
+lter, we can track how long writes spent in the iMC before completions were=
+ sent to the HA.  The 'posted' filter, on the other hand, provides informat=
+ion about how much queueing is actually happening in the iMC for writes bef=
+ore they are actually issued to memory.  High average occupancies will gene=
+rally coincide with high write major mode counts.",
+         "Unit": "iMC"
      },
      {
-         "BriefDescription": "Number of cycles within a transaction divided by the number of elisions.",
--        "MetricExpr": "cpu@cycles\\-t@ / cpu@el\\-start@",
-+        "MetricExpr": "(cycles\\-t / el\\-start if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_cycles_per_elision",
-         "ScaleUnit": "1cycles / elision"
-     },
-     {
-         "BriefDescription": "Number of cycles within a transaction divided by the number of transactions.",
--        "MetricExpr": "cpu@cycles\\-t@ / cpu@tx\\-start@",
-+        "MetricExpr": "(cycles\\-t / tx\\-start if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_cycles_per_transaction",
-         "ScaleUnit": "1cycles / transaction"
-     },
-     {
-         "BriefDescription": "Percentage of cycles within a transaction region.",
--        "MetricExpr": "cpu@cycles\\-t@ / cycles",
-+        "MetricExpr": "(cycles\\-t / cycles if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_transactional_cycles",
-         "ScaleUnit": "100%"
-diff --git a/tools/perf/pmu-events/arch/x86/icelake/icl-metrics.json b/tools/perf/pmu-events/arch/x86/icelake/icl-metrics.json
-index cc4edf855064..8fcc05c4e0a1 100644
---- a/tools/perf/pmu-events/arch/x86/icelake/icl-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/icelake/icl-metrics.json
-@@ -1516,28 +1516,28 @@
-     },
-     {
-         "BriefDescription": "Percentage of cycles in aborted transactions.",
--        "MetricExpr": "max(cpu@cycles\\-t@ - cpu@cycles\\-ct@, 0) / cycles",
-+        "MetricExpr": "(max(cycles\\-t - cycles\\-ct, 0) / cycles if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_aborted_cycles",
-         "ScaleUnit": "100%"
-     },
-     {
-         "BriefDescription": "Number of cycles within a transaction divided by the number of elisions.",
--        "MetricExpr": "cpu@cycles\\-t@ / cpu@el\\-start@",
-+        "MetricExpr": "(cycles\\-t / el\\-start if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_cycles_per_elision",
-         "ScaleUnit": "1cycles / elision"
-     },
-     {
-         "BriefDescription": "Number of cycles within a transaction divided by the number of transactions.",
--        "MetricExpr": "cpu@cycles\\-t@ / cpu@tx\\-start@",
-+        "MetricExpr": "(cycles\\-t / tx\\-start if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_cycles_per_transaction",
-         "ScaleUnit": "1cycles / transaction"
-     },
-     {
-         "BriefDescription": "Percentage of cycles within a transaction region.",
--        "MetricExpr": "cpu@cycles\\-t@ / cycles",
-+        "MetricExpr": "(cycles\\-t / cycles if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_transactional_cycles",
-         "ScaleUnit": "100%"
-diff --git a/tools/perf/pmu-events/arch/x86/icelakex/icx-metrics.json b/tools/perf/pmu-events/arch/x86/icelakex/icx-metrics.json
-index 6f25b5b7aaf6..9bb7e3f20f7f 100644
---- a/tools/perf/pmu-events/arch/x86/icelakex/icx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/icelakex/icx-metrics.json
-@@ -1812,28 +1812,28 @@
-     },
-     {
-         "BriefDescription": "Percentage of cycles in aborted transactions.",
--        "MetricExpr": "max(cpu@cycles\\-t@ - cpu@cycles\\-ct@, 0) / cycles",
-+        "MetricExpr": "(max(cycles\\-t - cycles\\-ct, 0) / cycles if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_aborted_cycles",
-         "ScaleUnit": "100%"
-     },
-     {
-         "BriefDescription": "Number of cycles within a transaction divided by the number of elisions.",
--        "MetricExpr": "cpu@cycles\\-t@ / cpu@el\\-start@",
-+        "MetricExpr": "(cycles\\-t / el\\-start if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_cycles_per_elision",
-         "ScaleUnit": "1cycles / elision"
-     },
-     {
-         "BriefDescription": "Number of cycles within a transaction divided by the number of transactions.",
--        "MetricExpr": "cpu@cycles\\-t@ / cpu@tx\\-start@",
-+        "MetricExpr": "(cycles\\-t / tx\\-start if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_cycles_per_transaction",
-         "ScaleUnit": "1cycles / transaction"
-     },
-     {
-         "BriefDescription": "Percentage of cycles within a transaction region.",
--        "MetricExpr": "cpu@cycles\\-t@ / cycles",
-+        "MetricExpr": "(cycles\\-t / cycles if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_transactional_cycles",
-         "ScaleUnit": "100%"
-diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/spr-metrics.json b/tools/perf/pmu-events/arch/x86/sapphirerapids/spr-metrics.json
-index c732982f70b5..c207c851a9f9 100644
---- a/tools/perf/pmu-events/arch/x86/sapphirerapids/spr-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/spr-metrics.json
-@@ -1938,28 +1938,28 @@
-     },
-     {
-         "BriefDescription": "Percentage of cycles in aborted transactions.",
--        "MetricExpr": "max(cpu@cycles\\-t@ - cpu@cycles\\-ct@, 0) / cycles",
-+        "MetricExpr": "(max(cycles\\-t - cycles\\-ct, 0) / cycles if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_aborted_cycles",
-         "ScaleUnit": "100%"
-     },
-     {
-         "BriefDescription": "Number of cycles within a transaction divided by the number of elisions.",
--        "MetricExpr": "cpu@cycles\\-t@ / cpu@el\\-start@",
-+        "MetricExpr": "(cycles\\-t / el\\-start if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_cycles_per_elision",
-         "ScaleUnit": "1cycles / elision"
-     },
-     {
-         "BriefDescription": "Number of cycles within a transaction divided by the number of transactions.",
--        "MetricExpr": "cpu@cycles\\-t@ / cpu@tx\\-start@",
-+        "MetricExpr": "(cycles\\-t / tx\\-start if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_cycles_per_transaction",
-         "ScaleUnit": "1cycles / transaction"
-     },
-     {
-         "BriefDescription": "Percentage of cycles within a transaction region.",
--        "MetricExpr": "cpu@cycles\\-t@ / cycles",
-+        "MetricExpr": "(cycles\\-t / cycles if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_transactional_cycles",
-         "ScaleUnit": "100%"
-diff --git a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
-index 2ed88842b880..94cb38540b5a 100644
---- a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
-@@ -1466,28 +1466,28 @@
-     },
-     {
-         "BriefDescription": "Percentage of cycles in aborted transactions.",
--        "MetricExpr": "max(cpu@cycles\\-t@ - cpu@cycles\\-ct@, 0) / cycles",
-+        "MetricExpr": "(max(cycles\\-t - cycles\\-ct, 0) / cycles if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_aborted_cycles",
-         "ScaleUnit": "100%"
-     },
-     {
-         "BriefDescription": "Number of cycles within a transaction divided by the number of elisions.",
--        "MetricExpr": "cpu@cycles\\-t@ / cpu@el\\-start@",
-+        "MetricExpr": "(cycles\\-t / el\\-start if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_cycles_per_elision",
-         "ScaleUnit": "1cycles / elision"
-     },
-     {
-         "BriefDescription": "Number of cycles within a transaction divided by the number of transactions.",
--        "MetricExpr": "cpu@cycles\\-t@ / cpu@tx\\-start@",
-+        "MetricExpr": "(cycles\\-t / tx\\-start if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_cycles_per_transaction",
-         "ScaleUnit": "1cycles / transaction"
-     },
-     {
-         "BriefDescription": "Percentage of cycles within a transaction region.",
--        "MetricExpr": "cpu@cycles\\-t@ / cycles",
-+        "MetricExpr": "(cycles\\-t / cycles if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_transactional_cycles",
-         "ScaleUnit": "100%"
-diff --git a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
-index 507d39efacc8..fa4209809c57 100644
---- a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
-@@ -1774,28 +1774,28 @@
-     },
-     {
-         "BriefDescription": "Percentage of cycles in aborted transactions.",
--        "MetricExpr": "max(cpu@cycles\\-t@ - cpu@cycles\\-ct@, 0) / cycles",
-+        "MetricExpr": "(max(cycles\\-t - cycles\\-ct, 0) / cycles if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_aborted_cycles",
-         "ScaleUnit": "100%"
-     },
-     {
-         "BriefDescription": "Number of cycles within a transaction divided by the number of elisions.",
--        "MetricExpr": "cpu@cycles\\-t@ / cpu@el\\-start@",
-+        "MetricExpr": "(cycles\\-t / el\\-start if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_cycles_per_elision",
-         "ScaleUnit": "1cycles / elision"
-     },
-     {
-         "BriefDescription": "Number of cycles within a transaction divided by the number of transactions.",
--        "MetricExpr": "cpu@cycles\\-t@ / cpu@tx\\-start@",
-+        "MetricExpr": "(cycles\\-t / tx\\-start if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_cycles_per_transaction",
-         "ScaleUnit": "1cycles / transaction"
-     },
-     {
-         "BriefDescription": "Percentage of cycles within a transaction region.",
--        "MetricExpr": "cpu@cycles\\-t@ / cycles",
-+        "MetricExpr": "(cycles\\-t / cycles if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_transactional_cycles",
-         "ScaleUnit": "100%"
-diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/tgl-metrics.json b/tools/perf/pmu-events/arch/x86/tigerlake/tgl-metrics.json
-index 83346911aa63..c7c2d6ab1a93 100644
---- a/tools/perf/pmu-events/arch/x86/tigerlake/tgl-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/tigerlake/tgl-metrics.json
-@@ -1530,28 +1530,28 @@
-     },
-     {
-         "BriefDescription": "Percentage of cycles in aborted transactions.",
--        "MetricExpr": "max(cpu@cycles\\-t@ - cpu@cycles\\-ct@, 0) / cycles",
-+        "MetricExpr": "(max(cycles\\-t - cycles\\-ct, 0) / cycles if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_aborted_cycles",
-         "ScaleUnit": "100%"
-     },
-     {
-         "BriefDescription": "Number of cycles within a transaction divided by the number of elisions.",
--        "MetricExpr": "cpu@cycles\\-t@ / cpu@el\\-start@",
-+        "MetricExpr": "(cycles\\-t / el\\-start if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_cycles_per_elision",
-         "ScaleUnit": "1cycles / elision"
-     },
-     {
-         "BriefDescription": "Number of cycles within a transaction divided by the number of transactions.",
--        "MetricExpr": "cpu@cycles\\-t@ / cpu@tx\\-start@",
-+        "MetricExpr": "(cycles\\-t / tx\\-start if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_cycles_per_transaction",
-         "ScaleUnit": "1cycles / transaction"
-     },
-     {
-         "BriefDescription": "Percentage of cycles within a transaction region.",
--        "MetricExpr": "cpu@cycles\\-t@ / cycles",
-+        "MetricExpr": "(cycles\\-t / cycles if has_event(cycles\\-t) else 0)",
-         "MetricGroup": "transaction",
-         "MetricName": "tsx_transactional_cycles",
-         "ScaleUnit": "100%"
--- 
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
+ents/arch/x86/mapfile.csv
+index de4832bddf05..eccc7ef98870 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -5,7 +5,7 @@ GenuineIntel-6-(1C|26|27|35|36),v4,bonnell,core
+ GenuineIntel-6-(3D|47),v28,broadwell,core
+ GenuineIntel-6-56,v10,broadwellde,core
+ GenuineIntel-6-4F,v21,broadwellx,core
+-GenuineIntel-6-55-[56789ABCDEF],v1.18,cascadelakex,core
++GenuineIntel-6-55-[56789ABCDEF],v1.19,cascadelakex,core
+ GenuineIntel-6-9[6C],v1.04,elkhartlake,core
+ GenuineIntel-6-5[CF],v13,goldmont,core
+ GenuineIntel-6-7A,v1.01,goldmontplus,core
+--=20
 2.41.0.162.gfafddb0af9-goog
 
