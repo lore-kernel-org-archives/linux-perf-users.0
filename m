@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9080C001B0
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 00:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5262EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 00:34:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231235AbjFWAeW (ORCPT
+        id S231523AbjFWAez (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Jun 2023 20:34:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47182 "EHLO
+        Thu, 22 Jun 2023 20:34:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231261AbjFWAeN (ORCPT
+        with ESMTP id S231522AbjFWAeQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Jun 2023 20:34:13 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C04B7270D
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 17:33:53 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-bc9483b506fso116232276.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 17:33:53 -0700 (PDT)
+        Thu, 22 Jun 2023 20:34:16 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB9C3273B
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 17:33:55 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-573a92296c7so31301507b3.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 17:33:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687480432; x=1690072432;
+        d=google.com; s=20221208; t=1687480435; x=1690072435;
         h=content-transfer-encoding:to:from:subject:references:mime-version
          :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=PpmMqADQMWGgQwCwK+rLV+M/fmB9R42OKi4G7A8TKP0=;
-        b=50la2c5N4s4ax/oeugMNI28s9RyzAUvbAGJaw4sly8EEpMAncoIL1GT2pMYJCvAmc2
-         RDTyxFyNIvO8DnN3rRx63puv039zrnjZk2zYt68htZjxa5zU+jqzzaJfaZynAszZA9hz
-         GiHEcQxLqy643EbmBCKHB8AfVY4CGvdf/lfdoRszH98TtiOyeyMgI34syPSHg3r7q5DB
-         PyO+3QFcejifLjQNVXdxrX4XX5dYgGFeuiNW+I6wCmYm/YXpZtI31tM9zfGZS4Zp0dyi
-         ISykuAV2pp+lTdWXegAvJTqJIBxPabDKMWGGoRUpeCl3J/txs12NCwh0oTu6K0hTsaic
-         r/dw==
+        bh=IH93V5eIpnR2f14b4ZM+Ftn03PloFxrPP2IsbOx78io=;
+        b=d1EVMdVRM60bnoPZsxDOgoFkzZjCd0SiKXS49lwqW0SRkIeN1kfAPyBPmqIsMBAg0Q
+         peeEr0rbalNwmLhEbFu6z3p73l9HfUqYXNGsj8cAbEzoT+snrEwhk2TChmSNogIuIsLu
+         zI8GOT5xxxUm39IdYqKumNj5vjiSRp10BU5FEW8f91fqPwhIDv5r5WrkjYfTGs4D0FbM
+         5CwtBGjG7HIz8D53ctySQLOSexLLdeFKD/aJ8h6XIznTIMEZzjYFlinpiA21BYm3r9dH
+         stxI7Z4dJBceprtsOJ0uB05sAxsydVwoj5qckza9F0+sQ+hDH1b2RAfhzdvY8eR+HrSQ
+         jM6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687480432; x=1690072432;
+        d=1e100.net; s=20221208; t=1687480435; x=1690072435;
         h=content-transfer-encoding:to:from:subject:references:mime-version
          :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=PpmMqADQMWGgQwCwK+rLV+M/fmB9R42OKi4G7A8TKP0=;
-        b=Bj9kLpU873eSvQGjzQxKsWsE4f8khpw8CfKsTv8RpluSpIvkFQnNvfWFGenO07cHGb
-         HXVamPHaBZIJngBwxJj0bwWffxnNQ1XVQN8XrfYkq4yWpkdZd4bf6eJKrBev8zq2IVB0
-         QDOU2RLUsF7ge+zAXPXNMr3k/TJQEVi5eW9XjUUScs8Dv7QidqOjKPjYqRF5AM9oGKJF
-         cSO7J+J1HvqwF0IbTeKLUqsgImLG/SfLgubt75fXnZZPlgwEnYCOc3yMSD9bid52XWfE
-         l2tVxxh8tDYpLiDLKlOe5OtVZ5Ph8sZH4jWm2eZjzsGRPBWHnT9RHza4MxBhLpjwlGQx
-         /5LQ==
-X-Gm-Message-State: AC+VfDxrS8Ssj273g+w+cN2b2Ghhgs4ytekBEdEf8FMnmrc3hcqjOXRN
-        INrTcy0QRDtbBa3Ro5Yhck4pRIBJffch
-X-Google-Smtp-Source: ACHHUZ5FsVGtWTKhU/UQofq0TxcuBG21VWr3Zl8RpcBSOHP1I0XNvTv0NYNXWwUurhia3hB50LPdklM//VlL
+        bh=IH93V5eIpnR2f14b4ZM+Ftn03PloFxrPP2IsbOx78io=;
+        b=Ez8ktZ0oV0Wr0GCxfG91bfGwCEZ19Hsi1WNnyKjsW3is6COWOTKVZsbtktXiah7JiA
+         V6cw3uMRR/ysWoO1H0iyjHpSE0fJFAXwG7nXKNH3kpuQj1GAy3ae/CvpXLDHnpgQWR39
+         K7+fp24/6pImCPSU3iURyQMKGqtfEaGhejqwMMJPvsGRoAB+iVG+Eji4VUEWKVryNbA2
+         aociAv3SWmGD8Eg+DDPVwGp70199+CZ85rk8cc6xSa2ieLWbkyBgSg+7klSKFxFoDins
+         UBnx6tgiVm5npPVdaEeogvVtsnPXvkf6vWstBW+/QCxoLIFiKGG7YSVbfWCl07PZuABU
+         Ma0Q==
+X-Gm-Message-State: AC+VfDzbUnxwilhGEHZ9XZzSHdaDxdxv+JsNHQnQOQrqoA2D0l2Pt4T5
+        yc5LUBT2UHRIFmhGfC5LJ2sIQK6Xbuz9
+X-Google-Smtp-Source: ACHHUZ7KCmDDivcYD8o8a0GyY53WQCDDjii/GzDR7IWH4HD+viq/OKd0IZ0gPLiYbMLB/ydTv1ZwlqcV/M2k
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6559:8968:cdfe:35b6])
- (user=irogers job=sendgmr) by 2002:a25:b18f:0:b0:bcc:285c:66e8 with SMTP id
- h15-20020a25b18f000000b00bcc285c66e8mr2625189ybj.4.1687480432679; Thu, 22 Jun
- 2023 17:33:52 -0700 (PDT)
-Date:   Thu, 22 Jun 2023 17:33:07 -0700
+ (user=irogers job=sendgmr) by 2002:a81:eb09:0:b0:569:e04a:238f with SMTP id
+ n9-20020a81eb09000000b00569e04a238fmr8448196ywm.4.1687480434812; Thu, 22 Jun
+ 2023 17:33:54 -0700 (PDT)
+Date:   Thu, 22 Jun 2023 17:33:08 -0700
 In-Reply-To: <20230623003312.3981075-1-irogers@google.com>
-Message-Id: <20230623003312.3981075-8-irogers@google.com>
+Message-Id: <20230623003312.3981075-9-irogers@google.com>
 Mime-Version: 1.0
 References: <20230623003312.3981075-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v1 07/12] perf vendor events intel: Update icelake to 1.19
+Subject: [PATCH v1 08/12] perf vendor events intel: Update icelakex to 1.21
 From:   Ian Rogers <irogers@google.com>
 To:     eter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -87,57 +87,24 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Updates were released in:
-https://github.com/intel/perfmon/commit/f3d841189f8964bc240c86301f4c8498456=
-30b5b
-A number of events are deprecated and event descriptions updated. Adds
-events ICACHE_DATA.STALLS, ICACHE_TAG.STALLS and DECODE.LCP.
+https://github.com/intel/perfmon/commit/78d47cbbae48a0297a507ae4fea234ff37f=
+f9960
+Adds the events ICACHE_DATA.STALLS, ICACHE_TAG.STALLS and
+DECODE.LCP. Descriptions are also updated.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../pmu-events/arch/x86/icelake/cache.json    |  8 ++---
- .../pmu-events/arch/x86/icelake/frontend.json | 32 ++++++++++++++++---
- .../pmu-events/arch/x86/icelake/pipeline.json |  6 ++--
+ .../arch/x86/icelakex/frontend.json           | 32 ++++++++++++++++---
+ .../arch/x86/icelakex/pipeline.json           |  4 +--
+ .../x86/icelakex/uncore-interconnect.json     |  2 +-
  tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
- 4 files changed, 36 insertions(+), 12 deletions(-)
+ 4 files changed, 32 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/icelake/cache.json b/tools/perf=
-/pmu-events/arch/x86/icelake/cache.json
-index 79b9f02a4b63..d26c4efe35f0 100644
---- a/tools/perf/pmu-events/arch/x86/icelake/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/icelake/cache.json
-@@ -155,18 +155,18 @@
-         "UMask": "0x21"
-     },
-     {
--        "BriefDescription": "All requests that miss L2 cache. This event i=
-s not supported on ICL and ICX products, only supported on RKL products.",
-+        "BriefDescription": "This event is deprecated.",
-+        "Deprecated": "1",
-         "EventCode": "0x24",
-         "EventName": "L2_RQSTS.MISS",
--        "PublicDescription": "Counts all requests that miss L2 cache. This=
- event is not supported on ICL and ICX products, only supported on RKL prod=
-ucts.",
-         "SampleAfterValue": "200003",
-         "UMask": "0x3f"
-     },
-     {
--        "BriefDescription": "All L2 requests. This event is not supported =
-on ICL and ICX products, only supported on RKL products.",
-+        "BriefDescription": "This event is deprecated.",
-+        "Deprecated": "1",
-         "EventCode": "0x24",
-         "EventName": "L2_RQSTS.REFERENCES",
--        "PublicDescription": "Counts all L2 requests. This event is not su=
-pported on ICL and ICX products, only supported on RKL products.",
-         "SampleAfterValue": "200003",
-         "UMask": "0xff"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/icelake/frontend.json b/tools/p=
-erf/pmu-events/arch/x86/icelake/frontend.json
-index 3e3d2b002170..2b539a08d2bf 100644
---- a/tools/perf/pmu-events/arch/x86/icelake/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/icelake/frontend.json
+diff --git a/tools/perf/pmu-events/arch/x86/icelakex/frontend.json b/tools/=
+perf/pmu-events/arch/x86/icelakex/frontend.json
+index 71498044f1cb..f6edc4222f42 100644
+--- a/tools/perf/pmu-events/arch/x86/icelakex/frontend.json
++++ b/tools/perf/pmu-events/arch/x86/icelakex/frontend.json
 @@ -7,6 +7,14 @@
          "SampleAfterValue": "100003",
          "UMask": "0x1"
@@ -223,11 +190,11 @@ TAG_STALL]",
          "SampleAfterValue": "200003",
          "UMask": "0x4"
      },
-diff --git a/tools/perf/pmu-events/arch/x86/icelake/pipeline.json b/tools/p=
-erf/pmu-events/arch/x86/icelake/pipeline.json
-index 154fee4b60fb..375b78044f14 100644
---- a/tools/perf/pmu-events/arch/x86/icelake/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/icelake/pipeline.json
+diff --git a/tools/perf/pmu-events/arch/x86/icelakex/pipeline.json b/tools/=
+perf/pmu-events/arch/x86/icelakex/pipeline.json
+index 442a4c7539dd..176e5ef2a24a 100644
+--- a/tools/perf/pmu-events/arch/x86/icelakex/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/icelakex/pipeline.json
 @@ -318,10 +318,10 @@
          "UMask": "0x40"
      },
@@ -254,36 +221,36 @@ ty for each LCP (Length changing prefix) in a 16-byte chunk. [This event is=
          "SampleAfterValue": "500009",
          "UMask": "0x1"
      },
-@@ -556,7 +556,7 @@
-         "BriefDescription": "TMA slots wasted due to incorrect speculation=
- by branch mispredictions",
-         "EventCode": "0xa4",
-         "EventName": "TOPDOWN.BR_MISPREDICT_SLOTS",
--        "PublicDescription": "Number of TMA slots that were wasted due to =
-incorrect speculation by branch mispredictions. This event estimates number=
- of operations that were issued but not retired from the specualtive path a=
-s well as the out-of-order engine recovery past a branch misprediction.",
-+        "PublicDescription": "Number of TMA slots that were wasted due to =
-incorrect speculation by branch mispredictions. This event estimates number=
- of operations that were issued but not retired from the speculative path a=
-s well as the out-of-order engine recovery past a branch misprediction.",
-         "SampleAfterValue": "10000003",
-         "UMask": "0x8"
+diff --git a/tools/perf/pmu-events/arch/x86/icelakex/uncore-interconnect.js=
+on b/tools/perf/pmu-events/arch/x86/icelakex/uncore-interconnect.json
+index 8ac5907762e1..f87ea3f66d1b 100644
+--- a/tools/perf/pmu-events/arch/x86/icelakex/uncore-interconnect.json
++++ b/tools/perf/pmu-events/arch/x86/icelakex/uncore-interconnect.json
+@@ -9311,7 +9311,7 @@
+         "EventCode": "0x50",
+         "EventName": "UNC_M3UPI_RxC_HELD.PARALLEL_SUCCESS",
+         "PerPkg": "1",
+-        "PublicDescription": "Message Held : Parallel Success : ad and bl =
+messages were actually slotted into the same flit in paralle",
++        "PublicDescription": "Message Held : Parallel Success : ad and bl =
+messages were actually slotted into the same flit in parallel",
+         "UMask": "0x8",
+         "Unit": "M3UPI"
      },
 diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
 ents/arch/x86/mapfile.csv
-index eccc7ef98870..d63c9df8f65d 100644
+index d63c9df8f65d..98828c3a9cde 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -13,7 +13,7 @@ GenuineIntel-6-B6,v1.00,grandridge,core
- GenuineIntel-6-A[DE],v1.01,graniterapids,core
+@@ -14,7 +14,7 @@ GenuineIntel-6-A[DE],v1.01,graniterapids,core
  GenuineIntel-6-(3C|45|46),v33,haswell,core
  GenuineIntel-6-3F,v27,haswellx,core
--GenuineIntel-6-7[DE],v1.18,icelake,core
-+GenuineIntel-6-7[DE],v1.19,icelake,core
- GenuineIntel-6-6[AC],v1.20,icelakex,core
+ GenuineIntel-6-7[DE],v1.19,icelake,core
+-GenuineIntel-6-6[AC],v1.20,icelakex,core
++GenuineIntel-6-6[AC],v1.21,icelakex,core
  GenuineIntel-6-3A,v24,ivybridge,core
  GenuineIntel-6-3E,v23,ivytown,core
+ GenuineIntel-6-2D,v23,jaketown,core
 --=20
 2.41.0.162.gfafddb0af9-goog
 
