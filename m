@@ -2,254 +2,168 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C52EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 15:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BC4EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 15:20:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232607AbjFWPM6 (ORCPT
+        id S231570AbjFWPUe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Jun 2023 11:12:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57736 "EHLO
+        Fri, 23 Jun 2023 11:20:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232490AbjFWPLp (ORCPT
+        with ESMTP id S232664AbjFWPUP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Jun 2023 11:11:45 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDDF32729
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 08:11:10 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5704e551e8bso10843127b3.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 08:11:10 -0700 (PDT)
+        Fri, 23 Jun 2023 11:20:15 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9505E48
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 08:20:14 -0700 (PDT)
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35NDPe0o003408;
+        Fri, 23 Jun 2023 15:20:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ to : cc : from : subject : content-type : content-transfer-encoding :
+ mime-version; s=corp-2023-03-30;
+ bh=bdPvFyCYUR3jAmnTUQVn1OgZOnlP9P/WiDU2sxbLNUQ=;
+ b=RIJtgr6y6xLqqpONZBqOswJmjBTFB6+jKA8PpfEC8uZ2hcBDiB7RWhYSFIaKlVhGcfiV
+ 8ZCSUYadPlB4uGRHykPzrvgqB6la9DSjq5Ks8KJ1g5KtGCsVLREs+D8C7VdEodTJEAny
+ KhLWhIjVKKYjmp98x0tVrHy1SG0ie6pZDPRVrKvMEqDnCtr/F+Mt6x7sCbLdNe5wSzr3
+ LJgOCr/mTotdv4/QnCvKoyGCqIQSSc5/ha8p/pOCa8kPW3f7555qbbKvDZOOgC/hXmrt
+ cXb3VNJCgD/mfsHCJEaybEnuTJ6L1bFV28jKuGRkp7B62yNkdwN5Hdpc7aa2S4NaNdUt sQ== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3r94qac121-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 23 Jun 2023 15:20:03 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 35NEjsj9007741;
+        Fri, 23 Jun 2023 15:20:03 GMT
+Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2042.outbound.protection.outlook.com [104.47.51.42])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3r9w19kb4a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 23 Jun 2023 15:20:03 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Jh6qQfaefZaRdexJyn++SJX5mJEX7jkeZ4dwGw7Cc1aH4pz19XGVZpbdlfeWDdTNgx/maIqpPRo1XPPigkk1/QPbUCYDk2ZuaB76cL7Jw37dys4BaS7Ojmpn5dDXo3lmpN5rn/A4ANPHY4BhdmkhK2+6Y1oJabdzUGtQQtca8QEtlantbyW1BV0CAyhgd7nlXTbmW4Zv/gOFxptH/l1FGkx8YNqxkd080Fjj74qwAjRu9JCjEFLNSMcmJRpUUguZ6J2OoDUzifu1YFkpHbpr47ZiI4fGc5OnuOze64rXb+HHzwdVguah9gVN2fD5jit0K3h5TNg43P+vtL/RVPrn3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bdPvFyCYUR3jAmnTUQVn1OgZOnlP9P/WiDU2sxbLNUQ=;
+ b=jCDS5MvSSlzj/BZOZMtJYiyqwnuAoA+GxIp6Gck48WWKFwT5Rr3MCIqcuysmAaT6JKJI7OUg91Zo/vFucdjhsF4B88mIw3Oj+NCawinSgcCL6xfdidFpSKlBGeKFMB34e4DmV83BlBr144epNpxCPCSfTmDusVamXTQPyJHbrsrH+Yw0knVb9sn1ag44OaWBVA+oW+NvlX+WgoU8Qb7yECm4aY6y+am0C2wHNgSbHMxaBf/14esQAsq5Cym0KO713pYKfLcrnxmsRpbki+y2u0lKcNy2TTW3YZzFDU1PX6GgBgdjSa3eSdspsYcte+RWYMVyQMenI8EPuNfZ0V8Clg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687533064; x=1690125064;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NjmwL8WseP3HzYigt6canmDc/9LLjtw4UlWBwZCWzrI=;
-        b=5pRYaw4oEivyTLfaXO50KNsphBBt2HZ3hzpCDKDYewdSu9CQNRTV1OGheLK/gzyCVk
-         K89jQmhYhcezy3Wa78KX9QJgrRvGSBDlcRH+Fs7hnTqxlU6ApNLCvpdWSmYC1dyHdLyz
-         qv0DoNCjN9CE+WKKhEzMt8kRaUB4uj2vJlLhP9EtcLy9dcgR6jFfx1sgt882D5cWMs39
-         kKN2oLxYvB4bI3Wazd1b61l/JNmvxPz/cbF66xEPWXuS3GLe3rc/A2ysSTE9+7byyHf4
-         FgUlCsYTHEKfPenSvSPabGmnuVoCSVvMigrLox3phKB+oyTAcnjRKV/S0hHdNcUhhgKO
-         I/Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687533064; x=1690125064;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NjmwL8WseP3HzYigt6canmDc/9LLjtw4UlWBwZCWzrI=;
-        b=aeyejxlzzkiByMtnyrpIJFydygE6DbLrmpmkGR2YXtxkrIVaefuQYZcy0KP79Z8t+p
-         Tx2N3QaTXEG9yEBL/jrZKNEpV15H2oqlswLIHQaHNk4k+ovY8mjXU6dvflvMV77J1PNN
-         9SwoXsEn+imhza53Dqbbl66BPJTO6usLDm8BY5APP1UJmJiw2yxT1652Dahe9Dm6ujfj
-         pZnuOAR3bR087EIsvxgPYxx//lHEXeAnXwX094RCXi8Sn1MuZOO/mUG3wqcWBO6INaZH
-         N03EtHk6uk3iWFsJUBZXWv+7dMLQzoGAC/ckxXl/ZI9Jw81F6E4y3pX9f7R8V70Tl++H
-         B4iA==
-X-Gm-Message-State: AC+VfDzgIMZjwLl6rMvQuNxJ7e0UsV40mAktSgcW0/ljH0gg/Ftf9YBA
-        bS7s8gXARonacF7mJammOph6TqeHk8Yl
-X-Google-Smtp-Source: ACHHUZ5ZRQOjBM7R9fyw55HuF/+F5cACymM0q4IeYxLU+rS3Qeb0hZjzxc7H/lioBzxTNs3m1wbJC2A5RVlQ
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6559:8968:cdfe:35b6])
- (user=irogers job=sendgmr) by 2002:a81:b60a:0:b0:573:4c08:ec40 with SMTP id
- u10-20020a81b60a000000b005734c08ec40mr6253294ywh.7.1687533064442; Fri, 23 Jun
- 2023 08:11:04 -0700 (PDT)
-Date:   Fri, 23 Jun 2023 08:10:16 -0700
-In-Reply-To: <20230623151016.4193660-1-irogers@google.com>
-Message-Id: <20230623151016.4193660-13-irogers@google.com>
-Mime-Version: 1.0
-References: <20230623151016.4193660-1-irogers@google.com>
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v2 12/12] perf vendor events intel: Update tigerlake to 1.13
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Sohom Datta <sohomdatta1@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Perry Taylor <perry.taylor@intel.com>,
-        Samantha Alt <samantha.alt@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Weilin Wang <weilin.wang@intel.com>,
-        Edward Baker <edward.baker@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bdPvFyCYUR3jAmnTUQVn1OgZOnlP9P/WiDU2sxbLNUQ=;
+ b=E/pzJRCIueBiukZ8mwv6Jxu+N2JxhhzmRoJLKY5uRKzyDL6J4p79G33HFDE92R7+Pkf/jk6LZGv+AabdsJjh+3GoyusYIk2yhU+XGBTzlkhIbLOjHDfSA5/D8nBAnmRDEHuRInrwWWDTnuXbBMxvth5O5LZMQerJNTzPMG3Sc0s=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by SJ1PR10MB5905.namprd10.prod.outlook.com (2603:10b6:a03:48c::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.26; Fri, 23 Jun
+ 2023 15:20:00 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::e38:5b81:b87f:c1eb]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::e38:5b81:b87f:c1eb%7]) with mapi id 15.20.6521.023; Fri, 23 Jun 2023
+ 15:20:00 +0000
+Message-ID: <151a8677-3259-0586-03f3-fb751782daa9@oracle.com>
+Date:   Fri, 23 Jun 2023 16:19:56 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Content-Language: en-US
+To:     irogers@google.com, acme@kernel.org
+Cc:     linux-perf-users@vger.kernel.org
+From:   John Garry <john.g.garry@oracle.com>
+Subject: perf test pmu-events question
+Organization: Oracle Corporation
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P123CA0246.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1a7::17) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|SJ1PR10MB5905:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7feb5467-c6a4-48b7-5815-08db73fd4f83
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: To0h0yho6qSq5CjiY+Hk8DcY9WYJnA0J9DlUIJKFMFKHZWS6tw3oYKZuJBPzLlT2k0tPPYPa7CACb/+MR5Mwtq910KzLZ7Vgt1j9MdCtEIO8KnS6KR2nw8temOB6Li9g7mIXE/utAY0pYSxCGe7T8fNeuVz1fRFo1zqID6stwdPKAulpriMbHhMG68VZ/8DYa3f3iH5eZj6/F+0hsu6wy1p7WNN4qAivXUPv6rFABWjNXjixB3E4VgMgCQ9wOzfwfWc5m5K1tQGgF4Kk/4Yn3CNrgsS25utrHIJ1KPCihpxsiOVAyY58MCW90R9O7mx5GmJppUIZYVeQFkwomztJ5FcamI05NPy/cLEtTOPW2014G2rWxfZX9HuQmmhIHegMTkjyOR6OWC1l0dVZwiFDCXqBMs+LZFxqxrq3buIilGP2P/D/Msod7M9mW6nmH1okx03V73YWPnOfzfr3S2RVhUx65mDSJZiVM/JYQSUnu0LGQoGopmpUJIYW4CaMykpLIUy0khrFgiBc4DztKAhOWiazXV1WV44MVdzGg1MfuqhGAmRQ9aWnwdUFnK2F/Ldcb8OUkl2yRw57bSKnAoW+RbTdvJBcq+dsx+EmYs4uKUQwUHD4ftNm6zfUoc0dlfygaloVWyj6VLW33nRpcFnN+w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(376002)(396003)(136003)(39860400002)(346002)(451199021)(4744005)(2906002)(6486002)(36916002)(6666004)(38100700002)(83380400001)(2616005)(6512007)(186003)(26005)(3480700007)(41300700001)(86362001)(31696002)(6506007)(478600001)(36756003)(316002)(66946007)(4326008)(8936002)(8676002)(66556008)(66476007)(5660300002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MU9RQXAwN2dTTHBuTmRjRGVoaS9yRmNyY0MyVHpQaVZDemcwTmlHYWxjMCtL?=
+ =?utf-8?B?MkpsSUpDamNMS1pRNnlhanB3aGg2QzJnQm9ZOFJQN205bVhkT0Z6cnZoL2xo?=
+ =?utf-8?B?RkhPUis0VEZjUnN2ZkhIVkVyWVJ2bVozOTFsOHNjcVlHajZhdkRuM3pMdTJz?=
+ =?utf-8?B?Wk9kYXdlSWl1R2RKUUVVSWZZUVVtTG13SXBMbGF4RWJvaUxLeUNWcTR6TUtw?=
+ =?utf-8?B?dk53OGExSDhYaVpJTmJaTlArUk1ydXh3QXVvVTg0eUt2Y1A5RXhxejJmVDdi?=
+ =?utf-8?B?VG5jNTV1WjJVMDN2aVR4YnlKdFl5QWI2V2JGbXpKdHVTVE5ybHI5Slk5WElY?=
+ =?utf-8?B?RUIyOHkzUGoxcXl2K1RGLzcvbU5leWNieE9ocFVJWlRiVlQrNHRXK2t1a1ZY?=
+ =?utf-8?B?Z1pLVU1iOERjVUZCY0tTeSt3ZGZLemtkTHNLZjlrRWRmalA4c1Z6Y0RhRVJY?=
+ =?utf-8?B?ZU9NTk1tMlcvcGUzQmFCYUh0dXA3R0hxc0hqdWY5ZWRyUTdGaklFMzdwb1NI?=
+ =?utf-8?B?TWlJR1VXb3d1aGQrcnhkYS9sQUp0MTVVV2tDRmNCZVZWdTdqMWNjVFA1eDY3?=
+ =?utf-8?B?OGFEanFQa2dEcHY0QXhkNHVSYmhnalN1SnZrOEpWQUJ0VjhYWkFkamRqYU9E?=
+ =?utf-8?B?K2NQZWMwVzhvQTgrcGFJOW5lZzZRbkRHdmNQL3Jwbk9lbFc3cmdaTmp6a1hq?=
+ =?utf-8?B?L2MwOWFibDNkaG5QMzJlM0gxSVlTb0ZZczFGWGQ0WGI4bzhUR2FJeVE3eGRE?=
+ =?utf-8?B?Q3pJdWhORmJxTnNNdk5NOW1idTFnUWpkK1JVK29tMUptOGJhOUgxNVo3SDh3?=
+ =?utf-8?B?bjZVc0ZFNkl4SmcwWDZMTzN3N3JoanhaTzNmanE3d20xbU5iTXpsckk4VWdr?=
+ =?utf-8?B?ejljMm1ZWldTcU5iRkcyNTNDdTZwMHc3ZEVaM0tDZHNnbTZjRWlZL29RS01B?=
+ =?utf-8?B?cWhERmxtVm5kNEthOFB5T2F4UEVROVcrNzRmTTUvaTFEZmoranVqdXhDcWxz?=
+ =?utf-8?B?dFpFdEhnN2RIdGJQZ3d2ZERvSzkrNDdPUDVvMWlMRlAyTUZRNktnVVZPVFg2?=
+ =?utf-8?B?RHp0VDFYYUxzdSt5V2F4R1RHbldWaHF1ZXlIVldSa0UydEtQNWtvd0xZa0Y4?=
+ =?utf-8?B?aEFiZWNnQnNWMWo5Y283d2c0SHBqbWxRZDN1SnRWdVNSTVk2NzNIMExmcm8w?=
+ =?utf-8?B?cTBQWjRGaHdZOE0wV2MvUjFWRFdQcWd1dGpoaXhhSFJiRTdQMWg0anplMUZG?=
+ =?utf-8?B?MmVLL0VTVmNiZGpHcWdWcUU2bEFaV3lleDNUT3ZwVEFWa09vWDdOWVNtYjgv?=
+ =?utf-8?B?MWk5Wnc3RktxUzN2OXlYTEE4UVpVemx2OTR3MmdCOFJmOWwrU0ZhanM0ZlpN?=
+ =?utf-8?B?bVc3MFhWcFNUTjJzTUt0NGJqM3d5SXBtRUlBc2FGc012SDZsaCs0bHNwZmY0?=
+ =?utf-8?B?YUZ6WEpReDZYUWwxT2t4U0taRTh5NkpqeklxdmJpclV6ejhCNUJnOWdzNDIx?=
+ =?utf-8?B?MWVhclNuejcrZzZvUm0vYVM2ZVJ2SExSeStXK045djBEeXU2QW1naThUM3R2?=
+ =?utf-8?B?NzN3ODB5aHFOZlE4K1VtMDBPUUZMV3ZUTzQ2THNGYm1GSFEzOUo4VmU3WVdG?=
+ =?utf-8?B?Z1drbG96cmtINGV3UURDTlM4SlR2ajlYaURGYUJaNVJwNUZjZ3l0aUdzUkl5?=
+ =?utf-8?B?aTdpTlRHaitmTlRnU3dkRlNjcW1rS3pMTEhBZ3FsWjNHL2lVNm1IdmlLUnE0?=
+ =?utf-8?B?YUhZVDZCNXYrTjJwclhEUVE5Q0MyV0ZKQjdjTXI0SUt5K0xmNGlnMWpmOVJN?=
+ =?utf-8?B?NDBCM0RZeEJ4cmd2Q1ZlRHZodDRLc1EzU1NxMnpYa0JkSDlLTjJoeU1NcHN1?=
+ =?utf-8?B?Uk1ZU1JkNFdVck5SSU9zakZoSFJsTTBWYzd3dDV3WlNCM204OTJFMGQxQ3pN?=
+ =?utf-8?B?L1RQTWsySjIwUG83YnNLVDFDOGZIR1A3ZHJtN1BVMEdaUHFDOGdnR2FLdlc4?=
+ =?utf-8?B?Zy8rWHp0ZWtjTkE2K05md095RDZPTEJxRXRzaHI4bzNHOFVCR3c4Z0tYT0F0?=
+ =?utf-8?B?VE90T293MlFTUTMzbk12Uy9VdDF0MitldUhRVFo2QlBhLzByc1RIR0hiMjVo?=
+ =?utf-8?Q?WdZuDWa7GzUFORBdA/ZTGYSzy?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: B7/bbraWRK6kPMSjU/2BJDqRVyO1rc19B0oqpRi8yhARkK+hZyuIcPSnmech/8RDfoPSN1NhOe7XMd/D/+khNuwWnYJPPMrfXa8Le0NEERr8tdAFMotNrgbREgxPf8+SvPRgyEiRgI1UmP4AMi3u3oMCvBAUUCcKf4C99lfYLPMlEakeJsksOACAEMlUOBvmyu9YcDd8KIpFyAOFyTPB+fKM3QlWdxsSS6ZDFRPy/aIKYdhEhDAcRYN9oTxpU1c1FFn9qXeSKSqKLTTSEsbSiUOl3ZU/fW1ATf9BXNyw4LuNrQVECt8TfiREHqlZnTV2AzWooidMMhg6pPrRzkiskJgOm5wxuwhUat95dXPQ1EQZ3jm3iKmstbUqJBvCps1ZRnp5T8MvlQe+wKm8akkSp4Waj39M5MKQw0caf61Gy2WTIsM817ejYXkqnV2CQyn+bk95Ay4x+MoQgaRXvH5At19aeG44tbcwAm0G6P1NxmkQ3JmTQ5EgQXNwCgzjgMolFmcVods66kI550CvxR23sM31FJN5PkEhwJLleQeko/gSjPTxiTUTPRGmYmqObxWpjioQlsWTuckmJ+sNCgTvl2fApn5K6VW0H1JruTk7ruhiWNSwmII96hqjyG6we3iawZPCrR6gt+NqhbTDT2Q5FJ33ojXYe6peTwdAT9C38zKETtydR193T6OrMhJsEk484Zd6oPe/e8NH1ILNlbjfVZNVuUHJscWulWGTNU5x1HLz/2Hh2NnBAcVEJHS/JCr0hbpappOOVcmSelzqcmp/6kbT71hzWfzcMEEXdFY0lrdj2sr/iK0xNddoYkUQxPgj
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7feb5467-c6a4-48b7-5815-08db73fd4f83
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2023 15:20:00.3531
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1YnpQrXdo3AKsfkw+p+Xp+340J8WEtS6BMPaKRp8cvhsPCwC2SI+sLxOZWP0VvgJzNXsk70GGaDjFB9mHCqCyg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR10MB5905
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-23_08,2023-06-22_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 mlxscore=0
+ suspectscore=0 bulkscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
+ definitions=main-2306230136
+X-Proofpoint-GUID: PzdwxEMuGNzN4Pjwnb22TYG5oD1Z7t6x
+X-Proofpoint-ORIG-GUID: PzdwxEMuGNzN4Pjwnb22TYG5oD1Z7t6x
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Updates were released in:
-https://github.com/intel/perfmon/commit/9a3cd5ad68aee46078c663fe0cd9484e395=
-6fd88
-Adds the events ICACHE_DATA.STALLS, ICACHE_TAG.STALLS and
-DECODE.LCP. Descriptions are also updated.
+Hi Ian,
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
- .../arch/x86/tigerlake/frontend.json          | 32 ++++++++++++++++---
- .../arch/x86/tigerlake/pipeline.json          |  6 ++--
- 3 files changed, 32 insertions(+), 8 deletions(-)
+I was doing some re-write for pmu sys events metric support and I want 
+to add more testcases - we don't really have any.
 
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
-ents/arch/x86/mapfile.csv
-index 7c6598a9b240..6650100830c4 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -30,7 +30,7 @@ GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
- GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v57,skylake,core
- GenuineIntel-6-55-[01234],v1.31,skylakex,core
- GenuineIntel-6-86,v1.21,snowridgex,core
--GenuineIntel-6-8[CD],v1.12,tigerlake,core
-+GenuineIntel-6-8[CD],v1.13,tigerlake,core
- GenuineIntel-6-2C,v4,westmereep-dp,core
- GenuineIntel-6-25,v3,westmereep-sp,core
- GenuineIntel-6-2F,v3,westmereex,core
-diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/frontend.json b/tools=
-/perf/pmu-events/arch/x86/tigerlake/frontend.json
-index 23b8528590b3..d7b972452c0e 100644
---- a/tools/perf/pmu-events/arch/x86/tigerlake/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/tigerlake/frontend.json
-@@ -7,6 +7,14 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Stalls caused by changing prefix length of th=
-e instruction. [This event is alias to ILD_STALL.LCP]",
-+        "EventCode": "0x87",
-+        "EventName": "DECODE.LCP",
-+        "PublicDescription": "Counts cycles that the Instruction Length de=
-coder (ILD) stalls occurred due to dynamically changing prefix length of th=
-e decoded instruction (by operand size prefix instruction 0x66, address siz=
-e prefix instruction 0x67 or REX.W for Intel64). Count is proportional to t=
-he number of prefixes in a 16B-line. This may result in a three-cycle penal=
-ty for each LCP (Length changing prefix) in a 16-byte chunk. [This event is=
- alias to ILD_STALL.LCP]",
-+        "SampleAfterValue": "500009",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Decode Stream Buffer (DSB)-to-MITE transition=
-s count.",
-         "CounterMask": "1",
-@@ -213,10 +221,10 @@
-         "UMask": "0x1"
-     },
-     {
--        "BriefDescription": "Cycles where a code fetch is stalled due to L=
-1 instruction cache miss.",
-+        "BriefDescription": "Cycles where a code fetch is stalled due to L=
-1 instruction cache miss. [This event is alias to ICACHE_DATA.STALLS]",
-         "EventCode": "0x80",
-         "EventName": "ICACHE_16B.IFDATA_STALL",
--        "PublicDescription": "Counts cycles where a code line fetch is sta=
-lled due to an L1 instruction cache miss. The legacy decode pipeline works =
-at a 16 Byte granularity.",
-+        "PublicDescription": "Counts cycles where a code line fetch is sta=
-lled due to an L1 instruction cache miss. The legacy decode pipeline works =
-at a 16 Byte granularity. [This event is alias to ICACHE_DATA.STALLS]",
-         "SampleAfterValue": "500009",
-         "UMask": "0x4"
-     },
-@@ -237,10 +245,26 @@
-         "UMask": "0x2"
-     },
-     {
--        "BriefDescription": "Cycles where a code fetch is stalled due to L=
-1 instruction cache tag miss.",
-+        "BriefDescription": "Cycles where a code fetch is stalled due to L=
-1 instruction cache tag miss. [This event is alias to ICACHE_TAG.STALLS]",
-         "EventCode": "0x83",
-         "EventName": "ICACHE_64B.IFTAG_STALL",
--        "PublicDescription": "Counts cycles where a code fetch is stalled =
-due to L1 instruction cache tag miss.",
-+        "PublicDescription": "Counts cycles where a code fetch is stalled =
-due to L1 instruction cache tag miss. [This event is alias to ICACHE_TAG.ST=
-ALLS]",
-+        "SampleAfterValue": "200003",
-+        "UMask": "0x4"
-+    },
-+    {
-+        "BriefDescription": "Cycles where a code fetch is stalled due to L=
-1 instruction cache miss. [This event is alias to ICACHE_16B.IFDATA_STALL]"=
-,
-+        "EventCode": "0x80",
-+        "EventName": "ICACHE_DATA.STALLS",
-+        "PublicDescription": "Counts cycles where a code line fetch is sta=
-lled due to an L1 instruction cache miss. The legacy decode pipeline works =
-at a 16 Byte granularity. [This event is alias to ICACHE_16B.IFDATA_STALL]"=
-,
-+        "SampleAfterValue": "500009",
-+        "UMask": "0x4"
-+    },
-+    {
-+        "BriefDescription": "Cycles where a code fetch is stalled due to L=
-1 instruction cache tag miss. [This event is alias to ICACHE_64B.IFTAG_STAL=
-L]",
-+        "EventCode": "0x83",
-+        "EventName": "ICACHE_TAG.STALLS",
-+        "PublicDescription": "Counts cycles where a code fetch is stalled =
-due to L1 instruction cache tag miss. [This event is alias to ICACHE_64B.IF=
-TAG_STALL]",
-         "SampleAfterValue": "200003",
-         "UMask": "0x4"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json b/tools=
-/perf/pmu-events/arch/x86/tigerlake/pipeline.json
-index 020801cbd7e3..541bf1dd1679 100644
---- a/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json
-@@ -335,10 +335,10 @@
-         "UMask": "0x80"
-     },
-     {
--        "BriefDescription": "Stalls caused by changing prefix length of th=
-e instruction.",
-+        "BriefDescription": "Stalls caused by changing prefix length of th=
-e instruction. [This event is alias to DECODE.LCP]",
-         "EventCode": "0x87",
-         "EventName": "ILD_STALL.LCP",
--        "PublicDescription": "Counts cycles that the Instruction Length de=
-coder (ILD) stalls occurred due to dynamically changing prefix length of th=
-e decoded instruction (by operand size prefix instruction 0x66, address siz=
-e prefix instruction 0x67 or REX.W for Intel64). Count is proportional to t=
-he number of prefixes in a 16B-line. This may result in a three-cycle penal=
-ty for each LCP (Length changing prefix) in a 16-byte chunk.",
-+        "PublicDescription": "Counts cycles that the Instruction Length de=
-coder (ILD) stalls occurred due to dynamically changing prefix length of th=
-e decoded instruction (by operand size prefix instruction 0x66, address siz=
-e prefix instruction 0x67 or REX.W for Intel64). Count is proportional to t=
-he number of prefixes in a 16B-line. This may result in a three-cycle penal=
-ty for each LCP (Length changing prefix) in a 16-byte chunk. [This event is=
- alias to DECODE.LCP]",
-         "SampleAfterValue": "500009",
-         "UMask": "0x1"
-     },
-@@ -564,7 +564,7 @@
-         "BriefDescription": "TMA slots wasted due to incorrect speculation=
- by branch mispredictions",
-         "EventCode": "0xa4",
-         "EventName": "TOPDOWN.BR_MISPREDICT_SLOTS",
--        "PublicDescription": "Number of TMA slots that were wasted due to =
-incorrect speculation by branch mispredictions. This event estimates number=
- of operations that were issued but not retired from the specualtive path a=
-s well as the out-of-order engine recovery past a branch misprediction.",
-+        "PublicDescription": "Number of TMA slots that were wasted due to =
-incorrect speculation by branch mispredictions. This event estimates number=
- of operations that were issued but not retired from the speculative path a=
-s well as the out-of-order engine recovery past a branch misprediction.",
-         "SampleAfterValue": "10000003",
-         "UMask": "0x8"
-     },
---=20
-2.41.0.162.gfafddb0af9-goog
+So I noticed that tests/pmu-events.c::test__parsing() can pick up on an 
+invalid metric for the test CPU, like M3 as it references itself. 
+However we can't detect whether event aliases referenced in the metric 
+exist for the CPU. Is it worth testing for this? Would it be sane to 
+scan the associated CPU event tables to see if we can find the event 
+there? Or do we already have some per-non-test-CPU metric validator 
+already in the testcases (I could not see it)?
+
+Thanks,
+John
+
 
