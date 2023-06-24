@@ -2,109 +2,182 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5414EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 23:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB3BEB64D7
+	for <linux-perf-users@archiver.kernel.org>; Sat, 24 Jun 2023 00:03:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230244AbjFWXwT convert rfc822-to-8bit (ORCPT
+        id S229542AbjFXADd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Jun 2023 19:52:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57278 "EHLO
+        Fri, 23 Jun 2023 20:03:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229558AbjFWXwS (ORCPT
+        with ESMTP id S231506AbjFXADc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Jun 2023 19:52:18 -0400
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A94510F1;
-        Fri, 23 Jun 2023 16:52:17 -0700 (PDT)
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-be49e41a3d6so974822276.1;
-        Fri, 23 Jun 2023 16:52:17 -0700 (PDT)
+        Fri, 23 Jun 2023 20:03:32 -0400
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 896FC2707;
+        Fri, 23 Jun 2023 17:03:24 -0700 (PDT)
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-bf3934ee767so3628346276.0;
+        Fri, 23 Jun 2023 17:03:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687564336; x=1690156336;
+        d=1e100.net; s=20221208; t=1687565004; x=1690157004;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pehld0+Q+I3dGObCtKVPQHnHv57AYakUkX+nfcd4SXE=;
-        b=fgroEBoRH5vR74VCzJBFuNz6N9j9Ojt+ZUVmcDaiuDibOm+8s/jp9ilS7fcMHD1W3R
-         W0wTQu/FwNcm+rRgRIc6sBzkR5FWn4zkh7H0omdz9jZ84YRqKenhVHlv1KUTANk0A1Fx
-         zerrc7Y8sFP3arrNv3YSE7EUOVcs6Tf7wR4nSGUI2V5N3mCrVxA8NffV4kRbGFUpEWq3
-         CQLCA9Pm/yneaHe8tms2G5GVmdhRKqQD2aCKTaaIkjAZB1FfTegBgeOrN1726wbn2gtL
-         J6HilxIuhnyR51EBqlRAEV4U52sDyxD4zDyiBFwpuqzY41KitgDMwZlbwwtjyIZhGGYL
-         YWeQ==
-X-Gm-Message-State: AC+VfDzcyLZBqTHG1oo7JyiXp0Zm+6AXPyEJd37VlvFXiMXfEQePJZy7
-        Zrw0UEQvrYu2asXcOKE5bJbnRJUANwy7XuxhRTk=
-X-Google-Smtp-Source: ACHHUZ5Z6u7uccdeUH87ndvZmYiBDviMr2xRCWRpoFlRu4DxOa2CgxBrP+fOpymJ9vZ7i6k2AzN0fKFsGdJzNsCt4GU=
-X-Received: by 2002:a5b:8c7:0:b0:c12:29ac:1d3b with SMTP id
- w7-20020a5b08c7000000b00c1229ac1d3bmr155431ybq.11.1687564336570; Fri, 23 Jun
- 2023 16:52:16 -0700 (PDT)
+        bh=pGxsOBbKB22bf0B3O3FFaShm0eqOgqt5FgbcjeTORJ4=;
+        b=P6ZsZ+A2FGZ3iKm/RpnXpE0aVSgZ8w1jGpZZpPmzUEnUvHj1BZNA5mTL/3GmG1cVYW
+         1tqgf/ViH4FKPIoPT3H4nw3z8HO0fykTvXyPeW+NYlvlqfzxbey2QRpbOfJHPsZ7jtho
+         XgdmijS6wzf9R20WQcxLYf6HLT6HMcd2gPlx7+g4+FWhSXzVuG3JaRVS6s8xsqRyCrPo
+         0sKeUUISDOei/PKW5fqbrBapBmjK9CibIlWGkOky2oOb8wzX+cIfyYdHepHM77rYhto6
+         5anm2YFjhfwd/IGXCJw1rtswWAdt+3pAqgHW6agr5mdbxgAXD5xrb2jSrePSY6tbfl3k
+         91TQ==
+X-Gm-Message-State: AC+VfDxQyjcUYeMLW4Sq6pKdxhknnOIrHJHzQ30p8ZM4nmjwXeLguHRe
+        6k9iEMLtqMU6cmlsPtpSHYez/HTORsFzc3QgXOA=
+X-Google-Smtp-Source: ACHHUZ74md1d7MCVgnQak7P7DSFy1RGjbsvcL2UzCK/lxvaIV7Dt+oqX0IdVhBd9GO7+OI5JrMPtT6AuBl1cxPlAC4o=
+X-Received: by 2002:a25:4007:0:b0:b94:bbf2:19a3 with SMTP id
+ n7-20020a254007000000b00b94bbf219a3mr24508831yba.18.1687565003693; Fri, 23
+ Jun 2023 17:03:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <1685438374-33287-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1685438374-33287-3-git-send-email-renyu.zj@linux.alibaba.com>
- <c1d8ee9b-4839-1011-4dad-c4777d8f8224@oracle.com> <452e724b-2a2c-52fd-274b-60db7a7f730e@linux.alibaba.com>
- <c4b2fca8-602d-9c76-90a7-3eafd92da8bc@oracle.com> <76fcb062-61a8-5f90-b39d-b5fb6da35652@linux.alibaba.com>
- <ZH452mAFn1uNo4NF@kernel.org> <c8494676-25f8-72de-3279-70d49b74a91c@linux.alibaba.com>
-In-Reply-To: <c8494676-25f8-72de-3279-70d49b74a91c@linux.alibaba.com>
+References: <cover.1687375189.git.anupnewsmail@gmail.com> <3772bce9068962f2a4c57672e919ebdf30edbc5c.1687375189.git.anupnewsmail@gmail.com>
+In-Reply-To: <3772bce9068962f2a4c57672e919ebdf30edbc5c.1687375189.git.anupnewsmail@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 23 Jun 2023 16:52:04 -0700
-Message-ID: <CAM9d7ci2fG0Z=y0E8YBPBY802u30n+ANn3tS16c1_08TjoObng@mail.gmail.com>
-Subject: Re: [PATCH v3 2/7] perf metric: Event "Compat" value supports
- matching multiple identifiers
-To:     Jing Zhang <renyu.zj@linux.alibaba.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
+Date:   Fri, 23 Jun 2023 17:03:12 -0700
+Message-ID: <CAM9d7cj1bWWM7j5LCTpDQqLXmn5UH1mkCvZ-k3VEXJb7S2+wxg@mail.gmail.com>
+Subject: Re: [PATCH 4/9] scripts: python: Implement parsing of input data in convertPerfScriptProfile
+To:     Anup Sharma <anupnewsmail@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Hi Anup,
 
-On Wed, Jun 14, 2023 at 8:42 PM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
+On Wed, Jun 21, 2023 at 12:41 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
 >
+> The lines variable is created by splitting the profile string into individual
+> lines. It allows for iterating over each line for processing.
 >
+> The line is considered the start of a sample. It is matched against a regular
+> expression pattern to extract relevant information such as before_time_stamp,
+> time_stamp, threadNamePidAndTidMatch, threadName, pid, and tid.
 >
-> 在 2023/6/6 上午3:39, Arnaldo Carvalho de Melo 写道:
-> > Em Mon, Jun 05, 2023 at 10:46:36AM +0800, Jing Zhang escreveu:
-> >> 在 2023/6/3 上午12:20, John Garry 写道:
-> >>> On 01/06/2023 09:58, Jing Zhang wrote:
-> >>>> It can match identifiers "arm_cmn600_{0,1,2..X}" or "arm_cmn650_{0,1,2..X}" or "arm_cmn700_{0,1,2..X}" or "arm_ci700_{ 0,1,2..X}".
-> >>>> In other words, it can match all identifiers prefixed with “arm_cmn600” or “arm_cmn650” or “arm_cmn700” or “arm_ci700”.
-> >>>>
-> >>>> If a new model arm_cmn driver with identifier "arm_cmn750_0", it will not be matched, but if a new revision arm_cmn driver with identifier
-> >>>> "arm_cmn700_4", it can be matched.
-> >>>
-> >>> OK, I see what you mean. My confusion came about though your commit message on this same patch, which did not mention cmn650. I assumed that the example event which you were describing was supported for arm_cmn650 and you intentionally omitted it.
-> >>>
-> >>
-> >> Yes, I didn't write cmn650 in the commit message, just because I omitted it. I will add it in a later version.
-> >
-> > Ok, will wait for v4 then.
-> >
-> > - Arnaldo
+> The stack frames of the current sample are then parsed in a nested loop.
+> Each stackFrameLine is matched against a regular expression pattern to
+> extract rawFunc and mod information.
 >
-> Hi Arnaldo,
+> Also fixed few checkpatch warnings.
 >
-> Thank you for following up this patchset, maybe we can merge patch4 to patch7 into your branch first?
-> They have all been reviewed/acked and there is no dispute. And patch4-7 does not depend on patch1-3,
-> because patch4-7 is about the metric of ali_drw_pmu, and patch1-3 is about the metric of arm_cmn.
-> It may take some time for patch1-3 to reach a consensus.
+> Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
+> ---
+>  .../scripts/python/firefox-gecko-converter.py | 62 ++++++++++++++++++-
+>  1 file changed, 60 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools/perf/scripts/python/firefox-gecko-converter.py
+> index 0ff70c0349c8..e5bc7a11c3e6 100644
+> --- a/tools/perf/scripts/python/firefox-gecko-converter.py
+> +++ b/tools/perf/scripts/python/firefox-gecko-converter.py
+> @@ -1,4 +1,5 @@
+>  #!/usr/bin/env python3
+> +# SPDX-License-Identifier: GPL-2.0
 
-IIUC patch 4 is for the kernel and patch 5-7 semantically depend on it.
-So the patch 4 should be picked up by the kernel maintainers first.
+Please put this line in the first commit.
+
+>  import re
+>  import sys
+>  import json
+> @@ -14,13 +15,13 @@ def isPerfScriptFormat(profile):
+>      firstLine = profile[:profile.index('\n')]
+>      return bool(re.match(r'^\S.*?\s+(?:\d+/)?\d+\s+(?:\d+\d+\s+)?[\d.]+:', firstLine))
+>
+> -def convertPerfScriptProfile(profile):
+> +def convertPerfScriptProfile(profile):
+
+You'd better configure your editor to warn or even fix
+the trailing whitespace automatically.
 
 Thanks,
 Namhyung
+
+
+>
+>          def addSample(threadName, stackArray, time):
+>              nonlocal name
+>              if name != threadName:
+>                  name = threadName
+> -            # TODO:
+> +            # TODO:
+>              # get_or_create_stack will create a new stack if it doesn't exist, or return the existing stack if it does.
+>              # get_or_create_frame will create a new frame if it doesn't exist, or return the existing frame if it does.
+>              stack = reduce(lambda prefix, stackFrame: get_or_create_stack(get_or_create_frame(stackFrame), prefix), stackArray, None)
+> @@ -54,3 +55,60 @@ def convertPerfScriptProfile(profile):
+>              thread = _createtread(threadName, pid, tid)
+>              threadMap[tid] = thread
+>          thread['addSample'](threadName, stack, time_stamp)
+> +
+> +    lines = profile.split('\n')
+> +
+> +    line_index = 0
+> +    startTime = 0
+> +    while line_index < len(lines):
+> +        line = lines[line_index]
+> +        line_index += 1
+> +    # perf script --header outputs header lines beginning with #
+> +        if line == '' or line.startswith('#'):
+> +            continue
+> +
+> +        sample_start_line = line
+> +
+> +        sample_start_match = re.match(r'^(.*)\s+([\d.]+):', sample_start_line)
+> +        if not sample_start_match:
+> +            print(f'Could not parse line as the start of a sample in the "perf script" profile format: "{sample_start_line}"')
+> +            continue
+> +
+> +        before_time_stamp = sample_start_match[1]
+> +        time_stamp = float(sample_start_match[2]) * 1000
+> +        threadNamePidAndTidMatch = re.match(r'^(.*)\s+(?:(\d+)\/)?(\d+)\b', before_time_stamp)
+> +
+> +        if not threadNamePidAndTidMatch:
+> +            print('Could not parse line as the start of a sample in the "perf script" profile format: "%s"' % sampleStartLine)
+> +            continue
+> +        threadName = threadNamePidAndTidMatch[1].strip()
+> +        pid = int(threadNamePidAndTidMatch[2] or 0)
+> +        tid = int(threadNamePidAndTidMatch[3] or 0)
+> +        if startTime == 0:
+> +            startTime = time_stamp
+> +        # Parse the stack frames of the current sample in a nested loop.
+> +        stack = []
+> +        while line_index < len(lines):
+> +            stackFrameLine = lines[line_index]
+> +            line_index += 1
+> +            if stackFrameLine.strip() == '':
+> +                # Sample ends.
+> +                break
+> +            stackFrameMatch = re.match(r'^\s*(\w+)\s*(.+) \(([^)]*)\)', stackFrameLine)
+> +            if stackFrameMatch:
+> +                rawFunc = stackFrameMatch[2]
+> +                mod = stackFrameMatch[3]
+> +                rawFunc = re.sub(r'\+0x[\da-f]+$', '', rawFunc)
+> +
+> +            if rawFunc.startswith('('):
+> +                continue # skip process names
+> +
+> +            if mod:
+> +                # If we have a module name, provide it.
+> +                # The code processing the profile will search for
+> +                # "functionName (in libraryName)" using a regexp,
+> +                # and automatically create the library information.
+> +                rawFunc += f' (in {mod})'
+> +
+> +            stack.append(rawFunc)
+> +
+> --
+> 2.34.1
+>
