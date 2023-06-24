@@ -2,118 +2,83 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E193BEB64DA
-	for <linux-perf-users@archiver.kernel.org>; Sat, 24 Jun 2023 08:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0317EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Sat, 24 Jun 2023 17:59:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232574AbjFXIy7 (ORCPT
+        id S230021AbjFXR7F (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 24 Jun 2023 04:54:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45198 "EHLO
+        Sat, 24 Jun 2023 13:59:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231202AbjFXIy6 (ORCPT
+        with ESMTP id S229824AbjFXR7F (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 24 Jun 2023 04:54:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C83A118B;
-        Sat, 24 Jun 2023 01:54:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4E35E60C3E;
-        Sat, 24 Jun 2023 08:54:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B133C433C0;
-        Sat, 24 Jun 2023 08:54:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687596896;
-        bh=P0AKloJHoPY0vVaH7+W9a/W3b8lwXqRDYLtUxhBSYL0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aFtMAM8bi0y4Bp+oBX1Eb/QknPMGyQ3S+5T7xUgNwj4tYfwYe5vCVTyUEMg+veaas
-         SO+FVI9TEGpyzY/A5QXci5lheHBKhVjymfJbCLtClUT9Wd7hPGoeaOVaQm3DfBUXvc
-         u5pn/SWwBluNh+ufE8oPF0684cVzqilo/VRmLQ/t+we3xnTH0GlRQK8gM32Hg//vEu
-         +9tX+A3aBrGAALKbmynTNxfPTuX/v/eO5nsHo9YnQaoAIZzH9Lkaf4Kq47GdF9UyFn
-         pqY5ihSbXhsgNIdQIRRP+pG6eB0XfoHw8IxjMqPTQiagm63Dy6XAQNzXvTKatVJrBi
-         AO9wI8Jkb8sAA==
-Date:   Sat, 24 Jun 2023 09:54:50 +0100
-From:   Conor Dooley <conor@kernel.org>
+        Sat, 24 Jun 2023 13:59:05 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A1851BE7
+        for <linux-perf-users@vger.kernel.org>; Sat, 24 Jun 2023 10:59:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1687629544; x=1719165544;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IsOYmJUNdjgRz2OhlzNBAtXzuNdWYxyCbIxrojU/3Uc=;
+  b=mpvm38ovlyJ4mo6C60XYoI2BYaD2jST6PHhAWDEVjDqb3Sl8bxId4QIa
+   85Udm1RlMvcT6j1gC2euAY57+U9urZvlk/iZO0zbesSWJItYclcQLBlDz
+   BzMNUTsOhQSJSL0Bt9x+ZnFI8R8F/ppKlLUAxMPcGCF0zLnO+Y9+m7MTF
+   tQSRP7hCi6XujO85kj7CZmhMy2hRyDlVR6Zsjmi2fBM11FI1xKS0xgjch
+   eof6VDhJTEEYnJRgXvz1DO0HI2H4uxP+7jYLLGb5Ut3qxUIlTQgPFC4k2
+   /K78hoHHmnkCi8tXXxNuwxqx5H2nRXGPToU7ywAUR43OxBK/xAHRTFAql
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10751"; a="358459860"
+X-IronPort-AV: E=Sophos;i="6.01,155,1684825200"; 
+   d="scan'208";a="358459860"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2023 10:59:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10751"; a="1045983152"
+X-IronPort-AV: E=Sophos;i="6.01,155,1684825200"; 
+   d="scan'208";a="1045983152"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2023 10:59:03 -0700
+Date:   Sat, 24 Jun 2023 10:59:01 -0700
+From:   Andi Kleen <ak@linux.intel.com>
 To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Inochi Amaoto <inochiama@outlook.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Nikita Shubin <n.shubin@yadro.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH V3] perf vendor events riscv: add T-HEAD C9xx JSON file
-Message-ID: <20230624-supermom-disparity-37546ffed0a4@spud>
-References: <CAM9d7cjtisDVPijfU=iEGxc0YF=RnAt+r18Jg+8Av-+RAO=jeg@mail.gmail.com>
- <IA1PR20MB49536C0DA47122E9E3CB7CBBBB20A@IA1PR20MB4953.namprd20.prod.outlook.com>
- <CAM9d7cis-rb0fozK+T6R8MCEcT0ZF=RRNpv1qAWsLkMfsG6KxA@mail.gmail.com>
+Cc:     Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Subject: Re: Perf stat regression from d15480a3d67
+Message-ID: <ZJcu5XiTFWtXC7QU@tassilo>
+References: <ZJOmXU/41HMzanM9@tassilo>
+ <CAP-5=fWZAcXcE3CP-V7t=gSehO-AacHJWhjHjtA5nCd5B2-n1A@mail.gmail.com>
+ <ZJQSUHLe9Cqpw21n@tassilo>
+ <CAM9d7cgpegLH9QpUhHQy0ckMpO6CaKaYrAeHKNm4CT01R4bhGw@mail.gmail.com>
+ <ZJSr2PbOrpFrSIaL@tassilo>
+ <CAM9d7cj1XXpuaPss7qa7eSD8LJCQZ1KorviOxxnt2Hpk_J3ugQ@mail.gmail.com>
+ <ZJXl5vdhxPnVBRze@tassilo>
+ <CAP-5=fXOi=xQ4=j5xAq+jWLR9n7uvfsWK+PzXkY1MZ3Fz-xccw@mail.gmail.com>
+ <CAM9d7cg5ZQvHGs3fh9iXxdgRY2uidgDTQ0WSQGuicub+wX8KFQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="dzXjnwP3OWEoTm01"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAM9d7cis-rb0fozK+T6R8MCEcT0ZF=RRNpv1qAWsLkMfsG6KxA@mail.gmail.com>
+In-Reply-To: <CAM9d7cg5ZQvHGs3fh9iXxdgRY2uidgDTQ0WSQGuicub+wX8KFQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+> > So with perf-tools-next it appears that we're not merging the uncore
+> > events, but that's different than skipping events.
 
---dzXjnwP3OWEoTm01
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Isn't that a regression too? We're supposed to merge.
 
-On Fri, Jun 23, 2023 at 09:35:01PM -0700, Namhyung Kim wrote:
-> On Fri, Jun 23, 2023 at 6:33=E2=80=AFPM Inochi Amaoto <inochiama@outlook.=
-com> wrote:
+> 
+> Right, not sure what's changed though.
+> 
+> Andi, what's your expectation?
 
-> >
-> > As for c9xx wildcard, the T-HEAD provides a `MCPUID` vendor CSR to allow
-> > its CKLINK to get the detail CPU info. The format of this CSR are:
-> >
-> > ------------------------------------------------
-> > |31   28|27  26|25    22|21   18|17    8|7    0|
-> > | index | WLRL | family | class | model | WLRL |
-> > ------------------------------------------------
-> >
-> > And for C9xx series (only index 0000 is vaild for us, as `MCPUID` also
-> > provides other index).
-> >
-> > | 0000 | xx | 0100 | class | xxxxxxxxxx | xxxxxxxx |
-> >
-> > The class codes are:
-> >
-> > C910: 0011
-> > c906: 0100
-> >
-> > The CSR is a M-mode only CSR, so now I'm exploring a clean way to
-> > integrate this CSR into the kernel. Any advice?
+The original test case passes with perf-next, but I still see failures, 
+but that might be related to PMU reordering. I'll investigate that.
 
-See for example how riscv_cpuinfo_starting() reads mvendorid & Co.
+However if the original hiding is still in the code the problem could still
+happen, right? I would still prefer to do what i suggested earlier,
+to only do hiding on --per-thread with an option to turn off.
 
-> I don't know about the details.  Is this CSR available from user space?
-> If not, you could add it somewhere in the sysfs.
-
-Machine mode is the highest privilege level, Supervisor mode is next &
-User mode is the lowest. Typically the kernel runs in Supervisor mode.
-
---dzXjnwP3OWEoTm01
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZJavWgAKCRB4tDGHoIJi
-0nfzAPwN3X0swkvrSVf8ck8JWpqyr9/NjbbeDsSElciyJFoqDQD9E/lEdIn9KVve
-N9l4vjuyVseuxyUV74TZmag+74774gE=
-=ndGS
------END PGP SIGNATURE-----
-
---dzXjnwP3OWEoTm01--
+-Andi
