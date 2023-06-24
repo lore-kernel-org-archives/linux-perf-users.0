@@ -2,48 +2,48 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4539EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Sat, 24 Jun 2023 00:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE6CEB64D7
+	for <linux-perf-users@archiver.kernel.org>; Sat, 24 Jun 2023 00:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230478AbjFXAFK convert rfc822-to-8bit (ORCPT
+        id S229576AbjFXARt convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Jun 2023 20:05:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34054 "EHLO
+        Fri, 23 Jun 2023 20:17:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230516AbjFXAFK (ORCPT
+        with ESMTP id S229539AbjFXARs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Jun 2023 20:05:10 -0400
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F7AE1715;
-        Fri, 23 Jun 2023 17:05:09 -0700 (PDT)
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-62ffb5f6aafso10539956d6.1;
-        Fri, 23 Jun 2023 17:05:09 -0700 (PDT)
+        Fri, 23 Jun 2023 20:17:48 -0400
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E081826A9;
+        Fri, 23 Jun 2023 17:17:47 -0700 (PDT)
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-bcd0226607bso3620539276.1;
+        Fri, 23 Jun 2023 17:17:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687565108; x=1690157108;
+        d=1e100.net; s=20221208; t=1687565867; x=1690157867;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aL5w2m8V/KDDXwMddYTWzt+5srKNCPxK8P/RiM5TeBE=;
-        b=AjiUGplicGIsRNBjRHHIlNquYfZBsdnC/fkE4F6rur5zkb+w0pqqLyicoxmOqQwpK/
-         pHlOBZn0i22bEEiAZN5ZPXlWsbgvcvYR4FxQSeByjVRhWz9HA93X6KPzdLkI1NoPrK5m
-         iZuqn5hUl7a+CoAtDk1z7A+zFzMHi6l2vC6lSkAdTj+zaDmd+9bWh6KXx1qkXR2Si6Jt
-         BhpsvRG45Lq5IsoH25HJg/u2KNcQk7xqYRDO4whHDBHvnB6qo0dM/F+oRaSBRiWI+HZj
-         q8/r9BUYUWkeA34JyhKyOvO5UdmColWfrK6yrV0d3Whbv9KASSNpWFMV2eqEo1CfqvcU
-         XMIA==
-X-Gm-Message-State: AC+VfDyz0uZZ0wH4R6uUaJU4SiVmGFmmrgBgbXoklhwjY40QMnqK1NWr
-        Z2OciBhxA1Uyf/1HtrzrAtAPrAVIFb/cEf9h5r8=
-X-Google-Smtp-Source: ACHHUZ6NE6ujRGM98HY3j9uxeIkYXkzK9S/TYzrlW9uwGmhfNN/kn1bdgiyUxQC8DXwTmVtPO6yX1tzNZfWXAYUE4oY=
-X-Received: by 2002:a05:6214:5193:b0:630:1bc8:9c7 with SMTP id
- kl19-20020a056214519300b006301bc809c7mr17681678qvb.2.1687565108078; Fri, 23
- Jun 2023 17:05:08 -0700 (PDT)
+        bh=0hPv8x0shEc/k1aN0by01gtPFzohHEguHvDTQ7Gv+Rw=;
+        b=ZpQr62wsKyCw6n+3cqyp5FJwZM0bv9bYpRMAAiRyOJDlWu5isKghF+n6lb2TtyPoMc
+         O4eHWYqONFJgLVxe32/g+GBCEy0v2J5qxvJ0XG5PoSVhCr+rbOiPwi7kEd100zOfus4p
+         qpaaX/bsMZr2vMgjmJqNrDPFGOEsahvyfpiP4gpgcb4bKxMg68RaxuVeJv7PfK2go5wW
+         sPRWLmMoz3B+TgRsvnh6hMH0VqO5qN/8leIeORLRYXjWde1ylWTRS8IbTUV78ofumiGT
+         ZKVT3KsWBOMVX4TUA2WRvv8gdKTmapjursFgbdFIaK6eVZ1Cqr/qqZFIFo27WhasmHcV
+         rJTw==
+X-Gm-Message-State: AC+VfDyB94lNKBl8nzuOEO3ThX3jIGgqVpgS4DftqUhWSDzihcX8aEYH
+        vU9kI8ZdXClvMzzIb0v5mRvihUu80xng5/4yf/c=
+X-Google-Smtp-Source: ACHHUZ6l3TbHPX8wI1PbnOY0McB4XZDCxRwUFIviGRz4FHEneTHHeSQaYtHtraYCmbboUltMOGHqhaF47c92hM7Zwlc=
+X-Received: by 2002:a25:6a43:0:b0:ba8:2a74:155 with SMTP id
+ f64-20020a256a43000000b00ba82a740155mr21475536ybc.32.1687565866927; Fri, 23
+ Jun 2023 17:17:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1687375189.git.anupnewsmail@gmail.com> <4d0ac80521ebd44322a360ac331ce2443a1f0f26.1687375189.git.anupnewsmail@gmail.com>
-In-Reply-To: <4d0ac80521ebd44322a360ac331ce2443a1f0f26.1687375189.git.anupnewsmail@gmail.com>
+References: <36fcef74ba3d21250f4c9605e691d1e2dac20ebb.camel@maquefel.me> <IA1PR20MB4953FCC20C89F2659EB34896BB7F9@IA1PR20MB4953.namprd20.prod.outlook.com>
+In-Reply-To: <IA1PR20MB4953FCC20C89F2659EB34896BB7F9@IA1PR20MB4953.namprd20.prod.outlook.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 23 Jun 2023 17:04:56 -0700
-Message-ID: <CAM9d7cgAfvzrGiU0QiEigTAYKMe+OEP0b3o3Xd-0VhXX5Wkx1g@mail.gmail.com>
-Subject: Re: [PATCH 7/9] scripts: python: implement get or create frame function
-To:     Anup Sharma <anupnewsmail@gmail.com>
+Date:   Fri, 23 Jun 2023 17:17:35 -0700
+Message-ID: <CAM9d7cjtisDVPijfU=iEGxc0YF=RnAt+r18Jg+8Av-+RAO=jeg@mail.gmail.com>
+Subject: Re: [PATCH V3] perf vendor events riscv: add T-HEAD C9xx JSON file
+To:     Inochi Amaoto <inochiama@outlook.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -51,96 +51,54 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Nikita Shubin <n.shubin@yadro.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 21, 2023 at 12:45 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
->
-> The CATEGORIES list and the USER_CATEGORY_INDEX and
-> KERNEL_CATEGORY_INDEX constants has been introduced.
->
-> The get_or_create_frame function is responsible for retrieving or
-> creating a frame based on the provided frameString. If the frame
-> corresponding to the frameString is found in the frameMap, it is
-> returned. Otherwise, a new frame is created by appending relevant
-> information to the frameTable's 'data' array and adding the
-> frameString to the stringTable.
->
-> The index of the newly created frame is added to the frameMap.
->
-> Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
-> ---
->  .../scripts/python/firefox-gecko-converter.py | 38 +++++++++++++++++++
->  1 file changed, 38 insertions(+)
->
-> diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools/perf/scripts/python/firefox-gecko-converter.py
-> index 30fc542cfdeb..866751e5d1ce 100644
-> --- a/tools/perf/scripts/python/firefox-gecko-converter.py
-> +++ b/tools/perf/scripts/python/firefox-gecko-converter.py
-> @@ -15,6 +15,13 @@ def isPerfScriptFormat(profile):
->      firstLine = profile[:profile.index('\n')]
->      return bool(re.match(r'^\S.*?\s+(?:\d+/)?\d+\s+(?:\d+\d+\s+)?[\d.]+:', firstLine))
->
-> +CATEGORIES = [
-> +{'name': 'User', 'color': 'yellow', 'subcategories': ['Other']},
-> +{'name': 'Kernel', 'color': 'orange', 'subcategories': ['Other']}
-> +]
-> +USER_CATEGORY_INDEX = 0
-> +KERNEL_CATEGORY_INDEX = 1
-> +
->  def convertPerfScriptProfile(profile):
->      def _createtread(name, pid, tid):
->          markers = {
-> @@ -70,6 +77,37 @@ def convertPerfScriptProfile(profile):
->                  stackMap[key] = stack
->              return stack
->
-> +        frameMap = dict()
-> +        def get_or_create_frame(frameString):
-> +            frame = frameMap.get(frameString)
-> +            if frame is None:
-> +                frame = len(frameTable['data'])
-> +                location = len(stringTable)
-> +                stringTable.append(frameString)
-> +
-> +                category = KERNEL_CATEGORY_INDEX if frameString.find('kallsyms') != -1 or frameString.find('/vmlinux') != -1 or frameString.endswith('.ko)') else USER_CATEGORY_INDEX
+Hello,
 
-This line is too long, we usually don't allow long lines
-over 100 characters.
+On Thu, May 18, 2023 at 2:50 AM Inochi Amaoto <inochiama@outlook.com> wrote:
+>
+> > licheerv # perf record
+> > [  432.015618] watchdog: BUG: soft lockup - CPU#0 stuck for 26s!
+> > [perf:117]
+> > [  460.015617] watchdog: BUG: soft lockup - CPU#0 stuck for 52s!
+> > [perf:117]
+> > [  488.015616] watchdog: BUG: soft lockup - CPU#0 stuck for 78s!
+> > [perf:117]
+> > [  516.015617] watchdog: BUG: soft lockup - CPU#0 stuck for 104s!
+> > [perf:117]
+> >
+> > But that's not related to your patch anyway.
+>
+> Same issue on c920, but it did not always occur.
+> Like a sbi issue for T-HEAD cpus.
+>
+> > I am strongly against using "c9xx" wildcard, i would prefer declaring
+> > them separate (especially taking in mind that c920 is c910 with vector
+> > - AFAIK), but that's up to Arnaldo to decide.
+>
+> AFAIK, there is no reliable way to distinguish c906 and c910 cores. And
+> the events of c910 and c920 are the same (according to the draft document
+> of the c920).
+>
+> Anyway, I agree to let Arnaldo decide.
+>
+> > Tested-by: Nikita Shubin <n.shubin@yadro.com>
+
+I'm collecting patches on behalf of Arnaldo this time.
+It seems this patch was not picked up for a long time.
+
+I think we can make changes for the c9xx wildcard later
+if needed.  I'll process it in the current form.
 
 Thanks,
 Namhyung
-
-
-> +                implementation = None
-> +                optimizations = None
-> +                line = None
-> +                relevantForJS = False
-> +                subcategory = None
-> +                innerWindowID = 0
-> +                column = None
-> +
-> +                frameTable['data'].append([
-> +                    location,
-> +                    relevantForJS,
-> +                    innerWindowID,
-> +                    implementation,
-> +                    optimizations,
-> +                    line,
-> +                    column,
-> +                    category,
-> +                    subcategory,
-> +                ])
-> +                frameMap[frameString] = frame
-> +            return frame
-> +
->          def addSample(threadName, stackArray, time):
->              nonlocal name
->              if name != threadName:
-> --
-> 2.34.1
->
