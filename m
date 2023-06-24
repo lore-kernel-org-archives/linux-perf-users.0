@@ -2,83 +2,87 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0317EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Sat, 24 Jun 2023 17:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD2EEB64DA
+	for <linux-perf-users@archiver.kernel.org>; Sat, 24 Jun 2023 23:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230021AbjFXR7F (ORCPT
+        id S229781AbjFXXhg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 24 Jun 2023 13:59:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43106 "EHLO
+        Sat, 24 Jun 2023 19:37:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229824AbjFXR7F (ORCPT
+        with ESMTP id S229660AbjFXXhf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 24 Jun 2023 13:59:05 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A1851BE7
-        for <linux-perf-users@vger.kernel.org>; Sat, 24 Jun 2023 10:59:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687629544; x=1719165544;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=IsOYmJUNdjgRz2OhlzNBAtXzuNdWYxyCbIxrojU/3Uc=;
-  b=mpvm38ovlyJ4mo6C60XYoI2BYaD2jST6PHhAWDEVjDqb3Sl8bxId4QIa
-   85Udm1RlMvcT6j1gC2euAY57+U9urZvlk/iZO0zbesSWJItYclcQLBlDz
-   BzMNUTsOhQSJSL0Bt9x+ZnFI8R8F/ppKlLUAxMPcGCF0zLnO+Y9+m7MTF
-   tQSRP7hCi6XujO85kj7CZmhMy2hRyDlVR6Zsjmi2fBM11FI1xKS0xgjch
-   eof6VDhJTEEYnJRgXvz1DO0HI2H4uxP+7jYLLGb5Ut3qxUIlTQgPFC4k2
-   /K78hoHHmnkCi8tXXxNuwxqx5H2nRXGPToU7ywAUR43OxBK/xAHRTFAql
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10751"; a="358459860"
-X-IronPort-AV: E=Sophos;i="6.01,155,1684825200"; 
-   d="scan'208";a="358459860"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2023 10:59:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10751"; a="1045983152"
-X-IronPort-AV: E=Sophos;i="6.01,155,1684825200"; 
-   d="scan'208";a="1045983152"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2023 10:59:03 -0700
-Date:   Sat, 24 Jun 2023 10:59:01 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Subject: Re: Perf stat regression from d15480a3d67
-Message-ID: <ZJcu5XiTFWtXC7QU@tassilo>
-References: <ZJOmXU/41HMzanM9@tassilo>
- <CAP-5=fWZAcXcE3CP-V7t=gSehO-AacHJWhjHjtA5nCd5B2-n1A@mail.gmail.com>
- <ZJQSUHLe9Cqpw21n@tassilo>
- <CAM9d7cgpegLH9QpUhHQy0ckMpO6CaKaYrAeHKNm4CT01R4bhGw@mail.gmail.com>
- <ZJSr2PbOrpFrSIaL@tassilo>
- <CAM9d7cj1XXpuaPss7qa7eSD8LJCQZ1KorviOxxnt2Hpk_J3ugQ@mail.gmail.com>
- <ZJXl5vdhxPnVBRze@tassilo>
- <CAP-5=fXOi=xQ4=j5xAq+jWLR9n7uvfsWK+PzXkY1MZ3Fz-xccw@mail.gmail.com>
- <CAM9d7cg5ZQvHGs3fh9iXxdgRY2uidgDTQ0WSQGuicub+wX8KFQ@mail.gmail.com>
+        Sat, 24 Jun 2023 19:37:35 -0400
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1056210F4;
+        Sat, 24 Jun 2023 16:37:35 -0700 (PDT)
+Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-780cdb2aa01so48858339f.0;
+        Sat, 24 Jun 2023 16:37:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687649854; x=1690241854;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KsIg6m7BWrpUwxujmjQxPQdlEy5JHTyD5kBudsZOhOI=;
+        b=Vya8Z0eI3dfs+aHZQxlmbRHn8E4troT+q/lGP/60lPeN1AiAsaPQ4rJSeTDoCRlFm3
+         n7Xl2u1oOaCZg9WK4xE7IyZjQZL248jntN7ozsWjx+dnqJzrsFf0kyNurfKrgNaDAhuy
+         OrshIVJbz5DSFRj6lSfH2X2f4FPivDPKw0hMetdZb40+xfsAPVIvSnLvdaubORqWkpmI
+         EptO941a/YFsLyl3WSTOO7FZMXOl1Tv/Y5XXeYG8f4XRf9B8mStleQqRXaPhf6aH2h2G
+         h70psWuHOITjqqtm22+nx3F+/hmuhHpoI9xOB9VXkWc77siMxqjksEP+7P9ppW9lDpfM
+         vSFQ==
+X-Gm-Message-State: AC+VfDz1XDFx0OHuHviQBv2j08JLYuJ2yRZXvu5irg2XjF37B0xgLiui
+        naed3iszVTsEoxOwXs4Ico+spoGc6aoqTYmDXjU=
+X-Google-Smtp-Source: ACHHUZ5DDvhzBocDBYZZW1sCOkdkJ0e/BX5o4oMvRr5BwoOggJqbLqp8VvKzyGNzdcn9yXOxJCoTLUlLtkRuI3LlD1I=
+X-Received: by 2002:a05:6602:2995:b0:777:acdd:c44 with SMTP id
+ o21-20020a056602299500b00777acdd0c44mr16632499ior.10.1687649853842; Sat, 24
+ Jun 2023 16:37:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7cg5ZQvHGs3fh9iXxdgRY2uidgDTQ0WSQGuicub+wX8KFQ@mail.gmail.com>
+References: <20230623054520.4118442-1-irogers@google.com> <CAM9d7ciLAUc+0pxeLU91RCxi-oWmV5q=Nb0BQ_tP_4U=PGCtmA@mail.gmail.com>
+In-Reply-To: <CAM9d7ciLAUc+0pxeLU91RCxi-oWmV5q=Nb0BQ_tP_4U=PGCtmA@mail.gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Sat, 24 Jun 2023 16:37:21 -0700
+Message-ID: <CAM9d7cjM73BxHTB3Rmo5zgm_Por=iJGTZbWOaJLVNZMDkq-4Jg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] Remove symbol_name_rb_node
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Carsten Haitzler <carsten.haitzler@arm.com>,
+        Changbin Du <changbin.du@huawei.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Jason Wang <wangborong@cdjrlc.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-> > So with perf-tools-next it appears that we're not merging the uncore
-> > events, but that's different than skipping events.
+On Fri, Jun 23, 2023 at 9:42 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> On Thu, Jun 22, 2023 at 10:45 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > Use a sorted array of symbol pointers to avoid the potentially
+> > unnecessary 3 pointers (rb_node) for the name sorted symbols. Saves
+> > been 24 and 16 bytes per symbol.
+> >
+> > v3. Move sort by name dso lock into its own patch.
+> > v2. map__find_symbol_by_name_idx so that map__find_symbol_by_name
+> >     doesn't need an optional parameter. Separate out
+> >     symbol_conf.sort_by_name removal.
+> >
+> > Ian Rogers (3):
+> >   perf dso: Sort symbols under lock
+> >   perf symbol: Remove symbol_name_rb_node
+> >   perf symbol_conf: Remove now unused sort_by_name
+>
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-Isn't that a regression too? We're supposed to merge.
-
-> 
-> Right, not sure what's changed though.
-> 
-> Andi, what's your expectation?
-
-The original test case passes with perf-next, but I still see failures, 
-but that might be related to PMU reordering. I'll investigate that.
-
-However if the original hiding is still in the code the problem could still
-happen, right? I would still prefer to do what i suggested earlier,
-to only do hiding on --per-thread with an option to turn off.
-
--Andi
+Applied to perf-tools-next, thanks!
