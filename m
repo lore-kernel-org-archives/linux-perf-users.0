@@ -2,53 +2,50 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C365EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Sun, 25 Jun 2023 08:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4131EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Sun, 25 Jun 2023 11:09:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230197AbjFYI7A (ORCPT
+        id S231401AbjFYLJM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 25 Jun 2023 04:59:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38340 "EHLO
+        Sun, 25 Jun 2023 07:09:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230362AbjFYI67 (ORCPT
+        with ESMTP id S230029AbjFYLJL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 25 Jun 2023 04:58:59 -0400
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01EE7103;
-        Sun, 25 Jun 2023 01:58:57 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0Vlrm5fd_1687683530;
-Received: from 30.120.140.216(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0Vlrm5fd_1687683530)
-          by smtp.aliyun-inc.com;
-          Sun, 25 Jun 2023 16:58:52 +0800
-Message-ID: <a33568fe-b461-6d8c-4c71-5f8dd2d3ef5b@linux.alibaba.com>
-Date:   Sun, 25 Jun 2023 16:58:48 +0800
+        Sun, 25 Jun 2023 07:09:11 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4D2AB8F;
+        Sun, 25 Jun 2023 04:09:10 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E04231FB;
+        Sun, 25 Jun 2023 04:09:53 -0700 (PDT)
+Received: from [192.168.0.146] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A5CA33F663;
+        Sun, 25 Jun 2023 04:09:00 -0700 (PDT)
+Message-ID: <6c5f8eef-3373-0012-e811-3b1eb8930d22@arm.com>
+Date:   Sun, 25 Jun 2023 16:39:00 +0530
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.11.2
-Subject: Re: [PATCH v4 0/4] Add JSON metrics for Yitian710 DDR
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        John Garry <john.g.garry@oracle.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Ian Rogers <irogers@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH V13 03/10] arm64/perf: Add branch stack support in struct
+ arm_pmu
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
+        Mark Brown <broonie@kernel.org>,
         James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
-References: <1687245156-61215-1-git-send-email-renyu.zj@linux.alibaba.com>
- <CAM9d7cj3v58m8NcsEK4sYsk_dbQDAq71hYo7DV=xaQa_rZyPYg@mail.gmail.com>
- <a5486c58-32b6-2d5e-e623-d7844c51474c@linux.alibaba.com>
- <CAM9d7chxMpUUouHsVTEvVEy8RyZ6tNzYbVD=a0Toao=n6cau-w@mail.gmail.com>
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <CAM9d7chxMpUUouHsVTEvVEy8RyZ6tNzYbVD=a0Toao=n6cau-w@mail.gmail.com>
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+References: <20230622065351.1092893-1-anshuman.khandual@arm.com>
+ <20230622065351.1092893-4-anshuman.khandual@arm.com>
+ <CAM9d7cgTyowSHTydOUprPMn80POvbtYetrHTA_eU-wL0B_Cr8g@mail.gmail.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <CAM9d7cgTyowSHTydOUprPMn80POvbtYetrHTA_eU-wL0B_Cr8g@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -57,100 +54,13 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-在 2023/6/21 下午1:00, Namhyung Kim 写道:
-> On Tue, Jun 20, 2023 at 8:08 PM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
->>
->>
->>
->> 在 2023/6/21 上午3:04, Namhyung Kim 写道:
->>> Hello,
->>>
->>> On Tue, Jun 20, 2023 at 12:17 AM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
->>>>
->>>> Hi all,
->>>>
->>>> I add an identifier sysfs file for the yitian710 SoC DDR to allow
->>>> userspace to identify the specific implementation of the device,
->>>> so that the perf tool can match the corresponding uncore events and
->>>> metrics through the identifier. Then added yitian710 SoC DDR
->>>> metrics and events alias.
->>>>
->>>> Change since v3:
->>>> - Split the CMN and ali_drw patches. This patchset only contains
->>>>   ali_drw PMU related patches. The CMN metric related patches will
->>>>   be in another patchset.
->>>> - Link: https://lore.kernel.org/all/1685438374-33287-1-git-send-email-renyu.zj@linux.alibaba.com/
->>>>
->>>> $perf list:
->>>> ...
->>>> ali_drw:
->>>>   chi_rxdat
->>>>        [A packet at CHI RXDAT interface (write data). Unit: ali_drw]
->>>>   chi_rxrsp
->>>>        [A packet at CHI RXRSP interface. Unit: ali_drw]
->>>>   chi_txdat
->>>>        [A packet at CHI TXDAT interface (read data). Unit: ali_drw]
->>>>   chi_txreq
->>>>        [A packet at CHI TXREQ interface (request). Unit: ali_drw]
->>>>   cycle
->>>>        [The ddr cycle. Unit: ali_drw]
->>>> ...
->>>> ali_drw:
->>>>   ddr_read_bandwidth.all
->>>>        [The ddr read bandwidth(MB/s). Unit: ali_drw ]
->>>>   ddr_write_bandwidth.all
->>>>        [The ddr write bandwidth(MB/s). Unit: ali_drw ]
->>>> ...
->>>>
->>>> $perf stat -M ddr_read_bandwidth.all ./test
->>>>
->>>> Performance counter stats for 'system wide':
->>>>
->>>>             38,150      hif_rd        #  2.4 MB/s  ddr_read_bandwidth.all
->>>>      1,000,957,941 ns   duration_time
->>>>
->>>>        1.000957941 seconds time elapsed
->>>>
->>>> Jing Zhang (4):
->>>>   driver/perf: Add identifier sysfs file for Yitian 710 DDR
->>>>   perf jevents: Add support for Yitian 710 DDR PMU aliasing
->>>>   perf vendor events: Add JSON metrics for Yitian 710 DDR
->>>>   docs: perf: Update metric usage for Alibaba's T-Head PMU driver
->>>
->>> So patch 1 is for the kernel, and patch 2-4 depend on it, right?
->>>
->>
->> Hi Namhyung,
->>
->> Yes, patch 2-4 depend on patch 1.
->>
->>> I'm curious why the first patch is needed, presumably the PMU
->>> should have 'ali_drw' in the name already.  Do we use substring
->>> match for the compat name in the JSON metric?
->>>
->>
->> The main purpose of patch 1 is to add an identifier so that the Compat
->> field can match the corresponding event when defining aliases or metrics
->> for events.
->>
->> For example, "Unit" can match "ali_drw" in the name and different SoCs may
->> be able to match ali_drw, but they may have different events, and even if
->> the events are the same, the meanings may be different. Therefore, the
->> Compat field is needed to match the Identifier to confirm which type and
->> revision of PMU the current SoC has. Therefore, both "Unit" and "Compat"
->> need to be matched at the same time. Although it seems that ali_drw is
->> redundantly matched currently, it is meaningful for future expansion.
+On 6/24/23 04:51, Namhyung Kim wrote:
+> Hello,
 > 
-> I see, thanks for the explanation.
-> 
-> I think you need to route the kernel patch differently.  I can apply the tools
-> part once the kernel patch gets Acks from others.
-> 
+> On Wed, Jun 21, 2023 at 11:55 PM Anshuman Khandual
+> <anshuman.khandual@arm.com> wrote:
+>> This updates 'struct arm_pmu' for branch stack sampling support being added
+>> later. This adds an element 'reg_trbidr' to capture BRBE attribute details.
+> reg_brbidr, right?
 
-Ok, Thank you.
-
-Thanks,
-Jing
-
-> Thanks,
-> Namhyung
+Yes, it's a typo indeed.
