@@ -2,89 +2,105 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F161FEB64DA
-	for <linux-perf-users@archiver.kernel.org>; Sun, 25 Jun 2023 01:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 040B5EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Sun, 25 Jun 2023 08:56:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229939AbjFYBid (ORCPT
+        id S231779AbjFYI4Q (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 24 Jun 2023 21:38:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35830 "EHLO
+        Sun, 25 Jun 2023 04:56:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229537AbjFYBic (ORCPT
+        with ESMTP id S229683AbjFYI4O (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 24 Jun 2023 21:38:32 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 255AAA8;
-        Sat, 24 Jun 2023 18:38:31 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.56])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4QpYV32r8kzLmwb;
-        Sun, 25 Jun 2023 09:36:27 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Sun, 25 Jun 2023 09:38:28 +0800
-Subject: Re: [PATCH v5 4/4] perf tools: Add printing perf_event_attr config
- symbol in perf_event_attr__fprintf()
-To:     Namhyung Kim <namhyung@kernel.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <anshuman.khandual@arm.com>,
-        <jesussanp@google.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20230623054416.160858-1-yangjihong1@huawei.com>
- <20230623054416.160858-5-yangjihong1@huawei.com>
- <CAM9d7cjzzmjQnJUvE2a6bqDao07o9+mSyJH4C4xRq0zEZJwLnQ@mail.gmail.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <2654189b-0804-305a-be06-3234f39f0403@huawei.com>
-Date:   Sun, 25 Jun 2023 09:38:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Sun, 25 Jun 2023 04:56:14 -0400
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50CC3E40;
+        Sun, 25 Jun 2023 01:56:09 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R451e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0VlrouNg_1687683362;
+Received: from 30.120.140.216(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VlrouNg_1687683362)
+          by smtp.aliyun-inc.com;
+          Sun, 25 Jun 2023 16:56:04 +0800
+Message-ID: <3ec4c1c7-11cf-6518-933d-cb9167ab3bd0@linux.alibaba.com>
+Date:   Sun, 25 Jun 2023 16:55:58 +0800
 MIME-Version: 1.0
-In-Reply-To: <CAM9d7cjzzmjQnJUvE2a6bqDao07o9+mSyJH4C4xRq0zEZJwLnQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.11.2
+Subject: Re: [PATCH v3 2/7] perf metric: Event "Compat" value supports
+ matching multiple identifiers
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+References: <1685438374-33287-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1685438374-33287-3-git-send-email-renyu.zj@linux.alibaba.com>
+ <c1d8ee9b-4839-1011-4dad-c4777d8f8224@oracle.com>
+ <452e724b-2a2c-52fd-274b-60db7a7f730e@linux.alibaba.com>
+ <c4b2fca8-602d-9c76-90a7-3eafd92da8bc@oracle.com>
+ <76fcb062-61a8-5f90-b39d-b5fb6da35652@linux.alibaba.com>
+ <ZH452mAFn1uNo4NF@kernel.org>
+ <c8494676-25f8-72de-3279-70d49b74a91c@linux.alibaba.com>
+ <CAM9d7ci2fG0Z=y0E8YBPBY802u30n+ANn3tS16c1_08TjoObng@mail.gmail.com>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <CAM9d7ci2fG0Z=y0E8YBPBY802u30n+ANn3tS16c1_08TjoObng@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
 
-On 2023/6/24 13:28, Namhyung Kim wrote:
+
+在 2023/6/24 上午7:52, Namhyung Kim 写道:
 > Hello,
 > 
-> On Thu, Jun 22, 2023 at 10:46 PM Yang Jihong <yangjihong1@huawei.com> wrote:
+> On Wed, Jun 14, 2023 at 8:42 PM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
 >>
->> When printing perf_event_attr, always display perf_event_attr config and
->> its symbol to improve the readability of debugging information.
 >>
+>>
+>> 在 2023/6/6 上午3:39, Arnaldo Carvalho de Melo 写道:
+>>> Em Mon, Jun 05, 2023 at 10:46:36AM +0800, Jing Zhang escreveu:
+>>>> 在 2023/6/3 上午12:20, John Garry 写道:
+>>>>> On 01/06/2023 09:58, Jing Zhang wrote:
+>>>>>> It can match identifiers "arm_cmn600_{0,1,2..X}" or "arm_cmn650_{0,1,2..X}" or "arm_cmn700_{0,1,2..X}" or "arm_ci700_{ 0,1,2..X}".
+>>>>>> In other words, it can match all identifiers prefixed with “arm_cmn600” or “arm_cmn650” or “arm_cmn700” or “arm_ci700”.
+>>>>>>
+>>>>>> If a new model arm_cmn driver with identifier "arm_cmn750_0", it will not be matched, but if a new revision arm_cmn driver with identifier
+>>>>>> "arm_cmn700_4", it can be matched.
+>>>>>
+>>>>> OK, I see what you mean. My confusion came about though your commit message on this same patch, which did not mention cmn650. I assumed that the example event which you were describing was supported for arm_cmn650 and you intentionally omitted it.
+>>>>>
+>>>>
+>>>> Yes, I didn't write cmn650 in the commit message, just because I omitted it. I will add it in a later version.
+>>>
+>>> Ok, will wait for v4 then.
+>>>
+>>> - Arnaldo
+>>
+>> Hi Arnaldo,
+>>
+>> Thank you for following up this patchset, maybe we can merge patch4 to patch7 into your branch first?
+>> They have all been reviewed/acked and there is no dispute. And patch4-7 does not depend on patch1-3,
+>> because patch4-7 is about the metric of ali_drw_pmu, and patch1-3 is about the metric of arm_cmn.
+>> It may take some time for patch1-3 to reach a consensus.
 > 
-> [SNIP]
->> +
->> +#ifdef HAVE_LIBTRACEEVENT
->> +static void __p_config_tracepoint_id(char *buf, size_t size, u64 value)
->> +{
->> +       char *str = tracepoint_id_to_name(value);
+> IIUC patch 4 is for the kernel and patch 5-7 semantically depend on it.
+> So the patch 4 should be picked up by the kernel maintainers first.
 > 
-> This makes the python module import test failing due to the
-> undefined symbol.  I'll fix it by adding a dummy function in
-> util/python.c file.  But next time, please run `perf test` first
-> and make sure you don't break anything.
 
-Thanks for the correction.
+Yes, that's right, thanks.
 
-Running `perf test` on my environment has only one testcase for python:
-
-19:'import perf' in python: Ok
-
-The result is OK. The possible cause is that some libraries are missing 
-in my environment. As a result, other Python tests are not executed. 
-I'll check them first.
-
-Thanks,
-Yang
+> Thanks,
+> Namhyung
