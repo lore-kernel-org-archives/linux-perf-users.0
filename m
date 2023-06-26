@@ -2,75 +2,108 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC755EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 08:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73929EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 08:12:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229806AbjFZIJa (ORCPT
+        id S229799AbjFZIMp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Jun 2023 04:09:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49744 "EHLO
+        Mon, 26 Jun 2023 04:12:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229767AbjFZIJ3 (ORCPT
+        with ESMTP id S229762AbjFZIMm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Jun 2023 04:09:29 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4500F1BB;
-        Mon, 26 Jun 2023 01:09:28 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 111332F4;
-        Mon, 26 Jun 2023 01:10:12 -0700 (PDT)
-Received: from [192.168.1.100] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F7D93F73F;
-        Mon, 26 Jun 2023 01:09:25 -0700 (PDT)
-Message-ID: <0050f8d2-a4cd-2b84-77ad-6fa93bb14b16@arm.com>
-Date:   Mon, 26 Jun 2023 09:09:23 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH] perf tests: Fix test_arm_callgraph_fp variable expansion
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr,
-        linux-perf-users@vger.kernel.org, spoorts2@in.ibm.com,
-        kernel-janitors@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mon, 26 Jun 2023 04:12:42 -0400
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06D63E76;
+        Mon, 26 Jun 2023 01:12:35 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4QqLDc5xCyz4wZr;
+        Mon, 26 Jun 2023 18:12:32 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+        s=201702; t=1687767154;
+        bh=YL4WtG8LHm8HUihCvX1m65X1iguc/Lla+C+qJnkgHSU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=l/0v/jqK+E4RhCKLhMKi2A2cfLf7MEG/IjT47KrFbvNwUcc/ak2DcL4RwaSXDX5HU
+         32GcpNT4wkfyYrOboPEi/MBWW99W9Hs4wuyupj1wBRh9zSyX1B4QhqA96VXrhyfuG9
+         wZANibg/LWtdko5+N4iG4gJ8/GrLEK186mgGG4z3akt2rQTtTq5Xw3tUOGoIsuO+Ub
+         4JIZZmUIHPUjc4KZoHW2y8iin8mA5M4WHvkRIW0+vcWGxPxQOqKrG37PR8lxBH/Mq7
+         DpOn27+D47aUPU6eNxX6RONJ2cLF8/RpY47ESCplSGpmtbCldGCdPLzG+wWdHUteUZ
+         tqaKUnDV2rudw==
+Date:   Mon, 26 Jun 2023 18:12:31 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
         Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <20230622101809.2431897-1-james.clark@arm.com>
- <2b1cec46-52a9-21f1-bfcd-fbb4298f072a@web.de>
-Content-Language: en-US
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <2b1cec46-52a9-21f1-bfcd-fbb4298f072a@web.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+        linux-next@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: linux-next: build failure after merge of the net-next tree
+Message-ID: <20230626181231.70405c1f@canb.auug.org.au>
+In-Reply-To: <2947430.1687765706@warthog.procyon.org.uk>
+References: <20230626112847.2ef3d422@canb.auug.org.au>
+        <2947430.1687765706@warthog.procyon.org.uk>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/1Ge+Wr0ku4FcBxMax3jOKWi";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+--Sig_/1Ge+Wr0ku4FcBxMax3jOKWi
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi David,
 
-On 23/06/2023 17:56, Markus Elfring wrote:
-> …
->> At the same time silence the shellcheck warning for that line and fix
->> two more shellcheck errors at the end of the script.
-> 
-> Does such a wording really fit to the known requirement “Solve only one problem per patch.”?
-> 
-> See also:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.4-rc7#n81
-> 
-> 
-> Regards,
-> Markus
+On Mon, 26 Jun 2023 08:48:26 +0100 David Howells <dhowells@redhat.com> wrot=
+e:
+>
+> Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>=20
+> > After merging the net-next tree, today's linux-next build (native perf)
+> > failed like this:
+> >=20
+> > In file included from builtin-trace.c:907:
+> > trace/beauty/msg_flags.c: In function 'syscall_arg__scnprintf_msg_flags=
+':
+> > trace/beauty/msg_flags.c:28:21: error: 'MSG_SPLICE_PAGES' undeclared (f=
+irst use in this function) =20
+>=20
+> I tried applying the attached patch, but it doesn't make any difference.
 
-I think so, it fixes all the shellcheck errors that were claimed to be
-fixed and introduced by the referenced fix.
+I wonder if it is using the system headers?  Or depends on "make headers-in=
+stall"?
 
-To be honest I would have rather just reverted the original change
-completely because it was obviously never tested.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/1Ge+Wr0ku4FcBxMax3jOKWi
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmSZSG8ACgkQAVBC80lX
+0Gxg/ggAkTZ+/82QjJe4wJrDgQ+zyJhq4vhN3TFH56b9I64FB9blMUZicISKfQte
+O/y63r6wPVD5Tsjc8v81egJO+i4/jXd/jp4i+ce7xSNDk0uSIjeRoXr8wMD3R793
+Z0925rEhClPbyGwjhNZulvAOEcNZOyN/2A8z+zFSN/3ie6bTNxWNrVXkN1P25RTd
+FAQYiT+YtY5taSmAnmO+O7ckJl69o3K8xUPct4a0oeEWxgNnjrXfKlhAUyFZzLzv
+TjYK7Vk3KfGKJ2rGrLEw2RlgaIMMJ5/3NupwFqbpa6UMHtyMfv+5Z2EzHVs8BqFJ
+G9IHURBU29V9G16Lrjo2uPr0UBOIaw==
+=IP/A
+-----END PGP SIGNATURE-----
+
+--Sig_/1Ge+Wr0ku4FcBxMax3jOKWi--
