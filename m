@@ -2,233 +2,220 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AC1EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 16:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73982EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 16:38:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231772AbjFZQL4 (ORCPT
+        id S229638AbjFZQib (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Jun 2023 12:11:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46232 "EHLO
+        Mon, 26 Jun 2023 12:38:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229806AbjFZQLu (ORCPT
+        with ESMTP id S229454AbjFZQia (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Jun 2023 12:11:50 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88BABE48
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 09:11:37 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1b520329adeso251155ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 09:11:37 -0700 (PDT)
+        Mon, 26 Jun 2023 12:38:30 -0400
+Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DA7783
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 09:38:29 -0700 (PDT)
+Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-401d1d967beso4041cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 09:38:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687795897; x=1690387897;
+        d=google.com; s=20221208; t=1687797508; x=1690389508;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vUpK/FesKqMENV8Lp1Bpn5fG0Rycj/A9sGOJzazt60g=;
-        b=2SGAdpMYFO2GYOYhdprBSPelJ2SwI6wK7MeheKmG4Phk0C8o779XGeGAd+TzppXg3/
-         xCfkO0KbZj22BBrp8j7k3h5BlzRspMUf2SOD0AtmKUDcbrF9dlLIS63pnmApdPWZIBbV
-         Xk9bz39k7iciEt4fSs0D4EwQcUzzJcuWT0nNEfz4QcdbfWUERBPo6nUfPCAMJzT2qB3i
-         vnRwbAOTToFM7JH8DqK6Hri8L4fX5lZaed9kTzOq554VY4iS+m0YRiPmXnXzGD/0K5+r
-         DDu53xRunTc9dohT4TeuVnNiYZ8aeleAHOOxCeEjb+ULt+3wCg3d26ivdo+2ozvlbFfB
-         NmKQ==
+        bh=DdnlJZSXW5PwKmUgpPMGFTsKOOAqLa+rJ2YTia9KdGM=;
+        b=LuTHwz5zxUE1jwKl7521XwqpYDku8bBx6vygKSLQOpjZbQkvNBIAHqatxw8QS7czB9
+         oeBWofS8UqPS8GxWH06bJSqDGJBIhkHB9vqEymQWOdLUAtFZ26W2+/WFP8ENAmjqj6kN
+         YoowWp4/8yQT+qZ+PRKHIjBc8rZqNUV+PVx0w6xo4W+//9rYeEpO3EvR0C/QI5Pmx0oJ
+         IzWnL01L5b2uhOIaQZFgWR1rbPRosggeWcbk0rn1nLHchnf9+BnS3gz4kBxHM/mtIgaP
+         q49ahWbGfAuTlSg/1WS2vxkUiFvv2g3OrmqzGGhep/7GEpXmYtNZZhY+YTvnqRaVV5wM
+         lrsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687795897; x=1690387897;
+        d=1e100.net; s=20221208; t=1687797508; x=1690389508;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vUpK/FesKqMENV8Lp1Bpn5fG0Rycj/A9sGOJzazt60g=;
-        b=RfsDrxBOAcyAJeaJU4/mYnxFuZaECz1Pc6FpfRRz9kBG+yyAletXSFssqoUipjUpny
-         H+Kw1vg6GVbNxukCWT7FOYhGxBWV0ni2s8weNQqPdOOenVt2uuB+q+e7HbA4G7qaAiK1
-         258dtZCDrXUILVNvtIo7nSpyAAwofpZxgM+QkYnkpBcy8KfaysSSlDEap6P7DCCwBMbw
-         dE5JXr/zJwZ+cnzVaSljhEixLe99NjYQ1Kn0ng7GbdfyfKyw+0KAwaodwxbs0suniivV
-         at8LysZzNn7HWlverRcdnde8nidzdouG+djzEgR5E6Ht2kToml41WlSivSqeGS04iGfX
-         IvxQ==
-X-Gm-Message-State: AC+VfDzd2gqeU+z9DljjrLEJYgs8YJWet0yOOseU7wqoiuA6os17MsVb
-        HCG5foUZQHJSivUTyL/u8yDyovYAWEC8lNcbVqPiJA==
-X-Google-Smtp-Source: ACHHUZ4wCUwjtnjlBAP6350IJkr+7MVseDsx3rKsMgKqbhq7kdQBbTI/1dHfCcVl7ROAsuQ8/kgGGh6tkXQIXYNzbQo=
-X-Received: by 2002:a17:902:c44a:b0:1a9:bb1d:64e with SMTP id
- m10-20020a170902c44a00b001a9bb1d064emr1942727plm.15.1687795896773; Mon, 26
- Jun 2023 09:11:36 -0700 (PDT)
+        bh=DdnlJZSXW5PwKmUgpPMGFTsKOOAqLa+rJ2YTia9KdGM=;
+        b=aZUzJuoa4lRuTPI9bUILQYOOdZY383NpYXlAkHfCiy6BixM01TLWn9n5n3J1Z3e8SL
+         1wfpi7Z87j9RhFalwMhz8Bbop3Oh9kB/G3PY1nT1o/xvMAT9U16jWtW9qbQVZJ5H0oW2
+         wrN07OE89i5KGBA8jsrk7QF1dP+gWVwfXIOPcKszkoQnj4yTj4bTr2Or5+tpy3gdvTyk
+         9FRWXhgOjjVN41dOLWsmrgTLyU+fwk2qpFfam8/rWKPv0u9ZgOieFAdJpWbk5YzBzCgM
+         2W+lIosdCbRIN3nyRncZCwrmio4+YCzoy+apH/CBA8K/6YMivsGxA6SC6IWlON5avP7u
+         QDpg==
+X-Gm-Message-State: AC+VfDypleb8lhtdeuS73U1tb1l1BkNqH2NYCLgb/G1T2FYQwYNNoLq2
+        lXEyoqoBOJk+hUPcu+4qT139ldMcWoZ0hr56bM+0xg==
+X-Google-Smtp-Source: ACHHUZ5CBGGKaMIKkNz3aZA5nkPZYuue/90sL4zOip+IPc83LbAJRuFnPL/jd+cJ5It0gjasi7W7ESmGAfFfxl5ztiA=
+X-Received: by 2002:a05:622a:1826:b0:3f9:a986:f3a4 with SMTP id
+ t38-20020a05622a182600b003f9a986f3a4mr435591qtc.25.1687797508477; Mon, 26 Jun
+ 2023 09:38:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAM9d7cgmHuhv1U6yAB-2qUr8SuFjUd-Lqw0kew9MaBVeD8xxGw@mail.gmail.com>
- <CAP-5=fXFBpaN+ajF+u6GAL-3bb9LPR=dwevB_-7N7uUh-c3SPw@mail.gmail.com>
- <a3958a0c-092f-b609-e2ea-0d35fddd4375@arm.com> <CAP-5=fX8Nwtra=EgRNh3Ybp+N0BKp4Cw=0uRS9ZCdPyGF4R_bA@mail.gmail.com>
- <20230626123249.GC19941@willie-the-truck> <57ea7d37-83bd-80ba-3342-93598a88ac20@arm.com>
- <20230626150945.GA20321@willie-the-truck>
-In-Reply-To: <20230626150945.GA20321@willie-the-truck>
+References: <151a8677-3259-0586-03f3-fb751782daa9@oracle.com>
+ <CAP-5=fXDVUToBbS6z8YY9K0vh5Z=PHh83RZXX3=NugTEqFeXzQ@mail.gmail.com> <5bebf78f-15ce-7aaa-eaed-41cd49f53d68@oracle.com>
+In-Reply-To: <5bebf78f-15ce-7aaa-eaed-41cd49f53d68@oracle.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 26 Jun 2023 09:11:25 -0700
-Message-ID: <CAP-5=fWf+Ts93StWaiaqdkcgVkjnBR9nFsR=4yKG8R9LpdUNFw@mail.gmail.com>
-Subject: Re: perf-tools-next: Request for testing hybrid changes
-To:     Will Deacon <will@kernel.org>
-Cc:     James Clark <james.clark@arm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Namhyung Kim <namhyung@gmail.com>, mark.rutland@arm.com
+Date:   Mon, 26 Jun 2023 09:38:16 -0700
+Message-ID: <CAP-5=fUjPAmisSkfPJUzorrev2FwWMeMHBBXF1Sh2WfAg8KHzA@mail.gmail.com>
+Subject: Re: perf test pmu-events question
+To:     John Garry <john.g.garry@oracle.com>
+Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 26, 2023 at 8:09=E2=80=AFAM Will Deacon <will@kernel.org> wrote=
-:
+On Mon, Jun 26, 2023 at 6:33=E2=80=AFAM John Garry <john.g.garry@oracle.com=
+> wrote:
 >
-> Hi James,
->
-> On Mon, Jun 26, 2023 at 03:39:00PM +0100, James Clark wrote:
-> > On 26/06/2023 13:32, Will Deacon wrote:
-> > > What does PERF_PMU_CAP_EXTENDED_HW_TYPE buy us on Arm, given that we'=
-ve
-> > > supported heterogeneous PMUs for years without issues? In other words=
-,
-> > > what is the benefit of supporting two user ABIs here?
-> > >
-> > Aren't there some issues around per-process perf sessions and choosing
-> > which PMU to use?
-> >
-> > For example on Juno if I run perf on one of the big cores (1 and 2),
-> > then I only get an accurate cycle count if the process I'm interested i=
+> On 23/06/2023 16:48, Ian Rogers wrote:
+> > On Fri, Jun 23, 2023 at 8:20=E2=80=AFAM John Garry <john.g.garry@oracle=
+.com> wrote:
+> >>
+> >> Hi Ian,
+> >>
+> >> I was doing some re-write for pmu sys events metric support and I want
+> >> to add more testcases - we don't really have any.
+> >>
+> >> So I noticed that tests/pmu-events.c::test__parsing() can pick up on a=
 n
-> > also runs on a big core:
+> >> invalid metric for the test CPU, like M3 as it references itself.
+> >> However we can't detect whether event aliases referenced in the metric
+> >> exist for the CPU. Is it worth testing for this? Would it be sane to
+> >> scan the associated CPU event tables to see if we can find the event
+> >> there? Or do we already have some per-non-test-CPU metric validator
+> >> already in the testcases (I could not see it)?
 > >
-> >   taskset --cpu-list 1 perf stat -e cycles -- taskset \
-> >    --cpu-list 1 stress -c 1 -t 1
-> >
-> >   1087015046      cycles:u
-> >
-> > If the stress process runs on a small core (4 for example) then I get a
-> > much lower count, which I think is only accounting for the taskset
-> > before it finishes pinning stress to the small core:
-> >
-> >   taskset --cpu-list 1 perf stat -e cycles -- taskset \
-> >     --cpu-list 4 stress -c 1 -t 1
-> >
-> >   68134032      cycles:u
-> >
-> > Then if perf starts on a small core it gets even worse, you never get
-> > any cycle counts, even if stress runs on the same core:
-> >
-> >   taskset --cpu-list 0 perf stat -e cycles -- taskset \
-> >     --cpu-list 0 stress -c 1 -t 1
-> >
-> >   <not counted>      cycles:u
-> >
-> > I'm not sure how many of these are just the perf tool doing the wrong
-> > thing and should be fixed in other ways than using
-> > PERF_PMU_CAP_EXTENDED_HW_TYPE. But there is also something to be said
-> > for consistency that if PERF_PMU_CAP_EXTENDED_HW_TYPE is already
-> > understood by the tool as a way to use different PMU types then
-> > supporting it on Arm might make sense.
 >
-> I think the above is just an example of how the ABIs differ and doesn't
-> reflect a limitation of either, no? In other words, if you drive it wrong=
-,
-> then yes, you get the wrong result. That's the same with any heterogeneou=
-s
-> system. I agree that consistency is great, but we've been exposing
-> heterogeneous PMUs on arm for what, a decade now? It feels a little
-> disingenuous to say we should be consistent with something that's this
-> hot off the press.
-
-55bcf6ef314a perf: Extend PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE
-Date:   Mon Apr 12 07:31:01 2021 -0700
-https://lore.kernel.org/all/1618237865-33448-22-git-send-email-kan.liang@li=
-nux.intel.com/
-
-> Anyway, my main question is still largely unanswered: what does the new
-> ABI gain us over what we have? Is it documented somewhere?
-
-I'm not sure why you see this as a new ABI? There are 32-bits in the
-perf_event_attr config that now hold the extended type information
-which were unused and erroneous if used previously. These bits just
-clear up ambiguity for the legacy event types about which PMU is being
-requested when perf events are associated with a task. There are IIRC
-62 legacy hardware/hardware-cache events with hard coded PMU type
-numbers. The perf tool will use these in preference to other events
-and are used when no events/metrics are requested of the perf tool.
-The extended type is described in the uapi perf_event.h, it probably
-also makes sense to add man page documentation.
-
-> For example,
-> how does it handle things like:
+> Hi Ian,
 >
->   - Different number of hardware counters across CPU types
+> Thanks for getting back to me.
+>
+> >
+> > Hi John,
+> >
+> > we always need more tests :-)
+>
+> Sure
+>
+> > For Intel there has historically been a
+> > problem that the names in metrics and the event data will get out of
+> > alignment. There is a best effort test during the metric generation
+> > that this doesn't happen any more here:
+> > https://urldefense.com/v3/__https://github.com/intel/perfmon/blob/main/=
+scripts/create_perf_json.py*L1171-L1188__;Iw!!ACWV5N9M2RV99hQ!OKyD56aIReczg=
+aPkGD3MZ0yZ-WFe7qXps1aFyF6pibEN8nk0r4N5Y87MgV0twed_V8E8l7kjJd88_AjTGW8$
+>
+> Does that validate alias event support for the CPU? It seems that the
+> specific lines mentioned are just checking for keywords.
 
-This is unchanged. If you open a legacy say "cycles" event on CPU0 and
-then use the raw/dynamic type to open other events, those events will
-go into a perf hardware context and can multiplex when the counters
-are all used.
+So we filter out all of the keywords and then assert the named thing
+is either an event or an auxiliary metric:
+assert v in events or v.upper() in events or v in infoname or v in aux,
 
->   - An event that might not be supported across different CPU types
+I agree, the weight of the code is toward skipping the keywords.
 
-This happens but is only detected for the hardware-cache events. The
-ARM PMUs are already handling this, they just are unable to handle it
-in per-thread mode.
+> > But still things get messed up, such as PMU names being mismatched -
+> > when this happens the JSON events just don't appear at runtime. We
+> > could try to replicate the event matching logic at creation time in
+> > jevents.py and that should do what you mention and be
+> > multi-architecture.
+>
+> OK, that could work. It is limited to testing just aliases, which I
+> suppose has some value.
 
->   - Events that might collide across CPU types (e.g. raw events that have
->     the same encoding but count something different)
+Note, I'm going to try avoid using the name aliases as it is
+overloaded in the tool whereas we tend to just mean event. It is
+likely the code/comments in the tool will slowly migrate to my
+preference :-)
 
-This happens with homogeneous PMUs too. There's nothing special in the
-kernel/tool to merge such events, if you use enough of them you'll get
-multiplexing. It is a case of buyer beware.
+> However I am not sure how well this would suit testing sys event metric
+> support, where I want to ensure that a specific event alias is chosen
+> for a metric in the same pmu_sys_events struct.
 
-> From what I can tell, the main difference between the interfaces seems to
-> be the level of resourcing that Intel and Arm have each put into the
-> tooling, and I don't think that's a particularly compelling reason to
-> take on the burden of maintaining both in the kernel. However, if there
-> are functional benefits with PERF_PMU_CAP_EXTENDED_HW_TYPE over what we'v=
-e
-> been doing them I'm keen to hear about them.
+Are you specifying the PMU? If not there is a danger the event will
+match >1 PMU.
 
-The benefits are that currently the perf tool is broken* for ARM
-heterogeneous PMUs. Specifically, perf will open events "instructions"
-or "cycles" for a benchmark like:
+> > The metric test tests every metric produces an
+> > output, and this fails when event parsing fails, so this has
+> > traditionally been the way to find bad metrics.
+> >We do have build time
+> > tests like:
+> > https://urldefense.com/v3/__https://git.kernel.org/pub/scm/linux/kernel=
+/git/perf/perf-tools-next.git/tree/tools/perf/pmu-events/Build?h=3Dperf-too=
+ls-next*n30__;Iw!!ACWV5N9M2RV99hQ!OKyD56aIReczgaPkGD3MZ0yZ-WFe7qXps1aFyF6pi=
+bEN8nk0r4N5Y87MgV0twed_V8E8l7kjJd882X6fEUE$
+>
+> This just tests invalid metric format, right?
 
-$ perf stat -e cycles benchmark
+So this specific test is checking the metric code passes some unit
+tests. When we parse metrics from json, in jevents.py, we use this
+code and it will throw exceptions if the json metric is badly formed.
+You probably remember seeing patches fixes parentheses.
 
-and the cycles event will be opened for the PMU of the current CPU the
-perf tool happens to be running on. It won't be opened on the other
-PMU. This means perf is only counting some fraction of the event.
+> >
+> > Intel don't have JSON encodings for the TSX events and so they use
+> > sysfs events and this is what motivated the has_event test:
+> > https://urldefense.com/v3/__https://lore.kernel.org/linux-perf-users/20=
+230623151016.4193660-1-irogers@google.com/__;!!ACWV5N9M2RV99hQ!OKyD56aIRecz=
+gaPkGD3MZ0yZ-WFe7qXps1aFyF6pibEN8nk0r4N5Y87MgV0twed_V8E8l7kjJd88rRd1z5c$
+> >
+> > Some other thoughts in this area:
+> > 1) I'd like to get sysfs snapshots so that we can get things like
+> > parse-events coverage of heterogeneous PMUs without needing such a
+> > system.
+>
+> That idea would seem good to testing other sort of uncore PMUs - for
+> example, since I don't have access to a system which supports sys
+> events, I need to bodge the kernel to support some fake PMU kernel
+> driver for things like smmu pmcg.
 
-At this point adding the capability to the PMU has been in the kernel
-for over 2 years. On the user side Intel hardcoded support for their
-CPUs and I recently tried to make this into something generic.
-Unfortunately in making this generic I've discovered the extended type
-bit was never added to ARM PMUs. This means that rather than open a
-single event the perf tool is opening say the cycles event twice, but
-because the extended type information causes errors on ARM we don't
-encode that yielding the same event opened twice on the PMU of the CPU
-that perf happens to be running on. I believe users with heterogeneous
-ARM PMUs aware of the problem have been avoiding the legacy events, is
-this something you are expecting the tool to do too? For example:
+My thoughts too. I lack a lot of heterogeneous systems for testing.
 
-$ perf record benchmark
+> > 2) The largest part of the perf binary is the json data.
+>
+> oh
+>
+> > I'd like to
+> > convert the json data to a sysfs style, then compress it in a way
+> > where we benefit from duplication between files (zip can't do this,
+> > but tgz or 7zip can). libarchive can load these formats from memory.
+> > The current json data on x86 converts to about 7MB of read-only data,
+> > but the same json files compress down to about 1.5MB. The perf binary
+> > is about 3MB of code, so doing the compression should hopefully make
+> > the file size about half what it currently is and do something to stem
+> > the problem of the binary slowly growing over time with new
+> > architecture releases.
+>
+> ok, sounds reasonable if slow binary loading is really a problem.
 
-Will open the cycles event for the threads of benchmark. With extended
-type information we open a cycles event on each PMU, but without it
-we're only sampling on a fraction of the PMUs. Should the tool turn
-cycles on ARM into an ARM architecture standard event? Which event and
-who will write/test the mapping code? The problem is finite (there are
-only 62 events) and there are no time machines, perhaps if there were
-we wouldn't have the legacy events at all. The PMU driver change looks
-about as small as it can be, adding a bit to the capabilities of the
-PMU. I have no way to test such a change and it doesn't resolve the
-problem for older kernels on the perf tool.
+The time for perf to parse events I will probably regress with
+compression, because of the need to decompress. The file size is an
+issue that comes up when the binary is installed at the scale Google
+does (both devices and data centers). We're over 10MB and edging
+slowly toward 11MB as Intel add models.
+
+> > 3) I'm hoping we can do something like a unionfs with the in memory
+> > sysfs, on disk sysfs tar balls and the like, and the machine's actual
+> > sysfs so that we can just have one consistent view in the tool.
+> > 4) I want to make PMUs lazier so that we don't need to eagerly load
+> > all the events. The cycles event doesn't need json or sysfs data, but
+> > it is all still loaded due to wanting the PMU. This faults in a lot of
+> > JSON data on x86 that is then never used.
+> >
+> That should be pretty easy to do by only needing to setup event aliases
+> et al when we have events which are not from known config terms, right?
+
+Yeah, it feels low hanging. The code turns every json event and sysfs
+event into a perf_pmu_alias when the PMU is created, the events are
+sorted and then we search them at parse time. We can avoid doing this
+and search the jevents.py created tables instead. This should turn
+loading n events into log2(n) for the sake of the search. This will
+change with the compressed version, and the behavior will depend on
+the compression format. This is why I like the idea of punting the
+problem to libarchive.
 
 Thanks,
 Ian
 
-* I don't have an ARM system with heterogeneous PMUs to confirm this,
-I'm inferring from the code and some tests Arnaldo ran on a system of
-his.
-
-> Will
+> Thanks,
+> John
