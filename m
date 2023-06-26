@@ -2,102 +2,157 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDA9EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 12:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05A8EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 13:21:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231375AbjFZMqT (ORCPT
+        id S230004AbjFZNVN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Jun 2023 08:46:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40262 "EHLO
+        Mon, 26 Jun 2023 09:21:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbjFZMqC (ORCPT
+        with ESMTP id S229880AbjFZNVM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Jun 2023 08:46:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E49392942;
-        Mon, 26 Jun 2023 05:44:51 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        Mon, 26 Jun 2023 09:21:12 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B9E01B1
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 06:20:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1687785622;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=p/Z1KtTHNDEz/UvhK/uC5AXS1uWtp7gEorowOqjT+2k=;
+        b=HlqHyZSuLOfLUnj11cWrTO5hMEOmeHo+x2zxMniqQ2Ho4PDv37JSMuWoZ5SfZSvMXjhCA4
+        7rJmheuMzLOGCZgtWATFuu1Mz3Wzb/6ZT1IH3Mnv7F0lkMqs43j4wao2nRPTezCnimJhzP
+        MA2Xl23OCct+qVwAF9CTHrVDFPK/J6s=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-654-CPSOP-6FMqeapgcO3dkupw-1; Mon, 26 Jun 2023 09:20:19 -0400
+X-MC-Unique: CPSOP-6FMqeapgcO3dkupw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5292160E9B;
-        Mon, 26 Jun 2023 12:44:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E74D4C433C8;
-        Mon, 26 Jun 2023 12:44:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687783479;
-        bh=zybkaKmO2rq8ExZfzHUmP4+U7WBCst4SsJhXQatkp/o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OCaYeKgR7cpxf3FJj1ApaF+cDf3BQWX4+ctqU0OLRRBja2IVSkgwgUW18kLel4THd
-         JivMpVLL1+0o/vjgGN+qiZfvL0+SCTd6YUzcKnxFCyS64Xbey0jmw/qrMy7MDCUF4A
-         9wywLBAPZZKr2V77R9Dhv+VTTFRSEvugBf6kVzglEMZuv5GNi/0NW/YyIJ3Ydyps+i
-         honsMly0qBOAN/erO6dD+/Ku/qrEiW1X/6ITnlB6ANyhW03fij5GpxwmmbwbprPFYH
-         /lfDMZ9LabmUaAZKseb0sLWhWx1oKVJta2wHtXSOZ/f/i418+QiEScI2Dp0MJovzCf
-         gCOpnC8dcu37w==
-Date:   Mon, 26 Jun 2023 13:44:32 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jing Zhang <renyu.zj@linux.alibaba.com>,
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E48B2858EED;
+        Mon, 26 Jun 2023 13:20:17 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3B361C478C6;
+        Mon, 26 Jun 2023 13:20:15 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+cc:     dhowells@redhat.com,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        David Miller <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        John Garry <john.g.garry@oracle.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Ian Rogers <irogers@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
-Subject: Re: [PATCH v4 0/4] Add JSON metrics for Yitian710 DDR
-Message-ID: <20230626124431.GB20045@willie-the-truck>
-References: <1687245156-61215-1-git-send-email-renyu.zj@linux.alibaba.com>
- <CAM9d7cj3v58m8NcsEK4sYsk_dbQDAq71hYo7DV=xaQa_rZyPYg@mail.gmail.com>
- <a5486c58-32b6-2d5e-e623-d7844c51474c@linux.alibaba.com>
- <CAM9d7chxMpUUouHsVTEvVEy8RyZ6tNzYbVD=a0Toao=n6cau-w@mail.gmail.com>
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+        linux-next@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] tools: Fix MSG_SPLICE_PAGES build error in trace tools
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7chxMpUUouHsVTEvVEy8RyZ6tNzYbVD=a0Toao=n6cau-w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3065879.1687785614.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Mon, 26 Jun 2023 14:20:14 +0100
+Message-ID: <3065880.1687785614@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 20, 2023 at 10:00:46PM -0700, Namhyung Kim wrote:
-> On Tue, Jun 20, 2023 at 8:08 PM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
-> > 在 2023/6/21 上午3:04, Namhyung Kim 写道:
-> > > I'm curious why the first patch is needed, presumably the PMU
-> > > should have 'ali_drw' in the name already.  Do we use substring
-> > > match for the compat name in the JSON metric?
-> > >
-> >
-> > The main purpose of patch 1 is to add an identifier so that the Compat
-> > field can match the corresponding event when defining aliases or metrics
-> > for events.
-> >
-> > For example, "Unit" can match "ali_drw" in the name and different SoCs may
-> > be able to match ali_drw, but they may have different events, and even if
-> > the events are the same, the meanings may be different. Therefore, the
-> > Compat field is needed to match the Identifier to confirm which type and
-> > revision of PMU the current SoC has. Therefore, both "Unit" and "Compat"
-> > need to be matched at the same time. Although it seems that ali_drw is
-> > redundantly matched currently, it is meaningful for future expansion.
-> 
-> I see, thanks for the explanation.
-> 
-> I think you need to route the kernel patch differently.  I can apply the tools
-> part once the kernel patch gets Acks from others.
+The following error is being seen the perf tools because they have their
+own copies of a lot of kernel headers:
 
-Sorry, I missed this initially as I didn't realise there were kernel changes
-hidden in this series (I saw "JSON" and ignored it...). Given that the 6.5
-merge window is now open, I'll pick the kernel change up for 6.6 when I
-start queueing patches in a few weeks.
+In file included from builtin-trace.c:907:
+trace/beauty/msg_flags.c: In function 'syscall_arg__scnprintf_msg_flags':
+trace/beauty/msg_flags.c:28:21: error: 'MSG_SPLICE_PAGES' undeclared (firs=
+t use in this function)
+   28 |         if (flags & MSG_##n) { \
+      |                     ^~~~
+trace/beauty/msg_flags.c:50:9: note: in expansion of macro 'P_MSG_FLAG'
+   50 |         P_MSG_FLAG(SPLICE_PAGES);
+      |         ^~~~~~~~~~
+trace/beauty/msg_flags.c:28:21: note: each undeclared identifier is report=
+ed only once for each function it appears in
+   28 |         if (flags & MSG_##n) { \
+      |                     ^~~~
+trace/beauty/msg_flags.c:50:9: note: in expansion of macro 'P_MSG_FLAG'
+   50 |         P_MSG_FLAG(SPLICE_PAGES);
+      |         ^~~~~~~~~~
 
-Will
+Fix this by (1) adding MSG_SPLICE_PAGES to
+tools/perf/trace/beauty/include/linux/socket.h - which looks like it ought
+to work, but doesn't, and (2) defining it conditionally in the file on
+which the error occurs (suggested by Matthieu Baerts - this is also done
+for some other flags).
+
+Fixes: b848b26c6672 ("net: Kill MSG_SENDPAGE_NOTLAST")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Link: https://lore.kernel.org/r/20230626112847.2ef3d422@canb.auug.org.au/
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+cc: "David S. Miller" <davem@davemloft.net>
+cc: Eric Dumazet <edumazet@google.com>
+cc: Jakub Kicinski <kuba@kernel.org>
+cc: Paolo Abeni <pabeni@redhat.com>
+cc: Jens Axboe <axboe@kernel.dk>
+cc: Matthew Wilcox <willy@infradead.org>
+cc: bpf@vger.kernel.org
+cc: dccp@vger.kernel.org
+cc: linux-crypto@vger.kernel.org
+cc: mptcp@lists.linux.dev
+cc: netdev@vger.kernel.org
+cc: tipc-discussion@lists.sourceforge.net
+cc: virtualization@lists.linux-foundation.org
+---
+ include/linux/socket.h |    1 +
+ msg_flags.c            |    3 +++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/tools/perf/trace/beauty/include/linux/socket.h b/tools/perf/t=
+race/beauty/include/linux/socket.h
+index 3bef212a24d7..77cb707a566a 100644
+--- a/tools/perf/trace/beauty/include/linux/socket.h
++++ b/tools/perf/trace/beauty/include/linux/socket.h
+@@ -326,6 +326,7 @@ struct ucred {
+ 					  */
+ =
+
+ #define MSG_ZEROCOPY	0x4000000	/* Use user data in kernel path */
++#define MSG_SPLICE_PAGES 0x8000000	/* Splice the pages from the iterator =
+in sendmsg() */
+ #define MSG_FASTOPEN	0x20000000	/* Send data in TCP SYN */
+ #define MSG_CMSG_CLOEXEC 0x40000000	/* Set close_on_exec for file
+ 					   descriptor received through
+diff --git a/tools/perf/trace/beauty/msg_flags.c b/tools/perf/trace/beauty=
+/msg_flags.c
+index 5cdebd7ece7e..aa9934020232 100644
+--- a/tools/perf/trace/beauty/msg_flags.c
++++ b/tools/perf/trace/beauty/msg_flags.c
+@@ -8,6 +8,9 @@
+ #ifndef MSG_WAITFORONE
+ #define MSG_WAITFORONE		   0x10000
+ #endif
++#ifndef MSG_SPLICE_PAGES
++#define MSG_SPLICE_PAGES	0x8000000
++#endif
+ #ifndef MSG_FASTOPEN
+ #define MSG_FASTOPEN		0x20000000
+ #endif
+
