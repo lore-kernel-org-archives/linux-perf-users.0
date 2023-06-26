@@ -2,171 +2,237 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93FFEB64D7
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 10:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C486EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 10:40:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229446AbjFZKU4 (ORCPT
+        id S229908AbjFZKku (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Jun 2023 06:20:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55646 "EHLO
+        Mon, 26 Jun 2023 06:40:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229679AbjFZKUz (ORCPT
+        with ESMTP id S229815AbjFZKkt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Jun 2023 06:20:55 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7AFF719F;
-        Mon, 26 Jun 2023 03:20:53 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27F392F4;
-        Mon, 26 Jun 2023 03:21:37 -0700 (PDT)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D511D3F64C;
-        Mon, 26 Jun 2023 03:20:50 -0700 (PDT)
-Message-ID: <e60de124-ae61-c8a0-c012-ce6d4dabad10@arm.com>
-Date:   Mon, 26 Jun 2023 11:20:49 +0100
+        Mon, 26 Jun 2023 06:40:49 -0400
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2049.outbound.protection.outlook.com [40.107.101.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5D1410CF;
+        Mon, 26 Jun 2023 03:40:22 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AsDIkFZMn8Bly+7cKAdaRlYdcsWFHkGhg74AsSZoe3edsoxgnKifmZ9Z/Pu1zEd206YdLwImLvbcgGAuLAzbnuHMOJvDAwmVyDRl9JfSJBQzjRvM0atDY8gwHfzlgLZcH3mHLj6jW1qJaYn3g7FzjhYGdOlteghTMQMedK90q6/TFv/pUUN0Ir5bYMHaYcKYh/jSLGoOBo98ZxqokdCEby6WmwcHY2sTR8eGV8hwcZN6ZxbPKecAZRhEOFsAg5M29Zw2che60CcRx8i0em/HoEjvEyVCj8NsEontZpAgwzMNspZiub1XUJCjenvG94t8czOzkIgxWx80ksLwTTC91g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=r1Y6oY2HOrJU2bbYdgYjV1Eu4N6rPgKgU84fT1+IstM=;
+ b=Yh4eVb8AkA8hQfAXzRAD/axYzaWtmMCVjm17GcBCgFdlRxW6AhKXTr8jqA/JdJlDVxef1o5m645bs3Qw7Y/lQJ4Cy3tkBTGlsqqYkgc3aNHbNiLVrWDSrQNspU0Davnnyzlp04GkUOa17WtlmuWBfWs/rbnRqCvhGFYIa0qtJgAhDINam0banbRg6A+37AuUlcXzvAsQnbCnu7Rr6TvbEstUB/TIJrAsa7JOtRaFWYQVfCPksTwfAnmBrMBc7fKehE4e1OTIlZGtmtWjx03vGd7X/SAbl9/AnffLlBPh2NRCNMqPUAaNHNbN66qprPLT5l1we9eqEnnxNIA6Jgf11Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r1Y6oY2HOrJU2bbYdgYjV1Eu4N6rPgKgU84fT1+IstM=;
+ b=pZ9YBc9HGohdSVj9gQPGWoE3aaIY4kj5xc/8o42d6Dq1DfkXPPYMw7hKndERBwtoFmG2loioUpBHyGfCZFmQXOFQxxMbNKM1xpZptrLXiomsOTDKV+jiZJNIdU4A+rJ2MggchQoE+BQYw+2GPoNv2NfoVgxG1rMEyjiRXK0EFa4=
+Received: from BN0PR04CA0037.namprd04.prod.outlook.com (2603:10b6:408:e8::12)
+ by CY8PR12MB8361.namprd12.prod.outlook.com (2603:10b6:930:7b::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.23; Mon, 26 Jun
+ 2023 10:40:20 +0000
+Received: from BN8NAM11FT102.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:e8:cafe::f6) by BN0PR04CA0037.outlook.office365.com
+ (2603:10b6:408:e8::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.33 via Frontend
+ Transport; Mon, 26 Jun 2023 10:40:20 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT102.mail.protection.outlook.com (10.13.177.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6500.47 via Frontend Transport; Mon, 26 Jun 2023 10:40:20 +0000
+Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 26 Jun
+ 2023 05:40:15 -0500
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+To:     <acme@kernel.org>
+CC:     <ravi.bangoria@amd.com>, <peterz@infradead.org>,
+        <irogers@google.com>, <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sandipan.das@amd.com>,
+        <ananth.narayan@amd.com>, <santosh.shukla@amd.com>
+Subject: [PATCH v2] perf evsel amd: Fix IBS error message
+Date:   Mon, 26 Jun 2023 16:09:58 +0530
+Message-ID: <20230626103958.834-1-ravi.bangoria@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH 1/1] perf: cs-etm: Fixes in instruction sample synthesis
-Content-Language: en-US
-To:     Tanmay Jagdale <tanmay@marvell.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sgoutham@marvell.com, gcherian@marvell.com, lcherian@marvell.com,
-        areddy3@marvell.com, john.g.garry@oracle.com, will@kernel.org,
-        mike.leach@linaro.org, suzuki.poulose@arm.com,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, irogers@google.com, adrian.hunter@intel.com,
-        "coresight@lists.linaro.org" <coresight@lists.linaro.org>
-References: <20230623182204.25199-1-tanmay@marvell.com>
- <20230623182204.25199-2-tanmay@marvell.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20230623182204.25199-2-tanmay@marvell.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT102:EE_|CY8PR12MB8361:EE_
+X-MS-Office365-Filtering-Correlation-Id: af7c9180-1521-4699-4939-08db7631bd23
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: fegEUPS8a+N88ghIoG5ygMX2OlX1bWtmRQwUdpRlehgRY3t84UAs4SBcduGQc3D1Q7ldNLhWGr1HwoP/mVpmy35Jjvi3/RoC3P0VoM2H561zNssJ2elTZO4f4w1VdfT4W+ykvc5APM1qfPtPPgDrLLTz5uJbuPRYApGGH8/zZQYwroW9BSwYCCuRm52rGCfvG+QoiVrCDkM1cnp16sR0JYaxHqrC16RHmvBictGEk7Uja6s22R+b4Zu9DtHU87d9OARESwEQOYlpdlYlxJef19B1JnqqJlWjzCBlVBju4UEqbVSKNL64whlifRAAiICir7w432bwZ9dxjaA+ARZqQwwq981HmcjayqZuqzzL2YywqLim1YmSR5YzdCzdlrIOeHdT1Zlniv8iJybfEiyAmgFL2l1lh+1nqK+zJxzNThYc9vX7/r0Ky7EVCgL7yXmQS8oDDJStMV+7PGJJkYUHdtiBdqz8flD9y2AwzvOiykosHHhDwUh9fpLE/60J8ekPBFNZZBay7AQLGz/eow+MbFom4kih1FFBwZ9o2W65aXfxO/Zyb6bHhBf5itA/c29xYH1/t5rDKjpEWT1HusEx92YcARdhOTcrZIs13X+TIz+64adaq3xlgHLh2TGTnumTJmZF+H47aucmp1hei7DGkayvy1RlsHP8CE4/1417Iwk7IL4fAxLhVafz6iFUld76r24aWFx1NwaQquRUbreKfnIVFC1a4UUlbf24+sV+Z8Dr828K+y4oABmfV5thpiv1eeWQU9pVy6rVlAx8CQ3KRw==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(396003)(376002)(136003)(346002)(39860400002)(451199021)(46966006)(36840700001)(40470700004)(8676002)(70206006)(8936002)(70586007)(41300700001)(316002)(6916009)(4326008)(1076003)(26005)(16526019)(186003)(336012)(426003)(2616005)(478600001)(54906003)(6666004)(40460700003)(966005)(7696005)(82310400005)(15650500001)(2906002)(5660300002)(40480700001)(44832011)(82740400003)(81166007)(356005)(36756003)(86362001)(36860700001)(83380400001)(47076005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2023 10:40:20.1269
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: af7c9180-1521-4699-4939-08db7631bd23
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT102.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8361
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+AMD IBS can do per-process profiling[1] and is no longer restricted to
+per-cpu or systemwide only. Remove stale error message. Also, checking
+just exclude_kernel is not sufficient since IBS does not support any
+privilege filters. So include all exclude_* checks. And finally, move
+these checks under tools/perf/arch/x86/ from generic code.
 
+Before:
+  $ sudo ./perf record -e ibs_op//k -C 0
+  Error:
+  AMD IBS may only be available in system-wide/per-cpu mode.  Try
+  using -a, or -C and workload affinity
 
-On 23/06/2023 19:22, Tanmay Jagdale wrote:
-> The existing method of synthesizing instruction samples has the
-> following issues:
-> 1. Non-branch instructions have mnemonics of branch instructions.
-> 2. Branch target address is missing.
-> 
-> Set the sample flags only when we reach the last instruction in
-> the tidq (which would be a branch instruction) to solve issue 1).
-> 
-> To fix issue 2), start synthesizing the instructions from the
-> previous packet (tidq->prev_packet) instead of current packet
-> (tidq->packet). This way, it is easy to figure out the target
-> address of the branch instruction in tidq->prev_packet which
-> is the current packet's (tidq->packet) first executed instruction.
-> 
-> After the switch to processing the previous packet first, we no
-> longer need to swap the packets during cs_etm__flush().
+After:
+  $ sudo ./perf record -e ibs_op//k -C 0
+  Error:
+  AMD IBS doesn't support privilege filtering. Try again with
+  exclude_{kernel|user|hv|idle|host|guest}=0.
 
-Hi Tanmay,
+Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+---
+v1: https://lore.kernel.org/r/20230621062359.201-1-ravi.bangoria@amd.com
+v1->v2:
+  - Check all exclude_* flags not just exclude_kernel
+  - Move AMD specific checks under tools/perf/arch/x86/
 
-I think the fix for setting the right flags and instruction type makes
-sense, but is it possible to do it without the change to swapping in
-cs_etm__flush() or some of the other changes to
-cs_etm__synth_instruction_sample()?
+ tools/perf/arch/x86/util/evsel.c | 25 +++++++++++++++++++++++++
+ tools/perf/util/evsel.c          | 30 +++++++++---------------------
+ tools/perf/util/evsel.h          |  1 +
+ 3 files changed, 35 insertions(+), 21 deletions(-)
 
-I'm seeing some differences in the output related to the PID that's
-assigned to a sample and some of the addresses that aren't explained by
-the commit message. Also there is no corresponding change to
-cs_etm__synth_branch_sample(), which is also using prev_packet etc so
-I'm wondering if that's correct now without the swap? That function gets
-used with the default itrace options or itrace=b
+diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
+index 512c2d885d24..9a7141c5a4ea 100644
+--- a/tools/perf/arch/x86/util/evsel.c
++++ b/tools/perf/arch/x86/util/evsel.c
+@@ -102,3 +102,28 @@ void arch__post_evsel_config(struct evsel *evsel, struct perf_event_attr *attr)
+ 		}
+ 	}
+ }
++
++int arch_evsel__open_strerror(struct evsel *evsel, char *msg, size_t size)
++{
++	if (!x86__is_amd_cpu())
++		return 0;
++
++	if (!evsel->core.attr.precise_ip &&
++	    !(evsel->pmu_name && !strncmp(evsel->pmu_name, "ibs", 3)))
++		return 0;
++
++	/* More verbose IBS errors. */
++	if (evsel->core.attr.exclude_kernel || evsel->core.attr.exclude_user ||
++	    evsel->core.attr.exclude_hv || evsel->core.attr.exclude_idle ||
++	    evsel->core.attr.exclude_host || evsel->core.attr.exclude_guest) {
++		return scnprintf(msg, size, "AMD IBS doesn't support privilege filtering. Try "
++				 "again with exclude_{kernel|user|hv|idle|host|guest}=0.");
++	}
++
++	if (!evsel->core.attr.sample_period) {
++		return scnprintf(msg, size, "AMD IBS doesn't support counting mode. Try "
++				 "again with sample_{period|freq} with non-zero value.");
++	}
++
++	return 0;
++}
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index f607b5bddc76..762e2b2634a5 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2924,25 +2924,19 @@ static bool find_process(const char *name)
+ 	return ret ? false : true;
+ }
+ 
+-static bool is_amd(const char *arch, const char *cpuid)
++int __weak arch_evsel__open_strerror(struct evsel *evsel __maybe_unused,
++				     char *msg __maybe_unused,
++				     size_t size __maybe_unused)
+ {
+-	return arch && !strcmp("x86", arch) && cpuid && strstarts(cpuid, "AuthenticAMD");
+-}
+-
+-static bool is_amd_ibs(struct evsel *evsel)
+-{
+-	return evsel->core.attr.precise_ip
+-	    || (evsel->pmu_name && !strncmp(evsel->pmu_name, "ibs", 3));
++	return 0;
+ }
+ 
+ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+ 			 int err, char *msg, size_t size)
+ {
+-	struct perf_env *env = evsel__env(evsel);
+-	const char *arch = perf_env__arch(env);
+-	const char *cpuid = perf_env__cpuid(env);
+ 	char sbuf[STRERR_BUFSIZE];
+ 	int printed = 0, enforced = 0;
++	int ret;
+ 
+ 	switch (err) {
+ 	case EPERM:
+@@ -3044,16 +3038,6 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+ 			return scnprintf(msg, size,
+ 	"Invalid event (%s) in per-thread mode, enable system wide with '-a'.",
+ 					evsel__name(evsel));
+-		if (is_amd(arch, cpuid)) {
+-			if (is_amd_ibs(evsel)) {
+-				if (evsel->core.attr.exclude_kernel)
+-					return scnprintf(msg, size,
+-	"AMD IBS can't exclude kernel events.  Try running at a higher privilege level.");
+-				if (!evsel->core.system_wide)
+-					return scnprintf(msg, size,
+-	"AMD IBS may only be available in system-wide/per-cpu mode.  Try using -a, or -C and workload affinity");
+-			}
+-		}
+ 
+ 		break;
+ 	case ENODATA:
+@@ -3063,6 +3047,10 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+ 		break;
+ 	}
+ 
++	ret = arch_evsel__open_strerror(evsel, msg, size);
++	if (ret)
++		return ret;
++
+ 	return scnprintf(msg, size,
+ 	"The sys_perf_event_open() syscall returned with %d (%s) for event (%s).\n"
+ 	"/bin/dmesg | grep -i perf may provide additional information.\n",
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 9f06d6cd5379..848534ec74fa 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -311,6 +311,7 @@ void evsel__set_sample_id(struct evsel *evsel, bool use_sample_identifier);
+ 
+ void arch_evsel__set_sample_weight(struct evsel *evsel);
+ void arch__post_evsel_config(struct evsel *evsel, struct perf_event_attr *attr);
++int arch_evsel__open_strerror(struct evsel *evsel, char *msg, size_t size);
+ 
+ int evsel__set_filter(struct evsel *evsel, const char *filter);
+ int evsel__append_tp_filter(struct evsel *evsel, const char *filter);
+-- 
+2.41.0
 
-For example if I run 'perf script --itrace=i100ns' and diff the output
-before and after your change I see a difference even though branch and
-instruction info isn't printed, so I wouldn't expect to see any changes.
-This is on a systemwide recording of a system under load.
-
-Thanks
-James
-
-> 
-> Signed-off-by: Tanmay Jagdale <tanmay@marvell.com>
-> ---
->  tools/perf/util/cs-etm.c | 32 +++++++++++++++++++++++++-------
->  1 file changed, 25 insertions(+), 7 deletions(-)
-> 
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 91299cc56bf7..446e00d98fd5 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -1418,10 +1418,26 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
->  	sample.stream_id = etmq->etm->instructions_id;
->  	sample.period = period;
->  	sample.cpu = tidq->packet->cpu;
-> -	sample.flags = tidq->prev_packet->flags;
->  	sample.cpumode = event->sample.header.misc;
->  
-> -	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->packet, &sample);
-> +	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->prev_packet, &sample);
-> +
-> +	/* Populate branch target information only when we encounter
-> +	 * branch instruction, which is at the end of tidq->prev_packet.
-> +	 */
-> +	if (addr == (tidq->prev_packet->end_addr - 4)) {
-> +		/* Update the perf_sample flags using the prev_packet
-> +		 * since that is the queue we are synthesizing.
-> +		 */
-> +		sample.flags = tidq->prev_packet->flags;
-> +
-> +		/* The last instruction of the previous queue would be a
-> +		 * branch operation. Get the target of that branch by looking
-> +		 * into the first executed instruction of the current packet
-> +		 * queue.
-> +		 */
-> +		sample.addr = cs_etm__first_executed_instr(tidq->packet);
-> +	}
->  
->  	if (etm->synth_opts.last_branch)
->  		sample.branch_stack = tidq->last_branch;
-> @@ -1641,7 +1657,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
->  	/* Get instructions remainder from previous packet */
->  	instrs_prev = tidq->period_instructions;
->  
-> -	tidq->period_instructions += tidq->packet->instr_count;
-> +	tidq->period_instructions += tidq->prev_packet->instr_count;
->  
->  	/*
->  	 * Record a branch when the last instruction in
-> @@ -1721,8 +1737,11 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
->  			 * been executed, but PC has not advanced to next
->  			 * instruction)
->  			 */
-> +			/* Get address from prev_packet since we are synthesizing
-> +			 * that in cs_etm__synth_instruction_sample()
-> +			 */
->  			addr = cs_etm__instr_addr(etmq, trace_chan_id,
-> -						  tidq->packet, offset - 1);
-> +						  tidq->prev_packet, offset - 1);
->  			ret = cs_etm__synth_instruction_sample(
->  				etmq, tidq, addr,
->  				etm->instructions_sample_period);
-> @@ -1786,7 +1805,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
->  
->  	/* Handle start tracing packet */
->  	if (tidq->prev_packet->sample_type == CS_ETM_EMPTY)
-> -		goto swap_packet;
-> +		goto reset_last_br;
->  
->  	if (etmq->etm->synth_opts.last_branch &&
->  	    etmq->etm->synth_opts.instructions &&
-> @@ -1822,8 +1841,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
->  			return err;
->  	}
->  
-> -swap_packet:
-> -	cs_etm__packet_swap(etm, tidq);
-> +reset_last_br:
->  
->  	/* Reset last branches after flush the trace */
->  	if (etm->synth_opts.last_branch)
