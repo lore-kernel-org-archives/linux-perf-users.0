@@ -2,135 +2,155 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40510EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 14:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AEEEB64D7
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 14:39:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230156AbjFZOap (ORCPT
+        id S230023AbjFZOjO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Jun 2023 10:30:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47062 "EHLO
+        Mon, 26 Jun 2023 10:39:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229524AbjFZOao (ORCPT
+        with ESMTP id S229586AbjFZOjF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Jun 2023 10:30:44 -0400
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05F1B10C
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 07:30:43 -0700 (PDT)
-Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-3fb4146e8fcso2417035e9.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 07:30:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687789841; x=1690381841;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=sOo0XC/Y4flNUsbiJzBoRTnJAgB9VDv1XM+zJzFrca0=;
-        b=QsW3/nHLhkexzxGA0twe/x2qW+MofrKWc20XzfvTwk9ZpPAmfEi5ih1e5YIuIT2lNC
-         tjzCItcBDxFEFpbD7plDyGkfJ6B6tktDh1RDsc6ybYsCUOAiNzUnoB7b3UCawebRTjP+
-         IoVoceQUvr2vN6a2MOQFkk1b5sL3SecejNjv+vqiS03ImU7+AJ6TLazciDLoJy1LmNi/
-         QDPMsiuJuIIhwrC2wnDBhy0BD7hQrTbGaXffjQQ/QtmqFhMAfZPpTXoSijvnZwqpNWbS
-         O7tcEJhLj/e72X+eQkt3abY6eNBxVugwOG2ALiWE2YSEe8VNPf1Bl5GntO/vsmEX50nc
-         9ayg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687789841; x=1690381841;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sOo0XC/Y4flNUsbiJzBoRTnJAgB9VDv1XM+zJzFrca0=;
-        b=lBhPRl0QwuQhDk3VkzZRXICSZRj1ZWn2CVuAnbTHB++x7ZqC3d5YItXqLEGilssVfx
-         uJCj3F+OaYPzXhkVRBoxyonfaVJWyg7R5uWdvUl9KI/XNpTeWHOS9mwLtr1dmL9L/VxF
-         IGOeOC6ISqlRrfF38Aetrk9NSy8o4XJgrd/CaJXl932u3owyM0G1Zq3IUQX+9pwNTbjU
-         8fIXQIWR6l04mDl90v7qdX9/vqw1TGZVST1ERnQaBSTIbXGVjMhlbd+2+Cb9ljso93d/
-         d49fEpaRqZIhqIOhzfTMD8R86BfSK35EhsU9MlswW9/rjNJxM2uXvVXYn7jcJxKzAdHJ
-         7bYw==
-X-Gm-Message-State: AC+VfDyPl2jsIf6eCeGs9ALFPyDiJVGCSGNkdPFk/k+EFVJEfAZoKxl6
-        hGSQrVGoBJQZb2xkMpDXy8ifRw==
-X-Google-Smtp-Source: ACHHUZ6VWP4raj9cfLAIOeEgLIdxBNSr9wdsVkIQVnyoeIOHSC4oDNzgvxTcgh/C0ZjUg/zNHcMRlg==
-X-Received: by 2002:a05:600c:10d1:b0:3f7:a20a:561d with SMTP id l17-20020a05600c10d100b003f7a20a561dmr27638549wmd.8.1687789841362;
-        Mon, 26 Jun 2023 07:30:41 -0700 (PDT)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id t15-20020a0560001a4f00b00313f676832bsm1380811wry.93.2023.06.26.07.30.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jun 2023 07:30:40 -0700 (PDT)
-Date:   Mon, 26 Jun 2023 15:30:38 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-perf-users@vger.kernel.org, ito-yuichi@fujitsu.com,
-        Chen-Yu Tsai <wens@csie.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        kgdb-bugreport@lists.sourceforge.net,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 6/7] kgdb: Provide a stub kgdb_nmicallback() if
- !CONFIG_KGDB
-Message-ID: <20230626143038.GB95170@aspen.lan>
-References: <20230601213440.2488667-1-dianders@chromium.org>
- <20230601143109.v9.6.Ia3aeac89bb6751b682237e76e5ba594318e4b1aa@changeid>
- <CAD=FV=XbnUZh2uQ5Sr3Dg=+Kiz7rfZVyP-zNQtXrV_NSsCTFcA@mail.gmail.com>
+        Mon, 26 Jun 2023 10:39:05 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 069B7BF
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 07:39:03 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 182A12F4;
+        Mon, 26 Jun 2023 07:39:47 -0700 (PDT)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 29FEF3F663;
+        Mon, 26 Jun 2023 07:39:01 -0700 (PDT)
+Message-ID: <57ea7d37-83bd-80ba-3342-93598a88ac20@arm.com>
+Date:   Mon, 26 Jun 2023 15:39:00 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: perf-tools-next: Request for testing hybrid changes
+Content-Language: en-US
+To:     Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>
+Cc:     John Garry <john.g.garry@oracle.com>, Leo Yan <leo.yan@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Namhyung Kim <namhyung@gmail.com>, mark.rutland@arm.com
+References: <CAM9d7cgmHuhv1U6yAB-2qUr8SuFjUd-Lqw0kew9MaBVeD8xxGw@mail.gmail.com>
+ <CAP-5=fXFBpaN+ajF+u6GAL-3bb9LPR=dwevB_-7N7uUh-c3SPw@mail.gmail.com>
+ <a3958a0c-092f-b609-e2ea-0d35fddd4375@arm.com>
+ <CAP-5=fX8Nwtra=EgRNh3Ybp+N0BKp4Cw=0uRS9ZCdPyGF4R_bA@mail.gmail.com>
+ <20230626123249.GC19941@willie-the-truck>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20230626123249.GC19941@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=XbnUZh2uQ5Sr3Dg=+Kiz7rfZVyP-zNQtXrV_NSsCTFcA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 15, 2023 at 11:14:18AM -0700, Doug Anderson wrote:
-> Daniel,
->
-> On Thu, Jun 1, 2023 at 2:37 PM Douglas Anderson <dianders@chromium.org> wrote:
-> >
-> > To save architectures from needing to wrap the call in #ifdefs, add a
-> > stub no-op version of kgdb_nmicallback(), which returns 1 if it didn't
-> > handle anything.
-> >
-> > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> > In v9 this is the only kgdb dependency. I'm assuming it could go
-> > through the arm64 tree? If that's not a good idea, we could always
-> > change the patch ("arm64: kgdb: Roundup cpus using IPI as NMI") not to
-> > depend on it by only calling kgdb_nmicallback() if CONFIG_KGDB is not
-> > defined.
-> >
-> > Changes in v9:
-> > - Added missing "inline"
-> >
-> > Changes in v8:
-> > - "Provide a stub kgdb_nmicallback() if !CONFIG_KGDB" new for v8
-> >
-> >  include/linux/kgdb.h | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
-> > index 258cdde8d356..76e891ee9e37 100644
-> > --- a/include/linux/kgdb.h
-> > +++ b/include/linux/kgdb.h
-> > @@ -365,5 +365,6 @@ extern void kgdb_free_init_mem(void);
-> >  #define dbg_late_init()
-> >  static inline void kgdb_panic(const char *msg) {}
-> >  static inline void kgdb_free_init_mem(void) { }
-> > +static inline int kgdb_nmicallback(int cpu, void *regs) { return 1; }
->
-> What do you think about landing just ${SUBJECT} patch in kgdb right
-> now so it can end up in v6.5-rc1? It seems like this series is
-> currently blocked on Mark getting a spare moment and it seems unlikely
-> that'll happen this cycle. If we at least land the kgdb patch then it
-> would make things all that much easier to land in the next cycle. The
-> kgdb patch feels like it can make sense on its own...
-
-Yes, grabbing this one should be fine!
 
 
-Daniel.
+On 26/06/2023 13:32, Will Deacon wrote:
+> On Fri, Jun 23, 2023 at 07:30:53AM -0700, Ian Rogers wrote:
+>> On Fri, Jun 23, 2023 at 1:42 AM James Clark <james.clark@arm.com> wrote:
+>>>
+>>>
+>>>
+>>> On 22/06/2023 21:15, Ian Rogers wrote:
+>>>> On Thu, Jun 22, 2023 at 11:57 AM Namhyung Kim <namhyung@gmail.com> wrote:
+>>>>>
+>>>>> Hello,
+>>>>>
+>>>>> In this development cycle, we've got a big change in how to handle
+>>>>> heterogeneous core PMUs. It's mostly tested on Intel hybrid machines
+>>>>> but caused some troubles on others.  So I'd like to confirm it works
+>>>>> on major platforms without problems.  Especially on ARM64 as it has
+>>>>> the big.LITTLE CPUs.
+>>>>
+>>>>
+>>>> Thanks Namhyung. I believe there is a change on ARM64 that makes a
+>>>> problem of one type into a slightly different problem. The perf parse
+>>>> events logic handles events certain known hardware events using known
+>>>> numeric encodings, for example, the cycles event has a type of 0
+>>>> (PERF_TYPE_HARDWARE) and a config of 0 (PERF_COUNT_HW_CPU_CYCLES):
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/parse-events.l?h=perf-tools-next#n286
+>>>>
+>>>> The perf_event_open syscall can specify a CPU number of -1 for any. My
+>>>> understanding is that -1 on ARM translates into choose the PMU of the
+>>>> current running thread, this means that if a thread migrates from
+>>>> between core/PMU types it won't be recorded on the alternate PMU type.
+>>>>
+>>>> The extended type capability (PERF_PMU_CAP_EXTENDED_HW_TYPE) solves
+>>>> this, but appears not to be set on ARM's PMU:
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/tree/drivers/perf/arm-cmn.c#n2291
+>>>> Could an ARM64 related person fix this?
+>>>>
+>>>
+>>> Yes I was planning to look into this since this thread [1].
+>>> It seems like there are still some test failures on Juno which I'm
+>>> working through now, even after the fix in that thread. And I was
+>>> thinking that it should be possible to support
+>>> PERF_PMU_CAP_EXTENDED_HW_TYPE on Arm too.
+>>
+>> Thanks James, my memory of Juno boards was early bring up work and I
+>> don't recall them having heterogeneous PMUs. Presumably this is
+>> another issue, I'm happy to help if you can share more details.
+>>
+>> It is great that you'll look to add PERF_PMU_CAP_EXTENDED_HW_TYPE,
+>> there is also the legacy kernel issue. Do you have a plan there or
+>> should supporting PERF_PMU_CAP_EXTENDED_HW_TYPE be the plan? As the
+>> Linux 6.5 merge window will open soon I'm concerned that these fixes
+>> may only make it into 6.6. Should we do anything short-term for 6.5?
+>> For example, if extended types aren't supported then disable the
+>> wildcard matching of PMUs in the "numeric", really PERF_TYPE_HARDWARE
+>> and PERF_TYPE_HW_CACHE, cases?
+> 
+> What does PERF_PMU_CAP_EXTENDED_HW_TYPE buy us on Arm, given that we've
+> supported heterogeneous PMUs for years without issues? In other words,
+> what is the benefit of supporting two user ABIs here?
+> 
+> Will
+
+Aren't there some issues around per-process perf sessions and choosing
+which PMU to use?
+
+For example on Juno if I run perf on one of the big cores (1 and 2),
+then I only get an accurate cycle count if the process I'm interested in
+also runs on a big core:
+
+  taskset --cpu-list 1 perf stat -e cycles -- taskset \
+   --cpu-list 1 stress -c 1 -t 1
+
+  1087015046      cycles:u
+
+If the stress process runs on a small core (4 for example) then I get a
+much lower count, which I think is only accounting for the taskset
+before it finishes pinning stress to the small core:
+
+  taskset --cpu-list 1 perf stat -e cycles -- taskset \
+    --cpu-list 4 stress -c 1 -t 1
+
+  68134032      cycles:u
+
+Then if perf starts on a small core it gets even worse, you never get
+any cycle counts, even if stress runs on the same core:
+
+  taskset --cpu-list 0 perf stat -e cycles -- taskset \
+    --cpu-list 0 stress -c 1 -t 1
+
+  <not counted>      cycles:u
+
+I'm not sure how many of these are just the perf tool doing the wrong
+thing and should be fixed in other ways than using
+PERF_PMU_CAP_EXTENDED_HW_TYPE. But there is also something to be said
+for consistency that if PERF_PMU_CAP_EXTENDED_HW_TYPE is already
+understood by the tool as a way to use different PMU types then
+supporting it on Arm might make sense.
+
+James
