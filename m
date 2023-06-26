@@ -2,101 +2,97 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E30EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 05:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11349EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 05:33:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229683AbjFZFbF (ORCPT
+        id S229516AbjFZFdt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Jun 2023 01:31:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55066 "EHLO
+        Mon, 26 Jun 2023 01:33:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229566AbjFZFbE (ORCPT
+        with ESMTP id S229582AbjFZFds (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Jun 2023 01:31:04 -0400
-Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0577116
-        for <linux-perf-users@vger.kernel.org>; Sun, 25 Jun 2023 22:31:03 -0700 (PDT)
-Received: by mail-pf1-x449.google.com with SMTP id d2e1a72fcca58-666ec28a20dso999077b3a.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 25 Jun 2023 22:31:03 -0700 (PDT)
+        Mon, 26 Jun 2023 01:33:48 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8850EE43
+        for <linux-perf-users@vger.kernel.org>; Sun, 25 Jun 2023 22:33:47 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1b54594ce62so148135ad.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 25 Jun 2023 22:33:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687757463; x=1690349463;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=peuhcomyzUm1WYfUTQS3mV4fqDU7Ve4mUuTiDhGA//A=;
-        b=fOXpdUaZpej6Gu9iwqHFOMuLQxAluPKvXFsnjABYVGHAdhFmMMZlzBLf2BPpUz6H1k
-         9uek95cDC0dE+g4z3Iz4zbYzGe+OlRkpoNLnYBj2cwF2ORWmneFuss/BR9jQ70rEAHn5
-         6QPppbcHZjTaK3Viw6NKfq66q5d0x34arwKuayDxSc+5+a37hgtyr1/5BxowKUOgagul
-         jLSJ9CPTIvOLAMChFvMl+uRJ4qixmwnk2/s4aCgpcHURMuE+JUsxFxazmtykCdOVXD/X
-         L7Ucr4WbtWhwbytcOBdW1eWwSxm1OXYpxmD89IkADnvq/BAR2RJoSGmDLxyXwHPT1Bkw
-         WIKA==
+        d=google.com; s=20221208; t=1687757627; x=1690349627;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Qyun1xPw4UegVORHRpXF4+0NUZJM/WIAcV1rZWG4eao=;
+        b=xaGJpbJO8n6GhO92pZHsJUYCxYJr0k2xraykGGefgJnELJHgZidw5ApwQcgi6OV3q1
+         sfK0sJKBtE2zL5wbRrtEjXTGdFtmvxD5H6wCWYODZNk/hlKz3SMAC1TzFMcMYqX8GAM7
+         Ow5rsYCB/i58RZIbKlcI7cZKNHJBYWJ8Ysifl0B99K63w24UPDsngKytMFl1tddSQ6MN
+         MRHEVsrZSjp1W0meZn0WHxOtMWCLhdnLPNRV8fZypqklr+UUpuWKv+SA06byU2BMDrJO
+         JtQG9oOhLUTPxj+EzjokzgpjXh3Q33M1ojkkrWmaRk0BChNMmEXzZC79atg8leSGNDee
+         02DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687757463; x=1690349463;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=peuhcomyzUm1WYfUTQS3mV4fqDU7Ve4mUuTiDhGA//A=;
-        b=UGR+pDx+dGJbOwJEZM2YoVsRyyvl41t5yxP8indFqxI3n+Bfhx9Qk6iO42FBjSGdUK
-         wj4TYnBY8TA4al0S/t3iT884HLf8W9MqiYZhSuAw26VaAXKyG5WNI2Mbd5gHG2V/19Ev
-         bfJdo98AJVy/KBe36tdA9haLp6m23h3gOQbxkh/OID0hhV8Eg2EzPelzLGlOTALXlppA
-         HtMICs7dhYbM0ki5DmvJtyktSJYpKXscju6zgNL4h3YNNogrGBubW/ee0scwOifmct7C
-         RR2jvyv8bGY41fmCTJ1wKWqgIJZzHt+kNtkmV9dujhjwKrQ8poh5IjxORrc8bBM5gllv
-         dxaw==
-X-Gm-Message-State: AC+VfDwNP4FqR83YohW4oIWj/O2yRVY8Ao6O7c8L/rNW5R0RWUPHuYP+
-        AfmCFN2+4x26721c4+KixwixFNRP+EFD
-X-Google-Smtp-Source: ACHHUZ7mD6277JxlxdO/XpkoyniIWck0W2cN665ORJ+jVm63PNgz8tlijTmz4vMCjEZYvDp87f7MNUI4UCob
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:595f:edfe:c81f:233a])
- (user=irogers job=sendgmr) by 2002:a05:6a00:139b:b0:678:e0b1:7f28 with SMTP
- id t27-20020a056a00139b00b00678e0b17f28mr341064pfg.6.1687757463098; Sun, 25
- Jun 2023 22:31:03 -0700 (PDT)
-Date:   Sun, 25 Jun 2023 22:30:48 -0700
-Message-Id: <20230626053048.257959-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v1] perf pmu: Correct auto_merge_stats test
+        d=1e100.net; s=20221208; t=1687757627; x=1690349627;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Qyun1xPw4UegVORHRpXF4+0NUZJM/WIAcV1rZWG4eao=;
+        b=CBrDsfkDvUqgshCUu1Xhx4iepMOJLjduU0r82u0WQkYy0gcm2kAE6/vzqzlq5wDPmm
+         JKUTZA9yON4lqf7vf8wriA6G7xeUfoSoBo4VUG+voqRTmh+/lXtSvPwCR7hMibPFYV9e
+         6PeSvBkrPqZqOlPdYLhGyZvZpwI/GtVgY8BFQD9Rof/bdA1D+hfmzte2vBjWi4IQzxte
+         SmhRCq+W90PhDS4LXn+u65n8Y3zm4cYmxFv6tycdYfCQp2jwR+7Smeq3PsHBOtuXpvWE
+         z0yAFAkZw9s7bpYoRXJHlDJT8/J3eyBE4PyUCE4F1S4pPfj5AJ90dStrche2VUsxL06x
+         GTuw==
+X-Gm-Message-State: AC+VfDwj8wW1jGUHqnbT0TCcgxXrnaSh4xfUQB6X02xnm9O2sT/OibKN
+        viYGlqWylKDkHmfOAa0XL8gOp9vmes43tPMmtKE9RWdk/eJvJX/JfR2t/Q==
+X-Google-Smtp-Source: ACHHUZ6TmKBCWQHdJExZ3sUcMZQ99mv544GXFJtf/57KzK4GRwXoIhOuN/Xst0Ag5cn2SiYOL4dZ0rF/Dp1b68NtHu8=
+X-Received: by 2002:a17:902:d506:b0:1ae:3f71:c18 with SMTP id
+ b6-20020a170902d50600b001ae3f710c18mr1163615plg.11.1687757626871; Sun, 25 Jun
+ 2023 22:33:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <ZJOmXU/41HMzanM9@tassilo> <CAP-5=fWZAcXcE3CP-V7t=gSehO-AacHJWhjHjtA5nCd5B2-n1A@mail.gmail.com>
+ <ZJQSUHLe9Cqpw21n@tassilo> <CAM9d7cgpegLH9QpUhHQy0ckMpO6CaKaYrAeHKNm4CT01R4bhGw@mail.gmail.com>
+ <ZJSr2PbOrpFrSIaL@tassilo> <CAM9d7cj1XXpuaPss7qa7eSD8LJCQZ1KorviOxxnt2Hpk_J3ugQ@mail.gmail.com>
+ <ZJXl5vdhxPnVBRze@tassilo> <CAP-5=fXOi=xQ4=j5xAq+jWLR9n7uvfsWK+PzXkY1MZ3Fz-xccw@mail.gmail.com>
+ <CAM9d7cg5ZQvHGs3fh9iXxdgRY2uidgDTQ0WSQGuicub+wX8KFQ@mail.gmail.com> <ZJcu5XiTFWtXC7QU@tassilo>
+In-Reply-To: <ZJcu5XiTFWtXC7QU@tassilo>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
+Date:   Sun, 25 Jun 2023 22:33:34 -0700
+Message-ID: <CAP-5=fVTuPp75yWi+YNs5fTWyoTe=TCJNscsvn648-OxNtk_mg@mail.gmail.com>
+Subject: Re: Perf stat regression from d15480a3d67
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, acme@kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The original logic was:
-https://lore.kernel.org/all/20230527072210.2900565-35-irogers@google.com/
-return !is_pmu_hybrid(pmu->name)
+On Sat, Jun 24, 2023 at 10:59=E2=80=AFAM Andi Kleen <ak@linux.intel.com> wr=
+ote:
+>
+> > > So with perf-tools-next it appears that we're not merging the uncore
+> > > events, but that's different than skipping events.
+>
+> Isn't that a regression too? We're supposed to merge.
 
-is_pmu_hybrid was removed but with the incorrect condition which was
-fixed for core PMUs but not uncore. This change fixes both.
+Right, bisected and sent a fix:
+https://lore.kernel.org/lkml/20230626053048.257959-1-irogers@google.com/
 
-Fixes: e23421426e13 ("perf pmu: Correct perf_pmu__auto_merge_stats() affecting hybrid")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/pmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+Ian
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 64fa568a5426..8d5ecd4ff1a9 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1427,7 +1427,7 @@ bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu)
- 
- bool perf_pmu__auto_merge_stats(const struct perf_pmu *pmu)
- {
--	return pmu->is_core && perf_pmus__num_core_pmus() == 1;
-+	return !pmu->is_core || perf_pmus__num_core_pmus() == 1;
- }
- 
- bool perf_pmu__have_event(const struct perf_pmu *pmu, const char *name)
--- 
-2.41.0.162.gfafddb0af9-goog
-
+> >
+> > Right, not sure what's changed though.
+> >
+> > Andi, what's your expectation?
+>
+> The original test case passes with perf-next, but I still see failures,
+> but that might be related to PMU reordering. I'll investigate that.
+>
+> However if the original hiding is still in the code the problem could sti=
+ll
+> happen, right? I would still prefer to do what i suggested earlier,
+> to only do hiding on --per-thread with an option to turn off.
+>
+> -Andi
