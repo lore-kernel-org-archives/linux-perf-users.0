@@ -2,65 +2,52 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1B7EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 13:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E10EEB64DA
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 13:52:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230088AbjFZNrL (ORCPT
+        id S229621AbjFZNwU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Jun 2023 09:47:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46776 "EHLO
+        Mon, 26 Jun 2023 09:52:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229706AbjFZNrK (ORCPT
+        with ESMTP id S229636AbjFZNwT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Jun 2023 09:47:10 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1C38E7E
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 06:47:07 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-4f8775126d3so4256064e87.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 06:47:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1687787226; x=1690379226;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3ajgNyIwWVcjYzMwm3DqnghOvwsLRw6qD3CZhsNi77c=;
-        b=V8u9lIovuozTtLYUjXpTS7ULYjyFXNNH91wqTcdZLzgyKyyep5wVeXZCMcMy8wX9jF
-         bFZ7vDrmDSceVrr7oDg+wbgk4TKsV7sq+NHSWOwEYO8XTENMv4rFSFUjeszEYgm/3anL
-         ZSY8rR3ZF6c6OtMdC6Y76w4uVX0QNMrVRBh6a+fCocx77Hp3Q8HyakiAKh5RM3dS9OUk
-         rLbcsr43EA/DQGnVN8a7Zt7OWr5FFJAN/Eh3spRhI6dHfxdvS75vlizeP2assm03fNwm
-         NjPnafyE7zUejngXe65jjCyijnu/+OiRggEdOwFtGL3Rlg8OPVf3m/wCIg0Ily+fDnBY
-         ccuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687787226; x=1690379226;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3ajgNyIwWVcjYzMwm3DqnghOvwsLRw6qD3CZhsNi77c=;
-        b=YSMhRRym1DKM97P75Bgk1Uvg8aMavVcSa+1Y78WOMI7ETb0UWAX2jhfOBsXkwuDhv8
-         VyeCVhPaACCBDCh+WmDUE3J1a+ViMnHCvzVe+XhQv+kG25ZWPv53YarH9D/DN4H7/nJE
-         3xNXlRfRR5PD5fC1HkHrmbEZ8+a4qTUhzcUC4YDgCv41pHW/yPD36H4LqD0KIfYw6m2y
-         I0++055CAdCY0Q0Uxk/233opPxXA0OCw/FzgUmN6AFelHWWjWvRtc6UYez4WrsEAedX8
-         f94MEkxKr/sSnGLoMoXhVUDHO62QPzQFarV49vuL9DnIvUCFFGC2CzwyjXFW1o0UE4SB
-         AMtA==
-X-Gm-Message-State: AC+VfDw4FpafGGNYwIjQFVVYbKxH9RktUIYFrV+zXIuRcTlcRyMlKYm4
-        uEObbBZgqiQWh5D399BkMTUtsA==
-X-Google-Smtp-Source: ACHHUZ49MM6SoxHOQwXx4/5NyeGysVk3STjfIfrbc8JWShz/Wbl953NReXc8cQftzBAW+LXumnPAvw==
-X-Received: by 2002:a05:6512:31c8:b0:4f9:5d34:44b1 with SMTP id j8-20020a05651231c800b004f95d3444b1mr10794636lfe.2.1687787226112;
-        Mon, 26 Jun 2023 06:47:06 -0700 (PDT)
-Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id o16-20020a1c7510000000b003f9b155b148sm10720189wmc.34.2023.06.26.06.47.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Jun 2023 06:47:05 -0700 (PDT)
-Message-ID: <5791ec06-7174-9ae5-4fe4-6969ed110165@tessares.net>
-Date:   Mon, 26 Jun 2023 15:47:00 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH net-next] tools: Fix MSG_SPLICE_PAGES build error in trace
- tools
-Content-Language: en-GB
-To:     David Howells <dhowells@redhat.com>, netdev@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Mon, 26 Jun 2023 09:52:19 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB4B2109
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 06:51:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1687787496;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tK/iiYQUluNE0Uml8JHqAJ8sgWk+hiwneX6EQmjmmc8=;
+        b=KhwLN96IzUWBH1915+m5/Q6A3v/FsWAD9/qM2qtTbhSd4mNv/PQ6mefYSfkKStSFaN2pOl
+        DfUBHyLcJaeY3S2g3Xd0BSnNlzt8GEDWOTD+i62glC8FxQlt/v9EaAbzxX8W5CpDI2XA+B
+        GBiLjz8y+SagVqBwdTndD/I6e2jaBeg=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-438-wGqdrhGLPYGKkT2K6gg_og-1; Mon, 26 Jun 2023 09:51:32 -0400
+X-MC-Unique: wGqdrhGLPYGKkT2K6gg_og-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E171429AB41D;
+        Mon, 26 Jun 2023 13:50:59 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5984240C2070;
+        Mon, 26 Jun 2023 13:50:57 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <5791ec06-7174-9ae5-4fe4-6969ed110165@tessares.net>
+References: <5791ec06-7174-9ae5-4fe4-6969ed110165@tessares.net> <3065880.1687785614@warthog.procyon.org.uk>
+To:     Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc:     dhowells@redhat.com, netdev@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         David Miller <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -77,68 +64,26 @@ Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
         linux-next@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <3065880.1687785614@warthog.procyon.org.uk>
-From:   Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <3065880.1687785614@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH net-next] tools: Fix MSG_SPLICE_PAGES build error in trace tools
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3067875.1687787456.1@warthog.procyon.org.uk>
+Date:   Mon, 26 Jun 2023 14:50:56 +0100
+Message-ID: <3067876.1687787456@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi David,
+Matthieu Baerts <matthieu.baerts@tessares.net> wrote:
 
-Thank you for the patch!
+> So another issue. When checking the differences between the two files, I
+> see there are still also other modifications to import, e.g. it looks
+> like you also added MSG_INTERNAL_SENDMSG_FLAGS macro in socket.h. Do you
+> plan to fix that too?
 
-On 26/06/2023 15:20, David Howells wrote:
-> The following error is being seen the perf tools because they have their
-> own copies of a lot of kernel headers:
-> 
-> In file included from builtin-trace.c:907:
-> trace/beauty/msg_flags.c: In function 'syscall_arg__scnprintf_msg_flags':
-> trace/beauty/msg_flags.c:28:21: error: 'MSG_SPLICE_PAGES' undeclared (first use in this function)
->    28 |         if (flags & MSG_##n) { \
->       |                     ^~~~
-> trace/beauty/msg_flags.c:50:9: note: in expansion of macro 'P_MSG_FLAG'
->    50 |         P_MSG_FLAG(SPLICE_PAGES);
->       |         ^~~~~~~~~~
-> trace/beauty/msg_flags.c:28:21: note: each undeclared identifier is reported only once for each function it appears in
->    28 |         if (flags & MSG_##n) { \
->       |                     ^~~~
-> trace/beauty/msg_flags.c:50:9: note: in expansion of macro 'P_MSG_FLAG'
->    50 |         P_MSG_FLAG(SPLICE_PAGES);
->       |         ^~~~~~~~~~
-> 
-> Fix this by (1) adding MSG_SPLICE_PAGES to
-> tools/perf/trace/beauty/include/linux/socket.h - which looks like it ought
-> to work, but doesn't
+That's just a list of other flags that we need to prevent userspace passing
+in - it's not a flag in its own right.
 
-Commit 58277f502f42 ("perf trace beauty: Add script to autogenerate
-socket families table") seems to suggest this file is only used by
-tools/perf/trace/beauty/socket.sh script (and later by sockaddr.sh) but
-not by msg_flags.c.
+David
 
-If I'm not mistaken, it is then not required to modify this file to fix
-the issue you mention.
-
-But it is still needed to modify it to avoid another warning:
-
-  Warning: Kernel ABI header at
-'tools/perf/trace/beauty/include/linux/socket.h' differs from latest
-version at 'include/linux/socket.h'
-  diff -u tools/perf/trace/beauty/include/linux/socket.h
-include/linux/socket.h
-So another issue. When checking the differences between the two files, I
-see there are still also other modifications to import, e.g. it looks
-like you also added MSG_INTERNAL_SENDMSG_FLAGS macro in socket.h. Do you
-plan to fix that too?
-It might be clearer to have all these modifications of
-tools/perf/trace/beauty/include/linux/socket.h in a separated commit as
-it is fixing a different issue but that's a detail. As long as we can
-have perf compiling without issues when using the net-next tree :)
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
