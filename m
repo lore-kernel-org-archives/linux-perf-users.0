@@ -2,123 +2,102 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FD5EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 12:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDA9EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 12:46:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230217AbjFZMmN (ORCPT
+        id S231375AbjFZMqT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Jun 2023 08:42:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39470 "EHLO
+        Mon, 26 Jun 2023 08:46:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229952AbjFZMmM (ORCPT
+        with ESMTP id S229704AbjFZMqC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Jun 2023 08:42:12 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26B23125
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 05:42:11 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id ffacd0b85a97d-312826ffedbso3728975f8f.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 05:42:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687783329; x=1690375329;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1xYFUI/k6vE8xTpsdHwPYP/AxDoWz5CfcCmedbDcsCk=;
-        b=HulYCJn2XvaoDSsPKEw20CbMSvHHqVWwluwnv+5VYXvTK9JPgZ5nM3vQc35CmzxnVT
-         erSpLVKvkwcp9NcrYGD0XF6zV5/FE7ShtDTlaa7RRJ7lTJ0Rl+l2ql7V+xWoL7BQvspW
-         bUup2x/P3rogs01jgXA864coD/zr8aeVLsmxVpKFeUmYNif+lEEMcNwz+YQvJ90+V5/S
-         Sca/4xnf4cwZ0DktnLljqtStdu3CZ0hcXzeCEfW5nEmNFV6OPPRZQ53y7knjWUzVL219
-         qpuOQ/exS1vaqQXMVVL4IXxyw2LvSSZu8iPBjpgIMltUNPVUbagSRGficpDPylbcjgrn
-         /xvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687783329; x=1690375329;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1xYFUI/k6vE8xTpsdHwPYP/AxDoWz5CfcCmedbDcsCk=;
-        b=McfC5SW80v5L7c3NVVrhQhqgNQwx4+RY2zI/cQ5QVaPoh2vMpDAuaJa8Q6H7SrE5kt
-         HvKM1OclHBUTeKrqnH6GHMkoEV3FIqxcrG309hrPCLYooWB4p9+ZqySeuIKoyryaApiC
-         CQuMasAeXkff48wQSvj3d2ifkoRoWCV0pDErciD9bwRvTuQ7KhjD6AZbx2Tw9WXEDQdF
-         u1NkH3vLYJT+kQm/hDdribsIrfYgvD0+ChMoNtuQ8vXs+m32+BfVZM9j0bl58mtWugqM
-         6py10SxmqJqu0bSpEhX0BokE5TuxnPVpxk/TzXwK7vJqPYVmectAtBvNpVS/l60lpcFU
-         CXfw==
-X-Gm-Message-State: AC+VfDxUaodpsYPliD0mLZ6pRkRAO8O7d58ZQ1C/YB9oRYEm5z7eHcDJ
-        FurYgPHCZOGwz50V4KYBKUVFPo/Ku9Hu+GXM7mQ=
-X-Google-Smtp-Source: ACHHUZ4jV/fFHYVmJHIFWX5YYyvq2DO6Ztl2dE10nsLUPa3JM9Dl8QYQNK041AtNX4hZ2/9zrLf4Xg==
-X-Received: by 2002:adf:f203:0:b0:30f:ca58:39ca with SMTP id p3-20020adff203000000b0030fca5839camr23923068wro.31.1687783329608;
-        Mon, 26 Jun 2023 05:42:09 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id h10-20020a5d504a000000b00313e8dc7facsm5477055wrt.116.2023.06.26.05.42.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jun 2023 05:42:07 -0700 (PDT)
-Date:   Mon, 26 Jun 2023 15:42:03 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     Ian Rogers <irogers@google.com>, Sasha Levin <sashal@kernel.org>
-Cc:     Markus Elfring <Markus.Elfring@web.de>,
-        linux-perf-users@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Ivan Babrou <ivan@cloudflare.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Mon, 26 Jun 2023 08:46:02 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E49392942;
+        Mon, 26 Jun 2023 05:44:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5292160E9B;
+        Mon, 26 Jun 2023 12:44:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E74D4C433C8;
+        Mon, 26 Jun 2023 12:44:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1687783479;
+        bh=zybkaKmO2rq8ExZfzHUmP4+U7WBCst4SsJhXQatkp/o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OCaYeKgR7cpxf3FJj1ApaF+cDf3BQWX4+ctqU0OLRRBja2IVSkgwgUW18kLel4THd
+         JivMpVLL1+0o/vjgGN+qiZfvL0+SCTd6YUzcKnxFCyS64Xbey0jmw/qrMy7MDCUF4A
+         9wywLBAPZZKr2V77R9Dhv+VTTFRSEvugBf6kVzglEMZuv5GNi/0NW/YyIJ3Ydyps+i
+         honsMly0qBOAN/erO6dD+/Ku/qrEiW1X/6ITnlB6ANyhW03fij5GpxwmmbwbprPFYH
+         /lfDMZ9LabmUaAZKseb0sLWhWx1oKVJta2wHtXSOZ/f/i418+QiEScI2Dp0MJovzCf
+         gCOpnC8dcu37w==
+Date:   Mon, 26 Jun 2023 13:44:32 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jing Zhang <renyu.zj@linux.alibaba.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr
-Subject: Re: [PATCH v2] perf unwind: Fix map reference counts
-Message-ID: <35569055-0873-4d5d-8c9c-78c818e9aa26@moroto.mountain>
-References: <20230623043107.4077510-1-irogers@google.com>
- <64741e8e-e81a-afb9-9ce3-9c2d6baab44a@web.de>
- <CAP-5=fVwhiGJEqTST2bfX8cUALpnTxELSHrvKtyJEPjqQjOacQ@mail.gmail.com>
+        Jonathan Corbet <corbet@lwn.net>,
+        John Garry <john.g.garry@oracle.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Ian Rogers <irogers@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+Subject: Re: [PATCH v4 0/4] Add JSON metrics for Yitian710 DDR
+Message-ID: <20230626124431.GB20045@willie-the-truck>
+References: <1687245156-61215-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <CAM9d7cj3v58m8NcsEK4sYsk_dbQDAq71hYo7DV=xaQa_rZyPYg@mail.gmail.com>
+ <a5486c58-32b6-2d5e-e623-d7844c51474c@linux.alibaba.com>
+ <CAM9d7chxMpUUouHsVTEvVEy8RyZ6tNzYbVD=a0Toao=n6cau-w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVwhiGJEqTST2bfX8cUALpnTxELSHrvKtyJEPjqQjOacQ@mail.gmail.com>
+In-Reply-To: <CAM9d7chxMpUUouHsVTEvVEy8RyZ6tNzYbVD=a0Toao=n6cau-w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 23, 2023 at 10:49:36AM -0700, Ian Rogers wrote:
+On Tue, Jun 20, 2023 at 10:00:46PM -0700, Namhyung Kim wrote:
+> On Tue, Jun 20, 2023 at 8:08 PM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
+> > 在 2023/6/21 上午3:04, Namhyung Kim 写道:
+> > > I'm curious why the first patch is needed, presumably the PMU
+> > > should have 'ali_drw' in the name already.  Do we use substring
+> > > match for the compat name in the JSON metric?
+> > >
 > >
-> > How do you think about to add the tag “Fixes”?
+> > The main purpose of patch 1 is to add an identifier so that the Compat
+> > field can match the corresponding event when defining aliases or metrics
+> > for events.
+> >
+> > For example, "Unit" can match "ali_drw" in the name and different SoCs may
+> > be able to match ali_drw, but they may have different events, and even if
+> > the events are the same, the meanings may be different. Therefore, the
+> > Compat field is needed to match the Identifier to confirm which type and
+> > revision of PMU the current SoC has. Therefore, both "Unit" and "Compat"
+> > need to be matched at the same time. Although it seems that ali_drw is
+> > redundantly matched currently, it is meaningful for future expansion.
 > 
-> In general we've not been adding Fixes as there is a danger a backport
-> will introduce a use-after-free.
+> I see, thanks for the explanation.
+> 
+> I think you need to route the kernel patch differently.  I can apply the tools
+> part once the kernel patch gets Acks from others.
 
-I feel like we have been discussing issues around Perf backports
-recently.  Wasn't there some build breakage that wasn't detected?  Why
-not just ask Sasha to leave perf out of the -stable tree?
+Sorry, I missed this initially as I didn't realise there were kernel changes
+hidden in this series (I saw "JSON" and ignored it...). Given that the 6.5
+merge window is now open, I'll pick the kernel change up for 6.6 when I
+start queueing patches in a few weeks.
 
-Also Sasha has a tag to explain that patch AAA is included because
-patch BBB depends on it.  I feel like maybe those tags are backwards,
-it would be nicer to tag AAA as depending on BBB.  That way we could
-add the dependency tags here.
-
-I think at Linaro we have recently been testing taking the latest Perf
-tools and using them on older kernels.  I don't know the details around
-why we can't just use the perf that ships with the kernel...
-
-To tell the truth, I also don't really understand the problem for this
-patch specifically. From what I can see, the Fixes tag would have been:
-
-Fixes: 0dd5041c9a0e ("perf addr_location: Add init/exit/copy functions")
-
-1) Adding a Fixes tag would have automatically prevented any backports.
-2) I don't see any possible use after frees.  That probably means I have
-identified the wrong Fixes tag?
-
-I'm not going to dig further than that because I don't care.  I'm just
-looking at it because Markus added kernel-janitors to the CC list.  But
-for subsystems where I'm more involved then I always look at how a bug
-is introduced.  That information is essential to me as a reviewer.  So
-if I'm writing a patch and even if it's not a bug fix but let's say it
-deletes dead code then I often include include the information under the
---- cut off line.
-
----
-This dead code was introduced by commit 23423423 ("blah blah blah").
-
-regards,
-dan carpenter
+Will
