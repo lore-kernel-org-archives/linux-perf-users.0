@@ -2,85 +2,110 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E46EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 23:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98303EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 23:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229500AbjFZXKD convert rfc822-to-8bit (ORCPT
+        id S229471AbjFZXO7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Jun 2023 19:10:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56222 "EHLO
+        Mon, 26 Jun 2023 19:14:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229481AbjFZXKC (ORCPT
+        with ESMTP id S229459AbjFZXO7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Jun 2023 19:10:02 -0400
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EFC610FC
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 16:10:01 -0700 (PDT)
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-bff0beb2d82so3896769276.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 16:10:01 -0700 (PDT)
+        Mon, 26 Jun 2023 19:14:59 -0400
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB42F10D2;
+        Mon, 26 Jun 2023 16:14:57 -0700 (PDT)
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-5701e8f2b79so41583987b3.0;
+        Mon, 26 Jun 2023 16:14:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687821001; x=1690413001;
+        d=1e100.net; s=20221208; t=1687821297; x=1690413297;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3P2oyRWtxu7qu8aJM5SSjGX2KOYLwQHYvCeH8ev3qU4=;
-        b=k0RzWkhfzft/WU7Ouy7MEq53DiVw0Q7bYOJWf9Zi+cfYbaTVOJZuc5TOnGBx88gJXx
-         Bagim+bQ/oE40RxjwasT65Kn7ghzvka40ykbnnQzc4uxmWW+7N/ikHs/r2YOW9uXP4Se
-         wbb22Y2mLmdzd+zISSrY80KOyfLNZYsALAGTmDIyYGFDforojPGuBGJt/Gx5L6sJz4jU
-         JaXlPpAQAug1mUT7lR2NvhRFJGoEQ1snpCg/03Vxu9J3TuDmO3tmk6uavkIA4KtihGbr
-         BX4Iq/8RFc7zL751jfy6o+AQpap6OSuTc8sTuXEI6VgSAi2Xj2EmbgWvVc2KLfW9Z2l2
-         T3OQ==
-X-Gm-Message-State: AC+VfDz2oXs1OuiSSyESr2y4SfqVBSHuyBYGGnuptb6FxSksBWEn3npX
-        07f0h2YHhLvi/Jekx/hczYJVpUKZhTGMn3FQyi8=
-X-Google-Smtp-Source: ACHHUZ5RrBes66CWdKlEmZatckqkNirkRz6BeRwsvnu/+lqa15d+UZ1Sb3CjcAeSREMSJ3j3JfsQA5D1JNkYyyUj/AM=
-X-Received: by 2002:a25:34cf:0:b0:bb1:568c:437d with SMTP id
- b198-20020a2534cf000000b00bb1568c437dmr25283881yba.3.1687821000621; Mon, 26
- Jun 2023 16:10:00 -0700 (PDT)
+        bh=kM73dDXJJ2LQE16TI30w/dkhZfJCFiiWEY4v9vd3CAI=;
+        b=LDX72YnIUSr+k4xLstF51E7GaDxYyBd6KxcvBbZNYLVFq/ugCcPmyF7e/qlFrs+Dwl
+         b22mLaJen3XLfYOFittbcOp6jCcq1lOMnNF3ujmJ/YNxntuRoEpnc828EVLyKt3pUL+i
+         gRv+1SqBEijiwFdNt4Pwn5t9/lM3QjolL2MwwbAVokjrizCNr2vUXB8BN6xdjj72bg3N
+         u/iVqTOh1Gk9fJfhzjkGfhUN9Jk5KBDhXDv8c7RcYsWgSmyRmdPZhmWxncb7LvjJZcl3
+         HdH4JtRM0QbD0S8JrRBcIAPxiM6OMnrZ8WhqwbaxpyywQVLnaik1qKIaY2dsD7gy56eF
+         xLMQ==
+X-Gm-Message-State: AC+VfDxnXkVzmVdIdpc81pblavP9+yE6qUi04NPzqM+V6bQiRkguUIZ4
+        dkNIzQek31lUrb98FBHtDGKywk5jT6y8mk3z7wA=
+X-Google-Smtp-Source: ACHHUZ6SlNxvS+0k1RkdHbPMGvtR/zIR689flvvkM6fGCsnFYzBJ3gb7C/t8rh8Gglh4bBOZPBk7Q91WVqTWMmesHvU=
+X-Received: by 2002:a25:2903:0:b0:bff:d530:f06 with SMTP id
+ p3-20020a252903000000b00bffd5300f06mr14953523ybp.41.1687821296805; Mon, 26
+ Jun 2023 16:14:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <ZJOmXU/41HMzanM9@tassilo> <CAP-5=fWZAcXcE3CP-V7t=gSehO-AacHJWhjHjtA5nCd5B2-n1A@mail.gmail.com>
- <ZJQSUHLe9Cqpw21n@tassilo> <CAM9d7cgpegLH9QpUhHQy0ckMpO6CaKaYrAeHKNm4CT01R4bhGw@mail.gmail.com>
- <ZJSr2PbOrpFrSIaL@tassilo> <CAM9d7cj1XXpuaPss7qa7eSD8LJCQZ1KorviOxxnt2Hpk_J3ugQ@mail.gmail.com>
- <ZJXl5vdhxPnVBRze@tassilo> <CAP-5=fXOi=xQ4=j5xAq+jWLR9n7uvfsWK+PzXkY1MZ3Fz-xccw@mail.gmail.com>
- <CAM9d7cg5ZQvHGs3fh9iXxdgRY2uidgDTQ0WSQGuicub+wX8KFQ@mail.gmail.com> <ZJcu5XiTFWtXC7QU@tassilo>
-In-Reply-To: <ZJcu5XiTFWtXC7QU@tassilo>
+References: <CAM9d7cjtisDVPijfU=iEGxc0YF=RnAt+r18Jg+8Av-+RAO=jeg@mail.gmail.com>
+ <IA1PR20MB49536C0DA47122E9E3CB7CBBBB20A@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <CAM9d7cis-rb0fozK+T6R8MCEcT0ZF=RRNpv1qAWsLkMfsG6KxA@mail.gmail.com> <20230624-supermom-disparity-37546ffed0a4@spud>
+In-Reply-To: <20230624-supermom-disparity-37546ffed0a4@spud>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 26 Jun 2023 16:09:48 -0700
-Message-ID: <CAM9d7chyic6tf0nvJVE+Mt+X0fagecxESqVj9=pLNtxbCP5NeQ@mail.gmail.com>
-Subject: Re: Perf stat regression from d15480a3d67
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
+Date:   Mon, 26 Jun 2023 16:14:45 -0700
+Message-ID: <CAM9d7cjHndHrcH95uwmYRMRpm-a0kX2BHQ1jzmyo6f48w69jbg@mail.gmail.com>
+Subject: Re: [PATCH V3] perf vendor events riscv: add T-HEAD C9xx JSON file
+To:     Conor Dooley <conor@kernel.org>
+Cc:     Inochi Amaoto <inochiama@outlook.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Nikita Shubin <n.shubin@yadro.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Jun 24, 2023 at 10:59 AM Andi Kleen <ak@linux.intel.com> wrote:
->
-> > > So with perf-tools-next it appears that we're not merging the uncore
-> > > events, but that's different than skipping events.
->
-> Isn't that a regression too? We're supposed to merge.
+Hello,
 
-Right, should be fixed by Ian's patch.
+On Sat, Jun 24, 2023 at 1:54 AM Conor Dooley <conor@kernel.org> wrote:
+>
+> On Fri, Jun 23, 2023 at 09:35:01PM -0700, Namhyung Kim wrote:
+> > On Fri, Jun 23, 2023 at 6:33 PM Inochi Amaoto <inochiama@outlook.com> wrote:
+>
+> > >
+> > > As for c9xx wildcard, the T-HEAD provides a `MCPUID` vendor CSR to allow
+> > > its CKLINK to get the detail CPU info. The format of this CSR are:
+> > >
+> > > ------------------------------------------------
+> > > |31   28|27  26|25    22|21   18|17    8|7    0|
+> > > | index | WLRL | family | class | model | WLRL |
+> > > ------------------------------------------------
+> > >
+> > > And for C9xx series (only index 0000 is vaild for us, as `MCPUID` also
+> > > provides other index).
+> > >
+> > > | 0000 | xx | 0100 | class | xxxxxxxxxx | xxxxxxxx |
+> > >
+> > > The class codes are:
+> > >
+> > > C910: 0011
+> > > c906: 0100
+> > >
+> > > The CSR is a M-mode only CSR, so now I'm exploring a clean way to
+> > > integrate this CSR into the kernel. Any advice?
+>
+> See for example how riscv_cpuinfo_starting() reads mvendorid & Co.
+>
+> > I don't know about the details.  Is this CSR available from user space?
+> > If not, you could add it somewhere in the sysfs.
+>
+> Machine mode is the highest privilege level, Supervisor mode is next &
+> User mode is the lowest. Typically the kernel runs in Supervisor mode.
 
->
-> >
-> > Right, not sure what's changed though.
-> >
-> > Andi, what's your expectation?
->
-> The original test case passes with perf-next, but I still see failures,
-> but that might be related to PMU reordering. I'll investigate that.
->
-> However if the original hiding is still in the code the problem could still
-> happen, right? I would still prefer to do what i suggested earlier,
-> to only do hiding on --per-thread with an option to turn off.
+Maybe you're interested in this thread for user visible identifiers.
 
-I think the hiding should not happen in normal conditions
-besides the --per-thread.  So I want to be clear what makes
-it disappears.  Then we can decide what to do.
+https://lore.kernel.org/all/1687245156-61215-1-git-send-email-renyu.zj@linux.alibaba.com/
 
 Thanks,
 Namhyung
