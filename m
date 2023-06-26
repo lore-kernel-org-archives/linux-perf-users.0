@@ -2,197 +2,101 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FE7C001B0
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 00:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E30EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 05:31:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229770AbjFZArG (ORCPT
+        id S229683AbjFZFbF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 25 Jun 2023 20:47:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46468 "EHLO
+        Mon, 26 Jun 2023 01:31:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229529AbjFZArE (ORCPT
+        with ESMTP id S229566AbjFZFbE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 25 Jun 2023 20:47:04 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 035A1BD;
-        Sun, 25 Jun 2023 17:47:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687740424; x=1719276424;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=VXsRJQsvO7IRZ3uVQLIs4sCvYYKXeqssXDKhRM7iKqM=;
-  b=PCN/uqEoLpT0njf93L5l2O56myOy24bxLZJhWNwmQK9SWACcZenxyGke
-   u4+LPNr5RpiI2wbHiAOyhFOuhHfJzyc/wfOiTLGOV4NHOpJzIiNERGfzX
-   wTzuKKbSN6hjqZ5s7247WTRHwfPbcy5+REy1m4MFGenNPky4U3Ae7BGUz
-   qRRWKPfywx6Wrunsdh3rfmc6hBn18ikta5NMs7G9HHcnwa2960TS3xlhE
-   xeGIPj79d++mnBJprc7aO+VEnmTJrFvvJnN+i3joBaRmWV0fdRNLh37H+
-   S2DjScWndDe5ToWbZJZ1Yck4rcWaIjB7RLHzFX2R+0thtLb2NJbz2i/MS
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10752"; a="350910752"
-X-IronPort-AV: E=Sophos;i="6.01,158,1684825200"; 
-   d="scan'208";a="350910752"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2023 17:47:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10752"; a="829042310"
-X-IronPort-AV: E=Sophos;i="6.01,158,1684825200"; 
-   d="scan'208";a="829042310"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmsmga002.fm.intel.com with ESMTP; 25 Jun 2023 17:47:01 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Sun, 25 Jun 2023 17:47:01 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Sun, 25 Jun 2023 17:47:01 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27 via Frontend Transport; Sun, 25 Jun 2023 17:47:01 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.102)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Sun, 25 Jun 2023 17:47:00 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cQUalgDun9oP0EFLKHLSnrrQNyRtFzExiG+xjdv7d0Yrcba9KfkAvwpkZX3pJ/JG3Nynpt1qRMjpdvT6K4NC3L6XmmMZmi3CU7D+UlR9RZF5v53iYl/5VsiG2YNlfTLbYEF2kXSUKn/iDi/Jorx+aBX+ED0BkK5WeQHWVaHjRJK+rK6wBehAYOCVLINYeiGETZPPBVRUWy4ZC1O3lZut7jpZygGXPMqSkM/Ybsg2a4Rl4mLRv/Np2mKuKCvuCU2vTCJISAccd1DsQEth6PPvRXrIfPbOOIXq9APXij4ACApgUxWAlwLLI4NDfgALKWbL1U89RAuSaVghyp8EKqj4jg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZBcaJdLMjkX+H1DroTcwW58Ae8TCMYTg6ZJ1I1OHUYQ=;
- b=MkDe4ksFVMsLnmL9g3+ZZihUhmSSZAfxZ48b6UlJbixKPCzn70+o/6vmeT1xt3VgBxNhsQvsXsc4v5h/O8OVNk2yaWD4h1VlevoiO1dOBK5b1IJJh22NTDOHIoueKqXjBHXIc0ZWjhxRNdAhjVAb7KgVzI40Gcur7PVnQHb9pEhxrpZUjVjPa05/vAqxacP7fqXW5UyptSUxBy3IeSUBPwyNV8CbTK9Q1Fp8vL1l+tKaNhFzvG2r0Gbq9xvdPb780KslBGB9ZqhqhDLyWeCDJK1Ad7IDEZvGPGxEFr2kpCOYbCZTEJ+Epfhz4V1OO6Oy7JxGZAVFQeRNYwpbDtFvrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by MN0PR11MB6057.namprd11.prod.outlook.com (2603:10b6:208:375::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.26; Mon, 26 Jun
- 2023 00:46:58 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::aeb:12b5:6ac9:fab0]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::aeb:12b5:6ac9:fab0%7]) with mapi id 15.20.6500.029; Mon, 26 Jun 2023
- 00:46:58 +0000
-Date:   Sun, 25 Jun 2023 17:46:53 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Namhyung Kim <namhyung@gmail.com>,
-        Liang Kan <kan.liang@linux.intel.com>,
-        <linux-cxl@vger.kernel.org>, <peterz@infradead.org>
-CC:     <mingo@reresetdhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <will@kernel.org>, <dan.j.williams@intel.com>,
-        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: RE: [PATCH v8 3/5] cxl/pci: Find and register CXL PMU devices
-Message-ID: <6498dffd2e228_8e17829465@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20230531110011.13963-1-Jonathan.Cameron@huawei.com>
- <20230531110011.13963-4-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230531110011.13963-4-Jonathan.Cameron@huawei.com>
-X-ClientProxiedBy: MW4PR03CA0268.namprd03.prod.outlook.com
- (2603:10b6:303:b4::33) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MN0PR11MB6057:EE_
-X-MS-Office365-Filtering-Correlation-Id: ab943ffd-62a0-4763-f920-08db75ded847
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: c98RjdqydQJ7j02zqpUzPCB1RUA8S23X0eQFI6m3AWSP4y//wYfIWuuZI1gleSFTq6PYiPKTbDWJXQE6EamPRXeUMAr7ytdWCtJZhVpoBEyAgaA8Hz/TsMQUTp2XuAlX6kqToOXXIi2z/Tds3lVzF3oZWZwc6RI3WKAjDCXcadACwPNvhfBktpnEy+guw+qCjOiRGVHWakkXbW12Tg/r+c9HWr05uwqntdywQ1xq3PkxVUpKImLMhUzuencii+YhlclZt0WrB4b8tkaFT/ag0x78MYXdbTKWCmsYJyAzLygDor7zFU1OqQnMeQNS/BUSDk5np2X/TsO0dcQHkntANlQkzrxtm71RVz+tsaMKxAPOag2ae4frbkYv5dqUS0rK9tBh6BJ4+F0ks1oSUyf4cHJpySXvrYz12kbbix+d7jQM402fQsuRSel8tIzWTGfg6ysToG1K8V+kNmfmAdGkDvM7OtEsQbVS67L4IzoSfNGPDQv3yn2Yjz6JDYlfjuFiCWPTiRgEiYmhj0k+HZ4aExLe5ULGmVseEpysbkr2g1Pfo7mAOJ1aO4SwPzlKO2mh
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(376002)(346002)(136003)(396003)(39860400002)(451199021)(82960400001)(38100700002)(83380400001)(86362001)(478600001)(54906003)(110136005)(6486002)(6666004)(41300700001)(66476007)(66556008)(66946007)(316002)(8676002)(8936002)(26005)(4326008)(6506007)(6512007)(186003)(9686003)(2906002)(7416002)(5660300002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?9HsodgjSjBT7UrX20WPIpisfP+TKyo5hq4Sw0Ac6u9oBRCnf5sLraTqJWLaS?=
- =?us-ascii?Q?nt4SLQbJywItdy3TNhbHrtcpkZ7I/zTF6Gf16FLbKg8QjFSQ9fABtiqD4qQS?=
- =?us-ascii?Q?2xV8xNfVRinpElj1gBc4JuWTuPd5QE3k8AB6Z6fXR9kfHtrbRnTBfZvOlrVE?=
- =?us-ascii?Q?lkP3a2xqMKvqbUbj34O+mP4k5u3uvzVoU+mo+jKpgGOQTSQDCl7DTUf9t+nS?=
- =?us-ascii?Q?o1PuHlLiOWoUd5VoMlu2sy9Ab6JSadu2tYZ/eUMDYst5kQh+w0lfFyiXltSv?=
- =?us-ascii?Q?O7hyqhJ7yLod+d9SLg+JsbJ3wPQ/FxMpJIrJX/JHnfj8SrtW9qPoN9V6ZhVh?=
- =?us-ascii?Q?Vc5wbCmLKdNfvlB3pZR29jOn16nfOp7bWx0o59+i5JNq4zcf1pyouXGLSEaO?=
- =?us-ascii?Q?v2QiBdvD2o4WIB99ZsEMoYRdiNvAFXFK5GClkBZ5CZ4KwQHYo8kJC0q96rP0?=
- =?us-ascii?Q?Yf96kefM0CfkWYRlBuEEjAgrpChkFzWOi2kHiNP86mrau0PG6gANxphHNMjy?=
- =?us-ascii?Q?3OkMMR2tfnUvVu2hnJu3eUXLLLLV/askmBpGx450xWOah96mUaleDiP/Jii/?=
- =?us-ascii?Q?mGqbiGUIMvb0JKQa/BAWuGNtNeerrOsI+JQPO6CLIK9ideck8oHKd+bbhJ7I?=
- =?us-ascii?Q?MDBYk3e4h+X7ltHD2YXCWmRRnmAsvSNtBj+uWrJSgfHp6BB1Nekefx9/MZEL?=
- =?us-ascii?Q?8fLa0417k5cmjQoQFsAcwVVlD8/K2yuja9x67NIx59jIynSkjMAghyJ6RXGj?=
- =?us-ascii?Q?H+nr6jdelSy7PmzMfu+OCYvENcJ6TX1y9Y7IkA+BKXMHU6Ke6jv+Uilh1Y2D?=
- =?us-ascii?Q?5GU0OETipuZLI75Ly9uV6DhCyXp2RAUAj1J3z4KMQDBTrY/f+SCNYlwOoUK1?=
- =?us-ascii?Q?j0dDE9qaCjkkeTe6bQ1BS6FzT8fpwUJQMYitlJUrXt+734uCg28K3Q+kd9WT?=
- =?us-ascii?Q?2bfpj6o3OTch8hUXdVbzz1xmpgvrRNO+VxlDQNgfcZxb3zCz5W4RNXy/kwUZ?=
- =?us-ascii?Q?VYoO9KT5n7CPaVsgFIxsfGAojcCK16f4tbDqr3aKGf7+8WA6gdMHfR9jg4mO?=
- =?us-ascii?Q?nIaSOlXoojobonWyHszZNNObGIm+V1IFWkyR1PptKLqWB5sHOiAXT18YqtkG?=
- =?us-ascii?Q?5dMb4sIxn8q2nDS6ppTn/1w+kTU5ihbzG1Pnt19pURkjWfLjOmNk5NcRjDwh?=
- =?us-ascii?Q?RP+wx1KBu9684FElAbOtZrEbtWRzlSIyU3QyK3Dl5f0fgWiZ/xFGq91JB9FT?=
- =?us-ascii?Q?2LKhI513t7ZIvbAfZaaNAGTRariw8wmypc44ZmgK8P2UwNRNJzoniwrSJ/cv?=
- =?us-ascii?Q?5CsKWUUSBaiblNEOOqO5m3cYTFSXfsIxiJKaATCu/mpJiGRbhMjoUD34fIUK?=
- =?us-ascii?Q?gdiKlUFmNaBQCT2frA3c7WahkGp6NId2luQnChfwyqyierDttvLJshlFBDBj?=
- =?us-ascii?Q?D6Yvy4WEY61yTJL/1wPXQ0baulcObmkTqZ3Bs8L1Qhr7v86SR4sqwGvRREZD?=
- =?us-ascii?Q?xLA/wBdEtlh+c3+i86C1YznjvD7uifTZ0UT0m4xZpyXJx7So9j7+Yoh8fJFC?=
- =?us-ascii?Q?7jIN6UfaGz9uejuymBj0Xgx+Uioyo4yJjmkaH94YP3bFWdjtBIHertkiLSnN?=
- =?us-ascii?Q?Sw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab943ffd-62a0-4763-f920-08db75ded847
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2023 00:46:57.7246
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: y5WHP2phyaQcoTchGVaFcf1JWvHJrzsPw48Ac8NEGfA1ztVsawcMG2A6IjX0aKLRDBS+2AUcUzID9yhAOoQjSwzhvln4CiXdqKA/QWr0eKI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6057
-X-OriginatorOrg: intel.com
+        Mon, 26 Jun 2023 01:31:04 -0400
+Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0577116
+        for <linux-perf-users@vger.kernel.org>; Sun, 25 Jun 2023 22:31:03 -0700 (PDT)
+Received: by mail-pf1-x449.google.com with SMTP id d2e1a72fcca58-666ec28a20dso999077b3a.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 25 Jun 2023 22:31:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1687757463; x=1690349463;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=peuhcomyzUm1WYfUTQS3mV4fqDU7Ve4mUuTiDhGA//A=;
+        b=fOXpdUaZpej6Gu9iwqHFOMuLQxAluPKvXFsnjABYVGHAdhFmMMZlzBLf2BPpUz6H1k
+         9uek95cDC0dE+g4z3Iz4zbYzGe+OlRkpoNLnYBj2cwF2ORWmneFuss/BR9jQ70rEAHn5
+         6QPppbcHZjTaK3Viw6NKfq66q5d0x34arwKuayDxSc+5+a37hgtyr1/5BxowKUOgagul
+         jLSJ9CPTIvOLAMChFvMl+uRJ4qixmwnk2/s4aCgpcHURMuE+JUsxFxazmtykCdOVXD/X
+         L7Ucr4WbtWhwbytcOBdW1eWwSxm1OXYpxmD89IkADnvq/BAR2RJoSGmDLxyXwHPT1Bkw
+         WIKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687757463; x=1690349463;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=peuhcomyzUm1WYfUTQS3mV4fqDU7Ve4mUuTiDhGA//A=;
+        b=UGR+pDx+dGJbOwJEZM2YoVsRyyvl41t5yxP8indFqxI3n+Bfhx9Qk6iO42FBjSGdUK
+         wj4TYnBY8TA4al0S/t3iT884HLf8W9MqiYZhSuAw26VaAXKyG5WNI2Mbd5gHG2V/19Ev
+         bfJdo98AJVy/KBe36tdA9haLp6m23h3gOQbxkh/OID0hhV8Eg2EzPelzLGlOTALXlppA
+         HtMICs7dhYbM0ki5DmvJtyktSJYpKXscju6zgNL4h3YNNogrGBubW/ee0scwOifmct7C
+         RR2jvyv8bGY41fmCTJ1wKWqgIJZzHt+kNtkmV9dujhjwKrQ8poh5IjxORrc8bBM5gllv
+         dxaw==
+X-Gm-Message-State: AC+VfDwNP4FqR83YohW4oIWj/O2yRVY8Ao6O7c8L/rNW5R0RWUPHuYP+
+        AfmCFN2+4x26721c4+KixwixFNRP+EFD
+X-Google-Smtp-Source: ACHHUZ7mD6277JxlxdO/XpkoyniIWck0W2cN665ORJ+jVm63PNgz8tlijTmz4vMCjEZYvDp87f7MNUI4UCob
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:595f:edfe:c81f:233a])
+ (user=irogers job=sendgmr) by 2002:a05:6a00:139b:b0:678:e0b1:7f28 with SMTP
+ id t27-20020a056a00139b00b00678e0b17f28mr341064pfg.6.1687757463098; Sun, 25
+ Jun 2023 22:31:03 -0700 (PDT)
+Date:   Sun, 25 Jun 2023 22:30:48 -0700
+Message-Id: <20230626053048.257959-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
+Subject: [PATCH v1] perf pmu: Correct auto_merge_stats test
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Jonathan Cameron wrote:
-> CXL PMU devices can be found from entries in the Register
-> Locator DVSEC.
-> 
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  drivers/cxl/core/Makefile |  1 +
->  drivers/cxl/core/core.h   |  1 +
->  drivers/cxl/core/pmu.c    | 68 +++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/port.c   |  2 ++
->  drivers/cxl/core/regs.c   | 16 +++++++++
->  drivers/cxl/cxl.h         | 13 ++++++++
->  drivers/cxl/cxlpci.h      |  1 +
->  drivers/cxl/pci.c         | 26 ++++++++++++++-
->  drivers/cxl/pmu.h         | 28 ++++++++++++++++
->  9 files changed, 155 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> index ca4ae31d8f57..1f66b5d4d935 100644
-> --- a/drivers/cxl/core/Makefile
-> +++ b/drivers/cxl/core/Makefile
-> @@ -12,5 +12,6 @@ cxl_core-y += memdev.o
->  cxl_core-y += mbox.o
->  cxl_core-y += pci.o
->  cxl_core-y += hdm.o
-> +cxl_core-y += pmu.o
+The original logic was:
+https://lore.kernel.org/all/20230527072210.2900565-35-irogers@google.com/
+return !is_pmu_hybrid(pmu->name)
 
-One small addition I will make to this patch is to fix the cxl_test
-build with the following complimentary change:
+is_pmu_hybrid was removed but with the incorrect condition which was
+fixed for core PMUs but not uncore. This change fixes both.
 
-diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-index 6f9347ade82c..aa0ca7095a64 100644
---- a/tools/testing/cxl/Kbuild
-+++ b/tools/testing/cxl/Kbuild
-@@ -57,6 +57,7 @@ cxl_core-y += $(CXL_CORE_SRC)/memdev.o
- cxl_core-y += $(CXL_CORE_SRC)/mbox.o
- cxl_core-y += $(CXL_CORE_SRC)/pci.o
- cxl_core-y += $(CXL_CORE_SRC)/hdm.o
-+cxl_core-y += $(CXL_CORE_SRC)/pmu.o
- cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
- cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
- cxl_core-y += config_check.o
+Fixes: e23421426e13 ("perf pmu: Correct perf_pmu__auto_merge_stats() affecting hybrid")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/pmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 64fa568a5426..8d5ecd4ff1a9 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1427,7 +1427,7 @@ bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu)
+ 
+ bool perf_pmu__auto_merge_stats(const struct perf_pmu *pmu)
+ {
+-	return pmu->is_core && perf_pmus__num_core_pmus() == 1;
++	return !pmu->is_core || perf_pmus__num_core_pmus() == 1;
+ }
+ 
+ bool perf_pmu__have_event(const struct perf_pmu *pmu, const char *name)
+-- 
+2.41.0.162.gfafddb0af9-goog
+
