@@ -2,152 +2,97 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E31EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 20:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21970EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 21:27:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229578AbjFZU7C convert rfc822-to-8bit (ORCPT
+        id S230376AbjFZV1k (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Jun 2023 16:59:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51952 "EHLO
+        Mon, 26 Jun 2023 17:27:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbjFZU7B (ORCPT
+        with ESMTP id S230383AbjFZV1j (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Jun 2023 16:59:01 -0400
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA6D8125;
-        Mon, 26 Jun 2023 13:59:00 -0700 (PDT)
-Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7835bad99fbso51939839f.1;
-        Mon, 26 Jun 2023 13:59:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687813140; x=1690405140;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w8/FilnxQYWJtSiiMwZyoDzlxp4aKzL1HmrYGLutaDA=;
-        b=I/FC7e6oYfoh5WYlgLsSpwjy5JlnkQYYgSXieDjc5ZmPi0qTwpgieg3Zm7ugLK1P5g
-         Jf9po23SZ1ahikTAgW9wNmsr6tXR/8LQzYNNLKx6dchr1RUCzdWoXFdSA1hJSGxzhIgg
-         Il9LNynVx4d5zghKdo8hMP13bxQQ1SKocVOKSMXyysUhYa8amhatR5J/JRV8s22A3M8V
-         PAKrSzsUbE6qjDSCL77s2IVqBtSE3c7fbu0CQtmranJS9fsZXt3tIRW68NK4DB38myQW
-         W60uUF584oz6WzD3Y2mwcjhJ6K4VSK8xq+5uS2yznGHlxDxNUYqF7ROkQ8k7xmsQrixS
-         u2Pw==
-X-Gm-Message-State: AC+VfDzSSwZH9WP6Ute7h/4ESWHxUTGZU3ZzneiXfgx8HLgGtP7lzrnr
-        pfO2fnP3pc+Qkv1ZYO+nFMnsMrqE7pAOILnbFm0=
-X-Google-Smtp-Source: ACHHUZ6kMJi3Eve8QpoIfyr1Bt9ZaZLbIFTqpFwimUl7nrLbeOJZFMknBrYDrzpFpMryPyVUsj5dA82W6H8S2oKbqkU=
-X-Received: by 2002:a6b:ea03:0:b0:783:5511:7b27 with SMTP id
- m3-20020a6bea03000000b0078355117b27mr3980870ioc.9.1687813139837; Mon, 26 Jun
- 2023 13:58:59 -0700 (PDT)
+        Mon, 26 Jun 2023 17:27:39 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56A1D1702;
+        Mon, 26 Jun 2023 14:27:37 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9DAE160EB2;
+        Mon, 26 Jun 2023 21:27:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57EAFC433C0;
+        Mon, 26 Jun 2023 21:27:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1687814856;
+        bh=cD+DlgssDHp9bWUfoAqdwHPtpJlWEj+4Ut4kvVblUg0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ljNIZ97KtuHOBzk+gfTMQAonQtKrXqmArEvp6gf6th8U9snAirn5HZDr1pg39P5AM
+         38gQsvUyYJlV3jRaJ6kdS4HMZqqEbbjpqCwKDqWHdOiJQ00c6CDF3KnUyl1a+uCfIT
+         +xjUvT7wagBbCIUxOr1Ysw1TFcb4kRMdstAYOVJmeh1c2aJ1ajmTMXLray5ohrZA1k
+         TGJKSOFKLXOkfZHHSsu2DT8/xHwyfZDfAaRIj4k7jAwNPPrkoK47wsuRy8FgpA5QG0
+         MiMilxWpzVqMxN+muUL8m1ErVMR7jUvIEziUej63OU+jBJM+NfvkJEhv2s1qez5gY8
+         SzPCGc2kupEtQ==
+Date:   Mon, 26 Jun 2023 14:27:34 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     Matthieu Baerts <matthieu.baerts@tessares.net>,
+        dhowells@redhat.com, acme@kernel.org, adrian.hunter@intel.com,
+        alexander.shishkin@linux.intel.com, bpf@vger.kernel.org,
+        davem@davemloft.net, irogers@google.com, jolsa@kernel.org,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mingo@redhat.com, namhyung@kernel.org, netdev@vger.kernel.org,
+        peterz@infradead.org, sfr@canb.auug.org.au
+Subject: Re: [PATCH net-next] perf trace: fix MSG_SPLICE_PAGES build error
+Message-ID: <20230626142734.0fa4fa68@kernel.org>
+In-Reply-To: <20230626090239.899672-1-matthieu.baerts@tessares.net>
+References: <2947430.1687765706@warthog.procyon.org.uk>
+        <20230626090239.899672-1-matthieu.baerts@tessares.net>
 MIME-Version: 1.0
-References: <20230626201606.2514679-1-jolsa@kernel.org>
-In-Reply-To: <20230626201606.2514679-1-jolsa@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 26 Jun 2023 13:58:48 -0700
-Message-ID: <CAM9d7chMGzEJ3GKyxXD-RwUpjje7u3Cp810TRD+ZGgCT+mFrEQ@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: Add missing else to cmd_daemon subcommand condition
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Jiri,
-
-On Mon, Jun 26, 2023 at 1:16 PM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Namhyung reported segfault in perf daemon start command.
->
-> It's caused by extra check on argv[0] which is set to NULL by previous
-> __cmd_start call. Adding missing else to skip the extra check.
->
-> Fixes: 92294b906e6c ("perf daemon: Dynamically allocate path to perf")
-> Reported-by: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-
-Thanks for the fix.  Now it runs ok.
-
-Before:
-  $ sudo ./perf test -v daemon
-   85: daemon operations                                               :
-  --- start ---
-  test child forked, pid 82420
-  test daemon list
-  ./tests/shell/daemon.sh: line 133: 82426 Segmentation fault
-perf daemon start --config ${config}
-  test daemon reconfig
-  ./tests/shell/daemon.sh: line 133: 82520 Segmentation fault
-perf daemon start --config ${config}
-  test daemon stop
-  ./tests/shell/daemon.sh: line 133: 82636 Segmentation fault
-perf daemon start --config ${config}
-  test daemon signal
-  ./tests/shell/daemon.sh: line 133: 82674 Segmentation fault
-perf daemon start --config ${config}
-  signal 12 sent to session 'test [82676]'
-  signal 12 sent to session 'test [82676]'
-  test daemon ping
-  ./tests/shell/daemon.sh: line 133: 82702 Segmentation fault
-perf daemon start --config ${config}
-  test daemon lock
-  ./tests/shell/daemon.sh: line 133: 82734 Segmentation fault
-perf daemon start --config ${config}
-  test child finished with 0
-  ---- end ----
-  daemon operations: Ok
-
-Maybe we need to investigate more why it was ok..
-But at least I don't see segfaults anymore
-
-
-After:
-   85: daemon operations                                               :
-  --- start ---
-  test child forked, pid 80752
-  test daemon list
-  test daemon reconfig
-  test daemon stop
-  test daemon signal
-  signal 12 sent to session 'test [81022]'
-  signal 12 sent to session 'test [81022]'
-  test daemon ping
-  test daemon lock
-  test child finished with 0
-  ---- end ----
-  daemon operations: Ok
-
-
-Tested-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks,
-Namhyung
-
-
-
+On Mon, 26 Jun 2023 11:02:39 +0200 Matthieu Baerts wrote:
+> Our MPTCP CI and Stephen got this error:
+> 
+>     In file included from builtin-trace.c:907:
+>     trace/beauty/msg_flags.c: In function 'syscall_arg__scnprintf_msg_flags':
+>     trace/beauty/msg_flags.c:28:21: error: 'MSG_SPLICE_PAGES' undeclared (first use in this function)
+>        28 |         if (flags & MSG_##n) {           |                     ^~~~
+>     trace/beauty/msg_flags.c:50:9: note: in expansion of macro 'P_MSG_FLAG'
+>        50 |         P_MSG_FLAG(SPLICE_PAGES);
+>           |         ^~~~~~~~~~
+>     trace/beauty/msg_flags.c:28:21: note: each undeclared identifier is reported only once for each function it appears in
+>        28 |         if (flags & MSG_##n) {           |                     ^~~~
+>     trace/beauty/msg_flags.c:50:9: note: in expansion of macro 'P_MSG_FLAG'
+>        50 |         P_MSG_FLAG(SPLICE_PAGES);
+>           |         ^~~~~~~~~~
+> 
+> The fix is similar to what was done with MSG_FASTOPEN: the new macro is
+> defined if it is not defined in the system headers.
+> 
+> Fixes: b848b26c6672 ("net: Kill MSG_SENDPAGE_NOTLAST")
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Closes: https://lore.kernel.org/r/20230626112847.2ef3d422@canb.auug.org.au/
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 > ---
->  tools/perf/builtin-daemon.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
-> index f5674d824a40..83954af36753 100644
-> --- a/tools/perf/builtin-daemon.c
-> +++ b/tools/perf/builtin-daemon.c
-> @@ -1524,7 +1524,7 @@ int cmd_daemon(int argc, const char **argv)
->         if (argc) {
->                 if (!strcmp(argv[0], "start"))
->                         ret = __cmd_start(&__daemon, daemon_options, argc, argv);
-> -               if (!strcmp(argv[0], "signal"))
-> +               else if (!strcmp(argv[0], "signal"))
->                         ret = __cmd_signal(&__daemon, daemon_options, argc, argv);
->                 else if (!strcmp(argv[0], "stop"))
->                         ret = __cmd_stop(&__daemon, daemon_options, argc, argv);
-> --
-> 2.41.0
->
+> 
+> Notes:
+>     @David: I solved it like that in MPTCP tree. Does it work for you too?
+> 
+>     I guess tools/perf/trace/beauty/include/linux/socket.h file still needs
+>     to be updated, not just to add MSG_SPLICE_PAGES but also other
+>     modifications done in this file. Maybe best to sync with Arnaldo because
+>     he might do it soon during the coming merge window I guess.
+> 
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+Hi Arnaldo, are you okay with us taking this into the networking tree?
+Or do you prefer to sync the header after everything lands in Linus's
+tree?
