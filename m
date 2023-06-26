@@ -2,154 +2,176 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 638B6EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 06:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EBFEB64D7
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 07:49:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229516AbjFZGHB (ORCPT
+        id S229471AbjFZHtX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Jun 2023 02:07:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36552 "EHLO
+        Mon, 26 Jun 2023 03:49:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229481AbjFZGG7 (ORCPT
+        with ESMTP id S229506AbjFZHtW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Jun 2023 02:06:59 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2080.outbound.protection.outlook.com [40.107.243.80])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80A73EB;
-        Sun, 25 Jun 2023 23:06:58 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=btzmZqAIOeiWdhG6Z3x+qLL7WZnqbU97Uuejwyz1JtT0cCRMuWh+azSkmTSO9EnoRwL5WLsMivbDM7W51Ur+HlPFzDPjomvLPaT5DUlJvU8mY8Y7KgWJu3FAF567t9H2im+VM9lZxr+55S7cHHjNmkwswYL5P9rjRB+xLaX0jJerVDvE9bkp9+L4vo5b1yP2tTEdLRXjHu34+a/ALx5OwqrrRuY1mlPmM2TlO9FaHru2JULJbINFzjT9LofwzXvzxU68wrcP7KVJuRZ0iEQ+s4xCGSdfFKXBPbfVaNGZqODZFRbzQX80xCs314CdxKEDCs35/LqrtGpqQbOOUWSNpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aqfXBbOeYmJB/d1CY+LyH/E1c9KWxXAFBNqHnT3i2Bo=;
- b=Fzq2/BPvZOIh1iFRAvwz5MAPRhydK8pI8Baqh0KJb3yHyx3r5dCcCaYp6+a63Czt5uh0WVViSEzy7RO14B0jyVAvLZ0q2FvYNah56xVybwbiGjfsJmK35N1XcCHQyq6NoKvwpvawawY5qKE1r8IYLHwjnNHaf56c25EzM7xMH/iBdsIcT7+Qs02MtMNDPR2ivYUjGhPsO+9xRqnfsMu7ovzqGllhcH8J1W6ZMLUFXNhKZNmK01AoiOm0XGEMaiNiW2rx0djBAOsVjKC3xrmX1GMQUATmkp9HSGtdspMmhHy5pS5Ayathh5uL1acwtNVFla1SOTVD+78hNdZGE7J1eA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aqfXBbOeYmJB/d1CY+LyH/E1c9KWxXAFBNqHnT3i2Bo=;
- b=2oNoa9rP81SP7CkoycOj5WRv9LBEE3KRRpUvYdCRtddqVvw71hXAdWsf/rFUOcW+PRWij2EooWGJoUycMgg3A11g+Aps0Td85RdCXjpKE8KS/pquv7BZXZUt6xUuAgU4pGL8RMznyGdGvivVHRzEIyX/eq4dMH9Nfr0idF8fu30=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by DM4PR12MB7501.namprd12.prod.outlook.com (2603:10b6:8:113::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.26; Mon, 26 Jun
- 2023 06:06:55 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::b4a6:94bb:6895:645]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::b4a6:94bb:6895:645%4]) with mapi id 15.20.6521.024; Mon, 26 Jun 2023
- 06:06:55 +0000
-Message-ID: <d483f539-afd7-8268-5fad-10d9a4489a37@amd.com>
-Date:   Mon, 26 Jun 2023 11:36:40 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [RFC] perf record: Use PERF_RECORD_LOST for synthesizing samples
- from read_format->lost
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
-        peterz@infradead.org, adrian.hunter@intel.com, kan.liang@intel.com,
-        eranian@google.com, ak@linux.intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com,
-        santosh.shukla@amd.com, Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20230623082031.1402-1-ravi.bangoria@amd.com>
- <CAM9d7ciP7hj+u70qxMLE67Hm0uUJfC1rjnW-jDXSLmVYpef_eg@mail.gmail.com>
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <CAM9d7ciP7hj+u70qxMLE67Hm0uUJfC1rjnW-jDXSLmVYpef_eg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BMXP287CA0005.INDP287.PROD.OUTLOOK.COM
- (2603:1096:b00:2c::19) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+        Mon, 26 Jun 2023 03:49:22 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5942E1B0
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 00:48:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1687765713;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ocXyG+slkr0gL4aywexn0lNOfJV4nZ/IWmE7AdPVwQ0=;
+        b=ZwooTgz/NUQBEOjQTJi1rkTJMnv6dg9WIy+NQOLZ/q9w7hPIN5VwCJZAEztKPKpVUhRNyd
+        YSCB1iPafxABtKZ+wBALfYDfy1cKkdW3GlT0C+r77AjaoJYF6eIjFBARdfX1FpFXHn9wsL
+        d2mcA9ymypavXIXzN2qGCwe7fszDqtU=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-518-LZEMRXVMNku8ZOzuiFUVAA-1; Mon, 26 Jun 2023 03:48:30 -0400
+X-MC-Unique: LZEMRXVMNku8ZOzuiFUVAA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3FBDE29A9D2A;
+        Mon, 26 Jun 2023 07:48:29 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 173F640C6CD1;
+        Mon, 26 Jun 2023 07:48:27 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20230626112847.2ef3d422@canb.auug.org.au>
+References: <20230626112847.2ef3d422@canb.auug.org.au>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     dhowells@redhat.com, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+        linux-next@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: linux-next: build failure after merge of the net-next tree
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|DM4PR12MB7501:EE_
-X-MS-Office365-Filtering-Correlation-Id: 24a47b2a-5b21-4984-6ded-08db760b8aaf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dI6f6RuoIs1RRrr6Q3fsUP2r9A5G5N7siwVYcMz9qnheyxwaeLWIcyqbDXyMrf2/W71FFVrSvN1oHO6MU2ympqz+4R2eJPrpfxBGs6r4/gfzKm9eoKMWpQ2v+2fnv/GdStQ+UJCmr8WhotyT6hUS5fROz1nNsOL/6l5ezWCrHls5V0l+AtDrsjcXn7mhZZW4NU8Ydlk8f8fJ7atCdsBZgsrHRU2lh1yXESqy3JLP0nuRvmWRmNjd95u2iuh1KOG4shO4385e8AimKsLdG5iz2/ixmxyw0RoaK71LAcGtDzKy2FyEF5Cda1HRygY3y4zhbtuI3ZYbusbNLuTU2R5/ZI7LBdqCgVwhPQVGGyxTZD6J7ighINFqGB3SBISSekXdOFBDJ4Vmr2wjEIt/UrPuqVOUwilKhoqsWfVls9Ewj0cHISq/LC1F9Sw/iobvyWYCGSUWYhDgUTMErKdtSBTFqLEh0ZocP+Vq0mDluS+CkACAnuuS3+uYpRyn6rJxIGzh8BVqpa0dS9C80VT8g1r1rCNw2jfsIU5GKBrVATJjBZRFts6OhftiH9eKsBCLNvrNihvV2Dhfe0roIEomkN78enZJP7a+JNaIsuBKFjkhmGfkxQjbn9qFl1Tq9YXbKB2F7m3Qurkwjqihqi2P46jnCw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(39860400002)(396003)(136003)(346002)(376002)(451199021)(31686004)(36756003)(5660300002)(44832011)(7416002)(316002)(86362001)(66476007)(6916009)(8936002)(8676002)(4326008)(41300700001)(31696002)(66556008)(38100700002)(66946007)(6486002)(26005)(6512007)(53546011)(6506007)(2906002)(186003)(478600001)(6666004)(2616005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RjF4dExNaGFOM1JwRHVnTlZMaVBHdGhTMlFnNm5nSlFRRzRUSFp1b3dxRGRB?=
- =?utf-8?B?ZXFINlN2NzdzTjJGdjdoYU1pMmd6ZjN2cUFBTGdtVVV5blpDdU5jWU9zZlVy?=
- =?utf-8?B?NGZWdks5bExUMXNXWWZTWVo0U0xNTGd4VHpxUWVpKyt6VzhwR2UreTgxbFJX?=
- =?utf-8?B?aWpwdjBTN1I1dGc5eGtobHdoLzd4cS9IWkN4eDEyNGgzZFdoaVAwRVBCTE01?=
- =?utf-8?B?bFBKais5NkxTSWJGV1ZhSG5ZdE9SSGhQanZnT0FkcWdYaGtmcWNUakpnL3pz?=
- =?utf-8?B?NmRlZlcxdGJUUTNiemYvaWFRcFFMQkRwQVFHS0QxZnh6eVo2YmkzQlFsY3Bl?=
- =?utf-8?B?bnZJMFp0eDh0MC9FdUNCVlhlRGlZTWljYnQ4SG9Zd1pQekRabWhoWEtwd3By?=
- =?utf-8?B?dWg3R0ZNUHJzOVVpS3RCaXNCUzE0V1c4K2pZN2RmSDlwSlJucGh0YURIM2s4?=
- =?utf-8?B?dzJaTjlxWVRVbVNBcnBqamxUWEdPQWY0aWFKNW94ZzNoaGZybnZzUW50eFgv?=
- =?utf-8?B?OWt2MVhWOTBNRXpDeHQ2S0NIZzh6YlNhR2FrYndOTU5pYW01bHpHc1Voc2Nh?=
- =?utf-8?B?Q3FudE5keUg3VGFiUVZHQVF4bFJSS2ZZOVVweXZ2TFNyQTZzYzNLN29hY1Jw?=
- =?utf-8?B?dks1NnRNTk5WTnhySUs2aDhUK1BkTUQ0Mk5yMEIzLzJwMm5BSDZUL0F2WTVq?=
- =?utf-8?B?c0ZiMGZ3THo4dlozd3lYWXR1MnU2ZHVVbWQwMnVMeWgwMVd5SjlidW1XcTFu?=
- =?utf-8?B?SmUrYmdmWFMyTlYwclJhcThzK0lrNUk1R2dQME9WUW51T0xHM3dKU0tRMVVZ?=
- =?utf-8?B?YUU3dzZMckRSRFFJdExvajVhdzZMaEl3cjVKcjgvTXVSS3l2OFdoYUovN3Uy?=
- =?utf-8?B?YWw4OVpuVUtDa0JFcmlYd0pUUk9LT1d1SEhtZjZZSlZ0dnp0ajl6RmEwREdo?=
- =?utf-8?B?dk1DcE1nbnNqOVlVRVpqZzNObUEySmhDWXlHNDkvSThuM1lhU25kNWRtT3F4?=
- =?utf-8?B?ODZac3VFcGlEUGQ3cE1OcXA3S2VYM1plNVJDVnVicm9tQWdiUjNDTjVNNW4x?=
- =?utf-8?B?eEx4cXVDc2RldE9UNG5EWjlONG1xa0ZrSWVVZTJzcnAxeDhCWGwvakVYRHB1?=
- =?utf-8?B?VTdGTkg4TGg4NEYveDhCQU1EVUFIcGZCVW43WDUyTkxVaG4vSUxpZVlOaVB6?=
- =?utf-8?B?T2xZWGkyUkpQekgrbEtEc3VxL0lzQkRMMGYzbXJBWmdWdnZrU04yWXFhNjBw?=
- =?utf-8?B?WnorM0kxckY3dXUwWnVIRnB1ZllpelNXeVNya0JuZnRQajVzVkUybTlQaDJK?=
- =?utf-8?B?b1MwQjZ6NGFuMENONUNJdUhKY2g5TjZDSVNoaW1VVHNpK0l4S1J3eGlrOHlU?=
- =?utf-8?B?OTNrUHk4TWYrMWZYYTZBdis1c2FES1J6RmhmYXhwV3Z1bWFvREhwUWpCZ2NU?=
- =?utf-8?B?S0NjYzZUVm1MOGx0UDBvcXQ0MjhXbHhsaGozOGFVeElDQjR0RVIyTVZ3bzND?=
- =?utf-8?B?Mmo3SmVpTjY0ZEt2c0hxTVJZRzhQSDlBNEZUOEZCL3VLWGlXVWFHd0ZxQ1Rt?=
- =?utf-8?B?QXRJTXEwTUUrc0RQNTI3Q09RSzJQK0h2Qzk1aGF6ejVhL3ZqWUptVDB0L290?=
- =?utf-8?B?QnNrU21qU3g2QWw1Zi9pUWRwemZwb3d5S2x6UFlhS2tSOXU4Z0tKM2xSN3lp?=
- =?utf-8?B?bitXZ21RL1hvNEJzdlNvV3ZIa2hYT21tRlNCL2ZsUEJLeXJMTzIwZzNLaTlJ?=
- =?utf-8?B?eWswVFRZaVhTeGdEc0ZXVk5LZHFyamlUQm14cy81WElkVk00UThERXdOSEZz?=
- =?utf-8?B?eDhsbGtGVE0rek5tek5iVlZKcUlKWFJvQlNFVHprOGg0T0tmc0s4ZWE4UDZN?=
- =?utf-8?B?YUR1SVg5MEVBaDFwSFY0S2ZmN0YwS1EwTzI1Y3U5ZC9sOUZTM1dJNEVxR1Ew?=
- =?utf-8?B?emJRa1ViTEtwYzRoa3pReVhheTB2RXFLRFJVWXFRY2thUXVYZlJBdHFJcHdN?=
- =?utf-8?B?OVVjZFpiVlluQ1lZUG1DQmxIZy9ITFc1cEpSWkp2d3p0WkEzaG5VbFBRd3hE?=
- =?utf-8?B?YzdSeE1QNUErM3QzMC9FUHdOWFd5WFVmd3phNUFSakEySWhrelJEc1FYdnU1?=
- =?utf-8?Q?YqRxEApFIhpIRIQAi2Pm/9Ism?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24a47b2a-5b21-4984-6ded-08db760b8aaf
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2023 06:06:55.0185
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3Is9KYtoEI7TfxRc0ws8sdqgG5h6iRSRTERmSzzS/WzGqTwJ2QQ/h+FSQmkd4x5XGGFo9QadNVK0n80lWNSfwg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7501
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2947428.1687765706.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Mon, 26 Jun 2023 08:48:26 +0100
+Message-ID: <2947430.1687765706@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 24-Jun-23 11:25 AM, Namhyung Kim wrote:
-> Hi Ravi,
-> 
-> On Fri, Jun 23, 2023 at 1:21 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
->>
->> Currently perf synthesizes PERF_RECORD_LOST_SAMPLES samples for values
->> returned by read_format->lost. IIUC, PERF_RECORD_LOST_SAMPLES is used
->> only when hw provides corrupted samples and thus kernel has to drop
->> those. OTOH, PERF_RECORD_LOST is used when kernel has valid samples but
->> it fails to push them to ring-buffer because ring-buffer is already full.
->>
->> So I feel PERF_RECORD_LOST is more appropriate for synthesizing samples
->> from read_format->lost.
-> 
-> The problem of PERF_RECORD_LOST is that it counts non-sample
-> records too.  It just counts every lost records and put the number
-> when it can find a space in the ring buffer later.  We don't know
-> which one is lost and how many of it.
-> 
-> Some users want to get the accurate number of samples even if it's
-> not recorded in the ring buffer.  Using PERF_RECORD_LOST can be
-> confusing since the kernel will return inaccurate data in terms of the
-> number of lost samples.  So I chose PERF_RECORD_LOST_SAMPLES
-> to return the accurate number for each event.
+Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-Ok. Thanks for the clarification.
+> After merging the net-next tree, today's linux-next build (native perf)
+> failed like this:
+> =
 
-Ravi
+> In file included from builtin-trace.c:907:
+> trace/beauty/msg_flags.c: In function 'syscall_arg__scnprintf_msg_flags'=
+:
+> trace/beauty/msg_flags.c:28:21: error: 'MSG_SPLICE_PAGES' undeclared (fi=
+rst use in this function)
+
+I tried applying the attached patch, but it doesn't make any difference.
+
+Any idea what I've missed?  Also, why do we have duplicates of all the ker=
+nel
+headers in the tools/ directory?
+
+David
+---
+
+commit 878ff45f5f746f6773224ff952c490b5812462f2
+Author: David Howells <dhowells@redhat.com>
+Date:   Mon Jun 26 08:08:12 2023 +0100
+
+    tools: Fix MSG_SPLICE_PAGES build error in trace tools
+    =
+
+    Fix the following error:
+    =
+
+    In file included from builtin-trace.c:907:
+    trace/beauty/msg_flags.c: In function 'syscall_arg__scnprintf_msg_flag=
+s':
+    trace/beauty/msg_flags.c:28:21: error: 'MSG_SPLICE_PAGES' undeclared (=
+first use in this function)
+       28 |         if (flags & MSG_##n) { \
+          |                     ^~~~
+    trace/beauty/msg_flags.c:50:9: note: in expansion of macro 'P_MSG_FLAG=
+'
+       50 |         P_MSG_FLAG(SPLICE_PAGES);
+          |         ^~~~~~~~~~
+    trace/beauty/msg_flags.c:28:21: note: each undeclared identifier is re=
+ported only once for each function it appears in
+       28 |         if (flags & MSG_##n) { \
+          |                     ^~~~
+    trace/beauty/msg_flags.c:50:9: note: in expansion of macro 'P_MSG_FLAG=
+'
+       50 |         P_MSG_FLAG(SPLICE_PAGES);
+          |         ^~~~~~~~~~
+    =
+
+    There is no MSG_SPLICE_PAGES in tools/perf/trace/beauty/include/linux/=
+socket.h
+    =
+
+    Fixes: b848b26c6672 ("net: Kill MSG_SENDPAGE_NOTLAST")
+    Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+    Link: https://lore.kernel.org/r/20230626112847.2ef3d422@canb.auug.org.=
+au/
+    Signed-off-by: David Howells <dhowells@redhat.com>
+    cc: "David S. Miller" <davem@davemloft.net>
+    cc: Eric Dumazet <edumazet@google.com>
+    cc: Jakub Kicinski <kuba@kernel.org>
+    cc: Paolo Abeni <pabeni@redhat.com>
+    cc: Jens Axboe <axboe@kernel.dk>
+    cc: Matthew Wilcox <willy@infradead.org>
+    cc: bpf@vger.kernel.org
+    cc: dccp@vger.kernel.org
+    cc: linux-afs@lists.infradead.org
+    cc: linux-arm-msm@vger.kernel.org
+    cc: linux-can@vger.kernel.org
+    cc: linux-crypto@vger.kernel.org
+    cc: linux-doc@vger.kernel.org
+    cc: linux-hams@vger.kernel.org
+    cc: linux-perf-users@vger.kernel.org
+    cc: linux-rdma@vger.kernel.org
+    cc: linux-sctp@vger.kernel.org
+    cc: linux-wpan@vger.kernel.org
+    cc: linux-x25@vger.kernel.org
+    cc: mptcp@lists.linux.dev
+    cc: netdev@vger.kernel.org
+    cc: rds-devel@oss.oracle.com
+    cc: tipc-discussion@lists.sourceforge.net
+    cc: virtualization@lists.linux-foundation.org
+
+diff --git a/tools/perf/trace/beauty/include/linux/socket.h b/tools/perf/t=
+race/beauty/include/linux/socket.h
+index 3bef212a24d7..77cb707a566a 100644
+--- a/tools/perf/trace/beauty/include/linux/socket.h
++++ b/tools/perf/trace/beauty/include/linux/socket.h
+@@ -326,6 +326,7 @@ struct ucred {
+ 					  */
+ =
+
+ #define MSG_ZEROCOPY	0x4000000	/* Use user data in kernel path */
++#define MSG_SPLICE_PAGES 0x8000000	/* Splice the pages from the iterator =
+in sendmsg() */
+ #define MSG_FASTOPEN	0x20000000	/* Send data in TCP SYN */
+ #define MSG_CMSG_CLOEXEC 0x40000000	/* Set close_on_exec for file
+ 					   descriptor received through
+
