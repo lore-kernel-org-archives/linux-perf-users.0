@@ -2,111 +2,135 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAE4EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 13:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40510EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jun 2023 14:30:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229928AbjFZN4Y (ORCPT
+        id S230156AbjFZOap (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Jun 2023 09:56:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51280 "EHLO
+        Mon, 26 Jun 2023 10:30:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230195AbjFZN4V (ORCPT
+        with ESMTP id S229524AbjFZOao (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Jun 2023 09:56:21 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F132410EB
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 06:56:14 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-3fa8692a006so24879275e9.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 06:56:14 -0700 (PDT)
+        Mon, 26 Jun 2023 10:30:44 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05F1B10C
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 07:30:43 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-3fb4146e8fcso2417035e9.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 07:30:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1687787773; x=1690379773;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FvwNRNrF8mI3P6llYM5gd3K4KnP8OJjmIVJOWMH6Qwk=;
-        b=udTCrsmRCn5UUJQwqNUZMWZGz0xksESGqOF3Q0FF4x2DROSdW0N27AXj4wxaYq7CIk
-         UMKkgKy0SW7FIudsGAGzQvOIQgsKGjBAkI9KjgoMBtyldJkSU82QOO2d2X1ERca36FKz
-         atL0SafhyuOcgOwf86/SmJDu9dy/NtvGrLJMUViOmiBSuL9HSzw1YpiFKZRp4BlvmJyO
-         c6kxkXVG50R2xhXYHTvhUoZ9c3rMC6uFPgLMq/llDL+T7I4mt9WfM1qZy+qKHLGOtq9+
-         YZnTrUOauH81tdJ536nibfiQTns/LrMVykgtuwv1aRO/iELPkvMcQ0gm5678QcXH3iq2
-         Onrg==
+        d=linaro.org; s=google; t=1687789841; x=1690381841;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=sOo0XC/Y4flNUsbiJzBoRTnJAgB9VDv1XM+zJzFrca0=;
+        b=QsW3/nHLhkexzxGA0twe/x2qW+MofrKWc20XzfvTwk9ZpPAmfEi5ih1e5YIuIT2lNC
+         tjzCItcBDxFEFpbD7plDyGkfJ6B6tktDh1RDsc6ybYsCUOAiNzUnoB7b3UCawebRTjP+
+         IoVoceQUvr2vN6a2MOQFkk1b5sL3SecejNjv+vqiS03ImU7+AJ6TLazciDLoJy1LmNi/
+         QDPMsiuJuIIhwrC2wnDBhy0BD7hQrTbGaXffjQQ/QtmqFhMAfZPpTXoSijvnZwqpNWbS
+         O7tcEJhLj/e72X+eQkt3abY6eNBxVugwOG2ALiWE2YSEe8VNPf1Bl5GntO/vsmEX50nc
+         9ayg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687787773; x=1690379773;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1687789841; x=1690381841;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FvwNRNrF8mI3P6llYM5gd3K4KnP8OJjmIVJOWMH6Qwk=;
-        b=BMmR4gYWawpoflWNmYYc8yQEXYZivd0WpFC41xSTm5x3LEkBq5v6eBw8ATXbPFY/iG
-         Msg/m7hVS17dFyu3GOjIr6KXTM1JKG/Rb/FduBOjp3B20j0285NV5CTdT6g2qwSgaCN/
-         B5jq4xzPAR+b4L0h67WVPl3aLFa5VG32GjgMlfztTlvrm0oyQS8sG7YBQak6X9Q6oCpO
-         73Wl1XHomYj+j4VTclv4VUNeCPFuKeYlK2nJZybEe6P0qKwNKhMCN2bjRagJ2jmi8NU5
-         2xxByEZxLQindGRhG1nBGwg56BpMykgv6gTraP7zy3nSc5Vc8zNmhJgeqUStPOowVALR
-         LZmA==
-X-Gm-Message-State: AC+VfDwi4xM//b/k38UQDPPcbFcj9/eK/bzjiyoh8XDYQTettzDTbCRq
-        iOJV76D7WSnovl/Zix/YrpqU/w==
-X-Google-Smtp-Source: ACHHUZ77dDFzSYL/4C41Q5EjhUboMu666xiajF8k2wkBMpzw4Zj+zteK2QyE8a3CbzCPcE6wR0A3uA==
-X-Received: by 2002:a7b:ca55:0:b0:3fa:7515:544 with SMTP id m21-20020a7bca55000000b003fa75150544mr9208279wml.34.1687787773275;
-        Mon, 26 Jun 2023 06:56:13 -0700 (PDT)
-Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id c21-20020a7bc855000000b003f8fac0ad4bsm7735241wml.17.2023.06.26.06.56.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Jun 2023 06:56:12 -0700 (PDT)
-Message-ID: <2cb3b411-9010-a44b-ebee-1914e7fd7b9c@tessares.net>
-Date:   Mon, 26 Jun 2023 15:56:12 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH net-next] tools: Fix MSG_SPLICE_PAGES build error in trace
- tools
-Content-Language: en-GB
-To:     David Howells <dhowells@redhat.com>
-Cc:     netdev@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>,
-        David Miller <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
+        bh=sOo0XC/Y4flNUsbiJzBoRTnJAgB9VDv1XM+zJzFrca0=;
+        b=lBhPRl0QwuQhDk3VkzZRXICSZRj1ZWn2CVuAnbTHB++x7ZqC3d5YItXqLEGilssVfx
+         uJCj3F+OaYPzXhkVRBoxyonfaVJWyg7R5uWdvUl9KI/XNpTeWHOS9mwLtr1dmL9L/VxF
+         IGOeOC6ISqlRrfF38Aetrk9NSy8o4XJgrd/CaJXl932u3owyM0G1Zq3IUQX+9pwNTbjU
+         8fIXQIWR6l04mDl90v7qdX9/vqw1TGZVST1ERnQaBSTIbXGVjMhlbd+2+Cb9ljso93d/
+         d49fEpaRqZIhqIOhzfTMD8R86BfSK35EhsU9MlswW9/rjNJxM2uXvVXYn7jcJxKzAdHJ
+         7bYw==
+X-Gm-Message-State: AC+VfDyPl2jsIf6eCeGs9ALFPyDiJVGCSGNkdPFk/k+EFVJEfAZoKxl6
+        hGSQrVGoBJQZb2xkMpDXy8ifRw==
+X-Google-Smtp-Source: ACHHUZ6VWP4raj9cfLAIOeEgLIdxBNSr9wdsVkIQVnyoeIOHSC4oDNzgvxTcgh/C0ZjUg/zNHcMRlg==
+X-Received: by 2002:a05:600c:10d1:b0:3f7:a20a:561d with SMTP id l17-20020a05600c10d100b003f7a20a561dmr27638549wmd.8.1687789841362;
+        Mon, 26 Jun 2023 07:30:41 -0700 (PDT)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id t15-20020a0560001a4f00b00313f676832bsm1380811wry.93.2023.06.26.07.30.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Jun 2023 07:30:40 -0700 (PDT)
+Date:   Mon, 26 Jun 2023 15:30:38 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-perf-users@vger.kernel.org, ito-yuichi@fujitsu.com,
+        Chen-Yu Tsai <wens@csie.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-        linux-next@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <5791ec06-7174-9ae5-4fe4-6969ed110165@tessares.net>
- <3065880.1687785614@warthog.procyon.org.uk>
- <3067876.1687787456@warthog.procyon.org.uk>
-From:   Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <3067876.1687787456@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        kgdb-bugreport@lists.sourceforge.net,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 6/7] kgdb: Provide a stub kgdb_nmicallback() if
+ !CONFIG_KGDB
+Message-ID: <20230626143038.GB95170@aspen.lan>
+References: <20230601213440.2488667-1-dianders@chromium.org>
+ <20230601143109.v9.6.Ia3aeac89bb6751b682237e76e5ba594318e4b1aa@changeid>
+ <CAD=FV=XbnUZh2uQ5Sr3Dg=+Kiz7rfZVyP-zNQtXrV_NSsCTFcA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD=FV=XbnUZh2uQ5Sr3Dg=+Kiz7rfZVyP-zNQtXrV_NSsCTFcA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 26/06/2023 15:50, David Howells wrote:
-> Matthieu Baerts <matthieu.baerts@tessares.net> wrote:
-> 
->> So another issue. When checking the differences between the two files, I
->> see there are still also other modifications to import, e.g. it looks
->> like you also added MSG_INTERNAL_SENDMSG_FLAGS macro in socket.h. Do you
->> plan to fix that too?
-> 
-> That's just a list of other flags that we need to prevent userspace passing
-> in - it's not a flag in its own right.
+On Thu, Jun 15, 2023 at 11:14:18AM -0700, Doug Anderson wrote:
+> Daniel,
+>
+> On Thu, Jun 1, 2023 at 2:37 PM Douglas Anderson <dianders@chromium.org> wrote:
+> >
+> > To save architectures from needing to wrap the call in #ifdefs, add a
+> > stub no-op version of kgdb_nmicallback(), which returns 1 if it didn't
+> > handle anything.
+> >
+> > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+> > In v9 this is the only kgdb dependency. I'm assuming it could go
+> > through the arm64 tree? If that's not a good idea, we could always
+> > change the patch ("arm64: kgdb: Roundup cpus using IPI as NMI") not to
+> > depend on it by only calling kgdb_nmicallback() if CONFIG_KGDB is not
+> > defined.
+> >
+> > Changes in v9:
+> > - Added missing "inline"
+> >
+> > Changes in v8:
+> > - "Provide a stub kgdb_nmicallback() if !CONFIG_KGDB" new for v8
+> >
+> >  include/linux/kgdb.h | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
+> > index 258cdde8d356..76e891ee9e37 100644
+> > --- a/include/linux/kgdb.h
+> > +++ b/include/linux/kgdb.h
+> > @@ -365,5 +365,6 @@ extern void kgdb_free_init_mem(void);
+> >  #define dbg_late_init()
+> >  static inline void kgdb_panic(const char *msg) {}
+> >  static inline void kgdb_free_init_mem(void) { }
+> > +static inline int kgdb_nmicallback(int cpu, void *regs) { return 1; }
+>
+> What do you think about landing just ${SUBJECT} patch in kgdb right
+> now so it can end up in v6.5-rc1? It seems like this series is
+> currently blocked on Mark getting a spare moment and it seems unlikely
+> that'll happen this cycle. If we at least land the kgdb patch then it
+> would make things all that much easier to land in the next cycle. The
+> kgdb patch feels like it can make sense on its own...
 
-I agree. This file is not even used by C files, only by scripts parsing
-it if I'm not mistaken.
+Yes, grabbing this one should be fine!
 
-But if there are differences with include/linux/socket.h, the warning I
-mentioned will be visible when compiling Perf.
 
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+Daniel.
