@@ -2,90 +2,124 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C939EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 19:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E09FEB64D9
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 19:33:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229718AbjF0T3v (ORCPT
+        id S230106AbjF0TdQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Jun 2023 15:29:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48700 "EHLO
+        Tue, 27 Jun 2023 15:33:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbjF0T3u (ORCPT
+        with ESMTP id S229746AbjF0TdP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Jun 2023 15:29:50 -0400
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B566B19A9;
-        Tue, 27 Jun 2023 12:29:49 -0700 (PDT)
-Received: by mail-yb1-xb2d.google.com with SMTP id 3f1490d57ef6-bfee679b7efso4813715276.0;
-        Tue, 27 Jun 2023 12:29:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687894189; x=1690486189;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XWTyrHWo3DH4WeJQJV3ZkbmX57NNeA9KlEEZWcqodA4=;
-        b=kmfeeAkPPfIIrgdhOd0Wz4grrEpQXcJmqHZ9HzQ7fuysvUZaCgExi22n1Bd0FYEXa2
-         TjrE9q5kPQe+asD1MQsO/KQw9jNjLqwHALeKqPUWj3pQmhn7/nSkIGlqf3z/X61xjh/R
-         myalWcsWU5YNZyIHwdJgQSDQVhJoGUC/LQINYA3cW8I1OueqF48HhicinqWQyRKHq2Yc
-         9Wj0GmeNw10ae8KihoCV4p3gfxAoiPGK94CwRt0+F9xfmGWLsi9wv/evVGUy8lhHyUv0
-         1yQA4cZ+v37F/eLCdaqLgyGyLvqzjd6JdzNw9iBMXhQcf8D62KtWLIQNh1mswSGQ/KSZ
-         Znkw==
+        Tue, 27 Jun 2023 15:33:15 -0400
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30A9B1BC3;
+        Tue, 27 Jun 2023 12:33:14 -0700 (PDT)
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-c13b0941a38so338689276.0;
+        Tue, 27 Jun 2023 12:33:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687894189; x=1690486189;
+        d=1e100.net; s=20221208; t=1687894393; x=1690486393;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XWTyrHWo3DH4WeJQJV3ZkbmX57NNeA9KlEEZWcqodA4=;
-        b=IC3vXvbKX7UOZ0b4IuopssrknTuRAvhw/25VEJcPm6nWr0kTFX6l27tIfxKEzJ1RVL
-         GAhX03Aj119tWbxhxzHeoz5KS/hMUBye/HKEtAxhNxm8NRViyDj6Hl86op0pP04bdTcP
-         YnjE9d12xWnvBFbBHqnejSGtKUmLKCN2pbXfpp9QxHHMve2ojaVCXSr+pGrnUYnIrUAC
-         OYq1TGkQL8CCiqxpASoC1jw8V5MtYC482fHkzW8cZpqzABwksK0EVnmcy8gPteEWWFc4
-         J5JR4IysbKVRXujPZ+y0kVURfkikI84SotcoyvTighszajdsw9bmto7h2LOWzJx2JlI6
-         MhJA==
-X-Gm-Message-State: AC+VfDwHvCZMV++cTT6oGAZJmiYQ6WrLw5uD8TEDl7ELIgJOLQ9doNQh
-        SjaH4b429mXbTU6ukeDZoEjfLyf/FnU0qlBBnFc=
-X-Google-Smtp-Source: ACHHUZ56nLE7/aI1LmL+DMoeX705IRHIayduaPNCBJtfc5MDE2Q8Y9FjW+iOMmg2yR7Tp6iZIqy4yeFOLbNspBtvAXk=
-X-Received: by 2002:a25:6fc6:0:b0:c24:dea:a5e1 with SMTP id
- k189-20020a256fc6000000b00c240deaa5e1mr6059171ybc.3.1687894188822; Tue, 27
- Jun 2023 12:29:48 -0700 (PDT)
+        bh=c6I1qDNxrhaapOFb46VGvBuvtnmrp2kBctslbEeEODg=;
+        b=aPZE4jt/XY6t6chgiKySDHn36EuvSmuYXXwHF9YKEIcBp7NS7JHmBI1WQfuwi3oKrL
+         Dm3OrEPDigj2xXB37dcmlq4OTa+Uz0uSJkUAh59Kq7I7FNXGxxYnDV2jFcn9GUpRYIam
+         WBo+13eYgvPtBMr9tmQStOtmsb1Iz76rvLAdVq7VoWzrEMODfEV7IU/aF46gAD7rJJH+
+         JLpwTQRqj8BctBfzEvYQsImtp1KpkkQNxvQ/AaaJPqXXuIemkkkGLV2RJy1suiqSY057
+         Yjrndn+CeocVHBb9xA8z3jAJSDHCG6H6tSjQKB6lPKBMhlJIRWiwTqhsdlbkwzbhMHoH
+         rhuA==
+X-Gm-Message-State: AC+VfDw9R/gMwcKbGcjxW57vRzOkUKC2JY8hBMMHLMcRX2NeoyH/W8UL
+        f/4xd2goCbUuupd5d0ftFkVoBJX6N90/x90opQM=
+X-Google-Smtp-Source: ACHHUZ5ARinfQ03+Wn7zCCdzOEc4NDbJs+cCh1o88sZhvU8Ng6O9KNQ+LB0QE+64kS3i1/NyFuQJY8+6toXVgGkQgKs=
+X-Received: by 2002:a25:dc91:0:b0:bce:bed4:29f6 with SMTP id
+ y139-20020a25dc91000000b00bcebed429f6mr138892ybe.17.1687894393221; Tue, 27
+ Jun 2023 12:33:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230624002708.1907962-1-maskray@google.com> <ff7c875a-8893-9b7d-e2fa-200f1601e666@meta.com>
-In-Reply-To: <ff7c875a-8893-9b7d-e2fa-200f1601e666@meta.com>
-From:   Namhyung Kim <namhyung@gmail.com>
-Date:   Tue, 27 Jun 2023 12:29:37 -0700
-Message-ID: <CAM9d7cjyKmKk+z1z8qatjaC7xwwJa_PFE0DJzJ=_mFjS6taz_A@mail.gmail.com>
-Subject: Re: [PATCH] perf: Replace deprecated -target with --target= for Clang
-To:     Yonghong Song <yhs@meta.com>
-Cc:     Fangrui Song <maskray@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev
+References: <20230626201606.2514679-1-jolsa@kernel.org> <CAM9d7chMGzEJ3GKyxXD-RwUpjje7u3Cp810TRD+ZGgCT+mFrEQ@mail.gmail.com>
+ <ZJqfUL1gnkTbUx5n@krava>
+In-Reply-To: <ZJqfUL1gnkTbUx5n@krava>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 27 Jun 2023 12:33:02 -0700
+Message-ID: <CAM9d7chRtGNG6KLkWQRBz0aNVwDJWm-StPbMuXN4bumpUsNG-g@mail.gmail.com>
+Subject: Re: [PATCH] perf tools: Add missing else to cmd_daemon subcommand condition
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Fangui and Yonghong,
-
-On Sun, Jun 25, 2023 at 11:25=E2=80=AFAM Yonghong Song <yhs@meta.com> wrote=
-:
+On Tue, Jun 27, 2023 at 1:35 AM Jiri Olsa <olsajiri@gmail.com> wrote:
 >
->
->
-> On 6/23/23 5:27 PM, Fangrui Song wrote:
-> > -target has been deprecated since Clang 3.4 in 2013. Use the preferred
-> > --target=3Dbpf form instead. This matches how we use --target=3D in
-> > scripts/Makefile.clang.
+> On Mon, Jun 26, 2023 at 01:58:48PM -0700, Namhyung Kim wrote:
+> > Hi Jiri,
 > >
-> > Link: https://github.com/llvm/llvm-project/commit/274b6f0c87a6a1798de0a=
-68135afc7f95def6277
-> > Signed-off-by: Fangrui Song <maskray@google.com>
+> > On Mon, Jun 26, 2023 at 1:16 PM Jiri Olsa <jolsa@kernel.org> wrote:
+> > >
+> > > Namhyung reported segfault in perf daemon start command.
+> > >
+> > > It's caused by extra check on argv[0] which is set to NULL by previous
+> > > __cmd_start call. Adding missing else to skip the extra check.
+> > >
+> > > Fixes: 92294b906e6c ("perf daemon: Dynamically allocate path to perf")
+> > > Reported-by: Namhyung Kim <namhyung@kernel.org>
+> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> >
+> > Thanks for the fix.  Now it runs ok.
+> >
+> > Before:
+> >   $ sudo ./perf test -v daemon
+> >    85: daemon operations                                               :
+> >   --- start ---
+> >   test child forked, pid 82420
+> >   test daemon list
+> >   ./tests/shell/daemon.sh: line 133: 82426 Segmentation fault
+> > perf daemon start --config ${config}
+> >   test daemon reconfig
+> >   ./tests/shell/daemon.sh: line 133: 82520 Segmentation fault
+> > perf daemon start --config ${config}
+> >   test daemon stop
+> >   ./tests/shell/daemon.sh: line 133: 82636 Segmentation fault
+> > perf daemon start --config ${config}
+> >   test daemon signal
+> >   ./tests/shell/daemon.sh: line 133: 82674 Segmentation fault
+> > perf daemon start --config ${config}
+> >   signal 12 sent to session 'test [82676]'
+> >   signal 12 sent to session 'test [82676]'
+> >   test daemon ping
+> >   ./tests/shell/daemon.sh: line 133: 82702 Segmentation fault
+> > perf daemon start --config ${config}
+> >   test daemon lock
+> >   ./tests/shell/daemon.sh: line 133: 82734 Segmentation fault
+> > perf daemon start --config ${config}
+> >   test child finished with 0
+> >   ---- end ----
+> >   daemon operations: Ok
+> >
+> > Maybe we need to investigate more why it was ok..
+> > But at least I don't see segfaults anymore
 >
-> Acked-by: Yonghong Song <yhs@fb.com>
+> yea, for some reason parse_options would put NULL into argv[0]
+>
+> I'll try to check what changed, in any case the fix makes the
+> condition alligned with the other legs and fixes the segfault
 
-After 10 years of deprecation, time to change. :)
+Yep, thanks for checking.
+
+In the meantime, Thomas Richter reported the same problem and
+fix.  I'll take yours but leave it for the record.
+
+  http://lore.kernel.org/r/20230627092633.2135105-1-tmricht@linux.ibm.com
 
 Applied to perf-tools-next, thanks!
