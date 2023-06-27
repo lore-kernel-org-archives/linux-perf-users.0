@@ -2,98 +2,104 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51618EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 07:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60176C001B0
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 07:52:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231139AbjF0HVx (ORCPT
+        id S230377AbjF0HwO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Jun 2023 03:21:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56566 "EHLO
+        Tue, 27 Jun 2023 03:52:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231235AbjF0HVk (ORCPT
+        with ESMTP id S230232AbjF0HwN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Jun 2023 03:21:40 -0400
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECE6C2D65;
-        Tue, 27 Jun 2023 00:20:59 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0Vm4sP4I_1687850391;
-Received: from 30.221.150.4(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0Vm4sP4I_1687850391)
-          by smtp.aliyun-inc.com;
-          Tue, 27 Jun 2023 15:19:53 +0800
-Message-ID: <e125258f-559e-ae0a-8eb3-f119b0e7c87c@linux.alibaba.com>
-Date:   Tue, 27 Jun 2023 15:19:48 +0800
+        Tue, 27 Jun 2023 03:52:13 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9DC62268D
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jun 2023 00:52:05 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57D222F4;
+        Tue, 27 Jun 2023 00:52:49 -0700 (PDT)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC0903F663;
+        Tue, 27 Jun 2023 00:52:03 -0700 (PDT)
+Message-ID: <334989bf-5501-494c-f246-81878fd2fed8@arm.com>
+Date:   Tue, 27 Jun 2023 08:52:02 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.11.2
-Subject: Re: [PATCH v4 0/4] Add JSON metrics for Yitian710 DDR
-To:     Will Deacon <will@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        John Garry <john.g.garry@oracle.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Ian Rogers <irogers@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
-References: <1687245156-61215-1-git-send-email-renyu.zj@linux.alibaba.com>
- <CAM9d7cj3v58m8NcsEK4sYsk_dbQDAq71hYo7DV=xaQa_rZyPYg@mail.gmail.com>
- <a5486c58-32b6-2d5e-e623-d7844c51474c@linux.alibaba.com>
- <CAM9d7chxMpUUouHsVTEvVEy8RyZ6tNzYbVD=a0Toao=n6cau-w@mail.gmail.com>
- <20230626124431.GB20045@willie-the-truck>
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <20230626124431.GB20045@willie-the-truck>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH 13/22] tools/perf/tests: Fix shellcheck warning for
+ coresight.sh shell script
+Content-Language: en-US
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com, acme@kernel.org, jolsa@kernel.org,
+        irogers@google.com, namhyung@kernel.org, ravi.bangoria@amd.com,
+        john.g.garry@oracle.com
+References: <20230621083021.71203-1-atrajeev@linux.vnet.ibm.com>
+ <20230621083021.71203-14-atrajeev@linux.vnet.ibm.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20230621083021.71203-14-atrajeev@linux.vnet.ibm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-在 2023/6/26 下午8:44, Will Deacon 写道:
-> On Tue, Jun 20, 2023 at 10:00:46PM -0700, Namhyung Kim wrote:
->> On Tue, Jun 20, 2023 at 8:08 PM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
->>> 在 2023/6/21 上午3:04, Namhyung Kim 写道:
->>>> I'm curious why the first patch is needed, presumably the PMU
->>>> should have 'ali_drw' in the name already.  Do we use substring
->>>> match for the compat name in the JSON metric?
->>>>
->>>
->>> The main purpose of patch 1 is to add an identifier so that the Compat
->>> field can match the corresponding event when defining aliases or metrics
->>> for events.
->>>
->>> For example, "Unit" can match "ali_drw" in the name and different SoCs may
->>> be able to match ali_drw, but they may have different events, and even if
->>> the events are the same, the meanings may be different. Therefore, the
->>> Compat field is needed to match the Identifier to confirm which type and
->>> revision of PMU the current SoC has. Therefore, both "Unit" and "Compat"
->>> need to be matched at the same time. Although it seems that ali_drw is
->>> redundantly matched currently, it is meaningful for future expansion.
->>
->> I see, thanks for the explanation.
->>
->> I think you need to route the kernel patch differently.  I can apply the tools
->> part once the kernel patch gets Acks from others.
+On 21/06/2023 09:30, Athira Rajeev wrote:
+> From: Kajol Jain <kjain@linux.ibm.com>
 > 
-> Sorry, I missed this initially as I didn't realise there were kernel changes
-> hidden in this series (I saw "JSON" and ignored it...). Given that the 6.5
-> merge window is now open, I'll pick the kernel change up for 6.6 when I
-> start queueing patches in a few weeks.
+> Running shellcheck on coresight.sh throws below warning:
 > 
-> Will
+> In lib/coresight.sh line 1:
+> ^-- SC2148 (error): Tips depend on target shell and yours is unknown. Add a shebang or a 'shell' directive.
+> 
+> In lib/coresight.sh line 13:
+> PERFRECOPT="$PERFRECMEM -e cs_etm//u"
+> ^--------^ SC2034 (warning): PERFRECOPT appears unused. Verify use (or export if used externally).
+> 
+> Fixed the warnings by:
+> - Adding shell directive
+> - Using export for PERFRECOPT variable
+> 
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> ---
+>  tools/perf/tests/shell/lib/coresight.sh | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/tests/shell/lib/coresight.sh b/tools/perf/tests/shell/lib/coresight.sh
+> index 6c3d34ec64d8..c7d97a0186c7 100644
+> --- a/tools/perf/tests/shell/lib/coresight.sh
+> +++ b/tools/perf/tests/shell/lib/coresight.sh
+> @@ -1,3 +1,4 @@
+> +#!/bin/bash
 
-Thank you will, maybe it is because I did not describe this series well, and
-it is easy to cause the patch to be ignored. I will pay attention to this
-problem in the future.
+There is a comment a couple of lines below this that says the shebang
+was excluded for a reason. It's probably worth leaving it excluded or
+updating the comment.
 
-Thanks,
-Jing
+>  # SPDX-License-Identifier: GPL-2.0
+>  # Carsten Haitzler <carsten.haitzler@arm.com>, 2021
+>  
+> @@ -10,7 +11,7 @@
+>  
+>  # perf record options for the perf tests to use
+>  PERFRECMEM="-m ,16M"
+> -PERFRECOPT="$PERFRECMEM -e cs_etm//u"
+> +export PERFRECOPT="$PERFRECMEM -e cs_etm//u"
+
+This might silence the warning, but there are other variables like DATD
+that are used in the sub-test scripts in the same way. They just don't
+trigger the warning because they're also used in the top level one.
+
+I think this change makes the code more misleading than solving any
+problems. The coresight.sh script is sourced in the same process as the
+sub tests so exporting variables isn't needed which is why it already
+works without this change.
+
+>  
+>  TOOLS=$(dirname $0)
+>  DIR="$TOOLS/$TEST"
