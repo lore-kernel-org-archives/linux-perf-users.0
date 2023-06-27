@@ -2,144 +2,116 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F22EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 00:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBCBEB64DD
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 03:38:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229500AbjF0ACc (ORCPT
+        id S229977AbjF0Dia (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Jun 2023 20:02:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39682 "EHLO
+        Mon, 26 Jun 2023 23:38:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbjF0ACc (ORCPT
+        with ESMTP id S229978AbjF0Dhp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Jun 2023 20:02:32 -0400
-Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0986C5;
-        Mon, 26 Jun 2023 17:02:30 -0700 (PDT)
-Received: by mail-il1-x135.google.com with SMTP id e9e14a558f8ab-3458a08310aso13579005ab.3;
-        Mon, 26 Jun 2023 17:02:30 -0700 (PDT)
+        Mon, 26 Jun 2023 23:37:45 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA8D74EE1
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 20:31:43 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id ffacd0b85a97d-3090d3e9c92so5774068f8f.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 20:31:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687824150; x=1690416150;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qg2KUH6YMBj2eN2aEtzkgtiYkQL1wDcya22Dq84KAL0=;
-        b=eXnqbSBJDFJjfibslGCyT1NTo95GSTccgHpecgbt9FV06Tj4exgC8MK5RgRV9qzkbh
-         fONb1dLS5svxkwKRcl4dng+/E1mkVJiVlGxBflnMVFWGEpD5XMZU+vCdHkuFs44CHGEI
-         HkPUjyyWkhGG6qWt/vnyrJ8IK8p7Dk0KSY0jzFLGo8jerAno9zrSkvy0dzLrdtNLXKh+
-         zES3WNmWuJRFTYoJ5kmE0Qd/4Eghiq313pN+GyM7G6C6rKAKDYJOBt/S+qBpaNZmdIJj
-         HS04TWkCcHtk01GqwmCukA11r9gxpIGHnxkiyjkIL7KEE/p9RnMqe5JX2fuGcdCXr5+v
-         darA==
+        d=tessares.net; s=google; t=1687836697; x=1690428697;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5GbO+jlh/+SHI/tcTuT/GmsMZMmHOv628giw+Fale9I=;
+        b=lt548kuA2FVP1IeyUVcVhJeuGW7XELKZtjZgyAjoQyHAfg3ZsJMACuUyP/8R0tOAv2
+         CtFgWlyaIyegpQv0616hNffKXuCk4lNpLmlH7IEbUj1jZx3iy9KlcRSCbc1Zu9jWKdvF
+         ardr3J/KujJJjfK8M3DGp3TpJA2V+JUqHv4iKvscpko98v/tssEwHb2zJ9E3Bvl1+vd2
+         YCBH8uuzkY//2j/zVqqYxyXQ2Vkq3UQxPn8Gtr0K1aw20c1n/TMr6fj9DqkLnGZn1OXA
+         YUwOfPCTWfYiR/ke2rjNq867mcE+m/lnsQHyZBQWG90jmypsh/pFOMcSmzB3f5ZHr+iM
+         aJrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687824150; x=1690416150;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qg2KUH6YMBj2eN2aEtzkgtiYkQL1wDcya22Dq84KAL0=;
-        b=OMW6Mg4/ez239CDlSua/AjSINIp8CmQEZ4JqZVMBCoVTStA/7qavZqFlakI00IYyim
-         uu2T1gXQVfQ3Wh/mRCEiiRV12g3EdICzV8Bn5Utp+pzRCxUc18u+XxDXEEJKcms3ZJru
-         uldvcfOijQxP/d6Vw5i6Zr+000S2zMquxNcFZyB0rMSCJU8sEvQ/X5inYmXottCMcMQp
-         Y+Nawj4v0UCJAKXSF4FMyVAIxH5nhpQascb+8QVK67w7jpBvybUQWy1aV8W6sc5QfkMV
-         sxnnHkuZSasRbVhwUrCaEJwRoSbBXgY96XPD4i7j+NziH4FpiPoK5oBBPvu2mP3BETbf
-         UPiw==
-X-Gm-Message-State: AC+VfDxE9mFvwj5UXrz7cd+X3/wQ3KZ/J6PAeNfImeoKv9u1QPdnlCke
-        jEYJloVGX1bC4tnHjg3HLMQ=
-X-Google-Smtp-Source: ACHHUZ4gqFGGIbB8wJk/toxi8obZ6ktxvt7geu159xIwH2eJFNvwUssm2izOVDiVcBkitWUuwXJYPQ==
-X-Received: by 2002:a92:cc0b:0:b0:343:47fb:e68a with SMTP id s11-20020a92cc0b000000b0034347fbe68amr23232190ilp.26.1687824150172;
-        Mon, 26 Jun 2023 17:02:30 -0700 (PDT)
-Received: from google.com ([2601:647:6700:7f00:83fb:9433:2220:da46])
-        by smtp.gmail.com with ESMTPSA id e13-20020a62aa0d000000b0067526282193sm2770730pff.157.2023.06.26.17.02.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jun 2023 17:02:29 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-Date:   Mon, 26 Jun 2023 17:02:27 -0700
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     James Clark <james.clark@arm.com>, Ian Rogers <irogers@google.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] perf report: Don't add to histogram when there is no
- thread found
-Message-ID: <ZJonE3ZZ2cBUq0U8@google.com>
-References: <20230626161059.324046-1-james.clark@arm.com>
- <20230626161059.324046-3-james.clark@arm.com>
+        d=1e100.net; s=20221208; t=1687836697; x=1690428697;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5GbO+jlh/+SHI/tcTuT/GmsMZMmHOv628giw+Fale9I=;
+        b=RQUmc1MD2KbRjKtAdqbELF2fA+plWT310uOi96sPEuYh+K8Oh+h22GQo8yMGXgYJHy
+         4A9XsnzEuOmwJGSGhiTqF79amN8zO1SnaU6dUYTtIq0JTI3I8PH6QTETMG/WpkkkGq6+
+         AvNPD/4IYW2YRVD5KipcBzRaMFpm9QuHCP+WJX+UDlbQROlb/KquUq4CwgWHDDlr77Eq
+         aPCk2S1XKLyld9QwHgObI1vokStm67AAiJM0EY3lsK7VqJUJyblT+DOux9f6vRynX0Dt
+         mHb5FH2wDMt7wfH0RXRHSSpYbjvMKfe2GseUtV0iPgm+FH7FfegsJfFqt6qbeuM4l55t
+         N6KA==
+X-Gm-Message-State: AC+VfDxILfQh2abowghCs4f2eoaOhLODde4Vn+38xMxK7I2yhBfl4/Nu
+        mKNQsIZzxXGU4/OAiDHDBCyfsA==
+X-Google-Smtp-Source: ACHHUZ4DG/F1MkxDITFfZ6tV/0y1Ks9e+W7zekR6iDGnLjp/6Kd9oN2II721QlOREWqFQ3r/v/cHxA==
+X-Received: by 2002:a05:6000:545:b0:313:ef93:9257 with SMTP id b5-20020a056000054500b00313ef939257mr6305157wrf.32.1687836697578;
+        Mon, 26 Jun 2023 20:31:37 -0700 (PDT)
+Received: from [127.0.0.1] ([185.232.21.146])
+        by smtp.gmail.com with ESMTPSA id c1-20020a056000104100b003140039f318sm227717wrx.69.2023.06.26.20.31.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Jun 2023 20:31:37 -0700 (PDT)
+Date:   Tue, 27 Jun 2023 05:31:35 +0200 (GMT+02:00)
+From:   Matthieu Baerts <matthieu.baerts@tessares.net>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        dhowells@redhat.com, acme@kernel.org, adrian.hunter@intel.com,
+        alexander.shishkin@linux.intel.com, bpf@vger.kernel.org,
+        davem@davemloft.net, irogers@google.com, jolsa@kernel.org,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mingo@redhat.com, netdev@vger.kernel.org, peterz@infradead.org,
+        sfr@canb.auug.org.au
+Message-ID: <f99109bb-34aa-44d7-9a38-a6df0d6b2ff9@tessares.net>
+In-Reply-To: <20230626144934.4904c2ad@kernel.org>
+References: <2947430.1687765706@warthog.procyon.org.uk> <20230626090239.899672-1-matthieu.baerts@tessares.net> <20230626142734.0fa4fa68@kernel.org> <CAM9d7che_3z=NgT9OkrNmAQigY3Bo8nv16TVH6fgx8pn76xUbg@mail.gmail.com> <20230626144934.4904c2ad@kernel.org>
+Subject: Re: [PATCH net-next] perf trace: fix MSG_SPLICE_PAGES build error
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230626161059.324046-3-james.clark@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Correlation-ID: <f99109bb-34aa-44d7-9a38-a6df0d6b2ff9@tessares.net>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 26, 2023 at 05:10:58PM +0100, James Clark wrote:
-> thread__find_map() chooses to exit without assigning a thread to the
-> addr_location in some scenarios, for example when there are samples from
-> a guest and perf_guest == false. This results in a segfault when adding
-> to the histogram because it uses unguarded accesses to the thread member
-> of the addr_location.
+Hi Jakub, Namhyung,
 
-Looking at the commit 0dd5041c9a0ea ("perf addr_location: Add
-init/exit/copy functions") that introduced the change, I'm not sure if
-it's the intend behavior.
-
-It might change maps and map, but not thread.  Then I think no reason
-to not set the al->thread at the beginning.
-
-How about this?  Ian?
-(I guess we can get rid of the duplicate 'al->map = NULL' part)
-
-Thanks,
-Namhyung
+@Namhyung: thank you for the explanations about the header files in the oth=
+er thread!
 
 
----8<---
- 
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index 3860b0c74829..4cbb092e0684 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -581,15 +581,14 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
- 	maps__zput(al->maps);
- 	map__zput(al->map);
- 	thread__zput(al->thread);
-+	al->thread = thread__get(thread);
- 
- 	al->addr = addr;
- 	al->cpumode = cpumode;
- 	al->filtered = 0;
- 
--	if (machine == NULL) {
--		al->map = NULL;
-+	if (machine == NULL)
- 		return NULL;
--	}
- 
- 	if (cpumode == PERF_RECORD_MISC_KERNEL && perf_host) {
- 		al->level = 'k';
-@@ -605,7 +604,6 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
- 		al->level = 'u';
- 	} else {
- 		al->level = 'H';
--		al->map = NULL;
- 
- 		if ((cpumode == PERF_RECORD_MISC_GUEST_USER ||
- 			cpumode == PERF_RECORD_MISC_GUEST_KERNEL) &&
-@@ -619,7 +617,6 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
- 		return NULL;
- 	}
- 	al->maps = maps__get(maps);
--	al->thread = thread__get(thread);
- 	al->map = map__get(maps__find(maps, al->addr));
- 	if (al->map != NULL) {
- 		/*
+26 Jun 2023 23:49:36 Jakub Kicinski <kuba@kernel.org>:
+> On Mon, 26 Jun 2023 14:41:56 -0700 Namhyung Kim wrote:
+>
+>> But in general you don't need to change the copy of the tools
+>> headers together.=C2=A0 It also needs to support old & new kernels
+>> so different care should be taken.=C2=A0 Please separate tooling
+>> changes and let us handle them.
+>
+> Ack, I'm not sure what makes this a special case, from Stephen's
+> original report:
+>
+> https://lore.kernel.org/all/20230626112847.2ef3d422@canb.auug.org.au/
+> > it sounded like perf won't build without the fix.
+
+The copy of the header file is confusing :)
+
+If I understood properly, here, we need the modification in msg_flags.c fro=
+m Perf code because this file has been recently modified by David's series =
+in net-next to support a new flag (not present in the system header files y=
+et). Without this patch, Perf doesn't build.
+
+Now regarding the "internal" copy of header files: we don't need to modify =
+it because it is just used by Perf maintainers to monitor the modifications=
+ in the original file. If I'm not mistaken, it might even be better to reve=
+rt the line that has been removed in David's original series in net-next in=
+ this header file. But now that Namhyung is aware of that modification, I g=
+uess the revert is probably not needed. But in short, it is then better not=
+ to modify this header file in the networking tree :-)
+
+Cheers,
+Matt
+--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
