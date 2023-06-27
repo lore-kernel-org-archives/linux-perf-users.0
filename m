@@ -2,180 +2,673 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D36AEB64DD
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 08:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7764EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 08:40:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230002AbjF0IgY (ORCPT
+        id S230179AbjF0Ikt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Jun 2023 04:36:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41898 "EHLO
+        Tue, 27 Jun 2023 04:40:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229720AbjF0IgH (ORCPT
+        with ESMTP id S229931AbjF0Iks (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Jun 2023 04:36:07 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94AE5E6F;
-        Tue, 27 Jun 2023 01:35:40 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-3fa94ea1caaso18042585e9.1;
-        Tue, 27 Jun 2023 01:35:40 -0700 (PDT)
+        Tue, 27 Jun 2023 04:40:48 -0400
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E2AFE3
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jun 2023 01:40:45 -0700 (PDT)
+Received: by mail-lj1-x230.google.com with SMTP id 38308e7fff4ca-2b6a1fe5845so28662481fa.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jun 2023 01:40:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687854939; x=1690446939;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=j5dQeYHYKYlJGoRN0EElGK6VPybOH+UnW7mCvvK0jmI=;
-        b=bMdPxlNve1ptwbBvvg3YZSu7PK70OsE4K3JS3uD/L+E9SjPnZbWxWyEcUupbNIFjbF
-         CGMLLfuGZV7S5bP7oRgxd1dUTFUmM2CIlm30RSqDXJ43NOx/VIZN6VDJpi7wM0Br6xas
-         Hvk1dAyK98XbcVJ4I816D+gVz5/43og1o8p+BCgH2ZzRqjXBnmz99VHYm9jmHFWoNolJ
-         Xy+Eqv+qLDw6Fuz/BIm3S6mQ1LBVeTuZ97N3wRWnQYURYITefb0U4UrQ6uNx6TXzXvlD
-         oHxGu3Mz1paoaqJDd7ufeU/bQ0IfqOoWZe3+V/MYlVsNKsvF87QA4TnSWv6EGmjsbzvo
-         Lwdg==
+        d=atishpatra.org; s=google; t=1687855244; x=1690447244;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N+Xt4TQgJAx583g027rkJq+T0ffm9dHOMS4HBa+6+HI=;
+        b=X716tHpS1hesZ93IBrKrwMndNCjqzDnVKexLb1R7qBPD7yA7OWJ+TpTAXMW3/+eu/o
+         UmXidTIVTCD3sD4ZwHlvTFCTHVtvKR/K/gLuff5pfTCiVlEtTuEflQTMi93zsFwbEc0p
+         nEOrxyz7K87j0VLgF1t8sbIYUYmmy6MaJMh3g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687854939; x=1690446939;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=j5dQeYHYKYlJGoRN0EElGK6VPybOH+UnW7mCvvK0jmI=;
-        b=Fa6YRNlnLur2q21Q5l+Sk1mqcAxQHkikGGITQENF6wrumcZwnX3GJlagPMJMRgUCta
-         LkSIOq0W6A3TIfoKhq4srJY0M1uuqT1Q03EEVZ01KomWMsH6Qa4TaRowcXsiL8HRrA/C
-         SzxWAOSs0Zx178xJcD/YdnEpuCZwaapZ/w1dwMRqN2V+YixLuK9IDc+txj6DJAorKK56
-         GI+naoa1U7XSnA259xVHnJn+E7eD8m3c09aOPEF64Pvfgtfq5hujDjYb7Ap1MBdOMeCm
-         YWFGn6L2Te+j1EatpOKhstonfPspzpNHlfXG2vbE7Qsu4uwLsHz2usTIyRSeJWUTM33m
-         9vaQ==
-X-Gm-Message-State: AC+VfDxFMqbS+VCx6q/WTwBiQzvdjyEMLWnzLuckfpIKapAWrFgrc+2L
-        0qGvEsmCU8R9w7y6nWrt4t0=
-X-Google-Smtp-Source: ACHHUZ6lMfDIQEfRLBxoYy6NK8cy1ffoV03IuwFDgbqQ1Lmh8SDB7VL77m97d9KgkHl3HSWa0jjOow==
-X-Received: by 2002:a05:600c:511f:b0:3fa:9996:8e03 with SMTP id o31-20020a05600c511f00b003fa99968e03mr4416331wms.10.1687854938850;
-        Tue, 27 Jun 2023 01:35:38 -0700 (PDT)
-Received: from krava (85-160-25-217.reb.o2.cz. [85.160.25.217])
-        by smtp.gmail.com with ESMTPSA id z16-20020a5d4d10000000b00313eeca9f4asm6184873wrt.14.2023.06.27.01.35.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jun 2023 01:35:38 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Tue, 27 Jun 2023 10:35:28 +0200
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
+        d=1e100.net; s=20221208; t=1687855244; x=1690447244;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=N+Xt4TQgJAx583g027rkJq+T0ffm9dHOMS4HBa+6+HI=;
+        b=WhFKswKDwonDVb7vwt1S/kzVTQ1JEmjQxO14EiEObiMtafXF8SqLdE35197tJ23e+b
+         uuvq7xF/kuvoxpfk/PSVnsPUHX78HYD3oUCMT3VMrT4DubkPOm0c9fiJ1c4nOZscrKIV
+         B3I+VA4sulFageSEXYqPCGvNzBgTte1fGjgTS+T/X6Y5nek/B+MIxHpf7yL5MX8JeOej
+         iQ9VB2hRATiz6RoqtyZq9AFCKqWv7p11P/EHgHTiS6zKLFXLDGEyWiimwh2OQh/IruzH
+         9Vtj5j8YYLDvmi57ftUIvr/x94hP4/YGMY4+iIP1vqOnXMzJ2c9h9/9rSLu/kVM8QzYa
+         8FGA==
+X-Gm-Message-State: AC+VfDxu9Okk1UcwTfWgWEPnuuasxesyLgn2iY4kFS7wZIY28nhYUbHv
+        gy6tdvFzhmzf3vNX+1aoFqrVev50MljWJpLW6Sbt
+X-Google-Smtp-Source: ACHHUZ5U6m0ORH1r9MU2U84Yr3A3mEzQcSBL+BjFHqaDib0SJ/FrMaTh7e9pD6SsFKEAJOuaZrKkoWzYcflzynJtNVY=
+X-Received: by 2002:a2e:9585:0:b0:2b5:81a8:3179 with SMTP id
+ w5-20020a2e9585000000b002b581a83179mr12669550ljh.3.1687855243548; Tue, 27 Jun
+ 2023 01:40:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <IA1PR20MB4953B6C4CB711506CF542737BB7E9@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <36fcef74ba3d21250f4c9605e691d1e2dac20ebb.camel@maquefel.me>
+In-Reply-To: <36fcef74ba3d21250f4c9605e691d1e2dac20ebb.camel@maquefel.me>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Tue, 27 Jun 2023 01:40:32 -0700
+Message-ID: <CAOnJCUL6oPNeXNtN8DTsK7cnJXsOb5AmfU02PP05EtuG-L9EmQ@mail.gmail.com>
+Subject: Re: [PATCH V3] perf vendor events riscv: add T-HEAD C9xx JSON file
+To:     Nikita Shubin <nikita.shubin@maquefel.me>
+Cc:     Inochi Amaoto <inochiama@outlook.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf tools: Add missing else to cmd_daemon subcommand
- condition
-Message-ID: <ZJqfUL1gnkTbUx5n@krava>
-References: <20230626201606.2514679-1-jolsa@kernel.org>
- <CAM9d7chMGzEJ3GKyxXD-RwUpjje7u3Cp810TRD+ZGgCT+mFrEQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7chMGzEJ3GKyxXD-RwUpjje7u3Cp810TRD+ZGgCT+mFrEQ@mail.gmail.com>
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Nikita Shubin <n.shubin@yadro.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 26, 2023 at 01:58:48PM -0700, Namhyung Kim wrote:
-> Hi Jiri,
-> 
-> On Mon, Jun 26, 2023 at 1:16 PM Jiri Olsa <jolsa@kernel.org> wrote:
+On Thu, May 18, 2023 at 2:09=E2=80=AFAM Nikita Shubin <nikita.shubin@maquef=
+el.me> wrote:
+>
+> Hello Inochi Amaoto!
+>
+> Tested your latest patch on LicheeRV C906:
+>
+> linux $ git describe --tags
+> v6.4-rc2-1-g85a420ada3a8
+>
+> opensbi $ git describe --tags
+> v1.2-119-gdc1c7db
+>
+> stat_all_pmu.sh - PASSED
+>
+> Perf stat gives something:
+>
+> perf stat -e data_tlb_miss,inst_tlb_miss,jtlb_miss,l1_dcache_read_acc
+> ess,l1_dcache_read_miss,l1_dcache_write_access,l1_dcache_write_miss,l1_
+> icache_ac
+> cess,l1_icache_miss -- sleep 1
+>
+>  Performance counter stats for 'sleep 1':
+>
+>               9082      data_tlb_miss
+>               5604      inst_tlb_miss
+>               1790      jtlb_miss
+>             130207      l1_dcache_read_access
+>               3353      l1_dcache_read_miss
+>              80454      l1_dcache_write_access
+>                633      l1_dcache_write_miss
+>             639820      l1_icache_access
+>              14660      l1_icache_miss
+>
+>        1.009768750 seconds time elapsed
+>
+>        0.000000000 seconds user
+>        0.010388000 seconds sys
+>
+> perf record hangs
+>
+> licheerv # perf record
+> [  432.015618] watchdog: BUG: soft lockup - CPU#0 stuck for 26s!
+> [perf:117]
+> [  460.015617] watchdog: BUG: soft lockup - CPU#0 stuck for 52s!
+> [perf:117]
+> [  488.015616] watchdog: BUG: soft lockup - CPU#0 stuck for 78s!
+> [perf:117]
+> [  516.015617] watchdog: BUG: soft lockup - CPU#0 stuck for 104s!
+> [perf:117]
+>
+
+Is it related to perf record or just random soft lockups you keep
+getting on this board ?
+
+> But that's not related to your patch anyway.
+>
+> I am strongly against using "c9xx" wildcard, i would prefer declaring
+> them separate (especially taking in mind that c920 is c910 with vector
+> - AFAIK), but that's up to Arnaldo to decide.
+>
+> Anyway:
+>
+> Tested-by: Nikita Shubin <n.shubin@yadro.com>
+>
+>
+> On Wed, 2023-05-17 at 15:12 +0800, Inochi Amaoto wrote:
+> > Add json file of T-HEAD C9xx series events.
 > >
-> > Namhyung reported segfault in perf daemon start command.
+> > The event idx (raw value) is summary as following:
 > >
-> > It's caused by extra check on argv[0] which is set to NULL by previous
-> > __cmd_start call. Adding missing else to skip the extra check.
+> > event id range   | support cpu
+> >  0x01 - 0x06     |  c906,c910,c920
+> >  0x07            |  c906
+> >  0x08 - 0x0a     |  c910,c920
+> >  0x0b - 0x0f     |  c906,c910,c920
+> >  0x10 - 0x1a     |  c910,c920
+> >  0x1b - 0x1c     |  c910,c920 (software defined for all >=3D 0x1b)
+> >  0x1d - 0x2a     |  c906
 > >
-> > Fixes: 92294b906e6c ("perf daemon: Dynamically allocate path to perf")
-> > Reported-by: Namhyung Kim <namhyung@kernel.org>
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> 
-> Thanks for the fix.  Now it runs ok.
-> 
-> Before:
->   $ sudo ./perf test -v daemon
->    85: daemon operations                                               :
->   --- start ---
->   test child forked, pid 82420
->   test daemon list
->   ./tests/shell/daemon.sh: line 133: 82426 Segmentation fault
-> perf daemon start --config ${config}
->   test daemon reconfig
->   ./tests/shell/daemon.sh: line 133: 82520 Segmentation fault
-> perf daemon start --config ${config}
->   test daemon stop
->   ./tests/shell/daemon.sh: line 133: 82636 Segmentation fault
-> perf daemon start --config ${config}
->   test daemon signal
->   ./tests/shell/daemon.sh: line 133: 82674 Segmentation fault
-> perf daemon start --config ${config}
->   signal 12 sent to session 'test [82676]'
->   signal 12 sent to session 'test [82676]'
->   test daemon ping
->   ./tests/shell/daemon.sh: line 133: 82702 Segmentation fault
-> perf daemon start --config ${config}
->   test daemon lock
->   ./tests/shell/daemon.sh: line 133: 82734 Segmentation fault
-> perf daemon start --config ${config}
->   test child finished with 0
->   ---- end ----
->   daemon operations: Ok
-> 
-> Maybe we need to investigate more why it was ok..
-> But at least I don't see segfaults anymore
-
-yea, for some reason parse_options would put NULL into argv[0]
-
-I'll try to check what changed, in any case the fix makes the
-condition alligned with the other legs and fixes the segfault
-
-jirka
-
-> 
-> 
-> After:
->    85: daemon operations                                               :
->   --- start ---
->   test child forked, pid 80752
->   test daemon list
->   test daemon reconfig
->   test daemon stop
->   test daemon signal
->   signal 12 sent to session 'test [81022]'
->   signal 12 sent to session 'test [81022]'
->   test daemon ping
->   test daemon lock
->   test child finished with 0
->   ---- end ----
->   daemon operations: Ok
-> 
-> 
-> Tested-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> Thanks,
-> Namhyung
-> 
-> 
-> 
+> > The event ids are based on the public document of T-HEAD and cover
+> > the c9xx series.
+> >
+> > These events are the max that c9xx series support.
+> > Since T-HEAD let manufacturers decide whether events are usable,
+> > the final support of the perf events is determined by the pmu node
+> > of the soc dtb.
+> >
+> > Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
 > > ---
-> >  tools/perf/builtin-daemon.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > Change from v2:
+> > 1. add C906 0x07 events to the instruction.json file
+> > 2. fix name for events 0x07 and 0x09 in instruction.json
 > >
-> > diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
-> > index f5674d824a40..83954af36753 100644
-> > --- a/tools/perf/builtin-daemon.c
-> > +++ b/tools/perf/builtin-daemon.c
-> > @@ -1524,7 +1524,7 @@ int cmd_daemon(int argc, const char **argv)
-> >         if (argc) {
-> >                 if (!strcmp(argv[0], "start"))
-> >                         ret = __cmd_start(&__daemon, daemon_options, argc, argv);
-> > -               if (!strcmp(argv[0], "signal"))
-> > +               else if (!strcmp(argv[0], "signal"))
-> >                         ret = __cmd_signal(&__daemon, daemon_options, argc, argv);
-> >                 else if (!strcmp(argv[0], "stop"))
-> >                         ret = __cmd_stop(&__daemon, daemon_options, argc, argv);
+> > Example:
+> >
+> > This pmu node example can be used on sophgo sg2042 platform (c920)
+> > with
+> > mainline OpenSBI.
+> > It should also work on T-HEAD th1520.
+> >
+> > For the one use C906 core. Only event 0x01 - 0x07, 0xb - 0xf has
+> > known
+> > CSR mapping. The other events do not have known CSR mapping in
+> > document
+> > until now.
+> > This pmu node needs to be shorten to adopt c906
+> >
+> > pmu {
+> >         compatible =3D "riscv,pmu";
+> >         riscv,event-to-mhpmcounters =3D
+> >                 // event-start event-end a bitmap of all the
+> > MHPMCOUNTERx
+> >                 <0x00006 0x00006 0x00000400>,
+> >                 <0x00005 0x00005 0x00000800>,
+> >                 <0x10000 0x10000 0x00004000>,
+> >                 <0x10001 0x10001 0x00008000>,
+> >                 <0x10002 0x10002 0x00010000>,
+> >                 <0x10003 0x10003 0x00020000>,
+> >                 <0x10008 0x10008 0x00000008>,
+> >                 <0x10009 0x10009 0x00000010>,
+> >                 <0x10010 0x10010 0x00040000>,
+> >                 <0x10011 0x10011 0x00080000>,
+> >                 <0x10012 0x10012 0x00100000>,
+> >                 <0x10013 0x10013 0x00200000>,
+> >                 <0x10019 0x10019 0x00000040>,
+> >                 <0x10021 0x10021 0x00000020>;
+> >         riscv,event-to-mhpmevent =3D
+> >                 // event-id event-selector
+> >                 /* mhpmevent3: L1I_READ_ACCESS */
+> >                 <0x10008 0x00000000 0x00000001>,
+> >                 /* mhpmevent4: L1I_READ_MISS */
+> >                 <0x10009 0x00000000 0x00000002>,
+> >                 /* mhpmevent5: ITLB_READ_MISS */
+> >                 <0x10021 0x00000000 0x00000003>,
+> >                 /* mhpmevent6: DTLB_READ_MISS */
+> >                 <0x10019 0x00000000 0x00000004>,
+> >                 /* mhpmevent10: PMU_HW_BRANCH_MISSES */
+> >                 <0x00006 0x00000000 0x00000008>,
+> >                 /* mhpmevent11: PMU_HW_BRANCH_INSTRUCTIONS */
+> >                 <0x00005 0x00000000 0x00000009>,
+> >                 /* mhpmevent14: L1D_READ_ACCESS */
+> >                 <0x10000 0x00000000 0x0000000c>,
+> >                 /* mhpmevent15: L1D_READ_MISS */
+> >                 <0x10001 0x00000000 0x0000000d>,
+> >                 /* mhpmevent16: L1D_WRITE_ACCESS */
+> >                 <0x10002 0x00000000 0x0000000e>,
+> >                 /* mhpmevent17: L1D_WRITE_MISS */
+> >                 <0x10003 0x00000000 0x0000000f>,
+> >                 /* mhpmevent18: LL_READ_ACCESS */
+> >                 <0x10010 0x00000000 0x00000010>,
+> >                 /* mhpmevent19: LL_READ_MISS */
+> >                 <0x10011 0x00000000 0x00000011>,
+> >                 /* mhpmevent20: LL_WRITE_ACCESS */
+> >                 <0x10012 0x00000000 0x00000012>,
+> >                 /* mhpmevent21: LL_WRITE_MISS */
+> >                 <0x10013 0x00000000 0x00000013>;
+> >         riscv,raw-event-to-mhpmcounters =3D
+> >                 /* mhpmevent3: L1 ICache Access Counter */
+> >                 <0x00000000 0x00000001 0xffffffff 0xffffffff
+> > 0x00000008>,
+> >                 /* mhpmevent4: L1 ICache Miss Counter */
+> >                 <0x00000000 0x00000002 0xffffffff 0xffffffff
+> > 0x00000010>,
+> >                 /* mhpmevent5: I-UTLB Miss Counter */
+> >                 <0x00000000 0x00000003 0xffffffff 0xffffffff
+> > 0x00000020>,
+> >                 /* mhpmevent6: D-UTLB Miss Counter */
+> >                 <0x00000000 0x00000004 0xffffffff 0xffffffff
+> > 0x00000040>,
+> >                 /* mhpmevent7: JTLB Miss */
+> >                 <0x00000000 0x00000005 0xffffffff 0xffffffff
+> > 0x00000080>,
+> >                 /* mhpmevent8: Conditional Branch Mispredict */
+> >                 <0x00000000 0x00000006 0xffffffff 0xffffffff
+> > 0x00000100>,
+> >                 /* mhpmevent9: Conditional Branch Instruction Counter
+> > (reserved for c910)*/
+> >                 /* <0x00000000 0x00000007 0xffffffff 0xffffffff
+> > 0x00000200>, */
+> >                 /* mhpmevent10: Indirect Branch Mispredict Counter */
+> >                 <0x00000000 0x00000008 0xffffffff 0xffffffff
+> > 0x00000400>,
+> >                 /* mhpmevent11: Indirect Branch Instruction Counter
+> > */
+> >                 <0x00000000 0x00000009 0xffffffff 0xffffffff
+> > 0x00000800>,
+> >                 /* mhpmevent12: LSU Spec Fail */
+> >                 <0x00000000 0x0000000a 0xffffffff 0xffffffff
+> > 0x00001000>,
+> >                 /* mhpmevent13: Store Instruction */
+> >                 <0x00000000 0x0000000b 0xffffffff 0xffffffff
+> > 0x00002000>,
+> >                 /* mhpmevent14: L1 DCache read access Counter */
+> >                 <0x00000000 0x0000000c 0xffffffff 0xffffffff
+> > 0x00004000>,
+> >                 /* mhpmevent15: L1 DCache read miss Counter */
+> >                 <0x00000000 0x0000000d 0xffffffff 0xffffffff
+> > 0x00008000>,
+> >                 /* mhpmevent16: L1 DCache write access Counter */
+> >                 <0x00000000 0x0000000e 0xffffffff 0xffffffff
+> > 0x00010000>,
+> >                 /* mhpmevent17: L1 DCache write access Counter */
+> >                 <0x00000000 0x0000000f 0xffffffff 0xffffffff
+> > 0x00020000>,
+> >                 /* mhpmevent18: L2 Cache read access Counter */
+> >                 <0x00000000 0x00000010 0xffffffff 0xffffffff
+> > 0x00040000>,
+> >                 /* mhpmevent19: L2 Cache read miss Counter */
+> >                 <0x00000000 0x00000011 0xffffffff 0xffffffff
+> > 0x00080000>,
+> >                 /* mhpmevent20: L2 Cache write access Counter */
+> >                 <0x00000000 0x00000012 0xffffffff 0xffffffff
+> > 0x00100000>,
+> >                 /* mhpmevent21: L2 Cache write miss Counter */
+> >                 <0x00000000 0x00000013 0xffffffff 0xffffffff
+> > 0x00200000>,
+> >                 /* mhpmevent22: RF Launch Fail */
+> >                 <0x00000000 0x00000014 0xffffffff 0xffffffff
+> > 0x00400000>,
+> >                 /* mhpmevent23: RF Reg Launch Fail */
+> >                 <0x00000000 0x00000015 0xffffffff 0xffffffff
+> > 0x00800000>,
+> >                 /* mhpmevent24: RF Instruction */
+> >                 <0x00000000 0x00000016 0xffffffff 0xffffffff
+> > 0x01000000>,
+> >                 /* mhpmevent25: LSU Cross 4K Stall */
+> >                 <0x00000000 0x00000017 0xffffffff 0xffffffff
+> > 0x02000000>,
+> >                 /* mhpmevent26: LSU Other Stall */
+> >                 <0x00000000 0x00000018 0xffffffff 0xffffffff
+> > 0x04000000>,
+> >                 /* mhpmevent27: LSU SQ Discard */
+> >                 <0x00000000 0x00000019 0xffffffff 0xffffffff
+> > 0x08000000>,
+> >                 /* mhpmevent28: LSU SQ Data Discard */
+> >                 <0x00000000 0x0000001a 0xffffffff 0xffffffff
+> > 0x10000000>;
+> > };
+> >
+> > ---
+> >  tools/perf/pmu-events/arch/riscv/mapfile.csv  |  1 +
+> >  .../arch/riscv/t-head/c9xx/cache.json         | 67 +++++++++++++++++
+> >  .../arch/riscv/t-head/c9xx/firmware.json      | 68
+> > ++++++++++++++++++
+> >  .../arch/riscv/t-head/c9xx/instruction.json   | 72
+> > +++++++++++++++++++
+> >  .../arch/riscv/t-head/c9xx/microarch.json     | 67 +++++++++++++++++
+> >  5 files changed, 275 insertions(+)
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/t-
+> > head/c9xx/cache.json
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/t-
+> > head/c9xx/firmware.json
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/t-
+> > head/c9xx/instruction.json
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/t-
+> > head/c9xx/microarch.json
+> >
+> > diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv
+> > b/tools/perf/pmu-events/arch/riscv/mapfile.csv
+> > index c61b3d6ef616..dd1d998a7ad6 100644
+> > --- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
+> > +++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
+> > @@ -15,3 +15,4 @@
+> >  #
+> >  #MVENDORID-MARCHID-MIMPID,Version,Filename,EventType
+> >  0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
+> > +0x5b7-0x0-0x0,v1,t-head/c9xx,core
+> > diff --git a/tools/perf/pmu-events/arch/riscv/t-head/c9xx/cache.json
+> > b/tools/perf/pmu-events/arch/riscv/t-head/c9xx/cache.json
+> > new file mode 100644
+> > index 000000000000..2c6e9a904a11
+> > --- /dev/null
+> > +++ b/tools/perf/pmu-events/arch/riscv/t-head/c9xx/cache.json
+> > @@ -0,0 +1,67 @@
+> > +[
+> > +  {
+> > +    "EventName": "L1_ICACHE_ACCESS",
+> > +    "EventCode": "0x000001",
+> > +    "BriefDescription": "L1 instruction cache access"
+> > +  },
+> > +  {
+> > +    "EventName": "L1_ICACHE_MISS",
+> > +    "EventCode": "0x000002",
+> > +    "BriefDescription": "L1 instruction cache miss"
+> > +  },
+> > +  {
+> > +    "EventName": "INST_TLB_MISS",
+> > +    "EventCode": "0x000003",
+> > +    "BriefDescription": "Instruction TLB (I-UTLB) miss"
+> > +  },
+> > +  {
+> > +    "EventName": "DATA_TLB_MISS",
+> > +    "EventCode": "0x000004",
+> > +    "BriefDescription": "Data TLB (D-UTLB) miss"
+> > +  },
+> > +  {
+> > +    "EventName": "JTLB_MISS",
+> > +    "EventCode": "0x000005",
+> > +    "BriefDescription": "JTLB access miss"
+> > +  },
+> > +  {
+> > +    "EventName": "L1_DCACHE_READ_ACCESS",
+> > +    "EventCode": "0x00000c",
+> > +    "BriefDescription": "L1 data cache read access"
+> > +  },
+> > +  {
+> > +    "EventName": "L1_DCACHE_READ_MISS",
+> > +    "EventCode": "0x00000d",
+> > +    "BriefDescription": "L1 data cache read miss"
+> > +  },
+> > +  {
+> > +    "EventName": "L1_DCACHE_WRITE_ACCESS",
+> > +    "EventCode": "0x00000e",
+> > +    "BriefDescription": "L1 data cache write access"
+> > +  },
+> > +  {
+> > +    "EventName": "L1_DCACHE_WRITE_MISS",
+> > +    "EventCode": "0x00000f",
+> > +    "BriefDescription": "L1 data cache write miss"
+> > +  },
+> > +  {
+> > +    "EventName": "L2_CACHE_READ_ACCESS",
+> > +    "EventCode": "0x000010",
+> > +    "BriefDescription": "L2 cache read access"
+> > +  },
+> > +  {
+> > +    "EventName": "L2_CACHE_READ_MISS",
+> > +    "EventCode": "0x000011",
+> > +    "BriefDescription": "L2 cache read miss"
+> > +  },
+> > +  {
+> > +    "EventName": "L2_CACHE_WRITE_ACCESS",
+> > +    "EventCode": "0x000012",
+> > +    "BriefDescription": "L2 cache write access"
+> > +  },
+> > +  {
+> > +    "EventName": "L2_CACHE_WRITE_MISS",
+> > +    "EventCode": "0x000013",
+> > +    "BriefDescription": "L2 cache write miss"
+> > +  }
+> > +]
+> > diff --git a/tools/perf/pmu-events/arch/riscv/t-
+> > head/c9xx/firmware.json b/tools/perf/pmu-events/arch/riscv/t-
+> > head/c9xx/firmware.json
+> > new file mode 100644
+> > index 000000000000..9b4a032186a7
+> > --- /dev/null
+> > +++ b/tools/perf/pmu-events/arch/riscv/t-head/c9xx/firmware.json
+> > @@ -0,0 +1,68 @@
+> > +[
+> > +  {
+> > +    "ArchStdEvent": "FW_MISALIGNED_LOAD"
+> > +  },
+> > +  {
+> > +    "ArchStdEvent": "FW_MISALIGNED_STORE"
+> > +  },
+> > +  {
+> > +    "ArchStdEvent": "FW_ACCESS_LOAD"
+> > +  },
+> > +  {
+> > +    "ArchStdEvent": "FW_ACCESS_STORE"
+> > +  },
+> > +  {
+> > +    "ArchStdEvent": "FW_ILLEGAL_INSN"
+> > +  },
+> > +  {
+> > +    "ArchStdEvent": "FW_SET_TIMER"
+> > +  },
+> > +  {
+> > +    "ArchStdEvent": "FW_IPI_SENT"
+> > +  },
+> > +  {
+> > +    "ArchStdEvent": "FW_IPI_RECEIVED"
+> > +  },
+> > +  {
+> > +    "ArchStdEvent": "FW_FENCE_I_SENT"
+> > +  },
+> > +  {
+> > +    "ArchStdEvent": "FW_FENCE_I_RECEIVED"
+> > +  },
+> > +  {
+> > +    "ArchStdEvent": "FW_SFENCE_VMA_SENT"
+> > +  },
+> > +  {
+> > +    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+> > +  },
+> > +  {
+> > +    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+> > +  },
+> > +  {
+> > +    "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
+> > +  },
+> > +  {
+> > +    "ArchStdEvent": "FW_HFENCE_GVMA_SENT"
+> > +  },
+> > +  {
+> > +    "ArchStdEvent": "FW_HFENCE_GVMA_RECEIVED"
+> > +  },
+> > +  {
+> > +    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_SENT"
+> > +  },
+> > +  {
+> > +    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_RECEIVED"
+> > +  },
+> > +  {
+> > +    "ArchStdEvent": "FW_HFENCE_VVMA_SENT"
+> > +  },
+> > +  {
+> > +    "ArchStdEvent": "FW_HFENCE_VVMA_RECEIVED"
+> > +  },
+> > +  {
+> > +    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_SENT"
+> > +  },
+> > +  {
+> > +    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_RECEIVED"
+> > +  }
+> > +]
+> > diff --git a/tools/perf/pmu-events/arch/riscv/t-
+> > head/c9xx/instruction.json b/tools/perf/pmu-events/arch/riscv/t-
+> > head/c9xx/instruction.json
+> > new file mode 100644
+> > index 000000000000..7f1649548177
+> > --- /dev/null
+> > +++ b/tools/perf/pmu-events/arch/riscv/t-head/c9xx/instruction.json
+> > @@ -0,0 +1,72 @@
+> > +[
+> > +  {
+> > +    "EventName": "BR_COND_MIS_PRED",
+> > +    "EventCode": "0x000006",
+> > +    "BriefDescription": "Conditional branch mispredict"
+> > +  },
+> > +  {
+> > +    "EventName": "INST_BR_COND_MIS",
+> > +    "EventCode": "0x000007",
+> > +    "BriefDescription": "Conditional branch instruction"
+> > +  },
+> > +  {
+> > +    "EventName": "BR_INDIRECT_MIS_PRED",
+> > +    "EventCode": "0x000008",
+> > +    "BriefDescription": "Indirect branch mispredict"
+> > +  },
+> > +  {
+> > +    "EventName": "INST_BR_COND_MIS",
+> > +    "EventCode": "0x000009",
+> > +    "BriefDescription": "Indirect branch instruction"
+> > +  },
+> > +  {
+> > +    "EventName": "INST_STORE",
+> > +    "EventCode": "0x00000b",
+> > +    "BriefDescription": "Store instruction retired"
+> > +  },
+> > +  {
+> > +    "EventName": "INST_ALU",
+> > +    "EventCode": "0x00001d",
+> > +    "BriefDescription": "ALU instruction retired"
+> > +  },
+> > +  {
+> > +    "EventName": "INST_LOAD_SAVE",
+> > +    "EventCode": "0x00001e",
+> > +    "BriefDescription": "LOAD/Store instruction retired"
+> > +  },
+> > +  {
+> > +    "EventName": "INST_VECTOR",
+> > +    "EventCode": "0x00001f",
+> > +    "BriefDescription": "Vector instruction retired"
+> > +  },
+> > +  {
+> > +    "EventName": "INST_CSR_ACCESS",
+> > +    "EventCode": "0x000020",
+> > +    "BriefDescription": "CSR access instruction retired"
+> > +  },
+> > +  {
+> > +    "EventName": "INST_SYNC",
+> > +    "EventCode": "0x000021",
+> > +    "BriefDescription": "Sync instruction retired"
+> > +  },
+> > +  {
+> > +    "EventName": "INST_LOAD_SAVE_UNALIGNED",
+> > +    "EventCode": "0x000022",
+> > +    "BriefDescription": "Load/Store unaligned access instruction
+> > retired"
+> > +  },
+> > +  {
+> > +    "EventName": "INST_ENV_CALL",
+> > +    "EventCode": "0x000025",
+> > +    "BriefDescription": "Environment call instruction retired"
+> > +  },
+> > +  {
+> > +    "EventName": "INST_LONGJUMP",
+> > +    "EventCode": "0x000026",
+> > +    "BriefDescription": "Long jump instruction retired (jump dist
+> > over 8MB)"
+> > +  },
+> > +  {
+> > +    "EventName": "INST_FP",
+> > +    "EventCode": "0x00002a",
+> > +    "BriefDescription": "Float point instruction retired"
+> > +  }
+> > +]
+> > diff --git a/tools/perf/pmu-events/arch/riscv/t-
+> > head/c9xx/microarch.json b/tools/perf/pmu-events/arch/riscv/t-
+> > head/c9xx/microarch.json
+> > new file mode 100644
+> > index 000000000000..073c1d085021
+> > --- /dev/null
+> > +++ b/tools/perf/pmu-events/arch/riscv/t-head/c9xx/microarch.json
+> > @@ -0,0 +1,67 @@
+> > +[
+> > +  {
+> > +    "EventName": "LSU_SPEC_FAIL",
+> > +    "EventCode": "0x00000a",
+> > +    "BriefDescription": "LSU Spec Fail"
+> > +  },
+> > +  {
+> > +    "EventName": "RF_LAUNCH_FAIL",
+> > +    "EventCode": "0x000014",
+> > +    "BriefDescription": "Register file launch fail"
+> > +  },
+> > +  {
+> > +    "EventName": "RF_REG_LAUNCH",
+> > +    "EventCode": "0x000015",
+> > +    "BriefDescription": "Register file reg launch"
+> > +  },
+> > +  {
+> > +    "EventName": "RF_INSTRUCTION",
+> > +    "EventCode": "0x000016",
+> > +    "BriefDescription": "Register file instruction"
+> > +  },
+> > +  {
+> > +    "EventName": "LSU_STALL_CROSS_4K",
+> > +    "EventCode": "0x000017",
+> > +    "BriefDescription": "LSU stall with cross 4K access"
+> > +  },
+> > +  {
+> > +    "EventName": "LSU_STALL_OTHER",
+> > +    "EventCode": "0x000018",
+> > +    "BriefDescription": "LSU stall with other events"
+> > +  },
+> > +  {
+> > +    "EventName": "LSU_SQ_DISCARD",
+> > +    "EventCode": "0x000019",
+> > +    "BriefDescription": "LSU SQ discard"
+> > +  },
+> > +  {
+> > +    "EventName": "LSU_SQ_DISCARD_DATA",
+> > +    "EventCode": "0x00001a",
+> > +    "BriefDescription": "LSU SQ data discard"
+> > +  },
+> > +  {
+> > +    "EventName": "INT_NUMBER",
+> > +    "EventCode": "0x000023",
+> > +    "BriefDescription": "Interrupt number respond"
+> > +  },
+> > +  {
+> > +    "EventName": "INT_OFF_CYCLE",
+> > +    "EventCode": "0x000024",
+> > +    "BriefDescription": "Off cycle before interrupt arbitrating"
+> > +  },
+> > +  {
+> > +    "EventName": "STALLED_CYCLE_IFU",
+> > +    "EventCode": "0x000027",
+> > +    "BriefDescription": "Stall cycles of the instruction fetch unit"
+> > +  },
+> > +  {
+> > +    "EventName": "STALLED_CYCLE_IDU",
+> > +    "EventCode": "0x000028",
+> > +    "BriefDescription": "Stall cycles of the instruction decoding
+> > unit and next-level pipeline unit"
+> > +  },
+> > +  {
+> > +    "EventName": "STALLED_CYCLE_SYNC",
+> > +    "EventCode": "0x000029",
+> > +    "BriefDescription": "Stalled cycle for sync instructions
+> > (FENCE/FENCE.i/SFENCE/SYNC...)"
+> > +  }
+> > +]
 > > --
-> > 2.41.0
+> > 2.40.1
 > >
+> >
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
+
+
+--=20
+Regards,
+Atish
