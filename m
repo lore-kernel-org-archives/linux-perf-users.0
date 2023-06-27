@@ -2,59 +2,56 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7C3C00528
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 18:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E4FEB64D9
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 18:28:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230494AbjF0SL0 (ORCPT
+        id S230303AbjF0S26 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Jun 2023 14:11:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42908 "EHLO
+        Tue, 27 Jun 2023 14:28:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231163AbjF0SLL (ORCPT
+        with ESMTP id S229742AbjF0S25 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Jun 2023 14:11:11 -0400
+        Tue, 27 Jun 2023 14:28:57 -0400
 Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BE6B2D4A
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jun 2023 11:11:08 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5707177ff8aso61444777b3.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jun 2023 11:11:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 536BF10DA
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jun 2023 11:28:55 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5704e551e8bso65806897b3.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jun 2023 11:28:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687889467; x=1690481467;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=StcgeFnI4n9LLLvk4G7O6CbzjZValP2DfB//GyhRxDI=;
-        b=7fT/jL8m9VFgKdPRPOi4B5qlF4mYEdel0EQFlq0HfSkH8ap+Sk7AXUq4SgGGOkq6RF
-         vfeOeoptamRzNTV5P2QRXdwht66ZNBjz8u98EcDYBkOk5W5sk81TsFV9qyXqHoaLs5sz
-         E5tOga4zvvyQTk4erCcpikGhS6PUt6Oc9Xd+6YmkRck6UxZYnnUgH8A4kWHHIPYokdBQ
-         W2Gu5kN7E/p20ktY0+1JrqRVWCg926kaGSbVpEx21KKT4uQeK+YXeu6Rl2a1e1EhLoGT
-         LmeExdSr0MympjvgYodvQf5FrL+HMOsnsKqVhELrLn+KZ5dsnyBKiaXvhd4/xD7s7Ok3
-         Okdg==
+        d=google.com; s=20221208; t=1687890534; x=1690482534;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pCEk4rjcfYTL2DuAl4m74mxfXYI4yN7w7niW6JdDvXw=;
+        b=Cm3bw124FnPJLd/hOVzZkDDEl6NNM4e2Hl/lg4rqzZFObSGD+uZnXFozeYjh0LOYLL
+         kpEDPktwyWqw0Pq7ozb4zkXc9QwiUAW+kmkiYBWTROZNSUezXf+9Rsv9cqOvedHA/I76
+         ryK1te8HJfEiHohIYLEA69RFYB+bmV+37MNrsT4ebstip6UaYunO7AdrjpaYjflhlpL6
+         xS8yCJmHsstL8q/t/CDMkfPTjMJAoTgn+5QT+1HYSIFM8haYxKCw/kaL8B2g9p/CpxVE
+         YTZo30pAo3ee7f6jXZWZIPJ6ae6c/EE7RzoncuCGrfwEJ/Jf8K3Ok1ReXADB6GJnX0AF
+         AsKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687889467; x=1690481467;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=StcgeFnI4n9LLLvk4G7O6CbzjZValP2DfB//GyhRxDI=;
-        b=bQwxHTHwoj6N6pL/DM35EFj5e4j/K+vjRBD6ETrfdNFQuETsVjF61kHvybQdqf5pbq
-         rbiXjZInOtWs+xqK6qel8mLdCuxMFvM+i/x+klHlKnNv7Gwy6inFqWTw/2sMBEc2KohW
-         ggznocxQVK9Z3WilzKxsb252z/eOQoOuelwKjddJde+LMgVooApKYRpoOzOR7lFR544j
-         ZVBlohoWDxI964tNRoV+b5B6WtdiBS2Rj74OQTVetGunoLUUvxbKD0upLXScZ9JoksI6
-         HWfI4jaJKLSD0KfWvhC7+OwXjkn4rx3HjmSSyayyHyG2Z/ukugZkU8lA9VGNt4rZ3MWQ
-         ChfQ==
-X-Gm-Message-State: AC+VfDwySszW966dBeqzq4ouMm4r/qaRh8+6IuHJHZvSytca/3n7GHRP
-        MHK2lMtcn+5xVXpjvwtuVps7TeUAgnwz
-X-Google-Smtp-Source: ACHHUZ5Op7YTRWS0VwHR9qRGvjW0o4XHD6oxkOBCTvBdbBFCZ4OTsZUg/zDMYyJ9dDx9txiWTt/otuxf8T0X
+        d=1e100.net; s=20221208; t=1687890534; x=1690482534;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pCEk4rjcfYTL2DuAl4m74mxfXYI4yN7w7niW6JdDvXw=;
+        b=S3vtwPyL3zeG43PiX5dlc9dpBTfiYtMV/160di9H1nzfDgEm+2Q6zu+wM10Bw5Wrc3
+         JTgVFxJ511iWng9S7mhkx3yOu+1O5UCeNNQ8mC3w5JpBp9o8a3iI84jcGX62B0v7FwvK
+         M5Hb5J2uZWIG1Nft3da1ni3ZTjwmN348vKkc9drfFBc5l2hOS6Zush/U9WHSYgkiourC
+         5hEGGh42JMECpNzq7Do3nL3ofZhP7TT/LS6vZhheXmBMfHljSlKw4ad22Uuob7IY/eVX
+         6shAPk1G5OYCIWYHpzYuv9UYcQBWMUDn81dP6OwklsRuApcW0xX6y9101Afw4R0zUi2O
+         EMpQ==
+X-Gm-Message-State: AC+VfDzF8+qh6lj5kY0NofEhUd0qcDec4r83LPVZZ5f5hTbXq3RIC+cR
+        vAXXO0EGVNvwmn4EsjtsbQl0TWLMAi6H
+X-Google-Smtp-Source: ACHHUZ6wQDXh989UuoDBFM6nLfDD0nRgSuyNK+A4PNTa/4bB+SnOFzM6nso7l0EW6nj0faBVK5sPn3IhC3XE
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a518:9a69:cf62:b4d9])
- (user=irogers job=sendgmr) by 2002:a0d:ec4a:0:b0:56d:21a1:16a1 with SMTP id
- r10-20020a0dec4a000000b0056d21a116a1mr13933293ywn.5.1687889467366; Tue, 27
- Jun 2023 11:11:07 -0700 (PDT)
-Date:   Tue, 27 Jun 2023 11:10:28 -0700
-In-Reply-To: <20230627181030.95608-1-irogers@google.com>
-Message-Id: <20230627181030.95608-12-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a81:ac08:0:b0:56d:1b6:5360 with SMTP id
+ k8-20020a81ac08000000b0056d01b65360mr13365076ywh.5.1687890534617; Tue, 27 Jun
+ 2023 11:28:54 -0700 (PDT)
+Date:   Tue, 27 Jun 2023 11:28:34 -0700
+Message-Id: <20230627182834.117565-1-irogers@google.com>
 Mime-Version: 1.0
-References: <20230627181030.95608-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v2 11/13] perf parse-events: Populate error column for
- BPF/tracepoint events
+Subject: [PATCH v1] perf pmus: Add placeholder core PMU
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -65,362 +62,97 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
         Kan Liang <kan.liang@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
+        Yang Jihong <yangjihong1@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Follow convention from parse_events_terms__num/str and pass the
-YYLTYPE for the location.
+If loading a core PMU fails, legacy hardware/cache events may segv due
+to there being no PMU. Create a placeholder empty PMU for this
+case. This was discussed in:
+https://lore.kernel.org/lkml/20230614151625.2077-1-yangjihong1@huawei.com/
 
+Reported-by: Yang Jihong <yangjihong1@huawei.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/bpf.c         |  2 +-
- tools/perf/util/parse-events.c | 80 ++++++++++++++++++++--------------
- tools/perf/util/parse-events.h |  8 ++--
- tools/perf/util/parse-events.y |  6 +--
- 4 files changed, 57 insertions(+), 39 deletions(-)
+ tools/perf/util/pmu.c  | 25 +++++++++++++++++++++++++
+ tools/perf/util/pmu.h  |  1 +
+ tools/perf/util/pmus.c |  7 ++++++-
+ 3 files changed, 32 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
-index 8beb46066034..31796f2a80f4 100644
---- a/tools/perf/tests/bpf.c
-+++ b/tools/perf/tests/bpf.c
-@@ -124,7 +124,7 @@ static int do_test(struct bpf_object *obj, int (*func)(void),
- 	parse_state.error = &parse_error;
- 	INIT_LIST_HEAD(&parse_state.list);
- 
--	err = parse_events_load_bpf_obj(&parse_state, &parse_state.list, obj, NULL);
-+	err = parse_events_load_bpf_obj(&parse_state, &parse_state.list, obj, NULL, NULL);
- 	parse_events_error__exit(&parse_error);
- 	if (err == -ENODATA) {
- 		pr_debug("Failed to add events selected by BPF, debuginfo package not installed\n");
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index f31f233e395f..fdd304fbed7c 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -499,7 +499,7 @@ int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
- 
- #ifdef HAVE_LIBTRACEEVENT
- static void tracepoint_error(struct parse_events_error *e, int err,
--			     const char *sys, const char *name)
-+			     const char *sys, const char *name, int column)
- {
- 	const char *str;
- 	char help[BUFSIZ];
-@@ -526,18 +526,19 @@ static void tracepoint_error(struct parse_events_error *e, int err,
- 	}
- 
- 	tracing_path__strerror_open_tp(err, help, sizeof(help), sys, name);
--	parse_events_error__handle(e, 0, strdup(str), strdup(help));
-+	parse_events_error__handle(e, column, strdup(str), strdup(help));
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 8d5ecd4ff1a9..7f984a7f16ca 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -928,6 +928,31 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char
+ 	return NULL;
  }
  
- static int add_tracepoint(struct list_head *list, int *idx,
- 			  const char *sys_name, const char *evt_name,
- 			  struct parse_events_error *err,
--			  struct list_head *head_config)
-+			  struct list_head *head_config, void *loc_)
- {
-+	YYLTYPE *loc = loc_;
- 	struct evsel *evsel = evsel__newtp_idx(sys_name, evt_name, (*idx)++);
- 
- 	if (IS_ERR(evsel)) {
--		tracepoint_error(err, PTR_ERR(evsel), sys_name, evt_name);
-+		tracepoint_error(err, PTR_ERR(evsel), sys_name, evt_name, loc->first_column);
- 		return PTR_ERR(evsel);
- 	}
- 
-@@ -556,7 +557,7 @@ static int add_tracepoint(struct list_head *list, int *idx,
- static int add_tracepoint_multi_event(struct list_head *list, int *idx,
- 				      const char *sys_name, const char *evt_name,
- 				      struct parse_events_error *err,
--				      struct list_head *head_config)
-+				      struct list_head *head_config, YYLTYPE *loc)
- {
- 	char *evt_path;
- 	struct dirent *evt_ent;
-@@ -565,13 +566,13 @@ static int add_tracepoint_multi_event(struct list_head *list, int *idx,
- 
- 	evt_path = get_events_file(sys_name);
- 	if (!evt_path) {
--		tracepoint_error(err, errno, sys_name, evt_name);
-+		tracepoint_error(err, errno, sys_name, evt_name, loc->first_column);
- 		return -1;
- 	}
- 	evt_dir = opendir(evt_path);
- 	if (!evt_dir) {
- 		put_events_file(evt_path);
--		tracepoint_error(err, errno, sys_name, evt_name);
-+		tracepoint_error(err, errno, sys_name, evt_name, loc->first_column);
- 		return -1;
- 	}
- 
-@@ -588,11 +589,11 @@ static int add_tracepoint_multi_event(struct list_head *list, int *idx,
- 		found++;
- 
- 		ret = add_tracepoint(list, idx, sys_name, evt_ent->d_name,
--				     err, head_config);
-+				     err, head_config, loc);
- 	}
- 
- 	if (!found) {
--		tracepoint_error(err, ENOENT, sys_name, evt_name);
-+		tracepoint_error(err, ENOENT, sys_name, evt_name, loc->first_column);
- 		ret = -1;
- 	}
- 
-@@ -604,19 +605,19 @@ static int add_tracepoint_multi_event(struct list_head *list, int *idx,
- static int add_tracepoint_event(struct list_head *list, int *idx,
- 				const char *sys_name, const char *evt_name,
- 				struct parse_events_error *err,
--				struct list_head *head_config)
-+				struct list_head *head_config, YYLTYPE *loc)
- {
- 	return strpbrk(evt_name, "*?") ?
--	       add_tracepoint_multi_event(list, idx, sys_name, evt_name,
--					  err, head_config) :
--	       add_tracepoint(list, idx, sys_name, evt_name,
--			      err, head_config);
-+		add_tracepoint_multi_event(list, idx, sys_name, evt_name,
-+					   err, head_config, loc) :
-+		add_tracepoint(list, idx, sys_name, evt_name,
-+			       err, head_config, loc);
- }
- 
- static int add_tracepoint_multi_sys(struct list_head *list, int *idx,
- 				    const char *sys_name, const char *evt_name,
- 				    struct parse_events_error *err,
--				    struct list_head *head_config)
-+				    struct list_head *head_config, YYLTYPE *loc)
- {
- 	struct dirent *events_ent;
- 	DIR *events_dir;
-@@ -624,7 +625,7 @@ static int add_tracepoint_multi_sys(struct list_head *list, int *idx,
- 
- 	events_dir = tracing_events__opendir();
- 	if (!events_dir) {
--		tracepoint_error(err, errno, sys_name, evt_name);
-+		tracepoint_error(err, errno, sys_name, evt_name, loc->first_column);
- 		return -1;
- 	}
- 
-@@ -640,7 +641,7 @@ static int add_tracepoint_multi_sys(struct list_head *list, int *idx,
- 			continue;
- 
- 		ret = add_tracepoint_event(list, idx, events_ent->d_name,
--					   evt_name, err, head_config);
-+					   evt_name, err, head_config, loc);
- 	}
- 
- 	closedir(events_dir);
-@@ -653,6 +654,7 @@ struct __add_bpf_event_param {
- 	struct parse_events_state *parse_state;
- 	struct list_head *list;
- 	struct list_head *head_config;
-+	YYLTYPE *loc;
- };
- 
- static int add_bpf_event(const char *group, const char *event, int fd, struct bpf_object *obj,
-@@ -679,7 +681,7 @@ static int add_bpf_event(const char *group, const char *event, int fd, struct bp
- 
- 	err = parse_events_add_tracepoint(&new_evsels, &parse_state->idx, group,
- 					  event, parse_state->error,
--					  param->head_config);
-+					  param->head_config, param->loc);
- 	if (err) {
- 		struct evsel *evsel, *tmp;
- 
-@@ -706,12 +708,14 @@ static int add_bpf_event(const char *group, const char *event, int fd, struct bp
- int parse_events_load_bpf_obj(struct parse_events_state *parse_state,
- 			      struct list_head *list,
- 			      struct bpf_object *obj,
--			      struct list_head *head_config)
-+			      struct list_head *head_config,
-+			      void *loc)
- {
- 	int err;
- 	char errbuf[BUFSIZ];
--	struct __add_bpf_event_param param = {parse_state, list, head_config};
-+	struct __add_bpf_event_param param = {parse_state, list, head_config, loc};
- 	static bool registered_unprobe_atexit = false;
-+	YYLTYPE test_loc = {.first_column = -1};
- 
- 	if (IS_ERR(obj) || !obj) {
- 		snprintf(errbuf, sizeof(errbuf),
-@@ -742,6 +746,9 @@ int parse_events_load_bpf_obj(struct parse_events_state *parse_state,
- 		goto errout;
- 	}
- 
-+	if (!param.loc)
-+		param.loc = &test_loc;
++/* Creates the PMU when sysfs scanning fails. */
++struct perf_pmu *perf_pmu__create_placeholder_core_pmu(struct list_head *core_pmus)
++{
++	struct perf_pmu *pmu = zalloc(sizeof(*pmu));
 +
- 	err = bpf__foreach_event(obj, add_bpf_event, &param);
- 	if (err) {
- 		snprintf(errbuf, sizeof(errbuf),
-@@ -751,7 +758,7 @@ int parse_events_load_bpf_obj(struct parse_events_state *parse_state,
- 
- 	return 0;
- errout:
--	parse_events_error__handle(parse_state->error, 0,
-+	parse_events_error__handle(parse_state->error, param.loc->first_column,
- 				strdup(errbuf), strdup("(add -v to see detail)"));
- 	return err;
- }
-@@ -839,11 +846,13 @@ int parse_events_load_bpf(struct parse_events_state *parse_state,
- 			  struct list_head *list,
- 			  char *bpf_file_name,
- 			  bool source,
--			  struct list_head *head_config)
-+			  struct list_head *head_config,
-+			  void *loc_)
- {
- 	int err;
- 	struct bpf_object *obj;
- 	LIST_HEAD(obj_head_config);
-+	YYLTYPE *loc = loc_;
- 
- 	if (head_config)
- 		split_bpf_config_terms(head_config, &obj_head_config);
-@@ -863,12 +872,12 @@ int parse_events_load_bpf(struct parse_events_state *parse_state,
- 						   -err, errbuf,
- 						   sizeof(errbuf));
- 
--		parse_events_error__handle(parse_state->error, 0,
-+		parse_events_error__handle(parse_state->error, loc->first_column,
- 					strdup(errbuf), strdup("(add -v to see detail)"));
- 		return err;
- 	}
- 
--	err = parse_events_load_bpf_obj(parse_state, list, obj, head_config);
-+	err = parse_events_load_bpf_obj(parse_state, list, obj, head_config, loc);
- 	if (err)
- 		return err;
- 	err = parse_events_config_bpf(parse_state, obj, &obj_head_config);
-@@ -885,9 +894,12 @@ int parse_events_load_bpf(struct parse_events_state *parse_state,
- int parse_events_load_bpf_obj(struct parse_events_state *parse_state,
- 			      struct list_head *list __maybe_unused,
- 			      struct bpf_object *obj __maybe_unused,
--			      struct list_head *head_config __maybe_unused)
-+			      struct list_head *head_config __maybe_unused,
-+			      void *loc_)
- {
--	parse_events_error__handle(parse_state->error, 0,
-+	YYLTYPE *loc = loc_;
++	if (!pmu)
++		return NULL;
 +
-+	parse_events_error__handle(parse_state->error, loc->first_column,
- 				   strdup("BPF support is not compiled"),
- 				   strdup("Make sure libbpf-devel is available at build time."));
- 	return -ENOTSUP;
-@@ -897,9 +909,12 @@ int parse_events_load_bpf(struct parse_events_state *parse_state,
- 			  struct list_head *list __maybe_unused,
- 			  char *bpf_file_name __maybe_unused,
- 			  bool source __maybe_unused,
--			  struct list_head *head_config __maybe_unused)
-+			  struct list_head *head_config __maybe_unused,
-+			  void *loc_)
- {
--	parse_events_error__handle(parse_state->error, 0,
-+	YYLTYPE *loc = loc_;
++	pmu->name = strdup("cpu");
++	if (!pmu->name) {
++		free(pmu);
++		return NULL;
++	}
 +
-+	parse_events_error__handle(parse_state->error, loc->first_column,
- 				   strdup("BPF support is not compiled"),
- 				   strdup("Make sure libbpf-devel is available at build time."));
- 	return -ENOTSUP;
-@@ -1433,8 +1448,9 @@ static int get_config_chgs(struct perf_pmu *pmu, struct list_head *head_config,
- int parse_events_add_tracepoint(struct list_head *list, int *idx,
- 				const char *sys, const char *event,
- 				struct parse_events_error *err,
--				struct list_head *head_config)
-+				struct list_head *head_config, void *loc_)
++	pmu->is_core = true;
++	pmu->type = PERF_TYPE_RAW;
++	pmu->cpus = cpu_map__online();
++
++	INIT_LIST_HEAD(&pmu->format);
++	INIT_LIST_HEAD(&pmu->aliases);
++	INIT_LIST_HEAD(&pmu->caps);
++	list_add_tail(&pmu->list, core_pmus);
++	return pmu;
++}
++
+ void perf_pmu__warn_invalid_formats(struct perf_pmu *pmu)
  {
-+	YYLTYPE *loc = loc_;
- #ifdef HAVE_LIBTRACEEVENT
- 	if (head_config) {
- 		struct perf_event_attr attr;
-@@ -1446,17 +1462,17 @@ int parse_events_add_tracepoint(struct list_head *list, int *idx,
+ 	struct perf_pmu_format *format;
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 8807a624e918..203b92860e3c 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -286,6 +286,7 @@ int perf_pmu__event_source_devices_fd(void);
+ int perf_pmu__pathname_fd(int dirfd, const char *pmu_name, const char *filename, int flags);
  
- 	if (strpbrk(sys, "*?"))
- 		return add_tracepoint_multi_sys(list, idx, sys, event,
--						err, head_config);
-+						err, head_config, loc);
- 	else
- 		return add_tracepoint_event(list, idx, sys, event,
--					    err, head_config);
-+					    err, head_config, loc);
- #else
- 	(void)list;
- 	(void)idx;
- 	(void)sys;
- 	(void)event;
- 	(void)head_config;
--	parse_events_error__handle(err, 0, strdup("unsupported tracepoint"),
-+	parse_events_error__handle(err, loc->first_column, strdup("unsupported tracepoint"),
- 				strdup("libtraceevent is necessary for tracepoint support"));
- 	return -1;
- #endif
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index b37e5ee193a8..cabbe70adb82 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -169,18 +169,20 @@ int parse_events_name(struct list_head *list, const char *name);
- int parse_events_add_tracepoint(struct list_head *list, int *idx,
- 				const char *sys, const char *event,
- 				struct parse_events_error *error,
--				struct list_head *head_config);
-+				struct list_head *head_config, void *loc);
- int parse_events_load_bpf(struct parse_events_state *parse_state,
- 			  struct list_head *list,
- 			  char *bpf_file_name,
- 			  bool source,
--			  struct list_head *head_config);
-+			  struct list_head *head_config,
-+			  void *loc);
- /* Provide this function for perf test */
- struct bpf_object;
- int parse_events_load_bpf_obj(struct parse_events_state *parse_state,
- 			      struct list_head *list,
- 			      struct bpf_object *obj,
--			      struct list_head *head_config);
-+			      struct list_head *head_config,
-+			      void *loc);
- int parse_events_add_numeric(struct parse_events_state *parse_state,
- 			     struct list_head *list,
- 			     u32 type, u64 config,
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index a636a7db6e6f..50f5b819de37 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -567,7 +567,7 @@ tracepoint_name opt_event_config
- 		error->idx = @1.first_column;
+ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char *lookup_name);
++struct perf_pmu *perf_pmu__create_placeholder_core_pmu(struct list_head *core_pmus);
+ void perf_pmu__delete(struct perf_pmu *pmu);
  
- 	err = parse_events_add_tracepoint(list, &parse_state->idx, $1.sys, $1.event,
--					error, $2);
-+					error, $2, &@1);
+ #endif /* __PMU_H */
+diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+index 0866dee3fc62..3cd9de42139e 100644
+--- a/tools/perf/util/pmus.c
++++ b/tools/perf/util/pmus.c
+@@ -153,7 +153,12 @@ static void pmu_read_sysfs(bool core_only)
  
- 	parse_events_terms__delete($2);
- 	free($1.sys);
-@@ -640,7 +640,7 @@ PE_BPF_OBJECT opt_event_config
- 	list = alloc_list();
- 	if (!list)
- 		YYNOMEM;
--	err = parse_events_load_bpf(parse_state, list, $1, false, $2);
-+	err = parse_events_load_bpf(parse_state, list, $1, false, $2, &@1);
- 	parse_events_terms__delete($2);
- 	free($1);
- 	if (err) {
-@@ -658,7 +658,7 @@ PE_BPF_SOURCE opt_event_config
- 	list = alloc_list();
- 	if (!list)
- 		YYNOMEM;
--	err = parse_events_load_bpf(_parse_state, list, $1, true, $2);
-+	err = parse_events_load_bpf(_parse_state, list, $1, true, $2, &@1);
- 	parse_events_terms__delete($2);
- 	if (err) {
- 		free(list);
+ 	closedir(dir);
+ 	if (core_only) {
+-		read_sysfs_core_pmus = true;
++		if (!list_empty(&core_pmus))
++			read_sysfs_core_pmus = true;
++		else {
++			if (perf_pmu__create_placeholder_core_pmu(&core_pmus))
++				read_sysfs_core_pmus = true;
++		}
+ 	} else {
+ 		read_sysfs_core_pmus = true;
+ 		read_sysfs_all_pmus = true;
 -- 
 2.41.0.162.gfafddb0af9-goog
 
