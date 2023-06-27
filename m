@@ -2,132 +2,98 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE0AEB64DC
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 04:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1701EEB64D9
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 05:32:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231140AbjF0EhC (ORCPT
+        id S229848AbjF0Fcq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Jun 2023 00:37:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33602 "EHLO
+        Tue, 27 Jun 2023 01:32:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231172AbjF0EgY (ORCPT
+        with ESMTP id S229562AbjF0Fcp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Jun 2023 00:36:24 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA4582136
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 21:35:47 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5766e49b802so58138427b3.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 21:35:47 -0700 (PDT)
+        Tue, 27 Jun 2023 01:32:45 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDBB51A4
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 22:32:43 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-3fb4146e8fcso8757255e9.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 22:32:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687840547; x=1690432547;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/xtK5HWFrotXOQTFAtNsXMiJLnjczB0bKaJqMYYAdAw=;
-        b=dq8Z6/zkvj5AhkzyvCcePMaY/4TJVw6FKcFL0Grg7cTDpD7U97mANBasuEHRqq5E6J
-         CeQG3laHxYsRQCw3jJIaAi640DkEL7fgTvW22VJ8WDVgEl+4NX2s598D87gax6gGuSoB
-         5hMicurS2TR9HLtZr0Wd1+mVC7zxtAjFXsaOKbM0in3upafjoLIvGDv/bWUYVrx7xhKU
-         cqHeiQZ1IEWQgkzY5fGck0b2h+bdXDUYdfXp4LE7J8DEVN8XccrdNwldcj6O43u/1TpF
-         Z9PZyLuTNMg27UDpArpdutfeETdpMIdn7hEG+m84SMTDXzgW2+FoZUTV0XQUDCUMEpna
-         RnBg==
+        d=linaro.org; s=google; t=1687843962; x=1690435962;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ooF2+9s/dYxk4t4QZ6dr9+cLdLfWELP5XjTCQq5ybIM=;
+        b=iPNim+rvo2A1bn4dMUpbF1e0wz6EHmQxUGg3fxS/+RmnfHG3J5BVlUWPudJHtH2vP8
+         YjqFyw/UGGt17s8u9TU6IQq+4HFYI8r7SpVepLLM6d6YG52UjNvRTbzcVS2qqSO/bvoO
+         kIzZ7bdb6MFPTOU2pgG3yd7iuvPxsPb6+zzjYIpoRDyrASAGY+jKEVnnnOzw76GM0/ch
+         Dtjy7JhZd8qqO/3fS5uJ3uDAxkmyI/nNc7aOg12onfRM6yluoX3USBNrkmwxUsGEaLxU
+         b9/6zfoWKBsZMdvTrB3nXg8UNo7575e2HYb4IY2h9B47hfUhESpgAA6/DmUh/Ti7xu6Y
+         rahg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687840547; x=1690432547;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/xtK5HWFrotXOQTFAtNsXMiJLnjczB0bKaJqMYYAdAw=;
-        b=OIuQQos2FHkh6+98rGmmy3dFQVWmPN9LWc0b61EGDrI334rNYZ1KTAr0a+x3ECQ4vX
-         rUAhy2VSK2yLo82oY8l9N5vXMtk8lGIdbRNzLIsTx04L8vq+UkFVax1tZ+gf6Odi8ylC
-         7N07zMYRg9S6P+p/dhULpYAiYLLnqmA0JoLlSX6u/qHjQRCD900V61qTVm1v3ZhAO+qP
-         6gjl3s+e5T10bYkIxBr9Yj0/fO6l6y48glMd6uL1gVgvhpm78MftsNBIqKmzzHr7PZ1a
-         cUnWZCmvGvaSvwEuUhFiygqPaRvrHVemyw0ntlY/OoQISnDy4R5lD7rIY23iZt9RJh/Y
-         FNWA==
-X-Gm-Message-State: AC+VfDwDS2Edj5DH0Jqt9WRdq+RQK+JSIGWSyORdZ63TPFaDa7mDRVEQ
-        QX7RJOsUM746yyjWaJUuCf4h+4ftOoIZ
-X-Google-Smtp-Source: ACHHUZ7GCRaJQ8Zjv8j32ZTbpzp8/lqeBYs2D+DAkuQ/ELDVxl53n8Ud2bKcAn8g+26DHXYGmXXZ/pEJnOgt
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:497e:a125:3cde:94f])
- (user=irogers job=sendgmr) by 2002:a81:b344:0:b0:56d:25f3:f940 with SMTP id
- r65-20020a81b344000000b0056d25f3f940mr13876270ywh.10.1687840547041; Mon, 26
- Jun 2023 21:35:47 -0700 (PDT)
-Date:   Mon, 26 Jun 2023 21:34:58 -0700
-In-Reply-To: <20230627043458.662048-1-irogers@google.com>
-Message-Id: <20230627043458.662048-14-irogers@google.com>
-Mime-Version: 1.0
-References: <20230627043458.662048-1-irogers@google.com>
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v1 13/13] perf parse-events: Remove ABORT_ON
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
+        d=1e100.net; s=20221208; t=1687843962; x=1690435962;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ooF2+9s/dYxk4t4QZ6dr9+cLdLfWELP5XjTCQq5ybIM=;
+        b=VN74FSlxyOEYtUM/4aA8Cq0FY4wynQhS8o7ZkAmD0BS38ZZqniLoRA4jhamHDhoZet
+         3iE5gA7JRVgxHZisBhqDJMSMpKmHMIOnSILXSSJK/2kFlQWuWS5Saxsqjt7l3UhmRol4
+         wkRThss7F70s01gp51UGpuqMuCZLEazy/00droZedBxA9oIVXiUMdQwi5EpdZNYlVY6h
+         EEWukJOGhnqCm6CZv4bP5xFK5YaewFmspkxNhEAxGNJJ9ufIeoCBQNFYCzew0E0+bqsC
+         e56s8kK/ecB7yr0DnfKlfp2T7DjqISuLUpJNZiXF2MhsKXSOixH4Lgllf4oLh5NF2SjN
+         +HJQ==
+X-Gm-Message-State: AC+VfDzUWX+3RE4rleV2IvVePVWTsu1FK10LzucBy3/i4rE3CTQgnp9T
+        oXcJGv1ygMcKqrDTmfz+gjIKyw==
+X-Google-Smtp-Source: ACHHUZ7/KMGanhWpS4V6XigbARqv+ptaFhhnRebXUfv/XgANDJmcyk+nRrK/8gABHNSsbrCfv0MRJg==
+X-Received: by 2002:a05:600c:3657:b0:3f6:8ba:6ea2 with SMTP id y23-20020a05600c365700b003f608ba6ea2mr28557361wmq.15.1687843962270;
+        Mon, 26 Jun 2023 22:32:42 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id x26-20020a1c7c1a000000b003fa740ef99esm9405573wmc.45.2023.06.26.22.32.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Jun 2023 22:32:39 -0700 (PDT)
+Date:   Tue, 27 Jun 2023 08:32:36 +0300
+From:   Dan Carpenter <dan.carpenter@linaro.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        linux-perf-users@vger.kernel.org, kernel-janitors@vger.kernel.org,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Ivan Babrou <ivan@cloudflare.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr
+Subject: Re: [PATCH v2] perf unwind: Fix map reference counts
+Message-ID: <a9732501-3eff-4b94-a9b2-53e5e5e5be1d@kadam.mountain>
+References: <20230623043107.4077510-1-irogers@google.com>
+ <64741e8e-e81a-afb9-9ce3-9c2d6baab44a@web.de>
+ <CAP-5=fVwhiGJEqTST2bfX8cUALpnTxELSHrvKtyJEPjqQjOacQ@mail.gmail.com>
+ <35569055-0873-4d5d-8c9c-78c818e9aa26@moroto.mountain>
+ <CAP-5=fWDnLDox3apMmvXmzVurFA=+sj7SEOOD7_2fam2VrGokA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fWDnLDox3apMmvXmzVurFA=+sj7SEOOD7_2fam2VrGokA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Prefer informative messages rather than none with ABORT_ON. Document
-one failure mode and add an error message for another.
+Ah, great.  Thanks, Ian.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/parse-events.y | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+The Reference Count Checking page is good information.  There is a bunch
+of interest in doing better QC so this stuff is good to know.
 
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 844646752462..454577f7aff6 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -22,12 +22,6 @@
- 
- void parse_events_error(YYLTYPE *loc, void *parse_state, void *scanner, char const *msg);
- 
--#define ABORT_ON(val) \
--do { \
--	if (val) \
--		YYABORT; \
--} while (0)
--
- #define PE_ABORT(val) \
- do { \
- 	if (val == -ENOMEM) \
-@@ -618,7 +612,9 @@ PE_RAW opt_event_config
- 		YYNOMEM;
- 	errno = 0;
- 	num = strtoull($1 + 1, NULL, 16);
--	ABORT_ON(errno);
-+	/* Given the lexer will only give [a-fA-F0-9]+ a failure here should be impossible. */
-+	if (errno)
-+		YYABORT;
- 	free($1);
- 	err = parse_events_add_numeric(_parse_state, list, PERF_TYPE_RAW, num, $2,
- 				       /*wildcard=*/false);
-@@ -978,7 +974,17 @@ PE_VALUE PE_ARRAY_RANGE PE_VALUE
- {
- 	struct parse_events_array array;
- 
--	ABORT_ON($3 < $1);
-+	if ($3 < $1) {
-+		struct parse_events_state *parse_state = _parse_state;
-+		struct parse_events_error *error = parse_state->error;
-+		char *err_str;
-+
-+		if (asprintf(&err_str, "Expected '%ld' to be less-than '%ld'", $3, $1) < 0)
-+			err_str = NULL;
-+
-+		parse_events_error__handle(error, @1.first_column, err_str, NULL);
-+		YYABORT;
-+	}
- 	array.nr_ranges = 1;
- 	array.ranges = malloc(sizeof(array.ranges[0]));
- 	if (!array.ranges)
--- 
-2.41.0.162.gfafddb0af9-goog
+So in this case, it's probably difficult to assign a Fixes tag and that's
+fine.  Whatever.  But I'm not a huge fan of the "Leave off the Fixes tag"
+approach to preventing backports.  There should be a better system for
+that.  Maybe there should be a tag for that?  Or possibly that's too
+complicated...  I'm not sure.
 
+Anyway, let's leave it for now.  If it's really a problem then we'll run
+into it again later and we can think about it at that point.
+
+regards,
+dan carpenter
