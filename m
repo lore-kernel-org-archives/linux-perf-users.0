@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BA4C0015E
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 18:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC71EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 18:11:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230229AbjF0SKz (ORCPT
+        id S231379AbjF0SLT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Jun 2023 14:10:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42692 "EHLO
+        Tue, 27 Jun 2023 14:11:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230121AbjF0SKx (ORCPT
+        with ESMTP id S230085AbjF0SKv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Jun 2023 14:10:53 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A3B42D42
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jun 2023 11:10:51 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-56ff81be091so67558467b3.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jun 2023 11:10:51 -0700 (PDT)
+        Tue, 27 Jun 2023 14:10:51 -0400
+Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D101E1FE0
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jun 2023 11:10:48 -0700 (PDT)
+Received: by mail-pg1-x54a.google.com with SMTP id 41be03b00d2f7-55b0e3f3cc9so465292a12.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jun 2023 11:10:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687889450; x=1690481450;
+        d=google.com; s=20221208; t=1687889448; x=1690481448;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=pylB9mwmAKl3TUVj6l4nL/JaxRJCwOWbixQnNb1VbG4=;
-        b=DwonPv3+k7d87RYPLiQHRluN8geVSL/JuBedm0iIRSSridMUKd+QRAh1UTNbrX4Rc+
-         2tRuCmYb7a+HMHtj2KZX571wOPyJrGR60Dq3/+JaFxSG0GwbdlvEzEp6fxBQetHs3DJ3
-         yFXaBGg9M+J8lE9iiX4UNTSDmX6x5pSWn2U5u/BIDPEoK5Qg185uhmRrS8ED6F1LE5jG
-         dabyrr6kNBhj3hMpTPKXaptlQ3c9GVv9jv0jzRjvzTvVfngEgYWKc5xQfRpm1tT/IC7W
-         irQV1RF7wayw3JHLbxBub63u0hwGyuMWjq1Y/13neXOMviL18Rv36saBLHX/JYwsdlo6
-         mElg==
+        bh=E3xFrkPN2+sT/sY0g+uTpgnQ+XoDit6j6d+F4zxTHTs=;
+        b=mDO2RZPnw3ueZUEgv1txbCfJHsBa5ZLGazmnDmvs1Rka9T1sryG8ukUK81nej5lSNu
+         ORauHXjoy1ZWTbiDpbmxh/Ik0yEX7nG/6Kexgltr82+VRMVArq9QsoYWy6GTx+sXEhB3
+         urulGJs2wXbd8LaN7yG5ZJqtHm+FAftrzBsdkM2+8018xoe9DHQG72o2CvaG1m85vGlz
+         5IEf668Pba9cgBJXVY9EVU3x9C/nLzyHwbwQ9aRW7k03A7HvDUY/BXQN3+h7C74R5BUU
+         hnFpuLkVqktQKdKBdU8mQoYsp4xWyf4aNgy7FU5a/VIu3RjDzRNmIU//UnIc4IDcJBDk
+         CsNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687889450; x=1690481450;
+        d=1e100.net; s=20221208; t=1687889448; x=1690481448;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pylB9mwmAKl3TUVj6l4nL/JaxRJCwOWbixQnNb1VbG4=;
-        b=YLyGLT8ZTpO1yXCb8Q2huupvd0owOn0SphR0wARhCyrubdnaMops8O3VjUL6wbJVUs
-         h86eWoZmFgZvoVkaIeGlaC3YjXF5l8TKIklwjAmAcBUkSx5R+1Lg0A7toPPUX+RuKD4u
-         COsiQql8MCsAhNBeOsafm0OywwJIvEPca2kWlQUlKRL+JkgU0bmfjST5VlI7lJKniFRa
-         n0jOzKI7Gk3i/L4r9biSULAQpZp/UBTIRjFFF0QbqeMOhZR2RGgoOWCkUCoQuibOrMXB
-         KMkPdMiNbPuHA5ezIOoqauCagfAVVq/fZ2i6+MQCrWL22ONPknjc1hjzA42qF+XfmSmf
-         KCqA==
-X-Gm-Message-State: AC+VfDxdEFHI9ofeCyyC/cfCzcKueDkvC5ORN5KTxorahYuFG/lsVxcB
-        I65MNDMdJpQ+pdrJFswAD1PqlZhoKe4P
-X-Google-Smtp-Source: ACHHUZ4XYIxsTEbA4adKWxNXnm8MjJHZ+dVuNGVRGkIxnc/aVH6goL6IK/5IA70vJOxc3jszcWLIrfctyYob
+        bh=E3xFrkPN2+sT/sY0g+uTpgnQ+XoDit6j6d+F4zxTHTs=;
+        b=AtsoewhYfWTyk/YcbLhVEk4hCV+i4hA6ITHVSAQhzS7zgVlY0r+Fk1GYuAOGHZS2S8
+         2YLoKSP+oVjqkLm0WR82FQdA0tEWfLSZBfuonmxphFrU4rquhFtLB8SJVIO7z0Dp6ReB
+         Wm4M+JVaBSKZPNnuIUm4QH+tGzGYsbVle+CMWlWwXnYYhREy798hbjCBzLBHHhNgI71X
+         0YREFItaXZT9CsA0clpJlT3HMjE5ve+zaHmZKyDtC/Ywo2Qq6+MQhA2S4zdII1H8cPUa
+         UnmlEZrbNfn7qSdt90A/+SQ3GVnjmAn4vvR7E/J5sgpXWtjcTGhBsZ+NS0OqSeRlUJ9b
+         aSRA==
+X-Gm-Message-State: AC+VfDyaaduMi7bRHuZOzzjou9ZC24UBnHk8e57lZkMOx0YEmxecFjYX
+        G7jMzUW6rruXk9OnLrQBicCkr3523Pho
+X-Google-Smtp-Source: ACHHUZ5mB+sRufre0MS10vvaUmW/lZoKm7KiOFOjWsJZZ/Z0hFb1Aj5m0AyV+IoElXQMnCvyrcjdO2AbKUr/
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a518:9a69:cf62:b4d9])
- (user=irogers job=sendgmr) by 2002:a81:ae64:0:b0:573:7ae2:2684 with SMTP id
- g36-20020a81ae64000000b005737ae22684mr9718244ywk.4.1687889450770; Tue, 27 Jun
- 2023 11:10:50 -0700 (PDT)
-Date:   Tue, 27 Jun 2023 11:10:21 -0700
+ (user=irogers job=sendgmr) by 2002:a17:90a:c695:b0:262:dc49:3bff with SMTP id
+ n21-20020a17090ac69500b00262dc493bffmr1357157pjt.5.1687889448289; Tue, 27 Jun
+ 2023 11:10:48 -0700 (PDT)
+Date:   Tue, 27 Jun 2023 11:10:20 -0700
 In-Reply-To: <20230627181030.95608-1-irogers@google.com>
-Message-Id: <20230627181030.95608-5-irogers@google.com>
+Message-Id: <20230627181030.95608-4-irogers@google.com>
 Mime-Version: 1.0
 References: <20230627181030.95608-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v2 04/13] perf parse-events: Add more comments to parse_events_state
+Subject: [PATCH v2 03/13] perf parse-events: Remove two unused tokens
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -73,43 +73,26 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Improve documentation of struct parse_events_state.
+The tokens PE_PREFIX_RAW and PE_PREFIX_GROUP are unused so remove them.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/parse-events.h | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/perf/util/parse-events.y | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index b0eb95f93e9c..b37e5ee193a8 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -121,17 +121,25 @@ struct parse_events_error {
- };
- 
- struct parse_events_state {
-+	/* The list parsed events are placed on. */
- 	struct list_head	   list;
-+	/* The updated index used by entries as they are added. */
- 	int			   idx;
-+	/* Error information. */
- 	struct parse_events_error *error;
-+	/* Used by BPF event creation. */
- 	struct evlist		  *evlist;
-+	/* Holds returned terms for term parsing. */
- 	struct list_head	  *terms;
-+	/* Start token. */
- 	int			   stoken;
-+	/* Special fake PMU marker for testing. */
- 	struct perf_pmu		  *fake_pmu;
- 	/* If non-null, when wildcard matching only match the given PMU. */
- 	const char		  *pmu_filter;
- 	/* Should PE_LEGACY_NAME tokens be generated for config terms? */
- 	bool			   match_legacy_cache_terms;
-+	/* Were multiple PMUs scanned to find events? */
- 	bool			   wild_card_pmus;
- };
- 
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index 4ee6c6865655..b09a5fa92144 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -61,7 +61,7 @@ static void free_list_evsel(struct list_head* list_evsel)
+ %token PE_BPF_OBJECT PE_BPF_SOURCE
+ %token PE_MODIFIER_EVENT PE_MODIFIER_BP PE_BP_COLON PE_BP_SLASH
+ %token PE_LEGACY_CACHE
+-%token PE_PREFIX_MEM PE_PREFIX_RAW PE_PREFIX_GROUP
++%token PE_PREFIX_MEM
+ %token PE_ERROR
+ %token PE_ARRAY_ALL PE_ARRAY_RANGE
+ %token PE_DRV_CFG_TERM
 -- 
 2.41.0.162.gfafddb0af9-goog
 
