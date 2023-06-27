@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A51EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 04:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10735EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 04:36:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231222AbjF0Eg1 (ORCPT
+        id S230240AbjF0Egi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Jun 2023 00:36:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33604 "EHLO
+        Tue, 27 Jun 2023 00:36:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230449AbjF0EgM (ORCPT
+        with ESMTP id S229780AbjF0EgT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Jun 2023 00:36:12 -0400
+        Tue, 27 Jun 2023 00:36:19 -0400
 Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2077A1BF1
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 21:35:41 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-573cacf4804so54581317b3.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 21:35:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A394A2107
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 21:35:45 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-56942442eb0so52811647b3.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jun 2023 21:35:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687840540; x=1690432540;
+        d=google.com; s=20221208; t=1687840545; x=1690432545;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=HmcwCCrzohBexPPxiwkNS29383WCu9lx0QPsW2KVyZ4=;
-        b=dX0nzwKDmwRLRzUElRbb/ZUhU8CqDyxurklThpje/xh9AZe7uPANzlcnjMfd3Nphxa
-         Feqs7E72EoJkDBbOEX4ndFRoShyAYkJujZwyfhO1l0BBwA3Gs2u84tlmKI2znvCpOvp/
-         vCcjREuJgs2pJyJlWRCpukXwBO1MPUhGPrdg4gHR/QMtKMD6FsrCfo+0PU6C3sAzWV+h
-         zZxLMQMNDhyZ6p9vVplVkJdASPfquPFGTb7pVzuvBqIZLNvhD94Og/PMKu8UPtxgdudB
-         6fjGTRzje7pmiDFVUrksxcOstqsnJ2L4AE5B3/lV6jQBMF+ctiJPrlDEsfkLzv215Rse
-         00OQ==
+        bh=UFXjOGQUuRL/6Lf/qhHtjD4wLyWg5SPpnyU6+2nAMFU=;
+        b=WuzxF4hiC134VQthgbEQwiSQJ7Ssgcg+mMbUKJzZP62pLb+9TsBeOV1/RsS6C9p20m
+         wE3eSW7aLPghlDc8f/QiGz7fCKCmgiNodA4Zdzc3yUfIBpdXjzbAfQyai2Ufubgv7vh/
+         //L5QISuq82uO+fWFgg55dds2XDlvms0SjwykGX8Py1y/ksgnDtj8PHCL/HTJAfL4p6/
+         SAJtQ0S355Hdw/TDxIY7W3nymKHV+BYgjDnlM2tG8jsYHozdwNGGmK7YzZQWhXjjg9ke
+         tPUOSjMNDH4LrpUZ1FU2AgQaU57l/jkUf41g9xNWBGrG87slOTNiYJwLyAR93hpvV1Mv
+         hnJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687840540; x=1690432540;
+        d=1e100.net; s=20221208; t=1687840545; x=1690432545;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HmcwCCrzohBexPPxiwkNS29383WCu9lx0QPsW2KVyZ4=;
-        b=F9Wt7D4Q6okvYUqfWcmfC746bZB4iK15s5nwst9QsVxTp2TJt+lW6M0n8HDdd/tYPu
-         NgXwNqnAkRycfyqdqQpcDOMW/a+vB1Kz9r4TpHZtc3UjIDQg5QJmCLdVaUlKifhzAKAJ
-         jnx08oEFVZHV5YqL6vie+0yPN2pnuuvUDK8cb6qx82cGeg63c27CEIyfYK1n6GcrX/bt
-         3S7qeCudi8jey+U9vw1HhGtNStI8KRw61RG33kGptUrpCoDWE+2gb6zXTyQf1/D7TBI0
-         Xc7k4Er52J8ZAA4YCRWVXNwBH1RDB4+h6MEK8ELd05KEru9/u5uUR9798CDuhFcOqPde
-         LYjQ==
-X-Gm-Message-State: AC+VfDxE3XdL4W7zjEd/OT8DzvuUvsrlkveDFQWXwkjOKuWwjM66ryjL
-        uc0GipPAq9vDZCFhb9/dcqVHR1IBY+oC
-X-Google-Smtp-Source: ACHHUZ6Ij9UVX+Y1eE/fAeD49qeUrfoIUY5V8xWSHMepARTJgN2SMH/Cpx4WFc7JhU4gPkhTdXdvWdR9wDWu
+        bh=UFXjOGQUuRL/6Lf/qhHtjD4wLyWg5SPpnyU6+2nAMFU=;
+        b=IRvC4wFiq5aGuReeon/pXC0Wp6HhgdhuY/fgw2AAh5mDSGsZFWaCeHl1WqAuTC3tx3
+         6SIt1h9ITG38G+DHoCadV6UwLnvodnYTtD7ADvTtOcqkUAH3J23jmUSJIpSyHw+yBV0V
+         h6cb6jVwaSVTSdiLRAqHc+/Xp3YGVmDf4LD3B6RZcn6U3WR6ZKKbo3L3D9zBJJcKrbgQ
+         pvZ0N/HWeWFeIcuCZk25e4RHIsDSeBTzuKYi2j0xcHnOGkrosoZ1OAAF47mu/Wm1HRnA
+         99UJWJiYd/jH3xl6XZPD5q4EJy5+pOYT3KSsqKNF22X17FyK1+d/pfo/9wU3bgOLYsUX
+         lNUw==
+X-Gm-Message-State: AC+VfDzSOECoE+L4tY7Glv/FXckgIMPp45vVMLqtG8SSn/27xg7865Ao
+        2zt0VxKW2ETpXGMZb8GxgJm0xyv0rctc
+X-Google-Smtp-Source: ACHHUZ5V6kpYqAE9w966HoP/tbn8OzhGrmerxYboNRZvOVEgWJy+GuW6GPPWYQmaTpLKG9938psz7F119P3b
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:497e:a125:3cde:94f])
- (user=irogers job=sendgmr) by 2002:a25:e0c6:0:b0:bc7:f6af:8cff with SMTP id
- x189-20020a25e0c6000000b00bc7f6af8cffmr14521026ybg.2.1687840540338; Mon, 26
- Jun 2023 21:35:40 -0700 (PDT)
-Date:   Mon, 26 Jun 2023 21:34:55 -0700
+ (user=irogers job=sendgmr) by 2002:a81:4505:0:b0:576:af04:3495 with SMTP id
+ s5-20020a814505000000b00576af043495mr2838921ywa.9.1687840544829; Mon, 26 Jun
+ 2023 21:35:44 -0700 (PDT)
+Date:   Mon, 26 Jun 2023 21:34:57 -0700
 In-Reply-To: <20230627043458.662048-1-irogers@google.com>
-Message-Id: <20230627043458.662048-11-irogers@google.com>
+Message-Id: <20230627043458.662048-13-irogers@google.com>
 Mime-Version: 1.0
 References: <20230627043458.662048-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v1 10/13] perf parse-events: Additional error reporting
+Subject: [PATCH v1 12/13] perf parse-events: Improve location for add pmu
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -73,98 +73,139 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When no events or PMUs match report an error for event_pmu:
+Improve the location for add PMU for cases when PMUs aren't found.
 
-Before:
-```
-$ perf stat -e 'asdfasdf' -a sleep 1
-Run 'perf list' for a list of valid events
-
- Usage: perf stat [<options>] [<command>]
-
-    -e, --event <event>   event selector. use 'perf list' to list available events
-```
-
-After:
-```
-$ perf stat -e 'asdfasdf' -a sleep 1
-event syntax error: 'asdfasdf'
-                     \___ Bad event name
-
-Unabled to find PMU or event on a PMU of 'asdfasdf'
-Run 'perf list' for a list of valid events
-
- Usage: perf stat [<options>] [<command>]
-
-    -e, --event <event>   event selector. use 'perf list' to list available events
-```
-
-Fixes the inadvertent removal when hybrid parsing was modified.
-
-Fixes: ("70c90e4a6b2f perf parse-events: Avoid scanning PMUs before parsing")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/parse-events.y | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+ tools/perf/util/parse-events.c | 12 +++++++-----
+ tools/perf/util/parse-events.h |  4 ++--
+ tools/perf/util/parse-events.y |  8 ++++----
+ 3 files changed, 13 insertions(+), 11 deletions(-)
 
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index a92545908626..473746c9f3c4 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1566,13 +1566,14 @@ static bool config_term_percore(struct list_head *config_terms)
+ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 			 struct list_head *list, char *name,
+ 			 struct list_head *head_config,
+-			 bool auto_merge_stats)
++			 bool auto_merge_stats, void *loc_)
+ {
+ 	struct perf_event_attr attr;
+ 	struct perf_pmu_info info;
+ 	struct perf_pmu *pmu;
+ 	struct evsel *evsel;
+ 	struct parse_events_error *err = parse_state->error;
++	YYLTYPE *loc = loc_;
+ 	LIST_HEAD(config_terms);
+ 
+ 	pmu = parse_state->fake_pmu ?: perf_pmus__find(name);
+@@ -1596,7 +1597,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 		if (asprintf(&err_str,
+ 				"Cannot find PMU `%s'. Missing kernel support?",
+ 				name) >= 0)
+-			parse_events_error__handle(err, 0, err_str, NULL);
++			parse_events_error__handle(err, loc->first_column, err_str, NULL);
+ 		return -EINVAL;
+ 	}
+ 	if (head_config)
+@@ -1682,12 +1683,13 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 
+ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+ 			       char *str, struct list_head *head,
+-			       struct list_head **listp)
++			       struct list_head **listp, void *loc_)
+ {
+ 	struct parse_events_term *term;
+ 	struct list_head *list = NULL;
+ 	struct list_head *orig_head = NULL;
+ 	struct perf_pmu *pmu = NULL;
++	YYLTYPE *loc = loc_;
+ 	int ok = 0;
+ 	char *config;
+ 
+@@ -1734,7 +1736,7 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+ 				parse_events_copy_term_list(head, &orig_head);
+ 				if (!parse_events_add_pmu(parse_state, list,
+ 							  pmu->name, orig_head,
+-							  auto_merge_stats)) {
++							  auto_merge_stats, loc)) {
+ 					pr_debug("%s -> %s/%s/\n", str,
+ 						 pmu->name, alias->str);
+ 					parse_state->wild_card_pmus = true;
+@@ -1747,7 +1749,7 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+ 
+ 	if (parse_state->fake_pmu) {
+ 		if (!parse_events_add_pmu(parse_state, list, str, head,
+-					  /*auto_merge_stats=*/true)) {
++					  /*auto_merge_stats=*/true, loc)) {
+ 			pr_debug("%s -> %s/%s/\n", str, "fake_pmu", str);
+ 			ok++;
+ 		}
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index cabbe70adb82..e59b33805886 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -202,7 +202,7 @@ int parse_events_add_breakpoint(struct parse_events_state *parse_state,
+ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 			 struct list_head *list, char *name,
+ 			 struct list_head *head_config,
+-			 bool auto_merge_stats);
++			bool auto_merge_stats, void *loc);
+ 
+ struct evsel *parse_events__add_event(int idx, struct perf_event_attr *attr,
+ 				      const char *name, const char *metric_id,
+@@ -211,7 +211,7 @@ struct evsel *parse_events__add_event(int idx, struct perf_event_attr *attr,
+ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+ 			       char *str,
+ 			       struct list_head *head_config,
+-			       struct list_head **listp);
++			       struct list_head **listp, void *loc);
+ 
+ int parse_events_copy_term_list(struct list_head *old,
+ 				 struct list_head **new);
 diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index f090a85c4518..a636a7db6e6f 100644
+index 50f5b819de37..844646752462 100644
 --- a/tools/perf/util/parse-events.y
 +++ b/tools/perf/util/parse-events.y
-@@ -291,7 +291,6 @@ PE_NAME opt_pmu_config
- {
- 	struct parse_events_state *parse_state = _parse_state;
- 	struct list_head *list = NULL, *orig_terms = NULL, *terms= NULL;
--	struct parse_events_error *error = parse_state->error;
- 	char *pattern = NULL;
- 
- #define CLEANUP						\
-@@ -303,9 +302,6 @@ PE_NAME opt_pmu_config
- 		free(pattern);				\
- 	} while(0)
- 
--	if (error)
--		error->idx = @1.first_column;
--
- 	if (parse_events_copy_term_list($2, &orig_terms)) {
- 		CLEANUP;
+@@ -313,7 +313,7 @@ PE_NAME opt_pmu_config
  		YYNOMEM;
-@@ -360,6 +356,14 @@ PE_NAME opt_pmu_config
+ 	}
+ 	/* Attempt to add to list assuming $1 is a PMU name. */
+-	if (parse_events_add_pmu(parse_state, list, $1, $2, /*auto_merge_stats=*/false)) {
++	if (parse_events_add_pmu(parse_state, list, $1, $2, /*auto_merge_stats=*/false, &@1)) {
+ 		struct perf_pmu *pmu = NULL;
+ 		int ok = 0;
+ 
+@@ -341,7 +341,7 @@ PE_NAME opt_pmu_config
+ 					YYNOMEM;
+ 				}
+ 				if (!parse_events_add_pmu(parse_state, list, pmu->name, terms,
+-							  auto_merge_stats)) {
++							  auto_merge_stats, &@1)) {
+ 					ok++;
+ 					parse_state->wild_card_pmus = true;
+ 				}
+@@ -352,7 +352,7 @@ PE_NAME opt_pmu_config
+ 		if (!ok) {
+ 			/* Failure to add, assume $1 is an event name. */
+ 			zfree(&list);
+-			ok = !parse_events_multi_pmu_add(parse_state, $1, $2, &list);
++			ok = !parse_events_multi_pmu_add(parse_state, $1, $2, &list, &@1);
  			$2 = NULL;
  		}
  		if (!ok) {
-+			struct parse_events_error *error = parse_state->error;
-+			char *help;
-+
-+			if (asprintf(&help, "Unabled to find PMU or event on a PMU of '%s'", $1) < 0)
-+				help = NULL;
-+			parse_events_error__handle(error, @1.first_column,
-+						   strdup("Bad event or PMU"),
-+						   help);
- 			CLEANUP;
- 			YYABORT;
- 		}
-@@ -376,9 +380,18 @@ PE_NAME sep_dc
+@@ -379,7 +379,7 @@ PE_NAME sep_dc
+ 	struct list_head *list;
  	int err;
  
- 	err = parse_events_multi_pmu_add(_parse_state, $1, NULL, &list);
--	free($1);
--	if (err < 0)
-+	if (err < 0) {
-+		struct parse_events_state *parse_state = _parse_state;
-+		struct parse_events_error *error = parse_state->error;
-+		char *help;
-+
-+		if (asprintf(&help, "Unabled to find PMU or event on a PMU of '%s'", $1) < 0)
-+			help = NULL;
-+		parse_events_error__handle(error, @1.first_column, strdup("Bad event name"), help);
-+		free($1);
- 		PE_ABORT(err);
-+	}
-+	free($1);
- 	$$ = list;
- }
- 
+-	err = parse_events_multi_pmu_add(_parse_state, $1, NULL, &list);
++	err = parse_events_multi_pmu_add(_parse_state, $1, NULL, &list, &@1);
+ 	if (err < 0) {
+ 		struct parse_events_state *parse_state = _parse_state;
+ 		struct parse_events_error *error = parse_state->error;
 -- 
 2.41.0.162.gfafddb0af9-goog
 
