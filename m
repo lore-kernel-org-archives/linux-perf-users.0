@@ -2,104 +2,180 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60176C001B0
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 07:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D36AEB64DD
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 08:36:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230377AbjF0HwO (ORCPT
+        id S230002AbjF0IgY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Jun 2023 03:52:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44616 "EHLO
+        Tue, 27 Jun 2023 04:36:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230232AbjF0HwN (ORCPT
+        with ESMTP id S229720AbjF0IgH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Jun 2023 03:52:13 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9DC62268D
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jun 2023 00:52:05 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57D222F4;
-        Tue, 27 Jun 2023 00:52:49 -0700 (PDT)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC0903F663;
-        Tue, 27 Jun 2023 00:52:03 -0700 (PDT)
-Message-ID: <334989bf-5501-494c-f246-81878fd2fed8@arm.com>
-Date:   Tue, 27 Jun 2023 08:52:02 +0100
+        Tue, 27 Jun 2023 04:36:07 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94AE5E6F;
+        Tue, 27 Jun 2023 01:35:40 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-3fa94ea1caaso18042585e9.1;
+        Tue, 27 Jun 2023 01:35:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687854939; x=1690446939;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=j5dQeYHYKYlJGoRN0EElGK6VPybOH+UnW7mCvvK0jmI=;
+        b=bMdPxlNve1ptwbBvvg3YZSu7PK70OsE4K3JS3uD/L+E9SjPnZbWxWyEcUupbNIFjbF
+         CGMLLfuGZV7S5bP7oRgxd1dUTFUmM2CIlm30RSqDXJ43NOx/VIZN6VDJpi7wM0Br6xas
+         Hvk1dAyK98XbcVJ4I816D+gVz5/43og1o8p+BCgH2ZzRqjXBnmz99VHYm9jmHFWoNolJ
+         Xy+Eqv+qLDw6Fuz/BIm3S6mQ1LBVeTuZ97N3wRWnQYURYITefb0U4UrQ6uNx6TXzXvlD
+         oHxGu3Mz1paoaqJDd7ufeU/bQ0IfqOoWZe3+V/MYlVsNKsvF87QA4TnSWv6EGmjsbzvo
+         Lwdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687854939; x=1690446939;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j5dQeYHYKYlJGoRN0EElGK6VPybOH+UnW7mCvvK0jmI=;
+        b=Fa6YRNlnLur2q21Q5l+Sk1mqcAxQHkikGGITQENF6wrumcZwnX3GJlagPMJMRgUCta
+         LkSIOq0W6A3TIfoKhq4srJY0M1uuqT1Q03EEVZ01KomWMsH6Qa4TaRowcXsiL8HRrA/C
+         SzxWAOSs0Zx178xJcD/YdnEpuCZwaapZ/w1dwMRqN2V+YixLuK9IDc+txj6DJAorKK56
+         GI+naoa1U7XSnA259xVHnJn+E7eD8m3c09aOPEF64Pvfgtfq5hujDjYb7Ap1MBdOMeCm
+         YWFGn6L2Te+j1EatpOKhstonfPspzpNHlfXG2vbE7Qsu4uwLsHz2usTIyRSeJWUTM33m
+         9vaQ==
+X-Gm-Message-State: AC+VfDxFMqbS+VCx6q/WTwBiQzvdjyEMLWnzLuckfpIKapAWrFgrc+2L
+        0qGvEsmCU8R9w7y6nWrt4t0=
+X-Google-Smtp-Source: ACHHUZ6lMfDIQEfRLBxoYy6NK8cy1ffoV03IuwFDgbqQ1Lmh8SDB7VL77m97d9KgkHl3HSWa0jjOow==
+X-Received: by 2002:a05:600c:511f:b0:3fa:9996:8e03 with SMTP id o31-20020a05600c511f00b003fa99968e03mr4416331wms.10.1687854938850;
+        Tue, 27 Jun 2023 01:35:38 -0700 (PDT)
+Received: from krava (85-160-25-217.reb.o2.cz. [85.160.25.217])
+        by smtp.gmail.com with ESMTPSA id z16-20020a5d4d10000000b00313eeca9f4asm6184873wrt.14.2023.06.27.01.35.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Jun 2023 01:35:38 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Tue, 27 Jun 2023 10:35:28 +0200
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf tools: Add missing else to cmd_daemon subcommand
+ condition
+Message-ID: <ZJqfUL1gnkTbUx5n@krava>
+References: <20230626201606.2514679-1-jolsa@kernel.org>
+ <CAM9d7chMGzEJ3GKyxXD-RwUpjje7u3Cp810TRD+ZGgCT+mFrEQ@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH 13/22] tools/perf/tests: Fix shellcheck warning for
- coresight.sh shell script
-Content-Language: en-US
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, acme@kernel.org, jolsa@kernel.org,
-        irogers@google.com, namhyung@kernel.org, ravi.bangoria@amd.com,
-        john.g.garry@oracle.com
-References: <20230621083021.71203-1-atrajeev@linux.vnet.ibm.com>
- <20230621083021.71203-14-atrajeev@linux.vnet.ibm.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20230621083021.71203-14-atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7chMGzEJ3GKyxXD-RwUpjje7u3Cp810TRD+ZGgCT+mFrEQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 21/06/2023 09:30, Athira Rajeev wrote:
-> From: Kajol Jain <kjain@linux.ibm.com>
+On Mon, Jun 26, 2023 at 01:58:48PM -0700, Namhyung Kim wrote:
+> Hi Jiri,
 > 
-> Running shellcheck on coresight.sh throws below warning:
+> On Mon, Jun 26, 2023 at 1:16 PM Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > Namhyung reported segfault in perf daemon start command.
+> >
+> > It's caused by extra check on argv[0] which is set to NULL by previous
+> > __cmd_start call. Adding missing else to skip the extra check.
+> >
+> > Fixes: 92294b906e6c ("perf daemon: Dynamically allocate path to perf")
+> > Reported-by: Namhyung Kim <namhyung@kernel.org>
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > 
-> In lib/coresight.sh line 1:
-> ^-- SC2148 (error): Tips depend on target shell and yours is unknown. Add a shebang or a 'shell' directive.
+> Thanks for the fix.  Now it runs ok.
 > 
-> In lib/coresight.sh line 13:
-> PERFRECOPT="$PERFRECMEM -e cs_etm//u"
-> ^--------^ SC2034 (warning): PERFRECOPT appears unused. Verify use (or export if used externally).
+> Before:
+>   $ sudo ./perf test -v daemon
+>    85: daemon operations                                               :
+>   --- start ---
+>   test child forked, pid 82420
+>   test daemon list
+>   ./tests/shell/daemon.sh: line 133: 82426 Segmentation fault
+> perf daemon start --config ${config}
+>   test daemon reconfig
+>   ./tests/shell/daemon.sh: line 133: 82520 Segmentation fault
+> perf daemon start --config ${config}
+>   test daemon stop
+>   ./tests/shell/daemon.sh: line 133: 82636 Segmentation fault
+> perf daemon start --config ${config}
+>   test daemon signal
+>   ./tests/shell/daemon.sh: line 133: 82674 Segmentation fault
+> perf daemon start --config ${config}
+>   signal 12 sent to session 'test [82676]'
+>   signal 12 sent to session 'test [82676]'
+>   test daemon ping
+>   ./tests/shell/daemon.sh: line 133: 82702 Segmentation fault
+> perf daemon start --config ${config}
+>   test daemon lock
+>   ./tests/shell/daemon.sh: line 133: 82734 Segmentation fault
+> perf daemon start --config ${config}
+>   test child finished with 0
+>   ---- end ----
+>   daemon operations: Ok
 > 
-> Fixed the warnings by:
-> - Adding shell directive
-> - Using export for PERFRECOPT variable
+> Maybe we need to investigate more why it was ok..
+> But at least I don't see segfaults anymore
+
+yea, for some reason parse_options would put NULL into argv[0]
+
+I'll try to check what changed, in any case the fix makes the
+condition alligned with the other legs and fixes the segfault
+
+jirka
+
 > 
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> ---
->  tools/perf/tests/shell/lib/coresight.sh | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/perf/tests/shell/lib/coresight.sh b/tools/perf/tests/shell/lib/coresight.sh
-> index 6c3d34ec64d8..c7d97a0186c7 100644
-> --- a/tools/perf/tests/shell/lib/coresight.sh
-> +++ b/tools/perf/tests/shell/lib/coresight.sh
-> @@ -1,3 +1,4 @@
-> +#!/bin/bash
-
-There is a comment a couple of lines below this that says the shebang
-was excluded for a reason. It's probably worth leaving it excluded or
-updating the comment.
-
->  # SPDX-License-Identifier: GPL-2.0
->  # Carsten Haitzler <carsten.haitzler@arm.com>, 2021
->  
-> @@ -10,7 +11,7 @@
->  
->  # perf record options for the perf tests to use
->  PERFRECMEM="-m ,16M"
-> -PERFRECOPT="$PERFRECMEM -e cs_etm//u"
-> +export PERFRECOPT="$PERFRECMEM -e cs_etm//u"
-
-This might silence the warning, but there are other variables like DATD
-that are used in the sub-test scripts in the same way. They just don't
-trigger the warning because they're also used in the top level one.
-
-I think this change makes the code more misleading than solving any
-problems. The coresight.sh script is sourced in the same process as the
-sub tests so exporting variables isn't needed which is why it already
-works without this change.
-
->  
->  TOOLS=$(dirname $0)
->  DIR="$TOOLS/$TEST"
+> After:
+>    85: daemon operations                                               :
+>   --- start ---
+>   test child forked, pid 80752
+>   test daemon list
+>   test daemon reconfig
+>   test daemon stop
+>   test daemon signal
+>   signal 12 sent to session 'test [81022]'
+>   signal 12 sent to session 'test [81022]'
+>   test daemon ping
+>   test daemon lock
+>   test child finished with 0
+>   ---- end ----
+>   daemon operations: Ok
+> 
+> 
+> Tested-by: Namhyung Kim <namhyung@kernel.org>
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+> 
+> > ---
+> >  tools/perf/builtin-daemon.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
+> > index f5674d824a40..83954af36753 100644
+> > --- a/tools/perf/builtin-daemon.c
+> > +++ b/tools/perf/builtin-daemon.c
+> > @@ -1524,7 +1524,7 @@ int cmd_daemon(int argc, const char **argv)
+> >         if (argc) {
+> >                 if (!strcmp(argv[0], "start"))
+> >                         ret = __cmd_start(&__daemon, daemon_options, argc, argv);
+> > -               if (!strcmp(argv[0], "signal"))
+> > +               else if (!strcmp(argv[0], "signal"))
+> >                         ret = __cmd_signal(&__daemon, daemon_options, argc, argv);
+> >                 else if (!strcmp(argv[0], "stop"))
+> >                         ret = __cmd_stop(&__daemon, daemon_options, argc, argv);
+> > --
+> > 2.41.0
+> >
