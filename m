@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45408EB64DC
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 255A7EB64D9
 	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 18:11:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230187AbjF0SLV (ORCPT
+        id S230113AbjF0SLU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Jun 2023 14:11:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42812 "EHLO
+        Tue, 27 Jun 2023 14:11:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230295AbjF0SK6 (ORCPT
+        with ESMTP id S230205AbjF0SKy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Jun 2023 14:10:58 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58322272D
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jun 2023 11:10:56 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-bfee5fd909aso5496071276.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jun 2023 11:10:56 -0700 (PDT)
+        Tue, 27 Jun 2023 14:10:54 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C23611FE0
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jun 2023 11:10:53 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-56ff81be091so67558977b3.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jun 2023 11:10:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687889455; x=1690481455;
+        d=google.com; s=20221208; t=1687889453; x=1690481453;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=hfYhuJ0XDyvK4n4WNbDnoJ3i1epMtBqut75yAMaV+gY=;
-        b=fJ/k7mucYzBMSvs1vvV15ie93EM0pdSvxSUdAibrdcK8Xlo3QJke/WMQV3YHip6PPd
-         L8Cd8nJEThKRdGQ2VTW41re3ZnkIycotbObtvgaoqLFhCNpiEFkiQeN6l4fYZ7prWdt8
-         uV5Shhvouyj7E1gCloG+G40JhxYFGkEvI2ecrkyEtmkLXzoh1msQmywG5djMLzyl75C7
-         /Ru0IM92CtF1HiniTaMAMp+6bztbSXOudj3AHphKfyuYYcYl2qIEmt4G88gKrzzlHNTS
-         6DbTTYUpAslWcs3bdKbSUEId2GOodNlFw954jDc501bIdNf44FhQG39rCNeLO/V14Gd3
-         NeOw==
+        bh=7W0MHDI7A/36EtneRiQenQbjO4j0vMg3AtMW+Ct7r1E=;
+        b=ic/uUxLDADiZsinLV836FUMBjwA4clCXnO3zJoz5EXIbi1vzujUI7YnlBalxEbY6Jr
+         oqhuE44GRUbA4YFRItPjtnPNSZuGMpJY9cWyu337SnIqlkVYBY5tkzuNXyemUTtSYVHt
+         cNI7pK1ELHaNon/Rt/uVBWz7LE0T5sn3ehHrsxsszZdh281296bZCIqTty4DYVCxyiCC
+         uNP6M/icy39rmPwQ6ZT3VPDbg6zPgPf2Mb48GH+v+ZQBFpzujICXAoMqvkgqEy7yfEXc
+         o+tAAOK4eg4U6a5bS/MlqRtXVyGY08LppDGk/vKjm904GInymr/HLFPu4RcwYJYP8A36
+         9bSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687889455; x=1690481455;
+        d=1e100.net; s=20221208; t=1687889453; x=1690481453;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hfYhuJ0XDyvK4n4WNbDnoJ3i1epMtBqut75yAMaV+gY=;
-        b=ZyuMidKC781CzcgE08nCcE4hyqWDN4EGW1X4jWi9ZXRXM/xBpMqiv9KyNDhlpIT/8v
-         1arb2bSC72TMIMDfzt+3OzGL+WzmWnNOSxb6Gr3dS9xx1fO32lt/XJyOs+5e5SZ1Mi9V
-         qFTpnG8lzfzbnox7hJpDTRilVoSr3ONP/oRhbIWGjx9pLQLvBI7AENA9vmzKuWKvnJi6
-         6pZ8uPlNZ6WeEV5V7OTJOwpw8dwmkqDPKXlMiC7jr+233BTM6c5tr5oS0cnREfhvpsAz
-         aAwmTiIe0x0KPc3/tdP0RJM+8Q/lvEtms7pLTITD7VNkqE6XxkdnelmKZa3OkRiyp3pG
-         BIDg==
-X-Gm-Message-State: AC+VfDwttSg9rMWOMqa5c9ccgAZnTqKDuCF9pAXOueeta2WKu5rCf3pi
-        MAkypnpzA6tyOMH1fBaRqlEAJVBTkJvX
-X-Google-Smtp-Source: ACHHUZ7hCPGedLA3hDk85YPuzkka3hqhshJtOMTfnuxOsm7D9+OdRd8J3ECgi1iIpw1Da0GndXH8fW2VN2e5
+        bh=7W0MHDI7A/36EtneRiQenQbjO4j0vMg3AtMW+Ct7r1E=;
+        b=LGybE5GL4Kubu6Eggz4GRQ8nwJHiYf9MD2c5YlhtHdgiNvafBjnEy1q6I9wFrVdhBp
+         R4NNRdpqbv69zWjh2makuZ5kTYt9y0WOpU3GTs811dd1C/lFgYaItkIDnn1OkI6mYMik
+         8t+BYylAutFKvrX+L92nlzRhOsjaDtb+Guu/TWFwFnHbBzNu8co5U3X+NdeMQf8LPs0P
+         KLLu9bIvrXlSd6XC/XF/fK8GCT6Yfx7h6LUNevmlHNnSBCLnX7HKu0MMM2t7e09V5I4a
+         HFDZowjsSIwQIUSzzfEsoBZ7W78bL6XJ5cJWTeVya2CZtJlB98NoJC3ryK9XGZmKHnJV
+         TRsA==
+X-Gm-Message-State: AC+VfDyeX4tJxZ298HixXIv+YiBvJdDiKtHeGP+JIPOZ+4aJXfS1si4v
+        DakHLDxAZQvZ38a+tENg7/Rq+dq/NcZv
+X-Google-Smtp-Source: ACHHUZ7WMEj53/YOTC5fQeFqG+pKB8WUM8Wqp5CfW3X6NRJuJ5eUfxUuqqXvmD68sSI7ABQ2xhJFPv4Y3STK
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a518:9a69:cf62:b4d9])
- (user=irogers job=sendgmr) by 2002:a25:d658:0:b0:bbb:8c13:ce26 with SMTP id
- n85-20020a25d658000000b00bbb8c13ce26mr15119569ybg.11.1687889455645; Tue, 27
- Jun 2023 11:10:55 -0700 (PDT)
-Date:   Tue, 27 Jun 2023 11:10:23 -0700
+ (user=irogers job=sendgmr) by 2002:a81:441b:0:b0:576:b244:5a4e with SMTP id
+ r27-20020a81441b000000b00576b2445a4emr3880646ywa.10.1687889453097; Tue, 27
+ Jun 2023 11:10:53 -0700 (PDT)
+Date:   Tue, 27 Jun 2023 11:10:22 -0700
 In-Reply-To: <20230627181030.95608-1-irogers@google.com>
-Message-Id: <20230627181030.95608-7-irogers@google.com>
+Message-Id: <20230627181030.95608-6-irogers@google.com>
 Mime-Version: 1.0
 References: <20230627181030.95608-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v2 06/13] perf parse-event: Add memory allocation test for
- name terms
+Subject: [PATCH v2 05/13] perf parse-events: Avoid regrouped warning for wild
+ card events
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -74,44 +74,50 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If the name memory allocation fails then propagate to the parser.
+There is logic to avoid printing the regrouping warning for wild card
+PMUs, this logic also needs to apply for wild card events.
+
+Before:
+```
+$ perf stat -e '{data_read,data_write}' -a sleep 1
+WARNING: events were regrouped to match PMUs
+
+ Performance counter stats for 'system wide':
+
+          2,979.16 MiB  data_read
+            410.26 MiB  data_write
+
+       1.001541923 seconds time elapsed
+```
+After:
+```
+$ perf stat -e '{data_read,data_write}' -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+          2,975.94 MiB  data_read
+            432.05 MiB  data_write
+
+       1.001119499 seconds time elapsed
+```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/parse-events.c | 5 ++++-
- tools/perf/util/parse-events.y | 2 +-
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ tools/perf/util/parse-events.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 0aa4308edb6c..f31f233e395f 100644
+index 5dcfbf316bf6..0aa4308edb6c 100644
 --- a/tools/perf/util/parse-events.c
 +++ b/tools/perf/util/parse-events.c
-@@ -1965,8 +1965,11 @@ int parse_events_name(struct list_head *list, const char *name)
- 	struct evsel *evsel;
- 
- 	__evlist__for_each_entry(list, evsel) {
--		if (!evsel->name)
-+		if (!evsel->name) {
- 			evsel->name = strdup(name);
-+			if (!evsel->name)
-+				return -ENOMEM;
-+		}
- 	}
- 
- 	return 0;
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index b09a5fa92144..3ee351768433 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -263,7 +263,7 @@ PE_EVENT_NAME event_def
- 	free($1);
- 	if (err) {
- 		free_list_evsel($2);
--		YYABORT;
-+		YYNOMEM;
- 	}
- 	$$ = $2;
- }
+@@ -1722,6 +1722,7 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+ 							  auto_merge_stats)) {
+ 					pr_debug("%s -> %s/%s/\n", str,
+ 						 pmu->name, alias->str);
++					parse_state->wild_card_pmus = true;
+ 					ok++;
+ 				}
+ 				parse_events_terms__delete(orig_head);
 -- 
 2.41.0.162.gfafddb0af9-goog
 
