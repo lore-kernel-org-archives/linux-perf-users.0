@@ -2,289 +2,200 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E80EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 09:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA57EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 09:26:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231191AbjF0JIu (ORCPT
+        id S231136AbjF0J06 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Jun 2023 05:08:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58364 "EHLO
+        Tue, 27 Jun 2023 05:26:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231545AbjF0JIc (ORCPT
+        with ESMTP id S230386AbjF0J0y (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Jun 2023 05:08:32 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E4172139
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jun 2023 02:08:21 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id 38308e7fff4ca-2b6985de215so39576891fa.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jun 2023 02:08:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1687856900; x=1690448900;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=stjT86fYKuiXvBaSB2WoO7+BJHVe758I2dhXd0cbDAY=;
-        b=aCwv8XyJHIxBZ7JHg3Ta+tupjTY51coWUiGxvF+8zG4tycNrHZantd4GIiR/WcS3Qb
-         CbVZRuCHlNjtORe1Kk4FgR5sMDgXXcHf9jz8shD6qo0bxGca2LYRGxplBVD5K8bGo/UG
-         MWYAKhrWrXAszGh6QPpdw2hWo1YabMiri8ThqUHJMpBmip9CwF/iJUgqseSds5wf/m5R
-         WdEOcTV3RNfMiVoT6Cqdo43CeTkP0QtPOA8q7nopsKwCm14ZSXD7XhFltpX+IcJ8DLVP
-         Mb69xZL0ioOz+85DYEhWp/CwBnx9rjLqMl2EIAko1P/+XrJaouvShtYnQvB+mevwTHVq
-         w/Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687856900; x=1690448900;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=stjT86fYKuiXvBaSB2WoO7+BJHVe758I2dhXd0cbDAY=;
-        b=RY/d8IJHQelsqtB4sz/RQBvm5f8jP9tCCXqOlxHAQtP+p6K42tEzU6Ycuj/AHc7hKn
-         z5XoJSYDBxaXOl0bHKY5v62mBhr4IyBXVfATvt9E+TPYxuLfJOomU29zqpkF7pTPTSqx
-         SKtQMCa6jP1QpnefypS0c3CKL/5dlAwUeDxU7BVoVgqjx9dMBdcaiO9T0F1H4rjSbTwc
-         DVyE7GyHp5UMFQYpW+/jrohavt0LY/LyWe/ZT9w543ZuOq9QzQVrvvtzd0x61RtT2tP9
-         pUljNDED/e0rMJDPEf686HQs2jxta7nJnhnkIeA0ur6td7kNLoOQYO5ok/Ere1641qlm
-         8Ryw==
-X-Gm-Message-State: AC+VfDyjUxpzDD1mdcHG79sKanj0/Qi3EfPCGFjoRqorrjFAQIuyKnEk
-        DycToPinspXqaoBH8Zy+fhw2Zcta09uskn6T1K0SQA==
-X-Google-Smtp-Source: ACHHUZ5BN9eKyi0r0qJ9h2elSHMi5KeDf7a+rpIa0hLeV58ADMjKts8uASQ2aziaU/7hkENIVNUMhtca7rKAg++nyAg=
-X-Received: by 2002:a2e:6e16:0:b0:2b5:950a:711c with SMTP id
- j22-20020a2e6e16000000b002b5950a711cmr8404984ljc.10.1687856899530; Tue, 27
- Jun 2023 02:08:19 -0700 (PDT)
+        Tue, 27 Jun 2023 05:26:54 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A583219A8;
+        Tue, 27 Jun 2023 02:26:52 -0700 (PDT)
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35R9PKQ9005824;
+        Tue, 27 Jun 2023 09:26:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=rmtHEQvElFnOaqzt2Bdg2pmC8IvPaNV2o+NWS6XdJIo=;
+ b=M9ssyCAoxEhAUdhsBKTmPs9gcBifY0qXzHES5nYtlCWFzz15BJgpllrpRLwvRzAGppd/
+ jdZh/1ucpyiDYMmWUEQAzwAEiej5Ngya5GGnl+yYInCpOypBLLwnBb+SucQTu40l28yI
+ Y0s9FCU+XF6km6t2chePTct3fHIHAJZuy5VynCJsBD6tB+q/i7xgr3HtWlAJf0pdA699
+ RkJF4ttW3Vw2i+Ewa39CsGRdFlKqZjOI59J1wL5KTIhXOszVg0eN6AWYATpw1CWwZcul
+ cMiKUHZjDO2tM/WSFZBkncxyBC7kPfoTIkfUIQB4UvKQol6DHAZpFOlSu/XfBo6Wd923 1Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rfw4680t8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Jun 2023 09:26:49 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35R9PI6c005241;
+        Tue, 27 Jun 2023 09:26:49 GMT
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rfw4680su-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Jun 2023 09:26:49 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35R2n9Kt001450;
+        Tue, 27 Jun 2023 09:26:47 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+        by ppma04ams.nl.ibm.com (PPS) with ESMTPS id 3rdr451rdq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Jun 2023 09:26:47 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35R9QhNQ39387480
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 27 Jun 2023 09:26:43 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7535A2004B;
+        Tue, 27 Jun 2023 09:26:43 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1C5E620043;
+        Tue, 27 Jun 2023 09:26:43 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Tue, 27 Jun 2023 09:26:43 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, irogers@google.com, hca@linux.ibm.com
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf/test: perf test case Daemon operations dumps core
+Date:   Tue, 27 Jun 2023 11:26:33 +0200
+Message-Id: <20230627092633.2135105-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-References: <20230602094841.1225-1-eric.lin@sifive.com> <CAPqJEFpamQSbCcD0QJ16u7ctRf1=NYihod6gdZJfxFpE0YUVHQ@mail.gmail.com>
- <CABPqkBRyqsMnNbokBKepkWq1DtzfB0npXySGbKS1T3nQTwmaAw@mail.gmail.com> <20230621115811.GD2053369@hirez.programming.kicks-ass.net>
-In-Reply-To: <20230621115811.GD2053369@hirez.programming.kicks-ass.net>
-From:   Eric Lin <eric.lin@sifive.com>
-Date:   Tue, 27 Jun 2023 17:08:07 +0800
-Message-ID: <CAPqJEFpV8a8D7eA0sspjvThvBxdZhSLPTEbEzN7WiGCAzSnYYg@mail.gmail.com>
-Subject: Re: [PATCH] perf/core: Add pmu stop before unthrottling to prevent WARNING
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        palmer@dabbelt.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        greentime.hu@sifive.com, vincent.chen@sifive.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: sGWoQyU7VxmytPHsl3toxfPRwyeLSuJA
+X-Proofpoint-GUID: zvnrrGrPPiZZVDFKANmkAiAXwUxKRThp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-27_05,2023-06-26_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 priorityscore=1501 malwarescore=0 mlxlogscore=999
+ suspectscore=0 bulkscore=0 clxscore=1015 spamscore=0 impostorscore=0
+ mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306270086
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 21, 2023 at 01:58:11PM +0200, Peter Zijlstra wrote:
-> On Tue, Jun 20, 2023 at 11:18:05PM -0700, Stephane Eranian wrote:
-> > On Tue, Jun 20, 2023 at 9:25=E2=80=AFPM Eric Lin <eric.lin@sifive.com> =
-wrote:
-> > >
-> > > CC: Stephane Eranian
-> > >
-> > > On Fri, Jun 2, 2023 at 5:49=E2=80=AFPM Eric Lin <eric.lin@sifive.com>=
- wrote:
-> > > >
-> > > > Currently, during the perf sampling, if the perf interrupt takes to=
-o long,
-> > > > perf framework will lower the perf_event_max_sample_rate. This will=
- limit
-> > > > the number of samples per timer tick (max_samples_per_tick) and set=
- hwc->interrupts
-> > > > to MAX_INTERRUPTS within the __perf_event_account_interrupt() funct=
-ion.
-> > > >
-> > > > Afterward, the perf framework will unthrottle the event in the time=
-r interrupt
-> > > > handler, which triggers the driver's *_pmu_start() function. Most o=
-f the driver's
-> > > > *_pmu_start() functions will check the event->hw.state to determine=
- whether this
-> > > > event has stopped. If the event has not stopped, a WARN_ON_ONCE() w=
-arning
-> > > > will be triggered as shown below:
-> > > >
-> > > > [ 2110.224723] ------------[ cut here ]------------
-> > > > [ 2110.224851] WARNING: CPU: 0 PID: 240 at drivers/perf/riscv_pmu.c=
-:184 riscv_pmu_start+0x7c/0x8e
-> > > > [ 2110.225242] Modules linked in:
-> > > > [ 2110.225380] CPU: 0 PID: 240 Comm: ls Not tainted 6.4-rc4-g19d078=
-8e9ef2 #1
-> > > > [ 2110.225574] Hardware name: SiFive (DT)
-> > > > [ 2110.225657] epc : riscv_pmu_start+0x7c/0x8e
-> > > > [ 2110.225834]  ra : riscv_pmu_start+0x28/0x8e
-> > > > [ 2110.225998] epc : ffffffff80aef864 ra : ffffffff80aef810 sp : ff=
-ff8f80004db6f0
-> > > > [ 2110.226135]  gp : ffffffff81c83750 tp : ffffaf80069f9bc0 t0 : ff=
-ff8f80004db6c0
-> > > > [ 2110.226245]  t1 : 0000000000000000 t2 : 000000000000001f s0 : ff=
-ff8f80004db720
-> > > > [ 2110.226367]  s1 : ffffaf8008ca1068 a0 : 0000ffffffffffff a1 : 00=
-00000000000000
-> > > > [ 2110.226488]  a2 : 0000000000000001 a3 : 0000000000000870 a4 : 00=
-00000000000000
-> > > > [ 2110.226605]  a5 : 0000000000000000 a6 : 0000000000000840 a7 : 00=
-00000000000030
-> > > > [ 2110.226721]  s2 : 0000000000000000 s3 : ffffaf8005165800 s4 : ff=
-ffaf800424da00
-> > > > [ 2110.226838]  s5 : ffffffffffffffff s6 : ffffffff81cc7590 s7 : 00=
-00000000000000
-> > > > [ 2110.226955]  s8 : 0000000000000006 s9 : 0000000000000001 s10: ff=
-ffaf807efbc340
-> > > > [ 2110.227064]  s11: ffffaf807efbbf00 t3 : ffffaf8006a16028 t4 : 00=
-000000dbfbb796
-> > > > [ 2110.227180]  t5 : 0000000700000000 t6 : ffffaf8005269870
-> > > > [ 2110.227277] status: 0000000200000100 badaddr: 0000000000000000 c=
-ause: 0000000000000003
-> > > > [ 2110.227407] [<ffffffff80aef864>] riscv_pmu_start+0x7c/0x8e
-> > > > [ 2110.227622] [<ffffffff80185b56>] perf_adjust_freq_unthr_context+=
-0x15e/0x174
-> > > > [ 2110.227961] [<ffffffff80188642>] perf_event_task_tick+0x88/0x9c
-> > > > [ 2110.228235] [<ffffffff800626a8>] scheduler_tick+0xfe/0x27c
-> > > > [ 2110.228463] [<ffffffff800b5640>] update_process_times+0x9a/0xba
-> > > > [ 2110.228690] [<ffffffff800c5bd4>] tick_sched_handle+0x32/0x66
-> > > > [ 2110.229007] [<ffffffff800c5e0c>] tick_sched_timer+0x64/0xb0
-> > > > [ 2110.229253] [<ffffffff800b5e50>] __hrtimer_run_queues+0x156/0x2f=
-4
-> > > > [ 2110.229446] [<ffffffff800b6bdc>] hrtimer_interrupt+0xe2/0x1fe
-> > > > [ 2110.229637] [<ffffffff80acc9e8>] riscv_timer_interrupt+0x38/0x42
-> > > > [ 2110.229984] [<ffffffff80090a16>] handle_percpu_devid_irq+0x90/0x=
-1d2
-> > > > [ 2110.230162] [<ffffffff8008a9f4>] generic_handle_domain_irq+0x28/=
-0x36
-> > > >
-> > > > To prevent this warning, we should call the driver's *_pmu_stop() f=
-unction before unthrottling
-> > > >
-> > > > Signed-off-by: Eric Lin <eric.lin@sifive.com>
-> > > > ---
-> > > >  kernel/events/core.c | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > >
-> > > > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > > > index db016e418931..098c875abe88 100644
-> > > > --- a/kernel/events/core.c
-> > > > +++ b/kernel/events/core.c
-> > > > @@ -4128,6 +4128,7 @@ perf_adjust_freq_unthr_context(struct perf_ev=
-ent_context *ctx, bool unthrottle)
-> > > >
-> > > >                 if (hwc->interrupts =3D=3D MAX_INTERRUPTS) {
-> > > >                         hwc->interrupts =3D 0;
-> > > > +                       event->pmu->stop(event, 0);
-> >
-> > But how could the event have been stopped with a call to pmu->stop()
-> > during throttling?
->
-> Yeah, Changelog fails to explain how we got to the faulty state -- and
-> without that we can't judge if the proposed solution actually fixes the
-> problem or not.
->
+The perf test case Daemon operations dumps core all the time.
+I narrowed it down to this invocation:
 
-Hi Stephane, Peter,
-
-Most of the pmu driver will call *_pmu_stop(event,0) in the
-*_pmu_handle_irq() function and update the hwc->state with
-PERF_HES_STOPPED flag as below:
-
-arch/alpha/kernel/perf_event.c:856:             if
-(perf_event_overflow(event, &data, regs)) {
-arch/alpha/kernel/perf_event.c-857-                     /* Interrupts
-coming too quickly; "throttle" the
-arch/alpha/kernel/perf_event.c-858-                      * counter,
-i.e., disable it for a little while.
-arch/alpha/kernel/perf_event.c-859-                      */
-arch/alpha/kernel/perf_event.c-860-
-alpha_pmu_stop(event, 0);
-arch/alpha/kernel/perf_event.c-861-             }
------
-arch/arc/kernel/perf_event.c:603:                       if
-(perf_event_overflow(event, &data, regs))
-arch/arc/kernel/perf_event.c-604-
-arc_pmu_stop(event, 0);
-arch/arc/kernel/perf_event.c-605-               }
------
-arch/x86/events/amd/core.c:935:         if (perf_event_overflow(event,
-&data, regs))
-arch/x86/events/amd/core.c-936-                 x86_pmu_stop(event, 0);
-arch/x86/events/amd/core.c-937- }
------
-
-However, some of the pmu drivers stop the event in the
-*_pmu_handle_irq() without updating the hwc->state with
-PERF_HES_STOPPED flag as below:
-
-arch/arm/kernel/perf_event_v7.c:994:            if
-(perf_event_overflow(event, &data, regs))
-arch/arm/kernel/perf_event_v7.c-995-
-cpu_pmu->disable(event); // <=3D=3D not update with PERF_HES_STOPPED
-arch/arm/kernel/perf_event_v7.c-996-    }
-------
-arch/csky/kernel/perf_event.c:1142:             if
-(perf_event_overflow(event, &data, regs))
-arch/csky/kernel/perf_event.c-1143-
-csky_pmu_stop_event(event); // <=3D=3D not update with PERF_HES_STOPPED
-arch/csky/kernel/perf_event.c-1144-     }
--------
-arch/loongarch/kernel/perf_event.c:492: if (perf_event_overflow(event,
-data, regs))
-arch/loongarch/kernel/perf_event.c-493-
-loongarch_pmu_disable_event(idx);    // <=3D=3D not update with
-PERF_HES_STOPPED
-arch/loongarch/kernel/perf_event.c-494-}
--------
-arch/mips/kernel/perf_event_mipsxx.c:794:       if
-(perf_event_overflow(event, data, regs))
-arch/mips/kernel/perf_event_mipsxx.c-795-
-mipsxx_pmu_disable_event(idx); // <=3D=3D not update with PERF_HES_STOPPED
-arch/mips/kernel/perf_event_mipsxx.c-796-}
+Segmentation fault (core dumped)
 ....
+(gdb) where
+    at builtin-daemon.c:1527
+    argv=0x3ffe66f9630) at perf.c:323
+    at perf.c:377
+    at perf.c:421
+(gdb)
 
-Furthermore, these drivers did not add event->hw.state checking in
-*_pmu_start() before starting the event like x86 does:
+Normally this goes unnoticed, the core dumps are only shown in
+verbose mode and when core dump generation is enabled on fedora 38:
 
-1497 static void x86_pmu_start(struct perf_event *event, int flags)
-1498 {
-1499     struct cpu_hw_events *cpuc =3D this_cpu_ptr(&cpu_hw_events);
-1500     int idx =3D event->hw.idx;
-1501
-1502     if (WARN_ON_ONCE(!(event->hw.state & PERF_HES_STOPPED)))
-1503         return;
-1504
+ # ./perf test daemon
+ 80: daemon operations                   : Ok
+ # ll core*
+-rw------- 1 root root 3551232 Jun 27 10:08 core.4586
+-rw------- 1 root root 3551232 Jun 27 10:08 core.4688
+-rw------- 1 root root 3551232 Jun 27 10:08 core.4812
+-rw------- 1 root root 3551232 Jun 27 10:08 core.4857
+-rw------- 1 root root 3551232 Jun 27 10:08 core.4893
+-rw------- 1 root root 3551232 Jun 27 10:08 core.4933
+-rw------- 1 root root 3551232 Jun 27 10:08 core.4947
+-rw------- 1 root root 3551232 Jun 27 10:08 core.4949
+ # ./perf test -v daemon
+ 80: daemon operations                  :
+--- start ---
+test child forked, pid 4974
+test daemon list
+./tests/shell/daemon.sh: line 133:  4980 Segmentation fault \
+		(core dumped) perf daemon start --config ${config}
+test daemon reconfig
+./tests/shell/daemon.sh: line 133:  5082 Segmentation fault \
+		(core dumped) perf daemon start --config ${config}
+test daemon stop
+./tests/shell/daemon.sh: line 133:  5206 Segmentation fault \
+		(core dumped) perf daemon start --config ${config}
+test daemon signal
+./tests/shell/daemon.sh: line 133:  5250 Segmentation fault \
+		(core dumped) perf daemon start --config ${config}
+signal 12 sent to session 'test [5252]'
+signal 12 sent to session 'test [5252]'
+test daemon ping
+./tests/shell/daemon.sh: line 133:  5286 Segmentation fault \
+		(core dumped) perf daemon start --config ${config}
+test daemon lock
+./tests/shell/daemon.sh: line 133:  5326 Segmentation fault \
+		(core dumped) perf daemon start --config ${config}
+test child finished with 0
+---- end ----
+daemon operations: Ok
+ # ll core*|wc -l
+16
+ #
 
-As a result, these drivers won't trigger the WARN_ON_ONCE warning as
-shown in this patch.
+The root cause is in function cmd_daemon():
 
-However, if a pmu driver like RISC-V pmu which didn't call
-*_pmu_stop(event,0) without updating the hwc->state with
-PERF_HES_STOPPED flag in the *_pmu_handle_irq() function
-but has event->hw.state checking in *_pmu_start(), it could trigger
-the WARN_ON_ONCE warning as shown in this patch.
+    argc = parse_options(argc, argv, daemon_options, daemon_usage,
+		         PARSE_OPT_STOP_AT_NON_OPTION);
 
-Therefore, I think we need to call pmu->stop() before unthrottling the
-event to prevent this warning.
+    if (argc) {
+	if (!strcmp(argv[0], "start"))
+		ret = __cmd_start(&__daemon, daemon_options, argc,
+				  argv);
+	if (!strcmp(argv[0], "signal"))
+		    ^^^^^^^
+Parameter argv[0] is set to NULL in function __cmd_start() and the
+next strcmp() accesses a NULL pointer.
 
-Or maybe we can add hwc->state checking before we call pmu->stop() as below=
-:
+Output after:
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4128,7 +4128,8 @@ perf_adjust_freq_unthr_context(struct
-perf_event_context *ctx, bool unthrottle)
+ # ./perf daemon start --config /tmp/perf-daemon-config
+ #
+ # ./perf test -v daemon
+ 80: daemon operations                                               :
+--- start ---
+test child forked, pid 6517
+test daemon list
+test daemon reconfig
+test daemon stop
+test daemon signal
+signal 12 sent to session 'test [6780]'
+signal 12 sent to session 'test [6780]'
+test daemon ping
+test daemon lock
+test child finished with 0
+---- end ----
+daemon operations: Ok
+ #
 
-                if (hwc->interrupts =3D=3D MAX_INTERRUPTS) {
-                        hwc->interrupts =3D 0;
--                       event->pmu->stop(event, 0);
-+                       if (!(hwc->state & PERF_HES_STOPPED))
-+                               event->pmu->stop(event, 0);
-                        perf_log_throttle(event, 1);
-                        event->pmu->start(event, 0);
-                }
+Fixes: 92294b906e6c ("perf daemon: Dynamically allocate path to perf")
 
-Thanks.
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/builtin-daemon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best Regards,
-Eric Lin.
+diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
+index f5674d824a40..83954af36753 100644
+--- a/tools/perf/builtin-daemon.c
++++ b/tools/perf/builtin-daemon.c
+@@ -1524,7 +1524,7 @@ int cmd_daemon(int argc, const char **argv)
+ 	if (argc) {
+ 		if (!strcmp(argv[0], "start"))
+ 			ret = __cmd_start(&__daemon, daemon_options, argc, argv);
+-		if (!strcmp(argv[0], "signal"))
++		else if (!strcmp(argv[0], "signal"))
+ 			ret = __cmd_signal(&__daemon, daemon_options, argc, argv);
+ 		else if (!strcmp(argv[0], "stop"))
+ 			ret = __cmd_stop(&__daemon, daemon_options, argc, argv);
+-- 
+2.41.0
 
-
-> > >
-> > > >                         perf_log_throttle(event, 1);
-> > > >                         event->pmu->start(event, 0);
-> > > >                 }
-> > > > --
-> > > > 2.17.1
-> > > >
