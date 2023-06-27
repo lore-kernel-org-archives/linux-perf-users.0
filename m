@@ -2,200 +2,158 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA57EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 09:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 540AEEB64D9
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 09:38:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231136AbjF0J06 (ORCPT
+        id S230357AbjF0Jin (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Jun 2023 05:26:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42772 "EHLO
+        Tue, 27 Jun 2023 05:38:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230386AbjF0J0y (ORCPT
+        with ESMTP id S230179AbjF0Jim (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Jun 2023 05:26:54 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A583219A8;
-        Tue, 27 Jun 2023 02:26:52 -0700 (PDT)
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35R9PKQ9005824;
-        Tue, 27 Jun 2023 09:26:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=rmtHEQvElFnOaqzt2Bdg2pmC8IvPaNV2o+NWS6XdJIo=;
- b=M9ssyCAoxEhAUdhsBKTmPs9gcBifY0qXzHES5nYtlCWFzz15BJgpllrpRLwvRzAGppd/
- jdZh/1ucpyiDYMmWUEQAzwAEiej5Ngya5GGnl+yYInCpOypBLLwnBb+SucQTu40l28yI
- Y0s9FCU+XF6km6t2chePTct3fHIHAJZuy5VynCJsBD6tB+q/i7xgr3HtWlAJf0pdA699
- RkJF4ttW3Vw2i+Ewa39CsGRdFlKqZjOI59J1wL5KTIhXOszVg0eN6AWYATpw1CWwZcul
- cMiKUHZjDO2tM/WSFZBkncxyBC7kPfoTIkfUIQB4UvKQol6DHAZpFOlSu/XfBo6Wd923 1Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rfw4680t8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 27 Jun 2023 09:26:49 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35R9PI6c005241;
-        Tue, 27 Jun 2023 09:26:49 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rfw4680su-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 27 Jun 2023 09:26:49 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35R2n9Kt001450;
-        Tue, 27 Jun 2023 09:26:47 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-        by ppma04ams.nl.ibm.com (PPS) with ESMTPS id 3rdr451rdq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 27 Jun 2023 09:26:47 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35R9QhNQ39387480
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 27 Jun 2023 09:26:43 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7535A2004B;
-        Tue, 27 Jun 2023 09:26:43 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1C5E620043;
-        Tue, 27 Jun 2023 09:26:43 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Tue, 27 Jun 2023 09:26:43 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, irogers@google.com, hca@linux.ibm.com
-Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf/test: perf test case Daemon operations dumps core
-Date:   Tue, 27 Jun 2023 11:26:33 +0200
-Message-Id: <20230627092633.2135105-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.39.2
+        Tue, 27 Jun 2023 05:38:42 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 602C51BFF;
+        Tue, 27 Jun 2023 02:38:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=R4bsPd5TDwVP6VZpwDh0pJ+z3F6SCbi1gN0b38ql1Sc=; b=BB2MmbjeFpFwF6NTfzSJPbo18L
+        umbiOKKOzgtmxQwzj13hr/AvYG5yaQt1YQ9oB+toT0laa4GjwAlNT5wFELlKhVSjmtlxEShjRb8XZ
+        b5I/Q9B9D47KqaENBq8pDNVLdRSXZL/u76LG9PtodKkWScs7BrmNOrTWCRMSa/9rPK904M/0O1kOz
+        71qTYv8aP9ZmXKDa+pXkELI7el6a+p37g/8Fb2ID0+SrMrDkiVDezYy9Ix9IWbuwbUQVfViMFr6Q0
+        b8bq6QApRry55fYvb+vYGoBmtIpPhZ4hX65UA1ms0lqqjgvrqkvmB+xwiVOy1YXt8wTP1UUfrwATf
+        /4QU6neg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1qE59U-004dLC-1M;
+        Tue, 27 Jun 2023 09:38:24 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 95774300023;
+        Tue, 27 Jun 2023 11:38:23 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7427D24A3B973; Tue, 27 Jun 2023 11:38:23 +0200 (CEST)
+Date:   Tue, 27 Jun 2023 11:38:23 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Eric Lin <eric.lin@sifive.com>
+Cc:     Stephane Eranian <eranian@google.com>, mingo@redhat.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        palmer@dabbelt.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        greentime.hu@sifive.com, vincent.chen@sifive.com
+Subject: Re: [PATCH] perf/core: Add pmu stop before unthrottling to prevent
+ WARNING
+Message-ID: <20230627093823.GV83892@hirez.programming.kicks-ass.net>
+References: <20230602094841.1225-1-eric.lin@sifive.com>
+ <CAPqJEFpamQSbCcD0QJ16u7ctRf1=NYihod6gdZJfxFpE0YUVHQ@mail.gmail.com>
+ <CABPqkBRyqsMnNbokBKepkWq1DtzfB0npXySGbKS1T3nQTwmaAw@mail.gmail.com>
+ <20230621115811.GD2053369@hirez.programming.kicks-ass.net>
+ <CAPqJEFpV8a8D7eA0sspjvThvBxdZhSLPTEbEzN7WiGCAzSnYYg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: sGWoQyU7VxmytPHsl3toxfPRwyeLSuJA
-X-Proofpoint-GUID: zvnrrGrPPiZZVDFKANmkAiAXwUxKRThp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-27_05,2023-06-26_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 priorityscore=1501 malwarescore=0 mlxlogscore=999
- suspectscore=0 bulkscore=0 clxscore=1015 spamscore=0 impostorscore=0
- mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306270086
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPqJEFpV8a8D7eA0sspjvThvBxdZhSLPTEbEzN7WiGCAzSnYYg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The perf test case Daemon operations dumps core all the time.
-I narrowed it down to this invocation:
+On Tue, Jun 27, 2023 at 05:08:07PM +0800, Eric Lin wrote:
 
-Segmentation fault (core dumped)
-....
-(gdb) where
-    at builtin-daemon.c:1527
-    argv=0x3ffe66f9630) at perf.c:323
-    at perf.c:377
-    at perf.c:421
-(gdb)
+> > Yeah, Changelog fails to explain how we got to the faulty state -- and
+> > without that we can't judge if the proposed solution actually fixes the
+> > problem or not.
+> >
+> 
+> Hi Stephane, Peter,
+> 
+> Most of the pmu driver will call *_pmu_stop(event,0) in the
+> *_pmu_handle_irq() function and update the hwc->state with
+> PERF_HES_STOPPED flag as below:
+> 
+> arch/alpha/kernel/perf_event.c:856:             if
+> (perf_event_overflow(event, &data, regs)) {
+> arch/alpha/kernel/perf_event.c-857-                     /* Interrupts
+> coming too quickly; "throttle" the
+> arch/alpha/kernel/perf_event.c-858-                      * counter,
+> i.e., disable it for a little while.
+> arch/alpha/kernel/perf_event.c-859-                      */
+> arch/alpha/kernel/perf_event.c-860-
+> alpha_pmu_stop(event, 0);
+> arch/alpha/kernel/perf_event.c-861-             }
+> -----
+> arch/arc/kernel/perf_event.c:603:                       if
+> (perf_event_overflow(event, &data, regs))
+> arch/arc/kernel/perf_event.c-604-
+> arc_pmu_stop(event, 0);
+> arch/arc/kernel/perf_event.c-605-               }
+> -----
+> arch/x86/events/amd/core.c:935:         if (perf_event_overflow(event,
+> &data, regs))
+> arch/x86/events/amd/core.c-936-                 x86_pmu_stop(event, 0);
+> arch/x86/events/amd/core.c-937- }
+> -----
+> 
+> However, some of the pmu drivers stop the event in the
+> *_pmu_handle_irq() without updating the hwc->state with
+> PERF_HES_STOPPED flag as below:
+> 
+> arch/arm/kernel/perf_event_v7.c:994:            if
+> (perf_event_overflow(event, &data, regs))
+> arch/arm/kernel/perf_event_v7.c-995-
+> cpu_pmu->disable(event); // <== not update with PERF_HES_STOPPED
+> arch/arm/kernel/perf_event_v7.c-996-    }
+> ------
+> arch/csky/kernel/perf_event.c:1142:             if
+> (perf_event_overflow(event, &data, regs))
+> arch/csky/kernel/perf_event.c-1143-
+> csky_pmu_stop_event(event); // <== not update with PERF_HES_STOPPED
+> arch/csky/kernel/perf_event.c-1144-     }
+> -------
+> arch/loongarch/kernel/perf_event.c:492: if (perf_event_overflow(event,
+> data, regs))
+> arch/loongarch/kernel/perf_event.c-493-
+> loongarch_pmu_disable_event(idx);    // <== not update with
+> PERF_HES_STOPPED
+> arch/loongarch/kernel/perf_event.c-494-}
+> -------
+> arch/mips/kernel/perf_event_mipsxx.c:794:       if
+> (perf_event_overflow(event, data, regs))
+> arch/mips/kernel/perf_event_mipsxx.c-795-
+> mipsxx_pmu_disable_event(idx); // <== not update with PERF_HES_STOPPED
+> arch/mips/kernel/perf_event_mipsxx.c-796-}
+> ....
+> 
+> Furthermore, these drivers did not add event->hw.state checking in
+> *_pmu_start() before starting the event like x86 does:
+> 
+> 1497 static void x86_pmu_start(struct perf_event *event, int flags)
+> 1498 {
+> 1499     struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+> 1500     int idx = event->hw.idx;
+> 1501
+> 1502     if (WARN_ON_ONCE(!(event->hw.state & PERF_HES_STOPPED)))
+> 1503         return;
+> 1504
+> 
+> As a result, these drivers won't trigger the WARN_ON_ONCE warning as
+> shown in this patch.
+> 
+> However, if a pmu driver like RISC-V pmu which didn't call
+> *_pmu_stop(event,0) without updating the hwc->state with
+> PERF_HES_STOPPED flag in the *_pmu_handle_irq() function
+> but has event->hw.state checking in *_pmu_start(), it could trigger
+> the WARN_ON_ONCE warning as shown in this patch.
+> 
+> Therefore, I think we need to call pmu->stop() before unthrottling the
+> event to prevent this warning.
 
-Normally this goes unnoticed, the core dumps are only shown in
-verbose mode and when core dump generation is enabled on fedora 38:
-
- # ./perf test daemon
- 80: daemon operations                   : Ok
- # ll core*
--rw------- 1 root root 3551232 Jun 27 10:08 core.4586
--rw------- 1 root root 3551232 Jun 27 10:08 core.4688
--rw------- 1 root root 3551232 Jun 27 10:08 core.4812
--rw------- 1 root root 3551232 Jun 27 10:08 core.4857
--rw------- 1 root root 3551232 Jun 27 10:08 core.4893
--rw------- 1 root root 3551232 Jun 27 10:08 core.4933
--rw------- 1 root root 3551232 Jun 27 10:08 core.4947
--rw------- 1 root root 3551232 Jun 27 10:08 core.4949
- # ./perf test -v daemon
- 80: daemon operations                  :
---- start ---
-test child forked, pid 4974
-test daemon list
-./tests/shell/daemon.sh: line 133:  4980 Segmentation fault \
-		(core dumped) perf daemon start --config ${config}
-test daemon reconfig
-./tests/shell/daemon.sh: line 133:  5082 Segmentation fault \
-		(core dumped) perf daemon start --config ${config}
-test daemon stop
-./tests/shell/daemon.sh: line 133:  5206 Segmentation fault \
-		(core dumped) perf daemon start --config ${config}
-test daemon signal
-./tests/shell/daemon.sh: line 133:  5250 Segmentation fault \
-		(core dumped) perf daemon start --config ${config}
-signal 12 sent to session 'test [5252]'
-signal 12 sent to session 'test [5252]'
-test daemon ping
-./tests/shell/daemon.sh: line 133:  5286 Segmentation fault \
-		(core dumped) perf daemon start --config ${config}
-test daemon lock
-./tests/shell/daemon.sh: line 133:  5326 Segmentation fault \
-		(core dumped) perf daemon start --config ${config}
-test child finished with 0
----- end ----
-daemon operations: Ok
- # ll core*|wc -l
-16
- #
-
-The root cause is in function cmd_daemon():
-
-    argc = parse_options(argc, argv, daemon_options, daemon_usage,
-		         PARSE_OPT_STOP_AT_NON_OPTION);
-
-    if (argc) {
-	if (!strcmp(argv[0], "start"))
-		ret = __cmd_start(&__daemon, daemon_options, argc,
-				  argv);
-	if (!strcmp(argv[0], "signal"))
-		    ^^^^^^^
-Parameter argv[0] is set to NULL in function __cmd_start() and the
-next strcmp() accesses a NULL pointer.
-
-Output after:
-
- # ./perf daemon start --config /tmp/perf-daemon-config
- #
- # ./perf test -v daemon
- 80: daemon operations                                               :
---- start ---
-test child forked, pid 6517
-test daemon list
-test daemon reconfig
-test daemon stop
-test daemon signal
-signal 12 sent to session 'test [6780]'
-signal 12 sent to session 'test [6780]'
-test daemon ping
-test daemon lock
-test child finished with 0
----- end ----
-daemon operations: Ok
- #
-
-Fixes: 92294b906e6c ("perf daemon: Dynamically allocate path to perf")
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/perf/builtin-daemon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
-index f5674d824a40..83954af36753 100644
---- a/tools/perf/builtin-daemon.c
-+++ b/tools/perf/builtin-daemon.c
-@@ -1524,7 +1524,7 @@ int cmd_daemon(int argc, const char **argv)
- 	if (argc) {
- 		if (!strcmp(argv[0], "start"))
- 			ret = __cmd_start(&__daemon, daemon_options, argc, argv);
--		if (!strcmp(argv[0], "signal"))
-+		else if (!strcmp(argv[0], "signal"))
- 			ret = __cmd_signal(&__daemon, daemon_options, argc, argv);
- 		else if (!strcmp(argv[0], "stop"))
- 			ret = __cmd_stop(&__daemon, daemon_options, argc, argv);
--- 
-2.41.0
-
+How is that not a pmu driver problem ? I'd think we should be fixing
+those drivers. Mark, do you have have any memories of how the ARM driver
+came to be this way?
