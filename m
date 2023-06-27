@@ -2,54 +2,54 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CB6EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 06:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60951EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 06:33:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229702AbjF0Gaw (ORCPT
+        id S229780AbjF0GdD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Jun 2023 02:30:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37086 "EHLO
+        Tue, 27 Jun 2023 02:33:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229656AbjF0Gav (ORCPT
+        with ESMTP id S229742AbjF0GdB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Jun 2023 02:30:51 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A826BF;
-        Mon, 26 Jun 2023 23:30:50 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1b51488ad67so21378355ad.3;
-        Mon, 26 Jun 2023 23:30:50 -0700 (PDT)
+        Tue, 27 Jun 2023 02:33:01 -0400
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6612E5A;
+        Mon, 26 Jun 2023 23:33:00 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-668704a5b5bso3833160b3a.0;
+        Mon, 26 Jun 2023 23:33:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687847450; x=1690439450;
+        d=gmail.com; s=20221208; t=1687847580; x=1690439580;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=okd4Hx4unIxXnS558GJb5i+FkVyJr3dJEH0kXxONQ18=;
-        b=L8xL/5g9Lo6HDZeVzpi3Yay84jPsOMEVqbOmis+uy4vLf+BmN06o05VSF4L+LWjbjr
-         A1MRcn9JSPpTsWld0zEMa85czsjVKeWkX+z6NyN5W7VzxmG98kcZ2lWaP3O88CtgPhUE
-         WYXRFSy3K7bM1W0eoLjgVAdHpWbeYtzW+TTKccdKvc1UwQTr+eFQVo6aAq2WEMWkQhIr
-         8Q+In/6o23jKll8xjzqaHIpFwchdjn0f8kIuGCfxlcl8Itv+HOi2JOxsgbRFvwaylox9
-         Uud8cCQNUAagBhf5j9cct6+v1GE0wwEdg/zVsjtBxNgBay/sfZxdmfu8as149RcCcJqm
-         PkcQ==
+        bh=ehmbUEpgbaPxTlOJARi3abmL78zdkNcEfVy/qADnbcM=;
+        b=AToRD3ykPoY/AN8fvJ/dx+eeMxKOReHuGXxTSshorr42HPQAI8EZr/j6cnARnBZeEG
+         jdqcI6BeazSy8KnVxwdKKr/AmGORy1wc/BkPoIqMR0fE7I6aNUXAnhGJ9CS5jzj6eBLi
+         pXjxSMHi4RBBZAv+BPXAE/delZ/R1cdfazYcUMw0PjlK17A5aon+9nfZObsWb3LsiLbo
+         5NkFziYZlOOtrmgjIyZElABW10i3uHuhvff4gw7hL7nkH1jOSBiB6Vbi0bK6CoDMYhmT
+         nH7zJ4DBa6Iba44XxWeFcm7C1Y74kmwLRDuu3q2tPtZNqoa8JsQdVjqLAMpaLeym2Z5A
+         LMYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687847450; x=1690439450;
+        d=1e100.net; s=20221208; t=1687847580; x=1690439580;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:sender:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=okd4Hx4unIxXnS558GJb5i+FkVyJr3dJEH0kXxONQ18=;
-        b=k0mw1RkS1Dpr7aSkGwtzzUX05WqSPjvGGlo6DA+aUY8SVU2ESYgfeLZtw5ebC6IrW5
-         YcYxJjfEh7X757QrelnjuthsYMUEgfq+cyWoxymyjv90wL3hf3ebO40C84vTNw6gZMVP
-         0uNPV2wQlEH1Ekvnrm1W9JmxMY8QGEUBkFfnXDwzk5fIbS+5b+ELfUaNbYLd9azj6vC6
-         swHbXC4gMZ9Y41pGs7V/l+kQyh9JXDIbPzouLSxdKSOSEi1Bf1tfWCwr8b+5+T4BSPmL
-         J4nwPb53htEkG9XNVdVTos4b8qjZ9AhgUlZJDNYDw3WdEpOoKj7xi8YeuF2pQ/1GIilt
-         k/SA==
-X-Gm-Message-State: AC+VfDw14xRWUE8XEWLSPU7Rn68VCx/+bWd/U80mx3LmnduFWZZ9Mt3G
-        s0IlCsUVR8Ux7o5Cv+3+U/8=
-X-Google-Smtp-Source: ACHHUZ6lSEEedS7ImrIIIDH/Kscr+1QcGy6C6gw7mCE6QOBsKaMEdvanGduqC35z6dEE8QhIxcertg==
-X-Received: by 2002:a17:902:d48d:b0:1b4:fd48:d734 with SMTP id c13-20020a170902d48d00b001b4fd48d734mr7054440plg.47.1687847449713;
-        Mon, 26 Jun 2023 23:30:49 -0700 (PDT)
+        bh=ehmbUEpgbaPxTlOJARi3abmL78zdkNcEfVy/qADnbcM=;
+        b=Hiv85xlfedM15IQtqggUWVOPwjjk2TV3M0tOVfjFlLn5Mx3IWQZ8uXBmIp9PhXv2AH
+         VZecFPmc5Qoou6vmsJ1T+e9rDoHNaz54/q+yrhIauzcSkLn31kEgE6GrNzOW3fiQSr04
+         fR6pzacvMq+Lr4i93UUA+/4+TDqWVtoE5t8KWK5xCt8FzHcLocxzW2Ens8vo4abxb5hs
+         mejHoBMWeJir4OzKmNmcouHSkV2nK/FHJ5nSSCT2lNuCd/yx2AG/unQJpe8rR2vYQoAf
+         osqhdH3S4bvWXNpvssUlVTg3DLYlL18xEASG475xQy/qZ1pFF3Xqj7L8++GtZeq+S0pK
+         Fw1w==
+X-Gm-Message-State: AC+VfDzujk99UXTaD/R9qjqb6bXW8iZbdTldJuAxP7y3z1n4IliYM8iK
+        9tgPj9jZmAMhTPwffggmIWc=
+X-Google-Smtp-Source: ACHHUZ5wNhHnqaq4167hCYZOqyRIuyVddabXOsqeV8f0cER2+oATvXvcfEKXnKh4h+auiqEPp+nlWw==
+X-Received: by 2002:a05:6a20:748d:b0:126:92de:b893 with SMTP id p13-20020a056a20748d00b0012692deb893mr9777862pzd.31.1687847580168;
+        Mon, 26 Jun 2023 23:33:00 -0700 (PDT)
 Received: from moohyul.svl.corp.google.com ([2620:15c:2a3:200:1663:6fac:d111:59cf])
-        by smtp.gmail.com with ESMTPSA id z7-20020a170903018700b001b02162c86bsm5199541plg.80.2023.06.26.23.30.48
+        by smtp.gmail.com with ESMTPSA id d25-20020aa78159000000b0064378c52398sm4709694pfn.25.2023.06.26.23.32.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jun 2023 23:30:49 -0700 (PDT)
+        Mon, 26 Jun 2023 23:32:59 -0700 (PDT)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -59,13 +59,10 @@ Cc:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Andres Freund <andres@anarazel.de>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Subject: [BUG] perf build: fail with BUILD_NONDISTRO=1 FEATURES_DUMP=...
-Date:   Mon, 26 Jun 2023 23:30:30 -0700
-Message-ID: <20230627063046.548573-1-namhyung@kernel.org>
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf test: Fix a compile error on pe-file-parsing.c
+Date:   Mon, 26 Jun 2023 23:32:57 -0700
+Message-ID: <20230627063257.549005-1-namhyung@kernel.org>
 X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -74,55 +71,96 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
-
-I'm having a failure during `make build-test` in the perf tree.
-It calls make BUILD_NONDISTRO=1 with FEATURES_DUMP defined.
-Building with BUILD_NONDISTRO=1 alone was fine but it fails when I
-define the FEATURES_DUMP too.
+The dso__find_symbol_by_name() should be have idx pointer argument.
+Found during the build-test.
 
   $ make build-test
-            make_nondistro_O: cd . && make BUILD_NONDISTRO=1 \
-		FEATURES_DUMP=./BUILD_TEST_FEATURE_DUMP -j64 \
-		O=/tmp/tmp.6JwPK1xbWG DESTDIR=/tmp/tmp.sWSewBwO13
   ...
-    CC      util/annotate.o
-  In file included from util/annotate.c:1814:
-  tools/include/tools/dis-asm-compat.h:10:6: error: redeclaration of ‘enum disassembler_style’
-     10 | enum disassembler_style {DISASSEMBLER_STYLE_NOT_EMPTY};
-        |      ^~~~~~~~~~~~~~~~~~
-  In file included from util/annotate.c:1809:
-  /usr/include/dis-asm.h:53:6: note: originally defined here
-     53 | enum disassembler_style
-        |      ^~~~~~~~~~~~~~~~~~
-  tools/include/tools/dis-asm-compat.h: In function ‘init_disassemble_info_compat’:
-  tools/include/tools/dis-asm-compat.h:50:9: error: too few arguments to function ‘init_disassemble_info’
-     50 |         init_disassemble_info(info, stream,
-        |         ^~~~~~~~~~~~~~~~~~~~~
-  /usr/include/dis-asm.h:480:13: note: declared here
-    480 | extern void init_disassemble_info (struct disassemble_info *dinfo, void *stream,
-        |             ^~~~~~~~~~~~~~~~~~~~~
-  util/annotate.c: In function ‘symbol__disassemble_bpf’:
-  util/annotate.c:1896:36: error: incompatible type for argument 1 of ‘disassembler’
-   1896 |         disassemble = disassembler(bfdf);
-        |                                    ^~~~
-        |                                    |
-        |                                    bfd *
-  /usr/include/dis-asm.h:409:63: note: expected ‘enum bfd_architecture’ but argument is of type ‘bfd *’
-    409 | extern disassembler_ftype disassembler (enum bfd_architecture arc,
-        |                                         ~~~~~~~~~~~~~~~~~~~~~~^~~
-  util/annotate.c:1896:23: error: too few arguments to function ‘disassembler’
-   1896 |         disassemble = disassembler(bfdf);
-        |                       ^~~~~~~~~~~~
-  /usr/include/dis-asm.h:409:27: note: declared here
-    409 | extern disassembler_ftype disassembler (enum bfd_architecture arc,
-        |                           ^~~~~~~~~~~~
+    CC      /tmp/tmp.6JwPK1xbWG/tests/pe-file-parsing.o
+  tests/pe-file-parsing.c: In function ‘run_dir’:
+  tests/pe-file-parsing.c:64:15: error: too few arguments to function ‘dso__find_symbol_by_name’
+     64 |         sym = dso__find_symbol_by_name(dso, "main");
+        |               ^~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from tests/pe-file-parsing.c:16:
+  /usr/local/google/home/namhyung/project/linux/tools/perf/util/symbol.h:135:16: note: declared here
+    135 | struct symbol *dso__find_symbol_by_name(struct dso *dso, const char *name, size_t *idx);
+        |                ^~~~~~~~~~~~~~~~~~~~~~~~
 
+Fixes: 259dce914e93 ("perf symbol: Remove symbol_name_rb_node")
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/Makefile.config         | 13 ++++++++++---
+ tools/perf/tests/pe-file-parsing.c |  3 ++-
+ 2 files changed, 12 insertions(+), 4 deletions(-)
 
-Thanks,
-Namhyung
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 78411252b72a..0609c19caabd 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -315,6 +315,9 @@ FEATURE_CHECK_LDFLAGS-libpython := $(PYTHON_EMBED_LDOPTS)
+ 
+ FEATURE_CHECK_LDFLAGS-libaio = -lrt
+ 
++FEATURE_CHECK_LDFLAGS-disassembler-four-args = -lbfd -lopcodes -ldl
++FEATURE_CHECK_LDFLAGS-disassembler-init-styled = -lbfd -lopcodes -ldl
++
+ CORE_CFLAGS += -fno-omit-frame-pointer
+ CORE_CFLAGS += -ggdb3
+ CORE_CFLAGS += -funwind-tables
+@@ -344,8 +347,8 @@ ifneq ($(TCMALLOC),)
+ endif
+ 
+ ifeq ($(FEATURES_DUMP),)
+-# We will display at the end of this Makefile.config, using $(call feature_display_entries),
+-# as we may retry some feature detection here.
++# We will display at the end of this Makefile.config, using $(call feature_display_entries)
++# As we may retry some feature detection here, see the disassembler-four-args case, for instance
+   FEATURE_DISPLAY_DEFERRED := 1
+ include $(srctree)/tools/build/Makefile.feature
+ else
+@@ -907,9 +910,13 @@ ifdef BUILD_NONDISTRO
+ 
+     ifeq ($(feature-libbfd-liberty), 1)
+       EXTLIBS += -lbfd -lopcodes -liberty
++      FEATURE_CHECK_LDFLAGS-disassembler-four-args += -liberty -ldl
++      FEATURE_CHECK_LDFLAGS-disassembler-init-styled += -liberty -ldl
+     else
+       ifeq ($(feature-libbfd-liberty-z), 1)
+         EXTLIBS += -lbfd -lopcodes -liberty -lz
++        FEATURE_CHECK_LDFLAGS-disassembler-four-args += -liberty -lz -ldl
++        FEATURE_CHECK_LDFLAGS-disassembler-init-styled += -liberty -lz -ldl
+       endif
+     endif
+     $(call feature_check,disassembler-four-args)
+@@ -1333,6 +1340,6 @@ endif
+ 
+ # re-generate FEATURE-DUMP as we may have called feature_check, found out
+ # extra libraries to add to LDFLAGS of some other test and then redo those
+-# tests.
++# tests, see the block about libbfd, disassembler-four-args, for instance.
+ $(shell rm -f $(FEATURE_DUMP_FILENAME))
+ $(foreach feat,$(FEATURE_TESTS),$(shell echo "$(call feature_assign,$(feat))" >> $(FEATURE_DUMP_FILENAME)))
+diff --git a/tools/perf/tests/pe-file-parsing.c b/tools/perf/tests/pe-file-parsing.c
+index c09a9fae1689..fff58b220c07 100644
+--- a/tools/perf/tests/pe-file-parsing.c
++++ b/tools/perf/tests/pe-file-parsing.c
+@@ -34,6 +34,7 @@ static int run_dir(const char *d)
+ 	struct dso *dso;
+ 	struct symbol *sym;
+ 	int ret;
++	size_t idx;
+ 
+ 	scnprintf(filename, PATH_MAX, "%s/pe-file.exe", d);
+ 	ret = filename__read_build_id(filename, &bid);
+@@ -61,7 +62,7 @@ static int run_dir(const char *d)
+ 	TEST_ASSERT_VAL("Failed to load symbols", ret == 0);
+ 
+ 	dso__sort_by_name(dso);
+-	sym = dso__find_symbol_by_name(dso, "main");
++	sym = dso__find_symbol_by_name(dso, "main", &idx);
+ 	TEST_ASSERT_VAL("Failed to find main", sym);
+ 	dso__delete(dso);
+ 
+-- 
+2.41.0.162.gfafddb0af9-goog
 
-
-Cc: Andres Freund <andres@anarazel.de>
-Cc: Sedat Dilek <sedat.dilek@gmail.com>
-Cc: Roberto Sassu <roberto.sassu@huawei.com>
