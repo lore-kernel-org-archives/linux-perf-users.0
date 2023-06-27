@@ -2,231 +2,98 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53494EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 07:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51618EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Jun 2023 07:21:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230075AbjF0HNM (ORCPT
+        id S231139AbjF0HVx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Jun 2023 03:13:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52792 "EHLO
+        Tue, 27 Jun 2023 03:21:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229715AbjF0HNJ (ORCPT
+        with ESMTP id S231235AbjF0HVk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Jun 2023 03:13:09 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E65D51BE7
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jun 2023 00:13:07 -0700 (PDT)
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35R6lWGp015835;
-        Tue, 27 Jun 2023 07:12:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
- from : in-reply-to : date : cc : message-id : references : to :
- content-transfer-encoding : mime-version; s=pp1;
- bh=qENkCljCDflHY6/epHP+L8qvaPUneqDYTxiCjsxEAA8=;
- b=e4Tllnzhh/O3oclWXQGJ14+cxcHjGgyQgI+5GKKYqUudGwNWRekOZy6jx9InHgJ+PPBU
- BcXtJlvlPTlT3+enunNhtMHR05jxad8gUCWuQEF4gXVweTNSPj+ofDqWDNAtcYPfrFS/
- yyeQ4fkLpcYyz5Hp+UNKWhxsFrJPyqUado/93ES8fXfYBUkwF1R+jXn114Sm6RMfT+Da
- meEipSb7Dv7uJ3aHk+cj8OZzmUCyx36wzj9tnsBwNyCVqH8BUyugpIhR8lG7T4WnzRC0
- D2adEoFmuexvxqGo6BVTDwHPxsAQzxx1/yBcH7dlWfTd7cscBe8tK63oGc3iNR7LgGHL JA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rfttfrqjx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 27 Jun 2023 07:12:56 +0000
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35R6mKWe018162;
-        Tue, 27 Jun 2023 07:12:55 GMT
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rfttfrqj4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 27 Jun 2023 07:12:55 +0000
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35R0xZZp007897;
-        Tue, 27 Jun 2023 07:12:53 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma01fra.de.ibm.com (PPS) with ESMTPS id 3rdr451ap9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 27 Jun 2023 07:12:53 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35R7CoUC3932888
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 27 Jun 2023 07:12:50 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F03B820040;
-        Tue, 27 Jun 2023 07:12:49 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6EB0920043;
-        Tue, 27 Jun 2023 07:12:47 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.109.215.188])
-        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Tue, 27 Jun 2023 07:12:47 +0000 (GMT)
-Content-Type: text/plain;
-        charset=utf-8
-Subject: Re: [PATCH 00/22] tools/perf: Fix shellcheck coding/formatting issues
- of perf tool shell scripts
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <CAM9d7cj_7SBXtCuP66xra0R4ygNt851A6f20s6BtfyXCzZJrtQ@mail.gmail.com>
-Date:   Tue, 27 Jun 2023 12:42:34 +0530
-Cc:     Ian Rogers <irogers@google.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        john.g.garry@oracle.com, Kajol Jain <kjain@linux.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Message-Id: <052F4C8C-4F35-44B3-BCE6-E155741A45F9@linux.vnet.ibm.com>
-References: <20230621083021.71203-1-atrajeev@linux.vnet.ibm.com>
- <CAM9d7cj_7SBXtCuP66xra0R4ygNt851A6f20s6BtfyXCzZJrtQ@mail.gmail.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-X-Mailer: Apple Mail (2.3731.500.231)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: e_iv8czUoDpCR_Q9j3_bwksyMfkuO30k
-X-Proofpoint-ORIG-GUID: 8Bj0-cKzX8djvm9ZuszNER4mbKDZGZBh
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Tue, 27 Jun 2023 03:21:40 -0400
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECE6C2D65;
+        Tue, 27 Jun 2023 00:20:59 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0Vm4sP4I_1687850391;
+Received: from 30.221.150.4(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0Vm4sP4I_1687850391)
+          by smtp.aliyun-inc.com;
+          Tue, 27 Jun 2023 15:19:53 +0800
+Message-ID: <e125258f-559e-ae0a-8eb3-f119b0e7c87c@linux.alibaba.com>
+Date:   Tue, 27 Jun 2023 15:19:48 +0800
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-27_03,2023-06-26_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 mlxlogscore=999 phishscore=0 adultscore=0
- lowpriorityscore=0 malwarescore=0 clxscore=1015 mlxscore=0 spamscore=0
- suspectscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306270066
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.11.2
+Subject: Re: [PATCH v4 0/4] Add JSON metrics for Yitian710 DDR
+To:     Will Deacon <will@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        John Garry <john.g.garry@oracle.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Ian Rogers <irogers@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+References: <1687245156-61215-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <CAM9d7cj3v58m8NcsEK4sYsk_dbQDAq71hYo7DV=xaQa_rZyPYg@mail.gmail.com>
+ <a5486c58-32b6-2d5e-e623-d7844c51474c@linux.alibaba.com>
+ <CAM9d7chxMpUUouHsVTEvVEy8RyZ6tNzYbVD=a0Toao=n6cau-w@mail.gmail.com>
+ <20230626124431.GB20045@willie-the-truck>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <20230626124431.GB20045@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-> On 24-Jun-2023, at 5:10 AM, Namhyung Kim <namhyung@kernel.org> wrote:
->=20
-> Hello,
->=20
-> On Wed, Jun 21, 2023 at 1:30=E2=80=AFAM Athira Rajeev
-> <atrajeev@linux.vnet.ibm.com> wrote:
->>=20
->> Patchset covers a set of fixes for coding/formatting issues observed whi=
-le
->> running shellcheck tool on the perf shell scripts.
->>=20
->> This cleanup is a pre-requisite to include a build option for shellcheck
->> discussed here: https://www.spinics.net/lists/linux-perf-users/msg25553.=
-html
->> First set of patches were posted here:
->> https://lore.kernel.org/linux-perf-users/53B7D823-1570-4289-A632-2205EE2=
-B522C@linux.vnet.ibm.com/T/#t
->>=20
->> This patchset covers remaining set of shell scripts which needs
->> fix. Patch 1 is resubmission of patch 6 from the initial series.
->> Patch 15, 16 and 22 touches code from tools/perf/trace/beauty.
->> Other patches are fixes for scripts from tools/perf/tests.
->=20
-> Thanks for this work.  But it seems there are some issues
-> even after applying this series.
->=20
->  $ for F in $(find tests/shell/ -perm -o=3Dx -name '*.sh'); do
->> shellcheck $F; done | grep -c -e '(info)' -e '(warning)'
->  29
->=20
->  $ for F in $(find tests/shell/ -perm -o=3Dx -name '*.sh'); do
->> shellcheck $F; done | grep ^In
->  In tests/shell/pipe_test.sh line 10:
->  In tests/shell/pipe_test.sh line 15:
->  In tests/shell/pipe_test.sh line 20:
->  In tests/shell/pipe_test.sh line 21:
->  In tests/shell/pipe_test.sh line 26:
->  In tests/shell/pipe_test.sh line 27:
->  In tests/shell/pipe_test.sh line 33:
->  In tests/shell/record+zstd_comp_decomp.sh line 16:
->  In tests/shell/record+zstd_comp_decomp.sh line 22:
->  In tests/shell/record+zstd_comp_decomp.sh line 27:
->  In tests/shell/record+zstd_comp_decomp.sh line 28:
->  In tests/shell/record+zstd_comp_decomp.sh line 29:
->  In tests/shell/record+zstd_comp_decomp.sh line 30:
->  In tests/shell/record+zstd_comp_decomp.sh line 36:
->  In tests/shell/coresight/thread_loop_check_tid_2.sh line 8:
->  In tests/shell/coresight/thread_loop_check_tid_2.sh line 11:
->  In tests/shell/coresight/thread_loop_check_tid_2.sh line 14:
->=20
-> Also unfortunately there's some update in the shell tests.
-> Please rebase onto the perf-tools-next.
+在 2023/6/26 下午8:44, Will Deacon 写道:
+> On Tue, Jun 20, 2023 at 10:00:46PM -0700, Namhyung Kim wrote:
+>> On Tue, Jun 20, 2023 at 8:08 PM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
+>>> 在 2023/6/21 上午3:04, Namhyung Kim 写道:
+>>>> I'm curious why the first patch is needed, presumably the PMU
+>>>> should have 'ali_drw' in the name already.  Do we use substring
+>>>> match for the compat name in the JSON metric?
+>>>>
+>>>
+>>> The main purpose of patch 1 is to add an identifier so that the Compat
+>>> field can match the corresponding event when defining aliases or metrics
+>>> for events.
+>>>
+>>> For example, "Unit" can match "ali_drw" in the name and different SoCs may
+>>> be able to match ali_drw, but they may have different events, and even if
+>>> the events are the same, the meanings may be different. Therefore, the
+>>> Compat field is needed to match the Identifier to confirm which type and
+>>> revision of PMU the current SoC has. Therefore, both "Unit" and "Compat"
+>>> need to be matched at the same time. Although it seems that ali_drw is
+>>> redundantly matched currently, it is meaningful for future expansion.
+>>
+>> I see, thanks for the explanation.
+>>
+>> I think you need to route the kernel patch differently.  I can apply the tools
+>> part once the kernel patch gets Acks from others.
+> 
+> Sorry, I missed this initially as I didn't realise there were kernel changes
+> hidden in this series (I saw "JSON" and ignored it...). Given that the 6.5
+> merge window is now open, I'll pick the kernel change up for 6.6 when I
+> start queueing patches in a few weeks.
+> 
+> Will
 
-Hi Namhyung
+Thank you will, maybe it is because I did not describe this series well, and
+it is easy to cause the patch to be ignored. I will pay attention to this
+problem in the future.
 
-Thanks for checking. Will send an updated version on top of perf-tools-next
-
-Thanks
-Athira
->=20
-> Thanks,
-> Namhyung
->=20
->=20
->>=20
->> Akanksha J N (1):
->>  tools/perf/tests: Fix shellcheck warnings for
->>    trace+probe_vfs_getname.sh
->>=20
->> Athira Rajeev (11):
->>  tools/perf/tests: fix test_arm_spe_fork.sh signal case issues
->>  tools/perf/tests: Fix unused variable references in
->>    stat+csv_summary.sh testcase
->>  tools/perf/tests: fix shellcheck warning for
->>    test_perf_data_converter_json.sh testcase
->>  tools/perf/tests: Fix shellcheck issue for stat_bpf_counters.sh
->>    testcase
->>  tools/perf/tests: Fix shellcheck issues in
->>    tests/shell/stat+shadow_stat.sh tetscase
->>  tools/perf/tests: Fix shellcheck warnings for
->>    thread_loop_check_tid_10.sh
->>  tools/perf/tests: Fix shellcheck warnings for unroll_loop_thread_10.sh
->>  tools/perf/tests: Fix shellcheck warnings for lib/probe_vfs_getname.sh
->>  tools/perf/tests: Fix the shellcheck wanrings in lib/waiting.sh
->>  tools/perf/trace: Fix x86_arch_prctl.sh to address shellcheck warnings
->>  tools/perf/arch/x86: Fix syscalltbl.sh to address shellcheck warnings
->>=20
->> Kajol Jain (10):
->>  tools/perf/tests: Fix shellcheck warning for probe_vfs_getname.sh
->>    testcase
->>  tools/perf/tests: Fix shellcheck warning for record_offcpu.sh testcase
->>  tools/perf/tests: Fix shellcheck issue for lock_contention.sh testcase
->>  tools/perf/tests: Fix shellcheck issue for stat_bpf_counters_cgrp.sh
->>    testcase
->>  tools/perf/tests: Fix shellcheck warning for asm_pure_loop.sh shell
->>    script
->>  tools/perf/tests: Fix shellcheck warning for memcpy_thread_16k_10.sh
->>    shell script
->>  tools/perf/tests: Fix shellcheck warning for coresight.sh shell script
->>  tools/perf/tests: Fix shellcheck warning for probe.sh shell script
->>  tools/perf/trace: Fix shellcheck issue for arch_errno_names.sh script
->>  tools/perf: Fix shellcheck issue for check-headers.sh script
->>=20
->> .../arch/x86/entry/syscalls/syscalltbl.sh     |  2 +-
->> tools/perf/check-headers.sh                   |  6 ++--
->> .../tests/shell/coresight/asm_pure_loop.sh    |  2 +-
->> .../shell/coresight/memcpy_thread_16k_10.sh   |  2 +-
->> .../coresight/thread_loop_check_tid_10.sh     |  2 +-
->> .../shell/coresight/unroll_loop_thread_10.sh  |  2 +-
->> tools/perf/tests/shell/lib/coresight.sh       |  3 +-
->> tools/perf/tests/shell/lib/probe.sh           |  1 +
->> .../perf/tests/shell/lib/probe_vfs_getname.sh |  5 ++--
->> tools/perf/tests/shell/lib/waiting.sh         |  1 +
->> tools/perf/tests/shell/lock_contention.sh     | 12 ++++----
->> tools/perf/tests/shell/probe_vfs_getname.sh   |  4 +--
->> tools/perf/tests/shell/record_offcpu.sh       |  6 ++--
->> tools/perf/tests/shell/stat+csv_summary.sh    |  4 +--
->> tools/perf/tests/shell/stat+shadow_stat.sh    |  4 +--
->> tools/perf/tests/shell/stat_bpf_counters.sh   |  4 +--
->> .../tests/shell/stat_bpf_counters_cgrp.sh     | 28 ++++++++-----------
->> tools/perf/tests/shell/test_arm_spe_fork.sh   |  2 +-
->> .../shell/test_perf_data_converter_json.sh    |  2 +-
->> .../tests/shell/trace+probe_vfs_getname.sh    |  6 ++--
->> tools/perf/trace/beauty/arch_errno_names.sh   | 15 ++++------
->> tools/perf/trace/beauty/x86_arch_prctl.sh     |  6 ++--
->> 22 files changed, 58 insertions(+), 61 deletions(-)
->>=20
->> --
->> 2.39.1
-
-
+Thanks,
+Jing
