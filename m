@@ -2,169 +2,152 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CCB7EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jun 2023 20:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3362FEB64D7
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jun 2023 20:05:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231588AbjF1UBz (ORCPT
+        id S231544AbjF1UFd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Jun 2023 16:01:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230260AbjF1UBu (ORCPT
+        Wed, 28 Jun 2023 16:05:33 -0400
+Received: from mail-yb1-f172.google.com ([209.85.219.172]:59665 "EHLO
+        mail-yb1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231252AbjF1UFa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Jun 2023 16:01:50 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3FE51FE7;
-        Wed, 28 Jun 2023 13:01:49 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-666ed230c81so151873b3a.0;
-        Wed, 28 Jun 2023 13:01:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687982509; x=1690574509;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BVELursx7ZDvBYQWp0incqgL1857WVtGQabwOfefQSc=;
-        b=gN/lr8UbwiJrrDE/KxtTTHGo8Y4o30+B6GIfeY7nBFzojGAOptzHMWWBaICsjeydhJ
-         uJ4On3ApMAVXjXLmYWNeCIY9dBzWUCUxmdbq+N8FgOEPi/cTuMHmBxn7fqrrkcpSLIeC
-         /0aVTVoQQMcEDP9htZcY1zQBA5Y6kO6Kc+4T62CICo69fcZd1TGuFxJ8yHttMopBfJty
-         TRXh/CQWSyFbUY8RSiYh2k2zk9yWpLEsPds0cUB/xa4KivQlnO95lIuAXZyh0YlULULn
-         VJTT+JM1xqEyFkhBgjmuGvd+7BegufSJ5JQW9mIr82B0g8dRnNLOIXVuDKNbTcOwOX1K
-         XmCw==
+        Wed, 28 Jun 2023 16:05:30 -0400
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-bd0a359ca35so121688276.3;
+        Wed, 28 Jun 2023 13:05:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687982509; x=1690574509;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=BVELursx7ZDvBYQWp0incqgL1857WVtGQabwOfefQSc=;
-        b=lcPutIIZxIUUkr3zKNwLpHWI7AeckIOLv9w9qkQj0xn8Z+MgUS7lfjc5ZQV8R6NraF
-         8C6o/H+0RF5CLcUCKzoTKH4zBcpDrPEoADGt5eKGrl2TrVhqY9W9aSdxz0XSTLt/KKMn
-         scGIPXXx85vpsXp3geM/UUCUZNOBdU1x2GJQ5wv8uS58+Diq6Br8QWGMw6qRQztiAf4/
-         ut99S5+uMKgYwjT/50CR22JFatOOhyCeYxRpKIJrH74yP6S2PmChMc0xoHjEhUj3fEJJ
-         bGcun6p+KWQKnsleCeaYztqBJ8uQpS1e6VRJQKvaRVGE7X7Ebyf6uB7ubNSmsOvb33wR
-         1cxg==
-X-Gm-Message-State: AC+VfDxEfCLscvfZpm2kRGnz7WwnWkMeITe0zU0cs7tPlQuuYtn0hjoI
-        RNTcRWmLZXdTDBoEwwo57Vj/lOi33VE=
-X-Google-Smtp-Source: ACHHUZ593BLR6RNR8eoFC7C/7TumlbXFyDfhoijcz6m9Pw/s/2wogOCaZI0M05UiUMZUa5KJ+eS85A==
-X-Received: by 2002:a05:6a00:1504:b0:668:7325:e184 with SMTP id q4-20020a056a00150400b006687325e184mr39037691pfu.16.1687982509139;
-        Wed, 28 Jun 2023 13:01:49 -0700 (PDT)
-Received: from bangji.corp.google.com ([2620:15c:2c0:5:fc6b:e50c:c8f0:b09b])
-        by smtp.gmail.com with ESMTPSA id f3-20020aa78b03000000b0065e154bac6dsm7340376pfd.133.2023.06.28.13.01.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jun 2023 13:01:48 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-        Hao Luo <haoluo@google.com>
-Subject: [PATCH 4/4] perf test: Test perf lock contention CSV output
-Date:   Wed, 28 Jun 2023 13:01:41 -0700
-Message-ID: <20230628200141.2739587-5-namhyung@kernel.org>
-X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
-In-Reply-To: <20230628200141.2739587-1-namhyung@kernel.org>
-References: <20230628200141.2739587-1-namhyung@kernel.org>
+        d=1e100.net; s=20221208; t=1687982729; x=1690574729;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wTmpyVSMLrIk0QN7D+5i/fdXLo6g3GMR/467HY8B59c=;
+        b=T4Hff1Fk03Bp3B0AkaOi9eYnl8ayYRfBGZKFg1Ly4lQqfCyzc/OpWg8Ebgcxzcr7j+
+         lfX7ZRm0gTTHOGj5kpVhpsWYeSGcmRRNGgKilxwUV2nqcGb0BHUUWnffIVAh4+7eKP1q
+         s/gPMj2dAImgVPOu1Wme21eTIGI8gW4TPSFKxy2mt+ZUNfOV9VYj50cV2iAolb9vsDFU
+         UNj72J1Iw2aybP0QL0Zvp20xVGXdwV/UTzXyD2+PeBzzcxHlDpqC8SmMIoEao/V8gRFF
+         wr3HEOSws1oAOHwT43sxrLk4SR5hNXQwuIZEYWLzeQelntL0UhyqBqyHz6dirHnx5TZR
+         pahw==
+X-Gm-Message-State: AC+VfDzzBtgNbdcyduYDB0Q5Tu8nS9SmNiNRJxeRYoZRzC6Rjp1Hecd0
+        G53xrdzjPL1k4EjaJcHGIHbSA279r8A8DHkwudo=
+X-Google-Smtp-Source: ACHHUZ6fxZywp+3+CMdiM7w2ojgSM3x9Sg3C3EXjRVMYsP0lSj8tSCwOXRQhKihLvaqxFyn+DYxAxK2OKmy1IH+nygE=
+X-Received: by 2002:a25:cf91:0:b0:c14:3d56:bf65 with SMTP id
+ f139-20020a25cf91000000b00c143d56bf65mr9889094ybg.4.1687982729154; Wed, 28
+ Jun 2023 13:05:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230627182834.117565-1-irogers@google.com> <344a8de1-469d-a8f9-100e-9a67e562939b@huawei.com>
+In-Reply-To: <344a8de1-469d-a8f9-100e-9a67e562939b@huawei.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 28 Jun 2023 13:05:17 -0700
+Message-ID: <CAM9d7chik56jZqKSUJqdvwTG9gPRVcChPdUnTi-NcCRozrb9nQ@mail.gmail.com>
+Subject: Re: [PATCH v1] perf pmus: Add placeholder core PMU
+To:     Yang Jihong <yangjihong1@huawei.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-To verify CSV output, just check the number of separators (",") using
-the tr and wc commands like this.
+On Tue, Jun 27, 2023 at 8:01 PM Yang Jihong <yangjihong1@huawei.com> wrote:
+>
+> Hello,
+>
+> On 2023/6/28 2:28, Ian Rogers wrote:
+> > If loading a core PMU fails, legacy hardware/cache events may segv due
+> > to there being no PMU. Create a placeholder empty PMU for this
+> > case. This was discussed in:
+> > https://lore.kernel.org/lkml/20230614151625.2077-1-yangjihong1@huawei.com/
+> >
+> > Reported-by: Yang Jihong <yangjihong1@huawei.com>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >   tools/perf/util/pmu.c  | 25 +++++++++++++++++++++++++
+> >   tools/perf/util/pmu.h  |  1 +
+> >   tools/perf/util/pmus.c |  7 ++++++-
+> >   3 files changed, 32 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> > index 8d5ecd4ff1a9..7f984a7f16ca 100644
+> > --- a/tools/perf/util/pmu.c
+> > +++ b/tools/perf/util/pmu.c
+> > @@ -928,6 +928,31 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char
+> >       return NULL;
+> >   }
+> >
+> > +/* Creates the PMU when sysfs scanning fails. */
+> > +struct perf_pmu *perf_pmu__create_placeholder_core_pmu(struct list_head *core_pmus)
+> > +{
+> > +     struct perf_pmu *pmu = zalloc(sizeof(*pmu));
+> > +
+> > +     if (!pmu)
+> > +             return NULL;
+> > +
+> > +     pmu->name = strdup("cpu");
+> > +     if (!pmu->name) {
+> > +             free(pmu);
+> > +             return NULL;
+> > +     }
+> > +
+> > +     pmu->is_core = true;
+> > +     pmu->type = PERF_TYPE_RAW;
+> > +     pmu->cpus = cpu_map__online();
+> > +
+> > +     INIT_LIST_HEAD(&pmu->format);
+> > +     INIT_LIST_HEAD(&pmu->aliases);
+> > +     INIT_LIST_HEAD(&pmu->caps);
+> > +     list_add_tail(&pmu->list, core_pmus);
+> > +     return pmu;
+> > +}
+> > +
+> >   void perf_pmu__warn_invalid_formats(struct perf_pmu *pmu)
+> >   {
+> >       struct perf_pmu_format *format;
+> > diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> > index 8807a624e918..203b92860e3c 100644
+> > --- a/tools/perf/util/pmu.h
+> > +++ b/tools/perf/util/pmu.h
+> > @@ -286,6 +286,7 @@ int perf_pmu__event_source_devices_fd(void);
+> >   int perf_pmu__pathname_fd(int dirfd, const char *pmu_name, const char *filename, int flags);
+> >
+> >   struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char *lookup_name);
+> > +struct perf_pmu *perf_pmu__create_placeholder_core_pmu(struct list_head *core_pmus);
+> >   void perf_pmu__delete(struct perf_pmu *pmu);
+> >
+> >   #endif /* __PMU_H */
+> > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> > index 0866dee3fc62..3cd9de42139e 100644
+> > --- a/tools/perf/util/pmus.c
+> > +++ b/tools/perf/util/pmus.c
+> > @@ -153,7 +153,12 @@ static void pmu_read_sysfs(bool core_only)
+> >
+> >       closedir(dir);
+> >       if (core_only) {
+> > -             read_sysfs_core_pmus = true;
+> > +             if (!list_empty(&core_pmus))
+> > +                     read_sysfs_core_pmus = true;
+> > +             else {
+> > +                     if (perf_pmu__create_placeholder_core_pmu(&core_pmus))
+> > +                             read_sysfs_core_pmus = true;
+> > +             }
+> >       } else {
+> >               read_sysfs_core_pmus = true;
+> >               read_sysfs_all_pmus = true;
+> >
+> Great. This patch solves the problem, the test results are shown in [1].
+>
+> Tested-by: Yang Jihong <yangjihong1@huawei.com>
 
-  grep -v "^#" ${result} | tr -d -c | wc -c
-
-Now it expects 6 columns (and 5 separators) in the output, but it may
-be changed later so count the field in the header first and compare it
-to the actual output lines.
-
-  $ cat ${result}
-  # output: contended, total wait, max wait, avg wait, type, caller
-  1, 28787, 28787, 28787, spinlock, raw_spin_rq_lock_nested+0x1b
-
-The test looks like below now:
-
-  $ sudo ./perf test -v contention
-   86: kernel lock contention analysis test                            :
-  --- start ---
-  test child forked, pid 2705822
-  Testing perf lock record and perf lock contention
-  Testing perf lock contention --use-bpf
-  Testing perf lock record and perf lock contention at the same time
-  Testing perf lock contention --threads
-  Testing perf lock contention --lock-addr
-  Testing perf lock contention --type-filter (w/ spinlock)
-  Testing perf lock contention --lock-filter (w/ tasklist_lock)
-  Testing perf lock contention --callstack-filter (w/ unix_stream)
-  Testing perf lock contention --callstack-filter with task aggregation
-  Testing perf lock contention CSV output
-  test child finished with 0
-  ---- end ----
-  kernel lock contention analysis test: Ok
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/shell/lock_contention.sh | 36 +++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
-index f2cc187b6186..4a194420416e 100755
---- a/tools/perf/tests/shell/lock_contention.sh
-+++ b/tools/perf/tests/shell/lock_contention.sh
-@@ -233,6 +233,41 @@ test_aggr_task_stack_filter()
- 	fi
- }
- 
-+test_csv_output()
-+{
-+	echo "Testing perf lock contention CSV output"
-+	perf lock contention -i ${perfdata} -E 1 -x , --output ${result}
-+	# count the number of commas in the header
-+	# it should have 5: contended, total-wait, max-wait, avg-wait, type, caller
-+	header=$(grep "# output:" ${result} | tr -d -c , | wc -c)
-+	if [ "${header}" != "5" ]; then
-+		echo "[Fail] Recorded result does not have enough output columns: ${header} != 5"
-+		err=1
-+		exit
-+	fi
-+	# count the number of commas in the output
-+	output=$(grep -v "^#" ${result} | tr -d -c , | wc -c)
-+	if [ "${header}" != "${output}" ]; then
-+		echo "[Fail] Recorded result does not match the number of commas: ${header} != ${output}"
-+		err=1
-+		exit
-+	fi
-+
-+	if ! perf lock con -b true > /dev/null 2>&1 ; then
-+		echo "[Skip] No BPF support"
-+		return
-+	fi
-+
-+	# the perf lock contention output goes to the stderr
-+	perf lock con -a -b -E 1 -x , --output ${result} -- perf bench sched messaging > /dev/null 2>&1
-+	output=$(grep -v "^#" ${result} | tr -d -c , | wc -c)
-+	if [ "${header}" != "${output}" ]; then
-+		echo "[Fail] BPF result does not match the number of commas: ${header} != ${output}"
-+		err=1
-+		exit
-+	fi
-+}
-+
- check
- 
- test_record
-@@ -244,5 +279,6 @@ test_type_filter
- test_lock_filter
- test_stack_filter
- test_aggr_task_stack_filter
-+test_csv_output
- 
- exit ${err}
--- 
-2.41.0.255.g8b1d071c50-goog
-
+Applied to perf-tools-next, thanks!
