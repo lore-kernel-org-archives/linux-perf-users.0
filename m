@@ -2,64 +2,64 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94824EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jun 2023 10:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E18CEB64D7
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jun 2023 10:33:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231433AbjF1KdW (ORCPT
+        id S231535AbjF1KdZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Jun 2023 06:33:22 -0400
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:9476 "EHLO
-        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231448AbjF1KbO (ORCPT
+        Wed, 28 Jun 2023 06:33:25 -0400
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:12536 "EHLO
+        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231443AbjF1KbO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Wed, 28 Jun 2023 06:31:14 -0400
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35S90FqT020438;
-        Wed, 28 Jun 2023 10:30:13 GMT
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35S8xh4Q015057;
+        Wed, 28 Jun 2023 10:30:25 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : content-transfer-encoding : content-type :
- mime-version; s=corp-2023-03-30;
- bh=33mijaKoOEEZVAcp47V0F2L7xqbUcCfWnB+lLnFzEzg=;
- b=TB2/nC548rB78wFCqTGV3NmywlHMAmZsSK3FrMPka3L0Nj7/plID1HmAMYD4pPdWiLpV
- CF9uO35iBfnlmpWKodyY1oU+CLZApcEPXKc/YJZd/Hq7gYpw6KnovidxaHF5GdCcsvOZ
- 9sNeX70vjB36hzSMyO+0pEjgL9waZCRGgcqEsD1EqPhjfkmEycjoN2j9viQe1NVVowjz
- uccbMvibzfyEdJbqElGTH4+cvl1K0xtZPXiM0bmyBcgODMnPdoADsm76Jbi9/7Zp8vJA
- kSCd5+Wfp/enbf2JgxTg2W6FFScS0IG9APiJEkemviQ4SpGB6UaUGqPtpZLt3AMbJoFT ag== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3rdpwdf5mu-1
+ subject : date : message-id : in-reply-to : references :
+ content-transfer-encoding : content-type : mime-version;
+ s=corp-2023-03-30; bh=UU2sHGlmXXcaiJGNyo96qt+oyclFyaELE//6xrkiAbc=;
+ b=XYNgcvMDENO7YQVwtryj+cXu8DcwFcne5IT4rj3CrFCLTvNNQvlDabaM26Q+jleakOTv
+ 5b4AnzLbct7uXOT95yXud+khYF5s9cNkEufkcUPksRRaoOttEDdY3S4X7Zc556lydZCZ
+ vF7sZAzNVXupuaV1Cih26Y9shE+ue26yMMajxVtmjAog1g4JIyDAPlYL/YL0rJS8mnQd
+ rL16jhhKG94OHbmK9iXAd5WfJmZntTKgMkKtX9XA/U3Rvhi0hItDoepSgfhc682FZ3sJ
+ hbxdw3n4MfICqztdlyqSkGgKRA6/eQhi8IDnTmurUWJ9Lxohoa3Pea+yr5v4bKAVAWtB cg== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3rds1u73hm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Jun 2023 10:30:12 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 35S8XQRS008634;
-        Wed, 28 Jun 2023 10:30:11 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2042.outbound.protection.outlook.com [104.47.66.42])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3rdpx5tr3a-1
+        Wed, 28 Jun 2023 10:30:25 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 35S9H164029644;
+        Wed, 28 Jun 2023 10:30:24 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2170.outbound.protection.outlook.com [104.47.55.170])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3rdpx5tpwe-2
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Jun 2023 10:30:11 +0000
+        Wed, 28 Jun 2023 10:30:24 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ij2r/VYj0Sf3UUAWrLC3aDf73WQZfY3jUgT7D1u+3Q5xreZ88vttz/YDgrMFeY1vvRDfb8RUjdnj9k0WPs1+5zF3NinwSsSX+wAL6NzuHrGHGkCypucVQgFRCWoNifzFwzQFpfXhQ0emGBYJwVcZEu8LwjwL8C3cttjI/7m1Pz6AUXzhT08WZuTR/3qU44THh1E334TW3D5/EVhtSPfBlMLFUUxGkg0iJlm8iwX0AxQy8p9Q+LmMvkRaNZP7sG60hJfXZcIfrJYpVIw8BERwfuX30TenJeitVzAL89Fdz/NAs4fxk2rr/9oNJcA+2WqGW0MBGPOmVkFA6L/WirRn+w==
+ b=BWk1bnFDeVqC2jc9xU3htcTqWE/lZvoBnUbW9jztO1iXIK+y4OEJ1BRvQS4XUM7TUsYVssaGRQPzZijvJOWkUVsuNghpIX/t3czCiBAFMfgb41tjOQEcTVtP5YWSJyHLJrzHc2i4JE6TNwxBLTj5A7PcFfv19Zm0q+NqKC8Q8iRs24mBboxHacVvogq6txKaH/PhMiAg7bJbZ94eTo3Ljxvso6gCUF/6Kim1zJBmS9vTqbRP5xjFXjuqIQNePGzUiZjjFD66+Ugru7R6SqZcw+xzyNxgDdjhQzFw4PB5S/6H7XxgcYq6/4C1dKM+1XXzSmjwaTP4BvZcI8x97Crrqw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=33mijaKoOEEZVAcp47V0F2L7xqbUcCfWnB+lLnFzEzg=;
- b=hbLAgozfmXqbOxBJtrFwQT1rS80cX0lAWavRZHtAeJAD8QWpQzFD9l/7cjxbAcxthxaed3lH3fanIpwO0rk56VjEJ7QppuoBto7LZ7/vHMrfKuAjm7p277Dtcgi6gFnTnRBFg9ut/6SQSw0hOnVw9BiDBWVwmHKRhlUTZ4gooCrn415hqcECpLVBI0Dm9cWAGOVZ3iqhSI4JxWibpSSzdlI4awK7fZJQO29DPyL/sN7Ij6SzEL9HRXQCvdVPZK3DdosW5bjEX3pSZ0uo6V+cyoYWE1foh0ccwG+Rk5Lzcr2CUFhio8FM6qblpv3eqjvy6p4v6CHO/JXpdQtcA3+qYg==
+ bh=UU2sHGlmXXcaiJGNyo96qt+oyclFyaELE//6xrkiAbc=;
+ b=XYe0wGuVCu8DNlf3dlkXUv+S1Q2oSZGOE4sB9JYuH1Vy5wfAZmJuEJwnXxRPNmGbqtVWPkqT5nrHIdl5g94gIDELekNNh6WXz2scQtSnmXG7oAVeMloPn+t2haEdeQtTD7dFl/CSR8tNwG6dLot79iSm0z/PPbTqhHpyQsDOHCeaEvSzJenu7jj6OBfGARwEpncbnWof6AmiXsRm5BMKRH43YV7WGupW0G1Wjz+Owcf7e5aDFanwalYfhO5vRkyoUUxunfjOeHZNyVurYFdaHcKE2hhbJeLw3oOU78JwygfhresfCsEtQDQofM0bHDlv4NLg8MbSwH9uk9HXdgRzVA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=33mijaKoOEEZVAcp47V0F2L7xqbUcCfWnB+lLnFzEzg=;
- b=ni9pCBxPHMrm3S9sS9HuInlsX8ieefZf7aZfVCfZ4ddoHCwqhg8raXPVjnglRnTU3Lh9ziN2q4XQC4A1IiZ3GDxNWUBZlZs+TW/YgDDM1i8my2nRKnjK/JbQi98fbein2HLgmFTepDgUXqHCgAGFdX+601IgrN13FdAEdA16Z4U=
+ bh=UU2sHGlmXXcaiJGNyo96qt+oyclFyaELE//6xrkiAbc=;
+ b=GZO/p+3oqE2KzpoQXcBfF0t1j0M/y9AChsovZiyrdr9Lx/0zpaZCgcAuGwm1HyXyrpIWja9MdkiOfBn8DKQzIqIb584jSv9ZgFlxH3MhQRRojTRkpdQXf9GXJmm2HMIrJcqkjllDpdlrHwAqC8RVplrehRl0zZp6ZZUVRrEbkfs=
 Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
  by SA2PR10MB4715.namprd10.prod.outlook.com (2603:10b6:806:fb::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.24; Wed, 28 Jun
- 2023 10:30:09 +0000
+ 2023 10:30:22 +0000
 Received: from DM6PR10MB4313.namprd10.prod.outlook.com
  ([fe80::e38:5b81:b87f:c1eb]) by DM6PR10MB4313.namprd10.prod.outlook.com
  ([fe80::e38:5b81:b87f:c1eb%7]) with mapi id 15.20.6521.023; Wed, 28 Jun 2023
- 10:30:09 +0000
+ 10:30:22 +0000
 From:   John Garry <john.g.garry@oracle.com>
 To:     acme@kernel.org, irogers@google.com, namhyung@kernel.org,
         jolsa@kernel.org
@@ -69,152 +69,277 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         zhangshaokun@hisilicon.com, qiangqing.zhang@nxp.com,
         kjain@linux.ibm.com, kan.liang@linux.intel.com,
         John Garry <john.g.garry@oracle.com>
-Subject: [PATCH RFC 0/9]  perf tool: sys event metric support re-write
-Date:   Wed, 28 Jun 2023 10:29:40 +0000
-Message-Id: <20230628102949.2598096-1-john.g.garry@oracle.com>
+Subject: [PATCH RFC 6/9] perf metrics: Add metricgroup_sys_metric_supported()
+Date:   Wed, 28 Jun 2023 10:29:46 +0000
+Message-Id: <20230628102949.2598096-7-john.g.garry@oracle.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20230628102949.2598096-1-john.g.garry@oracle.com>
+References: <20230628102949.2598096-1-john.g.garry@oracle.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR13CA0193.namprd13.prod.outlook.com
- (2603:10b6:a03:2c3::18) To DM6PR10MB4313.namprd10.prod.outlook.com
+X-ClientProxiedBy: SA9PR13CA0066.namprd13.prod.outlook.com
+ (2603:10b6:806:23::11) To DM6PR10MB4313.namprd10.prod.outlook.com
  (2603:10b6:5:212::20)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|SA2PR10MB4715:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8c884615-043c-4cd2-1cea-08db77c2a5cf
+X-MS-Office365-Filtering-Correlation-Id: 5c440c4b-5c93-4459-a0e6-08db77c2ada8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7oQqv7OqqonDIJSIWMEbD58a8JwoRlg0jI490APzIiceB10JtbmlRiAM8AoKFXoinTW0cLr2aZN/SMlGnofL63QWoTowhvCjHq3mCq5mZH+66vP7rYzTtiTWTBAHCfFdYjj81TRzGuUXe9imKC47xw58xb0hi4MDXU5/F0qBbIR51tDD1y1NbafQJz4laIGOeKfQqrVA+cND+xOXaJq/PtJg7EnX8/abymAu2DrWfUjchY9VfMrkTXBojvSdhftu1951Xo+v8NnslLY630G3c4ivJ3XZonUsaO4vMfk8l28ryCa7NPle7mFypzGXjc/agS1+ru588Od5lmI8k76JbLJmqkdRLdGtAnFT9SWOXe/7/qCn2UdUN8cVtsbaG3iDsx5ffEa2zNIkSJm2wWoygPLcPMmBgw4ObOLxL1+A2mStDKDrqvznWbLTJkKJFQyttky9wFXtly35FxBpwVWtTixat/9z/PFSAlvd8mK+9xwKXxGThRp62uqf6fyrGS+Osux6wjUTAviF4b36KaCkWlv+4nUjFA4RBvdH4stm5trBdXHrz+97CaA69oAaVEst
+X-Microsoft-Antispam-Message-Info: Ru++znWGnBDfIE9sIGOrU+lBbF/JHg1rXt1akdqStGjyPiJRLOKECa/fL5dJsk9luLsjSIK8KqZZwx/IWFAK9i3ibz1GZQIYDNBrZ9mfqbkutaBIG1G6Mz9K8NmIsBXDfUagYIV9EO1nLEe7BRE/3TIaA1nYF0yLZAhwKqhtcfyfXBSLznAVlbjvKH+kk5739epPWiVKVAriXuM7zLiNoXlz7il8vwksknoKYhHxkrzBUmYYP4Ww+uZrrhNitMopz2v/fP8MIQNpEOLefD+8pW0rsKJei8rBXQ2aHplGDfETZYZEW8RaR3JaSDplolhljjE4Aa9RrWwdra5b0cGL+Uie/3/wkCrFPIt3mTML5IbkYfOFzX/h5alGudlogFFCaiPd4Zp/1sV0gOZwh8GyxJFAC2ETznHzEcOqWkT8+gzLzzA/3FiWTK0fiIsM45TvtNRuwHIRq2XlkSeNCpE/doBXB4LIbMWs3uTGcUhjxVbzLPZ/fO2wK3Xhkx5EwxsctDiW/lhKax0HYcaiUzP16KZU4bBh8/ZZlQTPzKyF95RkNdwtZwTz1wpEqzvk2Z7V
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(39860400002)(396003)(346002)(376002)(136003)(451199021)(38100700002)(83380400001)(103116003)(36756003)(86362001)(478600001)(6666004)(6486002)(2616005)(8936002)(316002)(66946007)(8676002)(41300700001)(66556008)(4326008)(66476007)(107886003)(1076003)(6512007)(6506007)(26005)(186003)(7416002)(5660300002)(2906002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?BW0LnjovkaccLxa+oL4ZmvwUGtmm0LBnxzMZOO0apLEsCKW43gp9N/GSw9XD?=
- =?us-ascii?Q?w3F7Kgol2s2CfUz3y0Kx8Hda4WiANwApXmoBA+7eTyF5wxqpdKwl7Hx0nPfH?=
- =?us-ascii?Q?2yUw2akJf6nj39mPX9I1ekTxLmkpmRAE1IfTA8JXQ+va1UalQkFJpCKcjfPs?=
- =?us-ascii?Q?IDPUX/gsVX5JDnMPVa+1OdqGahzkJL5pPJ1f6RARWbe+gCLmQQq1yMC3wzVI?=
- =?us-ascii?Q?bGznRPGHkzJpk6J2vOKb96Jv9f+AizI2S1wU/Rs8AWL86aDXfYRlbiUBOsUC?=
- =?us-ascii?Q?TVqor7RthAVJ4Bgwjab6nb52YW6DykwThx9YcS8EjSmMm1UikjBURYtfyirV?=
- =?us-ascii?Q?pbN9K1gzKrQ3ty+1ftvily2Uq89OV2d/ynaFq9HUI7TPm6OdpqthdTi5uAFT?=
- =?us-ascii?Q?2hzPg0FOBpjKjWsASkH765Osn8nAVdjoC4Ad3SckpMcPb/cy+F0VDV2no58U?=
- =?us-ascii?Q?sO5vK6z72jtgJYnqJTAo4erWxnxVeL4fg9TpbkX7vo7fxNfCrMQSQRAgP2wq?=
- =?us-ascii?Q?iheqRn3FNR6rqr0QU9J1dN9GITJ8NgoLrhu48jUI8Yofq4hlg/8FZdxlcKtz?=
- =?us-ascii?Q?nfFzRNE1i1/fgc5dWV7f018ip1zLa4GAOv+9iqenMuOTOcK3iYiDocFXnw26?=
- =?us-ascii?Q?OGq9IYTvwefXBYzhatMBEZqNUrvQJ3DHvrPYd8EvwSmgm8WIjwiObDWGA+/i?=
- =?us-ascii?Q?bPmKo3AZNQiXMLFTJnXHMMC49mQfmVo9GkLQxN0hOEOXwh88cpEbPLfEjvfw?=
- =?us-ascii?Q?NIBo9swX4WGehqKVbrvNYQN8FrdGqM9dIs+nB3cyPl7IpiaVmft9oXF7BCRJ?=
- =?us-ascii?Q?k5915iVs3jnOuKcgLOWhQECcdVznI1PI8mSaq0rFJHE2ieeod+6bnq4hYjJy?=
- =?us-ascii?Q?zSBEGVZJEYQtswtIxWoT798jt3hh9xibsuTploV+CeU5FUf9lDTSiT8FWajZ?=
- =?us-ascii?Q?Oco5rV7nYb8GfTVPoSP+0tgFkrv3JXL3VLQnaxkJ7b6nYqcMq5rRehj34sMy?=
- =?us-ascii?Q?HS7mNzOpGQXcN4S1bo2XPU0ztMhIrma1qnF6vA5ZJshNorxweett6FZcTNqk?=
- =?us-ascii?Q?OE8JmEtd503Ls0rEToeLVqDWGWItG03HBS7dyi98AYbuVD0bHAK25SGB3AeQ?=
- =?us-ascii?Q?UBfgb0HyLPULj+CbX7289Dj0lh0fZpQAj5PvDfrJz+mgWHb5Pi+/pLFXLXgJ?=
- =?us-ascii?Q?yUEeCexkRo8M9EmQSMqEQGPKtwLRipXuvqY/4TjIGq6oyAlO13tUjagkwlCt?=
- =?us-ascii?Q?qVZYGUnXEYANjuk/6LUNgdZxVJiHNQwYq1zZu30kesgJCHMxj/12P8EGQi4q?=
- =?us-ascii?Q?A5Ss6CrWysdVR4ZCY4CIvFQZdb9Xc8y0DCJliXPYkzwkpde20UKOttf+DULn?=
- =?us-ascii?Q?ybsQmhXQz9lrcRANsnX1jRQeH+EWuAUMn5cnXUFYyY0wc68wUXFg2aBu7s3S?=
- =?us-ascii?Q?QVQ1agh2Kh5OHrcHftwKIlzy9Aavs3EG3Udjaagj1+l2+Mq7ti+58L6Tjpjq?=
- =?us-ascii?Q?jikW/M0FmhHREYQPqg/52nmM9LJ0aAba+3Z3dzr6x6rFqxF2feJNW7ruhdKg?=
- =?us-ascii?Q?J35trZSNYO02bVJ/48FWHFn60IetKDs4qKYxafeaAyz6jVpxU7gqPvUBwCNB?=
- =?us-ascii?Q?8A=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?qQsbxo1JQCExF1MfJbz4KfEXnsvW04dgjNvn/Ss5zhg4yMcdbzW2iBNAhgai?=
+ =?us-ascii?Q?7xI/pr+F059ZDC2lkvYbxYQsIrGS/VdU3eNOoh4WmInVXRNX/Pm0zAAA8BRv?=
+ =?us-ascii?Q?/p08g5qbJovpQfmi2WonlFDBuVHeYd5jG4kYyofEaxAU01aN3JCqw/PYOXlu?=
+ =?us-ascii?Q?8dyvzK5kx0MGMKZ8e9DqHJ4Me68tkzROUfkXz12EOfbjsndn9l7ZV9R8g50t?=
+ =?us-ascii?Q?M/6B8F2u6EmKMt5+Xg0gwIsdI6BntrVnKUrM+d6r6Rtrnwm/FJ7hSG+Jx2SJ?=
+ =?us-ascii?Q?vt+4pT2PRoYW9OMHrrp4GJ5FsadM/jO+zwKHnfnxZ1jNKgaP00HiPmJIfkpI?=
+ =?us-ascii?Q?nOyRWlT0IRZ7cdUa2hmv8M2XFxYEgZ1YpFNLX3A7L/l0H9TdPiCwQUkYfBe5?=
+ =?us-ascii?Q?WpBaxIAeGNpJLB0u446ARUH9qXUeFiBubV2pTuIWOj1Qe/TEXp5h9Mqx+asu?=
+ =?us-ascii?Q?u3o3pjJZGm9mMNHQh0KATmYxSl+zJOqyehlO1n1ERKuzJvAZI+TkQVi63dSo?=
+ =?us-ascii?Q?bl04rkktVb7wDzbNBYXFZ1yzq+wnlJJsD3tdl98K6tTJkovmvB96kU/cpDti?=
+ =?us-ascii?Q?Um0lFIbS+r+PqNAL1LJENM6+C8NzmboI2/19rxBxfaov/8FxzLsqDcqhQ2/e?=
+ =?us-ascii?Q?JDu8Xrx4a2j1aOg5VwkdI0J/f+wS8KDsCuxbrELvVlcKYltg8wAdQlUVgTwj?=
+ =?us-ascii?Q?Eftot2LDS6Gxa1vZjtb5aJFtxFG/mW/cmoMuo3mUm58Eo32WuMo1ZmQtikx8?=
+ =?us-ascii?Q?/Ercfj8cRfaGk9A/1bBN6zEZrSBbZqy1tW2eTSW4yQD+dRSDCSsY84UvYO53?=
+ =?us-ascii?Q?BmE5yk24vNTlXnFZSj2CmiUDQ/bPNs1kUDXk1nWSLF8U3Nq+Q4mrszO21kqI?=
+ =?us-ascii?Q?XYJQuj2+O1SFCGKMOYL/cwO3EO/MokQKReQaQZeOzpKNCj5Sp1gpO6RwpmtV?=
+ =?us-ascii?Q?xPsQi5XvqNI4PZuXyyHGlyB0fQPDvnzyXTWIB5n17tOr8Y5vdNVNcjDfr7LG?=
+ =?us-ascii?Q?LyvNcbHs2xmSRmUPT0MIhz6dJqu/VibbBNdRO4RYUmACZAt62VLOBH/igzMn?=
+ =?us-ascii?Q?jaQxXgLcdFciN+GjbZOFVDw9SKZ00g2TJ7J1D35aHMTWBSFDC0+7SDz3su5C?=
+ =?us-ascii?Q?WBjfTYd4aCQchx3eU2pf9RYWn2BS0XcJPFB1td0eNrJg4mNyr+8puCmpUTa3?=
+ =?us-ascii?Q?Nfvg5Wik+xJeBkzMNTRV4Qp27trwQz1KKSnMndKGtvH8xUkd8L/hVK0UxBJ2?=
+ =?us-ascii?Q?Da9DJsQa5lBqyRS8e1e+xAfmrcQHENF0bvbvXbHifTF5YsXySKtBg+2oT1bt?=
+ =?us-ascii?Q?SUzMPReU8+iHI2gDfJN1hnHI3l303HnHA4pXOJgjXA83QUN71g015hd3eYqJ?=
+ =?us-ascii?Q?89H4Accn8EnddneeaIlTmbiQtIwDPFEQeHQ4qXTAAUuJcznR+mJudWeDj9YJ?=
+ =?us-ascii?Q?N2J1inliM47w9yfIG5nC/5qIIt+ookgchbbUxgh22kpR5CQYQsvQbzsjrKUw?=
+ =?us-ascii?Q?Qgf21m+Wx0FjoElqX67qj6EmBYfqEjQVt5JaK9/k4kculiRNe1W6nEwQbNYM?=
+ =?us-ascii?Q?if/zDRO3Kr1/AR7iTfGB5osDwbhE1R1WNJ+96fN4GU0uDYwyEIQFq4MNdBzS?=
+ =?us-ascii?Q?KA=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?us-ascii?Q?aBYMHGr/csme4w0khUG9V48LpfwxkINd6F1TiL/I+JPFqFwdvk2HaePXUkKj?=
- =?us-ascii?Q?FqikZgOVYIowU79rAbGQek8fmrwDLdqUsKTbRsyQKmn256gutyVne4yhNiAF?=
- =?us-ascii?Q?IFYc293CqMQcqqABoXRpwn+PkjphM0CBe2KgIUOsbPc5RsQRV1I0XzD/NADO?=
- =?us-ascii?Q?c+1qlDFOs8NVKrQnqoFUzx0GfHQemvda1PcaNMxL09pLV5PAv8fbRyt1wHZB?=
- =?us-ascii?Q?ZfZ+qmKeUqEADPgwG0KunCyejhlsysTQtGPG2lDyGnDrtqSpYIJi4ty9cr50?=
- =?us-ascii?Q?3jOc8/vt4yyHql5wgnVbrhddkAuxzxKwWl94t/XwTP49tGlVHLCdPTZjblzq?=
- =?us-ascii?Q?TmfcgUV9R/3hfMS+8MvOIT36LwlCdDluFA5lwl2Hls3ly9MP9OW8F3fq+A9Q?=
- =?us-ascii?Q?gkG9OjIzjQ6DzynVIA0tJtacDorFx8UXj6jmptIRbyIqcGu+AVicyEXNtuh8?=
- =?us-ascii?Q?JOZQYrXBM4oYR3Fgc5AQ1F8ILFPJNN2mdwekRWpjPEXvoltMrIbadkYEJHyK?=
- =?us-ascii?Q?6MQ57jrRFM1UUHYoFuirbFsb3ngHs4SlWACXK6JpHs9jOvvEC9dEwAbOxbGL?=
- =?us-ascii?Q?Z4rR1kxsIlgWmH/ACG/sQMSCcIAIyawyUGd584Ui8PMrDTjRqM7OcDYw0P0u?=
- =?us-ascii?Q?gtzNKbRYHkGBzvIbGyf1zzIoxLHbs2zy5nkEu3vg2YrVdd/K6cLoWYkXdBkl?=
- =?us-ascii?Q?pnycUMINKqqsgZWaGCCLy9SYqv79v5+TlRcBEBd/92x9j3Wp8yrD7nsg00gX?=
- =?us-ascii?Q?Kcv7z3+/dTLdP2CvqU6SjlAPSTOKSZ3vMjljhqOMrV11EXNYck/TCu0+gKip?=
- =?us-ascii?Q?7NO4IndSc5Hxxat84WUxD+HQL0pn1AdaZhGrV1NzJMkBlJYbF7Tgu8VeLzGf?=
- =?us-ascii?Q?mGtYyftJcpo91/acNdJeh1YmBK0pU7LU7hZTOI9OKt0pz1kuTgAgG+IGSNqE?=
- =?us-ascii?Q?l/XODjsjn672km3plbjRDEWqZxcBj0D2O6Lv2mK8+FmBD3imTG5P0ZZcBC+8?=
- =?us-ascii?Q?6q5KK/RqEFySHlCl8I886sYtXemlp99oxnEm9M8BsyYb89G+AJCePB57CNBh?=
- =?us-ascii?Q?lM2pHKGZpk5y4li/+gjaAyOzvO3JQQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?us-ascii?Q?b+dTCftJ3ZuI9O/zJ4pgvPfdsTeYqsMKM8wxk3Dhwmq41l/yQE1qN91s7vVn?=
+ =?us-ascii?Q?jl1GAxxV7zRsH1BsA6+++zyOJK82PzH1hxfvN1skXOhOJJ3Xel3GhD/aEDkW?=
+ =?us-ascii?Q?KXpYFRB/+oxwAth3tiDIOVN0AszNfs29/QoXgKHfEvkLt+7mNL4jygZuQ5Vq?=
+ =?us-ascii?Q?RvIz7OxX1hXXk0ahwP97+gdRKAbisoESLu2NdUGzUAqn3VfGp/QFyVUR2FPL?=
+ =?us-ascii?Q?WWoLdS2VFvWvWSr0RZY+IQsgouQs9EKb6Z+eqTVcnI1qNn3DQm9oZ7ZXlxmC?=
+ =?us-ascii?Q?zdYf0AP8alCQrmdxkwZ8dKZrWCNh1CNIUCSUziFaCJI9VYBhgtshsl5HFSWN?=
+ =?us-ascii?Q?/PU1dZX3zJ0X3Qz+QZT7Oh1FXYP0K0rZa3mxKFR/tzwTv/FP1UNgHGYYU1s5?=
+ =?us-ascii?Q?ST0TBJvDRiOqlDqcY3QF3OJv8lUetrH0TTkdFAaz3tfV4H5vp5FwASROgScH?=
+ =?us-ascii?Q?OvBWv3hYzYQ7yIvbiyjguVlwtwKG5dA0KpXEMEI2YIwp7xw/KgrwTv0vH1jH?=
+ =?us-ascii?Q?WVBBdsMw4DS9t99WHniH8x8K1dEleFd0rJrsxySGwRbg5QMZ8BiGpbAbMwQm?=
+ =?us-ascii?Q?qcDCimDs8xh6fYjXAesFQ7AIXg5nzXs0vIRm/rXKvF7hbfBW4N9RqUtg220r?=
+ =?us-ascii?Q?2cMA2kUyuSTX0boz4dsw413biOOuBecoFaFb7d5N/To10smbv56KlFZ5Zprm?=
+ =?us-ascii?Q?0CqJ58/S4jt3fXijGvwavbutDzUOe0sVRvPrw7ejH3H5ZPSCRIAl26eRkTkK?=
+ =?us-ascii?Q?kv8LTyegjKDYgM44PyU/TmNS66Og0FmfgcaktCr3/vDxyThXwf3Pd+DdOOda?=
+ =?us-ascii?Q?vPkmkUx3wqwuLWWtjf35IdRuO7xulU8lagcMM6xPGbuzR2XXAlN93xxLNUCq?=
+ =?us-ascii?Q?XdbE/Azj/9+G3g6sfJ/CrZ2V5iJsKHHqgqikZfR2UaQLX/nwXAPlSeDyNz6N?=
+ =?us-ascii?Q?PjG9dvVYmnFTH9HJVfXmyLFb5JZaK/XWQbSYHOqOLKSCKDkaVdqmuJT/QAih?=
+ =?us-ascii?Q?TvXbRsgxSN49CahFhO5ga6DZceSakdQwUkRLylLLb50T39HXwiHKgyvCt+Bt?=
+ =?us-ascii?Q?YvRcbyuVFpeehriZk65eaNcyM5Yz1A=3D=3D?=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c884615-043c-4cd2-1cea-08db77c2a5cf
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c440c4b-5c93-4459-a0e6-08db77c2ada8
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2023 10:30:09.3449
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2023 10:30:22.4974
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jFRMDqe6CJq12SFhi+/J8vAqp7q6TIJ2eu/hetrDkRh3FjrhJ7/C5yNaT3A2z4380iE3sI0ePOPhiyNvxr3teA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 52LVoTVCPGYqnrqKsBjrpX8gY/kh0F6VGDE4PNXVY68Lx6T0wqaqfz0se/JICTeg/XuNdvL8wjAS1qOBFxUnPQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4715
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
  definitions=2023-06-28_06,2023-06-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- malwarescore=0 suspectscore=0 spamscore=0 bulkscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0
+ malwarescore=0 adultscore=0 mlxlogscore=999 phishscore=0 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2305260000 definitions=main-2306280092
-X-Proofpoint-GUID: qZPViu0HfjSjylA9NEydAmgSoHU2ZdyD
-X-Proofpoint-ORIG-GUID: qZPViu0HfjSjylA9NEydAmgSoHU2ZdyD
+X-Proofpoint-GUID: t4hyf-cdVM9pw-cj4MzAaev4aUmDo9u0
+X-Proofpoint-ORIG-GUID: t4hyf-cdVM9pw-cj4MzAaev4aUmDo9u0
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The current sys event metric support has some issues, like:
-- It is broken that we only match a metric based on PMU compat, but not
-  Unit as well, as reported by Jing Zhang <renyu.zj@linux.alibaba.com>
-- No real self-test support
-- Not able to use resolvable metrics
-- Need to specify event PMU Unit and Compat for metric, which should not
-  be necessary
+Add a function to match a sys metric for the host.
 
-This series changes sys event metric support to match metrics based on
-evaluating each term in the metric expression and then ensuring it
-matches an event from the same associated pmu_sys_events table.
+Currently we do the following the match a metric:
+- iter through all sys metrics for all sys event tables
+- for each iter, iter through all PMUs
+- if the PMU Unit and id match the metric Unit and compat, then the metric
+  matches for the host
 
-Why an RFC?
-- Even though main motivation here was to improve self-test support, that
-  has proved quite tricky and nothing has been added yet.
-  My desire is to test the feature that we match metrics for a specific
-  SoC when PMUs with matching HW identifier are present. So I would hope
-  to add sys metrics for many SoCs in ../pmu-events/arch/test/
-- I still need to suppress logs from metricgroup_sys_metric_supported()
-  indirect calls to functions like parse_events_multi_pmu_add(),
-  generating logs like
-  "smmuv3_pmcg.wr_sent_sp -> smmuv3_pmcg_50/event=0x86/" - we should only
-  see those logs for when really adding the metric in calling add_metric()
+We should not be required to match a metric Unit and compat, unless the
+metric explicitly specifies target PMU, like:
+ "MetricExpr": "imx8_ddr0@axid\\-read\\,axi_mask\\=0xffff\\,axi_id\\=0x0000@",
 
-Based on 82fe2e45cdb0 (acme/tmp.perf/core, acme/tmp.perf-tools-next, acme/perf/core, acme/perf-tools-next) perf pmus: Check if we can encode the PMU number in perf_event_attr.type
+Rather, we should be match against events aliases present from the events
+in the same pmu_sys_events structure. Those events added will be gated on
+matching Unit and Compat specifiers.
 
-John Garry (9):
-  perf metrics: Delete metricgroup_add_iter_data.table
-  perf metrics: Don't iter sys metrics if we already found a CPU match
-  perf metrics: Pass cpu and sys tables to metricgroup__add_metric()
-  perf jevents: Add sys_events_find_events_table()
-  perf pmu: Refactor pmu_add_sys_aliases_iter_fn()
-  perf metrics: Add metricgroup_sys_metric_supported()
-  perf metrics: Test metric match in metricgroup__sys_event_iter()
-  perf metrics: Stop metricgroup__add_metric_sys_event_iter if already
-    matched
-  perf vendor events arm64: Remove unnecessary metric Unit and Compat
-    specifiers
+The steps in metricgroup_match_sys_pm() are as follows:
+a. Find event table associated with metric table
+b. Call add_metric() for the metric, which resolves referenced metrics and
+   generates a list of type struct metric
+c. Iter through metric list and parse ids, to find a list of evsel's
+d. For each evsel, match event against known events in event table
+e. If we can't match an evsel as the metric explicitly specifies target PMU,
+   just match evsel PMU against metric Unit and Compat.
 
- .../arm64/freescale/imx8mm/sys/metrics.json   |   4 -
- .../arm64/freescale/imx8mn/sys/metrics.json   |   4 -
- .../arm64/freescale/imx8mq/sys/metrics.json   |   4 -
- .../arm64/hisilicon/hip09/sys/uncore-cpa.json |   4 -
- tools/perf/pmu-events/empty-pmu-events.c      |   6 +
- tools/perf/pmu-events/jevents.py              |  11 ++
- tools/perf/pmu-events/pmu-events.h            |   3 +
- tools/perf/tests/expand-cgroup.c              |   2 +-
- tools/perf/tests/parse-metric.c               |   2 +-
- tools/perf/tests/pmu-events.c                 |  29 ++-
- tools/perf/util/metricgroup.c                 | 182 +++++++++++++++---
- tools/perf/util/metricgroup.h                 |   3 +-
- tools/perf/util/pmu.c                         |  20 +-
- tools/perf/util/pmu.h                         |   2 +
- 14 files changed, 220 insertions(+), 56 deletions(-)
+Step d. is required as in parse_ids() -> parse_events_add_pmu(), we might
+have matched metric for other system which has the same name, i.e. when
+we find matching event and PMU, we must ensure it matches compat for event
+from metric's associated event table.
 
+Function metricgroup__sys_event_iter() will now call
+metricgroup_sys_metric_supported() to match the metric.
+
+Signed-off-by: John Garry <john.g.garry@oracle.com>
+---
+ tools/perf/util/metricgroup.c | 115 +++++++++++++++++++++++++++++++---
+ 1 file changed, 105 insertions(+), 10 deletions(-)
+
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 520436fbe99d..6be410363099 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -486,23 +486,18 @@ struct metricgroup_iter_data {
+ 	void *data;
+ };
+ 
++static bool metricgroup_sys_metric_supported(const struct pmu_metric *pm,
++			const struct pmu_metrics_table *table);
++
+ static int metricgroup__sys_event_iter(const struct pmu_metric *pm,
+ 				       const struct pmu_metrics_table *table,
+ 				       void *data)
+ {
+ 	struct metricgroup_iter_data *d = data;
+-	struct perf_pmu *pmu = NULL;
+-
+-	if (!pm->metric_expr || !pm->compat)
+-		return 0;
+-
+-	while ((pmu = perf_pmus__scan(pmu))) {
+-
+-		if (!pmu->id || strcmp(pmu->id, pm->compat))
+-			continue;
+ 
++	if (metricgroup_sys_metric_supported(pm, table))
+ 		return d->fn(pm, table, d->data);
+-	}
++
+ 	return 0;
+ }
+ 
+@@ -1705,6 +1700,106 @@ static int parse_groups(struct evlist *perf_evlist,
+ 	return ret;
+ }
+ 
++struct metricgroup__test_event {
++	struct pmu_event *found_event;
++	struct perf_pmu *pmu;
++	char *evsel_name;
++};
++
++static int metricgroup__test_event_iter(const struct pmu_event *pe,
++		const struct pmu_events_table *table __maybe_unused,
++		void *vdata)
++{
++	struct metricgroup__test_event *data = vdata;
++	struct pmu_event *found_event = data->found_event;
++	char *evsel_name = data->evsel_name;
++	struct perf_pmu *pmu = data->pmu;
++
++	if (strcasecmp(pe->name, evsel_name))
++		return 0;
++
++	if (!strcmp(pmu->id, pe->compat)) {
++		/* Copy, as pe is only valid in the iter */
++		memcpy(found_event, pe, sizeof(*pe));
++		/* Stop iter'ing */
++		return 1;
++	}
++
++	return 0;
++}
++
++static bool metricgroup_sys_metric_supported(const struct pmu_metric *pm,
++				const struct pmu_metrics_table *table)
++{
++	const struct pmu_events_table *events_table;
++	bool tool_events[PERF_TOOL_MAX] = {false};
++	struct metric *m = NULL;
++	bool ret = false;
++	int err;
++	LIST_HEAD(list);
++
++	events_table = sys_events_find_events_table(table);
++	if (!events_table)
++		return false;
++
++	err = add_metric(&list /* d->metric_list */, pm,
++			 NULL /* modifier */, false /* metric_no_group */,
++			 false /* metric_no_threshold */, false /* user_requested_cpu_list */,
++			 false /*system wide */, NULL /* root metric */,
++			 NULL /* visited */, table);
++	if (ret)
++		return false;
++
++	/*
++	 * We have a list of metrics. Now generate an evlist per metric, and
++	 * match each evsel. We match evsel by findings its corresponding PMU
++	 * and then ensuring the we can find it in either a. the event list
++	 * associated with the metric or b. if it is a metric referencing an
++	 * explicit PMU. In both cases we match the pmu->id against the event
++	 * compat.
++	 */
++	list_for_each_entry(m, &list, nd) {
++		struct evsel *evsel;
++
++		err = parse_ids(false, NULL, m->pctx, m->modifier,
++				m->group_events, tool_events, &m->evlist);
++		if (err)
++			return false;
++
++		evlist__for_each_entry(m->evlist, evsel) {
++			struct perf_pmu *pmu = perf_pmus__find(evsel->pmu_name);
++			struct pmu_event found_event = {};
++			struct metricgroup__test_event data = {
++				.evsel_name = evsel->name,
++				.found_event = &found_event,
++				.pmu = pmu,
++			};
++
++			if (!pmu)
++				return false;
++
++			pmu_events_table_for_each_event(events_table,
++					metricgroup__test_event_iter,
++					&data);
++			if (found_event.name)
++				continue;
++
++			/*
++			 * We dould not find alias event, so maybe our evsel
++			 * is for a specific PMU.
++			 */
++			if (strchr(evsel->name, '/')) {
++				if (pmu_event_match_pmu(pm->pmu, pm->compat, pmu))
++					continue;
++			}
++
++			return false;
++		}
++	}
++
++	return true;
++}
++
+ int metricgroup__parse_groups(struct evlist *perf_evlist,
+ 			      const char *pmu,
+ 			      const char *str,
 -- 
 2.35.3
 
