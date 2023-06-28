@@ -2,275 +2,116 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E061BEB64D9
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jun 2023 03:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7069AC001B3
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jun 2023 07:52:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230313AbjF1DBz (ORCPT
+        id S230511AbjF1Hwm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Jun 2023 23:01:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51190 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229680AbjF1DBx (ORCPT
+        Wed, 28 Jun 2023 03:52:42 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20460 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230450AbjF1Hwc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Jun 2023 23:01:53 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EAC8171A;
-        Tue, 27 Jun 2023 20:01:51 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QrRB06rrrzlWJK;
-        Wed, 28 Jun 2023 10:59:04 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Wed, 28 Jun 2023 11:01:48 +0800
-Subject: Re: [PATCH v1] perf pmus: Add placeholder core PMU
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20230627182834.117565-1-irogers@google.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <344a8de1-469d-a8f9-100e-9a67e562939b@huawei.com>
-Date:   Wed, 28 Jun 2023 11:01:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
-MIME-Version: 1.0
-In-Reply-To: <20230627182834.117565-1-irogers@google.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Wed, 28 Jun 2023 03:52:32 -0400
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35S5pSFw008157;
+        Wed, 28 Jun 2023 06:04:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=qjhN1yHhVfB8bKKHksru9FAz/YSXpy2LrUUmQdoojY4=;
+ b=k/+w0azOqOXyw1ZX/vUF2Pw2F2cnXhPrsHi+X1RI0iqGKhoUWKHfBD9oiyWsXL3V6j7v
+ px7pn2La4x7zWbcHWky+NIO+xzhqBIx5UIxyjp2A0IUiWnV7qly9/MvLwtKXL30zzhgC
+ aOeIPxttQ+jwUitgIrWa+ohywq/emWRgyFZych56UB0Hb16w0+tpyT7P8Exhf/DcsD6i
+ 1//ICCFx+OKioBJGg30M+wkUoULxf9xKqu4e/Pu9/JHRIFRXbud1V9Wp6nbb/+4zGJ2N
+ xHzW5Gc1LSqb33L849Zbjs1rr5rSfHCDgzbMyzKIESYXbaf12Fv61uom/flxfq/ufmQp Fg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rgf36ranx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Jun 2023 06:04:12 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35S5pWGJ008285;
+        Wed, 28 Jun 2023 06:04:11 GMT
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rgf36ram3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Jun 2023 06:04:11 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35S2jYJO030676;
+        Wed, 28 Jun 2023 06:04:09 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+        by ppma04fra.de.ibm.com (PPS) with ESMTPS id 3rdr451ss7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Jun 2023 06:04:09 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35S645P016908894
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 28 Jun 2023 06:04:05 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9EB0B20043;
+        Wed, 28 Jun 2023 06:04:05 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4203C20040;
+        Wed, 28 Jun 2023 06:04:05 +0000 (GMT)
+Received: from [9.152.212.165] (unknown [9.152.212.165])
+        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Wed, 28 Jun 2023 06:04:05 +0000 (GMT)
+Message-ID: <e5274fc1-7de4-2c63-8767-fc437c2b68b2@linux.ibm.com>
+Date:   Wed, 28 Jun 2023 08:04:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH] perf/test: perf test case Daemon operations dumps core
+To:     Namhyung Kim <namhyung@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, irogers@google.com, hca@linux.ibm.com,
+        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com
+References: <20230627092633.2135105-1-tmricht@linux.ibm.com>
+ <CAM9d7cjmmx2GQ7QQj3wBe1KkqgVNzoYbMuLeasVUWuZeLWUE9A@mail.gmail.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <CAM9d7cjmmx2GQ7QQj3wBe1KkqgVNzoYbMuLeasVUWuZeLWUE9A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: LJQoIT1Veq46xhr8OJ_IzaJ_5DYTmhkl
+X-Proofpoint-ORIG-GUID: N3rKsWCN7AlhjlHo3O3mwpGnqZpQXBTw
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-28_02,2023-06-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ mlxscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0 clxscore=1015
+ adultscore=0 malwarescore=0 impostorscore=0 suspectscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306280053
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
-
-On 2023/6/28 2:28, Ian Rogers wrote:
-> If loading a core PMU fails, legacy hardware/cache events may segv due
-> to there being no PMU. Create a placeholder empty PMU for this
-> case. This was discussed in:
-> https://lore.kernel.org/lkml/20230614151625.2077-1-yangjihong1@huawei.com/
+On 6/27/23 17:35, Namhyung Kim wrote:
+> Hello,
 > 
-> Reported-by: Yang Jihong <yangjihong1@huawei.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->   tools/perf/util/pmu.c  | 25 +++++++++++++++++++++++++
->   tools/perf/util/pmu.h  |  1 +
->   tools/perf/util/pmus.c |  7 ++++++-
->   3 files changed, 32 insertions(+), 1 deletion(-)
+> On Tue, Jun 27, 2023 at 2:39 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+>>
+>> The perf test case Daemon operations dumps core all the time.
+>> I narrowed it down to this invocation:
 > 
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 8d5ecd4ff1a9..7f984a7f16ca 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -928,6 +928,31 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char
->   	return NULL;
->   }
->   
-> +/* Creates the PMU when sysfs scanning fails. */
-> +struct perf_pmu *perf_pmu__create_placeholder_core_pmu(struct list_head *core_pmus)
-> +{
-> +	struct perf_pmu *pmu = zalloc(sizeof(*pmu));
-> +
-> +	if (!pmu)
-> +		return NULL;
-> +
-> +	pmu->name = strdup("cpu");
-> +	if (!pmu->name) {
-> +		free(pmu);
-> +		return NULL;
-> +	}
-> +
-> +	pmu->is_core = true;
-> +	pmu->type = PERF_TYPE_RAW;
-> +	pmu->cpus = cpu_map__online();
-> +
-> +	INIT_LIST_HEAD(&pmu->format);
-> +	INIT_LIST_HEAD(&pmu->aliases);
-> +	INIT_LIST_HEAD(&pmu->caps);
-> +	list_add_tail(&pmu->list, core_pmus);
-> +	return pmu;
-> +}
-> +
->   void perf_pmu__warn_invalid_formats(struct perf_pmu *pmu)
->   {
->   	struct perf_pmu_format *format;
-> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> index 8807a624e918..203b92860e3c 100644
-> --- a/tools/perf/util/pmu.h
-> +++ b/tools/perf/util/pmu.h
-> @@ -286,6 +286,7 @@ int perf_pmu__event_source_devices_fd(void);
->   int perf_pmu__pathname_fd(int dirfd, const char *pmu_name, const char *filename, int flags);
->   
->   struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char *lookup_name);
-> +struct perf_pmu *perf_pmu__create_placeholder_core_pmu(struct list_head *core_pmus);
->   void perf_pmu__delete(struct perf_pmu *pmu);
->   
->   #endif /* __PMU_H */
-> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> index 0866dee3fc62..3cd9de42139e 100644
-> --- a/tools/perf/util/pmus.c
-> +++ b/tools/perf/util/pmus.c
-> @@ -153,7 +153,12 @@ static void pmu_read_sysfs(bool core_only)
->   
->   	closedir(dir);
->   	if (core_only) {
-> -		read_sysfs_core_pmus = true;
-> +		if (!list_empty(&core_pmus))
-> +			read_sysfs_core_pmus = true;
-> +		else {
-> +			if (perf_pmu__create_placeholder_core_pmu(&core_pmus))
-> +				read_sysfs_core_pmus = true;
-> +		}
->   	} else {
->   		read_sysfs_core_pmus = true;
->   		read_sysfs_all_pmus = true;
+> Jiri sent the same fix already.  I'll add your Reported-by, ok?
 > 
-Great. This patch solves the problem, the test results are shown in [1].
+> https://lore.kernel.org/all/20230626201606.2514679-1-jolsa@kernel.org/
+> 
+> Thanks,
+> Namhyung
+> 
 
-Tested-by: Yang Jihong <yangjihong1@huawei.com>
+sure, fine with me.
 
-[1]:
-# perf --debug verbose=2 record true
-<SNIP>
-------------------------------------------------------------
-perf_event_attr:
-   size                             136
-   { sample_period, sample_freq }   4000
-   sample_type                      IP|TID|TIME|PERIOD
-   read_format                      ID|LOST
-   disabled                         1
-   inherit                          1
-   mmap                             1
-   comm                             1
-   freq                             1
-   enable_on_exec                   1
-   task                             1
-   precise_ip                       3
-   sample_id_all                    1
-   mmap2                            1
-   comm_exec                        1
-   ksymbol                          1
-   bpf_event                        1
-------------------------------------------------------------
-sys_perf_event_open: pid 703  cpu 0  group_fd -1  flags 0x8
-sys_perf_event_open failed, error -2
-decreasing precise_ip by one (2)
-------------------------------------------------------------
-perf_event_attr:
-   size                             136
-   { sample_period, sample_freq }   4000
-   sample_type                      IP|TID|TIME|PERIOD
-   read_format                      ID|LOST
-   disabled                         1
-   inherit                          1
-   mmap                             1
-   comm                             1
-   freq                             1
-   enable_on_exec                   1
-   task                             1
-   precise_ip                       2
-   sample_id_all                    1
-   mmap2                            1
-   comm_exec                        1
-   ksymbol                          1
-   bpf_event                        1
-------------------------------------------------------------
-sys_perf_event_open: pid 703  cpu 0  group_fd -1  flags 0x8
-sys_perf_event_open failed, error -2
-decreasing precise_ip by one (1)
-------------------------------------------------------------
-perf_event_attr:
-   size                             136
-   { sample_period, sample_freq }   4000
-   sample_type                      IP|TID|TIME|PERIOD
-   read_format                      ID|LOST
-   disabled                         1
-   inherit                          1
-   mmap                             1
-   comm                             1
-   freq                             1
-   enable_on_exec                   1
-   task                             1
-   precise_ip                       1
-   sample_id_all                    1
-   mmap2                            1
-   comm_exec                        1
-   ksymbol                          1
-   bpf_event                        1
-------------------------------------------------------------
-sys_perf_event_open: pid 703  cpu 0  group_fd -1  flags 0x8
-sys_perf_event_open failed, error -2
-decreasing precise_ip by one (0)
-------------------------------------------------------------
-perf_event_attr:
-   size                             136
-   { sample_period, sample_freq }   4000
-   sample_type                      IP|TID|TIME|PERIOD
-   read_format                      ID|LOST
-   disabled                         1
-   inherit                          1
-   mmap                             1
-   comm                             1
-   freq                             1
-   enable_on_exec                   1
-   task                             1
-   sample_id_all                    1
-   mmap2                            1
-   comm_exec                        1
-   ksymbol                          1
-   bpf_event                        1
-------------------------------------------------------------
-sys_perf_event_open: pid 703  cpu 0  group_fd -1  flags 0x8
-sys_perf_event_open failed, error -2
-Warning:
-The cycles event is not supported, trying to fall back to cpu-clock-ticks
-------------------------------------------------------------
-perf_event_attr:
-   type                             1
-   size                             136
-   { sample_period, sample_freq }   4000
-   sample_type                      IP|TID|TIME|PERIOD
-   read_format                      ID|LOST
-   disabled                         1
-   inherit                          1
-   mmap                             1
-   comm                             1
-   freq                             1
-   enable_on_exec                   1
-   task                             1
-   precise_ip                       3
-   sample_id_all                    1
-   mmap2                            1
-   comm_exec                        1
-   ksymbol                          1
-   bpf_event                        1
-------------------------------------------------------------
-sys_perf_event_open: pid 703  cpu 0  group_fd -1  flags 0x8 = 5
-sys_perf_event_open: pid 703  cpu 1  group_fd -1  flags 0x8 = 6
-sys_perf_event_open: pid 703  cpu 2  group_fd -1  flags 0x8 = 7
-sys_perf_event_open: pid 703  cpu 3  group_fd -1  flags 0x8 = 9
-sys_perf_event_open: pid 703  cpu 4  group_fd -1  flags 0x8 = 10
-sys_perf_event_open: pid 703  cpu 5  group_fd -1  flags 0x8 = 11
-sys_perf_event_open: pid 703  cpu 6  group_fd -1  flags 0x8 = 12
-sys_perf_event_open: pid 703  cpu 7  group_fd -1  flags 0x8 = 13
-<SNIP>
-[ perf record: Captured and wrote 0.006 MB perf.data (116 samples) ]
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: David Faller
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
 
-Thanks,
-Yang
