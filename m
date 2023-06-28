@@ -2,157 +2,150 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D127EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jun 2023 23:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A401C001B3
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jun 2023 23:43:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230237AbjF1XXG (ORCPT
+        id S231559AbjF1Xnu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Jun 2023 19:23:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34330 "EHLO
+        Wed, 28 Jun 2023 19:43:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230014AbjF1XXF (ORCPT
+        with ESMTP id S229501AbjF1Xnt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Jun 2023 19:23:05 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88BD7E9;
-        Wed, 28 Jun 2023 16:23:03 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-666e5f0d60bso67196b3a.3;
-        Wed, 28 Jun 2023 16:23:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687994583; x=1690586583;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=krWbw+BRsQITYVufaotBbsHrMdJirArhgEro2wyvZZw=;
-        b=VG4eVmV7X0PrRJabZhLepIPCn10VfwxhUFLDyxL3WER+FWdxOkKJRMDYIAmD3iGbsR
-         QscJf+8wHR01e1gZ6/22E3mlRfbx+EoXKlwwYZA53BTmjGI635oCwfrf2mJ0TkS5odJ8
-         rrdk4YAtvlhHZmKgIrfFphLaMnfPnjZBDVOPookObmHkpavbBB0O682UYDkUxfX9q9dT
-         XmVPf3ggYRyNgNRQUm6rrzkNMRSB55/79APdTgVjYqjDsZ9o1n5ykhANX8A2xfDJRnEa
-         3xxZ24Nnb1P76Grro/BrOm+iZfOs5J5Z+wovkAKeFs8no/nJgfwXQamh96ciBtCq12ei
-         xgKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687994583; x=1690586583;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=krWbw+BRsQITYVufaotBbsHrMdJirArhgEro2wyvZZw=;
-        b=jdZVsJNs5rP7OJ2GE/KeM4rIHobrV4SvuRCAVRBkOuB+DEHFH7l9gnxM0ClVRfTWYp
-         kGojHlCVuIH9cwnUbLpFUC6MnZhAT/O/3CaUz+gJb/pdd0e673xlsL2iLIWIXFmAebnJ
-         gWV22T5I8vtg9KIk1G1YyNv6ZzjrfYLjaIkxy1S4sipgAk7Pg3o2Q4G25DdkGpcjrL0/
-         8QUgnkVIQxGYVL39p31xzyfYtQwfZd6Tj4yn45JeViKBlxhGOwjhPzdLKuGTgRFTYVQT
-         TZZmD29Kt2NcjlXW6oY3r7qPhQTXXfnOpbfvch0v9VSiFlB9PmQRk2xkPrBpJOp7DgR/
-         74cw==
-X-Gm-Message-State: AC+VfDz8mCgfmMYY/i1Q3nhUlwz8S5O0lojCQnA8ilhm/uXSRKD1uW19
-        q/yTC4h6BZ2TEpf5+eQXxa4=
-X-Google-Smtp-Source: ACHHUZ7tpawt47u9azMsFTmz1yUC6zRi1mISK+ZPaSdG3gpeOvA2QQqUeLQlHIVTmz1PQNyGQ4h8Eg==
-X-Received: by 2002:a05:6a20:8405:b0:12c:d44b:349 with SMTP id c5-20020a056a20840500b0012cd44b0349mr63898pzd.38.1687994582808;
-        Wed, 28 Jun 2023 16:23:02 -0700 (PDT)
-Received: from bangji.hsd1.ca.comcast.net ([2601:647:6700:7f00:6887:93d0:b9c9:df85])
-        by smtp.gmail.com with ESMTPSA id w8-20020a170902a70800b001b3d4d74749sm8213267plq.7.2023.06.28.16.23.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jun 2023 16:23:01 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [GIT PULL] perf tools changes for v6.5
-Date:   Wed, 28 Jun 2023 16:22:59 -0700
-Message-ID: <20230628232259.2777226-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
-In-Reply-To: <20230628215954.1230048-1-namhyung@kernel.org>
-References: <20230628215954.1230048-1-namhyung@kernel.org>
+        Wed, 28 Jun 2023 19:43:49 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7577610EC;
+        Wed, 28 Jun 2023 16:43:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+        bh=mkpKticynoUGDZ1Tdpq3P9FZu5kxXQf0JefJvMLgJuA=; b=eVGM60hxW/1oCROBhJRKbbF9pd
+        /WHGc+o+pb+fkeVze6GKs3Hcu2mjtmWM/4oUGYCU0t+UbFMtrvvcjHSl/cglLWbeBdgmG30OqcMNt
+        S2Pr1+dHNTd4T3qFeiVwQeps/R+LjlmcLTRsuZ8NdhZsmraeYrB2Kel7p0VxJ6+7q7EgMQ6Wx6ank
+        P+yHcdGkzLdLPcfc5husZ1HslNubmokchQy4wGscGAVnBMae971Q/C5VLDp5JrfEWC1X5YToHzDHK
+        +ikxlG8dV0EOrjRrjMKr08rEq8iFClaMjdpXxuLncvJrq9YBnHim1BxRohfVxP5cT8JFsbmDDx9YM
+        9l9IY3yQ==;
+Received: from [2601:1c2:980:9ec0::2764]
+        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1qEeow-00H298-0w;
+        Wed, 28 Jun 2023 23:43:34 +0000
+Message-ID: <08e273fc-49c5-dd09-1c9e-d85a080767f9@infradead.org>
+Date:   Wed, 28 Jun 2023 16:43:27 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH] syscalls: Cleanup references to sys_lookup_dcookie()
+Content-Language: en-US
+To:     Sohil Mehta <sohil.mehta@intel.com>, Arnd Bergmann <arnd@arndb.de>,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org
+Cc:     Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Sergei Trofimovich <slyich@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rohan McLure <rmclure@linux.ibm.com>,
+        Andreas Schwab <schwab@linux-m68k.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Brian Gerst <brgerst@gmail.com>, linux-alpha@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+References: <20230628230935.1196180-1-sohil.mehta@intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20230628230935.1196180-1-sohil.mehta@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Oh, I forgot to mention that it'd create a conflict with the tip tree because
-it contains some perf user space changes.
 
-Stephen Rothwell already resolved this like below in the -next tree.
 
-  https://lore.kernel.org/r/CAM9d7ciqQSp3zWNeq-P0r8pGN=6jJBWyxK=LzUz2SYm_kAaG4g@mail.gmail.com
+On 6/28/23 16:09, Sohil Mehta wrote:
+> commit 'be65de6b03aa ("fs: Remove dcookies support")' removed the
+> syscall definition for lookup_dcookie.  However, syscall tables still
+> point to the old sys_lookup_dcookie() definition. Update syscall tables
+> of all architectures to directly point to sys_ni_syscall() instead.
+> 
+> Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
 
-I'm copying it in just case.
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
 
-Thanks,
-Namhyung
+Thanks.
 
----
-commit de114f42b7c24d1e8373800e46c3a19b944e4665
-Merge: f78f1f477e06 ad5f604e186a
-Author: Stephen Rothwell <sfr@canb.auug.org.au>
-Date:   Wed Jun 28 09:54:39 2023 +1000
+> ---
+> This patch has a dependency on another patch that has been applied to the
+> asm-generic tree:
+> https://lore.kernel.org/lkml/20230621223600.1348693-1-sohil.mehta@intel.com/
+> ---
+>  arch/alpha/kernel/syscalls/syscall.tbl              | 2 +-
+>  arch/arm/tools/syscall.tbl                          | 2 +-
+>  arch/arm64/include/asm/unistd32.h                   | 4 ++--
+>  arch/ia64/kernel/syscalls/syscall.tbl               | 2 +-
+>  arch/m68k/kernel/syscalls/syscall.tbl               | 2 +-
+>  arch/microblaze/kernel/syscalls/syscall.tbl         | 2 +-
+>  arch/mips/kernel/syscalls/syscall_n32.tbl           | 2 +-
+>  arch/mips/kernel/syscalls/syscall_n64.tbl           | 2 +-
+>  arch/mips/kernel/syscalls/syscall_o32.tbl           | 2 +-
+>  arch/parisc/kernel/syscalls/syscall.tbl             | 2 +-
+>  arch/powerpc/kernel/syscalls/syscall.tbl            | 2 +-
+>  arch/s390/kernel/syscalls/syscall.tbl               | 2 +-
+>  arch/sh/kernel/syscalls/syscall.tbl                 | 2 +-
+>  arch/sparc/kernel/syscalls/syscall.tbl              | 2 +-
+>  arch/x86/entry/syscalls/syscall_32.tbl              | 2 +-
+>  arch/x86/entry/syscalls/syscall_64.tbl              | 2 +-
+>  arch/xtensa/kernel/syscalls/syscall.tbl             | 2 +-
+>  include/linux/compat.h                              | 1 -
+>  include/linux/syscalls.h                            | 1 -
+>  include/uapi/asm-generic/unistd.h                   | 2 +-
+>  kernel/sys_ni.c                                     | 2 --
+>  tools/include/uapi/asm-generic/unistd.h             | 2 +-
+>  tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl | 2 +-
+>  tools/perf/arch/powerpc/entry/syscalls/syscall.tbl  | 2 +-
+>  tools/perf/arch/s390/entry/syscalls/syscall.tbl     | 2 +-
+>  tools/perf/arch/x86/entry/syscalls/syscall_64.tbl   | 2 +-
+>  26 files changed, 24 insertions(+), 28 deletions(-)
+> 
 
-    Merge branch 'perf-tools-next' of git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git
-    
-    # Conflicts:
-    #       tools/perf/arch/x86/include/arch-tests.h
-    #       tools/perf/arch/x86/tests/arch-tests.c
 
-diff --cc tools/perf/arch/x86/include/arch-tests.h
-index 93d3b8877baa,df133020d582..2b0684132f06
---- a/tools/perf/arch/x86/include/arch-tests.h
-+++ b/tools/perf/arch/x86/include/arch-tests.h
-@@@ -11,7 -13,7 +13,8 @@@ int test__intel_pt_pkt_decoder(struct t
-  int test__intel_pt_hybrid_compat(struct test_suite *test, int subtest);
-  int test__bp_modify(struct test_suite *test, int subtest);
-  int test__x86_sample_parsing(struct test_suite *test, int subtest);
-+ int test__hybrid(struct test_suite *test, int subtest);
- +int test__amd_ibs_via_core_pmu(struct test_suite *test, int subtest);
-  
-  extern struct test_suite *arch_tests[];
-  
-diff --cc tools/perf/arch/x86/tests/Build
-index fd02d8181718,394771c00dca..b87f46e5feea
---- a/tools/perf/arch/x86/tests/Build
-+++ b/tools/perf/arch/x86/tests/Build
-@@@ -3,6 -3,9 +3,10 @@@ perf-$(CONFIG_DWARF_UNWIND) += dwarf-un
-  
-  perf-y += arch-tests.o
-  perf-y += sample-parsing.o
-- perf-$(CONFIG_AUXTRACE) += insn-x86.o intel-pt-test.o
-+ perf-y += hybrid.o
-+ perf-$(CONFIG_AUXTRACE) += intel-pt-test.o
-+ ifeq ($(CONFIG_EXTRA_TESTS),y)
-+ perf-$(CONFIG_AUXTRACE) += insn-x86.o
-+ endif
-  perf-$(CONFIG_X86_64) += bp-modify.o
- +perf-y += amd-ibs-via-core-pmu.o
-diff --cc tools/perf/arch/x86/tests/arch-tests.c
-index b5c85ab8d92e,3f2b90c59f92..9808dc02fe79
---- a/tools/perf/arch/x86/tests/arch-tests.c
-+++ b/tools/perf/arch/x86/tests/arch-tests.c
-@@@ -22,7 -24,15 +24,16 @@@ struct test_suite suite__intel_pt = 
-  DEFINE_SUITE("x86 bp modify", bp_modify);
-  #endif
-  DEFINE_SUITE("x86 Sample parsing", x86_sample_parsing);
-+ static struct test_case hybrid_tests[] = {
-+ 	TEST_CASE_REASON("x86 hybrid event parsing", hybrid, "not hybrid"),
-+ 	{ .name = NULL, }
-+ };
-+ 
-+ struct test_suite suite__hybrid = {
-+ 	.desc = "x86 hybrid",
-+ 	.test_cases = hybrid_tests,
-+ };
- +DEFINE_SUITE("AMD IBS via core pmu", amd_ibs_via_core_pmu);
-  
-  struct test_suite *arch_tests[] = {
-  #ifdef HAVE_DWARF_UNWIND_SUPPORT
-@@@ -36,6 -48,6 +49,7 @@@
-  	&suite__bp_modify,
-  #endif
-  	&suite__x86_sample_parsing,
-+ 	&suite__hybrid,
- +	&suite__amd_ibs_via_core_pmu,
-  	NULL,
-  };
+-- 
+~Randy
