@@ -2,64 +2,64 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A79EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jun 2023 10:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99E2EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jun 2023 10:33:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231375AbjF1KdP (ORCPT
+        id S231434AbjF1KdR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Jun 2023 06:33:15 -0400
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:12656 "EHLO
+        Wed, 28 Jun 2023 06:33:17 -0400
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:12052 "EHLO
         mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231447AbjF1KbO (ORCPT
+        by vger.kernel.org with ESMTP id S231442AbjF1KbO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Wed, 28 Jun 2023 06:31:14 -0400
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35S8xqMM006641;
-        Wed, 28 Jun 2023 10:30:20 GMT
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35S8xpY8023199;
+        Wed, 28 Jun 2023 10:30:24 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references :
  content-transfer-encoding : content-type : mime-version;
- s=corp-2023-03-30; bh=r4qM/ngLrfPnqWi0Fb1fg1fq9WWVMk1a99HUIWr0bPA=;
- b=efZYaYsPICHwJk8oq0Fvu+EWh82/OPUo4CsIAx0A+WvgZUojtWOWCBv7szHcDUDP/uJt
- Db0kai/z2HnoaZdTTuRcy5bwpadVJFfnc1cojXnaeN6wLTJ/NTv+z1d0LovWBGQ2ldUU
- sIMwjOWFmZDSjtPBW3J8gJGneBFiTiMFGWDbOIEj/bRrm8RewSQNv3G0262oimfyMi2V
- iyqK/ZzAgrdKTn8vRl5vMXE9a/rUY0ff4Iqt1cDqX7fMABPDIaSPorMEdW7coBmbHQ7D
- C6gg/0GnJbKvR8suQEFODJsy19NFLwRd3xL0IjC3dBF+o5AAxaOTA44GWLO6k7No8DBL 4g== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3rdq30y9nn-1
+ s=corp-2023-03-30; bh=I63gI5Z2fYJEZuuoUwEztOOjT+fmTVS90Iv/RJgFuro=;
+ b=ZV/lgJTDvah8Wu58jgug1BRwD4DnD+qpVv/oXddvB8Ah9jbkzD/r9XGF31r+lTHc0QPl
+ Hw2lvrfGbTPyuT7RKDjs5u8GjrEReenDGvYAWEzYh7RPLr9Ilsg+PhDXEpJMxhJACZIl
+ JKh5dv+tOVGvpDjBTKMyVClzhPWGKXwLElHb6X9UoZxvb0XYbIwzrLHt4a4BRrR7x+q3
+ 40XAn1TrtckaTXzx2KRH3CE2ffdsxImURf/Aybf+YnfEd4ols8ggw8UJdtinqvzAaxjh
+ 8yce+JIFVBHD02/3Nyi/nyj3xtvB7vQg1DqE2vk9qOexd6T4Pxdmzhm+bUzLsLcuyYfJ DQ== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3rdqdtq5wb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Jun 2023 10:30:19 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 35S9EXdP008565;
-        Wed, 28 Jun 2023 10:30:19 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2173.outbound.protection.outlook.com [104.47.55.173])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3rdpx5tra2-1
+        Wed, 28 Jun 2023 10:30:24 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 35S9H161029644;
+        Wed, 28 Jun 2023 10:30:23 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2170.outbound.protection.outlook.com [104.47.55.170])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3rdpx5tpwe-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Jun 2023 10:30:19 +0000
+        Wed, 28 Jun 2023 10:30:23 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nCHSCU0yMl4HeUK8boLvqCVa5PVV22fXcj0GmYAew4W7OsP96/e1ayM0o7RgqgnqVWvQU17EpwYVQ8wgf587dTBULfZFtFPUiwyDI26zUFTzJtvY4J2VQHwRTY7mEt5qOb0bgy2IYsCnPJiNhUdVffrJCbJUwSw3n/7lJJIzDX78HO9iwU3h/e0wcmaQznar8dl+t9im7JG65NLXgaz0UhJ01KiiRE/2HraBvm8uX4AAHeTeXp4SKWUjA+ZgpcU3TDzWajZO6M3PIuxgQF/dyGwVKWLXyaRfRfmFkquMa+ZVfyXVlXya/fCdA++OTivqRjggjw8+34Io0DjcChkuMg==
+ b=kd0nV1hgjecwgRfeMTpRLl0G7KD5AGmbyttgbe2HkIgC4b9lZYZoq3vAoEQZ6f8fJ+IFPqCwtCZCRPUWeENOvhu8D8FzoeClM4EvxG4GwCxHirNQc4qNke9UhsWlO0tHbIgWkvW4SBgsOqWr4bqCAfBrXHA6FFxbONPQ9hxOg1kKcBDoWx4AnGHRzY2lqVjFG7E1c8XKPXuzG085qlQEM9CPX4YWmGGYPS5RoIprmex9zc4R+aA/QBvNNkOV7nDzoGaL+uBLVIZc63fsk9R3s22cpVC8qFpuJjoGM1+rfKz41vUZ3k0Vv+k3aWC22ZvfcUHPrjY3pgh+PSW7SQoHmA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=r4qM/ngLrfPnqWi0Fb1fg1fq9WWVMk1a99HUIWr0bPA=;
- b=aQVdUcNtL+gzozKzoIGsf6QG7aeKWenLUNuNIxzsq/oT1wm4+37+f2JOa10/4GTvd4jst5p26e86yn2rlJcZgp9alQ6kxFsfCg9NYNL8NieIY3NPHAO4pFWg9FCcx7Gi+PhitdhBndp35/Eywev5kI1ph5LN48vca260ZVZTIRlfziM33rx/VU41OlkSu68ZkUDtiq+gCN4KqojVM/DUt5TNfAyZebssnPy2eREEByjzDdp+nK8xtWkybxCJPX4gyMu6h0eYu7QkFLNcF564cVHViL6RQcc54Zeoz2QsT8oe0DxgBZ+QMHFpcl9pcFbL/y+XjsjcXZuvMRGRrhbApA==
+ bh=I63gI5Z2fYJEZuuoUwEztOOjT+fmTVS90Iv/RJgFuro=;
+ b=UzmaZS0a0o/92iTILVc4vC7B8CTdhesJpRMuFV2n/2BXNM6AsP5EOuYhHrTirQs440j+R6tVLGGHOfcC7tYPHBwoEhXx2voclXiRWpCUKcx2ClAALE+bCAHc/vY3+2TZ1/DG9oDPJg+yoVSnyNqDtVoiVAkbxj9JnObuEs5KfUnYv/m/ZvHSos/bKaLrm3j2gnFLXRdVJMKOQ0yDu4aq/7dTrsxedcchVk901snk2BUEQVno4S9YnSxr3Yp6f5wkeRB9JNWv64wevJ7GZNE59HILb7Cm7NN08zUH+eOcYJ3FJo0GL6pfmX8Kj1BzMgGQhOQqWiZdWKeMmUJM8XTCPQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r4qM/ngLrfPnqWi0Fb1fg1fq9WWVMk1a99HUIWr0bPA=;
- b=EHFh6jKluoG0b5qu0usDHKtSbLJXfS3LDfM+d+qDZdtCCAPrL6NfNKxU5ykEwshgsPEgQlYrDKu77qNLUzVzEDVjS3GXdbZd1OEb65+5Rga34PmoV0j0brRiD5Ej7Oe9EdWLQvlcsxGyGi/2rmwnCjM/j3zK1qcx2QXLQz2AMW4=
+ bh=I63gI5Z2fYJEZuuoUwEztOOjT+fmTVS90Iv/RJgFuro=;
+ b=vRKYcJnABQ7kzxx6DrJacC6OFv3G+495JV3zcbKIAflh0KEpdYDodIg4Umkk+gfIhqZLA3blgTIK9lWs+3Ufoto5pGuX3doEkaYtSAIG22s99kTNbPrOHz6Of1VcERH8tPPgdWuBrgd+9QIMU4qkf4Ns0Ytn1UokFLiD78USfZY=
 Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
  by SA2PR10MB4715.namprd10.prod.outlook.com (2603:10b6:806:fb::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.24; Wed, 28 Jun
- 2023 10:30:16 +0000
+ 2023 10:30:20 +0000
 Received: from DM6PR10MB4313.namprd10.prod.outlook.com
  ([fe80::e38:5b81:b87f:c1eb]) by DM6PR10MB4313.namprd10.prod.outlook.com
  ([fe80::e38:5b81:b87f:c1eb%7]) with mapi id 15.20.6521.023; Wed, 28 Jun 2023
- 10:30:16 +0000
+ 10:30:20 +0000
 From:   John Garry <john.g.garry@oracle.com>
 To:     acme@kernel.org, irogers@google.com, namhyung@kernel.org,
         jolsa@kernel.org
@@ -69,348 +69,158 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         zhangshaokun@hisilicon.com, qiangqing.zhang@nxp.com,
         kjain@linux.ibm.com, kan.liang@linux.intel.com,
         John Garry <john.g.garry@oracle.com>
-Subject: [PATCH RFC 3/9] perf metrics: Pass cpu and sys tables to metricgroup__add_metric()
-Date:   Wed, 28 Jun 2023 10:29:43 +0000
-Message-Id: <20230628102949.2598096-4-john.g.garry@oracle.com>
+Subject: [PATCH RFC 5/9] perf pmu: Refactor pmu_add_sys_aliases_iter_fn()
+Date:   Wed, 28 Jun 2023 10:29:45 +0000
+Message-Id: <20230628102949.2598096-6-john.g.garry@oracle.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230628102949.2598096-1-john.g.garry@oracle.com>
 References: <20230628102949.2598096-1-john.g.garry@oracle.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SJ0P220CA0009.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:a03:41b::25) To DM6PR10MB4313.namprd10.prod.outlook.com
+X-ClientProxiedBy: SJ0PR13CA0182.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c3::7) To DM6PR10MB4313.namprd10.prod.outlook.com
  (2603:10b6:5:212::20)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|SA2PR10MB4715:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4dd79a60-3229-4fe6-0601-08db77c2aa1a
+X-MS-Office365-Filtering-Correlation-Id: 00582e73-4061-4588-f35c-08db77c2ac8c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 80lcX4R12gaweELdcsNAFJ0V2BwUqPBm57HZ2AHY2lAabgxmFx0znFPdyGE00RpS986TvjiThU6rs7ShUo+uSXecxnyE5R+GuDzcom2Uj3VF83PThBy9lxuK5P86UFJjaig/KiGBhi9jMDAyOKx8RriV/XLIA8EMugkN/v5/LE0/vEnhUDQigdVB3bi+OnLQisDNnkphAxYFlqRqrXk01QTznJC96uxSoT+/6USJGu7Ad40g31tuKKmpN3bDFnp/M29eMej6JgRUFKf9M+GV9E1PjANFoco0OeyPmrDiS63VQ+eTjzBoad56K9IQlZCZ4brNu7l4XXO7zRh7ZomCOwluhKaOYG+1i5A9zjjYvNZoLqbG8nvZSdbMr80pwpwQSkOHQGfIicgNcfAU3tHcWxAhugXWZzUv4BR8sPD9MkE0/4pGr5+KyzgKGb5+Sg7Qu9xUuXXvTmYA2YceDJyeRJV00S7DF8KouThcUCHv/0vkpGEEFKqcOXlt7/N+D+gQ/xDJ8yCz1T2Cwt1x7E2YuocPeFVNwb75+pX7H/95fwUi/8k4rDUBZKQMGQe1Lov48EkiDiiquguU6eHYNp89iibFplB+5kVIxB5iFVenjBBxT6B0uDlnU+riYwukzUdv
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(39860400002)(396003)(346002)(376002)(136003)(451199021)(38100700002)(83380400001)(103116003)(36756003)(86362001)(478600001)(6666004)(6486002)(2616005)(8936002)(316002)(66946007)(8676002)(41300700001)(66556008)(4326008)(66476007)(107886003)(1076003)(6512007)(6506007)(26005)(186003)(7416002)(5660300002)(2906002)(101420200003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: LCh1JtPZmod7/1xma3t754m87XlJQ0JNnAcS3y/Q8C1uAXDwB+oJdjKjn0aP2QnO5UV1K8k+WJgrcUT+kU5Vr18QSvl7F0Htt9+pIzYsTCDoQ82+dSoPkC7x7YKX4v2JdAQ8aIQjvgiJ/7Vfv5aKyY/Fp+wNSvljh10r7h6cR6YVxTrKFcS6WZpM1hDdfCAdhL7hMo+jV0a+tHRjasuDfAR7NFK8Mk25D/rlxEcnb2NgESK5ks1u5yabVVI+FqpwR/faKlTUDJicPdAH8uWQRpkm6E/meXq7CD5Or61vE8Ijz4I6ja5NxqsRDsjm5H4VX7E65K5E366jphOfM6IOXJ8fcHEbX0Vj8TQ11u8CThKOQStd/wAf2oODnW3jh9XzwZ/SNhV16maXYfAlaJnNgHZW5ZTtLpKMUOHyQhQkvXVm2OOTKSK2GYHdZQYcUigzOrK71QhS2agRPclDnty6DLj00x04En53/hsVzABBzC5ljbHqgs9NcgDqn09ByPqnmIyl3/H2rVx9eEqeI6K2aEAIMkFZOz1XhItEPvH5BDf5WpHd7G20SVtUHspT953/
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(39860400002)(396003)(346002)(376002)(136003)(451199021)(38100700002)(83380400001)(103116003)(36756003)(86362001)(478600001)(6666004)(6486002)(2616005)(8936002)(316002)(66946007)(8676002)(41300700001)(66556008)(4326008)(66476007)(107886003)(1076003)(6512007)(6506007)(26005)(186003)(7416002)(5660300002)(2906002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?MZUFrd359r1ckDq76oy+/DuK+rnV+UVDEnxFbpRBaPjwLT47Fn7ZDSfGRc8x?=
- =?us-ascii?Q?2q4XeJF3HHxSKWOHVxWrcTi3xXTdTsqQU26aC3Y+ltySnQX/DqWdcplq1XN/?=
- =?us-ascii?Q?ydhXJJUlJYloRoPpzTtlRCBDLifpuAUAILakvvpEsXje9LV7X96+GOr0Jpy8?=
- =?us-ascii?Q?cgr4KvgqwHytc0xLY2tLS3mz9RDwKIjW1uwclvvRA4XBRW4oM36ppAtltrsB?=
- =?us-ascii?Q?MDtQ7Oe4pel7wT0WLFT3e6/6gnHegFvEI7YCuWxjpe590a0ZGyHsFm6Dv+Sl?=
- =?us-ascii?Q?47A7A8D9zslI0Z4oJoccjdxv3lgngBTFjuRESj8aKkbxAOS6bYn5PdTgy7fB?=
- =?us-ascii?Q?vKZ13fhWUY5E7CUe+eqUuRN+kTww/YbvZZGSgEEH0aXiZe9kI6oPCL4jytUc?=
- =?us-ascii?Q?dZ/jeHRxmMX5Mn7Wh3sM1i+2kWM//VWRcQqY0E+1+JrdEqKZcWK7wj/NorWJ?=
- =?us-ascii?Q?fDdrFNxXZoYgaN/Rp7y69O8XnfLv7AaC4hxwYnpe+sr4ezqUIUUYL3r0qKnD?=
- =?us-ascii?Q?kHb7LR+xe6aX5NDMGjP49HExZzs3wqEcRp9Eq8qkfZ3sAX6mP/R3lxYEmZ5b?=
- =?us-ascii?Q?eKmAdH0LTE8YR+1a9qpW77QKTU7xn3SOWnZD+iG5Z810R3VSOEbvW/27uqqx?=
- =?us-ascii?Q?Dhfu6rPnpZlD0OdwDIUzZju7za3yOpxYya66YV43t5Dqogy/fy2A8zjaS3jj?=
- =?us-ascii?Q?D2aQQiKbNYmZ3RF4nFx6lWwZmSirbSKZD9k9OqJBFtoohkhRjmEXy+sA4ztR?=
- =?us-ascii?Q?05VsgIHqkExH6bVFVDzmcTCoOAqWbT/W+qKlnwLzuNuwwWnegilpgMuvLex8?=
- =?us-ascii?Q?wUZC93RhU03YoHcnjSsI6YZToOM646SjB2sivs56vNfu/5MQ0PeL3n4tzZ3Z?=
- =?us-ascii?Q?oGvQesEmFObIXv4t8/eJQfMWD52YhOMnJUGLcnFd2b1xAWRrTh60GHt1wN9t?=
- =?us-ascii?Q?8l4j/8nIjS5mdYTrfCO+UGVURdyt64eMFjaDiOY1+uRGV3hWvyDkb7UWd3au?=
- =?us-ascii?Q?ZSb/xYmJIvoS1SAS8ksDYBvS9uIMOkkAk9X6GmPHR/4afHL4Vb6CTNzdXeUs?=
- =?us-ascii?Q?xXd6iTTyALpk8aeFVOSTL9DcN5CKQaHTsH4yGbmzpnTQcXrMzsghbj+2cZiI?=
- =?us-ascii?Q?6wh6zVDgyAXFnJTdRGC0tIV8AOHWWcl0YtZ25dPHUNfGRpsyjHl+jd1L5t8v?=
- =?us-ascii?Q?BAKKyFmf8W1M8pb2PaOqkYeNgnHFft9u0x62XFPxLv6g+CRs8kJebAR3lOB4?=
- =?us-ascii?Q?XodZBufSFaoY+aoAxW/PL/Q2X0/iFuuM5dxO9HmWjpAR/D3H2tTHENLK17UV?=
- =?us-ascii?Q?EScuLjaPbETAhfZo4SQxOltxHFwupbdq4YH4vjEFdQHewaD4gP9q2oTxUOiv?=
- =?us-ascii?Q?ePKCxRihBO6ykR1kCcuBOUt5TaGkagmSSZrnWWAk7iw2axLXKI8l9qtmchCi?=
- =?us-ascii?Q?1hp8yF+ebJaLZSmpdEN+6ocAkoUkY2SXRKympYZjKNsgvKQ4kIz1jhf4xmPL?=
- =?us-ascii?Q?qfvNiQXMOeBLdTF+cB5uEu47gOz63/qI2erXtTOI++Pi/sb/dbHUKs9phfJk?=
- =?us-ascii?Q?ziIC+T0mGRRR56RGhpPf/apQUP/Ul5X01jNXMTKY8Z0RLu+zP8e4JTTcy/Vo?=
- =?us-ascii?Q?3g=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?aoQUDfpqVY0Lv5E7qaVZJSi47+4AlvejxAybgj8hgtC4ZIlVjHMxgoH013/O?=
+ =?us-ascii?Q?FNBq1Yeq7gokT4yxhGGcS/C2F52dFQPgTpiR7LRI2QVUjRv8G13ZUnEyRrpy?=
+ =?us-ascii?Q?uXa6lmOd4NWkX5TlA8CkKV4xlbJyRAVF6/O+40bzT54DcmkjoTBgh9fQRmNS?=
+ =?us-ascii?Q?OiSx7PYOwhl0nJ0Xag8diDsiTv/x5uUjl3xqRcueoRuJgIt4FIny3hg/rTSy?=
+ =?us-ascii?Q?HqwtTf5rNypR8WGRZht1IqIHCODbsVXh+/IJYY9722CwqfJwFX0CJQ90y40K?=
+ =?us-ascii?Q?osh9Qv28fuxoboBth2DePSFfb87Y+vr/9BosaauMtN25GwkKKovcUXLHnNz1?=
+ =?us-ascii?Q?L40fb18xMhB1wET2gbSm6E4bralblcd1D9nzAeZ9+BzbAYlo1sQMo1sI73XY?=
+ =?us-ascii?Q?XsbRCjYFqq2te8CWHIZvEzOhQZVuIki71UvrFqa6gFAfHZDhYOVJ65YKwISf?=
+ =?us-ascii?Q?zJAEU8y2rqBClw/bNcDXcOiF6KWGjC7bjdwxw/0Z7YzxvPE5obdyAZ7rVsHU?=
+ =?us-ascii?Q?VH2mUlGJ2+ZQ+CDI3gsoZTr6s6Tz9ZulzRflvWQSMjXuWcgBpbZcjCMoPhFD?=
+ =?us-ascii?Q?eBBHsQo0gfIQIBXdMBq2EEt8maSNPly0I+UQ87RiRiqeSCDKtjjZbA5B3r49?=
+ =?us-ascii?Q?zG2Wc17jyz0ycnDHhMS4Q0BwNbIuEYnrjA/uOwUPh+TEfLpw36CV1/kYbrm3?=
+ =?us-ascii?Q?UEXvhP/dl+pdma2JkC0bv4JxICudEbvAo4M8wqIUKjiRdvVU9uivkfXgB6Fs?=
+ =?us-ascii?Q?vdS13CBE0i06YX42299VX5Ymwm+6lcaN7H6VHeau7R8eEkCVLFWPhCGrZvRF?=
+ =?us-ascii?Q?aECOiGT61q54ecpKy9mGmzJaeLhH9QBIIsCtCJ0t7hGSg0kfficL5J8mkt1Q?=
+ =?us-ascii?Q?MUVKst8N6LzdtJYZvL2IioFs5njqd0FTdeP/EcaXAU06Ci705ubPj8B+HQAr?=
+ =?us-ascii?Q?4OWzGjQRKMgfIbB3I7LxgRvK4ukQsPV+lqQ/uvyxK7Am35LbTpZhz4Det7F2?=
+ =?us-ascii?Q?f9lJIIMPq8oC5+ZOCkMc/L2R05eZcV9zCCanRvmoYaoK2VRcizk/95onCUBH?=
+ =?us-ascii?Q?Xq7HCH6MfZZYLCCab7dRhcWYpMLoIYQ/ug5ksWlRxQH5czGCh+VVzmCVG+Ms?=
+ =?us-ascii?Q?ZyDF4Q6edKjMG7FD6ER0G1k7ACSTT2cxtqGNjXSQhDswZI0SMiDHp3mk/0np?=
+ =?us-ascii?Q?i7UZwLmcLEvPUKjaA/CyjmpQTnsqXE2lOXFqbsIvGJc9cwlHOaSC1UABfSPN?=
+ =?us-ascii?Q?dxT2Drafu04tC8w6yewqaKphycXTR/MQMfICU25S07kbD6lvGNavgDJX8UwO?=
+ =?us-ascii?Q?+jg9ElmBNN6KWGDl88bQvyMa2GuamZXz04oP/NyvOJY8Klm45cUSA8ih+P7H?=
+ =?us-ascii?Q?2Iz1Cx0nwygAti0oKadpCDZO/alZR8gNzvK8Kb/tpBj1x7+64o4Ct3OXMSOx?=
+ =?us-ascii?Q?853il4AdfkuuA9rcgu3xZACwSP1AjP3k3RL6QVof0hc6J5AXhZ9LKw1B/LJW?=
+ =?us-ascii?Q?cGp4Z8TFRdbUHp4p86rhQN9vHx5qGGdwuePeD8GZm/Tx6wHMrK2+HZ7d+D0V?=
+ =?us-ascii?Q?9TLvkUxrSP+kOXaasg/t4Xmhyn3vBbNtWwibbo37UsNBN4bod76NMJqZ2930?=
+ =?us-ascii?Q?KA=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?us-ascii?Q?hb84sbXCOkFsGWFHgxRnjbxsjEu7xdDTaIj5VFxV018Ghu4UMTkMCpdBY9ky?=
- =?us-ascii?Q?YuIptYQIV05DoaqBbVo8xx2QCnFPbAalu7ye1oKGNfU4eOV2tj8DdXpF/wKK?=
- =?us-ascii?Q?gw/go1is5gr82/fktRH+TVZ84OPDX8f7onR9xmqudr8QWaaEKzuYOzgd3Ss5?=
- =?us-ascii?Q?cWCFXNRIQXyf1UWBC/UB++cBmdSPKuVbv1ZbuWwffcDRLMoOpVU59YlkMiUb?=
- =?us-ascii?Q?wzXhnW0fvc09Xq4EuMHUSKtRGo0sRIBejcCzkANI2t9iO2w0Pmofxus2Sczi?=
- =?us-ascii?Q?qPxLf/+fFG6sB6N8PhWrr1FuV1qxzAKkrbYG/EIqfrSESN6cjDR3Z76nYUzh?=
- =?us-ascii?Q?hR6ywgI23IiqfRNMHO8+gD/vCdSi3K+DAxtrhOkoXn9HkNCpdeLGJy9NiIkW?=
- =?us-ascii?Q?Br3FuFZsJthhqgC8e2mz4JhOa4acNgKRMTWBiQl0SJpjpLbB9FvftmpOOl3W?=
- =?us-ascii?Q?joZWlHLLw1OxuZi6inWJ8fym8XkUaRz8YkhmWkKwqo8w/9rRCmEwkx5ErNkk?=
- =?us-ascii?Q?cRdwfNVPttNsyq0yyaAhjrHwnEapTsFdTy+tgiwoVk5QtYRKdNjT6G/+HRxK?=
- =?us-ascii?Q?vir97BqAJCQOE4c82EqQeuyzMFxSJKvncGcVpnykdTOeamzKQ5RWjvi5BPuf?=
- =?us-ascii?Q?BE4T8reeNbyCq4DO7PRSOZzLKBkjHJ/E3w4o9OAe2fuQxK9utZyxGGb4kW3q?=
- =?us-ascii?Q?/ExX7jkJTVZB0RWhqj5p6blT0Ox0SYVG0yBouqTi+yrWZKEuSx4ius1iCzs5?=
- =?us-ascii?Q?dmVJGkQqfa+OVvaf6WUJqsZhMq1Zd5UOYQ45eStRddMBCRD1MXxgEiTWkiZJ?=
- =?us-ascii?Q?00z0vc6qe3xf8mWtgCLR7iuT45ex3PD8kn4aUT2Woob8SR7DcIzcKBui0C2H?=
- =?us-ascii?Q?lgHiEtZLDZlRwC/DynNQEk0uzvTLk0aRW4c7fkSvGPK8JC5Jfo72+19RakUg?=
- =?us-ascii?Q?7MzXzjyYmka//JkKZXKpcbEIsBOb+Djzaa7qK1RT4gwgHOT4NIWiq205VUiH?=
- =?us-ascii?Q?lEoOnRraCVlYxBtn9YmZmwaONRxZjtUGEr08FntRC23lxD5gCNPnHZ7z++lZ?=
- =?us-ascii?Q?qro4bwo5vflaHnmf+Bayk+Xz+Qu9wQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?us-ascii?Q?H258B0Xpc5mFJg0Icsx7rm5Bd4Z8EHxJBSjhQ2P1xNcHTfhovHLyy1I6PL+k?=
+ =?us-ascii?Q?SYeKr0P9WyuQszul0rg9E43CBhoiNVd3dP+nwPXF0GekGDkzix4ss7zwwN75?=
+ =?us-ascii?Q?Tt+b5S0dIezrji7y9xwxQTrX46f4sjb1BtT8h/g8jLCxxH0pGMsMOOk5AEpR?=
+ =?us-ascii?Q?PO2b2ebNhmBPvQOWbiKUCfKt0XUE7pxYuD8gRWJLRu2rqp4u6cikBQdMOpHP?=
+ =?us-ascii?Q?ZrcZiq8qgfBzkDplDqfj9nukfwlxya7mltMhhrmHQ9iyICLwEKbneT/rjVH4?=
+ =?us-ascii?Q?JsB7SoyXGKggssuygOm0xL1sZ1bQK9us5CzL+vvOvBsxEBy6D4rOyNVzQmXA?=
+ =?us-ascii?Q?g8OwYm0IrqxFywcFYTSjiS8NpfcujzgOy024OIhaZbgjTcihaj8uaiUo8NVW?=
+ =?us-ascii?Q?s4xtoc/qonCndo8xT/hV2i+2aKEDaFEVsEytf5MswnXcgDSs3nRTXXLxEtor?=
+ =?us-ascii?Q?Sahg0/SeC9v5Hie5YWxnf0XPdOmzROMvx/zGBf6UQAIAt6jA1bbraSADYR/M?=
+ =?us-ascii?Q?Dw+MNbUiS00ykksw37YN5inhRNEuiRFHaZUhHH9cHRny/JPcs91tYaDEvSxf?=
+ =?us-ascii?Q?a7DNZoiIh2jxrYtj8dPlFnlUMKVmhwfQnA5oNB8BuwV/0doX4taFGPZHC6DO?=
+ =?us-ascii?Q?aAeTtdlVq2lJiTUvfw1I6dNuSsVijK5Rkb8guIJKLwYY6KXI+lzA7Kd0iCvf?=
+ =?us-ascii?Q?8RtgizSqW4reRZMvKl2KZRbu4M73o09AkYAv0YYKVIJGfkChT7r/KIcVRygI?=
+ =?us-ascii?Q?bjxFCA4OJL1p9lrKust6EWwtUai6VOrKuqXgy3LlsSRr9tQ1NCfejo28l0j5?=
+ =?us-ascii?Q?SGgcy+afkoBIeN/zTtEjrFT83GCjWA2EODTY0Oj940pN0y/dn9ygMAr5yGw2?=
+ =?us-ascii?Q?pRfAmJ0FDEzgq+bck6SYl8/XmcD9BJTkrVfHk4LtdZ8JfW4MNrTjW+oxNGND?=
+ =?us-ascii?Q?ZZ0yp25AuqshGb4ReBM1J5o/qFlrrAwgt+vyOniqaqR42akjLQrqrRtVUQaV?=
+ =?us-ascii?Q?+AVLXDy8GZWg1T+6ncTNlimK7WDJBKrjfaNwJ2Vvj6c87FK2wRcVzsITqur1?=
+ =?us-ascii?Q?+OL8T+Bey5rqh48UvjMh8fCfd/R8lQ=3D=3D?=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4dd79a60-3229-4fe6-0601-08db77c2aa1a
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00582e73-4061-4588-f35c-08db77c2ac8c
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2023 10:30:16.6011
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2023 10:30:20.6472
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PZ5qs0KYNVmPWWsBomVW5MGgZTFGDaV/Fx2fjg6JZZBp7VjfEv7aAOQEt5EzDDGVN0uf3bjvK2tFq4rbgLVcwA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: KYcp/nLggZTXjJ0FTXkRheU9aKJifjmjkIPzKi1ANE+K6MvLeEoCyj65ID5I0jJW6l3ez8Ntam6ZOBVYaym53w==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4715
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
  definitions=2023-06-28_06,2023-06-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- malwarescore=0 suspectscore=0 spamscore=0 bulkscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0
+ malwarescore=0 adultscore=0 mlxlogscore=999 phishscore=0 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2305260000 definitions=main-2306280092
-X-Proofpoint-ORIG-GUID: Zh1faJHjqPMjsUabR94QPohG6tcK1dPI
-X-Proofpoint-GUID: Zh1faJHjqPMjsUabR94QPohG6tcK1dPI
+X-Proofpoint-GUID: ZUQObEtsCYZ68AeawPRFgxxHM6rCd_kK
+X-Proofpoint-ORIG-GUID: ZUQObEtsCYZ68AeawPRFgxxHM6rCd_kK
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The current @table arg may be a CPU metric table or a sys metric table.
-There is no point in searching the CPU metric table for a sys metric, and
-vice versa, so pass separate pointers
-
-When sys metric table is passed, this would mean that we are in self-test
-mode. In this mode, the host system cannot match events in the metric
-expression as the associated PMUs may not be present. As such, just try
-add the metric, see metricgroup__add_metric_sys_event_iter().
+Refactor pmu_add_sys_aliases_iter_fn() into sub-function
+pmu_event_match_pmu(), which is a function which allows us to match a pmu
+against a "unit" and "compat" values.
 
 Signed-off-by: John Garry <john.g.garry@oracle.com>
 ---
- tools/perf/tests/expand-cgroup.c |  2 +-
- tools/perf/tests/parse-metric.c  |  2 +-
- tools/perf/tests/pmu-events.c    | 29 +++++++++++++++-----
- tools/perf/util/metricgroup.c    | 45 +++++++++++++++++++++++---------
- tools/perf/util/metricgroup.h    |  3 ++-
- 5 files changed, 59 insertions(+), 22 deletions(-)
+ tools/perf/util/pmu.c | 20 +++++++++++++++-----
+ tools/perf/util/pmu.h |  2 ++
+ 2 files changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/tests/expand-cgroup.c b/tools/perf/tests/expand-cgroup.c
-index 9c1a1f18db75..50e128ddb474 100644
---- a/tools/perf/tests/expand-cgroup.c
-+++ b/tools/perf/tests/expand-cgroup.c
-@@ -187,7 +187,7 @@ static int expand_metric_events(void)
- 
- 	rblist__init(&metric_events);
- 	pme_test = find_core_metrics_table("testarch", "testcpu");
--	ret = metricgroup__parse_groups_test(evlist, pme_test, metric_str, &metric_events);
-+	ret = metricgroup__parse_groups_test(evlist, pme_test, NULL, metric_str, &metric_events);
- 	if (ret < 0) {
- 		pr_debug("failed to parse '%s' metric\n", metric_str);
- 		goto out;
-diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
-index 2c28fb50dc24..e146f1193294 100644
---- a/tools/perf/tests/parse-metric.c
-+++ b/tools/perf/tests/parse-metric.c
-@@ -95,7 +95,7 @@ static int __compute_metric(const char *name, struct value *vals,
- 
- 	/* Parse the metric into metric_events list. */
- 	pme_test = find_core_metrics_table("testarch", "testcpu");
--	err = metricgroup__parse_groups_test(evlist, pme_test, name,
-+	err = metricgroup__parse_groups_test(evlist, pme_test, NULL, name,
- 					     &metric_events);
- 	if (err)
- 		goto out;
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index 64383fc34ef1..de571fd11cd7 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -798,9 +798,9 @@ struct metric {
- 	struct metric_ref metric_ref;
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 6142e4710a2f..ae1a2a97965c 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -801,6 +801,20 @@ struct pmu_sys_event_iter_data {
+ 	struct perf_pmu *pmu;
  };
  
--static int test__parsing_callback(const struct pmu_metric *pm,
-+static int _test__parsing_callback(const struct pmu_metric *pm,
- 				  const struct pmu_metrics_table *table,
--				  void *data)
-+				  void *data, bool is_cpu_table)
- {
- 	int *failures = data;
- 	int k;
-@@ -811,6 +811,8 @@ static int test__parsing_callback(const struct pmu_metric *pm,
- 		.nr_entries = 0,
- 	};
- 	int err = 0;
-+	const struct pmu_metrics_table *cpu_table = is_cpu_table ? table : NULL;
-+	const struct pmu_metrics_table *sys_table = is_cpu_table ? NULL : table;
- 
- 	if (!pm->metric_expr)
- 		return 0;
-@@ -834,7 +836,8 @@ static int test__parsing_callback(const struct pmu_metric *pm,
- 
- 	perf_evlist__set_maps(&evlist->core, cpus, NULL);
- 
--	err = metricgroup__parse_groups_test(evlist, table, pm->metric_name, &metric_events);
-+	err = metricgroup__parse_groups_test(evlist, cpu_table, sys_table,
-+					     pm->metric_name, &metric_events);
- 	if (err) {
- 		if (!strcmp(pm->metric_name, "M1") || !strcmp(pm->metric_name, "M2") ||
- 		    !strcmp(pm->metric_name, "M3")) {
-@@ -890,13 +893,27 @@ static int test__parsing_callback(const struct pmu_metric *pm,
- 	return err;
- }
- 
--static int test__parsing(struct test_suite *test __maybe_unused,
-+static int test__parsing_callback_cpu(const struct pmu_metric *pm,
-+				  const struct pmu_metrics_table *table,
-+				  void *data)
++bool pmu_event_match_pmu(const char *event_unit, const char *event_compat, struct perf_pmu *pmu)
 +{
-+	return _test__parsing_callback(pm, table, data, true);
++	if (!event_unit || !event_compat)
++		return false;
++
++	if (strcmp(pmu->id, event_compat))
++		return false;
++
++	if (!pmu_uncore_alias_match(event_unit, pmu->name))
++		return false;
++
++	return true;
 +}
 +
-+static int test__parsing_callback_sys(const struct pmu_metric *pm,
-+				  const struct pmu_metrics_table *table,
-+				  void *data)
-+{
-+	return _test__parsing_callback(pm, table, data, false);
-+}
+ static int pmu_add_sys_aliases_iter_fn(const struct pmu_event *pe,
+ 				       const struct pmu_events_table *table __maybe_unused,
+ 				       void *data)
+@@ -808,11 +822,7 @@ static int pmu_add_sys_aliases_iter_fn(const struct pmu_event *pe,
+ 	struct pmu_sys_event_iter_data *idata = data;
+ 	struct perf_pmu *pmu = idata->pmu;
+ 
+-	if (!pe->compat || !pe->pmu)
+-		return 0;
+-
+-	if (!strcmp(pmu->id, pe->compat) &&
+-	    pmu_uncore_alias_match(pe->pmu, pmu->name)) {
++	if (pmu_event_match_pmu(pe->pmu, pe->compat, pmu)) {
+ 		__perf_pmu__new_alias(idata->head, -1,
+ 				      (char *)pe->name,
+ 				      (char *)pe->desc,
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 8807a624e918..8cccbc9b2548 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -288,4 +288,6 @@ int perf_pmu__pathname_fd(int dirfd, const char *pmu_name, const char *filename,
+ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char *lookup_name);
+ void perf_pmu__delete(struct perf_pmu *pmu);
+ 
++bool pmu_event_match_pmu(const char *event_name, const char *event_compat, struct perf_pmu *pmu);
 +
-+static __maybe_unused int test__parsing(struct test_suite *test __maybe_unused,
- 			 int subtest __maybe_unused)
- {
- 	int failures = 0;
- 
--	pmu_for_each_core_metric(test__parsing_callback, &failures);
--	pmu_for_each_sys_metric(test__parsing_callback, &failures);
-+	pmu_for_each_core_metric(test__parsing_callback_cpu, &failures);
-+	pmu_for_each_sys_metric(test__parsing_callback_sys, &failures);
- 
- 	return failures == 0 ? TEST_OK : TEST_FAIL;
- }
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 8d2ac2513530..520436fbe99d 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -1232,13 +1232,14 @@ static int metricgroup__add_metric(const char *pmu, const char *metric_name, con
- 				   const char *user_requested_cpu_list,
- 				   bool system_wide,
- 				   struct list_head *metric_list,
--				   const struct pmu_metrics_table *table)
-+				   const struct pmu_metrics_table *cpu_table,
-+				   const struct pmu_metrics_table *sys_table)
- {
- 	LIST_HEAD(list);
- 	int ret;
- 	bool has_match = false;
- 
--	{
-+	if (cpu_table) {
- 		struct metricgroup__add_metric_data data = {
- 			.list = &list,
- 			.pmu = pmu,
-@@ -1254,7 +1255,7 @@ static int metricgroup__add_metric(const char *pmu, const char *metric_name, con
- 		 * Iterate over all metrics seeing if metric matches either the
- 		 * name or group. When it does add the metric to the list.
- 		 */
--		ret = pmu_metrics_table_for_each_metric(table, metricgroup__add_metric_callback,
-+		ret = pmu_metrics_table_for_each_metric(cpu_table, metricgroup__add_metric_callback,
- 						       &data);
- 		if (ret)
- 			goto out;
-@@ -1267,7 +1268,21 @@ static int metricgroup__add_metric(const char *pmu, const char *metric_name, con
- 		goto out;
- 	}
- 
--	{
-+	if (sys_table) {
-+		struct metricgroup_add_iter_data data = {
-+			.metric_list = &list,
-+			.pmu = pmu,
-+			.metric_name = metric_name,
-+			.modifier = modifier,
-+			.metric_no_group = metric_no_group,
-+			.user_requested_cpu_list = user_requested_cpu_list,
-+			.system_wide = system_wide,
-+			.has_match = &has_match,
-+			.ret = &ret,
-+		};
-+		pmu_metrics_table_for_each_metric(sys_table,
-+			metricgroup__add_metric_sys_event_iter, &data);
-+	} else {
- 		struct metricgroup_iter_data data = {
- 			.fn = metricgroup__add_metric_sys_event_iter,
- 			.data = (void *) &(struct metricgroup_add_iter_data) {
-@@ -1320,7 +1335,8 @@ static int metricgroup__add_metric_list(const char *pmu, const char *list,
- 					bool metric_no_threshold,
- 					const char *user_requested_cpu_list,
- 					bool system_wide, struct list_head *metric_list,
--					const struct pmu_metrics_table *table)
-+					const struct pmu_metrics_table *cpu_table,
-+					const struct pmu_metrics_table *sys_table)
- {
- 	char *list_itr, *list_copy, *metric_name, *modifier;
- 	int ret, count = 0;
-@@ -1338,7 +1354,8 @@ static int metricgroup__add_metric_list(const char *pmu, const char *list,
- 		ret = metricgroup__add_metric(pmu, metric_name, modifier,
- 					      metric_no_group, metric_no_threshold,
- 					      user_requested_cpu_list,
--					      system_wide, metric_list, table);
-+					      system_wide, metric_list, cpu_table,
-+					      sys_table);
- 		if (ret == -EINVAL)
- 			pr_err("Cannot find metric or group `%s'\n", metric_name);
- 
-@@ -1534,7 +1551,8 @@ static int parse_groups(struct evlist *perf_evlist,
- 			bool system_wide,
- 			struct perf_pmu *fake_pmu,
- 			struct rblist *metric_events_list,
--			const struct pmu_metrics_table *table)
-+			const struct pmu_metrics_table *cpu_table,
-+			const struct pmu_metrics_table *sys_table)
- {
- 	struct evlist *combined_evlist = NULL;
- 	LIST_HEAD(metric_list);
-@@ -1547,7 +1565,7 @@ static int parse_groups(struct evlist *perf_evlist,
- 		metricgroup__rblist_init(metric_events_list);
- 	ret = metricgroup__add_metric_list(pmu, str, metric_no_group, metric_no_threshold,
- 					   user_requested_cpu_list,
--					   system_wide, &metric_list, table);
-+					   system_wide, &metric_list, cpu_table, sys_table);
- 	if (ret)
- 		goto out;
- 
-@@ -1697,18 +1715,19 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
- 			      bool system_wide,
- 			      struct rblist *metric_events)
- {
--	const struct pmu_metrics_table *table = pmu_metrics_table__find();
-+	const struct pmu_metrics_table *cpu_table = pmu_metrics_table__find();
- 
--	if (!table)
-+	if (!cpu_table)
- 		return -EINVAL;
- 
- 	return parse_groups(perf_evlist, pmu, str, metric_no_group, metric_no_merge,
- 			    metric_no_threshold, user_requested_cpu_list, system_wide,
--			    /*fake_pmu=*/NULL, metric_events, table);
-+			    /*fake_pmu=*/NULL, metric_events, cpu_table, NULL);
- }
- 
- int metricgroup__parse_groups_test(struct evlist *evlist,
--				   const struct pmu_metrics_table *table,
-+				   const struct pmu_metrics_table *cpu_table,
-+				   const struct pmu_metrics_table *sys_table,
- 				   const char *str,
- 				   struct rblist *metric_events)
- {
-@@ -1718,7 +1737,7 @@ int metricgroup__parse_groups_test(struct evlist *evlist,
- 			    /*metric_no_threshold=*/false,
- 			    /*user_requested_cpu_list=*/NULL,
- 			    /*system_wide=*/false,
--			    &perf_pmu__fake, metric_events, table);
-+			    &perf_pmu__fake, metric_events, cpu_table, sys_table);
- }
- 
- struct metricgroup__has_metric_data {
-diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
-index d5325c6ec8e1..b5f0d598eaec 100644
---- a/tools/perf/util/metricgroup.h
-+++ b/tools/perf/util/metricgroup.h
-@@ -79,7 +79,8 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
- 			      bool system_wide,
- 			      struct rblist *metric_events);
- int metricgroup__parse_groups_test(struct evlist *evlist,
--				   const struct pmu_metrics_table *table,
-+				   const struct pmu_metrics_table *cpu_table,
-+				   const struct pmu_metrics_table *sys_table,
- 				   const char *str,
- 				   struct rblist *metric_events);
- 
+ #endif /* __PMU_H */
 -- 
 2.35.3
 
