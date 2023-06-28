@@ -2,116 +2,205 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7069AC001B3
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jun 2023 07:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24993EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jun 2023 07:58:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230511AbjF1Hwm (ORCPT
+        id S231524AbjF1H54 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Jun 2023 03:52:42 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20460 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230450AbjF1Hwc (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Jun 2023 03:52:32 -0400
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35S5pSFw008157;
-        Wed, 28 Jun 2023 06:04:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=qjhN1yHhVfB8bKKHksru9FAz/YSXpy2LrUUmQdoojY4=;
- b=k/+w0azOqOXyw1ZX/vUF2Pw2F2cnXhPrsHi+X1RI0iqGKhoUWKHfBD9oiyWsXL3V6j7v
- px7pn2La4x7zWbcHWky+NIO+xzhqBIx5UIxyjp2A0IUiWnV7qly9/MvLwtKXL30zzhgC
- aOeIPxttQ+jwUitgIrWa+ohywq/emWRgyFZych56UB0Hb16w0+tpyT7P8Exhf/DcsD6i
- 1//ICCFx+OKioBJGg30M+wkUoULxf9xKqu4e/Pu9/JHRIFRXbud1V9Wp6nbb/+4zGJ2N
- xHzW5Gc1LSqb33L849Zbjs1rr5rSfHCDgzbMyzKIESYXbaf12Fv61uom/flxfq/ufmQp Fg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rgf36ranx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Jun 2023 06:04:12 +0000
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35S5pWGJ008285;
-        Wed, 28 Jun 2023 06:04:11 GMT
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rgf36ram3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Jun 2023 06:04:11 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35S2jYJO030676;
-        Wed, 28 Jun 2023 06:04:09 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma04fra.de.ibm.com (PPS) with ESMTPS id 3rdr451ss7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Jun 2023 06:04:09 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35S645P016908894
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Jun 2023 06:04:05 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9EB0B20043;
-        Wed, 28 Jun 2023 06:04:05 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4203C20040;
-        Wed, 28 Jun 2023 06:04:05 +0000 (GMT)
-Received: from [9.152.212.165] (unknown [9.152.212.165])
-        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Wed, 28 Jun 2023 06:04:05 +0000 (GMT)
-Message-ID: <e5274fc1-7de4-2c63-8767-fc437c2b68b2@linux.ibm.com>
-Date:   Wed, 28 Jun 2023 08:04:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] perf/test: perf test case Daemon operations dumps core
-To:     Namhyung Kim <namhyung@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, irogers@google.com, hca@linux.ibm.com,
-        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com
-References: <20230627092633.2135105-1-tmricht@linux.ibm.com>
- <CAM9d7cjmmx2GQ7QQj3wBe1KkqgVNzoYbMuLeasVUWuZeLWUE9A@mail.gmail.com>
+        Wed, 28 Jun 2023 03:57:56 -0400
+Received: from mail-bn8nam04on2076.outbound.protection.outlook.com ([40.107.100.76]:33312
+        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231373AbjF1HzA (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 28 Jun 2023 03:55:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X8YSWjknk3gHv/QVrMdMPXJRuFPk3rF5ue7LSrNBUHRlUnhsXCRq73Od1d1BgmlLALHGfSx0Fl6GeC6QYUbhyc8lOCM0mxMZNYLbqeVYzQ1P/aEX04V0Y3et3QRikB/XfnQ+qH5Mt+0IxKFiAIgbu7TLXKloH3+7aku2rMipafbzPik1sddO8ZxdO9rhE99w4ZdkE3fM8j1YKehmMVhn6VSptGtGKSlv9anWmSWxb7tEggDr9UXdX5e1RPkO1LIm+9qlQa49NjdZb21t4R8d8g8AbWp8tfm6bQ8kGnapHqKZtYpQtpIC59sk1MYbveT4roMqhUS72QJIfwCFsRgJSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NTbxjH4GIdEZ0eDdU7Lj6XDYM5SUITh+EE1RCmwwHSE=;
+ b=cBu4mJerCGHUK39s7FQYXddDVVnUFMtXQjFLmAX7piMJWooMbbig3+VEl4A2fKpn0ZrA24uLnBHUEaKsLIOsva+IcIcZq8DEkOk1ncbEdUbvs9Ly1zYt7kNfzm2kTnsuELfjsQFM0NoQqx1N9aXoGdnlz14HxNR+V9waXz/FF3trRgq1/4DrCBzC1tMnKY6ommReOAp+bnA6xM0R4VlD0+Y1z3+FuScb7TrGtXHYpxsVtp2XkeBcqafuGoqxaKpsYyXucSMWxrAMUIm/qpyPzWOdXsHgAGozyDDcKZkegH2qd9p8L0BWVQRgBwCOBkgCA3VfGB4GaIdFELIUfUGpHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NTbxjH4GIdEZ0eDdU7Lj6XDYM5SUITh+EE1RCmwwHSE=;
+ b=em4T4/XCtdmvIVg6XYp5ctJ1Wvz4aEgoMcUPI56dEskghV71oaj7fNWXx853UPaCcpFM5qUEjkumk/HwzuUwZh88S2q2bq9wbt8/iR0790jqwV/HvIDx9SK7GtgsJkeeU4espKoKLkvdpNdZlunwMKIeG9cYH3bjtL4fPeKABv8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by MW4PR12MB6682.namprd12.prod.outlook.com (2603:10b6:303:1e3::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.24; Wed, 28 Jun
+ 2023 04:50:36 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::b4a6:94bb:6895:645]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::b4a6:94bb:6895:645%4]) with mapi id 15.20.6521.024; Wed, 28 Jun 2023
+ 04:50:36 +0000
+Message-ID: <aa2ef58a-f02b-8c9d-2b62-8587f3b091bc@amd.com>
+Date:   Wed, 28 Jun 2023 10:19:49 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v2] perf evsel amd: Fix IBS error message
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     acme@kernel.org, peterz@infradead.org, irogers@google.com,
+        jolsa@kernel.org, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com,
+        santosh.shukla@amd.com, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20230626103958.834-1-ravi.bangoria@amd.com>
+ <CAM9d7cgL2+jHtyy6k19NbmW1cD+RGRkwUANDk8xH3oGqxB0qqQ@mail.gmail.com>
 Content-Language: en-US
-From:   Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <CAM9d7cjmmx2GQ7QQj3wBe1KkqgVNzoYbMuLeasVUWuZeLWUE9A@mail.gmail.com>
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <CAM9d7cgL2+jHtyy6k19NbmW1cD+RGRkwUANDk8xH3oGqxB0qqQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: LJQoIT1Veq46xhr8OJ_IzaJ_5DYTmhkl
-X-Proofpoint-ORIG-GUID: N3rKsWCN7AlhjlHo3O3mwpGnqZpQXBTw
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+X-ClientProxiedBy: PN2PR01CA0110.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:27::25) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-28_02,2023-06-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- mlxscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0 clxscore=1015
- adultscore=0 malwarescore=0 impostorscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306280053
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|MW4PR12MB6682:EE_
+X-MS-Office365-Filtering-Correlation-Id: 50b49651-d83f-4190-f49e-08db77933654
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: crReek1yES7h5GjTizDFRDWiUBH5RMycbkVpi2Gxb5fRcnWwjoLd1S7lpMpkVKEjmkh4bnXz0UkE+75vm28c6QGl6/CWCoisYzJSfy6B7xjBNNSqpUUhc/wCscTuUko2eKkRDR6+CYusapHfB/I1SmA4vHLYmipdSElxAQbwXRtllof8gZv3pb1gJLeFIl3BEDSgYUu2uZO3q6iNaw/zpWRqmEVi3D1okfcSerVbPTpPZ80USBWht8fjSpLknAVZDYUkJmpj1q4VvlO9ycQMxUs6OS3VtD/Qy6bhEKa6gLptCdp/kMZSfnka2nH9SPPF4hbPtg454LXW8m+nWG2gBSS9xndqC4kHCKuzPLMy7d3VrGS1VHy0UxzCy0sf7Ipxxhh0axuT+T+tgLDc1NHKGeWdo/6PT4pY1tWNwx9GUA4aZCtwNHUHEhBcsf2+CbGpqBBdpRQp8b21yvG6qMKskvUa2RdPz7kNwVOKQ7NG0kYkTnwrjmYFfsGuxlwGWlblMLOB/PPAQPty8GgaX14TRn/s7gomBIkZuJi8HTNw3ktxLLM6qemIs6aCNcceinBPWmEtdv+a2qD6Pw9ej1Q+T2mRGXLTxTAaif7InczpKndl/IV0yIYhP6/LKaoxgND2jEawdDyIwgsB6ql3MTO81Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(396003)(136003)(39860400002)(346002)(376002)(451199021)(6512007)(31686004)(36756003)(44832011)(86362001)(41300700001)(6916009)(4326008)(66556008)(66946007)(31696002)(316002)(66476007)(8936002)(38100700002)(8676002)(966005)(5660300002)(6506007)(53546011)(6486002)(186003)(15650500001)(83380400001)(6666004)(2906002)(2616005)(478600001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?OTBvZEpJcWpRQURyd0VUdDlZbUF4WkFBZmlrMUVCczZnWWZlSGFUN3BzM3lC?=
+ =?utf-8?B?S0l1RU9pSW1JYUVqZStnZjlUMGFBaE04U3FlWlRHWWdFZTJsN0NMTUZUZ1p4?=
+ =?utf-8?B?RlowSDRlVFQwZE1GdkcxczQ4Q0tnQlZiWkJVNW94KzVDYW5uYi9abWNOM3cw?=
+ =?utf-8?B?aUxrREZKSE1HWVVvUWlhSmhER1BLVG1tY2xVZlBoVFZBU01DZEtWOXQ2MXlm?=
+ =?utf-8?B?N3VVUnNnRGlGeWNzVmYzWUtWYWFYeVFoSlpMYm83Nks2eHBMQUZ3RWhBTU9B?=
+ =?utf-8?B?aU9LbWxpQ2ZzSDJLbnI2UENyaVFLbkZMOThGWDl4R1JmaUliTmFnelJuM2hj?=
+ =?utf-8?B?d25PQzl2YlJsZE9KT1ZwdTVvenJ2WmpHejZyOUJZcXR3SzNtbUp0aTlnUkJP?=
+ =?utf-8?B?UkxOYlZoei9aNHRSNXBxek53UXRnNFpLaEtLK2JML0I2WjdEU25UdERoVlBj?=
+ =?utf-8?B?RHZDQ2FXcHMzZEtIeXNwMldNY2VlYU55bi85bEZMTHFsS1ZEU1lOb0ZnSy9V?=
+ =?utf-8?B?TU40eUFRTUpEZnY1K1FNLzZra1YrWW50Tk5oMGNIU2NsZmVvbVgxdGRCbFdi?=
+ =?utf-8?B?UzFqdndoNzBGME5jb0Y3UTFTUFVTdmYxbVZaK0tSR3J3QTRiYTl3RG9TYmYz?=
+ =?utf-8?B?alBzWjUrM1EyTTY4ZVdNQjM3K2t0dlI4NDMrVEREUjVVZWpycUlFRk4rM0U4?=
+ =?utf-8?B?bHZBQ1pXQzMvU28xaWZtSkI1Sm1mZC83STdSUDF0bVl3L2Y5M05Xd09pOEdx?=
+ =?utf-8?B?YllJUjZHYjlnRm01SEIxSExYQUZseE5WbjJOaVFtYmhSeThTeklkKzhJRFpX?=
+ =?utf-8?B?WXJkaTBUVU9oeS8wVks2WmxoQnBmT0M5V0tYQUhWUmkxT095V21jRWZPMXdm?=
+ =?utf-8?B?ajZIRUtxNjNYSjM0TnNmMDd1MmNNMjh6ejljN2JOOTF1NlJobTNYdFVkTzVS?=
+ =?utf-8?B?WnVmc3VJaHdTeGZQVVVEQUwraDBoTklITzhEMjFBUTVkS29tY29RNVNmQ05I?=
+ =?utf-8?B?RXVLelhoNTNQWTAra1p3WXRJNyt3bmgxZy9ua3N3QVI5bWpjcVFoSURkMHhv?=
+ =?utf-8?B?QkxwQzB3SjFveEtPZXRscEpqOHk2TTAyVTlFMFIvWWZ5a1RsM0QxeDhZOCtQ?=
+ =?utf-8?B?aFFPTkhZcUNuT0xHeHZ4eUVtTHJjdUlxbzNBaWp4SVJxdXNwQWNmck1GbjU1?=
+ =?utf-8?B?M0tPZnVkTFQyeDVJd1hVbmlWTlcwZDFNUUdtYTNmTmZEdDR6TGlkN1pIQmRo?=
+ =?utf-8?B?clFzY1VYeGQ5d2pxWjE4ajUzTzFxc0xIbjU1ck1ibWw2YmJzU21CMm1JU2Vm?=
+ =?utf-8?B?TzRoK01ZSEFkcmpwcWFLZXhabXVvMkUwS09aRWdRQUVpa3ZqS21YS1kybkZ0?=
+ =?utf-8?B?Qldsd2VpVzJTWndYVnRoQnRCMWFBa2NjMDI3SEVYeUpxay91QXcrbjFJRlFB?=
+ =?utf-8?B?UEVNaDFzN0dCS0FuYjVITElYUzl5elludlpSYVk2SjlTbEhmM0prYTBvSUhO?=
+ =?utf-8?B?OEw2aTFzVytkSW8wV0VTOUhXMUV2a1F0SUcxTFBMZFgzckltS1FjaXZvMVQw?=
+ =?utf-8?B?RzJFUnl0NXc3NTZiM1ZsNEFtNEwrRkQyK1pQMkpnTjBST3R2cG5YcHAyQ0Rm?=
+ =?utf-8?B?ekZnZ0M4Q3NSM2JmNmd5T21KYm5CL1FndG1FQzBHRHlacTFqSDlPMFltTHY1?=
+ =?utf-8?B?cFRUYWltNnAvNkNna3QwZnhRT1ErYy81eTc0TkpCeVorTlFWYndJa0prWHdE?=
+ =?utf-8?B?K2ZBbmR2THZ3R0VMSkZtZWVUaytlRFI0d1huT2JFRURYbGdGRmErRkxxOFFt?=
+ =?utf-8?B?ajVybVgwbDBtNkFGMXlEeE1IeWhEdlB5VDI1cTBPVEwrbU00dFdGS05ZNzlT?=
+ =?utf-8?B?WDhxYVNVRXQrbFMyckRvVlZPNmtHYUpEa3d4WGluTHllZ3FuakRxNFhDclZi?=
+ =?utf-8?B?eWc2VEJWQlVGZDN3K2dvaEs5ZFNJeUVveDhHYWxGUEJ4WEhWdUgzRmY5Q29W?=
+ =?utf-8?B?UmNoM2FKT3pheE1wVnVMbmM5Q0pONEtoK1NieThNSEFmc0JjRm9yNThMZHJI?=
+ =?utf-8?B?bTZoYVg2ZVBFL29qZmVzZDh0SzNkbGFWTjErK2swc3VWc01aaFczSFpuNDJJ?=
+ =?utf-8?B?SzE1YStiY05Yc1kwNVd5c2FxNDN2bHBVVkZBcmpReFhwVXVnOTQyblI1Y0ZE?=
+ =?utf-8?Q?YrlKyJUu3eIf2Ggaj4nBAic1vnrryeqcuDEIbeZDaCPR?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 50b49651-d83f-4190-f49e-08db77933654
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2023 04:50:36.1843
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qzytF5NnSiR5QvFaPdzzEFtqv6koL2J1bN1816naSxLiu3ralCj6BQ+4GhkD9OAshQtrG2dF8nrqpaqwMP9JXQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6682
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 6/27/23 17:35, Namhyung Kim wrote:
-> Hello,
+On 27-Jun-23 4:34 AM, Namhyung Kim wrote:
+> Hi Ravi,
 > 
-> On Tue, Jun 27, 2023 at 2:39 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+> On Mon, Jun 26, 2023 at 3:40 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
 >>
->> The perf test case Daemon operations dumps core all the time.
->> I narrowed it down to this invocation:
+>> AMD IBS can do per-process profiling[1] and is no longer restricted to
+>> per-cpu or systemwide only. Remove stale error message. Also, checking
+>> just exclude_kernel is not sufficient since IBS does not support any
+>> privilege filters. So include all exclude_* checks. And finally, move
+>> these checks under tools/perf/arch/x86/ from generic code.
+>>
+>> Before:
+>>   $ sudo ./perf record -e ibs_op//k -C 0
+>>   Error:
+>>   AMD IBS may only be available in system-wide/per-cpu mode.  Try
+>>   using -a, or -C and workload affinity
+>>
+>> After:
+>>   $ sudo ./perf record -e ibs_op//k -C 0
+>>   Error:
+>>   AMD IBS doesn't support privilege filtering. Try again with
+>>   exclude_{kernel|user|hv|idle|host|guest}=0.
 > 
-> Jiri sent the same fix already.  I'll add your Reported-by, ok?
+> Can we have more user-friendly messages like below?
 > 
-> https://lore.kernel.org/all/20230626201606.2514679-1-jolsa@kernel.org/
-> 
-> Thanks,
-> Namhyung
-> 
+>  "Try again without the privilege modifiers like 'k' at the end."
+Sure.
 
-sure, fine with me.
+> 
+>>
+>> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+>> ---
+>> v1: https://lore.kernel.org/r/20230621062359.201-1-ravi.bangoria@amd.com
+>> v1->v2:
+>>   - Check all exclude_* flags not just exclude_kernel
+>>   - Move AMD specific checks under tools/perf/arch/x86/
+>>
+>>  tools/perf/arch/x86/util/evsel.c | 25 +++++++++++++++++++++++++
+>>  tools/perf/util/evsel.c          | 30 +++++++++---------------------
+>>  tools/perf/util/evsel.h          |  1 +
+>>  3 files changed, 35 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
+>> index 512c2d885d24..9a7141c5a4ea 100644
+>> --- a/tools/perf/arch/x86/util/evsel.c
+>> +++ b/tools/perf/arch/x86/util/evsel.c
+>> @@ -102,3 +102,28 @@ void arch__post_evsel_config(struct evsel *evsel, struct perf_event_attr *attr)
+>>                 }
+>>         }
+>>  }
+>> +
+>> +int arch_evsel__open_strerror(struct evsel *evsel, char *msg, size_t size)
+>> +{
+>> +       if (!x86__is_amd_cpu())
+>> +               return 0;
+>> +
+>> +       if (!evsel->core.attr.precise_ip &&
+>> +           !(evsel->pmu_name && !strncmp(evsel->pmu_name, "ibs", 3)))
+>> +               return 0;
+>> +
+>> +       /* More verbose IBS errors. */
+>> +       if (evsel->core.attr.exclude_kernel || evsel->core.attr.exclude_user ||
+>> +           evsel->core.attr.exclude_hv || evsel->core.attr.exclude_idle ||
+>> +           evsel->core.attr.exclude_host || evsel->core.attr.exclude_guest) {
+>> +               return scnprintf(msg, size, "AMD IBS doesn't support privilege filtering. Try "
+>> +                                "again with exclude_{kernel|user|hv|idle|host|guest}=0.");
+>> +       }
+>> +
+>> +       if (!evsel->core.attr.sample_period) {
+>> +               return scnprintf(msg, size, "AMD IBS doesn't support counting mode. Try "
+>> +                                "again with sample_{period|freq} with non-zero value.");
+> 
+> Is this for perf stat?   We don't allow zero period for perf record.
+> 
+>   $ perf record -F 0 true
+>   frequency and count are zero, aborting
+> 
+> Then maybe it can say: "IBS doesn't support perf stat, Use perf record."
 
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Gregor Pillen
-Geschäftsführung: David Faller
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+Ok. Let me skip this since generic code is already covering it.
 
+Thanks,
+Ravi
