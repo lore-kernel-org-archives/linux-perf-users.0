@@ -2,129 +2,98 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3E2EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Jun 2023 21:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D313EC001B0
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Jun 2023 22:04:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231621AbjF2Vtp convert rfc822-to-8bit (ORCPT
+        id S231781AbjF2WEJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Jun 2023 17:49:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60134 "EHLO
+        Thu, 29 Jun 2023 18:04:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230106AbjF2Vtl (ORCPT
+        with ESMTP id S229632AbjF2WEI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Jun 2023 17:49:41 -0400
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01A2730C4;
-        Thu, 29 Jun 2023 14:49:40 -0700 (PDT)
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5634d8d1db0so816840eaf.0;
-        Thu, 29 Jun 2023 14:49:40 -0700 (PDT)
+        Thu, 29 Jun 2023 18:04:08 -0400
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A518630D1;
+        Thu, 29 Jun 2023 15:04:07 -0700 (PDT)
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-bad0c4f6f50so1790533276.1;
+        Thu, 29 Jun 2023 15:04:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688075380; x=1690667380;
+        d=1e100.net; s=20221208; t=1688076247; x=1690668247;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0l23JP6S9GF/LAJfWcHkkcP43ONSxdFrMmfEO7H0kkE=;
-        b=Gk90oRB+UAgMNfNRfbBae4fhx0Mtg0JN+CZujOejRaDwVfEoAn0yqUhYQ/HaJwJmpY
-         QkQp0hkHPtsKbte00flgZBwneXD+hlSLrSHOMRPK4WLALkEwJBbO7fk/wXhF+yBZGRWV
-         ZTQwp6dxQLLk6GTSJLVIf08BI96f9Wa4CT8554OG4qTV7tgDx3NBUSRWrpDbPJJVnQ/H
-         0mj/YGm4N3VZFJaa1QUBD4dH5TF/hpP6CqRHISeNJ29NxgGoM8FTj04gFyvuQ1jdOe3t
-         fKeef94nKQMtu9j5K3NxlG60Fv0v+/sASlIpafqAAPpLTPk3jpwXZWfYpy15l7wFojaQ
-         Cd9Q==
-X-Gm-Message-State: ABy/qLaxl1HN7r/FSUDMB3HGixrppHVVnHLqn91AU6b8DUyPdkGkPRtY
-        4oKbBt1GB4pMC+QSLMugCsH2+y+AJkpe40jNujCYiKiz
-X-Google-Smtp-Source: APBJJlHlXlntMH5DzeJI8yA4KDyrBXcKEoP2+taRKkbY3XHfuf2wz3KNvVIpxBG8F2/r6sGSfWxsetWTCuw8LQI1VMk=
-X-Received: by 2002:a05:6358:e907:b0:134:e34e:ec49 with SMTP id
- gk7-20020a056358e90700b00134e34eec49mr891794rwb.2.1688075380126; Thu, 29 Jun
- 2023 14:49:40 -0700 (PDT)
+        bh=u7291qckVfYWCuKWv0VcLn223mZh7f/lbFxCabc9sbE=;
+        b=jmzqg7iXkUIjrg4+0VioG2aemaX6sAg6PzM4d/nF4OD0lwq8ONkDTFzZI6EXvQ+V4D
+         gAe3LY1YN/KshlH67Rx2kFkzA+aFRgyEq4ryjqsRgkUHVPw47YwFNFTDRmzmPQM6DUcP
+         v6Hx1/397lDfuNBuk1UOLIGzF7zMW/ajHQzPRIws+neSHNEzi0nPQMUyPOjoO6J80RnE
+         xLH5Hx/K57N3FLDTRd8GUyuIIxVD/bFzDeT13M8L0ITx4P0BuVrwKUPdfY7e/Cvdadx3
+         gBIxxtwicvEWQRpQ1s3Gw2Im5MAU9PRU/mTRxLBc2c+I5zSI9mYdffj4ZY2cIfq48jvo
+         Hfog==
+X-Gm-Message-State: ABy/qLZ8lCG8hyWPK3nMAKQchnCyK6DvTF8WCrVrxdr+cyfWWBUdvBkk
+        2f0MJC05KYz8r83afqUDxuYSMxUGJ1fsMKPJftM=
+X-Google-Smtp-Source: APBJJlHRvuFCduHH5tQ2+DYic01wPkU/kvXGJwnlInLOsKGdvKug0WZYtaRoBE45TmehG+RPz7wMlc1hz9PXv2etPBc=
+X-Received: by 2002:a25:ad94:0:b0:c12:29ac:1d35 with SMTP id
+ z20-20020a25ad94000000b00c1229ac1d35mr1447153ybi.13.1688076246741; Thu, 29
+ Jun 2023 15:04:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230627181030.95608-1-irogers@google.com> <20230627181030.95608-14-irogers@google.com>
-In-Reply-To: <20230627181030.95608-14-irogers@google.com>
+References: <20230628105303.4053478-1-james.clark@arm.com>
+In-Reply-To: <20230628105303.4053478-1-james.clark@arm.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 29 Jun 2023 14:49:29 -0700
-Message-ID: <CAM9d7cjxrNTOUGxmTAycko_Gn_uY5aX8cBWTa-jrhLoc-Bur1g@mail.gmail.com>
-Subject: Re: [PATCH v2 13/13] perf parse-events: Remove ABORT_ON
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+Date:   Thu, 29 Jun 2023 15:03:55 -0700
+Message-ID: <CAM9d7cgo97jJTTTV7F2kJ=sF9MBoRwegN4r0dWotbUD=Nr1_cQ@mail.gmail.com>
+Subject: Re: [PATCH v1 0/1] perf tools: Add a place to put kernel config
+ fragments for test runs
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-perf-users@vger.kernel.org, acme@kernel.org,
+        masahiroy@kernel.org, leo.yan@linaro.org, broonie@kernel.org,
+        Aishwarya.TCV@arm.com, Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 27, 2023 at 11:11 AM Ian Rogers <irogers@google.com> wrote:
->
-> Prefer informative messages rather than none with ABORT_ON. Document
-> one failure mode and add an error message for another.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/parse-events.y | 22 ++++++++++++++--------
->  1 file changed, 14 insertions(+), 8 deletions(-)
->
-> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-> index 844646752462..454577f7aff6 100644
-> --- a/tools/perf/util/parse-events.y
-> +++ b/tools/perf/util/parse-events.y
-> @@ -22,12 +22,6 @@
->
->  void parse_events_error(YYLTYPE *loc, void *parse_state, void *scanner, char const *msg);
->
-> -#define ABORT_ON(val) \
-> -do { \
-> -       if (val) \
-> -               YYABORT; \
-> -} while (0)
-> -
->  #define PE_ABORT(val) \
->  do { \
->         if (val == -ENOMEM) \
-> @@ -618,7 +612,9 @@ PE_RAW opt_event_config
->                 YYNOMEM;
->         errno = 0;
->         num = strtoull($1 + 1, NULL, 16);
-> -       ABORT_ON(errno);
-> +       /* Given the lexer will only give [a-fA-F0-9]+ a failure here should be impossible. */
-> +       if (errno)
-> +               YYABORT;
->         free($1);
->         err = parse_events_add_numeric(_parse_state, list, PERF_TYPE_RAW, num, $2,
->                                        /*wildcard=*/false);
-> @@ -978,7 +974,17 @@ PE_VALUE PE_ARRAY_RANGE PE_VALUE
->  {
->         struct parse_events_array array;
->
-> -       ABORT_ON($3 < $1);
-> +       if ($3 < $1) {
-> +               struct parse_events_state *parse_state = _parse_state;
-> +               struct parse_events_error *error = parse_state->error;
-> +               char *err_str;
-> +
-> +               if (asprintf(&err_str, "Expected '%ld' to be less-than '%ld'", $3, $1) < 0)
+Hi James,
 
-Isn't it to be "greater-than or equal" ?
+On Wed, Jun 28, 2023 at 3:53 AM James Clark <james.clark@arm.com> wrote:
+>
+> Changes since RFC:
+>
+>  * Changed arch filename convention to use the ARCH= build time values
+>    instead of uname
+>
+> It seems like there were no objections on the RFC, apart from maybe
+> changing the perf tests to run as a kself test. But that's probably not
+> going to happen for a while, if ever, and these fragments can always
+> be moved in that case.
+
+I missed the RFC, sorry.  Could you please add a link for that?
 
 Thanks,
 Namhyung
 
 
-> +                       err_str = NULL;
-> +
-> +               parse_events_error__handle(error, @1.first_column, err_str, NULL);
-> +               YYABORT;
-> +       }
->         array.nr_ranges = 1;
->         array.ranges = malloc(sizeof(array.ranges[0]));
->         if (!array.ranges)
+>
+> James Clark (1):
+>   perf tools: Add a place to put kernel config fragments for test runs
+>
+>  tools/perf/tests/config-fragments/README |  7 +++++++
+>  tools/perf/tests/config-fragments/arm64  |  1 +
+>  tools/perf/tests/config-fragments/config | 11 +++++++++++
+>  3 files changed, 19 insertions(+)
+>  create mode 100644 tools/perf/tests/config-fragments/README
+>  create mode 100644 tools/perf/tests/config-fragments/arm64
+>  create mode 100644 tools/perf/tests/config-fragments/config
+>
+>
+> base-commit: ad5f604e186ac08d12c401e34ea96c09c38ddbc5
 > --
-> 2.41.0.162.gfafddb0af9-goog
+> 2.34.1
 >
