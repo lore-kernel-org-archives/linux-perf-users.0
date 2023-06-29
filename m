@@ -2,150 +2,123 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A401C001B3
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jun 2023 23:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6966EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Jun 2023 06:26:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231559AbjF1Xnu (ORCPT
+        id S231954AbjF2G0x convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Jun 2023 19:43:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39270 "EHLO
+        Thu, 29 Jun 2023 02:26:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229501AbjF1Xnt (ORCPT
+        with ESMTP id S231932AbjF2G01 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Jun 2023 19:43:49 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7577610EC;
-        Wed, 28 Jun 2023 16:43:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-        bh=mkpKticynoUGDZ1Tdpq3P9FZu5kxXQf0JefJvMLgJuA=; b=eVGM60hxW/1oCROBhJRKbbF9pd
-        /WHGc+o+pb+fkeVze6GKs3Hcu2mjtmWM/4oUGYCU0t+UbFMtrvvcjHSl/cglLWbeBdgmG30OqcMNt
-        S2Pr1+dHNTd4T3qFeiVwQeps/R+LjlmcLTRsuZ8NdhZsmraeYrB2Kel7p0VxJ6+7q7EgMQ6Wx6ank
-        P+yHcdGkzLdLPcfc5husZ1HslNubmokchQy4wGscGAVnBMae971Q/C5VLDp5JrfEWC1X5YToHzDHK
-        +ikxlG8dV0EOrjRrjMKr08rEq8iFClaMjdpXxuLncvJrq9YBnHim1BxRohfVxP5cT8JFsbmDDx9YM
-        9l9IY3yQ==;
-Received: from [2601:1c2:980:9ec0::2764]
-        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qEeow-00H298-0w;
-        Wed, 28 Jun 2023 23:43:34 +0000
-Message-ID: <08e273fc-49c5-dd09-1c9e-d85a080767f9@infradead.org>
-Date:   Wed, 28 Jun 2023 16:43:27 -0700
+        Thu, 29 Jun 2023 02:26:27 -0400
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE5FA30C5;
+        Wed, 28 Jun 2023 23:26:20 -0700 (PDT)
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-c14476f8401so323926276.3;
+        Wed, 28 Jun 2023 23:26:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688019979; x=1690611979;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YfLTbjgoIsSKWwNycBDFQAmVln5oxCfW2uQIjevEO0Q=;
+        b=XsKrwfcPgYsJ3ILFRX7CJ8rq9Dx+sDCYsgRhJ7y7PtbacvLzQL6D4mBPp5mx4Ib0e/
+         FtiI8paUgY/iAzm00i1XJDQBJNg0dvmPZ3GzjyNWyJavSFkqBu+yRGpxutijgc2++hvB
+         sUrww9rzu51b8BGsdBdrDI5BS4MvTy+fcD/HU8xlIgOnexgURuUay9aQ28j+i3CiSMRr
+         0upkak4DqwbdZgvkyGPJ+84kBM5RTW+XA8RiXov2oRLN9P/qPSnl0e18/i+q2r9rNE6V
+         iqh4+lIpuVnpsUCFj5eg+mytkQI8t1j3FcfCmUFWoildSQO2xj8Uwwzptn/dfYpV9yLA
+         yXsQ==
+X-Gm-Message-State: AC+VfDxZmWZFCppYJLUZPyl5Suog6dxoOGsji8W0BMq6sEYd8Pd+NMww
+        dH4ejwQUpSoMl6Fx0TgsttlZOopDswIxxnU4Qyc=
+X-Google-Smtp-Source: ACHHUZ686BJK5GLXUVLpMrxPzUvmVNafwU2xx1cinYaV1jwVxxqvItD9C/+eScUzT8eZ2aDpXxFGKxy5rBZQOyUt7aQ=
+X-Received: by 2002:a25:37d7:0:b0:c0b:7483:5cf0 with SMTP id
+ e206-20020a2537d7000000b00c0b74835cf0mr16305934yba.65.1688019979572; Wed, 28
+ Jun 2023 23:26:19 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH] syscalls: Cleanup references to sys_lookup_dcookie()
-Content-Language: en-US
-To:     Sohil Mehta <sohil.mehta@intel.com>, Arnd Bergmann <arnd@arndb.de>,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org
-Cc:     Richard Henderson <richard.henderson@linaro.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
+References: <ZG5kjDN63HqqMuJJ@yoga> <CAM9d7ciUsJM1kZhGbhQUfdxq1rsvLig2C-mAki13a92EjW37kw@mail.gmail.com>
+ <CAP-5=fVekEnC1s=xUG-jFeL20qM=EPNkPO8aw8bcg4cVM=m5wg@mail.gmail.com>
+ <ZHENW4HOIo0F6FnN@yoga> <ZHkEWse0NVZhwKR7@yoga> <ZH5YBBWW5ANckoMp@yoga>
+ <CAP-5=fU7ukrQSh_8OwH9C+a-EwCamCrMaZxjqDhE9f+bFJwQBQ@mail.gmail.com>
+ <ZIHPXV5/ZopqcSSc@yoga> <ZIofrGKElc3nkNk0@yoga> <CAP-5=fV9tXNpYHH9DW0cVbRoFLGvG9SNn-MUhuyKuVBRuDqjoA@mail.gmail.com>
+ <ZJyT8bt0LFLw6hKV@yoga>
+In-Reply-To: <ZJyT8bt0LFLw6hKV@yoga>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 28 Jun 2023 23:26:08 -0700
+Message-ID: <CAM9d7ch7TdagV+dzj6MCp4fY15Vc4oGJjKAoQDyc=BXqy7qi+A@mail.gmail.com>
+Subject: Re: [RFC] Adding Support for Firefox's Gecko Profile Format
+To:     Anup Sharma <anupnewsmail@gmail.com>
+Cc:     Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Sergei Trofimovich <slyich@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rohan McLure <rmclure@linux.ibm.com>,
-        Andreas Schwab <schwab@linux-m68k.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Brian Gerst <brgerst@gmail.com>, linux-alpha@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-References: <20230628230935.1196180-1-sohil.mehta@intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20230628230935.1196180-1-sohil.mehta@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Anup,
 
+On Wed, Jun 28, 2023 at 1:11 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
+>
+> On Wed, Jun 14, 2023 at 01:17:52PM -0700, Ian Rogers wrote:
+> > On Wed, Jun 14, 2023 at 1:14 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
+> > >
+> > > On Thu, Jun 08, 2023 at 06:23:49PM +0530, Anup Sharma wrote:
+> > > I wanted to take a moment to provide you with an update on the progress
+> > > of our Firefox Gecko converter work. While I must emphasize that the code
+> > > I'm sharing is not the final version, I wanted to share the advancements
+> > > I have made thus far.
+> > >
+> > > This script can generate a JSON format from the output of the "perf script" command.
+> > > I attempted to load this JSON file into profile.firefox.com, and although it
+> > > successfully loaded, the call tree are not visible. I'm certain this issue
+> > > is related to the format of the JSON file or if there is another underlying
+> > > cause. I will continue investigating to determine the cause of this problem.
+> >
+> > Great Anup, progress can be frustrating slow at first but it is a good
+> > milestone to be generating output and having firefox profiler consume
+> > it. You can open up the JavaScript console for the firefox profiler
+> > and it will give some debug output. This should hopefully help you
+> > make progress.
+>
+> This week I tried playing with perf-script-python, the first challenge was
+> figuring out how to parse the data coming from the process_events.
+> Understanding the structure and extracting the necessary information
+> proved to be more complex than anticipated. This required me to spend
+> a significant amount of time researching and experimenting with different
+> parsing techniques.
 
-On 6/28/23 16:09, Sohil Mehta wrote:
-> commit 'be65de6b03aa ("fs: Remove dcookies support")' removed the
-> syscall definition for lookup_dcookie.  However, syscall tables still
-> point to the old sys_lookup_dcookie() definition. Update syscall tables
-> of all architectures to directly point to sys_ni_syscall() instead.
-> 
-> Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
+I'm not sure what kind of parsing you meant.  IIRC the sample data is
+in a dict and all the information should be available there.  Maybe we
+missed some new sample data types though.
 
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+>
+> The second challenge revolved around the usage of event hooks provided with the perf script
+> python event handlers. I found myself deliberating between two approaches. The first
+> approach involved creating custom functions that would be called using the event
+> handlers. These functions would then save the data in an organized format within
+> globally created data structures. The alternative approach was to write the entire
+> logic inside the event handlers themselves.
+>
+> Additionally, I contemplated whether it would be more suitable to handle the creation of
+> a Gecko format for JSON and the profile format within the same script or to separate
+> them into different scripts.
+>
+> I will discuss this points during tomorrow's office hour.
+>
+> However, I have gained a deeper understanding of the problem at hand and will use this
+> knowledge to make more informed decisions and progress more effectively in the coming weeks.
 
-Thanks.
+Sounds like you did a good amount of research on how perf script
+works.  We can talk about the details in the meeting.
 
-> ---
-> This patch has a dependency on another patch that has been applied to the
-> asm-generic tree:
-> https://lore.kernel.org/lkml/20230621223600.1348693-1-sohil.mehta@intel.com/
-> ---
->  arch/alpha/kernel/syscalls/syscall.tbl              | 2 +-
->  arch/arm/tools/syscall.tbl                          | 2 +-
->  arch/arm64/include/asm/unistd32.h                   | 4 ++--
->  arch/ia64/kernel/syscalls/syscall.tbl               | 2 +-
->  arch/m68k/kernel/syscalls/syscall.tbl               | 2 +-
->  arch/microblaze/kernel/syscalls/syscall.tbl         | 2 +-
->  arch/mips/kernel/syscalls/syscall_n32.tbl           | 2 +-
->  arch/mips/kernel/syscalls/syscall_n64.tbl           | 2 +-
->  arch/mips/kernel/syscalls/syscall_o32.tbl           | 2 +-
->  arch/parisc/kernel/syscalls/syscall.tbl             | 2 +-
->  arch/powerpc/kernel/syscalls/syscall.tbl            | 2 +-
->  arch/s390/kernel/syscalls/syscall.tbl               | 2 +-
->  arch/sh/kernel/syscalls/syscall.tbl                 | 2 +-
->  arch/sparc/kernel/syscalls/syscall.tbl              | 2 +-
->  arch/x86/entry/syscalls/syscall_32.tbl              | 2 +-
->  arch/x86/entry/syscalls/syscall_64.tbl              | 2 +-
->  arch/xtensa/kernel/syscalls/syscall.tbl             | 2 +-
->  include/linux/compat.h                              | 1 -
->  include/linux/syscalls.h                            | 1 -
->  include/uapi/asm-generic/unistd.h                   | 2 +-
->  kernel/sys_ni.c                                     | 2 --
->  tools/include/uapi/asm-generic/unistd.h             | 2 +-
->  tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl | 2 +-
->  tools/perf/arch/powerpc/entry/syscalls/syscall.tbl  | 2 +-
->  tools/perf/arch/s390/entry/syscalls/syscall.tbl     | 2 +-
->  tools/perf/arch/x86/entry/syscalls/syscall_64.tbl   | 2 +-
->  26 files changed, 24 insertions(+), 28 deletions(-)
-> 
-
-
--- 
-~Randy
+Thanks,
+Namhyung
