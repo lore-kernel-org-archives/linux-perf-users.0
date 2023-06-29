@@ -2,47 +2,47 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB9D9EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Jun 2023 21:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3E2EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Jun 2023 21:49:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231918AbjF2Vbv convert rfc822-to-8bit (ORCPT
+        id S231621AbjF2Vtp convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Jun 2023 17:31:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56340 "EHLO
+        Thu, 29 Jun 2023 17:49:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230410AbjF2Vbt (ORCPT
+        with ESMTP id S230106AbjF2Vtl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Jun 2023 17:31:49 -0400
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30013F5;
-        Thu, 29 Jun 2023 14:31:47 -0700 (PDT)
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-5773f41c1dcso2132707b3.1;
-        Thu, 29 Jun 2023 14:31:47 -0700 (PDT)
+        Thu, 29 Jun 2023 17:49:41 -0400
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01A2730C4;
+        Thu, 29 Jun 2023 14:49:40 -0700 (PDT)
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5634d8d1db0so816840eaf.0;
+        Thu, 29 Jun 2023 14:49:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688074306; x=1690666306;
+        d=1e100.net; s=20221208; t=1688075380; x=1690667380;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GoENgYvXFLite5/xMgXTrtXiVpAbaDQ9fsoEG3w0OLA=;
-        b=Lp4EkjHxJNUEmrX9VtFdA6xnngVpiCjlAM6ml9fl1IH1aUP3b7oY5SbgEdfIDrVJvJ
-         BgBrqCAsKZe95OcecnhsaEbPfA++F9RvpJmDCb4O83AmayvMpstT1wgYL/XCAfERgAEB
-         Ag9E9TfVxr73LhKJHzAYwWnF08jMJ1cH8+wD9DmGkElam0QxtlIfWRyfi+6KzwvnuT1y
-         Fjt/M127qvfJok7rss/1dAfC7eHNLW9jIP1sfY84xZN3q60Bo4mqPLGUkAD51NjWQ5hz
-         Q+4/M45usIZ/rvB5NgvM17T1DPhXtwyNG3vIgJNx+c5fUubQZQTFf9w5kU8e9G8YtkTt
-         DBlA==
-X-Gm-Message-State: ABy/qLah7vaZa4Kmb3OiRzRsiQgBkTki6m3uJ4VZnYPzFyw8OpekO1YX
-        OOFM+Gglzz108vaOLidNKc6lJDYV2v9/CCsApRY=
-X-Google-Smtp-Source: APBJJlHokpAkUFadL2QgrAZ2q/30Xl/epYQBSSEn/8mKrLBcEzR0CGXdNOWWDltlmQfe3fiUrDiwRZOUzf6KRLkIgHY=
-X-Received: by 2002:a25:19c1:0:b0:c00:92c8:542f with SMTP id
- 184-20020a2519c1000000b00c0092c8542fmr779020ybz.60.1688074306279; Thu, 29 Jun
- 2023 14:31:46 -0700 (PDT)
+        bh=0l23JP6S9GF/LAJfWcHkkcP43ONSxdFrMmfEO7H0kkE=;
+        b=Gk90oRB+UAgMNfNRfbBae4fhx0Mtg0JN+CZujOejRaDwVfEoAn0yqUhYQ/HaJwJmpY
+         QkQp0hkHPtsKbte00flgZBwneXD+hlSLrSHOMRPK4WLALkEwJBbO7fk/wXhF+yBZGRWV
+         ZTQwp6dxQLLk6GTSJLVIf08BI96f9Wa4CT8554OG4qTV7tgDx3NBUSRWrpDbPJJVnQ/H
+         0mj/YGm4N3VZFJaa1QUBD4dH5TF/hpP6CqRHISeNJ29NxgGoM8FTj04gFyvuQ1jdOe3t
+         fKeef94nKQMtu9j5K3NxlG60Fv0v+/sASlIpafqAAPpLTPk3jpwXZWfYpy15l7wFojaQ
+         Cd9Q==
+X-Gm-Message-State: ABy/qLaxl1HN7r/FSUDMB3HGixrppHVVnHLqn91AU6b8DUyPdkGkPRtY
+        4oKbBt1GB4pMC+QSLMugCsH2+y+AJkpe40jNujCYiKiz
+X-Google-Smtp-Source: APBJJlHlXlntMH5DzeJI8yA4KDyrBXcKEoP2+taRKkbY3XHfuf2wz3KNvVIpxBG8F2/r6sGSfWxsetWTCuw8LQI1VMk=
+X-Received: by 2002:a05:6358:e907:b0:134:e34e:ec49 with SMTP id
+ gk7-20020a056358e90700b00134e34eec49mr891794rwb.2.1688075380126; Thu, 29 Jun
+ 2023 14:49:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230623151016.4193660-1-irogers@google.com>
-In-Reply-To: <20230623151016.4193660-1-irogers@google.com>
+References: <20230627181030.95608-1-irogers@google.com> <20230627181030.95608-14-irogers@google.com>
+In-Reply-To: <20230627181030.95608-14-irogers@google.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 29 Jun 2023 14:31:34 -0700
-Message-ID: <CAM9d7cgX-vnwkrQMMHn2C1sCjm3YO=xaigmMTsrbkg+fHk2H2g@mail.gmail.com>
-Subject: Re: [PATCH v2 00/12] Add metric has_event, update intel vendor events
+Date:   Thu, 29 Jun 2023 14:49:29 -0700
+Message-ID: <CAM9d7cjxrNTOUGxmTAycko_Gn_uY5aX8cBWTa-jrhLoc-Bur1g@mail.gmail.com>
+Subject: Re: [PATCH v2 13/13] perf parse-events: Remove ABORT_ON
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -51,66 +51,80 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Sohom Datta <sohomdatta1@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Perry Taylor <perry.taylor@intel.com>,
-        Samantha Alt <samantha.alt@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Weilin Wang <weilin.wang@intel.com>,
-        Edward Baker <edward.baker@intel.com>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
-
-On Fri, Jun 23, 2023 at 8:10 AM Ian Rogers <irogers@google.com> wrote:
+On Tue, Jun 27, 2023 at 11:11 AM Ian Rogers <irogers@google.com> wrote:
 >
-> Add a new has_event function for metrics so that events that can be
-> disabled by the kernel/firmware don't cause metrics to fail. Use this
-> function for Intel transaction metrics fixing "perf all metrics test"
-> on systems with TSX disabled. The update conversion script is posted in:
-> https://github.com/intel/perfmon/pull/90
+> Prefer informative messages rather than none with ABORT_ON. Document
+> one failure mode and add an error message for another.
 >
-> Re-generate Intel vendor events using:
-> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
-> Adding rocketlake support, uncore and many core events for meteorlake,
-> and smaller updates for cascakelakex, icelake, icelakex,
-> sapphirerapids, skylake, skylakex and tigerlake.
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/parse-events.y | 22 ++++++++++++++--------
+>  1 file changed, 14 insertions(+), 8 deletions(-)
 >
-> v2. Handle failed memory allocated for evlist, John Garry.
+> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+> index 844646752462..454577f7aff6 100644
+> --- a/tools/perf/util/parse-events.y
+> +++ b/tools/perf/util/parse-events.y
+> @@ -22,12 +22,6 @@
 >
-> Ian Rogers (12):
->   perf expr: Add has_event function
->   perf jevents: Support for has_event function
->   perf vendor metrics intel: Make transaction metrics conditional
->   perf vendor events intel: Add rocketlake events/metrics
->   perf vendor events intel: Update meteorlake to 1.03
->   perf vendor events intel: Update cascadelakex to 1.19
->   perf vendor events intel: Update icelake to 1.19
->   perf vendor events intel: Update icelakex to 1.21
->   perf vendor events intel: Update sapphirerapids to 1.14
->   perf vendor events intel: Update skylake to 57
->   perf vendor events intel: Update skylakex to 1.31
->   perf vendor events intel: Update tigerlake to 1.13
+>  void parse_events_error(YYLTYPE *loc, void *parse_state, void *scanner, char const *msg);
+>
+> -#define ABORT_ON(val) \
+> -do { \
+> -       if (val) \
+> -               YYABORT; \
+> -} while (0)
+> -
+>  #define PE_ABORT(val) \
+>  do { \
+>         if (val == -ENOMEM) \
+> @@ -618,7 +612,9 @@ PE_RAW opt_event_config
+>                 YYNOMEM;
+>         errno = 0;
+>         num = strtoull($1 + 1, NULL, 16);
+> -       ABORT_ON(errno);
+> +       /* Given the lexer will only give [a-fA-F0-9]+ a failure here should be impossible. */
+> +       if (errno)
+> +               YYABORT;
+>         free($1);
+>         err = parse_events_add_numeric(_parse_state, list, PERF_TYPE_RAW, num, $2,
+>                                        /*wildcard=*/false);
+> @@ -978,7 +974,17 @@ PE_VALUE PE_ARRAY_RANGE PE_VALUE
+>  {
+>         struct parse_events_array array;
+>
+> -       ABORT_ON($3 < $1);
+> +       if ($3 < $1) {
+> +               struct parse_events_state *parse_state = _parse_state;
+> +               struct parse_events_error *error = parse_state->error;
+> +               char *err_str;
+> +
+> +               if (asprintf(&err_str, "Expected '%ld' to be less-than '%ld'", $3, $1) < 0)
 
-My tigerlake laptop now passes the all metrics test with this.
-It used to fail like below:
-
-  event syntax error:
-'{cpu/cycles-t,metric-id=cpu!3cycles!1t!3/,cpu/tx-start,m..'
-                            \___ unknown term 'cycles-t' for pmu 'cpu'
-
-Tested-by: Namhyung Kim <namhyung@kernel.org>
+Isn't it to be "greater-than or equal" ?
 
 Thanks,
 Namhyung
+
+
+> +                       err_str = NULL;
+> +
+> +               parse_events_error__handle(error, @1.first_column, err_str, NULL);
+> +               YYABORT;
+> +       }
+>         array.nr_ranges = 1;
+>         array.ranges = malloc(sizeof(array.ranges[0]));
+>         if (!array.ranges)
+> --
+> 2.41.0.162.gfafddb0af9-goog
+>
