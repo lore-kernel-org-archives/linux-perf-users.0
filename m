@@ -2,125 +2,116 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B2BEB64DA
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jun 2023 21:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D049EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jun 2023 21:04:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231508AbjF3VCy convert rfc822-to-8bit (ORCPT
+        id S232675AbjF3VEA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Jun 2023 17:02:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58484 "EHLO
+        Fri, 30 Jun 2023 17:04:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232375AbjF3VCx (ORCPT
+        with ESMTP id S232726AbjF3VDw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Jun 2023 17:02:53 -0400
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AAC93AAF;
-        Fri, 30 Jun 2023 14:02:52 -0700 (PDT)
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-bfee66a5db6so2180424276.0;
-        Fri, 30 Jun 2023 14:02:52 -0700 (PDT)
+        Fri, 30 Jun 2023 17:03:52 -0400
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E98424221;
+        Fri, 30 Jun 2023 14:03:48 -0700 (PDT)
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-c40c367949eso1342543276.1;
+        Fri, 30 Jun 2023 14:03:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688158971; x=1690750971;
+        d=1e100.net; s=20221208; t=1688159028; x=1690751028;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QaJR3XXXCrhbjYtKCZ1X+dPieH6DxQBprcivRtbfQUY=;
-        b=gVTRCWp6g1EyckUqz/MVo9qU+keBJqzfj6cYAeeomlMHxJ1wm/34Crkxjxsu2g6Suz
-         BQ6dlDvBui2tz16xHg5KtCwjru95Ui5KMbn7o2fXs/h7gxZFHt8+91Erotfg1zn9T38G
-         Jm2LV0q7FI6RLn7qpfJpsKOpOC8sU/VUIi6YrWGrAMxOOtF2BiEh6P+KGtRP/ZJ0QB3z
-         tdBqAdmpDGTF68AnXIYxAnfyAMF9JQkoeSF5zlfAnzN5LCyMKRLr/gKQ6IqfLT0D+gW8
-         PC5AKYZ4qC66LklWxarFhW8LSFiGiTXp8ZHY8yyV+MjpsqF7o6ZCyGyZboXPaGj9OrcE
-         iKBg==
-X-Gm-Message-State: ABy/qLZbCGev5ka5qRJ1f/HOS2+Zl0pLIXA4T2F9TuvsHgag/dneWncu
-        ufG5l01kcVHYWY2aEPuQ0iY/3ClCLaUZQUNNmt8=
-X-Google-Smtp-Source: APBJJlFUh7jF98u3G1CNzoNLEJHzfbIQW3ootq9oZwxEGAIzPEvLBI5WrxqwcVcpo1/Qaq1hhd6xn6HyeUrqFHcrYYk=
-X-Received: by 2002:a25:26c4:0:b0:c40:f090:98bf with SMTP id
- m187-20020a2526c4000000b00c40f09098bfmr3019764ybm.28.1688158971230; Fri, 30
- Jun 2023 14:02:51 -0700 (PDT)
+        bh=wVGM406xAqn4Hn9Deh7kQt4tORL6Fxhh/UBnDJhIX3I=;
+        b=CzIjt5xVEqqcAlgyHrLMT85/B5TIYHlVJM8enjx/uChiCCpipGV8yluOy354TqMDcp
+         5u+GjZFANjVQVPclj78VJdP3ZffgzhZfUGP+u2Xixn02GMUuB62EieElyznM4aZGTE7r
+         4D5Sqz4C0JYrAIjCBovs1mVW+S8SfIKqDfPXhoDh/GnqmY35Z7bJPlfSCChxAS3QZpPW
+         zaeIfmJzMRJ7FoWGp5uCwxtP4/y76rtjYSd5svzEFykevFytm4siO+gaRq3snU72PKr/
+         f3VA8jyBwYTv85YlVNGikYLGyqqQQqhJgbDZDLop9jRyElGtyWTOGTpOK3jo5eDP5A0Z
+         kkHA==
+X-Gm-Message-State: ABy/qLZIyh+XxqZw6ktsMQQPNO47fvX83g7c92J72utM0O7iKaibzY3C
+        wS6isL/qNyd0TcWxAL3z1YkrB9DqG03fnDVHrcM=
+X-Google-Smtp-Source: APBJJlEG8/0u0yaEBl0JZOnHYNF5VOMtgNAxXm0x2vZqAu/ZydtgsSX1mofjdxkhJyBYZn1lwTjMrZzqhSOVvIJsEj8=
+X-Received: by 2002:a25:6cd4:0:b0:bac:1522:f870 with SMTP id
+ h203-20020a256cd4000000b00bac1522f870mr3675226ybc.52.1688159028012; Fri, 30
+ Jun 2023 14:03:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230626161059.324046-1-james.clark@arm.com> <20230626161059.324046-3-james.clark@arm.com>
- <ZJonE3ZZ2cBUq0U8@google.com> <CAP-5=fX+FDAkFoMhQY27_+fiRp_UDruP8qWTdjvqU5-uE0SdWA@mail.gmail.com>
- <CAM9d7cj4xr6oTDKvxbNTVUewyZFTBchQS36KC0nN4i4HjCsq5w@mail.gmail.com>
- <CAP-5=fUTzn06DM7o-1qBx7Tauo2Q2ACHmYcvwTmrTOJpzS2=oQ@mail.gmail.com>
- <d5618d0b-1441-0c04-4b09-768bfe7b7ee7@arm.com> <CAM9d7cjx2zinztBYiYaU6iqKzuV3vcJA6wtY71aicFbr5sy9zA@mail.gmail.com>
-In-Reply-To: <CAM9d7cjx2zinztBYiYaU6iqKzuV3vcJA6wtY71aicFbr5sy9zA@mail.gmail.com>
+References: <20230623151016.4193660-1-irogers@google.com> <CAM9d7cgX-vnwkrQMMHn2C1sCjm3YO=xaigmMTsrbkg+fHk2H2g@mail.gmail.com>
+In-Reply-To: <CAM9d7cgX-vnwkrQMMHn2C1sCjm3YO=xaigmMTsrbkg+fHk2H2g@mail.gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 30 Jun 2023 14:02:38 -0700
-Message-ID: <CAM9d7chKj4pnhtuuA6wN6TBLUYq_9bTxvr6dRT7CKW3CfQ1Avg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf report: Don't add to histogram when there is no
- thread found
-To:     James Clark <james.clark@arm.com>
-Cc:     Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
+Date:   Fri, 30 Jun 2023 14:03:35 -0700
+Message-ID: <CAM9d7cjVChbQThcMx7ptp-FRCrrwgV97fVJ0FpasC20M1+yLbQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/12] Add metric has_event, update intel vendor events
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
         John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
+        Andrii Nakryiko <andrii@kernel.org>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Sohom Datta <sohomdatta1@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Perry Taylor <perry.taylor@intel.com>,
+        Samantha Alt <samantha.alt@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Weilin Wang <weilin.wang@intel.com>,
+        Edward Baker <edward.baker@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 28, 2023 at 1:06 PM Namhyung Kim <namhyung@kernel.org> wrote:
+On Thu, Jun 29, 2023 at 2:31 PM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> On Wed, Jun 28, 2023 at 3:34 AM James Clark <james.clark@arm.com> wrote:
-> >
-> >
-> >
-> > On 27/06/2023 18:19, Ian Rogers wrote:
-> > > On Tue, Jun 27, 2023 at 9:58 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >>
-> > >> On Tue, Jun 27, 2023 at 9:43 AM Ian Rogers <irogers@google.com> wrote:
-> > >>>
-> > >>> On Mon, Jun 26, 2023 at 5:02 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >>>>
-> > >>>> On Mon, Jun 26, 2023 at 05:10:58PM +0100, James Clark wrote:
-> > >>>>> thread__find_map() chooses to exit without assigning a thread to the
-> > >>>>> addr_location in some scenarios, for example when there are samples from
-> > >>>>> a guest and perf_guest == false. This results in a segfault when adding
-> > >>>>> to the histogram because it uses unguarded accesses to the thread member
-> > >>>>> of the addr_location.
-> > >>>>
-> > >>>> Looking at the commit 0dd5041c9a0ea ("perf addr_location: Add
-> > >>>> init/exit/copy functions") that introduced the change, I'm not sure if
-> > >>>> it's the intend behavior.
-> > >>>>
-> > >>>> It might change maps and map, but not thread.  Then I think no reason
-> > >>>> to not set the al->thread at the beginning.
-> > >>>>
-> > >>>> How about this?  Ian?
-> > >>>> (I guess we can get rid of the duplicate 'al->map = NULL' part)
-> > >>>
-> > >>> It seemed strange that we were failing to find a map (the function's
-> > >>> purpose) but then populating the address_location. The change below
-> > >>> brings back that somewhat odd behavior. I'm okay with reverting to the
-> > >>> old behavior, clearly there were users relying on it. We should
-> > >>> probably also copy maps and not just thread, as that was the previous
-> > >>> behavior.
-> > >>
-> > >> Probably.  But it used to support samples without maps and I think
-> > >> that's why it ignores the return value of thread__find_map().  So
-> > >> we can expect al.map is NULL and maybe fine to leave it for now.
-> > >>
-> > >> As machine__resolve() returns -1 if it gets no thread, we should set
-> > >> al.thread when it returns 0.
-> > >>
-> > >> Can I get your Acked-by?
-> > >
-> > > Yep:
-> > > Acked-by: Ian Rogers <irogers@google.com>
-> >
-> > Looks good to me too. Should I resend the set with this change instead
-> > of my one?
+> Hi Ian,
 >
-> No, I can take care of that.  I'll take this as your Acked-by. :)
+> On Fri, Jun 23, 2023 at 8:10 AM Ian Rogers <irogers@google.com> wrote:
+> >
+> > Add a new has_event function for metrics so that events that can be
+> > disabled by the kernel/firmware don't cause metrics to fail. Use this
+> > function for Intel transaction metrics fixing "perf all metrics test"
+> > on systems with TSX disabled. The update conversion script is posted in:
+> > https://github.com/intel/perfmon/pull/90
+> >
+> > Re-generate Intel vendor events using:
+> > https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+> > Adding rocketlake support, uncore and many core events for meteorlake,
+> > and smaller updates for cascakelakex, icelake, icelakex,
+> > sapphirerapids, skylake, skylakex and tigerlake.
+> >
+> > v2. Handle failed memory allocated for evlist, John Garry.
+> >
+> > Ian Rogers (12):
+> >   perf expr: Add has_event function
+> >   perf jevents: Support for has_event function
+> >   perf vendor metrics intel: Make transaction metrics conditional
+> >   perf vendor events intel: Add rocketlake events/metrics
+> >   perf vendor events intel: Update meteorlake to 1.03
+> >   perf vendor events intel: Update cascadelakex to 1.19
+> >   perf vendor events intel: Update icelake to 1.19
+> >   perf vendor events intel: Update icelakex to 1.21
+> >   perf vendor events intel: Update sapphirerapids to 1.14
+> >   perf vendor events intel: Update skylake to 57
+> >   perf vendor events intel: Update skylakex to 1.31
+> >   perf vendor events intel: Update tigerlake to 1.13
+>
+> My tigerlake laptop now passes the all metrics test with this.
+> It used to fail like below:
+>
+>   event syntax error:
+> '{cpu/cycles-t,metric-id=cpu!3cycles!1t!3/,cpu/tx-start,m..'
+>                             \___ unknown term 'cycles-t' for pmu 'cpu'
+>
+> Tested-by: Namhyung Kim <namhyung@kernel.org>
 
-This part is applied to perf-tools-next, thanks!
+Applied to perf-tools-next, thanks!
