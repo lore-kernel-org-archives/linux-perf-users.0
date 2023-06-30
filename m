@@ -2,435 +2,127 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D5FEB64D7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jun 2023 18:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 350E5EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jun 2023 18:43:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233135AbjF3Sk1 (ORCPT
+        id S233148AbjF3Sn0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Jun 2023 14:40:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45636 "EHLO
+        Fri, 30 Jun 2023 14:43:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233134AbjF3SkL (ORCPT
+        with ESMTP id S231361AbjF3SnZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Jun 2023 14:40:11 -0400
-Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BA044213
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jun 2023 11:40:01 -0700 (PDT)
-Received: by mail-qt1-x82a.google.com with SMTP id d75a77b69052e-40345bf4875so44501cf.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jun 2023 11:40:01 -0700 (PDT)
+        Fri, 30 Jun 2023 14:43:25 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 575A73C35
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jun 2023 11:43:24 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-992b2249d82so229694666b.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jun 2023 11:43:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1688150400; x=1690742400;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lMhdF7XmZUrQzEGOBCLhK60sECD90kqP+92O6yGTFyM=;
-        b=iWsTvzTBqM8kolIuXx0id5TEB937GwMk+2ZqoY456wWh7pG3N8BU0g4ywtsLS2la8a
-         QKrbPNUgpaYexx+1l40HqupvHmxWR4Rb4P3veemDHb1lTBcaabyPlwtNj4IyxV7DezMm
-         C2ypT3ynlBSl/pPD5Xb1/BG+VN8YaZFJbxDCMLw1vETcKWKGme08yjUnSMkHRQDPd6VG
-         Swy/wx2sqQffLupwR9zwxy+vZfz2sYSS8w/c7YBOx4aqQls62F3s2WGNWw/ES9tuj5ad
-         62H96Ci4ijA+9oSCF0sCB2wSZ0IvPDvn6E8Z8CnICLuOXbe9bMoU5307Mr8sMjjMp+VH
-         0avQ==
+        d=linux-foundation.org; s=google; t=1688150602; x=1690742602;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=jPEvXo6WjRs1USguPeZQCvSg+BfPycq4avRrgWVGqyM=;
+        b=Tfd4srCUb5pQPtWZGrzEItpOby83+pCgDydvDuEEyTa7LSdNmjIMuWUxGxMnwUiKw3
+         hhL+mYcTJpREALUKA7NuMx6BzVcp3tgEfPFtW5rIpw93SYNEbPlwJfzvHMzcEMDCb0a1
+         dO6nTRA+ES7Ob6qnlZ64kGLfbiUn+5ya26kN0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688150400; x=1690742400;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lMhdF7XmZUrQzEGOBCLhK60sECD90kqP+92O6yGTFyM=;
-        b=QTSp0WtGnQpi+L40HBnnP1ReVglEGVQClIR9ZTYN5BiHrhrOakbg9YYKszjm+ACfd2
-         2tpoVeE/RtiDz5DjOmvofhN9QlBP9rw7CzBDHVvBZCeyAfnXjrcSEnF36h68Zlys8mzB
-         me2y/tpFubTDk2N9hxUUHa0xpudzAWxYYazreuV473OgnFJ16RpsgJK0Fb5isVwCrcGM
-         R8+etmwwiSnOC/lliVXIhRGKw8N0W9CgStJ/K74qkFAB5j242RnDt/IuoeCxzUJWulZx
-         44nF2QVCfXKxaqTKz4l/W/6eCMQyX2aGxMtLTlv05HNwBmTpPIp4qYMj4flLtwNfXSRL
-         3U5Q==
-X-Gm-Message-State: ABy/qLZv/2jCTRUL+qXogEPwbppczkjmIUrTOU7ylXPTt2Xw42ZGcFjq
-        lvtETspzaCGYMw9VmhAd8YJKh/ERXujbmUazury0sw==
-X-Google-Smtp-Source: APBJJlHJrnMSqi8V5RX1eIMBqnmr7LPrFQQ1b8Y5Qaheazr200SwE8XUuCuy+9FRgOlkD/KAbPQb2asHgWUZSP4fs6o=
-X-Received: by 2002:ac8:5841:0:b0:3f2:1441:3c11 with SMTP id
- h1-20020ac85841000000b003f214413c11mr14347qth.2.1688150400094; Fri, 30 Jun
- 2023 11:40:00 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1688150602; x=1690742602;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jPEvXo6WjRs1USguPeZQCvSg+BfPycq4avRrgWVGqyM=;
+        b=Z5x4D4Yv7rv7b8OxZXU0iURexKIobuEXDGO/nD3OTBCR3wJTLtAsDu3m9jiYYstmRC
+         /9K1pRo3Gt/gzVcZEQy6t+FtBs//oq7ByN8x2GmbeKQ3WMxc/lOTp/SOQeJETfvETeaG
+         PCUUz4l1COhUHeXo2iy/WKgdT93c0KOPrrOa8dmVUvwMokR4mr87R0jrs8yDqwGKdFQd
+         BYzsYPAxAlvBOtStyBWhLt2QTOCPqslbzPh/QT33Vh+eaUuREfw5hHfTBilUdz2TmvPZ
+         CCbWc4bGmN9XSRnog5aANJ8fvsZqEllV0AN2tyes4KrXpgWm81tG/EnVkS1q+y7/szwt
+         SVYw==
+X-Gm-Message-State: ABy/qLZUnpvQTt1Q+/3TD+8qRTllLXd0xtuwkA21cTZd8TRcb7yO7N00
+        wNeRAOpSpfu3raoALhcpzDxhUOYBPGu43kPfXRRfgeIv
+X-Google-Smtp-Source: APBJJlHWT0153IUilKT7obfEKIuIKOs2SlH9GxCoNKta9oNmZrILSKHnbdNOZTFm7qlJFv4kauQHag==
+X-Received: by 2002:a17:906:3bd3:b0:991:e961:a5f4 with SMTP id v19-20020a1709063bd300b00991e961a5f4mr2575024ejf.20.1688150602574;
+        Fri, 30 Jun 2023 11:43:22 -0700 (PDT)
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
+        by smtp.gmail.com with ESMTPSA id p21-20020a170906499500b0097404f4a124sm8376043eju.2.2023.06.30.11.43.21
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 Jun 2023 11:43:21 -0700 (PDT)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-51d885b0256so2590753a12.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jun 2023 11:43:21 -0700 (PDT)
+X-Received: by 2002:a05:6402:3456:b0:51a:50f2:4e7a with SMTP id
+ l22-20020a056402345600b0051a50f24e7amr2198661edc.13.1688150601530; Fri, 30
+ Jun 2023 11:43:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230628102949.2598096-1-john.g.garry@oracle.com> <20230628102949.2598096-4-john.g.garry@oracle.com>
-In-Reply-To: <20230628102949.2598096-4-john.g.garry@oracle.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 30 Jun 2023 11:39:48 -0700
-Message-ID: <CAP-5=fVS5Y2VxSDNdcXjc0Y90J7XpCXtxXU_=_Fjn6MJkuz3nA@mail.gmail.com>
-Subject: Re: [PATCH RFC 3/9] perf metrics: Pass cpu and sys tables to metricgroup__add_metric()
-To:     John Garry <john.g.garry@oracle.com>
-Cc:     acme@kernel.org, namhyung@kernel.org, jolsa@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        renyu.zj@linux.alibaba.com, shangxiaojing@huawei.com,
-        zhangshaokun@hisilicon.com, qiangqing.zhang@nxp.com,
-        kjain@linux.ibm.com, kan.liang@linux.intel.com
+References: <20230628215954.1230048-1-namhyung@kernel.org>
+In-Reply-To: <20230628215954.1230048-1-namhyung@kernel.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 30 Jun 2023 11:43:04 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whOLQsPiDJifHzfg+q-W4q=MXcbvzKLS4J4otOicbZqjA@mail.gmail.com>
+Message-ID: <CAHk-=whOLQsPiDJifHzfg+q-W4q=MXcbvzKLS4J4otOicbZqjA@mail.gmail.com>
+Subject: Re: [GIT PULL] perf tools changes for v6.5
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 28, 2023 at 3:30=E2=80=AFAM John Garry <john.g.garry@oracle.com=
-> wrote:
+On Wed, 28 Jun 2023 at 15:00, Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> The current @table arg may be a CPU metric table or a sys metric table.
-> There is no point in searching the CPU metric table for a sys metric, and
-> vice versa, so pass separate pointers
->
-> When sys metric table is passed, this would mean that we are in self-test
-> mode. In this mode, the host system cannot match events in the metric
-> expression as the associated PMUs may not be present. As such, just try
-> add the metric, see metricgroup__add_metric_sys_event_iter().
+> Please consider pulling perf tool changes.  I'm doing this on behalf of
+> Arnaldo as he's on vacation.  This is my first pull request and hope I
+> didn't break anything. :)
 
-Thanks John, I'm not opposed to this change. My understanding is it
-will give greater testing coverage. As previously mentioned I'd like
-longer term we have a sysfs like abstraction for the json events. For
-CPUs this could be like:
+Things look normal, although I find your pgp key situation confusing.
 
-<cpuid>/cpu/events/inst_retired.any
-<cpuid>/cpu/events/inst_retired.any.scale
-<cpuid>/cpu/events/inst_retired.any.unit
-<cpuid>/cpu/events/inst_retired.any.desc
-...
-<cpuid>/cpu/metrics/ipc
-<cpuid>/cpu/metrics/ipc.scale
-<cpuid>/cpu/metrics/ipc.unit
-...
-<cpuid>/uncore_imc_free_running_0/events/unc_mc0_rdcas_count_freerun
-...
+I looked up your gpg key from the kernel.org pgp key repo, but that's
+apparently not the one you used for signing this.
 
-Where <cpuid> comes from mapfile.csv. I'd like to union the in memory
-json event generated sysfs, with the kernel sysfs. There needs to be
-some kind of wildcard mechanism for all the uncore counters. Such a
-union-ing could allow on an disk sysfs, and this could be a route for
-testing.
+So I have two keys for you, and neither of them are then signed by
+others (although that part is probably just the usual pgp mess with
+signatures being dropped due to flooded bogus signatures, which has
+made the whole pgp infrastructure be essentially close to useless).
 
-For sys metrics I guess we'd so something like:
+Anyway, I wish the pgp key situation would be better, but it's not an
+actual problem.
 
-sys/hisi_sicl/events/cpa_cycles
-sys/hisi_sicl/events/cpa_cycles.desc
-...
-sys/cpa/events/cpa_cycles
-sys/cpa/cpa_cycles.desc
-...
+HOWEVER.
 
-or perhaps have some kind of wildcard matching syntax:
+What _is_ a problem is that the end result doesn't build cleanly.
 
-sys/(hisi_sicl|cpa)/events/cpa_cycles
-sys/(hisi_sicl|cpa)/events/cpa_cycles.desc
-...
+The
 
-So ultimately I can imagine the distinction of sys and cpu are going
-to become less, and we just test properties of PMUs. The ideas of
-tables should be hidden, but we could have a boolean on a PMU to say
-whether it is a sys or cpu type.
+        if (list_empty(&pmus))
+                perf_pmu__scan(NULL);
 
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
-> ---
->  tools/perf/tests/expand-cgroup.c |  2 +-
->  tools/perf/tests/parse-metric.c  |  2 +-
->  tools/perf/tests/pmu-events.c    | 29 +++++++++++++++-----
->  tools/perf/util/metricgroup.c    | 45 +++++++++++++++++++++++---------
->  tools/perf/util/metricgroup.h    |  3 ++-
->  5 files changed, 59 insertions(+), 22 deletions(-)
->
-> diff --git a/tools/perf/tests/expand-cgroup.c b/tools/perf/tests/expand-c=
-group.c
-> index 9c1a1f18db75..50e128ddb474 100644
-> --- a/tools/perf/tests/expand-cgroup.c
-> +++ b/tools/perf/tests/expand-cgroup.c
-> @@ -187,7 +187,7 @@ static int expand_metric_events(void)
->
->         rblist__init(&metric_events);
->         pme_test =3D find_core_metrics_table("testarch", "testcpu");
-> -       ret =3D metricgroup__parse_groups_test(evlist, pme_test, metric_s=
-tr, &metric_events);
-> +       ret =3D metricgroup__parse_groups_test(evlist, pme_test, NULL, me=
-tric_str, &metric_events);
+        ibs_pmu = perf_pmu__find("ibs_op");
 
-nit: Here and below. Could we name the argument here, so:
-ret =3D metricgroup__parse_groups_test(evlist, pme_test,
-/*sys_table=3D*/NULL, metric_str, &metric_events);
-for clarity it would be nice if pme_test were cpu_table.
+in the amd-ibs-via-core no longer works, and it seems that it should just be
 
-Thanks,
-Ian
+        ibs_pmu = perf_pmus__find("ibs_op");
 
+That's fine - I can do (and did) that merge resolution - and it's part
+of my normal "merge and test build", but I'm slightly unhappy that I
+wasn't told about this part.
 
->         if (ret < 0) {
->                 pr_debug("failed to parse '%s' metric\n", metric_str);
->                 goto out;
-> diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-met=
-ric.c
-> index 2c28fb50dc24..e146f1193294 100644
-> --- a/tools/perf/tests/parse-metric.c
-> +++ b/tools/perf/tests/parse-metric.c
-> @@ -95,7 +95,7 @@ static int __compute_metric(const char *name, struct va=
-lue *vals,
->
->         /* Parse the metric into metric_events list. */
->         pme_test =3D find_core_metrics_table("testarch", "testcpu");
-> -       err =3D metricgroup__parse_groups_test(evlist, pme_test, name,
-> +       err =3D metricgroup__parse_groups_test(evlist, pme_test, NULL, na=
-me,
->                                              &metric_events);
->         if (err)
->                 goto out;
-> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.=
-c
-> index 64383fc34ef1..de571fd11cd7 100644
-> --- a/tools/perf/tests/pmu-events.c
-> +++ b/tools/perf/tests/pmu-events.c
-> @@ -798,9 +798,9 @@ struct metric {
->         struct metric_ref metric_ref;
->  };
->
-> -static int test__parsing_callback(const struct pmu_metric *pm,
-> +static int _test__parsing_callback(const struct pmu_metric *pm,
->                                   const struct pmu_metrics_table *table,
-> -                                 void *data)
-> +                                 void *data, bool is_cpu_table)
->  {
->         int *failures =3D data;
->         int k;
-> @@ -811,6 +811,8 @@ static int test__parsing_callback(const struct pmu_me=
-tric *pm,
->                 .nr_entries =3D 0,
->         };
->         int err =3D 0;
-> +       const struct pmu_metrics_table *cpu_table =3D is_cpu_table ? tabl=
-e : NULL;
-> +       const struct pmu_metrics_table *sys_table =3D is_cpu_table ? NULL=
- : table;
->
->         if (!pm->metric_expr)
->                 return 0;
-> @@ -834,7 +836,8 @@ static int test__parsing_callback(const struct pmu_me=
-tric *pm,
->
->         perf_evlist__set_maps(&evlist->core, cpus, NULL);
->
-> -       err =3D metricgroup__parse_groups_test(evlist, table, pm->metric_=
-name, &metric_events);
-> +       err =3D metricgroup__parse_groups_test(evlist, cpu_table, sys_tab=
-le,
-> +                                            pm->metric_name, &metric_eve=
-nts);
->         if (err) {
->                 if (!strcmp(pm->metric_name, "M1") || !strcmp(pm->metric_=
-name, "M2") ||
->                     !strcmp(pm->metric_name, "M3")) {
-> @@ -890,13 +893,27 @@ static int test__parsing_callback(const struct pmu_=
-metric *pm,
->         return err;
->  }
->
-> -static int test__parsing(struct test_suite *test __maybe_unused,
-> +static int test__parsing_callback_cpu(const struct pmu_metric *pm,
-> +                                 const struct pmu_metrics_table *table,
-> +                                 void *data)
-> +{
-> +       return _test__parsing_callback(pm, table, data, true);
-> +}
-> +
-> +static int test__parsing_callback_sys(const struct pmu_metric *pm,
-> +                                 const struct pmu_metrics_table *table,
-> +                                 void *data)
-> +{
-> +       return _test__parsing_callback(pm, table, data, false);
-> +}
-> +
-> +static __maybe_unused int test__parsing(struct test_suite *test __maybe_=
-unused,
->                          int subtest __maybe_unused)
->  {
->         int failures =3D 0;
->
-> -       pmu_for_each_core_metric(test__parsing_callback, &failures);
-> -       pmu_for_each_sys_metric(test__parsing_callback, &failures);
-> +       pmu_for_each_core_metric(test__parsing_callback_cpu, &failures);
-> +       pmu_for_each_sys_metric(test__parsing_callback_sys, &failures);
->
->         return failures =3D=3D 0 ? TEST_OK : TEST_FAIL;
->  }
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
-c
-> index 8d2ac2513530..520436fbe99d 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -1232,13 +1232,14 @@ static int metricgroup__add_metric(const char *pm=
-u, const char *metric_name, con
->                                    const char *user_requested_cpu_list,
->                                    bool system_wide,
->                                    struct list_head *metric_list,
-> -                                  const struct pmu_metrics_table *table)
-> +                                  const struct pmu_metrics_table *cpu_ta=
-ble,
-> +                                  const struct pmu_metrics_table *sys_ta=
-ble)
->  {
->         LIST_HEAD(list);
->         int ret;
->         bool has_match =3D false;
->
-> -       {
-> +       if (cpu_table) {
->                 struct metricgroup__add_metric_data data =3D {
->                         .list =3D &list,
->                         .pmu =3D pmu,
-> @@ -1254,7 +1255,7 @@ static int metricgroup__add_metric(const char *pmu,=
- const char *metric_name, con
->                  * Iterate over all metrics seeing if metric matches eith=
-er the
->                  * name or group. When it does add the metric to the list=
-.
->                  */
-> -               ret =3D pmu_metrics_table_for_each_metric(table, metricgr=
-oup__add_metric_callback,
-> +               ret =3D pmu_metrics_table_for_each_metric(cpu_table, metr=
-icgroup__add_metric_callback,
->                                                        &data);
->                 if (ret)
->                         goto out;
-> @@ -1267,7 +1268,21 @@ static int metricgroup__add_metric(const char *pmu=
-, const char *metric_name, con
->                 goto out;
->         }
->
-> -       {
-> +       if (sys_table) {
-> +               struct metricgroup_add_iter_data data =3D {
-> +                       .metric_list =3D &list,
-> +                       .pmu =3D pmu,
-> +                       .metric_name =3D metric_name,
-> +                       .modifier =3D modifier,
-> +                       .metric_no_group =3D metric_no_group,
-> +                       .user_requested_cpu_list =3D user_requested_cpu_l=
-ist,
-> +                       .system_wide =3D system_wide,
-> +                       .has_match =3D &has_match,
-> +                       .ret =3D &ret,
-> +               };
-> +               pmu_metrics_table_for_each_metric(sys_table,
-> +                       metricgroup__add_metric_sys_event_iter, &data);
-> +       } else {
->                 struct metricgroup_iter_data data =3D {
->                         .fn =3D metricgroup__add_metric_sys_event_iter,
->                         .data =3D (void *) &(struct metricgroup_add_iter_=
-data) {
-> @@ -1320,7 +1335,8 @@ static int metricgroup__add_metric_list(const char =
-*pmu, const char *list,
->                                         bool metric_no_threshold,
->                                         const char *user_requested_cpu_li=
-st,
->                                         bool system_wide, struct list_hea=
-d *metric_list,
-> -                                       const struct pmu_metrics_table *t=
-able)
-> +                                       const struct pmu_metrics_table *c=
-pu_table,
-> +                                       const struct pmu_metrics_table *s=
-ys_table)
->  {
->         char *list_itr, *list_copy, *metric_name, *modifier;
->         int ret, count =3D 0;
-> @@ -1338,7 +1354,8 @@ static int metricgroup__add_metric_list(const char =
-*pmu, const char *list,
->                 ret =3D metricgroup__add_metric(pmu, metric_name, modifie=
-r,
->                                               metric_no_group, metric_no_=
-threshold,
->                                               user_requested_cpu_list,
-> -                                             system_wide, metric_list, t=
-able);
-> +                                             system_wide, metric_list, c=
-pu_table,
-> +                                             sys_table);
->                 if (ret =3D=3D -EINVAL)
->                         pr_err("Cannot find metric or group `%s'\n", metr=
-ic_name);
->
-> @@ -1534,7 +1551,8 @@ static int parse_groups(struct evlist *perf_evlist,
->                         bool system_wide,
->                         struct perf_pmu *fake_pmu,
->                         struct rblist *metric_events_list,
-> -                       const struct pmu_metrics_table *table)
-> +                       const struct pmu_metrics_table *cpu_table,
-> +                       const struct pmu_metrics_table *sys_table)
->  {
->         struct evlist *combined_evlist =3D NULL;
->         LIST_HEAD(metric_list);
-> @@ -1547,7 +1565,7 @@ static int parse_groups(struct evlist *perf_evlist,
->                 metricgroup__rblist_init(metric_events_list);
->         ret =3D metricgroup__add_metric_list(pmu, str, metric_no_group, m=
-etric_no_threshold,
->                                            user_requested_cpu_list,
-> -                                          system_wide, &metric_list, tab=
-le);
-> +                                          system_wide, &metric_list, cpu=
-_table, sys_table);
->         if (ret)
->                 goto out;
->
-> @@ -1697,18 +1715,19 @@ int metricgroup__parse_groups(struct evlist *perf=
-_evlist,
->                               bool system_wide,
->                               struct rblist *metric_events)
->  {
-> -       const struct pmu_metrics_table *table =3D pmu_metrics_table__find=
-();
-> +       const struct pmu_metrics_table *cpu_table =3D pmu_metrics_table__=
-find();
->
-> -       if (!table)
-> +       if (!cpu_table)
->                 return -EINVAL;
->
->         return parse_groups(perf_evlist, pmu, str, metric_no_group, metri=
-c_no_merge,
->                             metric_no_threshold, user_requested_cpu_list,=
- system_wide,
-> -                           /*fake_pmu=3D*/NULL, metric_events, table);
-> +                           /*fake_pmu=3D*/NULL, metric_events, cpu_table=
-, NULL);
->  }
->
->  int metricgroup__parse_groups_test(struct evlist *evlist,
-> -                                  const struct pmu_metrics_table *table,
-> +                                  const struct pmu_metrics_table *cpu_ta=
-ble,
-> +                                  const struct pmu_metrics_table *sys_ta=
-ble,
->                                    const char *str,
->                                    struct rblist *metric_events)
->  {
-> @@ -1718,7 +1737,7 @@ int metricgroup__parse_groups_test(struct evlist *e=
-vlist,
->                             /*metric_no_threshold=3D*/false,
->                             /*user_requested_cpu_list=3D*/NULL,
->                             /*system_wide=3D*/false,
-> -                           &perf_pmu__fake, metric_events, table);
-> +                           &perf_pmu__fake, metric_events, cpu_table, sy=
-s_table);
->  }
->
->  struct metricgroup__has_metric_data {
-> diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.=
-h
-> index d5325c6ec8e1..b5f0d598eaec 100644
-> --- a/tools/perf/util/metricgroup.h
-> +++ b/tools/perf/util/metricgroup.h
-> @@ -79,7 +79,8 @@ int metricgroup__parse_groups(struct evlist *perf_evlis=
-t,
->                               bool system_wide,
->                               struct rblist *metric_events);
->  int metricgroup__parse_groups_test(struct evlist *evlist,
-> -                                  const struct pmu_metrics_table *table,
-> +                                  const struct pmu_metrics_table *cpu_ta=
-ble,
-> +                                  const struct pmu_metrics_table *sys_ta=
-ble,
->                                    const char *str,
->                                    struct rblist *metric_events);
->
-> --
-> 2.35.3
->
+The actual data conflicts were trivial. But this was a semantic
+conflict that was invisible to git, but showed up in build testing.
+
+And I *think* you should have known about it, because the conflict you
+do talk about shows that
+
+ +perf-y += amd-ibs-via-core-pmu.o
+
+as part of the actual data conflicts.
+
+Anyway, I've resolved this, and it wasn't a *problem*, and I'm just a
+bit unhappy that it took me by surprise.
+
+              Linus
