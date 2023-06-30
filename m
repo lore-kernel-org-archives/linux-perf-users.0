@@ -2,95 +2,147 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D7FEB64D7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jun 2023 08:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20771EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jun 2023 08:31:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232096AbjF3IFJ (ORCPT
+        id S232572AbjF3Iby (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Jun 2023 04:05:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60678 "EHLO
+        Fri, 30 Jun 2023 04:31:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232381AbjF3IFA (ORCPT
+        with ESMTP id S232552AbjF3Ibt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Jun 2023 04:05:00 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 442DA30DF;
-        Fri, 30 Jun 2023 01:04:58 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E64F8C14;
-        Fri, 30 Jun 2023 01:05:41 -0700 (PDT)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 77CA73F73F;
-        Fri, 30 Jun 2023 01:04:56 -0700 (PDT)
-Message-ID: <36767548-fbc3-9c4b-848c-d1d3102e442a@arm.com>
-Date:   Fri, 30 Jun 2023 09:04:55 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v1 0/1] perf tools: Add a place to put kernel config
- fragments for test runs
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     linux-perf-users@vger.kernel.org, acme@kernel.org,
-        masahiroy@kernel.org, leo.yan@linaro.org, broonie@kernel.org,
-        Aishwarya.TCV@arm.com, Peter Zijlstra <peterz@infradead.org>,
+        Fri, 30 Jun 2023 04:31:49 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 670BA3594
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jun 2023 01:31:40 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id ffacd0b85a97d-314118623d5so1833099f8f.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jun 2023 01:31:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20221208.gappssmtp.com; s=20221208; t=1688113899; x=1690705899;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=I7xu9e/8zpZngb/8IehgWdJUCcpoeDVm3vpzs3Qy7mo=;
+        b=H865ZtJHjbuc6MuFVYa6SgB+ccoXiHGJQIfADr+zwMK/j+TvVpF9r811O5KdXbAu5+
+         8rnETbuyrAMsXoADgBZsmqyWAJr2v0SEQYshs1SJYhCXKgyoO6o3PJr4ldpS8G81FyDD
+         5pJH5cSvZ1+TDWcK6vDQAbBn+F15tFvNuOhYAQrzT4I29Y6oNdLKn4cLGQ+ogAC/S4FO
+         VTT6g+Rr36ezXTugl0LhtdCY68hxlgD8P8RQc//MOZj5goxL8G/fFJl97Hi8BBomykLL
+         ifR/3V7HCfdYcA93pumIwoaa/E8SI7eQ7OroZqiDb/jdJyXWhiTW+FiT0P9QtP8R7EOe
+         vpZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688113899; x=1690705899;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=I7xu9e/8zpZngb/8IehgWdJUCcpoeDVm3vpzs3Qy7mo=;
+        b=icpnyDpYN7FuPsc1ECVzkw2E7LtkEZjQYyGVr0gg3lBYvgv/I0DjGior2WMThpQe+I
+         Ve+xNaDb6NMN9XLYmJY2ybzfWSiCOIELzvR3PDZeBOT9vNivjwMDeqLn50DBwAyVHzBk
+         LFWdhS9NRxu2cqw5HrlBIsaZcBYrtfMTDDWErgSzMqJlpPYsGI16a0rU3h+RSqpE/+9i
+         exLf2YvMg6YiJy/ngTdRVUuo+yq2jxALuP3Wlq07phxAet+ewat9ugLqG2wfs4rlgbDW
+         A7ZL/GwS7wJAWjt/RNybi/e7xvMU7Duql0oU2wSOPDLvI5SIqFWmd5VsbiJK35Tt4Oby
+         0z7Q==
+X-Gm-Message-State: ABy/qLZ4v+VGiekEX/+qOTTdk8ozM0u6l4WtTou49grw8McAwi3UWOph
+        Xv5U6Cjo4Ie/vHXq97va1ls+Lw==
+X-Google-Smtp-Source: APBJJlF2cVmZSXyEpZo5Wr+x3JPdjgQAG++Uz1dQG5lH+T/9n8SPtY5CQ+JHQXWfIJwLUbsOsOGQcg==
+X-Received: by 2002:adf:f60c:0:b0:313:e741:1caa with SMTP id t12-20020adff60c000000b00313e7411caamr1823926wrp.25.1688113898731;
+        Fri, 30 Jun 2023 01:31:38 -0700 (PDT)
+Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id h15-20020a05600004cf00b0030e52d4c1bcsm17976111wri.71.2023.06.30.01.31.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Jun 2023 01:31:38 -0700 (PDT)
+From:   Alexandre Ghiti <alexghiti@rivosinc.com>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org
-References: <20230628105303.4053478-1-james.clark@arm.com>
- <CAM9d7cgo97jJTTTV7F2kJ=sF9MBoRwegN4r0dWotbUD=Nr1_cQ@mail.gmail.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <CAM9d7cgo97jJTTTV7F2kJ=sF9MBoRwegN4r0dWotbUD=Nr1_cQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <atishp@atishpatra.org>,
+        Anup Patel <anup@brainfault.org>,
+        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+        Andrew Jones <ajones@ventanamicro.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH v3 00/10] riscv: Allow userspace to directly access perf counters
+Date:   Fri, 30 Jun 2023 10:30:03 +0200
+Message-Id: <20230630083013.102334-1-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+riscv used to allow direct access to cycle/time/instret counters,
+bypassing the perf framework, this patchset intends to allow the user to
+mmap any counter when accessed through perf. But we can't break the
+existing behaviour so we introduce a sysctl perf_user_access like arm64
+does, which defaults to the legacy mode described above.
 
+This version needs openSBI v1.3 *and* a fix that went upstream lately
+(https://lore.kernel.org/lkml/20230616114831.3186980-1-maz@kernel.org/T/).
 
-On 29/06/2023 23:03, Namhyung Kim wrote:
-> Hi James,
-> 
-> On Wed, Jun 28, 2023 at 3:53 AM James Clark <james.clark@arm.com> wrote:
->>
->> Changes since RFC:
->>
->>  * Changed arch filename convention to use the ARCH= build time values
->>    instead of uname
->>
->> It seems like there were no objections on the RFC, apart from maybe
->> changing the perf tests to run as a kself test. But that's probably not
->> going to happen for a while, if ever, and these fragments can always
->> be moved in that case.
-> 
-> I missed the RFC, sorry.  Could you please add a link for that?
-> 
-> Thanks,
-> Namhyung
+**Important**: In this version, the default mode is now user access, not
+the legacy so some applications will break.
 
-Yep, it's here:
-https://lore.kernel.org/lkml/d02cce4a-47b1-a776-0d3a-a6a7c9a4d8fd@arm.com/T/
+base-commit-tag: v6.4-rc6
 
-> 
-> 
->>
->> James Clark (1):
->>   perf tools: Add a place to put kernel config fragments for test runs
->>
->>  tools/perf/tests/config-fragments/README |  7 +++++++
->>  tools/perf/tests/config-fragments/arm64  |  1 +
->>  tools/perf/tests/config-fragments/config | 11 +++++++++++
->>  3 files changed, 19 insertions(+)
->>  create mode 100644 tools/perf/tests/config-fragments/README
->>  create mode 100644 tools/perf/tests/config-fragments/arm64
->>  create mode 100644 tools/perf/tests/config-fragments/config
->>
->>
->> base-commit: ad5f604e186ac08d12c401e34ea96c09c38ddbc5
->> --
->> 2.34.1
->>
+Changes in v3:
+v3:
+- patch 1 now contains the ref to the faulty commit (no Fixes tag as it is only a comment), as Andrew suggested
+- Removed RISCV_PMU_LEGACY_TIME from patch 3, as Andrew suggested
+- Rename RISCV_PMU_PDEV_NAME to "riscv-pmu-sbi", patch4 is just cosmetic now, as Andrew suggested
+- Removed a few useless (and wrong) comments, as Andrew suggested
+- Simplify arch_perf_update_userpage code, as Andrew suggested
+- Documentation now mentions that time CSR is *always* accessible, whatever the mode, as suggested by Andrew
+- Removed CYCLEH reference and add TODO for rv32 support, as suggested by Atish
+- Do not rename the pmu instance as Atish suggested
+- Set pmc_width only if rdpmc is enabled and CONFIG_RISCV_PMU is set and the event is a hw event
+- Move arch_perf_update_userpage https://lore.kernel.org/lkml/20230616114831.3186980-1-maz@kernel.org/T/
+- **Switch to user mode access by default**
+
+Changes in v2:
+- Split into smaller patches, way better!
+- Add RB from Conor
+- Simplify the way we checked riscv architecture
+- Fix race mmap and other thread running on other cpus
+- Use hwc when available
+- Set all userspace access flags in event_init, too cumbersome to handle sysctl changes
+- Fix arch_perf_update_userpage for pmu other than riscv-pmu by renaming pmu driver
+- Fixed kernel test robot build error
+- Fixed documentation (Andrew and Bagas)
+- perf testsuite passes mmap tests in all 3 modes
+
+Alexandre Ghiti (10):
+  perf: Fix wrong comment about default event_idx
+  include: riscv: Fix wrong include guard in riscv_pmu.h
+  riscv: Make legacy counter enum match the HW numbering
+  drivers: perf: Rename riscv pmu sbi driver
+  riscv: Prepare for user-space perf event mmap support
+  drivers: perf: Implement perf event mmap support in the legacy backend
+  drivers: perf: Implement perf event mmap support in the SBI backend
+  Documentation: admin-guide: Add riscv sysctl_perf_user_access
+  tools: lib: perf: Implement riscv mmap support
+  perf: tests: Adapt mmap-basic.c for riscv
+
+ Documentation/admin-guide/sysctl/kernel.rst |  26 ++-
+ drivers/perf/riscv_pmu.c                    | 113 +++++++++++
+ drivers/perf/riscv_pmu_legacy.c             |  28 ++-
+ drivers/perf/riscv_pmu_sbi.c                | 196 +++++++++++++++++++-
+ include/linux/perf/riscv_pmu.h              |  12 +-
+ include/linux/perf_event.h                  |   3 +-
+ tools/lib/perf/mmap.c                       |  65 +++++++
+ tools/perf/tests/mmap-basic.c               |   4 +-
+ 8 files changed, 427 insertions(+), 20 deletions(-)
+
+-- 
+2.39.2
+
