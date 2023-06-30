@@ -2,54 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20771EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jun 2023 08:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 779D8C0015E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jun 2023 08:32:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232572AbjF3Iby (ORCPT
+        id S232573AbjF3Icv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Jun 2023 04:31:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42130 "EHLO
+        Fri, 30 Jun 2023 04:32:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232552AbjF3Ibt (ORCPT
+        with ESMTP id S232565AbjF3Icn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Jun 2023 04:31:49 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 670BA3594
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jun 2023 01:31:40 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id ffacd0b85a97d-314118623d5so1833099f8f.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jun 2023 01:31:40 -0700 (PDT)
+        Fri, 30 Jun 2023 04:32:43 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBDFE1BE9
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jun 2023 01:32:41 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-3fa93d61d48so17952485e9.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jun 2023 01:32:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20221208.gappssmtp.com; s=20221208; t=1688113899; x=1690705899;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=I7xu9e/8zpZngb/8IehgWdJUCcpoeDVm3vpzs3Qy7mo=;
-        b=H865ZtJHjbuc6MuFVYa6SgB+ccoXiHGJQIfADr+zwMK/j+TvVpF9r811O5KdXbAu5+
-         8rnETbuyrAMsXoADgBZsmqyWAJr2v0SEQYshs1SJYhCXKgyoO6o3PJr4ldpS8G81FyDD
-         5pJH5cSvZ1+TDWcK6vDQAbBn+F15tFvNuOhYAQrzT4I29Y6oNdLKn4cLGQ+ogAC/S4FO
-         VTT6g+Rr36ezXTugl0LhtdCY68hxlgD8P8RQc//MOZj5goxL8G/fFJl97Hi8BBomykLL
-         ifR/3V7HCfdYcA93pumIwoaa/E8SI7eQ7OroZqiDb/jdJyXWhiTW+FiT0P9QtP8R7EOe
-         vpZg==
+        d=rivosinc-com.20221208.gappssmtp.com; s=20221208; t=1688113960; x=1690705960;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YVY/yta8MPWmg9iGDhd2QZ8qAlvFNnDO2cXvkrgJQ+E=;
+        b=kl/TPhm6ikHmXXieyToZuU/DsVCjRsYDu5avotvuqaFc6tZ03SeeW4FBKpCi/Mw0WK
+         wYwR3smgKyTmD/+jwch8XyufhBtdkF3f7qT76g3QLFIxycHhxqlDuelvEeFLcQBDGwtt
+         c99+4W37R5ubiuAV02MC9TfgLz/gSE7K7R4yhEbEZr5+7p6QH5R3OjwwnSQN3sEOn7tW
+         RKj4BSD6VxbchcdMJw22xXR3zLMu8PcBAKcXWWpZR1RwCBliqolg8sKRbGtF44CNGBjW
+         9CyHSusDkCPt0CnofvgfwI9NFxWhPuDzw6CUyYduupu1PMRz4yXtfiSFdQwWM5irvYAE
+         GdrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688113899; x=1690705899;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=I7xu9e/8zpZngb/8IehgWdJUCcpoeDVm3vpzs3Qy7mo=;
-        b=icpnyDpYN7FuPsc1ECVzkw2E7LtkEZjQYyGVr0gg3lBYvgv/I0DjGior2WMThpQe+I
-         Ve+xNaDb6NMN9XLYmJY2ybzfWSiCOIELzvR3PDZeBOT9vNivjwMDeqLn50DBwAyVHzBk
-         LFWdhS9NRxu2cqw5HrlBIsaZcBYrtfMTDDWErgSzMqJlpPYsGI16a0rU3h+RSqpE/+9i
-         exLf2YvMg6YiJy/ngTdRVUuo+yq2jxALuP3Wlq07phxAet+ewat9ugLqG2wfs4rlgbDW
-         A7ZL/GwS7wJAWjt/RNybi/e7xvMU7Duql0oU2wSOPDLvI5SIqFWmd5VsbiJK35Tt4Oby
-         0z7Q==
-X-Gm-Message-State: ABy/qLZ4v+VGiekEX/+qOTTdk8ozM0u6l4WtTou49grw8McAwi3UWOph
-        Xv5U6Cjo4Ie/vHXq97va1ls+Lw==
-X-Google-Smtp-Source: APBJJlF2cVmZSXyEpZo5Wr+x3JPdjgQAG++Uz1dQG5lH+T/9n8SPtY5CQ+JHQXWfIJwLUbsOsOGQcg==
-X-Received: by 2002:adf:f60c:0:b0:313:e741:1caa with SMTP id t12-20020adff60c000000b00313e7411caamr1823926wrp.25.1688113898731;
-        Fri, 30 Jun 2023 01:31:38 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1688113960; x=1690705960;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YVY/yta8MPWmg9iGDhd2QZ8qAlvFNnDO2cXvkrgJQ+E=;
+        b=P84Q/xA5zyoxVmrtCz4dd6Ga3mnN9dHuNWR3kZMgI9I+V0TRW4Y6xQAX/5SW9u+0ZD
+         BtcxD+1Ro01kIG1BzvGa+Up6hMo+WQGAQ9m2M3wFk9m2EsXZyXiEUrTMRyjPGS5kYnhw
+         dcugb3eg+XAU0szWdNZ0T9OfIiFlWn2YMydyBrIKHtZ0NCdhUlXKkzLi2Ud+fq8+MpwZ
+         rJkZ5RooIe+6pob+rYDTOBcFWlb60lMjw8hgqAshL0Usex8CJ6KZ1aZAhp6iXxvnQd9j
+         A/h2jQsGT4/rqdN9/VeARkOAsg6UbDEIg6uFA1EbpQ9tb6bY0iOt3JIeQET81iTnfcJZ
+         a+fQ==
+X-Gm-Message-State: AC+VfDymNkuUfztt3tbY1lJu9rFfqwXw6N70IlHNs+VXo1hmFh0d5CZW
+        J9XGFTgKkFXdGQTM6pcMHCGTcg==
+X-Google-Smtp-Source: ACHHUZ4sOZab/Xe9VR+3s2W1uRvunuBxqP1Egjt8iE/RBBaYrC98a4RA8h5p4k6wwDyYphRxgmB5tw==
+X-Received: by 2002:a1c:7c05:0:b0:3f6:2ae:230e with SMTP id x5-20020a1c7c05000000b003f602ae230emr1443811wmc.3.1688113960321;
+        Fri, 30 Jun 2023 01:32:40 -0700 (PDT)
 Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id h15-20020a05600004cf00b0030e52d4c1bcsm17976111wri.71.2023.06.30.01.31.37
+        by smtp.gmail.com with ESMTPSA id v4-20020a05600c214400b003fa95890484sm13846402wml.20.2023.06.30.01.32.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jun 2023 01:31:38 -0700 (PDT)
+        Fri, 30 Jun 2023 01:32:40 -0700 (PDT)
 From:   Alexandre Ghiti <alexghiti@rivosinc.com>
 To:     Jonathan Corbet <corbet@lwn.net>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -70,79 +71,45 @@ To:     Jonathan Corbet <corbet@lwn.net>,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
-Cc:     Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v3 00/10] riscv: Allow userspace to directly access perf counters
-Date:   Fri, 30 Jun 2023 10:30:03 +0200
-Message-Id: <20230630083013.102334-1-alexghiti@rivosinc.com>
+Cc:     Alexandre Ghiti <alexghiti@rivosinc.com>,
+        Atish Patra <atishp@rivosinc.com>
+Subject: [PATCH v3 01/10] perf: Fix wrong comment about default event_idx
+Date:   Fri, 30 Jun 2023 10:30:04 +0200
+Message-Id: <20230630083013.102334-2-alexghiti@rivosinc.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230630083013.102334-1-alexghiti@rivosinc.com>
+References: <20230630083013.102334-1-alexghiti@rivosinc.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-riscv used to allow direct access to cycle/time/instret counters,
-bypassing the perf framework, this patchset intends to allow the user to
-mmap any counter when accessed through perf. But we can't break the
-existing behaviour so we introduce a sysctl perf_user_access like arm64
-does, which defaults to the legacy mode described above.
+Since commit c719f56092ad ("perf: Fix and clean up initialization of
+pmu::event_idx"), event_idx default implementation has returned 0, not
+idx + 1, so fix the comment that can be misleading.
 
-This version needs openSBI v1.3 *and* a fix that went upstream lately
-(https://lore.kernel.org/lkml/20230616114831.3186980-1-maz@kernel.org/T/).
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+Reviewed-by: Atish Patra <atishp@rivosinc.com>
+---
+ include/linux/perf_event.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-**Important**: In this version, the default mode is now user access, not
-the legacy so some applications will break.
-
-base-commit-tag: v6.4-rc6
-
-Changes in v3:
-v3:
-- patch 1 now contains the ref to the faulty commit (no Fixes tag as it is only a comment), as Andrew suggested
-- Removed RISCV_PMU_LEGACY_TIME from patch 3, as Andrew suggested
-- Rename RISCV_PMU_PDEV_NAME to "riscv-pmu-sbi", patch4 is just cosmetic now, as Andrew suggested
-- Removed a few useless (and wrong) comments, as Andrew suggested
-- Simplify arch_perf_update_userpage code, as Andrew suggested
-- Documentation now mentions that time CSR is *always* accessible, whatever the mode, as suggested by Andrew
-- Removed CYCLEH reference and add TODO for rv32 support, as suggested by Atish
-- Do not rename the pmu instance as Atish suggested
-- Set pmc_width only if rdpmc is enabled and CONFIG_RISCV_PMU is set and the event is a hw event
-- Move arch_perf_update_userpage https://lore.kernel.org/lkml/20230616114831.3186980-1-maz@kernel.org/T/
-- **Switch to user mode access by default**
-
-Changes in v2:
-- Split into smaller patches, way better!
-- Add RB from Conor
-- Simplify the way we checked riscv architecture
-- Fix race mmap and other thread running on other cpus
-- Use hwc when available
-- Set all userspace access flags in event_init, too cumbersome to handle sysctl changes
-- Fix arch_perf_update_userpage for pmu other than riscv-pmu by renaming pmu driver
-- Fixed kernel test robot build error
-- Fixed documentation (Andrew and Bagas)
-- perf testsuite passes mmap tests in all 3 modes
-
-Alexandre Ghiti (10):
-  perf: Fix wrong comment about default event_idx
-  include: riscv: Fix wrong include guard in riscv_pmu.h
-  riscv: Make legacy counter enum match the HW numbering
-  drivers: perf: Rename riscv pmu sbi driver
-  riscv: Prepare for user-space perf event mmap support
-  drivers: perf: Implement perf event mmap support in the legacy backend
-  drivers: perf: Implement perf event mmap support in the SBI backend
-  Documentation: admin-guide: Add riscv sysctl_perf_user_access
-  tools: lib: perf: Implement riscv mmap support
-  perf: tests: Adapt mmap-basic.c for riscv
-
- Documentation/admin-guide/sysctl/kernel.rst |  26 ++-
- drivers/perf/riscv_pmu.c                    | 113 +++++++++++
- drivers/perf/riscv_pmu_legacy.c             |  28 ++-
- drivers/perf/riscv_pmu_sbi.c                | 196 +++++++++++++++++++-
- include/linux/perf/riscv_pmu.h              |  12 +-
- include/linux/perf_event.h                  |   3 +-
- tools/lib/perf/mmap.c                       |  65 +++++++
- tools/perf/tests/mmap-basic.c               |   4 +-
- 8 files changed, 427 insertions(+), 20 deletions(-)
-
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index d5628a7b5eaa..56fe43b20966 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -442,7 +442,8 @@ struct pmu {
+ 
+ 	/*
+ 	 * Will return the value for perf_event_mmap_page::index for this event,
+-	 * if no implementation is provided it will default to: event->hw.idx + 1.
++	 * if no implementation is provided it will default to 0 (see
++	 * perf_event_idx_default).
+ 	 */
+ 	int (*event_idx)		(struct perf_event *event); /*optional */
+ 
 -- 
 2.39.2
 
