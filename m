@@ -2,202 +2,127 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F39EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jun 2023 20:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 053DCEB64DA
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jun 2023 20:41:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231537AbjF3URH (ORCPT
+        id S230525AbjF3Ula convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Jun 2023 16:17:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43998 "EHLO
+        Fri, 30 Jun 2023 16:41:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229882AbjF3URG (ORCPT
+        with ESMTP id S232242AbjF3UlY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Jun 2023 16:17:06 -0400
-Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12EAF30C5
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jun 2023 13:17:05 -0700 (PDT)
-Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-401d1d967beso69711cf.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jun 2023 13:17:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1688156224; x=1690748224;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AhewT4f0UOSioUznQR6E30vq7XPstuamVEJFO+KirRA=;
-        b=nOeY49aXkTzXdNCKWDJ1WxBzQ3TJch54HvwT4fmA3hhzd05Roz5SufF48M/uwZE88L
-         z9ZZTVoctCVlSKFUQHrnUEjN+G4UpT++Z9OEQXjpOswTqzPVGWLhMqiIX9/7m6KHswdl
-         5fKI0Fy6zDKoR2rjAFPJUpw2lYhT1djlTsDppQjNw47jt+LV65VA+tQ7VFNwJ+7raKEg
-         JmbvNS+5omqUGMhZ0BsqGLW+gMM+PS1UJov1WXdcyHWgQZZOzTtXPSgQkGyOpAdh7VR7
-         j8g/4XYJWFpxMo+7aTF4KzQuhD7OuVMxyPZ/TY2CEZSns08kEKY5oR7E5rBVRXT3wD2y
-         tX/w==
+        Fri, 30 Jun 2023 16:41:24 -0400
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F23A3AA4;
+        Fri, 30 Jun 2023 13:41:23 -0700 (PDT)
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-bacf685150cso2240639276.3;
+        Fri, 30 Jun 2023 13:41:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688156224; x=1690748224;
+        d=1e100.net; s=20221208; t=1688157682; x=1690749682;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AhewT4f0UOSioUznQR6E30vq7XPstuamVEJFO+KirRA=;
-        b=ZkDfpGtAOnI9R5JYwQvHq2Fj+eGnHnO68yXW+W+RgsAF7XI8Ngn22xqwd12BLph9N3
-         865dXmq5vgEZ65ajHI/hJUECDxvVpar758MWh5aiUENALpByn0CGqHKbQxCptFj9IIb8
-         NLP04bcZERHd61nvJNSeefRHhdogXdMp/UIUEQyIugL1DkGYakIwDvk58u0UtJgMCSFH
-         qE3hA5g+VQRwh34XA78oVH4EmOUGDZ9Tk/LmuAp1cJqbPnjTVbjQthXC1B8pEKowDkHB
-         hQnDvZmwSojsh9WDSRCCQSmNBTKcuEKymUi3ydHOArYnifK/ABUIkGaNCoGFBi1uHhjv
-         Ahow==
-X-Gm-Message-State: ABy/qLYrZGRSeefeqKodys2Iwfk43u7MALUEVhlDZybCauQpLQoy/eM5
-        ed/Q3b5DQ+9iZvG9zLKrlIBOeUGUawRwd7UDSCW2Uw==
-X-Google-Smtp-Source: APBJJlHhdB8Pmy4C63TnFuiw+Fg8ml6gqXXkudlDW7XmkU66eyXD69lowEw/CN+3QPpU3s07T2Pt4hlaz3SxyI0jTRc=
-X-Received: by 2002:ac8:7f82:0:b0:3ed:210b:e698 with SMTP id
- z2-20020ac87f82000000b003ed210be698mr33968qtj.7.1688156224033; Fri, 30 Jun
- 2023 13:17:04 -0700 (PDT)
+        bh=AYo6xwqgj8zLkrevSTQkiJtfEFqIVZl3iHwHCD3Vcos=;
+        b=GWAS/yOEknb7yhlnmVOXOxnkp8z3Mf/D6+wI7FgojSE/LtoMKvfdHlqsOCRZFjlRAr
+         nkpo9Nv6NZfYnPrXyKQXq9pntI0kfssb2KR86rkGYr5TWlTEYjvE5hQ3YyxxJpLr8Rwm
+         ZTWyivtXNqmL1Y7KiP6iz/tkK5atFPNsK1kExIM6nvQMxmf7HdGgwx455obPFVFzh4QH
+         KECjqRtb3srh0Q6yU9iWQeE+LZoYepYj7iXb71+uJQBOa6UhSw+gyJ6TGvpUA7mj/bwC
+         qWGGOljZAfvx0SbGNe53QmMWHsx++OmxC3XyD4ry5DvC9zX+25xvDKDZCx11hAQzNSZJ
+         SfTg==
+X-Gm-Message-State: ABy/qLbHbskNTWrw25BMhX2atG502RMi1pURlwMAYTTGX2XaFljj15pB
+        iRrhksnFNwo/GTguuH6qCpeQEYEViU6rNQP62WM=
+X-Google-Smtp-Source: APBJJlEqVAfrRJFE3aEHuiEdW7YLrymc6shDJInOjyjRUpwfSj+e96oScfQ0D3gvA5SF46wzO3Yk+hvA4mOmZnLUzbU=
+X-Received: by 2002:a25:d87:0:b0:c41:d9da:213c with SMTP id
+ 129-20020a250d87000000b00c41d9da213cmr2563067ybn.40.1688157682386; Fri, 30
+ Jun 2023 13:41:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230628102949.2598096-1-john.g.garry@oracle.com>
- <20230628102949.2598096-5-john.g.garry@oracle.com> <CAP-5=fXa24_LEiyni0Ncyfa5hKwC1GE6y-zi2u8M98M9SwHX+g@mail.gmail.com>
-In-Reply-To: <CAP-5=fXa24_LEiyni0Ncyfa5hKwC1GE6y-zi2u8M98M9SwHX+g@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 30 Jun 2023 13:16:52 -0700
-Message-ID: <CAP-5=fUs=u3PKYP3mVDdzNB8+=GAHaEXG3SGfWJpMELYYqO_hA@mail.gmail.com>
-Subject: Re: [PATCH RFC 4/9] perf jevents: Add sys_events_find_events_table()
-To:     John Garry <john.g.garry@oracle.com>
-Cc:     acme@kernel.org, namhyung@kernel.org, jolsa@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        renyu.zj@linux.alibaba.com, shangxiaojing@huawei.com,
-        zhangshaokun@hisilicon.com, qiangqing.zhang@nxp.com,
-        kjain@linux.ibm.com, kan.liang@linux.intel.com
+References: <20230628215954.1230048-1-namhyung@kernel.org> <CAHk-=whOLQsPiDJifHzfg+q-W4q=MXcbvzKLS4J4otOicbZqjA@mail.gmail.com>
+In-Reply-To: <CAHk-=whOLQsPiDJifHzfg+q-W4q=MXcbvzKLS4J4otOicbZqjA@mail.gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 30 Jun 2023 13:41:11 -0700
+Message-ID: <CAM9d7cgN8fOGwyUReec9mdfrts_y3qkNFo1931iW43D+3R2aRw@mail.gmail.com>
+Subject: Re: [GIT PULL] perf tools changes for v6.5
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 30, 2023 at 12:00=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> On Wed, Jun 28, 2023 at 3:30=E2=80=AFAM John Garry <john.g.garry@oracle.c=
-om> wrote:
-> >
-> > Add a function to get the events table associated with a metric table f=
-or
-> > struct pmu_sys_events.
-> >
-> > We could also use something like:
-> > struct pmu_sys_events *sys =3D container_of(metrics, struct pmu_sys_eve=
-nts,
-> >                                                 metric_table);
-> >
-> > to lookup struct pmu_sys_events, but that relies on the user always pas=
-sing
-> > a sys events metric struct pointer, so this way is safer, but slower.
->
-> If an event is specific to a particular PMU, shouldn't the metric name
-> the PMU with the event? For example:
->
-> MetricName: "IPC",
-> MetricExpr: "instructions / cycles",
->
-> Here instructions and cycles can wildcard match on BIG.little/hybrid
-> systems and so we get an IPC metric for each PMU - although, I suspect
-> this isn't currently quite working. We can also, and currently, do:
->
-> MetricName: "IPC",
-> MetricExpr: "cpu_atom@instructions@ / cpu_atom@cycles@",
-> ...
-> MetricName: "IPC",
-> MetricExpr: "cpu_core@instructions@ / cpu_core@cycles@",
->
-> The @ is used to avoid parsing confusion with / meaning divide. The
-> PMUs for the events are explicitly listed here. We could say the PMU
-> is implied but then it gets complex for uncore events, for metrics
-> that mix core and uncore events.
+Hi Linus,
 
-So looking at the later patches, they are making it so the PMU doesn't
-need to be specified, so I think it is the same issue as here. My
-thought was that the PMU would always be required for metrics like
-memory bandwidth per million instructions, ie >1 PMU. I know this
-makes the metrics longer, I've tried to avoid writing json metrics and
-have used Python to write them in my own work:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/pmu-events/metric.py?h=3Dperf-tools-next#n411
+On Fri, Jun 30, 2023 at 11:43 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Wed, 28 Jun 2023 at 15:00, Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Please consider pulling perf tool changes.  I'm doing this on behalf of
+> > Arnaldo as he's on vacation.  This is my first pull request and hope I
+> > didn't break anything. :)
+>
+> Things look normal, although I find your pgp key situation confusing.
+>
+> I looked up your gpg key from the kernel.org pgp key repo, but that's
+> apparently not the one you used for signing this.
+>
+> So I have two keys for you, and neither of them are then signed by
+> others (although that part is probably just the usual pgp mess with
+> signatures being dropped due to flooded bogus signatures, which has
+> made the whole pgp infrastructure be essentially close to useless).
+>
+> Anyway, I wish the pgp key situation would be better, but it's not an
+> actual problem.
+
+Sorry about that.  Unfortunately I lost my old key due to a problem
+in my backups.  So I had to create a new one and asked signing
+by others including Arnaldo and Jiri.  Probably it's a problem in
+the pgp system as you mentioned, I don't know enough about
+that though.
+
+
+>
+> HOWEVER.
+>
+> What _is_ a problem is that the end result doesn't build cleanly.
+>
+> The
+>
+>         if (list_empty(&pmus))
+>                 perf_pmu__scan(NULL);
+>
+>         ibs_pmu = perf_pmu__find("ibs_op");
+>
+> in the amd-ibs-via-core no longer works, and it seems that it should just be
+>
+>         ibs_pmu = perf_pmus__find("ibs_op");
+>
+> That's fine - I can do (and did) that merge resolution - and it's part
+> of my normal "merge and test build", but I'm slightly unhappy that I
+> wasn't told about this part.
+>
+> The actual data conflicts were trivial. But this was a semantic
+> conflict that was invisible to git, but showed up in build testing.
+>
+> And I *think* you should have known about it, because the conflict you
+> do talk about shows that
+>
+>  +perf-y += amd-ibs-via-core-pmu.o
+>
+> as part of the actual data conflicts.
+>
+> Anyway, I've resolved this, and it wasn't a *problem*, and I'm just a
+> bit unhappy that it took me by surprise.
+
+Sorry about the inconvenience.  I'll check this kind of
+problem more seriously next time and let you know.
 
 Thanks,
-Ian
-
-> Thanks,
-> Ian
->
->
-> > Signed-off-by: John Garry <john.g.garry@oracle.com>
-> > ---
-> >  tools/perf/pmu-events/empty-pmu-events.c |  6 ++++++
-> >  tools/perf/pmu-events/jevents.py         | 11 +++++++++++
-> >  tools/perf/pmu-events/pmu-events.h       |  3 +++
-> >  3 files changed, 20 insertions(+)
-> >
-> > diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-=
-events/empty-pmu-events.c
-> > index a630c617e879..ae431b6bdf91 100644
-> > --- a/tools/perf/pmu-events/empty-pmu-events.c
-> > +++ b/tools/perf/pmu-events/empty-pmu-events.c
-> > @@ -290,6 +290,12 @@ int pmu_metrics_table_for_each_metric(const struct=
- pmu_metrics_table *table, pmu
-> >         return 0;
-> >  }
-> >
-> > +const struct pmu_events_table *
-> > +sys_events_find_events_table(__maybe_unused const struct pmu_metrics_t=
-able *metrics)
-> > +{
-> > +       return NULL;
-> > +}
-> > +
-> >  const struct pmu_events_table *perf_pmu__find_events_table(struct perf=
-_pmu *pmu)
-> >  {
-> >         const struct pmu_events_table *table =3D NULL;
-> > diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/j=
-events.py
-> > index 80b569b8634b..947e8b1efa26 100755
-> > --- a/tools/perf/pmu-events/jevents.py
-> > +++ b/tools/perf/pmu-events/jevents.py
-> > @@ -786,6 +786,17 @@ int pmu_metrics_table_for_each_metric(const struct=
- pmu_metrics_table *table,
-> >          return 0;
-> >  }
-> >
-> > +const struct pmu_events_table *
-> > +sys_events_find_events_table(const struct pmu_metrics_table *metrics)
-> > +{
-> > +       for (const struct pmu_sys_events *tables =3D &pmu_sys_event_tab=
-les[0];
-> > +             tables->name; tables++) {
-> > +               if (&tables->metric_table =3D=3D metrics)
-> > +                       return &tables->event_table;
-> > +       }
-> > +       return NULL;
-> > +}
-> > +
-> >  const struct pmu_events_table *perf_pmu__find_events_table(struct perf=
-_pmu *pmu)
-> >  {
-> >          const struct pmu_events_table *table =3D NULL;
-> > diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events=
-/pmu-events.h
-> > index caf59f23cd64..a3642c08e39d 100644
-> > --- a/tools/perf/pmu-events/pmu-events.h
-> > +++ b/tools/perf/pmu-events/pmu-events.h
-> > @@ -77,6 +77,9 @@ typedef int (*pmu_metric_iter_fn)(const struct pmu_me=
-tric *pm,
-> >                                   const struct pmu_metrics_table *table=
-,
-> >                                   void *data);
-> >
-> > +const struct pmu_events_table *
-> > +sys_events_find_events_table(const struct pmu_metrics_table *metrics);
-> > +
-> >  int pmu_events_table_for_each_event(const struct pmu_events_table *tab=
-le, pmu_event_iter_fn fn,
-> >                                     void *data);
-> >  int pmu_metrics_table_for_each_metric(const struct pmu_metrics_table *=
-table, pmu_metric_iter_fn fn,
-> > --
-> > 2.35.3
-> >
+Namhyung
