@@ -2,54 +2,98 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF41EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Jun 2023 22:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 966EFEB64DD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jun 2023 05:34:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230181AbjF2WIo convert rfc822-to-8bit (ORCPT
+        id S232166AbjF3FeI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Jun 2023 18:08:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36428 "EHLO
+        Fri, 30 Jun 2023 01:34:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229632AbjF2WIo (ORCPT
+        with ESMTP id S231235AbjF3FeF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Jun 2023 18:08:44 -0400
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D25C71BDB;
-        Thu, 29 Jun 2023 15:08:42 -0700 (PDT)
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-c413d8224e3so54498276.0;
-        Thu, 29 Jun 2023 15:08:42 -0700 (PDT)
+        Fri, 30 Jun 2023 01:34:05 -0400
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AE8010F8;
+        Thu, 29 Jun 2023 22:34:04 -0700 (PDT)
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-bfe6ea01ff5so1371845276.3;
+        Thu, 29 Jun 2023 22:34:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688076522; x=1690668522;
+        d=1e100.net; s=20221208; t=1688103243; x=1690695243;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BL7VqxKomzdMLSFIfqy41Rb4lDArQ9pvzshCeviE3a8=;
-        b=UZ6KCznqMqhvOxapJloR2wyK9YymTc1inpfXEbQCP6g5rsSFZZQRQMxI5641PTHnEh
-         gP2EmG1ytNofPCbcBzf+slzTCroI6HEBeWwFtx09gPSGZImD72hYFt2kEsiePfMipq+1
-         WNS7px9FKlCP+I/daYoDnchPhXeqjm6JOuFIt3EzG994Z2usUJkCKU8Dy5qA1JSi/5jk
-         NvqgYTNL/L4+Xzo4Fmsb8y1PAe0lNMYReKHkFv/Sz+QF5YmE8LMKo7J0hO39gLbCxfCl
-         edQrNSxzNTeI0MpxywRCnyZ2Zr9aPSEdPUIAKnLf+JDrzp5qBEKeVsoFFQwr7244EEck
-         1JlQ==
-X-Gm-Message-State: ABy/qLYiMP8u46AQ/QDlzD/uKDRajvb66mYOVavOmJpxSCF4P7vMqVZq
-        eUrZnH+Fsvbt8WcL55JLhzaqZDNKuhMr13S8dGw=
-X-Google-Smtp-Source: APBJJlH+qevXON7QcPePSKwWTm7z+StA2xVdgCCACPBAmRctOn6Y0nq11V7P6TQiLjZFYqIBxkk7A5itAEW4yjTukQc=
-X-Received: by 2002:a25:d390:0:b0:c0b:7483:5ced with SMTP id
- e138-20020a25d390000000b00c0b74835cedmr1002412ybf.33.1688076521872; Thu, 29
- Jun 2023 15:08:41 -0700 (PDT)
+        bh=rqe4oW6egP6ZYOUhmx0yHzT4spsp8DeajtOy9Dxl0N0=;
+        b=LIl0qLBMoW2LcJe2pPURQ0ju/TOcC/ZDWK6A3oVTnmFWJS7gYfIC1bIOf1gArGxrxM
+         I1boPzYZz19N5jurvtUEsZMRl9AlekP1u5fqDuB95nUo4uhTt3NgshUtNu3KfRvwzo5k
+         rCkn2GPz/k93Of9GfOClAJMS3N5vv2B6eqJ0c3fYbGN42PK38YFAkqAJP8/kkthAga+s
+         U1s3ENOmaKhtVza2UVdZzhHmtC883/wN8Z3t4TZ6kPVzGDnduFiMHU/jII8VFmZ8ixFn
+         P8WkVY85ZdA7eJb99tEhNAjPervEYs0QXGjiLfb3/OEV3+Dv5RZYEzR4W/h2Ythp+374
+         LUTg==
+X-Gm-Message-State: ABy/qLZ+1tELI0GRK3KtASWIqhDTVq1zv15xBVimE0wYU6IodiN/UVGf
+        XMpKUz2j7WLP6GjxWts5bkvmrtp3Sh5+2+FN1ApXPUOEo1c=
+X-Google-Smtp-Source: APBJJlGsOWkMaxD3Bj5EXOi0ZRM8KsFOEr8Lg1uNKczc+6HZPSKDsYy2QxFxSi6Et+JGvnEpCG0zVQlZ9J+DNPB54vc=
+X-Received: by 2002:a25:3107:0:b0:c12:29ac:1d36 with SMTP id
+ x7-20020a253107000000b00c1229ac1d36mr1697430ybx.7.1688103242894; Thu, 29 Jun
+ 2023 22:34:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230628102949.2598096-1-john.g.garry@oracle.com>
-In-Reply-To: <20230628102949.2598096-1-john.g.garry@oracle.com>
+References: <20230628230935.1196180-1-sohil.mehta@intel.com> <08e273fc-49c5-dd09-1c9e-d85a080767f9@infradead.org>
+In-Reply-To: <08e273fc-49c5-dd09-1c9e-d85a080767f9@infradead.org>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 29 Jun 2023 15:08:30 -0700
-Message-ID: <CAM9d7ciBWjNHOfouNKSFy2q88Cs4-6F8EjGqGpFdwb6QTShaew@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/9] perf tool: sys event metric support re-write
-To:     John Garry <john.g.garry@oracle.com>
-Cc:     acme@kernel.org, irogers@google.com, jolsa@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        renyu.zj@linux.alibaba.com, shangxiaojing@huawei.com,
-        zhangshaokun@hisilicon.com, qiangqing.zhang@nxp.com,
-        kjain@linux.ibm.com, kan.liang@linux.intel.com
+Date:   Thu, 29 Jun 2023 22:33:51 -0700
+Message-ID: <CAM9d7ch0GtTUjhtbph5rmCDvRBAKjLCN+25mukn_QPv4bDsjGQ@mail.gmail.com>
+Subject: Re: [PATCH] syscalls: Cleanup references to sys_lookup_dcookie()
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Sohil Mehta <sohil.mehta@intel.com>, Arnd Bergmann <arnd@arndb.de>,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Sergei Trofimovich <slyich@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rohan McLure <rmclure@linux.ibm.com>,
+        Andreas Schwab <schwab@linux-m68k.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Brian Gerst <brgerst@gmail.com>, linux-alpha@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
@@ -58,71 +102,26 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hello,
 
-On Wed, Jun 28, 2023 at 3:30 AM John Garry <john.g.garry@oracle.com> wrote:
+On Wed, Jun 28, 2023 at 4:44 PM Randy Dunlap <rdunlap@infradead.org> wrote:
 >
-> The current sys event metric support has some issues, like:
-> - It is broken that we only match a metric based on PMU compat, but not
->   Unit as well, as reported by Jing Zhang <renyu.zj@linux.alibaba.com>
-> - No real self-test support
-> - Not able to use resolvable metrics
-> - Need to specify event PMU Unit and Compat for metric, which should not
->   be necessary
 >
-> This series changes sys event metric support to match metrics based on
-> evaluating each term in the metric expression and then ensuring it
-> matches an event from the same associated pmu_sys_events table.
 >
-> Why an RFC?
-> - Even though main motivation here was to improve self-test support, that
->   has proved quite tricky and nothing has been added yet.
->   My desire is to test the feature that we match metrics for a specific
->   SoC when PMUs with matching HW identifier are present. So I would hope
->   to add sys metrics for many SoCs in ../pmu-events/arch/test/
-> - I still need to suppress logs from metricgroup_sys_metric_supported()
->   indirect calls to functions like parse_events_multi_pmu_add(),
->   generating logs like
->   "smmuv3_pmcg.wr_sent_sp -> smmuv3_pmcg_50/event=0x86/" - we should only
->   see those logs for when really adding the metric in calling add_metric()
+> On 6/28/23 16:09, Sohil Mehta wrote:
+> > commit 'be65de6b03aa ("fs: Remove dcookies support")' removed the
+> > syscall definition for lookup_dcookie.  However, syscall tables still
+> > point to the old sys_lookup_dcookie() definition. Update syscall tables
+> > of all architectures to directly point to sys_ni_syscall() instead.
+> >
+> > Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
 >
-> Based on 82fe2e45cdb0 (acme/tmp.perf/core, acme/tmp.perf-tools-next, acme/perf/core, acme/perf-tools-next) perf pmus: Check if we can encode the PMU number in perf_event_attr.type
+> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
 
-We moved to new repos from acme to perf/perf-tools and perf/perf-tools-next.
-You'd better rebase the series onto perf-tools-next (branch name is the same).
+I was about to say that it'd be nice if you split the tools/perf part
+since it can support old kernels.  But if the syscall is only used for
+oprofile then probably perf doesn't need to care about it. :)
+
+For the perf part,
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
-
-
->
-> John Garry (9):
->   perf metrics: Delete metricgroup_add_iter_data.table
->   perf metrics: Don't iter sys metrics if we already found a CPU match
->   perf metrics: Pass cpu and sys tables to metricgroup__add_metric()
->   perf jevents: Add sys_events_find_events_table()
->   perf pmu: Refactor pmu_add_sys_aliases_iter_fn()
->   perf metrics: Add metricgroup_sys_metric_supported()
->   perf metrics: Test metric match in metricgroup__sys_event_iter()
->   perf metrics: Stop metricgroup__add_metric_sys_event_iter if already
->     matched
->   perf vendor events arm64: Remove unnecessary metric Unit and Compat
->     specifiers
->
->  .../arm64/freescale/imx8mm/sys/metrics.json   |   4 -
->  .../arm64/freescale/imx8mn/sys/metrics.json   |   4 -
->  .../arm64/freescale/imx8mq/sys/metrics.json   |   4 -
->  .../arm64/hisilicon/hip09/sys/uncore-cpa.json |   4 -
->  tools/perf/pmu-events/empty-pmu-events.c      |   6 +
->  tools/perf/pmu-events/jevents.py              |  11 ++
->  tools/perf/pmu-events/pmu-events.h            |   3 +
->  tools/perf/tests/expand-cgroup.c              |   2 +-
->  tools/perf/tests/parse-metric.c               |   2 +-
->  tools/perf/tests/pmu-events.c                 |  29 ++-
->  tools/perf/util/metricgroup.c                 | 182 +++++++++++++++---
->  tools/perf/util/metricgroup.h                 |   3 +-
->  tools/perf/util/pmu.c                         |  20 +-
->  tools/perf/util/pmu.h                         |   2 +
->  14 files changed, 220 insertions(+), 56 deletions(-)
->
-> --
-> 2.35.3
->
