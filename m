@@ -2,97 +2,95 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DB1EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jun 2023 08:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D7FEB64D7
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jun 2023 08:05:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232006AbjF3IAg (ORCPT
+        id S232096AbjF3IFJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Jun 2023 04:00:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59136 "EHLO
+        Fri, 30 Jun 2023 04:05:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229742AbjF3IAe (ORCPT
+        with ESMTP id S232381AbjF3IFA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Jun 2023 04:00:34 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F39751713;
-        Fri, 30 Jun 2023 01:00:32 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id ffacd0b85a97d-311099fac92so1884303f8f.0;
-        Fri, 30 Jun 2023 01:00:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688112031; x=1690704031;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=A8FnmCCz7avUcOjil/VxXP8BWdBesWE35fMFLOG+zfM=;
-        b=Te325GePj1V1DJnW6/YqZe1cLLVmY/Hl2Ra5DOMFH+AjsljkDe4GLJAt4HetxmZHMG
-         6hs/f1VsVvrIYwzh8woH4s4CLvmCXQonD9nEtonuErVhrIAynjnJrDH6zV2Qa+aP3Tsx
-         6bDH4fQxifehCTpjAGFMiuL0DExhIB/L/j2F2Kn429qHTD4SE/DYv/7qcUW+p/pl7skM
-         7X010/U3/9T9pHV93kdyQj+4UuIaBDnrALr8p+CxkYL5xhYxyY1Uyj/ST2WjikErWJnM
-         7raHWYrjWxcvodxUyZD2b+L543eQsnLFK6duFl5QjbblakfIt6+voogdwemA6DxlPs6W
-         gv1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688112031; x=1690704031;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=A8FnmCCz7avUcOjil/VxXP8BWdBesWE35fMFLOG+zfM=;
-        b=QBQAvgT1e1dr3DGF+3V5ID9RFceSOtsGiyCzOoHfAsjkw6Jzk37jlL6RI5mh0qSjNq
-         eaP6p9kYr1b704KEAHa8pmXO4oeG8l/25kUBzq9nANx3nq6Fk8Bm/by9pDVD0IlKO1Ww
-         JGj6Ivf2WHjMUUH7Bjixb5t3WeXXjgbye5jjpca4FXn8NZsfta7pYstQ7hi/pGYaf6IG
-         jecrY8Pfbwj9O6tGd/NhyIl1kz2/WFlkdCwlpPuJBdjjWE1GKFjIAPZmTdoCNsES/ofr
-         aApClYAp/ekIAvFti/bE+8fsMzQVPdS8HgpkAQhgu+2qyCwXtkWTMZPmFIYFthuJS3w1
-         LaYA==
-X-Gm-Message-State: ABy/qLapLlKM9cTZAahy1bg5WaO+B333jWeYk07OW3Z8ui6MX1I9H0s2
-        NpoUlvREgYwJJEqGlfwWhrE=
-X-Google-Smtp-Source: APBJJlHceyknYZd/od2MM2r7dprrhRcaPC788isslwGOi7QoNWp5Krq7bfc6DIEfs4QylAsf1IV+0w==
-X-Received: by 2002:adf:fd43:0:b0:313:f18d:1f2c with SMTP id h3-20020adffd43000000b00313f18d1f2cmr1640240wrs.38.1688112031114;
-        Fri, 30 Jun 2023 01:00:31 -0700 (PDT)
-Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.gmail.com with ESMTPSA id t15-20020a0560001a4f00b00313f676832bsm11422388wry.93.2023.06.30.01.00.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jun 2023 01:00:30 -0700 (PDT)
-From:   Colin Ian King <colin.i.king@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Fri, 30 Jun 2023 04:05:00 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 442DA30DF;
+        Fri, 30 Jun 2023 01:04:58 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E64F8C14;
+        Fri, 30 Jun 2023 01:05:41 -0700 (PDT)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 77CA73F73F;
+        Fri, 30 Jun 2023 01:04:56 -0700 (PDT)
+Message-ID: <36767548-fbc3-9c4b-848c-d1d3102e442a@arm.com>
+Date:   Fri, 30 Jun 2023 09:04:55 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v1 0/1] perf tools: Add a place to put kernel config
+ fragments for test runs
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-perf-users@vger.kernel.org, acme@kernel.org,
+        masahiroy@kernel.org, leo.yan@linaro.org, broonie@kernel.org,
+        Aishwarya.TCV@arm.com, Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] perf/benchmark: Fix spelling mistake "synchronious" -> "synchronous"
-Date:   Fri, 30 Jun 2023 09:00:29 +0100
-Message-Id: <20230630080029.15614-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.39.2
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+        linux-kernel@vger.kernel.org
+References: <20230628105303.4053478-1-james.clark@arm.com>
+ <CAM9d7cgo97jJTTTV7F2kJ=sF9MBoRwegN4r0dWotbUD=Nr1_cQ@mail.gmail.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <CAM9d7cgo97jJTTTV7F2kJ=sF9MBoRwegN4r0dWotbUD=Nr1_cQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-There is a spelling mistake in an option description. Fix it.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- tools/perf/bench/sched-seccomp-notify.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/bench/sched-seccomp-notify.c b/tools/perf/bench/sched-seccomp-notify.c
-index eac4ef60090f..2e8205c61141 100644
---- a/tools/perf/bench/sched-seccomp-notify.c
-+++ b/tools/perf/bench/sched-seccomp-notify.c
-@@ -33,7 +33,7 @@ static bool sync_mode;
- static const struct option options[] = {
- 	OPT_U64('l', "loop",	&loops,		"Specify number of loops"),
- 	OPT_BOOLEAN('s', "sync-mode", &sync_mode,
--		    "Enable the synchronious mode for seccomp notifications"),
-+		    "Enable the synchronous mode for seccomp notifications"),
- 	OPT_END()
- };
- 
--- 
-2.39.2
+On 29/06/2023 23:03, Namhyung Kim wrote:
+> Hi James,
+> 
+> On Wed, Jun 28, 2023 at 3:53 AM James Clark <james.clark@arm.com> wrote:
+>>
+>> Changes since RFC:
+>>
+>>  * Changed arch filename convention to use the ARCH= build time values
+>>    instead of uname
+>>
+>> It seems like there were no objections on the RFC, apart from maybe
+>> changing the perf tests to run as a kself test. But that's probably not
+>> going to happen for a while, if ever, and these fragments can always
+>> be moved in that case.
+> 
+> I missed the RFC, sorry.  Could you please add a link for that?
+> 
+> Thanks,
+> Namhyung
 
+Yep, it's here:
+https://lore.kernel.org/lkml/d02cce4a-47b1-a776-0d3a-a6a7c9a4d8fd@arm.com/T/
+
+> 
+> 
+>>
+>> James Clark (1):
+>>   perf tools: Add a place to put kernel config fragments for test runs
+>>
+>>  tools/perf/tests/config-fragments/README |  7 +++++++
+>>  tools/perf/tests/config-fragments/arm64  |  1 +
+>>  tools/perf/tests/config-fragments/config | 11 +++++++++++
+>>  3 files changed, 19 insertions(+)
+>>  create mode 100644 tools/perf/tests/config-fragments/README
+>>  create mode 100644 tools/perf/tests/config-fragments/arm64
+>>  create mode 100644 tools/perf/tests/config-fragments/config
+>>
+>>
+>> base-commit: ad5f604e186ac08d12c401e34ea96c09c38ddbc5
+>> --
+>> 2.34.1
+>>
