@@ -2,119 +2,233 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1BAEB64D7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jun 2023 08:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07727EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jun 2023 08:53:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232705AbjF3Imr (ORCPT
+        id S232637AbjF3IxD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Jun 2023 04:42:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47324 "EHLO
+        Fri, 30 Jun 2023 04:53:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232739AbjF3ImT (ORCPT
+        with ESMTP id S232628AbjF3IxB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Jun 2023 04:42:19 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C4BF3C0D
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jun 2023 01:41:55 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-4fb73ba3b5dso2627088e87.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jun 2023 01:41:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20221208.gappssmtp.com; s=20221208; t=1688114513; x=1690706513;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uDd0P6Z6Y37kRPaqqHaNAC3kQrjxk6Pu8HaK2zooeKg=;
-        b=Y41VrW8/WSTU5UZ0jha3wwL0Ej0Tqd3A2qkgrwAyZodUC/Uz8mWxFXPieMXCL9Qgkc
-         aCxnf9L5pPkNT/eeVpj05gNJZy/aSu0i+l4K1alIFaVSt15uuOkO1E6tqT2Jw85snBkt
-         eBMVD67kXwSAZmYJxN6xoMJp0H+pOyoW3QN4+hUahcRJSus8PGYrRNm9+d7On6kDNC7b
-         g3jjB7S7COhraUHuWtlOaXR0UlBpzLL2bWINQ2J4KfkEAXDJXOOk2OggifnX6rcvyHeG
-         nXSybsUY3tIMMztv3/UeobmrRZ0vqFQvg+NAjIoAuQfRago5a4TDxH3y3gIH4MfF24+s
-         PliA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688114513; x=1690706513;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uDd0P6Z6Y37kRPaqqHaNAC3kQrjxk6Pu8HaK2zooeKg=;
-        b=aR/Bk8tu0mx1kKumt1FaCmNDTvsqiXu2/vFKEZgPCqd/PDULV5+U8iTXCQ9griBjLA
-         CRrxoAq9B33pgmXymZVRvmO5fTnr0luykdagSeub1nZcaOC//lwszyDxXlnGlHUlmgMM
-         25d4o4QBN5WBpyVkt3RjMnCwSq5O06GRRazJhf+AhH2O6yDpr+rkZ2bedwhkYUob1wgm
-         +6NIHZsLCz47mG7bGhFyfiTU6BgorD59dKPDLIVG61gyupMm7WWj4Gh+ut9p4NyKg0BP
-         seIkbCXMrfaBImb2L+O5nc8g1DxdRDjxSQUqUVS4VSeEiVsiK9xcOTY0vi/HleowCdmW
-         sEkA==
-X-Gm-Message-State: ABy/qLYiA23gIqrt3z7VEO2mtR/s4gC+F1VFu0b9CmIf+eNOzUpZoPwp
-        1KD/p0pH1IsVqc7T8mLbc4uNsg==
-X-Google-Smtp-Source: APBJJlH7485mFBkMkfiINnyjXjrffdesyhHF/v8B35gqPVeTtnbEfcY+mPVgYOVbdZDlPoNQQNysmg==
-X-Received: by 2002:a19:8c19:0:b0:4f1:4cdc:ec03 with SMTP id o25-20020a198c19000000b004f14cdcec03mr1476845lfd.18.1688114513557;
-        Fri, 30 Jun 2023 01:41:53 -0700 (PDT)
-Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id v11-20020adff68b000000b0031424950a99sm649850wrp.81.2023.06.30.01.41.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jun 2023 01:41:53 -0700 (PDT)
-From:   Alexandre Ghiti <alexghiti@rivosinc.com>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <atishp@atishpatra.org>,
-        Anup Patel <anup@brainfault.org>,
-        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-        Andrew Jones <ajones@ventanamicro.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v3 10/10] perf: tests: Adapt mmap-basic.c for riscv
-Date:   Fri, 30 Jun 2023 10:30:13 +0200
-Message-Id: <20230630083013.102334-11-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230630083013.102334-1-alexghiti@rivosinc.com>
-References: <20230630083013.102334-1-alexghiti@rivosinc.com>
+        Fri, 30 Jun 2023 04:53:01 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2053.outbound.protection.outlook.com [40.107.94.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C23BF3596;
+        Fri, 30 Jun 2023 01:52:58 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GDTksAn/QzgLE7yCGAM6HePJ2j+MSHB04gAdLtdhdbhjaW5FjLA0wANU2hpy/dw3CZqDQISTfuGN2mMcIewEQYT6LcZn2UA1xvLyvC9plY9MIxRrgirr8thpaLvrG8T8A5GSiEa/T4jU8rVrBZYKLSS+2PvkWh2HVhUswCoF3KXXvNVgCQxUbm9pESzcflclgO0Pai70N2Uxdh4YnmkAqWPBABTxX2qNtCbAeyKbu8TsVwShsyXWm4IzEfcOWvjDjcFfEEEVXsUY3523S2o1/i8CaGk+ulFDPRFrO6ySatXzxUSeB8Lbb17L7dZFwMZ8BE8QwKih9JabxJqYP0vUDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tWAn0NDBM78v/cFJ1AHQxi6rMNtfCkoxW+BsQTE+soQ=;
+ b=goCI8viKUfs3GjrhBLysfq3Urk28ugu1q63TMn2tL/ID52O/ZiOPQh6HS1RwX4FjZUyf3WrJfwez5p16YJ/WH4JZO87OzEWPZ/dqT9oEI70YduCkm6tprz7I76Op4WxxlBNpKS9NOvzOwC7cYgbLW0H8OB0D7wOeQsimcbWoWezfzPgaB0UJOFKgT94HmXy5wuYsb2qM/nbvMibBljTBZXDZ6mBNJ5zzw2GETxWgov9knoBpegI8KEV/Vh6N74X5d6isyF/i14Tga5Nb7AjUAE39rO2qe1mcskaSAQK726GhEi/dUYcbOQJScG1k52SiqvJbXkwZMxJig+XpfVvtWg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tWAn0NDBM78v/cFJ1AHQxi6rMNtfCkoxW+BsQTE+soQ=;
+ b=xkpXpkhMmWPTPkWeXupw8w6KfEDo2SVItocGA81UQLslVKUTqR0l14929eXajytrYQUef98n2GRcmzrAqPVCd9XcAZuyyQ6G13rZVNRIT+f677XxWfkYjV4D4WQGmntRPt1RGc2H/Fia6noPowcc22qOS6oo4RT09VVl2USjKwg=
+Received: from BN9PR03CA0674.namprd03.prod.outlook.com (2603:10b6:408:10e::19)
+ by PH8PR12MB6676.namprd12.prod.outlook.com (2603:10b6:510:1c3::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.15; Fri, 30 Jun
+ 2023 08:52:56 +0000
+Received: from BN8NAM11FT092.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:10e:cafe::44) by BN9PR03CA0674.outlook.office365.com
+ (2603:10b6:408:10e::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.22 via Frontend
+ Transport; Fri, 30 Jun 2023 08:52:55 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT092.mail.protection.outlook.com (10.13.176.180) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6500.49 via Frontend Transport; Fri, 30 Jun 2023 08:52:55 +0000
+Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Fri, 30 Jun
+ 2023 03:52:48 -0500
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+To:     <acme@kernel.org>
+CC:     <ravi.bangoria@amd.com>, <peterz@infradead.org>,
+        <irogers@google.com>, <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sandipan.das@amd.com>,
+        <ananth.narayan@amd.com>, <santosh.shukla@amd.com>
+Subject: [PATCH v3] perf evsel amd: Fix IBS error message
+Date:   Fri, 30 Jun 2023 14:22:30 +0530
+Message-ID: <20230630085230.437-1-ravi.bangoria@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT092:EE_|PH8PR12MB6676:EE_
+X-MS-Office365-Filtering-Correlation-Id: d1ec3f1a-a4ec-4c46-b912-08db79476559
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TXK+kHc9ClsO8tCFPhUHkLQ8ZlsdO+GPIrnmpd7x8AV76CjAWZsTiLsfxaBim/sV7RQomDqUmVRwob3A7ZtLGquMnV//3hIrLpNXusMrvLfYjSknTEkGQzdIZStPG6ewVjj91TiimjMYnsUG2QFQZrg2u0KIMxmQnwb1ZhbNGPKSBRDELzyJui+z71BRqbVZ2+6/qjNUZt6joNJaUKHEK/QCVom1KiBfPPEmmf0+zjLgrlCEdh3pgjTAu8i5i2Xvw6pXDDwgVqq9jbWEHgFPRdyB0WbKVaoJFBApc+3AN0d3Q3Enreqwnex2KiZcM5MwAAdJuryyZ8jZ9yeDG8+seW2iokPRrgYINufl1LqtjtB8SFk3OMonJ4eWW2NO7h36LuKn1FkoB7y95l22wRrGxfZ45AXXjBbCD0XFMGQ8ioqgeg6VCfXa86w5aOhmSFT78JIbuduvdY2Ggdofj72eJUgTDXTA9mfhYELZbITdHpzLCOTn7surIG+mqxcr7oJZAQPdwySsqRoRrBVY2eZklAzE8xNnnMfiS1Bmz2NTW2bK8Q4idhpTNy4CXS8bJKedFrkLgW0eQrgM1inW63heWmzEutfUEjMr6GOroI1cTOolYOs8cOBpIUK1nKAX1fdszuCDDFZXU/X1/+76WysOJ2VtJ2Nn8xgIUUCRbzMRngVVLZZTI5nziTSyY19o/KS9jJ19xGZmZ0JVm2IIV0gy8URcmuptzDaTGgxJhYWQUzX/IAvgfx2kLDibzj9G3qjLQhPOxq7h2yXM8QbNcFwA6cmC3Oc8rZISpJl5C1IgCy8=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(346002)(39860400002)(396003)(376002)(136003)(451199021)(40470700004)(46966006)(36840700001)(44832011)(5660300002)(6916009)(70586007)(70206006)(316002)(36756003)(2906002)(4326008)(8676002)(15650500001)(8936002)(478600001)(40460700003)(36860700001)(966005)(40480700001)(41300700001)(86362001)(54906003)(82310400005)(7696005)(186003)(1076003)(47076005)(336012)(426003)(26005)(82740400003)(6666004)(16526019)(356005)(2616005)(81166007)(83380400001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2023 08:52:55.2606
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1ec3f1a-a4ec-4c46-b912-08db79476559
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT092.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6676
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-riscv now supports mmaping hardware counters to userspace so adapt the test
-to run on this architecture.
+AMD IBS can do per-process profiling[1] and is no longer restricted to
+per-cpu or systemwide only. Remove stale error message. Also, checking
+just exclude_kernel is not sufficient since IBS does not support any
+privilege filters. So include all exclude_* checks. And finally, move
+these checks under tools/perf/arch/x86/ from generic code.
 
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+Before:
+  $ sudo ./perf record -e ibs_op//k -C 0
+  Error:
+  AMD IBS may only be available in system-wide/per-cpu mode.  Try
+  using -a, or -C and workload affinity
+
+After:
+  $ sudo ./perf record -e ibs_op//k -C 0
+  Error:
+  AMD IBS doesn't support privilege filtering. Try again without
+  the privilege modifiers (like 'k') at the end.
+
+[1] https://git.kernel.org/torvalds/c/30093056f7b2
+
+Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 ---
- tools/perf/tests/mmap-basic.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v2: https://lore.kernel.org/r/20230626103958.834-1-ravi.bangoria@amd.com
+v2->v3:
+  - Make error message more perf tool user friendly.
 
-diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
-index e68ca6229756..f5075ca774f8 100644
---- a/tools/perf/tests/mmap-basic.c
-+++ b/tools/perf/tests/mmap-basic.c
-@@ -284,7 +284,7 @@ static struct test_case tests__basic_mmap[] = {
- 			 "permissions"),
- 	TEST_CASE_REASON("User space counter reading of instructions",
- 			 mmap_user_read_instr,
--#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
-+#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || __riscv_xlen == 64
- 			 "permissions"
- #else
- 			 "unsupported"
-@@ -292,7 +292,7 @@ static struct test_case tests__basic_mmap[] = {
- 		),
- 	TEST_CASE_REASON("User space counter reading of cycles",
- 			 mmap_user_read_cycles,
--#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
-+#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || __riscv_xlen == 64
- 			 "permissions"
- #else
- 			 "unsupported"
+ tools/perf/arch/x86/util/evsel.c | 20 ++++++++++++++++++++
+ tools/perf/util/evsel.c          | 30 +++++++++---------------------
+ tools/perf/util/evsel.h          |  1 +
+ 3 files changed, 30 insertions(+), 21 deletions(-)
+
+diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
+index 512c2d885d24..af454fd07887 100644
+--- a/tools/perf/arch/x86/util/evsel.c
++++ b/tools/perf/arch/x86/util/evsel.c
+@@ -102,3 +102,23 @@ void arch__post_evsel_config(struct evsel *evsel, struct perf_event_attr *attr)
+ 		}
+ 	}
+ }
++
++int arch_evsel__open_strerror(struct evsel *evsel, char *msg, size_t size)
++{
++	if (!x86__is_amd_cpu())
++		return 0;
++
++	if (!evsel->core.attr.precise_ip &&
++	    !(evsel->pmu_name && !strncmp(evsel->pmu_name, "ibs", 3)))
++		return 0;
++
++	/* More verbose IBS errors. */
++	if (evsel->core.attr.exclude_kernel || evsel->core.attr.exclude_user ||
++	    evsel->core.attr.exclude_hv || evsel->core.attr.exclude_idle ||
++	    evsel->core.attr.exclude_host || evsel->core.attr.exclude_guest) {
++		return scnprintf(msg, size, "AMD IBS doesn't support privilege filtering. Try "
++				 "again without the privilege modifiers (like 'k') at the end.");
++	}
++
++	return 0;
++}
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index f607b5bddc76..762e2b2634a5 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2924,25 +2924,19 @@ static bool find_process(const char *name)
+ 	return ret ? false : true;
+ }
+ 
+-static bool is_amd(const char *arch, const char *cpuid)
++int __weak arch_evsel__open_strerror(struct evsel *evsel __maybe_unused,
++				     char *msg __maybe_unused,
++				     size_t size __maybe_unused)
+ {
+-	return arch && !strcmp("x86", arch) && cpuid && strstarts(cpuid, "AuthenticAMD");
+-}
+-
+-static bool is_amd_ibs(struct evsel *evsel)
+-{
+-	return evsel->core.attr.precise_ip
+-	    || (evsel->pmu_name && !strncmp(evsel->pmu_name, "ibs", 3));
++	return 0;
+ }
+ 
+ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+ 			 int err, char *msg, size_t size)
+ {
+-	struct perf_env *env = evsel__env(evsel);
+-	const char *arch = perf_env__arch(env);
+-	const char *cpuid = perf_env__cpuid(env);
+ 	char sbuf[STRERR_BUFSIZE];
+ 	int printed = 0, enforced = 0;
++	int ret;
+ 
+ 	switch (err) {
+ 	case EPERM:
+@@ -3044,16 +3038,6 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+ 			return scnprintf(msg, size,
+ 	"Invalid event (%s) in per-thread mode, enable system wide with '-a'.",
+ 					evsel__name(evsel));
+-		if (is_amd(arch, cpuid)) {
+-			if (is_amd_ibs(evsel)) {
+-				if (evsel->core.attr.exclude_kernel)
+-					return scnprintf(msg, size,
+-	"AMD IBS can't exclude kernel events.  Try running at a higher privilege level.");
+-				if (!evsel->core.system_wide)
+-					return scnprintf(msg, size,
+-	"AMD IBS may only be available in system-wide/per-cpu mode.  Try using -a, or -C and workload affinity");
+-			}
+-		}
+ 
+ 		break;
+ 	case ENODATA:
+@@ -3063,6 +3047,10 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+ 		break;
+ 	}
+ 
++	ret = arch_evsel__open_strerror(evsel, msg, size);
++	if (ret)
++		return ret;
++
+ 	return scnprintf(msg, size,
+ 	"The sys_perf_event_open() syscall returned with %d (%s) for event (%s).\n"
+ 	"/bin/dmesg | grep -i perf may provide additional information.\n",
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 9f06d6cd5379..848534ec74fa 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -311,6 +311,7 @@ void evsel__set_sample_id(struct evsel *evsel, bool use_sample_identifier);
+ 
+ void arch_evsel__set_sample_weight(struct evsel *evsel);
+ void arch__post_evsel_config(struct evsel *evsel, struct perf_event_attr *attr);
++int arch_evsel__open_strerror(struct evsel *evsel, char *msg, size_t size);
+ 
+ int evsel__set_filter(struct evsel *evsel, const char *filter);
+ int evsel__append_tp_filter(struct evsel *evsel, const char *filter);
 -- 
-2.39.2
+2.41.0
 
