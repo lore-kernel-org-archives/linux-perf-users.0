@@ -2,127 +2,125 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 053DCEB64DA
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jun 2023 20:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B2BEB64DA
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jun 2023 21:02:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230525AbjF3Ula convert rfc822-to-8bit (ORCPT
+        id S231508AbjF3VCy convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Jun 2023 16:41:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51576 "EHLO
+        Fri, 30 Jun 2023 17:02:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232242AbjF3UlY (ORCPT
+        with ESMTP id S232375AbjF3VCx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Jun 2023 16:41:24 -0400
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F23A3AA4;
-        Fri, 30 Jun 2023 13:41:23 -0700 (PDT)
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-bacf685150cso2240639276.3;
-        Fri, 30 Jun 2023 13:41:23 -0700 (PDT)
+        Fri, 30 Jun 2023 17:02:53 -0400
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AAC93AAF;
+        Fri, 30 Jun 2023 14:02:52 -0700 (PDT)
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-bfee66a5db6so2180424276.0;
+        Fri, 30 Jun 2023 14:02:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688157682; x=1690749682;
+        d=1e100.net; s=20221208; t=1688158971; x=1690750971;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AYo6xwqgj8zLkrevSTQkiJtfEFqIVZl3iHwHCD3Vcos=;
-        b=GWAS/yOEknb7yhlnmVOXOxnkp8z3Mf/D6+wI7FgojSE/LtoMKvfdHlqsOCRZFjlRAr
-         nkpo9Nv6NZfYnPrXyKQXq9pntI0kfssb2KR86rkGYr5TWlTEYjvE5hQ3YyxxJpLr8Rwm
-         ZTWyivtXNqmL1Y7KiP6iz/tkK5atFPNsK1kExIM6nvQMxmf7HdGgwx455obPFVFzh4QH
-         KECjqRtb3srh0Q6yU9iWQeE+LZoYepYj7iXb71+uJQBOa6UhSw+gyJ6TGvpUA7mj/bwC
-         qWGGOljZAfvx0SbGNe53QmMWHsx++OmxC3XyD4ry5DvC9zX+25xvDKDZCx11hAQzNSZJ
-         SfTg==
-X-Gm-Message-State: ABy/qLbHbskNTWrw25BMhX2atG502RMi1pURlwMAYTTGX2XaFljj15pB
-        iRrhksnFNwo/GTguuH6qCpeQEYEViU6rNQP62WM=
-X-Google-Smtp-Source: APBJJlEqVAfrRJFE3aEHuiEdW7YLrymc6shDJInOjyjRUpwfSj+e96oScfQ0D3gvA5SF46wzO3Yk+hvA4mOmZnLUzbU=
-X-Received: by 2002:a25:d87:0:b0:c41:d9da:213c with SMTP id
- 129-20020a250d87000000b00c41d9da213cmr2563067ybn.40.1688157682386; Fri, 30
- Jun 2023 13:41:22 -0700 (PDT)
+        bh=QaJR3XXXCrhbjYtKCZ1X+dPieH6DxQBprcivRtbfQUY=;
+        b=gVTRCWp6g1EyckUqz/MVo9qU+keBJqzfj6cYAeeomlMHxJ1wm/34Crkxjxsu2g6Suz
+         BQ6dlDvBui2tz16xHg5KtCwjru95Ui5KMbn7o2fXs/h7gxZFHt8+91Erotfg1zn9T38G
+         Jm2LV0q7FI6RLn7qpfJpsKOpOC8sU/VUIi6YrWGrAMxOOtF2BiEh6P+KGtRP/ZJ0QB3z
+         tdBqAdmpDGTF68AnXIYxAnfyAMF9JQkoeSF5zlfAnzN5LCyMKRLr/gKQ6IqfLT0D+gW8
+         PC5AKYZ4qC66LklWxarFhW8LSFiGiTXp8ZHY8yyV+MjpsqF7o6ZCyGyZboXPaGj9OrcE
+         iKBg==
+X-Gm-Message-State: ABy/qLZbCGev5ka5qRJ1f/HOS2+Zl0pLIXA4T2F9TuvsHgag/dneWncu
+        ufG5l01kcVHYWY2aEPuQ0iY/3ClCLaUZQUNNmt8=
+X-Google-Smtp-Source: APBJJlFUh7jF98u3G1CNzoNLEJHzfbIQW3ootq9oZwxEGAIzPEvLBI5WrxqwcVcpo1/Qaq1hhd6xn6HyeUrqFHcrYYk=
+X-Received: by 2002:a25:26c4:0:b0:c40:f090:98bf with SMTP id
+ m187-20020a2526c4000000b00c40f09098bfmr3019764ybm.28.1688158971230; Fri, 30
+ Jun 2023 14:02:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230628215954.1230048-1-namhyung@kernel.org> <CAHk-=whOLQsPiDJifHzfg+q-W4q=MXcbvzKLS4J4otOicbZqjA@mail.gmail.com>
-In-Reply-To: <CAHk-=whOLQsPiDJifHzfg+q-W4q=MXcbvzKLS4J4otOicbZqjA@mail.gmail.com>
+References: <20230626161059.324046-1-james.clark@arm.com> <20230626161059.324046-3-james.clark@arm.com>
+ <ZJonE3ZZ2cBUq0U8@google.com> <CAP-5=fX+FDAkFoMhQY27_+fiRp_UDruP8qWTdjvqU5-uE0SdWA@mail.gmail.com>
+ <CAM9d7cj4xr6oTDKvxbNTVUewyZFTBchQS36KC0nN4i4HjCsq5w@mail.gmail.com>
+ <CAP-5=fUTzn06DM7o-1qBx7Tauo2Q2ACHmYcvwTmrTOJpzS2=oQ@mail.gmail.com>
+ <d5618d0b-1441-0c04-4b09-768bfe7b7ee7@arm.com> <CAM9d7cjx2zinztBYiYaU6iqKzuV3vcJA6wtY71aicFbr5sy9zA@mail.gmail.com>
+In-Reply-To: <CAM9d7cjx2zinztBYiYaU6iqKzuV3vcJA6wtY71aicFbr5sy9zA@mail.gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 30 Jun 2023 13:41:11 -0700
-Message-ID: <CAM9d7cgN8fOGwyUReec9mdfrts_y3qkNFo1931iW43D+3R2aRw@mail.gmail.com>
-Subject: Re: [GIT PULL] perf tools changes for v6.5
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+Date:   Fri, 30 Jun 2023 14:02:38 -0700
+Message-ID: <CAM9d7chKj4pnhtuuA6wN6TBLUYq_9bTxvr6dRT7CKW3CfQ1Avg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf report: Don't add to histogram when there is no
+ thread found
+To:     James Clark <james.clark@arm.com>
+Cc:     Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Linus,
-
-On Fri, Jun 30, 2023 at 11:43 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Wed, Jun 28, 2023 at 1:06 PM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> On Wed, 28 Jun 2023 at 15:00, Namhyung Kim <namhyung@kernel.org> wrote:
+> On Wed, Jun 28, 2023 at 3:34 AM James Clark <james.clark@arm.com> wrote:
 > >
-> > Please consider pulling perf tool changes.  I'm doing this on behalf of
-> > Arnaldo as he's on vacation.  This is my first pull request and hope I
-> > didn't break anything. :)
+> >
+> >
+> > On 27/06/2023 18:19, Ian Rogers wrote:
+> > > On Tue, Jun 27, 2023 at 9:58 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> > >>
+> > >> On Tue, Jun 27, 2023 at 9:43 AM Ian Rogers <irogers@google.com> wrote:
+> > >>>
+> > >>> On Mon, Jun 26, 2023 at 5:02 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > >>>>
+> > >>>> On Mon, Jun 26, 2023 at 05:10:58PM +0100, James Clark wrote:
+> > >>>>> thread__find_map() chooses to exit without assigning a thread to the
+> > >>>>> addr_location in some scenarios, for example when there are samples from
+> > >>>>> a guest and perf_guest == false. This results in a segfault when adding
+> > >>>>> to the histogram because it uses unguarded accesses to the thread member
+> > >>>>> of the addr_location.
+> > >>>>
+> > >>>> Looking at the commit 0dd5041c9a0ea ("perf addr_location: Add
+> > >>>> init/exit/copy functions") that introduced the change, I'm not sure if
+> > >>>> it's the intend behavior.
+> > >>>>
+> > >>>> It might change maps and map, but not thread.  Then I think no reason
+> > >>>> to not set the al->thread at the beginning.
+> > >>>>
+> > >>>> How about this?  Ian?
+> > >>>> (I guess we can get rid of the duplicate 'al->map = NULL' part)
+> > >>>
+> > >>> It seemed strange that we were failing to find a map (the function's
+> > >>> purpose) but then populating the address_location. The change below
+> > >>> brings back that somewhat odd behavior. I'm okay with reverting to the
+> > >>> old behavior, clearly there were users relying on it. We should
+> > >>> probably also copy maps and not just thread, as that was the previous
+> > >>> behavior.
+> > >>
+> > >> Probably.  But it used to support samples without maps and I think
+> > >> that's why it ignores the return value of thread__find_map().  So
+> > >> we can expect al.map is NULL and maybe fine to leave it for now.
+> > >>
+> > >> As machine__resolve() returns -1 if it gets no thread, we should set
+> > >> al.thread when it returns 0.
+> > >>
+> > >> Can I get your Acked-by?
+> > >
+> > > Yep:
+> > > Acked-by: Ian Rogers <irogers@google.com>
+> >
+> > Looks good to me too. Should I resend the set with this change instead
+> > of my one?
 >
-> Things look normal, although I find your pgp key situation confusing.
->
-> I looked up your gpg key from the kernel.org pgp key repo, but that's
-> apparently not the one you used for signing this.
->
-> So I have two keys for you, and neither of them are then signed by
-> others (although that part is probably just the usual pgp mess with
-> signatures being dropped due to flooded bogus signatures, which has
-> made the whole pgp infrastructure be essentially close to useless).
->
-> Anyway, I wish the pgp key situation would be better, but it's not an
-> actual problem.
+> No, I can take care of that.  I'll take this as your Acked-by. :)
 
-Sorry about that.  Unfortunately I lost my old key due to a problem
-in my backups.  So I had to create a new one and asked signing
-by others including Arnaldo and Jiri.  Probably it's a problem in
-the pgp system as you mentioned, I don't know enough about
-that though.
-
-
->
-> HOWEVER.
->
-> What _is_ a problem is that the end result doesn't build cleanly.
->
-> The
->
->         if (list_empty(&pmus))
->                 perf_pmu__scan(NULL);
->
->         ibs_pmu = perf_pmu__find("ibs_op");
->
-> in the amd-ibs-via-core no longer works, and it seems that it should just be
->
->         ibs_pmu = perf_pmus__find("ibs_op");
->
-> That's fine - I can do (and did) that merge resolution - and it's part
-> of my normal "merge and test build", but I'm slightly unhappy that I
-> wasn't told about this part.
->
-> The actual data conflicts were trivial. But this was a semantic
-> conflict that was invisible to git, but showed up in build testing.
->
-> And I *think* you should have known about it, because the conflict you
-> do talk about shows that
->
->  +perf-y += amd-ibs-via-core-pmu.o
->
-> as part of the actual data conflicts.
->
-> Anyway, I've resolved this, and it wasn't a *problem*, and I'm just a
-> bit unhappy that it took me by surprise.
-
-Sorry about the inconvenience.  I'll check this kind of
-problem more seriously next time and let you know.
-
-Thanks,
-Namhyung
+This part is applied to perf-tools-next, thanks!
