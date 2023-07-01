@@ -2,182 +2,117 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E44EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Sat,  1 Jul 2023 05:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0B1EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Sat,  1 Jul 2023 09:32:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229508AbjGAFZz (ORCPT
+        id S229538AbjGAJc2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 1 Jul 2023 01:25:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33874 "EHLO
+        Sat, 1 Jul 2023 05:32:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbjGAFZy (ORCPT
+        with ESMTP id S229452AbjGAJc1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 1 Jul 2023 01:25:54 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A9DDE65
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jun 2023 22:25:52 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id 3f1490d57ef6-c17534f4c63so2613851276.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jun 2023 22:25:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688189150; x=1690781150;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K1IbgPskuZjkHbaetOdWMwLAnH5BVLJDAsDlTvG1aNY=;
-        b=TLBTzB4w9M5dZ4szDykw89pQBnCzAiltHR7/yKKZQ5cbteV5jtPrrBdU0R5G9HChKl
-         xdILJmcDakKaKSJyzw/G/LXe5HvlRnncFTytw7ZiWHTV/63MgKoInqo1kp+o4Fi5wErl
-         UqN6dUwhgXVLbnkuhiSHoKWjgwQ/ryD821quWcn+49E53B5IUh7m8fBQIhQJg/ee7PDb
-         f4drmWCxW+yynMRsUMwf6ud6DJWg1C1iFFsKaxduRZcHOcVWSZu3dVgkWPf+RrTWL71a
-         hROI/LcnBJaPBBKMVAMh1Vt8evk5E54i0QkhbjlJ1f5hskYHfr2N1+QyDRU3KOYsnYWR
-         7euw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688189150; x=1690781150;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K1IbgPskuZjkHbaetOdWMwLAnH5BVLJDAsDlTvG1aNY=;
-        b=EP/ltBln3BSuCK2PRe/yy1RswDFZWC/hWp7puGMFFImIMhNUOlmnsvcXVt6+A3ujzU
-         07r9Jf8HUhC5shveQ5NO1FCc2uUz/QjTszMdwmKHifdpaHiNnqQ5uEKKnC+mce0P8DtF
-         qDn5sdy/POjmQgScvYKwdkM3GZUF9N4DoBzSf2GXBoqE7FUORL8oZy8b0/Ftt9CkzBij
-         6F63wTXZkAkWcawfEGGrpYYvAyk2cPYzOoaid669nsSEuhUfYaknNetL5Xj15oivrqEP
-         rkuvLZSwI+93G/pEwDSQTYtqWEva+2ze4U+Tx+QsFDulRk5opvH2jwmPFZ+DKWogFdpf
-         TlVw==
-X-Gm-Message-State: ABy/qLZPaGHEfg8juCs6Md4uuNHxYH3xN4FQSGaVZg07UEGXyfB8YoBF
-        vDF2SfRMtimJzjgmlaEQYA5VXG4mkjhcZZJfXosTarSNgrM=
-X-Google-Smtp-Source: APBJJlHir6+4qDZYSLAkAyTG5ZtHyF3IaovP4RJDA+xfO1sL6Z63SpteSw3k64H+dpQwzDLInxmNYvr3+42H2E/6AKs=
-X-Received: by 2002:a05:6902:603:b0:ba7:6d35:6b0f with SMTP id
- d3-20020a056902060300b00ba76d356b0fmr4813803ybt.22.1688189150144; Fri, 30 Jun
- 2023 22:25:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <CALDTKqiVNLHM8b21T-zikuNvhfE0N_-kEinpZGSRjSO-04R96w@mail.gmail.com>
- <874963e2-f97e-b463-1351-b00640b0f67b@arm.com> <CALDTKqg01+xJ2xu218c_QH2PbX9wdhYOiJfDieCXL5PHWV-6FQ@mail.gmail.com>
- <77773641-26e5-a754-63cf-e7d3443e11fc@arm.com> <CALDTKqgek3Bicxkvnq3BQnSaS2keQG6UK8S6_0oJn26r0D00MA@mail.gmail.com>
- <20230614012102.GJ217089@leoy-huanghe.lan> <CALDTKqgz6=WFs=bMvnFkKv5kt5OP5wtUqQ2uekVbumCxNqeRXw@mail.gmail.com>
- <CALDTKqiy7h+SiCsUhpgFNzUoYUPdq3e8EpAEbDgcH3ePbGOV3w@mail.gmail.com> <20230618092806.GA245455@leoy-huanghe.lan>
-In-Reply-To: <20230618092806.GA245455@leoy-huanghe.lan>
-From:   =?UTF-8?B?6JSh5rKF5L+h?= <fissure2010@gmail.com>
-Date:   Sat, 1 Jul 2023 13:25:37 +0800
-Message-ID: <CALDTKqivmdU4tFRyc99QUAbGSHG4ttzyuWN7wRRux9KrYdHa0w@mail.gmail.com>
-Subject: Re: Some questions about using the perf tool in ARM-SPE
-To:     Leo Yan <leo.yan@linaro.org>, James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org,
+        Sat, 1 Jul 2023 05:32:27 -0400
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2692A1986;
+        Sat,  1 Jul 2023 02:32:25 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 51D2F5C01F0;
+        Sat,  1 Jul 2023 05:32:21 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Sat, 01 Jul 2023 05:32:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+        :cc:content-transfer-encoding:content-type:content-type:date
+        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to; s=fm2; t=
+        1688203941; x=1688290341; bh=lo7eYR8ewIKPv+UuAUfwcsCCKFsoq+XFb7w
+        PN/jBldM=; b=h4Rc3qxcgBTX1r3XjUg/VaRzeDGQL422vacBaXvkil0mmfMlFcU
+        doz3VXok+jLucgiVAyJ4gr/mUpDNCo2+27rT4QKRDapTAA9nw7pWztd2kKV/O52+
+        jW5FqWuxmrzVlFJTK6VjWV33YdImO+dft1ZZ1SoZm1UfPNcNvxPCVBpsHsQ7o++d
+        s7KNPa2uY3Gt6wa0gjcOSX+hWEQRgSUot37uAGkpR3vGNwkE4zhC0fyWo8NpYaD+
+        5hLwN1Y0GiokMRDoU9gqLLA87KsYBbACqXgOq3ZcuzB/BZ5Cs+wIYY8JDO/o160O
+        FRyqQTeJye9kL2/XTN8M0GMS/CACdsJfDWQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:date:feedback-id:feedback-id
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+        1688203941; x=1688290341; bh=lo7eYR8ewIKPv+UuAUfwcsCCKFsoq+XFb7w
+        PN/jBldM=; b=eryE3u+SGeIXh10nR3DkZnWVW6JDEfqfKMYKMzhJVflLxhLuzdc
+        M9bvaUdVJEo7BwZS2vEdMRYacu1/j2luy5JmNl5XJWVMYw2dYi1wUEGcS0nHdMen
+        S1+m+FORfR75bcG0ODDTEK29HvuXQJDk6Ij9VlCcKx97beeRZwDUssMBkzHjBv6y
+        pUFpB2tdmfdr5Oaqtqd4mOUqLRe3GIRV0c3SHLPdo5dO/e9Jev+qHc5REpUVMmVf
+        eGwhsjEmj6ydyaJKwgp5tjL/FoYaLMCJkjM+4u2NaQgbXAHkbTM0KkfoEqMi/RyU
+        c7m8UcXqSOLmXWK75dUxq3o4RykoudlQuUw==
+X-ME-Sender: <xms:pPKfZBnfs4vfQH7YX-l5n0Q_7ss_x5JQOktIFdN7vj_k9LivIlAVrw>
+    <xme:pPKfZM2PCLcx0rbTJfb2SM_oHgFqMjG-2OkESJSy3zQhW8D5tjl3Ate---0xEzhmE
+    VTkBtXvA4ugEw>
+X-ME-Received: <xmr:pPKfZHrAM-7jEyENli0LMMK355sUKb88kBYB2OiYJ52CLZeaE9_UhGe-7e7NIv_Hq_fKR2YYuryKGS_T92aP0iaEpkby8BtOXrVL4A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrtdekgddugecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepgfekff
+    eifeeiveekleetjedvtedvtdeludfgvdfhteejjeeiudeltdefffefvdeinecuvehluhhs
+    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorg
+    hhrdgtohhm
+X-ME-Proxy: <xmx:pPKfZBn8UWy0KtAD3Co1QF8q1bmQpU_4-w0WINauD6Eb8LsDs5QkYQ>
+    <xmx:pPKfZP2QthhSFy1Vrck8zciQ-qhe_Ol-X2zMr3-pUdsfiJS3Y0bbxQ>
+    <xmx:pPKfZAumIRzkX72xZ42fKi8-zD2KM7k41AlE70RBTHPkH4ZSXGTgSQ>
+    <xmx:pfKfZODN8HKq36sH5v_24e4YtqPk6QEM2RcEArW2hv0fMX6ihLNSLw>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 1 Jul 2023 05:32:19 -0400 (EDT)
+Date:   Sat, 1 Jul 2023 11:32:12 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [v2 13/13] perf parse-events: Remove ABORT_ON
+Message-ID: <2023070106-unified-gone-f9d6@gregkh>
+References: <20230627181030.95608-14-irogers@google.com>
+ <ea39aaf0-0314-1780-c1cd-7c3661fa3e7c@web.de>
+ <CAP-5=fX+kdRujgNAq8SVkkNwgnB383r38+AEmvon1k01R4X=kg@mail.gmail.com>
+ <a3517306-7804-f5cf-6182-ef63b6054647@web.de>
+ <CAP-5=fUEa150DYWte2u6M8sejxXXqec_L8GEhVbppJHHq8N5PA@mail.gmail.com>
+ <4672c6f8-ef0d-6a36-49be-145629c2eade@web.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4672c6f8-ef0d-6a36-49be-145629c2eade@web.de>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Leo Yan
-
-On our platform, I cannot enable too many NUMA configurations as it
-would lead to build failures.
-could this be the reason for c2c failure? If so, I will try to
-identify which side is experiencing issues.
-
-This is my platform config status. ccould support c2c?
-user_shell:/data/local/tmp # zcat /proc/config.gz | grep NUMA
-CONFIG_ARCH_SUPPORTS_NUMA_BALANCING=3Dy
-# CONFIG_NUMA is not set
-CONFIG_DMA_PERNUMA_CMA=3Dy
-
-> ./perf script --header -I
-I think that's a key message.
-# =3D=3D=3D=3D=3D=3D
-# missing features: TRACING_DATA CPUDESC NUMA_TOPOLOGY BRANCH_STACK
-GROUP_DESC STAT MEM_TOPOLOGY CLOCKID DIR_FORMAT (null) (null)
-COMPRESSED CPU_PMU_CAPS CLOCK_DATA HYBRID_TOPOLOGY
-# =3D=3D=3D=3D=3D=3D=3D=3D
-#
-Only instruction-based sampling period is currently supported by Arm SPE.
-
-There are also many events related to L1d, TLB, and memory that are
-displayed. If you require this information, I can provide it
-
-         perf6.1  4725 [000]   129.779296:          1
-                                                   l1d-access:
-ffffffe012888f64 [unknown] ([unknown])
-
-Many Thanks
-Best Regards
-Zack.
-Leo Yan <leo.yan@linaro.org> =E6=96=BC 2023=E5=B9=B46=E6=9C=8818=E6=97=A5 =
-=E9=80=B1=E6=97=A5 =E4=B8=8B=E5=8D=885:28=E5=AF=AB=E9=81=93=EF=BC=9A
-
-<http://www.avg.com/email-signature?utm_medium=3Demail&utm_source=3Dlink&ut=
-m_campaign=3Dsig-email&utm_content=3Dwebmail>
-=E4=B9=BE=E6=B7=A8=E7=84=A1=E7=97=85=E6=AF=92=E3=80=82www.avg.com
-<http://www.avg.com/email-signature?utm_medium=3Demail&utm_source=3Dlink&ut=
-m_campaign=3Dsig-email&utm_content=3Dwebmail>
-<#DAB4FAD8-2DD7-40BB-A1B8-4E2AA1F9FDF2>
-
->
-> On Wed, Jun 14, 2023 at 02:08:36PM +0800, =E8=94=A1=E6=B2=85=E4=BF=A1 wro=
-te:
-> > "Fix mail to text modeFix mail to text mode"
+On Sat, Jul 01, 2023 at 11:00:15AM +0200, Markus Elfring wrote:
+> >> Will it become helpful to split the proposed patch into smaller update steps?
 > >
-> > Hi,
-> > How do I add NUME nodes (or CPU topology) to the kernel config?
->
-> Below configurations are enabled in my testing kernel:
->
-> root@leoy-huangpu:/home/leoy# zcat /proc/config.gz | grep NUMA
-> CONFIG_ARCH_SUPPORTS_NUMA_BALANCING=3Dy
-> CONFIG_NUMA_BALANCING=3Dy
-> CONFIG_NUMA_BALANCING_DEFAULT_ENABLED=3Dy
-> CONFIG_NUMA=3Dy
-> CONFIG_ACPI_NUMA=3Dy
-> CONFIG_NUMA_KEEP_MEMINFO=3Dy
-> CONFIG_USE_PERCPU_NUMA_NODE_ID=3Dy
-> CONFIG_GENERIC_ARCH_NUMA=3Dy
-> CONFIG_OF_NUMA=3Dy
-> CONFIG_DMA_PERNUMA_CMA=3Dy
->
-> > After I modified arm-spe.c. Snoop is working but Locked&Blocked&Local
-> > INSTR Latency their results are always No&N/A&0
->
-> I cannot understand this ... What's you have modified for arm-spe.c?
->
-> If you don't share more complete perf log then it would be difficult to
-> understand and locate issue.
->
-> > I merged 3 Cluter into one and have been able to record the whole syste=
-m.
-> > user_shell:/sys/bus/event_source/devices/arm_spe_0 # cat cpumask
-> > 0-7
->
-> This seems to me fine to me.
->
-> > On the c2c side:
-> > user_shel:/data/local/tmp # ./perf c2c report -vvv
-> > coalesce sort   fields: offset,iaddr
-> > coalesce resort fields: offset,tot_peer
-> > coalesce output fields:
-> > cl_num_empty,percent_rmt_peer,percent_lcl_peer,percent_stores_l1hit,per=
-cent_stores_l1miss,percent_stores_na,offset,offset_node,dcacheline_count,ia=
-ddr,mean_rmt_peer,mean_lcl_peer,mean_load,tot_recs,cpucnt,symbol,dso,cl_src=
-line,node
-> > Failed setup nodes
->
-> Before diving into "perf c2c" tool, please use "perf script" tool to
-> decode the perf data file and check if you have captured any SPE trace
-> data, and it's good to dump header info.  This would be useful to
-> analyze the issie.
->
-> $ ./perf script --header -I
->
-> > On the other hand, the perf I use is statically compiled with the
-> > aarch64 cross-compiler. I can't open all the features
->
-> This would be fine.  At my side, I built perf statically on x86_64
-> machine with the command:
->
-> $ make LDFLAGS=3D-static NO_LIBELF=3D1 NO_JVMTI=3D1  VF=3D1 DEBUG=3D1 NO_=
-LIBTRACEEVENT=3D1
->
-> And then I copied the perf binary on my Arm64 machine, it works pretty
-> well for Arm SPE.
->
-> Thanks,
-> Leo
+> > This is kind of why the series is 13 patches long, I'm not seeing why
+> > you think the following stats qualify as "long":
+> 
+> It seems that we came along different expectations for a desirable change granularity.
+> Intentions influence how known “code problems” can be adjusted (also for this update step).
+> 
+> How should following change ideas be handled then?
+> 
+> 1. Deletion of the macro “ABORT_ON”
+> 
+> 2. Addition of a comment for a special check
+> 
+> 3. Introduction of another error message for one failure mode
+> 
+> 
+> Would you like to adjust the change description another bit?
+
+Please no, it's fine.
