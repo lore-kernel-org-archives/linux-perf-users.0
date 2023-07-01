@@ -2,204 +2,135 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D63FDEB64DC
-	for <linux-perf-users@archiver.kernel.org>; Sat,  1 Jul 2023 18:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEDAEB64DC
+	for <linux-perf-users@archiver.kernel.org>; Sat,  1 Jul 2023 18:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229602AbjGASRz convert rfc822-to-8bit (ORCPT
+        id S229778AbjGASni convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 1 Jul 2023 14:17:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38988 "EHLO
+        Sat, 1 Jul 2023 14:43:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229579AbjGASRy (ORCPT
+        with ESMTP id S229573AbjGASnh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 1 Jul 2023 14:17:54 -0400
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E1C71BC6;
-        Sat,  1 Jul 2023 11:17:53 -0700 (PDT)
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-bad0c4f6f50so4458924276.1;
-        Sat, 01 Jul 2023 11:17:53 -0700 (PDT)
+        Sat, 1 Jul 2023 14:43:37 -0400
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 956AD10DC;
+        Sat,  1 Jul 2023 11:43:36 -0700 (PDT)
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-bd6446528dcso3151571276.2;
+        Sat, 01 Jul 2023 11:43:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688235472; x=1690827472;
+        d=1e100.net; s=20221208; t=1688237016; x=1690829016;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VgbI56nnbOX7WhFj+KJtKuAzNzhUoMUsJk0mZzG98eQ=;
-        b=WLjeXN3JpOIlC2+u0h4TKJzg0obaQAqC5xF8/q6PAi6PxNVEfgMzx9CB2u7CnJOco6
-         8xhOcc2S6kgbPW+5oXddOsxBRm9Blz70cqLHlhH901RspWyQyb6q+zs31lJ0Gwtmu1I/
-         kObR/kvTDsbPl7aaE8mmuwQzyiTI9DKwDrJFYOPGIbqbC8q4qxFFo3WacwkaW99PzHH0
-         NzGv1oAPSww7mEtj/3r6gwf5s1ioVonuoPPZhKuJRN/wu579h9EPWCQWMO6K9IYfVjHD
-         v1rCrEbN+MnoY+FYjbMNZFsYRs7d9oDc7PRnskJEfUrdgOZNqgef8+eCN2khnctygrm9
-         Pheg==
-X-Gm-Message-State: ABy/qLbsC1tPu9iI3gNdTN5aXYY7r8hKZSjhen8JKOe28PMrEHevOWRT
-        ugGZDM72oSOl2Snlr6AemCcM80Q46L0S8s/BMN4=
-X-Google-Smtp-Source: APBJJlEXcL5nDNV6sm/lt5bWSltLXADmCHoMzR3A1HKCNHANZZJeGTGssYjdfP83vMgVHnFGuGFnrNm7ReYQa95fYUM=
-X-Received: by 2002:a25:a227:0:b0:bcd:1e9:3703 with SMTP id
- b36-20020a25a227000000b00bcd01e93703mr12091529ybi.21.1688235472430; Sat, 01
- Jul 2023 11:17:52 -0700 (PDT)
+        bh=Ud6MKoHeXX6wSSB/d4LZ7XuJvAk8dvqDV0C73OcReOs=;
+        b=bYJcxufPebRBR9GoZSnPIqLHazenqr+eg5/khQtxx5IFt+xM/+1BYQR5t9lV7AqqMh
+         YeLoC1QlSVe4sUYKD/uy9e//8jO+CorfOfsGSYsE3r0RBW9C/hByPGSBcyKAPcsWh2M7
+         HjXHx0xEFpdaNCcfnNWxw4Bs4wp9z91P/0k81d2JLWght+IcZMIHZ20Zc4smQ/aOvw9V
+         WkAKsg19WwBjzwY9PlNV6ySdTXbJzm5BuuaTVl7Nso/BPTTAaL2V2ytTLRxtLrzxgl/b
+         eDy48ENHtEFxxneM67r1ZplgI1cOdL1Lui94OgBpO9D654+DZ2QTSJtDnYOuroiDQ7QT
+         8unw==
+X-Gm-Message-State: ABy/qLbMpbs35QuJoovRsE9YMhoYzPKrCQ9lYGtwBiET0rp/bcWs4lmS
+        tSA/s+OgUtZcYVYmoblxgTY+VRUd1TPw+kFF/I0=
+X-Google-Smtp-Source: APBJJlHvXbnPHJsRT+lR/KmhBsIrOqn8EmHLaVsZLlL0YI2ke3WVUA11ToiuRIPIjJUCTQPMhYsZmtgHbHk0FdQbRQQ=
+X-Received: by 2002:a25:aaf0:0:b0:be8:1aab:b3fb with SMTP id
+ t103-20020a25aaf0000000b00be81aabb3fbmr6383151ybi.21.1688237015704; Sat, 01
+ Jul 2023 11:43:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230630085230.437-1-ravi.bangoria@amd.com>
-In-Reply-To: <20230630085230.437-1-ravi.bangoria@amd.com>
+References: <20230627181030.95608-1-irogers@google.com> <20230627181030.95608-14-irogers@google.com>
+ <CAM9d7cjxrNTOUGxmTAycko_Gn_uY5aX8cBWTa-jrhLoc-Bur1g@mail.gmail.com> <CAP-5=fWdOQR0MvpJM2aW5Cc=GS86h2Kmh9zD2k5--K=8BNyVgw@mail.gmail.com>
+In-Reply-To: <CAP-5=fWdOQR0MvpJM2aW5Cc=GS86h2Kmh9zD2k5--K=8BNyVgw@mail.gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Sat, 1 Jul 2023 11:17:41 -0700
-Message-ID: <CAM9d7chYnT2s1V1juP+EyewJfRD+2qHGs2pwghh=k3kFf1P9BA@mail.gmail.com>
-Subject: Re: [PATCH v3] perf evsel amd: Fix IBS error message
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     acme@kernel.org, peterz@infradead.org, irogers@google.com,
-        jolsa@kernel.org, adrian.hunter@intel.com,
+Date:   Sat, 1 Jul 2023 11:43:24 -0700
+Message-ID: <CAM9d7ciBPUiM0QhfP=_EJXqZ=SgEkHii0Jc2J-MBkZr7k1wKUA@mail.gmail.com>
+Subject: Re: [PATCH v2 13/13] perf parse-events: Remove ABORT_ON
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com,
-        santosh.shukla@amd.com
+        bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ravi,
+On Fri, Jun 30, 2023 at 8:14 AM Ian Rogers <irogers@google.com> wrote:
+>
+> On Thu, Jun 29, 2023 at 2:49 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Tue, Jun 27, 2023 at 11:11 AM Ian Rogers <irogers@google.com> wrote:
+> > >
+> > > Prefer informative messages rather than none with ABORT_ON. Document
+> > > one failure mode and add an error message for another.
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/perf/util/parse-events.y | 22 ++++++++++++++--------
+> > >  1 file changed, 14 insertions(+), 8 deletions(-)
+> > >
+> > > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+> > > index 844646752462..454577f7aff6 100644
+> > > --- a/tools/perf/util/parse-events.y
+> > > +++ b/tools/perf/util/parse-events.y
+> > > @@ -22,12 +22,6 @@
+> > >
+> > >  void parse_events_error(YYLTYPE *loc, void *parse_state, void *scanner, char const *msg);
+> > >
+> > > -#define ABORT_ON(val) \
+> > > -do { \
+> > > -       if (val) \
+> > > -               YYABORT; \
+> > > -} while (0)
+> > > -
+> > >  #define PE_ABORT(val) \
+> > >  do { \
+> > >         if (val == -ENOMEM) \
+> > > @@ -618,7 +612,9 @@ PE_RAW opt_event_config
+> > >                 YYNOMEM;
+> > >         errno = 0;
+> > >         num = strtoull($1 + 1, NULL, 16);
+> > > -       ABORT_ON(errno);
+> > > +       /* Given the lexer will only give [a-fA-F0-9]+ a failure here should be impossible. */
+> > > +       if (errno)
+> > > +               YYABORT;
+> > >         free($1);
+> > >         err = parse_events_add_numeric(_parse_state, list, PERF_TYPE_RAW, num, $2,
+> > >                                        /*wildcard=*/false);
+> > > @@ -978,7 +974,17 @@ PE_VALUE PE_ARRAY_RANGE PE_VALUE
+> > >  {
+> > >         struct parse_events_array array;
+> > >
+> > > -       ABORT_ON($3 < $1);
+> > > +       if ($3 < $1) {
+> > > +               struct parse_events_state *parse_state = _parse_state;
+> > > +               struct parse_events_error *error = parse_state->error;
+> > > +               char *err_str;
+> > > +
+> > > +               if (asprintf(&err_str, "Expected '%ld' to be less-than '%ld'", $3, $1) < 0)
+> >
+> > Isn't it to be "greater-than or equal" ?
+>
+> I think the order is right. From the man page:
+>
+>        When  successful,  these  functions return the number of bytes printed,
+>        just like sprintf(3).  If memory allocation wasn't  possible,  or  some
+>        other error occurs, these functions will return -1, and the contents of
+>        strp are undefined.
+>
+> So here we need to catch -1 and ensure strp (&err_str) is NULL before
+> passing it to parse_events_error__handle.
 
-On Fri, Jun 30, 2023 at 1:53 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
->
-> AMD IBS can do per-process profiling[1] and is no longer restricted to
-> per-cpu or systemwide only. Remove stale error message. Also, checking
-> just exclude_kernel is not sufficient since IBS does not support any
-> privilege filters. So include all exclude_* checks. And finally, move
-> these checks under tools/perf/arch/x86/ from generic code.
->
-> Before:
->   $ sudo ./perf record -e ibs_op//k -C 0
->   Error:
->   AMD IBS may only be available in system-wide/per-cpu mode.  Try
->   using -a, or -C and workload affinity
->
-> After:
->   $ sudo ./perf record -e ibs_op//k -C 0
->   Error:
->   AMD IBS doesn't support privilege filtering. Try again without
->   the privilege modifiers (like 'k') at the end.
->
-> [1] https://git.kernel.org/torvalds/c/30093056f7b2
->
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Oh, I meant the message not the condition in the if statement.
+It seems it aborts if $3 < $1, then it expects $3 >= $1 in the
+normal condition, right?
 
 Thanks,
 Namhyung
-
-
-> ---
-> v2: https://lore.kernel.org/r/20230626103958.834-1-ravi.bangoria@amd.com
-> v2->v3:
->   - Make error message more perf tool user friendly.
->
->  tools/perf/arch/x86/util/evsel.c | 20 ++++++++++++++++++++
->  tools/perf/util/evsel.c          | 30 +++++++++---------------------
->  tools/perf/util/evsel.h          |  1 +
->  3 files changed, 30 insertions(+), 21 deletions(-)
->
-> diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
-> index 512c2d885d24..af454fd07887 100644
-> --- a/tools/perf/arch/x86/util/evsel.c
-> +++ b/tools/perf/arch/x86/util/evsel.c
-> @@ -102,3 +102,23 @@ void arch__post_evsel_config(struct evsel *evsel, struct perf_event_attr *attr)
->                 }
->         }
->  }
-> +
-> +int arch_evsel__open_strerror(struct evsel *evsel, char *msg, size_t size)
-> +{
-> +       if (!x86__is_amd_cpu())
-> +               return 0;
-> +
-> +       if (!evsel->core.attr.precise_ip &&
-> +           !(evsel->pmu_name && !strncmp(evsel->pmu_name, "ibs", 3)))
-> +               return 0;
-> +
-> +       /* More verbose IBS errors. */
-> +       if (evsel->core.attr.exclude_kernel || evsel->core.attr.exclude_user ||
-> +           evsel->core.attr.exclude_hv || evsel->core.attr.exclude_idle ||
-> +           evsel->core.attr.exclude_host || evsel->core.attr.exclude_guest) {
-> +               return scnprintf(msg, size, "AMD IBS doesn't support privilege filtering. Try "
-> +                                "again without the privilege modifiers (like 'k') at the end.");
-> +       }
-> +
-> +       return 0;
-> +}
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index f607b5bddc76..762e2b2634a5 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -2924,25 +2924,19 @@ static bool find_process(const char *name)
->         return ret ? false : true;
->  }
->
-> -static bool is_amd(const char *arch, const char *cpuid)
-> +int __weak arch_evsel__open_strerror(struct evsel *evsel __maybe_unused,
-> +                                    char *msg __maybe_unused,
-> +                                    size_t size __maybe_unused)
->  {
-> -       return arch && !strcmp("x86", arch) && cpuid && strstarts(cpuid, "AuthenticAMD");
-> -}
-> -
-> -static bool is_amd_ibs(struct evsel *evsel)
-> -{
-> -       return evsel->core.attr.precise_ip
-> -           || (evsel->pmu_name && !strncmp(evsel->pmu_name, "ibs", 3));
-> +       return 0;
->  }
->
->  int evsel__open_strerror(struct evsel *evsel, struct target *target,
->                          int err, char *msg, size_t size)
->  {
-> -       struct perf_env *env = evsel__env(evsel);
-> -       const char *arch = perf_env__arch(env);
-> -       const char *cpuid = perf_env__cpuid(env);
->         char sbuf[STRERR_BUFSIZE];
->         int printed = 0, enforced = 0;
-> +       int ret;
->
->         switch (err) {
->         case EPERM:
-> @@ -3044,16 +3038,6 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
->                         return scnprintf(msg, size,
->         "Invalid event (%s) in per-thread mode, enable system wide with '-a'.",
->                                         evsel__name(evsel));
-> -               if (is_amd(arch, cpuid)) {
-> -                       if (is_amd_ibs(evsel)) {
-> -                               if (evsel->core.attr.exclude_kernel)
-> -                                       return scnprintf(msg, size,
-> -       "AMD IBS can't exclude kernel events.  Try running at a higher privilege level.");
-> -                               if (!evsel->core.system_wide)
-> -                                       return scnprintf(msg, size,
-> -       "AMD IBS may only be available in system-wide/per-cpu mode.  Try using -a, or -C and workload affinity");
-> -                       }
-> -               }
->
->                 break;
->         case ENODATA:
-> @@ -3063,6 +3047,10 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
->                 break;
->         }
->
-> +       ret = arch_evsel__open_strerror(evsel, msg, size);
-> +       if (ret)
-> +               return ret;
-> +
->         return scnprintf(msg, size,
->         "The sys_perf_event_open() syscall returned with %d (%s) for event (%s).\n"
->         "/bin/dmesg | grep -i perf may provide additional information.\n",
-> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> index 9f06d6cd5379..848534ec74fa 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -311,6 +311,7 @@ void evsel__set_sample_id(struct evsel *evsel, bool use_sample_identifier);
->
->  void arch_evsel__set_sample_weight(struct evsel *evsel);
->  void arch__post_evsel_config(struct evsel *evsel, struct perf_event_attr *attr);
-> +int arch_evsel__open_strerror(struct evsel *evsel, char *msg, size_t size);
->
->  int evsel__set_filter(struct evsel *evsel, const char *filter);
->  int evsel__append_tp_filter(struct evsel *evsel, const char *filter);
-> --
-> 2.41.0
->
