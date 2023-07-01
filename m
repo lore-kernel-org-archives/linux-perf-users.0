@@ -2,111 +2,84 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFE3EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Sat,  1 Jul 2023 18:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D63FDEB64DC
+	for <linux-perf-users@archiver.kernel.org>; Sat,  1 Jul 2023 18:17:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230008AbjGASNq convert rfc822-to-8bit (ORCPT
+        id S229602AbjGASRz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 1 Jul 2023 14:13:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38106 "EHLO
+        Sat, 1 Jul 2023 14:17:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbjGASNp (ORCPT
+        with ESMTP id S229579AbjGASRy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 1 Jul 2023 14:13:45 -0400
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFC2D1BC6;
-        Sat,  1 Jul 2023 11:13:44 -0700 (PDT)
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-be30cbe88b3so3164985276.1;
-        Sat, 01 Jul 2023 11:13:44 -0700 (PDT)
+        Sat, 1 Jul 2023 14:17:54 -0400
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E1C71BC6;
+        Sat,  1 Jul 2023 11:17:53 -0700 (PDT)
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-bad0c4f6f50so4458924276.1;
+        Sat, 01 Jul 2023 11:17:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688235224; x=1690827224;
+        d=1e100.net; s=20221208; t=1688235472; x=1690827472;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=D4wue8LL+TgYf3QfbzqCOd+bCBl/YM/OaJxPurIPIJo=;
-        b=P6XQhHL/Cna3X3S5JeufEczqNHw3UvYLg4IZmoY+Sww+64Q6oyDMRUKQ59zewJFqP7
-         Eu5lodJjU7qHZ4NBMAj/U1pKkQu5VAhFsOOd8QFx3CFVxdrLnKv3UD4p5WxxxODu74Lo
-         seJh4mVfsd7MdUamquvHbl01zkkfMWNMXkHVjTifiUu9wP3osPf3M1ZMp6kmNGa7A+7j
-         3NAWmfGE/Aq56iV2JScQWq0eR2Dw5ShC6mSFxH0ZTIZK4kp47hz0qpvBiK+5RGeMdzON
-         KiSK9D/uMU+V0hsfgVKzVZknQsps+qmLUhjvut3z0Hpp1vsE48narod0B5rz59J7duYK
-         82uA==
-X-Gm-Message-State: ABy/qLaIhpyiIx+wG0bGwD5F1Gv1DoE2Ts+MZvgjZIERd87m66NbtMq7
-        tHZg8LTPWDnFnNkJRVh6KTdHEycNIcWemRSPFC8=
-X-Google-Smtp-Source: APBJJlG/nisR8Rhl5SbxuV09n0RgTROs/hfk+Dz6JACD4Joiyoom9JiJt1Wo2x8VjFbJzTelkQK6RH5CyqFhirDQ6Ro=
-X-Received: by 2002:a25:74d4:0:b0:bc9:f1a3:71d7 with SMTP id
- p203-20020a2574d4000000b00bc9f1a371d7mr5889098ybc.60.1688235223829; Sat, 01
- Jul 2023 11:13:43 -0700 (PDT)
+        bh=VgbI56nnbOX7WhFj+KJtKuAzNzhUoMUsJk0mZzG98eQ=;
+        b=WLjeXN3JpOIlC2+u0h4TKJzg0obaQAqC5xF8/q6PAi6PxNVEfgMzx9CB2u7CnJOco6
+         8xhOcc2S6kgbPW+5oXddOsxBRm9Blz70cqLHlhH901RspWyQyb6q+zs31lJ0Gwtmu1I/
+         kObR/kvTDsbPl7aaE8mmuwQzyiTI9DKwDrJFYOPGIbqbC8q4qxFFo3WacwkaW99PzHH0
+         NzGv1oAPSww7mEtj/3r6gwf5s1ioVonuoPPZhKuJRN/wu579h9EPWCQWMO6K9IYfVjHD
+         v1rCrEbN+MnoY+FYjbMNZFsYRs7d9oDc7PRnskJEfUrdgOZNqgef8+eCN2khnctygrm9
+         Pheg==
+X-Gm-Message-State: ABy/qLbsC1tPu9iI3gNdTN5aXYY7r8hKZSjhen8JKOe28PMrEHevOWRT
+        ugGZDM72oSOl2Snlr6AemCcM80Q46L0S8s/BMN4=
+X-Google-Smtp-Source: APBJJlEXcL5nDNV6sm/lt5bWSltLXADmCHoMzR3A1HKCNHANZZJeGTGssYjdfP83vMgVHnFGuGFnrNm7ReYQa95fYUM=
+X-Received: by 2002:a25:a227:0:b0:bcd:1e9:3703 with SMTP id
+ b36-20020a25a227000000b00bcd01e93703mr12091529ybi.21.1688235472430; Sat, 01
+ Jul 2023 11:17:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230630-perf-libdw-symfs-v2-1-469760dd4d5b@axis.com>
-In-Reply-To: <20230630-perf-libdw-symfs-v2-1-469760dd4d5b@axis.com>
+References: <20230630085230.437-1-ravi.bangoria@amd.com>
+In-Reply-To: <20230630085230.437-1-ravi.bangoria@amd.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Sat, 1 Jul 2023 11:13:32 -0700
-Message-ID: <CAM9d7cjF+g5Ww22bDviHqFa42dC1JjhGw1cM7POvTziY2wyCgA@mail.gmail.com>
-Subject: Re: [PATCH v2] perf: unwind: Fix symfs with libdw
-To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+Date:   Sat, 1 Jul 2023 11:17:41 -0700
+Message-ID: <CAM9d7chYnT2s1V1juP+EyewJfRD+2qHGs2pwghh=k3kFf1P9BA@mail.gmail.com>
+Subject: Re: [PATCH v3] perf evsel amd: Fix IBS error message
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     acme@kernel.org, peterz@infradead.org, irogers@google.com,
+        jolsa@kernel.org, adrian.hunter@intel.com,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@axis.com
+        sandipan.das@amd.com, ananth.narayan@amd.com,
+        santosh.shukla@amd.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Hi Ravi,
 
-On Fri, Jun 30, 2023 at 2:11 AM Vincent Whitchurch
-<vincent.whitchurch@axis.com> wrote:
+On Fri, Jun 30, 2023 at 1:53 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
 >
-> Pass the full path including the symfs (if any) to libdw.  Without this
-> unwinding fails with errors like this when a symfs is used:
+> AMD IBS can do per-process profiling[1] and is no longer restricted to
+> per-cpu or systemwide only. Remove stale error message. Also, checking
+> just exclude_kernel is not sufficient since IBS does not support any
+> privilege filters. So include all exclude_* checks. And finally, move
+> these checks under tools/perf/arch/x86/ from generic code.
 >
->   unwind: failed with 'No such file or directory'"
+> Before:
+>   $ sudo ./perf record -e ibs_op//k -C 0
+>   Error:
+>   AMD IBS may only be available in system-wide/per-cpu mode.  Try
+>   using -a, or -C and workload affinity
 >
-> Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-> ---
-> I posted this last year but didn't receive any comments.  This patch is
-> still needed in current mainline so here is a rebased version, fixing
-> some merge conflicts.
-
-Sorry that you didn't get any feedback.  Looks like a real problem.
-
+> After:
+>   $ sudo ./perf record -e ibs_op//k -C 0
+>   Error:
+>   AMD IBS doesn't support privilege filtering. Try again without
+>   the privilege modifiers (like 'k') at the end.
 >
-> Changes in v2:
-> - Rebased to v6.4.
-> - Link to v1: https://lore.kernel.org/lkml/20221125112743.2285759-1-vincent.whitchurch@axis.com/
-
-In general, you'd better base your perf tools changes on the
-perf/perf-tools (for fixes) or perf/perf-tools-next (for new features)
-in git.kernel.org.  But it seems this change applies cleanly.
-
-> ---
->  tools/perf/util/unwind-libdw.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+> [1] https://git.kernel.org/torvalds/c/30093056f7b2
 >
-> diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-> index bdccfc511b7e2..30a63d819d74e 100644
-> --- a/tools/perf/util/unwind-libdw.c
-> +++ b/tools/perf/util/unwind-libdw.c
-> @@ -66,9 +66,13 @@ static int __report_module(struct addr_location *al, u64 ip,
->                         mod = 0;
->         }
->
-> -       if (!mod)
-> -               mod = dwfl_report_elf(ui->dwfl, dso->short_name, dso->long_name, -1,
-> +       if (!mod) {
-> +               char filename[PATH_MAX];
-> +
-> +               __symbol__join_symfs(filename, sizeof(filename), dso->long_name);
-
-As __symbol__join_symfs() will have dso->long_name when symfs
-is not set, I don't think it changes the behavior, so
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 
@@ -114,18 +87,119 @@ Thanks,
 Namhyung
 
 
-> +               mod = dwfl_report_elf(ui->dwfl, dso->short_name, filename, -1,
->                                       map__start(al->map) - map__pgoff(al->map), false);
-> +       }
->         if (!mod) {
->                 char filename[PATH_MAX];
->
->
 > ---
-> base-commit: 6995e2de6891c724bfeb2db33d7b87775f913ad1
-> change-id: 20230630-perf-libdw-symfs-9adb29f4df7d
+> v2: https://lore.kernel.org/r/20230626103958.834-1-ravi.bangoria@amd.com
+> v2->v3:
+>   - Make error message more perf tool user friendly.
 >
-> Best regards,
+>  tools/perf/arch/x86/util/evsel.c | 20 ++++++++++++++++++++
+>  tools/perf/util/evsel.c          | 30 +++++++++---------------------
+>  tools/perf/util/evsel.h          |  1 +
+>  3 files changed, 30 insertions(+), 21 deletions(-)
+>
+> diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
+> index 512c2d885d24..af454fd07887 100644
+> --- a/tools/perf/arch/x86/util/evsel.c
+> +++ b/tools/perf/arch/x86/util/evsel.c
+> @@ -102,3 +102,23 @@ void arch__post_evsel_config(struct evsel *evsel, struct perf_event_attr *attr)
+>                 }
+>         }
+>  }
+> +
+> +int arch_evsel__open_strerror(struct evsel *evsel, char *msg, size_t size)
+> +{
+> +       if (!x86__is_amd_cpu())
+> +               return 0;
+> +
+> +       if (!evsel->core.attr.precise_ip &&
+> +           !(evsel->pmu_name && !strncmp(evsel->pmu_name, "ibs", 3)))
+> +               return 0;
+> +
+> +       /* More verbose IBS errors. */
+> +       if (evsel->core.attr.exclude_kernel || evsel->core.attr.exclude_user ||
+> +           evsel->core.attr.exclude_hv || evsel->core.attr.exclude_idle ||
+> +           evsel->core.attr.exclude_host || evsel->core.attr.exclude_guest) {
+> +               return scnprintf(msg, size, "AMD IBS doesn't support privilege filtering. Try "
+> +                                "again without the privilege modifiers (like 'k') at the end.");
+> +       }
+> +
+> +       return 0;
+> +}
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index f607b5bddc76..762e2b2634a5 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -2924,25 +2924,19 @@ static bool find_process(const char *name)
+>         return ret ? false : true;
+>  }
+>
+> -static bool is_amd(const char *arch, const char *cpuid)
+> +int __weak arch_evsel__open_strerror(struct evsel *evsel __maybe_unused,
+> +                                    char *msg __maybe_unused,
+> +                                    size_t size __maybe_unused)
+>  {
+> -       return arch && !strcmp("x86", arch) && cpuid && strstarts(cpuid, "AuthenticAMD");
+> -}
+> -
+> -static bool is_amd_ibs(struct evsel *evsel)
+> -{
+> -       return evsel->core.attr.precise_ip
+> -           || (evsel->pmu_name && !strncmp(evsel->pmu_name, "ibs", 3));
+> +       return 0;
+>  }
+>
+>  int evsel__open_strerror(struct evsel *evsel, struct target *target,
+>                          int err, char *msg, size_t size)
+>  {
+> -       struct perf_env *env = evsel__env(evsel);
+> -       const char *arch = perf_env__arch(env);
+> -       const char *cpuid = perf_env__cpuid(env);
+>         char sbuf[STRERR_BUFSIZE];
+>         int printed = 0, enforced = 0;
+> +       int ret;
+>
+>         switch (err) {
+>         case EPERM:
+> @@ -3044,16 +3038,6 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+>                         return scnprintf(msg, size,
+>         "Invalid event (%s) in per-thread mode, enable system wide with '-a'.",
+>                                         evsel__name(evsel));
+> -               if (is_amd(arch, cpuid)) {
+> -                       if (is_amd_ibs(evsel)) {
+> -                               if (evsel->core.attr.exclude_kernel)
+> -                                       return scnprintf(msg, size,
+> -       "AMD IBS can't exclude kernel events.  Try running at a higher privilege level.");
+> -                               if (!evsel->core.system_wide)
+> -                                       return scnprintf(msg, size,
+> -       "AMD IBS may only be available in system-wide/per-cpu mode.  Try using -a, or -C and workload affinity");
+> -                       }
+> -               }
+>
+>                 break;
+>         case ENODATA:
+> @@ -3063,6 +3047,10 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+>                 break;
+>         }
+>
+> +       ret = arch_evsel__open_strerror(evsel, msg, size);
+> +       if (ret)
+> +               return ret;
+> +
+>         return scnprintf(msg, size,
+>         "The sys_perf_event_open() syscall returned with %d (%s) for event (%s).\n"
+>         "/bin/dmesg | grep -i perf may provide additional information.\n",
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index 9f06d6cd5379..848534ec74fa 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -311,6 +311,7 @@ void evsel__set_sample_id(struct evsel *evsel, bool use_sample_identifier);
+>
+>  void arch_evsel__set_sample_weight(struct evsel *evsel);
+>  void arch__post_evsel_config(struct evsel *evsel, struct perf_event_attr *attr);
+> +int arch_evsel__open_strerror(struct evsel *evsel, char *msg, size_t size);
+>
+>  int evsel__set_filter(struct evsel *evsel, const char *filter);
+>  int evsel__append_tp_filter(struct evsel *evsel, const char *filter);
 > --
-> Vincent Whitchurch <vincent.whitchurch@axis.com>
+> 2.41.0
 >
