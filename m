@@ -2,49 +2,48 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AABE6EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Sat,  1 Jul 2023 17:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFE3EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Sat,  1 Jul 2023 18:13:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229506AbjGAR5s convert rfc822-to-8bit (ORCPT
+        id S230008AbjGASNq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 1 Jul 2023 13:57:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36430 "EHLO
+        Sat, 1 Jul 2023 14:13:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbjGAR5r (ORCPT
+        with ESMTP id S229446AbjGASNp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 1 Jul 2023 13:57:47 -0400
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD584E60;
-        Sat,  1 Jul 2023 10:57:45 -0700 (PDT)
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-c4e4c258ba9so163170276.1;
-        Sat, 01 Jul 2023 10:57:45 -0700 (PDT)
+        Sat, 1 Jul 2023 14:13:45 -0400
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFC2D1BC6;
+        Sat,  1 Jul 2023 11:13:44 -0700 (PDT)
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-be30cbe88b3so3164985276.1;
+        Sat, 01 Jul 2023 11:13:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688234265; x=1690826265;
+        d=1e100.net; s=20221208; t=1688235224; x=1690827224;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=I16kxq3liK2Om7mdHj2gKyKxAgwn/RzkolhoHDHOk8g=;
-        b=TWVRdLj6o/pm7Ix9OmNdsJO8oN+rE1CJwj730IA81FEo2sibq8/EHtlPjzc0pK+oSv
-         v+SxlhdygAN8QnIGUXxK2XHmeo77OzBOHApk/zGtfpegXYpJ+MUo/7LeppcDgPIBqIx+
-         g39ug85rjFZx27eQmr2HQFFuZHacn9MADtnLGyNB43ENpXAsii26NCk4R34zkEoP8FFr
-         IXeB75T5iwkcFblckWaEVd52Gy+Q0ZPPb4IZddk6T6/cX7HPUiAMRgWKkoxGNjJmiGfS
-         ITxs/HsW6Van545Ap7DX1e7L3DANcVM6JJlqkXxDzABw5QcKChLvdMWq0Y6SOlgozztE
-         7ddQ==
-X-Gm-Message-State: ABy/qLYuZTyEXvT7xO4ADHNGveVdRiD2e/d8mDVGM07lqimCzTDJOSuj
-        ksFkRzuUt7StQPSiMrbiTERRl2+rKBasrd3Phb5tZPU+
-X-Google-Smtp-Source: APBJJlGdfSHaala4PPlYpMlKxHR3rnesWu7dB72jd7aIfzNXs6BgWLCLSLYQazAgxc6Y3rcGz1J1Ds6VQ4IyHQBHPlM=
-X-Received: by 2002:a25:278a:0:b0:c1b:d362:4b49 with SMTP id
- n132-20020a25278a000000b00c1bd3624b49mr5421036ybn.50.1688234264743; Sat, 01
- Jul 2023 10:57:44 -0700 (PDT)
+        bh=D4wue8LL+TgYf3QfbzqCOd+bCBl/YM/OaJxPurIPIJo=;
+        b=P6XQhHL/Cna3X3S5JeufEczqNHw3UvYLg4IZmoY+Sww+64Q6oyDMRUKQ59zewJFqP7
+         Eu5lodJjU7qHZ4NBMAj/U1pKkQu5VAhFsOOd8QFx3CFVxdrLnKv3UD4p5WxxxODu74Lo
+         seJh4mVfsd7MdUamquvHbl01zkkfMWNMXkHVjTifiUu9wP3osPf3M1ZMp6kmNGa7A+7j
+         3NAWmfGE/Aq56iV2JScQWq0eR2Dw5ShC6mSFxH0ZTIZK4kp47hz0qpvBiK+5RGeMdzON
+         KiSK9D/uMU+V0hsfgVKzVZknQsps+qmLUhjvut3z0Hpp1vsE48narod0B5rz59J7duYK
+         82uA==
+X-Gm-Message-State: ABy/qLaIhpyiIx+wG0bGwD5F1Gv1DoE2Ts+MZvgjZIERd87m66NbtMq7
+        tHZg8LTPWDnFnNkJRVh6KTdHEycNIcWemRSPFC8=
+X-Google-Smtp-Source: APBJJlG/nisR8Rhl5SbxuV09n0RgTROs/hfk+Dz6JACD4Joiyoom9JiJt1Wo2x8VjFbJzTelkQK6RH5CyqFhirDQ6Ro=
+X-Received: by 2002:a25:74d4:0:b0:bc9:f1a3:71d7 with SMTP id
+ p203-20020a2574d4000000b00bc9f1a371d7mr5889098ybc.60.1688235223829; Sat, 01
+ Jul 2023 11:13:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230630080029.15614-1-colin.i.king@gmail.com>
-In-Reply-To: <20230630080029.15614-1-colin.i.king@gmail.com>
+References: <20230630-perf-libdw-symfs-v2-1-469760dd4d5b@axis.com>
+In-Reply-To: <20230630-perf-libdw-symfs-v2-1-469760dd4d5b@axis.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Sat, 1 Jul 2023 10:57:33 -0700
-Message-ID: <CAM9d7ch8GcZUXVEtPGh2QW8-_aiObq7ybU_7gY7LMcjRfOFvxw@mail.gmail.com>
-Subject: Re: [PATCH][next] perf/benchmark: Fix spelling mistake "synchronious"
- -> "synchronous"
-To:     Colin Ian King <colin.i.king@gmail.com>
+Date:   Sat, 1 Jul 2023 11:13:32 -0700
+Message-ID: <CAM9d7cjF+g5Ww22bDviHqFa42dC1JjhGw1cM7POvTziY2wyCgA@mail.gmail.com>
+Subject: Re: [PATCH v2] perf: unwind: Fix symfs with libdw
+To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -52,8 +51,8 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@axis.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
@@ -62,36 +61,71 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hello,
 
-On Fri, Jun 30, 2023 at 1:00 AM Colin Ian King <colin.i.king@gmail.com> wrote:
+On Fri, Jun 30, 2023 at 2:11 AM Vincent Whitchurch
+<vincent.whitchurch@axis.com> wrote:
 >
-> There is a spelling mistake in an option description. Fix it.
+> Pass the full path including the symfs (if any) to libdw.  Without this
+> unwinding fails with errors like this when a symfs is used:
 >
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+>   unwind: failed with 'No such file or directory'"
+>
+> Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
 > ---
->  tools/perf/bench/sched-seccomp-notify.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> I posted this last year but didn't receive any comments.  This patch is
+> still needed in current mainline so here is a rebased version, fixing
+> some merge conflicts.
 
-Hmm.. strange.  I cannot see the bench/sched-seccomp-notify.c.
-Which tree are you based?
+Sorry that you didn't get any feedback.  Looks like a real problem.
+
+>
+> Changes in v2:
+> - Rebased to v6.4.
+> - Link to v1: https://lore.kernel.org/lkml/20221125112743.2285759-1-vincent.whitchurch@axis.com/
+
+In general, you'd better base your perf tools changes on the
+perf/perf-tools (for fixes) or perf/perf-tools-next (for new features)
+in git.kernel.org.  But it seems this change applies cleanly.
+
+> ---
+>  tools/perf/util/unwind-libdw.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
+> index bdccfc511b7e2..30a63d819d74e 100644
+> --- a/tools/perf/util/unwind-libdw.c
+> +++ b/tools/perf/util/unwind-libdw.c
+> @@ -66,9 +66,13 @@ static int __report_module(struct addr_location *al, u64 ip,
+>                         mod = 0;
+>         }
+>
+> -       if (!mod)
+> -               mod = dwfl_report_elf(ui->dwfl, dso->short_name, dso->long_name, -1,
+> +       if (!mod) {
+> +               char filename[PATH_MAX];
+> +
+> +               __symbol__join_symfs(filename, sizeof(filename), dso->long_name);
+
+As __symbol__join_symfs() will have dso->long_name when symfs
+is not set, I don't think it changes the behavior, so
+
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
 
+> +               mod = dwfl_report_elf(ui->dwfl, dso->short_name, filename, -1,
+>                                       map__start(al->map) - map__pgoff(al->map), false);
+> +       }
+>         if (!mod) {
+>                 char filename[PATH_MAX];
 >
-> diff --git a/tools/perf/bench/sched-seccomp-notify.c b/tools/perf/bench/sched-seccomp-notify.c
-> index eac4ef60090f..2e8205c61141 100644
-> --- a/tools/perf/bench/sched-seccomp-notify.c
-> +++ b/tools/perf/bench/sched-seccomp-notify.c
-> @@ -33,7 +33,7 @@ static bool sync_mode;
->  static const struct option options[] = {
->         OPT_U64('l', "loop",    &loops,         "Specify number of loops"),
->         OPT_BOOLEAN('s', "sync-mode", &sync_mode,
-> -                   "Enable the synchronious mode for seccomp notifications"),
-> +                   "Enable the synchronous mode for seccomp notifications"),
->         OPT_END()
->  };
 >
+> ---
+> base-commit: 6995e2de6891c724bfeb2db33d7b87775f913ad1
+> change-id: 20230630-perf-libdw-symfs-9adb29f4df7d
+>
+> Best regards,
 > --
-> 2.39.2
+> Vincent Whitchurch <vincent.whitchurch@axis.com>
 >
