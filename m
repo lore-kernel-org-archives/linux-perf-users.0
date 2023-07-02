@@ -2,87 +2,135 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA26EC001B0
-	for <linux-perf-users@archiver.kernel.org>; Sun,  2 Jul 2023 01:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA7AC001B0
+	for <linux-perf-users@archiver.kernel.org>; Sun,  2 Jul 2023 03:03:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229684AbjGBBDo convert rfc822-to-8bit (ORCPT
+        id S229557AbjGBDDj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 1 Jul 2023 21:03:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43650 "EHLO
+        Sat, 1 Jul 2023 23:03:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229533AbjGBBDn (ORCPT
+        with ESMTP id S229457AbjGBDDh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 1 Jul 2023 21:03:43 -0400
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AED64172B;
-        Sat,  1 Jul 2023 18:03:42 -0700 (PDT)
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-bd6446528dcso3458682276.2;
-        Sat, 01 Jul 2023 18:03:42 -0700 (PDT)
+        Sat, 1 Jul 2023 23:03:37 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4C991706;
+        Sat,  1 Jul 2023 20:03:36 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-668704a5b5bso2637295b3a.0;
+        Sat, 01 Jul 2023 20:03:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688267016; x=1690859016;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0+WkD1spmkCtSByMtGbTNiya9x18zjitcw6zTIWUJH4=;
+        b=GIbz09WVg7xNtgefGpf32hZ6ZxYca2OFbdDyTaszABCACg/4CH9MkOu4l4Nl3gxgWN
+         YubC5PWZmWa/GRi1Yvv5hyi5OzFxtuOaAMuf4jz8syzRofFApCctiDHpW4j2F5iFV6Sn
+         gX2dJXhNdW8cumMub8w/D25yGfhpOEcokRmyu6Q0vBLlXVq1Klrlx+hldFChw2Lx8fn5
+         fF+VNnsqA0IVp0wYhY0sSsZbwNFQOoy1NS5Gt/z3P5pcYNX6UXtlRbBIVqcYwT6Ahchs
+         GUYpAyq2sArhVdvrxeT3JLF/Ff7yZVAhYkcJ9W8ATeCBayghWoFCp2CO5ZTqPSWNhiD2
+         ZwMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688259822; x=1690851822;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eH/EyizLb9FjbDE2YkuFGN61mm1+iiCI7p0+/Tx7qko=;
-        b=eTkDHVEHnqb1cFndxc83Izo7UTblTdrMziB0sCIaRfNNp0m6sidfrCQL2TSua9Z5Kh
-         7iI715oaYE+8AIdKNgBP2euBpJLksxIJUjEF+hLftHoKENBQt8N0y02O+2W/pAGw8a6F
-         A/qCmiIzBPfgo56PCZ0UH6OgX0093rS0HJYTRnbzX9Ady6gS+yC2ytJWpMH/8Tng/3Lf
-         X1zR99N5K2eCPw8ilBGrIYM681hIG1Ecq7cRfVB6fIQzeNiGs0cyG1i7IX6PoXR6BYHd
-         yYJOFQ6KOMWsoSSOZCMjVqpBmKBlj9or6x2UFUiK/TDKALLpk0ZImQabRrcJh/wgpXmS
-         Mo+A==
-X-Gm-Message-State: ABy/qLZmsn4ffIc1yFi5nN22uH+3H7LzfaE5ca/06cDOeJk/o/QXcsKO
-        WRQFLjiXd80BzzZohByopOyNGa/qDDuHP+DHV2Y=
-X-Google-Smtp-Source: APBJJlHHOWkKr0/zYtKwSsGlZrlHf2gh3VIuCvw6n4ajuNSjpGTn7JNs3X/0SJDBYrayzKCUV9OilaY/HevRe3yRQi4=
-X-Received: by 2002:a25:ae84:0:b0:bb1:6e29:a84d with SMTP id
- b4-20020a25ae84000000b00bb16e29a84dmr6865225ybj.53.1688259821849; Sat, 01 Jul
- 2023 18:03:41 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1688267016; x=1690859016;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0+WkD1spmkCtSByMtGbTNiya9x18zjitcw6zTIWUJH4=;
+        b=a6LyStjvMhFrqay5MdyHFJAtHmXyteE6P5q/QSzIxiA/PZK4mxUeE/LVLUsxGhsRuz
+         NWAu3ReiXAazWP0DDMLg4uax6AUlK9GwqvToxeQnbEPmbEua7Aac12NNmjvPPBLTg33q
+         szs79eiF/7QtezqLDejxtlROsHYYIcwj1xtrGlxGQXJfa5l5Oen7aVbuM1XedGMW2ZQr
+         ZfeXN66M3cMg21TmrbkNf8Qp4vzxZq2YHo1DJDmgp8o63+rO6+OmOfGwF+BoQlDsZasD
+         mecHqEvX1uKZB/ORRkggMWAXYKH7XeZ2A49dpKLPKeO7EXeZoTHh/t5TSJ4xo0lK/RIK
+         tl2A==
+X-Gm-Message-State: ABy/qLZKxRek3BobVEiihOFmYtREXIHm0mwnkNtm+Oo9JjSY62TkoiMX
+        0U06oEgH2Tm0O3HRYQfIQA8=
+X-Google-Smtp-Source: APBJJlE3EOfGlv4GwutC6Fr9Wf5e7s+tgg0H+RBJMnTQRCrpa9+9+63Ln4KG7fGGJ8CZdXFrLQkyig==
+X-Received: by 2002:a05:6a00:1806:b0:66b:6021:10fe with SMTP id y6-20020a056a00180600b0066b602110femr9802737pfa.31.1688267015903;
+        Sat, 01 Jul 2023 20:03:35 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 5-20020aa79145000000b006688e3de86fsm11979372pfi.85.2023.07.01.20.03.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Jul 2023 20:03:35 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <8d0e1a7c-3533-4b02-c1d6-3732f9680b2b@roeck-us.net>
+Date:   Sat, 1 Jul 2023 20:03:33 -0700
 MIME-Version: 1.0
-References: <20230630085230.437-1-ravi.bangoria@amd.com> <CAM9d7chYnT2s1V1juP+EyewJfRD+2qHGs2pwghh=k3kFf1P9BA@mail.gmail.com>
-In-Reply-To: <CAM9d7chYnT2s1V1juP+EyewJfRD+2qHGs2pwghh=k3kFf1P9BA@mail.gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Sat, 1 Jul 2023 18:03:30 -0700
-Message-ID: <CAM9d7ciV--mPi_MFQdsa8eoGp82NB0B5BmVccP_kMB65wGJafg@mail.gmail.com>
-Subject: Re: [PATCH v3] perf evsel amd: Fix IBS error message
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     acme@kernel.org, peterz@infradead.org, irogers@google.com,
-        jolsa@kernel.org, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com,
-        santosh.shukla@amd.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+From:   Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 6/6] watchdog/hardlockup: Define
+ HARDLOCKUP_DETECTOR_ARCH
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Nicholas Piggin <npiggin@gmail.com>,
+        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        "David S . Miller" <davem@davemloft.net>
+References: <20230616150618.6073-1-pmladek@suse.com>
+ <20230616150618.6073-7-pmladek@suse.com>
+ <7cfc15f1-d8d0-4418-b7a1-5aa9e90e3fb3@roeck-us.net>
+ <CAD=FV=UsgweS0pTpr=6xE-+Dx0fqXgjN=3Gf-4MQcNAzjL+64w@mail.gmail.com>
+Content-Language: en-US
+In-Reply-To: <CAD=FV=UsgweS0pTpr=6xE-+Dx0fqXgjN=3Gf-4MQcNAzjL+64w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Jul 1, 2023 at 11:17 AM Namhyung Kim <namhyung@kernel.org> wrote:
->
-> Hi Ravi,
->
-> On Fri, Jun 30, 2023 at 1:53 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
-> >
-> > AMD IBS can do per-process profiling[1] and is no longer restricted to
-> > per-cpu or systemwide only. Remove stale error message. Also, checking
-> > just exclude_kernel is not sufficient since IBS does not support any
-> > privilege filters. So include all exclude_* checks. And finally, move
-> > these checks under tools/perf/arch/x86/ from generic code.
-> >
-> > Before:
-> >   $ sudo ./perf record -e ibs_op//k -C 0
-> >   Error:
-> >   AMD IBS may only be available in system-wide/per-cpu mode.  Try
-> >   using -a, or -C and workload affinity
-> >
-> > After:
-> >   $ sudo ./perf record -e ibs_op//k -C 0
-> >   Error:
-> >   AMD IBS doesn't support privilege filtering. Try again without
-> >   the privilege modifiers (like 'k') at the end.
-> >
-> > [1] https://git.kernel.org/torvalds/c/30093056f7b2
-> >
-> > Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
->
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+On 7/1/23 09:08, Doug Anderson wrote:
+> Hi,
+> 
+> On Sat, Jul 1, 2023 at 7:40 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>>
+>> On Fri, Jun 16, 2023 at 05:06:18PM +0200, Petr Mladek wrote:
+>>> The HAVE_ prefix means that the code could be enabled. Add another
+>>> variable for HAVE_HARDLOCKUP_DETECTOR_ARCH without this prefix.
+>>> It will be set when it should be built. It will make it compatible
+>>> with the other hardlockup detectors.
+>>>
+>>> The change allows to clean up dependencies of PPC_WATCHDOG
+>>> and HAVE_HARDLOCKUP_DETECTOR_PERF definitions for powerpc.
+>>>
+>>> As a result HAVE_HARDLOCKUP_DETECTOR_PERF has the same dependencies
+>>> on arm, x86, powerpc architectures.
+>>>
+>>> Signed-off-by: Petr Mladek <pmladek@suse.com>
+>>> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+>>> ---
+>> ...
+>>> --- a/include/linux/nmi.h
+>>> +++ b/include/linux/nmi.h
+>>> @@ -9,7 +9,7 @@
+>>>   #include <asm/irq.h>
+>>>
+>>>   /* Arch specific watchdogs might need to share extra watchdog-related APIs. */
+>>> -#if defined(CONFIG_HAVE_HARDLOCKUP_DETECTOR_ARCH) || defined(CONFIG_HARDLOCKUP_DETECTOR_SPARC64)
+>>> +#if defined(CONFIG_HARDLOCKUP_DETECTOR_ARCH) || defined(CONFIG_HARDLOCKUP_DETECTOR_SPARC64)
+>>
+>> This results in:
+>>
+>> arch/powerpc/platforms/pseries/mobility.c: In function 'pseries_migrate_partition':
+>> arch/powerpc/platforms/pseries/mobility.c:753:17: error: implicit declaration of function 'watchdog_hardlockup_set_timeout_pct'; did you mean 'watchdog_hardlockup_stop'? [-Werror=implicit-function-declaration]
+>>    753 |                 watchdog_hardlockup_set_timeout_pct(factor);
+>>
+>> with ppc64_defconfig -CONFIG_HARDLOCKUP_DETECTOR, because the dummy
+>> for watchdog_hardlockup_set_timeout_pct() is still defined in
+>> arch/powerpc/include/asm/nmi.h which is no longer included.
+> 
+> Can you test with:
+> 
+> https://lore.kernel.org/r/20230629124500.1.I55e2f4e7903d686c4484cb23c033c6a9e1a9d4c4@changeid
+> 
 
-Applied to perf-tools-next, thanks!
+Sorry for the noise. I didn't find that one.
+
+Yes, that should work. It is a bit odd that including both linux/nmi.h
+and asm/nmi.h is required, but as it turns out that is actually quite common.
+
+Thanks,
+Guenter
+
+
