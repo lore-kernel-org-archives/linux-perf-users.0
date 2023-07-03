@@ -2,106 +2,72 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5954CEB64DC
-	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Jul 2023 07:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4C1EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Jul 2023 08:18:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230390AbjGCH0b (ORCPT
+        id S229670AbjGCISb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 3 Jul 2023 03:26:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59928 "EHLO
+        Mon, 3 Jul 2023 04:18:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230393AbjGCH0Y (ORCPT
+        with ESMTP id S229591AbjGCISa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Jul 2023 03:26:24 -0400
-Received: from mail-ua1-x92d.google.com (mail-ua1-x92d.google.com [IPv6:2607:f8b0:4864:20::92d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12457E78
-        for <linux-perf-users@vger.kernel.org>; Mon,  3 Jul 2023 00:26:12 -0700 (PDT)
-Received: by mail-ua1-x92d.google.com with SMTP id a1e0cc1a2514c-78f36f37e36so1213812241.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 03 Jul 2023 00:26:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688369171; x=1690961171;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=AFhL3WX439UF4ApWUsjLXGA8K76NwNV7mdB9JrDSbOs=;
-        b=DHzBol8NLJ+48zey6G6sAvkl6ZLmYaukks2MSceVz9eVvrtdUcyJ7mgcYSrSO0hTwW
-         2iVMxffzSLK0S2/rPMgLtNkyJjYZUKmqi8+xlyXOlLQjLrlwi/Z83AwdtiZ5b7loS6dA
-         9hhK9Sl0KSPoDlNfosKy43Jfeqn3agIJyzOHO9P4eyJIHAmCkk/HpC0YsAiF7G4UnTBv
-         q2nXKbdUE9jZeWnadixu10OKXl3xbJWeJZAWfW2I/1enV/ofupc3gmNxVbhB+V+Wt8xe
-         aqkGFYTgm1S8qtpKLatDn5ft4qkD7eWDUourxJc5SV8rSaXP0pKTeUIJngzgXv/QvbEM
-         ubNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688369171; x=1690961171;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AFhL3WX439UF4ApWUsjLXGA8K76NwNV7mdB9JrDSbOs=;
-        b=ZfNmt3PcFRfMX0Qs5LjBvokxctTPYf2LkypIGHNl0GKgOpRUHhgqC/hWqSBn75vWA3
-         A0FZ6JGANNsZUTofZqB6TP4pTgUkpwRadlRctFxd+cjVpVGqomlw16rdQNOkCVVKHOfL
-         5R5WD8e2/HMcnWFR4Le4oCkbWEReFeT1tYSKKWqeJl/foP6Ahhfb4nFqsMa8ZRpSmBSR
-         FmPwMlMavGONaonrxrRjEanUkgFyVNQTnJaooIVeMP0bckeDD1mtxukEd8NjZzqyMWW8
-         QuiroHb4SsGqacJPLcK6EG41MVtcd5seYJjVLlyBR+82eP3F6KWnfSpjxJpxUpGCRnsi
-         gn4A==
-X-Gm-Message-State: ABy/qLaaru77qPeA6tu0aDH369QKc4HhoO0HnEZyWB2CDHW/5C/Eircv
-        5qrXB79BggDDB+NUobIBzh8mflnBAvb8QaY6IqbbeDsMfLtb97pLRO313Q==
-X-Google-Smtp-Source: APBJJlGau/9OizFSeLgMU/K7IoZbflIEWzaM5xflRF3SI1OEFTJw/gCMYBFgMESsm8IteNIYVawKBkXDI8mVc+q8tBM=
-X-Received: by 2002:a67:f651:0:b0:443:51a7:b63d with SMTP id
- u17-20020a67f651000000b0044351a7b63dmr4037175vso.23.1688369171044; Mon, 03
- Jul 2023 00:26:11 -0700 (PDT)
+        Mon, 3 Jul 2023 04:18:30 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 96F60C5
+        for <linux-perf-users@vger.kernel.org>; Mon,  3 Jul 2023 01:18:29 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C629F1FB;
+        Mon,  3 Jul 2023 01:19:11 -0700 (PDT)
+Received: from [10.57.38.97] (unknown [10.57.38.97])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A5783F73F;
+        Mon,  3 Jul 2023 01:18:28 -0700 (PDT)
+Message-ID: <cf180f9a-085b-ad9b-c477-f02d32559c0a@arm.com>
+Date:   Mon, 3 Jul 2023 09:18:27 +0100
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 3 Jul 2023 12:55:59 +0530
-Message-ID: <CA+G9fYt1ZtucYds=p-Z+4sZ+nHMeEAFh2Fbe63VS_03-UsRwBg@mail.gmail.com>
-Subject: next: perf: 32-bit: bench/sched-seccomp-notify.c:139:24: error:
- format '%lu' expects argument of type 'long unsigned int', but argument 2 has
- type 'uint64_t'
-To:     open list <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, bpf <bpf@vger.kernel.org>
-Cc:     Andrei Vagin <avagin@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.12.0
+Subject: Re: Some questions about using the perf tool in ARM-SPE
+To:     Leo Yan <leo.yan@linaro.org>,
+        =?UTF-8?B?6JSh5rKF5L+h?= <fissure2010@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org
+References: <CALDTKqiVNLHM8b21T-zikuNvhfE0N_-kEinpZGSRjSO-04R96w@mail.gmail.com>
+ <874963e2-f97e-b463-1351-b00640b0f67b@arm.com>
+ <CALDTKqg01+xJ2xu218c_QH2PbX9wdhYOiJfDieCXL5PHWV-6FQ@mail.gmail.com>
+ <77773641-26e5-a754-63cf-e7d3443e11fc@arm.com>
+ <CALDTKqgek3Bicxkvnq3BQnSaS2keQG6UK8S6_0oJn26r0D00MA@mail.gmail.com>
+ <20230614012102.GJ217089@leoy-huanghe.lan>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20230614012102.GJ217089@leoy-huanghe.lan>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Following build regressions noticed on Linux next-20230703.
+Hi Leo
+On 14/06/2023 02:21, Leo Yan wrote:
+> Hi,
+> 
+> On Tue, Jun 13, 2023 at 09:23:33PM +0800, 蔡沅信 wrote:
+>> OK
+>> I have a new discovery that c2c seems to support only certain Arm
+>> Neoverse (N1/N2/V1) CPUs, I wonder if cortex-X4 could support it?
+> 
+> Based on Cortex-X4 TRM [1], we can see Cortex-X4 has the same SPE data
+> source packet format with Neoverse CPUs.  In theory, we can add
+> Cortex-X4's MIDR into the neoverse_spe[] array in
+> tools/perf/util/arm-spe.c to support Cortex-X4.
+> 
+> Linux master branch misses the definition for Cortex-X4's MIDR [2],
+> Mark.R / Suzuki / James, could you confirm if Arm has plan or already
+> has patches for enabling Cortex-X4's MIDR?
+> 
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Is there a particular reason why need this in the kernel ? Usual
+policy is, kernel needs to distinguish an MIDR, only if it ever
+needs to. e.g, a CPU erratum specific to the MIDR.
 
-Regressions found on i386:
+Suzuki
 
-  - build/gcc-11-lkftconfig-perf
-
-Regressions found on arm:
-
-  - build/gcc-10-lkftconfig-perf
-  - build/gcc-11-lkftconfig-perf
-
-Build error:
-=======
-bench/sched-seccomp-notify.c: In function 'bench_sched_seccomp_notify':
-bench/sched-seccomp-notify.c:139:24: error: format '%lu' expects
-argument of type 'long unsigned int', but argument 2 has type
-'uint64_t' {aka 'long long unsigned int'} [-Werror=format=]
-  139 |   printf("# Executed %lu system calls\n\n",
-      |                      ~~^
-      |                        |
-      |                        long unsigned int
-      |                      %llu
-  140 |    loops);
-      |    ~~~~~
-      |    |
-      |    uint64_t {aka long long unsigned int}
-cc1: all warnings being treated as errors
-make[4]: *** [tools/build/Makefile.build:97:
-/home/tuxbuild/.cache/tuxmake/builds/1/build/bench/sched-seccomp-notify.o]
-Error 1
-
-Links:
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20230703/testrun/18069798/suite/build/test/gcc-10-lkftconfig-perf/history/
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
