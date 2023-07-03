@@ -2,125 +2,119 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DABA7C3063F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Jul 2023 16:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 579F7C001DD
+	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Jul 2023 19:17:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229942AbjGCQ6m (ORCPT
+        id S230356AbjGCTRF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 3 Jul 2023 12:58:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33644 "EHLO
+        Mon, 3 Jul 2023 15:17:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229656AbjGCQ6l (ORCPT
+        with ESMTP id S229494AbjGCTRE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Jul 2023 12:58:41 -0400
-Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1AE3E58;
-        Mon,  3 Jul 2023 09:58:40 -0700 (PDT)
-Received: by mail-il1-x130.google.com with SMTP id e9e14a558f8ab-3458a08310aso21144185ab.3;
-        Mon, 03 Jul 2023 09:58:40 -0700 (PDT)
+        Mon, 3 Jul 2023 15:17:04 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB1ABE7B
+        for <linux-perf-users@vger.kernel.org>; Mon,  3 Jul 2023 12:16:56 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso3532964a12.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 03 Jul 2023 12:16:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688403520; x=1690995520;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=m1gGSJ/PiSm4A8FwJkg4VqG00mespObQU5IonWWaF9g=;
-        b=QNZQrObPBCtp+tU5MHKcTh+qpIMP3vzmk6S9GmJmVXTQxWjwzmpKPrmHMR5vtDFyy3
-         mOuxxon0KoZMts8WAWOhZKXPspHs2qkLYGURMzbMmjmC9uLojgaWxJ4A8wnvF+ukYLbH
-         KJ9qF9SyjepD4AUQ+fvMqrizZtBHWnGh0v3YN68/v8TvFjpmZakB0Giw9u4Q4rTtfCvk
-         HTbXmIkejDe2nbCk4hF4t+KkTwSKY1eUKC9B4kOnPf38rdhUVYTH10GLB7OSXhCS8scM
-         Mph7mosXnf8jKkrnTC9N/8jK7sE69TknnZp5UoYC2Y0AEM34RQDqo3B+UWhEFkjuVBcF
-         ZBvw==
+        d=chromium.org; s=google; t=1688411816; x=1691003816;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wmfYPyzMN3TrxeJJNRGqcc1V78+Dvq57QM07q24THxo=;
+        b=cBXXw1BX/YQS5OhV4wyvCMLEJtw2faKDUqVuqbWKxU8/5yCELOp1tCfXiXtEv52L9k
+         Yug4x5JvummwpTGtDjxJFlx12KJExacvZghztwNbjKCtREYW/fbFvq3eUtxNKLV+zRXg
+         QTsAuM4NQEoG6QGtlMfRxMY7t78OQSQoth/0E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688403520; x=1690995520;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=m1gGSJ/PiSm4A8FwJkg4VqG00mespObQU5IonWWaF9g=;
-        b=GR/RGMkOlWaE+aIcqpORwKkuibK+s7ZA0BZtx1MxYv4o6jhlJgoxmGSzg1Yqu9j2Fc
-         /GC9zWPyxdBJBnPa1aV7m3fCzy3COom48WtCmcfwYqCZ0wX8lhRM74JpvQ2X6WMCEatI
-         L+UEzWKTPtC7k1e2awk7GPuL6B5lagrD+6gWUGsEnuEJBKWSXnIqsQFGpv6CF0okyw7+
-         ZizD8bFvp6bRToWfYLZnvLMX8o7XeWB8GBSFqNAx2FaJ+FND7NRsOyiKrQ7lWybN0VkK
-         J4IfO7kzzitDzzricqSx7SegzlYQ52UNXtsADB6qHKQNnURtaQfnxH7JPyBa+SMvm/si
-         c8Wg==
-X-Gm-Message-State: ABy/qLY8YV0I8E2vwKRk95Ej3MyRfVepNFuja5ge4MJoEn1R2syD2E8Z
-        3pXo24Yydny5VF94n0jRbOc=
-X-Google-Smtp-Source: APBJJlHa5vJLvAEYbpRNrOoLf2BjlUjeDhQGrJYzACaFmghuRs0GfggMClE9APrML1QXzaijwQhFng==
-X-Received: by 2002:a92:c912:0:b0:345:6c70:a7cd with SMTP id t18-20020a92c912000000b003456c70a7cdmr11077327ilp.1.1688403519855;
-        Mon, 03 Jul 2023 09:58:39 -0700 (PDT)
-Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id r5-20020a056638100500b0042319c38763sm6627058jab.15.2023.07.03.09.58.39
+        d=1e100.net; s=20221208; t=1688411816; x=1691003816;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wmfYPyzMN3TrxeJJNRGqcc1V78+Dvq57QM07q24THxo=;
+        b=Oy3yE2TUEDIYPLgP0jY9VewPDNbT2pSr+TKUoJFoHbMXRh+Svaf1OZmnlf/23XSWn5
+         f33JaqwFkMIslq7DyNkniTeY0oSYR0P0pIS8qbiwvfGCWT9d1Bc3Yy+W0q6AA58KhCJY
+         a+j3IfL6HuQ5XHHExXbtb8wQ23s+yWU6hWHRpa2FVBFxMgD+bIyuv1KhEmU4OpOirUe9
+         oVTiYL+CLOZUhetRkKTl2WUmr0bo2T8r+vAZGwIoeUJ4mj+hETkjiF6bJS0VRjsy4Obi
+         X3EGb8fFst09ALuxoxXlkhs3Zyi+lfzYppcdG2XrAHqjkjq4A/cPzRzVjovncL4i3RmM
+         xYRg==
+X-Gm-Message-State: ABy/qLbdvOnqJ/CbuoAbNgERUNYWT87IWxRu2kOjBuwhRkVyc9ZwlsrI
+        03IwOB5+VwujchozICGJ0i4Bg1dKSLS0YQXIbRA=
+X-Google-Smtp-Source: APBJJlHAwULPXSe6lmSlODSHADBgzpaDcCSBPzHCTRoQEzG85Wo3jO6XKklJK6hdUmff3Yl9O+EZ7g==
+X-Received: by 2002:a05:6a20:2595:b0:126:3528:5a13 with SMTP id k21-20020a056a20259500b0012635285a13mr13907284pzd.53.1688411816317;
+        Mon, 03 Jul 2023 12:16:56 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id i11-20020aa78b4b000000b0066a6ba123eesm14325571pfd.51.2023.07.03.12.16.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jul 2023 09:58:39 -0700 (PDT)
-From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     linux-hardening@vger.kernel.org,
-        Azeem Shaikh <azeemshaikh38@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf: Replace strlcpy with strscpy
-Date:   Mon,  3 Jul 2023 16:58:16 +0000
-Message-ID: <20230703165817.2840457-1-azeemshaikh38@gmail.com>
-X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
+        Mon, 03 Jul 2023 12:16:55 -0700 (PDT)
+Date:   Mon, 3 Jul 2023 12:16:55 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, bpf <bpf@vger.kernel.org>,
+        Andrei Vagin <avagin@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: next: perf: 32-bit: bench/sched-seccomp-notify.c:139:24: error:
+ format '%lu' expects argument of type 'long unsigned int', but argument 2
+ has type 'uint64_t'
+Message-ID: <202307031216.171373CD3@keescook>
+References: <CA+G9fYt1ZtucYds=p-Z+4sZ+nHMeEAFh2Fbe63VS_03-UsRwBg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYt1ZtucYds=p-Z+4sZ+nHMeEAFh2Fbe63VS_03-UsRwBg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-strlcpy() reads the entire source buffer first.
-This read may exceed the destination size limit.
-This is both inefficient and can lead to linear read
-overflows if a source string is not NUL-terminated [1].
-In an effort to remove strlcpy() completely [2], replace
-strlcpy() here with strscpy().
-No return values were used, so direct replacement is safe.
+On Mon, Jul 03, 2023 at 12:55:59PM +0530, Naresh Kamboju wrote:
+> Following build regressions noticed on Linux next-20230703.
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> Regressions found on i386:
+> 
+>   - build/gcc-11-lkftconfig-perf
+> 
+> Regressions found on arm:
+> 
+>   - build/gcc-10-lkftconfig-perf
+>   - build/gcc-11-lkftconfig-perf
+> 
+> Build error:
+> =======
+> bench/sched-seccomp-notify.c: In function 'bench_sched_seccomp_notify':
+> bench/sched-seccomp-notify.c:139:24: error: format '%lu' expects
+> argument of type 'long unsigned int', but argument 2 has type
+> 'uint64_t' {aka 'long long unsigned int'} [-Werror=format=]
+>   139 |   printf("# Executed %lu system calls\n\n",
+>       |                      ~~^
+>       |                        |
+>       |                        long unsigned int
+>       |                      %llu
+>   140 |    loops);
+>       |    ~~~~~
+>       |    |
+>       |    uint64_t {aka long long unsigned int}
+> cc1: all warnings being treated as errors
+> make[4]: *** [tools/build/Makefile.build:97:
+> /home/tuxbuild/.cache/tuxmake/builds/1/build/bench/sched-seccomp-notify.o]
+> Error 1
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-[2] https://github.com/KSPP/linux/issues/89
+Thanks! I've updated the format string to use "%"PRIu64 now.
 
-Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
----
- kernel/events/core.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+-Kees
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 78ae7b6f90fd..2554f5fc70dc 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -8249,7 +8249,7 @@ static void perf_event_comm_event(struct perf_comm_event *comm_event)
- 	unsigned int size;
- 
- 	memset(comm, 0, sizeof(comm));
--	strlcpy(comm, comm_event->task->comm, sizeof(comm));
-+	strscpy(comm, comm_event->task->comm, sizeof(comm));
- 	size = ALIGN(strlen(comm)+1, sizeof(u64));
- 
- 	comm_event->comm = comm;
-@@ -8704,7 +8704,7 @@ static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
- 	}
- 
- cpy_name:
--	strlcpy(tmp, name, sizeof(tmp));
-+	strscpy(tmp, name, sizeof(tmp));
- 	name = tmp;
- got_name:
- 	/*
-@@ -9128,7 +9128,7 @@ void perf_event_ksymbol(u16 ksym_type, u64 addr, u32 len, bool unregister,
- 	    ksym_type == PERF_RECORD_KSYMBOL_TYPE_UNKNOWN)
- 		goto err;
- 
--	strlcpy(name, sym, KSYM_NAME_LEN);
-+	strscpy(name, sym, KSYM_NAME_LEN);
- 	name_len = strlen(name) + 1;
- 	while (!IS_ALIGNED(name_len, sizeof(u64)))
- 		name[name_len++] = '\0';
+> 
+> Links:
+>  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20230703/testrun/18069798/suite/build/test/gcc-10-lkftconfig-perf/history/
+> 
+> 
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
+
 -- 
-2.41.0.255.g8b1d071c50-goog
-
-
+Kees Cook
