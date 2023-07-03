@@ -2,186 +2,106 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD83EEB64DC
-	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Jul 2023 09:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C387AC001B3
+	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Jul 2023 10:21:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231126AbjGCJpV (ORCPT
+        id S230080AbjGCKVA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 3 Jul 2023 05:45:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45964 "EHLO
+        Mon, 3 Jul 2023 06:21:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230513AbjGCJpS (ORCPT
+        with ESMTP id S231186AbjGCKUx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Jul 2023 05:45:18 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD659E59
-        for <linux-perf-users@vger.kernel.org>; Mon,  3 Jul 2023 02:45:12 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-3fbc77e769cso36167925e9.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 03 Jul 2023 02:45:12 -0700 (PDT)
+        Mon, 3 Jul 2023 06:20:53 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A919BE
+        for <linux-perf-users@vger.kernel.org>; Mon,  3 Jul 2023 03:20:52 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1b882228638so7145645ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 03 Jul 2023 03:20:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20221208.gappssmtp.com; s=20221208; t=1688377511; x=1690969511;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rYrikqEYLAou4pnYR2Aq6pNjv0Vdk8l8/0T1K6ojTeg=;
-        b=2tXF85BjqNH/+g3RjKxu5KayJ5sZPo7Hf7CG6Rs2NqvX6hmkBrEvQuTxNo1lYNPDKz
-         KV4Z4oA24Y7BjKB1xYxChMdvy2tp1kH/12HdWcz5qmLpAZIBPVOGp9zwKIIzZGmg8rQu
-         fOe4HZ+2Gn94vJCDnNBMYLltoSeL+WUWEuLSdbeIYaqbbFxE0TAHBIsbsNejzaTJpM67
-         /wcm95xGEECPHfT6Cd4x3kpsl+CaCDtNBghXs/fIVeMZJ/s5Uay3fW9SHeoLBOKLLmtJ
-         el1gtaSLGON+Ih6l8SaFeLZm9ybTSF/jxT6c1RT6i5Rv0//NC/vZ2yPsP3Zh+aURel4c
-         EwJQ==
+        d=linaro.org; s=google; t=1688379652; x=1690971652;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=E6v08z17Vb6wfDocwp2lvaEISP+4aWL/qNSHEkH7ld0=;
+        b=Tjb3NoX8BKkjZ7C/5x9A/ke8HOqWCxMdCzsutVclhlix00YkUFfsKFxe1/qYUB+MZ5
+         nvBY9Gh81T437f3KdqGXHlbiWrGD89qKcFF9HVuSxKkKHOx0P3bg5S/vtlOVDQNzviLL
+         iGwe/2FIhUQ2+DhW0B8DJyucO6/IL+MZucrhZ6VaG8WMwdp0Uak3y3Yvv11VCJlt4WL8
+         1KvmImjaNvYwYY+COUFtZUPv5j/1HPIaKi4E0XYi4+phGDterwAgGHMzQcuHcmG4eKaA
+         9I1pr+AtVsIJDOmP20V5+wTIYBh0ut8cFKXr9HVnIkKIDYzpxQb/H4Nptks18+j8VUx9
+         Q2Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688377511; x=1690969511;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rYrikqEYLAou4pnYR2Aq6pNjv0Vdk8l8/0T1K6ojTeg=;
-        b=T+yNch6YI0kNAUxeBGRgEJKFwYAGIPVSAMBh+bn3QbiACt5g7ccynXhNGs/OU0Z43V
-         g/5meWsB2xZXIpqrvJAXQaduvgz43YnweSNI0s6h8pAQiYadqyVf6dpUVEfstLLb/Eiu
-         gokUuKpEOuqnQq3+hM+bvuU16M2gETRlCkf2UgbUbbRStiH6wiODPX7RdNO7toGk6rId
-         6su/zaRLDHW8rMdkpHEOi20sIDg+Raw/+QmgM4lWkUwGlHjyIhKACergGf3/ukW+T5mr
-         Q+HA8P+00b4J0MoiI2lBpzoPi7D5OvOByNxJpRyA8ObwUJJRVMIP57x5sO2v7islnM2k
-         hAbQ==
-X-Gm-Message-State: AC+VfDyzWxcPIlZJ9pgag2J6j08vGtxpFfLmccGtJzVaqQjIjgkcaEQW
-        WoJUJqPl7qM5fEjT77o9Q8gWBggj2zgK/PD2OMNURA==
-X-Google-Smtp-Source: ACHHUZ68NLQzXNzGeeF7k2ifsyB3gqwunDPHxpAfWYOPgJw1xDOPD6ZNy0ihSYOsi4YSHukqztCwt/Z/vGICPKx+RDA=
-X-Received: by 2002:a05:600c:3787:b0:3fa:8c67:fc43 with SMTP id
- o7-20020a05600c378700b003fa8c67fc43mr8267813wmr.32.1688377510814; Mon, 03 Jul
- 2023 02:45:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230630083013.102334-1-alexghiti@rivosinc.com>
- <20230630083013.102334-9-alexghiti@rivosinc.com> <20230630-f714cc46ee65cc65318f2ada@orel>
-In-Reply-To: <20230630-f714cc46ee65cc65318f2ada@orel>
-From:   Alexandre Ghiti <alexghiti@rivosinc.com>
-Date:   Mon, 3 Jul 2023 11:45:00 +0200
-Message-ID: <CAHVXubh97QyXbiQ6wcaEOkPBKJwzCzm77FgQ+eHEYFFEQyToJw@mail.gmail.com>
-Subject: Re: [PATCH v3 08/10] Documentation: admin-guide: Add riscv sysctl_perf_user_access
-To:     Andrew Jones <ajones@ventanamicro.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        d=1e100.net; s=20221208; t=1688379652; x=1690971652;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E6v08z17Vb6wfDocwp2lvaEISP+4aWL/qNSHEkH7ld0=;
+        b=F/Td2BhGgLqTpaBqwhoaXiUlK0P+4PO388uqaKWnB8P+AeZHHGdMoCAQcCJDd2LAs8
+         ufnUkfVSxbHdwiPY8L3bquBH0PFh2mS55l0ehAippdjjy2MKo659AAR6D22E3bbPsDN7
+         XSou/Bqaz/6sHHz+FEUF6lvDUhhVKV672v9/UxAaFocsKdt8EeEL4QhPOfGCiRIWMQCb
+         GXZWbXXRDyqSt6o14TqBRoI/WBCdbQGRBrgFCJYbhU7n6TVsDdtI++KVDrNYxKoVxDnc
+         n4apRrkBP0WUpWnTSdzqUIMSVERx7WVcLFl/9Rr823gnHVynvA0ZDY8j9he7GXUzLfv8
+         n8hw==
+X-Gm-Message-State: ABy/qLYaKrrh5CuEVtpl/DkAPgokVoHzLopxTuNzO6SxuigfosmLN/Bt
+        9/fQQw2OSef5jXY74LOqcHfE5Q==
+X-Google-Smtp-Source: APBJJlFoyEBoEGqdL2BC4vF8T6iIOUOlz1YSHuIwTtHopuGl2o+BaORdDWcFObVWsS+zkdhfWAPXow==
+X-Received: by 2002:a17:902:da92:b0:1b1:e002:703a with SMTP id j18-20020a170902da9200b001b1e002703amr8988232plx.12.1688379651802;
+        Mon, 03 Jul 2023 03:20:51 -0700 (PDT)
+Received: from leoy-huanghe ([192.169.115.125])
+        by smtp.gmail.com with ESMTPSA id p24-20020a170902a41800b001b39ffff838sm6824374plq.25.2023.07.03.03.20.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Jul 2023 03:20:51 -0700 (PDT)
+Date:   Mon, 3 Jul 2023 18:20:45 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        =?utf-8?B?6JSh5rKF5L+h?= <fissure2010@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <atishp@atishpatra.org>,
-        Anup Patel <anup@brainfault.org>,
-        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linux-perf-users@vger.kernel.org
+Subject: Re: Some questions about using the perf tool in ARM-SPE
+Message-ID: <20230703102032.GB904662@leoy-huanghe>
+References: <CALDTKqiVNLHM8b21T-zikuNvhfE0N_-kEinpZGSRjSO-04R96w@mail.gmail.com>
+ <874963e2-f97e-b463-1351-b00640b0f67b@arm.com>
+ <CALDTKqg01+xJ2xu218c_QH2PbX9wdhYOiJfDieCXL5PHWV-6FQ@mail.gmail.com>
+ <77773641-26e5-a754-63cf-e7d3443e11fc@arm.com>
+ <CALDTKqgek3Bicxkvnq3BQnSaS2keQG6UK8S6_0oJn26r0D00MA@mail.gmail.com>
+ <20230614012102.GJ217089@leoy-huanghe.lan>
+ <cf180f9a-085b-ad9b-c477-f02d32559c0a@arm.com>
+ <f811f7ce-bf04-b5af-ee33-ea489927649f@arm.com>
+ <20230703093913.GA904662@leoy-huanghe>
+ <87b24c93-c457-6cec-736f-ab976ee1d608@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87b24c93-c457-6cec-736f-ab976ee1d608@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 30, 2023 at 1:16=E2=80=AFPM Andrew Jones <ajones@ventanamicro.c=
-om> wrote:
->
-> On Fri, Jun 30, 2023 at 10:30:11AM +0200, Alexandre Ghiti wrote:
-> > riscv now uses this sysctl so document its usage for this architecture.
-> >
-> > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> > ---
-> >  Documentation/admin-guide/sysctl/kernel.rst | 26 +++++++++++++++++----
-> >  1 file changed, 22 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentatio=
-n/admin-guide/sysctl/kernel.rst
-> > index d85d90f5d000..c376692b372b 100644
-> > --- a/Documentation/admin-guide/sysctl/kernel.rst
-> > +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> > @@ -941,16 +941,34 @@ enabled, otherwise writing to this file will retu=
-rn ``-EBUSY``.
-> >  The default value is 8.
-> >
-> >
-> > -perf_user_access (arm64 only)
-> > -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +perf_user_access (arm64 and riscv only)
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +Controls user space access for reading perf event counters.
-> >
-> > -Controls user space access for reading perf event counters. When set t=
-o 1,
-> > -user space can read performance monitor counter registers directly.
-> > +arm64
-> > +=3D=3D=3D=3D=3D
-> >
-> >  The default value is 0 (access disabled).
->
-> Should add a blank line here.
+On Mon, Jul 03, 2023 at 10:42:21AM +0100, James Clark wrote:
 
-Done, thanks
+[...]
 
->
-> > +When set to 1, user space can read performance monitor counter registe=
-rs
-> > +directly.
-> >
-> >  See Documentation/arm64/perf.rst for more information.
-> >
-> > +riscv
-> > +=3D=3D=3D=3D=3D
-> > +
-> > +When set to 0, user access is disabled.
-> > +
-> > +When set to 1, user space can read performance monitor counter registe=
-rs
-> > +directly only through perf, any direct access without perf interventio=
-n will
->
-> Remove 'directly only'
->
-> (It can't be both "direct" and "through" at the same time.)
->
-> > +trigger an illegal instruction.
-> > +
-> > +The default value is 2,
->
-> This is no longer true.
+> >> This is on the tool side rather than in the kernel. But yes, if the data
+> >> source encoding is the same as the existing ones please send a patch
+> >> adding X4's MIDR to the list.
+> > 
+> > I can do this; as elaborated above, I think we need two patches, one is
+> > a kernel patch for adding MIDR and another patch is for perf tool to
+> > consume the MIDR of X4.  I would like to know if this is expected or
+> > not from your side.
+> > 
+> 
+> Personally I would just add it on the tool side only. If it's not really
+> needed in the kernel then it doesn't make sense to add it.
 
-Damn, sorry about that.
+Makes sense to me.  I will try to work out a patch, and it's good to not
+break building when kernel adds the same MIDR x4 definition.
 
->
-> > which enables legacy mode (user space has direct
-> > +access to cycle and insret CSRs only). Note that this legacy value
-> > +is deprecated and will be removed once all userspace applications are =
-fixed.
-> > +
-> > +Note that the time CSR is for now always accessible to all modes.
->
-> s/always accessible/always directly accessible/
->
-> Also, remove 'for now'. While we may change this in the future, I'm not
-> sure if the 'for now' helps much. Maybe a "This may change in the future.=
-"
-> type of sentence? Or, just nothing (for now :-) and we'll modify this
-> document if it changes later.
+Thanks,
+Leo
 
-I won't say anything about the future, thanks!
-
-I also harmonized the "user space" and "userspace" in this document
-with what arm64 does.
-
-Thanks
-
->
-> Thanks,
-> drew
->
-> >
-> >  pid_max
-> >  =3D=3D=3D=3D=3D=3D=3D
-> > --
-> > 2.39.2
-> >
+> But I suppose from a consistency point of view we could add it in both
+> places. I'm not too fussed either way.
+> 
+> > Thanks,
+> > Leo
