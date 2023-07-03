@@ -2,59 +2,47 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F03EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Jul 2023 08:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD0FEB64DC
+	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Jul 2023 08:24:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231337AbjGCIS5 (ORCPT
+        id S229657AbjGCIY3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 3 Jul 2023 04:18:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57886 "EHLO
+        Mon, 3 Jul 2023 04:24:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231403AbjGCIS4 (ORCPT
+        with ESMTP id S229593AbjGCIY2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Jul 2023 04:18:56 -0400
+        Mon, 3 Jul 2023 04:24:28 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9D949E5F;
-        Mon,  3 Jul 2023 01:18:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 95534B2
+        for <linux-perf-users@vger.kernel.org>; Mon,  3 Jul 2023 01:24:27 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE7CC1FB;
-        Mon,  3 Jul 2023 01:19:35 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 03BDD1FB;
+        Mon,  3 Jul 2023 01:25:10 -0700 (PDT)
 Received: from [192.168.1.3] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E52483F73F;
-        Mon,  3 Jul 2023 01:18:50 -0700 (PDT)
-Message-ID: <3a0fff38-b364-a6b4-1d10-41311e2073b4@arm.com>
-Date:   Mon, 3 Jul 2023 09:18:50 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC4123F73F;
+        Mon,  3 Jul 2023 01:24:26 -0700 (PDT)
+Message-ID: <f811f7ce-bf04-b5af-ee33-ea489927649f@arm.com>
+Date:   Mon, 3 Jul 2023 09:24:27 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
-Subject: Re: [PATCH 2/2] perf report: Don't add to histogram when there is no
- thread found
+Subject: Re: Some questions about using the perf tool in ARM-SPE
 Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
-References: <20230626161059.324046-1-james.clark@arm.com>
- <20230626161059.324046-3-james.clark@arm.com> <ZJonE3ZZ2cBUq0U8@google.com>
- <CAP-5=fX+FDAkFoMhQY27_+fiRp_UDruP8qWTdjvqU5-uE0SdWA@mail.gmail.com>
- <CAM9d7cj4xr6oTDKvxbNTVUewyZFTBchQS36KC0nN4i4HjCsq5w@mail.gmail.com>
- <CAP-5=fUTzn06DM7o-1qBx7Tauo2Q2ACHmYcvwTmrTOJpzS2=oQ@mail.gmail.com>
- <d5618d0b-1441-0c04-4b09-768bfe7b7ee7@arm.com>
- <CAM9d7cjx2zinztBYiYaU6iqKzuV3vcJA6wtY71aicFbr5sy9zA@mail.gmail.com>
- <CAM9d7chKj4pnhtuuA6wN6TBLUYq_9bTxvr6dRT7CKW3CfQ1Avg@mail.gmail.com>
+        =?UTF-8?B?6JSh5rKF5L+h?= <fissure2010@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-perf-users@vger.kernel.org
+References: <CALDTKqiVNLHM8b21T-zikuNvhfE0N_-kEinpZGSRjSO-04R96w@mail.gmail.com>
+ <874963e2-f97e-b463-1351-b00640b0f67b@arm.com>
+ <CALDTKqg01+xJ2xu218c_QH2PbX9wdhYOiJfDieCXL5PHWV-6FQ@mail.gmail.com>
+ <77773641-26e5-a754-63cf-e7d3443e11fc@arm.com>
+ <CALDTKqgek3Bicxkvnq3BQnSaS2keQG6UK8S6_0oJn26r0D00MA@mail.gmail.com>
+ <20230614012102.GJ217089@leoy-huanghe.lan>
+ <cf180f9a-085b-ad9b-c477-f02d32559c0a@arm.com>
 From:   James Clark <james.clark@arm.com>
-In-Reply-To: <CAM9d7chKj4pnhtuuA6wN6TBLUYq_9bTxvr6dRT7CKW3CfQ1Avg@mail.gmail.com>
+In-Reply-To: <cf180f9a-085b-ad9b-c477-f02d32559c0a@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -63,61 +51,35 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 30/06/2023 22:02, Namhyung Kim wrote:
-> On Wed, Jun 28, 2023 at 1:06 PM Namhyung Kim <namhyung@kernel.org> wrote:
+On 03/07/2023 09:18, Suzuki K Poulose wrote:
+> Hi Leo
+> On 14/06/2023 02:21, Leo Yan wrote:
+>> Hi,
 >>
->> On Wed, Jun 28, 2023 at 3:34 AM James Clark <james.clark@arm.com> wrote:
->>>
->>>
->>>
->>> On 27/06/2023 18:19, Ian Rogers wrote:
->>>> On Tue, Jun 27, 2023 at 9:58 AM Namhyung Kim <namhyung@kernel.org> wrote:
->>>>>
->>>>> On Tue, Jun 27, 2023 at 9:43 AM Ian Rogers <irogers@google.com> wrote:
->>>>>>
->>>>>> On Mon, Jun 26, 2023 at 5:02 PM Namhyung Kim <namhyung@kernel.org> wrote:
->>>>>>>
->>>>>>> On Mon, Jun 26, 2023 at 05:10:58PM +0100, James Clark wrote:
->>>>>>>> thread__find_map() chooses to exit without assigning a thread to the
->>>>>>>> addr_location in some scenarios, for example when there are samples from
->>>>>>>> a guest and perf_guest == false. This results in a segfault when adding
->>>>>>>> to the histogram because it uses unguarded accesses to the thread member
->>>>>>>> of the addr_location.
->>>>>>>
->>>>>>> Looking at the commit 0dd5041c9a0ea ("perf addr_location: Add
->>>>>>> init/exit/copy functions") that introduced the change, I'm not sure if
->>>>>>> it's the intend behavior.
->>>>>>>
->>>>>>> It might change maps and map, but not thread.  Then I think no reason
->>>>>>> to not set the al->thread at the beginning.
->>>>>>>
->>>>>>> How about this?  Ian?
->>>>>>> (I guess we can get rid of the duplicate 'al->map = NULL' part)
->>>>>>
->>>>>> It seemed strange that we were failing to find a map (the function's
->>>>>> purpose) but then populating the address_location. The change below
->>>>>> brings back that somewhat odd behavior. I'm okay with reverting to the
->>>>>> old behavior, clearly there were users relying on it. We should
->>>>>> probably also copy maps and not just thread, as that was the previous
->>>>>> behavior.
->>>>>
->>>>> Probably.  But it used to support samples without maps and I think
->>>>> that's why it ignores the return value of thread__find_map().  So
->>>>> we can expect al.map is NULL and maybe fine to leave it for now.
->>>>>
->>>>> As machine__resolve() returns -1 if it gets no thread, we should set
->>>>> al.thread when it returns 0.
->>>>>
->>>>> Can I get your Acked-by?
->>>>
->>>> Yep:
->>>> Acked-by: Ian Rogers <irogers@google.com>
->>>
->>> Looks good to me too. Should I resend the set with this change instead
->>> of my one?
+>> On Tue, Jun 13, 2023 at 09:23:33PM +0800, 蔡沅信 wrote:
+>>> OK
+>>> I have a new discovery that c2c seems to support only certain Arm
+>>> Neoverse (N1/N2/V1) CPUs, I wonder if cortex-X4 could support it?
 >>
->> No, I can take care of that.  I'll take this as your Acked-by. :)
+>> Based on Cortex-X4 TRM [1], we can see Cortex-X4 has the same SPE data
+>> source packet format with Neoverse CPUs.  In theory, we can add
+>> Cortex-X4's MIDR into the neoverse_spe[] array in
+>> tools/perf/util/arm-spe.c to support Cortex-X4.
+>>
+>> Linux master branch misses the definition for Cortex-X4's MIDR [2],
+>> Mark.R / Suzuki / James, could you confirm if Arm has plan or already
+>> has patches for enabling Cortex-X4's MIDR?
+>>
 > 
-> This part is applied to perf-tools-next, thanks!
+> Is there a particular reason why need this in the kernel ? Usual
+> policy is, kernel needs to distinguish an MIDR, only if it ever
+> needs to. e.g, a CPU erratum specific to the MIDR.
+> 
+> Suzuki>
 
-Thanks Namhyung
+This is on the tool side rather than in the kernel. But yes, if the data
+source encoding is the same as the existing ones please send a patch
+adding X4's MIDR to the list.
+
+Thanks
+James
