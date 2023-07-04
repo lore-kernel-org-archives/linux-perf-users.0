@@ -2,510 +2,101 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE6AEB64D9
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Jul 2023 11:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D15EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Jul 2023 12:28:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230451AbjGDLaa (ORCPT
+        id S231589AbjGDM2Y (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Jul 2023 07:30:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44712 "EHLO
+        Tue, 4 Jul 2023 08:28:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230242AbjGDLaa (ORCPT
+        with ESMTP id S231635AbjGDM2W (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Jul 2023 07:30:30 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 12D5EE52
-        for <linux-perf-users@vger.kernel.org>; Tue,  4 Jul 2023 04:30:24 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 387852F4;
-        Tue,  4 Jul 2023 04:31:06 -0700 (PDT)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F097C3F73F;
-        Tue,  4 Jul 2023 04:30:21 -0700 (PDT)
-Message-ID: <6310725b-cc30-49e4-d405-ed2d5f31b404@arm.com>
-Date:   Tue, 4 Jul 2023 12:30:20 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: perf-tools-next: Request for testing hybrid changes
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>
-Cc:     John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        Tue, 4 Jul 2023 08:28:22 -0400
+Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CAD710D0
+        for <linux-perf-users@vger.kernel.org>; Tue,  4 Jul 2023 05:28:20 -0700 (PDT)
+Received: by mail-qv1-xf2b.google.com with SMTP id 6a1803df08f44-635fa79d7c0so23594546d6.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jul 2023 05:28:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=maine.edu; s=google; t=1688473699; x=1691065699;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=l5YpNQ9k3FxEI6NyEQ6O/c948FLcVDYur8dACWC8IMo=;
+        b=MKbpxpd3h33Jur04KbPUrCLTlVIAAu5iv7+InZ2Ld/h7aQEoYZjAV/1l7GNlBXhBs/
+         SBy7ElK8A3XM0+bIPwHaC+MmN5ZHDIgtcMt0tbcTmJ/TCFBrs4T9BMNP4X7XwieicLlM
+         3Uf0jz/gYRqoPW9beXrjMAL/7Ilt9EiZwz9MQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688473699; x=1691065699;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l5YpNQ9k3FxEI6NyEQ6O/c948FLcVDYur8dACWC8IMo=;
+        b=lmds/P96Qrz4o6/2dGHniivll0XttZuC5dA1p3GSeJKN/DRceCjk3LVf1KF+6Vn5b2
+         cBBKUNxAI9gskjBRY1CxAiu2rwV1r82m1Nt3C7jEl7b1FPG+M/vgdxUIubCIafxY0Y85
+         50R6t0kpQR2HSV17oPhTaWcl1RSLsHi/X55L4SvPGvpGpaYg78BAL2SRqCpZlZWJUQk5
+         tArQhArq9pqVrZ/9HTCNj+MW7EN32reIJa0zvo6fvzSPWj1cd8zAZEdmIbfdPuD3itel
+         q3YtrFTrHwrT4pWjYQzofd1gVchQAwYt3SFrHeSM/JITOqixf11B+VM5MvF0ONrlKltf
+         bU8g==
+X-Gm-Message-State: AC+VfDw3uNnPzD8vJzf8hVQk0Yn195PAulHWAF6qsCf3VVkXnSGhVRYQ
+        uAiYafCcLLXOzdDjwIR2mr1mYA==
+X-Google-Smtp-Source: ACHHUZ6ytBJOoBgDRsxovcaKyYEdk2QBLDw+FxvVzCXKV9CmY3KSb9amNV59gJ8MDByp7CHlrPVdRA==
+X-Received: by 2002:ad4:5ba6:0:b0:623:5c93:77eb with SMTP id 6-20020ad45ba6000000b006235c9377ebmr22037706qvq.13.1688473699061;
+        Tue, 04 Jul 2023 05:28:19 -0700 (PDT)
+Received: from macbook-air.local (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id oj2-20020a056214440200b00631fc149a19sm1667137qvb.110.2023.07.04.05.28.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jul 2023 05:28:18 -0700 (PDT)
+From:   Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date:   Tue, 4 Jul 2023 08:28:08 -0400 (EDT)
+To:     Alexandre Ghiti <alexghiti@rivosinc.com>
+cc:     Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Namhyung Kim <namhyung@gmail.com>
-References: <CAM9d7cgmHuhv1U6yAB-2qUr8SuFjUd-Lqw0kew9MaBVeD8xxGw@mail.gmail.com>
- <CAP-5=fXFBpaN+ajF+u6GAL-3bb9LPR=dwevB_-7N7uUh-c3SPw@mail.gmail.com>
- <a3958a0c-092f-b609-e2ea-0d35fddd4375@arm.com>
- <CAP-5=fX8Nwtra=EgRNh3Ybp+N0BKp4Cw=0uRS9ZCdPyGF4R_bA@mail.gmail.com>
- <f1cfdc5d-19df-5d71-15c4-59af06dd3d28@arm.com>
- <CAP-5=fXwdc4VK=6dEoD4V0Jp+unYghWYTfbN4ER2aYd9R52W1g@mail.gmail.com>
- <01bc8040-92ef-cf8b-967a-6782989ecf33@arm.com>
- <CAP-5=fVkRc9=ySJ=fG-SQ8oAKmE_1mhHHzSASmGHUsda5Qy92A@mail.gmail.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <CAP-5=fVkRc9=ySJ=fG-SQ8oAKmE_1mhHHzSASmGHUsda5Qy92A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <atishp@atishpatra.org>,
+        Anup Patel <anup@brainfault.org>,
+        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+        Andrew Jones <ajones@ventanamicro.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 08/10] Documentation: admin-guide: Add riscv
+ sysctl_perf_user_access
+In-Reply-To: <20230703124647.215952-9-alexghiti@rivosinc.com>
+Message-ID: <72d2ad7a-601a-a06a-5587-3843971dddf3@maine.edu>
+References: <20230703124647.215952-1-alexghiti@rivosinc.com> <20230703124647.215952-9-alexghiti@rivosinc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 30/06/2023 17:45, Ian Rogers wrote:
-> On Fri, Jun 30, 2023 at 9:14 AM James Clark <james.clark@arm.com> wrote:
->>
->>
->>
->> On 30/06/2023 16:30, Ian Rogers wrote:
->>> On Thu, Jun 29, 2023 at 4:14 AM James Clark <james.clark@arm.com> wrote:
->>>>
->>>>
->>>>
->>>> On 23/06/2023 15:30, Ian Rogers wrote:
->>>>> On Fri, Jun 23, 2023 at 1:42 AM James Clark <james.clark@arm.com> wrote:
->>>>>>
->>>>>>
->>>>>>
->>>>>> On 22/06/2023 21:15, Ian Rogers wrote:
->>>>>>> On Thu, Jun 22, 2023 at 11:57 AM Namhyung Kim <namhyung@gmail.com> wrote:
->>>>>>>>
->>>>>>>> Hello,
->>>>>>>>
->>>>>>>> In this development cycle, we've got a big change in how to handle
->>>>>>>> heterogeneous core PMUs. It's mostly tested on Intel hybrid machines
->>>>>>>> but caused some troubles on others.  So I'd like to confirm it works
->>>>>>>> on major platforms without problems.  Especially on ARM64 as it has
->>>>>>>> the big.LITTLE CPUs.
->>>>>>>
->>>>>>>
->>>>>>> Thanks Namhyung. I believe there is a change on ARM64 that makes a
->>>>>>> problem of one type into a slightly different problem. The perf parse
->>>>>>> events logic handles events certain known hardware events using known
->>>>>>> numeric encodings, for example, the cycles event has a type of 0
->>>>>>> (PERF_TYPE_HARDWARE) and a config of 0 (PERF_COUNT_HW_CPU_CYCLES):
->>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/parse-events.l?h=perf-tools-next#n286
->>>>>>>
->>>>>>> The perf_event_open syscall can specify a CPU number of -1 for any. My
->>>>>>> understanding is that -1 on ARM translates into choose the PMU of the
->>>>>>> current running thread, this means that if a thread migrates from
->>>>>>> between core/PMU types it won't be recorded on the alternate PMU type.
->>>>>>>
->>>>>>> The extended type capability (PERF_PMU_CAP_EXTENDED_HW_TYPE) solves
->>>>>>> this, but appears not to be set on ARM's PMU:
->>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/tree/drivers/perf/arm-cmn.c#n2291
->>>>>>> Could an ARM64 related person fix this?
->>>>>>>
->>>>>>
->>>>>> Yes I was planning to look into this since this thread [1].
->>>>>> It seems like there are still some test failures on Juno which I'm
->>>>>> working through now, even after the fix in that thread. And I was
->>>>>> thinking that it should be possible to support
->>>>>> PERF_PMU_CAP_EXTENDED_HW_TYPE on Arm too.
->>>>>
->>>>> Thanks James, my memory of Juno boards was early bring up work and I
->>>>> don't recall them having heterogeneous PMUs. Presumably this is
->>>>
->>>> Juno does seem to report two PMU types:
->>>>
->>>>    ls /sys/bus/event_source/devices/
->>>>    ...
->>>>    armv8_cortex_a53  armv8_cortex_a57
->>>>    ...
->>>>
->>>>> another issue, I'm happy to help if you can share more details.
->>>>
->>>> So it looks like the failure starts at commit 8bc75f699c14 ("perf
->>>> parse-events: Support wildcards on raw events"). test__checkevent_raw()
->>>> is looking for PERF_TYPE_RAW at this point, but the commit has changed
->>>> the opened event to be whatever PMU it found (type 8 on n1sdp for
->>>> example) instead of PERF_TYPE_RAW (4) which causes the test to fail.
->>>>
->>>> Then looking at the latest perf-tools-next (ad5f604e186a), now the event
->>>> opened goes back to PERF_TYPE_RAW again, but test__checkevent_raw() is
->>>> testing for a real PMU type. None of the PMUs have raw type so the test
->>>> still fails.
->>>>
->>>> This is all on N1SDP which only has one PMU type so
->>>> perf_pmus__supports_extended_type() returns false.
->>>>
->>>> On Juno it's similar, but perf_pmus__supports_extended_type() isn't
->>>> called for the raw test for some reason. It doesn't get hit until the
->>>> "instructions" and test__checkevent_symbolic_name() test later. I saw
->>>> this because I was looking into Arnaldo's suggestion to hard code a
->>>> return false for arm there. But it doesn't fix the test failures for
->>>> either platform.
->>>>
->>>> The failures do look slightly different depending on whether there are
->>>> heterogeneous PMUs or not, so maybe there are two problems to fix. Here
->>>> are the full outputs of the test from both platforms. But I can't really
->>>> think what the fix should be (assuming we should first fix it without
->>>> looking at PERF_PMU_CAP_EXTENDED_HW_TYPE yet).
->>>>
->>>> N1SDP (only the raw test fails):
->>>>
->>>>  $ ls /sys/bus/event_source/devices/
->>>>  ...
->>>>  armv8_pmuv3_0
->>>>  ...
->>>>
->>>>  $ ./perf test "Test event parsing" -vvv
->>>>      6: Parse event definition strings                                  :
->>>>     6.1: Test event parsing                                            :
->>>>   --- start ---
->>>>   test child forked, pid 21636
->>>>   running test 0 'syscalls:sys_enter_openat'
->>>>   Using CPUID 0x00000000410fd0c0
->>>>   running test 1 'syscalls:*'
->>>>   running test 2 'r1a'
->>>>   FAILED tests/parse-events.c:123 No PMU found for type
->>>>   Event test failure: test 2 'r1a'running test 3 '1:1'
->>>>   running test 4 'instructions'
->>>>   running test 5 'cycles/period=100000,config2/'
->>>>   running test 6 'faults'
->>>>   running test 7 'L1-dcache-load-miss'
->>>>   running test 8 'mem:0'
->>>>   running test 9 'mem:0:x'
->>>>   running test 10 'mem:0:r'
->>>>   running test 11 'mem:0:w'
->>>>   running test 12 'syscalls:sys_enter_openat:k'
->>>>   running test 13 'syscalls:*:u'
->>>>   running test 14 'r1a:kp'
->>>>   FAILED tests/parse-events.c:123 No PMU found for type
->>>>   Event test failure: test 14 'r1a:kp'running test 15 '1:1:hp'
->>>>   running test 16 'instructions:h'
->>>>   running test 17 'faults:u'
->>>>   running test 18 'L1-dcache-load-miss:kp'
->>>>   running test 19 'mem:0:u'
->>>>   running test 20 'mem:0:x:k'
->>>>   running test 21 'mem:0:r:hp'
->>>>   running test 22 'mem:0:w:up'
->>>>   running test 23 'r1,syscalls:sys_enter_openat:k,1:1:hp'
->>>>   running test 24 'instructions:G'
->>>>   running test 25 'instructions:H'
->>>>   running test 26 'mem:0:rw'
->>>>   running test 27 'mem:0:rw:kp'
->>>>   running test 28 '{instructions:k,cycles:upp}'
->>>>   running test 29 '{faults:k,cache-references}:u,cycles:k'
->>>>   running test 30
->>>> 'group1{syscalls:sys_enter_openat:H,cycles:kppp},group2{cycles,1:3}:G,instructions:u'
->>>>   running test 31 '{cycles:u,instructions:kp}:p'
->>>>   running test 32 '{cycles,instructions}:G,{cycles:G,instructions:G},cycles'
->>>>   running test 33 '*:*'
->>>>   running test 34 '{cycles,cache-misses:G}:H'
->>>>   running test 35 '{cycles,cache-misses:H}:G'
->>>>   running test 36 '{cycles:G,cache-misses:H}:u'
->>>>   running test 37 '{cycles:G,cache-misses:H}:uG'
->>>>   running test 38 '{cycles,cache-misses,branch-misses}:S'
->>>>   running test 39 '{instructions,branch-misses}:Su'
->>>>   running test 40 'instructions:uDp'
->>>>   running test 41 '{cycles,cache-misses,branch-misses}:D'
->>>>   running test 42 'mem:0/1'
->>>>   running test 43 'mem:0/2:w'
->>>>   running test 44 'mem:0/4:rw:u'
->>>>   running test 45 'instructions:I'
->>>>   running test 46 'instructions:kIG'
->>>>   running test 47 'task-clock:P,cycles'
->>>>   running test 48 'instructions/name=insn/'
->>>>   running test 49 'r1234/name=rawpmu/'
->>>>   running test 50 '4:0x6530160/name=numpmu/'
->>>>   running test 51 'L1-dcache-misses/name=cachepmu/'
->>>>   running test 52 'intel_pt//u'
->>>>   ... SKIP
->>>>   running test 53
->>>> 'cycles/name='COMPLEX_CYCLES_NAME:orig=cycles,desc=chip-clock-ticks'/Duk'
->>>>   running test 54 'cycles//u'
->>>>   running test 55 'cycles:k'
->>>>   running test 56 'instructions:uep'
->>>>   running test 57 '{cycles,cache-misses,branch-misses}:e'
->>>>   running test 58 'cycles/name=name/'
->>>>   running test 59 'cycles/name=l1d/'
->>>>   running test 60 'mem:0/name=breakpoint/'
->>>>   running test 61 'mem:0:x/name=breakpoint/'
->>>>   running test 62 'mem:0:r/name=breakpoint/'
->>>>   running test 63 'mem:0:w/name=breakpoint/'
->>>>   running test 64 'mem:0/name=breakpoint/u'
->>>>   running test 65 'mem:0:x/name=breakpoint/k'
->>>>   running test 66 'mem:0:r/name=breakpoint/hp'
->>>>   running test 67 'mem:0:w/name=breakpoint/up'
->>>>   running test 68 'mem:0:rw/name=breakpoint/'
->>>>   running test 69 'mem:0:rw/name=breakpoint/kp'
->>>>   running test 70 'mem:0/1/name=breakpoint/'
->>>>   running test 71 'mem:0/2:w/name=breakpoint/'
->>>>   running test 72 'mem:0/4:rw/name=breakpoint/u'
->>>>   running test 73 'mem:0/1/name=breakpoint1/,mem:0/4:rw/name=breakpoint2/'
->>>
->>> I saw the raw encoding issue on my Raspberry Pi. I also saw a lot of
->>> libtraceevent errors. This is concerning me and we need to get a fix
->>> for 6.5.
->>>
->>>> Juno:
->>>>
->>>>   (/sys/bus/event_source/devices/ output above)
->>>>
->>>>       3: Parse event definition strings                                  :
->>>>     3.1: Test event parsing                                            :
->>>>   --- start ---
->>>>   running test 0 'r1a'
->>>>   Using CPUID 0x00000000410fd070
->>>>   FAILED tests/parse-events.c:123 No PMU found for type
->>>>   Event test failure: test 0 'r1a'running test 1 '1:1'
->>>>   running test 2 'instructions'
->>>>   Opening: unknown-hardware:HG
->>>>   ------------------------------------------------------------
->>>>   perf_event_attr:
->>>>     type                             0 (PERF_TYPE_HARDWARE)
->>>>     config                           0x800000000
->>>>     disabled                         1
->>>>   ------------------------------------------------------------
->>>
->>> Here the config has the extended type in it but because ARM PMU's
->>> heterogeneous PMUs aren't  supporting that we get divergence. I think
->>> this is a legitimate failure until ARM's PMU driver is fixed to enable
->>> the extended type information. We can make the test robust to this,
->>> but it is probably a good idea to red flag the ARM PMU being wrong.
->>
->> Shouldn't Perf just not request it if it isn't available? I thought the
->> capability stuff was supposed to help with knowing what the kernel will
->> support before opening the event.
-> 
-> So there are legacy events like instructions and cycles, the case here
-> is cycles. The type for the PMU is given as 0, no dynamically
-> registered PMU has this type, and the config is 0. For homogeneous
-> PMUs that'd be the end of the story:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/parse-events.c?h=perf-tools-next#n1510
-> 
-> For heterogeneous PMUs we need to open the event for each PMU. This is
-> because we want to track instructions or cycles on each PMU. The
-> encoding for this is to put the PMU's type into the extended type part
-> of the config. This is the 8 before all the 0s of the 0 config value.
-> 
-> In the kernel's core event opening handling is:
-> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/tree/kernel/events/core.c?h=perf/core#n11617
-> ```
-> /*
-> * PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE
-> * are often aliases for PERF_TYPE_RAW.
-> */
-> type = event->attr.type;
-> if (type == PERF_TYPE_HARDWARE || type == PERF_TYPE_HW_CACHE) {
-> type = event->attr.config >> PERF_PMU_TYPE_SHIFT;
-> if (!type) {
-> type = PERF_TYPE_RAW;
-> } else {
-> extended_type = true;
-> event->attr.config &= PERF_HW_EVENT_MASK;
-> }
-> }
-> ```
-> 
-> So without the extended type PERF_TYPE_RAW is used for
-> PERF_TYPE_HARDWARE or PERF_TYPE_HW_CACHE. However, the capability
-> needs to be set on the PMU to support extended types otherwise the
-> code will fail:
-> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/tree/kernel/events/core.c?h=perf/core#n11637
-> ```
-> if (event->attr.type != type && type != PERF_TYPE_RAW &&
->    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
-> goto fail;
-> ```
-> For heterogeneous ARM PMUs I believe this is exactly the path taken to
-> cause the perf_event_open to fail. The resolution is to add the bit to
-> the PMU's capabilities. I believe doing it here will suffice:
-> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/tree/drivers/perf/arm_pmu.c?h=perf/core#n877
-> So:
-> ```
-> .capabilities = PERF_PMU_CAP_HETEROGENEOUS_CPUS | PERF_PMU_CAP_EXTENDED_REGS,
-> ```
-> becomes:
-> ```
-> .capabilities = PERF_PMU_CAP_HETEROGENEOUS_CPUS |
-> PERF_PMU_CAP_EXTENDED_REGS | PERF_PMU_CAP_EXTENDED_HW_TYPE,
-> ```
-> Now strictly speaking you only need this in the case of heterogeneous
-> PMUs, but that's the case for other bits here and I don't see special
-> case logic...
-> 
+On Mon, 3 Jul 2023, Alexandre Ghiti wrote:
 
-Hi Ian,
+> -=================================
+> +perf_user_access (arm64 and riscv only)
+> +=======================================
 
-I tested the above and it seems to work fine on Arm so I will send it
-shortly. Some of the legacy perf stat use cases are working better with
-it so it makes sense to me. I also don't see a reason to not always do
-it even for homogeneous PMUs. To be honest I don't see a reason not to
-remove it as a capability and have it as the default behaviour
-everywhere? It all happens in the core code so I'm not sure adding it
-per PMU device is necessary, but maybe there is a reason?
+so I complained about this when support for this went in for arm64.
 
-I've also got a fix for all of the test cases which works for both
-scenarios where the kernel does and doesn't support
-PERF_PMU_CAP_EXTENDED_HW_TYPE which I will also send shortly. So there's
-probably no need for you to look into any of those failures on Arm anymore.
+Why do we have two separate ways of getting this info, one for x86 and one 
+for arm64/riscv?
 
-Apart from maybe the case with the cache events opening twice, but I can
-also look into a fix for that if you like?
+Could we get x86 patched to use the same interface?
 
-James
+It's a pain for tool users to have to maintain multiple code paths because 
+the various architectures can't agree on how to export this info to 
+userspace.
 
->> Even without that, Perf has the
->> fallback mechanism where it retries opening with fewer options if
->> something causes a failure.
-> 
-> The fallback with fewer options is a separate problem. The most common
-> case for that is that perf is trying to profile both user and kernel
-> code, but lacks permission. We retry just trying to profile user code.
-> The problem of permissions is a separate one to opening events on the
-> correct PMU.
-> 
->>>
->>>>   sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8
->>>>   sys_perf_event_open failed, error -2
->>>>   running test 3 'cycles/period=100000,config2/'
->>>>   running test 4 'faults'
->>>>   running test 5 'L1-dcache-load-miss'
->>>>   running test 6 'mem:0'
->>>>   running test 7 'mem:0:x'
->>>>   running test 8 'mem:0:r'
->>>>   running test 9 'mem:0:w'
->>>>   running test 10 'r1a:kp'
->>>>   FAILED tests/parse-events.c:123 No PMU found for type
->>>>   Event test failure: test 10 'r1a:kp'running test 11 '1:1:hp'
->>>>   running test 12 'instructions:h'
->>>>   FAILED tests/parse-events.c:329 wrong number of entries
->>>>   Event test failure: test 12 'instructions:h'running test 13 'faults:u'
->>>>   running test 14 'L1-dcache-load-miss:kp'
->>>>   running test 15 'mem:0:u'
->>>>   running test 16 'mem:0:x:k'
->>>>   running test 17 'mem:0:r:hp'
->>>>   running test 18 'mem:0:w:up'
->>>>   running test 19 'instructions:G'
->>>>   running test 20 'instructions:H'
->>>>   running test 21 'mem:0:rw'
->>>>   running test 22 'mem:0:rw:kp'
->>>>   running test 23 '{instructions:k,cycles:upp}'
->>>>   FAILED tests/parse-events.c:832 wrong number of entries
->>>>   Event test failure: test 23 '{instructions:k,cycles:upp}'running test
->>>
->>> These failures will relate to not opening enough events, there should
->>> be one instructions and cycles event/evsel (both legacy types) per
->>> PMU. Similarly below. All these failures will relate to the extended
->>> type divergence, could this be a priority for someone, ARM, Linaro..
->>> to look at? I'm happy to send emails, be on a call, etc.
->>>
->>
->> Yes a call sounds good. I can do 8am to 6pm BST all next week pretty
->> much, if that works for you?
-> 
-> Let me check with my wife. Next week is funny for some odd
-> "independence" celebration here.
-> 
->> I think Will has a point that the Arm version without
->> PERF_PMU_CAP_EXTENDED_HW_TYPE has existed for a long time, and as far as
->> I know new Perf should be compatible with old kernels (including the
->> tests?) so we should make sure it works with both versions even if we do
->> add PERF_PMU_CAP_EXTENDED_HW_TYPE for Arm later.
-> 
-> Agreed. It's the time machine problem, we can fix this but to fix it
-> for everyone requires a time machine. Fixing this problem on older
-> kernels is much more messy as event mapping logic is necessary. Given
-> a lack of complaints perhaps we just keep older kernels broken with a
-> failing test.
-> 
->> I need to go back and re-check my previous message about the usability
->> (rather than test) issues on Juno and see which ones, if any, are
->> related to these changes. If something that a user could do before
->> doesn't work anymore maybe that adds another argument.
-> 
-> Something that looks regressed in the new code is that we get >1
-> legacy cache event on heterogeneous ARM PMUs but the extended type
-> isn't set:
-> Iterating all core PMUs:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/parse-events.c?h=perf-tools-next#n464
-> The setting of the config will ignore not set the extended type bits:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/parse-events.c?h=perf-tools-next#n434
-> An example would be:
-> $ perf stat -e l1d-misses true
-> There should be two events on a heterogeneous system, but without the
-> extended type this will just induce unnecessary multiplexing. We
-> should probably just not iterate in the broken extended type case as
-> we are for PERF_TYPE_HARDWARE:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/parse-events.c?h=perf-tools-next#n1511
-> 
-> Thanks,
-> Ian
-> 
->>> Thanks,
->>> Ian
->>>
->>>> 24 '{faults:k,cache-references}:u,cycles:k'
->>>>   FAILED tests/parse-events.c:875 wrong number of entries
->>
->> [...]
->>>>   running test 65 'mem:0/4:rw/name=breakpoint/u'
->>>>   running test 66 'mem:0/1/name=breakpoint1/,mem:0/4:rw/name=breakpoint2/'
->>>>
->>>>
->>>>>
->>>>> It is great that you'll look to add PERF_PMU_CAP_EXTENDED_HW_TYPE,
->>>>> there is also the legacy kernel issue. Do you have a plan there or
->>>>> should supporting PERF_PMU_CAP_EXTENDED_HW_TYPE be the plan? As the
->>>>> Linux 6.5 merge window will open soon I'm concerned that these fixes
->>>>> may only make it into 6.6. Should we do anything short-term for 6.5?
->>>>> For example, if extended types aren't supported then disable the
->>>>> wildcard matching of PMUs in the "numeric", really PERF_TYPE_HARDWARE
->>>>> and PERF_TYPE_HW_CACHE, cases?
->>
->> Sorry I missed this bit before, but I think that we need both cases to
->> work even if we add PERF_PMU_CAP_EXTENDED_HW_TYPE in the future. So yes
->> I think some short term tool fix would be needed. Unless it's just the
->> tests that are failing rather than any real use cases, then maybe
->> nothing needs to be done.
->>
->> James
->>
->>>>>
->>>>> Thanks,
->>>>> Ian
->>>>>
->>>>>> [1]: https://lore.kernel.org/all/ZIxza13x+AwApbQb@kernel.org/
->>>>>>
->>>>>>> The perf tool is expecting it to be supported and so it tries to open
->>>>>>> the event for each core PMU, so the cycles event will open for each of
->>>>>>> a BIG.little PMU, however, as the extended type isn't supported the
->>>>>>> same event will be opened twice and the migration problem still
->>>>>>> exists. This problem exists for all PERF_TYPE_HARDWARE events (10) and
->>>>>>> all PERF_TYPE_HW_CACHE events (42).
->>>>>>>
->>>>>>> Assuming the capability issue is fixed, there is still an open issue
->>>>>>> about how to properly support these 52 events on older kernels. It
->>>>>>> would be possible to use the architecture standard events, so cycles
->>>>>>> can map to cpu_cycles, instructions to sw_incr, cache-references to
->>>>>>> l1d_cache (probably), etc. I'm not sure this will work for all 52
->>>>>>> events and the plumbing in the perf tool isn't straightforward.
->>>>>>> There's also the question of whether such a change of events should
->>>>>>> happen when we know the perf_event_open will be given a CPU, should
->>>>>>> that case not wildcard PMUs?>
->>>>>>> I'm happy to provide more context/details.
->>>>>>>
->>>>>>> Thanks,
->>>>>>> Ian
->>>>>>>
->>>>>>>> Also we are transitioning from Arnaldo's tree to new repositories in
->>>>>>>> git.kernel.org:
->>>>>>>>
->>>>>>>>  * kernel/git/perf/perf-tools (for the fixes on the current dev cycle)
->>>>>>>>  * kernel/git/perf/perf-tools-next (for new features for the next cycle)
->>>>>>>>
->>>>>>>> There is a branch with the same name.  Please check out
->>>>>>>> perf-tools-next and play with it.
->>>>>>>>
->>>>>>>> Thanks,
->>>>>>>> Namhyung
+Vince
