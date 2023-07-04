@@ -2,183 +2,290 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FC9EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Jul 2023 14:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F88EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Jul 2023 14:48:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231814AbjGDOi3 (ORCPT
+        id S231863AbjGDOs1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Jul 2023 10:38:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53062 "EHLO
+        Tue, 4 Jul 2023 10:48:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231578AbjGDOiZ (ORCPT
+        with ESMTP id S231869AbjGDOsX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Jul 2023 10:38:25 -0400
-Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B31E10C3;
-        Tue,  4 Jul 2023 07:38:20 -0700 (PDT)
-Received: by mail-ot1-x330.google.com with SMTP id 46e09a7af769-6b5ef64bca6so4984505a34.3;
-        Tue, 04 Jul 2023 07:38:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688481499; x=1691073499;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=AF17IbQd8ZxHv7cFvNY+odT1eF0QJFR1h0MLd8BIYjc=;
-        b=G2VE6fm00EqQKlsyVd2xRtU0thb2VUFW9Cp7ckYKcedpsaiaO/kJGhu2TcW9BR0gg0
-         hbug9YpxF3kmBEV4rbKlgS5a3AyEwBKV66bdb4tDBEHtEax7w2jCbEyVrmVnGduAS/qd
-         11GwlsZjBmlMvFH9pf7snQyNdhJH/kE+qzTe/mzoo98HVFPyY4ZHcTViX/4bIlhDfxlU
-         H2lrm6mEmG+WuW9EEBHOgQZiP6F0uXoK9nBu91alCyGWmQwz52RPle/pFb7EW9qM2o5I
-         mDCPh2SYU9yjQrW6RndJm/7ncbV0GWPy+fOpshMH8IXfR4VJWQptEu0v39z7E3bsdfbF
-         rFsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688481499; x=1691073499;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AF17IbQd8ZxHv7cFvNY+odT1eF0QJFR1h0MLd8BIYjc=;
-        b=iEd2rPWUwlJI/We8TSRbcItZ1/DivtcQLopxPgAGHIiUY3x3MSqgPc0JCskdP1fffB
-         lGlcnALiF2ni+xaumoLyHsl1urHfHgBRJRdUDenZISBlsIXI07KW9yG051TNleZdR2de
-         mymcswP5580ghq9QAFZuQmGu/wtyZBS9BdbilQjvRS1WM3meSNxfRf6vvQr0v8sxJRoO
-         nFEn7SgYoJIyOV8NIIJ5fKqVKXks79hrmw2U+f3wqSHU20Rx8Vy5hl87JWuzR+o6hST/
-         /E9gpP7NXu+8gE8gff7oO7OhumCBCL6c7iktb986BVJoA/RgHTc3jcKxzhmpvZZRwDpM
-         SNbA==
-X-Gm-Message-State: AC+VfDyDY5pi/i1zHT43Xuhr9joytZpJurVFxLg7ZHYkCXliEDnjIa3d
-        1C3RPjN2Qeioc9OHS56LN58=
-X-Google-Smtp-Source: ACHHUZ7DjkC8tG2WJV9SVeV9pXtt3YOIHU0Xt7K81GGg7u+bu1MSmZrzgrf/bZvjNdCLxLL2O73t+g==
-X-Received: by 2002:aca:d19:0:b0:396:4977:e148 with SMTP id 25-20020aca0d19000000b003964977e148mr12199716oin.9.1688481499354;
-        Tue, 04 Jul 2023 07:38:19 -0700 (PDT)
-Received: from yoga ([2400:1f00:13:4ede:ce27:3b63:fdb3:caf6])
-        by smtp.gmail.com with ESMTPSA id b13-20020aa7870d000000b0067a1f4f4f7dsm12978864pfo.169.2023.07.04.07.38.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jul 2023 07:38:18 -0700 (PDT)
-From:   Anup Sharma <anupnewsmail@gmail.com>
-X-Google-Original-From: Anup Sharma <AnupSharma>
-Date:   Tue, 4 Jul 2023 20:08:11 +0530
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Anup Sharma <anupnewsmail@gmail.com>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Tue, 4 Jul 2023 10:48:23 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2049.outbound.protection.outlook.com [40.107.223.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBC411703
+        for <linux-perf-users@vger.kernel.org>; Tue,  4 Jul 2023 07:48:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mhFrOS1DWkeFiIGfPAxHEpc9ag7XrN35q2E6E5a5uGcxkGMKDOz//ktTycHYlyaJKxTSq5iRgvSWNHkGc5B3BjSb1HdzWiujdbqMHMGy+lnr+x1EuwwtaQ2xeTYKXR2Di10cbsVLJYSEYt6Uw5ylRbbX+dyw8aLkhaKilufUZMjnqbZCZHp7R4nN0+AZV213e8PEKK96ceWx4oaaosVRA1GWoJwgb4PBJMjOmB/Z6jVKEPqW59gJMaENyK87LGzAMRH7XCIfv4SLMT1+rLE5mtlehbRyyGBFITRnf00/uXsvrpIVLFoy9sHaEPMCfzYTMzfeWZDxbZKNNTlRtSc6bw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VDVvawpl9/NLagBfc25lyGJ2pQ6+kUl+wyYwdXs7mhY=;
+ b=YcEnjggAix5n6KAZWb1eAC+k5rasvy4NYuzWVR623Arzb1uRpoC6eKMl6OrG5ai/FKZ2LLNEfd4CK9o5vgRoKl8WowfMqEBwIt1zsOoKXQu0uRmSP94hfvhMW+f9mSEoAEFPZGSpCqWITInbFSTcebokp5nk2yWIlTMh+KOOeIsUCpRV0T+wr0SHojQnp1TY3ywg7c3IyhN2LeHWD5qnvugOiaFFMgwTDFjbXGsy0IHDXrB7W65/5GuqnifSdcU6b3ed/0IIyYaiKQitGt4j+kUe+1qosg1g3VO4r2wOL2FcbjcjZ2eOln6q+n7u1rKtZ5XpQYqoeJ5fFj2AFrzq/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VDVvawpl9/NLagBfc25lyGJ2pQ6+kUl+wyYwdXs7mhY=;
+ b=LTP5H72BBUyzInISW3ZvetSNmZRnQcMc7UfU//9yCtBVRRLUeGYopMr6BjLhFjjnLtVlnMTPad4ZlAHlvcA6rUEVM15DNWQOmWnDq9xkTCleJcxopS3YIudhaooIisR/IGAiH0tSPCGlQywsGv028H2B64y/3r7swCOPZk37tMU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by DM4PR12MB5056.namprd12.prod.outlook.com (2603:10b6:5:38b::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.24; Tue, 4 Jul
+ 2023 14:48:14 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::c4e6:4e87:551a:7731]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::c4e6:4e87:551a:7731%4]) with mapi id 15.20.6544.024; Tue, 4 Jul 2023
+ 14:48:14 +0000
+Message-ID: <d10f0677-e7af-963e-faed-5228fd70b3fd@amd.com>
+Date:   Tue, 4 Jul 2023 20:17:59 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: perf-tools-next: Request for testing hybrid changes
+Content-Language: en-US
+To:     James Clark <james.clark@arm.com>, Ian Rogers <irogers@google.com>
+Cc:     John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] Adding Support for Firefox's Gecko Profile Format
-Message-ID: <ZKQu00bJZwO+Fc6m@yoga>
-References: <ZHENW4HOIo0F6FnN@yoga>
- <ZHkEWse0NVZhwKR7@yoga>
- <ZH5YBBWW5ANckoMp@yoga>
- <CAP-5=fU7ukrQSh_8OwH9C+a-EwCamCrMaZxjqDhE9f+bFJwQBQ@mail.gmail.com>
- <ZIHPXV5/ZopqcSSc@yoga>
- <ZIofrGKElc3nkNk0@yoga>
- <CAP-5=fV9tXNpYHH9DW0cVbRoFLGvG9SNn-MUhuyKuVBRuDqjoA@mail.gmail.com>
- <ZJyT8bt0LFLw6hKV@yoga>
- <CAM9d7ch7TdagV+dzj6MCp4fY15Vc4oGJjKAoQDyc=BXqy7qi+A@mail.gmail.com>
- <287bf3c8-fa0e-8c36-df14-7d728c63c265@intel.com>
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Namhyung Kim <namhyung@gmail.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>
+References: <CAM9d7cgmHuhv1U6yAB-2qUr8SuFjUd-Lqw0kew9MaBVeD8xxGw@mail.gmail.com>
+ <CAP-5=fXFBpaN+ajF+u6GAL-3bb9LPR=dwevB_-7N7uUh-c3SPw@mail.gmail.com>
+ <a3958a0c-092f-b609-e2ea-0d35fddd4375@arm.com>
+ <CAP-5=fX8Nwtra=EgRNh3Ybp+N0BKp4Cw=0uRS9ZCdPyGF4R_bA@mail.gmail.com>
+ <f1cfdc5d-19df-5d71-15c4-59af06dd3d28@arm.com>
+ <CAP-5=fXwdc4VK=6dEoD4V0Jp+unYghWYTfbN4ER2aYd9R52W1g@mail.gmail.com>
+ <01bc8040-92ef-cf8b-967a-6782989ecf33@arm.com>
+ <CAP-5=fVkRc9=ySJ=fG-SQ8oAKmE_1mhHHzSASmGHUsda5Qy92A@mail.gmail.com>
+ <6310725b-cc30-49e4-d405-ed2d5f31b404@arm.com>
+ <cc134bea-dbe3-cf41-4769-440b8c69e9b4@amd.com>
+ <10d4d4b1-5611-3276-2422-c297f0530ce1@arm.com>
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <10d4d4b1-5611-3276-2422-c297f0530ce1@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0219.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:ea::13) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <287bf3c8-fa0e-8c36-df14-7d728c63c265@intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|DM4PR12MB5056:EE_
+X-MS-Office365-Filtering-Correlation-Id: 42be0565-f538-4f76-6019-08db7c9db224
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: aOk5C5vfhRukMFABUVktBu7KFfK8455X9P5heR/LX2S4oQXuEwNqU2fFAKym6Nvw/07T3IMtuuVtYQ9uAa8aWbLfY18oh9F+M90JeYTzbbeh1ke9D+TCB+P5nSLMNtF9nBS/RWBHy7xpwZarP0oQw+q10NZWSTNsbjKr7qmH1r2qZIOXKAQVgxi1rI7S9jBpZoN45kaywhZJy48o/+fLyHguC4ve1SAmOZUgUSKu6AkoI+eLNS/lWf1zTvUNCs2+QRkodaGYnqG/LkcLQJApBXOzpRmkJY/PXTVFr3hXZGoCzdzDSwT98HTOo68jb8QEBpPrlFTDt5H2IQ1Ie2m6kpFmR9awvTQJKhS4an7Sq1E1By6ZAy9WgOX9hv0vWnpeji95esuioF+1qI7RcAbstAA5O38fta+1oEuUicz6Vj4Y/fgCcoeHcrpYvzppg05ZCl6DBkJbwLzH3aSVVbUbPA9AUo9gopKJHrsDi/FI4Cjn0XXI8goCYifujIY5KZYfzc4CxJqByVi3IFBtm/bkmHi2rb1T2iLObfal7fn0vJM2SVQseDeiGTT8aweVAHpkyQec6wy56BYHbvpb1LfR1y3/6p/B79Y7IATO/rhpGiH0ROucP+L7V+4o1CiAIu5CI7+f7KgvOj5X+QNgWG0qnQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(376002)(39860400002)(346002)(366004)(136003)(451199021)(38100700002)(2906002)(6486002)(8936002)(110136005)(54906003)(8676002)(36756003)(41300700001)(44832011)(7416002)(6666004)(478600001)(5660300002)(53546011)(66946007)(66476007)(6512007)(186003)(26005)(86362001)(6506007)(66556008)(316002)(4326008)(31686004)(966005)(31696002)(2616005)(83380400001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?em85ZGlxZ0hnTkQ1ekp6YllMZmljVytNZnMrd1UzL3FSWmdrSzdWLzczM3pH?=
+ =?utf-8?B?bWQ2OVM4WFV3RXVRZ1ZWLzNtQU9XSEVJQVdCbGVhVzhqSjVvYURCN29BcUVl?=
+ =?utf-8?B?VTQ5b1B2Sm5CRjBGT2lFbXRUTWZIaXRReFNHQkp0aWtRd0VDNEhuY1R0dlln?=
+ =?utf-8?B?N2tYTmFaYXdvUS92RTU0MDRSTDk2aWZYcHpBVTZZNnBLdjkwTFNNaXphL0lU?=
+ =?utf-8?B?YUZzMnYyY3J4UEhnekc0c1FCa1ZMSjI2Q2d5RXAzMllVSjlrOE14V1REMENP?=
+ =?utf-8?B?TENQYnkxN1ZTNEtxVXpUdWRueHQyTFRUM0Z0SFhWSVNwdzdWNVFZOGpiM3RH?=
+ =?utf-8?B?Mko1OHlDRm1HZ1FLUFh3RUhOY2FOTnVwbnBLT0llRG1yV2l3ZFVPZ1pmdVJZ?=
+ =?utf-8?B?cCs1N1c5c2lFa1JDN2l5dlZRSlhGQ05oZW5pRDVpRzVGTjhsbzhVRG1mQklL?=
+ =?utf-8?B?N1Njc25MZ003enJycHJkNjMvYUw0TFJiNlVxOEpyUS9Vd1ZaeFNEUW5abDYv?=
+ =?utf-8?B?QkFrQU9wTXhZVTRzcXFQYi91L3JVL1hIT014SzloOTlYUmlzcG8zMm4rdHNC?=
+ =?utf-8?B?eVJFOEhNTkRZUndIMWtNeXFDWFpJMFpoN3laY3dzTGs2WUlqUzNJWnZkN0dI?=
+ =?utf-8?B?cGlMcWNJYlo3ZkhyalBjeEM0cEhXOHlUNlZ5ckRvYzlETU1tZ1BwTkpkR1Fx?=
+ =?utf-8?B?K0VWNnNkV1dmUDcrZVRTWERYcWtHTlBlZGRUVnFNam9GeE1tekhMZlp2ajRF?=
+ =?utf-8?B?Qm83M2VDNm9VVTlMbUI2M3VzalY0K1o4b1E4bXUxaFM2TjVFUHdITWpXT3B5?=
+ =?utf-8?B?OXhRNmNnalBtKzM4RFA4WXBocWwzUEhEU0Z0Z2NLWGo2VHB0b2lBMEh2VC9T?=
+ =?utf-8?B?WGZjeERwQXVSenJKWG1RSUYrN2FMOWpFZ2VTUnRzRFBmN3Q1NUZocGpINlhh?=
+ =?utf-8?B?T1pLNlhFRy96b01HRjhudm8xMFFac011Rk5OYmZ3OWY2YVhJTDdwN2lhMTZI?=
+ =?utf-8?B?NGE4VVdFZHhKQXRtVW5xRk40Vk43Y3F3bHlKMnZURE5EZjhNNS9zYXk5MTlW?=
+ =?utf-8?B?Z2hSem5Nb2MwbjZuK1NlK3NIcXNsK2dXZENLU2Y5QlB5T0lGYWYrSS9ycmJ2?=
+ =?utf-8?B?Y09uR2Zqc2hxNk1wcENaM3VqR0ZOM3NjaWFqV3RJaDZEcWNrZG1xZlNnWlFH?=
+ =?utf-8?B?bFFnd2dyejd3NWlVemVwL1lkdkhDSDhPYkVzR3V1dDJkYUdkdlB6STBmOGtI?=
+ =?utf-8?B?VUdxVVh0SlJJRERUZndqTkx4citvcE5acGVWQnJiUFRmVU5ZYlVoK2t4OEVS?=
+ =?utf-8?B?aEdLaHV0RWozU21HTTR4U0w1UTR0b2xOOEFmWEdNOFdKSmcrMUZ2MWpydXQv?=
+ =?utf-8?B?L09KYzJVbmcxQWNqYzMxRWphc2xSSXJFZTJtdUZ5amt0OFJFV0RIbWNkU1Iy?=
+ =?utf-8?B?OCtRMi83M1J4WHBQd1cwSlJJSmRSdkZFb241dXlEYnE4LytjTGpMOFc2bzlM?=
+ =?utf-8?B?TEltaHRlSktodUorUUdOMjRLS3ZaYk9xTmlURkFVTXJMeWFsa2ZUaTZ4V1Bv?=
+ =?utf-8?B?bncvTGxobDhJaXArbElQQUdBS2dHOU9ML2N3ZXRhajJ4bG05OW84cnh5RkVW?=
+ =?utf-8?B?VGR3TnY1L2VpZm9vbU5wMDdRWFJFT1d3cUZIOEcwVUNPSWZXRjM2MTFlakdq?=
+ =?utf-8?B?UFFqQlNDTVlMaW9pa21SelpvNzJ1Yjd6QzBZSmVsUUx1K0k4MWFWTGNpdU9z?=
+ =?utf-8?B?cDVoM3lZQzRyS1JzcGtCbUZVMmpRYTlhdVZFR21yTWNFWHc4QVEyZGZOR3cr?=
+ =?utf-8?B?RnhMNVNoR2J3MFFIM0FkQmJDd29NeS9GUGJFUkdjOVBnZ2lROFllck5UaVBG?=
+ =?utf-8?B?QlVITFZYTm44cXNna21NQnFwUWZtWUxkdTk2eFVDRUVLaW0zQWVvTHU0b3ps?=
+ =?utf-8?B?ZW5hWEdtSFNLelY0MVl0ekU0Sld1K21wNklpY3FYNkg5Y1FVb1UzalQybHBv?=
+ =?utf-8?B?ZW1nUTE0a0ZwY0tSckdtZ0IvQUZtZGlPc3BjMTBSbDdLRW52amFYT1EzUS9E?=
+ =?utf-8?B?N0JvenpUd09MUGlBZ3hVcnF3T3FqZVpZTWk5Yk1Ldm1ndHZ3TmE3Z0NMSkJw?=
+ =?utf-8?Q?Sq8DJg4ghQloDILelpDbGMN21?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 42be0565-f538-4f76-6019-08db7c9db224
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2023 14:48:14.4698
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: njaY2yXaj6QSGs7k9mBzdLxgQyGMz+w3tV9OAuh/Z5Qee5kcnQSGy0k37pnA/8cJXKhbgSiXmFtdGw7D0Ys1mA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5056
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 29, 2023 at 09:35:22AM +0300, Adrian Hunter wrote:
-> On 29/06/23 09:26, Namhyung Kim wrote:
-> > Hi Anup,
-> > 
-> > On Wed, Jun 28, 2023 at 1:11 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
-> >>
-> >> On Wed, Jun 14, 2023 at 01:17:52PM -0700, Ian Rogers wrote:
-> >>> On Wed, Jun 14, 2023 at 1:14 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
-> >>>>
-> >>>> On Thu, Jun 08, 2023 at 06:23:49PM +0530, Anup Sharma wrote:
-> >>>> I wanted to take a moment to provide you with an update on the progress
-> >>>> of our Firefox Gecko converter work. While I must emphasize that the code
-> >>>> I'm sharing is not the final version, I wanted to share the advancements
-> >>>> I have made thus far.
-> >>>>
-> >>>> This script can generate a JSON format from the output of the "perf script" command.
-> >>>> I attempted to load this JSON file into profile.firefox.com, and although it
-> >>>> successfully loaded, the call tree are not visible. I'm certain this issue
-> >>>> is related to the format of the JSON file or if there is another underlying
-> >>>> cause. I will continue investigating to determine the cause of this problem.
-> >>>
-> >>> Great Anup, progress can be frustrating slow at first but it is a good
-> >>> milestone to be generating output and having firefox profiler consume
-> >>> it. You can open up the JavaScript console for the firefox profiler
-> >>> and it will give some debug output. This should hopefully help you
-> >>> make progress.
-> >>
-> >> This week I tried playing with perf-script-python, the first challenge was
-> >> figuring out how to parse the data coming from the process_events.
-> >> Understanding the structure and extracting the necessary information
-> >> proved to be more complex than anticipated. This required me to spend
-> >> a significant amount of time researching and experimenting with different
-> >> parsing techniques.
-> > 
-> > I'm not sure what kind of parsing you meant.  IIRC the sample data is
-> > in a dict and all the information should be available there.  Maybe we
-> > missed some new sample data types though.
+On 04-Jul-23 6:14 PM, James Clark wrote:
 > 
-> Most data is there.  There are existing scripts in
-> tools/perf/scripts/python/ for reference.
 > 
-> There is also the dlfilter API:
+> On 04/07/2023 13:33, Ravi Bangoria wrote:
+>>>> For heterogeneous ARM PMUs I believe this is exactly the path taken to
+>>>> cause the perf_event_open to fail. The resolution is to add the bit to
+>>>> the PMU's capabilities. I believe doing it here will suffice:
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/tree/drivers/perf/arm_pmu.c?h=perf/core#n877
+>>>> So:
+>>>> ```
+>>>> .capabilities = PERF_PMU_CAP_HETEROGENEOUS_CPUS | PERF_PMU_CAP_EXTENDED_REGS,
+>>>> ```
+>>>> becomes:
+>>>> ```
+>>>> .capabilities = PERF_PMU_CAP_HETEROGENEOUS_CPUS |
+>>>> PERF_PMU_CAP_EXTENDED_REGS | PERF_PMU_CAP_EXTENDED_HW_TYPE,
+>>>> ```
+>>>> Now strictly speaking you only need this in the case of heterogeneous
+>>>> PMUs, but that's the case for other bits here and I don't see special
+>>>> case logic...
+>>>>
+>>>
+>>> Hi Ian,
+>>>
+>>> I tested the above and it seems to work fine on Arm so I will send it
+>>> shortly. Some of the legacy perf stat use cases are working better with
+>>> it so it makes sense to me. I also don't see a reason to not always do
+>>> it even for homogeneous PMUs. To be honest I don't see a reason not to
+>>> remove it as a capability and have it as the default behaviour
+>>> everywhere? It all happens in the core code so I'm not sure adding it
+>>> per PMU device is necessary, but maybe there is a reason?
+>>
+>> EventSelect on AMD is 12 bits where upper nibble is passed via config[35:32].
+>> i.e. it conflicts with the semantics of PERF_PMU_CAP_EXTENDED_HW_TYPE. So,
+>> please don't make it default :)
+>>
+>> Thanks,
+>> Ravi
 > 
-> https://perf.wiki.kernel.org/index.php/Latest_Manual_Page_of_perf-dlfilter.1
->
-Hello everyone,
+> Ah, thanks for the answer. It's a bit late now but I wonder why it
+> wasn't added as a completely new argument to perf_event_open. That would
+> have avoided that. Is there a difference between adding a completely new
+> argument and adding a new argument by stuffing something into an
+> existing field.
 
-I hope you're all doing well. I have been working on the using process_events function and have made
-progress in developing the converter script. Currently, I am in the testing phase. However, I
-have encountered a problem after performing some recent compilations. I am no longer receiving
-the complete callchains in the output as I used to.
-For Example, when I ran the command perf script -F +pid, the output would include detailed
-information like the following example:
+My bad. let me take my words back. I forgot that perf uses generalized event
+codes for PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE and does not use actual
+raw config.
 
-perf-exec  132554/132554  171854.674582:        356 cycles:P: 
-	ffffffff8fab3fc6 arch_static_branch+0x6 (inlined)
-	ffffffff8fab3fc6 static_key_false+0x6 (inlined)
-	ffffffff8fab3fc6 native_write_msr+0x6 (/lib/modules/6.4.0-rc1/build/vmlinux)
-	ffffffff8fa12ca5 intel_pmu_enable_all+0x15 (/lib/modules/6.4.0-rc1/build/vmlinux)
+Anyway, I think there is still a bit of ambiguity with this code. For ex,
 
-However, in my current situation, the output is limited to the following:
+  type = PERF_TYPE_HARDWARE;
+  config = 0xU00000002;
 
-perf  108107/108107  [000] 67650.031827:          1 cycles:P:  
-ffffffff83ab3fc4 native_write_msr+0x4 (/lib/modules/6.4.0-rc1/build/vmlinux)
-perf  108107/108107  [000] 67650.031832:          1 cycles:P:
-ffffffff83ab3fc4 native_write_msr+0x4 (/lib/modules/6.4.0-rc1/build/vmlinux)
+counts instructions for 0xU = 0x0 / 0x1 / 0x3 / 0x4 / invalid pmu `type`,
+otherwise perf_event_open() fails. See below simple test:
 
-It seems to be issue in perf record. I would appreciate any suggestions or assistance
-in resolving this issue. Thank you all for your help.
+$ cat test.c
+#include <linux/perf_event.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/ioctl.h>
+#include <sys/syscall.h>
+#include <unistd.h>
 
-Regards,
-Anup
-> > 
-> >>
-> >> The second challenge revolved around the usage of event hooks provided with the perf script
-> >> python event handlers. I found myself deliberating between two approaches. The first
-> >> approach involved creating custom functions that would be called using the event
-> >> handlers. These functions would then save the data in an organized format within
-> >> globally created data structures. The alternative approach was to write the entire
-> >> logic inside the event handlers themselves.
-> >>
-> >> Additionally, I contemplated whether it would be more suitable to handle the creation of
-> >> a Gecko format for JSON and the profile format within the same script or to separate
-> >> them into different scripts.
-> >>
-> >> I will discuss this points during tomorrow's office hour.
-> >>
-> >> However, I have gained a deeper understanding of the problem at hand and will use this
-> >> knowledge to make more informed decisions and progress more effectively in the coming weeks.
-> > 
-> > Sounds like you did a good amount of research on how perf script
-> > works.  We can talk about the details in the meeting.
-> > 
-> > Thanks,
-> > Namhyung
-> 
+static long
+perf_event_open(struct perf_event_attr *hw_event, pid_t pid,
+               int cpu, int group_fd, unsigned long flags)
+{
+        int ret;
+
+        ret = syscall(SYS_perf_event_open, hw_event, pid, cpu,
+                      group_fd, flags);
+        return ret;
+}
+
+void loop(unsigned long config_upper_32)
+{
+        struct perf_event_attr pe;
+        int fd;
+
+        memset(&pe, 0, sizeof(pe));
+        pe.type = PERF_TYPE_HARDWARE;
+        pe.size = sizeof(pe);
+        pe.config = config_upper_32 | 0x2;
+        pe.disabled = 1;
+        pe.exclude_kernel = 1;
+        pe.exclude_hv = 1;
+
+        fd = perf_event_open(&pe, 0, -1, -1, 0);
+        if (fd == -1) {
+                printf("type: %d, config: 0x%llx: Error\n", pe.type, pe.config);
+                return;
+        }
+
+        printf("type: %d, config: 0x%llx: Ok\n", pe.type, pe.config);
+        close(fd);
+}
+
+int main(void)
+{
+        unsigned long i;
+
+        for (i = 0; i < 0x20; i++)
+                loop(i << 32);
+        return 0;
+}
+
+$ gcc -Wall -g test.c
+
+$ ./a.out
+type: 0, config: 0x2: Ok
+type: 0, config: 0x100000002: Ok
+type: 0, config: 0x200000002: Error
+type: 0, config: 0x300000002: Ok
+type: 0, config: 0x400000002: Ok
+type: 0, config: 0x500000002: Error
+type: 0, config: 0x600000002: Error
+type: 0, config: 0x700000002: Error
+type: 0, config: 0x800000002: Error
+type: 0, config: 0x900000002: Error
+type: 0, config: 0xa00000002: Error
+type: 0, config: 0xb00000002: Error
+type: 0, config: 0xc00000002: Error
+type: 0, config: 0xd00000002: Error
+type: 0, config: 0xe00000002: Error
+type: 0, config: 0xf00000002: Error
+type: 0, config: 0x1000000002: Error
+type: 0, config: 0x1100000002: Error
+type: 0, config: 0x1200000002: Ok
+type: 0, config: 0x1300000002: Ok
+type: 0, config: 0x1400000002: Ok
+type: 0, config: 0x1500000002: Ok
+type: 0, config: 0x1600000002: Ok
+type: 0, config: 0x1700000002: Ok
+type: 0, config: 0x1800000002: Ok
+type: 0, config: 0x1900000002: Ok
+type: 0, config: 0x1a00000002: Ok
+type: 0, config: 0x1b00000002: Ok
+type: 0, config: 0x1c00000002: Ok
+type: 0, config: 0x1d00000002: Ok
+type: 0, config: 0x1e00000002: Ok
+type: 0, config: 0x1f00000002: Ok
+$
+
+Max pmu `type` value on this machine is 17 (i.e. 0x11).
+
+Thanks,
+Ravi
