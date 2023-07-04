@@ -2,119 +2,133 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 579F7C001DD
-	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Jul 2023 19:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516D2EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Jul 2023 05:04:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230356AbjGCTRF (ORCPT
+        id S230056AbjGDFEC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 3 Jul 2023 15:17:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45470 "EHLO
+        Tue, 4 Jul 2023 01:04:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229494AbjGCTRE (ORCPT
+        with ESMTP id S229546AbjGDFEA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Jul 2023 15:17:04 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB1ABE7B
-        for <linux-perf-users@vger.kernel.org>; Mon,  3 Jul 2023 12:16:56 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso3532964a12.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 03 Jul 2023 12:16:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1688411816; x=1691003816;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wmfYPyzMN3TrxeJJNRGqcc1V78+Dvq57QM07q24THxo=;
-        b=cBXXw1BX/YQS5OhV4wyvCMLEJtw2faKDUqVuqbWKxU8/5yCELOp1tCfXiXtEv52L9k
-         Yug4x5JvummwpTGtDjxJFlx12KJExacvZghztwNbjKCtREYW/fbFvq3eUtxNKLV+zRXg
-         QTsAuM4NQEoG6QGtlMfRxMY7t78OQSQoth/0E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688411816; x=1691003816;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wmfYPyzMN3TrxeJJNRGqcc1V78+Dvq57QM07q24THxo=;
-        b=Oy3yE2TUEDIYPLgP0jY9VewPDNbT2pSr+TKUoJFoHbMXRh+Svaf1OZmnlf/23XSWn5
-         f33JaqwFkMIslq7DyNkniTeY0oSYR0P0pIS8qbiwvfGCWT9d1Bc3Yy+W0q6AA58KhCJY
-         a+j3IfL6HuQ5XHHExXbtb8wQ23s+yWU6hWHRpa2FVBFxMgD+bIyuv1KhEmU4OpOirUe9
-         oVTiYL+CLOZUhetRkKTl2WUmr0bo2T8r+vAZGwIoeUJ4mj+hETkjiF6bJS0VRjsy4Obi
-         X3EGb8fFst09ALuxoxXlkhs3Zyi+lfzYppcdG2XrAHqjkjq4A/cPzRzVjovncL4i3RmM
-         xYRg==
-X-Gm-Message-State: ABy/qLbdvOnqJ/CbuoAbNgERUNYWT87IWxRu2kOjBuwhRkVyc9ZwlsrI
-        03IwOB5+VwujchozICGJ0i4Bg1dKSLS0YQXIbRA=
-X-Google-Smtp-Source: APBJJlHAwULPXSe6lmSlODSHADBgzpaDcCSBPzHCTRoQEzG85Wo3jO6XKklJK6hdUmff3Yl9O+EZ7g==
-X-Received: by 2002:a05:6a20:2595:b0:126:3528:5a13 with SMTP id k21-20020a056a20259500b0012635285a13mr13907284pzd.53.1688411816317;
-        Mon, 03 Jul 2023 12:16:56 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id i11-20020aa78b4b000000b0066a6ba123eesm14325571pfd.51.2023.07.03.12.16.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jul 2023 12:16:55 -0700 (PDT)
-Date:   Mon, 3 Jul 2023 12:16:55 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, bpf <bpf@vger.kernel.org>,
-        Andrei Vagin <avagin@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: next: perf: 32-bit: bench/sched-seccomp-notify.c:139:24: error:
- format '%lu' expects argument of type 'long unsigned int', but argument 2
- has type 'uint64_t'
-Message-ID: <202307031216.171373CD3@keescook>
-References: <CA+G9fYt1ZtucYds=p-Z+4sZ+nHMeEAFh2Fbe63VS_03-UsRwBg@mail.gmail.com>
+        Tue, 4 Jul 2023 01:04:00 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 767BD1AD
+        for <linux-perf-users@vger.kernel.org>; Mon,  3 Jul 2023 22:03:59 -0700 (PDT)
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3644lpx0002290;
+        Tue, 4 Jul 2023 05:03:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=3hPYZMBNU5/19YLczA4yPKBhFusGpQeWXPBcqMysnQs=;
+ b=aFPN81IPYY6BrrjBUInJopNq/HE04nvczCGSM/JAL9ePs6ZrJQjES5TQXRdZDC7cKJWZ
+ ca4wxp57qC2S8u8S/huqa5SLjyhNmgkpEil7CcB13OvoPggu0fp1dfT0DSqoUtxVsuWZ
+ BW/YF+d1VmyvjHxLMNAETgrZryDQHwf8H6DTq3Vr0gP5wwfHAPFtPVJIW5DkWS5DAYpf
+ f0xVARGcfwjNRcSIC1rjebX8Fq4R0iVrooA5RF/QNr5v3bGb0l02xGkK+ZXsD2oURVqy
+ Bpl8R5zxQjDngQ/3J/uSoMtCBIQhmL7qMdl5Bn3oTGpkAnpqUSPmJukWVUNhilmpf+lK Ag== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rmcq8896g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Jul 2023 05:03:43 +0000
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3644lpov002270;
+        Tue, 4 Jul 2023 05:03:42 GMT
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rmcq8895x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Jul 2023 05:03:42 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3643KY93016240;
+        Tue, 4 Jul 2023 05:03:41 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+        by ppma04fra.de.ibm.com (PPS) with ESMTPS id 3rjbs51aax-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Jul 2023 05:03:40 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36453bFg19595918
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 4 Jul 2023 05:03:37 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7FF442004D;
+        Tue,  4 Jul 2023 05:03:37 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AB3F820040;
+        Tue,  4 Jul 2023 05:03:34 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.47.10])
+        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Tue,  4 Jul 2023 05:03:34 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, ak@linux.intel.com
+Cc:     namhyung@kernel.org, irogers@google.com, james.clark@arm.com,
+        mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
+        rnsastry@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.ibm.com,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Subject: [PATCH] tools/perf/tests: Fix Basic BPF llvm compile to check for libbpf support
+Date:   Tue,  4 Jul 2023 10:33:27 +0530
+Message-Id: <20230704050327.14963-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYt1ZtucYds=p-Z+4sZ+nHMeEAFh2Fbe63VS_03-UsRwBg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: t5FZauKNEZ-qRrAtX6S7qUidXq1Ja4uX
+X-Proofpoint-GUID: urRiKt5FTqhR3dqW32xDPD0pLO-5L4JI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-04_02,2023-06-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1011 lowpriorityscore=0 mlxlogscore=999 adultscore=0 bulkscore=0
+ spamscore=0 mlxscore=0 malwarescore=0 impostorscore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2307040042
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jul 03, 2023 at 12:55:59PM +0530, Naresh Kamboju wrote:
-> Following build regressions noticed on Linux next-20230703.
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> Regressions found on i386:
-> 
->   - build/gcc-11-lkftconfig-perf
-> 
-> Regressions found on arm:
-> 
->   - build/gcc-10-lkftconfig-perf
->   - build/gcc-11-lkftconfig-perf
-> 
-> Build error:
-> =======
-> bench/sched-seccomp-notify.c: In function 'bench_sched_seccomp_notify':
-> bench/sched-seccomp-notify.c:139:24: error: format '%lu' expects
-> argument of type 'long unsigned int', but argument 2 has type
-> 'uint64_t' {aka 'long long unsigned int'} [-Werror=format=]
->   139 |   printf("# Executed %lu system calls\n\n",
->       |                      ~~^
->       |                        |
->       |                        long unsigned int
->       |                      %llu
->   140 |    loops);
->       |    ~~~~~
->       |    |
->       |    uint64_t {aka long long unsigned int}
-> cc1: all warnings being treated as errors
-> make[4]: *** [tools/build/Makefile.build:97:
-> /home/tuxbuild/.cache/tuxmake/builds/1/build/bench/sched-seccomp-notify.o]
-> Error 1
+Basic BPF llvm compile fails in systems with libbpf
+that doesn't support BTF. Log shows below information.
 
-Thanks! I've updated the format string to use "%"PRIu64 now.
+	libbpf: BTF is required, but is missing or corrupted.
+	Failed to parse test case 'Basic BPF llvm compile'
+	test child finished with -2
+	---- end ----
 
--Kees
+Here BPF llvm compile fails due to missing BTF support.
+Fix the llvm test to skip the test incase BTF support is
+missing.
 
-> 
-> Links:
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20230703/testrun/18069798/suite/build/test/gcc-10-lkftconfig-perf/history/
-> 
-> 
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+ tools/perf/tests/llvm.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
+diff --git a/tools/perf/tests/llvm.c b/tools/perf/tests/llvm.c
+index 0bc25a56cfef..4c73c9eab0bb 100644
+--- a/tools/perf/tests/llvm.c
++++ b/tools/perf/tests/llvm.c
+@@ -4,6 +4,7 @@
+ #include <string.h>
+ #include "tests.h"
+ #include "debug.h"
++#include <errno.h>
+ 
+ #ifdef HAVE_LIBBPF_SUPPORT
+ #include <bpf/libbpf.h>
+@@ -14,8 +15,12 @@ static int test__bpf_parsing(void *obj_buf, size_t obj_buf_sz)
+ 	struct bpf_object *obj;
+ 
+ 	obj = bpf_object__open_mem(obj_buf, obj_buf_sz, NULL);
+-	if (libbpf_get_error(obj))
++	if (libbpf_get_error(obj)) {
++		/* Skip if there is no BTF support */
++		if (errno == ENOENT)
++			return TEST_SKIP;
+ 		return TEST_FAIL;
++	}
+ 	bpf_object__close(obj);
+ 	return TEST_OK;
+ }
 -- 
-Kees Cook
+2.27.0
+
