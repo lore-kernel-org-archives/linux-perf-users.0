@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DB9EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Jul 2023 07:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D64EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Jul 2023 07:44:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231477AbjGDHoc (ORCPT
+        id S231500AbjGDHod (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Jul 2023 03:44:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55234 "EHLO
+        Tue, 4 Jul 2023 03:44:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231345AbjGDHoa (ORCPT
+        with ESMTP id S231450AbjGDHoa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Tue, 4 Jul 2023 03:44:30 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A3DAE71;
-        Tue,  4 Jul 2023 00:44:23 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4QwF8g56ttzMqK1;
-        Tue,  4 Jul 2023 15:41:07 +0800 (CST)
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26FFFE7A;
+        Tue,  4 Jul 2023 00:44:24 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4QwF9t4yctzLnh6;
+        Tue,  4 Jul 2023 15:42:10 +0800 (CST)
 Received: from localhost.localdomain (10.67.174.95) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Tue, 4 Jul 2023 15:44:20 +0800
+ 15.1.2507.27; Tue, 4 Jul 2023 15:44:21 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -30,9 +30,9 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
 CC:     <yangjihong1@huawei.com>
-Subject: [PATCH 2/5] perf evlist: Add evlist__findnew_tracking_event() helper
-Date:   Tue, 4 Jul 2023 07:42:14 +0000
-Message-ID: <20230704074217.240939-3-yangjihong1@huawei.com>
+Subject: [PATCH 4/5] perf test: Add test case for record tracking
+Date:   Tue, 4 Jul 2023 07:42:16 +0000
+Message-ID: <20230704074217.240939-5-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
 In-Reply-To: <20230704074217.240939-1-yangjihong1@huawei.com>
 References: <20230704074217.240939-1-yangjihong1@huawei.com>
@@ -47,79 +47,72 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Currently, intel-bts, intel-pt, and arm-spe may add a dummy event for
-tracking to the evlist. We may need to search for the dummy event for
-some settings. Therefore, add evlist__findnew_tracking_event() helper.
+Add a new test case to record tracking side-band events for all CPUs when
+tracing selected CPUs
+
+Test result:
+
+  # ./perf test list 2>&1 | grep 'perf record tracking tests'
+   95: perf record tracking tests
+  f# ./perf test 95
+   95: perf record tracking tests                                      : Ok
 
 Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 ---
- tools/perf/builtin-record.c | 11 +++--------
- tools/perf/util/evlist.c    | 17 +++++++++++++++++
- tools/perf/util/evlist.h    |  1 +
- 3 files changed, 21 insertions(+), 8 deletions(-)
+ tools/perf/tests/shell/record_tracking.sh | 44 +++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100755 tools/perf/tests/shell/record_tracking.sh
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index aec18db7ff23..8872cd037f2c 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1295,14 +1295,9 @@ static int record__open(struct record *rec)
- 	 */
- 	if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
- 	    perf_pmus__num_core_pmus() > 1) {
--		pos = evlist__get_tracking_event(evlist);
--		if (!evsel__is_dummy_event(pos)) {
--			/* Set up dummy event. */
--			if (evlist__add_dummy(evlist))
--				return -ENOMEM;
--			pos = evlist__last(evlist);
--			evlist__set_tracking_event(evlist, pos);
--		}
-+		pos = evlist__findnew_tracking_event(evlist);
-+		if (!pos)
-+			return -ENOMEM;
- 
- 		/*
- 		 * Enable the dummy event when the process is forked for
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 7ef43f72098e..4621ddaeb8f3 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1694,6 +1694,23 @@ void evlist__set_tracking_event(struct evlist *evlist, struct evsel *tracking_ev
- 	tracking_evsel->tracking = true;
- }
- 
-+struct evsel *evlist__findnew_tracking_event(struct evlist *evlist)
+diff --git a/tools/perf/tests/shell/record_tracking.sh b/tools/perf/tests/shell/record_tracking.sh
+new file mode 100755
+index 000000000000..fe05f4772999
+--- /dev/null
++++ b/tools/perf/tests/shell/record_tracking.sh
+@@ -0,0 +1,44 @@
++#!/bin/sh
++# perf record tracking tests
++# SPDX-License-Identifier: GPL-2.0
++
++set -e
++
++err=0
++perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++
++can_cpu_wide()
 +{
-+	struct evsel *evsel;
++    if ! perf record -o ${perfdata} -BN --no-bpf-event -e dummy:u -C $1 true 2>&1 >/dev/null
++    then
++	echo "record tracking test [Skipped cannot record cpu$1]"
++	err=2
++    fi
 +
-+	evsel = evlist__get_tracking_event(evlist);
-+	if (!evsel__is_dummy_event(evsel)) {
-+		/* Set up dummy event. */
-+		if (evlist__add_dummy(evlist))
-+			return NULL;
-+
-+		evsel = evlist__last(evlist);
-+		evlist__set_tracking_event(evlist, evsel);
-+	}
-+
-+	return evsel;
++    rm -f ${perfdata}
++    return $err
 +}
 +
- struct evsel *evlist__find_evsel_by_str(struct evlist *evlist, const char *str)
- {
- 	struct evsel *evsel;
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 664c6bf7b3e0..4d28c50ba842 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -387,6 +387,7 @@ bool evlist_cpu_iterator__end(const struct evlist_cpu_iterator *evlist_cpu_itr);
- 
- struct evsel *evlist__get_tracking_event(struct evlist *evlist);
- void evlist__set_tracking_event(struct evlist *evlist, struct evsel *tracking_evsel);
-+struct evsel *evlist__findnew_tracking_event(struct evlist *evlist);
- 
- struct evsel *evlist__find_evsel_by_str(struct evlist *evlist, const char *str);
- 
++test_system_wide_tracking()
++{
++    # Need CPU 0 and CPU 1
++    can_cpu_wide 0 || return 0
++    can_cpu_wide 1 || return 0
++
++    # Record on CPU 0 a task running on CPU 1
++    perf record -BN --no-bpf-event -o ${perfdata} -e dummy:u -C 0 -- taskset --cpu-list 1 true
++
++    # Should get MMAP events from CPU 1
++    mmap_cnt=`perf script -i ${perfdata} --show-mmap-events -C 1 2>/dev/null | grep MMAP | wc -l`
++
++    rm -f ${perfdata}
++
++    if [ ${mmap_cnt} -gt 0 ] ; then
++	return 0
++    fi
++
++    echo "Failed to record MMAP events on CPU 1 when tracing CPU 0"
++    return 1
++}
++
++test_system_wide_tracking
 -- 
 2.30.GIT
 
