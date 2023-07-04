@@ -2,159 +2,136 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E9EEB64DA
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Jul 2023 05:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9786EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Jul 2023 07:44:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230208AbjGDFEo (ORCPT
+        id S230360AbjGDHob (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Jul 2023 01:04:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59334 "EHLO
+        Tue, 4 Jul 2023 03:44:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229546AbjGDFEn (ORCPT
+        with ESMTP id S230512AbjGDHoa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Jul 2023 01:04:43 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE6461AD
-        for <linux-perf-users@vger.kernel.org>; Mon,  3 Jul 2023 22:04:40 -0700 (PDT)
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3644kq2M007806;
-        Tue, 4 Jul 2023 05:04:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=wogNd8fAxbdATQusVjpVczlx3PEIH3oZiPdkoBucOyU=;
- b=HOFyml4d19Sg9aRxw+RHgHu1DzZiMad2wMMjPw0xZO5uU5vEc/IG4h+dQpgN2e0B12gH
- pU9P9o4SFBcwlonaAyDvVyyQv2T2yt1QiBrDK6ovxywUklGj83kTThrzHktwdHFWm14h
- Pms8ZQd5lKq09OeqMyfhcFp33BssN/Y+NvH+qvLkKpJ+7HBNPeZAjS4qoCRSuDJjsVAx
- VF3PbaN3fasNWCfhZtTTW0uWtlv+ghtq5UEEXF04i3AXGXvbhLPgOZaeU2gQ2VMPTLQj
- zwnVcT/hAt6laXdvbFa2FTAP2RmLu2NwkRkIVxPTG5Q2Vf9aKzpVYRA2Is6Msd9neehX TQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rmcpx0b1u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Jul 2023 05:04:35 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3645080P013810;
-        Tue, 4 Jul 2023 05:04:35 GMT
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rmcpx0b10-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Jul 2023 05:04:35 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36440K9C012565;
-        Tue, 4 Jul 2023 05:04:32 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-        by ppma03fra.de.ibm.com (PPS) with ESMTPS id 3rjbs4sa9t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Jul 2023 05:04:32 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36454TiC45154774
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 4 Jul 2023 05:04:29 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1ED6A20043;
-        Tue,  4 Jul 2023 05:04:29 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 53EAB20040;
-        Tue,  4 Jul 2023 05:04:27 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.47.10])
-        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Tue,  4 Jul 2023 05:04:27 +0000 (GMT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.500.231\))
-Subject: Re: [PATCH 1/2] tools/perf/tests: perf all metrics test fails when
- perf_event access is restricted
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20230615073803.54481-1-atrajeev@linux.vnet.ibm.com>
-Date:   Tue, 4 Jul 2023 10:34:16 +0530
-Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <AEE7B55C-BA6B-4E0E-A2E9-4E7EE09B4D50@linux.vnet.ibm.com>
-References: <20230615073803.54481-1-atrajeev@linux.vnet.ibm.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>, jolsa@kernel.org,
-        irogers@google.com, namhyung@kernel.org
-X-Mailer: Apple Mail (2.3731.500.231)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 6JvLRp4gc6qV1Vk9hKWewdEkkqZjix89
-X-Proofpoint-ORIG-GUID: V44eZQj5aimNBWyH26bFdEzQF6x_3b7T
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-04_02,2023-06-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
- mlxscore=0 malwarescore=0 impostorscore=0 spamscore=0 adultscore=0
- mlxlogscore=999 priorityscore=1501 suspectscore=0 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2307040042
+        Tue, 4 Jul 2023 03:44:30 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EFDDE70;
+        Tue,  4 Jul 2023 00:44:23 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4QwF9s2S8YzLngn;
+        Tue,  4 Jul 2023 15:42:09 +0800 (CST)
+Received: from localhost.localdomain (10.67.174.95) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Tue, 4 Jul 2023 15:44:20 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH 1/5] perf evlist: Export perf_evlist__propagate_maps()
+Date:   Tue, 4 Jul 2023 07:42:13 +0000
+Message-ID: <20230704074217.240939-2-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
+In-Reply-To: <20230704074217.240939-1-yangjihong1@huawei.com>
+References: <20230704074217.240939-1-yangjihong1@huawei.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.95]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+For dummy events that keep tracking, we may need to modify its cpu_maps.
+For example, change the cpu_maps to track side-band events for all CPUS.
+Export perf_evlist__propagate_maps () to support this scenario.
 
+No functional change.
 
-> On 15-Jun-2023, at 1:08 PM, Athira Rajeev =
-<atrajeev@linux.vnet.ibm.com> wrote:
->=20
-> Perf all metrics test fails as below when perf_event access
-> is restricted.
->=20
->    ./perf test -v "perf all metrics test"
->    Metric 'Memory_RD_BW_Chip' not printed in:
->    Error:
->    Access to performance monitoring and observability operations is =
-limited.
->    Enforced MAC policy settings (SELinux) can limit access to =
-performance
->    =E2=80=94
->    access to performance monitoring and observability operations for =
-processes
->    without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux =
-capability.
->    =E2=80=94
->    test child finished with -1
->    ---- end ----
->    perf all metrics test: FAILED!
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/lib/perf/evlist.c              | 23 +++++++++--------------
+ tools/lib/perf/include/perf/evlist.h |  2 ++
+ 2 files changed, 11 insertions(+), 14 deletions(-)
 
-
-Hi,
-
-Looking for review comments on this patch.
-
-Thanks
->=20
-> The perf all metrics test picks the input events from
-> "perf list --raw-dump metrics" and runs "perf stat -M "$m""
-> for each of the metrics in the list. It fails here for some
-> of the metrics which needs access, since it collects system
-> wide resource details/statistics. Fix the testcase to skip
-> those metric events.
->=20
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
-> tools/perf/tests/shell/stat_all_metrics.sh | 4 +++-
-> 1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/tools/perf/tests/shell/stat_all_metrics.sh =
-b/tools/perf/tests/shell/stat_all_metrics.sh
-> index 54774525e18a..14b96484a359 100755
-> --- a/tools/perf/tests/shell/stat_all_metrics.sh
-> +++ b/tools/perf/tests/shell/stat_all_metrics.sh
-> @@ -6,7 +6,9 @@ err=3D0
-> for m in $(perf list --raw-dump metrics); do
->   echo "Testing $m"
->   result=3D$(perf stat -M "$m" true 2>&1)
-> -  if [[ "$result" =3D~ ${m:0:50} ]] || [[ "$result" =3D~ "<not =
-supported>" ]]
-> +  # Skip if there is no access to perf_events monitoring
-> +  # and observability operations
-> +  if [[ "$result" =3D~ ${m:0:50} ]] || [[ "$result" =3D~ "<not =
-supported>" ]] || [[ "$result" =3D~ "Access to performance monitoring =
-and observability operations is limited" ]]
->   then
->     continue
->   fi
-> --=20
-> 2.31.1
->=20
+diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+index b8b066d0dc5e..a3057b692530 100644
+--- a/tools/lib/perf/evlist.c
++++ b/tools/lib/perf/evlist.c
+@@ -33,8 +33,8 @@ void perf_evlist__init(struct perf_evlist *evlist)
+ 	perf_evlist__reset_id_hash(evlist);
+ }
+ 
+-static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
+-					  struct perf_evsel *evsel)
++void perf_evlist__propagate_maps(struct perf_evlist *evlist,
++				 struct perf_evsel *evsel)
+ {
+ 	if (evsel->system_wide) {
+ 		/* System wide: set the cpu map of the evsel to all online CPUs. */
+@@ -78,16 +78,6 @@ static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
+ 	evlist->all_cpus = perf_cpu_map__merge(evlist->all_cpus, evsel->cpus);
+ }
+ 
+-static void perf_evlist__propagate_maps(struct perf_evlist *evlist)
+-{
+-	struct perf_evsel *evsel;
+-
+-	evlist->needs_map_propagation = true;
+-
+-	perf_evlist__for_each_evsel(evlist, evsel)
+-		__perf_evlist__propagate_maps(evlist, evsel);
+-}
+-
+ void perf_evlist__add(struct perf_evlist *evlist,
+ 		      struct perf_evsel *evsel)
+ {
+@@ -96,7 +86,7 @@ void perf_evlist__add(struct perf_evlist *evlist,
+ 	evlist->nr_entries += 1;
+ 
+ 	if (evlist->needs_map_propagation)
+-		__perf_evlist__propagate_maps(evlist, evsel);
++		perf_evlist__propagate_maps(evlist, evsel);
+ }
+ 
+ void perf_evlist__remove(struct perf_evlist *evlist,
+@@ -175,6 +165,8 @@ void perf_evlist__set_maps(struct perf_evlist *evlist,
+ 			   struct perf_cpu_map *cpus,
+ 			   struct perf_thread_map *threads)
+ {
++	struct perf_evsel *evsel;
++
+ 	/*
+ 	 * Allow for the possibility that one or another of the maps isn't being
+ 	 * changed i.e. don't put it.  Note we are assuming the maps that are
+@@ -192,7 +184,10 @@ void perf_evlist__set_maps(struct perf_evlist *evlist,
+ 		evlist->threads = perf_thread_map__get(threads);
+ 	}
+ 
+-	perf_evlist__propagate_maps(evlist);
++	evlist->needs_map_propagation = true;
++
++	perf_evlist__for_each_evsel(evlist, evsel)
++		perf_evlist__propagate_maps(evlist, evsel);
+ }
+ 
+ int perf_evlist__open(struct perf_evlist *evlist)
+diff --git a/tools/lib/perf/include/perf/evlist.h b/tools/lib/perf/include/perf/evlist.h
+index e894b770779e..d5a2569b2177 100644
+--- a/tools/lib/perf/include/perf/evlist.h
++++ b/tools/lib/perf/include/perf/evlist.h
+@@ -48,4 +48,6 @@ LIBPERF_API struct perf_mmap *perf_evlist__next_mmap(struct perf_evlist *evlist,
+ 
+ LIBPERF_API void perf_evlist__set_leader(struct perf_evlist *evlist);
+ LIBPERF_API int perf_evlist__nr_groups(struct perf_evlist *evlist);
++LIBPERF_API void perf_evlist__propagate_maps(struct perf_evlist *evlist,
++					     struct perf_evsel *evsel);
+ #endif /* __LIBPERF_EVLIST_H */
+-- 
+2.30.GIT
 
