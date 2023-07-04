@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D64EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Jul 2023 07:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B7EC001B3
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Jul 2023 07:44:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231500AbjGDHod (ORCPT
+        id S229667AbjGDHoe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Jul 2023 03:44:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55236 "EHLO
+        Tue, 4 Jul 2023 03:44:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231450AbjGDHoa (ORCPT
+        with ESMTP id S229793AbjGDHob (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Jul 2023 03:44:30 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26FFFE7A;
+        Tue, 4 Jul 2023 03:44:31 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F1F910C2;
         Tue,  4 Jul 2023 00:44:24 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4QwF9t4yctzLnh6;
-        Tue,  4 Jul 2023 15:42:10 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.57])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4QwFCC3Jd3zTmR6;
+        Tue,  4 Jul 2023 15:43:19 +0800 (CST)
 Received: from localhost.localdomain (10.67.174.95) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Tue, 4 Jul 2023 15:44:21 +0800
+ 15.1.2507.27; Tue, 4 Jul 2023 15:44:19 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -30,12 +30,10 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
 CC:     <yangjihong1@huawei.com>
-Subject: [PATCH 4/5] perf test: Add test case for record tracking
-Date:   Tue, 4 Jul 2023 07:42:16 +0000
-Message-ID: <20230704074217.240939-5-yangjihong1@huawei.com>
+Subject: [PATCH 0/5] perf record: Tracking side-band events for all CPUs when tracing selected CPUs
+Date:   Tue, 4 Jul 2023 07:42:12 +0000
+Message-ID: <20230704074217.240939-1-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
-In-Reply-To: <20230704074217.240939-1-yangjihong1@huawei.com>
-References: <20230704074217.240939-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -47,72 +45,104 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add a new test case to record tracking side-band events for all CPUs when
-tracing selected CPUs
+User space tasks can migrate between CPUs, we need to track side-band
+events for all CPUs.
 
-Test result:
+The specific scenarios are as follows:
 
-  # ./perf test list 2>&1 | grep 'perf record tracking tests'
-   95: perf record tracking tests
-  f# ./perf test 95
-   95: perf record tracking tests                                      : Ok
+         CPU0                                 CPU1
+  perf record -C 0 start
+                              taskA starts to be created and executed
+                                -> PERF_RECORD_COMM and PERF_RECORD_MMAP
+                                   events only deliver to CPU1
+                              ......
+                                |
+                          migrate to CPU0
+                                |
+  Running on CPU0    <----------/
+  ...
 
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
----
- tools/perf/tests/shell/record_tracking.sh | 44 +++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+  perf record -C 0 stop
+
+Now perf samples the PC of taskA. However, perf does not record the
+PERF_RECORD_COMM and PERF_RECORD_COMM events of taskA.
+Therefore, the comm and symbols of taskA cannot be parsed.
+
+The sys_perf_event_open invoked is as follows:
+
+  # perf --debug verbose=3 record -e cpu-clock -C 1 true
+  <SNIP>
+  Opening: cpu-clock
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             1
+    size                             136
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|ID|CPU|PERIOD
+    read_format                      ID|LOST
+    disabled                         1
+    inherit                          1
+    freq                             1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
+  Opening: dummy:HG
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             1
+    size                             136
+    config                           0x9
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|ID|CPU|PERIOD
+    read_format                      ID|LOST
+    inherit                          1
+    mmap                             1
+    comm                             1
+    freq                             1
+    task                             1
+    sample_id_all                    1
+    mmap2                            1
+    comm_exec                        1
+    ksymbol                          1
+    bpf_event                        1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
+  sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 7
+  sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 9
+  sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 10
+  sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 11
+  sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 12
+  sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 13
+  sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
+  <SNIP>
+
+1. patch1 and patch2 are pre-patch and are used to provide two helpers.
+   One is used to modify cpu_maps,
+   and the other is used to search for dummy tracking evsel in the evlist.
+2. patch3 is the main patch, track side-band events for all CPUs when
+   tracing selected CPUs
+3. patch4 adds the corresponding test case.
+4. patch5 is code optimization.
+
+Yang Jihong (5):
+  perf evlist: Export perf_evlist__propagate_maps()
+  perf evlist: Add evlist__findnew_tracking_event() helper
+  perf record: Tracking side-band events for all CPUs when tracing
+    selected CPUs
+  perf test: Add test case for record tracking
+  perf record: All config tracking are integrated into
+    record__config_tracking_events()
+
+ tools/lib/perf/evlist.c                   | 23 +++----
+ tools/lib/perf/include/perf/evlist.h      |  2 +
+ tools/perf/builtin-record.c               | 74 ++++++++++++++---------
+ tools/perf/tests/shell/record_tracking.sh | 44 ++++++++++++++
+ tools/perf/util/evlist.c                  | 17 ++++++
+ tools/perf/util/evlist.h                  |  1 +
+ 6 files changed, 120 insertions(+), 41 deletions(-)
  create mode 100755 tools/perf/tests/shell/record_tracking.sh
 
-diff --git a/tools/perf/tests/shell/record_tracking.sh b/tools/perf/tests/shell/record_tracking.sh
-new file mode 100755
-index 000000000000..fe05f4772999
---- /dev/null
-+++ b/tools/perf/tests/shell/record_tracking.sh
-@@ -0,0 +1,44 @@
-+#!/bin/sh
-+# perf record tracking tests
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+err=0
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+
-+can_cpu_wide()
-+{
-+    if ! perf record -o ${perfdata} -BN --no-bpf-event -e dummy:u -C $1 true 2>&1 >/dev/null
-+    then
-+	echo "record tracking test [Skipped cannot record cpu$1]"
-+	err=2
-+    fi
-+
-+    rm -f ${perfdata}
-+    return $err
-+}
-+
-+test_system_wide_tracking()
-+{
-+    # Need CPU 0 and CPU 1
-+    can_cpu_wide 0 || return 0
-+    can_cpu_wide 1 || return 0
-+
-+    # Record on CPU 0 a task running on CPU 1
-+    perf record -BN --no-bpf-event -o ${perfdata} -e dummy:u -C 0 -- taskset --cpu-list 1 true
-+
-+    # Should get MMAP events from CPU 1
-+    mmap_cnt=`perf script -i ${perfdata} --show-mmap-events -C 1 2>/dev/null | grep MMAP | wc -l`
-+
-+    rm -f ${perfdata}
-+
-+    if [ ${mmap_cnt} -gt 0 ] ; then
-+	return 0
-+    fi
-+
-+    echo "Failed to record MMAP events on CPU 1 when tracing CPU 0"
-+    return 1
-+}
-+
-+test_system_wide_tracking
 -- 
 2.30.GIT
 
