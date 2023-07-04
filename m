@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B7EC001B3
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Jul 2023 07:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 007CDEB64DD
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Jul 2023 07:44:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229667AbjGDHoe (ORCPT
+        id S229505AbjGDHoe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Tue, 4 Jul 2023 03:44:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55258 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229793AbjGDHob (ORCPT
+        with ESMTP id S231459AbjGDHoa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Jul 2023 03:44:31 -0400
+        Tue, 4 Jul 2023 03:44:30 -0400
 Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F1F910C2;
-        Tue,  4 Jul 2023 00:44:24 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.57])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4QwFCC3Jd3zTmR6;
-        Tue,  4 Jul 2023 15:43:19 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E766CE6D;
+        Tue,  4 Jul 2023 00:44:23 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4QwFCD5pDkzTm8c;
+        Tue,  4 Jul 2023 15:43:20 +0800 (CST)
 Received: from localhost.localdomain (10.67.174.95) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Tue, 4 Jul 2023 15:44:19 +0800
+ 15.1.2507.27; Tue, 4 Jul 2023 15:44:21 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -30,10 +30,12 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
 CC:     <yangjihong1@huawei.com>
-Subject: [PATCH 0/5] perf record: Tracking side-band events for all CPUs when tracing selected CPUs
-Date:   Tue, 4 Jul 2023 07:42:12 +0000
-Message-ID: <20230704074217.240939-1-yangjihong1@huawei.com>
+Subject: [PATCH 3/5] perf record: Tracking side-band events for all CPUs when tracing selected CPUs
+Date:   Tue, 4 Jul 2023 07:42:15 +0000
+Message-ID: <20230704074217.240939-4-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
+In-Reply-To: <20230704074217.240939-1-yangjihong1@huawei.com>
+References: <20230704074217.240939-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -117,32 +119,60 @@ The sys_perf_event_open invoked is as follows:
   sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
   <SNIP>
 
-1. patch1 and patch2 are pre-patch and are used to provide two helpers.
-   One is used to modify cpu_maps,
-   and the other is used to search for dummy tracking evsel in the evlist.
-2. patch3 is the main patch, track side-band events for all CPUs when
-   tracing selected CPUs
-3. patch4 adds the corresponding test case.
-4. patch5 is code optimization.
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/perf/builtin-record.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-Yang Jihong (5):
-  perf evlist: Export perf_evlist__propagate_maps()
-  perf evlist: Add evlist__findnew_tracking_event() helper
-  perf record: Tracking side-band events for all CPUs when tracing
-    selected CPUs
-  perf test: Add test case for record tracking
-  perf record: All config tracking are integrated into
-    record__config_tracking_events()
-
- tools/lib/perf/evlist.c                   | 23 +++----
- tools/lib/perf/include/perf/evlist.h      |  2 +
- tools/perf/builtin-record.c               | 74 ++++++++++++++---------
- tools/perf/tests/shell/record_tracking.sh | 44 ++++++++++++++
- tools/perf/util/evlist.c                  | 17 ++++++
- tools/perf/util/evlist.h                  |  1 +
- 6 files changed, 120 insertions(+), 41 deletions(-)
- create mode 100755 tools/perf/tests/shell/record_tracking.sh
-
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 8872cd037f2c..69e0d8c75aab 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -908,6 +908,31 @@ static int record__config_off_cpu(struct record *rec)
+ 	return off_cpu_prepare(rec->evlist, &rec->opts.target, &rec->opts);
+ }
+ 
++static int record__config_tracking_events(struct record *rec)
++{
++	struct evsel *evsel;
++	struct evlist *evlist = rec->evlist;
++	struct record_opts *opts = &rec->opts;
++
++	/*
++	 * User space tasks can migrate between CPUs, so when tracing
++	 * selected CPUs, sideband for all CPUs is still needed.
++	 */
++	if (opts->target.cpu_list) {
++		evsel = evlist__findnew_tracking_event(evlist);
++		if (!evsel)
++			return -ENOMEM;
++
++		if (!evsel->core.system_wide) {
++			evsel->core.system_wide = true;
++			evsel__set_sample_bit(evsel, TIME);
++			perf_evlist__propagate_maps(&evlist->core, &evsel->core);
++		}
++	}
++
++	return 0;
++}
++
+ static bool record__kcore_readable(struct machine *machine)
+ {
+ 	char kcore[PATH_MAX];
+@@ -4235,6 +4260,12 @@ int cmd_record(int argc, const char **argv)
+ 		goto out;
+ 	}
+ 
++	err = record__config_tracking_events(rec);
++	if (err) {
++		pr_err("record__config_tracking_events failed, error %d\n", err);
++		goto out;
++	}
++
+ 	err = record__init_thread_masks(rec);
+ 	if (err) {
+ 		pr_err("Failed to initialize parallel data streaming masks\n");
 -- 
 2.30.GIT
 
