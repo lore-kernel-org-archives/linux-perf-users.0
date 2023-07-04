@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 007CDEB64DD
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Jul 2023 07:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A86CEC001DD
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Jul 2023 07:44:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229505AbjGDHoe (ORCPT
+        id S231348AbjGDHof (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Jul 2023 03:44:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55244 "EHLO
+        Tue, 4 Jul 2023 03:44:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231459AbjGDHoa (ORCPT
+        with ESMTP id S231481AbjGDHob (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Jul 2023 03:44:30 -0400
+        Tue, 4 Jul 2023 03:44:31 -0400
 Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E766CE6D;
-        Tue,  4 Jul 2023 00:44:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C088E76;
+        Tue,  4 Jul 2023 00:44:24 -0700 (PDT)
 Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4QwFCD5pDkzTm8c;
-        Tue,  4 Jul 2023 15:43:20 +0800 (CST)
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4QwF8j0WSGzMqK8;
+        Tue,  4 Jul 2023 15:41:09 +0800 (CST)
 Received: from localhost.localdomain (10.67.174.95) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Tue, 4 Jul 2023 15:44:21 +0800
+ 15.1.2507.27; Tue, 4 Jul 2023 15:44:22 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -30,9 +30,9 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
 CC:     <yangjihong1@huawei.com>
-Subject: [PATCH 3/5] perf record: Tracking side-band events for all CPUs when tracing selected CPUs
-Date:   Tue, 4 Jul 2023 07:42:15 +0000
-Message-ID: <20230704074217.240939-4-yangjihong1@huawei.com>
+Subject: [PATCH 5/5] perf record: All config tracking are integrated into record__config_tracking_events()
+Date:   Tue, 4 Jul 2023 07:42:17 +0000
+Message-ID: <20230704074217.240939-6-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
 In-Reply-To: <20230704074217.240939-1-yangjihong1@huawei.com>
 References: <20230704074217.240939-1-yangjihong1@huawei.com>
@@ -47,32 +47,12 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-User space tasks can migrate between CPUs, we need to track side-band
-events for all CPUs.
-
-The specific scenarios are as follows:
-
-         CPU0                                 CPU1
-  perf record -C 0 start
-                              taskA starts to be created and executed
-                                -> PERF_RECORD_COMM and PERF_RECORD_MMAP
-                                   events only deliver to CPU1
-                              ......
-                                |
-                          migrate to CPU0
-                                |
-  Running on CPU0    <----------/
-  ...
-
-  perf record -C 0 stop
-
-Now perf samples the PC of taskA. However, perf does not record the
-PERF_RECORD_COMM and PERF_RECORD_COMM events of taskA.
-Therefore, the comm and symbols of taskA cannot be parsed.
+The current perf-record also config tracking events in record__open(),
+move it to the record__config_tracking_events().
 
 The sys_perf_event_open invoked is as follows:
 
-  # perf --debug verbose=3 record -e cpu-clock -C 1 true
+  # perf --debug verbose=3 record -e cpu-clock -D 100 true
   <SNIP>
   Opening: cpu-clock
   ------------------------------------------------------------
@@ -80,7 +60,7 @@ The sys_perf_event_open invoked is as follows:
     type                             1
     size                             136
     { sample_period, sample_freq }   4000
-    sample_type                      IP|TID|TIME|ID|CPU|PERIOD
+    sample_type                      IP|TID|TIME|ID|PERIOD
     read_format                      ID|LOST
     disabled                         1
     inherit                          1
@@ -88,7 +68,14 @@ The sys_perf_event_open invoked is as follows:
     sample_id_all                    1
     exclude_guest                    1
   ------------------------------------------------------------
-  sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
+  sys_perf_event_open: pid 3569  cpu 0  group_fd -1  flags 0x8 = 5
+  sys_perf_event_open: pid 3569  cpu 1  group_fd -1  flags 0x8 = 6
+  sys_perf_event_open: pid 3569  cpu 2  group_fd -1  flags 0x8 = 7
+  sys_perf_event_open: pid 3569  cpu 3  group_fd -1  flags 0x8 = 9
+  sys_perf_event_open: pid 3569  cpu 4  group_fd -1  flags 0x8 = 10
+  sys_perf_event_open: pid 3569  cpu 5  group_fd -1  flags 0x8 = 11
+  sys_perf_event_open: pid 3569  cpu 6  group_fd -1  flags 0x8 = 12
+  sys_perf_event_open: pid 3569  cpu 7  group_fd -1  flags 0x8 = 13
   Opening: dummy:HG
   ------------------------------------------------------------
   perf_event_attr:
@@ -96,12 +83,14 @@ The sys_perf_event_open invoked is as follows:
     size                             136
     config                           0x9
     { sample_period, sample_freq }   4000
-    sample_type                      IP|TID|TIME|ID|CPU|PERIOD
+    sample_type                      IP|TID|TIME|ID|PERIOD
     read_format                      ID|LOST
+    disabled                         1
     inherit                          1
     mmap                             1
     comm                             1
     freq                             1
+    enable_on_exec                   1
     task                             1
     sample_id_all                    1
     mmap2                            1
@@ -109,70 +98,90 @@ The sys_perf_event_open invoked is as follows:
     ksymbol                          1
     bpf_event                        1
   ------------------------------------------------------------
-  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
-  sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 7
-  sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 9
-  sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 10
-  sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 11
-  sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 12
-  sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 13
-  sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
+  sys_perf_event_open: pid 3569  cpu 0  group_fd -1  flags 0x8 = 14
+  sys_perf_event_open: pid 3569  cpu 1  group_fd -1  flags 0x8 = 15
+  sys_perf_event_open: pid 3569  cpu 2  group_fd -1  flags 0x8 = 16
+  sys_perf_event_open: pid 3569  cpu 3  group_fd -1  flags 0x8 = 17
+  sys_perf_event_open: pid 3569  cpu 4  group_fd -1  flags 0x8 = 18
+  sys_perf_event_open: pid 3569  cpu 5  group_fd -1  flags 0x8 = 19
+  sys_perf_event_open: pid 3569  cpu 6  group_fd -1  flags 0x8 = 20
+  sys_perf_event_open: pid 3569  cpu 7  group_fd -1  flags 0x8 = 21
   <SNIP>
 
 Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 ---
- tools/perf/builtin-record.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ tools/perf/builtin-record.c | 46 ++++++++++++++++---------------------
+ 1 file changed, 20 insertions(+), 26 deletions(-)
 
 diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 8872cd037f2c..69e0d8c75aab 100644
+index 69e0d8c75aab..1e21f64e4cfa 100644
 --- a/tools/perf/builtin-record.c
 +++ b/tools/perf/builtin-record.c
-@@ -908,6 +908,31 @@ static int record__config_off_cpu(struct record *rec)
- 	return off_cpu_prepare(rec->evlist, &rec->opts.target, &rec->opts);
- }
+@@ -915,15 +915,31 @@ static int record__config_tracking_events(struct record *rec)
+ 	struct record_opts *opts = &rec->opts;
  
-+static int record__config_tracking_events(struct record *rec)
-+{
-+	struct evsel *evsel;
-+	struct evlist *evlist = rec->evlist;
-+	struct record_opts *opts = &rec->opts;
-+
-+	/*
-+	 * User space tasks can migrate between CPUs, so when tracing
-+	 * selected CPUs, sideband for all CPUs is still needed.
-+	 */
-+	if (opts->target.cpu_list) {
-+		evsel = evlist__findnew_tracking_event(evlist);
-+		if (!evsel)
-+			return -ENOMEM;
-+
-+		if (!evsel->core.system_wide) {
-+			evsel->core.system_wide = true;
-+			evsel__set_sample_bit(evsel, TIME);
-+			perf_evlist__propagate_maps(&evlist->core, &evsel->core);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static bool record__kcore_readable(struct machine *machine)
- {
- 	char kcore[PATH_MAX];
-@@ -4235,6 +4260,12 @@ int cmd_record(int argc, const char **argv)
- 		goto out;
- 	}
+ 	/*
+-	 * User space tasks can migrate between CPUs, so when tracing
+-	 * selected CPUs, sideband for all CPUs is still needed.
++	 * For initial_delay, system wide or a hybrid system, we need to add a
++	 * dummy event so that we can track PERF_RECORD_MMAP to cover the delay
++	 * of waiting or event synthesis.
+ 	 */
+-	if (opts->target.cpu_list) {
++	if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
++	    perf_pmus__num_core_pmus() > 1) {
+ 		evsel = evlist__findnew_tracking_event(evlist);
+ 		if (!evsel)
+ 			return -ENOMEM;
  
-+	err = record__config_tracking_events(rec);
-+	if (err) {
-+		pr_err("record__config_tracking_events failed, error %d\n", err);
-+		goto out;
-+	}
+-		if (!evsel->core.system_wide) {
++		/*
++		 * Enable the dummy event when the process is forked for
++		 * initial_delay, immediately for system wide.
++		 */
++		if (opts->target.initial_delay && !evsel->immediate &&
++		    !target__has_cpu(&opts->target))
++			evsel->core.attr.enable_on_exec = 1;
++		else
++			evsel->immediate = 1;
 +
- 	err = record__init_thread_masks(rec);
- 	if (err) {
- 		pr_err("Failed to initialize parallel data streaming masks\n");
++		/*
++		 * User space tasks can migrate between CPUs, so when tracing
++		 * selected CPUs, sideband for all CPUs is still needed.
++		 */
++		if (opts->target.cpu_list && !evsel->core.system_wide) {
+ 			evsel->core.system_wide = true;
+ 			evsel__set_sample_bit(evsel, TIME);
+ 			perf_evlist__propagate_maps(&evlist->core, &evsel->core);
+@@ -1313,28 +1329,6 @@ static int record__open(struct record *rec)
+ 	struct record_opts *opts = &rec->opts;
+ 	int rc = 0;
+ 
+-	/*
+-	 * For initial_delay, system wide or a hybrid system, we need to add a
+-	 * dummy event so that we can track PERF_RECORD_MMAP to cover the delay
+-	 * of waiting or event synthesis.
+-	 */
+-	if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
+-	    perf_pmus__num_core_pmus() > 1) {
+-		pos = evlist__findnew_tracking_event(evlist);
+-		if (!pos)
+-			return -ENOMEM;
+-
+-		/*
+-		 * Enable the dummy event when the process is forked for
+-		 * initial_delay, immediately for system wide.
+-		 */
+-		if (opts->target.initial_delay && !pos->immediate &&
+-		    !target__has_cpu(&opts->target))
+-			pos->core.attr.enable_on_exec = 1;
+-		else
+-			pos->immediate = 1;
+-	}
+-
+ 	evlist__config(evlist, opts, &callchain_param);
+ 
+ 	evlist__for_each_entry(evlist, pos) {
 -- 
 2.30.GIT
 
