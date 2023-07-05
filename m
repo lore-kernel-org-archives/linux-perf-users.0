@@ -2,141 +2,119 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FFFEB64DA
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jul 2023 17:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D303EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jul 2023 18:09:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229730AbjGERey (ORCPT
+        id S231308AbjGESJe convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Jul 2023 13:34:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51984 "EHLO
+        Wed, 5 Jul 2023 14:09:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231545AbjGERex (ORCPT
+        with ESMTP id S230135AbjGESJd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Jul 2023 13:34:53 -0400
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6776E1BC6
-        for <linux-perf-users@vger.kernel.org>; Wed,  5 Jul 2023 10:34:16 -0700 (PDT)
-Received: by mail-yb1-xb2e.google.com with SMTP id 3f1490d57ef6-c49777d6e7aso5860744276.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Jul 2023 10:34:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688578410; x=1691170410;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GHoat11egk4c+Fr6oyWcJqtRqyY61MlbsSd3lj+tGHg=;
-        b=hryGVU4EooMfT50jZ2YPOYOSt2UpUcO8F6eMDp0F71hgh9knrNQ7HoXiKLZQriusTW
-         Z4JrjljoD6+mj81xXwNnHcx3lWfviqfACt8HgOVvnj3E8ESkf7U07ILAK+it73kKIBPD
-         NRkBV3cVgrOx9d2HsYkksFg036oAez+yqnljHztjVtTLtIKd+DZ6fTiJYKTatFgStOKv
-         iaP1kHpm5CYtgj6paEgRlxloP84ejyshangIheG3XZq0+/07h1QHXoJ2r4HvWfV9Mza5
-         AgyPCFYYktKpq3klRPpDnpDg67jNv1poG0kmOAefXyqSOdSwXcyIAu8zKZPQCL5YXN4h
-         hNSg==
+        Wed, 5 Jul 2023 14:09:33 -0400
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9A33170B
+        for <linux-perf-users@vger.kernel.org>; Wed,  5 Jul 2023 11:09:32 -0700 (PDT)
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-c01e1c0402cso6618134276.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Jul 2023 11:09:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688578410; x=1691170410;
+        d=1e100.net; s=20221208; t=1688580572; x=1691172572;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GHoat11egk4c+Fr6oyWcJqtRqyY61MlbsSd3lj+tGHg=;
-        b=iFg2MIJs5S/023bNk0KRGVeCaMU24Z/SLgPlyrrHb0fytwII9gx7J61mspHeNmMTpr
-         56hKBrqE2D03KunbvVEeb2LU/0KEYzYpc350jrxnCJmJl2/2thh6ud9AXTykiT7tlCt5
-         bw53g6uhrLorsfCATUO3T2mfJwmUy92b0D5jdQzXwe3s4t+IoYesCyjl8Kgnq9DhNfJL
-         C9mePPXYLYn4yR4EbNqCA122Tm6GC8pr6sEXKCyotnIaIr5D00J5YDGw08AO7uLAz4Fq
-         CwpY2L65XGWNkDO8ozg3G/WiiwR6vOvfwqUD2OwVbFxAqKd+uwfHkjyyTLSHC+UJJDH8
-         1rTg==
-X-Gm-Message-State: ABy/qLaJHriUZAxjRPXI9UBoz0HomnXnm7VBICKrdptIU+TrzpNuP07H
-        NW0fvzABQE6MSkOoBz8QgAne4TTibx5DUR+LKpc=
-X-Google-Smtp-Source: APBJJlHpexuJXBoSSh05RT6ZcIovSOcWCOo8S21kPKS1QlmluuurEdi0XeIf5hQW2BUHWjN8YQjyg5w55r4dgyp0CoQ=
-X-Received: by 2002:a25:ce92:0:b0:c61:4ae3:b2a3 with SMTP id
- x140-20020a25ce92000000b00c614ae3b2a3mr4031606ybe.28.1688578410575; Wed, 05
- Jul 2023 10:33:30 -0700 (PDT)
+        bh=25IhV79GGxnPjGPOZFmmn6T90UuWMvkNhe+QXJFLRLA=;
+        b=WJarxVu0JsqkeuyWyY+hnyEw10kVQKz5inR+1i9HUvmdZIMjqnCjy2FUUwOn4EWlaY
+         I1IrrVfwoy0vgRy41uxBiSQnWi28FNoTDxaCCmhg8Pv3kqjWb1gHVsuQN9o1vOVM29fm
+         10CJ/Oa5EPsZolZgjIkdSrYCEJUhEFiIkP4n4Wc7rMovBZETwYO06/HkU3rMhjbLgJXm
+         Hp4api07s9rrzMnRkKDHU315Q3tVza/PkHPgkMCZEMJjjK1ktgFqMKO8ewBp2iNMfcVw
+         I6/uZkt/igtsKi+/xZj9JrmjNcuPgM2pmL2J/6g6izohVOx70+OXc3ToRSzJZuHZ3qOp
+         lRuw==
+X-Gm-Message-State: ABy/qLZop0JGkGZalL66wnRrjO8E+T6Di3AxqranoD5HApTDf618dA0Q
+        325vd2gDVVOr/LKK+Hcod6kTcTAuLYVbLT/Geqg=
+X-Google-Smtp-Source: APBJJlHwrS4nf8rJTk5f0YBRHvIgjXfKS71w5014nQJecXOGCKHjxX2wEzvCCeojB12kpj0VL+rOXigMan1MOeWwDig=
+X-Received: by 2002:a25:60d6:0:b0:be6:6539:7fdc with SMTP id
+ u205-20020a2560d6000000b00be665397fdcmr12273915ybb.1.1688580571841; Wed, 05
+ Jul 2023 11:09:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <CALDTKqiVNLHM8b21T-zikuNvhfE0N_-kEinpZGSRjSO-04R96w@mail.gmail.com>
- <874963e2-f97e-b463-1351-b00640b0f67b@arm.com> <CALDTKqg01+xJ2xu218c_QH2PbX9wdhYOiJfDieCXL5PHWV-6FQ@mail.gmail.com>
- <77773641-26e5-a754-63cf-e7d3443e11fc@arm.com> <CALDTKqgek3Bicxkvnq3BQnSaS2keQG6UK8S6_0oJn26r0D00MA@mail.gmail.com>
- <20230614012102.GJ217089@leoy-huanghe.lan> <cf180f9a-085b-ad9b-c477-f02d32559c0a@arm.com>
- <f811f7ce-bf04-b5af-ee33-ea489927649f@arm.com> <20230703093913.GA904662@leoy-huanghe>
- <87b24c93-c457-6cec-736f-ab976ee1d608@arm.com> <20230703102032.GB904662@leoy-huanghe>
- <0ed20560-a880-9790-a7b2-5089c091fdae@arm.com>
-In-Reply-To: <0ed20560-a880-9790-a7b2-5089c091fdae@arm.com>
-From:   Namhyung Kim <namhyung@gmail.com>
-Date:   Wed, 5 Jul 2023 10:33:18 -0700
-Message-ID: <CAM9d7chz+7szVG8-XWrFGyiCPXFRc2zfq8s7VqMcqx3J7QCeyQ@mail.gmail.com>
-Subject: Re: Some questions about using the perf tool in ARM-SPE
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     Leo Yan <leo.yan@linaro.org>, James Clark <james.clark@arm.com>,
-        =?UTF-8?B?6JSh5rKF5L+h?= <fissure2010@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
+References: <20230704050327.14963-1-atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20230704050327.14963-1-atrajeev@linux.vnet.ibm.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 5 Jul 2023 11:09:20 -0700
+Message-ID: <CAM9d7chgkbsRn4Zt_hXodEzMYgVQAuAJux-kWQTjCFXb4z=TbQ@mail.gmail.com>
+Subject: Re: [PATCH] tools/perf/tests: Fix Basic BPF llvm compile to check for
+ libbpf support
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, ak@linux.intel.com,
+        irogers@google.com, james.clark@arm.com, mpe@ellerman.id.au,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, rnsastry@linux.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hello,
 
-On Mon, Jul 3, 2023 at 6:33=E2=80=AFAM Suzuki K Poulose <suzuki.poulose@arm=
-.com> wrote:
+On Mon, Jul 3, 2023 at 10:03 PM Athira Rajeev
+<atrajeev@linux.vnet.ibm.com> wrote:
 >
-> On 03/07/2023 11:20, Leo Yan wrote:
-> > On Mon, Jul 03, 2023 at 10:42:21AM +0100, James Clark wrote:
-> >
-> > [...]
-> >
-> >>>> This is on the tool side rather than in the kernel. But yes, if the =
-data
-> >>>> source encoding is the same as the existing ones please send a patch
-> >>>> adding X4's MIDR to the list.
-> >>>
-> >>> I can do this; as elaborated above, I think we need two patches, one =
-is
-> >>> a kernel patch for adding MIDR and another patch is for perf tool to
-> >>> consume the MIDR of X4.  I would like to know if this is expected or
-> >>> not from your side.
-> >>>
-> >>
-> >> Personally I would just add it on the tool side only. If it's not real=
-ly
-> >> needed in the kernel then it doesn't make sense to add it.
-> >
-> > Makes sense to me.  I will try to work out a patch, and it's good to no=
-t
-> > break building when kernel adds the same MIDR x4 definition.
+> Basic BPF llvm compile fails in systems with libbpf
+> that doesn't support BTF. Log shows below information.
 >
-> Do we somehow sync (copy) the cputype.h for perf tool ? Or do we keep
-> them in sync with a patch ?
+>         libbpf: BTF is required, but is missing or corrupted.
+>         Failed to parse test case 'Basic BPF llvm compile'
+>         test child finished with -2
+>         ---- end ----
 >
-> If it is the former, I wouldn't bother about updating the kernel
-> headers.
+> Here BPF llvm compile fails due to missing BTF support.
+> Fix the llvm test to skip the test incase BTF support is
+> missing.
+>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> ---
+>  tools/perf/tests/llvm.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/tests/llvm.c b/tools/perf/tests/llvm.c
+> index 0bc25a56cfef..4c73c9eab0bb 100644
+> --- a/tools/perf/tests/llvm.c
+> +++ b/tools/perf/tests/llvm.c
+> @@ -4,6 +4,7 @@
+>  #include <string.h>
+>  #include "tests.h"
+>  #include "debug.h"
+> +#include <errno.h>
+>
+>  #ifdef HAVE_LIBBPF_SUPPORT
+>  #include <bpf/libbpf.h>
+> @@ -14,8 +15,12 @@ static int test__bpf_parsing(void *obj_buf, size_t obj_buf_sz)
+>         struct bpf_object *obj;
+>
+>         obj = bpf_object__open_mem(obj_buf, obj_buf_sz, NULL);
+> -       if (libbpf_get_error(obj))
+> +       if (libbpf_get_error(obj)) {
+> +               /* Skip if there is no BTF support */
+> +               if (errno == ENOENT)
 
-In general, perf tool has a copy of kernel headers and there's a script
-called check-headers.sh to verify they are in sync.  We don't
-recommend kernel patches to touch the tool's copy.  And it's done
-by tool devs separately.
+Can we use the return value of libbpf_get_error() instead of
+using the errno?
+
+Also I'm curious why it requires BTF even if the BPF program
+doesn't use it.  Is there an option or something for that?
 
 Thanks,
 Namhyung
 
 
->
-> Also, how does the perf tool read the midr ? It is safer to read :
->
-> /sys/devices/system/cpu/cpu<N>/regs/identification/midr_el1
->
-> than relying mrs emulation, which could get you migrated to another CPU
-> and get a completely different MIDR_EL1 of a little CPU.
->
-> Suzuki
->
->
->
-> >
-> > Thanks,
-> > Leo
-> >
-> >> But I suppose from a consistency point of view we could add it in both
-> >> places. I'm not too fussed either way.
-> >>
-> >>> Thanks,
-> >>> Leo
+> +                       return TEST_SKIP;
+>                 return TEST_FAIL;
+> +       }
+>         bpf_object__close(obj);
+>         return TEST_OK;
+>  }
+> --
+> 2.27.0
 >
