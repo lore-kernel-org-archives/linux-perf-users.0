@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82369EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jul 2023 19:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0BEEB64DA
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jul 2023 19:44:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232588AbjGETme (ORCPT
+        id S233836AbjGETox (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Jul 2023 15:42:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48684 "EHLO
+        Wed, 5 Jul 2023 15:44:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233314AbjGETme (ORCPT
+        with ESMTP id S233614AbjGETou (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Jul 2023 15:42:34 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 362969F;
-        Wed,  5 Jul 2023 12:42:33 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id 98e67ed59e1d1-262fa79e9b3so36943a91.0;
-        Wed, 05 Jul 2023 12:42:33 -0700 (PDT)
+        Wed, 5 Jul 2023 15:44:50 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C65121990;
+        Wed,  5 Jul 2023 12:44:39 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1b895a06484so18453565ad.1;
+        Wed, 05 Jul 2023 12:44:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688586152; x=1691178152;
+        d=gmail.com; s=20221208; t=1688586279; x=1691178279;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=F/jsFLrmNjyiYjHyvrw+WR7HDQEG+dPkNlGKVeYGi8I=;
-        b=TIofqNfHFQobawWnN+T6CQEsoWs4vpXuIMoceRmfmefetUob0g5QvqAoEqZcl2i7jc
-         2Mr8rKn7j5/6dwFuM2XU1I/z34IJR+FuRLXhnolSQhNqqvl02xQqaae2+vxrCQRLSMKK
-         HIuIiFF0KjkmkG4oDTRRVHgHIN3Ulk/uzX+drgsTqafhvcJiuu4pE+I6CipUH3z6GIkz
-         D0ouwF6+gtRkiBkyw3IGi1Eubc4orBkxsre0qlb9kd0uYewfH2rvX5KmdwPNDHCrlWnl
-         btp5hmt9g/EMlHTyEoL3PZ0p/olYCCZ1cElBOt89P9UG6ftv5fLiQ84pvY3sy4xIPbZ0
-         81hA==
+        bh=yclTrzBLsbaEGvGCEpSUrAGw5ZKqNxDtNfrRanKfTkM=;
+        b=KK357Qafb3bDy59jGWZwHPs6hzA/M9nIBL7YEFkn14veMx8Jw+PLHXDidJo2JeUUzT
+         B0Gs0Cykr03evtx0ZNnx0o8PII8ZKrBIbdO2LgVGMN48DYjMWzzVkuYVa3Gkt42sIYRF
+         oTVsmbnhgj1wANPd40Cxnu3ZGndhD+Bo9+yfV0qjv3j16Ipm9/Fi/jaSemgjOYXiJ10H
+         FkJ5gEwWiG9FcpQQ4LzPTDkCqhAMmNP+h2TICzNtkU94mSqERZvSrvHETz15D7FlUhcZ
+         XYgxXNLhA7oZoNamzQleYZnezkZO2haJoKbUft+2v3+B7UioMAMQQQU54nLVSlXXc+a0
+         67IQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688586152; x=1691178152;
+        d=1e100.net; s=20221208; t=1688586279; x=1691178279;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=F/jsFLrmNjyiYjHyvrw+WR7HDQEG+dPkNlGKVeYGi8I=;
-        b=h8HxZlihFZnhCIHAhjWHSfyWcoYf/q0/psPhwT/no0alTgd/GPiQI7fYm4GSmHLG4a
-         cFhx4NHsDe7gsWydqlnv2wXmlaJXvzTAn09sj24HispeyRy4QVIqi53C0aAA3dIiToCl
-         dMJiyGKlx02dAEIre374TydTIdd//knuLxsDoxd7b1uNZOnHoGqH9tFzDmKT8LD4YZmR
-         2DUenN8zmCqSBEccQmtOoAkVQC/6GEhFgDHrFkWloGpOZBBrALxWffsL2ticQM4diAd9
-         s11hVK4oJCoECn8++v9UjYHXVxQYMJkoVBt7CohOZNDrIxxU1L4K3Ce6n9LzBQ398Bvz
-         bqJw==
-X-Gm-Message-State: ABy/qLZkFu/GFsgVfKKlTJXrV98Nm+oEdYPlfjdhaVCglBOqstbLL0Qr
-        ubc2n4TW/+Qa38tjwfl9Pg6PljXJY3i/CYZ4
-X-Google-Smtp-Source: APBJJlEQL3jFIuy2rLQG/6Iqxy+qepTqVddqeBbkwO5Hsw9xmE7cFPHqYvTz3dUf4lfn7G5w5gSfEA==
-X-Received: by 2002:a17:90b:30c3:b0:262:df79:6f81 with SMTP id hi3-20020a17090b30c300b00262df796f81mr12562185pjb.24.1688586152492;
-        Wed, 05 Jul 2023 12:42:32 -0700 (PDT)
+        bh=yclTrzBLsbaEGvGCEpSUrAGw5ZKqNxDtNfrRanKfTkM=;
+        b=G7Qh8qtyK5njiWSxAytNrbSIOmMqfJ6H0c16BZcLAosmrTlPw5ZQrsQO+fnxsPs9La
+         QJ2mhW5L/Xy78Z6xoFpd+ZV4AcWkTfzKl668KV2x0qKMH412FBURGopfFvq12//4f8Z/
+         OV4FbOGd34WFqpyXVrJ6YlZXq+i7yNbxXh1uAAA2jgRCvBMaBn46Ajo6PXCLuEUJLRdl
+         07OPIOjRpimGFdoCwpoDIXVSXv7sr04w8l1osqHEchydKHN2THJ7ECxQm2lJjPlMfghd
+         Walf8Z6TRA0yJ9pwq5+iBw2mKKWEZb0oNTM4tAyxH6D4r66gBOgXV37oGwr7G/ymY0rQ
+         b1Xw==
+X-Gm-Message-State: ABy/qLYfFi+AcwWVVThLByJdzFBJRDyJSJZUGLBHm0MSgM8S8ehWq9Hy
+        jPOhAT8bJXYX88UAzUyUgR4=
+X-Google-Smtp-Source: APBJJlGhvTrWD9TaRY6Fyr9MEAhGSBRSIMAIqvbM2M6VIgtotIllmt2k9luwDXM+lQ0VP12DJuAbKQ==
+X-Received: by 2002:a17:902:f68c:b0:1b8:a6be:ead3 with SMTP id l12-20020a170902f68c00b001b8a6beead3mr4613918plg.57.1688586279163;
+        Wed, 05 Jul 2023 12:44:39 -0700 (PDT)
 Received: from yoga ([2400:1f00:13:c628:31be:68ae:86f5:48b9])
-        by smtp.gmail.com with ESMTPSA id y17-20020a170902b49100b001b54dcd84e2sm19286004plr.240.2023.07.05.12.42.27
+        by smtp.gmail.com with ESMTPSA id bg6-20020a1709028e8600b001b3d0aff88fsm19298830plb.109.2023.07.05.12.44.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jul 2023 12:42:31 -0700 (PDT)
-Date:   Thu, 6 Jul 2023 01:12:23 +0530
+        Wed, 05 Jul 2023 12:44:38 -0700 (PDT)
+Date:   Thu, 6 Jul 2023 01:14:31 +0530
 From:   Anup Sharma <anupnewsmail@gmail.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -63,9 +63,9 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Anup Sharma <anupnewsmail@gmail.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/7] scripts: python: Extact necessary information from
- process event
-Message-ID: <de3f6251d7b0f202fac59224b9820b584233d871.1688585597.git.anupnewsmail@gmail.com>
+Subject: [PATCH v2 2/7] scripts: python: Introduce thread sample processing
+ to create thread
+Message-ID: <df4773a4ebb43a6c855bad5a2bbc338bc2669ca7.1688585597.git.anupnewsmail@gmail.com>
 References: <cover.1688585597.git.anupnewsmail@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -75,61 +75,42 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The script takes in a sample event dictionary(param_dict) and retrieves
-relevant data such as time stamp, PID, TID, thread name, and call stack
-information. If available, the call stack is parsed to include function
-names and the associated DSO, which are requires for creating json schema.
-Also few libaries has been included which will be used in later commit.
+The _addThreadSample function is responsible for adding a sample to a specific
+thread. It first checks if the thread exists in the thread_map dictionary.
+If not, it creates a new thread using the _createtread function and assigns
+it to the thread_map. Finally, it calls the 'addSample' method of the thread,
+passing the thread name, stack, and timestamp.
 
 Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
 ---
- .../scripts/python/firefox-gecko-converter.py | 37 +++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 tools/perf/scripts/python/firefox-gecko-converter.py
+ .../perf/scripts/python/firefox-gecko-converter.py  | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools/perf/scripts/python/firefox-gecko-converter.py
-new file mode 100644
-index 000000000000..ce663840d212
---- /dev/null
+index ce663840d212..95b061a97cbc 100644
+--- a/tools/perf/scripts/python/firefox-gecko-converter.py
 +++ b/tools/perf/scripts/python/firefox-gecko-converter.py
-@@ -0,0 +1,37 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Usage:
-+#
-+#     perf record -a -g -F 99 sleep 1
-+#     perf script firefox-gecko-converter.py
+@@ -18,7 +18,20 @@ sys.path.append(os.environ['PERF_EXEC_PATH'] + \
+ from perf_trace_context import *
+ from Core import *
+ 
++thread_map = {}
++start_time = None
 +
-+from __future__ import print_function
-+import os
-+import sys
-+import json
-+from functools import reduce
+ def process_event(param_dict):
++	global start_time
++	global thread_map
 +
-+sys.path.append(os.environ['PERF_EXEC_PATH'] + \
-+	'/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
++	def _addThreadSample(pid, tid, threadName, time_stamp, stack):
++		thread = thread_map.get(tid)
++		if not thread:
++			thread = _createtread(threadName, pid, tid)
++			thread_map[tid] = thread
++		thread['addSample'](threadName, stack, time_stamp)
 +
-+from perf_trace_context import *
-+from Core import *
-+
-+def process_event(param_dict):
-+	time_stamp = (param_dict['sample']['time'] // 1000) / 1000
-+	pid = param_dict['sample']['pid']
-+	tid = param_dict['sample']['tid']
-+	thread_name = param_dict['comm']
-+	start_time = time_stamp if not start_time else start_time
-+	if param_dict['callchain']:
-+		stack = []
-+		for call in param_dict['callchain']:
-+			if 'sym' not in call:
-+				continue
-+			stack.append(call['sym']['name'] + f' (in {call["dso"]})')
-+		if len(stack) != 0:
-+			stack = stack[::-1]
-+	else:
-+		mod = param_dict['symbol'] if 'symbol' in param_dict else '[unknown]'
-+		dso = param_dict['dso'] if 'dso' in param_dict else '[unknown]'
+ 	time_stamp = (param_dict['sample']['time'] // 1000) / 1000
+ 	pid = param_dict['sample']['pid']
+ 	tid = param_dict['sample']['tid']
 -- 
 2.34.1
 
