@@ -2,171 +2,203 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E811EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jul 2023 20:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C061EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jul 2023 21:10:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231550AbjGEUB7 (ORCPT
+        id S231776AbjGEVKH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Jul 2023 16:01:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34128 "EHLO
+        Wed, 5 Jul 2023 17:10:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229700AbjGEUBx (ORCPT
+        with ESMTP id S231848AbjGEVKG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Jul 2023 16:01:53 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11135121;
-        Wed,  5 Jul 2023 13:01:49 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1b89600a37fso18385585ad.2;
-        Wed, 05 Jul 2023 13:01:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688587308; x=1691179308;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lr+OJtVyAxS2YZZNpALcE7P9fld+sL5KFJ+QmTRku7k=;
-        b=Zb1FJmd9sQBDTe7gTKyJ3r1Ie574IGzORuw90G/FqGbphJHOMPbAxyYG27GkZxp8BC
-         vtrP+c99e3oJH69vFXwOkOSwCeDNjq8v1+yigmx0G3S2BHFqNKYU+TZJiZ7BfzM9RrQk
-         68t3Z/UjAKdfGzr4e4+3a03lirqD7rUJx44YSJBl5Iuo2BapV88KomZZmc6khG1OsSff
-         9MOXkghbR/dEW6BzFayPCQj3PMFuyBpiIqZNd4OMAztq3RRMS58vy2R1efRYaq467r5M
-         CGDZjKcBx/pTb7k16Ae13Q9d8ThIBoyLRXoLjwYeKa82MK7rlPCzZSfA/O/5/uwkwK7w
-         dRSw==
+        Wed, 5 Jul 2023 17:10:06 -0400
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7C911700;
+        Wed,  5 Jul 2023 14:10:04 -0700 (PDT)
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-c01e1c0402cso6788017276.0;
+        Wed, 05 Jul 2023 14:10:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688587308; x=1691179308;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lr+OJtVyAxS2YZZNpALcE7P9fld+sL5KFJ+QmTRku7k=;
-        b=awDyfdUffvtkNFPteiaSEZGlgxqSiYBSnGlJKTnIfH3vDPOwJ1fjZuzSzKf7uKBgLE
-         1DUnFRfUh0z+UUeHjebtXbdsymhbkklLMeTrHsmEpvA3O8irVbO+MkbA+rW2T+EWH+tK
-         asdK00YciOPszDGknJFpmC7CEnvLKNdiv8fdGYrfa1yPvziveHLqe8+2LBvaTCMn6ByJ
-         uhlVBY74ZUfsNDYGHfYOt4OlrOs4vjUTb6ckOVyyB/gQGjyop19a8pJgxZfGAhoHo8Fe
-         rVPWhtY9D5SHh3a8zfDDKq40Qyull5ukZHv4T/jb4dXMyRqTeLQps004IKLZSTNwv32l
-         /8Yg==
-X-Gm-Message-State: ABy/qLa3triI4qfhRo5xhcj5y1MSO6I9EtTwFboF+7VLQcHJkuVIRM5M
-        YnxnBvb0pH9BbdZCBd+Ng3U=
-X-Google-Smtp-Source: APBJJlEqY3psRs/rL15v0HFzYAurAcy0x2HC2lCYLhzLAf3rWBW6IQwIyej94TTjT8xpdzej93G9qw==
-X-Received: by 2002:a17:902:da92:b0:1b5:5a5f:369b with SMTP id j18-20020a170902da9200b001b55a5f369bmr16089762plx.65.1688587308312;
-        Wed, 05 Jul 2023 13:01:48 -0700 (PDT)
-Received: from yoga ([2400:1f00:13:c628:31be:68ae:86f5:48b9])
-        by smtp.gmail.com with ESMTPSA id m23-20020a170902bb9700b001b50cbc0b4fsm19351441pls.111.2023.07.05.13.01.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jul 2023 13:01:47 -0700 (PDT)
-From:   Anup Sharma <anupnewsmail@gmail.com>
-X-Google-Original-From: Anup Sharma <AnupSharma>
-Date:   Thu, 6 Jul 2023 01:31:40 +0530
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Anup Sharma <anupnewsmail@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/9] scripts: python: implement get or create frame
- function
-Message-ID: <ZKXMJFckLMcGcVkP@yoga>
-References: <cover.1687375189.git.anupnewsmail@gmail.com>
- <4d0ac80521ebd44322a360ac331ce2443a1f0f26.1687375189.git.anupnewsmail@gmail.com>
- <CAM9d7cgAfvzrGiU0QiEigTAYKMe+OEP0b3o3Xd-0VhXX5Wkx1g@mail.gmail.com>
+        d=1e100.net; s=20221208; t=1688591404; x=1691183404;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xWtXhDCoK/I7OHGS5PfaOc/0LhSpupgzLxe4u1hFXTA=;
+        b=SIoeopIkFWjI9H9Vvd2khhIsRPMry7pvCGmdE1Ek5o6wj8vBPb0W+MVLRh3nS5kP9N
+         pCj1sd38iTDZNmpRRuRTHhI2riwEdTggu7eRLWFKCc3xxQkHjc3Zt3RSQk0+fscd4eRa
+         fIIQacZwA4JoAb4mrbAWtq/qJi1jLM92qCU0dsKWKy+LitkqnNYBV967U19p1W48+5qG
+         Dyd4fWGtkLIb0Mjuj6lkpHcD3soFxBrcjeVClpsFyve7t8NjgwIQlgsL4bM5V+WnWZOp
+         4s5FyX+r74oGajwYRa0IEWsoJ5sjK9ukfnewbCSPnX5rQyZewFsNsRujl7nCsZruvGGK
+         5Wkw==
+X-Gm-Message-State: ABy/qLYiY1va5BvlzPhJ7EQCKpkpkAYZ2lKxR4YLslvDAFByR3+/FvVH
+        laEdudzgE6QZdpGdjAJBDDbkt1xjJX4cO9TDDe0=
+X-Google-Smtp-Source: APBJJlFbBnIN+wL7GBA4RpZ1/TVSc0T17YSRvriaD3HHreoNPmsWzJOIbegbX0O7Sdj+QCHkCg4zXtqYPJV1q6eXm4U=
+X-Received: by 2002:a25:ac92:0:b0:bc6:8015:1dc8 with SMTP id
+ x18-20020a25ac92000000b00bc680151dc8mr63372ybi.33.1688591403802; Wed, 05 Jul
+ 2023 14:10:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7cgAfvzrGiU0QiEigTAYKMe+OEP0b3o3Xd-0VhXX5Wkx1g@mail.gmail.com>
+References: <20230704074217.240939-1-yangjihong1@huawei.com> <20230704074217.240939-4-yangjihong1@huawei.com>
+In-Reply-To: <20230704074217.240939-4-yangjihong1@huawei.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 5 Jul 2023 14:09:52 -0700
+Message-ID: <CAM9d7cjSTqE+rEJiSkAwmg5+XSxrgFFZC3B94fo4rbA9MH9dQg@mail.gmail.com>
+Subject: Re: [PATCH 3/5] perf record: Tracking side-band events for all CPUs
+ when tracing selected CPUs
+To:     Yang Jihong <yangjihong1@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 23, 2023 at 05:04:56PM -0700, Namhyung Kim wrote:
-> On Wed, Jun 21, 2023 at 12:45 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
-> >
-> > The CATEGORIES list and the USER_CATEGORY_INDEX and
-> > KERNEL_CATEGORY_INDEX constants has been introduced.
-> >
-> > The get_or_create_frame function is responsible for retrieving or
-> > creating a frame based on the provided frameString. If the frame
-> > corresponding to the frameString is found in the frameMap, it is
-> > returned. Otherwise, a new frame is created by appending relevant
-> > information to the frameTable's 'data' array and adding the
-> > frameString to the stringTable.
-> >
-> > The index of the newly created frame is added to the frameMap.
-> >
-> > Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
-> > ---
-> >  .../scripts/python/firefox-gecko-converter.py | 38 +++++++++++++++++++
-> >  1 file changed, 38 insertions(+)
-> >
-> > diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools/perf/scripts/python/firefox-gecko-converter.py
-> > index 30fc542cfdeb..866751e5d1ce 100644
-> > --- a/tools/perf/scripts/python/firefox-gecko-converter.py
-> > +++ b/tools/perf/scripts/python/firefox-gecko-converter.py
-> > @@ -15,6 +15,13 @@ def isPerfScriptFormat(profile):
-> >      firstLine = profile[:profile.index('\n')]
-> >      return bool(re.match(r'^\S.*?\s+(?:\d+/)?\d+\s+(?:\d+\d+\s+)?[\d.]+:', firstLine))
-> >
-> > +CATEGORIES = [
-> > +{'name': 'User', 'color': 'yellow', 'subcategories': ['Other']},
-> > +{'name': 'Kernel', 'color': 'orange', 'subcategories': ['Other']}
-> > +]
-> > +USER_CATEGORY_INDEX = 0
-> > +KERNEL_CATEGORY_INDEX = 1
-> > +
-> >  def convertPerfScriptProfile(profile):
-> >      def _createtread(name, pid, tid):
-> >          markers = {
-> > @@ -70,6 +77,37 @@ def convertPerfScriptProfile(profile):
-> >                  stackMap[key] = stack
-> >              return stack
-> >
-> > +        frameMap = dict()
-> > +        def get_or_create_frame(frameString):
-> > +            frame = frameMap.get(frameString)
-> > +            if frame is None:
-> > +                frame = len(frameTable['data'])
-> > +                location = len(stringTable)
-> > +                stringTable.append(frameString)
-> > +
-> > +                category = KERNEL_CATEGORY_INDEX if frameString.find('kallsyms') != -1 or frameString.find('/vmlinux') != -1 or frameString.endswith('.ko)') else USER_CATEGORY_INDEX
-> 
-> This line is too long, we usually don't allow long lines
-> over 100 characters.
+On Tue, Jul 4, 2023 at 12:44 AM Yang Jihong <yangjihong1@huawei.com> wrote:
+>
+> User space tasks can migrate between CPUs, we need to track side-band
+> events for all CPUs.
+>
+> The specific scenarios are as follows:
+>
+>          CPU0                                 CPU1
+>   perf record -C 0 start
+>                               taskA starts to be created and executed
+>                                 -> PERF_RECORD_COMM and PERF_RECORD_MMAP
+>                                    events only deliver to CPU1
+>                               ......
+>                                 |
+>                           migrate to CPU0
+>                                 |
+>   Running on CPU0    <----------/
+>   ...
+>
+>   perf record -C 0 stop
 
-Thanks for your suggestion. I have taken care in latest version.
-Is there any way to add such checks in editor itself ? I used checkpatch.pl
-scripts, however it didnt catch this.
+But I'm curious why you don't limit the task to run on the
+specified CPUs only (using taskset).
 
-> Thanks,
-> Namhyung
-> 
-> 
-> > +                implementation = None
-> > +                optimizations = None
-> > +                line = None
-> > +                relevantForJS = False
-> > +                subcategory = None
-> > +                innerWindowID = 0
-> > +                column = None
-> > +
-> > +                frameTable['data'].append([
-> > +                    location,
-> > +                    relevantForJS,
-> > +                    innerWindowID,
-> > +                    implementation,
-> > +                    optimizations,
-> > +                    line,
-> > +                    column,
-> > +                    category,
-> > +                    subcategory,
-> > +                ])
-> > +                frameMap[frameString] = frame
-> > +            return frame
-> > +
-> >          def addSample(threadName, stackArray, time):
-> >              nonlocal name
-> >              if name != threadName:
-> > --
-> > 2.34.1
-> >
+Also, as you may know, you don't need to specify -C if you
+want to profile specific tasks only.  It'll open per-cpu, per-task
+events and they will have all necessary info.
+
+>
+> Now perf samples the PC of taskA. However, perf does not record the
+> PERF_RECORD_COMM and PERF_RECORD_COMM events of taskA.
+
+_COMM and _MMAP right?
+
+Thanks,
+Namhyung
+
+
+> Therefore, the comm and symbols of taskA cannot be parsed.
+>
+> The sys_perf_event_open invoked is as follows:
+>
+>   # perf --debug verbose=3 record -e cpu-clock -C 1 true
+>   <SNIP>
+>   Opening: cpu-clock
+>   ------------------------------------------------------------
+>   perf_event_attr:
+>     type                             1
+>     size                             136
+>     { sample_period, sample_freq }   4000
+>     sample_type                      IP|TID|TIME|ID|CPU|PERIOD
+>     read_format                      ID|LOST
+>     disabled                         1
+>     inherit                          1
+>     freq                             1
+>     sample_id_all                    1
+>     exclude_guest                    1
+>   ------------------------------------------------------------
+>   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
+>   Opening: dummy:HG
+>   ------------------------------------------------------------
+>   perf_event_attr:
+>     type                             1
+>     size                             136
+>     config                           0x9
+>     { sample_period, sample_freq }   4000
+>     sample_type                      IP|TID|TIME|ID|CPU|PERIOD
+>     read_format                      ID|LOST
+>     inherit                          1
+>     mmap                             1
+>     comm                             1
+>     freq                             1
+>     task                             1
+>     sample_id_all                    1
+>     mmap2                            1
+>     comm_exec                        1
+>     ksymbol                          1
+>     bpf_event                        1
+>   ------------------------------------------------------------
+>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
+>   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 7
+>   sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 9
+>   sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 10
+>   sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 11
+>   sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 12
+>   sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 13
+>   sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
+>   <SNIP>
+>
+> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> ---
+>  tools/perf/builtin-record.c | 31 +++++++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 8872cd037f2c..69e0d8c75aab 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -908,6 +908,31 @@ static int record__config_off_cpu(struct record *rec)
+>         return off_cpu_prepare(rec->evlist, &rec->opts.target, &rec->opts);
+>  }
+>
+> +static int record__config_tracking_events(struct record *rec)
+> +{
+> +       struct evsel *evsel;
+> +       struct evlist *evlist = rec->evlist;
+> +       struct record_opts *opts = &rec->opts;
+> +
+> +       /*
+> +        * User space tasks can migrate between CPUs, so when tracing
+> +        * selected CPUs, sideband for all CPUs is still needed.
+> +        */
+> +       if (opts->target.cpu_list) {
+> +               evsel = evlist__findnew_tracking_event(evlist);
+> +               if (!evsel)
+> +                       return -ENOMEM;
+> +
+> +               if (!evsel->core.system_wide) {
+> +                       evsel->core.system_wide = true;
+> +                       evsel__set_sample_bit(evsel, TIME);
+> +                       perf_evlist__propagate_maps(&evlist->core, &evsel->core);
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  static bool record__kcore_readable(struct machine *machine)
+>  {
+>         char kcore[PATH_MAX];
+> @@ -4235,6 +4260,12 @@ int cmd_record(int argc, const char **argv)
+>                 goto out;
+>         }
+>
+> +       err = record__config_tracking_events(rec);
+> +       if (err) {
+> +               pr_err("record__config_tracking_events failed, error %d\n", err);
+> +               goto out;
+> +       }
+> +
+>         err = record__init_thread_masks(rec);
+>         if (err) {
+>                 pr_err("Failed to initialize parallel data streaming masks\n");
+> --
+> 2.30.GIT
+>
