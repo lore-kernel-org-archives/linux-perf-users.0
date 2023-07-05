@@ -2,297 +2,141 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E74EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jul 2023 08:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FFFEB64DA
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jul 2023 17:34:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232343AbjGEI1N (ORCPT
+        id S229730AbjGERey (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Jul 2023 04:27:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50932 "EHLO
+        Wed, 5 Jul 2023 13:34:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232197AbjGEI1L (ORCPT
+        with ESMTP id S231545AbjGERex (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Jul 2023 04:27:11 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1DFD61712;
-        Wed,  5 Jul 2023 01:27:08 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3846D169E;
-        Wed,  5 Jul 2023 01:27:50 -0700 (PDT)
-Received: from localhost.localdomain (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 345FF3F73F;
-        Wed,  5 Jul 2023 01:27:06 -0700 (PDT)
-From:   James Clark <james.clark@arm.com>
-To:     linux-perf-users@vger.kernel.org, irogers@google.com
-Cc:     James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] perf test: Fix event parsing test when PERF_PMU_CAP_EXTENDED_HW_TYPE isn't supported.
-Date:   Wed,  5 Jul 2023 09:26:52 +0100
-Message-Id: <20230705082653.23566-3-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230705082653.23566-1-james.clark@arm.com>
-References: <20230705082653.23566-1-james.clark@arm.com>
+        Wed, 5 Jul 2023 13:34:53 -0400
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6776E1BC6
+        for <linux-perf-users@vger.kernel.org>; Wed,  5 Jul 2023 10:34:16 -0700 (PDT)
+Received: by mail-yb1-xb2e.google.com with SMTP id 3f1490d57ef6-c49777d6e7aso5860744276.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Jul 2023 10:34:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688578410; x=1691170410;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GHoat11egk4c+Fr6oyWcJqtRqyY61MlbsSd3lj+tGHg=;
+        b=hryGVU4EooMfT50jZ2YPOYOSt2UpUcO8F6eMDp0F71hgh9knrNQ7HoXiKLZQriusTW
+         Z4JrjljoD6+mj81xXwNnHcx3lWfviqfACt8HgOVvnj3E8ESkf7U07ILAK+it73kKIBPD
+         NRkBV3cVgrOx9d2HsYkksFg036oAez+yqnljHztjVtTLtIKd+DZ6fTiJYKTatFgStOKv
+         iaP1kHpm5CYtgj6paEgRlxloP84ejyshangIheG3XZq0+/07h1QHXoJ2r4HvWfV9Mza5
+         AgyPCFYYktKpq3klRPpDnpDg67jNv1poG0kmOAefXyqSOdSwXcyIAu8zKZPQCL5YXN4h
+         hNSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688578410; x=1691170410;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GHoat11egk4c+Fr6oyWcJqtRqyY61MlbsSd3lj+tGHg=;
+        b=iFg2MIJs5S/023bNk0KRGVeCaMU24Z/SLgPlyrrHb0fytwII9gx7J61mspHeNmMTpr
+         56hKBrqE2D03KunbvVEeb2LU/0KEYzYpc350jrxnCJmJl2/2thh6ud9AXTykiT7tlCt5
+         bw53g6uhrLorsfCATUO3T2mfJwmUy92b0D5jdQzXwe3s4t+IoYesCyjl8Kgnq9DhNfJL
+         C9mePPXYLYn4yR4EbNqCA122Tm6GC8pr6sEXKCyotnIaIr5D00J5YDGw08AO7uLAz4Fq
+         CwpY2L65XGWNkDO8ozg3G/WiiwR6vOvfwqUD2OwVbFxAqKd+uwfHkjyyTLSHC+UJJDH8
+         1rTg==
+X-Gm-Message-State: ABy/qLaJHriUZAxjRPXI9UBoz0HomnXnm7VBICKrdptIU+TrzpNuP07H
+        NW0fvzABQE6MSkOoBz8QgAne4TTibx5DUR+LKpc=
+X-Google-Smtp-Source: APBJJlHpexuJXBoSSh05RT6ZcIovSOcWCOo8S21kPKS1QlmluuurEdi0XeIf5hQW2BUHWjN8YQjyg5w55r4dgyp0CoQ=
+X-Received: by 2002:a25:ce92:0:b0:c61:4ae3:b2a3 with SMTP id
+ x140-20020a25ce92000000b00c614ae3b2a3mr4031606ybe.28.1688578410575; Wed, 05
+ Jul 2023 10:33:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CALDTKqiVNLHM8b21T-zikuNvhfE0N_-kEinpZGSRjSO-04R96w@mail.gmail.com>
+ <874963e2-f97e-b463-1351-b00640b0f67b@arm.com> <CALDTKqg01+xJ2xu218c_QH2PbX9wdhYOiJfDieCXL5PHWV-6FQ@mail.gmail.com>
+ <77773641-26e5-a754-63cf-e7d3443e11fc@arm.com> <CALDTKqgek3Bicxkvnq3BQnSaS2keQG6UK8S6_0oJn26r0D00MA@mail.gmail.com>
+ <20230614012102.GJ217089@leoy-huanghe.lan> <cf180f9a-085b-ad9b-c477-f02d32559c0a@arm.com>
+ <f811f7ce-bf04-b5af-ee33-ea489927649f@arm.com> <20230703093913.GA904662@leoy-huanghe>
+ <87b24c93-c457-6cec-736f-ab976ee1d608@arm.com> <20230703102032.GB904662@leoy-huanghe>
+ <0ed20560-a880-9790-a7b2-5089c091fdae@arm.com>
+In-Reply-To: <0ed20560-a880-9790-a7b2-5089c091fdae@arm.com>
+From:   Namhyung Kim <namhyung@gmail.com>
+Date:   Wed, 5 Jul 2023 10:33:18 -0700
+Message-ID: <CAM9d7chz+7szVG8-XWrFGyiCPXFRc2zfq8s7VqMcqx3J7QCeyQ@mail.gmail.com>
+Subject: Re: Some questions about using the perf tool in ARM-SPE
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     Leo Yan <leo.yan@linaro.org>, James Clark <james.clark@arm.com>,
+        =?UTF-8?B?6JSh5rKF5L+h?= <fissure2010@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Arm has multiple PMU types for heterogeneous systems, but doesn't
-currently support PERF_PMU_CAP_EXTENDED_HW_TYPE. Make the tests
-support both scenarios so that they pass on Arm, and will still pass
-once PERF_PMU_CAP_EXTENDED_HW_TYPE support is added.
+Hello,
 
-Fixes: 27c9fcfc1e14 ("perf test: Update parse-events expectations to test for multiple events")
-Acked-by: Ian Rogers <irogers@google.com>
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/tests/parse-events.c | 86 +++++++++++++++++++--------------
- 1 file changed, 50 insertions(+), 36 deletions(-)
+On Mon, Jul 3, 2023 at 6:33=E2=80=AFAM Suzuki K Poulose <suzuki.poulose@arm=
+.com> wrote:
+>
+> On 03/07/2023 11:20, Leo Yan wrote:
+> > On Mon, Jul 03, 2023 at 10:42:21AM +0100, James Clark wrote:
+> >
+> > [...]
+> >
+> >>>> This is on the tool side rather than in the kernel. But yes, if the =
+data
+> >>>> source encoding is the same as the existing ones please send a patch
+> >>>> adding X4's MIDR to the list.
+> >>>
+> >>> I can do this; as elaborated above, I think we need two patches, one =
+is
+> >>> a kernel patch for adding MIDR and another patch is for perf tool to
+> >>> consume the MIDR of X4.  I would like to know if this is expected or
+> >>> not from your side.
+> >>>
+> >>
+> >> Personally I would just add it on the tool side only. If it's not real=
+ly
+> >> needed in the kernel then it doesn't make sense to add it.
+> >
+> > Makes sense to me.  I will try to work out a patch, and it's good to no=
+t
+> > break building when kernel adds the same MIDR x4 definition.
+>
+> Do we somehow sync (copy) the cputype.h for perf tool ? Or do we keep
+> them in sync with a patch ?
+>
+> If it is the former, I wouldn't bother about updating the kernel
+> headers.
 
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 21f79aa31233..b2f82847e4c3 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -20,6 +20,20 @@
- #define PERF_TP_SAMPLE_TYPE (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME | \
- 			     PERF_SAMPLE_CPU | PERF_SAMPLE_PERIOD)
- 
-+static int num_core_entries(void)
-+{
-+	/*
-+	 * If the kernel supports extended type, expect events to be
-+	 * opened once for each core PMU type. Otherwise fall back to the legacy
-+	 * behavior of opening only one event even though there are multiple
-+	 * PMUs
-+	 */
-+	if (perf_pmus__supports_extended_type())
-+		return perf_pmus__num_core_pmus();
-+
-+	return 1;
-+}
-+
- static bool test_config(const struct evsel *evsel, __u64 expected_config)
- {
- 	__u32 type = evsel->core.attr.type;
-@@ -339,7 +353,7 @@ static int test__checkevent_symbolic_name_modifier(struct evlist *evlist)
- 	struct perf_evsel *evsel;
- 
- 	TEST_ASSERT_VAL("wrong number of entries",
--			evlist->core.nr_entries == perf_pmus__num_core_pmus());
-+			evlist->core.nr_entries == num_core_entries());
- 
- 	perf_evlist__for_each_entry(&evlist->core, evsel) {
- 		TEST_ASSERT_VAL("wrong exclude_user", evsel->attr.exclude_user);
-@@ -842,11 +856,11 @@ static int test__group1(struct evlist *evlist)
- 	struct evsel *evsel, *leader;
- 
- 	TEST_ASSERT_VAL("wrong number of entries",
--			evlist->core.nr_entries == (perf_pmus__num_core_pmus() * 2));
-+			evlist->core.nr_entries == (num_core_entries() * 2));
- 	TEST_ASSERT_VAL("wrong number of groups",
--			evlist__nr_groups(evlist) == perf_pmus__num_core_pmus());
-+			evlist__nr_groups(evlist) == num_core_entries());
- 
--	for (int i = 0; i < perf_pmus__num_core_pmus(); i++) {
-+	for (int i = 0; i < num_core_entries(); i++) {
- 		/* instructions:k */
- 		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
- 		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-@@ -885,7 +899,7 @@ static int test__group2(struct evlist *evlist)
- 	struct evsel *evsel, *leader = NULL;
- 
- 	TEST_ASSERT_VAL("wrong number of entries",
--			evlist->core.nr_entries == (2 * perf_pmus__num_core_pmus() + 1));
-+			evlist->core.nr_entries == (2 * num_core_entries() + 1));
- 	/*
- 	 * TODO: Currently the software event won't be grouped with the hardware
- 	 * event except for 1 PMU.
-@@ -1051,11 +1065,11 @@ static int test__group4(struct evlist *evlist __maybe_unused)
- 	struct evsel *evsel, *leader;
- 
- 	TEST_ASSERT_VAL("wrong number of entries",
--			evlist->core.nr_entries == (perf_pmus__num_core_pmus() * 2));
-+			evlist->core.nr_entries == (num_core_entries() * 2));
- 	TEST_ASSERT_VAL("wrong number of groups",
--			perf_pmus__num_core_pmus() == evlist__nr_groups(evlist));
-+			num_core_entries() == evlist__nr_groups(evlist));
- 
--	for (int i = 0; i < perf_pmus__num_core_pmus(); i++) {
-+	for (int i = 0; i < num_core_entries(); i++) {
- 		/* cycles:u + p */
- 		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
- 		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-@@ -1096,11 +1110,11 @@ static int test__group5(struct evlist *evlist __maybe_unused)
- 	struct evsel *evsel = NULL, *leader;
- 
- 	TEST_ASSERT_VAL("wrong number of entries",
--			evlist->core.nr_entries == (5 * perf_pmus__num_core_pmus()));
-+			evlist->core.nr_entries == (5 * num_core_entries()));
- 	TEST_ASSERT_VAL("wrong number of groups",
--			evlist__nr_groups(evlist) == (2 * perf_pmus__num_core_pmus()));
-+			evlist__nr_groups(evlist) == (2 * num_core_entries()));
- 
--	for (int i = 0; i < perf_pmus__num_core_pmus(); i++) {
-+	for (int i = 0; i < num_core_entries(); i++) {
- 		/* cycles + G */
- 		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
- 		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-@@ -1131,7 +1145,7 @@ static int test__group5(struct evlist *evlist __maybe_unused)
- 		TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 1);
- 		TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 	}
--	for (int i = 0; i < perf_pmus__num_core_pmus(); i++) {
-+	for (int i = 0; i < num_core_entries(); i++) {
- 		/* cycles:G */
- 		evsel = leader = evsel__next(evsel);
- 		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-@@ -1161,7 +1175,7 @@ static int test__group5(struct evlist *evlist __maybe_unused)
- 		TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
- 		TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 1);
- 	}
--	for (int i = 0; i < perf_pmus__num_core_pmus(); i++) {
-+	for (int i = 0; i < num_core_entries(); i++) {
- 		/* cycles */
- 		evsel = evsel__next(evsel);
- 		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-@@ -1182,11 +1196,11 @@ static int test__group_gh1(struct evlist *evlist)
- 	struct evsel *evsel = NULL, *leader;
- 
- 	TEST_ASSERT_VAL("wrong number of entries",
--			evlist->core.nr_entries == (2 * perf_pmus__num_core_pmus()));
-+			evlist->core.nr_entries == (2 * num_core_entries()));
- 	TEST_ASSERT_VAL("wrong number of groups",
--			evlist__nr_groups(evlist) == perf_pmus__num_core_pmus());
-+			evlist__nr_groups(evlist) == num_core_entries());
- 
--	for (int i = 0; i < perf_pmus__num_core_pmus(); i++) {
-+	for (int i = 0; i < num_core_entries(); i++) {
- 		/* cycles + :H group modifier */
- 		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
- 		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-@@ -1223,11 +1237,11 @@ static int test__group_gh2(struct evlist *evlist)
- 	struct evsel *evsel = NULL, *leader;
- 
- 	TEST_ASSERT_VAL("wrong number of entries",
--			evlist->core.nr_entries == (2 * perf_pmus__num_core_pmus()));
-+			evlist->core.nr_entries == (2 * num_core_entries()));
- 	TEST_ASSERT_VAL("wrong number of groups",
--			evlist__nr_groups(evlist) == perf_pmus__num_core_pmus());
-+			evlist__nr_groups(evlist) == num_core_entries());
- 
--	for (int i = 0; i < perf_pmus__num_core_pmus(); i++) {
-+	for (int i = 0; i < num_core_entries(); i++) {
- 		/* cycles + :G group modifier */
- 		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
- 		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-@@ -1264,11 +1278,11 @@ static int test__group_gh3(struct evlist *evlist)
- 	struct evsel *evsel = NULL, *leader;
- 
- 	TEST_ASSERT_VAL("wrong number of entries",
--			evlist->core.nr_entries == (2 * perf_pmus__num_core_pmus()));
-+			evlist->core.nr_entries == (2 * num_core_entries()));
- 	TEST_ASSERT_VAL("wrong number of groups",
--			evlist__nr_groups(evlist) == perf_pmus__num_core_pmus());
-+			evlist__nr_groups(evlist) == num_core_entries());
- 
--	for (int i = 0; i < perf_pmus__num_core_pmus(); i++) {
-+	for (int i = 0; i < num_core_entries(); i++) {
- 		/* cycles:G + :u group modifier */
- 		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
- 		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-@@ -1305,11 +1319,11 @@ static int test__group_gh4(struct evlist *evlist)
- 	struct evsel *evsel = NULL, *leader;
- 
- 	TEST_ASSERT_VAL("wrong number of entries",
--			evlist->core.nr_entries == (2 * perf_pmus__num_core_pmus()));
-+			evlist->core.nr_entries == (2 * num_core_entries()));
- 	TEST_ASSERT_VAL("wrong number of groups",
--			evlist__nr_groups(evlist) == perf_pmus__num_core_pmus());
-+			evlist__nr_groups(evlist) == num_core_entries());
- 
--	for (int i = 0; i < perf_pmus__num_core_pmus(); i++) {
-+	for (int i = 0; i < num_core_entries(); i++) {
- 		/* cycles:G + :uG group modifier */
- 		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
- 		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-@@ -1346,9 +1360,9 @@ static int test__leader_sample1(struct evlist *evlist)
- 	struct evsel *evsel = NULL, *leader;
- 
- 	TEST_ASSERT_VAL("wrong number of entries",
--			evlist->core.nr_entries == (3 * perf_pmus__num_core_pmus()));
-+			evlist->core.nr_entries == (3 * num_core_entries()));
- 
--	for (int i = 0; i < perf_pmus__num_core_pmus(); i++) {
-+	for (int i = 0; i < num_core_entries(); i++) {
- 		/* cycles - sampling group leader */
- 		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
- 		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-@@ -1398,9 +1412,9 @@ static int test__leader_sample2(struct evlist *evlist __maybe_unused)
- 	struct evsel *evsel = NULL, *leader;
- 
- 	TEST_ASSERT_VAL("wrong number of entries",
--			evlist->core.nr_entries == (2 * perf_pmus__num_core_pmus()));
-+			evlist->core.nr_entries == (2 * num_core_entries()));
- 
--	for (int i = 0; i < perf_pmus__num_core_pmus(); i++) {
-+	for (int i = 0; i < num_core_entries(); i++) {
- 		/* instructions - sampling group leader */
- 		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
- 		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-@@ -1437,9 +1451,9 @@ static int test__checkevent_pinned_modifier(struct evlist *evlist)
- 	struct evsel *evsel = NULL;
- 
- 	TEST_ASSERT_VAL("wrong number of entries",
--			evlist->core.nr_entries == perf_pmus__num_core_pmus());
-+			evlist->core.nr_entries == num_core_entries());
- 
--	for (int i = 0; i < perf_pmus__num_core_pmus(); i++) {
-+	for (int i = 0; i < num_core_entries(); i++) {
- 		evsel = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
- 		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
- 		TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
-@@ -1455,9 +1469,9 @@ static int test__pinned_group(struct evlist *evlist)
- 	struct evsel *evsel = NULL, *leader;
- 
- 	TEST_ASSERT_VAL("wrong number of entries",
--			evlist->core.nr_entries == (3 * perf_pmus__num_core_pmus()));
-+			evlist->core.nr_entries == (3 * num_core_entries()));
- 
--	for (int i = 0; i < perf_pmus__num_core_pmus(); i++) {
-+	for (int i = 0; i < num_core_entries(); i++) {
- 		/* cycles - group leader */
- 		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
- 		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-@@ -1500,9 +1514,9 @@ static int test__exclusive_group(struct evlist *evlist)
- 	struct evsel *evsel = NULL, *leader;
- 
- 	TEST_ASSERT_VAL("wrong number of entries",
--			evlist->core.nr_entries == (3 * perf_pmus__num_core_pmus()));
-+			evlist->core.nr_entries == 3 * num_core_entries());
- 
--	for (int i = 0; i < perf_pmus__num_core_pmus(); i++) {
-+	for (int i = 0; i < num_core_entries(); i++) {
- 		/* cycles - group leader */
- 		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
- 		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-@@ -1574,7 +1588,7 @@ static int test__checkevent_precise_max_modifier(struct evlist *evlist)
- 	struct evsel *evsel = evlist__first(evlist);
- 
- 	TEST_ASSERT_VAL("wrong number of entries",
--			evlist->core.nr_entries == (1 + perf_pmus__num_core_pmus()));
-+			evlist->core.nr_entries == 1 + num_core_entries());
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_SOFTWARE == evsel->core.attr.type);
- 	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_SW_TASK_CLOCK));
- 	return TEST_OK;
--- 
-2.34.1
+In general, perf tool has a copy of kernel headers and there's a script
+called check-headers.sh to verify they are in sync.  We don't
+recommend kernel patches to touch the tool's copy.  And it's done
+by tool devs separately.
 
+Thanks,
+Namhyung
+
+
+>
+> Also, how does the perf tool read the midr ? It is safer to read :
+>
+> /sys/devices/system/cpu/cpu<N>/regs/identification/midr_el1
+>
+> than relying mrs emulation, which could get you migrated to another CPU
+> and get a completely different MIDR_EL1 of a little CPU.
+>
+> Suzuki
+>
+>
+>
+> >
+> > Thanks,
+> > Leo
+> >
+> >> But I suppose from a consistency point of view we could add it in both
+> >> places. I'm not too fussed either way.
+> >>
+> >>> Thanks,
+> >>> Leo
+>
