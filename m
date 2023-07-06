@@ -2,189 +2,205 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3397EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Jul 2023 14:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF53BEB64D9
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Jul 2023 14:22:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232824AbjGFORk (ORCPT
+        id S232173AbjGFOWb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Jul 2023 10:17:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48314 "EHLO
+        Thu, 6 Jul 2023 10:22:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230108AbjGFORk (ORCPT
+        with ESMTP id S229694AbjGFOWa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Jul 2023 10:17:40 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE2B112A;
-        Thu,  6 Jul 2023 07:17:36 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-992dcae74e0so93768866b.3;
-        Thu, 06 Jul 2023 07:17:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688653055; x=1691245055;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xFf3EXInF/vw5mSDkGlm1RQPsDdmQJ8ogfM9wRRcu68=;
-        b=HmvPfKDxPhT7mqDTOq0bYJevpex30h3Nups50JviKXsXX9OOh3F0c0IBfRfoJ26qfm
-         yFdfsVND+HlqqAbz7KqDznyWW3o2rNmdFVX7I76bvkk1TGahvUuxukTvoFOjNVhrJhQk
-         qwOhDeppaXsNNJWgpAjJWJup/jfb9052XrQPJrAPR0fcVTrHsM0AJZ0b536YbBlyq/2G
-         a359e0ZaRrZz1ugx6UFybE8DGomTe+wsMjRPSKsJiAL2PMMSH3/+jxBuznOLr5MsMapz
-         dhKk51p59x+FLquQx6tT5Ab0Y3Hrhf6nmCpibcaSDtY/fJmJWwxgC8ls+/R6pogdtPVG
-         GveA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688653055; x=1691245055;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xFf3EXInF/vw5mSDkGlm1RQPsDdmQJ8ogfM9wRRcu68=;
-        b=F9vy59pmGYl2ogMFuiivmNLFx/WyTUU/yn0szWNlQlNTEfPIXdLm0mTzgq/XXGacH/
-         Yyd4TXiZKW0sgbEQvCiENESmk2nxKxkAgg+/4iR8cSQ2MBtGhvpqopGqwwIKopMaAWDI
-         tMlHABm00roFtgqGh+YkLNFXCdpqyQkkTN/fYrWCa7Z56PHFX9rYKdf4Z7SAfHoBlOP5
-         9ustY1n7cLrHPACIYSK8KPflWl35UAg2ZNiL+KkSeRCL2SEq9V+8ArcF1e/eSb4NP+eA
-         uAhM1bzC7bBLDAI5GcU3LhaE6Rb8g362FDtbWMfVlUJwEVheq82FDowSCaTLOUMZtSp8
-         1W7w==
-X-Gm-Message-State: ABy/qLYuMdA+9x48gC+bpRkJrg7iJKePILg2E1QlQL+wXI2YyJPIU7sD
-        BEoUWrfn0XENJVCSOgd+FpI=
-X-Google-Smtp-Source: APBJJlH3Fj7e5qYXpje+jUyv6IsICJPf10+3Je55O2fvk4vxVCN2reICwTZwT9lsrVfY5XHCGBUxZw==
-X-Received: by 2002:a17:906:1013:b0:961:a67:28d with SMTP id 19-20020a170906101300b009610a67028dmr1602283ejm.22.1688653055169;
-        Thu, 06 Jul 2023 07:17:35 -0700 (PDT)
-Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id kj4-20020a170907764400b009929d998ab6sm872432ejc.131.2023.07.06.07.17.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jul 2023 07:17:34 -0700 (PDT)
-From:   Uros Bizjak <ubizjak@gmail.com>
-To:     x86@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Uros Bizjak <ubizjak@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: [PATCH] perf/x86: Use local64_try_cmpxchg
-Date:   Thu,  6 Jul 2023 16:16:48 +0200
-Message-ID: <20230706141720.2672-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.41.0
-MIME-Version: 1.0
+        Thu, 6 Jul 2023 10:22:30 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2074.outbound.protection.outlook.com [40.107.244.74])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DABDDB;
+        Thu,  6 Jul 2023 07:22:28 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Cv09HaUmFgH08fpyRyS0NzD8R8nvUsbuev3aIGNzp2+GqxT5Y+Lsvlv/jyyx42ZDNTIVmNxD32Dchuu2Mi3z73HgRUo4pdR0k8gsp7pXk71Hz7d4TVw7i+ZWTbVWGFKqZwaQvKYykashsCHCWMBvm+VlqpiDDZ1s56MI8poBN+iWdKW/LE1lguqhh5e/YxiuryqDFMxTef4w53VekCLMbVjt39n6gNdGQJCN5S7gCjViVzEKFuwRaKpX0bcsgN8MhxdbZdV2d2RwfvcL0DexJW6nyGCD9gLlMoImWnwt3JBCH5cD5n4aS95+6e4x8l0cmFTetOxeDMz1FsiSrLtJMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qM6SqfE0/tQD7dty6tZ3kaBe3pqKoMhQuI69TXygGLc=;
+ b=b49g/vD0kPTm61QZ8BXHlX3zp8HKKaUKdVixf1tZeoLEDZ6s6DqKaHAZ/T59ku45bFt8BCLUe8XxAH4i674WmQxZob5oQ2gjqU4zg/295ps86lMfYqtlAf+h7qdQQXe/yHmByK2CBqyKqy1kpG6vIUHXSdR7h++7oO5baVmuIZVAY8Mnwo53vG35oQ7NQkw3jvXCN1B6AfXKSiFaxulX489IDLxmv4XzP1FmjcPEd3gVPRf/Ha8ed8N5iGwfsfxJLOrDCdcZuC92n88QV6bNYWnJ0SFDDcjwe2tRmqTWImkw5/7oxZXgx3sFZzMtoYaejwzYo+/vYGsSDy7Qi5YklA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qM6SqfE0/tQD7dty6tZ3kaBe3pqKoMhQuI69TXygGLc=;
+ b=pBdzyqHtkO4MBTbX5v6uBuhhe+Fqs/a5jOK5FBzCF+YSkdxjHhiIc8dv9k+y7VhwRwjDtEPVj6ygAnv6UVwiDJ9d/GQlUzAeKrXgxGUId3EZIdzWioW6mMmOhCBHiO/v3qb8ciAddBYPh1AWRbk0c6/ns6QmQ/eleKiSiJ0fSXo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
+ by SA1PR12MB6871.namprd12.prod.outlook.com (2603:10b6:806:25f::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.24; Thu, 6 Jul
+ 2023 14:22:25 +0000
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::9c4d:b56:ce20:d723]) by PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::9c4d:b56:ce20:d723%7]) with mapi id 15.20.6565.019; Thu, 6 Jul 2023
+ 14:22:25 +0000
+Message-ID: <ce15f15b-2f1d-960c-c20e-131d92e1d750@amd.com>
+Date:   Thu, 6 Jul 2023 19:52:09 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v2] perf vendor events amd: Fix large metrics
+To:     Ian Rogers <irogers@google.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com,
+        ayush.jain3@amd.com, ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com
+References: <20230706063440.54189-1-sandipan.das@amd.com>
+ <CAP-5=fVdVSL4H1qWLZMiU3H2-bOJ0RkFOfq4Jxz1qw0-8EoYFw@mail.gmail.com>
+Content-Language: en-US
+From:   Sandipan Das <sandipan.das@amd.com>
+In-Reply-To: <CAP-5=fVdVSL4H1qWLZMiU3H2-bOJ0RkFOfq4Jxz1qw0-8EoYFw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN3PR01CA0192.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:be::16) To PH7PR12MB5712.namprd12.prod.outlook.com
+ (2603:10b6:510:1e3::13)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|SA1PR12MB6871:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8d7a867e-9f27-4e63-4450-08db7e2c6b6c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: wMtGGAZGqjC/Y4yo3MJSoKMlZ5F4m12YXilxrQbiiIQwq3wt1QT4nzeIgH+3l2IbhzZCp9j6KCS+1dS5oeNYRvuWE+dizZlx3of26z1AFy5Zpw0hnokcWZtXg2hY64Gh7M7kZ+wEdHIb/qUDN3ihcnL7BdPEd2P3DY74W0B935j2Qz+rjSJTejIaZbP9qcYm0j3/KZEl8Rc/6Tjiu9jVqczGEOotHpqvQlIAzliRjWOOWsn7JdmaoNd0fZS6CsV2bTbuiiLqFNFdohzt/q4wpNWcpKBBUoO9elyce19sWUpHa+IHJ2CVXv9T+MxtvyYpHgnljURcWZ5jOBsezXZduT6Gbc70Cb1d0kEsZ0aW2jipkFeurIxW/B9YBEjBPR9PO4cLdONXktWh5LvlXTAtzbXZY6z7x5BexgJRRPHcdqQ8RnBpyfF7jLOHqsvy3ilJf01UstL/fk7o2//JP2qwxD6wXnOivv9kU9VsSyo6kPEt4sp92Z7/IVeAggsOq1GQ+5SiQz2GULEnkAF6XgjVY2FR++rCJZ6xwFCaC5iT9tKipbblyR9eJAsKp2KuK/a9l7WuRRwuFdDs4Wkbt0Hu1ErzSDNoQponSvRWy+ThzFFLA81zk+boYu6JkR6jMMpiSZl7dEl/VmPGmsOmLXmnLw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(39860400002)(396003)(376002)(136003)(346002)(451199021)(2906002)(41300700001)(7416002)(44832011)(8936002)(36756003)(8676002)(186003)(31696002)(2616005)(31686004)(6506007)(478600001)(5660300002)(26005)(6512007)(6666004)(86362001)(6486002)(316002)(4326008)(6916009)(53546011)(66946007)(66556008)(38100700002)(66476007)(83380400001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cnh0SkIvMkdrai9DT05CRHFTdVdITTBaNlFFVmY5bmtkMnB6UUxzMjYzTnNq?=
+ =?utf-8?B?N3ZJcVpnRDdSOUlpdUE3SkJERis4M3kzaHlvdjZsVDBYdW1xOHhIajBqK29l?=
+ =?utf-8?B?OUJreUlpVUZnMkZibC9yeFVJdzZzOW5taDRrYzU2QW1Ka0ppN1grTzhDd09G?=
+ =?utf-8?B?M2hjN2YrL0ZiYUxLMHdNdWxIT0ZGTk5UckY4bnZsK3dwaXdhQ2xsZDhjVDZY?=
+ =?utf-8?B?QktnZTdpZDNMbUJyTWhGNHlEalZVaWZnWkZYZ1Fyd1lLRnRCaTkzU21Nd2Uw?=
+ =?utf-8?B?SzBBeDlhTy9tQUhrbHRyUFRYN3pObVQ3dGJUd2Zxb2NtNkg0aVlXc1ptZWw2?=
+ =?utf-8?B?UjlnSWg2aWlNRXBQZ0t3MzhJU3hlYkJrT0xaWU1LQWhDdHdFNXYzTFJPZ293?=
+ =?utf-8?B?cGk3cmJQQzJlcFBHMlJXOU9oMENjVEtKd2lIR1Q5NFc3MGFKUFQ1V3c2WHpY?=
+ =?utf-8?B?cGlsdEpub0pqVHJ3aFk5NysvWW9oZ2FBUVhycDJpSFBOR2o1a2xpNDA4aDY2?=
+ =?utf-8?B?RFd3SmFMQ2FaMDdCdURkU3BUbjMxclN0eWMwUVRHM0FZZ0xnNU5FZXI4U0Vr?=
+ =?utf-8?B?Ynk3QlozdmtLNGQvWVo3ZStTY1N1VGNtaUlyMVpjc1dpYUVSM2VMTHZmSVNZ?=
+ =?utf-8?B?SmYwR01ZdkNNeXgxRDcvZHVDWnlLcTczSmM4bmphRmprZ1VEOTBSVHhSbUcy?=
+ =?utf-8?B?QjlKRHNYTm9oakVXa1h0QjVVMkRmczhqWW5nZGxDblU2VVNwKzNJamY2ZjdB?=
+ =?utf-8?B?WWhhRHhESGJLNkFuZmdWbFE5d3BZWTRURWtnS0RTejF0L0Z4bVF6anZkdzRi?=
+ =?utf-8?B?dHpBS1hSNzBQRG41RGM2Z0JSb2hlbTVaMitwTTZ5aGhMT01SRmR0andjV3Az?=
+ =?utf-8?B?M1dWeUc4RXBaT3RYK0UvZjBBNndKcG5UYytPNWNCbWdOc3loVmtEMEV0bncx?=
+ =?utf-8?B?UERoeUlSS1NSVlArcUZaS3BlR0didmgwbkppdGZKUGk2c2hwZ2J3Y3l3eHBt?=
+ =?utf-8?B?a2hQWWhrSlNIeitPTEVxRkN5aWwwN3ZURy9LeS9BOER6VkZHMmcyNzF1WXRV?=
+ =?utf-8?B?OHdwQndIcnpQc3BMY2RibzYwMDFSMFF6U2F5UUJjbEUramhGcnQxMTlVbW12?=
+ =?utf-8?B?K2pIdW9FczhtZENwOSt3TFJkRkV6ck0rMitvLzY3djd2WWJoMUtaQ0xCcG8w?=
+ =?utf-8?B?QmhGU3ZjZGoxcXpaR2FjbXY3a24vS1AyamEzMFF6eWRZRS9OK255ejBINURT?=
+ =?utf-8?B?MVVTY2pRZ0VleEs2bWlWVTdUVlJhRGdwYlFycTQ0a2hMRUloeVd1cVFOK2pv?=
+ =?utf-8?B?NDc4U2Y3SzMycE9VdDl5K2haQnh4d1M2TzBIK0FKZExtMnIxSmFDMnZDcW4y?=
+ =?utf-8?B?KzA1Y0FlWEtBbE9MdkxLY0ZOR0d5UjZydDdUSmF3c3VYWlJ5ZWVNb2pGL05y?=
+ =?utf-8?B?Q3JMWEpwU3JreXlWQ0FXY0U2OEI5ZTJHSFpUSzVXb3JFM0JUSVQ2dzBXU2p4?=
+ =?utf-8?B?MGV6UHhsSXJTZG5ZczJRMEJmc21JTUpxOVRoOG55TzBPdWh1ZnFjN2NOVk5w?=
+ =?utf-8?B?V1VUck5ITzdIWlBOOWl0Y0hDTWtjWDRBdkcvcHR0S1hkUVNNZDNDN1RleTRy?=
+ =?utf-8?B?Y0JubWh6elgrUk13OGZKZTFDcUdyd1dGU3dXYURuNHdFRUJOV05HNTlvL1Bm?=
+ =?utf-8?B?MUxkaERXM0NLUy8wYmNiL1B3Yld6V3F4UFlIMSt6VHdnR3dPQXJSWUQ2Q0tm?=
+ =?utf-8?B?Y3p6ZENaaHZMWXdKUE5LdXIzcmlhL2o3bUFLckRaVkl0NU51NEJFRWJsdWp3?=
+ =?utf-8?B?UytYVm4zdUdQSXVxVFlzY1J6WktrRVpoOEZNMVl4RjB5OGI2N1FlRWhSZEVL?=
+ =?utf-8?B?K2cxN2hNamhqeDI1RmlyOVRLRnJmczNoUWxZaHQ2QlBLVWJ5M2V3TCtMbSt1?=
+ =?utf-8?B?UE1jc2VNbm05djNrWVlxcXdINnJOOWY1T1AvRFVVMHpWajhqU01MVkFLTTNz?=
+ =?utf-8?B?eVJiTFMwa1ZNUHgwcExWYVkzRG1scUM4emJFNEIxeXJlclRJUkhhU09acG1k?=
+ =?utf-8?B?NGZTU2JYQWxjTENVZ0hONDhqNmJZQmJYbTc2dmlMZDdSKzNHcDVWZTdmbnlp?=
+ =?utf-8?Q?la1the9o9Bhp1GvvIOUekF/JV?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8d7a867e-9f27-4e63-4450-08db7e2c6b6c
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2023 14:22:25.3114
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: H6j3StGFXFi/Ag9oT5ASEmxWvgur8/xk2J7I+SebZYzPEBsDrKOAhGxbMqEjj3mD4F/rzwbeppNA9Wt7IPX4UQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6871
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Use local64_try_cmpxchg instead of local64_cmpxchg (*ptr, old, new) == old.
-x86 CMPXCHG instruction returns success in ZF flag, so this change saves a
-compare after cmpxchg (and related move instruction in front of cmpxchg).
+Hi Ian,
 
-Also, try_cmpxchg implicitly assigns old *ptr value to "old" when cmpxchg
-fails. There is no need to re-read the value in the loop.
+On 7/6/2023 7:19 PM, Ian Rogers wrote:
+> On Wed, Jul 5, 2023 at 11:34 PM Sandipan Das <sandipan.das@amd.com> wrote:
+>>
+>> There are cases where a metric requires more events than the number of
+>> available counters. E.g. AMD Zen, Zen 2 and Zen 3 processors have four
+>> data fabric counters but the "nps1_die_to_dram" metric has eight events.
+>> By default, the constituent events are placed in a group and since the
+>> events cannot be scheduled at the same time, the metric is not computed.
+>> The "all metrics" test also fails because of this.
+>>
+>> Use the NO_GROUP_EVENTS constraint for such metrics which anyway expect
+>> the user to run perf with "--metric-no-group".
+>>
+>> E.g.
+>>
+>>   $ sudo perf test -v 101
+>>
+>> Before:
+>>
+>>   101: perf all metrics test                                           :
+>>   --- start ---
+>>   test child forked, pid 37131
+>>   Testing branch_misprediction_ratio
+>>   Testing all_remote_links_outbound
+>>   Testing nps1_die_to_dram
+>>   Metric 'nps1_die_to_dram' not printed in:
+>>   Error:
+>>   Invalid event (dram_channel_data_controller_4) in per-thread mode, enable system wide with '-a'.
+>>   Testing macro_ops_dispatched
+>>   Testing all_l2_cache_accesses
+>>   Testing all_l2_cache_hits
+>>   Testing all_l2_cache_misses
+>>   Testing ic_fetch_miss_ratio
+>>   Testing l2_cache_accesses_from_l2_hwpf
+>>   Testing l2_cache_misses_from_l2_hwpf
+>>   Testing op_cache_fetch_miss_ratio
+>>   Testing l3_read_miss_latency
+>>   Testing l1_itlb_misses
+>>   test child finished with -1
+>>   ---- end ----
+>>   perf all metrics test: FAILED!
+>>
+>> After:
+>>
+>>   101: perf all metrics test                                           :
+>>   --- start ---
+>>   test child forked, pid 43766
+>>   Testing branch_misprediction_ratio
+>>   Testing all_remote_links_outbound
+>>   Testing nps1_die_to_dram
+>>   Testing macro_ops_dispatched
+>>   Testing all_l2_cache_accesses
+>>   Testing all_l2_cache_hits
+>>   Testing all_l2_cache_misses
+>>   Testing ic_fetch_miss_ratio
+>>   Testing l2_cache_accesses_from_l2_hwpf
+>>   Testing l2_cache_misses_from_l2_hwpf
+>>   Testing op_cache_fetch_miss_ratio
+>>   Testing l3_read_miss_latency
+>>   Testing l1_itlb_misses
+>>   test child finished with 0
+>>   ---- end ----
+>>   perf all metrics test: Ok
+>>
+>> Reported-by: Ayush Jain <ayush.jain3@amd.com>
+>> Suggested-by: Ian Rogers <irogers@google.com>
+>> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> 
+> Acked-by: Ian Rogers <irogers@google.com>
+> 
+> Will there be a PMU driver fix so that the perf_event_open fails for
+> the group? That way the weak group would work.
+> 
 
-No functional change intended.
+Yes, that's in our plan. Ravi (in CC) and I have discussed about adding
+group validation in the event_init() path.
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc. "H. Peter Anvin" <hpa@zytor.com>
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
----
- arch/x86/events/amd/ibs.c      |  4 ++--
- arch/x86/events/core.c         | 10 ++++------
- arch/x86/events/intel/cstate.c | 10 ++++------
- arch/x86/events/msr.c          |  8 +++-----
- 4 files changed, 13 insertions(+), 19 deletions(-)
-
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 371014802191..b54db2138c16 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -156,8 +156,8 @@ perf_event_try_update(struct perf_event *event, u64 new_raw_count, int width)
- 	 * count to the generic event atomically:
- 	 */
- 	prev_raw_count = local64_read(&hwc->prev_count);
--	if (local64_cmpxchg(&hwc->prev_count, prev_raw_count,
--					new_raw_count) != prev_raw_count)
-+	if (!local64_try_cmpxchg(&hwc->prev_count,
-+				 &prev_raw_count, new_raw_count))
- 		return 0;
- 
- 	/*
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 9d248703cbdd..23c96420dea1 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -129,13 +129,11 @@ u64 x86_perf_event_update(struct perf_event *event)
- 	 * exchange a new raw count - then add that new-prev delta
- 	 * count to the generic event atomically:
- 	 */
--again:
- 	prev_raw_count = local64_read(&hwc->prev_count);
--	rdpmcl(hwc->event_base_rdpmc, new_raw_count);
--
--	if (local64_cmpxchg(&hwc->prev_count, prev_raw_count,
--					new_raw_count) != prev_raw_count)
--		goto again;
-+	do {
-+		rdpmcl(hwc->event_base_rdpmc, new_raw_count);
-+	} while (!local64_try_cmpxchg(&hwc->prev_count,
-+				      &prev_raw_count, new_raw_count));
- 
- 	/*
- 	 * Now we have the new raw value and have updated the prev
-diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-index 835862c548cc..97035db68df2 100644
---- a/arch/x86/events/intel/cstate.c
-+++ b/arch/x86/events/intel/cstate.c
-@@ -365,13 +365,11 @@ static void cstate_pmu_event_update(struct perf_event *event)
- 	struct hw_perf_event *hwc = &event->hw;
- 	u64 prev_raw_count, new_raw_count;
- 
--again:
- 	prev_raw_count = local64_read(&hwc->prev_count);
--	new_raw_count = cstate_pmu_read_counter(event);
--
--	if (local64_cmpxchg(&hwc->prev_count, prev_raw_count,
--			    new_raw_count) != prev_raw_count)
--		goto again;
-+	do {
-+		new_raw_count = cstate_pmu_read_counter(event);
-+	} while (!local64_try_cmpxchg(&hwc->prev_count,
-+				      &prev_raw_count, new_raw_count));
- 
- 	local64_add(new_raw_count - prev_raw_count, &event->count);
- }
-diff --git a/arch/x86/events/msr.c b/arch/x86/events/msr.c
-index 0feaaa571303..61c59e0627d4 100644
---- a/arch/x86/events/msr.c
-+++ b/arch/x86/events/msr.c
-@@ -244,12 +244,10 @@ static void msr_event_update(struct perf_event *event)
- 	s64 delta;
- 
- 	/* Careful, an NMI might modify the previous event value: */
--again:
- 	prev = local64_read(&event->hw.prev_count);
--	now = msr_read_counter(event);
--
--	if (local64_cmpxchg(&event->hw.prev_count, prev, now) != prev)
--		goto again;
-+	do {
-+		now = msr_read_counter(event);
-+	} while (!local64_try_cmpxchg(&event->hw.prev_count, &prev, now));
- 
- 	delta = now - prev;
- 	if (unlikely(event->hw.event_base == MSR_SMI_COUNT)) {
--- 
-2.41.0
-
+- Sandipan
