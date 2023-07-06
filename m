@@ -2,226 +2,140 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF45EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Jul 2023 06:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8FBEB64D9
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Jul 2023 09:46:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233435AbjGFGe7 (ORCPT
+        id S229537AbjGFJqy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Jul 2023 02:34:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52630 "EHLO
+        Thu, 6 Jul 2023 05:46:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230383AbjGFGe6 (ORCPT
+        with ESMTP id S231915AbjGFJqx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Jul 2023 02:34:58 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2059.outbound.protection.outlook.com [40.107.244.59])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB1651B6;
-        Wed,  5 Jul 2023 23:34:56 -0700 (PDT)
+        Thu, 6 Jul 2023 05:46:53 -0400
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2138.outbound.protection.outlook.com [40.107.117.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1233E1998;
+        Thu,  6 Jul 2023 02:46:51 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JhBuqQHwYKJDIvker3FwKQkds7WSwrSHhD0o2zJBqshxdLoa2w+AX/l4FmsBT+b4Vw0Jw9QoIdKq77+cMB5lgfE/hIHGGNl7oc4cAl+3tV3zlMIsK/jsaw4GSlU4fCFcOTXQCLoSOtiA6QxJ6zyKqjQXpErayKcbgI/rBtwmRqz1EKvzdoewdXWwCvpg4iuqVHvIDjlxoHWR9K7EVPlYvHzHvXQD5e3z+w7kwaWTidwoGq9tPZJBxgvG9PpGSQflbf2+V+h+/pp7ODxTJwfiHW65xPtaoE5xa3/d04P4FD+y2B+DRiLIa0cihVXUIcqVgmXUJ0LLyOYQ3YmiQQRKjg==
+ b=RVyHdxtcG7AkrPMQQIhmgmjl8QNp6G8nO72wDrUFeR8pA9TenCagqjCNn8sFVJl4JLT/UU2vQbaHHyEKvVRu4PLv108UzDcFy66PkfMjJfBejY+NTk/fZGgu8oZWYwLpnd75IEoVPL3l0chM4zhm/JbBf83X3nJwYmNaUGoRYJdd9loZBx6+w/ABAWhh/Rbusj83lyVF+wZsQNka6trMtF/99rZqbiEuqrQlpyIfh5LpcWuH7zgVZqe6wvSU+OX28rWwkp9m9BXZelAIHSCvQlKsJVEOVl+OeXNCB0bDQ5IEadYWasm/TClhZ0fkJtQIJYRL/mzzsOI4xyQIfhqcCg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pfbKpvkQPcFVC6SQiEyXQzJiBkKJMo/1e4aZnUU/CQ4=;
- b=X0F2xWYB5KXvb7KgHMSzzE4ZimBEqiBdKr4Q9xpHD8cq2X7mKIQpwYp19IsVd8LVdnmsT5OabiKKTj/zW3KvzXhrh3aNUEAbh10dJUmo1UK/N5TWwBNywivpuZ70W4e0JCtVZLB5cmgxHAvCRPuHYZzmzzZ6TuOJgRoGPU6bMuTIu38mrOOjvR214zt9y65v2dwUffEyPabTNUo2SpIjXzAPKjORMiKpCLieZZ5dMDZwhpsPXVNAle/kJGLlN6xXc0qY3BXLCJ4/QcWdvO0BlaKtZ7i9ePEvr1CFAdrNHULu7JPoMmY/AvJz5cShl2/xkzxC6lU3REe2PXUQ+20eUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=BiiEpQ+cMYPLgqjF3mPFq23LQsFlRsPDqCNv/OAPmGU=;
+ b=i+A7LyHt3kIVVCdKbMzCHLN35SOOl9HRZBfoIHKVrWgiJVrBs1s000ZFohtk5ZGvc8IgEBAjFyr59vkdjllj3xhnsdKO62LMc5NkTcWUjgMCO6GKQLiNXLMv2BNsjzMBa1Rg410yYcJjkt5kb3vX6fcM2uRmFtWG6iMW1Uz31IOKtPwBa/Z7ziTkv9MdyGO+wMAeynKnbJAr1YtayNQPQMcVEuVUNZkgM70e2iBR9Cq3eHvRemmiTfsbNAfV74Vz2kxpfchGYO0rsdjkcSZNu9kzPD5sf7P0wxi+yCQsJXooL4kgFpoACjHKZru0Pz7lRSRijeWD0TMx/ippPjP4qA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pfbKpvkQPcFVC6SQiEyXQzJiBkKJMo/1e4aZnUU/CQ4=;
- b=HxOAfpipp7kFvT1FOuZ/8rozdPOS0eI1kUFpBOki0+ZIyKADXyR5LZPcedTtxHiQP3GjFe9A11bfUC4iqbh+pKAiXLvE3foh0DRIgYK1KQmPq05y4CPGBVUi8VuXKdmwO5oS9z1bZQouZMFJnU7wqAgRZlBIbGBBJsxtnGA/QDQ=
-Received: from DM6PR08CA0050.namprd08.prod.outlook.com (2603:10b6:5:1e0::24)
- by MN0PR12MB5715.namprd12.prod.outlook.com (2603:10b6:208:372::11) with
+ bh=BiiEpQ+cMYPLgqjF3mPFq23LQsFlRsPDqCNv/OAPmGU=;
+ b=I6WwLkktiq04EHeqPhBVD6gnrSFlSyyp/zoTscmbjSd6mH/XHxu303bD0+Od1tXfdDgkSFMHfzhAj+Ev0xDD3Fq882ADxpXqhuJllI7AlCI6YgRA61caY33w2cw8p9C0R7z+V3AoFOg+jJT/J/JTsGA+e8XXsxVQt5F6mb2xEIgIPCgkwdqNrNOQmkOiZT6TqinQhQ/EkYGjiwWMdFBljCPgEF9LTUaU0zRujRjk0xuYZMSZ6v6fM3rJHkfmDmxr0L3TOjEcyHqzMXEI8leas/eT+vDuTo1pTj7ZpMYXA6RK9wJwdMsnMw32bFDabuiyViewjhzP/IZ9fq8gN0iKag==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from TYZPR06MB6697.apcprd06.prod.outlook.com (2603:1096:400:451::6)
+ by TYZPR06MB5147.apcprd06.prod.outlook.com (2603:1096:400:1c1::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.17; Thu, 6 Jul
- 2023 06:34:54 +0000
-Received: from DM6NAM11FT014.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:1e0:cafe::d9) by DM6PR08CA0050.outlook.office365.com
- (2603:10b6:5:1e0::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.34 via Frontend
- Transport; Thu, 6 Jul 2023 06:34:54 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT014.mail.protection.outlook.com (10.13.173.132) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6521.45 via Frontend Transport; Thu, 6 Jul 2023 06:34:53 +0000
-Received: from sindhu.amdval.net (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 6 Jul
- 2023 01:34:48 -0500
-From:   Sandipan Das <sandipan.das@amd.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <ayush.jain3@amd.com>,
-        <ananth.narayan@amd.com>, <ravi.bangoria@amd.com>,
-        <santosh.shukla@amd.com>, <sandipan.das@amd.com>
-Subject: [PATCH v2] perf vendor events amd: Fix large metrics
-Date:   Thu, 6 Jul 2023 12:04:40 +0530
-Message-ID: <20230706063440.54189-1-sandipan.das@amd.com>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
+ 2023 09:46:46 +0000
+Received: from TYZPR06MB6697.apcprd06.prod.outlook.com
+ ([fe80::8586:be41:eaad:7c03]) by TYZPR06MB6697.apcprd06.prod.outlook.com
+ ([fe80::8586:be41:eaad:7c03%7]) with mapi id 15.20.6544.024; Thu, 6 Jul 2023
+ 09:46:46 +0000
+From:   Lu Hongfei <luhongfei@vivo.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     opensource.kernel@vivo.com, luhongfei@vivo.com
+Subject: [PATCH] tools: perf: Two typos have been corrected
+Date:   Thu,  6 Jul 2023 17:46:34 +0800
+Message-Id: <20230706094635.1553-1-luhongfei@vivo.com>
+X-Mailer: git-send-email 2.39.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
+X-ClientProxiedBy: SG2P153CA0052.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c6::21)
+ To TYZPR06MB6697.apcprd06.prod.outlook.com (2603:1096:400:451::6)
+MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT014:EE_|MN0PR12MB5715:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8cb77ee6-21e1-4191-4013-08db7deb1bb6
+X-MS-TrafficTypeDiagnostic: TYZPR06MB6697:EE_|TYZPR06MB5147:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6a77f569-358a-4c53-e2ea-08db7e05e99f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5X6EnhqSxyXU7K2U1uP55TwsT5SgBhECuBMH/66K7PfyIuL3hs8AAaLC+f82EriFb4iAmOlyeQrWbSGly5kPljf4XMicJt+JLk9lDeSTFn4kAyPP4sBlHBN4oZlf0ZfIrPReWK3VeSaLAdzaoVy5aNHto3GbHI0bz8ANzX7It0t7bcBhR8pcf64XG1hoDgNNXWeEt/K0BCE5wy1trTe9b9d2BjWCyz+Hq8FpVAYp0MflgFA96G9Q6wl8Au7RjUCbDjUcDzPpg2Tf9291WK34F1lDo3Ii198ukbiVirxk54BbJsTzqrl4fkYJWtu5iSB2iZVkxDTa3g7LNWzY0uMHf6CpsWNv6qNzDvuPM+TEzABJASAIrA49p1SAjxOzT/Zxw1dvnAlQvuKomD3EhMqC3NFYvA5IZrCgoab8vwyZYqSNESDWCVjfnUeOzJx+mDLxoUW2e/MvKunF/yoi7g3wWqCj6xj6fQ2LNT0CEttgVQswOes75AeQ2LOrM1NOvoccnw+evKHQlEFNuJWvgkGD0V+jnFrPH1y/sdQxqDMuu5pSkiGFiH1/rN074IOqL3rQaaOMAQdv5oIJaQMyTHT20HKYBqrdDbt13pOpvZ/G0BDq8yr2aHyKdrKMr4jpxzG4hlcbg4TMO9rjXBvLLhmWh/FjWxaXeU/prNqSZL4DPdLdjax4YBMIrfPqKXNonVQTUL001O93BgBckPSV/IAIwrrRGHlO07o+X6yxJXf75KQEG30YD1QzwvvrsNS3h83uuyxIYjZ3h8SpxAAL70KMNw==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(376002)(39860400002)(346002)(136003)(396003)(451199021)(36840700001)(40470700004)(46966006)(44832011)(8936002)(5660300002)(8676002)(70586007)(316002)(7416002)(4326008)(70206006)(2906002)(41300700001)(110136005)(54906003)(6666004)(966005)(2616005)(26005)(1076003)(186003)(16526019)(36860700001)(82740400003)(356005)(83380400001)(47076005)(336012)(426003)(478600001)(81166007)(82310400005)(40460700003)(36756003)(40480700001)(86362001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2023 06:34:53.7991
+X-Microsoft-Antispam-Message-Info: /V5zAP8PolwMd9NqgX2N01OZYVaezG8utiRztgmXrYfTom/Ncv5zFyj6M5P8Q1zwQkdxAXVZJLx1vSDCZApdx7Da3rEuXDCVrLfYzs2hNTO495vM2N4+uPbRo5uVN++NEjkM8Xtj/1Vmp1mT1jqFw41dWEl3wF59k9qNfqKIy6gaxvevXYRJmtGoZGTWUi+jp4Q9t8BxdjvWLNArmQ4oOasxgB3XjUymDH4EGECoEuQWXYeJMu7eSHsj7KdpE6vLfPdTMAOeHIk4KdK3CeM3WvGGmMcJag+IxRBFLcwiAyadMuGUsD3BYmJO1W9/LxHK/UcN13Q+TaZv/AdD4c8PkCLaIRTxaP1ncs5gIwgJGaTlA22yl8zJGyRZpxcmMmIblmojFlVlLujwXFjbIPT1ya8wjn+RyWIyCaVWh6h0lncbBzrqqAirxDsBWNsPJObVBsTRO2oGPVLmDD8pbCrcjuSjdQ3ZaAw9KlkBdXJSzySDirxfvumEaezzhWYzvouzhJm5v/sq+TvMCNsBtUBTxy6mZ9AitgydRxc40GlI1OUjIUmz9aJnWR8jZrXh90G6pj3NpwOC4YNGBLoliPX1xIqoxLtHAa62SIx1C5G0kX8NgqT1l2FuyyWKgddzTR47qAinpX4eRAtXxJxEOHdS7w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB6697.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(136003)(346002)(366004)(376002)(396003)(451199021)(38100700002)(38350700002)(921005)(36756003)(86362001)(6512007)(6666004)(6486002)(478600001)(52116002)(186003)(107886003)(6506007)(1076003)(26005)(8676002)(8936002)(7416002)(5660300002)(110136005)(41300700001)(4744005)(66946007)(66556008)(66476007)(4326008)(2906002)(316002)(2616005)(83380400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?QhVZX7yFvr1k4kb05JSlVFyoNuN5q/XR6NDfurCg7pvByIUnKMEK0Lu4yZON?=
+ =?us-ascii?Q?8HR3GyRt8fggDEI2A5hZuHwzR37s8k5ysMLUKWWccZs9hoWZfeYYomx/zvei?=
+ =?us-ascii?Q?waQvmWTnh1xHvzs1XeIHGApaiyjJNQAcheDuqpnu/dJMo5SyFQF3n2dh34vx?=
+ =?us-ascii?Q?Cictq96FkBCTltHV+4XhDoIihJAgnfi79LUOKuTHV0wZoGFD9G/sWPsyh89E?=
+ =?us-ascii?Q?cgWfo3TvY6BKP9yqT2BQg8gONvywWA6j5IUWTQvf8w/YjzJ0koE7/DESs8X8?=
+ =?us-ascii?Q?GysVnMkOVRYWnSGU4S9HAq1Jvittl/91R1Lz2Ksp30k2O5Axtts/UPNBpWJt?=
+ =?us-ascii?Q?3W04/KzVefW6x8pqKKaNWk6ikiuO00k0/ZX0dcILYp/01lEnC0GCq6+O7oTG?=
+ =?us-ascii?Q?odCuFHtHyuWDjwItp283DVt7ZBsCEERFLkcRc3voPRWLHuOHBV+xrAJ4jI9u?=
+ =?us-ascii?Q?D+EexZ7BcJOp2MUCH3rY1nr0ygWY1Xojx3lOMGdM0LTOz93xnJONU4QFIw0D?=
+ =?us-ascii?Q?j5tVTo+4nRyDAKL2NAKqR+ec8AXr33z3ApcbBdQOvxKNNiyvFI8GZRa+N2gm?=
+ =?us-ascii?Q?seAnfoOGdY6B9WxQ92lUCHLSv8lq4hET3CPhHG5f+2sJv8gPuRdmPYarPNst?=
+ =?us-ascii?Q?N+JqbD06GR9KTTmIDRyRWSgtLSXwG2Rkq4RiIlBAQUFSsCrmSOfWV5xxsNw7?=
+ =?us-ascii?Q?eORyfYoiWrQPma1l2X40mr2eakZdbx9GoGhxADRwnENJy3bOSXtP3sxb6Mnz?=
+ =?us-ascii?Q?+0/f2B3G02UZtFTHbqWNyo6q0oTKs0bjHk6qLTN2jAHuTAn5gWnhnLeItcTO?=
+ =?us-ascii?Q?IVrqRzOD7goa1t0r6VQuliJKC/g8zsh0jkctDaqYGnkLbkV04TT/PiHSD+ZK?=
+ =?us-ascii?Q?EZBsHhaP/hOHZ1lE1fIRwRmflAH4p4QPQcQDMO6qYfkxb8Ozzu4HtO+CCffh?=
+ =?us-ascii?Q?n88v2+vCnTs39zL5G4JX2zdPIF157hiM53W9/Yn8m0yUTYyLEA7f1+2cv8Z5?=
+ =?us-ascii?Q?KRivNGgJi1p3If5BT/eTjM2Y9xF96iP6VbkDA2gzHKwt9GsYFiXaa2oRq1/D?=
+ =?us-ascii?Q?ezGf4D6eJZ0WzTgn2yxbc9eYewFHmN7QgYBmJKigjQzB8qLjMs6Vr25YNrpg?=
+ =?us-ascii?Q?/MhaNw5hcvX2s6Cltfb6Ju8twtqrk49hNh7Y/d1FIU1iEwyc7gsnEUzF3FeN?=
+ =?us-ascii?Q?2VHMBNrxAOEr1PfUtWWF/XipTq0CPu9+QyFZHlR6utlBAWJujnBcL1yzxfha?=
+ =?us-ascii?Q?wYmSkwtWKYJf036NErJQd0WkzmGh5fzeOjkxe1lCOnghK410G4XgQh0YVTSB?=
+ =?us-ascii?Q?HURGmgRGrXDsZZriz50VQyNC7wihwowZg3Vf6GwiBoZzziJKn6IUxURVZL9c?=
+ =?us-ascii?Q?jhYTg9GF7NpXv5ROACADg/P/kOxXdA2UdcUkAJ1Ccm1x3TUQvzzcyT3dcGrC?=
+ =?us-ascii?Q?xu6YmO+BUlig8wltAb/6Dgq/i/BMaOwg8TpBnG6m8LpAyRXPNiUyt8EpacOr?=
+ =?us-ascii?Q?bULAUlcpheMVKV824xKCtY3ws0e15L0qvpG9p25bb4VPbNGHpcUxHPR2V6IR?=
+ =?us-ascii?Q?1qoLO429NtfBDNApovhA/Lq15Q4XDhQ6rsSTne57?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a77f569-358a-4c53-e2ea-08db7e05e99f
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB6697.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2023 09:46:46.4823
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8cb77ee6-21e1-4191-4013-08db7deb1bb6
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT014.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5715
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gf60h34RsvDydg9DzGaTjezQvvIQ5du74n1OybZ920I3qokCkxD9jD2HSFP5Nq7bdjup7628XnN5xL8GywIVvg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB5147
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-There are cases where a metric requires more events than the number of
-available counters. E.g. AMD Zen, Zen 2 and Zen 3 processors have four
-data fabric counters but the "nps1_die_to_dram" metric has eight events.
-By default, the constituent events are placed in a group and since the
-events cannot be scheduled at the same time, the metric is not computed.
-The "all metrics" test also fails because of this.
+When wrapping code, use ';' better than using ',' which is more
+in line with the coding habits of most engineers.
 
-Use the NO_GROUP_EVENTS constraint for such metrics which anyway expect
-the user to run perf with "--metric-no-group".
-
-E.g.
-
-  $ sudo perf test -v 101
-
-Before:
-
-  101: perf all metrics test                                           :
-  --- start ---
-  test child forked, pid 37131
-  Testing branch_misprediction_ratio
-  Testing all_remote_links_outbound
-  Testing nps1_die_to_dram
-  Metric 'nps1_die_to_dram' not printed in:
-  Error:
-  Invalid event (dram_channel_data_controller_4) in per-thread mode, enable system wide with '-a'.
-  Testing macro_ops_dispatched
-  Testing all_l2_cache_accesses
-  Testing all_l2_cache_hits
-  Testing all_l2_cache_misses
-  Testing ic_fetch_miss_ratio
-  Testing l2_cache_accesses_from_l2_hwpf
-  Testing l2_cache_misses_from_l2_hwpf
-  Testing op_cache_fetch_miss_ratio
-  Testing l3_read_miss_latency
-  Testing l1_itlb_misses
-  test child finished with -1
-  ---- end ----
-  perf all metrics test: FAILED!
-
-After:
-
-  101: perf all metrics test                                           :
-  --- start ---
-  test child forked, pid 43766
-  Testing branch_misprediction_ratio
-  Testing all_remote_links_outbound
-  Testing nps1_die_to_dram
-  Testing macro_ops_dispatched
-  Testing all_l2_cache_accesses
-  Testing all_l2_cache_hits
-  Testing all_l2_cache_misses
-  Testing ic_fetch_miss_ratio
-  Testing l2_cache_accesses_from_l2_hwpf
-  Testing l2_cache_misses_from_l2_hwpf
-  Testing op_cache_fetch_miss_ratio
-  Testing l3_read_miss_latency
-  Testing l1_itlb_misses
-  test child finished with 0
-  ---- end ----
-  perf all metrics test: Ok
-
-Reported-by: Ayush Jain <ayush.jain3@amd.com>
-Suggested-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+Signed-off-by: Lu Hongfei <luhongfei@vivo.com>
 ---
+ tools/perf/builtin-diff.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Previous versions can be found at:
-v1: https://lore.kernel.org/all/20230614090710.680330-1-sandipan.das@amd.com/
-
-Changes in v2:
-- As suggested by Ian, use the NO_GROUP_EVENTS constraint instead of
-  retrying the test scenario with --metric-no-group.
-- Change the commit message accordingly.
-
- tools/perf/pmu-events/arch/x86/amdzen1/recommended.json | 3 ++-
- tools/perf/pmu-events/arch/x86/amdzen2/recommended.json | 3 ++-
- tools/perf/pmu-events/arch/x86/amdzen3/recommended.json | 3 ++-
- 3 files changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/pmu-events/arch/x86/amdzen1/recommended.json b/tools/perf/pmu-events/arch/x86/amdzen1/recommended.json
-index bf5083c1c260..4d28177325a0 100644
---- a/tools/perf/pmu-events/arch/x86/amdzen1/recommended.json
-+++ b/tools/perf/pmu-events/arch/x86/amdzen1/recommended.json
-@@ -169,8 +169,9 @@
-   },
-   {
-     "MetricName": "nps1_die_to_dram",
--    "BriefDescription": "Approximate: Combined DRAM B/bytes of all channels on a NPS1 node (die) (may need --metric-no-group)",
-+    "BriefDescription": "Approximate: Combined DRAM B/bytes of all channels on a NPS1 node (die)",
-     "MetricExpr": "dram_channel_data_controller_0 + dram_channel_data_controller_1 + dram_channel_data_controller_2 + dram_channel_data_controller_3 + dram_channel_data_controller_4 + dram_channel_data_controller_5 + dram_channel_data_controller_6 + dram_channel_data_controller_7",
-+    "MetricConstraint": "NO_GROUP_EVENTS",
-     "MetricGroup": "data_fabric",
-     "PerPkg": "1",
-     "ScaleUnit": "6.1e-5MiB"
-diff --git a/tools/perf/pmu-events/arch/x86/amdzen2/recommended.json b/tools/perf/pmu-events/arch/x86/amdzen2/recommended.json
-index a71694a043ba..60e19456d4c8 100644
---- a/tools/perf/pmu-events/arch/x86/amdzen2/recommended.json
-+++ b/tools/perf/pmu-events/arch/x86/amdzen2/recommended.json
-@@ -169,8 +169,9 @@
-   },
-   {
-     "MetricName": "nps1_die_to_dram",
--    "BriefDescription": "Approximate: Combined DRAM B/bytes of all channels on a NPS1 node (die) (may need --metric-no-group)",
-+    "BriefDescription": "Approximate: Combined DRAM B/bytes of all channels on a NPS1 node (die)",
-     "MetricExpr": "dram_channel_data_controller_0 + dram_channel_data_controller_1 + dram_channel_data_controller_2 + dram_channel_data_controller_3 + dram_channel_data_controller_4 + dram_channel_data_controller_5 + dram_channel_data_controller_6 + dram_channel_data_controller_7",
-+    "MetricConstraint": "NO_GROUP_EVENTS",
-     "MetricGroup": "data_fabric",
-     "PerPkg": "1",
-     "ScaleUnit": "6.1e-5MiB"
-diff --git a/tools/perf/pmu-events/arch/x86/amdzen3/recommended.json b/tools/perf/pmu-events/arch/x86/amdzen3/recommended.json
-index 988cf68ae825..3e9e1781812e 100644
---- a/tools/perf/pmu-events/arch/x86/amdzen3/recommended.json
-+++ b/tools/perf/pmu-events/arch/x86/amdzen3/recommended.json
-@@ -205,10 +205,11 @@
-   },
-   {
-     "MetricName": "nps1_die_to_dram",
--    "BriefDescription": "Approximate: Combined DRAM B/bytes of all channels on a NPS1 node (die) (may need --metric-no-group)",
-+    "BriefDescription": "Approximate: Combined DRAM B/bytes of all channels on a NPS1 node (die)",
-     "MetricExpr": "dram_channel_data_controller_0 + dram_channel_data_controller_1 + dram_channel_data_controller_2 + dram_channel_data_controller_3 + dram_channel_data_controller_4 + dram_channel_data_controller_5 + dram_channel_data_controller_6 + dram_channel_data_controller_7",
-     "MetricGroup": "data_fabric",
-     "PerPkg": "1",
-+    "MetricConstraint": "NO_GROUP_EVENTS",
-     "ScaleUnit": "6.1e-5MiB"
-   }
- ]
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index e8a1b16aa5f8..57d300d8e570 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -1915,8 +1915,8 @@ static int data_init(int argc, const char **argv)
+ 		struct perf_data *data = &d->data;
+ 
+ 		data->path  = use_default ? defaults[i] : argv[i];
+-		data->mode  = PERF_DATA_MODE_READ,
+-		data->force = force,
++		data->mode  = PERF_DATA_MODE_READ;
++		data->force = force;
+ 
+ 		d->idx  = i;
+ 	}
 -- 
-2.34.1
+2.39.0
 
