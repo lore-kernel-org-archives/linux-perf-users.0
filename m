@@ -2,103 +2,162 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 671A3C0015E
-	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Jul 2023 15:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A49EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Jul 2023 21:13:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229677AbjGGPqJ (ORCPT
+        id S231489AbjGGVND (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 7 Jul 2023 11:46:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38856 "EHLO
+        Fri, 7 Jul 2023 17:13:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232438AbjGGPqF (ORCPT
+        with ESMTP id S232079AbjGGVNC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 7 Jul 2023 11:46:05 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 226C62121;
-        Fri,  7 Jul 2023 08:46:04 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5AFDD75;
-        Fri,  7 Jul 2023 08:46:45 -0700 (PDT)
-Received: from localhost.localdomain (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C87373F762;
-        Fri,  7 Jul 2023 08:46:01 -0700 (PDT)
-From:   James Clark <james.clark@arm.com>
-To:     linux-perf-users@vger.kernel.org, radhey.shyam.pandey@amd.com
-Cc:     coresight@lists.linaro.org, James Clark <james.clark@arm.com>,
+        Fri, 7 Jul 2023 17:13:02 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B683B2702;
+        Fri,  7 Jul 2023 14:12:39 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1b8bbce9980so16786585ad.2;
+        Fri, 07 Jul 2023 14:12:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688764357; x=1691356357;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3+zbVeGsIu88HXn6Bzuf24zwb+/jDouBgewDVwqhr3c=;
+        b=ZN5rkvBZLv9HYk1H7ecMPvpCji31Y7vvcmqn76vlvh3LT/4P4ck5sK9vAaQmKlPmSu
+         WfC+WZYtV1Z2gYlamzblzi142y4tr+GLuVYd6HusBcTEFMcmEpfxuSkO3EnWPUaeEnEa
+         XOGm3Fcgobne83qKc0q2lU5D9doYk7F+jkKAK4VCHcdwdC14PdCYeXVqALdnEmxuVFEl
+         duZY9O9ihxn/7YrLU19a+Ehnza8aRkG5/byUUYSOcYXJUL7p4jrS1QsrefRVbT+d6QPV
+         Uq6CNE6+hBtKIXGXD7+3EEyhyvXi4iyT7wbqCzFebeGHCl5Z/8FEerZFETW7hnQjMlVU
+         WsHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688764357; x=1691356357;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3+zbVeGsIu88HXn6Bzuf24zwb+/jDouBgewDVwqhr3c=;
+        b=hby25NwqmF32F9kby6wzdMvphtDDGf7XF6bcBv+7v6vsbzZzkl0LhTgHN4meFhGtx/
+         4AwSUdZ14ZRceTXW+xC4c8u55E1630SnH4HOK6olGYQ2gBQvb2ZCDgiLe9AN8JkhJCl4
+         azepH4ZsiXlrc0oN31X7WfWFKcyNFMS5sS+FUuNI/9610pBcAICRcfAAJ/ophhp5gHPF
+         yI9VRkWXMb1mp5Bw6al6MWTpy8NwNsR7RVggIsUe/LzihbvRl8IkrOdEqR3GztzeufmL
+         a9MulMzbRDrOUjuigMXnz3TMF6dk2fftKYxNG04dCx0ePxAHY7IxTOJophheFLH8sLcG
+         oJ/Q==
+X-Gm-Message-State: ABy/qLY8Ung3ue98weYPDvEcTxLxysXC4ZoxUV7EnBJmxYcunoUT3cYy
+        2c6WyfpNZZ2wL/DaX62pnTo=
+X-Google-Smtp-Source: APBJJlGKmQyrnTpCKGltFX4nFuyb/76UEU8UIZyH0PVpB0NhdZ/6X3pDJfo3TuSpvfwA59jaxJIQ+g==
+X-Received: by 2002:a17:902:f546:b0:1b8:ae12:563f with SMTP id h6-20020a170902f54600b001b8ae12563fmr6246952plf.29.1688764357184;
+        Fri, 07 Jul 2023 14:12:37 -0700 (PDT)
+Received: from yoga ([2400:1f00:13:8a1c:1db1:98d9:af8d:f09b])
+        by smtp.gmail.com with ESMTPSA id y10-20020a17090322ca00b001b03cda6389sm3687832plg.10.2023.07.07.14.12.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jul 2023 14:12:36 -0700 (PDT)
+From:   Anup Sharma <anupnewsmail@gmail.com>
+X-Google-Original-From: Anup Sharma <AnupSharma>
+Date:   Sat, 8 Jul 2023 02:42:29 +0530
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Anup Sharma <anupnewsmail@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] perf build: Fix library not found error when using CSLIBS
-Date:   Fri,  7 Jul 2023 16:45:46 +0100
-Message-Id: <20230707154546.456720-1-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/7] scripts: python: Extact necessary information
+ from process event
+Message-ID: <ZKh/vWsn2EiRV/9E@yoga>
+References: <cover.1688585597.git.anupnewsmail@gmail.com>
+ <de3f6251d7b0f202fac59224b9820b584233d871.1688585597.git.anupnewsmail@gmail.com>
+ <CAM9d7ci_xuVVQM9h3TdT23PsyfM5iHa8x=58k8aPQ=FfaWw8iA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7ci_xuVVQM9h3TdT23PsyfM5iHa8x=58k8aPQ=FfaWw8iA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
--L only specifies the search path for libraries directly provided in the
-link line with -l. Because -lopencsd isn't specified, it's only linked
-because it's a dependency of -lopencsd_c_api. Dependencies like this are
-resolved using the default system search paths or -rpath-link=... rather
-than -L. This means that compilation only works if OpenCSD is installed
-to the system rather than provided with the CSLIBS (-L) option.
+On Wed, Jul 05, 2023 at 10:35:02PM -0700, Namhyung Kim wrote:
+> Hi Anup,
+> 
+> On Wed, Jul 5, 2023 at 12:42 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
+> >
+> > The script takes in a sample event dictionary(param_dict) and retrieves
+> > relevant data such as time stamp, PID, TID, thread name, and call stack
+> > information. If available, the call stack is parsed to include function
+> > names and the associated DSO, which are requires for creating json schema.
+> > Also few libaries has been included which will be used in later commit.
+> >
+> > Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
+> > ---
+> >  .../scripts/python/firefox-gecko-converter.py | 37 +++++++++++++++++++
+> >  1 file changed, 37 insertions(+)
+> >  create mode 100644 tools/perf/scripts/python/firefox-gecko-converter.py
+> >
+> > diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools/perf/scripts/python/firefox-gecko-converter.py
+> > new file mode 100644
+> > index 000000000000..ce663840d212
+> > --- /dev/null
+> > +++ b/tools/perf/scripts/python/firefox-gecko-converter.py
+> > @@ -0,0 +1,37 @@
+> > +#!/usr/bin/env python3
 
-This could be fixed by adding -Wl,-rpath-link=$(CSLIBS) but that is less
-conventional than just adding -lopencsd to the link line so that it uses
--L. -lopencsd seems to have been removed in commit ed17b1914978 ("perf
-tools: Drop requirement for libstdc++.so for libopencsd check") because
-it was thought that there was a chance compilation would work even if it
-didn't exist, but I think that only applies to libstdc++ so there is no
-harm to add it back. libopencsd.so and libopencsd_c_api.so would always
-exist together.
+I believe this is not needed as we are using perf-script-python interface.
 
-Testing
-=======
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +#
+> > +# Usage:
+> > +#
+> > +#     perf record -a -g -F 99 sleep 1
+> > +#     perf script firefox-gecko-converter.py
+> > +
+> > +from __future__ import print_function
+> 
+> Is this needed for python3?
 
-The following scenarios now all work:
+No, it is not needed. I will remove it.
 
- * Cross build with OpenCSD installed
- * Cross build using CSLIBS=...
- * Native build with OpenCSD installed
- * Native build using CSLIBS=...
- * Static cross build with OpenCSD installed
- * Static cross build with CSLIBS=...
+>
+> > +import os
+> > +import sys
+> > +import json
+> > +from functools import reduce
+> > +
+> > +sys.path.append(os.environ['PERF_EXEC_PATH'] + \
+> > +       '/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
+> > +
+> > +from perf_trace_context import *
+> > +from Core import *
+> > +
+> > +def process_event(param_dict):
+> > +       time_stamp = (param_dict['sample']['time'] // 1000) / 1000
+> > +       pid = param_dict['sample']['pid']
+> > +       tid = param_dict['sample']['tid']
+> > +       thread_name = param_dict['comm']
+> > +       start_time = time_stamp if not start_time else start_time
+> > +       if param_dict['callchain']:
+> > +               stack = []
+> > +               for call in param_dict['callchain']:
+> > +                       if 'sym' not in call:
+> > +                               continue
+> > +                       stack.append(call['sym']['name'] + f' (in {call["dso"]})')
+> > +               if len(stack) != 0:
+> > +                       stack = stack[::-1]
+> > +       else:
+> > +               mod = param_dict['symbol'] if 'symbol' in param_dict else '[unknown]'
+> 
+> Why is it 'mod' instead of 'sym' or 'func'?
 
-Reported-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-Closes: https://lore.kernel.org/linux-arm-kernel/56905d7a-a91e-883a-b707-9d5f686ba5f1@arm.com/
-Link: https://lore.kernel.org/all/36cc4dc6-bf4b-1093-1c0a-876e368af183@kleine-koenig.org/
-Fixes: ed17b1914978 ("perf tools: Drop requirement for libstdc++.so for libopencsd check")
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/Makefile.config | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I will change it to 'func'. It will be more meaningful.
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 0609c19caabd..c5db0de49868 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -155,9 +155,9 @@ FEATURE_CHECK_LDFLAGS-libcrypto = -lcrypto
- ifdef CSINCLUDES
-   LIBOPENCSD_CFLAGS := -I$(CSINCLUDES)
- endif
--OPENCSDLIBS := -lopencsd_c_api
-+OPENCSDLIBS := -lopencsd_c_api -lopencsd
- ifeq ($(findstring -static,${LDFLAGS}),-static)
--  OPENCSDLIBS += -lopencsd -lstdc++
-+  OPENCSDLIBS += -lstdc++
- endif
- ifdef CSLIBS
-   LIBOPENCSD_LDFLAGS := -L$(CSLIBS)
--- 
-2.34.1
-
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+> > +               dso = param_dict['dso'] if 'dso' in param_dict else '[unknown]'
+> > --
+> > 2.34.1
+> >
