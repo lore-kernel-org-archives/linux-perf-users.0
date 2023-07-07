@@ -2,162 +2,130 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A49EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Jul 2023 21:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C74FEB64D9
+	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Jul 2023 23:12:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231489AbjGGVND (ORCPT
+        id S229914AbjGGXMR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 7 Jul 2023 17:13:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34636 "EHLO
+        Fri, 7 Jul 2023 19:12:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232079AbjGGVNC (ORCPT
+        with ESMTP id S229471AbjGGXMR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 7 Jul 2023 17:13:02 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B683B2702;
-        Fri,  7 Jul 2023 14:12:39 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1b8bbce9980so16786585ad.2;
-        Fri, 07 Jul 2023 14:12:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688764357; x=1691356357;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3+zbVeGsIu88HXn6Bzuf24zwb+/jDouBgewDVwqhr3c=;
-        b=ZN5rkvBZLv9HYk1H7ecMPvpCji31Y7vvcmqn76vlvh3LT/4P4ck5sK9vAaQmKlPmSu
-         WfC+WZYtV1Z2gYlamzblzi142y4tr+GLuVYd6HusBcTEFMcmEpfxuSkO3EnWPUaeEnEa
-         XOGm3Fcgobne83qKc0q2lU5D9doYk7F+jkKAK4VCHcdwdC14PdCYeXVqALdnEmxuVFEl
-         duZY9O9ihxn/7YrLU19a+Ehnza8aRkG5/byUUYSOcYXJUL7p4jrS1QsrefRVbT+d6QPV
-         Uq6CNE6+hBtKIXGXD7+3EEyhyvXi4iyT7wbqCzFebeGHCl5Z/8FEerZFETW7hnQjMlVU
-         WsHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688764357; x=1691356357;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3+zbVeGsIu88HXn6Bzuf24zwb+/jDouBgewDVwqhr3c=;
-        b=hby25NwqmF32F9kby6wzdMvphtDDGf7XF6bcBv+7v6vsbzZzkl0LhTgHN4meFhGtx/
-         4AwSUdZ14ZRceTXW+xC4c8u55E1630SnH4HOK6olGYQ2gBQvb2ZCDgiLe9AN8JkhJCl4
-         azepH4ZsiXlrc0oN31X7WfWFKcyNFMS5sS+FUuNI/9610pBcAICRcfAAJ/ophhp5gHPF
-         yI9VRkWXMb1mp5Bw6al6MWTpy8NwNsR7RVggIsUe/LzihbvRl8IkrOdEqR3GztzeufmL
-         a9MulMzbRDrOUjuigMXnz3TMF6dk2fftKYxNG04dCx0ePxAHY7IxTOJophheFLH8sLcG
-         oJ/Q==
-X-Gm-Message-State: ABy/qLY8Ung3ue98weYPDvEcTxLxysXC4ZoxUV7EnBJmxYcunoUT3cYy
-        2c6WyfpNZZ2wL/DaX62pnTo=
-X-Google-Smtp-Source: APBJJlGKmQyrnTpCKGltFX4nFuyb/76UEU8UIZyH0PVpB0NhdZ/6X3pDJfo3TuSpvfwA59jaxJIQ+g==
-X-Received: by 2002:a17:902:f546:b0:1b8:ae12:563f with SMTP id h6-20020a170902f54600b001b8ae12563fmr6246952plf.29.1688764357184;
-        Fri, 07 Jul 2023 14:12:37 -0700 (PDT)
-Received: from yoga ([2400:1f00:13:8a1c:1db1:98d9:af8d:f09b])
-        by smtp.gmail.com with ESMTPSA id y10-20020a17090322ca00b001b03cda6389sm3687832plg.10.2023.07.07.14.12.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jul 2023 14:12:36 -0700 (PDT)
-From:   Anup Sharma <anupnewsmail@gmail.com>
-X-Google-Original-From: Anup Sharma <AnupSharma>
-Date:   Sat, 8 Jul 2023 02:42:29 +0530
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Anup Sharma <anupnewsmail@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/7] scripts: python: Extact necessary information
- from process event
-Message-ID: <ZKh/vWsn2EiRV/9E@yoga>
-References: <cover.1688585597.git.anupnewsmail@gmail.com>
- <de3f6251d7b0f202fac59224b9820b584233d871.1688585597.git.anupnewsmail@gmail.com>
- <CAM9d7ci_xuVVQM9h3TdT23PsyfM5iHa8x=58k8aPQ=FfaWw8iA@mail.gmail.com>
+        Fri, 7 Jul 2023 19:12:17 -0400
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF38A1BD
+        for <linux-perf-users@vger.kernel.org>; Fri,  7 Jul 2023 16:12:11 -0700 (PDT)
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 367HVJr1001778
+        for <linux-perf-users@vger.kernel.org>; Fri, 7 Jul 2023 16:12:11 -0700
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3rpaun8de4-4
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Jul 2023 16:12:11 -0700
+Received: from twshared52565.14.frc2.facebook.com (2620:10d:c0a8:1b::2d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Fri, 7 Jul 2023 16:12:08 -0700
+Received: by devbig019.vll3.facebook.com (Postfix, from userid 137359)
+        id B9B62342E9F6D; Fri,  7 Jul 2023 16:12:02 -0700 (PDT)
+From:   Andrii Nakryiko <andrii@kernel.org>
+To:     <bpf@vger.kernel.org>, <ast@kernel.org>, <daniel@iogearbox.net>,
+        <martin.lau@kernel.org>
+CC:     <ravi.bangoria@amd.com>, <linux-perf-users@vger.kernel.org>,
+        <acme@kernel.org>, Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCH bpf-next] libbpf: only reset sec_def handler when necessary
+Date:   Fri, 7 Jul 2023 16:11:56 -0700
+Message-ID: <20230707231156.1711948-1-andrii@kernel.org>
+X-Mailer: git-send-email 2.34.1
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: _LsjuRAs0qJD6iESDBSSo0EfK7UNkqBo
+X-Proofpoint-ORIG-GUID: _LsjuRAs0qJD6iESDBSSo0EfK7UNkqBo
+Content-Transfer-Encoding: 8BIT
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7ci_xuVVQM9h3TdT23PsyfM5iHa8x=58k8aPQ=FfaWw8iA@mail.gmail.com>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-07_14,2023-07-06_02,2023-05-22_02
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 05, 2023 at 10:35:02PM -0700, Namhyung Kim wrote:
-> Hi Anup,
-> 
-> On Wed, Jul 5, 2023 at 12:42 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
-> >
-> > The script takes in a sample event dictionary(param_dict) and retrieves
-> > relevant data such as time stamp, PID, TID, thread name, and call stack
-> > information. If available, the call stack is parsed to include function
-> > names and the associated DSO, which are requires for creating json schema.
-> > Also few libaries has been included which will be used in later commit.
-> >
-> > Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
-> > ---
-> >  .../scripts/python/firefox-gecko-converter.py | 37 +++++++++++++++++++
-> >  1 file changed, 37 insertions(+)
-> >  create mode 100644 tools/perf/scripts/python/firefox-gecko-converter.py
-> >
-> > diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools/perf/scripts/python/firefox-gecko-converter.py
-> > new file mode 100644
-> > index 000000000000..ce663840d212
-> > --- /dev/null
-> > +++ b/tools/perf/scripts/python/firefox-gecko-converter.py
-> > @@ -0,0 +1,37 @@
-> > +#!/usr/bin/env python3
+Don't reset recorded sec_def handler unconditionally on
+bpf_program__set_type(). There are two situations where this is wrong.
 
-I believe this is not needed as we are using perf-script-python interface.
+First, if the program type didn't actually change. In that case original
+SEC handler should work just fine.
 
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +#
-> > +# Usage:
-> > +#
-> > +#     perf record -a -g -F 99 sleep 1
-> > +#     perf script firefox-gecko-converter.py
-> > +
-> > +from __future__ import print_function
-> 
-> Is this needed for python3?
+Second, catch-all custom SEC handler is supposed to work with any BPF
+program type and SEC() annotation, so it also doesn't make sense to
+reset that.
 
-No, it is not needed. I will remove it.
+This patch fixes both issues. This was reported recently in the context
+of breaking perf tool, which uses custom catch-all handler for fancy BPF
+prologue generation logic. This patch should fix the issue.
 
->
-> > +import os
-> > +import sys
-> > +import json
-> > +from functools import reduce
-> > +
-> > +sys.path.append(os.environ['PERF_EXEC_PATH'] + \
-> > +       '/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
-> > +
-> > +from perf_trace_context import *
-> > +from Core import *
-> > +
-> > +def process_event(param_dict):
-> > +       time_stamp = (param_dict['sample']['time'] // 1000) / 1000
-> > +       pid = param_dict['sample']['pid']
-> > +       tid = param_dict['sample']['tid']
-> > +       thread_name = param_dict['comm']
-> > +       start_time = time_stamp if not start_time else start_time
-> > +       if param_dict['callchain']:
-> > +               stack = []
-> > +               for call in param_dict['callchain']:
-> > +                       if 'sym' not in call:
-> > +                               continue
-> > +                       stack.append(call['sym']['name'] + f' (in {call["dso"]})')
-> > +               if len(stack) != 0:
-> > +                       stack = stack[::-1]
-> > +       else:
-> > +               mod = param_dict['symbol'] if 'symbol' in param_dict else '[unknown]'
-> 
-> Why is it 'mod' instead of 'sym' or 'func'?
+  [0] https://lore.kernel.org/linux-perf-users/ab865e6d-06c5-078e-e404-7f90686db50d@amd.com/
 
-I will change it to 'func'. It will be more meaningful.
+Fixes: d6e6286a12e7 ("libbpf: disassociate section handler on explicit bpf_program__set_type() call")
+Reported-by: Ravi Bangoria <ravi.bangoria@amd.com>
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+---
+ tools/lib/bpf/libbpf.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
-> 
-> Thanks,
-> Namhyung
-> 
-> 
-> > +               dso = param_dict['dso'] if 'dso' in param_dict else '[unknown]'
-> > --
-> > 2.34.1
-> >
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index fd4f1875df65..78635feb1946 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -8562,13 +8562,31 @@ enum bpf_prog_type bpf_program__type(const struct bpf_program *prog)
+ 	return prog->type;
+ }
+ 
++static size_t custom_sec_def_cnt;
++static struct bpf_sec_def *custom_sec_defs;
++static struct bpf_sec_def custom_fallback_def;
++static bool has_custom_fallback_def;
++static int last_custom_sec_def_handler_id;
++
+ int bpf_program__set_type(struct bpf_program *prog, enum bpf_prog_type type)
+ {
+ 	if (prog->obj->loaded)
+ 		return libbpf_err(-EBUSY);
+ 
++	/* if type is not changed, do nothing */
++	if (prog->type == type)
++		return 0;
++
+ 	prog->type = type;
+-	prog->sec_def = NULL;
++
++	/* If a program type was changed, we need to reset associated SEC()
++	 * handler, as it will be invalid now. The only exception is a generic
++	 * fallback handler, which by definition is program type-agnostic and
++	 * is a catch-all custom handler, optionally set by the application,
++	 * so should be able to handle any type of BPF program.
++	 */
++	if (prog->sec_def != &custom_fallback_def)
++		prog->sec_def = NULL;
+ 	return 0;
+ }
+ 
+@@ -8744,13 +8762,6 @@ static const struct bpf_sec_def section_defs[] = {
+ 	SEC_DEF("netfilter",		NETFILTER, BPF_NETFILTER, SEC_NONE),
+ };
+ 
+-static size_t custom_sec_def_cnt;
+-static struct bpf_sec_def *custom_sec_defs;
+-static struct bpf_sec_def custom_fallback_def;
+-static bool has_custom_fallback_def;
+-
+-static int last_custom_sec_def_handler_id;
+-
+ int libbpf_register_prog_handler(const char *sec,
+ 				 enum bpf_prog_type prog_type,
+ 				 enum bpf_attach_type exp_attach_type,
+-- 
+2.34.1
+
