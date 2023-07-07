@@ -2,130 +2,116 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C74FEB64D9
-	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Jul 2023 23:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2AFEB64DA
+	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Jul 2023 23:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229914AbjGGXMR convert rfc822-to-8bit (ORCPT
+        id S229502AbjGGXRJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 7 Jul 2023 19:12:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39042 "EHLO
+        Fri, 7 Jul 2023 19:17:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229471AbjGGXMR (ORCPT
+        with ESMTP id S229890AbjGGXRI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 7 Jul 2023 19:12:17 -0400
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF38A1BD
-        for <linux-perf-users@vger.kernel.org>; Fri,  7 Jul 2023 16:12:11 -0700 (PDT)
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 367HVJr1001778
-        for <linux-perf-users@vger.kernel.org>; Fri, 7 Jul 2023 16:12:11 -0700
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3rpaun8de4-4
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Jul 2023 16:12:11 -0700
-Received: from twshared52565.14.frc2.facebook.com (2620:10d:c0a8:1b::2d) by
- mail.thefacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Fri, 7 Jul 2023 16:12:08 -0700
-Received: by devbig019.vll3.facebook.com (Postfix, from userid 137359)
-        id B9B62342E9F6D; Fri,  7 Jul 2023 16:12:02 -0700 (PDT)
-From:   Andrii Nakryiko <andrii@kernel.org>
-To:     <bpf@vger.kernel.org>, <ast@kernel.org>, <daniel@iogearbox.net>,
-        <martin.lau@kernel.org>
-CC:     <ravi.bangoria@amd.com>, <linux-perf-users@vger.kernel.org>,
-        <acme@kernel.org>, Andrii Nakryiko <andrii@kernel.org>
-Subject: [PATCH bpf-next] libbpf: only reset sec_def handler when necessary
-Date:   Fri, 7 Jul 2023 16:11:56 -0700
-Message-ID: <20230707231156.1711948-1-andrii@kernel.org>
-X-Mailer: git-send-email 2.34.1
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-GUID: _LsjuRAs0qJD6iESDBSSo0EfK7UNkqBo
-X-Proofpoint-ORIG-GUID: _LsjuRAs0qJD6iESDBSSo0EfK7UNkqBo
-Content-Transfer-Encoding: 8BIT
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Fri, 7 Jul 2023 19:17:08 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07C5B1FF9
+        for <linux-perf-users@vger.kernel.org>; Fri,  7 Jul 2023 16:17:07 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-4fb960b7c9dso3852105e87.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Jul 2023 16:17:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688771825; x=1691363825;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vOafIyCGwjK7DCqgtmzW7AxV1GIwfC8+hSMuDBuTPac=;
+        b=d38MzkGHrUFrrBHcvq6K2D/SYRmb5ZXtPeRyNPbJSx9mJ4Dy0aguumujRC1xm2SUdY
+         MnYrydlv0D3wxsIMJCuVd9H0KOaXW1qEE+JnakdKB3czoR7WyksoFZHVhoDDhRKJFk3a
+         93YCYi+/J7TuWTiuYfz3k7CQ4HK6Ix21rlyIG4DjNl2YDwzPH7Qb70l2ZAxWxOKs8lcn
+         9rx5pYD244sNn7OQf4Q1xQ+RP2xfHpk9RfqmA5LmtBCGKtPGTqykHC+Z0fdA67mJSvZs
+         f4s8X4anpxLTAsqGfZEFDNQ4am5zqxiEy/bsyX+y8nWZ6NoVn5IxBvphJj1e6wQC1uBh
+         jgng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688771825; x=1691363825;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vOafIyCGwjK7DCqgtmzW7AxV1GIwfC8+hSMuDBuTPac=;
+        b=jb5Y9/+YPfNfpmmMaqQsopgVgan0WMhZwij0HIfeVojgefPbQHoLOJjYfJOq6pcoCR
+         a70j3HEoZFQ473HbbJ7onki12bQg/gWmJz+Uilf3+y6+U8KKF0kzQd2IEw9lB9SoVMQl
+         BVs65CCToAFlXEj71m0vFib/gpYEWiI/WjOTDLFypt2L4rxf+eso47Z7gJAZIt3SsjOJ
+         9fcZtRZh3bdxGbIW9NP9OteFI8oEj1BuJNosUdhcND9piMEpI7fWTD25gLLe9g7rTHyL
+         DK59wDINPeLbf3W6UXlUI4iVEpxjYQ1szI88XQrIatDkC3bYSE8cYeQfrsvE2ItTFrNA
+         VPfA==
+X-Gm-Message-State: ABy/qLbIlkw12TbGUKQgnI3wJ7EEET2KyrG9KASy0uIgBoUrk2HpAdPO
+        j5zOd0ujSryalqt2Chd06IuWRiNzblsbYUZG3A8=
+X-Google-Smtp-Source: APBJJlEC2kKrCFU/v9C6NcYBDQ5uR/lDq3BzFCkQ/KxKo3BPAcXrmqyIyOAk3AQ+n0SBCGzSTBYOBbAwMm7LGvZ3LgQ=
+X-Received: by 2002:a19:381e:0:b0:4f8:70b0:eec6 with SMTP id
+ f30-20020a19381e000000b004f870b0eec6mr4356489lfa.28.1688771824998; Fri, 07
+ Jul 2023 16:17:04 -0700 (PDT)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-07_14,2023-07-06_02,2023-05-22_02
+References: <ab865e6d-06c5-078e-e404-7f90686db50d@amd.com>
+In-Reply-To: <ab865e6d-06c5-078e-e404-7f90686db50d@amd.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 7 Jul 2023 16:16:52 -0700
+Message-ID: <CAEf4BzZK=zm9PkUwzJRgeQ=KXjKOK9TENUMTz+_FmU6kPjab7Q@mail.gmail.com>
+Subject: Re: [BUG] perf test: Regression because of d6e6286a12e7
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     andrii@kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Don't reset recorded sec_def handler unconditionally on
-bpf_program__set_type(). There are two situations where this is wrong.
+On Wed, Jul 5, 2023 at 9:39=E2=80=AFPM Ravi Bangoria <ravi.bangoria@amd.com=
+> wrote:
+>
+> Hi Andrii,
+>
+> I'm seeing perf test failure because of commit d6e6286a12e7 ("libbpf:
+> disassociate section handler on explicit bpf_program__set_type() call").
+>
 
-First, if the program type didn't actually change. In that case original
-SEC handler should work just fine.
+Yep, this commit would reset catch-all custom handler, which perf is
+setting. I've just sent a fix upstream ([0]). And once it lands, I'll
+cut a v1.2.1 libbpf bugfix release with just this fix on top of v1.2.
 
-Second, catch-all custom SEC handler is supposed to work with any BPF
-program type and SEC() annotation, so it also doesn't make sense to
-reset that.
+Can you please double-check that this patch indeed fixes the issue for
+you? I tried to do this locally, but for me perf test 42 fails both at
+current bpf-next, with the above commit reverted, and with my fix
+applied on top. So I can't be 100% sure.
 
-This patch fixes both issues. This was reported recently in the context
-of breaking perf tool, which uses custom catch-all handler for fancy BPF
-prologue generation logic. This patch should fix the issue.
+Thanks!
 
-  [0] https://lore.kernel.org/linux-perf-users/ab865e6d-06c5-078e-e404-7f90686db50d@amd.com/
+  [0] https://patchwork.kernel.org/project/netdevbpf/patch/20230707231156.1=
+711948-1-andrii@kernel.org/
 
-Fixes: d6e6286a12e7 ("libbpf: disassociate section handler on explicit bpf_program__set_type() call")
-Reported-by: Ravi Bangoria <ravi.bangoria@amd.com>
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
----
- tools/lib/bpf/libbpf.c | 27 +++++++++++++++++++--------
- 1 file changed, 19 insertions(+), 8 deletions(-)
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index fd4f1875df65..78635feb1946 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -8562,13 +8562,31 @@ enum bpf_prog_type bpf_program__type(const struct bpf_program *prog)
- 	return prog->type;
- }
- 
-+static size_t custom_sec_def_cnt;
-+static struct bpf_sec_def *custom_sec_defs;
-+static struct bpf_sec_def custom_fallback_def;
-+static bool has_custom_fallback_def;
-+static int last_custom_sec_def_handler_id;
-+
- int bpf_program__set_type(struct bpf_program *prog, enum bpf_prog_type type)
- {
- 	if (prog->obj->loaded)
- 		return libbpf_err(-EBUSY);
- 
-+	/* if type is not changed, do nothing */
-+	if (prog->type == type)
-+		return 0;
-+
- 	prog->type = type;
--	prog->sec_def = NULL;
-+
-+	/* If a program type was changed, we need to reset associated SEC()
-+	 * handler, as it will be invalid now. The only exception is a generic
-+	 * fallback handler, which by definition is program type-agnostic and
-+	 * is a catch-all custom handler, optionally set by the application,
-+	 * so should be able to handle any type of BPF program.
-+	 */
-+	if (prog->sec_def != &custom_fallback_def)
-+		prog->sec_def = NULL;
- 	return 0;
- }
- 
-@@ -8744,13 +8762,6 @@ static const struct bpf_sec_def section_defs[] = {
- 	SEC_DEF("netfilter",		NETFILTER, BPF_NETFILTER, SEC_NONE),
- };
- 
--static size_t custom_sec_def_cnt;
--static struct bpf_sec_def *custom_sec_defs;
--static struct bpf_sec_def custom_fallback_def;
--static bool has_custom_fallback_def;
--
--static int last_custom_sec_def_handler_id;
--
- int libbpf_register_prog_handler(const char *sec,
- 				 enum bpf_prog_type prog_type,
- 				 enum bpf_attach_type exp_attach_type,
--- 
-2.34.1
-
+> With 6.4 kernel and perf:
+>
+>   $ ./tools/perf/perf version
+>   perf version 6.4.g6995e2de6891
+>   $ sudo ./tools/perf/perf test 42
+>    42: BPF filter                               :
+>    42.1: Basic BPF filtering                    : Ok
+>    42.2: BPF pinning                            : Ok
+>    42.3: BPF prologue generation                : FAILED!
+>
+> After reverting d6e6286a12e7 commit:
+>
+>   $ git revert d6e6286a12e7
+>   $ make -C tools/perf/
+>   $ sudo ./tools/perf/perf test 42
+>    42: BPF filter                               :
+>    42.1: Basic BPF filtering                    : Ok
+>    42.2: BPF pinning                            : Ok
+>    42.3: BPF prologue generation                : Ok
+>
+> Is it a known issue?
+>
+> Thanks,
+> Ravi
