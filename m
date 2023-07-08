@@ -2,116 +2,86 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2AFEB64DA
-	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Jul 2023 23:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98359EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Sat,  8 Jul 2023 00:15:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229502AbjGGXRJ (ORCPT
+        id S229822AbjGHAPM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 7 Jul 2023 19:17:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39850 "EHLO
+        Fri, 7 Jul 2023 20:15:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229890AbjGGXRI (ORCPT
+        with ESMTP id S229665AbjGHAPL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 7 Jul 2023 19:17:08 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07C5B1FF9
-        for <linux-perf-users@vger.kernel.org>; Fri,  7 Jul 2023 16:17:07 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-4fb960b7c9dso3852105e87.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Jul 2023 16:17:06 -0700 (PDT)
+        Fri, 7 Jul 2023 20:15:11 -0400
+Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BC8919B7
+        for <linux-perf-users@vger.kernel.org>; Fri,  7 Jul 2023 17:15:11 -0700 (PDT)
+Received: by mail-pf1-x44a.google.com with SMTP id d2e1a72fcca58-6686a103a8cso4001135b3a.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Jul 2023 17:15:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688771825; x=1691363825;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vOafIyCGwjK7DCqgtmzW7AxV1GIwfC8+hSMuDBuTPac=;
-        b=d38MzkGHrUFrrBHcvq6K2D/SYRmb5ZXtPeRyNPbJSx9mJ4Dy0aguumujRC1xm2SUdY
-         MnYrydlv0D3wxsIMJCuVd9H0KOaXW1qEE+JnakdKB3czoR7WyksoFZHVhoDDhRKJFk3a
-         93YCYi+/J7TuWTiuYfz3k7CQ4HK6Ix21rlyIG4DjNl2YDwzPH7Qb70l2ZAxWxOKs8lcn
-         9rx5pYD244sNn7OQf4Q1xQ+RP2xfHpk9RfqmA5LmtBCGKtPGTqykHC+Z0fdA67mJSvZs
-         f4s8X4anpxLTAsqGfZEFDNQ4am5zqxiEy/bsyX+y8nWZ6NoVn5IxBvphJj1e6wQC1uBh
-         jgng==
+        d=google.com; s=20221208; t=1688775310; x=1691367310;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nETmYJjgT8aoTFOsp8DLKXk+glLs0WNsSqhpsY5wWJg=;
+        b=MHyqpcROOsORiRuiig5QS97hOe5HhZFl3Tt54WjbYvip6fb6JMsMsqcFJ6sK75U84M
+         htn1+uBCqrpZ2M+dPnHVW59TTkffvZCiRUxEdwYUAQhdV3Y2jXC2VaOaCXSec058PZ97
+         eTOGRz3UCPBv0AuVNX/5lWj0tpObuomQVAcAjDsFTxGI4KfZYqUsyrEm7Kx2+0UzcCyS
+         JfsWBIogpPx6vOOWLwRjxmVU4Ah8yGzWO8INL9k/6F/8y5nZy91aJ7NoEs+XmKd9/yZS
+         Dcq2X4C1lHNmwbLPnX0DfoflDqgcU6CbNfA2Q7CtWvi57vgx/bnjvyK8mH9I6ApU/jQB
+         Vw4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688771825; x=1691363825;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vOafIyCGwjK7DCqgtmzW7AxV1GIwfC8+hSMuDBuTPac=;
-        b=jb5Y9/+YPfNfpmmMaqQsopgVgan0WMhZwij0HIfeVojgefPbQHoLOJjYfJOq6pcoCR
-         a70j3HEoZFQ473HbbJ7onki12bQg/gWmJz+Uilf3+y6+U8KKF0kzQd2IEw9lB9SoVMQl
-         BVs65CCToAFlXEj71m0vFib/gpYEWiI/WjOTDLFypt2L4rxf+eso47Z7gJAZIt3SsjOJ
-         9fcZtRZh3bdxGbIW9NP9OteFI8oEj1BuJNosUdhcND9piMEpI7fWTD25gLLe9g7rTHyL
-         DK59wDINPeLbf3W6UXlUI4iVEpxjYQ1szI88XQrIatDkC3bYSE8cYeQfrsvE2ItTFrNA
-         VPfA==
-X-Gm-Message-State: ABy/qLbIlkw12TbGUKQgnI3wJ7EEET2KyrG9KASy0uIgBoUrk2HpAdPO
-        j5zOd0ujSryalqt2Chd06IuWRiNzblsbYUZG3A8=
-X-Google-Smtp-Source: APBJJlEC2kKrCFU/v9C6NcYBDQ5uR/lDq3BzFCkQ/KxKo3BPAcXrmqyIyOAk3AQ+n0SBCGzSTBYOBbAwMm7LGvZ3LgQ=
-X-Received: by 2002:a19:381e:0:b0:4f8:70b0:eec6 with SMTP id
- f30-20020a19381e000000b004f870b0eec6mr4356489lfa.28.1688771824998; Fri, 07
- Jul 2023 16:17:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <ab865e6d-06c5-078e-e404-7f90686db50d@amd.com>
-In-Reply-To: <ab865e6d-06c5-078e-e404-7f90686db50d@amd.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 7 Jul 2023 16:16:52 -0700
-Message-ID: <CAEf4BzZK=zm9PkUwzJRgeQ=KXjKOK9TENUMTz+_FmU6kPjab7Q@mail.gmail.com>
-Subject: Re: [BUG] perf test: Regression because of d6e6286a12e7
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     andrii@kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        d=1e100.net; s=20221208; t=1688775310; x=1691367310;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nETmYJjgT8aoTFOsp8DLKXk+glLs0WNsSqhpsY5wWJg=;
+        b=Y31ZjQt3aNDkIz4Uv4pzfLeEd4Qd/eONvPglKaaA98CyT775ZUgIKH6kPagDp/pnDP
+         unKbGa9mJjTTaA6qBDsYcznZmGNJ2ougnAsmHWCo2dZ2ng4y9mmJAdXGtzuJP38weUCd
+         wNKoNgqxSVaNJygF1RQKBNjxX++bBBEyE1pwJWNKY36jnHdjrb+awgz3iHX+MX5DI8EN
+         L5pPZjs2ra9ARaoCWGdeXzQaAzWqwDaog+ay46Ab+1Y32WI0QumQEtemWT4gSuTEnKwx
+         BRIrGR2dMRI+8fHM0CFiuJPLQonfRbch287MfAn2m1H7ZQ/YLqqK/U7Grm9+tdRTJzI+
+         0uEQ==
+X-Gm-Message-State: ABy/qLaukW1iy4O6JpGC4otAxdAQfOZyEp7Ah1VglI4K4wKhT+pHtmsK
+        2kFkOjYm8loandSz239xQzFW2Q4=
+X-Google-Smtp-Source: APBJJlFEc+cYhmAlo3tI45jURaJmwcNhv5hLHkov61yQJgZ28+zNvXA2cNzpYGCwt2UsNlO7OuFpOvo=
+X-Received: from sdf.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5935])
+ (user=sdf job=sendgmr) by 2002:aa7:8890:0:b0:668:7512:7c49 with SMTP id
+ z16-20020aa78890000000b0066875127c49mr9252588pfe.5.1688775310535; Fri, 07 Jul
+ 2023 17:15:10 -0700 (PDT)
+Date:   Fri, 7 Jul 2023 17:15:09 -0700
+In-Reply-To: <20230707231156.1711948-1-andrii@kernel.org>
+Mime-Version: 1.0
+References: <20230707231156.1711948-1-andrii@kernel.org>
+Message-ID: <ZKiqjS03rRlALV7z@google.com>
+Subject: Re: [PATCH bpf-next] libbpf: only reset sec_def handler when necessary
+From:   Stanislav Fomichev <sdf@google.com>
+To:     Andrii Nakryiko <andrii@kernel.org>
+Cc:     bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        martin.lau@kernel.org, ravi.bangoria@amd.com,
+        linux-perf-users@vger.kernel.org, acme@kernel.org
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 5, 2023 at 9:39=E2=80=AFPM Ravi Bangoria <ravi.bangoria@amd.com=
-> wrote:
->
-> Hi Andrii,
->
-> I'm seeing perf test failure because of commit d6e6286a12e7 ("libbpf:
-> disassociate section handler on explicit bpf_program__set_type() call").
->
+On 07/07, Andrii Nakryiko wrote:
+> Don't reset recorded sec_def handler unconditionally on
+> bpf_program__set_type(). There are two situations where this is wrong.
+> 
+> First, if the program type didn't actually change. In that case original
+> SEC handler should work just fine.
+> 
+> Second, catch-all custom SEC handler is supposed to work with any BPF
+> program type and SEC() annotation, so it also doesn't make sense to
+> reset that.
+> 
+> This patch fixes both issues. This was reported recently in the context
+> of breaking perf tool, which uses custom catch-all handler for fancy BPF
+> prologue generation logic. This patch should fix the issue.
+> 
+>   [0] https://lore.kernel.org/linux-perf-users/ab865e6d-06c5-078e-e404-7f90686db50d@amd.com/
+> 
+> Fixes: d6e6286a12e7 ("libbpf: disassociate section handler on explicit bpf_program__set_type() call")
+> Reported-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
 
-Yep, this commit would reset catch-all custom handler, which perf is
-setting. I've just sent a fix upstream ([0]). And once it lands, I'll
-cut a v1.2.1 libbpf bugfix release with just this fix on top of v1.2.
-
-Can you please double-check that this patch indeed fixes the issue for
-you? I tried to do this locally, but for me perf test 42 fails both at
-current bpf-next, with the above commit reverted, and with my fix
-applied on top. So I can't be 100% sure.
-
-Thanks!
-
-  [0] https://patchwork.kernel.org/project/netdevbpf/patch/20230707231156.1=
-711948-1-andrii@kernel.org/
-
-
-> With 6.4 kernel and perf:
->
->   $ ./tools/perf/perf version
->   perf version 6.4.g6995e2de6891
->   $ sudo ./tools/perf/perf test 42
->    42: BPF filter                               :
->    42.1: Basic BPF filtering                    : Ok
->    42.2: BPF pinning                            : Ok
->    42.3: BPF prologue generation                : FAILED!
->
-> After reverting d6e6286a12e7 commit:
->
->   $ git revert d6e6286a12e7
->   $ make -C tools/perf/
->   $ sudo ./tools/perf/perf test 42
->    42: BPF filter                               :
->    42.1: Basic BPF filtering                    : Ok
->    42.2: BPF pinning                            : Ok
->    42.3: BPF prologue generation                : Ok
->
-> Is it a known issue?
->
-> Thanks,
-> Ravi
+Acked-by: Stanislav Fomichev <sdf@google.com>
