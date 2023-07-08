@@ -2,130 +2,102 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1167C001B0
-	for <linux-perf-users@archiver.kernel.org>; Sat,  8 Jul 2023 09:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E379EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Sat,  8 Jul 2023 19:16:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231280AbjGHJBX (ORCPT
+        id S229816AbjGHTQd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 8 Jul 2023 05:01:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43812 "EHLO
+        Sat, 8 Jul 2023 15:16:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230514AbjGHJBP (ORCPT
+        with ESMTP id S229468AbjGHTQc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 8 Jul 2023 05:01:15 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52EA31723;
-        Sat,  8 Jul 2023 02:01:14 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-991da766865so341269866b.0;
-        Sat, 08 Jul 2023 02:01:14 -0700 (PDT)
+        Sat, 8 Jul 2023 15:16:32 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7ED4FC
+        for <linux-perf-users@vger.kernel.org>; Sat,  8 Jul 2023 12:16:31 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-51de9c2bc77so3505655a12.3
+        for <linux-perf-users@vger.kernel.org>; Sat, 08 Jul 2023 12:16:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688806873; x=1691398873;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nf6CWtf5sSzXSzp6IATkL8/vv+7S/TvwEjnbGt7d71E=;
-        b=OrM5pDnq+Vr/EwlVe+DD3mzWWS3F0uzrYAzk6uvTn8z23ssNUOzdUk4ODCstn8JiDC
-         0xzqEj7vmuAoxExq4m4ifummtrHEJwMOE8VxXlf8oA9CEoBQJi+mOrIgdgvL5c/BTHcC
-         sEglGaq9q9WelZBfYcIEFp1WTTF0fNvDH3LXjQPEkwSETrn+pYLvX7dvlqReqjEQwJNP
-         SF2Uwfs4OCTQhuy1nE9Oc+oSfRGWHjC0PcZ+qGhaupjOHy3D7BYy0dGiDl8n6b14XxC+
-         xNWhdJWZO371SuO0GLE531DUPKyiD6PNkJfr0UEiQwt2oozP+87OdpTXPYmch25HcoyX
-         BXUA==
+        d=linux-foundation.org; s=google; t=1688843790; x=1691435790;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=mLZlu9xJmqIEDMbaskzro9PEeknNhuP2jk6hFXnqIJo=;
+        b=gCKIBVvKL3qPNuTeoRLSB9oSYkTore3fHEcqbLFhGCXeHnmqrXItHexJ6O3HRsGIm1
+         S0aXR7Fjua80J2beXfslhVtew77McBL81ikgxZAbg4GCJ32K8oVcgaNUG/VW0lrn7EEM
+         As6x/F01E1T5/hlLnfZkk1W04GQGMGCYud07U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688806873; x=1691398873;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nf6CWtf5sSzXSzp6IATkL8/vv+7S/TvwEjnbGt7d71E=;
-        b=l+RdG9reJLsiRkHI/hJ2fjq7oT9zrplhbHUmVKU4XAN7Zd6Yl2YP5Bt7NoEFObu67R
-         0PyJFb0WCh3LqwwmG99LrQFVPflZ05PG0lGSI+Vyw/rLSRzmRb4P6JZbicqu/YPPLwT2
-         hJ4e7LJ1IIsX2+DNuK9tm5BCiL2kdSN08UO8XOOZ84R72Bs7T3WHvTE0H9z5uljCnQSI
-         D8ZIxphbeZl1lqsx8GTKOcMUgFhCszp0jF1+nwLXAJT+vnGqwO/oQZnwVOreQNG4H1tX
-         TQB5Jt747VZuvG+xseg6SsXIo532PcTRzbGdO7gRy1TWgqZmmIl8awmCj7RpfEu+YORm
-         ugXw==
-X-Gm-Message-State: ABy/qLaN+IST23fWjt3kXmtKfBZ0Ia6XZb5FA+WaaiJp15MtyJAGkHKB
-        SDIxP+bjoQkyFpKwjEc9u2M=
-X-Google-Smtp-Source: APBJJlHvjbfghU+R1GVuA1W0C07GTu/GC7MEOE21FxMF61BP0T9NAF6jpjoHbxYT65YvPnfoueGJMA==
-X-Received: by 2002:a17:906:5185:b0:992:a9c3:244f with SMTP id y5-20020a170906518500b00992a9c3244fmr5233427ejk.4.1688806872534;
-        Sat, 08 Jul 2023 02:01:12 -0700 (PDT)
-Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id g10-20020a17090613ca00b00992ae4cf3c1sm3204313ejc.186.2023.07.08.02.01.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Jul 2023 02:01:12 -0700 (PDT)
-From:   Uros Bizjak <ubizjak@gmail.com>
-To:     loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-        x86@kernel.org, linux-arch@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Uros Bizjak <ubizjak@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 2/2] perf/ring_buffer: Use local_try_cmpxchg in __perf_output_begin
-Date:   Sat,  8 Jul 2023 11:00:37 +0200
-Message-ID: <20230708090048.63046-2-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230708090048.63046-1-ubizjak@gmail.com>
-References: <20230708090048.63046-1-ubizjak@gmail.com>
+        d=1e100.net; s=20221208; t=1688843790; x=1691435790;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mLZlu9xJmqIEDMbaskzro9PEeknNhuP2jk6hFXnqIJo=;
+        b=SFTUjbDAM9gsRUCx2DUtNhCc3sW0qDMnsUotbggkntduRBxXDbTPnwoE4oQ7emwjaM
+         vEl/YJCVl3lyudSBCnZJsYWOv6KtGoHtbAgqRVR/EDwtubO6xBbZVRyrY/0OxctQ7sDn
+         pXwydXiIvkR8uCv+6r2LM5yyoYw1aTCh6O99AUX9knpGOsP8hLQ1xs0pWBdH1+xI7LI1
+         /k3jAHZhh5VtXCdRaRw7All9wwIFicoyeFdGrAn1zVRbEhrZvLbkRpqebQ6KfsGIku+b
+         euHFIOQ55FDrTAbMm2QGmOXaCiZirlld/EURiFFbOGX8RtfYdFbse6V1h9ROuo4KKgRG
+         /4Jg==
+X-Gm-Message-State: ABy/qLaXX3G7AB+/hM+eRsSOWacrpaLWFMxDxqM6skwR/g9WnMJF0TtL
+        4qmMunJhDxvDZRNnDKLa215a+QXNIPGdnPtPldcNVqVL
+X-Google-Smtp-Source: APBJJlHfDeo+O7s9O9gb674LdfkyfVwoy/qNO921k390PNlKSf1PyWtxgm2KeeMWBy94k71odIQr1Q==
+X-Received: by 2002:a05:6402:1645:b0:51e:34d5:a23f with SMTP id s5-20020a056402164500b0051e34d5a23fmr6316688edx.23.1688843790008;
+        Sat, 08 Jul 2023 12:16:30 -0700 (PDT)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com. [209.85.128.46])
+        by smtp.gmail.com with ESMTPSA id s26-20020a056402165a00b0051df1797222sm3559133edx.11.2023.07.08.12.16.28
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Jul 2023 12:16:29 -0700 (PDT)
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-3fb4146e8deso41285815e9.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 08 Jul 2023 12:16:28 -0700 (PDT)
+X-Received: by 2002:a5d:52cc:0:b0:314:f7e:8755 with SMTP id
+ r12-20020a5d52cc000000b003140f7e8755mr9103807wrv.55.1688843788496; Sat, 08
+ Jul 2023 12:16:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230707042644.94061-1-namhyung@kernel.org>
+In-Reply-To: <20230707042644.94061-1-namhyung@kernel.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 8 Jul 2023 12:16:11 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgRP0qeuTSWtHgDdvgUTfBD1mGwrenbOyJC7_ygsbWCEQ@mail.gmail.com>
+Message-ID: <CAHk-=wgRP0qeuTSWtHgDdvgUTfBD1mGwrenbOyJC7_ygsbWCEQ@mail.gmail.com>
+Subject: Re: [GIT PULL] perf tools changes for v6.5: 2nd batch
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Use local_try_cmpxchg instead of local_cmpxchg (*ptr, old, new) == old
-in __perf_output_begin.  x86 CMPXCHG instruction returns success in ZF
-flag, so this change saves a compare after cmpxchg (and related move
-instruction in front of cmpxchg).
+On Thu, 6 Jul 2023 at 21:26, Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> Hello Linus,
+>
+> Please consider pulling more perf tool changes.  These are remaining
+> changes and fixes for this cycle.  The last two fixes are relatively
+> new but other changes have been sitting on -next for a number of days.
 
-Also, try_cmpxchg implicitly assigns old *ptr value to "old" when cmpxchg
-fails. There is no need to re-read the value in the loop.
+Hmm.
 
-No functional change intended.
+I htink there's some dependency problem in the perf tools build that
+just caused a random build error for me:
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
----
- kernel/events/ring_buffer.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+   util/expr-flex.c:214: error: unterminated #ifdef
 
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index a0433f37b024..fb1e180b5f0a 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -191,9 +191,10 @@ __perf_output_begin(struct perf_output_handle *handle,
- 
- 	perf_output_get_handle(handle);
- 
-+	offset = local_read(&rb->head);
- 	do {
-+		head = offset;
- 		tail = READ_ONCE(rb->user_page->data_tail);
--		offset = head = local_read(&rb->head);
- 		if (!rb->overwrite) {
- 			if (unlikely(!ring_buffer_has_space(head, tail,
- 							    perf_data_size(rb),
-@@ -217,7 +218,7 @@ __perf_output_begin(struct perf_output_handle *handle,
- 			head += size;
- 		else
- 			head -= size;
--	} while (local_cmpxchg(&rb->head, offset, head) != offset);
-+	} while (!local_try_cmpxchg(&rb->head, &offset, head));
- 
- 	if (backward) {
- 		offset = head;
--- 
-2.41.0
+that error went away on a re-build, and it's clearly nonsensical when
+I look at that file, so it looks to me like somehow the parallel buld
+used that file while it 3as being generated.
 
+I don't see anything obviously wrong, and I've only seen this error
+once. I've done the pull - I doubt it was introduced by the recent
+changes - but I wanted to just mention that there seems to be some
+problem in this area..
+
+Am I the only one to have ever seen something like this?
+
+                 Linus
