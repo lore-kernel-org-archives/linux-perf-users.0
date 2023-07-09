@@ -2,83 +2,95 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 544A7EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Sun,  9 Jul 2023 01:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E78EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Sun,  9 Jul 2023 03:23:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229729AbjGIBkX (ORCPT
+        id S230085AbjGIDXl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 8 Jul 2023 21:40:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57644 "EHLO
+        Sat, 8 Jul 2023 23:23:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229620AbjGIBkW (ORCPT
+        with ESMTP id S229516AbjGIDXk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 8 Jul 2023 21:40:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFB0FE45
-        for <linux-perf-users@vger.kernel.org>; Sat,  8 Jul 2023 18:40:21 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 614D460B73
-        for <linux-perf-users@vger.kernel.org>; Sun,  9 Jul 2023 01:40:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B37BEC433C7;
-        Sun,  9 Jul 2023 01:40:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688866820;
-        bh=cCSoNdGhByAcijFIGmpoKqHnbwrgQX07PWN6H3JHoxI=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=gdmRzLTAlL8lwG//5JfNGpXD0g6NltnVSqqJ0B5n38Boz335q8wAJ46gnh2DSiuDY
-         iHNqR/qnIhxENOmdQ+tnetp+ZjDIvFzxWZtrSocS6S4YWmRodZUbQ+eTGYyP1jcVz1
-         TtNsH/fRF35hLQqukPUtBZSHEL9UV0pHTi0gBiEqp7cFDbDc5zSYm/gDwPwh6NB/mq
-         M3YqvmOEgMT/40TGx2pUqCWz0t9LtoD2vTpPT5Ov40y7+d+qNvo1GUZR0MRpnL7mWX
-         klTC3UNKlnCrW3Ht6rNRdwqnhvU4nFC/ILWTb7iHQmVhCw0NJJY7sQkCQkcdKYqZx/
-         6N3nxe22+x2zg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9E2BFC0C40E;
-        Sun,  9 Jul 2023 01:40:20 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Sat, 8 Jul 2023 23:23:40 -0400
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81C681B9;
+        Sat,  8 Jul 2023 20:23:38 -0700 (PDT)
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-765ae938b1bso314925685a.0;
+        Sat, 08 Jul 2023 20:23:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688873017; x=1691465017;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y5Os/T81jfV0h75zdTCYZv06KbERDIlm36ZHuHvLASs=;
+        b=QOT1tpjq+QXaUtLoskPNFiaBsus5uAQQLsSNKhs4gLNLGNik8lRqDYt3yOkhU9U4yy
+         0uIo/NXQQg8hO1HrQG96YHOuqmXmNzIgFdyG3MC5s1qVPiuTf30JR86TERiEJm6FDYQp
+         bUyVaugFUNfJuwdmaYXgiqRZDi2+lbRzcXRuiuGaZQpP5Gpm0vzePbMZHcPRcv8+WHTo
+         QBsixX2zsiidc/VD8SpKyAQaXQA0cGkuEgDXZTuUKpD0dZhaJsZwVRZGm2Vam+UIcceV
+         N8huyQno7jvkBJYF9CJJoLCOowYd+IbXl3Gk08IPu9bmPcnVHi9TaFf2L9cHfcw1Bz+O
+         POpA==
+X-Gm-Message-State: ABy/qLZ8YMO7yq963uHVoA/yJRo6gKaQskl5pJ1cTL+llo2NC26IBUkr
+        NqHRRskyu4xcu/YCZwhEDh0S3X207TLuotXTVw4=
+X-Google-Smtp-Source: APBJJlFQPtFEVtWcYE7How2gb/CHze6oWc15Qum2gklJGQTijwLRDkYhYvN4zBclMao8WbTKeTv0Ji3K0JuVa3VbfC8=
+X-Received: by 2002:a05:620a:28c5:b0:75d:4101:2c9a with SMTP id
+ l5-20020a05620a28c500b0075d41012c9amr11401351qkp.34.1688873017559; Sat, 08
+ Jul 2023 20:23:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next] libbpf: only reset sec_def handler when necessary
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <168886682064.2231.10209973851568634649.git-patchwork-notify@kernel.org>
-Date:   Sun, 09 Jul 2023 01:40:20 +0000
-References: <20230707231156.1711948-1-andrii@kernel.org>
-In-Reply-To: <20230707231156.1711948-1-andrii@kernel.org>
-To:     Andrii Nakryiko <andrii@kernel.org>
-Cc:     bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        martin.lau@kernel.org, ravi.bangoria@amd.com,
-        linux-perf-users@vger.kernel.org, acme@kernel.org
+References: <20230707042644.94061-1-namhyung@kernel.org> <CAHk-=wgRP0qeuTSWtHgDdvgUTfBD1mGwrenbOyJC7_ygsbWCEQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wgRP0qeuTSWtHgDdvgUTfBD1mGwrenbOyJC7_ygsbWCEQ@mail.gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Sat, 8 Jul 2023 20:23:25 -0700
+Message-ID: <CAM9d7cjvowtUcfew12k7oLs6g19FHZipcQ9UsX9pOKXENeGEYw@mail.gmail.com>
+Subject: Re: [GIT PULL] perf tools changes for v6.5: 2nd batch
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello:
+Hi Linus,
 
-This patch was applied to bpf/bpf-next.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
+On Sat, Jul 8, 2023 at 12:16 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Thu, 6 Jul 2023 at 21:26, Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hello Linus,
+> >
+> > Please consider pulling more perf tool changes.  These are remaining
+> > changes and fixes for this cycle.  The last two fixes are relatively
+> > new but other changes have been sitting on -next for a number of days.
+>
+> Hmm.
+>
+> I htink there's some dependency problem in the perf tools build that
+> just caused a random build error for me:
+>
+>    util/expr-flex.c:214: error: unterminated #ifdef
+>
+> that error went away on a re-build, and it's clearly nonsensical when
+> I look at that file, so it looks to me like somehow the parallel buld
+> used that file while it 3as being generated.
+>
+> I don't see anything obviously wrong, and I've only seen this error
+> once. I've done the pull - I doubt it was introduced by the recent
+> changes - but I wanted to just mention that there seems to be some
+> problem in this area..
+>
+> Am I the only one to have ever seen something like this?
 
-On Fri, 7 Jul 2023 16:11:56 -0700 you wrote:
-> Don't reset recorded sec_def handler unconditionally on
-> bpf_program__set_type(). There are two situations where this is wrong.
-> 
-> First, if the program type didn't actually change. In that case original
-> SEC handler should work just fine.
-> 
-> Second, catch-all custom SEC handler is supposed to work with any BPF
-> program type and SEC() annotation, so it also doesn't make sense to
-> reset that.
-> 
-> [...]
+I saw a similar problem before and it was ok after a re-build.
+I also believe it's not related to this pull request.  But I will
+take a deeper look at the problem.
 
-Here is the summary with links:
-  - [bpf-next] libbpf: only reset sec_def handler when necessary
-    https://git.kernel.org/bpf/bpf-next/c/c628747cc880
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Thanks,
+Namhyung
