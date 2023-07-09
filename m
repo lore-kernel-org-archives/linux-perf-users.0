@@ -2,95 +2,154 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E78EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Sun,  9 Jul 2023 03:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50474C0015E
+	for <linux-perf-users@archiver.kernel.org>; Sun,  9 Jul 2023 18:28:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230085AbjGIDXl convert rfc822-to-8bit (ORCPT
+        id S229579AbjGIS2b (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 8 Jul 2023 23:23:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36034 "EHLO
+        Sun, 9 Jul 2023 14:28:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229516AbjGIDXk (ORCPT
+        with ESMTP id S230272AbjGIS23 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 8 Jul 2023 23:23:40 -0400
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81C681B9;
-        Sat,  8 Jul 2023 20:23:38 -0700 (PDT)
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-765ae938b1bso314925685a.0;
-        Sat, 08 Jul 2023 20:23:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688873017; x=1691465017;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=y5Os/T81jfV0h75zdTCYZv06KbERDIlm36ZHuHvLASs=;
-        b=QOT1tpjq+QXaUtLoskPNFiaBsus5uAQQLsSNKhs4gLNLGNik8lRqDYt3yOkhU9U4yy
-         0uIo/NXQQg8hO1HrQG96YHOuqmXmNzIgFdyG3MC5s1qVPiuTf30JR86TERiEJm6FDYQp
-         bUyVaugFUNfJuwdmaYXgiqRZDi2+lbRzcXRuiuGaZQpP5Gpm0vzePbMZHcPRcv8+WHTo
-         QBsixX2zsiidc/VD8SpKyAQaXQA0cGkuEgDXZTuUKpD0dZhaJsZwVRZGm2Vam+UIcceV
-         N8huyQno7jvkBJYF9CJJoLCOowYd+IbXl3Gk08IPu9bmPcnVHi9TaFf2L9cHfcw1Bz+O
-         POpA==
-X-Gm-Message-State: ABy/qLZ8YMO7yq963uHVoA/yJRo6gKaQskl5pJ1cTL+llo2NC26IBUkr
-        NqHRRskyu4xcu/YCZwhEDh0S3X207TLuotXTVw4=
-X-Google-Smtp-Source: APBJJlFQPtFEVtWcYE7How2gb/CHze6oWc15Qum2gklJGQTijwLRDkYhYvN4zBclMao8WbTKeTv0Ji3K0JuVa3VbfC8=
-X-Received: by 2002:a05:620a:28c5:b0:75d:4101:2c9a with SMTP id
- l5-20020a05620a28c500b0075d41012c9amr11401351qkp.34.1688873017559; Sat, 08
- Jul 2023 20:23:37 -0700 (PDT)
+        Sun, 9 Jul 2023 14:28:29 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46BF911C
+        for <linux-perf-users@vger.kernel.org>; Sun,  9 Jul 2023 11:28:28 -0700 (PDT)
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 369IHVhm028168;
+        Sun, 9 Jul 2023 18:28:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=13KG55BGj3ZjCFxK/Pmae1TV1C/sdk1d+lFMZ/NlVhg=;
+ b=rsyyiOphnNwJ27Y67eSs0e9SJ3tsLpq7FctDTsFT/msIgePQBdn45rCYhX9UZ6flFgxN
+ m5gaMIzsdr//aUX1OHnSP2qXIVxA/h6OhuSiIFvet78rRdENBZfRvxCEVwdu5dHMfVnN
+ OnnulO3HMO1UZEWFzwEv8yxjQvC2jpXO5Sx1Hxi9zwpQSAqJKDTDaljRfWkbFzB7GGoq
+ XhXMiVdMtcc1DmayE18SJPE0QQ/zyGvABciObhoUM2MCyGC31tKjheKKYV2kFR/pdUv3
+ CN1BldMgO4OQCp0EcSbLROixcTUz0Qf58EDg16keqO2IUxXHuYgQtFz6hxfeNMzkmoby fQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rr21jr3p7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 09 Jul 2023 18:28:20 +0000
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 369ISJon018684;
+        Sun, 9 Jul 2023 18:28:19 GMT
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rr21jr3ny-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 09 Jul 2023 18:28:19 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3699SNK5016786;
+        Sun, 9 Jul 2023 18:28:18 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma04ams.nl.ibm.com (PPS) with ESMTPS id 3rpye58v46-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 09 Jul 2023 18:28:17 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 369ISEml39518560
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 9 Jul 2023 18:28:14 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9D8A22004F;
+        Sun,  9 Jul 2023 18:28:14 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7476120040;
+        Sun,  9 Jul 2023 18:28:12 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.24.202])
+        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Sun,  9 Jul 2023 18:28:12 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
+        namhyung@kernel.org
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Subject: [PATCH V2 03/26] tools/perf/tests: Fix shellcheck warning for record_offcpu.sh testcase
+Date:   Sun,  9 Jul 2023 23:57:37 +0530
+Message-Id: <20230709182800.53002-4-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20230709182800.53002-1-atrajeev@linux.vnet.ibm.com>
+References: <20230709182800.53002-1-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
-References: <20230707042644.94061-1-namhyung@kernel.org> <CAHk-=wgRP0qeuTSWtHgDdvgUTfBD1mGwrenbOyJC7_ygsbWCEQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wgRP0qeuTSWtHgDdvgUTfBD1mGwrenbOyJC7_ygsbWCEQ@mail.gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Sat, 8 Jul 2023 20:23:25 -0700
-Message-ID: <CAM9d7cjvowtUcfew12k7oLs6g19FHZipcQ9UsX9pOKXENeGEYw@mail.gmail.com>
-Subject: Re: [GIT PULL] perf tools changes for v6.5: 2nd batch
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 4WE0yH3-KvAicFvYx3OZ887dVwQ8JDtn
+X-Proofpoint-GUID: fm6IVlXbZCQqMawBXw_I-3JM3eS3_Y-W
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-09_12,2023-07-06_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 impostorscore=0 mlxscore=0 suspectscore=0 adultscore=0
+ bulkscore=0 spamscore=0 mlxlogscore=857 clxscore=1015 priorityscore=1501
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2307090169
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Linus,
+From: Kajol Jain <kjain@linux.ibm.com>
 
-On Sat, Jul 8, 2023 at 12:16 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Thu, 6 Jul 2023 at 21:26, Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hello Linus,
-> >
-> > Please consider pulling more perf tool changes.  These are remaining
-> > changes and fixes for this cycle.  The last two fixes are relatively
-> > new but other changes have been sitting on -next for a number of days.
->
-> Hmm.
->
-> I htink there's some dependency problem in the perf tools build that
-> just caused a random build error for me:
->
->    util/expr-flex.c:214: error: unterminated #ifdef
->
-> that error went away on a re-build, and it's clearly nonsensical when
-> I look at that file, so it looks to me like somehow the parallel buld
-> used that file while it 3as being generated.
->
-> I don't see anything obviously wrong, and I've only seen this error
-> once. I've done the pull - I doubt it was introduced by the recent
-> changes - but I wanted to just mention that there seems to be some
-> problem in this area..
->
-> Am I the only one to have ever seen something like this?
+Running shellcheck on record_offcpu.sh throws below warning:
 
-I saw a similar problem before and it was ok after a re-build.
-I also believe it's not related to this pull request.  But I will
-take a deeper look at the problem.
+In tests/shell/record_offcpu.sh line 13:
+  trap - exit term int
+         ^--^ SC3049 (warning): In POSIX sh, using lower/mixed case for signal names is undefined.
+              ^--^ SC3049 (warning): In POSIX sh, using lower/mixed case for signal names is undefined.
+                   ^-^ SC3049 (warning): In POSIX sh, using lower/mixed case for signal names is undefined.
 
-Thanks,
-Namhyung
+In tests/shell/record_offcpu.sh line 20:
+trap trap_cleanup exit term int
+                  ^--^ SC3049 (warning): In POSIX sh, using lower/mixed case for signal names is undefined.
+                       ^--^ SC3049 (warning): In POSIX sh, using lower/mixed case for signal names is undefined.
+                            ^-^ SC3049 (warning): In POSIX sh, using lower/mixed case for signal names is undefined.
+
+In tests/shell/record_offcpu.sh line 25:
+  if [ `id -u` != 0 ]
+       ^-----^ SC2046 (warning): Quote this to prevent word splitting.
+
+Fixed the warnings by:
+- Capitalize signals(INT, TERM, EXIT) to avoid mixed/lower case naming of
+signals.
+- Adding quotes to avoid word splitting.
+
+Result from shellcheck after patch changes:
+     $ shellcheck -S warning record_offcpu.sh
+     $
+
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+---
+ tools/perf/tests/shell/record_offcpu.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/tests/shell/record_offcpu.sh b/tools/perf/tests/shell/record_offcpu.sh
+index f062ae9a95e1..a0d14cd0aa79 100755
+--- a/tools/perf/tests/shell/record_offcpu.sh
++++ b/tools/perf/tests/shell/record_offcpu.sh
+@@ -10,19 +10,19 @@ perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+ cleanup() {
+   rm -f ${perfdata}
+   rm -f ${perfdata}.old
+-  trap - exit term int
++  trap - EXIT TERM INT
+ }
+ 
+ trap_cleanup() {
+   cleanup
+   exit 1
+ }
+-trap trap_cleanup exit term int
++trap trap_cleanup EXIT TERM INT
+ 
+ test_offcpu_priv() {
+   echo "Checking off-cpu privilege"
+ 
+-  if [ `id -u` != 0 ]
++  if [ "$(id -u)" != 0 ]
+   then
+     echo "off-cpu test [Skipped permission]"
+     err=2
+-- 
+2.39.1
+
