@@ -2,132 +2,123 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B81D0EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Sun,  9 Jul 2023 18:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F14C0015E
+	for <linux-perf-users@archiver.kernel.org>; Sun,  9 Jul 2023 18:28:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231485AbjGIS2h (ORCPT
+        id S231293AbjGIS2k (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 9 Jul 2023 14:28:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51216 "EHLO
+        Sun, 9 Jul 2023 14:28:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231634AbjGIS2g (ORCPT
+        with ESMTP id S231634AbjGIS2j (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 9 Jul 2023 14:28:36 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E173A11B
-        for <linux-perf-users@vger.kernel.org>; Sun,  9 Jul 2023 11:28:35 -0700 (PDT)
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 369IHKwg022447;
-        Sun, 9 Jul 2023 18:28:31 GMT
+        Sun, 9 Jul 2023 14:28:39 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A69C120
+        for <linux-perf-users@vger.kernel.org>; Sun,  9 Jul 2023 11:28:38 -0700 (PDT)
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 369IMvUY007703;
+        Sun, 9 Jul 2023 18:28:33 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=lJ66rmjHGos4P9V9EGkij7+CjZ7dC9WrfyTMTrow5Jg=;
- b=PcWCtxig4j17AYP3IezAAThj8eidMdkTaGcG/72i2ObiBkvJjNCrdJBegeQ/HmDP0ago
- CVRV31nzL36AJVl6luXOAefk9TghkCcH+QzjEFWe+529Tz6fHFZD8G/+/caEYmRPR70p
- 8LOPx17UFnYtIPdkLZQW3KBQuXkOJ6NmtQxtGjhbWtmLPQCg4AJuFllGVKlKnLka7Mnh
- Z8kf6Y+zdtWHM8DYb5yPs3/tAyhNRLSWn8ONK/5cCaw3INSdIxICeC5uoE01jz0Xicu2
- l/5+toxwzgh1vt+gR8ruMnYRzIUWNQ0QgvJLoDRL4y4JTd1w6rAsLQBsBmBOtzB4vGtI Dw== 
+ bh=UqAO3PubnZ0hxIJg58NVAAxh7lsx/3vQlxBnmE6xzSE=;
+ b=kC86HY6EEPkD1+Qr2UUcIZ0D7452pO7TzIaoUi55blI6198Al/xRyVENkPdPpdmtiNDY
+ WtY36rHuJrVpWI6fFs3HcZfcdWASV+DLnRsR15KSss6m5FcMx93XlM7jJhYAYnbN/gT1
+ BNMYyEQEahDpPCKWf/jHoZh3LYXFiNR+Mjg0D8bmBReO4f4t7XE6Oa0p5Tq/VZIMpuTG
+ 3NLqeMiuaMv1duRGThSHOOyEJfc+gUGIB1xjF5qrwRzJtmDGQtwTUNgL5LIgHvtc3I99
+ dxrNF5h6yUxMWLDK82gONF/CHsomhQbU3TYsfq2s19/16zakEMLJYdHkSEgDRHyjLbO8 wg== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rr21hr3ur-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rr24181f0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 09 Jul 2023 18:28:31 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 369ILA0A031289;
-        Sun, 9 Jul 2023 18:28:30 GMT
+        Sun, 09 Jul 2023 18:28:33 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 369IPWSX013707;
+        Sun, 9 Jul 2023 18:28:32 GMT
 Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rr21hr3uk-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rr24181er-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 09 Jul 2023 18:28:32 +0000
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 369ISUV8011580;
+        Sun, 9 Jul 2023 18:28:30 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+        by ppma01fra.de.ibm.com (PPS) with ESMTPS id 3rpye50mpn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Sun, 09 Jul 2023 18:28:30 +0000
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3699liq1029822;
-        Sun, 9 Jul 2023 18:28:28 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-        by ppma01fra.de.ibm.com (PPS) with ESMTPS id 3rpye50mpm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 09 Jul 2023 18:28:28 +0000
 Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 369ISOhK19727098
+        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 369ISR0I19726934
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 9 Jul 2023 18:28:25 GMT
+        Sun, 9 Jul 2023 18:28:27 GMT
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DB7562004E;
-        Sun,  9 Jul 2023 18:28:24 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 7274A2004B;
+        Sun,  9 Jul 2023 18:28:27 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 96B2420040;
-        Sun,  9 Jul 2023 18:28:22 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 41F5920043;
+        Sun,  9 Jul 2023 18:28:25 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.43.24.202])
         by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Sun,  9 Jul 2023 18:28:22 +0000 (GMT)
+        Sun,  9 Jul 2023 18:28:25 +0000 (GMT)
 From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
         namhyung@kernel.org
 Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
         kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
-Subject: [PATCH V2 07/26] tools/perf/tests: Fix unused variable references in stat+csv_summary.sh testcase
-Date:   Sun,  9 Jul 2023 23:57:41 +0530
-Message-Id: <20230709182800.53002-8-atrajeev@linux.vnet.ibm.com>
+Subject: [PATCH V2 08/26] tools/perf/tests: fix shellcheck warning for test_perf_data_converter_json.sh testcase
+Date:   Sun,  9 Jul 2023 23:57:42 +0530
+Message-Id: <20230709182800.53002-9-atrajeev@linux.vnet.ibm.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20230709182800.53002-1-atrajeev@linux.vnet.ibm.com>
 References: <20230709182800.53002-1-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: muv18sbeanIu--I3wJEuPnS6mz2nNaXc
-X-Proofpoint-GUID: mm3fDUoEEtjnkdgA5kLcSvr2t_ruh6yB
+X-Proofpoint-GUID: PKH6pAqwRWki9Yya__srZdRqMwo_OGa0
+X-Proofpoint-ORIG-GUID: H2z5_WL9NreuUJZ-dUSj-yBrTV15oymq
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
  definitions=2023-07-09_12,2023-07-06_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
- mlxscore=0 malwarescore=0 bulkscore=0 phishscore=0 impostorscore=0
- spamscore=0 lowpriorityscore=0 adultscore=0 priorityscore=1501
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=989 spamscore=0 bulkscore=0
+ impostorscore=0 phishscore=0 malwarescore=0 lowpriorityscore=0 mlxscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2305260000 definitions=main-2307090169
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Running shellcheck on stat+csv_summary.sh throws below warnings:
+Running shellcheck on test_perf_data_converter_json.sh throws
+below warning:
 
-   In tests/shell/stat+csv_summary.sh line 26:
-   while read num event run pct
-              ^-^ SC2034 (warning): num appears unused. Verify use (or export if used externally).
-                  ^---^ SC2034 (warning): event appears unused. Verify use (or export if used externally).
-                        ^-^ SC2034 (warning): run appears unused. Verify use (or export if used externally).
-                            ^-^ SC2034 (warning): pct appears unused. Verify use (or export if used externally).
+   In tests/shell/test_perf_data_converter_json.sh line 42:
+   	if [ $(cat "${result}" | wc -l) -gt "0" ] ; then
+                ^------------------------^ SC2046 (warning): Quote this to prevent word splitting.
 
-These variables are intentioanlly unused since they
-are needed to parse through the output. Use "_" as a
-prefix for these throw away variables.
+Fixed the warning by adding quotes to avoid word splitting.
+
+ShellCheck result with patch:
+    # shellcheck -S warning test_perf_data_converter_json.sh
+    #
 
 Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 ---
- tools/perf/tests/shell/stat+csv_summary.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/tests/shell/test_perf_data_converter_json.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/stat+csv_summary.sh b/tools/perf/tests/shell/stat+csv_summary.sh
-index 5571ff75eb42..8bae9c8a835e 100755
---- a/tools/perf/tests/shell/stat+csv_summary.sh
-+++ b/tools/perf/tests/shell/stat+csv_summary.sh
-@@ -10,7 +10,7 @@ set -e
- #
- perf stat -e cycles  -x' ' -I1000 --interval-count 1 --summary 2>&1 | \
- grep -e summary | \
--while read summary num event run pct
-+while read summary _num _event _run _pct
- do
- 	if [ $summary != "summary" ]; then
- 		exit 1
-@@ -23,7 +23,7 @@ done
- #
- perf stat -e cycles  -x' ' -I1000 --interval-count 1 --summary --no-csv-summary 2>&1 | \
- grep -e summary | \
--while read num event run pct
-+while read _num _event _run _pct
- do
- 	exit 1
- done
+diff --git a/tools/perf/tests/shell/test_perf_data_converter_json.sh b/tools/perf/tests/shell/test_perf_data_converter_json.sh
+index 72ac6c83231c..6ded58f98f55 100755
+--- a/tools/perf/tests/shell/test_perf_data_converter_json.sh
++++ b/tools/perf/tests/shell/test_perf_data_converter_json.sh
+@@ -39,7 +39,7 @@ test_json_converter_command()
+ 	echo "Testing Perf Data Convertion Command to JSON"
+ 	perf record -o "$perfdata" -F 99 -g -- perf test -w noploop > /dev/null 2>&1
+ 	perf data convert --to-json "$result" --force -i "$perfdata" >/dev/null 2>&1
+-	if [ $(cat "${result}" | wc -l) -gt "0" ] ; then
++	if [ "$(cat ${result} | wc -l)" -gt "0" ] ; then
+ 		echo "Perf Data Converter Command to JSON [SUCCESS]"
+ 	else
+ 		echo "Perf Data Converter Command to JSON [FAILED]"
 -- 
 2.39.1
 
