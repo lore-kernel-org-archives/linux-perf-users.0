@@ -2,155 +2,145 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6043C001DE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 332B9EB64DD
 	for <linux-perf-users@archiver.kernel.org>; Sun,  9 Jul 2023 18:28:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229535AbjGIS2c (ORCPT
+        id S230272AbjGIS2b (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 9 Jul 2023 14:28:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51110 "EHLO
+        Sun, 9 Jul 2023 14:28:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231332AbjGIS2a (ORCPT
+        with ESMTP id S229535AbjGIS23 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 9 Jul 2023 14:28:30 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8968FF9
-        for <linux-perf-users@vger.kernel.org>; Sun,  9 Jul 2023 11:28:29 -0700 (PDT)
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 369IM9G8030847;
-        Sun, 9 Jul 2023 18:28:23 GMT
+        Sun, 9 Jul 2023 14:28:29 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEB93115
+        for <linux-perf-users@vger.kernel.org>; Sun,  9 Jul 2023 11:28:27 -0700 (PDT)
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 369IRw8j021930;
+        Sun, 9 Jul 2023 18:28:16 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=g4a83SV60DqfeeQBzooYV0XTJN3xFqELgVabFoYRJqk=;
- b=hT7KIEmDLOo8uxoRmM4P+kBteFQ3VEamjsBo48rd2cdyWIfeeAbwb6TjgZmTl5dHI3wv
- U7hwCqZWtk6sIbPpTch44kv6Dyr0yACg6KPMcxVzu/lwpCdrEPiTXyGp6GMbTlVQ4JQ5
- fIGLvUKbhN8RL4rZoPrv/YXtgu3Li0+c7GLw/gq02b6inEcv+zE5ct630hBdY9AJFdHI
- MwQA1qm3fcKc06eJWZLN/MuZBSlU9OGY3DNt6IKvdboCxBqG8xjflvqutNOmY7vNkW3r
- M98b22naJPOgNFSOuvcqtijQ/e9loOtoMJPumS9k6ehbSytlrYb395L0Dkd+byZm7UP3 AA== 
+ bh=Eeso8zXQxUlmS2hjhTwKui190YsNrM2yFDBuV93nWV8=;
+ b=JRqd7zrmqzaPPnEwJhjRfDj8Ozg42vwGblPVGi4d61tEFnnreQtllqeRepL+I1iCH4VU
+ jaP7/HqLAaI8Zq1Qn3N1KOfLRQvijleC8y7c4QijO/v0zw4HSqjIkcyi+qeVsaFfccpc
+ eW7lLM8sF8inPUssGTrk+bTH/DlVPFmls9EAJI2wx+h5doppJL1Fgk8VELSx7fhnPgrp
+ P/bRg6bo+GQ2/xqyOIzRQCNEGFzfJQBmPw43X2UMTI1fu9RUtc+DST/oltjbOOD/X81a
+ wo58JKO9PBiRL+AhvnGW3+mCq6b/WVbvarY/pMXVvXJTJzZ/ovmBDcaggGy9yhzQvRTK IQ== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rr24381ga-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rr26rr03y-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 09 Jul 2023 18:28:23 +0000
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 369ISMrD011307;
-        Sun, 9 Jul 2023 18:28:22 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rr24381g7-1
+        Sun, 09 Jul 2023 18:28:16 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 369ISFHD023308;
+        Sun, 9 Jul 2023 18:28:15 GMT
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rr26rr03j-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 09 Jul 2023 18:28:22 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3699nUq3022939;
-        Sun, 9 Jul 2023 18:28:20 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3rpy2e0v9e-1
+        Sun, 09 Jul 2023 18:28:15 +0000
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 369ClHfR005633;
+        Sun, 9 Jul 2023 18:28:13 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+        by ppma01fra.de.ibm.com (PPS) with ESMTPS id 3rpye50mpg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 09 Jul 2023 18:28:20 +0000
+        Sun, 09 Jul 2023 18:28:12 +0000
 Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 369ISHL017957558
+        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 369IS9rb1638986
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 9 Jul 2023 18:28:17 GMT
+        Sun, 9 Jul 2023 18:28:09 GMT
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 395D82004F;
-        Sun,  9 Jul 2023 18:28:17 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 75E082004B;
+        Sun,  9 Jul 2023 18:28:09 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F3AA920043;
-        Sun,  9 Jul 2023 18:28:14 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 2987120043;
+        Sun,  9 Jul 2023 18:28:07 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.43.24.202])
         by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Sun,  9 Jul 2023 18:28:14 +0000 (GMT)
+        Sun,  9 Jul 2023 18:28:06 +0000 (GMT)
 From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
         namhyung@kernel.org
 Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
-Subject: [PATCH V2 04/26] tools/perf/tests: Fix shellcheck issue for lock_contention.sh testcase
-Date:   Sun,  9 Jul 2023 23:57:38 +0530
-Message-Id: <20230709182800.53002-5-atrajeev@linux.vnet.ibm.com>
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+        Akanksha J N <akanksha@linux.ibm.com>
+Subject: [PATCH V2 01/26] tools/perf/tests: Fix shellcheck warnings for trace+probe_vfs_getname.sh
+Date:   Sun,  9 Jul 2023 23:57:35 +0530
+Message-Id: <20230709182800.53002-2-atrajeev@linux.vnet.ibm.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20230709182800.53002-1-atrajeev@linux.vnet.ibm.com>
 References: <20230709182800.53002-1-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Ss3kuSKg1_vBnDXQb-GXe8WeqOqW3cs9
-X-Proofpoint-GUID: 5r86e7Sh3GRrQLvnnFw8ANzzeTRaujkN
+X-Proofpoint-GUID: OW8jqQO0c2l69jex_3lwNYUXmcaLgpt7
+X-Proofpoint-ORIG-GUID: pSm_rSi5Upm69xrR3UUdc0UZDYN4OFJg
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
  definitions=2023-07-09_12,2023-07-06_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 suspectscore=0 spamscore=0 clxscore=1015
- priorityscore=1501 mlxlogscore=999 malwarescore=0 impostorscore=0
- mlxscore=0 adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 spamscore=0 phishscore=0 mlxlogscore=974
+ impostorscore=0 suspectscore=0 malwarescore=0 adultscore=0 bulkscore=0
+ mlxscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.12.0-2305260000 definitions=main-2307090169
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Kajol Jain <kjain@linux.ibm.com>
+From: Akanksha J N <akanksha@linux.ibm.com>
 
-Running shellcheck on lock_contention.sh generates below warning:
+Running shellcheck -S on probe_vfs_getname.sh, throws below warnings:
 
-In tests/shell/lock_contention.sh line 24:
-	if [ `id -u` != 0 ]; then
-             ^-----^ SC2046 (warning): Quote this to prevent word splitting.
+Before fix:
 
-In tests/shell/lock_contention.sh line 160:
-	local type=$(head -1 "${result}" | awk '{ print $8 }' | sed -e 's/:.*//')
-        ^--------^ SC3043 (warning): In POSIX sh, 'local' is undefined.
-              ^--^ SC2155 (warning): Declare and assign separately to avoid masking return values.
-                   ^-- SC2046 (warning): Quote this to prevent word splitting.
+$ shellcheck -S warning trace+probe_vfs_getname.sh
 
-Fixed above warnings by:
-- Adding quotes to avoid word splitting.
-- Fixing shellcheck warnings for local usage, by prefixing
-  function name to the variable.
+	In trace+probe_vfs_getname.sh line 13:
+	. $(dirname $0)/lib/probe.sh
+	  ^-----------^ SC2046 (warning): Quote this to prevent word splitting.
+
+	In trace+probe_vfs_getname.sh line 18:
+	. $(dirname $0)/lib/probe_vfs_getname.sh
+	  ^-----------^ SC2046 (warning): Quote this to prevent word splitting.
+
+	In trace+probe_vfs_getname.sh line 21:
+		evts=$(echo $(perf list syscalls:sys_enter_open* 2>/dev/null | grep -E 'open(at)? ' | sed -r 's/.*sys_enter_([a-z]+) +\[.*$/\1/') | sed 's/ /,/')
+		            ^-- SC2046 (warning): Quote this to prevent word splitting.
+
+Fix the shellcheck warnings by adding quotes to prevent word splitting.
 
 Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+Signed-off-by: Akanksha J N <akanksha@linux.ibm.com>
 ---
- tools/perf/tests/shell/lock_contention.sh | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ tools/perf/tests/shell/trace+probe_vfs_getname.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
-index f2cc187b6186..51421f02fb02 100755
---- a/tools/perf/tests/shell/lock_contention.sh
-+++ b/tools/perf/tests/shell/lock_contention.sh
-@@ -21,7 +21,7 @@ trap_cleanup() {
- trap trap_cleanup EXIT TERM INT
+diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+index 0a4bac3dd77e..db2ff141f703 100755
+--- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+@@ -10,15 +10,15 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Arnaldo Carvalho de Melo <acme@kernel.org>, 2017
  
- check() {
--	if [ `id -u` != 0 ]; then
-+	if [ "$(id -u)" != 0 ]; then
- 		echo "[Skip] No root permission"
- 		err=2
- 		exit
-@@ -157,10 +157,10 @@ test_lock_filter()
- 	perf lock contention -i ${perfdata} -L tasklist_lock -q 2> ${result}
+-. $(dirname $0)/lib/probe.sh
++. "$(dirname $0)"/lib/probe.sh
  
- 	# find out the type of tasklist_lock
--	local type=$(head -1 "${result}" | awk '{ print $8 }' | sed -e 's/:.*//')
-+	test_lock_filter_type=$(head -1 "${result}" | awk '{ print $8 }' | sed -e 's/:.*//')
+ skip_if_no_perf_probe || exit 2
+ skip_if_no_perf_trace || exit 2
  
--	if [ "$(grep -c -v "${type}" "${result}")" != "0" ]; then
--		echo "[Fail] Recorded result should not have non-${type} locks:" "$(cat "${result}")"
-+	if [ "$(grep -c -v "${test_lock_filter_type}" "${result}")" != "0" ]; then
-+		echo "[Fail] Recorded result should not have non-${test_lock_filter_type} locks:" "$(cat "${result}")"
- 		err=1
- 		exit
- 	fi
-@@ -170,8 +170,8 @@ test_lock_filter()
- 	fi
+-. $(dirname $0)/lib/probe_vfs_getname.sh
++. "$(dirname $0)"/lib/probe_vfs_getname.sh
  
- 	perf lock con -a -b -L tasklist_lock -q -- perf bench sched messaging > /dev/null 2> ${result}
--	if [ "$(grep -c -v "${type}" "${result}")" != "0" ]; then
--		echo "[Fail] BPF result should not have non-${type} locks:" "$(cat "${result}")"
-+	if [ "$(grep -c -v "${test_lock_filter_type}" "${result}")" != "0" ]; then
-+		echo "[Fail] BPF result should not have non-${test_lock_filter_type} locks:" "$(cat "${result}")"
- 		err=1
- 		exit
- 	fi
+ trace_open_vfs_getname() {
+-	evts=$(echo $(perf list syscalls:sys_enter_open* 2>/dev/null | grep -E 'open(at)? ' | sed -r 's/.*sys_enter_([a-z]+) +\[.*$/\1/') | sed 's/ /,/')
++	evts="$(echo "$(perf list syscalls:sys_enter_open* 2>/dev/null | grep -E 'open(at)? ' | sed -r 's/.*sys_enter_([a-z]+) +\[.*$/\1/')" | sed ':a;N;s:\n:,:g')"
+ 	perf trace -e $evts touch $file 2>&1 | \
+ 	grep -E " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch\/[0-9]+ open(at)?\((dfd: +CWD, +)?filename: +${file}, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
+ }
 -- 
 2.39.1
 
