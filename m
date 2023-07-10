@@ -2,105 +2,107 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01235EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jul 2023 12:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7639EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jul 2023 12:32:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231521AbjGJM01 (ORCPT
+        id S231663AbjGJMcl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Jul 2023 08:26:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33946 "EHLO
+        Mon, 10 Jul 2023 08:32:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229848AbjGJM0Z (ORCPT
+        with ESMTP id S231651AbjGJMcl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Jul 2023 08:26:25 -0400
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81BF8B1;
-        Mon, 10 Jul 2023 05:26:22 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0Vn44hfE_1688991975;
-Received: from 30.240.113.134(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vn44hfE_1688991975)
-          by smtp.aliyun-inc.com;
-          Mon, 10 Jul 2023 20:26:17 +0800
-Message-ID: <40c4b292-e396-3a1b-f26f-ebbea93c02a8@linux.alibaba.com>
-Date:   Mon, 10 Jul 2023 20:26:14 +0800
+        Mon, 10 Jul 2023 08:32:41 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15949DD;
+        Mon, 10 Jul 2023 05:32:39 -0700 (PDT)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1qIq45-0006AD-MA; Mon, 10 Jul 2023 14:32:29 +0200
+Message-ID: <1c85c4d6-7097-bc0a-d0ca-ebe234d63ece@leemhuis.info>
+Date:   Mon, 10 Jul 2023 14:32:28 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.12.0
-Subject: Re: [Patch v2] perf/core: Bail out early if the request AUX area is
- out of bound
-Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     alexander.shishkin@linux.intel.com, james.clark@arm.com,
-        leo.yan@linaro.org, mingo@redhat.com,
-        baolin.wang@linux.alibaba.com, acme@kernel.org,
-        mark.rutland@arm.com, jolsa@kernel.org, namhyung@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-References: <20230613123211.58393-1-xueshuai@linux.alibaba.com>
- <20230710120026.GA3034907@hirez.programming.kicks-ass.net>
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20230710120026.GA3034907@hirez.programming.kicks-ass.net>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v3 0/2] perf probe: fix regression introduced by switch to
+ die_get_decl_file
+Content-Language: en-US, de-DE
+To:     =?UTF-8?Q?Georg_M=c3=bcller?= <georgmueller@gmx.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     regressions@lists.linux.dev,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230628084551.1860532-3-georgmueller@gmx.net>
+From:   "Linux regression tracking (Thorsten Leemhuis)" 
+        <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20230628084551.1860532-3-georgmueller@gmx.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688992359;2708e7eb;
+X-HE-SMSGID: 1qIq45-0006AD-MA
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
+
+Masami, Arnaldo, what's up here? Georg (who is not a regular
+contributor) afaics found a regression in a commit you
+authored/committed and even provided a patch-set to fix it (the first
+one nearly four weeks ago, e.g. before the merge window started), but
+hasn't received much support from your side to get this in. Could you
+please look into this to get this cleared up? Or am I missing something
+and progress to fix this has been made?
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
 
-On 2023/7/10 20:00, Peter Zijlstra wrote:
-> On Tue, Jun 13, 2023 at 08:32:11PM +0800, Shuai Xue wrote:
+On 28.06.23 10:45, Georg Müller wrote:
+> When switching from dwarf_decl_file() to die_get_decl_file(), a regression
+> was introduced when having a binary where the DWARF info is split to
+> multiple CUs. It is not possible to add probes to certain functions.
 > 
->>  kernel/events/ring_buffer.c              | 13 +++++++++++++
->>  tools/perf/Documentation/perf-record.txt |  3 ++-
->>  2 files changed, 15 insertions(+), 1 deletion(-)
->>
->> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
->> index a0433f37b024..e514aaba9d42 100644
->> --- a/kernel/events/ring_buffer.c
->> +++ b/kernel/events/ring_buffer.c
->> @@ -673,6 +673,7 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
->>  	bool overwrite = !(flags & RING_BUFFER_WRITABLE);
->>  	int node = (event->cpu == -1) ? -1 : cpu_to_node(event->cpu);
->>  	int ret = -ENOMEM, max_order;
->> +	size_t bytes;
->>  
->>  	if (!has_aux(event))
->>  		return -EOPNOTSUPP;
->> @@ -699,6 +700,18 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
->>  		watermark = 0;
->>  	}
->>  
->> +	/*
->> +	 * 'rb->aux_pages' allocated by kcalloc() is a pointer array which is
->> +	 * used to maintains AUX trace pages. The allocated page for this array
->> +	 * is physically contiguous (and virtually contiguous) with an order of
->> +	 * 0..MAX_ORDER. If the size of pointer array crosses the limitation set
->> +	 * by MAX_ORDER, it reveals a WARNING.
->> +	 *
->> +	 * So bail out early if the request AUX area is out of bound.
->> +	 */
->> +	if (check_mul_overflow(nr_pages, sizeof(void *), &bytes) ||
->> +	    get_order(bytes) > MAX_ORDER)
->> +		return -EINVAL;
+> These patches introduce a testcase which shows the current regression
+> and a fix for the issue
 > 
-> This is all quite horrific :/ What's wrong with something simple:
+> Signed-off-by: Georg Müller <georgmueller@gmx.net>
+> Link: https://lore.kernel.org/r/5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net/
 > 
-> 	/* Can't allocate more than MAX_ORDER  */
-> 	if (get_order((unsigned long)nr_pages * sizeof(void*)) > MAX_ORDER)
-> 		return -EINVAL;
+> ---
+> Changes in v2:
+>  - Add testcase
 > 
-> If you're on 32bit then nr_pages should never be big enough to overflow,
-> fundamentally you'll only have 32-PAGE_SHIFT bits in nr_pages.
-
-Well, you are right. Thank you for pointing it out.
-I will send a new version with your simplified code :)
-
-Best Regards,
-Shuai
-
+> Changes in v3:
+>  - start new thread
+>  - add stable to cc
+> 
+> Georg Müller (2):
+>   perf probe: add test for regression introduced by switch to
+>     die_get_decl_file
+>   perf probe: read DWARF files from the correct CU
+> 
+>  .../shell/test_uprobe_from_different_cu.sh    | 77 +++++++++++++++++++
+>  tools/perf/util/dwarf-aux.c                   |  4 +-
+>  2 files changed, 80 insertions(+), 1 deletion(-)
+>  create mode 100755 tools/perf/tests/shell/test_uprobe_from_different_cu.sh
+> 
+> --
+> 2.41.0
 > 
 > 
->>  	rb->aux_pages = kcalloc_node(nr_pages, sizeof(void *), GFP_KERNEL,
->>  				     node);
 > 
