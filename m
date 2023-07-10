@@ -2,141 +2,139 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 056D4EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jul 2023 14:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7EBEB64D9
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jul 2023 16:04:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230228AbjGJO24 (ORCPT
+        id S230364AbjGJQEy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Jul 2023 10:28:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46614 "EHLO
+        Mon, 10 Jul 2023 12:04:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229683AbjGJO2z (ORCPT
+        with ESMTP id S229517AbjGJQEx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Jul 2023 10:28:55 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 195B38E
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Jul 2023 07:28:54 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E76042B;
-        Mon, 10 Jul 2023 07:29:35 -0700 (PDT)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D5B5D3F67D;
-        Mon, 10 Jul 2023 07:28:52 -0700 (PDT)
-Message-ID: <555baa74-5c43-fe75-bad6-58b8871d1f5f@arm.com>
-Date:   Mon, 10 Jul 2023 15:28:43 +0100
+        Mon, 10 Jul 2023 12:04:53 -0400
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56153B1
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Jul 2023 09:04:52 -0700 (PDT)
+Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-401d1d967beso401861cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Jul 2023 09:04:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1689005091; x=1691597091;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lQ0ChdJZ9bvsDMGFfFNVKYinco8bgguH5l8lIeF9Wb4=;
+        b=aKFNT3c6Sym9xk3ozE3Ix8+OiI1n/FwQMdOYbq9gHIld7LwkpBx8vsciYETfb+k5IT
+         /G7R2iz8zjG3vsG2QfbIi+7pnRW5Qp+AWsiMFwl3JE64NRGBJnXJ/hqJ/OIN2IXxwc4x
+         06IwqdWorovjUkkOKB8CzCCHGm8ANj+UpumRDVUHWX86NgXj0QVJbM3rAI1iTo06wX2x
+         kLjuaeouWkbApL3PRQySkOAV5JhSui5C4yoxFbJkl9+VhehYGpgvz0Cj37SIF0vl2hT9
+         rrWu4AxRkVdT7UACAMQXzKZUQ4AN7KX0/MgGPeXLguxsfi5MEAkfeVyNRoQPyI1S/Ypw
+         QBRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689005091; x=1691597091;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lQ0ChdJZ9bvsDMGFfFNVKYinco8bgguH5l8lIeF9Wb4=;
+        b=XidaL3nuXvmQUoh+GjFHEzKdRP6TNPv3ycUO85vk86HN44UMlgbrzP2gx50Azxtpz5
+         XfWjdR+ZtSk8w/JARxvB/RN85kvTTL3Xv8MH4GDCO3Puol3EVCHvU4MP51xQU0x2R8/J
+         8TEfXR2JC9iNJogRKSID7wIbAyhiNN40A67GYthznkx414bF+8k1fDeqbLhoZ43GzDQ8
+         CiiLtjgvmESe/ih9FwJ9Jjtjg8PdcBB7yY5Hdv5npvsYr3hWP4joenPWWMsidpjCSLXb
+         c18Ru3hTzMX9Ur1N8LcQWODFnmYaFYD/RHjn8wgYJdW/KRNgD9xx3Kq+ceS+1Un2jN57
+         AdDg==
+X-Gm-Message-State: ABy/qLYG2hzg2eA5D14g4ljZP6L0T70MbQNVUOEwDr8vpEZPvGlkCH37
+        AAjswt32uH8NNawfFYq6XfCrkqArozzKsd2Pz0QQ5g==
+X-Google-Smtp-Source: APBJJlGG3emPEW9lCBmbjIZvOhY9Y2wKHO9AVCRQTb5IQmhuex38dhkY6Tx06HnSWe1fbxnzXvXNKEm2fhg/kBCXhQI=
+X-Received: by 2002:a05:622a:18a9:b0:3fa:3c8f:3435 with SMTP id
+ v41-20020a05622a18a900b003fa3c8f3435mr238467qtc.27.1689005091243; Mon, 10 Jul
+ 2023 09:04:51 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v2 4/5] perf vendor events arm64: Update N2-r0p3 and V2
- metrics and events using Arm telemetry repo
-Content-Language: en-US
-To:     renyu.zj@linux.alibaba.com
-Cc:     namhyung@kernel.org, acme@kernel.org,
-        John Garry <john.g.garry@oracle.com>,
-        linux-perf-users@vger.kernel.org, irogers@google.com
-References: <20230710141903.1595312-1-james.clark@arm.com>
- <20230710141903.1595312-5-james.clark@arm.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20230710141903.1595312-5-james.clark@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20230710122138.1450930-1-james.clark@arm.com> <20230710122138.1450930-2-james.clark@arm.com>
+In-Reply-To: <20230710122138.1450930-2-james.clark@arm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 10 Jul 2023 09:04:40 -0700
+Message-ID: <CAP-5=fVoFKTUOLL=Bo6m=3hS61mWV_PJ9dvFCGTprbH75BJh4w@mail.gmail.com>
+Subject: Re: [PATCH 1/4] arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE capability
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Yabin Cui <yabinc@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 10/07/2023 15:19, James Clark wrote:
-> The new metrics contain a fix for N2 r0p3 where CPU_CYCLES should not be
-> subtracted from stalls for topdown metrics anymore. The current metrics
-> assume that the fix should be applied anywhere where slots != 5, but
-> this is only the case for V2 and not N2 r0p3.
-> 
-> Split the metrics into a new version for N2-r0p3 and V2 which still
-> share the same metrics. Apart from some slight naming and grouping
-> differences the new metrics are functionally the same as the existing
-> ones. Any missing metrics were manually appended to the end of the auto
-> generated file.
-> 
-> For the events, the new data includes descriptions that may have product
-> specific details and new groupings that will be consistent with other
-> products.
-> 
-> After generating the metrics from the telemetry repo [1], the following
-> manual steps were performed:
-> 
->  * Change the hard coded slots in neoverse-n2r0p3-v2 to #slots so that
->    it will work on both N2 and V2.
-> 
->  * Append some metrics from the old N2/V2 data that aren't present in
->    the telemetry data. These will possibly be added to the
->    telemetry-solution repo at a later time:
-> 
->     l3d_cache_mpki, l3d_cache_miss_rate, branch_pki, ipc_rate, spec_ipc,
->     retired_rate, wasted_rate, load_spec_rate, store_spec_rate,
->     advanced_simd_spec_rate, float_point_spec_rate,
->     branch_immed_spec_rate, branch_return_spec_rate,
->     branch_indirect_spec_rate
-> 
-> [1]: https://gitlab.arm.com/telemetry-solution/telemetry-solution/-/blob/main/data/pmu/cpu/neoverse/neoverse-n2.json
-> 
+On Mon, Jul 10, 2023 at 5:22=E2=80=AFAM James Clark <james.clark@arm.com> w=
+rote:
+>
+> This capability gives us the ability to open PERF_TYPE_HARDWARE and
+> PERF_TYPE_HW_CACHE events on a specific PMU for free. All the
+> implementation is contained in the Perf core and tool code so no change
+> to the Arm PMU driver is needed.
+>
+> The following basic use case now results in Perf opening the event on
+> all PMUs rather than picking only one in an unpredictable way:
+>
+>   $ perf stat -e cycles -- taskset --cpu-list 0,1 stress -c 2
+>
+>    Performance counter stats for 'taskset --cpu-list 0,1 stress -c 2':
+>
+>          963279620      armv8_cortex_a57/cycles/                (99.19%)
+>          752745657      armv8_cortex_a53/cycles/                (94.80%)
+>
+> Fixes: 55bcf6ef314a ("perf: Extend PERF_TYPE_HARDWARE and PERF_TYPE_HW_CA=
+CHE")
+> Suggested-by: Ian Rogers <irogers@google.com>
 > Signed-off-by: James Clark <james.clark@arm.com>
+
+Acked-by: Ian Rogers <irogers@google.com>
+
+Thanks,
+Ian
+
 > ---
-
-[...]
-
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/metrics.json
-> new file mode 100644
-> index 000000000000..b01cc2120175
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/metrics.json
-> @@ -0,0 +1,331 @@
-> +[
-> +    {
-> +        "ArchStdEvent": "backend_bound",
-> +        "MetricExpr": "(100 * ((STALL_SLOT_BACKEND / (CPU_CYCLES * #slots)) - ((BR_MIS_PRED * 3) / CPU_CYCLES)))"
-> +    },
-
-Hi Jing,
-
-I'm not sure if you remember, but a long time ago I said that I was
-going to update these N2 and V2 metrics that you upstreamed.
-
-Now that these are coming from the Arm telemetry repo they have an
-adjustment for subtracting branch misses that we think is more accurate
-because of an issue with the STALL_SLOT_BACKEND counter. I've left the
-sbsa.json metrics without the adjustments as it shouldn't normally be
-needed.
-
-I also had to drop the "if (#slots - 5) else" check because it won't
-apply to N2-r0p3, but I split the metrics into two instead to fix that
-issue.
-
-The rest is pretty much the same apart from some slight grouping/naming/
-scaling differences.
-
-Let me know what you think.
-
-Thanks
-James
-
-> +    {
-> +        "MetricName": "backend_stalled_cycles",
-> +        "MetricExpr": "((STALL_BACKEND / CPU_CYCLES) * 100)",
-> +        "BriefDescription": "This metric is the percentage of cycles that were stalled due to resource constraints in the backend unit of the processor.",
-> +        "MetricGroup": "Cycle_Accounting",
-> +        "ScaleUnit": "1percent of cycles"
-> +    },
-> +    {
-> +        "ArchStdEvent": "bad_speculation",
-> +        "MetricExpr": "(100 * (((1 - (OP_RETIRED / OP_SPEC)) * (1 - (STALL_SLOT / (CPU_CYCLES * #slots)))) + ((BR_MIS_PRED * 4) / CPU_CYCLES)))"
-> +    },
-> +    {
-> +        "MetricName": "branch_misprediction_ratio",
-> +        "MetricExpr": "(BR_MIS_PRED_RETIRED / BR_RETIRED)",
-> +        "BriefDescription": "This metric measures the ratio of branches mispredicted to the total number of branches architecturally executed. This gives an indication of the effectiveness of the branch prediction unit.",
-> +        "MetricGroup": "Miss_Ratio;Branch_Effectiveness",
-> +        "ScaleUnit": "1per branch"
-> +    },
-
-
+>  drivers/perf/arm_pmu.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+> index 277e29fbd504..d8844a9461a2 100644
+> --- a/drivers/perf/arm_pmu.c
+> +++ b/drivers/perf/arm_pmu.c
+> @@ -875,8 +875,13 @@ struct arm_pmu *armpmu_alloc(void)
+>                  * configuration (e.g. big.LITTLE). This is not an uncore=
+ PMU,
+>                  * and we have taken ctx sharing into account (e.g. with =
+our
+>                  * pmu::filter callback and pmu::event_init group validat=
+ion).
+> +                *
+> +                * PERF_PMU_CAP_EXTENDED_HW_TYPE is required to open the =
+legacy
+> +                * PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE events on a
+> +                * specific PMU.
+>                  */
+> -               .capabilities   =3D PERF_PMU_CAP_HETEROGENEOUS_CPUS | PER=
+F_PMU_CAP_EXTENDED_REGS,
+> +               .capabilities   =3D PERF_PMU_CAP_HETEROGENEOUS_CPUS | PER=
+F_PMU_CAP_EXTENDED_REGS |
+> +                                 PERF_PMU_CAP_EXTENDED_HW_TYPE,
+>         };
+>
+>         pmu->attr_groups[ARMPMU_ATTR_GROUP_COMMON] =3D
+> --
+> 2.34.1
+>
