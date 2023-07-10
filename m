@@ -2,109 +2,83 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E9FEB64D9
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jul 2023 12:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8CEEB64D9
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jul 2023 12:22:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229713AbjGJMBB (ORCPT
+        id S229758AbjGJMWA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Jul 2023 08:01:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50656 "EHLO
+        Mon, 10 Jul 2023 08:22:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229663AbjGJMBA (ORCPT
+        with ESMTP id S229517AbjGJMWA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Jul 2023 08:01:00 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63C4AD1;
-        Mon, 10 Jul 2023 05:00:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=7a3aObqALZ0RGVJNPU87pW+rmJD5s/3iTVbIQ9L7MVY=; b=jK+jMf+l74JDzsvgKRmBF4nw95
-        wxZTqNU1gg/WKprlF0LO8D2en3yOA61Kshjq/DxDa+/kqZ8nFhKca0gXFfKQ9qfbo3n54C4MiC+T8
-        T+QNDSKZM+ucpPDLOZKvE4Wlu59PAFYBtGhMoaFzuK+hRQAa5dP8UxK+rVrEbFgt+4iAYDthzC1bs
-        SogNMxPbjzWK3WpN02v+NQIvlaG+N8WLW6/HjEjuC2psnZ7/fUnr6xR8ijWA9XaGX2czu7u6g2WAD
-        Uzc/C+ixvg5d7maGag0HUi3Zjetl5ab3nfcGsNdvPTGTr7597PFKqsPoIfJuekshDJoV42NZSZz7Z
-        2pLsxtPg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qIpZ6-00EZpt-FH; Mon, 10 Jul 2023 12:00:28 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 87F0630017D;
-        Mon, 10 Jul 2023 14:00:26 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6B79B2B3B25E1; Mon, 10 Jul 2023 14:00:26 +0200 (CEST)
-Date:   Mon, 10 Jul 2023 14:00:26 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Shuai Xue <xueshuai@linux.alibaba.com>
-Cc:     alexander.shishkin@linux.intel.com, james.clark@arm.com,
-        leo.yan@linaro.org, mingo@redhat.com,
-        baolin.wang@linux.alibaba.com, acme@kernel.org,
-        mark.rutland@arm.com, jolsa@kernel.org, namhyung@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [Patch v2] perf/core: Bail out early if the request AUX area is
- out of bound
-Message-ID: <20230710120026.GA3034907@hirez.programming.kicks-ass.net>
-References: <20230613123211.58393-1-xueshuai@linux.alibaba.com>
+        Mon, 10 Jul 2023 08:22:00 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0BF95C7;
+        Mon, 10 Jul 2023 05:21:58 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E658B2B;
+        Mon, 10 Jul 2023 05:22:40 -0700 (PDT)
+Received: from e127643.arm.com (unknown [10.57.29.214])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C59153F67D;
+        Mon, 10 Jul 2023 05:21:55 -0700 (PDT)
+From:   James Clark <james.clark@arm.com>
+To:     linux-perf-users@vger.kernel.org, irogers@google.com
+Cc:     James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 0/4] arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE capability
+Date:   Mon, 10 Jul 2023 13:21:33 +0100
+Message-Id: <20230710122138.1450930-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230613123211.58393-1-xueshuai@linux.alibaba.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 13, 2023 at 08:32:11PM +0800, Shuai Xue wrote:
+This came out of the discussion here [1]. It seems like we can get some
+extra big.LITTLE stuff working pretty easily. The test issues mentioned
+in the linked thread are actually fairly unrelated and I've fixed them
+in a different set on the list.
 
->  kernel/events/ring_buffer.c              | 13 +++++++++++++
->  tools/perf/Documentation/perf-record.txt |  3 ++-
->  2 files changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-> index a0433f37b024..e514aaba9d42 100644
-> --- a/kernel/events/ring_buffer.c
-> +++ b/kernel/events/ring_buffer.c
-> @@ -673,6 +673,7 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
->  	bool overwrite = !(flags & RING_BUFFER_WRITABLE);
->  	int node = (event->cpu == -1) ? -1 : cpu_to_node(event->cpu);
->  	int ret = -ENOMEM, max_order;
-> +	size_t bytes;
->  
->  	if (!has_aux(event))
->  		return -EOPNOTSUPP;
-> @@ -699,6 +700,18 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
->  		watermark = 0;
->  	}
->  
-> +	/*
-> +	 * 'rb->aux_pages' allocated by kcalloc() is a pointer array which is
-> +	 * used to maintains AUX trace pages. The allocated page for this array
-> +	 * is physically contiguous (and virtually contiguous) with an order of
-> +	 * 0..MAX_ORDER. If the size of pointer array crosses the limitation set
-> +	 * by MAX_ORDER, it reveals a WARNING.
-> +	 *
-> +	 * So bail out early if the request AUX area is out of bound.
-> +	 */
-> +	if (check_mul_overflow(nr_pages, sizeof(void *), &bytes) ||
-> +	    get_order(bytes) > MAX_ORDER)
-> +		return -EINVAL;
+After adding it in the first commit, the remaining ones tidy up a
+related capability that doesn't do anything any more.
 
-This is all quite horrific :/ What's wrong with something simple:
+I've added a fixes tag for the commit where
+PERF_PMU_CAP_EXTENDED_HW_TYPE was originally added because it probably
+should have been added to the Arm PMU at the same time. It doesn't apply
+cleanly that far back because another capability was added between then,
+but the resolution is trivial.
 
-	/* Can't allocate more than MAX_ORDER  */
-	if (get_order((unsigned long)nr_pages * sizeof(void*)) > MAX_ORDER)
-		return -EINVAL;
+Thanks
+James
 
-If you're on 32bit then nr_pages should never be big enough to overflow,
-fundamentally you'll only have 32-PAGE_SHIFT bits in nr_pages.
+[1]: https://lore.kernel.org/linux-perf-users/CAP-5=fVkRc9=ySJ=fG-SQ8oAKmE_1mhHHzSASmGHUsda5Qy92A@mail.gmail.com/T/#t
 
+James Clark (4):
+  arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE capability
+  perf/x86: Remove unused PERF_PMU_CAP_HETEROGENEOUS_CPUS capability
+  arm_pmu: Remove unused PERF_PMU_CAP_HETEROGENEOUS_CPUS capability
+  perf: Remove unused PERF_PMU_CAP_HETEROGENEOUS_CPUS capability
 
->  	rb->aux_pages = kcalloc_node(nr_pages, sizeof(void *), GFP_KERNEL,
->  				     node);
+ arch/x86/events/core.c     |  1 -
+ drivers/perf/arm_pmu.c     | 10 ++++++----
+ include/linux/perf_event.h |  2 +-
+ 3 files changed, 7 insertions(+), 6 deletions(-)
 
+-- 
+2.34.1
 
