@@ -2,220 +2,490 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9926EEB64D9
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jul 2023 16:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B89C04A6A
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jul 2023 18:52:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231835AbjGJQ5L (ORCPT
+        id S232750AbjGJSwh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Jul 2023 12:57:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55532 "EHLO
+        Mon, 10 Jul 2023 14:52:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231704AbjGJQ5I (ORCPT
+        with ESMTP id S230386AbjGJSwf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Jul 2023 12:57:08 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBD59E49
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Jul 2023 09:56:43 -0700 (PDT)
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36ACRDlZ004918;
-        Mon, 10 Jul 2023 16:56:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=AdXWr/MG+dM5AlQ9+A5Ky5ls6nIUCYxETpZrZcjOLOY=;
- b=H0RonZ2HNlIpykeq1RRpcsZ9g3mramRBPlbNL1eLgNg8M0Ec69rWzrQqCqr9nCU1aeSz
- XrIlSl7RCpuD6J3vky7rx3MK8ACLlbfCdUlwtmkAUq5v3SwN1vZEMwNvAUx1vZHJS9XU
- BNN4GlD6E5TbtQfFxOFabXp+EHRpjemvkog6bNVQh6NyEi6t/mSiHecY2W7ZF2neEUfV
- 4kdRXvSzvawNV0zpB+Cn1siooeHCWePhgiTBKAgDMA7TsjapfTWHZ4PaLMywgu/5+G4m
- PsR4LpMZ82jy9rvw6ALlKZP1QpRNs4wN2wMnMTHBZexqBVzW8Xm0BVz5/nYfagDbfSF+ 7Q== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3rr5h11kp9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Jul 2023 16:56:27 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 36AFlpij035620;
-        Mon, 10 Jul 2023 16:56:27 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2168.outbound.protection.outlook.com [104.47.55.168])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3rpx83qu1g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Jul 2023 16:56:27 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G9L+Sxc3p6eponQScWITYW68UbwsZ8qMwlKfopLcgIxmBOd736mk98lws/SOzpGCrM19FrBrd7HzoIhkf6h9mMtI7YYDq5fFtQnf1LM8Y4W/wqPORgFL4x+ADgAKeLOgvUFtiDBo3OvE05Zbszsvo/3jBlN/SW2emblQBLVvBl7m0geEvW5wJtmaNt7nV/Qf9N6OPlk2JA5M1LPxZk/jlxzM+/xrTrPDfW0YKsB68ex1oehrzEdMHtFzSPoQzBW2o5cjZPGLNdr5wvM3CFkV1LeTAQ92q61zJxmrQ+AHFOKRWKRnsVHTYoLEEii2vk3xQ9KibjirM/qjYfLKfrUXcw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AdXWr/MG+dM5AlQ9+A5Ky5ls6nIUCYxETpZrZcjOLOY=;
- b=ZrJctep8nhZKLDID/NLVU/FI60sVk2UWGWJjagfW9/gkWVErUGbIgnWd3gZnH9cT+MepBeOaJiiXfIMgUW9LRy6xN/hK/0ZTTBa67NP4vhy5aDKzsoE69W4mI3mEV28qMQa5Ft7wu61RPx9I1jR3mHxEt8ubhJeIWk7yRQtk2fN+CJwiQ4gjmoeYqsc18WXz1UGiYiGvXh4Hov3YG4Dy0wJ1BehOFDCTmtFA6U/c/gGcarCyqxm6AWFIk3IJefgKL77Q5FFvGPFerrG/7DaxUZl5wqwzoNbmtOxwUZE3sIb7uUF0rhOWpIRUoBDH3PYxgGj3FYULBbPHd4uXGe6qtw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AdXWr/MG+dM5AlQ9+A5Ky5ls6nIUCYxETpZrZcjOLOY=;
- b=drzL/qvM6mFjPaw7zF0VG/qJ47Z9GVKFrUe3gQ+Y9/SQ/VF1UOXJuUNjlTLMByiC4q3lbIVGerD+dwJxBejt8asK0WOkBHqD9FNTZAjJWUomZ5+/A31w0sSKlqFhIYa0QOwMRXgub8l48s2YDEraxEnomxMKRlaVspnSLkuGc10=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by BN0PR10MB4903.namprd10.prod.outlook.com (2603:10b6:408:122::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.31; Mon, 10 Jul
- 2023 16:56:22 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::e38:5b81:b87f:c1eb]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::e38:5b81:b87f:c1eb%7]) with mapi id 15.20.6565.028; Mon, 10 Jul 2023
- 16:56:22 +0000
-Message-ID: <a35179ad-bb62-113d-3a7e-da4d2ec3c0b0@oracle.com>
-Date:   Mon, 10 Jul 2023 17:56:19 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v2 2/5] perf jevents: Match on highest version of Arm json
- file available
-To:     James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, irogers@google.com,
-        renyu.zj@linux.alibaba.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com
-Cc:     namhyung@kernel.org, acme@kernel.org
-References: <20230710141903.1595312-1-james.clark@arm.com>
- <20230710141903.1595312-3-james.clark@arm.com>
-Content-Language: en-US
-From:   John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <20230710141903.1595312-3-james.clark@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR10CA0081.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:15::34) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+        Mon, 10 Jul 2023 14:52:35 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18A86E9;
+        Mon, 10 Jul 2023 11:52:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689015153; x=1720551153;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=9a4XUQKD3ye7xs9ePB4eQT0MrE+BnUzLQe3MtvFmF7Y=;
+  b=Qo6kyb1L00cHEIMPRfSD/Nb1n7yXu2rPhZ6cpuOSNIcWaZzNdt33FLeh
+   Z5NBsbm8g8ODaXEeaREZPNqdp1nkpPlWa9uN7OJ6Ic5xlkZf2pH5l4vIN
+   ZwOK4QbqFU1O0hfj/iVSbO5MRUN6WYiIWOSbzInN1URuqbryge1X14OZE
+   4oK1Wbn/tqtyoXiYzR7+OsOjnP52oWlfIXeK4IvhAJF0cRvUPc2Xpy5jI
+   Ak/GKCaWzJNBo7OTwZm8Fm+bPvyOA0iAURQfzMMI/vzIkrdB1dNTePkax
+   W7CC92PFMKqwdvFmvfKAiXuetInpHAzm56uCgsj+PwjnPtJmShnu9bOMD
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="367004269"
+X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
+   d="scan'208";a="367004269"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2023 11:52:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="1051455454"
+X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
+   d="scan'208";a="1051455454"
+Received: from sohilmeh.sc.intel.com ([172.25.103.65])
+  by fmsmga005.fm.intel.com with ESMTP; 10 Jul 2023 11:52:27 -0700
+From:   Sohil Mehta <sohil.mehta@intel.com>
+To:     Arnd Bergmann <arnd@arndb.de>, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Cc:     Sohil Mehta <sohil.mehta@intel.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Sergei Trofimovich <slyich@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rohan McLure <rmclure@linux.ibm.com>,
+        Andreas Schwab <schwab@linux-m68k.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: [PATCH v2] syscalls: Cleanup references to sys_lookup_dcookie()
+Date:   Mon, 10 Jul 2023 18:51:24 +0000
+Message-Id: <20230710185124.3848462-1-sohil.mehta@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230628230935.1196180-1-sohil.mehta@intel.com>
+References: <20230628230935.1196180-1-sohil.mehta@intel.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|BN0PR10MB4903:EE_
-X-MS-Office365-Filtering-Correlation-Id: 555ce6fe-f326-4295-1032-08db816696f0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MoQywBIIdzay2hdaTe83QLHdnORm8Lga7ACJp46UCCCeKCp6R1H22DNQiOegukX4K9uNQlWwZoD6qLmL3N7MhOy2BHAPe/lA5zD+pNkQSc/+cEmcVRBoxG3N7DnfCa/Bh40DdI+MQLhZngQbMxTu91pBJqMDacMoekmNUaHjLxm8aOpxb05uhJ/lo5xPJzW8WhgDM4kr1o73cDe2iYtRH3+ulaC2TA9MPGXPX4v4oqN98m8WEzCORdIU7See7nynfYYfB0N+97oMz3C5eTF8l0gDYFNSyt7BcsC06nZvDuVbR1aJiTJDlPxAWozAqE05sndWSCyfBtHrFQGfA5ftP8Ujyr/48iIh5fmpkicts+XTELvfiqUvnqNNsSI7cSLM/NcDt6qAgbfehRDR2cNTyRsOJAMtdfDpWU6SjCurfnVLUJ/kbNJG4s4Y9BHmTBFeDLSkrt2aIRDBtxyoFKVVtSoqRnvErPSKNg2err/24C86/C1SVSpBjd3DANZ/V/TlyeqUJ+Lu3MmK/sQhtLqbrJRw3jxbBlD6sEo66nx0qTWQxGftdjPTtQhsW5yWY1uuulsLjpzilKhAEYwQrlRybRUXR4camtXebiE+CxnjooPz0JbisK2JLUUKN5/NVrXJuKuvwMjDrYCGIKlrQbEXLg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(346002)(376002)(396003)(366004)(39860400002)(451199021)(5660300002)(8936002)(8676002)(83380400001)(2906002)(2616005)(36756003)(38100700002)(31696002)(86362001)(53546011)(26005)(6506007)(186003)(316002)(66946007)(66476007)(66556008)(6666004)(4326008)(6486002)(36916002)(41300700001)(6512007)(478600001)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?b2MyL2xYMlZLL25mc0puRmp6ZXkyYjBvaWJiYTZwVnk2bFZKeHp2NVZ5YWdv?=
- =?utf-8?B?VDI0VUEzZ0xiS1pqS0pOTjI4dVRiM1Y0WTViK1ZJOEtQV01kMjVoVGNlbVNv?=
- =?utf-8?B?QWpIOXlIdXphTzhOZ2hiUGJKVnRrWEZmTXNiNDYxYzFKZU9MQ3B5WTQxVnVx?=
- =?utf-8?B?bGFFSUpaVXE4Y1N1MWlJN3k1SmN0Y2RtZ0FFamFNdEdILzg1WFNxb0k3bE5z?=
- =?utf-8?B?N01YQ1JRa3FzRTlDS09lSS9Pd0hYcjdLVGx3MWoxM3hDR3pZQ1JXc1c4OHdy?=
- =?utf-8?B?aFlnZFlxS01LUkhLbGJKdVJhTHM0OHJEWEZlN0RNd0g2MnhhbXhmS1FjWllr?=
- =?utf-8?B?SmRuRnk3cFFzZ2ZrV29OT3ZtMkVzN1RnUXg2SXNZYmM4dURlLzVnVmRYa0hi?=
- =?utf-8?B?SmRIZ0JOMW1BSVhKb05WU2xVaTVJWkErbEV3VFVuOXhHcjN0Tk1kYzI1M0lv?=
- =?utf-8?B?N24veFhvRkxKRjdRQ2kxZ01qdm04U0RXNEVJK3BqRC9OR3l1RDJuTncwU3JS?=
- =?utf-8?B?d1g1aHlMQVFLQlNSUHdCM1lVckpvdmJkaHBmellGellnOVpRR2JXWlhCQTBy?=
- =?utf-8?B?NUc3UDgvdnAvb2s3bkM5MnA5a3V6MHpNYStsbi9waGM4NjBsN2JNSXZzREhM?=
- =?utf-8?B?b0wxUlBjQ0dIVnl3RDU4MjdHYi9JOERqNXFvL1NiYzQ3djlwVnd4WjNidnZE?=
- =?utf-8?B?UXRKM3NkNk1CRTlPRzFUdXg4N0FHYUpZVFlXcndBT1lSOU51Q3huczV0cElp?=
- =?utf-8?B?SDZsV0MvbTBnYThFTENqd1Z5MnJNblhQUjB6M3hXQnVFWVBxbWVsNnlvL0dr?=
- =?utf-8?B?eWF0ZU1pc2hhV3RxWEMzbUhyOVNiclUrdVlCVUFaenI4ZENkTTZjYzh6bGNz?=
- =?utf-8?B?RFhXdTFaSlEwYjZ5Q0JIMlQ3Q0Nqd2tTUmcrams3UzJwTEFCSjFZZkM2cHhK?=
- =?utf-8?B?MUhTak9mOE10Sm53NVF2bWhKb2M3cHd0OG5TMVNOZDROaW01ZHpuYVI1VGVD?=
- =?utf-8?B?RTdKNTVtcWdmZVhSdjhnaVpYdGFrbGFaTU5oT25uZUNFS3g0WVYrekpzNGlY?=
- =?utf-8?B?V3NrdFpEUGxDMlF4NE1MREVzcmhETTM4R2U0dDRzMUJxOWNhZmYrcTFxYnhy?=
- =?utf-8?B?NVBkNnZHbXNocFFuZ05hYmZGWkxqcXg5MnVnZ3dweDZiTU1qa3B1TjFMM2Zs?=
- =?utf-8?B?dHJTdXpBUVkxTEIvMXFYR2JmOElVVEhrOVpPNmh4QmVhOFlVakdzZXNRWHlD?=
- =?utf-8?B?c1puNEJRUzZDOWlIMUprU2syNjFBV1JyNk9EZGYvV3ZIQUlYbW50VThvSVY3?=
- =?utf-8?B?dmt6eDVjRlRjT2EveEMrbENxRTFJZFVON1dmbU1jZVAwSTU2VE8vWmJRbWFo?=
- =?utf-8?B?RVlDaVU3WDFEc2dpaHNtOTVDcURxalFRRnkxTFk5RTltbmtlZVpWN1dlRU5p?=
- =?utf-8?B?bUdiTkhMdUVLSm5yYlpaWG1sVzdwL3FlN2NJK3B5eElDMkZXMjd3MW5STGdB?=
- =?utf-8?B?UVBVTFRuWHpvTTQ5ZHZ2dUJpWDBFZWZzOFdjUXZjMjBHOGZ6dkI4NS9nc3Rj?=
- =?utf-8?B?by8xbXMyTVBzQlI4UE1sQ3FlaUJwMkJuZUp6aHBHbm1BWjdFZkxzRTU5Q1Y3?=
- =?utf-8?B?YUlKbm9Jbm1xOGROZDJEQVNYMm1DakhqRUtqc3Q3R3dZbis5Mk96Uy9MRzhE?=
- =?utf-8?B?Z0dvcWZZNzJRWkErZDBVbGhySlhwTU1TMEZRZVlFTU5HQVlwSnFGand0ZkQx?=
- =?utf-8?B?TjRzb2NRaTJxa1BFMUx4bnNjeUhhTlJSWWF0aDlPRjB0YkVaRlNmbWZCeHJQ?=
- =?utf-8?B?ZFNBM25DRlEzbnNkQ0dYczMwc3ZxbysrNmJ2TEFaNjVSVllrV0pET25pdlNV?=
- =?utf-8?B?YVdsWFFYZldHZFI5ZlNKTTR2YVNxeWpJK0FiL1NEQkloS0RQMVoyS3RjcFpi?=
- =?utf-8?B?b1Nkc3V4VVZaWGkzWjg5bUU1OXNUbTJvOHl6UElaZkJudWZEdlpTbWhCNDJB?=
- =?utf-8?B?MGtDbDUvOWtTamNDbi9GRVpDZXhrb2h3bGJhYVNqbGV0TFhaeE5ub1VpUmlJ?=
- =?utf-8?B?dW45M3NoVVRGYTZEYjc4b3NNUjRDNlBJa2YyZ0xoekRYWEhTUEtvTW5ETi9J?=
- =?utf-8?Q?MNJsa6qeau1SfwL3kdPo+GW2R?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?Mmd2RWlZQndGVW55Zi9lK3RRdjdKZ2VPYUU4QmVIQ0hqZnN4S0tzMWRwV0FM?=
- =?utf-8?B?UEtUNDJaTWZMMkswNTJndFhGY2U2d3AvMVZkQUxhdlFzbVJ0VXhPSWZzc2li?=
- =?utf-8?B?MWhUcUxJM2dGL3h6V2xqTkRBUCtSWnIwNGUxa1VkUm1vOWxibmdLYVJjMHVn?=
- =?utf-8?B?RGJYQk1PQkNHZUsxSG8zMGpoeWJtbEZDTGYrRWl5RzBLNEFCbEYzeFIzamhE?=
- =?utf-8?B?NjFoMFZYMUtRNTJUbU1iVXExQlJvcnJjYit1VXhBeDlZN0hrNDBaeUZzekVo?=
- =?utf-8?B?azhSVC9KVCt4SHIvb2FjOUpiUGZRNXV6OWF5UFN0UGJMMlFmV0V0YVNRT0Vo?=
- =?utf-8?B?bVBralJ1ZXhpTDFGajFoZ01KQ0tlaTJCS0lhcjRlNmpEQWFCL2oxa1k3TmpR?=
- =?utf-8?B?RTRiZlYzWGhKN0pxSWJQMW01bCtkZ3J2N0l0N3orRGdZTklmSE8yTjd2NXN6?=
- =?utf-8?B?TFR5R0FLb2wwd2N6TjNMaHVaUHJ5bjFrYW5JSFppZzdJWnBqRmlXOGZSckdL?=
- =?utf-8?B?UnBpWnlKeU1ObWdMTVFjeC9Fa2cyZUJRL1lZVlBuelpUVFdtd0JPZEczbUVq?=
- =?utf-8?B?dEE4OEtBb0QxNWtSMDJsUUNuSkxnKzNhN2ZCSk5XM0F6RDcvOUI4cE1lV2xv?=
- =?utf-8?B?cEFJc2NTcnZWdlRkN01QcjBLNW40ZWxpcmZEYWZPR1FzeWdHeXQ5S00vdnNT?=
- =?utf-8?B?N0haR1JBRVNuSmRHMS9pV3dIYUVyaDkxTjVRQ0hrMGdnY0dYb093ekg2SEta?=
- =?utf-8?B?YmZEWmJKZURQZmlkWVl2NjR6TmVNMmNBQmtrUkxKby90YXVKYzdqSHlJZGRy?=
- =?utf-8?B?V3BZU1dnaFJtVGcyRy9Fc0d3WHMwb3NSTkJFU0pXM1VxamlPZGhRa3Z1aWhv?=
- =?utf-8?B?dWV0bUZZSTRqN1hSQzNZb0gxNmZMaE55eUJpQkRwbk83aHVmbXI5Y1RsNkdu?=
- =?utf-8?B?OVYzTVJoaFVhc3FoSkxGejArMGxzdHU4V1d0dzIrTGVlL2djcEE2S0VSUFpM?=
- =?utf-8?B?WmppWmtrOTZBbUI5Wll5emJDRzMwUHhyekhsSHBmVzNpWm1sWGluMmR4VTFG?=
- =?utf-8?B?RU13ek5aSkF4NzFGYlJCSEpNN2lUYjR6SjFiNHZraGYzRzZ2OU9MbjdJMVZv?=
- =?utf-8?B?d1R5cFB0dnBCVTIvSVViS3ZnM0p0enhWUmhpanBKZXdQaXVwazVRaUFjZWpG?=
- =?utf-8?B?MTdra2pmWktlb0RCMnZuaWk4TnFzOEw1K2lsdnlZVGxoTnFBa0toUFIvYzQy?=
- =?utf-8?Q?qY2olUIGu4LG5zq?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 555ce6fe-f326-4295-1032-08db816696f0
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2023 16:56:22.4976
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: o/gmeZeTbr7NfnsDwqxR5E7AkQPxU7Dwl+r/szlXNVp9EpofAu7do2Y5iB//3mhW+RPjEiA85S9eI6iAMC5Ysg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR10MB4903
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-10_12,2023-07-06_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 bulkscore=0
- suspectscore=0 spamscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
- definitions=main-2307100153
-X-Proofpoint-ORIG-GUID: kvCBYMNo0JKQyV_HmTmStY8FWPutzEqX
-X-Proofpoint-GUID: kvCBYMNo0JKQyV_HmTmStY8FWPutzEqX
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 10/07/2023 15:19, James Clark wrote:
+commit 'be65de6b03aa ("fs: Remove dcookies support")' removed the
+syscall definition for lookup_dcookie.  However, syscall tables still
+point to the old sys_lookup_dcookie() definition. Update syscall tables
+of all architectures to directly point to sys_ni_syscall() instead.
 
-+
+Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+Acked-by: Namhyung Kim <namhyung@kernel.org> # for perf
+---
+v2:
+- Rebased to v6.5-rc1. No other dependencies.
+- Added acquired tags.
+---
+ arch/alpha/kernel/syscalls/syscall.tbl              | 2 +-
+ arch/arm/tools/syscall.tbl                          | 2 +-
+ arch/arm64/include/asm/unistd32.h                   | 4 ++--
+ arch/ia64/kernel/syscalls/syscall.tbl               | 2 +-
+ arch/m68k/kernel/syscalls/syscall.tbl               | 2 +-
+ arch/microblaze/kernel/syscalls/syscall.tbl         | 2 +-
+ arch/mips/kernel/syscalls/syscall_n32.tbl           | 2 +-
+ arch/mips/kernel/syscalls/syscall_n64.tbl           | 2 +-
+ arch/mips/kernel/syscalls/syscall_o32.tbl           | 2 +-
+ arch/parisc/kernel/syscalls/syscall.tbl             | 2 +-
+ arch/powerpc/kernel/syscalls/syscall.tbl            | 2 +-
+ arch/s390/kernel/syscalls/syscall.tbl               | 2 +-
+ arch/sh/kernel/syscalls/syscall.tbl                 | 2 +-
+ arch/sparc/kernel/syscalls/syscall.tbl              | 2 +-
+ arch/x86/entry/syscalls/syscall_32.tbl              | 2 +-
+ arch/x86/entry/syscalls/syscall_64.tbl              | 2 +-
+ arch/xtensa/kernel/syscalls/syscall.tbl             | 2 +-
+ include/linux/compat.h                              | 1 -
+ include/linux/syscalls.h                            | 1 -
+ include/uapi/asm-generic/unistd.h                   | 2 +-
+ kernel/sys_ni.c                                     | 2 --
+ tools/include/uapi/asm-generic/unistd.h             | 2 +-
+ tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl | 2 +-
+ tools/perf/arch/powerpc/entry/syscalls/syscall.tbl  | 2 +-
+ tools/perf/arch/s390/entry/syscalls/syscall.tbl     | 2 +-
+ tools/perf/arch/x86/entry/syscalls/syscall_64.tbl   | 2 +-
+ 26 files changed, 24 insertions(+), 28 deletions(-)
 
-
-Hi James,
-
-It would be good to cc some additional people and lists.
-
-> Currently version and revision fields are masked out of the MIDR so
-
-Do you mean variant and revision?
-
-> there can only be one set of jsons per CPU. In a later commit multiple
-> revisions of Neoverse N2 json files will be provided.
-> 
-
-
-> The highest valid version of json files should be used,
-
-What exactly does that mean?
-
-So it seems that you have CPUs with matching MIDR except variant and 
-revision, but have different events, right?
-
-Then to solve that are you saying that the highest version of the JSONs 
-should used, upto and including the same CPU version (???) - correct?
-
-The cover letter doesn't mention anything relevant :(
-
-> but to make this
-> work the mapfile has to be reverse sorted on the CPUID field so that the
-> highest is found first.
-> It's possible, but error prone, to do this
-> manually so instead add an explicit sort into jevents.py. If the CPUID
-> is a string then the rows are string sorted rather than numerically.
-> 
-
-Thanks,
-John
+diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
+index 1f13995d00d7..1349012f5c2e 100644
+--- a/arch/alpha/kernel/syscalls/syscall.tbl
++++ b/arch/alpha/kernel/syscalls/syscall.tbl
+@@ -334,7 +334,7 @@
+ 401	common	io_submit			sys_io_submit
+ 402	common	io_cancel			sys_io_cancel
+ 405	common	exit_group			sys_exit_group
+-406	common	lookup_dcookie			sys_lookup_dcookie
++406	common	lookup_dcookie			sys_ni_syscall
+ 407	common	epoll_create			sys_epoll_create
+ 408	common	epoll_ctl			sys_epoll_ctl
+ 409	common	epoll_wait			sys_epoll_wait
+diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
+index 8ebed8a13874..cb7ea3bf18cf 100644
+--- a/arch/arm/tools/syscall.tbl
++++ b/arch/arm/tools/syscall.tbl
+@@ -263,7 +263,7 @@
+ 246	common	io_submit		sys_io_submit
+ 247	common	io_cancel		sys_io_cancel
+ 248	common	exit_group		sys_exit_group
+-249	common	lookup_dcookie		sys_lookup_dcookie
++249	common	lookup_dcookie		sys_ni_syscall
+ 250	common	epoll_create		sys_epoll_create
+ 251	common	epoll_ctl		sys_epoll_ctl		sys_oabi_epoll_ctl
+ 252	common	epoll_wait		sys_epoll_wait
+diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
+index d952a28463e0..2d8ab890818a 100644
+--- a/arch/arm64/include/asm/unistd32.h
++++ b/arch/arm64/include/asm/unistd32.h
+@@ -508,8 +508,8 @@ __SYSCALL(__NR_io_submit, compat_sys_io_submit)
+ __SYSCALL(__NR_io_cancel, sys_io_cancel)
+ #define __NR_exit_group 248
+ __SYSCALL(__NR_exit_group, sys_exit_group)
+-#define __NR_lookup_dcookie 249
+-__SYSCALL(__NR_lookup_dcookie, compat_sys_lookup_dcookie)
++			/* 249 was lookup_dcookie */
++__SYSCALL(249, sys_ni_syscall)
+ #define __NR_epoll_create 250
+ __SYSCALL(__NR_epoll_create, sys_epoll_create)
+ #define __NR_epoll_ctl 251
+diff --git a/arch/ia64/kernel/syscalls/syscall.tbl b/arch/ia64/kernel/syscalls/syscall.tbl
+index f8c74ffeeefb..ac8bd817b1b9 100644
+--- a/arch/ia64/kernel/syscalls/syscall.tbl
++++ b/arch/ia64/kernel/syscalls/syscall.tbl
+@@ -222,7 +222,7 @@
+ 210	common	fadvise64			sys_fadvise64_64
+ 211	common	tgkill				sys_tgkill
+ 212	common	exit_group			sys_exit_group
+-213	common	lookup_dcookie			sys_lookup_dcookie
++213	common	lookup_dcookie			sys_ni_syscall
+ 214	common	io_setup			sys_io_setup
+ 215	common	io_destroy			sys_io_destroy
+ 216	common	io_getevents			sys_io_getevents
+diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
+index 4f504783371f..985eab03b83b 100644
+--- a/arch/m68k/kernel/syscalls/syscall.tbl
++++ b/arch/m68k/kernel/syscalls/syscall.tbl
+@@ -255,7 +255,7 @@
+ 245	common	io_cancel			sys_io_cancel
+ 246	common	fadvise64			sys_fadvise64
+ 247	common	exit_group			sys_exit_group
+-248	common	lookup_dcookie			sys_lookup_dcookie
++248	common	lookup_dcookie			sys_ni_syscall
+ 249	common	epoll_create			sys_epoll_create
+ 250	common	epoll_ctl			sys_epoll_ctl
+ 251	common	epoll_wait			sys_epoll_wait
+diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
+index 858d22bf275c..167586f139aa 100644
+--- a/arch/microblaze/kernel/syscalls/syscall.tbl
++++ b/arch/microblaze/kernel/syscalls/syscall.tbl
+@@ -260,7 +260,7 @@
+ 250	common	fadvise64			sys_fadvise64
+ # 251 is available for reuse (was briefly sys_set_zone_reclaim)
+ 252	common	exit_group			sys_exit_group
+-253	common	lookup_dcookie			sys_lookup_dcookie
++253	common	lookup_dcookie			sys_ni_syscall
+ 254	common	epoll_create			sys_epoll_create
+ 255	common	epoll_ctl			sys_epoll_ctl
+ 256	common	epoll_wait			sys_epoll_wait
+diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
+index 1976317d4e8b..eff7a64e6bf1 100644
+--- a/arch/mips/kernel/syscalls/syscall_n32.tbl
++++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
+@@ -214,7 +214,7 @@
+ 203	n32	io_submit			compat_sys_io_submit
+ 204	n32	io_cancel			sys_io_cancel
+ 205	n32	exit_group			sys_exit_group
+-206	n32	lookup_dcookie			sys_lookup_dcookie
++206	n32	lookup_dcookie			sys_ni_syscall
+ 207	n32	epoll_create			sys_epoll_create
+ 208	n32	epoll_ctl			sys_epoll_ctl
+ 209	n32	epoll_wait			sys_epoll_wait
+diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
+index cfda2511badf..478fe63601fc 100644
+--- a/arch/mips/kernel/syscalls/syscall_n64.tbl
++++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
+@@ -214,7 +214,7 @@
+ 203	n64	io_submit			sys_io_submit
+ 204	n64	io_cancel			sys_io_cancel
+ 205	n64	exit_group			sys_exit_group
+-206	n64	lookup_dcookie			sys_lookup_dcookie
++206	n64	lookup_dcookie			sys_ni_syscall
+ 207	n64	epoll_create			sys_epoll_create
+ 208	n64	epoll_ctl			sys_epoll_ctl
+ 209	n64	epoll_wait			sys_epoll_wait
+diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
+index 7692234c3768..1eb4efe647b9 100644
+--- a/arch/mips/kernel/syscalls/syscall_o32.tbl
++++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
+@@ -258,7 +258,7 @@
+ 244	o32	io_submit			sys_io_submit			compat_sys_io_submit
+ 245	o32	io_cancel			sys_io_cancel
+ 246	o32	exit_group			sys_exit_group
+-247	o32	lookup_dcookie			sys_lookup_dcookie		compat_sys_lookup_dcookie
++247	o32	lookup_dcookie			sys_ni_syscall
+ 248	o32	epoll_create			sys_epoll_create
+ 249	o32	epoll_ctl			sys_epoll_ctl
+ 250	o32	epoll_wait			sys_epoll_wait
+diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
+index a0a9145b6dd4..b2d9266a4736 100644
+--- a/arch/parisc/kernel/syscalls/syscall.tbl
++++ b/arch/parisc/kernel/syscalls/syscall.tbl
+@@ -245,7 +245,7 @@
+ # 220 was alloc_hugepages
+ # 221 was free_hugepages
+ 222	common	exit_group		sys_exit_group
+-223	common	lookup_dcookie		sys_lookup_dcookie		compat_sys_lookup_dcookie
++223	common	lookup_dcookie		sys_ni_syscall
+ 224	common	epoll_create		sys_epoll_create
+ 225	common	epoll_ctl		sys_epoll_ctl
+ 226	common	epoll_wait		sys_epoll_wait
+diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
+index 8c0b08b7a80e..1b7777e5f9ff 100644
+--- a/arch/powerpc/kernel/syscalls/syscall.tbl
++++ b/arch/powerpc/kernel/syscalls/syscall.tbl
+@@ -294,7 +294,7 @@
+ 233	32	fadvise64			sys_ppc32_fadvise64		compat_sys_ppc32_fadvise64
+ 233	64	fadvise64			sys_fadvise64
+ 234	nospu	exit_group			sys_exit_group
+-235	nospu	lookup_dcookie			sys_lookup_dcookie		compat_sys_lookup_dcookie
++235	nospu	lookup_dcookie			sys_ni_syscall
+ 236	common	epoll_create			sys_epoll_create
+ 237	common	epoll_ctl			sys_epoll_ctl
+ 238	common	epoll_wait			sys_epoll_wait
+diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
+index a6935af2235c..11782be77f57 100644
+--- a/arch/s390/kernel/syscalls/syscall.tbl
++++ b/arch/s390/kernel/syscalls/syscall.tbl
+@@ -100,7 +100,7 @@
+ 106  common	stat			sys_newstat			compat_sys_newstat
+ 107  common	lstat			sys_newlstat			compat_sys_newlstat
+ 108  common	fstat			sys_newfstat			compat_sys_newfstat
+-110  common	lookup_dcookie		sys_lookup_dcookie		compat_sys_lookup_dcookie
++110  common	lookup_dcookie		-				-
+ 111  common	vhangup			sys_vhangup			sys_vhangup
+ 112  common	idle			-				-
+ 114  common	wait4			sys_wait4			compat_sys_wait4
+diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
+index 97377e8c5025..a8e3fbd448cd 100644
+--- a/arch/sh/kernel/syscalls/syscall.tbl
++++ b/arch/sh/kernel/syscalls/syscall.tbl
+@@ -260,7 +260,7 @@
+ 250	common	fadvise64			sys_fadvise64
+ # 251 is unused
+ 252	common	exit_group			sys_exit_group
+-253	common	lookup_dcookie			sys_lookup_dcookie
++253	common	lookup_dcookie			sys_ni_syscall
+ 254	common	epoll_create			sys_epoll_create
+ 255	common	epoll_ctl			sys_epoll_ctl
+ 256	common	epoll_wait			sys_epoll_wait
+diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
+index faa835f3c54a..2fb51f6f8248 100644
+--- a/arch/sparc/kernel/syscalls/syscall.tbl
++++ b/arch/sparc/kernel/syscalls/syscall.tbl
+@@ -249,7 +249,7 @@
+ 205	common	readahead		sys_readahead			compat_sys_readahead
+ 206	common	socketcall		sys_socketcall			sys32_socketcall
+ 207	common	syslog			sys_syslog
+-208	common	lookup_dcookie		sys_lookup_dcookie		compat_sys_lookup_dcookie
++208	common	lookup_dcookie		sys_ni_syscall
+ 209	common	fadvise64		sys_fadvise64			compat_sys_fadvise64
+ 210	common	fadvise64_64		sys_fadvise64_64		compat_sys_fadvise64_64
+ 211	common	tgkill			sys_tgkill
+diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+index bc0a3c941b35..88d7d4dcab55 100644
+--- a/arch/x86/entry/syscalls/syscall_32.tbl
++++ b/arch/x86/entry/syscalls/syscall_32.tbl
+@@ -264,7 +264,7 @@
+ 250	i386	fadvise64		sys_ia32_fadvise64
+ # 251 is available for reuse (was briefly sys_set_zone_reclaim)
+ 252	i386	exit_group		sys_exit_group
+-253	i386	lookup_dcookie		sys_lookup_dcookie		compat_sys_lookup_dcookie
++253	i386	lookup_dcookie
+ 254	i386	epoll_create		sys_epoll_create
+ 255	i386	epoll_ctl		sys_epoll_ctl
+ 256	i386	epoll_wait		sys_epoll_wait
+diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+index 227538b0ce80..27f78821453b 100644
+--- a/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -220,7 +220,7 @@
+ 209	64	io_submit		sys_io_submit
+ 210	common	io_cancel		sys_io_cancel
+ 211	64	get_thread_area
+-212	common	lookup_dcookie		sys_lookup_dcookie
++212	common	lookup_dcookie
+ 213	common	epoll_create		sys_epoll_create
+ 214	64	epoll_ctl_old
+ 215	64	epoll_wait_old
+diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
+index 2b69c3c035b6..65322171b3f3 100644
+--- a/arch/xtensa/kernel/syscalls/syscall.tbl
++++ b/arch/xtensa/kernel/syscalls/syscall.tbl
+@@ -273,7 +273,7 @@
+ 252	common	timer_getoverrun		sys_timer_getoverrun
+ # System
+ 253	common	reserved253			sys_ni_syscall
+-254	common	lookup_dcookie			sys_lookup_dcookie
++254	common	lookup_dcookie			sys_ni_syscall
+ 255	common	available255			sys_ni_syscall
+ 256	common	add_key				sys_add_key
+ 257	common	request_key			sys_request_key
+diff --git a/include/linux/compat.h b/include/linux/compat.h
+index 1cfa4f0f490a..233f61ec8afc 100644
+--- a/include/linux/compat.h
++++ b/include/linux/compat.h
+@@ -581,7 +581,6 @@ asmlinkage long compat_sys_io_pgetevents_time64(compat_aio_context_t ctx_id,
+ 					struct io_event __user *events,
+ 					struct __kernel_timespec __user *timeout,
+ 					const struct __compat_aio_sigset __user *usig);
+-asmlinkage long compat_sys_lookup_dcookie(u32, u32, char __user *, compat_size_t);
+ asmlinkage long compat_sys_epoll_pwait(int epfd,
+ 			struct epoll_event __user *events,
+ 			int maxevents, int timeout,
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 03e3d0121d5e..8f93b37b80fa 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -371,7 +371,6 @@ asmlinkage long sys_lremovexattr(const char __user *path,
+ 				 const char __user *name);
+ asmlinkage long sys_fremovexattr(int fd, const char __user *name);
+ asmlinkage long sys_getcwd(char __user *buf, unsigned long size);
+-asmlinkage long sys_lookup_dcookie(u64 cookie64, char __user *buf, size_t len);
+ asmlinkage long sys_eventfd2(unsigned int count, int flags);
+ asmlinkage long sys_epoll_create1(int flags);
+ asmlinkage long sys_epoll_ctl(int epfd, int op, int fd,
+diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+index fd6c1cb585db..7ea3875137e9 100644
+--- a/include/uapi/asm-generic/unistd.h
++++ b/include/uapi/asm-generic/unistd.h
+@@ -71,7 +71,7 @@ __SYSCALL(__NR_fremovexattr, sys_fremovexattr)
+ #define __NR_getcwd 17
+ __SYSCALL(__NR_getcwd, sys_getcwd)
+ #define __NR_lookup_dcookie 18
+-__SC_COMP(__NR_lookup_dcookie, sys_lookup_dcookie, compat_sys_lookup_dcookie)
++__SYSCALL(__NR_lookup_dcookie, sys_ni_syscall)
+ #define __NR_eventfd2 19
+ __SYSCALL(__NR_eventfd2, sys_eventfd2)
+ #define __NR_epoll_create1 20
+diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+index 781de7cc6a4e..817f1e433369 100644
+--- a/kernel/sys_ni.c
++++ b/kernel/sys_ni.c
+@@ -51,8 +51,6 @@ COND_SYSCALL_COMPAT(io_pgetevents);
+ COND_SYSCALL(io_uring_setup);
+ COND_SYSCALL(io_uring_enter);
+ COND_SYSCALL(io_uring_register);
+-COND_SYSCALL(lookup_dcookie);
+-COND_SYSCALL_COMPAT(lookup_dcookie);
+ COND_SYSCALL(eventfd2);
+ COND_SYSCALL(epoll_create1);
+ COND_SYSCALL(epoll_ctl);
+diff --git a/tools/include/uapi/asm-generic/unistd.h b/tools/include/uapi/asm-generic/unistd.h
+index dd7d8e10f16d..652537342a47 100644
+--- a/tools/include/uapi/asm-generic/unistd.h
++++ b/tools/include/uapi/asm-generic/unistd.h
+@@ -71,7 +71,7 @@ __SYSCALL(__NR_fremovexattr, sys_fremovexattr)
+ #define __NR_getcwd 17
+ __SYSCALL(__NR_getcwd, sys_getcwd)
+ #define __NR_lookup_dcookie 18
+-__SC_COMP(__NR_lookup_dcookie, sys_lookup_dcookie, compat_sys_lookup_dcookie)
++__SYSCALL(__NR_lookup_dcookie, sys_ni_syscall)
+ #define __NR_eventfd2 19
+ __SYSCALL(__NR_eventfd2, sys_eventfd2)
+ #define __NR_epoll_create1 20
+diff --git a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
+index 3f1886ad9d80..23a72075987d 100644
+--- a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
++++ b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
+@@ -214,7 +214,7 @@
+ 203	n64	io_submit			sys_io_submit
+ 204	n64	io_cancel			sys_io_cancel
+ 205	n64	exit_group			sys_exit_group
+-206	n64	lookup_dcookie			sys_lookup_dcookie
++206	n64	lookup_dcookie			sys_ni_syscall
+ 207	n64	epoll_create			sys_epoll_create
+ 208	n64	epoll_ctl			sys_epoll_ctl
+ 209	n64	epoll_wait			sys_epoll_wait
+diff --git a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
+index a0be127475b1..2c8db9708ec8 100644
+--- a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
++++ b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
+@@ -294,7 +294,7 @@
+ 233	32	fadvise64			sys_ppc32_fadvise64		compat_sys_ppc32_fadvise64
+ 233	64	fadvise64			sys_fadvise64
+ 234	nospu	exit_group			sys_exit_group
+-235	nospu	lookup_dcookie			sys_lookup_dcookie		compat_sys_lookup_dcookie
++235	nospu	lookup_dcookie			sys_ni_syscall
+ 236	common	epoll_create			sys_epoll_create
+ 237	common	epoll_ctl			sys_epoll_ctl
+ 238	common	epoll_wait			sys_epoll_wait
+diff --git a/tools/perf/arch/s390/entry/syscalls/syscall.tbl b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
+index b68f47541169..85b45b49756e 100644
+--- a/tools/perf/arch/s390/entry/syscalls/syscall.tbl
++++ b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
+@@ -100,7 +100,7 @@
+ 106  common	stat			sys_newstat			compat_sys_newstat
+ 107  common	lstat			sys_newlstat			compat_sys_newlstat
+ 108  common	fstat			sys_newfstat			compat_sys_newfstat
+-110  common	lookup_dcookie		sys_lookup_dcookie		compat_sys_lookup_dcookie
++110  common	lookup_dcookie		-				-
+ 111  common	vhangup			sys_vhangup			sys_vhangup
+ 112  common	idle			-				-
+ 114  common	wait4			sys_wait4			compat_sys_wait4
+diff --git a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
+index c84d12608cd2..da2643738262 100644
+--- a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -220,7 +220,7 @@
+ 209	64	io_submit		sys_io_submit
+ 210	common	io_cancel		sys_io_cancel
+ 211	64	get_thread_area
+-212	common	lookup_dcookie		sys_lookup_dcookie
++212	common	lookup_dcookie
+ 213	common	epoll_create		sys_epoll_create
+ 214	64	epoll_ctl_old
+ 215	64	epoll_wait_old
+-- 
+2.34.1
 
