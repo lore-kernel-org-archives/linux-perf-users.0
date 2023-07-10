@@ -2,110 +2,113 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10247EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jul 2023 21:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 285DFEB64D9
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jul 2023 21:36:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230487AbjGJVWa (ORCPT
+        id S230080AbjGJVgz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Jul 2023 17:22:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41004 "EHLO
+        Mon, 10 Jul 2023 17:36:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230399AbjGJVW2 (ORCPT
+        with ESMTP id S229670AbjGJVgy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Jul 2023 17:22:28 -0400
-Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E7AD1AB
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Jul 2023 14:22:23 -0700 (PDT)
-Received: by mail-qv1-xf29.google.com with SMTP id 6a1803df08f44-635decc135eso28664306d6.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Jul 2023 14:22:23 -0700 (PDT)
+        Mon, 10 Jul 2023 17:36:54 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 818F0F4;
+        Mon, 10 Jul 2023 14:36:53 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-51e4c868ee4so3356914a12.0;
+        Mon, 10 Jul 2023 14:36:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689024142; x=1691616142;
+        d=gmail.com; s=20221208; t=1689025012; x=1691617012;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=f/AHnLRjSLfFE9cPgB0m1arr9qA/D4bUxDLvGm185g4=;
-        b=p5bEh9YpRBSvdjZQX8rMsK7yK10d4+t79qj0lXTV1iANI6Zi8/7mfKnUVPneSAWGET
-         ocTlr4vlq45Nf+fvDaKYPrSTPBYfUMtsHoEqbWVHyWwlcRUgZ9oCYjxSSudPXmEL0vQ6
-         fE3BP/WKikO8G8l0OLD/RFGA82qdICWixK1tuplEuNXFFkaLuv2dTqJpTlTvhbmLG+3S
-         ip4z8zyBOTNeMBaEqdcwVyvKXYwYLVouJpqAIRs8TdYl9HzCrCcKvHx1PvH1+7W3jDfk
-         9Fe1T81re8u4E2XdgUAOawq6VYTSS/Y5WnEmPyoNPnZ0F/9QnAAQRw+HOlENg4ZLEMcs
-         0SzA==
+        bh=yPHLwCYSrzehX+poMBnyQydgb702LDDTYd8W73ZnNTE=;
+        b=drwfvugvpq5SG1Mzzkv8dvjVvQuxZuyWFoNqKsyLCJyYVJoEeOHFj5Z6qgaZcUcXBi
+         Xfb/wgI2+Jf3kQ82qzvmH1ogZMj3Qcyubf1/0LkmpBiH8UXZ63UOumxrcXM1R+C/EnAQ
+         DNyzPrk3KEbAkISce+h7Pk7HZMoffBJsArMSEbe0e87t7TsqHZM5nbkQqeLf6S6qzBmO
+         mCpsUQu+hmpoS5A2zv4mpMp5hYXAlBGglVT9m8JfnvwwiFCrnYlnwhbQcVs66ADq1j2Q
+         JONNGu3OZxa7uZm5ylgsV44zjtjTW8MvGcG/oy+HCGL66MYirwKjShH+9F8MAhFCABrS
+         unfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689024142; x=1691616142;
+        d=1e100.net; s=20221208; t=1689025012; x=1691617012;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=f/AHnLRjSLfFE9cPgB0m1arr9qA/D4bUxDLvGm185g4=;
-        b=fXvbP2ZtyRmep93x64pqet802feiq5j2I4MPqMz6VWFnPabsxDN994ZL//U+uRESR4
-         agrbhnpXd+NddpGF8kRzq65F/x0SwHob0NdkJYwDwM37zGmv+ZR9nef6j6JG4OhWZvfz
-         LU35Mh/l8c8oanpKLDvvQiqpR3SyNgVOWXXIAc1ucUOkKUZteR1a/fF8lrNiKAC88gjB
-         h5L6tKu5EEFK7DnvojwogEGrQIkDV5aBGyFYfHbSHOU+4P/dkM1zkkk7IyjcaNnFKBSO
-         c0SIpVGFWLV2BVpDaW2jVCWc5F+xehSZjIT5H9v/IWV6xKGzHMDGsyI1U+qbBsxbxoI2
-         ERbA==
-X-Gm-Message-State: ABy/qLa5HsIbhWBBfq4r/k3Bj+ApqfOaM3PisWDzDJqzilAGg4GCYRjz
-        1LGoKk/FNaY74gX+/pqZZeQI+v/UiQbkNQ3+AI+9og==
-X-Google-Smtp-Source: APBJJlEyTl3gs/z6eTnepp8nz5+pFBwJ2K0VEGAzQIoNlATKxCwU0usk0HgClb+WScNXShjcKaBO3hflJJH/vIj4QtA=
-X-Received: by 2002:a0c:9701:0:b0:634:97ed:9a5f with SMTP id
- k1-20020a0c9701000000b0063497ed9a5fmr14901888qvd.26.1689024142302; Mon, 10
- Jul 2023 14:22:22 -0700 (PDT)
+        bh=yPHLwCYSrzehX+poMBnyQydgb702LDDTYd8W73ZnNTE=;
+        b=dX9J2btNwilVxz4Nlq+ki3gqrtLzmgcyyLhGMqkFF98aC+Lbw5xIih0U3ebdVGMxHM
+         vexQEF1kt35gW/JhQ/Yes+BPXjAtLU4Qlg9byeJBGaRU4GaUtFn9wfC8FMb+6++fbEuA
+         TrQ3O6oqJsBK2uFdWMGggchK+Sw0s2JERcM7vf3VpgOPIosNZErg19sGZdtNSuizi6UH
+         ItetsYyfViHs8XMH5cVWDW2TKDDYZvJ0vQnJ4K7Ew80NtkR0gFzYToTkwuGpp3fvgL5M
+         BIcxW6R6TEzRuwv9hdlGsqXIWNJYSY5T1Qv71wYYrup0thZHK8eX2j9BarTbWnB/KZV2
+         0wlw==
+X-Gm-Message-State: ABy/qLZ55PFNfvPpAfdtZyPpmkwG7Ln/N2f59ilTgqEhb3//l0rox3QD
+        laEctBjSSRQc6jGdYfysQ9hzmYjRX6s93s7R0s4=
+X-Google-Smtp-Source: APBJJlE4s1l1x+VII7uSBaO+SFsR7XDvpab0BU22qp+Rpa87o/Qc5GXhXuccu11ijfq6NMJjBjjj2cExjhlHnDRRX70=
+X-Received: by 2002:aa7:c654:0:b0:51e:1af0:3a90 with SMTP id
+ z20-20020aa7c654000000b0051e1af03a90mr12744434edr.37.1689025011946; Mon, 10
+ Jul 2023 14:36:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAKwvOdnrHErOK+w878izVauHUKaX3eD-HXgigq2Ogm3iSj-fHA@mail.gmail.com>
- <76CB17D0-5A66-4D49-A389-8F40EC830DC0@sladewatkins.net> <CAP-5=fXVgwMO_CpS-EHN6PFhLB-J5Ft7qHz7oQd-WOMnTj72Cw@mail.gmail.com>
- <CAM9d7chvZjZ4YVc6j3w7OkdHteyJ0GUZboieu9G7jAWBevoZqA@mail.gmail.com>
- <e553c4f8-ed3d-0755-cc8a-b5ffe43b2c2f@amd.com> <CAKwvOdk6TTNhu_+FdONTXPo9Z8u5D4-5kf-rMN8oK4+6fMyc-w@mail.gmail.com>
- <CABPqkBQVfQFJKCdHXEMGFcupzvy8zq14F52eLW5s9vr2Shmi6w@mail.gmail.com>
- <85822c3c-2254-52cc-e6b1-9c89adb63771@amd.com> <CAKwvOdkfEexsE07XXGW3FF+nMt-pR8uv2EA7QzsPbEZsSQBO-Q@mail.gmail.com>
- <85aabdc8-07cd-3285-1f3f-605f9ebbab18@amd.com> <b6a503b7-b421-a5c0-1cc8-4f1567b8d9de@amd.com>
- <CAKwvOdmY7qoSG61f7UouWFz+gNN531FhpHbqawrAKCNKNDJHnw@mail.gmail.com> <5c077e61-c206-812f-1cb9-d47785e8176f@amd.com>
-In-Reply-To: <5c077e61-c206-812f-1cb9-d47785e8176f@amd.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 10 Jul 2023 14:22:11 -0700
-Message-ID: <CAKwvOdm9SAQ5i74JUzWP4Q1WW3aHq+3Jo7hqfie+oMxjnKqxSA@mail.gmail.com>
-Subject: Re: Invalid event (cycles:pp) in per-thread mode, enable system wide
- with '-a'.
-To:     Ravi Bangoria <ravi.bangoria@amd.com>,
-        Namhyung Kim <namhyung@gmail.com>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Slade Watkins <srw@sladewatkins.net>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+References: <ab865e6d-06c5-078e-e404-7f90686db50d@amd.com> <CAEf4BzZK=zm9PkUwzJRgeQ=KXjKOK9TENUMTz+_FmU6kPjab7Q@mail.gmail.com>
+ <78044efc-98d7-cd49-d2b5-4c2abb16d6c9@amd.com>
+In-Reply-To: <78044efc-98d7-cd49-d2b5-4c2abb16d6c9@amd.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 10 Jul 2023 14:36:39 -0700
+Message-ID: <CAEf4BzZCrDftNdNicuMS7NoF+hNiQEQwsH_-RMBh3Xxg+AQwiw@mail.gmail.com>
+Subject: Re: [BUG] perf test: Regression because of d6e6286a12e7
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     andrii@kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
-        Kees Cook <keescook@chromium.org>, sandipan.das@amd.com,
-        Bill Wendling <morbo@google.com>,
-        clang-built-linux <llvm@lists.linux.dev>,
-        Yonghong Song <yhs@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Jun 25, 2023 at 10:45=E2=80=AFPM Ravi Bangoria <ravi.bangoria@amd.c=
-om> wrote:
+On Sun, Jul 9, 2023 at 9:05=E2=80=AFPM Ravi Bangoria <ravi.bangoria@amd.com=
+> wrote:
 >
-> Hi Nick,
->
-> On 23-Jun-23 9:53 PM, Nick Desaulniers wrote:
-> >>> On 12-Oct-22 3:02 AM, Nick Desaulniers wrote:
-> > Hi Ravi,
-> > Sorry, I'm not able to load a custom kernel image on my employer
-> > provided workstation, and I never got approval to expense hardware for
-> > testing this otherwise.
+> On 08-Jul-23 4:46 AM, Andrii Nakryiko wrote:
+> > On Wed, Jul 5, 2023 at 9:39=E2=80=AFPM Ravi Bangoria <ravi.bangoria@amd=
+.com> wrote:
+> >>
+> >> Hi Andrii,
+> >>
+> >> I'm seeing perf test failure because of commit d6e6286a12e7 ("libbpf:
+> >> disassociate section handler on explicit bpf_program__set_type() call"=
+).
+> >>
 > >
-> > Was there ever any update on this? I'm on 6.1.25 now and still cant run
-> > $ perf record -e cycles:pp --call-graph lbr <any command to profile>
+> > Yep, this commit would reset catch-all custom handler, which perf is
+> > setting. I've just sent a fix upstream ([0]). And once it lands, I'll
+> > cut a v1.2.1 libbpf bugfix release with just this fix on top of v1.2.
+> >
+> > Can you please double-check that this patch indeed fixes the issue for
+> > you? I tried to do this locally, but for me perf test 42 fails both at
+> > current bpf-next, with the above commit reverted, and with my fix
+> > applied on top. So I can't be 100% sure.
+> >
+> > Thanks!
+> >
+> >   [0] https://patchwork.kernel.org/project/netdevbpf/patch/202307072311=
+56.1711948-1-andrii@kernel.org/
 >
-> Per-process precise sampling on AMD platforms should work from 6.2-rc1
-> onward.
+> Thanks. A quick test seems to be working fine.
 
-Ok, I can wait for my employer to ship 6.2 on our workstations.
+Alright, thanks for confirming! I've just released v1.2.1 bug fix
+release with just this fix on top of v1.2.
 
-> However, --call-graph=3Dlbr is not supported on AMD (hw limitation).
+Thanks for reporting!
 
-On any AMD uarches? Is there an equivalent? LBR encoding is compact
-which makes working it much faster than DWARF or stack frame
-unwinding.
---=20
-Thanks,
-~Nick Desaulniers
+But given v1.2 was cut on May 1st, and the offending commit landed
+some time late March, I wonder how did this slip through the cracks
+and go unreported for so long? Is there something we can do to catch
+these perf-only regressions a bit sooner?
+
+
+>
+> Ravi
