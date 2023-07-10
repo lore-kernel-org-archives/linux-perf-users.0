@@ -2,119 +2,132 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FFAEB64DA
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jul 2023 13:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04458EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jul 2023 13:44:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232574AbjGJNbh (ORCPT
+        id S230223AbjGJNoP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Jul 2023 09:31:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41302 "EHLO
+        Mon, 10 Jul 2023 09:44:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232422AbjGJNbe (ORCPT
+        with ESMTP id S229907AbjGJNoO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Jul 2023 09:31:34 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F305F12A;
-        Mon, 10 Jul 2023 06:31:28 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E25E311FB;
-        Mon, 10 Jul 2023 06:32:10 -0700 (PDT)
-Received: from e127643.arm.com (unknown [10.57.30.85])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C5DD43F67D;
-        Mon, 10 Jul 2023 06:31:25 -0700 (PDT)
-From:   James Clark <james.clark@arm.com>
-To:     linux-perf-users@vger.kernel.org, irogers@google.com,
-        renyu.zj@linux.alibaba.com, john.g.garry@oracle.com
-Cc:     James Clark <james.clark@arm.com>, Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
+        Mon, 10 Jul 2023 09:44:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53FA6BA;
+        Mon, 10 Jul 2023 06:44:13 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E642460FC6;
+        Mon, 10 Jul 2023 13:44:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ECCEC433C8;
+        Mon, 10 Jul 2023 13:44:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1688996652;
+        bh=f8+Tgjr82BQ+lwzbHHg9u/aqPVDfaD8lbBwoguIlk+w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u9aUbDe2rXRBAMG0lbwa91r24ByoD38mxzaGazqadyRo4c0gTzwwTBMnSbJidaiVc
+         3VdBn6sx6m1JR2rQNJDd5P5aTFDO5+oRg9aRD9wQ0YSBEk6A6GWMo7wO2vjUiw1orY
+         tmLGIgMOq75VHbkxAVkNC67l6/3PeacJSrtuV+oTaXSXsQN10yx/nUDEGY9Gkx/rWN
+         a9CKWZggWo0CEQ74Lx6LxRuvaiTlT/qfgPvSgqE3NGsYEWUMvm4pd1VC1BFMdMBV8P
+         Nuh+qygzLfkuj1iDco31uWVbX8H74SmwR2pWMhTUqDyjCM3l8VDLviQY/w7wcEPAHI
+         E/vjXhuylIFSg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 5C8E140516; Mon, 10 Jul 2023 10:44:09 -0300 (-03)
+Date:   Mon, 10 Jul 2023 10:44:09 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Linux regressions mailing list <regressions@lists.linux.dev>
+Cc:     Georg =?iso-8859-1?Q?M=FCller?= <georgmueller@gmx.net>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        coresight@lists.linaro.org
-Subject: [PATCH 3/4] perf vendor events arm64: Update scale units and descriptions of common topdown metrics
-Date:   Mon, 10 Jul 2023 14:30:54 +0100
-Message-Id: <20230710133058.1483610-3-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230710133058.1483610-1-james.clark@arm.com>
-References: <20230710133058.1483610-1-james.clark@arm.com>
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] perf probe: fix regression introduced by switch
+ to die_get_decl_file
+Message-ID: <ZKwLKXL6rkoShDNc@kernel.org>
+References: <20230628084551.1860532-3-georgmueller@gmx.net>
+ <1c85c4d6-7097-bc0a-d0ca-ebe234d63ece@leemhuis.info>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1c85c4d6-7097-bc0a-d0ca-ebe234d63ece@leemhuis.info>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Metrics will be published here [1] going forwards, but they have
-slightly different scale units. To allow autogenerated metrics to be
-added more easily, update the scale units to match.
+Em Mon, Jul 10, 2023 at 02:32:28PM +0200, Linux regression tracking (Thorsten Leemhuis) escreveu:
+> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> for once, to make this easily accessible to everyone.
+> 
+> Masami, Arnaldo, what's up here? Georg (who is not a regular
+> contributor) afaics found a regression in a commit you
+> authored/committed and even provided a patch-set to fix it (the first
+> one nearly four weeks ago, e.g. before the merge window started), but
+> hasn't received much support from your side to get this in. Could you
+> please look into this to get this cleared up? Or am I missing something
+> and progress to fix this has been made?
 
-The more detailed descriptions have also been taken and added to the
-common file.
+I'm back from a 2 week vacation, going thru the pile, probably fell thru
+the cracks and Namyung, that processed patches while I was away didn't
+notice it either.
 
-[1]: https://gitlab.arm.com/telemetry-solution/telemetry-solution/-/tree/main/data/pmu/cpu/
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/pmu-events/arch/arm64/sbsa.json | 24 +++++++++++-----------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+I'm checking,
 
-diff --git a/tools/perf/pmu-events/arch/arm64/sbsa.json b/tools/perf/pmu-events/arch/arm64/sbsa.json
-index f90b338261ac..4eed79a28f6e 100644
---- a/tools/perf/pmu-events/arch/arm64/sbsa.json
-+++ b/tools/perf/pmu-events/arch/arm64/sbsa.json
-@@ -1,34 +1,34 @@
- [
-     {
--        "MetricExpr": "stall_slot_frontend / (#slots * cpu_cycles)",
--        "BriefDescription": "Frontend bound L1 topdown metric",
-+        "MetricExpr": "100 * (stall_slot_frontend / (#slots * cpu_cycles))",
-+        "BriefDescription": "This metric is the percentage of total slots that were stalled due to resource constraints in the frontend of the processor.",
-         "DefaultMetricgroupName": "TopdownL1",
-         "MetricGroup": "Default;TopdownL1",
-         "MetricName": "frontend_bound",
--        "ScaleUnit": "100%"
-+        "ScaleUnit": "1percent of slots"
-     },
-     {
--        "MetricExpr": "(1 - op_retired / op_spec) * (1 - stall_slot / (#slots * cpu_cycles))",
--        "BriefDescription": "Bad speculation L1 topdown metric",
-+        "MetricExpr": "100 * ((1 - op_retired / op_spec) * (1 - stall_slot / (#slots * cpu_cycles)))",
-+        "BriefDescription": "This metric is the percentage of total slots that executed operations and didn't retire due to a pipeline flush.\nThis indicates cycles that were utilized but inefficiently.",
-         "DefaultMetricgroupName": "TopdownL1",
-         "MetricGroup": "Default;TopdownL1",
-         "MetricName": "bad_speculation",
--        "ScaleUnit": "100%"
-+        "ScaleUnit": "1percent of slots"
-     },
-     {
--        "MetricExpr": "(op_retired / op_spec) * (1 - stall_slot / (#slots * cpu_cycles))",
--        "BriefDescription": "Retiring L1 topdown metric",
-+        "MetricExpr": "100 * ((op_retired / op_spec) * (1 - stall_slot / (#slots * cpu_cycles)))",
-+        "BriefDescription": "This metric is the percentage of total slots that retired operations, which indicates cycles that were utilized efficiently.",
-         "DefaultMetricgroupName": "TopdownL1",
-         "MetricGroup": "Default;TopdownL1",
-         "MetricName": "retiring",
--        "ScaleUnit": "100%"
-+        "ScaleUnit": "1percent of slots"
-     },
-     {
--        "MetricExpr": "stall_slot_backend / (#slots * cpu_cycles)",
--        "BriefDescription": "Backend Bound L1 topdown metric",
-+        "MetricExpr": "100 * (stall_slot_backend / (#slots * cpu_cycles))",
-+        "BriefDescription": "This metric is the percentage of total slots that were stalled due to resource constraints in the backend of the processor.",
-         "DefaultMetricgroupName": "TopdownL1",
-         "MetricGroup": "Default;TopdownL1",
-         "MetricName": "backend_bound",
--        "ScaleUnit": "100%"
-+        "ScaleUnit": "1percent of slots"
-     }
- ]
+- Arnaldo
+ 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
+> 
+> On 28.06.23 10:45, Georg Müller wrote:
+> > When switching from dwarf_decl_file() to die_get_decl_file(), a regression
+> > was introduced when having a binary where the DWARF info is split to
+> > multiple CUs. It is not possible to add probes to certain functions.
+> > 
+> > These patches introduce a testcase which shows the current regression
+> > and a fix for the issue
+> > 
+> > Signed-off-by: Georg Müller <georgmueller@gmx.net>
+> > Link: https://lore.kernel.org/r/5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net/
+> > 
+> > ---
+> > Changes in v2:
+> >  - Add testcase
+> > 
+> > Changes in v3:
+> >  - start new thread
+> >  - add stable to cc
+> > 
+> > Georg Müller (2):
+> >   perf probe: add test for regression introduced by switch to
+> >     die_get_decl_file
+> >   perf probe: read DWARF files from the correct CU
+> > 
+> >  .../shell/test_uprobe_from_different_cu.sh    | 77 +++++++++++++++++++
+> >  tools/perf/util/dwarf-aux.c                   |  4 +-
+> >  2 files changed, 80 insertions(+), 1 deletion(-)
+> >  create mode 100755 tools/perf/tests/shell/test_uprobe_from_different_cu.sh
+> > 
+> > --
+> > 2.41.0
+> > 
+> > 
+> > 
+
 -- 
-2.34.1
 
+- Arnaldo
