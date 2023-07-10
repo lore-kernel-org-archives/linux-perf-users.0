@@ -2,124 +2,86 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98D3EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jul 2023 13:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 204F5EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jul 2023 14:19:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229795AbjGJNuG (ORCPT
+        id S229722AbjGJOTf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Jul 2023 09:50:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53794 "EHLO
+        Mon, 10 Jul 2023 10:19:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbjGJNuF (ORCPT
+        with ESMTP id S233170AbjGJOTc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Jul 2023 09:50:05 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB32398;
-        Mon, 10 Jul 2023 06:50:03 -0700 (PDT)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1qIrGv-000548-Uw; Mon, 10 Jul 2023 15:49:50 +0200
-Message-ID: <090d1bcb-608b-1aa3-7a59-f2b09ff0061e@leemhuis.info>
-Date:   Mon, 10 Jul 2023 15:49:49 +0200
+        Mon, 10 Jul 2023 10:19:32 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1C820E3
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Jul 2023 07:19:31 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 233B4D75;
+        Mon, 10 Jul 2023 07:20:13 -0700 (PDT)
+Received: from localhost.localdomain (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BDB963F67D;
+        Mon, 10 Jul 2023 07:19:29 -0700 (PDT)
+From:   James Clark <james.clark@arm.com>
+To:     linux-perf-users@vger.kernel.org, irogers@google.com,
+        renyu.zj@linux.alibaba.com, john.g.garry@oracle.com
+Cc:     namhyung@kernel.org, acme@kernel.org,
+        James Clark <james.clark@arm.com>
+Subject: [PATCH v2 1/5] perf: cs-etm: Don't duplicate FIELD_GET()
+Date:   Mon, 10 Jul 2023 15:18:59 +0100
+Message-Id: <20230710141903.1595312-2-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230710141903.1595312-1-james.clark@arm.com>
+References: <20230710141903.1595312-1-james.clark@arm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v3 0/2] perf probe: fix regression introduced by switch to
- die_get_decl_file
-Content-Language: en-US, de-DE
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Linux regressions mailing list <regressions@lists.linux.dev>
-Cc:     =?UTF-8?Q?Georg_M=c3=bcller?= <georgmueller@gmx.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230628084551.1860532-3-georgmueller@gmx.net>
- <1c85c4d6-7097-bc0a-d0ca-ebe234d63ece@leemhuis.info>
- <ZKwLKXL6rkoShDNc@kernel.org>
-From:   "Linux regression tracking (Thorsten Leemhuis)" 
-        <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZKwLKXL6rkoShDNc@kernel.org>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688997003;db093e26;
-X-HE-SMSGID: 1qIrGv-000548-Uw
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 10.07.23 15:44, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Jul 10, 2023 at 02:32:28PM +0200, Linux regression tracking (Thorsten Leemhuis) escreveu:
->> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
->> for once, to make this easily accessible to everyone.
->>
->> Masami, Arnaldo, what's up here? Georg (who is not a regular
->> contributor) afaics found a regression in a commit you
->> authored/committed and even provided a patch-set to fix it (the first
->> one nearly four weeks ago, e.g. before the merge window started), but
->> hasn't received much support from your side to get this in. Could you
->> please look into this to get this cleared up? Or am I missing something
->> and progress to fix this has been made?
-> 
-> I'm back from a 2 week vacation,
+linux/bitfield.h can be included as long as linux/kernel.h is included
+first, so change the order of the includes and drop the duplicate macro.
 
-Welcome back and hope you found some rest.
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/perf/util/cs-etm.c | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
 
-> going thru the pile, probably fell thru
-> the cracks and Namyung, that processed patches while I was away didn't
-> notice it either.
-> 
-> I'm checking,
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 1419b40dfbe8..9729d006550d 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -6,10 +6,11 @@
+  * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
+  */
+ 
++#include <linux/kernel.h>
++#include <linux/bitfield.h>
+ #include <linux/bitops.h>
+ #include <linux/coresight-pmu.h>
+ #include <linux/err.h>
+-#include <linux/kernel.h>
+ #include <linux/log2.h>
+ #include <linux/types.h>
+ #include <linux/zalloc.h>
+@@ -281,17 +282,6 @@ static int cs_etm__metadata_set_trace_id(u8 trace_chan_id, u64 *cpu_metadata)
+ 	return 0;
+ }
+ 
+-/*
+- * FIELD_GET (linux/bitfield.h) not available outside kernel code,
+- * and the header contains too many dependencies to just copy over,
+- * so roll our own based on the original
+- */
+-#define __bf_shf(x) (__builtin_ffsll(x) - 1)
+-#define FIELD_GET(_mask, _reg)						\
+-	({								\
+-		(typeof(_mask))(((_reg) & (_mask)) >> __bf_shf(_mask)); \
+-	})
+-
+ /*
+  * Get a metadata for a specific cpu from an array.
+  *
+-- 
+2.34.1
 
-Great, many thx! Ciao, Thorsten
-
->> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->> --
->> Everything you wanna know about Linux kernel regression tracking:
->> https://linux-regtracking.leemhuis.info/about/#tldr
->> If I did something stupid, please tell me, as explained on that page.
->>
->>
->> On 28.06.23 10:45, Georg Müller wrote:
->>> When switching from dwarf_decl_file() to die_get_decl_file(), a regression
->>> was introduced when having a binary where the DWARF info is split to
->>> multiple CUs. It is not possible to add probes to certain functions.
->>>
->>> These patches introduce a testcase which shows the current regression
->>> and a fix for the issue
->>>
->>> Signed-off-by: Georg Müller <georgmueller@gmx.net>
->>> Link: https://lore.kernel.org/r/5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net/
->>>
->>> ---
->>> Changes in v2:
->>>  - Add testcase
->>>
->>> Changes in v3:
->>>  - start new thread
->>>  - add stable to cc
->>>
->>> Georg Müller (2):
->>>   perf probe: add test for regression introduced by switch to
->>>     die_get_decl_file
->>>   perf probe: read DWARF files from the correct CU
->>>
->>>  .../shell/test_uprobe_from_different_cu.sh    | 77 +++++++++++++++++++
->>>  tools/perf/util/dwarf-aux.c                   |  4 +-
->>>  2 files changed, 80 insertions(+), 1 deletion(-)
->>>  create mode 100755 tools/perf/tests/shell/test_uprobe_from_different_cu.sh
->>>
->>> --
->>> 2.41.0
->>>
->>>
->>>
-> 
