@@ -2,175 +2,108 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CB5EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jul 2023 22:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63979EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jul 2023 23:08:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230477AbjGJWnQ (ORCPT
+        id S229670AbjGJXIT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Jul 2023 18:43:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36728 "EHLO
+        Mon, 10 Jul 2023 19:08:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230292AbjGJWnI (ORCPT
+        with ESMTP id S230310AbjGJXIR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Jul 2023 18:43:08 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8D40C4;
-        Mon, 10 Jul 2023 15:43:06 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-55779047021so3436975a12.3;
-        Mon, 10 Jul 2023 15:43:06 -0700 (PDT)
+        Mon, 10 Jul 2023 19:08:17 -0400
+Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 188B810D;
+        Mon, 10 Jul 2023 16:08:16 -0700 (PDT)
+Received: by mail-oi1-x229.google.com with SMTP id 5614622812f47-3a04e5baffcso4141706b6e.3;
+        Mon, 10 Jul 2023 16:08:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689028986; x=1691620986;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=cwD7qyMS4zLIWzJbsRd2HepNWRl3udEBk9Vr53sr8E4=;
-        b=PaPL/06k+4GrOMHHCaCbdjwIKVleSAXLgWa7SkvcO9Lp+gZ3y/yz8tpPY2G4m0bzEM
-         6Rbqn+T4WRjPkDOXH1IBTsCVGbm7dpiuhBq3PMMHq1+7HneP025c3O31c00y1mts1LUN
-         6EwRA1DSzW1PoQl5p+BI08ofsyFBe1H+Na7PAsQxR3Da3XRDCB+H6GkRScm4FkYOIKxa
-         PRFHoj78MV874qCTQX78MVA4Ek4VhU+rSB+vfkNOWPFTwmCnbWVLoED1EC6kePghV+Il
-         arPUpu7L/INgipTXKWfw2/cbWsO8SMHckzrlY0cqhn8q4GGO7LvfMe2b4L9N/FuDv2rM
-         0cAQ==
+        d=gmail.com; s=20221208; t=1689030495; x=1691622495;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Vf0fvL5fN8MurExCXhEJeP/D8yL9Qpt+oFEEwg0wzcM=;
+        b=DE8z1iTACA/5CZQsSDa2U9wf8y5753+kcmqUFYv1C/tKA4tsyeyTM2I4pzbUZslO1d
+         DiwXz0ifOheEGcxRI/tI1VwdA73HjKbKz7Uft3YbR6XxKPpsl2n/51GiLVPF02cdPlnp
+         uvGa1DjUaaNrNJxl1whbtkA/GRuWPIgreiT2fNiZgQaq/jOK7TqnDwV+hAB7FIF5fXXT
+         n5V/sdd1R0T4gYgLpatLsm3fXTjv2V3o0gABVK5Z3EudmrnMhamb6UWBlOJ+IzlJWCr5
+         EDgCLVA2JJz3zdlM/I3HqpORezGSATttod+o9oLCYRUHsyA/A5jyPVGI8zjokx2NbHfp
+         dqIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689028986; x=1691620986;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
+        d=1e100.net; s=20221208; t=1689030495; x=1691622495;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cwD7qyMS4zLIWzJbsRd2HepNWRl3udEBk9Vr53sr8E4=;
-        b=Q2prKppUVkKdso4zswpBV//oObiZPMtSia7g5P920PpA7wPFBBGeX4MHeUSUqAV/Zr
-         LqU3VFM+gQjApOUnZ+K6G/CQd/RM7ZFI0qnuHk3BQMmrgqY72wfQj7DiH3dst3dGSy34
-         xiUzCgEXFP8zOFhi3y0/eisQwdCyC41nbT21GFezYevcD60rnkvyyDF5QRIL6zFRTEEs
-         NqYnpebXIHREQd+k3n9mq/Hc0aVWhmDmdtL5tigf7vRxwoh8scC7w/Y1C2OvjmgpyHiV
-         B5eW7sGHY9khlnUxDka7KZlNglFff9v9MwvGlv80SCKUNfTH/x0SpFtzJVJgKZr2gMNM
-         4P7w==
-X-Gm-Message-State: ABy/qLZeqBHF+hGAXOojEEU44aXnJJt8foDnN54uZwXGcB6NaV8eo+oZ
-        zZ0WlqGnfjqy2JSLk0UsmE73mxC196AsO7Oe
-X-Google-Smtp-Source: APBJJlGwUgrHc2wuhWPLThj3IjY4kLhfCa8NTx6eo17us8NcHFBWq42lQ9RHbopdm6W6ntWK5jewnw==
-X-Received: by 2002:a17:902:7b88:b0:1b7:e478:6bcd with SMTP id w8-20020a1709027b8800b001b7e4786bcdmr9531711pll.33.1689028986144;
-        Mon, 10 Jul 2023 15:43:06 -0700 (PDT)
+        bh=Vf0fvL5fN8MurExCXhEJeP/D8yL9Qpt+oFEEwg0wzcM=;
+        b=bzDHwAYsKBtGkt2WyvNFmcfkxteknnfUQ8baqOHWsuVX8NhJ0kf1csCDO92HS1ZMVD
+         8ldLB4vQvLcYL8ecJ28USf/jF+NL7z/1iePEl/5SGzYP4wGJE8Di5rN1LIF4fmbC8wE/
+         l6sLbQ/082DZK8gdHOzqYN+YY+h3TWWL5ZGWdsT/JxxiCtHrw4ljjuuTFVzPA4MTnQjj
+         HQv2QP/dgmxl9owrhazAhM/yXGLo8JV8bcZyvWke9AQcd9bFto/wkcHaWsa733y3WJus
+         3CNqkPxtZA/UBBZk1MPs2KAsXfdk7JfvN6C0psWfRettcZ72AovG4IEJiCd38cKROTdC
+         pLmw==
+X-Gm-Message-State: ABy/qLbqOkvahQtC9M/3XQLNd16B2Kk4ReZwuG7KfgNIxZyNGyhezefJ
+        U60BPOkczisrPMi54YWO/84=
+X-Google-Smtp-Source: APBJJlH7hkB77Bscn3KRTkzaHfzCY2i6sf1I/xj+9kMS2tprITbkvtjLmKTBb5MsW9DZ13yjKFVCmA==
+X-Received: by 2002:a05:6358:2813:b0:132:d42f:8e19 with SMTP id k19-20020a056358281300b00132d42f8e19mr9637245rwb.31.1689030495299;
+        Mon, 10 Jul 2023 16:08:15 -0700 (PDT)
 Received: from yoga ([2400:1f00:13:76f2:868d:bc7d:562b:a5bb])
-        by smtp.gmail.com with ESMTPSA id e2-20020a17090301c200b001a6d4ea7301sm377563plh.251.2023.07.10.15.43.01
+        by smtp.gmail.com with ESMTPSA id r27-20020a638f5b000000b005307501cfe4sm232292pgn.44.2023.07.10.16.08.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jul 2023 15:43:05 -0700 (PDT)
+        Mon, 10 Jul 2023 16:08:14 -0700 (PDT)
+Date:   Tue, 11 Jul 2023 04:38:06 +0530
 From:   Anup Sharma <anupnewsmail@gmail.com>
-X-Google-Original-From: Anup Sharma <AnupSharma>
-Date:   Tue, 11 Jul 2023 04:12:57 +0530
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Anup Sharma <anupnewsmail@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
+        Anup Sharma <anupnewsmail@gmail.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/7] scripts: python: implement get or create frame
- function
-Message-ID: <ZKyJcbX89y5ziqNi@yoga>
-References: <cover.1688585597.git.anupnewsmail@gmail.com>
- <a5749b6a98928b2a8fa6c1dd1c54201334edb04b.1688585597.git.anupnewsmail@gmail.com>
- <CAM9d7ciZcO_kVwRhOoz0xt-hdguoTHUd8RPSpSOwiCFOTbYNKw@mail.gmail.com>
+Subject: [PATCH v3 0/6] Add support for Firefox's gecko profile format
+Message-ID: <cover.1689024635.git.anupnewsmail@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7ciZcO_kVwRhOoz0xt-hdguoTHUd8RPSpSOwiCFOTbYNKw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 05, 2023 at 11:06:58PM -0700, Namhyung Kim wrote:
-> On Wed, Jul 5, 2023 at 12:48 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
-> >
-> > The get_or_create_frame function is responsible for retrieving or
-> > creating a frame based on the provided frameString. If the frame
-> > corresponding to the frameString is found in the frameMap, it is
-> > returned. Otherwise, a new frame is created by appending relevant
-> > information to the frameTable's 'data' array and adding the
-> > frameString to the stringTable.
-> >
-> > The index of the newly created frame is added to the frameMap.
-> >
-> > Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
-> > ---
-> >  .../scripts/python/firefox-gecko-converter.py | 33 +++++++++++++++++++
-> >  1 file changed, 33 insertions(+)
-> >
-> > diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools/perf/scripts/python/firefox-gecko-converter.py
-> > index 6f69c083d3ff..d5b9fb16e520 100644
-> > --- a/tools/perf/scripts/python/firefox-gecko-converter.py
-> > +++ b/tools/perf/scripts/python/firefox-gecko-converter.py
-> > @@ -77,6 +77,39 @@ def process_event(param_dict):
-> >                                 stackMap[key] = stack
-> >                         return stack
-> >
-> > +               frameMap = dict()
-> > +               def get_or_create_frame(frameString):
-> > +                       frame = frameMap.get(frameString)
-> > +                       if frame is None:
-> > +                               frame = len(frameTable['data'])
-> > +                               location = len(stringTable)
-> > +                               stringTable.append(frameString)
-> 
-> Looks like it just always appending a new string.
-> Any deduplication work later?
+This patch series adds support for Firefox's gecko profile format.
+The format is documented here [1].
 
-Although this initially came to my mind and almost all stack frames
-seem to be similar for a repeated call, but I am not sure if we can dedup
-because some frames do differ as the call stack progresses. For example,
-a process exits a function and then calls another function, resulting in
-most of the stack frames being the same but the last one being different.
+I have incorporated several changes based on feedback from the
+previous version of the patch. However, there are still a few
+remaining comments that I am currently addressing.
 
-> > +                               category = KERNEL_CATEGORY_INDEX if frameString.find('kallsyms') != -1 \
-> > +                                               or frameString.find('/vmlinux') != -1 \
-> > +                                               or frameString.endswith('.ko)') \
-> > +                                               else USER_CATEGORY_INDEX
-> 
-> I think you can use param_dict['sample']['cpumode'].
-> Please see include/uapi/linux/perf_event.h for cpumode
-> values.
+Additionally, I am still in the process of learning how to send
+patches in a series, so there may be some shortcomings in this
+particular series as well.
 
-I am actively working on incorporating the use of param_dict
-['sample']['cpumode'] to determine the category in the
-upcoming v4 update. I saw in param_dict['sample']['cpumode']
-values exist as 1 and 2. Can you point me to exact line in
-include/uapi/linux/perf_event.h . I am not able to find it.
+changes from v2:
+- renamed mod to func
+- removed unnessecary imports print_function
+- removed shebang python env declaration
+- changed _createtread to _createThread
+- Commits in better order.
 
-> > +                               implementation = None
-> > +                               optimizations = None
-> > +                               line = None
-> > +                               relevantForJS = False
-> > +                               subcategory = None
-> > +                               innerWindowID = 0
-> > +                               column = None
-> > +
-> > +                               frameTable['data'].append([
-> > +                                       location,
-> > +                                       relevantForJS,
-> > +                                       innerWindowID,
-> > +                                       implementation,
-> > +                                       optimizations,
-> > +                                       line,
-> > +                                       column,
-> > +                                       category,
-> > +                                       subcategory,
-> > +                               ])
-> > +                               frameMap[frameString] = frame
-> 
-> I think it'd be better if you define the frameTable in this
-> commit.
+[1] https://github.com/firefox-devtools/profiler/blob/main/docs-developer/gecko-profile-format.md
 
-Certainly, my apologies for the disorder.
+Anup Sharma (6):
+  scripts: python: Add initial script file with imports.
+  scripts: python: Extact necessary information from process event
+  scripts: python: thread sample processing to create thread with
+    schemas
+  scripts: python: Add trace end processing and JSON output
+  scripts: python: Implement add sample function and return finish
+  scripts: python: implement get or create frame and stack function
 
-> Thanks,
-> Namhyung
-> 
-> 
-> > +                       return frame
-> > +
-> >         def _addThreadSample(pid, tid, threadName, time_stamp, stack):
-> >                 thread = thread_map.get(tid)
-> >                 if not thread:
-> > --
-> > 2.34.1
-> >
+ .../scripts/python/firefox-gecko-converter.py | 221 ++++++++++++++++++
+ 1 file changed, 221 insertions(+)
+ create mode 100644 tools/perf/scripts/python/firefox-gecko-converter.py
+
+-- 
+2.34.1
+
