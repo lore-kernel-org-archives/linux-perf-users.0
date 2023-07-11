@@ -2,131 +2,141 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 558B0EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jul 2023 17:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8841FEB64DD
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jul 2023 17:34:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230491AbjGKRaa convert rfc822-to-8bit (ORCPT
+        id S230204AbjGKReg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Jul 2023 13:30:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41484 "EHLO
+        Tue, 11 Jul 2023 13:34:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbjGKRa3 (ORCPT
+        with ESMTP id S229890AbjGKRef (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Jul 2023 13:30:29 -0400
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3745A1;
-        Tue, 11 Jul 2023 10:30:28 -0700 (PDT)
-Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-47e793ccdc7so1898391e0c.1;
-        Tue, 11 Jul 2023 10:30:28 -0700 (PDT)
+        Tue, 11 Jul 2023 13:34:35 -0400
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 477E5E77;
+        Tue, 11 Jul 2023 10:34:31 -0700 (PDT)
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-47e655e9a9aso2177108e0c.2;
+        Tue, 11 Jul 2023 10:34:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689096628; x=1691688628;
+        d=1e100.net; s=20221208; t=1689096870; x=1691688870;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PwVGOGhzlbrDjjqXvCrudYlu5CQ3HrJeIcRNYeurvBA=;
-        b=jVN0i7sdojVfBpaC77C2ko7XARkadAI2BCQ9JWHid2qyixU48RojXaq/wwKTyS/1lL
-         ljaJZ35Wtrp3fuWKISW8+MyGL5ubMZQmX0Y7By6w3/v6uT0QpJjZC4bl7GK7y916+H0B
-         vL1jUPYPXu4neUZe1yiqxWqtvgQU05vO9BbeHFyInA5S19nk0XwW7pS9STqBud10cAq4
-         bgjN+Yg508QTM9iGRqtAYKceO2mKwyVayNYwvVbU8oT7PdUNLPtJ6O//rxCIEvLE1oVV
-         6aPo2kXC3zU+bdvGBBhFKe7+hz89JoE9rEfA3A8+tb8cz2vYjYZrPxam5iCPsSSJSc70
-         MDNw==
-X-Gm-Message-State: ABy/qLYlYOiBPe4dPVtWMeNpKOblRyYHOSGxiV/aNCDtx4cIcjFEQa3g
-        WN/YyjhPO3OeymRPzDApDaaAHvPemcZRRP6KjalIQ7Yk
-X-Google-Smtp-Source: APBJJlHPDIiWNNx7gZC4xz1m3OvYDtp2Gk5/Hxi2GnB6KjNqUTH93hQtcSVpZuvx05JkEUxapJ84ljJrDB5ZTLwrioM=
-X-Received: by 2002:a1f:4544:0:b0:47e:a218:86b2 with SMTP id
- s65-20020a1f4544000000b0047ea21886b2mr5481714vka.15.1689096627914; Tue, 11
- Jul 2023 10:30:27 -0700 (PDT)
+        bh=LHveKtnhu8QuPi05Hn4gQQcWgqPxgrNd+FfX38wdmsE=;
+        b=fv8MWKfX7UTLQ5REFdzFz4VtvyuY/qCUOemz8H/S+0X/r6qDGa4fl5/l7TAeS6xeGp
+         cUbildRa3x9zZmAWxzr3tgvAgTgCjyRlCmcy4+E9yf3G+EJg6hSpvg1RZ3i9ge+7FP1j
+         LN7Y0uOL8MCq6Z/q2JhdIW8tDmdtrM2OD3lzRXchHaIrmJpCZMSKUbsHOEikijX0hJi3
+         OtFkAukrnkCHr+ZBohFWAu7kunr9U4DmOP6bR6LY1MDiQB8OYkadKXHbv+KhF8XgB3ZG
+         +NUbW9efVbuslAjElzEvULqeNIF2BfLKcmQoUfy/Vnfvd6XmSqDX6S/FU1uNOgDcixqC
+         nw5A==
+X-Gm-Message-State: ABy/qLbXzkn3GQ4wUPCvhEZ9cCoHTuoThHK7HLbnoHcPJr2gVVpG/KBQ
+        uL8V+f1yeaPsv10coH71EUgq5lCcVzkU9V9ayWg=
+X-Google-Smtp-Source: APBJJlH4YXSG7vT8mncA1+8Qte/AHKUMyFUk3Kfo51QFm40p7bQ43fRnwDozC38Id8CDhRolTyjp1d6ok/ds8Fzv4/w=
+X-Received: by 2002:a1f:d0c2:0:b0:46e:9f33:add1 with SMTP id
+ h185-20020a1fd0c2000000b0046e9f33add1mr7825797vkg.6.1689096869880; Tue, 11
+ Jul 2023 10:34:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230620201818.1670753-1-namhyung@kernel.org> <20230620201818.1670753-3-namhyung@kernel.org>
- <a791e982-ada3-7f26-e105-bc7fa9c7d346@intel.com>
-In-Reply-To: <a791e982-ada3-7f26-e105-bc7fa9c7d346@intel.com>
+References: <20230706063440.54189-1-sandipan.das@amd.com> <CAP-5=fVdVSL4H1qWLZMiU3H2-bOJ0RkFOfq4Jxz1qw0-8EoYFw@mail.gmail.com>
+ <ZK1sb4tPizTzWq7q@kernel.org>
+In-Reply-To: <ZK1sb4tPizTzWq7q@kernel.org>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 11 Jul 2023 10:30:16 -0700
-Message-ID: <CAM9d7cjZA9JD_bxkaRyJxgt4sirCvwdyCARVTGMPOGHsip+MHA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] perf machine: Include data symbols in the kernel map
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
+Date:   Tue, 11 Jul 2023 10:34:18 -0700
+Message-ID: <CAM9d7ci5owtM9h_PjsLo6hNz=kZKDT8PcPFOWX41Vf9g+SnpEQ@mail.gmail.com>
+Subject: Re: [PATCH v2] perf vendor events amd: Fix large metrics
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Sandipan Das <sandipan.das@amd.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        adrian.hunter@intel.com, ayush.jain3@amd.com,
+        ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Adrian,
-
-On Tue, Jul 11, 2023 at 8:19 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+On Tue, Jul 11, 2023 at 7:51 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> On 20/06/23 23:18, Namhyung Kim wrote:
-> > When perf record -d is used, it needs data mmaps to symbolize global data.
-> > But it missed to collect kernel data maps so it cannot symbolize them.
-> > Instead of having a separate map, just increase the kernel map size to
-> > include the data section.
+> Em Thu, Jul 06, 2023 at 06:49:29AM -0700, Ian Rogers escreveu:
+> > On Wed, Jul 5, 2023 at 11:34 PM Sandipan Das <sandipan.das@amd.com> wrote:
+> > >
+> > > There are cases where a metric requires more events than the number of
+> > > available counters. E.g. AMD Zen, Zen 2 and Zen 3 processors have four
+> > > data fabric counters but the "nps1_die_to_dram" metric has eight events.
+> > > By default, the constituent events are placed in a group and since the
+> > > events cannot be scheduled at the same time, the metric is not computed.
+> > > The "all metrics" test also fails because of this.
+> > >
+> > > Use the NO_GROUP_EVENTS constraint for such metrics which anyway expect
+> > > the user to run perf with "--metric-no-group".
+> > >
+> > > E.g.
+> > >
+> > >   $ sudo perf test -v 101
+> > >
+> > > Before:
+> > >
+> > >   101: perf all metrics test                                           :
+> > >   --- start ---
+> > >   test child forked, pid 37131
+> > >   Testing branch_misprediction_ratio
+> > >   Testing all_remote_links_outbound
+> > >   Testing nps1_die_to_dram
+> > >   Metric 'nps1_die_to_dram' not printed in:
+> > >   Error:
+> > >   Invalid event (dram_channel_data_controller_4) in per-thread mode, enable system wide with '-a'.
+> > >   Testing macro_ops_dispatched
+> > >   Testing all_l2_cache_accesses
+> > >   Testing all_l2_cache_hits
+> > >   Testing all_l2_cache_misses
+> > >   Testing ic_fetch_miss_ratio
+> > >   Testing l2_cache_accesses_from_l2_hwpf
+> > >   Testing l2_cache_misses_from_l2_hwpf
+> > >   Testing op_cache_fetch_miss_ratio
+> > >   Testing l3_read_miss_latency
+> > >   Testing l1_itlb_misses
+> > >   test child finished with -1
+> > >   ---- end ----
+> > >   perf all metrics test: FAILED!
+> > >
+> > > After:
+> > >
+> > >   101: perf all metrics test                                           :
+> > >   --- start ---
+> > >   test child forked, pid 43766
+> > >   Testing branch_misprediction_ratio
+> > >   Testing all_remote_links_outbound
+> > >   Testing nps1_die_to_dram
+> > >   Testing macro_ops_dispatched
+> > >   Testing all_l2_cache_accesses
+> > >   Testing all_l2_cache_hits
+> > >   Testing all_l2_cache_misses
+> > >   Testing ic_fetch_miss_ratio
+> > >   Testing l2_cache_accesses_from_l2_hwpf
+> > >   Testing l2_cache_misses_from_l2_hwpf
+> > >   Testing op_cache_fetch_miss_ratio
+> > >   Testing l3_read_miss_latency
+> > >   Testing l1_itlb_misses
+> > >   test child finished with 0
+> > >   ---- end ----
+> > >   perf all metrics test: Ok
+> > >
+> > > Reported-by: Ayush Jain <ayush.jain3@amd.com>
+> > > Suggested-by: Ian Rogers <irogers@google.com>
+> > > Signed-off-by: Sandipan Das <sandipan.das@amd.com>
 > >
-> > Probably we can have a separate kernel map for data, but the current
-> > code assumes a single kernel map.  So it'd require more changes in other
-> > places and looks error-prone.  I decided not to go that way for now.
-> >
-> > Also it seems the kernel module size already includes the data section.
-> >
-> > For example, my system has the following.
-> >
-> >   $ grep -e _stext -e _etext -e _edata /proc/kallsyms
-> >   ffffffff99800000 T _stext
-> >   ffffffff9a601ac8 T _etext
-> >   ffffffff9b446a00 D _edata
-> >
-> > Size of the text section is (0x9a601ac8 - 0x99800000 = 0xe01ac8) and
-> > size of the data section is (0x9b446a00 - 0x99800000 = 0x1c46a00).
-> >
-> > Before:
-> >   $ perf record -d true
-> >
-> >   $ perf report -D | grep MMAP | head -1
-> >   0 0 0x460 [0x60]: PERF_RECORD_MMAP -1/0: [0xffffffff99800000(0xe01ac8) @ 0xffffffff99800000]: x [kernel.kallsyms]_text
-> >                                                                ^^^^^^^^
-> >                                                                  here
-> > After:
-> >   $ perf report -D | grep MMAP | head -1
-> >   0 0 0x460 [0x60]: PERF_RECORD_MMAP -1/0: [0xffffffff99800000(0x1c46a00) @ 0xffffffff99800000]: x [kernel.kallsyms]_text
-> >                                                                ^^^^^^^^^
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/util/machine.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> > index ddc0a2130caf..e93a66f6e0b3 100644
-> > --- a/tools/perf/util/machine.c
-> > +++ b/tools/perf/util/machine.c
-> > @@ -1218,7 +1218,10 @@ static int machine__get_running_kernel_start(struct machine *machine,
-> >
-> >       *start = addr;
-> >
-> > -     err = kallsyms__get_function_start(filename, "_etext", &addr);
-> > +     if (machine->has_data_mmap)
-> > +             err = kallsyms__get_symbol_start(filename, "_edata", &addr);
-> > +     else
-> > +             err = kallsyms__get_function_start(filename, "_etext", &addr);
+> > Acked-by: Ian Rogers <irogers@google.com>
 >
-> What is the downside of just extending it unconditionally?
+> Thanks, applied.
 
-I don't know.. maybe some people would argue it needs the
-proper protection bits other than 'x' but this patch also breaks it.
-But as I said, I'm not sure if we really want to change that now.
+If I'm not too late..
 
-That said, we can make it unconditional. :)
+Tested-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
-
->
-> >       if (!err)
-> >               *end = addr;
-> >
->
