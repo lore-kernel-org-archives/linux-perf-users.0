@@ -2,136 +2,151 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF550EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jul 2023 13:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E48EEB64DC
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jul 2023 13:54:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231631AbjGKNUI (ORCPT
+        id S232079AbjGKNx7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Jul 2023 09:20:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44290 "EHLO
+        Tue, 11 Jul 2023 09:53:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229491AbjGKNUI (ORCPT
+        with ESMTP id S229637AbjGKNx5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Jul 2023 09:20:08 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 463C312F;
-        Tue, 11 Jul 2023 06:20:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CF002614DD;
-        Tue, 11 Jul 2023 13:20:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04486C433C8;
-        Tue, 11 Jul 2023 13:20:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689081606;
-        bh=uOS4JfNufBFC0X+cPyi5FCg/wfbG6rddahqbtej+cxE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jtIZOuwVUA6gRzzifFEtONSM8PLmeN4AmB5mo68yP9DT34i44Aa22wqsbGhjsCT8J
-         ZPXjkFA8ZD6l9Km+x9yAaekLi//ruuOFKGDVdIbCKBweHTTwCYQvUSYjSc3Ze3SOfU
-         JqrNdXZoBar9mDR5v8LW5NYZrIMK4nqAQgmlsM/Ruiv9/sPZQJW/jl7HSxT4CCgkfl
-         JeeZjHd9IXp7UyoLjnpIeu7ROxLcYRuqFlc68iyXBPsxa0KrxpxjmjzxHg/i/FpUoN
-         P9PhfeuvKLLlYn0K4D5Q7LdM3eYPjVmCOnq11N0tRkUYRuC/Apwp7IBG5MWp7eiPEa
-         EzK+qIxMkDD6g==
-Date:   Tue, 11 Jul 2023 22:20:00 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Georg =?UTF-8?B?TcO8bGxlcg==?= <georgmueller@gmx.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        regressions@lists.linux.dev,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf probe: read DWARF files from the correct CU
-Message-Id: <20230711222000.d316cf7fd643cb4203ea1204@kernel.org>
-In-Reply-To: <ZK1RyVue7OMXzVl4@kernel.org>
-References: <5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net>
-        <20230615200147.664346-3-georgmueller@gmx.net>
-        <ZK1RyVue7OMXzVl4@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Tue, 11 Jul 2023 09:53:57 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DBDA94;
+        Tue, 11 Jul 2023 06:53:56 -0700 (PDT)
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36BDgFZU032373;
+        Tue, 11 Jul 2023 13:53:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=IppzMroP1qhzHzibMwQb7urLmDbLU3ctwMXcQ4ZJrxY=;
+ b=hVv3xa0L2Z0DAiiNAXHtPGte3FKPDbrhjgmZVj/w9lduB42HHx/47VuDpEOhdGXyjQeW
+ fIjYwzbJLpI07Ld4ZpEgRAY48VQKJgNVMTTobaA3XU8UVWgdo/fTNs/5s/qtytZwbwOS
+ XU9i52j9F7danZCXFxN6As9eazjUD71QGVVbC5WgRPt9Op9gguLtl64g7AgqSOCpnwlV
+ g0NOKawfYMP9MpG/BisfPOeIEvidJ5iVi8Asy6rjjpb7MmhsKCRx3O0GdyOI5gtjYdQJ
+ RBlT9ny33hewlRjL6Egbn6dcT8iGAncemxQXE3GBbVSSVa4rVWtjm5hwFdKuxwK/Qkc/ pA== 
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rs86u0jc5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Jul 2023 13:53:52 +0000
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36B6v6PN011434;
+        Tue, 11 Jul 2023 13:53:49 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma01fra.de.ibm.com (PPS) with ESMTPS id 3rpye51bpf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Jul 2023 13:53:48 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36BDrj4M43123186
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Jul 2023 13:53:45 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F15C42004F;
+        Tue, 11 Jul 2023 13:53:44 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BB76820040;
+        Tue, 11 Jul 2023 13:53:44 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Tue, 11 Jul 2023 13:53:44 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, jolsa@kernel.org, rostedt@goodmis.org
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH v2] perf/build: fix broken dependency check for libtracefs
+Date:   Tue, 11 Jul 2023 15:53:38 +0200
+Message-Id: <20230711135338.397473-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.39.2
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: ORUko_NciuHZ5uRhcEMvXe0bGJxJMMr7
+X-Proofpoint-ORIG-GUID: ORUko_NciuHZ5uRhcEMvXe0bGJxJMMr7
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-11_08,2023-07-11_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
+ bulkscore=0 impostorscore=0 phishscore=0 priorityscore=1501 suspectscore=0
+ mlxscore=0 lowpriorityscore=0 clxscore=1015 mlxlogscore=885 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
+ definitions=main-2307110123
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, 11 Jul 2023 09:57:45 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Perf build auto-detects features and packages already installed
+for its build. This is done in directory tools/build/feature. This
+directory contains small sample programs. When they successfully
+compile the necessary prereqs in form of libraries and header
+files are present.
 
-> Em Thu, Jun 15, 2023 at 10:01:37PM +0200, Georg Müller escreveu:
-> > After switching from dwarf_decl_file() to die_get_decl_file(), it is not
-> > possible to add probes for certain functions of certain binaries:
-> > 
-> >  $ perf probe -x /usr/lib/systemd/systemd-logind match_unit_removed
-> >  A function DIE doesn't have decl_line. Maybe broken DWARF?
-> >  A function DIE doesn't have decl_line. Maybe broken DWARF?
-> >  Probe point 'match_unit_removed' not found.
-> >     Error: Failed to add events.
-> > 
-> > The problem is that die_get_decl_file() uses the wrong CU to search for
-> > the file. elfutils commit e1db5cdc9f has some good explanation for this:
-> > 
-> >     dwarf_decl_file uses dwarf_attr_integrate to get the DW_AT_decl_file
-> >     attribute. This means the attribute might come from a different DIE
-> >     in a different CU. If so, we need to use the CU associated with the
-> >     attribute, not the original DIE, to resolve the file name.
-> > 
-> > This patch uses the same source of information as elfutils: use attribute
-> > DW_AT_decl_file and use this CU to search for the file.
-> 
-> Thanks, applied to the perf-tools branch, that will be submitted for
-> Linux v6.5.
+Such a check is also done for libtracefs. And this check fails:
 
-Thanks Arnaldo and Georg,
+Output before:
+ # rm -f test-libtracefs.bin; make test-libtracefs.bin
+ gcc  -MD -Wall -Werror -o test-libtracefs.bin test-libtracefs.c \
+	 > test-libtracefs.make.output 2>&1 -ltracefs
+ make: *** [Makefile:211: test-libtracefs.bin] Error 1
+ # cat test-libtracefs.make.output
+ In file included from test-libtracefs.c:2:
+ /usr/include/tracefs/tracefs.h:11:10: fatal error: \
+	 event-parse.h: No such file or directory
+   11 | #include <event-parse.h>
+      |          ^~~~~~~~~~~~~~~
+ compilation terminated.
+ #
 
-It sounds perfect reason why that happened. I didn't expect the case that
-the attribute comes from another CU...
+The root cause of this compile error is
+commit 880885d9c22e ("libtracefs: Remove "traceevent/" from referencing libtraceevent headers")
+in the libtracefs project hosted here:
+ https://git.kernel.org/pub/scm/libs/libtrace/libtracefs.git/
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+That mentioned patch removes the traceevent/ directory name from
+the include statement, causing the file not to be included even
+when the libtraceevent-devel package is installed. This package contains
+the file referred to in tracefs/tracefs.h:
+ # rpm -ql libtraceevent-devel
+ /usr/include/traceevent
+ /usr/include/traceevent/event-parse.h  <----- here
+ /usr/include/traceevent/event-utils.h
+ /usr/include/traceevent/kbuffer.h
+ /usr/include/traceevent/trace-seq.h
+ /usr/lib64/libtraceevent.so
+ /usr/lib64/pkgconfig/libtraceevent.pc
+ #
 
-> 
-> - Arnaldo
->  
-> > Fixes: dc9a5d2ccd5c ("perf probe: Fix to get declared file name from clang DWARF5")
-> > Signed-off-by: Georg Müller <georgmueller@gmx.net>
-> > Link: https://lore.kernel.org/r/5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net/
-> > ---
-> >  tools/perf/util/dwarf-aux.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> > index b07414409771..137b3ed9897b 100644
-> > --- a/tools/perf/util/dwarf-aux.c
-> > +++ b/tools/perf/util/dwarf-aux.c
-> > @@ -478,8 +478,10 @@ static const char *die_get_file_name(Dwarf_Die *dw_die, int idx)
-> >  {
-> >  	Dwarf_Die cu_die;
-> >  	Dwarf_Files *files;
-> > +	Dwarf_Attribute attr_mem;
-> > 
-> > -	if (idx < 0 || !dwarf_diecu(dw_die, &cu_die, NULL, NULL) ||
-> > +	if (idx < 0 || !dwarf_attr_integrate(dw_die, DW_AT_decl_file, &attr_mem) ||
-> > +	    !dwarf_cu_die(attr_mem.cu, &cu_die, NULL, NULL, NULL, NULL, NULL, NULL) ||
-> >  	    dwarf_getsrcfiles(&cu_die, &files, NULL) != 0)
-> >  		return NULL;
-> > 
-> > --
-> > 2.41.0
-> > 
-> 
-> -- 
-> 
-> - Arnaldo
+With this patch the compile succeeds.
 
+Output after:
+ # rm -f test-libtracefs.bin; make test-libtracefs.bin
+ gcc  -MD -Wall -Werror -o test-libtracefs.bin test-libtracefs.c \
+	 > test-libtracefs.make.output 2>&1 -I/usr/include/traceevent -ltracefs
+ #
 
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Cc: jolsa@kernel.org
+Cc: rostedt@goodmis.org
+---
+ tools/build/feature/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 0f0aa9b7d7b5..2cd6dbbee088 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -208,7 +208,7 @@ $(OUTPUT)test-libtraceevent.bin:
+ 	$(BUILD) -ltraceevent
+ 
+ $(OUTPUT)test-libtracefs.bin:
+-	$(BUILD) -ltracefs
++	 $(BUILD) $(shell $(PKG_CONFIG) --cflags libtraceevent 2>/dev/null) -ltracefs
+ 
+ $(OUTPUT)test-libcrypto.bin:
+ 	$(BUILD) -lcrypto
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.41.0
+
