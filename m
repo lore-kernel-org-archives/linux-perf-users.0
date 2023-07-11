@@ -2,190 +2,142 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFECBEB64D9
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jul 2023 23:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2547EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jul 2023 01:41:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229619AbjGJXPX (ORCPT
+        id S229664AbjGKBlb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Jul 2023 19:15:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49058 "EHLO
+        Mon, 10 Jul 2023 21:41:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230361AbjGJXPT (ORCPT
+        with ESMTP id S229626AbjGKBla (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Jul 2023 19:15:19 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD9321B7;
-        Mon, 10 Jul 2023 16:15:17 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id 41be03b00d2f7-55b1238a013so3633707a12.3;
-        Mon, 10 Jul 2023 16:15:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689030917; x=1691622917;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dAwiz27o1hNxGAQwrIRT6lxtMelfroQzik/QCJDjd3Q=;
-        b=b0GCU0td2713cSKuiHV/PsI8IVs/WmY2ym5aADJqcjTx3HWC7XNdRQaDOPXjNIRYgc
-         WEnpFPR4gSrPyWkqlStg3rQwvlKROz9w4/WU0yKShDufhQmZC3BCyxgetFfqtU8wNtIS
-         QKiesFEBkm6SxRTGJc8lkWRD/sDTfDpZgEo/QYy4U73TeCaoaqqiHwTbIRFCjyi5rTHT
-         3+sJxKowFugyM4/TPZSjBML2/CE3P4p00enxTxrL0ab4c/gyDRxpx6LEPqTs7n/oexWl
-         OdXP/MDVFIVkjj1zGsC76AG05Gt5cueT4C3vMoQkdw4BB6BiyHuaLdtY1xVen6ZEH2WB
-         GadA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689030917; x=1691622917;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dAwiz27o1hNxGAQwrIRT6lxtMelfroQzik/QCJDjd3Q=;
-        b=JTzM+cq9x4Q+ptV2Lx8YLfJx9BaiEiismcM8uVTHc7ChnITAuCSsaOku+Brnv6y2M7
-         coUY+k40zJeP968xDE8R9HT7GB/IIe7e9Pw1cQnvC5g4E2bxUzfg5xrpCOdfqH+BQcUg
-         vaMJlN4Z5piWF9VE1L/K3nu6So4bIHoTz9uK0L/bpYvyQOCqwyv7A2DNzrx2lwVPxTnS
-         hsaRlPakX1b8THect0TgJ1x/ayVkWwLIIG+KCHwo4BIzBv5xwdXGTyqqB+bt7UQbux+U
-         a9Wp4ddEJ1DUiKnFXBLdVv7lGHFFtC/ZKQ3wy/bvd3D04n1pSMWj/aS1E1N9qB8N0Jpa
-         vODQ==
-X-Gm-Message-State: ABy/qLZsQXZbVf4a3KCzwY3KrAN3Ues4HBW1nrX8HbFFr9OmhzYXT3LH
-        6ev/mEQUuIDD148h/g//yXQ=
-X-Google-Smtp-Source: APBJJlF6C6Tptsh25nmcDwQDB9YW4j1H6BPwVehKw7ItD6HJJIsYlF3lN3rYWXHtoWKCKMoVaY6dzA==
-X-Received: by 2002:a05:6a20:54a7:b0:131:a21:9f96 with SMTP id i39-20020a056a2054a700b001310a219f96mr11740678pzk.6.1689030917027;
-        Mon, 10 Jul 2023 16:15:17 -0700 (PDT)
-Received: from yoga ([2400:1f00:13:76f2:868d:bc7d:562b:a5bb])
-        by smtp.gmail.com with ESMTPSA id k22-20020aa792d6000000b00682868714fdsm325357pfa.95.2023.07.10.16.15.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jul 2023 16:15:16 -0700 (PDT)
-Date:   Tue, 11 Jul 2023 04:45:10 +0530
-From:   Anup Sharma <anupnewsmail@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Anup Sharma <anupnewsmail@gmail.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 6/6] scripts: python: implement get or create frame and
- stack function
-Message-ID: <dd26619520465132d33dd84780859e6bf89133bf.1689024635.git.anupnewsmail@gmail.com>
-References: <cover.1689024635.git.anupnewsmail@gmail.com>
+        Mon, 10 Jul 2023 21:41:30 -0400
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56C82A4;
+        Mon, 10 Jul 2023 18:41:28 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R801e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0Vn6IAgc_1689039682;
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vn6IAgc_1689039682)
+          by smtp.aliyun-inc.com;
+          Tue, 11 Jul 2023 09:41:25 +0800
+From:   Shuai Xue <xueshuai@linux.alibaba.com>
+To:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
+        james.clark@arm.com, leo.yan@linaro.org
+Cc:     mingo@redhat.com, baolin.wang@linux.alibaba.com, acme@kernel.org,
+        mark.rutland@arm.com, jolsa@kernel.org, namhyung@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH v3] perf/core: Bail out early if the request AUX area is out of bound
+Date:   Tue, 11 Jul 2023 09:41:20 +0800
+Message-Id: <20230711014120.53461-1-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1689024635.git.anupnewsmail@gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Complete addSample function, it takes the thread name, stack array,
-and time as input parameters and  if the thread name differs from
-the current name, it updates the name. The function utilizes the
-get_or_create_stack and get_or_create_frame methods to construct
-the stack structure. Finally, it adds the stack, time, and
-responsiveness values to the 'data' list within 'samples'.
+When perf-record with a large AUX area, e.g 4GB, it fails with:
 
-The get_or_create_stack function is responsible for retrieving
-or creating a stack based on the provided frame and prefix.
-It first generates a key using the frame and prefix values.
-If the stack corresponding to the key is found in the stackMap,
-it is returned. Otherwise, a new stack is created by appending
-the prefix and frame to the stackTable's 'data' array. The key
-and the index of the newly created stack are added to the
-stackMap for future reference.
+    #perf record -C 0 -m ,4G -e arm_spe_0// -- sleep 1
+    failed to mmap with 12 (Cannot allocate memory)
 
-The get_or_create_frame function is responsible for retrieving or
-creating a frame based on the provided frameString. If the frame
-corresponding to the frameString is found in the frameMap, it is
-returned. Otherwise, a new frame is created by appending relevant
-information to the frameTable's 'data' array and adding the
-frameString to the stringTable.
+and it reveals a WARNING with __alloc_pages():
 
-Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
+[   66.595604] ------------[ cut here ]------------
+[   66.600206] WARNING: CPU: 44 PID: 17573 at mm/page_alloc.c:5568 __alloc_pages+0x1ec/0x248
+[   66.608375] Modules linked in: ip6table_filter(E) ip6_tables(E) iptable_filter(E) ebtable_nat(E) ebtables(E) aes_ce_blk(E) vfat(E) fat(E) aes_ce_cipher(E) crct10dif_ce(E) ghash_ce(E) sm4_ce_cipher(E) sm4(E) sha2_ce(E) sha256_arm64(E) sha1_ce(E) acpi_ipmi(E) sbsa_gwdt(E) sg(E) ipmi_si(E) ipmi_devintf(E) ipmi_msghandler(E) ip_tables(E) sd_mod(E) ast(E) drm_kms_helper(E) syscopyarea(E) sysfillrect(E) nvme(E) sysimgblt(E) i2c_algo_bit(E) nvme_core(E) drm_shmem_helper(E) ahci(E) t10_pi(E) libahci(E) drm(E) crc64_rocksoft(E) i40e(E) crc64(E) libata(E) i2c_core(E)
+[   66.657719] CPU: 44 PID: 17573 Comm: perf Kdump: loaded Tainted: G            E      6.3.0-rc4+ #58
+[   66.666749] Hardware name: Default Default/Default, BIOS 1.2.M1.AL.P.139.00 03/22/2023
+[   66.674650] pstate: 23400009 (nzCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
+[   66.681597] pc : __alloc_pages+0x1ec/0x248
+[   66.685680] lr : __kmalloc_large_node+0xc0/0x1f8
+[   66.690285] sp : ffff800020523980
+[   66.693585] pmr_save: 000000e0
+[   66.696624] x29: ffff800020523980 x28: ffff000832975800 x27: 0000000000000000
+[   66.703746] x26: 0000000000100000 x25: 0000000000100000 x24: ffff8000083615d0
+[   66.710866] x23: 0000000000040dc0 x22: ffff000823d6d140 x21: 000000000000000b
+[   66.717987] x20: 000000000000000b x19: 0000000000000000 x18: 0000000000000030
+[   66.725108] x17: 0000000000000000 x16: ffff800008f05be8 x15: ffff000823d6d6d0
+[   66.732229] x14: 0000000000000000 x13: 343373656761705f x12: 726e202c30206574
+[   66.739350] x11: 00000000ffff7fff x10: 00000000ffff7fff x9 : ffff8000083af570
+[   66.746471] x8 : 00000000000bffe8 x7 : c0000000ffff7fff x6 : 000000000005fff4
+[   66.753592] x5 : 0000000000000000 x4 : ffff000823d6d8d8 x3 : 0000000000000000
+[   66.760713] x2 : 0000000000000000 x1 : 0000000000000001 x0 : 0000000000040dc0
+[   66.767834] Call trace:
+[   66.770267]  __alloc_pages+0x1ec/0x248
+[   66.774003]  __kmalloc_large_node+0xc0/0x1f8
+[   66.778259]  __kmalloc_node+0x134/0x1e8
+[   66.782081]  rb_alloc_aux+0xe0/0x298
+[   66.785643]  perf_mmap+0x440/0x660
+[   66.789031]  mmap_region+0x308/0x8a8
+[   66.792593]  do_mmap+0x3c0/0x528
+[   66.795807]  vm_mmap_pgoff+0xf4/0x1b8
+[   66.799456]  ksys_mmap_pgoff+0x18c/0x218
+[   66.803365]  __arm64_sys_mmap+0x38/0x58
+[   66.807187]  invoke_syscall+0x50/0x128
+[   66.810922]  el0_svc_common.constprop.0+0x58/0x188
+[   66.815698]  do_el0_svc+0x34/0x50
+[   66.818999]  el0_svc+0x34/0x108
+[   66.822127]  el0t_64_sync_handler+0xb8/0xc0
+[   66.826296]  el0t_64_sync+0x1a4/0x1a8
+[   66.829946] ---[ end trace 0000000000000000 ]---
+
+'rb->aux_pages' allocated by kcalloc() is a pointer array which is used to
+maintain AUX trace pages. The allocated page for this array is physically
+contiguous (and virtually contiguous) with an order of 0..MAX_ORDER. If the
+size of pointer array crosses the limitation set by MAX_ORDER, it reveals a
+WARNING.
+
+So bail out early with -EINVAL if the request AUX area is out of bound,
+e.g.:
+
+    #perf record -C 0 -m ,4G -e arm_spe_0// -- sleep 1
+    failed to mmap with 22 (Invalid argument)
+
+Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
 ---
- .../scripts/python/firefox-gecko-converter.py | 57 ++++++++++++++++++-
- 1 file changed, 56 insertions(+), 1 deletion(-)
+changes since v2:
+- remove unnecessary overflow check (per Peter)
 
-diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools/perf/scripts/python/firefox-gecko-converter.py
-index 6c934de1f608..97fbe562ee2b 100644
---- a/tools/perf/scripts/python/firefox-gecko-converter.py
-+++ b/tools/perf/scripts/python/firefox-gecko-converter.py
-@@ -21,6 +21,8 @@ sys.path.append(os.environ['PERF_EXEC_PATH'] + \
- from perf_trace_context import *
- from Core import *
+changes since v1:
+- drop out patch2 because it has been fixed on upstream (Thanks James for reminding)
+- move sanity check into rb_alloc_aux (per Leo)
+- add overflow check (per James)
+---
+ kernel/events/ring_buffer.c              | 3 +++
+ tools/perf/Documentation/perf-record.txt | 3 ++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index a0433f37b024..5933ce45c68a 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -699,6 +699,9 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
+ 		watermark = 0;
+ 	}
  
-+USER_CATEGORY_INDEX = 0
-+KERNEL_CATEGORY_INDEX = 1
- thread_map = {}
- start_time = None
++	/* Can't allocate more than MAX_ORDER */
++	if (get_order((unsigned long)nr_pages * sizeof(void *)) > MAX_ORDER)
++		return -EINVAL;
+ 	rb->aux_pages = kcalloc_node(nr_pages, sizeof(void *), GFP_KERNEL,
+ 				     node);
+ 	if (!rb->aux_pages)
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 680396c56bd1..5d8d3ad084ed 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -290,7 +290,8 @@ OPTIONS
+ 	specification with appended unit character - B/K/M/G. The
+ 	size is rounded up to have nearest pages power of two value.
+ 	Also, by adding a comma, the number of mmap pages for AUX
+-	area tracing can be specified.
++	area tracing can be specified. With MAX_ORDER set as 10 on
++	arm64 platform , the maximum AUX area is limited to 2GiB.
  
-@@ -34,7 +36,12 @@ CATEGORIES = [
- PRODUCT = os.popen('uname -op').read().strip()
- 
- def trace_end():
--    thread_array = thread_map.values()))
-+    thread_array = list(map(lambda thread: thread['finish'](), thread_map.values()))
-+
-+# Parse the callchain of the current sample into a stack array.
-+    for thread in thread_array:
-+        key = thread['samples']['schema']['time']
-+        thread['samples']['data'].sort(key=lambda data : float(data[key]))
- 
-     result = {
-         'meta': {
-@@ -106,7 +113,55 @@ def process_event(param_dict):
- 		}
- 		stringTable = []
- 
-+		stackMap = dict()
-+		def get_or_create_stack(frame, prefix):
-+			key = f"{frame}" if prefix is None else f"{frame},{prefix}"
-+			stack = stackMap.get(key)
-+			if stack is None:
-+				stack = len(stackTable['data'])
-+				stackTable['data'].append([prefix, frame])
-+				stackMap[key] = stack
-+			return stack
-+
-+		frameMap = dict()
-+		def get_or_create_frame(frameString):
-+			frame = frameMap.get(frameString)
-+			if frame is None:
-+				frame = len(frameTable['data'])
-+				location = len(stringTable)
-+				stringTable.append(frameString)
-+				category = KERNEL_CATEGORY_INDEX if frameString.find('kallsyms') != -1 \
-+						or frameString.find('/vmlinux') != -1 \
-+						or frameString.endswith('.ko)') \
-+						else USER_CATEGORY_INDEX
-+				implementation = None
-+				optimizations = None
-+				line = None
-+				relevantForJS = False
-+				subcategory = None
-+				innerWindowID = 0
-+				column = None
-+
-+				frameTable['data'].append([
-+					location,
-+					relevantForJS,
-+					innerWindowID,
-+					implementation,
-+					optimizations,
-+					line,
-+					column,
-+					category,
-+					subcategory,
-+				])
-+				frameMap[frameString] = frame
-+			return frame
-+
- 		def addSample(threadName, stackArray, time):
-+			nonlocal name
-+			if name != threadName:
-+				name = threadName
-+			stack = reduce(lambda prefix, stackFrame: get_or_create_stack
-+					(get_or_create_frame(stackFrame), prefix), stackArray, None)
- 			responsiveness = 0
- 			samples['data'].append([stack, time, responsiveness])
- 
+ -g::
+ 	Enables call-graph (stack chain/backtrace) recording for both
 -- 
-2.34.1
+2.39.3
 
