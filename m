@@ -2,213 +2,136 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA72EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jul 2023 13:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF550EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jul 2023 13:20:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232629AbjGKNNo (ORCPT
+        id S231631AbjGKNUI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Jul 2023 09:13:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41420 "EHLO
+        Tue, 11 Jul 2023 09:20:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231226AbjGKNNm (ORCPT
+        with ESMTP id S229491AbjGKNUI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Jul 2023 09:13:42 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3979E55;
-        Tue, 11 Jul 2023 06:13:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689081213; x=1720617213;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=j/p/nhIRZ9ZpkuLx/tRzZlO+OaCeIIAB7XnwRxGyg1w=;
-  b=oFsRI2oOOeUHp6c6QQol62UsaFCBVL6uyfgaH9tzPu5VnNyLk8+S2wPN
-   lfC9UDqQDpCsjcCBX3rpnJueXuGuvyq6sL2aZkq61pqI16HNpKH+TonkL
-   xrdTBbTaMbqZ0xk/thJcj8q6qiV0OBK7SbB4xtFRSS6Ei4f+conG8NxDq
-   MncPVjLrRaj2CLJwWrvTOdnSX8PUaKKMi5SovdJ7kIRPZsgNTOsLLzBNk
-   XSSGKnSRVRaPFhhlHGbrRbqR/4XjEjMKJopW4yZE5a6zgxsYxln2x9LLc
-   UNm1z87XbbnPyj0JyXqho2CL2BoVZUfL6fUN++3JqkJa6L10jMzMhvQl+
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="362077029"
-X-IronPort-AV: E=Sophos;i="6.01,196,1684825200"; 
-   d="scan'208";a="362077029"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 06:13:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="786620609"
-X-IronPort-AV: E=Sophos;i="6.01,196,1684825200"; 
-   d="scan'208";a="786620609"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.44.50])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 06:13:30 -0700
-Message-ID: <206972a3-d44d-1c75-3fbc-426427614543@intel.com>
-Date:   Tue, 11 Jul 2023 16:13:26 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.13.0
-Subject: Re: [PATCH 3/5] perf record: Tracking side-band events for all CPUs
- when tracing selected CPUs
-Content-Language: en-US
-To:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, kan.liang@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20230704074217.240939-1-yangjihong1@huawei.com>
- <20230704074217.240939-4-yangjihong1@huawei.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230704074217.240939-4-yangjihong1@huawei.com>
+        Tue, 11 Jul 2023 09:20:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 463C312F;
+        Tue, 11 Jul 2023 06:20:07 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CF002614DD;
+        Tue, 11 Jul 2023 13:20:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04486C433C8;
+        Tue, 11 Jul 2023 13:20:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689081606;
+        bh=uOS4JfNufBFC0X+cPyi5FCg/wfbG6rddahqbtej+cxE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=jtIZOuwVUA6gRzzifFEtONSM8PLmeN4AmB5mo68yP9DT34i44Aa22wqsbGhjsCT8J
+         ZPXjkFA8ZD6l9Km+x9yAaekLi//ruuOFKGDVdIbCKBweHTTwCYQvUSYjSc3Ze3SOfU
+         JqrNdXZoBar9mDR5v8LW5NYZrIMK4nqAQgmlsM/Ruiv9/sPZQJW/jl7HSxT4CCgkfl
+         JeeZjHd9IXp7UyoLjnpIeu7ROxLcYRuqFlc68iyXBPsxa0KrxpxjmjzxHg/i/FpUoN
+         P9PhfeuvKLLlYn0K4D5Q7LdM3eYPjVmCOnq11N0tRkUYRuC/Apwp7IBG5MWp7eiPEa
+         EzK+qIxMkDD6g==
+Date:   Tue, 11 Jul 2023 22:20:00 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Georg =?UTF-8?B?TcO8bGxlcg==?= <georgmueller@gmx.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        regressions@lists.linux.dev,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf probe: read DWARF files from the correct CU
+Message-Id: <20230711222000.d316cf7fd643cb4203ea1204@kernel.org>
+In-Reply-To: <ZK1RyVue7OMXzVl4@kernel.org>
+References: <5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net>
+        <20230615200147.664346-3-georgmueller@gmx.net>
+        <ZK1RyVue7OMXzVl4@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 4/07/23 10:42, Yang Jihong wrote:
-> User space tasks can migrate between CPUs, we need to track side-band
-> events for all CPUs.
+On Tue, 11 Jul 2023 09:57:45 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+
+> Em Thu, Jun 15, 2023 at 10:01:37PM +0200, Georg Müller escreveu:
+> > After switching from dwarf_decl_file() to die_get_decl_file(), it is not
+> > possible to add probes for certain functions of certain binaries:
+> > 
+> >  $ perf probe -x /usr/lib/systemd/systemd-logind match_unit_removed
+> >  A function DIE doesn't have decl_line. Maybe broken DWARF?
+> >  A function DIE doesn't have decl_line. Maybe broken DWARF?
+> >  Probe point 'match_unit_removed' not found.
+> >     Error: Failed to add events.
+> > 
+> > The problem is that die_get_decl_file() uses the wrong CU to search for
+> > the file. elfutils commit e1db5cdc9f has some good explanation for this:
+> > 
+> >     dwarf_decl_file uses dwarf_attr_integrate to get the DW_AT_decl_file
+> >     attribute. This means the attribute might come from a different DIE
+> >     in a different CU. If so, we need to use the CU associated with the
+> >     attribute, not the original DIE, to resolve the file name.
+> > 
+> > This patch uses the same source of information as elfutils: use attribute
+> > DW_AT_decl_file and use this CU to search for the file.
 > 
-> The specific scenarios are as follows:
+> Thanks, applied to the perf-tools branch, that will be submitted for
+> Linux v6.5.
+
+Thanks Arnaldo and Georg,
+
+It sounds perfect reason why that happened. I didn't expect the case that
+the attribute comes from another CU...
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
 > 
->          CPU0                                 CPU1
->   perf record -C 0 start
->                               taskA starts to be created and executed
->                                 -> PERF_RECORD_COMM and PERF_RECORD_MMAP
->                                    events only deliver to CPU1
->                               ......
->                                 |
->                           migrate to CPU0
->                                 |
->   Running on CPU0    <----------/
->   ...
-> 
->   perf record -C 0 stop
-> 
-> Now perf samples the PC of taskA. However, perf does not record the
-> PERF_RECORD_COMM and PERF_RECORD_COMM events of taskA.
-> Therefore, the comm and symbols of taskA cannot be parsed.
-> 
-> The sys_perf_event_open invoked is as follows:
-> 
->   # perf --debug verbose=3 record -e cpu-clock -C 1 true
->   <SNIP>
->   Opening: cpu-clock
->   ------------------------------------------------------------
->   perf_event_attr:
->     type                             1
->     size                             136
->     { sample_period, sample_freq }   4000
->     sample_type                      IP|TID|TIME|ID|CPU|PERIOD
->     read_format                      ID|LOST
->     disabled                         1
->     inherit                          1
->     freq                             1
->     sample_id_all                    1
->     exclude_guest                    1
->   ------------------------------------------------------------
->   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
->   Opening: dummy:HG
->   ------------------------------------------------------------
->   perf_event_attr:
->     type                             1
->     size                             136
->     config                           0x9
->     { sample_period, sample_freq }   4000
->     sample_type                      IP|TID|TIME|ID|CPU|PERIOD
->     read_format                      ID|LOST
->     inherit                          1
->     mmap                             1
->     comm                             1
->     freq                             1
->     task                             1
->     sample_id_all                    1
->     mmap2                            1
->     comm_exec                        1
->     ksymbol                          1
->     bpf_event                        1
->   ------------------------------------------------------------
->   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
->   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 7
->   sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 9
->   sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 10
->   sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 11
->   sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 12
->   sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 13
->   sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
->   <SNIP>
-> 
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> ---
->  tools/perf/builtin-record.c | 31 +++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 8872cd037f2c..69e0d8c75aab 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -908,6 +908,31 @@ static int record__config_off_cpu(struct record *rec)
->  	return off_cpu_prepare(rec->evlist, &rec->opts.target, &rec->opts);
->  }
+> - Arnaldo
 >  
-> +static int record__config_tracking_events(struct record *rec)
-> +{
-> +	struct evsel *evsel;
-> +	struct evlist *evlist = rec->evlist;
-> +	struct record_opts *opts = &rec->opts;
-> +
-> +	/*
-> +	 * User space tasks can migrate between CPUs, so when tracing
-> +	 * selected CPUs, sideband for all CPUs is still needed.
-> +	 */
-> +	if (opts->target.cpu_list) {
+> > Fixes: dc9a5d2ccd5c ("perf probe: Fix to get declared file name from clang DWARF5")
+> > Signed-off-by: Georg Müller <georgmueller@gmx.net>
+> > Link: https://lore.kernel.org/r/5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net/
+> > ---
+> >  tools/perf/util/dwarf-aux.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> > index b07414409771..137b3ed9897b 100644
+> > --- a/tools/perf/util/dwarf-aux.c
+> > +++ b/tools/perf/util/dwarf-aux.c
+> > @@ -478,8 +478,10 @@ static const char *die_get_file_name(Dwarf_Die *dw_die, int idx)
+> >  {
+> >  	Dwarf_Die cu_die;
+> >  	Dwarf_Files *files;
+> > +	Dwarf_Attribute attr_mem;
+> > 
+> > -	if (idx < 0 || !dwarf_diecu(dw_die, &cu_die, NULL, NULL) ||
+> > +	if (idx < 0 || !dwarf_attr_integrate(dw_die, DW_AT_decl_file, &attr_mem) ||
+> > +	    !dwarf_cu_die(attr_mem.cu, &cu_die, NULL, NULL, NULL, NULL, NULL, NULL) ||
+> >  	    dwarf_getsrcfiles(&cu_die, &files, NULL) != 0)
+> >  		return NULL;
+> > 
+> > --
+> > 2.41.0
+> > 
+> 
+> -- 
+> 
+> - Arnaldo
 
-I am not sure if anyone minds doing this by default, but perhaps
-we should say something about it on the perf record man page.
 
-> +		evsel = evlist__findnew_tracking_event(evlist);
-> +		if (!evsel)
-> +			return -ENOMEM;
-> +
-> +		if (!evsel->core.system_wide) {
-> +			evsel->core.system_wide = true;
-> +			evsel__set_sample_bit(evsel, TIME);
-> +			perf_evlist__propagate_maps(&evlist->core, &evsel->core);
-> +		}
-
-Perhaps better to export via internel/evsel.h
-
-void perf_evsel__go_system_wide(struct perf_evlist *evlist, struct perf_evsel *evsel)
-{
-	if (!evsel->system_wide) {
-		evsel->system_wide = true;
-		if (evlist->needs_map_propagation)
-			__perf_evlist__propagate_maps(evlist, evsel);
-	}
-}
-
-As suggested in response to patch 2, perhaps deal with system_wide
-inside evlist__findnew_tracking_event()
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static bool record__kcore_readable(struct machine *machine)
->  {
->  	char kcore[PATH_MAX];
-> @@ -4235,6 +4260,12 @@ int cmd_record(int argc, const char **argv)
->  		goto out;
->  	}
->  
-> +	err = record__config_tracking_events(rec);
-> +	if (err) {
-> +		pr_err("record__config_tracking_events failed, error %d\n", err);
-> +		goto out;
-> +	}
-> +
->  	err = record__init_thread_masks(rec);
->  	if (err) {
->  		pr_err("Failed to initialize parallel data streaming masks\n");
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
