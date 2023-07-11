@@ -2,70 +2,108 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F1DC0015E
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jul 2023 13:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27422EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jul 2023 14:05:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233097AbjGKNyj (ORCPT
+        id S233217AbjGKOFJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Jul 2023 09:54:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36688 "EHLO
+        Tue, 11 Jul 2023 10:05:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233096AbjGKNyh (ORCPT
+        with ESMTP id S233180AbjGKOFJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Jul 2023 09:54:37 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B24710CB
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 06:54:32 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id ffacd0b85a97d-3144bf65ce9so5884707f8f.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 06:54:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689083670; x=1691675670;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=nSPcjHhT/5N6nT8y7wV1S+8bHOcpcOu78CNmBPxWjPo=;
-        b=B7PkqrZ2+bqYM6w00WxretUP5j1BmZ3LcNN3/ir2belrBOJs6baL2dCROITGhGVcsM
-         wRR6CY+CCeONMJCbeq3KrYDvDUeCsT6nIfoqumEZ9TnLqE2zTPv3c590met9xGeLEFfc
-         /YBSwPdl64VIM21G1QR9312Aj0/rDfl1rrLOnBbcJT0uK0JIiXDDIiVqYNc8OfGmZZMJ
-         oRgOYgXvuYF6/7tsov8yIepU8jyDu5oQS0eegeXnqWjefAoj31WYyK/kvLVAq0fSJMR+
-         mPIOCxwCCkgM3DoTG/BINDKIVjSKhliks1GJuE/jZWh4xFZB8tKpl366njUaA2/9DWXR
-         G+rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689083670; x=1691675670;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nSPcjHhT/5N6nT8y7wV1S+8bHOcpcOu78CNmBPxWjPo=;
-        b=JLLCR9USNPdEcyeTqJZv32kxe4IoJklfShQTYJN30JtPK7oFPoa5YeMaMDZeUB7opG
-         dyxXBKnsGAzDzUtRRL/W2HGQ1H9Xlqog3xsNofVFy+oNCgykcEoYMmHQS/xjTXXQqQIR
-         swe0dje7luMRQLosZXUfBJEqQT388rzOZgqljqDlazHlpCC6fEyRrwZbPK1tFwHb/M9P
-         NTh0Q0/7cUmDIifdTXbLRFxhEkzpdUViNjmkxJ1BVhAA17To1X0cArkt75wngKqOyq71
-         0WIAP0asAnBqtAn46r6Kxnf1bhRO9GK/PJRk76BJxJCdS1GzgUydS/dnM6he1MNtJUpY
-         SHDw==
-X-Gm-Message-State: ABy/qLaeSiyGh5znFNSd6uRLXtR30TZEf4DxWGfD6VRxl0IHnCcxOU7G
-        +vXWLY0ZECZtcmESy5PQDfM5cS8vM4UcmpbHTrmhN1hLiaz1fA==
-X-Google-Smtp-Source: APBJJlFoeL0+FQRu10buQm++xCqXwtoCiExMfDT2FHcRUK/e4XMPMp9z78kHpkzO8Ykn2O8RLm5x1zFQLnijzA5MoAg=
-X-Received: by 2002:adf:ee4a:0:b0:30f:af19:81f3 with SMTP id
- w10-20020adfee4a000000b0030faf1981f3mr14364572wro.41.1689083670152; Tue, 11
- Jul 2023 06:54:30 -0700 (PDT)
+        Tue, 11 Jul 2023 10:05:09 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 00C6510F6;
+        Tue, 11 Jul 2023 07:05:03 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A6D381FB;
+        Tue, 11 Jul 2023 07:05:45 -0700 (PDT)
+Received: from [10.57.30.34] (unknown [10.57.30.34])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C5C733F740;
+        Tue, 11 Jul 2023 07:05:00 -0700 (PDT)
+Message-ID: <95506174-546c-9bf7-82af-09058550be6d@arm.com>
+Date:   Tue, 11 Jul 2023 15:04:54 +0100
 MIME-Version: 1.0
-From:   Roman Lozko <lozko.roma@gmail.com>
-Date:   Tue, 11 Jul 2023 16:54:19 +0300
-Message-ID: <CAEhC_Bkc9gV72k1iLqGjpjmRGx8aMjS6n_6gmmdr=XTzNeFc=g@mail.gmail.com>
-Subject: Using Intel PT with JIT
-To:     linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH 3/4] arm_pmu: Remove unused
+ PERF_PMU_CAP_HETEROGENEOUS_CPUS capability
+Content-Language: en-US
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, irogers@google.com
+References: <20230710122138.1450930-1-james.clark@arm.com>
+ <20230710122138.1450930-4-james.clark@arm.com>
+ <86792ab2-864a-5c27-95c1-54c4057024db@arm.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <86792ab2-864a-5c27-95c1-54c4057024db@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi, I tried to use `perf record` with Intel PT but afterwards I can't
-inject JIT dump to trace, `perf inject` says:
 
-error, jitted code must be sampled with perf record -k 1
-0x59d8 [0xb0]: failed to process type: 10 [Operation not permitted]
 
-On the other hand, `-k 1` cannot be passed to `perf record`:
+On 11/07/2023 13:08, Anshuman Khandual wrote:
+> 
+> 
+> On 7/10/23 17:51, James Clark wrote:
+>> Since commit bd2756811766 ("perf: Rewrite core context handling") the
+>> relationship between perf_event_context and PMUs has changed so that
+>> the error scenario that PERF_PMU_CAP_HETEROGENEOUS_CPUS originally
+>> silenced no longer exists.
+>>
+>> Remove the capability and associated comment to avoid confusion that it
+>> actually influences any perf core behavior. This change should be a
+>> no-op.
+>>
+>> Signed-off-by: James Clark <james.clark@arm.com>
+>> ---
+>>  drivers/perf/arm_pmu.c | 7 ++-----
+>>  1 file changed, 2 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+>> index d8844a9461a2..297906df6628 100644
+>> --- a/drivers/perf/arm_pmu.c
+>> +++ b/drivers/perf/arm_pmu.c
+>> @@ -872,15 +872,12 @@ struct arm_pmu *armpmu_alloc(void)
+>>  		.attr_groups	= pmu->attr_groups,
+>>  		/*
+>>  		 * This is a CPU PMU potentially in a heterogeneous
+>> -		 * configuration (e.g. big.LITTLE). This is not an uncore PMU,
+>> -		 * and we have taken ctx sharing into account (e.g. with our
+>> -		 * pmu::filter callback and pmu::event_init group validation).
+>> -		 *
+>> +		 * configuration (e.g. big.LITTLE) so
+>>  		 * PERF_PMU_CAP_EXTENDED_HW_TYPE is required to open the legacy
+>>  		 * PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE events on a
+>>  		 * specific PMU.
+>>  		 */
+>> -		.capabilities	= PERF_PMU_CAP_HETEROGENEOUS_CPUS | PERF_PMU_CAP_EXTENDED_REGS |
+>> +		.capabilities	= PERF_PMU_CAP_EXTENDED_REGS |
+>>  				  PERF_PMU_CAP_EXTENDED_HW_TYPE,
+> 
+> Small nit, the second line could be folded back into the first one.
 
-Cannot use clockid (-k option) with intel_pt
+.clang-format has a column limit of 80 which is why it gets folded. The
+kernel coding style guide also still says 80 is a strongly preferred
+limit so I'll probably leave it.
 
-Is there a way to use Intel PT with jitted code? I am using perf
-5.13.8, maybe it is already implemented in later versions?
+> 
+>>  	};
+>>  
