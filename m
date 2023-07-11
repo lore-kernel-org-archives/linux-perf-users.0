@@ -2,62 +2,62 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 614B9EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jul 2023 20:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D44BEB64DC
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jul 2023 20:57:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231163AbjGKU4T (ORCPT
+        id S229947AbjGKU5i (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Jul 2023 16:56:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55016 "EHLO
+        Tue, 11 Jul 2023 16:57:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229843AbjGKU4S (ORCPT
+        with ESMTP id S229843AbjGKU5h (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Jul 2023 16:56:18 -0400
+        Tue, 11 Jul 2023 16:57:37 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F032410DD;
-        Tue, 11 Jul 2023 13:56:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAECA10F1;
+        Tue, 11 Jul 2023 13:57:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
         Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-        bh=orypT0PcLMcwunRr7HJCTZt2dNcjGKOQN6brONjfzCg=; b=PH/POPXe6NnDn2Nge+dfFAM9Li
-        s0rRpQu09mpPbgWcpJWSDm5X6DIvk/uiqcb3ZWQwSbN6WP5huFBN72CGNChs3s8TfyrXxNMmKFAXd
-        i03CK/J79nfBdk+Wy8tJ807VEoFE5fI0V5QdsLM29AIEWnoc8eDr+ZRyWFURbHyTHwHI63jZbhP+i
-        bO2um614jE5ddwZiED7Wp0wqqK5GodGjt9F1DhnFw9qINeSieP7/I80HQbNlkIILSnJHM6EfU1OmE
-        B7JLvfJEXNBhxKuL08z26kG24DdqnSAY7PVJMGL1nEAjRtLGZzqjRcHRDzCLHPPYCRxqtDHuvRtdE
-        VRexneBg==;
+        bh=vwTATQP068L/ne+SRlgCgF6JMBo++yW0PawfgQUt9f8=; b=p6mxf5PgwU5RlSWIQcx1pTf/Vo
+        31Ot85kz7hgP87y+UjSc0q3/sCcarLpMLGxusjnRLTA/caEVJ+hkhG80lUmRjmjbOAmCvxmIaN1gD
+        Z8jXdXtZUlGwZiDUJp/qPZdtNMfoVSZGDeJ7qFy6fzwrRiyaZMC7voK3B25QaMKTpYkXStxWuifQw
+        W8byMGY4LEJSKpVAXw4+TzEH4md0bcUA90x55LoTUIaZyuObQSariw2oYYbsTuX+uv6cKrn2wSIKf
+        jJxY+7FIM3vnyl9asgiGiF1HUwD8AxYlWdnXVJh+E7ZY4XQfxrUE984Cl44jRV+0wO/IAI4LoLehp
+        eZ5QtcDw==;
 Received: from [2601:1c2:980:9ec0::2764]
         by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qJKP9-00FsQb-2Z;
-        Tue, 11 Jul 2023 20:56:15 +0000
-Message-ID: <38d8820d-4ca0-0bf1-b707-94b850b08241@infradead.org>
-Date:   Tue, 11 Jul 2023 13:56:15 -0700
+        id 1qJKQQ-00Fsa1-23;
+        Tue, 11 Jul 2023 20:57:34 +0000
+Message-ID: <7a50239c-f4e7-a624-7fe7-709c5c6498d3@infradead.org>
+Date:   Tue, 11 Jul 2023 13:57:34 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH v2 06/10] docs: ABI:
- sysfs-bus-event_source-devices-hv_gpci: Document
- affinity_domain_via_virtual_processor sysfs interface file
+Subject: Re: [PATCH v2 08/10] docs: ABI:
+ sysfs-bus-event_source-devices-hv_gpci: Document affinity_domain_via_domain
+ sysfs interface file
 Content-Language: en-US
 To:     Kajol Jain <kjain@linux.ibm.com>, mpe@ellerman.id.au
 Cc:     linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
         atrajeev@linux.vnet.ibm.com, disgoel@linux.ibm.com,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20230710092717.55317-1-kjain@linux.ibm.com>
- <20230710092717.55317-7-kjain@linux.ibm.com>
+ <20230710092717.55317-9-kjain@linux.ibm.com>
 From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20230710092717.55317-7-kjain@linux.ibm.com>
+In-Reply-To: <20230710092717.55317-9-kjain@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi--
+Hi,
 
 On 7/10/23 02:27, Kajol Jain wrote:
 > Add details of the new hv-gpci interface file called
-> "affinity_domain_via_virtual_processor" in the ABI documentation.
+> "affinity_domain_via_domain" in the ABI documentation.
 > 
 > Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
 > ---
@@ -65,21 +65,21 @@ On 7/10/23 02:27, Kajol Jain wrote:
 >  1 file changed, 32 insertions(+)
 > 
 > diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices-hv_gpci b/Documentation/ABI/testing/sysfs-bus-event_source-devices-hv_gpci
-> index aff52dc3b05c..3b63d66658fe 100644
+> index 3b63d66658fe..d8e65b93d1f7 100644
 > --- a/Documentation/ABI/testing/sysfs-bus-event_source-devices-hv_gpci
 > +++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices-hv_gpci
-> @@ -144,3 +144,35 @@ Description:	admin read only
+> @@ -176,3 +176,35 @@ Description:	admin read only
 >  			   more information.
 >  
 >  		* "-EFBIG" : System information exceeds PAGE_SIZE.
 > +
-> +What:		/sys/devices/hv_gpci/interface/affinity_domain_via_virtual_processor
+> +What:		/sys/devices/hv_gpci/interface/affinity_domain_via_domain
 > +Date:		July 2023
 > +Contact:	Linux on PowerPC Developer List <linuxppc-dev@lists.ozlabs.org>
 > +Description:	admin read only
 > +		This sysfs file exposes the system topology information by making HCALL
 > +		H_GET_PERF_COUNTER_INFO. The HCALL is made with counter request value
-> +		AFFINITY_DOMAIN_INFORMATION_BY_VIRTUAL_PROCESSOR(0xA0).
+> +		AFFINITY_DOMAIN_INFORMATION_BY_DOMAIN(0xB0).
 > +
 > +		* This sysfs file will be created only for power10 and above platforms.
 > +
@@ -87,11 +87,11 @@ On 7/10/23 02:27, Kajol Jain wrote:
 > +
 > +		* This sysfs file will be created, only when the HCALL returns "H_SUCESS",
 
-		                                                                H_SUCCESS
+		                                                                typo
 
 > +		  "H_AUTHORITY" and "H_PARAMETER" as the return type.
 
-		            s/and/or/
+		              s/and/or/
 
 > +
 > +		  HCALL with return error type "H_AUTHORITY", can be resolved during
