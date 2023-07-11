@@ -2,211 +2,179 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B07EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jul 2023 14:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B91BEB64DC
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jul 2023 15:10:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232621AbjGKOvd (ORCPT
+        id S229970AbjGKPKt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Jul 2023 10:51:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57224 "EHLO
+        Tue, 11 Jul 2023 11:10:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232262AbjGKOvc (ORCPT
+        with ESMTP id S230329AbjGKPKs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Jul 2023 10:51:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 966E81BB;
-        Tue, 11 Jul 2023 07:51:31 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1B3E161515;
-        Tue, 11 Jul 2023 14:51:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1590DC433C8;
-        Tue, 11 Jul 2023 14:51:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689087090;
-        bh=LDPCX11v0c+dpXVZwPUW42yYc1K3TuG9tgPfht12BYs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FYvB+2U2HPdqCadDwP3nP7YDwijECzeIGkL+aN6kAuknOwKCofyfz3p3NuMnl6tFd
-         2DV6Ijp6r4WF9J5iWOpBY++sjj3Wcz7+RD6ZuCCaTeD133A2Q6LTUuIcC0bgqh1AkV
-         euZTmpCYNZN2AKcGl+iLQe/UqOdcDFQmwjWJa17oab1qO4VDuV7Jhj3M2aBcVnAKnB
-         MBE9lnU4TGBGa1i4ljWAkSBPU+xakc0ni9Rv0J5/EhZ2zviHu9qh9LLeSFV3ISs8nG
-         FPq3CNPbR1Ci2wjS7bsxkHCvY9Ny/32HR7c4644KKT7CD9t9NLOBnbSCYZPQJ1xzVM
-         KcHtuqK3uypwA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 78D5B40516; Tue, 11 Jul 2023 11:51:27 -0300 (-03)
-Date:   Tue, 11 Jul 2023 11:51:27 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Sandipan Das <sandipan.das@amd.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, adrian.hunter@intel.com, ayush.jain3@amd.com,
-        ananth.narayan@amd.com, ravi.bangoria@amd.com,
-        santosh.shukla@amd.com
-Subject: Re: [PATCH v2] perf vendor events amd: Fix large metrics
-Message-ID: <ZK1sb4tPizTzWq7q@kernel.org>
-References: <20230706063440.54189-1-sandipan.das@amd.com>
- <CAP-5=fVdVSL4H1qWLZMiU3H2-bOJ0RkFOfq4Jxz1qw0-8EoYFw@mail.gmail.com>
+        Tue, 11 Jul 2023 11:10:48 -0400
+Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AB4610F2
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 08:10:28 -0700 (PDT)
+Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-403b622101bso269151cf.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 08:10:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1689088227; x=1691680227;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FXXgBlGDAgzLkutcHZ7sASFFDrpsYXVUKvAHMEtR4rw=;
+        b=N6klHx+eyuoIjfiaI0v1z47RRdpGs97orCUlDc8RWQBS8JGIZsDQR2lmYLZktkTL7N
+         utNpaypyO6MgRQhLkmG+MiHyu3WQMEloe6KTLQndlWJfNqEcA6mZSjHzBQC19GAibNRp
+         ddcle7Shm+PTvtuPzRKxJouBbpmz7LbYPIAptzrgyLHrSsQ2+38QF8G+bubLsmlF6B6r
+         ozfVkIePgd80QubPNfkGVCxZa0ohVvNBPy1pT2Kf8YXjGTZsoUjlfc88Pb6vH1GpAHbg
+         EvyzocZL3wWdUtJHwm/rZPZFrI7at3X9eBzi6AKlJZYxQKFQTKwON7ANgQIc2iWo91xz
+         KiOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689088227; x=1691680227;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FXXgBlGDAgzLkutcHZ7sASFFDrpsYXVUKvAHMEtR4rw=;
+        b=M/Yasf5kJEgPndVwL7VhHEnYCVtJQX74esl1OjwShPduN8dSjKKrBII+14DrQLPW7c
+         vouoYU6iaq833JxRpcxJ0P9rC5pBg8qQCxZdv8PIVjqf6p3GZSqZTEblOJWb0aynJap4
+         mAinj4M59crF7my1oCuabzOzQYs91AOP1Q6NRPU3LO82OgUxfND3FqpGksznsqEMHloi
+         BLFlTNCPNR2tbXTz9+zOm4pHuXSNV2ffMiaewQuYnuP8I10hYGNuCKglwQ2q5s9hDt1/
+         YqrpcqYVWq8SGy9XvUMS2Ibf5FY9ldonD31PMtx0YkBC0+Tx/Y8jg0gQwB0vIqLsPPfM
+         Qg2w==
+X-Gm-Message-State: ABy/qLaIJW8JeYB2eAUq7ziNxAWNb4uKysJ+CB1Xb4Iva7IHlVob+O3W
+        kTZBwhWQQAItqaC+vc2CgwiH6KO5cURLNi+sXzQmww==
+X-Google-Smtp-Source: APBJJlFZZhaRI8ygieCTBZxLDpHmKmobNdZcLK+Gcqk61HWR1zTWR1ySAr85pNZwVmhZc3CTTku2gSWjKJCK+skFdZk=
+X-Received: by 2002:a05:622a:315:b0:3f9:ab2c:88b9 with SMTP id
+ q21-20020a05622a031500b003f9ab2c88b9mr207655qtw.25.1689088227475; Tue, 11 Jul
+ 2023 08:10:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVdVSL4H1qWLZMiU3H2-bOJ0RkFOfq4Jxz1qw0-8EoYFw@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+References: <20230711055859.1242497-1-irogers@google.com> <182675ca-0905-0ed2-de94-0f7d4a256082@oracle.com>
+In-Reply-To: <182675ca-0905-0ed2-de94-0f7d4a256082@oracle.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 11 Jul 2023 08:10:15 -0700
+Message-ID: <CAP-5=fXrOvkwrbEB0GGv6Xr5JOdrW7dzjOL=MkDdxX2McfnzYA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] perf list: Remove duplicate PMUs
+To:     John Garry <john.g.garry@oracle.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Jul 06, 2023 at 06:49:29AM -0700, Ian Rogers escreveu:
-> On Wed, Jul 5, 2023 at 11:34 PM Sandipan Das <sandipan.das@amd.com> wrote:
-> >
-> > There are cases where a metric requires more events than the number of
-> > available counters. E.g. AMD Zen, Zen 2 and Zen 3 processors have four
-> > data fabric counters but the "nps1_die_to_dram" metric has eight events.
-> > By default, the constituent events are placed in a group and since the
-> > events cannot be scheduled at the same time, the metric is not computed.
-> > The "all metrics" test also fails because of this.
-> >
-> > Use the NO_GROUP_EVENTS constraint for such metrics which anyway expect
-> > the user to run perf with "--metric-no-group".
-> >
-> > E.g.
-> >
-> >   $ sudo perf test -v 101
+On Tue, Jul 11, 2023 at 1:26=E2=80=AFAM John Garry <john.g.garry@oracle.com=
+> wrote:
+>
+> On 11/07/2023 06:58, Ian Rogers wrote:
+> > When there are multiple PMUs differing by ordered suffixes only
+> > display one. This avoids repeated listing of events, in particular
+> > when there are 10s of uncore PMUs. This also helps speed the all PMU
+> > event tests.
 > >
 > > Before:
-> >
-> >   101: perf all metrics test                                           :
-> >   --- start ---
-> >   test child forked, pid 37131
-> >   Testing branch_misprediction_ratio
-> >   Testing all_remote_links_outbound
-> >   Testing nps1_die_to_dram
-> >   Metric 'nps1_die_to_dram' not printed in:
-> >   Error:
-> >   Invalid event (dram_channel_data_controller_4) in per-thread mode, enable system wide with '-a'.
-> >   Testing macro_ops_dispatched
-> >   Testing all_l2_cache_accesses
-> >   Testing all_l2_cache_hits
-> >   Testing all_l2_cache_misses
-> >   Testing ic_fetch_miss_ratio
-> >   Testing l2_cache_accesses_from_l2_hwpf
-> >   Testing l2_cache_misses_from_l2_hwpf
-> >   Testing op_cache_fetch_miss_ratio
-> >   Testing l3_read_miss_latency
-> >   Testing l1_itlb_misses
-> >   test child finished with -1
-> >   ---- end ----
-> >   perf all metrics test: FAILED!
+> > ```
+> > $ perf list
+> > ...
+> >    uncore_imc_free_running_0/data_read/               [Kernel PMU event=
+]
+> >    uncore_imc_free_running_0/data_total/              [Kernel PMU event=
+]
+> >    uncore_imc_free_running_0/data_write/              [Kernel PMU event=
+]
+> >    uncore_imc_free_running_1/data_read/               [Kernel PMU event=
+]
+> >    uncore_imc_free_running_1/data_total/              [Kernel PMU event=
+]
+> >    uncore_imc_free_running_1/data_write/              [Kernel PMU event=
+]
+> > ```
 > >
 > > After:
-> >
-> >   101: perf all metrics test                                           :
-> >   --- start ---
-> >   test child forked, pid 43766
-> >   Testing branch_misprediction_ratio
-> >   Testing all_remote_links_outbound
-> >   Testing nps1_die_to_dram
-> >   Testing macro_ops_dispatched
-> >   Testing all_l2_cache_accesses
-> >   Testing all_l2_cache_hits
-> >   Testing all_l2_cache_misses
-> >   Testing ic_fetch_miss_ratio
-> >   Testing l2_cache_accesses_from_l2_hwpf
-> >   Testing l2_cache_misses_from_l2_hwpf
-> >   Testing op_cache_fetch_miss_ratio
-> >   Testing l3_read_miss_latency
-> >   Testing l1_itlb_misses
-> >   test child finished with 0
-> >   ---- end ----
-> >   perf all metrics test: Ok
-> >
-> > Reported-by: Ayush Jain <ayush.jain3@amd.com>
-> > Suggested-by: Ian Rogers <irogers@google.com>
-> > Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> 
-> Acked-by: Ian Rogers <irogers@google.com>
+> > ```
+> > $ perf list
+> > ...
+> >    uncore_imc_free_running/data_read/                 [Kernel PMU event=
+]
+> >    uncore_imc_free_running/data_total/                [Kernel PMU event=
+]
+> >    uncore_imc_free_running/data_write/                [Kernel PMU event=
+]
+>
+> So with this change can we run something like:
+>
+> perf stat -e uncore_imc_free_running/data_read/
+>
+> ?
 
-Thanks, applied.
+It is a long standing behavior of the event parser that we match the
+numeric suffixes, so:
 
-- Arnaldo
+```
+$ sudo perf stat -e uncore_imc_free_running/data_read/ -a sleep 1
 
- 
-> Will there be a PMU driver fix so that the perf_event_open fails for
-> the group? That way the weak group would work.
-> 
+Performance counter stats for 'system wide':
+
+         6,969.93 MiB  uncore_imc_free_running/data_read/
+
+      1.001163027 seconds time elapsed
+```
+
+The "uncore_" at the beginning is also optional, I kind of wish the
+"free_running" was too. The code doing this is:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/parse-events.y?h=3Dperf-tools-next#n316
+adding a * after the PMU name in:
+asprintf(&pattern, "%s*", $1)
+Then using fnmatch here:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/pmu.c?h=3Dperf-tools-next#n1707
+
+> If so, does that match all PMUs whose name beings with
+> "uncore_imc_free_running" (and give aggregate result for those PMUs)?
+
+Yep. As we're matching with a filename '*' glob then it will actually
+potentially grab a bunch more. I think this should likely be made a
+lot more precise.
+
+The merging of the counters happens throughout the code, but it is set up h=
+ere:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/stat.c?h=3Dperf-tools-next#n559
+
+I didn't write this behavior, it has pre-existed my contributions. I'm
+hoping to change the perf list behavior as we're seeing large server
+systems with getting on toward 100 PMUs, the events are replicated for
+each one and the perf list and testing behaviors are somewhat
+exploding in size.
+
+Thanks,
+Ian
+
 > Thanks,
-> Ian
-> 
-> > ---
+> John
+>
+> > ```
 > >
-> > Previous versions can be found at:
-> > v1: https://lore.kernel.org/all/20230614090710.680330-1-sandipan.das@amd.com/
+> > The PMUs are sorted by name then suffix as a part of this change.
 > >
-> > Changes in v2:
-> > - As suggested by Ian, use the NO_GROUP_EVENTS constraint instead of
-> >   retrying the test scenario with --metric-no-group.
-> > - Change the commit message accordingly.
+> > Ian Rogers (3):
+> >    perf pmus: Sort pmus by name then suffix
+> >    perf pmus: Add scan that ignores duplicates, use for perf list
+> >    perf pmus: Don't print PMU suffix in list
 > >
-> >  tools/perf/pmu-events/arch/x86/amdzen1/recommended.json | 3 ++-
-> >  tools/perf/pmu-events/arch/x86/amdzen2/recommended.json | 3 ++-
-> >  tools/perf/pmu-events/arch/x86/amdzen3/recommended.json | 3 ++-
-> >  3 files changed, 6 insertions(+), 3 deletions(-)
+> >   tools/perf/util/pmus.c | 107 +++++++++++++++++++++++++++++++++++++++-=
+-
+> >   1 file changed, 102 insertions(+), 5 deletions(-)
 > >
-> > diff --git a/tools/perf/pmu-events/arch/x86/amdzen1/recommended.json b/tools/perf/pmu-events/arch/x86/amdzen1/recommended.json
-> > index bf5083c1c260..4d28177325a0 100644
-> > --- a/tools/perf/pmu-events/arch/x86/amdzen1/recommended.json
-> > +++ b/tools/perf/pmu-events/arch/x86/amdzen1/recommended.json
-> > @@ -169,8 +169,9 @@
-> >    },
-> >    {
-> >      "MetricName": "nps1_die_to_dram",
-> > -    "BriefDescription": "Approximate: Combined DRAM B/bytes of all channels on a NPS1 node (die) (may need --metric-no-group)",
-> > +    "BriefDescription": "Approximate: Combined DRAM B/bytes of all channels on a NPS1 node (die)",
-> >      "MetricExpr": "dram_channel_data_controller_0 + dram_channel_data_controller_1 + dram_channel_data_controller_2 + dram_channel_data_controller_3 + dram_channel_data_controller_4 + dram_channel_data_controller_5 + dram_channel_data_controller_6 + dram_channel_data_controller_7",
-> > +    "MetricConstraint": "NO_GROUP_EVENTS",
-> >      "MetricGroup": "data_fabric",
-> >      "PerPkg": "1",
-> >      "ScaleUnit": "6.1e-5MiB"
-> > diff --git a/tools/perf/pmu-events/arch/x86/amdzen2/recommended.json b/tools/perf/pmu-events/arch/x86/amdzen2/recommended.json
-> > index a71694a043ba..60e19456d4c8 100644
-> > --- a/tools/perf/pmu-events/arch/x86/amdzen2/recommended.json
-> > +++ b/tools/perf/pmu-events/arch/x86/amdzen2/recommended.json
-> > @@ -169,8 +169,9 @@
-> >    },
-> >    {
-> >      "MetricName": "nps1_die_to_dram",
-> > -    "BriefDescription": "Approximate: Combined DRAM B/bytes of all channels on a NPS1 node (die) (may need --metric-no-group)",
-> > +    "BriefDescription": "Approximate: Combined DRAM B/bytes of all channels on a NPS1 node (die)",
-> >      "MetricExpr": "dram_channel_data_controller_0 + dram_channel_data_controller_1 + dram_channel_data_controller_2 + dram_channel_data_controller_3 + dram_channel_data_controller_4 + dram_channel_data_controller_5 + dram_channel_data_controller_6 + dram_channel_data_controller_7",
-> > +    "MetricConstraint": "NO_GROUP_EVENTS",
-> >      "MetricGroup": "data_fabric",
-> >      "PerPkg": "1",
-> >      "ScaleUnit": "6.1e-5MiB"
-> > diff --git a/tools/perf/pmu-events/arch/x86/amdzen3/recommended.json b/tools/perf/pmu-events/arch/x86/amdzen3/recommended.json
-> > index 988cf68ae825..3e9e1781812e 100644
-> > --- a/tools/perf/pmu-events/arch/x86/amdzen3/recommended.json
-> > +++ b/tools/perf/pmu-events/arch/x86/amdzen3/recommended.json
-> > @@ -205,10 +205,11 @@
-> >    },
-> >    {
-> >      "MetricName": "nps1_die_to_dram",
-> > -    "BriefDescription": "Approximate: Combined DRAM B/bytes of all channels on a NPS1 node (die) (may need --metric-no-group)",
-> > +    "BriefDescription": "Approximate: Combined DRAM B/bytes of all channels on a NPS1 node (die)",
-> >      "MetricExpr": "dram_channel_data_controller_0 + dram_channel_data_controller_1 + dram_channel_data_controller_2 + dram_channel_data_controller_3 + dram_channel_data_controller_4 + dram_channel_data_controller_5 + dram_channel_data_controller_6 + dram_channel_data_controller_7",
-> >      "MetricGroup": "data_fabric",
-> >      "PerPkg": "1",
-> > +    "MetricConstraint": "NO_GROUP_EVENTS",
-> >      "ScaleUnit": "6.1e-5MiB"
-> >    }
-> >  ]
-> > --
-> > 2.34.1
-> >
-
--- 
-
-- Arnaldo
+>
