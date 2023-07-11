@@ -2,179 +2,127 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B91BEB64DC
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jul 2023 15:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B879EEB64DC
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jul 2023 15:19:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229970AbjGKPKt (ORCPT
+        id S231649AbjGKPTs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Jul 2023 11:10:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34850 "EHLO
+        Tue, 11 Jul 2023 11:19:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230329AbjGKPKs (ORCPT
+        with ESMTP id S231658AbjGKPTo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Jul 2023 11:10:48 -0400
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AB4610F2
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 08:10:28 -0700 (PDT)
-Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-403b622101bso269151cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 08:10:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689088227; x=1691680227;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FXXgBlGDAgzLkutcHZ7sASFFDrpsYXVUKvAHMEtR4rw=;
-        b=N6klHx+eyuoIjfiaI0v1z47RRdpGs97orCUlDc8RWQBS8JGIZsDQR2lmYLZktkTL7N
-         utNpaypyO6MgRQhLkmG+MiHyu3WQMEloe6KTLQndlWJfNqEcA6mZSjHzBQC19GAibNRp
-         ddcle7Shm+PTvtuPzRKxJouBbpmz7LbYPIAptzrgyLHrSsQ2+38QF8G+bubLsmlF6B6r
-         ozfVkIePgd80QubPNfkGVCxZa0ohVvNBPy1pT2Kf8YXjGTZsoUjlfc88Pb6vH1GpAHbg
-         EvyzocZL3wWdUtJHwm/rZPZFrI7at3X9eBzi6AKlJZYxQKFQTKwON7ANgQIc2iWo91xz
-         KiOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689088227; x=1691680227;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FXXgBlGDAgzLkutcHZ7sASFFDrpsYXVUKvAHMEtR4rw=;
-        b=M/Yasf5kJEgPndVwL7VhHEnYCVtJQX74esl1OjwShPduN8dSjKKrBII+14DrQLPW7c
-         vouoYU6iaq833JxRpcxJ0P9rC5pBg8qQCxZdv8PIVjqf6p3GZSqZTEblOJWb0aynJap4
-         mAinj4M59crF7my1oCuabzOzQYs91AOP1Q6NRPU3LO82OgUxfND3FqpGksznsqEMHloi
-         BLFlTNCPNR2tbXTz9+zOm4pHuXSNV2ffMiaewQuYnuP8I10hYGNuCKglwQ2q5s9hDt1/
-         YqrpcqYVWq8SGy9XvUMS2Ibf5FY9ldonD31PMtx0YkBC0+Tx/Y8jg0gQwB0vIqLsPPfM
-         Qg2w==
-X-Gm-Message-State: ABy/qLaIJW8JeYB2eAUq7ziNxAWNb4uKysJ+CB1Xb4Iva7IHlVob+O3W
-        kTZBwhWQQAItqaC+vc2CgwiH6KO5cURLNi+sXzQmww==
-X-Google-Smtp-Source: APBJJlFZZhaRI8ygieCTBZxLDpHmKmobNdZcLK+Gcqk61HWR1zTWR1ySAr85pNZwVmhZc3CTTku2gSWjKJCK+skFdZk=
-X-Received: by 2002:a05:622a:315:b0:3f9:ab2c:88b9 with SMTP id
- q21-20020a05622a031500b003f9ab2c88b9mr207655qtw.25.1689088227475; Tue, 11 Jul
- 2023 08:10:27 -0700 (PDT)
+        Tue, 11 Jul 2023 11:19:44 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FFDECE;
+        Tue, 11 Jul 2023 08:19:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689088783; x=1720624783;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=RPEqQ1NRCXtz4rGqZRl1bYAvipwQ1TUTiiBY0hY4Ojw=;
+  b=SX8uxqncaczXxLsmi4wNk4nydxfHAzfZnSh6FHjK+0dFj5cU8TDwkKrV
+   G4Dey36U3bMl/In5mNJ6eZukVsEqrm5QqO/K/5QYajO5QH5PrLcYZUsd1
+   /R/n3OnAyDFkfnrrzFyYslK3fG9Njut5oI/9KiGMhnDqZ/P3OLTmozkEY
+   Nc+4beGVtBrUIYESDLbnwVdasG2TNyd7ZGPJ5jtVUH7cSryDtbc7I0Bov
+   +iNw9O8lzGsRqK1w5yIS74xQTR57y5Bn0Ru5mFZKL9BoxAq7elqlrCrv8
+   YjAvC+dAlHlnIa4NdHwDFirjwPGwPC0sZznYdzpaVHGm4ui8pKu18m7rd
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="367227008"
+X-IronPort-AV: E=Sophos;i="6.01,196,1684825200"; 
+   d="scan'208";a="367227008"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 08:19:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="750790829"
+X-IronPort-AV: E=Sophos;i="6.01,196,1684825200"; 
+   d="scan'208";a="750790829"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.44.50])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 08:19:39 -0700
+Message-ID: <a791e982-ada3-7f26-e105-bc7fa9c7d346@intel.com>
+Date:   Tue, 11 Jul 2023 18:19:35 +0300
 MIME-Version: 1.0
-References: <20230711055859.1242497-1-irogers@google.com> <182675ca-0905-0ed2-de94-0f7d4a256082@oracle.com>
-In-Reply-To: <182675ca-0905-0ed2-de94-0f7d4a256082@oracle.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 11 Jul 2023 08:10:15 -0700
-Message-ID: <CAP-5=fXrOvkwrbEB0GGv6Xr5JOdrW7dzjOL=MkDdxX2McfnzYA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] perf list: Remove duplicate PMUs
-To:     John Garry <john.g.garry@oracle.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.13.0
+Subject: Re: [PATCH 3/3] perf machine: Include data symbols in the kernel map
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+References: <20230620201818.1670753-1-namhyung@kernel.org>
+ <20230620201818.1670753-3-namhyung@kernel.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20230620201818.1670753-3-namhyung@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jul 11, 2023 at 1:26=E2=80=AFAM John Garry <john.g.garry@oracle.com=
-> wrote:
->
-> On 11/07/2023 06:58, Ian Rogers wrote:
-> > When there are multiple PMUs differing by ordered suffixes only
-> > display one. This avoids repeated listing of events, in particular
-> > when there are 10s of uncore PMUs. This also helps speed the all PMU
-> > event tests.
-> >
-> > Before:
-> > ```
-> > $ perf list
-> > ...
-> >    uncore_imc_free_running_0/data_read/               [Kernel PMU event=
-]
-> >    uncore_imc_free_running_0/data_total/              [Kernel PMU event=
-]
-> >    uncore_imc_free_running_0/data_write/              [Kernel PMU event=
-]
-> >    uncore_imc_free_running_1/data_read/               [Kernel PMU event=
-]
-> >    uncore_imc_free_running_1/data_total/              [Kernel PMU event=
-]
-> >    uncore_imc_free_running_1/data_write/              [Kernel PMU event=
-]
-> > ```
-> >
-> > After:
-> > ```
-> > $ perf list
-> > ...
-> >    uncore_imc_free_running/data_read/                 [Kernel PMU event=
-]
-> >    uncore_imc_free_running/data_total/                [Kernel PMU event=
-]
-> >    uncore_imc_free_running/data_write/                [Kernel PMU event=
-]
->
-> So with this change can we run something like:
->
-> perf stat -e uncore_imc_free_running/data_read/
->
-> ?
+On 20/06/23 23:18, Namhyung Kim wrote:
+> When perf record -d is used, it needs data mmaps to symbolize global data.
+> But it missed to collect kernel data maps so it cannot symbolize them.
+> Instead of having a separate map, just increase the kernel map size to
+> include the data section.
+> 
+> Probably we can have a separate kernel map for data, but the current
+> code assumes a single kernel map.  So it'd require more changes in other
+> places and looks error-prone.  I decided not to go that way for now.
+> 
+> Also it seems the kernel module size already includes the data section.
+> 
+> For example, my system has the following.
+> 
+>   $ grep -e _stext -e _etext -e _edata /proc/kallsyms
+>   ffffffff99800000 T _stext
+>   ffffffff9a601ac8 T _etext
+>   ffffffff9b446a00 D _edata
+> 
+> Size of the text section is (0x9a601ac8 - 0x99800000 = 0xe01ac8) and
+> size of the data section is (0x9b446a00 - 0x99800000 = 0x1c46a00).
+> 
+> Before:
+>   $ perf record -d true
+> 
+>   $ perf report -D | grep MMAP | head -1
+>   0 0 0x460 [0x60]: PERF_RECORD_MMAP -1/0: [0xffffffff99800000(0xe01ac8) @ 0xffffffff99800000]: x [kernel.kallsyms]_text
+>                                                                ^^^^^^^^
+>                                                                  here
+> After:
+>   $ perf report -D | grep MMAP | head -1
+>   0 0 0x460 [0x60]: PERF_RECORD_MMAP -1/0: [0xffffffff99800000(0x1c46a00) @ 0xffffffff99800000]: x [kernel.kallsyms]_text
+>                                                                ^^^^^^^^^
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/machine.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index ddc0a2130caf..e93a66f6e0b3 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -1218,7 +1218,10 @@ static int machine__get_running_kernel_start(struct machine *machine,
+>  
+>  	*start = addr;
+>  
+> -	err = kallsyms__get_function_start(filename, "_etext", &addr);
+> +	if (machine->has_data_mmap)
+> +		err = kallsyms__get_symbol_start(filename, "_edata", &addr);
+> +	else
+> +		err = kallsyms__get_function_start(filename, "_etext", &addr);
 
-It is a long standing behavior of the event parser that we match the
-numeric suffixes, so:
+What is the downside of just extending it unconditionally?
 
-```
-$ sudo perf stat -e uncore_imc_free_running/data_read/ -a sleep 1
+>  	if (!err)
+>  		*end = addr;
+>  
 
-Performance counter stats for 'system wide':
-
-         6,969.93 MiB  uncore_imc_free_running/data_read/
-
-      1.001163027 seconds time elapsed
-```
-
-The "uncore_" at the beginning is also optional, I kind of wish the
-"free_running" was too. The code doing this is:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/parse-events.y?h=3Dperf-tools-next#n316
-adding a * after the PMU name in:
-asprintf(&pattern, "%s*", $1)
-Then using fnmatch here:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/pmu.c?h=3Dperf-tools-next#n1707
-
-> If so, does that match all PMUs whose name beings with
-> "uncore_imc_free_running" (and give aggregate result for those PMUs)?
-
-Yep. As we're matching with a filename '*' glob then it will actually
-potentially grab a bunch more. I think this should likely be made a
-lot more precise.
-
-The merging of the counters happens throughout the code, but it is set up h=
-ere:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/stat.c?h=3Dperf-tools-next#n559
-
-I didn't write this behavior, it has pre-existed my contributions. I'm
-hoping to change the perf list behavior as we're seeing large server
-systems with getting on toward 100 PMUs, the events are replicated for
-each one and the perf list and testing behaviors are somewhat
-exploding in size.
-
-Thanks,
-Ian
-
-> Thanks,
-> John
->
-> > ```
-> >
-> > The PMUs are sorted by name then suffix as a part of this change.
-> >
-> > Ian Rogers (3):
-> >    perf pmus: Sort pmus by name then suffix
-> >    perf pmus: Add scan that ignores duplicates, use for perf list
-> >    perf pmus: Don't print PMU suffix in list
-> >
-> >   tools/perf/util/pmus.c | 107 +++++++++++++++++++++++++++++++++++++++-=
--
-> >   1 file changed, 102 insertions(+), 5 deletions(-)
-> >
->
