@@ -2,32 +2,33 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F8CEB64DD
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jul 2023 12:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF230EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jul 2023 12:09:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231503AbjGKMB7 (ORCPT
+        id S230128AbjGKMJL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Jul 2023 08:01:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42156 "EHLO
+        Tue, 11 Jul 2023 08:09:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231436AbjGKMB6 (ORCPT
+        with ESMTP id S229987AbjGKMJJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Jul 2023 08:01:58 -0400
+        Tue, 11 Jul 2023 08:09:09 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 73CA410C4;
-        Tue, 11 Jul 2023 05:01:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C3D781708;
+        Tue, 11 Jul 2023 05:08:59 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 360B62B;
-        Tue, 11 Jul 2023 05:02:28 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A88E72B;
+        Tue, 11 Jul 2023 05:09:41 -0700 (PDT)
 Received: from [10.163.47.87] (unknown [10.163.47.87])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ECD223F67D;
-        Tue, 11 Jul 2023 05:01:39 -0700 (PDT)
-Message-ID: <e111d9ac-c4f6-c541-313b-7a3a6acfb5d2@arm.com>
-Date:   Tue, 11 Jul 2023 17:31:37 +0530
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 766923F67D;
+        Tue, 11 Jul 2023 05:08:53 -0700 (PDT)
+Message-ID: <86792ab2-864a-5c27-95c1-54c4057024db@arm.com>
+Date:   Tue, 11 Jul 2023 17:38:51 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Subject: Re: [PATCH 1/4] arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE capability
+Subject: Re: [PATCH 3/4] arm_pmu: Remove unused
+ PERF_PMU_CAP_HETEROGENEOUS_CPUS capability
 Content-Language: en-US
 To:     James Clark <james.clark@arm.com>,
         linux-perf-users@vger.kernel.org, irogers@google.com
@@ -46,9 +47,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Kan Liang <kan.liang@linux.intel.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 References: <20230710122138.1450930-1-james.clark@arm.com>
- <20230710122138.1450930-2-james.clark@arm.com>
+ <20230710122138.1450930-4-james.clark@arm.com>
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20230710122138.1450930-2-james.clark@arm.com>
+In-Reply-To: <20230710122138.1450930-4-james.clark@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -58,47 +59,42 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 On 7/10/23 17:51, James Clark wrote:
-> This capability gives us the ability to open PERF_TYPE_HARDWARE and
-> PERF_TYPE_HW_CACHE events on a specific PMU for free. All the
-> implementation is contained in the Perf core and tool code so no change
-> to the Arm PMU driver is needed.
+> Since commit bd2756811766 ("perf: Rewrite core context handling") the
+> relationship between perf_event_context and PMUs has changed so that
+> the error scenario that PERF_PMU_CAP_HETEROGENEOUS_CPUS originally
+> silenced no longer exists.
 > 
-> The following basic use case now results in Perf opening the event on
-> all PMUs rather than picking only one in an unpredictable way:
+> Remove the capability and associated comment to avoid confusion that it
+> actually influences any perf core behavior. This change should be a
+> no-op.
 > 
->   $ perf stat -e cycles -- taskset --cpu-list 0,1 stress -c 2
-> 
->    Performance counter stats for 'taskset --cpu-list 0,1 stress -c 2':
-> 
->          963279620      armv8_cortex_a57/cycles/                (99.19%)
->          752745657      armv8_cortex_a53/cycles/                (94.80%)
-> 
-> Fixes: 55bcf6ef314a ("perf: Extend PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE")
-> Suggested-by: Ian Rogers <irogers@google.com>
 > Signed-off-by: James Clark <james.clark@arm.com>
 > ---
->  drivers/perf/arm_pmu.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+>  drivers/perf/arm_pmu.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
 > 
 > diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-> index 277e29fbd504..d8844a9461a2 100644
+> index d8844a9461a2..297906df6628 100644
 > --- a/drivers/perf/arm_pmu.c
 > +++ b/drivers/perf/arm_pmu.c
-> @@ -875,8 +875,13 @@ struct arm_pmu *armpmu_alloc(void)
->  		 * configuration (e.g. big.LITTLE). This is not an uncore PMU,
->  		 * and we have taken ctx sharing into account (e.g. with our
->  		 * pmu::filter callback and pmu::event_init group validation).
-> +		 *
-> +		 * PERF_PMU_CAP_EXTENDED_HW_TYPE is required to open the legacy
-
-s/legacy/generic ? These hardware events are still around.
-
-> +		 * PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE events on a
-> +		 * specific PMU.
+> @@ -872,15 +872,12 @@ struct arm_pmu *armpmu_alloc(void)
+>  		.attr_groups	= pmu->attr_groups,
+>  		/*
+>  		 * This is a CPU PMU potentially in a heterogeneous
+> -		 * configuration (e.g. big.LITTLE). This is not an uncore PMU,
+> -		 * and we have taken ctx sharing into account (e.g. with our
+> -		 * pmu::filter callback and pmu::event_init group validation).
+> -		 *
+> +		 * configuration (e.g. big.LITTLE) so
+>  		 * PERF_PMU_CAP_EXTENDED_HW_TYPE is required to open the legacy
+>  		 * PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE events on a
+>  		 * specific PMU.
 >  		 */
-> -		.capabilities	= PERF_PMU_CAP_HETEROGENEOUS_CPUS | PERF_PMU_CAP_EXTENDED_REGS,
-> +		.capabilities	= PERF_PMU_CAP_HETEROGENEOUS_CPUS | PERF_PMU_CAP_EXTENDED_REGS |
-> +				  PERF_PMU_CAP_EXTENDED_HW_TYPE,
+> -		.capabilities	= PERF_PMU_CAP_HETEROGENEOUS_CPUS | PERF_PMU_CAP_EXTENDED_REGS |
+> +		.capabilities	= PERF_PMU_CAP_EXTENDED_REGS |
+>  				  PERF_PMU_CAP_EXTENDED_HW_TYPE,
+
+Small nit, the second line could be folded back into the first one.
+
 >  	};
 >  
->  	pmu->attr_groups[ARMPMU_ATTR_GROUP_COMMON] =
