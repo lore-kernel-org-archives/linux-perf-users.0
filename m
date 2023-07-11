@@ -2,141 +2,102 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8841FEB64DD
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jul 2023 17:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3FEEB64DD
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jul 2023 19:05:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230204AbjGKReg convert rfc822-to-8bit (ORCPT
+        id S230325AbjGKTF1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Jul 2023 13:34:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43024 "EHLO
+        Tue, 11 Jul 2023 15:05:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229890AbjGKRef (ORCPT
+        with ESMTP id S230178AbjGKTF0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Jul 2023 13:34:35 -0400
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 477E5E77;
-        Tue, 11 Jul 2023 10:34:31 -0700 (PDT)
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-47e655e9a9aso2177108e0c.2;
-        Tue, 11 Jul 2023 10:34:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689096870; x=1691688870;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LHveKtnhu8QuPi05Hn4gQQcWgqPxgrNd+FfX38wdmsE=;
-        b=fv8MWKfX7UTLQ5REFdzFz4VtvyuY/qCUOemz8H/S+0X/r6qDGa4fl5/l7TAeS6xeGp
-         cUbildRa3x9zZmAWxzr3tgvAgTgCjyRlCmcy4+E9yf3G+EJg6hSpvg1RZ3i9ge+7FP1j
-         LN7Y0uOL8MCq6Z/q2JhdIW8tDmdtrM2OD3lzRXchHaIrmJpCZMSKUbsHOEikijX0hJi3
-         OtFkAukrnkCHr+ZBohFWAu7kunr9U4DmOP6bR6LY1MDiQB8OYkadKXHbv+KhF8XgB3ZG
-         +NUbW9efVbuslAjElzEvULqeNIF2BfLKcmQoUfy/Vnfvd6XmSqDX6S/FU1uNOgDcixqC
-         nw5A==
-X-Gm-Message-State: ABy/qLbXzkn3GQ4wUPCvhEZ9cCoHTuoThHK7HLbnoHcPJr2gVVpG/KBQ
-        uL8V+f1yeaPsv10coH71EUgq5lCcVzkU9V9ayWg=
-X-Google-Smtp-Source: APBJJlH4YXSG7vT8mncA1+8Qte/AHKUMyFUk3Kfo51QFm40p7bQ43fRnwDozC38Id8CDhRolTyjp1d6ok/ds8Fzv4/w=
-X-Received: by 2002:a1f:d0c2:0:b0:46e:9f33:add1 with SMTP id
- h185-20020a1fd0c2000000b0046e9f33add1mr7825797vkg.6.1689096869880; Tue, 11
- Jul 2023 10:34:29 -0700 (PDT)
+        Tue, 11 Jul 2023 15:05:26 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1107E60
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 12:05:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689102321; x=1720638321;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=T0zlaESnLnZcnU7RFutA/jZfsbUeco24Cp68ut0m1jM=;
+  b=n4VmCFwKbudGmZFCzymHnt2dsJM+zINyfJGH41lfsxSDRWZw7u/8kbK9
+   Kbi8N4dQm/3xY631WnxSIr0P2YK1UHtxOX4pKpk4I+X1ZbMAg93w9PzAH
+   Z36XkK9bkZ3QQfGeo7uTm15tI0cWZDzQ0HK2xeSYeH+JeOhqjK4q/1AkG
+   9o62DiYOZK+fTtT2AwHQgKk3Fzog9umy9y0+tCUM3DnxhbESxjmnfSfGT
+   HWAkMqWF7u/bfiuCAN9YFbwWJgCdJ/vDZVzh7jAmx04mXLEduZUXE0K5E
+   RgTHgYXTuqlOqLVdPyf/VUSnxl5t+TBdKgPq6yv7g2rux22FrWwksQHNa
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="395502258"
+X-IronPort-AV: E=Sophos;i="6.01,197,1684825200"; 
+   d="scan'208";a="395502258"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 12:05:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="715272654"
+X-IronPort-AV: E=Sophos;i="6.01,197,1684825200"; 
+   d="scan'208";a="715272654"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.44.50])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 12:05:18 -0700
+Message-ID: <ac0f7815-e14d-f1e0-a44e-bc4a19f0b8c8@intel.com>
+Date:   Tue, 11 Jul 2023 22:05:13 +0300
 MIME-Version: 1.0
-References: <20230706063440.54189-1-sandipan.das@amd.com> <CAP-5=fVdVSL4H1qWLZMiU3H2-bOJ0RkFOfq4Jxz1qw0-8EoYFw@mail.gmail.com>
- <ZK1sb4tPizTzWq7q@kernel.org>
-In-Reply-To: <ZK1sb4tPizTzWq7q@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 11 Jul 2023 10:34:18 -0700
-Message-ID: <CAM9d7ci5owtM9h_PjsLo6hNz=kZKDT8PcPFOWX41Vf9g+SnpEQ@mail.gmail.com>
-Subject: Re: [PATCH v2] perf vendor events amd: Fix large metrics
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        adrian.hunter@intel.com, ayush.jain3@amd.com,
-        ananth.narayan@amd.com, ravi.bangoria@amd.com,
-        santosh.shukla@amd.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.13.0
+Subject: Re: Using Intel PT with JIT
+Content-Language: en-US
+To:     Roman Lozko <lozko.roma@gmail.com>,
+        linux-perf-users@vger.kernel.org
+References: <CAEhC_Bkc9gV72k1iLqGjpjmRGx8aMjS6n_6gmmdr=XTzNeFc=g@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CAEhC_Bkc9gV72k1iLqGjpjmRGx8aMjS6n_6gmmdr=XTzNeFc=g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jul 11, 2023 at 7:51 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Thu, Jul 06, 2023 at 06:49:29AM -0700, Ian Rogers escreveu:
-> > On Wed, Jul 5, 2023 at 11:34 PM Sandipan Das <sandipan.das@amd.com> wrote:
-> > >
-> > > There are cases where a metric requires more events than the number of
-> > > available counters. E.g. AMD Zen, Zen 2 and Zen 3 processors have four
-> > > data fabric counters but the "nps1_die_to_dram" metric has eight events.
-> > > By default, the constituent events are placed in a group and since the
-> > > events cannot be scheduled at the same time, the metric is not computed.
-> > > The "all metrics" test also fails because of this.
-> > >
-> > > Use the NO_GROUP_EVENTS constraint for such metrics which anyway expect
-> > > the user to run perf with "--metric-no-group".
-> > >
-> > > E.g.
-> > >
-> > >   $ sudo perf test -v 101
-> > >
-> > > Before:
-> > >
-> > >   101: perf all metrics test                                           :
-> > >   --- start ---
-> > >   test child forked, pid 37131
-> > >   Testing branch_misprediction_ratio
-> > >   Testing all_remote_links_outbound
-> > >   Testing nps1_die_to_dram
-> > >   Metric 'nps1_die_to_dram' not printed in:
-> > >   Error:
-> > >   Invalid event (dram_channel_data_controller_4) in per-thread mode, enable system wide with '-a'.
-> > >   Testing macro_ops_dispatched
-> > >   Testing all_l2_cache_accesses
-> > >   Testing all_l2_cache_hits
-> > >   Testing all_l2_cache_misses
-> > >   Testing ic_fetch_miss_ratio
-> > >   Testing l2_cache_accesses_from_l2_hwpf
-> > >   Testing l2_cache_misses_from_l2_hwpf
-> > >   Testing op_cache_fetch_miss_ratio
-> > >   Testing l3_read_miss_latency
-> > >   Testing l1_itlb_misses
-> > >   test child finished with -1
-> > >   ---- end ----
-> > >   perf all metrics test: FAILED!
-> > >
-> > > After:
-> > >
-> > >   101: perf all metrics test                                           :
-> > >   --- start ---
-> > >   test child forked, pid 43766
-> > >   Testing branch_misprediction_ratio
-> > >   Testing all_remote_links_outbound
-> > >   Testing nps1_die_to_dram
-> > >   Testing macro_ops_dispatched
-> > >   Testing all_l2_cache_accesses
-> > >   Testing all_l2_cache_hits
-> > >   Testing all_l2_cache_misses
-> > >   Testing ic_fetch_miss_ratio
-> > >   Testing l2_cache_accesses_from_l2_hwpf
-> > >   Testing l2_cache_misses_from_l2_hwpf
-> > >   Testing op_cache_fetch_miss_ratio
-> > >   Testing l3_read_miss_latency
-> > >   Testing l1_itlb_misses
-> > >   test child finished with 0
-> > >   ---- end ----
-> > >   perf all metrics test: Ok
-> > >
-> > > Reported-by: Ayush Jain <ayush.jain3@amd.com>
-> > > Suggested-by: Ian Rogers <irogers@google.com>
-> > > Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> >
-> > Acked-by: Ian Rogers <irogers@google.com>
->
-> Thanks, applied.
+On 11/07/23 16:54, Roman Lozko wrote:
+> Hi, I tried to use `perf record` with Intel PT but afterwards I can't
+> inject JIT dump to trace, `perf inject` says:
+> 
+> error, jitted code must be sampled with perf record -k 1
+> 0x59d8 [0xb0]: failed to process type: 10 [Operation not permitted]
+> 
+> On the other hand, `-k 1` cannot be passed to `perf record`:
+> 
+> Cannot use clockid (-k option) with intel_pt
+> 
+> Is there a way to use Intel PT with jitted code? I am using perf
+> 5.13.8, maybe it is already implemented in later versions?
+> 
 
-If I'm not too late..
+Seems to work:
 
-Tested-by: Namhyung Kim <namhyung@kernel.org>
+$ cat HelloWorldApp.java  
+import java.util.*;
 
-Thanks,
-Namhyung
+/**
+* The HelloWorldApp class implements an application that
+* simply prints "Hello World!" to standard output.
+*/
+class HelloWorldApp {
+       public static void main(String[] args) {
+               System.out.println("Hello World!"); // Display the string.
+       }
+}
+$ javac HelloWorldApp.java
+$ perf version
+perf version 5.13.8.g3cfdd7252e00
+$ perf record  -e intel_pt//u -o java.perf.data java -agentpath:/home/ahunter/git/linux-stable/tools/perf/libperf-jvmti.so HelloWorldApp  
+java: jvmti: jitdump in /home/ahunter/.debug/jit/java-jit-20230711.XXgKfxna/jit-75025.dump
+Hello World!
+[ perf record: Woken up 3 times to write data ]
+[ perf record: Captured and wrote 4.072 MB java.perf.data ]
+$ perf inject -i java.perf.data --jit -o java.perf.data.jitted                                                                              
+$
+
+
