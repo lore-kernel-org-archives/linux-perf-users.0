@@ -2,182 +2,135 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B971EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 06:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D20EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 06:53:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231255AbjGLGFh (ORCPT
+        id S232040AbjGLGxA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Jul 2023 02:05:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51746 "EHLO
+        Wed, 12 Jul 2023 02:53:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231251AbjGLGFg (ORCPT
+        with ESMTP id S232016AbjGLGw4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Jul 2023 02:05:36 -0400
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED118BB
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 23:05:34 -0700 (PDT)
-Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-4036bd4fff1so130371cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 23:05:34 -0700 (PDT)
+        Wed, 12 Jul 2023 02:52:56 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EAF9188
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 23:52:54 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-c6dd0e46a52so5404333276.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 23:52:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689141934; x=1691733934;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yyLeCb+4QsM02BWy0BPE1CVBn7Ooftnyy1p5ySh/I/4=;
-        b=Ev1HmpgXVTBgAiyhphybA8sI8dalHz3OmxXw33a0PCQqHOzd5p6MtWXo1K5ldIZdpw
-         v3y5bL5lnSTheG27eOuWOt4ncxVqQ37zBxIwnQvwuGXTT4ZIYoiNcHr5vSWtlHY+3k46
-         8h9v+7NVGiDae0Ins5msDftVsigZwsst5uvOr9z1VCfRxNg5RPWGgNZyoBZiuVg1z4dI
-         JaYaUbfTa3Oq/1vCJdTlkcOfIyWVtxc4ELjAujFYrDdNGlGAKTM8Uhho0UEX8qsT78Xh
-         iZPVYMWV80tn12lrh2iV9oBQ8/VYHmGiq46H7AJct/ki8uTwJE0xpqTVAwZbD0pOF2ad
-         +THg==
+        d=google.com; s=20221208; t=1689144773; x=1691736773;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=y/xEXbInlbT/mWlE+l7wvB8yv7wRGOs96AGe4Pwk5fs=;
+        b=gebAwvel5szqUUFm9xDJ9B6JG8HuRDc6wDQp6f5xICBCCEHHzJH+84wytnFGd2KxG1
+         U7b1aydvyh6BVXn5dlel2aMv0uVvRmuzqqVYLo83KiQ1UX1qCBC6AIUxYnwfkV4ORFfB
+         ns8Gb1Fn97E21Wmfb2nRru6rmKBFRbAjEkTYkL86cs5NqVYexz0rxWJASxwVGPK8br8N
+         Wb0gsLZrabD8MeqkrfTQOLSvIGjY5lOvFvpkNoKF79Jx3Gvvz3zZWB/YaRJ+piFEAGyt
+         wOzKkk+Lo4e1XC9mTndAzl5NTnBWMHQDdDUu02hQszNI3sWaEE81PSOzPiCQt3VgPBwn
+         BWZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689141934; x=1691733934;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yyLeCb+4QsM02BWy0BPE1CVBn7Ooftnyy1p5ySh/I/4=;
-        b=Au+6kuiSTNc8+Ar2HYZs8oPD4txqqPzKD83FjDepwr354H7TY12WMlklgLGiQXQ0P2
-         jZsJeo36B/1Qf5/waBZVJFthMFg7Q3t6+ZXbYyvccQRbeZtFA6vbr8IEohvAxhBTCJJI
-         +SiJVb7f7/JN2Vsx5MRCJhh+F1UmRHcwFS9AxEIcKcIG96yI4zDU3xiB/ubXiNqNDJFo
-         gXITk4hPZ+5aQHWr+sh0eAJ9jQ8yBxsWvLGUPA/wBICDrreft4GiQKl8y4X9DOFrkNlW
-         p9ufZlJEclrehsBU5xKIRB0O9MRDA/tzVJ7jrAkcJDyxDJ251rOMvpNwrGHJIghNJyUP
-         yAzg==
-X-Gm-Message-State: ABy/qLZM0ANGsMRjzzDDCLETQAy5AQqQU/lWL22u1RHxmObIqQN2E32W
-        U1N0YoWF4DMJVDxLXEF3+/aE1H4ca9icGA7DyngmMw==
-X-Google-Smtp-Source: APBJJlEuK+J5x5jJ6LWJS9P5JpvLKII3XEaYsPC+2PPfBNgcIOlv0nSlStXVuI9FbfKB8JR4GAHeMfUvqcvXVwfUfts=
-X-Received: by 2002:a05:622a:1452:b0:3ed:86f6:6eab with SMTP id
- v18-20020a05622a145200b003ed86f66eabmr147634qtx.14.1689141933980; Tue, 11 Jul
- 2023 23:05:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230628102949.2598096-1-john.g.garry@oracle.com>
- <20230628102949.2598096-5-john.g.garry@oracle.com> <CAP-5=fXa24_LEiyni0Ncyfa5hKwC1GE6y-zi2u8M98M9SwHX+g@mail.gmail.com>
- <CAP-5=fUs=u3PKYP3mVDdzNB8+=GAHaEXG3SGfWJpMELYYqO_hA@mail.gmail.com> <d59b6e7c-cead-24d4-a9cb-6552b3154d84@oracle.com>
-In-Reply-To: <d59b6e7c-cead-24d4-a9cb-6552b3154d84@oracle.com>
+        d=1e100.net; s=20221208; t=1689144773; x=1691736773;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=y/xEXbInlbT/mWlE+l7wvB8yv7wRGOs96AGe4Pwk5fs=;
+        b=UGjawhkiJl0yqc/7T5S8QaBT7z/aW1fTHvWjxJYvOO3cKuq1spKOixc8Z7sSpeilEj
+         Cl0vRyamE6v0+fGGt0IBYu8M9nmeON67uPPcEKrw5Vno51I3ERFVxHEX/cwm+Ph/bjOC
+         qX7mtj+j+w6OXsScjDvwx9s88zfIU+jKCtpNhYcsJs8Odkm6Beui58gNKLxSk/J8ScKa
+         BAWoNPUHPmoReiKvMJvIB0DGgAHmDlnwjH699TWx46jrt5MfqYNzfJsryySBfx63VM4T
+         cEcL7Cl4GlenNb0y+8UUV4rvzlscknVetZLB+Nayp+qPhWTbHdU3otRqu4n3oXRyJDxM
+         0YhQ==
+X-Gm-Message-State: ABy/qLbUs6uswXUrfMooOQ3jkXOzl+Si513jMXxxiSH+MOkuLMce0GDj
+        GSIqq18kcoOAKLtpeaJTinCQnx/PVN2/
+X-Google-Smtp-Source: APBJJlGYOB+tzfAur3zuZF33qiFoQQ9JvWC0LENO29amDw6ZfvkTZnqGcnmJD2Oo/AuhU94vvM4fDKZkYMZb
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:9d6e:a38f:b398:c8b4])
+ (user=irogers job=sendgmr) by 2002:a05:6902:508:b0:c4b:6ed6:6147 with SMTP id
+ x8-20020a056902050800b00c4b6ed66147mr164772ybs.9.1689144773629; Tue, 11 Jul
+ 2023 23:52:53 -0700 (PDT)
+Date:   Tue, 11 Jul 2023 23:52:50 -0700
+Message-Id: <20230712065250.1450306-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.41.0.390.g38632f3daf-goog
+Subject: [PATCH v1] perf parse-events: Avoid segv if PMU lookup fails for
+ legacy cache terms
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 11 Jul 2023 23:05:22 -0700
-Message-ID: <CAP-5=fUu6xgVDQT4tq=vmRLDMe3ddMLywP11uOLvKSu8Lc6BjQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 4/9] perf jevents: Add sys_events_find_events_table()
-To:     John Garry <john.g.garry@oracle.com>
-Cc:     acme@kernel.org, namhyung@kernel.org, jolsa@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        renyu.zj@linux.alibaba.com, shangxiaojing@huawei.com,
-        kjain@linux.ibm.com, kan.liang@linux.intel.com
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jul 3, 2023 at 8:15=E2=80=AFAM John Garry <john.g.garry@oracle.com>=
- wrote:
->
-> On 30/06/2023 21:16, Ian Rogers wrote:
-> > On Fri, Jun 30, 2023 at 12:00=E2=80=AFPM Ian Rogers<irogers@google.com>=
-  wrote:
-> >> On Wed, Jun 28, 2023 at 3:30=E2=80=AFAM John Garry<john.g.garry@oracle=
-.com>  wrote:
-> >>> Add a function to get the events table associated with a metric table=
- for
-> >>> struct pmu_sys_events.
-> >>>
-> >>> We could also use something like:
-> >>> struct pmu_sys_events *sys =3D container_of(metrics, struct pmu_sys_e=
-vents,
-> >>>                                                  metric_table);
-> >>>
-> >>> to lookup struct pmu_sys_events, but that relies on the user always p=
-assing
-> >>> a sys events metric struct pointer, so this way is safer, but slower.
->
-> Hi Ian,
->
-> >> If an event is specific to a particular PMU, shouldn't the metric name
-> >> the PMU with the event?
->
-> I am working on the basis - which I think is quite sane in case of sys
-> events - that event names are unique to a PMU type.
->
-> > For example:
-> >>
-> >> MetricName: "IPC",
-> >> MetricExpr: "instructions / cycles",
-> >>
-> >> Here instructions and cycles can wildcard match on BIG.little/hybrid
-> >> systems and so we get an IPC metric for each PMU - although, I suspect
-> >> this isn't currently quite working. We can also, and currently, do:
-> >>
-> >> MetricName: "IPC",
-> >> MetricExpr: "cpu_atom@instructions@ / cpu_atom@cycles@",
-> >> ...
-> >> MetricName: "IPC",
-> >> MetricExpr: "cpu_core@instructions@ / cpu_core@cycles@",
->
-> I did not know that it was possible to state that an event is for a
-> specific PMU type in this fashion - is this feature new? Does it work
-> only for known terms, like cycles and instructions?
+libfuzzer found the following command could segv:
+```
+$ perf stat -e cpu/L2,L2/ true
+```
+This is because the L2 term rewrites the perf_event_attr type to
+PERF_TYPE_HW_CACHE which then fails the PMU lookup for the second
+legacy cache term.
 
-It has been in metrics a long time (I didn't choose that @ was the /
-replacement :-) ). It should work for all events.
+The new failure is consistent with repeated hardware terms:
+```
+$ perf stat -e cpu/L2,L2/ true
+event syntax error: 'cpu/L2,L2/'
+                            \___ Failed to find PMU for type 3
 
-> >> The @ is used to avoid parsing confusion with / meaning divide. The
-> >> PMUs for the events are explicitly listed here. We could say the PMU
-> >> is implied but then it gets complex for uncore events, for metrics
-> >> that mix core and uncore events.
->
-> So this works ok for IPC and CPU PMUs as we want the same event for many
-> PMU types and naturally it would have the same name.
->
-> I am still not sure that sys event metrics need to specify a PMU.
+Initial error:
+event syntax error: 'cpu/L2,L2/'
+                            \___ Failed to find PMU for type 3
+Run 'perf list' for a list of valid events
 
-There was a similar thought for hybrid metrics. The PMU could be
-implied from the PMU of the metric. I think there can be confusion
-from an implied PMU, for example the cycles event without a PMU will
-open two events on a hybrid CPU. If we imply the PMU then it can mean
-just 1 PMU, but if the PMU doesn't have the event presumably it means
-the multiple PMU behavior.
+ Usage: perf stat [<options>] [<command>]
 
-In parse-events there is existing logic to wildcard events but to
-ignore those that don't match a given PMU. This is used to support the
---cputype option in builtin-stat.c, there is a similar option for
-builtin-list.c. We can use this so that events in a metric only match
-the PMU of the metric. Currently there are core metrics but whose
-events are all uncore like:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json?h=3Dperf-tools=
--next#n1802
+    -e, --event <event>   event selector. use 'perf list' to list available events
+$ perf stat -e cpu/cycles,cycles/ true
+event syntax error: 'cpu/cycles,cycles/'
+                                \___ Failed to find PMU for type 0
 
-So we'd need to move these metrics to be on the appropriate uncore
-PMU. Supporting >1 PMU in a metric wouldn't work though as it would
-appear the event was missing. Having the metric specify the PMU avoids
-these problems, but is verbose.
+Initial error:
+event syntax error: 'cpu/cycles,cycles/'
+                                \___ Failed to find PMU for type 0
+Run 'perf list' for a list of valid events
 
-Thanks,
-Ian
+ Usage: perf stat [<options>] [<command>]
 
-> > So looking at the later patches, they are making it so the PMU doesn't
-> > need to be specified,
->
-> Right, as we assume that we use uniquely named events. Having non-unique
-> event names seems to create problems.
->
-> > so I think it is the same issue as here. My
-> > thought was that the PMU would always be required for metrics like
-> > memory bandwidth per million instructions, ie >1 PMU.
->
-> We treat these sys PMUs as standalone, and it makes no sense (currently)
-> to have a metric which contains events for multiple PMU types as we
-> don't know if the system is created with those PMUs, and, if it is, what
-> topology etc.
->
-> > I know this
-> > makes the metrics longer, I've tried to avoid writing json metrics and
-> > have used Python to write them in my own work:
-> > https://urldefense.com/v3/__https://git.kernel.org/pub/scm/linux/kernel=
-/git/perf/perf-tools-next.git/tree/tools/perf/pmu-events/metric.py?h=3Dperf=
--tools-next*n411__;Iw!!ACWV5N9M2RV99hQ!PE_9BEFVCr25fA9OHzfEDuT-MncA5pnPf5C3=
-eTqYnXGKG9Q2OItrEIiEYz1T366HjAayQmYtZ6N6WxPJBCI$
->
-> Thanks
-> John
->
+    -e, --event <event>   event selector. use 'perf list' to list available events
+```
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/parse-events.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 5dcfbf316bf6..acde097e327c 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1216,6 +1216,14 @@ static int config_term_pmu(struct perf_event_attr *attr,
+ 	if (term->type_term == PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE) {
+ 		const struct perf_pmu *pmu = perf_pmus__find_by_type(attr->type);
+ 
++		if (!pmu) {
++			char *err_str;
++
++			if (asprintf(&err_str, "Failed to find PMU for type %d", attr->type) >= 0)
++				parse_events_error__handle(err, term->err_term,
++							   err_str, /*help=*/NULL);
++			return -EINVAL;
++		}
+ 		if (perf_pmu__supports_legacy_cache(pmu)) {
+ 			attr->type = PERF_TYPE_HW_CACHE;
+ 			return parse_events__decode_legacy_cache(term->config, pmu->type,
+-- 
+2.41.0.390.g38632f3daf-goog
+
