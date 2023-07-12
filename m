@@ -2,239 +2,155 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 270D7EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 17:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9433DEB64DD
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 17:52:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231921AbjGLRog (ORCPT
+        id S232462AbjGLRwp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Jul 2023 13:44:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46132 "EHLO
+        Wed, 12 Jul 2023 13:52:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229669AbjGLRof (ORCPT
+        with ESMTP id S232441AbjGLRwo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Jul 2023 13:44:35 -0400
-Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D79E119BC
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 10:44:33 -0700 (PDT)
-Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-403b622101bso22141cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 10:44:33 -0700 (PDT)
+        Wed, 12 Jul 2023 13:52:44 -0400
+Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95AC61FC2
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 10:52:43 -0700 (PDT)
+Received: by mail-qt1-x82e.google.com with SMTP id d75a77b69052e-403b622101bso24451cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 10:52:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689183873; x=1691775873;
+        d=google.com; s=20221208; t=1689184362; x=1691776362;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=x75I9EAPBB5X8JrQCs3qwbk2FtMM8P9XHyZKY9VrwHo=;
-        b=FcSq1Yrb7K+X1AnQD9Ks0JfnkfX+UObbanCcCa69KTVEkoB8PN10JetL52iyDWawf0
-         D1ldw6PBJLp6weiTQxfHKLs+lw6sSthbYyhRns0t9bDOL2tTB2ghKBWHXUaSEmnGKEbI
-         lJ8zjtL+4XUZjLSqWaUbzBmzp/0Iq2nFCTApElHUhyBUws3aEwtbKLDGJ6PKTdUiFArV
-         BGaODOW8xHeTQyvelmRlxM0VW6cZP6LVHXCxNdkBLPVizY3+x+ZanewEbW5MlAjIFmsB
-         L7ZsYsGgOfS9dv0wrNKrkYMtxeRVOfgxWX8PUYTQIo0oxy5M6T3N8amxZ5y08GqYHIki
-         TBBQ==
+        bh=jM9bdOrQaPaBEpJgo9Tqz6y2K8+tG7zdCt8BktRJpJo=;
+        b=JB7asozQqmiRVwOE0NRcwMZBRm1plp/pnv5004SmxJ8qnZCK6jJtfG3Ic2gshMjBo0
+         9IVtzP1aWVGO0QU3SXQUlHj8fuoL8OBSmF6UdGq/5mbdfsNJOT4YdZ9i/UvhkLGx+GSd
+         Rukv3Jrvz7ojCCrWpST94M3+T5Hos8NvqV1rOaVNdeHEuKxZtpWugUP6ZyN2hsEiF+sK
+         M2mHl8qiGTswkuEX7ulcjxgauVXUfIJuL578HlSZ5LYf3TxgjevgpBwJQ20aLu4i8EhF
+         AEXGdambcfBZEPxszq7xzvj8G+vPG6UVMMAqGQ4mlR3GDm0vPHohy2Jz4FNv0LMr0Qf+
+         Q63g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689183873; x=1691775873;
+        d=1e100.net; s=20221208; t=1689184363; x=1691776363;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=x75I9EAPBB5X8JrQCs3qwbk2FtMM8P9XHyZKY9VrwHo=;
-        b=EwcmigF6SBm5VQ8TBtq8DPGxOnjql/Yk3Sr1wkYBgz2ZcBZoQmFU5URSIw6JenLLPW
-         9jfLAEp/PwVVnfB5RvUYbooE3zJ9BSG2C65XYWavasZVTa9t9W25ZJ88CHcGU/eN7n8N
-         OIkyLbQRWUSbSDTPrtSA90cAec4zFbCU7Dz+kE5bEIiraBVlbT3SzbKx9/l9syPPf/Tz
-         W/MHlwq+Mi3zSJyOhWJVJwNNDoFn/R4Z/U8s63ZpEdrGXFyn/zizQ+VIWM6CrxF3MUkp
-         qEqffuip/PhXsQHdb14p0Q9BYmBK/0j4lpruWRmWdn6NrJo6BP+FC/BIeLdNXvJpAyJ3
-         02hQ==
-X-Gm-Message-State: ABy/qLaKHvkrybtfrdS2kqxWmbxs/mx16dZrdCl/bKIyWcHDaVn8qNgj
-        JiS2ZsLTQse2FNnrsHFwf++KGs/EBC2yC3OBsdK4FA==
-X-Google-Smtp-Source: APBJJlHgqrbTuhReoH8BNugKwG1YnoIT7/6+KCzu+GIQiYo+7RAsTlMzd5UOXpXSdjxn1PHxAN6+BnpzACqcmXh7ceI=
-X-Received: by 2002:ac8:5814:0:b0:3ef:404a:b291 with SMTP id
- g20-20020ac85814000000b003ef404ab291mr229808qtg.7.1689183872839; Wed, 12 Jul
- 2023 10:44:32 -0700 (PDT)
+        bh=jM9bdOrQaPaBEpJgo9Tqz6y2K8+tG7zdCt8BktRJpJo=;
+        b=HIMq9qcKkhI+CkAFyctYO7nqNIEdcfCPM+U0znxUj8nfnVNHktNnVL81MZlc9I7ydQ
+         e/7VNod0JSqzPrXiy3r9zZmejYjgDYM8owpNu84E172sZXQCrbvSOYPdx6KHpoIwLsWs
+         UQ4J01sUlzZ1YooaNYEMkXi9EfA7RNgIpy4AFAKPJJNJQXT1hjsaq95oiu52WtUSqudn
+         N6Y47FAQSIjG//4QrllU+i3F5WWbRfmz00EDkDFD4Wx7mdPjq50GkVT3Z/TdFQcP8N6F
+         IhVvGRKMKMcAi+vQgh8IlY9uR+uD8mbUKDKW4Wqbp2jfx9clSjpVO7tpwzFhSXZhs3jQ
+         Qh/g==
+X-Gm-Message-State: ABy/qLZu2kvYzLzOEIdsGTXfbcTQA1d470e1pauiWMLVEOXidABZw2BN
+        xWFxVP7fhRqDR3AV+joirqcGULim9W1HLzJ8pqQCbg==
+X-Google-Smtp-Source: APBJJlHaYXEfRmzu+bv8B6OWFOU1nFEd32JbQY9BYrwEvxiAqRK40ckZP5eOSp3wk6r3t+v7uLcBs+vuiLRlcg0Akbg=
+X-Received: by 2002:ac8:5981:0:b0:403:aa88:cf7e with SMTP id
+ e1-20020ac85981000000b00403aa88cf7emr260453qte.29.1689184362598; Wed, 12 Jul
+ 2023 10:52:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1689024635.git.anupnewsmail@gmail.com> <dd26619520465132d33dd84780859e6bf89133bf.1689024635.git.anupnewsmail@gmail.com>
-In-Reply-To: <dd26619520465132d33dd84780859e6bf89133bf.1689024635.git.anupnewsmail@gmail.com>
+References: <20230628102949.2598096-1-john.g.garry@oracle.com>
+ <20230628102949.2598096-5-john.g.garry@oracle.com> <CAP-5=fXa24_LEiyni0Ncyfa5hKwC1GE6y-zi2u8M98M9SwHX+g@mail.gmail.com>
+ <CAP-5=fUs=u3PKYP3mVDdzNB8+=GAHaEXG3SGfWJpMELYYqO_hA@mail.gmail.com>
+ <d59b6e7c-cead-24d4-a9cb-6552b3154d84@oracle.com> <CAP-5=fUu6xgVDQT4tq=vmRLDMe3ddMLywP11uOLvKSu8Lc6BjQ@mail.gmail.com>
+ <897dcf1d-6a04-33d3-9c4f-ea9d1706cdad@oracle.com>
+In-Reply-To: <897dcf1d-6a04-33d3-9c4f-ea9d1706cdad@oracle.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 12 Jul 2023 10:44:21 -0700
-Message-ID: <CAP-5=fVtE14SyCvkYCQgePm-5upAZYvU7AvkwcYXGLYBffko1A@mail.gmail.com>
-Subject: Re: [PATCH v3 6/6] scripts: python: implement get or create frame and
- stack function
-To:     Anup Sharma <anupnewsmail@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 12 Jul 2023 10:52:31 -0700
+Message-ID: <CAP-5=fX+rz928LtFs2MWYUH=6Mcvz0XQcLRkO-n9BnVnX4RYWw@mail.gmail.com>
+Subject: Re: [PATCH RFC 4/9] perf jevents: Add sys_events_find_events_table()
+To:     John Garry <john.g.garry@oracle.com>
+Cc:     acme@kernel.org, namhyung@kernel.org, jolsa@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        renyu.zj@linux.alibaba.com, shangxiaojing@huawei.com,
+        kjain@linux.ibm.com, kan.liang@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jul 10, 2023 at 4:15=E2=80=AFPM Anup Sharma <anupnewsmail@gmail.com=
+On Wed, Jul 12, 2023 at 3:55=E2=80=AFAM John Garry <john.g.garry@oracle.com=
 > wrote:
 >
-> Complete addSample function, it takes the thread name, stack array,
-> and time as input parameters and  if the thread name differs from
-> the current name, it updates the name. The function utilizes the
-> get_or_create_stack and get_or_create_frame methods to construct
-> the stack structure. Finally, it adds the stack, time, and
-> responsiveness values to the 'data' list within 'samples'.
 >
-> The get_or_create_stack function is responsible for retrieving
-> or creating a stack based on the provided frame and prefix.
-> It first generates a key using the frame and prefix values.
-> If the stack corresponding to the key is found in the stackMap,
-> it is returned. Otherwise, a new stack is created by appending
-> the prefix and frame to the stackTable's 'data' array. The key
-> and the index of the newly created stack are added to the
-> stackMap for future reference.
+> >>>> MetricExpr: "cpu_core@instructions@ / cpu_core@cycles@",
+> >> I did not know that it was possible to state that an event is for a
+> >> specific PMU type in this fashion - is this feature new? Does it work
+> >> only for known terms, like cycles and instructions?
+> > It has been in metrics a long time (I didn't choose that @ was the /
+> > replacement =F0=9F=98=84 ). It should work for all events.
+> >
 >
-> The get_or_create_frame function is responsible for retrieving or
-> creating a frame based on the provided frameString. If the frame
-> corresponding to the frameString is found in the frameMap, it is
-> returned. Otherwise, a new frame is created by appending relevant
-> information to the frameTable's 'data' array and adding the
-> frameString to the stringTable.
+> Good to know.
 >
-> Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
-> ---
->  .../scripts/python/firefox-gecko-converter.py | 57 ++++++++++++++++++-
->  1 file changed, 56 insertions(+), 1 deletion(-)
+> >>>> The @ is used to avoid parsing confusion with / meaning divide. The
+> >>>> PMUs for the events are explicitly listed here. We could say the PMU
+> >>>> is implied but then it gets complex for uncore events, for metrics
+> >>>> that mix core and uncore events.
+> >> So this works ok for IPC and CPU PMUs as we want the same event for ma=
+ny
+> >> PMU types and naturally it would have the same name.
+> >>
+> >> I am still not sure that sys event metrics need to specify a PMU.
+> > There was a similar thought for hybrid metrics. The PMU could be
+> > implied from the PMU of the metric. I think there can be confusion
+> > from an implied PMU, for example the cycles event without a PMU will
+> > open two events on a hybrid CPU. If we imply the PMU then it can mean
+> > just 1 PMU, but if the PMU doesn't have the event presumably it means
+> > the multiple PMU behavior.
+> >
+> > In parse-events there is existing logic to wildcard events but to
+> > ignore those that don't match a given PMU. This is used to support the
+> > --cputype option in builtin-stat.c, there is a similar option for
+> > builtin-list.c. We can use this so that events in a metric only match
+> > the PMU of the metric. Currently there are core metrics but whose
+> > events are all uncore like:
+> > https://urldefense.com/v3/__https://git.kernel.org/pub/scm/linux/kernel=
+/git/perf/perf-tools-next.git/tree/tools/perf/pmu-events/arch/x86/alderlake=
+/adl-metrics.json?h=3Dperf-tools-next*n1802__;Iw!!ACWV5N9M2RV99hQ!MjhanGd4A=
+VsAl6d8weFktNHgeOptrgeBDyooXlpeW-J1TQ0e2BwzvqO4BTFEjs_gRzuWTPfnhW_jLx1pIJc$
+> >
+> > So we'd need to move these metrics to be on the appropriate uncore
+> > PMU. Supporting >1 PMU
 >
-> diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools=
-/perf/scripts/python/firefox-gecko-converter.py
-> index 6c934de1f608..97fbe562ee2b 100644
-> --- a/tools/perf/scripts/python/firefox-gecko-converter.py
-> +++ b/tools/perf/scripts/python/firefox-gecko-converter.py
-> @@ -21,6 +21,8 @@ sys.path.append(os.environ['PERF_EXEC_PATH'] + \
->  from perf_trace_context import *
->  from Core import *
+> To be crystal clear, when you say ">1 PMU", do you mean ">1 PMU instance
+> of the same type" or ">1 PMU type"?
+
+So I'm meaning that if you have a MetricExpr where the events are from
+>1 PMU, for example memory bandwidth coming from uncore PMUs and then
+instructions from a core PMU, and you do something like a ratio
+between these two.
+
+>   in a metric wouldn't work though as it would
+> > appear the event was missing. Having the metric specify the PMU avoids
+> > these problems, but is verbose.
 >
-> +USER_CATEGORY_INDEX =3D 0
-> +KERNEL_CATEGORY_INDEX =3D 1
->  thread_map =3D {}
->  start_time =3D None
+> The message I'm getting - correct me if I am wrong - is that you would
+> still prefer the PMU specified per event in metric expr, right? We don't
+> do that exactly for sys PMU metrics today - we specify "Unit" instead, li=
+ke:
 >
-> @@ -34,7 +36,12 @@ CATEGORIES =3D [
->  PRODUCT =3D os.popen('uname -op').read().strip()
+> MetricExpr: "sys_pmu_bar_event_foo1 + sys_pmu_bar_event_foo2"
+> Compat: "baz"
+> Unit:"sys_pmu_bar"
 >
->  def trace_end():
-> -    thread_array =3D thread_map.values()))
-> +    thread_array =3D list(map(lambda thread: thread['finish'](), thread_=
-map.values()))
-
-With a class this will be a more intuitive:
-
-thread.finish()
-
-> +
-> +# Parse the callchain of the current sample into a stack array.
-> +    for thread in thread_array:
-> +        key =3D thread['samples']['schema']['time']
-
-I'm not sure what 'schema' is here. Worth a comment.
-
-> +        thread['samples']['data'].sort(key=3Dlambda data : float(data[ke=
-y]))
-
-Perhaps there is a more intention revealing name than "data".
-
+> And so you prefer something like the following, right?
+> MetricExpr: "sys_pmu_foo@bar1@ + sys_pmu_foo@bar2@"
 >
->      result =3D {
->          'meta': {
-> @@ -106,7 +113,55 @@ def process_event(param_dict):
->                 }
->                 stringTable =3D []
->
-> +               stackMap =3D dict()
-> +               def get_or_create_stack(frame, prefix):
+> If so, I think that is ok - I just want to get rid of Unit and Compat.
 
-Can you comment what frame and prefix are with examples, otherwise
-understanding this function is hard.
-
-> +                       key =3D f"{frame}" if prefix is None else f"{fram=
-e},{prefix}"
-> +                       stack =3D stackMap.get(key)
-> +                       if stack is None:
-> +                               stack =3D len(stackTable['data'])
-> +                               stackTable['data'].append([prefix, frame]=
-)
-> +                               stackMap[key] =3D stack
-> +                       return stack
-> +
-> +               frameMap =3D dict()
-> +               def get_or_create_frame(frameString):
-
-s/frameMap/frame_map/
-s/frameString/frame_string/
-
-These variable names aren't going a long way to helping understand the
-code. They mention frame and then the type, which should really be
-type information like ": Dict[...]". Can you improve the names as
-otherwise we effectively have 3 local variables all called "frame".
-
-> +                       frame =3D frameMap.get(frameString)
-> +                       if frame is None:
-> +                               frame =3D len(frameTable['data'])
-> +                               location =3D len(stringTable)
-> +                               stringTable.append(frameString)
-> +                               category =3D KERNEL_CATEGORY_INDEX if fra=
-meString.find('kallsyms') !=3D -1 \
-> +                                               or frameString.find('/vml=
-inux') !=3D -1 \
-> +                                               or frameString.endswith('=
-.ko)') \
-> +                                               else USER_CATEGORY_INDEX
-
-Perhaps make this a helper function, symbol_name_to_category_index.
-
-> +                               implementation =3D None
-> +                               optimizations =3D None
-> +                               line =3D None
-> +                               relevantForJS =3D False
-
-Some comments on these variables would be useful, perhaps just use
-named arguments below.
-
-> +                               subcategory =3D None
-> +                               innerWindowID =3D 0
-> +                               column =3D None
-> +
-> +                               frameTable['data'].append([
-> +                                       location,
-> +                                       relevantForJS,
-> +                                       innerWindowID,
-> +                                       implementation,
-> +                                       optimizations,
-> +                                       line,
-> +                                       column,
-> +                                       category,
-> +                                       subcategory,
-> +                               ])
-> +                               frameMap[frameString] =3D frame
-> +                       return frame
-> +
->                 def addSample(threadName, stackArray, time):
-> +                       nonlocal name
-> +                       if name !=3D threadName:
-> +                               name =3D threadName
-
-A comment/example would be useful here.
-
-> +                       stack =3D reduce(lambda prefix, stackFrame: get_o=
-r_create_stack
-> +                                       (get_or_create_frame(stackFrame),=
- prefix), stackArray, None)
+I think we're agreeing :-) I think Unit may be useful, say on Intel
+hybrid I want the tma_fround_bound metric on just cpu_atom. Currently
+the use of Unit is messy for metrics, ie uncore metrics are associated
+with core PMUs, and what to do with a MetricExpr with >1 PMU. I think
+we're learning from trying. I'm just hoping the migration to a sysfs
+style layout will still be possible, as I can see lots of upside in
+terms of testing, 1 approach, etc.
 
 Thanks,
 Ian
 
->                         responsiveness =3D 0
->                         samples['data'].append([stack, time, responsivene=
-ss])
->
-> --
-> 2.34.1
->
+> Thanks,
+> John
