@@ -2,153 +2,250 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 812EFEB64DA
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 20:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F81CEB64DA
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 22:37:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232394AbjGLUsc (ORCPT
+        id S231398AbjGLWhw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Jul 2023 16:48:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59038 "EHLO
+        Wed, 12 Jul 2023 18:37:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232196AbjGLUs2 (ORCPT
+        with ESMTP id S229506AbjGLWhv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Jul 2023 16:48:28 -0400
-Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D5851FF5
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 13:48:27 -0700 (PDT)
-Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-4036bd4fff1so25221cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 13:48:27 -0700 (PDT)
+        Wed, 12 Jul 2023 18:37:51 -0400
+Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FC231FD4
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 15:37:49 -0700 (PDT)
+Received: by mail-qt1-x82e.google.com with SMTP id d75a77b69052e-4036bd4fff1so59091cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 15:37:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689194906; x=1691786906;
+        d=google.com; s=20221208; t=1689201468; x=1691793468;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ckvfaMUWpPvTo3te2ghCH91a1cTE4BZA7za+DnJRfWc=;
-        b=ihCoBZPfH+/EUMXvGA0hQEGZN+NjZH+19kjrsKmTU+8L8MLDyGD+DD1SRcO/+WgtDQ
-         S/cuwlX5KK1TUg03WXllxL2RU+lerRIAn+nHyAr4T/O9eyGPMeRs25NqGIsBV8eN2Lem
-         tRmebaizSAQb9laYuUYSfmI9wjSYAlpb8CnuWLVyA08PbT+ysnXNHetDnTUnya20Ak+b
-         RhWiLGAukCdh+Pce9tauGU+JGgxCBMWbkCino2MwKjkFhuTcBrBQuLOVhOnwSq/VE+8H
-         HK+lEwnizMuO+PUVt29ThSy+u9mScgHWUH+fgL4HdkdbK7BXpZnzrjyZHFHM9GL+9SVL
-         mEcQ==
+        bh=RSLm7OgvDjCIbcXOw5uuAV7h48kPlKZpDxLeFUfyiq4=;
+        b=rnQ9o0E2l/BiQrlY+riM1wbukDiYm1B48anGRuDdYPOxCaotBOlbTDOO8nAHSy2B6a
+         fNyQAt8/reux4SzDQmE5JW0MF65yecvSCO+embQk0rQq41N5BYc9Dqs7Db0v/w605Kg8
+         PfSC7f7xFOYzyz+/n3CZtnU/jGwKQlLlAh+2vMvMSP3l5EqB++UphBZkrAyKuGS6iFrE
+         hmdPG10EKrbRyzKPRiDg2c29TjTMJJbLlDzAIJcPOiHVXYwUCvjhAVA5jYRBQEVH5tI+
+         +KuWX5z2t7lk/J0pA9vD4t0JSBrBBzrGmPGzgmYFfawsOyMj7Ln4pHNu2W40bc01DCbt
+         fVgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689194906; x=1691786906;
+        d=1e100.net; s=20221208; t=1689201468; x=1691793468;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ckvfaMUWpPvTo3te2ghCH91a1cTE4BZA7za+DnJRfWc=;
-        b=T3+mMfvnDGlFfNIp3bD5NM9OgfIqt7xUsZ6y017IlknM8Yr/QPrqA57WngTJEP1gFv
-         KuBqGp9wjrwxp5YHxBkU3W4YKawXH9dHlbAiEaGD87DEC/JPv5LnFHvKsbUvbnlz3xz7
-         9uq7dKzXoUag5ILVTYIE/eL2bqGeSIGmQAzh4HUgWLRw6YDTp66xurr8uRyvhmcHBpAe
-         B/X3F6aHMHUN4eqjsK2YaKyBhKrY7hPXgnVZZrRMAwX3FiNtujoEuX1Fz0+sQ8nxL6E3
-         aXY3+XMpEGsuOajAmY66EaRMrhtc6NAhVOSbT0rkAOczF+xj9m88LDmQ8NF7uMIqrpXj
-         ZlwA==
-X-Gm-Message-State: ABy/qLYktcLrYbLplLh2wxvO00NONF2IATNoVUYYpu+qiMNFsOvLtbS8
-        n1Ns3pdkbQlSutrt2CJ0iaypvy6b/jmMXrlRlyJEkJ/H7nzAJ81cNs3Ayg==
-X-Google-Smtp-Source: APBJJlGKu9LJh5fJZUzLj9OH8ENDKvSNndC0BxMA80bWvU95D5HbkN8J1w8FijCQRcgyer/1smSRlempjC8RMfjpxHY=
-X-Received: by 2002:ac8:5905:0:b0:3ef:302c:319e with SMTP id
- 5-20020ac85905000000b003ef302c319emr357520qty.8.1689194906296; Wed, 12 Jul
- 2023 13:48:26 -0700 (PDT)
+        bh=RSLm7OgvDjCIbcXOw5uuAV7h48kPlKZpDxLeFUfyiq4=;
+        b=HCWFwbM+BijSDyhaNmO3WVzQMv67N3hE1ruRKoAnoS+ouLgwxKJRWpXps2Oj22HJY1
+         enJwjPaP7AUlfTmX0O0ZuwQ3PNP01RnsxZuTkyetn2m0RT/GiIZC0V0wbFi0jAo5Sq8e
+         RyJP0NXqr2spKHaQ93kJKAKutoMve5ZroopjzYoreWZ0n0wuUcOkKcup+OwBZtmzKA1M
+         0Jn8/q3Ar7bnr7WC73GJNL36d5EvGmJ/vhHtv7QN36/ppU3WP/jl9lMEBkRnoysBS/si
+         yXC6DGtoSDUVLpkp9PTGh0vPTv3Tm6WrdKVHsu45Maq0PMyH5bcbpPDWBy18R117dcii
+         Wv7w==
+X-Gm-Message-State: ABy/qLaZstZPoluCcCt+e55ZsIK+9PdM57HHJPW1L1uAtsDiP6dMltLa
+        DfuHbiNEcPtkdidqitRH5U5prb85PtV3Ft8XTcL0uw==
+X-Google-Smtp-Source: APBJJlFoMk+z4lKf+SvAMxufHc4BBJvzVx9uo4K8JqABLWNqGUM9+naj9MCfru1kTFeZ7n5YwjAuktO0HSMGF1b6IGQ=
+X-Received: by 2002:ac8:5bd1:0:b0:3f8:1db6:201c with SMTP id
+ b17-20020ac85bd1000000b003f81db6201cmr354287qtb.13.1689201468137; Wed, 12 Jul
+ 2023 15:37:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230704074217.240939-1-yangjihong1@huawei.com> <20230704074217.240939-5-yangjihong1@huawei.com>
-In-Reply-To: <20230704074217.240939-5-yangjihong1@huawei.com>
+References: <20230606014559.21783-1-leo.yan@linaro.org>
+In-Reply-To: <20230606014559.21783-1-leo.yan@linaro.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 12 Jul 2023 13:48:14 -0700
-Message-ID: <CAP-5=fVv5C75xy-kMRfssCGd6syx5H1FKe1xs2K_+xQhQVJQPA@mail.gmail.com>
-Subject: Re: [PATCH 4/5] perf test: Add test case for record tracking
-To:     Yang Jihong <yangjihong1@huawei.com>, adrian.hunter@intel.com
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, kan.liang@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Date:   Wed, 12 Jul 2023 15:37:36 -0700
+Message-ID: <CAP-5=fV1m440mKc0R=m5C4N2NtoiixchtnpX2eR3PA_5hXbqEQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] perf parse-regs: Refactor architecture functions
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Guo Ren <guoren@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Ming Wang <wangming01@loongson.cn>,
+        Eric Lin <eric.lin@sifive.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Ivan Babrou <ivan@cloudflare.com>,
+        Fangrui Song <maskray@google.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-csky@vger.kernel.org,
+        linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jul 4, 2023 at 12:44=E2=80=AFAM Yang Jihong <yangjihong1@huawei.com=
-> wrote:
+On Mon, Jun 5, 2023 at 6:46=E2=80=AFPM Leo Yan <leo.yan@linaro.org> wrote:
 >
-> Add a new test case to record tracking side-band events for all CPUs when
-> tracing selected CPUs
+> This patch series is to refactor arch related functions for register
+> parsing, which follows up the discussion for v1:
+> https://lore.kernel.org/lkml/20230520025537.1811986-1-leo.yan@linaro.org/
+>
+> Compared to patch series v1, this patch series introduces new functions
+> perf_arch_reg_{ip|sp}(), so this can allow the tool to support cross
+> analysis.
+>
+> To verify the cross analysis, I used below steps:
+>
+> - Firstly, I captured perf data on Arm64 machine:
+>
+>   $ perf record --call-graph fp -- ./test_program
+>
+>   Or ...
+>
+>   $ perf record --call-graph dwarf -- ./test_program
+>
+>   Then, I also archived associated debug data:
+>
+>   $ perf archive
+>
+> - Secondly, I copied the perf data file and debug tar file on my x86
+>   machine:
+>
+>   $ scp perf.data perf.data.tar.bz2 leoy@IP_ADDRESS:/target/path/
+>
+> - On x86 machine, I need to build perf for support multi-arch unwinding:
+>
+>   $ git clone http://git.savannah.gnu.org/r/libunwind.git
+>   $ cd libunwind
+>   $ autoreconf -i
+>
+>   # Build and install libunwind aarch64:
+>   $ ./configure prefix=3D/home/leoy/Work/tools/libunwind/install/ \
+>         --target=3Daarch64-linux-gnu CC=3Dx86_64-linux-gnu-gcc
+>   $ make && make install
+>
+>   # Build and install libunwind x86:
+>   $ ./configure prefix=3D/home/leoy/Work/tools/libunwind/install/ \
+>         --target=3Dx86_64-linux-gnu CC=3Dx86_64-linux-gnu-gcc
+>   $ make && make install
+>
+> - Build perf tool for support multi-archs:
+>
+>   $ cd $LINUX/tools/perf
+>   $ make VF=3D1 DEBUG=3D1 LIBUNWIND_DIR=3D/home/leoy/Work/tools/libunwind=
+/install
+>
+> At the end, I verified the x86 perf tool can do cross analysis for aarch6=
+4's
+> perf data file.
+>
+> Note, I still see x86 perf tool cannot display the complete callgraph
+> for aarch64, but it should not the issue caused by this series, which
+> will be addressed by separate patches.
+>
+> I also built this patch series on my Arm64 and x86 machines, both can
+> compile perf tool successfully; but I have no chance to build other
+> archs natively.
+>
+> Changes from v1:
+> - For support cross analysis for IP/SP registers, introduced patch 0002
+>   (James Clark, Ian Rogers).
+>
+>
+> Leo Yan (6):
+>   perf parse-regs: Refactor arch register parsing functions
+>   perf parse-regs: Introduce functions perf_arch_reg_{ip|sp}()
+>   perf unwind: Use perf_arch_reg_{ip|sp}() to substitute macros
+>   perf parse-regs: Remove unused macros PERF_REG_{IP|SP}
+>   perf parse-regs: Remove PERF_REGS_{MAX|MASK} from common code
+>   perf parse-regs: Move out arch specific header from util/perf_regs.h
 
-We're using "tracking" and "sideband" as synonyms, I think it would be
-clearer to just use "sideband" and not use "tracking". I see both
-terms in tools/perf/Documentation/perf-intel-pt.txt
+Sorry for the slow review. For the series:
+Acked-by: Ian Rogers <irogers@google.com>
 
-Would it be possible to get some consistency here?
+Some thoughts:
+uint64_t __perf_reg_ip_arm(void)
+uint64_t seems like we're giving a lot of space for future register
+encodings. I think some of the other functions use this size of value
+due to returning a bitmap/mask, but here it isn't clear and just feels
+excessive.
 
-Thanks,
+Do we need the "__" prefix on all the functions?
+
+In Makefile.config there are NO_PERF_REGS and CONFIG_PERF_REGS then
+the define HAVE_PERF_REGS_SUPPORT. Is this still relevant? If we had
+an architecture with no support, couldn't it still read a perf.data
+file from a supported architecture? It would be nice to remove at
+least NO_PERF_REGS and HAVE_PERF_REGS_SUPPORT.
+
+This change is very worthwhile fix and cleanup, it didn't introduce
+what is pondered above, hence the acked-by.
+
+Thanks!
 Ian
 
-> Test result:
+>  tools/perf/arch/arm/include/perf_regs.h       |   3 -
+>  tools/perf/arch/arm/util/perf_regs.c          |  11 +
+>  tools/perf/arch/arm/util/unwind-libdw.c       |   1 +
+>  tools/perf/arch/arm64/include/perf_regs.h     |   3 -
+>  tools/perf/arch/arm64/util/machine.c          |   1 +
+>  tools/perf/arch/arm64/util/perf_regs.c        |   6 +
+>  tools/perf/arch/arm64/util/unwind-libdw.c     |   1 +
+>  tools/perf/arch/csky/include/perf_regs.h      |   3 -
+>  tools/perf/arch/csky/util/perf_regs.c         |  11 +
+>  tools/perf/arch/csky/util/unwind-libdw.c      |   1 +
+>  tools/perf/arch/loongarch/include/perf_regs.h |   2 -
+>  tools/perf/arch/loongarch/util/perf_regs.c    |  11 +
+>  tools/perf/arch/loongarch/util/unwind-libdw.c |   1 +
+>  tools/perf/arch/mips/include/perf_regs.h      |   2 -
+>  tools/perf/arch/mips/util/perf_regs.c         |  11 +
+>  tools/perf/arch/powerpc/include/perf_regs.h   |   3 -
+>  tools/perf/arch/powerpc/util/perf_regs.c      |   6 +
+>  tools/perf/arch/powerpc/util/unwind-libdw.c   |   1 +
+>  tools/perf/arch/riscv/include/perf_regs.h     |   3 -
+>  tools/perf/arch/riscv/util/perf_regs.c        |  11 +
+>  tools/perf/arch/riscv/util/unwind-libdw.c     |   1 +
+>  tools/perf/arch/s390/include/perf_regs.h      |   3 -
+>  tools/perf/arch/s390/util/perf_regs.c         |  11 +
+>  tools/perf/arch/s390/util/unwind-libdw.c      |   1 +
+>  tools/perf/arch/x86/include/perf_regs.h       |   2 -
+>  tools/perf/arch/x86/util/perf_regs.c          |   6 +
+>  tools/perf/arch/x86/util/unwind-libdw.c       |   1 +
+>  tools/perf/util/Build                         |   1 +
+>  tools/perf/util/evsel.c                       |   6 +-
+>  tools/perf/util/libunwind/arm64.c             |   2 -
+>  tools/perf/util/libunwind/x86_32.c            |   2 -
+>  tools/perf/util/perf-regs-arch/Build          |   9 +
+>  .../util/perf-regs-arch/perf_regs_aarch64.c   |  96 +++
+>  .../perf/util/perf-regs-arch/perf_regs_arm.c  |  60 ++
+>  .../perf/util/perf-regs-arch/perf_regs_csky.c | 100 +++
+>  .../util/perf-regs-arch/perf_regs_loongarch.c |  91 +++
+>  .../perf/util/perf-regs-arch/perf_regs_mips.c |  87 ++
+>  .../util/perf-regs-arch/perf_regs_powerpc.c   | 145 ++++
+>  .../util/perf-regs-arch/perf_regs_riscv.c     |  92 +++
+>  .../perf/util/perf-regs-arch/perf_regs_s390.c |  96 +++
+>  .../perf/util/perf-regs-arch/perf_regs_x86.c  |  98 +++
+>  tools/perf/util/perf_regs.c                   | 772 ++----------------
+>  tools/perf/util/perf_regs.h                   |  49 +-
+>  tools/perf/util/unwind-libdw.c                |   7 +-
+>  tools/perf/util/unwind-libunwind-local.c      |   6 +-
+>  tools/perf/util/unwind.h                      |   8 -
+>  46 files changed, 1078 insertions(+), 766 deletions(-)
+>  create mode 100644 tools/perf/util/perf-regs-arch/Build
+>  create mode 100644 tools/perf/util/perf-regs-arch/perf_regs_aarch64.c
+>  create mode 100644 tools/perf/util/perf-regs-arch/perf_regs_arm.c
+>  create mode 100644 tools/perf/util/perf-regs-arch/perf_regs_csky.c
+>  create mode 100644 tools/perf/util/perf-regs-arch/perf_regs_loongarch.c
+>  create mode 100644 tools/perf/util/perf-regs-arch/perf_regs_mips.c
+>  create mode 100644 tools/perf/util/perf-regs-arch/perf_regs_powerpc.c
+>  create mode 100644 tools/perf/util/perf-regs-arch/perf_regs_riscv.c
+>  create mode 100644 tools/perf/util/perf-regs-arch/perf_regs_s390.c
+>  create mode 100644 tools/perf/util/perf-regs-arch/perf_regs_x86.c
 >
->   # ./perf test list 2>&1 | grep 'perf record tracking tests'
->    95: perf record tracking tests
->   f# ./perf test 95
->    95: perf record tracking tests                                      : =
-Ok
->
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> ---
->  tools/perf/tests/shell/record_tracking.sh | 44 +++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100755 tools/perf/tests/shell/record_tracking.sh
->
-> diff --git a/tools/perf/tests/shell/record_tracking.sh b/tools/perf/tests=
-/shell/record_tracking.sh
-> new file mode 100755
-> index 000000000000..fe05f4772999
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/record_tracking.sh
-> @@ -0,0 +1,44 @@
-> +#!/bin/sh
-> +# perf record tracking tests
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +set -e
-> +
-> +err=3D0
-> +perfdata=3D$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> +
-> +can_cpu_wide()
-> +{
-> +    if ! perf record -o ${perfdata} -BN --no-bpf-event -e dummy:u -C $1 =
-true 2>&1 >/dev/null
-> +    then
-> +       echo "record tracking test [Skipped cannot record cpu$1]"
-> +       err=3D2
-> +    fi
-> +
-> +    rm -f ${perfdata}
-> +    return $err
-> +}
-> +
-> +test_system_wide_tracking()
-> +{
-> +    # Need CPU 0 and CPU 1
-> +    can_cpu_wide 0 || return 0
-> +    can_cpu_wide 1 || return 0
-> +
-> +    # Record on CPU 0 a task running on CPU 1
-> +    perf record -BN --no-bpf-event -o ${perfdata} -e dummy:u -C 0 -- tas=
-kset --cpu-list 1 true
-> +
-> +    # Should get MMAP events from CPU 1
-> +    mmap_cnt=3D`perf script -i ${perfdata} --show-mmap-events -C 1 2>/de=
-v/null | grep MMAP | wc -l`
-> +
-> +    rm -f ${perfdata}
-> +
-> +    if [ ${mmap_cnt} -gt 0 ] ; then
-> +       return 0
-> +    fi
-> +
-> +    echo "Failed to record MMAP events on CPU 1 when tracing CPU 0"
-> +    return 1
-> +}
-> +
-> +test_system_wide_tracking
 > --
-> 2.30.GIT
+> 2.34.1
 >
