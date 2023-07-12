@@ -2,28 +2,29 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D19BEB64D9
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 14:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27733EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 14:32:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232190AbjGLOas (ORCPT
+        id S231522AbjGLOcp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Jul 2023 10:30:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35288 "EHLO
+        Wed, 12 Jul 2023 10:32:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232923AbjGLOao (ORCPT
+        with ESMTP id S233165AbjGLOco (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Jul 2023 10:30:44 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 405AD1BDB;
-        Wed, 12 Jul 2023 07:30:40 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4R1Krp66GCz1JCXD;
-        Wed, 12 Jul 2023 22:30:02 +0800 (CST)
+        Wed, 12 Jul 2023 10:32:44 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 788081992;
+        Wed, 12 Jul 2023 07:32:37 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4R1Ks24TxHzPkB8;
+        Wed, 12 Jul 2023 22:30:14 +0800 (CST)
 Received: from [10.67.111.205] (10.67.111.205) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Wed, 12 Jul 2023 22:30:37 +0800
-Subject: Re: [PATCH 1/5] perf evlist: Export perf_evlist__propagate_maps()
+ 15.1.2507.27; Wed, 12 Jul 2023 22:32:34 +0800
+Subject: Re: [PATCH 2/5] perf evlist: Add evlist__findnew_tracking_event()
+ helper
 To:     Adrian Hunter <adrian.hunter@intel.com>, <peterz@infradead.org>,
         <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
         <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
@@ -31,20 +32,20 @@ To:     Adrian Hunter <adrian.hunter@intel.com>, <peterz@infradead.org>,
         <kan.liang@linux.intel.com>, <linux-kernel@vger.kernel.org>,
         <linux-perf-users@vger.kernel.org>
 References: <20230704074217.240939-1-yangjihong1@huawei.com>
- <20230704074217.240939-2-yangjihong1@huawei.com>
- <180925f8-57f3-c97a-15c4-db2c73abe4a2@intel.com>
+ <20230704074217.240939-3-yangjihong1@huawei.com>
+ <5882e592-641f-71cc-7a91-66f66b58d5a6@intel.com>
 From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <a7480404-c6ad-8892-b9d2-d2458c2e686b@huawei.com>
-Date:   Wed, 12 Jul 2023 22:30:36 +0800
+Message-ID: <e77cf128-b8d2-9866-a80f-23ec46e2245b@huawei.com>
+Date:   Wed, 12 Jul 2023 22:32:33 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.1
 MIME-Version: 1.0
-In-Reply-To: <180925f8-57f3-c97a-15c4-db2c73abe4a2@intel.com>
+In-Reply-To: <5882e592-641f-71cc-7a91-66f66b58d5a6@intel.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemm600003.china.huawei.com (7.193.23.202)
 X-CFilter-Loop: Reflected
 Precedence: bulk
@@ -53,29 +54,68 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hello,
 
-On 2023/7/11 21:12, Adrian Hunter wrote:
+On 2023/7/11 21:13, Adrian Hunter wrote:
 > On 4/07/23 10:42, Yang Jihong wrote:
->> For dummy events that keep tracking, we may need to modify its cpu_maps.
->> For example, change the cpu_maps to track side-band events for all CPUS.
->> Export perf_evlist__propagate_maps () to support this scenario.
+>> Currently, intel-bts, intel-pt, and arm-spe may add a dummy event for
+>> tracking to the evlist. We may need to search for the dummy event for
+>> some settings. Therefore, add evlist__findnew_tracking_event() helper.
+>>
+>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+>> ---
+>>   tools/perf/builtin-record.c | 11 +++--------
+>>   tools/perf/util/evlist.c    | 17 +++++++++++++++++
+>>   tools/perf/util/evlist.h    |  1 +
+>>   3 files changed, 21 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+>> index aec18db7ff23..8872cd037f2c 100644
+>> --- a/tools/perf/builtin-record.c
+>> +++ b/tools/perf/builtin-record.c
+>> @@ -1295,14 +1295,9 @@ static int record__open(struct record *rec)
+>>   	 */
+>>   	if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
+>>   	    perf_pmus__num_core_pmus() > 1) {
+>> -		pos = evlist__get_tracking_event(evlist);
+>> -		if (!evsel__is_dummy_event(pos)) {
+>> -			/* Set up dummy event. */
+>> -			if (evlist__add_dummy(evlist))
+>> -				return -ENOMEM;
+>> -			pos = evlist__last(evlist);
+>> -			evlist__set_tracking_event(evlist, pos);
+>> -		}
+>> +		pos = evlist__findnew_tracking_event(evlist);
+>> +		if (!pos)
+>> +			return -ENOMEM;
+>>   
+>>   		/*
+>>   		 * Enable the dummy event when the process is forked for
+>> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+>> index 7ef43f72098e..4621ddaeb8f3 100644
+>> --- a/tools/perf/util/evlist.c
+>> +++ b/tools/perf/util/evlist.c
+>> @@ -1694,6 +1694,23 @@ void evlist__set_tracking_event(struct evlist *evlist, struct evsel *tracking_ev
+>>   	tracking_evsel->tracking = true;
+>>   }
+>>   
+>> +struct evsel *evlist__findnew_tracking_event(struct evlist *evlist)
+>> +{
+>> +	struct evsel *evsel;
+>> +
+>> +	evsel = evlist__get_tracking_event(evlist);
+>> +	if (!evsel__is_dummy_event(evsel)) {
+>> +		/* Set up dummy event. */
+>> +		if (evlist__add_dummy(evlist))
 > 
-> __perf_evlist__propagate_maps() is quite low-level so it would be better
-> to avoid exporting it.
+> evlist__add_dummy() does not exclude_kernel so it
+> will end up relying on evsel__fallback() to work in
+> cases where the user does not have kernel access.
 > 
+> evlist__add_aux_dummy() is probably better suited.
+> Consequently perhaps pass system_wide as
+> a parameter to evlist__findnew_tracking_event() and
+> deal with that all inside evlist__findnew_tracking_event()
 > 
-Or can we export it via internal/evlist.h?
-Because as mentioned in patch 2:
-
-void perf_evsel__go_system_wide(struct perf_evlist *evlist, struct 
-perf_evsel *evsel)
-{
-if (!evsel->system_wide) {
-evsel->system_wide = true;
-if (evlist->needs_map_propagation)
-__perf_evlist__propagate_maps(evlist, evsel);
-}
-}
-This interface needs to invoke __perf_evlist__propagate_maps.
+OK. These two points will be modified in the next version.
 
 Thanks,
 Yang
