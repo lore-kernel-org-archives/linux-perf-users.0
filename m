@@ -2,150 +2,182 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30817EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 05:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B971EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 06:05:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231406AbjGLFol (ORCPT
+        id S231255AbjGLGFh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Jul 2023 01:44:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43240 "EHLO
+        Wed, 12 Jul 2023 02:05:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231790AbjGLFoe (ORCPT
+        with ESMTP id S231251AbjGLGFg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Jul 2023 01:44:34 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 290CD173B;
-        Tue, 11 Jul 2023 22:44:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689140667; x=1720676667;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=xkJNOQbIe3Ek/OWTXqgC8D9Wm7aeIy2w4ZWDPqFFbw4=;
-  b=EzPBQ98aO4uKmBBLLl81dc4Z12Kkfo4wu7QqOR9Vgdy85J5yQPcOGoPa
-   dhk05ixNJk6nFbPDAmfHSTmtkBzdzoobRea0kUVtPurOFqrURXFKUSQVc
-   +oVHrenbDjymtjakX1phvG6hllOn5+1f2p40HbUMXNRLPdiLp+8sEx79K
-   u6F75fCjjyAcbLkVMNFQNSR8u+X/+6aOhDzVvgCy6y9G9K1r9EN83IXQM
-   4r4l7+13hnglvhKK14q7FECDfnnPOPOgZTO4/LFL4XjnveXs1fvqG+TfH
-   4rpzoqYs7dYnCxZO7caNO8jG0N+C/mw7c1jbdgXatWvmksxAx8898C/RI
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="368342779"
-X-IronPort-AV: E=Sophos;i="6.01,198,1684825200"; 
-   d="scan'208";a="368342779"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 22:44:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="724745735"
-X-IronPort-AV: E=Sophos;i="6.01,198,1684825200"; 
-   d="scan'208";a="724745735"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.42.166])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 22:44:17 -0700
-Message-ID: <8256a332-6a9c-c552-ceb5-fc6cc08792cd@intel.com>
-Date:   Wed, 12 Jul 2023 08:44:14 +0300
+        Wed, 12 Jul 2023 02:05:36 -0400
+Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED118BB
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 23:05:34 -0700 (PDT)
+Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-4036bd4fff1so130371cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 23:05:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1689141934; x=1691733934;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yyLeCb+4QsM02BWy0BPE1CVBn7Ooftnyy1p5ySh/I/4=;
+        b=Ev1HmpgXVTBgAiyhphybA8sI8dalHz3OmxXw33a0PCQqHOzd5p6MtWXo1K5ldIZdpw
+         v3y5bL5lnSTheG27eOuWOt4ncxVqQ37zBxIwnQvwuGXTT4ZIYoiNcHr5vSWtlHY+3k46
+         8h9v+7NVGiDae0Ins5msDftVsigZwsst5uvOr9z1VCfRxNg5RPWGgNZyoBZiuVg1z4dI
+         JaYaUbfTa3Oq/1vCJdTlkcOfIyWVtxc4ELjAujFYrDdNGlGAKTM8Uhho0UEX8qsT78Xh
+         iZPVYMWV80tn12lrh2iV9oBQ8/VYHmGiq46H7AJct/ki8uTwJE0xpqTVAwZbD0pOF2ad
+         +THg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689141934; x=1691733934;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yyLeCb+4QsM02BWy0BPE1CVBn7Ooftnyy1p5ySh/I/4=;
+        b=Au+6kuiSTNc8+Ar2HYZs8oPD4txqqPzKD83FjDepwr354H7TY12WMlklgLGiQXQ0P2
+         jZsJeo36B/1Qf5/waBZVJFthMFg7Q3t6+ZXbYyvccQRbeZtFA6vbr8IEohvAxhBTCJJI
+         +SiJVb7f7/JN2Vsx5MRCJhh+F1UmRHcwFS9AxEIcKcIG96yI4zDU3xiB/ubXiNqNDJFo
+         gXITk4hPZ+5aQHWr+sh0eAJ9jQ8yBxsWvLGUPA/wBICDrreft4GiQKl8y4X9DOFrkNlW
+         p9ufZlJEclrehsBU5xKIRB0O9MRDA/tzVJ7jrAkcJDyxDJ251rOMvpNwrGHJIghNJyUP
+         yAzg==
+X-Gm-Message-State: ABy/qLZM0ANGsMRjzzDDCLETQAy5AQqQU/lWL22u1RHxmObIqQN2E32W
+        U1N0YoWF4DMJVDxLXEF3+/aE1H4ca9icGA7DyngmMw==
+X-Google-Smtp-Source: APBJJlEuK+J5x5jJ6LWJS9P5JpvLKII3XEaYsPC+2PPfBNgcIOlv0nSlStXVuI9FbfKB8JR4GAHeMfUvqcvXVwfUfts=
+X-Received: by 2002:a05:622a:1452:b0:3ed:86f6:6eab with SMTP id
+ v18-20020a05622a145200b003ed86f66eabmr147634qtx.14.1689141933980; Tue, 11 Jul
+ 2023 23:05:33 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.13.0
-Subject: Re: [PATCH 3/3] perf machine: Include data symbols in the kernel map
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <20230620201818.1670753-1-namhyung@kernel.org>
- <20230620201818.1670753-3-namhyung@kernel.org>
- <a791e982-ada3-7f26-e105-bc7fa9c7d346@intel.com>
- <CAM9d7cjZA9JD_bxkaRyJxgt4sirCvwdyCARVTGMPOGHsip+MHA@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CAM9d7cjZA9JD_bxkaRyJxgt4sirCvwdyCARVTGMPOGHsip+MHA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20230628102949.2598096-1-john.g.garry@oracle.com>
+ <20230628102949.2598096-5-john.g.garry@oracle.com> <CAP-5=fXa24_LEiyni0Ncyfa5hKwC1GE6y-zi2u8M98M9SwHX+g@mail.gmail.com>
+ <CAP-5=fUs=u3PKYP3mVDdzNB8+=GAHaEXG3SGfWJpMELYYqO_hA@mail.gmail.com> <d59b6e7c-cead-24d4-a9cb-6552b3154d84@oracle.com>
+In-Reply-To: <d59b6e7c-cead-24d4-a9cb-6552b3154d84@oracle.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 11 Jul 2023 23:05:22 -0700
+Message-ID: <CAP-5=fUu6xgVDQT4tq=vmRLDMe3ddMLywP11uOLvKSu8Lc6BjQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 4/9] perf jevents: Add sys_events_find_events_table()
+To:     John Garry <john.g.garry@oracle.com>
+Cc:     acme@kernel.org, namhyung@kernel.org, jolsa@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        renyu.zj@linux.alibaba.com, shangxiaojing@huawei.com,
+        kjain@linux.ibm.com, kan.liang@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 11/07/23 20:30, Namhyung Kim wrote:
-> Hi Adrian,
-> 
-> On Tue, Jul 11, 2023 at 8:19 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>
->> On 20/06/23 23:18, Namhyung Kim wrote:
->>> When perf record -d is used, it needs data mmaps to symbolize global data.
->>> But it missed to collect kernel data maps so it cannot symbolize them.
->>> Instead of having a separate map, just increase the kernel map size to
->>> include the data section.
->>>
->>> Probably we can have a separate kernel map for data, but the current
->>> code assumes a single kernel map.  So it'd require more changes in other
->>> places and looks error-prone.  I decided not to go that way for now.
->>>
->>> Also it seems the kernel module size already includes the data section.
->>>
->>> For example, my system has the following.
->>>
->>>   $ grep -e _stext -e _etext -e _edata /proc/kallsyms
->>>   ffffffff99800000 T _stext
->>>   ffffffff9a601ac8 T _etext
->>>   ffffffff9b446a00 D _edata
->>>
->>> Size of the text section is (0x9a601ac8 - 0x99800000 = 0xe01ac8) and
->>> size of the data section is (0x9b446a00 - 0x99800000 = 0x1c46a00).
->>>
->>> Before:
->>>   $ perf record -d true
->>>
->>>   $ perf report -D | grep MMAP | head -1
->>>   0 0 0x460 [0x60]: PERF_RECORD_MMAP -1/0: [0xffffffff99800000(0xe01ac8) @ 0xffffffff99800000]: x [kernel.kallsyms]_text
->>>                                                                ^^^^^^^^
->>>                                                                  here
->>> After:
->>>   $ perf report -D | grep MMAP | head -1
->>>   0 0 0x460 [0x60]: PERF_RECORD_MMAP -1/0: [0xffffffff99800000(0x1c46a00) @ 0xffffffff99800000]: x [kernel.kallsyms]_text
->>>                                                                ^^^^^^^^^
->>>
->>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
->>> ---
->>>  tools/perf/util/machine.c | 5 ++++-
->>>  1 file changed, 4 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
->>> index ddc0a2130caf..e93a66f6e0b3 100644
->>> --- a/tools/perf/util/machine.c
->>> +++ b/tools/perf/util/machine.c
->>> @@ -1218,7 +1218,10 @@ static int machine__get_running_kernel_start(struct machine *machine,
->>>
->>>       *start = addr;
->>>
->>> -     err = kallsyms__get_function_start(filename, "_etext", &addr);
->>> +     if (machine->has_data_mmap)
->>> +             err = kallsyms__get_symbol_start(filename, "_edata", &addr);
->>> +     else
->>> +             err = kallsyms__get_function_start(filename, "_etext", &addr);
->>
->> What is the downside of just extending it unconditionally?
-> 
-> I don't know.. maybe some people would argue it needs the
-> proper protection bits other than 'x' but this patch also breaks it.
-> But as I said, I'm not sure if we really want to change that now.
-> 
-> That said, we can make it unconditional. :)
+On Mon, Jul 3, 2023 at 8:15=E2=80=AFAM John Garry <john.g.garry@oracle.com>=
+ wrote:
+>
+> On 30/06/2023 21:16, Ian Rogers wrote:
+> > On Fri, Jun 30, 2023 at 12:00=E2=80=AFPM Ian Rogers<irogers@google.com>=
+  wrote:
+> >> On Wed, Jun 28, 2023 at 3:30=E2=80=AFAM John Garry<john.g.garry@oracle=
+.com>  wrote:
+> >>> Add a function to get the events table associated with a metric table=
+ for
+> >>> struct pmu_sys_events.
+> >>>
+> >>> We could also use something like:
+> >>> struct pmu_sys_events *sys =3D container_of(metrics, struct pmu_sys_e=
+vents,
+> >>>                                                  metric_table);
+> >>>
+> >>> to lookup struct pmu_sys_events, but that relies on the user always p=
+assing
+> >>> a sys events metric struct pointer, so this way is safer, but slower.
+>
+> Hi Ian,
+>
+> >> If an event is specific to a particular PMU, shouldn't the metric name
+> >> the PMU with the event?
+>
+> I am working on the basis - which I think is quite sane in case of sys
+> events - that event names are unique to a PMU type.
+>
+> > For example:
+> >>
+> >> MetricName: "IPC",
+> >> MetricExpr: "instructions / cycles",
+> >>
+> >> Here instructions and cycles can wildcard match on BIG.little/hybrid
+> >> systems and so we get an IPC metric for each PMU - although, I suspect
+> >> this isn't currently quite working. We can also, and currently, do:
+> >>
+> >> MetricName: "IPC",
+> >> MetricExpr: "cpu_atom@instructions@ / cpu_atom@cycles@",
+> >> ...
+> >> MetricName: "IPC",
+> >> MetricExpr: "cpu_core@instructions@ / cpu_core@cycles@",
+>
+> I did not know that it was possible to state that an event is for a
+> specific PMU type in this fashion - is this feature new? Does it work
+> only for known terms, like cycles and instructions?
 
-Might as well to start with.  Will need a big comment.
+It has been in metrics a long time (I didn't choose that @ was the /
+replacement :-) ). It should work for all events.
 
-Also do we know if all arch's do it like that? Perhaps
-need to fallback to _etext if _edata is not found?
+> >> The @ is used to avoid parsing confusion with / meaning divide. The
+> >> PMUs for the events are explicitly listed here. We could say the PMU
+> >> is implied but then it gets complex for uncore events, for metrics
+> >> that mix core and uncore events.
+>
+> So this works ok for IPC and CPU PMUs as we want the same event for many
+> PMU types and naturally it would have the same name.
+>
+> I am still not sure that sys event metrics need to specify a PMU.
 
-> 
-> Thanks,
-> Namhyung
-> 
->>
->>>       if (!err)
->>>               *end = addr;
->>>
->>
+There was a similar thought for hybrid metrics. The PMU could be
+implied from the PMU of the metric. I think there can be confusion
+from an implied PMU, for example the cycles event without a PMU will
+open two events on a hybrid CPU. If we imply the PMU then it can mean
+just 1 PMU, but if the PMU doesn't have the event presumably it means
+the multiple PMU behavior.
 
+In parse-events there is existing logic to wildcard events but to
+ignore those that don't match a given PMU. This is used to support the
+--cputype option in builtin-stat.c, there is a similar option for
+builtin-list.c. We can use this so that events in a metric only match
+the PMU of the metric. Currently there are core metrics but whose
+events are all uncore like:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json?h=3Dperf-tools=
+-next#n1802
+
+So we'd need to move these metrics to be on the appropriate uncore
+PMU. Supporting >1 PMU in a metric wouldn't work though as it would
+appear the event was missing. Having the metric specify the PMU avoids
+these problems, but is verbose.
+
+Thanks,
+Ian
+
+> > So looking at the later patches, they are making it so the PMU doesn't
+> > need to be specified,
+>
+> Right, as we assume that we use uniquely named events. Having non-unique
+> event names seems to create problems.
+>
+> > so I think it is the same issue as here. My
+> > thought was that the PMU would always be required for metrics like
+> > memory bandwidth per million instructions, ie >1 PMU.
+>
+> We treat these sys PMUs as standalone, and it makes no sense (currently)
+> to have a metric which contains events for multiple PMU types as we
+> don't know if the system is created with those PMUs, and, if it is, what
+> topology etc.
+>
+> > I know this
+> > makes the metrics longer, I've tried to avoid writing json metrics and
+> > have used Python to write them in my own work:
+> > https://urldefense.com/v3/__https://git.kernel.org/pub/scm/linux/kernel=
+/git/perf/perf-tools-next.git/tree/tools/perf/pmu-events/metric.py?h=3Dperf=
+-tools-next*n411__;Iw!!ACWV5N9M2RV99hQ!PE_9BEFVCr25fA9OHzfEDuT-MncA5pnPf5C3=
+eTqYnXGKG9Q2OItrEIiEYz1T366HjAayQmYtZ6N6WxPJBCI$
+>
+> Thanks
+> John
+>
