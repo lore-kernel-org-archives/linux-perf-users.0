@@ -2,60 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0725EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 17:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32010EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 17:28:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233236AbjGLR0H (ORCPT
+        id S230360AbjGLR25 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Jul 2023 13:26:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37694 "EHLO
+        Wed, 12 Jul 2023 13:28:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233195AbjGLR0G (ORCPT
+        with ESMTP id S229473AbjGLR24 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Jul 2023 13:26:06 -0400
-Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AA5A1FD7
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 10:26:03 -0700 (PDT)
-Received: by mail-qt1-x836.google.com with SMTP id d75a77b69052e-403b622101bso16151cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 10:26:03 -0700 (PDT)
+        Wed, 12 Jul 2023 13:28:56 -0400
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C43B11BF5
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 10:28:55 -0700 (PDT)
+Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-40371070eb7so19031cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 10:28:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689182763; x=1691774763;
+        d=google.com; s=20221208; t=1689182935; x=1691774935;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=D9sndbKeetjpAVtCfzhlTGiXlOcxcO0n9Fuy0P6FrMY=;
-        b=hsscseJOQp9XQr5bKoFXLVxQotsPHhFyUa71rXgiJAQoKNokKl6l5lvMxiqa0B8T9f
-         e47EYYfbaB59SrHyY1pyS8WX8qRSQy4tKgh6LVa/S3aAu4IoadoahrleZwW8C/ypgBpq
-         jSIKZ2gzDSRpgDEaXLv/oL6dsjx52TS1374BOEgr+j14kuSLKKG9T1OQgU9s81LWtars
-         BpcaEtPHYalkgoGmxyy/6MRBTOs3CJ0n3NZk+2As/i5ZuCtU00WSrXbOAMJxVzr24ncG
-         BUW6YnG8lwucPUddysnK2x3tzw9TrDeeWtD+y4ttAlghFHkif4GhErZyXhaJWFfKifKi
-         Sbhw==
+        bh=Jf6jn4Tmh6XLNjLqmxZGPisxyJ73A2eJOVy3NQS6PLk=;
+        b=gImBrw0t0mlBNIdvg2GkS2g94nraaakeN5+Br49MJyHjrMvlJK5XCtmIDFedMbMdd1
+         ujJikBSb04kucgbR5hZkIqpv8jA/t3CMQyLI3K+4QhmH9qGNWSh7w3PpSVGdyYGJoq4G
+         0fhFBjjWSJEY6ebihsAmdhf9vk/S1IcqokulaBoFu/OKxrVTUvvazboA0alD6VQwddug
+         IKGSr5C8Ot53Js+sFpnigfBxJjmby/JwF0ZQU+nLCFtoru0GpULYlm+Hti5PMMOvbuHh
+         uUY/aL8JW0OyCMoLRr3CF3W0Wa6Pz88G+JoaocPc9364U+XPy+DdLnXbWytx/BaVzBFU
+         mP2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689182763; x=1691774763;
+        d=1e100.net; s=20221208; t=1689182935; x=1691774935;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=D9sndbKeetjpAVtCfzhlTGiXlOcxcO0n9Fuy0P6FrMY=;
-        b=CDP4aH8+8B/VOfVE+qgEi+WYsSUUY1dS2Hg5q+z2LkI51bv8f1BY85u9ob69o2jy7f
-         6DUuinumuYkbzWH2kg2GTxdAaDrr/bgFj93ii37aJwT+lWt05l04+PAFXHPQoccmxye+
-         +0S2iG4bJ3iuANd1n+emlQdhEWv+YzP4u2eyMfgrGxjhBoy4ZkI4DqVfJLNdHy2ELuEj
-         iDmvL9MkKgxc71gXWxRoSgCKOWzws4WGOM8iGMb5U4rx+9qCLv1fSCWDgJjkMh/lMB0Z
-         kjxdbFAlMDRHou3oOtB1PqGAurcOH2WeI5uLSFy/8LRiMEg54jIw7jA57HBwuc55j8Y4
-         kzVg==
-X-Gm-Message-State: ABy/qLYc/2ZVgWWknpubjZobjuhPK2VIoogajpRY/LyXFBs4D5D/06gh
-        Y90vCHQPIaZd0n3p1D1c9zLz57b53ipKHf5c9i5P/RKLFTxoy4PcnlU=
-X-Google-Smtp-Source: APBJJlEFr1+xClIimgby3gC8zl116qm8FpS4A4eHM/ieeHa0jSU1ewQYIukYVwFRIjWlvTtZ44Ru+Twa3zG5M+kwguc=
-X-Received: by 2002:ac8:7f11:0:b0:3f6:97b4:1a4d with SMTP id
- f17-20020ac87f11000000b003f697b41a4dmr267957qtk.23.1689182762716; Wed, 12 Jul
- 2023 10:26:02 -0700 (PDT)
+        bh=Jf6jn4Tmh6XLNjLqmxZGPisxyJ73A2eJOVy3NQS6PLk=;
+        b=jBOzBtfhEZvvA74mUM4Kg3nwPh2W2Z2Vc+3xNMGmLHSJa2vismi5K3nVJf7xRxAxei
+         lHzPQZv290zrXhPr2g8LJ7NGUFGpIBKiGxwPJchr4c4g7l8oy+ZzcPPQJlyVTF9g1hPh
+         C/U38avISBwmF7t81azrubpyH1zFWNw6YcmIdN+bKYpqV2ijmv2ehb5s0brtMDi1LNIW
+         8iYXGjwAqcsNVGPE0mQt2WDg+mCvFaZfO+CdV/k/G/R4x+tDgqIe/9+hg6a0w/Pp5p1X
+         1fODdxFolvcXOTsiblwZpiiUs2x7YQhynG7vYygbiqNgeGoAfn86OCakbkVvMh1quRTR
+         jIPw==
+X-Gm-Message-State: ABy/qLYgY1xXvjL7UAdvx8okb8jgJhfvG/5G1ldzWzQ0obdq9V5obnJ8
+        Ra8T6eE6YUdmJoBuADRlAhOzejc753Ocw54+Gqfv8w==
+X-Google-Smtp-Source: APBJJlFiEd58mMKPb53D3NFQACKs9rJ08QTBvtKayfJE2Kg/fvO/VuY1W/RjrtlNPXdR7s0pQ4k5iqg4njFJFhYd770=
+X-Received: by 2002:ac8:5e0d:0:b0:3ed:6bde:9681 with SMTP id
+ h13-20020ac85e0d000000b003ed6bde9681mr344009qtx.0.1689182934850; Wed, 12 Jul
+ 2023 10:28:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1689024635.git.anupnewsmail@gmail.com> <70fd94954a3872caeef5851607b245394149f4a9.1689024635.git.anupnewsmail@gmail.com>
-In-Reply-To: <70fd94954a3872caeef5851607b245394149f4a9.1689024635.git.anupnewsmail@gmail.com>
+References: <cover.1689024635.git.anupnewsmail@gmail.com> <11543b39f97a7e2f9eac76c1233f1b1caa3f2c48.1689024635.git.anupnewsmail@gmail.com>
+In-Reply-To: <11543b39f97a7e2f9eac76c1233f1b1caa3f2c48.1689024635.git.anupnewsmail@gmail.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 12 Jul 2023 10:25:50 -0700
-Message-ID: <CAP-5=fVC8T+GNQYcQi9sAOcV5YUb5zX2D5AwH72aSvL8_Cn3Zw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/6] scripts: python: thread sample processing to
- create thread with schemas
+Date:   Wed, 12 Jul 2023 10:28:42 -0700
+Message-ID: <CAP-5=fXT3a4JE6u8zXf3=xFbOGTre3WD63SMPrA_iSVpgHjDVA@mail.gmail.com>
+Subject: Re: [PATCH v3 4/6] scripts: python: Add trace end processing and JSON output
 To:     Anup Sharma <anupnewsmail@gmail.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -75,163 +74,75 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 On Mon, Jul 10, 2023 at 4:13=E2=80=AFPM Anup Sharma <anupnewsmail@gmail.com=
 > wrote:
 >
-> The _addThreadSample function is responsible for adding a sample
-> to a specific thread. It first checks if the thread exists in
-> the thread_map dictionary.
+> Inside the trace end function the final output will be dumped
+> to standard output in JSON gecko format. Additionally, constants
+> such as USER_CATEGORY_INDEX, KERNEL_CATEGORY_INDEX, CATEGORIES, and
+> PRODUCT are defined to provide contextual information.
 >
-> The markers structure defines the schema and data for
-> thread markers, including fields such as 'name',
-> 'startTime', 'endTime', 'phase', 'category', and 'data'.
->
-> The samples structure defines the schema and data for thread
-> samples, including fields such as 'stack', 'time', and
-> 'responsiveness'.
->
-> The frameTable structure defines the schema and data for frame
-> information, including fields such as 'location', 'relevantForJS',
-> 'innerWindowID', 'implementation', 'optimizations', 'line',
-> 'column', 'category', and 'subcategory'.
->
-> The purpose of this function is to create a new thread structure
-> These structures provide a framework for storing and organizing
-> information related to thread markers, samples, frame details,
-> and stack information.
->
-> The call stack is parsed to include function names and the associated
-> DSO, which are requires for creating json schema. Also few libaries
-> has been included which will be used in later commit.
-
-nit: s/requires/required.
-nit: I think the "Also few..." statement is out-of-date.
-
 > Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
+
+Acked-by: Ian Rogers <irogers@google.com>
+
 > ---
->  .../scripts/python/firefox-gecko-converter.py | 70 +++++++++++++++++++
->  1 file changed, 70 insertions(+)
+>  .../scripts/python/firefox-gecko-converter.py | 34 ++++++++++++++++++-
+>  1 file changed, 33 insertions(+), 1 deletion(-)
 >
 > diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools=
 /perf/scripts/python/firefox-gecko-converter.py
-> index 765f1775cee5..0b8a86bdcab1 100644
+> index 0b8a86bdcab1..39818a603265 100644
 > --- a/tools/perf/scripts/python/firefox-gecko-converter.py
 > +++ b/tools/perf/scripts/python/firefox-gecko-converter.py
-> @@ -21,6 +21,7 @@ sys.path.append(os.environ['PERF_EXEC_PATH'] + \
->  from perf_trace_context import *
->  from Core import *
->
-
-A comment and type information would be useful here. map is another
-word for a dictionary, which is somewhat implied. So the information
-here is that this data structure will hold something to do with
-threads.  Perhaps say, "a map from TID to a Thread." A better variable
-name may then be tid_to_thread_map, but as map is implied you could
-do: tid_to_thread: Dict[int, Thread].
-
-> +thread_map =3D {}
+> @@ -24,8 +24,40 @@ from Core import *
+>  thread_map =3D {}
 >  start_time =3D None
 >
->  def trace_end():
-> @@ -28,6 +29,57 @@ def trace_end():
->
->  def process_event(param_dict):
->         global start_time
-> +       global thread_map
-> +
-> +       def _createThread(name, pid, tid):
-> +               markers =3D {
-> +                       'schema': {
-> +                               'name': 0,
-> +                               'startTime': 1,
-> +                               'endTime': 2,
-> +                               'phase': 3,
-> +                               'category': 4,
-> +                               'data': 5,
-> +                       },
-> +                       'data': [],
-> +               }
-> +               samples =3D {
-> +                       'schema': {
-> +                               'stack': 0,
-> +                               'time': 1,
-> +                               'responsiveness': 2,
-> +                               },
-> +                       'data': [],
-> +               }
-> +               frameTable =3D {
-> +                       'schema': {
-> +                               'location': 0,
-> +                               'relevantForJS': 1,
-> +                               'innerWindowID': 2,
-> +                               'implementation': 3,
-> +                               'optimizations': 4,
-> +                               'line': 5,
-> +                               'column': 6,
-> +                               'category': 7,
-> +                               'subcategory': 8,
-> +                       },
-> +                       'data': [],
-> +               }
-> +               stackTable =3D {
-> +                       'schema': {
-> +                               'prefix': 0,
-> +                               'frame': 1,
-> +                       },
-> +                       'data': [],
-> +               }
-> +               stringTable =3D []
+> +# Follow Brendan Gregg's Flamegraph convention: orange for kernel and ye=
+llow for user
+> +CATEGORIES =3D [
+> +    {'name': 'User', 'color': 'yellow', 'subcategories': ['Other']},
+> +    {'name': 'Kernel', 'color': 'orange', 'subcategories': ['Other']}
+> +]
 
-Is there a missing return here?
-
-> +
-> +       def _addThreadSample(pid, tid, threadName, time_stamp, stack):
-> +               thread =3D thread_map.get(tid)
-> +               if not thread:
-> +                       thread =3D _createThread(threadName, pid, tid)
-> +                       thread_map[tid] =3D thread
-> +
->         # Extract relevant information from the event parameters. The eve=
-nt parameters
->         # are in a dictionary:
->         time_stamp =3D (param_dict['sample']['time'] // 1000) / 1000
-> @@ -37,3 +89,21 @@ def process_event(param_dict):
->
->         # Assume that start time is the time of the first event.
->         start_time =3D time_stamp if not start_time else start_time
-> +
-> +       # Parse the callchain of the current sample into a stack array.
-> +       if param_dict['callchain']:
-> +               stack =3D []
-> +               for call in param_dict['callchain']:
-> +                       if 'sym' not in call:
-> +                               continue
-> +                       stack.append(call['sym']['name'] + f' (in {call["=
-dso"]})')
-
-Rather than mix an append and an f-string, just have the f-string ie:
-stack.append(f'{call["sym"]["name"]} (in {"call["dso"]})')
-
-> +               if len(stack) !=3D 0:
-> +                       stack =3D stack[::-1]
-> +                       _addThreadSample(pid, tid, thread_name, time_stam=
-p, stack)
-> +
-> +       # During perf record if -g is not used, the callchain is not avai=
-lable.
-> +       # In that case, the symbol and dso are available in the event par=
-ameters.
-> +       else:
-> +               func =3D param_dict['symbol'] if 'symbol' in param_dict e=
-lse '[unknown]'
-> +               dso =3D param_dict['dso'] if 'dso' in param_dict else '[u=
-nknown]'
-> +               _addThreadSample(pid, tid, thread_name, time_stamp, [func=
- + f' (in {dso})'])
-
-Similarly:
-f'{func} (in {dso})'
+A follow up could be to make these command line options, defaulting to
+orange and yellow.
 
 Thanks,
 Ian
 
+> +
+> +# The product name is used by the profiler UI to show the Operating syst=
+em and Processor.
+> +PRODUCT =3D os.popen('uname -op').read().strip()
+> +
+>  def trace_end():
+> -       pass
+> +    thread_array =3D thread_map.values()))
+> +
+> +    result =3D {
+> +        'meta': {
+> +            'interval': 1,
+> +            'processType': 0,
+> +            'product': PRODUCT,
+> +            'stackwalk': 1,
+> +            'debug': 0,
+> +            'gcpoison': 0,
+> +            'asyncstack': 1,
+> +            'startTime': start_time,
+> +            'shutdownTime': None,
+> +            'version': 24,
+> +            'presymbolicated': True,
+> +            'categories': CATEGORIES,
+> +            'markerSchema': []
+> +            },
+> +        'libs': [],
+> +        'threads': thread_array,
+> +        'processes': [],
+> +        'pausedRanges': []
+> +    }
+> +    json.dump(result, sys.stdout, indent=3D2)
+>
+>  def process_event(param_dict):
+>         global start_time
 > --
 > 2.34.1
 >
