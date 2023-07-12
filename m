@@ -2,158 +2,150 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAC0EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 05:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30817EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 05:44:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229655AbjGLFkY (ORCPT
+        id S231406AbjGLFol (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Jul 2023 01:40:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40796 "EHLO
+        Wed, 12 Jul 2023 01:44:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229884AbjGLFkW (ORCPT
+        with ESMTP id S231790AbjGLFoe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Jul 2023 01:40:22 -0400
-Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 125441716
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 22:40:21 -0700 (PDT)
-Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-403b622101bso122401cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 22:40:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689140420; x=1691732420;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FiAkkP1EdbnMW11GKMsPgjH7qLZViInmNnoTvxJOghg=;
-        b=i0+S727nPyAqpSy2g6Lc7SX+6EIh8piKjI3Id6+GYQ7Xb/5lH//pDrU/0Sy5dDOvW2
-         oCorTl5fFVx5R2YGMDj86YV49WK/sAzlPmOEs0naimiLMYeeNPFzvaC63er5Pr2OkxrE
-         PcUR1Ap/VKoRYyEFMmbXq8caFewX+yk1U9OEquF/BbsWLgGeHresVwSVgwxYA8TQIwmd
-         Hn75G5psHbLVkITBTYZ2KKPpPJ7HI4/wsLXkeGR6JQKNBovQcsDofFxsMlwxHNaWmSNH
-         VoZAc+2gCWrG5meQnjpdbLge5JcCXbqV6JilpXMIpVSJhMY9lspaJ7x8awyOEJAsPGX8
-         szJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689140420; x=1691732420;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FiAkkP1EdbnMW11GKMsPgjH7qLZViInmNnoTvxJOghg=;
-        b=IxZHkrpD8R0nuO5V/RcT/px3G6FMB5qmvo/6I6J4F62cTcXJuOOK7X1c8lUDIkD3uV
-         q77VYphLPTxdDySyZPtpHgzA54yv4cmwAnANbmNT2tTCo2f4tir2aI/zITLAsWE61LdV
-         m2e92eTps3osQllnmtongWIb3KzTNz4hIJ0/fJJKYGDiRWPQMFUou4DvrWSwnA2M3Hbx
-         5/43aW6EDuKm44yAehGhYN0+G31PtBQ7W1RWPUB5AEo9OdPSXLKC9xAmCA23Rs1ObX+R
-         0RAfqGsIFFJn6zOAQ59DJy/5Zgj1l2TyTEK8bTyTu7otUTq67MsUYmWQYTn8ffkn2rPu
-         +BxQ==
-X-Gm-Message-State: ABy/qLaYlOfR5O60ELs1KgTFlnGNtqw3LK3tjBtvpgC+DKK2TfBZvzJk
-        byB4yRX6AHtcsMWOeoQWS8aiGGCzPwbUyt8IzrlFokiRQKCEMavnnG7c+g==
-X-Google-Smtp-Source: APBJJlHwfRGQqV5h0r1U/quRuRwac2oyC+UIwxJkjMht+s97QQICb0a8zOQgj6IisHdkK+loe/01x414bqugznaKuDk=
-X-Received: by 2002:a05:622a:588:b0:3f9:a770:7279 with SMTP id
- c8-20020a05622a058800b003f9a7707279mr80910qtb.9.1689140419969; Tue, 11 Jul
- 2023 22:40:19 -0700 (PDT)
+        Wed, 12 Jul 2023 01:44:34 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 290CD173B;
+        Tue, 11 Jul 2023 22:44:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689140667; x=1720676667;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=xkJNOQbIe3Ek/OWTXqgC8D9Wm7aeIy2w4ZWDPqFFbw4=;
+  b=EzPBQ98aO4uKmBBLLl81dc4Z12Kkfo4wu7QqOR9Vgdy85J5yQPcOGoPa
+   dhk05ixNJk6nFbPDAmfHSTmtkBzdzoobRea0kUVtPurOFqrURXFKUSQVc
+   +oVHrenbDjymtjakX1phvG6hllOn5+1f2p40HbUMXNRLPdiLp+8sEx79K
+   u6F75fCjjyAcbLkVMNFQNSR8u+X/+6aOhDzVvgCy6y9G9K1r9EN83IXQM
+   4r4l7+13hnglvhKK14q7FECDfnnPOPOgZTO4/LFL4XjnveXs1fvqG+TfH
+   4rpzoqYs7dYnCxZO7caNO8jG0N+C/mw7c1jbdgXatWvmksxAx8898C/RI
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="368342779"
+X-IronPort-AV: E=Sophos;i="6.01,198,1684825200"; 
+   d="scan'208";a="368342779"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 22:44:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="724745735"
+X-IronPort-AV: E=Sophos;i="6.01,198,1684825200"; 
+   d="scan'208";a="724745735"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.42.166])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 22:44:17 -0700
+Message-ID: <8256a332-6a9c-c552-ceb5-fc6cc08792cd@intel.com>
+Date:   Wed, 12 Jul 2023 08:44:14 +0300
 MIME-Version: 1.0
-References: <20230628102949.2598096-1-john.g.garry@oracle.com>
- <20230628102949.2598096-3-john.g.garry@oracle.com> <CAP-5=fWB9H0KWrXYouepUiAbnfH3u29XuRVN6KXVw3CNbD4xrA@mail.gmail.com>
- <bb828dd4-3c22-7383-008e-ab4f860ed686@oracle.com>
-In-Reply-To: <bb828dd4-3c22-7383-008e-ab4f860ed686@oracle.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 11 Jul 2023 22:40:08 -0700
-Message-ID: <CAP-5=fWZj-vzmF4=iNEw=8DdJetB4HWtHYSzCCvqms9iKdaZ6w@mail.gmail.com>
-Subject: Re: [PATCH RFC 2/9] perf metrics: Don't iter sys metrics if we
- already found a CPU match
-To:     John Garry <john.g.garry@oracle.com>
-Cc:     acme@kernel.org, namhyung@kernel.org, jolsa@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        renyu.zj@linux.alibaba.com, shangxiaojing@huawei.com,
-        zhangshaokun@hisilicon.com, qiangqing.zhang@nxp.com,
-        kjain@linux.ibm.com, kan.liang@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.13.0
+Subject: Re: [PATCH 3/3] perf machine: Include data symbols in the kernel map
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+References: <20230620201818.1670753-1-namhyung@kernel.org>
+ <20230620201818.1670753-3-namhyung@kernel.org>
+ <a791e982-ada3-7f26-e105-bc7fa9c7d346@intel.com>
+ <CAM9d7cjZA9JD_bxkaRyJxgt4sirCvwdyCARVTGMPOGHsip+MHA@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CAM9d7cjZA9JD_bxkaRyJxgt4sirCvwdyCARVTGMPOGHsip+MHA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jul 3, 2023 at 6:09=E2=80=AFAM John Garry <john.g.garry@oracle.com>=
- wrote:
->
-> On 30/06/2023 18:41, Ian Rogers wrote:
-> > On Wed, Jun 28, 2023 at 3:30=E2=80=AFAM John Garry<john.g.garry@oracle.=
-com>  wrote:
-> >> In metricgroup__add_metric() we still iter the sys metrics if we alrea=
-dy
-> >> found a match from the CPU table, which is pretty pointless, so don't
-> >> bother.
-> >>
-> >> Signed-off-by: John Garry<john.g.garry@oracle.com>
-> >> ---
-> >>   tools/perf/util/metricgroup.c | 7 +++++++
-> >>   1 file changed, 7 insertions(+)
-> >>
-> >> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgro=
-up.c
-> >> index 4389ccd29fe7..8d2ac2513530 100644
-> >> --- a/tools/perf/util/metricgroup.c
-> >> +++ b/tools/perf/util/metricgroup.c
-> >> @@ -1261,6 +1261,12 @@ static int metricgroup__add_metric(const char *=
-pmu, const char *metric_name, con
-> >>
-> >>                  has_match =3D data.has_match;
-> >>          }
->
-> Hi Ian,
->
-> >> +
-> >> +       if (has_match) {
-> >> +               ret =3D 0;
-> >> +               goto out;
-> >> +       }
-> >> +
-> > I think this can just be:
-> >
-> > if (!has_match)
->
-> But ret has no initial value
->
-> >
-> > However, I'm not sure I agree with the intent of the change. We may
-> > have a metric like IPC and want it to apply to all types of CPU, GPU,
-> > etc. If we short-cut here then that won't be possible.
->
-> A few points to make on this:
-> - Currently we don't have any same-named metrics like this, so not much
-> use in supporting it in the code (yet).
+On 11/07/23 20:30, Namhyung Kim wrote:
+> Hi Adrian,
+> 
+> On Tue, Jul 11, 2023 at 8:19 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>
+>> On 20/06/23 23:18, Namhyung Kim wrote:
+>>> When perf record -d is used, it needs data mmaps to symbolize global data.
+>>> But it missed to collect kernel data maps so it cannot symbolize them.
+>>> Instead of having a separate map, just increase the kernel map size to
+>>> include the data section.
+>>>
+>>> Probably we can have a separate kernel map for data, but the current
+>>> code assumes a single kernel map.  So it'd require more changes in other
+>>> places and looks error-prone.  I decided not to go that way for now.
+>>>
+>>> Also it seems the kernel module size already includes the data section.
+>>>
+>>> For example, my system has the following.
+>>>
+>>>   $ grep -e _stext -e _etext -e _edata /proc/kallsyms
+>>>   ffffffff99800000 T _stext
+>>>   ffffffff9a601ac8 T _etext
+>>>   ffffffff9b446a00 D _edata
+>>>
+>>> Size of the text section is (0x9a601ac8 - 0x99800000 = 0xe01ac8) and
+>>> size of the data section is (0x9b446a00 - 0x99800000 = 0x1c46a00).
+>>>
+>>> Before:
+>>>   $ perf record -d true
+>>>
+>>>   $ perf report -D | grep MMAP | head -1
+>>>   0 0 0x460 [0x60]: PERF_RECORD_MMAP -1/0: [0xffffffff99800000(0xe01ac8) @ 0xffffffff99800000]: x [kernel.kallsyms]_text
+>>>                                                                ^^^^^^^^
+>>>                                                                  here
+>>> After:
+>>>   $ perf report -D | grep MMAP | head -1
+>>>   0 0 0x460 [0x60]: PERF_RECORD_MMAP -1/0: [0xffffffff99800000(0x1c46a00) @ 0xffffffff99800000]: x [kernel.kallsyms]_text
+>>>                                                                ^^^^^^^^^
+>>>
+>>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+>>> ---
+>>>  tools/perf/util/machine.c | 5 ++++-
+>>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+>>> index ddc0a2130caf..e93a66f6e0b3 100644
+>>> --- a/tools/perf/util/machine.c
+>>> +++ b/tools/perf/util/machine.c
+>>> @@ -1218,7 +1218,10 @@ static int machine__get_running_kernel_start(struct machine *machine,
+>>>
+>>>       *start = addr;
+>>>
+>>> -     err = kallsyms__get_function_start(filename, "_etext", &addr);
+>>> +     if (machine->has_data_mmap)
+>>> +             err = kallsyms__get_symbol_start(filename, "_edata", &addr);
+>>> +     else
+>>> +             err = kallsyms__get_function_start(filename, "_etext", &addr);
+>>
+>> What is the downside of just extending it unconditionally?
+> 
+> I don't know.. maybe some people would argue it needs the
+> proper protection bits other than 'x' but this patch also breaks it.
+> But as I said, I'm not sure if we really want to change that now.
+> 
+> That said, we can make it unconditional. :)
 
-We have same named metrics for heterogeneous CPU PMUs:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json?h=3Dperf-tools=
--next#n304
-cpu_atom
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json?h=3Dperf-tools=
--next#n1125
-cpu_core
+Might as well to start with.  Will need a big comment.
 
-> - Even if we had some same-named metrics, I am not sure if it even works
-> properly. Do we have any uncore PMU metrics which have same name as CPU
-> metrics?
+Also do we know if all arch's do it like that? Perhaps
+need to fallback to _etext if _edata is not found?
 
-So I was thinking IPC was a generic concept that would apply to a
-co-processor on a network card, a GPU, etc.
-
-> - Further to the previous point, do we really want same-named metrics
-> for different PMUs in the future? I think event / metric names need to
-> be chosen carefully to avoid clash for other PMUs or keywords. For your
-> example, if I did ask for IPC metric, I'd like to be able to just know
-> I'm getting IPC metric for CPUs or some other PMUs, but not both.
-
-At the moment if you request an event without a PMU, say instructions
-retired, we will attempt to open the event on every PMU - legacy
-events (PERF_TYPE_HARDWARE, PERF_TYPE_HW_CACHE) only try the core
-PMUs. It would seem consistent if metrics tried to open on every PMU
-like most events.
-
-Thanks,
-Ian
-
+> 
 > Thanks,
-> John
->
-> >
+> Namhyung
+> 
+>>
+>>>       if (!err)
+>>>               *end = addr;
+>>>
+>>
+
