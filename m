@@ -2,57 +2,48 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D383CEB64D9
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 13:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D5BEB64DA
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 14:06:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232399AbjGLNie (ORCPT
+        id S229762AbjGLOGI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Jul 2023 09:38:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56072 "EHLO
+        Wed, 12 Jul 2023 10:06:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232401AbjGLNic (ORCPT
+        with ESMTP id S229529AbjGLOGH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Jul 2023 09:38:32 -0400
+        Wed, 12 Jul 2023 10:06:07 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 777171BC5;
-        Wed, 12 Jul 2023 06:38:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0938CCE
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 07:06:06 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92A58D75;
-        Wed, 12 Jul 2023 06:39:09 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3EB83D75;
+        Wed, 12 Jul 2023 07:06:48 -0700 (PDT)
 Received: from [192.168.1.3] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 606A03F67D;
-        Wed, 12 Jul 2023 06:38:24 -0700 (PDT)
-Message-ID: <516face0-fc2f-453c-df9a-f6ebe47c687f@arm.com>
-Date:   Wed, 12 Jul 2023 14:38:15 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E0083F67D;
+        Wed, 12 Jul 2023 07:06:04 -0700 (PDT)
+Message-ID: <e9f088d0-e19a-fe1f-e7c5-bf2141b95868@arm.com>
+Date:   Wed, 12 Jul 2023 15:06:03 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
-Subject: Re: [PATCH v3 2/5] perf jevents: Match on highest version of Arm json
+Subject: Re: [PATCH v2 2/5] perf jevents: Match on highest version of Arm json
  file available
 Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>
-Cc:     linux-perf-users@vger.kernel.org, renyu.zj@linux.alibaba.com,
-        john.g.garry@oracle.com, namhyung@kernel.org, acme@kernel.org,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Nick Forrington <nick.forrington@arm.com>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20230711100218.1651995-1-james.clark@arm.com>
- <20230711100218.1651995-3-james.clark@arm.com>
- <CAP-5=fUJavikRkhm601ws+=yB3As1X0Au9Fr-5Z=BemGW9xjyw@mail.gmail.com>
+To:     John Garry <john.g.garry@oracle.com>, irogers@google.com
+Cc:     namhyung@kernel.org, acme@kernel.org,
+        linux-perf-users@vger.kernel.org, renyu.zj@linux.alibaba.com,
+        will@kernel.org, linux-arm-kernel@lists.infradead.org,
+        mark.rutland@arm.com
+References: <20230710141903.1595312-1-james.clark@arm.com>
+ <20230710141903.1595312-3-james.clark@arm.com>
+ <a35179ad-bb62-113d-3a7e-da4d2ec3c0b0@oracle.com>
+ <1eb50ae1-8c7c-7108-d9e7-0422752c4d9d@arm.com>
+ <16699c8a-1b68-f34d-770c-d1a1283f9603@oracle.com>
+ <d0317185-4880-5504-2ca6-bab3fe30faff@arm.com>
+ <034c775e-c0f1-9bda-df6b-80c068dfd69a@oracle.com>
 From:   James Clark <james.clark@arm.com>
-In-Reply-To: <CAP-5=fUJavikRkhm601ws+=yB3As1X0Au9Fr-5Z=BemGW9xjyw@mail.gmail.com>
+In-Reply-To: <034c775e-c0f1-9bda-df6b-80c068dfd69a@oracle.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -61,299 +52,130 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 12/07/2023 01:39, Ian Rogers wrote:
-> On Tue, Jul 11, 2023 at 3:02 AM James Clark <james.clark@arm.com> wrote:
+On 12/07/2023 12:33, John Garry wrote:
+> On 12/07/2023 12:00, James Clark wrote:
 >>
->> Currently variant and revision fields are masked out of the MIDR so
->> there can only be one set of jsons per CPU. In a later commit multiple
->> revisions of Neoverse N2 json files will be provided. This can be used
->> when a change is made to a new CPU version that fixes an event or metric
->> formula.
 >>
->> The highest valid version of json files should be used. For example if
->> r0p0 and r1p0 JSON files are both provided, then r0p0 files will be used
->> for all CPU versions up to (not including) r1p0, and then from r1p0
->> onwards the r1p0 files will be used. To make this work the mapfile has
->> to be reverse sorted on the CPUID field so that the highest is found
->> first. It's possible, but error prone, to do this manually so instead
->> add an explicit sort into jevents.py. If the CPUID is a string then the
->> rows are string sorted rather than numerically.
+>> On 12/07/2023 10:22, John Garry wrote:
+>>> On 11/07/2023 11:18, James Clark wrote:
+>>>>>> The highest valid version of json files should be used,
+>>>>> What exactly does that mean?
+>>>>>
+>>>>> So it seems that you have CPUs with matching MIDR except variant and
+>>>>> revision, but have different events, right?
+>>>> Yes. In this case we changed how a metric is calculated in N2-r0p3
+>>>> because the workaround that was needed for r0p0 is no longer needed
+>>>> (CPU_CYCLES should not subtracted from stalls for topdown metrics
+>>>> anymore).
+>>>
+>>> If there are only very subtle differences, then could we solve with
+>>> metric expression function? We already do something else like this for
+>>> literal #slots for arm64
 >>
->> Signed-off-by: James Clark <james.clark@arm.com>
->> ---
->>  tools/perf/arch/arm64/util/header.c          | 61 +++++++++++++++-----
->>  tools/perf/pmu-events/arch/arm64/mapfile.csv | 12 +++-
->>  tools/perf/pmu-events/jevents.py             | 49 +++++++++-------
->>  tools/perf/tests/pmu-events.c                | 34 +++++++++++
->>  4 files changed, 119 insertions(+), 37 deletions(-)
+>> Possibly, but I'd have to add a new mechanism to expose the version
+>> numbers to the metrics so it can be used in an expression. And I think
+>> it could get very messy quite quickly and make the expression hard to
+>> read. In fact in this specific case I'm not even sure how it would look.
+>> Something like this (where #p is the p in r0p3)?
 >>
->> diff --git a/tools/perf/arch/arm64/util/header.c b/tools/perf/arch/arm64/util/header.c
->> index 80b9f6287fe2..637ad21721c2 100644
->> --- a/tools/perf/arch/arm64/util/header.c
->> +++ b/tools/perf/arch/arm64/util/header.c
->> @@ -1,3 +1,6 @@
->> +#include <linux/kernel.h>
->> +#include <linux/bits.h>
->> +#include <linux/bitfield.h>
->>  #include <stdio.h>
->>  #include <stdlib.h>
->>  #include <perf/cpumap.h>
->> @@ -10,14 +13,12 @@
->>
->>  #define MIDR "/regs/identification/midr_el1"
->>  #define MIDR_SIZE 19
->> -#define MIDR_REVISION_MASK      0xf
->> -#define MIDR_VARIANT_SHIFT      20
->> -#define MIDR_VARIANT_MASK       (0xf << MIDR_VARIANT_SHIFT)
->> +#define MIDR_REVISION_MASK      GENMASK(3, 0)
->> +#define MIDR_VARIANT_MASK      GENMASK(23, 20)
->>
->>  static int _get_cpuid(char *buf, size_t sz, struct perf_cpu_map *cpus)
->>  {
->>         const char *sysfs = sysfs__mountpoint();
->> -       u64 midr = 0;
->>         int cpu;
->>
->>         if (!sysfs || sz < MIDR_SIZE)
->> @@ -44,21 +45,11 @@ static int _get_cpuid(char *buf, size_t sz, struct perf_cpu_map *cpus)
->>                 }
->>                 fclose(file);
->>
->> -               /* Ignore/clear Variant[23:20] and
->> -                * Revision[3:0] of MIDR
->> -                */
->> -               midr = strtoul(buf, NULL, 16);
->> -               midr &= (~(MIDR_VARIANT_MASK | MIDR_REVISION_MASK));
->> -               scnprintf(buf, MIDR_SIZE, "0x%016lx", midr);
->>                 /* got midr break loop */
->>                 break;
->>         }
->>
->>         perf_cpu_map__put(cpus);
->> -
->> -       if (!midr)
->> -               return EINVAL;
->> -
->>         return 0;
->>  }
->>
->> @@ -99,3 +90,45 @@ char *get_cpuid_str(struct perf_pmu *pmu)
->>
->>         return buf;
->>  }
->> +
->> +
->> +int strcmp_cpuid_str(const char *mapcpuid, const char *idstr)
->> +{
->> +       u64 map_id = strtoull(mapcpuid, NULL, 16);
->> +       char map_id_variant = FIELD_GET(MIDR_VARIANT_MASK, map_id);
->> +       char map_id_revision = FIELD_GET(MIDR_REVISION_MASK, map_id);
->> +       u64 id = strtoull(idstr, NULL, 16);
->> +       char id_variant = FIELD_GET(MIDR_VARIANT_MASK, id);
->> +       char id_revision = FIELD_GET(MIDR_REVISION_MASK, id);
->> +       u64 id_fields = ~(MIDR_VARIANT_MASK | MIDR_REVISION_MASK);
->> +
->> +       /* Compare without version first */
->> +       if ((map_id & id_fields) != (id & id_fields))
->> +               return 1;
->> +
->> +       /*
->> +        * ID matches, now compare version.
->> +        *
->> +        * Arm revisions (like r0p0) are compared here like two digit semver
->> +        * values eg. 1.3 < 2.0 < 2.1 < 2.2. The events json file with the
->> +        * highest matching version is used.
->> +        *
->> +        *  r = high value = 'Variant' field in MIDR
->> +        *  p = low value  = 'Revision' field in MIDR
->> +        *
->> +        * Because the Variant field is further to the left, iterating through a
->> +        * reverse sorted mapfile.csv gives the correct comparison behavior.
->> +        * This relies on jevents.py sorting the list in print_mapping_table().
->> +        */
->> +       if (id_variant > map_id_variant)
->> +               return 0;
->> +
->> +       if (id_variant == map_id_variant && id_revision >= map_id_revision)
->> +               return 0;
->> +
->> +       /*
->> +        * variant is less than mapfile variant or variants are the same but
->> +        * the revision doesn't match. Return no match.
->> +        */
->> +       return 1;
->> +}
->> diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
->> index 32674ddd2b63..3a90fe650863 100644
->> --- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
->> +++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
->> @@ -3,7 +3,17 @@
->>  #
->>  # where
->>  #      MIDR    Processor version
->> -#              Variant[23:20] and Revision [3:0] should be zero.
->> +#              Variant[23:20] and Revision [3:0] should be set to the
->> +#               lowest supported version for that set of JSON files.
->> +#               Multiple versions of the same CPU can be provided and
->> +#               the highest version JSON files available will be used.
->> +#
->> +#               For example for a single set of JSONs, if variant and
->> +#               revision are both set to 0 then the JSONs will match all
->> +#               CPU versions. If another set is provided with variant
->> +#               set to 1, the previous JSONs will match all versions up
->> +#               to r1p0, and then r1p0 CPUs and above will start to
->> +#               match the next set of JSONs provided.
->>  #      Version could be used to track version of of JSON file
->>  #              but currently unused.
->>  #      JSON/file/pathname is the path to JSON file, relative
->> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
->> index 12e80bb7939b..c6a848f8d93a 100755
->> --- a/tools/perf/pmu-events/jevents.py
->> +++ b/tools/perf/pmu-events/jevents.py
->> @@ -620,28 +620,34 @@ const struct pmu_events_map pmu_events_map[] = {
->>  },
->>  """)
->>      else:
->> +      def int_or_string_key(row):
->> +        try:
->> +          return int(row[0], 0)
->> +        except:
->> +          return row[0]
->>        with open(f'{_args.starting_dir}/{arch}/mapfile.csv') as csvfile:
->> -        table = csv.reader(csvfile)
->> -        first = True
->> -        for row in table:
->> -          # Skip the first row or any row beginning with #.
->> -          if not first and len(row) > 0 and not row[0].startswith('#'):
->> -            event_tblname = file_name_to_table_name('pmu_events_', [], row[2].replace('/', '_'))
->> -            if event_tblname in _event_tables:
->> -              event_size = f'ARRAY_SIZE({event_tblname})'
->> -            else:
->> -              event_tblname = 'NULL'
->> -              event_size = '0'
->> -            metric_tblname = file_name_to_table_name('pmu_metrics_', [], row[2].replace('/', '_'))
->> -            if metric_tblname in _metric_tables:
->> -              metric_size = f'ARRAY_SIZE({metric_tblname})'
->> -            else:
->> -              metric_tblname = 'NULL'
->> -              metric_size = '0'
->> -            if event_size == '0' and metric_size == '0':
->> -              continue
->> -            cpuid = row[0].replace('\\', '\\\\')
->> -            _args.output_file.write(f"""{{
->> +        table = [row for row in csv.reader(csvfile)]
->> +      # Strip the first row or any row beginning with #.
->> +      table = [row for row in table[1:] if len(row) > 0 and not row[0].startswith('#')]
->> +      # Sort on CPUID field for predictable >= version comparisons later on
->> +      table = sorted(table, key=int_or_string_key, reverse=True)
->> +      for row in table:
+>>   {
+>>   "ArchStdEvent": "bad_speculation",
+>>   "MetricExpr": "(100 * (((1 - (OP_RETIRED / OP_SPEC)) * (1 -
+>> ((STALL_SLOT - (CPU_CYCLES if (#p >= 3) else 0) / (CPU_CYCLES *
+>> #slots)))) + ((BR_MIS_PRED * 4) / CPU_CYCLES)))"
 > 
-> nit: kind of weird diff is seeing this as changed, the rest is
-> explainable by the switch to the list comprehension.
+> Could this formula for "CPU_CYCLES if (#p >= 3) else 0" be generalised
+> with a literal (like what we do for #slots)?
 > 
 
-It's just because I copy the whole table first so technically everything
-doesn't need to be inside the 'with' block anymore. But it doesn't
-really matter to leave it in the block and the diff will be much smaller
-so I can undo that change.
+Yes that could work, then we wouldn't need the logic inside the formula.
 
->> +        event_tblname = file_name_to_table_name('pmu_events_', [], row[2].replace('/', '_'))
->> +        if event_tblname in _event_tables:
->> +          event_size = f'ARRAY_SIZE({event_tblname})'
->> +        else:
->> +          event_tblname = 'NULL'
->> +          event_size = '0'
->> +        metric_tblname = file_name_to_table_name('pmu_metrics_', [], row[2].replace('/', '_'))
->> +        if metric_tblname in _metric_tables:
->> +          metric_size = f'ARRAY_SIZE({metric_tblname})'
->> +        else:
->> +          metric_tblname = 'NULL'
->> +          metric_size = '0'
->> +        if event_size == '0' and metric_size == '0':
->> +          continue
->> +        cpuid = row[0].replace('\\', '\\\\')
->> +        _args.output_file.write(f"""{{
->>  \t.arch = "{arch}",
->>  \t.cpuid = "{cpuid}",
->>  \t.event_table = {{
->> @@ -654,7 +660,6 @@ const struct pmu_events_map pmu_events_map[] = {
->>  \t}}
->>  }},
->>  """)
->> -          first = False
+>>   },
 >>
->>    _args.output_file.write("""{
->>  \t.arch = 0,
->> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
->> index 64383fc34ef1..e730d4792bbe 100644
->> --- a/tools/perf/tests/pmu-events.c
->> +++ b/tools/perf/tests/pmu-events.c
->> @@ -14,6 +14,7 @@
->>  #include "util/evlist.h"
->>  #include "util/expr.h"
->>  #include "util/hashmap.h"
->> +#include "util/header.h"
->>  #include "util/parse-events.h"
->>  #include "metricgroup.h"
->>  #include "stat.h"
->> @@ -1027,6 +1028,38 @@ static int test__parsing_threshold(struct test_suite *test __maybe_unused,
->>         return pmu_for_each_sys_metric(test__parsing_threshold_callback, NULL);
->>  }
+>> In this case it's not so bad because we don't need to compare r as well,
+>> but I think it could get worse if r was non 0 or there were more
+>> significant differences to the metric.
 >>
->> +static int test__cpuid_match(struct test_suite *test __maybe_unused,
->> +                                      int subtest __maybe_unused)
->> +{
->> +#ifdef __aarch64__
+>> It also doesn't scale in the same way when we're using auto generated
+>> metrics with the data that Arm is publishing. We're going to treat CPU
+>> versions as a completely new set of JSONs if there are any
+>> differences/fixes in the PMU stuff and just publish a whole new set.
+>> That way any tool that's consuming these can just check the MIDR and use
+>> whichever JSONS are most appropriate.
 > 
-> This feels like it should be in: tools/perf/arch/arm64/tests/
+> So far we have got away with ignoring revision and variant - why change
+> this now just for these arm parts is a good question..
+> 
+>> In theory this shouldn't require
+>> any manual intervention or re-writing of expressions. And it saves every
+>> tool having to solve the same problem.
+> 
+> Sure, but we have tried to reduce duplication as much as possible, and
+> example would be ArchStdEvents
+> 
+
+What's the end goal of reducing duplication? Is it to reduce the binary
+size or to reduce human input?
+
+For the binary size if most of these strings are the same then they are
+de-duplicated and the impact on the binary size is very small.
+
+If it's to save on human input, then not doing it this way has the
+potential to be more work in the long run. At the moment we can just run
+a script and generate the Arm JSONs using what Arm is publishing. We
+might understand all these subtle de-duplication efforts, but anyone
+coming in the future is going to have a hard time understanding.
+Especially if they just want to re-run the script to update some text,
+then there is a big risk of making a mistake when re-applying the manual
+changes.
+
+I'm not completely opposed to the idea of re-working this expression
+this time so that it works in both places, but I think we should be sure
+that we do it for the right reasons.
+
+As an example for comparison, I tried a build with a single set of
+events and both sets (from this change) and the difference in size is
+1760 bytes. Is it really worth starting to edit formulas just to save
+that much space?
+
+>>
+>> It's possible in the future that there are also small changes to the
+>> description text or availability of the events between versions. It
+>> hasn't happened yet, but it gives us the flexibility to do that too.
+> 
+> Here the (handful of) metrics are subtly different between these
+> rev/variant, but all the events are the same. It's hard to justify
+> duplicating almost everything just for that.
+> 
+
+If it saves time and reduces the chance of making mistakes then
+personally I don't see an issue with the duplication.
+
+>>
+> 
+> I am not sure on how to handle this, since we might be bombarded with
+> support for more CPUs with the same MIDR issue and having quirks for all
+> becomes unworkable.
+> 
+
+I really don't see this being used very often. And it will always be
+used much less often than the task of adding entirely new CPUs, so it
+won't cause the number of JSONs to grow faster than that already
+existing work. To be honest there is a non-zero chance that it never
+gets used again.
+
+Although even if we never use it again we still might want to
+re-generate the JSONS because of a typo fix or something so that task is
+just a script run rather than script run, and then re-applying the
+expression fixes.
+
+> Can you just give the idea above on literals/functions in the metricexpr
+> a go, to see how it looks? Maybe Ian has a good idea on similar solutions.
 > 
 > Thanks,
-> Ian
-> 
+> John
 
-Yep that works, I will move it there.
+Yes I can give it a go. Also interested to see what Ian thinks as well.
 
+Thanks
 James
-
->> +       /* midr with no leading zeros matches */
->> +       if (strcmp_cpuid_str("0x410fd0c0", "0x00000000410fd0c0"))
->> +               return -1;
->> +       /* Upper case matches */
->> +       if (strcmp_cpuid_str("0x410fd0c0", "0x00000000410FD0C0"))
->> +               return -1;
->> +       /* r0p0 = r0p0 matches */
->> +       if (strcmp_cpuid_str("0x00000000410fd480", "0x00000000410fd480"))
->> +               return -1;
->> +       /* r0p1 > r0p0 matches */
->> +       if (strcmp_cpuid_str("0x00000000410fd480", "0x00000000410fd481"))
->> +               return -1;
->> +       /* r1p0 > r0p0 matches*/
->> +       if (strcmp_cpuid_str("0x00000000410fd480", "0x00000000411fd480"))
->> +               return -1;
->> +       /* r0p0 < r0p1 doesn't match */
->> +       if (!strcmp_cpuid_str("0x00000000410fd481", "0x00000000410fd480"))
->> +               return -1;
->> +       /* r0p0 < r1p0 doesn't match */
->> +       if (!strcmp_cpuid_str("0x00000000411fd480", "0x00000000410fd480"))
->> +               return -1;
->> +       /* Different CPU doesn't match */
->> +       if (!strcmp_cpuid_str("0x00000000410fd4c0", "0x00000000430f0af0"))
->> +               return -1;
->> +#endif
->> +       return 0;
->> +}
->> +
->>  static struct test_case pmu_events_tests[] = {
->>         TEST_CASE("PMU event table sanity", pmu_event_table),
->>         TEST_CASE("PMU event map aliases", aliases),
->> @@ -1034,6 +1067,7 @@ static struct test_case pmu_events_tests[] = {
->>                          "some metrics failed"),
->>         TEST_CASE("Parsing of PMU event table metrics with fake PMUs", parsing_fake),
->>         TEST_CASE("Parsing of metric thresholds with fake PMUs", parsing_threshold),
->> +       TEST_CASE("CPUID matching", cpuid_match),
->>         { .name = NULL, }
->>  };
->>
->> --
->> 2.34.1
->>
