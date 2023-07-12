@@ -2,161 +2,143 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A5EC0015E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 15:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CAAC001DC
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 16:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233736AbjGLPjf (ORCPT
+        id S233080AbjGLQZf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Jul 2023 11:39:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54292 "EHLO
+        Wed, 12 Jul 2023 12:25:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233731AbjGLPjf (ORCPT
+        with ESMTP id S233142AbjGLQZR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Jul 2023 11:39:35 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 824091989
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 08:39:34 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2145A6182F
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 15:39:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C662C433C7;
-        Wed, 12 Jul 2023 15:39:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689176373;
-        bh=kd5GqcBZiouq7TUihxd1vamZF0QZihUM3A0Xx+8Vd+Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TebfYEGi8HDqVFsi2KAYUjKROan2KNGntvLx+K+ifVbCPcMx0x83V1O+Xf6OCbuCO
-         J285wr1USjuQ+UD3oUG8gwQ4tykNeoewzZW/PamcL5iEUU55LWjmymlcAYUzDlSrtD
-         uXga3oKr9JLlP2MqkJbvUZD36UfdqSc8Goaoc2Fbim0+k0w/B6LDXUt3YXCDwP1rTQ
-         9UZeHO1uU4U7dn9hynSRaOrcMhrcwFjD/pIGx2YlBcKOGYqkzkJHyWZLikmdfoxEb+
-         A/Nvl7AWhAsWg4ey2zT95wCytFj8/Ly/CyEwqY3nFIqKsOYZtrRNfwGwD1drNR2+8b
-         DpMSKMP/4lzHw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 69C5B40516; Wed, 12 Jul 2023 12:39:30 -0300 (-03)
-Date:   Wed, 12 Jul 2023 12:39:30 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>, andrii@kernel.org,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>
-Subject: Re: [BUG] perf test: Regression because of d6e6286a12e7
-Message-ID: <ZK7JMjN9LXTFEOvT@kernel.org>
-References: <ab865e6d-06c5-078e-e404-7f90686db50d@amd.com>
- <CAEf4BzZK=zm9PkUwzJRgeQ=KXjKOK9TENUMTz+_FmU6kPjab7Q@mail.gmail.com>
- <78044efc-98d7-cd49-d2b5-4c2abb16d6c9@amd.com>
- <CAEf4BzZCrDftNdNicuMS7NoF+hNiQEQwsH_-RMBh3Xxg+AQwiw@mail.gmail.com>
- <146e00be-98c8-873d-081f-252647b71b12@amd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        Wed, 12 Jul 2023 12:25:17 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2076.outbound.protection.outlook.com [40.107.244.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6BB2213B;
+        Wed, 12 Jul 2023 09:25:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oMQY69OsbHpYa8pdE2U0rC6WHGhZe/guMD/qRM/yzjmEeVpE226KswZ4lpWNvY3qyPs5ZiO+shWV4/pX17WSKRGkYW+Pjfu+fxmad8GzXuHXpBdG3uwmO2jpe//zhHwFA7/rGtrDiXFb54Q+HT/hVz3mT+rMpcZnySXi1u5XL/UCpoN5BZkZ2VohoIofY2YIGrEYJKn4dyIUhuTJ6yBD0yQhLTwWWRY1dZUUetipNUiLwNARNTXkobfP2DWm+1elelycVg1KjPzjWt1hDF3sGZWo0gBalaLm8DYh+xnhddR9xskiaT589YJks3R5MRssF4u+fwxa4N/UU28T7La8Tw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/3/47gkvMH55/0CMpRSovEUXrZ/vEpWrsM9f3h0jkD4=;
+ b=WSztg56+BI7hLJOvNlhO7fWZsctji2JzCErEhsSR43Agh1WKN5IuBUiAAEFHLwC9KTetS5LueozC8iiH3KsumjfcI01eGXE9/cjO9+ZQKVSYSUpH1eXumncOsKcdz0Q3Rx7nL7VBfQDnryc9q/D6uN8d0TYDA0xSaauSMcUIHDuuoWAZ6ykelru3fK2hOadRLyg8+m+fPXTWab1TCj/7sd4tcUCgFv1tUlfv+Kw5pwrkcMKPuYPLv6lxFYUbU5uNBNEB72ybrndExjyLmO71xf/fzeiRNQQCY8iJjOAxWQ2Zeh8+Pfz+cOS5QOM3Lbgkkxvezl0S7OF1Q/PCWfNhpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/3/47gkvMH55/0CMpRSovEUXrZ/vEpWrsM9f3h0jkD4=;
+ b=nmP0PBH9CMjr7HUHzTS0M6Qlb2T3j2VcFqwUjXoiZCnbQ6TjLGGdInTY/P5tAk5FcNr7Fbw7cYqQcV0DvDIVdBdV/AcNmTLw3LofU6RDO+4tOuNznBgrzeIGbiucGPtdvEgOb9OcHKaNton06mzHJ9qLeF4UV2leme4ck9kslkg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BN9PR12MB5115.namprd12.prod.outlook.com (2603:10b6:408:118::14)
+ by SJ0PR12MB5405.namprd12.prod.outlook.com (2603:10b6:a03:3af::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.30; Wed, 12 Jul
+ 2023 16:25:01 +0000
+Received: from BN9PR12MB5115.namprd12.prod.outlook.com
+ ([fe80::2dc3:c1:e72d:55bc]) by BN9PR12MB5115.namprd12.prod.outlook.com
+ ([fe80::2dc3:c1:e72d:55bc%7]) with mapi id 15.20.6588.022; Wed, 12 Jul 2023
+ 16:25:01 +0000
+Message-ID: <83f11260-cd26-5b46-e9d4-1ca97565a1d0@amd.com>
+Date:   Wed, 12 Jul 2023 12:24:57 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 3/5] drm/amdkfd: use vma_is_stack() and vma_is_heap()
+Content-Language: en-US
+To:     Christoph Hellwig <hch@infradead.org>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        selinux@vger.kernel.org
+References: <20230712143831.120701-1-wangkefeng.wang@huawei.com>
+ <20230712143831.120701-4-wangkefeng.wang@huawei.com>
+ <ZK671bHU1QLYagj8@infradead.org>
+From:   Felix Kuehling <felix.kuehling@amd.com>
+In-Reply-To: <ZK671bHU1QLYagj8@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <146e00be-98c8-873d-081f-252647b71b12@amd.com>
-X-Url:  http://acmel.wordpress.com
+X-ClientProxiedBy: YQBPR0101CA0048.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:1::25) To BN9PR12MB5115.namprd12.prod.outlook.com
+ (2603:10b6:408:118::14)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN9PR12MB5115:EE_|SJ0PR12MB5405:EE_
+X-MS-Office365-Filtering-Correlation-Id: 54d2cf1a-4060-42c6-f067-08db82f48a53
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DdS/k/UyI757s5MIVZCkAnaiewmbp9b9MhABMbpSasgeLFu+dl+cRwaDZ6j501gaswKmBIhVv/3D0xWQcsKXbXvQtcHDbTX3kBzaPmoLYP7Qb6vX3uyCdVaPZaD8yuZZFUq+xCdZ+FziuSHce91BeZlZGB7uEtSW4aTJU1ohNIK+F7HYz8AhXpCtadbA8NL+OmajUF6q7YE/687Be48OK9imbGNdWy04mDUvOWOySO6/5TI1zXB1vCTG3nX+dDFRJWmAjoiA16gbTmTWPMswGszLFFNw86eOyHuzvnrMcn+7SqmmpizYtOscSvvddU1RNAhVSFDvtjjou1GHlbFisSV22K3/suW37Ji3frPD+uxZs6JB9R09cUctI6ftQeeb/zmc8OY5v014qpgaUt/yLpN0JZPfhjq8tKVV3yKCXc9gni2VxT3zfg2FNggzW8U2v0/ZU61rbUP5Uy/93xtLEN1R/WMDLkGIsDfQvKDuOvQOhynwrP7K8qTQNzU24QRwaCnMRvOOSg8sUvexe4PLnTIlDroX8er1DaVD84z3Pss3NjD793FpmqCMSATJPAtecp8OSZ6YsM5gnOiTXd9HKorVrWErsxA0zAsKBQo0LWvy1vVBc0TsuzzlQzvP6aGW47OryX3tbXuSKMGI32Qqhw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5115.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(366004)(39860400002)(136003)(376002)(396003)(451199021)(38100700002)(31696002)(86362001)(31686004)(186003)(6666004)(36756003)(110136005)(6486002)(6506007)(26005)(5660300002)(2616005)(6512007)(66946007)(2906002)(66556008)(316002)(4744005)(66476007)(7416002)(8676002)(44832011)(8936002)(478600001)(83380400001)(4326008)(41300700001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?U0V0cy96UU1JUitoMURIQ3RkZG5sbFNFT3FPbTROeCs5VDllYWYrZzdwNjBR?=
+ =?utf-8?B?djNCL1VzQUd6WXRHUGxqQmNoZ2J2VTcvNkRNT2ZyK1FQMUFKOXdGOFFpWTd4?=
+ =?utf-8?B?cFo3YTh1cmtCVTBReGdZdTFaK092SkRsbTlXSG4vVFliTXVjdGpxZyt5WW15?=
+ =?utf-8?B?SStxMXVvZ1NWaXk2T0VSVStySHRzT1FCeFkyS09JL3JHTm9WRGYxZnlTZFpI?=
+ =?utf-8?B?SkJsckFNYnFXNjF1N1FoeTZYNGJ5cXUvdVZkWGZJUjV0RzFOL2FLQ2MzdE1V?=
+ =?utf-8?B?d0dHYUJRL3VDbDB2TjRQMlZVRDB5cnpUYVhsdzB3NkVnWW9RWXJhSnJGY3hK?=
+ =?utf-8?B?RUpXMEsrSElxL2FRLzVGdis1MVBsSmtoaG5jcytzZDJmeUV2bzd3UUJ2d2VL?=
+ =?utf-8?B?eCttakhkUWdpSlZPazNZY0dBWlphZ20yK3dwckEzaFRoWU1MNUFrOU5zKzhp?=
+ =?utf-8?B?YU5FMWFjcFJHaEIyZU5USnJiaW9VUXpRK3JhWDIyOHRsZ29OQldmNG1ibWwz?=
+ =?utf-8?B?ZkNWUHQ4dk9ycUdkVlY2SkloUlpHMzg0bjZkRUxMaXBSVDRQZkEwSmNpV2xa?=
+ =?utf-8?B?Qy85bk94enVjTmQ4ZmN2Mml0bFU0M0VtTytVKzV6My9qeTVqVUVkTnU5Y0RC?=
+ =?utf-8?B?d2RlTG9xUHJrcTlvTlo1M0hSV3Y1aFFvMVhzZmh6UlVncTBWZC9zSC9MQ29B?=
+ =?utf-8?B?aDl2NEVuNHpwSTkxZXdBZWdwVGdQWHNYWkdvbjlVeHNoMHRScms3amc5ckhj?=
+ =?utf-8?B?MDNFWHMxQmJXNVhwdGFtZHR6dklPMTdBUDFONUtITm8vem5YM3hEQ25OeDhZ?=
+ =?utf-8?B?ZmtnL25XN2pOS0JSVmdIQmZsUC93SDRQempaK2Z3VUpCM3R2cE1jRTZFdHlQ?=
+ =?utf-8?B?TndBTXROeFJuc0RhR2dVVmtPaEh4QUxIN1Q3Q0QwakJVQ3FNUlV0YjNSVllF?=
+ =?utf-8?B?RWIzSzZHR1ZETFZ0ZEtMRzRVMkVyVFdaR3pVNStkWXFxOUtaNnRNVEx6QXQ4?=
+ =?utf-8?B?RnlFMklaYlNwRW41K3cxU3dDVVZibTBpcmhOTkpRMFplWFBnL3RvZlUxdU5J?=
+ =?utf-8?B?NWlvdGZvL3gwRWtxeVFSeGFnWVpqOU5CUWhQM3ZMSlE2eHNLNGhjZjJoNzIx?=
+ =?utf-8?B?R2l4alQvb0NkcjlnRzB5UCtiMlVGdk9SajlQV3EvY01CSVRFeFNBbXpzUExG?=
+ =?utf-8?B?QVlSWTRGWThHZkNKdER2MHd4d0l3S1Y4L040bDFXc1NrYlU3Qnl4VnBaNU03?=
+ =?utf-8?B?UGVaN1IvWi9ZWVRISjVrZkJHeFZvc2k4b3FFNUtCU3BKVTRQNFgrcjdWemQx?=
+ =?utf-8?B?WFNXd0dNenpiTlJpNkkvMTF1V2ZQZ21oK0tXQlZLMUVyRitveENoOURDN0p0?=
+ =?utf-8?B?Wi9ObWlLdU5iS1hPN2VzVmMzVW5SRko4anZVRE9tUlhYU0t2R0dweWZ4VmZR?=
+ =?utf-8?B?c1dGc3BEbkEyOWVuRy9pQ0dtUzBvcmRkZkp6SHpDNDVaZXVHY1krTkRkdkVN?=
+ =?utf-8?B?OCtpblNZK3lvODJFcGZoUDJaNS9NNmRJRll6ellwdTJIU0lYd3NnVzIzQ3hO?=
+ =?utf-8?B?emYxZHVkV2VES0c2N0gwKzhQcHFCaEd4Y1BVc1B5N0lUZnI0QXFHenhEY2Jp?=
+ =?utf-8?B?TXdZZVNRcTBHeElwVWhSS2x6WGttR29oaWJadTkvSDVvYTFqQ1N3UFJCcTNz?=
+ =?utf-8?B?cCs1aHZicjJXbWZIa0pUZElmWCt4NFZRZ0pjOUlMK2g5MFhscWF3MnpNQW5T?=
+ =?utf-8?B?YnRMeVlSVFBUN2NyZ29yVVovUkJGWlNjR3RJRjArNVVTNVBtV1dqR0FDaWs5?=
+ =?utf-8?B?WmxLeVh1QU04Y2VnM2pNYnViTlJBdUlsUlhTeXE4bjYzaEd4L2xrRTJSOE1Y?=
+ =?utf-8?B?czd3WnRwRFdrMzJBT1lma0ZjUThjbllOTmhTalpsVDBmWEdLRUZMZkNSb2RS?=
+ =?utf-8?B?VjFlUk10UnhZUzVxMWlWT05Na0FrSUwrQ3JJMTg5cHFzQjVOTGhodlN1MkVs?=
+ =?utf-8?B?ekpEOHlneE9FZGhQWnhNbWxIT2NxVnpPTjZjTHRZYjlpREJSQ3Q1VnB6cmRo?=
+ =?utf-8?B?ekRTUU4zNERQZXJKVzZBeGZYcHpQbS9YQkhES0VDbElFVVdxbHpGYk5aMzFR?=
+ =?utf-8?Q?k6zPpGmn6hJnz4s4tpRnwbJVg?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54d2cf1a-4060-42c6-f067-08db82f48a53
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5115.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jul 2023 16:25:00.8883
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: C1zh1/k5wDb4P/oLtfnufCF8yl68ug1VUFVZPmHwO/NuQxu1Q3mWaf+9JHW8ifrz3c+Ggr0EtkKciPcpuSSyIA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5405
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Jul 12, 2023 at 07:38:58PM +0530, Ravi Bangoria escreveu:
-> On 11-Jul-23 3:06 AM, Andrii Nakryiko wrote:
-> > On Sun, Jul 9, 2023 at 9:05 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
-> >> On 08-Jul-23 4:46 AM, Andrii Nakryiko wrote:
-> >>> On Wed, Jul 5, 2023 at 9:39 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
-> >>>> I'm seeing perf test failure because of commit d6e6286a12e7 ("libbpf:
-> >>>> disassociate section handler on explicit bpf_program__set_type() call").
+Allocations in the heap and stack tend to be small, with several 
+allocations sharing the same page. Sharing the same page for different 
+allocations with different access patterns leads to thrashing when we 
+migrate data back and forth on GPU and CPU access. To avoid this we 
+disable HMM migrations for head and stack VMAs.
 
-> >>> Yep, this commit would reset catch-all custom handler, which perf is
-> >>> setting. I've just sent a fix upstream ([0]). And once it lands, I'll
-> >>> cut a v1.2.1 libbpf bugfix release with just this fix on top of v1.2.
+Regards,
+   Felix
 
-> >>> Can you please double-check that this patch indeed fixes the issue for
-> >>> you? I tried to do this locally, but for me perf test 42 fails both at
-> >>> current bpf-next, with the above commit reverted, and with my fix
-> >>> applied on top. So I can't be 100% sure.
 
-> >>>   [0] https://patchwork.kernel.org/project/netdevbpf/patch/20230707231156.1711948-1-andrii@kernel.org/
-
-> >> Thanks. A quick test seems to be working fine.
-
-> > Alright, thanks for confirming! I've just released v1.2.1 bug fix
-> > release with just this fix on top of v1.2.
-
-> > Thanks for reporting!
-
-> > But given v1.2 was cut on May 1st, and the offending commit landed
-> > some time late March, I wonder how did this slip through the cracks
-> > and go unreported for so long? Is there something we can do to catch
-> > these perf-only regressions a bit sooner?
-
-> I guess it got slipped because that patch went in via bpf tree. Would
-> it be possible to run bpf related perf tests at the time of applying
-> libbpf patches? Arnaldo might have better ideas :)
-
-Right, perhaps the libbpf CI could try building perf, preferably with
-BUILD_BPF_SKEL=1, to enable these tools:
-
-[acme@nine linux]$ ls -la tools/perf/util/bpf_skel/*.bpf.*
--rw-r--r--. 1 acme acme  5581 Jul  7 12:38 tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
--rw-r--r--. 1 acme acme  1764 Jul  7 12:38 tools/perf/util/bpf_skel/bperf_follower.bpf.c
--rw-r--r--. 1 acme acme  1438 Jul  7 12:38 tools/perf/util/bpf_skel/bperf_leader.bpf.c
--rw-r--r--. 1 acme acme  2290 Jul  7 12:38 tools/perf/util/bpf_skel/bpf_prog_profiler.bpf.c
--rw-r--r--. 1 acme acme  2164 Jul  7 12:38 tools/perf/util/bpf_skel/func_latency.bpf.c
--rw-r--r--. 1 acme acme  9017 Jul  7 12:38 tools/perf/util/bpf_skel/kwork_trace.bpf.c
--rw-r--r--. 1 acme acme 10147 Jul 12 11:49 tools/perf/util/bpf_skel/lock_contention.bpf.c
--rw-r--r--. 1 acme acme  6109 Jul  7 12:38 tools/perf/util/bpf_skel/off_cpu.bpf.c
--rw-r--r--. 1 acme acme  4932 Jul  7 12:38 tools/perf/util/bpf_skel/sample_filter.bpf.c
-[acme@nine linux]$
-
-There are 'perf test' entries for the BPF support in perf that is pre
-libbpf skel functionality above and as well some for the libbpf based
-skel features, such as:
-
-[root@quaco ~]# perf test -vvv contention
- 87: kernel lock contention analysis test                            :
---- start ---
-test child forked, pid 213314
-Testing perf lock record and perf lock contention
-Testing perf lock contention --use-bpf
-Testing perf lock record and perf lock contention at the same time
-Testing perf lock contention --threads
-Testing perf lock contention --lock-addr
-Testing perf lock contention --type-filter (w/ spinlock)
-Testing perf lock contention --lock-filter (w/ tasklist_lock)
-Testing perf lock contention --callstack-filter (w/ unix_stream)
-Testing perf lock contention --callstack-filter with task aggregation
-Testing perf lock contention CSV output
-test child finished with 0
----- end ----
-kernel lock contention analysis test: Ok
-[root@quaco ~]#
-
-We could perhaps add support for some kind of tags to the tests, to
-help run just the ones that use bpf and then you could use:
-
- # perf test --uses bpf
-
-At first we would just add this tag, then we would use it for other
-stuff as the need arises to run just a subset of the tests.
-
-But for now you could start perhaps with:
-
-[root@quaco ~]# perf test LLVM ; perf test "BPF " ; perf test "lock contention"
- 40: LLVM search and compile                                         :
- 40.1: Basic BPF llvm compile                                        : Ok
- 40: LLVM search and compile                                         :
- 40.1: Basic BPF llvm compile                                        : Ok
- 40.3: Compile source for BPF prologue generation                    : Ok
- 40.4: Compile source for BPF relocation                             : Ok
- 42: BPF filter                                                      :
- 42.1: Basic BPF filtering                                           : Ok
- 42.2: BPF pinning                                                   : Ok
- 42.3: BPF prologue generation                                       : FAILED!
- 87: kernel lock contention analysis test                            : Ok
-[root@quaco ~]#
-
-- Arnaldo
+Am 2023-07-12 um 10:42 schrieb Christoph Hellwig:
+> On Wed, Jul 12, 2023 at 10:38:29PM +0800, Kefeng Wang wrote:
+>> Use the helpers to simplify code.
+> Nothing against your addition of a helper, but a GPU driver really
+> should have no business even looking at this information..
+>
+>
