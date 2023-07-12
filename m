@@ -2,135 +2,155 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D20EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 06:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5A1EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 08:35:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232040AbjGLGxA (ORCPT
+        id S231855AbjGLIe7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Jul 2023 02:53:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46680 "EHLO
+        Wed, 12 Jul 2023 04:34:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232016AbjGLGw4 (ORCPT
+        with ESMTP id S231690AbjGLIes (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Jul 2023 02:52:56 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EAF9188
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 23:52:54 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-c6dd0e46a52so5404333276.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 23:52:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689144773; x=1691736773;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=y/xEXbInlbT/mWlE+l7wvB8yv7wRGOs96AGe4Pwk5fs=;
-        b=gebAwvel5szqUUFm9xDJ9B6JG8HuRDc6wDQp6f5xICBCCEHHzJH+84wytnFGd2KxG1
-         U7b1aydvyh6BVXn5dlel2aMv0uVvRmuzqqVYLo83KiQ1UX1qCBC6AIUxYnwfkV4ORFfB
-         ns8Gb1Fn97E21Wmfb2nRru6rmKBFRbAjEkTYkL86cs5NqVYexz0rxWJASxwVGPK8br8N
-         Wb0gsLZrabD8MeqkrfTQOLSvIGjY5lOvFvpkNoKF79Jx3Gvvz3zZWB/YaRJ+piFEAGyt
-         wOzKkk+Lo4e1XC9mTndAzl5NTnBWMHQDdDUu02hQszNI3sWaEE81PSOzPiCQt3VgPBwn
-         BWZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689144773; x=1691736773;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=y/xEXbInlbT/mWlE+l7wvB8yv7wRGOs96AGe4Pwk5fs=;
-        b=UGjawhkiJl0yqc/7T5S8QaBT7z/aW1fTHvWjxJYvOO3cKuq1spKOixc8Z7sSpeilEj
-         Cl0vRyamE6v0+fGGt0IBYu8M9nmeON67uPPcEKrw5Vno51I3ERFVxHEX/cwm+Ph/bjOC
-         qX7mtj+j+w6OXsScjDvwx9s88zfIU+jKCtpNhYcsJs8Odkm6Beui58gNKLxSk/J8ScKa
-         BAWoNPUHPmoReiKvMJvIB0DGgAHmDlnwjH699TWx46jrt5MfqYNzfJsryySBfx63VM4T
-         cEcL7Cl4GlenNb0y+8UUV4rvzlscknVetZLB+Nayp+qPhWTbHdU3otRqu4n3oXRyJDxM
-         0YhQ==
-X-Gm-Message-State: ABy/qLbUs6uswXUrfMooOQ3jkXOzl+Si513jMXxxiSH+MOkuLMce0GDj
-        GSIqq18kcoOAKLtpeaJTinCQnx/PVN2/
-X-Google-Smtp-Source: APBJJlGYOB+tzfAur3zuZF33qiFoQQ9JvWC0LENO29amDw6ZfvkTZnqGcnmJD2Oo/AuhU94vvM4fDKZkYMZb
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:9d6e:a38f:b398:c8b4])
- (user=irogers job=sendgmr) by 2002:a05:6902:508:b0:c4b:6ed6:6147 with SMTP id
- x8-20020a056902050800b00c4b6ed66147mr164772ybs.9.1689144773629; Tue, 11 Jul
- 2023 23:52:53 -0700 (PDT)
-Date:   Tue, 11 Jul 2023 23:52:50 -0700
-Message-Id: <20230712065250.1450306-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.41.0.390.g38632f3daf-goog
-Subject: [PATCH v1] perf parse-events: Avoid segv if PMU lookup fails for
- legacy cache terms
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 12 Jul 2023 04:34:48 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E77D46A1;
+        Wed, 12 Jul 2023 01:31:12 -0700 (PDT)
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36C8Lees002969;
+        Wed, 12 Jul 2023 08:31:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : content-transfer-encoding
+ : mime-version; s=pp1; bh=jf6odRfBfMhCoLLCi3/EFoWJ+oADv8iSXTDyUmCpUjc=;
+ b=dEhLVonKjY5w63xh1Pi1vOWYf43DaTpEc223FbT4Xf2RTNxK+v37wRWCNI9JOY6InsY4
+ j8TokxC1PNGlaml1VKLN0FZOU7GiSWgXCb1KmoUuFB19OEiqGmXulfeaRQoGaaOo6WXR
+ w3GX1/8qoyMfGE6iCb87Bm70mxjynQAjek8Y9Ia5q8jQbg2ATpzi98pAUEFDSDxT7nxc
+ RwkjVvONL7LueRnstrM6KSd8jI1uMF7cE8qBHC9fQaZArG+SvSGt0ArMzgIeAplWD84L
+ fTpR+uQo45tqiYL89JTKYwyiiXy+vgWAhRRkm97gvkx32ak+PDT6RbI4b+ztSdG2VT5q BQ== 
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rsrkmg5qg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 12 Jul 2023 08:31:00 +0000
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36C4q8tA012827;
+        Wed, 12 Jul 2023 08:30:58 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma02fra.de.ibm.com (PPS) with ESMTPS id 3rpye5hupa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 12 Jul 2023 08:30:58 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36C8Us0o43188534
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Jul 2023 08:30:54 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 97F9820043;
+        Wed, 12 Jul 2023 08:30:54 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 38A0020040;
+        Wed, 12 Jul 2023 08:30:54 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Wed, 12 Jul 2023 08:30:54 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, wangnan0@huawei.com, jolsa@kernel.org
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf build: Fix broken feature check for clang due to C++ standard and changed library packaging
+Date:   Wed, 12 Jul 2023 10:30:37 +0200
+Message-Id: <20230712083037.4081444-2-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230712083037.4081444-1-tmricht@linux.ibm.com>
+References: <20230712083037.4081444-1-tmricht@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: zNQWBdYkHHxlzT3QmHedOVIINGTECUd-
+X-Proofpoint-ORIG-GUID: zNQWBdYkHHxlzT3QmHedOVIINGTECUd-
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-12_04,2023-07-11_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 mlxscore=0 suspectscore=0 adultscore=0 mlxlogscore=999
+ clxscore=1011 impostorscore=0 phishscore=0 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2307120070
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-libfuzzer found the following command could segv:
-```
-$ perf stat -e cpu/L2,L2/ true
-```
-This is because the L2 term rewrites the perf_event_attr type to
-PERF_TYPE_HW_CACHE which then fails the PMU lookup for the second
-legacy cache term.
+Perf build auto-detects features and packages already installed
+for its build. This is done in directory tools/build/feature. This
+directory contains small sample programs. When they successfully
+compile the necessary prereqs in form of libraries and header
+files are present.
 
-The new failure is consistent with repeated hardware terms:
-```
-$ perf stat -e cpu/L2,L2/ true
-event syntax error: 'cpu/L2,L2/'
-                            \___ Failed to find PMU for type 3
+Such a check is also done for clang. And this check fails.
 
-Initial error:
-event syntax error: 'cpu/L2,L2/'
-                            \___ Failed to find PMU for type 3
-Run 'perf list' for a list of valid events
+Fix this and update to the latest C++ standard and use the
+new library provided by clang (which contains new packaging)
+see this link for reference:
+ https://fedoraproject.org/wiki/Changes/Stop-Shipping-Individual-Component-Libraries-In-clang-lib-Package
 
- Usage: perf stat [<options>] [<command>]
+Output before:
+ # rm -f ./test-clang.bin; make test-clang.bin; ./test-clang.bin; \
+	ll test-clang.make.output
+ g++  -MD -Wall -Werror -o test-clang.bin test-clang.cpp \
+	 	> test-clang.make.output 2>&1 -std=gnu++14 \
+	-I/usr/include 		\
+	-L/usr/lib64		\
+	-Wl,--start-group -lclangBasic -lclangDriver	\
+	  -lclangFrontend -lclangEdit -lclangLex	\
+	  -lclangAST -Wl,--end-group 			\
+	-lLLVM-16	\
+			\
+	> test-clang.make.output 2>&1
+ make: *** [Makefile:356: test-clang.bin] Error 1
+ -bash: ./test-clang.bin: No such file or directory
+ -rw-r--r--. 1 root root 252041 Jul 12 09:56 test-clang.make.output
+ #
 
-    -e, --event <event>   event selector. use 'perf list' to list available events
-$ perf stat -e cpu/cycles,cycles/ true
-event syntax error: 'cpu/cycles,cycles/'
-                                \___ Failed to find PMU for type 0
+File test-clang.make.output contains many lines of unreferenced
+symbols.
 
-Initial error:
-event syntax error: 'cpu/cycles,cycles/'
-                                \___ Failed to find PMU for type 0
-Run 'perf list' for a list of valid events
+Output after:
+ # rm -f ./test-clang.bin; make test-clang.bin; ./test-clang.bin; \
+	cat test-clang.make.output
+ g++  -MD -Wall -Werror -o test-clang.bin test-clang.cpp \
+	 > test-clang.make.output 2>&1 -std=gnu++17	\
+	-I/usr/include 		\
+	-L/usr/lib64		\
+	-Wl,--start-group -lclang-cpp -Wl,--end-group	\
+	-lLLVM-16	\
+			\
+	> test-clang.make.output 2>&1
+ #
 
- Usage: perf stat [<options>] [<command>]
-
-    -e, --event <event>   event selector. use 'perf list' to list available events
-```
-
-Signed-off-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 ---
- tools/perf/util/parse-events.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/build/feature/Makefile | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 5dcfbf316bf6..acde097e327c 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1216,6 +1216,14 @@ static int config_term_pmu(struct perf_event_attr *attr,
- 	if (term->type_term == PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE) {
- 		const struct perf_pmu *pmu = perf_pmus__find_by_type(attr->type);
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index f8db69654791..0b4a6e43c5cc 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -353,12 +353,10 @@ $(OUTPUT)test-llvm-version.bin:
+ 		> $(@:.bin=.make.output) 2>&1
  
-+		if (!pmu) {
-+			char *err_str;
-+
-+			if (asprintf(&err_str, "Failed to find PMU for type %d", attr->type) >= 0)
-+				parse_events_error__handle(err, term->err_term,
-+							   err_str, /*help=*/NULL);
-+			return -EINVAL;
-+		}
- 		if (perf_pmu__supports_legacy_cache(pmu)) {
- 			attr->type = PERF_TYPE_HW_CACHE;
- 			return parse_events__decode_legacy_cache(term->config, pmu->type,
+ $(OUTPUT)test-clang.bin:
+-	$(BUILDXX) -std=gnu++14					\
++	$(BUILDXX) -std=gnu++17					\
+ 		-I$(shell $(LLVM_CONFIG) --includedir) 		\
+ 		-L$(shell $(LLVM_CONFIG) --libdir)		\
+-		-Wl,--start-group -lclangBasic -lclangDriver	\
+-		  -lclangFrontend -lclangEdit -lclangLex	\
+-		  -lclangAST -Wl,--end-group 			\
++		-Wl,--start-group -lclang-cpp -Wl,--end-group	\
+ 		$(shell $(LLVM_CONFIG) --libs Core option)	\
+ 		$(shell $(LLVM_CONFIG) --system-libs)		\
+ 		> $(@:.bin=.make.output) 2>&1
 -- 
-2.41.0.390.g38632f3daf-goog
+2.41.0
 
