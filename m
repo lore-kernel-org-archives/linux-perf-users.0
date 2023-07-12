@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CDFEB64DC
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 01:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15691EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 01:08:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229786AbjGLBE6 (ORCPT
+        id S230397AbjGLBI0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Jul 2023 21:04:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45388 "EHLO
+        Tue, 11 Jul 2023 21:08:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229512AbjGLBE6 (ORCPT
+        with ESMTP id S229742AbjGLBIY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Jul 2023 21:04:58 -0400
-Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F23D510CF
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 18:04:52 -0700 (PDT)
-Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-40371070eb7so84771cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 18:04:52 -0700 (PDT)
+        Tue, 11 Jul 2023 21:08:24 -0400
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12C0410CF
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 18:08:20 -0700 (PDT)
+Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-40371070eb7so85551cf.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 18:08:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689123892; x=1691715892;
+        d=google.com; s=20221208; t=1689124099; x=1691716099;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=B/059FfCH0EmoBEDbU/cU2PZjQH7sjhtwTjXzIB0Gwg=;
-        b=Ju93j28ZMGUftBoTIu5zQLJ4zRxv4BsLGvXlobLTg0CZ+uRq7VnC3lGq43yl2YcGIX
-         bAwWF2yry5Rn4ZARXcjZWsjYbzjqT1VvOs1KAInoIKR5/W8njc2hs6IYEFWv2E52KxbO
-         eV9Rkac6wwk1+2sveepKULt0ZiHTWmKeZBmzSUM75gv5f6cN+NhCrwB06rowTPXnqi7X
-         4aFF68Hjrdou7MeRsGGMDrzZAJhog9tbd/1MT6V+KrPZAMPS3eg8g4Re6XnDqU/wiSpG
-         3i11B73HI6rRJ9sjJCj4KHZ08ejEniCD5IoZYML3prNlqu3TiQYfP9nNKqc+XRPaH2gG
-         FiOg==
+        bh=vTLbIEaDAyxHMgEDXvVLlgIZELdDYAWBC+pwyOI6ZbM=;
+        b=DAOLGGPgeteOrwyFXYRVnSovxDwZEenMYlb4HuVrXkdYqyY1ur6FZv3ZDES3Z70l41
+         FfnKscV9P2iyrVCsns/mw9IB29DAWcmd0lt+LOOP9UknmyUqbw5hL6kIcotHkrFywxwQ
+         lkGTn4Elte8CUzk9L2tjRHKv+6obOSJOIgxQsSwROQFRgoF8QCWgeSsQeE85jnoST2Ef
+         8pSYRE9GtoO4C/C13lSWj2oEprXodyds09Eh9/vhkPqB9LqpbAVSLW5dbIqL13LDvD6G
+         UrwKuB4aT7xPeMyFmcSwdY7HvAp5q6GeYPw1QKuvhR0luGJ/S6efxxLJIZlUNLVvmu2Z
+         QRaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689123892; x=1691715892;
+        d=1e100.net; s=20221208; t=1689124099; x=1691716099;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=B/059FfCH0EmoBEDbU/cU2PZjQH7sjhtwTjXzIB0Gwg=;
-        b=ficPLfmNXpXiPBComqyxjQHd4NEKSFlelfuW4t9mQlA9OaFKW1emlHTIR26X4fqQhj
-         3cUDbL1MbGPkjvqfYSL3Cu0WFsrR+xDyjWLSCJ56kJdqYEzFRH7Rbb+moW5qdx3RVXLF
-         e1wDol1xPZnlAa1EIfcNz3rPuWtWjEHSwx4DDWpL6agM7GyDpPcTbsbkd/AxCMSAEkFh
-         OV3Zl+4nCVTsY0/frFijXPSYIckyv3bfUi0zgb8OtnFvf8BaT3GG8s9fFbIsH4SjIjBc
-         LV6eFhhMkVXrVc4BNPV2sBJh5fZLIGQ1wW/iU+63/5T4mRIS1W4DLbuvnokEFA4OWl8K
-         vFUQ==
-X-Gm-Message-State: ABy/qLZV6pat9PK1kPDL6i6Iza0q8Mehw4bpHkRXt5IL35jZk1JS1lqo
-        heEnhBxnj/M41Dk7JEA8l6MidueK1B98tJ3jEKEnUQ==
-X-Google-Smtp-Source: APBJJlE/YOXzIw5ayL8ROL2GBytmEAmtkdUqAGjQS3D1gjLTFrqT8KA33lUFnFM71RpAit9CT8Id6IuXVirVzqkV5Jc=
-X-Received: by 2002:ac8:5a8b:0:b0:3f8:5b2:aef2 with SMTP id
- c11-20020ac85a8b000000b003f805b2aef2mr115279qtc.26.1689123890967; Tue, 11 Jul
- 2023 18:04:50 -0700 (PDT)
+        bh=vTLbIEaDAyxHMgEDXvVLlgIZELdDYAWBC+pwyOI6ZbM=;
+        b=leXK1ov8J6gyZdwNuWJSvdw9ysHywGoWBi4T1/VXTNnHeKrB8r2WaWCB/JaaCzdmbt
+         WkvqmEmU1uZPrJs1WBMBpG5FEp1E0+nx+PPCAQgQ8vexBK0apLdOlVb64Vleo3I49mIe
+         3yCdNQamc2hnjRBix2eEHBAP1hOBNya99hdpnB0b4uP/JWVxR4nX6htS3qjTqJhhC3r8
+         SvQ8545kW7CSRK78Fbusw65rZX35oe3N7jQTAZGcRmnxzS82RtjncaKKOuJfy2A+h4X8
+         SIkpXu7SXYNu9Dy1Pupw4fPxpqEzd/Hywb0q0yZHrkA1l337sDXFIHRN8UIKJl+HIIzM
+         T+2A==
+X-Gm-Message-State: ABy/qLbJqkjXySpa43DQxbSvvqOzZGOaPG3P86nawxyASyzzufkQ/Glb
+        usSTjDnBQO1MtGIccV9Fb97gDcO4ao7gZFCMjnKhyw==
+X-Google-Smtp-Source: APBJJlFWyOyx+UsXVna4lv6siVentgbcP3k7mSW+DBOdqh/0S6C2BKF2UwKkEzn6fkN2ajiDaEzrQbqiXyNTgqvQqyw=
+X-Received: by 2002:ac8:5e0d:0:b0:3ed:6bde:9681 with SMTP id
+ h13-20020ac85e0d000000b003ed6bde9681mr145257qtx.0.1689124097848; Tue, 11 Jul
+ 2023 18:08:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230711100218.1651995-1-james.clark@arm.com> <20230711100218.1651995-5-james.clark@arm.com>
-In-Reply-To: <20230711100218.1651995-5-james.clark@arm.com>
+References: <20230711100218.1651995-1-james.clark@arm.com> <20230711100218.1651995-6-james.clark@arm.com>
+In-Reply-To: <20230711100218.1651995-6-james.clark@arm.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 11 Jul 2023 18:04:38 -0700
-Message-ID: <CAP-5=fVPriUQZN+OzDOVnMMe0y9QzRHuaBMgrCcSvbE+3ME=Lg@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] perf vendor events arm64: Update N2-r0p3 and V2
- metrics and events using Arm telemetry repo
+Date:   Tue, 11 Jul 2023 18:08:06 -0700
+Message-ID: <CAP-5=fXU0rYNA_1_ZFtO95k_jTFhWXCdUR0PYe5gnHw2G4_YXA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] perf vendor events arm64: Update N2-r0p0 metrics
+ and events using Arm telemetry repo
 To:     James Clark <james.clark@arm.com>
 Cc:     linux-perf-users@vger.kernel.org, renyu.zj@linux.alibaba.com,
         john.g.garry@oracle.com, namhyung@kernel.org, acme@kernel.org,
@@ -81,19 +81,12 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jul 11, 2023 at 3:03=E2=80=AFAM James Clark <james.clark@arm.com> w=
+On Tue, Jul 11, 2023 at 3:04=E2=80=AFAM James Clark <james.clark@arm.com> w=
 rote:
 >
-> The new metrics contain a fix for N2 r0p3 where CPU_CYCLES should not be
-> subtracted from stalls for topdown metrics anymore. The current metrics
-> assume that the fix should be applied anywhere where slots !=3D 5, but
-> this is only the case for V2 and not N2 r0p3.
->
-> Split the metrics into a new version for N2-r0p3 and V2 which still
-> share the same metrics. Apart from some slight naming and grouping
-> differences the new metrics are functionally the same as the existing
-> ones. Any missing metrics were manually appended to the end of the auto
-> generated file.
+> Apart from some slight naming and grouping differences the new metrics
+> are functionally the same as the existing ones. Any missing metrics were
+> manually appended to the end of the auto generated file.
 >
 > For the events, the new data includes descriptions that may have product
 > specific details and new groupings that will be consistent with other
@@ -101,9 +94,6 @@ rote:
 >
 > After generating the metrics from the telemetry repo [1], the following
 > manual steps were performed:
->
->  * Change the hard coded slots in neoverse-n2r0p3-v2 to #slots so that
->    it will work on both N2 and V2.
 >
 >  * Append some metrics from the old N2/V2 data that aren't present in
 >    the telemetry data. These will possibly be added to the
@@ -122,70 +112,973 @@ main/data/pmu/cpu/neoverse/neoverse-n2.json
 
 Acked-by: Ian Rogers <irogers@google.com>
 
+Some of the same nits as patch 4/5.
+
+Thanks,
+Ian
+
 > ---
->  .../arm64/arm/neoverse-n2r0p3-v2/bus.json     |  18 +
->  .../arm/neoverse-n2r0p3-v2/exception.json     |  62 ++++
->  .../arm/neoverse-n2r0p3-v2/fp_operation.json  |  22 ++
->  .../arm64/arm/neoverse-n2r0p3-v2/general.json |  10 +
->  .../arm/neoverse-n2r0p3-v2/l1d_cache.json     |  54 +++
->  .../arm/neoverse-n2r0p3-v2/l1i_cache.json     |  14 +
->  .../arm/neoverse-n2r0p3-v2/l2_cache.json      |  50 +++
->  .../arm/neoverse-n2r0p3-v2/l3_cache.json      |  22 ++
->  .../arm/neoverse-n2r0p3-v2/ll_cache.json      |  10 +
->  .../arm64/arm/neoverse-n2r0p3-v2/memory.json  |  46 +++
->  .../arm64/arm/neoverse-n2r0p3-v2/metrics.json | 331 ++++++++++++++++++
->  .../arm64/arm/neoverse-n2r0p3-v2/retired.json |  30 ++
->  .../arm64/arm/neoverse-n2r0p3-v2/spe.json     |  18 +
->  .../neoverse-n2r0p3-v2/spec_operation.json    | 110 ++++++
->  .../arm64/arm/neoverse-n2r0p3-v2/stall.json   |  30 ++
->  .../arm64/arm/neoverse-n2r0p3-v2/sve.json     |  50 +++
->  .../arm64/arm/neoverse-n2r0p3-v2/tlb.json     |  66 ++++
->  .../arm64/arm/neoverse-n2r0p3-v2/trace.json   |  38 ++
->  tools/perf/pmu-events/arch/arm64/mapfile.csv  |   3 +-
->  19 files changed, 983 insertions(+), 1 deletion(-)
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-=
-v2/bus.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-=
-v2/exception.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-=
-v2/fp_operation.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-=
-v2/general.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-=
-v2/l1d_cache.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-=
-v2/l1i_cache.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-=
-v2/l2_cache.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-=
-v2/l3_cache.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-=
-v2/ll_cache.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-=
-v2/memory.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-=
-v2/metrics.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-=
-v2/retired.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-=
-v2/spe.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-=
-v2/spec_operation.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-=
-v2/stall.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-=
-v2/sve.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-=
-v2/tlb.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-=
-v2/trace.json
+>  .../arch/arm64/arm/neoverse-n2-v2/branch.json |   8 -
+>  .../arch/arm64/arm/neoverse-n2-v2/bus.json    |  20 --
+>  .../arch/arm64/arm/neoverse-n2-v2/cache.json  | 155 --------
+>  .../arm64/arm/neoverse-n2-v2/exception.json   |  47 ---
+>  .../arm64/arm/neoverse-n2-v2/instruction.json | 143 --------
+>  .../arch/arm64/arm/neoverse-n2-v2/memory.json |  41 ---
+>  .../arm64/arm/neoverse-n2-v2/metrics.json     | 273 --------------
+>  .../arm64/arm/neoverse-n2-v2/pipeline.json    |  23 --
+>  .../arch/arm64/arm/neoverse-n2-v2/spe.json    |  14 -
+>  .../arch/arm64/arm/neoverse-n2-v2/trace.json  |  29 --
+>  .../arch/arm64/arm/neoverse-n2r0p0/bus.json   |  18 +
+>  .../arm64/arm/neoverse-n2r0p0/exception.json  |  62 ++++
+>  .../arm/neoverse-n2r0p0/fp_operation.json     |  22 ++
+>  .../arm64/arm/neoverse-n2r0p0/general.json    |  10 +
+>  .../arm64/arm/neoverse-n2r0p0/l1d_cache.json  |  54 +++
+>  .../arm64/arm/neoverse-n2r0p0/l1i_cache.json  |  14 +
+>  .../arm64/arm/neoverse-n2r0p0/l2_cache.json   |  50 +++
+>  .../arm64/arm/neoverse-n2r0p0/l3_cache.json   |  22 ++
+>  .../arm64/arm/neoverse-n2r0p0/ll_cache.json   |  10 +
+>  .../arm64/arm/neoverse-n2r0p0/memory.json     |  46 +++
+>  .../arm64/arm/neoverse-n2r0p0/metrics.json    | 332 ++++++++++++++++++
+>  .../arm64/arm/neoverse-n2r0p0/retired.json    |  30 ++
+>  .../arch/arm64/arm/neoverse-n2r0p0/spe.json   |  18 +
+>  .../arm/neoverse-n2r0p0/spec_operation.json   | 110 ++++++
+>  .../arch/arm64/arm/neoverse-n2r0p0/stall.json |  30 ++
+>  .../arch/arm64/arm/neoverse-n2r0p0/sve.json   |  50 +++
+>  .../arch/arm64/arm/neoverse-n2r0p0/tlb.json   |  66 ++++
+>  .../arch/arm64/arm/neoverse-n2r0p0/trace.json |  38 ++
+>  tools/perf/pmu-events/arch/arm64/mapfile.csv  |   2 +-
+>  29 files changed, 983 insertions(+), 754 deletions(-)
+>  delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/b=
+ranch.json
+>  delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/b=
+us.json
+>  delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/c=
+ache.json
+>  delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/e=
+xception.json
+>  delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/i=
+nstruction.json
+>  delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/m=
+emory.json
+>  delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/m=
+etrics.json
+>  delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/p=
+ipeline.json
+>  delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/s=
+pe.json
+>  delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/t=
+race.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/=
+bus.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/=
+exception.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/=
+fp_operation.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/=
+general.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/=
+l1d_cache.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/=
+l1i_cache.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/=
+l2_cache.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/=
+l3_cache.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/=
+ll_cache.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/=
+memory.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/=
+metrics.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/=
+retired.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/=
+spe.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/=
+spec_operation.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/=
+stall.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/=
+sve.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/=
+tlb.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/=
+trace.json
 >
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/bus.=
-json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/bus.json
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/branch.j=
+son b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/branch.json
+> deleted file mode 100644
+> index 79f2016c53b0..000000000000
+> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/branch.json
+> +++ /dev/null
+> @@ -1,8 +0,0 @@
+> -[
+> -    {
+> -        "ArchStdEvent": "BR_MIS_PRED"
+> -    },
+> -    {
+> -        "ArchStdEvent": "BR_PRED"
+> -    }
+> -]
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/bus.json=
+ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/bus.json
+> deleted file mode 100644
+> index 579c1c993d17..000000000000
+> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/bus.json
+> +++ /dev/null
+> @@ -1,20 +0,0 @@
+> -[
+> -    {
+> -        "ArchStdEvent": "CPU_CYCLES"
+> -    },
+> -    {
+> -        "ArchStdEvent": "BUS_ACCESS"
+> -    },
+> -    {
+> -        "ArchStdEvent": "BUS_CYCLES"
+> -    },
+> -    {
+> -        "ArchStdEvent": "BUS_ACCESS_RD"
+> -    },
+> -    {
+> -        "ArchStdEvent": "BUS_ACCESS_WR"
+> -    },
+> -    {
+> -        "ArchStdEvent": "CNT_CYCLES"
+> -    }
+> -]
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/cache.js=
+on b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/cache.json
+> deleted file mode 100644
+> index 0141f749bff3..000000000000
+> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/cache.json
+> +++ /dev/null
+> @@ -1,155 +0,0 @@
+> -[
+> -    {
+> -        "ArchStdEvent": "L1I_CACHE_REFILL"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1I_TLB_REFILL"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1D_CACHE_REFILL"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1D_CACHE"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1D_TLB_REFILL"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1I_CACHE"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1D_CACHE_WB"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L2D_CACHE"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L2D_CACHE_REFILL"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L2D_CACHE_WB"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L2D_CACHE_ALLOCATE"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1D_TLB"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1I_TLB"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L3D_CACHE_ALLOCATE"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L3D_CACHE_REFILL"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L3D_CACHE"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L2D_TLB_REFILL"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L2D_TLB"
+> -    },
+> -    {
+> -        "ArchStdEvent": "DTLB_WALK"
+> -    },
+> -    {
+> -        "ArchStdEvent": "ITLB_WALK"
+> -    },
+> -    {
+> -        "ArchStdEvent": "LL_CACHE_RD"
+> -    },
+> -    {
+> -        "ArchStdEvent": "LL_CACHE_MISS_RD"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1D_CACHE_LMISS_RD"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1D_CACHE_RD"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1D_CACHE_WR"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1D_CACHE_REFILL_RD"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1D_CACHE_REFILL_WR"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1D_CACHE_REFILL_INNER"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1D_CACHE_REFILL_OUTER"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1D_CACHE_WB_VICTIM"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1D_CACHE_WB_CLEAN"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1D_CACHE_INVAL"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1D_TLB_REFILL_RD"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1D_TLB_REFILL_WR"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1D_TLB_RD"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1D_TLB_WR"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L2D_CACHE_RD"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L2D_CACHE_WR"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L2D_CACHE_REFILL_RD"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L2D_CACHE_REFILL_WR"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L2D_CACHE_WB_VICTIM"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L2D_CACHE_WB_CLEAN"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L2D_CACHE_INVAL"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L2D_TLB_REFILL_RD"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L2D_TLB_REFILL_WR"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L2D_TLB_RD"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L2D_TLB_WR"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L3D_CACHE_RD"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L1I_CACHE_LMISS"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L2D_CACHE_LMISS_RD"
+> -    },
+> -    {
+> -        "ArchStdEvent": "L3D_CACHE_LMISS_RD"
+> -    }
+> -]
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/exceptio=
+n.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/exception.json
+> deleted file mode 100644
+> index 344a2d552ad5..000000000000
+> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/exception.json
+> +++ /dev/null
+> @@ -1,47 +0,0 @@
+> -[
+> -    {
+> -        "ArchStdEvent": "EXC_TAKEN"
+> -    },
+> -    {
+> -        "ArchStdEvent": "MEMORY_ERROR"
+> -    },
+> -    {
+> -        "ArchStdEvent": "EXC_UNDEF"
+> -    },
+> -    {
+> -        "ArchStdEvent": "EXC_SVC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "EXC_PABORT"
+> -    },
+> -    {
+> -        "ArchStdEvent": "EXC_DABORT"
+> -    },
+> -    {
+> -        "ArchStdEvent": "EXC_IRQ"
+> -    },
+> -    {
+> -        "ArchStdEvent": "EXC_FIQ"
+> -    },
+> -    {
+> -        "ArchStdEvent": "EXC_SMC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "EXC_HVC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "EXC_TRAP_PABORT"
+> -    },
+> -    {
+> -        "ArchStdEvent": "EXC_TRAP_DABORT"
+> -    },
+> -    {
+> -        "ArchStdEvent": "EXC_TRAP_OTHER"
+> -    },
+> -    {
+> -        "ArchStdEvent": "EXC_TRAP_IRQ"
+> -    },
+> -    {
+> -        "ArchStdEvent": "EXC_TRAP_FIQ"
+> -    }
+> -]
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/instruct=
+ion.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/instruction.=
+json
+> deleted file mode 100644
+> index e57cd55937c6..000000000000
+> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/instruction.jso=
+n
+> +++ /dev/null
+> @@ -1,143 +0,0 @@
+> -[
+> -    {
+> -        "ArchStdEvent": "SW_INCR"
+> -    },
+> -    {
+> -        "ArchStdEvent": "INST_RETIRED"
+> -    },
+> -    {
+> -        "ArchStdEvent": "EXC_RETURN"
+> -    },
+> -    {
+> -        "ArchStdEvent": "CID_WRITE_RETIRED"
+> -    },
+> -    {
+> -        "ArchStdEvent": "INST_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "TTBR_WRITE_RETIRED"
+> -    },
+> -    {
+> -        "ArchStdEvent": "BR_RETIRED"
+> -    },
+> -    {
+> -        "ArchStdEvent": "BR_MIS_PRED_RETIRED"
+> -    },
+> -    {
+> -        "ArchStdEvent": "OP_RETIRED"
+> -    },
+> -    {
+> -        "ArchStdEvent": "OP_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "LDREX_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "STREX_PASS_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "STREX_FAIL_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "STREX_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "LD_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "ST_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "DP_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "ASE_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "VFP_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "PC_WRITE_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "CRYPTO_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "BR_IMMED_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "BR_RETURN_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "BR_INDIRECT_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "ISB_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "DSB_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "DMB_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "RC_LD_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "RC_ST_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "ASE_INST_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "SVE_INST_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "FP_HP_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "FP_SP_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "FP_DP_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "SVE_PRED_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "SVE_PRED_EMPTY_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "SVE_PRED_FULL_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "SVE_PRED_PARTIAL_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "SVE_PRED_NOT_FULL_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "SVE_LDFF_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "SVE_LDFF_FAULT_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "FP_SCALE_OPS_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "FP_FIXED_OPS_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "ASE_SVE_INT8_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "ASE_SVE_INT16_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "ASE_SVE_INT32_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "ASE_SVE_INT64_SPEC"
+> -    }
+> -]
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/memory.j=
+son b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/memory.json
+> deleted file mode 100644
+> index 7b2b21ac150f..000000000000
+> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/memory.json
+> +++ /dev/null
+> @@ -1,41 +0,0 @@
+> -[
+> -    {
+> -        "ArchStdEvent": "MEM_ACCESS"
+> -    },
+> -    {
+> -        "ArchStdEvent": "REMOTE_ACCESS"
+> -    },
+> -    {
+> -        "ArchStdEvent": "MEM_ACCESS_RD"
+> -    },
+> -    {
+> -        "ArchStdEvent": "MEM_ACCESS_WR"
+> -    },
+> -    {
+> -        "ArchStdEvent": "UNALIGNED_LD_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "UNALIGNED_ST_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "UNALIGNED_LDST_SPEC"
+> -    },
+> -    {
+> -        "ArchStdEvent": "LDST_ALIGN_LAT"
+> -    },
+> -    {
+> -        "ArchStdEvent": "LD_ALIGN_LAT"
+> -    },
+> -    {
+> -        "ArchStdEvent": "ST_ALIGN_LAT"
+> -    },
+> -    {
+> -        "ArchStdEvent": "MEM_ACCESS_CHECKED"
+> -    },
+> -    {
+> -        "ArchStdEvent": "MEM_ACCESS_CHECKED_RD"
+> -    },
+> -    {
+> -        "ArchStdEvent": "MEM_ACCESS_CHECKED_WR"
+> -    }
+> -]
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.=
+json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.json
+> deleted file mode 100644
+> index 8ad15b726dca..000000000000
+> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.json
+> +++ /dev/null
+> @@ -1,273 +0,0 @@
+> -[
+> -    {
+> -        "ArchStdEvent": "FRONTEND_BOUND",
+> -        "MetricExpr": "((stall_slot_frontend) if (#slots - 5) else (stal=
+l_slot_frontend - cpu_cycles)) / (#slots * cpu_cycles)"
+> -    },
+> -    {
+> -        "ArchStdEvent": "BAD_SPECULATION",
+> -        "MetricExpr": "(1 - op_retired / op_spec) * (1 - (stall_slot if =
+(#slots - 5) else (stall_slot - cpu_cycles)) / (#slots * cpu_cycles))"
+> -    },
+> -    {
+> -        "ArchStdEvent": "RETIRING",
+> -        "MetricExpr": "(op_retired / op_spec) * (1 - (stall_slot if (#sl=
+ots - 5) else (stall_slot - cpu_cycles)) / (#slots * cpu_cycles))"
+> -    },
+> -    {
+> -        "ArchStdEvent": "BACKEND_BOUND"
+> -    },
+> -    {
+> -        "MetricExpr": "L1D_TLB_REFILL / L1D_TLB",
+> -        "BriefDescription": "The rate of L1D TLB refill to the overall L=
+1D TLB lookups",
+> -        "MetricGroup": "TLB",
+> -        "MetricName": "l1d_tlb_miss_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "L1I_TLB_REFILL / L1I_TLB",
+> -        "BriefDescription": "The rate of L1I TLB refill to the overall L=
+1I TLB lookups",
+> -        "MetricGroup": "TLB",
+> -        "MetricName": "l1i_tlb_miss_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "L2D_TLB_REFILL / L2D_TLB",
+> -        "BriefDescription": "The rate of L2D TLB refill to the overall L=
+2D TLB lookups",
+> -        "MetricGroup": "TLB",
+> -        "MetricName": "l2_tlb_miss_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "DTLB_WALK / INST_RETIRED * 1000",
+> -        "BriefDescription": "The rate of TLB Walks per kilo instructions=
+ for data accesses",
+> -        "MetricGroup": "TLB",
+> -        "MetricName": "dtlb_mpki",
+> -        "ScaleUnit": "1MPKI"
+> -    },
+> -    {
+> -        "MetricExpr": "DTLB_WALK / L1D_TLB",
+> -        "BriefDescription": "The rate of DTLB Walks to the overall L1D T=
+LB lookups",
+> -        "MetricGroup": "TLB",
+> -        "MetricName": "dtlb_walk_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "ITLB_WALK / INST_RETIRED * 1000",
+> -        "BriefDescription": "The rate of TLB Walks per kilo instructions=
+ for instruction accesses",
+> -        "MetricGroup": "TLB",
+> -        "MetricName": "itlb_mpki",
+> -        "ScaleUnit": "1MPKI"
+> -    },
+> -    {
+> -        "MetricExpr": "ITLB_WALK / L1I_TLB",
+> -        "BriefDescription": "The rate of ITLB Walks to the overall L1I T=
+LB lookups",
+> -        "MetricGroup": "TLB",
+> -        "MetricName": "itlb_walk_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "L1I_CACHE_REFILL / INST_RETIRED * 1000",
+> -        "BriefDescription": "The rate of L1 I-Cache misses per kilo inst=
+ructions",
+> -        "MetricGroup": "Cache",
+> -        "MetricName": "l1i_cache_mpki",
+> -        "ScaleUnit": "1MPKI"
+> -    },
+> -    {
+> -        "MetricExpr": "L1I_CACHE_REFILL / L1I_CACHE",
+> -        "BriefDescription": "The rate of L1 I-Cache misses to the overal=
+l L1 I-Cache",
+> -        "MetricGroup": "Cache",
+> -        "MetricName": "l1i_cache_miss_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "L1D_CACHE_REFILL / INST_RETIRED * 1000",
+> -        "BriefDescription": "The rate of L1 D-Cache misses per kilo inst=
+ructions",
+> -        "MetricGroup": "Cache",
+> -        "MetricName": "l1d_cache_mpki",
+> -        "ScaleUnit": "1MPKI"
+> -    },
+> -    {
+> -        "MetricExpr": "L1D_CACHE_REFILL / L1D_CACHE",
+> -        "BriefDescription": "The rate of L1 D-Cache misses to the overal=
+l L1 D-Cache",
+> -        "MetricGroup": "Cache",
+> -        "MetricName": "l1d_cache_miss_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "L2D_CACHE_REFILL / INST_RETIRED * 1000",
+> -        "BriefDescription": "The rate of L2 D-Cache misses per kilo inst=
+ructions",
+> -        "MetricGroup": "Cache",
+> -        "MetricName": "l2d_cache_mpki",
+> -        "ScaleUnit": "1MPKI"
+> -    },
+> -    {
+> -        "MetricExpr": "L2D_CACHE_REFILL / L2D_CACHE",
+> -        "BriefDescription": "The rate of L2 D-Cache misses to the overal=
+l L2 D-Cache",
+> -        "MetricGroup": "Cache",
+> -        "MetricName": "l2d_cache_miss_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "L3D_CACHE_REFILL / INST_RETIRED * 1000",
+> -        "BriefDescription": "The rate of L3 D-Cache misses per kilo inst=
+ructions",
+> -        "MetricGroup": "Cache",
+> -        "MetricName": "l3d_cache_mpki",
+> -        "ScaleUnit": "1MPKI"
+> -    },
+> -    {
+> -        "MetricExpr": "L3D_CACHE_REFILL / L3D_CACHE",
+> -        "BriefDescription": "The rate of L3 D-Cache misses to the overal=
+l L3 D-Cache",
+> -        "MetricGroup": "Cache",
+> -        "MetricName": "l3d_cache_miss_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "LL_CACHE_MISS_RD / INST_RETIRED * 1000",
+> -        "BriefDescription": "The rate of LL Cache read misses per kilo i=
+nstructions",
+> -        "MetricGroup": "Cache",
+> -        "MetricName": "ll_cache_read_mpki",
+> -        "ScaleUnit": "1MPKI"
+> -    },
+> -    {
+> -        "MetricExpr": "LL_CACHE_MISS_RD / LL_CACHE_RD",
+> -        "BriefDescription": "The rate of LL Cache read misses to the ove=
+rall LL Cache read",
+> -        "MetricGroup": "Cache",
+> -        "MetricName": "ll_cache_read_miss_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "(LL_CACHE_RD - LL_CACHE_MISS_RD) / LL_CACHE_RD",
+> -        "BriefDescription": "The rate of LL Cache read hit to the overal=
+l LL Cache read",
+> -        "MetricGroup": "Cache",
+> -        "MetricName": "ll_cache_read_hit_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "BR_MIS_PRED_RETIRED / INST_RETIRED * 1000",
+> -        "BriefDescription": "The rate of branches mis-predicted per kilo=
+ instructions",
+> -        "MetricGroup": "Branch",
+> -        "MetricName": "branch_mpki",
+> -        "ScaleUnit": "1MPKI"
+> -    },
+> -    {
+> -        "MetricExpr": "BR_RETIRED / INST_RETIRED * 1000",
+> -        "BriefDescription": "The rate of branches retired per kilo instr=
+uctions",
+> -        "MetricGroup": "Branch",
+> -        "MetricName": "branch_pki",
+> -        "ScaleUnit": "1PKI"
+> -    },
+> -    {
+> -        "MetricExpr": "BR_MIS_PRED_RETIRED / BR_RETIRED",
+> -        "BriefDescription": "The rate of branches mis-predited to the ov=
+erall branches",
+> -        "MetricGroup": "Branch",
+> -        "MetricName": "branch_miss_pred_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "instructions / CPU_CYCLES",
+> -        "BriefDescription": "The average number of instructions executed=
+ for each cycle.",
+> -        "MetricGroup": "PEutilization",
+> -        "MetricName": "ipc"
+> -    },
+> -    {
+> -        "MetricExpr": "ipc / 5",
+> -        "BriefDescription": "IPC percentage of peak. The peak of IPC is =
+5.",
+> -        "MetricGroup": "PEutilization",
+> -        "MetricName": "ipc_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "INST_RETIRED / CPU_CYCLES",
+> -        "BriefDescription": "Architecturally executed Instructions Per C=
+ycle (IPC)",
+> -        "MetricGroup": "PEutilization",
+> -        "MetricName": "retired_ipc"
+> -    },
+> -    {
+> -        "MetricExpr": "INST_SPEC / CPU_CYCLES",
+> -        "BriefDescription": "Speculatively executed Instructions Per Cyc=
+le (IPC)",
+> -        "MetricGroup": "PEutilization",
+> -        "MetricName": "spec_ipc"
+> -    },
+> -    {
+> -        "MetricExpr": "OP_RETIRED / OP_SPEC",
+> -        "BriefDescription": "Of all the micro-operations issued, what pe=
+rcentage are retired(committed)",
+> -        "MetricGroup": "PEutilization",
+> -        "MetricName": "retired_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "1 - OP_RETIRED / OP_SPEC",
+> -        "BriefDescription": "Of all the micro-operations issued, what pe=
+rcentage are not retired(committed)",
+> -        "MetricGroup": "PEutilization",
+> -        "MetricName": "wasted_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "OP_RETIRED / OP_SPEC * (1 - (STALL_SLOT if (#slot=
+s - 5) else (STALL_SLOT - CPU_CYCLES)) / (#slots * CPU_CYCLES))",
+> -        "BriefDescription": "The truly effective ratio of micro-operatio=
+ns executed by the CPU, which means that misprediction and stall are not in=
+cluded",
+> -        "MetricGroup": "PEutilization",
+> -        "MetricName": "cpu_utilization",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "LD_SPEC / INST_SPEC",
+> -        "BriefDescription": "The rate of load instructions speculatively=
+ executed to overall instructions speclatively executed",
+> -        "MetricGroup": "InstructionMix",
+> -        "MetricName": "load_spec_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "ST_SPEC / INST_SPEC",
+> -        "BriefDescription": "The rate of store instructions speculativel=
+y executed to overall instructions speclatively executed",
+> -        "MetricGroup": "InstructionMix",
+> -        "MetricName": "store_spec_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "DP_SPEC / INST_SPEC",
+> -        "BriefDescription": "The rate of integer data-processing instruc=
+tions speculatively executed to overall instructions speclatively executed"=
+,
+> -        "MetricGroup": "InstructionMix",
+> -        "MetricName": "data_process_spec_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "ASE_SPEC / INST_SPEC",
+> -        "BriefDescription": "The rate of advanced SIMD instructions spec=
+ulatively executed to overall instructions speclatively executed",
+> -        "MetricGroup": "InstructionMix",
+> -        "MetricName": "advanced_simd_spec_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "VFP_SPEC / INST_SPEC",
+> -        "BriefDescription": "The rate of floating point instructions spe=
+culatively executed to overall instructions speclatively executed",
+> -        "MetricGroup": "InstructionMix",
+> -        "MetricName": "float_point_spec_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "CRYPTO_SPEC / INST_SPEC",
+> -        "BriefDescription": "The rate of crypto instructions speculative=
+ly executed to overall instructions speclatively executed",
+> -        "MetricGroup": "InstructionMix",
+> -        "MetricName": "crypto_spec_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "BR_IMMED_SPEC / INST_SPEC",
+> -        "BriefDescription": "The rate of branch immediate instructions s=
+peculatively executed to overall instructions speclatively executed",
+> -        "MetricGroup": "InstructionMix",
+> -        "MetricName": "branch_immed_spec_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "BR_RETURN_SPEC / INST_SPEC",
+> -        "BriefDescription": "The rate of procedure return instructions s=
+peculatively executed to overall instructions speclatively executed",
+> -        "MetricGroup": "InstructionMix",
+> -        "MetricName": "branch_return_spec_rate",
+> -        "ScaleUnit": "100%"
+> -    },
+> -    {
+> -        "MetricExpr": "BR_INDIRECT_SPEC / INST_SPEC",
+> -        "BriefDescription": "The rate of indirect branch instructions sp=
+eculatively executed to overall instructions speclatively executed",
+> -        "MetricGroup": "InstructionMix",
+> -        "MetricName": "branch_indirect_spec_rate",
+> -        "ScaleUnit": "100%"
+> -    }
+> -]
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/pipeline=
+.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/pipeline.json
+> deleted file mode 100644
+> index f9fae15f7555..000000000000
+> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/pipeline.json
+> +++ /dev/null
+> @@ -1,23 +0,0 @@
+> -[
+> -    {
+> -        "ArchStdEvent": "STALL_FRONTEND"
+> -    },
+> -    {
+> -        "ArchStdEvent": "STALL_BACKEND"
+> -    },
+> -    {
+> -        "ArchStdEvent": "STALL"
+> -    },
+> -    {
+> -        "ArchStdEvent": "STALL_SLOT_BACKEND"
+> -    },
+> -    {
+> -        "ArchStdEvent": "STALL_SLOT_FRONTEND"
+> -    },
+> -    {
+> -        "ArchStdEvent": "STALL_SLOT"
+> -    },
+> -    {
+> -        "ArchStdEvent": "STALL_BACKEND_MEM"
+> -    }
+> -]
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/spe.json=
+ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/spe.json
+> deleted file mode 100644
+> index 20f2165c85fe..000000000000
+> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/spe.json
+> +++ /dev/null
+> @@ -1,14 +0,0 @@
+> -[
+> -    {
+> -        "ArchStdEvent": "SAMPLE_POP"
+> -    },
+> -    {
+> -        "ArchStdEvent": "SAMPLE_FEED"
+> -    },
+> -    {
+> -        "ArchStdEvent": "SAMPLE_FILTRATE"
+> -    },
+> -    {
+> -        "ArchStdEvent": "SAMPLE_COLLISION"
+> -    }
+> -]
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/trace.js=
+on b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/trace.json
+> deleted file mode 100644
+> index 3116135c59e2..000000000000
+> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/trace.json
+> +++ /dev/null
+> @@ -1,29 +0,0 @@
+> -[
+> -    {
+> -        "ArchStdEvent": "TRB_WRAP"
+> -    },
+> -    {
+> -        "ArchStdEvent": "TRCEXTOUT0"
+> -    },
+> -    {
+> -        "ArchStdEvent": "TRCEXTOUT1"
+> -    },
+> -    {
+> -        "ArchStdEvent": "TRCEXTOUT2"
+> -    },
+> -    {
+> -        "ArchStdEvent": "TRCEXTOUT3"
+> -    },
+> -    {
+> -        "ArchStdEvent": "CTI_TRIGOUT4"
+> -    },
+> -    {
+> -        "ArchStdEvent": "CTI_TRIGOUT5"
+> -    },
+> -    {
+> -        "ArchStdEvent": "CTI_TRIGOUT6"
+> -    },
+> -    {
+> -        "ArchStdEvent": "CTI_TRIGOUT7"
+> -    }
+> -]
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/bus.jso=
+n b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/bus.json
 > new file mode 100644
 > index 000000000000..2e11a8c4a484
 > --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/bus.json
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/bus.json
 > @@ -0,0 +1,18 @@
 > +[
 > +    {
@@ -193,10 +1086,6 @@ json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/bus.json
 > +        "PublicDescription": "Counts memory transactions issued by the C=
 PU to the external bus, including snoop requests and snoop responses. Each =
 beat of data is counted individually."
-
-It might be nice to add "beat" to the glossary:
-https://perf.wiki.kernel.org/index.php/Glossary
-
 > +    },
 > +    {
 > +        "ArchStdEvent": "BUS_CYCLES",
@@ -217,14 +1106,13 @@ e external bus. Each beat of data is counted individually."
 he external bus. Each beat of data is counted individually."
 > +    }
 > +]
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/exce=
-ption.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/except=
-ion.json
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/excepti=
+on.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/exception.js=
+on
 > new file mode 100644
 > index 000000000000..4404b8e91690
 > --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/exception.j=
-son
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/exception.json
 > @@ -0,0 +1,62 @@
 > +[
 > +    {
@@ -316,14 +1204,14 @@ t taken from EL0, EL1,\n or EL2 to EL3 (which would be the normal behavior =
 for FIQs when not executing\n in EL3)."
 > +    }
 > +]
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/fp_o=
-peration.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/fp_=
-operation.json
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/fp_oper=
+ation.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/fp_operat=
+ion.json
 > new file mode 100644
 > index 000000000000..cec3435ac766
 > --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/fp_operatio=
-n.json
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/fp_operation.j=
+son
 > @@ -0,0 +1,22 @@
 > +[
 > +    {
@@ -352,14 +1240,12 @@ gle precision floating point operations."
  single precision floating point operations."
 > +    }
 > +]
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/gene=
-ral.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/general.=
-json
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/general=
+.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/general.json
 > new file mode 100644
 > index 000000000000..428810f855b8
 > --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/general.jso=
-n
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/general.json
 > @@ -0,0 +1,10 @@
 > +[
 > +    {
@@ -373,14 +1259,13 @@ n
 > +        "PublicDescription": "Counts constant frequency cycles"
 > +    }
 > +]
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/l1d_=
-cache.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/l1d_ca=
-che.json
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/l1d_cac=
+he.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/l1d_cache.js=
+on
 > new file mode 100644
 > index 000000000000..ed83e1c5affe
 > --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/l1d_cache.j=
-son
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/l1d_cache.json
 > @@ -0,0 +1,54 @@
 > +[
 > +    {
@@ -400,9 +1285,6 @@ h access to a cache line is counted including the multiple accesses caused =
 by single instructions such as LDM or STM. Each access to other level 1 dat=
 a or unified memory structures, for example refill buffers, write buffers, =
 and write-back buffers, are also counted."
-
-nit: "counts as both" should be "count as both"
-
 > +    },
 > +    {
 > +        "ArchStdEvent": "L1D_CACHE_WB",
@@ -486,14 +1368,13 @@ d by set/way.\n\nNote that CMOs that operate by set/way cannot be broadcast=
  from one CPU to another."
 > +    }
 > +]
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/l1i_=
-cache.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/l1i_ca=
-che.json
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/l1i_cac=
+he.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/l1i_cache.js=
+on
 > new file mode 100644
 > index 000000000000..633f1030359d
 > --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/l1i_cache.j=
-son
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/l1i_cache.json
 > @@ -0,0 +1,14 @@
 > +[
 > +    {
@@ -515,14 +1396,12 @@ ntenance operations are not counted."
  instruction cache, that incurred additional latency."
 > +    }
 > +]
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/l2_c=
-ache.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/l2_cach=
-e.json
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/l2_cach=
+e.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/l2_cache.json
 > new file mode 100644
 > index 000000000000..0e31d0daf88b
 > --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/l2_cache.js=
-on
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/l2_cache.json
 > @@ -0,0 +1,50 @@
 > +[
 > +    {
@@ -610,14 +1489,12 @@ ot be broadcast from one CPU to another."
 ency."
 > +    }
 > +]
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/l3_c=
-ache.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/l3_cach=
-e.json
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/l3_cach=
+e.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/l3_cache.json
 > new file mode 100644
 > index 000000000000..45bfba532df7
 > --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/l3_cache.js=
-on
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/l3_cache.json
 > @@ -0,0 +1,22 @@
 > +[
 > +    {
@@ -648,14 +1525,12 @@ isses in the lower level caches or translation resolutions due to accesses.=
 l 3 cache from memory read operations that incurred additional latency."
 > +    }
 > +]
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/ll_c=
-ache.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/ll_cach=
-e.json
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/ll_cach=
+e.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/ll_cache.json
 > new file mode 100644
 > index 000000000000..bb712d57d58a
 > --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/ll_cache.js=
-on
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/ll_cache.json
 > @@ -0,0 +1,10 @@
 > +[
 > +    {
@@ -678,13 +1553,12 @@ on is indicated by a field in the CHI transaction returning to the CPU. Thi=
 s event does not count reads caused by cache maintenance operations."
 > +    }
 > +]
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/memo=
-ry.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/memory.js=
-on
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/memory.=
+json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/memory.json
 > new file mode 100644
 > index 000000000000..106a97f8b2e7
 > --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/memory.json
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/memory.json
 > @@ -0,0 +1,46 @@
 > +[
 > +    {
@@ -770,20 +1644,18 @@ in a cycle that are tag checked by the Memory Tagging Extension (MTE)."
  in a cycle that is tag checked by the Memory Tagging Extension (MTE)."
 > +    }
 > +]
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/metr=
-ics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/metrics.=
-json
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/metrics=
+.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/metrics.json
 > new file mode 100644
-> index 000000000000..b01cc2120175
+> index 000000000000..8f1479b1bb0d
 > --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/metrics.jso=
-n
-> @@ -0,0 +1,331 @@
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/metrics.json
+> @@ -0,0 +1,332 @@
 > +[
 > +    {
 > +        "ArchStdEvent": "backend_bound",
-> +        "MetricExpr": "(100 * ((STALL_SLOT_BACKEND / (CPU_CYCLES * #slot=
-s)) - ((BR_MIS_PRED * 3) / CPU_CYCLES)))"
+> +        "MetricExpr": "(100 * ((STALL_SLOT_BACKEND / (CPU_CYCLES * 5)) -=
+ ((BR_MIS_PRED * 3) / CPU_CYCLES)))"
 > +    },
 > +    {
 > +        "MetricName": "backend_stalled_cycles",
@@ -791,16 +1663,14 @@ s)) - ((BR_MIS_PRED * 3) / CPU_CYCLES)))"
 > +        "BriefDescription": "This metric is the percentage of cycles tha=
 t were stalled due to resource constraints in the backend unit of the proce=
 ssor.",
-
-nit: here and below saying "This metric" is somewhat redundant.
-
 > +        "MetricGroup": "Cycle_Accounting",
 > +        "ScaleUnit": "1percent of cycles"
 > +    },
 > +    {
 > +        "ArchStdEvent": "bad_speculation",
-> +        "MetricExpr": "(100 * (((1 - (OP_RETIRED / OP_SPEC)) * (1 - (STA=
-LL_SLOT / (CPU_CYCLES * #slots)))) + ((BR_MIS_PRED * 4) / CPU_CYCLES)))"
+> +        "MetricExpr": "(100 * (((1 - (OP_RETIRED / OP_SPEC)) * (1 - ((ST=
+ALL_SLOT - CPU_CYCLES) / (CPU_CYCLES * 5)))) + ((BR_MIS_PRED * 4) / CPU_CYC=
+LES)))"
 > +    },
 > +    {
 > +        "MetricName": "branch_misprediction_ratio",
@@ -855,8 +1725,8 @@ Walks to the total number of data TLB accesses. This gives an indication of=
 > +    },
 > +    {
 > +        "ArchStdEvent": "frontend_bound",
-> +        "MetricExpr": "(100 * ((STALL_SLOT_FRONTEND / (CPU_CYCLES * #slo=
-ts)) - (BR_MIS_PRED / CPU_CYCLES)))"
+> +        "MetricExpr": "(100 * (((STALL_SLOT_FRONTEND - CPU_CYCLES) / (5 =
+* CPU_CYCLES)) - (BR_MIS_PRED / CPU_CYCLES)))"
 > +    },
 > +    {
 > +        "MetricName": "frontend_stalled_cycles",
@@ -1052,7 +1922,9 @@ ercentage of operations speculatively executed.",
 > +        "ScaleUnit": "1percent of operations"
 > +    },
 > +    {
-> +        "ArchStdEvent": "retiring"
+> +        "ArchStdEvent": "retiring",
+> +        "MetricExpr": "(100 * ((OP_RETIRED / OP_SPEC) * (1 - ((STALL_SLO=
+T - CPU_CYCLES) / (CPU_CYCLES * 5)))))"
 > +    },
 > +    {
 > +        "MetricName": "scalar_fp_percentage",
@@ -1103,7 +1975,7 @@ uctions",
 > +        "ScaleUnit": "1PKI"
 > +    },
 > +    {
-> +        "MetricExpr": "ipc / #slots",
+> +        "MetricExpr": "ipc / 5",
 > +        "BriefDescription": "IPC percentage of peak. The peak of IPC is =
 the number of slots.",
 > +        "MetricGroup": "General",
@@ -1137,12 +2009,6 @@ rcentage are not retired(committed)",
 > +        "MetricExpr": "LD_SPEC / INST_SPEC",
 > +        "BriefDescription": "The rate of load instructions speculatively=
  executed to overall instructions speclatively executed",
-
-nit: here and below "speclatively" should be "speculatively"
-
-Thanks,
-Ian
-
 > +        "MetricGroup": "Operation_Mix",
 > +        "MetricName": "load_spec_rate",
 > +        "ScaleUnit": "100%"
@@ -1196,14 +2062,12 @@ eculatively executed to overall instructions speclatively executed",
 > +        "ScaleUnit": "100%"
 > +    }
 > +]
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/reti=
-red.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/retired.=
-json
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/retired=
+.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/retired.json
 > new file mode 100644
 > index 000000000000..f297b049b62f
 > --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/retired.jso=
-n
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/retired.json
 > @@ -0,0 +1,30 @@
 > +[
 > +    {
@@ -1256,12 +2120,12 @@ urally executed. This is a count of number of micro-operations retired from=
  the commit queue in a single cycle."
 > +    }
 > +]
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/spe.=
-json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/spe.json
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/spe.jso=
+n b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/spe.json
 > new file mode 100644
 > index 000000000000..5de8b0f3a440
 > --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/spe.json
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/spe.json
 > @@ -0,0 +1,18 @@
 > +[
 > +    {
@@ -1286,14 +2150,14 @@ be chosen for sampling."
 have collided with a previous sample and so therefore not taken."
 > +    }
 > +]
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/spec=
-_operation.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/s=
-pec_operation.json
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/spec_op=
+eration.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/spec_op=
+eration.json
 > new file mode 100644
 > index 000000000000..1af961f8a6c8
 > --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/spec_operat=
-ion.json
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/spec_operation=
+.json
 > @@ -0,0 +1,110 @@
 > +[
 > +    {
@@ -1446,12 +2310,12 @@ re speculatively executed. Eg: STLR, STLRH, STLRB'"
 D operations."
 > +    }
 > +]
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/stal=
-l.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/stall.json
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/stall.j=
+son b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/stall.json
 > new file mode 100644
 > index 000000000000..bbbebc805034
 > --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/stall.json
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/stall.json
 > @@ -0,0 +1,30 @@
 > +[
 > +    {
@@ -1501,12 +2365,12 @@ because there is a pending demand load request in progress in the last leve=
 l core cache."
 > +    }
 > +]
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/sve.=
-json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/sve.json
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/sve.jso=
+n b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/sve.json
 > new file mode 100644
 > index 000000000000..51dab48cb2ba
 > --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/sve.json
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/sve.json
 > @@ -0,0 +1,50 @@
 > +[
 > +    {
@@ -1570,12 +2434,12 @@ D or SVE integer operations with the largest data type a 32-bit integer."
 D or SVE integer operations with the largest data type a 64-bit integer."
 > +    }
 > +]
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/tlb.=
-json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/tlb.json
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/tlb.jso=
+n b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/tlb.json
 > new file mode 100644
 > index 000000000000..b550af1831f5
 > --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/tlb.json
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/tlb.json
 > @@ -0,0 +1,66 @@
 > +[
 > +    {
@@ -1698,12 +2562,12 @@ ry write operations from both data and instruction fetch except for those c=
 aused by TLB maintenance operations."
 > +    }
 > +]
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/trac=
-e.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/trace.json
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/trace.j=
+son b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/trace.json
 > new file mode 100644
 > index 000000000000..98f6fabfebc7
 > --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p3-v2/trace.json
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2r0p0/trace.json
 > @@ -0,0 +1,38 @@
 > +[
 > +    {
@@ -1754,19 +2618,18 @@ ent write pointer is wrapped to the base pointer."
 > +]
 > diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pm=
 u-events/arch/arm64/mapfile.csv
-> index 3a90fe650863..b1259deb8800 100644
+> index b1259deb8800..ba24c70dcf31 100644
 > --- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
 > +++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-> @@ -45,7 +45,8 @@
+> @@ -44,7 +44,7 @@
+>  0x00000000410fd460,v1,arm/cortex-a510,core
 >  0x00000000410fd470,v1,arm/cortex-a710,core
 >  0x00000000410fd480,v1,arm/cortex-x2,core
->  0x00000000410fd490,v1,arm/neoverse-n2-v2,core
-> -0x00000000410fd4f0,v1,arm/neoverse-n2-v2,core
-> +0x00000000410fd493,v1,arm/neoverse-n2r0p3-v2,core
-> +0x00000000410fd4f0,v1,arm/neoverse-n2r0p3-v2,core
+> -0x00000000410fd490,v1,arm/neoverse-n2-v2,core
+> +0x00000000410fd490,v1,arm/neoverse-n2r0p0,core
+>  0x00000000410fd493,v1,arm/neoverse-n2r0p3-v2,core
+>  0x00000000410fd4f0,v1,arm/neoverse-n2r0p3-v2,core
 >  0x00000000420f5160,v1,cavium/thunderx2,core
->  0x00000000430f0af0,v1,cavium/thunderx2,core
->  0x00000000460f0010,v1,fujitsu/a64fx,core
 > --
 > 2.34.1
 >
