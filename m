@@ -2,108 +2,158 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7857EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 05:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAC0EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jul 2023 05:40:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231373AbjGLFDM (ORCPT
+        id S229655AbjGLFkY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Jul 2023 01:03:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32926 "EHLO
+        Wed, 12 Jul 2023 01:40:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229609AbjGLFDM (ORCPT
+        with ESMTP id S229884AbjGLFkW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Jul 2023 01:03:12 -0400
-Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03AB410CF
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 22:03:11 -0700 (PDT)
-Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-401d1d967beso124711cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 22:03:10 -0700 (PDT)
+        Wed, 12 Jul 2023 01:40:22 -0400
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 125441716
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 22:40:21 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-403b622101bso122401cf.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jul 2023 22:40:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689138190; x=1691730190;
+        d=google.com; s=20221208; t=1689140420; x=1691732420;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vWqgo9ch58QO6RaJ3RurqQJj+97McdmoLo9JFZJT7aE=;
-        b=e0PfKiB+KtsxPEO9lO30LmAxZK2/I2tiNU2BdBFs52hLqXtLdAoXPUQW2Uv+7jYLiT
-         csmCMXtu3jIaFKdoqknruNgAHhrj1s/LhSn1QP5IlYJr3ukes6tiKZ8fsv9lUPdfwhkI
-         Wxi0sPzGlZwPXzl45oNMZ74zywz3HTbL++5HecdDauU+YcXXivoGBuwh9y6AIUEPUCAL
-         JV+NVxNqUEkg5GxYPnlNUUfiTPwhJ06yCelp6bm6WE35LOz8J9Z+AIEAeBOm+ISOaSbP
-         foq3JXT4oTL0GIdau+v4mDf+X5abps1gsM8Nim45cWT6ZtPLM/NYpQZvoWZtCUA95BMG
-         lC8Q==
+        bh=FiAkkP1EdbnMW11GKMsPgjH7qLZViInmNnoTvxJOghg=;
+        b=i0+S727nPyAqpSy2g6Lc7SX+6EIh8piKjI3Id6+GYQ7Xb/5lH//pDrU/0Sy5dDOvW2
+         oCorTl5fFVx5R2YGMDj86YV49WK/sAzlPmOEs0naimiLMYeeNPFzvaC63er5Pr2OkxrE
+         PcUR1Ap/VKoRYyEFMmbXq8caFewX+yk1U9OEquF/BbsWLgGeHresVwSVgwxYA8TQIwmd
+         Hn75G5psHbLVkITBTYZ2KKPpPJ7HI4/wsLXkeGR6JQKNBovQcsDofFxsMlwxHNaWmSNH
+         VoZAc+2gCWrG5meQnjpdbLge5JcCXbqV6JilpXMIpVSJhMY9lspaJ7x8awyOEJAsPGX8
+         szJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689138190; x=1691730190;
+        d=1e100.net; s=20221208; t=1689140420; x=1691732420;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vWqgo9ch58QO6RaJ3RurqQJj+97McdmoLo9JFZJT7aE=;
-        b=NTz+n2hTVwpB+uTCuo5XCjf7Ad2FJehgVKNOU+Tb42vGCzdaMTenmycA8eQGz41CpS
-         nzjhHjJXYAIeOwugoh0nlbxG9/GPKCcBHx/CDVBek6WAC+cDDmmBHrYyoA43N8w5hZJG
-         Wt4J9uSLBKY8t2rfA+BeQ9PBXlFFQ3zFHYLE1G24qLLNOTIIn+2lvm12SZ66BJAlGpSr
-         ZnaN/Tli9ZNHq84RDiboyVAa0SsAaM3d8T2wMTGSzVSsA2Rw3Y1awZBA5LeBBa61oxEX
-         qaEATMK4zN+5kcRtDor7urxnRnYp9gc6fA734fSo9LqLs/201GWqiK89iYRpaayOvI5H
-         VHuQ==
-X-Gm-Message-State: ABy/qLYodKNHCHsRetyOGQWd4hwAveGkRo6wY8+J/NPPfu5c9gttWaeR
-        t1VA5/NwUKkNGN1GQAznHq0lMUk4tbGS93FGyRpKvA==
-X-Google-Smtp-Source: APBJJlF5X00VyyfFQORSYwFYdQOkrD5s6atbZB7qfu78cC/IMrJvp/ItF6bi0AoaB9my4Gh69EUR3dw9nMPx8YHCFcg=
-X-Received: by 2002:a05:622a:1ba7:b0:403:c739:a5a3 with SMTP id
- bp39-20020a05622a1ba700b00403c739a5a3mr18296qtb.11.1689138190092; Tue, 11 Jul
- 2023 22:03:10 -0700 (PDT)
+        bh=FiAkkP1EdbnMW11GKMsPgjH7qLZViInmNnoTvxJOghg=;
+        b=IxZHkrpD8R0nuO5V/RcT/px3G6FMB5qmvo/6I6J4F62cTcXJuOOK7X1c8lUDIkD3uV
+         q77VYphLPTxdDySyZPtpHgzA54yv4cmwAnANbmNT2tTCo2f4tir2aI/zITLAsWE61LdV
+         m2e92eTps3osQllnmtongWIb3KzTNz4hIJ0/fJJKYGDiRWPQMFUou4DvrWSwnA2M3Hbx
+         5/43aW6EDuKm44yAehGhYN0+G31PtBQ7W1RWPUB5AEo9OdPSXLKC9xAmCA23Rs1ObX+R
+         0RAfqGsIFFJn6zOAQ59DJy/5Zgj1l2TyTEK8bTyTu7otUTq67MsUYmWQYTn8ffkn2rPu
+         +BxQ==
+X-Gm-Message-State: ABy/qLaYlOfR5O60ELs1KgTFlnGNtqw3LK3tjBtvpgC+DKK2TfBZvzJk
+        byB4yRX6AHtcsMWOeoQWS8aiGGCzPwbUyt8IzrlFokiRQKCEMavnnG7c+g==
+X-Google-Smtp-Source: APBJJlHwfRGQqV5h0r1U/quRuRwac2oyC+UIwxJkjMht+s97QQICb0a8zOQgj6IisHdkK+loe/01x414bqugznaKuDk=
+X-Received: by 2002:a05:622a:588:b0:3f9:a770:7279 with SMTP id
+ c8-20020a05622a058800b003f9a7707279mr80910qtb.9.1689140419969; Tue, 11 Jul
+ 2023 22:40:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230706094635.1553-1-luhongfei@vivo.com>
-In-Reply-To: <20230706094635.1553-1-luhongfei@vivo.com>
+References: <20230628102949.2598096-1-john.g.garry@oracle.com>
+ <20230628102949.2598096-3-john.g.garry@oracle.com> <CAP-5=fWB9H0KWrXYouepUiAbnfH3u29XuRVN6KXVw3CNbD4xrA@mail.gmail.com>
+ <bb828dd4-3c22-7383-008e-ab4f860ed686@oracle.com>
+In-Reply-To: <bb828dd4-3c22-7383-008e-ab4f860ed686@oracle.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 11 Jul 2023 22:02:58 -0700
-Message-ID: <CAP-5=fWs+19O-tHUVtxY79svL-oFjKDO-0-bF1Kdn2+VObxxaQ@mail.gmail.com>
-Subject: Re: [PATCH] tools: perf: Two typos have been corrected
-To:     Lu Hongfei <luhongfei@vivo.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+Date:   Tue, 11 Jul 2023 22:40:08 -0700
+Message-ID: <CAP-5=fWZj-vzmF4=iNEw=8DdJetB4HWtHYSzCCvqms9iKdaZ6w@mail.gmail.com>
+Subject: Re: [PATCH RFC 2/9] perf metrics: Don't iter sys metrics if we
+ already found a CPU match
+To:     John Garry <john.g.garry@oracle.com>
+Cc:     acme@kernel.org, namhyung@kernel.org, jolsa@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        opensource.kernel@vivo.com
+        renyu.zj@linux.alibaba.com, shangxiaojing@huawei.com,
+        zhangshaokun@hisilicon.com, qiangqing.zhang@nxp.com,
+        kjain@linux.ibm.com, kan.liang@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jul 6, 2023 at 2:46=E2=80=AFAM Lu Hongfei <luhongfei@vivo.com> wrot=
-e:
+On Mon, Jul 3, 2023 at 6:09=E2=80=AFAM John Garry <john.g.garry@oracle.com>=
+ wrote:
 >
-> When wrapping code, use ';' better than using ',' which is more
-> in line with the coding habits of most engineers.
+> On 30/06/2023 18:41, Ian Rogers wrote:
+> > On Wed, Jun 28, 2023 at 3:30=E2=80=AFAM John Garry<john.g.garry@oracle.=
+com>  wrote:
+> >> In metricgroup__add_metric() we still iter the sys metrics if we alrea=
+dy
+> >> found a match from the CPU table, which is pretty pointless, so don't
+> >> bother.
+> >>
+> >> Signed-off-by: John Garry<john.g.garry@oracle.com>
+> >> ---
+> >>   tools/perf/util/metricgroup.c | 7 +++++++
+> >>   1 file changed, 7 insertions(+)
+> >>
+> >> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgro=
+up.c
+> >> index 4389ccd29fe7..8d2ac2513530 100644
+> >> --- a/tools/perf/util/metricgroup.c
+> >> +++ b/tools/perf/util/metricgroup.c
+> >> @@ -1261,6 +1261,12 @@ static int metricgroup__add_metric(const char *=
+pmu, const char *metric_name, con
+> >>
+> >>                  has_match =3D data.has_match;
+> >>          }
 >
-> Signed-off-by: Lu Hongfei <luhongfei@vivo.com>
+> Hi Ian,
+>
+> >> +
+> >> +       if (has_match) {
+> >> +               ret =3D 0;
+> >> +               goto out;
+> >> +       }
+> >> +
+> > I think this can just be:
+> >
+> > if (!has_match)
+>
+> But ret has no initial value
+>
+> >
+> > However, I'm not sure I agree with the intent of the change. We may
+> > have a metric like IPC and want it to apply to all types of CPU, GPU,
+> > etc. If we short-cut here then that won't be possible.
+>
+> A few points to make on this:
+> - Currently we don't have any same-named metrics like this, so not much
+> use in supporting it in the code (yet).
 
-Acked-by: Ian Rogers <irogers@google.com>
+We have same named metrics for heterogeneous CPU PMUs:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json?h=3Dperf-tools=
+-next#n304
+cpu_atom
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json?h=3Dperf-tools=
+-next#n1125
+cpu_core
+
+> - Even if we had some same-named metrics, I am not sure if it even works
+> properly. Do we have any uncore PMU metrics which have same name as CPU
+> metrics?
+
+So I was thinking IPC was a generic concept that would apply to a
+co-processor on a network card, a GPU, etc.
+
+> - Further to the previous point, do we really want same-named metrics
+> for different PMUs in the future? I think event / metric names need to
+> be chosen carefully to avoid clash for other PMUs or keywords. For your
+> example, if I did ask for IPC metric, I'd like to be able to just know
+> I'm getting IPC metric for CPUs or some other PMUs, but not both.
+
+At the moment if you request an event without a PMU, say instructions
+retired, we will attempt to open the event on every PMU - legacy
+events (PERF_TYPE_HARDWARE, PERF_TYPE_HW_CACHE) only try the core
+PMUs. It would seem consistent if metrics tried to open on every PMU
+like most events.
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/builtin-diff.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Thanks,
+> John
 >
-> diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-> index e8a1b16aa5f8..57d300d8e570 100644
-> --- a/tools/perf/builtin-diff.c
-> +++ b/tools/perf/builtin-diff.c
-> @@ -1915,8 +1915,8 @@ static int data_init(int argc, const char **argv)
->                 struct perf_data *data =3D &d->data;
->
->                 data->path  =3D use_default ? defaults[i] : argv[i];
-> -               data->mode  =3D PERF_DATA_MODE_READ,
-> -               data->force =3D force,
-> +               data->mode  =3D PERF_DATA_MODE_READ;
-> +               data->force =3D force;
->
->                 d->idx  =3D i;
->         }
-> --
-> 2.39.0
->
+> >
