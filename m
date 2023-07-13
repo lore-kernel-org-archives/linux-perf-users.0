@@ -2,177 +2,108 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E41FFEB64DA
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Jul 2023 01:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40178EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Jul 2023 01:20:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232680AbjGMBQo (ORCPT
+        id S231573AbjGMBU3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Jul 2023 21:16:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56324 "EHLO
+        Wed, 12 Jul 2023 21:20:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229755AbjGMBQm (ORCPT
+        with ESMTP id S229755AbjGMBU2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Jul 2023 21:16:42 -0400
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36E99127
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 18:16:41 -0700 (PDT)
-Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-401d1d967beso94831cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 18:16:41 -0700 (PDT)
+        Wed, 12 Jul 2023 21:20:28 -0400
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 033CD1BF8
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 18:20:25 -0700 (PDT)
+Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-401d1d967beso95471cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 18:20:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689211000; x=1691803000;
+        d=google.com; s=20221208; t=1689211224; x=1691803224;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qSajZfL2Fg0+J9rUBR1X7rs0ogrromMkaV9GMdpQR6o=;
-        b=XlqLAMO8KVLs1TgPlknrE6np08aOXrPRvw+L2tMV9m7sq4cerUQI28bzwucqz4ZvKR
-         5Qh2oEcw0Zo/mjU/R8lxQs2TcTqzi6ZxHRubE5t8HMI/rM1VLEKlU66qEhA5wq41Ruw8
-         cbKpyduCN4YEVU41hb5FI+kLzjRE3gIaa601AD/53TZI+zDXk2wB7SmilloNJDq/P8rx
-         RaYucwWdy/fOEvIrv2fOmzn+7Rkc9SELBzkG3pmiS6U73oQ0qpobN80vF3Hu4pzoG43Z
-         9CEv57kaChhbKa0Gm2oTKyOXwSo2HOeB7uRvxCR3GlnwXBpaCtzs2D9g46/gLuAfnNK+
-         CNjg==
+        bh=WL6clHOfL7C2hzwuxd/sFxhXrd/t/IxXL0MpWSGPbkM=;
+        b=iw5fAj3Vfq5oS9pv4JCar5T5vJFnpy44wK+oarIAu11flncOHggNv9BcKTRj5bp2s0
+         zoVE4t39cS5rlq69rAos2Iq7IofayAdUzjbeQUxePkt2mVOm9C3oQm8WR/I2+7NfHvn5
+         VY4o6j8jR8m7kEqHFpTS44IO5GRpi1lIuA6kUcQgdb/MeNfzlnJ+IwcI0+Fs9JqAVwIc
+         pBogtsQLIceeSRNbsT8N9JC8KLb5nEfK8eS6Oi8UJRjo9u3LtvATbLfsXRnD/eT1Yx5p
+         iZicS3cwn3ILyx9/X6mtX3BxxDjrQ0NvUlHV1IO+eDMHbVS2R6h8FOdZRqWptbz54Vhu
+         qSvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689211000; x=1691803000;
+        d=1e100.net; s=20221208; t=1689211224; x=1691803224;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qSajZfL2Fg0+J9rUBR1X7rs0ogrromMkaV9GMdpQR6o=;
-        b=Xo+GHHAz77Dr2kT8o4gTug5rJY+hJxViK3YJsKIqEk83Y/+0h6Xt9FsO9PdBpW4Bo0
-         zH+GUo59IiIl6dTPsWQPy6WuW55eq7y+G0yEHMD9jNfNn74ChE8pKWMdlfPeXJFXIJfc
-         e7NgFUxheJxBTLdOsTMPW78MJs5cv/GVMba354AXuhaycU0MfR/efVGjUMaYlBH8k66k
-         gudTT+XlPCsIjz4J3UfDt43UoeWzwa21qCkwHaW/epZ5YU8Szw/mHQ9Zlp+8yeo3GkGv
-         JSqPYRnabVEFbv5kMy1Qnju/grUmFE0Zl4sKtlt1f1RKjVTqjSE858fu1AHckev1oGX9
-         iIqg==
-X-Gm-Message-State: ABy/qLYOIPIQMdnkPeXZPJL8J6WsHluQefgnPeAz1mQ0dQW/0/WCDfgH
-        44NCsQsnYCHC8XxIG1rp5W9Kn+FyYiro0gIEYm9ucVTofhNjMZWs8T//Gw==
-X-Google-Smtp-Source: APBJJlHgGYB6bDXnHoALNNfwk4u4ow9Nn1d4x5+8cXY/amZiok4oGbJ2v94RKPuDwgASCfqSsRhVT8uRXOFTtnAzD10=
-X-Received: by 2002:a05:622a:178a:b0:3f9:56c:1129 with SMTP id
- s10-20020a05622a178a00b003f9056c1129mr357429qtk.5.1689211000179; Wed, 12 Jul
- 2023 18:16:40 -0700 (PDT)
+        bh=WL6clHOfL7C2hzwuxd/sFxhXrd/t/IxXL0MpWSGPbkM=;
+        b=SFri04fnLDijwbZCuocc2sihghOwMmrtgDtODE0CSzIHR2KLQQHZpR0xSTqQpNlPXO
+         S/1RO04DS7ySTRGK1sEBp9eNz6Y/3yLEcFfZc5lSt90DiOq3qRCB3meqVz7Ctmai82WK
+         bO9F8BnAg5IB+ayytc7e/IEe/rJD0HtgsYFWqI6DBwxxY1WRl8hTFbYF21tbOJg8yrzX
+         tvkhsP/5yqIjO/1giQfJYBJ3w5BGJLPCwYSUb9piXaccPAg1b+g3kLj7Mmw6BrIAGtOp
+         omKhTr4RETJiRPPsaLnPRn98ZbJT1b/8rDSu1xsssF/Svm8PV5Pke9C8izq0gK6WkE7E
+         /O+w==
+X-Gm-Message-State: ABy/qLarScLntg77lK5bylMNQQwvkF/qSNNoJFMOrVtkeY3lN+bNkX7C
+        b3FTT4ju/1l0Rhf1D/fXWiV4PK+bAtDlXVdVvieEDw==
+X-Google-Smtp-Source: APBJJlEVum1x2dgOQB1waY93tVBEFBDp4ECMJSRVJJUfUINAwf4YAgZO5ej/8T8oAgCdzO+R4oMzSYmAivoB9jeH31M=
+X-Received: by 2002:a05:622a:1826:b0:403:a6e5:9cdf with SMTP id
+ t38-20020a05622a182600b00403a6e59cdfmr449075qtc.8.1689211224028; Wed, 12 Jul
+ 2023 18:20:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230613164145.50488-1-atrajeev@linux.vnet.ibm.com> <20230613164145.50488-18-atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20230613164145.50488-18-atrajeev@linux.vnet.ibm.com>
+References: <20230614062234.24149-1-luojianhong@cdjrlc.com> <329a5b1b6e2c9061467ed6ef82247b8d@208suo.com>
+In-Reply-To: <329a5b1b6e2c9061467ed6ef82247b8d@208suo.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 12 Jul 2023 18:16:28 -0700
-Message-ID: <CAP-5=fUYTjPjL0c_R6F=RTOaRtbOvctVubvn6S1hxLYd5g1o3A@mail.gmail.com>
-Subject: Re: [PATCH 17/17] perf tests task_analyzer: skip tests if no
- libtraceevent support
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, namhyung@kernel.org,
-        ravi.bangoria@amd.com, john.g.garry@oracle.com,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, Aditya Gupta <adityag@linux.ibm.com>
+Date:   Wed, 12 Jul 2023 18:20:12 -0700
+Message-ID: <CAP-5=fW_tgXjWpevy+y4gY5XxpYq27zHahPZ8fv5L3+LdjaFnQ@mail.gmail.com>
+Subject: Re: [PATCH] perf tools:remove unneeded variable from perf_event_attr__fprintf()
+To:     baomingtong001@208suo.com
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com,
+        anshuman.khandual@arm.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 13, 2023 at 10:04=E2=80=AFAM Athira Rajeev
-<atrajeev@linux.vnet.ibm.com> wrote:
+On Tue, Jun 13, 2023 at 11:25=E2=80=AFPM <baomingtong001@208suo.com> wrote:
 >
-> From: Aditya Gupta <adityag@linux.ibm.com>
+> fix the following coccicheck warning:
 >
-> Test "perf script task-analyzer tests" fails in environment with missing
-> libtraceevent support, as perf record fails to create the perf.data
-> file, which further tests depend on.
+> tools/perf/util/perf_event_attr_fprintf.c:97:5-8: Unneeded variable:
+> "ret". Return "0".
 >
-> Instead, when perf is not compiled with libtraceevent support, skip those
-> tests instead of failing them, by checking the output of `perf
-> record --dry-run` to see if it prints the error "libtraceevent is
-> necessary for tracepoint support"
->
-> For the following output, perf compiled with: `make NO_LIBTRACEEVENT=3D1`
->
-> Before the patch:
->
-> 108: perf script task-analyzer tests                                 :
-> test child forked, pid 24105
-> failed to open perf.data: No such file or directory  (try 'perf record' f=
-irst)
-> FAIL: "invokation of perf script report task-analyzer command failed" Err=
-or message: ""
-> FAIL: "test_basic" Error message: "Failed to find required string:'Comm'.=
-"
-> failed to open perf.data: No such file or directory  (try 'perf record' f=
-irst)
-> FAIL: "invokation of perf script report task-analyzer --ns --rename-comms=
--by-tids 0:random command failed" Error message: ""
-> FAIL: "test_ns_rename" Error message: "Failed to find required string:'Co=
-mm'."
-> failed to open perf.data: No such file or directory  (try 'perf record' f=
-irst)
-> <...>
-> perf script task-analyzer tests: FAILED!
->
-> With this patch, the script instead returns 2 signifying SKIP, and after
-> the patch:
->
-> 108: perf script task-analyzer tests                                 :
-> test child forked, pid 26010
-> libtraceevent is necessary for tracepoint support
-> WARN: Skipping tests. No libtraceevent support
-> test child finished with -2
-> perf script task-analyzer tests: Skip
->
-> Fixes: e8478b84d6ba ("perf test: add new task-analyzer tests")
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
-> ---
->  tools/perf/tests/shell/test_task_analyzer.sh | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->
-> diff --git a/tools/perf/tests/shell/test_task_analyzer.sh b/tools/perf/te=
-sts/shell/test_task_analyzer.sh
-> index b094eeb3bf66..59785dfc11f8 100755
-> --- a/tools/perf/tests/shell/test_task_analyzer.sh
-> +++ b/tools/perf/tests/shell/test_task_analyzer.sh
-> @@ -44,9 +44,20 @@ find_str_or_fail() {
->         fi
->  }
->
-> +# check if perf is compiled with libtraceevent support
-> +skip_no_probe_record_support() {
-> +       perf record -e "sched:sched_switch" -a -- sleep 1 2>&1 | grep "li=
-btraceevent is necessary for tracepoint support" && return 2
+> Signed-off-by: Mingtong Bao <baomingtong001@208suo.com>
 
-Fwiw, another way to detect build options used in other shell tests is:
-perf version --build-options | grep HAVE_LIBTRACEEVENT | grep -q OFF && ret=
-urn 2
+Acked-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> +       return 0
-> +}
-> +
->  prepare_perf_data() {
->         # 1s should be sufficient to catch at least some switches
->         perf record -e sched:sched_switch -a -- sleep 1 > /dev/null 2>&1
-> +       # check if perf data file got created in above step.
-> +       if [ ! -e "perf.data" ]; then
-> +               printf "FAIL: perf record failed to create \"perf.data\" =
-\n"
-> +               return 1
-> +       fi
->  }
+> ---
+>   tools/perf/util/perf_event_attr_fprintf.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
 >
->  # check standard inkvokation with no arguments
-> @@ -134,6 +145,13 @@ test_csvsummary_extended() {
->         find_str_or_fail "Out-Out;" csvsummary "${FUNCNAME[0]}"
->  }
+> diff --git a/tools/perf/util/perf_event_attr_fprintf.c
+> b/tools/perf/util/perf_event_attr_fprintf.c
+> index 7e5e7b30510d..4a8f625b80c7 100644
+> --- a/tools/perf/util/perf_event_attr_fprintf.c
+> +++ b/tools/perf/util/perf_event_attr_fprintf.c
+> @@ -94,7 +94,6 @@ int perf_event_attr__fprintf(FILE *fp, struct
+> perf_event_attr *attr,
+>                    attr__fprintf_f attr__fprintf, void *priv)
+>   {
+>       char buf[BUF_SIZE];
+> -    int ret =3D 0;
 >
-> +skip_no_probe_record_support
-> +err=3D$?
-> +if [ $err -ne 0 ]; then
-> +       echo "WARN: Skipping tests. No libtraceevent support"
-> +       cleanup
-> +       exit $err
-> +fi
->  prepare_perf_data
->  test_basic
->  test_ns_rename
-> --
-> 2.39.1
+>       PRINT_ATTRf(type, p_unsigned);
+>       PRINT_ATTRf(size, p_unsigned);
+> @@ -155,5 +154,5 @@ int perf_event_attr__fprintf(FILE *fp, struct
+> perf_event_attr *attr,
+>       PRINT_ATTRf(aux_sample_size, p_unsigned);
+>       PRINT_ATTRf(sig_data, p_unsigned);
 >
+> -    return ret;
+> +    return 0;
+>   }
