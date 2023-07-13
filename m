@@ -2,150 +2,232 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F04C0015E
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Jul 2023 23:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CC6C0015E
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Jul 2023 23:52:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233928AbjGMXtp (ORCPT
+        id S232245AbjGMXv7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Jul 2023 19:49:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33934 "EHLO
+        Thu, 13 Jul 2023 19:51:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229953AbjGMXtp (ORCPT
+        with ESMTP id S232193AbjGMXv5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Jul 2023 19:49:45 -0400
-Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B9CC270F
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Jul 2023 16:49:44 -0700 (PDT)
-Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-40371070eb7so80381cf.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Jul 2023 16:49:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689292183; x=1691884183;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Uf9eZzWTd6bCo2iXJG8qXItCRIW3JnWJx3nH8jBZutg=;
-        b=SJjfzpaKzFbBuDyqlrE/ipmpMRjo7y1qKInpFfEOEaoB3yIWinzJE+x2gVM5ExTzt1
-         C5c0bIZ4JpSOGDsK1amFVlCr8Q/5H7BQjTdDuWXcPNyPgM6L2BUNuNaElskXTOJK0PTk
-         ZrhyPL53FpXpX/UEO/b970w3OxxN0FkRp0A8dp3HTpat7PWIJRi4tqRzvYRbOYasVCzW
-         6v8DlBlD+ssptEa0XcDlqETnKBk+GVuyaHbh0R1mzhgT2G1MmfRwhYvFqStLu9Gy5Pij
-         jpJGyFb57KdIbzVqgmHKFQqPMo5ie5+fAUl0Cxau2gr+2v7E3055eKZ7FgX7m8tOWR+e
-         Eeew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689292183; x=1691884183;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Uf9eZzWTd6bCo2iXJG8qXItCRIW3JnWJx3nH8jBZutg=;
-        b=Z+va9URoIfYDu/x9OSfeoVKb4FY22W3ji6I7Y2T2uxMNO61DB+etzAxbWPPcwDcF1P
-         6wmp4jYLw5UrFb2fd0lFjgDNij9CAuQDpXUPbxvdsSteYceGs/AZsomwrz0I0ICwWkkj
-         xe+FMSzh05VXC2KzB++Yep78u54FbtILJ4dH+/Yy3hu3ONxl6BXEHYtvbTUsUn5CoBdI
-         iAfPzMSXtBe3vt482M1j6PAMcbdpeB4oK49NeVAVYSpTkyS+OXw1k2aVShbGSXpzJN0X
-         /YxmiBvkjuQBB4v+GgHJ6Z5m6vyKtnkZlxyzQBdVTXQuMloHeBJIQRX7koye53i6Exg4
-         6eVw==
-X-Gm-Message-State: ABy/qLZsp8wOrBzZQUYfSFzryPSZS39/GeSsjJv3KtuE3Mz9YLySiQ1U
-        eFGkkBECr4rISI/eJ8dVyiUF1wVxIifzbGnQBvH/TkADPV6N2D0Gj9UqXw==
-X-Google-Smtp-Source: APBJJlGftfREFmdHrV6IExA64KVjl5xkgorvIdPr8XG1tV1oKh4LXNSAfN5cK6N1tNbLJPQIEagQX+mNOZkqNLSvp5A=
-X-Received: by 2002:ac8:5acf:0:b0:3f8:5b2:aef0 with SMTP id
- d15-20020ac85acf000000b003f805b2aef0mr825420qtd.24.1689292183189; Thu, 13 Jul
- 2023 16:49:43 -0700 (PDT)
+        Thu, 13 Jul 2023 19:51:57 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94A421FCD
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Jul 2023 16:51:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689292316; x=1720828316;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=xjExe+LHfnsZvF/kmciec8GJHBQ4DLvW34cLUJJw/w8=;
+  b=g4OcBkI7o+SEmTyb2qixAVIYIgm7Y1r06Ezb/79IZcZKs/Sei5Gu5l1S
+   56vQqWD+BjP6oEcb52z+BYH5KibUtX+BCSo7BzrS7QPa8peAhc/t55Mkg
+   gTcNqu747zUSJlSnzxz/U9/EZgeBcBmCl3SmXBHFml79QMBh03gjMaYvS
+   Z3Th2JSQgIBomQyg63qwjgEQFsKsRiXhJUU4y/dWeALJa84S19AFlMZfH
+   Ru2Anrf5h80ooJEnb1oSzY40cEE/RJ8bFI3dS7UYsaz7w23oIkrBLsW1F
+   ZfLb09LPgpcSsBDa4IsS9ZDnGDYCTKquRMiDW5Oak9ljPwnqVduOh9V0d
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="367986039"
+X-IronPort-AV: E=Sophos;i="6.01,204,1684825200"; 
+   d="scan'208";a="367986039"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 16:51:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="699454624"
+X-IronPort-AV: E=Sophos;i="6.01,204,1684825200"; 
+   d="scan'208";a="699454624"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 16:51:45 -0700
+Date:   Thu, 13 Jul 2023 16:51:44 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: Event reordering regression for software events
+Message-ID: <ZLCOEOtJOQiN+8VB@tassilo>
+References: <ZLBgbHkbrfGygM/u@tassilo>
+ <ZLBjI4a3wIMs75lA@kernel.org>
+ <CAP-5=fU5Y95G2FsFdwxwPk=kLe=kka7CkD7ZDrzSU+Xv-Ks=Qg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20230713111930.1636612-1-tmricht@linux.ibm.com>
-In-Reply-To: <20230713111930.1636612-1-tmricht@linux.ibm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 13 Jul 2023 16:49:31 -0700
-Message-ID: <CAP-5=fXSrR5bqHRP=rGoMeWE+beZT36JTXctGP7tawjjx=m6Hw@mail.gmail.com>
-Subject: Re: [PATCH v2] perf build: Support llvm and clang support compiled in
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, wangnan0@huawei.com, jolsa@kernel.org,
-        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fU5Y95G2FsFdwxwPk=kLe=kka7CkD7ZDrzSU+Xv-Ks=Qg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jul 13, 2023 at 4:19=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
-om> wrote:
->
-> Perf build suports llvm and clang support compiled in.
-> Test case 56 builtin clang support provides a test case
-> which is always skipped.
->
-> Link perf with the latest llvm and clang libraries and
-> enable this test case.
->
-> Use 'make LIBCLANGLLVM=3D1' to include this support.
->
-> V2: Add Library patch before -lclang-cpp
->
-> Output before:
->  # ./perf test 56
->  56: builtin clang support                  :
->  56.1: builtin clang compile C source to IR : Skip (not compiled in)
->  56.2: builtin clang compile C source to ELF object: \
->                                         Skip (not compiled in)
->
-> Output after:
->  # ./perf test 56
->  56: builtin clang support                          :
->  56.1: builtin clang compile C source to IR         : Ok
->  56.2: builtin clang compile C source to ELF object : Ok
->  #
->
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Cc: Wang Nan <wangnan0@huawei.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
 
-Build tested with LLVM 14 and 15 using:
-BUILD_BPF_SKEL=3D1 LIBCLANGLLVM=3D1 LLVM_CONFIG=3Dllvm-config-14
-BUILD_BPF_SKEL=3D1 LIBCLANGLLVM=3D1 LLVM_CONFIG=3Dllvm-config-15
+On Thu, Jul 13, 2023 at 02:24:22PM -0700, Ian Rogers wrote:
+> On Thu, Jul 13, 2023 at 1:48 PM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > Em Thu, Jul 13, 2023 at 01:37:00PM -0700, Andi Kleen escreveu:
+> > > Hi Ian,
+> > >
+> > > The current post 6.3 linux-perf-next causes some fairly drastic
+> > > reordering in output for some event combinations. I bisected it down to
+> > > your patch:
+> > >
+> > > commit 347c2f0a0988c59c402148054ef54648853fa669
+> > > Author: Ian Rogers <irogers@google.com>
+> > > Date:   Sat Mar 11 18:15:40 2023 -0800
+> > >
+> > >     perf parse-events: Sort and group parsed events
+> > >
+> > >     This change is intended to be a no-op for most current cases, the
+> > >     default sort order is the order the events were parsed. Where it
+> > >     varies is in how groups are handled. Previously an uncore and core
+> > >     event that are grouped would most often cause the group to be removed:
+> > >
+> 
+> So this is a no-op for most current cases where event groups aren't
+> used. The default order for events is the order they were inserted in.
 
-Tested-by: Ian Rogers <irogers@google.com>
+This doesn't seem to be what happens because the patch reorders
+top-level events outside group. (like all the top level "dummy"ies)
 
-Thanks,
-Ian
+But this commit broke things that are completely unrelated to hybrid and uncore,
+just plain software events not being in a group. There's no reason 
+to reorder those.
 
-> ---
->  tools/perf/Makefile.config | 2 +-
->  tools/perf/Makefile.perf   | 5 +----
->  2 files changed, 2 insertions(+), 5 deletions(-)
->
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 0609c19caabd..a90af438261c 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -325,7 +325,7 @@ CORE_CFLAGS +=3D -Wall
->  CORE_CFLAGS +=3D -Wextra
->  CORE_CFLAGS +=3D -std=3Dgnu11
->
-> -CXXFLAGS +=3D -std=3Dgnu++14 -fno-exceptions -fno-rtti
-> +CXXFLAGS +=3D -std=3Dgnu++17 -fno-exceptions -fno-rtti
->  CXXFLAGS +=3D -Wall
->  CXXFLAGS +=3D -fno-omit-frame-pointer
->  CXXFLAGS +=3D -ggdb3
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 097316ef38e6..158a0733fc9d 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -426,10 +426,7 @@ EXTLIBS :=3D $(call filter-out,$(EXCLUDE_EXTLIBS),$(=
-EXTLIBS))
->  LIBS =3D -Wl,--whole-archive $(PERFLIBS) $(EXTRA_PERFLIBS) -Wl,--no-whol=
-e-archive -Wl,--start-group $(EXTLIBS) -Wl,--end-group
->
->  ifeq ($(USE_CLANG), 1)
-> -  CLANGLIBS_LIST =3D AST Basic CodeGen Driver Frontend Lex Tooling Edit =
-Sema Analysis Parse Serialization
-> -  CLANGLIBS_NOEXT_LIST =3D $(foreach l,$(CLANGLIBS_LIST),$(shell $(LLVM_=
-CONFIG) --libdir)/libclang$(l))
-> -  LIBCLANG =3D $(foreach l,$(CLANGLIBS_NOEXT_LIST),$(wildcard $(l).a $(l=
-).so))
-> -  LIBS +=3D -Wl,--start-group $(LIBCLANG) -Wl,--end-group
-> +  LIBS +=3D -L$(shell $(LLVM_CONFIG) --libdir) -lclang-cpp
->  endif
->
->  ifeq ($(USE_LLVM), 1)
-> --
-> 2.41.0
->
+Basically anything you do for hybrid and topdown shouldn't affect
+anything else. That's the basic rule.
+
+
+> Perf metric events require being in a group with the slots event
+> first. There are assumptions in the perf code that sibling events are
+> adjacent in the evlist. To fix and maintain all the requirements on
+> the evlist we've gotten to where we are now. I've tried to make the
+> code as simple and transparent as possible, but still fulfilling the
+> requirements coming from perf metric events and hybrid. The logic is
+> in parse_events__sort_events_and_fix_groups:
+
+This random reordering approach is just not viable. I explained
+this before. If you have a tool which generates the same event in
+multiple instances (for which there are many valid reasons related
+to multiplexing accuracy), then it absolutely cannot handle random
+reordering. The tool doesn't know which instance of its event is where
+if it's not in the same position.
+
+If you find you need reordering for your purposes and you know
+you don't rely on ordering make it some kind of opt-in.
+But forcing it on all perf users doesn't work.
+
+
+> > > wrong place, instead of the expected order.
+> > >
+> > > good:
+> > >
+> > > ...
+> > > 986476553;ns;duration_time;986476553;100.00;;
+> > > 0;;dummy;983952237;100.00;;
+> > > 0;;cs:u;983952237;100.00;;
+> > > 16532;;minor-faults:u;983952237;100.00;;
+> > > 0;;major-faults:u;983952237;100.00;;
+> > > 0;;migrations:u;983952237;100.00;;
+> > > 3532509496;;cycles:u;23999092;2.00;;
+> > > ....
+> > >
+> > > bad:
+> > >
+> > > 1010119571;ns;duration_time;1010119571;100.00;;
+> > > 0;;dummy [software];1007748753;100.00;;
+> > > 0;;cs:u [software];1007748753;100.00;;
+> > > 16496;;minor-faults:u [software];1007748753;100.00;;
+> > > 0;;major-faults:u [software];1007748753;100.00;;
+> > > 0;;migrations:u [software];1007748753;100.00;;
+> > > 0;;dummy [software];1007748753;100.00;;
+> > > 0;;dummy [software];1007748753;100.00;;
+> > > 0;;dummy [software];1007748753;100.00;;
+> > > 0;;dummy [software];1007748753;100.00;;
+> > > 0;;emulation-faults [software];1007748753;100.00;;
+> > > 0;;dummy [software];1007748753;100.00;;
+> > > 0;;dummy [software];1007748753;100.00;;
+> > > 0;;emulation-faults [software];1007748753;100.00;;
+> > > 0;;emulation-faults [software];1007748753;100.00;;
+
+Please explain how this insane order can make sense even with hybrid
+or metrics. 
+
+> > > 3603193382;;cycles:u;23996241;2.00;;
+> > > 2277091922;;cpu/event=0x0,umask=0x3/u;23996241;2.00;;
+> > > 4182126406;;cpu/event=0xc2,umask=0x2/u;23996241;2.00;;
+> > > 4364677170;;cpu/event=0xc0,umask=0x0/u;23996241;2.00;;
+> > >
+> > >
+> > > Unfortunately this totally breaks toplev. It needs to have the dummies
+> > > in the right location.`
+> > >
+> > > Another problem is that it also now adds [software] to lots of software
+> > > events, which of course also breaks any parsing tools. I haven't bisected
+> > > that too, but it needs fixing too.
+> 
+> There's nothing to bisect, the behavior has changed. We can revert the
+> behavior, break Intel hybrid and Intel perf metric events, but that
+
+I've been using perf metrics for many years without problems without this patch.
+
+I know hybrid has some issues that need to be fixed, but that
+absolutely cannot break basic properties like having a parseable
+output format.
+
+> would seem unfortunate. Tbh, the mistake here is the assumptions that
+> toplev is making.
+
+It's not an random assumption, it's the only way to parse perf output uniquely.
+
+Please make it an option. But this cannot stay this way unconditionally 
+if perf stat is supposed to stay a tool which can be used from other programs.
+
+> > correctness, a necessary step to resume attempts at being multithreaded.
+> >
+> > We have seen a growing number of 'perf test' entries being submitted,
+> > with writing shell scripts that check if the output from various command
+> > lines produce expected results.
+> >
+> > It would really be great to have new entries that exercise what is
+> > expected by toplev so that we really are careful with compatibility.
+> 
+> We are careful with compatibility, in fact we've written a number of
+> tests to ensure the json and CSV output doesn't regress. Kan recently
+
+The tests are super basic and don't seem to cover any even moderately
+complex cases. Yes it's great that you wrote tests, but given
+the poor coverage you really cannot rely on just a few basic unit
+tests here.
+
+Given that, and the wide usage of perf and the existence of Hyrum's law the
+only safe way is to avoid changing default behaviors. If you want
+some behavior change make it opt-in.
+
+> Kan recently removed events and put metric names in the text output
+> instead, even hiding events that have been programmed.. basically
+> relying on text output is wrong and toplev is broken in this regard.
+
+I missed your explanation how toplev is supposed to parse the output
+then instead?
+
+> Fixing hybrid and perf metric events weren't problems of my invention,
+> nor were they done with a casual disregard for perf users and no care
+> about breaking them. That said, testing can always be better so why
+> not add toplev's tests to tools/perf/tests/shell ? This way I can only
+> break things if I ignore a test regression.
+
+toplev generates the perf command lines dynamically and they are highly
+dependent on the current system.  I don't see a simple way to make
+independent tests, unless you want a big case statement for existing systems,
+or add most of toplev.
+
+I guess could add some script that is the equivalent of
+
+git clone https://github.com/andikleen/pmu-tools
+cd pmu-tools
+PERF=/point/to/new/perf/binary  ./tl-tester
+
+if that helps? The toplev test suite has reasonably good coverage.
+
+
+-Andi
