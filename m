@@ -2,84 +2,197 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9A5C0015E
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Jul 2023 16:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9763EC001DD
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Jul 2023 16:53:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232003AbjGMQni (ORCPT
+        id S232012AbjGMQxh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Jul 2023 12:43:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54978 "EHLO
+        Thu, 13 Jul 2023 12:53:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235515AbjGMQnU (ORCPT
+        with ESMTP id S235347AbjGMQxg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Jul 2023 12:43:20 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CF4530FA
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Jul 2023 09:43:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689266579; x=1720802579;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=Ti2aV+8E+xVsRMUvjwciNlmKrTA0Gd6Ag9MVTjte6hc=;
-  b=P4lOoolt/cokToWSytuV/sAyQNNh4snKHJOdO0biqce2si4O2gaNnpXZ
-   Y/norJL9BFtEGdVGbTOAG0E0T77moE8d1qXH5qedjOcfPCPFqTHO+R84u
-   Av+1cBHNoL+zZuM82JW5UDmjYASQJ520UcRXbZK38I1eU3BXAzPg1etGh
-   8eSrI2NAa8HiDK9koT/aMo3KlF0F49pi5iVPUdbTUqD/b+T1ti4eqiX4W
-   HQ9OoJiUK8IxqqVmj/6w97iDeiInmrRqU5jpqcI2OBR64nja3NpkGel68
-   A6Gdp5WLlZBM2JTQwWHdHrWNbbgI6pp7bxYGep6jqjFzxYpVma2IUah58
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="350117204"
-X-IronPort-AV: E=Sophos;i="6.01,203,1684825200"; 
-   d="scan'208";a="350117204"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 09:42:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="757232925"
-X-IronPort-AV: E=Sophos;i="6.01,203,1684825200"; 
-   d="scan'208";a="757232925"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 09:42:46 -0700
-Date:   Thu, 13 Jul 2023 09:42:45 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     irogers@google.com
-Cc:     linux-perf-users@vger.kernel.org
-Subject: perf command line error handling regression
-Message-ID: <ZLAphRzys2lcNICF@tassilo>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Thu, 13 Jul 2023 12:53:36 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B24B62D55
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Jul 2023 09:53:23 -0700 (PDT)
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36DGksRV011507;
+        Thu, 13 Jul 2023 16:53:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=7Zy8RTtUviGs7teFyUFZlWFkGwiJx6+DEnhk+sQTGW0=;
+ b=U5s5S28tOH7icYAOCmtjFfxCw8KZXqpBkP6j9l7muzXfULgfUim/cy71n9LqqpfJwXGj
+ yNghRrtM1h7aM5cdPf+e+fAH7kFyIcQNH+sLxK1irkvKvlfkfxyYnhltudGt6VQfIR52
+ sk2ws3T6/j2FA/yTrnGcgBJ4VBcuJUMEsSGRDE4FJW+mtMKmgBuCByQKfZWbAN1CYUzz
+ bNi5ioJLDKo0gmwCedt36FpRVABJFoVdITtam1FEfkkjLvAD3KfTNGSu0CjratEGUp6X
+ s54VfxNWaUxAdW065Z+GgLTsexta1kzY+wjik3rJK+cKgeqr6DMck8KZpJqMD10kICJP pQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rtn3eg47j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Jul 2023 16:53:17 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36DGmQpl015549;
+        Thu, 13 Jul 2023 16:53:16 GMT
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rtn3eg46k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Jul 2023 16:53:16 +0000
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36DBovuo007062;
+        Thu, 13 Jul 2023 16:53:14 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3rpy2eaf4s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Jul 2023 16:53:14 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36DGrAaZ45744652
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jul 2023 16:53:10 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 553AB2004D;
+        Thu, 13 Jul 2023 16:53:10 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7D85A20049;
+        Thu, 13 Jul 2023 16:53:08 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.39.172])
+        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Thu, 13 Jul 2023 16:53:08 +0000 (GMT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.500.231\))
+Subject: Re: [PATCH 1/2] tools/perf/tests: perf all metrics test fails when
+ perf_event access is restricted
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <CAM9d7chEpdJkpWuxZD2-w89SFBm9CU28MpLA40LV+=GaLJXS1w@mail.gmail.com>
+Date:   Thu, 13 Jul 2023 22:22:56 +0530
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>, disgoel@linux.vnet.ibm.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <79C2D267-53E0-4169-91EA-98EC5F5EC9E8@linux.vnet.ibm.com>
+References: <20230615073803.54481-1-atrajeev@linux.vnet.ibm.com>
+ <AEE7B55C-BA6B-4E0E-A2E9-4E7EE09B4D50@linux.vnet.ibm.com>
+ <CAM9d7chEpdJkpWuxZD2-w89SFBm9CU28MpLA40LV+=GaLJXS1w@mail.gmail.com>
+To:     Namhyung Kim <namhyung@kernel.org>
+X-Mailer: Apple Mail (2.3731.500.231)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: CA4e8x7OMtn9-1JOen8TEuSwcOjLe-ZJ
+X-Proofpoint-GUID: rU2-3WC-KZfLqONJe8-Et_6R7dLRr67-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-13_06,2023-07-13_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 priorityscore=1501 spamscore=0 phishscore=0 bulkscore=0
+ malwarescore=0 mlxscore=0 suspectscore=0 lowpriorityscore=0 clxscore=1015
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2307130146
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Ian,
-
-Since the commit below, I see the following:
-
-$ perf foo
-Segmentation fault (core dumped)
-$
-
-Before:
-
-$ perf foo
-perf: 'foo' is not a perf-command. See 'perf --help'.
-$
-
-(gdb) bt
-#0  0x00007ffff6f89fe2 in __strcmp_evex () from /lib64/libc.so.6
-#1  0x00007ffff6e6387d in msort_with_tmp.part () from /lib64/libc.so.6
-#2  0x00007ffff6e63bd6 in qsort_r () from /lib64/libc.so.6
-#3  0x00000000005895af in help_unknown_cmd (cmd=cmd@entry=0x7fffffffdaf2 "foo") at util/help-unknown-cmd.c:71
-#4  0x000000000040cb52 in main (argc=1, argv=0x7fffffffd750) at perf.c:543
 
 
-commit 657a3efee43a29d13c4f30e4c8f6a178fd2bf14a
-Author: Ian Rogers <irogers@google.com>
-Date:   Sun Jun 11 16:36:06 2023 -0700
+> On 05-Jul-2023, at 11:54 PM, Namhyung Kim <namhyung@kernel.org> wrote:
+>=20
+> On Mon, Jul 3, 2023 at 10:04=E2=80=AFPM Athira Rajeev
+> <atrajeev@linux.vnet.ibm.com> wrote:
+>>=20
+>>=20
+>>=20
+>>> On 15-Jun-2023, at 1:08 PM, Athira Rajeev =
+<atrajeev@linux.vnet.ibm.com> wrote:
+>>>=20
+>>> Perf all metrics test fails as below when perf_event access
+>>> is restricted.
+>>>=20
+>>>   ./perf test -v "perf all metrics test"
+>>>   Metric 'Memory_RD_BW_Chip' not printed in:
+>>>   Error:
+>>>   Access to performance monitoring and observability operations is =
+limited.
+>>>   Enforced MAC policy settings (SELinux) can limit access to =
+performance
+>>>   =E2=80=94
+>>>   access to performance monitoring and observability operations for =
+processes
+>>>   without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux =
+capability.
+>>>   =E2=80=94
+>>>   test child finished with -1
+>>>   ---- end ----
+>>>   perf all metrics test: FAILED!
+>=20
+> In my system, it fails like below:
+>=20
+>  $ ./perf test -v 101
+>  101: perf all metrics test                                           =
+:
+>  --- start ---
+>  test child forked, pid 398458
+>  Testing branch_misprediction_ratio
+>  Testing all_remote_links_outbound
+>  Metric 'all_remote_links_outbound' not printed in:
+>  Error:
+>  Invalid event (remote_outbound_data_controller_3:u) in per-thread
+> mode, enable system wide with '-a'.
+>  Testing nps1_die_to_dram
 
-    lib subcmd: Avoid memory leak in exclude_cmds
+Hi Namhyung,
 
-    exclude_cmds will shorten the cmds names array, before doing so free the
-    removed entry.
+Thanks for checking. Is the fail behaviour observed after applying this =
+fix patch ?
+I will check it in my setup=20
+
+Athira
+>  ...
+>=20
+> Thanks,
+> Namhyung
+>=20
+>>=20
+>>=20
+>> Hi,
+>>=20
+>> Looking for review comments on this patch.
+>>=20
+>> Thanks
+>>>=20
+>>> The perf all metrics test picks the input events from
+>>> "perf list --raw-dump metrics" and runs "perf stat -M "$m""
+>>> for each of the metrics in the list. It fails here for some
+>>> of the metrics which needs access, since it collects system
+>>> wide resource details/statistics. Fix the testcase to skip
+>>> those metric events.
+>>>=20
+>>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>>> ---
+>>> tools/perf/tests/shell/stat_all_metrics.sh | 4 +++-
+>>> 1 file changed, 3 insertions(+), 1 deletion(-)
+>>>=20
+>>> diff --git a/tools/perf/tests/shell/stat_all_metrics.sh =
+b/tools/perf/tests/shell/stat_all_metrics.sh
+>>> index 54774525e18a..14b96484a359 100755
+>>> --- a/tools/perf/tests/shell/stat_all_metrics.sh
+>>> +++ b/tools/perf/tests/shell/stat_all_metrics.sh
+>>> @@ -6,7 +6,9 @@ err=3D0
+>>> for m in $(perf list --raw-dump metrics); do
+>>>  echo "Testing $m"
+>>>  result=3D$(perf stat -M "$m" true 2>&1)
+>>> -  if [[ "$result" =3D~ ${m:0:50} ]] || [[ "$result" =3D~ "<not =
+supported>" ]]
+>>> +  # Skip if there is no access to perf_events monitoring
+>>> +  # and observability operations
+>>> +  if [[ "$result" =3D~ ${m:0:50} ]] || [[ "$result" =3D~ "<not =
+supported>" ]] || [[ "$result" =3D~ "Access to performance monitoring =
+and observability operations is limited" ]]
+>>>  then
+>>>    continue
+>>>  fi
+>>> --
+>>> 2.31.1
+
 
