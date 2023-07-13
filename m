@@ -2,122 +2,151 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E940BEB64DD
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Jul 2023 09:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CC6EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Jul 2023 11:20:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230036AbjGMJPu (ORCPT
+        id S232167AbjGMLUG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Jul 2023 05:15:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44584 "EHLO
+        Thu, 13 Jul 2023 07:20:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233779AbjGMJPt (ORCPT
+        with ESMTP id S232181AbjGMLUF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Jul 2023 05:15:49 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7AFC81980;
-        Thu, 13 Jul 2023 02:15:47 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B50E51570;
-        Thu, 13 Jul 2023 02:16:29 -0700 (PDT)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D24F63F740;
-        Thu, 13 Jul 2023 02:15:44 -0700 (PDT)
-Message-ID: <12a2da14-1fd0-09cd-92c0-c43dd1df51eb@arm.com>
-Date:   Thu, 13 Jul 2023 10:15:33 +0100
+        Thu, 13 Jul 2023 07:20:05 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 526AA26A1;
+        Thu, 13 Jul 2023 04:20:04 -0700 (PDT)
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36DBGP5B029087;
+        Thu, 13 Jul 2023 11:19:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=WeQUdBYX4oH9A+RGhFG1aGqzmBTPgeTJskhiZlg5yy8=;
+ b=ajGAO9CIpFQjQOn1eU0d7c3NP6gL37Py1Zq/tlkvp1/BEJh2nj0q0ga6+KrGE3edOb3R
+ wownuVfqrQcLfEHpYTnreLQ987rEVQi+4bf2t7TyL68MPdV7++KLGXBqAYqW/BWZFqI2
+ F1+H7QDp4eCxCY7XJwPoC1Wp5rgIUfTtNau6mTzvI0waX4bbE6+FQvn+c5fQFF6vBbh6
+ hYd7nxblsBwXZQHepouoRHYkx16puWpE09FxXgaylDAdC2rX5cCRZv0vK7a3u7Sv3aHq
+ FfHFImFZyHauu6ElNBpURMyMwRrQfiR8OUUETGJx4uXrvF1QLr+RYv3HnO3un4XD3ERl Cw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rtg8j01n1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Jul 2023 11:19:44 +0000
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36DBHUw3031579;
+        Thu, 13 Jul 2023 11:19:44 GMT
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rtg8j01mp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Jul 2023 11:19:44 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36D3JRuW031327;
+        Thu, 13 Jul 2023 11:19:42 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3rpy2e37gc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Jul 2023 11:19:42 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36DBJdkc22086282
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jul 2023 11:19:39 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E64432004D;
+        Thu, 13 Jul 2023 11:19:38 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 89CDD2004B;
+        Thu, 13 Jul 2023 11:19:38 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Thu, 13 Jul 2023 11:19:38 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, irogers@google.com, wangnan0@huawei.com,
+        jolsa@kernel.org
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH v2] perf build: Support llvm and clang support compiled in
+Date:   Thu, 13 Jul 2023 13:19:30 +0200
+Message-Id: <20230713111930.1636612-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH 4/4] perf: Remove unused PERF_PMU_CAP_HETEROGENEOUS_CPUS
- capability
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, irogers@google.com
-References: <20230710122138.1450930-1-james.clark@arm.com>
- <20230710122138.1450930-5-james.clark@arm.com>
- <96a3d12a-71d8-1779-28a3-316e1838292e@arm.com>
- <6143e1cd-4db7-d980-a189-b9b06f99d7c4@arm.com>
- <ca559765-0f07-b187-bdcd-826dcd99a312@arm.com>
-Content-Language: en-US
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <ca559765-0f07-b187-bdcd-826dcd99a312@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 9fuoG5gglUFQq318UC0FQCozZ2GcwgjC
+X-Proofpoint-GUID: WURcoLFAw5trRMChsU4IRMpL_-eDGZ5u
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-13_04,2023-07-11_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 bulkscore=0 spamscore=0 phishscore=0 clxscore=1015
+ malwarescore=0 impostorscore=0 suspectscore=0 priorityscore=1501
+ mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2307130097
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Perf build suports llvm and clang support compiled in.
+Test case 56 builtin clang support provides a test case
+which is always skipped.
 
+Link perf with the latest llvm and clang libraries and
+enable this test case.
 
-On 13/07/2023 08:30, Anshuman Khandual wrote:
-> 
-> 
-> On 7/11/23 19:45, James Clark wrote:
->>
->>
->> On 11/07/2023 13:10, Anshuman Khandual wrote:
->>>
->>>
->>> On 7/10/23 17:51, James Clark wrote:
->>>> Since commit bd2756811766 ("perf: Rewrite core context handling") the
->>>> relationship between perf_event_context and PMUs has changed so that
->>>> the error scenario that PERF_PMU_CAP_HETEROGENEOUS_CPUS originally
->>>> silenced no longer exists.
->>>>
->>>> Remove the capability to avoid confusion that it actually influences
->>>> any perf core behavior. This change should be a no-op.
->>>>
->>>> Signed-off-by: James Clark <james.clark@arm.com>
->>>> ---
->>>>  include/linux/perf_event.h | 2 +-
->>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->>>> index d5628a7b5eaa..3f4d941fd6c5 100644
->>>> --- a/include/linux/perf_event.h
->>>> +++ b/include/linux/perf_event.h
->>>> @@ -288,7 +288,7 @@ struct perf_event_pmu_context;
->>>>  #define PERF_PMU_CAP_EXTENDED_REGS		0x0008
->>>>  #define PERF_PMU_CAP_EXCLUSIVE			0x0010
->>>>  #define PERF_PMU_CAP_ITRACE			0x0020
->>>> -#define PERF_PMU_CAP_HETEROGENEOUS_CPUS		0x0040
->>>> +/* Unused					0x0040 */
->>>
->>> Small nit, "Unused" marking might not be required here.
->>>
->>
->> But then it would be very easy to miss that there is a free bit if I
->> don't leave the comment. Is it really better without it?
->>
->> I could shift all the following ones down by one bit, but it would be a
-> 
-> Sounds as a better option IMHO.
-> 
->> lot of work to make sure that nobody has hard coded some check for one
->> of the bits instead of using the define somewhere.
-> 
-> These are not user visible ABI and hence defined in include/linux/perf_event.h
-> to be used by drivers registering a PMU for capability enumeration. I am just
-> wondering why they might have been hard coded any where ?
-> 
+Use 'make LIBCLANGLLVM=1' to include this support.
 
-You never know, I've seen worse! I suppose we'll find out if I change it
-and anything breaks. It will probably be fine though, I'll make the
-change on the next version.
+V2: Add Library patch before -lclang-cpp
 
->>
->>>>  #define PERF_PMU_CAP_NO_EXCLUDE			0x0080
->>>>  #define PERF_PMU_CAP_AUX_OUTPUT			0x0100
->>>>  #define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0200
+Output before:
+ # ./perf test 56
+ 56: builtin clang support                  :
+ 56.1: builtin clang compile C source to IR : Skip (not compiled in)
+ 56.2: builtin clang compile C source to ELF object: \
+	 				Skip (not compiled in)
+
+Output after:
+ # ./perf test 56
+ 56: builtin clang support                          :
+ 56.1: builtin clang compile C source to IR         : Ok
+ 56.2: builtin clang compile C source to ELF object : Ok
+ #
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Cc: Wang Nan <wangnan0@huawei.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/perf/Makefile.config | 2 +-
+ tools/perf/Makefile.perf   | 5 +----
+ 2 files changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 0609c19caabd..a90af438261c 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -325,7 +325,7 @@ CORE_CFLAGS += -Wall
+ CORE_CFLAGS += -Wextra
+ CORE_CFLAGS += -std=gnu11
+ 
+-CXXFLAGS += -std=gnu++14 -fno-exceptions -fno-rtti
++CXXFLAGS += -std=gnu++17 -fno-exceptions -fno-rtti
+ CXXFLAGS += -Wall
+ CXXFLAGS += -fno-omit-frame-pointer
+ CXXFLAGS += -ggdb3
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 097316ef38e6..158a0733fc9d 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -426,10 +426,7 @@ EXTLIBS := $(call filter-out,$(EXCLUDE_EXTLIBS),$(EXTLIBS))
+ LIBS = -Wl,--whole-archive $(PERFLIBS) $(EXTRA_PERFLIBS) -Wl,--no-whole-archive -Wl,--start-group $(EXTLIBS) -Wl,--end-group
+ 
+ ifeq ($(USE_CLANG), 1)
+-  CLANGLIBS_LIST = AST Basic CodeGen Driver Frontend Lex Tooling Edit Sema Analysis Parse Serialization
+-  CLANGLIBS_NOEXT_LIST = $(foreach l,$(CLANGLIBS_LIST),$(shell $(LLVM_CONFIG) --libdir)/libclang$(l))
+-  LIBCLANG = $(foreach l,$(CLANGLIBS_NOEXT_LIST),$(wildcard $(l).a $(l).so))
+-  LIBS += -Wl,--start-group $(LIBCLANG) -Wl,--end-group
++  LIBS += -L$(shell $(LLVM_CONFIG) --libdir) -lclang-cpp
+ endif
+ 
+ ifeq ($(USE_LLVM), 1)
+-- 
+2.41.0
+
