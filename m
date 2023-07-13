@@ -2,69 +2,113 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9B2EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Jul 2023 07:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B181EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Jul 2023 07:31:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233897AbjGMHAA (ORCPT
+        id S233644AbjGMHbG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Jul 2023 03:00:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59504 "EHLO
+        Thu, 13 Jul 2023 03:31:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233486AbjGMHAA (ORCPT
+        with ESMTP id S233486AbjGMHbG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Jul 2023 03:00:00 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21D00119;
-        Wed, 12 Jul 2023 23:59:59 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4R1llB1GGXzNm6J;
-        Thu, 13 Jul 2023 14:56:38 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Thu, 13 Jul 2023 14:59:54 +0800
-Subject: Re: [PATCH 4/5] perf test: Add test case for record tracking
-To:     Ian Rogers <irogers@google.com>, <adrian.hunter@intel.com>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <kan.liang@linux.intel.com>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>
-References: <20230704074217.240939-1-yangjihong1@huawei.com>
- <20230704074217.240939-5-yangjihong1@huawei.com>
- <CAP-5=fVv5C75xy-kMRfssCGd6syx5H1FKe1xs2K_+xQhQVJQPA@mail.gmail.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <fd039d2b-9be8-75b0-56ba-081755bd4f0e@huawei.com>
-Date:   Thu, 13 Jul 2023 14:59:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Thu, 13 Jul 2023 03:31:06 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B50D9E77;
+        Thu, 13 Jul 2023 00:31:04 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4E821570;
+        Thu, 13 Jul 2023 00:31:46 -0700 (PDT)
+Received: from [10.163.49.144] (unknown [10.163.49.144])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 44FD03F73F;
+        Thu, 13 Jul 2023 00:30:57 -0700 (PDT)
+Message-ID: <ca559765-0f07-b187-bdcd-826dcd99a312@arm.com>
+Date:   Thu, 13 Jul 2023 13:00:55 +0530
 MIME-Version: 1.0
-In-Reply-To: <CAP-5=fVv5C75xy-kMRfssCGd6syx5H1FKe1xs2K_+xQhQVJQPA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH 4/4] perf: Remove unused PERF_PMU_CAP_HETEROGENEOUS_CPUS
+ capability
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+To:     James Clark <james.clark@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, irogers@google.com
+References: <20230710122138.1450930-1-james.clark@arm.com>
+ <20230710122138.1450930-5-james.clark@arm.com>
+ <96a3d12a-71d8-1779-28a3-316e1838292e@arm.com>
+ <6143e1cd-4db7-d980-a189-b9b06f99d7c4@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <6143e1cd-4db7-d980-a189-b9b06f99d7c4@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
 
-On 2023/7/13 4:48, Ian Rogers wrote:
-> On Tue, Jul 4, 2023 at 12:44 AM Yang Jihong <yangjihong1@huawei.com> wrote:
+
+On 7/11/23 19:45, James Clark wrote:
+> 
+> 
+> On 11/07/2023 13:10, Anshuman Khandual wrote:
 >>
->> Add a new test case to record tracking side-band events for all CPUs when
->> tracing selected CPUs
+>>
+>> On 7/10/23 17:51, James Clark wrote:
+>>> Since commit bd2756811766 ("perf: Rewrite core context handling") the
+>>> relationship between perf_event_context and PMUs has changed so that
+>>> the error scenario that PERF_PMU_CAP_HETEROGENEOUS_CPUS originally
+>>> silenced no longer exists.
+>>>
+>>> Remove the capability to avoid confusion that it actually influences
+>>> any perf core behavior. This change should be a no-op.
+>>>
+>>> Signed-off-by: James Clark <james.clark@arm.com>
+>>> ---
+>>>  include/linux/perf_event.h | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+>>> index d5628a7b5eaa..3f4d941fd6c5 100644
+>>> --- a/include/linux/perf_event.h
+>>> +++ b/include/linux/perf_event.h
+>>> @@ -288,7 +288,7 @@ struct perf_event_pmu_context;
+>>>  #define PERF_PMU_CAP_EXTENDED_REGS		0x0008
+>>>  #define PERF_PMU_CAP_EXCLUSIVE			0x0010
+>>>  #define PERF_PMU_CAP_ITRACE			0x0020
+>>> -#define PERF_PMU_CAP_HETEROGENEOUS_CPUS		0x0040
+>>> +/* Unused					0x0040 */
+>>
+>> Small nit, "Unused" marking might not be required here.
+>>
 > 
-> We're using "tracking" and "sideband" as synonyms, I think it would be
-> clearer to just use "sideband" and not use "tracking". I see both
-> terms in tools/perf/Documentation/perf-intel-pt.txt
+> But then it would be very easy to miss that there is a free bit if I
+> don't leave the comment. Is it really better without it?
 > 
-Okay, will use "sideband events" instead of "tracking events" in the 
-next version.
+> I could shift all the following ones down by one bit, but it would be a
 
-Thanks,
-Yang
+Sounds as a better option IMHO.
+
+> lot of work to make sure that nobody has hard coded some check for one
+> of the bits instead of using the define somewhere.
+
+These are not user visible ABI and hence defined in include/linux/perf_event.h
+to be used by drivers registering a PMU for capability enumeration. I am just
+wondering why they might have been hard coded any where ?
+
+> 
+>>>  #define PERF_PMU_CAP_NO_EXCLUDE			0x0080
+>>>  #define PERF_PMU_CAP_AUX_OUTPUT			0x0100
+>>>  #define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0200
