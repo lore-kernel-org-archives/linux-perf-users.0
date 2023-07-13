@@ -2,61 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB362EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Jul 2023 03:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AA9EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Jul 2023 03:10:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233352AbjGMDGA (ORCPT
+        id S229740AbjGMDKd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Jul 2023 23:06:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37244 "EHLO
+        Wed, 12 Jul 2023 23:10:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232167AbjGMDF6 (ORCPT
+        with ESMTP id S230054AbjGMDKb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Jul 2023 23:05:58 -0400
-Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 479C719BE
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 20:05:56 -0700 (PDT)
-Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-4036bd4fff1so109061cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 20:05:56 -0700 (PDT)
+        Wed, 12 Jul 2023 23:10:31 -0400
+Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62E791BDA
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 20:10:30 -0700 (PDT)
+Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-4036bd4fff1so109841cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jul 2023 20:10:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689217555; x=1691809555;
+        d=google.com; s=20221208; t=1689217829; x=1691809829;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YAdeA2B+EW+ai0RGsbG6q+tZPOctUxCkhZFz9cywSIU=;
-        b=pLhhkWNglQtkg9ky9otWlEd9blp2NpoSOnt2/hc1Gl+53Rwi1dNyRcArNNVyuzbMjL
-         q/7i6iEmgQnXZGr5jw/AA94Uj3DxNUahClwXYGtVhAryvJyEVuofaLpaI+Hp7stRGe54
-         guXkN5fkJZFRLp5FYaMiBdQs6YDTLNVi4hU3JvIzWqhTPjcVZoXWwHT/1tQJCoepf8XT
-         Fhp8LU7YczbWpJ2QDOCczR2Gp4eyi32TDiitsiY17ucTM6Ht9lvaM73Ddy4vsXuNq72d
-         B6/zyJBteuSQ5tUUqyqNLhtojE/zszTcXuUaHYeyXHO7xGKz3N/NYXCVhjUHbkg1srG5
-         O5ow==
+        bh=xCEbI3WgmGp1pRdtBWdu/+PPGiU0Pj/o+/7oiTniyaE=;
+        b=Hg1CGXQ0eyM5/jE5SmlcTlo1bRmry0Wt9Vl2FzVAPRYpMMTj9uVyJmQtFcKikEXSTB
+         B1cG/SdA3VD/wuesbYyHeJaaIvyBZwm72uzXcOFXKEzkOpeP8mQ+TSpGyZ68TxiA5hzd
+         4nJO+mL7FXol+qEfzYM0i0rzMEQ7mmLDcaFH/2oxm+PbCKIpj4fOmg4CdznFuDgCZ5qi
+         XonaexQDgP884JigkO5lDS3IMk7TIR16xhivyb4/oai+7V4aeqzq8QFGOXQBQ1UU2/Zm
+         O4WvwDzz7X30j+2LpOFe9Nwr70u0SRsRiJcg1VjFYDgwIyvccFumbXd4pnr8s7PYi7U3
+         IB9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689217555; x=1691809555;
+        d=1e100.net; s=20221208; t=1689217829; x=1691809829;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YAdeA2B+EW+ai0RGsbG6q+tZPOctUxCkhZFz9cywSIU=;
-        b=CjnSGl2JB7OM5019Og5dDCtKjpyWHTSgOGLXUSaQeiQnEUF7GtvkNAw5f/iTnIVwxP
-         aYRIldi3gBwZnc2L3FuMWMiwLihUQ0SCna2HVGcofhACThjjHOWVjihGSKQd06hh/HvT
-         AG6e+A9CLAhMLpAHEeprpxcue2nZvBDNxKM/939lutl5QiyrUXzE3AuS1sCu7f7LwawK
-         saVDJ4cqIv9pGzxg37HbjfgrWyl8hgC/XyOr1U5rkyC8+2Lx0BD+YgGsuLSG0+2OxbET
-         WD/K+aDlYd1sLKLQA3wWY+cXVcB0/hDsb0+NVXSkCoaBSqjF74RA37HEnySr8WTucFHn
-         0ZTA==
-X-Gm-Message-State: ABy/qLbd+sGkEZPNB2/VmqL2CAb98M5eNTDEd0x7QHRPD3bBcNaG6ul7
-        X6/QUhRzc6fVQX7EKiqZTQhTCpLGS1EPpEBML04lVA==
-X-Google-Smtp-Source: APBJJlE0tFVp3Q0Xcug15BBkfjbEN/aIulnDt8Wb7YzP0+ZLPpAcM6G0JoMLliqT/PJhJAs2dY6yOf2SA5YIxu/gjok=
-X-Received: by 2002:a05:622a:1054:b0:3f8:175a:4970 with SMTP id
- f20-20020a05622a105400b003f8175a4970mr489084qte.18.1689217555220; Wed, 12 Jul
- 2023 20:05:55 -0700 (PDT)
+        bh=xCEbI3WgmGp1pRdtBWdu/+PPGiU0Pj/o+/7oiTniyaE=;
+        b=bteMnPMJZL/uu3x8L9vr8nhrivLPMRoZE9SpjLgF+R2A/Vs9xagbB07OPa9zNSdoqO
+         bxWeN3idB/fANcrrfMIBuZZkafRJiiGGnhBFKJmC0nJaI5tnEzw9AYszT/+RCN1Oe7dT
+         gbFQ+ID3kvrLDXCm8vfXeDFXbZm2cpBP/9ANga2omQ0i1QxqR2ZcbI4ZqGRXnV5A605J
+         ARffMYhbrv7PmBEb9t9Os/YFbnXNZWmTglIdVODDKjfjs5rnGMbrGqyQBL+f0hhsTnMu
+         gMXTEAF+pcRZoT1/DpNz4PCSbnGVt/mm9pettKkBgSTX5S65Oh65faN+O1O1MpH6VFFc
+         Im1Q==
+X-Gm-Message-State: ABy/qLZ87p6K2MlLzNOy21DyYsr7p4zCtxbW3oD9qkPLCrY+cJLi/Vn9
+        setlHQAxdQJYE88TS5DcDxJDkJBCFdo8nSV6Eu1+Jg==
+X-Google-Smtp-Source: APBJJlH79jPWzG5n9UA0czpeAGh9irvaLp4SsnIBSq4hmhIVAqPafLLD+MqdLwOqYP+Fs8W+vcZSUxgUYsb+cU46bpE=
+X-Received: by 2002:a05:622a:307:b0:403:b1e5:bcae with SMTP id
+ q7-20020a05622a030700b00403b1e5bcaemr454336qtw.10.1689217829371; Wed, 12 Jul
+ 2023 20:10:29 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230712083037.4081444-1-tmricht@linux.ibm.com>
- <20230712083037.4081444-2-tmricht@linux.ibm.com> <CAP-5=fW3M-RaOF=3wBzyimc1oZwJ9cPndRsvVs0fG9=B+D0FoQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fW3M-RaOF=3wBzyimc1oZwJ9cPndRsvVs0fG9=B+D0FoQ@mail.gmail.com>
+In-Reply-To: <20230712083037.4081444-1-tmricht@linux.ibm.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 12 Jul 2023 20:05:44 -0700
-Message-ID: <CAP-5=fU-NUZFboVHnM03rR_773WDZ36T+ES5W4PoZSgUP7i7DQ@mail.gmail.com>
-Subject: Re: [PATCH] perf build: Fix broken feature check for clang due to C++
- standard and changed library packaging
+Date:   Wed, 12 Jul 2023 20:10:18 -0700
+Message-ID: <CAP-5=fUM5w8o4LOh470ciNhvH3bRPnOQ8AojGcWNXeQJJq-TsQ@mail.gmail.com>
+Subject: Re: [PATCH] perf build: Fix broken feature check for llvm due to C++ standard
 To:     Thomas Richter <tmricht@linux.ibm.com>
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org, wangnan0@huawei.com, jolsa@kernel.org,
@@ -68,100 +66,70 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 12, 2023 at 8:02=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On Wed, Jul 12, 2023 at 1:35=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
+om> wrote:
 >
-> On Wed, Jul 12, 2023 at 1:35=E2=80=AFAM Thomas Richter <tmricht@linux.ibm=
-.com> wrote:
-> >
-> > Perf build auto-detects features and packages already installed
-> > for its build. This is done in directory tools/build/feature. This
-> > directory contains small sample programs. When they successfully
-> > compile the necessary prereqs in form of libraries and header
-> > files are present.
-> >
-> > Such a check is also done for clang. And this check fails.
-> >
-> > Fix this and update to the latest C++ standard and use the
-> > new library provided by clang (which contains new packaging)
-> > see this link for reference:
-> >  https://fedoraproject.org/wiki/Changes/Stop-Shipping-Individual-Compon=
-ent-Libraries-In-clang-lib-Package
-> >
-> > Output before:
-> >  # rm -f ./test-clang.bin; make test-clang.bin; ./test-clang.bin; \
-> >         ll test-clang.make.output
-> >  g++  -MD -Wall -Werror -o test-clang.bin test-clang.cpp \
-> >                 > test-clang.make.output 2>&1 -std=3Dgnu++14 \
-> >         -I/usr/include          \
-> >         -L/usr/lib64            \
-> >         -Wl,--start-group -lclangBasic -lclangDriver    \
-> >           -lclangFrontend -lclangEdit -lclangLex        \
-> >           -lclangAST -Wl,--end-group                    \
-> >         -lLLVM-16       \
-> >                         \
-> >         > test-clang.make.output 2>&1
-> >  make: *** [Makefile:356: test-clang.bin] Error 1
-> >  -bash: ./test-clang.bin: No such file or directory
-> >  -rw-r--r--. 1 root root 252041 Jul 12 09:56 test-clang.make.output
-> >  #
-> >
-> > File test-clang.make.output contains many lines of unreferenced
-> > symbols.
-> >
-> > Output after:
-> >  # rm -f ./test-clang.bin; make test-clang.bin; ./test-clang.bin; \
-> >         cat test-clang.make.output
-> >  g++  -MD -Wall -Werror -o test-clang.bin test-clang.cpp \
-> >          > test-clang.make.output 2>&1 -std=3Dgnu++17     \
-> >         -I/usr/include          \
-> >         -L/usr/lib64            \
-> >         -Wl,--start-group -lclang-cpp -Wl,--end-group   \
-> >         -lLLVM-16       \
-> >                         \
-> >         > test-clang.make.output 2>&1
-> >  #
-> >
-> > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Perf build auto-detects features and packages already installed
+> for its build. This is done in directory tools/build/feature. This
+> directory contains small sample programs. When they successfully
+> compile the necessary prereqs in form of libraries and header
+> files are present.
 >
-> Tested-by: Ian Rogers <irogers@google.com>
+> Such a check is also done for llvm. And this check fails.
+> Fix this and update to the latest C++ standard.
+>
+> Output before:
+>  # rm -f ./test-llvm.bin; make test-llvm.bin; ./test-llvm.bin
+>  g++  -MD -Wall -Werror -o test-llvm.bin test-llvm.cpp \
+>                 > test-llvm.make.output 2>&1 -std=3Dgnu++14 \
+>         -I/usr/include          \
+>         -L/usr/lib64            \
+>         -lLLVM-16               \
+>                         \
+>         > test-llvm.make.output 2>&1
+>
+>  make: *** [Makefile:343: test-llvm.bin] Error 1
+>  -bash: ./test-llvm.bin: No such file or directory
+>  #
+>
+> Output after:
+>  # rm -f ./test-llvm.bin; make test-llvm.bin; ./test-llvm.bin
+>  g++  -MD -Wall -Werror -o test-llvm.bin test-llvm.cpp \
+>                 > test-llvm.make.output 2>&1 -std=3Dgnu++17 \
+>         -I/usr/include          \
+>         -L/usr/lib64            \
+>         -lLLVM-16               \
+>                         \
+>         > test-llvm.make.output 2>&1
+>  Hello World!
+>  #
+>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 
-Ah, presumably obsolete to:
-https://lore.kernel.org/linux-perf-users/20230712083037.4081444-1-tmricht@l=
-inux.ibm.com/
+Tested-by: Ian Rogers <irogers@google.com>
+
+Tested with clang/llvm 15.
 
 Thanks,
 Ian
 
-
-
-> Thanks!
-> Ian
+> ---
+>  tools/build/feature/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> > ---
-> >  tools/build/feature/Makefile | 6 ++----
-> >  1 file changed, 2 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefil=
-e
-> > index f8db69654791..0b4a6e43c5cc 100644
-> > --- a/tools/build/feature/Makefile
-> > +++ b/tools/build/feature/Makefile
-> > @@ -353,12 +353,10 @@ $(OUTPUT)test-llvm-version.bin:
-> >                 > $(@:.bin=3D.make.output) 2>&1
-> >
-> >  $(OUTPUT)test-clang.bin:
-> > -       $(BUILDXX) -std=3Dgnu++14                                 \
-> > +       $(BUILDXX) -std=3Dgnu++17                                 \
-> >                 -I$(shell $(LLVM_CONFIG) --includedir)          \
-> >                 -L$(shell $(LLVM_CONFIG) --libdir)              \
-> > -               -Wl,--start-group -lclangBasic -lclangDriver    \
-> > -                 -lclangFrontend -lclangEdit -lclangLex        \
-> > -                 -lclangAST -Wl,--end-group                    \
-> > +               -Wl,--start-group -lclang-cpp -Wl,--end-group   \
-> >                 $(shell $(LLVM_CONFIG) --libs Core option)      \
-> >                 $(shell $(LLVM_CONFIG) --system-libs)           \
-> >                 > $(@:.bin=3D.make.output) 2>&1
-> > --
-> > 2.41.0
-> >
+> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> index 0f0aa9b7d7b5..f8db69654791 100644
+> --- a/tools/build/feature/Makefile
+> +++ b/tools/build/feature/Makefile
+> @@ -340,7 +340,7 @@ $(OUTPUT)test-jvmti-cmlr.bin:
+>         $(BUILD)
+>
+>  $(OUTPUT)test-llvm.bin:
+> -       $(BUILDXX) -std=3Dgnu++14                                 \
+> +       $(BUILDXX) -std=3Dgnu++17                                 \
+>                 -I$(shell $(LLVM_CONFIG) --includedir)          \
+>                 -L$(shell $(LLVM_CONFIG) --libdir)              \
+>                 $(shell $(LLVM_CONFIG) --libs Core BPF)         \
+> --
+> 2.41.0
+>
