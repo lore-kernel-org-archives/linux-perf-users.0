@@ -2,130 +2,367 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C5AEB64DD
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Jul 2023 08:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B332EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Jul 2023 08:59:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234327AbjGMIkv (ORCPT
+        id S234230AbjGMI7S (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Jul 2023 04:40:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43342 "EHLO
+        Thu, 13 Jul 2023 04:59:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234226AbjGMIkk (ORCPT
+        with ESMTP id S234656AbjGMI7K (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Jul 2023 04:40:40 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86D992D56
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Jul 2023 01:36:18 -0700 (PDT)
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36D8ToPm029404;
-        Thu, 13 Jul 2023 08:36:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=pp1;
- bh=APmQqBY6fcIS99MvAhbTAOc76h4aFWX3grpGyaxAE5o=;
- b=Iob4iqU11hns7HUb90RT2By418UkVHU8jVjDAgeTojV4UxJ5cxjgyk6OTzLQgHK/wi/w
- 0FABnXbk9GwuAgUR9zKKbOT2mypoz1l26vJwm6/NBIfDhva8DQAKDIsfb3dDcGVh+4wB
- /b8J9BOhJ0KaRpjF+rcyCbx6D1IOh4tK78vfXhuFYVf3sTtMiQWIsTS4XXkT15mkz/GZ
- D8TPOVpPO93Q/Jnszk/MofE2xSdSs2VvsBOjZIm37FGsU5tIHx16CACM3RKZ1g/QAQUb
- XIHl1wrK9ynHRvw/phTbiQMLlM7Z9jz37ixE5qI90Hl1EZEAW6K9FFzMoYvLfqbSmYHl jg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rtdps896e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Jul 2023 08:36:00 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36D8MiuZ003814;
-        Thu, 13 Jul 2023 08:35:51 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rtdps87qg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Jul 2023 08:35:51 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36D3JRqA031327;
-        Thu, 13 Jul 2023 08:35:25 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3rpy2e35hb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Jul 2023 08:35:25 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36D8ZLQd21562056
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Jul 2023 08:35:21 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B809A2004B;
-        Thu, 13 Jul 2023 08:35:21 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2C5F720043;
-        Thu, 13 Jul 2023 08:35:19 +0000 (GMT)
-Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com (unknown [9.109.199.72])
-        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Thu, 13 Jul 2023 08:35:18 +0000 (GMT)
-Date:   Thu, 13 Jul 2023 14:05:16 +0530
-From:   Aditya Gupta <adityag@linux.ibm.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
-        jolsa@kernel.org, namhyung@kernel.org, ravi.bangoria@amd.com,
-        john.g.garry@oracle.com, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
-Subject: Re: [PATCH 17/17] perf tests task_analyzer: skip tests if no
- libtraceevent support
-Message-ID: <mtekq46r24mrdpngjswvuocthrgtlxazo5s4vqvyxpn3xaxo7x@7ttfgmuj7yut>
-References: <20230613164145.50488-1-atrajeev@linux.vnet.ibm.com>
- <20230613164145.50488-18-atrajeev@linux.vnet.ibm.com>
- <CAP-5=fUYTjPjL0c_R6F=RTOaRtbOvctVubvn6S1hxLYd5g1o3A@mail.gmail.com>
+        Thu, 13 Jul 2023 04:59:10 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAC4F127;
+        Thu, 13 Jul 2023 01:59:06 -0700 (PDT)
+Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.56])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4R1pRm2bdMz18KGW;
+        Thu, 13 Jul 2023 16:58:28 +0800 (CST)
+Received: from M910t.huawei.com (10.110.54.157) by
+ kwepemi500013.china.huawei.com (7.221.188.120) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Thu, 13 Jul 2023 16:59:03 +0800
+From:   Changbin Du <changbin.du@huawei.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Changbin Du <changbin.du@huawei.com>
+Subject: [PATCH] perf: add new option '--workload-attr' to set workload sched_policy/priority/mask
+Date:   Thu, 13 Jul 2023 16:58:31 +0800
+Message-ID: <20230713085831.395112-1-changbin.du@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUYTjPjL0c_R6F=RTOaRtbOvctVubvn6S1hxLYd5g1o3A@mail.gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: cYBaHGx50uXoJRyQZ8COd2fhDCKENYr0
-X-Proofpoint-GUID: 2fAvTLYhcomP3BeAs6pYbHn28w-6IWsV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-13_04,2023-07-11_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- priorityscore=1501 spamscore=0 impostorscore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 suspectscore=0 adultscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2307130074
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.110.54.157]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemi500013.china.huawei.com (7.221.188.120)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello Ian,
+To get consistent benchmarking results, sometimes we need to set the
+sched_policy/priority/mask of the workload to reduce system noise.
 
-On Wed, Jul 12, 2023 at 06:16:28PM -0700, Ian Rogers wrote:
-> On Tue, Jun 13, 2023 at 10:04 AM Athira Rajeev
-> <atrajeev@linux.vnet.ibm.com> wrote:
-> >
-> > From: Aditya Gupta <adityag@linux.ibm.com>
-> >
-> > Test "perf script task-analyzer tests" fails in environment with missing
-> > libtraceevent support, as perf record fails to create the perf.data
-> > file, which further tests depend on.
-> >
-> > Instead, when perf is not compiled with libtraceevent support, skip those
-> > tests instead of failing them, by checking the output of `perf
-> > record --dry-run` to see if it prints the error "libtraceevent is
-> > necessary for tracepoint support"
-> >
-> > ...
-> >
-> > +# check if perf is compiled with libtraceevent support
-> > +skip_no_probe_record_support() {
-> > +       perf record -e "sched:sched_switch" -a -- sleep 1 2>&1 | grep "libtraceevent is necessary for tracepoint support" && return 2
-> 
-> Fwiw, another way to detect build options used in other shell tests is:
-> perf version --build-options | grep HAVE_LIBTRACEEVENT | grep -q OFF && return 2
-> 
-> Thanks,
-> Ian
-> 
+For example, CPU binding is required on big.little system.
 
-Thanks for the review. That seems more straightforward way to check for
-libtraceevent support. I will work on a patch for this, and test it.
+  $ perf stat -r 10 -- taskset -c 0 ls
 
-Thanks,
-Aditya G
+Nevertheless, the 'taskset' is also counted here.
+
+To get away of the middleman, this adds a new option '--workload-attr' to
+do the same jobs for stat and record commands.
+
+  $ sudo perf stat --workload-attr fifo,40,0x1 -- ls
+
+Above will make 'ls' run on CPU #0 with fifo scheduler and realtime
+priority is 40.
+
+Signed-off-by: Changbin Du <changbin.du@huawei.com>
+---
+ tools/perf/builtin-record.c |  22 +++++++
+ tools/perf/builtin-stat.c   |  13 ++++
+ tools/perf/util/evlist.c    | 117 ++++++++++++++++++++++++++++++++++++
+ tools/perf/util/evlist.h    |   3 +
+ tools/perf/util/target.h    |   9 +++
+ 5 files changed, 164 insertions(+)
+
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index aec18db7ff23..dc14231f01bb 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -3289,6 +3289,17 @@ static int parse_record_synth_option(const struct option *opt,
+ 	return 0;
+ }
+ 
++static int record_parse_workload_attr_opt(const struct option *opt,
++					  const char *arg,
++					  int unset __maybe_unused)
++{
++	struct record_opts *opts = opt->value;
++
++	return evlist__parse_workload_attr(arg, &opts->target.workload.sched_policy,
++					   &opts->target.workload.sched_priority,
++					   &opts->target.workload.cpu_mask);
++}
++
+ /*
+  * XXX Ideally would be local to cmd_record() and passed to a record__new
+  * because we need to have access to it in record__exit, that is called
+@@ -3309,6 +3320,8 @@ static struct record record = {
+ 		.target		     = {
+ 			.uses_mmap   = true,
+ 			.default_per_cpu = true,
++			.workload.sched_policy = -1,
++			.workload.sched_priority = 0,
+ 		},
+ 		.mmap_flush          = MMAP_FLUSH_DEFAULT,
+ 		.nr_threads_synthesize = 1,
+@@ -3333,6 +3346,12 @@ static struct record record = {
+ const char record_callchain_help[] = CALLCHAIN_RECORD_HELP
+ 	"\n\t\t\t\tDefault: fp";
+ 
++const char record_workload_attr_help[] =
++	"setup target workload (the <command>) attributes:\n\n"
++	HELP_PAD "sched_policy: other|fifo|rr|batch|idle\n"
++	HELP_PAD "priority: scheduling priority for fifo|rr, nice value for other\n"
++	HELP_PAD "cpu-mask: CPU affinity mask. e.g. 0x03 is processors #0 and #1";
++
+ static bool dry_run;
+ 
+ static struct parse_events_option_args parse_events_option_args = {
+@@ -3551,6 +3570,9 @@ static struct option __record_options[] = {
+ 			    "write collected trace data into several data files using parallel threads",
+ 			    record__parse_threads),
+ 	OPT_BOOLEAN(0, "off-cpu", &record.off_cpu, "Enable off-cpu analysis"),
++	OPT_CALLBACK(0, "workload-attr", &record.opts,
++		     "sched_policy[,priority][,cpu-mask]", record_workload_attr_help,
++		     &record_parse_workload_attr_opt),
+ 	OPT_END()
+ };
+ 
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 07b48f6df48e..1a83ea9c4b7f 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -108,6 +108,8 @@ static bool all_counters_use_bpf = true;
+ 
+ static struct target target = {
+ 	.uid	= UINT_MAX,
++	.workload.sched_policy = -1,
++	.workload.sched_priority = 0,
+ };
+ 
+ #define METRIC_ONLY_LEN 20
+@@ -1160,6 +1162,14 @@ static int parse_cache_level(const struct option *opt,
+ 	return 0;
+ }
+ 
++static int parse_workload_attr_opt(const struct option *opt __maybe_unused, const char *arg,
++				   int unset __maybe_unused)
++{
++	return evlist__parse_workload_attr(arg, &target.workload.sched_policy,
++					   &target.workload.sched_priority,
++					   &target.workload.cpu_mask);
++}
++
+ static struct option stat_options[] = {
+ 	OPT_BOOLEAN('T', "transaction", &transaction_run,
+ 		    "hardware transaction statistics"),
+@@ -1298,6 +1308,9 @@ static struct option stat_options[] = {
+ 	OPT_CALLBACK_OPTARG(0, "iostat", &evsel_list, &stat_config, "default",
+ 			    "measure I/O performance metrics provided by arch/platform",
+ 			    iostat_parse),
++	OPT_CALLBACK(0, "workload-attr", &stat_config,
++		     "sched_policy[,priority][,cpu-mask]", record_workload_attr_help,
++		     &parse_workload_attr_opt),
+ 	OPT_END()
+ };
+ 
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 7ef43f72098e..5b040f489f1a 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -46,6 +46,7 @@
+ #include <sys/mman.h>
+ #include <sys/prctl.h>
+ #include <sys/timerfd.h>
++#include <sys/resource.h>
+ 
+ #include <linux/bitops.h>
+ #include <linux/hash.h>
+@@ -1398,6 +1399,119 @@ int evlist__open(struct evlist *evlist)
+ 	return err;
+ }
+ 
++int evlist__parse_workload_attr(const char *str, int *sched_policy, int *sched_priority,
++				cpu_set_t *cpu_mask)
++{
++	char *tok, *saveptr = NULL;
++	char *buf;
++	int ret = -1;
++
++	/* We need buffer that we know we can write to. */
++	buf = strdup(str);
++	if (!buf)
++		return -ENOMEM;
++
++	tok = strtok_r((char *)buf, ",", &saveptr);
++	do {
++		/* sched_policy */
++		if (!strncmp(tok, "other", sizeof("other")))
++			*sched_policy = SCHED_OTHER;
++		else if (!strncmp(tok, "fifo", sizeof("fifo"))) {
++			*sched_policy = SCHED_FIFO;
++			/* default to lowest priority */
++			*sched_priority = 99;
++		} else if (!strncmp(tok, "rr", sizeof("rr"))) {
++			*sched_policy = SCHED_RR;
++			*sched_priority = 99;
++		} else if (!strncmp(tok, "batch", sizeof("batch")))
++			*sched_policy = SCHED_BATCH;
++		else if (!strncmp(tok, "idle", sizeof("idle")))
++			*sched_policy = SCHED_IDLE;
++		else {
++			pr_err("workload_attr: unknown sched policy %s\n", tok);
++			break;
++		}
++
++		/* sched_priority */
++		tok = strtok_r(NULL, ",", &saveptr);
++		if (tok) {
++			int priority;
++			char *endptr;
++
++			priority = strtol(tok, &endptr, 0);
++			if (*endptr) {
++				pr_err("workload_attr: invalid sched priority %s\n", tok);
++				break;
++			}
++
++			if (*sched_policy == SCHED_FIFO || *sched_policy == SCHED_RR) {
++				if (priority < 1 || priority > 99) {
++					pr_err("workload_attr: invalid priority %d for fifo and rr, allowed [1,99]\n",
++					       priority);
++					break;
++				}
++			}
++			*sched_priority = priority;
++		}
++
++		/* cpu_mask */
++		tok = strtok_r(NULL, ",", &saveptr);
++		if (tok) {
++			char *endptr;
++			unsigned long mask = 0;
++
++			/* TODO: parse more than 64 cpus. */
++			mask = strtoul(tok, &endptr, 0);
++			if (*endptr) {
++				pr_err("workload_attr: invalid cpu mask %s\n", tok);
++				break;
++			}
++
++			for (unsigned int i = 0; i < 8 * sizeof(unsigned long); i++) {
++				if ((mask >> i) & 0x1)
++					CPU_SET(i, cpu_mask);
++			}
++		}
++		ret = 0;
++	} while (0);
++
++	free(buf);
++	return ret;
++}
++
++static int setup_workload_attr(struct target *target)
++{
++	struct sched_param param;
++	int policy = target->workload.sched_policy;
++	int priority = target->workload.sched_priority;
++
++	if (policy >= 0) {
++		param.sched_priority = (policy == SCHED_FIFO || policy == SCHED_RR) ?
++					priority : 0;
++		if (sched_setscheduler(0, policy, &param) != 0) {
++			perror("failed to set the scheduler");
++			return -1;
++		}
++
++		if (policy == SCHED_OTHER) {
++			if (setpriority(PRIO_PROCESS, 0, priority) != 0) {
++				perror("failed to set the nice value");
++				return -1;
++			}
++		}
++	}
++
++	if (CPU_COUNT(&target->workload.cpu_mask) > 0) {
++		if (sched_setaffinity(0, sizeof(target->workload.cpu_mask),
++				      &target->workload.cpu_mask) != 0) {
++			perror("failed to set the sched affinity");
++			return -1;
++		}
++	}
++
++	return 0;
++}
++
+ int evlist__prepare_workload(struct evlist *evlist, struct target *target, const char *argv[],
+ 			     bool pipe_output, void (*exec_error)(int signo, siginfo_t *info, void *ucontext))
+ {
+@@ -1464,6 +1578,9 @@ int evlist__prepare_workload(struct evlist *evlist, struct target *target, const
+ 			exit(ret);
+ 		}
+ 
++		if (setup_workload_attr(target) != 0)
++			exit(-1);
++
+ 		execvp(argv[0], (char **)argv);
+ 
+ 		if (exec_error) {
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 664c6bf7b3e0..9502e9a8d5eb 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -15,6 +15,7 @@
+ #include <pthread.h>
+ #include <signal.h>
+ #include <unistd.h>
++#include <sched.h>
+ 
+ struct pollfd;
+ struct thread_map;
+@@ -180,6 +181,8 @@ void evlist__set_id_pos(struct evlist *evlist);
+ void evlist__config(struct evlist *evlist, struct record_opts *opts, struct callchain_param *callchain);
+ int record_opts__config(struct record_opts *opts);
+ 
++int evlist__parse_workload_attr(const char *str, int *sched_policy, int *sched_priority,
++				cpu_set_t *cpu_mask);
+ int evlist__prepare_workload(struct evlist *evlist, struct target *target,
+ 			     const char *argv[], bool pipe_output,
+ 			     void (*exec_error)(int signo, siginfo_t *info, void *ucontext));
+diff --git a/tools/perf/util/target.h b/tools/perf/util/target.h
+index d582cae8e105..75cc2070687f 100644
+--- a/tools/perf/util/target.h
++++ b/tools/perf/util/target.h
+@@ -4,6 +4,7 @@
+ 
+ #include <stdbool.h>
+ #include <sys/types.h>
++#include <sched.h>
+ 
+ struct target {
+ 	const char   *pid;
+@@ -19,6 +20,12 @@ struct target {
+ 	bool	     use_bpf;
+ 	int	     initial_delay;
+ 	const char   *attr_map;
++
++	struct {
++		int	 sched_policy;
++		int	 sched_priority;
++		cpu_set_t cpu_mask;
++	} workload;
+ };
+ 
+ enum target_errno {
+@@ -103,4 +110,6 @@ static inline bool target__uses_dummy_map(struct target *target)
+ 	return use_dummy;
+ }
+ 
++extern const char record_workload_attr_help[];
++
+ #endif /* _PERF_TARGET_H */
+-- 
+2.25.1
 
