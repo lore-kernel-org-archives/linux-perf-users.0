@@ -2,197 +2,217 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9763EC001DD
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Jul 2023 16:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E43C0015E
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Jul 2023 20:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232012AbjGMQxh (ORCPT
+        id S232693AbjGMUhI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Jul 2023 12:53:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33952 "EHLO
+        Thu, 13 Jul 2023 16:37:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235347AbjGMQxg (ORCPT
+        with ESMTP id S229942AbjGMUhH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Jul 2023 12:53:36 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B24B62D55
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Jul 2023 09:53:23 -0700 (PDT)
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36DGksRV011507;
-        Thu, 13 Jul 2023 16:53:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=7Zy8RTtUviGs7teFyUFZlWFkGwiJx6+DEnhk+sQTGW0=;
- b=U5s5S28tOH7icYAOCmtjFfxCw8KZXqpBkP6j9l7muzXfULgfUim/cy71n9LqqpfJwXGj
- yNghRrtM1h7aM5cdPf+e+fAH7kFyIcQNH+sLxK1irkvKvlfkfxyYnhltudGt6VQfIR52
- sk2ws3T6/j2FA/yTrnGcgBJ4VBcuJUMEsSGRDE4FJW+mtMKmgBuCByQKfZWbAN1CYUzz
- bNi5ioJLDKo0gmwCedt36FpRVABJFoVdITtam1FEfkkjLvAD3KfTNGSu0CjratEGUp6X
- s54VfxNWaUxAdW065Z+GgLTsexta1kzY+wjik3rJK+cKgeqr6DMck8KZpJqMD10kICJP pQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rtn3eg47j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Jul 2023 16:53:17 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36DGmQpl015549;
-        Thu, 13 Jul 2023 16:53:16 GMT
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rtn3eg46k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Jul 2023 16:53:16 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36DBovuo007062;
-        Thu, 13 Jul 2023 16:53:14 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3rpy2eaf4s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Jul 2023 16:53:14 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36DGrAaZ45744652
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Jul 2023 16:53:10 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 553AB2004D;
-        Thu, 13 Jul 2023 16:53:10 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7D85A20049;
-        Thu, 13 Jul 2023 16:53:08 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.39.172])
-        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Thu, 13 Jul 2023 16:53:08 +0000 (GMT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.500.231\))
-Subject: Re: [PATCH 1/2] tools/perf/tests: perf all metrics test fails when
- perf_event access is restricted
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <CAM9d7chEpdJkpWuxZD2-w89SFBm9CU28MpLA40LV+=GaLJXS1w@mail.gmail.com>
-Date:   Thu, 13 Jul 2023 22:22:56 +0530
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>, disgoel@linux.vnet.ibm.com
+        Thu, 13 Jul 2023 16:37:07 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B84581FD6
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Jul 2023 13:37:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689280625; x=1720816625;
+  h=date:from:to:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1j+X89xHrI/HHt6VHIT5oc1K5FJUb0a+UpWm/iDYm7A=;
+  b=Itr2CfE4vaCGPYm1QlCaInqYy9ob+J3GtKnQUGTBh15iaUnjExRVjt0Y
+   +X/XiCLi4DXgsEmzVrBB4HmOmXWmD2+iSj39/douQeIrLDBeUt0aHNCKV
+   WA4IpM9cvg1yuMI7bhevL+VKyWPToLnZ5wQr0VyRdLdX/LQ/fF5ZhkeF9
+   2/pYxPMZx5HZC31yka28PVgj8gLOp8Pff4LSyVhsyq38A8/74Y/YRRmGQ
+   yvojbpalwWSnHw/EMwPXuKGJ6Jmw/38uBAKzhB+MDd+UOeqMYUyK3LHUm
+   Baw+Atj5V3HjgmxjbqMscjyB1CpdjBRK78SZuCaROvv5WBuSBZBVLpjmA
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="396116486"
+X-IronPort-AV: E=Sophos;i="6.01,203,1684825200"; 
+   d="scan'208";a="396116486"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 13:37:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="699398210"
+X-IronPort-AV: E=Sophos;i="6.01,203,1684825200"; 
+   d="scan'208";a="699398210"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 13:37:04 -0700
+Date:   Thu, 13 Jul 2023 13:37:00 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     irogers@google.com, namhyung@kernel.org, acme@kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Event reordering regression for software events
+Message-ID: <ZLBgbHkbrfGygM/u@tassilo>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <79C2D267-53E0-4169-91EA-98EC5F5EC9E8@linux.vnet.ibm.com>
-References: <20230615073803.54481-1-atrajeev@linux.vnet.ibm.com>
- <AEE7B55C-BA6B-4E0E-A2E9-4E7EE09B4D50@linux.vnet.ibm.com>
- <CAM9d7chEpdJkpWuxZD2-w89SFBm9CU28MpLA40LV+=GaLJXS1w@mail.gmail.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-X-Mailer: Apple Mail (2.3731.500.231)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: CA4e8x7OMtn9-1JOen8TEuSwcOjLe-ZJ
-X-Proofpoint-GUID: rU2-3WC-KZfLqONJe8-Et_6R7dLRr67-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-13_06,2023-07-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=999 priorityscore=1501 spamscore=0 phishscore=0 bulkscore=0
- malwarescore=0 mlxscore=0 suspectscore=0 lowpriorityscore=0 clxscore=1015
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2307130146
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Ian,
+
+The current post 6.3 linux-perf-next causes some fairly drastic
+reordering in output for some event combinations. I bisected it down to
+your patch:
+
+commit 347c2f0a0988c59c402148054ef54648853fa669
+Author: Ian Rogers <irogers@google.com>
+Date:   Sat Mar 11 18:15:40 2023 -0800
+
+    perf parse-events: Sort and group parsed events
+
+    This change is intended to be a no-op for most current cases, the
+    default sort order is the order the events were parsed. Where it
+    varies is in how groups are handled. Previously an uncore and core
+    event that are grouped would most often cause the group to be removed:
+
+I currently only have a large test case, but for the test case [1] below=20
+most of the "dummy"s and some other software events end up in a row and als=
+o in the
+wrong place, instead of the expected order.
+
+good:
+
+=2E..
+986476553;ns;duration_time;986476553;100.00;;
+0;;dummy;983952237;100.00;;
+0;;cs:u;983952237;100.00;;
+16532;;minor-faults:u;983952237;100.00;;
+0;;major-faults:u;983952237;100.00;;
+0;;migrations:u;983952237;100.00;;
+3532509496;;cycles:u;23999092;2.00;;
+=2E...
+
+bad:
+
+1010119571;ns;duration_time;1010119571;100.00;;
+0;;dummy [software];1007748753;100.00;;
+0;;cs:u [software];1007748753;100.00;;
+16496;;minor-faults:u [software];1007748753;100.00;;
+0;;major-faults:u [software];1007748753;100.00;;
+0;;migrations:u [software];1007748753;100.00;;
+0;;dummy [software];1007748753;100.00;;
+0;;dummy [software];1007748753;100.00;;
+0;;dummy [software];1007748753;100.00;;
+0;;dummy [software];1007748753;100.00;;
+0;;emulation-faults [software];1007748753;100.00;;
+0;;dummy [software];1007748753;100.00;;
+0;;dummy [software];1007748753;100.00;;
+0;;emulation-faults [software];1007748753;100.00;;
+0;;emulation-faults [software];1007748753;100.00;;
+3603193382;;cycles:u;23996241;2.00;;
+2277091922;;cpu/event=3D0x0,umask=3D0x3/u;23996241;2.00;;
+4182126406;;cpu/event=3D0xc2,umask=3D0x2/u;23996241;2.00;;
+4364677170;;cpu/event=3D0xc0,umask=3D0x0/u;23996241;2.00;;
 
 
-> On 05-Jul-2023, at 11:54 PM, Namhyung Kim <namhyung@kernel.org> wrote:
->=20
-> On Mon, Jul 3, 2023 at 10:04=E2=80=AFPM Athira Rajeev
-> <atrajeev@linux.vnet.ibm.com> wrote:
->>=20
->>=20
->>=20
->>> On 15-Jun-2023, at 1:08 PM, Athira Rajeev =
-<atrajeev@linux.vnet.ibm.com> wrote:
->>>=20
->>> Perf all metrics test fails as below when perf_event access
->>> is restricted.
->>>=20
->>>   ./perf test -v "perf all metrics test"
->>>   Metric 'Memory_RD_BW_Chip' not printed in:
->>>   Error:
->>>   Access to performance monitoring and observability operations is =
-limited.
->>>   Enforced MAC policy settings (SELinux) can limit access to =
-performance
->>>   =E2=80=94
->>>   access to performance monitoring and observability operations for =
-processes
->>>   without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux =
-capability.
->>>   =E2=80=94
->>>   test child finished with -1
->>>   ---- end ----
->>>   perf all metrics test: FAILED!
->=20
-> In my system, it fails like below:
->=20
->  $ ./perf test -v 101
->  101: perf all metrics test                                           =
-:
->  --- start ---
->  test child forked, pid 398458
->  Testing branch_misprediction_ratio
->  Testing all_remote_links_outbound
->  Metric 'all_remote_links_outbound' not printed in:
->  Error:
->  Invalid event (remote_outbound_data_controller_3:u) in per-thread
-> mode, enable system wide with '-a'.
->  Testing nps1_die_to_dram
+Unfortunately this totally breaks toplev. It needs to have the dummies
+in the right location.`
 
-Hi Namhyung,
+Another problem is that it also now adds [software] to lots of software
+events, which of course also breaks any parsing tools. I haven't bisected
+that too, but it needs fixing too.
 
-Thanks for checking. Is the fail behaviour observed after applying this =
-fix patch ?
-I will check it in my setup=20
+I must say using perf recently is frustrating with all the regressions!
+Please be a bit more careful with compatibility.
 
-Athira
->  ...
->=20
-> Thanks,
-> Namhyung
->=20
->>=20
->>=20
->> Hi,
->>=20
->> Looking for review comments on this patch.
->>=20
->> Thanks
->>>=20
->>> The perf all metrics test picks the input events from
->>> "perf list --raw-dump metrics" and runs "perf stat -M "$m""
->>> for each of the metrics in the list. It fails here for some
->>> of the metrics which needs access, since it collects system
->>> wide resource details/statistics. Fix the testcase to skip
->>> those metric events.
->>>=20
->>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->>> ---
->>> tools/perf/tests/shell/stat_all_metrics.sh | 4 +++-
->>> 1 file changed, 3 insertions(+), 1 deletion(-)
->>>=20
->>> diff --git a/tools/perf/tests/shell/stat_all_metrics.sh =
-b/tools/perf/tests/shell/stat_all_metrics.sh
->>> index 54774525e18a..14b96484a359 100755
->>> --- a/tools/perf/tests/shell/stat_all_metrics.sh
->>> +++ b/tools/perf/tests/shell/stat_all_metrics.sh
->>> @@ -6,7 +6,9 @@ err=3D0
->>> for m in $(perf list --raw-dump metrics); do
->>>  echo "Testing $m"
->>>  result=3D$(perf stat -M "$m" true 2>&1)
->>> -  if [[ "$result" =3D~ ${m:0:50} ]] || [[ "$result" =3D~ "<not =
-supported>" ]]
->>> +  # Skip if there is no access to perf_events monitoring
->>> +  # and observability operations
->>> +  if [[ "$result" =3D~ ${m:0:50} ]] || [[ "$result" =3D~ "<not =
-supported>" ]] || [[ "$result" =3D~ "Access to performance monitoring =
-and observability operations is limited" ]]
->>>  then
->>>    continue
->>>  fi
->>> --
->>> 2.31.1
+-Andi
+
+
+
+[1]=20
+
+$PERF stat -x\; --no-merge -o xxx -e '{cpu/event=3D0xc0,umask=3D0x0/u,cpu/e=
+vent=3D0x3c,umask=3D0x0/u,cpu/event=3D0x0,umask=3D0x3/u,cpu/event=3D0x3c,um=
+ask=3D0x2/u,cpu/event=3D0x3c,umask=3D0x1/u,cpu/event=3D0xb1,umask=3D0x1/u,c=
+pu/event=3D0xb1,umask=3D0x2,cmask=3D1/u},msr/tsc/,duration_time,dummy,uncor=
+e_imc/event=3D0x4,umask=3D0x3/,uncore_imc/event=3D0x4,umask=3D0xc/,cs:u,min=
+or-faults:u,major-faults:u,migrations:u,{cycles:u,cpu/event=3D0x0,umask=3D0=
+x3/u,cpu/event=3D0xc2,umask=3D0x2/u,cpu/event=3D0xc0,umask=3D0x0/u,cpu/even=
+t=3D0xc4,umask=3D0x40/u,cpu/event=3D0xb1,umask=3D0x1/u,cpu/event=3D0xe,umas=
+k=3D0x1/u},{cpu/event=3D0xc2,umask=3D0x2/u,cpu/event=3D0xc2,umask=3D0x2,cma=
+sk=3D1/u,cpu/event=3D0x3c,umask=3D0x0/ku,cpu/event=3D0xc0,umask=3D0x0/ku},{=
+cpu/event=3D0x79,umask=3D0x8/u,cpu/event=3D0xa8,umask=3D0x1/u,cpu/event=3D0=
+x79,umask=3D0x4/u,cpu/event=3D0x79,umask=3D0x30/u,cpu/event=3D0xc0,umask=3D=
+0x0/u,cpu/event=3D0x3c,umask=3D0x0/u},{cpu/event=3D0x10,umask=3D0x20/u,cpu/=
+event=3D0x10,umask=3D0x80/u,cpu/event=3D0x10,umask=3D0x10/u,cpu/event=3D0x1=
+0,umask=3D0x40/u},{cpu/event=3D0x11,umask=3D0x2/u,cpu/event=3D0x11,umask=3D=
+0x1/u,cpu/event=3D0x3c,umask=3D0x0/u,cpu/event=3D0x3c,umask=3D0x2/u,cpu/eve=
+nt=3D0x3c,umask=3D0x1/u},{cpu/event=3D0x10,umask=3D0x20/u,cpu/event=3D0x10,=
+umask=3D0x80/u,cpu/event=3D0x10,umask=3D0x10/u,cpu/event=3D0x10,umask=3D0x4=
+0/u,cpu/event=3D0x3c,umask=3D0x0/u},{cpu/event=3D0x3c,umask=3D0x0/ku,cpu/ev=
+ent=3D0x3c,umask=3D0x1/u,cpu/event=3D0xc2,umask=3D0x2/u,cpu/event=3D0xd,uma=
+sk=3D0x3,cmask=3D1/u},{cpu/event=3D0x9c,umask=3D0x1/u,cpu/event=3D0x3c,umas=
+k=3D0x0/u,cpu/event=3D0x3c,umask=3D0x2/u,cpu/event=3D0x3c,umask=3D0x1/u,cpu=
+/event=3D0xc2,umask=3D0x2/u},{cpu/event=3D0xe,umask=3D0x1/u,cpu/event=3D0xc=
+2,umask=3D0x2/u,cpu/event=3D0xd,umask=3D0x3,cmask=3D1/u,cpu/event=3D0x3c,um=
+ask=3D0x0/u,cpu/event=3D0x3c,umask=3D0x2/u},{cpu/event=3D0x9c,umask=3D0x1/u=
+,cpu/event=3D0x3c,umask=3D0x0/u,cpu/event=3D0x3c,umask=3D0x2/u,cpu/event=3D=
+0x3c,umask=3D0x1/u,cpu/event=3D0xe,umask=3D0x1/u},{cpu/event=3D0x3c,umask=
+=3D0x0/u,cpu/event=3D0x9c,umask=3D0x1,cmask=3D4/u,cpu/event=3D0x3c,umask=3D=
+0x2/u,cpu/event=3D0x3c,umask=3D0x1/u,cpu/event=3D0x9c,umask=3D0x1/u,cpu/eve=
+nt=3D0xc0,umask=3D0x0/u},{cpu/event=3D0xc2,umask=3D0x2/u,cpu/event=3D0x3c,u=
+mask=3D0x0/u,cpu/event=3D0x3c,umask=3D0x2/u,cpu/event=3D0x3c,umask=3D0x1/u,=
+cpu/event=3D0xd,umask=3D0x3,cmask=3D1/u},{cpu/event=3D0xc2,umask=3D0x2/u,cp=
+u/event=3D0xe,umask=3D0x1/u,cpu/event=3D0x79,umask=3D0x30/u,cpu/event=3D0x3=
+c,umask=3D0x0/u,cpu/event=3D0x3c,umask=3D0x2/u},{cpu/event=3D0xe,umask=3D0x=
+1/u,cpu/event=3D0xc2,umask=3D0x2/u,cpu/event=3D0xd,umask=3D0x3,cmask=3D1/u,=
+cpu/event=3D0x3c,umask=3D0x0/u,cpu/event=3D0x3c,umask=3D0x2/u},{cpu/event=
+=3D0xc5,umask=3D0x0/u,cpu/event=3D0xc3,umask=3D0x1,edge=3D1,cmask=3D1/u,cpu=
+/event=3D0x3c,umask=3D0x1/u},dummy,{cpu/event=3D0xe,umask=3D0x1/u,cpu/event=
+=3D0xc2,umask=3D0x2/u,cpu/event=3D0xd,umask=3D0x3,cmask=3D1/u,cpu/event=3D0=
+x3c,umask=3D0x0/u,cpu/event=3D0x3c,umask=3D0x2/u},{cpu/event=3D0x9c,umask=
+=3D0x1/u,cpu/event=3D0x3c,umask=3D0x0/u,cpu/event=3D0x3c,umask=3D0x2/u,cpu/=
+event=3D0x3c,umask=3D0x1/u,cpu/event=3D0xe,umask=3D0x1/u},dummy,{cpu/event=
+=3D0xa3,umask=3D0x6,cmask=3D6/u,cpu/event=3D0xa2,umask=3D0x8/u,cpu/event=3D=
+0xa3,umask=3D0x4,cmask=3D4/u,cpu/event=3D0xb1,umask=3D0x1,cmask=3D1/u},{cpu=
+/event=3D0xb1,umask=3D0x1,cmask=3D3/u,cpu/event=3D0xb1,umask=3D0x1,cmask=3D=
+2/u,cpu/event=3D0xc0,umask=3D0x0/u,cpu/event=3D0x5e,umask=3D0x1/u,cpu/event=
+=3D0x9c,umask=3D0x1,cmask=3D4/u},{cpu/event=3D0x9c,umask=3D0x1/u,cpu/event=
+=3D0x3c,umask=3D0x0/u,cpu/event=3D0x3c,umask=3D0x2/u,cpu/event=3D0x3c,umask=
+=3D0x1/u,cpu/event=3D0xe,umask=3D0x1/u},{cpu/event=3D0xc2,umask=3D0x2/u,cpu=
+/event=3D0xd,umask=3D0x3,cmask=3D1/u},dummy,dummy,emulation-faults,dummy,{c=
+pu/event=3D0xa3,umask=3D0x6,cmask=3D6/u,cpu/event=3D0xa2,umask=3D0x8/u,cpu/=
+event=3D0xa3,umask=3D0x4,cmask=3D4/u,cpu/event=3D0xb1,umask=3D0x1,cmask=3D1=
+/u},{cpu/event=3D0xb1,umask=3D0x1,cmask=3D3/u,cpu/event=3D0xb1,umask=3D0x1,=
+cmask=3D2/u,cpu/event=3D0xc0,umask=3D0x0/u,cpu/event=3D0x5e,umask=3D0x1/u,c=
+pu/event=3D0x9c,umask=3D0x1,cmask=3D4/u},{cpu/event=3D0x79,umask=3D0x30,edg=
+e=3D1,cmask=3D1/u,cpu/event=3D0x3c,umask=3D0x0/u,cpu/event=3D0x87,umask=3D0=
+x1/u,cpu/event=3D0xab,umask=3D0x2/u,cpu/event=3D0xa2,umask=3D0x8/u},{cpu/ev=
+ent=3D0x85,umask=3D0x10/u,cpu/event=3D0x85,umask=3D0x4/u,cpu/event=3D0x3c,u=
+mask=3D0x0/u,cpu/event=3D0x8,umask=3D0x10/u,cpu/event=3D0x8,umask=3D0x4/u},=
+{cpu/event=3D0xc5,umask=3D0x0/u,cpu/event=3D0xc3,umask=3D0x1,edge=3D1,cmask=
+=3D1/u,cpu/event=3D0xe6,umask=3D0x1f/u,cpu/event=3D0x3c,umask=3D0x0/u},{cpu=
+/event=3D0xd1,umask=3D0x4/u,cpu/event=3D0xd1,umask=3D0x20/u,cpu/event=3D0xa=
+3,umask=3D0x5,cmask=3D5/u,cpu/event=3D0x3c,umask=3D0x0/u},{cpu/event=3D0x14=
+,umask=3D0x1/u,cpu/event=3D0x3c,umask=3D0x0/u,cpu/event=3D0x3c,umask=3D0x2/=
+u,cpu/event=3D0x3c,umask=3D0x1/u,cpu/event=3D0x11,umask=3D0x2/u},{cpu/event=
+=3D0xc2,umask=3D0x2/u,cpu/event=3D0xe,umask=3D0x1/u,cpu/event=3D0x79,umask=
+=3D0x30/u,cpu/event=3D0x3c,umask=3D0x0/u,cpu/event=3D0x3c,umask=3D0x2/u},{c=
+pu/event=3D0xc2,umask=3D0x2/u,cpu/event=3D0x10,umask=3D0x1/u,cpu/event=3D0x=
+b1,umask=3D0x1/u,cpu/event=3D0x10,umask=3D0x20/u},{cpu/event=3D0x10,umask=
+=3D0x80/u,cpu/event=3D0x10,umask=3D0x10/u,cpu/event=3D0x10,umask=3D0x40/u,c=
+pu/event=3D0x11,umask=3D0x1/u},{cpu/event=3D0x3c,umask=3D0x0/u,cpu/event=3D=
+0x9c,umask=3D0x1,cmask=3D4/u,cpu/event=3D0x3c,umask=3D0x2/u,cpu/event=3D0x3=
+c,umask=3D0x1/u},dummy,{cpu/event=3D0xa3,umask=3D0x4,cmask=3D4/u,cpu/event=
+=3D0xb1,umask=3D0x1,cmask=3D1/u,cpu/event=3D0xb1,umask=3D0x1,cmask=3D3/u,cp=
+u/event=3D0xb1,umask=3D0x1,cmask=3D2/u},{cpu/event=3D0xc0,umask=3D0x0/u,cpu=
+/event=3D0x5e,umask=3D0x1/u,cpu/event=3D0xa2,umask=3D0x8/u,cpu/event=3D0xa3=
+,umask=3D0x6,cmask=3D6/u,cpu/event=3D0x3c,umask=3D0x0/u,cpu/event=3D0x60,um=
+ask=3D0x8,cmask=3D6/u},{cpu/event=3D0x3c,umask=3D0x0/u,cpu/event=3D0x60,uma=
+sk=3D0x8,cmask=3D1/u,cpu/event=3D0x60,umask=3D0x8,cmask=3D6/u},{cpu/event=
+=3D0xc2,umask=3D0x2/u,cpu/event=3D0x10,umask=3D0x1/u,cpu/event=3D0xb1,umask=
+=3D0x1/u},{cpu/event=3D0x10,umask=3D0x20/u,cpu/event=3D0x10,umask=3D0x80/u,=
+cpu/event=3D0xb1,umask=3D0x1/u,cpu/event=3D0x10,umask=3D0x10/u},emulation-f=
+aults,{cpu/event=3D0x10,umask=3D0x10/u,cpu/event=3D0x10,umask=3D0x40/u,cpu/=
+event=3D0x11,umask=3D0x1/u,cpu/event=3D0x11,umask=3D0x2/u},emulation-faults=
+,{cpu/event=3D0x11,umask=3D0x2/u,cpu/event=3D0x11,umask=3D0x1/u,cpu/event=
+=3D0xb1,umask=3D0x1/u}'
+
 
 
