@@ -2,148 +2,122 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95DBAC001DF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jul 2023 19:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344FBEB64DC
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jul 2023 21:36:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236113AbjGNT4k (ORCPT
+        id S229643AbjGNVgU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Jul 2023 15:56:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49442 "EHLO
+        Fri, 14 Jul 2023 17:36:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236592AbjGNT4g (ORCPT
+        with ESMTP id S229448AbjGNVgT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Jul 2023 15:56:36 -0400
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 057753AB8;
-        Fri, 14 Jul 2023 12:56:29 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id DEDF05C009D;
-        Fri, 14 Jul 2023 15:56:25 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Fri, 14 Jul 2023 15:56:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-transfer-encoding:content-type:content-type:date
-        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to; s=fm2; t=
-        1689364585; x=1689450985; bh=bIDbQfxsNuvf3d9r/rOpxa+WmMoPtn+8jD3
-        nk1eOuRM=; b=SGMembvX6/sAHfuOugqH9axbat/QoJ0k31uIq0vHq0+0ZRq9/bm
-        OXE4fsjATB99uYFbcAOqgiYTHo/G6oDsB/CtG/4tOHM+S4lOaCWbNGhHggOsAJTg
-        R9x3L8nKHjrq8GlGVIJ3q52beg3LfkH49h4safD8f3/9/UWoGrvEiu/G8GQeWhsj
-        QBINygCvMVi3GocH49248OkLx/g7BcAV1u7sIyM14bQ44Jjn/2m2h0UISKDEyaOz
-        LiZL8ngaiTLV0m38ocWnY5LlNGr8kj6VSMgo6BbX4AuPvRR9+inBIg2TDeq3EBVa
-        XU1pvnDy1aQqp4RoKfvE7UAdu5l/KSmdn0g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:date:feedback-id:feedback-id
-        :from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-        1689364585; x=1689450985; bh=bIDbQfxsNuvf3d9r/rOpxa+WmMoPtn+8jD3
-        nk1eOuRM=; b=OQUfHU85i/3qDShDvTCgfTD7feljdTJdTsnuo5ejQBoyPs0P2uv
-        Z8yhnO9uqNgQP4P4ilW2vOODiZuuT114HqvMR+jVhEzUGMPzGFNZb9y/2mM11JH3
-        iSO1XktS3kXfIxO1sn/yYGVQonR1mWZCYIIOrqoVRNzaSTphNKiVsgzIBPIScgWb
-        Z9v0Zo8pgQ6o2JVPgvhPnhBB/uIl9i84xc840h50R0HRvBf8iSsayfWcg5bT1Eec
-        vVXCtmEw6o+6btBP99+xmA290mk9/QTtkdDPF9AJWxPcVzskgP+PvHPr+w/oRip3
-        0GmREp6JTbBoHvyZLHHMGxmDM7Lx70sI4ew==
-X-ME-Sender: <xms:aKixZINAaHZB2npjlr6kbwwcGSVaR5zGuNyYmH16wvpA4A1Iul-Z-A>
-    <xme:aKixZO9FE28zzxsHMXwW1FYewcFTJPhJbLC0HpzLgAg6Gu9oCDArV6KFkUHtSfJNl
-    EUoJjSEoSDY6FTMNnw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrfeeigddugeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpefgkeeuleegieeghfduudeltdekfeffjeeuleehleefudettddtgfevueef
-    feeigeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:aKixZPTYvU0vcmCP_r2Hf20okR3zUmuZi9AmprKDUWqxyEYbhddrMw>
-    <xmx:aKixZAsElIgnNOVEibh3rfmvgRbV4aiLiBiVdTJDz0occUAMdxRP6Q>
-    <xmx:aKixZAdfD6MDZtpCirPQ9q2-7iBk7Zcv9Ts7-dfZxNFt69I6d2fbWA>
-    <xmx:aaixZHzmJD_NpvGaWn6kqZWRXRbs2qeuuJsh2383wclZmbiiFdiBMw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 66359B60086; Fri, 14 Jul 2023 15:56:24 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-531-gfdfa13a06d-fm-20230703.001-gfdfa13a0
-Mime-Version: 1.0
-Message-Id: <bf997965-71d1-4949-8cbc-de46ac6a1283@app.fastmail.com>
-In-Reply-To: <CAP-5=fWmPQ9vtH1t9pSPCPBiOFxQQe43C7Bk4amLS08ASAnwGg@mail.gmail.com>
-References: <1687443219-11946-1-git-send-email-yangtiezhu@loongson.cn>
- <1412dbaf-56f4-418b-85ea-681b1c44cc26@app.fastmail.com>
- <CAP-5=fWmPQ9vtH1t9pSPCPBiOFxQQe43C7Bk4amLS08ASAnwGg@mail.gmail.com>
-Date:   Fri, 14 Jul 2023 21:56:04 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Ian Rogers" <irogers@google.com>,
-        "Tiezhu Yang" <yangtiezhu@loongson.cn>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
-        Linux-Arch <linux-arch@vger.kernel.org>, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH v3 0/2] Unify uapi bitsperlong.h
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        Fri, 14 Jul 2023 17:36:19 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C0173585;
+        Fri, 14 Jul 2023 14:36:18 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1b9cdef8619so15618975ad.0;
+        Fri, 14 Jul 2023 14:36:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689370578; x=1691962578;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TmEIC2uOQWMGdSXi/s9FCQP4FKhvkW7TusIhlJLLWXA=;
+        b=RRHAJcjIqpaMbbHPglhj4IAw2TVt8KST+G56PjDlPKo9u70i176XTpLLob2PbnY2sA
+         /zXRb9AYgopppOD2jauRVQjPrc7OkN/0lQmAU1wxNhuFUCU4w0FjY5VlRLjYluTAK+gk
+         peKikL7UaOqMVBKqKaeqox8WSnVfOYiD9ECmRGdaDk1vAmVenAgQTGXGwzIai33MuvO7
+         MICx64BC75DxkFSUwSfP/hir+GrqrFSnGF6YgQ7R1iTbMDor1hSZU97FhKMZnZjsYmQm
+         sjztv2zIOB73kaGQ+YnMh/ziHl3ae+8bVxJZikOVc9f9xNwFfVsqOxlkB+2tLX+SvEkq
+         eFCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689370578; x=1691962578;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TmEIC2uOQWMGdSXi/s9FCQP4FKhvkW7TusIhlJLLWXA=;
+        b=NNkWPR06lbIydS5RRiYMTKPp8wOY5NOc55ft972xMobkrie0uLWTPUGkB/wAYy6Knu
+         SM6PuZmaeLRrVmIlRixzJpJDeaNKCQOFWlmHTJvoW2e7qBEE6AY5OQ+r1mEUtmFm0llN
+         05UCxG6dQGhXUANxM2WFHL7JpwlZ3Mfkeu6AYZye5y/kMxUVd2rb757kWAbZmX0uY1tC
+         wBdipM3ezu/OVAUUxyHGVgLdF2OZO/cW7iw2dKJmXWzxLHganq6hmfrn4YukzW9yLmic
+         pwiIR0Pny9RAB7x8VpcHfsLMZpaebt20ZXvHA2LXd/+ee19nOnU1d2BW1ZAbAxRfrtDz
+         jSVA==
+X-Gm-Message-State: ABy/qLapPIm3i//bFBw+vnep9htXuWrhDVQWau37ZIaIH/q51GXWXpAf
+        LsuatMLPo0NbH/HCDDXjMAr0+sL2VgQOE/zO
+X-Google-Smtp-Source: APBJJlHkV0nEMnJUoLk1MsdBUbdHqbDSejDQZIYTSxLEpA0TZlxFU41GHog+zkgBTM2Po/FDeVOC0g==
+X-Received: by 2002:a17:902:c381:b0:1b8:9db5:2ec1 with SMTP id g1-20020a170902c38100b001b89db52ec1mr4133373plg.67.1689370577685;
+        Fri, 14 Jul 2023 14:36:17 -0700 (PDT)
+Received: from yoga ([2400:1f00:13:8030:52d1:71af:18b3:54f1])
+        by smtp.gmail.com with ESMTPSA id h2-20020a170902f7c200b001b9c5e07bc3sm5865940plw.238.2023.07.14.14.36.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Jul 2023 14:36:17 -0700 (PDT)
+From:   Anup Sharma <anupnewsmail@gmail.com>
+X-Google-Original-From: Anup Sharma <AnupSharma>
+Date:   Sat, 15 Jul 2023 03:06:09 +0530
+To:     linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, anupnewsmail@gmail.com
+Subject: Re: [PATCH v3 0/6] Add support for Firefox's gecko profile format
+Message-ID: <ZLG/yVndGkFTuA2o@yoga>
+References: <cover.1689024635.git.anupnewsmail@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1689024635.git.anupnewsmail@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jul 14, 2023, at 20:34, Ian Rogers wrote:
-> On Thu, Jun 22, 2023 at 8:10=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> =
-wrote:
->>
->> On Thu, Jun 22, 2023, at 16:13, Tiezhu Yang wrote:
->> > v3:
->> >   -- Check the definition of __BITS_PER_LONG first at
->> >      the beginning of uapi/asm-generic/bitsperlong.h
->> >
->
-> Thanks for doing this cleanup! I just wanted to report an issue I ran
-> into with building the Linux perf tool. The header guard in:
-> tools/include/asm-generic/bitsperlong.h
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/tools/include/asm-generic/bitsperlong.h
->
-> Caused an issue with building:
-> tools/perf/util/cs-etm.c
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/tools/perf/util/cs-etm.c
->
-> The issue was that cs-etm.c would #include a system header, which
-> would transitively include a header with the same header guard. This
-> led to the tools/include/asm-generic/bitsperlong.h being ignored and
-> the compilation of tools/perf/util/cs-etm.c failing due to a missing
-> define. My local workaround is:
->
-> ```
-> diff --git a/tools/include/asm-generic/bitsperlong.h
-> b/tools/include/asm-generic/bitsperlong.h
-> index 2093d56ddd11..88508a35cb45 100644
-> --- a/tools/include/asm-generic/bitsperlong.h
-> +++ b/tools/include/asm-generic/bitsperlong.h
-> @@ -1,6 +1,6 @@
-> /* SPDX-License-Identifier: GPL-2.0 */
-> -#ifndef __ASM_GENERIC_BITS_PER_LONG
-> -#define __ASM_GENERIC_BITS_PER_LONG
-> +#ifndef __LINUX_TOOLS_ASM_GENERIC_BITS_PER_LONG
-> +#define __LINUX_TOOLS_ASM_GENERIC_BITS_PER_LONG
-> #include <uapi/asm-generic/bitsperlong.h>
-> @@ -21,4 +21,4 @@
-> #define small_const_nbits(nbits) \
-> (__builtin_constant_p(nbits) && (nbits) <=3D BITS_PER_LONG && (nbits) =
-> 0)
-> -#endif /* __ASM_GENERIC_BITS_PER_LONG */
-> +#endif /* __LINUX_TOOLS_ASM_GENERIC_BITS_PER_LONG */
-> ```
->
-> I'm not sure if a wider fix is necessary for this, but I thought it
-> worthwhile to report that there are potential issues. I don't think we
-> can use #pragma once, as an alternative to header guards, to avoid
-> this kind of name collision.
+On Tue, Jul 11, 2023 at 04:38:06AM +0530, Anup Sharma wrote:
+> This patch series adds support for Firefox's gecko profile format.
+> The format is documented here [1].
+> 
+> I have incorporated several changes based on feedback from the
+> previous version of the patch. However, there are still a few
+> remaining comments that I am currently addressing.
+> 
+> Additionally, I am still in the process of learning how to send
+> patches in a series, so there may be some shortcomings in this
+> particular series as well.
+> 
+> changes from v2:
+> - renamed mod to func
+> - removed unnessecary imports print_function
+> - removed shebang python env declaration
+> - changed _createtread to _createThread
+> - Commits in better order.
 
-Thanks for the report! I think the correct fix is to update
-the tools/include/ headers to have the same change as the kernel
-itself. I don't know why we end up including both, that sounds
-like a separate issue but should normally be harmless as long
-as the contents are the same.
+Hello everyone, I wanted to express my gratitude for your support.
+I recently received an email from GSoC admin informing me that I
+have successfully passed my midterm evaluation. I am thrilled about
+this news!. Ian, could you please provide some insights on the commit
+arrangement in v3 compared to v2? I noticed in v3, on 1/6 you have
+mentioned regarding the commit arrangement. I want to make sure I
+haven't overlooked. Currently, I'm focusing on developing the next
+version of patches, so having this information would be extremely
+beneficial to me. Thank you in advance!
 
-      Arnd
+> [1] https://github.com/firefox-devtools/profiler/blob/main/docs-developer/gecko-profile-format.md
+> 
+> Anup Sharma (6):
+>   scripts: python: Add initial script file with imports.
+>   scripts: python: Extact necessary information from process event
+>   scripts: python: thread sample processing to create thread with
+>     schemas
+>   scripts: python: Add trace end processing and JSON output
+>   scripts: python: Implement add sample function and return finish
+>   scripts: python: implement get or create frame and stack function
+> 
+>  .../scripts/python/firefox-gecko-converter.py | 221 ++++++++++++++++++
+>  1 file changed, 221 insertions(+)
+>  create mode 100644 tools/perf/scripts/python/firefox-gecko-converter.py
+> 
+> -- 
+> 2.34.1
+> 
