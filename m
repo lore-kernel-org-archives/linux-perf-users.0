@@ -2,169 +2,91 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55873EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jul 2023 07:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD12EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jul 2023 07:06:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231431AbjGNHC0 (ORCPT
+        id S235152AbjGNHGp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Jul 2023 03:02:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45700 "EHLO
+        Fri, 14 Jul 2023 03:06:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229492AbjGNHCZ (ORCPT
+        with ESMTP id S232382AbjGNHGm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Jul 2023 03:02:25 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9070171D;
-        Fri, 14 Jul 2023 00:02:24 -0700 (PDT)
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36E6k8mC003711;
-        Fri, 14 Jul 2023 07:02:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=VSZ2cLwX/EHXnaRmoVY3Q/CXPd3lzNMShf9VQsHYbZM=;
- b=F9jCkLDwZECEsSzd4c6/nNh7238079QEjvVzPfQGvKY7NYKkJe6sHLh2yBuemM8yVbD5
- 1OgIqxdFL3buUzxlRvmqAbO5SAOrv9Q6lHVT4FhLaNmgJdyoIVad8ymQCBkcGBaraZIE
- Q0YcddfEwR5OqccLNuwbPYgPmwmbfIKTTizg93pai56lKG8IoKTjbb3yooEm4WEniI4M
- XBAZdlPseoF3Sp/8JwOuiitNDZdKv83I2wE6rJ/rRKU2iYoTDiv7sTuZcsJGuXiYeatm
- bQC+7ESQqP2t1deFANp+x+mIRZeaPpqznkreVjBF5ocvnHzJHt9Sni2UMfZd3Up1DooA qQ== 
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ru1cjrbgq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 14 Jul 2023 07:02:09 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36E4xAPA007392;
-        Fri, 14 Jul 2023 07:02:09 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3rtpvs1420-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 14 Jul 2023 07:02:09 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36E726BT20578820
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 Jul 2023 07:02:06 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 00AD52004E;
-        Fri, 14 Jul 2023 07:02:06 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F3CE12004B;
-        Fri, 14 Jul 2023 07:02:03 +0000 (GMT)
-Received: from [9.43.21.134] (unknown [9.43.21.134])
-        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Fri, 14 Jul 2023 07:02:03 +0000 (GMT)
-Message-ID: <d91cee25-19d6-2eaa-1ad3-94718fa253cb@linux.ibm.com>
-Date:   Fri, 14 Jul 2023 12:32:02 +0530
+        Fri, 14 Jul 2023 03:06:42 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C4F61727;
+        Fri, 14 Jul 2023 00:06:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689318401; x=1720854401;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=BaEo9Tux8uqrNwgTh1LcHPbDEKHZM4gN91FR5Y91izM=;
+  b=cMFakY9dbSPVfl9hq9dyZrQiKhidFHSfVxCXNrtf23GUV6DuF8uqq8uD
+   0WPlRQfFcg68Sx+JFMjaMo62xDDyGSgTvFwcyCHUt/zi5KNcoQX0KAYnp
+   uWPyvJJDLAVwt/ytyhLOFxcr/vF25t0gWuFvnczUlsT9u5BnoJ1jsQq5g
+   tPz43nml47Aiii6P/DowTNyaBF1rTNsUQ0hv7adGYCjoUbzhC1ezVzXkv
+   pyYQKe75yy+192+pp1GB5cc2ThOvgBi/Ds/pKFVX1wGODSc4YywLA+l5C
+   CK3pYQIyiWdX03bQtj0MJ9g4uMXfqVUD+MMwvTDybHQDEPYBVHHaIdrev
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="350280434"
+X-IronPort-AV: E=Sophos;i="6.01,204,1684825200"; 
+   d="scan'208";a="350280434"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2023 00:06:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="968898780"
+X-IronPort-AV: E=Sophos;i="6.01,204,1684825200"; 
+   d="scan'208";a="968898780"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.49.109])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2023 00:06:35 -0700
+Message-ID: <b1127b63-6c6a-e42e-ce6c-cf4f24bbc5a1@intel.com>
+Date:   Fri, 14 Jul 2023 10:06:31 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v2 02/10] docs: ABI:
- sysfs-bus-event_source-devices-hv_gpci: Document processor_bus_topology sysfs
- interface file
-To:     Randy Dunlap <rdunlap@infradead.org>, mpe@ellerman.id.au
-Cc:     linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, disgoel@linux.ibm.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230710092717.55317-1-kjain@linux.ibm.com>
- <20230710092717.55317-3-kjain@linux.ibm.com>
- <4418618a-ac75-f824-ec6d-984421dd5c6b@infradead.org>
+ Firefox/102.0 Thunderbird/102.13.0
+Subject: Re: [PATCH] perf: add new option '--workload-attr' to set workload
+ sched_policy/priority/mask
 Content-Language: en-US
-From:   kajoljain <kjain@linux.ibm.com>
-In-Reply-To: <4418618a-ac75-f824-ec6d-984421dd5c6b@infradead.org>
+To:     Changbin Du <changbin.du@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230713085831.395112-1-changbin.du@huawei.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20230713085831.395112-1-changbin.du@huawei.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: -6e-aaptf8lQBw9POaytQSMl9XXfYxQy
-X-Proofpoint-ORIG-GUID: -6e-aaptf8lQBw9POaytQSMl9XXfYxQy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-14_03,2023-07-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
- priorityscore=1501 spamscore=0 mlxlogscore=999 impostorscore=0
- phishscore=0 lowpriorityscore=0 malwarescore=0 adultscore=0 mlxscore=0
- bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2307140059
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-
-
-
-
-
-
-
-
-Thanks Randy for the review comments, I will do these updates
-for all documentation patches in my next version of patchset.
-
-Thanks,
-Kajol Jain
-
-On 7/12/23 02:22, Randy Dunlap wrote:
-> Hi--
+On 13/07/23 11:58, Changbin Du wrote:
+> To get consistent benchmarking results, sometimes we need to set the
+> sched_policy/priority/mask of the workload to reduce system noise.
 > 
-> On 7/10/23 02:27, Kajol Jain wrote:
->> Add details of the new hv-gpci interface file called
->> "processor_bus_topology" in the ABI documentation.
->>
->> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
->> ---
->>  .../sysfs-bus-event_source-devices-hv_gpci    | 32 +++++++++++++++++++
->>  1 file changed, 32 insertions(+)
->>
->> diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices-hv_gpci b/Documentation/ABI/testing/sysfs-bus-event_source-devices-hv_gpci
->> index 12e2bf92783f..2eeeab9a20fa 100644
->> --- a/Documentation/ABI/testing/sysfs-bus-event_source-devices-hv_gpci
->> +++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices-hv_gpci
->> @@ -80,3 +80,35 @@ Contact:	Linux on PowerPC Developer List <linuxppc-dev@lists.ozlabs.org>
->>  Description:	read only
->>  		This sysfs file exposes the cpumask which is designated to make
->>  		HCALLs to retrieve hv-gpci pmu event counter data.
->> +
->> +What:		/sys/devices/hv_gpci/interface/processor_bus_topology
->> +Date:		July 2023
->> +Contact:	Linux on PowerPC Developer List <linuxppc-dev@lists.ozlabs.org>
->> +Description:	admin read only
->> +		This sysfs file exposes the system topology information by making HCALL
->> +		H_GET_PERF_COUNTER_INFO. The HCALL is made with counter request value
->> +		PROCESSOR_BUS_TOPOLOGY(0xD0).
->> +
->> +		* This sysfs file will be created only for power10 and above platforms.
->> +
->> +		* User needs root privileges to read data from this sysfs file.
->> +
->> +		* This sysfs file will be created, only when the HCALL returns "H_SUCESS",
+> For example, CPU binding is required on big.little system.
 > 
-> 		                                                                H_SUCCESS
+>   $ perf stat -r 10 -- taskset -c 0 ls
 > 
->> +		  "H_AUTHORITY" and "H_PARAMETER" as the return type.
+> Nevertheless, the 'taskset' is also counted here.
 > 
-> 		            s/and/or/
+> To get away of the middleman, this adds a new option '--workload-attr' to
+> do the same jobs for stat and record commands.
 > 
->> +
->> +		  HCALL with return error type "H_AUTHORITY", can be resolved during
+>   $ sudo perf stat --workload-attr fifo,40,0x1 -- ls
 > 
-> 		                             Drop the comma ^
-> 
->> +		  runtime by setting "Enable Performance Information Collection" option.
->> +
->> +		* The end user reading this sysfs file must decode the content as per
->> +		  underlying platform/firmware.
->> +
->> +		Possible error codes while reading this sysfs file:
->> +
->> +		* "-EPERM" : Partition is not permitted to retrieve performance information,
->> +			    required to set "Enable Performance Information Collection" option.
->> +
->> +		* "-EIO" : Can't retrieve system information because of invalid buffer length/invalid address
->> +			   or because of some hardware error. Refer getPerfCountInfo documentation for
-> 
-> 			                                      Refer to
-> 
->> +			   more information.
->> +
->> +		* "-EFBIG" : System information exceeds PAGE_SIZE.
-> 
+> Above will make 'ls' run on CPU #0 with fifo scheduler and realtime
+> priority is 40.
+
+Aren't there ways to set up a process then start perf using -p <pid>
+then let the process continue.
+
