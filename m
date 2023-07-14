@@ -2,56 +2,56 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D45E8C001DE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jul 2023 08:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B264EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jul 2023 09:08:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235623AbjGNIvP (ORCPT
+        id S234750AbjGNJIL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Jul 2023 04:51:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56634 "EHLO
+        Fri, 14 Jul 2023 05:08:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235535AbjGNIvP (ORCPT
+        with ESMTP id S235793AbjGNJH5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Jul 2023 04:51:15 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F36E2701
-        for <linux-perf-users@vger.kernel.org>; Fri, 14 Jul 2023 01:51:13 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id 38308e7fff4ca-2b703c900e3so24844871fa.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 14 Jul 2023 01:51:12 -0700 (PDT)
+        Fri, 14 Jul 2023 05:07:57 -0400
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B24830CB
+        for <linux-perf-users@vger.kernel.org>; Fri, 14 Jul 2023 02:07:50 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id 38308e7fff4ca-2b703cbfaf5so24628151fa.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 14 Jul 2023 02:07:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google; t=1689324671; x=1691916671;
+        d=atishpatra.org; s=google; t=1689325668; x=1691917668;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UVJFUGPgUiZjejGogHmLzYwwKGbHbhdGEjYSUHSjBfo=;
-        b=pYAcX4FPQitZnsDIm6cTcKdm1Ztraq4W2bv6eu94SIYUTBpXculUzJiLK05nDzIZQY
-         X+ajUMzJ4+s3GZVMczZKydx+tBqLXWPIIcNeeaSKxDbOIpV+juiQrp9N9A7oMFbOy0ej
-         Bev1FExTBu9b0hpfG/pxEJkztwcOKTfi7ojBA=
+        bh=YzynI4WLtBuw1d8m4j6WgZRv2EJK5DJSgflNEDgPfAc=;
+        b=IeC4T67kCP+pYnmAmWKq3ZdRuzCxPc8oq3BWChG25r6bWYHzuDoyfrRi9GHWV4EuNv
+         cse/ph6ey17vHs/Oht8kGJb1u140M0biadKuB6R+b6tTZzd4eCLeh4M3XHMaNQqQ/tvZ
+         5hH1xkdWhGE/JMhxT4YxkiL4kTRihb5q62bv4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689324671; x=1691916671;
+        d=1e100.net; s=20221208; t=1689325668; x=1691917668;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UVJFUGPgUiZjejGogHmLzYwwKGbHbhdGEjYSUHSjBfo=;
-        b=XkMzjMJU+8AHti+Kvu3uupJZLasx43vt2C/rnAUjVOlpHmBSQf+ZUXuWTKUIXZg/NJ
-         agMF2M1j4XTOFSdq+s0tnhO9vE8YA8IVVtpEYv71t7ofVUrOEKN9JK+mbWAqdFN7lvhU
-         JsQh1t/WExz5jHXlF+iwKmqkMmnCWypvEiSt6fDTsrEGOcoyZOO4wZ2Bs+xqfTLAe71E
-         xQ2JvLgv3r22GQmBpZl6NZlzP281FThgrLFVOHHc3Gs+kX4aTTPayxd+uanrORqKNc6V
-         BiCxCKfsXfWA1StULtr5+JKgCgXaclMoimIfF/0t3QFk0hFXsqDgAzNud5/Uif8dVyCa
-         8ryg==
-X-Gm-Message-State: ABy/qLbVnjhh4JVrTMxPKn1J8qF1Ze8bQq4OS3UszHdytZxD8s/U1xbF
-        bkrAyoWu9fETebEsQJ/tN+RAM6PPeAoMVxSQ1gLL
-X-Google-Smtp-Source: APBJJlHjR6JsuaMQbXZar+lmwIZWlDiqDI6I9i3Y4OuSMcqQfvuZ6VyIJunOF1Ue2HAQ0kQfJSL6fyyKFEWspQicjTo=
-X-Received: by 2002:a2e:8611:0:b0:2b6:ee1c:216a with SMTP id
- a17-20020a2e8611000000b002b6ee1c216amr3436379lji.34.1689324671023; Fri, 14
- Jul 2023 01:51:11 -0700 (PDT)
+        bh=YzynI4WLtBuw1d8m4j6WgZRv2EJK5DJSgflNEDgPfAc=;
+        b=U8g3KneWP9VtlxXKChDshPWJD9ch84V5TIJFSaslqTCQsvz74tCtHXjCvgyLD/Zj3L
+         tbz1yhLeKkYkjOWGogy4kwMVVD/FX78qYfg101fCkP6Cbo291nuIVk4I0X2Oe+7YIWr1
+         zzrA5qSDrwwNADDa6lqyBNyhh5R2sv+NZWR5tmFciwdYAMkysK6uaVJQqjhcrEQSP2BK
+         kL8Ye4515DVDuFQwxGNTWfmG1LZU2pQNZ+nxSHgZj/EmYIu64bhs3nAOVvwrIQtkotqM
+         JCYiQCle2VSup9LjcH//w6Lk37nkNspGpuu1CIscCOMxcSg8IV7RN+a9Hb8/kNfe2FqZ
+         aTxg==
+X-Gm-Message-State: ABy/qLZQxvlNz1HGtHNcQ7K8ipAr1nhA5lAXGyi9bJNVpDnZ6L0CTRsH
+        7CijsfSu3krRs53SItX206RFDgZs8QQSLKV/I+JC
+X-Google-Smtp-Source: APBJJlEwvR3ie1wgajxu0LrxjHcnSgGyVfqq6Q7CDLHhh5oOZ5yoIAJ4eMMXji8exSySAnAz+ADwVtTO01lfq+BCC5k=
+X-Received: by 2002:a2e:9f0c:0:b0:2b6:d9dd:f65f with SMTP id
+ u12-20020a2e9f0c000000b002b6d9ddf65fmr3737244ljk.17.1689325668135; Fri, 14
+ Jul 2023 02:07:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230703124647.215952-1-alexghiti@rivosinc.com> <20230703124647.215952-9-alexghiti@rivosinc.com>
-In-Reply-To: <20230703124647.215952-9-alexghiti@rivosinc.com>
+References: <20230703124647.215952-1-alexghiti@rivosinc.com>
+In-Reply-To: <20230703124647.215952-1-alexghiti@rivosinc.com>
 From:   Atish Patra <atishp@atishpatra.org>
-Date:   Fri, 14 Jul 2023 01:50:59 -0700
-Message-ID: <CAOnJCUJGHWicrhGOGPK_aduaD9jXz7THHcbU+i+7tK-ChtQxNg@mail.gmail.com>
-Subject: Re: [PATCH v4 08/10] Documentation: admin-guide: Add riscv sysctl_perf_user_access
+Date:   Fri, 14 Jul 2023 02:07:36 -0700
+Message-ID: <CAOnJCUKCwnOXGWKiwQQxZ92t4138JAOqzkkqtwApHRy6YuS0Kw@mail.gmail.com>
+Subject: Re: [PATCH v4 00/10] riscv: Allow userspace to directly access perf counters
 To:     Alexandre Ghiti <alexghiti@rivosinc.com>
 Cc:     Jonathan Corbet <corbet@lwn.net>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -77,73 +77,103 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jul 3, 2023 at 5:54=E2=80=AFAM Alexandre Ghiti <alexghiti@rivosinc.=
+On Mon, Jul 3, 2023 at 5:46=E2=80=AFAM Alexandre Ghiti <alexghiti@rivosinc.=
 com> wrote:
 >
-> riscv now uses this sysctl so document its usage for this architecture.
+> riscv used to allow direct access to cycle/time/instret counters,
+> bypassing the perf framework, this patchset intends to allow the user to
+> mmap any counter when accessed through perf. But we can't break the
+> existing behaviour so we introduce a sysctl perf_user_access like arm64
+> does, which defaults to the legacy mode described above.
 >
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> ---
->  Documentation/admin-guide/sysctl/kernel.rst | 27 ++++++++++++++++++---
->  1 file changed, 23 insertions(+), 4 deletions(-)
+> This version needs openSBI v1.3 *and* a kernel fix that went upstream lat=
+ely
+> (https://lore.kernel.org/lkml/20230616114831.3186980-1-maz@kernel.org/T/)=
+.
 >
-> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/=
-admin-guide/sysctl/kernel.rst
-> index d85d90f5d000..19b627883313 100644
-> --- a/Documentation/admin-guide/sysctl/kernel.rst
-> +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> @@ -941,16 +941,35 @@ enabled, otherwise writing to this file will return=
- ``-EBUSY``.
->  The default value is 8.
+> **Important**: In this version, the default mode is now user access, not
+> the legacy so some applications will break.
 >
->
-> -perf_user_access (arm64 only)
-> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +perf_user_access (arm64 and riscv only)
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Controls user space access for reading perf event counters.
->
-> -Controls user space access for reading perf event counters. When set to =
-1,
-> -user space can read performance monitor counter registers directly.
-> +arm64
-> +=3D=3D=3D=3D=3D
->
->  The default value is 0 (access disabled).
->
-> +When set to 1, user space can read performance monitor counter registers
-> +directly.
-> +
+Maybe providing a little more context to the issue will help
+understanding why breaking those legacy
+applications is necessary due to security reasons.
 
-For ARM64, 1 also enables reading performance counters via perf interface o=
-nly.
-I don't think there is any way to access the counters directly in ARM64.
+Here was the previous discussion around this[1].
+Most of the legacy user applications using rdcycle should use rdtime
+instead as they just want to record the time
+elapsed. Allowing rdcycle/rdinstret to be read from user space can
+lead to very deterministic attacks[2].
 
->  See Documentation/arm64/perf.rst for more information.
+[1] https://groups.google.com/a/groups.riscv.org/g/sw-dev/c/REWcwYnzsKE?pli=
+=3D1
+[2] https://www.youtube.com/watch?v=3D3-c4C_L2PRQ&ab_channel=3DIEEESymposiu=
+monSecurityandPrivacy
+
+Any user application that really requires to read rdcycle directly can
+use this new perf interface to do that without any latency.
+
+> base-commit-tag: v6.4-rc6
 >
-> +riscv
-> +=3D=3D=3D=3D=3D
-> +
-> +When set to 0, user space access is disabled.
-> +
-> +The default value is 1, user space can read performance monitor counter
-> +registers through perf, any direct access without perf intervention will=
- trigger
-> +an illegal instruction.
-> +
-> +When set to 2, which enables legacy mode (user space has direct access t=
-o cycle
-> +and insret CSRs only). Note that this legacy value is deprecated and wil=
-l be
-> +removed once all user space applications are fixed.
-> +
-> +Note that the time CSR is always directly accessible to all modes.
+> Changes in v4:
+> - Fixed some nits in riscv_pmu_sbi.c thanks to Andrew
+> - Fixed the documentation thanks to Andrew
+> - Added RB from Andrew \o/
 >
->  pid_max
->  =3D=3D=3D=3D=3D=3D=3D
+> Changes in v3:
+> - patch 1 now contains the ref to the faulty commit (no Fixes tag as it i=
+s only a comment), as Andrew suggested
+> - Removed RISCV_PMU_LEGACY_TIME from patch 3, as Andrew suggested
+> - Rename RISCV_PMU_PDEV_NAME to "riscv-pmu-sbi", patch4 is just cosmetic =
+now, as Andrew suggested
+> - Removed a few useless (and wrong) comments, as Andrew suggested
+> - Simplify arch_perf_update_userpage code, as Andrew suggested
+> - Documentation now mentions that time CSR is *always* accessible, whatev=
+er the mode, as suggested by Andrew
+> - Removed CYCLEH reference and add TODO for rv32 support, as suggested by=
+ Atish
+> - Do not rename the pmu instance as Atish suggested
+> - Set pmc_width only if rdpmc is enabled and CONFIG_RISCV_PMU is set and =
+the event is a hw event
+> - Move arch_perf_update_userpage https://lore.kernel.org/lkml/20230616114=
+831.3186980-1-maz@kernel.org/T/
+> - **Switch to user mode access by default**
+>
+> Changes in v2:
+> - Split into smaller patches, way better!
+> - Add RB from Conor
+> - Simplify the way we checked riscv architecture
+> - Fix race mmap and other thread running on other cpus
+> - Use hwc when available
+> - Set all userspace access flags in event_init, too cumbersome to handle =
+sysctl changes
+> - Fix arch_perf_update_userpage for pmu other than riscv-pmu by renaming =
+pmu driver
+> - Fixed kernel test robot build error
+> - Fixed documentation (Andrew and Bagas)
+> - perf testsuite passes mmap tests in all 3 modes
+>
+> Alexandre Ghiti (10):
+>   perf: Fix wrong comment about default event_idx
+>   include: riscv: Fix wrong include guard in riscv_pmu.h
+>   riscv: Make legacy counter enum match the HW numbering
+>   drivers: perf: Rename riscv pmu sbi driver
+>   riscv: Prepare for user-space perf event mmap support
+>   drivers: perf: Implement perf event mmap support in the legacy backend
+>   drivers: perf: Implement perf event mmap support in the SBI backend
+>   Documentation: admin-guide: Add riscv sysctl_perf_user_access
+>   tools: lib: perf: Implement riscv mmap support
+>   perf: tests: Adapt mmap-basic.c for riscv
+>
+>  Documentation/admin-guide/sysctl/kernel.rst |  27 ++-
+>  drivers/perf/riscv_pmu.c                    | 113 +++++++++++
+>  drivers/perf/riscv_pmu_legacy.c             |  28 ++-
+>  drivers/perf/riscv_pmu_sbi.c                | 196 +++++++++++++++++++-
+>  include/linux/perf/riscv_pmu.h              |  12 +-
+>  include/linux/perf_event.h                  |   3 +-
+>  tools/lib/perf/mmap.c                       |  65 +++++++
+>  tools/perf/tests/mmap-basic.c               |   4 +-
+>  8 files changed, 428 insertions(+), 20 deletions(-)
+>
 > --
 > 2.39.2
 >
