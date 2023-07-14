@@ -2,91 +2,84 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD12EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jul 2023 07:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC76C001B0
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jul 2023 07:19:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235152AbjGNHGp (ORCPT
+        id S235380AbjGNHTw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Jul 2023 03:06:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47370 "EHLO
+        Fri, 14 Jul 2023 03:19:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232382AbjGNHGm (ORCPT
+        with ESMTP id S235077AbjGNHTt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Jul 2023 03:06:42 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C4F61727;
-        Fri, 14 Jul 2023 00:06:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689318401; x=1720854401;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=BaEo9Tux8uqrNwgTh1LcHPbDEKHZM4gN91FR5Y91izM=;
-  b=cMFakY9dbSPVfl9hq9dyZrQiKhidFHSfVxCXNrtf23GUV6DuF8uqq8uD
-   0WPlRQfFcg68Sx+JFMjaMo62xDDyGSgTvFwcyCHUt/zi5KNcoQX0KAYnp
-   uWPyvJJDLAVwt/ytyhLOFxcr/vF25t0gWuFvnczUlsT9u5BnoJ1jsQq5g
-   tPz43nml47Aiii6P/DowTNyaBF1rTNsUQ0hv7adGYCjoUbzhC1ezVzXkv
-   pyYQKe75yy+192+pp1GB5cc2ThOvgBi/Ds/pKFVX1wGODSc4YywLA+l5C
-   CK3pYQIyiWdX03bQtj0MJ9g4uMXfqVUD+MMwvTDybHQDEPYBVHHaIdrev
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="350280434"
-X-IronPort-AV: E=Sophos;i="6.01,204,1684825200"; 
-   d="scan'208";a="350280434"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2023 00:06:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="968898780"
-X-IronPort-AV: E=Sophos;i="6.01,204,1684825200"; 
-   d="scan'208";a="968898780"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.49.109])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2023 00:06:35 -0700
-Message-ID: <b1127b63-6c6a-e42e-ce6c-cf4f24bbc5a1@intel.com>
-Date:   Fri, 14 Jul 2023 10:06:31 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.13.0
-Subject: Re: [PATCH] perf: add new option '--workload-attr' to set workload
- sched_policy/priority/mask
-Content-Language: en-US
-To:     Changbin Du <changbin.du@huawei.com>,
+        Fri, 14 Jul 2023 03:19:49 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 045F830E8;
+        Fri, 14 Jul 2023 00:19:36 -0700 (PDT)
+Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4R2N7M2t7jzNmSX;
+        Fri, 14 Jul 2023 15:16:15 +0800 (CST)
+Received: from M910t (10.110.54.157) by kwepemi500013.china.huawei.com
+ (7.221.188.120) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 14 Jul
+ 2023 15:19:32 +0800
+Date:   Fri, 14 Jul 2023 15:19:14 +0800
+From:   Changbin Du <changbin.du@huawei.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+CC:     Changbin Du <changbin.du@huawei.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf: add new option '--workload-attr' to set workload
+ sched_policy/priority/mask
+Message-ID: <20230714071914.3jro4kfcvhun2ptd@M910t>
 References: <20230713085831.395112-1-changbin.du@huawei.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230713085831.395112-1-changbin.du@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <b1127b63-6c6a-e42e-ce6c-cf4f24bbc5a1@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <b1127b63-6c6a-e42e-ce6c-cf4f24bbc5a1@intel.com>
+X-Originating-IP: [10.110.54.157]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemi500013.china.huawei.com (7.221.188.120)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 13/07/23 11:58, Changbin Du wrote:
-> To get consistent benchmarking results, sometimes we need to set the
-> sched_policy/priority/mask of the workload to reduce system noise.
+On Fri, Jul 14, 2023 at 10:06:31AM +0300, Adrian Hunter wrote:
+> On 13/07/23 11:58, Changbin Du wrote:
+> > To get consistent benchmarking results, sometimes we need to set the
+> > sched_policy/priority/mask of the workload to reduce system noise.
+> > 
+> > For example, CPU binding is required on big.little system.
+> > 
+> >   $ perf stat -r 10 -- taskset -c 0 ls
+> > 
+> > Nevertheless, the 'taskset' is also counted here.
+> > 
+> > To get away of the middleman, this adds a new option '--workload-attr' to
+> > do the same jobs for stat and record commands.
+> > 
+> >   $ sudo perf stat --workload-attr fifo,40,0x1 -- ls
+> > 
+> > Above will make 'ls' run on CPU #0 with fifo scheduler and realtime
+> > priority is 40.
 > 
-> For example, CPU binding is required on big.little system.
-> 
->   $ perf stat -r 10 -- taskset -c 0 ls
-> 
-> Nevertheless, the 'taskset' is also counted here.
-> 
-> To get away of the middleman, this adds a new option '--workload-attr' to
-> do the same jobs for stat and record commands.
-> 
->   $ sudo perf stat --workload-attr fifo,40,0x1 -- ls
-> 
-> Above will make 'ls' run on CPU #0 with fifo scheduler and realtime
-> priority is 40.
+> Aren't there ways to set up a process then start perf using -p <pid>
+> then let the process continue.
+>
+By that you need a mechanism to pause the new spawnned process and wait perf to
+attach. Or setup the sched properties by the app itself. But sometimes we just
+simply want to run the app through and measure some events. With
+--workload-attr, we do not need extra setup works.
 
-Aren't there ways to set up a process then start perf using -p <pid>
-then let the process continue.
-
+-- 
+Cheers,
+Changbin Du
