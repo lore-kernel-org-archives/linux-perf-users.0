@@ -2,125 +2,110 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3856AEB64DA
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jul 2023 09:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEFAEB64DA
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jul 2023 11:13:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235808AbjGNJaL (ORCPT
+        id S229520AbjGNLNA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Jul 2023 05:30:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54144 "EHLO
+        Fri, 14 Jul 2023 07:13:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235726AbjGNJaK (ORCPT
+        with ESMTP id S231235AbjGNLM7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Jul 2023 05:30:10 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E3DB26AE
-        for <linux-perf-users@vger.kernel.org>; Fri, 14 Jul 2023 02:30:09 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id 38308e7fff4ca-2b8390003e2so11887701fa.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 14 Jul 2023 02:30:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google; t=1689327008; x=1691919008;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dosegy5s6S3Py/sYCBb7fr6YwHTMUrv8EM9f77WeMOc=;
-        b=Xqcw23ipPcPee2KGDUUmScxC6YI+Lt+tpZLhyiWzpqBFRO340fdakn0xdVV1NlwZYo
-         8LZbDjW6NUOsDs0GB/lm0oM1oxUlYm5/QtzGj1+yTps3jl6EW1l2EbnJeFvc6s69+PMu
-         3etpZNsNrgUTw2j28xUGW6FsyP7PGWyvOkhIA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689327008; x=1691919008;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dosegy5s6S3Py/sYCBb7fr6YwHTMUrv8EM9f77WeMOc=;
-        b=edPeY2rIHoTpaqdEWeUmurpyhyKZNd73ismXXXmSuyjFdUQ4523HwIMdqlCI1ihSsQ
-         9A7/wZ4jOsP7o/TxTIhQ9iuA8/r24NPsWeD34rm5+aJ+6Pgo7HgCUbUcZ500XRBheDhY
-         /nBq0IBS0CEjLQlxnMFisZE2jdUL8+k6xFrjq8YXZ36J1Zn5PSCk82dQDLwuYJwvgxBY
-         2iWkqnpJ6dAGpkRdXcwkBlHFAvQ8X9YZLX90h0qrrCctr1VTG/u5QXVrtWoUlvMUHjXA
-         kW/UTSOk/5IITjOhi3LWcmldgnL5IFFib3rHRbma1Qi4J2sBmx+l2dG2FIhWoCj3TahZ
-         mrSw==
-X-Gm-Message-State: ABy/qLYXtV6E4CO+5He95ZQjPV8aZFh2eXOBZvQS3l3BPxyJl0DeCReQ
-        KbrewjF9lee5hI18oUpU3Zsr7lLW2FqFNJJNZk3L
-X-Google-Smtp-Source: APBJJlEPgo1IICV+iHBqiUW+Vh3Nr2Vbvx10CePV36LNEMGHrNoz3v5ECTBa/vGZDHxkGoGYB97wfvhB3JFhCknlnkc=
-X-Received: by 2002:a2e:a16f:0:b0:2b6:d57f:d81 with SMTP id
- u15-20020a2ea16f000000b002b6d57f0d81mr3198367ljl.53.1689327007925; Fri, 14
- Jul 2023 02:30:07 -0700 (PDT)
+        Fri, 14 Jul 2023 07:12:59 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6FC42D78
+        for <linux-perf-users@vger.kernel.org>; Fri, 14 Jul 2023 04:12:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689333178; x=1720869178;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=ocTsRncx6NuZE1siHV5O7T9pi2EAo6ReDlJdw034SkE=;
+  b=MqiWqDYnw8DrptugzLunSUfF5gVLehzFNClHLPS/BLOW0bPxr0/Ri3B/
+   bX3cCBT9mldJxM1TggbvnLqhzgStgAbi7ZYP/mbzRDFoPnhxre8dSFcus
+   CUF88/1mM+EjgVKUksBgXRVffKBIGWr8FPqfBKDsC0/gWRMSKAB1OaqKQ
+   tr9gEVzRU8+BDZxAW7oZFQb8iVLL5Y7QrkwQKk46kAfPuhFjiCSRLqSY+
+   WW3Epm9tZt+OkbaetYRgXtRUakTVnc+YHOJM4JyE9JLYhQKpSB2h9kqo1
+   k57YNhXSakwUvgp/BHqOkKbK1ZlWCR1Mb7JTbtQ96+wF8BgLx5WGQ91a/
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="362916178"
+X-IronPort-AV: E=Sophos;i="6.01,205,1684825200"; 
+   d="scan'208";a="362916178"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2023 04:12:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="722369344"
+X-IronPort-AV: E=Sophos;i="6.01,205,1684825200"; 
+   d="scan'208";a="722369344"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.49.109])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2023 04:12:53 -0700
+Message-ID: <d2662fac-1c25-f5fc-4126-eb2d1545e434@intel.com>
+Date:   Fri, 14 Jul 2023 14:12:48 +0300
 MIME-Version: 1.0
-References: <20230703124647.215952-1-alexghiti@rivosinc.com> <20230703124647.215952-11-alexghiti@rivosinc.com>
-In-Reply-To: <20230703124647.215952-11-alexghiti@rivosinc.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Fri, 14 Jul 2023 02:29:56 -0700
-Message-ID: <CAOnJCUJcYAX3=h=O6nCjN+hAL9cT8Cmw5sgXa1MZpKEPCuyM-A@mail.gmail.com>
-Subject: Re: [PATCH v4 10/10] perf: tests: Adapt mmap-basic.c for riscv
-To:     Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-        Andrew Jones <ajones@ventanamicro.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.13.0
+Subject: Re: Is PEBS-via-PT expected to work on Alder Lake Gracemont cores?
+Content-Language: en-US
+To:     Tudor Brindus <tbrindus@gmail.com>,
+        linux-perf-users@vger.kernel.org
+References: <CABPTGz8qFqV0X0Wv0Tx=EZAcMORaGFAnwU94cZCeMbdGA6s6Cw@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CABPTGz8qFqV0X0Wv0Tx=EZAcMORaGFAnwU94cZCeMbdGA6s6Cw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jul 3, 2023 at 5:57=E2=80=AFAM Alexandre Ghiti <alexghiti@rivosinc.=
-com> wrote:
->
-> riscv now supports mmaping hardware counters to userspace so adapt the te=
-st
-> to run on this architecture.
->
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-> ---
->  tools/perf/tests/mmap-basic.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.=
-c
-> index e68ca6229756..f5075ca774f8 100644
-> --- a/tools/perf/tests/mmap-basic.c
-> +++ b/tools/perf/tests/mmap-basic.c
-> @@ -284,7 +284,7 @@ static struct test_case tests__basic_mmap[] =3D {
->                          "permissions"),
->         TEST_CASE_REASON("User space counter reading of instructions",
->                          mmap_user_read_instr,
-> -#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
-> +#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || =
-__riscv_xlen =3D=3D 64
->                          "permissions"
->  #else
->                          "unsupported"
-> @@ -292,7 +292,7 @@ static struct test_case tests__basic_mmap[] =3D {
->                 ),
->         TEST_CASE_REASON("User space counter reading of cycles",
->                          mmap_user_read_cycles,
-> -#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
-> +#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || =
-__riscv_xlen =3D=3D 64
->                          "permissions"
->  #else
->                          "unsupported"
-> --
-> 2.39.2
->
+On 13/06/22 22:45, Tudor Brindus wrote:
+> Hi linux-perf-users,
+> 
+> I recently obtained an Alder Lake machine, and was hoping to try out
+> PEBS-via-PT on its E-cores.
+> 
+> The patchset[0] adding support for Alder Lake to perf suggests this should be
+> possible:
+> 
+>> - The "cpu_core" PMU supports Topdown metrics.
+>>   The "cpu_atom" PMU supports PEBS-via-PT.
+> 
+> However, I haven't been able to get it to work, despite spending the better
+> part of a day trying. I am on a 5.19 kernel.
 
+I realise this is an old email but FWIW the Linux driver currently
+supports only Intel PT features that are common to all CPUs.
 
-Reviewed-by: Atish Patra <atishp@rivosinc.com>
---=20
-Regards,
-Atish
+> 
+> $ taskset -c 15 ./demo &
+> $ perf record -e
+> '{intel_pt//,cpu_atom/name=br_misp,event=0xC5,umask=0x0,aux-output/ppp}:u'
+> -p $(pidof demo)
+> Error:
+> cpu_atom/br_misp/: PMU Hardware doesn't support 'aux_output' feature
+> 
+> dmesg reports that the cpu_atom PMU should support PEBS-via-PT:
+> 
+> [    0.005511] core: cpu_atom PMU driver: PEBS-via-PT
+> [    0.005511] ... version:                5
+> [    0.005511] ... bit width:              48
+> [    0.005511] ... generic registers:      6
+> [    0.005511] ... value mask:             0000ffffffffffff
+> [    0.005511] ... max period:             00007fffffffffff
+> [    0.005511] ... fixed-purpose events:   3
+> [    0.005511] ... event mask:             000000070000003f
+> [    0.060399]   #9 #10 #11 #12 #13 #14 #15
+> 
+> Am I doing something silly here? As far as I can tell from reading the patch,
+> PERF_PMU_CAP_AUX_OUTPUT is a function of intel_cap.pebs_output_pt_available,
+> which should be set (otherwise dmesg would not be printing the "PEBS-via-PT"
+> string).
+> 
+> Thanks,
+> Tudor
+> 
+> [0]: https://lore.kernel.org/lkml/20210310165358.GI23521@zn.tnic/T/
+> 
+
