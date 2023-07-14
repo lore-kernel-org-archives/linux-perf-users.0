@@ -2,56 +2,56 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B0EC001B0
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jul 2023 08:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C04C001B0
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jul 2023 08:04:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235133AbjGNIEB (ORCPT
+        id S232059AbjGNIEd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Jul 2023 04:04:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55510 "EHLO
+        Fri, 14 Jul 2023 04:04:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235154AbjGNIDf (ORCPT
+        with ESMTP id S234797AbjGNIEO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Jul 2023 04:03:35 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C84E249FF
-        for <linux-perf-users@vger.kernel.org>; Fri, 14 Jul 2023 01:01:14 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id 38308e7fff4ca-2b6fbf0c0e2so24237681fa.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 14 Jul 2023 01:01:14 -0700 (PDT)
+        Fri, 14 Jul 2023 04:04:14 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D05783C2D
+        for <linux-perf-users@vger.kernel.org>; Fri, 14 Jul 2023 01:01:41 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id 38308e7fff4ca-2b702319893so24442651fa.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 14 Jul 2023 01:01:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google; t=1689321673; x=1691913673;
+        d=atishpatra.org; s=google; t=1689321700; x=1691913700;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1EP8QirGSf2eyBcIi4yRsMFtzBd2RQ70krFjONUiThU=;
-        b=qrgkw6OLa/u09k4e8aJM4RCLYCSGJL2Ws3SFmAj0tiB0tCpyZoQo61oYAsI8sU9BB8
-         H+gQWv8vCeKgKgyoeSKS4C4Sc0C4IPiwmVfTHUNpOFsAZRTsMpO+0/j6Wnd+QMliJQf8
-         i4x/3jU9uKTH2hS4SI8A4xrNpqD/H+x2vIEBo=
+        bh=ShjQafFlxwj0ZbXGvO6wNGgWYgf4xaRFZkYq02YP6kc=;
+        b=NxLgPV4I19f8IiP60ZnGFSeHPxtkexY32ZSMloC+h1rGlZvabpR6A/95fQRFz3JYYl
+         mA3aygOemm5vn9YIIfhjVvgiQfzkmba/RYXwnACWZ9QvSY934p3EaqHuKQndThA/Ncol
+         PPB/1ojsJfRmvkFBS7VpyIdsWANx5SGYvfneQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689321673; x=1691913673;
+        d=1e100.net; s=20221208; t=1689321700; x=1691913700;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1EP8QirGSf2eyBcIi4yRsMFtzBd2RQ70krFjONUiThU=;
-        b=ZYsX3Cac6lzYj4zswKSxmBJnFLgi5PPrAXBD5r+8NU/ZN37XeOt6YCPBBYYopWnOid
-         qsU+hcUgNOCksfmEGHO0zMhgN/OwOZ4qBN6MSsW5Mo5lcVYNlhrm/0XcvD2VCKq55Ou4
-         iRgrSjLZD4/TAFc71cjR1YnqkU9vl0tCTRRrPCoEyrt2GFOgANy3sGWli4HdZ0qSINJ6
-         zjaSzjy0Ybl4YuN13UYcgZIUcULsK9mj5Vq0zJSpehRNJLguqtvdldvvN/DydFKQh/l+
-         Iem1tn/W1bH2iJVbeMt/AgK/dAMAaKyOrQ8exlK7N7dx7L1aU99ZCK3rK9GlaNPJwdrr
-         56qw==
-X-Gm-Message-State: ABy/qLZMmYGzZFuyjlg59+Bc7WJRx1qjyWPbUZ+f2hSrI8zZukcLtZDC
-        2klCmMJVJL+g1uHlRPxqe7chlO9LmqRUH/kA+9Fo
-X-Google-Smtp-Source: APBJJlH9NXJwG/irkEBqLyvhCaQIJQoJOMcC3K+qxYOhEFI0i6ghNvHJrlfaGxOM3WfsQn8boxIxuA7ht9mmOsLse2o=
-X-Received: by 2002:a2e:8611:0:b0:2b6:ee1c:216a with SMTP id
- a17-20020a2e8611000000b002b6ee1c216amr3346497lji.34.1689321672902; Fri, 14
- Jul 2023 01:01:12 -0700 (PDT)
+        bh=ShjQafFlxwj0ZbXGvO6wNGgWYgf4xaRFZkYq02YP6kc=;
+        b=VPxry3HjHmGuMJVKbQmcjr93ZWK/euixa1M1oVDwbqSZua6PQzFruf0U6yHI4hEkRo
+         pqbWAuqRJYBxBWfcHLLYYqpNjnRjTzJ+2ecHyYwxcYTTyxyVRBwFaUzKPV1jxHsbPtW4
+         fr74JJmSFBgHHbE7KYkvWT9AAfGCcH74tlQMZx1Ef5v5y//SxtQvWSUkTenAHf7NPay2
+         17j36C1tgt+vyXkMcLbnXgJgGR9muM8+XNL/0kGkmfyygC7HXR/1huHY9Q6lf99JXhri
+         dj6cZAH3Pv5P0CgkFW6zStk9XKT3TahvMR9NjGHB0BZxCPJ9d7uHy4d6CVKr+f8wZ7oW
+         5S2A==
+X-Gm-Message-State: ABy/qLaGh2W0Vg0ernTAB0xzRUVqOQalzqKryXbqL64099+3A7y3Uual
+        g4/8u7w9Je+rGRvH2ZQqSPDzLdVeY7jAv/nT0FqK
+X-Google-Smtp-Source: APBJJlG8yJgz5jfm4hlpuw8sREsVvtiALqK/rKnopveB5SJ1Aggbn1Z9er70e9nUIoAw3y4SZLdpoCvsmxLPKA6jdac=
+X-Received: by 2002:a2e:8082:0:b0:2b6:d8d5:15b1 with SMTP id
+ i2-20020a2e8082000000b002b6d8d515b1mr2761616ljg.50.1689321700031; Fri, 14 Jul
+ 2023 01:01:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230703124647.215952-1-alexghiti@rivosinc.com> <20230703124647.215952-4-alexghiti@rivosinc.com>
-In-Reply-To: <20230703124647.215952-4-alexghiti@rivosinc.com>
+References: <20230703124647.215952-1-alexghiti@rivosinc.com> <20230703124647.215952-5-alexghiti@rivosinc.com>
+In-Reply-To: <20230703124647.215952-5-alexghiti@rivosinc.com>
 From:   Atish Patra <atishp@atishpatra.org>
-Date:   Fri, 14 Jul 2023 01:01:01 -0700
-Message-ID: <CAOnJCULeM0TXR8mp-FihtMZ2KfOTkPzmzjX74Mj6_c62UrhAEA@mail.gmail.com>
-Subject: Re: [PATCH v4 03/10] riscv: Make legacy counter enum match the HW numbering
+Date:   Fri, 14 Jul 2023 01:01:28 -0700
+Message-ID: <CAOnJCULCcPaHL5WeF=1L=Ge22M6CgGHLPVh7z1dOyhT7S0V5+Q@mail.gmail.com>
+Subject: Re: [PATCH v4 04/10] drivers: perf: Rename riscv pmu sbi driver
 To:     Alexandre Ghiti <alexghiti@rivosinc.com>
 Cc:     Jonathan Corbet <corbet@lwn.net>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -77,39 +77,63 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jul 3, 2023 at 5:49=E2=80=AFAM Alexandre Ghiti <alexghiti@rivosinc.=
+On Mon, Jul 3, 2023 at 5:50=E2=80=AFAM Alexandre Ghiti <alexghiti@rivosinc.=
 com> wrote:
 >
-> RISCV_PMU_LEGACY_INSTRET used to be set to 1 whereas the offset of this
-> hardware counter from CSR_CYCLE is actually 2: make this offset match the
-> real hw offset so that we can directly expose those values to userspace.
+> That's just cosmetic, no functional changes.
 >
 > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 > Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
 > ---
->  drivers/perf/riscv_pmu_legacy.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/perf/riscv_pmu_sbi.c   | 4 ++--
+>  include/linux/perf/riscv_pmu.h | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 >
-> diff --git a/drivers/perf/riscv_pmu_legacy.c b/drivers/perf/riscv_pmu_leg=
-acy.c
-> index ca9e20bfc7ac..6a000abc28bb 100644
-> --- a/drivers/perf/riscv_pmu_legacy.c
-> +++ b/drivers/perf/riscv_pmu_legacy.c
-> @@ -13,7 +13,7 @@
->  #include <linux/platform_device.h>
+> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+> index 4f3ac296b3e2..83c3f1c4d2f1 100644
+> --- a/drivers/perf/riscv_pmu_sbi.c
+> +++ b/drivers/perf/riscv_pmu_sbi.c
+> @@ -914,7 +914,7 @@ static int pmu_sbi_device_probe(struct platform_devic=
+e *pdev)
+>  static struct platform_driver pmu_sbi_driver =3D {
+>         .probe          =3D pmu_sbi_device_probe,
+>         .driver         =3D {
+> -               .name   =3D RISCV_PMU_PDEV_NAME,
+> +               .name   =3D RISCV_PMU_SBI_PDEV_NAME,
+>         },
+>  };
 >
->  #define RISCV_PMU_LEGACY_CYCLE         0
-> -#define RISCV_PMU_LEGACY_INSTRET       1
-> +#define RISCV_PMU_LEGACY_INSTRET       2
+> @@ -941,7 +941,7 @@ static int __init pmu_sbi_devinit(void)
+>         if (ret)
+>                 return ret;
 >
->  static bool pmu_init_done;
+> -       pdev =3D platform_device_register_simple(RISCV_PMU_PDEV_NAME, -1,=
+ NULL, 0);
+> +       pdev =3D platform_device_register_simple(RISCV_PMU_SBI_PDEV_NAME,=
+ -1, NULL, 0);
+>         if (IS_ERR(pdev)) {
+>                 platform_driver_unregister(&pmu_sbi_driver);
+>                 return PTR_ERR(pdev);
+> diff --git a/include/linux/perf/riscv_pmu.h b/include/linux/perf/riscv_pm=
+u.h
+> index 9f70d94942e0..5deeea0be7cb 100644
+> --- a/include/linux/perf/riscv_pmu.h
+> +++ b/include/linux/perf/riscv_pmu.h
+> @@ -21,7 +21,7 @@
 >
+>  #define RISCV_MAX_COUNTERS     64
+>  #define RISCV_OP_UNSUPP                (-EOPNOTSUPP)
+> -#define RISCV_PMU_PDEV_NAME    "riscv-pmu"
+> +#define RISCV_PMU_SBI_PDEV_NAME        "riscv-pmu-sbi"
+>  #define RISCV_PMU_LEGACY_PDEV_NAME     "riscv-pmu-legacy"
+>
+>  #define RISCV_PMU_STOP_FLAG_RESET 1
 > --
 > 2.39.2
 >
 
-Reviewed-by: Atish Patra <atishp@rivosinc.com>
 
+Reviewed-by: Atish Patra <atishp@rivosinc.com>
 --=20
 Regards,
 Atish
