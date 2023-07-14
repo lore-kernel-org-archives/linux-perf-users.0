@@ -2,31 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC76C001B0
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jul 2023 07:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B0EC001B0
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jul 2023 08:04:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235380AbjGNHTw (ORCPT
+        id S235133AbjGNIEB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Jul 2023 03:19:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55722 "EHLO
+        Fri, 14 Jul 2023 04:04:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235077AbjGNHTt (ORCPT
+        with ESMTP id S235154AbjGNIDf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Jul 2023 03:19:49 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 045F830E8;
-        Fri, 14 Jul 2023 00:19:36 -0700 (PDT)
-Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4R2N7M2t7jzNmSX;
-        Fri, 14 Jul 2023 15:16:15 +0800 (CST)
-Received: from M910t (10.110.54.157) by kwepemi500013.china.huawei.com
- (7.221.188.120) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 14 Jul
- 2023 15:19:32 +0800
-Date:   Fri, 14 Jul 2023 15:19:14 +0800
-From:   Changbin Du <changbin.du@huawei.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-CC:     Changbin Du <changbin.du@huawei.com>,
+        Fri, 14 Jul 2023 04:03:35 -0400
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C84E249FF
+        for <linux-perf-users@vger.kernel.org>; Fri, 14 Jul 2023 01:01:14 -0700 (PDT)
+Received: by mail-lj1-x234.google.com with SMTP id 38308e7fff4ca-2b6fbf0c0e2so24237681fa.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 14 Jul 2023 01:01:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google; t=1689321673; x=1691913673;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1EP8QirGSf2eyBcIi4yRsMFtzBd2RQ70krFjONUiThU=;
+        b=qrgkw6OLa/u09k4e8aJM4RCLYCSGJL2Ws3SFmAj0tiB0tCpyZoQo61oYAsI8sU9BB8
+         H+gQWv8vCeKgKgyoeSKS4C4Sc0C4IPiwmVfTHUNpOFsAZRTsMpO+0/j6Wnd+QMliJQf8
+         i4x/3jU9uKTH2hS4SI8A4xrNpqD/H+x2vIEBo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689321673; x=1691913673;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1EP8QirGSf2eyBcIi4yRsMFtzBd2RQ70krFjONUiThU=;
+        b=ZYsX3Cac6lzYj4zswKSxmBJnFLgi5PPrAXBD5r+8NU/ZN37XeOt6YCPBBYYopWnOid
+         qsU+hcUgNOCksfmEGHO0zMhgN/OwOZ4qBN6MSsW5Mo5lcVYNlhrm/0XcvD2VCKq55Ou4
+         iRgrSjLZD4/TAFc71cjR1YnqkU9vl0tCTRRrPCoEyrt2GFOgANy3sGWli4HdZ0qSINJ6
+         zjaSzjy0Ybl4YuN13UYcgZIUcULsK9mj5Vq0zJSpehRNJLguqtvdldvvN/DydFKQh/l+
+         Iem1tn/W1bH2iJVbeMt/AgK/dAMAaKyOrQ8exlK7N7dx7L1aU99ZCK3rK9GlaNPJwdrr
+         56qw==
+X-Gm-Message-State: ABy/qLZMmYGzZFuyjlg59+Bc7WJRx1qjyWPbUZ+f2hSrI8zZukcLtZDC
+        2klCmMJVJL+g1uHlRPxqe7chlO9LmqRUH/kA+9Fo
+X-Google-Smtp-Source: APBJJlH9NXJwG/irkEBqLyvhCaQIJQoJOMcC3K+qxYOhEFI0i6ghNvHJrlfaGxOM3WfsQn8boxIxuA7ht9mmOsLse2o=
+X-Received: by 2002:a2e:8611:0:b0:2b6:ee1c:216a with SMTP id
+ a17-20020a2e8611000000b002b6ee1c216amr3346497lji.34.1689321672902; Fri, 14
+ Jul 2023 01:01:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230703124647.215952-1-alexghiti@rivosinc.com> <20230703124647.215952-4-alexghiti@rivosinc.com>
+In-Reply-To: <20230703124647.215952-4-alexghiti@rivosinc.com>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Fri, 14 Jul 2023 01:01:01 -0700
+Message-ID: <CAOnJCULeM0TXR8mp-FihtMZ2KfOTkPzmzjX74Mj6_c62UrhAEA@mail.gmail.com>
+Subject: Re: [PATCH v4 03/10] riscv: Make legacy counter enum match the HW numbering
+To:     Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -35,51 +62,54 @@ CC:     Changbin Du <changbin.du@huawei.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] perf: add new option '--workload-attr' to set workload
- sched_policy/priority/mask
-Message-ID: <20230714071914.3jro4kfcvhun2ptd@M910t>
-References: <20230713085831.395112-1-changbin.du@huawei.com>
- <b1127b63-6c6a-e42e-ce6c-cf4f24bbc5a1@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <b1127b63-6c6a-e42e-ce6c-cf4f24bbc5a1@intel.com>
-X-Originating-IP: [10.110.54.157]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemi500013.china.huawei.com (7.221.188.120)
-X-CFilter-Loop: Reflected
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+        Andrew Jones <ajones@ventanamicro.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jul 14, 2023 at 10:06:31AM +0300, Adrian Hunter wrote:
-> On 13/07/23 11:58, Changbin Du wrote:
-> > To get consistent benchmarking results, sometimes we need to set the
-> > sched_policy/priority/mask of the workload to reduce system noise.
-> > 
-> > For example, CPU binding is required on big.little system.
-> > 
-> >   $ perf stat -r 10 -- taskset -c 0 ls
-> > 
-> > Nevertheless, the 'taskset' is also counted here.
-> > 
-> > To get away of the middleman, this adds a new option '--workload-attr' to
-> > do the same jobs for stat and record commands.
-> > 
-> >   $ sudo perf stat --workload-attr fifo,40,0x1 -- ls
-> > 
-> > Above will make 'ls' run on CPU #0 with fifo scheduler and realtime
-> > priority is 40.
-> 
-> Aren't there ways to set up a process then start perf using -p <pid>
-> then let the process continue.
+On Mon, Jul 3, 2023 at 5:49=E2=80=AFAM Alexandre Ghiti <alexghiti@rivosinc.=
+com> wrote:
 >
-By that you need a mechanism to pause the new spawnned process and wait perf to
-attach. Or setup the sched properties by the app itself. But sometimes we just
-simply want to run the app through and measure some events. With
---workload-attr, we do not need extra setup works.
+> RISCV_PMU_LEGACY_INSTRET used to be set to 1 whereas the offset of this
+> hardware counter from CSR_CYCLE is actually 2: make this offset match the
+> real hw offset so that we can directly expose those values to userspace.
+>
+> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+> ---
+>  drivers/perf/riscv_pmu_legacy.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/perf/riscv_pmu_legacy.c b/drivers/perf/riscv_pmu_leg=
+acy.c
+> index ca9e20bfc7ac..6a000abc28bb 100644
+> --- a/drivers/perf/riscv_pmu_legacy.c
+> +++ b/drivers/perf/riscv_pmu_legacy.c
+> @@ -13,7 +13,7 @@
+>  #include <linux/platform_device.h>
+>
+>  #define RISCV_PMU_LEGACY_CYCLE         0
+> -#define RISCV_PMU_LEGACY_INSTRET       1
+> +#define RISCV_PMU_LEGACY_INSTRET       2
+>
+>  static bool pmu_init_done;
+>
+> --
+> 2.39.2
+>
 
--- 
-Cheers,
-Changbin Du
+Reviewed-by: Atish Patra <atishp@rivosinc.com>
+
+--=20
+Regards,
+Atish
