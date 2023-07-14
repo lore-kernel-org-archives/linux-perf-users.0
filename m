@@ -2,151 +2,245 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2238CEB64DD
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jul 2023 02:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73822EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jul 2023 03:07:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232783AbjGNCb5 convert rfc822-to-8bit (ORCPT
+        id S232823AbjGNDHw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Jul 2023 22:31:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52240 "EHLO
+        Thu, 13 Jul 2023 23:07:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231547AbjGNCb4 (ORCPT
+        with ESMTP id S233207AbjGNDHu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Jul 2023 22:31:56 -0400
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C429C2D63;
-        Thu, 13 Jul 2023 19:31:49 -0700 (PDT)
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-4815756d742so435313e0c.1;
-        Thu, 13 Jul 2023 19:31:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689301909; x=1691893909;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3nTW7gc06oCO+awj0xYoLUkZXhqvUKiuD24Yf6fhtuE=;
-        b=YtWDI73dY00nez3A+XO3CPqLDhZSS1sxSz4DvDpMrBcA+N/HgwY+Bv+L+hylYez5D0
-         4BtKlT1FuIFCAJ7jEdHucn/sv7OqMN2F1wgdFkdwVGpHcjUaXifeVh1KN1iFTCP4CKNU
-         Sa9TlZi0JhARPCzI5P7piIOAQnO0y7B2yRQuxEiFuTEUy6raKTKKp41wGnnPbsugkjuf
-         6a/Zxm0LHYJ3N3ZwW7C54doaGS4LZkxTHU7obQNlM31jkMbKW9ZJV5b7zqN2UNG40xJg
-         jnwDhpoxw3i/pSdSWSBYG4gFcudFlqEDFEXl/j4M/NDAwiGzBoZMTsR2RcMKpy0lfOmH
-         a2ew==
-X-Gm-Message-State: ABy/qLYlvHJMYCoWPSNIXwlXtqbP4dl5v7I4nQBhY0T3QokMrQ6Q/Fjf
-        w9NGWKMdTz9K/zJYoVPRgWKhL0fAKeP6iM0wE5Y=
-X-Google-Smtp-Source: APBJJlFcM/c6143DXDXfpL/riNtIJbjA6mt/IFwh6YTX0AAQ6hBrc+1QjH+nTBRYi5xUjsXKyAVVsqbO0Pd20e5AIHU=
-X-Received: by 2002:a1f:bfd8:0:b0:47e:6e24:7672 with SMTP id
- p207-20020a1fbfd8000000b0047e6e247672mr1885895vkf.13.1689301908691; Thu, 13
- Jul 2023 19:31:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1689024635.git.anupnewsmail@gmail.com> <11543b39f97a7e2f9eac76c1233f1b1caa3f2c48.1689024635.git.anupnewsmail@gmail.com>
- <CAP-5=fXT3a4JE6u8zXf3=xFbOGTre3WD63SMPrA_iSVpgHjDVA@mail.gmail.com>
-In-Reply-To: <CAP-5=fXT3a4JE6u8zXf3=xFbOGTre3WD63SMPrA_iSVpgHjDVA@mail.gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 13 Jul 2023 19:31:36 -0700
-Message-ID: <CAM9d7cjRhOQfihjg9ddKBmNCkW7CAG3NMWPkJQOAs5MHUxQUuA@mail.gmail.com>
-Subject: Re: [PATCH v3 4/6] scripts: python: Add trace end processing and JSON output
+        Thu, 13 Jul 2023 23:07:50 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7EB52D79
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Jul 2023 20:07:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689304066; x=1720840066;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=rou1IB30FynuBlvWAl4I7YyzAEIHCxdUvZnlaGhIWi8=;
+  b=C/msT+Xn0JRjBxuwGOrZlkqzt2HuusAaIetv7YoMhs6AzKJaQfMMuZsR
+   LPW8mhOQgpwy7di0A3iEKVE6/zCf6mzZwaTCAPQ4d7tVMBeuaYfPZ+R5k
+   ZQRFpVNQvxfrHruj15hP6/02ReZWHp9na9c+PVfXDj/zR80vDqkzp0n6d
+   KvAD5/Zl/NFRC0S/ooqo34cdYb/y5kZ4Br+KPheRkGVOgRNFbPmC5GenU
+   PweHrpIqdpel0kn4tGp1nC567oF8fb+J5hASSp+qXLP96CmNzjSky7ohr
+   oq9RnrpB+nKwXlsIq+1BvZV5ZFj3o5RTIs4R7+MOWCfpURU7DHdHNcnvt
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="368017338"
+X-IronPort-AV: E=Sophos;i="6.01,204,1684825200"; 
+   d="scan'208";a="368017338"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 20:07:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="751875519"
+X-IronPort-AV: E=Sophos;i="6.01,204,1684825200"; 
+   d="scan'208";a="751875519"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 20:07:45 -0700
+Date:   Thu, 13 Jul 2023 20:07:44 -0700
+From:   Andi Kleen <ak@linux.intel.com>
 To:     Ian Rogers <irogers@google.com>
-Cc:     Anup Sharma <anupnewsmail@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: Event reordering regression for software events
+Message-ID: <ZLC8AIEfUJMQFOEn@tassilo>
+References: <ZLBgbHkbrfGygM/u@tassilo>
+ <ZLBjI4a3wIMs75lA@kernel.org>
+ <CAP-5=fU5Y95G2FsFdwxwPk=kLe=kka7CkD7ZDrzSU+Xv-Ks=Qg@mail.gmail.com>
+ <ZLCOEOtJOQiN+8VB@tassilo>
+ <CAP-5=fWjDeXZfgLu8hiavtkRGmWsZnwt3g+Ms5YPL12PxUaCgg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWjDeXZfgLu8hiavtkRGmWsZnwt3g+Ms5YPL12PxUaCgg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Anup and Ian,
-
-On Wed, Jul 12, 2023 at 10:28 AM Ian Rogers <irogers@google.com> wrote:
->
-> On Mon, Jul 10, 2023 at 4:13 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
+On Thu, Jul 13, 2023 at 06:14:16PM -0700, Ian Rogers wrote:
+> On Thu, Jul 13, 2023 at 4:52 PM Andi Kleen <ak@linux.intel.com> wrote:
 > >
-> > Inside the trace end function the final output will be dumped
-> > to standard output in JSON gecko format. Additionally, constants
-> > such as USER_CATEGORY_INDEX, KERNEL_CATEGORY_INDEX, CATEGORIES, and
-> > PRODUCT are defined to provide contextual information.
 > >
-> > Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
->
-> Acked-by: Ian Rogers <irogers@google.com>
-
-I'm ok with this change too but I think it can be squashed to
-patch 1/6 as I think it'd make it more self-contained.  Of course
-you might change time and thread to have empty values.
-
->
-> > ---
-> >  .../scripts/python/firefox-gecko-converter.py | 34 ++++++++++++++++++-
-> >  1 file changed, 33 insertions(+), 1 deletion(-)
+> > On Thu, Jul 13, 2023 at 02:24:22PM -0700, Ian Rogers wrote:
+> > > On Thu, Jul 13, 2023 at 1:48 PM Arnaldo Carvalho de Melo
+> > > <acme@kernel.org> wrote:
+> > > >
+> > > > Em Thu, Jul 13, 2023 at 01:37:00PM -0700, Andi Kleen escreveu:
+> > > > > Hi Ian,
+> > > > >
+> > > > > The current post 6.3 linux-perf-next causes some fairly drastic
+> > > > > reordering in output for some event combinations. I bisected it down to
+> > > > > your patch:
+> > > > >
+> > > > > commit 347c2f0a0988c59c402148054ef54648853fa669
+> > > > > Author: Ian Rogers <irogers@google.com>
+> > > > > Date:   Sat Mar 11 18:15:40 2023 -0800
+> > > > >
+> > > > >     perf parse-events: Sort and group parsed events
+> > > > >
+> > > > >     This change is intended to be a no-op for most current cases, the
+> > > > >     default sort order is the order the events were parsed. Where it
+> > > > >     varies is in how groups are handled. Previously an uncore and core
+> > > > >     event that are grouped would most often cause the group to be removed:
+> > > > >
+> > >
+> > > So this is a no-op for most current cases where event groups aren't
+> > > used. The default order for events is the order they were inserted in.
 > >
-> > diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools/perf/scripts/python/firefox-gecko-converter.py
-> > index 0b8a86bdcab1..39818a603265 100644
-> > --- a/tools/perf/scripts/python/firefox-gecko-converter.py
-> > +++ b/tools/perf/scripts/python/firefox-gecko-converter.py
-> > @@ -24,8 +24,40 @@ from Core import *
-> >  thread_map = {}
-> >  start_time = None
+> > This doesn't seem to be what happens because the patch reorders
+> > top-level events outside group. (like all the top level "dummy"ies)
 > >
-> > +# Follow Brendan Gregg's Flamegraph convention: orange for kernel and yellow for user
-> > +CATEGORIES = [
-> > +    {'name': 'User', 'color': 'yellow', 'subcategories': ['Other']},
-> > +    {'name': 'Kernel', 'color': 'orange', 'subcategories': ['Other']}
-> > +]
->
-> A follow up could be to make these command line options, defaulting to
-> orange and yellow.
-
-Sounds good.
-
->
-> > +
-> > +# The product name is used by the profiler UI to show the Operating system and Processor.
-> > +PRODUCT = os.popen('uname -op').read().strip()
-
-I'm not against this but having a command name (or full
-command line) of the target process as a title might be better.
-But I'm not sure if the python scripting engine exposed the info
-(like in perf report --header-only) to the script.
-
-Thanks,
-Namhyung
-
-
-> > +
-> >  def trace_end():
-> > -       pass
-> > +    thread_array = thread_map.values()))
-> > +
-> > +    result = {
-> > +        'meta': {
-> > +            'interval': 1,
-> > +            'processType': 0,
-> > +            'product': PRODUCT,
-> > +            'stackwalk': 1,
-> > +            'debug': 0,
-> > +            'gcpoison': 0,
-> > +            'asyncstack': 1,
-> > +            'startTime': start_time,
-> > +            'shutdownTime': None,
-> > +            'version': 24,
-> > +            'presymbolicated': True,
-> > +            'categories': CATEGORIES,
-> > +            'markerSchema': []
-> > +            },
-> > +        'libs': [],
-> > +        'threads': thread_array,
-> > +        'processes': [],
-> > +        'pausedRanges': []
-> > +    }
-> > +    json.dump(result, sys.stdout, indent=2)
+> > But this commit broke things that are completely unrelated to hybrid and uncore,
+> > just plain software events not being in a group. There's no reason
+> > to reorder those.
 > >
-> >  def process_event(param_dict):
-> >         global start_time
-> > --
-> > 2.34.1
+> > Basically anything you do for hybrid and topdown shouldn't affect
+> > anything else. That's the basic rule.
+> 
+> It is not clear that modifying the order of events in the evlist
+> qualifies as a breakage, 
+
+I don't know what to say here. 
+
+> and it is necessary because of complex kernel
+> APIs that particularly in the case of perf metric events, Intel were
+> responsible for.
+
+But my example has no perf metrics.
+
+Also taking a step back: 
+
+You're saying reordering is needed for perf metrics because slots
+has to come first in the group. 
+
+But the expectation here was always that the user would specify
+the groups this way, otherwise it doesn't work.  Do you disagree with
+that?
+
+So why does the perf tool need to fix it? Just pass it to the kernel
+and it won't schedule and the user has to fix it.
+
+Perhaps perf can give warnings to make it clearer.
+
+I understand that the metrics code has to make sure to not generate
+such groups, but that's a different problem that shouldn't affect how
+non metrics events are handled.
+
+Also I reviewed the commit in question and at least the example
+doesn't even have perf metrics ?!? It's trying to fix some uncore issue.
+
+So it seems what we're talking about here has nothing to do with 
+perf metrics.
+
+How about replacing the sorting commit with a warning and ask 
+the user to do the reordering? Would that work for you?
+
+> > > > > wrong place, instead of the expected order.
+> > > > >
+> > > > > good:
+> > > > >
+> > > > > ...
+> > > > > 986476553;ns;duration_time;986476553;100.00;;
+> > > > > 0;;dummy;983952237;100.00;;
+> > > > > 0;;cs:u;983952237;100.00;;
+> > > > > 16532;;minor-faults:u;983952237;100.00;;
+> > > > > 0;;major-faults:u;983952237;100.00;;
+> > > > > 0;;migrations:u;983952237;100.00;;
+> > > > > 3532509496;;cycles:u;23999092;2.00;;
+> > > > > ....
+> > > > >
+> > > > > bad:
+> > > > >
+> > > > > 1010119571;ns;duration_time;1010119571;100.00;;
+> > > > > 0;;dummy [software];1007748753;100.00;;
+> > > > > 0;;cs:u [software];1007748753;100.00;;
+> > > > > 16496;;minor-faults:u [software];1007748753;100.00;;
+> > > > > 0;;major-faults:u [software];1007748753;100.00;;
+> > > > > 0;;migrations:u [software];1007748753;100.00;;
+> > > > > 0;;dummy [software];1007748753;100.00;;
+> > > > > 0;;dummy [software];1007748753;100.00;;
+> > > > > 0;;dummy [software];1007748753;100.00;;
+> > > > > 0;;dummy [software];1007748753;100.00;;
+> > > > > 0;;emulation-faults [software];1007748753;100.00;;
+> > > > > 0;;dummy [software];1007748753;100.00;;
+> > > > > 0;;dummy [software];1007748753;100.00;;
+> > > > > 0;;emulation-faults [software];1007748753;100.00;;
+> > > > > 0;;emulation-faults [software];1007748753;100.00;;
 > >
+> > Please explain how this insane order can make sense even with hybrid
+> > or metrics.
+> 
+> Tbh, I'm not sure what you are doing. linux-next is on 6.5 but you
+> mention 6.3. You don't list a platform for testing on. I'm not even
+
+6.3 was my original reference point, but since I bisected the issue
+it's not 6.3 but exactly just this one commit that changes behavior.
+
+The platform is SKX.
+
+> 
+> > > would seem unfortunate. Tbh, the mistake here is the assumptions that
+> > > toplev is making.
+> >
+> > It's not an random assumption, it's the only way to parse perf output uniquely.
+> >
+> > Please make it an option. But this cannot stay this way unconditionally
+> > if perf stat is supposed to stay a tool which can be used from other programs.
+> 
+> You should be using the json or CSV outputs. These are intended for
+
+This is the CSV output that is reordered! (see the example you just
+quoted)
+
+I haven't tested JSON, but I assume that is reordered too.
+
+> 
+> For hybrid the problem of regrouping events still isn't properly
+> solved. Consider:
+
+
+Yes I understand that hybrid has issues. But the first step to solving
+them is to not break existing platforms.
+
+> 
+> perf stat -e '{cycles,faults}' ...
+> 
+> On a hybrid system we get the cycles event for the cpu_atom and
+> cpu_core PMUs, but faults as a software event will exist once and be
+> grouped on only 1 of the PMUs. This behavior is clearly silly, faults
+> should measure both on cpu_atom and cpu_core PMUs, as it would appear
+> on a non-hybrid system, and we should fix this. But what you're
+> arguing is that we can't and shouldn't as Hyrum's law tells us that
+> someone is depending on the 1 PMU behavior.
+
+TBH i don't have a strong opinion on keeping hybrid the same
+As you say it is somewhat broken, so I guess there are less 
+existing users and some change there is acceptable, as long
+as it doesn't affect the more mature platforms.
+
+As for your example it seems somewhat obscure and I would probably
+consider it user error. The non PMU qualified support was really only intended to
+keep existing perf record/stat default working, for everything else
+it should be discouraged. Trying to fix every corner case
+here automatically is unlikely to be productive.
+
+So perhaps just print a warning in this case? 
+
+> explicitly list the groups and PMUs. We need to make the tool behave
+> properly for increasingly complex kernel PMU event requirements.
+
+I agree, but reordering the complete event list with a huge impact
+on non hybrid is not the way to do it.
+
+
+> This issue is often made substantially more complex as fixing Intel's
+> kernel PMU driver is pushed back upon - for example, we can't rely on
+> weak groups,
+
+I thought they still work most of the time?
+
+-Andi
