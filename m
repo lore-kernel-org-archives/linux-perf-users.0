@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A542DC001E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D12C00528
 	for <linux-perf-users@archiver.kernel.org>; Sat, 15 Jul 2023 03:31:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230082AbjGODbl (ORCPT
+        id S229572AbjGODbl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Fri, 14 Jul 2023 23:31:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33246 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229904AbjGODbh (ORCPT
+        with ESMTP id S229981AbjGODbh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Fri, 14 Jul 2023 23:31:37 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C87B43A99;
-        Fri, 14 Jul 2023 20:31:36 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4R2v492nYMzVhkT;
-        Sat, 15 Jul 2023 11:30:17 +0800 (CST)
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65F923A96;
+        Fri, 14 Jul 2023 20:31:35 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4R2v262NSQztRTY;
+        Sat, 15 Jul 2023 11:28:30 +0800 (CST)
 Received: from localhost.localdomain (10.67.174.95) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Sat, 15 Jul 2023 11:31:33 +0800
+ 15.1.2507.27; Sat, 15 Jul 2023 11:31:31 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -32,9 +32,9 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <ak@linux.intel.com>, <anshuman.khandual@arm.com>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
 CC:     <yangjihong1@huawei.com>
-Subject: [PATCH v2 6/7] perf test: Update system-wide-dummy attr expected values
-Date:   Sat, 15 Jul 2023 03:29:14 +0000
-Message-ID: <20230715032915.97146-7-yangjihong1@huawei.com>
+Subject: [PATCH v2 3/7] perf record: Move setting dummy tracking before record__init_thread_masks()
+Date:   Sat, 15 Jul 2023 03:29:11 +0000
+Message-ID: <20230715032915.97146-4-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
 In-Reply-To: <20230715032915.97146-1-yangjihong1@huawei.com>
 References: <20230715032915.97146-1-yangjihong1@huawei.com>
@@ -49,61 +49,160 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The perf record uses evlist__add_aux_dummy() instead of evlist__add_dummy()
-to add a dummy event. The value of attr needs to be updated.
+When dummy tracking go system wide, the mmap cpu mask is changed.
+Therefore, needs to be placed before record__init_thread_masks().
+Dummy tracking has been set in record__open(), move it before
+record__init_thread_masks() and add a helper for unified processing.
 
-The perf test result is as follows:
+The sys_perf_event_open invoked is as follows:
 
-  # ./perf test list  2>&1 | grep 'Setup struct perf_event_attr'
-   17: Setup struct perf_event_attr
-  # ./perf test 17
-   17: Setup struct perf_event_attr                                    : Ok
+  # perf --debug verbose=3 record -e cpu-clock -D 100 true
+    <SNIP>
+    Opening: cpu-clock
+    ------------------------------------------------------------
+    perf_event_attr:
+      type                             1
+      size                             136
+      { sample_period, sample_freq }   4000
+      sample_type                      IP|TID|TIME|PERIOD|IDENTIFIER
+      read_format                      ID|LOST
+      disabled                         1
+      inherit                          1
+      freq                             1
+      sample_id_all                    1
+      exclude_guest                    1
+    ------------------------------------------------------------
+    sys_perf_event_open: pid 6867  cpu 0  group_fd -1  flags 0x8 = 5
+    sys_perf_event_open: pid 6867  cpu 1  group_fd -1  flags 0x8 = 6
+    sys_perf_event_open: pid 6867  cpu 2  group_fd -1  flags 0x8 = 7
+    sys_perf_event_open: pid 6867  cpu 3  group_fd -1  flags 0x8 = 9
+    sys_perf_event_open: pid 6867  cpu 4  group_fd -1  flags 0x8 = 10
+    sys_perf_event_open: pid 6867  cpu 5  group_fd -1  flags 0x8 = 11
+    sys_perf_event_open: pid 6867  cpu 6  group_fd -1  flags 0x8 = 12
+    sys_perf_event_open: pid 6867  cpu 7  group_fd -1  flags 0x8 = 13
+    Opening: dummy:u
+    ------------------------------------------------------------
+    perf_event_attr:
+      type                             1
+      size                             136
+      config                           0x9
+      { sample_period, sample_freq }   1
+      sample_type                      IP|TID|TIME|IDENTIFIER
+      read_format                      ID|LOST
+      disabled                         1
+      inherit                          1
+      exclude_kernel                   1
+      exclude_hv                       1
+      mmap                             1
+      comm                             1
+      enable_on_exec                   1
+      task                             1
+      sample_id_all                    1
+      exclude_guest                    1
+      mmap2                            1
+      comm_exec                        1
+      ksymbol                          1
+      bpf_event                        1
+    ------------------------------------------------------------
+    sys_perf_event_open: pid 6867  cpu 0  group_fd -1  flags 0x8 = 14
+    sys_perf_event_open: pid 6867  cpu 1  group_fd -1  flags 0x8 = 15
+    sys_perf_event_open: pid 6867  cpu 2  group_fd -1  flags 0x8 = 16
+    sys_perf_event_open: pid 6867  cpu 3  group_fd -1  flags 0x8 = 17
+    sys_perf_event_open: pid 6867  cpu 4  group_fd -1  flags 0x8 = 18
+    sys_perf_event_open: pid 6867  cpu 5  group_fd -1  flags 0x8 = 19
+    sys_perf_event_open: pid 6867  cpu 6  group_fd -1  flags 0x8 = 20
+    sys_perf_event_open: pid 6867  cpu 7  group_fd -1  flags 0x8 = 21
+    <SNIP>
 
 Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 ---
- tools/perf/tests/attr/system-wide-dummy | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ tools/perf/builtin-record.c | 59 +++++++++++++++++++++++--------------
+ 1 file changed, 37 insertions(+), 22 deletions(-)
 
-diff --git a/tools/perf/tests/attr/system-wide-dummy b/tools/perf/tests/attr/system-wide-dummy
-index 2f3e3eb728eb..69f61f3271cc 100644
---- a/tools/perf/tests/attr/system-wide-dummy
-+++ b/tools/perf/tests/attr/system-wide-dummy
-@@ -9,8 +9,8 @@ flags=8
- type=1
- size=136
- config=9
--sample_period=4000
--sample_type=455
-+sample_period=1
-+sample_type=199
- read_format=4|20
- # Event will be enabled right away.
- disabled=0
-@@ -18,12 +18,12 @@ inherit=1
- pinned=0
- exclusive=0
- exclude_user=0
--exclude_kernel=0
--exclude_hv=0
-+exclude_kernel=1
-+exclude_hv=1
- exclude_idle=0
- mmap=1
- comm=1
--freq=1
-+freq=0
- inherit_stat=0
- enable_on_exec=0
- task=1
-@@ -32,7 +32,7 @@ precise_ip=0
- mmap_data=0
- sample_id_all=1
- exclude_host=0
--exclude_guest=0
-+exclude_guest=1
- exclude_callchain_kernel=0
- exclude_callchain_user=0
- mmap2=1
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index ca83599cc50c..ccbcb005e188 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -908,6 +908,37 @@ static int record__config_off_cpu(struct record *rec)
+ 	return off_cpu_prepare(rec->evlist, &rec->opts.target, &rec->opts);
+ }
+ 
++static int record__config_tracking_events(struct record *rec)
++{
++	struct evsel *evsel;
++	struct evlist *evlist = rec->evlist;
++	struct record_opts *opts = &rec->opts;
++
++	/*
++	 * For initial_delay, system wide or a hybrid system, we need to add a
++	 * dummy event so that we can track PERF_RECORD_MMAP to cover the delay
++	 * of waiting or event synthesis.
++	 */
++	if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
++	    perf_pmus__num_core_pmus() > 1) {
++		evsel = evlist__findnew_tracking_event(evlist, false);
++		if (!evsel)
++			return -ENOMEM;
++
++		/*
++		 * Enable the dummy event when the process is forked for
++		 * initial_delay, immediately for system wide.
++		 */
++		if (opts->target.initial_delay && !evsel->immediate &&
++		    !target__has_cpu(&opts->target))
++			evsel->core.attr.enable_on_exec = 1;
++		else
++			evsel->immediate = 1;
++	}
++
++	return 0;
++}
++
+ static bool record__kcore_readable(struct machine *machine)
+ {
+ 	char kcore[PATH_MAX];
+@@ -1288,28 +1319,6 @@ static int record__open(struct record *rec)
+ 	struct record_opts *opts = &rec->opts;
+ 	int rc = 0;
+ 
+-	/*
+-	 * For initial_delay, system wide or a hybrid system, we need to add a
+-	 * dummy event so that we can track PERF_RECORD_MMAP to cover the delay
+-	 * of waiting or event synthesis.
+-	 */
+-	if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
+-	    perf_pmus__num_core_pmus() > 1) {
+-		pos = evlist__findnew_tracking_event(evlist, false);
+-		if (!pos)
+-			return -ENOMEM;
+-
+-		/*
+-		 * Enable the dummy event when the process is forked for
+-		 * initial_delay, immediately for system wide.
+-		 */
+-		if (opts->target.initial_delay && !pos->immediate &&
+-		    !target__has_cpu(&opts->target))
+-			pos->core.attr.enable_on_exec = 1;
+-		else
+-			pos->immediate = 1;
+-	}
+-
+ 	evlist__config(evlist, opts, &callchain_param);
+ 
+ 	evlist__for_each_entry(evlist, pos) {
+@@ -4235,6 +4244,12 @@ int cmd_record(int argc, const char **argv)
+ 		goto out;
+ 	}
+ 
++	err = record__config_tracking_events(rec);
++	if (err) {
++		pr_err("record__config_tracking_events failed, error %d\n", err);
++		goto out;
++	}
++
+ 	err = record__init_thread_masks(rec);
+ 	if (err) {
+ 		pr_err("Failed to initialize parallel data streaming masks\n");
 -- 
 2.30.GIT
 
