@@ -2,122 +2,91 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 344FBEB64DC
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jul 2023 21:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E16BEB64DC
+	for <linux-perf-users@archiver.kernel.org>; Sat, 15 Jul 2023 03:31:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229643AbjGNVgU (ORCPT
+        id S229580AbjGODbf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Jul 2023 17:36:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45194 "EHLO
+        Fri, 14 Jul 2023 23:31:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjGNVgT (ORCPT
+        with ESMTP id S229482AbjGODbe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Jul 2023 17:36:19 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C0173585;
-        Fri, 14 Jul 2023 14:36:18 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1b9cdef8619so15618975ad.0;
-        Fri, 14 Jul 2023 14:36:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689370578; x=1691962578;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TmEIC2uOQWMGdSXi/s9FCQP4FKhvkW7TusIhlJLLWXA=;
-        b=RRHAJcjIqpaMbbHPglhj4IAw2TVt8KST+G56PjDlPKo9u70i176XTpLLob2PbnY2sA
-         /zXRb9AYgopppOD2jauRVQjPrc7OkN/0lQmAU1wxNhuFUCU4w0FjY5VlRLjYluTAK+gk
-         peKikL7UaOqMVBKqKaeqox8WSnVfOYiD9ECmRGdaDk1vAmVenAgQTGXGwzIai33MuvO7
-         MICx64BC75DxkFSUwSfP/hir+GrqrFSnGF6YgQ7R1iTbMDor1hSZU97FhKMZnZjsYmQm
-         sjztv2zIOB73kaGQ+YnMh/ziHl3ae+8bVxJZikOVc9f9xNwFfVsqOxlkB+2tLX+SvEkq
-         eFCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689370578; x=1691962578;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TmEIC2uOQWMGdSXi/s9FCQP4FKhvkW7TusIhlJLLWXA=;
-        b=NNkWPR06lbIydS5RRiYMTKPp8wOY5NOc55ft972xMobkrie0uLWTPUGkB/wAYy6Knu
-         SM6PuZmaeLRrVmIlRixzJpJDeaNKCQOFWlmHTJvoW2e7qBEE6AY5OQ+r1mEUtmFm0llN
-         05UCxG6dQGhXUANxM2WFHL7JpwlZ3Mfkeu6AYZye5y/kMxUVd2rb757kWAbZmX0uY1tC
-         wBdipM3ezu/OVAUUxyHGVgLdF2OZO/cW7iw2dKJmXWzxLHganq6hmfrn4YukzW9yLmic
-         pwiIR0Pny9RAB7x8VpcHfsLMZpaebt20ZXvHA2LXd/+ee19nOnU1d2BW1ZAbAxRfrtDz
-         jSVA==
-X-Gm-Message-State: ABy/qLapPIm3i//bFBw+vnep9htXuWrhDVQWau37ZIaIH/q51GXWXpAf
-        LsuatMLPo0NbH/HCDDXjMAr0+sL2VgQOE/zO
-X-Google-Smtp-Source: APBJJlHkV0nEMnJUoLk1MsdBUbdHqbDSejDQZIYTSxLEpA0TZlxFU41GHog+zkgBTM2Po/FDeVOC0g==
-X-Received: by 2002:a17:902:c381:b0:1b8:9db5:2ec1 with SMTP id g1-20020a170902c38100b001b89db52ec1mr4133373plg.67.1689370577685;
-        Fri, 14 Jul 2023 14:36:17 -0700 (PDT)
-Received: from yoga ([2400:1f00:13:8030:52d1:71af:18b3:54f1])
-        by smtp.gmail.com with ESMTPSA id h2-20020a170902f7c200b001b9c5e07bc3sm5865940plw.238.2023.07.14.14.36.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jul 2023 14:36:17 -0700 (PDT)
-From:   Anup Sharma <anupnewsmail@gmail.com>
-X-Google-Original-From: Anup Sharma <AnupSharma>
-Date:   Sat, 15 Jul 2023 03:06:09 +0530
-To:     linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, anupnewsmail@gmail.com
-Subject: Re: [PATCH v3 0/6] Add support for Firefox's gecko profile format
-Message-ID: <ZLG/yVndGkFTuA2o@yoga>
-References: <cover.1689024635.git.anupnewsmail@gmail.com>
+        Fri, 14 Jul 2023 23:31:34 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69EB43A96;
+        Fri, 14 Jul 2023 20:31:33 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4R2v2r211nzLnj2;
+        Sat, 15 Jul 2023 11:29:08 +0800 (CST)
+Received: from localhost.localdomain (10.67.174.95) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Sat, 15 Jul 2023 11:31:30 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+        <james.clark@arm.com>, <tmricht@linux.ibm.com>,
+        <ak@linux.intel.com>, <anshuman.khandual@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH v2 1/7] perf evlist: Add perf_evlist__go_system_wide() helper
+Date:   Sat, 15 Jul 2023 03:29:09 +0000
+Message-ID: <20230715032915.97146-2-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
+In-Reply-To: <20230715032915.97146-1-yangjihong1@huawei.com>
+References: <20230715032915.97146-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1689024635.git.anupnewsmail@gmail.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.95]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jul 11, 2023 at 04:38:06AM +0530, Anup Sharma wrote:
-> This patch series adds support for Firefox's gecko profile format.
-> The format is documented here [1].
-> 
-> I have incorporated several changes based on feedback from the
-> previous version of the patch. However, there are still a few
-> remaining comments that I am currently addressing.
-> 
-> Additionally, I am still in the process of learning how to send
-> patches in a series, so there may be some shortcomings in this
-> particular series as well.
-> 
-> changes from v2:
-> - renamed mod to func
-> - removed unnessecary imports print_function
-> - removed shebang python env declaration
-> - changed _createtread to _createThread
-> - Commits in better order.
+For dummy events that keep tracking, we may need to modify its cpu_maps.
+For example, change the cpu_maps to record sideband events for all CPUS.
+Add perf_evlist__go_system_wide() helper to support this scenario.
 
-Hello everyone, I wanted to express my gratitude for your support.
-I recently received an email from GSoC admin informing me that I
-have successfully passed my midterm evaluation. I am thrilled about
-this news!. Ian, could you please provide some insights on the commit
-arrangement in v3 compared to v2? I noticed in v3, on 1/6 you have
-mentioned regarding the commit arrangement. I want to make sure I
-haven't overlooked. Currently, I'm focusing on developing the next
-version of patches, so having this information would be extremely
-beneficial to me. Thank you in advance!
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/lib/perf/evlist.c                  | 9 +++++++++
+ tools/lib/perf/include/internal/evlist.h | 2 ++
+ 2 files changed, 11 insertions(+)
 
-> [1] https://github.com/firefox-devtools/profiler/blob/main/docs-developer/gecko-profile-format.md
-> 
-> Anup Sharma (6):
->   scripts: python: Add initial script file with imports.
->   scripts: python: Extact necessary information from process event
->   scripts: python: thread sample processing to create thread with
->     schemas
->   scripts: python: Add trace end processing and JSON output
->   scripts: python: Implement add sample function and return finish
->   scripts: python: implement get or create frame and stack function
-> 
->  .../scripts/python/firefox-gecko-converter.py | 221 ++++++++++++++++++
->  1 file changed, 221 insertions(+)
->  create mode 100644 tools/perf/scripts/python/firefox-gecko-converter.py
-> 
-> -- 
-> 2.34.1
-> 
+diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+index b8b066d0dc5e..3acbbccc1901 100644
+--- a/tools/lib/perf/evlist.c
++++ b/tools/lib/perf/evlist.c
+@@ -738,3 +738,12 @@ int perf_evlist__nr_groups(struct perf_evlist *evlist)
+ 	}
+ 	return nr_groups;
+ }
++
++void perf_evlist__go_system_wide(struct perf_evlist *evlist, struct perf_evsel *evsel)
++{
++	if (!evsel->system_wide) {
++		evsel->system_wide = true;
++		if (evlist->needs_map_propagation)
++			__perf_evlist__propagate_maps(evlist, evsel);
++	}
++}
+diff --git a/tools/lib/perf/include/internal/evlist.h b/tools/lib/perf/include/internal/evlist.h
+index 3339bc2f1765..d86ffe8ed483 100644
+--- a/tools/lib/perf/include/internal/evlist.h
++++ b/tools/lib/perf/include/internal/evlist.h
+@@ -135,4 +135,6 @@ int perf_evlist__id_add_fd(struct perf_evlist *evlist,
+ void perf_evlist__reset_id_hash(struct perf_evlist *evlist);
+ 
+ void __perf_evlist__set_leader(struct list_head *list, struct perf_evsel *leader);
++
++void perf_evlist__go_system_wide(struct perf_evlist *evlist, struct perf_evsel *evsel);
+ #endif /* __LIBPERF_INTERNAL_EVLIST_H */
+-- 
+2.30.GIT
+
