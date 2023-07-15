@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D76EAC0015E
-	for <linux-perf-users@archiver.kernel.org>; Sat, 15 Jul 2023 03:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD285C001E0
+	for <linux-perf-users@archiver.kernel.org>; Sat, 15 Jul 2023 03:31:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229880AbjGODbg (ORCPT
+        id S229950AbjGODbh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Jul 2023 23:31:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33214 "EHLO
+        Fri, 14 Jul 2023 23:31:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229572AbjGODbf (ORCPT
+        with ESMTP id S229737AbjGODbf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Fri, 14 Jul 2023 23:31:35 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B21D33A97;
-        Fri, 14 Jul 2023 20:31:33 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.57])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4R2v1m3vqZzNm8K;
-        Sat, 15 Jul 2023 11:28:12 +0800 (CST)
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35C0B3A99;
+        Fri, 14 Jul 2023 20:31:34 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4R2v25500VztR9j;
+        Sat, 15 Jul 2023 11:28:29 +0800 (CST)
 Received: from localhost.localdomain (10.67.174.95) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Sat, 15 Jul 2023 11:31:29 +0800
+ 15.1.2507.27; Sat, 15 Jul 2023 11:31:31 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -32,10 +32,12 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <ak@linux.intel.com>, <anshuman.khandual@arm.com>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
 CC:     <yangjihong1@huawei.com>
-Subject: [PATCH v2 0/7] perf record: Track sideband events for all CPUs when tracing selected CPUs
-Date:   Sat, 15 Jul 2023 03:29:08 +0000
-Message-ID: <20230715032915.97146-1-yangjihong1@huawei.com>
+Subject: [PATCH v2 2/7] perf evlist: Add evlist__findnew_tracking_event() helper
+Date:   Sat, 15 Jul 2023 03:29:10 +0000
+Message-ID: <20230715032915.97146-3-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
+In-Reply-To: <20230715032915.97146-1-yangjihong1@huawei.com>
+References: <20230715032915.97146-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -47,117 +49,83 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-User space tasks can migrate between CPUs, track sideband events for all
-CPUs.
+Currently, intel-bts, intel-pt, and arm-spe may add a dummy event for
+tracking to the evlist. We may need to search for the dummy event for
+some settings. Therefore, add evlist__findnew_tracking_event() helper.
 
-The specific scenarios are as follows:
+evlist__findnew_tracking_event() also deal with system_wide maps if
+system_wide is true.
 
-         CPU0                                 CPU1
-  perf record -C 0 start
-                              taskA starts to be created and executed
-                                -> PERF_RECORD_COMM and PERF_RECORD_MMAP
-                                   events only deliver to CPU1
-                              ......
-                                |
-                          migrate to CPU0
-                                |
-  Running on CPU0    <----------/
-  ...
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/perf/builtin-record.c | 11 +++--------
+ tools/perf/util/evlist.c    | 18 ++++++++++++++++++
+ tools/perf/util/evlist.h    |  1 +
+ 3 files changed, 22 insertions(+), 8 deletions(-)
 
-  perf record -C 0 stop
-
-Now perf samples the PC of taskA. However, perf does not record the
-PERF_RECORD_COMM and PERF_RECORD_COMM events of taskA.
-Therefore, the comm and symbols of taskA cannot be parsed.
-
-The sys_perf_event_open invoked is as follows:
-
-  # perf --debug verbose=3 record -e cpu-clock -C 1 true
-  <SNIP>
-  Opening: cpu-clock
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             1
-    size                             136
-    { sample_period, sample_freq }   4000
-    sample_type                      IP|TID|TIME|ID|CPU|PERIOD
-    read_format                      ID|LOST
-    disabled                         1
-    inherit                          1
-    freq                             1
-    sample_id_all                    1
-    exclude_guest                    1
-  ------------------------------------------------------------
-  sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
-  Opening: dummy:HG
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             1
-    size                             136
-    config                           0x9
-    { sample_period, sample_freq }   1
-    sample_type                      IP|TID|TIME|CPU|IDENTIFIER
-    read_format                      ID|LOST
-    inherit                          1
-    exclude_kernel                   1
-    exclude_hv                       1
-    mmap                             1
-    comm                             1
-    task                             1
-    sample_id_all                    1
-    exclude_guest                    1
-    mmap2                            1
-    comm_exec                        1
-    ksymbol                          1
-    bpf_event                        1
-  ------------------------------------------------------------
-  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
-  sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 7
-  sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 9
-  sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 10
-  sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 11
-  sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 12
-  sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 13
-  sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
-  <SNIP>
-
-Changes since v1:
- - Add perf_evlist__go_system_wide() via internal/evlist.h instead of
-   exporting perf_evlist__propagate_maps().
- - Use evlist__add_aux_dummy() instead of evlist__add_dummy() in
-   evlist__findnew_tracking_event().
- - Add a parameter in evlist__findnew_tracking_event() to deal with
-   system_wide inside.
- - Add sideband for all CPUs when tracing selected CPUs comments on
-   the perf record man page.
- - Use "sideband events" instead of "tracking events".
- - Adjust the patches Sequence.
- - Add patch5 to skip dummy event sample_type check for evlist_config.
- - Add patch6 to update system-wide-dummy attr values for perf test.
-
-Yang Jihong (7):
-  perf evlist: Add perf_evlist__go_system_wide() helper
-  perf evlist: Add evlist__findnew_tracking_event() helper
-  perf record: Move setting dummy tracking before
-    record__init_thread_masks()
-  perf record: Track sideband events for all CPUs when tracing selected
-    CPUs
-  perf evlist: Skip dummy event sample_type check for evlist_config
-  perf test: Update system-wide-dummy attr expected values
-  perf test: Add test case for record sideband events
-
- tools/lib/perf/evlist.c                   |  9 +++
- tools/lib/perf/include/internal/evlist.h  |  2 +
- tools/perf/Documentation/perf-record.txt  |  3 +
- tools/perf/builtin-record.c               | 69 ++++++++++++++---------
- tools/perf/tests/attr/system-wide-dummy   | 12 ++--
- tools/perf/tests/shell/record_tracking.sh | 44 +++++++++++++++
- tools/perf/util/evlist.c                  | 18 ++++++
- tools/perf/util/evlist.h                  |  1 +
- tools/perf/util/record.c                  |  7 +++
- 9 files changed, 132 insertions(+), 33 deletions(-)
- create mode 100755 tools/perf/tests/shell/record_tracking.sh
-
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index aec18db7ff23..ca83599cc50c 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1295,14 +1295,9 @@ static int record__open(struct record *rec)
+ 	 */
+ 	if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
+ 	    perf_pmus__num_core_pmus() > 1) {
+-		pos = evlist__get_tracking_event(evlist);
+-		if (!evsel__is_dummy_event(pos)) {
+-			/* Set up dummy event. */
+-			if (evlist__add_dummy(evlist))
+-				return -ENOMEM;
+-			pos = evlist__last(evlist);
+-			evlist__set_tracking_event(evlist, pos);
+-		}
++		pos = evlist__findnew_tracking_event(evlist, false);
++		if (!pos)
++			return -ENOMEM;
+ 
+ 		/*
+ 		 * Enable the dummy event when the process is forked for
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 7ef43f72098e..25c3ebe2c2f5 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1694,6 +1694,24 @@ void evlist__set_tracking_event(struct evlist *evlist, struct evsel *tracking_ev
+ 	tracking_evsel->tracking = true;
+ }
+ 
++struct evsel *evlist__findnew_tracking_event(struct evlist *evlist, bool system_wide)
++{
++	struct evsel *evsel;
++
++	evsel = evlist__get_tracking_event(evlist);
++	if (!evsel__is_dummy_event(evsel)) {
++		evsel = evlist__add_aux_dummy(evlist, system_wide);
++		if (!evsel)
++			return NULL;
++
++		evlist__set_tracking_event(evlist, evsel);
++	} else if (system_wide) {
++		perf_evlist__go_system_wide(&evlist->core, &evsel->core);
++	}
++
++	return evsel;
++}
++
+ struct evsel *evlist__find_evsel_by_str(struct evlist *evlist, const char *str)
+ {
+ 	struct evsel *evsel;
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 664c6bf7b3e0..98e7ddb2bd30 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -387,6 +387,7 @@ bool evlist_cpu_iterator__end(const struct evlist_cpu_iterator *evlist_cpu_itr);
+ 
+ struct evsel *evlist__get_tracking_event(struct evlist *evlist);
+ void evlist__set_tracking_event(struct evlist *evlist, struct evsel *tracking_evsel);
++struct evsel *evlist__findnew_tracking_event(struct evlist *evlist, bool system_wide);
+ 
+ struct evsel *evlist__find_evsel_by_str(struct evlist *evlist, const char *str);
+ 
 -- 
 2.30.GIT
 
