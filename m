@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF3FC001B0
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jul 2023 15:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFB0EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jul 2023 15:32:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231863AbjGQPWC (ORCPT
+        id S229912AbjGQPcY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Jul 2023 11:22:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54266 "EHLO
+        Mon, 17 Jul 2023 11:32:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231617AbjGQPVr (ORCPT
+        with ESMTP id S230033AbjGQPcW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Jul 2023 11:21:47 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C8E310E3;
-        Mon, 17 Jul 2023 08:21:21 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-666eec46206so4762969b3a.3;
-        Mon, 17 Jul 2023 08:21:21 -0700 (PDT)
+        Mon, 17 Jul 2023 11:32:22 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA2F81BCF;
+        Mon, 17 Jul 2023 08:32:03 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-676f16e0bc4so2998344b3a.0;
+        Mon, 17 Jul 2023 08:32:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689607239; x=1692199239;
+        d=gmail.com; s=20221208; t=1689607922; x=1692199922;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:date:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=Z+9axMsQJLeztv/jtIsPFrb695KemJk12Qdi8hyVSxc=;
-        b=RwMr9J4Siy7s/bgP86jf2/tpp9hQdx27OCaFJ9SOfXk+/D6VD8u+5SV63dFZODsB/c
-         COwDvnq21kxHGf88FO+d+iwNYaRs6IEWwB0ClA7T1Y67lrnOm6aIsIui1mr/iJ4GNC97
-         XUUCjvaWqhUAMDqXa6ccYSAefWRiPsFTmFg2rkIrkeRbJk+HUE6VvwwpbPpaGDnX2XWb
-         WPnknulItPnNOVRlo+lUmeURVE0I3PoWMEypy8UTnrT3m+IhqBWkuw+SZIrGnSESDjjk
-         yz3/MrziZYrKGE1qT7fAAQppBtW7fmaUyADkZP5qKvvKg84RZfwDXLXJooSHi3f4Tpn7
-         ovzw==
+        bh=27Fw7ahUO7Rg3+RjNN9n0/x/pO5L1cy+G+UZ2EeNmrY=;
+        b=T5EG4LtPLEU/VLd03iebqbqi7NDNpxzS+O5wgmtwnbVX2PxwK1VkxCRa17vqsFqbPh
+         2UcA96rQx0cRwZFe1jJnMqiPWWWeOwVRpFrl4XtzEHtGvXJLG9jEJXkvOdWBYpfcYRQ5
+         hdWGbyDoLC4pNUQvvzTd+KeIEPMuatosB3F18YVMFOM8UZYFN4bVaBO8kZEkeNbQNtVa
+         dP1SIfkBgDHmXQmI/MM5rLr/rnkkUU0KWhFZmYZyU0x8KTY8Cxawl3J+PMTyViay90/r
+         Vf3kzq56eOpZb72kZzZeku2B14XzqDusrhkT1QHnd13Xn5zrh2+hnz2ISV0J7VrAxLkA
+         hC3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689607239; x=1692199239;
+        d=1e100.net; s=20221208; t=1689607922; x=1692199922;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z+9axMsQJLeztv/jtIsPFrb695KemJk12Qdi8hyVSxc=;
-        b=SFIARHgPc8MozFBP45/9FXPm5JzqGRw2T3ggb6ilmUFU3dGWLHbGRDSoObAUkpNmvX
-         AlkAQ6nNlDiAyub235WapbcUyUMY4XCrRGbN/rKfFefb7TbXsBvx8glfy1gktkJGkKTH
-         vNEKnjNQ6yMLiVoCtO8Kio0JW517UfF0LVtd14iiAud/Rjk3HwmZgV5/G4jMJodNtgzM
-         0Rw2yDPpJl0YsawSdr0cf7s7st/OgNHyQBY6dbRcgDSLYmZfioFmEihSrSkK0XFhvDXR
-         Ig+3JrY1E+xNLz0ZjpyzlDMDk0uGMD77pwtxwmyD/Et59v17kfwiSQFEl4JSGKbtxkza
-         b5Yw==
-X-Gm-Message-State: ABy/qLaDL7lQmqx/DIrjUVK5DwsqOb+81ny5e8vTjvQwj9F8yZu5lJvX
-        iIjllC1O1lCJK8n7Ga1FeU0=
-X-Google-Smtp-Source: APBJJlHWWrE8x2IGxBP2h84nm6ucOqSL8AVtoXx1IBoCuBUQfij7rAxoa0dMAC6qrjoYHbIWnfKvng==
-X-Received: by 2002:a17:902:c949:b0:1b8:b5f8:c485 with SMTP id i9-20020a170902c94900b001b8b5f8c485mr15761521pla.50.1689607238728;
-        Mon, 17 Jul 2023 08:20:38 -0700 (PDT)
+        bh=27Fw7ahUO7Rg3+RjNN9n0/x/pO5L1cy+G+UZ2EeNmrY=;
+        b=B5ajwYrbZ0Ban77vJZigtAuRSA0diVWaeAanQ3HmtfQ10sJVuEW2pAlDuigXZ2p/mD
+         nFjTTRlw28uLea3zmpBkMHclfothO9dCy8MjAlvZctnkGEQO5F74i471AlkksYpeNNPO
+         np+nZ1q7j0s5J1YPDrMa5lNd9/3QP1KlAMWrjSQK/VOpoN6BeZ1+IMguVl7WmSQBsHIX
+         DRKHDyMN7DrZJX7NCL4aAoLjhlMWEkDr0xGKxtD3SxZnDAk5FMNapQAmzajjANQ+CH/h
+         RPNHlVqzNENTjeJ/R73B8784fvVHSEm9gvz5vbIIMTBIrOZN94SRmT2SSLnhBlM0sSLa
+         gfjg==
+X-Gm-Message-State: ABy/qLYc3duwuKohXNDxPYnWsPWYmQWsFwfmKv3pocRqwEF51N0jLNoz
+        c31M6a8NxTt8g/G70PnDric=
+X-Google-Smtp-Source: APBJJlFOCIct0t0XU+JR1ZAuRio0rXT0p0LipzMJIVcRF6hHr58Q4Bhdk41jKcdQcwrlI8n/pYjwmg==
+X-Received: by 2002:a05:6a20:3d8a:b0:133:7fe3:6831 with SMTP id s10-20020a056a203d8a00b001337fe36831mr13489437pzi.57.1689607921926;
+        Mon, 17 Jul 2023 08:32:01 -0700 (PDT)
 Received: from yoga ([2400:1f00:13:50e2:5893:783e:fde0:1bce])
-        by smtp.gmail.com with ESMTPSA id im16-20020a170902bb1000b001b83e5ec666sm42785plb.6.2023.07.17.08.20.34
+        by smtp.gmail.com with ESMTPSA id j5-20020a62e905000000b0068338b6667asm9311168pfh.212.2023.07.17.08.31.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jul 2023 08:20:38 -0700 (PDT)
+        Mon, 17 Jul 2023 08:32:01 -0700 (PDT)
 From:   Anup Sharma <anupnewsmail@gmail.com>
 X-Google-Original-From: Anup Sharma <AnupSharma>
-Date:   Mon, 17 Jul 2023 20:50:31 +0530
+Date:   Mon, 17 Jul 2023 21:01:53 +0530
 To:     Ian Rogers <irogers@google.com>
 Cc:     Anup Sharma <anupnewsmail@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -65,85 +65,95 @@ Cc:     Anup Sharma <anupnewsmail@gmail.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/6] scripts: python: Add initial script file with
- imports
-Message-ID: <ZLVcP77aI7dGQCdI@yoga>
+Subject: Re: [PATCH v3 2/6] scripts: python: Extact necessary information
+ from process event
+Message-ID: <ZLVe6Xz1dnFEnaG4@yoga>
 References: <cover.1689024635.git.anupnewsmail@gmail.com>
- <5d3727bacffa331cd81a059fc3122cfb3f43dabd.1689024635.git.anupnewsmail@gmail.com>
- <CAP-5=fVOTstw=V2dsyfqQV1NB24ePOkqxUtF1g==5TGk5i3Phg@mail.gmail.com>
+ <ba55bf712cc27494635ca0bb23a21b42529c9327.1689024635.git.anupnewsmail@gmail.com>
+ <CAP-5=fUqKZkuODXTez+Dk+RqTmh+NaeRBun65onG-yByUJOnVA@mail.gmail.com>
+ <CAP-5=fW0DT+JkU07K8brv2O_T6=hTM3SQMoji0o2rnsF6w+Y_Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVOTstw=V2dsyfqQV1NB24ePOkqxUtF1g==5TGk5i3Phg@mail.gmail.com>
+In-Reply-To: <CAP-5=fW0DT+JkU07K8brv2O_T6=hTM3SQMoji0o2rnsF6w+Y_Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 12, 2023 at 09:50:40AM -0700, Ian Rogers wrote:
-> On Mon, Jul 10, 2023 at 4:09 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
+On Wed, Jul 12, 2023 at 10:03:57AM -0700, Ian Rogers wrote:
+> On Wed, Jul 12, 2023 at 10:01 AM Ian Rogers <irogers@google.com> wrote:
 > >
-> > Added the necessary modules, including the Perf-Trace-Util
-> > library, and defines the required functions and variables.
-> > It leverages the perf_trace_context and Core modules for
-> > tracing and processing events. Also added usage information.
+> > On Mon, Jul 10, 2023 at 4:10 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
+> > >
+> > > The script takes in a sample event dictionary(param_dict) and retrieves
+> > > relevant data such as time stamp, PID, TID, thread name. Also start time
+> > > is defined.
+> > >
+> > > Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
+> > > ---
+> > >  .../perf/scripts/python/firefox-gecko-converter.py  | 13 ++++++++++++-
+> > >  1 file changed, 12 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools/perf/scripts/python/firefox-gecko-converter.py
+> > > index 5b342641925c..765f1775cee5 100644
+> > > --- a/tools/perf/scripts/python/firefox-gecko-converter.py
+> > > +++ b/tools/perf/scripts/python/firefox-gecko-converter.py
+> > > @@ -21,8 +21,19 @@ sys.path.append(os.environ['PERF_EXEC_PATH'] + \
+> > >  from perf_trace_context import *
+> > >  from Core import *
+> > >
 > >
-> > Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
-> 
-> Acked-by: Ian Rogers <irogers@google.com>
-> 
-> > ---
-> >  .../scripts/python/firefox-gecko-converter.py | 28 +++++++++++++++++++
-> >  1 file changed, 28 insertions(+)
-> >  create mode 100644 tools/perf/scripts/python/firefox-gecko-converter.py
+> > It'd be nice to have a comment here, perhaps:
+> > # The time stamp from the first of the time ordered events.
 > >
-> > diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools/perf/scripts/python/firefox-gecko-converter.py
-> > new file mode 100644
-> > index 000000000000..5b342641925c
-> > --- /dev/null
-> > +++ b/tools/perf/scripts/python/firefox-gecko-converter.py
-> > @@ -0,0 +1,28 @@
-> > +# firefox-gecko-converter.py - Convert perf record output to Firefox's gecko profile format
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +#
-> > +# The script converts perf.data to Gecko Profile Format,
-> > +# which can be read by https://profiler.firefox.com/.
-> > +#
-> > +# Usage:
-> > +#
-> > +#     perf record -a -g -F 99 sleep 60
-> > +#     perf script firefox-gecko-converter.py > output.json
-> > +
-> > +import os
-> > +import sys
-> > +import json
-> > +from functools import reduce
-> > +
-> 
-> nit: technically some of these imports should be added when necessary
-> in the code.
 
-Noted.
+Sure. I will add it.
 
-> > +# Add the Perf-Trace-Util library to the Python path
-> > +sys.path.append(os.environ['PERF_EXEC_PATH'] + \
-> > +       '/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
-> > +
-> > +from perf_trace_context import *
-> > +from Core import *
-> > +
-> > +def trace_end():
-> > +       pass
-> > +
-> > +def process_event(param_dict):
-> 
-> nit: (this is likely addressed in later patches) you can add return
-> and parameter types here to aid understanding of the code. Function
-> comments are also useful.
-
-Noted.
-
-> > +       pass
-> > --
-> > 2.34.1
+> > > +start_time = None
+> > > +
+> > >  def trace_end():
+> > >         pass
+> > >
+> > >  def process_event(param_dict):
+> > > -       pass
+> > > +       global start_time
+> > > +       # Extract relevant information from the event parameters. The event parameters
+> > > +       # are in a dictionary:
+> > > +       time_stamp = (param_dict['sample']['time'] // 1000) / 1000
+> > > +       pid = param_dict['sample']['pid']
+> > > +       tid = param_dict['sample']['tid']
+> > > +       thread_name = param_dict['comm']
+> > > +
+> > > +       # Assume that start time is the time of the first event.
+> > > +       start_time = time_stamp if not start_time else start_time
 > >
+> > I appreciate that this is one line, but it takes some getting your
+> > head around that start_time is being assigned to itself in the common
+> > case. I think this would be more readable as:
+> >
+> > if not start_time:
+> >   start_time = time_stamp
+
+Sure. I will change it.
+
+> I believe the events are guaranteed time ordered in perf script. The
+> ordered_event logic handles this, but I likely haven't got a full
+> grasp on all the corners of it. You can always assert the behavior
+> (comments with guarantees :-) ):
+> 
+> assert start_time <= time_stamp, "Events aren't time ordered"
+
+I dont think assert is usefull here as start_time will be initialized
+and assigned only once for all the process event triggers. So, the
+significance of assert is not clear to me.
+
+> Thanks,
+> Ian
+> 
+> > Thanks,
+> > Ian
+> >
+> > > --
+> > > 2.34.1
+> > >
