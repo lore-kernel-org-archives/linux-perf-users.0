@@ -2,180 +2,169 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F4EC0015E
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jul 2023 15:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7732C001B0
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jul 2023 15:59:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231706AbjGQPxS (ORCPT
+        id S230452AbjGQP7S (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Jul 2023 11:53:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48598 "EHLO
+        Mon, 17 Jul 2023 11:59:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230189AbjGQPxR (ORCPT
+        with ESMTP id S229731AbjGQP7R (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Jul 2023 11:53:17 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EF2EA4;
-        Mon, 17 Jul 2023 08:53:16 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1b895a06484so27916525ad.1;
-        Mon, 17 Jul 2023 08:53:16 -0700 (PDT)
+        Mon, 17 Jul 2023 11:59:17 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D978DD8;
+        Mon, 17 Jul 2023 08:59:16 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id 98e67ed59e1d1-263374f2f17so2446423a91.0;
+        Mon, 17 Jul 2023 08:59:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689609196; x=1692201196;
+        d=gmail.com; s=20221208; t=1689609556; x=1692201556;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:date:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=7HKpP5mcDRv5ySS4JCo6NCH3S1mQJkLAnPgImOv+RPo=;
-        b=CDTNYz2M6URSjOeVtrgzuniiP0wvyMOI+rJcwCi45OxdlEfIBIUtLEkQkv3m5UQKoH
-         zxDYMbVrfhx4UJYGAg6PpQBkjjANVjNZbf1J/w7YU/cvlqrByRi75/l4UVf/PSjNoKJW
-         N28UnmiycbJzi02ySJEPWlBnEIRMBdMjCRzEYwM6ZTxHCJCib+vGdQqzOn33tzZMs6sS
-         WVjg6e5iZ3FjIx9d85yECVT7exQN/tveiGFsGx5w8bLM2xfjl7a5HeRqZPkmmktbeI4i
-         1yPO/TncgrbDqbbEhXs/tHZhx04g992qbmy+mxslj9UhjZTpCzyH1uUeokCrqb9vEkRk
-         mCcQ==
+        bh=UvHbtMz36nAYwOqM6y1BD7XGn+T3QzVrtohh3Auo9x0=;
+        b=AqylJkL03+2isSpBoKjJFPjXHrvY3UnQ+NrdyeGbO9Z+RIjgH/UsOoHyn9QEjuGtlF
+         Vqht2ZB4fMOwaxyudNPQConB7bg5tD7K1LS8o663X9w0VnN0SpgKq47jeNMsrx9aqmwM
+         kOXSucuBoRct17bUd4VS4wndJmbmMM8zkZxlTla6xMcs6WSS38Dqgr0qmwkJzxYYi0uf
+         dbSmeY1gNX9Po5p5hRGvzWnhXb+I+X1cJEhPdjh9aab1I5AU/3RRMcmq9Nd2VjRarjj2
+         SIIvs3cegsF3e0zcuKTQHSDi+0FB7WKGpqsSP+9IhYElDiWHLT6jqjk7OIz8bHqZTpoW
+         /J2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689609196; x=1692201196;
+        d=1e100.net; s=20221208; t=1689609556; x=1692201556;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7HKpP5mcDRv5ySS4JCo6NCH3S1mQJkLAnPgImOv+RPo=;
-        b=iVYE8RtQ8dQaOXS+9S9uQsxMV2/VFY+d97/LFZEEVvzVqUFtbLBUSjmzvkJawQSbtl
-         8ZxDpHRDm5P7x6YQ99cn3oVeHW/COcxult63ZUz/BXfBhoE5JXaVCwoXpRaR0akqkESQ
-         aBPr8izhIefCzAA+JBM+2zuVPbpsS7sVRwzHbwEyLElSFvy8+KIaaGqHDkwa2CSRt4Cr
-         h+9ed0At/0e8TLsSVcfSrjFbE3Aa4PFPGH7IZks0KnOec1aeI1OGGwQ+rLrEwlRTT0mU
-         emiZxt9wipubGsHmrE+eIWWGS0pjWitFMRvEReygaUBxAbyCosrWRfzGeQwKB7H5DjUS
-         OM/A==
-X-Gm-Message-State: ABy/qLZvsfPWzABAvJf+em8aLaKU/Qexb6quGrlHT00O2d+8nCyywdWv
-        V2FeSVoIQJ9OCpJ1xCWTUt8=
-X-Google-Smtp-Source: APBJJlGu7WlaB3DZRiAv9zSKrUNcLQujWzb9bbRjWXf758/6NE4SI0+oJTyHCKQbwf4tV5lhYgGW+A==
-X-Received: by 2002:a17:902:724b:b0:1b8:b436:c006 with SMTP id c11-20020a170902724b00b001b8b436c006mr10249999pll.12.1689609195574;
-        Mon, 17 Jul 2023 08:53:15 -0700 (PDT)
+        bh=UvHbtMz36nAYwOqM6y1BD7XGn+T3QzVrtohh3Auo9x0=;
+        b=dXXcVWMJ+yyE0h8USoPAndwsiHJvJXB5RjdgjLYRH079ymeTnY3HWcziNkzBJChna1
+         jQZzQKjNddWvEMybFMAoon5E6jhVmK8fGCUdFsetnzalcVAE7r38lcgPvYLx+P4ju1GH
+         rVIXsExMrR26IoPiJ6RpM+5QAeTpKfKUlsHfaTsvrwyoJ0M8kaRUhnTl8zP7mfC8q8p/
+         H22E/PGSmWiguS9/duUTzJXs8cj3sFLsS0d8/UjPt5s0IW/clm9kDBIvtp0FMAo1/Tow
+         +vishimx4fKeA0EgxQ92hsFFr5dDSUwGjK1ACvRYvZwr07rxqHj/TNXeNXzUjVYOUrmQ
+         o2Mw==
+X-Gm-Message-State: ABy/qLa/15+QZ8J1uvsAcKJsZih3xZqolIqDNLlY6isk40XaZd2fQk4D
+        AvkWp8Q2bZ9tx7aKLfGnPK8=
+X-Google-Smtp-Source: APBJJlF3aQiHedJIInqcUf06kA0JliXD7cxnpC/bL597/rEOko2Dg6Tt2+tGNA+yMV5eCdWDnwCmqQ==
+X-Received: by 2002:a17:90a:38e1:b0:262:e6c6:c2ec with SMTP id x88-20020a17090a38e100b00262e6c6c2ecmr9521732pjb.33.1689609555677;
+        Mon, 17 Jul 2023 08:59:15 -0700 (PDT)
 Received: from yoga ([2400:1f00:13:50e2:5893:783e:fde0:1bce])
-        by smtp.gmail.com with ESMTPSA id d13-20020a170903230d00b001b694130c05sm79160plh.1.2023.07.17.08.53.11
+        by smtp.gmail.com with ESMTPSA id j6-20020a17090a840600b002641a9faa01sm5056939pjn.52.2023.07.17.08.59.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jul 2023 08:53:15 -0700 (PDT)
+        Mon, 17 Jul 2023 08:59:15 -0700 (PDT)
 From:   Anup Sharma <anupnewsmail@gmail.com>
 X-Google-Original-From: Anup Sharma <AnupSharma>
-Date:   Mon, 17 Jul 2023 21:23:07 +0530
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Anup Sharma <anupnewsmail@gmail.com>,
+Date:   Mon, 17 Jul 2023 21:29:07 +0530
+To:     Ian Rogers <irogers@google.com>
+Cc:     Anup Sharma <anupnewsmail@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/6] scripts: python: Add trace end processing and
- JSON output
-Message-ID: <ZLVj49CufjImBnCf@yoga>
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 5/6] scripts: python: Implement add sample function
+ and return finish
+Message-ID: <ZLVlS3xHLZFZjRMq@yoga>
 References: <cover.1689024635.git.anupnewsmail@gmail.com>
- <11543b39f97a7e2f9eac76c1233f1b1caa3f2c48.1689024635.git.anupnewsmail@gmail.com>
- <CAP-5=fXT3a4JE6u8zXf3=xFbOGTre3WD63SMPrA_iSVpgHjDVA@mail.gmail.com>
- <CAM9d7cjRhOQfihjg9ddKBmNCkW7CAG3NMWPkJQOAs5MHUxQUuA@mail.gmail.com>
+ <8b80f803ffbed4c84c0c63b3e1dae155a66ac1f2.1689024635.git.anupnewsmail@gmail.com>
+ <CAP-5=fVtfHM0NJ-7ogR1wvu3bUMR+2a1o-ndRPT_-BD1o5xdgg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7cjRhOQfihjg9ddKBmNCkW7CAG3NMWPkJQOAs5MHUxQUuA@mail.gmail.com>
+In-Reply-To: <CAP-5=fVtfHM0NJ-7ogR1wvu3bUMR+2a1o-ndRPT_-BD1o5xdgg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jul 13, 2023 at 07:31:36PM -0700, Namhyung Kim wrote:
-> Hi Anup and Ian,
-> 
-> On Wed, Jul 12, 2023 at 10:28 AM Ian Rogers <irogers@google.com> wrote:
+On Wed, Jul 12, 2023 at 10:35:16AM -0700, Ian Rogers wrote:
+> On Mon, Jul 10, 2023 at 4:14 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
 > >
-> > On Mon, Jul 10, 2023 at 4:13 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
-> > >
-> > > Inside the trace end function the final output will be dumped
-> > > to standard output in JSON gecko format. Additionally, constants
-> > > such as USER_CATEGORY_INDEX, KERNEL_CATEGORY_INDEX, CATEGORIES, and
-> > > PRODUCT are defined to provide contextual information.
-> > >
-> > > Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
+> > The addSample function appends a new entry to the 'samples' data structure.
 > >
-> > Acked-by: Ian Rogers <irogers@google.com>
-> 
-> I'm ok with this change too but I think it can be squashed to
-> patch 1/6 as I think it'd make it more self-contained.  Of course
-> you might change time and thread to have empty values.
-> 
+> > The finish function generates a dictionary containing various profile
+> > information such as 'tid', 'pid', 'name', 'markers', 'samples',
+> > 'frameTable', 'stackTable', 'stringTable', 'registerTime',
+> > 'unregisterTime', and 'processType'.
 > >
-> > > ---
-> > >  .../scripts/python/firefox-gecko-converter.py | 34 ++++++++++++++++++-
-> > >  1 file changed, 33 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools/perf/scripts/python/firefox-gecko-converter.py
-> > > index 0b8a86bdcab1..39818a603265 100644
-> > > --- a/tools/perf/scripts/python/firefox-gecko-converter.py
-> > > +++ b/tools/perf/scripts/python/firefox-gecko-converter.py
-> > > @@ -24,8 +24,40 @@ from Core import *
-> > >  thread_map = {}
-> > >  start_time = None
-> > >
-> > > +# Follow Brendan Gregg's Flamegraph convention: orange for kernel and yellow for user
-> > > +CATEGORIES = [
-> > > +    {'name': 'User', 'color': 'yellow', 'subcategories': ['Other']},
-> > > +    {'name': 'Kernel', 'color': 'orange', 'subcategories': ['Other']}
-> > > +]
+> > Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
+> > ---
+> >  .../scripts/python/firefox-gecko-converter.py | 25 +++++++++++++++++++
+> >  1 file changed, 25 insertions(+)
 > >
-> > A follow up could be to make these command line options, defaulting to
-> > orange and yellow.
+> > diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools/perf/scripts/python/firefox-gecko-converter.py
+> > index 39818a603265..6c934de1f608 100644
+> > --- a/tools/perf/scripts/python/firefox-gecko-converter.py
+> > +++ b/tools/perf/scripts/python/firefox-gecko-converter.py
+> > @@ -106,11 +106,36 @@ def process_event(param_dict):
+> >                 }
+> >                 stringTable = []
+> >
+> > +               def addSample(threadName, stackArray, time):
 > 
-> Sounds good.
+> I think these aren't following general naming conventions:
+> https://peps.python.org/pep-0008/#function-and-variable-names
+> So use thread_name, stack_array.
 
-Nice Idea, I have added this in the next version of patch.
+Noted. Will fix in v4.
 
-> >
-> > > +
-> > > +# The product name is used by the profiler UI to show the Operating system and Processor.
-> > > +PRODUCT = os.popen('uname -op').read().strip()
+> > +                       responsiveness = 0
+> > +                       samples['data'].append([stack, time, responsiveness])
+> > +
+> > +               def finish():
+> > +                       return {
+> > +                               "tid": tid,
+> > +                               "pid": pid,
+> > +                               "name": name,
+> > +                               "markers": markers,
+> > +                               "samples": samples,
+> > +                               "frameTable": frameTable,
+> > +                               "stackTable": stackTable,
+> > +                               "stringTable": stringTable,
+> > +                               "registerTime": 0,
+> > +                               "unregisterTime": None,
+> > +                               "processType": 'default'
+> > +                       }
+> > +
+> > +               return {
+> > +                       "addSample": addSample,
+> > +                       "finish": finish
+> > +               }
 > 
-> I'm not against this but having a command name (or full
-> command line) of the target process as a title might be better.
-> But I'm not sure if the python scripting engine exposed the info
-> (like in perf report --header-only) to the script.
+> I think the use of a dictionary here isn't idiomatic. Rather than use
+> a dictionary I think you can make a class Thread, then have functions
+> passed self called addSample and finish. So:
 
-I tried to get the command name or any sort of header information but it seems to
-be not exposed to the perf-script-python interface. can anyone confirm
-if there is any way to get the command name or any header information from the
-perf-script-python interface?
+agreed.
+
+> class Thread:
+>   def addSample(self, thread_name: str, stack_array: list[...], time: int):
+>      responsiveness = 0
+>      self.samples['data'] ...
+> ...
+> thread.addSample(threadName, stack, time_stamp)
+>
+> Should samples be its own class here?
+
+I have changed the code to use object oriented approach by taking
+reference from simpleperf. I will make class Thread and Sample.
 
 > Thanks,
-> Namhyung
+> Ian
 > 
-> 
-> > > +
-> > >  def trace_end():
-> > > -       pass
-> > > +    thread_array = thread_map.values()))
-> > > +
-> > > +    result = {
-> > > +        'meta': {
-> > > +            'interval': 1,
-> > > +            'processType': 0,
-> > > +            'product': PRODUCT,
-> > > +            'stackwalk': 1,
-> > > +            'debug': 0,
-> > > +            'gcpoison': 0,
-> > > +            'asyncstack': 1,
-> > > +            'startTime': start_time,
-> > > +            'shutdownTime': None,
-> > > +            'version': 24,
-> > > +            'presymbolicated': True,
-> > > +            'categories': CATEGORIES,
-> > > +            'markerSchema': []
-> > > +            },
-> > > +        'libs': [],
-> > > +        'threads': thread_array,
-> > > +        'processes': [],
-> > > +        'pausedRanges': []
-> > > +    }
-> > > +    json.dump(result, sys.stdout, indent=2)
-> > >
-> > >  def process_event(param_dict):
-> > >         global start_time
-> > > --
-> > > 2.34.1
-> > >
+> > +
+> >         def _addThreadSample(pid, tid, threadName, time_stamp, stack):
+> >                 thread = thread_map.get(tid)
+> >                 if not thread:
+> >                         thread = _createThread(threadName, pid, tid)
+> >                         thread_map[tid] = thread
+> > +               thread['addSample'](threadName, stack, time_stamp)
+> >
+> >         # Extract relevant information from the event parameters. The event parameters
+> >         # are in a dictionary:
+> > --
+> > 2.34.1
+> >
