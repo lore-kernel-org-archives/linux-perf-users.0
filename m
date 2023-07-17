@@ -2,437 +2,197 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC277C001B0
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jul 2023 12:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57738EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jul 2023 13:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230420AbjGQMBD (ORCPT
+        id S229559AbjGQNhx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Jul 2023 08:01:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34296 "EHLO
+        Mon, 17 Jul 2023 09:37:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230366AbjGQMA7 (ORCPT
+        with ESMTP id S231246AbjGQNhk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Jul 2023 08:00:59 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 452A210DF;
-        Mon, 17 Jul 2023 05:00:47 -0700 (PDT)
-Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4R4LHQ6qXDzrRmQ;
-        Mon, 17 Jul 2023 20:00:02 +0800 (CST)
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemi500013.china.huawei.com (7.221.188.120) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Mon, 17 Jul 2023 20:00:43 +0800
-From:   Changbin Du <changbin.du@huawei.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Hui Wang <hw.huiwang@huawei.com>,
-        Changbin Du <changbin.du@huawei.com>
-Subject: [PATCH v2 2/2] perf: add new option '--workload-attr' to set workload sched_policy/priority/mask
-Date:   Mon, 17 Jul 2023 20:00:03 +0800
-Message-ID: <20230717120003.2391329-3-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230717120003.2391329-1-changbin.du@huawei.com>
-References: <20230717120003.2391329-1-changbin.du@huawei.com>
+        Mon, 17 Jul 2023 09:37:40 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9869413E
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Jul 2023 06:37:39 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3610661050
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Jul 2023 13:37:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33721C433C7;
+        Mon, 17 Jul 2023 13:37:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689601058;
+        bh=+X89mHiW5o9VUH1OMc5U6tHBl2LHZQrfl/4HB/nD7hY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I2hp0Z7UH08DYcPrMPySSjpDXG9kn3+uPsRfGE3Ny8jX20MaTyQB3x4AUK9ABlwUW
+         8zqI13Y76MSwfCXdv/Iww2AeVGIQamqzfYPryU1vI02Vf8l7idklb3S4jo95tI9EhZ
+         zGg/JE7mBoXSnhgA+ER66RUx870ZImLGv04+Ad/fxDW/DBcHVkVev3HJn8WSlynesn
+         rIWPpd9s0QoeYNs73FuUtYErT1TfbO2N8dGjP4yxCrwTk/1BEMA4MwjMeJz9mccrRA
+         0REZWNNT5TdBOoGL66iKO0YaCtYiQMaNkxtKSX0e48WBBXoFjfpIZyzI3e2PotlsSr
+         DeaICXyQmRaaQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 7FEC440516; Mon, 17 Jul 2023 10:37:35 -0300 (-03)
+Date:   Mon, 17 Jul 2023 10:37:35 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Ian Rogers <irogers@google.com>, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: Event reordering regression for software events
+Message-ID: <ZLVEHz0uzq79eto5@kernel.org>
+References: <ZLBgbHkbrfGygM/u@tassilo>
+ <ZLBjI4a3wIMs75lA@kernel.org>
+ <CAP-5=fU5Y95G2FsFdwxwPk=kLe=kka7CkD7ZDrzSU+Xv-Ks=Qg@mail.gmail.com>
+ <ZLCOEOtJOQiN+8VB@tassilo>
+ <CAP-5=fWjDeXZfgLu8hiavtkRGmWsZnwt3g+Ms5YPL12PxUaCgg@mail.gmail.com>
+ <ZLC8AIEfUJMQFOEn@tassilo>
+ <CAP-5=fVWyrmRHCmNGRrME-YSSwbJV90-_dcC=LyNAXjk9baMGA@mail.gmail.com>
+ <ZLSgzJsom0avu/hX@tassilo>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.110.54.157]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemi500013.china.huawei.com (7.221.188.120)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZLSgzJsom0avu/hX@tassilo>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-To get consistent benchmarking results, sometimes we need to set the
-sched_policy/priority/mask of the workload to reduce system noise.
+Em Sun, Jul 16, 2023 at 07:00:44PM -0700, Andi Kleen escreveu:
+> On Thu, Jul 13, 2023 at 08:56:55PM -0700, Ian Rogers wrote:
+> > Yes I disagree. We can't always force perf metric events in a group
+> > because weak groups don't always work. When we place the perf metric
+> > events outside of a group they are broken. So now we don't group the
+> > events and fix the topdown events to be in a group, in arch specific
+> > code. It is a complete pain brought about by the Intel core PMU
+> > driver.
+> 
+> Was that the old topdown slots have to be first issue, or something
+> else?
+> 
+> If it's so painful I guess could revisit the kernel part, although
+> I suspect anything that the kernel could do the perf tool could do too.
+> 
+> > 
+> > > So why does the perf tool need to fix it? Just pass it to the kernel
+> > > and it won't schedule and the user has to fix it.
+> > 
+> > Because in some cases, and the cases I have happened to care about,
+> > the groups of events come from metrics.
+> 
+> That's fine, but can't you just fix it for the metrics only.
+> 
+> Also even for metrics if you freely reorder them they might become
+> unparseable.  But the events inside the metrics should be freely
 
-For example, CPU binding is required on big.little system.
+Don't we have a JSON output? My expectation is that after the work that
+Ian has been doing we will settle down, but even then downstreamers
+should try to use JSON as input as that would avoid the problems we are
+having?
 
-  $ perf stat -- taskset -c 0 ls
+You mentioned that it was difficult to add entries to 'perf test' but
+that we could try running toplev's regression test, right? I can add it
+to my set of tests but perhaps the best thing would be to wire it up to
+one of the CIs out there?
 
-Nevertheless, the 'taskset' is also counted here.
+- Arnaldo
 
-To get away of the middleman, this adds a new option '--workload-attr' to
-do the same jobs for stat and record commands.
+> reorderable (well technically someone could have a dependency on that
+> too, but at least in my mind that's much less likely than their
+> dependency just being on the metric) 
+> 
+> So what it really needs is a sort only insight the metric.
+> 
+> That shouldn't be too hard to implement, right?
+> 
+> Also I guess we could add some test cases on avoiding reordering,
+> although I'm optimistic that once it is established that reordering
+> should be minimized/avoided it is unlikely to be something 
+> that breask frequently.
+> 
+> Would it be possible to revert the global sort patch until that 
+> is sorted out? Otherwise I'm afraid I'll end up with perf releases
+> that are absolutely incompatible to toplev, and I'll get problems
+> with my user base who often cannot easily update perf.
+> 
+> Arnaldo, can you please comment on this, what is your policy 
+> on regressions here?
 
-  $ sudo perf stat --workload-attr fifo,40,0-3:7 -- ls
+ 
+> > But things like wildcard group expansion and regrouping is a metric
+> > problem too. So why would there be a parse events for metrics and a
+> > separate one for events? Doing it this way would make metric group
+> > testing significantly more hard too, as we can't just try the events
+> > without the metric.
+> 
+> Hmm, perhaps add some kind of debug flag to handle this case?
+> As long as it's not default I don't have any issues with that.
+> 
+> > > How about replacing the sorting commit with a warning and ask
+> > > the user to do the reordering? Would that work for you?
+> > 
+> > No.
+> 
+> Well I hope we can get to some compromise here. Right now 
+> this arbitary unpredictable reordering is a show stopper for me,
+> and I suspect it will be for any other perf stat users that do some kind
+> of post processing.
+> 
+> As long as we find a solution like above that works for the metrics
+> it should be ok right?
+> 
+> > > The platform is SKX.
+> > >
+> > > >
+> > > > > > would seem unfortunate. Tbh, the mistake here is the assumptions that
+> > > > > > toplev is making.
+> > > > >
+> > > > > It's not an random assumption, it's the only way to parse perf output uniquely.
+> > > > >
+> > > > > Please make it an option. But this cannot stay this way unconditionally
+> > > > > if perf stat is supposed to stay a tool which can be used from other programs.
+> > > >
+> > > > You should be using the json or CSV outputs. These are intended for
+> > >
+> > > This is the CSV output that is reordered! (see the example you just
+> > > quoted)
+> > >
+> > > I haven't tested JSON, but I assume that is reordered too.
+> > 
+> > The output of the JSON is a dictionary and inherently unordered.
+> 
+> I haven't tried to use it, but if you have something like
+> perf stat --json -e '{cycles,branches},{cycles,cache-misses}' how would you
+> distinguish the two different cycles without order? 
+> 
+> > crashes vs having the complete TopdownL1 working on both PMUs, testing
+> > parity with non-hybrid. We also fixed all address and leak sanitizer
+> > bugs. 
+> 
+> > Perf in Linux 6.5 even without the awesome new features like
+> > lock contention analysis, is the best perf tool we've ever had.
+> 
+> Sure and without arbitrary reordering and unparseable output it would be
+> even better ...
+> 
+> > Does SKX have uncore? Yes, so you need to reorder events and this
+> > change didn't start it.
+> 
+> Yes of course it has an uncore.
+> 
+> You only need to reorder if you create broken groups.  At least my tool
+> doesn't generate them.
+> 
+> > NO_GROUP_EVENTS is used to avoid a group being used, an important use
+> > being avoiding PMU driver bugs.
+> > 
+> 
+> Hmm, not sure what that is refering to, but ok.
+> 
+> -Andi
 
-Above will make 'ls' run on CPU #0-#3 and #7 with fifo scheduler and
-realtime priority is 40.
-
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
-
----
-v2: Use cpu list spec instead of cpu mask number.
----
- tools/perf/Documentation/perf-record.txt |   7 ++
- tools/perf/Documentation/perf-stat.txt   |   6 ++
- tools/perf/builtin-record.c              |  26 +++++
- tools/perf/builtin-stat.c                |  18 ++++
- tools/perf/util/evlist.c                 | 115 +++++++++++++++++++++++
- tools/perf/util/evlist.h                 |   3 +
- tools/perf/util/target.h                 |   9 ++
- 7 files changed, 184 insertions(+)
-
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 680396c56bd1..b13b21a6becc 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -838,6 +838,13 @@ filtered through the mask provided by -C option.
- 	only, as of now.  So the applications built without the frame
- 	pointer might see bogus addresses.
- 
-+--workload-attr <sched_policy[,priority][,cpu-list]>
-+	setup target workload (the <command>) attributes:
-+
-+	  sched_policy: other|fifo|rr|batch|idle
-+	  priority: scheduling priority for fifo|rr, nice value for other
-+	  cpu-list: CPU affinity. e.g. 1-2:4 is processors #1, #2, and #4
-+
- include::intel-hybrid.txt[]
- 
- SEE ALSO
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 8f789fa1242e..da7b8393773e 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -262,6 +262,12 @@ disable events during measurements:
-  wait -n ${perf_pid}
-  exit $?
- 
-+--workload-attr <sched_policy[,priority][,cpu-list]>
-+	setup target workload (the <command>) attributes:
-+
-+	  sched_policy: other|fifo|rr|batch|idle
-+	  priority: scheduling priority for fifo|rr, nice value for other
-+	  cpu-list: CPU affinity. e.g. 1-2:4 is processors #1, #2, and #4
- 
- --pre::
- --post::
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index aec18db7ff23..c16e230afcd5 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -3289,6 +3289,17 @@ static int parse_record_synth_option(const struct option *opt,
- 	return 0;
- }
- 
-+static int record_parse_workload_attr_opt(const struct option *opt,
-+					  const char *arg,
-+					  int unset __maybe_unused)
-+{
-+	struct record_opts *opts = opt->value;
-+
-+	return evlist__parse_workload_attr(arg, &opts->target.workload.sched_policy,
-+					   &opts->target.workload.sched_priority,
-+					   &opts->target.workload.cpu_map);
-+}
-+
- /*
-  * XXX Ideally would be local to cmd_record() and passed to a record__new
-  * because we need to have access to it in record__exit, that is called
-@@ -3309,6 +3320,8 @@ static struct record record = {
- 		.target		     = {
- 			.uses_mmap   = true,
- 			.default_per_cpu = true,
-+			.workload.sched_policy = -1,
-+			.workload.sched_priority = 0,
- 		},
- 		.mmap_flush          = MMAP_FLUSH_DEFAULT,
- 		.nr_threads_synthesize = 1,
-@@ -3333,6 +3346,12 @@ static struct record record = {
- const char record_callchain_help[] = CALLCHAIN_RECORD_HELP
- 	"\n\t\t\t\tDefault: fp";
- 
-+const char record_workload_attr_help[] =
-+	"setup target workload (the <command>) attributes:\n\n"
-+	HELP_PAD "sched_policy: other|fifo|rr|batch|idle\n"
-+	HELP_PAD "priority: scheduling priority for fifo|rr, nice value for other\n"
-+	HELP_PAD "cpu-list: CPU affinity. e.g. 1-2:4 is processors #1, #2, and #4";
-+
- static bool dry_run;
- 
- static struct parse_events_option_args parse_events_option_args = {
-@@ -3551,6 +3570,9 @@ static struct option __record_options[] = {
- 			    "write collected trace data into several data files using parallel threads",
- 			    record__parse_threads),
- 	OPT_BOOLEAN(0, "off-cpu", &record.off_cpu, "Enable off-cpu analysis"),
-+	OPT_CALLBACK(0, "workload-attr", &record.opts,
-+		     "sched_policy[,priority][,cpu-list]", record_workload_attr_help,
-+		     &record_parse_workload_attr_opt),
- 	OPT_END()
- };
- 
-@@ -4266,6 +4288,10 @@ int cmd_record(int argc, const char **argv)
- 	record__free_thread_masks(rec, rec->nr_threads);
- 	rec->nr_threads = 0;
- 	evlist__close_control(rec->opts.ctl_fd, rec->opts.ctl_fd_ack, &rec->opts.ctl_fd_close);
-+	if (rec->opts.target.workload.cpu_map) {
-+		perf_cpu_map__put(rec->opts.target.workload.cpu_map);
-+		rec->opts.target.workload.cpu_map = NULL;
-+	}
- 	return err;
- }
- 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 07b48f6df48e..bb755cb44103 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -108,6 +108,8 @@ static bool all_counters_use_bpf = true;
- 
- static struct target target = {
- 	.uid	= UINT_MAX,
-+	.workload.sched_policy = -1,
-+	.workload.sched_priority = 0,
- };
- 
- #define METRIC_ONLY_LEN 20
-@@ -1160,6 +1162,14 @@ static int parse_cache_level(const struct option *opt,
- 	return 0;
- }
- 
-+static int parse_workload_attr_opt(const struct option *opt __maybe_unused, const char *arg,
-+				   int unset __maybe_unused)
-+{
-+	return evlist__parse_workload_attr(arg, &target.workload.sched_policy,
-+					   &target.workload.sched_priority,
-+					   &target.workload.cpu_map);
-+}
-+
- static struct option stat_options[] = {
- 	OPT_BOOLEAN('T', "transaction", &transaction_run,
- 		    "hardware transaction statistics"),
-@@ -1220,6 +1230,9 @@ static struct option stat_options[] = {
- 	OPT_BOOLEAN(0, "append", &append_file, "append to the output file"),
- 	OPT_INTEGER(0, "log-fd", &output_fd,
- 		    "log output to fd, instead of stderr"),
-+	OPT_CALLBACK(0, "workload-attr", &stat_config,
-+		     "sched_policy[,priority][,cpu-list]", record_workload_attr_help,
-+		     &parse_workload_attr_opt),
- 	OPT_STRING(0, "pre", &pre_cmd, "command",
- 			"command to run prior to the measured command"),
- 	OPT_STRING(0, "post", &post_cmd, "command",
-@@ -2893,5 +2906,10 @@ int cmd_stat(int argc, const char **argv)
- 	metricgroup__rblist_exit(&stat_config.metric_events);
- 	evlist__close_control(stat_config.ctl_fd, stat_config.ctl_fd_ack, &stat_config.ctl_fd_close);
- 
-+	if (target.workload.cpu_map) {
-+		perf_cpu_map__put(target.workload.cpu_map);
-+		target.workload.cpu_map = NULL;
-+	}
-+
- 	return status;
- }
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 7ef43f72098e..d3949e3e0e85 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -46,6 +46,7 @@
- #include <sys/mman.h>
- #include <sys/prctl.h>
- #include <sys/timerfd.h>
-+#include <sys/resource.h>
- 
- #include <linux/bitops.h>
- #include <linux/hash.h>
-@@ -58,6 +59,7 @@
- #include <perf/evsel.h>
- #include <perf/cpumap.h>
- #include <perf/mmap.h>
-+#include <perf/cpumap.h>
- 
- #include <internal/xyarray.h>
- 
-@@ -1398,6 +1400,116 @@ int evlist__open(struct evlist *evlist)
- 	return err;
- }
- 
-+int evlist__parse_workload_attr(const char *str, int *sched_policy, int *sched_priority,
-+				struct perf_cpu_map **cpu_map)
-+{
-+	char *tok, *saveptr = NULL;
-+	char *buf;
-+	int ret = -1;
-+
-+	/* We need buffer that we know we can write to. */
-+	buf = strdup(str);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	tok = strtok_r((char *)buf, ",", &saveptr);
-+	do {
-+		/* sched policy */
-+		if (!strncmp(tok, "other", sizeof("other")))
-+			*sched_policy = SCHED_OTHER;
-+		else if (!strncmp(tok, "fifo", sizeof("fifo"))) {
-+			*sched_policy = SCHED_FIFO;
-+			/* default to lowest priority */
-+			*sched_priority = 99;
-+		} else if (!strncmp(tok, "rr", sizeof("rr"))) {
-+			*sched_policy = SCHED_RR;
-+			*sched_priority = 99;
-+		} else if (!strncmp(tok, "batch", sizeof("batch")))
-+			*sched_policy = SCHED_BATCH;
-+		else if (!strncmp(tok, "idle", sizeof("idle")))
-+			*sched_policy = SCHED_IDLE;
-+		else {
-+			pr_err("workload_attr: unknown sched policy %s\n", tok);
-+			break;
-+		}
-+
-+		/* sched priority */
-+		tok = strtok_r(NULL, ",", &saveptr);
-+		if (tok) {
-+			int priority;
-+			char *endptr;
-+
-+			priority = strtol(tok, &endptr, 0);
-+			if (*endptr) {
-+				pr_err("workload_attr: invalid sched priority %s\n", tok);
-+				break;
-+			}
-+
-+			if (*sched_policy == SCHED_FIFO || *sched_policy == SCHED_RR) {
-+				if (priority < 1 || priority > 99) {
-+					pr_err("workload_attr: invalid priority %d for fifo and rr, allowed [1,99]\n",
-+					       priority);
-+					break;
-+				}
-+			}
-+			*sched_priority = priority;
-+		}
-+
-+		/* cpu list */
-+		tok = strtok_r(NULL, ",", &saveptr);
-+		if (tok) {
-+			*cpu_map = __perf_cpu_map__new(tok, ':');
-+			if (!*cpu_map) {
-+				pr_err("workload_attr: failed to get cpus map from %s\n", tok);
-+				break;
-+			}
-+		}
-+		ret = 0;
-+	} while (0);
-+
-+	free(buf);
-+	return ret;
-+}
-+
-+static int setup_workload_attr(struct target *target)
-+{
-+	struct sched_param param;
-+	int policy = target->workload.sched_policy;
-+	int priority = target->workload.sched_priority;
-+
-+	if (policy >= 0) {
-+		param.sched_priority = (policy == SCHED_FIFO || policy == SCHED_RR) ?
-+					priority : 0;
-+		if (sched_setscheduler(0, policy, &param) != 0) {
-+			perror("failed to set the sched policy");
-+			return -1;
-+		}
-+
-+		if (policy == SCHED_OTHER) {
-+			if (setpriority(PRIO_PROCESS, 0, priority) != 0) {
-+				perror("failed to set the nice value");
-+				return -1;
-+			}
-+		}
-+	}
-+
-+	if (target->workload.cpu_map) {
-+		size_t cpuset_size = -1;
-+		cpu_set_t *cpu_set;
-+
-+		cpu_set = perf_cpu_map__2_cpuset(target->workload.cpu_map, &cpuset_size);
-+		if (!cpu_set)
-+			return -1;
-+
-+		if (sched_setaffinity(0, cpuset_size, cpu_set) != 0) {
-+			perror("failed to set the sched affinity");
-+			return -1;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- int evlist__prepare_workload(struct evlist *evlist, struct target *target, const char *argv[],
- 			     bool pipe_output, void (*exec_error)(int signo, siginfo_t *info, void *ucontext))
- {
-@@ -1464,6 +1576,9 @@ int evlist__prepare_workload(struct evlist *evlist, struct target *target, const
- 			exit(ret);
- 		}
- 
-+		if (setup_workload_attr(target) != 0)
-+			exit(-1);
-+
- 		execvp(argv[0], (char **)argv);
- 
- 		if (exec_error) {
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 664c6bf7b3e0..761ae102dda6 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -15,6 +15,7 @@
- #include <pthread.h>
- #include <signal.h>
- #include <unistd.h>
-+#include <sched.h>
- 
- struct pollfd;
- struct thread_map;
-@@ -180,6 +181,8 @@ void evlist__set_id_pos(struct evlist *evlist);
- void evlist__config(struct evlist *evlist, struct record_opts *opts, struct callchain_param *callchain);
- int record_opts__config(struct record_opts *opts);
- 
-+int evlist__parse_workload_attr(const char *str, int *sched_policy, int *sched_priority,
-+				struct perf_cpu_map **cpu_set);
- int evlist__prepare_workload(struct evlist *evlist, struct target *target,
- 			     const char *argv[], bool pipe_output,
- 			     void (*exec_error)(int signo, siginfo_t *info, void *ucontext));
-diff --git a/tools/perf/util/target.h b/tools/perf/util/target.h
-index d582cae8e105..16fe33dda2ef 100644
---- a/tools/perf/util/target.h
-+++ b/tools/perf/util/target.h
-@@ -4,6 +4,7 @@
- 
- #include <stdbool.h>
- #include <sys/types.h>
-+#include <sched.h>
- 
- struct target {
- 	const char   *pid;
-@@ -19,6 +20,12 @@ struct target {
- 	bool	     use_bpf;
- 	int	     initial_delay;
- 	const char   *attr_map;
-+
-+	struct {
-+		int	 sched_policy;
-+		int	 sched_priority;
-+		struct perf_cpu_map *cpu_map;
-+	} workload;
- };
- 
- enum target_errno {
-@@ -103,4 +110,6 @@ static inline bool target__uses_dummy_map(struct target *target)
- 	return use_dummy;
- }
- 
-+extern const char record_workload_attr_help[];
-+
- #endif /* _PERF_TARGET_H */
 -- 
-2.25.1
 
+- Arnaldo
