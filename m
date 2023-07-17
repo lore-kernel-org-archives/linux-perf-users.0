@@ -2,110 +2,82 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBED9C0015E
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jul 2023 16:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545EFEB64DC
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jul 2023 18:16:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231967AbjGQQNc (ORCPT
+        id S231674AbjGQSQc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Jul 2023 12:13:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58922 "EHLO
+        Mon, 17 Jul 2023 14:16:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232080AbjGQQNO (ORCPT
+        with ESMTP id S231687AbjGQSQa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Jul 2023 12:13:14 -0400
-Received: from mail-yw1-x1132.google.com (mail-yw1-x1132.google.com [IPv6:2607:f8b0:4864:20::1132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86224E56
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Jul 2023 09:13:09 -0700 (PDT)
-Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-5700b15c12fso47047727b3.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Jul 2023 09:13:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1689610389; x=1692202389;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8CqPKH8zLjxPG0T2aNpKAIqJzacVH6EbJBb3LjExpjw=;
-        b=cQpEj7wQVECv/U9cTpn+RN55ujAIWvks3MU4IX4Wr/hwnFIe0F/qx5YUKjSMpnx703
-         CHzs0WWQ7uBihIAx5z5eiCKmCaltnArXhlaNRgavYeytVm5vSw/gQiRT1py2AerifbO6
-         AiJnYOTJCz0R2HkNoD7T9Yf9t3z2uTFa83xyLrtRemXVRe2lrXcVvM5qyrJMMViUNE7U
-         6aLZBv3MPfrrvSHz+w10LReOyQijeOLBQAf/Jl5WjQxapxktKezBDH2erUpWfo+TfrZS
-         RnuZ/YnESkQ6HSr7gO5+BgLJh/oDlySt0yQzLcBh/BGfPb0h9TdwTyAHNWQPywULEg7z
-         BUVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689610389; x=1692202389;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8CqPKH8zLjxPG0T2aNpKAIqJzacVH6EbJBb3LjExpjw=;
-        b=YjXQ7ChdQa5W5IRRccyhENMfuwFGuZK3+VANtb7vIRIJD0bJkpN3hS/Bp5wfJx7iy+
-         IiPA9D3NwZl2pue0PIEDnsFNS02Kw/K06AwmwcrIl4C4cxKF9LuCltC0uceP0iqDC71q
-         BUPUH9tyjK880IryzJdzyybTe1PCGQhshUaAFBd0O28CssDAV45AfHj8Nj4BXa+8JMBO
-         NzTWjo8yRj5dCXlMsH7iXnEyVzMpws15pT059bd9+118O4Kqcv4KS7VtKUvFNuEbnDPQ
-         /BrJ5wLqAdS2N8mG4zAd3PAPF3u0DVXbJ1+TS6NzSfPAbl7IEIrtL2mog9WH3NI1moO6
-         E4+A==
-X-Gm-Message-State: ABy/qLYvVvv5iEDOVuDKd0yhHwU3ZNIotyPt356DJmArLN4zBRUPq0DH
-        B3AFd0ZYBy7hiNp8BkkGHVsHYbK3/vDhvwZFIyiw
-X-Google-Smtp-Source: APBJJlGog4dyfGlwFIS3iBtcrvJFLeH/ogm5YcXS+semC1utnZAcGzlBZgUKou2DvMgGuYXX4nNPAERtXRDz/TQJF88=
-X-Received: by 2002:a81:67c1:0:b0:577:2fda:f181 with SMTP id
- b184-20020a8167c1000000b005772fdaf181mr12551811ywc.44.1689610388723; Mon, 17
- Jul 2023 09:13:08 -0700 (PDT)
+        Mon, 17 Jul 2023 14:16:30 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B75719B5
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Jul 2023 11:16:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 944B7610A2
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Jul 2023 18:15:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C462AC433CA;
+        Mon, 17 Jul 2023 18:15:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689617730;
+        bh=yClenxN+4eb8887C2/BIVVRgYyMgdE8IE/HWbM8IMcA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=LAPRiBdkGpYNQoDwQm7NoyTImmoaZKVBMOCEbPyeO1Xe3uJXP7KY12+WuJ5xXuTAw
+         wgn6HYn7fuLiUhfp8WCrQT1NK8QEm3yYKLYEmDsROUc420184+ARVbU8DADwFemxku
+         XmZWKYazKTFPUyQkAabMS6c6wZ+2eUa/1j9euuk31ralBQfV0JVyOnNuiveXxrRy3n
+         QJleWL7y1dedMwyTkaO8NZKN2RRo0qPeumti0x43ctiEgr8PqMmmMjdIH3LSeppkww
+         kdxyEUvDHteXbAbV6LnjX699NTxOP3BNEjHpaCJ9byFsN8h+Iq5eCHiGRfpb/kpZ0G
+         4czYPlQe4WmLQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 7828F40516; Mon, 17 Jul 2023 15:06:10 -0300 (-03)
+Date:   Mon, 17 Jul 2023 15:06:10 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-perf-users@vger.kernel.org
+Subject: perf probe: Trying to read a 'ctx' named local variable
+Message-ID: <ZLWDEjvFjrrEJODp@kernel.org>
 MIME-Version: 1.0
-References: <20230712143831.120701-1-wangkefeng.wang@huawei.com> <20230712143831.120701-5-wangkefeng.wang@huawei.com>
-In-Reply-To: <20230712143831.120701-5-wangkefeng.wang@huawei.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 17 Jul 2023 12:12:58 -0400
-Message-ID: <CAHC9VhSU=T5FEP=sZyNukykE-xRzWsqyddS2-+sEsy2bmfGHKQ@mail.gmail.com>
-Subject: Re: [PATCH 4/5] selinux: use vma_is_stack() and vma_is_heap()
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-        selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 12, 2023 at 10:25=E2=80=AFAM Kefeng Wang <wangkefeng.wang@huawe=
-i.com> wrote:
->
-> Use the helpers to simplify code.
->
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
->  security/selinux/hooks.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
->
-> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> index 4e46cf3d67b6..289ef2d6a427 100644
-> --- a/security/selinux/hooks.c
-> +++ b/security/selinux/hooks.c
-> @@ -3775,13 +3775,10 @@ static int selinux_file_mprotect(struct vm_area_s=
-truct *vma,
->         if (default_noexec &&
->             (prot & PROT_EXEC) && !(vma->vm_flags & VM_EXEC)) {
->                 int rc =3D 0;
-> -               if (vma->vm_start >=3D vma->vm_mm->start_brk &&
-> -                   vma->vm_end <=3D vma->vm_mm->brk) {
-> +               if (vma_is_heap(vma)) {
->                         rc =3D avc_has_perm(sid, sid, SECCLASS_PROCESS,
->                                           PROCESS__EXECHEAP, NULL);
-> -               } else if (!vma->vm_file &&
-> -                          ((vma->vm_start <=3D vma->vm_mm->start_stack &=
-&
-> -                            vma->vm_end >=3D vma->vm_mm->start_stack) ||
-> +               } else if (!vma->vm_file && vma_is_stack(vma) ||
->                             vma_is_stack_for_current(vma))) {
+Hi Masami,
 
-With the parens fix that Andrew already provided.
+	Trying to use perf to debug perf I stumbled on this:
 
-Acked-by: Paul Moore <paul@paul-moore.com>
+[root@quaco ~]# perf probe -x ~/bin/perf -L sigtrap_handler
+<sigtrap_handler@/home/acme/git/perf-tools/tools/perf/tests/sigtrap.c:0>
+      0  sigtrap_handler(int signum __maybe_unused, siginfo_t *info, void *ucontext __maybe_unused)
+         {
+                if (!__atomic_fetch_add(&ctx.signal_count, 1, __ATOMIC_RELAXED))
+      3                 ctx.first_siginfo = *info;
+      4         __atomic_fetch_sub(&ctx.tids_want_signal, syscall(SYS_gettid), __ATOMIC_RELAXED);
+         }
 
->                         rc =3D avc_has_perm(sid, sid, SECCLASS_PROCESS,
->                                           PROCESS__EXECSTACK, NULL);
-> --
-> 2.41.0
+         static void *test_thread(void *arg)
 
---=20
-paul-moore.com
+[root@quaco ~]# perf probe -x ~/bin/perf sigtrap_handler:4 "ctx.signal_count"
+Failed to write event: Invalid argument
+Please upgrade your kernel to at least 3.14 to have access to feature @ctx
+  Error: Failed to add events.
+[root@quaco ~]#
+
+[root@quaco ~]# uname -a
+Linux quaco 6.3.8-100.fc37.x86_64 #1 SMP PREEMPT_DYNAMIC Thu Jun 15 01:51:54 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
+[root@quaco ~]# rpm -qa | grep kernel-debuginfo
+kernel-debuginfo-common-x86_64-6.3.8-100.fc37.x86_64
+kernel-debuginfo-6.3.8-100.fc37.x86_64
+[root@quaco ~]#
+
+-- 
+
+- Arnaldo
