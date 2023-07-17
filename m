@@ -2,180 +2,115 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 206DAC0015E
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jul 2023 02:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4D9EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jul 2023 05:43:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229710AbjGQCAx (ORCPT
+        id S231258AbjGQFnv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 16 Jul 2023 22:00:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45206 "EHLO
+        Mon, 17 Jul 2023 01:43:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229579AbjGQCAw (ORCPT
+        with ESMTP id S231278AbjGQFnr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 16 Jul 2023 22:00:52 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32488E52
-        for <linux-perf-users@vger.kernel.org>; Sun, 16 Jul 2023 19:00:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689559251; x=1721095251;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=K8iC/yI9RrgOEd9KerVAcww4jivp5QHyk8MbfNPLFpk=;
-  b=cd85cAOYJpIlj/TWKlv5lYDJJpGJJsMmCNPn+XovWP9RvC9IHD3YFH9C
-   6qu/Pfc4HYruOEL/kvsdpgaKwd1Em0Jxwh9XEOJysJwLuNuSP0EutC49Y
-   hNT+foAVNb7HOzh8R7tAWMjR+w6T2LPUY6wZFua2WLPn60cU5IHVS1dka
-   evax/eu7U8Dt3dbEKJ66VaS8wFbAqAbwldOgviyfaRd0W8oMCnypDfndV
-   CwBgXaVigbqLt2Hzkh7YlqaIH/NB4jam00FF6TrKUcQurqjKSin0Tr3PB
-   QYJaVNaCQYj6yq757CfnTlAzfy3hgTuyHAZm6l5rq/3xy/AukikXIHupL
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10773"; a="345415028"
-X-IronPort-AV: E=Sophos;i="6.01,211,1684825200"; 
-   d="scan'208";a="345415028"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2023 19:00:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10773"; a="897032599"
-X-IronPort-AV: E=Sophos;i="6.01,211,1684825200"; 
-   d="scan'208";a="897032599"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2023 19:00:45 -0700
-Date:   Sun, 16 Jul 2023 19:00:44 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: Event reordering regression for software events
-Message-ID: <ZLSgzJsom0avu/hX@tassilo>
-References: <ZLBgbHkbrfGygM/u@tassilo>
- <ZLBjI4a3wIMs75lA@kernel.org>
- <CAP-5=fU5Y95G2FsFdwxwPk=kLe=kka7CkD7ZDrzSU+Xv-Ks=Qg@mail.gmail.com>
- <ZLCOEOtJOQiN+8VB@tassilo>
- <CAP-5=fWjDeXZfgLu8hiavtkRGmWsZnwt3g+Ms5YPL12PxUaCgg@mail.gmail.com>
- <ZLC8AIEfUJMQFOEn@tassilo>
- <CAP-5=fVWyrmRHCmNGRrME-YSSwbJV90-_dcC=LyNAXjk9baMGA@mail.gmail.com>
+        Mon, 17 Jul 2023 01:43:47 -0400
+Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE71EE6E
+        for <linux-perf-users@vger.kernel.org>; Sun, 16 Jul 2023 22:43:38 -0700 (PDT)
+Received: by mail-qk1-x72b.google.com with SMTP id af79cd13be357-7672303c831so395193885a.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 16 Jul 2023 22:43:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1689572618; x=1692164618;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uuuapjCm4uGRuklqDX8mlQes8ibPwf0zSHbcBhv1+wk=;
+        b=YHIL+Q4b3CFfCYm9CihgC3tCGEJLGrMGXdGiZ2Bh6+7eKpxaMZRlVHfornWX0kWU7A
+         crgNhpc+tHNK2BD7thw8Dqg2KDc41WFfz0xEmU9W6cWrMoeBgnyCDdJRfwoPsEmE5vOJ
+         xcvrFigQLXZiyHn4D4MljNTGqQ7jZ/+Ms9EuulbqKhTTD6T0wixnoPGMZG9kfeMSDeXi
+         felWXDFVueNqirjzjSV5jRmTc6FX0+6c9fRO2zfpXGJXVj+6EnwLyq4v0ROcrWb0Pr1R
+         HlCNziFKcalhPrTXjhKkbLukviIh3aYFLpseQ9llEWD45v34k6O66ZZZVU1A+mp75msk
+         43dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689572618; x=1692164618;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uuuapjCm4uGRuklqDX8mlQes8ibPwf0zSHbcBhv1+wk=;
+        b=e1AvJur8wCoXQB+WkXgAEDpV0MPdNMv9EZ8vbszhP7iRsUJuUIlE0isUK8+cc3snBR
+         5oXHGpeYFIMwtuZ9jQ3LUmvGmHNQ58KbLH9Gad9pT9CnWMjFwdXM7v8OYy2kUndq/6FV
+         TZ2zYdDRwmGX1gy+Vd397+9oSm+T5QvdBLCunBZ1Swhpmo7BKicQJiSp3N2qAje0Y7ag
+         TfDdXq78ojl/+DUKo4phHAlY9EkjVNkGDWhCpErSyeQWqxjQFimoWYExJc81NYfjgFOb
+         HDuk9MC3NTLARKpylrKK4ujoSCuo30tmG1uq2tnTH6ClyBYE8jpImx35BjzyfxUL3Rga
+         kS3Q==
+X-Gm-Message-State: ABy/qLaRMn0cocNTUJlBz0aRcyYwmcOKixwavH7r7r2pRQrLN4wkZc+5
+        HwNODYHLXwpgxm2AOMIYUjrd/w==
+X-Google-Smtp-Source: APBJJlFXTfi8g5jBhSbeBObDe11usDkfzwOunbCh7CEeZgDBWe4niHoSon7iQk0OGp5W9T40RiM4+w==
+X-Received: by 2002:a05:620a:4516:b0:765:a518:c31d with SMTP id t22-20020a05620a451600b00765a518c31dmr14358123qkp.54.1689572617873;
+        Sun, 16 Jul 2023 22:43:37 -0700 (PDT)
+Received: from leoy-huanghe.lan (211-75-219-203.hinet-ip.hinet.net. [211.75.219.203])
+        by smtp.gmail.com with ESMTPSA id i14-20020a17090a2a0e00b00263e59c1a9fsm4625849pjd.34.2023.07.16.22.43.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Jul 2023 22:43:37 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        John Garry <john.g.garry@oracle.com>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        D Scott Phillips <scott@os.amperecomputing.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        German Gomez <german.gomez@arm.com>,
+        Ali Saidi <alisaidi@amazon.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, fissure2010@gmail.com
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v1 0/3] arm64: Support Cortex-X4 CPU for Perf Arm SPE
+Date:   Mon, 17 Jul 2023 13:43:24 +0800
+Message-Id: <20230717054327.79815-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fVWyrmRHCmNGRrME-YSSwbJV90-_dcC=LyNAXjk9baMGA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jul 13, 2023 at 08:56:55PM -0700, Ian Rogers wrote:
-> Yes I disagree. We can't always force perf metric events in a group
-> because weak groups don't always work. When we place the perf metric
-> events outside of a group they are broken. So now we don't group the
-> events and fix the topdown events to be in a group, in arch specific
-> code. It is a complete pain brought about by the Intel core PMU
-> driver.
+This series support Cortex-X4 CPU in Perf Arm SPE.
 
-Was that the old topdown slots have to be first issue, or something
-else?
+The Arm64 and tools both include the header cputype.h for CPU part and
+MIDR definitions, to de-couple between the tools and the kernel, the
+tools doesn't directly use the kernel's header, alternatively, the tools
+maintain a copy and sync with kernel's header.
 
-If it's so painful I guess could revisit the kernel part, although
-I suspect anything that the kernel could do the perf tool could do too.
+To keep the exact same content between kernel and tools' headers, this
+series firstly adds Cortex-X4 CPU part and MIDR definitions in the
+kernel header; then the second patch syncs the change into the tools'
+header.  The first patch is to support the Cortex-X4 in perf Arm SPE
+with the new CPU definitions.
 
-> 
-> > So why does the perf tool need to fix it? Just pass it to the kernel
-> > and it won't schedule and the user has to fix it.
-> 
-> Because in some cases, and the cases I have happened to care about,
-> the groups of events come from metrics.
+I don't have Cortex-X4 machine in hand, so just verified with
+compilation perf tool.
 
-That's fine, but can't you just fix it for the metrics only.
 
-Also even for metrics if you freely reorder them they might become
-unparseable.  But the events inside the metrics should be freely
-reorderable (well technically someone could have a dependency on that
-too, but at least in my mind that's much less likely than their
-dependency just being on the metric) 
+Leo Yan (3):
+  arm64: Add Cortex-X4 CPU part definitions
+  tools headers arm64: Sync Cortex-X4 CPU part definitions
+  perf arm-spe: Support data source for Cortex-X4 CPU
 
-So what it really needs is a sort only insight the metric.
+ arch/arm64/include/asm/cputype.h       |  2 ++
+ tools/arch/arm64/include/asm/cputype.h |  2 ++
+ tools/perf/util/arm-spe.c              | 14 ++++++++------
+ 3 files changed, 12 insertions(+), 6 deletions(-)
 
-That shouldn't be too hard to implement, right?
+-- 
+2.34.1
 
-Also I guess we could add some test cases on avoiding reordering,
-although I'm optimistic that once it is established that reordering
-should be minimized/avoided it is unlikely to be something 
-that breask frequently.
-
-Would it be possible to revert the global sort patch until that 
-is sorted out? Otherwise I'm afraid I'll end up with perf releases
-that are absolutely incompatible to toplev, and I'll get problems
-with my user base who often cannot easily update perf.
-
-Arnaldo, can you please comment on this, what is your policy 
-on regressions here?
-
-> But things like wildcard group expansion and regrouping is a metric
-> problem too. So why would there be a parse events for metrics and a
-> separate one for events? Doing it this way would make metric group
-> testing significantly more hard too, as we can't just try the events
-> without the metric.
-
-Hmm, perhaps add some kind of debug flag to handle this case?
-As long as it's not default I don't have any issues with that.
-
-> > How about replacing the sorting commit with a warning and ask
-> > the user to do the reordering? Would that work for you?
-> 
-> No.
-
-Well I hope we can get to some compromise here. Right now 
-this arbitary unpredictable reordering is a show stopper for me,
-and I suspect it will be for any other perf stat users that do some kind
-of post processing.
-
-As long as we find a solution like above that works for the metrics
-it should be ok right?
-
-> > The platform is SKX.
-> >
-> > >
-> > > > > would seem unfortunate. Tbh, the mistake here is the assumptions that
-> > > > > toplev is making.
-> > > >
-> > > > It's not an random assumption, it's the only way to parse perf output uniquely.
-> > > >
-> > > > Please make it an option. But this cannot stay this way unconditionally
-> > > > if perf stat is supposed to stay a tool which can be used from other programs.
-> > >
-> > > You should be using the json or CSV outputs. These are intended for
-> >
-> > This is the CSV output that is reordered! (see the example you just
-> > quoted)
-> >
-> > I haven't tested JSON, but I assume that is reordered too.
-> 
-> The output of the JSON is a dictionary and inherently unordered.
-
-I haven't tried to use it, but if you have something like
-perf stat --json -e '{cycles,branches},{cycles,cache-misses}' how would you
-distinguish the two different cycles without order? 
-
-> crashes vs having the complete TopdownL1 working on both PMUs, testing
-> parity with non-hybrid. We also fixed all address and leak sanitizer
-> bugs. 
-
-> Perf in Linux 6.5 even without the awesome new features like
-> lock contention analysis, is the best perf tool we've ever had.
-
-Sure and without arbitrary reordering and unparseable output it would be
-even better ...
-
-> Does SKX have uncore? Yes, so you need to reorder events and this
-> change didn't start it.
-
-Yes of course it has an uncore.
-
-You only need to reorder if you create broken groups.  At least my tool
-doesn't generate them.
-
-> NO_GROUP_EVENTS is used to avoid a group being used, an important use
-> being avoiding PMU driver bugs.
-> 
-
-Hmm, not sure what that is refering to, but ok.
-
--Andi
