@@ -2,103 +2,148 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3894EEB64DC
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jul 2023 14:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF3FC001B0
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jul 2023 15:22:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229962AbjGQOlh (ORCPT
+        id S231863AbjGQPWC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Jul 2023 10:41:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34022 "EHLO
+        Mon, 17 Jul 2023 11:22:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230156AbjGQOlg (ORCPT
+        with ESMTP id S231617AbjGQPVr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Jul 2023 10:41:36 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45084E4C;
-        Mon, 17 Jul 2023 07:41:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689604895; x=1721140895;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=3d/dMArMMvLara8UGSDubQb+jDPmJOD4PUCUjs5TeR0=;
-  b=jeWrHzODizyKKao8MYhCXgdheJmW4TTX31BXXPRKB2bEPJtE6yFq7V6g
-   9bm1DFfO2/FlYED1HzO9LzQ07XTFCryX8qofq7B9srF4OvxZuBodOAks1
-   vYWjrCwSgY4H0f4RHEGoycpmxOrPHHtnpD0nWpE+2kDbNR59FimkpefIA
-   VWJ3s3y46NJo2H97jpnfEzvr4zXTQ4qoLWvP3Fyco/ifPBlj7RB8Fpo5C
-   Ytfd0woDpYAhTSdHnWxqpxZG3Quik4ycDN7x2i1sUKc88u/EeJxHhD3qC
-   gmR1qh+S4iOpcTjXR8FfOX3zubQmfIJf142DMZ7Komb5eWu1+bQaKv8ym
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10774"; a="345537783"
-X-IronPort-AV: E=Sophos;i="6.01,211,1684825200"; 
-   d="scan'208";a="345537783"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2023 07:41:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10774"; a="1053924534"
-X-IronPort-AV: E=Sophos;i="6.01,211,1684825200"; 
-   d="scan'208";a="1053924534"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.223.8])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2023 07:41:29 -0700
-Message-ID: <5797e5a7-a85f-4f7c-1649-88f8f9ff7a6b@intel.com>
-Date:   Mon, 17 Jul 2023 17:41:24 +0300
+        Mon, 17 Jul 2023 11:21:47 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C8E310E3;
+        Mon, 17 Jul 2023 08:21:21 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-666eec46206so4762969b3a.3;
+        Mon, 17 Jul 2023 08:21:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689607239; x=1692199239;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Z+9axMsQJLeztv/jtIsPFrb695KemJk12Qdi8hyVSxc=;
+        b=RwMr9J4Siy7s/bgP86jf2/tpp9hQdx27OCaFJ9SOfXk+/D6VD8u+5SV63dFZODsB/c
+         COwDvnq21kxHGf88FO+d+iwNYaRs6IEWwB0ClA7T1Y67lrnOm6aIsIui1mr/iJ4GNC97
+         XUUCjvaWqhUAMDqXa6ccYSAefWRiPsFTmFg2rkIrkeRbJk+HUE6VvwwpbPpaGDnX2XWb
+         WPnknulItPnNOVRlo+lUmeURVE0I3PoWMEypy8UTnrT3m+IhqBWkuw+SZIrGnSESDjjk
+         yz3/MrziZYrKGE1qT7fAAQppBtW7fmaUyADkZP5qKvvKg84RZfwDXLXJooSHi3f4Tpn7
+         ovzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689607239; x=1692199239;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z+9axMsQJLeztv/jtIsPFrb695KemJk12Qdi8hyVSxc=;
+        b=SFIARHgPc8MozFBP45/9FXPm5JzqGRw2T3ggb6ilmUFU3dGWLHbGRDSoObAUkpNmvX
+         AlkAQ6nNlDiAyub235WapbcUyUMY4XCrRGbN/rKfFefb7TbXsBvx8glfy1gktkJGkKTH
+         vNEKnjNQ6yMLiVoCtO8Kio0JW517UfF0LVtd14iiAud/Rjk3HwmZgV5/G4jMJodNtgzM
+         0Rw2yDPpJl0YsawSdr0cf7s7st/OgNHyQBY6dbRcgDSLYmZfioFmEihSrSkK0XFhvDXR
+         Ig+3JrY1E+xNLz0ZjpyzlDMDk0uGMD77pwtxwmyD/Et59v17kfwiSQFEl4JSGKbtxkza
+         b5Yw==
+X-Gm-Message-State: ABy/qLaDL7lQmqx/DIrjUVK5DwsqOb+81ny5e8vTjvQwj9F8yZu5lJvX
+        iIjllC1O1lCJK8n7Ga1FeU0=
+X-Google-Smtp-Source: APBJJlHWWrE8x2IGxBP2h84nm6ucOqSL8AVtoXx1IBoCuBUQfij7rAxoa0dMAC6qrjoYHbIWnfKvng==
+X-Received: by 2002:a17:902:c949:b0:1b8:b5f8:c485 with SMTP id i9-20020a170902c94900b001b8b5f8c485mr15761521pla.50.1689607238728;
+        Mon, 17 Jul 2023 08:20:38 -0700 (PDT)
+Received: from yoga ([2400:1f00:13:50e2:5893:783e:fde0:1bce])
+        by smtp.gmail.com with ESMTPSA id im16-20020a170902bb1000b001b83e5ec666sm42785plb.6.2023.07.17.08.20.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jul 2023 08:20:38 -0700 (PDT)
+From:   Anup Sharma <anupnewsmail@gmail.com>
+X-Google-Original-From: Anup Sharma <AnupSharma>
+Date:   Mon, 17 Jul 2023 20:50:31 +0530
+To:     Ian Rogers <irogers@google.com>
+Cc:     Anup Sharma <anupnewsmail@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/6] scripts: python: Add initial script file with
+ imports
+Message-ID: <ZLVcP77aI7dGQCdI@yoga>
+References: <cover.1689024635.git.anupnewsmail@gmail.com>
+ <5d3727bacffa331cd81a059fc3122cfb3f43dabd.1689024635.git.anupnewsmail@gmail.com>
+ <CAP-5=fVOTstw=V2dsyfqQV1NB24ePOkqxUtF1g==5TGk5i3Phg@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.13.0
-Subject: Re: [PATCH v2 5/7] perf evlist: Skip dummy event sample_type check
- for evlist_config
-Content-Language: en-US
-To:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, kan.liang@linux.intel.com,
-        james.clark@arm.com, tmricht@linux.ibm.com, ak@linux.intel.com,
-        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-References: <20230715032915.97146-1-yangjihong1@huawei.com>
- <20230715032915.97146-6-yangjihong1@huawei.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230715032915.97146-6-yangjihong1@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVOTstw=V2dsyfqQV1NB24ePOkqxUtF1g==5TGk5i3Phg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 15/07/23 06:29, Yang Jihong wrote:
-> The dummp event does not contain sampls data. Therefore, sample_type does
-> not need to be checked.
+On Wed, Jul 12, 2023 at 09:50:40AM -0700, Ian Rogers wrote:
+> On Mon, Jul 10, 2023 at 4:09 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
+> >
+> > Added the necessary modules, including the Perf-Trace-Util
+> > library, and defines the required functions and variables.
+> > It leverages the perf_trace_context and Core modules for
+> > tracing and processing events. Also added usage information.
+> >
+> > Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
 > 
-> Currently, the sample id format of the actual sampling event may be changed
-> after the dummy event is added.
+> Acked-by: Ian Rogers <irogers@google.com>
 > 
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> ---
->  tools/perf/util/record.c | 7 +++++++
->  1 file changed, 7 insertions(+)
+> > ---
+> >  .../scripts/python/firefox-gecko-converter.py | 28 +++++++++++++++++++
+> >  1 file changed, 28 insertions(+)
+> >  create mode 100644 tools/perf/scripts/python/firefox-gecko-converter.py
+> >
+> > diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools/perf/scripts/python/firefox-gecko-converter.py
+> > new file mode 100644
+> > index 000000000000..5b342641925c
+> > --- /dev/null
+> > +++ b/tools/perf/scripts/python/firefox-gecko-converter.py
+> > @@ -0,0 +1,28 @@
+> > +# firefox-gecko-converter.py - Convert perf record output to Firefox's gecko profile format
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +#
+> > +# The script converts perf.data to Gecko Profile Format,
+> > +# which can be read by https://profiler.firefox.com/.
+> > +#
+> > +# Usage:
+> > +#
+> > +#     perf record -a -g -F 99 sleep 60
+> > +#     perf script firefox-gecko-converter.py > output.json
+> > +
+> > +import os
+> > +import sys
+> > +import json
+> > +from functools import reduce
+> > +
 > 
-> diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
-> index 9eb5c6a08999..0240be3b340f 100644
-> --- a/tools/perf/util/record.c
-> +++ b/tools/perf/util/record.c
-> @@ -128,6 +128,13 @@ void evlist__config(struct evlist *evlist, struct record_opts *opts, struct call
->  		evlist__for_each_entry(evlist, evsel) {
->  			if (evsel->core.attr.sample_type == first->core.attr.sample_type)
->  				continue;
-> +
-> +			/*
-> +			 * Skip the sample_type check for the dummy event
-> +			 * because it does not have any samples anyway.
-> +			 */
-> +			if (evsel__is_dummy_event(evsel))
-> +				continue;
+> nit: technically some of these imports should be added when necessary
+> in the code.
 
-Sideband event records have "ID samples" so the sample type still matters.
+Noted.
 
+> > +# Add the Perf-Trace-Util library to the Python path
+> > +sys.path.append(os.environ['PERF_EXEC_PATH'] + \
+> > +       '/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
+> > +
+> > +from perf_trace_context import *
+> > +from Core import *
+> > +
+> > +def trace_end():
+> > +       pass
+> > +
+> > +def process_event(param_dict):
+> 
+> nit: (this is likely addressed in later patches) you can add return
+> and parameter types here to aid understanding of the code. Function
+> comments are also useful.
 
->  			use_sample_identifier = perf_can_sample_identifier();
->  			break;
->  		}
+Noted.
 
+> > +       pass
+> > --
+> > 2.34.1
+> >
