@@ -2,150 +2,121 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08830C001B0
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jul 2023 05:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D75EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jul 2023 05:57:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231376AbjGQFoY (ORCPT
+        id S229491AbjGQF5V (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Jul 2023 01:44:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41138 "EHLO
+        Mon, 17 Jul 2023 01:57:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231240AbjGQFoH (ORCPT
+        with ESMTP id S231340AbjGQF5U (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Jul 2023 01:44:07 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BDBD10E7
-        for <linux-perf-users@vger.kernel.org>; Sun, 16 Jul 2023 22:43:57 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id 98e67ed59e1d1-262c42d3fafso2455335a91.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 16 Jul 2023 22:43:57 -0700 (PDT)
+        Mon, 17 Jul 2023 01:57:20 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBE14E4B
+        for <linux-perf-users@vger.kernel.org>; Sun, 16 Jul 2023 22:57:18 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-6686708c986so4242285b3a.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 16 Jul 2023 22:57:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1689572637; x=1692164637;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TyK1Jggty5zZRfu0FmHGDNpSPXcYX18o45hq3r51GJg=;
-        b=iXWppoz1AtZx/m5XFZNR40D+3TcADWNzySwcCoQsC8xOqLO612ZBGmlEsB4fJEs7d6
-         ax4juD1nPhZsis8SaDw3nR0JT8vIqiq+LCmIVSTLgULfxal42o+la/rk7RIzjcnS6hNZ
-         fuRyo21BSMXpJUlAtAMms6YDtg4a/GX6aX7oxHHXYte15u2Xa16C3wcH8Jqp15iqGjI9
-         rANF8+UAkRNYlS6flx0FCR1GOrLvMBfHUskPHw+L/pdM5riM7g6iqkiMaWaSB2QxKMl4
-         ELhTQUasJQ1wdhUzR2b2Iof5GcgwFPloqTGdM4+NvYX06E3mkY7CF8bmLxXuxD/2/w6l
-         OPhQ==
+        d=linaro.org; s=google; t=1689573438; x=1692165438;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=CXS3RmyWWgom91Sv94zX4MYmhnr9NNlrigD9YVxcfFM=;
+        b=sZvISqmbQql4wFArhW21VXG+Bi/Vy9DGhpzrBp63sSEL99+PPbpIXs/OyTvyO4TBuJ
+         0iVCkCXyKV5rl2GUv+rl6bkZ6kbKYYfa6o7hqbVnCe9ETWy4uFWAVxU+D/cJjmFHGggj
+         2m8Fu20nIA4RyfQF+j96H4ZAF0iN+W8+xkSAOGGdadWEXI18nOIY16fiZWduC1RgqeiP
+         AD9VrebJlqutkdcxwkmxPY94XP7B0tiwlVA2J+PstljZjj8DXp3/9CFatDi32VBTJjPn
+         pl7fATHbtJXHo9N+CAxiv/vdnvGGMYmfNR4ZjGGkSUUMQdlo+HFWfRDS3NjozN3hzEzL
+         ok9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689572637; x=1692164637;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TyK1Jggty5zZRfu0FmHGDNpSPXcYX18o45hq3r51GJg=;
-        b=MX48u+txVCMby3vLOui9AQZidYX+zxBg6/45V/g4OERfG7aOrrw3QkFeZ0TCym+t/9
-         8UTbgVa7Mk5HbJfHfUrd9LVfXvw05Y87rtvrYGAPbejstoaWYRnC25lNHa42X6UnBtEc
-         DxA3dDzyQwtWQJjGdhQElXx55trNDJ0K3Lwp2+r9onoLNa1zFo/H/sJRazYbKN3JyAB4
-         qX2aJvM5KhnFSO+9uesftlOXqghRo6vq/yQurvalZI/ZLUnBBML+MBsGxulzVjEbkim4
-         64V5WwJ2d4epT5bvq18WIJA+S0zr+MYWjlxt9MAaMn9SGP1mH1/+y59rzzUY8mMXwh9E
-         F7Pg==
-X-Gm-Message-State: ABy/qLbTx/ZonmFhxMy27hhKjOgrbgQAC/4ieZm/U7Its6bTUjH9o9lt
-        2MDLak0KoZaGc0WSJOnQTv2fBg==
-X-Google-Smtp-Source: APBJJlFdGZVJYwmzxQ2PK7b0e7+IIasqkbhIeSaSVNpOZTQFe/vbgjUD2wWvkkqgR9tljz/+hAYuRg==
-X-Received: by 2002:a17:90b:784:b0:267:6fd0:bd31 with SMTP id l4-20020a17090b078400b002676fd0bd31mr11124005pjz.7.1689572636858;
-        Sun, 16 Jul 2023 22:43:56 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1689573438; x=1692165438;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CXS3RmyWWgom91Sv94zX4MYmhnr9NNlrigD9YVxcfFM=;
+        b=MDpq88Vcy9ySiIF5JqfqvhAQgryc+L0wjc5QOAwm+1bawbDfvgziOj3ViLxlSLP37J
+         +BqAFTYOIwn3iRTikFPvwEJw6xcl1HSU1kvk7Z926koILl1yLyKxFD5gCW4Xv8dlZ7PE
+         4UcAk6i2cxiOnmvZBgDLOZxRoN/DwBh1x7YGaz4xF/7i8ioTy5Q+fL6XQcs4SW5AxzPn
+         mNQqT8X38IOvCtQBusk6CGQGlQN7RiTDZ7899rtZ4nUhdqUkLYzuZ23MGCLIuBbPvNcx
+         jpUzYnUpo6pz3Y77qib9qsLmDiAm8EIKnel0dxuBZjVXX7dOXAtJAOaYBng8me12H1lT
+         dsJQ==
+X-Gm-Message-State: ABy/qLaQJntorZoKozGi4Hh4zSLVQqto0CsVhaqkuifM79M27sFysng4
+        C/Ads65TnuJesdNs4rqs77jm5w==
+X-Google-Smtp-Source: APBJJlG+GLmJb3DLkjsbWz43FlHVnd5GUILcKO5yeyWHw3ZgYrW10GmfTKaol8vq4/cXNw4zfl1n9g==
+X-Received: by 2002:a05:6a00:240f:b0:64c:4f2f:a235 with SMTP id z15-20020a056a00240f00b0064c4f2fa235mr13669845pfh.30.1689573438187;
+        Sun, 16 Jul 2023 22:57:18 -0700 (PDT)
 Received: from leoy-huanghe.lan (211-75-219-203.hinet-ip.hinet.net. [211.75.219.203])
-        by smtp.gmail.com with ESMTPSA id i14-20020a17090a2a0e00b00263e59c1a9fsm4625849pjd.34.2023.07.16.22.43.50
+        by smtp.gmail.com with ESMTPSA id g8-20020aa78188000000b00678afd48250sm10968865pfi.218.2023.07.16.22.57.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Jul 2023 22:43:56 -0700 (PDT)
+        Sun, 16 Jul 2023 22:57:17 -0700 (PDT)
+Date:   Mon, 17 Jul 2023 13:57:13 +0800
 From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        John Garry <john.g.garry@oracle.com>,
+To:     Namhyung Kim <namhyung@gmail.com>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        =?utf-8?B?6JSh5rKF5L+h?= <fissure2010@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        D Scott Phillips <scott@os.amperecomputing.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        German Gomez <german.gomez@arm.com>,
-        Ali Saidi <alisaidi@amazon.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, fissure2010@gmail.com
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 3/3] perf arm-spe: Support data source for Cortex-X4 CPU
-Date:   Mon, 17 Jul 2023 13:43:27 +0800
-Message-Id: <20230717054327.79815-4-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230717054327.79815-1-leo.yan@linaro.org>
-References: <20230717054327.79815-1-leo.yan@linaro.org>
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: Some questions about using the perf tool in ARM-SPE
+Message-ID: <20230717055713.GA79840@leoy-huanghe.lan>
+References: <77773641-26e5-a754-63cf-e7d3443e11fc@arm.com>
+ <CALDTKqgek3Bicxkvnq3BQnSaS2keQG6UK8S6_0oJn26r0D00MA@mail.gmail.com>
+ <20230614012102.GJ217089@leoy-huanghe.lan>
+ <cf180f9a-085b-ad9b-c477-f02d32559c0a@arm.com>
+ <f811f7ce-bf04-b5af-ee33-ea489927649f@arm.com>
+ <20230703093913.GA904662@leoy-huanghe>
+ <87b24c93-c457-6cec-736f-ab976ee1d608@arm.com>
+ <20230703102032.GB904662@leoy-huanghe>
+ <0ed20560-a880-9790-a7b2-5089c091fdae@arm.com>
+ <CAM9d7chz+7szVG8-XWrFGyiCPXFRc2zfq8s7VqMcqx3J7QCeyQ@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7chz+7szVG8-XWrFGyiCPXFRc2zfq8s7VqMcqx3J7QCeyQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-We have a CPU list to maintain Neoverse CPUs (N1/N2/V2), this list is
-used for parsing data source packet.  Since Cortex-x4 CPU shares the
-same data source format with Neoverse CPUs, this commit adds Cortex-x4
-CPU into the CPU list so we can reuse the parsing logic.
+Hi Suzuki,
 
-The CPU list was assumed for only Neoverse CPUs, but now Cortex-X4 has
-been added into the list.  To avoid Neoverse specific naming, this patch
-renames the variables and function as the default data source format.
+On Wed, Jul 05, 2023 at 10:33:18AM -0700, Namhyung Kim wrote:
+> On Mon, Jul 3, 2023 at 6:33 AM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+> > On 03/07/2023 11:20, Leo Yan wrote:
+> > > On Mon, Jul 03, 2023 at 10:42:21AM +0100, James Clark wrote:
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/util/arm-spe.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+[...]
 
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index afbd5869f6bf..c2cdb9f2e188 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -409,15 +409,16 @@ static int arm_spe__synth_instruction_sample(struct arm_spe_queue *speq,
- 	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
- }
- 
--static const struct midr_range neoverse_spe[] = {
-+static const struct midr_range cpus_use_default_data_src[] = {
- 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
- 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2),
- 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V1),
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_X4),
- 	{},
- };
- 
--static void arm_spe__synth_data_source_neoverse(const struct arm_spe_record *record,
--						union perf_mem_data_src *data_src)
-+static void arm_spe__synth_data_source_default(const struct arm_spe_record *record,
-+					       union perf_mem_data_src *data_src)
- {
- 	/*
- 	 * Even though four levels of cache hierarchy are possible, no known
-@@ -518,7 +519,8 @@ static void arm_spe__synth_data_source_generic(const struct arm_spe_record *reco
- static u64 arm_spe__synth_data_source(const struct arm_spe_record *record, u64 midr)
- {
- 	union perf_mem_data_src	data_src = { .mem_op = PERF_MEM_OP_NA };
--	bool is_neoverse = is_midr_in_range_list(midr, neoverse_spe);
-+	bool is_default_dc =
-+		is_midr_in_range_list(midr, cpus_use_default_data_src);
- 
- 	if (record->op & ARM_SPE_OP_LD)
- 		data_src.mem_op = PERF_MEM_OP_LOAD;
-@@ -527,8 +529,8 @@ static u64 arm_spe__synth_data_source(const struct arm_spe_record *record, u64 m
- 	else
- 		return 0;
- 
--	if (is_neoverse)
--		arm_spe__synth_data_source_neoverse(record, &data_src);
-+	if (is_default_dc)
-+		arm_spe__synth_data_source_default(record, &data_src);
- 	else
- 		arm_spe__synth_data_source_generic(record, &data_src);
- 
--- 
-2.34.1
+> > Do we somehow sync (copy) the cputype.h for perf tool ? Or do we keep
+> > them in sync with a patch ?
+> >
+> > If it is the former, I wouldn't bother about updating the kernel
+> > headers.
+> 
+> In general, perf tool has a copy of kernel headers and there's a script
+> called check-headers.sh to verify they are in sync.  We don't
+> recommend kernel patches to touch the tool's copy.  And it's done
+> by tool devs separately.
 
+We have the kernel header arch/arm64/include/asm/cputype.h, tools have a
+copy which is placed in tools/arch/arm64/include/asm/cputype.h.
+
+As Namhyung explained, usually the kernel header is firstly changed and
+then the tool developers send a separate patch to sync with kernel
+header.  You could see a recent example by Arnaldo's patch [1].
+
+By following this working model, I sent patch series to add Cortex-X4
+CPU part and MIDR definitions.  I personally think this is the best
+way for us to keep the alignment between the kernel header and tools
+header [2].  Please let me know if this doable or not?
+
+Sorry for late response due to vacation :)
+
+Thanks,
+Leo
+
+[1] https://lore.kernel.org/lkml/ZLFQ%2Ftu%2FATQwDEIW@kernel.org/
+[2] https://lore.kernel.org/lkml/20230717054327.79815-1-leo.yan@linaro.org/
