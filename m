@@ -2,262 +2,110 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B5DEB64DC
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jul 2023 16:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBED9C0015E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jul 2023 16:13:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230174AbjGQQNA (ORCPT
+        id S231967AbjGQQNc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Jul 2023 12:13:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58608 "EHLO
+        Mon, 17 Jul 2023 12:13:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232043AbjGQQMn (ORCPT
+        with ESMTP id S232080AbjGQQNO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Jul 2023 12:12:43 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 704B3FC;
-        Mon, 17 Jul 2023 09:12:41 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1b8b2b60731so25096855ad.2;
-        Mon, 17 Jul 2023 09:12:41 -0700 (PDT)
+        Mon, 17 Jul 2023 12:13:14 -0400
+Received: from mail-yw1-x1132.google.com (mail-yw1-x1132.google.com [IPv6:2607:f8b0:4864:20::1132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86224E56
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Jul 2023 09:13:09 -0700 (PDT)
+Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-5700b15c12fso47047727b3.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Jul 2023 09:13:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689610361; x=1692202361;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=KqQaPv4Fn3MjQuoSouIRvNL/VfuKWqsAXCUL+WpnOZ0=;
-        b=Ji7e2PjDkY0KhMv59NQvxUS4U3A78b5Zmb55N6a/DLaQp8lg+uwHECUlX4u0u77pvI
-         +M3yBW4FOhvuJUrjG9BT99Jh1CGh6U+4OtmovQc7U/rKde4XzMJrXmRZAhxaYN0bqV6S
-         gTTgqJKzm/RBfIDX4v8ZKkf9wFANeZBer02oCmQeiRJasoXzceh+1WtITodPlhYbaoTV
-         OhOKaKLQGTgmTwZyuQcBVYy4l8XXmB5VbRcG8eIlWih0e3oxnuPXUUaVoDUmPBEosZc7
-         pWpjl5LpHiUKam7RJAYX/t2m/n8bhjZ5cuD8q/dNjKXx/dw8U+FHfVfz+Vj7A/bhVHOg
-         HkWw==
+        d=paul-moore.com; s=google; t=1689610389; x=1692202389;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8CqPKH8zLjxPG0T2aNpKAIqJzacVH6EbJBb3LjExpjw=;
+        b=cQpEj7wQVECv/U9cTpn+RN55ujAIWvks3MU4IX4Wr/hwnFIe0F/qx5YUKjSMpnx703
+         CHzs0WWQ7uBihIAx5z5eiCKmCaltnArXhlaNRgavYeytVm5vSw/gQiRT1py2AerifbO6
+         AiJnYOTJCz0R2HkNoD7T9Yf9t3z2uTFa83xyLrtRemXVRe2lrXcVvM5qyrJMMViUNE7U
+         6aLZBv3MPfrrvSHz+w10LReOyQijeOLBQAf/Jl5WjQxapxktKezBDH2erUpWfo+TfrZS
+         RnuZ/YnESkQ6HSr7gO5+BgLJh/oDlySt0yQzLcBh/BGfPb0h9TdwTyAHNWQPywULEg7z
+         BUVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689610361; x=1692202361;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KqQaPv4Fn3MjQuoSouIRvNL/VfuKWqsAXCUL+WpnOZ0=;
-        b=Nsdw6i7VkpsNgzK0mc9rfnbwRXye62kwruHwmZ/LifLAAI5mm/IJaCvSV/Bz35AHQO
-         5snKtB9hmKD4FyAjKm1gE01ASI9H/YM/eS+QyWEdhbKGMh4v4wyovfWdZpMQLfL70ttC
-         0dIJgbpsrdvhN9IjPdPWgfO9KzGwZl8bRcD3YOEQ+5ldR34hZXXb8cy9hemM2LFSacEu
-         KaxIstUTvzRGcTASrcdzzHtssb3SFB5tz/j/fpyIkYQ62FlJG8m6qfSW8HUqe4JtUYvT
-         zXVIrxTXuRQHH8U9rHM/xYxzOzlKDRPFsrRygwIBxIeLi83y7W2CloXen/y6N5br/N9j
-         leeA==
-X-Gm-Message-State: ABy/qLZ1CaVSTcSf+wQfsK4l3yPns9cwoR9hP7OIBddflEQDss3M9+P7
-        sobzFc0RykH/s4b3Om8VuaM=
-X-Google-Smtp-Source: APBJJlHIyLiJ/pdiJefQEOZh93bm5gCbvEtcPKDImLJ8JlpoIkMKJc6nnPGAcqGVgThGf8hevXRr1g==
-X-Received: by 2002:a17:902:e743:b0:1b8:b4d5:4c3d with SMTP id p3-20020a170902e74300b001b8b4d54c3dmr13943395plf.51.1689610360457;
-        Mon, 17 Jul 2023 09:12:40 -0700 (PDT)
-Received: from yoga ([2400:1f00:13:50e2:5893:783e:fde0:1bce])
-        by smtp.gmail.com with ESMTPSA id 5-20020a170902c24500b001b86f1b5797sm53058plg.302.2023.07.17.09.12.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jul 2023 09:12:40 -0700 (PDT)
-From:   Anup Sharma <anupnewsmail@gmail.com>
-X-Google-Original-From: Anup Sharma <AnupSharma>
-Date:   Mon, 17 Jul 2023 21:42:32 +0530
-To:     Ian Rogers <irogers@google.com>
-Cc:     Anup Sharma <anupnewsmail@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 6/6] scripts: python: implement get or create frame
- and stack function
-Message-ID: <ZLVocFUFMgquEJDY@yoga>
-References: <cover.1689024635.git.anupnewsmail@gmail.com>
- <dd26619520465132d33dd84780859e6bf89133bf.1689024635.git.anupnewsmail@gmail.com>
- <CAP-5=fVtE14SyCvkYCQgePm-5upAZYvU7AvkwcYXGLYBffko1A@mail.gmail.com>
+        d=1e100.net; s=20221208; t=1689610389; x=1692202389;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8CqPKH8zLjxPG0T2aNpKAIqJzacVH6EbJBb3LjExpjw=;
+        b=YjXQ7ChdQa5W5IRRccyhENMfuwFGuZK3+VANtb7vIRIJD0bJkpN3hS/Bp5wfJx7iy+
+         IiPA9D3NwZl2pue0PIEDnsFNS02Kw/K06AwmwcrIl4C4cxKF9LuCltC0uceP0iqDC71q
+         BUPUH9tyjK880IryzJdzyybTe1PCGQhshUaAFBd0O28CssDAV45AfHj8Nj4BXa+8JMBO
+         NzTWjo8yRj5dCXlMsH7iXnEyVzMpws15pT059bd9+118O4Kqcv4KS7VtKUvFNuEbnDPQ
+         /BrJ5wLqAdS2N8mG4zAd3PAPF3u0DVXbJ1+TS6NzSfPAbl7IEIrtL2mog9WH3NI1moO6
+         E4+A==
+X-Gm-Message-State: ABy/qLYvVvv5iEDOVuDKd0yhHwU3ZNIotyPt356DJmArLN4zBRUPq0DH
+        B3AFd0ZYBy7hiNp8BkkGHVsHYbK3/vDhvwZFIyiw
+X-Google-Smtp-Source: APBJJlGog4dyfGlwFIS3iBtcrvJFLeH/ogm5YcXS+semC1utnZAcGzlBZgUKou2DvMgGuYXX4nNPAERtXRDz/TQJF88=
+X-Received: by 2002:a81:67c1:0:b0:577:2fda:f181 with SMTP id
+ b184-20020a8167c1000000b005772fdaf181mr12551811ywc.44.1689610388723; Mon, 17
+ Jul 2023 09:13:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVtE14SyCvkYCQgePm-5upAZYvU7AvkwcYXGLYBffko1A@mail.gmail.com>
+References: <20230712143831.120701-1-wangkefeng.wang@huawei.com> <20230712143831.120701-5-wangkefeng.wang@huawei.com>
+In-Reply-To: <20230712143831.120701-5-wangkefeng.wang@huawei.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 17 Jul 2023 12:12:58 -0400
+Message-ID: <CAHC9VhSU=T5FEP=sZyNukykE-xRzWsqyddS2-+sEsy2bmfGHKQ@mail.gmail.com>
+Subject: Re: [PATCH 4/5] selinux: use vma_is_stack() and vma_is_heap()
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 12, 2023 at 10:44:21AM -0700, Ian Rogers wrote:
-> On Mon, Jul 10, 2023 at 4:15 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
-> >
-> > Complete addSample function, it takes the thread name, stack array,
-> > and time as input parameters and  if the thread name differs from
-> > the current name, it updates the name. The function utilizes the
-> > get_or_create_stack and get_or_create_frame methods to construct
-> > the stack structure. Finally, it adds the stack, time, and
-> > responsiveness values to the 'data' list within 'samples'.
-> >
-> > The get_or_create_stack function is responsible for retrieving
-> > or creating a stack based on the provided frame and prefix.
-> > It first generates a key using the frame and prefix values.
-> > If the stack corresponding to the key is found in the stackMap,
-> > it is returned. Otherwise, a new stack is created by appending
-> > the prefix and frame to the stackTable's 'data' array. The key
-> > and the index of the newly created stack are added to the
-> > stackMap for future reference.
-> >
-> > The get_or_create_frame function is responsible for retrieving or
-> > creating a frame based on the provided frameString. If the frame
-> > corresponding to the frameString is found in the frameMap, it is
-> > returned. Otherwise, a new frame is created by appending relevant
-> > information to the frameTable's 'data' array and adding the
-> > frameString to the stringTable.
-> >
-> > Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
-> > ---
-> >  .../scripts/python/firefox-gecko-converter.py | 57 ++++++++++++++++++-
-> >  1 file changed, 56 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools/perf/scripts/python/firefox-gecko-converter.py
-> > index 6c934de1f608..97fbe562ee2b 100644
-> > --- a/tools/perf/scripts/python/firefox-gecko-converter.py
-> > +++ b/tools/perf/scripts/python/firefox-gecko-converter.py
-> > @@ -21,6 +21,8 @@ sys.path.append(os.environ['PERF_EXEC_PATH'] + \
-> >  from perf_trace_context import *
-> >  from Core import *
-> >
-> > +USER_CATEGORY_INDEX = 0
-> > +KERNEL_CATEGORY_INDEX = 1
-> >  thread_map = {}
-> >  start_time = None
-> >
-> > @@ -34,7 +36,12 @@ CATEGORIES = [
-> >  PRODUCT = os.popen('uname -op').read().strip()
-> >
-> >  def trace_end():
-> > -    thread_array = thread_map.values()))
-> > +    thread_array = list(map(lambda thread: thread['finish'](), thread_map.values()))
-> 
-> With a class this will be a more intuitive:
-> 
-> thread.finish()
+On Wed, Jul 12, 2023 at 10:25=E2=80=AFAM Kefeng Wang <wangkefeng.wang@huawe=
+i.com> wrote:
+>
+> Use the helpers to simplify code.
+>
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+>  security/selinux/hooks.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+>
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index 4e46cf3d67b6..289ef2d6a427 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -3775,13 +3775,10 @@ static int selinux_file_mprotect(struct vm_area_s=
+truct *vma,
+>         if (default_noexec &&
+>             (prot & PROT_EXEC) && !(vma->vm_flags & VM_EXEC)) {
+>                 int rc =3D 0;
+> -               if (vma->vm_start >=3D vma->vm_mm->start_brk &&
+> -                   vma->vm_end <=3D vma->vm_mm->brk) {
+> +               if (vma_is_heap(vma)) {
+>                         rc =3D avc_has_perm(sid, sid, SECCLASS_PROCESS,
+>                                           PROCESS__EXECHEAP, NULL);
+> -               } else if (!vma->vm_file &&
+> -                          ((vma->vm_start <=3D vma->vm_mm->start_stack &=
+&
+> -                            vma->vm_end >=3D vma->vm_mm->start_stack) ||
+> +               } else if (!vma->vm_file && vma_is_stack(vma) ||
+>                             vma_is_stack_for_current(vma))) {
 
-I have made the changes. Thanks for the suggestion.
+With the parens fix that Andrew already provided.
 
-> > +
-> > +# Parse the callchain of the current sample into a stack array.
-> > +    for thread in thread_array:
-> > +        key = thread['samples']['schema']['time']
-> 
-> I'm not sure what 'schema' is here. Worth a comment.
+Acked-by: Paul Moore <paul@paul-moore.com>
 
-Thanks, I am planning to add hyper-link as a the comment. Like this:
-# https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L216
-However it is going to exceed 100 characters limit. If I wrap it
-around, it will look ugly. Any suggestions?
+>                         rc =3D avc_has_perm(sid, sid, SECCLASS_PROCESS,
+>                                           PROCESS__EXECSTACK, NULL);
+> --
+> 2.41.0
 
-> 
-> > +        thread['samples']['data'].sort(key=lambda data : float(data[key]))
-> 
-> Perhaps there is a more intention revealing name than "data".
-
-Noted. I will change it.
-
-> >
-> >      result = {
-> >          'meta': {
-> > @@ -106,7 +113,55 @@ def process_event(param_dict):
-> >                 }
-> >                 stringTable = []
-> >
-> > +               stackMap = dict()
-> > +               def get_or_create_stack(frame, prefix):
-> 
-> Can you comment what frame and prefix are with examples, otherwise
-> understanding this function is hard.
-
-I am using more descriptive names now. I have also added a comment like
-this to the function:
-"""Gets a matching stack, or saves the new stack. Returns a Stack ID."""
-Will be reflected in v4.
-
-> > +                       key = f"{frame}" if prefix is None else f"{frame},{prefix}"
-> > +                       stack = stackMap.get(key)
-> > +                       if stack is None:
-> > +                               stack = len(stackTable['data'])
-> > +                               stackTable['data'].append([prefix, frame])
-> > +                               stackMap[key] = stack
-> > +                       return stack
-> > +
-> > +               frameMap = dict()
-> > +               def get_or_create_frame(frameString):
-> 
-> s/frameMap/frame_map/
-> s/frameString/frame_string/
-> 
-> These variable names aren't going a long way to helping understand the
-> code. They mention frame and then the type, which should really be
-> type information like ": Dict[...]". Can you improve the names as
-> otherwise we effectively have 3 local variables all called "frame".
-
-I have made the changes. Thanks for the suggestion.
-
-> > +                       frame = frameMap.get(frameString)
-> > +                       if frame is None:
-> > +                               frame = len(frameTable['data'])
-> > +                               location = len(stringTable)
-> > +                               stringTable.append(frameString)
-> > +                               category = KERNEL_CATEGORY_INDEX if frameString.find('kallsyms') != -1 \
-> > +                                               or frameString.find('/vmlinux') != -1 \
-> > +                                               or frameString.endswith('.ko)') \
-> > +                                               else USER_CATEGORY_INDEX
-> 
-> Perhaps make this a helper function, symbol_name_to_category_index.
-
-I am trying to find if I can use cpu_mode instead of this as suggested by
-Namhyung. If not, I will add a helper function in the later version.
-
-> > +                               implementation = None
-> > +                               optimizations = None
-> > +                               line = None
-> > +                               relevantForJS = False
-> 
-> Some comments on these variables would be useful, perhaps just use
-> named arguments below.
-
-Okay, this variable comes from Gecko format, now adding link might
-make it understandable.
-
-> > +                               subcategory = None
-> > +                               innerWindowID = 0
-> > +                               column = None
-> > +
-> > +                               frameTable['data'].append([
-> > +                                       location,
-> > +                                       relevantForJS,
-> > +                                       innerWindowID,
-> > +                                       implementation,
-> > +                                       optimizations,
-> > +                                       line,
-> > +                                       column,
-> > +                                       category,
-> > +                                       subcategory,
-> > +                               ])
-> > +                               frameMap[frameString] = frame
-> > +                       return frame
-> > +
-> >                 def addSample(threadName, stackArray, time):
-> > +                       nonlocal name
-> > +                       if name != threadName:
-> > +                               name = threadName
-> 
-> A comment/example would be useful here.
-
-Noted.
-
-> 
-> > +                       stack = reduce(lambda prefix, stackFrame: get_or_create_stack
-> > +                                       (get_or_create_frame(stackFrame), prefix), stackArray, None)
-> 
-> Thanks,
-> Ian
-> 
-> >                         responsiveness = 0
-> >                         samples['data'].append([stack, time, responsiveness])
-> >
-> > --
-> > 2.34.1
-> >
+--=20
+paul-moore.com
