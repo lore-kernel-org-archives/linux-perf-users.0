@@ -2,138 +2,238 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDCCEB64DC
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Jul 2023 10:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E389EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Jul 2023 10:33:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231493AbjGRKaR (ORCPT
+        id S231240AbjGRKd5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Jul 2023 06:30:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40720 "EHLO
+        Tue, 18 Jul 2023 06:33:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231445AbjGRKaO (ORCPT
+        with ESMTP id S229953AbjGRKd4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Jul 2023 06:30:14 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D74DE4F;
-        Tue, 18 Jul 2023 03:30:10 -0700 (PDT)
+        Tue, 18 Jul 2023 06:33:56 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1DD4E4C;
+        Tue, 18 Jul 2023 03:33:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689676212; x=1721212212;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=K+4kNxHQIbdWa/W8bQDdyQh8NM/jPe+65g6OQMfRd/A=;
-  b=DZ8rY9a+JTVbDphI77cTsgG+Vqqlcnpq11FjkEjslGYkizaoS2gzy4xp
-   v2gBdx7TzdS0de4Bw28RtxLHAkXdKAgF3pGWx2lRLuNFJ7AvndH+oRpdE
-   MtJdqae6TrQOnlC0Q+4jokugqwrEHsRJgHqo6VLqcOl5rPULgFL++5ekX
-   End1GZV09POYwTE0finHrOqHLQeYeziDc/S/5BkMCr8KenBqVnOCj8NiF
-   rW2uDrU9ZbFLshNzf+b0x+4StZpJM4+igUn0ARZ77xp8ha13sugymFozz
-   PrpEmot5SvNgVedScHHTP+IcmWQT7ErUdkWzSRMQc8L0pJP0Ma3gkJWiN
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10774"; a="452548376"
+  t=1689676433; x=1721212433;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=s6mI8YfHslfKOIw00/F6WzVeMyVWya6JvmgsxQ4PDk4=;
+  b=mXFsBC6k5fny7kC4xoS89Ctp65DE1zLRizdaDlxrqjt20mjUXwPA3faR
+   Qw6auykdnbmR64aFpMtD1UDdIq+8365owHG65HL5e5lrcYG5p5NwlG6Ca
+   FJgLbpqAIWhKEIyQsT2p4yW7UKsxH4ccH8t6vlISbe2q7xxNeeFYWJswb
+   70/miESKBSkKAqsMrGJIsz+T5xJ/lviepdjSs1GhxEFsy3NH/2EoHIflh
+   Q8GDNZKEpH11B9UgWi2YpJpxsMmGqQnoNFn7r0Rw5HkFWHqblREUfS+Js
+   VzVD3YMRxEoSnyW3H5xCEjHNGh90NIJPR8xoq13oHqSbzpfk7WlRuOjO6
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10774"; a="432350091"
 X-IronPort-AV: E=Sophos;i="6.01,214,1684825200"; 
-   d="scan'208";a="452548376"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2023 03:30:08 -0700
+   d="scan'208";a="432350091"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2023 03:33:52 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10774"; a="793586273"
+X-IronPort-AV: E=McAfee;i="6600,9927,10774"; a="847646219"
 X-IronPort-AV: E=Sophos;i="6.01,214,1684825200"; 
-   d="scan'208";a="793586273"
+   d="scan'208";a="847646219"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.223.138])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2023 03:30:03 -0700
-Message-ID: <ab152551-5e65-c43d-2046-a096a28db913@intel.com>
-Date:   Tue, 18 Jul 2023 13:29:57 +0300
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2023 03:33:50 -0700
+Message-ID: <36d52843-0070-6f34-bb73-21ecaed776a5@intel.com>
+Date:   Tue, 18 Jul 2023 13:33:46 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Firefox/102.0 Thunderbird/102.13.0
-Subject: Re: [PATCH v2 5/7] perf evlist: Skip dummy event sample_type check
- for evlist_config
+Subject: Re: [PATCH] perf: doc: fix format of unordered lists
 Content-Language: en-US
-To:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, kan.liang@linux.intel.com,
-        james.clark@arm.com, tmricht@linux.ibm.com, ak@linux.intel.com,
-        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-References: <20230715032915.97146-1-yangjihong1@huawei.com>
- <20230715032915.97146-6-yangjihong1@huawei.com>
- <5797e5a7-a85f-4f7c-1649-88f8f9ff7a6b@intel.com>
- <44645529-0ee6-fe69-bc03-fefbc6f73d4d@huawei.com>
- <c4b7fb70-7b2e-74e9-576f-33b29e8801cd@intel.com>
- <77ea9309-da6f-f7b9-a822-b371e0f832d3@huawei.com>
+To:     Changbin Du <changbin.du@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230718085242.3090797-1-changbin.du@huawei.com>
 From:   Adrian Hunter <adrian.hunter@intel.com>
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
  Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <77ea9309-da6f-f7b9-a822-b371e0f832d3@huawei.com>
+In-Reply-To: <20230718085242.3090797-1-changbin.du@huawei.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 18/07/23 13:17, Yang Jihong wrote:
-> Hello,
+On 18/07/23 11:52, Changbin Du wrote:
+> Fix the format of unordered lists so the can wrap properly.
 > 
-> On 2023/7/18 17:56, Adrian Hunter wrote:
->> On 18/07/23 12:30, Yang Jihong wrote:
->>> Hello,
->>>
->>> On 2023/7/17 22:41, Adrian Hunter wrote:
->>>> On 15/07/23 06:29, Yang Jihong wrote:
->>>>> The dummp event does not contain sampls data. Therefore, sample_type does
->>>>> not need to be checked.
->>>>>
->>>>> Currently, the sample id format of the actual sampling event may be changed
->>>>> after the dummy event is added.
->>>>>
->>>>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
->>>>> ---
->>>>>    tools/perf/util/record.c | 7 +++++++
->>>>>    1 file changed, 7 insertions(+)
->>>>>
->>>>> diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
->>>>> index 9eb5c6a08999..0240be3b340f 100644
->>>>> --- a/tools/perf/util/record.c
->>>>> +++ b/tools/perf/util/record.c
->>>>> @@ -128,6 +128,13 @@ void evlist__config(struct evlist *evlist, struct record_opts *opts, struct call
->>>>>            evlist__for_each_entry(evlist, evsel) {
->>>>>                if (evsel->core.attr.sample_type == first->core.attr.sample_type)
->>>>>                    continue;
->>>>> +
->>>>> +            /*
->>>>> +             * Skip the sample_type check for the dummy event
->>>>> +             * because it does not have any samples anyway.
->>>>> +             */
->>>>> +            if (evsel__is_dummy_event(evsel))
->>>>> +                continue;
->>>>
->>>> Sideband event records have "ID samples" so the sample type still matters.
->>>>
->>> Okay, will remove this patch in next version.
->>>
->>> Can I ask a little more about this?
->>>
->>> Use PERF_SAMPLE_IDENTIFICATION instead of PERF_SAMPLE_ID because for samples of type PERF_RECORD_SAMPLE, there may be different record formats due to different *sample_type* settings, so the fixed SAMPLE_ID  location mode PERF_SAMPLE_NAME is required here.
->>>
->>> However, for the sideband event, the samples of the PERF_RECORD_SAMPLE type is not recorded (only PERF_RECORD_MMAP, PERF_RECORD_COMM, and so on). Therefore, the "use sample identifier "check can be skipped here.
->>>
->>> That's my understanding of PERF_SAMPLE_IDENTIFICATION . If there is any error, please help to correct it.
->>>
->>> *Sideband event records have "ID samples" so the sample type still matters.*
->>>
->>> Does this mean that sideband will also record samples of type PERF_RECORD_SAMPLE? What exactly is the sampling data?
->>
->> No.  There are additional members as defined by struct sample_id for PERF_RECORD_MMAP:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/perf_event.h?h=v6.4#n872
->>
-> I'm sorry, maybe my comments didn't make it clear.
-> I mean, can we skip the "use_sample_identifier" check here?
+> Signed-off-by: Changbin Du <changbin.du@huawei.com>
+
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
+> ---
+>  tools/perf/Documentation/perf-ftrace.txt | 16 +++---
+>  tools/perf/Documentation/perf-record.txt | 73 +++++++++++++-----------
+>  2 files changed, 48 insertions(+), 41 deletions(-)
 > 
-> That is, set sample_type to *XXX|PERF_SAMPLE_ID* instead of *XXX|PERF_SAMPLE_IDENTIFICATION*
-
-In general, when there are different values of sample_type, the PERF_SAMPLE_ID is needed to determine which is which.
-But PERF_SAMPLE_ID is not at a fixed position, so the sample_type is needed to find it.  That is why PERF_SAMPLE_IDENTIFIER is better.
-
-Why do want to change it?
+> diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
+> index df4595563801..d780b93fcf87 100644
+> --- a/tools/perf/Documentation/perf-ftrace.txt
+> +++ b/tools/perf/Documentation/perf-ftrace.txt
+> @@ -96,8 +96,9 @@ OPTIONS for 'perf ftrace trace'
+>  
+>  --func-opts::
+>  	List of options allowed to set:
+> -	  call-graph - Display kernel stack trace for function tracer.
+> -	  irq-info   - Display irq context info for function tracer.
+> +
+> +	  - call-graph - Display kernel stack trace for function tracer.
+> +	  - irq-info   - Display irq context info for function tracer.
+>  
+>  -G::
+>  --graph-funcs=::
+> @@ -118,11 +119,12 @@ OPTIONS for 'perf ftrace trace'
+>  
+>  --graph-opts::
+>  	List of options allowed to set:
+> -	  nosleep-time - Measure on-CPU time only for function_graph tracer.
+> -	  noirqs       - Ignore functions that happen inside interrupt.
+> -	  verbose      - Show process names, PIDs, timestamps, etc.
+> -	  thresh=<n>   - Setup trace duration threshold in microseconds.
+> -	  depth=<n>    - Set max depth for function graph tracer to follow.
+> +
+> +	  - nosleep-time - Measure on-CPU time only for function_graph tracer.
+> +	  - noirqs       - Ignore functions that happen inside interrupt.
+> +	  - verbose      - Show process names, PIDs, timestamps, etc.
+> +	  - thresh=<n>   - Setup trace duration threshold in microseconds.
+> +	  - depth=<n>    - Set max depth for function graph tracer to follow.
+>  
+>  
+>  OPTIONS for 'perf ftrace latency'
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> index 9c01076f6c89..8ee5d60225ec 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -523,9 +523,10 @@ CLOCK_BOOTTIME, CLOCK_REALTIME and CLOCK_TAI.
+>  Select AUX area tracing Snapshot Mode. This option is valid only with an
+>  AUX area tracing event. Optionally, certain snapshot capturing parameters
+>  can be specified in a string that follows this option:
+> -  'e': take one last snapshot on exit; guarantees that there is at least one
+> +
+> +  - 'e': take one last snapshot on exit; guarantees that there is at least one
+>         snapshot in the output file;
+> -  <size>: if the PMU supports this, specify the desired snapshot size.
+> +  - <size>: if the PMU supports this, specify the desired snapshot size.
+>  
+>  In Snapshot Mode trace data is captured only when signal SIGUSR2 is received
+>  and on exit if the above 'e' option is given.
+> @@ -572,8 +573,9 @@ providing implementation for Posix AIO API.
+>  
+>  --affinity=mode::
+>  Set affinity mask of trace reading thread according to the policy defined by 'mode' value:
+> -  node - thread affinity mask is set to NUMA node cpu mask of the processed mmap buffer
+> -  cpu  - thread affinity mask is set to cpu of the processed mmap buffer
+> +
+> +  - node - thread affinity mask is set to NUMA node cpu mask of the processed mmap buffer
+> +  - cpu  - thread affinity mask is set to cpu of the processed mmap buffer
+>  
+>  --mmap-flush=number::
+>  
+> @@ -625,16 +627,17 @@ Record timestamp boundary (time of first/last samples).
+>  --switch-output[=mode]::
+>  Generate multiple perf.data files, timestamp prefixed, switching to a new one
+>  based on 'mode' value:
+> -  "signal" - when receiving a SIGUSR2 (default value) or
+> -  <size>   - when reaching the size threshold, size is expected to
+> -             be a number with appended unit character - B/K/M/G
+> -  <time>   - when reaching the time threshold, size is expected to
+> -             be a number with appended unit character - s/m/h/d
+>  
+> -             Note: the precision of  the size  threshold  hugely depends
+> -             on your configuration  - the number and size of  your  ring
+> -             buffers (-m). It is generally more precise for higher sizes
+> -             (like >5M), for lower values expect different sizes.
+> +  - "signal" - when receiving a SIGUSR2 (default value) or
+> +  - <size>   - when reaching the size threshold, size is expected to
+> +               be a number with appended unit character - B/K/M/G
+> +  - <time>   - when reaching the time threshold, size is expected to
+> +               be a number with appended unit character - s/m/h/d
+> +
+> +               Note: the precision of  the size  threshold  hugely depends
+> +               on your configuration  - the number and size of  your  ring
+> +               buffers (-m). It is generally more precise for higher sizes
+> +               (like >5M), for lower values expect different sizes.
+>  
+>  A possible use case is to, given an external event, slice the perf.data file
+>  that gets then processed, possibly via a perf script, to decide if that
+> @@ -680,11 +683,12 @@ choice in this option.  For example, --synth=no would have MMAP events for
+>  kernel and modules.
+>  
+>  Available types are:
+> -  'task'    - synthesize FORK and COMM events for each task
+> -  'mmap'    - synthesize MMAP events for each process (implies 'task')
+> -  'cgroup'  - synthesize CGROUP events for each cgroup
+> -  'all'     - synthesize all events (default)
+> -  'no'      - do not synthesize any of the above events
+> +
+> +  - 'task'    - synthesize FORK and COMM events for each task
+> +  - 'mmap'    - synthesize MMAP events for each process (implies 'task')
+> +  - 'cgroup'  - synthesize CGROUP events for each cgroup
+> +  - 'all'     - synthesize all events (default)
+> +  - 'no'      - do not synthesize any of the above events
+>  
+>  --tail-synthesize::
+>  Instead of collecting non-sample events (for example, fork, comm, mmap) at
+> @@ -736,18 +740,19 @@ ctl-fifo / ack-fifo are opened and used as ctl-fd / ack-fd as follows.
+>  Listen on ctl-fd descriptor for command to control measurement.
+>  
+>  Available commands:
+> -  'enable'           : enable events
+> -  'disable'          : disable events
+> -  'enable name'      : enable event 'name'
+> -  'disable name'     : disable event 'name'
+> -  'snapshot'         : AUX area tracing snapshot).
+> -  'stop'             : stop perf record
+> -  'ping'             : ping
+> -
+> -  'evlist [-v|-g|-F] : display all events
+> -                       -F  Show just the sample frequency used for each event.
+> -                       -v  Show all fields.
+> -                       -g  Show event group information.
+> +
+> +  - 'enable'           : enable events
+> +  - 'disable'          : disable events
+> +  - 'enable name'      : enable event 'name'
+> +  - 'disable name'     : disable event 'name'
+> +  - 'snapshot'         : AUX area tracing snapshot).
+> +  - 'stop'             : stop perf record
+> +  - 'ping'             : ping
+> +  - 'evlist [-v|-g|-F] : display all events
+> +
+> +                         -F  Show just the sample frequency used for each event.
+> +                         -v  Show all fields.
+> +                         -g  Show event group information.
+>  
+>  Measurements can be started with events disabled using --delay=-1 option. Optionally
+>  send control command completion ('ack\n') to ack-fd descriptor to synchronize with the
+> @@ -808,10 +813,10 @@ the second monitors CPUs 1 and 5-7 with the affinity mask 5-7.
+>  <spec> value can also be a string meaning predefined parallel threads
+>  layout:
+>  
+> -    cpu    - create new data streaming thread for every monitored cpu
+> -    core   - create new thread to monitor CPUs grouped by a core
+> -    package - create new thread to monitor CPUs grouped by a package
+> -    numa   - create new threed to monitor CPUs grouped by a NUMA domain
+> +    - cpu    - create new data streaming thread for every monitored cpu
+> +    - core   - create new thread to monitor CPUs grouped by a core
+> +    - package - create new thread to monitor CPUs grouped by a package
+> +    - numa   - create new threed to monitor CPUs grouped by a NUMA domain
+>  
+>  Predefined layouts can be used on systems with large number of CPUs in
+>  order not to spawn multiple per-cpu streaming threads but still avoid LOST
 
