@@ -2,355 +2,176 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36146EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Jul 2023 18:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA1EEB64DC
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Jul 2023 19:46:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229544AbjGRSZe (ORCPT
+        id S229849AbjGRTqW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Jul 2023 14:25:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59220 "EHLO
+        Tue, 18 Jul 2023 15:46:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229502AbjGRSZd (ORCPT
+        with ESMTP id S229506AbjGRTqV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Jul 2023 14:25:33 -0400
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75779DD
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Jul 2023 11:25:30 -0700 (PDT)
-Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-403f21d3c2dso350931cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Jul 2023 11:25:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689704729; x=1692296729;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y/PxRwR3OTlH3pV//Xqln6mioB7cPnR2f/0ynVsnZ14=;
-        b=jQcZhcEVxPypBJsUmxPlIJgj6I7DnrOpGXxKcJg71Y8DzY5AuqH2cZe1X3c4JybW7o
-         N6S1EGbqPmGhHyOsiGL4NCdTEVp4Kpc0/sK82xounbbUtb64F3OEo+v6XCgptdB/DIV3
-         jHqQgfQI22QkSqtJAMS6XY2oil9UDtCVspgvdTUREbF/9uOSqTYAfR0GqXqAhVC5wME8
-         TQT/kstIisSGMRJUmzkErWqoyDcvdsF8aa/lXKhwzzJqI2scpsJYCLjIbisGjxUj4ZrG
-         Ivq/qRGbk690E4J71bNHWQehs3HVQNANZjndIiRlF44XGjfT7pYCkLaqshBIiFr+B2Nd
-         Bvhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689704729; x=1692296729;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=y/PxRwR3OTlH3pV//Xqln6mioB7cPnR2f/0ynVsnZ14=;
-        b=McnF4pYcKSLElJYaYPgzaptYT5k934WGkCWJ4DeyE68zeCsnlFf5hjTIq7mSCPaukg
-         7btTPImavJDDtdZn+TobIF+atGp6rjIxjgo3Ub1e/OKrmMtX/RQCPDQSI3D3jeJZeH2G
-         WH1pVCI385GfWfOmzyAdFUotcYDRkMM4RogdB8j5sN6fZwNvOZWNFBWswu2+08eaAAOy
-         3+sSyyGST9j7++ZJC3JDdr2E7IDyHzx+nzUXqAi3NY/JYyh8T9UZkLI0rDbwejN7IYKU
-         uzltqXj1kHF8gjclAquTGxTht7Kq9UyESTDB7MRWhB3Q5OlgmctfD/3prmqq/KTnj8jx
-         m7GA==
-X-Gm-Message-State: ABy/qLYOZ/Zjw6AdHWBaZoGDEW+/TosDUJlSfbCobtKWi6GR4d91q+6k
-        h4nJDgM2+SSCgyxutBDT1S855QPE/j/J1MD4ejsNdGidOpVypW7EXKxy1A==
-X-Google-Smtp-Source: APBJJlF+WJDXb2sbnDfQA6ZUIjTu5r93PNMqundlRfgqMS5Hv4Mo7cuhqYI0bSohurQxQGlBYlZGsX9gAdQzkptz+UU=
-X-Received: by 2002:a05:622a:193:b0:3ef:5f97:258f with SMTP id
- s19-20020a05622a019300b003ef5f97258fmr344686qtw.16.1689704729310; Tue, 18 Jul
- 2023 11:25:29 -0700 (PDT)
+        Tue, 18 Jul 2023 15:46:21 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCBBD1995;
+        Tue, 18 Jul 2023 12:46:14 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5B18D60BA3;
+        Tue, 18 Jul 2023 19:46:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFE1BC433C7;
+        Tue, 18 Jul 2023 19:46:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689709573;
+        bh=r40iy3DmR5NfuY8P/YmJjY+9faNDmei1QHEOjouRvPQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kvqKNJdI4ioAzzWEg4FgcRAOQIAc+uexOP/c7AmY5g4N9lhqoZB3iBbE9dNfnLJ73
+         FuWIH+HrXi+7DchUubOeh144kmG4USpf4yFOlaPN6vxBOZyOVUK2BPKcAsSu7usFTv
+         ekOnGDEGIF+4Lotc5Trf2eNM+TXE0Gg54wmbYqyJRPDwIxq4MXedJj2YRBTkBLWxwn
+         Xpun/Fk1UYRAS/swcQwosR3lL2ZacJ4hvni3hVM/uZVF9ugMsbEmCDBWmyp569TsGI
+         +xoX8HAz3aw/eaQaXsbklZBncuJ1WFZ5bsh+3HMJ0Yz5Nn0h1JS0tFvMqid28p682S
+         c03I7F7RHieBA==
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ayush Jain <ayush.jain3@amd.com>,
+        =?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>,
+        James Clark <james.clark@arm.com>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [GIT PULL] perf tools fixes for v6.5
+Date:   Tue, 18 Jul 2023 16:46:02 -0300
+Message-ID: <20230718194602.444597-1-acme@kernel.org>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-References: <ZLBgbHkbrfGygM/u@tassilo> <ZLBjI4a3wIMs75lA@kernel.org>
- <CAP-5=fU5Y95G2FsFdwxwPk=kLe=kka7CkD7ZDrzSU+Xv-Ks=Qg@mail.gmail.com>
- <ZLCOEOtJOQiN+8VB@tassilo> <CAP-5=fWjDeXZfgLu8hiavtkRGmWsZnwt3g+Ms5YPL12PxUaCgg@mail.gmail.com>
- <ZLC8AIEfUJMQFOEn@tassilo> <CAP-5=fVWyrmRHCmNGRrME-YSSwbJV90-_dcC=LyNAXjk9baMGA@mail.gmail.com>
- <ZLSgzJsom0avu/hX@tassilo>
-In-Reply-To: <ZLSgzJsom0avu/hX@tassilo>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 18 Jul 2023 11:25:17 -0700
-Message-ID: <CAP-5=fUJEzvq4GNfdk-FOXxM=MvQyDWYksPRNz_=W2+6UuVgrg@mail.gmail.com>
-Subject: Re: Event reordering regression for software events
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Jul 16, 2023 at 7:00=E2=80=AFPM Andi Kleen <ak@linux.intel.com> wro=
-te:
->
-> On Thu, Jul 13, 2023 at 08:56:55PM -0700, Ian Rogers wrote:
-> > Yes I disagree. We can't always force perf metric events in a group
-> > because weak groups don't always work. When we place the perf metric
-> > events outside of a group they are broken. So now we don't group the
-> > events and fix the topdown events to be in a group, in arch specific
-> > code. It is a complete pain brought about by the Intel core PMU
-> > driver.
->
-> Was that the old topdown slots have to be first issue, or something
-> else?
+Hi Linus,
 
-Yes, the current ordering is defined here:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/arch/x86/util/evlist.c?h=3Dperf-tools-next#n79
+	Please consider pulling,
 
-> If it's so painful I guess could revisit the kernel part, although
-> I suspect anything that the kernel could do the perf tool could do too.
->
-> >
-> > > So why does the perf tool need to fix it? Just pass it to the kernel
-> > > and it won't schedule and the user has to fix it.
-> >
-> > Because in some cases, and the cases I have happened to care about,
-> > the groups of events come from metrics.
->
-> That's fine, but can't you just fix it for the metrics only.
->
-> Also even for metrics if you freely reorder them they might become
-> unparseable.  But the events inside the metrics should be freely
-> reorderable (well technically someone could have a dependency on that
-> too, but at least in my mind that's much less likely than their
-> dependency just being on the metric)
->
-> So what it really needs is a sort only insight the metric.
->
-> That shouldn't be too hard to implement, right?
+Best regards,
 
-I'll describe why this isn't a fix below.
+- Arnaldo
 
-> Also I guess we could add some test cases on avoiding reordering,
-> although I'm optimistic that once it is established that reordering
-> should be minimized/avoided it is unlikely to be something
-> that breask frequently.
->
-> Would it be possible to revert the global sort patch until that
-> is sorted out? Otherwise I'm afraid I'll end up with perf releases
-> that are absolutely incompatible to toplev, and I'll get problems
-> with my user base who often cannot easily update perf.
+The following changes since commit 3f01e9fed8454dcd89727016c3e5b2fbb8f8e50c:
 
-This would break the majority of metrics from Icelake forward.
+  Merge tag 'linux-watchdog-6.5-rc2' of git://www.linux-watchdog.org/linux-watchdog (2023-07-10 10:04:26 -0700)
 
-> Arnaldo, can you please comment on this, what is your policy
-> on regressions here?
->
-> > But things like wildcard group expansion and regrouping is a metric
-> > problem too. So why would there be a parse events for metrics and a
-> > separate one for events? Doing it this way would make metric group
-> > testing significantly more hard too, as we can't just try the events
-> > without the metric.
->
-> Hmm, perhaps add some kind of debug flag to handle this case?
-> As long as it's not default I don't have any issues with that.
->
-> > > How about replacing the sorting commit with a warning and ask
-> > > the user to do the reordering? Would that work for you?
-> >
-> > No.
->
-> Well I hope we can get to some compromise here. Right now
-> this arbitary unpredictable reordering is a show stopper for me,
-> and I suspect it will be for any other perf stat users that do some kind
-> of post processing.
->
-> As long as we find a solution like above that works for the metrics
-> it should be ok right?
+are available in the Git repository at:
 
-So you've resisted working through what your issue with the sorting
-is. To call the sorting arbitrary is of course wrong, but you keep
-wanting to say everything the perf tool is doing is wrong. Moving
-forward...
+  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.5-1-2023-07-18
 
-What is happening in your example is straightforward. The sorting
-code's goal is to keep events in their place but what to do about:
-perf stat -e 'cycles,{uncore_imc_free_running/data_read/,uncore_imc_free_ru=
-nning/data_write/}'
-where there are 2 uncore_imc_free_running PMUs? After parsing the
-evlist looks like:
-cycles,{uncore_imc_free_running_0/data_read/,uncore_imc_free_running_1/data=
-_read/,uncore_imc_free_running_0/data_write/,uncore_imc_free_running_1/data=
-_write/}
-We need to turn 1 group into 2, we need to reorder by the PMUs, this leads =
-to:
-cycles,{uncore_imc_free_running_0/data_read/,uncore_imc_free_running_0/data=
-_write/},{uncore_imc_free_running_1/data_read/,uncore_imc_free_running_1/da=
-ta_write/}
-There is no regression here, it has always been perf's behavior to
-reorder events and create groups globally.
-When sorting groups the code uses the position in the original list of
-the group's leader:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/parse-events.c?h=3Dperf-tools-next#n2124
-For events within a group it sorts them by group PMU name (which is
-normally just the PMU name), if the PMU names are the same it sorts
-the events by their original position in the list possibly corrected
-for perf metric events.
+for you to fetch changes up to 2480232c61b888a160153b9022858ac8c4362d5f:
 
-Okay, so now imagine the lack of grouping brought about by perf metric
-(topdown) events and broken Intel PMUs that fail to break weak groups.
-For a hypothetical example we create a list of events like:
-perf stat -e 'topdown-fe-bound,cycles,instructions,slots'
-As with the group case we need to reorder the events to have slots and
-topdown-fe-bound together and grouped. The code achieves:
-{slots,topdown-fe-bound},cycles,instructions
-As grouped events need to be adjacent in the evlist, we need to sort
-all the events without a group to be together and place the perf
-metric events first. They are then placed in a group.
-So that we best respect the order of ungrouped and grouped events, we
-place the ungrouped events as if they are a group with a leader with
-the index of the first ungrouped event.
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/parse-events.c?h=3Dperf-tools-next#n2101
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/parse-events.c?h=3Dperf-tools-next#n2170
+  perf test task_exit: No need for a cycles event to check if we get an PERF_RECORD_EXIT (2023-07-17 10:27:44 -0300)
 
-So this then comes to your example where you have ungrouped events,
-grouped events in a giant list. Well on Icelake+ we could have perf
-metric events in those ungrouped events, this means we need to sort
-the ungrouped events together, potentially moving perf metric events
-to the front and grouping them.
+----------------------------------------------------------------
+perf tools fixes for v6.5:
 
-Hey hey hey, you say. I'm on SkylakeX and don't have perf metric
-events. Why should the tool be trying to sort events to fix issues on
-a PMU I don't have?
-The problem is that Icelake+ architectures all have this issue and I
-keep trying to make the code simpler and do the same thing for
-everybody. I got rid of hardcoded "cpu_atom" and "cpu_core", the
-separate hybrid event parsing, ... I'm trying to make it that perf
-isn't a concatenated group of architecture specific PMU drivers and
-there is commonality in how everything is done.
-Well you say, I still want my ungrouped events to be scattered around
-my list and you better not move them as that is the world's largest
-regression, is crazy arbitrary rubbish and please go dump all your
-changes in the garbage.
+- Don't group events when computing metrics that require more than the
+  maximum number of simultaneously enabled events on AMD systems.
 
-I disagree, the sorting is doing its best to only fix what is
-necessary and otherwise to rely on the command line. That said, it can
-only fix:
-perf stat -e 'slots,{uncore_imc_free_running_0/data_read/,uncore_imc_free_r=
-unning_1/data_read/},topdown-fe-bound'
-If it is able to move slots and topdown-fe-bound to be adjacent.
+- Fix multi CU handling in 'perf probe', add a 'perf test' entry to regress
+  test it.
 
-So how can I make you happy:
-1) throw everything away.. well that would be a challenge, break stuff
-and I don't want to fix the resultant mess.
-2) we can sort only for metrics. This leads to metric event parsing
-and event parsing, duplication, testing and other issues. I'm trying
-to make metrics sit on top of event parsing and not fork them. This is
-more true after the hybrid changes, where things like setting up a
-default cycles event is done through event parsing to avoid
-duplication of the wildcard logic. Plus we still need event sorting
-and grouping logic without metrics for at least uncore events.
-3) we can sort only on Icelake+ architectures. Well isn't that the
-majority of what Intel cares about now-a-days? It also leads to having
-2 code paths and testing problems. It also won't work as uncore events
-won't be sorted, regrouped and fixed.
-4) we add a special toplev flag that disables sorting and grouping.
-Well that will break sorting and grouping of uncore events and so I
-don't think this will make you happy.
-5)  we add a special toplev flag that on detecting a core PMUs causes
-sorting and regrouping to be disabled. This isn't much better than 4
-and still unlikely to make you happy.
+- Make the 'perf test task_exit' stop generating samples by using the
+  'dummy' event, all it is testing is if a PERF_RECORD_EXIT is generated
+  at the end of a perf session. This makes this perf test to stop
+  sometimes failing on some systems due to a full ring buffer.
 
-So what can we do?
-1) change how perf metric (topdown) events are implemented in the PMU.
-This strategy works best with a time machine and we're duty bound, in
-that case, to fix other problems in history.
-2) stop toplev being a PITA? Wouldn't that be nice.
-3) we do some kind of ungrouped event sorting hack. Rather than make
-every ungrouped event look like having a common leader index, we only
-do that for events that need to be forced into a group (perf metric
-events). This should mean ungrouped events are sorted wrt groups in
-the place they are originally in the list. This should fix the
-pre-Icelake problems but on Icelake+ we can still get the "arbitrary"
-reordering issue you so despise for perf metric events.
+- Avoid SEGV if PMU lookup fails for legacy cache terms.
 
-I'm going to give (3) a go and mail it today.
+- Fix libsubcmd SEGV/use-after-free when commands aren't excluded.
 
-> > > The platform is SKX.
-> > >
-> > > >
-> > > > > > would seem unfortunate. Tbh, the mistake here is the assumption=
-s that
-> > > > > > toplev is making.
-> > > > >
-> > > > > It's not an random assumption, it's the only way to parse perf ou=
-tput uniquely.
-> > > > >
-> > > > > Please make it an option. But this cannot stay this way unconditi=
-onally
-> > > > > if perf stat is supposed to stay a tool which can be used from ot=
-her programs.
-> > > >
-> > > > You should be using the json or CSV outputs. These are intended for
-> > >
-> > > This is the CSV output that is reordered! (see the example you just
-> > > quoted)
-> > >
-> > > I haven't tested JSON, but I assume that is reordered too.
-> >
-> > The output of the JSON is a dictionary and inherently unordered.
->
-> I haven't tried to use it, but if you have something like
-> perf stat --json -e '{cycles,branches},{cycles,cache-misses}' how would y=
-ou
-> distinguish the two different cycles without order?
->
-> > crashes vs having the complete TopdownL1 working on both PMUs, testing
-> > parity with non-hybrid. We also fixed all address and leak sanitizer
-> > bugs.
->
-> > Perf in Linux 6.5 even without the awesome new features like
-> > lock contention analysis, is the best perf tool we've ever had.
->
-> Sure and without arbitrary reordering and unparseable output it would be
-> even better ...
+- Fix OpenCSD (ARM64's CoreSight hardware tracing) library path resolution when
+  specifying CSLIBS= in the make command line.
 
-Ugh.. am I being motivated here to fix your toplev problem?
+- Fix broken feature check for libtracefs due to external lib changes,
+  use the provided pkgconfig file instead to future proof it.
 
-> > Does SKX have uncore? Yes, so you need to reorder events and this
-> > change didn't start it.
->
-> Yes of course it has an uncore.
->
-> You only need to reorder if you create broken groups.  At least my tool
-> doesn't generate them.
+- Sync drm, fcntl, kvm, mount, prctl, socket, vhost, asound, arm64's
+  cputype headers with the kernel sources, in some cases this made the
+  tools become aware of new kernel APIs such as ioctls and the cachestat
+  sysctl.
 
-Zip-a-Dee-Doo-Dah.
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-> > NO_GROUP_EVENTS is used to avoid a group being used, an important use
-> > being avoiding PMU driver bugs.
-> >
->
-> Hmm, not sure what that is refering to, but ok.
+----------------------------------------------------------------
+Arnaldo Carvalho de Melo (11):
+      tools headers UAPI: Sync drm/i915_drm.h with the kernel sources
+      tools headers UAPI: Sync files changed by new cachestat syscall with the kernel sources
+      tools headers uapi: Sync linux/fcntl.h with the kernel sources
+      tools headers UAPI: Sync linux/kvm.h with the kernel sources
+      tools include UAPI: Sync linux/mount.h copy with the kernel sources
+      tools headers UAPI: Sync linux/prctl.h with the kernel sources
+      perf beauty: Update copy of linux/socket.h with the kernel sources
+      tools include UAPI: Sync linux/vhost.h with the kernel sources
+      tools include UAPI: Sync the sound/asound.h copy with the kernel sources
+      tools headers arm64: Sync arm64's cputype.h with the kernel sources
+      perf test task_exit: No need for a cycles event to check if we get an PERF_RECORD_EXIT
 
-You can take the metrics and remove the NO_GROUP_EVENTS. The failure
-mode is that the weak group fails to be broken. I believe the issues
-to be some mix of errata, naivety in the fake PMU driver when
-scheduling onto counters and not appreciating that not all counters
-are created equal, possible bugs, etc. The issues may not just be on
-the core PMU, it depends on the metric.
+Georg Müller (2):
+      perf probe: Add test for regression introduced by switch to die_get_decl_file()
+      perf probe: Read DWARF files from the correct CU
 
-Given I'm fixing things for you, can you please fix:
-$ perf stat -e 'slots,branches,slots' -a sleep 1
-to not multiplex on Icelake+.
+Ian Rogers (2):
+      libsubcmd: Avoid SEGV/use-after-free when commands aren't excluded
+      perf parse-events: Avoid SEGV if PMU lookup fails for legacy cache terms
 
-This can be achieved with:
-```
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2607,7 +2607,7 @@ static int group_can_go_on(struct perf_event
-*event, int can_add_hw)
-        * Otherwise, try to add it if all previous groups were able
-        * to go on.
-        */
--       return can_add_hw;
-+       return 1;
-}
+James Clark (1):
+      perf build: Fix library not found error when using CSLIBS
 
-static void add_event_to_ctx(struct perf_event *event,
-```
-That means we'll consider adding every hardware event just as we
-consider adding every software event. A more complex fix would be to
-make can_add_hw some kind of bitmap that indicates different counter
-types are available, and to only stop searching only when all counter
-types are exhausted. I'm perfectly happy getting rid of the can_add_hw
-optimization and not worrying about the potential extra overhead. That
-overhead is theoretic and under user control. The unnecessary
-multiplexing is just silly and unavoidable.
+Sandipan Das (1):
+      perf vendor events amd: Fix large metrics
 
-Thanks,
-Ian
+Thomas Richter (1):
+      perf build: Fix broken feature check for libtracefs due to external lib changes
 
-> -Andi
+ tools/arch/arm64/include/asm/cputype.h             |  8 ++
+ tools/build/feature/Makefile                       |  2 +-
+ tools/include/uapi/asm-generic/unistd.h            |  5 +-
+ tools/include/uapi/drm/i915_drm.h                  | 95 +++++++++++++++++++++-
+ tools/include/uapi/linux/fcntl.h                   |  5 ++
+ tools/include/uapi/linux/kvm.h                     |  6 +-
+ tools/include/uapi/linux/mman.h                    | 14 ++++
+ tools/include/uapi/linux/mount.h                   |  3 +-
+ tools/include/uapi/linux/prctl.h                   | 11 +++
+ tools/include/uapi/linux/vhost.h                   | 31 +++++++
+ tools/include/uapi/sound/asound.h                  | 81 +++++++++++++++++-
+ tools/lib/subcmd/help.c                            | 18 ++--
+ tools/perf/Makefile.config                         |  4 +-
+ .../perf/arch/mips/entry/syscalls/syscall_n64.tbl  |  1 +
+ tools/perf/arch/powerpc/entry/syscalls/syscall.tbl |  1 +
+ tools/perf/arch/s390/entry/syscalls/syscall.tbl    |  1 +
+ tools/perf/arch/x86/entry/syscalls/syscall_64.tbl  |  1 +
+ .../pmu-events/arch/x86/amdzen1/recommended.json   |  3 +-
+ .../pmu-events/arch/x86/amdzen2/recommended.json   |  3 +-
+ .../pmu-events/arch/x86/amdzen3/recommended.json   |  3 +-
+ .../tests/shell/test_uprobe_from_different_cu.sh   | 77 ++++++++++++++++++
+ tools/perf/tests/task-exit.c                       |  4 +-
+ tools/perf/trace/beauty/include/linux/socket.h     |  5 ++
+ tools/perf/trace/beauty/move_mount_flags.sh        |  2 +-
+ tools/perf/trace/beauty/msg_flags.c                |  8 ++
+ tools/perf/util/dwarf-aux.c                        |  4 +-
+ tools/perf/util/parse-events.c                     |  8 ++
+ 27 files changed, 381 insertions(+), 23 deletions(-)
+ create mode 100755 tools/perf/tests/shell/test_uprobe_from_different_cu.sh
