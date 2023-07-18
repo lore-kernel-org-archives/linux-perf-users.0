@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F881EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Jul 2023 03:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1831EEB64DD
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Jul 2023 03:34:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229837AbjGRDeY (ORCPT
+        id S229931AbjGRDeZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Jul 2023 23:34:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38826 "EHLO
+        Mon, 17 Jul 2023 23:34:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229633AbjGRDeW (ORCPT
+        with ESMTP id S229825AbjGRDeZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Jul 2023 23:34:22 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 863D4BB;
-        Mon, 17 Jul 2023 20:34:20 -0700 (PDT)
-Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.53])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4R4l0c1c5Fz18M3f;
-        Tue, 18 Jul 2023 11:33:36 +0800 (CST)
+        Mon, 17 Jul 2023 23:34:25 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80AD6BB;
+        Mon, 17 Jul 2023 20:34:22 -0700 (PDT)
+Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4R4l0d4QvyzrRpm;
+        Tue, 18 Jul 2023 11:33:37 +0800 (CST)
 Received: from M910t.huawei.com (10.110.54.157) by
  kwepemi500013.china.huawei.com (7.221.188.120) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Tue, 18 Jul 2023 11:34:17 +0800
+ 15.1.2507.27; Tue, 18 Jul 2023 11:34:19 +0800
 From:   Changbin Du <changbin.du@huawei.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -36,9 +36,9 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Hui Wang <hw.huiwang@huawei.com>,
         Changbin Du <changbin.du@huawei.com>
-Subject: [PATCH v3 1/3] perf cpumap: Add __perf_cpu_map__new and perf_cpu_map__2_cpuset
-Date:   Tue, 18 Jul 2023 11:33:53 +0800
-Message-ID: <20230718033355.2960912-2-changbin.du@huawei.com>
+Subject: [PATCH v3 3/3] perf: replace taskset with --workload-attr option
+Date:   Tue, 18 Jul 2023 11:33:55 +0800
+Message-ID: <20230718033355.2960912-4-changbin.du@huawei.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230718033355.2960912-1-changbin.du@huawei.com>
 References: <20230718033355.2960912-1-changbin.du@huawei.com>
@@ -53,206 +53,96 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This adds two new api which will be used later.
-  - __perf_cpu_map__new: accept a specified separator instead of ','.
-  - perf_cpu_map__2_cpuset: convert perf_cpu_map to cpu_set_t.
+Replace the taskset with our new option --workload-attr.
 
 Signed-off-by: Changbin Du <changbin.du@huawei.com>
 ---
- tools/lib/perf/cpumap.c              | 45 ++++++++++++++++++++++++++--
- tools/lib/perf/include/perf/cpumap.h |  4 +++
- tools/lib/perf/libperf.map           |  2 ++
- tools/perf/tests/cpumap.c            | 23 ++++++++++++++
- 4 files changed, 71 insertions(+), 3 deletions(-)
+ tools/perf/Documentation/intel-hybrid.txt        | 2 +-
+ tools/perf/Documentation/perf-stat.txt           | 2 +-
+ tools/perf/tests/shell/stat_bpf_counters_cgrp.sh | 2 +-
+ tools/perf/tests/shell/test_arm_coresight.sh     | 2 +-
+ tools/perf/tests/shell/test_data_symbol.sh       | 2 +-
+ tools/perf/tests/shell/test_intel_pt.sh          | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-index 2a5a29217374..23e907078b28 100644
---- a/tools/lib/perf/cpumap.c
-+++ b/tools/lib/perf/cpumap.c
-@@ -1,4 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
-+#define _GNU_SOURCE
- #include <perf/cpumap.h>
- #include <stdlib.h>
- #include <linux/refcount.h>
-@@ -7,6 +8,7 @@
- #include <stdio.h>
- #include <string.h>
- #include <unistd.h>
-+#include <sched.h>
- #include <ctype.h>
- #include <limits.h>
+diff --git a/tools/perf/Documentation/intel-hybrid.txt b/tools/perf/Documentation/intel-hybrid.txt
+index e7a776ad25d7..b4adb1eeba3f 100644
+--- a/tools/perf/Documentation/intel-hybrid.txt
++++ b/tools/perf/Documentation/intel-hybrid.txt
+@@ -132,7 +132,7 @@ displayed. The percentage is the event's running time/enabling time.
+ One example, 'triad_loop' runs on cpu16 (atom core), while we can see the
+ scaled value for core cycles is 160,444,092 and the percentage is 0.47%.
  
-@@ -201,7 +203,7 @@ static struct perf_cpu_map *cpu_map__read_all_cpu_map(void)
- 	return cpus;
- }
+-perf stat -e cycles \-- taskset -c 16 ./triad_loop
++perf stat -e cycles --workload-attr other,0,16 \-- ./triad_loop
  
--struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
-+struct perf_cpu_map *__perf_cpu_map__new(const char *cpu_list, char sep)
+ As previous, two events are created.
+ 
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 18d0f73458b1..fb52ddcea622 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -464,7 +464,7 @@ on workload with changing phases.
+ 
+ To interpret the results it is usually needed to know on which
+ CPUs the workload runs on. If needed the CPUs can be forced using
+-taskset.
++--workload-attr option.
+ 
+ --td-level::
+ Print the top-down statistics that equal the input level. It allows
+diff --git a/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh b/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
+index d724855d097c..b13bf391b137 100755
+--- a/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
++++ b/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
+@@ -64,7 +64,7 @@ check_cpu_list_counted()
  {
- 	struct perf_cpu_map *cpus = NULL;
- 	unsigned long start_cpu, end_cpu = 0;
-@@ -225,7 +227,7 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
- 		p = NULL;
- 		start_cpu = strtoul(cpu_list, &p, 0);
- 		if (start_cpu >= INT_MAX
--		    || (*p != '\0' && *p != ',' && *p != '-'))
-+		    || (*p != '\0' && *p != sep && *p != '-'))
- 			goto invalid;
+ 	local output
  
- 		if (*p == '-') {
-@@ -233,7 +235,7 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
- 			p = NULL;
- 			end_cpu = strtoul(cpu_list, &p, 0);
- 
--			if (end_cpu >= INT_MAX || (*p != '\0' && *p != ','))
-+			if (end_cpu >= INT_MAX || (*p != '\0' && *p != sep))
- 				goto invalid;
- 
- 			if (end_cpu < start_cpu)
-@@ -278,6 +280,11 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
- 	return cpus;
+-	output=$(perf stat -C 1 --bpf-counters --for-each-cgroup ${test_cgroups} -e cpu-clock -x, taskset -c 1 sleep 1  2>&1)
++	output=$(perf stat -C 1 --bpf-counters --for-each-cgroup ${test_cgroups} -e cpu-clock -x, --workload-attr other,0,1 -- sleep 1 2>&1)
+ 	if echo ${output} | grep -q -F "<not "; then
+ 		echo "Some CPU events are not counted"
+ 		if [ "${verbose}" = "1" ]; then
+diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
+index f1bf5621160f..e00d04570aa8 100755
+--- a/tools/perf/tests/shell/test_arm_coresight.sh
++++ b/tools/perf/tests/shell/test_arm_coresight.sh
+@@ -38,7 +38,7 @@ record_touch_file() {
+ 	echo "Recording trace (only user mode) with path: CPU$2 => $1"
+ 	rm -f $file
+ 	perf record -o ${perfdata} -e cs_etm/@$1/u --per-thread \
+-		-- taskset -c $2 touch $file > /dev/null 2>&1
++		--workload-attr other,0,$2 -- touch $file > /dev/null 2>&1
  }
  
-+struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
-+{
-+	return __perf_cpu_map__new(cpu_list, ',');
-+}
-+
- static int __perf_cpu_map__nr(const struct perf_cpu_map *cpus)
- {
- 	return RC_CHK_ACCESS(cpus)->nr;
-@@ -479,3 +486,35 @@ struct perf_cpu_map *perf_cpu_map__intersect(struct perf_cpu_map *orig,
- 	free(tmp_cpus);
- 	return merged;
- }
-+
-+/* The caller is responsible for freeing returned cpu_set_t with CPU_FREE(). */
-+cpu_set_t *perf_cpu_map__2_cpuset(struct perf_cpu_map *cpus, size_t *cpuset_size)
-+{
-+	cpu_set_t *cpusetp;
-+	int max_cpu;
-+	struct perf_cpu cpu;
-+	int idx;
-+
-+	if (perf_cpu_map__has_any_cpu(cpus))
-+		return NULL;
-+
-+	max_cpu = perf_cpu_map__max(cpus).cpu;
-+	if (max_cpu < 0)
-+		return NULL;
-+
-+	cpusetp = CPU_ALLOC(max_cpu + 1);
-+	if (cpusetp == NULL)
-+		return NULL;
-+
-+	*cpuset_size = CPU_ALLOC_SIZE(max_cpu + 1);
-+	CPU_ZERO_S(*cpuset_size, cpusetp);
-+
-+	perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
-+		if (cpu.cpu == -1)
-+			continue;
-+
-+		CPU_SET_S(cpu.cpu, *cpuset_size, cpusetp);
-+	}
-+
-+	return cpusetp;
-+}
-diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
-index e38d859a384d..1a0498f92dbe 100644
---- a/tools/lib/perf/include/perf/cpumap.h
-+++ b/tools/lib/perf/include/perf/cpumap.h
-@@ -3,6 +3,7 @@
- #define __LIBPERF_CPUMAP_H
+ perf_script_branch_samples() {
+diff --git a/tools/perf/tests/shell/test_data_symbol.sh b/tools/perf/tests/shell/test_data_symbol.sh
+index 69bb6fe86c50..02c6a97e3d0f 100755
+--- a/tools/perf/tests/shell/test_data_symbol.sh
++++ b/tools/perf/tests/shell/test_data_symbol.sh
+@@ -50,7 +50,7 @@ echo "Recording workload..."
+ # specific CPU and test in per-CPU mode.
+ is_amd=$(grep -E -c 'vendor_id.*AuthenticAMD' /proc/cpuinfo)
+ if (($is_amd >= 1)); then
+-	perf mem record -o ${PERF_DATA} -C 0 -- taskset -c 0 $TEST_PROGRAM &
++	perf mem record -o ${PERF_DATA} -C 0 --workload-attr other,0,0 -- $TEST_PROGRAM &
+ else
+ 	perf mem record --all-user -o ${PERF_DATA} -- $TEST_PROGRAM &
+ fi
+diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
+index 3a8b9bffa022..0dc085c72593 100755
+--- a/tools/perf/tests/shell/test_intel_pt.sh
++++ b/tools/perf/tests/shell/test_intel_pt.sh
+@@ -110,7 +110,7 @@ test_system_wide_side_band()
+ 	can_cpu_wide 1 || return $?
  
- #include <perf/core.h>
-+#include <sched.h>
- #include <stdio.h>
- #include <stdbool.h>
+ 	# Record on CPU 0 a task running on CPU 1
+-	perf_record_no_decode -o "${perfdatafile}" -e intel_pt//u -C 0 -- taskset --cpu-list 1 uname
++	perf_record_no_decode -o "${perfdatafile}" -e intel_pt//u -C 0 --workload-attr other,0,1 -- uname
  
-@@ -23,6 +24,7 @@ struct perf_cpu_map;
-  */
- LIBPERF_API struct perf_cpu_map *perf_cpu_map__dummy_new(void);
- LIBPERF_API struct perf_cpu_map *perf_cpu_map__default_new(void);
-+LIBPERF_API struct perf_cpu_map *__perf_cpu_map__new(const char *cpu_list, char sep);
- LIBPERF_API struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list);
- LIBPERF_API struct perf_cpu_map *perf_cpu_map__read(FILE *file);
- LIBPERF_API struct perf_cpu_map *perf_cpu_map__get(struct perf_cpu_map *map);
-@@ -46,6 +48,8 @@ LIBPERF_API bool perf_cpu_map__equal(const struct perf_cpu_map *lhs,
-  */
- LIBPERF_API bool perf_cpu_map__has_any_cpu(const struct perf_cpu_map *map);
- 
-+LIBPERF_API cpu_set_t *perf_cpu_map__2_cpuset(struct perf_cpu_map *cpus, size_t *cpuset_size);
-+
- #define perf_cpu_map__for_each_cpu(cpu, idx, cpus)		\
- 	for ((idx) = 0, (cpu) = perf_cpu_map__cpu(cpus, idx);	\
- 	     (idx) < perf_cpu_map__nr(cpus);			\
-diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
-index 190b56ae923a..fe0946e34471 100644
---- a/tools/lib/perf/libperf.map
-+++ b/tools/lib/perf/libperf.map
-@@ -5,6 +5,7 @@ LIBPERF_0.0.1 {
- 		perf_cpu_map__default_new;
- 		perf_cpu_map__get;
- 		perf_cpu_map__put;
-+		__perf_cpu_map__new;
- 		perf_cpu_map__new;
- 		perf_cpu_map__read;
- 		perf_cpu_map__nr;
-@@ -12,6 +13,7 @@ LIBPERF_0.0.1 {
- 		perf_cpu_map__empty;
- 		perf_cpu_map__max;
- 		perf_cpu_map__has;
-+		perf_cpu_map__2_cpuset;
- 		perf_thread_map__new_array;
- 		perf_thread_map__new_dummy;
- 		perf_thread_map__set_pid;
-diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-index 7730fc2ab40b..ae5e5337ea4f 100644
---- a/tools/perf/tests/cpumap.c
-+++ b/tools/perf/tests/cpumap.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "tests.h"
-+#include <sched.h>
- #include <stdio.h>
- #include "cpumap.h"
- #include "event.h"
-@@ -247,12 +248,34 @@ static int test__cpu_map_equal(struct test_suite *test __maybe_unused, int subte
- 	return TEST_OK;
- }
- 
-+static int test__cpu_map_convert(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-+{
-+	struct perf_cpu_map *any = perf_cpu_map__dummy_new();
-+	struct perf_cpu_map *cpus = perf_cpu_map__new("1-2");
-+	cpu_set_t *cpu_set;
-+	size_t setsize;
-+
-+	cpu_set = perf_cpu_map__2_cpuset(any, &setsize);
-+	TEST_ASSERT_VAL("not equal", cpu_set == NULL);
-+	CPU_FREE(cpu_set);
-+
-+	cpu_set = perf_cpu_map__2_cpuset(cpus, &setsize);
-+	TEST_ASSERT_VAL("cpus", cpu_set != NULL);
-+	TEST_ASSERT_VAL("bad cpuset", !CPU_ISSET_S(0, setsize, cpu_set));
-+	TEST_ASSERT_VAL("bad cpuset", CPU_ISSET_S(1, setsize, cpu_set));
-+	TEST_ASSERT_VAL("bad cpuset", CPU_ISSET_S(2, setsize, cpu_set));
-+	CPU_FREE(cpu_set);
-+
-+	return TEST_OK;
-+}
-+
- static struct test_case tests__cpu_map[] = {
- 	TEST_CASE("Synthesize cpu map", cpu_map_synthesize),
- 	TEST_CASE("Print cpu map", cpu_map_print),
- 	TEST_CASE("Merge cpu map", cpu_map_merge),
- 	TEST_CASE("Intersect cpu map", cpu_map_intersect),
- 	TEST_CASE("Equal cpu map", cpu_map_equal),
-+	TEST_CASE("Convert cpu map", cpu_map_convert),
- 	{	.name = NULL, }
- };
- 
+ 	# Should get MMAP events from CPU 1 because they can be needed to decode
+ 	mmap_cnt=$(perf script -i "${perfdatafile}" --no-itrace --show-mmap-events -C 1 2>/dev/null | grep -c MMAP)
 -- 
 2.25.1
 
