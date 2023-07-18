@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDE0EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Jul 2023 22:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D78EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Jul 2023 22:48:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229873AbjGRWr7 (ORCPT
+        id S230350AbjGRWss (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Jul 2023 18:47:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57464 "EHLO
+        Tue, 18 Jul 2023 18:48:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229518AbjGRWr6 (ORCPT
+        with ESMTP id S229518AbjGRWsr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Jul 2023 18:47:58 -0400
-Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E052DA1;
-        Tue, 18 Jul 2023 15:47:53 -0700 (PDT)
-Received: by mail-oi1-x22b.google.com with SMTP id 5614622812f47-38c35975545so4839172b6e.1;
-        Tue, 18 Jul 2023 15:47:53 -0700 (PDT)
+        Tue, 18 Jul 2023 18:48:47 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF384EC;
+        Tue, 18 Jul 2023 15:48:34 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-55c993e26ffso2433620a12.0;
+        Tue, 18 Jul 2023 15:48:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689720473; x=1692312473;
+        d=gmail.com; s=20221208; t=1689720514; x=1692312514;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=R5YqH3VqKGjLLAoXXHfP8sq49ATZcVTncb1eNoNAhtA=;
-        b=SGae1hx5Ep3cwgFdPAy75Mv3EV96nNYg5p5X+GUs0FZ9jcD2vL3yTAENZV/+qLhaTO
-         7h75tXKjL9rNTf3Wvg6xHLiRo6V7987kBEmldd52lMhgrjIec8+26EYINE+GYiaAgIDS
-         9u0xaLpFsX/GBlFsyZPyG2AIiKUXqqGyYwPYW7LgQG2RoRrK+MB4zfHRBuiuQC8WUF9v
-         7YNqYQ3x0OGKbVYRvw6rhDu+1QNt448ysVd1XO5lnz2sFJRQgQWe1N7nvgvMEaTZ4Nti
-         vPZBgEt45q90u9XTl3nw2pZCP/R6y86byGiltDxypFy/ZWHkU5rsT3gKbHBI+DNPfDkE
-         uXfA==
+        bh=1d8swg9Y9ZixZmusx5ZmXbxt99Xqol7znCwCmQSk3ZI=;
+        b=emwJY9ZJECLmBaafe7jMvIHAr4sMp56GWkOkD7dQZL5tAOkKbIVuBc5y7+2hvJD5ZC
+         SScNluQBdVqrXU8XA0q5rXinV8EaBkL4x9F83xoAmn/kx2+LcNhCFghJVdly7VCbGlwN
+         8HCR4Gdqoy74YVjuRkik+yCbDi9/QQwRkVnUgbv9gA5na23PcLR0YLBCDT1wetrDr1c0
+         qVNappH1/hxsd6g85MH1Gctgw1CZvKwUKqGwG2LGdBHwN23rNY4pZdI/vEW7MWBpIpWt
+         kTm2Umi602swO+e+Ye72G0Sjoa+2Q5/56UGa6oTsayuOyc9fKa2mTzFxPvQQRQN1czE8
+         xLeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689720473; x=1692312473;
+        d=1e100.net; s=20221208; t=1689720514; x=1692312514;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=R5YqH3VqKGjLLAoXXHfP8sq49ATZcVTncb1eNoNAhtA=;
-        b=LYO+VMFOI9eT4DNeaDFQvB0bEVCeuqxyeHWgSId4BvFs8PmjoVP2i2DA4GPjqVqMm9
-         GMpJ5iDyzh72fnnTycZkQ9XMzb9qe/iUPQy/Ee6Xa4qC5V7oVrCDBzKfGnxEwpOeoU3H
-         PuEAtw/21mRutJKC5ngLPH8ieXtwlQyvBm7sEZELqGFf/TtDrr0YPjC12pu/btsDAlgK
-         hcfbeRM/zbTJ4xM6B0xqARpS3cXNtkdI45aBFbNnyK+3lbMvV2YgmSe/874VY137PgB7
-         YMRu0xPqjcdsP5c7xBKTTbkbE0qPb7JX+KtuuVUjCkM0fxkct7VSs8yf2ugkTQF+5iYD
-         K1bQ==
-X-Gm-Message-State: ABy/qLbM1Y7ygUh5NS9R0LxdePN3+cxSuKoAbthk+QQjGSgIa88hqIrn
-        A0uYrXzUznRKR0yBoI4OjNU=
-X-Google-Smtp-Source: APBJJlFgWGatezkp9nPkMa8w08ly5NtSVSXqx51EiWMl8ZUgey5YauYcJG6q8Nkal092t9zMgC/6Ag==
-X-Received: by 2002:aca:bd04:0:b0:398:2f92:65ca with SMTP id n4-20020acabd04000000b003982f9265camr12531578oif.7.1689720472963;
-        Tue, 18 Jul 2023 15:47:52 -0700 (PDT)
+        bh=1d8swg9Y9ZixZmusx5ZmXbxt99Xqol7znCwCmQSk3ZI=;
+        b=NTUrLlri4JASAN2goQRF1D7ovF9DPpCGdphH7Mx7SNUf0MorAAWdUJzZ+gwjheeynq
+         bXdZA2nBBx1gwc41jNKKbly/PoDw9zeavPOby4nTcTjQFqyCtN3kF1dz4hNzX5Ux4Tp+
+         /rETyYkMabMxwu+rQn2kjKcZ3qPAAFyGBLLsR2UuEL2Au38DwjtKmBVpGRuyZR1nVB8F
+         GXlZ1vqM1wl/lFEqE7ta2P2Ody2susU7Ak06IsAolU2C3N96Ums5YAt1pue2FnRriaEN
+         xvmza0vAanSTQAHf2WBg+n9JxAQDPuvF/OPqNvM91dudRGt8UPWpsMludXjnwHM6FlMd
+         JaeQ==
+X-Gm-Message-State: ABy/qLbM6yZm5qugN9rGUVttb/tiyHNT20wtgwkEQLHlQ5SU9Tduh88G
+        TXSHr0uylGmo0lFeneo8x4g=
+X-Google-Smtp-Source: APBJJlEr9VeGDpzg3TrHyG+9650W/M65MuPWS5iwlfcndUVKOal5WfoaF32Bn8dB3y9BpmI1dyGKSg==
+X-Received: by 2002:a05:6a20:3955:b0:12f:dce2:b385 with SMTP id r21-20020a056a20395500b0012fdce2b385mr4062572pzg.10.1689720514171;
+        Tue, 18 Jul 2023 15:48:34 -0700 (PDT)
 Received: from yoga ([2400:1f00:13:be68:c61a:77e0:3624:e4f6])
-        by smtp.gmail.com with ESMTPSA id w5-20020a17090a380500b0025e7f7b46c3sm86662pjb.25.2023.07.18.15.47.48
+        by smtp.gmail.com with ESMTPSA id u21-20020aa78395000000b0065434edd521sm1959826pfm.196.2023.07.18.15.48.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jul 2023 15:47:52 -0700 (PDT)
-Date:   Wed, 19 Jul 2023 04:17:44 +0530
+        Tue, 18 Jul 2023 15:48:33 -0700 (PDT)
+Date:   Wed, 19 Jul 2023 04:18:26 +0530
 From:   Anup Sharma <anupnewsmail@gmail.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -63,9 +63,9 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Anup Sharma <anupnewsmail@gmail.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/6] perf scripts python: Add initial script file with
- usage information
-Message-ID: <a9c432016409db2fcebbaf7bdfdd2921cbcc5300.1689718662.git.anupnewsmail@gmail.com>
+Subject: [PATCH v4 2/6] perf scripts python: Extact necessary information
+ from process event
+Message-ID: <feeadb6d460a2fa30eb866f2b1eb9e5e0a818ad5.1689718662.git.anupnewsmail@gmail.com>
 References: <cover.1689718662.git.anupnewsmail@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -75,55 +75,44 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Added necessary modules, including the Perf-Trace-Util
-library, and defines the required functions and variables
-for using perf script python. The perf_trace_context and
-Core modules for tracing and processing events has been
-also imported. Also added usage information.
+The script takes in a sample event dictionary(param_dict) and retrieves
+relevant data such as time stamp, PID, TID, and comm for each event.
+Also start time is defined as a global variable as it need to be passed
+to trace_end for gecko meta information field creation.
 
 Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
 ---
- .../scripts/python/firefox-gecko-converter.py | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 tools/perf/scripts/python/firefox-gecko-converter.py
+ .../perf/scripts/python/firefox-gecko-converter.py | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools/perf/scripts/python/firefox-gecko-converter.py
-new file mode 100644
-index 000000000000..63ecaf1abee8
---- /dev/null
+index 63ecaf1abee8..bfc8c2b026bf 100644
+--- a/tools/perf/scripts/python/firefox-gecko-converter.py
 +++ b/tools/perf/scripts/python/firefox-gecko-converter.py
-@@ -0,0 +1,31 @@
-+# firefox-gecko-converter.py - Convert perf record output to Firefox's gecko profile format
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# The script converts perf.data to Gecko Profile Format,
-+# which can be read by https://profiler.firefox.com/.
-+#
-+# Usage:
-+#
-+#     perf record -a -g -F 99 sleep 60
-+#     perf script firefox-gecko-converter.py > output.json
+@@ -20,10 +20,22 @@ sys.path.append(os.environ['PERF_EXEC_PATH'] + \
+ from perf_trace_context import *
+ from Core import *
+ 
++# start_time is intialiazed only once for the all event traces.
++start_time = None
 +
-+import os
-+import sys
-+from typing import Dict
+ # Uses perf script python interface to parse each
+ # event and store the data in the thread builder.
+ def process_event(param_dict: Dict) -> None:
+-	pass
++	global start_time
++	global tid_to_thread
++	time_stamp = (param_dict['sample']['time'] // 1000) / 1000
++	pid = param_dict['sample']['pid']
++	tid = param_dict['sample']['tid']
++	comm = param_dict['comm']
 +
-+# Add the Perf-Trace-Util library to the Python path
-+sys.path.append(os.environ['PERF_EXEC_PATH'] + \
-+	'/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
-+
-+from perf_trace_context import *
-+from Core import *
-+
-+# Uses perf script python interface to parse each
-+# event and store the data in the thread builder.
-+def process_event(param_dict: Dict) -> None:
-+	pass
-+
-+# Trace_end runs at the end and will be used to aggregate
-+# the data into the final json object and print it out to stdout.
-+def trace_end() -> None:
-+	pass
++	# Start time is the time of the first sample
++	if not start_time:
++		start_time = time_stamp
+ 
+ # Trace_end runs at the end and will be used to aggregate
+ # the data into the final json object and print it out to stdout.
 -- 
 2.34.1
 
