@@ -2,41 +2,57 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA1EEB64DC
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Jul 2023 19:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF411EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Jul 2023 22:16:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229849AbjGRTqW (ORCPT
+        id S231590AbjGRWQU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Jul 2023 15:46:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33510 "EHLO
+        Tue, 18 Jul 2023 18:16:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229506AbjGRTqV (ORCPT
+        with ESMTP id S231515AbjGRWQQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Jul 2023 15:46:21 -0400
+        Tue, 18 Jul 2023 18:16:16 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCBBD1995;
-        Tue, 18 Jul 2023 12:46:14 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B08E3198D;
+        Tue, 18 Jul 2023 15:16:15 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5B18D60BA3;
-        Tue, 18 Jul 2023 19:46:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFE1BC433C7;
-        Tue, 18 Jul 2023 19:46:09 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4DF546126C;
+        Tue, 18 Jul 2023 22:16:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A7597C433C7;
+        Tue, 18 Jul 2023 22:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689709573;
-        bh=r40iy3DmR5NfuY8P/YmJjY+9faNDmei1QHEOjouRvPQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=kvqKNJdI4ioAzzWEg4FgcRAOQIAc+uexOP/c7AmY5g4N9lhqoZB3iBbE9dNfnLJ73
-         FuWIH+HrXi+7DchUubOeh144kmG4USpf4yFOlaPN6vxBOZyOVUK2BPKcAsSu7usFTv
-         ekOnGDEGIF+4Lotc5Trf2eNM+TXE0Gg54wmbYqyJRPDwIxq4MXedJj2YRBTkBLWxwn
-         Xpun/Fk1UYRAS/swcQwosR3lL2ZacJ4hvni3hVM/uZVF9ugMsbEmCDBWmyp569TsGI
-         +xoX8HAz3aw/eaQaXsbklZBncuJ1WFZ5bsh+3HMJ0Yz5Nn0h1JS0tFvMqid28p682S
-         c03I7F7RHieBA==
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
+        s=k20201202; t=1689718574;
+        bh=fAsWtDGuusE0QW9q58XQTB8JznHo+i2FpUyePvySw8E=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=pN1sC0enqj/iR8ea/VxSxwpd/TWn/xY7B0jyZ+SUXzOvfN67BjpmuI6zzh/k9tm+f
+         DpMv9NpeUSec0qKFRbMVedhZZQdNkNOAOXQZj7w6I+aWsIS8S8/IO7VHJjueUBDKGZ
+         JkZfjybaIFKpIeT89Ih4qRtK++07dxuT8DPo4ZHlT6JQl+oyowRSzFPVzTgNUIXWrr
+         afuFoVP6ichnpb6FyKte0KX84dr1L6cjH2abLNnIlKEun4eH0xka8kFxF40dZe4fWK
+         x3vWjQ0Dx61JniLrNF9Q3ppLYOhnhOcVLwOJ6h3W/P6wCCAD0iD7s0X7Nfeyso/253
+         9hoa8iCYwxSdA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 94053C64458;
+        Tue, 18 Jul 2023 22:16:14 +0000 (UTC)
+Subject: Re: [GIT PULL] perf tools fixes for v6.5
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20230718194602.444597-1-acme@kernel.org>
+References: <20230718194602.444597-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20230718194602.444597-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.5-1-2023-07-18
+X-PR-Tracked-Commit-Id: 2480232c61b888a160153b9022858ac8c4362d5f
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ccff6d117d8dc8d8d86e8695a75e5f8b01e573bf
+Message-Id: <168971857459.2335.8703651309773236737.pr-tracker-bot@kernel.org>
+Date:   Tue, 18 Jul 2023 22:16:14 +0000
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -53,125 +69,19 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Sandipan Das <sandipan.das@amd.com>,
         Thomas Richter <tmricht@linux.ibm.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [GIT PULL] perf tools fixes for v6.5
-Date:   Tue, 18 Jul 2023 16:46:02 -0300
-Message-ID: <20230718194602.444597-1-acme@kernel.org>
-X-Mailer: git-send-email 2.41.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Linus,
+The pull request you sent on Tue, 18 Jul 2023 16:46:02 -0300:
 
-	Please consider pulling,
+> git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.5-1-2023-07-18
 
-Best regards,
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ccff6d117d8dc8d8d86e8695a75e5f8b01e573bf
 
-- Arnaldo
+Thank you!
 
-The following changes since commit 3f01e9fed8454dcd89727016c3e5b2fbb8f8e50c:
-
-  Merge tag 'linux-watchdog-6.5-rc2' of git://www.linux-watchdog.org/linux-watchdog (2023-07-10 10:04:26 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.5-1-2023-07-18
-
-for you to fetch changes up to 2480232c61b888a160153b9022858ac8c4362d5f:
-
-  perf test task_exit: No need for a cycles event to check if we get an PERF_RECORD_EXIT (2023-07-17 10:27:44 -0300)
-
-----------------------------------------------------------------
-perf tools fixes for v6.5:
-
-- Don't group events when computing metrics that require more than the
-  maximum number of simultaneously enabled events on AMD systems.
-
-- Fix multi CU handling in 'perf probe', add a 'perf test' entry to regress
-  test it.
-
-- Make the 'perf test task_exit' stop generating samples by using the
-  'dummy' event, all it is testing is if a PERF_RECORD_EXIT is generated
-  at the end of a perf session. This makes this perf test to stop
-  sometimes failing on some systems due to a full ring buffer.
-
-- Avoid SEGV if PMU lookup fails for legacy cache terms.
-
-- Fix libsubcmd SEGV/use-after-free when commands aren't excluded.
-
-- Fix OpenCSD (ARM64's CoreSight hardware tracing) library path resolution when
-  specifying CSLIBS= in the make command line.
-
-- Fix broken feature check for libtracefs due to external lib changes,
-  use the provided pkgconfig file instead to future proof it.
-
-- Sync drm, fcntl, kvm, mount, prctl, socket, vhost, asound, arm64's
-  cputype headers with the kernel sources, in some cases this made the
-  tools become aware of new kernel APIs such as ioctls and the cachestat
-  sysctl.
-
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-----------------------------------------------------------------
-Arnaldo Carvalho de Melo (11):
-      tools headers UAPI: Sync drm/i915_drm.h with the kernel sources
-      tools headers UAPI: Sync files changed by new cachestat syscall with the kernel sources
-      tools headers uapi: Sync linux/fcntl.h with the kernel sources
-      tools headers UAPI: Sync linux/kvm.h with the kernel sources
-      tools include UAPI: Sync linux/mount.h copy with the kernel sources
-      tools headers UAPI: Sync linux/prctl.h with the kernel sources
-      perf beauty: Update copy of linux/socket.h with the kernel sources
-      tools include UAPI: Sync linux/vhost.h with the kernel sources
-      tools include UAPI: Sync the sound/asound.h copy with the kernel sources
-      tools headers arm64: Sync arm64's cputype.h with the kernel sources
-      perf test task_exit: No need for a cycles event to check if we get an PERF_RECORD_EXIT
-
-Georg Müller (2):
-      perf probe: Add test for regression introduced by switch to die_get_decl_file()
-      perf probe: Read DWARF files from the correct CU
-
-Ian Rogers (2):
-      libsubcmd: Avoid SEGV/use-after-free when commands aren't excluded
-      perf parse-events: Avoid SEGV if PMU lookup fails for legacy cache terms
-
-James Clark (1):
-      perf build: Fix library not found error when using CSLIBS
-
-Sandipan Das (1):
-      perf vendor events amd: Fix large metrics
-
-Thomas Richter (1):
-      perf build: Fix broken feature check for libtracefs due to external lib changes
-
- tools/arch/arm64/include/asm/cputype.h             |  8 ++
- tools/build/feature/Makefile                       |  2 +-
- tools/include/uapi/asm-generic/unistd.h            |  5 +-
- tools/include/uapi/drm/i915_drm.h                  | 95 +++++++++++++++++++++-
- tools/include/uapi/linux/fcntl.h                   |  5 ++
- tools/include/uapi/linux/kvm.h                     |  6 +-
- tools/include/uapi/linux/mman.h                    | 14 ++++
- tools/include/uapi/linux/mount.h                   |  3 +-
- tools/include/uapi/linux/prctl.h                   | 11 +++
- tools/include/uapi/linux/vhost.h                   | 31 +++++++
- tools/include/uapi/sound/asound.h                  | 81 +++++++++++++++++-
- tools/lib/subcmd/help.c                            | 18 ++--
- tools/perf/Makefile.config                         |  4 +-
- .../perf/arch/mips/entry/syscalls/syscall_n64.tbl  |  1 +
- tools/perf/arch/powerpc/entry/syscalls/syscall.tbl |  1 +
- tools/perf/arch/s390/entry/syscalls/syscall.tbl    |  1 +
- tools/perf/arch/x86/entry/syscalls/syscall_64.tbl  |  1 +
- .../pmu-events/arch/x86/amdzen1/recommended.json   |  3 +-
- .../pmu-events/arch/x86/amdzen2/recommended.json   |  3 +-
- .../pmu-events/arch/x86/amdzen3/recommended.json   |  3 +-
- .../tests/shell/test_uprobe_from_different_cu.sh   | 77 ++++++++++++++++++
- tools/perf/tests/task-exit.c                       |  4 +-
- tools/perf/trace/beauty/include/linux/socket.h     |  5 ++
- tools/perf/trace/beauty/move_mount_flags.sh        |  2 +-
- tools/perf/trace/beauty/msg_flags.c                |  8 ++
- tools/perf/util/dwarf-aux.c                        |  4 +-
- tools/perf/util/parse-events.c                     |  8 ++
- 27 files changed, 381 insertions(+), 23 deletions(-)
- create mode 100755 tools/perf/tests/shell/test_uprobe_from_different_cu.sh
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
