@@ -2,195 +2,106 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 613AAEB64DC
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Jul 2023 11:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5BEEB64DA
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Jul 2023 15:10:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229583AbjGRLcX (ORCPT
+        id S233180AbjGRPK2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Jul 2023 07:32:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44632 "EHLO
+        Tue, 18 Jul 2023 11:10:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbjGRLcW (ORCPT
+        with ESMTP id S231501AbjGRPK1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Jul 2023 07:32:22 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50025BD;
-        Tue, 18 Jul 2023 04:32:20 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4R4xc51HXrzrRnV;
-        Tue, 18 Jul 2023 19:31:33 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Tue, 18 Jul 2023 19:32:15 +0800
-Subject: Re: [PATCH v2 5/7] perf evlist: Skip dummy event sample_type check
- for evlist_config
-To:     Adrian Hunter <adrian.hunter@intel.com>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, <irogers@google.com>,
-        <kan.liang@linux.intel.com>, <james.clark@arm.com>,
-        <tmricht@linux.ibm.com>, <ak@linux.intel.com>,
-        <anshuman.khandual@arm.com>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>
-References: <20230715032915.97146-1-yangjihong1@huawei.com>
- <20230715032915.97146-6-yangjihong1@huawei.com>
- <5797e5a7-a85f-4f7c-1649-88f8f9ff7a6b@intel.com>
- <44645529-0ee6-fe69-bc03-fefbc6f73d4d@huawei.com>
- <c4b7fb70-7b2e-74e9-576f-33b29e8801cd@intel.com>
- <77ea9309-da6f-f7b9-a822-b371e0f832d3@huawei.com>
- <ab152551-5e65-c43d-2046-a096a28db913@intel.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <ca64f76f-ccf4-3779-4090-6028b7ee7bef@huawei.com>
-Date:   Tue, 18 Jul 2023 19:32:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Tue, 18 Jul 2023 11:10:27 -0400
+Received: from mail-oi1-x22f.google.com (mail-oi1-x22f.google.com [IPv6:2607:f8b0:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBB66171A;
+        Tue, 18 Jul 2023 08:10:26 -0700 (PDT)
+Received: by mail-oi1-x22f.google.com with SMTP id 5614622812f47-3a3efee1d44so4313944b6e.3;
+        Tue, 18 Jul 2023 08:10:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20221208; t=1689693026; x=1692285026;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JNQ6/gc5vfGP1wHAlH0r+RXd8q2VGkAv8eOnlipw9dY=;
+        b=CV3ZKEqZWXlKDj1uZ5AVabNJrLd2Eg+AK05DTeuCA+f5zQEMBxYFca0FBmwFTkHcK7
+         3MlmM5lZTYfktW0UF6SbvxyLoTf1TuBv6ZgILXcv8VOuLPDPduWcM5h/tDvlr0ypg5/q
+         smpype/Nr37YgegIwLWzCYWecOynGyznMId0h5Yu07QY99zOYbeNAPhOMiBJCFwdHIg1
+         os2djPgcqhMTtJsBcOr448wqDatFIAol+X13i+uIjse3EoWbTEh8eawvWBB+t+x4nBHX
+         AwOdbRVZlXT+Nd0dKShzXbdAGtZ+nCvMDk4XVNYGLQfeaKo9QT1PyMpwDQCP/QPpHn7V
+         zClA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689693026; x=1692285026;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JNQ6/gc5vfGP1wHAlH0r+RXd8q2VGkAv8eOnlipw9dY=;
+        b=LRA0oZN4mUBW4jmsOjoQ2EWbta78mTwljgAYIai1i8OEqEOAEcej0/jugixJtQnbJh
+         P+6ZhYRp3LdX7pcnFhgA+hFRz3Kdo/APSJV+0WNFofoQCfdf4ngsC3XTBLKVOBCM36lz
+         8ujR2MX2n4SrtplsBlPKkNpMPgZZF8DVSgRWiDdWpKk479KXg0UOXyiZ/r7e57NzkS0R
+         kTrGFm5b2UH7uJSFMj6jyucrTQ4vFH/HqF1ZdChzzLcIV3Yn0bsBFn9Ns4iRG+CGOlf1
+         E1yJb4S3trM7GXXGHAFSFEq8tfmejaOzxUH/QxnlSpj1M2o4ezRMxsMePL+pyBlB4dzk
+         9Jjw==
+X-Gm-Message-State: ABy/qLb0JpLIuAhc47AZr08INcMG88PRUX+b51N3aTeoKz8mPAuBFxiC
+        ews8AYOnQ6swl2gsDjFLYBQTu4xWaKdujOAs13tenJbNcBEzWA==
+X-Google-Smtp-Source: APBJJlHDVXGokvOwlHVsvWNoqkFMjjyNFTxOWLqeqnl954tIVvHpuyY0R8psa6PK/CXU+eZaGshpae8nJo4WqnvYlBA=
+X-Received: by 2002:a05:6358:7f0d:b0:134:c37f:4b60 with SMTP id
+ p13-20020a0563587f0d00b00134c37f4b60mr11494410rwn.32.1689693025766; Tue, 18
+ Jul 2023 08:10:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <ab152551-5e65-c43d-2046-a096a28db913@intel.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+References: <20230712143831.120701-1-wangkefeng.wang@huawei.com> <20230712143831.120701-2-wangkefeng.wang@huawei.com>
+In-Reply-To: <20230712143831.120701-2-wangkefeng.wang@huawei.com>
+From:   =?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>
+Date:   Tue, 18 Jul 2023 17:10:14 +0200
+Message-ID: <CAJ2a_Dd+CUggq0gtaeuPSP+iCrqUH08cCwU95AYGXxv5TBWSuA@mail.gmail.com>
+Subject: Re: [PATCH 1/5] mm: introduce vma_is_stack() and vma_is_heap()
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On Wed, 12 Jul 2023 at 16:25, Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
+>
+> Introduce the two helpers for general use.
+>
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+>  include/linux/mm.h | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 1462cf15badf..0bbeb31ac750 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -926,6 +926,18 @@ static inline bool vma_is_anonymous(struct vm_area_struct *vma)
+>         return !vma->vm_ops;
+>  }
+>
+> +static inline bool vma_is_heap(struct vm_area_struct *vma)
 
-On 2023/7/18 18:29, Adrian Hunter wrote:
-> On 18/07/23 13:17, Yang Jihong wrote:
->> Hello,
->>
->> On 2023/7/18 17:56, Adrian Hunter wrote:
->>> On 18/07/23 12:30, Yang Jihong wrote:
->>>> Hello,
->>>>
->>>> On 2023/7/17 22:41, Adrian Hunter wrote:
->>>>> On 15/07/23 06:29, Yang Jihong wrote:
->>>>>> The dummp event does not contain sampls data. Therefore, sample_type does
->>>>>> not need to be checked.
->>>>>>
->>>>>> Currently, the sample id format of the actual sampling event may be changed
->>>>>> after the dummy event is added.
->>>>>>
->>>>>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
->>>>>> ---
->>>>>>     tools/perf/util/record.c | 7 +++++++
->>>>>>     1 file changed, 7 insertions(+)
->>>>>>
->>>>>> diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
->>>>>> index 9eb5c6a08999..0240be3b340f 100644
->>>>>> --- a/tools/perf/util/record.c
->>>>>> +++ b/tools/perf/util/record.c
->>>>>> @@ -128,6 +128,13 @@ void evlist__config(struct evlist *evlist, struct record_opts *opts, struct call
->>>>>>             evlist__for_each_entry(evlist, evsel) {
->>>>>>                 if (evsel->core.attr.sample_type == first->core.attr.sample_type)
->>>>>>                     continue;
->>>>>> +
->>>>>> +            /*
->>>>>> +             * Skip the sample_type check for the dummy event
->>>>>> +             * because it does not have any samples anyway.
->>>>>> +             */
->>>>>> +            if (evsel__is_dummy_event(evsel))
->>>>>> +                continue;
->>>>>
->>>>> Sideband event records have "ID samples" so the sample type still matters.
->>>>>
->>>> Okay, will remove this patch in next version.
->>>>
->>>> Can I ask a little more about this?
->>>>
->>>> Use PERF_SAMPLE_IDENTIFICATION instead of PERF_SAMPLE_ID because for samples of type PERF_RECORD_SAMPLE, there may be different record formats due to different *sample_type* settings, so the fixed SAMPLE_ID  location mode PERF_SAMPLE_NAME is required here.
->>>>
->>>> However, for the sideband event, the samples of the PERF_RECORD_SAMPLE type is not recorded (only PERF_RECORD_MMAP, PERF_RECORD_COMM, and so on). Therefore, the "use sample identifier "check can be skipped here.
->>>>
->>>> That's my understanding of PERF_SAMPLE_IDENTIFICATION . If there is any error, please help to correct it.
->>>>
->>>> *Sideband event records have "ID samples" so the sample type still matters.*
->>>>
->>>> Does this mean that sideband will also record samples of type PERF_RECORD_SAMPLE? What exactly is the sampling data?
->>>
->>> No.  There are additional members as defined by struct sample_id for PERF_RECORD_MMAP:
->>>
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/perf_event.h?h=v6.4#n872
->>>
->> I'm sorry, maybe my comments didn't make it clear.
->> I mean, can we skip the "use_sample_identifier" check here?
->>
->> That is, set sample_type to *XXX|PERF_SAMPLE_ID* instead of *XXX|PERF_SAMPLE_IDENTIFICATION*
-> 
-> In general, when there are different values of sample_type, the PERF_SAMPLE_ID is needed to determine which is which.
-> But PERF_SAMPLE_ID is not at a fixed position, so the sample_type is needed to find it.  That is why PERF_SAMPLE_IDENTIFIER is better.
-> 
-> Why do want to change it?
+What about declaring the parameters const to document in code these
+functions do not modify any state, and allow callers to pass pointers
+to const?
 
-Without this patch, we now add a system_wide tracking event and modify 
-the sample_type of the  actual sample event.
-
-For example, when we run:
-   # perf record -e cycles -C 0
-
-1. The default sample_type of the "cycles" is IP|TID|TIME|CPU|PERIOD.
-2. Then add a system_wide sideband event whose sample_type is 
-IP|TID|TIME|CPU.
-3. The two sample_types are different.
-4. Therefore, the evlist__config adds a PERF_SAMPLE_IDENTIFICATION to 
-both sample_types instead of PERF_SAMPLE_ID.
-
-evlist__config {
-         ...
-          } else if (evlist->core.nr_entries > 1) {
-          // One is cycles and the other is sideband . 
-
-                  struct evsel *first = evlist__first(evlist); 
-
- 
-
-                  evlist__for_each_entry(evlist, evsel) { 
-
-                          if (evsel->core.attr.sample_type == 
-first->core.attr.sample_type)
-                                  continue; 
-
-                          use_sample_identifier = 
-perf_can_sample_identifier();
-                          // the sample_type of cycles is different from 
-that of sideband.
-						 // Therefore, use_sample_identifier is set to true.
-                          break; 
-
-                  } 
-
-                  sample_id = true; 
-
-          } 
-
- 
-
-          if (sample_id) { 
-
-                  evlist__for_each_entry(evlist, evsel) 
-
-                          evsel__set_sample_id(evsel, 
-use_sample_identifier);
-                          // both cycles and sideband set 
-PERF_SAMPLE_IDENTIFICATION  						
-          } 
-
-         ...
-}
-
-The comparison of the sideband event sample_type is skipped so that the 
-sample_type of the original cycles is not changed.
-
-It does not seem necessary to compare the sample_type of sidebband 
-event. It is not an actual sample event, so I'd like to confirm that.
-
-If the change is as expected and necessary, then I'll remove the patch.
-
-Thanks,
-Yang
-
+> +{
+> +       return vma->vm_start <= vma->vm_mm->brk &&
+> +               vma->vm_end >= vma->vm_mm->start_brk;
+> +}
+> +
+> +static inline bool vma_is_stack(struct vm_area_struct *vma)
+> +{
+> +       return vma->vm_start <= vma->vm_mm->start_stack &&
+> +              vma->vm_end >= vma->vm_mm->start_stack;
+> +}
+> +
+>  static inline bool vma_is_temporary_stack(struct vm_area_struct *vma)
+>  {
+>         int maybe_stack = vma->vm_flags & (VM_GROWSDOWN | VM_GROWSUP);
+> --
+> 2.41.0
+>
