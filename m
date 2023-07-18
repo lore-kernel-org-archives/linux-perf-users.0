@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C368EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Jul 2023 22:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23159EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Jul 2023 22:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229678AbjGRWvw (ORCPT
+        id S229612AbjGRWwt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Jul 2023 18:51:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59894 "EHLO
+        Tue, 18 Jul 2023 18:52:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229532AbjGRWvv (ORCPT
+        with ESMTP id S229577AbjGRWws (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Jul 2023 18:51:51 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02958113;
-        Tue, 18 Jul 2023 15:51:00 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id 98e67ed59e1d1-262d33fa37cso3434069a91.3;
-        Tue, 18 Jul 2023 15:50:59 -0700 (PDT)
+        Tue, 18 Jul 2023 18:52:48 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F6FFEE;
+        Tue, 18 Jul 2023 15:52:22 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-666ed230c81so6299866b3a.0;
+        Tue, 18 Jul 2023 15:52:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689720659; x=1692312659;
+        d=gmail.com; s=20221208; t=1689720741; x=1692312741;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bAziTTNqkuDxnsVhswEAtYdwMiQKe4Q0DSlep6xN+rY=;
-        b=TG6BttH0y1XtYqBNMg8rULmY5CDgCLLSQfYicSCLKZa00WKkMgXKSZBlzUChvsKO4A
-         47qSYrFT1ZhmczurwUznvobMAGABpncs7nh339VmTHq92fLtQPjZG86JwikiQY9pvenC
-         q0Tjt5X/ff2Fvsxkgrb++IQsrPhRe5W0PGtnf+b4+tFWrw/rcnzQuLZ+L4AkySf5zV5C
-         h1lm/Uq9VpRMzkR2lyq1vqfRh9V/EeVQLZwY5LjkxKeoSPrdMqyu1uGLBXvurROtFJ0i
-         KoQmawZkYh6EFnmCaMyy5xPTIRoaFS762wuIMdRtccr1aSzm3S737s7bJX3ZHahj2eiC
-         xMOg==
+        bh=AESNSKu76AwBKDmM6LgRhommsrTxqaO6oADrlXIeM64=;
+        b=gvtye7OYtvyAywIXMhCIK07kjzJzgri2LsA/WZAVczuZuJQjAeR6DmBeDGBw5TGPqw
+         r7RmWVBvLhlinXTGJeSmoyJN9i0604XOOq8vGBK2L8ddyOQ3rkkO8TenTR74Q8I4rWmq
+         1R1GZzHyuQFQKGeH1ff5EERFFnXn0Hyvnw1x+J6Y+O7BZjwhcmYi+tTyjA5+UY2vtLfC
+         zCKfkdCqrV6vtp9BX7rxe97zAXlbXiUI6oixBEV6EguOEB9Mg7ooV4bw+XUHmittbOCT
+         xExiD/x5gxaPx4/zl20oBsKEQhz+YgWwyrL+MpUUeshIbvST1JFNKXU5WWu28ibEqx3N
+         AxGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689720659; x=1692312659;
+        d=1e100.net; s=20221208; t=1689720741; x=1692312741;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bAziTTNqkuDxnsVhswEAtYdwMiQKe4Q0DSlep6xN+rY=;
-        b=HRTAyoqu3Glmk/++aYCyBsFRrOFw36c40NK+1KcJMMMFLk0HOnz3IUXbNRNbg6vCze
-         ek+/vjkwJ3fvPv06lHyujO1gw/XUuC71xT1LGWk1bgQaHsPNIqnfk0lN9D2c4H9WoMk3
-         4aNeA/sVG5V8eGU/VJPW+bJdqymD9DbRL4AwX7RmfoMRDT24dHsppEs/W+52EPUlO/EA
-         1rO8pLy8vr12dhjuHGz+CHinA/0NJJ8AwuwZSRln5opYnetKFiZdMu+JG2Nn3KL9opTx
-         6YnLHM1b6FCTtbKEGmmeC44Ggq1/aeHBHSzuIZusWhgx9urgyuzpnTd30wlzqx0KZ0U2
-         zpXA==
-X-Gm-Message-State: ABy/qLbN5KXKDyhaGM/3NQNuna8WWObEau6cdmfUs4KqVWWppdQk1hhH
-        HeykhGMUKujyHNMUdwdjcumEr0bTd3C2mouI
-X-Google-Smtp-Source: APBJJlE1LxEerg9t/i5ahWNwoPzbIJNTBbMbyjoMt5nbezqaUrOmkjFtf27vc87mxvPig5D29FIKyg==
-X-Received: by 2002:a17:90a:294b:b0:263:70d5:6d60 with SMTP id x11-20020a17090a294b00b0026370d56d60mr13331369pjf.30.1689720659188;
-        Tue, 18 Jul 2023 15:50:59 -0700 (PDT)
+        bh=AESNSKu76AwBKDmM6LgRhommsrTxqaO6oADrlXIeM64=;
+        b=hHEcnZ0WR5/GE5oFMp5Y5BUwpTrmDTKDp2gIgNKzuoGMg1N9GI0s8a/BRMndrQ0TZU
+         A8bPag2BjNM7coF3x+hIe+nPhJ15q4LCG0C1CCEcpAgqKbrPeDfImeCkKJzYDjt0yLKW
+         gvxjEZj2xJD/VtVZZKwGK24R7dY5lLzpyKDKSFwPWkWgCdyPoacrE6dPQMuK/sE17cTo
+         tQkx4JBoOOgSHJWZmSqVEhWDzSqpaG7CPUVDcnnRn9iw9O7HDiFvNhfaACNtqUEY9N2g
+         UHs+YiwG/sb3jHSzvWaNtzFz0A4w0DZ48KJon1rLNVoFKp8Efnby/N2orz4SELZ7awF8
+         JiEw==
+X-Gm-Message-State: ABy/qLb0BFu9AcSVJiMYhp7GoAB09UsgfJnAEgtVSYXLc3UWHuHNt4fn
+        TJgEVt920CKN9UcwxEAoiG8=
+X-Google-Smtp-Source: APBJJlFv1a/dZKM9JVmWRbsLvfc2IoXCwZIL/wLdapRaYK1KM4xxmWOn/IR3cQz9bWwJ7Hq0+pK0Pw==
+X-Received: by 2002:a05:6a20:12c9:b0:12e:c481:7072 with SMTP id v9-20020a056a2012c900b0012ec4817072mr914193pzg.37.1689720741264;
+        Tue, 18 Jul 2023 15:52:21 -0700 (PDT)
 Received: from yoga ([2400:1f00:13:be68:c61a:77e0:3624:e4f6])
-        by smtp.gmail.com with ESMTPSA id gp20-20020a17090adf1400b0025023726fc4sm75420pjb.26.2023.07.18.15.50.54
+        by smtp.gmail.com with ESMTPSA id a11-20020a637f0b000000b005633941a547sm1943769pgd.27.2023.07.18.15.52.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jul 2023 15:50:58 -0700 (PDT)
-Date:   Wed, 19 Jul 2023 04:20:51 +0530
+        Tue, 18 Jul 2023 15:52:20 -0700 (PDT)
+Date:   Wed, 19 Jul 2023 04:22:13 +0530
 From:   Anup Sharma <anupnewsmail@gmail.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -63,9 +63,9 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Anup Sharma <anupnewsmail@gmail.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 5/6] perf scripts python: implement internal get or create
- frame, stack and string function
-Message-ID: <4cbbbb2b748f29c1a5025d23f0260a395054003a.1689718662.git.anupnewsmail@gmail.com>
+Subject: [PATCH v4 6/6] perf scripts python: Implement add sample function
+ and thread processing
+Message-ID: <6771dcadf7507ad8916ba2398d22f873579b0505.1689718662.git.anupnewsmail@gmail.com>
 References: <cover.1689718662.git.anupnewsmail@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -75,120 +75,83 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The intern_stack function is responsible for retrieving
-or creating a stack_id based on the provided frame_id and prefix_id.
-It first generates a key using the frame_id and prefix_id values.
-If the stack corresponding to the key is found in the stackMap,
-it is returned. Otherwise, a new stack is created by appending
-the prefix_id and frame_id to the stackTable. The key
-and the index of the newly created stack are added to the
-stackMap for future reference.
-
-The _intern_frame function is responsible for retrieving or
-creating a frame_id based on the provided frame string. If the frame_id
-corresponding to the frameString is found in the frameMap, it is
-returned. Otherwise, a new frame is created by appending relevant
-information to the frameTable and adding the frameString to the string_id
-through _intern_string.
-
-The _intern_string function will gets a matching string, or saves the new
-string and returns a String ID.
+The stack has been created for storing func and dso from the callchain.
+The sample has been added to a specific thread. It first checks if the
+thread exists in the Thread class. Then it call _add_sample function
+which is responsible for appending a new entry to the samples list.
 
 Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
 ---
- .../scripts/python/firefox-gecko-converter.py | 58 ++++++++++++++++++-
- 1 file changed, 57 insertions(+), 1 deletion(-)
+ .../scripts/python/firefox-gecko-converter.py | 46 +++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
 diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools/perf/scripts/python/firefox-gecko-converter.py
-index a0218e2245f2..ae69c0a4af13 100644
+index ae69c0a4af13..9c4393787daa 100644
 --- a/tools/perf/scripts/python/firefox-gecko-converter.py
 +++ b/tools/perf/scripts/python/firefox-gecko-converter.py
-@@ -13,6 +13,7 @@ import os
- import sys
- import json
- import argparse
-+from functools import reduce
- from dataclasses import dataclass, field
- from typing import List, Dict, Optional, NamedTuple, Set, Tuple, Any
+@@ -156,6 +156,25 @@ class Thread:
+ 		))
+ 		return frame_id
  
-@@ -39,6 +40,13 @@ CATEGORIES = None
- # The product name is used by the profiler UI to show the Operating system and Processor.
- PRODUCT = os.popen('uname -op').read().strip()
- 
-+# Here key = tid, value = Thread
-+tid_to_thread = dict()
++	def _add_sample(self, comm: str, stack: List[str], time_ms: Milliseconds) -> None:
++		"""Add a timestamped stack trace sample to the thread builder.
++		Args:
++			comm: command-line (name) of the thread at this sample
++			stack: sampled stack frames. Root first, leaf last.
++			time_ms: timestamp of sample in milliseconds.
++		"""
++		# Ihreads may not set their names right after they are created.
++		# Instead, they might do it later. In such situations, to use the latest name they have set.
++		if self.comm != comm:
++			self.comm = comm
 +
-+# The category index is used by the profiler UI to show the color of the flame graph.
-+USER_CATEGORY_INDEX = 0
-+KERNEL_CATEGORY_INDEX = 1
-+
- # https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L156
- class Frame(NamedTuple):
- 	string_id: StringID
-@@ -99,6 +107,55 @@ class Thread:
- 	stackMap: Dict[Tuple[Optional[int], int], int] = field(default_factory=dict)
- 	frameMap: Dict[str, int] = field(default_factory=dict)
- 
-+	def _intern_stack(self, frame_id: int, prefix_id: Optional[int]) -> int:
-+		"""Gets a matching stack, or saves the new stack. Returns a Stack ID."""
-+		key = f"{frame_id}" if prefix_id is None else f"{frame_id},{prefix_id}"
-+		# key = (prefix_id, frame_id)
-+		stack_id = self.stackMap.get(key)
-+		if stack_id is None:
-+			# return stack_id
-+			stack_id = len(self.stackTable)
-+			self.stackTable.append(Stack(prefix_id=prefix_id, frame_id=frame_id))
-+			self.stackMap[key] = stack_id
-+		return stack_id
-+
-+	def _intern_string(self, string: str) -> int:
-+		"""Gets a matching string, or saves the new string. Returns a String ID."""
-+		string_id = self.stringMap.get(string)
-+		if string_id is not None:
-+			return string_id
-+		string_id = len(self.stringTable)
-+		self.stringTable.append(string)
-+		self.stringMap[string] = string_id
-+		return string_id
-+
-+	def _intern_frame(self, frame_str: str) -> int:
-+		"""Gets a matching stack frame, or saves the new frame. Returns a Frame ID."""
-+		frame_id = self.frameMap.get(frame_str)
-+		if frame_id is not None:
-+			return frame_id
-+		frame_id = len(self.frameTable)
-+		self.frameMap[frame_str] = frame_id
-+		string_id = self._intern_string(frame_str)
-+
-+		symbol_name_to_category = KERNEL_CATEGORY_INDEX if frame_str.find('kallsyms') != -1 \
-+		or frame_str.find('/vmlinux') != -1 \
-+		or frame_str.endswith('.ko)') \
-+		else USER_CATEGORY_INDEX
-+
-+		self.frameTable.append(Frame(
-+			string_id=string_id,
-+			relevantForJS=False,
-+			innerWindowID=0,
-+			implementation=None,
-+			optimizations=None,
-+			line=None,
-+			column=None,
-+			category=symbol_name_to_category,
-+			subcategory=None,
-+		))
-+		return frame_id
++		prefix_stack_id = reduce(lambda prefix_id, frame: self._intern_stack
++						(self._intern_frame(frame), prefix_id), stack, None)
++		if prefix_stack_id is not None:
++			self.samples.append(Sample(stack_id=prefix_stack_id,
++									time_ms=time_ms,
++									responsiveness=0))
 +
  	def _to_json_dict(self) -> Dict:
  		"""Converts current Thread to GeckoThread JSON format."""
  		# Gecko profile format is row-oriented data as List[List],
-@@ -163,7 +220,6 @@ class Thread:
- 			"processType": "default",
- 		}
+@@ -234,9 +253,36 @@ def process_event(param_dict: Dict) -> None:
+ 	if not start_time:
+ 		start_time = time_stamp
  
--
- # Uses perf script python interface to parse each
- # event and store the data in the thread builder.
- def process_event(param_dict: Dict) -> None:
++	# Parse and append the callchain of the current sample into a stack.
++	stack = []
++	if param_dict['callchain']:
++		for call in param_dict['callchain']:
++			if 'sym' not in call:
++				continue
++			stack.append(f'{call["sym"]["name"]} (in {call["dso"]})')
++		if len(stack) != 0:
++			# Reverse the stack, as root come first and the leaf at the end.
++			stack = stack[::-1]
++
++	# During perf record if -g is not used, the callchain is not available.
++	# In that case, the symbol and dso are available in the event parameters.
++	else:
++		func = param_dict['symbol'] if 'symbol' in param_dict else '[unknown]'
++		dso = param_dict['dso'] if 'dso' in param_dict else '[unknown]'
++		stack.append(f'{func} (in {dso})')
++
++	# Add sample to the specific thread.
++	thread = tid_to_thread.get(tid)
++	if thread is None:
++		thread = Thread(comm=comm, pid=pid, tid=tid)
++		tid_to_thread[tid] = thread
++	thread._add_sample(comm=comm, stack=stack, time_ms=time_stamp)
++
+ # Trace_end runs at the end and will be used to aggregate
+ # the data into the final json object and print it out to stdout.
+ def trace_end() -> None:
++	threads = [thread._to_json_dict() for thread in tid_to_thread.values()]
++
+ 	# Schema: https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L305
+ 	gecko_profile_with_meta = {
+ 		"meta": {
 -- 
 2.34.1
 
