@@ -2,38 +2,38 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21448C001DE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 20:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE42EC001B0
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 20:32:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230428AbjGSUb5 (ORCPT
+        id S231195AbjGSUcO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Jul 2023 16:31:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33966 "EHLO
+        Wed, 19 Jul 2023 16:32:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230500AbjGSUbw (ORCPT
+        with ESMTP id S231303AbjGSUcK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Jul 2023 16:31:52 -0400
+        Wed, 19 Jul 2023 16:32:10 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26F531FFE;
-        Wed, 19 Jul 2023 13:31:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3DB2268D;
+        Wed, 19 Jul 2023 13:31:38 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 414716182C;
-        Wed, 19 Jul 2023 20:30:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29EE3C433C9;
-        Wed, 19 Jul 2023 20:30:11 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1BC3B61828;
+        Wed, 19 Jul 2023 20:30:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 044B0C433C7;
+        Wed, 19 Jul 2023 20:30:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689798614;
-        bh=Na90jgwrhK74RAguQcWtc6XkFOL8jLuOvNfJ2Q5L1OY=;
+        s=k20201202; t=1689798605;
+        bh=BRr5z+/T35P0lcuwuDmZU0RVzfr8a7oe2vprcDbwtgo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pOpuhOAIG0e+iG62LTVp/tOhm8LzD0rRM3ibmk6yVo2hwFY4DhRRdPheSDbNtDfLM
-         Bujg66J+7JICkSoBp8HPkMxK8Oz9qAIFFYgSA48TfTO622vnYlLwyj94nmtCQjaERL
-         Ki6o1XPdvRhWJuJQU8gNFU0gqxGmVDi3SzDaz3L/MQaIMtVkdSZEDayVa9x6f6OI5P
-         F42+Gsb7vi1AnoIObXd2JQ3OR/PYcLPk+k8Tza/Q2VAXpxFNEYZWUwKP32kqJJrqe/
-         BygHJnfOXWU0sQOHnWoByHfFO0TcbocwzUBIZVgP0CDKQ+1Eu7ro2EbL12/yP7SYXU
-         QLyVqMMsrD/tw==
+        b=eLuzMdK34w6j5GXTkBaVLYSnwgF5Bu10EGq7KZeJhZlqE3HnYBLVm4IEb4roVyTwh
+         zaRJeQThJ4AwDxoFLo0FHsKfpHb/hroAwkE9/sVSKF+KehTyNo1IXC9GgO16PNNwSo
+         HBP8mGWr+glXWHk2ty88qBhpLeRNDRCESsWRzJ5g08Mh0YRpsPldwoJMrGo9TmUciG
+         +utjq8ZVV6cRUKH6fodglvjSjZPdTtx5cMD7pQPNig3MKUkA0/xdJ4AK+8/zSQ0IS4
+         mq0EjGOhSMVIPY1VS4KDrmfwBkQ4g2fjvDt7VpeYtNF26daSz6+Q/2j2sJr+nbs9JD
+         zo/T8JyH7hO/A==
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -44,9 +44,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5/6] perf trace: Free thread_trace->files table
-Date:   Wed, 19 Jul 2023 17:29:50 -0300
-Message-ID: <20230719202951.534582-6-acme@kernel.org>
+Subject: [PATCH 2/6] perf thread: Allow tools to register a thread->priv destructor
+Date:   Wed, 19 Jul 2023 17:29:47 -0300
+Message-ID: <20230719202951.534582-3-acme@kernel.org>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20230719202951.534582-1-acme@kernel.org>
 References: <20230719202951.534582-1-acme@kernel.org>
@@ -58,10 +58,9 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The fd->pathname table that is kept in 'struct thread_trace' and thus in
-thread->priv must be freed when a thread is deleted.
-
-This was also detected using -fsanitize=address.
+So that when thread__delete() runs it can be called and free stuff tools
+stashed into thread->priv, like 'perf trace' does and will use this
+new facility to plug some leaks.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Ian Rogers <irogers@google.com>
@@ -69,48 +68,52 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ tools/perf/util/thread.c | 11 +++++++++++
+ tools/perf/util/thread.h |  2 ++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 56651d666480cc16..7ece2521efb69182 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1296,6 +1296,8 @@ static struct thread_trace *thread_trace__new(void)
- 	return ttrace;
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index 0b166404c5c365cf..35dd4e716e411da9 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -80,6 +80,13 @@ struct thread *thread__new(pid_t pid, pid_t tid)
+ 	return NULL;
  }
  
-+static void thread_trace__free_files(struct thread_trace *ttrace);
++static void (*thread__priv_destructor)(void *priv);
 +
- static void thread_trace__delete(void *pttrace)
- {
- 	struct thread_trace *ttrace = pttrace;
-@@ -1305,6 +1307,7 @@ static void thread_trace__delete(void *pttrace)
- 
- 	intlist__delete(ttrace->syscall_stats);
- 	ttrace->syscall_stats = NULL;
-+	thread_trace__free_files(ttrace);
- 	zfree(&ttrace->entry_str);
- 	free(ttrace);
- }
-@@ -1346,6 +1349,17 @@ void syscall_arg__set_ret_scnprintf(struct syscall_arg *arg,
- 
- static const size_t trace__entry_str_size = 2048;
- 
-+static void thread_trace__free_files(struct thread_trace *ttrace)
++void thread__set_priv_destructor(void (*destructor)(void *priv))
 +{
-+	for (int i = 0; i < ttrace->files.max; ++i) {
-+		struct file *file = ttrace->files.table + i;
-+		zfree(&file->pathname);
-+	}
-+
-+	zfree(&ttrace->files.table);
-+	ttrace->files.max  = -1;
++	thread__priv_destructor = destructor;
 +}
 +
- static struct file *thread_trace__files_entry(struct thread_trace *ttrace, int fd)
+ void thread__delete(struct thread *thread)
  {
- 	if (fd < 0)
+ 	struct namespaces *namespaces, *tmp_namespaces;
+@@ -112,6 +119,10 @@ void thread__delete(struct thread *thread)
+ 	exit_rwsem(thread__namespaces_lock(thread));
+ 	exit_rwsem(thread__comm_lock(thread));
+ 	thread__free_stitch_list(thread);
++
++	if (thread__priv_destructor)
++		thread__priv_destructor(thread__priv(thread));
++
+ 	RC_CHK_FREE(thread);
+ }
+ 
+diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+index 9068a21ce0fa1b0f..e79225a0ea46b789 100644
+--- a/tools/perf/util/thread.h
++++ b/tools/perf/util/thread.h
+@@ -71,6 +71,8 @@ struct thread *thread__new(pid_t pid, pid_t tid);
+ int thread__init_maps(struct thread *thread, struct machine *machine);
+ void thread__delete(struct thread *thread);
+ 
++void thread__set_priv_destructor(void (*destructor)(void *priv));
++
+ struct thread *thread__get(struct thread *thread);
+ void thread__put(struct thread *thread);
+ 
 -- 
 2.41.0
 
