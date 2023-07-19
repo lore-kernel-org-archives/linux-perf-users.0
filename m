@@ -2,210 +2,183 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75524EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 06:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F90EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 06:56:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230510AbjGSGRa (ORCPT
+        id S231236AbjGSG4D (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Jul 2023 02:17:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50420 "EHLO
+        Wed, 19 Jul 2023 02:56:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231131AbjGSGRX (ORCPT
+        with ESMTP id S229590AbjGSG4C (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Jul 2023 02:17:23 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BFE81FCB
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Jul 2023 23:17:19 -0700 (PDT)
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36J68ImV028431;
-        Wed, 19 Jul 2023 06:17:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=9L9oMBpmGFFeIYhxMPZL/jZawONiDUb0YmBOMQ4z7UE=;
- b=EQSLbTmIWP78aVPU/PEUqIVKA5VZzmh2msiYuXB/rYXojB90aWJzihxpPzJw+FzHkJ23
- 3hRt6RihwMPkCtGrTtdvHOOEIK6YlyVCtgkYBzqcw+Fu9TEOdHQeIFWc0rR9CXXdmzsW
- hRtP8Kr6xCzunK2+aNvCt8qDC6lFjL+e8wwXWrEoAm93yQ4G0F+8IY1/WkuC7sUhR5M6
- Nb50qrGlmRujjBpAFlpbAlj1HmS0HWshgcqlNm89dLMAh/U0aO9ftLe6byYK+HS4drtB
- k70ovWHt7BmGIunoYpLqCLka6FL16ZKVn790NRMR7mpC//Yr6igB/Vnv5ylLryAXxrxp fQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rx6ynks1x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Jul 2023 06:17:12 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36J68PQH029015;
-        Wed, 19 Jul 2023 06:17:11 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rx6ynks1m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Jul 2023 06:17:11 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36J5aVY2004455;
-        Wed, 19 Jul 2023 06:17:11 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3rv8g110ur-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Jul 2023 06:17:10 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36J6H9uU20709888
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jul 2023 06:17:09 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4529420043;
-        Wed, 19 Jul 2023 06:17:09 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CB99E2004D;
-        Wed, 19 Jul 2023 06:17:03 +0000 (GMT)
-Received: from [9.43.119.126] (unknown [9.43.119.126])
-        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Wed, 19 Jul 2023 06:17:03 +0000 (GMT)
-Message-ID: <1fbdbb26-4fce-ea25-a96a-99982b3f1603@linux.ibm.com>
-Date:   Wed, 19 Jul 2023 11:47:00 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH V2 00/26] tools/perf: Fix shellcheck coding/formatting
- issues of perf tool shell scripts
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
-        jolsa@kernel.org, irogers@google.com, namhyung@kernel.org
-Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, disgoel@linux.vnet.ibm.com
-References: <20230709182800.53002-1-atrajeev@linux.vnet.ibm.com>
-Content-Language: en-US
-From:   kajoljain <kjain@linux.ibm.com>
-In-Reply-To: <20230709182800.53002-1-atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 8BvKljGvN83JOw693shD1Jk71BPB3s3b
-X-Proofpoint-ORIG-GUID: 8x-C4BeZR454gUZtsJ5M6BFzs_wzGBzP
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Wed, 19 Jul 2023 02:56:02 -0400
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2067.outbound.protection.outlook.com [40.107.96.67])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4F4F1BFD;
+        Tue, 18 Jul 2023 23:56:00 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Hn0vFPrpZhmMynyREosgmELfiSwcUxLiLl6k2VJ667/Vo+Y+y0JjdHvFMBEK+CRqnIMCI0c0MTw+KZEEakKd+CsGyeSaIXeJx20dpBlGoOEUnhSMFPUzmZ4K8nbESMDtTXf+JTNW0BvQNSMVcD6DoJ6F8iv2zW5q+N6LQwgwl5oReQBq9b1jhbnbKYpH/e1Ocw0ZO6dv/yTkVW2K1tx3aF0rygsAjHIRkog6W94o70uMINbS0Fv7/1CvbfeFZnz8olzxfGBXCKpvco9NR97YDtE9MHoJMaSegNmmE1/SUpw11eAQxTdRDt8hSkMMNg9OLn3dZ1kXEUSkZRXbMq7ASQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7wxnt7ur/zUc4R4Xyr3xenabaVLIDj3BFzxjdyaCZys=;
+ b=Makp+KX84PieTa7ukhfwl10GUi52gueVJGJT6mNdpf+ZnsHkoiOmpW1ZpM5IOtOUt4seDL6dC9xQMU9GiYh86pYE6sCPcwQd4lerZfHLsYevb1Q/EOtxoD/QR2XvpAgucTBnZQggiZKbYVog+9RAFcMuV7D81ZUZEtQFz8egmQPPbrU/uiFPAPlDavgFUvkYLIsd9ZTpIYKrpiympCeqbc5DddUW6Gpf8WRzLODVmy62ZI/l6hn9phEmmiffQQxtoW2amRDyMYifhN28svQXKRcCLo8PefVei71tVA/C4Ewysr52XacSaIhMq5GZXbJ89Pv7Y0DLdVkFIeObLtbkew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7wxnt7ur/zUc4R4Xyr3xenabaVLIDj3BFzxjdyaCZys=;
+ b=qvujhVbARAYWaXEjReWCpRJ/kL+MVsPbSVGuSEg7fJVuGsXrpG2AIkSvSJzJGm8LwbDagvZVRub6SEnuXWB88DBCeAmDuD3QkhJggbJeEN8ourOi8fKVVLVW8fkImBSr2ZMu647iIz0FmRntmwUTMwPGmDDMBAWlZCcfxyWEqrg=
+Received: from BN0PR10CA0020.namprd10.prod.outlook.com (2603:10b6:408:143::11)
+ by BY5PR12MB4035.namprd12.prod.outlook.com (2603:10b6:a03:206::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.32; Wed, 19 Jul
+ 2023 06:55:55 +0000
+Received: from BN8NAM11FT083.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:143:cafe::22) by BN0PR10CA0020.outlook.office365.com
+ (2603:10b6:408:143::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.24 via Frontend
+ Transport; Wed, 19 Jul 2023 06:55:55 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT083.mail.protection.outlook.com (10.13.177.75) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6588.34 via Frontend Transport; Wed, 19 Jul 2023 06:55:55 +0000
+Received: from sindhu.amdval.net (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 19 Jul
+ 2023 01:55:49 -0500
+From:   Sandipan Das <sandipan.das@amd.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <x86@kernel.org>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <tglx@linutronix.de>, <bp@alien8.de>,
+        <dave.hansen@linux.intel.com>, <hpa@zytor.com>,
+        <eranian@google.com>, <ananth.narayan@amd.com>,
+        <ravi.bangoria@amd.com>, <santosh.shukla@amd.com>,
+        <sandipan.das@amd.com>
+Subject: [PATCH 0/6] perf/x86/amd: Add memory controller events
+Date:   Wed, 19 Jul 2023 12:25:35 +0530
+Message-ID: <cover.1689748843.git.sandipan.das@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-19_02,2023-07-18_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 spamscore=0
- mlxlogscore=999 impostorscore=0 adultscore=0 priorityscore=1501 mlxscore=0
- malwarescore=0 suspectscore=0 lowpriorityscore=0 phishscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
- definitions=main-2307190056
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT083:EE_|BY5PR12MB4035:EE_
+X-MS-Office365-Filtering-Correlation-Id: c3378ad7-bdeb-4a25-68f6-08db8825330e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: gljAIvNIVvrONQEX9Bh2X/OsV0AAcEyd9zlWrszH2iQY1q2ZFotCV3VIxThvu+QgnewUyTgu6ZRcq/x6spbEgg7+Sl3AItR61ueGGm3OE5qlKBurQjqSDCu1SP9LG+XlKu2QwqZZ2WNNyn0bsY7SXCsqTiS/5x9OW4lwU68I/Xm9W5ERw1lWTahZ5Q1QVcdR8F3Vosn3oTzLiVrVkIrRcAjfynxccA/Oxo+QxhbrtiCXXCmb44eFg/iL6zJwBEOXHvSHwKcfLEXorQdLWJ7PDejWILGZJJKKUoTJYU8n6qMlQxpTlsNZw3vJdlVV9bssvin6uRWmpnKTYEMAl6/mdvQ5Un0PouzOl1bFIv68cMP/XvQ+kt3lOhmfsjgxU7fx9Ta3m1c9SEo71z6UvDfv/zTahYNFsgJWgncVxT4IdBxN+JvYqYPlNtea7XM4CevspLtx9vGKbl2wlY6RUXfJ1qdxeV6MsIPC+g8DrLHOM2zwPJTwdVlOpVC6nrkKRBGqOc8np0ANj1uyZQhYn8xQUYdcghkuoBjvehr96UxZJ0v0UxistdFzaK92FF/gqfwoT4zoH8dqvqIv939mSoo7PPdLp+t8Sd+yX60TUt2xxz1pMp5vHRrxQQbv9a13yhuDhMVocaOgkpqhqbX5f1BXc/1mobIVTGO1YBkndsiPWX7k0hz+88mD/s9Lm8xQa5eVdgUiOEGtmefIEk/oiVgeiTW21jvr4gnCsIiN8QG5mTfcX/WdOAVslek5AKRPt45RZ4mYMArM6c/FgKgzucJeqg==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(376002)(39860400002)(136003)(346002)(396003)(82310400008)(451199021)(46966006)(40470700004)(36840700001)(7416002)(86362001)(36756003)(2906002)(44832011)(40460700003)(40480700001)(2616005)(16526019)(186003)(36860700001)(83380400001)(336012)(426003)(47076005)(26005)(82740400003)(81166007)(110136005)(356005)(70206006)(6666004)(54906003)(70586007)(478600001)(316002)(5660300002)(4326008)(41300700001)(8936002)(8676002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jul 2023 06:55:55.4338
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c3378ad7-bdeb-4a25-68f6-08db8825330e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT083.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4035
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+Unified Memory Controller (UMC) events were introduced with Zen 4 as a
+part of the Performance Monitoring Version 2 (PerfMonV2) enhancements.
+Currently, Zen 4 supports upto 12 channels of DDR5 memory and each of
+them are controlled by a dedicated UMC. Each UMC, in turn, has its own
+set of performance monitoring counters. These counters can provide info
+on UMC command activity which in turn can be used to derive utilization
+and bandwidth. Using perf tool, users can profile activity either on a
+combined basis (includes all active UMCs) or for individual UMCs.
 
-Looking for review comments on this patchset.
+E.g. measurement across all UMCs
 
-Thanks,
-Kajol Jain
+  $ sudo perf stat -e amd_umc/umc_cas_cmd.all/ -a -- sleep 1
 
+   Performance counter stats for 'system wide':
 
-On 7/9/23 23:57, Athira Rajeev wrote:
-> Patchset covers a set of fixes for coding/formatting issues observed while
-> running shellcheck tool on the perf shell scripts.
-> 
-> This cleanup is a pre-requisite to include a build option for shellcheck
-> discussed here: https://www.spinics.net/lists/linux-perf-users/msg25553.html
-> First set of patches were posted here:
-> https://lore.kernel.org/linux-perf-users/53B7D823-1570-4289-A632-2205EE2B522C@linux.vnet.ibm.com/T/#t
-> 
-> This patchset covers remaining set of shell scripts which needs
-> fix. Patch 1 is resubmission of patch 6 from the initial series.
-> Patch 15, 16 and 22 touches code from tools/perf/trace/beauty.
-> Other patches are fixes for scripts from tools/perf/tests.
-> 
-> The shellcheck is run for severity level for errors and warnings.
-> Command used:
-> 
-> # for F in $(find tests/shell/ -perm -o=x -name '*.sh'); do shellcheck -S warning $F; done
-> # echo $?
-> 0
-> 
-> Changelog:
-> v1 -> v2:
->   - Rebased on top of perf-tools-next from:
->   https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=perf-tools-next
-> 
->   - Fixed shellcheck errors and warnings reported for newly
->     added changes from perf-tools-next branch
-> 
->   - Addressed review comment from James clark for patch 
->     number 13 from V1. The changes in patch 13 were not necessary
->     since the file "tests/shell/lib/coresight.sh" is sourced from
->     other test files.
-> 
-> Akanksha J N (1):
->   tools/perf/tests: Fix shellcheck warnings for
->     trace+probe_vfs_getname.sh
-> 
-> Athira Rajeev (14):
->   tools/perf/tests: fix test_arm_spe_fork.sh signal case issues
->   tools/perf/tests: Fix unused variable references in
->     stat+csv_summary.sh testcase
->   tools/perf/tests: fix shellcheck warning for
->     test_perf_data_converter_json.sh testcase
->   tools/perf/tests: Fix shellcheck issue for stat_bpf_counters.sh
->     testcase
->   tools/perf/tests: Fix shellcheck issues in
->     tests/shell/stat+shadow_stat.sh tetscase
->   tools/perf/tests: Fix shellcheck warnings for
->     thread_loop_check_tid_10.sh
->   tools/perf/tests: Fix shellcheck warnings for unroll_loop_thread_10.sh
->   tools/perf/tests: Fix shellcheck warnings for lib/probe_vfs_getname.sh
->   tools/perf/tests: Fix the shellcheck warnings in lib/waiting.sh
->   tools/perf/trace: Fix x86_arch_prctl.sh to address shellcheck warnings
->   tools/perf/arch/x86: Fix syscalltbl.sh to address shellcheck warnings
->   tools/perf/tests/shell: Fix the shellcheck warnings in
->     record+zstd_comp_decomp.sh
->   tools/perf/tests/shell: Fix shellcheck warning for stat+std_output.sh
->     testcase
->   tools/perf/tests: Fix shellcheck warning for stat+std_output.sh
->     testcase
-> 
-> Kajol Jain (11):
->   tools/perf/tests: Fix shellcheck warning for probe_vfs_getname.sh
->     testcase
->   tools/perf/tests: Fix shellcheck warning for record_offcpu.sh testcase
->   tools/perf/tests: Fix shellcheck issue for lock_contention.sh testcase
->   tools/perf/tests: Fix shellcheck issue for stat_bpf_counters_cgrp.sh
->     testcase
->   tools/perf/tests: Fix shellcheck warning for asm_pure_loop.sh shell
->     script
->   tools/perf/tests: Fix shellcheck warning for memcpy_thread_16k_10.sh
->     shell script
->   tools/perf/tests: Fix shellcheck warning for probe.sh shell script
->   tools/perf/trace: Fix shellcheck issue for arch_errno_names.sh script
->   tools/perf: Fix shellcheck issue for check-headers.sh script
->   tools/shell/coresight: Fix shellcheck warning for
->     thread_loop_check_tid_2.sh shell script
->   tools/perf/tests/shell/lib: Fix shellcheck warning for stat_output.sh
->     shell script
-> 
->  .../arch/x86/entry/syscalls/syscalltbl.sh     |  2 +-
->  tools/perf/check-headers.sh                   |  6 ++--
->  .../tests/shell/coresight/asm_pure_loop.sh    |  2 +-
->  .../shell/coresight/memcpy_thread_16k_10.sh   |  2 +-
->  .../coresight/thread_loop_check_tid_10.sh     |  2 +-
->  .../coresight/thread_loop_check_tid_2.sh      |  2 +-
->  .../shell/coresight/unroll_loop_thread_10.sh  |  2 +-
->  tools/perf/tests/shell/lib/probe.sh           |  1 +
->  .../perf/tests/shell/lib/probe_vfs_getname.sh |  5 ++--
->  tools/perf/tests/shell/lib/stat_output.sh     |  1 +
->  tools/perf/tests/shell/lib/waiting.sh         |  1 +
->  tools/perf/tests/shell/lock_contention.sh     | 12 ++++----
->  tools/perf/tests/shell/probe_vfs_getname.sh   |  4 +--
->  .../tests/shell/record+zstd_comp_decomp.sh    | 14 +++++-----
->  tools/perf/tests/shell/record_offcpu.sh       |  6 ++--
->  tools/perf/tests/shell/stat+csv_output.sh     |  2 +-
->  tools/perf/tests/shell/stat+csv_summary.sh    |  4 +--
->  tools/perf/tests/shell/stat+shadow_stat.sh    |  4 +--
->  tools/perf/tests/shell/stat+std_output.sh     |  3 +-
->  tools/perf/tests/shell/stat_bpf_counters.sh   |  4 +--
->  .../tests/shell/stat_bpf_counters_cgrp.sh     | 28 ++++++++-----------
->  tools/perf/tests/shell/test_arm_spe_fork.sh   |  2 +-
->  .../shell/test_perf_data_converter_json.sh    |  2 +-
->  .../tests/shell/trace+probe_vfs_getname.sh    |  6 ++--
->  tools/perf/trace/beauty/arch_errno_names.sh   | 15 ++++------
->  tools/perf/trace/beauty/x86_arch_prctl.sh     |  6 ++--
->  26 files changed, 67 insertions(+), 71 deletions(-)
-> 
+             544,810      amd_umc/umc_cas_cmd.all/
+
+         1.002012663 seconds time elapsed
+
+E.g. measurement specific to certain UMCs
+
+  $ sudo perf stat -e amd_umc_0/umc_cas_cmd.all/ -e amd_umc_6/umc_cas_cmd.all/ -a -- sleep 1
+
+   Performance counter stats for 'system wide':
+
+              21,096      amd_umc_0/umc_cas_cmd.all/
+              35,428      amd_umc_6/umc_cas_cmd.all/
+
+         1.001802611 seconds time elapsed
+
+The available UMCs can be found from sysfs and the socket to which they
+belong can be derived from the cpumask.
+
+E.g.
+
+  $ find /sys/devices/ -maxdepth 1 -name "amd_umc_*"
+
+  /sys/devices/amd_umc_9
+  /sys/devices/amd_umc_7
+  /sys/devices/amd_umc_5
+  /sys/devices/amd_umc_3
+  /sys/devices/amd_umc_1
+  /sys/devices/amd_umc_10
+  /sys/devices/amd_umc_8
+  /sys/devices/amd_umc_6
+  /sys/devices/amd_umc_4
+  /sys/devices/amd_umc_2
+  /sys/devices/amd_umc_11
+  /sys/devices/amd_umc_0
+
+  $ cat /sys/devices/amd_umc_0/cpumask
+  0
+
+  $ cat /sys/devices/amd_umc_6/cpumask
+  96
+
+All of the output above comes from a dual socket Genoa system having
+96 cores and 6 populated memory channels per socket.
+
+Sandipan Das (6):
+  perf/x86/amd/uncore: Refactor uncore management
+  perf/x86/amd/uncore: Use rdmsr if rdpmc is unavailable
+  x86/cpuid: Add smp helper
+  perf/x86/amd/uncore: Add group exclusivity
+  perf/x86/amd/uncore: Add memory controller support
+  perf vendor events amd: Add Zen 4 memory controller events
+
+ arch/x86/events/amd/uncore.c                  | 893 +++++++++++-------
+ arch/x86/include/asm/cpuid.h                  |  14 +
+ arch/x86/include/asm/msr-index.h              |   4 +
+ arch/x86/include/asm/perf_event.h             |   9 +
+ arch/x86/lib/Makefile                         |   2 +-
+ arch/x86/lib/cpuid-smp.c                      |  36 +
+ .../arch/x86/amdzen4/memory-controller.json   | 101 ++
+ .../arch/x86/amdzen4/recommended.json         |  84 ++
+ tools/perf/pmu-events/jevents.py              |   2 +
+ 9 files changed, 807 insertions(+), 338 deletions(-)
+ create mode 100644 arch/x86/lib/cpuid-smp.c
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/memory-controller.json
+
+-- 
+2.34.1
+
