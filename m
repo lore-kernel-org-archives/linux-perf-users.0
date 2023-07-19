@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F3CC001E0
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 16:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2158AC0015E
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 16:48:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230288AbjGSQpb (ORCPT
+        id S230079AbjGSQsp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Jul 2023 12:45:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60668 "EHLO
+        Wed, 19 Jul 2023 12:48:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230397AbjGSQpU (ORCPT
+        with ESMTP id S230232AbjGSQso (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Jul 2023 12:45:20 -0400
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 592A41FF6
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 09:45:09 -0700 (PDT)
-Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-40371070eb7so561cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 09:45:09 -0700 (PDT)
+        Wed, 19 Jul 2023 12:48:44 -0400
+Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AB652136
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 09:48:32 -0700 (PDT)
+Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-401d1d967beso5741cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 09:48:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689785108; x=1692377108;
+        d=google.com; s=20221208; t=1689785311; x=1692377311;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5eouzQn1DE3Woy1acpRFuk9bMIN105v+sSKwoOHp8Q8=;
-        b=iSnTbfngNexifbTiJuj1A6pSo2Dvmra91A6H2aTFXGTdtnmF/hweiXJatXvaYyRH94
-         iFaeVyWCgEhGxoqSM88bbB5h/kHIQ4+2SIKEKGbRuXgqduISr1qluykNMSfYxdOtjT0Z
-         9amcHsbdvG0+WiWUIR7y5qGp47GKcUf0Ia5qYmCmP8su/ZuOaRG+Q9bccR+PKJPVIPcm
-         dSwucDH1R0BIkkXmAryUDhGrC8AXwBv9q0SPJH9gY24OoBpqYaas2WdyHp2R2W13TBoc
-         9kvQHu8ZIJG10bA4EMIUhJu+4iYx5Z933YapDLepmhz1hgqrbZQLBPVCCHJXKMJIn+Zi
-         EvDQ==
+        bh=Qdhb3Ae11Gg1Dat3FtPlzRqYz+pl+VF4Ei5yrEPLth0=;
+        b=ZhpgSv3ucAbMdOpycJUjN25cYLL4v6Q2VEZ9BHyAYp/RLIZTddNVRP3H1CckWGYT6+
+         DDx8BkNPfq1m4eGu6KnD4v1nA34X3YhpzrtlxqtwXNDeNfzi8I3R/BnpbSNCAz/cFOxA
+         UX+0qplhn5jKCpboPrfhEab3jglezs+E+hmzwVSQ2k1VJY/jfuG6MwtsX8KrhBEksb5N
+         MDUMdrW2UvnNCPajHkBwyePdOUD1wurmMBd2MxzCJ+0xWWDuOJVMWRH5kxdKfbMckjqE
+         /iJa8ARtYoF4YjmmF8B9PZexijoUH2qNxe/gi9VJBHzhDH6Yi/fPH9zOTTYSnbo6kFjQ
+         03iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689785108; x=1692377108;
+        d=1e100.net; s=20221208; t=1689785311; x=1692377311;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5eouzQn1DE3Woy1acpRFuk9bMIN105v+sSKwoOHp8Q8=;
-        b=TlHzhsxW3nsZZfjbv14fGmcxWueSv71BnB1+poZmJqukN751GXhBcqvVouFAVU6ngx
-         sMl/S+5yhDhTlWkHdhB7sn7g1CCoe8jGHyCpTwTnVPW+q/3Hua9/kjW5SvQUyxNyjW2e
-         enW+ok5/Bxm76n8s5QBVoykf2l9YcGKnGTiYKkr8Qh+qFyZALnnw/DhJXIfUTaq/fS7c
-         phl410jSFdkt83A0gRCXo6IwAZM5pehqq0VSNZAzj+FT431rbpprIAV6n9yWx0RFbf4P
-         qd3vs6TA6Jg73/TFxAlTKcqJi3RnK6j7Yiq9jFAMrWNr26P/BvMgrGqE1YXX3pcXZxSf
-         07EQ==
-X-Gm-Message-State: ABy/qLYXQONci5bdPxbXBy1dN3FWeElQCARDjrtADVlV1d1s3FcH2fEy
-        xPrmHPq8Y9zwlIqozVXDeqdocwu4YMvt+AKtT7AVqQ==
-X-Google-Smtp-Source: APBJJlEL8/G/yVptpWOuQ0guUBdI/DR3grNFP/ZpiVN+HoXzJ96I7quOyM5EFQoiqbygx2tM85uZiFrotTti9DDS5c4=
-X-Received: by 2002:a05:622a:38b:b0:405:3a65:b3d6 with SMTP id
- j11-20020a05622a038b00b004053a65b3d6mr117111qtx.13.1689785107840; Wed, 19 Jul
- 2023 09:45:07 -0700 (PDT)
+        bh=Qdhb3Ae11Gg1Dat3FtPlzRqYz+pl+VF4Ei5yrEPLth0=;
+        b=F6CN4JWmscho9GpBOmkeqU9jEplkRDr2oxTk8s8GbcrjbDbDj6WyicXFOf7PkKhsQn
+         o76SK4g4CSWxNPp2vKi+BGz1gC+9CfuUHxjcmUyTCKyhT5hQ60IluGM6mCLdLAyfm+sQ
+         ioUo5vEbM8YeoG2CtECi2OUwHvwXJ/p0Iq2I14sQ99IuL5KU6B/ntoIYmBZ2EBx8omdr
+         Zqjt2uhVtgoHz4WqduTP9XMt3F+0UP/a+GzQHyGZZSABRTx365ekOZNgrL2G6JwYOMVN
+         yPlorQmDG+S3bJOxniQsaHw00jzy3UR5avsdCLxWgFq9gSBuKXWUsQ2L14j6TiIcYq+m
+         dkng==
+X-Gm-Message-State: ABy/qLY4Et4R2EKUsrqvcz6a7nX3G16z9NqWDyAQpHeo77Ygms7EX2cU
+        Y1vOiTYzWK8s/RtUleXaggCLCnMolERsZ6IkKJrZVw==
+X-Google-Smtp-Source: APBJJlGHWag7WGvy2AIyTiB9+pLYJ1QpIZVF1cgNC8KDXbH+lfqt6f2fQwTqpmSovIPhRjokwwyzwhW6thNdncLuoxs=
+X-Received: by 2002:a05:622a:1cd:b0:403:a090:41c5 with SMTP id
+ t13-20020a05622a01cd00b00403a09041c5mr701146qtw.16.1689785311166; Wed, 19 Jul
+ 2023 09:48:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230715032915.97146-1-yangjihong1@huawei.com> <20230715032915.97146-3-yangjihong1@huawei.com>
-In-Reply-To: <20230715032915.97146-3-yangjihong1@huawei.com>
+References: <20230715032915.97146-1-yangjihong1@huawei.com> <20230715032915.97146-8-yangjihong1@huawei.com>
+In-Reply-To: <20230715032915.97146-8-yangjihong1@huawei.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 19 Jul 2023 09:44:56 -0700
-Message-ID: <CAP-5=fVysKhUn1YsUr0NBU2kVBDgkoczO861XwK5VCtkeYSRJA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/7] perf evlist: Add evlist__findnew_tracking_event() helper
+Date:   Wed, 19 Jul 2023 09:48:19 -0700
+Message-ID: <CAP-5=fXANQvgd96=hi2j7touCex0UQ9GsUB0cL1018KfeZPqzg@mail.gmail.com>
+Subject: Re: [PATCH v2 7/7] perf test: Add test case for record sideband events
 To:     Yang Jihong <yangjihong1@huawei.com>
 Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
@@ -72,101 +72,84 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 On Fri, Jul 14, 2023 at 8:31=E2=80=AFPM Yang Jihong <yangjihong1@huawei.com=
 > wrote:
 >
-> Currently, intel-bts, intel-pt, and arm-spe may add a dummy event for
-> tracking to the evlist. We may need to search for the dummy event for
-> some settings. Therefore, add evlist__findnew_tracking_event() helper.
+> Add a new test case to record sideband events for all CPUs when tracing
+> selected CPUs
 >
-> evlist__findnew_tracking_event() also deal with system_wide maps if
-> system_wide is true.
+> Test result:
+>
+>   # ./perf test list 2>&1 | grep 'perf record sideband tests'
+>    95: perf record sideband tests
+>   # ./perf test 95
+>    95: perf record sideband tests                                      : =
+Ok
+>
+> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> ---
+>  tools/perf/tests/shell/record_tracking.sh | 44 +++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100755 tools/perf/tests/shell/record_tracking.sh
+>
+> diff --git a/tools/perf/tests/shell/record_tracking.sh b/tools/perf/tests=
+/shell/record_tracking.sh
 
-I'm wondering if we can simplify the naming in the API, we have "dummy
-event" which makes sense as we literally call the event "dummy",
-"sideband" which refers to the kind of samples/events the dummy event
-will record but "tracking" I think tends to get used as a verb rather
-than a noun. So I think evlist__findnew_tracking_event should be
-evlist__findnew_dummy_event.
+Could this be record_sideband.sh ? It will be more consistent with the
+test output...
 
 Thanks,
 Ian
 
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> ---
->  tools/perf/builtin-record.c | 11 +++--------
->  tools/perf/util/evlist.c    | 18 ++++++++++++++++++
->  tools/perf/util/evlist.h    |  1 +
->  3 files changed, 22 insertions(+), 8 deletions(-)
->
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index aec18db7ff23..ca83599cc50c 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -1295,14 +1295,9 @@ static int record__open(struct record *rec)
->          */
->         if (opts->target.initial_delay || target__has_cpu(&opts->target) =
-||
->             perf_pmus__num_core_pmus() > 1) {
-> -               pos =3D evlist__get_tracking_event(evlist);
-> -               if (!evsel__is_dummy_event(pos)) {
-> -                       /* Set up dummy event. */
-> -                       if (evlist__add_dummy(evlist))
-> -                               return -ENOMEM;
-> -                       pos =3D evlist__last(evlist);
-> -                       evlist__set_tracking_event(evlist, pos);
-> -               }
-> +               pos =3D evlist__findnew_tracking_event(evlist, false);
-> +               if (!pos)
-> +                       return -ENOMEM;
->
->                 /*
->                  * Enable the dummy event when the process is forked for
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index 7ef43f72098e..25c3ebe2c2f5 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -1694,6 +1694,24 @@ void evlist__set_tracking_event(struct evlist *evl=
-ist, struct evsel *tracking_ev
->         tracking_evsel->tracking =3D true;
->  }
->
-> +struct evsel *evlist__findnew_tracking_event(struct evlist *evlist, bool=
- system_wide)
+> new file mode 100755
+> index 000000000000..44fc0af92f81
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/record_tracking.sh
+> @@ -0,0 +1,44 @@
+> +#!/bin/sh
+> +# perf record sideband tests
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +set -e
+> +
+> +err=3D0
+> +perfdata=3D$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+> +
+> +can_cpu_wide()
 > +{
-> +       struct evsel *evsel;
+> +    if ! perf record -o ${perfdata} -BN --no-bpf-event -e dummy:u -C $1 =
+true 2>&1 >/dev/null
+> +    then
+> +        echo "record sideband test [Skipped cannot record cpu$1]"
+> +        err=3D2
+> +    fi
 > +
-> +       evsel =3D evlist__get_tracking_event(evlist);
-> +       if (!evsel__is_dummy_event(evsel)) {
-> +               evsel =3D evlist__add_aux_dummy(evlist, system_wide);
-> +               if (!evsel)
-> +                       return NULL;
-> +
-> +               evlist__set_tracking_event(evlist, evsel);
-> +       } else if (system_wide) {
-> +               perf_evlist__go_system_wide(&evlist->core, &evsel->core);
-> +       }
-> +
-> +       return evsel;
+> +    rm -f ${perfdata}
+> +    return $err
 > +}
 > +
->  struct evsel *evlist__find_evsel_by_str(struct evlist *evlist, const cha=
-r *str)
->  {
->         struct evsel *evsel;
-> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> index 664c6bf7b3e0..98e7ddb2bd30 100644
-> --- a/tools/perf/util/evlist.h
-> +++ b/tools/perf/util/evlist.h
-> @@ -387,6 +387,7 @@ bool evlist_cpu_iterator__end(const struct evlist_cpu=
-_iterator *evlist_cpu_itr);
->
->  struct evsel *evlist__get_tracking_event(struct evlist *evlist);
->  void evlist__set_tracking_event(struct evlist *evlist, struct evsel *tra=
-cking_evsel);
-> +struct evsel *evlist__findnew_tracking_event(struct evlist *evlist, bool=
- system_wide);
->
->  struct evsel *evlist__find_evsel_by_str(struct evlist *evlist, const cha=
-r *str);
->
+> +test_system_wide_tracking()
+> +{
+> +    # Need CPU 0 and CPU 1
+> +    can_cpu_wide 0 || return 0
+> +    can_cpu_wide 1 || return 0
+> +
+> +    # Record on CPU 0 a task running on CPU 1
+> +    perf record -BN --no-bpf-event -o ${perfdata} -e dummy:u -C 0 -- tas=
+kset --cpu-list 1 true
+> +
+> +    # Should get MMAP events from CPU 1
+> +    mmap_cnt=3D`perf script -i ${perfdata} --show-mmap-events -C 1 2>/de=
+v/null | grep MMAP | wc -l`
+> +
+> +    rm -f ${perfdata}
+> +
+> +    if [ ${mmap_cnt} -gt 0 ] ; then
+> +        return 0
+> +    fi
+> +
+> +    echo "Failed to record MMAP events on CPU 1 when tracing CPU 0"
+> +    return 1
+> +}
+> +
+> +test_system_wide_tracking
 > --
 > 2.30.GIT
 >
