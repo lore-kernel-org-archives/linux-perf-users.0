@@ -2,133 +2,87 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97130EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 11:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F23EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 11:51:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229464AbjGSLEk (ORCPT
+        id S229485AbjGSLvE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Jul 2023 07:04:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40406 "EHLO
+        Wed, 19 Jul 2023 07:51:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbjGSLEj (ORCPT
+        with ESMTP id S230194AbjGSLvD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Jul 2023 07:04:39 -0400
-Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24707186;
-        Wed, 19 Jul 2023 04:04:38 -0700 (PDT)
-Received: by mail-io1-xd2c.google.com with SMTP id ca18e2360f4ac-783698a37beso387942539f.0;
-        Wed, 19 Jul 2023 04:04:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689764677; x=1692356677;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sf4ZRV10sV6tx4jAS43WUBL09WMMeV0xvAxTcrZcosU=;
-        b=syS5KsxIe77zYDrCENDBQkrf7gsj3kAytcNlamTWsCmzB/0Jh8evMBT6NjC3nVN9iQ
-         Wo4tXlj4vXy8P2mt9hlIFXcLuHAn6txEdXGbkqeG3db8MY1/raF5Wu3jBj30B0heQ1hM
-         gzPZjOziD3R5nPRIToOO6eqLMhZKZJaydN3MoRa0E00Yb666/T0A+FVZr9k1Y8uOoV+h
-         sugQOqGxtgsI/qT5Rsh6THy8EucTFCgqX6Sou7AaZWfFmgImeZTsQIE6LwUkr1TWEV/v
-         NIPJRzzXBIpnSwfphiJ33nEKZoDxd7IRf5o7yYLw9KimPwrRMzkceIFvsP/sEcKl4csY
-         T08w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689764677; x=1692356677;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sf4ZRV10sV6tx4jAS43WUBL09WMMeV0xvAxTcrZcosU=;
-        b=aYmRweqD4P56KdR5FZdeEM887iNK6pJTPbwi3zW8uxSUoh/5E4FgDEpn4DVDIihAHc
-         Lx4xoK/2rt1tBNuI//aeECohZW/W1RnQb20l6Nxk9yeh0g9IK2LTPpFnk+Zmfxuxv7XY
-         RN53ic7MyMJmzFVZlY4SmeSS2x/ibJsNpqSZB22E1Y+Vfi0+vrDCyllk8JB7ICnieeww
-         RTPpFW3seBazSjhS+jSh+B+WgfyENWmAxnEedHzPbGhrAtJt7ZI/mh4xy5bEZtpymxKz
-         r6zf+kIZOuZBnPk2j5AuhHmSU8InKwp6+DQTuP7xdqSc27rL4geP9gEer9xwydjXvW8z
-         PB+g==
-X-Gm-Message-State: ABy/qLYjb9vZjj3eFp+ASc3sX7m+Qa2jbEAoUZYTs1O7kHvQyhtaXpTo
-        07VUJMMTyWKBrJ5IcPp8SKE=
-X-Google-Smtp-Source: APBJJlGaE1cI4QMalhDeKG+GT6zh5I35yQo6jroBAILxmWinh1inRLDQtp8kaGEZA7UT3BAER1aIYg==
-X-Received: by 2002:a6b:fe17:0:b0:787:1f16:53ce with SMTP id x23-20020a6bfe17000000b007871f1653cemr5434904ioh.18.1689764677154;
-        Wed, 19 Jul 2023 04:04:37 -0700 (PDT)
-Received: from yoga ([2400:1f00:13:be68:7e35:c5e7:4202:bd70])
-        by smtp.gmail.com with ESMTPSA id c1-20020a170902d48100b001b896d0eb3dsm3680730plg.8.2023.07.19.04.04.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jul 2023 04:04:36 -0700 (PDT)
-From:   Anup Sharma <anupnewsmail@gmail.com>
-X-Google-Original-From: Anup Sharma <AnupSharma>
-Date:   Wed, 19 Jul 2023 16:34:28 +0530
-To:     Anup Sharma <anupnewsmail@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/6] Add support for Firefox's gecko profile format
-Message-ID: <ZLfDPPYK1PXc9xOe@yoga>
-References: <cover.1689718662.git.anupnewsmail@gmail.com>
+        Wed, 19 Jul 2023 07:51:03 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09B38170F;
+        Wed, 19 Jul 2023 04:50:57 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1689767455;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=y7h+KH/omTFY2W2ky+xbCPhNySLWmWU60lnSpyss0CM=;
+        b=viuCzRZD3USkMXyBZjlheY4+g9MGsrGUO29XYYvojVkrASWHqd1xmpdD2R+9W242qG7gFY
+        DcpBhdeIUhD2Y5DNpDJYp/mNXI5NKOqPWD+KmyoqwXJPL+UX5cXlSawlcn4/ScdbHjyDDY
+        K4DlUR2fXvgjH5yTycbVoUS4s7nhFqBv+3V9hRbzbo+njKKENGXtI7+bzXia8tmQfpqRt/
+        /XUB0sdl6K6eYpp56eD9VUEkFEFnQnccQeBmLF9hSSmocrMDEcISdt5W1Cl99k7S0pMEYB
+        sWZzt/InbBLE7ikkyBVKhKrKUK0+IWgGz04lJEn3Q4jAj6Cb7cZTijE5gBSgzA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1689767455;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=y7h+KH/omTFY2W2ky+xbCPhNySLWmWU60lnSpyss0CM=;
+        b=eY7emreGayYqGFikikjd9+TMgLI5w4icVeewdxgLSYOvQU3Wte+kGvZSsu3kqT1/1uV1vs
+        7tJOxE+YrGH8zTAQ==
+To:     Sandipan Das <sandipan.das@amd.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, x86@kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        adrian.hunter@intel.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, eranian@google.com, ananth.narayan@amd.com,
+        ravi.bangoria@amd.com, santosh.shukla@amd.com, sandipan.das@amd.com
+Subject: Re: [PATCH 3/6] x86/cpuid: Add smp helper
+In-Reply-To: <87v8egwe9l.ffs@tglx>
+References: <cover.1689748843.git.sandipan.das@amd.com>
+ <827723d8f506411700c68bccc5072ec8d918d2de.1689748843.git.sandipan.das@amd.com>
+ <87v8egwe9l.ffs@tglx>
+Date:   Wed, 19 Jul 2023 13:50:55 +0200
+Message-ID: <87mszsw25c.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1689718662.git.anupnewsmail@gmail.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 19, 2023 at 04:15:52AM +0530, Anup Sharma wrote:
-> This patch series adds support for Firefox's gecko profile format.
-> The format is documented here [1].
-> 
-> I have incorporated several changes based on feedback from the
-> previous version of the patch.
-> 
-> Changes in v3:
-a small typo here. It should be v4 instead of v3 (changes in v4).
-> - Implemented object-oriented programming (OOP) approach for Thread and Sample
->   to improve code organization and maintainability.
-> - Enhanced user experience by introducing argparse for changing color settings
->   of user and kernel symbols during execution.
-> - Ensured proper module encapsulation by adding imports wherever necessary.
-> - Improved code readability by adding descriptive comments and type annotations.
-> 
-> These changes focus on adopting OOP principles, enhancing user interaction with argparse,
-> and making the code more readable with comments and type information.
-> 
-> TODO:
-> - use cpu_mode to determine the category instead of finding it from symbol name.
-> - Write a test.
-> - add direct execution command for this script under script/python/bin directory.
-> 
-> Committer Testing:
-> - Tested with a perf.data file generated for single and multiple cpu
->   cores enabled.
-> - Uploaded the stdout into profiler.firefox.com and verified the
->   output.
-> - Verified the output with the output generated by the existing
->   script as mentioned here [2].
-> Method:
-> - perf record -F 99 -a -g -- sleep 5
-> - perf script firefox-gecko-converter.py > output.json
-> - upload output.json to profiler.firefox.com
-> 
-> [1] https://github.com/firefox-devtools/profiler/blob/main/docs-developer/gecko-profile-format.md
-> [2] https://perf.wiki.kernel.org/index.php/Tutorial#Firefox_Profiler
-> 
-> Anup Sharma (6):
->   perf scripts python: Add initial script file with usage information
->   perf scripts python: Extact necessary information from process event
->   perf scripts python: Add classes and conversion functions
->   perf scripts python: Add trace end processing and PRODUCT and
->     CATEGORIES information
->   perf scripts python: implement internal get or create frame, stack and
->     string function
->   perf scripts python: Implement add sample function and thread
->     processing
-> 
->  .../scripts/python/firefox-gecko-converter.py | 339 ++++++++++++++++++
->  1 file changed, 339 insertions(+)
->  create mode 100644 tools/perf/scripts/python/firefox-gecko-converter.py
-> 
-> -- 
-> 2.34.1
-> 
+On Wed, Jul 19 2023 at 09:29, Thomas Gleixner wrote:
+> On Wed, Jul 19 2023 at 12:25, Sandipan Das wrote:
+>> Depending on which CPU the CPUID instruction is executed, some leaves
+>> can report different values. There are cases where it may be required
+>> to know all possible values.
+>> Add a new helper that executes CPUID on a particular CPU and returns
+>> the EAX, EBX, ECX and EDX values.
+>
+> NAK.
+>
+> This madness has to stop. The correct thing is to parse the information
+> in CPUID at the point where the CPU comes online and store it for easy
+> consumption.
+>
+> I'm in the process of reworking the CPUID and topology evaluation and
+> that's where these things need to be stored. I'm still fighting some
+> nightmares with the already existing mess.
+>
+> Look at the mess people created over time here:
+>
+>      https://lore.kernel.org/lkml/20230717223049.327865981@linutronix.de
+>
+> No need to add more insanities to it. IOW, this has to wait for a week
+> or two until I settled the remaining issues.
+
+Actually you can do that today already. Either make it part of the CPUID
+evaluation or use the perf hotplug callback mechanism which is invoked
+early on the upcoming CPU and read that CPUID leaf.
+
