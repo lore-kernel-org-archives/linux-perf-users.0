@@ -2,104 +2,152 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFEFDEB64DA
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 14:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D31EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 15:23:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230209AbjGSOuU (ORCPT
+        id S231583AbjGSPW7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Jul 2023 10:50:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43052 "EHLO
+        Wed, 19 Jul 2023 11:22:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230384AbjGSOuT (ORCPT
+        with ESMTP id S231744AbjGSPWx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Jul 2023 10:50:19 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20AD8198D;
-        Wed, 19 Jul 2023 07:49:53 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4BCDD61724;
-        Wed, 19 Jul 2023 14:49:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FB11C433C8;
-        Wed, 19 Jul 2023 14:49:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689778190;
-        bh=A3CT326GLyuZ8uG3ETpFiXuusbMwfWFklBzbmRUIMNU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ohnmzcB+bjpNkYJYehCOo+xlvbo0F8MQ8fNKAMyeIRJ4SAiNxuJ7gTBq7w417yBmp
-         kxpXsSV2BgbblTd9/geUEyrtVKItQS5bWsJQJchy03NnSUAWHaGGP55S7w7riek14G
-         zlXYAFXVWshM2W8qUzvievxS3Dq+6+MozfLa20WkfkKweiA84pl3vNNSSh4KEEHz55
-         Ftk5F37U2hRH3z0SwNCx92i7XhM89j3s+ZTxudWM1lr8cKs9CfEAgOVfCJcus6y51Z
-         WDtPGyGGa0KjpuAD98gBPhZn5azpeA8Ap95izdTEecZnC+TLWZd0lpA+gcPIcsSfR4
-         KswggLK+8kpIA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 82B1E40516; Wed, 19 Jul 2023 11:49:47 -0300 (-03)
-Date:   Wed, 19 Jul 2023 11:49:47 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Wed, 19 Jul 2023 11:22:53 -0400
+Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CE7B19A6
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 08:22:40 -0700 (PDT)
+Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-4036bd4fff1so711441cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 08:22:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1689780159; x=1692372159;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B72UkkXxSYnbUsFY/YUEO+cQDrOpS7sEr3ObSScgRhE=;
+        b=gMU01dt+lLh55R7AX3Hk7+fyFASXNlkl/+3gC3QqhooZOJiNeiOhwYBV6FMfCiCWvJ
+         8yBTWf8jCnNXfYAJsZc3HGRQJ+3k3/MFifaij7cbXWeyM1cvDSYy9vqP5qxIzGd3KEZv
+         5t8NmerDiBHSV4dIoq+b4b7De2ASocG2xTLEUA9kT5WZjF/Wp0Gyn1qN6RfYff6Bo8IJ
+         7OIEGVcVfoyctj9F5uzS8V/VrDouwo2ozfB5BHxFFgYedAYTAl8Dlix5QOCUtquVI/Jq
+         jJn5cvrja/GlrF8iR5pBhFCVqHcppVmXDsXiZvy4MNNpMoiqPRooTwKEOfqKcRSgqipX
+         QBlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689780159; x=1692372159;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B72UkkXxSYnbUsFY/YUEO+cQDrOpS7sEr3ObSScgRhE=;
+        b=d8HIP+AbQ0wGOgvXPAgoi7mTiLWOLt0ChWKD7iYxfP7x5ViBWl+Y8QteQBBu9HH9oI
+         Heb4PlO/nIHTF7RGBSFSsNDvfuCkPw9wH28sMhrgzRq/35kYs3Vnd68qq9Xj7VUaxUzi
+         w9JoJdnKWC+VjYSE259vKWXXdRez5/HUVZhKu70M9R9yc8sOUmJlTdOVd/qRm7sMCtCO
+         7lA/V1H2AG7ToL7pvORbIa0sKRebqfGR86ID477vJpk+NJXYi97g7fmhf4q6OHpEC0O2
+         dLdZVWz7r5iocHbBffoUJTJMniK8fP3axd6DEBdfSlsflmOezrJTOIOnHxVo8rULqaOA
+         jSRA==
+X-Gm-Message-State: ABy/qLYo9yWp4CrejUqdsJpnVSY11xfoS3hUJvYdEnQnTRvdv5W3QFYh
+        Yd9Xscdpff2iHX3g5RYEFo3OOacoaLvpYZWJwew0jA==
+X-Google-Smtp-Source: APBJJlFvJSbZ8xBnLgfIuzFE30MmDzLcOIGFY6sMLTSM66P9iy4b/F4ZwAquSqsG+u2lZyeklZqivh1tMWu62WEqlHk=
+X-Received: by 2002:a05:622a:193:b0:3ef:5f97:258f with SMTP id
+ s19-20020a05622a019300b003ef5f97258fmr595360qtw.16.1689780159248; Wed, 19 Jul
+ 2023 08:22:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1689718662.git.anupnewsmail@gmail.com> <ZLfDPPYK1PXc9xOe@yoga>
+In-Reply-To: <ZLfDPPYK1PXc9xOe@yoga>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 19 Jul 2023 08:22:24 -0700
+Message-ID: <CAP-5=fUzUoLEpjcrZTzX93TPFbRMUhZGF+BVLB9OiusmKJFYvA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/6] Add support for Firefox's gecko profile format
+To:     Anup Sharma <anupnewsmail@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/3] Parse event sort/regroup fixes
-Message-ID: <ZLf4C/+x2ZSpb1Uz@kernel.org>
-References: <20230719001836.198363-1-irogers@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230719001836.198363-1-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jul 18, 2023 at 05:18:33PM -0700, Ian Rogers escreveu:
-> Patch 1, fix:
-> perf stat -e cycles,slots,topdown-fe-bound
-> so that cycles isn't made a group leader (failure caused by PMUs
-> matching). Previously this event list would fail so not necessarily a
-> regression over previous perf release.
-> 
-> Patch 2, when regrouping events the leader needs to be updated due to
-> sorting. This fix causes larger event groups that then regress at
-> least the tigerlake metric test as the kernel PMU driver fails to
-> break the weak groups. This is a fix for a bug but the consequence of
-> fixing the bug is to make a passing test fail due to the kernel PMU
-> driver.
-> 
-> Patch 3, don't alter the list position of events without a group if
-> they don't need forcing into a group. Analysis showed this was the
-> cause of the issue reported by Andi Kleen:
-> https://lore.kernel.org/linux-perf-users/ZLBgbHkbrfGygM%2Fu@tassilo/
+On Wed, Jul 19, 2023 at 4:04=E2=80=AFAM Anup Sharma <anupnewsmail@gmail.com=
+> wrote:
+>
+> On Wed, Jul 19, 2023 at 04:15:52AM +0530, Anup Sharma wrote:
+> > This patch series adds support for Firefox's gecko profile format.
+> > The format is documented here [1].
+> >
+> > I have incorporated several changes based on feedback from the
+> > previous version of the patch.
+> >
+> > Changes in v3:
+> a small typo here. It should be v4 instead of v3 (changes in v4).
+> > - Implemented object-oriented programming (OOP) approach for Thread and=
+ Sample
+> >   to improve code organization and maintainability.
+> > - Enhanced user experience by introducing argparse for changing color s=
+ettings
+> >   of user and kernel symbols during execution.
+> > - Ensured proper module encapsulation by adding imports wherever necess=
+ary.
+> > - Improved code readability by adding descriptive comments and type ann=
+otations.
+> >
+> > These changes focus on adopting OOP principles, enhancing user interact=
+ion with argparse,
+> > and making the code more readable with comments and type information.
+> >
+> > TODO:
+> > - use cpu_mode to determine the category instead of finding it from sym=
+bol name.
+> > - Write a test.
+> > - add direct execution command for this script under script/python/bin =
+directory.
+> >
 
-Andi,
-
-	Can you please check these patches and provide a Tested-by?
+Thanks Anup, is there a minimal TODO so that some code can be merged?
+I didn't have any comments for this series so:
+Acked-by: Ian Rogers <irogers@google.com>
+I think even the test can be follow up as the code isn't on the critical pa=
+th.
 
 Thanks,
+Ian
 
-- Arnaldo
- 
-> Due to the test regression in patch 2, follow up patches may be
-> necessary for Icelake+ Intel vendor metrics to add METRIC_NO_GROUP to
-> avoid the kernel PMU driver issue.
-> 
-> Ian Rogers (3):
->   perf parse-events: Extra care around force grouped events
->   perf parse-events: When fixing group leaders always set the leader
->   perf parse-events: Only move force grouped evsels when sorting
-> 
->  tools/perf/util/parse-events.c | 58 +++++++++++++++++++++-------------
->  1 file changed, 36 insertions(+), 22 deletions(-)
-> 
-> -- 
-> 2.41.0.487.g6d72f3e995-goog
+> > Committer Testing:
+> > - Tested with a perf.data file generated for single and multiple cpu
+> >   cores enabled.
+> > - Uploaded the stdout into profiler.firefox.com and verified the
+> >   output.
+> > - Verified the output with the output generated by the existing
+> >   script as mentioned here [2].
+> > Method:
+> > - perf record -F 99 -a -g -- sleep 5
+> > - perf script firefox-gecko-converter.py > output.json
+> > - upload output.json to profiler.firefox.com
+> >
+> > [1] https://github.com/firefox-devtools/profiler/blob/main/docs-develop=
+er/gecko-profile-format.md
+> > [2] https://perf.wiki.kernel.org/index.php/Tutorial#Firefox_Profiler
+> >
+> > Anup Sharma (6):
+> >   perf scripts python: Add initial script file with usage information
+> >   perf scripts python: Extact necessary information from process event
+> >   perf scripts python: Add classes and conversion functions
+> >   perf scripts python: Add trace end processing and PRODUCT and
+> >     CATEGORIES information
+> >   perf scripts python: implement internal get or create frame, stack an=
+d
+> >     string function
+> >   perf scripts python: Implement add sample function and thread
+> >     processing
+> >
+> >  .../scripts/python/firefox-gecko-converter.py | 339 ++++++++++++++++++
+> >  1 file changed, 339 insertions(+)
+> >  create mode 100644 tools/perf/scripts/python/firefox-gecko-converter.p=
+y
+> >
+> > --
+> > 2.34.1
+> >
