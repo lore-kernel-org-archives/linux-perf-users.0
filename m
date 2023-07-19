@@ -2,133 +2,335 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12670C001B0
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 15:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F21AC001B0
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 16:13:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230273AbjGSPuS (ORCPT
+        id S230089AbjGSQNF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Jul 2023 11:50:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52568 "EHLO
+        Wed, 19 Jul 2023 12:13:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229673AbjGSPuQ (ORCPT
+        with ESMTP id S229832AbjGSQNE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Jul 2023 11:50:16 -0400
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3E6C19BC
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 08:50:05 -0700 (PDT)
-Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-4036bd4fff1so721491cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 08:50:05 -0700 (PDT)
+        Wed, 19 Jul 2023 12:13:04 -0400
+Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B5B7E52
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 09:12:55 -0700 (PDT)
+Received: by mail-qt1-x836.google.com with SMTP id d75a77b69052e-40371070eb7so666111cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 09:12:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689781804; x=1692373804;
+        d=google.com; s=20221208; t=1689783174; x=1692375174;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OFrUgOBRU5LRkuOibj1Wn78oyPKuJ5PufyYoH6fT47g=;
-        b=00U7y2p7FCFTHRuDKA8GkLL/EgkMGu4khpifCIb9d8bFmxz8H8KWNLSxDaUHd7wRDA
-         /wBzLAua2eKqbFnXFxirIfycCDqN3yFZQWGwFQybFp+gTIHEPPIoE0ruO/T+BfME2FLq
-         ZxMu3pcVlWyCl1GSNevoRC9Kfij09d6qVGt9RGA8bc5Wcxvow8ceXmLleiiHvG/jVXfb
-         ZHhKo5SWu6rkJpu1ebt6LLllkBIdCVwMbGPb+bqFFPBcbxEMuwyzR1xM6VyWpEKnsvKX
-         WKz0FKlJManx1+TwQu5oEDmHwe4PviQWyKSX/qsbdDL3QnbdPUBa8uCoJWoxGMiaNkp3
-         Exug==
+        bh=9X/T6eIl8uv7b1fwfeNSFGPzQj0MwF56jVEOv5Ex2a0=;
+        b=05bppa1UvF3bLHg1a21i7yXYgd3IweWyuUbx/uSEAyVurRLCSjSB8NLBO/F4und3wC
+         cGj1dGL9EgxB3Y2WEkvN+lhfF/6EhIBcx1ffjZbRrlY6SP51nDmvZDZ2iL0qeJrZWWbz
+         HZzZfP9hJ+LGvc4ztKB6WoIHeIBYKqZ5TPbGVv7iLqXpADHmacReY5PoNkLX2Q+S4sMB
+         T/QRBuMaQNJCyZCqPWB8NYkoGs5/8bKHYGZ2PzsZMqXu4OLdfXd5WLLskzSKL8oFvIbL
+         hOalcHu0AsHPbnVDnc3aplrMSNCebwfabxmQEy1LEzWYsxDNEwHd97u/BvohXCEUdnOw
+         8Pog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689781804; x=1692373804;
+        d=1e100.net; s=20221208; t=1689783174; x=1692375174;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OFrUgOBRU5LRkuOibj1Wn78oyPKuJ5PufyYoH6fT47g=;
-        b=IRyXcu0na60a7QM6nq3FJVXfCRU1C/CkprAZjWnL6GiyfDuTic7qVAHn8cewhS5Pvx
-         jLYENLI1gPnUowawK2KS5qJA6OAV00Y4aoiplMeGfv7aLL1mgkgdbbX21asC/sTANrU5
-         5SsTu4ePigtqiNtNe6Hs70gDE/XJQKcVkJULJjnxqlMEUaII8/0r6INHKIKJysj1K1Xq
-         UnfKRVzm+SCLeoxKnk6LvyMwwEbW/psxDbPEVsIJaVH92iW/YIPBEQ6ww5/TE3+Nu8Iu
-         iZgYhaaXwmy7KAQQ7sQaUbTJKSlZa9gTThXZvDDZgqyOr/3LUxKlnkOg6fr204ITUu7N
-         vSrg==
-X-Gm-Message-State: ABy/qLZT0kgK0q+ZFf7o+UPwvsdIHbJCGje7WIx8p/6AYSoJosKnYvwU
-        vj+hW2ckKlO+MXX/HkzvvI/kPQIlRsGlFxMXeqYO6A==
-X-Google-Smtp-Source: APBJJlFmIi7M2rW34hvn/P2sLljtDbqNDzKEFsQVEgFF03q5+81wL4xxP/HEonTbMImrALOqwf7EO8fPsokB7tEtQcU=
-X-Received: by 2002:ac8:7dd6:0:b0:403:b1d0:2f0a with SMTP id
- c22-20020ac87dd6000000b00403b1d02f0amr599239qte.28.1689781804546; Wed, 19 Jul
- 2023 08:50:04 -0700 (PDT)
+        bh=9X/T6eIl8uv7b1fwfeNSFGPzQj0MwF56jVEOv5Ex2a0=;
+        b=gEeTv1N77tPA8fUR+WGZAmoaXSh4FUL5eYgQJadReesDMDtNv8SByNqRGM1RvkfV38
+         L2n4KG46EBOY6MPganFvXPeMQmldckR5jOBlpP2JmGN8DjCOuleFcYBRbI9DTAjU5zVh
+         O0/EyuE2Nwf1n9sSfYqV9oP62uTsloxLXSeVINk5At2R6mhsgIquxIJrRryrWbDpkCk5
+         GA5zuyQWqrpcwOZx9DsDHb/lSQ5rtZgUKEOwOhtR1MGvoziwweg/1CN32sTFEax/WBEw
+         qlSGd/El5pZDEbdcNP/i1v2u7cL2pbepXgk1viVI8mryLiLxnianJuQtq4MukhAPAYZ2
+         4z4A==
+X-Gm-Message-State: ABy/qLb6PMyVCr1gYlvrq1MPAhKtlHnylm4Xo91Gcda9H+9R/Csooskj
+        V5srVYW7ClxFRv8t+iok6c4SE0CLsIlrsvPQOMD5HtBV+NZsfbtMd7w=
+X-Google-Smtp-Source: APBJJlEg8IQOaM/hF1/8FHt/n6wJSgBmXsxn8FPUaw1rnzKIQP/rAnZ/K3cOCs6XQXd4VzgzEM4VZJAMjZ6rkpLmvT0=
+X-Received: by 2002:a05:622a:1a87:b0:3f4:f0fd:fe7e with SMTP id
+ s7-20020a05622a1a8700b003f4f0fdfe7emr574304qtc.3.1689783174436; Wed, 19 Jul
+ 2023 09:12:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230628102949.2598096-1-john.g.garry@oracle.com>
- <20230628102949.2598096-5-john.g.garry@oracle.com> <CAP-5=fXa24_LEiyni0Ncyfa5hKwC1GE6y-zi2u8M98M9SwHX+g@mail.gmail.com>
- <CAP-5=fUs=u3PKYP3mVDdzNB8+=GAHaEXG3SGfWJpMELYYqO_hA@mail.gmail.com>
- <d59b6e7c-cead-24d4-a9cb-6552b3154d84@oracle.com> <CAP-5=fUu6xgVDQT4tq=vmRLDMe3ddMLywP11uOLvKSu8Lc6BjQ@mail.gmail.com>
- <897dcf1d-6a04-33d3-9c4f-ea9d1706cdad@oracle.com> <CAP-5=fX+rz928LtFs2MWYUH=6Mcvz0XQcLRkO-n9BnVnX4RYWw@mail.gmail.com>
- <297ddf04-9b35-7613-8efd-2857668b6835@oracle.com> <CAP-5=fXSQVyqCfrBJFjHkrRdANuQC=TKR-HHi37hLaQ91rPQiA@mail.gmail.com>
- <eb011f48-b953-3647-4699-734ebdf1876a@oracle.com> <CAP-5=fXJxVpYQ84hXiMxy4LUi7xs1puXdDhbp6d6N2ArnqKJuQ@mail.gmail.com>
- <0d6e41d1-2f27-9a90-1516-c4e50bad1c21@oracle.com> <CAP-5=fXKqZM=RMB-+ooKEKfGw=KdCVU0UbVQ9+XrDOAWpoYAdw@mail.gmail.com>
- <4f0355ec-8bc6-e51a-ab5b-61d555a68b6c@oracle.com> <CAP-5=fVGOP6-k=BTRd_bn=N0HVy+1ShpdW5rk5ND0ZGhm_fQkg@mail.gmail.com>
- <a5082f3b-58a4-0773-2608-2e2647459d3c@oracle.com>
-In-Reply-To: <a5082f3b-58a4-0773-2608-2e2647459d3c@oracle.com>
+References: <cover.1689748843.git.sandipan.das@amd.com> <a70b1ef6ab427b768f21401af280d235dd095412.1689748843.git.sandipan.das@amd.com>
+In-Reply-To: <a70b1ef6ab427b768f21401af280d235dd095412.1689748843.git.sandipan.das@amd.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 19 Jul 2023 08:49:53 -0700
-Message-ID: <CAP-5=fVjfR2jpVDbqiBTXRoCStwsTZ9sEZAY-PZCLAiVjy4yzA@mail.gmail.com>
-Subject: Re: [PATCH RFC 4/9] perf jevents: Add sys_events_find_events_table()
-To:     John Garry <john.g.garry@oracle.com>
-Cc:     namhyung@kernel.org, acme@kernel.org, jolsa@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        renyu.zj@linux.alibaba.com, shangxiaojing@huawei.com,
-        kjain@linux.ibm.com, kan.liang@linux.intel.com
+Date:   Wed, 19 Jul 2023 09:12:42 -0700
+Message-ID: <CAP-5=fX1NQzus3MQapmBrdgEhDG4+XmawgytfugHHOKD0E-COg@mail.gmail.com>
+Subject: Re: [PATCH 6/6] perf vendor events amd: Add Zen 4 memory controller events
+To:     Sandipan Das <sandipan.das@amd.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        x86@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, adrian.hunter@intel.com, tglx@linutronix.de,
+        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+        eranian@google.com, ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 19, 2023 at 8:37=E2=80=AFAM John Garry <john.g.garry@oracle.com=
+On Tue, Jul 18, 2023 at 11:58=E2=80=AFPM Sandipan Das <sandipan.das@amd.com=
 > wrote:
 >
-> On 19/07/2023 16:25, Ian Rogers wrote:
-> >> I was thinking about this a little further. So you suggest that the
-> >> metric expression contains PMU name per term, like
-> >> "cpu_atom@instructions@ / cpu_atom@cycles@" - how would/could this wor=
-k
-> >> for PMUs with more complex naming, like the form hisi_siclXXX_cpa_YYY?
-> >> Would we use the "Unit" expression for the metric name, like
-> >> "@hisi_sicl,cpa@event_foo"?
-> > How does this work for events? The "@hisi_sicl,cpa@event_foo" looks
-> > strange, shouldn't it be "hisi_sicl,cpa@event_foo@" but then hisi_sicl
-> > looks like an event name.
+> Make the jevents parser aware of the Unified Memory Controller (UMC) PMU
+> and add events taken from Section 8.2.1 "UMC Performance Monitor Events"
+> of the Processor Programming Reference (PPR) for AMD Family 19h Model 11h
+> processors. The events capture UMC command activity such as CAS, ACTIVATE=
+,
+> PRECHARGE etc. while the metrics derive data bus utilization and memory
+> bandwidth out of these events.
 >
-> Yeah, that was a typo from me - like you say, it would be
-> hisi_sicl,cpa@event_foo@
+> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+
+Acked-by: Ian Rogers <irogers@google.com>
+
+> ---
+>  .../arch/x86/amdzen4/memory-controller.json   | 101 ++++++++++++++++++
+>  .../arch/x86/amdzen4/recommended.json         |  84 +++++++++++++++
+>  tools/perf/pmu-events/jevents.py              |   2 +
+>  3 files changed, 187 insertions(+)
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/memory-control=
+ler.json
 >
-> So is that what you would be suggesting then, such that we specify the
-> PMU in the metric terms? It does look a bit odd :)
+> diff --git a/tools/perf/pmu-events/arch/x86/amdzen4/memory-controller.jso=
+n b/tools/perf/pmu-events/arch/x86/amdzen4/memory-controller.json
+> new file mode 100644
+> index 000000000000..55263e5e4f69
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/x86/amdzen4/memory-controller.json
+> @@ -0,0 +1,101 @@
+> +[
+> +  {
+> +    "EventName": "umc_mem_clk",
+> +    "PublicDescription": "Number of memory clock cycles.",
+> +    "EventCode": "0x00",
+> +    "PerPkg": "1",
+> +    "Unit": "UMCPMC"
 
-I guess there could be some kind of regular expression syntax:
-(hisi_scl|cpa)@event_foo
-
-We have the "has_event" function now in the metric expressions:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/expr.c?h=3Dperf-tools-next#n480
-
-So it could be:
-hisi_scl@event_foo@ if has_event(hisi_scl@event_foo@) else cpa@event_foo@
-
-Which has the advantage of working today, but the disadvantage of being ver=
-bose.
+nit: Why use UMCPMC and then rewrite to amd_umc, why not just use "amd_umc"=
+ ?
 
 Thanks,
 Ian
 
 
-> >
-> >>>> BTW, which git repo/branch do you guys use for dev? I thought that i=
-t
-> >>>> would be acme git, but Namhyung says "We moved to new repos from acm=
-e to
-> >>>> perf/perf-tools and perf/perf-tools-next" - where is repo "perf"?
-> >>> Current development is here now:
-> >>> https://urldefense.com/v3/__https://git.kernel.org/pub/scm/linux/kern=
-el/git/perf/perf-tools-next.git/log/?h=3Dperf-tools-next__;!!ACWV5N9M2RV99h=
-Q!OQDHOClSjd6nVZhmgzrK3RwzXuQpP54QhqyIKpITa_MFD4PLdS7yPYSnvInFja9nrFx9Sd-Un=
-lsJ6XUqAh4$
-> >> Can that be added to the MAINTAINERS file? I suppose it is ok under
-> >> "PERFORMANCE EVENTS SUBSYTEM", since the two would-be git repos listed
-> >> under that same entry would be pretty obvious in purpose.
-> > Arnaldo could you take a look at doing this?
+> +  },
+> +  {
+> +    "EventName": "umc_act_cmd.all",
+> +    "PublicDescription": "Number of ACTIVATE commands sent.",
+> +    "EventCode": "0x05",
+> +    "PerPkg": "1",
+> +    "Unit": "UMCPMC"
+> +  },
+> +  {
+> +    "EventName": "umc_act_cmd.rd",
+> +    "PublicDescription": "Number of ACTIVATE commands sent for reads.",
+> +    "EventCode": "0x05",
+> +    "RdWrMask": "0x1",
+> +    "PerPkg": "1",
+> +    "Unit": "UMCPMC"
+> +  },
+> +  {
+> +    "EventName": "umc_act_cmd.wr",
+> +    "PublicDescription": "Number of ACTIVATE commands sent for writes.",
+> +    "EventCode": "0x05",
+> +    "RdWrMask": "0x2",
+> +    "PerPkg": "1",
+> +    "Unit": "UMCPMC"
+> +  },
+> +  {
+> +    "EventName": "umc_pchg_cmd.all",
+> +    "PublicDescription": "Number of PRECHARGE commands sent.",
+> +    "EventCode": "0x06",
+> +    "PerPkg": "1",
+> +    "Unit": "UMCPMC"
+> +  },
+> +  {
+> +    "EventName": "umc_pchg_cmd.rd",
+> +    "PublicDescription": "Number of PRECHARGE commands sent for reads.",
+> +    "EventCode": "0x06",
+> +    "RdWrMask": "0x1",
+> +    "PerPkg": "1",
+> +    "Unit": "UMCPMC"
+> +  },
+> +  {
+> +    "EventName": "umc_pchg_cmd.wr",
+> +    "PublicDescription": "Number of PRECHARGE commands sent for writes."=
+,
+> +    "EventCode": "0x06",
+> +    "RdWrMask": "0x2",
+> +    "PerPkg": "1",
+> +    "Unit": "UMCPMC"
+> +  },
+> +  {
+> +    "EventName": "umc_cas_cmd.all",
+> +    "PublicDescription": "Number of CAS commands sent.",
+> +    "EventCode": "0x0a",
+> +    "PerPkg": "1",
+> +    "Unit": "UMCPMC"
+> +  },
+> +  {
+> +    "EventName": "umc_cas_cmd.rd",
+> +    "PublicDescription": "Number of CAS commands sent for reads.",
+> +    "EventCode": "0x0a",
+> +    "RdWrMask": "0x1",
+> +    "PerPkg": "1",
+> +    "Unit": "UMCPMC"
+> +  },
+> +  {
+> +    "EventName": "umc_cas_cmd.wr",
+> +    "PublicDescription": "Number of CAS commands sent for writes.",
+> +    "EventCode": "0x0a",
+> +    "RdWrMask": "0x2",
+> +    "PerPkg": "1",
+> +    "Unit": "UMCPMC"
+> +  },
+> +  {
+> +    "EventName": "umc_data_slot_clks.all",
+> +    "PublicDescription": "Number of clocks used by the data bus.",
+> +    "EventCode": "0x14",
+> +    "PerPkg": "1",
+> +    "Unit": "UMCPMC"
+> +  },
+> +  {
+> +    "EventName": "umc_data_slot_clks.rd",
+> +    "PublicDescription": "Number of clocks used by the data bus for read=
+s.",
+> +    "EventCode": "0x14",
+> +    "RdWrMask": "0x1",
+> +    "PerPkg": "1",
+> +    "Unit": "UMCPMC"
+> +  },
+> +  {
+> +    "EventName": "umc_data_slot_clks.wr",
+> +    "PublicDescription": "Number of clocks used by the data bus for writ=
+es.",
+> +    "EventCode": "0x14",
+> +    "RdWrMask": "0x2",
+> +    "PerPkg": "1",
+> +    "Unit": "UMCPMC"
+> +  }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/x86/amdzen4/recommended.json b/to=
+ols/perf/pmu-events/arch/x86/amdzen4/recommended.json
+> index 5e6a793acf7b..96e06401c6cb 100644
+> --- a/tools/perf/pmu-events/arch/x86/amdzen4/recommended.json
+> +++ b/tools/perf/pmu-events/arch/x86/amdzen4/recommended.json
+> @@ -330,5 +330,89 @@
+>      "MetricGroup": "data_fabric",
+>      "PerPkg": "1",
+>      "ScaleUnit": "6.103515625e-5MiB"
+> +  },
+> +  {
+> +    "MetricName": "umc_data_bus_utilization",
+> +    "BriefDescription": "Memory controller data bus utilization.",
+> +    "MetricExpr": "d_ratio(umc_data_slot_clks.all / 2, umc_mem_clk)",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "umc_cas_cmd_rate",
+> +    "BriefDescription": "Memory controller CAS command rate.",
+> +    "MetricExpr": "d_ratio(umc_cas_cmd.all * 1000, umc_mem_clk)",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1"
+> +  },
+> +  {
+> +    "MetricName": "umc_cas_cmd_read_ratio",
+> +    "BriefDescription": "Ratio of memory controller CAS commands for rea=
+ds.",
+> +    "MetricExpr": "d_ratio(umc_cas_cmd.rd, umc_cas_cmd.all)",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "umc_cas_cmd_write_ratio",
+> +    "BriefDescription": "Ratio of memory controller CAS commands for wri=
+tes.",
+> +    "MetricExpr": "d_ratio(umc_cas_cmd.wr, umc_cas_cmd.all)",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "umc_mem_read_bandwidth",
+> +    "BriefDescription": "Estimated memory read bandwidth.",
+> +    "MetricExpr": "(umc_cas_cmd.rd * 64) / 1e6 / duration_time",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "1MB/s"
+> +  },
+> +  {
+> +    "MetricName": "umc_mem_write_bandwidth",
+> +    "BriefDescription": "Estimated memory write bandwidth.",
+> +    "MetricExpr": "(umc_cas_cmd.wr * 64) / 1e6 / duration_time",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "1MB/s"
+> +  },
+> +  {
+> +    "MetricName": "umc_mem_bandwidth",
+> +    "BriefDescription": "Estimated combined memory bandwidth.",
+> +    "MetricExpr": "(umc_cas_cmd.all * 64) / 1e6 / duration_time",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "1MB/s"
+> +  },
+> +  {
+> +    "MetricName": "umc_cas_cmd_read_ratio",
+> +    "BriefDescription": "Ratio of memory controller CAS commands for rea=
+ds.",
+> +    "MetricExpr": "d_ratio(umc_cas_cmd.rd, umc_cas_cmd.all)",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "umc_cas_cmd_rate",
+> +    "BriefDescription": "Memory controller CAS command rate.",
+> +    "MetricExpr": "d_ratio(umc_cas_cmd.all * 1000, umc_mem_clk)",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1"
+> +  },
+> +  {
+> +    "MetricName": "umc_activate_cmd_rate",
+> +    "BriefDescription": "Memory controller ACTIVATE command rate.",
+> +    "MetricExpr": "d_ratio(umc_act_cmd.all * 1000, umc_mem_clk)",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1"
+> +  },
+> +  {
+> +    "MetricName": "umc_precharge_cmd_rate",
+> +    "BriefDescription": "Memory controller PRECHARGE command rate.",
+> +    "MetricExpr": "d_ratio(umc_pchg_cmd.all * 1000, umc_mem_clk)",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1"
+>    }
+>  ]
+> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
+ents.py
+> index 12e80bb7939b..c2a5728253db 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+> @@ -272,6 +272,7 @@ class JsonEvent:
+>            'imx8_ddr': 'imx8_ddr',
+>            'L3PMC': 'amd_l3',
+>            'DFPMC': 'amd_df',
+> +          'UMCPMC': 'amd_umc',
+>            'cpu_core': 'cpu_core',
+>            'cpu_atom': 'cpu_atom',
+>        }
+> @@ -330,6 +331,7 @@ class JsonEvent:
+>          ('Invert', 'inv=3D'),
+>          ('SampleAfterValue', 'period=3D'),
+>          ('UMask', 'umask=3D'),
+> +        ('RdWrMask', 'rdwrmask=3D'),
+>      ]
+>      for key, value in event_fields:
+>        if key in jd and jd[key] !=3D '0':
+> --
+> 2.34.1
 >
-> Thanks,
-> John
