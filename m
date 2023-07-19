@@ -2,200 +2,230 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E724C0015E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 17:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9E9C001B0
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 17:47:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230405AbjGSRMZ (ORCPT
+        id S229596AbjGSRq7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Jul 2023 13:12:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48376 "EHLO
+        Wed, 19 Jul 2023 13:46:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231189AbjGSRMY (ORCPT
+        with ESMTP id S229530AbjGSRq6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Jul 2023 13:12:24 -0400
-Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C18B1701
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 10:12:21 -0700 (PDT)
-Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-403f21d3c2dso9571cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 10:12:21 -0700 (PDT)
+        Wed, 19 Jul 2023 13:46:58 -0400
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 797EF1BFC
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 10:46:56 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-403f21d3c2dso19841cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 10:46:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689786740; x=1692378740;
+        d=google.com; s=20221208; t=1689788815; x=1692380815;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kq4j2u46wil1ke52/+CnH14UkMUz/ytY53Ok+bsM5GU=;
-        b=g0G8X70teAAyZAkWLbF+vMVfO9L+y6n6bG9NPwGSQjxwF9XQotP1lv3E+QtiNY5MA2
-         c0Dl0ngaWR1XjW/zN/6b7vkG3crrJchcrY9kW4CIV6g1DlbIoCGiTdupuhzopptu8UP6
-         Sr2i5TE0/KdV4Vo1dldATPTOwaLneY0OEylRQ3C2yTmbuiWW9hbXj78yDp0OdDS8xSPO
-         aJP82uERjhVWq51Izw9hIcQLt2St+GQrvU4uFLJTU0QSSINcWNV3FDxOmeunD/rmJBR0
-         fAsofRX99qObnVIGeCF7UMOHUPB3xpfydRd8YiCAVLWd265F/vcs5O4eaFcwanaeGxeG
-         oXmw==
+        bh=BYibOhQ/sb7T0GVqrGS+JLuttKSP7dbSD4obWi2tT7o=;
+        b=DqvencPSSPr2JJyXLrEqYm/67F/ouEBYqSRKwLqwY8JZEiYWqnkruw7t/OvRhlKXNk
+         M2Bd9c1yBVnqK5HXtFfco1qntVSoG1FtvLv0FmqdjWlX0gTCagYd/Ul79qHNNApcuIzX
+         96nkDN5vWJV+fB29hYkGSq5bVv2jnEpEieKbC/u4zZWFtO51eZp3cQSjnKDv1t4t64Eu
+         +pa7/lKiGXBTGfwqHGZY0JzKsZzON4gbyUHvFMzx71RjexrpjhJZm8EtJ2zerAd8oH48
+         0XK4V7OUTUYwsD4Yo2v1Mc5zjH3LVUsk3MJPmzgytKGh5Hd2D+Xbo9e9TvzpND/70vDE
+         g2ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689786740; x=1692378740;
+        d=1e100.net; s=20221208; t=1689788815; x=1692380815;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kq4j2u46wil1ke52/+CnH14UkMUz/ytY53Ok+bsM5GU=;
-        b=fUweCMnu0krs7wliLDI4s7uelidNafOJ30Imc/SLgM/KFPcrzSrAnUrCzrNPIlsiP2
-         gmOJJgVgX6vH4QY0bGZh7e49l59QYpTNQWGxT1xRRIsM28z/+k7k+qRBmPVvNVjUTL0e
-         8eeoYyTTPqURogkGET1JTeS9vfR3/YdKNDnVW4lXloaBP5384wGuw6EscmwR0K+5hl9c
-         o5tudDRPq8GQnkvyXYc1kL3wJ4UvRBWEFGW9TcqUq7INS+1dP3fi/NZUMHoeeTpzTOg4
-         xCt3BhN70T4EOlvxqFxFU5wHhWwFDYJq+dSK395Df9tp8IE8Bz9uydslwxTjJWPAdINU
-         t6PQ==
-X-Gm-Message-State: ABy/qLbyigMa71G2SnuxukM7CyiJLztLYeP8nVEPSaQ5lfdpLRuc670P
-        U9E44Nct/Le7DtNsEja5k7qDSqi4s+ZdJeKKEfxZ7Q==
-X-Google-Smtp-Source: APBJJlHpQOYSzqxXGuzVcbYnlfuvIArb0O9nLkJXBcX5vlTL4it/Or3f2kwpGFNjpS52wab4u61zvzTR0OpGHXS145U=
-X-Received: by 2002:ac8:7fca:0:b0:403:b242:3e30 with SMTP id
- b10-20020ac87fca000000b00403b2423e30mr623248qtk.1.1689786740368; Wed, 19 Jul
- 2023 10:12:20 -0700 (PDT)
+        bh=BYibOhQ/sb7T0GVqrGS+JLuttKSP7dbSD4obWi2tT7o=;
+        b=F7yfK8ccjknsUNUssPzSqs/k8vcwKCMmBEaAZBwc1oK94i4l9cX/OYQO4MZE0shtkh
+         ec0gM5TqXbZU7eSyQoiVhAn2yTV4oruT3d8nl4hVuURQmTFEXF8yJHoSSW9v+9i3+gI5
+         pV/RG4rrKOqiKGu8ITj+4LLRO7NaNvs2+DaXHWkZOK8BQc+6g2FrKcwS1AXi3FLvZ+T4
+         yPGFZIM+2QOjIRMa1nZ7HW1pViK5LTu5DShhocM1yoofJXb4I2wKz4chd2FKv+4QL4zH
+         pNk0eV1zwy1bz2e8Ee5pKd32fEz6T0pKscJOz3dhuKxbYoTQiPQwo9YmEAV6N0ijWtza
+         1jWQ==
+X-Gm-Message-State: ABy/qLbkBkxu0bv3U35H+tt7heduuNvlWvHsL5zhwMVLmpTIApZLuas6
+        4rEZ4A5J6TGCkVFIdmnjgDC8UjtNqKKVTLmNb4t9rg==
+X-Google-Smtp-Source: APBJJlGoKIi4FBiyCYQOIQ+Vf+tb88VPR3HCoCjhXLwpWBaCgudXFTXJoz84j+yaSdbrPI22S1OaeJnRO0yzoEOZGJ8=
+X-Received: by 2002:a05:622a:181f:b0:3ef:3361:75d5 with SMTP id
+ t31-20020a05622a181f00b003ef336175d5mr3548qtc.11.1689788815460; Wed, 19 Jul
+ 2023 10:46:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230715032915.97146-1-yangjihong1@huawei.com>
- <20230715032915.97146-3-yangjihong1@huawei.com> <CAP-5=fVysKhUn1YsUr0NBU2kVBDgkoczO861XwK5VCtkeYSRJA@mail.gmail.com>
- <085942cc-f6e7-a81b-243f-a739c91ecd72@intel.com>
-In-Reply-To: <085942cc-f6e7-a81b-243f-a739c91ecd72@intel.com>
+References: <20230709182800.53002-1-atrajeev@linux.vnet.ibm.com> <1fbdbb26-4fce-ea25-a96a-99982b3f1603@linux.ibm.com>
+In-Reply-To: <1fbdbb26-4fce-ea25-a96a-99982b3f1603@linux.ibm.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 19 Jul 2023 10:12:09 -0700
-Message-ID: <CAP-5=fVmKmgsABpnsngT9L1QeaWaUxakHc1078LahGFqK4-riA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/7] perf evlist: Add evlist__findnew_tracking_event() helper
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, kan.liang@linux.intel.com,
-        james.clark@arm.com, tmricht@linux.ibm.com, ak@linux.intel.com,
-        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
+Date:   Wed, 19 Jul 2023 10:46:40 -0700
+Message-ID: <CAP-5=fWZy-y9kiuAFQsaNeRYn8PJofFR5DHj5qA53FhB3+UrfQ@mail.gmail.com>
+Subject: Re: [PATCH V2 00/26] tools/perf: Fix shellcheck coding/formatting
+ issues of perf tool shell scripts
+To:     kajoljain <kjain@linux.ibm.com>
+Cc:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
+        jolsa@kernel.org, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, disgoel@linux.vnet.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 19, 2023 at 9:59=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
-com> wrote:
+On Tue, Jul 18, 2023 at 11:17=E2=80=AFPM kajoljain <kjain@linux.ibm.com> wr=
+ote:
 >
-> On 19/07/23 19:44, Ian Rogers wrote:
-> > On Fri, Jul 14, 2023 at 8:31=E2=80=AFPM Yang Jihong <yangjihong1@huawei=
-.com> wrote:
-> >>
-> >> Currently, intel-bts, intel-pt, and arm-spe may add a dummy event for
-> >> tracking to the evlist. We may need to search for the dummy event for
-> >> some settings. Therefore, add evlist__findnew_tracking_event() helper.
-> >>
-> >> evlist__findnew_tracking_event() also deal with system_wide maps if
-> >> system_wide is true.
+> Hi,
+>
+> Looking for review comments on this patchset.
+>
+> Thanks,
+> Kajol Jain
+>
+>
+> On 7/9/23 23:57, Athira Rajeev wrote:
+> > Patchset covers a set of fixes for coding/formatting issues observed wh=
+ile
+> > running shellcheck tool on the perf shell scripts.
 > >
-> > I'm wondering if we can simplify the naming in the API, we have "dummy
-> > event" which makes sense as we literally call the event "dummy",
-> > "sideband" which refers to the kind of samples/events the dummy event
-> > will record but "tracking" I think tends to get used as a verb rather
-> > than a noun. So I think evlist__findnew_tracking_event should be
-> > evlist__findnew_dummy_event.
->
-> Except the tracking event has "tracking" set but there can be other dummy
-> events that do not.
+> > This cleanup is a pre-requisite to include a build option for shellchec=
+k
+> > discussed here: https://www.spinics.net/lists/linux-perf-users/msg25553=
+.html
+> > First set of patches were posted here:
+> > https://lore.kernel.org/linux-perf-users/53B7D823-1570-4289-A632-2205EE=
+2B522C@linux.vnet.ibm.com/T/#t
+> >
+> > This patchset covers remaining set of shell scripts which needs
+> > fix. Patch 1 is resubmission of patch 6 from the initial series.
+> > Patch 15, 16 and 22 touches code from tools/perf/trace/beauty.
+> > Other patches are fixes for scripts from tools/perf/tests.
+> >
+> > The shellcheck is run for severity level for errors and warnings.
+> > Command used:
+> >
+> > # for F in $(find tests/shell/ -perm -o=3Dx -name '*.sh'); do shellchec=
+k -S warning $F; done
+> > # echo $?
+> > 0
+> >
 
-Thanks! I'm wondering what a dummy event without tracking would be
-used for - do you have a reference? I don't see anything in
-perf_event.h calling things like mmap2/comm in perf_event_attr
-tracking. I'm not a fan of dummy due to it not being intention
-revealing. Perhaps if we could go back in time  we could call the
-event "sideband", maybe we should migrate to this. We have other
-non-obvious uses of the term dummy like in cpumap:
+I don't see anything objectionable in the changes so for the series:
+Acked-by: Ian Rogers <irogers@google.com>
+
+Some thoughts:
+ - Adding "#!/bin/bash" to scripts in tools/perf/tests/lib - I think
+we didn't do this to avoid these being included as tests. There are
+now extra checks when finding shell tests, so I can imagine doing this
+isn't a regression but just a heads up.
+ - I think James' comment was addressed:
+https://lore.kernel.org/linux-perf-users/334989bf-5501-494c-f246-81878fd2fe=
+d8@arm.com/
+ - Why aren't these changes being mailed to LKML? The wider community
+on LKML have thoughts on shell scripts, plus it makes the changes miss
+my mail filters.
+ - Can we automate this testing into the build? For example, following
+a similar kernel build pattern we run a python test and make the log
+output a requirement here:
 https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/lib/perf/include/perf/cpumap.h?h=3Dperf-tools-next#n24
-If tracking can be on any event then does that make the functions
-behavior more ambiguous if it means dummy+tracking not <any
-event>+tracking?
+ee/tools/perf/pmu-events/Build?h=3Dperf-tools-next#n30
+   I think we can translate:
+for F in $(find tests/shell/ -perm -o=3Dx -name '*.sh'); do shellcheck
+-S warning $F; done
+   into a rule in make for log files that are then a dependency on the
+perf binary. We can then parallel shellcheck during the build and
+avoid regressions. We probably need a CONFIG_SHELLCHECK feature check
+in the build to avoid not having shellcheck breaking the build.
 
 Thanks,
 Ian
 
+> > Changelog:
+> > v1 -> v2:
+> >   - Rebased on top of perf-tools-next from:
+> >   https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=
+=3Dperf-tools-next
 > >
-> > Thanks,
-> > Ian
+> >   - Fixed shellcheck errors and warnings reported for newly
+> >     added changes from perf-tools-next branch
 > >
-> >> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> >> ---
-> >>  tools/perf/builtin-record.c | 11 +++--------
-> >>  tools/perf/util/evlist.c    | 18 ++++++++++++++++++
-> >>  tools/perf/util/evlist.h    |  1 +
-> >>  3 files changed, 22 insertions(+), 8 deletions(-)
-> >>
-> >> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> >> index aec18db7ff23..ca83599cc50c 100644
-> >> --- a/tools/perf/builtin-record.c
-> >> +++ b/tools/perf/builtin-record.c
-> >> @@ -1295,14 +1295,9 @@ static int record__open(struct record *rec)
-> >>          */
-> >>         if (opts->target.initial_delay || target__has_cpu(&opts->targe=
-t) ||
-> >>             perf_pmus__num_core_pmus() > 1) {
-> >> -               pos =3D evlist__get_tracking_event(evlist);
-> >> -               if (!evsel__is_dummy_event(pos)) {
-> >> -                       /* Set up dummy event. */
-> >> -                       if (evlist__add_dummy(evlist))
-> >> -                               return -ENOMEM;
-> >> -                       pos =3D evlist__last(evlist);
-> >> -                       evlist__set_tracking_event(evlist, pos);
-> >> -               }
-> >> +               pos =3D evlist__findnew_tracking_event(evlist, false);
-> >> +               if (!pos)
-> >> +                       return -ENOMEM;
-> >>
-> >>                 /*
-> >>                  * Enable the dummy event when the process is forked f=
-or
-> >> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> >> index 7ef43f72098e..25c3ebe2c2f5 100644
-> >> --- a/tools/perf/util/evlist.c
-> >> +++ b/tools/perf/util/evlist.c
-> >> @@ -1694,6 +1694,24 @@ void evlist__set_tracking_event(struct evlist *=
-evlist, struct evsel *tracking_ev
-> >>         tracking_evsel->tracking =3D true;
-> >>  }
-> >>
-> >> +struct evsel *evlist__findnew_tracking_event(struct evlist *evlist, b=
-ool system_wide)
-> >> +{
-> >> +       struct evsel *evsel;
-> >> +
-> >> +       evsel =3D evlist__get_tracking_event(evlist);
-> >> +       if (!evsel__is_dummy_event(evsel)) {
-> >> +               evsel =3D evlist__add_aux_dummy(evlist, system_wide);
-> >> +               if (!evsel)
-> >> +                       return NULL;
-> >> +
-> >> +               evlist__set_tracking_event(evlist, evsel);
-> >> +       } else if (system_wide) {
-> >> +               perf_evlist__go_system_wide(&evlist->core, &evsel->cor=
-e);
-> >> +       }
-> >> +
-> >> +       return evsel;
-> >> +}
-> >> +
-> >>  struct evsel *evlist__find_evsel_by_str(struct evlist *evlist, const =
-char *str)
-> >>  {
-> >>         struct evsel *evsel;
-> >> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> >> index 664c6bf7b3e0..98e7ddb2bd30 100644
-> >> --- a/tools/perf/util/evlist.h
-> >> +++ b/tools/perf/util/evlist.h
-> >> @@ -387,6 +387,7 @@ bool evlist_cpu_iterator__end(const struct evlist_=
-cpu_iterator *evlist_cpu_itr);
-> >>
-> >>  struct evsel *evlist__get_tracking_event(struct evlist *evlist);
-> >>  void evlist__set_tracking_event(struct evlist *evlist, struct evsel *=
-tracking_evsel);
-> >> +struct evsel *evlist__findnew_tracking_event(struct evlist *evlist, b=
-ool system_wide);
-> >>
-> >>  struct evsel *evlist__find_evsel_by_str(struct evlist *evlist, const =
-char *str);
-> >>
-> >> --
-> >> 2.30.GIT
-> >>
->
+> >   - Addressed review comment from James clark for patch
+> >     number 13 from V1. The changes in patch 13 were not necessary
+> >     since the file "tests/shell/lib/coresight.sh" is sourced from
+> >     other test files.
+> >
+> > Akanksha J N (1):
+> >   tools/perf/tests: Fix shellcheck warnings for
+> >     trace+probe_vfs_getname.sh
+> >
+> > Athira Rajeev (14):
+> >   tools/perf/tests: fix test_arm_spe_fork.sh signal case issues
+> >   tools/perf/tests: Fix unused variable references in
+> >     stat+csv_summary.sh testcase
+> >   tools/perf/tests: fix shellcheck warning for
+> >     test_perf_data_converter_json.sh testcase
+> >   tools/perf/tests: Fix shellcheck issue for stat_bpf_counters.sh
+> >     testcase
+> >   tools/perf/tests: Fix shellcheck issues in
+> >     tests/shell/stat+shadow_stat.sh tetscase
+> >   tools/perf/tests: Fix shellcheck warnings for
+> >     thread_loop_check_tid_10.sh
+> >   tools/perf/tests: Fix shellcheck warnings for unroll_loop_thread_10.s=
+h
+> >   tools/perf/tests: Fix shellcheck warnings for lib/probe_vfs_getname.s=
+h
+> >   tools/perf/tests: Fix the shellcheck warnings in lib/waiting.sh
+> >   tools/perf/trace: Fix x86_arch_prctl.sh to address shellcheck warning=
+s
+> >   tools/perf/arch/x86: Fix syscalltbl.sh to address shellcheck warnings
+> >   tools/perf/tests/shell: Fix the shellcheck warnings in
+> >     record+zstd_comp_decomp.sh
+> >   tools/perf/tests/shell: Fix shellcheck warning for stat+std_output.sh
+> >     testcase
+> >   tools/perf/tests: Fix shellcheck warning for stat+std_output.sh
+> >     testcase
+> >
+> > Kajol Jain (11):
+> >   tools/perf/tests: Fix shellcheck warning for probe_vfs_getname.sh
+> >     testcase
+> >   tools/perf/tests: Fix shellcheck warning for record_offcpu.sh testcas=
+e
+> >   tools/perf/tests: Fix shellcheck issue for lock_contention.sh testcas=
+e
+> >   tools/perf/tests: Fix shellcheck issue for stat_bpf_counters_cgrp.sh
+> >     testcase
+> >   tools/perf/tests: Fix shellcheck warning for asm_pure_loop.sh shell
+> >     script
+> >   tools/perf/tests: Fix shellcheck warning for memcpy_thread_16k_10.sh
+> >     shell script
+> >   tools/perf/tests: Fix shellcheck warning for probe.sh shell script
+> >   tools/perf/trace: Fix shellcheck issue for arch_errno_names.sh script
+> >   tools/perf: Fix shellcheck issue for check-headers.sh script
+> >   tools/shell/coresight: Fix shellcheck warning for
+> >     thread_loop_check_tid_2.sh shell script
+> >   tools/perf/tests/shell/lib: Fix shellcheck warning for stat_output.sh
+> >     shell script
+> >
+> >  .../arch/x86/entry/syscalls/syscalltbl.sh     |  2 +-
+> >  tools/perf/check-headers.sh                   |  6 ++--
+> >  .../tests/shell/coresight/asm_pure_loop.sh    |  2 +-
+> >  .../shell/coresight/memcpy_thread_16k_10.sh   |  2 +-
+> >  .../coresight/thread_loop_check_tid_10.sh     |  2 +-
+> >  .../coresight/thread_loop_check_tid_2.sh      |  2 +-
+> >  .../shell/coresight/unroll_loop_thread_10.sh  |  2 +-
+> >  tools/perf/tests/shell/lib/probe.sh           |  1 +
+> >  .../perf/tests/shell/lib/probe_vfs_getname.sh |  5 ++--
+> >  tools/perf/tests/shell/lib/stat_output.sh     |  1 +
+> >  tools/perf/tests/shell/lib/waiting.sh         |  1 +
+> >  tools/perf/tests/shell/lock_contention.sh     | 12 ++++----
+> >  tools/perf/tests/shell/probe_vfs_getname.sh   |  4 +--
+> >  .../tests/shell/record+zstd_comp_decomp.sh    | 14 +++++-----
+> >  tools/perf/tests/shell/record_offcpu.sh       |  6 ++--
+> >  tools/perf/tests/shell/stat+csv_output.sh     |  2 +-
+> >  tools/perf/tests/shell/stat+csv_summary.sh    |  4 +--
+> >  tools/perf/tests/shell/stat+shadow_stat.sh    |  4 +--
+> >  tools/perf/tests/shell/stat+std_output.sh     |  3 +-
+> >  tools/perf/tests/shell/stat_bpf_counters.sh   |  4 +--
+> >  .../tests/shell/stat_bpf_counters_cgrp.sh     | 28 ++++++++-----------
+> >  tools/perf/tests/shell/test_arm_spe_fork.sh   |  2 +-
+> >  .../shell/test_perf_data_converter_json.sh    |  2 +-
+> >  .../tests/shell/trace+probe_vfs_getname.sh    |  6 ++--
+> >  tools/perf/trace/beauty/arch_errno_names.sh   | 15 ++++------
+> >  tools/perf/trace/beauty/x86_arch_prctl.sh     |  6 ++--
+> >  26 files changed, 67 insertions(+), 71 deletions(-)
+> >
