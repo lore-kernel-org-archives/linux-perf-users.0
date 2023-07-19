@@ -2,121 +2,168 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A2DC0015E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 16:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26409C0015E
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 16:59:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229827AbjGSQzx (ORCPT
+        id S229449AbjGSQ7d (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Jul 2023 12:55:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39848 "EHLO
+        Wed, 19 Jul 2023 12:59:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbjGSQzw (ORCPT
+        with ESMTP id S229492AbjGSQ7c (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Jul 2023 12:55:52 -0400
-Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7D4F172E
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 09:55:51 -0700 (PDT)
-Received: by mail-qt1-x82a.google.com with SMTP id d75a77b69052e-40371070eb7so4251cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 09:55:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689785751; x=1692377751;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Sj3T/c8YmvgYfTPVsluIq5bnwE6iaG+nhT4u1XN3xLo=;
-        b=AGauPzP+8A9C+sl48+22NswYUFYkLmocOlzOPRtRzGNodahOvDljveR86sZfrkPW3K
-         US8iRew1BEtZbAN6hhw0SpfSi8U9+bkjubJXW2G2IC7yVaotwcPSaW0YHtREMyTLs4BI
-         KqHsQyyUkVmdqDcwMfjtUQyAmlgkHfu7Pk5s4EdLPxKicFU2T7sTUfShrDVnJzPawepi
-         unuF4nvUQhVxecmP8wiKzkcTwrXQVugAnbr/IASM1PWYJIsChQYV4X0cMh1lzmjnDti+
-         ES30zALn0mmVGx16mAF/lvdlIo3yX+4luTfgbnMx8TlNWVcAA0znb6RmnaTMG7WHhmRb
-         Wc/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689785751; x=1692377751;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Sj3T/c8YmvgYfTPVsluIq5bnwE6iaG+nhT4u1XN3xLo=;
-        b=e2QvbKtnj5iQFXk49qYXTHpGHxLKEnFmV6T5WRynKx5JqMLJ+PnTvXVojdXfHy91NN
-         6tp4sKbiAMfZe4WN8toiy4jN4C6sh0harDRWxjhP6VDObCCIVl6F0O13277eh53tfoMc
-         KARxwZ55OT3J0O4WJoi4WKp7DojDlmyPG9u9GBrXTBgBVL+sYiBqKmvwo9rxQlalxgVJ
-         xFIIbB8YvSF7T3rI7oyhH1tykSrHqU/JUkuvf21pmA/mnskTKEmdgMKmJy5itzDco0bE
-         jXLVa6J/vB664SJbkzCsZwmNsEafbqqjmUXKtWHg5y4wzjpZsSyY7+HoRZHTlrLywLsR
-         4i5g==
-X-Gm-Message-State: ABy/qLYZhX91fRWyvWvZK99Fe4uCXXGlO0SauVP+QOFf3bSGuA3fO+2o
-        YdVjePlm7zzwyYCkY5dUiX0q0fqIoGuEAADkKqpgRQ==
-X-Google-Smtp-Source: APBJJlFZiNoYe1axEr2mRKwb20Bd4i3b8lR3RBIA0XbPnU5r0k3J9KjP047hqPmE1v2p3Yuc0NIVMsvEr0fyri/cRVM=
-X-Received: by 2002:ac8:5714:0:b0:403:a43d:bd7d with SMTP id
- 20-20020ac85714000000b00403a43dbd7dmr625699qtw.4.1689785750750; Wed, 19 Jul
- 2023 09:55:50 -0700 (PDT)
+        Wed, 19 Jul 2023 12:59:32 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C704B6;
+        Wed, 19 Jul 2023 09:59:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689785971; x=1721321971;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=RPaGjKlGwxdShpweO5RJ0J/GpYXeaPosH1orxZVdr5U=;
+  b=WWCteQpzyfqUWPGTjL+m+M4WIhlHJCFHedyPxP01KXVbKe6aNhjAEwe9
+   iBdlmAsbA1fG21u+DnqXCmHZLJOpCRZ5jYXWjARr7Ko/YWFj7QHkF8/So
+   8joeHQ4unzrvHpzFV+lq/SxzKalePRuy0WBTcNcJ24EIEViInxVPeX4C0
+   b8vqQ8sf0YwQWJTgI/Ub7nwRH+d9tEZ9T0kQkZ0cOhX6DPHemvK+A/M+i
+   An/fwgQnh85O45tUVkj5ccsptkoo/M7H3viFcVre4ES+tjoh8pBd3vE3p
+   VWt56yhmePVIZGEqhnIhuKVhQtpc0R3awHVenB7mPu8+WC2XCfqgzhsYR
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10776"; a="370083357"
+X-IronPort-AV: E=Sophos;i="6.01,216,1684825200"; 
+   d="scan'208";a="370083357"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2023 09:59:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10776"; a="753770253"
+X-IronPort-AV: E=Sophos;i="6.01,216,1684825200"; 
+   d="scan'208";a="753770253"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.32.71])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2023 09:59:25 -0700
+Message-ID: <085942cc-f6e7-a81b-243f-a739c91ecd72@intel.com>
+Date:   Wed, 19 Jul 2023 19:59:17 +0300
 MIME-Version: 1.0
-References: <20230713085831.395112-1-changbin.du@huawei.com>
- <b1127b63-6c6a-e42e-ce6c-cf4f24bbc5a1@intel.com> <20230714071914.3jro4kfcvhun2ptd@M910t>
-In-Reply-To: <20230714071914.3jro4kfcvhun2ptd@M910t>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 19 Jul 2023 09:55:39 -0700
-Message-ID: <CAP-5=fV49y9y8Q3-3rhACMQJiQ+nAh0RfysT8bhpJ5_AOqLScw@mail.gmail.com>
-Subject: Re: [PATCH] perf: add new option '--workload-attr' to set workload sched_policy/priority/mask
-To:     Changbin Du <changbin.du@huawei.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.13.0
+Subject: Re: [PATCH v2 2/7] perf evlist: Add evlist__findnew_tracking_event()
+ helper
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Yang Jihong <yangjihong1@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, kan.liang@linux.intel.com,
+        james.clark@arm.com, tmricht@linux.ibm.com, ak@linux.intel.com,
+        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+References: <20230715032915.97146-1-yangjihong1@huawei.com>
+ <20230715032915.97146-3-yangjihong1@huawei.com>
+ <CAP-5=fVysKhUn1YsUr0NBU2kVBDgkoczO861XwK5VCtkeYSRJA@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CAP-5=fVysKhUn1YsUr0NBU2kVBDgkoczO861XwK5VCtkeYSRJA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jul 14, 2023 at 12:19=E2=80=AFAM Changbin Du <changbin.du@huawei.co=
-m> wrote:
->
-> On Fri, Jul 14, 2023 at 10:06:31AM +0300, Adrian Hunter wrote:
-> > On 13/07/23 11:58, Changbin Du wrote:
-> > > To get consistent benchmarking results, sometimes we need to set the
-> > > sched_policy/priority/mask of the workload to reduce system noise.
-> > >
-> > > For example, CPU binding is required on big.little system.
-> > >
-> > >   $ perf stat -r 10 -- taskset -c 0 ls
-> > >
-> > > Nevertheless, the 'taskset' is also counted here.
-> > >
-> > > To get away of the middleman, this adds a new option '--workload-attr=
-' to
-> > > do the same jobs for stat and record commands.
-> > >
-> > >   $ sudo perf stat --workload-attr fifo,40,0x1 -- ls
-> > >
-> > > Above will make 'ls' run on CPU #0 with fifo scheduler and realtime
-> > > priority is 40.
-> >
-> > Aren't there ways to set up a process then start perf using -p <pid>
-> > then let the process continue.
-> >
-> By that you need a mechanism to pause the new spawnned process and wait p=
-erf to
-> attach. Or setup the sched properties by the app itself. But sometimes we=
- just
-> simply want to run the app through and measure some events. With
-> --workload-attr, we do not need extra setup works.
+On 19/07/23 19:44, Ian Rogers wrote:
+> On Fri, Jul 14, 2023 at 8:31 PM Yang Jihong <yangjihong1@huawei.com> wrote:
+>>
+>> Currently, intel-bts, intel-pt, and arm-spe may add a dummy event for
+>> tracking to the evlist. We may need to search for the dummy event for
+>> some settings. Therefore, add evlist__findnew_tracking_event() helper.
+>>
+>> evlist__findnew_tracking_event() also deal with system_wide maps if
+>> system_wide is true.
+> 
+> I'm wondering if we can simplify the naming in the API, we have "dummy
+> event" which makes sense as we literally call the event "dummy",
+> "sideband" which refers to the kind of samples/events the dummy event
+> will record but "tracking" I think tends to get used as a verb rather
+> than a noun. So I think evlist__findnew_tracking_event should be
+> evlist__findnew_dummy_event.
 
-To my naive eyes this looks to be a broadly useful addition. Some thoughts:
- - "cpu-mask" as the command line argument name, this is "-C" and
-"--cpu" elsewhere, so perhaps just "cpu" as the mask is perhaps
-confusing.
- - could we get a test? Perhaps add a case to tools/perf/tests/shell/stat.s=
-h:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/tests/shell/stat.sh?h=3Dperf-tools-next
+Except the tracking event has "tracking" set but there can be other dummy
+events that do not.
 
-Thanks,
-Ian
+> 
+> Thanks,
+> Ian
+> 
+>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+>> ---
+>>  tools/perf/builtin-record.c | 11 +++--------
+>>  tools/perf/util/evlist.c    | 18 ++++++++++++++++++
+>>  tools/perf/util/evlist.h    |  1 +
+>>  3 files changed, 22 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+>> index aec18db7ff23..ca83599cc50c 100644
+>> --- a/tools/perf/builtin-record.c
+>> +++ b/tools/perf/builtin-record.c
+>> @@ -1295,14 +1295,9 @@ static int record__open(struct record *rec)
+>>          */
+>>         if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
+>>             perf_pmus__num_core_pmus() > 1) {
+>> -               pos = evlist__get_tracking_event(evlist);
+>> -               if (!evsel__is_dummy_event(pos)) {
+>> -                       /* Set up dummy event. */
+>> -                       if (evlist__add_dummy(evlist))
+>> -                               return -ENOMEM;
+>> -                       pos = evlist__last(evlist);
+>> -                       evlist__set_tracking_event(evlist, pos);
+>> -               }
+>> +               pos = evlist__findnew_tracking_event(evlist, false);
+>> +               if (!pos)
+>> +                       return -ENOMEM;
+>>
+>>                 /*
+>>                  * Enable the dummy event when the process is forked for
+>> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+>> index 7ef43f72098e..25c3ebe2c2f5 100644
+>> --- a/tools/perf/util/evlist.c
+>> +++ b/tools/perf/util/evlist.c
+>> @@ -1694,6 +1694,24 @@ void evlist__set_tracking_event(struct evlist *evlist, struct evsel *tracking_ev
+>>         tracking_evsel->tracking = true;
+>>  }
+>>
+>> +struct evsel *evlist__findnew_tracking_event(struct evlist *evlist, bool system_wide)
+>> +{
+>> +       struct evsel *evsel;
+>> +
+>> +       evsel = evlist__get_tracking_event(evlist);
+>> +       if (!evsel__is_dummy_event(evsel)) {
+>> +               evsel = evlist__add_aux_dummy(evlist, system_wide);
+>> +               if (!evsel)
+>> +                       return NULL;
+>> +
+>> +               evlist__set_tracking_event(evlist, evsel);
+>> +       } else if (system_wide) {
+>> +               perf_evlist__go_system_wide(&evlist->core, &evsel->core);
+>> +       }
+>> +
+>> +       return evsel;
+>> +}
+>> +
+>>  struct evsel *evlist__find_evsel_by_str(struct evlist *evlist, const char *str)
+>>  {
+>>         struct evsel *evsel;
+>> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+>> index 664c6bf7b3e0..98e7ddb2bd30 100644
+>> --- a/tools/perf/util/evlist.h
+>> +++ b/tools/perf/util/evlist.h
+>> @@ -387,6 +387,7 @@ bool evlist_cpu_iterator__end(const struct evlist_cpu_iterator *evlist_cpu_itr);
+>>
+>>  struct evsel *evlist__get_tracking_event(struct evlist *evlist);
+>>  void evlist__set_tracking_event(struct evlist *evlist, struct evsel *tracking_evsel);
+>> +struct evsel *evlist__findnew_tracking_event(struct evlist *evlist, bool system_wide);
+>>
+>>  struct evsel *evlist__find_evsel_by_str(struct evlist *evlist, const char *str);
+>>
+>> --
+>> 2.30.GIT
+>>
 
-> --
-> Cheers,
-> Changbin Du
