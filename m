@@ -2,152 +2,130 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D31EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 15:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E562EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 15:25:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231583AbjGSPW7 (ORCPT
+        id S231663AbjGSPZj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Jul 2023 11:22:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60168 "EHLO
+        Wed, 19 Jul 2023 11:25:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231744AbjGSPWx (ORCPT
+        with ESMTP id S231216AbjGSPZi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Jul 2023 11:22:53 -0400
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CE7B19A6
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 08:22:40 -0700 (PDT)
-Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-4036bd4fff1so711441cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 08:22:40 -0700 (PDT)
+        Wed, 19 Jul 2023 11:25:38 -0400
+Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9909A19BC
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 08:25:24 -0700 (PDT)
+Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-577497ec6c6so69840757b3.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 08:25:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689780159; x=1692372159;
+        d=paul-moore.com; s=google; t=1689780323; x=1692372323;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=B72UkkXxSYnbUsFY/YUEO+cQDrOpS7sEr3ObSScgRhE=;
-        b=gMU01dt+lLh55R7AX3Hk7+fyFASXNlkl/+3gC3QqhooZOJiNeiOhwYBV6FMfCiCWvJ
-         8yBTWf8jCnNXfYAJsZc3HGRQJ+3k3/MFifaij7cbXWeyM1cvDSYy9vqP5qxIzGd3KEZv
-         5t8NmerDiBHSV4dIoq+b4b7De2ASocG2xTLEUA9kT5WZjF/Wp0Gyn1qN6RfYff6Bo8IJ
-         7OIEGVcVfoyctj9F5uzS8V/VrDouwo2ozfB5BHxFFgYedAYTAl8Dlix5QOCUtquVI/Jq
-         jJn5cvrja/GlrF8iR5pBhFCVqHcppVmXDsXiZvy4MNNpMoiqPRooTwKEOfqKcRSgqipX
-         QBlg==
+        bh=E9cCLj0zM8JjUOyomZEKsWMrdNLR9qOvsZrkfrcN/wI=;
+        b=OEkJOsaDK/Sdhd+3KExw0lzHKRrWqkDKbK3EdKZwnico2hN66bMte46sznr3D2q8Ij
+         kbEqswBd4Nce8EcmHj//I9ODApZC3L90+sXmFcS3ViqD/041bQU+p1oZEBIpbGHxQdRW
+         Bkx5xcshP6g0XlBXSCaQ//9PGUg4t0Ev53G19Jn7Bfe4HXMoys0m8SzehU1V6F7QP7eC
+         8lD4s/Cq7UyYFbJ2XhyBKI9zR6lTkAPuQK2Be95WCrVId1mNkjbCaiY+OoJI9U3Jthni
+         rSjU8rQv78mbNQMwp1Pir4wiHsocaFkhglAJQrREt1ieUgUGlrDPdPr85ltO3yU7F7at
+         iaVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689780159; x=1692372159;
+        d=1e100.net; s=20221208; t=1689780323; x=1692372323;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=B72UkkXxSYnbUsFY/YUEO+cQDrOpS7sEr3ObSScgRhE=;
-        b=d8HIP+AbQ0wGOgvXPAgoi7mTiLWOLt0ChWKD7iYxfP7x5ViBWl+Y8QteQBBu9HH9oI
-         Heb4PlO/nIHTF7RGBSFSsNDvfuCkPw9wH28sMhrgzRq/35kYs3Vnd68qq9Xj7VUaxUzi
-         w9JoJdnKWC+VjYSE259vKWXXdRez5/HUVZhKu70M9R9yc8sOUmJlTdOVd/qRm7sMCtCO
-         7lA/V1H2AG7ToL7pvORbIa0sKRebqfGR86ID477vJpk+NJXYi97g7fmhf4q6OHpEC0O2
-         dLdZVWz7r5iocHbBffoUJTJMniK8fP3axd6DEBdfSlsflmOezrJTOIOnHxVo8rULqaOA
-         jSRA==
-X-Gm-Message-State: ABy/qLYo9yWp4CrejUqdsJpnVSY11xfoS3hUJvYdEnQnTRvdv5W3QFYh
-        Yd9Xscdpff2iHX3g5RYEFo3OOacoaLvpYZWJwew0jA==
-X-Google-Smtp-Source: APBJJlFvJSbZ8xBnLgfIuzFE30MmDzLcOIGFY6sMLTSM66P9iy4b/F4ZwAquSqsG+u2lZyeklZqivh1tMWu62WEqlHk=
-X-Received: by 2002:a05:622a:193:b0:3ef:5f97:258f with SMTP id
- s19-20020a05622a019300b003ef5f97258fmr595360qtw.16.1689780159248; Wed, 19 Jul
- 2023 08:22:39 -0700 (PDT)
+        bh=E9cCLj0zM8JjUOyomZEKsWMrdNLR9qOvsZrkfrcN/wI=;
+        b=i51Kkwkl5xo+N3EbnDBabZs+nZ93LUUuTC6/tc8qQNvkxLHB3aFVz6ZO7wuJatDSe/
+         Lsj4G4kWn+1vMxoaF6hsILWcF73oT6FlpuxTK3iRZeawS2rcJnUonGlHDRmFl/hAAMwn
+         0uvxkYGIfWqb8i116ggVFHvZjroV2MvroFjUO+S+nY23V1UoeEKAUdmWhouCX4WbOAd5
+         lzWCoith/wDl4DrJXSSQFDUnvtRxsbX/1LGW7lWC8ktD8ksPQWOHvU6f0xHgMK8vfhmG
+         a1Dm+g+41B9kqLdeGHyRZpUQsvVmJDFgj7VpgJHY8dLPlSzxFnanA43CM6zBNpVVI8ev
+         RNog==
+X-Gm-Message-State: ABy/qLZoF40eh9mznOTN0c18eGCOECMsfUsVSvay/hO+msZGqY6MI13F
+        2Qp6KepuLBhsMpzNrc61+q+jxVQez6uajhDH4/fv
+X-Google-Smtp-Source: APBJJlEKuWkfr0ZOUpBDkgDJSGU1WICL7JKLe65DOhMheQvB+Dy8YyA22pUEoTNZB9gyg+Sk1cUZ7AumngsAXFfSIUo=
+X-Received: by 2002:a0d:cb10:0:b0:57a:8de9:29e7 with SMTP id
+ n16-20020a0dcb10000000b0057a8de929e7mr18181677ywd.28.1689780323608; Wed, 19
+ Jul 2023 08:25:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1689718662.git.anupnewsmail@gmail.com> <ZLfDPPYK1PXc9xOe@yoga>
-In-Reply-To: <ZLfDPPYK1PXc9xOe@yoga>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 19 Jul 2023 08:22:24 -0700
-Message-ID: <CAP-5=fUzUoLEpjcrZTzX93TPFbRMUhZGF+BVLB9OiusmKJFYvA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/6] Add support for Firefox's gecko profile format
-To:     Anup Sharma <anupnewsmail@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230719075127.47736-1-wangkefeng.wang@huawei.com>
+ <20230719075127.47736-4-wangkefeng.wang@huawei.com> <CAJ2a_DfGvPeDuN38UBXD4f2928n9GZpHFgdiPo9MoSAY7YXeOg@mail.gmail.com>
+ <dc8223db-b4ac-7bee-6f89-63475a7dcaf8@huawei.com>
+In-Reply-To: <dc8223db-b4ac-7bee-6f89-63475a7dcaf8@huawei.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 19 Jul 2023 11:25:12 -0400
+Message-ID: <CAHC9VhQzJ3J0kEymDUn3i+dnP_34GMNRjaCHXc4oddUCFb0Ygw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] selinux: use vma_is_initial_stack() and vma_is_initial_heap()
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        =?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        selinux@vger.kernel.org,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 19, 2023 at 4:04=E2=80=AFAM Anup Sharma <anupnewsmail@gmail.com=
-> wrote:
+On Wed, Jul 19, 2023 at 6:23=E2=80=AFAM Kefeng Wang <wangkefeng.wang@huawei=
+.com> wrote:
+> On 2023/7/19 17:02, Christian G=C3=B6ttsche wrote:
+> > On Wed, 19 Jul 2023 at 09:40, Kefeng Wang <wangkefeng.wang@huawei.com> =
+wrote:
+> >>
+> >> Use the helpers to simplify code.
+> >>
+> >> Cc: Paul Moore <paul@paul-moore.com>
+> >> Cc: Stephen Smalley <stephen.smalley.work@gmail.com>
+> >> Cc: Eric Paris <eparis@parisplace.org>
+> >> Acked-by: Paul Moore <paul@paul-moore.com>
+> >> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> >> ---
+> >>   security/selinux/hooks.c | 7 ++-----
+> >>   1 file changed, 2 insertions(+), 5 deletions(-)
+> >>
+> >> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> >> index d06e350fedee..ee8575540a8e 100644
+> >> --- a/security/selinux/hooks.c
+> >> +++ b/security/selinux/hooks.c
+> >> @@ -3762,13 +3762,10 @@ static int selinux_file_mprotect(struct vm_are=
+a_struct *vma,
+> >>          if (default_noexec &&
+> >>              (prot & PROT_EXEC) && !(vma->vm_flags & VM_EXEC)) {
+> >>                  int rc =3D 0;
+> >> -               if (vma->vm_start >=3D vma->vm_mm->start_brk &&
+> >> -                   vma->vm_end <=3D vma->vm_mm->brk) {
+> >> +               if (vma_is_initial_heap(vma)) {
+> >
+> > This seems to change the condition from
+> >
+> >      vma->vm_start >=3D vma->vm_mm->start_brk && vma->vm_end <=3D vma->=
+vm_mm->brk
+> >
+> > to
+> >
+> >      vma->vm_start <=3D vma->vm_mm->brk && vma->vm_end >=3D vma->vm_mm-=
+>start_brk
+> >
+> > (or AND arguments swapped)
+> >
+> >      vma->vm_end >=3D vma->vm_mm->start_brk && vma->vm_start <=3D vma->=
+vm_mm->brk
+> >
+> > Is this intended?
 >
-> On Wed, Jul 19, 2023 at 04:15:52AM +0530, Anup Sharma wrote:
-> > This patch series adds support for Firefox's gecko profile format.
-> > The format is documented here [1].
-> >
-> > I have incorporated several changes based on feedback from the
-> > previous version of the patch.
-> >
-> > Changes in v3:
-> a small typo here. It should be v4 instead of v3 (changes in v4).
-> > - Implemented object-oriented programming (OOP) approach for Thread and=
- Sample
-> >   to improve code organization and maintainability.
-> > - Enhanced user experience by introducing argparse for changing color s=
-ettings
-> >   of user and kernel symbols during execution.
-> > - Ensured proper module encapsulation by adding imports wherever necess=
-ary.
-> > - Improved code readability by adding descriptive comments and type ann=
-otations.
-> >
-> > These changes focus on adopting OOP principles, enhancing user interact=
-ion with argparse,
-> > and making the code more readable with comments and type information.
-> >
-> > TODO:
-> > - use cpu_mode to determine the category instead of finding it from sym=
-bol name.
-> > - Write a test.
-> > - add direct execution command for this script under script/python/bin =
-directory.
-> >
+> The new condition is to check whether there is intersection between
+> [startbrk,brk] and [vm_start,vm_end], it contains orignal check, so
+> I think it is ok, but for selinux check, I am not sure if there is
+> some other problem.
 
-Thanks Anup, is there a minimal TODO so that some code can be merged?
-I didn't have any comments for this series so:
-Acked-by: Ian Rogers <irogers@google.com>
-I think even the test can be follow up as the code isn't on the critical pa=
-th.
+This particular SELinux vma check is see if the vma falls within the
+heap; can you confirm that this change preserves this?
 
-Thanks,
-Ian
-
-> > Committer Testing:
-> > - Tested with a perf.data file generated for single and multiple cpu
-> >   cores enabled.
-> > - Uploaded the stdout into profiler.firefox.com and verified the
-> >   output.
-> > - Verified the output with the output generated by the existing
-> >   script as mentioned here [2].
-> > Method:
-> > - perf record -F 99 -a -g -- sleep 5
-> > - perf script firefox-gecko-converter.py > output.json
-> > - upload output.json to profiler.firefox.com
-> >
-> > [1] https://github.com/firefox-devtools/profiler/blob/main/docs-develop=
-er/gecko-profile-format.md
-> > [2] https://perf.wiki.kernel.org/index.php/Tutorial#Firefox_Profiler
-> >
-> > Anup Sharma (6):
-> >   perf scripts python: Add initial script file with usage information
-> >   perf scripts python: Extact necessary information from process event
-> >   perf scripts python: Add classes and conversion functions
-> >   perf scripts python: Add trace end processing and PRODUCT and
-> >     CATEGORIES information
-> >   perf scripts python: implement internal get or create frame, stack an=
-d
-> >     string function
-> >   perf scripts python: Implement add sample function and thread
-> >     processing
-> >
-> >  .../scripts/python/firefox-gecko-converter.py | 339 ++++++++++++++++++
-> >  1 file changed, 339 insertions(+)
-> >  create mode 100644 tools/perf/scripts/python/firefox-gecko-converter.p=
-y
-> >
-> > --
-> > 2.34.1
-> >
+--=20
+paul-moore.com
