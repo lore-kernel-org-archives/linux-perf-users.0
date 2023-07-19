@@ -2,38 +2,38 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A86AC001B0
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 20:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F16C001B0
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 20:49:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230500AbjGSUcV (ORCPT
+        id S229714AbjGSUt0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Jul 2023 16:32:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33966 "EHLO
+        Wed, 19 Jul 2023 16:49:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230416AbjGSUcS (ORCPT
+        with ESMTP id S229611AbjGSUtZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Jul 2023 16:32:18 -0400
+        Wed, 19 Jul 2023 16:49:25 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18AAB1FCE;
-        Wed, 19 Jul 2023 13:31:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2A161FC0;
+        Wed, 19 Jul 2023 13:49:24 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 44367617EF;
-        Wed, 19 Jul 2023 20:30:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01A12C433C7;
-        Wed, 19 Jul 2023 20:30:08 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5CD2E6183C;
+        Wed, 19 Jul 2023 20:49:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EDC4C433C8;
+        Wed, 19 Jul 2023 20:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689798611;
-        bh=W5TxjO0FZLzZwTfwZhu1oBz8pm8d9YfgcvKsQLRyIvE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TtWzTqqICusKSGjbNnyVzMjE8Dfl1qMjSh/Xu3oyB41xSqW/4QwcJEQJinP0jRwwl
-         5Qu272LZfeKTh7+beVG2q7/DL9h6AJlU06B1ijhrpocK0Jio87Mpye9M7n/Pko5S+y
-         Rh2Emq+pWhv48/fy37QIzvp8fanySQByKq/uzphLgMyLzCrAUSt4HCXo6Eg7w9/Cxq
-         jMlVgsRDBIwyKy7YeUB4CtmnznNyrnLu+KgKrLFUA36wAGIScD3Bsmg85wOCC87JC7
-         Bj8q5lqdIbztrqx1LX3NWGHPaPMilphUNI4lCrvGKuLQGDzcTSrGakZUKsdeUMkkFF
-         xiJ1dVDMq8qGg==
+        s=k20201202; t=1689799763;
+        bh=TCKxv/PHrVcQ5XdxdCykqXw0ltN3EL+j1VJlZlY1wLM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YdGqtMP33hjX75NyVhuJIx7Rw5aALcujWh2MP1QXqFqarNdczfbrpVgeL2qWwlMo+
+         FKwtG5pYm/oTE2CuTf68RObM6d1NhodRdsClj+1w0Q4NIy1tjQtuDpNZzUSblIEdqE
+         ZxCD0W8kI2ZMPk77vixU7SzHEC+wTtNPvdhnlrRORJkctnKCU6CoRJwQZLcsYcsSYv
+         BGkAForzwMiHmBRRyrzAg+NfR/Nj58dZ25u2D2rEbYaoeHIxryIiGEekOOG5SmWKKe
+         lAQKXiXaP6DtAOwWGSFm761H5750AG/zdQdtjEpGB0drczZpLSjsowtae/tF0M4xvx
+         L4H5ZoR8EQkDQ==
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -43,108 +43,78 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Clark Williams <williams@redhat.com>,
         Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Riccardo Mancini <rickyman7@gmail.com>
-Subject: [PATCH 4/6] perf trace: Really free the evsel->priv area
-Date:   Wed, 19 Jul 2023 17:29:49 -0300
-Message-ID: <20230719202951.534582-5-acme@kernel.org>
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCHES/RFC 1/5] perf bench uprobe + BPF skel
+Date:   Wed, 19 Jul 2023 17:49:05 -0300
+Message-ID: <20230719204910.539044-1-acme@kernel.org>
 X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230719202951.534582-1-acme@kernel.org>
-References: <20230719202951.534582-1-acme@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Hi,
 
-In 3cb4d5e00e037c70 ("perf trace: Free syscall tp fields in
-evsel->priv") it only was freeing if strcmp(evsel->tp_format->system,
-"syscalls") returned zero, while the corresponding initialization of
-evsel->priv was being performed if it was _not_ zero, i.e. if the tp
-system wasn't 'syscalls'.
+	This adds a 'perf bench' to test the overhead of uprobes + BPF
+programs, for now just a few simple tests, but I plan to make it
+possible to specify the functions to attach the uprobe + BPF, other BPF
+operations dealing with maps, etc.
 
-Just stop looking for that and free it if evsel->priv was set, which
-should be equivalent.
+	This is how it looks like now:
 
-Also use the pre-existing evsel_trace__delete() function.
+  [root@five ~]# perf bench uprobe all
+  # Running uprobe/baseline benchmark...
+  # Executed 1,000 usleep(1000) calls
+       Total time: 1,053,963 usecs
+  
+   1,053.963 usecs/op
+  
+  # Running uprobe/empty benchmark...
+  # Executed 1,000 usleep(1000) calls
+       Total time: 1,056,293 usecs +2,330 to baseline
+  
+   1,056.293 usecs/op 2.330 usecs/op to baseline
+  
+  # Running uprobe/trace_printk benchmark...
+  # Executed 1,000 usleep(1000) calls
+       Total time: 1,056,977 usecs +3,014 to baseline +684 to previous
+  
+   1,056.977 usecs/op 3.014 usecs/op to baseline 0.684 usecs/op to previous
+  
+  [root@five ~]
 
-This resolves these leaks, detected with:
+I put it here:
 
-  $ make EXTRA_CFLAGS="-fsanitize=address" BUILD_BPF_SKEL=1 CORESIGHT=1 O=/tmp/build/perf-tools-next -C tools/perf install-bin
+  https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=perf-bench-uprobe
 
-  =================================================================
-  ==481565==ERROR: LeakSanitizer: detected memory leaks
+  git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf-bench-uprobe
 
-  Direct leak of 40 byte(s) in 1 object(s) allocated from:
-      #0 0x7f7343cba097 in calloc (/lib64/libasan.so.8+0xba097)
-      #1 0x987966 in zalloc (/home/acme/bin/perf+0x987966)
-      #2 0x52f9b9 in evsel_trace__new /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:307
-      #3 0x52f9b9 in evsel__syscall_tp /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:333
-      #4 0x52f9b9 in evsel__init_raw_syscall_tp /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:458
-      #5 0x52f9b9 in perf_evsel__raw_syscall_newtp /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:480
-      #6 0x540e8b in trace__add_syscall_newtp /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:3212
-      #7 0x540e8b in trace__run /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:3891
-      #8 0x540e8b in cmd_trace /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:5156
-      #9 0x5ef262 in run_builtin /home/acme/git/perf-tools-next/tools/perf/perf.c:323
-      #10 0x4196da in handle_internal_command /home/acme/git/perf-tools-next/tools/perf/perf.c:377
-      #11 0x4196da in run_argv /home/acme/git/perf-tools-next/tools/perf/perf.c:421
-      #12 0x4196da in main /home/acme/git/perf-tools-next/tools/perf/perf.c:537
-      #13 0x7f7342c4a50f in __libc_start_call_main (/lib64/libc.so.6+0x2750f)
+Further ideas, problems?
 
-  Direct leak of 40 byte(s) in 1 object(s) allocated from:
-      #0 0x7f7343cba097 in calloc (/lib64/libasan.so.8+0xba097)
-      #1 0x987966 in zalloc (/home/acme/bin/perf+0x987966)
-      #2 0x52f9b9 in evsel_trace__new /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:307
-      #3 0x52f9b9 in evsel__syscall_tp /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:333
-      #4 0x52f9b9 in evsel__init_raw_syscall_tp /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:458
-      #5 0x52f9b9 in perf_evsel__raw_syscall_newtp /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:480
-      #6 0x540dd1 in trace__add_syscall_newtp /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:3205
-      #7 0x540dd1 in trace__run /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:3891
-      #8 0x540dd1 in cmd_trace /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:5156
-      #9 0x5ef262 in run_builtin /home/acme/git/perf-tools-next/tools/perf/perf.c:323
-      #10 0x4196da in handle_internal_command /home/acme/git/perf-tools-next/tools/perf/perf.c:377
-      #11 0x4196da in run_argv /home/acme/git/perf-tools-next/tools/perf/perf.c:421
-      #12 0x4196da in main /home/acme/git/perf-tools-next/tools/perf/perf.c:537
-      #13 0x7f7342c4a50f in __libc_start_call_main (/lib64/libc.so.6+0x2750f)
+- Arnaldo
 
-  SUMMARY: AddressSanitizer: 80 byte(s) leaked in 2 allocation(s).
-  [root@quaco ~]#
 
-With this we plug all leaks with "perf trace sleep 1".
 
-Fixes: 3cb4d5e00e037c70 ("perf trace: Free syscall tp fields in evsel->priv")
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Riccardo Mancini <rickyman7@gmail.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-trace.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+Arnaldo Carvalho de Melo (5):
+  perf bench uprobe: Add benchmark to test uprobe overhead
+  perf bench uprobe: Print diff to baseline
+  perf bench uprobe: Show diff to previous
+  perf bench uprobe empty: Add entry attaching an empty BPF program
+  perf bench uprobe trace_printk: Add entry attaching an BPF program that does a trace_printk
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index b7cbe4bcd136b137..56651d666480cc16 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -3151,13 +3151,8 @@ static void evlist__free_syscall_tp_fields(struct evlist *evlist)
- 	struct evsel *evsel;
- 
- 	evlist__for_each_entry(evlist, evsel) {
--		struct evsel_trace *et = evsel->priv;
--
--		if (!et || !evsel->tp_format || strcmp(evsel->tp_format->system, "syscalls"))
--			continue;
--
--		zfree(&et->fmt);
--		free(et);
-+		evsel_trace__delete(evsel->priv);
-+		evsel->priv = NULL;
- 	}
- }
- 
+ tools/perf/Documentation/perf-bench.txt     |   3 +
+ tools/perf/Makefile.perf                    |   1 +
+ tools/perf/bench/Build                      |   1 +
+ tools/perf/bench/bench.h                    |   3 +
+ tools/perf/bench/uprobe.c                   | 198 ++++++++++++++++++++
+ tools/perf/builtin-bench.c                  |   8 +
+ tools/perf/util/bpf_skel/bench_uprobe.bpf.c |  23 +++
+ 7 files changed, 237 insertions(+)
+ create mode 100644 tools/perf/bench/uprobe.c
+ create mode 100644 tools/perf/util/bpf_skel/bench_uprobe.bpf.c
+
 -- 
 2.41.0
 
