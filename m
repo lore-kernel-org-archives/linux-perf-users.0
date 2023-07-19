@@ -2,143 +2,106 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3150C001DC
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 20:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD227C001B0
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 20:30:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230109AbjGSUHb (ORCPT
+        id S229447AbjGSUaj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Jul 2023 16:07:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49248 "EHLO
+        Wed, 19 Jul 2023 16:30:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229542AbjGSUHY (ORCPT
+        with ESMTP id S231467AbjGSUae (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Jul 2023 16:07:24 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4771492;
-        Wed, 19 Jul 2023 13:07:23 -0700 (PDT)
+        Wed, 19 Jul 2023 16:30:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D6EE2D6B;
+        Wed, 19 Jul 2023 13:30:03 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D859361812;
-        Wed, 19 Jul 2023 20:07:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B303C433C9;
-        Wed, 19 Jul 2023 20:07:22 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 20A0F617E4;
+        Wed, 19 Jul 2023 20:30:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 040E5C433C9;
+        Wed, 19 Jul 2023 20:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689797242;
-        bh=QBRlv2TQMbOLiRvL0z9P4oIMqhGPMMGSEdcz73enZaw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dm23rWS9Rw6KGAXcY7fuoaDU28fLmGZtA7SLE6RiGx2FoRtRCGnsQjATCPx9dpqsq
-         oUP2RkT4+v8C82HZLBdLQPBraitPW9d+bFP1lWYq7EMkaXEuBF3vCvVJYUlN8bJZ2Q
-         zxD6mmXx0fGjeCV0CtEkNtElaPu5shLL2Atd3x33NdA3hp2w+niODhzYnIkAdo3K8O
-         eAzhxwKZ1caG5qIL4pMEpBnX0E7/UKf1hf3LMy6PP55+6PKaAZIULaalXQs0UzPMBd
-         QQUgOL5QUtkA/mJyaskDagLgav1Izt6Q1NECuWIi36In3LMKZg0qKGF2QceLcPq0MJ
-         ou7lWynyzfzhA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 199B940516; Wed, 19 Jul 2023 17:07:19 -0300 (-03)
-Date:   Wed, 19 Jul 2023 17:07:19 -0300
+        s=k20201202; t=1689798602;
+        bh=goX2lDmeZF8/0WGZE1xE1qdjbTmkUWJAnLQ7R0lm72Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uEDfoUsmNHbSkzHppAbTaO7Bjutnh+Mbk65s/ZGip7I6hA5YOH15YX2cW4XZ6eJpF
+         GMJkoUgXmOYSv+8MOjJALcIVIxVn6dQYiGhsRkyrHxF1+rEoUd/ddumTdQJ49py2Is
+         t2sJFU/CKw/CpsNOL3FFNvriX0o0d1FlfUa9Ud8Jnx0UNDcoGhdfTZHQOSzZC0H6sr
+         9Sht3vtL4lMY8OW/GKYlpV9d8qXzb3auxYatV+sgHWf4IBcAaQ8tBTYZXo6pXKiRue
+         3QHErko/kiy0D/91MQrXtIwJnKZeurmpc4srG+kFVb3JknGMrbC5tqBBfGFa6aQruu
+         83MLGZFrO5XBQ==
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     John Garry <john.g.garry@oracle.com>, namhyung@kernel.org,
-        jolsa@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        renyu.zj@linux.alibaba.com, shangxiaojing@huawei.com,
-        kjain@linux.ibm.com, kan.liang@linux.intel.com
-Subject: Re: [PATCH RFC 4/9] perf jevents: Add sys_events_find_events_table()
-Message-ID: <ZLhCd684SosTkJ8q@kernel.org>
-References: <897dcf1d-6a04-33d3-9c4f-ea9d1706cdad@oracle.com>
- <CAP-5=fX+rz928LtFs2MWYUH=6Mcvz0XQcLRkO-n9BnVnX4RYWw@mail.gmail.com>
- <297ddf04-9b35-7613-8efd-2857668b6835@oracle.com>
- <CAP-5=fXSQVyqCfrBJFjHkrRdANuQC=TKR-HHi37hLaQ91rPQiA@mail.gmail.com>
- <eb011f48-b953-3647-4699-734ebdf1876a@oracle.com>
- <CAP-5=fXJxVpYQ84hXiMxy4LUi7xs1puXdDhbp6d6N2ArnqKJuQ@mail.gmail.com>
- <0d6e41d1-2f27-9a90-1516-c4e50bad1c21@oracle.com>
- <CAP-5=fXKqZM=RMB-+ooKEKfGw=KdCVU0UbVQ9+XrDOAWpoYAdw@mail.gmail.com>
- <4f0355ec-8bc6-e51a-ab5b-61d555a68b6c@oracle.com>
- <CAP-5=fVGOP6-k=BTRd_bn=N0HVy+1ShpdW5rk5ND0ZGhm_fQkg@mail.gmail.com>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 1/6] perf evsel: Free evsel->filter on the destructor
+Date:   Wed, 19 Jul 2023 17:29:46 -0300
+Message-ID: <20230719202951.534582-2-acme@kernel.org>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230719202951.534582-1-acme@kernel.org>
+References: <20230719202951.534582-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVGOP6-k=BTRd_bn=N0HVy+1ShpdW5rk5ND0ZGhm_fQkg@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Jul 19, 2023 at 08:25:31AM -0700, Ian Rogers escreveu:
-> On Tue, Jul 18, 2023 at 2:32 AM John Garry <john.g.garry@oracle.com> wrote:
-> >
-> > On 17/07/2023 22:39, Ian Rogers wrote:
-> > > On Mon, Jul 17, 2023 at 12:41 AM John Garry<john.g.garry@oracle.com>  wrote:
-> > >> On 14/07/2023 16:55, Ian Rogers wrote:
-> > >>> In this
-> > >>> series my main concern was in the changes of the event lookup and
-> > >>> having implied PMUs. You mentioned doing these changes so I was
-> > >>> waiting for a v2.
-> > >> OK, fine, I can look to do this now.
-> >
-> > I was thinking about this a little further. So you suggest that the
-> > metric expression contains PMU name per term, like
-> > "cpu_atom@instructions@ / cpu_atom@cycles@" - how would/could this work
-> > for PMUs with more complex naming, like the form hisi_siclXXX_cpa_YYY?
-> > Would we use the "Unit" expression for the metric name, like
-> > "@hisi_sicl,cpa@event_foo"?
-> 
-> How does this work for events? The "@hisi_sicl,cpa@event_foo" looks
-> strange, shouldn't it be "hisi_sicl,cpa@event_foo@" but then hisi_sicl
-> looks like an event name.
-> 
-> >
-> > >>
-> > >> BTW, which git repo/branch do you guys use for dev? I thought that it
-> > >> would be acme git, but Namhyung says "We moved to new repos from acme to
-> > >> perf/perf-tools and perf/perf-tools-next" - where is repo "perf"?
-> > > Current development is here now:
-> > > https://urldefense.com/v3/__https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/log/?h=perf-tools-next__;!!ACWV5N9M2RV99hQ!OQDHOClSjd6nVZhmgzrK3RwzXuQpP54QhqyIKpITa_MFD4PLdS7yPYSnvInFja9nrFx9Sd-UnlsJ6XUqAh4$
-> >
-> > Can that be added to the MAINTAINERS file? I suppose it is ok under
-> > "PERFORMANCE EVENTS SUBSYTEM", since the two would-be git repos listed
-> > under that same entry would be pretty obvious in purpose.
-> 
-> Arnaldo could you take a look at doing this?
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Sure, just added this:
+Noticed with:
 
-[acme@quaco perf-tools-next]$ git show
-commit 0146244875046fad472a39ffd61ec4f91719b62a (HEAD -> perf-tools-next)
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date:   Wed Jul 19 16:53:01 2023 -0300
+  make EXTRA_CFLAGS="-fsanitize=address" BUILD_BPF_SKEL=1 CORESIGHT=1 O=/tmp/build/perf-tools-next -C tools/perf install-bin
 
-    MAINTAINERS: Add git information for perf-tools and perf-tools-next trees/branches
+Direct leak of 45 byte(s) in 1 object(s) allocated from:
+    #0 0x7f213f87243b in strdup (/lib64/libasan.so.8+0x7243b)
+    #1 0x63d15f in evsel__set_filter util/evsel.c:1371
+    #2 0x63d15f in evsel__append_filter util/evsel.c:1387
+    #3 0x63d15f in evsel__append_tp_filter util/evsel.c:1400
+    #4 0x62cd52 in evlist__append_tp_filter util/evlist.c:1145
+    #5 0x62cd52 in evlist__append_tp_filter_pids util/evlist.c:1196
+    #6 0x541e49 in trace__set_filter_loop_pids /home/acme/git/perf-tools/tools/perf/builtin-trace.c:3646
+    #7 0x541e49 in trace__set_filter_pids /home/acme/git/perf-tools/tools/perf/builtin-trace.c:3670
+    #8 0x541e49 in trace__run /home/acme/git/perf-tools/tools/perf/builtin-trace.c:3970
+    #9 0x541e49 in cmd_trace /home/acme/git/perf-tools/tools/perf/builtin-trace.c:5141
+    #10 0x5ef1a2 in run_builtin /home/acme/git/perf-tools/tools/perf/perf.c:323
+    #11 0x4196da in handle_internal_command /home/acme/git/perf-tools/tools/perf/perf.c:377
+    #12 0x4196da in run_argv /home/acme/git/perf-tools/tools/perf/perf.c:421
+    #13 0x4196da in main /home/acme/git/perf-tools/tools/perf/perf.c:537
+    #14 0x7f213e84a50f in __libc_start_call_main (/lib64/libc.so.6+0x2750f)
 
-    Now the perf tools development is done on these trees/branches:
+Free it on evsel__exit().
 
-      git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git perf-tools
-      git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/evsel.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-    For a while I'll continue mirroring what is these to the same branches
-    in my git tree.
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 762e2b2634a5532a..e41bc4d9925f69a4 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1474,6 +1474,7 @@ void evsel__exit(struct evsel *evsel)
+ 	perf_thread_map__put(evsel->core.threads);
+ 	zfree(&evsel->group_name);
+ 	zfree(&evsel->name);
++	zfree(&evsel->filter);
+ 	zfree(&evsel->pmu_name);
+ 	zfree(&evsel->group_pmu_name);
+ 	zfree(&evsel->unit);
+-- 
+2.41.0
 
-    Suggested-by: John Garry <john.g.garry@oracle.com>
-    Cc: Adrian Hunter <adrian.hunter@intel.com>
-    Cc: Ian Rogers <irogers@google.com>
-    Cc: Jiri Olsa <jolsa@kernel.org>
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Link: https://lore.kernel.org/lkml/CAP-5=fVGOP6-k=BTRd_bn=N0HVy+1ShpdW5rk5ND0ZGhm_fQkg@mail.gmail.com
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index aee340630ecaea38..e351cfc7cd41c570 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16629,6 +16629,8 @@ L:      linux-kernel@vger.kernel.org
- S:     Supported
- W:     https://perf.wiki.kernel.org/
- T:     git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
-+T:     git git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git perf-tools
-+T:     git git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
- F:     arch/*/events/*
- F:     arch/*/events/*/*
- F:     arch/*/include/asm/perf_event.h
-[acme@quaco perf-tools-next]$
