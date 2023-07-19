@@ -2,38 +2,38 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE42EC001B0
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 20:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A86AC001B0
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 20:32:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231195AbjGSUcO (ORCPT
+        id S230500AbjGSUcV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Jul 2023 16:32:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34386 "EHLO
+        Wed, 19 Jul 2023 16:32:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231303AbjGSUcK (ORCPT
+        with ESMTP id S230416AbjGSUcS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Jul 2023 16:32:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3DB2268D;
-        Wed, 19 Jul 2023 13:31:38 -0700 (PDT)
+        Wed, 19 Jul 2023 16:32:18 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18AAB1FCE;
+        Wed, 19 Jul 2023 13:31:47 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1BC3B61828;
-        Wed, 19 Jul 2023 20:30:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 044B0C433C7;
-        Wed, 19 Jul 2023 20:30:02 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 44367617EF;
+        Wed, 19 Jul 2023 20:30:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01A12C433C7;
+        Wed, 19 Jul 2023 20:30:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689798605;
-        bh=BRr5z+/T35P0lcuwuDmZU0RVzfr8a7oe2vprcDbwtgo=;
+        s=k20201202; t=1689798611;
+        bh=W5TxjO0FZLzZwTfwZhu1oBz8pm8d9YfgcvKsQLRyIvE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eLuzMdK34w6j5GXTkBaVLYSnwgF5Bu10EGq7KZeJhZlqE3HnYBLVm4IEb4roVyTwh
-         zaRJeQThJ4AwDxoFLo0FHsKfpHb/hroAwkE9/sVSKF+KehTyNo1IXC9GgO16PNNwSo
-         HBP8mGWr+glXWHk2ty88qBhpLeRNDRCESsWRzJ5g08Mh0YRpsPldwoJMrGo9TmUciG
-         +utjq8ZVV6cRUKH6fodglvjSjZPdTtx5cMD7pQPNig3MKUkA0/xdJ4AK+8/zSQ0IS4
-         mq0EjGOhSMVIPY1VS4KDrmfwBkQ4g2fjvDt7VpeYtNF26daSz6+Q/2j2sJr+nbs9JD
-         zo/T8JyH7hO/A==
+        b=TtWzTqqICusKSGjbNnyVzMjE8Dfl1qMjSh/Xu3oyB41xSqW/4QwcJEQJinP0jRwwl
+         5Qu272LZfeKTh7+beVG2q7/DL9h6AJlU06B1ijhrpocK0Jio87Mpye9M7n/Pko5S+y
+         Rh2Emq+pWhv48/fy37QIzvp8fanySQByKq/uzphLgMyLzCrAUSt4HCXo6Eg7w9/Cxq
+         jMlVgsRDBIwyKy7YeUB4CtmnznNyrnLu+KgKrLFUA36wAGIScD3Bsmg85wOCC87JC7
+         Bj8q5lqdIbztrqx1LX3NWGHPaPMilphUNI4lCrvGKuLQGDzcTSrGakZUKsdeUMkkFF
+         xiJ1dVDMq8qGg==
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -43,10 +43,11 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Clark Williams <williams@redhat.com>,
         Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 2/6] perf thread: Allow tools to register a thread->priv destructor
-Date:   Wed, 19 Jul 2023 17:29:47 -0300
-Message-ID: <20230719202951.534582-3-acme@kernel.org>
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Riccardo Mancini <rickyman7@gmail.com>
+Subject: [PATCH 4/6] perf trace: Really free the evsel->priv area
+Date:   Wed, 19 Jul 2023 17:29:49 -0300
+Message-ID: <20230719202951.534582-5-acme@kernel.org>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20230719202951.534582-1-acme@kernel.org>
 References: <20230719202951.534582-1-acme@kernel.org>
@@ -58,61 +59,91 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-So that when thread__delete() runs it can be called and free stuff tools
-stashed into thread->priv, like 'perf trace' does and will use this
-new facility to plug some leaks.
+In 3cb4d5e00e037c70 ("perf trace: Free syscall tp fields in
+evsel->priv") it only was freeing if strcmp(evsel->tp_format->system,
+"syscalls") returned zero, while the corresponding initialization of
+evsel->priv was being performed if it was _not_ zero, i.e. if the tp
+system wasn't 'syscalls'.
 
+Just stop looking for that and free it if evsel->priv was set, which
+should be equivalent.
+
+Also use the pre-existing evsel_trace__delete() function.
+
+This resolves these leaks, detected with:
+
+  $ make EXTRA_CFLAGS="-fsanitize=address" BUILD_BPF_SKEL=1 CORESIGHT=1 O=/tmp/build/perf-tools-next -C tools/perf install-bin
+
+  =================================================================
+  ==481565==ERROR: LeakSanitizer: detected memory leaks
+
+  Direct leak of 40 byte(s) in 1 object(s) allocated from:
+      #0 0x7f7343cba097 in calloc (/lib64/libasan.so.8+0xba097)
+      #1 0x987966 in zalloc (/home/acme/bin/perf+0x987966)
+      #2 0x52f9b9 in evsel_trace__new /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:307
+      #3 0x52f9b9 in evsel__syscall_tp /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:333
+      #4 0x52f9b9 in evsel__init_raw_syscall_tp /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:458
+      #5 0x52f9b9 in perf_evsel__raw_syscall_newtp /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:480
+      #6 0x540e8b in trace__add_syscall_newtp /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:3212
+      #7 0x540e8b in trace__run /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:3891
+      #8 0x540e8b in cmd_trace /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:5156
+      #9 0x5ef262 in run_builtin /home/acme/git/perf-tools-next/tools/perf/perf.c:323
+      #10 0x4196da in handle_internal_command /home/acme/git/perf-tools-next/tools/perf/perf.c:377
+      #11 0x4196da in run_argv /home/acme/git/perf-tools-next/tools/perf/perf.c:421
+      #12 0x4196da in main /home/acme/git/perf-tools-next/tools/perf/perf.c:537
+      #13 0x7f7342c4a50f in __libc_start_call_main (/lib64/libc.so.6+0x2750f)
+
+  Direct leak of 40 byte(s) in 1 object(s) allocated from:
+      #0 0x7f7343cba097 in calloc (/lib64/libasan.so.8+0xba097)
+      #1 0x987966 in zalloc (/home/acme/bin/perf+0x987966)
+      #2 0x52f9b9 in evsel_trace__new /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:307
+      #3 0x52f9b9 in evsel__syscall_tp /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:333
+      #4 0x52f9b9 in evsel__init_raw_syscall_tp /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:458
+      #5 0x52f9b9 in perf_evsel__raw_syscall_newtp /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:480
+      #6 0x540dd1 in trace__add_syscall_newtp /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:3205
+      #7 0x540dd1 in trace__run /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:3891
+      #8 0x540dd1 in cmd_trace /home/acme/git/perf-tools-next/tools/perf/builtin-trace.c:5156
+      #9 0x5ef262 in run_builtin /home/acme/git/perf-tools-next/tools/perf/perf.c:323
+      #10 0x4196da in handle_internal_command /home/acme/git/perf-tools-next/tools/perf/perf.c:377
+      #11 0x4196da in run_argv /home/acme/git/perf-tools-next/tools/perf/perf.c:421
+      #12 0x4196da in main /home/acme/git/perf-tools-next/tools/perf/perf.c:537
+      #13 0x7f7342c4a50f in __libc_start_call_main (/lib64/libc.so.6+0x2750f)
+
+  SUMMARY: AddressSanitizer: 80 byte(s) leaked in 2 allocation(s).
+  [root@quaco ~]#
+
+With this we plug all leaks with "perf trace sleep 1".
+
+Fixes: 3cb4d5e00e037c70 ("perf trace: Free syscall tp fields in evsel->priv")
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Ian Rogers <irogers@google.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Riccardo Mancini <rickyman7@gmail.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/thread.c | 11 +++++++++++
- tools/perf/util/thread.h |  2 ++
- 2 files changed, 13 insertions(+)
+ tools/perf/builtin-trace.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index 0b166404c5c365cf..35dd4e716e411da9 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -80,6 +80,13 @@ struct thread *thread__new(pid_t pid, pid_t tid)
- 	return NULL;
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index b7cbe4bcd136b137..56651d666480cc16 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3151,13 +3151,8 @@ static void evlist__free_syscall_tp_fields(struct evlist *evlist)
+ 	struct evsel *evsel;
+ 
+ 	evlist__for_each_entry(evlist, evsel) {
+-		struct evsel_trace *et = evsel->priv;
+-
+-		if (!et || !evsel->tp_format || strcmp(evsel->tp_format->system, "syscalls"))
+-			continue;
+-
+-		zfree(&et->fmt);
+-		free(et);
++		evsel_trace__delete(evsel->priv);
++		evsel->priv = NULL;
+ 	}
  }
- 
-+static void (*thread__priv_destructor)(void *priv);
-+
-+void thread__set_priv_destructor(void (*destructor)(void *priv))
-+{
-+	thread__priv_destructor = destructor;
-+}
-+
- void thread__delete(struct thread *thread)
- {
- 	struct namespaces *namespaces, *tmp_namespaces;
-@@ -112,6 +119,10 @@ void thread__delete(struct thread *thread)
- 	exit_rwsem(thread__namespaces_lock(thread));
- 	exit_rwsem(thread__comm_lock(thread));
- 	thread__free_stitch_list(thread);
-+
-+	if (thread__priv_destructor)
-+		thread__priv_destructor(thread__priv(thread));
-+
- 	RC_CHK_FREE(thread);
- }
- 
-diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-index 9068a21ce0fa1b0f..e79225a0ea46b789 100644
---- a/tools/perf/util/thread.h
-+++ b/tools/perf/util/thread.h
-@@ -71,6 +71,8 @@ struct thread *thread__new(pid_t pid, pid_t tid);
- int thread__init_maps(struct thread *thread, struct machine *machine);
- void thread__delete(struct thread *thread);
- 
-+void thread__set_priv_destructor(void (*destructor)(void *priv));
-+
- struct thread *thread__get(struct thread *thread);
- void thread__put(struct thread *thread);
  
 -- 
 2.41.0
