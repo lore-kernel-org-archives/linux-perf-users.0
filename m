@@ -2,232 +2,141 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD4AC001B0
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 22:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6760EC001B0
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 22:31:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229875AbjGSW3h (ORCPT
+        id S230182AbjGSWb5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Jul 2023 18:29:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60816 "EHLO
+        Wed, 19 Jul 2023 18:31:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229888AbjGSW3g (ORCPT
+        with ESMTP id S230056AbjGSWb4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Jul 2023 18:29:36 -0400
-Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AE901FF9
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 15:29:34 -0700 (PDT)
-Received: by mail-il1-x12b.google.com with SMTP id e9e14a558f8ab-346099c6f43so51425ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 15:29:34 -0700 (PDT)
+        Wed, 19 Jul 2023 18:31:56 -0400
+Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D3052102
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 15:31:53 -0700 (PDT)
+Received: by mail-il1-x129.google.com with SMTP id e9e14a558f8ab-345bc4a438fso28255ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 15:31:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689805773; x=1692397773;
+        d=google.com; s=20221208; t=1689805913; x=1692397913;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tqoeu32/ubTfhfs6iCcSSOBQyyfVchKkhCCT1JC+XAk=;
-        b=fhkFVSKo7vG2mHRskyY30qxwdiGCy6BwiQvXwBSODoJk8nERBLfkV4WFzEIBnuNnWu
-         Uv/dG4CnBEjHgTrfySDCys5p3W2GCBox2oAL277y6RIbJivqLHKX0K/eRx/ElKoJLWUg
-         pC1DXZVvvwPKyzPW4ZYmcdRqbd0SXsPjT9l0z8WjmkKHSfmCPOF73V+9kJ5X9u2P/cCB
-         qmoCKkK83wZv7XIgZ+ecKa8teV7ChfoGVmKmrJztwCkD+qfeSeALdJ8JzyWSFBpncb/f
-         Pm2v8BIQdc+kykfzZQH5ISC1aKoXubQ5ydXRuX04K+UaQOaPKXwu79UGsPaKbNYkmOnL
-         Z6dQ==
+        bh=hiNsp140u/z6iaEw6m3evD3OsE+pjKNY88u57By7+DM=;
+        b=MWnmjKVm7AYL27gaU9Vyk22i9b/I03CZ2m3162rteHKQ0h6PQ+eQJFrnU0gdW5S/sA
+         5AYA+Ot2dAes2ZoyaFtHJAF4VQEcJi/hoVusA+yjI0PkWr1tHKUKOFjV4UEWtz1A3A6W
+         CrpAB9k8A9M1BD7vJc4NnwGswA1YlfSR43p2qYT7m9VUunZ9wMZ1TmpnRI3KJoSd038Z
+         iSYhj4Dw6FFxF+vlId7PlFyh/0kSZisDo0les+2TgUsfW8XuluThywlb8lMddoFHASY8
+         IJvJtWZ5guTPqByisvww8eb9QnENwIe2I2lJaf578Sul9C79FIXW7Qzqkf98klTH6NyN
+         5eeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689805773; x=1692397773;
+        d=1e100.net; s=20221208; t=1689805913; x=1692397913;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tqoeu32/ubTfhfs6iCcSSOBQyyfVchKkhCCT1JC+XAk=;
-        b=LVapvjsXE7ggiTYtuDWT6E1lmF6vfMfcE5+n1YkL42SKSUt9CnGyHJMVTGGtluyRUt
-         Ju6f61Ih5j/VBbY17Rw138OX9EZf9lme7lpWV6NmLLFpLjzP+BKlNWzKgFB9gvJN6M/T
-         nfLQuEbTidWgpr6MyWDr9r44T6i3jKQdDPOcr8tEmLlBCoVRZ8VSvqMztm9I/DfkSwVh
-         aU0SsKrP0tJ4WN1lYMYKK/RCb1n7JIgDKfLFoAeO4OpZSbDWKSj+2r2zVqNlo+j5aMRj
-         TeTVgrZXNw+SpY5eAU28pTfvrTsILeiJI6wPDwakkYE1Rp7DB+srYvBRpuTGzFUVbCYv
-         L9zQ==
-X-Gm-Message-State: ABy/qLaxOKy8aH/YDjjSvA2lQsdSRD/ZNl1VavOe5kztX5hRqy0DYhzd
-        0wTXaG/RLWRvc8N06KL3ybVZbsUzISB+Dy94+j2LXjR6OiM4FKPclihS0Q==
-X-Google-Smtp-Source: APBJJlHIgsdtyrAeyDIhRYnQ24HD/WjVFs8ko5K9ZxM8lpafShcrD0gfpVexu/lDsUJcqwEqJ0y7HCA9DYLgz2tgIgA=
-X-Received: by 2002:a05:6e02:20c9:b0:340:57e1:2f7b with SMTP id
- 9-20020a056e0220c900b0034057e12f7bmr34276ilq.5.1689805773098; Wed, 19 Jul
- 2023 15:29:33 -0700 (PDT)
+        bh=hiNsp140u/z6iaEw6m3evD3OsE+pjKNY88u57By7+DM=;
+        b=kQ2hcsbiLEe/EZNz6NqZpzTRG9t6MQkDM4VniMjThuEd0KynMEY63Sd7ChFvYadujy
+         +yUdvWCBBZ4ziCZchNhdDDLm666jQs53Yr1P+2P3HWVijBmFSBcustLCgX88TWuzdWlR
+         ahvuDgdzX3jiHOJnowrtLu+N8vG5cw/ZpTwXLbLXxX1mQckfkDQT8jdBXRzrBqdW0XK6
+         ky96UjrUp3dKprZcx3tEHFU6EoMX10ccWPx9XzvnZnxup7HpwXfeAUlt2YjnQ799IfRX
+         uUib32Jb7X6nzqCwJjbV96lwM28n6DRZLoxsqaoCIJTJwKTkWhyN6xkC/HQ4+FgdKygU
+         VbjA==
+X-Gm-Message-State: ABy/qLZfvPI/rP8KTjyKgCnyEWtfwCWWrMoy0Bc5L++cwqtB/mQj3MVl
+        lKqq1leo2iZWuuMDEqtUuj5geSmxixN6dLqrOE2RfQ==
+X-Google-Smtp-Source: APBJJlH9BzVTG/2sfDIAuUfdaGvxpNlVQtgmXmW6P6EhWaGK5HeN313qhFDPSDiTYWH9S+nNpyiNfOADKTIwVEXEmgw=
+X-Received: by 2002:a05:6e02:1ba3:b0:346:9c8:b011 with SMTP id
+ n3-20020a056e021ba300b0034609c8b011mr37657ili.19.1689805912815; Wed, 19 Jul
+ 2023 15:31:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAP-5=fU10YCxZfq=dOUUPR0dRusbq=vzp5CqsOuz1aLVY16KAw@mail.gmail.com>
- <CAP-5=fWOCE6+9MuiFziHz1o6Ej-FTDJa1fnkhYpifz7Rtazk8Q@mail.gmail.com>
- <CAP-5=fXf-FmKb=D4h5VgxQ=w3T3+Nn3AP4ExR9YjnKFB=4m7bA@mail.gmail.com>
- <CAP-5=fWSHpWx02+nB8joo0JbtNJXAEHFLBdY7n5W=tSbdpMGkg@mail.gmail.com>
- <CAP-5=fX9OXTiiojNp-ut-_LOD2=6+mEN8iAt=UUGfmDu4q+F3Q@mail.gmail.com> <CAP-5=fU6TWKQ8eDUM5UFfO2h6TgL9j7-43eWfZMTbwpRqHS6OA@mail.gmail.com>
-In-Reply-To: <CAP-5=fU6TWKQ8eDUM5UFfO2h6TgL9j7-43eWfZMTbwpRqHS6OA@mail.gmail.com>
+References: <20230719202951.534582-1-acme@kernel.org> <20230719202951.534582-3-acme@kernel.org>
+In-Reply-To: <20230719202951.534582-3-acme@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 19 Jul 2023 15:29:20 -0700
-Message-ID: <CAP-5=fX4Fj3phsny8zPueJpUaxN0jEhvJarc3ghz46RCtu0C+A@mail.gmail.com>
-Subject: Re: Linux Perf Tool Office Hours
-To:     linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Anup Sharma <anupnewsmail@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 19 Jul 2023 15:31:41 -0700
+Message-ID: <CAP-5=fV3Er=Ek8=iE=bSGbEBmM56_PJffMWot1g_5Bh8B5hO7A@mail.gmail.com>
+Subject: Re: [PATCH 2/6] perf thread: Allow tools to register a thread->priv destructor
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-A reminder there is the usual office hours tomorrow:
-
-Linux Perf Tool Office Hours
-Thursday, July 20 =C2=B7 9:00 =E2=80=93 9:45am
-Time zone: America/Los_Angeles
-Google Meet joining info
-Video call link: https://meet.google.com/jds-asbo-day
-Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 018 892=
-=E2=80=AC#
-More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252256983
-
-Thanks,
-Ian
-
-On Wed, Jul 12, 2023 at 3:42=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On Wed, Jul 19, 2023 at 1:30=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> A reminder there are office hours tomorrow. This is a particular
-> useful time to sync with Anup, the Linux Foundation Google
-> Summer-of-Code contributor this year.
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >
-> Linux Perf Tool Office Hours
-> Thursday, July 13 =C2=B7 9:00 =E2=80=93 9:45am
-> Time zone: America/Los_Angeles
-> Google Meet joining info
-> Video call link: https://meet.google.com/jds-asbo-day
-> Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 018 892=
-=E2=80=AC#
-> More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252256983
+> So that when thread__delete() runs it can be called and free stuff tools
+> stashed into thread->priv, like 'perf trace' does and will use this
+> new facility to plug some leaks.
 >
-> Thanks!
-> Ian
-> On Thu, Jul 6, 2023 at 8:31=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
-> >
-> > Hi,
-> >
-> > Sorry for the late notice. Office hours today in 30 minutes.
-> >
-> > Linux Perf Tool Office Hours
-> > Thursday, July 6 =C2=B7 9:00 =E2=80=93 9:45am
-> > Time zone: America/Los_Angeles
-> > Google Meet joining info
-> > Video call link: https://meet.google.com/jds-asbo-day
-> > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 018 8=
-92=E2=80=AC#
-> > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252256983
-> >
-> > Thanks,
-> > Ian
-> >
-> > On Wed, Jun 21, 2023 at 3:15=E2=80=AFPM Ian Rogers <irogers@google.com>=
- wrote:
-> > >
-> > > Hi,
-> > >
-> > > Office hours reminder tomorrow. A chance to discuss any topics of the
-> > > day and for
-> > > GSoC contributor sync.
-> > >
-> > > Linux Perf Tool Office Hours
-> > > Thursday, June 22 =C2=B7 9:00 =E2=80=93 9:45am
-> > > Time zone: America/Los_Angeles
-> > > Google Meet joining info
-> > > Video call link: https://meet.google.com/jds-asbo-day
-> > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 018=
- 892=E2=80=AC#
-> > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252256983
-> > >
-> > > Thanks,
-> > > Ian
-> > >
-> > > On Wed, Jun 14, 2023 at 10:01=E2=80=AFAM Ian Rogers <irogers@google.c=
-om> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > Office hours reminder. A chance to discuss topics of the day and fo=
-r
-> > > > GSoC contributor sync.
-> > > >
-> > > > Linux Perf Tool Office Hours
-> > > > Thursday, June 15 =C2=B7 9:00 =E2=80=93 9:45am
-> > > > Time zone: America/Los_Angeles
-> > > > Google Meet joining info
-> > > > Video call link: https://meet.google.com/jds-asbo-day
-> > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 0=
-18 892=E2=80=AC#
-> > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D66292522569=
-83
-> > > >
-> > > > Thanks,
-> > > > Ian
-> > > >
-> > > > On Wed, Jun 7, 2023 at 9:14=E2=80=AFPM Ian Rogers <irogers@google.c=
-om> wrote:
-> > > > >
-> > > > > Hi,
-> > > > >
-> > > > > Office hours and chance for GSoC contributor sync slightly earlie=
-r at
-> > > > > 9am PT tomorrow:
-> > > > >
-> > > > > Linux Perf Tool Office Hours
-> > > > > Thursday, June 8 =C2=B7 9:00 =E2=80=93 9:45am
-> > > > > Time zone: America/Los_Angeles
-> > > > > Google Meet joining info
-> > > > > Video call link: https://meet.google.com/jds-asbo-day
-> > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817=
- 018 892=E2=80=AC#
-> > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D662925225=
-6983
-> > > > >
-> > > > > If you'd like to randomly drop in, feel free. An issue I'm keen t=
-o
-> > > > > discuss is memory usage and memory leaks.
-> > > > >
-> > > > > Thanks,
-> > > > > Ian
-> > > > >
-> > > > > On Wed, May 31, 2023 at 10:00=E2=80=AFAM Ian Rogers <irogers@goog=
-le.com> wrote:
-> > > > > >
-> > > > > > Hi,
-> > > > > >
-> > > > > > On Monday the Google Summer-of-Code officially started and Anup=
- is
-> > > > > > this summer's contributor to the Linux perf tool! We've found i=
-n the
-> > > > > > past [1] that having office hours is a good chance for contribu=
-tors to
-> > > > > > sync and also for those interested in the Linux perf tool to al=
-so
-> > > > > > connect and share their problems and experiences. As such we pl=
-an on
-> > > > > > running our first office hours for this summer tomorrow, the de=
-tails
-> > > > > > are below:
-> > > > > >
-> > > > > > Linux Perf Tool Office Hours
-> > > > > > Thursday, June 1 =C2=B7 9:30 =E2=80=93 10:30am
-> > > > > > Time zone: America/Los_Angeles
-> > > > > > Google Meet joining info
-> > > > > > Video call link: https://meet.google.com/jds-asbo-day
-> > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA8=
-17 018 892=E2=80=AC#
-> > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252=
-256983
-> > > > > >
-> > > > > > Please ask me and I'll be more than happy to add you to the cal=
-endar
-> > > > > > invite for this. Over the summer we can adjust the timing of th=
-e
-> > > > > > office hours to maximize participation, etc. so please reach ou=
-t and
-> > > > > > share concerns.
-> > > > > >
-> > > > > > Thanks,
-> > > > > > Ian
-> > > > > >
-> > > > > > [1] https://lore.kernel.org/linux-perf-users/CAP-5=3DfWiQHvYZp5=
-R=3Duw4xUwBiN1fBLBU8witPkYM+2r8tnYCOg@mail.gmail.com/
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/util/thread.c | 11 +++++++++++
+>  tools/perf/util/thread.h |  2 ++
+>  2 files changed, 13 insertions(+)
+>
+> diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+> index 0b166404c5c365cf..35dd4e716e411da9 100644
+> --- a/tools/perf/util/thread.c
+> +++ b/tools/perf/util/thread.c
+> @@ -80,6 +80,13 @@ struct thread *thread__new(pid_t pid, pid_t tid)
+>         return NULL;
+>  }
+>
+> +static void (*thread__priv_destructor)(void *priv);
+> +
+> +void thread__set_priv_destructor(void (*destructor)(void *priv))
+> +{
+
+Perhaps:
+assert(thread__priv_destructor =3D=3D NULL);
+
+To make it clear that there should never be >1 currently.
+
+> +       thread__priv_destructor =3D destructor;
+> +}
+> +
+>  void thread__delete(struct thread *thread)
+>  {
+>         struct namespaces *namespaces, *tmp_namespaces;
+> @@ -112,6 +119,10 @@ void thread__delete(struct thread *thread)
+>         exit_rwsem(thread__namespaces_lock(thread));
+>         exit_rwsem(thread__comm_lock(thread));
+>         thread__free_stitch_list(thread);
+> +
+> +       if (thread__priv_destructor)
+> +               thread__priv_destructor(thread__priv(thread));
+> +
+>         RC_CHK_FREE(thread);
+>  }
+>
+> diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+> index 9068a21ce0fa1b0f..e79225a0ea46b789 100644
+> --- a/tools/perf/util/thread.h
+> +++ b/tools/perf/util/thread.h
+> @@ -71,6 +71,8 @@ struct thread *thread__new(pid_t pid, pid_t tid);
+>  int thread__init_maps(struct thread *thread, struct machine *machine);
+>  void thread__delete(struct thread *thread);
+>
+> +void thread__set_priv_destructor(void (*destructor)(void *priv));
+> +
+>  struct thread *thread__get(struct thread *thread);
+>  void thread__put(struct thread *thread);
+>
+> --
+> 2.41.0
+>
