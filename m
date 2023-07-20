@@ -2,207 +2,92 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B07FAEB64DA
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jul 2023 05:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 354DFEB64DA
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jul 2023 07:24:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229521AbjGTFnB (ORCPT
+        id S231504AbjGTHX6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Jul 2023 01:43:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45140 "EHLO
+        Thu, 20 Jul 2023 03:23:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229777AbjGTFm5 (ORCPT
+        with ESMTP id S231518AbjGTHX5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Jul 2023 01:42:57 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9678726B3;
-        Wed, 19 Jul 2023 22:42:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689831730; x=1721367730;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=MxY21H5/SQdW3PMRwfr7m9ZIcvcF/tWof2ULeHHJEG4=;
-  b=YKC8vqx/oB4XCAsYzh3zHSWddC7knVSe2RaL3/oAAWvJ3TiJ49mXsJOt
-   eX8mId8USIQkCdvtksoBP8VdGM/Ua1Y98kfPW5cL8vLZkqaJja0Me2gZL
-   mMCPDpQQcUaeo/C9XlYa9qO//SuthiQ4F688ro+WxWPEq2Ezs5ynADJzo
-   A+uxVuCFI+Y4VFsz0lMzntTV6KXEZjldhFJ/8gZzbqpcdCBiGHqX6X470
-   QzeBQu0xbxE+1kpRTia59FVwb5aeqZ1yysG4L7+0MnGJuVIEMlCK0F4Q4
-   vvDLdNu+28FfNV5imgEjzr5zwRDSGNIXNzyPZxoVra3yO4tOdWhTJaEYP
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10776"; a="351503998"
-X-IronPort-AV: E=Sophos;i="6.01,216,1684825200"; 
-   d="scan'208";a="351503998"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2023 22:42:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10776"; a="814381643"
-X-IronPort-AV: E=Sophos;i="6.01,216,1684825200"; 
-   d="scan'208";a="814381643"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.32.109])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2023 22:42:02 -0700
-Message-ID: <e1e94935-31b3-a567-44f7-739330548e7d@intel.com>
-Date:   Thu, 20 Jul 2023 08:41:59 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.13.0
-Subject: Re: [PATCH v2 5/7] perf evlist: Skip dummy event sample_type check
- for evlist_config
-Content-Language: en-US
-To:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, kan.liang@linux.intel.com,
-        james.clark@arm.com, tmricht@linux.ibm.com, ak@linux.intel.com,
-        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
+        Thu, 20 Jul 2023 03:23:57 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E963C1FCD;
+        Thu, 20 Jul 2023 00:23:55 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4R640W4psjzrRh8;
+        Thu, 20 Jul 2023 15:23:07 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Thu, 20 Jul 2023 15:23:52 +0800
+Subject: Re: [PATCH v2 2/7] perf evlist: Add evlist__findnew_tracking_event()
+ helper
+To:     Ian Rogers <irogers@google.com>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+        <james.clark@arm.com>, <tmricht@linux.ibm.com>,
+        <ak@linux.intel.com>, <anshuman.khandual@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
 References: <20230715032915.97146-1-yangjihong1@huawei.com>
- <20230715032915.97146-6-yangjihong1@huawei.com>
- <5797e5a7-a85f-4f7c-1649-88f8f9ff7a6b@intel.com>
- <44645529-0ee6-fe69-bc03-fefbc6f73d4d@huawei.com>
- <c4b7fb70-7b2e-74e9-576f-33b29e8801cd@intel.com>
- <77ea9309-da6f-f7b9-a822-b371e0f832d3@huawei.com>
- <ab152551-5e65-c43d-2046-a096a28db913@intel.com>
- <ca64f76f-ccf4-3779-4090-6028b7ee7bef@huawei.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <ca64f76f-ccf4-3779-4090-6028b7ee7bef@huawei.com>
-Content-Type: text/plain; charset=UTF-8
+ <20230715032915.97146-3-yangjihong1@huawei.com>
+ <CAP-5=fVysKhUn1YsUr0NBU2kVBDgkoczO861XwK5VCtkeYSRJA@mail.gmail.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <993bd68c-c0ec-4960-d3b0-bd2dbda82402@huawei.com>
+Date:   Thu, 20 Jul 2023 15:23:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAP-5=fVysKhUn1YsUr0NBU2kVBDgkoczO861XwK5VCtkeYSRJA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 18/07/23 14:32, Yang Jihong wrote:
-> Hello,
-> 
-> On 2023/7/18 18:29, Adrian Hunter wrote:
->> On 18/07/23 13:17, Yang Jihong wrote:
->>> Hello,
->>>
->>> On 2023/7/18 17:56, Adrian Hunter wrote:
->>>> On 18/07/23 12:30, Yang Jihong wrote:
->>>>> Hello,
->>>>>
->>>>> On 2023/7/17 22:41, Adrian Hunter wrote:
->>>>>> On 15/07/23 06:29, Yang Jihong wrote:
->>>>>>> The dummp event does not contain sampls data. Therefore, sample_type does
->>>>>>> not need to be checked.
->>>>>>>
->>>>>>> Currently, the sample id format of the actual sampling event may be changed
->>>>>>> after the dummy event is added.
->>>>>>>
->>>>>>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
->>>>>>> ---
->>>>>>>     tools/perf/util/record.c | 7 +++++++
->>>>>>>     1 file changed, 7 insertions(+)
->>>>>>>
->>>>>>> diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
->>>>>>> index 9eb5c6a08999..0240be3b340f 100644
->>>>>>> --- a/tools/perf/util/record.c
->>>>>>> +++ b/tools/perf/util/record.c
->>>>>>> @@ -128,6 +128,13 @@ void evlist__config(struct evlist *evlist, struct record_opts *opts, struct call
->>>>>>>             evlist__for_each_entry(evlist, evsel) {
->>>>>>>                 if (evsel->core.attr.sample_type == first->core.attr.sample_type)
->>>>>>>                     continue;
->>>>>>> +
->>>>>>> +            /*
->>>>>>> +             * Skip the sample_type check for the dummy event
->>>>>>> +             * because it does not have any samples anyway.
->>>>>>> +             */
->>>>>>> +            if (evsel__is_dummy_event(evsel))
->>>>>>> +                continue;
->>>>>>
->>>>>> Sideband event records have "ID samples" so the sample type still matters.
->>>>>>
->>>>> Okay, will remove this patch in next version.
->>>>>
->>>>> Can I ask a little more about this?
->>>>>
->>>>> Use PERF_SAMPLE_IDENTIFICATION instead of PERF_SAMPLE_ID because for samples of type PERF_RECORD_SAMPLE, there may be different record formats due to different *sample_type* settings, so the fixed SAMPLE_ID  location mode PERF_SAMPLE_NAME is required here.
->>>>>
->>>>> However, for the sideband event, the samples of the PERF_RECORD_SAMPLE type is not recorded (only PERF_RECORD_MMAP, PERF_RECORD_COMM, and so on). Therefore, the "use sample identifier "check can be skipped here.
->>>>>
->>>>> That's my understanding of PERF_SAMPLE_IDENTIFICATION . If there is any error, please help to correct it.
->>>>>
->>>>> *Sideband event records have "ID samples" so the sample type still matters.*
->>>>>
->>>>> Does this mean that sideband will also record samples of type PERF_RECORD_SAMPLE? What exactly is the sampling data?
->>>>
->>>> No.  There are additional members as defined by struct sample_id for PERF_RECORD_MMAP:
->>>>
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/perf_event.h?h=v6.4#n872
->>>>
->>> I'm sorry, maybe my comments didn't make it clear.
->>> I mean, can we skip the "use_sample_identifier" check here?
->>>
->>> That is, set sample_type to *XXX|PERF_SAMPLE_ID* instead of *XXX|PERF_SAMPLE_IDENTIFICATION*
+Hello,
+
+On 2023/7/20 0:44, Ian Rogers wrote:
+> On Fri, Jul 14, 2023 at 8:31 PM Yang Jihong <yangjihong1@huawei.com> wrote:
 >>
->> In general, when there are different values of sample_type, the PERF_SAMPLE_ID is needed to determine which is which.
->> But PERF_SAMPLE_ID is not at a fixed position, so the sample_type is needed to find it.  That is why PERF_SAMPLE_IDENTIFIER is better.
+>> Currently, intel-bts, intel-pt, and arm-spe may add a dummy event for
+>> tracking to the evlist. We may need to search for the dummy event for
+>> some settings. Therefore, add evlist__findnew_tracking_event() helper.
 >>
->> Why do want to change it?
+>> evlist__findnew_tracking_event() also deal with system_wide maps if
+>> system_wide is true.
 > 
-> Without this patch, we now add a system_wide tracking event and modify the sample_type of the  actual sample event.
+> I'm wondering if we can simplify the naming in the API, we have "dummy
+> event" which makes sense as we literally call the event "dummy",
+> "sideband" which refers to the kind of samples/events the dummy event
+> will record but "tracking" I think tends to get used as a verb rather
+> than a noun. So I think evlist__findnew_tracking_event should be
+> evlist__findnew_dummy_event.
 > 
-> For example, when we run:
->   # perf record -e cycles -C 0
-> 
-> 1. The default sample_type of the "cycles" is IP|TID|TIME|CPU|PERIOD.
-> 2. Then add a system_wide sideband event whose sample_type is IP|TID|TIME|CPU.
-> 3. The two sample_types are different.
-> 4. Therefore, the evlist__config adds a PERF_SAMPLE_IDENTIFICATION to both sample_types instead of PERF_SAMPLE_ID.
-> 
-> evlist__config {
->         ...
->          } else if (evlist->core.nr_entries > 1) {
->          // One is cycles and the other is sideband .
->                  struct evsel *first = evlist__first(evlist);
-> 
-> 
->                  evlist__for_each_entry(evlist, evsel) {
->                          if (evsel->core.attr.sample_type == first->core.attr.sample_type)
->                                  continue;
->                          use_sample_identifier = perf_can_sample_identifier();
->                          // the sample_type of cycles is different from that of sideband.
->                          // Therefore, use_sample_identifier is set to true.
->                          break;
->                  }
->                  sample_id = true;
->          }
-> 
-> 
->          if (sample_id) {
->                  evlist__for_each_entry(evlist, evsel)
->                          evsel__set_sample_id(evsel, use_sample_identifier);
->                          // both cycles and sideband set PERF_SAMPLE_IDENTIFICATION                         
->          }
->         ...
-> }
-> 
-> The comparison of the sideband event sample_type is skipped so that the sample_type of the original cycles is not changed.
-> 
-> It does not seem necessary to compare the sample_type of sidebband event. It is not an actual sample event, so I'd like to confirm that.
+Uh, from the discussion that followed, it seems that there is no 
+consensus yet...
+If there is a clear consensus on whether to use "dummy event" or 
+"tracking event", I will change the name of the API.
 
-It is necessary.  The sample type is used to parse ID samples
-that are part of e.g. MMAP events - refer perf_evsel__parse_id_sample()
+I think sideband event is equivalent to tracking event (refer 
+evsel__config(), tracking events include task, mmap, mmap2, and comm 
+sideband events, which are all sideband).
 
-We could teach perf to handle dummy events differently because they
-do not use all the sample_type bits (only the ones in perf_evsel__parse_id_sample())
-but that is probably not backward compatible.
+tracking event are instances of dummy event. For example, we create 
+another dummy event to record the text poke event of ksymbol (refer perf 
+record --kcore).
 
-The only value in that would be to make it work without
-PERF_SAMPLE_ID or PERF_SAMPLE_IDENTIFIER because that would
-save 8-bytes per event record.
+An evlist contains only one tracking event, but can contain multiple 
+dummy events.
 
-Otherwise there is no benefit to prefer PERF_SAMPLE_ID over
-PERF_SAMPLE_IDENTIFIER except backward compatibility with
-some other tool that doesn't know about PERF_SAMPLE_IDENTIFIER.
-
-> 
-> If the change is as expected and necessary, then I'll remove the patch.
-> 
-> Thanks,
-> Yang
-> 
-
+Thanks,
+Yang
