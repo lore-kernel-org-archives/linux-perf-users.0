@@ -2,41 +2,41 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AC4EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jul 2023 15:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 853AEEB64DA
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jul 2023 15:14:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230464AbjGTPJo (ORCPT
+        id S231756AbjGTPOD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Jul 2023 11:09:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49332 "EHLO
+        Thu, 20 Jul 2023 11:14:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229656AbjGTPJn (ORCPT
+        with ESMTP id S230340AbjGTPNq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Jul 2023 11:09:43 -0400
+        Thu, 20 Jul 2023 11:13:46 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F5B52127;
-        Thu, 20 Jul 2023 08:09:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40A28BB;
+        Thu, 20 Jul 2023 08:13:45 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C7AAC61AF8;
-        Thu, 20 Jul 2023 15:09:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0489C433C8;
-        Thu, 20 Jul 2023 15:09:40 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C92D66192B;
+        Thu, 20 Jul 2023 15:13:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA680C433C8;
+        Thu, 20 Jul 2023 15:13:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689865781;
-        bh=5g4Xx4ZaJyjCybAc+Ycb6LzHoCIJ7SMjln0ESw0bJD4=;
+        s=k20201202; t=1689866024;
+        bh=dNi3pxGPfJjCfyqOiKYv3XKeqhPxPVccbSeSA7NRShs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r19XwKgtXby3Ms4qGJTTo3XZ+o9IirVbw/MM7o5lw3dl5xfDZPnKhj6mw2S/Mw69S
-         bl3fnMpmB4uFoVhUeeZLy7Az65gmXzHfzryQCj8QI8Po/TOKPJuWC7pzyfjbbI7EhS
-         yMKaODri/F/tHwyJWuF+DckxzJu4pwZ0depAUkI8b54AD9qYmtsyarAHlV4bGxcQd4
-         KmEAhu+wPBI/svGA7TQ25C6s1F+FwcXXZ6XJYzrS0Ba8jcfyIGJU2LuHrfjHIOw8Qi
-         ua4Zzgvr28maFlfW69ViTAEZ5CBauNSi9746bb0hf4Mw800LKfjxpRaYAULzzHswZS
-         sb6O1Cg2UOipg==
+        b=QVKBt9F2CXh3aLSukqejA1yyluENPufmbTS468PvC4z1UGLmaMdL0rdBaJKsuSnPA
+         WOwwaSIa51cSFJoJrym8j0HEU64XNIOL53KJpR0rsD1TUPEZFHC2o2RxBKMY54XqU/
+         cDu2g4jDqVqgnOI/y//RVaLXjUULGLtSnbcWYA43eBZR6+ye3NCAvpLckVWwhDA/DS
+         4SqiLZLqXwvp5gnoXukwmee3GhD5hYMV+2D7OLk++RTPlKEGvZqoPGAPbfWFRoRTDF
+         m0+IhluiABAwJ2oFF0d5dGgzrcx63w1ydo8iFEMD6lKzK2csxdLqJAawdvfQ1Oy6tr
+         do0Ehth1eo97w==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B0FCA40516; Thu, 20 Jul 2023 12:09:37 -0300 (-03)
-Date:   Thu, 20 Jul 2023 12:09:37 -0300
+        id 12B2740516; Thu, 20 Jul 2023 12:13:41 -0300 (-03)
+Date:   Thu, 20 Jul 2023 12:13:41 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Anup Sharma <anupnewsmail@gmail.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -48,150 +48,131 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 4/6] perf scripts python: Add trace end processing and
- PRODUCT and CATEGORIES information
-Message-ID: <ZLlOMR9UjRFnCfS+@kernel.org>
+Subject: Re: [PATCH v4 6/6] perf scripts python: Implement add sample
+ function and thread processing
+Message-ID: <ZLlPJU6N1XHjWVBl@kernel.org>
 References: <cover.1689718662.git.anupnewsmail@gmail.com>
- <662239f70618982ef659362ae5729422f318db66.1689718662.git.anupnewsmail@gmail.com>
+ <6771dcadf7507ad8916ba2398d22f873579b0505.1689718662.git.anupnewsmail@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <662239f70618982ef659362ae5729422f318db66.1689718662.git.anupnewsmail@gmail.com>
+In-Reply-To: <6771dcadf7507ad8916ba2398d22f873579b0505.1689718662.git.anupnewsmail@gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Jul 19, 2023 at 04:20:08AM +0530, Anup Sharma escreveu:
-> The final output will now be presented in JSON format following the Gecko
-> profile structure. Additionally, the inclusion of PRODUCT allows easy retrieval
-> of header information for UI.
-> 
-> Furthermore, CATEGORIES have been introduced to enable customization of
-> kernel and user colors using input arguments. To facilitate this functionality,
-> an argparse-based parser has been implemented.
-> 
-> Note that the implementation of threads will be addressed in subsequent commits."
+Em Wed, Jul 19, 2023 at 04:22:13AM +0530, Anup Sharma escreveu:
+> The stack has been created for storing func and dso from the callchain.
+> The sample has been added to a specific thread. It first checks if the
+> thread exists in the Thread class. Then it call _add_sample function
+> which is responsible for appending a new entry to the samples list.
 
-It is failing here:
+At the end of the series it produces JSON output, I was expecting that
+at this point you would provide a way for us to use this output and see
+it rendered somewhere, can you add instructions for that in this cset
+comment?
 
-  [root@five ~]# perf script firefox-gecko-converter.py
-  Traceback (most recent call last):
-    File "/var/home/acme/libexec/perf-core/scripts/python/firefox-gecko-converter.py", line 202, in trace_end
-      "threads": threads,
-  NameError: name 'threads' is not defined. Did you mean: 'Thread'?
-  Fatal Python error: handler_call_die: problem in Python trace event handler
-  Python runtime state: initialized
-  
-  Current thread 0x00007fde43f98f40 (most recent call first):
-    <no Python frame>
-  
-  Extension modules: perf_trace_context (total: 1)
-  Aborted (core dumped)
-  [root@five ~]#
+Also it isn't working when I try to see just the start of the output:
 
-We need to be able to test it at each changeset, not just at the end of
-the patchkit, so please reorganize this so that running:
+[root@five ~]# perf script firefox-gecko-converter.py | head
+{
+  "meta": {
+    "interval": 1,
+    "processType": 0,
+    "product": "x86_64 GNU/Linux",
+    "stackwalk": 1,
+    "debug": 0,
+    "gcpoison": 0,
+    "asyncstack": 1,
+    "startTime": 6796435.569,
+Traceback (most recent call last):
+  File "/var/home/acme/libexec/perf-core/scripts/python/firefox-gecko-converter.py", line 308, in trace_end
+    json.dump(gecko_profile_with_meta, sys.stdout, indent=2)
+  File "/usr/lib64/python3.10/json/__init__.py", line 180, in dump
+    fp.write(chunk)
+BrokenPipeError: [Errno 32] Broken pipe
+Fatal Python error: handler_call_die: problem in Python trace event handler
+Python runtime state: initialized
 
-  perf script firefox-gecko-converter.py
+Current thread 0x00007fc21c0ebf40 (most recent call first):
+  <no Python frame>
 
-After each patch works.
-
-We need this to bisect problems, etc.
-
-- Arnaldo
+Extension modules: perf_trace_context (total: 1)
+[root@five ~]#
  
 > Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
 > ---
->  .../scripts/python/firefox-gecko-converter.py | 64 ++++++++++++++++++-
->  1 file changed, 63 insertions(+), 1 deletion(-)
+>  .../scripts/python/firefox-gecko-converter.py | 46 +++++++++++++++++++
+>  1 file changed, 46 insertions(+)
 > 
 > diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools/perf/scripts/python/firefox-gecko-converter.py
-> index d9b1ec18997a..a0218e2245f2 100644
+> index ae69c0a4af13..9c4393787daa 100644
 > --- a/tools/perf/scripts/python/firefox-gecko-converter.py
 > +++ b/tools/perf/scripts/python/firefox-gecko-converter.py
-> @@ -11,6 +11,8 @@
+> @@ -156,6 +156,25 @@ class Thread:
+>  		))
+>  		return frame_id
 >  
->  import os
->  import sys
-> +import json
-> +import argparse
->  from dataclasses import dataclass, field
->  from typing import List, Dict, Optional, NamedTuple, Set, Tuple, Any
->  
-> @@ -30,6 +32,13 @@ Milliseconds = float
->  # start_time is intialiazed only once for the all event traces.
->  start_time = None
->  
-> +# https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/profile.js#L425
-> +# Follow Brendan Gregg's Flamegraph convention: orange for kernel and yellow for user space by default.
-> +CATEGORIES = None
+> +	def _add_sample(self, comm: str, stack: List[str], time_ms: Milliseconds) -> None:
+> +		"""Add a timestamped stack trace sample to the thread builder.
+> +		Args:
+> +			comm: command-line (name) of the thread at this sample
+> +			stack: sampled stack frames. Root first, leaf last.
+> +			time_ms: timestamp of sample in milliseconds.
+> +		"""
+> +		# Ihreads may not set their names right after they are created.
+> +		# Instead, they might do it later. In such situations, to use the latest name they have set.
+> +		if self.comm != comm:
+> +			self.comm = comm
 > +
-> +# The product name is used by the profiler UI to show the Operating system and Processor.
-> +PRODUCT = os.popen('uname -op').read().strip()
+> +		prefix_stack_id = reduce(lambda prefix_id, frame: self._intern_stack
+> +						(self._intern_frame(frame), prefix_id), stack, None)
+> +		if prefix_stack_id is not None:
+> +			self.samples.append(Sample(stack_id=prefix_stack_id,
+> +									time_ms=time_ms,
+> +									responsiveness=0))
 > +
->  # https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L156
->  class Frame(NamedTuple):
->  	string_id: StringID
-> @@ -172,4 +181,57 @@ def process_event(param_dict: Dict) -> None:
+>  	def _to_json_dict(self) -> Dict:
+>  		"""Converts current Thread to GeckoThread JSON format."""
+>  		# Gecko profile format is row-oriented data as List[List],
+> @@ -234,9 +253,36 @@ def process_event(param_dict: Dict) -> None:
+>  	if not start_time:
+>  		start_time = time_stamp
+>  
+> +	# Parse and append the callchain of the current sample into a stack.
+> +	stack = []
+> +	if param_dict['callchain']:
+> +		for call in param_dict['callchain']:
+> +			if 'sym' not in call:
+> +				continue
+> +			stack.append(f'{call["sym"]["name"]} (in {call["dso"]})')
+> +		if len(stack) != 0:
+> +			# Reverse the stack, as root come first and the leaf at the end.
+> +			stack = stack[::-1]
+> +
+> +	# During perf record if -g is not used, the callchain is not available.
+> +	# In that case, the symbol and dso are available in the event parameters.
+> +	else:
+> +		func = param_dict['symbol'] if 'symbol' in param_dict else '[unknown]'
+> +		dso = param_dict['dso'] if 'dso' in param_dict else '[unknown]'
+> +		stack.append(f'{func} (in {dso})')
+> +
+> +	# Add sample to the specific thread.
+> +	thread = tid_to_thread.get(tid)
+> +	if thread is None:
+> +		thread = Thread(comm=comm, pid=pid, tid=tid)
+> +		tid_to_thread[tid] = thread
+> +	thread._add_sample(comm=comm, stack=stack, time_ms=time_stamp)
+> +
 >  # Trace_end runs at the end and will be used to aggregate
 >  # the data into the final json object and print it out to stdout.
 >  def trace_end() -> None:
-> -	pass
-> +	# Schema: https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L305
-> +	gecko_profile_with_meta = {
-> +		"meta": {
-> +			"interval": 1,
-> +			"processType": 0,
-> +			"product": PRODUCT,
-> +			"stackwalk": 1,
-> +			"debug": 0,
-> +			"gcpoison": 0,
-> +			"asyncstack": 1,
-> +			"startTime": start_time,
-> +			"shutdownTime": None,
-> +			"version": 24,
-> +			"presymbolicated": True,
-> +			"categories": CATEGORIES,
-> +			"markerSchema": [],
-> +			},
-> +		"libs": [],
-> +		"threads": threads,
-> +		"processes": [],
-> +		"pausedRanges": [],
-> +	}
-> +	json.dump(gecko_profile_with_meta, sys.stdout, indent=2)
+> +	threads = [thread._to_json_dict() for thread in tid_to_thread.values()]
 > +
-> +def main() -> None:
-> +	global CATEGORIES
-> +	parser = argparse.ArgumentParser(description="Convert perf.data to Firefox\'s Gecko Profile format")
-> +
-> +	# Add the command-line options
-> +	# Colors must be defined according to this:
-> +	# https://github.com/firefox-devtools/profiler/blob/50124adbfa488adba6e2674a8f2618cf34b59cd2/res/css/categories.css
-> +	parser.add_argument('--user-color', default='yellow', help='Color for the User category')
-> +	parser.add_argument('--kernel-color', default='orange', help='Color for the Kernel category')
-> +	# Parse the command-line arguments
-> +	args = parser.parse_args()
-> +	# Access the values provided by the user
-> +	user_color = args.user_color
-> +	kernel_color = args.kernel_color
-> +
-> +	CATEGORIES = [
-> +		{
-> +			"name": 'User',
-> +			"color": user_color,
-> +			"subcategories": ['Other']
-> +		},
-> +		{
-> +			"name": 'Kernel',
-> +			"color": kernel_color,
-> +			"subcategories": ['Other']
-> +		},
-> +	]
-> +
-> +if __name__ == '__main__':
-> +    main()
+>  	# Schema: https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L305
+>  	gecko_profile_with_meta = {
+>  		"meta": {
 > -- 
 > 2.34.1
 > 
