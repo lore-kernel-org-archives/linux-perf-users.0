@@ -2,109 +2,270 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB16EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jul 2023 04:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE5AEB64DA
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jul 2023 05:12:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229524AbjGTEdL (ORCPT
+        id S229463AbjGTFMt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Jul 2023 00:33:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58656 "EHLO
+        Thu, 20 Jul 2023 01:12:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbjGTEdK (ORCPT
+        with ESMTP id S229452AbjGTFMq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Jul 2023 00:33:10 -0400
-Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1A201985
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 21:33:09 -0700 (PDT)
-Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-401d1d967beso184021cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 21:33:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689827589; x=1692419589;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q2Wv2sXy6dPs6y1IoEF3FQ9f1Jy0jfZNRNNhi4fWntI=;
-        b=JMMTrSfiyjx7CON1Qej5uXP27SMvtJ0VVcu7XUROw4D3rwADg2hKHrftk0wLx082Vu
-         1TXTFGZoTaBb5lW09UjKdU+FRddJ2qboVf1kv3D959FKiUHIQ4ia4mIDaym+bNclOiVt
-         TVIEx6UUJNvJ3sG8tBxev2Cgsi79ym0GxYCB3CYYWoKVIrrp9jHDIdc7OUFZu/qk/WKp
-         3qlp8+x7EEkjmPdNpd4gPjO18z8OBeUc2O3xdmS2Me6/0a/gu9VYX0Dy689Cz3g0baLw
-         pBxsHZZA9BFpRwIg12BJRCJe15vmKmmde0xgDNCPtE1G/Ju47OzBDPDoioJHWzxzYA/i
-         duYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689827589; x=1692419589;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q2Wv2sXy6dPs6y1IoEF3FQ9f1Jy0jfZNRNNhi4fWntI=;
-        b=XvyxibE0s/fWHDEbvmwaksps2I+pZBsXYoCyTfL2Rwq+Khmaa64ZAmwxTvecsyBr5a
-         yWxKi2qTOUfpetgqiLkswJ8IOWw+XAayCx9gdL3NUzabPpzgxzmOivpnH0XyBkumEbsz
-         spt9NOkMcvdjQlsaBtzj3nkQyoFJ5PDvcLzJL5UDsNmdX3ZA1eCJLpclsM03nFOu4ZbO
-         6tpBHMFvsj792BTfyy6X8qKv3ALVLb1opXxI6D/rRoFYg/HVRw05YrU8QXqsJ0DTYME/
-         o3o1Hlf2PFrX8Btmrf7Cg3uWIxkj85GTq0z86tBkiOOxN4HwN4h5B87R+VtjXr0LCgAh
-         fuSQ==
-X-Gm-Message-State: ABy/qLYigC41l8BfmxYjlbYtwQh/n2KpB49XuCb/GMvTUmDr5FZnfubU
-        FCllDnvgusrZjmThvX9uzo7Pr3ZWZeuq/p/x9C51d7RfvsoVElh1mY894eCB
-X-Google-Smtp-Source: APBJJlEhNIa45NPT4/vzKTu/RdxY3ac7TLMhTaAs3LseOWlIwAIyrb+96NnNlFgFJplZMkHXZ4JNWCz25Rdd8N2Jh10=
-X-Received: by 2002:a05:622a:120c:b0:3f8:5b2:aef0 with SMTP id
- y12-20020a05622a120c00b003f805b2aef0mr162550qtx.24.1689827588632; Wed, 19 Jul
- 2023 21:33:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230720034022.31937-1-rongqianfeng@vivo.com>
-In-Reply-To: <20230720034022.31937-1-rongqianfeng@vivo.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 19 Jul 2023 21:32:57 -0700
-Message-ID: <CAP-5=fXQY1T2VQxs2ZBX_9ksuVfYvvzA6xSeOUpSQ8Sz1eJv_Q@mail.gmail.com>
-Subject: Re: [PATCH] tools: perf: Two typos have been corrected
-To:     Rong Qianfeng <rongqianfeng@vivo.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Thu, 20 Jul 2023 01:12:46 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C456E52
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 22:12:44 -0700 (PDT)
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36K58OcN004491;
+        Thu, 20 Jul 2023 05:12:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
+ from : in-reply-to : date : cc : message-id : references : to :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=elPyhpH7mkUZN1pn+7b5abzFqrEEiJxLXwHx/SG699s=;
+ b=lTxi5qtvB+oyVYikkfruWbKTxBGzE+EvB+x+hlC7Piq4LzA8h0rjqAcM+DpYEvFv4dko
+ 0MagTcR9coR7XOSUMKB+Di37BID8MVNcQrYn6ZwWa3CrdpZ0FtKf0SnpolzBHbJ1BsUI
+ veSRU4zzFodKDIkhF5vvDtxCMkSLoFDQI0lKrj0BPZcfkuOk1m3qiVNXAqY2MGkSJ4RW
+ TOz4eZJ3M0SqsG8d2/JEUoHFe1s0a52R89RtnT85bsoirJZf8EFSFyO404mghx+twEGJ
+ pcHOBd/6szFzHQYCUmqmKWk9cDFrJjYQXlQlvo08LGO2Ye5hNI+ixszKIga+45HU8C2Z /A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rxvwt1nes-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Jul 2023 05:12:33 +0000
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36K58XGh005661;
+        Thu, 20 Jul 2023 05:12:33 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rxvwt1nef-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Jul 2023 05:12:33 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36K3nkNJ004510;
+        Thu, 20 Jul 2023 05:12:32 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+        by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3rv80jar7q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Jul 2023 05:12:32 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36K5CT7l21037576
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Jul 2023 05:12:29 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 99FC62004B;
+        Thu, 20 Jul 2023 05:12:29 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ABD0E20040;
+        Thu, 20 Jul 2023 05:12:27 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.35.28])
+        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Thu, 20 Jul 2023 05:12:27 +0000 (GMT)
+Content-Type: text/plain;
+        charset=utf-8
+Subject: Re: [PATCH V2 00/26] tools/perf: Fix shellcheck coding/formatting
+ issues of perf tool shell scripts
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <CAP-5=fWZy-y9kiuAFQsaNeRYn8PJofFR5DHj5qA53FhB3+UrfQ@mail.gmail.com>
+Date:   Thu, 20 Jul 2023 10:42:15 +0530
+Cc:     kajoljain <kjain@linux.ibm.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        opensource.kernel@vivo.com
-Content-Type: text/plain; charset="UTF-8"
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        disgoel@linux.vnet.ibm.com
+Message-Id: <D52339A7-30C6-4066-AE05-4BF8E9DCCFF4@linux.vnet.ibm.com>
+References: <20230709182800.53002-1-atrajeev@linux.vnet.ibm.com>
+ <1fbdbb26-4fce-ea25-a96a-99982b3f1603@linux.ibm.com>
+ <CAP-5=fWZy-y9kiuAFQsaNeRYn8PJofFR5DHj5qA53FhB3+UrfQ@mail.gmail.com>
+To:     Ian Rogers <irogers@google.com>
+X-Mailer: Apple Mail (2.3731.500.231)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: s6L7S4FcqhOZeb8u54IbYUgWV3tvmvPv
+X-Proofpoint-GUID: UvavT3O4cg5JpyzfBU3N7dwg_AuxVOa5
 Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-19_16,2023-07-19_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0 spamscore=0
+ mlxlogscore=999 priorityscore=1501 malwarescore=0 clxscore=1015 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2307200040
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 19, 2023 at 8:40=E2=80=AFPM Rong Qianfeng <rongqianfeng@vivo.co=
-m> wrote:
->
-> When wrapping code, use ';' better than using ',' which is more
-> in line with the coding habits of most engineers.
->
-> Signed-off-by: Rong Qianfeng <rongqianfeng@vivo.com>
 
-Snap: https://lore.kernel.org/lkml/20230706094635.1553-1-luhongfei@vivo.com=
-/
 
-Thanks,
-Ian
+> On 19-Jul-2023, at 11:16 PM, Ian Rogers <irogers@google.com> wrote:
+>=20
+> On Tue, Jul 18, 2023 at 11:17=E2=80=AFPM kajoljain <kjain@linux.ibm.com> =
+wrote:
+>>=20
+>> Hi,
+>>=20
+>> Looking for review comments on this patchset.
+>>=20
+>> Thanks,
+>> Kajol Jain
+>>=20
+>>=20
+>> On 7/9/23 23:57, Athira Rajeev wrote:
+>>> Patchset covers a set of fixes for coding/formatting issues observed wh=
+ile
+>>> running shellcheck tool on the perf shell scripts.
+>>>=20
+>>> This cleanup is a pre-requisite to include a build option for shellcheck
+>>> discussed here: https://www.spinics.net/lists/linux-perf-users/msg25553=
+.html
+>>> First set of patches were posted here:
+>>> https://lore.kernel.org/linux-perf-users/53B7D823-1570-4289-A632-2205EE=
+2B522C@linux.vnet.ibm.com/T/#t
+>>>=20
+>>> This patchset covers remaining set of shell scripts which needs
+>>> fix. Patch 1 is resubmission of patch 6 from the initial series.
+>>> Patch 15, 16 and 22 touches code from tools/perf/trace/beauty.
+>>> Other patches are fixes for scripts from tools/perf/tests.
+>>>=20
+>>> The shellcheck is run for severity level for errors and warnings.
+>>> Command used:
+>>>=20
+>>> # for F in $(find tests/shell/ -perm -o=3Dx -name '*.sh'); do shellchec=
+k -S warning $F; done
+>>> # echo $?
+>>> 0
+>>>=20
+>=20
+> I don't see anything objectionable in the changes so for the series:
+> Acked-by: Ian Rogers <irogers@google.com>
+>=20
+> Some thoughts:
+> - Adding "#!/bin/bash" to scripts in tools/perf/tests/lib - I think
+> we didn't do this to avoid these being included as tests. There are
+> now extra checks when finding shell tests, so I can imagine doing this
+> isn't a regression but just a heads up.
+> - I think James' comment was addressed:
+> https://lore.kernel.org/linux-perf-users/334989bf-5501-494c-f246-81878fd2=
+fed8@arm.com/
+> - Why aren't these changes being mailed to LKML? The wider community
+> on LKML have thoughts on shell scripts, plus it makes the changes miss
+> my mail filters.
+> - Can we automate this testing into the build? For example, following
+> a similar kernel build pattern we run a python test and make the log
+> output a requirement here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/=
+tree/tools/perf/pmu-events/Build?h=3Dperf-tools-next#n30
+>   I think we can translate:
+> for F in $(find tests/shell/ -perm -o=3Dx -name '*.sh'); do shellcheck
+> -S warning $F; done
+>   into a rule in make for log files that are then a dependency on the
+> perf binary. We can then parallel shellcheck during the build and
+> avoid regressions. We probably need a CONFIG_SHELLCHECK feature check
+> in the build to avoid not having shellcheck breaking the build.
 
-> ---
->  tools/perf/builtin-diff.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-> index e8a1b16aa5f8..57d300d8e570
-> --- a/tools/perf/builtin-diff.c
-> +++ b/tools/perf/builtin-diff.c
-> @@ -1915,8 +1915,8 @@ static int data_init(int argc, const char **argv)
->                 struct perf_data *data =3D &d->data;
->
->                 data->path  =3D use_default ? defaults[i] : argv[i];
-> -               data->mode  =3D PERF_DATA_MODE_READ,
-> -               data->force =3D force,
-> +               data->mode  =3D PERF_DATA_MODE_READ;
-> +               data->force =3D force;
->
->                 d->idx  =3D i;
->         }
-> --
-> 2.39.0
->
+Hi Ian
+
+Thanks for the comments.
+Yes, next step after this is to include build option for shellcheck by upda=
+ting Makefile.
+We will surely get into that build option enablement patch once we have all=
+ these corrections in place.
+
+Thanks
+Athira
+>=20
+> Thanks,
+> Ian
+>=20
+>>> Changelog:
+>>> v1 -> v2:
+>>>  - Rebased on top of perf-tools-next from:
+>>>  https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=
+=3Dperf-tools-next
+>>>=20
+>>>  - Fixed shellcheck errors and warnings reported for newly
+>>>    added changes from perf-tools-next branch
+>>>=20
+>>>  - Addressed review comment from James clark for patch
+>>>    number 13 from V1. The changes in patch 13 were not necessary
+>>>    since the file "tests/shell/lib/coresight.sh" is sourced from
+>>>    other test files.
+>>>=20
+>>> Akanksha J N (1):
+>>>  tools/perf/tests: Fix shellcheck warnings for
+>>>    trace+probe_vfs_getname.sh
+>>>=20
+>>> Athira Rajeev (14):
+>>>  tools/perf/tests: fix test_arm_spe_fork.sh signal case issues
+>>>  tools/perf/tests: Fix unused variable references in
+>>>    stat+csv_summary.sh testcase
+>>>  tools/perf/tests: fix shellcheck warning for
+>>>    test_perf_data_converter_json.sh testcase
+>>>  tools/perf/tests: Fix shellcheck issue for stat_bpf_counters.sh
+>>>    testcase
+>>>  tools/perf/tests: Fix shellcheck issues in
+>>>    tests/shell/stat+shadow_stat.sh tetscase
+>>>  tools/perf/tests: Fix shellcheck warnings for
+>>>    thread_loop_check_tid_10.sh
+>>>  tools/perf/tests: Fix shellcheck warnings for unroll_loop_thread_10.sh
+>>>  tools/perf/tests: Fix shellcheck warnings for lib/probe_vfs_getname.sh
+>>>  tools/perf/tests: Fix the shellcheck warnings in lib/waiting.sh
+>>>  tools/perf/trace: Fix x86_arch_prctl.sh to address shellcheck warnings
+>>>  tools/perf/arch/x86: Fix syscalltbl.sh to address shellcheck warnings
+>>>  tools/perf/tests/shell: Fix the shellcheck warnings in
+>>>    record+zstd_comp_decomp.sh
+>>>  tools/perf/tests/shell: Fix shellcheck warning for stat+std_output.sh
+>>>    testcase
+>>>  tools/perf/tests: Fix shellcheck warning for stat+std_output.sh
+>>>    testcase
+>>>=20
+>>> Kajol Jain (11):
+>>>  tools/perf/tests: Fix shellcheck warning for probe_vfs_getname.sh
+>>>    testcase
+>>>  tools/perf/tests: Fix shellcheck warning for record_offcpu.sh testcase
+>>>  tools/perf/tests: Fix shellcheck issue for lock_contention.sh testcase
+>>>  tools/perf/tests: Fix shellcheck issue for stat_bpf_counters_cgrp.sh
+>>>    testcase
+>>>  tools/perf/tests: Fix shellcheck warning for asm_pure_loop.sh shell
+>>>    script
+>>>  tools/perf/tests: Fix shellcheck warning for memcpy_thread_16k_10.sh
+>>>    shell script
+>>>  tools/perf/tests: Fix shellcheck warning for probe.sh shell script
+>>>  tools/perf/trace: Fix shellcheck issue for arch_errno_names.sh script
+>>>  tools/perf: Fix shellcheck issue for check-headers.sh script
+>>>  tools/shell/coresight: Fix shellcheck warning for
+>>>    thread_loop_check_tid_2.sh shell script
+>>>  tools/perf/tests/shell/lib: Fix shellcheck warning for stat_output.sh
+>>>    shell script
+>>>=20
+>>> .../arch/x86/entry/syscalls/syscalltbl.sh     |  2 +-
+>>> tools/perf/check-headers.sh                   |  6 ++--
+>>> .../tests/shell/coresight/asm_pure_loop.sh    |  2 +-
+>>> .../shell/coresight/memcpy_thread_16k_10.sh   |  2 +-
+>>> .../coresight/thread_loop_check_tid_10.sh     |  2 +-
+>>> .../coresight/thread_loop_check_tid_2.sh      |  2 +-
+>>> .../shell/coresight/unroll_loop_thread_10.sh  |  2 +-
+>>> tools/perf/tests/shell/lib/probe.sh           |  1 +
+>>> .../perf/tests/shell/lib/probe_vfs_getname.sh |  5 ++--
+>>> tools/perf/tests/shell/lib/stat_output.sh     |  1 +
+>>> tools/perf/tests/shell/lib/waiting.sh         |  1 +
+>>> tools/perf/tests/shell/lock_contention.sh     | 12 ++++----
+>>> tools/perf/tests/shell/probe_vfs_getname.sh   |  4 +--
+>>> .../tests/shell/record+zstd_comp_decomp.sh    | 14 +++++-----
+>>> tools/perf/tests/shell/record_offcpu.sh       |  6 ++--
+>>> tools/perf/tests/shell/stat+csv_output.sh     |  2 +-
+>>> tools/perf/tests/shell/stat+csv_summary.sh    |  4 +--
+>>> tools/perf/tests/shell/stat+shadow_stat.sh    |  4 +--
+>>> tools/perf/tests/shell/stat+std_output.sh     |  3 +-
+>>> tools/perf/tests/shell/stat_bpf_counters.sh   |  4 +--
+>>> .../tests/shell/stat_bpf_counters_cgrp.sh     | 28 ++++++++-----------
+>>> tools/perf/tests/shell/test_arm_spe_fork.sh   |  2 +-
+>>> .../shell/test_perf_data_converter_json.sh    |  2 +-
+>>> .../tests/shell/trace+probe_vfs_getname.sh    |  6 ++--
+>>> tools/perf/trace/beauty/arch_errno_names.sh   | 15 ++++------
+>>> tools/perf/trace/beauty/x86_arch_prctl.sh     |  6 ++--
+>>> 26 files changed, 67 insertions(+), 71 deletions(-)
+
+
