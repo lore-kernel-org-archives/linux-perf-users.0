@@ -2,41 +2,41 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BF8EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jul 2023 13:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE6CEB64DA
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jul 2023 13:56:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231255AbjGTNuE (ORCPT
+        id S231703AbjGTN4J (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Jul 2023 09:50:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32834 "EHLO
+        Thu, 20 Jul 2023 09:56:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231250AbjGTNuD (ORCPT
+        with ESMTP id S231722AbjGTN4I (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Jul 2023 09:50:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0FF326B3;
-        Thu, 20 Jul 2023 06:50:00 -0700 (PDT)
+        Thu, 20 Jul 2023 09:56:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5D73A2;
+        Thu, 20 Jul 2023 06:56:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6D54761ADA;
-        Thu, 20 Jul 2023 13:50:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84835C433C8;
-        Thu, 20 Jul 2023 13:49:59 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4983461B04;
+        Thu, 20 Jul 2023 13:56:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D017C433C9;
+        Thu, 20 Jul 2023 13:56:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689860999;
-        bh=nEFwg6fbISW6I5JdM4+Aiiv7SRb3ZillJUpOlDVgGy4=;
+        s=k20201202; t=1689861366;
+        bh=xaotAmYtR+6ed1XycHVZdoqdUJ+IadpeuySsE7fU++o=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kmWGzH+vbToIUE5yzzMCmBnwZe2Q/PRiqmc6oxcALqYG1XxrP3UebqY6d92GChnjH
-         mW08ScEd1/wI74wDdsb4TcKBmb4Uebu1dpL9nZmVDlYFrEjUDit2BSoRdg4dg4qJ76
-         uzUcYfzlApacO48te1v54vig8b1gsZtRlYHVvNMZyaiSv7ERy3lQ95JZ+S1/Sv7tNV
-         ckG7f4XAzcj5jkW6vcWDVCOl30xb3MzM4rUhtJC1syQCiDZE3K24j1NOVtnFKbtv4P
-         xEn2/HzhLaPd38cmZMzxc03uawgefGI6jyLoiUhpmHx3wwEfp7gO3qnRbMwJEqhHB9
-         OpxfxRvfxca2Q==
+        b=PEtd+9hT/NrJSfyW9xhPT5yEKM78wWVOplsoMPLHsFwi5SaM3bEU0kD9vHLoXAgGy
+         KcfZShRSPledbZiUSu7kr4eGajDlktkWsvEo0A0btEx+9JBVhenkNzADEu9mlECUZe
+         pxENdal6nEjEbm6Kadfd0nM0qCk1HsjH7QJh1YMMQnzU+nj16fC+bTMRS53zE+TZur
+         Zo68XbVax9re9AX+yVTsjTGCLE101oxRy8wdpZ2wrBGCYFRr5xJvguE38cuA84Yu2e
+         RwAa1xBAky3N32z/Lh+oZduFp/w1mafiUBwp/oebF1zBB3MW9nKcrJ1P81UKGsl61m
+         N7xkzoBUFLFEQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D155240516; Thu, 20 Jul 2023 10:49:56 -0300 (-03)
-Date:   Thu, 20 Jul 2023 10:49:56 -0300
+        id 7CCB240516; Thu, 20 Jul 2023 10:56:03 -0300 (-03)
+Date:   Thu, 20 Jul 2023 10:56:03 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
@@ -46,97 +46,117 @@ Cc:     Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Clark Williams <williams@redhat.com>,
         Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 2/6] perf thread: Allow tools to register a thread->priv
- destructor
-Message-ID: <ZLk7hOvDsliOboEH@kernel.org>
-References: <20230719202951.534582-1-acme@kernel.org>
- <20230719202951.534582-3-acme@kernel.org>
- <CAP-5=fV3Er=Ek8=iE=bSGbEBmM56_PJffMWot1g_5Bh8B5hO7A@mail.gmail.com>
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCHES/RFC 1/5] perf bench uprobe + BPF skel
+Message-ID: <ZLk88+EYaWeXA3Gm@kernel.org>
+References: <20230719204910.539044-1-acme@kernel.org>
+ <CAP-5=fVF6yE-Lo3xpqLz7ZyZ6sXzPvDTij6BcrYzjvMTEi+jRg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fV3Er=Ek8=iE=bSGbEBmM56_PJffMWot1g_5Bh8B5hO7A@mail.gmail.com>
+In-Reply-To: <CAP-5=fVF6yE-Lo3xpqLz7ZyZ6sXzPvDTij6BcrYzjvMTEi+jRg@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Jul 19, 2023 at 03:31:41PM -0700, Ian Rogers escreveu:
-> On Wed, Jul 19, 2023 at 1:30 PM Arnaldo Carvalho de Melo
+Em Wed, Jul 19, 2023 at 03:41:54PM -0700, Ian Rogers escreveu:
+> On Wed, Jul 19, 2023 at 1:49 PM Arnaldo Carvalho de Melo
 > <acme@kernel.org> wrote:
 > >
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Hi,
 > >
-> > So that when thread__delete() runs it can be called and free stuff tools
-> > stashed into thread->priv, like 'perf trace' does and will use this
-> > new facility to plug some leaks.
+> >         This adds a 'perf bench' to test the overhead of uprobes + BPF
+> > programs, for now just a few simple tests, but I plan to make it
+> > possible to specify the functions to attach the uprobe + BPF, other BPF
+> > operations dealing with maps, etc.
 > >
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > Cc: Ian Rogers <irogers@google.com>
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > ---
-> >  tools/perf/util/thread.c | 11 +++++++++++
-> >  tools/perf/util/thread.h |  2 ++
-> >  2 files changed, 13 insertions(+)
+> >         This is how it looks like now:
 > >
-> > diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-> > index 0b166404c5c365cf..35dd4e716e411da9 100644
-> > --- a/tools/perf/util/thread.c
-> > +++ b/tools/perf/util/thread.c
-> > @@ -80,6 +80,13 @@ struct thread *thread__new(pid_t pid, pid_t tid)
-> >         return NULL;
-> >  }
+> >   [root@five ~]# perf bench uprobe all
+> >   # Running uprobe/baseline benchmark...
+> >   # Executed 1,000 usleep(1000) calls
+> >        Total time: 1,053,963 usecs
 > >
-> > +static void (*thread__priv_destructor)(void *priv);
-> > +
-> > +void thread__set_priv_destructor(void (*destructor)(void *priv))
-> > +{
+> >    1,053.963 usecs/op
+> >
+> >   # Running uprobe/empty benchmark...
+> >   # Executed 1,000 usleep(1000) calls
+> >        Total time: 1,056,293 usecs +2,330 to baseline
+> >
+> >    1,056.293 usecs/op 2.330 usecs/op to baseline
+> >
+> >   # Running uprobe/trace_printk benchmark...
+> >   # Executed 1,000 usleep(1000) calls
+> >        Total time: 1,056,977 usecs +3,014 to baseline +684 to previous
+> >
+> >    1,056.977 usecs/op 3.014 usecs/op to baseline 0.684 usecs/op to previous
+> >
+> >   [root@five ~]
+> >
+> > I put it here:
+> >
+> >   https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=perf-bench-uprobe
+> >
+> >   git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf-bench-uprobe
+> >
+> > Further ideas, problems?
 > 
-> Perhaps:
-> assert(thread__priv_destructor == NULL);
+> No problems. Perhaps it would be interesting to measure the uprobe
+> overhead compared to say the overhead attaching to the nanosleep
+> syscall?
 
-I'll add that.
- 
-> To make it clear that there should never be >1 currently.
-> 
-> > +       thread__priv_destructor = destructor;
-> > +}
-> > +
-> >  void thread__delete(struct thread *thread)
-> >  {
-> >         struct namespaces *namespaces, *tmp_namespaces;
-> > @@ -112,6 +119,10 @@ void thread__delete(struct thread *thread)
-> >         exit_rwsem(thread__namespaces_lock(thread));
-> >         exit_rwsem(thread__comm_lock(thread));
-> >         thread__free_stitch_list(thread);
-> > +
-> > +       if (thread__priv_destructor)
-> > +               thread__priv_destructor(thread__priv(thread));
-> > +
-> >         RC_CHK_FREE(thread);
-> >  }
-> >
-> > diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-> > index 9068a21ce0fa1b0f..e79225a0ea46b789 100644
-> > --- a/tools/perf/util/thread.h
-> > +++ b/tools/perf/util/thread.h
-> > @@ -71,6 +71,8 @@ struct thread *thread__new(pid_t pid, pid_t tid);
-> >  int thread__init_maps(struct thread *thread, struct machine *machine);
-> >  void thread__delete(struct thread *thread);
-> >
-> > +void thread__set_priv_destructor(void (*destructor)(void *priv));
-> > +
-> >  struct thread *thread__get(struct thread *thread);
-> >  void thread__put(struct thread *thread);
-> >
-> > --
-> > 2.41.0
-> >
+Can you rephrase your question?
 
--- 
+The test is comparing the overhead attaching to the clock_nanosleep
+syscall:
 
-- Arnaldo
+[root@five ~]# strace -c ~/bin/perf bench uprobe baseline
+# Running 'uprobe/baseline' benchmark:
+# Executed 1,000 usleep(1000) calls
+     Total time: 1,077,139 usecs
+
+ 1,077.139 usecs/op
+==7056==LeakSanitizer has encountered a fatal error.
+==7056==HINT: For debugging, try setting environment variable LSAN_OPTIONS=verbosity=1:log_threads=1
+==7056==HINT: LeakSanitizer does not work under ptrace (strace, gdb, etc)
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ------------------
+ 52.87    0.002973           2      1000           clock_nanosleep
+ 22.55    0.001268           3       370           mmap
+  8.87    0.000499           4       106           read
+  5.42    0.000305           4        62           munmap
+  2.42    0.000136           3        38           openat
+  1.69    0.000095           1        48           mprotect
+  1.28    0.000072           1        57           close
+  1.19    0.000067           3        18           open
+  0.98    0.000055           1        40         1 newfstatat
+  0.44    0.000025           0        30           pread64
+  0.44    0.000025           6         4           getdents64
+  0.32    0.000018          18         1           readlink
+  0.28    0.000016           2         8           write
+  0.23    0.000013           1         9         4 prctl
+  0.21    0.000012           6         2         2 access
+  0.12    0.000007           0         8           madvise
+  0.11    0.000006           1         4           clock_gettime
+  0.11    0.000006           1         4           prlimit64
+  0.07    0.000004           1         3           rt_sigaction
+  0.07    0.000004           1         4           sigaltstack
+  0.07    0.000004           4         1           sched_getaffinity
+  0.05    0.000003           0         6           getpid
+  0.04    0.000002           0         3           rt_sigprocmask
+  0.04    0.000002           1         2         1 arch_prctl
+  0.04    0.000002           1         2           futex
+  0.04    0.000002           2         1           set_robust_list
+  0.02    0.000001           1         1           set_tid_address
+  0.02    0.000001           1         1           rseq
+  0.00    0.000000           0         1           brk
+  0.00    0.000000           0        14           sched_yield
+  0.00    0.000000           0         1           clone
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         1           wait4
+  0.00    0.000000           0         1           gettid
+------ ----------- ----------- --------- --------- ------------------
+100.00    0.005623           3      1852         8 total
+[root@five ~]#
