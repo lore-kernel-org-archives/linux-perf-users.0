@@ -2,126 +2,141 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F10EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jul 2023 10:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BF8EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jul 2023 13:50:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230101AbjGTKBN (ORCPT
+        id S231255AbjGTNuE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Jul 2023 06:01:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56942 "EHLO
+        Thu, 20 Jul 2023 09:50:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231235AbjGTKBH (ORCPT
+        with ESMTP id S231250AbjGTNuD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Jul 2023 06:01:07 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 345C1FD;
-        Thu, 20 Jul 2023 03:01:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689847266; x=1721383266;
-  h=message-id:date:mime-version:from:subject:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=6K2m70PwHB5P+4FJyncCXsXVleOk0EtZEdMx58MuRo8=;
-  b=V2a3f2CiQc1tq2ZSemwkz9PfhVMaJTgfmZmnsgPKgT69Zp0HHD3yphNd
-   PL0SICsXrREs77m8W6TpLfbfarKYlsFluK/l/dw87rALPNxtkAVTjgs/s
-   G406rLRyIl/FWYAB5PA+fQkKM0ONRo3B6IdRcVa/3AyGdkmD0wTgNK7+b
-   xxvIZ8qG9d+4Kwt1h2u5T8nOx60U68aJwkOxb3DKiQ+lakrL8LYtGXIGG
-   GF0YTtEX+UEW0XeTE8n6QlgvaTdXLgyPy8saB84sUfBkF5qVY15TpD3fD
-   2gNgSIJjtwy0s8ZVAXnsy1GFN2ZCXJ8oM7PU+APmZ9DSVS53phVWnFY6l
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10776"; a="351553640"
-X-IronPort-AV: E=Sophos;i="6.01,218,1684825200"; 
-   d="scan'208";a="351553640"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2023 03:01:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10776"; a="794402832"
-X-IronPort-AV: E=Sophos;i="6.01,218,1684825200"; 
-   d="scan'208";a="794402832"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.32.109])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2023 03:01:02 -0700
-Message-ID: <5889e93b-5ee3-8d59-c2fb-bce7070a1ab2@intel.com>
-Date:   Thu, 20 Jul 2023 13:00:58 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.13.0
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v3 0/3] perf: add new option '--workload-attr' to set
- workload sched_policy/priority/mask
-To:     Changbin Du <changbin.du@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Thu, 20 Jul 2023 09:50:03 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0FF326B3;
+        Thu, 20 Jul 2023 06:50:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6D54761ADA;
+        Thu, 20 Jul 2023 13:50:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84835C433C8;
+        Thu, 20 Jul 2023 13:49:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689860999;
+        bh=nEFwg6fbISW6I5JdM4+Aiiv7SRb3ZillJUpOlDVgGy4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kmWGzH+vbToIUE5yzzMCmBnwZe2Q/PRiqmc6oxcALqYG1XxrP3UebqY6d92GChnjH
+         mW08ScEd1/wI74wDdsb4TcKBmb4Uebu1dpL9nZmVDlYFrEjUDit2BSoRdg4dg4qJ76
+         uzUcYfzlApacO48te1v54vig8b1gsZtRlYHVvNMZyaiSv7ERy3lQ95JZ+S1/Sv7tNV
+         ckG7f4XAzcj5jkW6vcWDVCOl30xb3MzM4rUhtJC1syQCiDZE3K24j1NOVtnFKbtv4P
+         xEn2/HzhLaPd38cmZMzxc03uawgefGI6jyLoiUhpmHx3wwEfp7gO3qnRbMwJEqhHB9
+         OpxfxRvfxca2Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D155240516; Thu, 20 Jul 2023 10:49:56 -0300 (-03)
+Date:   Thu, 20 Jul 2023 10:49:56 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hui Wang <hw.huiwang@huawei.com>
-References: <20230718033355.2960912-1-changbin.du@huawei.com>
-Content-Language: en-US
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230718033355.2960912-1-changbin.du@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH 2/6] perf thread: Allow tools to register a thread->priv
+ destructor
+Message-ID: <ZLk7hOvDsliOboEH@kernel.org>
+References: <20230719202951.534582-1-acme@kernel.org>
+ <20230719202951.534582-3-acme@kernel.org>
+ <CAP-5=fV3Er=Ek8=iE=bSGbEBmM56_PJffMWot1g_5Bh8B5hO7A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fV3Er=Ek8=iE=bSGbEBmM56_PJffMWot1g_5Bh8B5hO7A@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 18/07/23 06:33, Changbin Du wrote:
-> This adds a new option '--workload-attr' to set the sched_policy/priority/mask
-> of the workload to reduce system noise.
+Em Wed, Jul 19, 2023 at 03:31:41PM -0700, Ian Rogers escreveu:
+> On Wed, Jul 19, 2023 at 1:30 PM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> >
+> > So that when thread__delete() runs it can be called and free stuff tools
+> > stashed into thread->priv, like 'perf trace' does and will use this
+> > new facility to plug some leaks.
+> >
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Ian Rogers <irogers@google.com>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/perf/util/thread.c | 11 +++++++++++
+> >  tools/perf/util/thread.h |  2 ++
+> >  2 files changed, 13 insertions(+)
+> >
+> > diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+> > index 0b166404c5c365cf..35dd4e716e411da9 100644
+> > --- a/tools/perf/util/thread.c
+> > +++ b/tools/perf/util/thread.c
+> > @@ -80,6 +80,13 @@ struct thread *thread__new(pid_t pid, pid_t tid)
+> >         return NULL;
+> >  }
+> >
+> > +static void (*thread__priv_destructor)(void *priv);
+> > +
+> > +void thread__set_priv_destructor(void (*destructor)(void *priv))
+> > +{
 > 
-> $ sudo perf stat --workload-attr fifo,40,0-3:7 -- ls
+> Perhaps:
+> assert(thread__priv_destructor == NULL);
 
-Not really sold on the need for this, but maybe it could be
-simpler.
-What about just adding a hook for a command (e.g. script) to
-run before exec'ing the workload e.g.
-
---configure-workload=blah.sh
-
-results in perf doing system("blah.sh 12345") where 12345
-is the workload PID.
-
-Then maybe you could do:
-
---configure-workload="taskset -p 0x3"
-
-
+I'll add that.
+ 
+> To make it clear that there should never be >1 currently.
 > 
-> Please see patch 1/2 for more details.
-> 
-> v3:
->   - replace taskset with --workload-attr option in documents and tests.
-> v2:
->   - Use cpu list spec instead of cpu mask number.
->   - Update documents.
-> 
-> Changbin Du (3):
->   perf cpumap: Add __perf_cpu_map__new and perf_cpu_map__2_cpuset
->   perf: add new option '--workload-attr' to set workload
->     sched_policy/priority/mask
->   perf: replace taskset with --workload-attr option
-> 
->  tools/lib/perf/cpumap.c                       |  45 ++++++-
->  tools/lib/perf/include/perf/cpumap.h          |   4 +
->  tools/lib/perf/libperf.map                    |   2 +
->  tools/perf/Documentation/intel-hybrid.txt     |   2 +-
->  tools/perf/Documentation/perf-record.txt      |   7 ++
->  tools/perf/Documentation/perf-stat.txt        |   8 +-
->  tools/perf/builtin-record.c                   |  26 ++++
->  tools/perf/builtin-stat.c                     |  18 +++
->  tools/perf/tests/cpumap.c                     |  23 ++++
->  .../tests/shell/stat_bpf_counters_cgrp.sh     |   2 +-
->  tools/perf/tests/shell/test_arm_coresight.sh  |   2 +-
->  tools/perf/tests/shell/test_data_symbol.sh    |   2 +-
->  tools/perf/tests/shell/test_intel_pt.sh       |   2 +-
->  tools/perf/util/evlist.c                      | 117 ++++++++++++++++++
->  tools/perf/util/evlist.h                      |   3 +
->  tools/perf/util/target.h                      |   9 ++
->  16 files changed, 263 insertions(+), 9 deletions(-)
-> 
+> > +       thread__priv_destructor = destructor;
+> > +}
+> > +
+> >  void thread__delete(struct thread *thread)
+> >  {
+> >         struct namespaces *namespaces, *tmp_namespaces;
+> > @@ -112,6 +119,10 @@ void thread__delete(struct thread *thread)
+> >         exit_rwsem(thread__namespaces_lock(thread));
+> >         exit_rwsem(thread__comm_lock(thread));
+> >         thread__free_stitch_list(thread);
+> > +
+> > +       if (thread__priv_destructor)
+> > +               thread__priv_destructor(thread__priv(thread));
+> > +
+> >         RC_CHK_FREE(thread);
+> >  }
+> >
+> > diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+> > index 9068a21ce0fa1b0f..e79225a0ea46b789 100644
+> > --- a/tools/perf/util/thread.h
+> > +++ b/tools/perf/util/thread.h
+> > @@ -71,6 +71,8 @@ struct thread *thread__new(pid_t pid, pid_t tid);
+> >  int thread__init_maps(struct thread *thread, struct machine *machine);
+> >  void thread__delete(struct thread *thread);
+> >
+> > +void thread__set_priv_destructor(void (*destructor)(void *priv));
+> > +
+> >  struct thread *thread__get(struct thread *thread);
+> >  void thread__put(struct thread *thread);
+> >
+> > --
+> > 2.41.0
+> >
 
+-- 
+
+- Arnaldo
