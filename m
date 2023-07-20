@@ -2,140 +2,160 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC25EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jul 2023 15:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1FBEB64DA
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jul 2023 17:12:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231970AbjGTPvI (ORCPT
+        id S230150AbjGTRMm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Jul 2023 11:51:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54064 "EHLO
+        Thu, 20 Jul 2023 13:12:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231373AbjGTPvI (ORCPT
+        with ESMTP id S230474AbjGTRMi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Jul 2023 11:51:08 -0400
+        Thu, 20 Jul 2023 13:12:38 -0400
 Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09069114
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Jul 2023 08:51:07 -0700 (PDT)
-Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-401d1d967beso356501cf.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Jul 2023 08:51:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 449EB1986
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Jul 2023 10:12:34 -0700 (PDT)
+Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-40540a8a3bbso11991cf.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Jul 2023 10:12:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689868266; x=1690473066;
+        d=google.com; s=20221208; t=1689873153; x=1690477953;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0YK0KVqgT80x9gtOq8ZA4JrTzkCJPsXRqm4bTuq2qlc=;
-        b=Ux7AodmvVSgABqN8P9sESis9DMtsCCYYycRlF3jYnEXnLRqzslfx+efIH3YOOlY0V5
-         xXMYjhh3QKN5JUMlxLaRoHULgvNR0gdfhl0RsOSpwLan84ipcIZWY9IKLff+elYshUEB
-         dbU/Rq+bMdZ92ziIkBxmO21TQrdVA7M3LDPdqky2fIEDYRhoHWHEiK8ve6udyd4qlKlJ
-         Ja3wf8udsBgNgKWc0BCGqnXey0COz3h6a+M127j54JftWLipcQthgFUTgajCGF44mfhk
-         WNi1MK3PD2N9j4dxU6ZbgdLoM/DOQ3vMco7weu1xBemc9MXM91q6oqPeD7MZDxwXwnq0
-         QnKw==
+        bh=XgKroFQPLE09VW7HU3YORU1IlmMjxO1ihJQVJHL39LQ=;
+        b=PmpgAEC9wBqpCZYdZxsWDBfnVbgW1YecjRUFlxot9ncNaQCJT9kX69lXdR5KpoXsZL
+         Nm4/8R0WUIKhT2lSBo799JzJ/V1RQt18Dmu0oZYm4gUrhPCxa1SNl9+n9/xi4lsUKoI/
+         FVzTb/wdwTTikh/OksLuaR1yisCLVHHjNJUKmShZz8ZmEee6CT2Bc+QlARjMgkDqqkTp
+         RUSgn9b8/mSnCbwsOeoFhVf490OdtPWU/Nd3UBYKKeLalFAdRonXC3nKG/DYQYtUgcA5
+         DSJ+H6nJgkfIGHRW/l+A6ot32nnJB3cAd4mGcgoHJmIf86iwrYBLEReHYzYh1E1u5wOm
+         tGMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689868266; x=1690473066;
+        d=1e100.net; s=20221208; t=1689873153; x=1690477953;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0YK0KVqgT80x9gtOq8ZA4JrTzkCJPsXRqm4bTuq2qlc=;
-        b=iCkNWU5f0NlkZ5Nz+pA9Yjk/yW9kd7g6Ub8Fara9dI/i+Bud/LQbun/KQV18D/Bja7
-         8OKYpjNZPnv+iTF6mjccf54x834mMYVUkQs9WL/U0EhffWRXghmy4wuJzMi1KoZBQD7O
-         VC1rOmSxHsprrqAqkVGCFI/J1gU4DtLXDQMOJOzEfCat81UTWWzaZbNbQThuyzoSvaun
-         sfX7iRcN6+1B5m8ftxKTqH/f5lqiaOqU+1G+C0n6taF0G46OFLzoK8o79jIluqZOqaQS
-         B0XJUXa9Qdc/QxlB8+vZ5JLKNPj3zsUl6aPG2z7nX0hKhUfJFXQuEALLbtf3ulAHywOR
-         PhbQ==
-X-Gm-Message-State: ABy/qLa4c/85sVOIv+vhR0PXNQidg7Vfl+7GL0IcJNNU/vh6FJIKG8GW
-        1ZGY7cnOZAdfk9J6Bkvz6jRxdt9xpADa5fCRJtsIug==
-X-Google-Smtp-Source: APBJJlEBDbt+lYzvGvMdMQJx6mphhH/41Ih+Sj4asX1FokH/uh8yfDLqFyjOqh05Q0xlYUlT0WwMUSay6wyjGUPP/y0=
-X-Received: by 2002:a05:622a:101:b0:3f4:f0fd:fe7e with SMTP id
- u1-20020a05622a010100b003f4f0fdfe7emr231958qtw.3.1689868266021; Thu, 20 Jul
- 2023 08:51:06 -0700 (PDT)
+        bh=XgKroFQPLE09VW7HU3YORU1IlmMjxO1ihJQVJHL39LQ=;
+        b=PXjI2yyW2kZGecQL9JHPEMpGzoQ0CqR4jtJPy8I3gD3gQy8hxV06UiH6HQixo6G6V/
+         a9DS4Rqc8Zkduw86VuraG6W26pgX/1Q0GeYutuLCDzlQeOUVIu/lBRuuz2UfCpJ+qPzR
+         4wF9ej6G3e+0xUlCCLSrA3OuN92YfEg7zymo/z8KsrJWhl8zYgPr+TxG4wZG7sgRGrSP
+         V71zJyjWySSrgiNXyNpabZbt2hBKScCw9GgTTi/zywG8wofhbdNbCcABNppwXBKGXz2/
+         +Q8eXiutxwrVBZIRAEGEJxpFHflwgivHp4mxBPlHuAdAnoiO4RWtFGhMvzFkRJ4XJCgc
+         G5qw==
+X-Gm-Message-State: ABy/qLZOcpl3kxG92HLzavDsOHf0YTuTIi0gg7fEryau6Jjnaixei3YD
+        5LBXT2puFZr7fMOUqE0rNsjvU0rHF4ojqqzCBpV9og==
+X-Google-Smtp-Source: APBJJlEMHAQAkn3EOSoeN59vhib89c/M3lOEfHFqzpjCi8fuoQp1QCtrjNPaI3mqm7wzrdESJWupioX6p/5j0+OVcq0=
+X-Received: by 2002:ac8:7f83:0:b0:403:b1d0:2f0a with SMTP id
+ z3-20020ac87f83000000b00403b1d02f0amr320764qtj.28.1689873153170; Thu, 20 Jul
+ 2023 10:12:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1689748843.git.sandipan.das@amd.com> <a70b1ef6ab427b768f21401af280d235dd095412.1689748843.git.sandipan.das@amd.com>
- <CAP-5=fX1NQzus3MQapmBrdgEhDG4+XmawgytfugHHOKD0E-COg@mail.gmail.com> <fef0492b-60c3-70ea-c7f1-370bf2734fc3@amd.com>
-In-Reply-To: <fef0492b-60c3-70ea-c7f1-370bf2734fc3@amd.com>
+References: <20230710122138.1450930-1-james.clark@arm.com> <20230710122138.1450930-2-james.clark@arm.com>
+ <e111d9ac-c4f6-c541-313b-7a3a6acfb5d2@arm.com> <597f53e0-5a5b-75a1-4054-253630a941f2@arm.com>
+In-Reply-To: <597f53e0-5a5b-75a1-4054-253630a941f2@arm.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 20 Jul 2023 08:50:54 -0700
-Message-ID: <CAP-5=fX=1t51+a9=Fj-xt4zyLw9OG44bu9wRdPsu2hPoh8cNZQ@mail.gmail.com>
-Subject: Re: [PATCH 6/6] perf vendor events amd: Add Zen 4 memory controller events
-To:     Sandipan Das <sandipan.das@amd.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        x86@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, adrian.hunter@intel.com, tglx@linutronix.de,
-        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-        eranian@google.com, ananth.narayan@amd.com, ravi.bangoria@amd.com,
-        santosh.shukla@amd.com
+Date:   Thu, 20 Jul 2023 10:12:21 -0700
+Message-ID: <CAP-5=fVpjJLBNCd4LJ7krX1tpqUT-S_DCRebXR1ioTCGFsF6Pw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE capability
+To:     James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 19, 2023 at 10:23=E2=80=AFPM Sandipan Das <sandipan.das@amd.com=
-> wrote:
+On Tue, Jul 11, 2023 at 7:12=E2=80=AFAM James Clark <james.clark@arm.com> w=
+rote:
 >
-> On 7/19/2023 9:42 PM, Ian Rogers wrote:
-> > On Tue, Jul 18, 2023 at 11:58=E2=80=AFPM Sandipan Das <sandipan.das@amd=
-.com> wrote:
-> >>
-> >> Make the jevents parser aware of the Unified Memory Controller (UMC) P=
-MU
-> >> and add events taken from Section 8.2.1 "UMC Performance Monitor Event=
-s"
-> >> of the Processor Programming Reference (PPR) for AMD Family 19h Model =
-11h
-> >> processors. The events capture UMC command activity such as CAS, ACTIV=
-ATE,
-> >> PRECHARGE etc. while the metrics derive data bus utilization and memor=
-y
-> >> bandwidth out of these events.
-> >>
-> >> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> >
-> > Acked-by: Ian Rogers <irogers@google.com>
-> >
-> >> ---
-> >>  .../arch/x86/amdzen4/memory-controller.json   | 101 +++++++++++++++++=
-+
-> >>  .../arch/x86/amdzen4/recommended.json         |  84 +++++++++++++++
-> >>  tools/perf/pmu-events/jevents.py              |   2 +
-> >>  3 files changed, 187 insertions(+)
-> >>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/memory-cont=
-roller.json
-> >>
-> >> diff --git a/tools/perf/pmu-events/arch/x86/amdzen4/memory-controller.=
-json b/tools/perf/pmu-events/arch/x86/amdzen4/memory-controller.json
-> >> new file mode 100644
-> >> index 000000000000..55263e5e4f69
-> >> --- /dev/null
-> >> +++ b/tools/perf/pmu-events/arch/x86/amdzen4/memory-controller.json
-> >> @@ -0,0 +1,101 @@
-> >> +[
-> >> +  {
-> >> +    "EventName": "umc_mem_clk",
-> >> +    "PublicDescription": "Number of memory clock cycles.",
-> >> +    "EventCode": "0x00",
-> >> +    "PerPkg": "1",
-> >> +    "Unit": "UMCPMC"
-> >
-> > nit: Why use UMCPMC and then rewrite to amd_umc, why not just use "amd_=
-umc" ?
-> >
 >
-> I followed the convention that has been historically used for AMD uncore =
-PMUs e.g.
-> the "Unit" for amd_df is "DFPMC" and for amd_l3 is "L3PMC". I do agree th=
-at its
-> simpler to use the same naming so will change this. If you prefer, I can =
-send out
-> a separate patch to change the unit naming for amd_df and amd_l3.
+>
+> On 11/07/2023 13:01, Anshuman Khandual wrote:
+> >
+> >
+> > On 7/10/23 17:51, James Clark wrote:
+> >> This capability gives us the ability to open PERF_TYPE_HARDWARE and
+> >> PERF_TYPE_HW_CACHE events on a specific PMU for free. All the
+> >> implementation is contained in the Perf core and tool code so no chang=
+e
+> >> to the Arm PMU driver is needed.
+> >>
+> >> The following basic use case now results in Perf opening the event on
+> >> all PMUs rather than picking only one in an unpredictable way:
+> >>
+> >>   $ perf stat -e cycles -- taskset --cpu-list 0,1 stress -c 2
+> >>
+> >>    Performance counter stats for 'taskset --cpu-list 0,1 stress -c 2':
+> >>
+> >>          963279620      armv8_cortex_a57/cycles/                (99.19=
+%)
+> >>          752745657      armv8_cortex_a53/cycles/                (94.80=
+%)
+> >>
+> >> Fixes: 55bcf6ef314a ("perf: Extend PERF_TYPE_HARDWARE and PERF_TYPE_HW=
+_CACHE")
+> >> Suggested-by: Ian Rogers <irogers@google.com>
+> >> Signed-off-by: James Clark <james.clark@arm.com>
 
-Thanks for the explanation. I don't mind but it is nicer to have fewer
-renames imo. If we get rid of one, perhaps we can get rid of them all?
-Perhaps merge this and follow up with simplification.
+Hi ARM Linux and ARM Linux PMU people,
+
+Could this patch be picked up for Linux 6.5? I don't see it in the
+tree and it seems a shame to have to wait for it. The other patches do
+cleanup and so waiting for 6.6 seems okay.
 
 Thanks,
 Ian
 
-> - Sandipan
+> >> ---
+> >>  drivers/perf/arm_pmu.c | 7 ++++++-
+> >>  1 file changed, 6 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+> >> index 277e29fbd504..d8844a9461a2 100644
+> >> --- a/drivers/perf/arm_pmu.c
+> >> +++ b/drivers/perf/arm_pmu.c
+> >> @@ -875,8 +875,13 @@ struct arm_pmu *armpmu_alloc(void)
+> >>               * configuration (e.g. big.LITTLE). This is not an uncore=
+ PMU,
+> >>               * and we have taken ctx sharing into account (e.g. with =
+our
+> >>               * pmu::filter callback and pmu::event_init group validat=
+ion).
+> >> +             *
+> >> +             * PERF_PMU_CAP_EXTENDED_HW_TYPE is required to open the =
+legacy
+> >
+> > s/legacy/generic ? These hardware events are still around.
 >
+> True, I thought I saw it mentioned that way somewhere, but I can
+> probably just remove it altogether. PERF_TYPE_HARDWARE and
+> PERF_TYPE_HW_CACHE is enough.
+>
+>
+> >
+> >> +             * PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE events on a
+> >> +             * specific PMU.
+> >>               */
+> >> -            .capabilities   =3D PERF_PMU_CAP_HETEROGENEOUS_CPUS | PER=
+F_PMU_CAP_EXTENDED_REGS,
+> >> +            .capabilities   =3D PERF_PMU_CAP_HETEROGENEOUS_CPUS | PER=
+F_PMU_CAP_EXTENDED_REGS |
+> >> +                              PERF_PMU_CAP_EXTENDED_HW_TYPE,
+> >>      };
+> >>
+> >>      pmu->attr_groups[ARMPMU_ATTR_GROUP_COMMON] =3D
