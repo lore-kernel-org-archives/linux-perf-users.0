@@ -2,160 +2,138 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1FBEB64DA
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jul 2023 17:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 722D0EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jul 2023 21:16:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230150AbjGTRMm (ORCPT
+        id S230176AbjGTVQc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Jul 2023 13:12:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51754 "EHLO
+        Thu, 20 Jul 2023 17:16:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230474AbjGTRMi (ORCPT
+        with ESMTP id S229824AbjGTVQb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Jul 2023 13:12:38 -0400
-Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 449EB1986
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Jul 2023 10:12:34 -0700 (PDT)
-Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-40540a8a3bbso11991cf.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Jul 2023 10:12:34 -0700 (PDT)
+        Thu, 20 Jul 2023 17:16:31 -0400
+Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E1942D40
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Jul 2023 14:16:26 -0700 (PDT)
+Received: by mail-oi1-x230.google.com with SMTP id 5614622812f47-3a3b7fafd61so883500b6e.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Jul 2023 14:16:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689873153; x=1690477953;
+        d=paul-moore.com; s=google; t=1689887785; x=1690492585;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XgKroFQPLE09VW7HU3YORU1IlmMjxO1ihJQVJHL39LQ=;
-        b=PmpgAEC9wBqpCZYdZxsWDBfnVbgW1YecjRUFlxot9ncNaQCJT9kX69lXdR5KpoXsZL
-         Nm4/8R0WUIKhT2lSBo799JzJ/V1RQt18Dmu0oZYm4gUrhPCxa1SNl9+n9/xi4lsUKoI/
-         FVzTb/wdwTTikh/OksLuaR1yisCLVHHjNJUKmShZz8ZmEee6CT2Bc+QlARjMgkDqqkTp
-         RUSgn9b8/mSnCbwsOeoFhVf490OdtPWU/Nd3UBYKKeLalFAdRonXC3nKG/DYQYtUgcA5
-         DSJ+H6nJgkfIGHRW/l+A6ot32nnJB3cAd4mGcgoHJmIf86iwrYBLEReHYzYh1E1u5wOm
-         tGMA==
+        bh=qG+ThjVmfgJOgCEH3FGED5B6h6SrS5o6Axcjc3bwSOI=;
+        b=PlsOhuAwUTnsUHdCrAacS252UIxiMGOunaN7sjGqk6IdEDvWSfDkeAaUkUyPQ8TsWM
+         dSwDx1M0yS6cP18SL/J1e1PXgjFT+K9g6o5oDfjX5KtL6NSbkgGERWclg4dqpb5RXbRk
+         mgSxD4tswhi0vnWZ7QVrXYqDP0D8ob9/9QUQ6YAxjdxcpwGDgQkVMpn2oIljVP+8n250
+         Cvgx17BBdzoeGzK2qImORkfKCzx9ew4k1bBToLGVABe29MENH0fq/kJj3qouvSeuyZdO
+         /Z1VN2fJikHf9jRa4qnEkTjqz53WsvY8WrwXfru0TXBwVShYekLaJiGmdg8c8HjFud4b
+         s4CQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689873153; x=1690477953;
+        d=1e100.net; s=20221208; t=1689887785; x=1690492585;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XgKroFQPLE09VW7HU3YORU1IlmMjxO1ihJQVJHL39LQ=;
-        b=PXjI2yyW2kZGecQL9JHPEMpGzoQ0CqR4jtJPy8I3gD3gQy8hxV06UiH6HQixo6G6V/
-         a9DS4Rqc8Zkduw86VuraG6W26pgX/1Q0GeYutuLCDzlQeOUVIu/lBRuuz2UfCpJ+qPzR
-         4wF9ej6G3e+0xUlCCLSrA3OuN92YfEg7zymo/z8KsrJWhl8zYgPr+TxG4wZG7sgRGrSP
-         V71zJyjWySSrgiNXyNpabZbt2hBKScCw9GgTTi/zywG8wofhbdNbCcABNppwXBKGXz2/
-         +Q8eXiutxwrVBZIRAEGEJxpFHflwgivHp4mxBPlHuAdAnoiO4RWtFGhMvzFkRJ4XJCgc
-         G5qw==
-X-Gm-Message-State: ABy/qLZOcpl3kxG92HLzavDsOHf0YTuTIi0gg7fEryau6Jjnaixei3YD
-        5LBXT2puFZr7fMOUqE0rNsjvU0rHF4ojqqzCBpV9og==
-X-Google-Smtp-Source: APBJJlEMHAQAkn3EOSoeN59vhib89c/M3lOEfHFqzpjCi8fuoQp1QCtrjNPaI3mqm7wzrdESJWupioX6p/5j0+OVcq0=
-X-Received: by 2002:ac8:7f83:0:b0:403:b1d0:2f0a with SMTP id
- z3-20020ac87f83000000b00403b1d02f0amr320764qtj.28.1689873153170; Thu, 20 Jul
- 2023 10:12:33 -0700 (PDT)
+        bh=qG+ThjVmfgJOgCEH3FGED5B6h6SrS5o6Axcjc3bwSOI=;
+        b=Et92ujphxZ4QJeXD8i5axP951OCUwnQGf6O1oHyEAfeZ+dsE96Q2mm0ws9KqwTY7aD
+         Oo6Q7rIRl8Cug7YtyNtDypG6bLQYsdiTB4/c2qY5oyb30suPNC6nitX1XNjDxWBRWtMW
+         ycw/edLaT80aBokVa53VftFvkO2v05sUVqTNYMsq149Z0yfgGfrKH8u/DXMxJdMfvdyF
+         YnUDEPRnr7x+ymX/9grcVV0AJNaDS3YS3oDViaX0rPuaR3KyqkQ1j9oHu97jFu6hTruh
+         KSmYZUTSy+r7OTXVSZQWwB7l4MKwM04U6PwzH3NZtK3F8F9IHpZkJEIr4n0Ww8d7ZpJo
+         ZGbw==
+X-Gm-Message-State: ABy/qLZTQe68cvVEyCMhJHHCInQTz7adm2eYvKKpabW7Dmog7qsoNSxS
+        L9XQUYev7za3RuMpA6NAq+seXyMg7g/dOSz73nQR
+X-Google-Smtp-Source: APBJJlEhgxTXc1qyzkAvHpHuXwIG3OtHxUZ6QwrqTdkR8L2OyhsuJu/aP2P2r4S2KF4Tr6uErZhsPZjFCuLra+hXwe4=
+X-Received: by 2002:aca:1218:0:b0:3a4:8e9b:e5cb with SMTP id
+ 24-20020aca1218000000b003a48e9be5cbmr84720ois.1.1689887785358; Thu, 20 Jul
+ 2023 14:16:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230710122138.1450930-1-james.clark@arm.com> <20230710122138.1450930-2-james.clark@arm.com>
- <e111d9ac-c4f6-c541-313b-7a3a6acfb5d2@arm.com> <597f53e0-5a5b-75a1-4054-253630a941f2@arm.com>
-In-Reply-To: <597f53e0-5a5b-75a1-4054-253630a941f2@arm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 20 Jul 2023 10:12:21 -0700
-Message-ID: <CAP-5=fVpjJLBNCd4LJ7krX1tpqUT-S_DCRebXR1ioTCGFsF6Pw@mail.gmail.com>
-Subject: Re: [PATCH 1/4] arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE capability
-To:     James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
+References: <20230719075127.47736-1-wangkefeng.wang@huawei.com>
+ <20230719075127.47736-4-wangkefeng.wang@huawei.com> <CAJ2a_DfGvPeDuN38UBXD4f2928n9GZpHFgdiPo9MoSAY7YXeOg@mail.gmail.com>
+ <dc8223db-b4ac-7bee-6f89-63475a7dcaf8@huawei.com> <CAHC9VhQzJ3J0kEymDUn3i+dnP_34GMNRjaCHXc4oddUCFb0Ygw@mail.gmail.com>
+ <1e839238-c78d-71e0-28ae-7efff0e04953@huawei.com>
+In-Reply-To: <1e839238-c78d-71e0-28ae-7efff0e04953@huawei.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 20 Jul 2023 17:16:14 -0400
+Message-ID: <CAHC9VhRBxQmxegjLQ73J7zMOTpsOOBTj9PwZ6BptV=6ToC+1BA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] selinux: use vma_is_initial_stack() and vma_is_initial_heap()
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     =?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        selinux@vger.kernel.org,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jul 11, 2023 at 7:12=E2=80=AFAM James Clark <james.clark@arm.com> w=
-rote:
->
->
->
-> On 11/07/2023 13:01, Anshuman Khandual wrote:
+On Thu, Jul 20, 2023 at 4:28=E2=80=AFAM Kefeng Wang <wangkefeng.wang@huawei=
+.com> wrote:
+> On 2023/7/19 23:25, Paul Moore wrote:
+> > On Wed, Jul 19, 2023 at 6:23=E2=80=AFAM Kefeng Wang <wangkefeng.wang@hu=
+awei.com> wrote:
+> >> On 2023/7/19 17:02, Christian G=C3=B6ttsche wrote:
+> >>> On Wed, 19 Jul 2023 at 09:40, Kefeng Wang <wangkefeng.wang@huawei.com=
+> wrote:
+> >>>>
+> >>>> Use the helpers to simplify code.
+> >>>>
+> >>>> Cc: Paul Moore <paul@paul-moore.com>
+> >>>> Cc: Stephen Smalley <stephen.smalley.work@gmail.com>
+> >>>> Cc: Eric Paris <eparis@parisplace.org>
+> >>>> Acked-by: Paul Moore <paul@paul-moore.com>
+> >>>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> >>>> ---
+> >>>>    security/selinux/hooks.c | 7 ++-----
+> >>>>    1 file changed, 2 insertions(+), 5 deletions(-)
+> >>>>
+> >>>> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> >>>> index d06e350fedee..ee8575540a8e 100644
+> >>>> --- a/security/selinux/hooks.c
+> >>>> +++ b/security/selinux/hooks.c
+> >>>> @@ -3762,13 +3762,10 @@ static int selinux_file_mprotect(struct vm_a=
+rea_struct *vma,
+> >>>>           if (default_noexec &&
+> >>>>               (prot & PROT_EXEC) && !(vma->vm_flags & VM_EXEC)) {
+> >>>>                   int rc =3D 0;
+> >>>> -               if (vma->vm_start >=3D vma->vm_mm->start_brk &&
+> >>>> -                   vma->vm_end <=3D vma->vm_mm->brk) {
+> >>>> +               if (vma_is_initial_heap(vma)) {
+> >>>
+> >>> This seems to change the condition from
+> >>>
+> >>>       vma->vm_start >=3D vma->vm_mm->start_brk && vma->vm_end <=3D vm=
+a->vm_mm->brk
+> >>>
+> >>> to
+> >>>
+> >>>       vma->vm_start <=3D vma->vm_mm->brk && vma->vm_end >=3D vma->vm_=
+mm->start_brk
+> >>>
+> >>> (or AND arguments swapped)
+> >>>
+> >>>       vma->vm_end >=3D vma->vm_mm->start_brk && vma->vm_start <=3D vm=
+a->vm_mm->brk
+> >>>
+> >>> Is this intended?
+> >>
+> >> The new condition is to check whether there is intersection between
+> >> [startbrk,brk] and [vm_start,vm_end], it contains orignal check, so
+> >> I think it is ok, but for selinux check, I am not sure if there is
+> >> some other problem.
 > >
-> >
-> > On 7/10/23 17:51, James Clark wrote:
-> >> This capability gives us the ability to open PERF_TYPE_HARDWARE and
-> >> PERF_TYPE_HW_CACHE events on a specific PMU for free. All the
-> >> implementation is contained in the Perf core and tool code so no chang=
-e
-> >> to the Arm PMU driver is needed.
-> >>
-> >> The following basic use case now results in Perf opening the event on
-> >> all PMUs rather than picking only one in an unpredictable way:
-> >>
-> >>   $ perf stat -e cycles -- taskset --cpu-list 0,1 stress -c 2
-> >>
-> >>    Performance counter stats for 'taskset --cpu-list 0,1 stress -c 2':
-> >>
-> >>          963279620      armv8_cortex_a57/cycles/                (99.19=
-%)
-> >>          752745657      armv8_cortex_a53/cycles/                (94.80=
-%)
-> >>
-> >> Fixes: 55bcf6ef314a ("perf: Extend PERF_TYPE_HARDWARE and PERF_TYPE_HW=
-_CACHE")
-> >> Suggested-by: Ian Rogers <irogers@google.com>
-> >> Signed-off-by: James Clark <james.clark@arm.com>
-
-Hi ARM Linux and ARM Linux PMU people,
-
-Could this patch be picked up for Linux 6.5? I don't see it in the
-tree and it seems a shame to have to wait for it. The other patches do
-cleanup and so waiting for 6.6 seems okay.
-
-Thanks,
-Ian
-
-> >> ---
-> >>  drivers/perf/arm_pmu.c | 7 ++++++-
-> >>  1 file changed, 6 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-> >> index 277e29fbd504..d8844a9461a2 100644
-> >> --- a/drivers/perf/arm_pmu.c
-> >> +++ b/drivers/perf/arm_pmu.c
-> >> @@ -875,8 +875,13 @@ struct arm_pmu *armpmu_alloc(void)
-> >>               * configuration (e.g. big.LITTLE). This is not an uncore=
- PMU,
-> >>               * and we have taken ctx sharing into account (e.g. with =
-our
-> >>               * pmu::filter callback and pmu::event_init group validat=
-ion).
-> >> +             *
-> >> +             * PERF_PMU_CAP_EXTENDED_HW_TYPE is required to open the =
-legacy
-> >
-> > s/legacy/generic ? These hardware events are still around.
+> > This particular SELinux vma check is see if the vma falls within the
+> > heap; can you confirm that this change preserves this?
 >
-> True, I thought I saw it mentioned that way somewhere, but I can
-> probably just remove it altogether. PERF_TYPE_HARDWARE and
-> PERF_TYPE_HW_CACHE is enough.
->
->
-> >
-> >> +             * PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE events on a
-> >> +             * specific PMU.
-> >>               */
-> >> -            .capabilities   =3D PERF_PMU_CAP_HETEROGENEOUS_CPUS | PER=
-F_PMU_CAP_EXTENDED_REGS,
-> >> +            .capabilities   =3D PERF_PMU_CAP_HETEROGENEOUS_CPUS | PER=
-F_PMU_CAP_EXTENDED_REGS |
-> >> +                              PERF_PMU_CAP_EXTENDED_HW_TYPE,
-> >>      };
-> >>
-> >>      pmu->attr_groups[ARMPMU_ATTR_GROUP_COMMON] =3D
+> Yes, within is one case of new vma scope check.
+
+Thanks for the confirmation.
+
+--=20
+paul-moore.com
