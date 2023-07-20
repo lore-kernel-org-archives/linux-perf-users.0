@@ -2,129 +2,108 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DCFEB64DA
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jul 2023 14:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C839EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jul 2023 14:45:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229880AbjGTOks (ORCPT
+        id S232313AbjGTOpX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Jul 2023 10:40:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33886 "EHLO
+        Thu, 20 Jul 2023 10:45:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229616AbjGTOks (ORCPT
+        with ESMTP id S232311AbjGTOpW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Jul 2023 10:40:48 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8DFC10FC
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Jul 2023 07:40:46 -0700 (PDT)
+        Thu, 20 Jul 2023 10:45:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93C3AC6;
+        Thu, 20 Jul 2023 07:45:21 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6C08C61B18
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Jul 2023 14:40:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5690C433C8;
-        Thu, 20 Jul 2023 14:40:45 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 291AC61B1F;
+        Thu, 20 Jul 2023 14:45:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B9F1C433C8;
+        Thu, 20 Jul 2023 14:45:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689864045;
-        bh=frCv0U6zXkpQWhmKxdqDk00UwkgOIJZTSc2SAU/QP5k=;
+        s=k20201202; t=1689864320;
+        bh=GYxbZ9V7Fkq63Zz96wh6w+B4fuq6/5qxNdUP/M4S/1A=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IjmTNEk+4yok1OWKBvwdD0YfKu8BOa6ndsLN4KM4ectsq0P9gBs7nJuWH12jFdOOz
-         kozXRz2Kv5B5AxR8QeZJghBg/F8kyTmzuahuJyBKvt8a21P7SQ6Fl3w44ARh/WpW6d
-         dEJLmRr2dvQA9u4DH/RUv6sX9n2v9xPL3RrAxbBsI1p2bDgUgJNnE2O6Ku0mFhXb1H
-         hxDwjqTlr0OREtt1pg97IS0ZV180kXD46lsa1eYAEAKC/Ohcy8GmSZ1aCjmnl2toZ1
-         /3EGXkLlLiXP7P3afi1vDs4ngXvfx2Qfz31yRedrTnsUs/AZbNxgLj1lj3CahUn8Yo
-         hFsCR/mJ6yTAA==
+        b=tUmiJK/OckNFf/iUr7fc2/XxAlzTuC4EaZlkHLH3KbKpb/ypm6CMsfv6C1U+GlqJz
+         8q10sLYH2P7LiufKTsqOEHdBbgrD2kx4V5gXs7WPILi3J5Wx5jNp/QPQrWLtyg1YuK
+         cF3PFo+3xxzybwIaC+/bB3ZIPxNN8Xyu2mQGsP1HNPaa77a5MA71ORoRJuUELiWL0r
+         TbWQD5yZwrTCuPs+8OdrlD2bbEY5V/iDP7h4Jprcidb6JzSRH+PfZoqYKgfk77Y+l0
+         8Lc4qqBNhEyPPGd/Q5Zh6TwVZomNMhbGI9ePMbw1O6d8IJmSxJF8LkAtSt1dVlUDSP
+         NrNJ6woF+ORPw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id BBE7540516; Thu, 20 Jul 2023 11:40:42 -0300 (-03)
-Date:   Thu, 20 Jul 2023 11:40:42 -0300
+        id 9531E40516; Thu, 20 Jul 2023 11:45:17 -0300 (-03)
+Date:   Thu, 20 Jul 2023 11:45:17 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-perf-users@vger.kernel.org
-Subject: Re: perf probe: Trying to read a 'ctx' named local variable
-Message-ID: <ZLlHagQuZGAhOk50@kernel.org>
-References: <ZLWDEjvFjrrEJODp@kernel.org>
- <20230718085451.f6e099de7d34f2ae3dc4b7fe@kernel.org>
+To:     Ian Rogers <irogers@google.com>, luhongfei@vivo.com
+Cc:     Rong Qianfeng <rongqianfeng@vivo.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        opensource.kernel@vivo.com
+Subject: Re: [PATCH] tools: perf: Two typos have been corrected
+Message-ID: <ZLlIfXUB9nd20Lzw@kernel.org>
+References: <20230720034022.31937-1-rongqianfeng@vivo.com>
+ <CAP-5=fXQY1T2VQxs2ZBX_9ksuVfYvvzA6xSeOUpSQ8Sz1eJv_Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230718085451.f6e099de7d34f2ae3dc4b7fe@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXQY1T2VQxs2ZBX_9ksuVfYvvzA6xSeOUpSQ8Sz1eJv_Q@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jul 18, 2023 at 08:54:51AM +0900, Masami Hiramatsu escreveu:
-> On Mon, 17 Jul 2023 15:06:10 -0300
-> Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Em Wed, Jul 19, 2023 at 09:32:57PM -0700, Ian Rogers escreveu:
+> On Wed, Jul 19, 2023 at 8:40 PM Rong Qianfeng <rongqianfeng@vivo.com> wrote:
+> >
+> > When wrapping code, use ';' better than using ',' which is more
+> > in line with the coding habits of most engineers.
+> >
+> > Signed-off-by: Rong Qianfeng <rongqianfeng@vivo.com>
 > 
-> > Hi Masami,
-> > 
-> > 	Trying to use perf to debug perf I stumbled on this:
-> > 
-> > [root@quaco ~]# perf probe -x ~/bin/perf -L sigtrap_handler
-> > <sigtrap_handler@/home/acme/git/perf-tools/tools/perf/tests/sigtrap.c:0>
-> >       0  sigtrap_handler(int signum __maybe_unused, siginfo_t *info, void *ucontext __maybe_unused)
-> >          {
-> >                 if (!__atomic_fetch_add(&ctx.signal_count, 1, __ATOMIC_RELAXED))
-> >       3                 ctx.first_siginfo = *info;
-> >       4         __atomic_fetch_sub(&ctx.tids_want_signal, syscall(SYS_gettid), __ATOMIC_RELAXED);
-> >          }
-> > 
-> >          static void *test_thread(void *arg)
-> > 
-> > [root@quaco ~]# perf probe -x ~/bin/perf sigtrap_handler:4 "ctx.signal_count"
-> > Failed to write event: Invalid argument
-> > Please upgrade your kernel to at least 3.14 to have access to feature @ctx
-> >   Error: Failed to add events.
-> > [root@quaco ~]#
-> 
-> Ah, this is a wrong usage (I'm also trapped the same thing). Correctly, it should
-> pass it as a single parameter.
-> 
-> perf probe -x ~/bin/perf "sigtrap_handler:4 ctx.signal_count"
+> Snap: https://lore.kernel.org/lkml/20230706094635.1553-1-luhongfei@vivo.com/
 
-[root@five ~]# perf probe -x ~/bin/perf "sigtrap_handler:4 ctx.signal_count"
-Failed to write event: Invalid argument
-Please upgrade your kernel to at least 3.14 to have access to feature @ctx
-  Error: Failed to add events.
-[root@five ~]#
+Applied the one from luhongfei@vivo.com,
 
-Didn't work?
+Thanks,
 
 - Arnaldo
  
-> This is for adding several events at the same time. But now it becomes just a trap.
-> Can I change the syntax from
+> Thanks,
+> Ian
 > 
-> perf probe [OPTIONS] <PROBE-DEFINITION> [PROBE-DEFINITION...]
-> 
-> To,
-> 
-> perf probe [OPTIONS] <PROBE-POINT> [ARGS...]
-> 
-> ?
-> 
-> We can keep --add having optional parameter as below.
-> 
-> perf probe [OPTIONS] --add <PROBE-DEFINITION>
-> 
-> Thank you,
-> 
-> > 
-> > [root@quaco ~]# uname -a
-> > Linux quaco 6.3.8-100.fc37.x86_64 #1 SMP PREEMPT_DYNAMIC Thu Jun 15 01:51:54 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
-> > [root@quaco ~]# rpm -qa | grep kernel-debuginfo
-> > kernel-debuginfo-common-x86_64-6.3.8-100.fc37.x86_64
-> > kernel-debuginfo-6.3.8-100.fc37.x86_64
-> > [root@quaco ~]#
-> > 
-> > -- 
-> > 
-> > - Arnaldo
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > ---
+> >  tools/perf/builtin-diff.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+> > index e8a1b16aa5f8..57d300d8e570
+> > --- a/tools/perf/builtin-diff.c
+> > +++ b/tools/perf/builtin-diff.c
+> > @@ -1915,8 +1915,8 @@ static int data_init(int argc, const char **argv)
+> >                 struct perf_data *data = &d->data;
+> >
+> >                 data->path  = use_default ? defaults[i] : argv[i];
+> > -               data->mode  = PERF_DATA_MODE_READ,
+> > -               data->force = force,
+> > +               data->mode  = PERF_DATA_MODE_READ;
+> > +               data->force = force;
+> >
+> >                 d->idx  = i;
+> >         }
+> > --
+> > 2.39.0
+> >
 
 -- 
 
