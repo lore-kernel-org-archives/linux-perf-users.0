@@ -2,148 +2,140 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EF2C001DE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jul 2023 22:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC4DC0015E
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jul 2023 03:40:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229639AbjGSWmI (ORCPT
+        id S229722AbjGTDky (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Jul 2023 18:42:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39690 "EHLO
+        Wed, 19 Jul 2023 23:40:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230223AbjGSWmH (ORCPT
+        with ESMTP id S229637AbjGTDkw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Jul 2023 18:42:07 -0400
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4171C1FF9
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 15:42:06 -0700 (PDT)
-Received: by mail-il1-x132.google.com with SMTP id e9e14a558f8ab-346258cf060so53865ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Jul 2023 15:42:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689806525; x=1692398525;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BU75HP7ou8V17HR9NjRcbCm0e51n/tpfKu20LZ2/p24=;
-        b=LvIcf6ni0oT8cAiEW9c/9QiG1mp+afngoiHVfpjBDP6v5tEHNFRWpHnGKBzZPDXSyv
-         JzzEygMwHi97xjFVo35EU0t2Zqf9DNkmBWLEXM29UcwkrJvOST/UPnRtw7BLaAO54Qfi
-         U0a3YMW70kPigTCc0+Z4KXpR+Sz8VWThkblZniPG6dLE93Wuf9E8hz+zhp2+ZlDOrHr2
-         /ModFLSh55Fek60iBmNqm8jdYMby6LYCYuccO3Rxth9FrTyVpeG+nWVcEMyDlERwHzGe
-         RAxdbg3KNgXUHBlsFoDtTzCAO/fSyEyWvRECMmaXRxwd63JhZAHRnm8jzYFhxvTjgiNi
-         /Gcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689806525; x=1692398525;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BU75HP7ou8V17HR9NjRcbCm0e51n/tpfKu20LZ2/p24=;
-        b=Xh7dj7W1vNexvZNk/BGw9nIYSOjAe2n8rEtMWiOEoRMVr/S+rqvkzo5h3S/TpKaHDS
-         o3aA6skHi5PAMek3K6aW4FMvSUGd9SPMfY8u0aVgZ72VtFsNmeyWY3JYIfmGo1FwlQHi
-         mkUj5g/Fm9Iy5hltFCqDXYuQWxjmiVawBMUuXe4+6agor+Pd97KiVsqV7sVeQ1wnhlZ+
-         jSZ6nbbti1iAt9HmAVwJomXuvjWw9UUKjuQLHfORAOPh0Qx1TQX2zPNhkwK9m2/MPlT1
-         eEj1a1UyyfZrRzZtH4JfdWS0H/O4i1Ej+58ZVTVCNUzoKGIqXwrIfWEFaHUzytrxY3hv
-         pcHQ==
-X-Gm-Message-State: ABy/qLZJ25OiESNWDFPGXyO2hYYJZDEjuF2L/0nVk5lmUiA+PsnYYdco
-        KsMxJjZ/hKSa+rICAwtyFnSKmBt+CpRuinOsAlQslw==
-X-Google-Smtp-Source: APBJJlGyQN7MKJ33nEYVGGc4luvKaEpoaQS/fi6LzKc2RtEHVenhRvaJ0N0KOCnCGmRzJ1fjesHGoyY6NhT6Jtt9Iwg=
-X-Received: by 2002:a05:6e02:b42:b0:346:676f:3517 with SMTP id
- f2-20020a056e020b4200b00346676f3517mr43100ilu.11.1689806525595; Wed, 19 Jul
- 2023 15:42:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230719204910.539044-1-acme@kernel.org>
-In-Reply-To: <20230719204910.539044-1-acme@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 19 Jul 2023 15:41:54 -0700
-Message-ID: <CAP-5=fVF6yE-Lo3xpqLz7ZyZ6sXzPvDTij6BcrYzjvMTEi+jRg@mail.gmail.com>
-Subject: Re: [PATCHES/RFC 1/5] perf bench uprobe + BPF skel
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Wed, 19 Jul 2023 23:40:52 -0400
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2131.outbound.protection.outlook.com [40.107.255.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 490B2F0;
+        Wed, 19 Jul 2023 20:40:51 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bcLwTEA+pmyyEXqgLkHxSTRz2a6ZdmYhFWaiC3nCKQJXBtq/4YJl5IqPRSM2psyvWsD1nNoqpUyheM0DluluwEpml10KRaV1RvYINZq476sD5oG5Bp2LTH7SoPchPUgL7/W6qmMpOvsccX++r6an9m2+dXmIaB1zYJyg4g9IKKTTp+uAk86+Ta19rtPzSQD48KWkzQ1v7+cAieOpeTAyJfi1roqKNh9rSbU7ExuU7V5xgzDd9+JSL6psKUVJO5CDeHNK7YNSjmtooRoAdQY16Lbuvwcgn7rSQQCRkorBBSI8ycDexBiKk7wQSDrAfwjXjLNtGfr0AdyOD0Jik0d/gw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=W275XnuqkOoCTXbZQsp9ltPUoZPYVgo+/C1IXol+dhw=;
+ b=PnHiuCIBMgzDCrx6DlvZ2XFdh7/ScCZBjkfVxLQ55iqTTAeSgTzWIj0kpZOxsdh3MzDRnFa3LDV4vu9H7v/g8yNF1KBZbHFXiPnyYJ6qZFzGUvCdSArQtU1CE3rWbtQL4loT/8tUqsslTW+mSseHNujFnJBAPcIpTlNwLfmd2a3sjLlvTWYSrvWcIAxWdF/69GGSvPxFG6rckFCTq2WVpwDRCvq4zk9NCW1NdO+vGJffEb+60O/HzQYjXBgF+qLkjKYYav0XNEgjgaBNCfhWcsvpjgjU0tz7VhMqJKbyIk9Vg45ZsmijMSC7oTT5I5rSlJ7FzvGlAI4K9qHd2+isKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W275XnuqkOoCTXbZQsp9ltPUoZPYVgo+/C1IXol+dhw=;
+ b=kHTrnPp7PZw7cZx97TzvxP9vHcjEz+fiMRgSbKJmda3B8R1IwOLXvD3gdACDQJ4cMRFr25clBZCr54AJDVfELpb/461UlDCP5ULMjXp0rvlHueMEA//T8mZ++kJcUjVdaZQDvGHgKHgtREwCw+1lUqXSfMkRcSmve8u0Ea126BXsdPE0tUqY+cVoq9KQu1oInXnQiFxN53kLxHWALUwcfF3x8e7aoh0gLYPnU4UNVU15A1ZgaH2ggsmSmK3EhJMrFVgKxdb6Z0WG1T6WLKHVgWxu/78Rp/y6Xd1fZBXwHqBVwxU20eNwUQdx9F8PX3AkgrAbzwYo3KhM39QwjoZPlw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SI2PR06MB5140.apcprd06.prod.outlook.com (2603:1096:4:1af::9) by
+ SEYPR06MB5859.apcprd06.prod.outlook.com (2603:1096:101:c0::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6609.24; Thu, 20 Jul 2023 03:40:41 +0000
+Received: from SI2PR06MB5140.apcprd06.prod.outlook.com
+ ([fe80::c1bf:c09e:7639:75f8]) by SI2PR06MB5140.apcprd06.prod.outlook.com
+ ([fe80::c1bf:c09e:7639:75f8%4]) with mapi id 15.20.6588.031; Thu, 20 Jul 2023
+ 03:40:41 +0000
+From:   Rong Qianfeng <rongqianfeng@vivo.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     opensource.kernel@vivo.com, rongqianfeng@vivo.com
+Subject: [PATCH] tools: perf: Two typos have been corrected
+Date:   Thu, 20 Jul 2023 11:40:22 +0800
+Message-Id: <20230720034022.31937-1-rongqianfeng@vivo.com>
+X-Mailer: git-send-email 2.39.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR02CA0046.apcprd02.prod.outlook.com
+ (2603:1096:4:196::15) To SI2PR06MB5140.apcprd06.prod.outlook.com
+ (2603:1096:4:1af::9)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SI2PR06MB5140:EE_|SEYPR06MB5859:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1be01951-9fbf-41e5-1283-08db88d31714
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6jde2bVKZGm3q8cJRdw5gwElrlAZt8s3JsQv8FE8eG1FIHY3yHZk8UZ/YUIwFNAsGuyqgYsXw9+0IFuxLgcA6dyOleClYL7HEuHzQhYyO2QoRc3cNjS5fZ+KMy9NslXS71DQrRe5d2LYcfijpdW5b131L6rkh3yErMBWQiFQBA7yoeJijBIhsihnSLySn7bNxrjaSGUuoH1qPRMKXel6bacf4LDzm9A0mdI64eOzVFUfELIMFz8zszQWW0blc1q5ztZ2AlMEs3evBP67KABauOq0mhJRQc84mw+a7OA03bpht/32CgwgvTTHiNm7pG3gv/q/5ndWe1q2d5N6Rr+M6wCkjCLkw5Dx7TI5EPkHqa2FnBJ1hDZ2UbuC0RhVTM5JJ5/YTT1HU4wXjx8qoTgYZnlmiJnOc/bbAIOJd09vRVFwzzjmZeMd3GQFWUbyv+WFQqI0m/4hL+X6mMv47nS08wzA/LsE4UTb1LKBQaukltV4fAGYIX+uHfiDuIfpMVerjjKcuGH2DoqO3ed+tGYfKl7sVkNyhVNyUGHXV9XFb/at1Uvj5kSZpRYp3AdyQYNBZYfoxhkeR5x993kXecsQgWQYav8StpgYSY+jaJuGjoHXtJq8scL6KuOp/IEeumYSEwItjSBNMNbCtCxZGK5RAE7/oEMS871+KuD4nBeKY4EHK7r5HrhqQ1nwSf+u6Bva
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SI2PR06MB5140.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(396003)(346002)(376002)(136003)(39860400002)(451199021)(2906002)(4744005)(478600001)(110136005)(41300700001)(7416002)(8936002)(8676002)(5660300002)(66556008)(66476007)(66946007)(4326008)(316002)(107886003)(52116002)(38350700002)(2616005)(86362001)(36756003)(26005)(1076003)(186003)(6506007)(921005)(6486002)(83380400001)(6512007)(38100700002)(6666004);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?PWpM4jvetf2f/IZCVWp7ocY5erKJLkrhVgxZs7iqDKofSPb8FgmDB5J9Fo8P?=
+ =?us-ascii?Q?FBM+EJThkKG4zcyG3q2twBjlPKAU+UkUFZXayfKFyfrGkGTV+8UD9oTcHpDc?=
+ =?us-ascii?Q?pvv/3KkrPdbTOmj9zUcchoIoYa+Qyb3yH0Mn2bOWkatxAfjTrV81zw7GmB77?=
+ =?us-ascii?Q?PnjMS8xtI0kCVyWaSZFMjetoMem0xiFGRCxI7PDVNMX1owDqwjt2ThBW916s?=
+ =?us-ascii?Q?/xmlSIbbMoMIqm9UdzxRCJ7/KYLRj491Yf5oYNx6yzkKjHhKCtorq3OdCnEQ?=
+ =?us-ascii?Q?0fSJvz3G9lrKAihwT822YrQtFCDlFJGUZORshZN+0Z29gcT+6oza/Q8fiznE?=
+ =?us-ascii?Q?UXo2n/DFsJYYCcEBq4NiviQd8gw0hv17az53Eh+6G5pP34Vhgd2A+4F8BTRM?=
+ =?us-ascii?Q?oKiSyAKwcRcOEYQFtlkPZn39kZRBgIHcBUiN803e0ZW8O/TUoY0LfGDFW81K?=
+ =?us-ascii?Q?g0t17IeQoXilfuQbpcgoKuLhjH9UXMozWseqbQQN4caZ6Y1VXwfikqMHi0td?=
+ =?us-ascii?Q?06J4yKrrjPHtJ6cMFQsGnhg7Z25grYVjgURA1PhjUMdEKDZvWmUaeBjGlNz6?=
+ =?us-ascii?Q?PBL82OpWspHBFMzLWLjitgdDlMif3ZHV4/+u0i2IYJwUyFuHZG2Dk7dVbg5g?=
+ =?us-ascii?Q?b9bkkfAZZ0Tw3PgyZPdeFeE5IxeG0YE41A1xuEuQ0vfXmOv1SpG/Z9ZoNu1h?=
+ =?us-ascii?Q?oa97RWul3Rsxm3fsU/FnlJjwle1u1yspyt3gxxwt1wO7jrpBv+mq5mHB6lCq?=
+ =?us-ascii?Q?Rpw1sgKSsNREGzUvfVrpkE8OWXwEgVNDCAqwkQCeqmX+c3RVfiH+PKOTNMNe?=
+ =?us-ascii?Q?zKNRaIoxtrwmmYpncAv9w8MwZ7LW/Ia22xvpQL4mKdw+lUUpWbmQGepgAVuI?=
+ =?us-ascii?Q?mL1MAwOEVJ9avZK0ejXqAMZ4Yl0pebVXNAsqCFSuzNbPX9B/0XRqS4Si4aSB?=
+ =?us-ascii?Q?L569Mj5C4lPOt0qtmLUxWEhHHMX7Ln0zdkpZZF4bSvHprdOqhDmBcV5d34Z7?=
+ =?us-ascii?Q?GM47Jb65apR7rBJ6MLhUP5OTLK+aS3iXnZnG8SUgUKSr60zcA7sUgy+ZQgJ3?=
+ =?us-ascii?Q?YQdg4rt0aH+tT3aTT7YxvPh51Vc6Md7HmJCbgPIwHDh1EU9OabKAKpXQk9K7?=
+ =?us-ascii?Q?XoQODuofNyg6Plju+GbK2BuXhrI3camfSpe5cPZS9zEAZvLsnt0PgvGWffxT?=
+ =?us-ascii?Q?qTaX4Jig+bgCigPWKEklPlwMt8GxFLFgzrjDg6noAATE3tFKLDza/bqtDuDa?=
+ =?us-ascii?Q?ZQSl0OyCvyoyU8pT2bn4xnjtaurzkA3OV0i4gY6ewDsgRpSUPa7ZL4d1H0Af?=
+ =?us-ascii?Q?ybfdFkaKeXacAPFjoVHJpED/Adl6pyl9DZGkUbS7SeTDLEUleLTTktskj7RO?=
+ =?us-ascii?Q?Lcuyg+0Te1o64wfLyKW4TpeiMeQGwXd9ffSeE73/f0Plr0G4Jfy9Z1+O89H9?=
+ =?us-ascii?Q?9vVEKTMpnYX3CI3et+d2vOncCIxpSkkhVR/LYITTWjftns+UkKCOmfyeomEj?=
+ =?us-ascii?Q?x2pXo+aD6qM4oe2pzXjDv0KURGT52FnN10xTa3xu5hFmsXxz8lz0WSRlxAvu?=
+ =?us-ascii?Q?7RHsSu0/NzA/pfN84QCVphqa3F7XE43BrF/5JVUH?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1be01951-9fbf-41e5-1283-08db88d31714
+X-MS-Exchange-CrossTenant-AuthSource: SI2PR06MB5140.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2023 03:40:41.1595
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8MoUd/OmbUeUdTvdzCOoqehmpnwVvaBusEpH+Wq1zH/xTJ+Qnt5G8JJBIfh4r0Pn3NiVayIt+8LkyXcdygdi6g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB5859
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 19, 2023 at 1:49=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Hi,
->
->         This adds a 'perf bench' to test the overhead of uprobes + BPF
-> programs, for now just a few simple tests, but I plan to make it
-> possible to specify the functions to attach the uprobe + BPF, other BPF
-> operations dealing with maps, etc.
->
->         This is how it looks like now:
->
->   [root@five ~]# perf bench uprobe all
->   # Running uprobe/baseline benchmark...
->   # Executed 1,000 usleep(1000) calls
->        Total time: 1,053,963 usecs
->
->    1,053.963 usecs/op
->
->   # Running uprobe/empty benchmark...
->   # Executed 1,000 usleep(1000) calls
->        Total time: 1,056,293 usecs +2,330 to baseline
->
->    1,056.293 usecs/op 2.330 usecs/op to baseline
->
->   # Running uprobe/trace_printk benchmark...
->   # Executed 1,000 usleep(1000) calls
->        Total time: 1,056,977 usecs +3,014 to baseline +684 to previous
->
->    1,056.977 usecs/op 3.014 usecs/op to baseline 0.684 usecs/op to previo=
-us
->
->   [root@five ~]
->
-> I put it here:
->
->   https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?=
-h=3Dperf-bench-uprobe
->
->   git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf-bench-uprob=
-e
->
-> Further ideas, problems?
+When wrapping code, use ';' better than using ',' which is more
+in line with the coding habits of most engineers.
 
-No problems. Perhaps it would be interesting to measure the uprobe
-overhead compared to say the overhead attaching to the nanosleep
-syscall?
+Signed-off-by: Rong Qianfeng <rongqianfeng@vivo.com>
+---
+ tools/perf/builtin-diff.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks,
-Ian
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index e8a1b16aa5f8..57d300d8e570
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -1915,8 +1915,8 @@ static int data_init(int argc, const char **argv)
+ 		struct perf_data *data = &d->data;
+ 
+ 		data->path  = use_default ? defaults[i] : argv[i];
+-		data->mode  = PERF_DATA_MODE_READ,
+-		data->force = force,
++		data->mode  = PERF_DATA_MODE_READ;
++		data->force = force;
+ 
+ 		d->idx  = i;
+ 	}
+-- 
+2.39.0
 
-> - Arnaldo
->
->
->
-> Arnaldo Carvalho de Melo (5):
->   perf bench uprobe: Add benchmark to test uprobe overhead
->   perf bench uprobe: Print diff to baseline
->   perf bench uprobe: Show diff to previous
->   perf bench uprobe empty: Add entry attaching an empty BPF program
->   perf bench uprobe trace_printk: Add entry attaching an BPF program that=
- does a trace_printk
->
->  tools/perf/Documentation/perf-bench.txt     |   3 +
->  tools/perf/Makefile.perf                    |   1 +
->  tools/perf/bench/Build                      |   1 +
->  tools/perf/bench/bench.h                    |   3 +
->  tools/perf/bench/uprobe.c                   | 198 ++++++++++++++++++++
->  tools/perf/builtin-bench.c                  |   8 +
->  tools/perf/util/bpf_skel/bench_uprobe.bpf.c |  23 +++
->  7 files changed, 237 insertions(+)
->  create mode 100644 tools/perf/bench/uprobe.c
->  create mode 100644 tools/perf/util/bpf_skel/bench_uprobe.bpf.c
->
-> --
-> 2.41.0
->
