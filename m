@@ -2,118 +2,134 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 508BEEB64DD
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Jul 2023 10:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B19B1EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Jul 2023 14:32:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229940AbjGUKWZ (ORCPT
+        id S229730AbjGUOc1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Jul 2023 06:22:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56290 "EHLO
+        Fri, 21 Jul 2023 10:32:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230384AbjGUKWJ (ORCPT
+        with ESMTP id S230027AbjGUOc0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Jul 2023 06:22:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F08830F0;
-        Fri, 21 Jul 2023 03:21:40 -0700 (PDT)
+        Fri, 21 Jul 2023 10:32:26 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1F892D56;
+        Fri, 21 Jul 2023 07:32:25 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 06A27618AC;
-        Fri, 21 Jul 2023 10:21:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96278C433C7;
-        Fri, 21 Jul 2023 10:21:35 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 588A761B27;
+        Fri, 21 Jul 2023 14:32:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECBCCC433C8;
+        Fri, 21 Jul 2023 14:32:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689934899;
-        bh=H8POZOfX8besCzfb+R2Af8o5NH3RWaYoXAhuHVlzDWI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VbmaRk5gsNQiIzh9mDHq/Ide82FIOBdDLshzMR0m5hFPnfc+g/QXkO7IrSov11nB2
-         tUaTeHjAoniOnZwpvnmuaffj8SBXdLqAPIBhXhZZnnv8gz9OeejASdREr15SIHxf9W
-         e4m8nUXE/KIGg3zQGX63qmABM6/0Rg6hkhzPqPydKyrjstV2JPU0GLLJqoN+r2jKjE
-         AEEh/yKYjEgWeyyx/3iw0qRtki+hi97Um+Lp7U+lfFRhSdtN2ebS+WcYl6/NkdGXcR
-         2/NIta67icXLsKPiYIw4dJR8BX0uakCFximn4sUMz4WO4y/Sfy0Q/bqIiHlKpOZ/35
-         6dNPvpL3zC14w==
-Date:   Fri, 21 Jul 2023 11:21:31 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        s=k20201202; t=1689949944;
+        bh=I+Szsk39PJsQ9rBjntkMFEeaQ2Uou8mYStFXkpPodnQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=t8c62hEL00dKY9g1WQo6gimsW3dDBw7KmddXLWbL/3YIY9UWNQcBrcuOlBQk0Q886
+         xZl/m9G96MNUZlEt15j5QmX+ENAkl7+AcXD8Zwhc6L8lAAMyWoYNA15jWVaMnuwzGu
+         /e2O2InmcgM9I3bC7BVKFUPkl4C8IYFpRV0gi2oniXBUmfGebKu/vZsvOs0KYltM8i
+         h/SFtEbgrYP5/9iZhvoTynjsPOjJllrc7qvw6zcj4tQ/RgspFvVloDFhP93D3nEnHi
+         X75rAfyWCANdP4V3u4d+Mll7vFrQllJO5PN+uVR0PDNZ9W5bV7aO7bHGcVSsg+LWUY
+         u8eKLqKF1ZvLg==
+Date:   Fri, 21 Jul 2023 23:32:19 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH 1/4] arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE capability
-Message-ID: <20230721102131.GA12457@willie-the-truck>
-References: <20230710122138.1450930-1-james.clark@arm.com>
- <20230710122138.1450930-2-james.clark@arm.com>
- <e111d9ac-c4f6-c541-313b-7a3a6acfb5d2@arm.com>
- <597f53e0-5a5b-75a1-4054-253630a941f2@arm.com>
- <CAP-5=fVpjJLBNCd4LJ7krX1tpqUT-S_DCRebXR1ioTCGFsF6Pw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVpjJLBNCd4LJ7krX1tpqUT-S_DCRebXR1ioTCGFsF6Pw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCHES/RFC 1/5] perf bench uprobe + BPF skel
+Message-Id: <20230721233219.9105d8e48d67e5eda3797e4e@kernel.org>
+In-Reply-To: <20230719204910.539044-1-acme@kernel.org>
+References: <20230719204910.539044-1-acme@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jul 20, 2023 at 10:12:21AM -0700, Ian Rogers wrote:
-> On Tue, Jul 11, 2023 at 7:12 AM James Clark <james.clark@arm.com> wrote:
-> >
-> >
-> >
-> > On 11/07/2023 13:01, Anshuman Khandual wrote:
-> > >
-> > >
-> > > On 7/10/23 17:51, James Clark wrote:
-> > >> This capability gives us the ability to open PERF_TYPE_HARDWARE and
-> > >> PERF_TYPE_HW_CACHE events on a specific PMU for free. All the
-> > >> implementation is contained in the Perf core and tool code so no change
-> > >> to the Arm PMU driver is needed.
-> > >>
-> > >> The following basic use case now results in Perf opening the event on
-> > >> all PMUs rather than picking only one in an unpredictable way:
-> > >>
-> > >>   $ perf stat -e cycles -- taskset --cpu-list 0,1 stress -c 2
-> > >>
-> > >>    Performance counter stats for 'taskset --cpu-list 0,1 stress -c 2':
-> > >>
-> > >>          963279620      armv8_cortex_a57/cycles/                (99.19%)
-> > >>          752745657      armv8_cortex_a53/cycles/                (94.80%)
-> > >>
-> > >> Fixes: 55bcf6ef314a ("perf: Extend PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE")
-> > >> Suggested-by: Ian Rogers <irogers@google.com>
-> > >> Signed-off-by: James Clark <james.clark@arm.com>
+On Wed, 19 Jul 2023 17:49:05 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+
+> Hi,
 > 
-> Hi ARM Linux and ARM Linux PMU people,
+> 	This adds a 'perf bench' to test the overhead of uprobes + BPF
+> programs, for now just a few simple tests, but I plan to make it
+> possible to specify the functions to attach the uprobe + BPF, other BPF
+> operations dealing with maps, etc.
 > 
-> Could this patch be picked up for Linux 6.5? I don't see it in the
-> tree and it seems a shame to have to wait for it. The other patches do
-> cleanup and so waiting for 6.6 seems okay.
+> 	This is how it looks like now:
+> 
+>   [root@five ~]# perf bench uprobe all
+>   # Running uprobe/baseline benchmark...
+>   # Executed 1,000 usleep(1000) calls
+>        Total time: 1,053,963 usecs
+>   
+>    1,053.963 usecs/op
+>   
+>   # Running uprobe/empty benchmark...
+>   # Executed 1,000 usleep(1000) calls
+>        Total time: 1,056,293 usecs +2,330 to baseline
+>   
+>    1,056.293 usecs/op 2.330 usecs/op to baseline
+>   
+>   # Running uprobe/trace_printk benchmark...
+>   # Executed 1,000 usleep(1000) calls
+>        Total time: 1,056,977 usecs +3,014 to baseline +684 to previous
+>   
+>    1,056.977 usecs/op 3.014 usecs/op to baseline 0.684 usecs/op to previous
+>   
+>   [root@five ~]
 
-I'm only taking fixes for 6.5 and I don't think this qualifies.
+Looks great! maybe we can also make kprobes benchmark too (but it depends
+on optimization and ftrace-based...)
 
-If it was an oversight introduced during the recent merge window, then
-I'd be happier fixing it up, but 55bcf6ef314a was merged ages ago (v5.12?),
-so I think we can wait.
+Thank you,
 
-I'll be queuing perf changes for 6.6 next week, so I'll look at this
-then.
+> 
+> I put it here:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=perf-bench-uprobe
+> 
+>   git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf-bench-uprobe
+> 
+> Further ideas, problems?
+> 
+> - Arnaldo
+> 
+> 
+> 
+> Arnaldo Carvalho de Melo (5):
+>   perf bench uprobe: Add benchmark to test uprobe overhead
+>   perf bench uprobe: Print diff to baseline
+>   perf bench uprobe: Show diff to previous
+>   perf bench uprobe empty: Add entry attaching an empty BPF program
+>   perf bench uprobe trace_printk: Add entry attaching an BPF program that does a trace_printk
+> 
+>  tools/perf/Documentation/perf-bench.txt     |   3 +
+>  tools/perf/Makefile.perf                    |   1 +
+>  tools/perf/bench/Build                      |   1 +
+>  tools/perf/bench/bench.h                    |   3 +
+>  tools/perf/bench/uprobe.c                   | 198 ++++++++++++++++++++
+>  tools/perf/builtin-bench.c                  |   8 +
+>  tools/perf/util/bpf_skel/bench_uprobe.bpf.c |  23 +++
+>  7 files changed, 237 insertions(+)
+>  create mode 100644 tools/perf/bench/uprobe.c
+>  create mode 100644 tools/perf/util/bpf_skel/bench_uprobe.bpf.c
+> 
+> -- 
+> 2.41.0
+> 
 
-Cheers,
 
-Will
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
