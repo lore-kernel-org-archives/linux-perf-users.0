@@ -2,106 +2,286 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFF7EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Jul 2023 18:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC634EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Jul 2023 18:30:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229686AbjGUSRW (ORCPT
+        id S230445AbjGUSac (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Jul 2023 14:17:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60922 "EHLO
+        Fri, 21 Jul 2023 14:30:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229656AbjGUSRV (ORCPT
+        with ESMTP id S230018AbjGUSab (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Jul 2023 14:17:21 -0400
-Received: from smtp-fw-9106.amazon.com (smtp-fw-9106.amazon.com [207.171.188.206])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E80E7E68;
-        Fri, 21 Jul 2023 11:17:16 -0700 (PDT)
+        Fri, 21 Jul 2023 14:30:31 -0400
+Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 477BCEB;
+        Fri, 21 Jul 2023 11:30:30 -0700 (PDT)
+Received: by mail-ot1-x331.google.com with SMTP id 46e09a7af769-6b9defb366eso1835332a34.2;
+        Fri, 21 Jul 2023 11:30:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1689963437; x=1721499437;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=TmtF3GFzs9OKVl3bOHgAhFBE6wjBFDuvzZ/HQeN7+FQ=;
-  b=PgwF96YGSRsryXqpZzsZmuR5rMgazsGo6gf6y5DTGVqwE2g65dXzMobz
-   isVnhtqdoyi3GsFnSkF23glg76AJEmEepJA/vX5v0Qc4QqsQwMTGq1m5w
-   RBP1SCfAGqpvS7Yj8DcSEI1bmmTxeiObZL/EluzEgIHJ4z6eGMkG/joMN
-   4=;
-X-IronPort-AV: E=Sophos;i="6.01,222,1684800000"; 
-   d="scan'208";a="661286278"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-pdx-2a-m6i4x-8a14c045.us-west-2.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2023 18:17:17 +0000
-Received: from EX19MTAUWA002.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-pdx-2a-m6i4x-8a14c045.us-west-2.amazon.com (Postfix) with ESMTPS id 1A5D080543;
-        Fri, 21 Jul 2023 18:17:15 +0000 (UTC)
-Received: from EX19D002UWA001.ant.amazon.com (10.13.138.247) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.30; Fri, 21 Jul 2023 18:17:14 +0000
-Received: from EX19MTAUEA001.ant.amazon.com (10.252.134.203) by
- EX19D002UWA001.ant.amazon.com (10.13.138.247) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.30; Fri, 21 Jul 2023 18:17:14 +0000
-Received: from dev-dsk-alisaidi-1e-5e886d10.us-east-1.amazon.com
- (10.200.156.102) by mail-relay.amazon.com (10.252.134.102) with Microsoft
- SMTP Server id 15.2.1118.30 via Frontend Transport; Fri, 21 Jul 2023 18:17:14
- +0000
-Received: by dev-dsk-alisaidi-1e-5e886d10.us-east-1.amazon.com (Postfix, from userid 5131138)
-        id 3B5AD21AD; Fri, 21 Jul 2023 18:17:14 +0000 (UTC)
-From:   Ali Saidi <alisaidi@amazon.com>
-To:     <leo.yan@linaro.org>
-CC:     <acme@kernel.org>, <catalin.marinas@arm.com>, <will@kernel.org>,
-        <john.g.garry@oracle.com>, <james.clark@arm.com>,
-        <mike.leach@linaro.org>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <scott@os.amperecomputing.com>,
-        <maz@kernel.org>, <anshuman.khandual@arm.com>,
-        <german.gomez@arm.com>, <alisaidi@amazon.com>,
-        <renyu.zj@linux.alibaba.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <fissure2010@gmail.com>
-Subject: Re: [PATCH v1 0/3] arm64: Support Cortex-X4 CPU for Perf Arm SPE
-Date:   Fri, 21 Jul 2023 18:16:53 +0000
-Message-ID: <20230721181653.22398-1-alisaidi@amazon.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230717054327.79815-1-leo.yan@linaro.org>
-References: <20230717054327.79815-1-leo.yan@linaro.org>
+        d=gmail.com; s=20221208; t=1689964229; x=1690569029;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eviz6yxXmXIVKJhsg2hoJNymFdQ/TGbAHjXtVl32Jqs=;
+        b=PodVOpwOkAv0DSopSVIIH5cqvaxq6n0DVqg1eiPTJGzOOiZHPa+TSvlvd2gB0RK1dU
+         H1Q9xwCv90GYCv8jNPADP5qx+kBtPaCkW8wQp+hNS0Zck9kR6vQuJ31hqZ8+zZggu8WT
+         GlxuOUx7OjXPwBYvJsgZYI2mpqFl+LZN5I+kYlTpWd0cKgXrIdSFOMIkScbpVz7HjpxB
+         K1WZ2T0hwE+aF4qLHB+HoQEQV+aarsOtip4ES5KmzrKaGO0IuIS9I3Vbeg5j6PRlVDax
+         nSeOYtcLipmu0EW3NzeIdRPgq0NB0Cz2ZTOIOMCZStKVHMCMdD0z258gKlf/+yfFcQFr
+         YOAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689964229; x=1690569029;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eviz6yxXmXIVKJhsg2hoJNymFdQ/TGbAHjXtVl32Jqs=;
+        b=T2AB+dfqbdVEVqJdgeX8Pl4ejHgOy0HT0Fw5QumUKElqM09csVbk28ZnT7qs/fmjHn
+         ytb4dDNGsOGj73XFKr8cRgV10fy4w/G3MzE1xA8OOZvGJqpaNhaYjeYaTwTJSTk2cBop
+         9pOKObuuPI7xPlDTQIRUZrGNALyveWBaKkKRLyHywDNqNRhT4Bu+pUQYYafILI7pcbZu
+         ZN/0+HJMZY8jBdw3eCKQT4PU9kJet9gtgpZNLSislDlsd35OfZ0hr0zfSkxCRU6Wm5+r
+         Zh96tRaer3zqAF9Uqw94KSZXFr2oZMXx/24Pt/WoJQskedMGzI/IELrClnq5iO7yRWeL
+         Ynyg==
+X-Gm-Message-State: ABy/qLacnxujCBqoyOly/HvdAwaSPOnatKCdZelKKfZekfIA5oINoVjs
+        83A+VB6r1S9lVz743xUJl60=
+X-Google-Smtp-Source: APBJJlHWsrh1hhWFKdHoC6mqeEAXpCOgMAHt4sJYmBnqezH21dBtFgC7El7Ri6icEIS7GO+9IF64gw==
+X-Received: by 2002:a05:6808:d54:b0:3a3:6364:2b73 with SMTP id w20-20020a0568080d5400b003a363642b73mr3654443oik.52.1689964229220;
+        Fri, 21 Jul 2023 11:30:29 -0700 (PDT)
+Received: from yoga ([2400:1f00:13:cde2:d588:8109:e86b:839c])
+        by smtp.gmail.com with ESMTPSA id p11-20020a17090a748b00b002676e95cd3bsm4401164pjk.0.2023.07.21.11.30.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jul 2023 11:30:28 -0700 (PDT)
+Date:   Sat, 22 Jul 2023 00:00:21 +0530
+From:   Anup Sharma <anupnewsmail@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Anup Sharma <anupnewsmail@gmail.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 8/8] perf test: Add support for testing perf gecko script
+Message-ID: <e18ac2e37858ccf484d3ac16504f0cf898ad59cb.1689964167.git.anupnewsmail@gmail.com>
+References: <cover.1689964167.git.anupnewsmail@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1689964167.git.anupnewsmail@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Leo,
+This commit add support for testing perf-gecko script.
+This test checks for the presence of required sections such as "meta,"
+"threads," "samples," "frameTable," "stackTable," "stringTable,"
+and "pausedRanges" which are few essential parameter to be present
+in output file. It also tests for user-defined color changes using
+the --user-color flag, and verifies the validity of the JSON format
+using Python's JSON library if available.
 
-On Mon, 17 Jul 2023 05:43:24 +0000, Leo Yan wrote:
-> This series support Cortex-X4 CPU in Perf Arm SPE.
-> 
-> The Arm64 and tools both include the header cputype.h for CPU part and
-> MIDR definitions, to de-couple between the tools and the kernel, the
-> tools doesn't directly use the kernel's header, alternatively, the tools
-> maintain a copy and sync with kernel's header.
-> 
-> To keep the exact same content between kernel and tools' headers, this
-> series firstly adds Cortex-X4 CPU part and MIDR definitions in the
-> kernel header; then the second patch syncs the change into the tools'
-> header.  The first patch is to support the Cortex-X4 in perf Arm SPE
-> with the new CPU definitions.
-> 
-> I don't have Cortex-X4 machine in hand, so just verified with
-> compilation perf tool.
+Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
+---
+ tools/perf/tests/shell/test_perf_gecko.sh | 188 ++++++++++++++++++++++
+ 1 file changed, 188 insertions(+)
+ create mode 100755 tools/perf/tests/shell/test_perf_gecko.sh
 
-This looks good to me, but can we add the other cores that operate the
-same way now too? Flipping through the TRMs A78, X3, V2, X1, A715,
-A720, and A78C all have the same encodings. 
-
-Reviewed-by: Ali Saidi <alisaidi@amazon.com>
-
-Thanks!
-Ali
-
-
+diff --git a/tools/perf/tests/shell/test_perf_gecko.sh b/tools/perf/tests/shell/test_perf_gecko.sh
+new file mode 100755
+index 000000000000..5c5f61438579
+--- /dev/null
++++ b/tools/perf/tests/shell/test_perf_gecko.sh
+@@ -0,0 +1,188 @@
++#!/bin/bash
++# perf script perf-gecko test
++# SPDX-License-Identifier: GPL-2.0
++
++err=0
++
++if [ "$PYTHON" = "" ] ; then
++	if which python3 > /dev/null ; then
++		PYTHON=python3
++	elif which python > /dev/null ; then
++		PYTHON=python
++	else
++		echo Skipping JSON format check, python not detected please set environment variable PYTHON.
++		PYTHON_NOT_AVAILABLE=1
++	fi
++fi
++
++# set PERF_EXEC_PATH to find scripts in the source directory
++perfdir=$(dirname "$0")/../..
++if [ -e "$perfdir/scripts/python/Perf-Trace-Util" ]; then
++  export PERF_EXEC_PATH=$perfdir
++fi
++
++tmpdir=$(mktemp -d /tmp/perf-script-perf-gecko-XXXXX)
++
++cleanup() {
++  rm -f perf.data
++  rm -f perf.data.old
++  rm -rf "$tmpdir"
++  trap - exit term int
++}
++
++trap_cleanup() {
++  cleanup
++  exit 1
++}
++trap trap_cleanup exit term int
++
++report() {
++	if [ "$1" = 0 ]; then
++		echo "PASS: \"$2\""
++	else
++		echo "FAIL: \"$2\" Error message: \"$3\""
++		err=1
++	fi
++}
++
++check_exec_0() {
++	if [ $? != 0 ]; then
++		report 1 "invocation of $1 command failed"
++	fi
++}
++
++find_str_or_fail() {
++	#echo "\"$1"\"
++	#echo "\"$2"\"
++	grep -q "$1" "$2"
++	if [ "$?" != 0 ]; then
++		report 1 "$3" "Failed to find required string:'${1}'."
++	else
++		report 0 "$3"
++	fi
++}
++
++prepare_perf_data() {
++	# 3s should be sufficient to catch few samples
++	perf record -g -- sleep 3 > /dev/null 2>&1
++	# check if perf data file got created in above step.
++	if [ ! -e "perf.data" ]; then
++		printf "FAIL: perf record failed to create \"perf.data\" \n"
++		return 1
++	fi
++}
++
++# check execution of command
++test_perf_gecko_command()
++{
++	echo "Testing Perf Gecko Command"
++	out="$tmpdir/perf.out"
++	perf script report perf-gecko > "$out"
++	check_exec_0 "perf script report perf-gecko"
++	if [ $(cat "${out}" | wc -l) -gt "0" ] ; then
++		echo "PASS: \"Perf Gecko Command\""
++	else
++		echo "FAIL: \"Perf Gecko Command\""
++		err=1
++		exit
++	fi
++}
++
++# with the help of python json libary validate the json output
++if [ "$PYTHON_NOT_AVAILABLE" != "0" ]; then
++	validate_json_format()
++	{
++		out="$tmpdir/perf.out"
++		if [ -f "$out" ] ; then
++			if $PYTHON -c  "import json; json.load(open('$out'))" >/dev/null 2>&1 ; then
++				echo "PASS: \"The file contains valid JSON format\""
++			else
++				echo "FAIL: \"The file does not contain valid JSON format\""
++				err=1
++				exit
++			fi
++		else
++			echo "FAIL: \"File not found\""
++			err=2
++			exit
++		fi
++	}
++fi
++
++# validate output for the presence of "meta".
++test_meta() {
++	out="$tmpdir/perf.out"
++	perf script report perf-gecko > "$out"
++	check_exec_0 "perf script report perf-gecko"
++	find_str_or_fail "meta" "$out" "${FUNCNAME[0]}"
++}
++
++# validate output for the presence of "threads".
++test_threads() {
++	out="$tmpdir/perf.out"
++	perf script report perf-gecko > "$out"
++	check_exec_0 "perf script report perf-gecko"
++	find_str_or_fail "threads" "$out" "${FUNCNAME[0]}"
++}
++
++# validate output for the presence of "samples".
++test_samples() {
++	out="$tmpdir/perf.out"
++	perf script report perf-gecko > "$out"
++	check_exec_0 "perf script report perf-gecko"
++	find_str_or_fail "samples" "$out" "${FUNCNAME[0]}"
++}
++
++# validate output for the presence of "frameTable".
++test_frametable() {
++	out="$tmpdir/perf.out"
++	perf script report perf-gecko > "$out"
++	check_exec_0 "perf script report perf-gecko"
++	find_str_or_fail "frameTable" "$out" "${FUNCNAME[0]}"
++}
++
++# validate output for the presence of "stackTable".
++test_stacktable() {
++	out="$tmpdir/perf.out"
++	perf script report perf-gecko > "$out"
++	check_exec_0 "perf script report perf-gecko"
++	find_str_or_fail "stackTable" "$out" "${FUNCNAME[0]}"
++}
++
++# validate output for the presence of "stringTable"
++test_stringtable() {
++	out="$tmpdir/perf.out"
++	perf script report perf-gecko > "$out"
++	check_exec_0 "perf script report perf-gecko"
++	find_str_or_fail "stringTable" "$out" "${FUNCNAME[0]}"
++}
++
++# validate output for the presence of "pausedRanges".
++test_pauseranges(){
++	out="$tmpdir/perf.out"
++	perf script report perf-gecko > "$out"
++	check_exec_0 "perf script report perf-gecko"
++	find_str_or_fail "pausedRanges" "$out" "${FUNCNAME[0]}"
++}
++
++# validate user-defined color presence in output "green"
++test_categorycolorchange(){
++	out="$tmpdir/perf.out"
++	perf script report perf-gecko --user-color="green"> "$out"
++	check_exec_0 "perf script report perf-gecko --user-color"
++	find_str_or_fail "green" "$out" "${FUNCNAME[0]}"
++}
++
++prepare_perf_data
++test_perf_gecko_command
++validate_json_format
++test_meta
++test_threads
++test_samples
++test_frametable
++test_stacktable
++test_stringtable
++test_pauseranges
++test_categorycolorchange
++cleanup
++exit $err
+-- 
+2.34.1
 
