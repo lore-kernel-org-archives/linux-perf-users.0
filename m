@@ -2,112 +2,106 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4FEEB64DD
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Jul 2023 17:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFF7EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Jul 2023 18:17:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229462AbjGUR6C (ORCPT
+        id S229686AbjGUSRW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Jul 2023 13:58:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54388 "EHLO
+        Fri, 21 Jul 2023 14:17:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230340AbjGUR54 (ORCPT
+        with ESMTP id S229656AbjGUSRV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Jul 2023 13:57:56 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1E85C6;
-        Fri, 21 Jul 2023 10:57:54 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1b895a06484so14394525ad.1;
-        Fri, 21 Jul 2023 10:57:54 -0700 (PDT)
+        Fri, 21 Jul 2023 14:17:21 -0400
+Received: from smtp-fw-9106.amazon.com (smtp-fw-9106.amazon.com [207.171.188.206])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E80E7E68;
+        Fri, 21 Jul 2023 11:17:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689962274; x=1690567074;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1iO7RitBOAvlss62RnOLeCZxiLAYet/53XRH4CXtEs4=;
-        b=fk4/QypjmdJuNtT/XSQWq/OThPpb77MUTgvjBRHxD67xldmYNpy05v9T7YgvHEuWpu
-         5XSBpOP2GIiov7r5bX3Rg6Kgr4vrF+8fjfT9AOGylJnNkgOc5Xgt+0Y49umgAjBKO57d
-         KUP1zzqcOlzK6NvMAV5ZIJtodzkL8o34rYAVspbmWUhyuClhOqtyKu1nGveTXz6K90+g
-         jX+KqSJX+biMbMChx4zDgFUQCy4UQekEGECC/1NbmGGKVJMATiSkLhnc3appKRGck5Bh
-         lShpqU/fob8LI/leRGhFrUEYyncbJG7sJJK3n6gM35OHAPTiORBV4W71XBBREX1VP+r1
-         TQoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689962274; x=1690567074;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1iO7RitBOAvlss62RnOLeCZxiLAYet/53XRH4CXtEs4=;
-        b=HToXT/VA+R5b0uiraAWwqJuyt2n2cnrR7xkdIvSSRKwCdC5h6L5pUN2SZPXWgmoZXC
-         fZSDIGMMUNhLhKt0FQyVfMY6iELyvl3Pf09IudIzxEC6czFUchs0r7B8hcPpfbbdyzXD
-         FTnDvP9TWGoUsEiPSppSq5C33Cty/jK+qPmZ5iCdADcGfTg8RqirZk1BNcg7r4FLmv9h
-         dR5Xlxj1e0EK+Q+nHTg6Gbjvs+MGpDJ1kSqa38fZCn2t9HgqwghpJOxZSpFCwJXFGRow
-         C2FPApZq740wAtq/BeKjiV0qmkf26CuPtwByg/1H6Rm3JTCx+hn1vLOI4/iI9G1dS2Bh
-         GIMA==
-X-Gm-Message-State: ABy/qLYZqmiV5obNO0OajFDQrwJmEm3yQa9Ne3GM7qFAuKYf5lCtBlEJ
-        Vv8AIHbQUukS5L6Ed1Dznbo=
-X-Google-Smtp-Source: APBJJlFUPIfP7vFuoI3K/1bdSxhM2cFG5kRveW1S9UN81JkNqXXy0YSoReJYH22GNJYJDueBR29WrQ==
-X-Received: by 2002:a17:902:7c8a:b0:1b8:3cb8:7926 with SMTP id y10-20020a1709027c8a00b001b83cb87926mr2178182pll.23.1689962274096;
-        Fri, 21 Jul 2023 10:57:54 -0700 (PDT)
-Received: from yoga ([2400:1f00:13:cde2:d588:8109:e86b:839c])
-        by smtp.gmail.com with ESMTPSA id l2-20020a170902f68200b001b89536974bsm3787696plg.202.2023.07.21.10.57.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jul 2023 10:57:53 -0700 (PDT)
-Date:   Fri, 21 Jul 2023 23:27:46 +0530
-From:   Anup Sharma <anupnewsmail@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Anup Sharma <anupnewsmail@gmail.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 7/8] perf scripts python: Add command execution for perf
- gecko script
-Message-ID: <cbf03cda175ea3dd2c6cd87bd3f12d803446cb95.1689961706.git.anupnewsmail@gmail.com>
-References: <cover.1689961706.git.anupnewsmail@gmail.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1689963437; x=1721499437;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=TmtF3GFzs9OKVl3bOHgAhFBE6wjBFDuvzZ/HQeN7+FQ=;
+  b=PgwF96YGSRsryXqpZzsZmuR5rMgazsGo6gf6y5DTGVqwE2g65dXzMobz
+   isVnhtqdoyi3GsFnSkF23glg76AJEmEepJA/vX5v0Qc4QqsQwMTGq1m5w
+   RBP1SCfAGqpvS7Yj8DcSEI1bmmTxeiObZL/EluzEgIHJ4z6eGMkG/joMN
+   4=;
+X-IronPort-AV: E=Sophos;i="6.01,222,1684800000"; 
+   d="scan'208";a="661286278"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-pdx-2a-m6i4x-8a14c045.us-west-2.amazon.com) ([10.25.36.214])
+  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2023 18:17:17 +0000
+Received: from EX19MTAUWA002.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+        by email-inbound-relay-pdx-2a-m6i4x-8a14c045.us-west-2.amazon.com (Postfix) with ESMTPS id 1A5D080543;
+        Fri, 21 Jul 2023 18:17:15 +0000 (UTC)
+Received: from EX19D002UWA001.ant.amazon.com (10.13.138.247) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.30; Fri, 21 Jul 2023 18:17:14 +0000
+Received: from EX19MTAUEA001.ant.amazon.com (10.252.134.203) by
+ EX19D002UWA001.ant.amazon.com (10.13.138.247) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.30; Fri, 21 Jul 2023 18:17:14 +0000
+Received: from dev-dsk-alisaidi-1e-5e886d10.us-east-1.amazon.com
+ (10.200.156.102) by mail-relay.amazon.com (10.252.134.102) with Microsoft
+ SMTP Server id 15.2.1118.30 via Frontend Transport; Fri, 21 Jul 2023 18:17:14
+ +0000
+Received: by dev-dsk-alisaidi-1e-5e886d10.us-east-1.amazon.com (Postfix, from userid 5131138)
+        id 3B5AD21AD; Fri, 21 Jul 2023 18:17:14 +0000 (UTC)
+From:   Ali Saidi <alisaidi@amazon.com>
+To:     <leo.yan@linaro.org>
+CC:     <acme@kernel.org>, <catalin.marinas@arm.com>, <will@kernel.org>,
+        <john.g.garry@oracle.com>, <james.clark@arm.com>,
+        <mike.leach@linaro.org>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <scott@os.amperecomputing.com>,
+        <maz@kernel.org>, <anshuman.khandual@arm.com>,
+        <german.gomez@arm.com>, <alisaidi@amazon.com>,
+        <renyu.zj@linux.alibaba.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <fissure2010@gmail.com>
+Subject: Re: [PATCH v1 0/3] arm64: Support Cortex-X4 CPU for Perf Arm SPE
+Date:   Fri, 21 Jul 2023 18:16:53 +0000
+Message-ID: <20230721181653.22398-1-alisaidi@amazon.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230717054327.79815-1-leo.yan@linaro.org>
+References: <20230717054327.79815-1-leo.yan@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1689961706.git.anupnewsmail@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This will enable the execution of perf-gecko.py script
-using record and report commands in perf script.
-And this will be also reflected at "perf script -l" command.
+Hi Leo,
 
-For Example:
-    perf script record perf-gecko
-    perf script report perf-gecko
+On Mon, 17 Jul 2023 05:43:24 +0000, Leo Yan wrote:
+> This series support Cortex-X4 CPU in Perf Arm SPE.
+> 
+> The Arm64 and tools both include the header cputype.h for CPU part and
+> MIDR definitions, to de-couple between the tools and the kernel, the
+> tools doesn't directly use the kernel's header, alternatively, the tools
+> maintain a copy and sync with kernel's header.
+> 
+> To keep the exact same content between kernel and tools' headers, this
+> series firstly adds Cortex-X4 CPU part and MIDR definitions in the
+> kernel header; then the second patch syncs the change into the tools'
+> header.  The first patch is to support the Cortex-X4 in perf Arm SPE
+> with the new CPU definitions.
+> 
+> I don't have Cortex-X4 machine in hand, so just verified with
+> compilation perf tool.
 
-Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
----
- tools/perf/scripts/python/bin/perf-gecko-record | 2 ++
- tools/perf/scripts/python/bin/perf-gecko-report | 3 +++
- 2 files changed, 5 insertions(+)
- create mode 100644 tools/perf/scripts/python/bin/perf-gecko-record
- create mode 100644 tools/perf/scripts/python/bin/perf-gecko-report
+This looks good to me, but can we add the other cores that operate the
+same way now too? Flipping through the TRMs A78, X3, V2, X1, A715,
+A720, and A78C all have the same encodings. 
 
-diff --git a/tools/perf/scripts/python/bin/perf-gecko-record b/tools/perf/scripts/python/bin/perf-gecko-record
-new file mode 100644
-index 000000000000..7df5a19c0163
---- /dev/null
-+++ b/tools/perf/scripts/python/bin/perf-gecko-record
-@@ -0,0 +1,2 @@
-+#!/bin/bash
-+perf record -g "$@"
-diff --git a/tools/perf/scripts/python/bin/perf-gecko-report b/tools/perf/scripts/python/bin/perf-gecko-report
-new file mode 100644
-index 000000000000..6781313dc862
---- /dev/null
-+++ b/tools/perf/scripts/python/bin/perf-gecko-report
-@@ -0,0 +1,3 @@
-+#!/bin/bash
-+# description: create firefox gecko profile json format from perf.data
-+perf script -s "$PERF_EXEC_PATH"/scripts/python/perf-gecko.py -- "$@"
--- 
-2.34.1
+Reviewed-by: Ali Saidi <alisaidi@amazon.com>
+
+Thanks!
+Ali
+
+
 
