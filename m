@@ -2,54 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 034CAC0015E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Jul 2023 17:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A09C0015E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Jul 2023 17:52:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229888AbjGURvO (ORCPT
+        id S230019AbjGURwk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Jul 2023 13:51:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50302 "EHLO
+        Fri, 21 Jul 2023 13:52:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbjGURvN (ORCPT
+        with ESMTP id S229737AbjGURwh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Jul 2023 13:51:13 -0400
+        Fri, 21 Jul 2023 13:52:37 -0400
 Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3BC73580;
-        Fri, 21 Jul 2023 10:51:10 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-668711086f4so1505876b3a.1;
-        Fri, 21 Jul 2023 10:51:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68ABE3586;
+        Fri, 21 Jul 2023 10:52:36 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-668709767b1so1570234b3a.2;
+        Fri, 21 Jul 2023 10:52:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689961870; x=1690566670;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Xpz1j0ViON/79H2hi1Eb1uXwApxUrfNApf/6cdh9gVs=;
-        b=c38Cqeoo94sWHycPlXorn1b2IPOWpnBg3h+QpBzO7AaekTWgGxN8lRdRl/Ab2XEU40
-         meBodYoL2nOUb3kwj+dHewh4qq1Q9FLtLZE82HzzYD3TsexYtaxEhwKw/xBYH2qVMfxS
-         uj5elBlVTSIfM2SdfB5rbuUUT7Fx/mMt7ZyyLpTsWByNFJBDlD2kDUadTRMn9WwCK0EE
-         H0OaqUOz81Qp31ePNwAknTFxc47XI+iyXxRj0SSuERcr0O1d6S6D1E1Gy+HWdopylbJ8
-         GHR5epNhagfo8IW2lQoxweE7qMHG1ahKcJvykwMrodSDIfrFQxAU83B+BA6ZqqEn9hC5
-         Yngg==
+        d=gmail.com; s=20221208; t=1689961956; x=1690566756;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kIWTPg91sCg5EQFT4pLbsMmSxH/5LnBec+qLbL/rIOI=;
+        b=GAL8WUrDbkrFBZ5AerXBFNk3kRpjC+2ID9l8TPMmPEzPyjX96N11mkjCmnjr7y5Anl
+         mk+Gdx0xCxRuhi0GXaNFq36Ww1tcB9kzEZ6xO5J9AbkKyndhUOAEpVT1ocZcgJTTTWHm
+         7Yu/DBy5t5o1+f1DJkDZW/8jnVE8FP3MFaLkGnF1lKeFWYxhverbzS0LCvX8x0hA+emL
+         Xa9zsl/PRRZCBxDgvJ70ZwS1qahP1zF0j9JpaTkrlD5W8Rsh81wGEHNN30OunKnk8pPz
+         JS+TuBY8pGVxphnIBYunqUVQkuY3Niqs8X2Zh2Q6R7eHYMtQFA2FcueJ4BBRyYmA83jt
+         PhiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689961870; x=1690566670;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xpz1j0ViON/79H2hi1Eb1uXwApxUrfNApf/6cdh9gVs=;
-        b=SdGNvv7+hLxk1h2IEkNFbrBN4KyGt1jJoRjhEO7YX4frwQ/mPL3PvDSQ/fYk5HPMiK
-         MBZYUWFdUuycjlkRwp5aXxuhQvQMzgcagUVT2U2lUMKtHM+a5bjFCI3JWIJiiVYOlM9i
-         lKRfmGstuRNKesaCkLbUw7LymwefrOasuVT85E/UujVL3Yi3GkIlYSeAYvJiuqL+EvhN
-         YMdadJw33KQVGER5taEoIlRZ09xI8yRRb2909G739Us/DNGu6FrHi17KVK5s4iX2+MOR
-         twn9fL4EDKyixArh1mdW7HDPCj4ChE1Y5p34IQzMuqR4PB274Y6wtDVCMXBjvQsrjpDT
-         wBZQ==
-X-Gm-Message-State: ABy/qLYhoWV8zieggYhLMiHMuO5EfZktfWv7zl21LmBdo6P/52xxENhh
-        GFrzWxFXI+2yrb+ZZkOtWPg=
-X-Google-Smtp-Source: APBJJlFyRRRr9DW6Q6e9XUtTfgm9f8cMnHFp/DhAiEmIxrd4jlqg45OayAjc7h4RSnT2JNJyaXuGrw==
-X-Received: by 2002:a05:6a20:394f:b0:10b:764b:a942 with SMTP id r15-20020a056a20394f00b0010b764ba942mr4627422pzg.11.1689961869947;
-        Fri, 21 Jul 2023 10:51:09 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1689961956; x=1690566756;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kIWTPg91sCg5EQFT4pLbsMmSxH/5LnBec+qLbL/rIOI=;
+        b=LWJ9rojwkR/XFH9v3/6079urzyBNMLLvD18WGb8DTcDXthQZPQ5+roE3kxHz5CvBts
+         8KDfHlpXtko2ngvaejXgcv658susronj8J5/x1zgpFLpZVSLdr3kLfCMUO0K8KDic5dG
+         Kl4z6nyfu5ePBXEDvj6y6WPMyzYyXxCbFAWuvjMRzoO0DQ6Kudv1hEAX7tioclu2Z1nE
+         f7GvvGPrPK5gZU1U8tD+EncCSd3ORJt64HClyHKe5YiPFabkoTH73APJVTxhLrwPfY/w
+         3Fn46aDsITRoHJQK57WGKwmIZu9BPtz54DQqS3l0BddrOoFjTLcofNeNxljTpkM4M5rs
+         ffAA==
+X-Gm-Message-State: ABy/qLYi6Q/m1ndiFeaz5bG4LgZ/MjaTQk+ZTGtkySpFXrk3EumJT0ej
+        i7j6yQWrcasIo7QxolCZmqQ=
+X-Google-Smtp-Source: APBJJlGLgqKyhKjGqE+g/9+ojyQQvvD7hCdKHxWTeNt1UyLjV7Ub0utLfhrMoT7yDWMaIAsNdJO1sg==
+X-Received: by 2002:a05:6a20:1589:b0:12d:d615:9279 with SMTP id h9-20020a056a20158900b0012dd6159279mr2657490pzj.25.1689961955711;
+        Fri, 21 Jul 2023 10:52:35 -0700 (PDT)
 Received: from yoga ([2400:1f00:13:cde2:d588:8109:e86b:839c])
-        by smtp.gmail.com with ESMTPSA id y6-20020a63b506000000b005348af1b84csm3346092pge.74.2023.07.21.10.51.05
+        by smtp.gmail.com with ESMTPSA id x18-20020a056a00271200b00671aa6b4962sm3242378pfv.114.2023.07.21.10.52.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jul 2023 10:51:09 -0700 (PDT)
-Date:   Fri, 21 Jul 2023 23:21:00 +0530
+        Fri, 21 Jul 2023 10:52:35 -0700 (PDT)
+Date:   Fri, 21 Jul 2023 23:22:28 +0530
 From:   Anup Sharma <anupnewsmail@gmail.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -62,72 +63,67 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Anup Sharma <anupnewsmail@gmail.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 0/8] Add support for Firefox's gecko profile format
-Message-ID: <cover.1689961706.git.anupnewsmail@gmail.com>
+Subject: [PATCH v5 1/8] perf scripts python: Add initial script file with
+ usage information
+Message-ID: <f2f1a62f1cc69f44a5414da46a26a4cf124d2744.1689961706.git.anupnewsmail@gmail.com>
+References: <cover.1689961706.git.anupnewsmail@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <cover.1689961706.git.anupnewsmail@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This patch series adds support for Firefox's gecko profile format.
-The format is documented here [1].
+Added necessary modules, including the Perf-Trace-Util
+library, and defines the required functions and variables
+for using perf script python. The perf_trace_context and
+Core modules for tracing and processing events has been
+also imported. Added usage information.
 
-I have incorporated several changes based on feedback from the
-previous version of the patch.
-
-Changes in v5:
-- Reorganized the patch series to ensure that each patch works independently.
-- Renamed the file to perf-gecko.py.
-- Added command exection support for the script. The script can now be
-  executed as "perf script report perf-gecko > output.json."
-- Simplified the usage information; previously it was "perf script
-  perf-gecko.py > output.json," now it is "perf script report
-  perf-gecko > output.json."
-- Merged the test and command execution patches into this series,
-  which were previously in a separate series.
-
-Committer Testing:
-- Tested with a perf.data file generated for single and multiple cpu
-  cores enabled.
-- Uploaded the stdout into profiler.firefox.com and verified the
-  output.
-- Verified the output with the output generated by the existing
-  script as mentioned here [2].
-
-Method:
-- perf record -F 99 -a -g -- sleep 5
-- perf script report perf-gecko > output.json
-- upload output.json to profiler.firefox.com
-
-[1] https://github.com/firefox-devtools/profiler/blob/main/docs-developer/gecko-profile-format.md
-[2] https://perf.wiki.kernel.org/index.php/Tutorial#Firefox_Profiler
-
-Anup Sharma (8):
-  perf scripts python: Add initial script file with usage information
-  perf scripts python: Extact necessary information from process event
-  perf scripts python: Add classes and conversion functions
-  perf scripts python: Add trace end processing and PRODUCT and
-    CATEGORIES information
-  perf scripts python: Implement add sample function and thread
-    processing
-  perf scripts python: Implement add sample function and thread
-    processing
-  perf scripts python: Add command execution for firefox gecko converter
-    script
-  perf test: Add support for testing firefox gecko converter script
-
- .../perf/scripts/python/bin/perf-gecko-record |   2 +
- .../perf/scripts/python/bin/perf-gecko-report |   3 +
- tools/perf/scripts/python/perf-gecko.py       | 339 ++++++++++++++++++
- tools/perf/tests/shell/test_perf_gecko.sh     | 188 ++++++++++
- 4 files changed, 532 insertions(+)
- create mode 100644 tools/perf/scripts/python/bin/perf-gecko-record
- create mode 100644 tools/perf/scripts/python/bin/perf-gecko-report
+Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
+---
+ tools/perf/scripts/python/perf-gecko.py | 31 +++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
  create mode 100644 tools/perf/scripts/python/perf-gecko.py
- create mode 100755 tools/perf/tests/shell/test_perf_gecko.sh
 
+diff --git a/tools/perf/scripts/python/perf-gecko.py b/tools/perf/scripts/python/perf-gecko.py
+new file mode 100644
+index 000000000000..4e651adb6395
+--- /dev/null
++++ b/tools/perf/scripts/python/perf-gecko.py
+@@ -0,0 +1,31 @@
++# firefox-gecko-converter.py - Convert perf record output to Firefox's gecko profile format
++# SPDX-License-Identifier: GPL-2.0
++#
++# The script converts perf.data to Gecko Profile Format,
++# which can be read by https://profiler.firefox.com/.
++#
++# Usage:
++#
++#     perf record -a -g -F 99 sleep 60
++#     perf script report perf-gecko > output.json
++
++import os
++import sys
++from typing import Dict
++
++# Add the Perf-Trace-Util library to the Python path
++sys.path.append(os.environ['PERF_EXEC_PATH'] + \
++	'/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
++
++from perf_trace_context import *
++from Core import *
++
++# Uses perf script python interface to parse each
++# event and store the data in the thread builder.
++def process_event(param_dict: Dict) -> None:
++	pass
++
++# Trace_end runs at the end and will be used to aggregate
++# the data into the final json object and print it out to stdout.
++def trace_end() -> None:
++	pass
 -- 
 2.34.1
 
