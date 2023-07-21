@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65343C0015E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Jul 2023 17:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4CBEB64DD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Jul 2023 17:54:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229622AbjGURx3 (ORCPT
+        id S230180AbjGURyz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Jul 2023 13:53:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52164 "EHLO
+        Fri, 21 Jul 2023 13:54:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230077AbjGURx2 (ORCPT
+        with ESMTP id S229727AbjGURyw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Jul 2023 13:53:28 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7792830FF;
-        Fri, 21 Jul 2023 10:53:27 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-68336d06620so1924856b3a.1;
-        Fri, 21 Jul 2023 10:53:27 -0700 (PDT)
+        Fri, 21 Jul 2023 13:54:52 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A31830FF;
+        Fri, 21 Jul 2023 10:54:51 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-668709767b1so1571615b3a.2;
+        Fri, 21 Jul 2023 10:54:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689962007; x=1690566807;
+        d=gmail.com; s=20221208; t=1689962090; x=1690566890;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zdmHVEOZnx9XkZhHfTLEdLkTSGQEKCcj987Y0mRU5GU=;
-        b=HC7nGhxL3EmXoXAdJXuBBcaA0qGN2ZxhF6YPAO0MwAsKSgJbLKmYWLIawxOeBIAdZl
-         A3fpVkxLPRjL077cHZoL+FvNzDIvWFsYN+qqUcEB4+N7jLOxOFn9sngWGuPegPXMdU7Q
-         Ve7pBoy0ZlNmfmHwuHQZYQ18w2U5GSQhkjNp9em31PMKE++uWPYBIo7Iv8tsSIAEnXRS
-         PQl7pJ+vjMZKKnBY3Wq6YqDEEBbwVAqD95DGA6QIWNmuoWU1cLL/z2vr7S9A8QwXINr9
-         3jxspamvrk8lOl7oBP5huXNU5fPrMV+Eow7lzhZrlMgex72gfILVaueBctvVMSoIm7jt
-         jiiQ==
+        bh=TdUwpQJ1fvo9wPeoyUZd+h9p9WkVUECzr/4+DTfg2fw=;
+        b=VDgiEFHaTR5MW0qHo4qC1ZF0ezbF2MZGTNjeR8I4GfcR6lyDLyZwyLlgUgoeA7rmlI
+         NMNDx79Jk7TCZr6jSE9otVvuxm+7Gb+Yx0GzR4h8s8cb40c3qrFb8f9wiXn9zZ7IAMmE
+         BQDdlV1zIV5yD0iRQns/mdQGYxK0jCkud7EiBZHMsLXT/6rCjzWSYc8aPJBDslwzpRyC
+         IfY0DNd6rlO7MEhyVbxSe2H9L3WDnlvb9EZo7uqMUwDPCVXVi7CaADAQu8Z2kh6r+1Yq
+         5HX+GF4vmbWcFAKRq5hvQ/desu1iJHEXTTXd/gpfbyZazuHupFj7LCXwqtl6BXpEyA4U
+         aIYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689962007; x=1690566807;
+        d=1e100.net; s=20221208; t=1689962090; x=1690566890;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zdmHVEOZnx9XkZhHfTLEdLkTSGQEKCcj987Y0mRU5GU=;
-        b=WUOQUNRZfFQdoqYdJ4A+3NOuRt73MdSaVOjP5hozQpjywuwfcAe4BkL6MIECkjukli
-         uv8Ea8MseTPUlNnvM3YGZbusmRTIk5I1eBvgx3ZCo9qA5eiYnv5hOah+5GRm3Qat9ZWb
-         uaJSdFWKYvSd7CDGKn+K1Ax9VQAqqFTZPzdeuYInBitFv1wqptJUXXfjN2eKK14Azgqk
-         hVLULK3cmULvdkJWRXfeCkyHhTUNglD3StD9SSoxmU/Xah57Su5zqjZPjabjbXHQf/99
-         Nioe0b2/5OCyZcz+NefvOo1vebru/O55EOkceQYdN0UUTgn+Nkd1Wm5IC6ctVWcFOxww
-         lnlw==
-X-Gm-Message-State: ABy/qLbqlpdp34XwD6Q7n+GGVvv/5X0aQDqO57OfaMB4LhLz1FYH1cIj
-        HdWL6/oG4ZlYBF+6JoXxHzs=
-X-Google-Smtp-Source: APBJJlE0EF47yVGan9WyTUm8NikrNutaf7wooOpEbhjBKKXG3gzX/Fbrd550ajmHULa5VM+34PGWqQ==
-X-Received: by 2002:a05:6a20:9389:b0:138:1980:1837 with SMTP id x9-20020a056a20938900b0013819801837mr3394164pzh.13.1689962006833;
-        Fri, 21 Jul 2023 10:53:26 -0700 (PDT)
+        bh=TdUwpQJ1fvo9wPeoyUZd+h9p9WkVUECzr/4+DTfg2fw=;
+        b=juvSKB9OAXMBv5X+WSkV+9BY9+Pbq1+7xJ0L6id4kL76jXVe46m4MkR8+NrclYEs7o
+         o+nyVoWsr1Qc2FOh1defQGnLqG7seT41eFt2UAPlR46vfweiSJSJ2Y7svXgjyTUoWyH/
+         OZiLCupViwmM74b+qnhLA3fq9ffSJ7cOQ3GlAslGEIDplB9AKmZpUEJaVinfORovCAVw
+         jaPvp5tiAxPuZ/TszfGZuq5enOwRGY+nrOgkt/eWvMXoFMq2eEEqPAR9a4L9miwhfTWj
+         jU9+SPcvHG/xgLQTJH5G0i6fAEHVziqbRl+MUWJtDQjQUf8ZDqWFcNC2srg46q4FPoOb
+         4E0w==
+X-Gm-Message-State: ABy/qLZ+oIbbeHJ6CCm5wympzWFEw8OKviCx8H031z8lIST3+hLI3069
+        4G31afFye91A8UlU1EK3/4xHY0DhSVRHDeli
+X-Google-Smtp-Source: APBJJlHTmZUbhRZL76BtwS1Q89aM7HW+TQqebtkN7UOVLUbOYu33fR3frbkTyxy0qwVP91U5wTBweA==
+X-Received: by 2002:a05:6a00:1381:b0:67f:48a2:5d9f with SMTP id t1-20020a056a00138100b0067f48a25d9fmr893357pfg.11.1689962090393;
+        Fri, 21 Jul 2023 10:54:50 -0700 (PDT)
 Received: from yoga ([2400:1f00:13:cde2:d588:8109:e86b:839c])
-        by smtp.gmail.com with ESMTPSA id jh6-20020a170903328600b001aad714400asm3791582plb.229.2023.07.21.10.53.22
+        by smtp.gmail.com with ESMTPSA id ff5-20020a056a002f4500b0067ea048cf83sm3230191pfb.186.2023.07.21.10.54.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jul 2023 10:53:26 -0700 (PDT)
-Date:   Fri, 21 Jul 2023 23:23:19 +0530
+        Fri, 21 Jul 2023 10:54:50 -0700 (PDT)
+Date:   Fri, 21 Jul 2023 23:24:42 +0530
 From:   Anup Sharma <anupnewsmail@gmail.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -63,9 +63,9 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Anup Sharma <anupnewsmail@gmail.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 3/8] perf scripts python: Add classes and conversion
- functions
-Message-ID: <ab7b40bd32df7101a6f8b4a3aa41570b63b831ac.1689961706.git.anupnewsmail@gmail.com>
+Subject: [PATCH v5 4/8] perf scripts python: Add trace end processing and
+ PRODUCT and CATEGORIES information
+Message-ID: <fa6d027e4134c48e8a2ea45dd8f6b21e6a3418e4.1689961706.git.anupnewsmail@gmail.com>
 References: <cover.1689961706.git.anupnewsmail@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -75,176 +75,109 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This commit introduces new classes and conversion functions to
-facilitate the representation of Gecko profile information. The new
-classes Frame, Stack, Sample, and Thread are added to handle specific
-components of the profile data, also link to the origin docs has been
-commented out.
+The final output will now be presented in JSON format following the Gecko
+profile structure. Additionally, the inclusion of PRODUCT allows easy retrieval
+of header information for UI.
 
-Additionally, Inside the Thread class _to_json_dict() method has been
-created that converts the current thread data into the corresponding
-format expected by the GeckoThread JSON schema, as per the Gecko
-profile format specification.
+Furthermore, CATEGORIES have been introduced to enable customization of
+kernel and user colors using input arguments. To facilitate this functionality,
+an argparse-based parser has been implemented.
+
+Note: The implementation of threads will be addressed in subsequent commits
+for now I have commented it out.
 
 Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
 ---
- tools/perf/scripts/python/perf-gecko.py | 133 +++++++++++++++++++++++-
- 1 file changed, 132 insertions(+), 1 deletion(-)
+ tools/perf/scripts/python/perf-gecko.py | 65 ++++++++++++++++++++++++-
+ 1 file changed, 64 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/scripts/python/perf-gecko.py b/tools/perf/scripts/python/perf-gecko.py
-index 02849d3c9e81..71e2b042e695 100644
+index 71e2b042e695..f0d29f48467e 100644
 --- a/tools/perf/scripts/python/perf-gecko.py
 +++ b/tools/perf/scripts/python/perf-gecko.py
-@@ -11,7 +11,8 @@
+@@ -11,6 +11,8 @@
  
  import os
  import sys
--from typing import Dict
-+from dataclasses import dataclass, field
-+from typing import List, Dict, Optional, NamedTuple, Set, Tuple, Any
++import json
++import argparse
+ from dataclasses import dataclass, field
+ from typing import List, Dict, Optional, NamedTuple, Set, Tuple, Any
  
- # Add the Perf-Trace-Util library to the Python path
- sys.path.append(os.environ['PERF_EXEC_PATH'] + \
-@@ -20,9 +21,139 @@ sys.path.append(os.environ['PERF_EXEC_PATH'] + \
- from perf_trace_context import *
- from Core import *
- 
-+StringID = int
-+StackID = int
-+FrameID = int
-+CategoryID = int
-+Milliseconds = float
-+
+@@ -30,6 +32,13 @@ Milliseconds = float
  # start_time is intialiazed only once for the all event traces.
  start_time = None
  
-+# https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L156
-+class Frame(NamedTuple):
-+	string_id: StringID
-+	relevantForJS: bool
-+	innerWindowID: int
-+	implementation: None
-+	optimizations: None
-+	line: None
-+	column: None
-+	category: CategoryID
-+	subcategory: int
++# https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/profile.js#L425
++# Follow Brendan Gregg's Flamegraph convention: orange for kernel and yellow for user space by default.
++CATEGORIES = None
 +
-+# https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L216
-+class Stack(NamedTuple):
-+	prefix_id: Optional[StackID]
-+	frame_id: FrameID
++# The product name is used by the profiler UI to show the Operating system and Processor.
++PRODUCT = os.popen('uname -op').read().strip()
 +
-+# https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L90
-+class Sample(NamedTuple):
-+	stack_id: Optional[StackID]
-+	time_ms: Milliseconds
-+	responsiveness: int
-+
-+@dataclass
-+class Thread:
-+	"""A builder for a profile of the thread.
-+
-+	Attributes:
-+		comm: Thread command-line (name).
-+		pid: process ID of containing process.
-+		tid: thread ID.
-+		samples: Timeline of profile samples.
-+		frameTable: interned stack frame ID -> stack frame.
-+		stringTable: interned string ID -> string.
-+		stringMap: interned string -> string ID.
-+		stackTable: interned stack ID -> stack.
-+		stackMap: (stack prefix ID, leaf stack frame ID) -> interned Stack ID.
-+		frameMap: Stack Frame string -> interned Frame ID.
-+		comm: str
-+		pid: int
-+		tid: int
-+		samples: List[Sample] = field(default_factory=list)
-+		frameTable: List[Frame] = field(default_factory=list)
-+		stringTable: List[str] = field(default_factory=list)
-+		stringMap: Dict[str, int] = field(default_factory=dict)
-+		stackTable: List[Stack] = field(default_factory=list)
-+		stackMap: Dict[Tuple[Optional[int], int], int] = field(default_factory=dict)
-+		frameMap: Dict[str, int] = field(default_factory=dict)
-+	"""
-+	comm: str
-+	pid: int
-+	tid: int
-+	samples: List[Sample] = field(default_factory=list)
-+	frameTable: List[Frame] = field(default_factory=list)
-+	stringTable: List[str] = field(default_factory=list)
-+	stringMap: Dict[str, int] = field(default_factory=dict)
-+	stackTable: List[Stack] = field(default_factory=list)
-+	stackMap: Dict[Tuple[Optional[int], int], int] = field(default_factory=dict)
-+	frameMap: Dict[str, int] = field(default_factory=dict)
-+
-+	def _to_json_dict(self) -> Dict:
-+		"""Converts current Thread to GeckoThread JSON format."""
-+		# Gecko profile format is row-oriented data as List[List],
-+		# And a schema for interpreting each index.
-+		# Schema:
-+		# https://github.com/firefox-devtools/profiler/blob/main/docs-developer/gecko-profile-format.md
-+		# https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L230
-+		return {
-+			"tid": self.tid,
-+			"pid": self.pid,
-+			"name": self.comm,
-+			# https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L51
-+			"markers": {
-+				"schema": {
-+					"name": 0,
-+					"startTime": 1,
-+					"endTime": 2,
-+					"phase": 3,
-+					"category": 4,
-+					"data": 5,
-+				},
-+				"data": [],
+ # https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L156
+ class Frame(NamedTuple):
+ 	string_id: StringID
+@@ -171,4 +180,58 @@ def process_event(param_dict: Dict) -> None:
+ # Trace_end runs at the end and will be used to aggregate
+ # the data into the final json object and print it out to stdout.
+ def trace_end() -> None:
+-	pass
++	# Schema: https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L305
++	gecko_profile_with_meta = {
++		"meta": {
++			"interval": 1,
++			"processType": 0,
++			"product": PRODUCT,
++			"stackwalk": 1,
++			"debug": 0,
++			"gcpoison": 0,
++			"asyncstack": 1,
++			"startTime": start_time,
++			"shutdownTime": None,
++			"version": 24,
++			"presymbolicated": True,
++			"categories": CATEGORIES,
++			"markerSchema": [],
 +			},
++		"libs": [],
++		# threads will be implemented in later commits.
++		# "threads": threads,
++		"processes": [],
++		"pausedRanges": [],
++	}
++	json.dump(gecko_profile_with_meta, sys.stdout, indent=2)
 +
-+			# https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L90
-+			"samples": {
-+				"schema": {
-+					"stack": 0,
-+					"time": 1,
-+					"responsiveness": 2,
-+				},
-+				"data": self.samples
-+			},
++def main() -> None:
++	global CATEGORIES
++	parser = argparse.ArgumentParser(description="Convert perf.data to Firefox\'s Gecko Profile format")
 +
-+			# https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L156
-+			"frameTable": {
-+				"schema": {
-+					"location": 0,
-+					"relevantForJS": 1,
-+					"innerWindowID": 2,
-+					"implementation": 3,
-+					"optimizations": 4,
-+					"line": 5,
-+					"column": 6,
-+					"category": 7,
-+					"subcategory": 8,
-+				},
-+				"data": self.frameTable,
-+			},
++	# Add the command-line options
++	# Colors must be defined according to this:
++	# https://github.com/firefox-devtools/profiler/blob/50124adbfa488adba6e2674a8f2618cf34b59cd2/res/css/categories.css
++	parser.add_argument('--user-color', default='yellow', help='Color for the User category')
++	parser.add_argument('--kernel-color', default='orange', help='Color for the Kernel category')
++	# Parse the command-line arguments
++	args = parser.parse_args()
++	# Access the values provided by the user
++	user_color = args.user_color
++	kernel_color = args.kernel_color
 +
-+			# https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L216
-+			"stackTable": {
-+				"schema": {
-+					"prefix": 0,
-+					"frame": 1,
-+				},
-+				"data": self.stackTable,
-+			},
-+			"stringTable": self.stringTable,
-+			"registerTime": 0,
-+			"unregisterTime": None,
-+			"processType": "default",
-+		}
++	CATEGORIES = [
++		{
++			"name": 'User',
++			"color": user_color,
++			"subcategories": ['Other']
++		},
++		{
++			"name": 'Kernel',
++			"color": kernel_color,
++			"subcategories": ['Other']
++		},
++	]
 +
- # Uses perf script python interface to parse each
- # event and store the data in the thread builder.
- def process_event(param_dict: Dict) -> None:
++if __name__ == '__main__':
++    main()
 -- 
 2.34.1
 
