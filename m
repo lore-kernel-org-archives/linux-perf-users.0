@@ -2,101 +2,118 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63787EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Jul 2023 09:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 508BEEB64DD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Jul 2023 10:22:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229988AbjGUJH3 (ORCPT
+        id S229940AbjGUKWZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Jul 2023 05:07:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33330 "EHLO
+        Fri, 21 Jul 2023 06:22:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230317AbjGUJH2 (ORCPT
+        with ESMTP id S230384AbjGUKWJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Jul 2023 05:07:28 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98AED2D7F;
-        Fri, 21 Jul 2023 02:07:26 -0700 (PDT)
-Received: from dggpeml100024.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4R6kBk5PNsztR9d;
-        Fri, 21 Jul 2023 17:04:14 +0800 (CST)
-Received: from hulk-vt.huawei.com (10.67.174.26) by
- dggpeml100024.china.huawei.com (7.185.36.115) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Fri, 21 Jul 2023 17:07:23 +0800
-From:   Xiu Jianfeng <xiujianfeng@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <mcgrof@kernel.org>,
-        <keescook@chromium.org>, <yzaikin@google.com>
-CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <xiujianfeng@huawei.com>
-Subject: [PATCH -next] perf/core: Rename perf_proc_update_handler for readability
-Date:   Fri, 21 Jul 2023 09:06:07 +0000
-Message-ID: <20230721090607.172002-1-xiujianfeng@huawei.com>
-X-Mailer: git-send-email 2.34.1
+        Fri, 21 Jul 2023 06:22:09 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F08830F0;
+        Fri, 21 Jul 2023 03:21:40 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 06A27618AC;
+        Fri, 21 Jul 2023 10:21:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96278C433C7;
+        Fri, 21 Jul 2023 10:21:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689934899;
+        bh=H8POZOfX8besCzfb+R2Af8o5NH3RWaYoXAhuHVlzDWI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VbmaRk5gsNQiIzh9mDHq/Ide82FIOBdDLshzMR0m5hFPnfc+g/QXkO7IrSov11nB2
+         tUaTeHjAoniOnZwpvnmuaffj8SBXdLqAPIBhXhZZnnv8gz9OeejASdREr15SIHxf9W
+         e4m8nUXE/KIGg3zQGX63qmABM6/0Rg6hkhzPqPydKyrjstV2JPU0GLLJqoN+r2jKjE
+         AEEh/yKYjEgWeyyx/3iw0qRtki+hi97Um+Lp7U+lfFRhSdtN2ebS+WcYl6/NkdGXcR
+         2/NIta67icXLsKPiYIw4dJR8BX0uakCFximn4sUMz4WO4y/Sfy0Q/bqIiHlKpOZ/35
+         6dNPvpL3zC14w==
+Date:   Fri, 21 Jul 2023 11:21:31 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH 1/4] arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE capability
+Message-ID: <20230721102131.GA12457@willie-the-truck>
+References: <20230710122138.1450930-1-james.clark@arm.com>
+ <20230710122138.1450930-2-james.clark@arm.com>
+ <e111d9ac-c4f6-c541-313b-7a3a6acfb5d2@arm.com>
+ <597f53e0-5a5b-75a1-4054-253630a941f2@arm.com>
+ <CAP-5=fVpjJLBNCd4LJ7krX1tpqUT-S_DCRebXR1ioTCGFsF6Pw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.26]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml100024.china.huawei.com (7.185.36.115)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVpjJLBNCd4LJ7krX1tpqUT-S_DCRebXR1ioTCGFsF6Pw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Just like other sysctl handlers of perf, rename it to
-perf_event_max_sample_rate_handler, minor readability improvement.
+On Thu, Jul 20, 2023 at 10:12:21AM -0700, Ian Rogers wrote:
+> On Tue, Jul 11, 2023 at 7:12 AM James Clark <james.clark@arm.com> wrote:
+> >
+> >
+> >
+> > On 11/07/2023 13:01, Anshuman Khandual wrote:
+> > >
+> > >
+> > > On 7/10/23 17:51, James Clark wrote:
+> > >> This capability gives us the ability to open PERF_TYPE_HARDWARE and
+> > >> PERF_TYPE_HW_CACHE events on a specific PMU for free. All the
+> > >> implementation is contained in the Perf core and tool code so no change
+> > >> to the Arm PMU driver is needed.
+> > >>
+> > >> The following basic use case now results in Perf opening the event on
+> > >> all PMUs rather than picking only one in an unpredictable way:
+> > >>
+> > >>   $ perf stat -e cycles -- taskset --cpu-list 0,1 stress -c 2
+> > >>
+> > >>    Performance counter stats for 'taskset --cpu-list 0,1 stress -c 2':
+> > >>
+> > >>          963279620      armv8_cortex_a57/cycles/                (99.19%)
+> > >>          752745657      armv8_cortex_a53/cycles/                (94.80%)
+> > >>
+> > >> Fixes: 55bcf6ef314a ("perf: Extend PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE")
+> > >> Suggested-by: Ian Rogers <irogers@google.com>
+> > >> Signed-off-by: James Clark <james.clark@arm.com>
+> 
+> Hi ARM Linux and ARM Linux PMU people,
+> 
+> Could this patch be picked up for Linux 6.5? I don't see it in the
+> tree and it seems a shame to have to wait for it. The other patches do
+> cleanup and so waiting for 6.6 seems okay.
 
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
----
- include/linux/perf_event.h | 2 +-
- kernel/events/core.c       | 4 ++--
- kernel/sysctl.c            | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+I'm only taking fixes for 6.5 and I don't think this qualifies.
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 2166a69e3bf2..681cb44249c4 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1556,7 +1556,7 @@ extern int sysctl_perf_cpu_time_max_percent;
- 
- extern void perf_sample_event_took(u64 sample_len_ns);
- 
--int perf_proc_update_handler(struct ctl_table *table, int write,
-+int perf_event_max_sample_rate_handler(struct ctl_table *table, int write,
- 		void *buffer, size_t *lenp, loff_t *ppos);
- int perf_cpu_time_max_percent_handler(struct ctl_table *table, int write,
- 		void *buffer, size_t *lenp, loff_t *ppos);
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 6fd9272eec6e..8db4c5f6328f 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -449,8 +449,8 @@ static void update_perf_cpu_limits(void)
- 
- static bool perf_rotate_context(struct perf_cpu_pmu_context *cpc);
- 
--int perf_proc_update_handler(struct ctl_table *table, int write,
--		void *buffer, size_t *lenp, loff_t *ppos)
-+int perf_event_max_sample_rate_handler(struct ctl_table *table, int write,
-+				       void *buffer, size_t *lenp, loff_t *ppos)
- {
- 	int ret;
- 	int perf_cpu = sysctl_perf_cpu_time_max_percent;
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 354a2d294f52..2b6585751891 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -1983,7 +1983,7 @@ static struct ctl_table kern_table[] = {
- 		.data		= &sysctl_perf_event_sample_rate,
- 		.maxlen		= sizeof(sysctl_perf_event_sample_rate),
- 		.mode		= 0644,
--		.proc_handler	= perf_proc_update_handler,
-+		.proc_handler	= perf_event_max_sample_rate_handler,
- 		.extra1		= SYSCTL_ONE,
- 	},
- 	{
--- 
-2.34.1
+If it was an oversight introduced during the recent merge window, then
+I'd be happier fixing it up, but 55bcf6ef314a was merged ages ago (v5.12?),
+so I think we can wait.
 
+I'll be queuing perf changes for 6.6 next week, so I'll look at this
+then.
+
+Cheers,
+
+Will
