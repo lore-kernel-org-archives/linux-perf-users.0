@@ -2,39 +2,39 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D445BEB64DC
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Jul 2023 14:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EED2EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Jul 2023 14:46:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229989AbjGUOoJ (ORCPT
+        id S230512AbjGUOqT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Jul 2023 10:44:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56570 "EHLO
+        Fri, 21 Jul 2023 10:46:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231502AbjGUOoF (ORCPT
+        with ESMTP id S231304AbjGUOqH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Jul 2023 10:44:05 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F11F30C4;
-        Fri, 21 Jul 2023 07:44:03 -0700 (PDT)
+        Fri, 21 Jul 2023 10:46:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19DD23588;
+        Fri, 21 Jul 2023 07:46:06 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AF63461CB8;
-        Fri, 21 Jul 2023 14:44:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 653C2C433C8;
-        Fri, 21 Jul 2023 14:43:58 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AB81361BAF;
+        Fri, 21 Jul 2023 14:46:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B4D8C433C7;
+        Fri, 21 Jul 2023 14:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689950642;
-        bh=TEmnsWmXJDUs/JVBHZ1mm0YYVwodKZrB/M5+cGLFQSQ=;
+        s=k20201202; t=1689950765;
+        bh=wh6KYtzokKI1f+cHkXEXNVb0673Gyg8MDVYmR2faJbk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ff2bfvQPYK3WN0eWpu7T2UKzfeJr2bzFGQxDpiQZ0fRjVznK3erjY1q6B8hxx4lYh
-         LeyACy60yUzdqJgjVOnnf/niMMTsCoylFMJK6VfdeAqVd0VdaDFhZjGIemImOXUM7l
-         dzmm4Tjnus4jMwVOgh93PSTcp+7seP7+2STiwsm83AmBDMHpY98BCu+U/Qn8XhUFRG
-         BgVz1rsPOA44KAG2xm+efmIwoh2FPUdtVAaxg/UwpFObnM1grgnh8dIL1ORaVMPISX
-         qp3G0XpELX7LA1f2H5DPbyIMl+oe9QIvdRH9wYT/doahGagoWYXANv10wgrygEQn62
-         rC9dubqze14Nw==
-Date:   Fri, 21 Jul 2023 23:43:55 +0900
+        b=iizLVdNk4lIjiVLmrI2x8kWEyIIgNOUYOY9ZRzCSMKg1SC1Eu+EfLv5p9bG6HsEP/
+         kcvfllwNw5RtSXFG6Bt+A7CVznk8Z4Rp8JxXtoVvNUVAK8Be86+MSrQxBq7cuhKcJz
+         BJkHODcv3/DMA5l4ZX6EeaOmrMGxhXIN5P/Y+OOEWDym2P5Amm3XAeoXkeVRifuAn5
+         ZChfDLzUMoCsYujaNDKPq0gVjzNdyEl5end721ZOF4A2M90sMsHveX3ZJmTTccEH6Q
+         gvWRbWHsG2Y11tpy1yoqj+yn2F021mvtAH2S8fEG90hBXHoUoVLPOlcabKYNOn/MG2
+         8XrAmdstbibRQ==
+Date:   Fri, 21 Jul 2023 23:45:59 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
@@ -49,11 +49,12 @@ Cc:     Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Dave Tucker <datucker@redhat.com>,
         Derek Barbosa <debarbos@redhat.com>,
         Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 2/5] perf bench uprobe: Print diff to baseline
-Message-Id: <20230721234355.b0a7ae245a2010d4a5c08a52@kernel.org>
-In-Reply-To: <20230719204910.539044-3-acme@kernel.org>
+Subject: Re: [PATCH 1/5] perf bench uprobe: Add benchmark to test uprobe
+ overhead
+Message-Id: <20230721234559.cef77903e1cff359dbb06dfd@kernel.org>
+In-Reply-To: <20230719204910.539044-2-acme@kernel.org>
 References: <20230719204910.539044-1-acme@kernel.org>
-        <20230719204910.539044-3-acme@kernel.org>
+        <20230719204910.539044-2-acme@kernel.org>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -62,16 +63,38 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, 19 Jul 2023 17:49:07 -0300
+On Wed, 19 Jul 2023 17:49:06 -0300
 Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
-> This is just prep work to show the diff to the unmodified workload.
+> This just adds the initial "workload", a call to libc's usleep(1000us)
+> function:
+> 
+>   $ perf stat --null perf bench uprobe all
+>   # Running uprobe/baseline benchmark...
+>   # Executed 1000 usleep(1000) calls
+>        Total time: 1053533 usecs
+> 
+>    1053.533 usecs/op
+> 
+>    Performance counter stats for 'perf bench uprobe all':
+> 
+>          1.061042896 seconds time elapsed
+> 
+>          0.001079000 seconds user
+>          0.006499000 seconds sys
+> 
+>   $
+> 
+> More entries will be added using a BPF skel to add various uprobes to
+> the usleep() function.
 
-Looks good to me, just one comment below.
+Looks good to me. 
 
 Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks,
 
 > 
 > Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -85,57 +108,162 @@ Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > Cc: Namhyung Kim <namhyung@kernel.org>
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > ---
->  tools/perf/bench/uprobe.c | 27 ++++++++++++++++++++++++---
->  1 file changed, 24 insertions(+), 3 deletions(-)
+>  tools/perf/Documentation/perf-bench.txt |  3 +
+>  tools/perf/bench/Build                  |  1 +
+>  tools/perf/bench/bench.h                |  1 +
+>  tools/perf/bench/uprobe.c               | 80 +++++++++++++++++++++++++
+>  tools/perf/builtin-bench.c              |  6 ++
+>  5 files changed, 91 insertions(+)
+>  create mode 100644 tools/perf/bench/uprobe.c
 > 
-> diff --git a/tools/perf/bench/uprobe.c b/tools/perf/bench/uprobe.c
-> index 707174220a76701f..60e7c43298d8cf56 100644
-> --- a/tools/perf/bench/uprobe.c
-> +++ b/tools/perf/bench/uprobe.c
-> @@ -34,6 +34,29 @@ static const char * const bench_uprobe_usage[] = {
->  	NULL
->  };
+> diff --git a/tools/perf/Documentation/perf-bench.txt b/tools/perf/Documentation/perf-bench.txt
+> index f04f0eaded985fc8..ca5789625cd2b8e5 100644
+> --- a/tools/perf/Documentation/perf-bench.txt
+> +++ b/tools/perf/Documentation/perf-bench.txt
+> @@ -67,6 +67,9 @@ SUBSYSTEM
+>  'internals'::
+>  	Benchmark internal perf functionality.
 >  
-> +static int bench_uprobe_format__default_fprintf(const char *name, const char *unit, u64 diff, FILE *fp)
+> +'uprobe'::
+> +	Benchmark overhead of uprobe + BPF.
+> +
+>  'all'::
+>  	All benchmark subsystems.
+>  
+> diff --git a/tools/perf/bench/Build b/tools/perf/bench/Build
+> index 0f158dc8139bbd0d..47412d47dccfeff2 100644
+> --- a/tools/perf/bench/Build
+> +++ b/tools/perf/bench/Build
+> @@ -16,6 +16,7 @@ perf-y += inject-buildid.o
+>  perf-y += evlist-open-close.o
+>  perf-y += breakpoint.o
+>  perf-y += pmu-scan.o
+> +perf-y += uprobe.o
+>  
+>  perf-$(CONFIG_X86_64) += mem-memcpy-x86-64-asm.o
+>  perf-$(CONFIG_X86_64) += mem-memset-x86-64-asm.o
+> diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
+> index 0d2b65976212333a..201311f75c964df2 100644
+> --- a/tools/perf/bench/bench.h
+> +++ b/tools/perf/bench/bench.h
+> @@ -42,6 +42,7 @@ int bench_inject_build_id(int argc, const char **argv);
+>  int bench_evlist_open_close(int argc, const char **argv);
+>  int bench_breakpoint_thread(int argc, const char **argv);
+>  int bench_breakpoint_enable(int argc, const char **argv);
+> +int bench_uprobe_baseline(int argc, const char **argv);
+>  int bench_pmu_scan(int argc, const char **argv);
+>  
+>  #define BENCH_FORMAT_DEFAULT_STR	"default"
+> diff --git a/tools/perf/bench/uprobe.c b/tools/perf/bench/uprobe.c
+> new file mode 100644
+> index 0000000000000000..707174220a76701f
+> --- /dev/null
+> +++ b/tools/perf/bench/uprobe.c
+> @@ -0,0 +1,80 @@
+> +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +/*
+> + * uprobe.c
+> + *
+> + * uprobe benchmarks
+> + *
+> + *  Copyright (C) 2023, Red Hat Inc, Arnaldo Carvalho de Melo <acme@redhat.com>
+> + */
+> +#include "../perf.h"
+> +#include "../util/util.h"
+> +#include <subcmd/parse-options.h>
+> +#include "../builtin.h"
+> +#include "bench.h"
+> +#include <linux/time64.h>
+> +
+> +#include <inttypes.h>
+> +#include <stdio.h>
+> +#include <sys/time.h>
+> +#include <sys/types.h>
+> +#include <time.h>
+> +#include <unistd.h>
+> +#include <stdlib.h>
+> +
+> +#define LOOPS_DEFAULT 1000
+> +static int loops = LOOPS_DEFAULT;
+> +
+> +static const struct option options[] = {
+> +	OPT_INTEGER('l', "loop",	&loops,		"Specify number of loops"),
+> +	OPT_END()
+> +};
+> +
+> +static const char * const bench_uprobe_usage[] = {
+> +	"perf bench uprobe <options>",
+> +	NULL
+> +};
+> +
+> +static int bench_uprobe(int argc, const char **argv)
 > +{
-> +	static u64 baseline;
-> +	s64 diff_to_baseline = diff - baseline;
-> +	int printed = fprintf(fp, "# Executed %'d %s calls\n", loops, name);
+> +	const char *name = "usleep(1000)", *unit = "usec";
+> +	struct timespec start, end;
+> +	u64 diff;
+> +	int i;
 > +
-> +	printed += fprintf(fp, " %14s: %'" PRIu64 " %ss", "Total time", diff, unit);
+> +	argc = parse_options(argc, argv, options, bench_uprobe_usage, 0);
 > +
-> +	if (baseline)
-> +		printed += fprintf(fp, " %s%'" PRId64 " to baseline", diff_to_baseline > 0 ? "+" : "", diff_to_baseline);
+> +	clock_gettime(CLOCK_REALTIME, &start);
 > +
-> +	printed += fprintf(fp, "\n\n %'.3f %ss/op", (double)diff / (double)loops, unit);
-
-Just a nit, do we need to repeat (double) cast on the denominator side too?
-
+> +	for (i = 0; i < loops; i++) {
+> +		usleep(USEC_PER_MSEC);
+> +	}
 > +
-> +	if (baseline)
-> +		printed += fprintf(fp, " %'.3f %ss/op to baseline", (double)diff_to_baseline / (double)loops, unit);
-> +	else
-> +		baseline = diff;
+> +	clock_gettime(CLOCK_REALTIME, &end);
 > +
-> +	fputc('\n', fp);
+> +	diff = end.tv_sec * NSEC_PER_SEC + end.tv_nsec - (start.tv_sec * NSEC_PER_SEC + start.tv_nsec);
+> +	diff /= NSEC_PER_USEC;
 > +
-> +	return printed + 1;
+> +	switch (bench_format) {
+> +	case BENCH_FORMAT_DEFAULT:
+> +		printf("# Executed %'d %s calls\n", loops, name);
+> +		printf(" %14s: %'" PRIu64 " %ss\n\n", "Total time", diff, unit);
+> +		printf(" %'.3f %ss/op\n", (double)diff / (double)loops, unit);
+> +		break;
+> +
+> +	case BENCH_FORMAT_SIMPLE:
+> +		printf("%" PRIu64 "\n", diff);
+> +		break;
+> +
+> +	default:
+> +		/* reaching here is something of a disaster */
+> +		fprintf(stderr, "Unknown format:%d\n", bench_format);
+> +		exit(1);
+> +	}
+> +
+> +	return 0;
 > +}
 > +
->  static int bench_uprobe(int argc, const char **argv)
->  {
->  	const char *name = "usleep(1000)", *unit = "usec";
-> @@ -56,9 +79,7 @@ static int bench_uprobe(int argc, const char **argv)
+> +int bench_uprobe_baseline(int argc, const char **argv)
+> +{
+> +	return bench_uprobe(argc, argv);
+> +}
+> diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
+> index db435b791a09b69b..09637aee83413e63 100644
+> --- a/tools/perf/builtin-bench.c
+> +++ b/tools/perf/builtin-bench.c
+> @@ -104,6 +104,11 @@ static struct bench breakpoint_benchmarks[] = {
+>  	{ NULL,	NULL, NULL },
+>  };
 >  
->  	switch (bench_format) {
->  	case BENCH_FORMAT_DEFAULT:
-> -		printf("# Executed %'d %s calls\n", loops, name);
-> -		printf(" %14s: %'" PRIu64 " %ss\n\n", "Total time", diff, unit);
-> -		printf(" %'.3f %ss/op\n", (double)diff / (double)loops, unit);
-> +		bench_uprobe_format__default_fprintf(name, unit, diff, stdout);
->  		break;
->  
->  	case BENCH_FORMAT_SIMPLE:
+> +static struct bench uprobe_benchmarks[] = {
+> +	{ "baseline",	"Baseline libc usleep(1000) call",	bench_uprobe_baseline,	},
+> +	{ NULL,	NULL, NULL },
+> +};
+> +
+>  struct collection {
+>  	const char	*name;
+>  	const char	*summary;
+> @@ -123,6 +128,7 @@ static struct collection collections[] = {
+>  #endif
+>  	{ "internals",	"Perf-internals benchmarks",			internals_benchmarks	},
+>  	{ "breakpoint",	"Breakpoint benchmarks",			breakpoint_benchmarks	},
+> +	{ "uprobe",	"uprobe benchmarks",				uprobe_benchmarks	},
+>  	{ "all",	"All benchmarks",				NULL			},
+>  	{ NULL,		NULL,						NULL			}
+>  };
 > -- 
 > 2.41.0
 > 
