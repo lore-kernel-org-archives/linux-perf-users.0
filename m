@@ -2,149 +2,184 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F76EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Jul 2023 00:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 084EFEB64DC
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Jul 2023 05:15:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230012AbjGUAin (ORCPT
+        id S229519AbjGUFPd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Jul 2023 20:38:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37826 "EHLO
+        Fri, 21 Jul 2023 01:15:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229500AbjGUAim (ORCPT
+        with ESMTP id S229450AbjGUFPc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Jul 2023 20:38:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51575272A
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Jul 2023 17:38:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DB65A61CD6
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Jul 2023 00:38:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C1B6C433C8;
-        Fri, 21 Jul 2023 00:38:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689899918;
-        bh=YUqCTJKd11G947Iu4AkFd6wVW29p+NEL0O+TW6oAc1k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=rvhppO1qtk0hJpPK+lCWHJgP1ADmzk3DqaX0FDXYZx/hLNz1pKAczMDquAqvjZSoQ
-         ksEXeM5cS18ARt4IMchNU2VzHUO0dijJb0ORshk7Ifdo5WiH/QZXAUEVdwF46M/a7X
-         6/LJzrx8mdeU0XhI6V5z3QMx3fYAEvoGJqbVxAhXvte0neBu2EuVh7sulcw7syvXgy
-         0FuAagOyPFHhVaCkNYuOdCgJtqfJ6b7BRdl3I1eiwyWTIclcCJNCWEsI7zJc3RhaPQ
-         0xOagsJJLALFRRzGt1rIn8WDvek9Yw1qDVOMvM2IJh2WNXbR03WtnyorMqAJJaXUl7
-         UGUGB/HdGmn2A==
-Date:   Fri, 21 Jul 2023 09:38:34 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     linux-perf-users@vger.kernel.org
-Subject: Re: perf probe: Trying to read a 'ctx' named local variable
-Message-Id: <20230721093834.a3e39a0adc0814cd655ead70@kernel.org>
-In-Reply-To: <ZLlHagQuZGAhOk50@kernel.org>
-References: <ZLWDEjvFjrrEJODp@kernel.org>
-        <20230718085451.f6e099de7d34f2ae3dc4b7fe@kernel.org>
-        <ZLlHagQuZGAhOk50@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 21 Jul 2023 01:15:32 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2079.outbound.protection.outlook.com [40.107.92.79])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD14619B2;
+        Thu, 20 Jul 2023 22:15:30 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=K1OiHD2tar/mAPuXzNGvRl3piUoEAwKqsq6DlhAX/MrXLY2ggdYjsVmwkqUVmTu761g9ysfvGRUr2qHhiT6mP3UpsoE109Lz0PjuVcGttWBWs04VxlAjzJMJQwNHM6HBNrrR3PdG6cm6AQtcLTASTyIk4kHtnkKeCl8LxR35qHqS0uYcxWVaF/5hOkQC4o00YPiltie+9ooYpeOWR2VBYNOmoZ/StAJqdk+rlV7YmpiXAbYdwAxZoBNorO5ukgN2PVRXwsVB4d02SISYiKeBng4GySNw74Fdr9gt3EjMBmw9s0UecUAghn1gtNUOu08Ybjvl3c0RHVfaXjA3Oem3rA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XsjZqe/jHcJbKiBDrhq4EE3RAZxdsbx85KxdVIdqRZU=;
+ b=lplUUUo+RA0JEfumTfhHEbNCN8RgkFHSnTeUqzmRfunM0lE4qjQ3kAOxFuKtldHs9u3QMsSpawBLnuab1Kda2iRvHcfoE1i3Kpgj1hB8nzYZV0LtY9OftLQ+QmABkC8y7Gu+bnUVjzyQyFr29KPGSZe4OMbYlA3G3m29BuAOKDMscKPsT/drQk913HNGJ14bJBTJ/HxRY5A8i0QcP8XC8wyBU1QuwQakPrVDpjnyzx5Bvz+8Vq2oAWBBC/zXpGgIp6tR0AgCpux4H1OoplOL7it3sHBsIq+dy+oShgAW36UIBkLK8jZM3W7qOH3j/qjqps2MnLIz1wGA6J1r2AVKFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XsjZqe/jHcJbKiBDrhq4EE3RAZxdsbx85KxdVIdqRZU=;
+ b=o8Vm27OhCVdMIMHZ2Tyf8P9ipA8CGJ8ycv0RkoXeGQQf+FZ7zwvCwelo/CiuPWsDND9rsT6rkZHD8Rrh6vk5fy0lxrShFzVAEeTIpwAT70Mx+ehBFstN/Xs2GjkWFbh28ME/ogH45DSVtfsjgqozDiWLxM/anHCpUpuh2lc8E3g=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB5713.namprd12.prod.outlook.com (2603:10b6:208:370::18)
+ by CY5PR12MB6034.namprd12.prod.outlook.com (2603:10b6:930:2e::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.24; Fri, 21 Jul
+ 2023 05:15:27 +0000
+Received: from MN0PR12MB5713.namprd12.prod.outlook.com
+ ([fe80::8ba3:7aea:769f:718f]) by MN0PR12MB5713.namprd12.prod.outlook.com
+ ([fe80::8ba3:7aea:769f:718f%7]) with mapi id 15.20.6609.026; Fri, 21 Jul 2023
+ 05:15:27 +0000
+Message-ID: <19be0aea-30b2-2aa2-12d7-57f668d759cb@amd.com>
+Date:   Fri, 21 Jul 2023 10:45:09 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/6] perf vendor events amd: Add Zen 4 memory controller
+ events
+To:     Ian Rogers <irogers@google.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        x86@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, adrian.hunter@intel.com, tglx@linutronix.de,
+        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+        eranian@google.com, ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com
+References: <cover.1689748843.git.sandipan.das@amd.com>
+ <a70b1ef6ab427b768f21401af280d235dd095412.1689748843.git.sandipan.das@amd.com>
+ <CAP-5=fX1NQzus3MQapmBrdgEhDG4+XmawgytfugHHOKD0E-COg@mail.gmail.com>
+ <fef0492b-60c3-70ea-c7f1-370bf2734fc3@amd.com>
+ <CAP-5=fX=1t51+a9=Fj-xt4zyLw9OG44bu9wRdPsu2hPoh8cNZQ@mail.gmail.com>
+Content-Language: en-US
+From:   Sandipan Das <sandipan.das@amd.com>
+In-Reply-To: <CAP-5=fX=1t51+a9=Fj-xt4zyLw9OG44bu9wRdPsu2hPoh8cNZQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN2PR01CA0222.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:ea::12) To MN0PR12MB5713.namprd12.prod.outlook.com
+ (2603:10b6:208:370::18)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB5713:EE_|CY5PR12MB6034:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0dab5008-1dd0-48c7-3486-08db89a97eb0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zeOEAO3FHXnnTMkeBBHZyJ6NQJxLP/7poLeZ5FioNeV5pNx+PoQh5cvwBKYtuP+sA7btkd4wiKNPltkZQZOX8gyGlz+/SYAPjH3c7ZRpFUcA25Ll8p3IzXjEEZkWaxlNdY3j9egLtiC+De/FDhXcktyh9lvkvS/RJMwxXHXyYwxgkMpbtYfUhAgS+yYbG/DCx/GlqnBSFDvUGgTo4V6vRdleQGQRk6dOLMchT2zsgb+EqFbMN0VUkap4yZc5V3vUOJ4npnIfPoEfXl/t4z028+ZolOROJxOjEMmBY5FNJ4XYzUFg92RO0uWu+e6wO7uFNNB0e3lVsrWe2rSnjbIaZ9C4RicFg5ECq9j28Vudv9POW9Y3P6uJXIJRdFVvbwiDIqi/7PxBoSA2NT4o8LpEyQLPYrGrmmCEoqEH8ayiwoes77UuiO9bd3v8yipmpygZP1cacq+Xa6syqDgLoL0ySBLN1ZYB7iTnWCEmFz80b9a2zJSkzaDsjDLB02oJINR9GuSpftFSioBEUN+7ddxgcm8+IzqHGPkUupMAssL+lsd7teSUwk+mXfeAcK7RQ5xQ8rP0V1oLMMzLE4kHTxQ1uahEn8lMe0d6/i6RXU4g5XfsA3DSEz/4jy5x20Lw38/5b5QkP3My/6vDzgd7xIBDIw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB5713.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(396003)(39860400002)(346002)(376002)(366004)(451199021)(83380400001)(2616005)(2906002)(38100700002)(66556008)(316002)(66946007)(478600001)(4326008)(6486002)(6916009)(53546011)(41300700001)(6506007)(26005)(186003)(66476007)(31686004)(6512007)(31696002)(36756003)(5660300002)(44832011)(8936002)(8676002)(86362001)(7416002)(6666004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WUlpcWNWbHVzc3NRL09VREZrZ1ErSWRVdnFmTDBZaHNJREkzSUdGYitxNHhO?=
+ =?utf-8?B?V0NEN1RrY0JiUDNiMllLSkJGS1dYVHluNDZjSGVlTm54QldrV3JsV2JiSXMy?=
+ =?utf-8?B?d2dDN0RoK2hTL0JseWpuazFjWDNoY0R2ZS9QWXp1TXVYOFZBZnhDY1ByUy8x?=
+ =?utf-8?B?SFVoOFdCUjE0UElmQVFCRm5zcyswekphOStHYllTc2hpZE1obXRTMjBlK1Uv?=
+ =?utf-8?B?bUdLWGthdkZrbGJhTWNuK0JsMndkNDhRVE5tckVoL1J4b3BrZmxxRGZ5MEow?=
+ =?utf-8?B?WXBMOUFWMXJRQVlBZVVSN1ZKVzhUMmxRR3FzZjBqbkpSSmRRV0NtOTVMM1Nx?=
+ =?utf-8?B?NEpQQXFwYTMwRmZVUVl5SStKZ2cvN0hwdmpoa3NSd0U0dEg1VWdtY3NtU2M2?=
+ =?utf-8?B?djNwbk5Lb29HeGp5QnEwc0czd0s3ZGV6cFVmOWszK0hjczYvOERaeDZYakxu?=
+ =?utf-8?B?NURkNXpHc2hNOUZUUTUzV0tSRS9ZYmdPZ2ZkRXNJTjBzYU9UNG9abGs3WDZ2?=
+ =?utf-8?B?cmN2TzBkTXhMMjdPSU9ESVVGaVA3VHVwd3BWTmdFckZ2RTN2NzVnbnhhSW9F?=
+ =?utf-8?B?RWpBV3AxRXdBRmVGTGV3Uk1la0tuQlRCUUxuNUltRUYrSVZPWVZvM1gxcmJz?=
+ =?utf-8?B?c1B6bU1pRHRmRVkwMW44MEpwQ01YeFdHSHJVRitzS2w1UC9zVG1KeGthYU9k?=
+ =?utf-8?B?ekNPdGNIRXRnRDRySGlKNXlrajBJTzZOR0xsM1hrcXp0ZlFOZVN4elNJQ2NU?=
+ =?utf-8?B?aW1kb09CT2pBQWNNOXd5cEtCSUpHSTFZWmR5c2xwTWF2MVdZcVlqVFYvVGNq?=
+ =?utf-8?B?dmoxWlp0QUNCOU9vUlltZTFTNlBnaGQzTEhCMVhJRVpNZThCaUVTcDRLM08y?=
+ =?utf-8?B?Z2E5UEsrenNLaFFxa0RLQXIrb3VZa3Vqd1JtL0ZGTVRTeUtHR05WU0FsSHpD?=
+ =?utf-8?B?YXg4eVV3dDJzdEVvR3RFNUdwSjQvbE9Hc0ZyYVRWU2hHUUZObnBvVGU4c25p?=
+ =?utf-8?B?dUNVYmJ6VVR2OWxMZTF2blNhMzJGV0pnUDNBYmlzUVFyZkk4cG5TNUJoMFB5?=
+ =?utf-8?B?SVRFSGkzbWhGWG9aSlM2UmtXa3pqRk9jSkdaSFNJdE9yck83S2VPc0xNTG9k?=
+ =?utf-8?B?WlYxckFXNmltOTFQL2RIOS80QnR5V2ZpeFgvL05Ka3lEdW5CNlo5SHdzVFBi?=
+ =?utf-8?B?SVZUaDNkQzZaUWcxa2lYM3ROeWF4MVMxQ0lzRzZBMFFZVzJVdWh5NFBUK3Qy?=
+ =?utf-8?B?YmM2cFJ5Z0dQV0pxQTdLM3BSaGhFM09UQ1FoVVkyajY5RW1jZVg4Y0Q4MjRq?=
+ =?utf-8?B?VXNzZTRDeTI4SUIwSHlOQ3FmSkNrYWxvZTMzVklKSVo1bmVBYjNJem5QZWtY?=
+ =?utf-8?B?NktjVWdqZFFQRVhiR2hnZkdhUUl3N1krZUdWSnZqcHlmUkY0Z3FHTkRhdkFq?=
+ =?utf-8?B?NzV2ZzJ6cTJvdVR0cW9ZMXZUemc3aEEvdUE4akRGZWNuZWROdUdCd2crVFVP?=
+ =?utf-8?B?bjNzL0xPbTVjRnZ0YWpPeVNOQ2FvVE9ONk1qUWtFZUFNR3d2NkpzZ2hGbjlx?=
+ =?utf-8?B?eVEvUzRHMDZ5MlgzOWpMNkpPZkFXRU5RMWdhNGRhWFpHbm80aTlPTC9vY0dV?=
+ =?utf-8?B?eWd1SlNNWVhiRy9qRFJ4UTAxcGlZZU9tcTFjQ3I1WE94NUV1YXo3UEltMTNN?=
+ =?utf-8?B?YW1rMmxrNVZPYWNkRXlkaVlzdmNJVXBGUnY5NUV3RGprOWQwZ095WjdZbjFH?=
+ =?utf-8?B?aEJmYTFacytGTnBReElNVTA1eUt5dnFRN3dPckNSbmtGY2NOOFJMaWhNelJD?=
+ =?utf-8?B?SVM1bUR3MmgzWkYxckl5RGdsTXlIQXB4YWpHWEw2YUZaY3F0WVgwR0RNck4z?=
+ =?utf-8?B?eVhNK2R1S2ZadFlna0RMZEMzaXJ2N2F5VGdQVzJoZUhvTmh4NEQ2bkZDVXpx?=
+ =?utf-8?B?NGx1VzFJSlIzcVRCYlEvVWsveERPMDBVLzVwSUVFZm02anVzYVgvY1ZEU2pH?=
+ =?utf-8?B?NDNoNk9XaW03T3VPOGRLZndRUWNEeXdEb1RHKzJ0Y054d0dFYU5TZVcyc0Zr?=
+ =?utf-8?B?eWxPVDZJaTlrZGpwZkQ4OHhXOGJCNVNjU0Iwekp3bmdqZVpCOGM4VUNrbXFV?=
+ =?utf-8?Q?UUaZgHAhNchRCR1giFE1awtPr?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0dab5008-1dd0-48c7-3486-08db89a97eb0
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB5713.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2023 05:15:27.4700
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZjqCD7g23QuzDpG4jEb9wRR/+vUwOgYu0t6ZkciUIGQTkVR3bGyFiztC2EYgvnIjX6oSB4g717PacDnjojGiEw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6034
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 20 Jul 2023 11:40:42 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-
-> Em Tue, Jul 18, 2023 at 08:54:51AM +0900, Masami Hiramatsu escreveu:
-> > On Mon, 17 Jul 2023 15:06:10 -0300
-> > Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > 
-> > > Hi Masami,
-> > > 
-> > > 	Trying to use perf to debug perf I stumbled on this:
-> > > 
-> > > [root@quaco ~]# perf probe -x ~/bin/perf -L sigtrap_handler
-> > > <sigtrap_handler@/home/acme/git/perf-tools/tools/perf/tests/sigtrap.c:0>
-> > >       0  sigtrap_handler(int signum __maybe_unused, siginfo_t *info, void *ucontext __maybe_unused)
-> > >          {
-> > >                 if (!__atomic_fetch_add(&ctx.signal_count, 1, __ATOMIC_RELAXED))
-> > >       3                 ctx.first_siginfo = *info;
-> > >       4         __atomic_fetch_sub(&ctx.tids_want_signal, syscall(SYS_gettid), __ATOMIC_RELAXED);
-> > >          }
-> > > 
-> > >          static void *test_thread(void *arg)
-> > > 
-> > > [root@quaco ~]# perf probe -x ~/bin/perf sigtrap_handler:4 "ctx.signal_count"
-> > > Failed to write event: Invalid argument
-> > > Please upgrade your kernel to at least 3.14 to have access to feature @ctx
-> > >   Error: Failed to add events.
-> > > [root@quaco ~]#
-> > 
-> > Ah, this is a wrong usage (I'm also trapped the same thing). Correctly, it should
-> > pass it as a single parameter.
-> > 
-> > perf probe -x ~/bin/perf "sigtrap_handler:4 ctx.signal_count"
+On 7/20/2023 9:20 PM, Ian Rogers wrote:
+> On Wed, Jul 19, 2023 at 10:23 PM Sandipan Das <sandipan.das@amd.com> wrote:
+>>
+>> On 7/19/2023 9:42 PM, Ian Rogers wrote:
+>>> On Tue, Jul 18, 2023 at 11:58 PM Sandipan Das <sandipan.das@amd.com> wrote:
+>>>>
+>>>> Make the jevents parser aware of the Unified Memory Controller (UMC) PMU
+>>>> and add events taken from Section 8.2.1 "UMC Performance Monitor Events"
+>>>> of the Processor Programming Reference (PPR) for AMD Family 19h Model 11h
+>>>> processors. The events capture UMC command activity such as CAS, ACTIVATE,
+>>>> PRECHARGE etc. while the metrics derive data bus utilization and memory
+>>>> bandwidth out of these events.
+>>>>
+>>>> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+>>>
+>>> Acked-by: Ian Rogers <irogers@google.com>
+>>>
+>>>> ---
+>>>>  .../arch/x86/amdzen4/memory-controller.json   | 101 ++++++++++++++++++
+>>>>  .../arch/x86/amdzen4/recommended.json         |  84 +++++++++++++++
+>>>>  tools/perf/pmu-events/jevents.py              |   2 +
+>>>>  3 files changed, 187 insertions(+)
+>>>>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/memory-controller.json
+>>>>
+>>>> diff --git a/tools/perf/pmu-events/arch/x86/amdzen4/memory-controller.json b/tools/perf/pmu-events/arch/x86/amdzen4/memory-controller.json
+>>>> new file mode 100644
+>>>> index 000000000000..55263e5e4f69
+>>>> --- /dev/null
+>>>> +++ b/tools/perf/pmu-events/arch/x86/amdzen4/memory-controller.json
+>>>> @@ -0,0 +1,101 @@
+>>>> +[
+>>>> +  {
+>>>> +    "EventName": "umc_mem_clk",
+>>>> +    "PublicDescription": "Number of memory clock cycles.",
+>>>> +    "EventCode": "0x00",
+>>>> +    "PerPkg": "1",
+>>>> +    "Unit": "UMCPMC"
+>>>
+>>> nit: Why use UMCPMC and then rewrite to amd_umc, why not just use "amd_umc" ?
+>>>
+>>
+>> I followed the convention that has been historically used for AMD uncore PMUs e.g.
+>> the "Unit" for amd_df is "DFPMC" and for amd_l3 is "L3PMC". I do agree that its
+>> simpler to use the same naming so will change this. If you prefer, I can send out
+>> a separate patch to change the unit naming for amd_df and amd_l3.
 > 
-> [root@five ~]# perf probe -x ~/bin/perf "sigtrap_handler:4 ctx.signal_count"
-> Failed to write event: Invalid argument
-> Please upgrade your kernel to at least 3.14 to have access to feature @ctx
->   Error: Failed to add events.
-> [root@five ~]#
+> Thanks for the explanation. I don't mind but it is nicer to have fewer
+> renames imo. If we get rid of one, perhaps we can get rid of them all?
+> Perhaps merge this and follow up with simplification.
 > 
-> Didn't work?
 
-Ah, I got it. The error message is wrong.
+Sure, sounds good.
 
-/sys/kernel/debug/tracing# cat error_log 
-[122869.758693] trace_uprobe: error: Symbol is not available with uprobe
-  Command: p:probe_perf/sigtrap_handler_L4 /usr/local/bin/perf:0xfc8e9 signal_count=@ctx+4:s32
-                                                                                                          ^
-"ctx" is not a local variable in this context and @ctx (global variable) is not
-accessible from uprobe events.
-Hmm, it must be checked while parsing the debuginfo.
-
-Thank you,
-
-> 
-> - Arnaldo
->  
-> > This is for adding several events at the same time. But now it becomes just a trap.
-> > Can I change the syntax from
-> > 
-> > perf probe [OPTIONS] <PROBE-DEFINITION> [PROBE-DEFINITION...]
-> > 
-> > To,
-> > 
-> > perf probe [OPTIONS] <PROBE-POINT> [ARGS...]
-> > 
-> > ?
-> > 
-> > We can keep --add having optional parameter as below.
-> > 
-> > perf probe [OPTIONS] --add <PROBE-DEFINITION>
-> > 
-> > Thank you,
-> > 
-> > > 
-> > > [root@quaco ~]# uname -a
-> > > Linux quaco 6.3.8-100.fc37.x86_64 #1 SMP PREEMPT_DYNAMIC Thu Jun 15 01:51:54 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
-> > > [root@quaco ~]# rpm -qa | grep kernel-debuginfo
-> > > kernel-debuginfo-common-x86_64-6.3.8-100.fc37.x86_64
-> > > kernel-debuginfo-6.3.8-100.fc37.x86_64
-> > > [root@quaco ~]#
-> > > 
-> > > -- 
-> > > 
-> > > - Arnaldo
-> > 
-> > 
-> > -- 
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> -- 
-> 
-> - Arnaldo
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+- Sandipan
