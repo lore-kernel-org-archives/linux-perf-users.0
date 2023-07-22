@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F613C001B0
-	for <linux-perf-users@archiver.kernel.org>; Sat, 22 Jul 2023 09:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 451F9C001E0
+	for <linux-perf-users@archiver.kernel.org>; Sat, 22 Jul 2023 09:35:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229933AbjGVJet (ORCPT
+        id S230024AbjGVJfE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 22 Jul 2023 05:34:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56344 "EHLO
+        Sat, 22 Jul 2023 05:35:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229571AbjGVJer (ORCPT
+        with ESMTP id S229890AbjGVJes (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 22 Jul 2023 05:34:47 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B72930E2;
-        Sat, 22 Jul 2023 02:34:44 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4R7LpS6Xx2zrRnN;
-        Sat, 22 Jul 2023 17:33:52 +0800 (CST)
+        Sat, 22 Jul 2023 05:34:48 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B85E730F1;
+        Sat, 22 Jul 2023 02:34:47 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.56])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4R7LpZ0cCkz18LVd;
+        Sat, 22 Jul 2023 17:33:58 +0800 (CST)
 Received: from localhost.localdomain (10.67.174.95) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Sat, 22 Jul 2023 17:34:40 +0800
+ 15.1.2507.27; Sat, 22 Jul 2023 17:34:44 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -32,10 +32,12 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <ak@linux.intel.com>, <anshuman.khandual@arm.com>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
 CC:     <yangjihong1@huawei.com>
-Subject: [PATCH v3 0/7] perf record: Track sideband events for all CPUs when tracing selected CPUs
-Date:   Sat, 22 Jul 2023 09:32:12 +0000
-Message-ID: <20230722093219.174898-1-yangjihong1@huawei.com>
+Subject: [PATCH v3 7/7] perf test: Add perf_event_attr test for record selected CPUs exclude_user
+Date:   Sat, 22 Jul 2023 09:32:19 +0000
+Message-ID: <20230722093219.174898-8-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
+In-Reply-To: <20230722093219.174898-1-yangjihong1@huawei.com>
+References: <20230722093219.174898-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -47,129 +49,53 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-User space tasks can migrate between CPUs, track sideband events for all
-CPUs.
+If all (non-dummy) evsel have exclude_user, system_wide sideband is not
+needed. Add this test scenario.
 
-The specific scenarios are as follows:
-
-         CPU0                                 CPU1
-  perf record -C 0 start
-                              taskA starts to be created and executed
-                                -> PERF_RECORD_COMM and PERF_RECORD_MMAP
-                                   events only deliver to CPU1
-                              ......
-                                |
-                          migrate to CPU0
-                                |
-  Running on CPU0    <----------/
-  ...
-
-  perf record -C 0 stop
-
-Now perf samples the PC of taskA. However, perf does not record the
-PERF_RECORD_COMM and PERF_RECORD_COMM events of taskA.
-Therefore, the comm and symbols of taskA cannot be parsed.
-
-The sys_perf_event_open invoked is as follows:
-
-  # perf --debug verbose=3 record -e cpu-clock -C 1 true
-  <SNIP>
-  Opening: cpu-clock
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             1 (PERF_TYPE_SOFTWARE)
-    size                             136
-    config                           0 (PERF_COUNT_SW_CPU_CLOCK)
-    { sample_period, sample_freq }   4000
-    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
-    read_format                      ID|LOST
-    disabled                         1
-    inherit                          1
-    freq                             1
-    sample_id_all                    1
-    exclude_guest                    1
-  ------------------------------------------------------------
-  sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
-  Opening: dummy:u
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             1 (PERF_TYPE_SOFTWARE)
-    size                             136
-    config                           0x9 (PERF_COUNT_SW_DUMMY)
-    { sample_period, sample_freq }   1
-    sample_type                      IP|TID|TIME|CPU|IDENTIFIER
-    read_format                      ID|LOST
-    inherit                          1
-    exclude_kernel                   1
-    exclude_hv                       1
-    mmap                             1
-    comm                             1
-    task                             1
-    sample_id_all                    1
-    exclude_guest                    1
-    mmap2                            1
-    comm_exec                        1
-    ksymbol                          1
-    bpf_event                        1
-  ------------------------------------------------------------
-  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
-  sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 7
-  sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 9
-  sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 10
-  sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 11
-  sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 12
-  sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 13
-  sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
-  <SNIP>
-
-Changes since_v2:
- - Rename record_tracking.sh to record_sideband.sh in tools/perf/tests/shell.
- - Remove "perf evlist: Skip dummy event sample_type check for evlist_config" patch.
- - Add opts->all_kernel check in record__config_tracking_events().
- - Add perf_event_attr test for record selected CPUs exclude_user.
- - Update base-record & system-wide-dummy sample_type attr expected values for test-record-C0.
-
-Changes since v1:
- - Add perf_evlist__go_system_wide() via internal/evlist.h instead of
-   exporting perf_evlist__propagate_maps().
- - Use evlist__add_aux_dummy() instead of evlist__add_dummy() in
-   evlist__findnew_tracking_event().
- - Add a parameter in evlist__findnew_tracking_event() to deal with
-   system_wide inside.
- - Add sideband for all CPUs when tracing selected CPUs comments on
-   the perf record man page.
- - Use "sideband events" instead of "tracking events".
- - Adjust the patches Sequence.
- - Add patch5 to skip dummy event sample_type check for evlist_config.
- - Add patch6 to update system-wide-dummy attr values for perf test.
-
-Yang Jihong (7):
-  perf evlist: Add perf_evlist__go_system_wide() helper
-  perf evlist: Add evlist__findnew_tracking_event() helper
-  perf record: Move setting dummy tracking before
-    record__init_thread_masks()
-  perf record: Track sideband events for all CPUs when tracing selected
-    CPUs
-  perf test: Update base-record & system-wide-dummy attr expected values
-    for test-record-C0
-  perf test: Add test case for record sideband events
-  perf test: Add perf_event_attr test for record selected CPUs
-    exclude_user
-
- tools/lib/perf/evlist.c                       |  9 +++
- tools/lib/perf/include/internal/evlist.h      |  2 +
- tools/perf/Documentation/perf-record.txt      |  3 +
- tools/perf/builtin-record.c                   | 76 ++++++++++++-------
- tools/perf/tests/attr/system-wide-dummy       | 14 ++--
- tools/perf/tests/attr/test-record-C0          |  4 +-
- .../tests/attr/test-record-C0-exclude_user    | 32 ++++++++
- tools/perf/tests/shell/record_sideband.sh     | 44 +++++++++++
- tools/perf/util/evlist.c                      | 18 +++++
- tools/perf/util/evlist.h                      |  1 +
- 10 files changed, 168 insertions(+), 35 deletions(-)
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ .../tests/attr/test-record-C0-exclude_user    | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
  create mode 100644 tools/perf/tests/attr/test-record-C0-exclude_user
- create mode 100755 tools/perf/tests/shell/record_sideband.sh
 
+diff --git a/tools/perf/tests/attr/test-record-C0-exclude_user b/tools/perf/tests/attr/test-record-C0-exclude_user
+new file mode 100644
+index 000000000000..2d7549277c1e
+--- /dev/null
++++ b/tools/perf/tests/attr/test-record-C0-exclude_user
+@@ -0,0 +1,32 @@
++[config]
++command = record
++args    = --no-bpf-event --all-kernel -C 0 kill >/dev/null 2>&1
++ret     = 1
++
++[event:base-record]
++cpu=0
++
++# no enable on exec for CPU attached
++enable_on_exec=0
++
++# PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_TIME |
++# PERF_SAMPLE_PERIOD | PERF_SAMPLE_IDENTIFIER
++# + PERF_SAMPLE_CPU added by -C 0
++sample_type=65927
++
++# Dummy event handles mmaps, comm and task.
++mmap=0
++comm=0
++task=0
++
++# exclude_user for all-kernel option
++exclude_user=1
++
++[event:system-wide-dummy]
++
++# system_wide is not need for all (non-dummy) events have exclude_user
++cpu=0
++
++# exclude_user for all-kernel option
++exclude_user=1
++exclude_kernel=0
 -- 
 2.30.GIT
 
