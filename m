@@ -2,119 +2,84 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B563C00528
-	for <linux-perf-users@archiver.kernel.org>; Sat, 22 Jul 2023 09:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC1EC41513
+	for <linux-perf-users@archiver.kernel.org>; Sun, 23 Jul 2023 08:22:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229808AbjGVJfF (ORCPT
+        id S229833AbjGWIWa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 22 Jul 2023 05:35:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56366 "EHLO
+        Sun, 23 Jul 2023 04:22:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229769AbjGVJes (ORCPT
+        with ESMTP id S229452AbjGWIW3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 22 Jul 2023 05:34:48 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43AB730F0;
-        Sat, 22 Jul 2023 02:34:47 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4R7LpX4mfJzrRmX;
-        Sat, 22 Jul 2023 17:33:56 +0800 (CST)
-Received: from localhost.localdomain (10.67.174.95) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Sat, 22 Jul 2023 17:34:44 +0800
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-        <james.clark@arm.com>, <tmricht@linux.ibm.com>,
-        <ak@linux.intel.com>, <anshuman.khandual@arm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-CC:     <yangjihong1@huawei.com>
-Subject: [PATCH v3 6/7] perf test: Add test case for record sideband events
-Date:   Sat, 22 Jul 2023 09:32:18 +0000
-Message-ID: <20230722093219.174898-7-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.30.GIT
-In-Reply-To: <20230722093219.174898-1-yangjihong1@huawei.com>
-References: <20230722093219.174898-1-yangjihong1@huawei.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.95]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+        Sun, 23 Jul 2023 04:22:29 -0400
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 425A110C8;
+        Sun, 23 Jul 2023 01:22:27 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0Vnzn8Ns_1690100515;
+Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0Vnzn8Ns_1690100515)
+          by smtp.aliyun-inc.com;
+          Sun, 23 Jul 2023 16:22:22 +0800
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+To:     John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>
+Subject: [PATCH v4 0/4] Add metric for Arm CMN
+Date:   Sun, 23 Jul 2023 16:21:49 +0800
+Message-Id: <1690100513-61165-1-git-send-email-renyu.zj@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add a new test case to record sideband events for all CPUs when tracing
-selected CPUs
+Hi all,
 
-Test result:
+This patch set adds event aliases and metrics for Arm CMN, and expands
+Compat's ability to match multiple identifiers and expands event fields
+in order to achieve the above capabilities.
 
-  # ./perf test list 2>&1 | grep 'perf record sideband tests'
-   95: perf record sideband tests
-  # ./perf test 95
-   95: perf record sideband tests                                      : Ok
+If it is no longer necessary to declare the "Compat" or "Unit" value
+when the metric is described by event aliases, I will delete "Compat"
+and "Unit" in the metric, but keep them for now.
 
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
----
- tools/perf/tests/shell/record_sideband.sh | 44 +++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100755 tools/perf/tests/shell/record_sideband.sh
+Changes since v3:
+- Split the arm CMN and ali_drw PMU patches compare to v3. ali_drw PMU
+  related patches are in another patchset.
+- "Compat" supports matching multiple identifiers.
+- Support more event filed.
+- Add alias for part of Arm CMN PMU.
+- Fix some bug for CMN metric description.
+- Link: https://lore.kernel.org/all/1685438374-33287-1-git-send-email-renyu.zj@linux.alibaba.com/
 
-diff --git a/tools/perf/tests/shell/record_sideband.sh b/tools/perf/tests/shell/record_sideband.sh
-new file mode 100755
-index 000000000000..2ecf00011cb1
---- /dev/null
-+++ b/tools/perf/tests/shell/record_sideband.sh
-@@ -0,0 +1,44 @@
-+#!/bin/sh
-+# perf record sideband tests
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+err=0
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+
-+can_cpu_wide()
-+{
-+    if ! perf record -o ${perfdata} -BN --no-bpf-event -C $1 true 2>&1 >/dev/null
-+    then
-+        echo "record sideband test [Skipped cannot record cpu$1]"
-+        err=2
-+    fi
-+
-+    rm -f ${perfdata}
-+    return $err
-+}
-+
-+test_system_wide_tracking()
-+{
-+    # Need CPU 0 and CPU 1
-+    can_cpu_wide 0 || return 0
-+    can_cpu_wide 1 || return 0
-+
-+    # Record on CPU 0 a task running on CPU 1
-+    perf record -BN --no-bpf-event -o ${perfdata} -C 0 -- taskset --cpu-list 1 true
-+
-+    # Should get MMAP events from CPU 1
-+    mmap_cnt=`perf script -i ${perfdata} --show-mmap-events -C 1 2>/dev/null | grep MMAP | wc -l`
-+
-+    rm -f ${perfdata}
-+
-+    if [ ${mmap_cnt} -gt 0 ] ; then
-+        return 0
-+    fi
-+
-+    echo "Failed to record MMAP events on CPU 1 when tracing CPU 0"
-+    return 1
-+}
-+
-+test_system_wide_tracking
+Jing Zhang (4):
+  perf metric: Event "Compat" value supports matching multiple
+    identifiers
+  perf jevents: Support more event fields
+  perf vendor events: Add alias for Arm CMN PMU events.
+  perf vendor events: Add metrics for Arm CMN
+
+ .../pmu-events/arch/arm64/arm/cmn/sys/cmn.json     | 266 +++++++++++++++++++++
+ .../pmu-events/arch/arm64/arm/cmn/sys/metric.json  |  74 ++++++
+ tools/perf/pmu-events/jevents.py                   |  23 +-
+ tools/perf/util/metricgroup.c                      |  27 ++-
+ 4 files changed, 381 insertions(+), 9 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json
+
 -- 
-2.30.GIT
+1.8.3.1
 
