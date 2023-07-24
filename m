@@ -2,162 +2,123 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC348C001B0
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jul 2023 16:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96957C0015E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jul 2023 17:54:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229537AbjGXQ6l (ORCPT
+        id S231901AbjGXRyX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Jul 2023 12:58:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46290 "EHLO
+        Mon, 24 Jul 2023 13:54:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229481AbjGXQ6k (ORCPT
+        with ESMTP id S231910AbjGXRyF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Jul 2023 12:58:40 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BB76126
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Jul 2023 09:58:39 -0700 (PDT)
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36OGbnPM025792;
-        Mon, 24 Jul 2023 16:58:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=SEeEt1/gcnQOQ2uaDKY1YS9JdPPgF+gNd/5X/HLnQ0o=;
- b=mEmhHGWwAB3qw/zBN0zYtmpiEp3XPf/zMFXUKToiphjlgdHGXTsQLaKibjWND3Rl+vyN
- ZL+OHmv0Az8bNOYquIp0po6Jdb7uNRPH503px3ytSg99b9bzEh3XcG2zx3vLx7QJwZyX
- k4k29cVrN+X+Bv6HNLA8YdZUa8ej05biZlkDsCBuBrdKS4BGJpimwqDQ8I6uZWqSYw/d
- qlUZGf7lDMy4j5aihg5rqL5Qc3kklMJ3uUAywBPFfAkToZ09b/nzPHK0rF5IFcrZkXBe
- YQvgpMSkHvy3d6eS0HcXxsZ9BWI0VOb3N5/fkx3nfzJnJodg7N/Dhjvf94QbaW9Cki5U Pg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s1t2ep674-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Jul 2023 16:58:26 +0000
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36OGcNYL030357;
-        Mon, 24 Jul 2023 16:58:26 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s1t2ep66m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Jul 2023 16:58:26 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-        by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36OFApb8014406;
-        Mon, 24 Jul 2023 16:58:24 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-        by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3s0stxn4pk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Jul 2023 16:58:24 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36OGwLk544040862
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jul 2023 16:58:21 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 672B720043;
-        Mon, 24 Jul 2023 16:58:21 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B242A20040;
-        Mon, 24 Jul 2023 16:58:18 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.66.145])
-        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Jul 2023 16:58:18 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
-        namhyung@kernel.org
-Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-Subject: [PATCH] tools/perf: Fix addr location init during arch_skip_callchain_idx function
-Date:   Mon, 24 Jul 2023 22:28:15 +0530
-Message-Id: <20230724165815.17810-1-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
+        Mon, 24 Jul 2023 13:54:05 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E77B3C3A;
+        Mon, 24 Jul 2023 10:52:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1690221130; x=1721757130;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=A7TMcwc2FKHptC0Rm44KdH9oKvYd6rBLX1wakGjXXak=;
+  b=cLnfm291kkOd6uQ28uFyTx9/d4C04N5qc1X/3pYaFcWj5buljxOLLZV5
+   vMzRAp7ZW5cbZPpxSi1aAK3sDP7hoeklhytXQYFNq7QomLY5FF8WGSkME
+   OtCfwedITwz7H4oyCxHs8B6b1eHCGVyA0edRslwenTv4DDMksOzLy4fAr
+   yuPwhQBNfK79A2ljFbbzVflq1q28Jq4NSJ4mG7W3H6WuUWpDAR5/NUkWD
+   R2K2qdm4ytt4ZbVWg9WV1l1xMNxP3FvrgXS6koXDi6acGXgNqzpoiqQlQ
+   kyM58iPnZkwIhRxxqgLWnlr6GfqkSMbzWkcyxUFVji1zTUcdr/ahZaH0N
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10781"; a="367538804"
+X-IronPort-AV: E=Sophos;i="6.01,228,1684825200"; 
+   d="scan'208";a="367538804"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2023 10:51:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10781"; a="729005959"
+X-IronPort-AV: E=Sophos;i="6.01,228,1684825200"; 
+   d="scan'208";a="729005959"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.33.18])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2023 10:51:20 -0700
+Message-ID: <5a24632a-4293-3009-e4c6-e81d6ceb8f07@intel.com>
+Date:   Mon, 24 Jul 2023 20:51:15 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 5DxQflGR6DcLF8xNGTTXg83EhE5bI9W1
-X-Proofpoint-GUID: FbdRUrbGBbRjgiFbRGkmCa70pIuSjBG3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-24_12,2023-07-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=999 priorityscore=1501 malwarescore=0 bulkscore=0
- lowpriorityscore=0 spamscore=0 mlxscore=0 adultscore=0 phishscore=0
- clxscore=1015 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2306200000 definitions=main-2307240148
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.13.0
+Subject: Re: [PATCH v3 0/3] perf: add new option '--workload-attr' to set
+ workload sched_policy/priority/mask
+Content-Language: en-US
+To:     Changbin Du <changbin.du@huawei.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hui Wang <hw.huiwang@huawei.com>
+References: <20230718033355.2960912-1-changbin.du@huawei.com>
+ <5889e93b-5ee3-8d59-c2fb-bce7070a1ab2@intel.com>
+ <20230724040229.eipq7i43v4xcrq3p@M910t>
+ <05b67e8c-6ba0-5774-93fd-d390ac4e3b19@intel.com>
+ <20230724093418.ntluetxruz3ufqnl@M910t>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20230724093418.ntluetxruz3ufqnl@M910t>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-perf record with callchain recording fails as below
-in powerpc:
+On 24/07/23 12:34, Changbin Du wrote:
+> On Mon, Jul 24, 2023 at 08:44:12AM +0300, Adrian Hunter wrote:
+>> On 24/07/23 07:02, Changbin Du wrote:
+>>> On Thu, Jul 20, 2023 at 01:00:58PM +0300, Adrian Hunter wrote:
+>>>> On 18/07/23 06:33, Changbin Du wrote:
+>>>>> This adds a new option '--workload-attr' to set the sched_policy/priority/mask
+>>>>> of the workload to reduce system noise.
+>>>>>
+>>>>> $ sudo perf stat --workload-attr fifo,40,0-3:7 -- ls
+>>>>
+>>>> Not really sold on the need for this, but maybe it could be
+>>>> simpler.
+>>>> What about just adding a hook for a command (e.g. script) to
+>>>> run before exec'ing the workload e.g.
+>>>>
+>>>> --configure-workload=blah.sh
+>>>>
+>>>> results in perf doing system("blah.sh 12345") where 12345
+>>>> is the workload PID.
+>>>>
+>>>> Then maybe you could do:
+>>>>
+>>>> --configure-workload="taskset -p 0x3"
+>>>>
+>>> Acctually, we already have such option for perf-stat.
+>>>
+>>> 	--post <command>  command to run after to the measured command
+>>>         --pre <command>   command to run prior to the measured command
+>>>
+>>> By involving a shell script we can do more complex setup. But sometimes I just
+>>> need to set sched attributes. For example, to investigate the impact of
+>>> various compiler optimizations. In this case, I don't want a script. This is the
+>>> original purpose I try to add this new option.
+>>
+>> There is also command schedtool, but what exactly is the problem
+>> with a script?
+>>
+>>>
+> There is no problem with a script, just a shortcut for convenience. When I want
+> to share perf investigation with somebody, I just need to share a single commandline.
+> Anyway nothing bad, right? :)
 
-    ./perf record -a -gR sleep 10
-    ./perf report
-    perf: Segmentation fault
+Also depends on what you call a single commandline, since you could
+always create the script and run perf in one long line :-)
 
-gdb trace points to thread__find_map
-
-    0  0x00000000101df314 in atomic_cmpxchg (newval=1818846826, oldval=1818846827, v=0x1001a8f3) at /home/athira/linux/tools/include/asm-generic/atomic-gcc.h:70
-    1  refcount_sub_and_test (i=1, r=0x1001a8f3) at /home/athira/linux/tools/include/linux/refcount.h:135
-    2  refcount_dec_and_test (r=0x1001a8f3) at /home/athira/linux/tools/include/linux/refcount.h:148
-    3  map__put (map=0x1001a8b3) at util/map.c:311
-    4  0x000000001016842c in __map__zput (map=0x7fffffffa368) at util/map.h:190
-    5  thread__find_map (thread=0x105b92f0, cpumode=<optimized out>, addr=13835058055283572736, al=al@entry=0x7fffffffa358) at util/event.c:582
-    6  0x000000001016882c in thread__find_symbol (thread=<optimized out>, cpumode=<optimized out>, addr=<optimized out>, al=0x7fffffffa358) at util/event.c:656
-    7  0x00000000102e12b4 in arch_skip_callchain_idx (thread=<optimized out>, chain=<optimized out>) at arch/powerpc/util/skip-callchain-idx.c:255
-    8  0x00000000101d3bf4 in thread__resolve_callchain_sample (thread=0x105b92f0, cursor=0x1053d160, evsel=<optimized out>, sample=0x7fffffffa908, parent=0x7fffffffa778, root_al=0x7fffffffa710,
-        max_stack=<optimized out>) at util/machine.c:2940
-    9  0x00000000101cd210 in sample__resolve_callchain (sample=<optimized out>, cursor=<optimized out>, parent=<optimized out>, evsel=<optimized out>, al=<optimized out>, max_stack=<optimized out>)
-        at util/callchain.c:1112
-    10 0x000000001022a9d8 in hist_entry_iter__add (iter=0x7fffffffa750, al=0x7fffffffa710, max_stack_depth=<optimized out>, arg=0x7fffffffbbd0) at util/hist.c:1232
-    11 0x0000000010056d98 in process_sample_event (tool=0x7fffffffbbd0, event=0x7ffff6223c38, sample=0x7fffffffa908, evsel=<optimized out>, machine=0x10524ef8) at builtin-report.c:332
-
-Here arch_skip_callchain_idx calls thread__find_symbol and which
-invokes thread__find_map with uninitialised "addr_location".
-Snippet:
-
-thread__find_symbol(thread, PERF_RECORD_MISC_USER, ip, &al);
-
-Recent change with commit 0dd5041c9a0ea ("perf addr_location:
-Add init/exit/copy functions"), introduced "maps__zput" in the
-function thread__find_map. This could result in segfault while
-accessing uninitialised map from "struct addr_location". Fix this
-by adding addr_location__init and addr_location__exit in
-arch_skip_callchain_idx.
-
-Fixes: 0dd5041c9a0ea ("perf addr_location: Add init/exit/copy functions")
-Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- tools/perf/arch/powerpc/util/skip-callchain-idx.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/tools/perf/arch/powerpc/util/skip-callchain-idx.c b/tools/perf/arch/powerpc/util/skip-callchain-idx.c
-index b7223feec770..5f3edb3004d8 100644
---- a/tools/perf/arch/powerpc/util/skip-callchain-idx.c
-+++ b/tools/perf/arch/powerpc/util/skip-callchain-idx.c
-@@ -250,6 +250,7 @@ int arch_skip_callchain_idx(struct thread *thread, struct ip_callchain *chain)
- 	if (!chain || chain->nr < 3)
- 		return skip_slot;
- 
-+	addr_location__init(&al);
- 	ip = chain->ips[1];
- 
- 	thread__find_symbol(thread, PERF_RECORD_MISC_USER, ip, &al);
-@@ -259,6 +260,7 @@ int arch_skip_callchain_idx(struct thread *thread, struct ip_callchain *chain)
- 
- 	if (!dso) {
- 		pr_debug("%" PRIx64 " dso is NULL\n", ip);
-+		addr_location__exit(&al);
- 		return skip_slot;
- 	}
- 
-@@ -279,5 +281,7 @@ int arch_skip_callchain_idx(struct thread *thread, struct ip_callchain *chain)
- 		 */
- 		skip_slot = 3;
- 	}
-+
-+	addr_location__exit(&al);
- 	return skip_slot;
- }
--- 
-2.25.1
+I would still go for the simpler option: easier to maintain and
+potentially more flexible.
 
