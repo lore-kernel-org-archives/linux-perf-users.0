@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75095EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jul 2023 21:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77565EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jul 2023 21:15:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230165AbjGXVJd (ORCPT
+        id S230418AbjGXVPX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Jul 2023 17:09:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46806 "EHLO
+        Mon, 24 Jul 2023 17:15:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229532AbjGXVJc (ORCPT
+        with ESMTP id S229598AbjGXVPV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Jul 2023 17:09:32 -0400
-Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EAA810E3
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Jul 2023 14:09:31 -0700 (PDT)
-Received: by mail-qv1-xf2a.google.com with SMTP id 6a1803df08f44-63cf6b21035so13849526d6.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Jul 2023 14:09:31 -0700 (PDT)
+        Mon, 24 Jul 2023 17:15:21 -0400
+Received: from mail-qv1-xf34.google.com (mail-qv1-xf34.google.com [IPv6:2607:f8b0:4864:20::f34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 067A7139
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Jul 2023 14:15:20 -0700 (PDT)
+Received: by mail-qv1-xf34.google.com with SMTP id 6a1803df08f44-63cf8754d95so8070906d6.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Jul 2023 14:15:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1690232970; x=1690837770;
+        d=google.com; s=20221208; t=1690233319; x=1690838119;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=F4R7OXxyA6++6H908qvwT/4xVlAoInx/mRJrgLvZp3I=;
-        b=7VPLC3FM4ARsMPpxFByktScwoRDHY1+O3k6ji1oMHXcyc6BWzJO2kc65fqEz/njpKS
-         1e7OlV2JEjMDqg5/b/8JhzaVftGznHjCljWM27BrP56UMgo4L8DdTIELZGyd7UD9rWPk
-         qQbnqI5NpI7yY40RMK0+86Sbiiv6BJBD6PmxYo61TZv00unQD3dW63wIjlZ4uU5YLag4
-         6T0PNkCCqQKY3fRRiocbDQLEC+UAeiYQ8kf5hL3Z5wM+rOMs1zhoGu6GcqpFEj1KU9Dh
-         YSpeA+8GtomB9U/LAI/r00dP87tOUdSYkkqZmSXVpqurgoIAKEF3A5KjksJiib/fhSTg
-         muAA==
+        bh=w4rysK55oB8iprX5PsN92lskw7NnrBKRNpCCq0EizyQ=;
+        b=1BXELcHUXg/+rCkwfBoa14IfiR2Q6aqU9PgFbw47oz0uC3np3HFNCaFz7ScGSD5/Mq
+         DQ2deQyYa6L8MreNAP/kbkznCiJ5lVuxnhfnrHFfd7TilrEZNfgf05J4hKAWXPiFXCKp
+         w2saThXCYP65xSFqvvNKuNizMsmiRJkbU1CrPzPT6jgiRpEfH5PpOv1qTdGsIVNhCvAe
+         Gntw2xb1FeAwbgsih7FPFGkyqFi3TaKSwJrgCjzW3MJ1FEezE8GysHleA1+80rYFJBqh
+         nI1ugr89BQt/oT26XVioNDLE/paobBJMMPO2VpTFOpV8yTf+D95fnySZsTO0RH7SoWAV
+         YxUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690232970; x=1690837770;
+        d=1e100.net; s=20221208; t=1690233319; x=1690838119;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=F4R7OXxyA6++6H908qvwT/4xVlAoInx/mRJrgLvZp3I=;
-        b=OOpbSGuBmVLvWP6Gee8Z0c/Vl6RQ2Xt36LeZJyvL68p8pqc+If4bxUTnfvUBuA+cdc
-         yYG86+yB1JQ6WzymSFW6SASdlylcDiqeLIyRMTqlI/GiiAhUhaBnXpUUNH5dDciVj0Mj
-         jip2Jkjst3ei8sX9az44/X3sNFpLoX/1EZGJQQ0SPnL0YzIZTKKD5NKgTy3r7tP/wOn4
-         uP2gZdDpSN6OddgyWkpds1m4pXIs6Rd7go9MrJCMDxQqc/BwSaNGkWEukFPCdENHNq7R
-         7BAX9om+N6fDiq526pskd2HMyFeFBtuduShwltHe6YqwqfKqzxxpnpJvkIb0qnkbnbp9
-         UIEg==
-X-Gm-Message-State: ABy/qLZMjR+Y+TEVD1uFf4CmXD3lj8No+x7RyzMJejIosRl+yxrOO+AM
-        kS41GvngcFoWab/OerrtKC4oNbbrA4oYVQkZeWdN0Q==
-X-Google-Smtp-Source: APBJJlEVIiJyEgN+QVsm2PLjyvD1Ou20SgK8rwynWuqyeHMek9W1M6VLm3dl9IiVVE8IhJUcTcukic+uVZi3kHIPE+c=
-X-Received: by 2002:a05:6214:11b0:b0:63c:fac8:ec0b with SMTP id
- u16-20020a05621411b000b0063cfac8ec0bmr786313qvv.39.1690232970451; Mon, 24 Jul
- 2023 14:09:30 -0700 (PDT)
+        bh=w4rysK55oB8iprX5PsN92lskw7NnrBKRNpCCq0EizyQ=;
+        b=DVP2MfMmV+AxKFbaVTWLwmett9ZtN56osotGNtCDAppGbWwhsO+n0M+i1LYAzOfqaz
+         9vkfaPP/VMR9J4+U5+lonGDjwlrseoy8IeSQVsnmt1H8iU/E4mjzEesPjZbcJE/Uu/ps
+         L9vDzGNYXSMNN9zZJ+ECrUpgj83GKH4DtcflIVIewuEZg389/13ozWSRxk4nC3cl0JG/
+         82O7WzShr0aB4UEA8MUEt3+/a162RRbMQQ5BYh5e+o4w6N/CTvwUh0v2GdkQVp62lUcx
+         k+xKXLIPGRDKc7NLTPPMVcjNEo4qQBgF7N3jaokndib25dDQr9MJ3YqVNOrbd/ci7Uoc
+         oBEA==
+X-Gm-Message-State: ABy/qLYwXlE55I76MfLXxXkgwIiVIwbms+7LSzRinW9yw3B74mS/diwa
+        j5edI4H3ybgktLZQm1r6obrRB/VB3dKLuSmUf+gEnw==
+X-Google-Smtp-Source: APBJJlGzkKPEZS/cCDJEywZijBo4Ycb4UpPFNxCPqzb5sG8S3hNQy1Vf6sw4+I8SpcgyjWOXfG3YKaJb/rNkKkoJIKU=
+X-Received: by 2002:a0c:facf:0:b0:635:e4ed:b6c9 with SMTP id
+ p15-20020a0cfacf000000b00635e4edb6c9mr949080qvo.24.1690233319030; Mon, 24 Jul
+ 2023 14:15:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230724201247.748146-1-irogers@google.com> <20230724201247.748146-2-irogers@google.com>
-In-Reply-To: <20230724201247.748146-2-irogers@google.com>
+References: <20230724201247.748146-1-irogers@google.com>
+In-Reply-To: <20230724201247.748146-1-irogers@google.com>
 From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 24 Jul 2023 14:09:19 -0700
-Message-ID: <CAKwvOdnNgd9QgvrR5H2rL8eb1Qc--ELCcOie8Bv=xTFqg9Zh-A@mail.gmail.com>
-Subject: Re: [PATCH v1 1/4] perf stat: Avoid uninitialized use of perf_stat_config
+Date:   Mon, 24 Jul 2023 14:15:07 -0700
+Message-ID: <CAKwvOd=12eSPyc5ZRgm8NPMJYjj13QOxcnHtv_Y7Ws-zffyUrA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/4] Perf tool LTO support
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -83,65 +83,18 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 On Mon, Jul 24, 2023 at 1:12=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
 te:
 >
-> perf_event__read_stat_config will assign values based on number of
-> tags and tag values. Initialize the structs to zero before they are
-> assigned so that no uninitialized values can be seen.
->
-> This potential error was reported by GCC with LTO enabled.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/tests/stat.c | 2 +-
->  tools/perf/util/stat.c  | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/tests/stat.c b/tools/perf/tests/stat.c
-> index 500974040fe3..706780fb5695 100644
-> --- a/tools/perf/tests/stat.c
-> +++ b/tools/perf/tests/stat.c
-> @@ -27,7 +27,7 @@ static int process_stat_config_event(struct perf_tool *=
-tool __maybe_unused,
->                                      struct machine *machine __maybe_unus=
-ed)
->  {
->         struct perf_record_stat_config *config =3D &event->stat_config;
-> -       struct perf_stat_config stat_config;
-> +       struct perf_stat_config stat_config =3D {};
+> Add a build flag, LTO=3D1, so that perf is built with the -flto
+> flag. Address some build errors this configuration throws up.
 
-^ how did this code ever work?
+Hi Ian,
+Thanks for the performance numbers. Any sense of what the build time
+numbers might look like for building perf with LTO?
 
-1. stat_config is not initialized
-2. perf_event__read_stat_config maybe assigns to &stat_config->__val
-3. process_stat_config_event() tests other members of stat_config
-
-I hope I've missed something obvious.
-
-
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
->
->  #define HAS(term, val) \
->         has_term(config, PERF_STAT_CONFIG_TERM__##term, val)
-> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> index 967e583392c7..ec3506042217 100644
-> --- a/tools/perf/util/stat.c
-> +++ b/tools/perf/util/stat.c
-> @@ -729,7 +729,7 @@ size_t perf_event__fprintf_stat_round(union perf_even=
-t *event, FILE *fp)
->
->  size_t perf_event__fprintf_stat_config(union perf_event *event, FILE *fp=
-)
->  {
-> -       struct perf_stat_config sc;
-> +       struct perf_stat_config sc =3D {};
->         size_t ret;
->
->         perf_event__read_stat_config(&sc, &event->stat_config);
-> --
-> 2.41.0.487.g6d72f3e995-goog
->
-
-
+Does `-flto=3Dthin` in clang's case make a meaningful difference of
+`-flto`? I'd recommend that over "full LTO" `-flto` when the
+performance difference of the result isn't too meaningful.  ThinLTO
+should be faster to build, but I don't know that I've ever built perf,
+so IDK what to expect.
 --=20
 Thanks,
 ~Nick Desaulniers
