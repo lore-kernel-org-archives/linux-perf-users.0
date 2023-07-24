@@ -2,123 +2,162 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBE2C0015E
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jul 2023 16:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC348C001B0
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jul 2023 16:58:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229544AbjGXQlt (ORCPT
+        id S229537AbjGXQ6l (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Jul 2023 12:41:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37042 "EHLO
+        Mon, 24 Jul 2023 12:58:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231496AbjGXQls (ORCPT
+        with ESMTP id S229481AbjGXQ6k (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Jul 2023 12:41:48 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3096C10D3;
-        Mon, 24 Jul 2023 09:41:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 783336127C;
-        Mon, 24 Jul 2023 16:41:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB0FAC433C9;
-        Mon, 24 Jul 2023 16:41:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690216904;
-        bh=slY2K6qUOwPVZDMW1XxpN8Wk8aylahbaAaTLXnyOJ6k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=s6eYP1XzTniWCT9wWlRFkQ/ubGlokLLoGu1+cHpeAzSMZPl8+SKFaI+FiqCxP8hEs
-         O1ZuNLGqlqTTPoREWhELqmcTt9JH4couhmX2cXVPOhgwzSiOZPxM2kPMnR4nEHYo2c
-         YIrsu1oehctcBzhBfrhdFDtjv7yfr8fZjY4y97TSRJRnBN0ZgkOgSdIYzL6LA0vG+m
-         4lRylbMPK1GnwVGTEFsjFyDhvOZ8e3zuPnr2+f3AmPwcNp4vUa/W0e1HSa4cNOKsf1
-         GIgFXIqqT50ipBGJSUktQgLfXD2r169xCOYQaIbWWS1GPgB28ZbmFMWmbyu3E3EHwq
-         kSfH3MB5Vcfdg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C73F240516; Mon, 24 Jul 2023 13:41:41 -0300 (-03)
-Date:   Mon, 24 Jul 2023 13:41:41 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     James Clark <james.clark@arm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>
-Cc:     Haixin Yu <yuhaixin.yhx@linux.alibaba.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf arm64: Fix read PMU cpu slots
-Message-ID: <ZL6pxZ4RmMC2W7S+@kernel.org>
-References: <ZL4G7rWXkfv-Ectq@B-Q60VQ05P-2326.local>
- <2e392aa9-859a-75ef-eb3e-1870b1e78061@linux.alibaba.com>
+        Mon, 24 Jul 2023 12:58:40 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BB76126
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Jul 2023 09:58:39 -0700 (PDT)
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36OGbnPM025792;
+        Mon, 24 Jul 2023 16:58:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=SEeEt1/gcnQOQ2uaDKY1YS9JdPPgF+gNd/5X/HLnQ0o=;
+ b=mEmhHGWwAB3qw/zBN0zYtmpiEp3XPf/zMFXUKToiphjlgdHGXTsQLaKibjWND3Rl+vyN
+ ZL+OHmv0Az8bNOYquIp0po6Jdb7uNRPH503px3ytSg99b9bzEh3XcG2zx3vLx7QJwZyX
+ k4k29cVrN+X+Bv6HNLA8YdZUa8ej05biZlkDsCBuBrdKS4BGJpimwqDQ8I6uZWqSYw/d
+ qlUZGf7lDMy4j5aihg5rqL5Qc3kklMJ3uUAywBPFfAkToZ09b/nzPHK0rF5IFcrZkXBe
+ YQvgpMSkHvy3d6eS0HcXxsZ9BWI0VOb3N5/fkx3nfzJnJodg7N/Dhjvf94QbaW9Cki5U Pg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s1t2ep674-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Jul 2023 16:58:26 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36OGcNYL030357;
+        Mon, 24 Jul 2023 16:58:26 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s1t2ep66m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Jul 2023 16:58:26 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36OFApb8014406;
+        Mon, 24 Jul 2023 16:58:24 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+        by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3s0stxn4pk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Jul 2023 16:58:24 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36OGwLk544040862
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jul 2023 16:58:21 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 672B720043;
+        Mon, 24 Jul 2023 16:58:21 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B242A20040;
+        Mon, 24 Jul 2023 16:58:18 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.66.145])
+        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Mon, 24 Jul 2023 16:58:18 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
+        namhyung@kernel.org
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+Subject: [PATCH] tools/perf: Fix addr location init during arch_skip_callchain_idx function
+Date:   Mon, 24 Jul 2023 22:28:15 +0530
+Message-Id: <20230724165815.17810-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2e392aa9-859a-75ef-eb3e-1870b1e78061@linux.alibaba.com>
-X-Url:  http://acmel.wordpress.com
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 5DxQflGR6DcLF8xNGTTXg83EhE5bI9W1
+X-Proofpoint-GUID: FbdRUrbGBbRjgiFbRGkmCa70pIuSjBG3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-24_12,2023-07-24_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 priorityscore=1501 malwarescore=0 bulkscore=0
+ lowpriorityscore=0 spamscore=0 mlxscore=0 adultscore=0 phishscore=0
+ clxscore=1015 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2306200000 definitions=main-2307240148
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jul 24, 2023 at 03:40:12PM +0800, Jing Zhang escreveu:
-> 
-> 
-> 在 2023/7/24 下午1:06, Haixin Yu 写道:
-> > Commit f8ad6018ce3c ("perf pmu: Remove duplication around
-> >  EVENT_SOURCE_DEVICE_PATH") uses sysfs__read_ull to read a full
-> > sysfs path, which will never success. Fix it by read file directly.
-> > 
-> > Signed-off-by: Haixin Yu <yuhaixin.yhx@linux.alibaba.com>
-> > ---
-> >  tools/perf/arch/arm64/util/pmu.c | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/tools/perf/arch/arm64/util/pmu.c b/tools/perf/arch/arm64/util/pmu.c
-> > index 561de0cb6b95..512a8f13c4de 100644
-> > --- a/tools/perf/arch/arm64/util/pmu.c
-> > +++ b/tools/perf/arch/arm64/util/pmu.c
-> > @@ -54,10 +54,11 @@ double perf_pmu__cpu_slots_per_cycle(void)
-> >  		perf_pmu__pathname_scnprintf(path, sizeof(path),
-> >  					     pmu->name, "caps/slots");
-> >  		/*
-> > -		 * The value of slots is not greater than 32 bits, but sysfs__read_int
-> > -		 * can't read value with 0x prefix, so use sysfs__read_ull instead.
-> > +		 * The value of slots is not greater than 32 bits, but
-> > +		 * filename__read_int can't read value with 0x prefix,
-> > +		 * so use filename__read_ull instead.
-> >  		 */
-> > -		sysfs__read_ull(path, &slots);
-> > +		filename__read_ull(path, &slots);
-> >  	}
-> >  
-> >  	return slots ? (double)slots : NAN;
-> 
-> Yes, the function perf_pmu__pathname_scnprintf returns the complete slots file path "/sys/bus/xxxxx/caps/slots",
-> and sysfs__read_ull will add the prefix "/sys" to the path, so the final file path becomes "/sys/sys/bus/xxxx/caps/slots"
-> which does not exist, and the slots file cannot be successfully read, so sysfs__read_ull needs to be changed to the
-> filename__read_ull.
-> 
-> I tested it and it works well.
-> 
-> Tested-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+perf record with callchain recording fails as below
+in powerpc:
 
-I've applied this to my local branch, thanks.
+    ./perf record -a -gR sleep 10
+    ./perf report
+    perf: Segmentation fault
 
-I also added the missing:
+gdb trace points to thread__find_map
 
-Fixes: f8ad6018ce3c065a ("perf pmu: Remove duplication around EVENT_SOURCE_DEVICE_PATH")
+    0  0x00000000101df314 in atomic_cmpxchg (newval=1818846826, oldval=1818846827, v=0x1001a8f3) at /home/athira/linux/tools/include/asm-generic/atomic-gcc.h:70
+    1  refcount_sub_and_test (i=1, r=0x1001a8f3) at /home/athira/linux/tools/include/linux/refcount.h:135
+    2  refcount_dec_and_test (r=0x1001a8f3) at /home/athira/linux/tools/include/linux/refcount.h:148
+    3  map__put (map=0x1001a8b3) at util/map.c:311
+    4  0x000000001016842c in __map__zput (map=0x7fffffffa368) at util/map.h:190
+    5  thread__find_map (thread=0x105b92f0, cpumode=<optimized out>, addr=13835058055283572736, al=al@entry=0x7fffffffa358) at util/event.c:582
+    6  0x000000001016882c in thread__find_symbol (thread=<optimized out>, cpumode=<optimized out>, addr=<optimized out>, al=0x7fffffffa358) at util/event.c:656
+    7  0x00000000102e12b4 in arch_skip_callchain_idx (thread=<optimized out>, chain=<optimized out>) at arch/powerpc/util/skip-callchain-idx.c:255
+    8  0x00000000101d3bf4 in thread__resolve_callchain_sample (thread=0x105b92f0, cursor=0x1053d160, evsel=<optimized out>, sample=0x7fffffffa908, parent=0x7fffffffa778, root_al=0x7fffffffa710,
+        max_stack=<optimized out>) at util/machine.c:2940
+    9  0x00000000101cd210 in sample__resolve_callchain (sample=<optimized out>, cursor=<optimized out>, parent=<optimized out>, evsel=<optimized out>, al=<optimized out>, max_stack=<optimized out>)
+        at util/callchain.c:1112
+    10 0x000000001022a9d8 in hist_entry_iter__add (iter=0x7fffffffa750, al=0x7fffffffa710, max_stack_depth=<optimized out>, arg=0x7fffffffbbd0) at util/hist.c:1232
+    11 0x0000000010056d98 in process_sample_event (tool=0x7fffffffbbd0, event=0x7ffff6223c38, sample=0x7fffffffa908, evsel=<optimized out>, machine=0x10524ef8) at builtin-report.c:332
 
-This is another case where a 'perf test' entry would come in handy.
+Here arch_skip_callchain_idx calls thread__find_symbol and which
+invokes thread__find_map with uninitialised "addr_location".
+Snippet:
 
-James, please check and ack,
+thread__find_symbol(thread, PERF_RECORD_MISC_USER, ip, &al);
 
-- Arnaldo
+Recent change with commit 0dd5041c9a0ea ("perf addr_location:
+Add init/exit/copy functions"), introduced "maps__zput" in the
+function thread__find_map. This could result in segfault while
+accessing uninitialised map from "struct addr_location". Fix this
+by adding addr_location__init and addr_location__exit in
+arch_skip_callchain_idx.
+
+Fixes: 0dd5041c9a0ea ("perf addr_location: Add init/exit/copy functions")
+Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+ tools/perf/arch/powerpc/util/skip-callchain-idx.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/tools/perf/arch/powerpc/util/skip-callchain-idx.c b/tools/perf/arch/powerpc/util/skip-callchain-idx.c
+index b7223feec770..5f3edb3004d8 100644
+--- a/tools/perf/arch/powerpc/util/skip-callchain-idx.c
++++ b/tools/perf/arch/powerpc/util/skip-callchain-idx.c
+@@ -250,6 +250,7 @@ int arch_skip_callchain_idx(struct thread *thread, struct ip_callchain *chain)
+ 	if (!chain || chain->nr < 3)
+ 		return skip_slot;
+ 
++	addr_location__init(&al);
+ 	ip = chain->ips[1];
+ 
+ 	thread__find_symbol(thread, PERF_RECORD_MISC_USER, ip, &al);
+@@ -259,6 +260,7 @@ int arch_skip_callchain_idx(struct thread *thread, struct ip_callchain *chain)
+ 
+ 	if (!dso) {
+ 		pr_debug("%" PRIx64 " dso is NULL\n", ip);
++		addr_location__exit(&al);
+ 		return skip_slot;
+ 	}
+ 
+@@ -279,5 +281,7 @@ int arch_skip_callchain_idx(struct thread *thread, struct ip_callchain *chain)
+ 		 */
+ 		skip_slot = 3;
+ 	}
++
++	addr_location__exit(&al);
+ 	return skip_slot;
+ }
+-- 
+2.25.1
+
