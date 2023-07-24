@@ -2,34 +2,38 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7902DC001E0
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jul 2023 13:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F991C001DF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jul 2023 13:50:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231171AbjGXNs3 (ORCPT
+        id S231138AbjGXNuC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Jul 2023 09:48:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48574 "EHLO
+        Mon, 24 Jul 2023 09:50:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231216AbjGXNsR (ORCPT
+        with ESMTP id S231297AbjGXNto (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Jul 2023 09:48:17 -0400
+        Mon, 24 Jul 2023 09:49:44 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D5FE03C19;
-        Mon, 24 Jul 2023 06:45:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 52979421A;
+        Mon, 24 Jul 2023 06:47:02 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89D53FEC;
-        Mon, 24 Jul 2023 06:45:55 -0700 (PDT)
-Received: from e127643.broadband (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A854A3F67D;
-        Mon, 24 Jul 2023 06:45:09 -0700 (PDT)
-From:   James Clark <james.clark@arm.com>
-To:     linux-perf-users@vger.kernel.org, irogers@google.com,
-        anshuman.khandual@arm.com, will@kernel.org
-Cc:     James Clark <james.clark@arm.com>,
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF3FA1655;
+        Mon, 24 Jul 2023 06:47:22 -0700 (PDT)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1E8893F67D;
+        Mon, 24 Jul 2023 06:46:37 -0700 (PDT)
+Message-ID: <5876adba-0507-6bfd-6ede-74f8e7aa55f2@arm.com>
+Date:   Mon, 24 Jul 2023 14:46:35 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH 1/4] arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE capability
+To:     Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -39,58 +43,75 @@ Cc:     James Clark <james.clark@arm.com>,
         Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
         "H. Peter Anvin" <hpa@zytor.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 0/4] arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE capability
-Date:   Mon, 24 Jul 2023 14:44:55 +0100
-Message-Id: <20230724134500.970496-1-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+References: <20230710122138.1450930-1-james.clark@arm.com>
+ <20230710122138.1450930-2-james.clark@arm.com>
+ <e111d9ac-c4f6-c541-313b-7a3a6acfb5d2@arm.com>
+ <597f53e0-5a5b-75a1-4054-253630a941f2@arm.com>
+ <CAP-5=fVpjJLBNCd4LJ7krX1tpqUT-S_DCRebXR1ioTCGFsF6Pw@mail.gmail.com>
+ <20230721102131.GA12457@willie-the-truck>
+Content-Language: en-US
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20230721102131.GA12457@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Changes since v1:
 
-  * Removed "legacy" description of PERF_TYPE_HARDWARE and
-    PERF_TYPE_HW_CACHE events
-  * Shift down remaining capability bits instead of inserting
-    /* Unused */ in the gap (last commit)
 
-Applies to v6.5-rc3
+On 21/07/2023 11:21, Will Deacon wrote:
+> On Thu, Jul 20, 2023 at 10:12:21AM -0700, Ian Rogers wrote:
+>> On Tue, Jul 11, 2023 at 7:12 AM James Clark <james.clark@arm.com> wrote:
+>>>
+>>>
+>>>
+>>> On 11/07/2023 13:01, Anshuman Khandual wrote:
+>>>>
+>>>>
+>>>> On 7/10/23 17:51, James Clark wrote:
+>>>>> This capability gives us the ability to open PERF_TYPE_HARDWARE and
+>>>>> PERF_TYPE_HW_CACHE events on a specific PMU for free. All the
+>>>>> implementation is contained in the Perf core and tool code so no change
+>>>>> to the Arm PMU driver is needed.
+>>>>>
+>>>>> The following basic use case now results in Perf opening the event on
+>>>>> all PMUs rather than picking only one in an unpredictable way:
+>>>>>
+>>>>>   $ perf stat -e cycles -- taskset --cpu-list 0,1 stress -c 2
+>>>>>
+>>>>>    Performance counter stats for 'taskset --cpu-list 0,1 stress -c 2':
+>>>>>
+>>>>>          963279620      armv8_cortex_a57/cycles/                (99.19%)
+>>>>>          752745657      armv8_cortex_a53/cycles/                (94.80%)
+>>>>>
+>>>>> Fixes: 55bcf6ef314a ("perf: Extend PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE")
+>>>>> Suggested-by: Ian Rogers <irogers@google.com>
+>>>>> Signed-off-by: James Clark <james.clark@arm.com>
+>>
+>> Hi ARM Linux and ARM Linux PMU people,
+>>
+>> Could this patch be picked up for Linux 6.5? I don't see it in the
+>> tree and it seems a shame to have to wait for it. The other patches do
+>> cleanup and so waiting for 6.6 seems okay.
+> 
+> I'm only taking fixes for 6.5 and I don't think this qualifies.
+> 
+> If it was an oversight introduced during the recent merge window, then
+> I'd be happier fixing it up, but 55bcf6ef314a was merged ages ago (v5.12?),
+> so I think we can wait.
+> 
+> I'll be queuing perf changes for 6.6 next week, so I'll look at this
+> then.
+> 
+> Cheers,
+> 
+> Will
 
----------------------
+Hi Will,
 
-This came out of the discussion here [1]. It seems like we can get some
-extra big.LITTLE stuff working pretty easily. The test issues mentioned
-in the linked thread are actually fairly unrelated and I've fixed them
-in a different set on the list.
+Thanks for looking at this. I've sent a v2 with Anshuman's fixes.
 
-After adding it in the first commit, the remaining ones tidy up a
-related capability that doesn't do anything any more.
-
-I've added a fixes tag for the commit where
-PERF_PMU_CAP_EXTENDED_HW_TYPE was originally added because it probably
-should have been added to the Arm PMU at the same time. It doesn't apply
-cleanly that far back because another capability was added between then,
-but the resolution is trivial.
-
-Thanks
 James
-
-[1]: https://lore.kernel.org/linux-perf-users/CAP-5=fVkRc9=ySJ=fG-SQ8oAKmE_1mhHHzSASmGHUsda5Qy92A@mail.gmail.com/T/#t
-
-James Clark (4):
-  arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE capability
-  perf/x86: Remove unused PERF_PMU_CAP_HETEROGENEOUS_CPUS capability
-  arm_pmu: Remove unused PERF_PMU_CAP_HETEROGENEOUS_CPUS capability
-  perf: Remove unused PERF_PMU_CAP_HETEROGENEOUS_CPUS capability
-
- arch/x86/events/core.c     |  1 -
- drivers/perf/arm_pmu.c     | 10 ++++++----
- include/linux/perf_event.h |  7 +++----
- 3 files changed, 9 insertions(+), 9 deletions(-)
-
--- 
-2.34.1
-
