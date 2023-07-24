@@ -2,138 +2,123 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD07CEB64DD
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jul 2023 21:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B21EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jul 2023 21:03:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229688AbjGXVCB (ORCPT
+        id S230346AbjGXVDp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Jul 2023 17:02:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43672 "EHLO
+        Mon, 24 Jul 2023 17:03:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229662AbjGXVCA (ORCPT
+        with ESMTP id S230301AbjGXVDp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Jul 2023 17:02:00 -0400
-Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67653E67
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Jul 2023 14:01:59 -0700 (PDT)
-Received: by mail-vs1-xe32.google.com with SMTP id ada2fe7eead31-440ad406bc8so1225590137.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Jul 2023 14:01:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1690232518; x=1690837318;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DwEv6m7WdEj0WSS/WT/tsZ81hOCgU00T3UAZ9HdZAtM=;
-        b=ZXJZqU++vguNApIwgPzo62X8jAfLDKCBIFCtO0mpcS9spwAkiHrJzjk3NqFkmjzfUJ
-         00W5rK4Im2ZLUNSjWMonuSYFVPgD8zpl6ZQdlEvys7eXO3FIpf57vu1SQFRoHiQ1qC8/
-         PnZlXRVgzntWJdt92inSsTgCxwbzn3SijHCpCqHJHrkAISuXS7tWqmyfiUDdgZ9fH17a
-         Xu+A8LW0LEpsgVEfA3+ZXDrcitcAT9LYOM0ADJfrw4tSxp7RaNbqFUwsfrQ7XFNnnuBs
-         z1dzEXCIAVkaEXj7JfwKwv521RnbBdchV5jPs7lA15JjkKx3v3d5BG0lhYYIhc1GlFAX
-         77JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690232518; x=1690837318;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DwEv6m7WdEj0WSS/WT/tsZ81hOCgU00T3UAZ9HdZAtM=;
-        b=fWEX8e/B6cgb+hnskssxWR3Nss/FYw6QEwB7wPdH7kkQWSMPkPWlJOK8sX7ErX2BnQ
-         bNvTcmktg8EpNHjEasrwaIXeGKiybuJNN13K2ASzdKnZJANqKN0ka0Z1KnucG51fhqLR
-         mDvJVPDOXmv3DpNxEVE/0QgkwgVhR63H4bVHMTV7yrY/42ozA0Pe7ONDZE6g5zGkbPAr
-         BGG6SpvHDaioJSRg9GeluI/YMoG8LWUEIpzEbNKmGiVDLK7vvHs0/rla55jmhrHBlXP6
-         C8WZmP6hwjCo7RPO2I5C1m12T+bFLi8nCDtE2bMOd3FrOa+dc8yvwY11tkeTNLE2VOjI
-         oGEA==
-X-Gm-Message-State: ABy/qLaMJ0LORltvMd1PVaHaXPmtU1atI1mdmPM2BVBYN55cly7txYov
-        eaBPUBq0ElVSb3Vjagpx/qSxSU2ODW7M6vKM+Oz8gA==
-X-Google-Smtp-Source: APBJJlErB59jzrRIhB+T/J9RpOvQv83sc4JBVzJJ4GXRhV/iU5dwS7hKGJz9QozlSrr9AqlTgzi1XIEgW6D/7n8VTUk=
-X-Received: by 2002:a67:ef84:0:b0:443:6392:71ea with SMTP id
- r4-20020a67ef84000000b00443639271eamr2866297vsp.34.1690232518329; Mon, 24 Jul
- 2023 14:01:58 -0700 (PDT)
+        Mon, 24 Jul 2023 17:03:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 461AA187
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Jul 2023 14:03:44 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CA19061263
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Jul 2023 21:03:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6814C433C7;
+        Mon, 24 Jul 2023 21:03:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690232623;
+        bh=kYSEueI+WBIYmfRMFPhQ6AKpNjlY0FqGZ2t/LW3XT2I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=E5m3HGxIfKlAAVQnBAFY5vLtZKt7ZnRYYHZsszZGFmiAprJU4tInJAFLhC9a84aC4
+         SzmhGmV8naumS1zchR2tzKDmrtuEvC2YVL8WIDlaLyrHtf6ApcaE99rK20kBendpZR
+         nFaV/f+RJhYi0r+rNN4pCa0m7+ivwil5Mw8UDCu1MIXsgHKrm/66pbvVUUfUQY/+j0
+         ujYklEejHyHzgZe4Df2Ym4ZDOmU9pwEkHw8dgFqNguHeeB3fc/f11B6WZ/m6o7kUK/
+         IsgUV5NM8iyR1wifjZ5x+pbCfJYdLWx4o7qqZxdBntqWe5QlDJpKEdKS8ef1wyHNCw
+         Tq5CCQm4EFsoA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2F0D240516; Mon, 24 Jul 2023 18:03:40 -0300 (-03)
+Date:   Mon, 24 Jul 2023 18:03:40 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     jolsa@kernel.org, irogers@google.com, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+Subject: Re: [PATCH] tools/perf: Fix addr location init during
+ arch_skip_callchain_idx function
+Message-ID: <ZL7nLEFFjTCTcZW6@kernel.org>
+References: <20230724165815.17810-1-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
-References: <20230724201247.748146-1-irogers@google.com> <20230724201247.748146-3-irogers@google.com>
-In-Reply-To: <20230724201247.748146-3-irogers@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 24 Jul 2023 14:01:46 -0700
-Message-ID: <CAKwvOdkkfkoOE7G__gJ1cQq5i2o4bauk7pqudb3vd2R7sneoYg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/4] perf parse-events: Avoid use uninitialized warning
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Tom Rix <trix@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Carsten Haitzler <carsten.haitzler@arm.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev, maskray@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230724165815.17810-1-atrajeev@linux.vnet.ibm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jul 24, 2023 at 1:13=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> With GCC LTO a potential use uninitialized is spotted:
-> ```
-> In function =E2=80=98parse_events_config_bpf=E2=80=99,
->     inlined from =E2=80=98parse_events_load_bpf=E2=80=99 at util/parse-ev=
-ents.c:874:8:
-> util/parse-events.c:792:37: error: =E2=80=98error_pos=E2=80=99 may be use=
-d uninitialized [-Werror=3Dmaybe-uninitialized]
->   792 |                                 idx =3D term->err_term + error_po=
-s;
->       |                                     ^
-> util/parse-events.c: In function =E2=80=98parse_events_load_bpf=E2=80=99:
-> util/parse-events.c:765:13: note: =E2=80=98error_pos=E2=80=99 was declare=
-d here
->   765 |         int error_pos;
->       |             ^
-> ```
-> So initialize at declaration.
+Em Mon, Jul 24, 2023 at 10:28:15PM +0530, Athira Rajeev escreveu:
+> perf record with callchain recording fails as below
+> in powerpc:
+> 
+>     ./perf record -a -gR sleep 10
+>     ./perf report
+>     perf: Segmentation fault
+> 
+> gdb trace points to thread__find_map
+> 
+>     0  0x00000000101df314 in atomic_cmpxchg (newval=1818846826, oldval=1818846827, v=0x1001a8f3) at /home/athira/linux/tools/include/asm-generic/atomic-gcc.h:70
+>     1  refcount_sub_and_test (i=1, r=0x1001a8f3) at /home/athira/linux/tools/include/linux/refcount.h:135
+>     2  refcount_dec_and_test (r=0x1001a8f3) at /home/athira/linux/tools/include/linux/refcount.h:148
+>     3  map__put (map=0x1001a8b3) at util/map.c:311
+>     4  0x000000001016842c in __map__zput (map=0x7fffffffa368) at util/map.h:190
+>     5  thread__find_map (thread=0x105b92f0, cpumode=<optimized out>, addr=13835058055283572736, al=al@entry=0x7fffffffa358) at util/event.c:582
+>     6  0x000000001016882c in thread__find_symbol (thread=<optimized out>, cpumode=<optimized out>, addr=<optimized out>, al=0x7fffffffa358) at util/event.c:656
+>     7  0x00000000102e12b4 in arch_skip_callchain_idx (thread=<optimized out>, chain=<optimized out>) at arch/powerpc/util/skip-callchain-idx.c:255
+>     8  0x00000000101d3bf4 in thread__resolve_callchain_sample (thread=0x105b92f0, cursor=0x1053d160, evsel=<optimized out>, sample=0x7fffffffa908, parent=0x7fffffffa778, root_al=0x7fffffffa710,
+>         max_stack=<optimized out>) at util/machine.c:2940
+>     9  0x00000000101cd210 in sample__resolve_callchain (sample=<optimized out>, cursor=<optimized out>, parent=<optimized out>, evsel=<optimized out>, al=<optimized out>, max_stack=<optimized out>)
+>         at util/callchain.c:1112
+>     10 0x000000001022a9d8 in hist_entry_iter__add (iter=0x7fffffffa750, al=0x7fffffffa710, max_stack_depth=<optimized out>, arg=0x7fffffffbbd0) at util/hist.c:1232
+>     11 0x0000000010056d98 in process_sample_event (tool=0x7fffffffbbd0, event=0x7ffff6223c38, sample=0x7fffffffa908, evsel=<optimized out>, machine=0x10524ef8) at builtin-report.c:332
+> 
+> Here arch_skip_callchain_idx calls thread__find_symbol and which
+> invokes thread__find_map with uninitialised "addr_location".
+> Snippet:
+> 
+> thread__find_symbol(thread, PERF_RECORD_MISC_USER, ip, &al);
+> 
+> Recent change with commit 0dd5041c9a0ea ("perf addr_location:
+> Add init/exit/copy functions"), introduced "maps__zput" in the
+> function thread__find_map. This could result in segfault while
+> accessing uninitialised map from "struct addr_location". Fix this
+> by adding addr_location__init and addr_location__exit in
+> arch_skip_callchain_idx.
 
-This common pattern in C is error prone (conditional assignment in the
-callee; callers maybe forget to initialize, then unconditionally use
-the value). Clang's static analyzer can spot these, but isn't run for
-tools/ AFAIK.
+Thanks, applied.
+ 
+> Fixes: 0dd5041c9a0ea ("perf addr_location: Add init/exit/copy functions")
 
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/parse-events.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
-s.c
-> index acde097e327c..da29061ecf49 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -762,7 +762,7 @@ parse_events_config_bpf(struct parse_events_state *pa=
-rse_state,
->                         struct list_head *head_config)
->  {
->         struct parse_events_term *term;
-> -       int error_pos;
-> +       int error_pos =3D 0;
->
->         if (!head_config || list_empty(head_config))
->                 return 0;
-> --
-> 2.41.0.487.g6d72f3e995-goog
->
+I'll also do a audit of all calls to thread__find_map() and its callers
+to check for other such cases :-\
+
+For instance, this one seem buggy as well, Adrian?
+
+diff --git a/tools/perf/util/dlfilter.c b/tools/perf/util/dlfilter.c
+index 46f74b2344dbb34c..798a53d7e6c9dfc5 100644
+--- a/tools/perf/util/dlfilter.c
++++ b/tools/perf/util/dlfilter.c
+@@ -166,6 +166,7 @@ static __s32 dlfilter__resolve_address(void *ctx, __u64 address, struct perf_dlf
+ 	if (!thread)
+ 		return -1;
+ 
++	addr_location__init(&al);
+ 	thread__find_symbol_fb(thread, d->sample->cpumode, address, &al);
+ 
+ 	al_to_d_al(&al, &d_al);
 
 
---=20
-Thanks,
-~Nick Desaulniers
