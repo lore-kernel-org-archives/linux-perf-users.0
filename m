@@ -2,52 +2,69 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E83EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jul 2023 21:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF22EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jul 2023 21:48:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230383AbjGXV3h (ORCPT
+        id S231252AbjGXVsZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Jul 2023 17:29:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57498 "EHLO
+        Mon, 24 Jul 2023 17:48:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229485AbjGXV3g (ORCPT
+        with ESMTP id S231319AbjGXVsX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Jul 2023 17:29:36 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51BABD8;
-        Mon, 24 Jul 2023 14:29:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D1C13613DC;
-        Mon, 24 Jul 2023 21:29:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4513C433C7;
-        Mon, 24 Jul 2023 21:29:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690234174;
-        bh=fqARBeO4c2YTPeSk975Ka86xirYABo69PGISN4e7vLI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N3HQrz3JW8g3YO8EdzbLFeYf1mrY/Yawvo/WMzv/qkz0xPca4NstPDjimzDip1S8g
-         nw39gZSxGmRk/c/9EDQOdKC1OGyX0djizdVuLTFy8KdUOepoE2r2QCo6LPi8AD08Hf
-         I5w0NF6wY0diODvSoN3fyDgk+6D5S64SEsHYiv3OB+W2o7cXiOsjJnm0IotuaSmVnJ
-         6ZlSQq/eTQX9HFXKx64wcF/CL79FgOW4P3qpBw22LbkCPDDCgX2G3omtzW7DLv1HNO
-         63kpv6ofoqyMXwxEHg7/ihcB3grujPrtFNhHaB7FDlWXrZRAP344c3DSU2ZU9/Zhkk
-         e3QuQhHl45esQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 22F5240516; Mon, 24 Jul 2023 18:29:31 -0300 (-03)
-Date:   Mon, 24 Jul 2023 18:29:31 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
+        Mon, 24 Jul 2023 17:48:23 -0400
+Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9791172B
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Jul 2023 14:48:20 -0700 (PDT)
+Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-40631c5b9e9so29771cf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Jul 2023 14:48:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1690235300; x=1690840100;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4ifTUtuK5V5MYNm+bAiFRs1Giaz2am8su6EuD15e6Ok=;
+        b=mMZUcwQNUodC/QF5Mwrwq4C5u18fp9psSC6UogZD89mO6pyZOOc7ho04Q2E7SqS/OO
+         KjReVXCVmSn2vYocui6Dtk4Wm2DAnDXrk8g0wR7nnx5vBHWQgxtz001U5hQtWel4/muw
+         tJ/yTdZDfKDBnHxwWLUnnv+FKDwZjAzFmIuo9B3bixEIYeBVKYlo7W2ujZubpiUjaYtJ
+         CGYyn+1RC5RpPS84stQZYGW+dwJU0QtCn3Xl4TPiHwk2elm0ePhqvQZftkpbbr1xHBQX
+         qtSRIrFmxyxhd/KpGzD7UKPMZKbbEA6SXOeFEQHkqse7OTDV0tI5Rvw4Oxu9u9hKLwmY
+         yG0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690235300; x=1690840100;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4ifTUtuK5V5MYNm+bAiFRs1Giaz2am8su6EuD15e6Ok=;
+        b=dWkefILGlpCa3jECLDFP80he+wewHL13ogSZh8bhJ3YUjy2wtd5VmJ6oOmV9wj5JE1
+         iV3kd4f/MOgV/Q2vNDt0nFFdE6DIff/tVQ1UMP2ZHYLJ1MHLHF4jDlRx8p3OeWO8GLcy
+         o7uWW/deBtHzMjRKBi9pTGLXuRQbdy02JgjUnCI0tWIMfEU/4lk87Ba6/9PUW4iDxfE6
+         sP21cwv5QxFMl+HAv10P6UC3uTt8Evq1U8oEAXhv/QqW9UUvyYC//xUJmvXB79KzyHhs
+         Hx9O3Ul+g1+Ua6PbLOabKQnRKHsJZ1nFZHlyvDXF/NF40Eit1LwmhnKj0aB7XSH6O8S8
+         BsMQ==
+X-Gm-Message-State: ABy/qLaLsMUF0vhE6DIhNv8Um60BdfIAoRQrlqj9zJnSIcBh+WjuUpMO
+        W0BDrlsKqkNNCViHAapk0PJ4OR7OvsHaJ09zRDygPA==
+X-Google-Smtp-Source: APBJJlHsYrWvniCrUgIhS1T7zRs3emxCP5nrN9ov/190OzoLUgKYnCs1z1pROaIHbr8oEMK6D6d+72oPtVgeoIS0i+k=
+X-Received: by 2002:ac8:5c89:0:b0:403:59cb:66c4 with SMTP id
+ r9-20020ac85c89000000b0040359cb66c4mr561657qta.23.1690235299904; Mon, 24 Jul
+ 2023 14:48:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230724201247.748146-1-irogers@google.com> <CAKwvOd=12eSPyc5ZRgm8NPMJYjj13QOxcnHtv_Y7Ws-zffyUrA@mail.gmail.com>
+In-Reply-To: <CAKwvOd=12eSPyc5ZRgm8NPMJYjj13QOxcnHtv_Y7Ws-zffyUrA@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 24 Jul 2023 14:48:08 -0700
+Message-ID: <CAP-5=fVh5atUjf4sLBYi4CwxYdWJfub_0anXKTdVuJrZkC4-tQ@mail.gmail.com>
+Subject: Re: [PATCH v1 0/4] Perf tool LTO support
+To:     Nick Desaulniers <ndesaulniers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>,
         Kan Liang <kan.liang@linux.intel.com>,
         Yang Jihong <yangjihong1@huawei.com>,
@@ -57,103 +74,140 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         James Clark <james.clark@arm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         bpf@vger.kernel.org, llvm@lists.linux.dev, maskray@google.com
-Subject: Re: [PATCH v1 0/4] Perf tool LTO support
-Message-ID: <ZL7tO4pwpfX8n0gZ@kernel.org>
-References: <20230724201247.748146-1-irogers@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230724201247.748146-1-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jul 24, 2023 at 01:12:43PM -0700, Ian Rogers escreveu:
-> Add a build flag, LTO=1, so that perf is built with the -flto
-> flag. Address some build errors this configuration throws up.
-> 
-> For me on my Debian derived OS, "CC=clang CXX=clang++ LD=ld.lld" works
-> fine. With GCC LTO this fails with:
-> ```
-> lto-wrapper: warning: using serial compilation of 50 LTRANS jobs
-> lto-wrapper: note: see the ‘-flto’ option documentation for more information
-> /usr/bin/ld: /tmp/ccK8kXAu.ltrans10.ltrans.o:(.data.rel.ro+0x28): undefined reference to `memset_orig'
-> /usr/bin/ld: /tmp/ccK8kXAu.ltrans10.ltrans.o:(.data.rel.ro+0x40): undefined reference to `__memset'
-> /usr/bin/ld: /tmp/ccK8kXAu.ltrans10.ltrans.o:(.data.rel+0x28): undefined reference to `memcpy_orig'
-> /usr/bin/ld: /tmp/ccK8kXAu.ltrans10.ltrans.o:(.data.rel+0x40): undefined reference to `__memcpy'
-> /usr/bin/ld: /tmp/ccK8kXAu.ltrans44.ltrans.o: in function `test__arch_unwind_sample':
-> /home/irogers/kernel.org/tools/perf/arch/x86/tests/dwarf-unwind.c:72: undefined reference to `perf_regs_load'
-> collect2: error: ld returned 1 exit status
-> ```
-> 
-> The issue is that we build multiple .o files in a directory and then
-> link them into a .o with "ld -r" (cmd_ld_multi). This early link step
-> appears to trigger GCC to remove the .S file definition of the symbol
-> and break the later link step (the perf-in.o shows perf_regs_load, for
-> example, going from the text section to being undefined at the link
-> step which doesn't happen with clang or without LTO). It is possible
-> to work around this by taking the final perf link command and adding
-> the .o files generated from .S back into it, namely:
-> arch/x86/tests/regs_load.o
-> bench/mem-memset-x86-64-asm.o
-> bench/mem-memcpy-x86-64-asm.o
-> 
-> A quick performance check and the performance improvements from LTO
-> are noticeable:
-> 
-> Non-LTO
-> ```
-> $ perf bench internals synthesize
->  # Running 'internals/synthesize' benchmark:
-> Computing performance of single threaded perf event synthesis by
-> synthesizing events on the perf process itself:
->   Average synthesis took: 202.216 usec (+- 0.160 usec)
->   Average num. events: 51.000 (+- 0.000)
->   Average time per event 3.965 usec
->   Average data synthesis took: 230.875 usec (+- 0.285 usec)
->   Average num. events: 271.000 (+- 0.000)
->   Average time per event 0.852 usec
-> ```
-> 
-> LTO
-> ```
-> $ perf bench internals synthesize
->  # Running 'internals/synthesize' benchmark:
-> Computing performance of single threaded perf event synthesis by
-> synthesizing events on the perf process itself:
->   Average synthesis took: 104.530 usec (+- 0.074 usec)
->   Average num. events: 51.000 (+- 0.000)
->   Average time per event 2.050 usec
->   Average data synthesis took: 112.660 usec (+- 0.114 usec)
->   Average num. events: 273.000 (+- 0.000)
->   Average time per event 0.413 usec
+On Mon, Jul 24, 2023 at 2:15=E2=80=AFPM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Mon, Jul 24, 2023 at 1:12=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > Add a build flag, LTO=3D1, so that perf is built with the -flto
+> > flag. Address some build errors this configuration throws up.
+>
+> Hi Ian,
+> Thanks for the performance numbers. Any sense of what the build time
+> numbers might look like for building perf with LTO?
+>
+> Does `-flto=3Dthin` in clang's case make a meaningful difference of
+> `-flto`? I'd recommend that over "full LTO" `-flto` when the
+> performance difference of the result isn't too meaningful.  ThinLTO
+> should be faster to build, but I don't know that I've ever built perf,
+> so IDK what to expect.
 
+Hi Nick,
 
-Cool stuff! Applied locally, test building now on the container suite.
+I'm not sure how much the perf build will benefit from LTO to say
+whether thin is good enough or not. Things like "perf record" are
+designed to spend the majority of their time blocking on a poll system
+call. We have benchmarks at least :-)
 
-- Arnaldo
+I grabbed some clang build times in an unscientific way on my loaded laptop=
+:
 
-> ```
-> 
-> Ian Rogers (4):
->   perf stat: Avoid uninitialized use of perf_stat_config
->   perf parse-events: Avoid use uninitialized warning
->   perf test: Avoid weak symbol for arch_tests
->   perf build: Add LTO build option
-> 
->  tools/perf/Makefile.config      |  5 +++++
->  tools/perf/tests/builtin-test.c | 11 ++++++++++-
->  tools/perf/tests/stat.c         |  2 +-
->  tools/perf/util/parse-events.c  |  2 +-
->  tools/perf/util/stat.c          |  2 +-
->  5 files changed, 18 insertions(+), 4 deletions(-)
-> 
-> -- 
-> 2.41.0.487.g6d72f3e995-goog
-> 
+no LTO
+real    0m48.846s
+user    3m11.452s
+sys     0m29.598s
 
--- 
+-flto=3Dthin
+real    0m55.910s
+user    4m2.342s
+sys     0m30.120s
 
-- Arnaldo
+real    0m50.330s
+user    3m36.986s
+sys     0m28.519s
+
+-flto
+real    1m12.002s
+user    3m27.676s
+sys     0m30.305s
+
+real    1m5.187s
+user    3m19.348s
+sys     0m29.031s
+
+So perhaps thin LTO increases total build time by 10%, whilst full LTO
+increases it by 50%.
+
+Gathering some clang performance numbers:
+
+no LTO
+$ perf bench internals synthesize
+# Running 'internals/synthesize' benchmark:
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+ Average synthesis took: 178.694 usec (+- 0.171 usec)
+ Average num. events: 52.000 (+- 0.000)
+ Average time per event 3.436 usec
+ Average data synthesis took: 194.545 usec (+- 0.088 usec)
+ Average num. events: 277.000 (+- 0.000)
+ Average time per event 0.702 usec
+# Running 'internals/synthesize' benchmark:
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+ Average synthesis took: 175.381 usec (+- 0.105 usec)
+ Average num. events: 52.000 (+- 0.000)
+ Average time per event 3.373 usec
+ Average data synthesis took: 188.980 usec (+- 0.071 usec)
+ Average num. events: 278.000 (+- 0.000)
+ Average time per event 0.680 usec
+
+-flto=3Dthin
+$ perf bench internals synthesize
+# Running 'internals/synthesize' benchmark:
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+ Average synthesis took: 183.122 usec (+- 0.082 usec)
+ Average num. events: 52.000 (+- 0.000)
+ Average time per event 3.522 usec
+ Average data synthesis took: 196.468 usec (+- 0.102 usec)
+ Average num. events: 277.000 (+- 0.000)
+ Average time per event 0.709 usec
+# Running 'internals/synthesize' benchmark:
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+ Average synthesis took: 177.684 usec (+- 0.094 usec)
+ Average num. events: 52.000 (+- 0.000)
+ Average time per event 3.417 usec
+ Average data synthesis took: 190.079 usec (+- 0.077 usec)
+ Average num. events: 275.000 (+- 0.000)
+ Average time per event 0.691 usec
+
+-flto
+$ perf bench internals synthesize
+# Running 'internals/synthesize' benchmark:
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+ Average synthesis took: 112.599 usec (+- 0.040 usec)
+ Average num. events: 52.000 (+- 0.000)
+ Average time per event 2.165 usec
+ Average data synthesis took: 119.012 usec (+- 0.070 usec)
+ Average num. events: 278.000 (+- 0.000)
+ Average time per event 0.428 usec
+# Running 'internals/synthesize' benchmark:
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+ Average synthesis took: 107.606 usec (+- 0.147 usec)
+ Average num. events: 52.000 (+- 0.000)
+ Average time per event 2.069 usec
+ Average data synthesis took: 114.633 usec (+- 0.159 usec)
+ Average num. events: 279.000 (+- 0.000)
+ Average time per event 0.411 usec
+
+The performance win from thin LTO doesn't look to be there. Full LTO
+appears to be reducing event synthesis time down to 60% of what it
+was. The clang numbers are looking better than the GCC ones. I think
+from this it makes sense to use -flto.
+
+Thanks,
+Ian
+
+> --
+> Thanks,
+> ~Nick Desaulniers
