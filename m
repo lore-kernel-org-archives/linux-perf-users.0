@@ -2,32 +2,31 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FB1EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jul 2023 03:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A095EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jul 2023 04:02:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229599AbjGXDub (ORCPT
+        id S229560AbjGXECx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 23 Jul 2023 23:50:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44480 "EHLO
+        Mon, 24 Jul 2023 00:02:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbjGXDua (ORCPT
+        with ESMTP id S229486AbjGXECw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 23 Jul 2023 23:50:30 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24D9483;
-        Sun, 23 Jul 2023 20:50:27 -0700 (PDT)
-Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4R8R3V26V0zVjfm;
-        Mon, 24 Jul 2023 11:48:54 +0800 (CST)
+        Mon, 24 Jul 2023 00:02:52 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71BBDB0;
+        Sun, 23 Jul 2023 21:02:50 -0700 (PDT)
+Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.55])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4R8RJb52YwzHqc0;
+        Mon, 24 Jul 2023 12:00:15 +0800 (CST)
 Received: from M910t (10.110.54.157) by kwepemi500013.china.huawei.com
  (7.221.188.120) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 24 Jul
- 2023 11:50:23 +0800
-Date:   Mon, 24 Jul 2023 11:50:06 +0800
+ 2023 12:02:47 +0800
+Date:   Mon, 24 Jul 2023 12:02:29 +0800
 From:   Changbin Du <changbin.du@huawei.com>
-To:     Ian Rogers <irogers@google.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
 CC:     Changbin Du <changbin.du@huawei.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -35,82 +34,92 @@ CC:     Changbin Du <changbin.du@huawei.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] perf: add new option '--workload-attr' to set workload
- sched_policy/priority/mask
-Message-ID: <20230724035006.5vje3jzhmedyljas@M910t>
-References: <20230713085831.395112-1-changbin.du@huawei.com>
- <b1127b63-6c6a-e42e-ce6c-cf4f24bbc5a1@intel.com>
- <20230714071914.3jro4kfcvhun2ptd@M910t>
- <CAP-5=fV49y9y8Q3-3rhACMQJiQ+nAh0RfysT8bhpJ5_AOqLScw@mail.gmail.com>
+        Ian Rogers <irogers@google.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Hui Wang <hw.huiwang@huawei.com>
+Subject: Re: [PATCH v3 0/3] perf: add new option '--workload-attr' to set
+ workload sched_policy/priority/mask
+Message-ID: <20230724040229.eipq7i43v4xcrq3p@M910t>
+References: <20230718033355.2960912-1-changbin.du@huawei.com>
+ <5889e93b-5ee3-8d59-c2fb-bce7070a1ab2@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fV49y9y8Q3-3rhACMQJiQ+nAh0RfysT8bhpJ5_AOqLScw@mail.gmail.com>
+In-Reply-To: <5889e93b-5ee3-8d59-c2fb-bce7070a1ab2@intel.com>
 X-Originating-IP: [10.110.54.157]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  kwepemi500013.china.huawei.com (7.221.188.120)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 19, 2023 at 09:55:39AM -0700, Ian Rogers wrote:
-> On Fri, Jul 14, 2023 at 12:19 AM Changbin Du <changbin.du@huawei.com> wrote:
-> >
-> > On Fri, Jul 14, 2023 at 10:06:31AM +0300, Adrian Hunter wrote:
-> > > On 13/07/23 11:58, Changbin Du wrote:
-> > > > To get consistent benchmarking results, sometimes we need to set the
-> > > > sched_policy/priority/mask of the workload to reduce system noise.
-> > > >
-> > > > For example, CPU binding is required on big.little system.
-> > > >
-> > > >   $ perf stat -r 10 -- taskset -c 0 ls
-> > > >
-> > > > Nevertheless, the 'taskset' is also counted here.
-> > > >
-> > > > To get away of the middleman, this adds a new option '--workload-attr' to
-> > > > do the same jobs for stat and record commands.
-> > > >
-> > > >   $ sudo perf stat --workload-attr fifo,40,0x1 -- ls
-> > > >
-> > > > Above will make 'ls' run on CPU #0 with fifo scheduler and realtime
-> > > > priority is 40.
-> > >
-> > > Aren't there ways to set up a process then start perf using -p <pid>
-> > > then let the process continue.
-> > >
-> > By that you need a mechanism to pause the new spawnned process and wait perf to
-> > attach. Or setup the sched properties by the app itself. But sometimes we just
-> > simply want to run the app through and measure some events. With
-> > --workload-attr, we do not need extra setup works.
+On Thu, Jul 20, 2023 at 01:00:58PM +0300, Adrian Hunter wrote:
+> On 18/07/23 06:33, Changbin Du wrote:
+> > This adds a new option '--workload-attr' to set the sched_policy/priority/mask
+> > of the workload to reduce system noise.
+> > 
+> > $ sudo perf stat --workload-attr fifo,40,0-3:7 -- ls
 > 
-> To my naive eyes this looks to be a broadly useful addition. Some thoughts:
->  - "cpu-mask" as the command line argument name, this is "-C" and
-> "--cpu" elsewhere, so perhaps just "cpu" as the mask is perhaps
-> confusing.
-I changed the name of third field to cpu-list, and use perf_cpu_map_new() to
-parse the list. This api doesn't accept a mask.
-
-        --workload-attr <sched_policy[,priority][,cpu-list]>
-                          setup target workload (the <command>) attributes:
-
-                                sched_policy: other|fifo|rr|batch|idle
-                                priority: scheduling priority for fifo|rr, nice value for other
-                                cpu-list: CPU affinity. e.g. 1-2:4 is processors #1, #2, and #4
-
->  - could we get a test? Perhaps add a case to tools/perf/tests/shell/stat.sh:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/shell/stat.sh?h=perf-tools-next
+> Not really sold on the need for this, but maybe it could be
+> simpler.
+> What about just adding a hook for a command (e.g. script) to
+> run before exec'ing the workload e.g.
 > 
-No problem, I will add a testcase there.
-
-> Thanks,
-> Ian
+> --configure-workload=blah.sh
 > 
-> > --
-> > Cheers,
-> > Changbin Du
+> results in perf doing system("blah.sh 12345") where 12345
+> is the workload PID.
+> 
+> Then maybe you could do:
+> 
+> --configure-workload="taskset -p 0x3"
+>
+Acctually, we already have such option for perf-stat.
+
+	--post <command>  command to run after to the measured command
+        --pre <command>   command to run prior to the measured command
+
+By involving a shell script we can do more complex setup. But sometimes I just
+need to set sched attributes. For example, to investigate the impact of
+various compiler optimizations. In this case, I don't want a script. This is the
+original purpose I try to add this new option.
+
+> 
+> > 
+> > Please see patch 1/2 for more details.
+> > 
+> > v3:
+> >   - replace taskset with --workload-attr option in documents and tests.
+> > v2:
+> >   - Use cpu list spec instead of cpu mask number.
+> >   - Update documents.
+> > 
+> > Changbin Du (3):
+> >   perf cpumap: Add __perf_cpu_map__new and perf_cpu_map__2_cpuset
+> >   perf: add new option '--workload-attr' to set workload
+> >     sched_policy/priority/mask
+> >   perf: replace taskset with --workload-attr option
+> > 
+> >  tools/lib/perf/cpumap.c                       |  45 ++++++-
+> >  tools/lib/perf/include/perf/cpumap.h          |   4 +
+> >  tools/lib/perf/libperf.map                    |   2 +
+> >  tools/perf/Documentation/intel-hybrid.txt     |   2 +-
+> >  tools/perf/Documentation/perf-record.txt      |   7 ++
+> >  tools/perf/Documentation/perf-stat.txt        |   8 +-
+> >  tools/perf/builtin-record.c                   |  26 ++++
+> >  tools/perf/builtin-stat.c                     |  18 +++
+> >  tools/perf/tests/cpumap.c                     |  23 ++++
+> >  .../tests/shell/stat_bpf_counters_cgrp.sh     |   2 +-
+> >  tools/perf/tests/shell/test_arm_coresight.sh  |   2 +-
+> >  tools/perf/tests/shell/test_data_symbol.sh    |   2 +-
+> >  tools/perf/tests/shell/test_intel_pt.sh       |   2 +-
+> >  tools/perf/util/evlist.c                      | 117 ++++++++++++++++++
+> >  tools/perf/util/evlist.h                      |   3 +
+> >  tools/perf/util/target.h                      |   9 ++
+> >  16 files changed, 263 insertions(+), 9 deletions(-)
+> > 
+> 
 
 -- 
 Cheers,
