@@ -2,33 +2,32 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCBFC0015E
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jul 2023 17:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C330C001DF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jul 2023 20:13:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232063AbjGYR7o (ORCPT
+        id S229650AbjGYUNi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Jul 2023 13:59:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51850 "EHLO
+        Tue, 25 Jul 2023 16:13:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231953AbjGYR7n (ORCPT
+        with ESMTP id S229606AbjGYUNh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Jul 2023 13:59:43 -0400
+        Tue, 25 Jul 2023 16:13:37 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C44A9BB;
-        Tue, 25 Jul 2023 10:59:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34D4B19AD;
+        Tue, 25 Jul 2023 13:13:36 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5976661851;
-        Tue, 25 Jul 2023 17:59:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B66C2C433C7;
-        Tue, 25 Jul 2023 17:59:40 +0000 (UTC)
-Date:   Tue, 25 Jul 2023 13:59:38 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BD3B7616A3;
+        Tue, 25 Jul 2023 20:13:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9279C433C7;
+        Tue, 25 Jul 2023 20:13:33 +0000 (UTC)
+Date:   Tue, 25 Jul 2023 16:13:32 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ze Gao <zegao2021@gmail.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ze Gao <zegao2021@gmail.com>, Ingo Molnar <mingo@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -41,10 +40,13 @@ Cc:     Ingo Molnar <mingo@redhat.com>,
         linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>
 Subject: Re: [RFC PATCH 1/3] sched, tracing: report task state in symbolic
  chars instead
-Message-ID: <20230725135938.1e056a02@rorschach.local.home>
-In-Reply-To: <20230725072254.32045-2-zegao@tencent.com>
+Message-ID: <20230725161332.34ba912a@rorschach.local.home>
+In-Reply-To: <20230725133100.GL3765278@hirez.programming.kicks-ass.net>
 References: <20230725072254.32045-1-zegao@tencent.com>
         <20230725072254.32045-2-zegao@tencent.com>
+        <20230725083357.GA3765278@hirez.programming.kicks-ass.net>
+        <CAD8CoPAdRUxk3FWdNX6g0V6Kdr3+sXv8fdQ9NhgKUR29-ZLaug@mail.gmail.com>
+        <20230725133100.GL3765278@hirez.programming.kicks-ass.net>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -53,93 +55,29 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, 25 Jul 2023 15:22:52 +0800
-Ze Gao <zegao2021@gmail.com> wrote:
+On Tue, 25 Jul 2023 15:31:00 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
->  #ifdef CREATE_TRACE_POINTS
-> -static inline long __trace_sched_switch_state(bool preempt,
-> +static inline const char __trace_sched_switch_state(bool preempt,
+> > > This is a format change and will likely break a ton of programs :/  
+> >   
+> 
+> > BTW, could you help to point to any possible tools/programs that would
+> > break other than perf/libtraceevent, because these two are the only
+> > users I run into so far.  
+> 
+> Latencytop was the one breaking a few years ago, but there's a metric
+> ton of sched_switch users out there, this is bound to generate pain.
+> 
+> Steve, you remember what the status of all this was? at the time
+> breaking this was considered on par with ABI breakage and we reverted or
+> something. Is this still so?
 
-Does it really need to be "const"?
+I did reply to the patch (before I switched to thread mode, and notice
+that there were already replies ;-)
 
->  					      unsigned int prev_state,
->  					      struct task_struct *p)
->  {
-> @@ -197,13 +198,6 @@ static inline long __trace_sched_switch_state(bool preempt,
->  	BUG_ON(p != current);
->  #endif /* CONFIG_SCHED_DEBUG */
->  
-> -	/*
-> -	 * Preemption ignores task state, therefore preempted tasks are always
-> -	 * RUNNING (we will not have dequeued if state != RUNNING).
-> -	 */
-> -	if (preempt)
-> -		return TASK_REPORT_MAX;
-> -
->  	/*
->  	 * task_state_index() uses fls() and returns a value from 0-8 range.
->  	 * Decrement it by 1 (except TASK_RUNNING state i.e 0) before using
-> @@ -212,7 +206,16 @@ static inline long __trace_sched_switch_state(bool preempt,
->  	 */
->  	state = __task_state_index(prev_state, p->exit_state);
->  
-> -	return state ? (1 << (state - 1)) : state;
-> +	/*
-> +	 * Preemption ignores task state, therefore preempted tasks are always
-> +	 * RUNNING (we will not have dequeued if state != RUNNING).
-> +	 * Here, we use 'p' to denote this case and only for this case.
-> +	 */
-> +	if (preempt)
-> +		return 'p';
-> +
-> +
-> +	return task_index_to_char(state);
->  }
->  #endif /* CREATE_TRACE_POINTS */
->  
-> @@ -232,7 +235,7 @@ TRACE_EVENT(sched_switch,
->  		__array(	char,	prev_comm,	TASK_COMM_LEN	)
->  		__field(	pid_t,	prev_pid			)
->  		__field(	int,	prev_prio			)
-> -		__field(	long,	prev_state			)
-> +		__field(	char,	prev_state			)
->  		__array(	char,	next_comm,	TASK_COMM_LEN	)
->  		__field(	pid_t,	next_pid			)
->  		__field(	int,	next_prio			)
-
-This will break userspace. Just because you update libtraceevent
-doesn't mean that it will get to all the users of it. There's still
-tools that have the old method hard coded and doesn't use the library.
-
-Now, because the old tools still do the parsing of this format, we can
-add a new field called prev_state_char that will give you this. Now to
-save space, we should change prev_state to int (can't make it short as
-there's that test for "+" which does sometimes happen). I believe we
-can make prev_prio and next prio into shorts (and possibly chars!).
+Pretty much all the tools have been switched over to libtraceevent, but
+some just copied the code internally. Although, newer code (like
+rasdaemon) are moving over to the newer shared library. Anyway, I did
+post a possibly solution in my other email.
 
 -- Steve
-
-
-> @@ -249,22 +252,8 @@ TRACE_EVENT(sched_switch,
->  		/* XXX SCHED_DEADLINE */
->  	),
->  
-> -	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%s%s ==> next_comm=%s next_pid=%d next_prio=%d",
-> -		__entry->prev_comm, __entry->prev_pid, __entry->prev_prio,
-> -
-> -		(__entry->prev_state & (TASK_REPORT_MAX - 1)) ?
-> -		  __print_flags(__entry->prev_state & (TASK_REPORT_MAX - 1), "|",
-> -				{ TASK_INTERRUPTIBLE, "S" },
-> -				{ TASK_UNINTERRUPTIBLE, "D" },
-> -				{ __TASK_STOPPED, "T" },
-> -				{ __TASK_TRACED, "t" },
-> -				{ EXIT_DEAD, "X" },
-> -				{ EXIT_ZOMBIE, "Z" },
-> -				{ TASK_PARKED, "P" },
-> -				{ TASK_DEAD, "I" }) :
-> -		  "R",
-> -
-> -		__entry->prev_state & TASK_REPORT_MAX ? "+" : "",
-> +	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%c ==> next_comm=%s next_pid=%d next_prio=%d",
-> +		__entry->prev_comm, __entry->prev_pid, __entry->prev_prio, __entry->prev_state,
->  		__entry->next_comm, __entry->next_pid, __entry->next_prio)
