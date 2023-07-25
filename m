@@ -2,127 +2,156 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A836CC001DE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jul 2023 10:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49446C001DE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jul 2023 10:55:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232795AbjGYKP5 (ORCPT
+        id S232590AbjGYKzx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Jul 2023 06:15:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40976 "EHLO
+        Tue, 25 Jul 2023 06:55:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232741AbjGYKP4 (ORCPT
+        with ESMTP id S231605AbjGYKzc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Jul 2023 06:15:56 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 911E919AF;
-        Tue, 25 Jul 2023 03:15:43 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6ED3515BF;
-        Tue, 25 Jul 2023 03:16:26 -0700 (PDT)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB49E3F67D;
-        Tue, 25 Jul 2023 03:15:40 -0700 (PDT)
-Message-ID: <56e70195-5f58-ca03-d6fd-f73e91f56298@arm.com>
-Date:   Tue, 25 Jul 2023 11:15:29 +0100
+        Tue, 25 Jul 2023 06:55:32 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01FF12689;
+        Tue, 25 Jul 2023 03:53:26 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-5222bc916acso2738213a12.3;
+        Tue, 25 Jul 2023 03:53:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690282399; x=1690887199;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dwGjez98+Z7DYerWtpEnUz/QCZ+ae99CXaeubhq+lCo=;
+        b=mlSsZSHswqcByPTwbuUwAjc/BiDmV8alwigpLyjDiXkr2naBn6+a1HZzUbRU4uTF/t
+         wqHWi/o3OBlSLBO3sduuT8vGsvn3O5kv8/1ZOuf/ofWgdsa4j5HewPQqgX5BI1s/FswI
+         //QmEsDN+IYCxbkPSe+UHTesOimIDGDxQzoWU2tyDXEnup3ogcWyNtnAPPuvaGUhz8jX
+         +CstZmpDAhBHorkYtLEAIfmq8mm9QloyePHrg7B0hVfk2ccwWi0b1RRlBzFg1x3hWxy4
+         CsNB5AEAqhdTyxwe805gHiCPJIM6b9YbHbw9FGa0SRBl7KAMA5DhIOCJyqVnDo0HfDoy
+         JmiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690282399; x=1690887199;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dwGjez98+Z7DYerWtpEnUz/QCZ+ae99CXaeubhq+lCo=;
+        b=LvDhHikfj/y1VAY9rSP7glrHFKYc3W8DafFAfhqK6HZ49GwrFd/QiEFBP8IcZeJgWd
+         +h5QNP5F3HeWW6dfcRVnnJgzYTOFTAzupkLWadBtqijQB/q5r4sxdRUxI55pHqMk9Ckv
+         Z9GL3Hqx9Ojq9Nt5k4qdVGLqLDZtwWYJS/kpsT/GUIIAgN+67078zhn5TJ5MAfiWpfMB
+         69RzsCqyS9hPicB+x2QKkWuVsa1fEH/eIDf7il+5vrg2XgiViljhPxBhT5cizZ+NLoyK
+         T2DiBqHog0spiH5fB5tNakW0Gm7BBXyN+vvm6hB1ur+Ht3XNA0U/qkI65v2C9e7IX4AH
+         haHw==
+X-Gm-Message-State: ABy/qLamytpqv+UrgOSxNHz10kWKQRg2ErUFb2kHIRS5I0Ibvt6PKUIt
+        rtUhp2OxLYMZdLkct+wepx9aAF3MUscZFqw7DjA=
+X-Google-Smtp-Source: APBJJlEYaSivhgx3xMc6SfnY1DcId6rr4g2XNOz6zf25YZ4iJm3mULUSeaSJIxdaLkXWE4p071ujLNUfx7EIZzvH8EE=
+X-Received: by 2002:a05:6402:1295:b0:51e:4e77:3347 with SMTP id
+ w21-20020a056402129500b0051e4e773347mr8959757edv.41.1690282398609; Tue, 25
+ Jul 2023 03:53:18 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH] perf arm64: Fix read PMU cpu slots
-Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>
-Cc:     Haixin Yu <yuhaixin.yhx@linux.alibaba.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+References: <20230725072254.32045-1-zegao@tencent.com> <20230725072254.32045-2-zegao@tencent.com>
+ <20230725083357.GA3765278@hirez.programming.kicks-ass.net>
+In-Reply-To: <20230725083357.GA3765278@hirez.programming.kicks-ass.net>
+From:   Ze Gao <zegao2021@gmail.com>
+Date:   Tue, 25 Jul 2023 18:53:07 +0800
+Message-ID: <CAD8CoPAdRUxk3FWdNX6g0V6Kdr3+sXv8fdQ9NhgKUR29-ZLaug@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] sched, tracing: report task state in symbolic
+ chars instead
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <ZL4G7rWXkfv-Ectq@B-Q60VQ05P-2326.local>
- <2e392aa9-859a-75ef-eb3e-1870b1e78061@linux.alibaba.com>
- <ZL6pxZ4RmMC2W7S+@kernel.org>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <ZL6pxZ4RmMC2W7S+@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Tue, Jul 25, 2023 at 4:34=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> On Tue, Jul 25, 2023 at 03:22:52PM +0800, Ze Gao wrote:
+>
+> > @@ -197,13 +198,6 @@ static inline long __trace_sched_switch_state(bool=
+ preempt,
+> >       BUG_ON(p !=3D current);
+> >  #endif /* CONFIG_SCHED_DEBUG */
+> >
+> > -     /*
+> > -      * Preemption ignores task state, therefore preempted tasks are a=
+lways
+> > -      * RUNNING (we will not have dequeued if state !=3D RUNNING).
+> > -      */
+> > -     if (preempt)
+> > -             return TASK_REPORT_MAX;
+> > -
+> >       /*
+> >        * task_state_index() uses fls() and returns a value from 0-8 ran=
+ge.
+> >        * Decrement it by 1 (except TASK_RUNNING state i.e 0) before usi=
+ng
+> > @@ -212,7 +206,16 @@ static inline long __trace_sched_switch_state(bool=
+ preempt,
+> >        */
+> >       state =3D __task_state_index(prev_state, p->exit_state);
+> >
+> > -     return state ? (1 << (state - 1)) : state;
+> > +     /*
+> > +      * Preemption ignores task state, therefore preempted tasks are a=
+lways
+> > +      * RUNNING (we will not have dequeued if state !=3D RUNNING).
+> > +      * Here, we use 'p' to denote this case and only for this case.
+> > +      */
+> > +     if (preempt)
+> > +             return 'p';
+> > +
+>
+> I don't get this move, why compute state before this return?
 
+Oops,  I was going to ignore the PREEMP_ACTIVE in the first attempt
+and changed it to 'state =3D 0'
+which I decided to introduce 'p' to denote this after second thoughts.
+Will fix it and revert this move.
 
-On 24/07/2023 17:41, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Jul 24, 2023 at 03:40:12PM +0800, Jing Zhang escreveu:
->>
->>
->> 在 2023/7/24 下午1:06, Haixin Yu 写道:
->>> Commit f8ad6018ce3c ("perf pmu: Remove duplication around
->>>  EVENT_SOURCE_DEVICE_PATH") uses sysfs__read_ull to read a full
->>> sysfs path, which will never success. Fix it by read file directly.
->>>
->>> Signed-off-by: Haixin Yu <yuhaixin.yhx@linux.alibaba.com>
->>> ---
->>>  tools/perf/arch/arm64/util/pmu.c | 7 ++++---
->>>  1 file changed, 4 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/tools/perf/arch/arm64/util/pmu.c b/tools/perf/arch/arm64/util/pmu.c
->>> index 561de0cb6b95..512a8f13c4de 100644
->>> --- a/tools/perf/arch/arm64/util/pmu.c
->>> +++ b/tools/perf/arch/arm64/util/pmu.c
->>> @@ -54,10 +54,11 @@ double perf_pmu__cpu_slots_per_cycle(void)
->>>  		perf_pmu__pathname_scnprintf(path, sizeof(path),
->>>  					     pmu->name, "caps/slots");
->>>  		/*
->>> -		 * The value of slots is not greater than 32 bits, but sysfs__read_int
->>> -		 * can't read value with 0x prefix, so use sysfs__read_ull instead.
->>> +		 * The value of slots is not greater than 32 bits, but
->>> +		 * filename__read_int can't read value with 0x prefix,
->>> +		 * so use filename__read_ull instead.
->>>  		 */
->>> -		sysfs__read_ull(path, &slots);
->>> +		filename__read_ull(path, &slots);
->>>  	}
->>>  
->>>  	return slots ? (double)slots : NAN;
->>
->> Yes, the function perf_pmu__pathname_scnprintf returns the complete slots file path "/sys/bus/xxxxx/caps/slots",
->> and sysfs__read_ull will add the prefix "/sys" to the path, so the final file path becomes "/sys/sys/bus/xxxx/caps/slots"
->> which does not exist, and the slots file cannot be successfully read, so sysfs__read_ull needs to be changed to the
->> filename__read_ull.
->>
->> I tested it and it works well.
->>
->> Tested-by: Jing Zhang <renyu.zj@linux.alibaba.com>
-> 
-> I've applied this to my local branch, thanks.
-> 
-> I also added the missing:
-> 
-> Fixes: f8ad6018ce3c065a ("perf pmu: Remove duplication around EVENT_SOURCE_DEVICE_PATH")
-> 
-> This is another case where a 'perf test' entry would come in handy.
-> 
-> James, please check and ack,
-> 
-> - Arnaldo
+> > +
+> > +     return task_index_to_char(state);
+> >  }
+> >  #endif /* CREATE_TRACE_POINTS */
+> >
+> > @@ -232,7 +235,7 @@ TRACE_EVENT(sched_switch,
+> >               __array(        char,   prev_comm,      TASK_COMM_LEN   )
+> >               __field(        pid_t,  prev_pid                        )
+> >               __field(        int,    prev_prio                       )
+> > -             __field(        long,   prev_state                      )
+> > +             __field(        char,   prev_state                      )
+> >               __array(        char,   next_comm,      TASK_COMM_LEN   )
+> >               __field(        pid_t,  next_pid                        )
+> >               __field(        int,    next_prio                       )
+>
+> This is a format change and will likely break a ton of programs :/
 
-Oops, looks like the system I tested that on doesn't report slots so it
-returns NAN whether it successfully reads the file or not.
+Yeah,  I admit that.  And I believe this kind of break happens each
+time the internal
+task state constant mapping is rearranged, it's of no big difference
+here, since the
+most renowned perf itself is still broken at this time after.  And
+IMHO it's time to fix
+this and do things correctly.  That is why I propose this and mark it as RF=
+C.
 
-I can't think of a test that doesn't just repeat that function so I will
-probably say to leave it as is (and we're not currently doing any
-automated testing on any platforms that report slots either). It's quite
-visible when it breaks because the topdown metrics won't work on
-platforms where they should.
+BTW, could you help to point to any possible tools/programs that would
+break other
+than perf/libtraceevent, because these two are the only users I run
+into so far.
 
-Sorry for the breakage!
-
-Acked-by: James Clark <james.clark@arm.com>
+Regards,
+Ze
