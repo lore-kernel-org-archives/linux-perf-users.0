@@ -2,156 +2,197 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49446C001DE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jul 2023 10:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 817EAC0015E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jul 2023 11:11:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232590AbjGYKzx (ORCPT
+        id S234057AbjGYLLM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Jul 2023 06:55:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35798 "EHLO
+        Tue, 25 Jul 2023 07:11:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231605AbjGYKzc (ORCPT
+        with ESMTP id S234119AbjGYLKs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Jul 2023 06:55:32 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01FF12689;
-        Tue, 25 Jul 2023 03:53:26 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-5222bc916acso2738213a12.3;
-        Tue, 25 Jul 2023 03:53:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690282399; x=1690887199;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dwGjez98+Z7DYerWtpEnUz/QCZ+ae99CXaeubhq+lCo=;
-        b=mlSsZSHswqcByPTwbuUwAjc/BiDmV8alwigpLyjDiXkr2naBn6+a1HZzUbRU4uTF/t
-         wqHWi/o3OBlSLBO3sduuT8vGsvn3O5kv8/1ZOuf/ofWgdsa4j5HewPQqgX5BI1s/FswI
-         //QmEsDN+IYCxbkPSe+UHTesOimIDGDxQzoWU2tyDXEnup3ogcWyNtnAPPuvaGUhz8jX
-         +CstZmpDAhBHorkYtLEAIfmq8mm9QloyePHrg7B0hVfk2ccwWi0b1RRlBzFg1x3hWxy4
-         CsNB5AEAqhdTyxwe805gHiCPJIM6b9YbHbw9FGa0SRBl7KAMA5DhIOCJyqVnDo0HfDoy
-         JmiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690282399; x=1690887199;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dwGjez98+Z7DYerWtpEnUz/QCZ+ae99CXaeubhq+lCo=;
-        b=LvDhHikfj/y1VAY9rSP7glrHFKYc3W8DafFAfhqK6HZ49GwrFd/QiEFBP8IcZeJgWd
-         +h5QNP5F3HeWW6dfcRVnnJgzYTOFTAzupkLWadBtqijQB/q5r4sxdRUxI55pHqMk9Ckv
-         Z9GL3Hqx9Ojq9Nt5k4qdVGLqLDZtwWYJS/kpsT/GUIIAgN+67078zhn5TJ5MAfiWpfMB
-         69RzsCqyS9hPicB+x2QKkWuVsa1fEH/eIDf7il+5vrg2XgiViljhPxBhT5cizZ+NLoyK
-         T2DiBqHog0spiH5fB5tNakW0Gm7BBXyN+vvm6hB1ur+Ht3XNA0U/qkI65v2C9e7IX4AH
-         haHw==
-X-Gm-Message-State: ABy/qLamytpqv+UrgOSxNHz10kWKQRg2ErUFb2kHIRS5I0Ibvt6PKUIt
-        rtUhp2OxLYMZdLkct+wepx9aAF3MUscZFqw7DjA=
-X-Google-Smtp-Source: APBJJlEYaSivhgx3xMc6SfnY1DcId6rr4g2XNOz6zf25YZ4iJm3mULUSeaSJIxdaLkXWE4p071ujLNUfx7EIZzvH8EE=
-X-Received: by 2002:a05:6402:1295:b0:51e:4e77:3347 with SMTP id
- w21-20020a056402129500b0051e4e773347mr8959757edv.41.1690282398609; Tue, 25
- Jul 2023 03:53:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230725072254.32045-1-zegao@tencent.com> <20230725072254.32045-2-zegao@tencent.com>
- <20230725083357.GA3765278@hirez.programming.kicks-ass.net>
-In-Reply-To: <20230725083357.GA3765278@hirez.programming.kicks-ass.net>
-From:   Ze Gao <zegao2021@gmail.com>
-Date:   Tue, 25 Jul 2023 18:53:07 +0800
-Message-ID: <CAD8CoPAdRUxk3FWdNX6g0V6Kdr3+sXv8fdQ9NhgKUR29-ZLaug@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/3] sched, tracing: report task state in symbolic
- chars instead
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Tue, 25 Jul 2023 07:10:48 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4043426B0
+        for <linux-perf-users@vger.kernel.org>; Tue, 25 Jul 2023 04:09:57 -0700 (PDT)
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36PB9R6P009270;
+        Tue, 25 Jul 2023 11:09:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=+Iygf2tGqoRwuW0+Vy2AWM7vI5r+nyDtBDPS1VhS6xE=;
+ b=IiVsIIErdmO+7kGkBe657iOAnRkkR5UfdUFT7wkBO6D/ZP1MYhsoQdm/EfaXpbwLj2l8
+ U3lzgTHcUu/kpgxHFOucTwcNWwPeNHsjb4QpkLjvrdx6VF/ZXX7wgGRYPqIqJjfHAdqm
+ eE5x3WmmO5Fh96N/X3Z7g73ql4UeYAfMDlbIfuWsabg71zwvlRM0o0K1FSq1uJdR3VMK
+ v8NVIHN+TmLRbxYuGGtu7Fb5LIBoFRzEAxyO3k0gJ4E8YqgU3Z7oR8M/IL8QTusZxDDs
+ CL5CZEssbQgCMsvYgvhNmdRwO9A18+FLNcUtACIfV8gnmcl2Xu1ietlKOp1ZY22cwYwn LA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s2cmnrqu8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Jul 2023 11:09:48 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36PB9lOC011167;
+        Tue, 25 Jul 2023 11:09:47 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s2cmnrqu1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Jul 2023 11:09:47 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36PAFSLd016584;
+        Tue, 25 Jul 2023 11:09:47 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3s0v512tnq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Jul 2023 11:09:47 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36PB9iF325690836
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Jul 2023 11:09:44 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 14AE520040;
+        Tue, 25 Jul 2023 11:09:44 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D0AAF20043;
+        Tue, 25 Jul 2023 11:09:41 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.119.82])
+        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Tue, 25 Jul 2023 11:09:41 +0000 (GMT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.500.231\))
+Subject: Re: [PATCH] tools/perf: Fix addr location init during
+ arch_skip_callchain_idx function
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <ZL7nLEFFjTCTcZW6@kernel.org>
+Date:   Tue, 25 Jul 2023 16:39:29 +0530
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <6C610EE0-DA53-4341-B3B2-D1EE3120F149@linux.vnet.ibm.com>
+References: <20230724165815.17810-1-atrajeev@linux.vnet.ibm.com>
+ <ZL7nLEFFjTCTcZW6@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+X-Mailer: Apple Mail (2.3731.500.231)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Y3MQ_Pjajee0snIasVKZr-EeyNgAjpz1
+X-Proofpoint-ORIG-GUID: ysG283ScSmkWr3q3BI6ERA6En7XWS1Dy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-25_06,2023-07-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ adultscore=0 spamscore=0 clxscore=1011 lowpriorityscore=0 suspectscore=0
+ mlxlogscore=999 phishscore=0 mlxscore=0 impostorscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
+ definitions=main-2307250096
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jul 25, 2023 at 4:34=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> On Tue, Jul 25, 2023 at 03:22:52PM +0800, Ze Gao wrote:
->
-> > @@ -197,13 +198,6 @@ static inline long __trace_sched_switch_state(bool=
- preempt,
-> >       BUG_ON(p !=3D current);
-> >  #endif /* CONFIG_SCHED_DEBUG */
-> >
-> > -     /*
-> > -      * Preemption ignores task state, therefore preempted tasks are a=
-lways
-> > -      * RUNNING (we will not have dequeued if state !=3D RUNNING).
-> > -      */
-> > -     if (preempt)
-> > -             return TASK_REPORT_MAX;
-> > -
-> >       /*
-> >        * task_state_index() uses fls() and returns a value from 0-8 ran=
-ge.
-> >        * Decrement it by 1 (except TASK_RUNNING state i.e 0) before usi=
-ng
-> > @@ -212,7 +206,16 @@ static inline long __trace_sched_switch_state(bool=
- preempt,
-> >        */
-> >       state =3D __task_state_index(prev_state, p->exit_state);
-> >
-> > -     return state ? (1 << (state - 1)) : state;
-> > +     /*
-> > +      * Preemption ignores task state, therefore preempted tasks are a=
-lways
-> > +      * RUNNING (we will not have dequeued if state !=3D RUNNING).
-> > +      * Here, we use 'p' to denote this case and only for this case.
-> > +      */
-> > +     if (preempt)
-> > +             return 'p';
-> > +
->
-> I don't get this move, why compute state before this return?
 
-Oops,  I was going to ignore the PREEMP_ACTIVE in the first attempt
-and changed it to 'state =3D 0'
-which I decided to introduce 'p' to denote this after second thoughts.
-Will fix it and revert this move.
 
-> > +
-> > +     return task_index_to_char(state);
-> >  }
-> >  #endif /* CREATE_TRACE_POINTS */
-> >
-> > @@ -232,7 +235,7 @@ TRACE_EVENT(sched_switch,
-> >               __array(        char,   prev_comm,      TASK_COMM_LEN   )
-> >               __field(        pid_t,  prev_pid                        )
-> >               __field(        int,    prev_prio                       )
-> > -             __field(        long,   prev_state                      )
-> > +             __field(        char,   prev_state                      )
-> >               __array(        char,   next_comm,      TASK_COMM_LEN   )
-> >               __field(        pid_t,  next_pid                        )
-> >               __field(        int,    next_prio                       )
->
-> This is a format change and will likely break a ton of programs :/
+> On 25-Jul-2023, at 2:33 AM, Arnaldo Carvalho de Melo <acme@kernel.org> =
+wrote:
+>=20
+> Em Mon, Jul 24, 2023 at 10:28:15PM +0530, Athira Rajeev escreveu:
+>> perf record with callchain recording fails as below
+>> in powerpc:
+>>=20
+>>   ./perf record -a -gR sleep 10
+>>   ./perf report
+>>   perf: Segmentation fault
+>>=20
+>> gdb trace points to thread__find_map
+>>=20
+>>   0  0x00000000101df314 in atomic_cmpxchg (newval=3D1818846826, =
+oldval=3D1818846827, v=3D0x1001a8f3) at =
+/home/athira/linux/tools/include/asm-generic/atomic-gcc.h:70
+>>   1  refcount_sub_and_test (i=3D1, r=3D0x1001a8f3) at =
+/home/athira/linux/tools/include/linux/refcount.h:135
+>>   2  refcount_dec_and_test (r=3D0x1001a8f3) at =
+/home/athira/linux/tools/include/linux/refcount.h:148
+>>   3  map__put (map=3D0x1001a8b3) at util/map.c:311
+>>   4  0x000000001016842c in __map__zput (map=3D0x7fffffffa368) at =
+util/map.h:190
+>>   5  thread__find_map (thread=3D0x105b92f0, cpumode=3D<optimized =
+out>, addr=3D13835058055283572736, al=3Dal@entry=3D0x7fffffffa358) at =
+util/event.c:582
+>>   6  0x000000001016882c in thread__find_symbol (thread=3D<optimized =
+out>, cpumode=3D<optimized out>, addr=3D<optimized out>, =
+al=3D0x7fffffffa358) at util/event.c:656
+>>   7  0x00000000102e12b4 in arch_skip_callchain_idx (thread=3D<optimized=
+ out>, chain=3D<optimized out>) at =
+arch/powerpc/util/skip-callchain-idx.c:255
+>>   8  0x00000000101d3bf4 in thread__resolve_callchain_sample =
+(thread=3D0x105b92f0, cursor=3D0x1053d160, evsel=3D<optimized out>, =
+sample=3D0x7fffffffa908, parent=3D0x7fffffffa778, =
+root_al=3D0x7fffffffa710,
+>>       max_stack=3D<optimized out>) at util/machine.c:2940
+>>   9  0x00000000101cd210 in sample__resolve_callchain =
+(sample=3D<optimized out>, cursor=3D<optimized out>, parent=3D<optimized =
+out>, evsel=3D<optimized out>, al=3D<optimized out>, =
+max_stack=3D<optimized out>)
+>>       at util/callchain.c:1112
+>>   10 0x000000001022a9d8 in hist_entry_iter__add (iter=3D0x7fffffffa750,=
+ al=3D0x7fffffffa710, max_stack_depth=3D<optimized out>, =
+arg=3D0x7fffffffbbd0) at util/hist.c:1232
+>>   11 0x0000000010056d98 in process_sample_event (tool=3D0x7fffffffbbd0,=
+ event=3D0x7ffff6223c38, sample=3D0x7fffffffa908, evsel=3D<optimized =
+out>, machine=3D0x10524ef8) at builtin-report.c:332
+>>=20
+>> Here arch_skip_callchain_idx calls thread__find_symbol and which
+>> invokes thread__find_map with uninitialised "addr_location".
+>> Snippet:
+>>=20
+>> thread__find_symbol(thread, PERF_RECORD_MISC_USER, ip, &al);
+>>=20
+>> Recent change with commit 0dd5041c9a0ea ("perf addr_location:
+>> Add init/exit/copy functions"), introduced "maps__zput" in the
+>> function thread__find_map. This could result in segfault while
+>> accessing uninitialised map from "struct addr_location". Fix this
+>> by adding addr_location__init and addr_location__exit in
+>> arch_skip_callchain_idx.
+>=20
+> Thanks, applied.
 
-Yeah,  I admit that.  And I believe this kind of break happens each
-time the internal
-task state constant mapping is rearranged, it's of no big difference
-here, since the
-most renowned perf itself is still broken at this time after.  And
-IMHO it's time to fix
-this and do things correctly.  That is why I propose this and mark it as RF=
-C.
+Hi Arnaldo,
 
-BTW, could you help to point to any possible tools/programs that would
-break other
-than perf/libtraceevent, because these two are the only users I run
-into so far.
+Thanks for picking the fix=20
 
-Regards,
-Ze
+Athira
+>=20
+>> Fixes: 0dd5041c9a0ea ("perf addr_location: Add init/exit/copy =
+functions")
+>=20
+>> Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>=20
+> I'll also do a audit of all calls to thread__find_map() and its =
+callers
+> to check for other such cases :-\
+>=20
+> For instance, this one seem buggy as well, Adrian?
+>=20
+> diff --git a/tools/perf/util/dlfilter.c b/tools/perf/util/dlfilter.c
+> index 46f74b2344dbb34c..798a53d7e6c9dfc5 100644
+> --- a/tools/perf/util/dlfilter.c
+> +++ b/tools/perf/util/dlfilter.c
+> @@ -166,6 +166,7 @@ static __s32 dlfilter__resolve_address(void *ctx, =
+__u64 address, struct perf_dlf
+> if (!thread)
+> return -1;
+>=20
+> + addr_location__init(&al);
+> thread__find_symbol_fb(thread, d->sample->cpumode, address, &al);
+>=20
+> al_to_d_al(&al, &d_al);
+
+
