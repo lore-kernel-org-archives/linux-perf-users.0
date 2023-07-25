@@ -2,109 +2,94 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C35A3C001E0
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jul 2023 13:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1E9C0015E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jul 2023 13:32:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230365AbjGYN3r (ORCPT
+        id S230362AbjGYNcP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Jul 2023 09:29:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58296 "EHLO
+        Tue, 25 Jul 2023 09:32:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230344AbjGYN3q (ORCPT
+        with ESMTP id S230265AbjGYNcO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Jul 2023 09:29:46 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D705F1BD8;
-        Tue, 25 Jul 2023 06:29:44 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AED3E15BF;
-        Tue, 25 Jul 2023 06:30:27 -0700 (PDT)
-Received: from [10.57.89.166] (unknown [10.57.89.166])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E0BC33F5A1;
-        Tue, 25 Jul 2023 06:29:41 -0700 (PDT)
-Message-ID: <3873f3b6-5e0b-360f-2f01-4584e15e960a@arm.com>
-Date:   Tue, 25 Jul 2023 14:29:39 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.13.0
-Subject: Re: [PATCH V13 - RESEND 06/10] arm64/perf: Enable branch stack events
- via FEAT_BRBE
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Yang Shen <shenyang39@huawei.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
-Cc:     Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Tue, 25 Jul 2023 09:32:14 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 062811BC2;
+        Tue, 25 Jul 2023 06:32:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=cJS9hWdS3WIM11d6kg/J2cpVY/K0AghRcBxdtWBel3E=; b=fu+uGT2qcg8H3XiKFVWP5UKtUq
+        lKTdMja9KLM/RBM3EcVilsF1p6x9bJYZyEu8mCJq15cab7zWZYLSH8YhSJkaxEU9CifjHcmYyyEZO
+        Cf53hw9g1ptZIAbpS3kVqcJxy5W6LlO+BIHvpK8CEjL57HhwzJxe5xBN1J5V/aFKGzgONGBUkldOd
+        ahHKi1y7acZIY4uAlNt/Kf784xjSInYAkfOjQ8OgNI//f0XwDKkMx9yjgysj7/lfDfPTogfHM5+tA
+        NdyAbLHorlLqctEgX4rPYQT901Yl7uMHDgFYn16OELr/frraKQpiR1ToCCuHV5//3Y8ce15wO9r5E
+        OJZUQz4Q==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1qOI7x-004A0r-0c;
+        Tue, 25 Jul 2023 13:31:01 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 42AC4300095;
+        Tue, 25 Jul 2023 15:31:00 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 265B52CCD6AC0; Tue, 25 Jul 2023 15:31:00 +0200 (CEST)
+Date:   Tue, 25 Jul 2023 15:31:00 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ze Gao <zegao2021@gmail.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <20230711082455.215983-1-anshuman.khandual@arm.com>
- <20230711082455.215983-7-anshuman.khandual@arm.com>
- <5c7c1ff3-1e2a-1258-7fa0-c82a9ab62646@huawei.com>
- <9d07e82a-06fb-a5f8-6f4f-f3c16784b9b7@arm.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <9d07e82a-06fb-a5f8-6f4f-f3c16784b9b7@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>
+Subject: Re: [RFC PATCH 1/3] sched, tracing: report task state in symbolic
+ chars instead
+Message-ID: <20230725133100.GL3765278@hirez.programming.kicks-ass.net>
+References: <20230725072254.32045-1-zegao@tencent.com>
+ <20230725072254.32045-2-zegao@tencent.com>
+ <20230725083357.GA3765278@hirez.programming.kicks-ass.net>
+ <CAD8CoPAdRUxk3FWdNX6g0V6Kdr3+sXv8fdQ9NhgKUR29-ZLaug@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD8CoPAdRUxk3FWdNX6g0V6Kdr3+sXv8fdQ9NhgKUR29-ZLaug@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 25/07/2023 12:42, Anshuman Khandual wrote:
-> Hello Yang,
-> 
-> On 7/25/23 12:42, Yang Shen wrote:
->>> +    if (!(branch_type & PERF_SAMPLE_BRANCH_NO_CYCLES))
->>> +        brbcr |= BRBCR_EL1_CC;
->>
->> Hi Anshuman,
->>
->> Here is problem about enable CYCLES_COUNT. The SPEC defines that the CYCLES_COUNT is only
->>
->> valid when the BRECR_EL1.CC & BRBCR_EL2.CC is true. And here the SPEC also defines that
->>
->> when PSTATE.EL == EL2 and HCR_EL2.E2h == '1', 'MSR BRBCR_EL1, <Xt>' means writing to
->>
->> BRBCR_EL2 actually. So 'armv8pmu_branch_enable' can only set the BRBCR_EL2.CC, while the
->>
->> BRECR_EL1.CC is still 0. The CYCLES_COUNT will be always 0 in records.
-> 
-> 
-> Agreed, this is a valid problem i.e BRBCR_EL1.CC and BRBCR_EL2.CC both needs to be set
-> for valid cycle count information regardless if the kernel runs in EL1 or EL2. A simple
-> hack in the current code setting BRBCR_EL12.C, which in turn sets BRBCR_EL1.CC when the
-> kernel runs in EL2 solves the problem.
-> 
->>
->> As a solution, maybe BRBCR_EL12 should be added for driver according to the registers definition.
-> 
-> Right, will add the definition for BRBCR_EL12 in arch/arm64/tools/sysreg
-> 
->>
->> Or, do you have a more standard solution?
-> 
-> Right, there are some nuances involved here.
-> 
-> Kernel could boot
-> 	
-> a. Directly into EL2 and stays in EL2 for good
-> b. Directly into EL2 but switches into EL1
-> c. Directly into EL1 without ever going into EL2
-> 
-> In all the above cases BRBCR_EL1.CC and BRBCR_EL2.CC needs to be set when cycle count
-> is requested in the perf event interface (event->attr.branch_sample_type) via clearing
-> PERF_SAMPLE_BRANCH_NO_CYCLES.
-> 
-> 
-> - For the case as in (c) where kernel boots into EL1 directly and hence cannot ever set
->    EL2 register, BRBCR_EL2.CC would be a booting requirement - updated in booting.rst
-> 
-> - For the cases as in (a) and (b) kernel boots via EL2, hence there is an opportunity
->    to set both BRBCR_EL1.CC (via accessed BRBCR_EL12.CC) and BRBCR_EL2.CC. Depending on
+On Tue, Jul 25, 2023 at 06:53:07PM +0800, Ze Gao wrote:
 
-You don't need to use BRBCR_EL12, if you do it early enough, before
-HCR_EL2.E2H == 1 is applied.
+> > > @@ -232,7 +235,7 @@ TRACE_EVENT(sched_switch,
+> > >               __array(        char,   prev_comm,      TASK_COMM_LEN   )
+> > >               __field(        pid_t,  prev_pid                        )
+> > >               __field(        int,    prev_prio                       )
+> > > -             __field(        long,   prev_state                      )
+> > > +             __field(        char,   prev_state                      )
+> > >               __array(        char,   next_comm,      TASK_COMM_LEN   )
+> > >               __field(        pid_t,  next_pid                        )
+> > >               __field(        int,    next_prio                       )
+> >
+> > This is a format change and will likely break a ton of programs :/
+> 
 
-Suzuki
+> BTW, could you help to point to any possible tools/programs that would
+> break other than perf/libtraceevent, because these two are the only
+> users I run into so far.
 
+Latencytop was the one breaking a few years ago, but there's a metric
+ton of sched_switch users out there, this is bound to generate pain.
+
+Steve, you remember what the status of all this was? at the time
+breaking this was considered on par with ABI breakage and we reverted or
+something. Is this still so?
