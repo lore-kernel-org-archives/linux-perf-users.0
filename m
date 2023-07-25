@@ -2,94 +2,71 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1E9C0015E
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jul 2023 13:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C062C0015E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jul 2023 13:50:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230362AbjGYNcP (ORCPT
+        id S230092AbjGYNuv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Jul 2023 09:32:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59148 "EHLO
+        Tue, 25 Jul 2023 09:50:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230265AbjGYNcO (ORCPT
+        with ESMTP id S230315AbjGYNuu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Jul 2023 09:32:14 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 062811BC2;
-        Tue, 25 Jul 2023 06:32:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=cJS9hWdS3WIM11d6kg/J2cpVY/K0AghRcBxdtWBel3E=; b=fu+uGT2qcg8H3XiKFVWP5UKtUq
-        lKTdMja9KLM/RBM3EcVilsF1p6x9bJYZyEu8mCJq15cab7zWZYLSH8YhSJkaxEU9CifjHcmYyyEZO
-        Cf53hw9g1ptZIAbpS3kVqcJxy5W6LlO+BIHvpK8CEjL57HhwzJxe5xBN1J5V/aFKGzgONGBUkldOd
-        ahHKi1y7acZIY4uAlNt/Kf784xjSInYAkfOjQ8OgNI//f0XwDKkMx9yjgysj7/lfDfPTogfHM5+tA
-        NdyAbLHorlLqctEgX4rPYQT901Yl7uMHDgFYn16OELr/frraKQpiR1ToCCuHV5//3Y8ce15wO9r5E
-        OJZUQz4Q==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qOI7x-004A0r-0c;
-        Tue, 25 Jul 2023 13:31:01 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 42AC4300095;
-        Tue, 25 Jul 2023 15:31:00 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 265B52CCD6AC0; Tue, 25 Jul 2023 15:31:00 +0200 (CEST)
-Date:   Tue, 25 Jul 2023 15:31:00 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ze Gao <zegao2021@gmail.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Subject: Re: [RFC PATCH 1/3] sched, tracing: report task state in symbolic
- chars instead
-Message-ID: <20230725133100.GL3765278@hirez.programming.kicks-ass.net>
-References: <20230725072254.32045-1-zegao@tencent.com>
- <20230725072254.32045-2-zegao@tencent.com>
- <20230725083357.GA3765278@hirez.programming.kicks-ass.net>
- <CAD8CoPAdRUxk3FWdNX6g0V6Kdr3+sXv8fdQ9NhgKUR29-ZLaug@mail.gmail.com>
+        Tue, 25 Jul 2023 09:50:50 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB3F2100;
+        Tue, 25 Jul 2023 06:50:48 -0700 (PDT)
+Received: from canpemm500007.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4R9JHc33hRzCrM1;
+        Tue, 25 Jul 2023 21:47:24 +0800 (CST)
+Received: from localhost (10.174.179.215) by canpemm500007.china.huawei.com
+ (7.192.104.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 25 Jul
+ 2023 21:50:46 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>
+CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] perf: Remove unused extern declaration arch_perf_get_page_size()
+Date:   Tue, 25 Jul 2023 21:50:38 +0800
+Message-ID: <20230725135038.25060-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD8CoPAdRUxk3FWdNX6g0V6Kdr3+sXv8fdQ9NhgKUR29-ZLaug@mail.gmail.com>
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.215]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ canpemm500007.china.huawei.com (7.192.104.62)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jul 25, 2023 at 06:53:07PM +0800, Ze Gao wrote:
+commit 8af26be06272 ("perf/core: Fix arch_perf_get_page_size()")
+left behind this.
 
-> > > @@ -232,7 +235,7 @@ TRACE_EVENT(sched_switch,
-> > >               __array(        char,   prev_comm,      TASK_COMM_LEN   )
-> > >               __field(        pid_t,  prev_pid                        )
-> > >               __field(        int,    prev_prio                       )
-> > > -             __field(        long,   prev_state                      )
-> > > +             __field(        char,   prev_state                      )
-> > >               __array(        char,   next_comm,      TASK_COMM_LEN   )
-> > >               __field(        pid_t,  next_pid                        )
-> > >               __field(        int,    next_prio                       )
-> >
-> > This is a format change and will likely break a ton of programs :/
-> 
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ include/linux/perf_event.h | 4 ----
+ 1 file changed, 4 deletions(-)
 
-> BTW, could you help to point to any possible tools/programs that would
-> break other than perf/libtraceevent, because these two are the only
-> users I run into so far.
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 2166a69e3bf2..198cc86b747e 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1860,10 +1860,6 @@ extern void arch_perf_update_userpage(struct perf_event *event,
+ 				      struct perf_event_mmap_page *userpg,
+ 				      u64 now);
+ 
+-#ifdef CONFIG_MMU
+-extern __weak u64 arch_perf_get_page_size(struct mm_struct *mm, unsigned long addr);
+-#endif
+-
+ /*
+  * Snapshot branch stack on software events.
+  *
+-- 
+2.34.1
 
-Latencytop was the one breaking a few years ago, but there's a metric
-ton of sched_switch users out there, this is bound to generate pain.
-
-Steve, you remember what the status of all this was? at the time
-breaking this was considered on par with ABI breakage and we reverted or
-something. Is this still so?
