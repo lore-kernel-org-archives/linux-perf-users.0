@@ -2,297 +2,168 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0239C0015E
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jul 2023 05:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B922EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jul 2023 05:54:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229452AbjGYFvK (ORCPT
+        id S232023AbjGYFyV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Jul 2023 01:51:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59476 "EHLO
+        Tue, 25 Jul 2023 01:54:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231453AbjGYFvH (ORCPT
+        with ESMTP id S231940AbjGYFx7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Jul 2023 01:51:07 -0400
+        Tue, 25 Jul 2023 01:53:59 -0400
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D189CE71
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Jul 2023 22:51:05 -0700 (PDT)
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36P5YSPJ030406;
-        Tue, 25 Jul 2023 05:50:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
- from : in-reply-to : date : cc : message-id : references : to :
- content-transfer-encoding : mime-version; s=pp1;
- bh=9VhP5synuBkn8l9QHwHLwIIsVPg8oD9RbvsgOyx6Obc=;
- b=GZU72zMAURmHXRpAFHDevjYGd8fHAuj3PzA3KcMGtluG1h35bAevH7YWqZh4b30y+fEB
- xUrV/dGM4EFBIPwxTswykn27IJg6NyNEUAuLxH/xcVAFJRTCrtfqqUe+uXu5Wn6BwCHQ
- 2G5nWX+y0vLZP6OnXNYnupct977Orter0EqQqWru615CLvvjCqvdWoKwN1Y5ZgAxpiQS
- zI2MMi8RJ4OgdB4OtyYnJIwh5jp4OfdpgpnVka5S7SoGMCVMOpw9Iv+YyfnaHtwiBpH4
- nQd3jfkfUqsiHSUfLv7U25Ze8NoT8gqtmASGNKmVh6maN+q1OU8o3BRcs34gvM19JNkB vw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s20jt9mjt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Jul 2023 05:50:58 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36P5ZlBq003313;
-        Tue, 25 Jul 2023 05:50:58 GMT
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF17F1FCB;
+        Mon, 24 Jul 2023 22:53:54 -0700 (PDT)
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36P5a4rn003524;
+        Tue, 25 Jul 2023 05:53:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=73b5IEFhrpzhzei5MhvJ+VRozwcxxuRxmymx0ijdhRY=;
+ b=PrzHE9MEpO1Ke5E3yIQV8a74GrE3iP+1Ymb/gUwsMB0m9NA1a1j/CPawkgkfG9gtSMjK
+ a8HbNN0kQl3Kbia56E5m/pI6sysjktjen9wLjai3Qgccm5hi3IvmXeVNtwZgZSUz+t2m
+ 1yBpj2HTl6OBNhjR2w+CE8l5BThwIolN7fXLVnFL0m4Ht2lbgHvi2B3F2AAQiCFVBoeM
+ HT3v9OgybWpDwChbj26nEWV5khnE5+okNaNbf1xkHIMXEGuF2uT28u/wKCO4q2c+EcBO
+ 5ZloYww3yQms815zkNdeQDAwGSXl4YT/cvXhAQ+fpdIbQJCRONyOO4T95SByKyNctaHY qQ== 
 Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s20jt9mjk-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s27shgyws-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Jul 2023 05:50:58 +0000
+        Tue, 25 Jul 2023 05:53:41 +0000
 Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36P55Et2016574;
-        Tue, 25 Jul 2023 05:50:57 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3s0v510vwv-1
+        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36P5GwO0016644;
+        Tue, 25 Jul 2023 05:53:40 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3s0v510wc6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Jul 2023 05:50:57 +0000
+        Tue, 25 Jul 2023 05:53:40 +0000
 Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36P5oqE514352916
+        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36P5rb2t19989238
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jul 2023 05:50:53 GMT
+        Tue, 25 Jul 2023 05:53:37 GMT
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 341732004D;
-        Tue, 25 Jul 2023 05:50:52 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 8FA1C2004B;
+        Tue, 25 Jul 2023 05:53:37 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 164EA20040;
-        Tue, 25 Jul 2023 05:50:50 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 9769E20040;
+        Tue, 25 Jul 2023 05:53:35 +0000 (GMT)
 Received: from smtpclient.apple (unknown [9.43.73.40])
         by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Tue, 25 Jul 2023 05:50:49 +0000 (GMT)
+        Tue, 25 Jul 2023 05:53:35 +0000 (GMT)
 Content-Type: text/plain;
-        charset=utf-8
-Subject: Re: [PATCH V2 00/26] tools/perf: Fix shellcheck coding/formatting
- issues of perf tool shell scripts
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.500.231\))
+Subject: Re: [PATCH v3 00/10] Add sysfs interface files to hv_gpci device to
+ expose system information
 From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <1f1e9978-a176-0ae9-6dac-8cc275c5f905@linux.ibm.com>
-Date:   Tue, 25 Jul 2023 11:20:37 +0530
-Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+In-Reply-To: <20230719061231.631410-1-kjain@linux.ibm.com>
+Date:   Tue, 25 Jul 2023 11:23:23 +0530
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
         Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>
-Message-Id: <89C3584E-97E6-4FCF-ABFA-C94AD3F65BC4@linux.vnet.ibm.com>
-References: <20230709182800.53002-1-atrajeev@linux.vnet.ibm.com>
- <1fbdbb26-4fce-ea25-a96a-99982b3f1603@linux.ibm.com>
- <CAP-5=fWZy-y9kiuAFQsaNeRYn8PJofFR5DHj5qA53FhB3+UrfQ@mail.gmail.com>
- <D52339A7-30C6-4066-AE05-4BF8E9DCCFF4@linux.vnet.ibm.com>
- <1f1e9978-a176-0ae9-6dac-8cc275c5f905@linux.ibm.com>
-To:     kajoljain <kjain@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
+        disgoel@linux.ibm.com, linux-perf-users@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <D884EDCC-EC77-4C80-A4D4-06B50ABE4AF8@linux.vnet.ibm.com>
+References: <20230719061231.631410-1-kjain@linux.ibm.com>
+To:     Kajol Jain <kjain@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
 X-Mailer: Apple Mail (2.3731.500.231)
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: vuVA6CNK4pkpjoiEaaQpl9ffVamy-T4Q
-X-Proofpoint-GUID: 7JBDLpYQgz5z8cmVWI0IYKPiiGuWQhJW
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
-MIME-Version: 1.0
+X-Proofpoint-GUID: nRRJxsTU-PYSn6VfvkYHmfyIpzED52qG
+X-Proofpoint-ORIG-GUID: nRRJxsTU-PYSn6VfvkYHmfyIpzED52qG
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
  definitions=2023-07-25_02,2023-07-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
- priorityscore=1501 impostorscore=0 phishscore=0 mlxscore=0 bulkscore=0
- malwarescore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
- definitions=main-2307250050
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
+ mlxlogscore=999 priorityscore=1501 spamscore=0 impostorscore=0
+ suspectscore=0 bulkscore=0 phishscore=0 mlxscore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2307250050
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-> On 20-Jul-2023, at 10:48 AM, kajoljain <kjain@linux.ibm.com> wrote:
->=20
->=20
->=20
-> On 7/20/23 10:42, Athira Rajeev wrote:
->>=20
->>=20
->>> On 19-Jul-2023, at 11:16 PM, Ian Rogers <irogers@google.com> wrote:
->>>=20
->>> On Tue, Jul 18, 2023 at 11:17=E2=80=AFPM kajoljain <kjain@linux.ibm.com=
-> wrote:
->>>>=20
->>>> Hi,
->>>>=20
->>>> Looking for review comments on this patchset.
->>>>=20
->>>> Thanks,
->>>> Kajol Jain
->>>>=20
->>>>=20
->>>> On 7/9/23 23:57, Athira Rajeev wrote:
->>>>> Patchset covers a set of fixes for coding/formatting issues observed =
-while
->>>>> running shellcheck tool on the perf shell scripts.
->>>>>=20
->>>>> This cleanup is a pre-requisite to include a build option for shellch=
-eck
->>>>> discussed here: https://www.spinics.net/lists/linux-perf-users/msg255=
-53.html
->>>>> First set of patches were posted here:
->>>>> https://lore.kernel.org/linux-perf-users/53B7D823-1570-4289-A632-2205=
-EE2B522C@linux.vnet.ibm.com/T/#t
->>>>>=20
->>>>> This patchset covers remaining set of shell scripts which needs
->>>>> fix. Patch 1 is resubmission of patch 6 from the initial series.
->>>>> Patch 15, 16 and 22 touches code from tools/perf/trace/beauty.
->>>>> Other patches are fixes for scripts from tools/perf/tests.
->>>>>=20
->>>>> The shellcheck is run for severity level for errors and warnings.
->>>>> Command used:
->>>>>=20
->>>>> # for F in $(find tests/shell/ -perm -o=3Dx -name '*.sh'); do shellch=
-eck -S warning $F; done
->>>>> # echo $?
->>>>> 0
->>>>>=20
->>>=20
->>> I don't see anything objectionable in the changes so for the series:
->>> Acked-by: Ian Rogers <irogers@google.com>
->>>=20
->>> Some thoughts:
->>> - Adding "#!/bin/bash" to scripts in tools/perf/tests/lib - I think
->>> we didn't do this to avoid these being included as tests. There are
->>> now extra checks when finding shell tests, so I can imagine doing this
->>> isn't a regression but just a heads up.
->>> - I think James' comment was addressed:
->>> https://lore.kernel.org/linux-perf-users/334989bf-5501-494c-f246-81878f=
-d2fed8@arm.com/
->>> - Why aren't these changes being mailed to LKML? The wider community
->>> on LKML have thoughts on shell scripts, plus it makes the changes miss
->>> my mail filters.
->>> - Can we automate this testing into the build? For example, following
->>> a similar kernel build pattern we run a python test and make the log
->>> output a requirement here:
->>> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/pmu-events/Build?h=3Dperf-tools-next#n30
->>>  I think we can translate:
->>> for F in $(find tests/shell/ -perm -o=3Dx -name '*.sh'); do shellcheck
->>> -S warning $F; done
->>>  into a rule in make for log files that are then a dependency on the
->>> perf binary. We can then parallel shellcheck during the build and
->>> avoid regressions. We probably need a CONFIG_SHELLCHECK feature check
->>> in the build to avoid not having shellcheck breaking the build.
->>=20
->> Hi Ian
->>=20
->> Thanks for the comments.
->> Yes, next step after this is to include build option for shellcheck by u=
-pdating Makefile.
->> We will surely get into that build option enablement patch once we have =
-all these corrections in place.
->>=20
->> Thanks
->> Athira
->>>=20
->=20
-> Hi Ian,
->   Thanks for reviewing the patches. As athira mentioned our next is to
-> include build option. So, we will work on it next once all the
-> correction done.
->=20
-> Thanks,
-> Kajol Jain
+> On 19-Jul-2023, at 11:42 AM, Kajol Jain <kjain@linux.ibm.com> wrote:
+> 
+> The hcall H_GET_PERF_COUNTER_INFO can be used to get data related to
+> chips, dimms and system topology, by passing different counter request
+> values.
+> Patchset adds sysfs files to "/sys/devices/hv_gpci/interface/"
+> of hv_gpci pmu driver, which will expose system topology information
+> using H_GET_PERF_COUNTER_INFO hcall. The added sysfs files are
+> available for power10 and above platforms and needs root access
+> to read the data.
+> 
+> Patches 1,3,5,7,9 adds sysfs interface files to the hv_gpci
+> pmu driver, to get system topology information.
+> 
+> List of added sysfs files:
+> -> processor_bus_topology (Counter request value : 0xD0)
+> -> processor_config (Counter request value : 0x90)
+> -> affinity_domain_via_virtual_processor (Counter request value : 0xA0)
+> -> affinity_domain_via_domain (Counter request value : 0xB0)
+> -> affinity_domain_via_partition (Counter request value : 0xB1)
+> 
+> Patches 2,4,6,8,10 adds details of the newly added hv_gpci
+> interface files listed above in the ABI documentation.
+> 
+> Patches 2,4,6,8,10 adds details of the newly added hv_gpci
+> interface files listed above in the ABI documentation.
 
-Hi Arnaldo,  Namhyung
-
-Can you have this patchset applied along with Acked-by from Ian ?
-Our next step is to add a build option for shellcheck by updating Makefile =
-and will be working on that.
+Reviewed-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 
 Thanks
-Athira=20
->=20
->>> Thanks,
->>> Ian
->>>=20
->>>>> Changelog:
->>>>> v1 -> v2:
->>>>> - Rebased on top of perf-tools-next from:
->>>>> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=
-=3Dperf-tools-next
->>>>>=20
->>>>> - Fixed shellcheck errors and warnings reported for newly
->>>>>   added changes from perf-tools-next branch
->>>>>=20
->>>>> - Addressed review comment from James clark for patch
->>>>>   number 13 from V1. The changes in patch 13 were not necessary
->>>>>   since the file "tests/shell/lib/coresight.sh" is sourced from
->>>>>   other test files.
->>>>>=20
->>>>> Akanksha J N (1):
->>>>> tools/perf/tests: Fix shellcheck warnings for
->>>>>   trace+probe_vfs_getname.sh
->>>>>=20
->>>>> Athira Rajeev (14):
->>>>> tools/perf/tests: fix test_arm_spe_fork.sh signal case issues
->>>>> tools/perf/tests: Fix unused variable references in
->>>>>   stat+csv_summary.sh testcase
->>>>> tools/perf/tests: fix shellcheck warning for
->>>>>   test_perf_data_converter_json.sh testcase
->>>>> tools/perf/tests: Fix shellcheck issue for stat_bpf_counters.sh
->>>>>   testcase
->>>>> tools/perf/tests: Fix shellcheck issues in
->>>>>   tests/shell/stat+shadow_stat.sh tetscase
->>>>> tools/perf/tests: Fix shellcheck warnings for
->>>>>   thread_loop_check_tid_10.sh
->>>>> tools/perf/tests: Fix shellcheck warnings for unroll_loop_thread_10.sh
->>>>> tools/perf/tests: Fix shellcheck warnings for lib/probe_vfs_getname.sh
->>>>> tools/perf/tests: Fix the shellcheck warnings in lib/waiting.sh
->>>>> tools/perf/trace: Fix x86_arch_prctl.sh to address shellcheck warnings
->>>>> tools/perf/arch/x86: Fix syscalltbl.sh to address shellcheck warnings
->>>>> tools/perf/tests/shell: Fix the shellcheck warnings in
->>>>>   record+zstd_comp_decomp.sh
->>>>> tools/perf/tests/shell: Fix shellcheck warning for stat+std_output.sh
->>>>>   testcase
->>>>> tools/perf/tests: Fix shellcheck warning for stat+std_output.sh
->>>>>   testcase
->>>>>=20
->>>>> Kajol Jain (11):
->>>>> tools/perf/tests: Fix shellcheck warning for probe_vfs_getname.sh
->>>>>   testcase
->>>>> tools/perf/tests: Fix shellcheck warning for record_offcpu.sh testcase
->>>>> tools/perf/tests: Fix shellcheck issue for lock_contention.sh testcase
->>>>> tools/perf/tests: Fix shellcheck issue for stat_bpf_counters_cgrp.sh
->>>>>   testcase
->>>>> tools/perf/tests: Fix shellcheck warning for asm_pure_loop.sh shell
->>>>>   script
->>>>> tools/perf/tests: Fix shellcheck warning for memcpy_thread_16k_10.sh
->>>>>   shell script
->>>>> tools/perf/tests: Fix shellcheck warning for probe.sh shell script
->>>>> tools/perf/trace: Fix shellcheck issue for arch_errno_names.sh script
->>>>> tools/perf: Fix shellcheck issue for check-headers.sh script
->>>>> tools/shell/coresight: Fix shellcheck warning for
->>>>>   thread_loop_check_tid_2.sh shell script
->>>>> tools/perf/tests/shell/lib: Fix shellcheck warning for stat_output.sh
->>>>>   shell script
->>>>>=20
->>>>> .../arch/x86/entry/syscalls/syscalltbl.sh     |  2 +-
->>>>> tools/perf/check-headers.sh                   |  6 ++--
->>>>> .../tests/shell/coresight/asm_pure_loop.sh    |  2 +-
->>>>> .../shell/coresight/memcpy_thread_16k_10.sh   |  2 +-
->>>>> .../coresight/thread_loop_check_tid_10.sh     |  2 +-
->>>>> .../coresight/thread_loop_check_tid_2.sh      |  2 +-
->>>>> .../shell/coresight/unroll_loop_thread_10.sh  |  2 +-
->>>>> tools/perf/tests/shell/lib/probe.sh           |  1 +
->>>>> .../perf/tests/shell/lib/probe_vfs_getname.sh |  5 ++--
->>>>> tools/perf/tests/shell/lib/stat_output.sh     |  1 +
->>>>> tools/perf/tests/shell/lib/waiting.sh         |  1 +
->>>>> tools/perf/tests/shell/lock_contention.sh     | 12 ++++----
->>>>> tools/perf/tests/shell/probe_vfs_getname.sh   |  4 +--
->>>>> .../tests/shell/record+zstd_comp_decomp.sh    | 14 +++++-----
->>>>> tools/perf/tests/shell/record_offcpu.sh       |  6 ++--
->>>>> tools/perf/tests/shell/stat+csv_output.sh     |  2 +-
->>>>> tools/perf/tests/shell/stat+csv_summary.sh    |  4 +--
->>>>> tools/perf/tests/shell/stat+shadow_stat.sh    |  4 +--
->>>>> tools/perf/tests/shell/stat+std_output.sh     |  3 +-
->>>>> tools/perf/tests/shell/stat_bpf_counters.sh   |  4 +--
->>>>> .../tests/shell/stat_bpf_counters_cgrp.sh     | 28 ++++++++-----------
->>>>> tools/perf/tests/shell/test_arm_spe_fork.sh   |  2 +-
->>>>> .../shell/test_perf_data_converter_json.sh    |  2 +-
->>>>> .../tests/shell/trace+probe_vfs_getname.sh    |  6 ++--
->>>>> tools/perf/trace/beauty/arch_errno_names.sh   | 15 ++++------
->>>>> tools/perf/trace/beauty/x86_arch_prctl.sh     |  6 ++--
->>>>> 26 files changed, 67 insertions(+), 71 deletions(-)
-
+Athira
+> 
+> Changelog:
+> v2 -> v3
+> -> Make nit changes in documentation patches as suggested by Randy Dunlap.
+> 
+> v1 -> v2
+> -> Incase the HCALL fails with errors that can be resolve during runtime,
+>   then only add sysinfo interface attributes to the interface_attrs
+>   attribute array. Even if one of the counter request value HCALL fails,
+>   don't add any sysinfo attribute to the interface_attrs attribute array.
+>   Add the code changes to make sure sysinfo interface added only when all
+>   the requirements met as suggested by Michael Ellerman.
+> -> Make changes in documentation, adds detail of errors type
+>   which can be resolved at runtime as suggested by Michael Ellerman.
+> -> Add new enum and sysinfo_counter_request array to get required
+>   counter request value in hv-gpci.c file.
+> -> Move the macros for interface attribute array index to hv-gpci.c, as
+>   these macros currently only used in hv-gpci.c file.
+> 
+> Kajol Jain (10):
+>  powerpc/hv_gpci: Add sysfs file inside hv_gpci device to show
+>    processor bus topology information
+>  docs: ABI: sysfs-bus-event_source-devices-hv_gpci: Document
+>    processor_bus_topology sysfs interface file
+>  powerpc/hv_gpci: Add sysfs file inside hv_gpci device to show
+>    processor config information
+>  docs: ABI: sysfs-bus-event_source-devices-hv_gpci: Document
+>    processor_config sysfs interface file
+>  powerpc/hv_gpci: Add sysfs file inside hv_gpci device to show affinity
+>    domain via virtual processor information
+>  docs: ABI: sysfs-bus-event_source-devices-hv_gpci: Document
+>    affinity_domain_via_virtual_processor sysfs interface file
+>  powerpc/hv_gpci: Add sysfs file inside hv_gpci device to show affinity
+>    domain via domain information
+>  docs: ABI: sysfs-bus-event_source-devices-hv_gpci: Document
+>    affinity_domain_via_domain sysfs interface file
+>  powerpc/hv_gpci: Add sysfs file inside hv_gpci device to show affinity
+>    domain via partition information
+>  docs: ABI: sysfs-bus-event_source-devices-hv_gpci: Document
+>    affinity_domain_via_partition sysfs interface file
+> 
+> .../sysfs-bus-event_source-devices-hv_gpci    | 160 +++++
+> arch/powerpc/perf/hv-gpci.c                   | 640 +++++++++++++++++-
+> 2 files changed, 798 insertions(+), 2 deletions(-)
+> 
+> -- 
+> 2.39.3
+> 
 
