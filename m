@@ -2,55 +2,54 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF51C04A6A
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jul 2023 07:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EC3C04FDF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jul 2023 07:27:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232600AbjGYH1B (ORCPT
+        id S232518AbjGYH1C (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Jul 2023 03:27:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45298 "EHLO
+        Tue, 25 Jul 2023 03:27:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232507AbjGYH00 (ORCPT
+        with ESMTP id S232502AbjGYH00 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Tue, 25 Jul 2023 03:26:26 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE78810F8;
-        Tue, 25 Jul 2023 00:23:09 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-66767d628e2so2945005b3a.2;
-        Tue, 25 Jul 2023 00:23:09 -0700 (PDT)
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27B1D18D;
+        Tue, 25 Jul 2023 00:23:03 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-668704a5b5bso4857432b3a.0;
+        Tue, 25 Jul 2023 00:23:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690269789; x=1690874589;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8jOqL9nsN3X2QdJmIGhs0fEScdnThT1mzgrts+M8u0c=;
-        b=P3uSFiU1A85ZSJW+KDb9oGfLXAkcmTl8KJIjIHI34hO7DMh5CQ8xjVOvFCjugBnao5
-         YoeoJgqCFcrBpF4FPxEi9hY5p9j/Ih56nHnaMAYwHzFYN/UCT9PC/DPY2D2jFYembcJh
-         Xl0AyJgZa/ji6U2z/EpGxkZ3iOMTsH2YsGVfd/DKUlE1G0DLQJ2B1rsMvHZi2gW7ZmIY
-         UfLBfyTZF7h6Md2IZcbw3hu95oeKNqp/9OOVqqEOt2e7urSSFg0wHqzmskEgijgSgTPh
-         +0dH0y109s6pCjy0eJcNgBb7u1kxRi2TU05xSiVMn/sqDvIQBMiwdjlMp/3OKqI2v98d
-         jMFg==
+        d=gmail.com; s=20221208; t=1690269782; x=1690874582;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vKQjaMEJgYXDeiEqOBeyjwVlXPnI8CfInsVRC+pOwA0=;
+        b=HNKC0I6t6rPeziRa/W467uitLYzDJL0JmAEEtV+PzeyPtcsfK6xjU6i5LRr0JbYMDd
+         gbIL7MBrUvsfXzqJOQ3LJ+EaZGnHYSZb+rDbmADhP36HShfupzHX3qXwv2+FYCQtUbaq
+         KJnztmCHluVNxPtx3kCmC/zIjc1ORRb1DNYUtwU3PxpfiDA4QVScOEcTWkDQ97EKSGQq
+         ZklS4cJRnFDbV/JKnF0+5JAremo9ZwDtuRX+r1Nk5y2gQpM0O4Z/wTHIXoLEY4XYTXg+
+         69O/2xtkiQmEXFg6NXaZROy93fuJSHAGeAfyM7a3so07p3yujaKuKIHGCMHxrDXNtqfX
+         JJag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690269789; x=1690874589;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8jOqL9nsN3X2QdJmIGhs0fEScdnThT1mzgrts+M8u0c=;
-        b=ER6JJHr1sed9NOcDtF4zuZ20RzLmiO8HeEEnF3SDXEQVnbbDg7CV4ctbWBj69m2f3i
-         lvE6Ne9kmFgmpgiMsyPAaqdLcmXGRkIP+r7rPVvKfjgvb5IrCVHNDjaDuQsx/f7kpoB2
-         5VTY4twQh1ccpS3bFQ02vdfgg8IkvHAetbHjneR3mbdFUMAwhpuOcRO13uiHi0OQykPw
-         O1ljzWGDpx7lpxeiEYZKlhEXoXiEAT/dMApaafws4FB6tLWO/SqVQ9CxjlHs9/OXTbD7
-         R9F0B4c9YJ5TvYwZYGheq9H+xAk1LQquxUz79Ast0n8j8RamIscQL13WnTPrTmrDMZky
-         6kig==
-X-Gm-Message-State: ABy/qLacNpjrY4myBTnVgDuahanKkPcWpmUNDZtHaZfD/kgpQKz+h19s
-        NhP3nsLuNjSEhenjrNbhkzM=
-X-Google-Smtp-Source: APBJJlE5P3KgIbml3rlumG2mIwCYc1q2G6bn6RD40IAKDiBVKE3ViSGYgMDvR1b5GmMw34nrbunaOw==
-X-Received: by 2002:a05:6a00:194c:b0:668:711a:7d93 with SMTP id s12-20020a056a00194c00b00668711a7d93mr7317580pfk.19.1690269789133;
-        Tue, 25 Jul 2023 00:23:09 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1690269782; x=1690874582;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vKQjaMEJgYXDeiEqOBeyjwVlXPnI8CfInsVRC+pOwA0=;
+        b=FhYF/GHQIIZp8a1KlBLZ2wnUGXZlGSdSmKeYhin3apOYm4JIYzRr/YKM1W61cxitob
+         tQOEPP87k0IuY60kZ2nyK0NdRKMWJUKm+eoFjaAHEHBpjVZI8hEkl3nd024pDskiTNdM
+         qSztPx0oMmnCYh7MBuIeaOozsaUm+6kYM4M8S47HQyQc9vFT6Yx/kEXeMca9qOpMbGX1
+         Xxg+bGjVPa+7MzyiFLEGTeMSqjtpweOHGkoK+Jv6WoTCy/kka1YI4Q+yntJlxMgd6hoz
+         KJo/K1E8rxqFgt6CeRbjkEjjnOtRgVoNY8zJo6clgU7UHhLpNCAXeMSEqjXvdmyKcMFT
+         I7jg==
+X-Gm-Message-State: ABy/qLazBL3fZOPNOI/XjiS5hyKel6cxbSFm45TseG1fhyRNpNOZc5TL
+        +UvC6iBHG/nhkfuP2rKaIjE=
+X-Google-Smtp-Source: APBJJlFjuoIgVBB2FhBq+74GoKcJSX+dXgAV1Y9+UPu8nu7svMqm2LdkIrh0NP5+f1Rj3TLNe/QZgQ==
+X-Received: by 2002:a05:6a00:130b:b0:67b:f249:35e2 with SMTP id j11-20020a056a00130b00b0067bf24935e2mr12223848pfu.21.1690269782467;
+        Tue, 25 Jul 2023 00:23:02 -0700 (PDT)
 Received: from localhost.localdomain ([203.205.141.82])
-        by smtp.googlemail.com with ESMTPSA id d12-20020a63734c000000b0055acfd94c20sm9863908pgn.35.2023.07.25.00.23.05
+        by smtp.googlemail.com with ESMTPSA id d12-20020a63734c000000b0055acfd94c20sm9863908pgn.35.2023.07.25.00.22.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jul 2023 00:23:08 -0700 (PDT)
+        Tue, 25 Jul 2023 00:23:01 -0700 (PDT)
 From:   Ze Gao <zegao2021@gmail.com>
 X-Google-Original-From: Ze Gao <zegao@tencent.com>
 To:     Ingo Molnar <mingo@redhat.com>,
@@ -66,125 +65,60 @@ To:     Ingo Molnar <mingo@redhat.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Subject: [RFC PATCH 1/3] sched, tracing: report task state in symbolic chars instead
-Date:   Tue, 25 Jul 2023 15:22:52 +0800
-Message-Id: <20230725072254.32045-2-zegao@tencent.com>
+Subject: [RFC PATCH 0/3] report task state in symbolic chars in sched tracepoints
+Date:   Tue, 25 Jul 2023 15:22:51 +0800
+Message-Id: <20230725072254.32045-1-zegao@tencent.com>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230725072254.32045-1-zegao@tencent.com>
-References: <20230725072254.32045-1-zegao@tencent.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Internal representations of task state are likely to be changed or ordered,
-and reporting them to userspace without exporting them as part of API is not
-a good choice, which can easily break a userspace observability tool as kernel
-evolves. For example, perf suffers from this and still reports wrong states
-by this patch.
+In the status quo, we should see three different outcomes of the reported
+sched-out task state from perf-script, perf-sched-timehist, and Tp_printk
+of tracepoint sched_switch.  And it's not hard to figure out that the
+former two are built upon the third one, and the reason why we see this
+inconsistency is that the former two does not catch up with the internal
+change of reported task state definitions as the kernel evolves.
 
-OTOH, some masqueraded state like TASK_REPORT_IDLE and TASK_REPORT_MAX are
-also reported inadvertently, which confuses things even more.
+IMHO, exporting internal representations of task state in the tracepoint
+sched_switch is not a good practice and not encouraged at all, which can
+easily break userspace tools that relies on it. Especially when tracepoints
+are massively used in many observability tools nowadays due to its stable
+nature, which makes them no longer used for debug only purpose and we
+should be careful to decide what ought to be reported to userspace and what
+ought not.
 
-So report task state in symbolic char instead, which is self-explaining and
-no further translation is needed.
+Therefore, to fix the issues mentioned above for good, instead of choosing
+to sync the userspace tracing tools with the latest task states constants
+mapping, I proposed to replace reported task state in sched_switch with
+a symbolic character, and save the further processing of userspace tools
+and spare them from knowing further implementation details in the kernel.
 
-Note for PREEMPT_ACTIVE, we introduce 'p' to report it and use the old
-conventions for the rest.
+After this patch seires, we report 'RSDTtXZPI' the same as in procfs, plus
+a 'p' which denotes PREEMP_ACTIVE and is used for sched_switch tracepoint only.
 
-Signed-off-by: Ze Gao <zegao@tencent.com>
----
- include/trace/events/sched.h | 41 +++++++++++++-----------------------
- 1 file changed, 15 insertions(+), 26 deletions(-)
+Reviews welcome!
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index fbb99a61f714..51102a7c0c2d 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -6,6 +6,7 @@
- #define _TRACE_SCHED_H
- 
- #include <linux/kthread.h>
-+#include <linux/sched.h>
- #include <linux/sched/numa_balancing.h>
- #include <linux/tracepoint.h>
- #include <linux/binfmts.h>
-@@ -187,7 +188,7 @@ DEFINE_EVENT(sched_wakeup_template, sched_wakeup_new,
- 	     TP_ARGS(p));
- 
- #ifdef CREATE_TRACE_POINTS
--static inline long __trace_sched_switch_state(bool preempt,
-+static inline const char __trace_sched_switch_state(bool preempt,
- 					      unsigned int prev_state,
- 					      struct task_struct *p)
- {
-@@ -197,13 +198,6 @@ static inline long __trace_sched_switch_state(bool preempt,
- 	BUG_ON(p != current);
- #endif /* CONFIG_SCHED_DEBUG */
- 
--	/*
--	 * Preemption ignores task state, therefore preempted tasks are always
--	 * RUNNING (we will not have dequeued if state != RUNNING).
--	 */
--	if (preempt)
--		return TASK_REPORT_MAX;
--
- 	/*
- 	 * task_state_index() uses fls() and returns a value from 0-8 range.
- 	 * Decrement it by 1 (except TASK_RUNNING state i.e 0) before using
-@@ -212,7 +206,16 @@ static inline long __trace_sched_switch_state(bool preempt,
- 	 */
- 	state = __task_state_index(prev_state, p->exit_state);
- 
--	return state ? (1 << (state - 1)) : state;
-+	/*
-+	 * Preemption ignores task state, therefore preempted tasks are always
-+	 * RUNNING (we will not have dequeued if state != RUNNING).
-+	 * Here, we use 'p' to denote this case and only for this case.
-+	 */
-+	if (preempt)
-+		return 'p';
-+
-+
-+	return task_index_to_char(state);
- }
- #endif /* CREATE_TRACE_POINTS */
- 
-@@ -232,7 +235,7 @@ TRACE_EVENT(sched_switch,
- 		__array(	char,	prev_comm,	TASK_COMM_LEN	)
- 		__field(	pid_t,	prev_pid			)
- 		__field(	int,	prev_prio			)
--		__field(	long,	prev_state			)
-+		__field(	char,	prev_state			)
- 		__array(	char,	next_comm,	TASK_COMM_LEN	)
- 		__field(	pid_t,	next_pid			)
- 		__field(	int,	next_prio			)
-@@ -249,22 +252,8 @@ TRACE_EVENT(sched_switch,
- 		/* XXX SCHED_DEADLINE */
- 	),
- 
--	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%s%s ==> next_comm=%s next_pid=%d next_prio=%d",
--		__entry->prev_comm, __entry->prev_pid, __entry->prev_prio,
--
--		(__entry->prev_state & (TASK_REPORT_MAX - 1)) ?
--		  __print_flags(__entry->prev_state & (TASK_REPORT_MAX - 1), "|",
--				{ TASK_INTERRUPTIBLE, "S" },
--				{ TASK_UNINTERRUPTIBLE, "D" },
--				{ __TASK_STOPPED, "T" },
--				{ __TASK_TRACED, "t" },
--				{ EXIT_DEAD, "X" },
--				{ EXIT_ZOMBIE, "Z" },
--				{ TASK_PARKED, "P" },
--				{ TASK_DEAD, "I" }) :
--		  "R",
--
--		__entry->prev_state & TASK_REPORT_MAX ? "+" : "",
-+	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%c ==> next_comm=%s next_pid=%d next_prio=%d",
-+		__entry->prev_comm, __entry->prev_pid, __entry->prev_prio, __entry->prev_state,
- 		__entry->next_comm, __entry->next_pid, __entry->next_prio)
- );
- 
+Regards,
+
+Ze
+
+Ze Gao (2):
+  sched, tracing: report task state in symbolic chars instead
+  perf sched: sync with latest sched_switch tracepoint definition
+
+ include/trace/events/sched.h | 41 ++++++++++-----------------
+ tools/perf/builtin-sched.c   | 55 ++++++------------------------------
+ 2 files changed, 24 insertions(+), 72 deletions(-)
+
+Ze Gao (1):
+  libtraceevent: sync with latest sched_switch tracepoint definition
+
+ plugins/plugin_sched_switch.c | 23 +----------------------
+ 1 file changed, 1 insertion(+), 22 deletions(-)
+
 -- 
 2.40.1
 
