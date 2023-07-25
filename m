@@ -2,133 +2,106 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9496BC41513
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jul 2023 00:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6F2C0015E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jul 2023 04:40:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229557AbjGYATk (ORCPT
+        id S229748AbjGYEkO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Jul 2023 20:19:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56960 "EHLO
+        Tue, 25 Jul 2023 00:40:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231142AbjGYATj (ORCPT
+        with ESMTP id S229470AbjGYEkN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Jul 2023 20:19:39 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02F1B115;
-        Mon, 24 Jul 2023 17:19:39 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-668704a5b5bso4634042b3a.0;
-        Mon, 24 Jul 2023 17:19:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690244378; x=1690849178;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ur/5UIDBgXwG6Jd780Yg5waMFnc/eDxnmfp27sGRL7Y=;
-        b=UV8wFxFPlSwyHsXrydC1BGttSUD8lOYHmBhZvhaf/T2014SOsJQLM4SFjYjxITN3Ei
-         /d5uvS56wDOZAdMe9C3XDtvK1JYm22RTo5uN3bZmmiFQmwD6cYOu8wMhXLdP+EqxDzke
-         A1e3A2tm2INM9SnAGh559S/O2gfw6jmkTf/+LzwStrt14aXD2lmOO6cY43yujd/CJdiY
-         3zEVSjNS2nn68dMVK7gutTTViD9b15P7Jp7KVh0Fb9sk0o6/43VeTXyfGP1Op4MYx+Fg
-         FNUnz1SanvO5enx9h3MDiX/BlWnqBIFUjI27Bz92yBRh/UGMK0M7ppyRcP/xK2YE8mzI
-         iyKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690244378; x=1690849178;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ur/5UIDBgXwG6Jd780Yg5waMFnc/eDxnmfp27sGRL7Y=;
-        b=RjvTSt5jE0qxOEsFVOAX65WQhNtUGE6WvMl0ieosHM1mpLVzzY7OV5dGxmGzrh8IGN
-         P4+ApawiI2l67fSWPK4vJUg1zBXxIh31vE9lItCeiCD/ER3i4lwtpQxSGrTLq9gFVZn+
-         IRfzTMBvHV+O5G7CTw0yQ+YB1/em62d1EslVo4so0eTOtub2n4qfdCC2DPfxVI7Tlx5k
-         uuITqJbzg/j47uiGf5dWOHUtUJ/UN1zyreov6I24xF98W1XSpwPLjQVNc9sBHcWq2HaA
-         piKAdWWi+Vt+wL7CmzuygzcwjETRkzjrUV0dHlAYcO0Qq1I2kJEvQ06PeBhgYMYnNZEe
-         Ub8w==
-X-Gm-Message-State: ABy/qLbpXAydVz+XoCgJ8UzzrO8iD6wRwMkyCgKNd4fQpRgZNfuoDLpS
-        qxqVjkc1/rDfjgBMYdwaaJo=
-X-Google-Smtp-Source: APBJJlE0zu9xQr1b0Yyk1rWyWtZRdcIrob1s3mfM+a0+bLXLjgA2N8iULbEgxbjKaZhnSnITG9QZqw==
-X-Received: by 2002:a05:6a00:14c4:b0:675:8f71:28ee with SMTP id w4-20020a056a0014c400b006758f7128eemr13956213pfu.34.1690244378333;
-        Mon, 24 Jul 2023 17:19:38 -0700 (PDT)
-Received: from bangji.roam.corp.google.com ([101.235.25.38])
-        by smtp.gmail.com with ESMTPSA id i22-20020aa787d6000000b006736bce8581sm8602432pfo.16.2023.07.24.17.19.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jul 2023 17:19:37 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 2/2] perf machine: Include data symbols in the kernel map
-Date:   Mon, 24 Jul 2023 17:19:29 -0700
-Message-ID: <20230725001929.368041-2-namhyung@kernel.org>
-X-Mailer: git-send-email 2.41.0.487.g6d72f3e995-goog
-In-Reply-To: <20230725001929.368041-1-namhyung@kernel.org>
-References: <20230725001929.368041-1-namhyung@kernel.org>
+        Tue, 25 Jul 2023 00:40:13 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4E59810D1;
+        Mon, 24 Jul 2023 21:40:11 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F2C1FEC;
+        Mon, 24 Jul 2023 21:40:54 -0700 (PDT)
+Received: from [10.163.51.115] (unknown [10.163.51.115])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC54A3F67D;
+        Mon, 24 Jul 2023 21:40:03 -0700 (PDT)
+Message-ID: <f76c16a5-22e0-4d8c-650d-1198a5cedcf0@arm.com>
+Date:   Tue, 25 Jul 2023 10:10:01 +0530
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v2 1/4] arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE
+ capability
+Content-Language: en-US
+To:     James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, irogers@google.com,
+        will@kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20230724134500.970496-1-james.clark@arm.com>
+ <20230724134500.970496-2-james.clark@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20230724134500.970496-2-james.clark@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When perf record -d is used, it needs data mmaps to symbolize global data.
-But it missed to collect kernel data maps so it cannot symbolize them.
-Instead of having a separate map, just increase the kernel map size to
-include the data section.
 
-Probably we can have a separate kernel map for data, but the current
-code assumes a single kernel map.  So it'd require more changes in other
-places and looks error-prone.  I decided not to go that way for now.
 
-Also it seems the kernel module size already includes the data section.
+On 7/24/23 19:14, James Clark wrote:
+> This capability gives us the ability to open PERF_TYPE_HARDWARE and
+> PERF_TYPE_HW_CACHE events on a specific PMU for free. All the
+> implementation is contained in the Perf core and tool code so no change
+> to the Arm PMU driver is needed.
+> 
+> The following basic use case now results in Perf opening the event on
+> all PMUs rather than picking only one in an unpredictable way:
+> 
+>   $ perf stat -e cycles -- taskset --cpu-list 0,1 stress -c 2
+> 
+>    Performance counter stats for 'taskset --cpu-list 0,1 stress -c 2':
+> 
+>          963279620      armv8_cortex_a57/cycles/                (99.19%)
+>          752745657      armv8_cortex_a53/cycles/                (94.80%)
+> 
+> Fixes: 55bcf6ef314a ("perf: Extend PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE")
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Acked-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: James Clark <james.clark@arm.com>
 
-For example, my system has the following.
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
-  $ grep -e _stext -e _etext -e _edata /proc/kallsyms
-  ffffffff99800000 T _stext
-  ffffffff9a601ac8 T _etext
-  ffffffff9b446a00 D _edata
-
-Size of the text section is (0x9a601ac8 - 0x99800000 = 0xe01ac8) and
-size including data section is (0x9b446a00 - 0x99800000 = 0x1c46a00).
-
-Before:
-  $ perf record -d true
-
-  $ perf report -D | grep MMAP | head -1
-  0 0 0x460 [0x60]: PERF_RECORD_MMAP -1/0: [0xffffffff99800000(0xe01ac8) @ 0xffffffff99800000]: x [kernel.kallsyms]_text
-                                                               ^^^^^^^^
-                                                                 here
-After:
-  $ perf report -D | grep MMAP | head -1
-  0 0 0x460 [0x60]: PERF_RECORD_MMAP -1/0: [0xffffffff99800000(0x1c46a00) @ 0xffffffff99800000]: x [kernel.kallsyms]_text
-                                                               ^^^^^^^^^
-
-Instead of just replacing it to _edata, try _edata first and then fall
-back to _etext just in case.
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/machine.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 4e62843d51b7..11de3ca8d4fa 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1216,7 +1216,9 @@ static int machine__get_running_kernel_start(struct machine *machine,
- 
- 	*start = addr;
- 
--	err = kallsyms__get_function_start(filename, "_etext", &addr);
-+	err = kallsyms__get_symbol_start(filename, "_edata", &addr);
-+	if (err)
-+		err = kallsyms__get_function_start(filename, "_etext", &addr);
- 	if (!err)
- 		*end = addr;
- 
--- 
-2.41.0.487.g6d72f3e995-goog
-
+> ---
+>  drivers/perf/arm_pmu.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+> index f6ccb2cd4dfc..2e79201daa4a 100644
+> --- a/drivers/perf/arm_pmu.c
+> +++ b/drivers/perf/arm_pmu.c
+> @@ -880,8 +880,13 @@ struct arm_pmu *armpmu_alloc(void)
+>  		 * configuration (e.g. big.LITTLE). This is not an uncore PMU,
+>  		 * and we have taken ctx sharing into account (e.g. with our
+>  		 * pmu::filter callback and pmu::event_init group validation).
+> +		 *
+> +		 * PERF_PMU_CAP_EXTENDED_HW_TYPE is required to open
+> +		 * PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE events on a
+> +		 * specific PMU.
+>  		 */
+> -		.capabilities	= PERF_PMU_CAP_HETEROGENEOUS_CPUS | PERF_PMU_CAP_EXTENDED_REGS,
+> +		.capabilities	= PERF_PMU_CAP_HETEROGENEOUS_CPUS | PERF_PMU_CAP_EXTENDED_REGS |
+> +				  PERF_PMU_CAP_EXTENDED_HW_TYPE,
+>  	};
+>  
+>  	pmu->attr_groups[ARMPMU_ATTR_GROUP_COMMON] =
