@@ -2,50 +2,52 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE77DC0015E
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jul 2023 14:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A53C0015E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jul 2023 14:08:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230357AbjGYOIO (ORCPT
+        id S229813AbjGYOIg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Jul 2023 10:08:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55334 "EHLO
+        Tue, 25 Jul 2023 10:08:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229813AbjGYOIN (ORCPT
+        with ESMTP id S230154AbjGYOIf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Jul 2023 10:08:13 -0400
+        Tue, 25 Jul 2023 10:08:35 -0400
 Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53329102;
-        Tue, 25 Jul 2023 07:08:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F076F102;
+        Tue, 25 Jul 2023 07:08:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690294092; x=1721830092;
+  t=1690294115; x=1721830115;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=USnH3ynaplC9uLeAMGBazyqCKVUslLdeZoZgqZ2Yn+g=;
-  b=bYLYWl1kXbrrl99mUTgXldu4e/e0nfiirHNA6dWkBFl3t2rDtWnGJCDK
-   Hdij3LAQ0Ed9/G4DH7YE/lPKd/A4wu13G6EWi6dKzJvIClQRyecxhuBrU
-   gmrPN/PBGAaf+4qzSZNWNb8ugs7wg40U18PDcAiS1ej/UvWUeY7jeKFJw
-   CRPkrzR4fvGbJ7us0Tz2pjJhfLlcfewBKGyTJsUNK+uNLFworw2Ssj34y
-   amZloCzGcvm8OqeqIvMK8QImMHmzHVIKnu6kfr/WwPWeI4bZIu+M5odSA
-   96dVqsExn162DO0Nsm+0AOOpRTyearMkTPImFkWRjif77eXsRKapnQubU
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10782"; a="431536525"
+  bh=9y/LiJLrXSm1fXP3reG+FrB4JdZTCsireB5Ygj7UXtE=;
+  b=ak3C7n/YDDwKImoDEit3M56Mp9/0LeVjlcYdeVm8ClcnU2BobEBP4bMZ
+   wArXewJP3nkq/qA9TgSDpuuooGNbgFQmigut9U4FB4yCfa0/w6tfwJ1nm
+   22RkXAS0fCABWyW9ZA7f7mXAIK3f26CqSlBdNZLnMN0FMOKBy0/R+Q7zO
+   7f9PyizlJvvOt4p8KdY07edUuzU8qUTfdFU/EBKdLCfl3RJEsA+U28aEX
+   t95BaKj0JAWUqJgzb4WS6zXbs2dJ9DjGTwqbUyownCDI6uEzCbm+Iju+1
+   CXLe2t7Rsto7lMCeMHl6BZeRwbveEWZm4RmjeBNFiR71cGhoFLbpT/j3h
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10782"; a="431536742"
 X-IronPort-AV: E=Sophos;i="6.01,230,1684825200"; 
-   d="scan'208";a="431536525"
+   d="scan'208";a="431536742"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2023 07:07:47 -0700
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2023 07:08:22 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10782"; a="796156872"
+X-IronPort-AV: E=McAfee;i="6600,9927,10782"; a="796156912"
 X-IronPort-AV: E=Sophos;i="6.01,230,1684825200"; 
-   d="scan'208";a="796156872"
+   d="scan'208";a="796156912"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.37.150])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2023 07:07:44 -0700
-Message-ID: <9e0147e3-2a6a-6b84-bdfa-365c0762058a@intel.com>
-Date:   Tue, 25 Jul 2023 17:07:40 +0300
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2023 07:08:19 -0700
+Message-ID: <1bd2e89c-8316-18fe-6584-c517da6585c4@intel.com>
+Date:   Tue, 25 Jul 2023 17:08:16 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Firefox/102.0 Thunderbird/102.13.0
-Subject: Re: [PATCH v2 1/2] perf tools: Add kallsyms__get_symbol_start()
+Subject: Re: [PATCH v2 2/2] perf machine: Include data symbols in the kernel
+ map
+Content-Language: en-US
 To:     Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>
@@ -55,11 +57,11 @@ Cc:     Ian Rogers <irogers@google.com>,
         LKML <linux-kernel@vger.kernel.org>,
         linux-perf-users@vger.kernel.org
 References: <20230725001929.368041-1-namhyung@kernel.org>
-Content-Language: en-US
+ <20230725001929.368041-2-namhyung@kernel.org>
 From:   Adrian Hunter <adrian.hunter@intel.com>
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
  Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230725001929.368041-1-namhyung@kernel.org>
+In-Reply-To: <20230725001929.368041-2-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -67,84 +69,63 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On 25/07/23 03:19, Namhyung Kim wrote:
-> The kallsyms__get_symbol_start() to get any symbol address from
-> kallsyms.  The existing kallsyms__get_function_start() only allows text
-> symbols so create this to allow data symbols too.
+> When perf record -d is used, it needs data mmaps to symbolize global data.
+> But it missed to collect kernel data maps so it cannot symbolize them.
+> Instead of having a separate map, just increase the kernel map size to
+> include the data section.
 > 
-> Acked-by: Ian Rogers <irogers@google.com>
+> Probably we can have a separate kernel map for data, but the current
+> code assumes a single kernel map.  So it'd require more changes in other
+> places and looks error-prone.  I decided not to go that way for now.
+> 
+> Also it seems the kernel module size already includes the data section.
+> 
+> For example, my system has the following.
+> 
+>   $ grep -e _stext -e _etext -e _edata /proc/kallsyms
+>   ffffffff99800000 T _stext
+>   ffffffff9a601ac8 T _etext
+>   ffffffff9b446a00 D _edata
+> 
+> Size of the text section is (0x9a601ac8 - 0x99800000 = 0xe01ac8) and
+> size including data section is (0x9b446a00 - 0x99800000 = 0x1c46a00).
+> 
+> Before:
+>   $ perf record -d true
+> 
+>   $ perf report -D | grep MMAP | head -1
+>   0 0 0x460 [0x60]: PERF_RECORD_MMAP -1/0: [0xffffffff99800000(0xe01ac8) @ 0xffffffff99800000]: x [kernel.kallsyms]_text
+>                                                                ^^^^^^^^
+>                                                                  here
+> After:
+>   $ perf report -D | grep MMAP | head -1
+>   0 0 0x460 [0x60]: PERF_RECORD_MMAP -1/0: [0xffffffff99800000(0x1c46a00) @ 0xffffffff99800000]: x [kernel.kallsyms]_text
+>                                                                ^^^^^^^^^
+> 
+> Instead of just replacing it to _edata, try _edata first and then fall
+> back to _etext just in case.
+> 
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
 Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
 > ---
->  tools/perf/util/event.c | 30 +++++++++++++++++++++++++++---
->  tools/perf/util/event.h |  2 ++
->  2 files changed, 29 insertions(+), 3 deletions(-)
+>  tools/perf/util/machine.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-> index 4cbb092e0684..923c0fb15122 100644
-> --- a/tools/perf/util/event.c
-> +++ b/tools/perf/util/event.c
-> @@ -93,8 +93,8 @@ struct process_symbol_args {
->  	u64	   start;
->  };
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index 4e62843d51b7..11de3ca8d4fa 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -1216,7 +1216,9 @@ static int machine__get_running_kernel_start(struct machine *machine,
 >  
-> -static int find_symbol_cb(void *arg, const char *name, char type,
-> -			  u64 start)
-> +static int find_func_symbol_cb(void *arg, const char *name, char type,
-> +			       u64 start)
->  {
->  	struct process_symbol_args *args = arg;
+>  	*start = addr;
 >  
-> @@ -110,12 +110,36 @@ static int find_symbol_cb(void *arg, const char *name, char type,
->  	return 1;
->  }
->  
-> +static int find_any_symbol_cb(void *arg, const char *name,
-> +			      char type __maybe_unused, u64 start)
-> +{
-> +	struct process_symbol_args *args = arg;
-> +
-> +	if (strcmp(name, args->name))
-> +		return 0;
-> +
-> +	args->start = start;
-> +	return 1;
-> +}
-> +
->  int kallsyms__get_function_start(const char *kallsyms_filename,
->  				 const char *symbol_name, u64 *addr)
->  {
->  	struct process_symbol_args args = { .name = symbol_name, };
->  
-> -	if (kallsyms__parse(kallsyms_filename, &args, find_symbol_cb) <= 0)
-> +	if (kallsyms__parse(kallsyms_filename, &args, find_func_symbol_cb) <= 0)
-> +		return -1;
-> +
-> +	*addr = args.start;
-> +	return 0;
-> +}
-> +
-> +int kallsyms__get_symbol_start(const char *kallsyms_filename,
-> +			       const char *symbol_name, u64 *addr)
-> +{
-> +	struct process_symbol_args args = { .name = symbol_name, };
-> +
-> +	if (kallsyms__parse(kallsyms_filename, &args, find_any_symbol_cb) <= 0)
->  		return -1;
->  
->  	*addr = args.start;
-> diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-> index de20e01c9d72..d8bcee2e9b93 100644
-> --- a/tools/perf/util/event.h
-> +++ b/tools/perf/util/event.h
-> @@ -360,6 +360,8 @@ size_t perf_event__fprintf(union perf_event *event, struct machine *machine, FIL
->  
->  int kallsyms__get_function_start(const char *kallsyms_filename,
->  				 const char *symbol_name, u64 *addr);
-> +int kallsyms__get_symbol_start(const char *kallsyms_filename,
-> +			       const char *symbol_name, u64 *addr);
->  
->  void event_attr_init(struct perf_event_attr *attr);
+> -	err = kallsyms__get_function_start(filename, "_etext", &addr);
+> +	err = kallsyms__get_symbol_start(filename, "_edata", &addr);
+> +	if (err)
+> +		err = kallsyms__get_function_start(filename, "_etext", &addr);
+>  	if (!err)
+>  		*end = addr;
 >  
 
