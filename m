@@ -2,150 +2,72 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19043C0015E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jul 2023 19:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4906DC0015E
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jul 2023 19:54:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229648AbjGZT0Y (ORCPT
+        id S232147AbjGZTy5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Jul 2023 15:26:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60454 "EHLO
+        Wed, 26 Jul 2023 15:54:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229926AbjGZT0X (ORCPT
+        with ESMTP id S232166AbjGZTy4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Jul 2023 15:26:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 533A82722;
-        Wed, 26 Jul 2023 12:26:22 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Wed, 26 Jul 2023 15:54:56 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D16EE1BF6;
+        Wed, 26 Jul 2023 12:54:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=+sjmv9pr64iRjIpEvcW+PMYy8Vwjlj4j8rPWgraZnrY=; b=EubcXkNMSbl8RgGlP5/BfrOYz1
+        R03MQHY9xkTpyY/Hr7t42wS48d6jace3WCnvwwCI4z/uo0dROX1lsugwabY5wGNvkg4w59iuWevxS
+        Xy5cIzRAoP0UG0kxgrvjSS/UOL39P9LiJvE84VIA9Rp2covc06PbKwhtHSwxL3zreaagDn7tqhxeq
+        nPtE+B163aH+EnYFgaB6zXBHS+/A+jR+2Me1/NMgT7PO1NgNemUDAi+4+lShDYYBdt2UDSx5XEpt/
+        ns1mQRmUIMgnqEuYnvVMCsOYDvrGuX24ckftJ6eZkcTXatpAjnryrh1pj/hkp38maFlC89oI5iQzI
+        NC9o7Q1g==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qOkam-006njv-5X; Wed, 26 Jul 2023 19:54:42 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C41E461CAB;
-        Wed, 26 Jul 2023 19:26:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1C5AC433C8;
-        Wed, 26 Jul 2023 19:26:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690399581;
-        bh=dbIwUSErpljSFjSlNL6UV2E5yY64QH+jCpPm7PZ5xfY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Iac3BijivUSkcHBBk+DCzxdixpbJR6KfDx93tiVepIrblkU83LY3Am01/NsV/8UEo
-         mgq3oatxKDla0pFMRcNc9Y4nvAhEKWSsMtYna1kU/h4qXUuZekzNTWEyN4iZg1vS5r
-         RG6LcWDc7gQnsl4dNiZScOeFxgbGMWjWyIxanuNXLqnELz+Kd7R6M+aNABlQJaFWOZ
-         ZMnzNxg1sTXfM40cgYGK8YiOpaKTwPoHIH9MUscJJcFC2Gn1ccqufGsRTHBIEJJxMt
-         8pB61f9rFck0CrGGhwkjqPbv2fJcYJxbKxG5V68PYup3j+ZlHAgVNN8IkOqh++sNkS
-         wDpksMumoGAZw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D608B40516; Wed, 26 Jul 2023 16:26:17 -0300 (-03)
-Date:   Wed, 26 Jul 2023 16:26:17 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] perf tools: Add kallsyms__get_symbol_start()
-Message-ID: <ZMFzWcKUn2M2j9lF@kernel.org>
-References: <20230725001929.368041-1-namhyung@kernel.org>
- <9e0147e3-2a6a-6b84-bdfa-365c0762058a@intel.com>
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 48B5D30057C;
+        Wed, 26 Jul 2023 21:54:39 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 06994205963B6; Wed, 26 Jul 2023 12:16:05 +0200 (CEST)
+Date:   Wed, 26 Jul 2023 12:16:05 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     namhyung@kernel.org, acme@kernel.org, mingo@kernel.org,
+        eranian@google.com, kan.liang@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, leo.yan@linaro.org,
+        kjain@linux.ibm.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
+        ananth.narayan@amd.com, santosh.shukla@amd.com
+Subject: Re: [RESEND][PATCH v4 0/3] perf/mem: AMD IBS improvements
+Message-ID: <20230726101605.GC3802077@hirez.programming.kicks-ass.net>
+References: <20230725150206.184-1-ravi.bangoria@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9e0147e3-2a6a-6b84-bdfa-365c0762058a@intel.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20230725150206.184-1-ravi.bangoria@amd.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jul 25, 2023 at 05:07:40PM +0300, Adrian Hunter escreveu:
-> On 25/07/23 03:19, Namhyung Kim wrote:
-> > The kallsyms__get_symbol_start() to get any symbol address from
-> > kallsyms.  The existing kallsyms__get_function_start() only allows text
-> > symbols so create this to allow data symbols too.
-> > 
-> > Acked-by: Ian Rogers <irogers@google.com>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+On Tue, Jul 25, 2023 at 08:32:03PM +0530, Ravi Bangoria wrote:
+> Namhyung Kim (1):
+>   perf/x86/ibs: Set mem_lvl_num, mem_remote and mem_hops for data_src
 > 
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-
-Thanks, applied both patches.
-
-- Arnaldo
- 
-> > ---
-> >  tools/perf/util/event.c | 30 +++++++++++++++++++++++++++---
-> >  tools/perf/util/event.h |  2 ++
-> >  2 files changed, 29 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-> > index 4cbb092e0684..923c0fb15122 100644
-> > --- a/tools/perf/util/event.c
-> > +++ b/tools/perf/util/event.c
-> > @@ -93,8 +93,8 @@ struct process_symbol_args {
-> >  	u64	   start;
-> >  };
-> >  
-> > -static int find_symbol_cb(void *arg, const char *name, char type,
-> > -			  u64 start)
-> > +static int find_func_symbol_cb(void *arg, const char *name, char type,
-> > +			       u64 start)
-> >  {
-> >  	struct process_symbol_args *args = arg;
-> >  
-> > @@ -110,12 +110,36 @@ static int find_symbol_cb(void *arg, const char *name, char type,
-> >  	return 1;
-> >  }
-> >  
-> > +static int find_any_symbol_cb(void *arg, const char *name,
-> > +			      char type __maybe_unused, u64 start)
-> > +{
-> > +	struct process_symbol_args *args = arg;
-> > +
-> > +	if (strcmp(name, args->name))
-> > +		return 0;
-> > +
-> > +	args->start = start;
-> > +	return 1;
-> > +}
-> > +
-> >  int kallsyms__get_function_start(const char *kallsyms_filename,
-> >  				 const char *symbol_name, u64 *addr)
-> >  {
-> >  	struct process_symbol_args args = { .name = symbol_name, };
-> >  
-> > -	if (kallsyms__parse(kallsyms_filename, &args, find_symbol_cb) <= 0)
-> > +	if (kallsyms__parse(kallsyms_filename, &args, find_func_symbol_cb) <= 0)
-> > +		return -1;
-> > +
-> > +	*addr = args.start;
-> > +	return 0;
-> > +}
-> > +
-> > +int kallsyms__get_symbol_start(const char *kallsyms_filename,
-> > +			       const char *symbol_name, u64 *addr)
-> > +{
-> > +	struct process_symbol_args args = { .name = symbol_name, };
-> > +
-> > +	if (kallsyms__parse(kallsyms_filename, &args, find_any_symbol_cb) <= 0)
-> >  		return -1;
-> >  
-> >  	*addr = args.start;
-> > diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-> > index de20e01c9d72..d8bcee2e9b93 100644
-> > --- a/tools/perf/util/event.h
-> > +++ b/tools/perf/util/event.h
-> > @@ -360,6 +360,8 @@ size_t perf_event__fprintf(union perf_event *event, struct machine *machine, FIL
-> >  
-> >  int kallsyms__get_function_start(const char *kallsyms_filename,
-> >  				 const char *symbol_name, u64 *addr);
-> > +int kallsyms__get_symbol_start(const char *kallsyms_filename,
-> > +			       const char *symbol_name, u64 *addr);
-> >  
-> >  void event_attr_init(struct perf_event_attr *attr);
-> >  
+> Ravi Bangoria (2):
+>   perf/mem: Introduce PERF_MEM_LVLNUM_UNC
+>   perf/mem: Add PERF_MEM_LVLNUM_NA to PERF_MEM_NA
 > 
+>  arch/x86/events/amd/ibs.c       | 156 ++++++++++++++------------------
+>  include/linux/perf_event.h      |   3 +-
+>  include/uapi/linux/perf_event.h |   3 +-
+>  3 files changed, 72 insertions(+), 90 deletions(-)
 
--- 
-
-- Arnaldo
+Thanks!
