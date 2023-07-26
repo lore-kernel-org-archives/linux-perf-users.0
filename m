@@ -2,144 +2,149 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D4FC001DC
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jul 2023 19:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19043C0015E
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jul 2023 19:26:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229698AbjGZTXE (ORCPT
+        id S229648AbjGZT0Y (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Jul 2023 15:23:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59328 "EHLO
+        Wed, 26 Jul 2023 15:26:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232287AbjGZTW5 (ORCPT
+        with ESMTP id S229926AbjGZT0X (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Jul 2023 15:22:57 -0400
+        Wed, 26 Jul 2023 15:26:23 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 167E22115;
-        Wed, 26 Jul 2023 12:22:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 533A82722;
+        Wed, 26 Jul 2023 12:26:22 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 979B661CA1;
-        Wed, 26 Jul 2023 19:22:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C401CC433C7;
-        Wed, 26 Jul 2023 19:22:54 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C41E461CAB;
+        Wed, 26 Jul 2023 19:26:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1C5AC433C8;
+        Wed, 26 Jul 2023 19:26:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690399375;
-        bh=y2c01r5DrVD9LAWnn2eltEtIg/G4Uc7VK457lA2zvus=;
+        s=k20201202; t=1690399581;
+        bh=dbIwUSErpljSFjSlNL6UV2E5yY64QH+jCpPm7PZ5xfY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sPhuTXCt42tSTRyuQCBdAgJNzENfkbID3457aJg5QG5aRDw8b+XcU4Jn3F0I7KUJ+
-         e7dNTp41wpR/6z25W1tHLKbOpA2fR5e5APaB4PqpHTrd29N1ThQI5wb+3fruRZJxUj
-         SD/5yS1g4DV0kLohvGCDCSXqk8VHPqJkMHqy30KyHW1zBMEDbnLx9kBR09VGS461QS
-         R5Z0JbGBUCEcHNkjKMyzaP1NIAH2ZDyg1HxeAKrHukWTXbpMQTpMXK/+rywMkgdrJa
-         jYUSGNtY10gTCg+tQ+it7+QuWOhjUPwtO21UZMN9mjk06t5M3usvOLOBXwQ9n9SczM
-         +JlP8/2oND/Gw==
+        b=Iac3BijivUSkcHBBk+DCzxdixpbJR6KfDx93tiVepIrblkU83LY3Am01/NsV/8UEo
+         mgq3oatxKDla0pFMRcNc9Y4nvAhEKWSsMtYna1kU/h4qXUuZekzNTWEyN4iZg1vS5r
+         RG6LcWDc7gQnsl4dNiZScOeFxgbGMWjWyIxanuNXLqnELz+Kd7R6M+aNABlQJaFWOZ
+         ZMnzNxg1sTXfM40cgYGK8YiOpaKTwPoHIH9MUscJJcFC2Gn1ccqufGsRTHBIEJJxMt
+         8pB61f9rFck0CrGGhwkjqPbv2fJcYJxbKxG5V68PYup3j+ZlHAgVNN8IkOqh++sNkS
+         wDpksMumoGAZw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id EA7E940516; Wed, 26 Jul 2023 16:22:51 -0300 (-03)
-Date:   Wed, 26 Jul 2023 16:22:51 -0300
+        id D608B40516; Wed, 26 Jul 2023 16:26:17 -0300 (-03)
+Date:   Wed, 26 Jul 2023 16:26:17 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Anup Sharma <anupnewsmail@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
         Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] Adding Support for Firefox's Gecko Profile Format
-Message-ID: <ZMFyi5S4JlFeZ/9c@kernel.org>
-References: <CAP-5=fU7ukrQSh_8OwH9C+a-EwCamCrMaZxjqDhE9f+bFJwQBQ@mail.gmail.com>
- <ZIHPXV5/ZopqcSSc@yoga>
- <ZIofrGKElc3nkNk0@yoga>
- <CAP-5=fV9tXNpYHH9DW0cVbRoFLGvG9SNn-MUhuyKuVBRuDqjoA@mail.gmail.com>
- <ZJyT8bt0LFLw6hKV@yoga>
- <CAM9d7ch7TdagV+dzj6MCp4fY15Vc4oGJjKAoQDyc=BXqy7qi+A@mail.gmail.com>
- <287bf3c8-fa0e-8c36-df14-7d728c63c265@intel.com>
- <ZKQu00bJZwO+Fc6m@yoga>
- <ZKRcTqAsKxF/Q3fQ@yoga>
- <ZMFgIekihhoGFBpn@yoga>
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] perf tools: Add kallsyms__get_symbol_start()
+Message-ID: <ZMFzWcKUn2M2j9lF@kernel.org>
+References: <20230725001929.368041-1-namhyung@kernel.org>
+ <9e0147e3-2a6a-6b84-bdfa-365c0762058a@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZMFgIekihhoGFBpn@yoga>
+In-Reply-To: <9e0147e3-2a6a-6b84-bdfa-365c0762058a@intel.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Jul 26, 2023 at 11:34:17PM +0530, Anup Sharma escreveu:
-> Dear all,
+Em Tue, Jul 25, 2023 at 05:07:40PM +0300, Adrian Hunter escreveu:
+> On 25/07/23 03:19, Namhyung Kim wrote:
+> > The kallsyms__get_symbol_start() to get any symbol address from
+> > kallsyms.  The existing kallsyms__get_function_start() only allows text
+> > symbols so create this to allow data symbols too.
+> > 
+> > Acked-by: Ian Rogers <irogers@google.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > 
-> I want to share a recent development in our project that
-> I have been working on this week. I have successfully
-> implemented a new feature that allows users to directly
-> open the browser and visualize the output of perf.data
-> on Firefox Profiler.
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Excellent news!
- 
-> To enhance user experience, I have made sure this option
-> is enabled by default. Additionally, I've also added a
-> handy command line argument, "--save-only," which allows
-> users to save the output file as needed. This enhancement
-> replaces the previous standard output method, providing a
-> much-improved experience.
-> 
-> Moreover, Everything is processed locally, and no data is
-> sent to any server.
-
-That addresses the worry about sending possibly sensitive data over the
-network by default, great.
- 
-> During this implementation, I had the opportunity to delve
-> into several exciting topics, including threading, HTTP server,
-> and CORS mechanisms. The learning process has been both
-> challenging and rewarding.
-
-Cool that you're so excited learning all this.
- 
-> Currently, I am in the process of performing some clean-up tasks.
-> Once that is complete, I will be sharing the next version of the
-> series, which includes this fantastic new feature, with all of
-> you very soon.
-> 
-> Thank you for your ongoing support and encouragement.
-
-Keep it up!
+Thanks, applied both patches.
 
 - Arnaldo
-
-> Thanks,
-> Anup
+ 
+> > ---
+> >  tools/perf/util/event.c | 30 +++++++++++++++++++++++++++---
+> >  tools/perf/util/event.h |  2 ++
+> >  2 files changed, 29 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+> > index 4cbb092e0684..923c0fb15122 100644
+> > --- a/tools/perf/util/event.c
+> > +++ b/tools/perf/util/event.c
+> > @@ -93,8 +93,8 @@ struct process_symbol_args {
+> >  	u64	   start;
+> >  };
+> >  
+> > -static int find_symbol_cb(void *arg, const char *name, char type,
+> > -			  u64 start)
+> > +static int find_func_symbol_cb(void *arg, const char *name, char type,
+> > +			       u64 start)
+> >  {
+> >  	struct process_symbol_args *args = arg;
+> >  
+> > @@ -110,12 +110,36 @@ static int find_symbol_cb(void *arg, const char *name, char type,
+> >  	return 1;
+> >  }
+> >  
+> > +static int find_any_symbol_cb(void *arg, const char *name,
+> > +			      char type __maybe_unused, u64 start)
+> > +{
+> > +	struct process_symbol_args *args = arg;
+> > +
+> > +	if (strcmp(name, args->name))
+> > +		return 0;
+> > +
+> > +	args->start = start;
+> > +	return 1;
+> > +}
+> > +
+> >  int kallsyms__get_function_start(const char *kallsyms_filename,
+> >  				 const char *symbol_name, u64 *addr)
+> >  {
+> >  	struct process_symbol_args args = { .name = symbol_name, };
+> >  
+> > -	if (kallsyms__parse(kallsyms_filename, &args, find_symbol_cb) <= 0)
+> > +	if (kallsyms__parse(kallsyms_filename, &args, find_func_symbol_cb) <= 0)
+> > +		return -1;
+> > +
+> > +	*addr = args.start;
+> > +	return 0;
+> > +}
+> > +
+> > +int kallsyms__get_symbol_start(const char *kallsyms_filename,
+> > +			       const char *symbol_name, u64 *addr)
+> > +{
+> > +	struct process_symbol_args args = { .name = symbol_name, };
+> > +
+> > +	if (kallsyms__parse(kallsyms_filename, &args, find_any_symbol_cb) <= 0)
+> >  		return -1;
+> >  
+> >  	*addr = args.start;
+> > diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+> > index de20e01c9d72..d8bcee2e9b93 100644
+> > --- a/tools/perf/util/event.h
+> > +++ b/tools/perf/util/event.h
+> > @@ -360,6 +360,8 @@ size_t perf_event__fprintf(union perf_event *event, struct machine *machine, FIL
+> >  
+> >  int kallsyms__get_function_start(const char *kallsyms_filename,
+> >  				 const char *symbol_name, u64 *addr);
+> > +int kallsyms__get_symbol_start(const char *kallsyms_filename,
+> > +			       const char *symbol_name, u64 *addr);
+> >  
+> >  void event_attr_init(struct perf_event_attr *attr);
+> >  
 > 
-> > > Regards,
-> > > Anup
-> > > > > 
-> > > > >>
-> > > > >> The second challenge revolved around the usage of event hooks provided with the perf script
-> > > > >> python event handlers. I found myself deliberating between two approaches. The first
-> > > > >> approach involved creating custom functions that would be called using the event
-> > > > >> handlers. These functions would then save the data in an organized format within
-> > > > >> globally created data structures. The alternative approach was to write the entire
-> > > > >> logic inside the event handlers themselves.
-> > > > >>
-> > > > >> Additionally, I contemplated whether it would be more suitable to handle the creation of
-> > > > >> a Gecko format for JSON and the profile format within the same script or to separate
-> > > > >> them into different scripts.
-> > > > >>
-> > > > >> I will discuss this points during tomorrow's office hour.
-> > > > >>
-> > > > >> However, I have gained a deeper understanding of the problem at hand and will use this
-> > > > >> knowledge to make more informed decisions and progress more effectively in the coming weeks.
-> > > > > 
-> > > > > Sounds like you did a good amount of research on how perf script
-> > > > > works.  We can talk about the details in the meeting.
-> > > > > 
-> > > > > Thanks,
-> > > > > Namhyung
-> > > > 
 
 -- 
 
