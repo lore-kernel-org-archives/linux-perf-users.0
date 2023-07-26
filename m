@@ -2,101 +2,136 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6441DC001DE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jul 2023 06:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4195C001DF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jul 2023 12:16:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231740AbjGZGkT (ORCPT
+        id S230382AbjGZMQ3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Jul 2023 02:40:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56074 "EHLO
+        Wed, 26 Jul 2023 08:16:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231299AbjGZGkS (ORCPT
+        with ESMTP id S229715AbjGZMQ2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Jul 2023 02:40:18 -0400
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9657119A1;
-        Tue, 25 Jul 2023 23:40:16 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0VoFo2qO_1690353609;
-Received: from 30.221.150.4(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VoFo2qO_1690353609)
-          by smtp.aliyun-inc.com;
-          Wed, 26 Jul 2023 14:40:11 +0800
-Message-ID: <4bb466a6-f64f-954c-0d4b-a140a555bffe@linux.alibaba.com>
-Date:   Wed, 26 Jul 2023 14:40:07 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.11.2
-Subject: Re: [PATCH v4 2/4] perf jevents: Support more event fields
-To:     John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>
-Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+        Wed, 26 Jul 2023 08:16:28 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C4D819A7;
+        Wed, 26 Jul 2023 05:16:28 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-55ae2075990so3578900a12.0;
+        Wed, 26 Jul 2023 05:16:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690373787; x=1690978587;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=P/SfUH6qagd9RztYevRFo2Q3j6jWs29w7wHJ0ZcNrWE=;
+        b=GmigUXHNKivEF+qJWOpYMSidwpXidWB/BVuh8qbB8lwRsTqUReNT9UUAdrL9YB5pff
+         ASxe6g2NoBplCcNWZUumZT20q+Ood/JVVApgHUyhnz37V7fKpZCDWAMyGQ6xkyspP/Pz
+         yEJw8sCXmFLiSZnQs2uw09KO3AFO5rF33dHntIqg/Ci56bl8fnnbltducGEWhBrMKdnz
+         OvbdgPl/6Jt4P9Ok2arH86Zo3k4a0rY/IJQVvmpB+YY9t6IcFnz4u3oln39B0xIQcLrz
+         rxHx8zAcLMx+GRSP1Gpu2oNzGjkTAUFNRhU8DLDvhHPehy5+ZE6zKkcpEQzdQKJd4yKH
+         7+MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690373787; x=1690978587;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=P/SfUH6qagd9RztYevRFo2Q3j6jWs29w7wHJ0ZcNrWE=;
+        b=ByouSNpscg6VNGH4TjPaAnw4pjQkGd4B7U55Vm4GuP230h1x/8VE0YKORo0NjpN+4N
+         dfQmw2njFixVa8NlUVonRqN3flaFw2jtOVEj7MxSGhde6Nr7+XCc8JbFmPwPlOOghQHP
+         f/0KQGoDR5YdRmAwk8bJeMLzn4lckAAM17+kCkuBTWX9l7V8sFJfMxRF17oVe0SHK619
+         ZHIiJ2Hk7zJgGyaFm5uQSuMU2hpG4bUiUsaW6A1K58+tBCvzjc8DFIQSijwV0MFcza0M
+         quu4Du3iGRzxBrHsmN5N4jxpL+O9AgQ8dYNFcXe08mlaBNjTlxqOMFBPSagjYanov8Ja
+         7nDQ==
+X-Gm-Message-State: ABy/qLb5aGfbEiZM+HOXomQ5ghqfvm79RdsaqTsxvI1Nk5c2AS2oeTy1
+        DnydbJd9GXM6kjY/Kyc5BbY=
+X-Google-Smtp-Source: APBJJlGE0q1zijcsm7so+mrQdJMlrjbBFw0rQBqydLkJfjQS/xtrxblvyRxdlJYD/eaC3oi36/W6iA==
+X-Received: by 2002:a17:90a:408f:b0:263:3386:9da8 with SMTP id l15-20020a17090a408f00b0026333869da8mr1155414pjg.49.1690373787347;
+        Wed, 26 Jul 2023 05:16:27 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.25])
+        by smtp.googlemail.com with ESMTPSA id ms19-20020a17090b235300b00263f446d432sm1172880pjb.43.2023.07.26.05.16.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jul 2023 05:16:26 -0700 (PDT)
+From:   Ze Gao <zegao2021@gmail.com>
+X-Google-Original-From: Ze Gao <zegao@tencent.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>
-References: <1690100513-61165-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1690100513-61165-3-git-send-email-renyu.zj@linux.alibaba.com>
- <13cdb7cb-e6c0-5b85-3ccf-adb3b0ed36e0@oracle.com>
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <13cdb7cb-e6c0-5b85-3ccf-adb3b0ed36e0@oracle.com>
-Content-Type: text/plain; charset=UTF-8
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
+Subject: [RFC PATCH v2 0/3] report task state in symbolic chars from sched tracepoint
+Date:   Wed, 26 Jul 2023 20:16:15 +0800
+Message-Id: <20230726121618.19198-1-zegao@tencent.com>
+X-Mailer: git-send-email 2.40.1
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
+This is the 2nd attempt to fix the report task state issue in sched
+tracepint, here is the first version:
 
-在 2023/7/25 下午5:41, John Garry 写道:
-> On 23/07/2023 09:21, Jing Zhang wrote:
->> The usual event descriptions are "event=xxx" or "config=xxx", while the
->> event descriptions of CMN are "type=xxx, eventid=xxx" or more complex.
->>
->> $cat /sys/bus/event_source/devices/arm_cmn_0/events/hnf_cache_fill
->> type=0x5,eventid=0x3
->>
->> When adding aliases for events described as "event=xxx" or "config=xxx",
->> EventCode or ConfigCode can be used in the JSON files to describe the
->> events. But "eventid=xxx, type=xxx" cannot be supported at present.
->>
->> If EventCode and ConfigCode is not added in the alias JSON file, the
->> event description will add "event=0" by default. So, even if the event
->> field is added to supplement "eventid=xxx" and "type=xxx", the final
->> parsing result will be "event=0, eventid=xxx, type=xxx".
->>
->> Therefore, when EventCode and ConfigCode are missing in JSON, "event=0" is
->> no longer added by default. EventidCode and Type are added to the event
->> field, and ConfigCode is moved into the event field.
-> 
-> What does "ConfigCode is moved into the event field" mean?
-> 
+https://lore.kernel.org/linux-trace-kernel/20230725072254.32045-1-zegao@tencent.com
 
-What I want to express is to move "ConfigCode" into the event_filed array which can also guarantee its original function. like this:
-event_fields = [
-	  ...
-          ('AnyThread', 'any='),
-          ('PortMask', 'ch_mask='),
-          ('ConfigCode', 'config='),
-	  ...
-]
+Against v1, add a new var to report task state in symbolic char instead
+of replacing the old one and to not to break anything.
 
-Haha, my English language proficiency still needs improvement, please forgive me.
+--
 
->>
-> 
-> There should be perf tool self-tests cases for this, see tests/pmu-events.c and tests/parse-events.c, like "umask" is tested
-> 
+In the status quo, we should see three different outcomes of the reported
+sched-out task state from perf-script, perf-sched-timehist, and Tp_printk
+of tracepoint sched_switch.  And it's not hard to figure out that the
+former two are built upon the third one, and the reason why we see this
+inconsistency is that the former two does not catch up with the internal
+change of reported task state definitions as the kernel evolves.
 
-Ok, will do.
+IMHO, exporting internal representations of task state in the tracepoint
+sched_switch is not a good practice and not encouraged at all, which can
+easily break userspace tools that relies on it. Especially when tracepoints
+are massively used in many observability tools nowadays due to its stable
+nature, which makes them no longer used for debug only purpose and we
+should be careful to decide what ought to be reported to userspace and what
+ought not.
 
+Therefore, to fix the issues mentioned above for good, instead of choosing
+I proposed to add a new variable to report task state in sched_switch with
+a symbolic character along with the old hardcoded value, and save the
+further processing of userspace tools and spare them from knowing
+implementation details in the kernel.
 
-Thanks,
-Jing
+After this patch seires, we report 'RSDTtXZPI' the same as in procfs, plus
+a 'p' which denotes PREEMP_ACTIVE and is used for sched_switch tracepoint only.
+
+Reviews welcome!
+
+Regards,
+
+Ze
+
+Ze Gao (2):
+  sched, tracing: add to report task state in symbolic chars
+  perf sched: use the new prev_state_char instead in tracepoint
+    sched_switch
+
+ include/trace/events/sched.h | 60 +++++++++++++++++++++---------------
+ tools/perf/builtin-sched.c   | 57 ++++++----------------------------
+ 2 files changed, 45 insertions(+), 72 deletions(-)
+
+Ze Gao (1):
+  libtraceevent: use the new prev_state_char instead in tracepoint
+    sched_switch
+
+ plugins/plugin_sched_switch.c | 29 ++++-------------------------
+ 1 file changed, 4 insertions(+), 25 deletions(-)
+
+-- 
+2.40.1
+
