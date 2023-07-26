@@ -2,88 +2,131 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF36C001E0
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jul 2023 06:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1193BC0015E
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jul 2023 06:26:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232045AbjGZGQd (ORCPT
+        id S229790AbjGZG0Y (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Jul 2023 02:16:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46576 "EHLO
+        Wed, 26 Jul 2023 02:26:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231946AbjGZGQK (ORCPT
+        with ESMTP id S230071AbjGZG0X (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Jul 2023 02:16:10 -0400
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8861719BD;
-        Tue, 25 Jul 2023 23:15:46 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R941e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0VoFhAhR_1690352140;
-Received: from 30.221.150.4(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VoFhAhR_1690352140)
-          by smtp.aliyun-inc.com;
-          Wed, 26 Jul 2023 14:15:41 +0800
-Message-ID: <a16f4eb7-24c2-fc42-964d-0b84effae9a5@linux.alibaba.com>
-Date:   Wed, 26 Jul 2023 14:15:37 +0800
+        Wed, 26 Jul 2023 02:26:23 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2569D13E;
+        Tue, 25 Jul 2023 23:26:22 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D02BF11FB;
+        Tue, 25 Jul 2023 23:27:04 -0700 (PDT)
+Received: from [10.162.40.16] (unknown [10.162.40.16])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7AB723F5A1;
+        Tue, 25 Jul 2023 23:26:17 -0700 (PDT)
+Message-ID: <b987c2df-0c3a-e728-e531-5a862c6076d3@arm.com>
+Date:   Wed, 26 Jul 2023 11:56:14 +0530
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.11.2
-Subject: Re: [PATCH v4 1/4] perf metric: Event "Compat" value supports
- matching multiple identifiers
-To:     John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>
-Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>
-References: <1690100513-61165-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1690100513-61165-2-git-send-email-renyu.zj@linux.alibaba.com>
- <4c20d8fd-b478-5b0a-0558-3b59dead0751@oracle.com>
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <4c20d8fd-b478-5b0a-0558-3b59dead0751@oracle.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH V13 - RESEND 06/10] arm64/perf: Enable branch stack events
+ via FEAT_BRBE
+Content-Language: en-US
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
+Cc:     Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+References: <20230711082455.215983-1-anshuman.khandual@arm.com>
+ <20230711082455.215983-7-anshuman.khandual@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20230711082455.215983-7-anshuman.khandual@arm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
+On 7/11/23 13:54, Anshuman Khandual wrote:
+> +static void capture_brbe_flags(struct perf_branch_entry *entry, struct perf_event *event,
+> +			       u64 brbinf)
+> +{
+> +	if (branch_sample_type(event))
+> +		brbe_set_perf_entry_type(entry, brbinf);
+> +
+> +	if (!branch_sample_no_cycles(event))
+> +		entry->cycles = brbe_get_cycles(brbinf);
 
-在 2023/7/25 下午4:20, John Garry 写道:
-> On 23/07/2023 09:21, Jing Zhang wrote:
->> The jevent "Compat" is used for uncore PMU alias or metric definitions.
->>
->> The same PMU driver has different PMU identifiers due to different hardware
->> versions and types, but they may have some common PMU event/metric. Since a
->> Compat value can only match one identifier, when adding the same event
->> alias and metric to PMUs with different identifiers, each identifier needs
->> to be defined once, which is not streamlined enough.
->>
->> So let "Compat" value supports matching multiple identifiers. For example,
->> the Compat value {abcde;123*} can match the PMU identifier "abcde" and the
->> the PMU identifier with the prefix "123", where "*" is a wildcard.
->> Tokens in Unit field are delimited by ';' with no spaces.
->>
->> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
->> ---
->>   tools/perf/util/metricgroup.c | 27 ++++++++++++++++++++++++++-
-> 
-> Why only support for metrics? Why not support for regular events aliases? I would have expected pmu_add_sys_aliases_iter_fn() to have been updated for this.
-> 
+Just revisiting the branch records cycle capture process in BRBE.
 
-Oh, you are right. I forgot to modify pmu_add_sys_aliases_iter_fn().
+'cycles' field is a 16 bit field in struct perf_branch_entry.
 
-> On the basis that we will support regular events aliases, we need perf tool self-test cases for this in tools/perf/test/pmu-events.c (I think that pmu-events.c would be the most appropriate file)
-> 
+struct perf_branch_entry {
+        __u64   from;
+        __u64   to;
+        __u64   mispred:1,  /* target mispredicted */
+                predicted:1,/* target predicted */
+                in_tx:1,    /* in transaction */
+                abort:1,    /* transaction abort */
+                cycles:16,  /* cycle count to last branch */
+                type:4,     /* branch type */
+                spec:2,     /* branch speculation info */
+                new_type:4, /* additional branch type */
+                priv:3,     /* privilege level */
+                reserved:31;
+};
 
-Ok, I will support it for regular events aliases and add self-test cases in the next version.
+static inline int brbe_get_cycles(u64 brbinf)
+{
+	/*
+	 * Captured cycle count is unknown and hence
+	 * should not be passed on to the user space.
+	 */
+	if (brbinf & BRBINFx_EL1_CCU)
+		return 0;
 
-Thanks,
-Jing
+	return FIELD_GET(BRBINFx_EL1_CC_MASK, brbinf);
+}
+
+capture_brbe_flags()
+{
+
+	.....
+	if (!branch_sample_no_cycles(event))
+		entry->cycles = brbe_get_cycles(brbinf);
+	.....
+
+}
+
+BRBINF<N>_EL1.CC[45:32] is a 14 bits field which gets assigned into
+perf_branch_entry->cycles field which is 16 bits wide. Although the
+cycle count representation here is mantissa and exponent based one.
+
+CC bits[7:0] indicate the mantissa M
+CC bits[13:8] indicate the exponent E
+
+The actual cycle count is based on the following formula as the per
+the spec [1], which needs to be derived from BRBINF<N>_EL1.CC field.
+
+-------------------------------------------------------------------
+The cycle count is expressed using the following function:
+
+if IsZero(E) then UInt(M) else UInt('1':M:Zeros(UInt(E)-1))
+
+If required, the cycle count is rounded to a multiple of 2(E-1) towards zero before being encoded.
+
+A value of all ones in both the mantissa and exponent indicates the cycle count value exceeded the size of the cycle counter.
+-------------------------------------------------------------------
+
+Given that there is only 16 bits in perf_branch_entry structure for
+cycles count, I assume that it needs to be derived in the user perf
+tool (per the above calculation) before being interpreted ?
+
+[1] https://developer.arm.com/documentation/ddi0601/2023-06/AArch64-Registers/BRBINF-n--EL1--Branch-Record-Buffer-Information-Register--n-?lang=en
+
+- Anshuman
+
+
