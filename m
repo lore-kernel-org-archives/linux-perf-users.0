@@ -2,64 +2,65 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3262C001DF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jul 2023 02:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39561C001DF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jul 2023 02:48:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229922AbjGZCls (ORCPT
+        id S230087AbjGZCse (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Jul 2023 22:41:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59080 "EHLO
+        Tue, 25 Jul 2023 22:48:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229478AbjGZClp (ORCPT
+        with ESMTP id S229478AbjGZCse (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Jul 2023 22:41:45 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC8B02689;
-        Tue, 25 Jul 2023 19:41:43 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-5221c6a2d3dso5735896a12.3;
-        Tue, 25 Jul 2023 19:41:43 -0700 (PDT)
+        Tue, 25 Jul 2023 22:48:34 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5023010F8;
+        Tue, 25 Jul 2023 19:48:31 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-5221ee899a0so5228727a12.1;
+        Tue, 25 Jul 2023 19:48:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690339302; x=1690944102;
+        d=gmail.com; s=20221208; t=1690339710; x=1690944510;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xSLpwcJW0NoDcK6EkMge5mYYmHzQy4bHqxuoYI2wbjk=;
-        b=qURn5MDKRxJhqki06Bwi7yrC2fL2pPst5wmSDU7FmnnzGrM4jYZFxPevobW+gZtxtm
-         9G9Wo0Fz+jGD0p0FwWSQAZIrfxGIeqW2GER1QUOKS2PPwaIUKQLzhDqa8ipJFe2VIel6
-         MI2aPOgPI8oHqiO+GwsxHgM8FBzeWAU9S6N91hCYV4j+zo8HuEgejEqqbLTF4A7snQQc
-         39V76Xmrerm7TZPDclHakmMVNVoWmgsO4AdnE9oJ13ZuIGiC8+PAbGKGuKL+wzI9BDo1
-         D217WSzz7CZHs1qLIUytXHCrgnZnOhIYCZo9NUGeEIZVssvpyzXcXxKapQsMnY+emNvk
-         gacQ==
+        bh=CkPelLDMNOyH3OdtnOt1tDO5lIdgxwJuRCGnJfwsAPo=;
+        b=ogGnr9VM4S0/sUBo0Jp2HGiPHHhFNJSoDNW60S8qONqlLMEeyRvP0VeFFdxcZBp6E7
+         fruasZx0fHoeDctQ0s2aV9g6MQ3CjUZSLMAYIgRxxjqOHRTjZ9CjVdtCYljYnk2zgOx5
+         hkhIgIuzZ7KWPT43U6bTdr1YigbGOk6AWUuJMWBLSPL43tbqmZl+YpTrv6epTEx4lNUI
+         aA2kMQe8WKYl28kGWwCNPnCmgvRmbBo6xkVzf+u5B9/LcJEXgAuoPz57Ij2ZDV2gATqL
+         rQCev/5xao6/ik98wttTcCMJP34/F6Aof+g60G+ziJYltc0DTFccOKMMKTS5PUhXaOkS
+         I1Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690339302; x=1690944102;
+        d=1e100.net; s=20221208; t=1690339710; x=1690944510;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xSLpwcJW0NoDcK6EkMge5mYYmHzQy4bHqxuoYI2wbjk=;
-        b=JHsZgir6o0aebEI8pCGfVSKeK4MweBhFH10tLbRMfoEKxmF2dK9TszHN6z4585Cp92
-         A44LxmpVTUqnskkdrHNimOawyMImomMOLTe0enwLvYIAB5CcfAiFgaknragAJABqB1q9
-         YZWVfbD6gBky5eQLPDyjB1PH42B0ABt75880yf9omQy+23+rKiLhGbuJJeH21+KoJkA/
-         jUwGDLBu3lpTytDSva3ryY4DHmy4q1QxfUIKTipqqLZ/8y18tNrE+qf4z+bb+7ANH4uE
-         0kyAYnXdXz2rRVtJlxjOIFFn1dksKxQj5o57R85dQOMn1P18amu+cU73xVTE6wLlj79d
-         e94w==
-X-Gm-Message-State: ABy/qLZysXyqB2lU/tLhiPIGse2f1Y/PljQhjPKET3Zt9hYge0mQCl6g
-        YsdlPYnKdWAzMk7jlrQtmDrfs7PA93k1/eDW2Y2eYBNOZLketA==
-X-Google-Smtp-Source: APBJJlGCO5PThD5Tryyg4XrXHFuTJAaBCGI7int3GhA3atEonWO4yWvavbVPAfeTolbvWP/UDmrm/pd+74tj+2CwjUE=
-X-Received: by 2002:aa7:c50c:0:b0:51d:7fa6:62ca with SMTP id
- o12-20020aa7c50c000000b0051d7fa662camr530063edq.14.1690339301927; Tue, 25 Jul
- 2023 19:41:41 -0700 (PDT)
+        bh=CkPelLDMNOyH3OdtnOt1tDO5lIdgxwJuRCGnJfwsAPo=;
+        b=ENy6XGfMw1Du1LmjYteIYYJmSHw9tUrEaCXMiYGCLJY4IzOG6+pnw0wHsyAmGU6Kgg
+         IgtNx93gwFr/s6OheJ2v0QAz9f0pYPHeCZtU7ZnPVm9xHeO/z0XJS5GIYPI0pdONxf7e
+         lrC4hLpGvzOdzexWjG7yViQHe3+J/EJc/xgMiVIT3eZdPEXLI6vNNWglQ5mAvLEgifCJ
+         dud/f7gHRexT4yy0oHcxQ410hBT84DhwcyjePU/xS3UgK713tbcTf+izkDp8yB+tbvPB
+         gdlnxfcm1JLExn1XMLRAjRdAA2wLTXs0TqItRx9HI8ptHIUPnxoF/85H2OYchDQhI5eG
+         fgEg==
+X-Gm-Message-State: ABy/qLY2TVjuVggVuIdjb9phbxFvf7hoPuzq7gUFDhHDuJqFGOLLOE8/
+        2qSddVA1sL64HAk68nkRFMK2gVqXAG2CSCCZ0QA=
+X-Google-Smtp-Source: APBJJlHtpO+4Uco650H9ikgEM/y0Hm8a4gqM5Cx0CHVOJRgANVZvO8OkuAdLqky8XTbpW35zFwj2Xg/XDTS252FPTpY=
+X-Received: by 2002:a05:6402:683:b0:522:2b76:1985 with SMTP id
+ f3-20020a056402068300b005222b761985mr443891edy.2.1690339709624; Tue, 25 Jul
+ 2023 19:48:29 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230725072254.32045-1-zegao@tencent.com> <20230725072254.32045-2-zegao@tencent.com>
- <20230725135938.1e056a02@rorschach.local.home>
-In-Reply-To: <20230725135938.1e056a02@rorschach.local.home>
+ <20230725135938.1e056a02@rorschach.local.home> <20230725201603.GB3784071@hirez.programming.kicks-ass.net>
+ <20230725175536.5449807c@rorschach.local.home>
+In-Reply-To: <20230725175536.5449807c@rorschach.local.home>
 From:   Ze Gao <zegao2021@gmail.com>
-Date:   Wed, 26 Jul 2023 10:41:30 +0800
-Message-ID: <CAD8CoPBTCXiusUGNTEwcm9WJ+MEfrX01xsCWYAtA7MCpfaeqmQ@mail.gmail.com>
+Date:   Wed, 26 Jul 2023 10:48:18 +0800
+Message-ID: <CAD8CoPDmHFLMixss1oEk0e-mVYKgwKxt1tXGtFpnwS+Rg-VwBA@mail.gmail.com>
 Subject: Re: [RFC PATCH 1/3] sched, tracing: report task state in symbolic
  chars instead
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -76,101 +77,29 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 26, 2023 at 1:59=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
+I'd like to try this one, and request for another RFC.
+
+Regards,
+Ze
+
+On Wed, Jul 26, 2023 at 5:55=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
 > wrote:
 >
-> On Tue, 25 Jul 2023 15:22:52 +0800
-> Ze Gao <zegao2021@gmail.com> wrote:
+> On Tue, 25 Jul 2023 22:16:03 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> >  #ifdef CREATE_TRACE_POINTS
-> > -static inline long __trace_sched_switch_state(bool preempt,
-> > +static inline const char __trace_sched_switch_state(bool preempt,
->
-> Does it really need to be "const"?
-
-Not really since it's rvalue after all, will remove this.
-
-> >                                             unsigned int prev_state,
-> >                                             struct task_struct *p)
-> >  {
-> > @@ -197,13 +198,6 @@ static inline long __trace_sched_switch_state(bool=
- preempt,
-> >       BUG_ON(p !=3D current);
-> >  #endif /* CONFIG_SCHED_DEBUG */
+> > > Now, because the old tools still do the parsing of this format, we ca=
+n
+> > > add a new field called prev_state_char that will give you this. Now t=
+o
+> > > save space, we should change prev_state to int (can't make it short a=
+s
+> > > there's that test for "+" which does sometimes happen). I believe we
+> > > can make prev_prio and next prio into shorts (and possibly chars!).
 > >
-> > -     /*
-> > -      * Preemption ignores task state, therefore preempted tasks are a=
-lways
-> > -      * RUNNING (we will not have dequeued if state !=3D RUNNING).
-> > -      */
-> > -     if (preempt)
-> > -             return TASK_REPORT_MAX;
-> > -
-> >       /*
-> >        * task_state_index() uses fls() and returns a value from 0-8 ran=
-ge.
-> >        * Decrement it by 1 (except TASK_RUNNING state i.e 0) before usi=
-ng
-> > @@ -212,7 +206,16 @@ static inline long __trace_sched_switch_state(bool=
- preempt,
-> >        */
-> >       state =3D __task_state_index(prev_state, p->exit_state);
-> >
-> > -     return state ? (1 << (state - 1)) : state;
-> > +     /*
-> > +      * Preemption ignores task state, therefore preempted tasks are a=
-lways
-> > +      * RUNNING (we will not have dequeued if state !=3D RUNNING).
-> > +      * Here, we use 'p' to denote this case and only for this case.
-> > +      */
-> > +     if (preempt)
-> > +             return 'p';
-> > +
-> > +
-> > +     return task_index_to_char(state);
-> >  }
-> >  #endif /* CREATE_TRACE_POINTS */
-> >
-> > @@ -232,7 +235,7 @@ TRACE_EVENT(sched_switch,
-> >               __array(        char,   prev_comm,      TASK_COMM_LEN   )
-> >               __field(        pid_t,  prev_pid                        )
-> >               __field(        int,    prev_prio                       )
-> > -             __field(        long,   prev_state                      )
-> > +             __field(        char,   prev_state                      )
-> >               __array(        char,   next_comm,      TASK_COMM_LEN   )
-> >               __field(        pid_t,  next_pid                        )
-> >               __field(        int,    next_prio                       )
+> > Or just leave the thing alone?
 >
-> This will break userspace. Just because you update libtraceevent
-> doesn't mean that it will get to all the users of it. There's still
-> tools that have the old method hard coded and doesn't use the library.
->
-> Now, because the old tools still do the parsing of this format, we can
-> add a new field called prev_state_char that will give you this. Now to
-> save space, we should change prev_state to int (can't make it short as
-> there's that test for "+" which does sometimes happen). I believe we
-> can make prev_prio and next prio into shorts (and possibly chars!).
+> Sure, but I would like to change the fields to smaller ones just so
+> that the event wastes less space on the buffer.
 >
 > -- Steve
->
-
-Agreed, and my first attempt was to not break anything here by
-introducing a new "char",  which is kinda redundant, but is a good way
-for smooth transition to decouple userspace from kernel on this weird
-design(of ABI).
-
-However, given the fact the in-tree perf still suffers this, I doubt many
-other tools could spare from it. And the best guess is that they are
-still partially broken silently and reports wrong and confusing states.
-And this is basically why I came up with this RFC and deliberately
-let them fail loudly to do a painful but quick recovery.
-
-Anyway, if we want to keep status quo, I can send over another two
-patches to fix perf and libtraceevent specifically and leave the tracepoint
-alone. But seriously, imho we might have no chance to correct this.
-and without a formal abi, the raw value (let alone the masqueraded ones)
-is just meaningless for userspace and that leaves it intended for kernel
-developers only.
-
-Thanks,
-Ze
