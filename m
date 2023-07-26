@@ -2,235 +2,175 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA09EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jul 2023 01:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3262C001DF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jul 2023 02:41:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229475AbjGZB7b (ORCPT
+        id S229922AbjGZCls (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Jul 2023 21:59:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48746 "EHLO
+        Tue, 25 Jul 2023 22:41:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229506AbjGZB7a (ORCPT
+        with ESMTP id S229478AbjGZClp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Jul 2023 21:59:30 -0400
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 409DC1BFF;
-        Tue, 25 Jul 2023 18:59:28 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0VoElwYK_1690336763;
-Received: from 30.240.115.26(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VoElwYK_1690336763)
-          by smtp.aliyun-inc.com;
-          Wed, 26 Jul 2023 09:59:25 +0800
-Message-ID: <6a8feb5f-0e78-2dd2-db6a-2dc22c663a00@linux.alibaba.com>
-Date:   Wed, 26 Jul 2023 09:59:22 +0800
+        Tue, 25 Jul 2023 22:41:45 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC8B02689;
+        Tue, 25 Jul 2023 19:41:43 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-5221c6a2d3dso5735896a12.3;
+        Tue, 25 Jul 2023 19:41:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690339302; x=1690944102;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xSLpwcJW0NoDcK6EkMge5mYYmHzQy4bHqxuoYI2wbjk=;
+        b=qURn5MDKRxJhqki06Bwi7yrC2fL2pPst5wmSDU7FmnnzGrM4jYZFxPevobW+gZtxtm
+         9G9Wo0Fz+jGD0p0FwWSQAZIrfxGIeqW2GER1QUOKS2PPwaIUKQLzhDqa8ipJFe2VIel6
+         MI2aPOgPI8oHqiO+GwsxHgM8FBzeWAU9S6N91hCYV4j+zo8HuEgejEqqbLTF4A7snQQc
+         39V76Xmrerm7TZPDclHakmMVNVoWmgsO4AdnE9oJ13ZuIGiC8+PAbGKGuKL+wzI9BDo1
+         D217WSzz7CZHs1qLIUytXHCrgnZnOhIYCZo9NUGeEIZVssvpyzXcXxKapQsMnY+emNvk
+         gacQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690339302; x=1690944102;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xSLpwcJW0NoDcK6EkMge5mYYmHzQy4bHqxuoYI2wbjk=;
+        b=JHsZgir6o0aebEI8pCGfVSKeK4MweBhFH10tLbRMfoEKxmF2dK9TszHN6z4585Cp92
+         A44LxmpVTUqnskkdrHNimOawyMImomMOLTe0enwLvYIAB5CcfAiFgaknragAJABqB1q9
+         YZWVfbD6gBky5eQLPDyjB1PH42B0ABt75880yf9omQy+23+rKiLhGbuJJeH21+KoJkA/
+         jUwGDLBu3lpTytDSva3ryY4DHmy4q1QxfUIKTipqqLZ/8y18tNrE+qf4z+bb+7ANH4uE
+         0kyAYnXdXz2rRVtJlxjOIFFn1dksKxQj5o57R85dQOMn1P18amu+cU73xVTE6wLlj79d
+         e94w==
+X-Gm-Message-State: ABy/qLZysXyqB2lU/tLhiPIGse2f1Y/PljQhjPKET3Zt9hYge0mQCl6g
+        YsdlPYnKdWAzMk7jlrQtmDrfs7PA93k1/eDW2Y2eYBNOZLketA==
+X-Google-Smtp-Source: APBJJlGCO5PThD5Tryyg4XrXHFuTJAaBCGI7int3GhA3atEonWO4yWvavbVPAfeTolbvWP/UDmrm/pd+74tj+2CwjUE=
+X-Received: by 2002:aa7:c50c:0:b0:51d:7fa6:62ca with SMTP id
+ o12-20020aa7c50c000000b0051d7fa662camr530063edq.14.1690339301927; Tue, 25 Jul
+ 2023 19:41:41 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.12.0
-Subject: Re: [PATCH v3] perf/core: Bail out early if the request AUX area is
- out of bound
-Content-Language: en-US
-To:     James Clark <james.clark@arm.com>,
-        alexander.shishkin@linux.intel.com, peterz@infradead.org,
-        leo.yan@linaro.org
-Cc:     mingo@redhat.com, baolin.wang@linux.alibaba.com, acme@kernel.org,
-        mark.rutland@arm.com, jolsa@kernel.org, namhyung@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-References: <20230711014120.53461-1-xueshuai@linux.alibaba.com>
- <75ddf1ce-64a2-f3a4-8a51-92e7bbb3899d@arm.com>
- <78dbe98e-8702-e332-59ff-3850cff2895b@linux.alibaba.com>
- <71064fb4-3745-c877-bf81-7542d815c289@arm.com>
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <71064fb4-3745-c877-bf81-7542d815c289@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20230725072254.32045-1-zegao@tencent.com> <20230725072254.32045-2-zegao@tencent.com>
+ <20230725135938.1e056a02@rorschach.local.home>
+In-Reply-To: <20230725135938.1e056a02@rorschach.local.home>
+From:   Ze Gao <zegao2021@gmail.com>
+Date:   Wed, 26 Jul 2023 10:41:30 +0800
+Message-ID: <CAD8CoPBTCXiusUGNTEwcm9WJ+MEfrX01xsCWYAtA7MCpfaeqmQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] sched, tracing: report task state in symbolic
+ chars instead
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Wed, Jul 26, 2023 at 1:59=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> On Tue, 25 Jul 2023 15:22:52 +0800
+> Ze Gao <zegao2021@gmail.com> wrote:
+>
+> >  #ifdef CREATE_TRACE_POINTS
+> > -static inline long __trace_sched_switch_state(bool preempt,
+> > +static inline const char __trace_sched_switch_state(bool preempt,
+>
+> Does it really need to be "const"?
 
+Not really since it's rvalue after all, will remove this.
 
-On 2023/7/25 17:56, James Clark wrote:
-> 
-> 
-> On 25/07/2023 08:31, Shuai Xue wrote:
->>
->>
->> On 2023/7/24 23:21, James Clark wrote:
->>>
->>>
->>> On 11/07/2023 02:41, Shuai Xue wrote:
->>>> When perf-record with a large AUX area, e.g 4GB, it fails with:
->>>>
->>>>     #perf record -C 0 -m ,4G -e arm_spe_0// -- sleep 1
->>>>     failed to mmap with 12 (Cannot allocate memory)
->>>>
->>>> and it reveals a WARNING with __alloc_pages():
->>>>
->>>> [   66.595604] ------------[ cut here ]------------
->>>> [   66.600206] WARNING: CPU: 44 PID: 17573 at mm/page_alloc.c:5568 __alloc_pages+0x1ec/0x248
->>>> [   66.608375] Modules linked in: ip6table_filter(E) ip6_tables(E) iptable_filter(E) ebtable_nat(E) ebtables(E) aes_ce_blk(E) vfat(E) fat(E) aes_ce_cipher(E) crct10dif_ce(E) ghash_ce(E) sm4_ce_cipher(E) sm4(E) sha2_ce(E) sha256_arm64(E) sha1_ce(E) acpi_ipmi(E) sbsa_gwdt(E) sg(E) ipmi_si(E) ipmi_devintf(E) ipmi_msghandler(E) ip_tables(E) sd_mod(E) ast(E) drm_kms_helper(E) syscopyarea(E) sysfillrect(E) nvme(E) sysimgblt(E) i2c_algo_bit(E) nvme_core(E) drm_shmem_helper(E) ahci(E) t10_pi(E) libahci(E) drm(E) crc64_rocksoft(E) i40e(E) crc64(E) libata(E) i2c_core(E)
->>>> [   66.657719] CPU: 44 PID: 17573 Comm: perf Kdump: loaded Tainted: G            E      6.3.0-rc4+ #58
->>>> [   66.666749] Hardware name: Default Default/Default, BIOS 1.2.M1.AL.P.139.00 03/22/2023
->>>> [   66.674650] pstate: 23400009 (nzCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
->>>> [   66.681597] pc : __alloc_pages+0x1ec/0x248
->>>> [   66.685680] lr : __kmalloc_large_node+0xc0/0x1f8
->>>> [   66.690285] sp : ffff800020523980
->>>> [   66.693585] pmr_save: 000000e0
->>>> [   66.696624] x29: ffff800020523980 x28: ffff000832975800 x27: 0000000000000000
->>>> [   66.703746] x26: 0000000000100000 x25: 0000000000100000 x24: ffff8000083615d0
->>>> [   66.710866] x23: 0000000000040dc0 x22: ffff000823d6d140 x21: 000000000000000b
->>>> [   66.717987] x20: 000000000000000b x19: 0000000000000000 x18: 0000000000000030
->>>> [   66.725108] x17: 0000000000000000 x16: ffff800008f05be8 x15: ffff000823d6d6d0
->>>> [   66.732229] x14: 0000000000000000 x13: 343373656761705f x12: 726e202c30206574
->>>> [   66.739350] x11: 00000000ffff7fff x10: 00000000ffff7fff x9 : ffff8000083af570
->>>> [   66.746471] x8 : 00000000000bffe8 x7 : c0000000ffff7fff x6 : 000000000005fff4
->>>> [   66.753592] x5 : 0000000000000000 x4 : ffff000823d6d8d8 x3 : 0000000000000000
->>>> [   66.760713] x2 : 0000000000000000 x1 : 0000000000000001 x0 : 0000000000040dc0
->>>> [   66.767834] Call trace:
->>>> [   66.770267]  __alloc_pages+0x1ec/0x248
->>>> [   66.774003]  __kmalloc_large_node+0xc0/0x1f8
->>>> [   66.778259]  __kmalloc_node+0x134/0x1e8
->>>> [   66.782081]  rb_alloc_aux+0xe0/0x298
->>>> [   66.785643]  perf_mmap+0x440/0x660
->>>> [   66.789031]  mmap_region+0x308/0x8a8
->>>> [   66.792593]  do_mmap+0x3c0/0x528
->>>> [   66.795807]  vm_mmap_pgoff+0xf4/0x1b8
->>>> [   66.799456]  ksys_mmap_pgoff+0x18c/0x218
->>>> [   66.803365]  __arm64_sys_mmap+0x38/0x58
->>>> [   66.807187]  invoke_syscall+0x50/0x128
->>>> [   66.810922]  el0_svc_common.constprop.0+0x58/0x188
->>>> [   66.815698]  do_el0_svc+0x34/0x50
->>>> [   66.818999]  el0_svc+0x34/0x108
->>>> [   66.822127]  el0t_64_sync_handler+0xb8/0xc0
->>>> [   66.826296]  el0t_64_sync+0x1a4/0x1a8
->>>> [   66.829946] ---[ end trace 0000000000000000 ]---
->>>>
->>>> 'rb->aux_pages' allocated by kcalloc() is a pointer array which is used to
->>>> maintain AUX trace pages. The allocated page for this array is physically
->>>> contiguous (and virtually contiguous) with an order of 0..MAX_ORDER. If the
->>>> size of pointer array crosses the limitation set by MAX_ORDER, it reveals a
->>>> WARNING.
->>>>
->>>> So bail out early with -EINVAL if the request AUX area is out of bound,
->>>> e.g.:
->>>>
->>>>     #perf record -C 0 -m ,4G -e arm_spe_0// -- sleep 1
->>>>     failed to mmap with 22 (Invalid argument)
->>>>
->>>
->>> Hi Shuai,
->>
->> Hi, James,
->>
->>>
->>> Now that I think about this, isn't the previous error "failed to mmap
->>> with 12 (Cannot allocate memory)" better than "failed to mmap with 22
->>> (Invalid argument)"?
->>
->> If I see a "invalid argument", I am expected to check my perf command
->> first. But for "Cannot allocate memory", I will doubt that the system
->> have problem but I dont have any idea about.
->>
->> IMO, I prefer "invalid argument". But I can change back to previous error
->> message if you insist.
->>
->>
-> 
-> Maybe, but if a tool is currently doing something like an increasing
-> loop to check for the max possible aux buffer size and checking for "12
-> (Cannot allocate memory)" then you could consider this change a
-> userspace breaking one.
-> 
-> The script would probably just be checking for any error, but you never
-> know.
-> 
-> I agree the error codes are quite non specific and don't really help
-> with showing the cause of the problem. But I can't see how the memory
-> one isn't more specific to the aux buffer size in this case.
-> 
-> I searched for other errors returned after checking get_order() and I
-> found both -EINVAL and -ENOMEM, so if there is no consensus maybe it's
-> best to stick to the existing return value.
+> >                                             unsigned int prev_state,
+> >                                             struct task_struct *p)
+> >  {
+> > @@ -197,13 +198,6 @@ static inline long __trace_sched_switch_state(bool=
+ preempt,
+> >       BUG_ON(p !=3D current);
+> >  #endif /* CONFIG_SCHED_DEBUG */
+> >
+> > -     /*
+> > -      * Preemption ignores task state, therefore preempted tasks are a=
+lways
+> > -      * RUNNING (we will not have dequeued if state !=3D RUNNING).
+> > -      */
+> > -     if (preempt)
+> > -             return TASK_REPORT_MAX;
+> > -
+> >       /*
+> >        * task_state_index() uses fls() and returns a value from 0-8 ran=
+ge.
+> >        * Decrement it by 1 (except TASK_RUNNING state i.e 0) before usi=
+ng
+> > @@ -212,7 +206,16 @@ static inline long __trace_sched_switch_state(bool=
+ preempt,
+> >        */
+> >       state =3D __task_state_index(prev_state, p->exit_state);
+> >
+> > -     return state ? (1 << (state - 1)) : state;
+> > +     /*
+> > +      * Preemption ignores task state, therefore preempted tasks are a=
+lways
+> > +      * RUNNING (we will not have dequeued if state !=3D RUNNING).
+> > +      * Here, we use 'p' to denote this case and only for this case.
+> > +      */
+> > +     if (preempt)
+> > +             return 'p';
+> > +
+> > +
+> > +     return task_index_to_char(state);
+> >  }
+> >  #endif /* CREATE_TRACE_POINTS */
+> >
+> > @@ -232,7 +235,7 @@ TRACE_EVENT(sched_switch,
+> >               __array(        char,   prev_comm,      TASK_COMM_LEN   )
+> >               __field(        pid_t,  prev_pid                        )
+> >               __field(        int,    prev_prio                       )
+> > -             __field(        long,   prev_state                      )
+> > +             __field(        char,   prev_state                      )
+> >               __array(        char,   next_comm,      TASK_COMM_LEN   )
+> >               __field(        pid_t,  next_pid                        )
+> >               __field(        int,    next_prio                       )
+>
+> This will break userspace. Just because you update libtraceevent
+> doesn't mean that it will get to all the users of it. There's still
+> tools that have the old method hard coded and doesn't use the library.
+>
+> Now, because the old tools still do the parsing of this format, we can
+> add a new field called prev_state_char that will give you this. Now to
+> save space, we should change prev_state to int (can't make it short as
+> there's that test for "+" which does sometimes happen). I believe we
+> can make prev_prio and next prio into shorts (and possibly chars!).
+>
+> -- Steve
+>
 
-Ok, I will change back to previous -ENOMEM :)
+Agreed, and my first attempt was to not break anything here by
+introducing a new "char",  which is kinda redundant, but is a good way
+for smooth transition to decouple userspace from kernel on this weird
+design(of ABI).
 
-Thank you.
+However, given the fact the in-tree perf still suffers this, I doubt many
+other tools could spare from it. And the best guess is that they are
+still partially broken silently and reports wrong and confusing states.
+And this is basically why I came up with this RFC and deliberately
+let them fail loudly to do a painful but quick recovery.
 
-Best Regards,
-Shuai
+Anyway, if we want to keep status quo, I can send over another two
+patches to fix perf and libtraceevent specifically and leave the tracepoint
+alone. But seriously, imho we might have no chance to correct this.
+and without a formal abi, the raw value (let alone the masqueraded ones)
+is just meaningless for userspace and that leaves it intended for kernel
+developers only.
 
-
-> 
-> James
-> 
->>> And you might want to split the doc change out if they are going to be
->>> merged through separate trees.
->>
->> Will do that.
->>
->>>
->>> And one comment below:
->>>
->>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->>>> ---
->>>> changes since v2:
->>>> - remove unnecessary overflow check (per Peter)
->>>>
->>>> changes since v1:
->>>> - drop out patch2 because it has been fixed on upstream (Thanks James for reminding)
->>>> - move sanity check into rb_alloc_aux (per Leo)
->>>> - add overflow check (per James)
->>>> ---
->>>>  kernel/events/ring_buffer.c              | 3 +++
->>>>  tools/perf/Documentation/perf-record.txt | 3 ++-
->>>>  2 files changed, 5 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
->>>> index a0433f37b024..5933ce45c68a 100644
->>>> --- a/kernel/events/ring_buffer.c
->>>> +++ b/kernel/events/ring_buffer.c
->>>> @@ -699,6 +699,9 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
->>>>  		watermark = 0;
->>>>  	}
->>>>  
->>>> +	/* Can't allocate more than MAX_ORDER */
->>>> +	if (get_order((unsigned long)nr_pages * sizeof(void *)) > MAX_ORDER)
->>>> +		return -EINVAL;
->>>>  	rb->aux_pages = kcalloc_node(nr_pages, sizeof(void *), GFP_KERNEL,
->>>>  				     node);
->>>>  	if (!rb->aux_pages)
->>>> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
->>>> index 680396c56bd1..5d8d3ad084ed 100644
->>>> --- a/tools/perf/Documentation/perf-record.txt
->>>> +++ b/tools/perf/Documentation/perf-record.txt
->>>> @@ -290,7 +290,8 @@ OPTIONS
->>>>  	specification with appended unit character - B/K/M/G. The
->>>>  	size is rounded up to have nearest pages power of two value.
->>>>  	Also, by adding a comma, the number of mmap pages for AUX
->>>> -	area tracing can be specified.
->>>> +	area tracing can be specified. With MAX_ORDER set as 10 on
->>>> +	arm64 platform , the maximum AUX area is limited to 2GiB.
->>>
->>> Minor nit: I wouldn't expect a Perf tool user to know what "MAX_ORDER"
->>> is, and I don't think the limitation is Arm specific? Maybe something in
->>> more relevant terms is more useful:
->>>
->>>   The maximum AUX area is limited by the page size of the system. For
->>>   example with 4K pages configured, the maximum is 2GiB.
->>
->> Agreed. Will change it.
->>
->>
->>>
->>> Thanks
->>> James
->>
->> Thank you for valuable comments.
->>
->> Best Regards,
->> Shuai
->>>
->>>>  
->>>>  -g::
->>>>  	Enables call-graph (stack chain/backtrace) recording for both
+Thanks,
+Ze
