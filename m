@@ -2,147 +2,136 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA9CC001B0
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jul 2023 12:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD15C001DC
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jul 2023 13:36:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234062AbjGZMQt (ORCPT
+        id S232648AbjGZNgv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Jul 2023 08:16:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32858 "EHLO
+        Wed, 26 Jul 2023 09:36:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233645AbjGZMQq (ORCPT
+        with ESMTP id S231758AbjGZNgu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Jul 2023 08:16:46 -0400
-Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D37C82698;
-        Wed, 26 Jul 2023 05:16:39 -0700 (PDT)
-Received: by mail-il1-x131.google.com with SMTP id e9e14a558f8ab-345fcf8951fso27553145ab.1;
-        Wed, 26 Jul 2023 05:16:39 -0700 (PDT)
+        Wed, 26 Jul 2023 09:36:50 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99D6A1734;
+        Wed, 26 Jul 2023 06:36:49 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1bb81809ca8so35380325ad.3;
+        Wed, 26 Jul 2023 06:36:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690373799; x=1690978599;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PzcxxlbFJ3XgasuaSW3q94g6VrQbmuetHpQHuGg7FzU=;
-        b=jWr2FVUNFVAj8c4IATVZ7wOpIy5pyYjdrKhq1XnaRhW1LWqd5o94aebPTcPg6y62Zn
-         VxNeDdLGwitNL9vOKacamAgjsVgGmOwgKaY8yKEuJw+kiQpcVhKdjipI7lNgvxUadI6A
-         m/NriPfv8n0kFYHkjwWYwtNO9qxJbYBovyrRAU7lQxna//uxQHpt3hw6dd1Cyf7SKrGn
-         zCJHJVqTSsdFLb1rgn/ipwTkz8Iv9tIwjJtTdrk5wtLOCZgT1LP+tqWwLG6dkFR3h7p+
-         zVd3jQOvAQdgI6DPk6xKH9DRtETNMBLvZmDvky8v/gTsWHa8EzwJlDRaUTbEAXH7PCGB
-         t44g==
+        d=gmail.com; s=20221208; t=1690378609; x=1690983409;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=gYgt2/L5v2iTxYlRyElhhZxpEQdszhBpRfoZ9bvFiQ0=;
+        b=cc+iIay/ECUUq2pHo33gxd4ADnap2aPJzZM2OBywjK7f+VDRd1WJuOxS7c6n9Q7ZYX
+         fR4V3H1u8u+4i4JlE5fZwItEwJ8c5gLPRtmyo4wIGDY4I74cL9fi0puRyvoPVDG5kchY
+         MIdU+wVuzneuLtM5doFCVEuZuvGwpdAvIbcflbNd+WB+bVKPyaxKU46Y5Sw05gCDtmOJ
+         l6anyIffgIvqiITu4Bns3vF7CAsi8KZFdlHTS8EPisT85e5Vxw+6grzUvglcRdOR0hKU
+         bUxryPE8Il+DhsnQv6g9XDQA1JOca6j/I9LS6MN1zNm47Mdo9qab6hDwxGv0LsBnUtmU
+         YGYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690373799; x=1690978599;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PzcxxlbFJ3XgasuaSW3q94g6VrQbmuetHpQHuGg7FzU=;
-        b=L/+6VjyMA6Sz9Ygb9VK9HglL6HyZ9nZGjBqlGu9Qw5kbavuZldbXcCRNYDnCXR32Hu
-         ifyCTnFbtumRyOboe4UOyxE1MCEfPGoBwpGZZqqbSWIeh4OKTx18ot4AW8ciXBMsZj9k
-         9pKUxY5RpYmYnYO8x5auZ1ARym/lHyzW7LORI1qMFCw4cESOERJckHZbdoHSOj5/WCTx
-         uslaCtwnH1i/ldcYdTwJA76RF7K3akadaVrHRAX7tijYXYBu/teXnz7wAzBHemDaU1s0
-         MwovRIoacdDWdeKwEPWLIBp4k1ts772nDP/Lz66x7i0vRR4AEO2sbHWOGPL+p/wyrJw0
-         GY+w==
-X-Gm-Message-State: ABy/qLasiJQSFIl6rJto0b98ukAz5rmYWcAfkNzTE5ZD0JGz5w6gkI7Z
-        sLP/KfkWYz2/scbFdIg2s9U=
-X-Google-Smtp-Source: APBJJlH6zbVQEJmJs/+ocaXTXJkfchg/0JB0jQo/dB+RUpuMADYLeL3yOmhm61B37jhB88FyH+zIdg==
-X-Received: by 2002:a92:c549:0:b0:345:8373:bf68 with SMTP id a9-20020a92c549000000b003458373bf68mr1969298ilj.25.1690373798957;
-        Wed, 26 Jul 2023 05:16:38 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.25])
-        by smtp.googlemail.com with ESMTPSA id ms19-20020a17090b235300b00263f446d432sm1172880pjb.43.2023.07.26.05.16.35
+        d=1e100.net; s=20221208; t=1690378609; x=1690983409;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gYgt2/L5v2iTxYlRyElhhZxpEQdszhBpRfoZ9bvFiQ0=;
+        b=G1NNdhkpQvkvtA2wkj2UO6RFn578CXuX0RCGF10UUiJ06jzFQZHkLa7bSqDMcOH1EF
+         MAppjIX6LMqBSFeI0bUwq+IEvL2uk7AZEw3CfwsU6xse7lk+BRIPzftJNUlBQHqnXQNK
+         m4xsnEPd3pcjmPBj9F5P6xfRZj/CLb9jv4KHhy3De9OvGWITWRHM78ItuEIo7xEX0rrD
+         V06ZJA8XeOsr97zOmgjXPY0W3dX02C8QGfK1HGR2S8m0ilXOtrilfdpILpaDPhlb7iO5
+         7SmVZ8fiK6UX8OovQhRk/voH5haZ0wBmLy7goimgsANw+sYHFOvkUVmuw3wcUvIRuecG
+         ZR/g==
+X-Gm-Message-State: ABy/qLZ+VJqXO07FbOM/N+Q4wcdM1hcC+xztI54NmJG08WVR8bKrCKXa
+        21G3tW4sHU9XfwtehH1ARZg=
+X-Google-Smtp-Source: APBJJlEpN1bPsnxPRND9LmzHt5o47i8k3Fn9HUNUfEcvha9GSBEaVJ0F0bDgj9ExYJlu7Ub8tl8QCw==
+X-Received: by 2002:a17:902:b08a:b0:1b8:c972:606c with SMTP id p10-20020a170902b08a00b001b8c972606cmr1869361plr.57.1690378608925;
+        Wed, 26 Jul 2023 06:36:48 -0700 (PDT)
+Received: from bangji.roam.corp.google.com ([114.129.115.132])
+        by smtp.gmail.com with ESMTPSA id q8-20020a170902b10800b001b8baa83639sm13206369plr.200.2023.07.26.06.36.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jul 2023 05:16:38 -0700 (PDT)
-From:   Ze Gao <zegao2021@gmail.com>
-X-Google-Original-From: Ze Gao <zegao@tencent.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Subject: [RFC PATCH v2 3/3] libtraceevent: use the new prev_state_char instead in tracepoint sched_switch
-Date:   Wed, 26 Jul 2023 20:16:18 +0800
-Message-Id: <20230726121618.19198-4-zegao@tencent.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230726121618.19198-1-zegao@tencent.com>
-References: <20230726121618.19198-1-zegao@tencent.com>
+        Wed, 26 Jul 2023 06:36:48 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Anup Sharma <anupnewsmail@gmail.com>, stable@vger.kernel.org
+Subject: [PATCH 1/2] perf build: Update build rule for generated files
+Date:   Wed, 26 Jul 2023 06:36:41 -0700
+Message-ID: <20230726133642.750342-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.41.0.487.g6d72f3e995-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Since the sched_switch tracepoint introduces a new variable to
-report sched-out task state in symbolic char, we switch to use
-that instead to spare from knowing internal implementations
-in kernel.
+The bison and flex generate C files from the source (.y and .l)
+files.  When O= option is used, they are saved in a separate directory
+but the default build rule assumes the .C files are in the source
+directory.  So it might read invalid file if there are generated files
+from an old version.  The same is true for the pmu-events files.
 
-Signed-off-by: Ze Gao <zegao@tencent.com>
+For example, the following command would cause a build failure:
+
+  $ git checkout v6.3
+  $ make -C tools/perf  # build in the same directory
+
+  $ git checkout v6.5-rc2
+  $ mkdir build  # create a build directory
+  $ make -C tools/perf O=build  # build in a different directory but it
+                                # refers files in the source directory
+
+Let's update the build rule to specify those cases explicitly to depend
+on the files in the output directory.
+
+Note that it's not a complete fix and it needs the next patch for the
+include path too.
+
+Fixes: 80eeb67fe577 ("perf jevents: Program to convert JSON file")
+Cc: stable@vger.kernel.org
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- plugins/plugin_sched_switch.c | 29 ++++-------------------------
- 1 file changed, 4 insertions(+), 25 deletions(-)
+ tools/build/Makefile.build  | 8 ++++++++
+ tools/perf/pmu-events/Build | 4 ++++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/plugins/plugin_sched_switch.c b/plugins/plugin_sched_switch.c
-index 8752cae..5dbdc28 100644
---- a/plugins/plugin_sched_switch.c
-+++ b/plugins/plugin_sched_switch.c
-@@ -9,27 +9,6 @@
- #include "event-parse.h"
- #include "trace-seq.h"
+diff --git a/tools/build/Makefile.build b/tools/build/Makefile.build
+index 89430338a3d9..f9396696fcbf 100644
+--- a/tools/build/Makefile.build
++++ b/tools/build/Makefile.build
+@@ -117,6 +117,14 @@ $(OUTPUT)%.s: %.c FORCE
+ 	$(call rule_mkdir)
+ 	$(call if_changed_dep,cc_s_c)
  
--static void write_state(struct trace_seq *s, int val)
--{
--	const char states[] = "SDTtZXxW";
--	int found = 0;
--	int i;
--
--	for (i = 0; i < (sizeof(states) - 1); i++) {
--		if (!(val & (1 << i)))
--			continue;
--
--		if (found)
--			trace_seq_putc(s, '|');
--
--		found = 1;
--		trace_seq_putc(s, states[i]);
--	}
--
--	if (!found)
--		trace_seq_putc(s, 'R');
--}
--
- static void write_and_save_comm(struct tep_format_field *field,
- 				struct tep_record *record,
- 				struct trace_seq *s, int pid)
-@@ -97,10 +76,10 @@ static int sched_switch_handler(struct trace_seq *s,
- 	trace_seq_printf(s, "%lld ", val);
- 
- 	if (tep_get_field_val(s, event, "prev_prio", record, &val, 1) == 0)
--		trace_seq_printf(s, "[%d] ", (int) val);
-+		trace_seq_printf(s, "[%d] ", (short) val);
- 
--	if (tep_get_field_val(s,  event, "prev_state", record, &val, 1) == 0)
--		write_state(s, val);
-+	if (tep_get_field_val(s,  event, "prev_state_char", record, &val, 1) == 0)
-+		trace_seq_putc(s, (char) val);
- 
- 	trace_seq_puts(s, " ==> ");
- 
-@@ -115,7 +94,7 @@ static int sched_switch_handler(struct trace_seq *s,
- 	trace_seq_printf(s, "%lld", val);
- 
- 	if (tep_get_field_val(s, event, "next_prio", record, &val, 1) == 0)
--		trace_seq_printf(s, " [%d]", (int) val);
-+		trace_seq_printf(s, " [%d]", (short) val);
- 
- 	return 0;
- }
++$(OUTPUT)%-bison.o: $(OUTPUT)%-bison.c FORCE
++	$(call rule_mkdir)
++	$(call if_changed_dep,$(host)cc_o_c)
++
++$(OUTPUT)%-flex.o: $(OUTPUT)%-flex.c FORCE
++	$(call rule_mkdir)
++	$(call if_changed_dep,$(host)cc_o_c)
++
+ # Gather build data:
+ #   obj-y        - list of build objects
+ #   subdir-y     - list of directories to nest
+diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
+index 150765f2baee..f38a27765604 100644
+--- a/tools/perf/pmu-events/Build
++++ b/tools/perf/pmu-events/Build
+@@ -35,3 +35,7 @@ $(PMU_EVENTS_C): $(JSON) $(JSON_TEST) $(JEVENTS_PY) $(METRIC_PY) $(METRIC_TEST_L
+ 	$(call rule_mkdir)
+ 	$(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) $(JEVENTS_MODEL) pmu-events/arch $@
+ endif
++
++$(OUTPUT)pmu-events/pmu-events.o: $(PMU_EVENTS_C)
++	$(call rule_mkdir)
++	$(call if_changed_dep,$(host)cc_o_c)
 -- 
-2.40.1
+2.41.0.487.g6d72f3e995-goog
 
