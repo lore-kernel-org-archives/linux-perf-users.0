@@ -2,51 +2,52 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A117C0015E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jul 2023 05:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF36C001E0
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jul 2023 06:16:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230367AbjGZFcX (ORCPT
+        id S232045AbjGZGQd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Jul 2023 01:32:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34946 "EHLO
+        Wed, 26 Jul 2023 02:16:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229635AbjGZFcV (ORCPT
+        with ESMTP id S231946AbjGZGQK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Jul 2023 01:32:21 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E75C2212D;
-        Tue, 25 Jul 2023 22:32:19 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66D8DFEC;
-        Tue, 25 Jul 2023 22:33:02 -0700 (PDT)
-Received: from [10.162.40.16] (unknown [10.162.40.16])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC6393F5A1;
-        Tue, 25 Jul 2023 22:32:14 -0700 (PDT)
-Message-ID: <8b9d860f-f235-651e-3e48-34cdc489440d@arm.com>
-Date:   Wed, 26 Jul 2023 11:02:11 +0530
+        Wed, 26 Jul 2023 02:16:10 -0400
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8861719BD;
+        Tue, 25 Jul 2023 23:15:46 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R941e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0VoFhAhR_1690352140;
+Received: from 30.221.150.4(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VoFhAhR_1690352140)
+          by smtp.aliyun-inc.com;
+          Wed, 26 Jul 2023 14:15:41 +0800
+Message-ID: <a16f4eb7-24c2-fc42-964d-0b84effae9a5@linux.alibaba.com>
+Date:   Wed, 26 Jul 2023 14:15:37 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH V13 - RESEND 06/10] arm64/perf: Enable branch stack events
- via FEAT_BRBE
-Content-Language: en-US
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Yang Shen <shenyang39@huawei.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
-Cc:     Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <20230711082455.215983-1-anshuman.khandual@arm.com>
- <20230711082455.215983-7-anshuman.khandual@arm.com>
- <5c7c1ff3-1e2a-1258-7fa0-c82a9ab62646@huawei.com>
- <9d07e82a-06fb-a5f8-6f4f-f3c16784b9b7@arm.com>
- <3873f3b6-5e0b-360f-2f01-4584e15e960a@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <3873f3b6-5e0b-360f-2f01-4584e15e960a@arm.com>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.11.2
+Subject: Re: [PATCH v4 1/4] perf metric: Event "Compat" value supports
+ matching multiple identifiers
+To:     John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>
+References: <1690100513-61165-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1690100513-61165-2-git-send-email-renyu.zj@linux.alibaba.com>
+ <4c20d8fd-b478-5b0a-0558-3b59dead0751@oracle.com>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <4c20d8fd-b478-5b0a-0558-3b59dead0751@oracle.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -55,199 +56,34 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 7/25/23 18:59, Suzuki K Poulose wrote:
-> On 25/07/2023 12:42, Anshuman Khandual wrote:
->> Hello Yang,
+在 2023/7/25 下午4:20, John Garry 写道:
+> On 23/07/2023 09:21, Jing Zhang wrote:
+>> The jevent "Compat" is used for uncore PMU alias or metric definitions.
 >>
->> On 7/25/23 12:42, Yang Shen wrote:
->>>> +    if (!(branch_type & PERF_SAMPLE_BRANCH_NO_CYCLES))
->>>> +        brbcr |= BRBCR_EL1_CC;
->>>
->>> Hi Anshuman,
->>>
->>> Here is problem about enable CYCLES_COUNT. The SPEC defines that the CYCLES_COUNT is only
->>>
->>> valid when the BRECR_EL1.CC & BRBCR_EL2.CC is true. And here the SPEC also defines that
->>>
->>> when PSTATE.EL == EL2 and HCR_EL2.E2h == '1', 'MSR BRBCR_EL1, <Xt>' means writing to
->>>
->>> BRBCR_EL2 actually. So 'armv8pmu_branch_enable' can only set the BRBCR_EL2.CC, while the
->>>
->>> BRECR_EL1.CC is still 0. The CYCLES_COUNT will be always 0 in records.
+>> The same PMU driver has different PMU identifiers due to different hardware
+>> versions and types, but they may have some common PMU event/metric. Since a
+>> Compat value can only match one identifier, when adding the same event
+>> alias and metric to PMUs with different identifiers, each identifier needs
+>> to be defined once, which is not streamlined enough.
 >>
+>> So let "Compat" value supports matching multiple identifiers. For example,
+>> the Compat value {abcde;123*} can match the PMU identifier "abcde" and the
+>> the PMU identifier with the prefix "123", where "*" is a wildcard.
+>> Tokens in Unit field are delimited by ';' with no spaces.
 >>
->> Agreed, this is a valid problem i.e BRBCR_EL1.CC and BRBCR_EL2.CC both needs to be set
->> for valid cycle count information regardless if the kernel runs in EL1 or EL2. A simple
->> hack in the current code setting BRBCR_EL12.C, which in turn sets BRBCR_EL1.CC when the
->> kernel runs in EL2 solves the problem.
->>
->>>
->>> As a solution, maybe BRBCR_EL12 should be added for driver according to the registers definition.
->>
->> Right, will add the definition for BRBCR_EL12 in arch/arm64/tools/sysreg
->>
->>>
->>> Or, do you have a more standard solution?
->>
->> Right, there are some nuances involved here.
->>
->> Kernel could boot
->>     
->> a. Directly into EL2 and stays in EL2 for good
->> b. Directly into EL2 but switches into EL1
->> c. Directly into EL1 without ever going into EL2
->>
->> In all the above cases BRBCR_EL1.CC and BRBCR_EL2.CC needs to be set when cycle count
->> is requested in the perf event interface (event->attr.branch_sample_type) via clearing
->> PERF_SAMPLE_BRANCH_NO_CYCLES.
->>
->>
->> - For the case as in (c) where kernel boots into EL1 directly and hence cannot ever set
->>    EL2 register, BRBCR_EL2.CC would be a booting requirement - updated in booting.rst
->>
->> - For the cases as in (a) and (b) kernel boots via EL2, hence there is an opportunity
->>    to set both BRBCR_EL1.CC (via accessed BRBCR_EL12.CC) and BRBCR_EL2.CC. Depending on
+>> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+>> ---
+>>   tools/perf/util/metricgroup.c | 27 ++++++++++++++++++++++++++-
 > 
-> You don't need to use BRBCR_EL12, if you do it early enough, before
-> HCR_EL2.E2H == 1 is applied.
+> Why only support for metrics? Why not support for regular events aliases? I would have expected pmu_add_sys_aliases_iter_fn() to have been updated for this.
+> 
 
-Agreed. Please find the code change which solves this reported problem, please
-have a look and let me know if anything needs changing.
+Oh, you are right. I forgot to modify pmu_add_sys_aliases_iter_fn().
 
-------------------------------------------------------------------------------
- Documentation/arch/arm64/booting.rst |  6 ++++
- arch/arm64/include/asm/el2_setup.h   | 45 ++++++++++++++++++++++++++++
- arch/arm64/tools/sysreg              | 38 +++++++++++++++++++++++
- 3 files changed, 89 insertions(+)
+> On the basis that we will support regular events aliases, we need perf tool self-test cases for this in tools/perf/test/pmu-events.c (I think that pmu-events.c would be the most appropriate file)
+> 
 
-diff --git a/Documentation/arch/arm64/booting.rst b/Documentation/arch/arm64/booting.rst
-index b57776a68f15..2276df285e83 100644
---- a/Documentation/arch/arm64/booting.rst
-+++ b/Documentation/arch/arm64/booting.rst
-@@ -349,6 +349,12 @@ Before jumping into the kernel, the following conditions must be met:
- 
-     - HWFGWTR_EL2.nSMPRI_EL1 (bit 54) must be initialised to 0b01.
- 
-+  For CPUs with feature Branch Record Buffer Extension (FEAT_BRBE):
-+
-+  - If the kernel is entered at EL1 and EL2 is present:
-+
-+    - BRBCR_EL2.CC (bit 3) must be initialised to 0b1.
-+
-   For CPUs with the Scalable Matrix Extension FA64 feature (FEAT_SME_FA64):
- 
-   - If EL3 is present:
-diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
-index 8e5ffb58f83e..75b04eff2dc7 100644
---- a/arch/arm64/include/asm/el2_setup.h
-+++ b/arch/arm64/include/asm/el2_setup.h
-@@ -150,6 +150,50 @@
- 	msr	cptr_el2, x0			// Disable copro. traps to EL2
- .endm
- 
-+/*
-+ * Enable BRBE cycle count
-+ *
-+ * BRBE requires both BRBCR_EL1.CC and BRBCR_EL2.CC fields, be set
-+ * for the cycle counts to be available in BRBINF<N>_EL1.CC during
-+ * branch record processing after a PMU interrupt. This enables CC
-+ * field on both these registers while still executing inside EL2.
-+ *
-+ * BRBE driver would still be able to toggle branch records cycle
-+ * count support via BRBCR_EL1.CC field regardless of whether the
-+ * kernel end up executing in EL1 or EL2.
-+ */
-+.macro __init_el2_brbe
-+	mrs	x1, id_aa64dfr0_el1
-+	ubfx	x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
-+	cbz	x1, .Lskip_brbe_cc_\@
-+
-+	mrs_s	x0, SYS_BRBCR_EL2
-+	orr	x0, x0, BRBCR_EL2_CC
-+	msr_s	SYS_BRBCR_EL2, x0
-+
-+	/*
-+	 * Accessing BRBCR_EL1 register here does not require
-+	 * BRBCR_EL12 addressing mode as HCR_EL2.E2H is still
-+	 * clear. Regardless, check for HCR_E2H and be on the
-+	 * safer side.
-+	 */
-+	mrs	x1, hcr_el2
-+	and	x1, x1, #HCR_E2H
-+	cbz	x1, .Lset_brbe_el1_direct_\@
-+
-+	mrs_s	x0, SYS_BRBCR_EL12
-+	orr	x0, x0, BRBCR_EL12_CC
-+	msr_s	SYS_BRBCR_EL12, x0
-+	b	.Lskip_brbe_cc_\@
-+
-+.Lset_brbe_el1_direct_\@:
-+	mrs_s	x0, SYS_BRBCR_EL1
-+	orr	x0, x0, BRBCR_EL1_CC
-+	msr_s	SYS_BRBCR_EL1, x0
-+
-+.Lskip_brbe_cc_\@:
-+.endm
-+
- /* Disable any fine grained traps */
- .macro __init_el2_fgt
- 	mrs	x1, id_aa64mmfr0_el1
-@@ -224,6 +268,7 @@
- 	__init_el2_nvhe_idregs
- 	__init_el2_cptr
- 	__init_el2_fgt
-+	__init_el2_brbe
- .endm
- 
- #ifndef __KVM_NVHE_HYPERVISOR__
-diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
-index 9892af96262f..7d1d6b3976b4 100644
---- a/arch/arm64/tools/sysreg
-+++ b/arch/arm64/tools/sysreg
-@@ -1048,6 +1048,44 @@ Enum	1:0	VALID
- EndEnum
- EndSysregFields
- 
-+Sysreg	BRBCR_EL12	2	5	9	0	0
-+Res0	63:24
-+Field	23 	EXCEPTION
-+Field	22 	ERTN
-+Res0	21:9
-+Field	8 	FZP
-+Res0	7
-+Enum	6:5	TS
-+	0b01	VIRTUAL
-+	0b10	GUEST_PHYSICAL
-+	0b11	PHYSICAL
-+EndEnum
-+Field	4	MPRED
-+Field	3	CC
-+Res0	2
-+Field	1	E1BRE
-+Field	0	E0BRE
-+EndSysreg
-+
-+Sysreg	BRBCR_EL2	2	4	9	0	0
-+Res0	63:24
-+Field	23 	EXCEPTION
-+Field	22 	ERTN
-+Res0	21:9
-+Field	8 	FZP
-+Res0	7
-+Enum	6:5	TS
-+	0b01	VIRTUAL
-+	0b10	GUEST_PHYSICAL
-+	0b11	PHYSICAL
-+EndEnum
-+Field	4	MPRED
-+Field	3	CC
-+Res0	2
-+Field	1	E1BRE
-+Field	0	E0BRE
-+EndSysreg
-+
- Sysreg	BRBCR_EL1	2	1	9	0	0
- Res0	63:24
- Field	23 	EXCEPTION
--- 
-2.25.1
+Ok, I will support it for regular events aliases and add self-test cases in the next version.
+
+Thanks,
+Jing
