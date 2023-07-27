@@ -2,94 +2,121 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C73DC00528
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jul 2023 20:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B489FC00528
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jul 2023 21:36:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230144AbjG0UGI (ORCPT
+        id S232085AbjG0Vg5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Jul 2023 16:06:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43024 "EHLO
+        Thu, 27 Jul 2023 17:36:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232569AbjG0UGF (ORCPT
+        with ESMTP id S229931AbjG0Vg4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Jul 2023 16:06:05 -0400
-Received: from mgamail.intel.com (unknown [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6E3C2D7D;
-        Thu, 27 Jul 2023 13:05:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690488357; x=1722024357;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Msn3P7XhihBuXIiP755PoG7r2oz2s+xBr5H2iJd5InA=;
-  b=Tk6poIR7i+qalq+p0aRuMFmPpBlTQH98Osu9Wfuui4aI9zsK/isczqhg
-   bpjyOQ9uoHfT61Tvw4UJ/RIWnZIUWTCHyyUw8OM4bpVPK0lr4wnGC3/Rg
-   iPYNEupQgGLVF5OU4hlduyB9OGDXjYwHrT3W7O325ApyUxSa0R9PjAas9
-   S1XpLuLIx2W4bikGzIAZktRBRnQFBEoTio+d6B0mR3QXMMoxlfSWbb2cA
-   SNrsZ7onWpHNTLLZHpZw6/Ch5dGZVJuz6IG40t6O3mI2XQb9PTPWWiZmS
-   5I09L+8fD2s0yZXPpdfVW8m5kTGBkJaq3upBA4F+i0L5RHjW9XBEGxekQ
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10784"; a="365879766"
-X-IronPort-AV: E=Sophos;i="6.01,235,1684825200"; 
-   d="scan'208";a="365879766"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2023 13:05:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10784"; a="727147160"
-X-IronPort-AV: E=Sophos;i="6.01,235,1684825200"; 
-   d="scan'208";a="727147160"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2023 13:05:57 -0700
-Date:   Thu, 27 Jul 2023 13:05:56 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/3] Parse event sort/regroup fixes
-Message-ID: <ZMLOJNGDlvlU1NBD@tassilo>
-References: <20230719001836.198363-1-irogers@google.com>
- <ZLf4C/+x2ZSpb1Uz@kernel.org>
+        Thu, 27 Jul 2023 17:36:56 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C3F1C3;
+        Thu, 27 Jul 2023 14:36:52 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D984A61EB8;
+        Thu, 27 Jul 2023 21:36:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D72AC433C8;
+        Thu, 27 Jul 2023 21:36:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690493811;
+        bh=duAwVmFYmsUINs8hFVbW/zohvuZX6TUh3Gnxn1i9JaI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VnkrMICyDKHI52bpNsVeWb1AIXCLlOc90Zm+WJzG7JhU/D/eh32guTyhJs9VbOXeY
+         VLunSyQzAZmzTpbjTD0/0bwVy6AP11F0L45gerinT+7xNzw+bUWgc1NJDEOd0uEw7k
+         0oizeR8ID0C2ayjOTINy9zIDUAhG5c3tNnJg2rSvPeFBObmg5Lisx+nvXBwG4+Xl67
+         qM9qBKsNHyW1L5vzqBQ1hNJg2A3IUp0YOwTv0VvVK+IsuC1joDQwV/a5XSzbXqGwPQ
+         WEEaOEhQLooEPvMJ6QS2mIGeMoxc3tmMofUdWTZQq7jpKKXznadVu7vzJ5i57P+phO
+         A0wy5jcHn6vKQ==
+Date:   Thu, 27 Jul 2023 14:36:48 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
+        linux-arch@vger.kernel.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH v3 1/2] asm-generic: Unify uapi bitsperlong.h for arm64,
+ riscv and loongarch
+Message-ID: <20230727213648.GA354736@dev-arch.thelio-3990X>
+References: <1687443219-11946-1-git-send-email-yangtiezhu@loongson.cn>
+ <1687443219-11946-2-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZLf4C/+x2ZSpb1Uz@kernel.org>
+In-Reply-To: <1687443219-11946-2-git-send-email-yangtiezhu@loongson.cn>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 19, 2023 at 11:49:47AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Jul 18, 2023 at 05:18:33PM -0700, Ian Rogers escreveu:
-> > Patch 1, fix:
-> > perf stat -e cycles,slots,topdown-fe-bound
-> > so that cycles isn't made a group leader (failure caused by PMUs
-> > matching). Previously this event list would fail so not necessarily a
-> > regression over previous perf release.
-> > 
-> > Patch 2, when regrouping events the leader needs to be updated due to
-> > sorting. This fix causes larger event groups that then regress at
-> > least the tigerlake metric test as the kernel PMU driver fails to
-> > break the weak groups. This is a fix for a bug but the consequence of
-> > fixing the bug is to make a passing test fail due to the kernel PMU
-> > driver.
-> > 
-> > Patch 3, don't alter the list position of events without a group if
-> > they don't need forcing into a group. Analysis showed this was the
-> > cause of the issue reported by Andi Kleen:
-> > https://lore.kernel.org/linux-perf-users/ZLBgbHkbrfGygM%2Fu@tassilo/
-> 
-> Andi,
-> 
-> 	Can you please check these patches and provide a Tested-by?
+Hi Tiezhu and Arnd,
 
-Tested-by: Andi Kleen <ak@linux.intel.com>
+On Thu, Jun 22, 2023 at 10:13:38PM +0800, Tiezhu Yang wrote:
+> Now we specify the minimal version of GCC as 5.1 and Clang/LLVM as 11.0.0
+> in Documentation/process/changes.rst, __CHAR_BIT__ and __SIZEOF_LONG__ are
+> usable, it is probably fine to unify the definition of __BITS_PER_LONG as
+> (__CHAR_BIT__ * __SIZEOF_LONG__) in asm-generic uapi bitsperlong.h.
+> 
+> In order to keep safe and avoid regression, only unify uapi bitsperlong.h
+> for some archs such as arm64, riscv and loongarch which are using newer
+> toolchains that have the definitions of __CHAR_BIT__ and __SIZEOF_LONG__.
+> 
+> Suggested-by: Xi Ruoyao <xry111@xry111.site>
+> Link: https://lore.kernel.org/all/d3e255e4746de44c9903c4433616d44ffcf18d1b.camel@xry111.site/
+> Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> Link: https://lore.kernel.org/linux-arch/a3a4f48a-07d4-4ed9-bc53-5d383428bdd2@app.fastmail.com/
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  arch/arm64/include/uapi/asm/bitsperlong.h          | 24 ----------------------
+>  arch/loongarch/include/uapi/asm/bitsperlong.h      |  9 --------
+>  arch/riscv/include/uapi/asm/bitsperlong.h          | 14 -------------
+>  include/uapi/asm-generic/bitsperlong.h             | 13 +++++++++++-
+>  tools/arch/arm64/include/uapi/asm/bitsperlong.h    | 24 ----------------------
+>  .../arch/loongarch/include/uapi/asm/bitsperlong.h  |  9 --------
+>  tools/arch/riscv/include/uapi/asm/bitsperlong.h    | 14 -------------
+>  tools/include/uapi/asm-generic/bitsperlong.h       | 14 ++++++++++++-
+>  tools/include/uapi/asm/bitsperlong.h               |  6 ------
+>  9 files changed, 25 insertions(+), 102 deletions(-)
+>  delete mode 100644 arch/arm64/include/uapi/asm/bitsperlong.h
+>  delete mode 100644 arch/loongarch/include/uapi/asm/bitsperlong.h
+>  delete mode 100644 arch/riscv/include/uapi/asm/bitsperlong.h
+>  delete mode 100644 tools/arch/arm64/include/uapi/asm/bitsperlong.h
+>  delete mode 100644 tools/arch/loongarch/include/uapi/asm/bitsperlong.h
+>  delete mode 100644 tools/arch/riscv/include/uapi/asm/bitsperlong.h
 
--Andi
+I think this change has backwards compatibility concerns, as it breaks
+building certain host tools on the stable releases (at least 6.4 and
+6.1, as that is where I noticed this). I see the following error on my
+aarch64 system:
+
+  $ make -skj"$(nproc)" ARCH=x86_64 CROSS_COMPILE=x86_64-linux- mrproper defconfig prepare
+  In file included from /usr/include/asm/bitsperlong.h:1,
+                   from /usr/include/asm-generic/int-ll64.h:12,
+                   from /usr/include/asm-generic/types.h:7,
+                   from /usr/include/asm/types.h:1,
+                   from tools/include/linux/types.h:13,
+                   from tools/arch/x86/include/asm/orc_types.h:9,
+                   from scripts/sorttable.h:96,
+                   from scripts/sorttable.c:201:
+  tools/include/asm-generic/bitsperlong.h:14:2: error: #error Inconsistent word size. Check asm/bitsperlong.h
+     14 | #error Inconsistent word size. Check asm/bitsperlong.h
+        |  ^~~~~
+
+A reverse bisect of 6.4 to 6.5-rc1 points to this patch. This Fedora
+rawhide container has kernel-headers 6.5.0-0.rc2.git0.1.fc39 and the
+error disappears when I downgrade to 6.4.0-0.rc7.git0.1.fc39. I have not
+done a ton of triage/debugging so far, as I am currently hunting down
+other regressions, but I figured I would get an initial report out,
+since I noticed it when validating LLVM from the new release/17.x
+branch. If there is any additional information I can provide or patches
+I can test, I am more than happy to do so.
+
+Cheers,
+Nathan
