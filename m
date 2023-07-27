@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6402C00528
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jul 2023 08:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04CE4C001E0
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jul 2023 08:47:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232837AbjG0IrW (ORCPT
+        id S233073AbjG0IrX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Jul 2023 04:47:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54874 "EHLO
+        Thu, 27 Jul 2023 04:47:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234000AbjG0IrE (ORCPT
+        with ESMTP id S232900AbjG0IrF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Jul 2023 04:47:04 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11E7049C2;
+        Thu, 27 Jul 2023 04:47:05 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1747449C3;
         Thu, 27 Jul 2023 01:29:42 -0700 (PDT)
 Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RBP3q4CL4zNmZN;
-        Thu, 27 Jul 2023 16:25:59 +0800 (CST)
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RBP6c4NHLzrS0H;
+        Thu, 27 Jul 2023 16:28:24 +0800 (CST)
 Received: from M910t.huawei.com (10.110.54.157) by
  kwepemi500013.china.huawei.com (7.221.188.120) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Thu, 27 Jul 2023 16:29:21 +0800
+ 15.1.2507.27; Thu, 27 Jul 2023 16:29:18 +0800
 From:   Changbin Du <changbin.du@huawei.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -36,12 +36,10 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Hui Wang <hw.huiwang@huawei.com>,
         Changbin Du <changbin.du@huawei.com>
-Subject: [PATCH v4 3/4] perf: replace taskset with --workload-attr option
-Date:   Thu, 27 Jul 2023 16:28:51 +0800
-Message-ID: <20230727082852.916093-4-changbin.du@huawei.com>
+Subject: [PATCH v4 0/4] perf: add new option '--workload-attr' to set workload sched_policy/priority/cpumask
+Date:   Thu, 27 Jul 2023 16:28:48 +0800
+Message-ID: <20230727082852.916093-1-changbin.du@huawei.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230727082852.916093-1-changbin.du@huawei.com>
-References: <20230727082852.916093-1-changbin.du@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -53,96 +51,48 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Replace the taskset with our new option --workload-attr.
+This adds a new option '--workload-attr' to set the sched_policy/priority/cpumask
+of the workload to reduce system noise.
 
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
----
- tools/perf/Documentation/intel-hybrid.txt        | 2 +-
- tools/perf/Documentation/perf-stat.txt           | 2 +-
- tools/perf/tests/shell/stat_bpf_counters_cgrp.sh | 2 +-
- tools/perf/tests/shell/test_arm_coresight.sh     | 2 +-
- tools/perf/tests/shell/test_data_symbol.sh       | 2 +-
- tools/perf/tests/shell/test_intel_pt.sh          | 2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
+$ sudo perf stat --workload-attr fifo,40,0-3:7 -- ls
 
-diff --git a/tools/perf/Documentation/intel-hybrid.txt b/tools/perf/Documentation/intel-hybrid.txt
-index e7a776ad25d7..b4adb1eeba3f 100644
---- a/tools/perf/Documentation/intel-hybrid.txt
-+++ b/tools/perf/Documentation/intel-hybrid.txt
-@@ -132,7 +132,7 @@ displayed. The percentage is the event's running time/enabling time.
- One example, 'triad_loop' runs on cpu16 (atom core), while we can see the
- scaled value for core cycles is 160,444,092 and the percentage is 0.47%.
- 
--perf stat -e cycles \-- taskset -c 16 ./triad_loop
-+perf stat -e cycles --workload-attr other,0,16 \-- ./triad_loop
- 
- As previous, two events are created.
- 
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 18d0f73458b1..fb52ddcea622 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -464,7 +464,7 @@ on workload with changing phases.
- 
- To interpret the results it is usually needed to know on which
- CPUs the workload runs on. If needed the CPUs can be forced using
--taskset.
-+--workload-attr option.
- 
- --td-level::
- Print the top-down statistics that equal the input level. It allows
-diff --git a/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh b/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
-index d724855d097c..b13bf391b137 100755
---- a/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
-+++ b/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
-@@ -64,7 +64,7 @@ check_cpu_list_counted()
- {
- 	local output
- 
--	output=$(perf stat -C 1 --bpf-counters --for-each-cgroup ${test_cgroups} -e cpu-clock -x, taskset -c 1 sleep 1  2>&1)
-+	output=$(perf stat -C 1 --bpf-counters --for-each-cgroup ${test_cgroups} -e cpu-clock -x, --workload-attr other,0,1 -- sleep 1 2>&1)
- 	if echo ${output} | grep -q -F "<not "; then
- 		echo "Some CPU events are not counted"
- 		if [ "${verbose}" = "1" ]; then
-diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
-index f1bf5621160f..e00d04570aa8 100755
---- a/tools/perf/tests/shell/test_arm_coresight.sh
-+++ b/tools/perf/tests/shell/test_arm_coresight.sh
-@@ -38,7 +38,7 @@ record_touch_file() {
- 	echo "Recording trace (only user mode) with path: CPU$2 => $1"
- 	rm -f $file
- 	perf record -o ${perfdata} -e cs_etm/@$1/u --per-thread \
--		-- taskset -c $2 touch $file > /dev/null 2>&1
-+		--workload-attr other,0,$2 -- touch $file > /dev/null 2>&1
- }
- 
- perf_script_branch_samples() {
-diff --git a/tools/perf/tests/shell/test_data_symbol.sh b/tools/perf/tests/shell/test_data_symbol.sh
-index 69bb6fe86c50..02c6a97e3d0f 100755
---- a/tools/perf/tests/shell/test_data_symbol.sh
-+++ b/tools/perf/tests/shell/test_data_symbol.sh
-@@ -50,7 +50,7 @@ echo "Recording workload..."
- # specific CPU and test in per-CPU mode.
- is_amd=$(grep -E -c 'vendor_id.*AuthenticAMD' /proc/cpuinfo)
- if (($is_amd >= 1)); then
--	perf mem record -o ${PERF_DATA} -C 0 -- taskset -c 0 $TEST_PROGRAM &
-+	perf mem record -o ${PERF_DATA} -C 0 --workload-attr other,0,0 -- $TEST_PROGRAM &
- else
- 	perf mem record --all-user -o ${PERF_DATA} -- $TEST_PROGRAM &
- fi
-diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
-index 3a8b9bffa022..0dc085c72593 100755
---- a/tools/perf/tests/shell/test_intel_pt.sh
-+++ b/tools/perf/tests/shell/test_intel_pt.sh
-@@ -110,7 +110,7 @@ test_system_wide_side_band()
- 	can_cpu_wide 1 || return $?
- 
- 	# Record on CPU 0 a task running on CPU 1
--	perf_record_no_decode -o "${perfdatafile}" -e intel_pt//u -C 0 -- taskset --cpu-list 1 uname
-+	perf_record_no_decode -o "${perfdatafile}" -e intel_pt//u -C 0 --workload-attr other,0,1 -- uname
- 
- 	# Should get MMAP events from CPU 1 because they can be needed to decode
- 	mmap_cnt=$(perf script -i "${perfdatafile}" --no-itrace --show-mmap-events -C 1 2>/dev/null | grep -c MMAP)
+Please see patch 2/4 for more details.
+
+v4:
+  - add a test case for perf-stat. (suggeted by Ian Rogers)
+  - fix warning found by 0-DAY.
+v3:
+  - replace taskset with --workload-attr option in documents and tests.
+v2:
+  - Use cpu list spec instead of cpu mask number.
+  - Update documents.
+
+Changbin Du (4):
+  perf cpumap: Add __perf_cpu_map__new and perf_cpu_map__2_cpuset
+  perf: add new option '--workload-attr' to set workload
+    sched_policy/priority/cpumask
+  perf: replace taskset with --workload-attr option
+  perf test: add test case for --workload-attr option
+
+ tools/lib/perf/cpumap.c                       |  45 ++++++-
+ tools/lib/perf/include/perf/cpumap.h          |   4 +
+ tools/lib/perf/libperf.map                    |   2 +
+ tools/perf/Documentation/intel-hybrid.txt     |   2 +-
+ tools/perf/Documentation/perf-record.txt      |   7 ++
+ tools/perf/Documentation/perf-stat.txt        |   8 +-
+ tools/perf/builtin-record.c                   |  26 ++++
+ tools/perf/builtin-stat.c                     |  18 +++
+ tools/perf/tests/cpumap.c                     |  23 ++++
+ tools/perf/tests/shell/stat.sh                |  19 +++
+ .../tests/shell/stat_bpf_counters_cgrp.sh     |   2 +-
+ tools/perf/tests/shell/test_arm_coresight.sh  |   2 +-
+ tools/perf/tests/shell/test_data_symbol.sh    |   2 +-
+ tools/perf/tests/shell/test_intel_pt.sh       |   2 +-
+ tools/perf/util/evlist.c                      | 116 ++++++++++++++++++
+ tools/perf/util/evlist.h                      |   3 +
+ tools/perf/util/target.h                      |   9 ++
+ 17 files changed, 281 insertions(+), 9 deletions(-)
+
 -- 
 2.25.1
 
