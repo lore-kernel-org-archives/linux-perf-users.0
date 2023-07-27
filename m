@@ -2,95 +2,84 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8FFC001E0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jul 2023 12:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4F4C0015E
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jul 2023 13:08:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234214AbjG0MX4 (ORCPT
+        id S231493AbjG0NIB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Jul 2023 08:23:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59008 "EHLO
+        Thu, 27 Jul 2023 09:08:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233983AbjG0MXc (ORCPT
+        with ESMTP id S230154AbjG0NIA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Jul 2023 08:23:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AAEF30F3;
-        Thu, 27 Jul 2023 05:23:02 -0700 (PDT)
+        Thu, 27 Jul 2023 09:08:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 111EF9C
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 06:07:59 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6C7DB61E39;
-        Thu, 27 Jul 2023 12:23:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FA5EC433C7;
-        Thu, 27 Jul 2023 12:22:56 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 97D5461E76
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 13:07:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C62DDC433C8;
+        Thu, 27 Jul 2023 13:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690460580;
-        bh=YEUaN3MAYqvBNyV2BN0EfRdtbsnSlDcYdBV+Ec5bGew=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=al5StR1U2A5QhAkVjg9jgc8Xl+SdFwMukysvKgeAqH83RA9BmwjXj+oPuFL3gv/SQ
-         +Ff3/x6ESWNEXYFWR6Rkb7LjADpheGl4rRvUdvbPAsSa9eivD5gFGEpETwmIJBUSK5
-         6RQdYwmlGSS6vPAF5bHCeGcSc3gOIU0B6SswuBbZTdT0ZoH89g5MwrvlX5MFYI6OLp
-         dwKx6sZpCqie0ZKmB2z1FjO4M50Or7P+DOAUvO8FnYHzp7s3ptqHaXohOJ4S6Ye+Ru
-         oXxhSTKZ+ehFR+bJwXOIP3Iw+Xbu1aGnuRBNNRWbsa7gEKpuhDC4xPzL2qROn0oGvJ
-         GB7MoYz1arqVg==
-From:   Will Deacon <will@kernel.org>
-To:     John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>
-Cc:     catalin.marinas@arm.com, kernel-team@android.com,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, linux-doc@vger.kernel.org,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-        linux-arm-kernel@lists.infradead.org,
-        James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v4 0/4] Add JSON metrics for Yitian710 DDR
-Date:   Thu, 27 Jul 2023 13:22:33 +0100
-Message-Id: <169045902550.3247310.8131913678229023529.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <1687245156-61215-1-git-send-email-renyu.zj@linux.alibaba.com>
-References: <1687245156-61215-1-git-send-email-renyu.zj@linux.alibaba.com>
+        s=k20201202; t=1690463278;
+        bh=9iLLIbFPMTlW58RwqjCUc4ue3BAmQrDJQcrR/wu0GTg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=svSWZsWNbZkKggY+2JjZGXH2y4AZPji6vfFZs+X8P/UxCy1BHxuGkL/gUsb7FesY7
+         +2qPRf4HJAlmD5T15Dul2NzFWKq/AV7NnhI/r2rXPMFlyIl4Meff0Ol/GgkRuN1lw3
+         KpNM4phmXdPIINr/Y7JcWKkWmVLJzbk784FVKIgqKGVJg7nwQlwyQGmk7vCRoe/0Si
+         YMv6Jha/sTV8Hk5VXuar4vxhLigY8mgTa/oDiD20fmj9MsQu1sOcaVNZd7EKgGegjy
+         60GTFQZo3OLv27xjzYO63mJnBPfQCeez4C6VD4B0qmpFbYcGh8nNHVC8UZKexyzCTz
+         TGJ4Aw+w3hQcg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 27EB340516; Thu, 27 Jul 2023 10:07:55 -0300 (-03)
+Date:   Thu, 27 Jul 2023 10:07:55 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Xiu Jianfeng <xiujianfeng@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH -next] perf doc: Fix typo in perf.data-file-format.txt
+Message-ID: <ZMJsK3eWvDcCRAqQ@kernel.org>
+References: <20230727105001.261420-1-xiujianfeng@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230727105001.261420-1-xiujianfeng@huawei.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, 20 Jun 2023 15:12:32 +0800, Jing Zhang wrote:
-> I add an identifier sysfs file for the yitian710 SoC DDR to allow
-> userspace to identify the specific implementation of the device,
-> so that the perf tool can match the corresponding uncore events and
-> metrics through the identifier. Then added yitian710 SoC DDR
-> metrics and events alias.
+Em Thu, Jul 27, 2023 at 10:50:01AM +0000, Xiu Jianfeng escreveu:
+> The 'it' should be 'is' here, fix it.
+
+Thanks, applied.
+
+- Arnaldo
+
+ 
+> Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+> ---
+>  tools/perf/Documentation/perf.data-file-format.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Change since v3:
-> - Split the CMN and ali_drw patches. This patchset only contains
->   ali_drw PMU related patches. The CMN metric related patches will
->   be in another patchset.
-> - Link: https://lore.kernel.org/all/1685438374-33287-1-git-send-email-renyu.zj@linux.alibaba.com/
-> 
-> [...]
-
-Applied first patch to will (for-next/perf), thanks!
-
-[1/4] driver/perf: Add identifier sysfs file for Yitian 710 DDR
-      https://git.kernel.org/will/c/cbbc6fdd85be
-
-Cheers,
--- 
-Will
-
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+> diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
+> index 635ba043fd7d..010a4edcd384 100644
+> --- a/tools/perf/Documentation/perf.data-file-format.txt
+> +++ b/tools/perf/Documentation/perf.data-file-format.txt
+> @@ -43,7 +43,7 @@ struct perf_file_section {
+>  
+>  Flags section:
+>  
+> -For each of the optional features a perf_file_section it placed after the data
+> +For each of the optional features a perf_file_section is placed after the data
+>  section if the feature bit is set in the perf_header flags bitset. The
+>  respective perf_file_section points to the data of the additional header and
+>  defines its size.
+> -- 
+> 2.34.1
