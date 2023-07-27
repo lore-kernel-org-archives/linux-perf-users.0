@@ -2,96 +2,193 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8FBC001E0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jul 2023 15:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA87AC001DC
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jul 2023 17:45:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233768AbjG0PxD (ORCPT
+        id S230386AbjG0Rpg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Jul 2023 11:53:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52370 "EHLO
+        Thu, 27 Jul 2023 13:45:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233710AbjG0PxC (ORCPT
+        with ESMTP id S230252AbjG0Rpf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Jul 2023 11:53:02 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADF8B2726
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 08:53:00 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1bbc87ded50so7041955ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 08:53:00 -0700 (PDT)
+        Thu, 27 Jul 2023 13:45:35 -0400
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68D7E30E9
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 10:45:34 -0700 (PDT)
+Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-40540a8a3bbso22741cf.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 10:45:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1690473180; x=1691077980;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20221208; t=1690479933; x=1691084733;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Tsln9vKd77VrKuSCt5b74Dm8nHR1wAeieAig4NB5efM=;
-        b=nXJUOUbb//dCVbV2sNfuul/Inn6960O/kVZTCj/H6sx1GdOxxNK6slNWvKKjY+iP61
-         GAzYNIFfZK77JXKjmzOAxURrTGpZE7SQkmwqETn1oPudri7QL5DTL3n2+JNk5OoH6rQa
-         peDFusmEllNIHZfnhbZyCrIZtwkTDrKl0K/nQ=
+        bh=9NM68tAoXkNSSuTEH5H5vU3+nDfBfd+jxzhQH9vzkrQ=;
+        b=TSwqBZ8n7ZEGiMAKIfH38i1gT8PJgCeByl6DHc9FRCkEe3M9IJpRif13ZASvuveFBL
+         MgYAwesAntN/aPqFJNWVSj4yeIRxUpytPOmO0/5p1QOUytMWZ+1/5ev07X0IvQFCRFnp
+         j9PmpZ3vBnTcP2lC5eRx5TaRhTZ86c/oO0By8T5W3Ld/HRAFNgJ7CH1JOvFjQscKwa7y
+         eATldlKSZmoIzicr4G9+D/lXK57D+uQ9EmMqG9GGjXByIaxGBH5QqRFVYiW9Lng2dvfL
+         LmvGfxZE1GRZhT6ZXEyU30YyPrFgAo+pZiiayJWzPEHaTXOG5k9M3strRyFE7EtY3s87
+         gDTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690473180; x=1691077980;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1690479933; x=1691084733;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Tsln9vKd77VrKuSCt5b74Dm8nHR1wAeieAig4NB5efM=;
-        b=aZVul9pAejjKw0WaArnXWdki4neYlJwo5UL8Huzwl/0EfnA7UKV6D/sjImPdAmjH7M
-         H80pKyrNihJuTVydjHVsvkCsdoFZF+bmPRps0uRKtrCb7hMIjWnUPDlvv1vTn8wHErxM
-         B3iTrONaqSkIQJtpLCAMq3GZbvqKQdZdJtn+aroERHzgG/m5skMQoP871BRBlRorZ1cM
-         iU+kJ7JiHl6UDsZ7nUM88ZL96/pc0kZhlanyMSMw2X60k1TRQJ9gQn1x9fpMk9ZcOwSo
-         PGlvtQgEGbaLRdpkqBA9N1Jto/+W/0rQ52jAWAudatFWjjpAio8r5wTGSntGU/GQvVg/
-         h0Zw==
-X-Gm-Message-State: ABy/qLbZkodBFRUFtkaxNMTqHQ0xPuKhfxz9p5+atEirilv3gmLfOnF0
-        MQ7AKKOghZpAsZEdJDCUx+LgfA==
-X-Google-Smtp-Source: APBJJlFOaM/OFa4DX6l2QCKWulPgwcxSJTXbEbkawxaDeRErqsLH0YJUo8GTRiLZLV6zU5t99voBfQ==
-X-Received: by 2002:a17:903:24d:b0:1b8:9044:b8ae with SMTP id j13-20020a170903024d00b001b89044b8aemr4985631plh.11.1690473180185;
-        Thu, 27 Jul 2023 08:53:00 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id jl21-20020a170903135500b001bbab888ba0sm1803506plb.138.2023.07.27.08.52.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jul 2023 08:52:59 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        bh=9NM68tAoXkNSSuTEH5H5vU3+nDfBfd+jxzhQH9vzkrQ=;
+        b=IebQy4++84OMgMwDoEz2C0iSiFPbjZjCvlkljPq07qNlB7ZN/MPxwIqHPMoN++R5/m
+         bi/BGKoMqeZ5xcroafNtCU6ja5KSZj1okJCStJITLiYPdQJwhKBhbMYp36xi7/Cutb+H
+         CCLsh3APo+cDWUqGL2C2qtWRwBGjekaTnxhpRNh6P5UpSTeWmj+j84Ox+bUEHwNbTcBc
+         ClAFZiNKDECkxbgrOcATUE+c6ahjm9sRCTnepCy+PGoKJSDCCc9yB0paRWpoX42+ABgy
+         Cj2GOJZMa4pv2geGSbKTYQa5y51CTi5g94kcutKqppXPvfNaYboajXvLIdw/1l+hUY8Z
+         tfOA==
+X-Gm-Message-State: ABy/qLbz+LZS+kP67GTOg+L+ZkK/ZxRrplQgDNzGpaXi4yQY5Qv1sGzi
+        ZV6YjeBINMTx6t4DASP1Q4Q7kETKnHDKJaFJwhTVdw==
+X-Google-Smtp-Source: APBJJlEj99lMMoNxLZYWPy675+FZqbeUxnuFQ5LbxIpF25s2aVsttkmdEpXKABFsgTiM3g7ONrVYArcNmSfFZO29G3c=
+X-Received: by 2002:a05:622a:174d:b0:403:a43d:be41 with SMTP id
+ l13-20020a05622a174d00b00403a43dbe41mr19549qtk.20.1690479933375; Thu, 27 Jul
+ 2023 10:45:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230628082337.1857302-1-georgmueller@gmx.net> <20230628082337.1857302-2-georgmueller@gmx.net>
+In-Reply-To: <20230628082337.1857302-2-georgmueller@gmx.net>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 27 Jul 2023 10:45:21 -0700
+Message-ID: <CAP-5=fUP6UuLgRty3t2=fQsQi3k4hDMz415vWdp1x88QMvZ8ug@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] perf probe: add test for regression introduced by
+ switch to die_get_decl_file
+To:     =?UTF-8?Q?Georg_M=C3=BCller?= <georgmueller@gmx.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        regressions@lists.linux.dev,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: Replace strlcpy with strscpy
-Date:   Thu, 27 Jul 2023 08:52:53 -0700
-Message-Id: <169047317156.2400214.7935379824991435172.b4-ty@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230703165817.2840457-1-azeemshaikh38@gmail.com>
-References: <20230703165817.2840457-1-azeemshaikh38@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Wed, Jun 28, 2023 at 1:25=E2=80=AFAM Georg M=C3=BCller <georgmueller@gmx=
+.net> wrote:
+>
+> This patch adds a test to validate that perf probe works for binaries
+> where DWARF info is split into multiple CUs
+>
+> Signed-off-by: Georg M=C3=BCller <georgmueller@gmx.net>
+> Link: https://lore.kernel.org/r/5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.=
+net/
+> ---
+>  .../shell/test_uprobe_from_different_cu.sh    | 77 +++++++++++++++++++
+>  1 file changed, 77 insertions(+)
+>  create mode 100755 tools/perf/tests/shell/test_uprobe_from_different_cu.=
+sh
+>
+> diff --git a/tools/perf/tests/shell/test_uprobe_from_different_cu.sh b/to=
+ols/perf/tests/shell/test_uprobe_from_different_cu.sh
+> new file mode 100755
+> index 000000000000..00d2e0e2e0c2
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
+> @@ -0,0 +1,77 @@
+> +#!/bin/bash
+> +# test perf probe of function from different CU
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +set -e
+> +
+> +temp_dir=3D$(mktemp -d /tmp/perf-uprobe-different-cu-sh.XXXXXXXXXX)
+> +
+> +cleanup()
+> +{
+> +       trap - EXIT TERM INT
+> +       if [[ "${temp_dir}" =3D~ ^/tmp/perf-uprobe-different-cu-sh.*$ ]];=
+ then
+> +               echo "--- Cleaning up ---"
+> +               perf probe -x ${temp_dir}/testfile -d foo
+> +               rm -f "${temp_dir}/"*
+> +               rmdir "${temp_dir}"
+> +       fi
+> +}
+> +
+> +trap_cleanup()
+> +{
+> +        cleanup
+> +        exit 1
+> +}
+> +
+> +trap trap_cleanup EXIT TERM INT
+> +
+> +cat > ${temp_dir}/testfile-foo.h << EOF
+> +struct t
+> +{
+> +  int *p;
+> +  int c;
+> +};
+> +
+> +extern int foo (int i, struct t *t);
+> +EOF
+> +
+> +cat > ${temp_dir}/testfile-foo.c << EOF
+> +#include "testfile-foo.h"
+> +
+> +int
+> +foo (int i, struct t *t)
+> +{
+> +  int j, res =3D 0;
+> +  for (j =3D 0; j < i && j < t->c; j++)
+> +    res +=3D t->p[j];
+> +
+> +  return res;
+> +}
+> +EOF
+> +
+> +cat > ${temp_dir}/testfile-main.c << EOF
+> +#include "testfile-foo.h"
+> +
+> +static struct t g;
+> +
+> +int
+> +main (int argc, char **argv)
+> +{
+> +  int i;
+> +  int j[argc];
+> +  g.c =3D argc;
+> +  g.p =3D j;
+> +  for (i =3D 0; i < argc; i++)
+> +    j[i] =3D (int) argv[i][0];
+> +  return foo (3, &g);
+> +}
+> +EOF
+> +
+> +gcc -g -Og -flto -c ${temp_dir}/testfile-foo.c -o ${temp_dir}/testfile-f=
+oo.o
+> +gcc -g -Og -c ${temp_dir}/testfile-main.c -o ${temp_dir}/testfile-main.o
+> +gcc -g -Og -o ${temp_dir}/testfile ${temp_dir}/testfile-foo.o ${temp_dir=
+}/testfile-main.o
 
-On Mon, 03 Jul 2023 16:58:16 +0000, Azeem Shaikh wrote:
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
-> No return values were used, so direct replacement is safe.
-> 
-> [...]
+Thanks for the test Georg! By directly relying on gcc this test fails
+for me in some constrained environments, like containers. I think
+there should be a skip if gcc isn't present. A different option is to
+just build the test code into the perf binary itself as a test
+workload:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/tests/workloads?h=3Dperf-tools-next
 
-Applied, thanks!
+Wdyt? Thanks,
+Ian
 
-[1/1] perf: Replace strlcpy with strscpy
-      https://git.kernel.org/kees/c/c9732f1461f9
-
-Best regards,
--- 
-Kees Cook
-
+> +
+> +perf probe -x ${temp_dir}/testfile --funcs foo
+> +perf probe -x ${temp_dir}/testfile foo
+> +
+> +cleanup
+> --
+> 2.41.0
+>
