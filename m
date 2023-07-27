@@ -2,264 +2,232 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A95CC0015E
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jul 2023 04:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5B5EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jul 2023 04:48:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230245AbjG0EUu (ORCPT
+        id S230410AbjG0EsZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Jul 2023 00:20:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55892 "EHLO
+        Thu, 27 Jul 2023 00:48:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230478AbjG0EUs (ORCPT
+        with ESMTP id S231338AbjG0EsX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Jul 2023 00:20:48 -0400
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5004F270D
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Jul 2023 21:20:46 -0700 (PDT)
-Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-4036bd4fff1so175441cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Jul 2023 21:20:46 -0700 (PDT)
+        Thu, 27 Jul 2023 00:48:23 -0400
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DEA82719
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Jul 2023 21:48:22 -0700 (PDT)
+Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-4036bd4fff1so179661cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Jul 2023 21:48:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1690431645; x=1691036445;
+        d=google.com; s=20221208; t=1690433301; x=1691038101;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HDWif2m5byX45hQoE5JAyEJ71zmQ4VucYXfmypMa/vo=;
-        b=1GmDnVof1by7OkOqsXKi5kTWfXre0qhvCvy41TSaYqUAbifVAUlnihFA5fyX6auBLb
-         cNxi+sY7HoUd2HoJvNUjXXXTFPrmDDBL8wARGKgIsf648bWfwQyimPMBn/c8IwS/mFLG
-         /fUYC1+1AOCqiyX6uVVbQBT5Ce3LsL5VnaZJWE6pR2GjhVQ8/p65wuG7TcbL8nbOSWSX
-         sQbYHh6Os1DIHfnCNT2ZJ4yJezJSTBrCIohwqKXiQ7MyUb4xVZYmdeklVyvTXFlXhKd8
-         Dhz941/rnP7Usbs+diM55v8FfO3paxkOJJgIuPwSxzkEwL6U2+TCzwDvZjL22eFtKwMG
-         YUmA==
+        bh=O9HSIrtFkclUh08WUnO+B+BwRK/qFesZ9SqYpqIojYc=;
+        b=lYZHABINhBqe1G2mHVSCBYrzOcWQYVQfYcYaDJNHjGJdTu9KeiY3yRKyAWhtUaN2ht
+         Sab6Gf2VrE1ndiMbct5kct6iC1F1m87Z3yc9X3G6vaddsXvEo4LqVmm+ZmwpG8Ep91M1
+         6exzt/amwArbgZJzW2lI4QLQEoIdUOM+25iiWAGXKv6bv491IrKi/KkQQG93y4Y6G/In
+         kE/TfE2WaCxyMlu2SuAjndZTL+6/byI15lVfJ/ui3uLEUtNWDcqGHKNlv3QrOI9orn8P
+         krI8ZQw8UCWfhfEewkfFcwKjznHIKiwzYSOuwwgODxBFQeW60kKQab2HR0q/uf4tZoOt
+         BWlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690431645; x=1691036445;
+        d=1e100.net; s=20221208; t=1690433301; x=1691038101;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HDWif2m5byX45hQoE5JAyEJ71zmQ4VucYXfmypMa/vo=;
-        b=iKvhkVkYhiyVrDUw90RIDS0wQ9eCDAnodsk043c2naR4t5LkqB1eKDzvnwZXaOnX6s
-         CWLb4/8Jh+7kc6q7riRVdPnxi6uVJkKSMq8VbctjYOLuYdrVSNjvwo2iZFBymHnrk/PS
-         YJVBXbql0JhK4zqApKklZpii2ONsqDxv+gM9mU/8GaGKq1643zcHbxpudDz5ANIeUNj1
-         6+NIroNlrSS3ITUE+TOZiGiCdgfOExmxFrOzN+aomTWUI8K2g1LWaq+yKGcf7adkc50k
-         xtPtMOuSR0CPQLYziPBJvv2RSCFxeIMrYA8YIZ+zUnP+EQ/f/n8aHyj5BKRQj7boDeox
-         XFHQ==
-X-Gm-Message-State: ABy/qLaphj/+LNYJvfpLrNSRQ3eVgPgOniZzIO44ywM9b/PhwI5iEW3s
-        4AOsrkVaYJCntlWJAoLkOKdX1XesOlQdXYFfFRtBiQ==
-X-Google-Smtp-Source: APBJJlESVlYW2atLxqn0NY7UiLPLOv7RsTDyF0YF810qXSGs5fHdwCx0fZdt3Qrp/pIYzMlUaBQkjFKAWnW/UuvX5pk=
-X-Received: by 2002:a05:622a:190c:b0:403:dcd4:b9b1 with SMTP id
- w12-20020a05622a190c00b00403dcd4b9b1mr148241qtc.18.1690431645325; Wed, 26 Jul
- 2023 21:20:45 -0700 (PDT)
+        bh=O9HSIrtFkclUh08WUnO+B+BwRK/qFesZ9SqYpqIojYc=;
+        b=cbTeTfdmIhmsC1IAD0z3Z/znD3lOKYNphBns1E/gcmNYnBmZvMP/cs1sUgKyotLFbm
+         jz/vTwjAF/6mr6a26Xo4S4YBzUBm78/Zt77YpqgwKKUpkTK0tiaMKxJc8Z6LrjX67UEi
+         F51xQDw016fXerAOgsTyHnPmrrUfU1uFeCXCKFoPBRM9jHa9fWDC3IEhI80Xh7zAbQUr
+         bxAAgIzToicHa+cAVtrzcaZtgMj+5jjzPy7T4HW2Y8oTxseI+n5He70ocYJu78OKksbA
+         L7LmDiciL71IxMcG+OUu07AFf1dNoVxPUaF5ocdO9GI8uSz/qfnKELNjWBve/XRuxv4o
+         pfCA==
+X-Gm-Message-State: ABy/qLZsldaEmzTVvyXtr/lKAOlVlV93W+vFMTPg74zgXJ7288TwfHNi
+        +XkTJSUIu/fpWrVdE6wI6vPM83jl6t5v+KJaSfcE5g==
+X-Google-Smtp-Source: APBJJlFZSj/4XZDQSkXKf9GLMLlJ1OhH7auW0F8ddBeujJvWq3cHpEA81n7a9v2R6peR2nyx3IoSQxBsrOHoKGEbQZc=
+X-Received: by 2002:a05:622a:349:b0:3f6:97b4:1a4d with SMTP id
+ r9-20020a05622a034900b003f697b41a4dmr86468qtw.23.1690433301294; Wed, 26 Jul
+ 2023 21:48:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <ca25b1b3-dc7a-b0bb-dce4-8d11eb343438@gmail.com>
-In-Reply-To: <ca25b1b3-dc7a-b0bb-dce4-8d11eb343438@gmail.com>
+References: <20230726133642.750342-1-namhyung@kernel.org> <CAP-5=fWM9Fhq5WvsBf2n=hGwwwRDt3-mUQ=_qzu8qYGtD1OeWQ@mail.gmail.com>
+ <CAM9d7citVc4ad65MLBWxvE-_AbwxO1DQWHf5w+ofSgWnWSx=Fw@mail.gmail.com>
+ <CAP-5=fVbwf9=ZFszgFpb_6Qb003WpZC3_vtO7fB1pL_vH-OhQw@mail.gmail.com> <CAM9d7chcrd8mN55yb+oCBi3=AF4-a=oCr66+cv7eaquzx0Kvpw@mail.gmail.com>
+In-Reply-To: <CAM9d7chcrd8mN55yb+oCBi3=AF4-a=oCr66+cv7eaquzx0Kvpw@mail.gmail.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 26 Jul 2023 21:20:33 -0700
-Message-ID: <CAP-5=fX2ar7Pfj9it8pX_ohgC7OzY59iuDFSQTY7Kcnkc3-S5g@mail.gmail.com>
-Subject: Re: [perf] Build error when using LTO on 6.4
-To:     Bagas Sanjaya <bagasdotme@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+Date:   Wed, 26 Jul 2023 21:48:09 -0700
+Message-ID: <CAP-5=fUPPRVSx9x4riCkkwEAza1N_r5qCxwqmdj0d7CEaKmCdw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf build: Update build rule for generated files
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Marcus Seyfarth <m.seyfarth@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Regressions <regressions@lists.linux.dev>,
-        Linux Perf <linux-perf-users@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Anup Sharma <anupnewsmail@gmail.com>, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 26, 2023 at 8:55=E2=80=AFPM Bagas Sanjaya <bagasdotme@gmail.com=
-> wrote:
+On Wed, Jul 26, 2023 at 6:01=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> Hi,
+> On Wed, Jul 26, 2023 at 5:36=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > On Wed, Jul 26, 2023 at 3:57=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > >
+> > > Hi Ian,
+> > >
+> > > On Wed, Jul 26, 2023 at 8:48=E2=80=AFAM Ian Rogers <irogers@google.co=
+m> wrote:
+> > > >
+> > > > On Wed, Jul 26, 2023 at 6:36=E2=80=AFAM Namhyung Kim <namhyung@kern=
+el.org> wrote:
+> > > > >
+> > > > > The bison and flex generate C files from the source (.y and .l)
+> > > > > files.  When O=3D option is used, they are saved in a separate di=
+rectory
+> > > > > but the default build rule assumes the .C files are in the source
+> > > > > directory.  So it might read invalid file if there are generated =
+files
+> > > > > from an old version.  The same is true for the pmu-events files.
+> > > > >
+> > > > > For example, the following command would cause a build failure:
+> > > > >
+> > > > >   $ git checkout v6.3
+> > > > >   $ make -C tools/perf  # build in the same directory
+> > > > >
+> > > > >   $ git checkout v6.5-rc2
+> > > > >   $ mkdir build  # create a build directory
+> > > > >   $ make -C tools/perf O=3Dbuild  # build in a different director=
+y but it
+> > > > >                                 # refers files in the source dire=
+ctory
+> > > > >
+> > > > > Let's update the build rule to specify those cases explicitly to =
+depend
+> > > > > on the files in the output directory.
+> > > > >
+> > > > > Note that it's not a complete fix and it needs the next patch for=
+ the
+> > > > > include path too.
+> > > > >
+> > > > > Fixes: 80eeb67fe577 ("perf jevents: Program to convert JSON file"=
+)
+> > > > > Cc: stable@vger.kernel.org
+> > > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > > > > ---
+> > > > >  tools/build/Makefile.build  | 8 ++++++++
+> > > > >  tools/perf/pmu-events/Build | 4 ++++
+> > > > >  2 files changed, 12 insertions(+)
+> > > > >
+> > > > > diff --git a/tools/build/Makefile.build b/tools/build/Makefile.bu=
+ild
+> > > > > index 89430338a3d9..f9396696fcbf 100644
+> > > > > --- a/tools/build/Makefile.build
+> > > > > +++ b/tools/build/Makefile.build
+> > > > > @@ -117,6 +117,14 @@ $(OUTPUT)%.s: %.c FORCE
+> > > > >         $(call rule_mkdir)
+> > > > >         $(call if_changed_dep,cc_s_c)
+> > > > >
+> > > > > +$(OUTPUT)%-bison.o: $(OUTPUT)%-bison.c FORCE
+> > > > > +       $(call rule_mkdir)
+> > > > > +       $(call if_changed_dep,$(host)cc_o_c)
+> > > > > +
+> > > > > +$(OUTPUT)%-flex.o: $(OUTPUT)%-flex.c FORCE
+> > > > > +       $(call rule_mkdir)
+> > > > > +       $(call if_changed_dep,$(host)cc_o_c)
+> > > > > +
+> > > >
+> > > > Hi Namhyung,
+> > > >
+> > > > as we have:
+> > > > ```
+> > > > $(OUTPUT)%.o: %.c FORCE
+> > > >        $(call rule_mkdir)
+> > > >        $(call if_changed_dep,$(host)cc_o_c)
+> > > > ```
+> > > > I'm not sure what the 2 additional rules achieve.
+> > >
+> > > The above rule assumes the .c files are in the source directory
+> > > (without $(OUTPUT) prefix).  It caused a trouble when the
+> > > flex and bison files are generated in the output directory and
+> > > you have an old version of them in the source directory.
+> > >
+> > >
+> > > >
+> > > > >  # Gather build data:
+> > > > >  #   obj-y        - list of build objects
+> > > > >  #   subdir-y     - list of directories to nest
+> > > > > diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/=
+Build
+> > > > > index 150765f2baee..f38a27765604 100644
+> > > > > --- a/tools/perf/pmu-events/Build
+> > > > > +++ b/tools/perf/pmu-events/Build
+> > > > > @@ -35,3 +35,7 @@ $(PMU_EVENTS_C): $(JSON) $(JSON_TEST) $(JEVENTS=
+_PY) $(METRIC_PY) $(METRIC_TEST_L
+> > > > >         $(call rule_mkdir)
+> > > > >         $(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS=
+_ARCH) $(JEVENTS_MODEL) pmu-events/arch $@
+> > > > >  endif
+> > > > > +
+> > > > > +$(OUTPUT)pmu-events/pmu-events.o: $(PMU_EVENTS_C)
+> > > > > +       $(call rule_mkdir)
+> > > > > +       $(call if_changed_dep,$(host)cc_o_c)
+> > > >
+> > > > If we add this, do the Makefile.build changes still need to happen?
+> > >
+> > > The Makefile.build changes are specific to flex and bison files.
+> > > So yes, we need this for pmu-events.c to work properly with O=3D
+> > > option.
+> >
+> > Got it, you are right I was confusing the flex/bison with the jevents
+> > case. Can we get away with a single rule then:
+> > ```
+> >  $(OUTPUT)%.o:  $(OUTPUT)%.c FORCE
+> >         $(call rule_mkdir)
+> >         $(call if_changed_dep,$(host)cc_o_c)
+> > ```
 >
-> I notice a build regression on Bugzilla [1]. Quoting from it:
->
-> > Starting with Kernel 6.4, I see a build error when using "-flto" to bui=
-ld perf. This used to work fine with earlier Kernels when using either bfd =
-or mold as linker when using GCC 13.1.1.
+> Probably, but I wonder if it affects the normal .c files expecting
+> them in the OUTPUT directory.
 
-Hmm.. strange I've never seen this work with GCC.
+Hmm.. I think the longer matches may be necessary to trigger the "more
+specific" ordering:
+https://www.gnu.org/software/make/manual/html_node/Pattern-Match.html
 
-> >
-> > This is the PKGBUILD I use as my build recipe: https://github.com/ms178=
-/archpkgbuilds/blob/main/packages/bpf/PKGBUILD
+I'm not keen on these extra rules that mirror existing rules, it is a
+bit cryptic what is going on. I wonder if it would be cleaner just to
+fail the build if the bogus pmu-events.c exists. For example:
+```
+--- a/tools/perf/pmu-events/Build
++++ b/tools/perf/pmu-events/Build
+@@ -12,6 +12,14 @@ EMPTY_PMU_EVENTS_C =3D pmu-events/empty-pmu-events.c
+PMU_EVENTS_C   =3D  $(OUTPUT)pmu-events/pmu-events.c
+METRIC_TEST_LOG        =3D  $(OUTPUT)pmu-events/metric_test.log
 
-If this binary is for distribution BUILD_BPF_SKEL=3D1 should be set. We
-need to make this an opt-out rather than opt-in. The last time we did
-this there was some friction:
-https://lore.kernel.org/lkml/CAHk-=3DwjY_3cBELRSLMpqCt6Eb71Qei2agfKSNsrr5Kc=
-pdEQCaA@mail.gmail.com/
-
-> >
-> > This is the konsole output I get now with Kernel 6.4.5:
-> >
-> > [CODE]
-> > CFLAGS=3D'-Wno-error=3Dbad-function-cast -Wno-error=3Ddeclaration-after=
--statement -Wno-error=3Dswitch-enum -Wbad-function-cast -Wdeclaration-after=
--statement -Wformat-security -Wformat-y2k -Winit-self -Wmissing-declaration=
-s -Wmissing-prototypes -Wno-system-headers -Wold-style-definition -Wpacked =
--Wredundant-decls -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wunde=
-f -Wwrite-strings -Wformat -Wno-type-limits -Wstrict-aliasing=3D3 -Wshadow =
--DHAVE_SYSCALL_TABLE_SUPPORT -DHAVE_ARCH_X86_64_SUPPORT -Iarch/x86/include/=
-generated -DHAVE_PERF_REGS_SUPPORT -DHAVE_ARCH_REGS_QUERY_REGISTER_OFFSET -=
-Werror -DNDEBUG=3D1 -O6 -fno-omit-frame-pointer -ggdb3 -funwind-tables -Wal=
-l -Wextra -std=3Dgnu11 -fstack-protector-all -U_FORTIFY_SOURCE -D_FORTIFY_S=
-OURCE=3D2 -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=3D64 -D_GNU_SOURCE -I/t=
-mp/makepkg/linux-tools/src/linux/tools/perf/util/include -I/tmp/makepkg/lin=
-ux-tools/src/linux/tools/perf/arch/x86/include -I/tmp/makepkg/linux-tools/s=
-rc/linux/tools/include/ -I/tmp/makepkg/linux-tools/src/linux/tools/arch/x86=
-/include/uapi -I/tmp/makepkg/linux-tools/src/linux/tools/include/uapi -I/tm=
-p/makepkg/linux-tools/src/linux/tools/arch/x86/include/ -I/tmp/makepkg/linu=
-x-tools/src/linux/tools/arch/x86/ -I/tmp/makepkg/linux-tools/src/linux/tool=
-s/perf/util -I/tmp/makepkg/linux-tools/src/linux/tools/perf -DHAVE_PTHREAD_=
-ATTR_SETAFFINITY_NP -DHAVE_PTHREAD_BARRIER -DHAVE_EVENTFD_SUPPORT -DHAVE_GE=
-T_CURRENT_DIR_NAME -DHAVE_GETTID -DHAVE_FILE_HANDLE -DHAVE_DWARF_GETLOCATIO=
-NS_SUPPORT -DHAVE_AIO_SUPPORT -DHAVE_SCANDIRAT_SUPPORT -DHAVE_SCHED_GETCPU_=
-SUPPORT -DHAVE_SETNS_SUPPORT -DHAVE_LIBELF_SUPPORT -DHAVE_ELF_GETPHDRNUM_SU=
-PPORT -DHAVE_GELF_GETNOTE_SUPPORT -DHAVE_ELF_GETSHDRSTRNDX_SUPPORT -DHAVE_D=
-EBUGINFOD_SUPPORT -DHAVE_DWARF_SUPPORT  -DHAVE_LIBBPF_SUPPORT -DHAVE_BPF_PR=
-OLOGUE -DHAVE_JITDUMP -DHAVE_DWARF_UNWIND_SUPPORT -DNO_LIBUNWIND_DEBUG_FRAM=
-E -DHAVE_LIBUNWIND_SUPPORT -DHAVE_LIBCRYPTO_SUPPORT -DHAVE_SLANG_SUPPORT -D=
-NO_LIBPERL -DHAVE_TIMERFD_SUPPORT -DHAVE_LIBPYTHON_SUPPORT -DHAVE_CXA_DEMAN=
-GLE_SUPPORT -DHAVE_ZLIB_SUPPORT -DHAVE_LZMA_SUPPORT -DHAVE_ZSTD_SUPPORT -DH=
-AVE_LIBCAP_SUPPORT -DHAVE_BACKTRACE_SUPPORT -DHAVE_LIBNUMA_SUPPORT -DHAVE_K=
-VM_STAT_SUPPORT -DDISASM_FOUR_ARGS_SIGNATURE -DDISASM_INIT_STYLED -DHAVE_PE=
-RF_READ_VDSO32 -DHAVE_AUXTRACE_SUPPORT -DHAVE_LIBTRACEEVENT -DLIBTRACEEVENT=
-_VERSION=3D66813 -I/tmp/makepkg/linux-tools/src/linux/tools/perf/libapi/inc=
-lude -I/tmp/makepkg/linux-tools/src/linux/tools/perf/libbpf/include -I/tmp/=
-makepkg/linux-tools/src/linux/tools/perf/libsubcmd/include -I/tmp/makepkg/l=
-inux-tools/src/linux/tools/perf/libsymbol/include -I/tmp/makepkg/linux-tool=
-s/src/linux/tools/perf/libperf/include' LDFLAGS=3D'-Wl,-O3,--as-needed,-Bsy=
-mbolic-functions,--sort-common,-flto=3Dauto -fopenmp -fuse-ld=3Dmold -march=
-=3Dnative -mtune=3Dnative -maes -mbmi2 -mpclmul -Wl,-zmax-page-size=3D0x200=
-000 -Wl,-z,noexecstack  -lunwind-x86_64 -lunwind -llzma  -L/usr/lib ' \
-> >   '/usr/bin/python' util/setup.py \
-> >   --quiet build_ext; \
-> > cp python_ext_build/lib/perf*.so python/
-> > rm -f -f /tmp/makepkg/linux-tools/src/linux/tools/perf/libbpf/libbpf.a;=
- ar rcs /tmp/makepkg/linux-tools/src/linux/tools/perf/libbpf/libbpf.a /tmp/=
-makepkg/linux-tools/src/linux/tools/perf/libbpf/staticobjs/libbpf-in.o
-> > [snip]
-> > gcc -Wno-error=3Dbad-function-cast -Wno-error=3Ddeclaration-after-state=
-ment -Wno-error=3Dswitch-enum -Wbad-function-cast -Wdeclaration-after-state=
-ment -Wformat-security -Wformat-y2k -Winit-self -Wmissing-declarations -Wmi=
-ssing-prototypes -Wno-system-headers -Wold-style-definition -Wpacked -Wredu=
-ndant-decls -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wundef -Wwr=
-ite-strings -Wformat -Wno-type-limits -Wstrict-aliasing=3D3 -Wshadow -DHAVE=
-_SYSCALL_TABLE_SUPPORT -DHAVE_ARCH_X86_64_SUPPORT -Iarch/x86/include/genera=
-ted -DHAVE_PERF_REGS_SUPPORT -DHAVE_ARCH_REGS_QUERY_REGISTER_OFFSET -Werror=
- -DNDEBUG=3D1 -O6 -fno-omit-frame-pointer -ggdb3 -funwind-tables -Wall -Wex=
-tra -std=3Dgnu11 -fstack-protector-all -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=
-=3D2 -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=3D64 -D_GNU_SOURCE -I/tmp/ma=
-kepkg/linux-tools/src/linux/tools/perf/util/include -I/tmp/makepkg/linux-to=
-ols/src/linux/tools/perf/arch/x86/include -I/tmp/makepkg/linux-tools/src/li=
-nux/tools/include/ -I/tmp/makepkg/linux-tools/src/linux/tools/arch/x86/incl=
-ude/uapi -I/tmp/makepkg/linux-tools/src/linux/tools/include/uapi -I/tmp/mak=
-epkg/linux-tools/src/linux/tools/arch/x86/include/ -I/tmp/makepkg/linux-too=
-ls/src/linux/tools/arch/x86/ -I/tmp/makepkg/linux-tools/src/linux/tools/per=
-f/util -I/tmp/makepkg/linux-tools/src/linux/tools/perf -DHAVE_PTHREAD_ATTR_=
-SETAFFINITY_NP -DHAVE_PTHREAD_BARRIER -DHAVE_EVENTFD_SUPPORT -DHAVE_GET_CUR=
-RENT_DIR_NAME -DHAVE_GETTID -DHAVE_FILE_HANDLE -DHAVE_DWARF_GETLOCATIONS_SU=
-PPORT -DHAVE_AIO_SUPPORT -DHAVE_SCANDIRAT_SUPPORT -DHAVE_SCHED_GETCPU_SUPPO=
-RT -DHAVE_SETNS_SUPPORT -DHAVE_LIBELF_SUPPORT -DHAVE_ELF_GETPHDRNUM_SUPPORT=
- -DHAVE_GELF_GETNOTE_SUPPORT -DHAVE_ELF_GETSHDRSTRNDX_SUPPORT -DHAVE_DEBUGI=
-NFOD_SUPPORT -DHAVE_DWARF_SUPPORT  -DHAVE_LIBBPF_SUPPORT -DHAVE_BPF_PROLOGU=
-E -DHAVE_JITDUMP -DHAVE_DWARF_UNWIND_SUPPORT -DNO_LIBUNWIND_DEBUG_FRAME -DH=
-AVE_LIBUNWIND_SUPPORT -DHAVE_LIBCRYPTO_SUPPORT -DHAVE_SLANG_SUPPORT -DNO_LI=
-BPERL -DHAVE_TIMERFD_SUPPORT -DHAVE_LIBPYTHON_SUPPORT -DHAVE_CXA_DEMANGLE_S=
-UPPORT -DHAVE_ZLIB_SUPPORT -DHAVE_LZMA_SUPPORT -DHAVE_ZSTD_SUPPORT -DHAVE_L=
-IBCAP_SUPPORT -DHAVE_BACKTRACE_SUPPORT -DHAVE_LIBNUMA_SUPPORT -DHAVE_KVM_ST=
-AT_SUPPORT -DDISASM_FOUR_ARGS_SIGNATURE -DDISASM_INIT_STYLED -DHAVE_PERF_RE=
-AD_VDSO32 -DHAVE_AUXTRACE_SUPPORT -DHAVE_LIBTRACEEVENT -DLIBTRACEEVENT_VERS=
-ION=3D66813 -I/tmp/makepkg/linux-tools/src/linux/tools/perf/libapi/include =
--I/tmp/makepkg/linux-tools/src/linux/tools/perf/libbpf/include -I/tmp/makep=
-kg/linux-tools/src/linux/tools/perf/libsubcmd/include -I/tmp/makepkg/linux-=
-tools/src/linux/tools/perf/libsymbol/include -I/tmp/makepkg/linux-tools/src=
-/linux/tools/perf/libperf/include -Wl,-O3,--as-needed,-Bsymbolic-functions,=
---sort-common,-flto=3Dauto -fopenmp -fuse-ld=3Dmold -march=3Dnative -mtune=
-=3Dnative -maes -mbmi2 -mpclmul -Wl,-zmax-page-size=3D0x200000 -Wl,-z,noexe=
-cstack  -lunwind-x86_64 -lunwind -llzma  -L/usr/lib  \
-> >         perf-in.o pmu-events/pmu-events-in.o -Wl,--whole-archive /tmp/m=
-akepkg/linux-tools/src/linux/tools/perf/libapi/libapi.a /tmp/makepkg/linux-=
-tools/src/linux/tools/perf/libperf/libperf.a /tmp/makepkg/linux-tools/src/l=
-inux/tools/perf/libsubcmd/libsubcmd.a /tmp/makepkg/linux-tools/src/linux/to=
-ols/perf/libsymbol/libsymbol.a /tmp/makepkg/linux-tools/src/linux/tools/per=
-f/libbpf/libbpf.a  -Wl,--no-whole-archive -Wl,--start-group -lpthread -lrt =
--lm -ldl -lelf -ldebuginfod -ldw -lunwind-x86_64 -lunwind -llzma -lcrypto -=
-lslang -lpython3.11 -ldl -lm -lutil -lstdc++ -lz -llzma -lzstd -lcap -lnuma=
- -ltraceevent -Wl,--end-group -o perf
-> > mold: error: undefined symbol: main
->
-> >>>> referenced by /usr/lib/Scrt1.o:(.text)
-> >>>>               /usr/lib/Scrt1.o:(_start)
-> > mold: error: undefined symbol: perf_pmu__getcpuid
-> >>>> referenced by pmu-events.c
-> >>>>               pmu-events/pmu-events-in.o:(perf_pmu__find_events_tabl=
-e)>>>
-> >>>>               referenced by pmu-events.c
-> >>>>               pmu-events/pmu-events-in.o:(perf_pmu__find_metrics_tab=
-le)
-> > mold: error: undefined symbol: strcmp_cpuid_str
-> >>>> referenced by pmu-events.c
-> >>>>               pmu-events/pmu-events-in.o:(perf_pmu__find_events_tabl=
-e)>>>
-> >>>>               referenced by pmu-events.c
-> >>>>               pmu-events/pmu-events-in.o:(perf_pmu__find_metrics_tab=
-le)>>>
-> >>>>               referenced by pmu-events.c
-> >>>>               pmu-events/pmu-events-in.o:(find_core_events_table)>>>
-> >>>>               referenced 1 more times
-> >
-> > mold: error: undefined symbol: _ctype
-> >>>> referenced by kallsyms.c
-> >>>>
-> >>>>               /tmp/makepkg/linux-tools/src/linux/tools/perf/libsymbo=
-l/libsymbol.a(libsymbol-in.o):(__tolower)>>>
-> >>>>               referenced by kallsyms.c
-> >>>>
-> >>>>               /tmp/makepkg/linux-tools/src/linux/tools/perf/libsymbo=
-l/libsymbol.a(libsymbol-in.o):(__toupper)
-> > mold: error: undefined symbol: strlcpy
-> >>>> referenced by exec-cmd.c
-> >>>>
-> >>>>               /tmp/makepkg/linux-tools/src/linux/tools/perf/libsubcm=
-d/libsubcmd.a(libsubcmd-in.o):(get_pwd_cwd)
-> > [/CODE]
-> >
-> > I have noticed a patch series of Ian Rodgers that might adress this iss=
-ue, but his reported errors were different to mine, see: https://www.spinic=
-s.net/lists/kernel/msg4872566.html
-> >
-> > Compiler: gcc-version 13.1.1 20230714 (GCC)
->
-> See Bugzilla for the full thread.
->
-> Anyway, I'm adding this regression to regzbot:
->
-> #regzbot introduced: v6.3..v6.4.5 https://bugzilla.kernel.org/show_bug.cg=
-i?id=3D217706
-
-Thanks, I'm not sure there is anything actionable for the bug.
-clang/llvm has always worked with LTO at Google. With my changes gcc
-works for me with some non-zero effort.
++ifneq ($(OUTPUT),)
++ifneq ($(wildcard pmu-events/pmu-events.c),)
++dummy :=3D $(error OUTPUT set but tools/perf/pmu-events/pmu-events.c exist=
+s. \
++           This can mean the generated version of pmu-events.c is not
+compiled. \
++           Try 'cd tools/perf; make clean; cd -' and then rebuilding.)
++endif
++endif
++
+ifeq ($(JEVENTS_ARCH),)
+JEVENTS_ARCH=3D$(SRCARCH)
+endif
+```
 
 Thanks,
 Ian
 
-> Thanks.
->
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217706
->
-> --
-> An old man doll... just what I always wanted! - Clara
+> Thanks,
+> Namhyung
