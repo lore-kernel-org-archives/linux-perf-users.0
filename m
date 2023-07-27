@@ -2,122 +2,96 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB78C001E0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jul 2023 14:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8FBC001E0
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jul 2023 15:53:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233210AbjG0OaZ (ORCPT
+        id S233768AbjG0PxD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Jul 2023 10:30:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60380 "EHLO
+        Thu, 27 Jul 2023 11:53:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232680AbjG0OaY (ORCPT
+        with ESMTP id S233710AbjG0PxC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Jul 2023 10:30:24 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D0DE30D2
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 07:30:22 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3fb4146e8fcso7032675e9.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 07:30:22 -0700 (PDT)
+        Thu, 27 Jul 2023 11:53:02 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADF8B2726
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 08:53:00 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1bbc87ded50so7041955ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 08:53:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20221208.gappssmtp.com; s=20221208; t=1690468221; x=1691073021;
+        d=chromium.org; s=google; t=1690473180; x=1691077980;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tUMayOneQ9ikYzzZBl/jcEnYT2gsm9hVqQEHFi1LQzE=;
-        b=j2+29OnuTalZpnUEEI7QghInin+VyTSgd3U/3esMN0czsLEJt+ZuFpJ6Bib2ay3vAo
-         534lwlygEEh6CiPhlG5t57U9tfZcRtsdMErIcrzQbkcQNe9XfC/5Az3c7pEmwas+++Ay
-         Ayoo+z561d8R12szH3sy/0m935SuCVVAl+bvyiQO4sxYJnRHU2BXGlZ5UIoTF7Hu2N5z
-         xNsqBZn4ZvCRlUc6Q5mfe7LzXpr++aSf8VpcTNiLu641sXTu1vu3EaWXk2+i7KfSm8f+
-         uY4DXBO1KTcNDRfFNOUGEC4sFMo/U6p05YmISwy6Vk7IDK4aogg8I04Fbfi2dVFTm3Be
-         /tYA==
+        bh=Tsln9vKd77VrKuSCt5b74Dm8nHR1wAeieAig4NB5efM=;
+        b=nXJUOUbb//dCVbV2sNfuul/Inn6960O/kVZTCj/H6sx1GdOxxNK6slNWvKKjY+iP61
+         GAzYNIFfZK77JXKjmzOAxURrTGpZE7SQkmwqETn1oPudri7QL5DTL3n2+JNk5OoH6rQa
+         peDFusmEllNIHZfnhbZyCrIZtwkTDrKl0K/nQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690468221; x=1691073021;
+        d=1e100.net; s=20221208; t=1690473180; x=1691077980;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tUMayOneQ9ikYzzZBl/jcEnYT2gsm9hVqQEHFi1LQzE=;
-        b=YaXwJl3Yw24skc9kawcGzrF/YpkqJnWySk18e+JgDsXbBDqwh/NFdJZiTjS8jflXzk
-         JvCM6vjjW3WPYz0ns+xUcG1mhl227uu53aYKV3aA+PXIeeqNPxjhMUeow+PAlBgKXaQe
-         0JuS3Nbd4ldSezBJp+Jm9jP8VgYuipR630HYE3xBVChqe5qAi8CmL1YXc8BvTOGPx5na
-         q2r6R3Av7KdV4B4g+f2966wzzfvHeZbpTfzPvz/MKmVplt6YqYuaabE9iD6BX3zpXB5V
-         30KU5qWRHS4Yfg2v3CplYy69UA2tsrI91rOMLskL8Qa5fmHCnYqockgSZruA8zfo6nos
-         7UWQ==
-X-Gm-Message-State: ABy/qLY0VFrkJGm6NiZ4cQIAuqy6PxQpmAEKGrgGotpZmukfFV5loZ2X
-        fgDRECfpaX1cBdy3IOJA/KVr5Q==
-X-Google-Smtp-Source: APBJJlFlAaMbRzdmArSgZ+AV8w3c/5LHqShEcivfEyw65QdH0Aqu7aOQV+4CCgwg82+wdZ4YMYCOsA==
-X-Received: by 2002:a1c:790c:0:b0:3fc:180:6463 with SMTP id l12-20020a1c790c000000b003fc01806463mr1879971wme.7.1690468220870;
-        Thu, 27 Jul 2023 07:30:20 -0700 (PDT)
-Received: from alex-rivos.home (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id s23-20020a7bc397000000b003fba6a0c881sm4726178wmj.43.2023.07.27.07.29.47
+        bh=Tsln9vKd77VrKuSCt5b74Dm8nHR1wAeieAig4NB5efM=;
+        b=aZVul9pAejjKw0WaArnXWdki4neYlJwo5UL8Huzwl/0EfnA7UKV6D/sjImPdAmjH7M
+         H80pKyrNihJuTVydjHVsvkCsdoFZF+bmPRps0uRKtrCb7hMIjWnUPDlvv1vTn8wHErxM
+         B3iTrONaqSkIQJtpLCAMq3GZbvqKQdZdJtn+aroERHzgG/m5skMQoP871BRBlRorZ1cM
+         iU+kJ7JiHl6UDsZ7nUM88ZL96/pc0kZhlanyMSMw2X60k1TRQJ9gQn1x9fpMk9ZcOwSo
+         PGlvtQgEGbaLRdpkqBA9N1Jto/+W/0rQ52jAWAudatFWjjpAio8r5wTGSntGU/GQvVg/
+         h0Zw==
+X-Gm-Message-State: ABy/qLbZkodBFRUFtkaxNMTqHQ0xPuKhfxz9p5+atEirilv3gmLfOnF0
+        MQ7AKKOghZpAsZEdJDCUx+LgfA==
+X-Google-Smtp-Source: APBJJlFOaM/OFa4DX6l2QCKWulPgwcxSJTXbEbkawxaDeRErqsLH0YJUo8GTRiLZLV6zU5t99voBfQ==
+X-Received: by 2002:a17:903:24d:b0:1b8:9044:b8ae with SMTP id j13-20020a170903024d00b001b89044b8aemr4985631plh.11.1690473180185;
+        Thu, 27 Jul 2023 08:53:00 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id jl21-20020a170903135500b001bbab888ba0sm1803506plb.138.2023.07.27.08.52.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jul 2023 07:30:20 -0700 (PDT)
-From:   Alexandre Ghiti <alexghiti@rivosinc.com>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Thu, 27 Jul 2023 08:52:59 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <atishp@atishpatra.org>,
-        Anup Patel <anup@brainfault.org>,
-        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-        Andrew Jones <ajones@ventanamicro.com>,
-        =?UTF-8?q?R=C3=A9mi=20Denis-Courmont?= <remi@remlab.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Alexandre Ghiti <alexghiti@rivosinc.com>,
-        Atish Patra <atishp@rivosinc.com>
-Subject: [PATCH v4 10/10] perf: tests: Adapt mmap-basic.c for riscv
-Date:   Thu, 27 Jul 2023 16:14:28 +0200
-Message-Id: <20230727141428.962286-11-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230727141428.962286-1-alexghiti@rivosinc.com>
-References: <20230727141428.962286-1-alexghiti@rivosinc.com>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf: Replace strlcpy with strscpy
+Date:   Thu, 27 Jul 2023 08:52:53 -0700
+Message-Id: <169047317156.2400214.7935379824991435172.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230703165817.2840457-1-azeemshaikh38@gmail.com>
+References: <20230703165817.2840457-1-azeemshaikh38@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-riscv now supports mmaping hardware counters to userspace so adapt the test
-to run on this architecture.
 
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-Reviewed-by: Atish Patra <atishp@rivosinc.com>
----
- tools/perf/tests/mmap-basic.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Mon, 03 Jul 2023 16:58:16 +0000, Azeem Shaikh wrote:
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
+> No return values were used, so direct replacement is safe.
+> 
+> [...]
 
-diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
-index e68ca6229756..f5075ca774f8 100644
---- a/tools/perf/tests/mmap-basic.c
-+++ b/tools/perf/tests/mmap-basic.c
-@@ -284,7 +284,7 @@ static struct test_case tests__basic_mmap[] = {
- 			 "permissions"),
- 	TEST_CASE_REASON("User space counter reading of instructions",
- 			 mmap_user_read_instr,
--#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
-+#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || __riscv_xlen == 64
- 			 "permissions"
- #else
- 			 "unsupported"
-@@ -292,7 +292,7 @@ static struct test_case tests__basic_mmap[] = {
- 		),
- 	TEST_CASE_REASON("User space counter reading of cycles",
- 			 mmap_user_read_cycles,
--#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
-+#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || __riscv_xlen == 64
- 			 "permissions"
- #else
- 			 "unsupported"
+Applied, thanks!
+
+[1/1] perf: Replace strlcpy with strscpy
+      https://git.kernel.org/kees/c/c9732f1461f9
+
+Best regards,
 -- 
-2.39.2
+Kees Cook
 
