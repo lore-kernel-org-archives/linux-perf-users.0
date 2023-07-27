@@ -2,135 +2,212 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBB2EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jul 2023 05:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9264CC001E0
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jul 2023 06:46:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232715AbjG0F5L (ORCPT
+        id S230123AbjG0Gp7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Jul 2023 01:57:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41128 "EHLO
+        Thu, 27 Jul 2023 02:45:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231967AbjG0F4s (ORCPT
+        with ESMTP id S229459AbjG0Gp6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Jul 2023 01:56:48 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE1CD1BC1;
-        Wed, 26 Jul 2023 22:56:06 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id 98e67ed59e1d1-267fc1d776eso350637a91.2;
-        Wed, 26 Jul 2023 22:56:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690437357; x=1691042157;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tAcJJL/0x6iDH6k56IBaaZzyu/V8tW3pl6w0uT8MYx8=;
-        b=MtW3Ss7Zl23nPg1vtBiORDONB220JwyiwWpXCdAFYfoPnyV5x6i4k7uNKDjuN8c0Uw
-         +leKOp+8qe9crKLrIH0KwJS03Mq882zX5RU7jbbgT5VOjnRlDLOAT31ZfV9OeIB4ErY9
-         lmcEJFW8psJi9CZY6zQMduQEnKD+aBVZX0VaNE6hIuWqoLLPSz6f6EK9ZQ/yS2Pip8fw
-         6g/Z76uU8Pzx0RPjgSQ7AxNsfGPjvtRQB3hIT6uYnniTxECRg4bxV6jRmMm4udXeqfMN
-         ai+IXSQ81bkB0wd5vqnyLCW6Q2sCfIepdq4K/tPLKP1Y/U2RZ+rMsXbSxKQmmno6ywrq
-         n0Kw==
+        Thu, 27 Jul 2023 02:45:58 -0400
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F671CE;
+        Wed, 26 Jul 2023 23:45:57 -0700 (PDT)
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-78bb7b89cabso22895239f.1;
+        Wed, 26 Jul 2023 23:45:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690437357; x=1691042157;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tAcJJL/0x6iDH6k56IBaaZzyu/V8tW3pl6w0uT8MYx8=;
-        b=OsdTkVUc3SkDJnnsECfeAKyHFLOUfv2+1N4jaxKGtxZEvBjLKSoIHGU/nR2Ity0JdG
-         D97xid9pYVr7YoeE1j25ok2TBCSTo6u+22X7OwKwU8z1J1v6/4FgHXEVK7w6Xv3gXlN5
-         Mx26TvuRpFeJcN+hN9ivEwcihiNOVm0OVpaIPX6lTl+y69A0cSBaeN7XS5QFsuvaVc3h
-         pkxSJHIcIPPzR9YjAt5KrtVbjmB1qBu0YhwQGGH7uzVBADmbY5Js18CkTHD9kcLj7gbI
-         6Fap90xOSNvRmlcCzlMObSDSpZa7uzLhJZZ2Qr0qAYOPxaZDWdIjHxJx8uI9uBM4kXN5
-         B8zQ==
-X-Gm-Message-State: ABy/qLYG3fmtaU0qhfy/7zu+S1vPAQNKjbFEtDHC60DqQbmvRwwzj2V6
-        LKSHsJ8BgLd2D1053tt06pY=
-X-Google-Smtp-Source: APBJJlGjUphH14lSqoGk7YSjqHZe99GonUlJp5micNhQ+t4ju7YHcGZqjF9FHRX1J3uopBZomPvTtw==
-X-Received: by 2002:a17:90a:bb8f:b0:267:7021:4e33 with SMTP id v15-20020a17090abb8f00b0026770214e33mr3245920pjr.47.1690437356983;
-        Wed, 26 Jul 2023 22:55:56 -0700 (PDT)
-Received: from debian.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id a15-20020a17090a70cf00b00267fbd521dbsm2082277pjm.5.2023.07.26.22.55.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jul 2023 22:55:56 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-        id 04244819183D; Thu, 27 Jul 2023 12:55:52 +0700 (WIB)
-Date:   Thu, 27 Jul 2023 12:55:52 +0700
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Marcus Seyfarth <m.seyfarth@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Regressions <regressions@lists.linux.dev>,
-        Linux Perf <linux-perf-users@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [perf] Build error when using LTO on 6.4
-Message-ID: <ZMIG6J+zqSIGVlAq@debian.me>
-References: <ca25b1b3-dc7a-b0bb-dce4-8d11eb343438@gmail.com>
- <CAP-5=fX2ar7Pfj9it8pX_ohgC7OzY59iuDFSQTY7Kcnkc3-S5g@mail.gmail.com>
+        d=1e100.net; s=20221208; t=1690440356; x=1691045156;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s7u/oga6SRbJL1Xe722L9LrFopB/doqHr8XfSCelTqU=;
+        b=jLBmdkseM5Rh5qmtBJDkI+tWfPHNvvXWP0lko5i5/tkaSQc7/hc6lYn562PCO5U2SA
+         UDcQ20zmwbkOAnubueKIik2kKpBcoIVvHNfFGRafkh500wkHqfZ0jbeyb5/LMhQLb1DC
+         yKQXgmuifse1edCxNnR1c3HbGGlELmKEu88nfOJyk/5e8e/ynO5GsR8Tw0svGjFXXVNh
+         /Oh1WIhiHgnGIPO3gRCYcnhiP98lSLE1z/c0e7T4Fsb4BzohRmcNuEYAn8FprD4XhWdy
+         oP6vXSTVMTxCvIxe4in+mabEmvUTaSiVP6Ll85eMu+EFyTeon1gN4Y3+tfe21VilrnXC
+         LTCA==
+X-Gm-Message-State: ABy/qLYe+Us982yK2xLwaustmEKovzh8xinulQiKoEE1uCXpadRUAaSs
+        89lImv/hqizqoMAzk8wUnqLNxaGVxK4+nxJ117Q=
+X-Google-Smtp-Source: APBJJlE0f5j8IRaA4Vbgtj5UFvkVytlnA4rTodoWnB9ewmz3K+K0ar3ZvDF115BTlbxXdmTqz/oeHF33AMcrU6/lT8s=
+X-Received: by 2002:a6b:a12:0:b0:780:c787:637b with SMTP id
+ z18-20020a6b0a12000000b00780c787637bmr4572060ioi.0.1690440356464; Wed, 26 Jul
+ 2023 23:45:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pnnYVvgbwHM4MjFI"
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fX2ar7Pfj9it8pX_ohgC7OzY59iuDFSQTY7Kcnkc3-S5g@mail.gmail.com>
+References: <20230726133642.750342-1-namhyung@kernel.org> <CAP-5=fWM9Fhq5WvsBf2n=hGwwwRDt3-mUQ=_qzu8qYGtD1OeWQ@mail.gmail.com>
+ <CAM9d7citVc4ad65MLBWxvE-_AbwxO1DQWHf5w+ofSgWnWSx=Fw@mail.gmail.com>
+ <CAP-5=fVbwf9=ZFszgFpb_6Qb003WpZC3_vtO7fB1pL_vH-OhQw@mail.gmail.com>
+ <CAM9d7chcrd8mN55yb+oCBi3=AF4-a=oCr66+cv7eaquzx0Kvpw@mail.gmail.com> <CAP-5=fUPPRVSx9x4riCkkwEAza1N_r5qCxwqmdj0d7CEaKmCdw@mail.gmail.com>
+In-Reply-To: <CAP-5=fUPPRVSx9x4riCkkwEAza1N_r5qCxwqmdj0d7CEaKmCdw@mail.gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 26 Jul 2023 23:45:44 -0700
+Message-ID: <CAM9d7cj6hpBbysg5grFWj89J3xTC8pio4juppBKH0ngvXq_n_Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf build: Update build rule for generated files
+To:     Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Anup Sharma <anupnewsmail@gmail.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
---pnnYVvgbwHM4MjFI
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jul 26, 2023 at 09:20:33PM -0700, Ian Rogers wrote:
-> On Wed, Jul 26, 2023 at 8:55=E2=80=AFPM Bagas Sanjaya <bagasdotme@gmail.c=
-om> wrote:
+On Wed, Jul 26, 2023 at 9:48 PM Ian Rogers <irogers@google.com> wrote:
+>
+> On Wed, Jul 26, 2023 at 6:01 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > Hi,
-> >
-> > I notice a build regression on Bugzilla [1]. Quoting from it:
-> >
-> > > Starting with Kernel 6.4, I see a build error when using "-flto" to b=
-uild perf. This used to work fine with earlier Kernels when using either bf=
-d or mold as linker when using GCC 13.1.1.
->=20
-> Hmm.. strange I've never seen this work with GCC.
->=20
+> > On Wed, Jul 26, 2023 at 5:36 PM Ian Rogers <irogers@google.com> wrote:
 > > >
-> > > This is the PKGBUILD I use as my build recipe: https://github.com/ms1=
-78/archpkgbuilds/blob/main/packages/bpf/PKGBUILD
->=20
-> If this binary is for distribution BUILD_BPF_SKEL=3D1 should be set. We
-> need to make this an opt-out rather than opt-in. The last time we did
-> this there was some friction:
-> https://lore.kernel.org/lkml/CAHk-=3DwjY_3cBELRSLMpqCt6Eb71Qei2agfKSNsrr5=
-KcpdEQCaA@mail.gmail.com/
+> > > On Wed, Jul 26, 2023 at 3:57 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > >
+> > > > Hi Ian,
+> > > >
+> > > > On Wed, Jul 26, 2023 at 8:48 AM Ian Rogers <irogers@google.com> wrote:
+> > > > >
+> > > > > On Wed, Jul 26, 2023 at 6:36 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > >
+> > > > > > The bison and flex generate C files from the source (.y and .l)
+> > > > > > files.  When O= option is used, they are saved in a separate directory
+> > > > > > but the default build rule assumes the .C files are in the source
+> > > > > > directory.  So it might read invalid file if there are generated files
+> > > > > > from an old version.  The same is true for the pmu-events files.
+> > > > > >
+> > > > > > For example, the following command would cause a build failure:
+> > > > > >
+> > > > > >   $ git checkout v6.3
+> > > > > >   $ make -C tools/perf  # build in the same directory
+> > > > > >
+> > > > > >   $ git checkout v6.5-rc2
+> > > > > >   $ mkdir build  # create a build directory
+> > > > > >   $ make -C tools/perf O=build  # build in a different directory but it
+> > > > > >                                 # refers files in the source directory
+> > > > > >
+> > > > > > Let's update the build rule to specify those cases explicitly to depend
+> > > > > > on the files in the output directory.
+> > > > > >
+> > > > > > Note that it's not a complete fix and it needs the next patch for the
+> > > > > > include path too.
+> > > > > >
+> > > > > > Fixes: 80eeb67fe577 ("perf jevents: Program to convert JSON file")
+> > > > > > Cc: stable@vger.kernel.org
+> > > > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > > > > > ---
+> > > > > >  tools/build/Makefile.build  | 8 ++++++++
+> > > > > >  tools/perf/pmu-events/Build | 4 ++++
+> > > > > >  2 files changed, 12 insertions(+)
+> > > > > >
+> > > > > > diff --git a/tools/build/Makefile.build b/tools/build/Makefile.build
+> > > > > > index 89430338a3d9..f9396696fcbf 100644
+> > > > > > --- a/tools/build/Makefile.build
+> > > > > > +++ b/tools/build/Makefile.build
+> > > > > > @@ -117,6 +117,14 @@ $(OUTPUT)%.s: %.c FORCE
+> > > > > >         $(call rule_mkdir)
+> > > > > >         $(call if_changed_dep,cc_s_c)
+> > > > > >
+> > > > > > +$(OUTPUT)%-bison.o: $(OUTPUT)%-bison.c FORCE
+> > > > > > +       $(call rule_mkdir)
+> > > > > > +       $(call if_changed_dep,$(host)cc_o_c)
+> > > > > > +
+> > > > > > +$(OUTPUT)%-flex.o: $(OUTPUT)%-flex.c FORCE
+> > > > > > +       $(call rule_mkdir)
+> > > > > > +       $(call if_changed_dep,$(host)cc_o_c)
+> > > > > > +
+> > > > >
+> > > > > Hi Namhyung,
+> > > > >
+> > > > > as we have:
+> > > > > ```
+> > > > > $(OUTPUT)%.o: %.c FORCE
+> > > > >        $(call rule_mkdir)
+> > > > >        $(call if_changed_dep,$(host)cc_o_c)
+> > > > > ```
+> > > > > I'm not sure what the 2 additional rules achieve.
+> > > >
+> > > > The above rule assumes the .c files are in the source directory
+> > > > (without $(OUTPUT) prefix).  It caused a trouble when the
+> > > > flex and bison files are generated in the output directory and
+> > > > you have an old version of them in the source directory.
+> > > >
+> > > >
+> > > > >
+> > > > > >  # Gather build data:
+> > > > > >  #   obj-y        - list of build objects
+> > > > > >  #   subdir-y     - list of directories to nest
+> > > > > > diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
+> > > > > > index 150765f2baee..f38a27765604 100644
+> > > > > > --- a/tools/perf/pmu-events/Build
+> > > > > > +++ b/tools/perf/pmu-events/Build
+> > > > > > @@ -35,3 +35,7 @@ $(PMU_EVENTS_C): $(JSON) $(JSON_TEST) $(JEVENTS_PY) $(METRIC_PY) $(METRIC_TEST_L
+> > > > > >         $(call rule_mkdir)
+> > > > > >         $(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) $(JEVENTS_MODEL) pmu-events/arch $@
+> > > > > >  endif
+> > > > > > +
+> > > > > > +$(OUTPUT)pmu-events/pmu-events.o: $(PMU_EVENTS_C)
+> > > > > > +       $(call rule_mkdir)
+> > > > > > +       $(call if_changed_dep,$(host)cc_o_c)
+> > > > >
+> > > > > If we add this, do the Makefile.build changes still need to happen?
+> > > >
+> > > > The Makefile.build changes are specific to flex and bison files.
+> > > > So yes, we need this for pmu-events.c to work properly with O=
+> > > > option.
+> > >
+> > > Got it, you are right I was confusing the flex/bison with the jevents
+> > > case. Can we get away with a single rule then:
+> > > ```
+> > >  $(OUTPUT)%.o:  $(OUTPUT)%.c FORCE
+> > >         $(call rule_mkdir)
+> > >         $(call if_changed_dep,$(host)cc_o_c)
+> > > ```
+> >
+> > Probably, but I wonder if it affects the normal .c files expecting
+> > them in the OUTPUT directory.
+>
+> Hmm.. I think the longer matches may be necessary to trigger the "more
+> specific" ordering:
+> https://www.gnu.org/software/make/manual/html_node/Pattern-Match.html
+>
+> I'm not keen on these extra rules that mirror existing rules, it is a
+> bit cryptic what is going on. I wonder if it would be cleaner just to
+> fail the build if the bogus pmu-events.c exists. For example:
 
-The reporter runs Arch Linux. PKGBUILD is a build script to create
-packages, though. See the distro doc [1] for details.
+I prefer just making it build instead of failing.  But not strongly
+against your idea.  It'd be nice to hear what others think.. Arnaldo?
 
-[1]: https://wiki.archlinux.org/title/PKGBUILD
+> ```
+> --- a/tools/perf/pmu-events/Build
+> +++ b/tools/perf/pmu-events/Build
+> @@ -12,6 +12,14 @@ EMPTY_PMU_EVENTS_C = pmu-events/empty-pmu-events.c
+> PMU_EVENTS_C   =  $(OUTPUT)pmu-events/pmu-events.c
+> METRIC_TEST_LOG        =  $(OUTPUT)pmu-events/metric_test.log
+>
+> +ifneq ($(OUTPUT),)
+> +ifneq ($(wildcard pmu-events/pmu-events.c),)
+> +dummy := $(error OUTPUT set but tools/perf/pmu-events/pmu-events.c exists. \
+> +           This can mean the generated version of pmu-events.c is not
+> compiled. \
+> +           Try 'cd tools/perf; make clean; cd -' and then rebuilding.)
 
---=20
-An old man doll... just what I always wanted! - Clara
+I've tested this and this message is buried in the stream of
+parallel build outputs. :(
 
---pnnYVvgbwHM4MjFI
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
+Namhyung
 
------BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZMIG4QAKCRD2uYlJVVFO
-o+lPAP9UioRI5BBggfSKjgjg93TNq16DLHoJzaMs4darxJ/jsAEAwM3yDTSUuRkf
-J1OiU/gDqhUYnvSrGVREJFGbwwJqMAY=
-=MDkJ
------END PGP SIGNATURE-----
-
---pnnYVvgbwHM4MjFI--
+> +endif
+> +endif
+> +
+> ifeq ($(JEVENTS_ARCH),)
+> JEVENTS_ARCH=$(SRCARCH)
+> endif
+> ```
