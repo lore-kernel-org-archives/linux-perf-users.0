@@ -2,84 +2,118 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4F4C0015E
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jul 2023 13:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0930C001E0
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jul 2023 13:55:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231493AbjG0NIB (ORCPT
+        id S232566AbjG0NzI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Jul 2023 09:08:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53372 "EHLO
+        Thu, 27 Jul 2023 09:55:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230154AbjG0NIA (ORCPT
+        with ESMTP id S232469AbjG0NzH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Jul 2023 09:08:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 111EF9C
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 06:07:59 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 97D5461E76
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 13:07:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C62DDC433C8;
-        Thu, 27 Jul 2023 13:07:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690463278;
-        bh=9iLLIbFPMTlW58RwqjCUc4ue3BAmQrDJQcrR/wu0GTg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=svSWZsWNbZkKggY+2JjZGXH2y4AZPji6vfFZs+X8P/UxCy1BHxuGkL/gUsb7FesY7
-         +2qPRf4HJAlmD5T15Dul2NzFWKq/AV7NnhI/r2rXPMFlyIl4Meff0Ol/GgkRuN1lw3
-         KpNM4phmXdPIINr/Y7JcWKkWmVLJzbk784FVKIgqKGVJg7nwQlwyQGmk7vCRoe/0Si
-         YMv6Jha/sTV8Hk5VXuar4vxhLigY8mgTa/oDiD20fmj9MsQu1sOcaVNZd7EKgGegjy
-         60GTFQZo3OLv27xjzYO63mJnBPfQCeez4C6VD4B0qmpFbYcGh8nNHVC8UZKexyzCTz
-         TGJ4Aw+w3hQcg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 27EB340516; Thu, 27 Jul 2023 10:07:55 -0300 (-03)
-Date:   Thu, 27 Jul 2023 10:07:55 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Xiu Jianfeng <xiujianfeng@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH -next] perf doc: Fix typo in perf.data-file-format.txt
-Message-ID: <ZMJsK3eWvDcCRAqQ@kernel.org>
-References: <20230727105001.261420-1-xiujianfeng@huawei.com>
+        Thu, 27 Jul 2023 09:55:07 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03D8030D2;
+        Thu, 27 Jul 2023 06:55:04 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id ffacd0b85a97d-317798b359aso999460f8f.1;
+        Thu, 27 Jul 2023 06:55:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690466102; x=1691070902;
+        h=content-transfer-encoding:cc:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6nozTGLuTxwX4YJWSLgmQ8WaXWgvzozi46ZP3VPVekc=;
+        b=TNjxezU2c3sIMI/qT2XvKL3r2oUybJ7vmj5+fcZBeCFYjYYPxztUZCUz3K7KwenyMd
+         Rb4eGBez3mlArn6wbfavXwpeXFTNcDpjeK9+WiN7nXV8addMqlJOSDcivjDsx/P8xdvu
+         00lIsMOLrDayRxUSz8vMlOvOIc06kVAhSQTygoF+P0NUUKljtuZFp34P7V8C0f8Er9kx
+         /AOVOW3W9xPS07vtIbFdHwnaNjc2HH2XhElFPpT8CqvOCMEM/9ADvMrsDrBzh17pfslD
+         5fIbmqCDpAwpVkYGNcQmT/9/k/kopiizuEF/yd3rjARUBvI4vH3UHXERr26mE/7BN83V
+         KlVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690466102; x=1691070902;
+        h=content-transfer-encoding:cc:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6nozTGLuTxwX4YJWSLgmQ8WaXWgvzozi46ZP3VPVekc=;
+        b=JfCSZdOpDY/IN+tC8o1Z+pDqYMsVOaqOdbq1RB2LPCz04BmtiVBW88UD2JiYiGesH3
+         h7v5aysA2X5q0PxGQLhQWvQWLvERLohMSbfk8eVtKzR6yuq3srAaf48jyR+j8QmNbbiF
+         memxAJ/CpjiZ5GQ1p6a8fzxe/UVxICpjaDubQSUaqH4Ip6REWsyuFtLgyGedxo7Tjghw
+         DGeKsP52wyzBKnL1tCQrKK8o3DEDWg+nIQfnUWOBhdyFYZMyZmgseggfse2EIZZbXw+0
+         E6154QikJktrFZ2V9m/ArAUaDD4jCgoLc7hQLFWr850bvzsmF6Gw/AYcaWgA/Abj7HUs
+         iGsA==
+X-Gm-Message-State: ABy/qLZp55I8c2xiJSJS98Y+fLkHoEfZLM4MpTYIpUfIJVw3vajERqLj
+        qiH0Wewbby7r4h4VSYXSOhnoMNBdiC6SMw==
+X-Google-Smtp-Source: APBJJlEwBetgbbB60dyxoBrHKHbl8kWkLb+v4ozb+yHuHulLmItrahjyeOEvDwrELCuhwKxwMmYzSQ==
+X-Received: by 2002:a05:6000:1152:b0:314:1ce9:3c86 with SMTP id d18-20020a056000115200b003141ce93c86mr1739331wrx.0.1690466101846;
+        Thu, 27 Jul 2023 06:55:01 -0700 (PDT)
+Received: from [192.168.0.101] (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.googlemail.com with ESMTPSA id r5-20020a056000014500b0031751d7d8a6sm2167440wrx.18.2023.07.27.06.55.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Jul 2023 06:55:01 -0700 (PDT)
+Message-ID: <21e2ea66-9524-8e34-a2f0-8e16b9617d68@gmail.com>
+Date:   Thu, 27 Jul 2023 14:55:00 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230727105001.261420-1-xiujianfeng@huawei.com>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Content-Language: en-US
+To:     Alexander Antonov <alexander.antonov@linux.intel.com>
+From:   "Colin King (gmail)" <colin.i.king@gmail.com>
+Subject: potential return of uninitialized variable ret in function
+ skx_upi_topology_cb
+Cc:     linux-perf-users@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Jul 27, 2023 at 10:50:01AM +0000, Xiu Jianfeng escreveu:
-> The 'it' should be 'is' here, fix it.
+Hi,
 
-Thanks, applied.
+Static analysis with cppcheck has detected a potential return of an 
+uninitialized variable in function skx_upi_topology_cb. The issue was 
+introduced with commit:
 
-- Arnaldo
+commit 4cfce57fa42d277497cd2c425021312eae2f223c
+Author: Alexander Antonov <alexander.antonov@linux.intel.com>
+Date:   Thu Nov 17 12:28:28 2022 +0000
 
- 
-> Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
-> ---
->  tools/perf/Documentation/perf.data-file-format.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
-> index 635ba043fd7d..010a4edcd384 100644
-> --- a/tools/perf/Documentation/perf.data-file-format.txt
-> +++ b/tools/perf/Documentation/perf.data-file-format.txt
-> @@ -43,7 +43,7 @@ struct perf_file_section {
->  
->  Flags section:
->  
-> -For each of the optional features a perf_file_section it placed after the data
-> +For each of the optional features a perf_file_section is placed after the data
->  section if the feature bit is set in the perf_header flags bitset. The
->  respective perf_file_section points to the data of the additional header and
->  defines its size.
-> -- 
-> 2.34.1
+     perf/x86/intel/uncore: Enable UPI topology discovery for Skylake Server
+
+static int skx_upi_topology_cb(struct intel_uncore_type *type, int segment,
+                                 int die, u64 cpu_bus_msr)
+{
+         int idx, ret;		
+
+^^ ret is not initialized
+
+         struct intel_uncore_topology *upi;
+         unsigned int devfn;
+         struct pci_dev *dev = NULL;
+         u8 bus = cpu_bus_msr >> (3 * BUS_NUM_STRIDE);
+
+         for (idx = 0; idx < type->num_boxes; idx++) {
+                 upi = &type->topology[die][idx];
+                 devfn = PCI_DEVFN(SKX_UPI_REGS_ADDR_DEVICE_LINK0 + idx,
+                                   SKX_UPI_REGS_ADDR_FUNCTION);
+                 dev = pci_get_domain_bus_and_slot(segment, bus, devfn);
+
+^^ dev may be null, so ret is never assigned
+
+                 if (dev) {
+                         ret = upi_fill_topology(dev, upi, idx);
+                         if (ret)
+                                 break;
+                 }
+         }
+
+         pci_dev_put(dev);
+         return ret;
+}
+
+I suspect this probably is very unlikely, but it would be useful to have 
+ret initialized to some value to avoid garbage being returned. Not sure 
+what the best value is to set as as default in this corner case.
+
+Colin
