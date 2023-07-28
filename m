@@ -2,100 +2,122 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3319DC41513
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 13:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8257C001DF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 13:59:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236095AbjG1Nk3 (ORCPT
+        id S229894AbjG1N7n (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jul 2023 09:40:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54422 "EHLO
+        Fri, 28 Jul 2023 09:59:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235774AbjG1Nk2 (ORCPT
+        with ESMTP id S229534AbjG1N7n (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jul 2023 09:40:28 -0400
+        Fri, 28 Jul 2023 09:59:43 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D6B419BF;
-        Fri, 28 Jul 2023 06:40:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42890E78;
+        Fri, 28 Jul 2023 06:59:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 27724620FD;
-        Fri, 28 Jul 2023 13:40:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6410BC433C7;
-        Fri, 28 Jul 2023 13:40:26 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D306262155;
+        Fri, 28 Jul 2023 13:59:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E58DC433C7;
+        Fri, 28 Jul 2023 13:59:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690551626;
-        bh=tlsE0+7xNYDWBajQc3lmfmA80SXhLg/A7CaGn11d9K4=;
+        s=k20201202; t=1690552781;
+        bh=F3dxrjgbvuK9UxFq0YQioOFyWmM5w9lhpsGUFhh3HYI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XA0YMVO5hYSzb8+pjL5xabzJ+9mlCLygcwa9jXFvHHSWeMe1fZiU4OZvFMFxrKAlF
-         0KSWiCG/BvrXtTrhS+RsntbAqlN5bua7POD+bunD9eoeINxDuQNI+01ktbDtI7xoy4
-         75HAJZFjEH+1kkaDQzKM+dDpm3oLTEClOW6Y9DP1nyO7dpB8pRNlrYofQ5IMqUV7kA
-         0wNmtIC/QBNBwyO5knoD7md0/9JY9pCVLT2EOvrB2tBiKArpjWB8sowLwRahEoAP6R
-         qHvkoLEEeYUH43idKDmCufY2FLSTl4hmuP02jjX1nGhyE2OeGNui/lsxOV9wwpayQ6
-         yJ5iS8N8gU5Dw==
+        b=TDhAXHeNYDqPzWDzPF1GiG62aQfnHSgcNXvP2CDN7AzMswajRDbm6xRFrxzZ2ypOp
+         x+Do7ECw8mF4tVlDeZR5OqLgLOwxhZc4SD7GDvOhPfDnQYZ+aK0isbgAbx6VIWupx+
+         xtYgOEV6br6tMzhLdYKtwLM9UFvNGSYs7d/CvHSGE6Ovrp7V07LVd922j5k0wrjemp
+         /TNzXdnh9IkQ6DjYB+jSMJV2CLhQs2vjeacVpPBfK8Bzg+sIT+tA/eYQkbv1ZIPPh0
+         ILykb1OWtw64yZ6WMxK1wW9torVkaPbwBlry4m1Vpj+p2aRFQwmARgz1oKMaq5t2Xl
+         q0xARtSekqIfQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CAA8340096; Fri, 28 Jul 2023 10:40:23 -0300 (-03)
-Date:   Fri, 28 Jul 2023 10:40:23 -0300
+        id 48D0C40096; Fri, 28 Jul 2023 10:59:38 -0300 (-03)
+Date:   Fri, 28 Jul 2023 10:59:38 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jing Zhang <renyu.zj@linux.alibaba.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>, Will Deacon <will@kernel.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: Re: [PATCH v5 0/3] Add aliases and JSON metrics for Yitian710 DDR
-Message-ID: <ZMPFR7YQJt2dEY35@kernel.org>
-References: <1690528175-2499-1-git-send-email-renyu.zj@linux.alibaba.com>
+To:     James Clark <james.clark@arm.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v1 4/6] perf build: Disable fewer flex warnings
+Message-ID: <ZMPJym7DnCkFH7aA@kernel.org>
+References: <20230728064917.767761-1-irogers@google.com>
+ <20230728064917.767761-5-irogers@google.com>
+ <a8833945-3f0a-7651-39ff-a01e7edc2b3a@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1690528175-2499-1-git-send-email-renyu.zj@linux.alibaba.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a8833945-3f0a-7651-39ff-a01e7edc2b3a@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jul 28, 2023 at 03:09:32PM +0800, Jing Zhang escreveu:
-> Hi,
+Em Fri, Jul 28, 2023 at 09:50:59AM +0100, James Clark escreveu:
 > 
-> I add aliases and JSON metrics for Yitian710 DDR. The kernel part that
-> this series depends on has been applied to for-next/perf. And this series
-> have all been reviewed. Can you help to apply them? Thank you.
 > 
-> Thanks,
-> Jing
+> On 28/07/2023 07:49, Ian Rogers wrote:
+> > If flex is version 2.6.4, reduce the number of flex C warnings
+> > disabled. Earlier flex versions have all C warnings disabled.
+> 
+> Hi Ian,
+> 
+> I get a build error with either this one or the bison warning change:
+> 
+>   $ make LLVM=1 -C tools/perf NO_BPF_SKEL=1 DEBUG=1
+> 
+>   util/pmu-bison.c:855:9: error: variable 'perf_pmu_nerrs' set but not
+> used [-Werror,-Wunused-but-set-variable]
+>     int yynerrs = 0;
+> 
+> I tried a clean build which normally fixes these kind of bison errors.
+> Let me know if you need any version info.
 
-Thanks, applied.
+Trying to build it with the command line above I get:
 
-- Arnaldo
+  CC      util/expr.o
+  CC      util/parse-events.o
+  CC      util/parse-events-flex.o
+util/parse-events-flex.c:7503:13: error: misleading indentation; statement is not part of the previous 'if' [-Werror,-Wmisleading-indentation]
+            if ( ! yyg->yy_state_buf )
+            ^
+util/parse-events-flex.c:7501:9: note: previous statement is here
+        if ( ! yyg->yy_state_buf )
+        ^
+1 error generated.
+make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: util/parse-events-flex.o] Error 1
+make[4]: *** Waiting for unfinished jobs....
+  LD      util/scripting-engines/perf-in.o
+make[3]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:140: util] Error 2
+make[2]: *** [Makefile.perf:682: perf-in.o] Error 2
+make[2]: *** Waiting for unfinished jobs....
+  CC      pmu-events/pmu-events.o
+  LD      pmu-events/pmu-events-in.o
+make[1]: *** [Makefile.perf:242: sub-make] Error 2
+make: *** [Makefile:70: all] Error 2
 
- 
-> Change since v4:
-> - Kernel patch has applied to for-next/perf, so this patchset only has
->   tools part and docs.
-> - Fixed patch conflicts.
-> - Link: https://lore.kernel.org/all/1687245156-61215-1-git-send-email-renyu.zj@linux.alibaba.com/
-> 
-> Jing Zhang (3):
->   perf jevents: Add support for Yitian 710 DDR PMU aliasing
->   perf vendor events: Add JSON metrics for Yitian 710 DDR
->   docs: perf: Update metric usage for Alibaba's T-Head PMU driver
-> 
->  Documentation/admin-guide/perf/alibaba_pmu.rst     |   5 +
->  .../arm64/freescale/yitian710/sys/ali_drw.json     | 373 +++++++++++++++++++++
->  .../arm64/freescale/yitian710/sys/metrics.json     |  20 ++
->  tools/perf/pmu-events/jevents.py                   |   1 +
->  4 files changed, 399 insertions(+)
->  create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/yitian710/sys/ali_drw.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/yitian710/sys/metrics.json
-> 
-> -- 
-> 1.8.3.1
-> 
-
--- 
-
-- Arnaldo
+⬢[acme@toolbox perf-tools-next]$ clang --version
+clang version 14.0.5 (Fedora 14.0.5-2.fc36)
+Target: x86_64-redhat-linux-gnu
+Thread model: posix
+InstalledDir: /usr/bin
+⬢[acme@toolbox perf-tools-next]$
