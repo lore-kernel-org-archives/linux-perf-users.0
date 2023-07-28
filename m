@@ -2,212 +2,178 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF25C001DE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 17:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BF0C001DE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 17:42:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234631AbjG1RhS (ORCPT
+        id S229525AbjG1RmV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jul 2023 13:37:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34012 "EHLO
+        Fri, 28 Jul 2023 13:42:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233555AbjG1RhQ (ORCPT
+        with ESMTP id S229449AbjG1RmV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jul 2023 13:37:16 -0400
-Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C89E94228
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 10:36:52 -0700 (PDT)
-Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-4036bd4fff1so19081cf.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 10:36:52 -0700 (PDT)
+        Fri, 28 Jul 2023 13:42:21 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD4132D4D
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 10:42:19 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-4fe07f0636bso4163257e87.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 10:42:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1690565807; x=1691170607;
+        d=cloudflare.com; s=google; t=1690566137; x=1691170937;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MiqbSlCh4A2mRbWwF0zI0J8GGrBtWSoOpef1Mjqsfh4=;
-        b=pYUZQ/F9GVmQGyqoYdTsX+D9YZN6NwIGsDTIETwQbNjV5huvfiAY8Pq67nPF5tVJfJ
-         2M4Se4AN1zkO34pOAlXZ75av4zan7pFfSxmIncOE6rNpALf5IzYEBfr0tUq5oNNWs9cs
-         q9CAoUcyg9dgE5uR/u+7A/Scx7vGweSOsizgArz2JN9QvVbHw8IwcFIzh29f4D3H5JcS
-         LRAsmXRns6fjOSWVu5Gxx4LdGgDp2d211uX6cK/VLe0KBlXyH0LBWiIWR5W3YKNMPy8S
-         Vnyd2hCm3pYXQHoHolR001syOUPZIoHOMk8TSJpQtsQBb2Tqwtn/tktEWVkf4bdLV5qs
-         cfqQ==
+        bh=mYLF84njYUu7JSVKHy5D6nCKlYMLp+3wofRRJeXEu7E=;
+        b=iziTcra8O3kMOn7bPIAuiGktuKrjNiFuJrcytTPBjE9Z/F/6KagvBYqTFcSv0A2VD7
+         fT0v2rYCw920LjFd2VW/H4+JnPKVEVA0k0pjKSQK/V7Fp+Pw95jdZ6RnXE+mirtB7RXX
+         dVKIW5mX6DYU1TjRy+tJe62RfohmYOUgi9H0M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690565807; x=1691170607;
+        d=1e100.net; s=20221208; t=1690566137; x=1691170937;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MiqbSlCh4A2mRbWwF0zI0J8GGrBtWSoOpef1Mjqsfh4=;
-        b=FBTIlRJpobZCopGdlUUV2On0Pwo+SjYEr/YWnZdWNl+RlUSED1kNL0fV/lJR/NE/MQ
-         uzwj+FgW4oqGLvacyyMDw8spyvySvGC+TbMhFnfjZW6h4nZxkLPFqa1FWr/9XwCh+o6e
-         e7QY9Vr7nvJUmGHk0Q2hqzoAHD0s41j67aHh8LZvFkgl75QGPHvv7i9eT6QfsV3Hw9m/
-         IfswK0WlrFx1q7Q2r6HA3ucJG8/QZusfaOjivh06Hz2UVXZWc96GsutOOM2P41uQPKqs
-         ahmxT7WPxUyJzK059kdswm0TC33d0VlBxWy84BPumptXh61KqW4Iohu2iBkCwdqeQyg9
-         wCaA==
-X-Gm-Message-State: ABy/qLZt2BtPcCq3b9RfIx/8YNecMmmQ/yTfVYykebl6CVDnTLdlnIro
-        hEEJdOKuxbkjF0MZInF7WE7sT5GGxNQq96qM4F22xA==
-X-Google-Smtp-Source: APBJJlGU8OmELhr7YpQrzOL8HDorgVHUOukFdXrzdpJfthXqD1XAJrcQCyz6QuDg7DEdynM99rxwJh3HnDPBuZF+NtE=
-X-Received: by 2002:ac8:5a92:0:b0:3f9:ab2c:88b9 with SMTP id
- c18-20020ac85a92000000b003f9ab2c88b9mr4923qtc.25.1690565807279; Fri, 28 Jul
- 2023 10:36:47 -0700 (PDT)
+        bh=mYLF84njYUu7JSVKHy5D6nCKlYMLp+3wofRRJeXEu7E=;
+        b=jaU2Tg0GqvGkxzvVPkMRUJxn2Zs+897BjD80t5zf94xgEXFAvOLu5AK5e4zhMGeh7K
+         ewsHz3va2X7kd32P25ShwjmVSKXoL0qzZklJXKWlQ3ntAHTcBodJuYePvWo5+fAP7Z/7
+         sUJqNE8PyvG5TZvZ1r/N428gr5KyEqh5cdSeEJ+7T8pDjlqrjbQIJt0pGs2GFjsZXX4i
+         x1lQiBGH09sr+OlCtcY5CLljtew7VANG+Z+uxff3YmaaqUovYQMAlhiy+CN+aTYv6KD2
+         oNc35/vgaAODPmVDWP8CzI0v6lvrifPo91vQn3f7ZpK9jo78BvgHqlTBXSO/pwKQ3ZxE
+         l83g==
+X-Gm-Message-State: ABy/qLZM5wBFCNWUpo0ZeD+IYnAbdNptNp3SKDbcErxeW5e4EOb/lAiO
+        cEstdWtFDQV6oqNq4e5J2csE4qhW0Mk+St8l1txJFyDWkDg/lcYa
+X-Google-Smtp-Source: APBJJlG+syxVWj31WyFpRDPU//DQTURjhEbh1wZ/zUchJicEJUyhjhyKV0VnmRkXLQh+8lqsZFetH31/oxxS+EeaRmM=
+X-Received: by 2002:a19:9146:0:b0:4fb:7b4c:d38c with SMTP id
+ y6-20020a199146000000b004fb7b4cd38cmr2103056lfj.60.1690566137512; Fri, 28 Jul
+ 2023 10:42:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <202307271413.eb0fd426-oliver.sang@intel.com>
-In-Reply-To: <202307271413.eb0fd426-oliver.sang@intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 28 Jul 2023 10:36:30 -0700
-Message-ID: <CAP-5=fUAcG+CzneUx0M0+3bxCvs6iTb=roaLp_qxi3j_KsUVpg@mail.gmail.com>
-Subject: Re: [linus:master] [perf map/maps/thread] bffb5b0c09: perf-sanity-tests.probe_libc's_inet_pton_&_backtrace_it_with_ping.fail
-To:     kernel test robot <oliver.sang@intel.com>
-Cc:     oe-lkp@lists.linux.dev, lkp@intel.com,
-        linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ali Saidi <alisaidi@amazon.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Brian Robbins <brianrob@linux.microsoft.com>,
-        Changbin Du <changbin.du@huawei.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        German Gomez <german.gomez@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Ivan Babrou <ivan@cloudflare.com>,
-        James Clark <james.clark@arm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        John Garry <john.g.garry@oracle.com>,
-        K Prateek Nayak <kprateek.nayak@amd.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Liam Howlett <liam.howlett@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+References: <20230718000737.49077-1-ivan@cloudflare.com>
+In-Reply-To: <20230718000737.49077-1-ivan@cloudflare.com>
+From:   Ivan Babrou <ivan@cloudflare.com>
+Date:   Fri, 28 Jul 2023 10:42:06 -0700
+Message-ID: <CABWYdi2E1XozvwsZwOA80X-YbqLejj_5sxzNAh7w6R93rD5sCw@mail.gmail.com>
+Subject: Re: [PATCH] perf script: print cgroup on the same line as comm
+To:     linux-perf-users@vger.kernel.org
+Cc:     kernel-team@cloudflare.com, linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        "Steinar H. Gunderson" <sesse@google.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Wenyu Liu <liuwenyu7@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Ye Xingchen <ye.xingchen@zte.com.cn>,
-        Yuan Can <yuancan@huawei.com>, linux-perf-users@vger.kernel.org
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 26, 2023 at 11:43=E2=80=AFPM kernel test robot
-<oliver.sang@intel.com> wrote:
+On Mon, Jul 17, 2023 at 5:07=E2=80=AFPM Ivan Babrou <ivan@cloudflare.com> w=
+rote:
 >
+> Commit 3fd7a168bf51 ("perf script: Add 'cgroup' field for output")
+> added support for printing cgroup path in perf script output.
 >
-> hi, Ian Rogers,
+> It was okay if you didn't want any stacks:
 >
-> we noticed this is a fix commit, and we really found some perf-sanity-tes=
-ts
-> can pass on this commit now.
-> however, probe_libc's_inet_pton_&_backtrace_it_with_ping started to fail =
-on this
-> commit.
+>     $ sudo perf script --comms jpegtran:23f4bf -F comm,tid,cpu,time,cgrou=
+p
+>     jpegtran:23f4bf 3321915 [013] 404718.587488:  /idle.slice/polish.serv=
+ice
+>     jpegtran:23f4bf 3321915 [031] 404718.592073:  /idle.slice/polish.serv=
+ice
 >
-> 1981da1fe2499823 bffb5b0c0976aa46aaa961dd19a
-> ---------------- ---------------------------
->        fail:runs  %reproduction    fail:runs
->            |             |             |
->            :6          100%           6:6     perf-sanity-tests.Check_bra=
-nch_stack_sampling.pass
->            :6          100%           6:6     perf-sanity-tests.Cumulate_=
-child_hist_entries.pass
->            :6          100%           6:6     perf-sanity-tests.dlfilter_=
-C_API.pass
->            :6          100%           6:6     perf-sanity-tests.perf_pipe=
-_recording_and_injection_test.pass
->            :6          100%           6:6     perf-sanity-tests.probe_lib=
-c's_inet_pton_&_backtrace_it_with_ping.fail
+> With stacks it gets messier as cgroup is printed after the stack:
 >
-> below is detail.
+>     $ perf script --comms jpegtran:23f4bf -F comm,tid,cpu,time,cgroup,ip,=
+sym
+>     jpegtran:23f4bf 3321915 [013] 404718.587488:
+>                     5c554 compress_output
+>                     570d9 jpeg_finish_compress
+>                     3476e jpegtran_main
+>                     330ee jpegtran::main
+>                     326e2 core::ops::function::FnOnce::call_once (inlined=
+)
+>                     326e2 std::sys_common::backtrace::__rust_begin_short_=
+backtrace
+>     /idle.slice/polish.service
+>     jpegtran:23f4bf 3321915 [031] 404718.592073:
+>                     8474d jsimd_encode_mcu_AC_first_prepare_sse2.PADDING
+>                 55af68e62fff [unknown]
+>     /idle.slice/polish.service
 >
-> Hello,
+> Let's instead print cgroup on the same line as comm:
 >
-> kernel test robot noticed "perf-sanity-tests.probe_libc's_inet_pton_&_bac=
-ktrace_it_with_ping.fail" on:
+>     $ perf script --comms jpegtran:23f4bf -F comm,tid,cpu,time,cgroup,ip,=
+sym
+>     jpegtran:23f4bf 3321915 [013] 404718.587488:  /idle.slice/polish.serv=
+ice
+>                     5c554 compress_output
+>                     570d9 jpeg_finish_compress
+>                     3476e jpegtran_main
+>                     330ee jpegtran::main
+>                     326e2 core::ops::function::FnOnce::call_once (inlined=
+)
+>                     326e2 std::sys_common::backtrace::__rust_begin_short_=
+backtrace
 >
-> commit: bffb5b0c0976aa46aaa961dd19a47c9d6301cfe1 ("perf map/maps/thread: =
-Changes to reference counting")
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+>     jpegtran:23f4bf 3321915 [031] 404718.592073:  /idle.slice/polish.serv=
+ice
+>                     8474d jsimd_encode_mcu_AC_first_prepare_sse2.PADDING
+>                 55af68e62fff [unknown]
 >
-> [test failed on linus/master 18b44bc5a67275641fb26f2c54ba7eef80ac5950]
-> [test failed on linux-next/master 0ba5d07205771c50789fd9063950aa75e7f1183=
-f]
-
-Is this failing at head or is this another please use my time machine
-and go fix the past request? The most recent fixes in this area were
-in May by Thomas Richter:
-https://lore.kernel.org/r/20230503081255.3372986-1-tmricht@linux.ibm.com
-This isn't failing for me either in 6.5-rc3 or at perf-tools-next
-head. The test output doesn't contain an indication of what the error
-is. I don't think there is anything actionable here.
-
-Thanks,
-Ian
-
-> in testcase: perf-sanity-tests
-> version: perf-x86_64-00c7b5f4ddc5-1_20230402
-> with following parameters:
+> Signed-off-by: Ivan Babrou <ivan@cloudflare.com>
+> Fixes: 3fd7a168bf51 ("perf script: Add 'cgroup' field for output")
+> ---
+>  tools/perf/builtin-script.c | 22 +++++++++++-----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
 >
->         perf_compiler: gcc
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 200b3e7ea8da..517bf25750c8 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -2199,6 +2199,17 @@ static void process_event(struct perf_script *scri=
+pt,
+>         if (PRINT_FIELD(RETIRE_LAT))
+>                 fprintf(fp, "%16" PRIu16, sample->retire_lat);
 >
+> +       if (PRINT_FIELD(CGROUP)) {
+> +               const char *cgrp_name;
+> +               struct cgroup *cgrp =3D cgroup__find(machine->env,
+> +                                                  sample->cgroup);
+> +               if (cgrp !=3D NULL)
+> +                       cgrp_name =3D cgrp->name;
+> +               else
+> +                       cgrp_name =3D "unknown";
+> +               fprintf(fp, " %s", cgrp_name);
+> +       }
+> +
+>         if (PRINT_FIELD(IP)) {
+>                 struct callchain_cursor *cursor =3D NULL;
 >
+> @@ -2243,17 +2254,6 @@ static void process_event(struct perf_script *scri=
+pt,
+>         if (PRINT_FIELD(CODE_PAGE_SIZE))
+>                 fprintf(fp, " %s", get_page_size_name(sample->code_page_s=
+ize, str));
 >
-> compiler: gcc-12
-> test machine: 224 threads 2 sockets Intel(R) Xeon(R) Platinum 8480+ (Sapp=
-hire Rapids) with 256G memory
+> -       if (PRINT_FIELD(CGROUP)) {
+> -               const char *cgrp_name;
+> -               struct cgroup *cgrp =3D cgroup__find(machine->env,
+> -                                                  sample->cgroup);
+> -               if (cgrp !=3D NULL)
+> -                       cgrp_name =3D cgrp->name;
+> -               else
+> -                       cgrp_name =3D "unknown";
+> -               fprintf(fp, " %s", cgrp_name);
+> -       }
+> -
+>         perf_sample__fprintf_ipc(sample, attr, fp);
 >
-> (please refer to attached dmesg/kmsg for entire log/backtrace)
->
->
->
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
-ion of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Closes: https://lore.kernel.org/oe-lkp/202307271413.eb0fd426-oliver.san=
-g@intel.com
->
->
-> ...
->  88: perf pipe recording and injection test                          : Ok
->  89: Add vfs_getname probe to get syscall args filenames             : Sk=
-ip
->  90: probe libc's inet_pton & backtrace it with ping                 : FA=
-ILED!   <---
->  91: Use vfs_getname probe to get syscall args filenames             : Sk=
-ip
->  92: Zstd perf.data compression/decompression                        : Ok
-> ...
->
->
-> To reproduce:
->
->         git clone https://github.com/intel/lkp-tests.git
->         cd lkp-tests
->         sudo bin/lkp install job.yaml           # job file is attached in=
- this email
->         bin/lkp split-job --compatible job.yaml # generate the yaml file =
-for lkp run
->         sudo bin/lkp run generated-yaml-file
->
->         # if come across any failure that blocks the test,
->         # please remove ~/.lkp and /lkp dir to run from a clean state.
->
->
->
+>         fprintf(fp, "\n");
 > --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+> 2.41.0
 >
->
+
+A friendly bump in case this slipped through the cracks.
