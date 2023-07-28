@@ -2,155 +2,136 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7BCC04A94
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 11:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A06C0015E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 13:31:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236110AbjG1LAz (ORCPT
+        id S236214AbjG1Nbp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jul 2023 07:00:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51378 "EHLO
+        Fri, 28 Jul 2023 09:31:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236104AbjG1LAy (ORCPT
+        with ESMTP id S235965AbjG1Nbo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jul 2023 07:00:54 -0400
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95B7A2701;
-        Fri, 28 Jul 2023 04:00:53 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id 108A65C0066;
-        Fri, 28 Jul 2023 07:00:53 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Fri, 28 Jul 2023 07:00:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1690542053; x=1690628453; bh=aG
-        D+6R9Vm1NeP/bPyAZllb14ByPMwMXIFJA/NEvaiVE=; b=cotDhuNDr0YdeeMx0d
-        UpVXUIPz1hjY4yYy/dnA3e1r/9d7E5GYLiavPpr1gDeCaFX/Q5kR+i4TIsK5giXU
-        +ChoeRBuD40R5J1YrTcQROznGofNtQ+1+gtWR2SLzB6QnMgqUjJ1GHsZmhZE1mA8
-        1n9PSX7M4PTwn11+XxyijK95PLvq28uN4ddc28p/Db7p2PlbLdd1wn8Jzp9i5nNK
-        9nP+49kfaWjxlPGvas7o1wR4c/se1lUmbAdrvQensjSjozaYOjlQM1rs3HjlyU0h
-        42CHkbCNhCOyNVVo+UgnO8Uipx3b93AuT/LnPI9lzCrYho2RCKU0bV8zyCFzhEpF
-        VTCw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; t=1690542053; x=1690628453; bh=aGD+6R9Vm1NeP
-        /bPyAZllb14ByPMwMXIFJA/NEvaiVE=; b=RdzJctVvatl9LSxuHLnm32ABwvRoN
-        nKW167qdMmXWS7lhYWvDRZgRMl2yLjJr2LzFu/5RrcmOSuyBYMMIcs1gZwRenqAX
-        pwxwVF8X6DohznfsBzA1TpgdjFvXpUZ+D5N4Hw+1mMbXJSFRIypv5h5oFyIXyZRL
-        SpevCyzvT+mbMaSr2Nr5wJIhm8qJBUSwpj7CxVUQecyLIfPR9CZDKeG1RmxpQrpl
-        MyS4KNXqOoBJfhbksYFudgOMY1bOBv7xN8uDj8ZIKsFw9qhFPgF0hUFJYjID4UmN
-        q6U+4/qs3kiGxaRhqKkqIZZ+U6wHjsAZYupQ3jcdDUWXR2X9ebjfFOLBg==
-X-ME-Sender: <xms:45_DZDzl-pkPwwvUPnWtK80ePiDVAQi5snbDEC0bKkqedn2MFuVrbQ>
-    <xme:45_DZLSeDZ1pPDBejWqVMzOZn9TnBFuzQOizZ3SVdTXWadshN_kSX4UN4-0QOnH1D
-    nvQ3qR8F9cNWyOaubM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrieeigdeffecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeevhfffledtgeehfeffhfdtgedvheejtdfgkeeuvefgudffteettdekkeeufeeh
-    udenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:45_DZNWisnhG9YvxOULy6tvJlnL15A_qQhWq5SEafh2H9Epg0SMlKg>
-    <xmx:45_DZNgemvn5LVUemNdLo8ut5g-TGREvi00HMdOsounjYZpokJDDGw>
-    <xmx:45_DZFD2uLncDi4ocuQHBPD8DJsKsFGponOSn6ck4UElnLQLKOUT8w>
-    <xmx:5Z_DZJ3q0-pertTRaIwzKz0yKDc-qy5BpHmJ6EgEW9-wbKGOLqEngw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 40AB5B60089; Fri, 28 Jul 2023 07:00:51 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-592-ga9d4a09b4b-fm-defalarms-20230725.001-ga9d4a09b
-Mime-Version: 1.0
-Message-Id: <1777400a-4d9c-4bdb-9d3b-f8808ef054cc@app.fastmail.com>
-In-Reply-To: <20230727213648.GA354736@dev-arch.thelio-3990X>
-References: <1687443219-11946-1-git-send-email-yangtiezhu@loongson.cn>
- <1687443219-11946-2-git-send-email-yangtiezhu@loongson.cn>
- <20230727213648.GA354736@dev-arch.thelio-3990X>
-Date:   Fri, 28 Jul 2023 13:00:30 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Nathan Chancellor" <nathan@kernel.org>,
-        "Tiezhu Yang" <yangtiezhu@loongson.cn>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
-        Linux-Arch <linux-arch@vger.kernel.org>, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH v3 1/2] asm-generic: Unify uapi bitsperlong.h for arm64, riscv and
- loongarch
-Content-Type: text/plain
+        Fri, 28 Jul 2023 09:31:44 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF875421D;
+        Fri, 28 Jul 2023 06:31:10 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D7B8162154;
+        Fri, 28 Jul 2023 13:29:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11D2EC433C8;
+        Fri, 28 Jul 2023 13:29:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690550963;
+        bh=dJ/zmPsFQ+JgVXeFfxfEAvFGUMbo+Z0t5O+InptEFuw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AbT21N9+3NEGy3RZ5G8cr9yxwQusCXxwZPclFtPaDX3H/fjm0GSWEVOvESipPMVkG
+         F6vkgonbYnk2ItD4mf7Dx5ucaPfw7tu/7P6rfzQygiozgC1eC4+GHTwfFeqkeHfwOx
+         0GT7NUwya9xIkP/s92/JPV+Ohdrsg2Z0JHRSmcxUmNEcpSsVsykDZCKg6BYEfW8FUp
+         J6t5raJMy6H3FtZGcsImUPgp1xYwm1+8ZBW7+MpuIt6ouhI6RZJ+9dx637vo0oddzF
+         APA2xr3YCTgdO+BG4qjFAvSHwo6kt/53XpUkwPWNcoYSbuqFpRaIJLU8h2jEOL5wt8
+         6X3ZvGSPYbgkw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 71F2040096; Fri, 28 Jul 2023 10:29:20 -0300 (-03)
+Date:   Fri, 28 Jul 2023 10:29:20 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, masahiroy@kernel.org,
+        leo.yan@linaro.org, broonie@kernel.org, Aishwarya.TCV@arm.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/1] perf tools: Add a place to put kernel config
+ fragments for test runs
+Message-ID: <ZMPCsEeO1Xad/pR6@kernel.org>
+References: <20230628105303.4053478-1-james.clark@arm.com>
+ <CAM9d7cgo97jJTTTV7F2kJ=sF9MBoRwegN4r0dWotbUD=Nr1_cQ@mail.gmail.com>
+ <36767548-fbc3-9c4b-848c-d1d3102e442a@arm.com>
+ <85fad198-278a-aea2-3ada-f4f6a31f02ef@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <85fad198-278a-aea2-3ada-f4f6a31f02ef@arm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jul 27, 2023, at 23:36, Nathan Chancellor wrote:
-> Hi Tiezhu and Arnd,
->
-> On Thu, Jun 22, 2023 at 10:13:38PM +0800, Tiezhu Yang wrote:
->> Now we specify the minimal version of GCC as 5.1 and Clang/LLVM as 11.0.0
->> in Documentation/process/changes.rst, __CHAR_BIT__ and __SIZEOF_LONG__ are
->> usable, it is probably fine to unify the definition of __BITS_PER_LONG as
->> (__CHAR_BIT__ * __SIZEOF_LONG__) in asm-generic uapi bitsperlong.h.
->> 
->> In order to keep safe and avoid regression, only unify uapi bitsperlong.h
->> for some archs such as arm64, riscv and loongarch which are using newer
->> toolchains that have the definitions of __CHAR_BIT__ and __SIZEOF_LONG__.
->> 
->> Suggested-by: Xi Ruoyao <xry111@xry111.site>
->> Link: https://lore.kernel.org/all/d3e255e4746de44c9903c4433616d44ffcf18d1b.camel@xry111.site/
->> Suggested-by: Arnd Bergmann <arnd@arndb.de>
->> Link: https://lore.kernel.org/linux-arch/a3a4f48a-07d4-4ed9-bc53-5d383428bdd2@app.fastmail.com/
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
+Em Fri, Jul 28, 2023 at 11:48:34AM +0100, James Clark escreveu:
+> 
+> 
+> On 30/06/2023 09:04, James Clark wrote:
+> > 
+> > 
+> > On 29/06/2023 23:03, Namhyung Kim wrote:
+> >> Hi James,
+> >>
+> >> On Wed, Jun 28, 2023 at 3:53 AM James Clark <james.clark@arm.com> wrote:
+> >>>
+> >>> Changes since RFC:
+> >>>
+> >>>  * Changed arch filename convention to use the ARCH= build time values
+> >>>    instead of uname
+> >>>
+> >>> It seems like there were no objections on the RFC, apart from maybe
+> >>> changing the perf tests to run as a kself test. But that's probably not
+> >>> going to happen for a while, if ever, and these fragments can always
+> >>> be moved in that case.
+> >>
+> >> I missed the RFC, sorry.  Could you please add a link for that?
+> >>
+> >> Thanks,
+> >> Namhyung
+> > 
+> > Yep, it's here:
+> > https://lore.kernel.org/lkml/d02cce4a-47b1-a776-0d3a-a6a7c9a4d8fd@arm.com/T/
+> > 
+> 
+> Hi Arnaldo,
+> 
+> Any interest in taking this one?
 
->
-> I think this change has backwards compatibility concerns, as it breaks
-> building certain host tools on the stable releases (at least 6.4 and
-> 6.1, as that is where I noticed this). I see the following error on my
-> aarch64 system:
->
->   $ make -skj"$(nproc)" ARCH=x86_64 CROSS_COMPILE=x86_64-linux- 
-> mrproper defconfig prepare
->   In file included from /usr/include/asm/bitsperlong.h:1,
->                    from /usr/include/asm-generic/int-ll64.h:12,
->                    from /usr/include/asm-generic/types.h:7,
->                    from /usr/include/asm/types.h:1,
->                    from tools/include/linux/types.h:13,
->                    from tools/arch/x86/include/asm/orc_types.h:9,
->                    from scripts/sorttable.h:96,
->                    from scripts/sorttable.c:201:
->   tools/include/asm-generic/bitsperlong.h:14:2: error: #error 
-> Inconsistent word size. Check asm/bitsperlong.h
->      14 | #error Inconsistent word size. Check asm/bitsperlong.h
->         |  ^~~~~
+Yeah, looks useful, we can go on from this starting point and improve
+it.
 
-Thanks for the report. I'm still struggling to figure out what
-exactly is going wrong here, and if this is a bug in the patch
-I merged, or an existing bug that now causes a build failure instead
-of some other problem.
+I merged it into perf-tools-next.
 
-> A reverse bisect of 6.4 to 6.5-rc1 points to this patch. This Fedora
-> rawhide container has kernel-headers 6.5.0-0.rc2.git0.1.fc39 and the
-> error disappears when I downgrade to 6.4.0-0.rc7.git0.1.fc39. I have not
-> done a ton of triage/debugging so far, as I am currently hunting down
-> other regressions, but I figured I would get an initial report out,
-> since I noticed it when validating LLVM from the new release/17.x
-> branch. If there is any additional information I can provide or patches
-> I can test, I am more than happy to do so.
+Thanks,
 
-One thing I think is going wrong here is that scripts/sorttable.c is
-meant to run on the host (arm64) but includes the target (x86)
-orc_Types.h header and the kernel-internal asm/bitsperlong.h instead
-of the uapi version. The sanity check in the kernel-side header
-is intended to cross-check the CONFIG_64BIT value against the
-__BITS_PER_LONG constant from the header.
+- Arnaldo
+ 
+> Thanks
+> James
+> 
+> >>
+> >>
+> >>>
+> >>> James Clark (1):
+> >>>   perf tools: Add a place to put kernel config fragments for test runs
+> >>>
+> >>>  tools/perf/tests/config-fragments/README |  7 +++++++
+> >>>  tools/perf/tests/config-fragments/arm64  |  1 +
+> >>>  tools/perf/tests/config-fragments/config | 11 +++++++++++
+> >>>  3 files changed, 19 insertions(+)
+> >>>  create mode 100644 tools/perf/tests/config-fragments/README
+> >>>  create mode 100644 tools/perf/tests/config-fragments/arm64
+> >>>  create mode 100644 tools/perf/tests/config-fragments/config
+> >>>
+> >>>
+> >>> base-commit: ad5f604e186ac08d12c401e34ea96c09c38ddbc5
+> >>> --
+> >>> 2.34.1
+> >>>
 
-My first guess would be that this only worked by accident if the headers
-defaulted to "#define __BITS_PER_LONG 32" in and #undef CONFIG_64BIT"
-when include/generated/autoconf.h, but now the __BITS_PER_LONG value
-is actually correct.
+-- 
 
-       Arnd
+- Arnaldo
