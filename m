@@ -2,100 +2,108 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE9EC0015E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 08:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 498A0C0015E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 10:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231708AbjG1I5u (ORCPT
+        id S234960AbjG1Ksm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jul 2023 04:57:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51624 "EHLO
+        Fri, 28 Jul 2023 06:48:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233450AbjG1I5r (ORCPT
+        with ESMTP id S234908AbjG1Ksj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jul 2023 04:57:47 -0400
+        Fri, 28 Jul 2023 06:48:39 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4894E106;
-        Fri, 28 Jul 2023 01:57:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2E0451BC6;
+        Fri, 28 Jul 2023 03:48:38 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FA95D75;
-        Fri, 28 Jul 2023 01:58:29 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 048B92F4;
+        Fri, 28 Jul 2023 03:49:21 -0700 (PDT)
 Received: from [10.57.0.116] (unknown [10.57.0.116])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 03EA73F67D;
-        Fri, 28 Jul 2023 01:57:42 -0700 (PDT)
-Message-ID: <c44279fa-9c7c-fe18-8040-677ed3eb1a95@arm.com>
-Date:   Fri, 28 Jul 2023 09:57:41 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1D293F6C4;
+        Fri, 28 Jul 2023 03:48:35 -0700 (PDT)
+Message-ID: <85fad198-278a-aea2-3ada-f4f6a31f02ef@arm.com>
+Date:   Fri, 28 Jul 2023 11:48:34 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
-Subject: Re: [PATCH v1 3/6] perf build: Add Wextra for C++ compilation
+Subject: Re: [PATCH v1 0/1] perf tools: Add a place to put kernel config
+ fragments for test runs
 Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>
-References: <20230728064917.767761-1-irogers@google.com>
- <20230728064917.767761-4-irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+From:   James Clark <james.clark@arm.com>
+To:     Namhyung Kim <namhyung@kernel.org>,
+        "acme@kernel.org" <acme@kernel.org>
+Cc:     linux-perf-users@vger.kernel.org, masahiroy@kernel.org,
+        leo.yan@linaro.org, broonie@kernel.org, Aishwarya.TCV@arm.com,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
-        Rob Herring <robh@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20230728064917.767761-4-irogers@google.com>
+        linux-kernel@vger.kernel.org
+References: <20230628105303.4053478-1-james.clark@arm.com>
+ <CAM9d7cgo97jJTTTV7F2kJ=sF9MBoRwegN4r0dWotbUD=Nr1_cQ@mail.gmail.com>
+ <36767548-fbc3-9c4b-848c-d1d3102e442a@arm.com>
+In-Reply-To: <36767548-fbc3-9c4b-848c-d1d3102e442a@arm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 28/07/2023 07:49, Ian Rogers wrote:
-> Commit d58ac0bf8d1e ("perf build: Add clang and llvm compile and
-> linking support") added -Wall and -Wno-strict-aliasing for CXXFLAGS,
-> but not -Wextra. -Wno-strict-aliasing is no longer necessary, adding
-> -Wextra for CXXFLAGS requires adding -Wno-unused-parameter clang.cpp
-> and clang-test.cpp for LIBCLANGLLVM=1 to build.
+On 30/06/2023 09:04, James Clark wrote:
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/Makefile.config | 2 +-
->  tools/perf/util/c++/Build  | 3 +++
->  2 files changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 14709a6bd622..fe7afe6d8529 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -333,8 +333,8 @@ CORE_CFLAGS += -std=gnu11
->  
->  CXXFLAGS += -std=gnu++14 -fno-exceptions -fno-rtti
->  CXXFLAGS += -Wall
-> +CXXFLAGS += -Wextra
->  CXXFLAGS += -fno-omit-frame-pointer
-> -CXXFLAGS += -Wno-strict-aliasing
->  
->  HOSTCFLAGS += -Wall
->  HOSTCFLAGS += -Wextra
-> diff --git a/tools/perf/util/c++/Build b/tools/perf/util/c++/Build
-> index 613ecfd76527..8610d032ac19 100644
-> --- a/tools/perf/util/c++/Build
-> +++ b/tools/perf/util/c++/Build
-> @@ -1,2 +1,5 @@
->  perf-$(CONFIG_CLANGLLVM) += clang.o
->  perf-$(CONFIG_CLANGLLVM) += clang-test.o
-> +
-> +CXXFLAGS_clang.o += -Wno-unused-parameter
-> +CXXFLAGS_clang-test.o += -Wno-unused-parameter
+> On 29/06/2023 23:03, Namhyung Kim wrote:
+>> Hi James,
+>>
+>> On Wed, Jun 28, 2023 at 3:53 AM James Clark <james.clark@arm.com> wrote:
+>>>
+>>> Changes since RFC:
+>>>
+>>>  * Changed arch filename convention to use the ARCH= build time values
+>>>    instead of uname
+>>>
+>>> It seems like there were no objections on the RFC, apart from maybe
+>>> changing the perf tests to run as a kself test. But that's probably not
+>>> going to happen for a while, if ever, and these fragments can always
+>>> be moved in that case.
+>>
+>> I missed the RFC, sorry.  Could you please add a link for that?
+>>
+>> Thanks,
+>> Namhyung
+> 
+> Yep, it's here:
+> https://lore.kernel.org/lkml/d02cce4a-47b1-a776-0d3a-a6a7c9a4d8fd@arm.com/T/
+> 
 
-Acked-by: James Clark <james.clark@arm.com>
+Hi Arnaldo,
+
+Any interest in taking this one?
+
+Thanks
+James
+
+>>
+>>
+>>>
+>>> James Clark (1):
+>>>   perf tools: Add a place to put kernel config fragments for test runs
+>>>
+>>>  tools/perf/tests/config-fragments/README |  7 +++++++
+>>>  tools/perf/tests/config-fragments/arm64  |  1 +
+>>>  tools/perf/tests/config-fragments/config | 11 +++++++++++
+>>>  3 files changed, 19 insertions(+)
+>>>  create mode 100644 tools/perf/tests/config-fragments/README
+>>>  create mode 100644 tools/perf/tests/config-fragments/arm64
+>>>  create mode 100644 tools/perf/tests/config-fragments/config
+>>>
+>>>
+>>> base-commit: ad5f604e186ac08d12c401e34ea96c09c38ddbc5
+>>> --
+>>> 2.34.1
+>>>
