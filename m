@@ -2,122 +2,72 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C204AC04A6A
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 04:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DC1C0015E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 06:17:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233352AbjG1Esx (ORCPT
+        id S233403AbjG1GRg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jul 2023 00:48:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50124 "EHLO
+        Fri, 28 Jul 2023 02:17:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233247AbjG1Esc (ORCPT
+        with ESMTP id S232575AbjG1GRg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jul 2023 00:48:32 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3588E26B8;
-        Thu, 27 Jul 2023 21:48:31 -0700 (PDT)
-Received: from dggpemm100001.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RBw6T19T8zNm4t;
-        Fri, 28 Jul 2023 12:45:05 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- dggpemm100001.china.huawei.com (7.185.36.93) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Fri, 28 Jul 2023 12:48:27 +0800
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-perf-users@vger.kernel.org>,
-        <selinux@vger.kernel.org>,
-        =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        <christian.koenig@amd.com>, <Xinhui.Pan@amd.com>,
-        <airlied@gmail.com>, <daniel@ffwll.ch>, <paul@paul-moore.com>,
-        <stephen.smalley.work@gmail.com>, <eparis@parisplace.org>,
-        <peterz@infradead.org>, <acme@kernel.org>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>
-Subject: [PATCH v3 4/4] perf/core: use vma_is_initial_stack() and vma_is_initial_heap()
-Date:   Fri, 28 Jul 2023 13:00:43 +0800
-Message-ID: <20230728050043.59880-5-wangkefeng.wang@huawei.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230728050043.59880-1-wangkefeng.wang@huawei.com>
-References: <20230728050043.59880-1-wangkefeng.wang@huawei.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm100001.china.huawei.com (7.185.36.93)
-X-CFilter-Loop: Reflected
+        Fri, 28 Jul 2023 02:17:36 -0400
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 714491FF5;
+        Thu, 27 Jul 2023 23:17:33 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R801e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0VoOxEFh_1690525042;
+Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VoOxEFh_1690525042)
+          by smtp.aliyun-inc.com;
+          Fri, 28 Jul 2023 14:17:29 +0800
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+To:     John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>
+Subject: [PATCH v5 0/5] Add aliases and metrics for Arm CMN
+Date:   Fri, 28 Jul 2023 14:17:15 +0800
+Message-Id: <1690525040-77423-1-git-send-email-renyu.zj@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Use the helpers to simplify code, also kill unneeded goto cpy_name.
+Changes since v4:
+- Support "Compat" to match multiple identifiers for regular events
+  aliases as suggested by John.
+- Add self-test cases for "Compat" new feature and new event_filed
+  as suggested by John.
+- Link: https://lore.kernel.org/all/1690100513-61165-1-git-send-email-renyu.zj@linux.alibaba.com/
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
----
- kernel/events/core.c | 33 +++++++++++----------------------
- 1 file changed, 11 insertions(+), 22 deletions(-)
+Jing Zhang (5):
+  perf metric: Event "Compat" value supports matching multiple
+    identifiers
+  perf jevents: Support more event fields
+  perf test: Add pmu-event test for "Compat" and new event_field.
+  perf jevents: Add support for Arm CMN PMU aliasing
+  perf vendor events: Add JSON metrics for Arm CMN
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f84e2640ea2f..b36d0823ff33 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -8631,7 +8631,7 @@ static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
- 	unsigned int size;
- 	char tmp[16];
- 	char *buf = NULL;
--	char *name;
-+	char *name = NULL;
- 
- 	if (vma->vm_flags & VM_READ)
- 		prot |= PROT_READ;
-@@ -8678,29 +8678,18 @@ static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
- 
- 		goto got_name;
- 	} else {
--		if (vma->vm_ops && vma->vm_ops->name) {
-+		if (vma->vm_ops && vma->vm_ops->name)
- 			name = (char *) vma->vm_ops->name(vma);
--			if (name)
--				goto cpy_name;
-+		if (!name)
-+			name = (char *)arch_vma_name(vma);
-+		if (!name) {
-+			if (vma_is_initial_heap(vma))
-+				name = "[heap]";
-+			else if (vma_is_initial_stack(vma))
-+				name = "[stack]";
-+			else
-+				name = "//anon";
- 		}
--
--		name = (char *)arch_vma_name(vma);
--		if (name)
--			goto cpy_name;
--
--		if (vma->vm_start <= vma->vm_mm->start_brk &&
--				vma->vm_end >= vma->vm_mm->brk) {
--			name = "[heap]";
--			goto cpy_name;
--		}
--		if (vma->vm_start <= vma->vm_mm->start_stack &&
--				vma->vm_end >= vma->vm_mm->start_stack) {
--			name = "[stack]";
--			goto cpy_name;
--		}
--
--		name = "//anon";
--		goto cpy_name;
- 	}
- 
- cpy_name:
+ .../pmu-events/arch/arm64/arm/cmn/sys/cmn.json     | 266 +++++++++++++++++++++
+ .../pmu-events/arch/arm64/arm/cmn/sys/metric.json  |  74 ++++++
+ .../pmu-events/arch/test/test_soc/sys/uncore.json  |   8 +
+ tools/perf/pmu-events/jevents.py                   |  22 +-
+ tools/perf/tests/pmu-events.c                      |  55 +++++
+ tools/perf/util/metricgroup.c                      |   2 +-
+ tools/perf/util/pmu.c                              |  27 ++-
+ tools/perf/util/pmu.h                              |   1 +
+ 8 files changed, 445 insertions(+), 10 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json
+
 -- 
-2.41.0
+1.8.3.1
 
