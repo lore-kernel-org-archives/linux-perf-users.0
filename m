@@ -2,170 +2,161 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EB4C0015E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 14:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F76C0015E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 14:30:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237059AbjG1O3l (ORCPT
+        id S237088AbjG1Oae (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jul 2023 10:29:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52338 "EHLO
+        Fri, 28 Jul 2023 10:30:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237082AbjG1O3k (ORCPT
+        with ESMTP id S235248AbjG1Oad (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jul 2023 10:29:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C37373C21;
-        Fri, 28 Jul 2023 07:29:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EAAC562167;
-        Fri, 28 Jul 2023 14:29:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1862C433C8;
-        Fri, 28 Jul 2023 14:29:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690554576;
-        bh=rl3ICyI1xb8NNYkUwggQGBZkbkR4Fw6St3ciX3au0Os=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=clQ2nEznsKNV/N0TmTO8FkMUEae6XMBZM9RCvoH+GKRFp4Xjy4WiE0n2GDAjourB9
-         v2NBSyFn5QCZ2XLYfolJCD/9hci42tVbye1rAn3W6ne79ZvxomoSHDjuXcdKM8But1
-         C4bWT1N5sckW+LXAmAlixhmmmOuueWhBSycLaVsc8mIJDaba/XkPJNL7er51/41cGM
-         Y+WyK8oQp7gB59Ylse/o97ZftI9IkyjP+COmJrtx0i2++CODJGjkXx3y6v5iqBkBBu
-         mvAjsZ4HFVXqCwQHdMFz2ejRD3agLUBNS4YT8fGK8PPlpwF79G1ITGek4srCtZ0IiA
-         U6XO9w/4Yxg5w==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6381540096; Fri, 28 Jul 2023 11:29:33 -0300 (-03)
-Date:   Fri, 28 Jul 2023 11:29:33 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Rob Herring <robh@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, Wang Nan <wangnan0@huawei.com>,
-        Wang ShaoBo <bobo.shaobowang@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>, He Kuang <hekuang@huawei.com>
-Subject: Re: [PATCH v1 0/3] Remove BPF arrays from perf event parsing
-Message-ID: <ZMPQze90mGEdYFtr@kernel.org>
-References: <20230728001212.457900-1-irogers@google.com>
+        Fri, 28 Jul 2023 10:30:33 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 492FE3A97
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 07:30:32 -0700 (PDT)
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36SE4VQk012127
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 14:30:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : to : from : subject : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=XxZ8ZUHouvHdTggPk4MrG6EvLffuzCjh93GVIGt8FEk=;
+ b=NFBItQwPPnlyzAVRR1BUk3A3dRo0e5+JIbHA7MCE8LRAa3zs6FHuIJgsdyOPeNkixKMD
+ gIWcWyCs8YJ6qSSS6GGdClaqszOqtOCf2b7oGy4rb7FWu2sqpXGAMztokonpvquGmJRK
+ HP578mpkq8qXdR70W9gKY3qI/i4L+FIZDE53KP942ZQWQsk67TqVK/k6MizCB1w+hvCO
+ cTnNkKP8s3vWZtZOq9I2IE5l1vLDgUhvgyytfilZKhG6ETFd0FDNcAWE33C/Xo+Nu0oB
+ Jq+0QLE/z1DMLeRf73H9dAWgTolgwBwDxcEaKZy/q/ahr5sfWaf3EVJdJ4AwRwGlpGFA 9w== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s4d7gcshk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 14:30:30 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36SDwvdj029966
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 14:30:30 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s4d7gcsh3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Jul 2023 14:30:30 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36SE01xM014406;
+        Fri, 28 Jul 2023 14:30:28 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3s0stypw9k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Jul 2023 14:30:28 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36SEUQTd41550326
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jul 2023 14:30:26 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AF0092005A;
+        Fri, 28 Jul 2023 14:30:26 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 802EA2004D;
+        Fri, 28 Jul 2023 14:30:26 +0000 (GMT)
+Received: from [9.179.4.63] (unknown [9.179.4.63])
+        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Fri, 28 Jul 2023 14:30:26 +0000 (GMT)
+Message-ID: <f0508123-780b-3370-e64a-c78a350d76fa@linux.ibm.com>
+Date:   Fri, 28 Jul 2023 16:30:26 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230728001212.457900-1-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Subject: perf test case 6 dumps core on s390 without PMU
+Organization: IBM
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: HGDOLvD1B8f0oTUYlsZMHZCzI8MNDQz_
+X-Proofpoint-GUID: 4EaD86sWoHoY9N0qeS0JmKk1wMuDDqkJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-27_10,2023-07-26_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ mlxlogscore=999 lowpriorityscore=0 clxscore=1015 suspectscore=0
+ phishscore=0 bulkscore=0 impostorscore=0 priorityscore=1501 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2307280130
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Jul 27, 2023 at 05:12:09PM -0700, Ian Rogers escreveu:
-> Event parsing was recently refactored:
-> https://lore.kernel.org/all/20230502223851.2234828-1-irogers@google.com/
-> 
-> During these changes I wanted to get coverage of all parts of the
-> parse-events.y and found that I couldn't test the array code.
-> 
-> The first patch fixes a BPF testing issue.
-> The 2nd and 3rd patch remove the BPF array event parsing code so that
-> it isn't adding complexity to event parsing.
+Using Linux 6.5.0rc3 perf test case 6 dumps core on an s390 without
+configured PMU (this can happen depending on customer machine configuration).
 
-Thanks, applied and tested that 'perf trace' using the old BPF perf
-integration continues to work modulo the sockaddr collectors, but that
-is a problem with a newer kernel BPF verifier or clang, will
-investigate.
+In this configuration several perf test cases fail:
+ # ./perf test 2>&1 | grep FAIL
+  6.1: Test event parsing                                : FAILED!
+ 10.3: Parsing of PMU event table metrics                : FAILED!
+ 10.4: Parsing of PMU event table metrics with fake PMUs : FAILED!
+ 28: Use a dummy software event to keep tracking         : FAILED!
+ 35: Track with sched_switch                             : FAILED!
+ 66: Parse and process metrics                           : FAILED!
+ #
 
-With those commented out:
+Even worse the test case 6 dumps core:
 
-diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-index 9a03189d33d3816a..97871e2bd3a47bdf 100644
---- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
-+++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-@@ -176,6 +176,7 @@ int syscall_unaugmented(struct syscall_enter_args *args)
- 	return 1;
- }
- 
-+#if 0
- /*
-  * These will be tail_called from SEC("raw_syscalls:sys_enter"), so will find in
-  * augmented_args_tmp what was read by that raw_syscalls:sys_enter and go
-@@ -219,6 +220,7 @@ int sys_enter_sendto(struct syscall_enter_args *args)
- 
- 	return augmented__output(args, augmented_args, len + socklen);
- }
-+#endif
- 
- SEC("!syscalls:sys_enter_open")
- int sys_enter_open(struct syscall_enter_args *args)
+ # ./perf test -F 6
+  6: Parse event definition strings                      :
+  6.1: Test event parsing                                :
+ Segmentation fault (core dumped)
+ #
 
+The root cause for these failures and core dump is a missing
+PMU, as can be seen by the debug output:
+   ...
+   Event test failure: test 57 'instructions:uep'
+   running test 58 '{cycles,cache-misses,branch-misses}:e'
+   No PMU found for 'cycles' <-- Here no PMU is found, because there is none!
+   FAILED tests/parse-events.c:1516 wrong number of entries
+   Event test failure: test 58 '{cycles,cache-misses,branch-misses}:e'
+Here no PMU is found, because there is none!
 
+   ....
+   running test 59 'cycles/name=name/'
+   No PMU found for 'name'
+   Segmentation fault (core dumped)
 
+Here the root cause in in function test__term_equal_term() variable
+evsel->name is NULL:
 
-  # perf trace -e /home/acme/git/perf-tools-next/tools/perf/examples/bpf/augmented_raw_syscalls.c,open*
-     0.000 systemd-oomd/952 openat(dfd: CWD, filename: "/proc/meminfo", flags: RDONLY|CLOEXEC) = 12
-    95.302 thermald/1231 openat(dfd: CWD, filename: "/sys/class/powercap/intel-rapl/intel-rapl:0/intel-rapl:0:2/energy_uj") = 13
-    95.586 thermald/1231 openat(dfd: CWD, filename: "/sys/class/powercap/intel-rapl/intel-rapl:0/energy_uj") = 13
-    95.857 thermald/1231 openat(dfd: CWD, filename: "/sys/class/thermal/thermal_zone2/temp") = 13
-   250.064 systemd-oomd/952 openat(dfd: CWD, filename: "/proc/meminfo", flags: RDONLY|CLOEXEC) = 12
-   500.054 systemd-oomd/952 openat(dfd: CWD, filename: "/proc/meminfo", flags: RDONLY|CLOEXEC) = 12
-   500.472 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/session.slice/memory.pressure", flags: RDONLY|CLOEXEC) = 12
-   500.669 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/session.slice/memory.current", flags: RDONLY|CLOEXEC) = 12
-   500.777 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/session.slice/memory.min", flags: RDONLY|CLOEXEC) = 12
-   500.873 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/session.slice/memory.low", flags: RDONLY|CLOEXEC) = 12
-   500.968 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/session.slice/memory.swap.current", flags: RDONLY|CLOEXEC) = 12
-   501.062 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/session.slice/memory.stat", flags: RDONLY|CLOEXEC) = 12
-   501.435 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/memory.pressure", flags: RDONLY|CLOEXEC) = 12
-   501.585 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/memory.current", flags: RDONLY|CLOEXEC) = 12
-   501.676 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/memory.min", flags: RDONLY|CLOEXEC) = 12
-   501.761 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/memory.low", flags: RDONLY|CLOEXEC) = 12
-   501.845 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/memory.swap.current", flags: RDONLY|CLOEXEC) = 12
-   501.929 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/memory.stat", flags: RDONLY|CLOEXEC) = 12
-   502.118 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-gnome\x2dsession\x2dmanager.slice/memory.pressure", flags: RDONLY|CLOEXEC) = 12
-   502.272 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-gnome\x2dsession\x2dmanager.slice/memory.current", flags: RDONLY|CLOEXEC) = 12
-   502.367 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-gnome\x2dsession\x2dmanager.slice/memory.min", flags: RDONLY|CLOEXEC) = 12
-   502.454 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-gnome\x2dsession\x2dmanager.slice/memory.low", flags: RDONLY|CLOEXEC) = 12
-   502.542 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-gnome\x2dsession\x2dmanager.slice/memory.swap.current", flags: RDONLY|CLOEXEC) = 12
-   502.628 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-gnome\x2dsession\x2dmanager.slice/memory.stat", flags: RDONLY|CLOEXEC) = 12
-   502.796 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-org.gnome.Terminal.slice/memory.pressure", flags: RDONLY|CLOEXEC) = 12
-   502.928 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-org.gnome.Terminal.slice/memory.current", flags: RDONLY|CLOEXEC) = 12
-   503.037 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-org.gnome.Terminal.slice/memory.min", flags: RDONLY|CLOEXEC) = 12
-   503.162 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-org.gnome.Terminal.slice/memory.low", flags: RDONLY|CLOEXEC) = 12
-   503.255 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-org.gnome.Terminal.slice/memory.swap.current", flags: RDONLY|CLOEXEC) = 12
-   503.341 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-org.gnome.Terminal.slice/memory.stat", flags: RDONLY|CLOEXEC) = 12
-   503.495 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/system.slice/memory.pressure", flags: RDONLY|CLOEXEC) = 12
-   503.620 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/system.slice/memory.current", flags: RDONLY|CLOEXEC) = 12
-   503.703 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/system.slice/memory.min", flags: RDONLY|CLOEXEC) = 12
-   503.782 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/system.slice/memory.low", flags: RDONLY|CLOEXEC) = 12
-   503.861 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/system.slice/memory.swap.current", flags: RDONLY|CLOEXEC) = 12
-   503.939 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/system.slice/memory.stat", flags: RDONLY|CLOEXEC) = 12
-   504.079 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1001.slice/user@1001.service/app.slice/memory.pressure", flags: RDONLY|CLOEXEC) = 12
-   504.240 systemd-oomd/952 openat(dfd: CWD, filename: "/sys/fs/cgroup/user.slice/user-1001.slice/user@1001.service/app.slice/memory.current", flags: RDONLY|CLOEXEC) = 12
-^C
+ # gdb ./perf
+....
+Breakpoint 1, test__term_equal_term (evlist=0x1542c00) at\
+                       tests/parse-events.c:1688
+(gdb) p evsel->name
+$3 = 0x3fff7fe3dc0 ""
+(gdb) n
+ 691 TEST_ASSERT_VAL("wrong type", evsel->core.attr.type == PERF_TYPE_HARDWARE);
+(gdb) n
+1692 TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+(gdb) n
+1693 TEST_ASSERT_VAL("wrong name setting", strcmp(evsel->name, "name") == 0);
+(gdb) n
 
-- Arnaldo
- 
-> Ian Rogers (3):
->   perf parse-event: Avoid BPF test segv
->   perf tools: Revert enable indices setting syntax for BPF map
->   perf parse-events: Remove array remnants
-> 
->  tools/perf/util/bpf-loader.c   | 101 ---------------------------
->  tools/perf/util/parse-events.c |  18 +----
->  tools/perf/util/parse-events.h |  10 ---
->  tools/perf/util/parse-events.l |  11 ---
->  tools/perf/util/parse-events.y | 122 ---------------------------------
->  5 files changed, 2 insertions(+), 260 deletions(-)
-> 
-> -- 
-> 2.41.0.487.g6d72f3e995-goog
-> 
+Program received signal SIGSEGV, Segmentation fault.
+
+I could fix this by checking for NULL pointer, but I have the
+feeling that there is more to it. However I do not fully understand
+the latest rework on the event handling.
+
+The other test cases listed above fail due to the same root cause,
+no PMU found.
+
+Please advise. What should all these test return when a system does
+not have any PMU defined at all?
+
+Thanks a lot.
 
 -- 
-
-- Arnaldo
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: David Faller
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
