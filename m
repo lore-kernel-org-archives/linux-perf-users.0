@@ -2,258 +2,124 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D955C001DF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 19:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A80EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 20:57:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230293AbjG1TEl (ORCPT
+        id S231357AbjG1U5G (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jul 2023 15:04:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35658 "EHLO
+        Fri, 28 Jul 2023 16:57:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229572AbjG1TEk (ORCPT
+        with ESMTP id S230473AbjG1U5F (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jul 2023 15:04:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA9EA30F5
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 12:04:38 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 78E5C621D3
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 19:04:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86A8DC433C8;
-        Fri, 28 Jul 2023 19:04:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690571077;
-        bh=oCcj4l/vxi3/5RrYa/uVUooUB2AdUtBM+entoWzf4Zk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KkMRmy+QWHMDjCVm7r9wyeSdGZ6tqC//Nui97d5EU1UZI22qzfjN/kVC6ariGtpYY
-         kKGF06NSQ7S/pJjsEHiqEMZIm6Yn39mtWQ/HWAgduLaWGjBPVmqQ2N228YWMiLS9nb
-         fVigmhD1fE9EMmIdhkZiW2ZgePbhluErtE8IYB3rQ+mB3lJ1QMFCvpSNNkJdP1H7BZ
-         wjArhSXiRtoRUeWPdqDwvK9SMeWGyX/FSydqr6Sp7pKgoDJJVMiqRrTuMjHrm1Eoci
-         icQ0EQ/7G/48aseE6SvQvnJkCkpvel+nlGzOmT/NqAJGyGwH2yKaEqiGZCGT3C4HVb
-         ktOxhZAjk97IA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 57DAA40096; Fri, 28 Jul 2023 16:04:35 -0300 (-03)
-Date:   Fri, 28 Jul 2023 16:04:35 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     kajoljain <kjain@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>
-Subject: Re: [PATCH V2 00/26] tools/perf: Fix shellcheck coding/formatting
- issues of perf tool shell scripts
-Message-ID: <ZMQRQ7K0DfgzH7yJ@kernel.org>
-References: <20230709182800.53002-1-atrajeev@linux.vnet.ibm.com>
- <1fbdbb26-4fce-ea25-a96a-99982b3f1603@linux.ibm.com>
- <CAP-5=fWZy-y9kiuAFQsaNeRYn8PJofFR5DHj5qA53FhB3+UrfQ@mail.gmail.com>
- <D52339A7-30C6-4066-AE05-4BF8E9DCCFF4@linux.vnet.ibm.com>
- <1f1e9978-a176-0ae9-6dac-8cc275c5f905@linux.ibm.com>
- <89C3584E-97E6-4FCF-ABFA-C94AD3F65BC4@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <89C3584E-97E6-4FCF-ABFA-C94AD3F65BC4@linux.vnet.ibm.com>
-X-Url:  http://acmel.wordpress.com
+        Fri, 28 Jul 2023 16:57:05 -0400
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCA57E69;
+        Fri, 28 Jul 2023 13:57:03 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id A1E6D5C0042;
+        Fri, 28 Jul 2023 16:57:00 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Fri, 28 Jul 2023 16:57:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm2; t=1690577820; x=1690664220; bh=Ey
+        7an+eYR/EJFsqkCsdCEc8Gpv7n/y5ox8OPRdihLJI=; b=J27Ci6eOLXZMwc/xdV
+        k4/V2Ujs43ozjAJSJfzx33h29LYVAIsS3r2RJin3T/aW9oDcdd1RmPgh7hHplotG
+        ao4ExzZ+Elqt0PbHK3Vwpar0x2Xmc2UCfGmd9fLSKLLisrOaXsiEwdG5b2JHXKt+
+        trvJN84Kz9wP971MY1lA3BBjQeeyG2oSSDzot3+ap9eRp7uEKFLnlROvX1RyyOkQ
+        cPGLOYSXKF2fUtPeIw12+zug1HWozIuI7m5ocf203YAa3ZVbwLL7SuHuIeBvEwy1
+        nvlcDVRyTjyvo5hL1QEan/7GpZf+ZIRBcKTAPl0Kj8QzxbfeY/jlO1r1V5TxEC0+
+        ky/w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; t=1690577820; x=1690664220; bh=Ey7an+eYR/EJF
+        sqkCsdCEc8Gpv7n/y5ox8OPRdihLJI=; b=jRJzUyuQYnTKWqqxrP/jCtF5Nsa3F
+        Z59ZYd6uvIJ2NsV4sighrm6TCgeOo4hzicUeS4qEK+Vc+ptBiyjvc/iA+cYC7qv6
+        VqOpjVspD8FHl2t86zbctNl4U6KKcV/7akn+jkek9JdiTIerAcCZWdWGRztGSzTD
+        QXBS6NvyFWX057/XWOQkz+PrLRXQCf6pn1xfl0QV2XjV4QlfAXvRdgYWDkE/mzRD
+        NEKr+b+vfaWojiojrIpnd6m19hA63OKiKjUnNLjWYYllRHHTX0IUURnuGkJ6VsMO
+        XihH+C35mv6VdKTqMaysBbrtnOmshMXX5yufdrvqln2HCjtpBrM7IYeUg==
+X-ME-Sender: <xms:myvEZE3Kf0PQjnUrKwFBbfhjCs9alz8rvv8ujuU6sPyCqxIxrKFZRA>
+    <xme:myvEZPFsHBpgijMZ8HW7DHJccCK07jIYm0mAqG_Jj7RYocsyKSpYoRlSvRbgK3z_r
+    D3bOsCQ5MZXNNhuvIY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrieeigdduheduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:myvEZM5Ahws0Z6Fti2HV7CL8kSy_SrbZMY_Sbxx9dXQfT347gKfP-Q>
+    <xmx:myvEZN0XmxO5j6XNcdHCoRnudYI_QAaQeYPj4xFi6joKwRoWSUVFiA>
+    <xmx:myvEZHF7eZKaSta7Ug36jfJ0rnDDOlRQg4ULRxeVexvvBQiC87wrIA>
+    <xmx:nCvEZNb439Dex4aaWQw5WdvGXT_tu2dwlKreo-BLQHj5EG1ucwKbTw>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 49564B60089; Fri, 28 Jul 2023 16:56:59 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-592-ga9d4a09b4b-fm-defalarms-20230725.001-ga9d4a09b
+Mime-Version: 1.0
+Message-Id: <a2fa1a31-e8bb-4659-9631-398b564e7c2b@app.fastmail.com>
+In-Reply-To: <20230728173103.GA1299743@dev-arch.thelio-3990X>
+References: <1687443219-11946-1-git-send-email-yangtiezhu@loongson.cn>
+ <1687443219-11946-2-git-send-email-yangtiezhu@loongson.cn>
+ <20230727213648.GA354736@dev-arch.thelio-3990X>
+ <1777400a-4d9c-4bdb-9d3b-f8808ef054cc@app.fastmail.com>
+ <20230728173103.GA1299743@dev-arch.thelio-3990X>
+Date:   Fri, 28 Jul 2023 22:56:38 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Nathan Chancellor" <nathan@kernel.org>
+Cc:     "Tiezhu Yang" <yangtiezhu@loongson.cn>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
+        Linux-Arch <linux-arch@vger.kernel.org>, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH v3 1/2] asm-generic: Unify uapi bitsperlong.h for arm64, riscv and
+ loongarch
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jul 25, 2023 at 11:20:37AM +0530, Athira Rajeev escreveu:
-> 
-> 
-> > On 20-Jul-2023, at 10:48 AM, kajoljain <kjain@linux.ibm.com> wrote:
-> > 
-> > 
-> > 
-> > On 7/20/23 10:42, Athira Rajeev wrote:
-> >> 
-> >> 
-> >>> On 19-Jul-2023, at 11:16 PM, Ian Rogers <irogers@google.com> wrote:
-> >>> 
-> >>> On Tue, Jul 18, 2023 at 11:17 PM kajoljain <kjain@linux.ibm.com> wrote:
-> >>>> 
-> >>>> Hi,
-> >>>> 
-> >>>> Looking for review comments on this patchset.
-> >>>> 
-> >>>> Thanks,
-> >>>> Kajol Jain
-> >>>> 
-> >>>> 
-> >>>> On 7/9/23 23:57, Athira Rajeev wrote:
-> >>>>> Patchset covers a set of fixes for coding/formatting issues observed while
-> >>>>> running shellcheck tool on the perf shell scripts.
-> >>>>> 
-> >>>>> This cleanup is a pre-requisite to include a build option for shellcheck
-> >>>>> discussed here: https://www.spinics.net/lists/linux-perf-users/msg25553.html
-> >>>>> First set of patches were posted here:
-> >>>>> https://lore.kernel.org/linux-perf-users/53B7D823-1570-4289-A632-2205EE2B522C@linux.vnet.ibm.com/T/#t
-> >>>>> 
-> >>>>> This patchset covers remaining set of shell scripts which needs
-> >>>>> fix. Patch 1 is resubmission of patch 6 from the initial series.
-> >>>>> Patch 15, 16 and 22 touches code from tools/perf/trace/beauty.
-> >>>>> Other patches are fixes for scripts from tools/perf/tests.
-> >>>>> 
-> >>>>> The shellcheck is run for severity level for errors and warnings.
-> >>>>> Command used:
-> >>>>> 
-> >>>>> # for F in $(find tests/shell/ -perm -o=x -name '*.sh'); do shellcheck -S warning $F; done
-> >>>>> # echo $?
-> >>>>> 0
-> >>>>> 
-> >>> 
-> >>> I don't see anything objectionable in the changes so for the series:
-> >>> Acked-by: Ian Rogers <irogers@google.com>
-> >>> 
-> >>> Some thoughts:
-> >>> - Adding "#!/bin/bash" to scripts in tools/perf/tests/lib - I think
-> >>> we didn't do this to avoid these being included as tests. There are
-> >>> now extra checks when finding shell tests, so I can imagine doing this
-> >>> isn't a regression but just a heads up.
-> >>> - I think James' comment was addressed:
-> >>> https://lore.kernel.org/linux-perf-users/334989bf-5501-494c-f246-81878fd2fed8@arm.com/
-> >>> - Why aren't these changes being mailed to LKML? The wider community
-> >>> on LKML have thoughts on shell scripts, plus it makes the changes miss
-> >>> my mail filters.
-> >>> - Can we automate this testing into the build? For example, following
-> >>> a similar kernel build pattern we run a python test and make the log
-> >>> output a requirement here:
-> >>> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/pmu-events/Build?h=perf-tools-next#n30
-> >>>  I think we can translate:
-> >>> for F in $(find tests/shell/ -perm -o=x -name '*.sh'); do shellcheck
-> >>> -S warning $F; done
-> >>>  into a rule in make for log files that are then a dependency on the
-> >>> perf binary. We can then parallel shellcheck during the build and
-> >>> avoid regressions. We probably need a CONFIG_SHELLCHECK feature check
-> >>> in the build to avoid not having shellcheck breaking the build.
-> >> 
-> >> Hi Ian
-> >> 
-> >> Thanks for the comments.
-> >> Yes, next step after this is to include build option for shellcheck by updating Makefile.
-> >> We will surely get into that build option enablement patch once we have all these corrections in place.
-> >> 
-> >> Thanks
-> >> Athira
-> >>> 
-> > 
-> > Hi Ian,
-> >   Thanks for reviewing the patches. As athira mentioned our next is to
-> > include build option. So, we will work on it next once all the
-> > correction done.
-> > 
-> > Thanks,
-> > Kajol Jain
-> 
-> Hi Arnaldo,  Namhyung
-> 
-> Can you have this patchset applied along with Acked-by from Ian ?
-> Our next step is to add a build option for shellcheck by updating Makefile and will be working on that.
+On Fri, Jul 28, 2023, at 19:31, Nathan Chancellor wrote:
+> On Fri, Jul 28, 2023 at 01:00:30PM +0200, Arnd Bergmann wrote:
+>>
+>> of the uapi version. The sanity check in the kernel-side header
+>> is intended to cross-check the CONFIG_64BIT value against the
+>> __BITS_PER_LONG constant from the header.
+>> 
+>> My first guess would be that this only worked by accident if the headers
+>> defaulted to "#define __BITS_PER_LONG 32" in and #undef CONFIG_64BIT"
+>> when include/generated/autoconf.h, but now the __BITS_PER_LONG value
+>> is actually correct.
+>
+> That seems like a reasonable theory. I am still busy looking into other
+> things today but I can try to double back to this on Monday if you don't
+> make any progress.
 
-I'll check it now
- 
-> Thanks
-> Athira 
-> > 
-> >>> Thanks,
-> >>> Ian
-> >>> 
-> >>>>> Changelog:
-> >>>>> v1 -> v2:
-> >>>>> - Rebased on top of perf-tools-next from:
-> >>>>> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=perf-tools-next
-> >>>>> 
-> >>>>> - Fixed shellcheck errors and warnings reported for newly
-> >>>>>   added changes from perf-tools-next branch
-> >>>>> 
-> >>>>> - Addressed review comment from James clark for patch
-> >>>>>   number 13 from V1. The changes in patch 13 were not necessary
-> >>>>>   since the file "tests/shell/lib/coresight.sh" is sourced from
-> >>>>>   other test files.
-> >>>>> 
-> >>>>> Akanksha J N (1):
-> >>>>> tools/perf/tests: Fix shellcheck warnings for
-> >>>>>   trace+probe_vfs_getname.sh
-> >>>>> 
-> >>>>> Athira Rajeev (14):
-> >>>>> tools/perf/tests: fix test_arm_spe_fork.sh signal case issues
-> >>>>> tools/perf/tests: Fix unused variable references in
-> >>>>>   stat+csv_summary.sh testcase
-> >>>>> tools/perf/tests: fix shellcheck warning for
-> >>>>>   test_perf_data_converter_json.sh testcase
-> >>>>> tools/perf/tests: Fix shellcheck issue for stat_bpf_counters.sh
-> >>>>>   testcase
-> >>>>> tools/perf/tests: Fix shellcheck issues in
-> >>>>>   tests/shell/stat+shadow_stat.sh tetscase
-> >>>>> tools/perf/tests: Fix shellcheck warnings for
-> >>>>>   thread_loop_check_tid_10.sh
-> >>>>> tools/perf/tests: Fix shellcheck warnings for unroll_loop_thread_10.sh
-> >>>>> tools/perf/tests: Fix shellcheck warnings for lib/probe_vfs_getname.sh
-> >>>>> tools/perf/tests: Fix the shellcheck warnings in lib/waiting.sh
-> >>>>> tools/perf/trace: Fix x86_arch_prctl.sh to address shellcheck warnings
-> >>>>> tools/perf/arch/x86: Fix syscalltbl.sh to address shellcheck warnings
-> >>>>> tools/perf/tests/shell: Fix the shellcheck warnings in
-> >>>>>   record+zstd_comp_decomp.sh
-> >>>>> tools/perf/tests/shell: Fix shellcheck warning for stat+std_output.sh
-> >>>>>   testcase
-> >>>>> tools/perf/tests: Fix shellcheck warning for stat+std_output.sh
-> >>>>>   testcase
-> >>>>> 
-> >>>>> Kajol Jain (11):
-> >>>>> tools/perf/tests: Fix shellcheck warning for probe_vfs_getname.sh
-> >>>>>   testcase
-> >>>>> tools/perf/tests: Fix shellcheck warning for record_offcpu.sh testcase
-> >>>>> tools/perf/tests: Fix shellcheck issue for lock_contention.sh testcase
-> >>>>> tools/perf/tests: Fix shellcheck issue for stat_bpf_counters_cgrp.sh
-> >>>>>   testcase
-> >>>>> tools/perf/tests: Fix shellcheck warning for asm_pure_loop.sh shell
-> >>>>>   script
-> >>>>> tools/perf/tests: Fix shellcheck warning for memcpy_thread_16k_10.sh
-> >>>>>   shell script
-> >>>>> tools/perf/tests: Fix shellcheck warning for probe.sh shell script
-> >>>>> tools/perf/trace: Fix shellcheck issue for arch_errno_names.sh script
-> >>>>> tools/perf: Fix shellcheck issue for check-headers.sh script
-> >>>>> tools/shell/coresight: Fix shellcheck warning for
-> >>>>>   thread_loop_check_tid_2.sh shell script
-> >>>>> tools/perf/tests/shell/lib: Fix shellcheck warning for stat_output.sh
-> >>>>>   shell script
-> >>>>> 
-> >>>>> .../arch/x86/entry/syscalls/syscalltbl.sh     |  2 +-
-> >>>>> tools/perf/check-headers.sh                   |  6 ++--
-> >>>>> .../tests/shell/coresight/asm_pure_loop.sh    |  2 +-
-> >>>>> .../shell/coresight/memcpy_thread_16k_10.sh   |  2 +-
-> >>>>> .../coresight/thread_loop_check_tid_10.sh     |  2 +-
-> >>>>> .../coresight/thread_loop_check_tid_2.sh      |  2 +-
-> >>>>> .../shell/coresight/unroll_loop_thread_10.sh  |  2 +-
-> >>>>> tools/perf/tests/shell/lib/probe.sh           |  1 +
-> >>>>> .../perf/tests/shell/lib/probe_vfs_getname.sh |  5 ++--
-> >>>>> tools/perf/tests/shell/lib/stat_output.sh     |  1 +
-> >>>>> tools/perf/tests/shell/lib/waiting.sh         |  1 +
-> >>>>> tools/perf/tests/shell/lock_contention.sh     | 12 ++++----
-> >>>>> tools/perf/tests/shell/probe_vfs_getname.sh   |  4 +--
-> >>>>> .../tests/shell/record+zstd_comp_decomp.sh    | 14 +++++-----
-> >>>>> tools/perf/tests/shell/record_offcpu.sh       |  6 ++--
-> >>>>> tools/perf/tests/shell/stat+csv_output.sh     |  2 +-
-> >>>>> tools/perf/tests/shell/stat+csv_summary.sh    |  4 +--
-> >>>>> tools/perf/tests/shell/stat+shadow_stat.sh    |  4 +--
-> >>>>> tools/perf/tests/shell/stat+std_output.sh     |  3 +-
-> >>>>> tools/perf/tests/shell/stat_bpf_counters.sh   |  4 +--
-> >>>>> .../tests/shell/stat_bpf_counters_cgrp.sh     | 28 ++++++++-----------
-> >>>>> tools/perf/tests/shell/test_arm_spe_fork.sh   |  2 +-
-> >>>>> .../shell/test_perf_data_converter_json.sh    |  2 +-
-> >>>>> .../tests/shell/trace+probe_vfs_getname.sh    |  6 ++--
-> >>>>> tools/perf/trace/beauty/arch_errno_names.sh   | 15 ++++------
-> >>>>> tools/perf/trace/beauty/x86_arch_prctl.sh     |  6 ++--
-> >>>>> 26 files changed, 67 insertions(+), 71 deletions(-)
-> 
-> 
+I tried reproducing this today on arm64 Debian with linux-6.5-rc3
+and clang-14.0.6 but I don't see the problem here. With 'make V=1'
+I see command for building scripts/sorttable is
 
--- 
+clang -Wp,-MMD,scripts/.sorttable.d -Wall -Wmissing-prototypes \
+ -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu11   \
+ -I./tools/include -I./tools/arch/x86/include -DUNWINDER_ORC_ENABLED \
+ -o scripts/sorttable scripts/sorttable.c   -lpthread
 
-- Arnaldo
+which does create an arm64 executable but includes the x86 headers,
+which is clearly a bug by itself, it just doesn't trigger the problem
+for me.
+
+I also noticed that your command line includes CROSS_COMPILE=x86_64-linux-
+rather than CROSS_COMPILE=x86_64-linux-gnu-, and I think we've had
+problems with that in the past, when "clang --target=x86_64-linux"
+fails to find the glibc system headers.
+
+     Arnd
