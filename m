@@ -2,24 +2,24 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9481DC04E69
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 06:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 561EBC0015E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 06:17:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233428AbjG1GRi (ORCPT
+        id S233449AbjG1GRj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jul 2023 02:17:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42866 "EHLO
+        Fri, 28 Jul 2023 02:17:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233418AbjG1GRh (ORCPT
+        with ESMTP id S232575AbjG1GRi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jul 2023 02:17:37 -0400
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13230272C;
-        Thu, 27 Jul 2023 23:17:34 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0VoOxEHt_1690525049;
-Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VoOxEHt_1690525049)
+        Fri, 28 Jul 2023 02:17:38 -0400
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF323273D;
+        Thu, 27 Jul 2023 23:17:36 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0VoOxEJY_1690525052;
+Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VoOxEJY_1690525052)
           by smtp.aliyun-inc.com;
-          Fri, 28 Jul 2023 14:17:30 +0800
+          Fri, 28 Jul 2023 14:17:33 +0800
 From:   Jing Zhang <renyu.zj@linux.alibaba.com>
 To:     John Garry <john.g.garry@oracle.com>,
         Ian Rogers <irogers@google.com>
@@ -33,9 +33,9 @@ Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
         Zhuo Song <zhuo.song@linux.alibaba.com>,
         Jing Zhang <renyu.zj@linux.alibaba.com>,
         Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: [PATCH v5 1/5] perf metric: Event "Compat" value supports matching multiple identifiers
-Date:   Fri, 28 Jul 2023 14:17:16 +0800
-Message-Id: <1690525040-77423-2-git-send-email-renyu.zj@linux.alibaba.com>
+Subject: [PATCH v5 5/5] perf vendor events: Add JSON metrics for Arm CMN
+Date:   Fri, 28 Jul 2023 14:17:20 +0800
+Message-Id: <1690525040-77423-6-git-send-email-renyu.zj@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1690525040-77423-1-git-send-email-renyu.zj@linux.alibaba.com>
 References: <1690525040-77423-1-git-send-email-renyu.zj@linux.alibaba.com>
@@ -43,96 +43,95 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The jevent "Compat" is used for uncore PMU alias or metric definitions.
-
-The same PMU driver has different PMU identifiers due to different hardware
-versions and types, but they may have some common PMU event/metric. Since a
-Compat value can only match one identifier, when adding the same event
-alias and metric to PMUs with different identifiers, each identifier needs
-to be defined once, which is not streamlined enough.
-
-So let "Compat" value supports matching multiple identifiers. For example,
-the Compat value {abcde;123*} can match the PMU identifier "abcde" and the
-the PMU identifier with the prefix "123", where "*" is a wildcard.
-Tokens in Unit field are delimited by ';' with no spaces.
+Add JSON metrics for Arm CMN. Currently just add part of CMN PMU
+metrics which are general and compatible for any SoC with CMN-ANY.
 
 Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
 ---
- tools/perf/util/metricgroup.c |  2 +-
- tools/perf/util/pmu.c         | 27 ++++++++++++++++++++++++++-
- tools/perf/util/pmu.h         |  1 +
- 3 files changed, 28 insertions(+), 2 deletions(-)
+ .../pmu-events/arch/arm64/arm/cmn/sys/metric.json  | 74 ++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 5e9c657..ff81bc5 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -477,7 +477,7 @@ static int metricgroup__sys_event_iter(const struct pmu_metric *pm,
- 
- 	while ((pmu = perf_pmu__scan(pmu))) {
- 
--		if (!pmu->id || strcmp(pmu->id, pm->compat))
-+		if (!pmu->id || !pmu_uncore_identifier_match(pmu->id, pm->compat))
- 			continue;
- 
- 		return d->fn(pm, table, d->data);
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index ad209c8..3ae249b 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -776,6 +776,31 @@ static bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
- 	return res;
- }
- 
-+bool pmu_uncore_identifier_match(const char *id, const char *compat)
-+{
-+	char *tmp = NULL, *tok, *str;
-+	bool res;
-+	int n;
-+
-+	str = strdup(compat);
-+	if (!str)
-+		return false;
-+
-+	tok = strtok_r(str, ";", &tmp);
-+	for (; tok; tok = strtok_r(NULL, ";", &tmp)) {
-+		n = strlen(tok);
-+		if ((tok[n - 1] == '*' && !strncmp(id, tok, n - 1)) ||
-+		    !strcmp(id, tok)) {
-+			res = true;
-+			goto out;
-+		}
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json
+new file mode 100644
+index 0000000..64db534
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json
+@@ -0,0 +1,74 @@
++[
++	{
++		"MetricName": "slc_miss_rate",
++		"BriefDescription": "The system level cache miss rate.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "hnf_cache_miss / hnf_slc_sf_cache_access",
++		"ScaleUnit": "100%",
++		"Unit": "arm_cmn",
++		"Compat": "434*;436*;43c*;43a*"
++	},
++	{
++		"MetricName": "hnf_message_retry_rate",
++		"BriefDescription": "HN-F message retry rate indicates whether a lack of credits is causing the bottlenecks.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "hnf_pocq_retry / hnf_pocq_reqs_recvd",
++		"ScaleUnit": "100%",
++		"Unit": "arm_cmn",
++		"Compat": "434*;436*;43c*;43a*"
++	},
++	{
++		"MetricName": "sf_hit_rate",
++		"BriefDescription": "Snoop filter hit rate can be used to measure the snoop filter efficiency.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "hnf_sf_hit / hnf_slc_sf_cache_access",
++		"ScaleUnit": "100%",
++		"Unit": "arm_cmn",
++		"Compat": "434*;436*;43c*;43a*"
++	},
++	{
++		"MetricName": "mc_message_retry_rate",
++		"BriefDescription": "The memory controller request retries rate indicates whether the memory controller is the bottleneck.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "hnf_mc_retries / hnf_mc_reqs",
++		"ScaleUnit": "100%",
++		"Unit": "arm_cmn",
++		"Compat": "434*;436*;43c*;43a*"
++	},
++	{
++		"MetricName": "rni_actual_read_bandwidth.all",
++		"BriefDescription": "This event measure the actual bandwidth that RN-I bridge sends to the interconnect.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "rnid_rxdat_flits * 32 / 1e6 / duration_time",
++		"ScaleUnit": "1MB/s",
++		"Unit": "arm_cmn",
++		"Compat": "434*;436*;43c*;43a*"
++	},
++	{
++		"MetricName": "rni_actual_write_bandwidth.all",
++		"BriefDescription": "This event measures the actual write bandwidth at RN-I bridges.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "rnid_txdat_flits * 32 / 1e6 / duration_time",
++		"ScaleUnit": "1MB/s",
++		"Unit": "arm_cmn",
++		"Compat": "434*;436*;43c*;43a*"
++	},
++	{
++		"MetricName": "rni_retry_rate",
++		"BriefDescription": "RN-I bridge retry rate indicates whether the memory controller is the bottleneck.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "rnid_txreq_flits_retried / rnid_txreq_flits_total",
++		"ScaleUnit": "100%",
++		"Unit": "arm_cmn",
++		"Compat": "434*;436*;43c*;43a*"
++	},
++	{
++		"MetricName": "sbsx_actual_write_bandwidth.all",
++		"BriefDescription": "sbsx actual write bandwidth.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "sbsx_txdat_flitv * 32 / 1e6 / duration_time",
++		"ScaleUnit": "1MB/s",
++		"Unit": "arm_cmn",
++		"Compat": "434*;436*;43c*;43a*"
 +	}
-+	res = false;
-+out:
-+	free(str);
-+	return res;
-+}
-+
- struct pmu_add_cpu_aliases_map_data {
- 	struct list_head *head;
- 	const char *name;
-@@ -847,7 +872,7 @@ static int pmu_add_sys_aliases_iter_fn(const struct pmu_event *pe,
- 	if (!pe->compat || !pe->pmu)
- 		return 0;
- 
--	if (!strcmp(pmu->id, pe->compat) &&
-+	if (pmu_uncore_identifier_match(pmu->id, pe->compat) &&
- 	    pmu_uncore_alias_match(pe->pmu, pmu->name)) {
- 		__perf_pmu__new_alias(idata->head, -1,
- 				      (char *)pe->name,
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index b9a02de..9d4385d 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -241,6 +241,7 @@ void pmu_add_cpu_aliases_table(struct list_head *head, struct perf_pmu *pmu,
- char *perf_pmu__getcpuid(struct perf_pmu *pmu);
- const struct pmu_events_table *pmu_events_table__find(void);
- const struct pmu_metrics_table *pmu_metrics_table__find(void);
-+bool pmu_uncore_identifier_match(const char *id, const char *compat);
- void perf_pmu_free_alias(struct perf_pmu_alias *alias);
- 
- int perf_pmu__convert_scale(const char *scale, char **end, double *sval);
++]
 -- 
 1.8.3.1
 
