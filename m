@@ -2,170 +2,320 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A15BEC001E0
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 02:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FF7C0015E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 04:09:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232103AbjG1CZE (ORCPT
+        id S229630AbjG1EIp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Jul 2023 22:25:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60660 "EHLO
+        Fri, 28 Jul 2023 00:08:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229812AbjG1CZD (ORCPT
+        with ESMTP id S233193AbjG1EIe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Jul 2023 22:25:03 -0400
-Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB95930DC;
-        Thu, 27 Jul 2023 19:24:57 -0700 (PDT)
-Received: by mail-io1-xd36.google.com with SMTP id ca18e2360f4ac-78847bb8940so68497539f.0;
-        Thu, 27 Jul 2023 19:24:57 -0700 (PDT)
+        Fri, 28 Jul 2023 00:08:34 -0400
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A25930EB
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 21:08:30 -0700 (PDT)
+Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-4036bd4fff1so169651cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 21:08:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690511097; x=1691115897;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+        d=google.com; s=20221208; t=1690517309; x=1691122109;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3qde5oqHOAvsDSREhKG9It0ouCEwVKT5mPlK+bDyfn8=;
-        b=UkixTDoY7LOV17oa9nRZhZAQaN2Mj+2yTSttLogXFgCMFPM9B5TBsPHse2aoZ33Ode
-         xYrl26hQZQ1+kTEVHKTh8uweBic+vNFuELyC07uDGSPXNddhvxAKLtcYmHtL7begeeXc
-         6cvN7hxxx1EUOEN/ziwSi2+yUkTs4EufWFmT+XqvksNatla9NJCK0qJDIFa6tvU4hoSr
-         G1MMOQ6wwsPUifF8YNPoDSWAQjujyOVnBXH1paGDHnjNwkNpcjJxeH+dFidwcAYpq0tU
-         jCSfRQtCwzAS5DldFHdhWfiu5dfX6LFymiJgnpfG77fW3/MSbxxR4B9CJYXSX65fiU/B
-         qj0Q==
+        bh=jTPzb3rb/gmto9ara7xlmi33Mo+qRIpZpkA6OxihvQI=;
+        b=2v+eCZWRkCo+GrbSIBgKeqXZ+INlQ7KZlqy8x1oUUUT9CmHWsmTn5ji26xvwHTwK/k
+         LBfIFSM+E18RKKqRVCyAeq/R4Q3A+k57eCG4390hy28v4goVzd8AkcTjJvBD2LW3kq15
+         Cqav8MYqa8CzocyXEwJGLCdtTTU7gg1n+fhrHmX4jWTD2K65t7ubvtAkI9Gydabw6VmK
+         +GQORiAC36A9caQnBoOxl6H64EaX439vlffHYNg745zBYzoxN0Iz8+CqsZoXyuuWQC1E
+         P/ByzynMAi8CqQocpXGfSd4W4FTFw+UT99e1w3EafB0Hv2cfkpPZZeIcnHRAJDt+Mj+3
+         hGEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690511097; x=1691115897;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=3qde5oqHOAvsDSREhKG9It0ouCEwVKT5mPlK+bDyfn8=;
-        b=No43+/o9ZgMIb6gkILBnxROG3+b2LqLQDO+5VqLjyf9QTmNErG2QEycOjcBm9LQJN/
-         vhKK4F4j0ykhWCsy6YKoremtKBQlZSgNEs1+4ZHDGXCmiFnhaJASGkM8kB8jxSJ99/uG
-         UubbrVPDKYriHWmBYc7IJHVNsFHiKOXBaqTep+FBPxYIlpl+D8xnnoYUXKnZhhcSjO8J
-         qwnUrfMgi8vJWmugYLfpKCzyE2cbebeGwWqOcMBhCMkF1LlJWbMXGiFV7bbfMLEFgOhI
-         Mxoa2uC6D+dZ2H8vggq3mfLLYG1+Haoi+H2GPJllLxRRtJO9ekwB3eewH64nhuGc/A3n
-         Cd+g==
-X-Gm-Message-State: ABy/qLb03OYNgR/yUqO2bmrv7/13dSf2S+ccxrvAOCUf9mprw++z0kkN
-        OkmAAFzx3weY7uvWAg5cwy4=
-X-Google-Smtp-Source: APBJJlF6t68jjR7oPSohtE8LKCrzR5k41/zGO4rIXzlObMnzhYO/Huq9UTUwM+T5ScYQqZozzckmCw==
-X-Received: by 2002:a05:6e02:128f:b0:343:c8b1:b7f0 with SMTP id y15-20020a056e02128f00b00343c8b1b7f0mr1280054ilq.23.1690511097076;
-        Thu, 27 Jul 2023 19:24:57 -0700 (PDT)
-Received: from bangji.roam.corp.google.com ([101.235.25.38])
-        by smtp.gmail.com with ESMTPSA id gz24-20020a17090b0ed800b002677739860fsm1696204pjb.34.2023.07.27.19.24.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jul 2023 19:24:56 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Anup Sharma <anupnewsmail@gmail.com>, stable@vger.kernel.org
-Subject: [PATCH v2 2/2] perf build: Include generated header files properly
-Date:   Thu, 27 Jul 2023 19:24:47 -0700
-Message-ID: <20230728022447.1323563-2-namhyung@kernel.org>
-X-Mailer: git-send-email 2.41.0.487.g6d72f3e995-goog
-In-Reply-To: <20230728022447.1323563-1-namhyung@kernel.org>
-References: <20230728022447.1323563-1-namhyung@kernel.org>
+        d=1e100.net; s=20221208; t=1690517309; x=1691122109;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jTPzb3rb/gmto9ara7xlmi33Mo+qRIpZpkA6OxihvQI=;
+        b=jCNdTRdrfOHp/FYfuYnRK+EkDoDWtCgGlk9BD37WeHHvQl6JRVH/zG8stLW48NVv6N
+         7ixkLySMnTTOHvC528MQkuiyIfhJxjWmPNTHT+Ks+UMMuAp11TTEw8AsS9iq1McphUmy
+         osfDGfArJ2nxjZD+QiIZKrjsSRUcV+YzuCAzqs3gYbtCz9Yyphx+bDVlSdR9cVCfLZ2c
+         r6fEAnKDCCY4UwOIF9pMTin8d3davHrI9qY00hsu43DItlxA6bmvHzEJoc+OM+KS+AYy
+         HsEz4JsSChZ2nF9S76hoXu33o6erhg2EhYcjA4kmT8W3E3PTHrgUiZTvMwbm59F60wlI
+         IAZQ==
+X-Gm-Message-State: ABy/qLY5QzVJq2KN0wxmNDuk0KDDlRhRAT1h9Hw6p4/hPWl/Z4wXEYwz
+        n0AunLBIitLi8mGYMkSbxN4Rt3IyyigXq9TulJxSvA==
+X-Google-Smtp-Source: APBJJlF/B8BCPcpCjkUOs2mffCGLpBCM9Xl7lBDh1eCwox9S7i16Z0rf9/jcT2gk1wOiKg+kcz0CxT0Pc/scfQTmiyA=
+X-Received: by 2002:ac8:59c7:0:b0:3ef:404a:b291 with SMTP id
+ f7-20020ac859c7000000b003ef404ab291mr97010qtf.7.1690517309321; Thu, 27 Jul
+ 2023 21:08:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <202307271322.40c2fc50-oliver.sang@intel.com>
+In-Reply-To: <202307271322.40c2fc50-oliver.sang@intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 27 Jul 2023 21:08:17 -0700
+Message-ID: <CAP-5=fV3N1h84yMBN2mA2TpasCy2trX0_cvq6MxJSH3oMVMjGQ@mail.gmail.com>
+Subject: Re: [linus:master] [perf pmu] a0c41caeba: kmsg.sanitizer.direct_leak/__interceptor_malloc/perf_cpu_map__alloc/perf_cpu_map__empty_new/cpu_map__from_range/cpu_map__new_data/perf_event__fprintf_event_update
+To:     kernel test robot <oliver.sang@intel.com>
+Cc:     oe-lkp@lists.linux.dev, lkp@intel.com,
+        linux-kernel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ali Saidi <alisaidi@amazon.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Clark <james.clark@arm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Kang Minchul <tegongkang@gmail.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Ming Wang <wangming01@loongson.cn>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Rob Herring <robh@kernel.org>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The flex and bison generate header files from the source.  When user
-specified a build directory with O= option, it'd generate files under
-the directory.  The build command has -I option to specify the header
-include directory.
+On Thu, Jul 27, 2023 at 6:07=E2=80=AFPM kernel test robot <oliver.sang@inte=
+l.com> wrote:
+>
+>
+>
+> Hello,
+>
+> kernel test robot noticed "kmsg.sanitizer.direct_leak/__interceptor_mallo=
+c/perf_cpu_map__alloc/perf_cpu_map__empty_new/cpu_map__from_range/cpu_map__=
+new_data/perf_event__fprintf_event_update" on:
+>
+> commit: a0c41caebab2fa224454d50dd4e29ae008ead25f ("perf pmu: Add CPU map =
+for "cpu" PMUs")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+>
+> [test failed on linus/master 18b44bc5a67275641fb26f2c54ba7eef80ac5950]
+> [test failed on linux-next/master 0ba5d07205771c50789fd9063950aa75e7f1183=
+f]
+>
+> in testcase: perf-test
+> version: perf-test-x86_64-git-1_20220520
+> with following parameters:
+>
+>         type: lkp
+>         group: group-01
+>
+> test-description: The internal Perf Test suite.
+>
+>
+> compiler: gcc-12
+> test machine: 224 threads 2 sockets Intel(R) Xeon(R) Platinum 8480+ (Sapp=
+hire Rapids) with 256G memory
+>
+> (please refer to attached dmesg/kmsg for entire log/backtrace)
+>
+>
+> we also noticed there are 2 other "Direct leak" but exist on both this co=
+mmit
+> and parent. (there are 3 "Indrect leak", but since exist on both this com=
+mit
+> and parent, we don't highlight below, details are in attached dmesg)
+>
+> we are not sure enough the impact of those 2 other "Direct leak", which w=
+e will
+> check further if we can capture the first commit caused them. we just rep=
+ort
+> this difference we found in our tests FYI.
+>
+>
+> 1578e63d3ac292ab a0c41caebab2fa224454d50dd4e
+> ---------------- ---------------------------
+>        fail:runs  %reproduction    fail:runs
+>            |             |             |
+>           6:6            0%           6:6     kmsg.sanitizer.direct_leak/=
+__interceptor_calloc/map__new2/machine__addnew_module_map/machine__process_=
+kernel_mmap_event/machine__process_mmap_event/perf_event__process_mmap
+>           6:6            0%           6:6     kmsg.sanitizer.direct_leak/=
+__interceptor_malloc/__maps__insert/maps__insert/thread__insert_map/machine=
+__process_mmap2_event/perf_event__process_mmap2
+>            :6          100%           6:6     kmsg.sanitizer.direct_leak/=
+__interceptor_malloc/perf_cpu_map__alloc/perf_cpu_map__empty_new/cpu_map__f=
+rom_range/cpu_map__new_data/perf_event__fprintf_event_update
+>
+>
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <oliver.sang@intel.com>
+> | Closes: https://lore.kernel.org/oe-lkp/202307271322.40c2fc50-oliver.san=
+g@intel.com
+>
+>
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =3D=3D16107=3D=3DERROR: LeakSanitizer: detected memory leaks
+>
+> Direct leak of 17544 byte(s) in 51 object(s) allocated from:     <----- a=
+lso happens on parent
+>     #0 0x7f77a26ad037 in __interceptor_calloc ../../../../src/libsanitize=
+r/asan/asan_malloc_linux.cpp:154
+>     #1 0x55eae21bcf4a in map__new2 util/map.c:226
+>     #2 0x55eae21a1b8b in machine__addnew_module_map util/machine.c:1039
+>     #3 0x55eae21a80d9 in machine__process_kernel_mmap_event util/machine.=
+c:1809
+>     #4 0x55eae21aa396 in machine__process_mmap_event util/machine.c:1996
+>     #5 0x55eae2069f1c in perf_event__process_mmap util/event.c:371
+>     #6 0x55eae21daa15 in machines__deliver_event util/session.c:1565
+>     #7 0x55eae21dc2f5 in perf_session__deliver_event util/session.c:1645
+>     #8 0x55eae21df380 in perf_session__process_event util/session.c:1881
+>     #9 0x55eae21e622c in process_simple util/session.c:2442
+>     #10 0x55eae21e527c in reader__read_event util/session.c:2371
+>     #11 0x55eae21e5bbc in reader__process_events util/session.c:2420
+>     #12 0x55eae21e69e5 in __perf_session__process_events util/session.c:2=
+467
+>     #13 0x55eae21e991d in perf_session__process_events util/session.c:263=
+3
+>     #14 0x55eae1d248dc in __cmd_report /usr/src/perf_selftests-x86_64-rhe=
+l-8.3-bpf-a0c41caebab2fa224454d50dd4e29ae008ead25f/tools/perf/builtin-repor=
+t.c:989
+>     #15 0x55eae1d30f76 in cmd_report /usr/src/perf_selftests-x86_64-rhel-=
+8.3-bpf-a0c41caebab2fa224454d50dd4e29ae008ead25f/tools/perf/builtin-report.=
+c:1709
+>     #16 0x55eae200824f in run_builtin /usr/src/perf_selftests-x86_64-rhel=
+-8.3-bpf-a0c41caebab2fa224454d50dd4e29ae008ead25f/tools/perf/perf.c:323
+>     #17 0x55eae2008ad1 in handle_internal_command /usr/src/perf_selftests=
+-x86_64-rhel-8.3-bpf-a0c41caebab2fa224454d50dd4e29ae008ead25f/tools/perf/pe=
+rf.c:377
+>     #18 0x55eae2009003 in run_argv /usr/src/perf_selftests-x86_64-rhel-8.=
+3-bpf-a0c41caebab2fa224454d50dd4e29ae008ead25f/tools/perf/perf.c:421
+>     #19 0x55eae200972f in main /usr/src/perf_selftests-x86_64-rhel-8.3-bp=
+f-a0c41caebab2fa224454d50dd4e29ae008ead25f/tools/perf/perf.c:537
+>     #20 0x7f77a1854d09 in __libc_start_main (/lib/x86_64-linux-gnu/libc.s=
+o.6+0x23d09)
 
-But the -I option only affects the files included like <...>.  Let's
-change the flex and bison headers to use it instead of "...".
+This was already fixed by:
+https://lore.kernel.org/r/20230608232823.4027869-20-irogers@google.com
 
-Fixes: 80eeb67fe577 ("perf jevents: Program to convert JSON file")
-Cc: stable@vger.kernel.org
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/pmu-events/jevents.py | 2 +-
- tools/perf/util/bpf-filter.c     | 4 ++--
- tools/perf/util/expr.c           | 4 ++--
- tools/perf/util/parse-events.c   | 4 ++--
- tools/perf/util/pmu.c            | 4 ++--
- 5 files changed, 9 insertions(+), 9 deletions(-)
+Thanks,
+Ian
 
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index 12e80bb7939b..82c42c46d886 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -999,7 +999,7 @@ such as "arm/cortex-a34".''',
-   _args = ap.parse_args()
- 
-   _args.output_file.write("""
--#include "pmu-events/pmu-events.h"
-+#include <pmu-events/pmu-events.h>
- #include "util/header.h"
- #include "util/pmu.h"
- #include <string.h>
-diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
-index 0b30688d78a7..47f01df658d9 100644
---- a/tools/perf/util/bpf-filter.c
-+++ b/tools/perf/util/bpf-filter.c
-@@ -9,8 +9,8 @@
- #include "util/evsel.h"
- 
- #include "util/bpf-filter.h"
--#include "util/bpf-filter-flex.h"
--#include "util/bpf-filter-bison.h"
-+#include <util/bpf-filter-flex.h>
-+#include <util/bpf-filter-bison.h>
- 
- #include "bpf_skel/sample-filter.h"
- #include "bpf_skel/sample_filter.skel.h"
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index 4814262e3805..7410a165f68b 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -10,8 +10,8 @@
- #include "debug.h"
- #include "evlist.h"
- #include "expr.h"
--#include "expr-bison.h"
--#include "expr-flex.h"
-+#include <util/expr-bison.h>
-+#include <util/expr-flex.h>
- #include "util/hashmap.h"
- #include "smt.h"
- #include "tsc.h"
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index acde097e327c..f3773467c103 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -18,8 +18,8 @@
- #include "debug.h"
- #include <api/fs/tracing_path.h>
- #include <perf/cpumap.h>
--#include "parse-events-bison.h"
--#include "parse-events-flex.h"
-+#include <util/parse-events-bison.h>
-+#include <util/parse-events-flex.h>
- #include "pmu.h"
- #include "pmus.h"
- #include "asm/bug.h"
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 7f984a7f16ca..b6654b9f55d2 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -19,8 +19,8 @@
- #include "evsel.h"
- #include "pmu.h"
- #include "pmus.h"
--#include "pmu-bison.h"
--#include "pmu-flex.h"
-+#include <util/pmu-bison.h>
-+#include <util/pmu-flex.h>
- #include "parse-events.h"
- #include "print-events.h"
- #include "header.h"
--- 
-2.41.0.487.g6d72f3e995-goog
-
+> Direct leak of 904 byte(s) in 1 object(s) allocated from:
+>     #0 0x7f77a26ace8f in __interceptor_malloc ../../../../src/libsanitize=
+r/asan/asan_malloc_linux.cpp:145
+>     #1 0x55eae2648cdd in perf_cpu_map__alloc (/usr/src/perf_selftests-x86=
+_64-rhel-8.3-bpf-a0c41caebab2fa224454d50dd4e29ae008ead25f/tools/perf/perf+0=
+x19a5cdd)
+>     #2 0x55eae22f7525 in perf_cpu_map__empty_new util/cpumap.c:163
+>     #3 0x55eae22f6dae in cpu_map__from_range util/cpumap.c:121
+>     #4 0x55eae22f7278 in cpu_map__new_data util/cpumap.c:144
+>     #5 0x55eae2179b4c in perf_event__fprintf_event_update util/header.c:4=
+348
+>     #6 0x55eae217a084 in perf_event__process_event_update util/header.c:4=
+410
+>     #7 0x55eae21dcbb1 in perf_session__process_user_event util/session.c:=
+1679
+>     #8 0x55eae21df1b7 in perf_session__process_event util/session.c:1867
+>     #9 0x55eae21e622c in process_simple util/session.c:2442
+>     #10 0x55eae21e527c in reader__read_event util/session.c:2371
+>     #11 0x55eae21e5bbc in reader__process_events util/session.c:2420
+>     #12 0x55eae21e69e5 in __perf_session__process_events util/session.c:2=
+467
+>     #13 0x55eae21e991d in perf_session__process_events util/session.c:263=
+3
+>     #14 0x55eae1d248dc in __cmd_report /usr/src/perf_selftests-x86_64-rhe=
+l-8.3-bpf-a0c41caebab2fa224454d50dd4e29ae008ead25f/tools/perf/builtin-repor=
+t.c:989
+>     #15 0x55eae1d30f76 in cmd_report /usr/src/perf_selftests-x86_64-rhel-=
+8.3-bpf-a0c41caebab2fa224454d50dd4e29ae008ead25f/tools/perf/builtin-report.=
+c:1709
+>     #16 0x55eae200824f in run_builtin /usr/src/perf_selftests-x86_64-rhel=
+-8.3-bpf-a0c41caebab2fa224454d50dd4e29ae008ead25f/tools/perf/perf.c:323
+>     #17 0x55eae2008ad1 in handle_internal_command /usr/src/perf_selftests=
+-x86_64-rhel-8.3-bpf-a0c41caebab2fa224454d50dd4e29ae008ead25f/tools/perf/pe=
+rf.c:377
+>     #18 0x55eae2009003 in run_argv /usr/src/perf_selftests-x86_64-rhel-8.=
+3-bpf-a0c41caebab2fa224454d50dd4e29ae008ead25f/tools/perf/perf.c:421
+>     #19 0x55eae200972f in main /usr/src/perf_selftests-x86_64-rhel-8.3-bp=
+f-a0c41caebab2fa224454d50dd4e29ae008ead25f/tools/perf/perf.c:537
+>     #20 0x7f77a1854d09 in __libc_start_main (/lib/x86_64-linux-gnu/libc.s=
+o.6+0x23d09)
+>
+> Direct leak of 64 byte(s) in 2 object(s) allocated from:     <----- also =
+happens on parent
+>     #0 0x7f77a26ace8f in __interceptor_malloc ../../../../src/libsanitize=
+r/asan/asan_malloc_linux.cpp:145
+>     #1 0x55eae21c15b1 in __maps__insert util/maps.c:43
+>     #2 0x55eae21c1a2a in maps__insert util/maps.c:70
+>     #3 0x55eae22038ba in thread__insert_map util/thread.c:355
+>     #4 0x55eae21a9bed in machine__process_mmap2_event util/machine.c:1959
+>     #5 0x55eae2069f70 in perf_event__process_mmap2 util/event.c:379
+>     #6 0x55eae21dac1e in machines__deliver_event util/session.c:1569
+>     #7 0x55eae21dc2f5 in perf_session__deliver_event util/session.c:1645
+>     #8 0x55eae21c7f35 in ordered_events__deliver_event util/session.c:188
+>     #9 0x55eae21f7824 in do_flush util/ordered-events.c:245
+>     #10 0x55eae21f863f in __ordered_events__flush util/ordered-events.c:3=
+24
+>     #11 0x55eae21f8b1a in ordered_events__flush util/ordered-events.c:342
+>     #12 0x55eae21e6a08 in __perf_session__process_events util/session.c:2=
+471
+>     #13 0x55eae21e991d in perf_session__process_events util/session.c:263=
+3
+>     #14 0x55eae1d248dc in __cmd_report /usr/src/perf_selftests-x86_64-rhe=
+l-8.3-bpf-a0c41caebab2fa224454d50dd4e29ae008ead25f/tools/perf/builtin-repor=
+t.c:989
+>     #15 0x55eae1d30f76 in cmd_report /usr/src/perf_selftests-x86_64-rhel-=
+8.3-bpf-a0c41caebab2fa224454d50dd4e29ae008ead25f/tools/perf/builtin-report.=
+c:1709
+>     #16 0x55eae200824f in run_builtin /usr/src/perf_selftests-x86_64-rhel=
+-8.3-bpf-a0c41caebab2fa224454d50dd4e29ae008ead25f/tools/perf/perf.c:323
+>     #17 0x55eae2008ad1 in handle_internal_command /usr/src/perf_selftests=
+-x86_64-rhel-8.3-bpf-a0c41caebab2fa224454d50dd4e29ae008ead25f/tools/perf/pe=
+rf.c:377
+>     #18 0x55eae2009003 in run_argv /usr/src/perf_selftests-x86_64-rhel-8.=
+3-bpf-a0c41caebab2fa224454d50dd4e29ae008ead25f/tools/perf/perf.c:421
+>     #19 0x55eae200972f in main /usr/src/perf_selftests-x86_64-rhel-8.3-bp=
+f-a0c41caebab2fa224454d50dd4e29ae008ead25f/tools/perf/perf.c:537
+>     #20 0x7f77a1854d09 in __libc_start_main (/lib/x86_64-linux-gnu/libc.s=
+o.6+0x23d09)
+>
+>
+>
+> To reproduce:
+>
+>         git clone https://github.com/intel/lkp-tests.git
+>         cd lkp-tests
+>         sudo bin/lkp install job.yaml           # job file is attached in=
+ this email
+>         bin/lkp split-job --compatible job.yaml # generate the yaml file =
+for lkp run
+>         sudo bin/lkp run generated-yaml-file
+>
+>         # if come across any failure that blocks the test,
+>         # please remove ~/.lkp and /lkp dir to run from a clean state.
+>
+>
+>
+> --
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
+>
+>
