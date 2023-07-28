@@ -2,127 +2,118 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C068C001DF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 14:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAC8C0015E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 15:20:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236204AbjG1OyR (ORCPT
+        id S234573AbjG1PUF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jul 2023 10:54:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37776 "EHLO
+        Fri, 28 Jul 2023 11:20:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229638AbjG1OyQ (ORCPT
+        with ESMTP id S233675AbjG1PUE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jul 2023 10:54:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9334F12D;
-        Fri, 28 Jul 2023 07:54:15 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 303056217F;
-        Fri, 28 Jul 2023 14:54:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C5C3C433C7;
-        Fri, 28 Jul 2023 14:54:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690556054;
-        bh=R9op8pPpmsKkCoqmTa7kyILBaKx3qjkB+WKspxSkx40=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qAbPllgiag0JHhACI1BZnqart2OdDDXqYcHTpHOQj3SCt1iDM8OLCW0nwB1ETdBkY
-         mW4lutGWRjORuLx3M+L1to6wA7cZb3hFtA8P3imJIxuxoiYWD1EKhT9aKv43fuSIPK
-         o9EHbV6ZlTb5PfxS9hKxjTB5Tzqy9t7zMjtSix6d0bypSRygrmgCb1pGt3eCvpIrDV
-         4mSJqVgH8fsBaSrjPG6aqCpFdZOLzyoEOjF2zu7I0Wa76+MEzXXRwfesGoRfvDcbUt
-         DprSrK41ByXxrMZIP8f4v9PEshuQMvVePtiXGcjhsOxTZNPwiBfUjh9N8pS5ibdM78
-         B8Dx0laG5GL4Q==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id BBCF640096; Fri, 28 Jul 2023 11:54:11 -0300 (-03)
-Date:   Fri, 28 Jul 2023 11:54:11 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Aditya Gupta <adityag@linux.ibm.com>
-Cc:     jolsa@kernel.org, irogers@google.com, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] perf tests task_analyzer: Check perf build options
- for libtraceevent support
-Message-ID: <ZMPWk5K63tadmDlU@kernel.org>
-References: <20230725061649.34937-1-adityag@linux.ibm.com>
+        Fri, 28 Jul 2023 11:20:04 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2371F3580;
+        Fri, 28 Jul 2023 08:20:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+ s=s31663417; t=1690557577; x=1691162377; i=georgmueller@gmx.net;
+ bh=b3jqgX/FTTLcKkdYTNRXpA+IdOm+qzwJHmsQNLmI1uU=;
+ h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+ b=Au1ml8XDHLXynrUV8DlBalRIcMriKlIfa/JY3oyDsDRFUxYctTyvfFHyTLbqPWP86nQQMRJ
+ sfG0BqIZUF/jauJ0nTh+EGXtvpokFemJSvMxczmd4WN0ChWlD95XFPyOs5U5inK1j8oeew52R
+ I9KfFimeUTO9opBX04yXYfP4Xam97NCwylY2Uzm/LI+Jmz1uh7RI8RmYA9ifgZTVTAkQk08KT
+ oJpff1BuuxwddxcxkqdVmeXJlE3p2FuorJRHToTjSN6qKLNnqeUxwmlgKtu2asdTfcJXZOptL
+ hd0Ms6xR0vrIpF0U58drb8PbwoqnJmBLrfRHqjsCwOPX53bhptEQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from nb-georg.intra.allegro-packets.com ([79.246.95.128]) by
+ mail.gmx.net (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MNKhm-1qDlUR1VOM-00OmRl; Fri, 28 Jul 2023 17:19:37 +0200
+From:   =?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        =?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] perf probe: skip test_uprobe_from_different_cu if there is no gcc
+Date:   Fri, 28 Jul 2023 17:18:12 +0200
+Message-ID: <20230728151812.454806-2-georgmueller@gmx.net>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230725061649.34937-1-adityag@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:k9aWZpPGLTw7RvMYEc6PyMQraGPcqSqMmqLsqlB27y8SL4tymPT
+ 4U0T4Z0aLLKEDVa5w8FH396x9LvRJwJNSpciBAKf+smlTwcjvoppabzCjWFwduTB1ene+cD
+ 7aYLRhREyOqFjQtlt1F1oXKFIhqRTK1MhVjnP2xBN8UhraMAR0xL8y1ktYZ5MPjs/P3yTIU
+ ho0krwrrCfC71WAFAOyiw==
+UI-OutboundReport: notjunk:1;M01:P0:6l98EEo7XGA=;nrweatGZcCzoena6WSFTgnmI6zm
+ F9e3quy9tezodLsvqxrCn68geGjN+MWnDI+XiK3NSSVumYveNNgEykIEsiqbgilNeFeviOy5P
+ NdbSB+GZRGHN3Iyu0ZxQg/9U5SZxLr6wmH8Z8ZRoDqmwzb2R1j5n003tJCerNbhgumgEzVSI4
+ eQHj5heFbOc3Civb0Nk1KYsCMdVbYk0yJofhPtxZzzFDO424mQt+LssqPard6Vqnvz4Y4iwoc
+ vU5z8MoAFAJ53nM6ozjbvfEJNu7qPVwAoDSrH3pwsx+Aj5i6wfuxR4rEZQ7zsM7zbtFG9M2dB
+ Wa8Y/YTZGxPdsTnSFj93I1SBM2/aVLwMWWy/ZqO0bCLsBKI1qsy0Mclb0CsoxewMIQ20zN35G
+ yoaLIRT11vGAaiVKRp3FLC/7ytcno/xpxZFOhBVI3u0uhaUgBtl7o8qZvNK+HomaOm+oHHhzV
+ Lnr2c4k51VmWOY/+/BRxUqVSKfrCGj+tRLHfipUt/WE5lNgxdGGiLCI4H0SizIZgv9jNjc7Ew
+ ZllJ8NHuiAplGyh0plH+3VCDzlmr8fVAEUkjdIn4hgtl4cNU+p0lnqN5DgWbaLJ/YntuJ6/q8
+ gmZMK2ke8hMmfeO7hPWHgQbdRJ0JmEVB7nsRRBGqv3h9MocJHvoi1pz0sjCmEsDtD8+FVjNQJ
+ 7yuo9NEmuBJBBfYW/LrZP4F9RRZNdyj1ch37n1J+0oquHdAhzQoR85wKyproFd1akHsUO266m
+ dy3wTk8eWKY/kTS+62+yvQxKPFpakdQ9ec9POz1GwIKkpGa7POUot9Uni5QFHGKrYgKhVLg0x
+ t5ZEt0cwxyGL/NF//7E7JBn7dZfYKnZwcTV7oaZet+LnlxCNAMlcINrjbXaWYam90zCxVFAkL
+ 8NFCaN05zAJVP4qHJL3FFox6BQcwcDNwhSzo/yYBbLnXJeq1cE1tBAWL4zsNH+Lxq5sydponE
+ 0c8WIw==
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jul 25, 2023 at 11:46:49AM +0530, Aditya Gupta escreveu:
-> Currently we depend on output of 'perf record -e "sched:sched_switch"', to
-> check whether perf was built with libtraceevent support.
-> 
-> Instead, a more straightforward approach can be to check the build options,
-> using 'perf version --build-options', to check for libtraceevent support.
-> 
-> When perf is compiled WITHOUT libtraceevent ('make NO_LIBTRACEEVENT=1'),
-> 'perf version --build-options' outputs (output trimmed):
-> 
-> 	 ...
->          libtraceevent: [ OFF ]  # HAVE_LIBTRACEEVENT
-> 	 ...
-> 
-> While, when perf is compiled WITH libtraceevent,
-> 
-> 'perf version --build-options' outputs:
-> 
-> ...
->          libtraceevent: [ on ]  # HAVE_LIBTRACEEVENT
-> 	 ...
-> 
-> Suggested-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
-> ---
-> 
->  tools/perf/tests/shell/test_task_analyzer.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/tests/shell/test_task_analyzer.sh b/tools/perf/tests/shell/test_task_analyzer.sh
-> index 0095abbe20ca..a28d784987b4 100755
-> --- a/tools/perf/tests/shell/test_task_analyzer.sh
-> +++ b/tools/perf/tests/shell/test_task_analyzer.sh
-> @@ -52,7 +52,7 @@ find_str_or_fail() {
->  
->  # check if perf is compiled with libtraceevent support
->  skip_no_probe_record_support() {
-> -	perf record -e "sched:sched_switch" -a -- sleep 1 2>&1 | grep "libtraceevent is necessary for tracepoint support" && return 2
-> +	perf version --build-options | grep HAVE_LIBTRACEEVENT | grep -q OFF && return 2
->  	return 0
+Without gcc, the test will fail.
 
-I'll apply this, but please consider adding a:
+On cleanup, ignore probe removal errors. Otherwise, in case of an error
+adding the probe, the temporary directory is not removed.
 
-	perf build --has libtraceevent
+Fixes: 56cbeacf1435 ("perf probe: Add test for regression introduced by sw=
+itch to die_get_decl_file()")
+Signed-off-by: Georg M=C3=BCller <georgmueller@gmx.net>
+Link: https://lore.kernel.org/r/CAP-5=3DfUP6UuLgRty3t2=3DfQsQi3k4hDMz415vW=
+dp1x88QMvZ8ug@mail.gmail.com/
+=2D--
+ tools/perf/tests/shell/test_uprobe_from_different_cu.sh | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-subcommand to have that query made more compact and to avoid the two
-extra grep.
+diff --git a/tools/perf/tests/shell/test_uprobe_from_different_cu.sh b/too=
+ls/perf/tests/shell/test_uprobe_from_different_cu.sh
+index 00d2e0e2e0c2..319f36ebb9a4 100755
+=2D-- a/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
++++ b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
+@@ -4,6 +4,12 @@
 
-BTW, I'll change that to:
+ set -e
 
-[acme@quaco perf-tools-next]$ perf version --build-options | grep " on .* HAVE_LIBTRACEEVENT"
-         libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
-[acme@quaco perf-tools-next]$
++# skip if there's no gcc
++if ! [ -x "$(command -v gcc)" ]; then
++        echo "failed: no gcc compiler"
++        exit 2
++fi
++
+ temp_dir=3D$(mktemp -d /tmp/perf-uprobe-different-cu-sh.XXXXXXXXXX)
 
-replacing "on" with OFF, so that we have just one grep.
+ cleanup()
+@@ -11,7 +17,7 @@ cleanup()
+ 	trap - EXIT TERM INT
+ 	if [[ "${temp_dir}" =3D~ ^/tmp/perf-uprobe-different-cu-sh.*$ ]]; then
+ 		echo "--- Cleaning up ---"
+-		perf probe -x ${temp_dir}/testfile -d foo
++		perf probe -x ${temp_dir}/testfile -d foo || true
+ 		rm -f "${temp_dir}/"*
+ 		rmdir "${temp_dir}"
+ 	fi
+=2D-
+2.41.0
 
-Thanks,
-
-- Arnaldo
-
->  }
->  
-> -- 
-> 2.41.0
-> 
-
--- 
-
-- Arnaldo
