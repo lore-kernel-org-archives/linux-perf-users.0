@@ -2,118 +2,186 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAC8C0015E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 15:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B65D4C001DE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 15:27:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234573AbjG1PUF (ORCPT
+        id S236890AbjG1P1K (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jul 2023 11:20:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48668 "EHLO
+        Fri, 28 Jul 2023 11:27:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233675AbjG1PUE (ORCPT
+        with ESMTP id S235697AbjG1P1J (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jul 2023 11:20:04 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2371F3580;
-        Fri, 28 Jul 2023 08:20:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
- s=s31663417; t=1690557577; x=1691162377; i=georgmueller@gmx.net;
- bh=b3jqgX/FTTLcKkdYTNRXpA+IdOm+qzwJHmsQNLmI1uU=;
- h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
- b=Au1ml8XDHLXynrUV8DlBalRIcMriKlIfa/JY3oyDsDRFUxYctTyvfFHyTLbqPWP86nQQMRJ
- sfG0BqIZUF/jauJ0nTh+EGXtvpokFemJSvMxczmd4WN0ChWlD95XFPyOs5U5inK1j8oeew52R
- I9KfFimeUTO9opBX04yXYfP4Xam97NCwylY2Uzm/LI+Jmz1uh7RI8RmYA9ifgZTVTAkQk08KT
- oJpff1BuuxwddxcxkqdVmeXJlE3p2FuorJRHToTjSN6qKLNnqeUxwmlgKtu2asdTfcJXZOptL
- hd0Ms6xR0vrIpF0U58drb8PbwoqnJmBLrfRHqjsCwOPX53bhptEQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from nb-georg.intra.allegro-packets.com ([79.246.95.128]) by
- mail.gmx.net (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MNKhm-1qDlUR1VOM-00OmRl; Fri, 28 Jul 2023 17:19:37 +0200
-From:   =?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Fri, 28 Jul 2023 11:27:09 -0400
+Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B9A730FC
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 08:27:07 -0700 (PDT)
+Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-40631c5b9e9so288301cf.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 08:27:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1690558026; x=1691162826;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w2cHEglOBw7vOs0ctBUQxyK7WvVIZxui8AGCj214fFw=;
+        b=e6XRIlLbdnBV3L+drIGrJ9hpPuszKL9KcdkNU3ekaiyj9oPIi424yCtahEr5IejeLS
+         DVaJsKY6P2gQinDqRDKpkG2Cqzp2iZRE+SuDVrql/sUVH/V6fLH1tcS6jVzZSIYiUExw
+         4mjNGLaKuaNSZpM9kj6StV2PQjstWNDxKKSjF++SSDOHr9RgtdhJON6K/z0E0sdf+HIw
+         GcV0Zs60/0lvk9ceXcscQ7QwYgzn3piuNUGWX3RqXqTt0Bx+NowyQrbj+pniVwxrEnPB
+         eG6jturlsiIsowf+LA6PWNH3FuS9c7Kix3RXflkIjjNKYHtE+5Jk+A2pw/05jXC99LK1
+         QPCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690558026; x=1691162826;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=w2cHEglOBw7vOs0ctBUQxyK7WvVIZxui8AGCj214fFw=;
+        b=KG84XZSObwvhR+kdyPYI4XHs3bGi1/mB19pHfgUT4K3sZkoTsXmWCvLHB/3hKDHjrP
+         PC1MURaMRhx1QMKFSfGYFtMjXsVr8B9CjokZzG/wbKnp/Pb1RRv0UQKyAHp0JvMTygcn
+         PyxSPmLaCFe6juKq8WaPjS+ggUKXJF/dVodODjTJEZ3yyBDultykk2sykZ2MutIVnn+A
+         IWrsQ4oxbrTudJsUwpjO0allJ2JzHOBu75lkZkcXpgmZPDye4tMpK/j4k3lTF6wN5cPM
+         lRp2J2xL/AW/88GzGZgXdC3oiY6D74mVtYEFDeramMekILyugY8zs3Js03cpgiXcU2A5
+         nqpQ==
+X-Gm-Message-State: ABy/qLYfFZm43yQ6O3aEWcDBLcxQkvu/gmgTnpmSCBeMwSSwfaq5bfwG
+        Ktxcm36oDkULSe/pF4091DEpt1WF+Eajkhiw4E5bFg==
+X-Google-Smtp-Source: APBJJlHIpT7XpTvB/yptY7dE3r/zPa8AQ/d9BXKIIJ1YOjIrDkWpf9UIHP7aBlLDk/kRbpYfjgdYrYdtNRjivLcW300=
+X-Received: by 2002:a05:622a:448:b0:3f8:5b2:aef0 with SMTP id
+ o8-20020a05622a044800b003f805b2aef0mr297197qtx.24.1690558026249; Fri, 28 Jul
+ 2023 08:27:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230728064917.767761-1-irogers@google.com> <20230728064917.767761-5-irogers@google.com>
+ <a8833945-3f0a-7651-39ff-a01e7edc2b3a@arm.com> <ZMPJym7DnCkFH7aA@kernel.org> <ZMPKekDl+g5PeiH8@kernel.org>
+In-Reply-To: <ZMPKekDl+g5PeiH8@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 28 Jul 2023 08:26:54 -0700
+Message-ID: <CAP-5=fX2LOdd_34ysAYYB5zq5tr7dMje35Nw6hrLXTPLsOHoaw@mail.gmail.com>
+Subject: Re: [PATCH v1 4/6] perf build: Disable fewer flex warnings
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        =?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf probe: skip test_uprobe_from_different_cu if there is no gcc
-Date:   Fri, 28 Jul 2023 17:18:12 +0200
-Message-ID: <20230728151812.454806-2-georgmueller@gmx.net>
-X-Mailer: git-send-email 2.41.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:k9aWZpPGLTw7RvMYEc6PyMQraGPcqSqMmqLsqlB27y8SL4tymPT
- 4U0T4Z0aLLKEDVa5w8FH396x9LvRJwJNSpciBAKf+smlTwcjvoppabzCjWFwduTB1ene+cD
- 7aYLRhREyOqFjQtlt1F1oXKFIhqRTK1MhVjnP2xBN8UhraMAR0xL8y1ktYZ5MPjs/P3yTIU
- ho0krwrrCfC71WAFAOyiw==
-UI-OutboundReport: notjunk:1;M01:P0:6l98EEo7XGA=;nrweatGZcCzoena6WSFTgnmI6zm
- F9e3quy9tezodLsvqxrCn68geGjN+MWnDI+XiK3NSSVumYveNNgEykIEsiqbgilNeFeviOy5P
- NdbSB+GZRGHN3Iyu0ZxQg/9U5SZxLr6wmH8Z8ZRoDqmwzb2R1j5n003tJCerNbhgumgEzVSI4
- eQHj5heFbOc3Civb0Nk1KYsCMdVbYk0yJofhPtxZzzFDO424mQt+LssqPard6Vqnvz4Y4iwoc
- vU5z8MoAFAJ53nM6ozjbvfEJNu7qPVwAoDSrH3pwsx+Aj5i6wfuxR4rEZQ7zsM7zbtFG9M2dB
- Wa8Y/YTZGxPdsTnSFj93I1SBM2/aVLwMWWy/ZqO0bCLsBKI1qsy0Mclb0CsoxewMIQ20zN35G
- yoaLIRT11vGAaiVKRp3FLC/7ytcno/xpxZFOhBVI3u0uhaUgBtl7o8qZvNK+HomaOm+oHHhzV
- Lnr2c4k51VmWOY/+/BRxUqVSKfrCGj+tRLHfipUt/WE5lNgxdGGiLCI4H0SizIZgv9jNjc7Ew
- ZllJ8NHuiAplGyh0plH+3VCDzlmr8fVAEUkjdIn4hgtl4cNU+p0lnqN5DgWbaLJ/YntuJ6/q8
- gmZMK2ke8hMmfeO7hPWHgQbdRJ0JmEVB7nsRRBGqv3h9MocJHvoi1pz0sjCmEsDtD8+FVjNQJ
- 7yuo9NEmuBJBBfYW/LrZP4F9RRZNdyj1ch37n1J+0oquHdAhzQoR85wKyproFd1akHsUO266m
- dy3wTk8eWKY/kTS+62+yvQxKPFpakdQ9ec9POz1GwIKkpGa7POUot9Uni5QFHGKrYgKhVLg0x
- t5ZEt0cwxyGL/NF//7E7JBn7dZfYKnZwcTV7oaZet+LnlxCNAMlcINrjbXaWYam90zCxVFAkL
- 8NFCaN05zAJVP4qHJL3FFox6BQcwcDNwhSzo/yYBbLnXJeq1cE1tBAWL4zsNH+Lxq5sydponE
- 0c8WIw==
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Without gcc, the test will fail.
+On Fri, Jul 28, 2023 at 7:02=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Fri, Jul 28, 2023 at 10:59:38AM -0300, Arnaldo Carvalho de Melo escrev=
+eu:
+> > Em Fri, Jul 28, 2023 at 09:50:59AM +0100, James Clark escreveu:
+> > >
+> > >
+> > > On 28/07/2023 07:49, Ian Rogers wrote:
+> > > > If flex is version 2.6.4, reduce the number of flex C warnings
+> > > > disabled. Earlier flex versions have all C warnings disabled.
+> > >
+> > > Hi Ian,
+> > >
+> > > I get a build error with either this one or the bison warning change:
+> > >
+> > >   $ make LLVM=3D1 -C tools/perf NO_BPF_SKEL=3D1 DEBUG=3D1
+> > >
+> > >   util/pmu-bison.c:855:9: error: variable 'perf_pmu_nerrs' set but no=
+t
+> > > used [-Werror,-Wunused-but-set-variable]
+> > >     int yynerrs =3D 0;
+> > >
+> > > I tried a clean build which normally fixes these kind of bison errors=
+.
+> > > Let me know if you need any version info.
+> >
+> > Trying to build it with the command line above I get:
+> >
+> >   CC      util/expr.o
+> >   CC      util/parse-events.o
+> >   CC      util/parse-events-flex.o
+> > util/parse-events-flex.c:7503:13: error: misleading indentation; statem=
+ent is not part of the previous 'if' [-Werror,-Wmisleading-indentation]
+> >             if ( ! yyg->yy_state_buf )
+> >             ^
+> > util/parse-events-flex.c:7501:9: note: previous statement is here
+> >         if ( ! yyg->yy_state_buf )
+> >         ^
+>
+> I added this to the patch to get it moving:
+>
+> make: Leaving directory '/var/home/acme/git/perf-tools-next/tools/perf'
+> =E2=AC=A2[acme@toolbox perf-tools-next]$ git diff
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 32239c4b0393c319..afa93eff495811cf 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -281,7 +281,7 @@ $(OUTPUT)util/bpf-filter-bison.c $(OUTPUT)util/bpf-fi=
+lter-bison.h: util/bpf-filt
+>
+>  FLEX_GE_264 :=3D $(shell expr $(shell $(FLEX) --version | sed -e  's/fle=
+x \([0-9]\+\).\([0-9]\+\).\([0-9]\+\)/\1\2\3/g') \>\=3D 264)
+>  ifeq ($(FLEX_GE_264),1)
+> -  flex_flags :=3D -Wno-redundant-decls -Wno-switch-default -Wno-unused-f=
+unction
+> +  flex_flags :=3D -Wno-redundant-decls -Wno-switch-default -Wno-unused-f=
+unction -Wno-misleading-indentation
+>  else
+>    flex_flags :=3D -w
+>  endif
+> =E2=AC=A2[acme@toolbox perf-tools-next]$
+>
+>
+> > 1 error generated.
+> > make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.b=
+uild:97: util/parse-events-flex.o] Error 1
+> > make[4]: *** Waiting for unfinished jobs....
+> >   LD      util/scripting-engines/perf-in.o
+> > make[3]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.b=
+uild:140: util] Error 2
+> > make[2]: *** [Makefile.perf:682: perf-in.o] Error 2
+> > make[2]: *** Waiting for unfinished jobs....
+> >   CC      pmu-events/pmu-events.o
+> >   LD      pmu-events/pmu-events-in.o
+> > make[1]: *** [Makefile.perf:242: sub-make] Error 2
+> > make: *** [Makefile:70: all] Error 2
+> >
+> > =E2=AC=A2[acme@toolbox perf-tools-next]$ clang --version
+> > clang version 14.0.5 (Fedora 14.0.5-2.fc36)
+> > Target: x86_64-redhat-linux-gnu
+> > Thread model: posix
+> > InstalledDir: /usr/bin
+> > =E2=AC=A2[acme@toolbox perf-tools-next]$
 
-On cleanup, ignore probe removal errors. Otherwise, in case of an error
-adding the probe, the temporary directory is not removed.
+Thanks James/Arnaldo, I was trying to be aggressive in having more
+flags, but it seems too aggressive. We should probably bring back the
+logic to make this flag only added if it is supported:
+  CC_HASNT_MISLEADING_INDENTATION :=3D $(shell echo "int main(void) {
+return 0 }" | $(CC) -Werror -Wno-misleading-indentation -o /dev/null
+-xc - 2>&1 | grep -q -- -Wno-misleading-indentation ; echo $$?)
+  ifeq ($(CC_HASNT_MISLEADING_INDENTATION), 1)
+    flex_flags +=3D -Wno-misleading-indentation
+  endif
+Arnaldo, is the misleading indentation in the bison generated code or
+something copy-pasted from the parse-events.l ? If the latter we may
+be able to fix the .l file to keep the warning.
 
-Fixes: 56cbeacf1435 ("perf probe: Add test for regression introduced by sw=
-itch to die_get_decl_file()")
-Signed-off-by: Georg M=C3=BCller <georgmueller@gmx.net>
-Link: https://lore.kernel.org/r/CAP-5=3DfUP6UuLgRty3t2=3DfQsQi3k4hDMz415vW=
-dp1x88QMvZ8ug@mail.gmail.com/
-=2D--
- tools/perf/tests/shell/test_uprobe_from_different_cu.sh | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Thanks,
+Ian
 
-diff --git a/tools/perf/tests/shell/test_uprobe_from_different_cu.sh b/too=
-ls/perf/tests/shell/test_uprobe_from_different_cu.sh
-index 00d2e0e2e0c2..319f36ebb9a4 100755
-=2D-- a/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
-+++ b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
-@@ -4,6 +4,12 @@
-
- set -e
-
-+# skip if there's no gcc
-+if ! [ -x "$(command -v gcc)" ]; then
-+        echo "failed: no gcc compiler"
-+        exit 2
-+fi
-+
- temp_dir=3D$(mktemp -d /tmp/perf-uprobe-different-cu-sh.XXXXXXXXXX)
-
- cleanup()
-@@ -11,7 +17,7 @@ cleanup()
- 	trap - EXIT TERM INT
- 	if [[ "${temp_dir}" =3D~ ^/tmp/perf-uprobe-different-cu-sh.*$ ]]; then
- 		echo "--- Cleaning up ---"
--		perf probe -x ${temp_dir}/testfile -d foo
-+		perf probe -x ${temp_dir}/testfile -d foo || true
- 		rm -f "${temp_dir}/"*
- 		rmdir "${temp_dir}"
- 	fi
-=2D-
-2.41.0
-
+> --
+>
+> - Arnaldo
