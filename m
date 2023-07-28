@@ -2,58 +2,61 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BF0C001DE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 17:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2AAC001E0
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 17:53:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229525AbjG1RmV (ORCPT
+        id S233312AbjG1RxQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jul 2023 13:42:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37852 "EHLO
+        Fri, 28 Jul 2023 13:53:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjG1RmV (ORCPT
+        with ESMTP id S233389AbjG1RxN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jul 2023 13:42:21 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD4132D4D
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 10:42:19 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-4fe07f0636bso4163257e87.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 10:42:19 -0700 (PDT)
+        Fri, 28 Jul 2023 13:53:13 -0400
+Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 358473A81
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 10:53:12 -0700 (PDT)
+Received: by mail-il1-x134.google.com with SMTP id e9e14a558f8ab-3460770afe2so7195ab.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 10:53:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google; t=1690566137; x=1691170937;
+        d=google.com; s=20221208; t=1690566791; x=1691171591;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mYLF84njYUu7JSVKHy5D6nCKlYMLp+3wofRRJeXEu7E=;
-        b=iziTcra8O3kMOn7bPIAuiGktuKrjNiFuJrcytTPBjE9Z/F/6KagvBYqTFcSv0A2VD7
-         fT0v2rYCw920LjFd2VW/H4+JnPKVEVA0k0pjKSQK/V7Fp+Pw95jdZ6RnXE+mirtB7RXX
-         dVKIW5mX6DYU1TjRy+tJe62RfohmYOUgi9H0M=
+        bh=zsIHLPb5okBWXJf2DtS76Y92BZwwFSzgLVO6RcujWsQ=;
+        b=dtdPiasbgn7CaqvxkgS3cosIxhKaD7PdNI4nHup/Mt+FArUPs4kuQQNpIZHJItnBiy
+         yOqBDtVdIN0uZpwAh+C6NKhqrAH7nxnm+Bl22M2vUM/p1ubXV4AiSDC9dnIr5AxdTou0
+         kzxM5iVxPfYWqxeR1ivufNCcn/nkNGQ0s11RRlmZiqVs53VN9Xrqn1iqGw1eWvrnWycS
+         sJgAwtpJ/yhA+254E2CbjGcn4IXCSCg/D72dF4TwHsgnMJxz7kpPK1zeOsFr/vkqkXJo
+         ga4i1v6ZpMGL4ECLEcii9uTg2DGiR7/QEA5eLmKR10HGjXkndlW04IAEC8cZyEB0oTbc
+         0THw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690566137; x=1691170937;
+        d=1e100.net; s=20221208; t=1690566791; x=1691171591;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mYLF84njYUu7JSVKHy5D6nCKlYMLp+3wofRRJeXEu7E=;
-        b=jaU2Tg0GqvGkxzvVPkMRUJxn2Zs+897BjD80t5zf94xgEXFAvOLu5AK5e4zhMGeh7K
-         ewsHz3va2X7kd32P25ShwjmVSKXoL0qzZklJXKWlQ3ntAHTcBodJuYePvWo5+fAP7Z/7
-         sUJqNE8PyvG5TZvZ1r/N428gr5KyEqh5cdSeEJ+7T8pDjlqrjbQIJt0pGs2GFjsZXX4i
-         x1lQiBGH09sr+OlCtcY5CLljtew7VANG+Z+uxff3YmaaqUovYQMAlhiy+CN+aTYv6KD2
-         oNc35/vgaAODPmVDWP8CzI0v6lvrifPo91vQn3f7ZpK9jo78BvgHqlTBXSO/pwKQ3ZxE
-         l83g==
-X-Gm-Message-State: ABy/qLZM5wBFCNWUpo0ZeD+IYnAbdNptNp3SKDbcErxeW5e4EOb/lAiO
-        cEstdWtFDQV6oqNq4e5J2csE4qhW0Mk+St8l1txJFyDWkDg/lcYa
-X-Google-Smtp-Source: APBJJlG+syxVWj31WyFpRDPU//DQTURjhEbh1wZ/zUchJicEJUyhjhyKV0VnmRkXLQh+8lqsZFetH31/oxxS+EeaRmM=
-X-Received: by 2002:a19:9146:0:b0:4fb:7b4c:d38c with SMTP id
- y6-20020a199146000000b004fb7b4cd38cmr2103056lfj.60.1690566137512; Fri, 28 Jul
- 2023 10:42:17 -0700 (PDT)
+        bh=zsIHLPb5okBWXJf2DtS76Y92BZwwFSzgLVO6RcujWsQ=;
+        b=HONY1dZb7Xd2aIe+nO3DwX122tgwoNN3pkm1Rx3dQwYbGcb/ZgOlIMG0Ih/NDg5Fts
+         CCYAdw5q96f3ya9pXt6ETGQJirfUQnx4WB0Iqf35dwad844GbZ4LaS7zEXjjUJc+aSSP
+         p8yDhZrlaFrIaPK5rLHCLz/AxqO9YPCiZzsLDMux7EHBxlkNZkSgAjbSGDHcc1XxHj6c
+         /lcb19Zk6Nuh6I4O7MTBYXkfue5GVsUF0ECBVXrMOET5xH68spn7XzpZG5A17AESEqqj
+         KSlp0962fOk/Wg+q2D+j4RIo8PVukjkTdbqlcoVQeYr41Znbf849ueEMOqigK7HoMPCZ
+         qAYg==
+X-Gm-Message-State: ABy/qLbQwT4yY8iEFJD8yGkuIndGrU9rPV1S3VaIiGniN1lLcreQIKuT
+        DpK+r5GXhiIjgYScSRCtxFncbyXCAut+jmcm0zbqOA==
+X-Google-Smtp-Source: APBJJlEDh03sKgpDB0dKs6Z85qIKrMbTr+Ye9aruBFA5yuWJzcNZnvHEOZQeaHI6jnTYkiNFcm6HvFJcJmmT2PwfIAQ=
+X-Received: by 2002:a05:6e02:b48:b0:33d:8e80:4c2f with SMTP id
+ f8-20020a056e020b4800b0033d8e804c2fmr16633ilu.20.1690566791205; Fri, 28 Jul
+ 2023 10:53:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230718000737.49077-1-ivan@cloudflare.com>
-In-Reply-To: <20230718000737.49077-1-ivan@cloudflare.com>
-From:   Ivan Babrou <ivan@cloudflare.com>
-Date:   Fri, 28 Jul 2023 10:42:06 -0700
-Message-ID: <CABWYdi2E1XozvwsZwOA80X-YbqLejj_5sxzNAh7w6R93rD5sCw@mail.gmail.com>
-Subject: Re: [PATCH] perf script: print cgroup on the same line as comm
-To:     linux-perf-users@vger.kernel.org
-Cc:     kernel-team@cloudflare.com, linux-kernel@vger.kernel.org,
+References: <20230727141428.962286-1-alexghiti@rivosinc.com> <20230727141428.962286-10-alexghiti@rivosinc.com>
+In-Reply-To: <20230727141428.962286-10-alexghiti@rivosinc.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 28 Jul 2023 10:52:59 -0700
+Message-ID: <CAP-5=fU5XYXrVnRUidpwjV2LiTsdebfidL43_Qo4Z7TBxMsVGA@mail.gmail.com>
+Subject: Re: [PATCH v4 09/10] tools: lib: perf: Implement riscv mmap support
+To:     Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -61,119 +64,134 @@ Cc:     kernel-team@cloudflare.com, linux-kernel@vger.kernel.org,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <atishp@atishpatra.org>,
+        Anup Patel <anup@brainfault.org>,
+        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+        Andrew Jones <ajones@ventanamicro.com>,
+        =?UTF-8?Q?R=C3=A9mi_Denis=2DCourmont?= <remi@remlab.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Atish Patra <atishp@rivosinc.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jul 17, 2023 at 5:07=E2=80=AFPM Ivan Babrou <ivan@cloudflare.com> w=
-rote:
+On Thu, Jul 27, 2023 at 7:28=E2=80=AFAM Alexandre Ghiti <alexghiti@rivosinc=
+.com> wrote:
 >
-> Commit 3fd7a168bf51 ("perf script: Add 'cgroup' field for output")
-> added support for printing cgroup path in perf script output.
+> riscv now supports mmaping hardware counters so add what's needed to
+> take advantage of that in libperf.
 >
-> It was okay if you didn't want any stacks:
->
->     $ sudo perf script --comms jpegtran:23f4bf -F comm,tid,cpu,time,cgrou=
-p
->     jpegtran:23f4bf 3321915 [013] 404718.587488:  /idle.slice/polish.serv=
-ice
->     jpegtran:23f4bf 3321915 [031] 404718.592073:  /idle.slice/polish.serv=
-ice
->
-> With stacks it gets messier as cgroup is printed after the stack:
->
->     $ perf script --comms jpegtran:23f4bf -F comm,tid,cpu,time,cgroup,ip,=
-sym
->     jpegtran:23f4bf 3321915 [013] 404718.587488:
->                     5c554 compress_output
->                     570d9 jpeg_finish_compress
->                     3476e jpegtran_main
->                     330ee jpegtran::main
->                     326e2 core::ops::function::FnOnce::call_once (inlined=
-)
->                     326e2 std::sys_common::backtrace::__rust_begin_short_=
-backtrace
->     /idle.slice/polish.service
->     jpegtran:23f4bf 3321915 [031] 404718.592073:
->                     8474d jsimd_encode_mcu_AC_first_prepare_sse2.PADDING
->                 55af68e62fff [unknown]
->     /idle.slice/polish.service
->
-> Let's instead print cgroup on the same line as comm:
->
->     $ perf script --comms jpegtran:23f4bf -F comm,tid,cpu,time,cgroup,ip,=
-sym
->     jpegtran:23f4bf 3321915 [013] 404718.587488:  /idle.slice/polish.serv=
-ice
->                     5c554 compress_output
->                     570d9 jpeg_finish_compress
->                     3476e jpegtran_main
->                     330ee jpegtran::main
->                     326e2 core::ops::function::FnOnce::call_once (inlined=
-)
->                     326e2 std::sys_common::backtrace::__rust_begin_short_=
-backtrace
->
->     jpegtran:23f4bf 3321915 [031] 404718.592073:  /idle.slice/polish.serv=
-ice
->                     8474d jsimd_encode_mcu_AC_first_prepare_sse2.PADDING
->                 55af68e62fff [unknown]
->
-> Signed-off-by: Ivan Babrou <ivan@cloudflare.com>
-> Fixes: 3fd7a168bf51 ("perf script: Add 'cgroup' field for output")
+> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+> Reviewed-by: Atish Patra <atishp@rivosinc.com>
 > ---
->  tools/perf/builtin-script.c | 22 +++++++++++-----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
+>  tools/lib/perf/mmap.c | 65 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 65 insertions(+)
 >
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 200b3e7ea8da..517bf25750c8 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -2199,6 +2199,17 @@ static void process_event(struct perf_script *scri=
-pt,
->         if (PRINT_FIELD(RETIRE_LAT))
->                 fprintf(fp, "%16" PRIu16, sample->retire_lat);
+> diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
+> index 0d1634cedf44..378a163f0554 100644
+> --- a/tools/lib/perf/mmap.c
+> +++ b/tools/lib/perf/mmap.c
+> @@ -392,6 +392,71 @@ static u64 read_perf_counter(unsigned int counter)
 >
-> +       if (PRINT_FIELD(CGROUP)) {
-> +               const char *cgrp_name;
-> +               struct cgroup *cgrp =3D cgroup__find(machine->env,
-> +                                                  sample->cgroup);
-> +               if (cgrp !=3D NULL)
-> +                       cgrp_name =3D cgrp->name;
-> +               else
-> +                       cgrp_name =3D "unknown";
-> +               fprintf(fp, " %s", cgrp_name);
+>  static u64 read_timestamp(void) { return read_sysreg(cntvct_el0); }
+>
+> +#elif __riscv_xlen =3D=3D 64
+
+This is something of an odd guard, perhaps:
+#elif defined(__riscv) && __riscv_xlen =3D=3D 64
+
+That way it is more intention revealing that this is riscv code. Could
+you add a comment relating to the __riscv_xlen ?
+
+> +
+> +/* TODO: implement rv32 support */
+> +
+> +#define CSR_CYCLE      0xc00
+> +#define CSR_TIME       0xc01
+> +
+> +#define csr_read(csr)                                          \
+> +({                                                             \
+> +       register unsigned long __v;                             \
+> +               __asm__ __volatile__ ("csrr %0, " #csr          \
+> +                : "=3Dr" (__v) :                                 \
+> +                : "memory");                                   \
+
+To avoid the macro pasting that could potentially go weird, could this be:
+
+__asm__ __volatile__ ("csrr %0, %1",
+  : "=3Dr"(__v) /* outputs */
+  : "i"(csr) /* inputs */
+  : "memory" /* clobbers */)
+
+Also, why is this clobbering memory? Worth adding a comment.
+
+Thanks,
+Ian
+
+> +                __v;                                           \
+> +})
+> +
+> +static unsigned long csr_read_num(int csr_num)
+> +{
+> +#define switchcase_csr_read(__csr_num, __val)           {\
+> +       case __csr_num:                                 \
+> +               __val =3D csr_read(__csr_num);            \
+> +               break; }
+> +#define switchcase_csr_read_2(__csr_num, __val)         {\
+> +       switchcase_csr_read(__csr_num + 0, __val)        \
+> +       switchcase_csr_read(__csr_num + 1, __val)}
+> +#define switchcase_csr_read_4(__csr_num, __val)         {\
+> +       switchcase_csr_read_2(__csr_num + 0, __val)      \
+> +       switchcase_csr_read_2(__csr_num + 2, __val)}
+> +#define switchcase_csr_read_8(__csr_num, __val)         {\
+> +       switchcase_csr_read_4(__csr_num + 0, __val)      \
+> +       switchcase_csr_read_4(__csr_num + 4, __val)}
+> +#define switchcase_csr_read_16(__csr_num, __val)        {\
+> +       switchcase_csr_read_8(__csr_num + 0, __val)      \
+> +       switchcase_csr_read_8(__csr_num + 8, __val)}
+> +#define switchcase_csr_read_32(__csr_num, __val)        {\
+> +       switchcase_csr_read_16(__csr_num + 0, __val)     \
+> +       switchcase_csr_read_16(__csr_num + 16, __val)}
+> +
+> +       unsigned long ret =3D 0;
+> +
+> +       switch (csr_num) {
+> +       switchcase_csr_read_32(CSR_CYCLE, ret)
+> +       default:
+> +               break;
 > +       }
 > +
->         if (PRINT_FIELD(IP)) {
->                 struct callchain_cursor *cursor =3D NULL;
->
-> @@ -2243,17 +2254,6 @@ static void process_event(struct perf_script *scri=
-pt,
->         if (PRINT_FIELD(CODE_PAGE_SIZE))
->                 fprintf(fp, " %s", get_page_size_name(sample->code_page_s=
-ize, str));
->
-> -       if (PRINT_FIELD(CGROUP)) {
-> -               const char *cgrp_name;
-> -               struct cgroup *cgrp =3D cgroup__find(machine->env,
-> -                                                  sample->cgroup);
-> -               if (cgrp !=3D NULL)
-> -                       cgrp_name =3D cgrp->name;
-> -               else
-> -                       cgrp_name =3D "unknown";
-> -               fprintf(fp, " %s", cgrp_name);
-> -       }
-> -
->         perf_sample__fprintf_ipc(sample, attr, fp);
->
->         fprintf(fp, "\n");
+> +       return ret;
+> +#undef switchcase_csr_read_32
+> +#undef switchcase_csr_read_16
+> +#undef switchcase_csr_read_8
+> +#undef switchcase_csr_read_4
+> +#undef switchcase_csr_read_2
+> +#undef switchcase_csr_read
+> +}
+> +
+> +static u64 read_perf_counter(unsigned int counter)
+> +{
+> +       return csr_read_num(CSR_CYCLE + counter);
+> +}
+> +
+> +static u64 read_timestamp(void)
+> +{
+> +       return csr_read_num(CSR_TIME);
+> +}
+> +
+>  #else
+>  static u64 read_perf_counter(unsigned int counter __maybe_unused) { retu=
+rn 0; }
+>  static u64 read_timestamp(void) { return 0; }
 > --
-> 2.41.0
+> 2.39.2
 >
-
-A friendly bump in case this slipped through the cracks.
