@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04943C001E0
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 00:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E466C0015E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 00:13:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232108AbjG1ANC (ORCPT
+        id S232384AbjG1ANR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Jul 2023 20:13:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52904 "EHLO
+        Thu, 27 Jul 2023 20:13:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232010AbjG1ANA (ORCPT
+        with ESMTP id S232127AbjG1AND (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Jul 2023 20:13:00 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2A1CBF
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 17:12:56 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-56942442eb0so16906047b3.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 17:12:56 -0700 (PDT)
+        Thu, 27 Jul 2023 20:13:03 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69C92268B
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 17:13:01 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d27ac992539so95831276.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 17:13:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1690503176; x=1691107976;
+        d=google.com; s=20221208; t=1690503180; x=1691107980;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=o6neUT/Z5ZxqZSvjTzsd3t4vT8zLu+ilqjGFbF/BwHo=;
-        b=p3UY5OrtqjoAHr4YStHKi65rVDwgAEV7PTWNIAzOHMRRHlj/Q7SO5SS/iWoKuNGKNQ
-         q3KH8pM5awvIVnWOT63BFHtZwwa9Eg1ijQC251g+h0PH1+pOncYTEvnlR8HJPVc1e9Zw
-         zy2Bs+axgBATCD+3uHBG/x3UhoysgCIiCEISgdeClzUhp3C4K/PSNQXAIfZ/egs9XtIc
-         LNUaKQbzbgSGfpDnqiWt7O2TA6OSyg3VFwMTP/o3zYgJ1HL654KUYJIiINd3H+rL9i+4
-         quOk3i/9iHtGRcOE3yKsB9jhMKECdvcp+GKr49ZFChLE+XmKDMnN3oxeiRt5QV5mIeUn
-         dLyA==
+        bh=TWz7XL7DQKS0EfsO7HA2MTsxrytCVyGHUhFfdbWDZ6s=;
+        b=IuvFR8BF5x1tWF1G6W+CDSQZV/ETHOkjlt5JLQdNIV3O6uadOqnLA7xXftF9bM1JRJ
+         on3qOQgxzN77vfUrqRid2baZtPRCfB9sIRH5BCkItKwFeqszmlmOn5YSBgft7bE7z/6Q
+         optwoMN3KaiZrIGku9DTaf4OIfHXFoNsmZF0uQ3EIckjvyynrnwAtaa58wWI+6s2Ig65
+         wVEfTqaXWXIyKp8vHk3ROuUMRureFKatzpizPZ6FYru+IrCB8wbfKnL/ZJRjTP7f7J7m
+         PGqB7U2SoXoG1l6H6j360dMT4DCVrFFPBUho6CaHWZEJrgfmiER5JUHJS/YwGAZN4WIF
+         wB3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690503176; x=1691107976;
+        d=1e100.net; s=20221208; t=1690503180; x=1691107980;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o6neUT/Z5ZxqZSvjTzsd3t4vT8zLu+ilqjGFbF/BwHo=;
-        b=jwnoesk4vsfLEjSy1lxp/+yLqz+BnnxWtj1qP3zSjX3eN0vAvTIfoZs9wLIWzBy3NS
-         +C/R+R3OWjsQrxbW+lHkSiN+X1U0exXwSZw3E8q2vzektbkohGb3nY9ijtTttx5r0qNG
-         DUbLbB529y0De678IBRkTyA5LUODYxHU/FpTEh4HvYiDxhlvn6tC0rf8a+Z2tF5VFEiL
-         X08pdjl7ufZ87jCbWzFbAPHcYjnls/A7pOpxSViOLcDD8O4HgIQOBerGIqaUIxMLO3W/
-         uFDRANypN1NVN6rEmnRbD3qKLs0CpIsPsjEa4BZT1RV9YRi7GmOlq6eTDFYgpWMn+JX0
-         xMOA==
-X-Gm-Message-State: ABy/qLY14QkLqZlSu7uz1NpSbW8RI56jNZ91wMXt0H4ymP14UZJICcih
-        GREAKYZlPtlYd3af8g6ImN/WqNXooJEk
-X-Google-Smtp-Source: APBJJlEt4iXxJP8WryqVeJzhMdGPpRqxcb6Ce1vKD99ePr2ibeCxFflRmitKYAp0ZponEC0d5cc+brXqHo0W
+        bh=TWz7XL7DQKS0EfsO7HA2MTsxrytCVyGHUhFfdbWDZ6s=;
+        b=VBHFZ8Z7kKDLpJddnYMVwMOvr+JhkYNr599b2v0ybnk+jipCt35R1177EnsJE/giUm
+         H35fFsnR27o9xPszkzk8w7kUaS4Kw/wWCaoM9odiPS9TaQWLB3gCo/UfSBf3vXgSyirl
+         luMTAcGTZQaztv9/VLWcqKyUUvhLQzPIEDrfzsDfj26Kg5zLAWxiJUeVQb8edOzyzj2+
+         LdsctACcqy4S8VLmfNPlJz1uvnUdgO3DJHBm6RY1t/LOQ/RAfIucpH0aaYfhyAVJ6UpA
+         bI065/U8X9CdRH750hSo/tkGKpjpkskP5AqHCgdlVwhmDh6P/CNH7uHu2C2o9IagzN9l
+         QBTQ==
+X-Gm-Message-State: ABy/qLZRZYKjb5exK1G/zx6yese0Wyi5j5qM00VMQnFy1jNbVupG9LtA
+        Vw0TwiViUkit9Z4WnEPdKhAVk12X4+IK
+X-Google-Smtp-Source: APBJJlFpuxfDhuyA9wPq1j8ekeU8floVzkUu1hEuEp9+trKyCpF1P2gF/EEdIZPyXLG7MeOx8eR5n175A9UL
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:3d03:ff18:af30:2dad])
- (user=irogers job=sendgmr) by 2002:a05:690c:72b:b0:57a:118a:f31 with SMTP id
- bt11-20020a05690c072b00b0057a118a0f31mr1109ywb.7.1690503176098; Thu, 27 Jul
- 2023 17:12:56 -0700 (PDT)
-Date:   Thu, 27 Jul 2023 17:12:10 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:569:b0:d11:3c58:2068 with SMTP id
+ a9-20020a056902056900b00d113c582068mr1077ybt.2.1690503180537; Thu, 27 Jul
+ 2023 17:13:00 -0700 (PDT)
+Date:   Thu, 27 Jul 2023 17:12:12 -0700
 In-Reply-To: <20230728001212.457900-1-irogers@google.com>
-Message-Id: <20230728001212.457900-2-irogers@google.com>
+Message-Id: <20230728001212.457900-4-irogers@google.com>
 Mime-Version: 1.0
 References: <20230728001212.457900-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.487.g6d72f3e995-goog
-Subject: [PATCH v1 1/3] perf parse-event: Avoid BPF test segv
+Subject: [PATCH v1 3/3] perf parse-events: Remove array remnants
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -76,28 +76,246 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-loc is passed as NULL in tools/perf/tests/bpf.c do_test, meaning
-errors trigger a segv when trying to access. Add the missing NULL
-check.
+parse_events_array was set up by event term parsing, which no longer
+exists. Remove this struct and references to it.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/parse-events.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/bpf-loader.c   | 101 ---------------------------------
+ tools/perf/util/parse-events.c |   8 ---
+ tools/perf/util/parse-events.h |  10 ----
+ 3 files changed, 119 deletions(-)
 
+diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+index 44cde27d6389..108eca9ddad4 100644
+--- a/tools/perf/util/bpf-loader.c
++++ b/tools/perf/util/bpf-loader.c
+@@ -1091,16 +1091,12 @@ enum bpf_map_op_type {
+ 
+ enum bpf_map_key_type {
+ 	BPF_MAP_KEY_ALL,
+-	BPF_MAP_KEY_RANGES,
+ };
+ 
+ struct bpf_map_op {
+ 	struct list_head list;
+ 	enum bpf_map_op_type op_type;
+ 	enum bpf_map_key_type key_type;
+-	union {
+-		struct parse_events_array array;
+-	} k;
+ 	union {
+ 		u64 value;
+ 		struct evsel *evsel;
+@@ -1116,8 +1112,6 @@ bpf_map_op__delete(struct bpf_map_op *op)
+ {
+ 	if (!list_empty(&op->list))
+ 		list_del_init(&op->list);
+-	if (op->key_type == BPF_MAP_KEY_RANGES)
+-		parse_events__clear_array(&op->k.array);
+ 	free(op);
+ }
+ 
+@@ -1196,18 +1190,6 @@ bpf_map_op_setkey(struct bpf_map_op *op, struct parse_events_term *term)
+ 	if (!term)
+ 		return 0;
+ 
+-	if (term->array.nr_ranges) {
+-		size_t memsz = term->array.nr_ranges *
+-				sizeof(op->k.array.ranges[0]);
+-
+-		op->k.array.ranges = memdup(term->array.ranges, memsz);
+-		if (!op->k.array.ranges) {
+-			pr_debug("Not enough memory to alloc indices for map\n");
+-			return -ENOMEM;
+-		}
+-		op->key_type = BPF_MAP_KEY_RANGES;
+-		op->k.array.nr_ranges = term->array.nr_ranges;
+-	}
+ 	return 0;
+ }
+ 
+@@ -1244,18 +1226,6 @@ bpf_map_op__clone(struct bpf_map_op *op)
+ 	}
+ 
+ 	INIT_LIST_HEAD(&newop->list);
+-	if (op->key_type == BPF_MAP_KEY_RANGES) {
+-		size_t memsz = op->k.array.nr_ranges *
+-			       sizeof(op->k.array.ranges[0]);
+-
+-		newop->k.array.ranges = memdup(op->k.array.ranges, memsz);
+-		if (!newop->k.array.ranges) {
+-			pr_debug("Failed to alloc indices for map\n");
+-			free(newop);
+-			return NULL;
+-		}
+-	}
+-
+ 	return newop;
+ }
+ 
+@@ -1456,40 +1426,6 @@ struct bpf_obj_config__map_func bpf_obj_config__map_funcs[] = {
+ 	{"event", bpf_map__config_event},
+ };
+ 
+-static int
+-config_map_indices_range_check(struct parse_events_term *term,
+-			       struct bpf_map *map,
+-			       const char *map_name)
+-{
+-	struct parse_events_array *array = &term->array;
+-	unsigned int i;
+-
+-	if (!array->nr_ranges)
+-		return 0;
+-	if (!array->ranges) {
+-		pr_debug("ERROR: map %s: array->nr_ranges is %d but range array is NULL\n",
+-			 map_name, (int)array->nr_ranges);
+-		return -BPF_LOADER_ERRNO__INTERNAL;
+-	}
+-
+-	if (!map) {
+-		pr_debug("Map '%s' is invalid\n", map_name);
+-		return -BPF_LOADER_ERRNO__INTERNAL;
+-	}
+-
+-	for (i = 0; i < array->nr_ranges; i++) {
+-		unsigned int start = array->ranges[i].start;
+-		size_t length = array->ranges[i].length;
+-		unsigned int idx = start + length - 1;
+-
+-		if (idx >= bpf_map__max_entries(map)) {
+-			pr_debug("ERROR: index %d too large\n", idx);
+-			return -BPF_LOADER_ERRNO__OBJCONF_MAP_IDX2BIG;
+-		}
+-	}
+-	return 0;
+-}
+-
+ static int
+ bpf__obj_config_map(struct bpf_object *obj,
+ 		    struct parse_events_term *term,
+@@ -1525,12 +1461,6 @@ bpf__obj_config_map(struct bpf_object *obj,
+ 		goto out;
+ 	}
+ 
+-	*key_scan_pos += strlen(map_opt);
+-	err = config_map_indices_range_check(term, map, map_name);
+-	if (err)
+-		goto out;
+-	*key_scan_pos -= strlen(map_opt);
+-
+ 	for (i = 0; i < ARRAY_SIZE(bpf_obj_config__map_funcs); i++) {
+ 		struct bpf_obj_config__map_func *func =
+ 				&bpf_obj_config__map_funcs[i];
+@@ -1579,7 +1509,6 @@ typedef int (*map_config_func_t)(const char *name, int map_fd,
+ 				 const struct bpf_map *map,
+ 				 struct bpf_map_op *op,
+ 				 void *pkey, void *arg);
+-
+ static int
+ foreach_key_array_all(map_config_func_t func,
+ 		      void *arg, const char *name,
+@@ -1600,32 +1529,6 @@ foreach_key_array_all(map_config_func_t func,
+ 	return 0;
+ }
+ 
+-static int
+-foreach_key_array_ranges(map_config_func_t func, void *arg,
+-			 const char *name, int map_fd,
+-			 const struct bpf_map *map,
+-			 struct bpf_map_op *op)
+-{
+-	unsigned int i, j;
+-	int err;
+-
+-	for (i = 0; i < op->k.array.nr_ranges; i++) {
+-		unsigned int start = op->k.array.ranges[i].start;
+-		size_t length = op->k.array.ranges[i].length;
+-
+-		for (j = 0; j < length; j++) {
+-			unsigned int idx = start + j;
+-
+-			err = func(name, map_fd, map, op, &idx, arg);
+-			if (err) {
+-				pr_debug("ERROR: failed to insert value to %s[%u]\n",
+-					 name, idx);
+-				return err;
+-			}
+-		}
+-	}
+-	return 0;
+-}
+ 
+ static int
+ bpf_map_config_foreach_key(struct bpf_map *map,
+@@ -1666,10 +1569,6 @@ bpf_map_config_foreach_key(struct bpf_map *map,
+ 				err = foreach_key_array_all(func, arg, name,
+ 							    map_fd, map, op);
+ 				break;
+-			case BPF_MAP_KEY_RANGES:
+-				err = foreach_key_array_ranges(func, arg, name,
+-							       map_fd, map, op);
+-				break;
+ 			default:
+ 				pr_debug("ERROR: keytype for map '%s' invalid\n",
+ 					 name);
 diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 926d3ac97324..02647313c918 100644
+index 0e2004511cf5..70841b0febf3 100644
 --- a/tools/perf/util/parse-events.c
 +++ b/tools/perf/util/parse-events.c
-@@ -758,7 +758,7 @@ int parse_events_load_bpf_obj(struct parse_events_state *parse_state,
+@@ -2717,9 +2717,6 @@ int parse_events_term__clone(struct parse_events_term **new,
  
- 	return 0;
- errout:
--	parse_events_error__handle(parse_state->error, param.loc->first_column,
-+	parse_events_error__handle(parse_state->error, param.loc ? param.loc->first_column : 0,
- 				strdup(errbuf), strdup("(add -v to see detail)"));
- 	return err;
+ void parse_events_term__delete(struct parse_events_term *term)
+ {
+-	if (term->array.nr_ranges)
+-		zfree(&term->array.ranges);
+-
+ 	if (term->type_val != PARSE_EVENTS__TERM_TYPE_NUM)
+ 		zfree(&term->val.str);
+ 
+@@ -2770,11 +2767,6 @@ void parse_events_terms__delete(struct list_head *terms)
+ 	free(terms);
  }
+ 
+-void parse_events__clear_array(struct parse_events_array *a)
+-{
+-	zfree(&a->ranges);
+-}
+-
+ void parse_events_evlist_error(struct parse_events_state *parse_state,
+ 			       int idx, const char *str)
+ {
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index e59b33805886..b77ff619a623 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -81,17 +81,8 @@ enum {
+ 	__PARSE_EVENTS__TERM_TYPE_NR,
+ };
+ 
+-struct parse_events_array {
+-	size_t nr_ranges;
+-	struct {
+-		unsigned int start;
+-		size_t length;
+-	} *ranges;
+-};
+-
+ struct parse_events_term {
+ 	char *config;
+-	struct parse_events_array array;
+ 	union {
+ 		char *str;
+ 		u64  num;
+@@ -162,7 +153,6 @@ int parse_events_term__clone(struct parse_events_term **new,
+ void parse_events_term__delete(struct parse_events_term *term);
+ void parse_events_terms__delete(struct list_head *terms);
+ void parse_events_terms__purge(struct list_head *terms);
+-void parse_events__clear_array(struct parse_events_array *a);
+ int parse_events__modifier_event(struct list_head *list, char *str, bool add);
+ int parse_events__modifier_group(struct list_head *list, char *event_mod);
+ int parse_events_name(struct list_head *list, const char *name);
 -- 
 2.41.0.487.g6d72f3e995-goog
 
