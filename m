@@ -2,56 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F56C001DE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 06:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 166CFEB64DD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 06:49:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233436AbjG1Gtr (ORCPT
+        id S233493AbjG1Gtu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jul 2023 02:49:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59120 "EHLO
+        Fri, 28 Jul 2023 02:49:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233342AbjG1Gtq (ORCPT
+        with ESMTP id S232986AbjG1Gtt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jul 2023 02:49:46 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 396883590
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 23:49:43 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-bc68c4e046aso1655123276.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 23:49:43 -0700 (PDT)
+        Fri, 28 Jul 2023 02:49:49 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 752E73A96
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 23:49:45 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5840614b13cso30106177b3.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jul 2023 23:49:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1690526982; x=1691131782;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=JSRNyTgH2RQM+IopPYAVHpRofqMWho9ANhQe7NRcfyI=;
-        b=nRXi1Z1xCu+ny9dJx+xC1ohGfwhMrbNXm3ILlxZ3d8TaGL1vQWN1Y8b119HfJeOH+L
-         sYKDJmVsp9CBS2egYSkyBlP6MXSlJmcM60reg1cTMtzo3s2yoXU4YF41uTIre8F6TBak
-         IV7uqTL1PElSoXiUNzEsLMQ6Vt12zexPCG/AQVo9mBnI5/+IJYT5zRffhRstt5aFptQH
-         aa98iwrlnIVy5+oVyhwnEV9xk0Uv4CWqfHV05vOOSjVxW3uJfPyTFTd2hQjYpTDrkTEW
-         4vf0idf827w3L+2/4kRyak9lzmfRYrBeTuZj9mxJJxnARn3FrgPJ9mNUgA+HPLxu9GCS
-         4tpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690526982; x=1691131782;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20221208; t=1690526984; x=1691131784;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=JSRNyTgH2RQM+IopPYAVHpRofqMWho9ANhQe7NRcfyI=;
-        b=UKun34kv4aJ1ShWKAqv9r+GIxOIlA7ao+VGZ0StoqIDNKiqaP8M7P3Ut8b/RdK3occ
-         9BVEdVHuuHPSpYjkIsXXHOplgZ4D7U7ODahflFidAgRNcs/rejlK4HkR8wR7vkqeO2uQ
-         gmVyWawRH4Fl7AV5wGfyqAc8lHtCRmFH8xFceWtc0bcSgFEQ/640ZCTQkK2Nx4sK8hlJ
-         1fFrkOtpg8qzEPvF/iQfLiP5nDzZGK2hLshBVg+a87buA1I42wYdgqEPVrpskkwYt60l
-         xO+UpRR+jo7K6qTWzeQG65RgrZBVgD+MzbA6rcq7SuVBbvvVLrDVGbiV6kNHslFDlQiy
-         DVcQ==
-X-Gm-Message-State: ABy/qLaOC6qzRF/4edxeL5Xi9C7AxLY3I5CJKiHX1AaukQdAFMLdjBNT
-        /iUQVod6d2wzNaIPQTIIimvOKh6hjkn6
-X-Google-Smtp-Source: APBJJlH3g+5y4xz+Nx2m6TkDig3uk0UwJ/M7ao/vA9fmwc712RvGVnodtkcrYfR1OT2c4G9x/YNVMhG1rfj/
+        bh=C14Lkth5YhYGrilJLa3as9gLOwkujqv4yqaGCfXT1cI=;
+        b=pTjgM814griVQd95nxRaERmRO4ta0it5y0NikLDzqte4Dxn2OcWCpUMVSOvdBGreHj
+         PZJRS4r4rVxhf29d7VG6q96fZkFs1VfPbiGyiQrPDC6Q9vUxd2rIephumHnoDhePDv2s
+         dZbeVLCAvL5Q+Mv4ZDP+F2ec55M3eGwo3vCBg8m30lXOcsi/8UbFGTLKyJw4IeRjmbFD
+         kTV85zxQ5M5/yBE4/QrnJEK2Mn1TnBXO1PxDUJWAlKuX+PuB0RRx31rFWa82I+LvrfuM
+         iww3QIxpJUoNGzIl7w8eydhXRjvGgmD818Sy6noQENKa3nyDJQixl0m0FI6X5wuwbhVr
+         Gg0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690526984; x=1691131784;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=C14Lkth5YhYGrilJLa3as9gLOwkujqv4yqaGCfXT1cI=;
+        b=WQukUsKxFrnOAYkRBQjTb2RTCyfxTY1TTidGi6E2qEVAzhBGb4t9YVDKDTLM0J0xb5
+         ZQ0Wmfc4UTVFDsAKUb9EEU19AXc+4nCOG1TRGnos3cFJe6zulnRQ5vzco1mg3VB9ZOqI
+         5pZp3KkmJ8vVKc7lI6a9S+YrQO8masXTHs90bdKXFAnGP9279erYjzEQpvHkq5f4L6e4
+         0qSUNyoTdww9AGlnpdPc6G9gdFlUmPMC4DnKxPIC0oJazszun9u9HOA6MBl4Oz6eo7/R
+         SpkDFGwhev2vseZioMY2RI4fpOSWxHNGrqDuvIruJPOrJ9pnY0ZoKDX4Gy1Nfv4bSYeA
+         yqGw==
+X-Gm-Message-State: ABy/qLYPlhkj+SqBSn10+sff4B7jsEQIt4/bwisuXiaiVC8yiL6qE0Gv
+        R0y1TW2cy5gp/EtbN7wNvi/t9tVsXsHF
+X-Google-Smtp-Source: APBJJlHY5OrUkocwZKG462E8XmaFPEseNqQWvhpbV4IL+1aqabtUQ0n/nVuKjAoPgqFX/ErHS1qmqEk8D1gC
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:3d03:ff18:af30:2dad])
- (user=irogers job=sendgmr) by 2002:a25:ab47:0:b0:d08:8cf5:c5d8 with SMTP id
- u65-20020a25ab47000000b00d088cf5c5d8mr4845ybi.5.1690526982027; Thu, 27 Jul
- 2023 23:49:42 -0700 (PDT)
-Date:   Thu, 27 Jul 2023 23:49:11 -0700
-Message-Id: <20230728064917.767761-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a81:c509:0:b0:583:9d8d:fb0d with SMTP id
+ k9-20020a81c509000000b005839d8dfb0dmr10517ywi.0.1690526984540; Thu, 27 Jul
+ 2023 23:49:44 -0700 (PDT)
+Date:   Thu, 27 Jul 2023 23:49:12 -0700
+In-Reply-To: <20230728064917.767761-1-irogers@google.com>
+Message-Id: <20230728064917.767761-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20230728064917.767761-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.487.g6d72f3e995-goog
-Subject: [PATCH v1 0/6] Simplify C/C++ compiler flags
+Subject: [PATCH v1 1/6] perf bpf-loader: Remove unneeded diagnostic pragma
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -77,31 +79,28 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Some compiler flags have been brought forward in the perf build but
-without any explicit need, for example -ggdb3. Some warnings were
-disabled but the underlying warning could be addressed. Try to reduce
-the number of compiler options used in the perf build, to enable
-Wextra for C++, and to disable fewer compiler warnings.
+Added during the progress to libbpf 1.0 the deprecated functions are
+no longer used and so the pragma can be removed.
 
-Ian Rogers (6):
-  perf bpf-loader: Remove unneeded diagnostic pragma
-  perf build: Don't always set -funwind-tables and -ggdb3
-  perf build: Add Wextra for C++ compilation
-  perf build: Disable fewer flex warnings
-  perf build: Disable fewer bison warnings
-  perf build: Remove -Wno-redundant-decls in 2 cases
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/bpf-loader.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
- tools/perf/Makefile.config     |  9 ++++-----
- tools/perf/util/Build          | 18 ++++++------------
- tools/perf/util/bpf-filter.y   |  2 ++
- tools/perf/util/bpf-loader.c   |  3 ---
- tools/perf/util/c++/Build      |  3 +++
- tools/perf/util/expr.y         |  4 +++-
- tools/perf/util/parse-events.c |  1 -
- tools/perf/util/parse-events.y |  1 +
- tools/perf/util/pmu.y          |  3 +++
- 9 files changed, 22 insertions(+), 22 deletions(-)
-
+diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+index 44cde27d6389..8f4c76f2265a 100644
+--- a/tools/perf/util/bpf-loader.c
++++ b/tools/perf/util/bpf-loader.c
+@@ -32,9 +32,6 @@
+ 
+ #include <internal/xyarray.h>
+ 
+-/* temporarily disable libbpf deprecation warnings */
+-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+-
+ static int libbpf_perf_print(enum libbpf_print_level level __attribute__((unused)),
+ 			      const char *fmt, va_list args)
+ {
 -- 
 2.41.0.487.g6d72f3e995-goog
 
