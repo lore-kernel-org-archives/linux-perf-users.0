@@ -2,90 +2,111 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 459F7C001DF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 14:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A70C41513
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 14:22:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237019AbjG1OTy (ORCPT
+        id S235946AbjG1OWc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jul 2023 10:19:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44402 "EHLO
+        Fri, 28 Jul 2023 10:22:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237035AbjG1OTo (ORCPT
+        with ESMTP id S235611AbjG1OWb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jul 2023 10:19:44 -0400
+        Fri, 28 Jul 2023 10:22:31 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66F26E7E
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 07:19:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E93063C0E;
+        Fri, 28 Jul 2023 07:22:13 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7E0466215D
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 14:19:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 194D6C433BA;
-        Fri, 28 Jul 2023 14:19:33 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7878C62165;
+        Fri, 28 Jul 2023 14:22:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDEB6C433CA;
+        Fri, 28 Jul 2023 14:22:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690553974;
-        bh=k1yrhKN55pnSQjpa8Z1plGb/LhTSCAvOOrECgnnamvw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=QJjVNvz6PtGJz5LGDkofOdvKnuZvBbidyQ149ZaDfkmSVjpnUwVgMCV+pJGdW28qG
-         nHbGbA8sIutFs6Ra4z8/sQlBUzsLmwWNQHE2cfWxlEuInh6JDnV1011/sFBAtmh2iJ
-         0feYuNXoUcCe7WnWhSkOFebR4UXPDyyEhOBpnbjOhrm2yRJOPo2tbxTmU7RM9SFBtn
-         8NLsa/iEkL3LUvvoW2e5fLUX3espMd9mjgI8neuwz//6s0qEwvqvkyDoKzQTvHFsYD
-         9jt2rdNex8WywtYdu9pBABia+ZmgXWpYUVnkZTdmIFv25ezbKIYGq/zbxzvMShzBJs
-         gdJFtcLgdGAEQ==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     linux-perf-users@vger.kernel.org, mhiramat@kernel.org
-Subject: [PATCH] perf probe: Show correct error about @symbol for uprobe
-Date:   Fri, 28 Jul 2023 23:19:30 +0900
-Message-Id: <169055397023.67089.12693645664676964310.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-User-Agent: StGit/0.19
+        s=k20201202; t=1690554132;
+        bh=rT/eYOtLbTs03n3CSJnusC5NVZmatwwQuZ8puahV/zA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bQBCeYpjqJoC+8dCdqVfDuw2kDRY999MaieN08n8ET27F03kpTfDupXf5CARbu63C
+         AYOllWRGGGnNivY6kqP2rNLon3At9e9IMfxVrtXTElHVngdTb1ZKXsH9Yd5e+kS3FQ
+         ln5e7k8vv8mjrVLLSu0GdyTRHbaVL7EvFdtoYN2D9C4oN3nmxxIGKz2Ymjw0y6sU6N
+         kzGlRk22ib0r5Tu05o/wGwZFvhJ8t7mVOi6DhyU7K4mD2txPI73NwePBbi2VTV5GXA
+         vP1JqACtyvFD1+EgbuIxO+p8wfHNmV/CTiRo1hPFpwzPEkOHap4BzeffdDXoY8pbck
+         Sv/IRwFProZug==
+Date:   Fri, 28 Jul 2023 15:22:05 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        D Scott Phillips <scott@os.amperecomputing.com>,
+        Marc Zyngier <maz@kernel.org>,
+        German Gomez <german.gomez@arm.com>,
+        Ali Saidi <alisaidi@amazon.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, fissure2010@gmail.com
+Subject: Re: [PATCH v1 3/3] perf arm-spe: Support data source for Cortex-X4
+ CPU
+Message-ID: <20230728142204.GB21718@willie-the-truck>
+References: <20230717054327.79815-1-leo.yan@linaro.org>
+ <20230717054327.79815-4-leo.yan@linaro.org>
+ <c784911e-72f4-8150-530b-234978546a45@arm.com>
+ <20230724110509.GA76473@leoy-huanghe.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230724110509.GA76473@leoy-huanghe.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Mon, Jul 24, 2023 at 07:05:09PM +0800, Leo Yan wrote:
+> On Mon, Jul 24, 2023 at 12:27:31PM +0530, Anshuman Khandual wrote:
+> 
+> [...]
+> 
+> > > -static const struct midr_range neoverse_spe[] = {
+> > > +static const struct midr_range cpus_use_default_data_src[] = {
+> > 
+> > Is not 'cpus_use_default_data_src' too long ? 'use' could be dropped ?
+> 
+> Okay, I can drop 'use'.
+> 
+> > >  	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
+> > >  	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2),
+> > >  	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V1),
+> > > +	MIDR_ALL_VERSIONS(MIDR_CORTEX_X4),
+> > >  	{},
+> > >  };
+> 
+> [...]
+> 
+> > >  static u64 arm_spe__synth_data_source(const struct arm_spe_record *record, u64 midr)
+> > >  {
+> > >  	union perf_mem_data_src	data_src = { .mem_op = PERF_MEM_OP_NA };
+> > > -	bool is_neoverse = is_midr_in_range_list(midr, neoverse_spe);
+> > > +	bool is_default_dc =
+> > 
+> > _dc stands for ?
+> 
+> Thanks for pointing out this; actually I mean '_ds' which stands for
+> data source.  Will spin a new patch for this.
 
-Since @symbol variable access is not supported by uprobe event, it must be
-correctly warn user instead of kernel version update.
+Thanks. Please can you put patch 2 (the one touching tools) at the end of
+the series, too? That way I can easily pick up the kernel changes.
 
-Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-Closes: https://lore.kernel.org/all/ZLWDEjvFjrrEJODp@kernel.org/
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- tools/perf/util/probe-event.c |   13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 6e2110d605fb..c1ded85fe859 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -2800,13 +2800,18 @@ static void warn_uprobe_event_compat(struct probe_trace_event *tev)
- 	if (!tev->uprobes || tev->nargs == 0 || !buf)
- 		goto out;
- 
--	for (i = 0; i < tev->nargs; i++)
--		if (strglobmatch(tev->args[i].value, "[$@+-]*")) {
--			pr_warning("Please upgrade your kernel to at least "
--				   "3.14 to have access to feature %s\n",
-+	for (i = 0; i < tev->nargs; i++) {
-+		if (strchr(tev->args[i].value, '@')) {
-+			pr_warning("%s accesses a variable by symbol name, but that is not supported for user application probe.\n",
-+				   tev->args[i].value);
-+			break;
-+		}
-+		if (strglobmatch(tev->args[i].value, "[$+-]*")) {
-+			pr_warning("Please upgrade your kernel to at least 3.14 to have access to feature %s\n",
- 				   tev->args[i].value);
- 			break;
- 		}
-+	}
- out:
- 	free(buf);
- }
-
+Will
