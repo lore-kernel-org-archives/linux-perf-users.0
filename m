@@ -2,136 +2,90 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BA8C001DF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 14:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 459F7C001DF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 14:19:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236547AbjG1OJh (ORCPT
+        id S237019AbjG1OTy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jul 2023 10:09:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39922 "EHLO
+        Fri, 28 Jul 2023 10:19:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232825AbjG1OJg (ORCPT
+        with ESMTP id S237035AbjG1OTo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jul 2023 10:09:36 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA0BB35A8;
-        Fri, 28 Jul 2023 07:09:35 -0700 (PDT)
+        Fri, 28 Jul 2023 10:19:44 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66F26E7E
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 07:19:36 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 477326214B;
-        Fri, 28 Jul 2023 14:09:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FCC2C433C8;
-        Fri, 28 Jul 2023 14:09:34 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7E0466215D
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 14:19:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 194D6C433BA;
+        Fri, 28 Jul 2023 14:19:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690553374;
-        bh=KLjExLhXnoctgt1F9lPT4E5ymQFk/shVtkceDCu/DEw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=t1etBMMWEBHJC08coP28YOQwC8VVdJesVcfvy18HnTq4G3U1ROuBFX3sNmyhnlKTl
-         wzoA/DYjJ9eVCXjIoEXKzN04peXut9x/9jSSA7B5xCwZsMzPTHo90weaB40QoBvyld
-         uQk112OiQI6MIxJprD1k1RhOn5ktNfrkPrD8vBnsS3PjIaVFvXg9U+vWyl4e81df8f
-         flm6vvxxn/AdxotNwvTgG3a4NQ9YzWxOBMIojxnRRBZOG+Vez+N0ASvKC0jf5k5S3U
-         u28l5ip/GchiYuL7gT1qqst1buMHlNuF6xlr1ijT4wdC3CrUJvKzQob07kx4kyawIR
-         MHlq42gPSy/bA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 37CD740096; Fri, 28 Jul 2023 11:09:32 -0300 (-03)
-Date:   Fri, 28 Jul 2023 11:09:32 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Anup Sharma <anupnewsmail@gmail.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] perf build: Update build rule for generated files
-Message-ID: <ZMPMHNjX2IxsLbAe@kernel.org>
-References: <20230728022447.1323563-1-namhyung@kernel.org>
+        s=k20201202; t=1690553974;
+        bh=k1yrhKN55pnSQjpa8Z1plGb/LhTSCAvOOrECgnnamvw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QJjVNvz6PtGJz5LGDkofOdvKnuZvBbidyQ149ZaDfkmSVjpnUwVgMCV+pJGdW28qG
+         nHbGbA8sIutFs6Ra4z8/sQlBUzsLmwWNQHE2cfWxlEuInh6JDnV1011/sFBAtmh2iJ
+         0feYuNXoUcCe7WnWhSkOFebR4UXPDyyEhOBpnbjOhrm2yRJOPo2tbxTmU7RM9SFBtn
+         8NLsa/iEkL3LUvvoW2e5fLUX3espMd9mjgI8neuwz//6s0qEwvqvkyDoKzQTvHFsYD
+         9jt2rdNex8WywtYdu9pBABia+ZmgXWpYUVnkZTdmIFv25ezbKIYGq/zbxzvMShzBJs
+         gdJFtcLgdGAEQ==
+From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     linux-perf-users@vger.kernel.org, mhiramat@kernel.org
+Subject: [PATCH] perf probe: Show correct error about @symbol for uprobe
+Date:   Fri, 28 Jul 2023 23:19:30 +0900
+Message-Id: <169055397023.67089.12693645664676964310.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230728022447.1323563-1-namhyung@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Jul 27, 2023 at 07:24:46PM -0700, Namhyung Kim escreveu:
-> The bison and flex generate C files from the source (.y and .l)
-> files.  When O= option is used, they are saved in a separate directory
-> but the default build rule assumes the .C files are in the source
-> directory.  So it might read invalid file if there are generated files
-> from an old version.  The same is true for the pmu-events files.
-> 
-> For example, the following command would cause a build failure:
-> 
->   $ git checkout v6.3
->   $ make -C tools/perf  # build in the same directory
-> 
->   $ git checkout v6.5-rc2
->   $ mkdir build  # create a build directory
->   $ make -C tools/perf O=build  # build in a different directory but it
->                                 # refers files in the source directory
-> 
-> Let's update the build rule to specify those cases explicitly to depend
-> on the files in the output directory.
-> 
-> Note that it's not a complete fix and it needs the next patch for the
-> include path too.
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Applied, testing it on the container builds.
+Since @symbol variable access is not supported by uprobe event, it must be
+correctly warn user instead of kernel version update.
 
-- Arnaldo
+Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Closes: https://lore.kernel.org/all/ZLWDEjvFjrrEJODp@kernel.org/
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ tools/perf/util/probe-event.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index 6e2110d605fb..c1ded85fe859 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -2800,13 +2800,18 @@ static void warn_uprobe_event_compat(struct probe_trace_event *tev)
+ 	if (!tev->uprobes || tev->nargs == 0 || !buf)
+ 		goto out;
  
-> Fixes: 80eeb67fe577 ("perf jevents: Program to convert JSON file")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/build/Makefile.build  | 10 ++++++++++
->  tools/perf/pmu-events/Build |  6 ++++++
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/tools/build/Makefile.build b/tools/build/Makefile.build
-> index 89430338a3d9..fac42486a8cf 100644
-> --- a/tools/build/Makefile.build
-> +++ b/tools/build/Makefile.build
-> @@ -117,6 +117,16 @@ $(OUTPUT)%.s: %.c FORCE
->  	$(call rule_mkdir)
->  	$(call if_changed_dep,cc_s_c)
->  
-> +# bison and flex files are generated in the OUTPUT directory
-> +# so it needs a separate rule to depend on them properly
-> +$(OUTPUT)%-bison.o: $(OUTPUT)%-bison.c FORCE
-> +	$(call rule_mkdir)
-> +	$(call if_changed_dep,$(host)cc_o_c)
-> +
-> +$(OUTPUT)%-flex.o: $(OUTPUT)%-flex.c FORCE
-> +	$(call rule_mkdir)
-> +	$(call if_changed_dep,$(host)cc_o_c)
-> +
->  # Gather build data:
->  #   obj-y        - list of build objects
->  #   subdir-y     - list of directories to nest
-> diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
-> index 150765f2baee..1d18bb89402e 100644
-> --- a/tools/perf/pmu-events/Build
-> +++ b/tools/perf/pmu-events/Build
-> @@ -35,3 +35,9 @@ $(PMU_EVENTS_C): $(JSON) $(JSON_TEST) $(JEVENTS_PY) $(METRIC_PY) $(METRIC_TEST_L
->  	$(call rule_mkdir)
->  	$(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) $(JEVENTS_MODEL) pmu-events/arch $@
->  endif
-> +
-> +# pmu-events.c file is generated in the OUTPUT directory so it needs a
-> +# separate rule to depend on it properly
-> +$(OUTPUT)pmu-events/pmu-events.o: $(PMU_EVENTS_C)
-> +	$(call rule_mkdir)
-> +	$(call if_changed_dep,cc_o_c)
-> -- 
-> 2.41.0.487.g6d72f3e995-goog
-> 
+-	for (i = 0; i < tev->nargs; i++)
+-		if (strglobmatch(tev->args[i].value, "[$@+-]*")) {
+-			pr_warning("Please upgrade your kernel to at least "
+-				   "3.14 to have access to feature %s\n",
++	for (i = 0; i < tev->nargs; i++) {
++		if (strchr(tev->args[i].value, '@')) {
++			pr_warning("%s accesses a variable by symbol name, but that is not supported for user application probe.\n",
++				   tev->args[i].value);
++			break;
++		}
++		if (strglobmatch(tev->args[i].value, "[$+-]*")) {
++			pr_warning("Please upgrade your kernel to at least 3.14 to have access to feature %s\n",
+ 				   tev->args[i].value);
+ 			break;
+ 		}
++	}
+ out:
+ 	free(buf);
+ }
 
--- 
-
-- Arnaldo
