@@ -2,168 +2,155 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD10FC0015E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 18:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE19EC001DE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 18:31:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235496AbjG1SKc (ORCPT
+        id S229580AbjG1SbK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jul 2023 14:10:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55214 "EHLO
+        Fri, 28 Jul 2023 14:31:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235594AbjG1SK0 (ORCPT
+        with ESMTP id S229446AbjG1SbJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jul 2023 14:10:26 -0400
+        Fri, 28 Jul 2023 14:31:09 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 229D244B3;
-        Fri, 28 Jul 2023 11:10:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D6034499;
+        Fri, 28 Jul 2023 11:30:46 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9E83A621D9;
-        Fri, 28 Jul 2023 18:10:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98FD6C433C8;
-        Fri, 28 Jul 2023 18:10:07 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AA10A621D7;
+        Fri, 28 Jul 2023 18:30:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7718C433C8;
+        Fri, 28 Jul 2023 18:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690567808;
-        bh=3LeMZELp4m+1YYGFtSrMAlQqThQJj6GMObRyyGm7lGs=;
+        s=k20201202; t=1690569005;
+        bh=uInCDj+mYhyh3EGnNpi/lvXN0Ha9NnDbrne3h8BtL2Y=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RzYn+nxk5BM8Wz7vV7nTjftpnfIwmtyxP6J4GzJeLEQhZr2RLcF+z0Ds8EbGpPAHQ
-         h2L2cjymJ524g3DzF/y8/NXSiwhm7AJ2zt6ITJwRY6i5O0O8DX5VOBB3SJa9cIuk4m
-         4tHzJX2ywbDPnRr4ZPoy/jHG39RxguJ1AdH4+ODNzIBeh0zXQQv79N3z8owiGz61Zh
-         yNJB4uj0PS3/2i5/+BygJi3E6gvFAuUo/ZdhyCKzaRY82vXVf+4hLZTrrYzL1/cmBk
-         9YBIuVdMjoNIA+7q6HZ63s8+6iW6NAnaSVEUBGB9tueXB7k7kYAgqA5t7XDZ1kf4Df
-         ZTClkQFSrd/cQ==
+        b=N3o+ZD1Hp89pRzstgK7t37+qptTti4MPp3Y0uEWOAUTQXhTp+IMHBduyVeoYr3yI5
+         X1GqBd5lyf58CrOqhLveam5CfhkAh777luRJNUugRX0ZijXLWDvcYHrSHVe0a0eBLW
+         /0o0MYskZPQ6CWf80g0OlS6xMG72Ftave4s7c388KW9l56qekafaqtQvZ3Yj8JB7dR
+         pron/RgVWBR0rEs9Yg0Lrc+zUqivLjJOriMN9J3RlLfgxxkrTy01FCkKcN7Ujf8yqn
+         ngZ1bz9FoeUBSEbjV7tj/+zSmofi/wyCh7Jb9+7UIU6WHNAY713TLOiUKAXbUkyLnT
+         YkB6SF+IS9Tcg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 08C7740096; Fri, 28 Jul 2023 15:10:05 -0300 (-03)
-Date:   Fri, 28 Jul 2023 15:10:04 -0300
+        id 2237E40096; Fri, 28 Jul 2023 15:30:02 -0300 (-03)
+Date:   Fri, 28 Jul 2023 15:30:02 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
-        Rob Herring <robh@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v1 4/6] perf build: Disable fewer flex warnings
-Message-ID: <ZMQEfIi/BYwpDIEB@kernel.org>
-References: <20230728064917.767761-1-irogers@google.com>
- <20230728064917.767761-5-irogers@google.com>
- <a8833945-3f0a-7651-39ff-a01e7edc2b3a@arm.com>
- <ZMPJym7DnCkFH7aA@kernel.org>
- <ZMPKekDl+g5PeiH8@kernel.org>
- <CAP-5=fX2LOdd_34ysAYYB5zq5tr7dMje35Nw6hrLXTPLsOHoaw@mail.gmail.com>
+Cc:     Aditya Gupta <adityag@linux.ibm.com>, jolsa@kernel.org,
+        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] perf tests task_analyzer: Check perf build options
+ for libtraceevent support
+Message-ID: <ZMQJKmV3XtwtZJtO@kernel.org>
+References: <20230725061649.34937-1-adityag@linux.ibm.com>
+ <ZMPWk5K63tadmDlU@kernel.org>
+ <CAP-5=fW1zkpJ4zr4ngz=6bZQuE6hOHo4AtXwUsVJK9oiDSc_mg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fX2LOdd_34ysAYYB5zq5tr7dMje35Nw6hrLXTPLsOHoaw@mail.gmail.com>
+In-Reply-To: <CAP-5=fW1zkpJ4zr4ngz=6bZQuE6hOHo4AtXwUsVJK9oiDSc_mg@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jul 28, 2023 at 08:26:54AM -0700, Ian Rogers escreveu:
-> On Fri, Jul 28, 2023 at 7:02 AM Arnaldo Carvalho de Melo
+Em Fri, Jul 28, 2023 at 09:01:11AM -0700, Ian Rogers escreveu:
+> On Fri, Jul 28, 2023 at 7:54 AM Arnaldo Carvalho de Melo
 > <acme@kernel.org> wrote:
 > >
-> > Em Fri, Jul 28, 2023 at 10:59:38AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > Em Fri, Jul 28, 2023 at 09:50:59AM +0100, James Clark escreveu:
-> > > >
-> > > >
-> > > > On 28/07/2023 07:49, Ian Rogers wrote:
-> > > > > If flex is version 2.6.4, reduce the number of flex C warnings
-> > > > > disabled. Earlier flex versions have all C warnings disabled.
-> > > >
-> > > > Hi Ian,
-> > > >
-> > > > I get a build error with either this one or the bison warning change:
-> > > >
-> > > >   $ make LLVM=1 -C tools/perf NO_BPF_SKEL=1 DEBUG=1
-> > > >
-> > > >   util/pmu-bison.c:855:9: error: variable 'perf_pmu_nerrs' set but not
-> > > > used [-Werror,-Wunused-but-set-variable]
-> > > >     int yynerrs = 0;
-> > > >
-> > > > I tried a clean build which normally fixes these kind of bison errors.
-> > > > Let me know if you need any version info.
+> > Em Tue, Jul 25, 2023 at 11:46:49AM +0530, Aditya Gupta escreveu:
+> > > Currently we depend on output of 'perf record -e "sched:sched_switch"', to
+> > > check whether perf was built with libtraceevent support.
 > > >
-> > > Trying to build it with the command line above I get:
+> > > Instead, a more straightforward approach can be to check the build options,
+> > > using 'perf version --build-options', to check for libtraceevent support.
 > > >
-> > >   CC      util/expr.o
-> > >   CC      util/parse-events.o
-> > >   CC      util/parse-events-flex.o
-> > > util/parse-events-flex.c:7503:13: error: misleading indentation; statement is not part of the previous 'if' [-Werror,-Wmisleading-indentation]
-> > >             if ( ! yyg->yy_state_buf )
-> > >             ^
-> > > util/parse-events-flex.c:7501:9: note: previous statement is here
-> > >         if ( ! yyg->yy_state_buf )
-> > >         ^
-> >
-> > I added this to the patch to get it moving:
-> >
-> > make: Leaving directory '/var/home/acme/git/perf-tools-next/tools/perf'
-> > ⬢[acme@toolbox perf-tools-next]$ git diff
-> > diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> > index 32239c4b0393c319..afa93eff495811cf 100644
-> > --- a/tools/perf/util/Build
-> > +++ b/tools/perf/util/Build
-> > @@ -281,7 +281,7 @@ $(OUTPUT)util/bpf-filter-bison.c $(OUTPUT)util/bpf-filter-bison.h: util/bpf-filt
-> >
-> >  FLEX_GE_264 := $(shell expr $(shell $(FLEX) --version | sed -e  's/flex \([0-9]\+\).\([0-9]\+\).\([0-9]\+\)/\1\2\3/g') \>\= 264)
-> >  ifeq ($(FLEX_GE_264),1)
-> > -  flex_flags := -Wno-redundant-decls -Wno-switch-default -Wno-unused-function
-> > +  flex_flags := -Wno-redundant-decls -Wno-switch-default -Wno-unused-function -Wno-misleading-indentation
-> >  else
-> >    flex_flags := -w
-> >  endif
-> > ⬢[acme@toolbox perf-tools-next]$
-> >
-> >
-> > > 1 error generated.
-> > > make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: util/parse-events-flex.o] Error 1
-> > > make[4]: *** Waiting for unfinished jobs....
-> > >   LD      util/scripting-engines/perf-in.o
-> > > make[3]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:140: util] Error 2
-> > > make[2]: *** [Makefile.perf:682: perf-in.o] Error 2
-> > > make[2]: *** Waiting for unfinished jobs....
-> > >   CC      pmu-events/pmu-events.o
-> > >   LD      pmu-events/pmu-events-in.o
-> > > make[1]: *** [Makefile.perf:242: sub-make] Error 2
-> > > make: *** [Makefile:70: all] Error 2
+> > > When perf is compiled WITHOUT libtraceevent ('make NO_LIBTRACEEVENT=1'),
+> > > 'perf version --build-options' outputs (output trimmed):
 > > >
-> > > ⬢[acme@toolbox perf-tools-next]$ clang --version
-> > > clang version 14.0.5 (Fedora 14.0.5-2.fc36)
-> > > Target: x86_64-redhat-linux-gnu
-> > > Thread model: posix
-> > > InstalledDir: /usr/bin
-> > > ⬢[acme@toolbox perf-tools-next]$
+> > >        ...
+> > >          libtraceevent: [ OFF ]  # HAVE_LIBTRACEEVENT
+> > >        ...
+> > >
+> > > While, when perf is compiled WITH libtraceevent,
+> > >
+> > > 'perf version --build-options' outputs:
+> > >
+> > > ...
+> > >          libtraceevent: [ on ]  # HAVE_LIBTRACEEVENT
+> > >        ...
+> > >
+> > > Suggested-by: Ian Rogers <irogers@google.com>
+> > > Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
+> > > ---
+> > >
+> > >  tools/perf/tests/shell/test_task_analyzer.sh | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/tools/perf/tests/shell/test_task_analyzer.sh b/tools/perf/tests/shell/test_task_analyzer.sh
+> > > index 0095abbe20ca..a28d784987b4 100755
+> > > --- a/tools/perf/tests/shell/test_task_analyzer.sh
+> > > +++ b/tools/perf/tests/shell/test_task_analyzer.sh
+> > > @@ -52,7 +52,7 @@ find_str_or_fail() {
+> > >
+> > >  # check if perf is compiled with libtraceevent support
+> > >  skip_no_probe_record_support() {
+> > > -     perf record -e "sched:sched_switch" -a -- sleep 1 2>&1 | grep "libtraceevent is necessary for tracepoint support" && return 2
+> > > +     perf version --build-options | grep HAVE_LIBTRACEEVENT | grep -q OFF && return 2
+> > >       return 0
+> >
+> > I'll apply this, but please consider adding a:
+> >
+> >         perf build --has libtraceevent
 > 
-> Thanks James/Arnaldo, I was trying to be aggressive in having more
-> flags, but it seems too aggressive. We should probably bring back the
-> logic to make this flag only added if it is supported:
->   CC_HASNT_MISLEADING_INDENTATION := $(shell echo "int main(void) {
-> return 0 }" | $(CC) -Werror -Wno-misleading-indentation -o /dev/null
-> -xc - 2>&1 | grep -q -- -Wno-misleading-indentation ; echo $$?)
->   ifeq ($(CC_HASNT_MISLEADING_INDENTATION), 1)
->     flex_flags += -Wno-misleading-indentation
->   endif
-> Arnaldo, is the misleading indentation in the bison generated code or
-> something copy-pasted from the parse-events.l ? If the latter we may
-> be able to fix the .l file to keep the warning.
+> That's a nice idea. You mean add a script like perf-archive.sh?
 
-I haven't checked, lemme do it now.
+Nope, I would just add a new builtin-build.c (or some other more
+suitable name to query what was built into perf) and then it would just
+do a simple search on the same array that 'perf version --build-options'
+currently uses (or the array that it would then share with 'perf
+build', I haven't looked at the source code.).
+
+So instead of a series of fork + execs we would just have one.
+
+- Arnaldo
+
+> Perhaps this flag should be supported by perf version instead.
+> 
+> Thanks,
+> Ian
+> 
+> > subcommand to have that query made more compact and to avoid the two
+> > extra grep.
+> >
+> > BTW, I'll change that to:
+> >
+> > [acme@quaco perf-tools-next]$ perf version --build-options | grep " on .* HAVE_LIBTRACEEVENT"
+> >          libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
+> > [acme@quaco perf-tools-next]$
+> >
+> > replacing "on" with OFF, so that we have just one grep.
+> >
+> > Thanks,
+> >
+> > - Arnaldo
+> >
+> > >  }
+> > >
+> > > --
+> > > 2.41.0
+> > >
+> >
+> > --
+> >
+> > - Arnaldo
+
+-- 
 
 - Arnaldo
