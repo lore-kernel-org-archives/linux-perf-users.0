@@ -2,193 +2,168 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CADB3C0015E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 17:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD10FC0015E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 18:10:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233888AbjG1R5s (ORCPT
+        id S235496AbjG1SKc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jul 2023 13:57:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48018 "EHLO
+        Fri, 28 Jul 2023 14:10:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233767AbjG1R5q (ORCPT
+        with ESMTP id S235594AbjG1SK0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jul 2023 13:57:46 -0400
-Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12A0D3C2A
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 10:57:39 -0700 (PDT)
-Received: by mail-il1-x133.google.com with SMTP id e9e14a558f8ab-348c7075afcso7055ab.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jul 2023 10:57:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1690567058; x=1691171858;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QxwJTgPqKGUqvUto5dRinQkbqBd7YM2MzlMxp9fWT8E=;
-        b=hQjJ1RLhJPauIywvr88WuY2ABYjB2prVNewvEwx+Ocd9iSB0qKWcCl2chTkt7owPHk
-         NwK1CRy9qGSPfS6cD1UYHjSR8fesIFv9I0Wd8aClgqqxYPlLXoqaYgEV8kVCIp4ecKgy
-         cu7SXnAM12xOR3BfkE6HRFPNdQzYfT5Ou6FJ3h8QqbAqcWzGk8SFvuKtMFGQTKyyeBma
-         F6RJuEPDUoITfFKh45bWuULRzL0DaBvkA0SpKtIq1WnQkYKvjBelp7tA2+xQxMt53ozp
-         GWWmzWCFAOH+p9xcFIeaU6MJ462VS89dfPCEEZlmfMv0glqmjj538X5HW0+YErboLJov
-         /R7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690567058; x=1691171858;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QxwJTgPqKGUqvUto5dRinQkbqBd7YM2MzlMxp9fWT8E=;
-        b=gxp5MkX05U0G2Zfktyx7vbecaC3r7Hk2mNzPO7VmoiecOuPpzWiNaESQ60PdihRkr5
-         ooRGicPZQ5Qspe4A+g/fDuDamY/KDmtNDpFvzLHdbjX1n4rPYCP2qNBAgsPV3Y3x97bW
-         XTvo2B5Rynti4oMDBJzqFw75i92A5sD0xtNXfgoAriy6DfNTa2yUwBLyczGcCRFFJZJq
-         g6y9Aa6wQkxYcO9XYR+8uQrk+PaB8FnWNWyick32HKS48w6EMV78HgRio0LprEQiErba
-         NsMIO3KTRHM6QkRxHwIlk5cFZ97vftOORCq/OhiWbuvJ9CfvR9xJnyCmdTUfBVD4Ehbi
-         F/FQ==
-X-Gm-Message-State: ABy/qLbiGiTfipsrhF6ro521tYlF3ILCBFb4WtA5hW3dEcv59rtjqVV/
-        pF9nf73rl/dx0MK1hplJcuXNfgWtHWrDJSuMJul6BA==
-X-Google-Smtp-Source: APBJJlHpbym5NVbH/RcqOhrKSFskHR7tQZfcGUN6Xl3PdQvSaVwD+bRtz/ffQC9VU+PrLaI/scDIoQUVlMUBomjnwB4=
-X-Received: by 2002:a05:6e02:1c01:b0:348:f100:a88 with SMTP id
- l1-20020a056e021c0100b00348f1000a88mr13379ilh.23.1690567058236; Fri, 28 Jul
- 2023 10:57:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230718000737.49077-1-ivan@cloudflare.com> <CABWYdi2E1XozvwsZwOA80X-YbqLejj_5sxzNAh7w6R93rD5sCw@mail.gmail.com>
-In-Reply-To: <CABWYdi2E1XozvwsZwOA80X-YbqLejj_5sxzNAh7w6R93rD5sCw@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 28 Jul 2023 10:57:26 -0700
-Message-ID: <CAP-5=fUe5JxXK3gPAGcR279xDVmFarotHvb2Gk19u5SAOboGtg@mail.gmail.com>
-Subject: Re: [PATCH] perf script: print cgroup on the same line as comm
-To:     Ivan Babrou <ivan@cloudflare.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     linux-perf-users@vger.kernel.org, kernel-team@cloudflare.com,
-        linux-kernel@vger.kernel.org,
+        Fri, 28 Jul 2023 14:10:26 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 229D244B3;
+        Fri, 28 Jul 2023 11:10:09 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9E83A621D9;
+        Fri, 28 Jul 2023 18:10:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98FD6C433C8;
+        Fri, 28 Jul 2023 18:10:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690567808;
+        bh=3LeMZELp4m+1YYGFtSrMAlQqThQJj6GMObRyyGm7lGs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RzYn+nxk5BM8Wz7vV7nTjftpnfIwmtyxP6J4GzJeLEQhZr2RLcF+z0Ds8EbGpPAHQ
+         h2L2cjymJ524g3DzF/y8/NXSiwhm7AJ2zt6ITJwRY6i5O0O8DX5VOBB3SJa9cIuk4m
+         4tHzJX2ywbDPnRr4ZPoy/jHG39RxguJ1AdH4+ODNzIBeh0zXQQv79N3z8owiGz61Zh
+         yNJB4uj0PS3/2i5/+BygJi3E6gvFAuUo/ZdhyCKzaRY82vXVf+4hLZTrrYzL1/cmBk
+         9YBIuVdMjoNIA+7q6HZ63s8+6iW6NAnaSVEUBGB9tueXB7k7kYAgqA5t7XDZ1kf4Df
+         ZTClkQFSrd/cQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 08C7740096; Fri, 28 Jul 2023 15:10:05 -0300 (-03)
+Date:   Fri, 28 Jul 2023 15:10:04 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     James Clark <james.clark@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v1 4/6] perf build: Disable fewer flex warnings
+Message-ID: <ZMQEfIi/BYwpDIEB@kernel.org>
+References: <20230728064917.767761-1-irogers@google.com>
+ <20230728064917.767761-5-irogers@google.com>
+ <a8833945-3f0a-7651-39ff-a01e7edc2b3a@arm.com>
+ <ZMPJym7DnCkFH7aA@kernel.org>
+ <ZMPKekDl+g5PeiH8@kernel.org>
+ <CAP-5=fX2LOdd_34ysAYYB5zq5tr7dMje35Nw6hrLXTPLsOHoaw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fX2LOdd_34ysAYYB5zq5tr7dMje35Nw6hrLXTPLsOHoaw@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jul 28, 2023 at 10:42=E2=80=AFAM Ivan Babrou <ivan@cloudflare.com> =
-wrote:
->
-> On Mon, Jul 17, 2023 at 5:07=E2=80=AFPM Ivan Babrou <ivan@cloudflare.com>=
- wrote:
+Em Fri, Jul 28, 2023 at 08:26:54AM -0700, Ian Rogers escreveu:
+> On Fri, Jul 28, 2023 at 7:02 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
 > >
-> > Commit 3fd7a168bf51 ("perf script: Add 'cgroup' field for output")
-> > added support for printing cgroup path in perf script output.
+> > Em Fri, Jul 28, 2023 at 10:59:38AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > Em Fri, Jul 28, 2023 at 09:50:59AM +0100, James Clark escreveu:
+> > > >
+> > > >
+> > > > On 28/07/2023 07:49, Ian Rogers wrote:
+> > > > > If flex is version 2.6.4, reduce the number of flex C warnings
+> > > > > disabled. Earlier flex versions have all C warnings disabled.
+> > > >
+> > > > Hi Ian,
+> > > >
+> > > > I get a build error with either this one or the bison warning change:
+> > > >
+> > > >   $ make LLVM=1 -C tools/perf NO_BPF_SKEL=1 DEBUG=1
+> > > >
+> > > >   util/pmu-bison.c:855:9: error: variable 'perf_pmu_nerrs' set but not
+> > > > used [-Werror,-Wunused-but-set-variable]
+> > > >     int yynerrs = 0;
+> > > >
+> > > > I tried a clean build which normally fixes these kind of bison errors.
+> > > > Let me know if you need any version info.
+> > >
+> > > Trying to build it with the command line above I get:
+> > >
+> > >   CC      util/expr.o
+> > >   CC      util/parse-events.o
+> > >   CC      util/parse-events-flex.o
+> > > util/parse-events-flex.c:7503:13: error: misleading indentation; statement is not part of the previous 'if' [-Werror,-Wmisleading-indentation]
+> > >             if ( ! yyg->yy_state_buf )
+> > >             ^
+> > > util/parse-events-flex.c:7501:9: note: previous statement is here
+> > >         if ( ! yyg->yy_state_buf )
+> > >         ^
 > >
-> > It was okay if you didn't want any stacks:
+> > I added this to the patch to get it moving:
 > >
-> >     $ sudo perf script --comms jpegtran:23f4bf -F comm,tid,cpu,time,cgr=
-oup
-> >     jpegtran:23f4bf 3321915 [013] 404718.587488:  /idle.slice/polish.se=
-rvice
-> >     jpegtran:23f4bf 3321915 [031] 404718.592073:  /idle.slice/polish.se=
-rvice
+> > make: Leaving directory '/var/home/acme/git/perf-tools-next/tools/perf'
+> > ⬢[acme@toolbox perf-tools-next]$ git diff
+> > diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> > index 32239c4b0393c319..afa93eff495811cf 100644
+> > --- a/tools/perf/util/Build
+> > +++ b/tools/perf/util/Build
+> > @@ -281,7 +281,7 @@ $(OUTPUT)util/bpf-filter-bison.c $(OUTPUT)util/bpf-filter-bison.h: util/bpf-filt
 > >
-> > With stacks it gets messier as cgroup is printed after the stack:
+> >  FLEX_GE_264 := $(shell expr $(shell $(FLEX) --version | sed -e  's/flex \([0-9]\+\).\([0-9]\+\).\([0-9]\+\)/\1\2\3/g') \>\= 264)
+> >  ifeq ($(FLEX_GE_264),1)
+> > -  flex_flags := -Wno-redundant-decls -Wno-switch-default -Wno-unused-function
+> > +  flex_flags := -Wno-redundant-decls -Wno-switch-default -Wno-unused-function -Wno-misleading-indentation
+> >  else
+> >    flex_flags := -w
+> >  endif
+> > ⬢[acme@toolbox perf-tools-next]$
 > >
-> >     $ perf script --comms jpegtran:23f4bf -F comm,tid,cpu,time,cgroup,i=
-p,sym
-> >     jpegtran:23f4bf 3321915 [013] 404718.587488:
-> >                     5c554 compress_output
-> >                     570d9 jpeg_finish_compress
-> >                     3476e jpegtran_main
-> >                     330ee jpegtran::main
-> >                     326e2 core::ops::function::FnOnce::call_once (inlin=
-ed)
-> >                     326e2 std::sys_common::backtrace::__rust_begin_shor=
-t_backtrace
-> >     /idle.slice/polish.service
-> >     jpegtran:23f4bf 3321915 [031] 404718.592073:
-> >                     8474d jsimd_encode_mcu_AC_first_prepare_sse2.PADDIN=
-G
-> >                 55af68e62fff [unknown]
-> >     /idle.slice/polish.service
 > >
-> > Let's instead print cgroup on the same line as comm:
-> >
-> >     $ perf script --comms jpegtran:23f4bf -F comm,tid,cpu,time,cgroup,i=
-p,sym
-> >     jpegtran:23f4bf 3321915 [013] 404718.587488:  /idle.slice/polish.se=
-rvice
-> >                     5c554 compress_output
-> >                     570d9 jpeg_finish_compress
-> >                     3476e jpegtran_main
-> >                     330ee jpegtran::main
-> >                     326e2 core::ops::function::FnOnce::call_once (inlin=
-ed)
-> >                     326e2 std::sys_common::backtrace::__rust_begin_shor=
-t_backtrace
-> >
-> >     jpegtran:23f4bf 3321915 [031] 404718.592073:  /idle.slice/polish.se=
-rvice
-> >                     8474d jsimd_encode_mcu_AC_first_prepare_sse2.PADDIN=
-G
-> >                 55af68e62fff [unknown]
-> >
-> > Signed-off-by: Ivan Babrou <ivan@cloudflare.com>
-> > Fixes: 3fd7a168bf51 ("perf script: Add 'cgroup' field for output")
+> > > 1 error generated.
+> > > make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: util/parse-events-flex.o] Error 1
+> > > make[4]: *** Waiting for unfinished jobs....
+> > >   LD      util/scripting-engines/perf-in.o
+> > > make[3]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:140: util] Error 2
+> > > make[2]: *** [Makefile.perf:682: perf-in.o] Error 2
+> > > make[2]: *** Waiting for unfinished jobs....
+> > >   CC      pmu-events/pmu-events.o
+> > >   LD      pmu-events/pmu-events-in.o
+> > > make[1]: *** [Makefile.perf:242: sub-make] Error 2
+> > > make: *** [Makefile:70: all] Error 2
+> > >
+> > > ⬢[acme@toolbox perf-tools-next]$ clang --version
+> > > clang version 14.0.5 (Fedora 14.0.5-2.fc36)
+> > > Target: x86_64-redhat-linux-gnu
+> > > Thread model: posix
+> > > InstalledDir: /usr/bin
+> > > ⬢[acme@toolbox perf-tools-next]$
+> 
+> Thanks James/Arnaldo, I was trying to be aggressive in having more
+> flags, but it seems too aggressive. We should probably bring back the
+> logic to make this flag only added if it is supported:
+>   CC_HASNT_MISLEADING_INDENTATION := $(shell echo "int main(void) {
+> return 0 }" | $(CC) -Werror -Wno-misleading-indentation -o /dev/null
+> -xc - 2>&1 | grep -q -- -Wno-misleading-indentation ; echo $$?)
+>   ifeq ($(CC_HASNT_MISLEADING_INDENTATION), 1)
+>     flex_flags += -Wno-misleading-indentation
+>   endif
+> Arnaldo, is the misleading indentation in the bison generated code or
+> something copy-pasted from the parse-events.l ? If the latter we may
+> be able to fix the .l file to keep the warning.
 
-This change makes sense to me. Namhyung, wdyt?
+I haven't checked, lemme do it now.
 
-Thanks,
-Ian
-
-
-> > ---
-> >  tools/perf/builtin-script.c | 22 +++++++++++-----------
-> >  1 file changed, 11 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> > index 200b3e7ea8da..517bf25750c8 100644
-> > --- a/tools/perf/builtin-script.c
-> > +++ b/tools/perf/builtin-script.c
-> > @@ -2199,6 +2199,17 @@ static void process_event(struct perf_script *sc=
-ript,
-> >         if (PRINT_FIELD(RETIRE_LAT))
-> >                 fprintf(fp, "%16" PRIu16, sample->retire_lat);
-> >
-> > +       if (PRINT_FIELD(CGROUP)) {
-> > +               const char *cgrp_name;
-> > +               struct cgroup *cgrp =3D cgroup__find(machine->env,
-> > +                                                  sample->cgroup);
-> > +               if (cgrp !=3D NULL)
-> > +                       cgrp_name =3D cgrp->name;
-> > +               else
-> > +                       cgrp_name =3D "unknown";
-> > +               fprintf(fp, " %s", cgrp_name);
-> > +       }
-> > +
-> >         if (PRINT_FIELD(IP)) {
-> >                 struct callchain_cursor *cursor =3D NULL;
-> >
-> > @@ -2243,17 +2254,6 @@ static void process_event(struct perf_script *sc=
-ript,
-> >         if (PRINT_FIELD(CODE_PAGE_SIZE))
-> >                 fprintf(fp, " %s", get_page_size_name(sample->code_page=
-_size, str));
-> >
-> > -       if (PRINT_FIELD(CGROUP)) {
-> > -               const char *cgrp_name;
-> > -               struct cgroup *cgrp =3D cgroup__find(machine->env,
-> > -                                                  sample->cgroup);
-> > -               if (cgrp !=3D NULL)
-> > -                       cgrp_name =3D cgrp->name;
-> > -               else
-> > -                       cgrp_name =3D "unknown";
-> > -               fprintf(fp, " %s", cgrp_name);
-> > -       }
-> > -
-> >         perf_sample__fprintf_ipc(sample, attr, fp);
-> >
-> >         fprintf(fp, "\n");
-> > --
-> > 2.41.0
-> >
->
-> A friendly bump in case this slipped through the cracks.
+- Arnaldo
