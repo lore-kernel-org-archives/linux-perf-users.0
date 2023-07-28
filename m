@@ -2,102 +2,111 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AECEC0015E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 14:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E26C0015E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jul 2023 14:42:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235151AbjG1OiQ (ORCPT
+        id S237215AbjG1Omr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jul 2023 10:38:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55986 "EHLO
+        Fri, 28 Jul 2023 10:42:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234699AbjG1OiP (ORCPT
+        with ESMTP id S237216AbjG1Omq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jul 2023 10:38:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EC8E3C24;
-        Fri, 28 Jul 2023 07:38:15 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 98A506216B;
-        Fri, 28 Jul 2023 14:38:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7BEFC433C7;
-        Fri, 28 Jul 2023 14:38:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690555094;
-        bh=wjwP4w8BS9th/B1i8S2XP4Q49a2HggcUKgJCWV6NSnY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fsRyWTTPKyVWiRdY9AHqj1FaDyEf4MZ5PJH6E/bKtl6NhpFj2PpGSuDWe4LN+HIf0
-         TxfygMz7KKizlaX/iIMtfG/NWrGLin1ZDUIisexCEQlVR3B44vMunEQtAYZ5e93vUc
-         Qty6vSkCUVg13t49PJmud32F6vvTV+rByQMom5SZECR82L2/aArG2naeuAw1BecSce
-         8KSJnVeI/mG/phKHy62vELq7mun/lwbWetVhwv0E4ZZq9K8LCPg3vq/iH6dD9bawfn
-         F+n+lCO+EBPpdFawB7M4l9BqHZOiLjzMQCKQ8qPcZY8ZtH9PSJmMYppqrPd66BOF+0
-         7BgeP5g1GNgPA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 67AB340096; Fri, 28 Jul 2023 11:38:11 -0300 (-03)
-Date:   Fri, 28 Jul 2023 11:38:11 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Ali Saidi <alisaidi@amazon.com>, catalin.marinas@arm.com,
-        will@kernel.org, john.g.garry@oracle.com, james.clark@arm.com,
-        mike.leach@linaro.org, peterz@infradead.org, mingo@redhat.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
-        adrian.hunter@intel.com, scott@os.amperecomputing.com,
-        maz@kernel.org, anshuman.khandual@arm.com, german.gomez@arm.com,
-        renyu.zj@linux.alibaba.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        fissure2010@gmail.com
-Subject: Re: [PATCH v1 0/3] arm64: Support Cortex-X4 CPU for Perf Arm SPE
-Message-ID: <ZMPS04R7MpnxKwJ0@kernel.org>
-References: <20230717054327.79815-1-leo.yan@linaro.org>
- <20230721181653.22398-1-alisaidi@amazon.com>
- <20230724113013.GB76473@leoy-huanghe.lan>
+        Fri, 28 Jul 2023 10:42:46 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69ABE1AD;
+        Fri, 28 Jul 2023 07:42:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+ s=s31663417; t=1690555313; x=1691160113; i=georgmueller@gmx.net;
+ bh=M/WETmw5YIFP0LfRJ5a0hlrmqjLYh88H3TYqQUuDLdg=;
+ h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
+ b=irSBPPfsD9YZWAOoLipis84tV4HY5LroJoPAytKtykYfw9PxsUvriC+YKqWh6yTuAizMhy7
+ pRAvDM7vGICrT/FKpnz7bp+NhefqKYSasC2tqDJBXp2v4Za009ZmyP5L5byKVpWexWU4y7MI7
+ Lf+nO7EAXI1jNkYySLM8WTz/bU4PTME5Afai9Vr6Bz7H+DFywHvaOB1/TVpz8g1rBtrfMcl4o
+ iYciGffDtIZlV+e180y/dcklMQJrgUGoK+Z+Ow5U554VvFzj37No6kWTYIwL2SMAHicCJtXFl
+ w10YdaTU+VDyfIxpwHR5I3ildC6jXqYkpd7eMluRWpT+xZhG6Ncg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [10.54.0.101] ([79.246.95.128]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MfYLa-1pweU51ln6-00g23i; Fri, 28
+ Jul 2023 16:41:53 +0200
+Message-ID: <adcb2f0e-9db1-dd5a-91dd-6f5567357174@gmx.net>
+Date:   Fri, 28 Jul 2023 16:41:51 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230724113013.GB76473@leoy-huanghe.lan>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v2 1/2] perf probe: add test for regression introduced by
+ switch to die_get_decl_file
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        regressions@lists.linux.dev,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230628082337.1857302-1-georgmueller@gmx.net>
+ <20230628082337.1857302-2-georgmueller@gmx.net>
+ <CAP-5=fUP6UuLgRty3t2=fQsQi3k4hDMz415vWdp1x88QMvZ8ug@mail.gmail.com>
+From:   =?UTF-8?Q?Georg_M=c3=bcller?= <georgmueller@gmx.net>
+In-Reply-To: <CAP-5=fUP6UuLgRty3t2=fQsQi3k4hDMz415vWdp1x88QMvZ8ug@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:sDrqkfLvyKv87wPdI67Pfq8Dl0IoJ7GwNZNYrQTBseNuxPM0HT1
+ qaKXhyQgK8x53dir8/keVvV22/H9RvuV71zhL1tJG6CDG1X4iCBQxMORJKb8tItAU7iI9IX
+ heIB3x11p57i727oXCjTtGgruGT5oIT7tJukV+4omfX7u6h1x+dBmFZoC8eTsDC2H4XXl8f
+ RCUgGladaVclQG/JHOtbg==
+UI-OutboundReport: notjunk:1;M01:P0:jMofSfNp27s=;ALDfp4otrWiPAi0bWjifjlNZHxp
+ FBbnIv+agpXiztrLKqyKpIQny49hWZ/AfZHlEqm0cFNlKQAMXWdBWzSA7arZy6yw9shgjbwiz
+ Sk6IirbVwFZpg51EOEGApCAw3zaWP9d5fY5zwJYfCsSFmuTXBkqS3lnYOTuT3U6Npt75H3B9l
+ C22ALRlC3RLbO9rCMTPJCLrhvlBbXVErl6FdsGuFgH/2SiKD12cODw0HENT7fkWwmBrrMA27x
+ rswn5qfdcr84cbvauFzegSqfNKAioIqCDCtWA7KKYWCLfNR5bfUdin0EHapSO0LGSWgoGIFxE
+ 029AZGpjK4D9RM3ncmPDJ8m31dhvEEyIE++JhRtW6+cqq9Lg6q8cG0tDOeOzPCLZ3KV+b3FcO
+ iQi2aUm6aiwE5m0zKFGktutYM66VooTrUJJaocfB26IN/bQ5EahN2wYciKqX+aiwWYTMnWMGn
+ fYJJSq534xJNFez2X1DaNMQ1TtamRDDxmoETXUmd+TozWRAMisn6/2tP+MyzFLPAe66A5wPnp
+ JSmcyaGgF1t+S/utiBz6QbZRwH/uaEviIFZnnI67CyfdFdmCk3QB5FTiRMCXkdcoJrEvwwtOu
+ O+p2TjUOwg1ZLQXgwaGMegIqtrmBKA75q6CHA45ykdIr4TOzyozuBVBWsoylWgfQzL3srPqaW
+ SXHIZY6xOjQtVvhjWhc8PSv+7jQKJQTV2zvazKzX8OJVhjx39NXkkifPO4A9dMkehmSz0vrSK
+ QzVBPEyaVyvhol5UQbKEsX/u3lv7SgYopDVxeYyI4q+GP5iQM/meAl3z6hZuNmHaEmVkne577
+ xc90UBXi5Cjdm2CbuPPWPHMLOrmY66XtBgdpOw9BX/oIH52isqOtnW0KTzTU0HwwwlclTtHJM
+ 5qtxKPThslkhRUT8pYdHygR3tCS7eM+O5xtuzNXeRtVp8ik8RQJfZaIuvf+eHl/gQV7Lqi5PS
+ m83DSw==
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jul 24, 2023 at 07:30:13PM +0800, Leo Yan escreveu:
-> Hi Ali,
-> 
-> On Fri, Jul 21, 2023 at 06:16:53PM +0000, Ali Saidi wrote:
-> 
-> > > This series support Cortex-X4 CPU in Perf Arm SPE.
-> 
-> [...]
-> 
-> > This looks good to me, but can we add the other cores that operate the
-> > same way now too? Flipping through the TRMs A78, X3, V2, X1, A715,
-> > A720, and A78C all have the same encodings. 
-> 
-> Thanks a lot for exploring more CPU variants which share the same data
-> source packet format.
-> 
-> The latest Linux kernel have defined the CPU part number and MIDR for
-> below CPU variants:
-> 
-> - A78
-> - X1
-> - A715
-> - A78C
-> 
-> I would like to use a patch to support these CPUs in perf tool.  Given
-> other CPU variants (X3/V2/A720) have not been supported in the kernel,
-> and so far no one requests them, I would like leave them out.
-> 
-> Please let me know if this okay for you or not.
-> 
-> 
-> > Reviewed-by: Ali Saidi <alisaidi@amazon.com>
-> 
-> Thanks for review, I will add your review tags in the new patch set.
 
-Ok, waiting for the new patch set.
+Am 27.07.23 um 19:45 schrieb Ian Rogers:
+> On Wed, Jun 28, 2023 at 1:25=E2=80=AFAM Georg M=C3=BCller <georgmueller@=
+gmx.net> wrote:
+>
+> Thanks for the test Georg! By directly relying on gcc this test fails
+> for me in some constrained environments, like containers. I think
+> there should be a skip if gcc isn't present. A different option is to
+> just build the test code into the perf binary itself as a test
+> workload:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git=
+/tree/tools/perf/tests/workloads?h=3Dperf-tools-next
+>
+> Wdyt? Thanks,
+> Ian
+>
 
-- Arnaldo
+I prepare a commit which checks for gcc and skips the test in this case.
+
+I think building thi test code into the perf binary itself is not an optio=
+n
+here, since the test relies on a special setup of using -flto for one of t=
+he
+compilation units.
+
+There is also a cleanup issue if anything fails. This will be included in
+the patch as well.
+
+Best regards,
+Georg
