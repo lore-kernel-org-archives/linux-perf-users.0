@@ -2,73 +2,73 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F60AC41513
-	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Jul 2023 07:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D40C41513
+	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Jul 2023 07:37:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229759AbjG2HgE (ORCPT
+        id S229844AbjG2Hhv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 29 Jul 2023 03:36:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44784 "EHLO
+        Sat, 29 Jul 2023 03:37:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229736AbjG2HgC (ORCPT
+        with ESMTP id S229779AbjG2Hhu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 29 Jul 2023 03:36:02 -0400
+        Sat, 29 Jul 2023 03:37:50 -0400
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 907624C0A;
-        Sat, 29 Jul 2023 00:35:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69CD23C00;
+        Sat, 29 Jul 2023 00:37:49 -0700 (PDT)
 Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36T7Vd3h002899;
-        Sat, 29 Jul 2023 07:35:44 GMT
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36T7Vfms003017;
+        Sat, 29 Jul 2023 07:35:21 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=lwwBgQuDYZpc32iqdJ5vsmUCoFWugm6cdc3BZhEyaBI=;
- b=UEOU4hIhu+G+QczdXXjuVs3q57LS+t43+fgDhOiPmog4ZhYcRu+/RoDYjPpJc3w0/eUS
- 9v41pn4hjohehViK3c78mkBpe6F3znoMWUpfEows8SZXfJTNAArnR2PMrWkS1lzSoCuq
- bc1f8WaJFuWaAf0gBm0WCfVmPq+ZH7atajgqB5Y3DwrESaYaUDhPQXqqzSkbDV4U1eoQ
- JEtY9+0F/jZN1N5HVFfRvJegPgnXWqYAbSIde8vdYXwPNTS7otDV1mDvJZZQUvi0gEKO
- DXyFyPttU6pm9ivDQkGHY+aEsXW9Ka5J/UIviYai6Odbc3eOSQCVgNOW+72FUowm1vkV OA== 
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s4xf085x3-1
+ bh=Eez4ps/egQlGxI4EQPMwQ44jJGzglimRszD7GFVOFPE=;
+ b=gVkOQldfISo3WcbJ4STWXz736we9ovP6tGBFFLv24AbcggFWvqEjSj8sCjV/FKa1Xksm
+ TAt17BdR9W38asRn8xNh9dW3LA5iJZq9aKtp/11hCccoGSFCifmXpfKVItWFNaPdERcH
+ KSqadugzKGDzj6tZBSrbpTohCiWTlDIBvEmbGrfr5DyYFS0bCdODPfXD2YKJ+zF8RCNW
+ DSnrWmLljE2E2xRfB/Ag7x2/fYYC3JKFwXCJzXHTfwyYckMsOhLqk6fHCLbezBcFkC1V
+ bP0/mG1DB9ddiszniWbbtdXQ1z/x7/f9GEC6dNL3Mh0DqdCedka2jIa/F41k3LH7pB+F 1g== 
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s4xf085bc-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 29 Jul 2023 07:35:43 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36T6AJuM002379;
-        Sat, 29 Jul 2023 07:35:41 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-        by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3s0unkcbu2-1
+        Sat, 29 Jul 2023 07:35:21 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36T77QeL002024;
+        Sat, 29 Jul 2023 07:35:20 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+        by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3s0tenvrbg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 29 Jul 2023 07:35:41 +0000
+        Sat, 29 Jul 2023 07:35:20 +0000
 Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36T7ZcPh60490124
+        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36T7ZGi815336080
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 29 Jul 2023 07:35:38 GMT
+        Sat, 29 Jul 2023 07:35:16 GMT
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 422E120043;
-        Sat, 29 Jul 2023 07:35:38 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id BB3532004E;
+        Sat, 29 Jul 2023 07:35:16 +0000 (GMT)
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1C28C20040;
-        Sat, 29 Jul 2023 07:35:36 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 64A7D20040;
+        Sat, 29 Jul 2023 07:35:14 +0000 (GMT)
 Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com.com (unknown [9.171.60.192])
         by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Sat, 29 Jul 2023 07:35:35 +0000 (GMT)
+        Sat, 29 Jul 2023 07:35:14 +0000 (GMT)
 From:   Kajol Jain <kjain@linux.ibm.com>
 To:     mpe@ellerman.id.au
 Cc:     linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
         atrajeev@linux.vnet.ibm.com, disgoel@linux.ibm.com,
         kjain@linux.ibm.com, linux-perf-users@vger.kernel.org,
         linux-kernel@vger.kernel.org, rdunlap@infradead.org
-Subject: [PATCH v4 09/10] powerpc/hv_gpci: Add sysfs file inside hv_gpci device to show affinity domain via partition information
-Date:   Sat, 29 Jul 2023 13:04:54 +0530
-Message-Id: <20230729073455.7918-10-kjain@linux.ibm.com>
+Subject: [PATCH v4 01/10] powerpc/hv_gpci: Add sysfs file inside hv_gpci device to show processor bus topology information
+Date:   Sat, 29 Jul 2023 13:04:46 +0530
+Message-Id: <20230729073455.7918-2-kjain@linux.ibm.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20230729073455.7918-1-kjain@linux.ibm.com>
 References: <20230729073455.7918-1-kjain@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Qfc2I3r_L27rVq9uEq5bBbP5lMu57Zdm
-X-Proofpoint-GUID: Qfc2I3r_L27rVq9uEq5bBbP5lMu57Zdm
+X-Proofpoint-ORIG-GUID: QOREMBA5RQHskEx76Ih9xutBVDuTTW0l
+X-Proofpoint-GUID: QOREMBA5RQHskEx76Ih9xutBVDuTTW0l
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
  definitions=2023-07-27_10,2023-07-26_01,2023-05-22_02
@@ -82,189 +82,60 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 The hcall H_GET_PERF_COUNTER_INFO with counter request value as
-AFFINITY_DOMAIN_INFORMATION_BY_PARTITION(0XB1), can be used to get
-the system affinity domain via partition information. To expose the system
-affinity domain via partition information, patch adds sysfs file called
-"affinity_domain_via_partition" to the "/sys/devices/hv_gpci/interface/"
-of hv_gpci pmu driver.
+PROCESSOR_BUS_TOPOLOGY(0XD0), can be used to get the system
+topology information. To expose the system topology information,
+patch adds sysfs file called "processor_bus_topology" to the
+"/sys/devices/hv_gpci/interface/" of hv_gpci pmu driver.
 
-Add new entry for AFFINITY_DOMAIN_VIA_PAR in sysinfo_counter_request
-array, which points to the counter request value
-"affinity_domain_via_partition" in hv-gpci.c file. Also add a
-new function called "affinity_domain_via_partition_result_parse" to parse
-the hcall result and store it in output buffer.
+Add macro for PROCESSOR_BUS_TOPOLOGY counter request value
+in hv-gpci.c file. Also add a new function called
+"systeminfo_gpci_request", to make the H_GET_PERF_COUNTER_INFO hcall
+with added macro and populates the output buffer.
 
-The affinity_domain_via_partition sysfs file is only available for power10
-and above platforms. Add a macro called
-INTERFACE_AFFINITY_DOMAIN_VIA_PAR_ATTR, which points to the index of NULL
-placeholder, for affinity_domain_via_partition attribute in
-interface_attrs array. Also updated the value of INTERFACE_NULL_ATTR
-macro in hv-gpci.c file.
+The processor_bus_topology sysfs file is only available for power10
+and above platforms. Add a new function called
+"add_sysinfo_interface_files", which will add processor_bus_topology
+attribute in the interface_attrs array, only for power10 and
+above platforms.
+Also add macro INTERFACE_PROCESSOR_BUS_TOPOLOGY_ATTR in hv-gpci.c
+file, which points to the index of NULL placefolder, for
+processor_bus_topology attribute.
 
 Reviewed-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
 ---
- arch/powerpc/perf/hv-gpci.c | 160 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 159 insertions(+), 1 deletion(-)
+ arch/powerpc/perf/hv-gpci.c | 184 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 182 insertions(+), 2 deletions(-)
 
 diff --git a/arch/powerpc/perf/hv-gpci.c b/arch/powerpc/perf/hv-gpci.c
-index 326b758df7c8..f2fff166290b 100644
+index 7ff8ff3509f5..225f148f75fd 100644
 --- a/arch/powerpc/perf/hv-gpci.c
 +++ b/arch/powerpc/perf/hv-gpci.c
-@@ -107,7 +107,8 @@ static ssize_t cpumask_show(struct device *dev,
- #define INTERFACE_PROCESSOR_CONFIG_ATTR		7
- #define INTERFACE_AFFINITY_DOMAIN_VIA_VP_ATTR	8
- #define INTERFACE_AFFINITY_DOMAIN_VIA_DOM_ATTR	9
--#define INTERFACE_NULL_ATTR			10
-+#define INTERFACE_AFFINITY_DOMAIN_VIA_PAR_ATTR	10
-+#define INTERFACE_NULL_ATTR			11
- 
- /* Counter request value to retrieve system information */
- enum {
-@@ -115,6 +116,7 @@ enum {
- 	PROCESSOR_CONFIG,
- 	AFFINITY_DOMAIN_VIA_VP, /* affinity domain via virtual processor */
- 	AFFINITY_DOMAIN_VIA_DOM, /* affinity domain via domain */
-+	AFFINITY_DOMAIN_VIA_PAR, /* affinity domain via partition */
- };
- 
- static int sysinfo_counter_request[] = {
-@@ -122,6 +124,7 @@ static int sysinfo_counter_request[] = {
- 	[PROCESSOR_CONFIG] = 0x90,
- 	[AFFINITY_DOMAIN_VIA_VP] = 0xA0,
- 	[AFFINITY_DOMAIN_VIA_DOM] = 0xB0,
-+	[AFFINITY_DOMAIN_VIA_PAR] = 0xB1,
- };
- 
- static DEFINE_PER_CPU(char, hv_gpci_reqb[HGPCI_REQ_BUFFER_SIZE]) __aligned(sizeof(uint64_t));
-@@ -458,6 +461,152 @@ static ssize_t affinity_domain_via_domain_show(struct device *dev, struct device
- 	return ret;
+@@ -102,6 +102,141 @@ static ssize_t cpumask_show(struct device *dev,
+ 	return cpumap_print_to_pagebuf(true, buf, &hv_gpci_cpumask);
  }
  
-+static void affinity_domain_via_partition_result_parse(int returned_values,
-+			int element_size, char *buf, size_t *last_element,
++/* Counter request value to retrieve system information */
++#define PROCESSOR_BUS_TOPOLOGY 0XD0
++
++/* Interface attribute array index to store system information */
++#define INTERFACE_PROCESSOR_BUS_TOPOLOGY_ATTR	6
++
++static DEFINE_PER_CPU(char, hv_gpci_reqb[HGPCI_REQ_BUFFER_SIZE]) __aligned(sizeof(uint64_t));
++
++static unsigned long systeminfo_gpci_request(u32 req, u32 starting_index,
++			u16 secondary_index, char *buf,
 +			size_t *n, struct hv_gpci_request_buffer *arg)
 +{
-+	size_t i = 0, j = 0;
-+	size_t k, l, m;
-+	uint16_t total_affinity_domain_ele, size_of_each_affinity_domain_ele;
-+
-+	/*
-+	 * hcall H_GET_PERF_COUNTER_INFO populates the 'returned_values'
-+	 * to show the total number of counter_value array elements
-+	 * returned via hcall.
-+	 * Unlike other request types, the data structure returned by this
-+	 * request is variable-size. For this counter request type,
-+	 * hcall populates 'cv_element_size' corresponds to minimum size of
-+	 * the structure returned i.e; the size of the structure with no domain
-+	 * information. Below loop go through all counter_value array
-+	 * to determine the number and size of each domain array element and
-+	 * add it to the output buffer.
-+	 */
-+	while (i < returned_values) {
-+		k = j;
-+		for (; k < j + element_size; k++)
-+			*n += sprintf(buf + *n,  "%02x", (u8)arg->bytes[k]);
-+		*n += sprintf(buf + *n,  "\n");
-+
-+		total_affinity_domain_ele = (u8)arg->bytes[k - 2] << 8 | (u8)arg->bytes[k - 3];
-+		size_of_each_affinity_domain_ele = (u8)arg->bytes[k] << 8 | (u8)arg->bytes[k - 1];
-+
-+		for (l = 0; l < total_affinity_domain_ele; l++) {
-+			for (m = 0; m < size_of_each_affinity_domain_ele; m++) {
-+				*n += sprintf(buf + *n,  "%02x", (u8)arg->bytes[k]);
-+				k++;
-+			}
-+			*n += sprintf(buf + *n,  "\n");
-+		}
-+
-+		*n += sprintf(buf + *n,  "\n");
-+		i++;
-+		j = k;
-+	}
-+
-+	*last_element = k;
-+}
-+
-+static ssize_t affinity_domain_via_partition_show(struct device *dev, struct device_attribute *attr,
-+							char *buf)
-+{
-+	struct hv_gpci_request_buffer *arg;
 +	unsigned long ret;
-+	size_t n = 0;
-+	size_t last_element = 0;
-+	u32 starting_index;
++	size_t i, j;
 +
-+	arg = (void *)get_cpu_var(hv_gpci_reqb);
-+	memset(arg, 0, HGPCI_REQ_BUFFER_SIZE);
-+
-+	/*
-+	 * Pass the counter request value 0xB1 corresponds to counter request
-+	 * type 'Affinity_domain_information_by_partition',
-+	 * to retrieve the system affinity domain by partition information.
-+	 * starting_index value refers to the starting hardware
-+	 * processor index.
-+	 */
-+	arg->params.counter_request = cpu_to_be32(sysinfo_counter_request[AFFINITY_DOMAIN_VIA_PAR]);
-+	arg->params.starting_index = cpu_to_be32(0);
++	arg->params.counter_request = cpu_to_be32(req);
++	arg->params.starting_index = cpu_to_be32(starting_index);
++	arg->params.secondary_index = cpu_to_be16(secondary_index);
 +
 +	ret = plpar_hcall_norets(H_GET_PERF_COUNTER_INFO,
 +			virt_to_phys(arg), HGPCI_REQ_BUFFER_SIZE);
-+
-+	if (!ret)
-+		goto parse_result;
-+
-+	/*
-+	 * ret value as 'H_PARAMETER' implies that the current buffer size
-+	 * can't accommodate all the information, and a partial buffer
-+	 * returned. To handle that, we need to make subsequent requests
-+	 * with next starting index to retrieve additional (missing) data.
-+	 * Below loop do subsequent hcalls with next starting index and add it
-+	 * to buffer util we get all the information.
-+	 */
-+	while (ret == H_PARAMETER) {
-+		affinity_domain_via_partition_result_parse(
-+			be16_to_cpu(arg->params.returned_values) - 1,
-+			be16_to_cpu(arg->params.cv_element_size), buf,
-+			&last_element, &n, arg);
-+
-+		if (n >= PAGE_SIZE) {
-+			put_cpu_var(hv_gpci_reqb);
-+			pr_debug("System information exceeds PAGE_SIZE\n");
-+			return -EFBIG;
-+		}
-+
-+		/*
-+		 * Since the starting index value is part of counter_value
-+		 * buffer elements, use the starting_index value in the last
-+		 * element and add 1 to make subsequent hcalls.
-+		 */
-+		starting_index = (u8)arg->bytes[last_element] << 8 |
-+				(u8)arg->bytes[last_element + 1];
-+
-+		memset(arg, 0, HGPCI_REQ_BUFFER_SIZE);
-+		arg->params.counter_request = cpu_to_be32(
-+				sysinfo_counter_request[AFFINITY_DOMAIN_VIA_PAR]);
-+		arg->params.starting_index = cpu_to_be32(starting_index);
-+
-+		ret = plpar_hcall_norets(H_GET_PERF_COUNTER_INFO,
-+				virt_to_phys(arg), HGPCI_REQ_BUFFER_SIZE);
-+
-+		if (ret && (ret != H_PARAMETER))
-+			goto out;
-+	}
-+
-+parse_result:
-+	affinity_domain_via_partition_result_parse(
-+		be16_to_cpu(arg->params.returned_values),
-+		be16_to_cpu(arg->params.cv_element_size),
-+		buf, &last_element, &n, arg);
-+
-+	put_cpu_var(hv_gpci_reqb);
-+	return n;
-+
-+out:
-+	put_cpu_var(hv_gpci_reqb);
 +
 +	/*
 +	 * ret value as 'H_PARAMETER' corresponds to 'GEN_BUF_TOO_SMALL',
@@ -284,35 +155,181 @@ index 326b758df7c8..f2fff166290b 100644
 +	 * because of invalid buffer-length/address or due to some hardware
 +	 * error.
 +	 */
-+	return -EIO;
++	if (ret && (ret != H_PARAMETER))
++		return -EIO;
++
++	/*
++	 * hcall H_GET_PERF_COUNTER_INFO populates the 'returned_values'
++	 * to show the total number of counter_value array elements
++	 * returned via hcall.
++	 * hcall also populates 'cv_element_size' corresponds to individual
++	 * counter_value array element size. Below loop go through all
++	 * counter_value array elements as per their size and add it to
++	 * the output buffer.
++	 */
++	for (i = 0; i < be16_to_cpu(arg->params.returned_values); i++) {
++		j = i * be16_to_cpu(arg->params.cv_element_size);
++
++		for (; j < (i + 1) * be16_to_cpu(arg->params.cv_element_size); j++)
++			*n += sprintf(buf + *n,  "%02x", (u8)arg->bytes[j]);
++		*n += sprintf(buf + *n,  "\n");
++	}
++
++	if (*n >= PAGE_SIZE) {
++		pr_info("System information exceeds PAGE_SIZE\n");
++		return -EFBIG;
++	}
++
++	return ret;
++}
++
++static ssize_t processor_bus_topology_show(struct device *dev, struct device_attribute *attr,
++				char *buf)
++{
++	struct hv_gpci_request_buffer *arg;
++	unsigned long ret;
++	size_t n = 0;
++
++	arg = (void *)get_cpu_var(hv_gpci_reqb);
++	memset(arg, 0, HGPCI_REQ_BUFFER_SIZE);
++
++	/*
++	 * Pass the counter request value 0xD0 corresponds to request
++	 * type 'Processor_bus_topology', to retrieve
++	 * the system topology information.
++	 * starting_index value implies the starting hardware
++	 * chip id.
++	 */
++	ret = systeminfo_gpci_request(PROCESSOR_BUS_TOPOLOGY, 0, 0, buf, &n, arg);
++
++	if (!ret)
++		return n;
++
++	if (ret != H_PARAMETER)
++		goto out;
++
++	/*
++	 * ret value as 'H_PARAMETER' corresponds to 'GEN_BUF_TOO_SMALL', which
++	 * implies that buffer can't accommodate all information, and a partial buffer
++	 * returned. To handle that, we need to make subsequent requests
++	 * with next starting index to retrieve additional (missing) data.
++	 * Below loop do subsequent hcalls with next starting index and add it
++	 * to buffer util we get all the information.
++	 */
++	while (ret == H_PARAMETER) {
++		int returned_values = be16_to_cpu(arg->params.returned_values);
++		int elementsize = be16_to_cpu(arg->params.cv_element_size);
++		int last_element = (returned_values - 1) * elementsize;
++
++		/*
++		 * Since the starting index value is part of counter_value
++		 * buffer elements, use the starting index value in the last
++		 * element and add 1 to make subsequent hcalls.
++		 */
++		u32 starting_index = arg->bytes[last_element + 3] +
++				(arg->bytes[last_element + 2] << 8) +
++				(arg->bytes[last_element + 1] << 16) +
++				(arg->bytes[last_element] << 24) + 1;
++
++		memset(arg, 0, HGPCI_REQ_BUFFER_SIZE);
++
++		ret = systeminfo_gpci_request(PROCESSOR_BUS_TOPOLOGY, starting_index,
++				0, buf, &n, arg);
++
++		if (!ret)
++			return n;
++
++		if (ret != H_PARAMETER)
++			goto out;
++	}
++
++	return n;
++
++out:
++	put_cpu_var(hv_gpci_reqb);
++	return ret;
 +}
 +
  static DEVICE_ATTR_RO(kernel_version);
  static DEVICE_ATTR_RO(cpumask);
  
-@@ -494,6 +643,11 @@ static struct attribute *interface_attrs[] = {
- 	 * attribute, set in init function if applicable.
- 	 */
- 	NULL,
+@@ -118,6 +253,11 @@ static struct attribute *interface_attrs[] = {
+ 	&hv_caps_attr_expanded.attr,
+ 	&hv_caps_attr_lab.attr,
+ 	&hv_caps_attr_collect_privileged.attr,
 +	/*
-+	 * This NULL is a placeholder for the affinity_domain_via_partition
++	 * This NULL is a placeholder for the processor_bus_topology
 +	 * attribute, set in init function if applicable.
 +	 */
 +	NULL,
  	NULL,
  };
  
-@@ -755,6 +909,10 @@ static struct device_attribute *sysinfo_device_attr_create(int
- 			attr->attr.name = "affinity_domain_via_domain";
- 			attr->show = affinity_domain_via_domain_show;
- 		break;
-+		case INTERFACE_AFFINITY_DOMAIN_VIA_PAR_ATTR:
-+			attr->attr.name = "affinity_domain_via_partition";
-+			attr->show = affinity_domain_via_partition_show;
-+		break;
- 		}
- 	} else
- 		pr_devel("hcall failed, with error: 0x%lx\n", ret);
+@@ -143,8 +283,6 @@ static const struct attribute_group *attr_groups[] = {
+ 	NULL,
+ };
+ 
+-static DEFINE_PER_CPU(char, hv_gpci_reqb[HGPCI_REQ_BUFFER_SIZE]) __aligned(sizeof(uint64_t));
+-
+ static unsigned long single_gpci_request(u32 req, u32 starting_index,
+ 		u16 secondary_index, u8 version_in, u32 offset, u8 length,
+ 		u64 *value)
+@@ -325,6 +463,44 @@ static int hv_gpci_cpu_hotplug_init(void)
+ 			  ppc_hv_gpci_cpu_offline);
+ }
+ 
++static void add_sysinfo_interface_files(void)
++{
++	struct device_attribute *attr = NULL;
++	unsigned long ret;
++	struct hv_gpci_request_buffer *arg;
++
++	/* Check for counter request type PROCESSOR_BUS_TOPOLOGY support */
++	arg = (void *)get_cpu_var(hv_gpci_reqb);
++	memset(arg, 0, HGPCI_REQ_BUFFER_SIZE);
++
++	arg->params.counter_request = cpu_to_be32(PROCESSOR_BUS_TOPOLOGY);
++
++	ret = plpar_hcall_norets(H_GET_PERF_COUNTER_INFO,
++			virt_to_phys(arg), HGPCI_REQ_BUFFER_SIZE);
++
++	put_cpu_var(hv_gpci_reqb);
++
++	/*
++	 * Add processor_bus_topology attribute in the interface_attrs
++	 * attribute array, only for valid return types.
++	 */
++	if (!ret || ret == H_AUTHORITY || ret == H_PARAMETER) {
++		attr = kzalloc(sizeof(*attr), GFP_KERNEL);
++
++		if (!attr) {
++			pr_info("Memory allocation failed for sysinfo interface files\n");
++			return;
++		}
++
++		sysfs_attr_init(&attr->attr);
++		attr->attr.name = "processor_bus_topology";
++		attr->attr.mode = 0444;
++		attr->show = processor_bus_topology_show;
++		interface_attrs[INTERFACE_PROCESSOR_BUS_TOPOLOGY_ATTR] = &attr->attr;
++	} else
++		pr_devel("hcall failed, with error: 0x%lx\n", ret);
++}
++
+ static int hv_gpci_init(void)
+ {
+ 	int r;
+@@ -388,6 +564,10 @@ static int hv_gpci_init(void)
+ 	if (r)
+ 		return r;
+ 
++	/* sysinfo interface files are only available for power10 and above platforms */
++	if (PVR_VER(mfspr(SPRN_PVR)) >= PVR_POWER10)
++		add_sysinfo_interface_files();
++
+ 	return 0;
+ }
+ 
 -- 
 2.39.3
 
