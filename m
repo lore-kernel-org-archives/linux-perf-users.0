@@ -2,118 +2,132 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7466EEB64DD
-	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Jul 2023 00:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E54EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Jul 2023 02:11:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236919AbjG2Alk (ORCPT
+        id S229886AbjG2CLF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jul 2023 20:41:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58036 "EHLO
+        Fri, 28 Jul 2023 22:11:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236932AbjG2Al0 (ORCPT
+        with ESMTP id S229509AbjG2CLF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jul 2023 20:41:26 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BD3749DD;
-        Fri, 28 Jul 2023 17:39:32 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1D31462223;
-        Sat, 29 Jul 2023 00:38:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EF58C433C7;
-        Sat, 29 Jul 2023 00:38:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690591099;
-        bh=6JXSUjfSrAVc9Yojm4Q1bx0HnxoRA4QH67N8+PlgllQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=J+hheeEAXGjkYYCCmxnoaweRRs8KOEdXzU5nxvMwhrkGOAxqilIb/7sD2bEFVyJNO
-         grItDGNQO6mJYxviWKFCklz1n78PrW2GtTYuYVkYxMdylw8yMsKEejW9VMfQWNQaOF
-         gUt3Wlnago3a9Fl1tEwG2lQngXlD4J51YX0/tRn0u3NWctJFZ0ENyRtNZHu0u4rGUJ
-         tIvYn1FeDhnhib0491ZHKCtibe0SYqICeJvU9LC/kOwLSmxEa0H5Imyt07CcnPSgV2
-         jGDYgpEWkH2iGDLlhaji5PjAKxSTZIKh/tFiXrEWILVH++wECunjT9aMyurxQboCG4
-         C6kBQy04B29GQ==
-Date:   Sat, 29 Jul 2023 09:38:14 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Georg =?UTF-8?B?TcO8bGxlcg==?= <georgmueller@gmx.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf probe: skip test_uprobe_from_different_cu if there
- is no gcc
-Message-Id: <20230729093814.d48a7b4fb51fdd74ad50ba42@kernel.org>
-In-Reply-To: <20230728151812.454806-2-georgmueller@gmx.net>
-References: <20230728151812.454806-2-georgmueller@gmx.net>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Fri, 28 Jul 2023 22:11:05 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45B284498;
+        Fri, 28 Jul 2023 19:11:03 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.57])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RCScL4QvvzVjr7;
+        Sat, 29 Jul 2023 10:09:22 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Sat, 29 Jul 2023 10:11:00 +0800
+Subject: Re: [PATCH v2 2/7] perf evlist: Add evlist__findnew_tracking_event()
+ helper
+To:     Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <kan.liang@linux.intel.com>, <james.clark@arm.com>,
+        <tmricht@linux.ibm.com>, <ak@linux.intel.com>,
+        <anshuman.khandual@arm.com>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>
+References: <20230715032915.97146-1-yangjihong1@huawei.com>
+ <20230715032915.97146-3-yangjihong1@huawei.com>
+ <CAP-5=fVysKhUn1YsUr0NBU2kVBDgkoczO861XwK5VCtkeYSRJA@mail.gmail.com>
+ <993bd68c-c0ec-4960-d3b0-bd2dbda82402@huawei.com>
+ <CAP-5=fXmpaKrVLifHh5H7Lf_nhNLGWFS0=CLRT2yHK5guReNGA@mail.gmail.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <ff345f02-cebd-9e76-b15c-e07249f516f1@huawei.com>
+Date:   Sat, 29 Jul 2023 10:10:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAP-5=fXmpaKrVLifHh5H7Lf_nhNLGWFS0=CLRT2yHK5guReNGA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, 28 Jul 2023 17:18:12 +0200
-Georg Müller <georgmueller@gmx.net> wrote:
+Hello,
 
-> Without gcc, the test will fail.
+On 2023/7/29 0:40, Ian Rogers wrote:
+> On Thu, Jul 20, 2023 at 12:24 AM Yang Jihong <yangjihong1@huawei.com> wrote:
+>>
+>> Hello,
+>>
+>> On 2023/7/20 0:44, Ian Rogers wrote:
+>>> On Fri, Jul 14, 2023 at 8:31 PM Yang Jihong <yangjihong1@huawei.com> wrote:
+>>>>
+>>>> Currently, intel-bts, intel-pt, and arm-spe may add a dummy event for
+>>>> tracking to the evlist. We may need to search for the dummy event for
+>>>> some settings. Therefore, add evlist__findnew_tracking_event() helper.
+>>>>
+>>>> evlist__findnew_tracking_event() also deal with system_wide maps if
+>>>> system_wide is true.
+>>>
+>>> I'm wondering if we can simplify the naming in the API, we have "dummy
+>>> event" which makes sense as we literally call the event "dummy",
+>>> "sideband" which refers to the kind of samples/events the dummy event
+>>> will record but "tracking" I think tends to get used as a verb rather
+>>> than a noun. So I think evlist__findnew_tracking_event should be
+>>> evlist__findnew_dummy_event.
+>>>
+>> Uh, from the discussion that followed, it seems that there is no
+>> consensus yet...
+>> If there is a clear consensus on whether to use "dummy event" or
+>> "tracking event", I will change the name of the API.
+>>
+>> I think sideband event is equivalent to tracking event (refer
+>> evsel__config(), tracking events include task, mmap, mmap2, and comm
+>> sideband events, which are all sideband).
+>>
+>> tracking event are instances of dummy event. For example, we create
+>> another dummy event to record the text poke event of ksymbol (refer perf
+>> record --kcore).
+>>
+>> An evlist contains only one tracking event, but can contain multiple
+>> dummy events.
 > 
-> On cleanup, ignore probe removal errors. Otherwise, in case of an error
-> adding the probe, the temporary directory is not removed.
+> Thanks for the feedback. So the tracking event is by definition the
+> first dummy event in the evlist? What is the purpose of the other
+Uh... It may not be the first dummy event, but evsel->track must be 
+true. Only one evsel in an evlist meets this condition.
 
-Interesting, so clang will not generate DWARF or perf probe is not able to
-handle clang generated DWARF?
+> dummy events in this case? Perhaps we can get to an intention
+> revealing implementation something like:
+> 
+> /** The "tracking event" gathering sideband data is the first dummy
+> event in the list. */
+> struct evsel *evlist__findnew_tracking_event(struct evlist *evlist)
+> {
+>     struct evsel *dummy = evlist__find_first_dummy_event(evlist);
+> 
+>     if (!dummy) {
+>        dummy = evlist__add_dummy(evlist);
+>     }
+>     return dummy;
+> }
+> 
+> But I think the key thing for me is I'm still not sure what is going
+> on when there are multiple dummy events for you, what are the other
+> dummy events for other than tracking sideband data?
+> 
+For other dummy events, perf record will open a dummy event to track 
+ksymbol text_poke when "--kcore" option is used.
+I thinks tracking ksymbol text_poke separately it needs to be processed 
+independently, go system_wide and enable immediately.
 
-Anyway, this looks good to me.
+All of the above is my understanding, may need Adrian to confirm whether 
+it is accurate.
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-> 
-> Fixes: 56cbeacf1435 ("perf probe: Add test for regression introduced by switch to die_get_decl_file()")
-> Signed-off-by: Georg Müller <georgmueller@gmx.net>
-> Link: https://lore.kernel.org/r/CAP-5=fUP6UuLgRty3t2=fQsQi3k4hDMz415vWdp1x88QMvZ8ug@mail.gmail.com/
-> ---
->  tools/perf/tests/shell/test_uprobe_from_different_cu.sh | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/tests/shell/test_uprobe_from_different_cu.sh b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
-> index 00d2e0e2e0c2..319f36ebb9a4 100755
-> --- a/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
-> +++ b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
-> @@ -4,6 +4,12 @@
-> 
->  set -e
-> 
-> +# skip if there's no gcc
-> +if ! [ -x "$(command -v gcc)" ]; then
-> +        echo "failed: no gcc compiler"
-> +        exit 2
-> +fi
-> +
->  temp_dir=$(mktemp -d /tmp/perf-uprobe-different-cu-sh.XXXXXXXXXX)
-> 
->  cleanup()
-> @@ -11,7 +17,7 @@ cleanup()
->  	trap - EXIT TERM INT
->  	if [[ "${temp_dir}" =~ ^/tmp/perf-uprobe-different-cu-sh.*$ ]]; then
->  		echo "--- Cleaning up ---"
-> -		perf probe -x ${temp_dir}/testfile -d foo
-> +		perf probe -x ${temp_dir}/testfile -d foo || true
->  		rm -f "${temp_dir}/"*
->  		rmdir "${temp_dir}"
->  	fi
-> --
-> 2.41.0
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thanks,
+Yang
