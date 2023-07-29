@@ -2,125 +2,145 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A78BC04A6A
-	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Jul 2023 07:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D02C001DC
+	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Jul 2023 07:39:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230097AbjG2Hid (ORCPT
+        id S229779AbjG2Hj6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 29 Jul 2023 03:38:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46798 "EHLO
+        Sat, 29 Jul 2023 03:39:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229949AbjG2HiY (ORCPT
+        with ESMTP id S229541AbjG2Hj5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 29 Jul 2023 03:38:24 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E61003C29
-        for <linux-perf-users@vger.kernel.org>; Sat, 29 Jul 2023 00:38:22 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-99bf8e5ab39so83267766b.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 29 Jul 2023 00:38:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1690616301; x=1691221101;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=IYmWtjCeCkbkXYXMidyXsHWo/uzc6Q0z95DnXsdb6Jk=;
-        b=Ut1CWQVuoMLWFKzhCEeRWNrfILigN3hwnJXELqS2Tsfgnn3fFk2TtGyJAzjAj5wGEA
-         sNipHCgNMxUMrgl7nescH6w++92Hb6aQiDANbCUKSWm8nzmINfUaAvlXNQcLqjtL2I3+
-         enz93UK0DlVK8+cta6KaXLupiTePyrO5Hriwxh8lFtelzsB2raxvmYI1/RkfKtyzsB6x
-         xWlmXhc0SpGkcPfWHr9tectW+YjxDC3M3yxfNMFziU7BBL7nHRpDeLc1luZT8v2fPWgQ
-         yrYMEYjOMuO3tiMBJmnqpRaJ4UxvaR5S6If5xytfRSueIvZvYxd/kgMfYtBaZ429//Dn
-         LkKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690616301; x=1691221101;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IYmWtjCeCkbkXYXMidyXsHWo/uzc6Q0z95DnXsdb6Jk=;
-        b=NKlmstfu5P1bYkWbRdecqGQrIS5STz2RT6b7LIrmkq0gsWfEdpgqnaJN00Ygw+Gn3c
-         S1aa+I346GyBeUozX+HPsMqA2fJw0Z0Rj6QnmkZ4WBvKX6IhX7ZrT8NpfLkWPnFDrqE9
-         Am3filSVHce7a5o8UKaMism5aQ4O0fwO6JWmSAJS1Yb6Hb988Pv7V5AbC1BRgGOCr3vq
-         i/eh+ZOVlsDD0lfJOFBPfgt+1Vty2t8jaFOLIOe/UxRpyqIlzDHk3AquY3shF2EW/BZ6
-         iyEC9hKL7ILwk9AS+6/1rAl5l3egsWfRd1IM7Fnx9FM9Au0jRGqXJlvR74YpaCWT3abd
-         2ZxQ==
-X-Gm-Message-State: ABy/qLbv8U7qMGQq/11Jw2rWXJ1um8i0k2KuYB9X9LQX8rSzQc4yW7lK
-        RLhq4rliyGUEy5CWwB1RC7ZD/I+Nt7dJm8970Lc=
-X-Google-Smtp-Source: APBJJlE05iU3+hYWOPGNmt1tk5T+oJvM8YCFPE9dtxhtPAlwF0v+PGLvzacP+3sj+ZuHwVpYnCzI/w==
-X-Received: by 2002:a17:906:74d6:b0:99b:e03b:3968 with SMTP id z22-20020a17090674d600b0099be03b3968mr1356267ejl.64.1690616301218;
-        Sat, 29 Jul 2023 00:38:21 -0700 (PDT)
-Received: from localhost (cst2-173-16.cust.vodafone.cz. [31.30.173.16])
-        by smtp.gmail.com with ESMTPSA id kk9-20020a170907766900b00982cfe1fe5dsm3000715ejc.65.2023.07.29.00.38.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Jul 2023 00:38:20 -0700 (PDT)
-Date:   Sat, 29 Jul 2023 09:38:19 +0200
-From:   Andrew Jones <ajones@ventanamicro.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Alexandre Ghiti <alexghiti@rivosinc.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <atishp@atishpatra.org>,
-        Anup Patel <anup@brainfault.org>,
-        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-        =?utf-8?B?UsOpbWk=?= Denis-Courmont <remi@remlab.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Atish Patra <atishp@rivosinc.com>
-Subject: Re: [PATCH v4 10/10] perf: tests: Adapt mmap-basic.c for riscv
-Message-ID: <20230729-b5ec43a48d67caf13025fafe@orel>
-References: <20230727141428.962286-1-alexghiti@rivosinc.com>
- <20230727141428.962286-11-alexghiti@rivosinc.com>
- <CAP-5=fXvqJk9hA51pDSXodEWSP4DzN+RJ1scpyzJOrxk2w5kjg@mail.gmail.com>
+        Sat, 29 Jul 2023 03:39:57 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5C413C00;
+        Sat, 29 Jul 2023 00:39:56 -0700 (PDT)
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36T7bW0Z017595;
+        Sat, 29 Jul 2023 07:39:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=2VfDGxCbb83n8VauqKQzoJjykpZeZRnflE5GwH/NBIs=;
+ b=MCw5e/8XpaVEEARzwiYzNvOHVWPLaW8XnWOGPY+7hQLs32KVpHeWH0gwldojEPA3Eg01
+ rPb1krXhKFnXthkGoA++9E/KBJaC9vN6bz5rfcHdsxf3eXLsIe4HYO1WPSr3rl90WLhI
+ o8bKedgMtSgO8So/M4gvKWYaxhkiyv4m0iVTSbRCATKiaPuEQT37b4CwWiSf6UcDq1xI
+ 5SFqX25jPyQ69tTJ/GUMct0OHohiK+4un/X4I7iN2ZlOQkyoFaJUttEXkhA1XVgjqINX
+ Rm2uwqag963nqaIc5ZlD0QgPdI9eBSKGuCMLB4SveVIHvezyYwztUHBy0W6QuOGl9ukO pQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s4w371hbb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 29 Jul 2023 07:39:51 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36T7cKaU022852;
+        Sat, 29 Jul 2023 07:39:51 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s4w371h8y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 29 Jul 2023 07:39:51 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36T5DQxs002381;
+        Sat, 29 Jul 2023 07:39:49 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3s0txkvmp8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 29 Jul 2023 07:39:49 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36T7dkfs28770998
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 29 Jul 2023 07:39:46 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4BF5F2004D;
+        Sat, 29 Jul 2023 07:39:46 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E7F4A20043;
+        Sat, 29 Jul 2023 07:39:42 +0000 (GMT)
+Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com (unknown [9.171.39.127])
+        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Sat, 29 Jul 2023 07:39:42 +0000 (GMT)
+Date:   Sat, 29 Jul 2023 13:09:37 +0530
+From:   Aditya Gupta <adityag@linux.ibm.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     jolsa@kernel.org, irogers@google.com, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] perf tests task_analyzer: Check perf build options
+ for libtraceevent support
+Message-ID: <3gmwq3qbe3lpcpvzwfaliyipoe7qrmqbbwd4fhsv7dj6q3kwpo@4g226sr4pm62>
+References: <20230725061649.34937-1-adityag@linux.ibm.com>
+ <ZMPWk5K63tadmDlU@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXvqJk9hA51pDSXodEWSP4DzN+RJ1scpyzJOrxk2w5kjg@mail.gmail.com>
+In-Reply-To: <ZMPWk5K63tadmDlU@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: NK3UGcF_Ck9HkJYSzCM1FNV7-vZZh2DI
+X-Proofpoint-ORIG-GUID: fRVJp-x3uciIRgJT9hqlmjRrAUrJN6QW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-27_10,2023-07-26_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=999 impostorscore=0 bulkscore=0 priorityscore=1501 mlxscore=0
+ lowpriorityscore=0 clxscore=1015 adultscore=0 malwarescore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2307290068
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jul 28, 2023 at 10:54:02AM -0700, Ian Rogers wrote:
-> On Thu, Jul 27, 2023 at 7:30 AM Alexandre Ghiti <alexghiti@rivosinc.com> wrote:
-> >
-> > riscv now supports mmaping hardware counters to userspace so adapt the test
-> > to run on this architecture.
-> >
-> > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> > Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-> > Reviewed-by: Atish Patra <atishp@rivosinc.com>
-> > ---
-> >  tools/perf/tests/mmap-basic.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
-> > index e68ca6229756..f5075ca774f8 100644
-> > --- a/tools/perf/tests/mmap-basic.c
-> > +++ b/tools/perf/tests/mmap-basic.c
-> > @@ -284,7 +284,7 @@ static struct test_case tests__basic_mmap[] = {
-> >                          "permissions"),
-> >         TEST_CASE_REASON("User space counter reading of instructions",
-> >                          mmap_user_read_instr,
-> > -#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
-> > +#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || __riscv_xlen == 64
+On Fri, Jul 28, 2023 at 11:54:11AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Jul 25, 2023 at 11:46:49AM +0530, Aditya Gupta escreveu:
+> > Currently we depend on output of 'perf record -e "sched:sched_switch"', to
+> > check whether perf was built with libtraceevent support.
+> > 
+> > Instead, a more straightforward approach can be to check the build options,
+> > using 'perf version --build-options', to check for libtraceevent support.
+> > 
+> > [...]
+> > 
+> > diff --git a/tools/perf/tests/shell/test_task_analyzer.sh b/tools/perf/tests/shell/test_task_analyzer.sh
+> > index 0095abbe20ca..a28d784987b4 100755
+> > --- a/tools/perf/tests/shell/test_task_analyzer.sh
+> > +++ b/tools/perf/tests/shell/test_task_analyzer.sh
+> > @@ -52,7 +52,7 @@ find_str_or_fail() {
+> >  
+> >  # check if perf is compiled with libtraceevent support
+> >  skip_no_probe_record_support() {
+> > -	perf record -e "sched:sched_switch" -a -- sleep 1 2>&1 | grep "libtraceevent is necessary for tracepoint support" && return 2
+> > +	perf version --build-options | grep HAVE_LIBTRACEEVENT | grep -q OFF && return 2
+> >  	return 0
 > 
-> Same comment relating to the guard, why not defined(__riscv) ?
+> I'll apply this, but please consider adding a:
+> 
+> 	perf build --has libtraceevent
+> 
+> subcommand to have that query made more compact and to avoid the two
+> extra grep.
 
-__riscv_xlen will always be defined for all riscv targets, so also
-checking __riscv isn't necessary when a specific bit width also needs
-to be checked. __riscv is useful for checks that don't need to be
-concerned with the bit width. Grepping, I see instances of both
-"defined(__riscv) && __riscv_xlen ==" and just "__riscv_xlen ==".
-IMHO, the former should be reduced to the latter, rather than creating
-more instances of them.
+Okay. As you suggested in another reply, I found the code in builtin-version.c,
+we can have a "perf build --has" option which can use the `IS_BUILTIN` macro
+also used by "perf version --build-options". It can support all other feature
+flags too.
+
+You can implement it or I can work on a patch for that ?
+
+It should require adding another 'struct option' to 'version_options', and
+check for the flag in 'cmd_version()'. Will have to look how to get the string
+passed after '--has'.
+
+> 
+> BTW, I'll change that to:
+> 
+> [acme@quaco perf-tools-next]$ perf version --build-options | grep " on .* HAVE_LIBTRACEEVENT"
+>          libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
+> [acme@quaco perf-tools-next]$
+> 
+> replacing "on" with OFF, so that we have just one grep.
+
+Okay.
 
 Thanks,
-drew
+- Aditya G
+
