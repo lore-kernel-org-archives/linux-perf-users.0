@@ -2,132 +2,155 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E54EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Jul 2023 02:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD84CC001DC
+	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Jul 2023 07:35:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229886AbjG2CLF (ORCPT
+        id S229496AbjG2Hfh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jul 2023 22:11:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35514 "EHLO
+        Sat, 29 Jul 2023 03:35:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229509AbjG2CLF (ORCPT
+        with ESMTP id S229447AbjG2Hfh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jul 2023 22:11:05 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45B284498;
-        Fri, 28 Jul 2023 19:11:03 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.57])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RCScL4QvvzVjr7;
-        Sat, 29 Jul 2023 10:09:22 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Sat, 29 Jul 2023 10:11:00 +0800
-Subject: Re: [PATCH v2 2/7] perf evlist: Add evlist__findnew_tracking_event()
- helper
-To:     Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <kan.liang@linux.intel.com>, <james.clark@arm.com>,
-        <tmricht@linux.ibm.com>, <ak@linux.intel.com>,
-        <anshuman.khandual@arm.com>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>
-References: <20230715032915.97146-1-yangjihong1@huawei.com>
- <20230715032915.97146-3-yangjihong1@huawei.com>
- <CAP-5=fVysKhUn1YsUr0NBU2kVBDgkoczO861XwK5VCtkeYSRJA@mail.gmail.com>
- <993bd68c-c0ec-4960-d3b0-bd2dbda82402@huawei.com>
- <CAP-5=fXmpaKrVLifHh5H7Lf_nhNLGWFS0=CLRT2yHK5guReNGA@mail.gmail.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <ff345f02-cebd-9e76-b15c-e07249f516f1@huawei.com>
-Date:   Sat, 29 Jul 2023 10:10:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Sat, 29 Jul 2023 03:35:37 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35450101;
+        Sat, 29 Jul 2023 00:35:36 -0700 (PDT)
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36T7VfEj003000;
+        Sat, 29 Jul 2023 07:35:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=Q7EgVlIj8WWBI961jwvSr0S3u2PuA1rGpYpxCocZk+A=;
+ b=gsKFuyv+VTfoNxTMdZmwnB9n/0NDYJrDvVlX7xldot69lvnQj4KAQ1Ka9KWWq8HPgQTG
+ zgZmEnaJbgjIFCwK5LTW8LTuneiAGyr8K/zlW7wn8SZbBJPG6SXxeb4tTc32xzMweYzz
+ nYEod4Ev66I54fs7Luq6cdgn64MO7whWCTWZVEO+aKJrmx2eoy6rgYAZpbPcYYpdRJha
+ 34NEqNLxBOW4Wzvyaklw4cqz6Kb4/9hjgwDwambjHqRACW994n3J6yITVuC5Phi01AyX
+ hdIjb/fuwdKcPDQ2t6DFNYhY6eT/PHWVtJQCUTrpRwNlZNDoTXHzzxrK9XhS3E2aoYTX sg== 
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s4xf0857t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 29 Jul 2023 07:35:17 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36T6KKJd026189;
+        Sat, 29 Jul 2023 07:35:16 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3s0sesw7kj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 29 Jul 2023 07:35:16 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36T7ZE8m45351362
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 29 Jul 2023 07:35:14 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EFBEB20043;
+        Sat, 29 Jul 2023 07:35:13 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CA70620040;
+        Sat, 29 Jul 2023 07:35:11 +0000 (GMT)
+Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com.com (unknown [9.171.60.192])
+        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Sat, 29 Jul 2023 07:35:11 +0000 (GMT)
+From:   Kajol Jain <kjain@linux.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, disgoel@linux.ibm.com,
+        kjain@linux.ibm.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rdunlap@infradead.org
+Subject: [PATCH v4 00/10] Add sysfs interface files to hv_gpci device to expose system information
+Date:   Sat, 29 Jul 2023 13:04:45 +0530
+Message-Id: <20230729073455.7918-1-kjain@linux.ibm.com>
+X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
-In-Reply-To: <CAP-5=fXmpaKrVLifHh5H7Lf_nhNLGWFS0=CLRT2yHK5guReNGA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: I8Wpywaubs4fkQr8LNtiWXmt0_k1PZ75
+X-Proofpoint-GUID: I8Wpywaubs4fkQr8LNtiWXmt0_k1PZ75
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-27_10,2023-07-26_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ spamscore=0 impostorscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 mlxscore=0 phishscore=0 clxscore=1015 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2307290068
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+The hcall H_GET_PERF_COUNTER_INFO can be used to get data related to
+chips, dimms and system topology, by passing different counter request
+values.
+Patchset adds sysfs files to "/sys/devices/hv_gpci/interface/"
+of hv_gpci pmu driver, which will expose system topology information
+using H_GET_PERF_COUNTER_INFO hcall. The added sysfs files are
+available for power10 and above platforms and needs root access
+to read the data.
 
-On 2023/7/29 0:40, Ian Rogers wrote:
-> On Thu, Jul 20, 2023 at 12:24 AM Yang Jihong <yangjihong1@huawei.com> wrote:
->>
->> Hello,
->>
->> On 2023/7/20 0:44, Ian Rogers wrote:
->>> On Fri, Jul 14, 2023 at 8:31 PM Yang Jihong <yangjihong1@huawei.com> wrote:
->>>>
->>>> Currently, intel-bts, intel-pt, and arm-spe may add a dummy event for
->>>> tracking to the evlist. We may need to search for the dummy event for
->>>> some settings. Therefore, add evlist__findnew_tracking_event() helper.
->>>>
->>>> evlist__findnew_tracking_event() also deal with system_wide maps if
->>>> system_wide is true.
->>>
->>> I'm wondering if we can simplify the naming in the API, we have "dummy
->>> event" which makes sense as we literally call the event "dummy",
->>> "sideband" which refers to the kind of samples/events the dummy event
->>> will record but "tracking" I think tends to get used as a verb rather
->>> than a noun. So I think evlist__findnew_tracking_event should be
->>> evlist__findnew_dummy_event.
->>>
->> Uh, from the discussion that followed, it seems that there is no
->> consensus yet...
->> If there is a clear consensus on whether to use "dummy event" or
->> "tracking event", I will change the name of the API.
->>
->> I think sideband event is equivalent to tracking event (refer
->> evsel__config(), tracking events include task, mmap, mmap2, and comm
->> sideband events, which are all sideband).
->>
->> tracking event are instances of dummy event. For example, we create
->> another dummy event to record the text poke event of ksymbol (refer perf
->> record --kcore).
->>
->> An evlist contains only one tracking event, but can contain multiple
->> dummy events.
-> 
-> Thanks for the feedback. So the tracking event is by definition the
-> first dummy event in the evlist? What is the purpose of the other
-Uh... It may not be the first dummy event, but evsel->track must be 
-true. Only one evsel in an evlist meets this condition.
+Patches 1,3,5,7,9 adds sysfs interface files to the hv_gpci
+pmu driver, to get system topology information.
 
-> dummy events in this case? Perhaps we can get to an intention
-> revealing implementation something like:
-> 
-> /** The "tracking event" gathering sideband data is the first dummy
-> event in the list. */
-> struct evsel *evlist__findnew_tracking_event(struct evlist *evlist)
-> {
->     struct evsel *dummy = evlist__find_first_dummy_event(evlist);
-> 
->     if (!dummy) {
->        dummy = evlist__add_dummy(evlist);
->     }
->     return dummy;
-> }
-> 
-> But I think the key thing for me is I'm still not sure what is going
-> on when there are multiple dummy events for you, what are the other
-> dummy events for other than tracking sideband data?
-> 
-For other dummy events, perf record will open a dummy event to track 
-ksymbol text_poke when "--kcore" option is used.
-I thinks tracking ksymbol text_poke separately it needs to be processed 
-independently, go system_wide and enable immediately.
+List of added sysfs files:
+-> processor_bus_topology (Counter request value : 0xD0)
+-> processor_config (Counter request value : 0x90)
+-> affinity_domain_via_virtual_processor (Counter request value : 0xA0)
+-> affinity_domain_via_domain (Counter request value : 0xB0)
+-> affinity_domain_via_partition (Counter request value : 0xB1)
 
-All of the above is my understanding, may need Adrian to confirm whether 
-it is accurate.
+Patches 2,4,6,8,10 adds details of the newly added hv_gpci
+interface files listed above in the ABI documentation.
 
-Thanks,
-Yang
+Patches 2,4,6,8,10 adds details of the newly added hv_gpci
+interface files listed above in the ABI documentation.
+
+Changelog:
+v3 -> v4
+-> Add Reviewed-by tag from Athira Rajeev.
+-> Correct typo by changing processor_bug_topology to processor_bus_topology
+
+v2 -> v3
+-> Make nit changes in documentation patches as suggested by Randy Dunlap.
+
+v1 -> v2
+-> Incase the HCALL fails with errors that can be resolve during runtime,
+   then only add sysinfo interface attributes to the interface_attrs
+   attribute array. Even if one of the counter request value HCALL fails,
+   don't add any sysinfo attribute to the interface_attrs attribute array.
+   Add the code changes to make sure sysinfo interface added only when all
+   the requirements met as suggested by Michael Ellerman.
+-> Make changes in documentation, adds detail of errors type
+   which can be resolved at runtime as suggested by Michael Ellerman.
+-> Add new enum and sysinfo_counter_request array to get required
+   counter request value in hv-gpci.c file.
+-> Move the macros for interface attribute array index to hv-gpci.c, as
+   these macros currently only used in hv-gpci.c file.
+
+Kajol Jain (10):
+  powerpc/hv_gpci: Add sysfs file inside hv_gpci device to show
+    processor bus topology information
+  docs: ABI: sysfs-bus-event_source-devices-hv_gpci: Document
+    processor_bus_topology sysfs interface file
+  powerpc/hv_gpci: Add sysfs file inside hv_gpci device to show
+    processor config information
+  docs: ABI: sysfs-bus-event_source-devices-hv_gpci: Document
+    processor_config sysfs interface file
+  powerpc/hv_gpci: Add sysfs file inside hv_gpci device to show affinity
+    domain via virtual processor information
+  docs: ABI: sysfs-bus-event_source-devices-hv_gpci: Document
+    affinity_domain_via_virtual_processor sysfs interface file
+  powerpc/hv_gpci: Add sysfs file inside hv_gpci device to show affinity
+    domain via domain information
+  docs: ABI: sysfs-bus-event_source-devices-hv_gpci: Document
+    affinity_domain_via_domain sysfs interface file
+  powerpc/hv_gpci: Add sysfs file inside hv_gpci device to show affinity
+    domain via partition information
+  docs: ABI: sysfs-bus-event_source-devices-hv_gpci: Document
+    affinity_domain_via_partition sysfs interface file
+
+ .../sysfs-bus-event_source-devices-hv_gpci    | 160 +++++
+ arch/powerpc/perf/hv-gpci.c                   | 640 +++++++++++++++++-
+ 2 files changed, 798 insertions(+), 2 deletions(-)
+
+-- 
+2.39.3
+
