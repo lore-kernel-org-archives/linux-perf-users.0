@@ -2,187 +2,249 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB436C04E69
-	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Jul 2023 21:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4543BC04A94
+	for <linux-perf-users@archiver.kernel.org>; Sun, 30 Jul 2023 10:39:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229560AbjG2VMv (ORCPT
+        id S229910AbjG3KjX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 29 Jul 2023 17:12:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36400 "EHLO
+        Sun, 30 Jul 2023 06:39:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbjG2VMu (ORCPT
+        with ESMTP id S229554AbjG3KjW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 29 Jul 2023 17:12:50 -0400
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4598010C4;
-        Sat, 29 Jul 2023 14:12:49 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id AEE9D5C00B7;
-        Sat, 29 Jul 2023 17:12:48 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Sat, 29 Jul 2023 17:12:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1690665168; x=1690751568; bh=2L
-        fIRxHFYf7tdiKVZVDNRsDqP9EiptdXtOO6rttjJd4=; b=YbZfH+nF9ZC2Yv40Wb
-        Fuit5rGlhfVzwXrH42XrZzJqEC8pysRJ8jeQeKPOki3IyRtp6rxWoRGy2h5cABB9
-        ARDZfDrglsLhUklgLkagtif1+btu2DkPyK7YfFfQoucZJFyzxV2srxa+0AUKSt3B
-        OJZPc5voyrmbP0Xhp5yf13ZHQpmAsAYJSVVq3jrmM88JWwrc/O4f3C1KAYrAd9oI
-        d8E9B92d6P9ioClbGuWJozgpUhmvqmblVVuUxZb1CCH1E4wTqRPSN1zJchFvPLaz
-        JnRRozeaut/LtlU7fcn4+56F4jpC0s3yAFJOtPwrIVfG+RWHIgeQTQyDYFP1SqxG
-        Oq4A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; t=1690665168; x=1690751568; bh=2LfIRxHFYf7td
-        iKVZVDNRsDqP9EiptdXtOO6rttjJd4=; b=m/YLPu8q3mhrS02GufIu+7Pus8img
-        YX5e4oOtO1PLj2Iw6Gr4VJ1jz1mVHnqlxu3r7U17Xeuq1vngeo3zyWfU7f5nKdc2
-        +H4T+t9DF1HrvdUptLghKQg8zFof6zG3u6RLWvhI37skysYRAr4wRqd0h1oHNlNV
-        PS0TGJ4m5mSjfXPokI6eRFwV/1hIKKGF5P7jwJN1xzWg/V+C2fCJ54oM6NLb1Q82
-        BntUGD10s/jC5xQEoH+trlllxHbSC95zVQ+5w13pYz3B+gaZO75aWmNYJdaOZ+Ew
-        yZWLTjGiJjaWyHsn/IEe4Htsd7h7VAJNlBzwR3axlSFehqxrT8RGoz5Hg==
-X-ME-Sender: <xms:z4DFZGACuWJH4Ai-lBBrfMWjpda14AuslY2pzRV42qxJAmcr6hrVPQ>
-    <xme:z4DFZAhfXvlLYmX9UkleogrCArOiJNv-rohV5b756dna6JHyvX-dFx5uIiuj6Dfnt
-    wIKbkq4pEZI4-8DdJM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrieekgdduheehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepjedvvddvudeludehjeeitdehheeivdejgfelleffiefgvefhhfeuudfhgeef
-    feehnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:z4DFZJn-T3kYtGDsJY4kOvnouMsFLtEenPFOL30hx98C2nXI8vOh3g>
-    <xmx:z4DFZExJvC0WEy5OIkZ_IByrdwEBK5xB-od0lZL1JJWU58QvY_Iogg>
-    <xmx:z4DFZLRBWVm5HJ7q0oAB4cR_DY0O1CMgQEknhzzozOs9cb1MqM52Kg>
-    <xmx:0IDFZGG_T2KqYRFvQlA-APHwKjQP-i6-G3opAzZVn6KmDzyfP0OjJA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 37ABCB60089; Sat, 29 Jul 2023 17:12:47 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-592-ga9d4a09b4b-fm-defalarms-20230725.001-ga9d4a09b
-Mime-Version: 1.0
-Message-Id: <6d6641b6-748e-412c-a139-35fc873a6a1b@app.fastmail.com>
-In-Reply-To: <20230729174617.GA1229655@dev-arch.thelio-3990X>
-References: <1687443219-11946-1-git-send-email-yangtiezhu@loongson.cn>
- <1687443219-11946-2-git-send-email-yangtiezhu@loongson.cn>
- <20230727213648.GA354736@dev-arch.thelio-3990X>
- <1777400a-4d9c-4bdb-9d3b-f8808ef054cc@app.fastmail.com>
- <20230728173103.GA1299743@dev-arch.thelio-3990X>
- <a2fa1a31-e8bb-4659-9631-398b564e7c2b@app.fastmail.com>
- <20230728234429.GA611252@dev-arch.thelio-3990X>
- <e7a792d9-39b9-440a-9c22-99e25b25a396@app.fastmail.com>
- <20230729174617.GA1229655@dev-arch.thelio-3990X>
-Date:   Sat, 29 Jul 2023 23:12:26 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Nathan Chancellor" <nathan@kernel.org>
-Cc:     "Tiezhu Yang" <yangtiezhu@loongson.cn>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
-        Linux-Arch <linux-arch@vger.kernel.org>, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH v3 1/2] asm-generic: Unify uapi bitsperlong.h for arm64, riscv and
- loongarch
-Content-Type: text/plain
+        Sun, 30 Jul 2023 06:39:22 -0400
+Received: from mail-oa1-x2d.google.com (mail-oa1-x2d.google.com [IPv6:2001:4860:4864:20::2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A46B019B2;
+        Sun, 30 Jul 2023 03:39:20 -0700 (PDT)
+Received: by mail-oa1-x2d.google.com with SMTP id 586e51a60fabf-1bb69c0070dso2679385fac.1;
+        Sun, 30 Jul 2023 03:39:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690713560; x=1691318360;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9ixXrYInOwbnust1iCQWifpopRByO26tK6/cFi3PNE8=;
+        b=AKUb7wgIXyA0TNRAdEMW2f8kFSzB2FlM8WDluURO8vkvKTLOJ91nru6IhZYyW7laBl
+         wkVJccvGMq+TcbJyeK3kqtXg8vdqrghhP6s//acEEFIG2e+7zhT6SftpCdFU63cgM+0z
+         +TnrXXnllB/o2rUxoc+Ewgo3I4urwHcz0sSKX95j3FS0rqjrYaR582pH9JQABQ2Z64wF
+         OTIVJ5LzmayqdYpiYT1vztu/F+dCY3eKlw5B9mpBSPvxeOwb/HEDFX02aJYmZa4D7pua
+         xJAyC6cSHvm5SvsUgdrhLxX04YrEvVXhx4uymFD5QPnyc/eLo+tWXNqnw95OXpIMU0bS
+         VEoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690713560; x=1691318360;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9ixXrYInOwbnust1iCQWifpopRByO26tK6/cFi3PNE8=;
+        b=AqQKlo5s47etGjkELMcDEFhhgevVmk8DO8q1am4Q+xOEuo1aOetFXjrgm8RN+fcKsH
+         lKHbwbYZdKRKnQElL25/4jIEJAi7rauy7UieZxGwHbWiRcL8vyAcmsarKH20XZouNDeq
+         qd3cJduFsN0BBW9+R947pK8tC+1HWDASyipYpN3jVEQnFKwCiiIMeMbzyw2VBmPNJXqK
+         RIzokOSRer3R59S6uwDQjDMFVFKFTnmrDxaHRTZQY8HeGSmBNLmXK/d8qS06UpsWsvZi
+         tkSiIbZ7AatIFjYcDK3Usfd/z56AdCBuaVETKvbpQjPncnYu4hIb3WUGNRDbayH0chX0
+         zNeQ==
+X-Gm-Message-State: ABy/qLY8SjoBfOlkvCHxnWDWJRYiQ8wcRIrwUFrlQsUuIVtxwqSnWVJW
+        FX7Qd0C3RaPc/mcTt4cga1I=
+X-Google-Smtp-Source: APBJJlFHnrvAY2Ua4RExfk45o99/eIP1aQr34Cd41Oh2UpiZhWfcdqjF0jzXlPz6zxCygiNxkP3lAQ==
+X-Received: by 2002:a05:6870:4182:b0:1ad:4c06:15c with SMTP id y2-20020a056870418200b001ad4c06015cmr7584392oac.18.1690713559720;
+        Sun, 30 Jul 2023 03:39:19 -0700 (PDT)
+Received: from yoga ([2400:1f00:13:582a:756:65ff:1368:3d28])
+        by smtp.gmail.com with ESMTPSA id x25-20020a62fb19000000b00679fef56287sm5876915pfm.147.2023.07.30.03.39.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Jul 2023 03:39:19 -0700 (PDT)
+Date:   Sun, 30 Jul 2023 16:09:11 +0530
+From:   Anup Sharma <anupnewsmail@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Anup Sharma <anupnewsmail@gmail.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] perf scripts python: launch the profiler UI on the default
+ browser with the appropriate URL
+Message-ID: <ZMY9z36d2FFXxLXD@yoga>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Jul 29, 2023, at 19:46, Nathan Chancellor wrote:
-> On Sat, Jul 29, 2023 at 09:59:23AM +0200, Arnd Bergmann wrote:
->> On Sat, Jul 29, 2023, at 01:44, Nathan Chancellor wrote:
+All required libraries have been imported and make sure that
+none of them are external dependencies. To achieve this, created
+a virt env and verified.
 
->> 
->> in order to get the ORC definitions from asm/orc_types.h, but
->> then it looks like it also gets the uapi/asm/bitsperlong.h
->> header from there which contains
->> 
->> #if defined(__x86_64__) && !defined(__ILP32__)
->> # define __BITS_PER_LONG 64
->> #else
->> # define __BITS_PER_LONG 32
->> #endif
->> 
->> and this would set __BITS_PER_LONG to 32 on arm64.
->> 
->> However, I don't see this actually being included on my
->> machine. Can you dump the sorttable.c preprocessor output
->> with your setup, using -fdirectives-only, so we can see
->> which of the two (__BITS_PER_LONG or BITS_PER_LONG) is
->> actually wrong and triggers the sanity check?
->
-> Sure thing, this is the output of:
->
->   $ gcc -I/linux-stable/tools/include 
-> -I/linux-stable/tools/arch/x86/include -DUNWINDER_ORC_ENABLED -I 
-> ./scripts -E -fdirectives-only /linux-stable/scripts/sorttable.c
->
-> https://gist.github.com/nathanchance/d2c3e58230930317dc84aff80fef38bf
+Modified usage information and added combined command.
 
-Ok, so what we get is that the system-wide
-/usr/include/aarch64-linux-gnu/asm/bitsperlong.h
+Modified the main() function to read the --save-only command-line
+option and set the output_file variable accordingly.
 
-includes the source tree file 
-tools/include/asm-generic/bitsperlong.h
+Modified the trace_end() function to check for the output_file variable.
+If it is set, the profiler data is saved to a local file in Gecko
+Profile format, or the profiler.firefox.com is opened on the default browser.
 
-which in the old kernels only has the "32" fallback value.
+Included trace_begin() to initialize the Firefox Profiler and launch
+the default browser to display the profiler.firefox.com.
 
->> What I see on my machine is that both definitions come
->> from the local tools/include/ headers, not from the
->> installed system headers, so I'm still doing something
->> wrong in my installation:
->
-> Just to make sure, you have the 6.5-rc1+ headers installed and you are
-> attempting to build the host tools from an earlier Linux release than
-> 6.5-rc1? I don't see a problem with building these host programs on
-> mainline/6.5, I see this issue when building them in older stable
-> releases (my reproduction so far has been on 6.4 but I see it when
-> building all currently supported long term stable releases) when I have
-> the 6.5-rc1+ headers installed.
+Added a new function launchFirefox() to start a local server and launch the
+profiler UI on the default browser with the appropriate URL.
 
-Ok, I see. I missed that part of your description earlier.
+Created the "CORSRequestHandler" class to enable Cross-Origin Resource Sharing.
 
->
-> which seems to be where the mismatch is coming from?
+Summary:
+This integration now includes a exiting feature to conveniently host the
+Gecko Profile data on a local server and open it directly in the default
+web browser. This means that users can now effortlessly visualize and
+analyze the profiler results with just a single click. The addition of the
+--save-only command-line option allows users to save the profiler output
+to a local file in Gecko Profile format, but the real highlight lies
+in the capability to seamlessly launch a local server, making the data
+accessible to Firefox Profiler via a web browser. In addition, it's
+important to highlight that all data are hosted locally, eliminating
+any concerns about data privacy rules and regulations.
 
-Right, exactly.
+Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
+---
+ tools/perf/scripts/python/gecko.py | 70 +++++++++++++++++++++++++++---
+ 1 file changed, 63 insertions(+), 7 deletions(-)
 
->> ./tools/include/asm-generic/bitsperlong.h
->> #define BITS_PER_LONG (__CHAR_BIT__ * __SIZEOF_LONG__)
->> 
->> Neither of these files actually contains the sanity
->> check in linux-6.5-rc3, and comparing these is clearly
->> nonsensical, as they are defined the same way (rather
->> than checking CONFIG_64BIT), but also I don't see why
->> there is both a uapi/ version and a non-uapi version
->> in what is meant to be a userspace header.
->
-> May be worth looping in the tools/ folks, since that whole directory is
-> rather special IMO...
+diff --git a/tools/perf/scripts/python/gecko.py b/tools/perf/scripts/python/gecko.py
+index 278c3aed282a..bc5a72f94bfa 100644
+--- a/tools/perf/scripts/python/gecko.py
++++ b/tools/perf/scripts/python/gecko.py
+@@ -1,4 +1,4 @@
+-# firefox-gecko-converter.py - Convert perf record output to Firefox's gecko profile format
++# gecko.py - Convert perf record output to Firefox's gecko profile format
+ # SPDX-License-Identifier: GPL-2.0
+ #
+ # The script converts perf.data to Gecko Profile Format,
+@@ -7,14 +7,26 @@
+ # Usage:
+ #
+ #     perf record -a -g -F 99 sleep 60
+-#     perf script report gecko > output.json
++#     perf script report gecko
++#
++# Combined:
++#
++#     perf script gecko -F 99 -a sleep 60
+ 
+ import os
+ import sys
++import time
+ import json
++import string
++import random
+ import argparse
++import threading
++import webbrowser
++import urllib.parse
++from os import system
+ from functools import reduce
+ from dataclasses import dataclass, field
++from http.server import HTTPServer, SimpleHTTPRequestHandler, test
+ from typing import List, Dict, Optional, NamedTuple, Set, Tuple, Any
+ 
+ # Add the Perf-Trace-Util library to the Python path
+@@ -40,9 +52,15 @@ CATEGORIES = None
+ # The product name is used by the profiler UI to show the Operating system and Processor.
+ PRODUCT = os.popen('uname -op').read().strip()
+ 
++# store the output file
++output_file = None
++
+ # Here key = tid, value = Thread
+ tid_to_thread = dict()
+ 
++# The HTTP server is used to serve the profile to the profiler UI.
++http_server_thread = None
++
+ # The category index is used by the profiler UI to show the color of the flame graph.
+ USER_CATEGORY_INDEX = 0
+ KERNEL_CATEGORY_INDEX = 1
+@@ -278,9 +296,19 @@ def process_event(param_dict: Dict) -> None:
+ 		tid_to_thread[tid] = thread
+ 	thread._add_sample(comm=comm, stack=stack, time_ms=time_stamp)
+ 
++def trace_begin() -> None:
++	global output_file
++	if (output_file is None):
++		print("Staring Firefox Profiler on your default browser...")
++		global http_server_thread
++		http_server_thread = threading.Thread(target=test, args=(CORSRequestHandler, HTTPServer,))
++		http_server_thread.daemon = True
++		http_server_thread.start()
++
+ # Trace_end runs at the end and will be used to aggregate
+ # the data into the final json object and print it out to stdout.
+ def trace_end() -> None:
++	global output_file
+ 	threads = [thread._to_json_dict() for thread in tid_to_thread.values()]
+ 
+ 	# Schema: https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L305
+@@ -305,22 +333,50 @@ def trace_end() -> None:
+ 		"processes": [],
+ 		"pausedRanges": [],
+ 	}
+-	json.dump(gecko_profile_with_meta, sys.stdout, indent=2)
++	# launch the profiler on local host if not specified --save-only args, otherwise print to file
++	if (output_file is None):
++		output_file = 'gecko_profile.json'
++		with open(output_file, 'w') as f:
++			json.dump(gecko_profile_with_meta, f, indent=2)
++		launchFirefox(output_file)
++		time.sleep(1)
++		print(f'[ perf gecko: Captured and wrote into {output_file} ]')
++	else:
++		print(f'[ perf gecko: Captured and wrote into {output_file} ]')
++		with open(output_file, 'w') as f:
++			json.dump(gecko_profile_with_meta, f, indent=2)
++
++# Used to enable Cross-Origin Resource Sharing (CORS) for requests coming from 'https://profiler.firefox.com', allowing it to access resources from this server.
++class CORSRequestHandler(SimpleHTTPRequestHandler):
++	def end_headers (self):
++		self.send_header('Access-Control-Allow-Origin', 'https://profiler.firefox.com')
++		SimpleHTTPRequestHandler.end_headers(self)
++
++# start a local server to serve the gecko_profile.json file to the profiler.firefox.com
++def launchFirefox(file):
++	safe_string = urllib.parse.quote_plus(f'http://localhost:8000/{file}')
++	url = 'https://profiler.firefox.com/from-url/' + safe_string
++	webbrowser.open(f'{url}')
+ 
+ def main() -> None:
++	global output_file
+ 	global CATEGORIES
+-	parser = argparse.ArgumentParser(description="Convert perf.data to Firefox\'s Gecko Profile format")
++	parser = argparse.ArgumentParser(description="Convert perf.data to Firefox\'s Gecko Profile format which can be uploaded to profiler.firefox.com for visualization")
+ 
+ 	# Add the command-line options
+ 	# Colors must be defined according to this:
+ 	# https://github.com/firefox-devtools/profiler/blob/50124adbfa488adba6e2674a8f2618cf34b59cd2/res/css/categories.css
+-	parser.add_argument('--user-color', default='yellow', help='Color for the User category')
+-	parser.add_argument('--kernel-color', default='orange', help='Color for the Kernel category')
++	parser.add_argument('--user-color', default='yellow', help='Color for the User category', choices=['yellow', 'blue', 'purple', 'green', 'orange', 'red', 'grey', 'magenta'])
++	parser.add_argument('--kernel-color', default='orange', help='Color for the Kernel category', choices=['yellow', 'blue', 'purple', 'green', 'orange', 'red', 'grey', 'magenta'])
++	# If --save-only is specified, the output will be saved to a file instead of opening Firefox's profiler directly.
++	parser.add_argument('--save-only', help='Save the output to a file instead of opening Firefox\'s profiler')
++
+ 	# Parse the command-line arguments
+ 	args = parser.parse_args()
+ 	# Access the values provided by the user
+ 	user_color = args.user_color
+ 	kernel_color = args.kernel_color
++	output_file = args.save_only
+ 
+ 	CATEGORIES = [
+ 		{
+@@ -336,4 +392,4 @@ def main() -> None:
+ 	]
+ 
+ if __name__ == '__main__':
+-    main()
++	main()
+-- 
+2.34.1
 
-I think the good news is that this only happens because
-the tools/ directory contains a copy of the kernel headers
-including that sanity check, and other user space won't
-suffer from it because they don't contain copies of kernel
-internal headers.
-
-Reverting the change might still end up being the easiest way
-out regardless, but it does seem like we should be able
-to address this in the tools directory by making sure it doesn't
-mix the installed headers with the local ones.
-
-Part of the problem I think is that the installed 
-/usr/include/asm-generic/int-ll64.h includes
-/usr/include/aarch64-linux-gnu/asm/bitsperlong.h, so both
-of them are the uapi headers, but this one has an
-"include <asm-generic/bitsperlong.h>" that expects the
-uapi version but instead gets the kernel version from
-the tools directory. We could override this by adding
-a working tools/include/asm-generic/bitsperlong.h header,
-but that has to be backported to the stable kernels then.
-
-       Arnd
