@@ -2,178 +2,113 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E96C001DC
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 09:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB247C001DF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 09:22:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229530AbjGaJGs (ORCPT
+        id S230311AbjGaJWQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Jul 2023 05:06:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39122 "EHLO
+        Mon, 31 Jul 2023 05:22:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbjGaJGc (ORCPT
+        with ESMTP id S232226AbjGaJVy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Jul 2023 05:06:32 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8C3851980;
-        Mon, 31 Jul 2023 02:06:17 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 63E33D75;
-        Mon, 31 Jul 2023 02:07:00 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.89.192])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 929E73F59C;
-        Mon, 31 Jul 2023 02:06:14 -0700 (PDT)
-Date:   Mon, 31 Jul 2023 10:06:08 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     James Clark <james.clark@arm.com>, Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mon, 31 Jul 2023 05:21:54 -0400
+Received: from mgamail.intel.com (unknown [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ACE3212A;
+        Mon, 31 Jul 2023 02:19:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1690795190; x=1722331190;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=M2PCAu0m+56F5IHFQZlXkdD0yF1c9t4/NzwenQcRKM0=;
+  b=D354Qgvf9jn8uJzYmc03tPgAW9PMHZkscNvhTr9suSfptBmAuFRRn2X3
+   HX29ML0in33WQKh8GMS4Lh0G/S8pqlrat8jmVty1ZbhE7HyXHxagUZ2EU
+   oyyUomOuXj4+hTLTBkYkhb38nD3abCKXVdroA82tq6OHgE9fkYEO+K0jH
+   WjS3GC+goH67RKGaXuW775F3ER09FBtztRMPZOpd3a/iyZ1PnFgznTz55
+   3/13Vg6j2YM9Fc++Hc8Huo5FaT37askwaVAyMnL7gdKCOpGH3lHtFLGIJ
+   vlhGZbgNnR3VF5Y/O9xUhqIheL3MH958grEJXG+Oj7qzWkZwFacYZljgv
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10787"; a="435273422"
+X-IronPort-AV: E=Sophos;i="6.01,244,1684825200"; 
+   d="scan'208";a="435273422"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2023 02:19:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10787"; a="728232893"
+X-IronPort-AV: E=Sophos;i="6.01,244,1684825200"; 
+   d="scan'208";a="728232893"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.251.208.223])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2023 02:19:09 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V13 - RESEND 02/10] arm64/perf: Add BRBE registers and
- fields
-Message-ID: <ZMd5gCOHqnGRc0Ja@FVFF77S0Q05N>
-References: <20230711082455.215983-1-anshuman.khandual@arm.com>
- <20230711082455.215983-3-anshuman.khandual@arm.com>
- <20230728162011.GA22050@willie-the-truck>
- <89ce4bc4-00c5-a763-3179-e1d3e9f198b7@arm.com>
- <937468a1-b325-7d05-8daf-765f911c9240@arm.com>
+Subject: [PATCH 1/3] perf dlfilter: Add a test for resolve_address()
+Date:   Mon, 31 Jul 2023 12:18:55 +0300
+Message-Id: <20230731091857.10681-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <937468a1-b325-7d05-8daf-765f911c9240@arm.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jul 31, 2023 at 08:03:21AM +0530, Anshuman Khandual wrote:
-> 
-> 
-> On 7/28/23 22:22, James Clark wrote:
-> > 
-> > 
-> > On 28/07/2023 17:20, Will Deacon wrote:
-> >> On Tue, Jul 11, 2023 at 01:54:47PM +0530, Anshuman Khandual wrote:
-> >>> This adds BRBE related register definitions and various other related field
-> >>> macros there in. These will be used subsequently in a BRBE driver which is
-> >>> being added later on.
-> >>>
-> >>> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> >>> Cc: Will Deacon <will@kernel.org>
-> >>> Cc: Marc Zyngier <maz@kernel.org>
-> >>> Cc: Mark Rutland <mark.rutland@arm.com>
-> >>> Cc: linux-arm-kernel@lists.infradead.org
-> >>> Cc: linux-kernel@vger.kernel.org
-> >>> Tested-by: James Clark <james.clark@arm.com>
-> >>> Reviewed-by: Mark Brown <broonie@kernel.org>
-> >>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> >>> ---
-> >>>  arch/arm64/include/asm/sysreg.h | 103 +++++++++++++++++++++
-> >>>  arch/arm64/tools/sysreg         | 158 ++++++++++++++++++++++++++++++++
-> >>>  2 files changed, 261 insertions(+)
-> >>>
-> >>> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-> >>> index b481935e9314..f95e30c13c8b 100644
-> >>> --- a/arch/arm64/include/asm/sysreg.h
-> >>> +++ b/arch/arm64/include/asm/sysreg.h
-> >>> @@ -163,6 +163,109 @@
-> >>>  #define SYS_DBGDTRTX_EL0		sys_reg(2, 3, 0, 5, 0)
-> >>>  #define SYS_DBGVCR32_EL2		sys_reg(2, 4, 0, 7, 0)
-> >>>  
-> >>> +#define __SYS_BRBINFO(n)		sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10)) >> 2 + 0))
-> >>> +#define __SYS_BRBSRC(n)			sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10)) >> 2 + 1))
-> >>> +#define __SYS_BRBTGT(n)			sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10)) >> 2 + 2))
-> >>
-> >> It's that time on a Friday but... aren't these macros busted? I think you
-> >> need brackets before adding the offset, otherwise wouldn't, for example,
-> >> target registers 0-15 all access info register 0 and __SYS_BRBTGT(16) would
-> >> then start accessing source register 0?
-> >>
-> >> I'm surprised that the compiler doesn't warn about this, but even more
-> >> surprised that you managed to test this.
-> >>
-> >> Please tell me I'm wrong!
-> >>
-> >> Will
-> > 
-> > No I think you are right, it is wrong. Luckily there is already an
-> > extraneous bracket so you you can fix it by moving one a place down:
-> > 
-> >   sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10) >> 2) + 2))
-> > 
-> > It's interesting because the test [1] is doing quite a bit and looking
-> > at the branch info, and that src and targets match up to function names.
-> > I also manually looked at the branch buffers and didn't see anything
-> > obviously wrong like things that looked like branch infos in the source
-> > or target fields. Will have to take another look to see if it would be
-> > possible for the test to catch this.
-> > 
-> > James
-> > 
-> > [1]:
-> > https://gitlab.arm.com/linux-arm/linux-jc/-/commit/3a7ddce70c2daadb63fcc511de0a89055ca48b32
-> 
-> ((((n) & 0x10)) >> 2 + 2) ---> ((((n) & 0x10) >> 2) + 2)
-> 
-> The additional brackets are useful in explicitly telling the compiler but
-> what it the compiler is just doing the right thing implicitly i.e computing
-> the shifting operation before doing the offset addition.
+Extend the "dlfilter C API" test to test
+perf_dlfilter_fns.resolve_address(). The test currently fails, but passes
+after a subsequent patch.
 
-No; that is not correct. In c, '+' has higher precedence than '>>'.
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ tools/perf/dlfilters/dlfilter-test-api-v0.c | 26 ++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
 
-For 'a >> b + c' the compiler *must* treat that as 'a >> (b + c)', and not as
-'(a >> b) + c'
+diff --git a/tools/perf/dlfilters/dlfilter-test-api-v0.c b/tools/perf/dlfilters/dlfilter-test-api-v0.c
+index b1f51efd67d6..72f263d49121 100644
+--- a/tools/perf/dlfilters/dlfilter-test-api-v0.c
++++ b/tools/perf/dlfilters/dlfilter-test-api-v0.c
+@@ -254,6 +254,30 @@ static int check_addr_al(void *ctx)
+ 	return 0;
+ }
+ 
++static int check_address_al(void *ctx, const struct perf_dlfilter_sample *sample)
++{
++	struct perf_dlfilter_al address_al;
++	const struct perf_dlfilter_al *al;
++
++	al = perf_dlfilter_fns.resolve_ip(ctx);
++	if (!al)
++		return test_fail("resolve_ip() failed");
++
++	address_al.size = sizeof(address_al);
++	if (perf_dlfilter_fns.resolve_address(ctx, sample->ip, &address_al))
++		return test_fail("resolve_address() failed");
++
++	CHECK(address_al.sym && al->sym);
++	CHECK(!strcmp(address_al.sym, al->sym));
++	CHECK(address_al.addr == al->addr);
++	CHECK(address_al.sym_start == al->sym_start);
++	CHECK(address_al.sym_end == al->sym_end);
++	CHECK(address_al.dso && al->dso);
++	CHECK(!strcmp(address_al.dso, al->dso));
++
++	return 0;
++}
++
+ static int check_attr(void *ctx)
+ {
+ 	struct perf_event_attr *attr = perf_dlfilter_fns.attr(ctx);
+@@ -290,7 +314,7 @@ static int do_checks(void *data, const struct perf_dlfilter_sample *sample, void
+ 	if (early && !d->do_early)
+ 		return 0;
+ 
+-	if (check_al(ctx) || check_addr_al(ctx))
++	if (check_al(ctx) || check_addr_al(ctx) || check_address_al(ctx, sample))
+ 		return -1;
+ 
+ 	if (early)
+-- 
+2.34.1
 
-That's trivial to test:
-
-| [mark@gravadlaks:~]% cat shiftadd.c 
-| #include <stdio.h>
-| 
-| unsigned long logshiftadd(unsigned long a,
-|                           unsigned long b,
-|                           unsigned long c)
-| {
-|         printf("%ld >> %ld + %ld is %ld\n",
-|                a, b, c, a >> b + c);
-| }
-| 
-| int main(int argc, char *argv)
-| {
-|         logshiftadd(0, 0, 0);
-|         logshiftadd(0, 0, 1);
-|         logshiftadd(0, 0, 2);
-|         printf("\n");
-|         logshiftadd(1024, 0, 0);
-|         logshiftadd(1024, 0, 1);
-|         logshiftadd(1024, 0, 2);
-|         printf("\n");
-|         logshiftadd(1024, 2, 0);
-|         logshiftadd(1024, 2, 1);
-|         logshiftadd(1024, 2, 2);
-| 
-|         return 0;
-| }
-| [mark@gravadlaks:~]% gcc shiftadd.c -o shiftadd
-| [mark@gravadlaks:~]% ./shiftadd 
-| 0 >> 0 + 0 is 0
-| 0 >> 0 + 1 is 0
-| 0 >> 0 + 2 is 0
-| 
-| 1024 >> 0 + 0 is 1024
-| 1024 >> 0 + 1 is 512
-| 1024 >> 0 + 2 is 256
-| 
-| 1024 >> 2 + 0 is 256
-| 1024 >> 2 + 1 is 128
-| 1024 >> 2 + 2 is 64
-
-> During testing, all > those captured branch records looked alright.
-
-I think we clearly need better testing here.
-
-Thanks,
-Mark.
