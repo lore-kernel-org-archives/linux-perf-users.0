@@ -2,76 +2,205 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A732EC41513
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 12:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B72C001E0
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 12:39:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232640AbjGaMbo (ORCPT
+        id S230191AbjGaMjE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Jul 2023 08:31:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53284 "EHLO
+        Mon, 31 Jul 2023 08:39:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232642AbjGaMbl (ORCPT
+        with ESMTP id S232741AbjGaMjD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Jul 2023 08:31:41 -0400
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81639E66;
-        Mon, 31 Jul 2023 05:31:39 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R611e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0Vogfr9A_1690806695;
-Received: from 30.221.150.94(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0Vogfr9A_1690806695)
-          by smtp.aliyun-inc.com;
-          Mon, 31 Jul 2023 20:31:36 +0800
-Message-ID: <6581496b-57e8-d5bf-ae3e-fb466ed5dff9@linux.alibaba.com>
-Date:   Mon, 31 Jul 2023 20:31:33 +0800
+        Mon, 31 Jul 2023 08:39:03 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FCFF1AD;
+        Mon, 31 Jul 2023 05:39:02 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RDyPy1lkzzNmg0;
+        Mon, 31 Jul 2023 20:35:34 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Mon, 31 Jul 2023 20:38:58 +0800
+Subject: Re: [PATCH v3 4/7] perf record: Track sideband events for all CPUs
+ when tracing selected CPUs
+To:     Adrian Hunter <adrian.hunter@intel.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <irogers@google.com>,
+        <kan.liang@linux.intel.com>, <james.clark@arm.com>,
+        <tmricht@linux.ibm.com>, <ak@linux.intel.com>,
+        <anshuman.khandual@arm.com>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>
+References: <20230722093219.174898-1-yangjihong1@huawei.com>
+ <20230722093219.174898-5-yangjihong1@huawei.com>
+ <4ec5cf9e-130d-4259-420f-420508186858@intel.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <095df85c-e44e-9ff0-ad28-c3473a9a01e4@huawei.com>
+Date:   Mon, 31 Jul 2023 20:38:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.11.2
-Subject: Re: [PATCH v5 4/5] perf jevents: Add support for Arm CMN PMU aliasing
-To:     John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>
-Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>
-References: <1690525040-77423-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1690525040-77423-5-git-send-email-renyu.zj@linux.alibaba.com>
- <01f793eb-6373-e6c0-a712-9e08ee3c91c8@oracle.com>
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <01f793eb-6373-e6c0-a712-9e08ee3c91c8@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <4ec5cf9e-130d-4259-420f-420508186858@intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hello,
 
-
-在 2023/7/28 下午4:17, John Garry 写道:
-> On 28/07/2023 07:17, Jing Zhang wrote:
->> Currently just add aliases for part of Arm CMN PMU events which are
->> general and compatible for any SoC and CMN-ANY.
+On 2023/7/31 19:08, Adrian Hunter wrote:
+> On 22/07/23 12:32, Yang Jihong wrote:
+>> User space tasks can migrate between CPUs, we need to track side-band
+>> events for all CPUs.
 >>
->> "Compat" value "434*;436*;43c*;43a*" means it is compatible with all
+>> The specific scenarios are as follows:
+>>
+>>           CPU0                                 CPU1
+>>    perf record -C 0 start
+>>                                taskA starts to be created and executed
+>>                                  -> PERF_RECORD_COMM and PERF_RECORD_MMAP
+>>                                     events only deliver to CPU1
+>>                                ......
+>>                                  |
+>>                            migrate to CPU0
+>>                                  |
+>>    Running on CPU0    <----------/
+>>    ...
+>>
+>>    perf record -C 0 stop
+>>
+>> Now perf samples the PC of taskA. However, perf does not record the
+>> PERF_RECORD_COMM and PERF_RECORD_MMAP events of taskA.
+>> Therefore, the comm and symbols of taskA cannot be parsed.
+>>
+>> The solution is to record sideband events for all CPUs when tracing
+>> selected CPUs. Because this modifies the default behavior, add related
+>> comments to the perf record man page.
+>>
+>> The sys_perf_event_open invoked is as follows:
+>>
+>>    # perf --debug verbose=3 record -e cpu-clock -C 1 true
+>>    <SNIP>
+>>    Opening: cpu-clock
+>>    ------------------------------------------------------------
+>>    perf_event_attr:
+>>      type                             1 (PERF_TYPE_SOFTWARE)
+>>      size                             136
+>>      config                           0 (PERF_COUNT_SW_CPU_CLOCK)
+>>      { sample_period, sample_freq }   4000
+>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>      read_format                      ID|LOST
+>>      disabled                         1
+>>      inherit                          1
+>>      freq                             1
+>>      sample_id_all                    1
+>>      exclude_guest                    1
+>>    ------------------------------------------------------------
+>>    sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
+>>    Opening: dummy:u
+>>    ------------------------------------------------------------
+>>    perf_event_attr:
+>>      type                             1 (PERF_TYPE_SOFTWARE)
+>>      size                             136
+>>      config                           0x9 (PERF_COUNT_SW_DUMMY)
+>>      { sample_period, sample_freq }   1
+>>      sample_type                      IP|TID|TIME|CPU|IDENTIFIER
+>>      read_format                      ID|LOST
+>>      inherit                          1
+>>      exclude_kernel                   1
+>>      exclude_hv                       1
+>>      mmap                             1
+>>      comm                             1
+>>      task                             1
+>>      sample_id_all                    1
+>>      exclude_guest                    1
+>>      mmap2                            1
+>>      comm_exec                        1
+>>      ksymbol                          1
+>>      bpf_event                        1
+>>    ------------------------------------------------------------
+>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
+>>    sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 7
+>>    sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 9
+>>    sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 10
+>>    sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 11
+>>    sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 12
+>>    sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 13
+>>    sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
+>>    <SNIP>
+>>
+>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+>> ---
+>>   tools/perf/Documentation/perf-record.txt |  3 +++
+>>   tools/perf/builtin-record.c              | 14 +++++++++++++-
+>>   2 files changed, 16 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+>> index 680396c56bd1..dac53ece51ab 100644
+>> --- a/tools/perf/Documentation/perf-record.txt
+>> +++ b/tools/perf/Documentation/perf-record.txt
+>> @@ -388,6 +388,9 @@ comma-separated list with no space: 0,1. Ranges of CPUs are specified with -: 0-
+>>   In per-thread mode with inheritance mode on (default), samples are captured only when
+>>   the thread executes on the designated CPUs. Default is to monitor all CPUs.
+>>   
+>> +User space tasks can migrate between CPUs, so when tracing selected CPUs,
+>> +a dummy event is created to track sideband for all CPUs.
+>> +
+>>   -B::
+>>   --no-buildid::
+>>   Do not save the build ids of binaries in the perf.data files. This skips
+>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+>> index 3ff9d972225e..4e8e97928f05 100644
+>> --- a/tools/perf/builtin-record.c
+>> +++ b/tools/perf/builtin-record.c
+>> @@ -912,6 +912,7 @@ static int record__config_tracking_events(struct record *rec)
+>>   {
+>>   	struct record_opts *opts = &rec->opts;
+>>   	struct evlist *evlist = rec->evlist;
+>> +	bool system_wide = false;
+>>   	struct evsel *evsel;
+>>   
+>>   	/*
+>> @@ -921,7 +922,18 @@ static int record__config_tracking_events(struct record *rec)
+>>   	 */
+>>   	if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
+>>   	    perf_pmus__num_core_pmus() > 1) {
+>> -		evsel = evlist__findnew_tracking_event(evlist, false);
+>> +
+>> +		/*
+>> +		 * User space tasks can migrate between CPUs, so when tracing
+>> +		 * selected CPUs, sideband for all CPUs is still needed.
+>> +		 *
+>> +		 * If all (non-dummy) evsel have exclude_user,
+>> +		 * system_wide is not needed.
+>> +		 */
+>> +		if (!!opts->target.cpu_list && !opts->all_kernel)
 > 
-> As mentioned in patch 1/5, a comma-separated list seems a better delimiter to me
-> 
->> CMN600/CMN650/CMN700/Ci700.
-> 
-> It would be good if you could provide a link to where you got these events. I think that it is the publicly available CMN TRM document.
-> 
+> Not everyone uses all-kernel.  Can we check the evsels are either dummy
+> or exclude_user?
+For perf_record, exclude_user of all evsels is set in evsel__config(), 
+and record__config_tracking_events() is before evsel__config().
 
-Ok, will do.
+Uh..., it seems that only opts->all_kernel can be used to check 
+exclude_user of evsels.
+
+void evsel__config()
+{
+   ...
+   if (opts->all_kernel) {
+     attr->exclude_kernel = 0;
+     attr->exclude_user   = 1;
+   }
+   ...
+}
 
 Thanks,
-Jing
-
->>
->> Signed-off-by: Jing Zhang<renyu.zj@linux.alibaba.com>
-> 
-> Apart from comments, above:
-> 
-> Reviewed-by: John Garry <john.g.garry@oracle.com>
+Yang
