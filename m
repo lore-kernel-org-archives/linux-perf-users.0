@@ -2,205 +2,191 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E951C001DF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 11:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FA4C001DC
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 12:19:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231984AbjGaLIM (ORCPT
+        id S232213AbjGaMTk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Jul 2023 07:08:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55242 "EHLO
+        Mon, 31 Jul 2023 08:19:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232075AbjGaLIL (ORCPT
+        with ESMTP id S232124AbjGaMTb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Jul 2023 07:08:11 -0400
-Received: from mgamail.intel.com (unknown [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D606E76;
-        Mon, 31 Jul 2023 04:08:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690801689; x=1722337689;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=wmHhhDZYj/HzDaojK6j8984a8pR+yl+cuphjT9plJ/I=;
-  b=IMPt2f5ecdyuxNXngky+ZOAdFsuyXpO3Xd05vGrxM6cSAIiv4ljCWVCT
-   PEhOJTjDx1YHhjgtbXM9jjIM5a+0n6HcO8CoTMHWGWdbynsWx0ozqMGqQ
-   g7WDrEhrCkaqd70HbmNNEIo9aWAVdO9s/rv7UC9iDBSHSKbJV2B8+BDbW
-   jKgLt8MqmFtEf5xvLSg8STiuSnO6kcVNEMBf5ctv3dkKelCYHLzonXv/B
-   veYLf6Sbmg5i4APNRqEHqNwIjUI/3VI4umbJ6aC+m5Ukjit5nVzNQjBzj
-   sQDEvCS8HPHAd5Z074xl23S10CRvJdvK5CfShTfAAXgGqSOEavSUSoE8B
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10787"; a="435293007"
-X-IronPort-AV: E=Sophos;i="6.01,244,1684825200"; 
-   d="scan'208";a="435293007"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2023 04:08:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10787"; a="852001627"
-X-IronPort-AV: E=Sophos;i="6.01,244,1684825200"; 
-   d="scan'208";a="852001627"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.208.223])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2023 04:08:04 -0700
-Message-ID: <4ec5cf9e-130d-4259-420f-420508186858@intel.com>
-Date:   Mon, 31 Jul 2023 14:08:00 +0300
+        Mon, 31 Jul 2023 08:19:31 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 875F210E7;
+        Mon, 31 Jul 2023 05:19:28 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5139D75;
+        Mon, 31 Jul 2023 05:20:11 -0700 (PDT)
+Received: from [10.163.53.56] (unknown [10.163.53.56])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A9BD3F5A1;
+        Mon, 31 Jul 2023 05:19:23 -0700 (PDT)
+Message-ID: <97ee0edd-c8f1-461d-b650-c1c6933efc2c@arm.com>
+Date:   Mon, 31 Jul 2023 17:49:19 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.13.1
-Subject: Re: [PATCH v3 4/7] perf record: Track sideband events for all CPUs
- when tracing selected CPUs
+ Thunderbird/102.13.0
+Subject: Re: [PATCH V13 - RESEND 02/10] arm64/perf: Add BRBE registers and
+ fields
 Content-Language: en-US
-To:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, kan.liang@linux.intel.com,
-        james.clark@arm.com, tmricht@linux.ibm.com, ak@linux.intel.com,
-        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     James Clark <james.clark@arm.com>, Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org
-References: <20230722093219.174898-1-yangjihong1@huawei.com>
- <20230722093219.174898-5-yangjihong1@huawei.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230722093219.174898-5-yangjihong1@huawei.com>
+References: <20230711082455.215983-1-anshuman.khandual@arm.com>
+ <20230711082455.215983-3-anshuman.khandual@arm.com>
+ <20230728162011.GA22050@willie-the-truck>
+ <89ce4bc4-00c5-a763-3179-e1d3e9f198b7@arm.com>
+ <937468a1-b325-7d05-8daf-765f911c9240@arm.com>
+ <ZMd5gCOHqnGRc0Ja@FVFF77S0Q05N>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <ZMd5gCOHqnGRc0Ja@FVFF77S0Q05N>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 22/07/23 12:32, Yang Jihong wrote:
-> User space tasks can migrate between CPUs, we need to track side-band
-> events for all CPUs.
-> 
-> The specific scenarios are as follows:
-> 
->          CPU0                                 CPU1
->   perf record -C 0 start
->                               taskA starts to be created and executed
->                                 -> PERF_RECORD_COMM and PERF_RECORD_MMAP
->                                    events only deliver to CPU1
->                               ......
->                                 |
->                           migrate to CPU0
->                                 |
->   Running on CPU0    <----------/
->   ...
-> 
->   perf record -C 0 stop
-> 
-> Now perf samples the PC of taskA. However, perf does not record the
-> PERF_RECORD_COMM and PERF_RECORD_MMAP events of taskA.
-> Therefore, the comm and symbols of taskA cannot be parsed.
-> 
-> The solution is to record sideband events for all CPUs when tracing
-> selected CPUs. Because this modifies the default behavior, add related
-> comments to the perf record man page.
-> 
-> The sys_perf_event_open invoked is as follows:
-> 
->   # perf --debug verbose=3 record -e cpu-clock -C 1 true
->   <SNIP>
->   Opening: cpu-clock
->   ------------------------------------------------------------
->   perf_event_attr:
->     type                             1 (PERF_TYPE_SOFTWARE)
->     size                             136
->     config                           0 (PERF_COUNT_SW_CPU_CLOCK)
->     { sample_period, sample_freq }   4000
->     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->     read_format                      ID|LOST
->     disabled                         1
->     inherit                          1
->     freq                             1
->     sample_id_all                    1
->     exclude_guest                    1
->   ------------------------------------------------------------
->   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
->   Opening: dummy:u
->   ------------------------------------------------------------
->   perf_event_attr:
->     type                             1 (PERF_TYPE_SOFTWARE)
->     size                             136
->     config                           0x9 (PERF_COUNT_SW_DUMMY)
->     { sample_period, sample_freq }   1
->     sample_type                      IP|TID|TIME|CPU|IDENTIFIER
->     read_format                      ID|LOST
->     inherit                          1
->     exclude_kernel                   1
->     exclude_hv                       1
->     mmap                             1
->     comm                             1
->     task                             1
->     sample_id_all                    1
->     exclude_guest                    1
->     mmap2                            1
->     comm_exec                        1
->     ksymbol                          1
->     bpf_event                        1
->   ------------------------------------------------------------
->   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
->   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 7
->   sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 9
->   sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 10
->   sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 11
->   sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 12
->   sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 13
->   sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
->   <SNIP>
-> 
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> ---
->  tools/perf/Documentation/perf-record.txt |  3 +++
->  tools/perf/builtin-record.c              | 14 +++++++++++++-
->  2 files changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-> index 680396c56bd1..dac53ece51ab 100644
-> --- a/tools/perf/Documentation/perf-record.txt
-> +++ b/tools/perf/Documentation/perf-record.txt
-> @@ -388,6 +388,9 @@ comma-separated list with no space: 0,1. Ranges of CPUs are specified with -: 0-
->  In per-thread mode with inheritance mode on (default), samples are captured only when
->  the thread executes on the designated CPUs. Default is to monitor all CPUs.
->  
-> +User space tasks can migrate between CPUs, so when tracing selected CPUs,
-> +a dummy event is created to track sideband for all CPUs.
-> +
->  -B::
->  --no-buildid::
->  Do not save the build ids of binaries in the perf.data files. This skips
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 3ff9d972225e..4e8e97928f05 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -912,6 +912,7 @@ static int record__config_tracking_events(struct record *rec)
->  {
->  	struct record_opts *opts = &rec->opts;
->  	struct evlist *evlist = rec->evlist;
-> +	bool system_wide = false;
->  	struct evsel *evsel;
->  
->  	/*
-> @@ -921,7 +922,18 @@ static int record__config_tracking_events(struct record *rec)
->  	 */
->  	if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
->  	    perf_pmus__num_core_pmus() > 1) {
-> -		evsel = evlist__findnew_tracking_event(evlist, false);
-> +
-> +		/*
-> +		 * User space tasks can migrate between CPUs, so when tracing
-> +		 * selected CPUs, sideband for all CPUs is still needed.
-> +		 *
-> +		 * If all (non-dummy) evsel have exclude_user,
-> +		 * system_wide is not needed.
-> +		 */
-> +		if (!!opts->target.cpu_list && !opts->all_kernel)
 
-Not everyone uses all-kernel.  Can we check the evsels are either dummy
-or exclude_user?
 
-> +			system_wide = true;
-> +
-> +		evsel = evlist__findnew_tracking_event(evlist, system_wide);
->  		if (!evsel)
->  			return -ENOMEM;
->  
+On 7/31/23 14:36, Mark Rutland wrote:
+> On Mon, Jul 31, 2023 at 08:03:21AM +0530, Anshuman Khandual wrote:
+>>
+>>
+>> On 7/28/23 22:22, James Clark wrote:
+>>>
+>>>
+>>> On 28/07/2023 17:20, Will Deacon wrote:
+>>>> On Tue, Jul 11, 2023 at 01:54:47PM +0530, Anshuman Khandual wrote:
+>>>>> This adds BRBE related register definitions and various other related field
+>>>>> macros there in. These will be used subsequently in a BRBE driver which is
+>>>>> being added later on.
+>>>>>
+>>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>>>> Cc: Will Deacon <will@kernel.org>
+>>>>> Cc: Marc Zyngier <maz@kernel.org>
+>>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>>>> Cc: linux-arm-kernel@lists.infradead.org
+>>>>> Cc: linux-kernel@vger.kernel.org
+>>>>> Tested-by: James Clark <james.clark@arm.com>
+>>>>> Reviewed-by: Mark Brown <broonie@kernel.org>
+>>>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>>>>> ---
+>>>>>  arch/arm64/include/asm/sysreg.h | 103 +++++++++++++++++++++
+>>>>>  arch/arm64/tools/sysreg         | 158 ++++++++++++++++++++++++++++++++
+>>>>>  2 files changed, 261 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+>>>>> index b481935e9314..f95e30c13c8b 100644
+>>>>> --- a/arch/arm64/include/asm/sysreg.h
+>>>>> +++ b/arch/arm64/include/asm/sysreg.h
+>>>>> @@ -163,6 +163,109 @@
+>>>>>  #define SYS_DBGDTRTX_EL0		sys_reg(2, 3, 0, 5, 0)
+>>>>>  #define SYS_DBGVCR32_EL2		sys_reg(2, 4, 0, 7, 0)
+>>>>>  
+>>>>> +#define __SYS_BRBINFO(n)		sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10)) >> 2 + 0))
+>>>>> +#define __SYS_BRBSRC(n)			sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10)) >> 2 + 1))
+>>>>> +#define __SYS_BRBTGT(n)			sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10)) >> 2 + 2))
+>>>>
+>>>> It's that time on a Friday but... aren't these macros busted? I think you
+>>>> need brackets before adding the offset, otherwise wouldn't, for example,
+>>>> target registers 0-15 all access info register 0 and __SYS_BRBTGT(16) would
+>>>> then start accessing source register 0?
+>>>>
+>>>> I'm surprised that the compiler doesn't warn about this, but even more
+>>>> surprised that you managed to test this.
+>>>>
+>>>> Please tell me I'm wrong!
+>>>>
+>>>> Will
+>>>
+>>> No I think you are right, it is wrong. Luckily there is already an
+>>> extraneous bracket so you you can fix it by moving one a place down:
+>>>
+>>>   sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10) >> 2) + 2))
+>>>
+>>> It's interesting because the test [1] is doing quite a bit and looking
+>>> at the branch info, and that src and targets match up to function names.
+>>> I also manually looked at the branch buffers and didn't see anything
+>>> obviously wrong like things that looked like branch infos in the source
+>>> or target fields. Will have to take another look to see if it would be
+>>> possible for the test to catch this.
+>>>
+>>> James
+>>>
+>>> [1]:
+>>> https://gitlab.arm.com/linux-arm/linux-jc/-/commit/3a7ddce70c2daadb63fcc511de0a89055ca48b32
+>>
+>> ((((n) & 0x10)) >> 2 + 2) ---> ((((n) & 0x10) >> 2) + 2)
+>>
+>> The additional brackets are useful in explicitly telling the compiler but
+>> what it the compiler is just doing the right thing implicitly i.e computing
+>> the shifting operation before doing the offset addition.
+> 
+> No; that is not correct. In c, '+' has higher precedence than '>>'.
+> 
+> For 'a >> b + c' the compiler *must* treat that as 'a >> (b + c)', and not as
+> '(a >> b) + c'
+> 
+> That's trivial to test:
+> 
+> | [mark@gravadlaks:~]% cat shiftadd.c 
+> | #include <stdio.h>
+> | 
+> | unsigned long logshiftadd(unsigned long a,
+> |                           unsigned long b,
+> |                           unsigned long c)
+> | {
+> |         printf("%ld >> %ld + %ld is %ld\n",
+> |                a, b, c, a >> b + c);
+> | }
+> | 
+> | int main(int argc, char *argv)
+> | {
+> |         logshiftadd(0, 0, 0);
+> |         logshiftadd(0, 0, 1);
+> |         logshiftadd(0, 0, 2);
+> |         printf("\n");
+> |         logshiftadd(1024, 0, 0);
+> |         logshiftadd(1024, 0, 1);
+> |         logshiftadd(1024, 0, 2);
+> |         printf("\n");
+> |         logshiftadd(1024, 2, 0);
+> |         logshiftadd(1024, 2, 1);
+> |         logshiftadd(1024, 2, 2);
+> | 
+> |         return 0;
+> | }
+> | [mark@gravadlaks:~]% gcc shiftadd.c -o shiftadd
+> | [mark@gravadlaks:~]% ./shiftadd 
+> | 0 >> 0 + 0 is 0
+> | 0 >> 0 + 1 is 0
+> | 0 >> 0 + 2 is 0
+> | 
+> | 1024 >> 0 + 0 is 1024
+> | 1024 >> 0 + 1 is 512
+> | 1024 >> 0 + 2 is 256
+> | 
+> | 1024 >> 2 + 0 is 256
+> | 1024 >> 2 + 1 is 128
+> | 1024 >> 2 + 2 is 64
 
+Understood.
+
+> 
+>> During testing, all > those captured branch records looked alright.
+> 
+> I think we clearly need better testing here
+I am still thinking - how could this might have been missed. Could it be
+possible that these wrongly computed higher indices were getting folded
+back/rolled over into the same legal range indices for a given bank. If
+they did, branch record processing would have still captured almost all
+of them, may be in an incorrect order. Branch order does matter for the
+stitched mechanism.
