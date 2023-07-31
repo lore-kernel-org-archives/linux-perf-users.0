@@ -2,110 +2,205 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 560F7C001E0
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 11:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E951C001DF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 11:08:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229579AbjGaLAT (ORCPT
+        id S231984AbjGaLIM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Jul 2023 07:00:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48884 "EHLO
+        Mon, 31 Jul 2023 07:08:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230412AbjGaLAP (ORCPT
+        with ESMTP id S232075AbjGaLIL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Jul 2023 07:00:15 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61D57E40;
-        Mon, 31 Jul 2023 04:00:13 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-5222c5d71b8so6409101a12.2;
-        Mon, 31 Jul 2023 04:00:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690801212; x=1691406012;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f0ZOvY/Xpr5zHXbVwVBZloVfJ8G8FuuDZCTbV8z9EOA=;
-        b=rH997djt343XybxXVBV+uA0CT9/skZz1zl6AUqtYMfTepAhSK30GnxKvmO4yoKPYYz
-         hnjki4wYcBX+3CdzG7u+09ySzk2ZuKO0WR3ynbk46LfhoUGX3BqFkg8WjgNtC4XDI/A4
-         hbWVK4ZPCphdTdXL+/Ns+pkjRg5Gaz+2FshCJ51XoVlFmVshuZmyL9sNMIq9yuuNPqPl
-         Jms53b74uOPrTI+pxyUusWF6dludQQW/2ZecBGJem6LETbdvQpR4GPmaiHEwSOKQAgEO
-         NjEOxgen7eugWN5X6Pa0Jf7fpbDOQmmZ35uW4PYR+xPTGHOfNqQYmHhLr/f+IwPbWLxs
-         YBQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690801212; x=1691406012;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f0ZOvY/Xpr5zHXbVwVBZloVfJ8G8FuuDZCTbV8z9EOA=;
-        b=MoZ1asJ5565cf+gP1AgS1JfDEBwGPMN2luUoACG7jftQxL5SweeHJ1H4/0j2HiMJIN
-         817MZtdlDgU32Zn5GhuDEdMH9D6okij7VCqcTZNH0ZJTGaiwEUK2e7BFfGqHq8jgdVTm
-         Km3stGF0cDJebaQqXCgbSmz3I45a9pPL3osIj0qqXaWbY5IebSKV+MtYMIjtcQs3YBVM
-         vCN+BdX0sdoXRAP40lgtTLRqfGSaYi+UD8feCamHdF3GrrpvNQmqGhcyHWFbHBZTdCz7
-         6tXepb8b9+06WJt9Z5MjKUuwxhutN97jhQZL1Ppzk8ZRYb6eC7DKsXM0ObPrYawDdpl4
-         n4Zg==
-X-Gm-Message-State: ABy/qLadGyDeRpnvI427EVrt8cGK+zcUzLJFI3AIdRtTDSoWNT0ilSym
-        6OdX6KyCG/v9y/snXAUXlA92KaRHQSbHlsb7Mko=
-X-Google-Smtp-Source: APBJJlEvzB3AzJ/tG+b0S8KLUVw6iL3Bw2nnGad8E+g1GQ8IQvLcu2BlyGA3ZVDjaEJxmRry1M5WYsjqAZIYec3ZxO0=
-X-Received: by 2002:aa7:d745:0:b0:522:289d:8dcd with SMTP id
- a5-20020aa7d745000000b00522289d8dcdmr7624694eds.35.1690801211659; Mon, 31 Jul
- 2023 04:00:11 -0700 (PDT)
+        Mon, 31 Jul 2023 07:08:11 -0400
+Received: from mgamail.intel.com (unknown [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D606E76;
+        Mon, 31 Jul 2023 04:08:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1690801689; x=1722337689;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=wmHhhDZYj/HzDaojK6j8984a8pR+yl+cuphjT9plJ/I=;
+  b=IMPt2f5ecdyuxNXngky+ZOAdFsuyXpO3Xd05vGrxM6cSAIiv4ljCWVCT
+   PEhOJTjDx1YHhjgtbXM9jjIM5a+0n6HcO8CoTMHWGWdbynsWx0ozqMGqQ
+   g7WDrEhrCkaqd70HbmNNEIo9aWAVdO9s/rv7UC9iDBSHSKbJV2B8+BDbW
+   jKgLt8MqmFtEf5xvLSg8STiuSnO6kcVNEMBf5ctv3dkKelCYHLzonXv/B
+   veYLf6Sbmg5i4APNRqEHqNwIjUI/3VI4umbJ6aC+m5Ukjit5nVzNQjBzj
+   sQDEvCS8HPHAd5Z074xl23S10CRvJdvK5CfShTfAAXgGqSOEavSUSoE8B
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10787"; a="435293007"
+X-IronPort-AV: E=Sophos;i="6.01,244,1684825200"; 
+   d="scan'208";a="435293007"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2023 04:08:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10787"; a="852001627"
+X-IronPort-AV: E=Sophos;i="6.01,244,1684825200"; 
+   d="scan'208";a="852001627"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.208.223])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2023 04:08:04 -0700
+Message-ID: <4ec5cf9e-130d-4259-420f-420508186858@intel.com>
+Date:   Mon, 31 Jul 2023 14:08:00 +0300
 MIME-Version: 1.0
-References: <20230726121618.19198-1-zegao@tencent.com> <20230726121618.19198-2-zegao@tencent.com>
- <20230731093655.GC29590@hirez.programming.kicks-ass.net>
-In-Reply-To: <20230731093655.GC29590@hirez.programming.kicks-ass.net>
-From:   Ze Gao <zegao2021@gmail.com>
-Date:   Mon, 31 Jul 2023 19:00:00 +0800
-Message-ID: <CAD8CoPDvXN6u8uw48UU97bWJgkB0S2qGimAFwhHo9XvWe_x03A@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 1/3] sched, tracing: add to report task state in
- symbolic chars
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.13.1
+Subject: Re: [PATCH v3 4/7] perf record: Track sideband events for all CPUs
+ when tracing selected CPUs
+Content-Language: en-US
+To:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, kan.liang@linux.intel.com,
+        james.clark@arm.com, tmricht@linux.ibm.com, ak@linux.intel.com,
+        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+References: <20230722093219.174898-1-yangjihong1@huawei.com>
+ <20230722093219.174898-5-yangjihong1@huawei.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20230722093219.174898-5-yangjihong1@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jul 31, 2023 at 5:37=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> On Wed, Jul 26, 2023 at 08:16:16PM +0800, Ze Gao wrote:
-> > Internal representations of task state are likely to be changed or
-> > ordered, and reporting them to userspace without exporting them as
-> > part of API is not a good choice, which can easily break a userspace
-> > observability tool as kernel evolves. For example, perf suffers from
-> > this and still reports wrong states by this patch.
-> >
-> > OTOH, some masqueraded state like TASK_REPORT_IDLE and TASK_REPORT_MAX
-> > are also reported inadvertently, which confuses things even more.
-> >
-> > So add a new variable in company with the old raw value to report task
-> > state in symbolic char, which is self-explaining and no further
-> > translation is needed, and also report priorities in 'short' to save
-> > some buffer space.  Of course this does not break any userspace tool.
-> >
-> > Note for PREEMPT_ACTIVE, we introduce 'p' to report it and use the old
-> > conventions for the rest.
->
-> So I really dont much like this. This looses the ability to see the
-> actual wait state flags, there could be multiple. Eg, things like
-> TASK_FREEZEABLE gets lost completely.
+On 22/07/23 12:32, Yang Jihong wrote:
+> User space tasks can migrate between CPUs, we need to track side-band
+> events for all CPUs.
+> 
+> The specific scenarios are as follows:
+> 
+>          CPU0                                 CPU1
+>   perf record -C 0 start
+>                               taskA starts to be created and executed
+>                                 -> PERF_RECORD_COMM and PERF_RECORD_MMAP
+>                                    events only deliver to CPU1
+>                               ......
+>                                 |
+>                           migrate to CPU0
+>                                 |
+>   Running on CPU0    <----------/
+>   ...
+> 
+>   perf record -C 0 stop
+> 
+> Now perf samples the PC of taskA. However, perf does not record the
+> PERF_RECORD_COMM and PERF_RECORD_MMAP events of taskA.
+> Therefore, the comm and symbols of taskA cannot be parsed.
+> 
+> The solution is to record sideband events for all CPUs when tracing
+> selected CPUs. Because this modifies the default behavior, add related
+> comments to the perf record man page.
+> 
+> The sys_perf_event_open invoked is as follows:
+> 
+>   # perf --debug verbose=3 record -e cpu-clock -C 1 true
+>   <SNIP>
+>   Opening: cpu-clock
+>   ------------------------------------------------------------
+>   perf_event_attr:
+>     type                             1 (PERF_TYPE_SOFTWARE)
+>     size                             136
+>     config                           0 (PERF_COUNT_SW_CPU_CLOCK)
+>     { sample_period, sample_freq }   4000
+>     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>     read_format                      ID|LOST
+>     disabled                         1
+>     inherit                          1
+>     freq                             1
+>     sample_id_all                    1
+>     exclude_guest                    1
+>   ------------------------------------------------------------
+>   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
+>   Opening: dummy:u
+>   ------------------------------------------------------------
+>   perf_event_attr:
+>     type                             1 (PERF_TYPE_SOFTWARE)
+>     size                             136
+>     config                           0x9 (PERF_COUNT_SW_DUMMY)
+>     { sample_period, sample_freq }   1
+>     sample_type                      IP|TID|TIME|CPU|IDENTIFIER
+>     read_format                      ID|LOST
+>     inherit                          1
+>     exclude_kernel                   1
+>     exclude_hv                       1
+>     mmap                             1
+>     comm                             1
+>     task                             1
+>     sample_id_all                    1
+>     exclude_guest                    1
+>     mmap2                            1
+>     comm_exec                        1
+>     ksymbol                          1
+>     bpf_event                        1
+>   ------------------------------------------------------------
+>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
+>   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 7
+>   sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 9
+>   sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 10
+>   sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 11
+>   sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 12
+>   sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 13
+>   sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
+>   <SNIP>
+> 
+> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> ---
+>  tools/perf/Documentation/perf-record.txt |  3 +++
+>  tools/perf/builtin-record.c              | 14 +++++++++++++-
+>  2 files changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> index 680396c56bd1..dac53ece51ab 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -388,6 +388,9 @@ comma-separated list with no space: 0,1. Ranges of CPUs are specified with -: 0-
+>  In per-thread mode with inheritance mode on (default), samples are captured only when
+>  the thread executes on the designated CPUs. Default is to monitor all CPUs.
+>  
+> +User space tasks can migrate between CPUs, so when tracing selected CPUs,
+> +a dummy event is created to track sideband for all CPUs.
+> +
+>  -B::
+>  --no-buildid::
+>  Do not save the build ids of binaries in the perf.data files. This skips
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 3ff9d972225e..4e8e97928f05 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -912,6 +912,7 @@ static int record__config_tracking_events(struct record *rec)
+>  {
+>  	struct record_opts *opts = &rec->opts;
+>  	struct evlist *evlist = rec->evlist;
+> +	bool system_wide = false;
+>  	struct evsel *evsel;
+>  
+>  	/*
+> @@ -921,7 +922,18 @@ static int record__config_tracking_events(struct record *rec)
+>  	 */
+>  	if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
+>  	    perf_pmus__num_core_pmus() > 1) {
+> -		evsel = evlist__findnew_tracking_event(evlist, false);
+> +
+> +		/*
+> +		 * User space tasks can migrate between CPUs, so when tracing
+> +		 * selected CPUs, sideband for all CPUs is still needed.
+> +		 *
+> +		 * If all (non-dummy) evsel have exclude_user,
+> +		 * system_wide is not needed.
+> +		 */
+> +		if (!!opts->target.cpu_list && !opts->all_kernel)
 
-Also, IIRC, TASK_FREEZABLE which is defined as 0x2000, is already lost
-in the current implementation of __trace_sched_switch_state which limits
-all states except PREEMPT_ACTIIVE below TASK_REPORT_IDLE to be
-reported. So I do not believe you can achieve this by just leaving things a=
-lone.
+Not everyone uses all-kernel.  Can we check the evsels are either dummy
+or exclude_user?
 
-Regards,
-Ze
+> +			system_wide = true;
+> +
+> +		evsel = evlist__findnew_tracking_event(evlist, system_wide);
+>  		if (!evsel)
+>  			return -ENOMEM;
+>  
+
