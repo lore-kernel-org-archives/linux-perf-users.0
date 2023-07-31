@@ -2,215 +2,109 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC7CC001DC
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 10:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C148C41513
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 10:17:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231659AbjGaKPb (ORCPT
+        id S232253AbjGaKRj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Jul 2023 06:15:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52630 "EHLO
+        Mon, 31 Jul 2023 06:17:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231567AbjGaKPa (ORCPT
+        with ESMTP id S232218AbjGaKRf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Jul 2023 06:15:30 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 063BDE5D
-        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jul 2023 03:15:25 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-31427ddd3fbso3998575f8f.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jul 2023 03:15:24 -0700 (PDT)
+        Mon, 31 Jul 2023 06:17:35 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2180810D5;
+        Mon, 31 Jul 2023 03:17:25 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-52256241c66so9047265a12.1;
+        Mon, 31 Jul 2023 03:17:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20221208.gappssmtp.com; s=20221208; t=1690798523; x=1691403323;
+        d=gmail.com; s=20221208; t=1690798644; x=1691403444;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EG3iuoYl2Yyk7UzsEc9LvQqrnR5PB3HBwoWOS4ckXVc=;
-        b=JwLZ45qZwpOVPkXVdWIjIpyNCmwYH3dD8Ou7rl1pivlSHmOAShFMtPSrushNT6kmaq
-         0dvPQPJk9qUs4AvASoH4gYvejhe/vSpJ4yXyYZyySjdQGekmCa/rEJCpbcQYWU/E8P3S
-         AlJhoAOq/XPyByQrKiIkNk/OrNEA5ye2AzKSbO1oFASt+UzRwFIPWKYe3WuZmxeQvDGd
-         /Fldg0QEg6p7DZ7btLj4ScOMseJMGHIDA9pso+oYxo3L4B91PFlYyvSd5DbmYHBcFOoi
-         vHMqeQ0nYL/ARSHDJmf9aL3oEsBkBmeXhnms5OSIg/VaUgDVI2kRDsctBYp8rqkmYenw
-         IuqQ==
+        bh=CXiGRTcr5MmLzRrYiT9TQhAL1SVOTO+sDF4VeUAvGqs=;
+        b=dWqYPSfAO+8WjXGBR5YYcjK33gynP8gxT7yczSDk13JfLzCvBcwdN5TMEoAHG3cY0h
+         ejbT4X+GcjZbxqkdupC4xjoxmDxjgUSODZNqXpPe1qXp0oZrh/+mgo2FSvey7Y0rdJIX
+         zoMZbSlFPU67M7NOWuH93PSWfV+5VjK2rZ/qFMMLN/Z8gxaJHtnb4Tm9vQutjA6eZHAk
+         zknXVWTiHf1xixC7+lnMxOy1u3ypDWIONamq9v6CxoujC44Uzoo/mZQOzV5VWy+DzY2e
+         3ltMJ2WDHPTyNzVw5HY2KfgmlHpaT/zqHPHRvhkFxgxPXqWDaSFZnMayWY4iviX8xI2S
+         GuJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690798523; x=1691403323;
+        d=1e100.net; s=20221208; t=1690798644; x=1691403444;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EG3iuoYl2Yyk7UzsEc9LvQqrnR5PB3HBwoWOS4ckXVc=;
-        b=AiyojYupI2k9T5oDUro1+Lso9+PXhzk0SkLF2UGGWpR2IWdJEwqdomsVLH085Cl17N
-         err9SFeIs65ElM52SrlzmlrS4pAn02hgZKpFwuREpZia1xUu6aDAztG8wGtc7Ln/ClQA
-         8o9V2r1kys5nXqc6da9Tg0xNreLNVYiGjqYvcfnBVv8EcS5/J1GMQtnVEQJ9e964vTPr
-         9heP7tuUh8wfZcZQIf/KL3JkVSdRQXO15hQ9uRr3XuzkBn86S0GPZFWxUw2BHXzHG5al
-         Gh74hnscHwcaiwTOxfKZGaXXftwAt9G5lGDTA+KeoqK/zpIegvkEE5yre15GNYPMu/oq
-         8ulw==
-X-Gm-Message-State: ABy/qLYQIx4G0LEK9l3t5Vwhu6/h3/3PWpjdcj2mgN+KV+L8KmlT598T
-        h/fxJlFEVShFrohSo2bU3lHnsE9kBeddeZAhTnJWlQ==
-X-Google-Smtp-Source: APBJJlFxSlRHvyoI0m2LL342krCpCaswj8cTM0vLfwdYwEDfTBUig6/z+ede7/AhGalI5Gom70ZQdsAskFXQlQqiPT4=
-X-Received: by 2002:a5d:43c3:0:b0:30f:af19:81f3 with SMTP id
- v3-20020a5d43c3000000b0030faf1981f3mr5506063wrr.41.1690798523303; Mon, 31 Jul
- 2023 03:15:23 -0700 (PDT)
+        bh=CXiGRTcr5MmLzRrYiT9TQhAL1SVOTO+sDF4VeUAvGqs=;
+        b=OYeQxZtIwm782/TL+wF4m4v91F4KWXqK51BlGyGfsHs7PnYOC5zjmSV6QOvIFCRZ7C
+         lRFXyWbH+uo6lwkORizaL0TQ/39ekrVoGVOtZCQM3Xesv4dVAJ564nTxwTY9AWXIMJo9
+         nq2rTt3HTN0RJNRimSUKOrf4isHasFHQ8phLLbfEODbrXC3FTEq8fHCqbPzcFbHtwtTC
+         FCe7lkbPdCZEpfeZEqugrMlTFogQkg+bBpYkHa5fvJnGSzxW4RXfm0oNXtS4zZ3hNuT1
+         9lcB9NjDOu4UnE0j3ociMsFloAhYP+5lhHttuxG5bGyzuUG7N6P6uIcA59UTUVWL03a2
+         Sqdg==
+X-Gm-Message-State: ABy/qLYMX3zeT1rX9httRXGgyo9NmsvRm609wxsJmcxvbtpdJAtYXHEg
+        NW4CWyBgtZwX9AG0sMBxh1lwMI7JDaYkT2TlUMI=
+X-Google-Smtp-Source: APBJJlEl1pSOq58OsusTT85TEubZsY4FjctGCi2DSQJkWxlNRpmU0ht7TEycBMzm3AnQw6NJzXstellJAFmIqhHFpYw=
+X-Received: by 2002:a05:6402:393:b0:522:3a1d:c233 with SMTP id
+ o19-20020a056402039300b005223a1dc233mr11405883edv.11.1690798643969; Mon, 31
+ Jul 2023 03:17:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230727141428.962286-1-alexghiti@rivosinc.com>
- <20230727141428.962286-10-alexghiti@rivosinc.com> <CAP-5=fU5XYXrVnRUidpwjV2LiTsdebfidL43_Qo4Z7TBxMsVGA@mail.gmail.com>
-In-Reply-To: <CAP-5=fU5XYXrVnRUidpwjV2LiTsdebfidL43_Qo4Z7TBxMsVGA@mail.gmail.com>
-From:   Alexandre Ghiti <alexghiti@rivosinc.com>
-Date:   Mon, 31 Jul 2023 12:15:12 +0200
-Message-ID: <CAHVXubgVAe1WsiZx5Ay+3KPK4u24k_vsnTwFFmBeVsHrGXwhfw@mail.gmail.com>
-Subject: Re: [PATCH v4 09/10] tools: lib: perf: Implement riscv mmap support
-To:     Ian Rogers <irogers@google.com>,
-        Palmer Dabbelt <palmer@rivosinc.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+References: <20230726121618.19198-1-zegao@tencent.com> <20230726121618.19198-2-zegao@tencent.com>
+ <20230731093655.GC29590@hirez.programming.kicks-ass.net>
+In-Reply-To: <20230731093655.GC29590@hirez.programming.kicks-ass.net>
+From:   Ze Gao <zegao2021@gmail.com>
+Date:   Mon, 31 Jul 2023 18:17:12 +0800
+Message-ID: <CAD8CoPABfCBmGvg5WnJQ6+=wmz7dNTY=ubd9nahVvzDOvo9t2g@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/3] sched, tracing: add to report task state in
+ symbolic chars
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <atishp@atishpatra.org>,
-        Anup Patel <anup@brainfault.org>,
-        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-        Andrew Jones <ajones@ventanamicro.com>,
-        =?UTF-8?Q?R=C3=A9mi_Denis=2DCourmont?= <remi@remlab.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Atish Patra <atishp@rivosinc.com>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
-
-On Fri, Jul 28, 2023 at 7:53=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On Mon, Jul 31, 2023 at 5:37=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
 >
-> On Thu, Jul 27, 2023 at 7:28=E2=80=AFAM Alexandre Ghiti <alexghiti@rivosi=
-nc.com> wrote:
+> On Wed, Jul 26, 2023 at 08:16:16PM +0800, Ze Gao wrote:
+> > Internal representations of task state are likely to be changed or
+> > ordered, and reporting them to userspace without exporting them as
+> > part of API is not a good choice, which can easily break a userspace
+> > observability tool as kernel evolves. For example, perf suffers from
+> > this and still reports wrong states by this patch.
 > >
-> > riscv now supports mmaping hardware counters so add what's needed to
-> > take advantage of that in libperf.
+> > OTOH, some masqueraded state like TASK_REPORT_IDLE and TASK_REPORT_MAX
+> > are also reported inadvertently, which confuses things even more.
 > >
-> > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> > Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-> > Reviewed-by: Atish Patra <atishp@rivosinc.com>
-> > ---
-> >  tools/lib/perf/mmap.c | 65 +++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 65 insertions(+)
+> > So add a new variable in company with the old raw value to report task
+> > state in symbolic char, which is self-explaining and no further
+> > translation is needed, and also report priorities in 'short' to save
+> > some buffer space.  Of course this does not break any userspace tool.
 > >
-> > diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
-> > index 0d1634cedf44..378a163f0554 100644
-> > --- a/tools/lib/perf/mmap.c
-> > +++ b/tools/lib/perf/mmap.c
-> > @@ -392,6 +392,71 @@ static u64 read_perf_counter(unsigned int counter)
-> >
-> >  static u64 read_timestamp(void) { return read_sysreg(cntvct_el0); }
-> >
-> > +#elif __riscv_xlen =3D=3D 64
+> > Note for PREEMPT_ACTIVE, we introduce 'p' to report it and use the old
+> > conventions for the rest.
 >
-> This is something of an odd guard, perhaps:
-> #elif defined(__riscv) && __riscv_xlen =3D=3D 64
->
-> That way it is more intention revealing that this is riscv code. Could
-> you add a comment relating to the __riscv_xlen ?
+> So I really dont much like this. This looses the ability to see the
+> actual wait state flags, there could be multiple. Eg, things like
+> TASK_FREEZEABLE gets lost completely.
 
-I guess Andrew answered that already.
+How about adding a new char for each distinct state you want to report
+, e.g., 'F' for this for debug purposes ? I don;t think we can lose the
+multiple flags just because we choose to report in chars. Still people
+can use the old raw value since we do not replace but supplement it here.
 
->
-> > +
-> > +/* TODO: implement rv32 support */
-> > +
-> > +#define CSR_CYCLE      0xc00
-> > +#define CSR_TIME       0xc01
-> > +
-> > +#define csr_read(csr)                                          \
-> > +({                                                             \
-> > +       register unsigned long __v;                             \
-> > +               __asm__ __volatile__ ("csrr %0, " #csr          \
-> > +                : "=3Dr" (__v) :                                 \
-> > +                : "memory");                                   \
->
-> To avoid the macro pasting that could potentially go weird, could this be=
-:
->
-> __asm__ __volatile__ ("csrr %0, %1",
->   : "=3Dr"(__v) /* outputs */
->   : "i"(csr) /* inputs */
->   : "memory" /* clobbers */)
->
-> Also, why is this clobbering memory? Worth adding a comment.
-
-No idea, I see that it is also done this way in
-arch/riscv/include/asm/csr.h. @Atish Kumar Patra , @Palmer Dabbelt ?
-
-Thanks for your comments!
-
-Alex
-
->
-> Thanks,
-> Ian
->
-> > +                __v;                                           \
-> > +})
-> > +
-> > +static unsigned long csr_read_num(int csr_num)
-> > +{
-> > +#define switchcase_csr_read(__csr_num, __val)           {\
-> > +       case __csr_num:                                 \
-> > +               __val =3D csr_read(__csr_num);            \
-> > +               break; }
-> > +#define switchcase_csr_read_2(__csr_num, __val)         {\
-> > +       switchcase_csr_read(__csr_num + 0, __val)        \
-> > +       switchcase_csr_read(__csr_num + 1, __val)}
-> > +#define switchcase_csr_read_4(__csr_num, __val)         {\
-> > +       switchcase_csr_read_2(__csr_num + 0, __val)      \
-> > +       switchcase_csr_read_2(__csr_num + 2, __val)}
-> > +#define switchcase_csr_read_8(__csr_num, __val)         {\
-> > +       switchcase_csr_read_4(__csr_num + 0, __val)      \
-> > +       switchcase_csr_read_4(__csr_num + 4, __val)}
-> > +#define switchcase_csr_read_16(__csr_num, __val)        {\
-> > +       switchcase_csr_read_8(__csr_num + 0, __val)      \
-> > +       switchcase_csr_read_8(__csr_num + 8, __val)}
-> > +#define switchcase_csr_read_32(__csr_num, __val)        {\
-> > +       switchcase_csr_read_16(__csr_num + 0, __val)     \
-> > +       switchcase_csr_read_16(__csr_num + 16, __val)}
-> > +
-> > +       unsigned long ret =3D 0;
-> > +
-> > +       switch (csr_num) {
-> > +       switchcase_csr_read_32(CSR_CYCLE, ret)
-> > +       default:
-> > +               break;
-> > +       }
-> > +
-> > +       return ret;
-> > +#undef switchcase_csr_read_32
-> > +#undef switchcase_csr_read_16
-> > +#undef switchcase_csr_read_8
-> > +#undef switchcase_csr_read_4
-> > +#undef switchcase_csr_read_2
-> > +#undef switchcase_csr_read
-> > +}
-> > +
-> > +static u64 read_perf_counter(unsigned int counter)
-> > +{
-> > +       return csr_read_num(CSR_CYCLE + counter);
-> > +}
-> > +
-> > +static u64 read_timestamp(void)
-> > +{
-> > +       return csr_read_num(CSR_TIME);
-> > +}
-> > +
-> >  #else
-> >  static u64 read_perf_counter(unsigned int counter __maybe_unused) { re=
-turn 0; }
-> >  static u64 read_timestamp(void) { return 0; }
-> > --
-> > 2.39.2
-> >
+Regards,
+Ze
