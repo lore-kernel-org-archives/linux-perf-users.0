@@ -2,211 +2,215 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42814C04FDF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 09:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC7CC001DC
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 10:15:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229983AbjGaJvD (ORCPT
+        id S231659AbjGaKPb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Jul 2023 05:51:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36746 "EHLO
+        Mon, 31 Jul 2023 06:15:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230094AbjGaJui (ORCPT
+        with ESMTP id S231567AbjGaKPa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Jul 2023 05:50:38 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E56C91BD2;
-        Mon, 31 Jul 2023 02:49:43 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-686f38692b3so4077682b3a.2;
-        Mon, 31 Jul 2023 02:49:43 -0700 (PDT)
+        Mon, 31 Jul 2023 06:15:30 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 063BDE5D
+        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jul 2023 03:15:25 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-31427ddd3fbso3998575f8f.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jul 2023 03:15:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690796983; x=1691401783;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+        d=rivosinc-com.20221208.gappssmtp.com; s=20221208; t=1690798523; x=1691403323;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=srChBgqkK2HgGpCSRgI2R97JsxAcdTHmiRn2ciHkn/Y=;
-        b=p1r5iHFCJoYcfwDUrmDWxBxPw6HqRaQG3xB8yYmbvEY+VYS7gw4oolqV+Z/nnfYg5M
-         oEV7LlRg5v/1Bt84bYMiW8YjIA7p3L0RxTyU3rreH8LVurcwMhXijRz7jAPR/vWwY0IY
-         tQs/4WJ0qFxqb9By1De8gqvGMlQCa2pWz6hN2dwl0pxx0L3G3lXcu0v0etR8rbwONHuH
-         AL9BK9mquSqih5nFnop3SNa5QXcKOfUR3DvZ9mPo//l8b1dGvOQYfSQXIt7Ur7ayzqJz
-         i4VcNeSLb65rPUUtBulKhqNvjkIOVqdhkm/MVWWsV3uglHHHGO3gS56UHxK852Zyat8B
-         UsPw==
+        bh=EG3iuoYl2Yyk7UzsEc9LvQqrnR5PB3HBwoWOS4ckXVc=;
+        b=JwLZ45qZwpOVPkXVdWIjIpyNCmwYH3dD8Ou7rl1pivlSHmOAShFMtPSrushNT6kmaq
+         0dvPQPJk9qUs4AvASoH4gYvejhe/vSpJ4yXyYZyySjdQGekmCa/rEJCpbcQYWU/E8P3S
+         AlJhoAOq/XPyByQrKiIkNk/OrNEA5ye2AzKSbO1oFASt+UzRwFIPWKYe3WuZmxeQvDGd
+         /Fldg0QEg6p7DZ7btLj4ScOMseJMGHIDA9pso+oYxo3L4B91PFlYyvSd5DbmYHBcFOoi
+         vHMqeQ0nYL/ARSHDJmf9aL3oEsBkBmeXhnms5OSIg/VaUgDVI2kRDsctBYp8rqkmYenw
+         IuqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690796983; x=1691401783;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=srChBgqkK2HgGpCSRgI2R97JsxAcdTHmiRn2ciHkn/Y=;
-        b=Axi44AwssO3ODLFVW02E+wewwsKLP5T8AXfG6BJwLWJiAxO/al0NLmbTV5kWHQlZ98
-         5pOuXyQlGNJE1bAriRipCawWCOBtZaXw3GS/IwHS1tBkewiYlAxqApEY+fIeJjcOCQ7l
-         PKC3Q1lxKD9GZiVOB8N7k9aURS7OgjqU817M5onoFxt0xJE6Wws4NM0JxHbWPCFAegFl
-         mBoDSC61yHDOAo5SO4/v7XRowLfWH7Tbm9Hny9Jy4ZNk5JlAXquD34Rg6kOH8/s4TqFn
-         a2faCf2U6pwOtEc/SyjZYCZfrOE7X9pWXAY6A4WsGiXDpJvd5+9y6x1tQ/Bzwuka7ktO
-         PLDA==
-X-Gm-Message-State: ABy/qLZAaud8tpAT3dnxsPS4UYK7ZsYPKo63wweXBi1ZuwRriuxg9b51
-        y506/P8fe8dI69OU6jyq4oE=
-X-Google-Smtp-Source: APBJJlHZAthHl4OKjoHHK6ESw06lVprmQUtSl7arS/NlwVct68uoaFo12mTuuHfBABubGVEyJ3stBw==
-X-Received: by 2002:a05:6a21:a105:b0:133:ebf2:96da with SMTP id aq5-20020a056a21a10500b00133ebf296damr8970908pzc.41.1690796983236;
-        Mon, 31 Jul 2023 02:49:43 -0700 (PDT)
-Received: from bangji.roam.corp.google.com ([117.111.1.150])
-        by smtp.gmail.com with ESMTPSA id w5-20020a170902d3c500b001bbd1562e75sm8117852plb.55.2023.07.31.02.49.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jul 2023 02:49:42 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH 2/2] perf hists browser: Fix the number of entries for 'e' key
-Date:   Mon, 31 Jul 2023 02:49:33 -0700
-Message-ID: <20230731094934.1616495-2-namhyung@kernel.org>
-X-Mailer: git-send-email 2.41.0.487.g6d72f3e995-goog
-In-Reply-To: <20230731094934.1616495-1-namhyung@kernel.org>
-References: <20230731094934.1616495-1-namhyung@kernel.org>
+        d=1e100.net; s=20221208; t=1690798523; x=1691403323;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EG3iuoYl2Yyk7UzsEc9LvQqrnR5PB3HBwoWOS4ckXVc=;
+        b=AiyojYupI2k9T5oDUro1+Lso9+PXhzk0SkLF2UGGWpR2IWdJEwqdomsVLH085Cl17N
+         err9SFeIs65ElM52SrlzmlrS4pAn02hgZKpFwuREpZia1xUu6aDAztG8wGtc7Ln/ClQA
+         8o9V2r1kys5nXqc6da9Tg0xNreLNVYiGjqYvcfnBVv8EcS5/J1GMQtnVEQJ9e964vTPr
+         9heP7tuUh8wfZcZQIf/KL3JkVSdRQXO15hQ9uRr3XuzkBn86S0GPZFWxUw2BHXzHG5al
+         Gh74hnscHwcaiwTOxfKZGaXXftwAt9G5lGDTA+KeoqK/zpIegvkEE5yre15GNYPMu/oq
+         8ulw==
+X-Gm-Message-State: ABy/qLYQIx4G0LEK9l3t5Vwhu6/h3/3PWpjdcj2mgN+KV+L8KmlT598T
+        h/fxJlFEVShFrohSo2bU3lHnsE9kBeddeZAhTnJWlQ==
+X-Google-Smtp-Source: APBJJlFxSlRHvyoI0m2LL342krCpCaswj8cTM0vLfwdYwEDfTBUig6/z+ede7/AhGalI5Gom70ZQdsAskFXQlQqiPT4=
+X-Received: by 2002:a5d:43c3:0:b0:30f:af19:81f3 with SMTP id
+ v3-20020a5d43c3000000b0030faf1981f3mr5506063wrr.41.1690798523303; Mon, 31 Jul
+ 2023 03:15:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230727141428.962286-1-alexghiti@rivosinc.com>
+ <20230727141428.962286-10-alexghiti@rivosinc.com> <CAP-5=fU5XYXrVnRUidpwjV2LiTsdebfidL43_Qo4Z7TBxMsVGA@mail.gmail.com>
+In-Reply-To: <CAP-5=fU5XYXrVnRUidpwjV2LiTsdebfidL43_Qo4Z7TBxMsVGA@mail.gmail.com>
+From:   Alexandre Ghiti <alexghiti@rivosinc.com>
+Date:   Mon, 31 Jul 2023 12:15:12 +0200
+Message-ID: <CAHVXubgVAe1WsiZx5Ay+3KPK4u24k_vsnTwFFmBeVsHrGXwhfw@mail.gmail.com>
+Subject: Re: [PATCH v4 09/10] tools: lib: perf: Implement riscv mmap support
+To:     Ian Rogers <irogers@google.com>,
+        Palmer Dabbelt <palmer@rivosinc.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <atishp@atishpatra.org>,
+        Anup Patel <anup@brainfault.org>,
+        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+        Andrew Jones <ajones@ventanamicro.com>,
+        =?UTF-8?Q?R=C3=A9mi_Denis=2DCourmont?= <remi@remlab.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Atish Patra <atishp@rivosinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The 'e' key is to toglle expand/collapse the selected entry only.  But
-the current code has a bug that it only increases the number of entries
-by 1 in the hierarchy mode so users cannot move under the current entry
-after the key stroke.  This is due to a wrong assumption in the
-hist_entry__set_folding().
+Hi Ian,
 
-The commit b33f922651011 ("perf hists browser: Put hist_entry folding
-logic into single function") factored out the code, but actually it
-should be handled separately.  The hist_browser__set_folding() is to
-update fold state for each entry so it needs to traverse all (child)
-entries regardless of the current fold state.  So it increases the
-number of entries by 1.
+On Fri, Jul 28, 2023 at 7:53=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Thu, Jul 27, 2023 at 7:28=E2=80=AFAM Alexandre Ghiti <alexghiti@rivosi=
+nc.com> wrote:
+> >
+> > riscv now supports mmaping hardware counters so add what's needed to
+> > take advantage of that in libperf.
+> >
+> > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> > Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+> > Reviewed-by: Atish Patra <atishp@rivosinc.com>
+> > ---
+> >  tools/lib/perf/mmap.c | 65 +++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 65 insertions(+)
+> >
+> > diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
+> > index 0d1634cedf44..378a163f0554 100644
+> > --- a/tools/lib/perf/mmap.c
+> > +++ b/tools/lib/perf/mmap.c
+> > @@ -392,6 +392,71 @@ static u64 read_perf_counter(unsigned int counter)
+> >
+> >  static u64 read_timestamp(void) { return read_sysreg(cntvct_el0); }
+> >
+> > +#elif __riscv_xlen =3D=3D 64
+>
+> This is something of an odd guard, perhaps:
+> #elif defined(__riscv) && __riscv_xlen =3D=3D 64
+>
+> That way it is more intention revealing that this is riscv code. Could
+> you add a comment relating to the __riscv_xlen ?
 
-But the hist_entry__set_folding() only cares the currently selected
-entry and its all children.  So it should count all unfolded child
-entries.  This code is implemented in hist_browser__toggle_fold()
-already so we can just call it.
+I guess Andrew answered that already.
 
-Fixes: b33f922651011 ("perf hists browser: Put hist_entry folding logic into single function")
-Cc: stable@vger.kernel.org
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/ui/browsers/hists.c | 58 ++++++++++++++--------------------
- 1 file changed, 24 insertions(+), 34 deletions(-)
+>
+> > +
+> > +/* TODO: implement rv32 support */
+> > +
+> > +#define CSR_CYCLE      0xc00
+> > +#define CSR_TIME       0xc01
+> > +
+> > +#define csr_read(csr)                                          \
+> > +({                                                             \
+> > +       register unsigned long __v;                             \
+> > +               __asm__ __volatile__ ("csrr %0, " #csr          \
+> > +                : "=3Dr" (__v) :                                 \
+> > +                : "memory");                                   \
+>
+> To avoid the macro pasting that could potentially go weird, could this be=
+:
+>
+> __asm__ __volatile__ ("csrr %0, %1",
+>   : "=3Dr"(__v) /* outputs */
+>   : "i"(csr) /* inputs */
+>   : "memory" /* clobbers */)
+>
+> Also, why is this clobbering memory? Worth adding a comment.
 
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index d8b88f10a48d..70db5a717905 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -407,11 +407,6 @@ static bool hist_browser__selection_has_children(struct hist_browser *browser)
- 	return container_of(ms, struct callchain_list, ms)->has_children;
- }
- 
--static bool hist_browser__he_selection_unfolded(struct hist_browser *browser)
--{
--	return browser->he_selection ? browser->he_selection->unfolded : false;
--}
--
- static bool hist_browser__selection_unfolded(struct hist_browser *browser)
- {
- 	struct hist_entry *he = browser->he_selection;
-@@ -584,8 +579,8 @@ static int hierarchy_set_folding(struct hist_browser *hb, struct hist_entry *he,
- 	return n;
- }
- 
--static void __hist_entry__set_folding(struct hist_entry *he,
--				      struct hist_browser *hb, bool unfold)
-+static void hist_entry__set_folding(struct hist_entry *he,
-+				    struct hist_browser *hb, bool unfold)
- {
- 	hist_entry__init_have_children(he);
- 	he->unfolded = unfold ? he->has_children : false;
-@@ -603,34 +598,12 @@ static void __hist_entry__set_folding(struct hist_entry *he,
- 		he->nr_rows = 0;
- }
- 
--static void hist_entry__set_folding(struct hist_entry *he,
--				    struct hist_browser *browser, bool unfold)
--{
--	double percent;
--
--	percent = hist_entry__get_percent_limit(he);
--	if (he->filtered || percent < browser->min_pcnt)
--		return;
--
--	__hist_entry__set_folding(he, browser, unfold);
--
--	if (!he->depth || unfold)
--		browser->nr_hierarchy_entries++;
--	if (he->leaf)
--		browser->nr_callchain_rows += he->nr_rows;
--	else if (unfold && !hist_entry__has_hierarchy_children(he, browser->min_pcnt)) {
--		browser->nr_hierarchy_entries++;
--		he->has_no_entry = true;
--		he->nr_rows = 1;
--	} else
--		he->has_no_entry = false;
--}
--
- static void
- __hist_browser__set_folding(struct hist_browser *browser, bool unfold)
- {
- 	struct rb_node *nd;
- 	struct hist_entry *he;
-+	double percent;
- 
- 	nd = rb_first_cached(&browser->hists->entries);
- 	while (nd) {
-@@ -640,6 +613,21 @@ __hist_browser__set_folding(struct hist_browser *browser, bool unfold)
- 		nd = __rb_hierarchy_next(nd, HMD_FORCE_CHILD);
- 
- 		hist_entry__set_folding(he, browser, unfold);
-+
-+		percent = hist_entry__get_percent_limit(he);
-+		if (he->filtered || percent < browser->min_pcnt)
-+			continue;
-+
-+		if (!he->depth || unfold)
-+			browser->nr_hierarchy_entries++;
-+		if (he->leaf)
-+			browser->nr_callchain_rows += he->nr_rows;
-+		else if (unfold && !hist_entry__has_hierarchy_children(he, browser->min_pcnt)) {
-+			browser->nr_hierarchy_entries++;
-+			he->has_no_entry = true;
-+			he->nr_rows = 1;
-+		} else
-+			he->has_no_entry = false;
- 	}
- }
- 
-@@ -659,8 +647,10 @@ static void hist_browser__set_folding_selected(struct hist_browser *browser, boo
- 	if (!browser->he_selection)
- 		return;
- 
--	hist_entry__set_folding(browser->he_selection, browser, unfold);
--	browser->b.nr_entries = hist_browser__nr_entries(browser);
-+	if (unfold == browser->he_selection->unfolded)
-+		return;
-+
-+	hist_browser__toggle_fold(browser);
- }
- 
- static void ui_browser__warn_lost_events(struct ui_browser *browser)
-@@ -732,8 +722,8 @@ static int hist_browser__handle_hotkey(struct hist_browser *browser, bool warn_l
- 		hist_browser__set_folding(browser, true);
- 		break;
- 	case 'e':
--		/* Expand the selected entry. */
--		hist_browser__set_folding_selected(browser, !hist_browser__he_selection_unfolded(browser));
-+		/* Toggle expand/collapse the selected entry. */
-+		hist_browser__toggle_fold(browser);
- 		break;
- 	case 'H':
- 		browser->show_headers = !browser->show_headers;
--- 
-2.41.0.487.g6d72f3e995-goog
+No idea, I see that it is also done this way in
+arch/riscv/include/asm/csr.h. @Atish Kumar Patra , @Palmer Dabbelt ?
 
+Thanks for your comments!
+
+Alex
+
+>
+> Thanks,
+> Ian
+>
+> > +                __v;                                           \
+> > +})
+> > +
+> > +static unsigned long csr_read_num(int csr_num)
+> > +{
+> > +#define switchcase_csr_read(__csr_num, __val)           {\
+> > +       case __csr_num:                                 \
+> > +               __val =3D csr_read(__csr_num);            \
+> > +               break; }
+> > +#define switchcase_csr_read_2(__csr_num, __val)         {\
+> > +       switchcase_csr_read(__csr_num + 0, __val)        \
+> > +       switchcase_csr_read(__csr_num + 1, __val)}
+> > +#define switchcase_csr_read_4(__csr_num, __val)         {\
+> > +       switchcase_csr_read_2(__csr_num + 0, __val)      \
+> > +       switchcase_csr_read_2(__csr_num + 2, __val)}
+> > +#define switchcase_csr_read_8(__csr_num, __val)         {\
+> > +       switchcase_csr_read_4(__csr_num + 0, __val)      \
+> > +       switchcase_csr_read_4(__csr_num + 4, __val)}
+> > +#define switchcase_csr_read_16(__csr_num, __val)        {\
+> > +       switchcase_csr_read_8(__csr_num + 0, __val)      \
+> > +       switchcase_csr_read_8(__csr_num + 8, __val)}
+> > +#define switchcase_csr_read_32(__csr_num, __val)        {\
+> > +       switchcase_csr_read_16(__csr_num + 0, __val)     \
+> > +       switchcase_csr_read_16(__csr_num + 16, __val)}
+> > +
+> > +       unsigned long ret =3D 0;
+> > +
+> > +       switch (csr_num) {
+> > +       switchcase_csr_read_32(CSR_CYCLE, ret)
+> > +       default:
+> > +               break;
+> > +       }
+> > +
+> > +       return ret;
+> > +#undef switchcase_csr_read_32
+> > +#undef switchcase_csr_read_16
+> > +#undef switchcase_csr_read_8
+> > +#undef switchcase_csr_read_4
+> > +#undef switchcase_csr_read_2
+> > +#undef switchcase_csr_read
+> > +}
+> > +
+> > +static u64 read_perf_counter(unsigned int counter)
+> > +{
+> > +       return csr_read_num(CSR_CYCLE + counter);
+> > +}
+> > +
+> > +static u64 read_timestamp(void)
+> > +{
+> > +       return csr_read_num(CSR_TIME);
+> > +}
+> > +
+> >  #else
+> >  static u64 read_perf_counter(unsigned int counter __maybe_unused) { re=
+turn 0; }
+> >  static u64 read_timestamp(void) { return 0; }
+> > --
+> > 2.39.2
+> >
