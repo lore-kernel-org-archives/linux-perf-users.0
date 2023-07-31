@@ -2,71 +2,82 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CA0C41513
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 13:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAEAC001DE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 13:47:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229555AbjGaNdT (ORCPT
+        id S230370AbjGaNrn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Jul 2023 09:33:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36228 "EHLO
+        Mon, 31 Jul 2023 09:47:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230044AbjGaNdS (ORCPT
+        with ESMTP id S230354AbjGaNrg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Jul 2023 09:33:18 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D13F1709
-        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jul 2023 06:33:17 -0700 (PDT)
-Received: from kwepemi500012.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RDzcf6HtQztRYj;
-        Mon, 31 Jul 2023 21:29:54 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemi500012.china.huawei.com
- (7.221.188.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 31 Jul
- 2023 21:33:14 +0800
-From:   Li Zetao <lizetao1@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <ravi.bangoria@amd.com>
-CC:     <lizetao1@huawei.com>, <linux-perf-users@vger.kernel.org>
-Subject: [PATCH -next] perf tool x86: Remove redundant bool conversion
-Date:   Mon, 31 Jul 2023 21:32:42 +0800
-Message-ID: <20230731133242.2684483-1-lizetao1@huawei.com>
-X-Mailer: git-send-email 2.34.1
+        Mon, 31 Jul 2023 09:47:36 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D500170C;
+        Mon, 31 Jul 2023 06:47:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=phaaJIZq1BLWmPqCytuBa+h2XJylFF98eK0c+HuebO4=; b=Fr1NrfcLzdpJVpmcOBL17zaxcV
+        zEYs26Dbdcqza8yQ2T/gXt6eJXboPEJDuFGznraLpotq5X7rjBlo3FpAmzHfseZRvk68l8JasNeG0
+        +WtScm3eUB5qzFnSVptSpdbfn3qDJe20ysVK0l4UYj/pksK8xkHmndNPZ00AHymM1PT3Pm8xhyoDY
+        P+N/gRHEh7Tq3zv150c3HLMnk43p8seEmT9AypoQn+WvEN1JpoUi0OMnBGLkKxGj2S7ARg8vVk7DS
+        ncdBCZlrKI1aVZGJJBi4u8phMp2+tpPtCrQZpp5BoEk7L6K4hd2fVmDuvQ7SjuHtMjV1S1M4MQvp1
+        CtbLs/0Q==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qQTEs-001wMI-Lv; Mon, 31 Jul 2023 13:47:11 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0F9B93001DD;
+        Mon, 31 Jul 2023 15:47:10 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EB506203EA053; Mon, 31 Jul 2023 15:47:09 +0200 (CEST)
+Date:   Mon, 31 Jul 2023 15:47:09 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        selinux@vger.kernel.org,
+        Christian =?iso-8859-1?Q?G=F6ttsche?= <cgzones@googlemail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
+        daniel@ffwll.ch, paul@paul-moore.com,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        acme@kernel.org
+Subject: Re: [PATCH v3 0/4] mm: convert to vma_is_initial_heap/stack()
+Message-ID: <20230731134709.GJ29590@hirez.programming.kicks-ass.net>
+References: <20230728050043.59880-1-wangkefeng.wang@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.90.53.73]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemi500012.china.huawei.com (7.221.188.12)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230728050043.59880-1-wangkefeng.wang@huawei.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-There is a warning reported by coccinelle:
+On Fri, Jul 28, 2023 at 01:00:39PM +0800, Kefeng Wang wrote:
 
-./tools/perf/arch/x86/util/env.c:18:29-34: WARNING:
-		conversion to bool not needed here
+> Kefeng Wang (4):
+>   mm: factor out VMA stack and heap checks
+>   drm/amdkfd: use vma_is_initial_stack() and vma_is_initial_heap()
+>   selinux: use vma_is_initial_stack() and vma_is_initial_heap()
+>   perf/core: use vma_is_initial_stack() and vma_is_initial_heap()
+> 
+>  drivers/gpu/drm/amd/amdkfd/kfd_svm.c |  5 +----
+>  fs/proc/task_mmu.c                   | 24 ++++----------------
+>  fs/proc/task_nommu.c                 | 15 +------------
+>  include/linux/mm.h                   | 25 +++++++++++++++++++++
+>  kernel/events/core.c                 | 33 ++++++++++------------------
+>  security/selinux/hooks.c             |  7 ++----
+>  6 files changed, 44 insertions(+), 65 deletions(-)
 
-Remove the redundant bool conversion to silence the warning.
-
-Signed-off-by: Li Zetao <lizetao1@huawei.com>
----
- tools/perf/arch/x86/util/env.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/arch/x86/util/env.c b/tools/perf/arch/x86/util/env.c
-index 3e537ffb1353..5b0db77f8e0f 100644
---- a/tools/perf/arch/x86/util/env.c
-+++ b/tools/perf/arch/x86/util/env.c
-@@ -15,5 +15,5 @@ bool x86__is_amd_cpu(void)
- 	is_amd = env.cpuid && strstarts(env.cpuid, "AuthenticAMD") ? 1 : -1;
- 	perf_env__exit(&env);
- ret:
--	return is_amd >= 1 ? true : false;
-+	return is_amd >= 1;
- }
--- 
-2.34.1
-
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
