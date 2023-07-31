@@ -2,82 +2,119 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAEAC001DE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 13:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6002C001DE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 14:07:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230370AbjGaNrn (ORCPT
+        id S232877AbjGaOHO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Jul 2023 09:47:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41120 "EHLO
+        Mon, 31 Jul 2023 10:07:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230354AbjGaNrg (ORCPT
+        with ESMTP id S232939AbjGaOGx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Jul 2023 09:47:36 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D500170C;
-        Mon, 31 Jul 2023 06:47:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=phaaJIZq1BLWmPqCytuBa+h2XJylFF98eK0c+HuebO4=; b=Fr1NrfcLzdpJVpmcOBL17zaxcV
-        zEYs26Dbdcqza8yQ2T/gXt6eJXboPEJDuFGznraLpotq5X7rjBlo3FpAmzHfseZRvk68l8JasNeG0
-        +WtScm3eUB5qzFnSVptSpdbfn3qDJe20ysVK0l4UYj/pksK8xkHmndNPZ00AHymM1PT3Pm8xhyoDY
-        P+N/gRHEh7Tq3zv150c3HLMnk43p8seEmT9AypoQn+WvEN1JpoUi0OMnBGLkKxGj2S7ARg8vVk7DS
-        ncdBCZlrKI1aVZGJJBi4u8phMp2+tpPtCrQZpp5BoEk7L6K4hd2fVmDuvQ7SjuHtMjV1S1M4MQvp1
-        CtbLs/0Q==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qQTEs-001wMI-Lv; Mon, 31 Jul 2023 13:47:11 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0F9B93001DD;
-        Mon, 31 Jul 2023 15:47:10 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id EB506203EA053; Mon, 31 Jul 2023 15:47:09 +0200 (CEST)
-Date:   Mon, 31 Jul 2023 15:47:09 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-        selinux@vger.kernel.org,
-        Christian =?iso-8859-1?Q?G=F6ttsche?= <cgzones@googlemail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
-        daniel@ffwll.ch, paul@paul-moore.com,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        acme@kernel.org
-Subject: Re: [PATCH v3 0/4] mm: convert to vma_is_initial_heap/stack()
-Message-ID: <20230731134709.GJ29590@hirez.programming.kicks-ass.net>
-References: <20230728050043.59880-1-wangkefeng.wang@huawei.com>
+        Mon, 31 Jul 2023 10:06:53 -0400
+Received: from mgamail.intel.com (unknown [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC711BF4;
+        Mon, 31 Jul 2023 07:04:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1690812259; x=1722348259;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=8c5Y6r6nrV+imaXJ+aq3XZpGq4sAW8zp+bZ99Ugqtkg=;
+  b=R25t1+CRDueyhGdvrQx7QllY8prcerUGKXKI5dd8TzVe9yhFRvN3Y68H
+   7JUEQVbCdh6ve8r7eETu6Tn80VXAAwEf3hyNcT8EgqUGrB1VzGUd2lIiN
+   hUKwdPuT/zSUjyz07i+x8McHL4tanqLe9EjBkIqq4ngiE7i+hBRy6R6+n
+   A0wmVNCtDR6s4TB5jQftGbr5mZ+QzbfkCqff6e3nxzHGz6lc7FtGMFy2z
+   +mqmWuT+StG07XZnx7l0cpUmruy396xRluNUwEGapTsUGnuseqDaXxBc5
+   kPMB+5vEdIMa4eQFaVdCA+EJhPcfLi+Drk992GABRNiNksMSRe6Z/njJy
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10788"; a="435335660"
+X-IronPort-AV: E=Sophos;i="6.01,244,1684825200"; 
+   d="scan'208";a="435335660"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2023 07:03:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10788"; a="1058942779"
+X-IronPort-AV: E=Sophos;i="6.01,244,1684825200"; 
+   d="scan'208";a="1058942779"
+Received: from aantonov-mobl1.ger.corp.intel.com (HELO [10.252.37.78]) ([10.252.37.78])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2023 07:03:26 -0700
+Message-ID: <9fa13591-38dc-5dbf-5271-5c2bd364f16f@linux.intel.com>
+Date:   Mon, 31 Jul 2023 16:02:09 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230728050043.59880-1-wangkefeng.wang@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: potential return of uninitialized variable ret in function
+ skx_upi_topology_cb
+To:     "Colin King (gmail)" <colin.i.king@gmail.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <21e2ea66-9524-8e34-a2f0-8e16b9617d68@gmail.com>
+Content-Language: en-US
+From:   Alexander Antonov <alexander.antonov@linux.intel.com>
+In-Reply-To: <21e2ea66-9524-8e34-a2f0-8e16b9617d68@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jul 28, 2023 at 01:00:39PM +0800, Kefeng Wang wrote:
+Hi Colin,
+Thank you so much for reporting the issue. Seems fix wasn't picked up 
+before, I will resend it.
 
-> Kefeng Wang (4):
->   mm: factor out VMA stack and heap checks
->   drm/amdkfd: use vma_is_initial_stack() and vma_is_initial_heap()
->   selinux: use vma_is_initial_stack() and vma_is_initial_heap()
->   perf/core: use vma_is_initial_stack() and vma_is_initial_heap()
-> 
->  drivers/gpu/drm/amd/amdkfd/kfd_svm.c |  5 +----
->  fs/proc/task_mmu.c                   | 24 ++++----------------
->  fs/proc/task_nommu.c                 | 15 +------------
->  include/linux/mm.h                   | 25 +++++++++++++++++++++
->  kernel/events/core.c                 | 33 ++++++++++------------------
->  security/selinux/hooks.c             |  7 ++----
->  6 files changed, 44 insertions(+), 65 deletions(-)
+Thank you
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+
+On 7/27/2023 3:55 PM, Colin King (gmail) wrote:
+> Hi,
+>
+> Static analysis with cppcheck has detected a potential return of an 
+> uninitialized variable in function skx_upi_topology_cb. The issue was 
+> introduced with commit:
+>
+> commit 4cfce57fa42d277497cd2c425021312eae2f223c
+> Author: Alexander Antonov <alexander.antonov@linux.intel.com>
+> Date:   Thu Nov 17 12:28:28 2022 +0000
+>
+>     perf/x86/intel/uncore: Enable UPI topology discovery for Skylake 
+> Server
+>
+> static int skx_upi_topology_cb(struct intel_uncore_type *type, int 
+> segment,
+>                                 int die, u64 cpu_bus_msr)
+> {
+>         int idx, ret;
+>
+> ^^ ret is not initialized
+>
+>         struct intel_uncore_topology *upi;
+>         unsigned int devfn;
+>         struct pci_dev *dev = NULL;
+>         u8 bus = cpu_bus_msr >> (3 * BUS_NUM_STRIDE);
+>
+>         for (idx = 0; idx < type->num_boxes; idx++) {
+>                 upi = &type->topology[die][idx];
+>                 devfn = PCI_DEVFN(SKX_UPI_REGS_ADDR_DEVICE_LINK0 + idx,
+>                                   SKX_UPI_REGS_ADDR_FUNCTION);
+>                 dev = pci_get_domain_bus_and_slot(segment, bus, devfn);
+>
+> ^^ dev may be null, so ret is never assigned
+>
+>                 if (dev) {
+>                         ret = upi_fill_topology(dev, upi, idx);
+>                         if (ret)
+>                                 break;
+>                 }
+>         }
+>
+>         pci_dev_put(dev);
+>         return ret;
+> }
+>
+> I suspect this probably is very unlikely, but it would be useful to 
+> have ret initialized to some value to avoid garbage being returned. 
+> Not sure what the best value is to set as as default in this corner case.
+>
+> Colin
