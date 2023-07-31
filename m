@@ -2,134 +2,174 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA44C41513
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 15:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36762C001DE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 16:04:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231929AbjGaPkR (ORCPT
+        id S233327AbjGaQEo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Jul 2023 11:40:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50142 "EHLO
+        Mon, 31 Jul 2023 12:04:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230511AbjGaPkN (ORCPT
+        with ESMTP id S233326AbjGaQEj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Jul 2023 11:40:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E041198B;
-        Mon, 31 Jul 2023 08:40:08 -0700 (PDT)
+        Mon, 31 Jul 2023 12:04:39 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D622F1BE9;
+        Mon, 31 Jul 2023 09:04:14 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 149D9611B9;
-        Mon, 31 Jul 2023 15:40:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82B8AC433C7;
-        Mon, 31 Jul 2023 15:40:05 +0000 (UTC)
-Date:   Mon, 31 Jul 2023 11:40:03 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ze Gao <zegao2021@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Subject: Re: [RFC PATCH v2 3/3] libtraceevent: use the new prev_state_char
- instead in tracepoint sched_switch
-Message-ID: <20230731114003.43842c8e@gandalf.local.home>
-In-Reply-To: <20230726121618.19198-4-zegao@tencent.com>
-References: <20230726121618.19198-1-zegao@tencent.com>
-        <20230726121618.19198-4-zegao@tencent.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0E88661207;
+        Mon, 31 Jul 2023 16:04:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC273C433C7;
+        Mon, 31 Jul 2023 16:04:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690819444;
+        bh=5mjxkRGYdDJHi8iwtbjaqm+ZNCwOd9w23JucUBfspJc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IsmshpuMt1cGOfRI5e/3xtukcr4V0We1YeC5wgMpz8W+RgsWHtFaqOAQtAPALNj9U
+         2R9y3xAC3kuregKU/3WvvqNt6xi4ujaay08GQOOmiKl0CstMwYlAbsVesU/0ntB2bM
+         AWLnvPC6bQ880pLICLLUzYb5Gndqj5nND6Nyq0/fac/Me4PTRDzaltX5SaM3WqLnik
+         65rkjwWALQbwb05YmTKdaishaSzwx6hYePIJ6htVXei03FGUIRmZt55uX+UG+cb0DI
+         dIEhkXlD6c0ivqDvlf0L0cPy1q5c79cwAx6c/o4hF2xPDzbG3OYNyyUmHEUJGuPbj6
+         3ZUtXa3EY5ulQ==
+Date:   Mon, 31 Jul 2023 09:04:02 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
+        Linux-Arch <linux-arch@vger.kernel.org>, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH v3 1/2] asm-generic: Unify uapi bitsperlong.h for arm64,
+ riscv and loongarch
+Message-ID: <20230731160402.GB1823389@dev-arch.thelio-3990X>
+References: <1687443219-11946-1-git-send-email-yangtiezhu@loongson.cn>
+ <1687443219-11946-2-git-send-email-yangtiezhu@loongson.cn>
+ <20230727213648.GA354736@dev-arch.thelio-3990X>
+ <1777400a-4d9c-4bdb-9d3b-f8808ef054cc@app.fastmail.com>
+ <20230728173103.GA1299743@dev-arch.thelio-3990X>
+ <a2fa1a31-e8bb-4659-9631-398b564e7c2b@app.fastmail.com>
+ <20230728234429.GA611252@dev-arch.thelio-3990X>
+ <e7a792d9-39b9-440a-9c22-99e25b25a396@app.fastmail.com>
+ <20230729174617.GA1229655@dev-arch.thelio-3990X>
+ <6d6641b6-748e-412c-a139-35fc873a6a1b@app.fastmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6d6641b6-748e-412c-a139-35fc873a6a1b@app.fastmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, 26 Jul 2023 20:16:18 +0800
-Ze Gao <zegao2021@gmail.com> wrote:
-
-> Since the sched_switch tracepoint introduces a new variable to
-> report sched-out task state in symbolic char, we switch to use
-> that instead to spare from knowing internal implementations
-> in kernel.
-
-This needs to be changed to check if the "prev_state_char" field exists,
-and if not, then it must use the old method. Same for perf. The tools must
-work with older kernels.
-
--- Steve
-
+On Sat, Jul 29, 2023 at 11:12:26PM +0200, Arnd Bergmann wrote:
+> On Sat, Jul 29, 2023, at 19:46, Nathan Chancellor wrote:
+> > On Sat, Jul 29, 2023 at 09:59:23AM +0200, Arnd Bergmann wrote:
+> >> On Sat, Jul 29, 2023, at 01:44, Nathan Chancellor wrote:
 > 
-> Signed-off-by: Ze Gao <zegao@tencent.com>
-> ---
->  plugins/plugin_sched_switch.c | 29 ++++-------------------------
->  1 file changed, 4 insertions(+), 25 deletions(-)
+> >> 
+> >> in order to get the ORC definitions from asm/orc_types.h, but
+> >> then it looks like it also gets the uapi/asm/bitsperlong.h
+> >> header from there which contains
+> >> 
+> >> #if defined(__x86_64__) && !defined(__ILP32__)
+> >> # define __BITS_PER_LONG 64
+> >> #else
+> >> # define __BITS_PER_LONG 32
+> >> #endif
+> >> 
+> >> and this would set __BITS_PER_LONG to 32 on arm64.
+> >> 
+> >> However, I don't see this actually being included on my
+> >> machine. Can you dump the sorttable.c preprocessor output
+> >> with your setup, using -fdirectives-only, so we can see
+> >> which of the two (__BITS_PER_LONG or BITS_PER_LONG) is
+> >> actually wrong and triggers the sanity check?
+> >
+> > Sure thing, this is the output of:
+> >
+> >   $ gcc -I/linux-stable/tools/include 
+> > -I/linux-stable/tools/arch/x86/include -DUNWINDER_ORC_ENABLED -I 
+> > ./scripts -E -fdirectives-only /linux-stable/scripts/sorttable.c
+> >
+> > https://gist.github.com/nathanchance/d2c3e58230930317dc84aff80fef38bf
 > 
-> diff --git a/plugins/plugin_sched_switch.c b/plugins/plugin_sched_switch.c
-> index 8752cae..5dbdc28 100644
-> --- a/plugins/plugin_sched_switch.c
-> +++ b/plugins/plugin_sched_switch.c
-> @@ -9,27 +9,6 @@
->  #include "event-parse.h"
->  #include "trace-seq.h"
->  
-> -static void write_state(struct trace_seq *s, int val)
-> -{
-> -	const char states[] = "SDTtZXxW";
-> -	int found = 0;
-> -	int i;
-> -
-> -	for (i = 0; i < (sizeof(states) - 1); i++) {
-> -		if (!(val & (1 << i)))
-> -			continue;
-> -
-> -		if (found)
-> -			trace_seq_putc(s, '|');
-> -
-> -		found = 1;
-> -		trace_seq_putc(s, states[i]);
-> -	}
-> -
-> -	if (!found)
-> -		trace_seq_putc(s, 'R');
-> -}
-> -
->  static void write_and_save_comm(struct tep_format_field *field,
->  				struct tep_record *record,
->  				struct trace_seq *s, int pid)
-> @@ -97,10 +76,10 @@ static int sched_switch_handler(struct trace_seq *s,
->  	trace_seq_printf(s, "%lld ", val);
->  
->  	if (tep_get_field_val(s, event, "prev_prio", record, &val, 1) ==
-> 0)
-> -		trace_seq_printf(s, "[%d] ", (int) val);
-> +		trace_seq_printf(s, "[%d] ", (short) val);
->  
-> -	if (tep_get_field_val(s,  event, "prev_state", record, &val, 1)
-> == 0)
-> -		write_state(s, val);
-> +	if (tep_get_field_val(s,  event, "prev_state_char", record,
-> &val, 1) == 0)
-> +		trace_seq_putc(s, (char) val);
->  
->  	trace_seq_puts(s, " ==> ");
->  
-> @@ -115,7 +94,7 @@ static int sched_switch_handler(struct trace_seq *s,
->  	trace_seq_printf(s, "%lld", val);
->  
->  	if (tep_get_field_val(s, event, "next_prio", record, &val, 1) ==
-> 0)
-> -		trace_seq_printf(s, " [%d]", (int) val);
-> +		trace_seq_printf(s, " [%d]", (short) val);
->  
->  	return 0;
->  }
+> Ok, so what we get is that the system-wide
+> /usr/include/aarch64-linux-gnu/asm/bitsperlong.h
+> 
+> includes the source tree file 
+> tools/include/asm-generic/bitsperlong.h
+> 
+> which in the old kernels only has the "32" fallback value.
 
+Ah, makes perfect sense.
+
+> >> What I see on my machine is that both definitions come
+> >> from the local tools/include/ headers, not from the
+> >> installed system headers, so I'm still doing something
+> >> wrong in my installation:
+> >
+> > Just to make sure, you have the 6.5-rc1+ headers installed and you are
+> > attempting to build the host tools from an earlier Linux release than
+> > 6.5-rc1? I don't see a problem with building these host programs on
+> > mainline/6.5, I see this issue when building them in older stable
+> > releases (my reproduction so far has been on 6.4 but I see it when
+> > building all currently supported long term stable releases) when I have
+> > the 6.5-rc1+ headers installed.
+> 
+> Ok, I see. I missed that part of your description earlier.
+> 
+> >
+> > which seems to be where the mismatch is coming from?
+> 
+> Right, exactly.
+> 
+> >> ./tools/include/asm-generic/bitsperlong.h
+> >> #define BITS_PER_LONG (__CHAR_BIT__ * __SIZEOF_LONG__)
+> >> 
+> >> Neither of these files actually contains the sanity
+> >> check in linux-6.5-rc3, and comparing these is clearly
+> >> nonsensical, as they are defined the same way (rather
+> >> than checking CONFIG_64BIT), but also I don't see why
+> >> there is both a uapi/ version and a non-uapi version
+> >> in what is meant to be a userspace header.
+> >
+> > May be worth looping in the tools/ folks, since that whole directory is
+> > rather special IMO...
+> 
+> I think the good news is that this only happens because
+> the tools/ directory contains a copy of the kernel headers
+> including that sanity check, and other user space won't
+> suffer from it because they don't contain copies of kernel
+> internal headers.
+
+Yeah, I think you are correct.
+
+> Reverting the change might still end up being the easiest way
+> out regardless, but it does seem like we should be able
+> to address this in the tools directory by making sure it doesn't
+> mix the installed headers with the local ones.
+
+Agreed, although you do make a good point below that we would need the
+fix in the stable trees, which adds additional complexity when it comes
+to things like bisecting. It is already hard enough with all the various
+clang behavior changes we have had to adapt to over the years...
+
+> Part of the problem I think is that the installed 
+> /usr/include/asm-generic/int-ll64.h includes
+> /usr/include/aarch64-linux-gnu/asm/bitsperlong.h, so both
+> of them are the uapi headers, but this one has an
+> "include <asm-generic/bitsperlong.h>" that expects the
+> uapi version but instead gets the kernel version from
+> the tools directory. We could override this by adding
+> a working tools/include/asm-generic/bitsperlong.h header,
+> but that has to be backported to the stable kernels then.
+
+but this does not sound like it would be the end of the world, I do not
+have to bisect too often and even if I have to, using a userspace
+without these headers is generally possible.
+
+Cheers,
+Nathan
