@@ -2,148 +2,224 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD47C41513
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 21:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA43C001E0
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 21:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229831AbjGaVHs (ORCPT
+        id S230046AbjGaVQo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Jul 2023 17:07:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38244 "EHLO
+        Mon, 31 Jul 2023 17:16:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229537AbjGaVHr (ORCPT
+        with ESMTP id S229526AbjGaVQn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Jul 2023 17:07:47 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 687F0194
-        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jul 2023 14:07:42 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-3fe1a17f983so17707005e9.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jul 2023 14:07:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jrtc27.com; s=gmail.jrtc27.user; t=1690837661; x=1691442461;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VNCGPjrbiEcyOtFfnoUVJfAnHPG+PuJqCkOivI0dKrA=;
-        b=FXyIWqpqhN+jTLM7VoB9X8KH9YGhO3BdVRbPbL+PqDUSp4+sviIuBIY/Rvv02m/PBA
-         OnULbqTAvH7W4XDTR6e8EQa0mMDiOhc4hPLf94ek9tER+nUJ74XdGiM7Hgjlhwp5TGsK
-         BHCfbC1lvxYVlSsXlfSDvTe2mgW/GDyVERsPc0MUkS7KSQvhSG0+WvVDNp02prlogtz3
-         U6NjH3bUOIHxcNto+k5TNole3bbMs0gx5RIibAPmBjwg/8GwthgOZzOPFo63b4htdzXM
-         lZJtxm13vuKhLuqzyzJC8ldXvCiFLon4KJY1ATFOEgtSl3IGVU3+3Z9vPHPWtu0i0gae
-         bjGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690837661; x=1691442461;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VNCGPjrbiEcyOtFfnoUVJfAnHPG+PuJqCkOivI0dKrA=;
-        b=f2yVGLkYJiYyHIpNAqTeN7bEor4xMOin0QZKwa+BFo91HgAKT+DlVXNiUEzRDZGkJd
-         Ba6mZGxz88t8aOYHfYcNDPF2RTVqIlP420Ecy7sfrZT7R/BmOxwTfr/4NgRw+rO8X7+t
-         SATkGtOxJwOGI41YSpW5uBJeU2L6HrglgquNogmYdVKuNustTaPwejONNLKd+vdXBxO/
-         lhg8vdWosI8J4Uea4OBoa9Hi79XhBcRq8DsQiurBTMGe0vucPTdL/Mpq97MWRtYB379H
-         m1eb3ljntpcaU45i8CS9Gpbrui6zMJOw796ErNJ4C6P42itqRuuxuKOKEUGuFo0ONucm
-         vLCA==
-X-Gm-Message-State: ABy/qLYbFTFIJtFMaqyMiw8u5aoq69eCZ9ZU9ISYqf2Zpbqwy9uPI+Dc
-        HEyYjrddoYXMjT4mCnfmZapVpg==
-X-Google-Smtp-Source: APBJJlGHTwVNWd//PZQ9JNGaGWYFnzIoYEDoehkWWJ7bscA0fSlZcXrSVnZcugVxt0+DshWg2nS0QA==
-X-Received: by 2002:a05:600c:2213:b0:3fe:2102:8083 with SMTP id z19-20020a05600c221300b003fe21028083mr741960wml.26.1690837660761;
-        Mon, 31 Jul 2023 14:07:40 -0700 (PDT)
-Received: from smtpclient.apple ([131.111.5.246])
-        by smtp.gmail.com with ESMTPSA id k17-20020adfe8d1000000b003143867d2ebsm14090234wrn.63.2023.07.31.14.07.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 31 Jul 2023 14:07:40 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.600.7\))
-Subject: Re: [PATCH v4 09/10] tools: lib: perf: Implement riscv mmap support
-From:   Jessica Clarke <jrtc27@jrtc27.com>
-In-Reply-To: <ZMgP6hhD/k7QNQ3t@casper.infradead.org>
-Date:   Mon, 31 Jul 2023 22:07:28 +0100
-Cc:     Ian Rogers <irogers@google.com>,
-        Alexandre Ghiti <alexghiti@rivosinc.com>,
-        Brendan Sweeney <brs@rivosinc.com>,
-        Palmer Dabbelt <palmer@rivosinc.com>,
-        Jonathan Corbet <corbet@lwn.net>,
+        Mon, 31 Jul 2023 17:16:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7472110E3;
+        Mon, 31 Jul 2023 14:16:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 04529612DC;
+        Mon, 31 Jul 2023 21:16:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3CDEC433C8;
+        Mon, 31 Jul 2023 21:16:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690838201;
+        bh=xcTqF7aOrNrqWKo1l81zdilo1yPMMlcZ5Ml2JwWWdb8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BRGq3BOfZl80YdgbPrb8M6ohUD9whYS9/PsDu6NVEknEnY3dd4+SKNBze0XeaBZAv
+         7ZeObuIDTBvBEf6U4o0TQabfkPafjWyaLejNGzUPwSGyBNb15aMJkI30oOCF/MUQTN
+         tTX2S4GI3oso1b5Mrl2moGGMWVzc81jJy/8vTTHQQM9eJG/0wzf8DRC6/4RTR4xFkk
+         F8KPx2pqslJIHiHPRKNIdR1TplXa3nrjh2I5Ddlg5GzgVOpH+BOvjgRDngBRdGez94
+         0LV8nAsGA5jwpG7wJqxMTSDp0/0/gjPpK/zWBCMxXI4epT5EJ1hTC7XJA/W+s1Zdaw
+         fPFt4wRcCB4GA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 64F7040096; Mon, 31 Jul 2023 18:16:38 -0300 (-03)
+Date:   Mon, 31 Jul 2023 18:16:38 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     James Clark <james.clark@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <atishp@atishpatra.org>,
-        Anup Patel <anup@brainfault.org>,
-        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-        Andrew Jones <ajones@ventanamicro.com>,
-        =?utf-8?Q?R=C3=A9mi_Denis-Courmont?= <remi@remlab.net>,
-        linux-doc@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Atish Patra <atishp@rivosinc.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <4A8F40EA-0322-4E52-B806-AE93B5D7CFAE@jrtc27.com>
-References: <20230727141428.962286-1-alexghiti@rivosinc.com>
- <20230727141428.962286-10-alexghiti@rivosinc.com>
- <CAP-5=fU5XYXrVnRUidpwjV2LiTsdebfidL43_Qo4Z7TBxMsVGA@mail.gmail.com>
- <CAHVXubgVAe1WsiZx5Ay+3KPK4u24k_vsnTwFFmBeVsHrGXwhfw@mail.gmail.com>
- <CAHVXubj80rQRShuDS09BeTrfR6nux0A68EMWLbeat8fd_Y3YdA@mail.gmail.com>
- <CAP-5=fWwzuGZ6a6Z38ndsb7gw7_uwS0a2VGXx08hMeiK8eZ91w@mail.gmail.com>
- <CAHVXubjhM9C1fw_Us=8+RuSJbW0pacFAk9gp7j2=BtMUPy_Byw@mail.gmail.com>
- <CAP-5=fUbiaVwSAhTbymyhdUPcVAXHiQZZexAOnrqid0LsPmfpw@mail.gmail.com>
- <ZMgP6hhD/k7QNQ3t@casper.infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-X-Mailer: Apple Mail (2.3731.600.7)
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        llvm@lists.linux.dev
+Subject: Re: [PATCH v1 4/6] perf build: Disable fewer flex warnings
+Message-ID: <ZMgkthavch7x/z+0@kernel.org>
+References: <20230728064917.767761-1-irogers@google.com>
+ <20230728064917.767761-5-irogers@google.com>
+ <a8833945-3f0a-7651-39ff-a01e7edc2b3a@arm.com>
+ <ZMPJym7DnCkFH7aA@kernel.org>
+ <ZMPKekDl+g5PeiH8@kernel.org>
+ <CAP-5=fX2LOdd_34ysAYYB5zq5tr7dMje35Nw6hrLXTPLsOHoaw@mail.gmail.com>
+ <ZMQEfIi/BYwpDIEB@kernel.org>
+ <ZMQMQoCtBytgwB4i@kernel.org>
+ <CAP-5=fUOD4hgQBmXjQh0HujO_39zQQhv_Wv5oirgAC4N8Ao1nw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fUOD4hgQBmXjQh0HujO_39zQQhv_Wv5oirgAC4N8Ao1nw@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 31 Jul 2023, at 20:47, Matthew Wilcox <willy@infradead.org> wrote:
->=20
-> On Mon, Jul 31, 2023 at 09:46:07AM -0700, Ian Rogers wrote:
->> On Mon, Jul 31, 2023 at 9:06=E2=80=AFAM Alexandre Ghiti =
-<alexghiti@rivosinc.com> wrote:
->>> I have just had the answer internally (thanks to @Brendan Sweeney):
->>> csr modifications can alter how the memory is accessed (satp which
->>> changes the address space, sum which allows/disallows userspace
->>> access...), so we need the memory barrier to make sure the compiler
->>> does not reorder the memory accesses.
->>=20
->> The conditions you mention shouldn't apply here though? Even if you
->> add a memory barrier for the compiler what is stopping the hardware
->> reordering loads and stores? If it absolutely has to be there then a
->> comment something like "There is a bug is riscv where the csrr
->> instruction can clobber memory breaking future reads and some how =
-this
->> constraint fixes it by ... ".
->=20
-> If the hardware doesn't know that writing to a csr can change how =
-memory
-> accesses are done and reorders memory accesses around that csr write,
-> you've got a really broken piece of hardware on your hands ...
->=20
-> I know nothing about risc-v, and maybe the definition says that you =
-need
-> to put a memory barrier before and/or after it in the instruction =
-stream,
-> but on all hardware I'm familiar with, writing to a CSR is an =
-implicitly
-> serialising operation.
+Em Fri, Jul 28, 2023 at 12:05:56PM -0700, Ian Rogers escreveu:
+> On Fri, Jul 28, 2023, 11:43 AM Arnaldo Carvalho de Melo <acme@kernel.org>
+> > > I haven't checked, lemme do it now.
 
-satp has some special rules due to the interaction with TLBs. Enabling
-/ disabling translation by toggling between Bare and non-Bare modes
-doesn=E2=80=99t require any kind of fence, nor does changing the ASID =
-(if not
-recycling), but any other changes to satp (changing between
-Sv39/Sv48/Sv57 or changing the page table base address) do require
-fences (not really sure why to be honest, maybe something about having
-separate kernel and user page tables?..). =C2=A75.2.1 Supervisor
-Memory-Management Fence Instruction of the privileged spec (the one =
-I=E2=80=99m
-looking at is version 20211203 but dated October 4, 2022) details this.
+> > It comes directly from flex's m4 files:
 
-Jess
+> > https://github.com/westes/flex/blob/master/src/c99-flex.skl#L2044
+
+> > So I'll keep the -Wno-misleading-indentation, ok?
+ 
+> Makes sense, yes.
+
+continuing, changed the version check to:
+
+commit f4da4419574536691c6b7843b6c48a3f97240404
+Author: Ian Rogers <irogers@google.com>
+Date:   Thu Jul 27 23:49:15 2023 -0700
+
+    perf build: Disable fewer flex warnings
+    
+    If flex is version 2.6.4, reduce the number of flex C warnings
+    disabled. Earlier flex versions have all C warnings disabled.
+    
+    Committer notes:
+    
+    Added this to the list of ignored warnings to get it building on
+    a Fedora 36 machine with flex 2.6.4:
+    
+      -Wno-misleading-indentation
+    
+    Noticed when building with:
+    
+      $ make LLVM=1 -C tools/perf NO_BPF_SKEL=1 DEBUG=1
+    
+    Take two:
+    
+    We can't just try to canonicalize flex versions by just removing the
+    dots, as we end up with:
+    
+            2.6.4 >= 2.5.37
+    
+    becoming:
+    
+            264 >= 2537
+    
+    Failing the build on flex 2.5.37, so instead use the back to the past
+    added $(call version_ge3,2.6.4,$(FLEX_VERSION)) variant to check for
+    that.
+    
+    Making sure $(FLEX_VERSION) keeps the dots as we may want to use 'sort
+    -V' or something nicer when available everywhere.
+    
+    Signed-off-by: Ian Rogers <irogers@google.com>
+    Cc: Adrian Hunter <adrian.hunter@intel.com>
+    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+    Cc: Andrii Nakryiko <andrii@kernel.org>
+    Cc: Eduard Zingerman <eddyz87@gmail.com>
+    Cc: Gaosheng Cui <cuigaosheng1@huawei.com>
+    Cc: Ingo Molnar <mingo@redhat.com>
+    Cc: Jiri Olsa <jolsa@kernel.org>
+    Cc: Kan Liang <kan.liang@linux.intel.com>
+    Cc: Mark Rutland <mark.rutland@arm.com>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Cc: Nathan Chancellor <nathan@kernel.org>
+    Cc: Nick Desaulniers <ndesaulniers@google.com>
+    Cc: Peter Zijlstra <peterz@infradead.org>
+    Cc: Rob Herring <robh@kernel.org>
+    Cc: Tom Rix <trix@redhat.com>
+    Cc: bpf@vger.kernel.org
+    Cc: llvm@lists.linux.dev
+    Link: https://lore.kernel.org/r/20230728064917.767761-5-irogers@google.com
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index bb08149179e405ac..ae91e2786f1a4f55 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -1,3 +1,5 @@
++include $(srctree)/tools/scripts/utilities.mak
++
+ perf-y += arm64-frame-pointer-unwind-support.o
+ perf-y += addr_location.o
+ perf-y += annotate.o
+@@ -279,13 +281,11 @@ $(OUTPUT)util/bpf-filter-bison.c $(OUTPUT)util/bpf-filter-bison.h: util/bpf-filt
+ 	$(Q)$(call echo-cmd,bison)$(BISON) -v $< -d $(PARSER_DEBUG_BISON) $(BISON_FILE_PREFIX_MAP) \
+ 		-o $(OUTPUT)util/bpf-filter-bison.c -p perf_bpf_filter_
+ 
+-FLEX_GE_26 := $(shell expr $(shell $(FLEX) --version | sed -e  's/flex \([0-9]\+\).\([0-9]\+\)/\1\2/g') \>\= 26)
+-ifeq ($(FLEX_GE_26),1)
+-  flex_flags := -Wno-switch-enum -Wno-switch-default -Wno-unused-function -Wno-redundant-decls -Wno-sign-compare -Wno-unused-parameter -Wno-missing-prototypes -Wno-missing-declarations
+-  CC_HASNT_MISLEADING_INDENTATION := $(shell echo "int main(void) { return 0 }" | $(CC) -Werror -Wno-misleading-indentation -o /dev/null -xc - 2>&1 | grep -q -- -Wno-misleading-indentation ; echo $$?)
+-  ifeq ($(CC_HASNT_MISLEADING_INDENTATION), 1)
+-    flex_flags += -Wno-misleading-indentation
+-  endif
++FLEX_VERSION := $(shell $(FLEX) --version | cut -d' ' -f2)
++
++FLEX_GE_264 := $(call version_ge3,2.6.4,$(FLEX_VERSION))
++ifeq ($(FLEX_GE_264),1)
++  flex_flags := -Wno-redundant-decls -Wno-switch-default -Wno-unused-function -Wno-misleading-indentation
+ else
+   flex_flags := -w
+ endif
+
+--------------------------------------------------------------------------
+
+with version_ge3 being:
+
+commit aa9e655a4d755c3c75eb3d200d87a3b695f602cf
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Mon Jul 31 16:19:21 2023 -0300
+
+    tools build: Add a 3-component greater or equal version comparator
+    
+    The next cset needs to compare if a flex version is greater or equal
+    than another, but since there is no canonical, generally available way
+    to compare versions in the command line (sort -V, yeah, but...), just
+    use awk to canonicalize the versions like is also done in
+    scripts/rust_is_available.sh.
+    
+    Cc: Adrian Hunter <adrian.hunter@intel.com>
+    Cc: Ian Rogers <irogers@google.com>
+    Cc: Jiri Olsa <jolsa@kernel.org>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+diff --git a/tools/scripts/utilities.mak b/tools/scripts/utilities.mak
+index 172e47273b5d995a..568a6541ecf98075 100644
+--- a/tools/scripts/utilities.mak
++++ b/tools/scripts/utilities.mak
+@@ -177,3 +177,13 @@ $(if $($(1)),$(call _ge_attempt,$($(1)),$(1)),$(call _ge_attempt,$(2)))
+ endef
+ _ge_attempt = $(or $(get-executable),$(call _gea_err,$(2)))
+ _gea_err  = $(if $(1),$(error Please set '$(1)' appropriately))
++
++# version-ge3
++#
++# Usage $(call version_ge3,2.6.4,$(FLEX_VERSION))
++#
++# To compare if a 3 component version is greater or equal to anoter, first use
++# was to check the flex version to see if we can use compiler warnings as
++# errors for one of the cases flex generates code C compilers complains about.
++#
++version_ge3 = $(shell awk -F'.' '{ printf("%d\n", (10000000 * $$1 + 10000 * $$2 + $$3) >= (10000000 * $$4 + 10000 * $$5 + $$6)) }' <<< "$(1).$(2)")
+
 
