@@ -2,174 +2,301 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36762C001DE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 16:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAE1C001DE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 16:07:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233327AbjGaQEo (ORCPT
+        id S233356AbjGaQG7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Jul 2023 12:04:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40660 "EHLO
+        Mon, 31 Jul 2023 12:06:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233326AbjGaQEj (ORCPT
+        with ESMTP id S233374AbjGaQGl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Jul 2023 12:04:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D622F1BE9;
-        Mon, 31 Jul 2023 09:04:14 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0E88661207;
-        Mon, 31 Jul 2023 16:04:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC273C433C7;
-        Mon, 31 Jul 2023 16:04:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690819444;
-        bh=5mjxkRGYdDJHi8iwtbjaqm+ZNCwOd9w23JucUBfspJc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IsmshpuMt1cGOfRI5e/3xtukcr4V0We1YeC5wgMpz8W+RgsWHtFaqOAQtAPALNj9U
-         2R9y3xAC3kuregKU/3WvvqNt6xi4ujaay08GQOOmiKl0CstMwYlAbsVesU/0ntB2bM
-         AWLnvPC6bQ880pLICLLUzYb5Gndqj5nND6Nyq0/fac/Me4PTRDzaltX5SaM3WqLnik
-         65rkjwWALQbwb05YmTKdaishaSzwx6hYePIJ6htVXei03FGUIRmZt55uX+UG+cb0DI
-         dIEhkXlD6c0ivqDvlf0L0cPy1q5c79cwAx6c/o4hF2xPDzbG3OYNyyUmHEUJGuPbj6
-         3ZUtXa3EY5ulQ==
-Date:   Mon, 31 Jul 2023 09:04:02 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
-        Linux-Arch <linux-arch@vger.kernel.org>, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH v3 1/2] asm-generic: Unify uapi bitsperlong.h for arm64,
- riscv and loongarch
-Message-ID: <20230731160402.GB1823389@dev-arch.thelio-3990X>
-References: <1687443219-11946-1-git-send-email-yangtiezhu@loongson.cn>
- <1687443219-11946-2-git-send-email-yangtiezhu@loongson.cn>
- <20230727213648.GA354736@dev-arch.thelio-3990X>
- <1777400a-4d9c-4bdb-9d3b-f8808ef054cc@app.fastmail.com>
- <20230728173103.GA1299743@dev-arch.thelio-3990X>
- <a2fa1a31-e8bb-4659-9631-398b564e7c2b@app.fastmail.com>
- <20230728234429.GA611252@dev-arch.thelio-3990X>
- <e7a792d9-39b9-440a-9c22-99e25b25a396@app.fastmail.com>
- <20230729174617.GA1229655@dev-arch.thelio-3990X>
- <6d6641b6-748e-412c-a139-35fc873a6a1b@app.fastmail.com>
+        Mon, 31 Jul 2023 12:06:41 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B0D51BCA
+        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jul 2023 09:06:37 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id ffacd0b85a97d-316feb137a7so4933246f8f.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jul 2023 09:06:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20221208.gappssmtp.com; s=20221208; t=1690819596; x=1691424396;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zT40P5kFEYJdNbKpdpMzY4q3SIu8zo9VS8U/UistRcU=;
+        b=qlsKjlMPSFUyTcM/PjPCc+rdwyRY3gp0AVih9dF+26W19C6HC8vxVMOpKDtuF6TJxk
+         QafF1HQRezHMGaBKLdWegYplAKZEKZ3tYME5DmydZ2wLC2H2ZIpqXJH7BHMbss34dmIr
+         VnQT3XxMY9A1RHP6A5nXMNdmbiQx0LuXCjkd03rlv0j6cae/rSG8DcBJyC4nz/opA+Wo
+         IjMXuDnJvO8ewS+92FTibL9UT75cCvV5Y/9pFNQmwFw3OMcda28tXzCFzImZsYeuD32N
+         t/JhAH+kl9Hh9EeSk/vdig4ZLyfdSHEqrfD+twgoykNfbGjpvGHmM4a5uxYaqmCyvUad
+         LSCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690819596; x=1691424396;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zT40P5kFEYJdNbKpdpMzY4q3SIu8zo9VS8U/UistRcU=;
+        b=JhLRV2Y4jJhs8Sljj1Ew8OEJTpNeXCFGSI6iVDtZ2XLsCbFGOvX6mLX0OmiRfcnbCF
+         aL8fKYsDL/HEdGjYMJ2cmjBfn8qNHbDVID1SokuaWDs/Wq5SkPGGn3WM/xuW7IVGKUG/
+         995H45Bwr1QdJKgFxQSUwaDb1LwGB8/BmxtsuSCTNUhEcsAelIo3nk1PwJtZuzB0JRhS
+         htaISQiQxWOgbw+egkivDHP8jBp4zBAMBeOscWX0jpfZDnJr1mskPYacc7tsWXWKIJkt
+         Z/uu6S8rNJPtnZUlCTvA9ZT8rl+xW61HDWvQSin86eRBh8iFc3cABXG4oAiwFfuViO/F
+         zhTA==
+X-Gm-Message-State: ABy/qLbWYDFQBLILX0zboft5fGu0InUkiaNoLeaC1oJjnVf0cQaiLi0h
+        XJRv3YsOZEGAhey+teMLekg3aRb6ULECBYrfLjKM3Q==
+X-Google-Smtp-Source: APBJJlF+BDencYo+LTfAMkZHqtnCV+zm+jRthazIG9YKGK5eIXIfmAkh9croBuRU4xtoao9hS+6hV+7hCS+8S97wY28=
+X-Received: by 2002:adf:d84a:0:b0:317:61d8:3c7e with SMTP id
+ k10-20020adfd84a000000b0031761d83c7emr194456wrl.26.1690819596395; Mon, 31 Jul
+ 2023 09:06:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6d6641b6-748e-412c-a139-35fc873a6a1b@app.fastmail.com>
+References: <20230727141428.962286-1-alexghiti@rivosinc.com>
+ <20230727141428.962286-10-alexghiti@rivosinc.com> <CAP-5=fU5XYXrVnRUidpwjV2LiTsdebfidL43_Qo4Z7TBxMsVGA@mail.gmail.com>
+ <CAHVXubgVAe1WsiZx5Ay+3KPK4u24k_vsnTwFFmBeVsHrGXwhfw@mail.gmail.com>
+ <CAHVXubj80rQRShuDS09BeTrfR6nux0A68EMWLbeat8fd_Y3YdA@mail.gmail.com> <CAP-5=fWwzuGZ6a6Z38ndsb7gw7_uwS0a2VGXx08hMeiK8eZ91w@mail.gmail.com>
+In-Reply-To: <CAP-5=fWwzuGZ6a6Z38ndsb7gw7_uwS0a2VGXx08hMeiK8eZ91w@mail.gmail.com>
+From:   Alexandre Ghiti <alexghiti@rivosinc.com>
+Date:   Mon, 31 Jul 2023 18:06:25 +0200
+Message-ID: <CAHVXubjhM9C1fw_Us=8+RuSJbW0pacFAk9gp7j2=BtMUPy_Byw@mail.gmail.com>
+Subject: Re: [PATCH v4 09/10] tools: lib: perf: Implement riscv mmap support
+To:     Ian Rogers <irogers@google.com>, Brendan Sweeney <brs@rivosinc.com>
+Cc:     Palmer Dabbelt <palmer@rivosinc.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <atishp@atishpatra.org>,
+        Anup Patel <anup@brainfault.org>,
+        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+        Andrew Jones <ajones@ventanamicro.com>,
+        =?UTF-8?Q?R=C3=A9mi_Denis=2DCourmont?= <remi@remlab.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Atish Patra <atishp@rivosinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Jul 29, 2023 at 11:12:26PM +0200, Arnd Bergmann wrote:
-> On Sat, Jul 29, 2023, at 19:46, Nathan Chancellor wrote:
-> > On Sat, Jul 29, 2023 at 09:59:23AM +0200, Arnd Bergmann wrote:
-> >> On Sat, Jul 29, 2023, at 01:44, Nathan Chancellor wrote:
-> 
-> >> 
-> >> in order to get the ORC definitions from asm/orc_types.h, but
-> >> then it looks like it also gets the uapi/asm/bitsperlong.h
-> >> header from there which contains
-> >> 
-> >> #if defined(__x86_64__) && !defined(__ILP32__)
-> >> # define __BITS_PER_LONG 64
-> >> #else
-> >> # define __BITS_PER_LONG 32
-> >> #endif
-> >> 
-> >> and this would set __BITS_PER_LONG to 32 on arm64.
-> >> 
-> >> However, I don't see this actually being included on my
-> >> machine. Can you dump the sorttable.c preprocessor output
-> >> with your setup, using -fdirectives-only, so we can see
-> >> which of the two (__BITS_PER_LONG or BITS_PER_LONG) is
-> >> actually wrong and triggers the sanity check?
+On Mon, Jul 31, 2023 at 5:10=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Mon, Jul 31, 2023 at 3:27=E2=80=AFAM Alexandre Ghiti <alexghiti@rivosi=
+nc.com> wrote:
 > >
-> > Sure thing, this is the output of:
+> > On Mon, Jul 31, 2023 at 12:15=E2=80=AFPM Alexandre Ghiti <alexghiti@riv=
+osinc.com> wrote:
+> > >
+> > > Hi Ian,
+> > >
+> > > On Fri, Jul 28, 2023 at 7:53=E2=80=AFPM Ian Rogers <irogers@google.co=
+m> wrote:
+> > > >
+> > > > On Thu, Jul 27, 2023 at 7:28=E2=80=AFAM Alexandre Ghiti <alexghiti@=
+rivosinc.com> wrote:
+> > > > >
+> > > > > riscv now supports mmaping hardware counters so add what's needed=
+ to
+> > > > > take advantage of that in libperf.
+> > > > >
+> > > > > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> > > > > Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+> > > > > Reviewed-by: Atish Patra <atishp@rivosinc.com>
+> > > > > ---
+> > > > >  tools/lib/perf/mmap.c | 65 +++++++++++++++++++++++++++++++++++++=
+++++++
+> > > > >  1 file changed, 65 insertions(+)
+> > > > >
+> > > > > diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
+> > > > > index 0d1634cedf44..378a163f0554 100644
+> > > > > --- a/tools/lib/perf/mmap.c
+> > > > > +++ b/tools/lib/perf/mmap.c
+> > > > > @@ -392,6 +392,71 @@ static u64 read_perf_counter(unsigned int co=
+unter)
+> > > > >
+> > > > >  static u64 read_timestamp(void) { return read_sysreg(cntvct_el0)=
+; }
+> > > > >
+> > > > > +#elif __riscv_xlen =3D=3D 64
+> > > >
+> > > > This is something of an odd guard, perhaps:
+> > > > #elif defined(__riscv) && __riscv_xlen =3D=3D 64
+> > > >
+> > > > That way it is more intention revealing that this is riscv code. Co=
+uld
+> > > > you add a comment relating to the __riscv_xlen ?
+> > >
+> > > I guess Andrew answered that already.
+> > >
+>
+> Not sure. I still think it looks weird:
+> ...
+> #if defined(__i386__) || defined(__x86_64__)
+> ...
+> #elif defined(__aarch64__)
+> ...
+> #elif __riscv_xlen =3D=3D 64
+> ...
+> #else
+> static u64 read_perf_counter(unsigned int counter __maybe_unused) { retur=
+n 0; }
+> static u64 read_timestamp(void) { return 0; }
+> #endif
+>
+> The first two are clearly #ifdef-ing architecture specific assembly
+> code, under what conditions I get RISC-V code  =C2=AF\(=E3=83=84)/=C2=AF =
+At least worth
+> a comment like "csrr is only available when you have xlens of 64
+> because ..."
+
+__riscv_xlen indicates riscv64, which is the only target of this
+patchset. But if you prefer, I don't mind adding back the
+defined(__riscv) if I re-spin a new version.
+
+>
+> > > >
+> > > > > +
+> > > > > +/* TODO: implement rv32 support */
+> > > > > +
+> > > > > +#define CSR_CYCLE      0xc00
+> > > > > +#define CSR_TIME       0xc01
+> > > > > +
+> > > > > +#define csr_read(csr)                                          \
+> > > > > +({                                                             \
+> > > > > +       register unsigned long __v;                             \
+> > > > > +               __asm__ __volatile__ ("csrr %0, " #csr          \
+> > > > > +                : "=3Dr" (__v) :                                =
+ \
+> > > > > +                : "memory");                                   \
+> > > >
+> > > > To avoid the macro pasting that could potentially go weird, could t=
+his be:
+> > > >
+> > > > __asm__ __volatile__ ("csrr %0, %1",
+> > > >   : "=3Dr"(__v) /* outputs */
+> > > >   : "i"(csr) /* inputs */
+> > > >   : "memory" /* clobbers */)
 > >
-> >   $ gcc -I/linux-stable/tools/include 
-> > -I/linux-stable/tools/arch/x86/include -DUNWINDER_ORC_ENABLED -I 
-> > ./scripts -E -fdirectives-only /linux-stable/scripts/sorttable.c
+> > Forgot to answer this one: it compiles, but I have to admit that I
+> > don't understand the difference and if that's correct (all macros in
+> > arch/riscv/include/asm/csr.h use # to do this) and what benefits it
+> > brings. Can you elaborate more on things that could "go weird"?
+>
+> So rather than use an input constraint for the asm block you are using
+> the C preprocessor to paste in the csr argument. If csr is something
+> like "1" then it looks good and you'll get "csrr %0,1". If you pass
+> something like "1 << 31" then that will be pasted as "csrr %0, 1 <<
+> 31" and that starts to get weird in the context of being in the
+> assembler where it is unlikely the C operators work. Using the input
+> constraint avoids this, causes the C compiler to check the type of the
+> argument and you'll probably get more intelligible error messages as a
+> consequence.
+>
+
+Thanks. So if I'm not mistaken, in this exact context, given we only
+use csr_read() through the csr_read_num() function, it seems ok right?
+
 > >
-> > https://gist.github.com/nathanchance/d2c3e58230930317dc84aff80fef38bf
-> 
-> Ok, so what we get is that the system-wide
-> /usr/include/aarch64-linux-gnu/asm/bitsperlong.h
-> 
-> includes the source tree file 
-> tools/include/asm-generic/bitsperlong.h
-> 
-> which in the old kernels only has the "32" fallback value.
-
-Ah, makes perfect sense.
-
-> >> What I see on my machine is that both definitions come
-> >> from the local tools/include/ headers, not from the
-> >> installed system headers, so I'm still doing something
-> >> wrong in my installation:
+> > Thanks again,
 > >
-> > Just to make sure, you have the 6.5-rc1+ headers installed and you are
-> > attempting to build the host tools from an earlier Linux release than
-> > 6.5-rc1? I don't see a problem with building these host programs on
-> > mainline/6.5, I see this issue when building them in older stable
-> > releases (my reproduction so far has been on 6.4 but I see it when
-> > building all currently supported long term stable releases) when I have
-> > the 6.5-rc1+ headers installed.
-> 
-> Ok, I see. I missed that part of your description earlier.
-> 
+> > Alex
 > >
-> > which seems to be where the mismatch is coming from?
-> 
-> Right, exactly.
-> 
-> >> ./tools/include/asm-generic/bitsperlong.h
-> >> #define BITS_PER_LONG (__CHAR_BIT__ * __SIZEOF_LONG__)
-> >> 
-> >> Neither of these files actually contains the sanity
-> >> check in linux-6.5-rc3, and comparing these is clearly
-> >> nonsensical, as they are defined the same way (rather
-> >> than checking CONFIG_64BIT), but also I don't see why
-> >> there is both a uapi/ version and a non-uapi version
-> >> in what is meant to be a userspace header.
-> >
-> > May be worth looping in the tools/ folks, since that whole directory is
-> > rather special IMO...
-> 
-> I think the good news is that this only happens because
-> the tools/ directory contains a copy of the kernel headers
-> including that sanity check, and other user space won't
-> suffer from it because they don't contain copies of kernel
-> internal headers.
+> > > >
+> > > > Also, why is this clobbering memory? Worth adding a comment.
+> > >
+> > > No idea, I see that it is also done this way in
+> > > arch/riscv/include/asm/csr.h. @Atish Kumar Patra , @Palmer Dabbelt ?
+>
+> It would seem to make sense then not to have a memory constraint until
+> we know why we're doing it?
+>
 
-Yeah, I think you are correct.
+I have just had the answer internally (thanks to @Brendan Sweeney):
+csr modifications can alter how the memory is accessed (satp which
+changes the address space, sum which allows/disallows userspace
+access...), so we need the memory barrier to make sure the compiler
+does not reorder the memory accesses.
 
-> Reverting the change might still end up being the easiest way
-> out regardless, but it does seem like we should be able
-> to address this in the tools directory by making sure it doesn't
-> mix the installed headers with the local ones.
+Thanks,
 
-Agreed, although you do make a good point below that we would need the
-fix in the stable trees, which adds additional complexity when it comes
-to things like bisecting. It is already hard enough with all the various
-clang behavior changes we have had to adapt to over the years...
+Alex
 
-> Part of the problem I think is that the installed 
-> /usr/include/asm-generic/int-ll64.h includes
-> /usr/include/aarch64-linux-gnu/asm/bitsperlong.h, so both
-> of them are the uapi headers, but this one has an
-> "include <asm-generic/bitsperlong.h>" that expects the
-> uapi version but instead gets the kernel version from
-> the tools directory. We could override this by adding
-> a working tools/include/asm-generic/bitsperlong.h header,
-> but that has to be backported to the stable kernels then.
-
-but this does not sound like it would be the end of the world, I do not
-have to bisect too often and even if I have to, using a userspace
-without these headers is generally possible.
-
-Cheers,
-Nathan
+> Thanks,
+> Ian
+>
+> > >
+> > > Thanks for your comments!
+> > >
+> > > Alex
+> > >
+> > > >
+> > > > Thanks,
+> > > > Ian
+> > > >
+> > > > > +                __v;                                           \
+> > > > > +})
+> > > > > +
+> > > > > +static unsigned long csr_read_num(int csr_num)
+> > > > > +{
+> > > > > +#define switchcase_csr_read(__csr_num, __val)           {\
+> > > > > +       case __csr_num:                                 \
+> > > > > +               __val =3D csr_read(__csr_num);            \
+> > > > > +               break; }
+> > > > > +#define switchcase_csr_read_2(__csr_num, __val)         {\
+> > > > > +       switchcase_csr_read(__csr_num + 0, __val)        \
+> > > > > +       switchcase_csr_read(__csr_num + 1, __val)}
+> > > > > +#define switchcase_csr_read_4(__csr_num, __val)         {\
+> > > > > +       switchcase_csr_read_2(__csr_num + 0, __val)      \
+> > > > > +       switchcase_csr_read_2(__csr_num + 2, __val)}
+> > > > > +#define switchcase_csr_read_8(__csr_num, __val)         {\
+> > > > > +       switchcase_csr_read_4(__csr_num + 0, __val)      \
+> > > > > +       switchcase_csr_read_4(__csr_num + 4, __val)}
+> > > > > +#define switchcase_csr_read_16(__csr_num, __val)        {\
+> > > > > +       switchcase_csr_read_8(__csr_num + 0, __val)      \
+> > > > > +       switchcase_csr_read_8(__csr_num + 8, __val)}
+> > > > > +#define switchcase_csr_read_32(__csr_num, __val)        {\
+> > > > > +       switchcase_csr_read_16(__csr_num + 0, __val)     \
+> > > > > +       switchcase_csr_read_16(__csr_num + 16, __val)}
+> > > > > +
+> > > > > +       unsigned long ret =3D 0;
+> > > > > +
+> > > > > +       switch (csr_num) {
+> > > > > +       switchcase_csr_read_32(CSR_CYCLE, ret)
+> > > > > +       default:
+> > > > > +               break;
+> > > > > +       }
+> > > > > +
+> > > > > +       return ret;
+> > > > > +#undef switchcase_csr_read_32
+> > > > > +#undef switchcase_csr_read_16
+> > > > > +#undef switchcase_csr_read_8
+> > > > > +#undef switchcase_csr_read_4
+> > > > > +#undef switchcase_csr_read_2
+> > > > > +#undef switchcase_csr_read
+> > > > > +}
+> > > > > +
+> > > > > +static u64 read_perf_counter(unsigned int counter)
+> > > > > +{
+> > > > > +       return csr_read_num(CSR_CYCLE + counter);
+> > > > > +}
+> > > > > +
+> > > > > +static u64 read_timestamp(void)
+> > > > > +{
+> > > > > +       return csr_read_num(CSR_TIME);
+> > > > > +}
+> > > > > +
+> > > > >  #else
+> > > > >  static u64 read_perf_counter(unsigned int counter __maybe_unused=
+) { return 0; }
+> > > > >  static u64 read_timestamp(void) { return 0; }
+> > > > > --
+> > > > > 2.39.2
+> > > > >
