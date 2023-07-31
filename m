@@ -2,119 +2,251 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6002C001DE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 14:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B222C001E0
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 14:28:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232877AbjGaOHO (ORCPT
+        id S231759AbjGaO2N (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Jul 2023 10:07:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54452 "EHLO
+        Mon, 31 Jul 2023 10:28:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232939AbjGaOGx (ORCPT
+        with ESMTP id S231744AbjGaO2L (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Jul 2023 10:06:53 -0400
-Received: from mgamail.intel.com (unknown [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC711BF4;
-        Mon, 31 Jul 2023 07:04:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690812259; x=1722348259;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=8c5Y6r6nrV+imaXJ+aq3XZpGq4sAW8zp+bZ99Ugqtkg=;
-  b=R25t1+CRDueyhGdvrQx7QllY8prcerUGKXKI5dd8TzVe9yhFRvN3Y68H
-   7JUEQVbCdh6ve8r7eETu6Tn80VXAAwEf3hyNcT8EgqUGrB1VzGUd2lIiN
-   hUKwdPuT/zSUjyz07i+x8McHL4tanqLe9EjBkIqq4ngiE7i+hBRy6R6+n
-   A0wmVNCtDR6s4TB5jQftGbr5mZ+QzbfkCqff6e3nxzHGz6lc7FtGMFy2z
-   +mqmWuT+StG07XZnx7l0cpUmruy396xRluNUwEGapTsUGnuseqDaXxBc5
-   kPMB+5vEdIMa4eQFaVdCA+EJhPcfLi+Drk992GABRNiNksMSRe6Z/njJy
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10788"; a="435335660"
-X-IronPort-AV: E=Sophos;i="6.01,244,1684825200"; 
-   d="scan'208";a="435335660"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2023 07:03:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10788"; a="1058942779"
-X-IronPort-AV: E=Sophos;i="6.01,244,1684825200"; 
-   d="scan'208";a="1058942779"
-Received: from aantonov-mobl1.ger.corp.intel.com (HELO [10.252.37.78]) ([10.252.37.78])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2023 07:03:26 -0700
-Message-ID: <9fa13591-38dc-5dbf-5271-5c2bd364f16f@linux.intel.com>
-Date:   Mon, 31 Jul 2023 16:02:09 +0200
+        Mon, 31 Jul 2023 10:28:11 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABE21B6;
+        Mon, 31 Jul 2023 07:28:09 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RF0qz0JL1ztRjT;
+        Mon, 31 Jul 2023 22:24:47 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Mon, 31 Jul 2023 22:28:06 +0800
+Subject: Re: [PATCH v3 4/7] perf record: Track sideband events for all CPUs
+ when tracing selected CPUs
+To:     Adrian Hunter <adrian.hunter@intel.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <irogers@google.com>,
+        <kan.liang@linux.intel.com>, <james.clark@arm.com>,
+        <tmricht@linux.ibm.com>, <ak@linux.intel.com>,
+        <anshuman.khandual@arm.com>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>
+References: <20230722093219.174898-1-yangjihong1@huawei.com>
+ <20230722093219.174898-5-yangjihong1@huawei.com>
+ <4ec5cf9e-130d-4259-420f-420508186858@intel.com>
+ <095df85c-e44e-9ff0-ad28-c3473a9a01e4@huawei.com>
+ <25b32870-12e1-b237-648a-3c6fd9678bb9@intel.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <8c62094a-921c-2f3a-2130-3f083f4ac178@huawei.com>
+Date:   Mon, 31 Jul 2023 22:28:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: potential return of uninitialized variable ret in function
- skx_upi_topology_cb
-To:     "Colin King (gmail)" <colin.i.king@gmail.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <21e2ea66-9524-8e34-a2f0-8e16b9617d68@gmail.com>
+In-Reply-To: <25b32870-12e1-b237-648a-3c6fd9678bb9@intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-From:   Alexander Antonov <alexander.antonov@linux.intel.com>
-In-Reply-To: <21e2ea66-9524-8e34-a2f0-8e16b9617d68@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Colin,
-Thank you so much for reporting the issue. Seems fix wasn't picked up 
-before, I will resend it.
+Hello,
 
-Thank you
+On 2023/7/31 21:01, Adrian Hunter wrote:
+> On 31/07/23 15:38, Yang Jihong wrote:
+>> Hello,
+>>
+>> On 2023/7/31 19:08, Adrian Hunter wrote:
+>>> On 22/07/23 12:32, Yang Jihong wrote:
+>>>> User space tasks can migrate between CPUs, we need to track side-band
+>>>> events for all CPUs.
+>>>>
+>>>> The specific scenarios are as follows:
+>>>>
+>>>>            CPU0                                 CPU1
+>>>>     perf record -C 0 start
+>>>>                                 taskA starts to be created and executed
+>>>>                                   -> PERF_RECORD_COMM and PERF_RECORD_MMAP
+>>>>                                      events only deliver to CPU1
+>>>>                                 ......
+>>>>                                   |
+>>>>                             migrate to CPU0
+>>>>                                   |
+>>>>     Running on CPU0    <----------/
+>>>>     ...
+>>>>
+>>>>     perf record -C 0 stop
+>>>>
+>>>> Now perf samples the PC of taskA. However, perf does not record the
+>>>> PERF_RECORD_COMM and PERF_RECORD_MMAP events of taskA.
+>>>> Therefore, the comm and symbols of taskA cannot be parsed.
+>>>>
+>>>> The solution is to record sideband events for all CPUs when tracing
+>>>> selected CPUs. Because this modifies the default behavior, add related
+>>>> comments to the perf record man page.
+>>>>
+>>>> The sys_perf_event_open invoked is as follows:
+>>>>
+>>>>     # perf --debug verbose=3 record -e cpu-clock -C 1 true
+>>>>     <SNIP>
+>>>>     Opening: cpu-clock
+>>>>     ------------------------------------------------------------
+>>>>     perf_event_attr:
+>>>>       type                             1 (PERF_TYPE_SOFTWARE)
+>>>>       size                             136
+>>>>       config                           0 (PERF_COUNT_SW_CPU_CLOCK)
+>>>>       { sample_period, sample_freq }   4000
+>>>>       sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>>>       read_format                      ID|LOST
+>>>>       disabled                         1
+>>>>       inherit                          1
+>>>>       freq                             1
+>>>>       sample_id_all                    1
+>>>>       exclude_guest                    1
+>>>>     ------------------------------------------------------------
+>>>>     sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
+>>>>     Opening: dummy:u
+>>>>     ------------------------------------------------------------
+>>>>     perf_event_attr:
+>>>>       type                             1 (PERF_TYPE_SOFTWARE)
+>>>>       size                             136
+>>>>       config                           0x9 (PERF_COUNT_SW_DUMMY)
+>>>>       { sample_period, sample_freq }   1
+>>>>       sample_type                      IP|TID|TIME|CPU|IDENTIFIER
+>>>>       read_format                      ID|LOST
+>>>>       inherit                          1
+>>>>       exclude_kernel                   1
+>>>>       exclude_hv                       1
+>>>>       mmap                             1
+>>>>       comm                             1
+>>>>       task                             1
+>>>>       sample_id_all                    1
+>>>>       exclude_guest                    1
+>>>>       mmap2                            1
+>>>>       comm_exec                        1
+>>>>       ksymbol                          1
+>>>>       bpf_event                        1
+>>>>     ------------------------------------------------------------
+>>>>     sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
+>>>>     sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 7
+>>>>     sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 9
+>>>>     sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 10
+>>>>     sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 11
+>>>>     sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 12
+>>>>     sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 13
+>>>>     sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
+>>>>     <SNIP>
+>>>>
+>>>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+>>>> ---
+>>>>    tools/perf/Documentation/perf-record.txt |  3 +++
+>>>>    tools/perf/builtin-record.c              | 14 +++++++++++++-
+>>>>    2 files changed, 16 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+>>>> index 680396c56bd1..dac53ece51ab 100644
+>>>> --- a/tools/perf/Documentation/perf-record.txt
+>>>> +++ b/tools/perf/Documentation/perf-record.txt
+>>>> @@ -388,6 +388,9 @@ comma-separated list with no space: 0,1. Ranges of CPUs are specified with -: 0-
+>>>>    In per-thread mode with inheritance mode on (default), samples are captured only when
+>>>>    the thread executes on the designated CPUs. Default is to monitor all CPUs.
+>>>>    +User space tasks can migrate between CPUs, so when tracing selected CPUs,
+>>>> +a dummy event is created to track sideband for all CPUs.
+>>>> +
+>>>>    -B::
+>>>>    --no-buildid::
+>>>>    Do not save the build ids of binaries in the perf.data files. This skips
+>>>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+>>>> index 3ff9d972225e..4e8e97928f05 100644
+>>>> --- a/tools/perf/builtin-record.c
+>>>> +++ b/tools/perf/builtin-record.c
+>>>> @@ -912,6 +912,7 @@ static int record__config_tracking_events(struct record *rec)
+>>>>    {
+>>>>        struct record_opts *opts = &rec->opts;
+>>>>        struct evlist *evlist = rec->evlist;
+>>>> +    bool system_wide = false;
+>>>>        struct evsel *evsel;
+>>>>          /*
+>>>> @@ -921,7 +922,18 @@ static int record__config_tracking_events(struct record *rec)
+>>>>         */
+>>>>        if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
+>>>>            perf_pmus__num_core_pmus() > 1) {
+>>>> -        evsel = evlist__findnew_tracking_event(evlist, false);
+>>>> +
+>>>> +        /*
+>>>> +         * User space tasks can migrate between CPUs, so when tracing
+>>>> +         * selected CPUs, sideband for all CPUs is still needed.
+>>>> +         *
+>>>> +         * If all (non-dummy) evsel have exclude_user,
+>>>> +         * system_wide is not needed.
+>>>> +         */
+>>>> +        if (!!opts->target.cpu_list && !opts->all_kernel)
+>>>
+>>> Not everyone uses all-kernel.  Can we check the evsels are either dummy
+>>> or exclude_user?
+>> For perf_record, exclude_user of all evsels is set in evsel__config(), and record__config_tracking_events() is before evsel__config().
+>>
+>> Uh..., it seems that only opts->all_kernel can be used to check exclude_user of evsels.
+>>
+>> void evsel__config()
+>> {
+>>    ...
+>>    if (opts->all_kernel) {
+>>      attr->exclude_kernel = 0;
+>>      attr->exclude_user   = 1;
+>>    }
+>>    ...
+>> }
+> 
+> The parser updates attr in accordance with ":k" etc.  I guess
+Yes, the ":k" situation also needs to be considered.
 
+> opts->all_kernel or opts->all_user override that as well.
+Yes, opts->all_kernel and opts->all_user will overwrite the original 
+attr, see [1].
 
-On 7/27/2023 3:55 PM, Colin King (gmail) wrote:
-> Hi,
->
-> Static analysis with cppcheck has detected a potential return of an 
-> uninitialized variable in function skx_upi_topology_cb. The issue was 
-> introduced with commit:
->
-> commit 4cfce57fa42d277497cd2c425021312eae2f223c
-> Author: Alexander Antonov <alexander.antonov@linux.intel.com>
-> Date:   Thu Nov 17 12:28:28 2022 +0000
->
->     perf/x86/intel/uncore: Enable UPI topology discovery for Skylake 
-> Server
->
-> static int skx_upi_topology_cb(struct intel_uncore_type *type, int 
-> segment,
->                                 int die, u64 cpu_bus_msr)
-> {
->         int idx, ret;
->
-> ^^ ret is not initialized
->
->         struct intel_uncore_topology *upi;
->         unsigned int devfn;
->         struct pci_dev *dev = NULL;
->         u8 bus = cpu_bus_msr >> (3 * BUS_NUM_STRIDE);
->
->         for (idx = 0; idx < type->num_boxes; idx++) {
->                 upi = &type->topology[die][idx];
->                 devfn = PCI_DEVFN(SKX_UPI_REGS_ADDR_DEVICE_LINK0 + idx,
->                                   SKX_UPI_REGS_ADDR_FUNCTION);
->                 dev = pci_get_domain_bus_and_slot(segment, bus, devfn);
->
-> ^^ dev may be null, so ret is never assigned
->
->                 if (dev) {
->                         ret = upi_fill_topology(dev, upi, idx);
->                         if (ret)
->                                 break;
->                 }
->         }
->
->         pci_dev_put(dev);
->         return ret;
-> }
->
-> I suspect this probably is very unlikely, but it would be useful to 
-> have ret initialized to some value to avoid garbage being returned. 
-> Not sure what the best value is to set as as default in this corner case.
->
-> Colin
+may need to check all_user, all_kernel and non-dummy exclude_user at the 
+same time:
+
+if ((all_user && one_non_dummy_exist) ||
+     (!all_user && !all_kernel && one_non_dummy_without_exclude_user)) {
+     system_wide = true;
+}
+
+[1]
+# perf --debug verbose=2 record -e cpu-clock:u --all-kernel true
+<SNIP>
+------------------------------------------------------------
+perf_event_attr:
+   type                             1 (PERF_TYPE_SOFTWARE)
+   size                             136
+   config                           0 (PERF_COUNT_SW_CPU_CLOCK)
+   { sample_period, sample_freq }   4000
+   sample_type                      IP|TID|TIME|PERIOD
+   read_format                      ID|LOST
+   disabled                         1
+   inherit                          1
+   exclude_user                     1
+   exclude_hv                       1
+   mmap                             1
+   comm                             1
+   freq                             1
+   enable_on_exec                   1
+   task                             1
+   sample_id_all                    1
+   exclude_guest                    1
+   mmap2                            1
+   comm_exec                        1
+   ksymbol                          1
+   bpf_event                        1
+------------------------------------------------------------
+<SNIP>
+
+Thanks,
+Yang
