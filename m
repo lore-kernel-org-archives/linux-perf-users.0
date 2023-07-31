@@ -2,127 +2,141 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6464EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 02:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CE6C41513
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 03:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229736AbjGaCde (ORCPT
+        id S229826AbjGaDxc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 30 Jul 2023 22:33:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37298 "EHLO
+        Sun, 30 Jul 2023 23:53:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229749AbjGaCdb (ORCPT
+        with ESMTP id S229785AbjGaDxY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 30 Jul 2023 22:33:31 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4AFC5E7B;
-        Sun, 30 Jul 2023 19:33:29 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 118A01650;
-        Sun, 30 Jul 2023 19:34:12 -0700 (PDT)
-Received: from [10.162.41.7] (a077893.blr.arm.com [10.162.41.7])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34B663F6C4;
-        Sun, 30 Jul 2023 19:33:23 -0700 (PDT)
-Message-ID: <937468a1-b325-7d05-8daf-765f911c9240@arm.com>
-Date:   Mon, 31 Jul 2023 08:03:21 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH V13 - RESEND 02/10] arm64/perf: Add BRBE registers and
- fields
-Content-Language: en-US
-To:     James Clark <james.clark@arm.com>, Will Deacon <will@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, mark.rutland@arm.com,
-        Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Sun, 30 Jul 2023 23:53:24 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 048D818D;
+        Sun, 30 Jul 2023 20:53:02 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3F95860E8D;
+        Mon, 31 Jul 2023 03:53:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BED03C433C8;
+        Mon, 31 Jul 2023 03:52:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690775581;
+        bh=Y9lgSgz5fjO9KmaWx63oLAt23LyF/pyHoSo8cniMsME=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=h/xhvo4F9dornzS8cdSJXF1rL85JfZ/EtzMDO0KpFHrSy8+WqRVz9SBnvFCXrLWRY
+         LiNn6LGmQIO89egztL9ybFWm0VTyzoEJ+X2L8jNjFsIGUrJfe4a6TnQj+sInvezkZg
+         UhQnRvwthsq/lf+GYWteOybzSoySE7O7HwkuRPCtNZu2iyoAErRdwBwwp327fCTBLZ
+         5sJaI+u9NXDwycJJfXWj7zer/EOf65IguwjcpW+wNgaLFvUnksUlqljcEheiYJRfVq
+         1PCtOHNuj5JaqZPDzBwyc3RwDNIU9yA/SMJLnba++1sq7sPU+FhpKMVQWEI+BbVq76
+         lFKaguqOe9u8Q==
+Date:   Mon, 31 Jul 2023 12:52:54 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Ze Gao <zegao2021@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <20230711082455.215983-1-anshuman.khandual@arm.com>
- <20230711082455.215983-3-anshuman.khandual@arm.com>
- <20230728162011.GA22050@willie-the-truck>
- <89ce4bc4-00c5-a763-3179-e1d3e9f198b7@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <89ce4bc4-00c5-a763-3179-e1d3e9f198b7@arm.com>
-Content-Type: text/plain; charset=UTF-8
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
+Subject: Re: [RFC PATCH v2 0/3] report task state in symbolic chars from
+ sched tracepoint
+Message-Id: <20230731125254.b059f0c7f29761d018dedbe8@kernel.org>
+In-Reply-To: <20230726121618.19198-1-zegao@tencent.com>
+References: <20230726121618.19198-1-zegao@tencent.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Wed, 26 Jul 2023 20:16:15 +0800
+Ze Gao <zegao2021@gmail.com> wrote:
+
+> 
+> This is the 2nd attempt to fix the report task state issue in sched
+> tracepint, here is the first version:
+> 
+> https://lore.kernel.org/linux-trace-kernel/20230725072254.32045-1-zegao@tencent.com
+> 
+> Against v1, add a new var to report task state in symbolic char instead
+> of replacing the old one and to not to break anything.
+> 
+> --
+> 
+> In the status quo, we should see three different outcomes of the reported
+> sched-out task state from perf-script, perf-sched-timehist, and Tp_printk
+> of tracepoint sched_switch.  And it's not hard to figure out that the
+> former two are built upon the third one, and the reason why we see this
+> inconsistency is that the former two does not catch up with the internal
+> change of reported task state definitions as the kernel evolves.
+> 
+> IMHO, exporting internal representations of task state in the tracepoint
+> sched_switch is not a good practice and not encouraged at all, which can
+> easily break userspace tools that relies on it. Especially when tracepoints
+> are massively used in many observability tools nowadays due to its stable
+> nature, which makes them no longer used for debug only purpose and we
+> should be careful to decide what ought to be reported to userspace and what
+> ought not.
+> 
+> Therefore, to fix the issues mentioned above for good, instead of choosing
+> I proposed to add a new variable to report task state in sched_switch with
+> a symbolic character along with the old hardcoded value, and save the
+> further processing of userspace tools and spare them from knowing
+> implementation details in the kernel.
+> 
+> After this patch seires, we report 'RSDTtXZPI' the same as in procfs, plus
+> a 'p' which denotes PREEMP_ACTIVE and is used for sched_switch tracepoint only.
+
+This series looks good to me. Putting the flag in the trace record is
+a good idea :)
+
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+for this series.
+
+Thank you,
+
+> 
+> Reviews welcome!
+> 
+> Regards,
+> 
+> Ze
+> 
+> Ze Gao (2):
+>   sched, tracing: add to report task state in symbolic chars
+>   perf sched: use the new prev_state_char instead in tracepoint
+>     sched_switch
+> 
+>  include/trace/events/sched.h | 60 +++++++++++++++++++++---------------
+>  tools/perf/builtin-sched.c   | 57 ++++++----------------------------
+>  2 files changed, 45 insertions(+), 72 deletions(-)
+> 
+> Ze Gao (1):
+>   libtraceevent: use the new prev_state_char instead in tracepoint
+>     sched_switch
+> 
+>  plugins/plugin_sched_switch.c | 29 ++++-------------------------
+>  1 file changed, 4 insertions(+), 25 deletions(-)
+> 
+> -- 
+> 2.40.1
+> 
 
 
-On 7/28/23 22:22, James Clark wrote:
-> 
-> 
-> On 28/07/2023 17:20, Will Deacon wrote:
->> On Tue, Jul 11, 2023 at 01:54:47PM +0530, Anshuman Khandual wrote:
->>> This adds BRBE related register definitions and various other related field
->>> macros there in. These will be used subsequently in a BRBE driver which is
->>> being added later on.
->>>
->>> Cc: Catalin Marinas <catalin.marinas@arm.com>
->>> Cc: Will Deacon <will@kernel.org>
->>> Cc: Marc Zyngier <maz@kernel.org>
->>> Cc: Mark Rutland <mark.rutland@arm.com>
->>> Cc: linux-arm-kernel@lists.infradead.org
->>> Cc: linux-kernel@vger.kernel.org
->>> Tested-by: James Clark <james.clark@arm.com>
->>> Reviewed-by: Mark Brown <broonie@kernel.org>
->>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->>> ---
->>>  arch/arm64/include/asm/sysreg.h | 103 +++++++++++++++++++++
->>>  arch/arm64/tools/sysreg         | 158 ++++++++++++++++++++++++++++++++
->>>  2 files changed, 261 insertions(+)
->>>
->>> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
->>> index b481935e9314..f95e30c13c8b 100644
->>> --- a/arch/arm64/include/asm/sysreg.h
->>> +++ b/arch/arm64/include/asm/sysreg.h
->>> @@ -163,6 +163,109 @@
->>>  #define SYS_DBGDTRTX_EL0		sys_reg(2, 3, 0, 5, 0)
->>>  #define SYS_DBGVCR32_EL2		sys_reg(2, 4, 0, 7, 0)
->>>  
->>> +#define __SYS_BRBINFO(n)		sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10)) >> 2 + 0))
->>> +#define __SYS_BRBSRC(n)			sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10)) >> 2 + 1))
->>> +#define __SYS_BRBTGT(n)			sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10)) >> 2 + 2))
->>
->> It's that time on a Friday but... aren't these macros busted? I think you
->> need brackets before adding the offset, otherwise wouldn't, for example,
->> target registers 0-15 all access info register 0 and __SYS_BRBTGT(16) would
->> then start accessing source register 0?
->>
->> I'm surprised that the compiler doesn't warn about this, but even more
->> surprised that you managed to test this.
->>
->> Please tell me I'm wrong!
->>
->> Will
-> 
-> No I think you are right, it is wrong. Luckily there is already an
-> extraneous bracket so you you can fix it by moving one a place down:
-> 
->   sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10) >> 2) + 2))
-> 
-> It's interesting because the test [1] is doing quite a bit and looking
-> at the branch info, and that src and targets match up to function names.
-> I also manually looked at the branch buffers and didn't see anything
-> obviously wrong like things that looked like branch infos in the source
-> or target fields. Will have to take another look to see if it would be
-> possible for the test to catch this.
-> 
-> James
-> 
-> [1]:
-> https://gitlab.arm.com/linux-arm/linux-jc/-/commit/3a7ddce70c2daadb63fcc511de0a89055ca48b32
-
-((((n) & 0x10)) >> 2 + 2) ---> ((((n) & 0x10) >> 2) + 2)
-
-The additional brackets are useful in explicitly telling the compiler but
-what it the compiler is just doing the right thing implicitly i.e computing
-the shifting operation before doing the offset addition. During testing, all
-those captured branch records looked alright. But that is no excuse, for not
-doing the right thing to begin with i.e adding explicit brackets. I will fix
-these in next version.
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
