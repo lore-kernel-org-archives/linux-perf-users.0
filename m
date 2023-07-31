@@ -2,31 +2,30 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAB8C41513
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 12:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A732EC41513
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 12:31:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231137AbjGaMaz (ORCPT
+        id S232640AbjGaMbo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Jul 2023 08:30:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52618 "EHLO
+        Mon, 31 Jul 2023 08:31:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232615AbjGaMaw (ORCPT
+        with ESMTP id S232642AbjGaMbl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Jul 2023 08:30:52 -0400
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8898C10DF;
-        Mon, 31 Jul 2023 05:30:49 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0VofLXKW_1690806644;
-Received: from 30.221.150.94(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VofLXKW_1690806644)
+        Mon, 31 Jul 2023 08:31:41 -0400
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81639E66;
+        Mon, 31 Jul 2023 05:31:39 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R611e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0Vogfr9A_1690806695;
+Received: from 30.221.150.94(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0Vogfr9A_1690806695)
           by smtp.aliyun-inc.com;
-          Mon, 31 Jul 2023 20:30:45 +0800
-Message-ID: <2dc21269-2fa0-ea39-454d-5f12a414bc13@linux.alibaba.com>
-Date:   Mon, 31 Jul 2023 20:30:43 +0800
+          Mon, 31 Jul 2023 20:31:36 +0800
+Message-ID: <6581496b-57e8-d5bf-ae3e-fb466ed5dff9@linux.alibaba.com>
+Date:   Mon, 31 Jul 2023 20:31:33 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.11.2
-Subject: Re: [PATCH v5 3/5] perf test: Add pmu-event test for "Compat" and new
- event_field.
+Subject: Re: [PATCH v5 4/5] perf jevents: Add support for Arm CMN PMU aliasing
 To:     John Garry <john.g.garry@oracle.com>,
         Ian Rogers <irogers@google.com>
 Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
@@ -39,10 +38,10 @@ Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
         Zhuo Song <zhuo.song@linux.alibaba.com>,
         Shuai Xue <xueshuai@linux.alibaba.com>
 References: <1690525040-77423-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1690525040-77423-4-git-send-email-renyu.zj@linux.alibaba.com>
- <abeaafbe-2290-d272-ddd1-f358f7271edc@oracle.com>
+ <1690525040-77423-5-git-send-email-renyu.zj@linux.alibaba.com>
+ <01f793eb-6373-e6c0-a712-9e08ee3c91c8@oracle.com>
 From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <abeaafbe-2290-d272-ddd1-f358f7271edc@oracle.com>
+In-Reply-To: <01f793eb-6373-e6c0-a712-9e08ee3c91c8@oracle.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -51,124 +50,28 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-在 2023/7/28 下午4:30, John Garry 写道:
+在 2023/7/28 下午4:17, John Garry 写道:
 > On 28/07/2023 07:17, Jing Zhang wrote:
->> Add new event test for uncore system event which is used to verify the
->> functionality of "Compat" matching multiple identifiers and the new event
->> fields "EventIdCode" and "Type".
+>> Currently just add aliases for part of Arm CMN PMU events which are
+>> general and compatible for any SoC and CMN-ANY.
 >>
+>> "Compat" value "434*;436*;43c*;43a*" means it is compatible with all
 > 
-> Thanks for doing this. It looks ok. I just have a comment, below.
+> As mentioned in patch 1/5, a comma-separated list seems a better delimiter to me
 > 
-
-Thanks.
-
->> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
->> ---
->>   .../pmu-events/arch/test/test_soc/sys/uncore.json  |  8 ++++
->>   tools/perf/tests/pmu-events.c                      | 55 ++++++++++++++++++++++
->>   2 files changed, 63 insertions(+)
->>
->> diff --git a/tools/perf/pmu-events/arch/test/test_soc/sys/uncore.json b/tools/perf/pmu-events/arch/test/test_soc/sys/uncore.json
->> index c7e7528..879a0ae 100644
->> --- a/tools/perf/pmu-events/arch/test/test_soc/sys/uncore.json
->> +++ b/tools/perf/pmu-events/arch/test/test_soc/sys/uncore.json
->> @@ -12,5 +12,13 @@
->>              "EventName": "sys_ccn_pmu.read_cycles",
->>              "Unit": "sys_ccn_pmu",
->>              "Compat": "0x01"
->> +   },
->> +   {
->> +           "BriefDescription": "Counts total cache misses in first lookup result (high priority).",
->> +           "Type": "0x05",
->> +           "EventIdCode": "0x01",
->> +           "EventName": "sys_cmn_pmu.hnf_cache_miss",
->> +           "Unit": "arm_cmn",
->> +           "Compat": "434*;436*;43c*;43a01"
->>      }
->>   ]
->> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
->> index 1dff863b..e227dcd 100644
->> --- a/tools/perf/tests/pmu-events.c
->> +++ b/tools/perf/tests/pmu-events.c
->> @@ -255,9 +255,24 @@ struct perf_pmu_test_pmu {
->>       .matching_pmu = "uncore_sys_ccn_pmu",
->>   };
->>   +static const struct perf_pmu_test_event sys_cmn_pmu_hnf_cache_miss = {
->> +    .event = {
->> +        .name = "sys_cmn_pmu.hnf_cache_miss",
->> +        .event = "type=0x05,eventid=0x01",
->> +        .desc = "Counts total cache misses in first lookup result (high priority). Unit: uncore_arm_cmn ",
->> +        .topic = "uncore",
->> +        .pmu = "uncore_arm_cmn",
->> +        .compat = "434*;436*;43c*;43a01",
->> +    },
->> +    .alias_str = "type=0x5,eventid=0x1",
->> +    .alias_long_desc = "Counts total cache misses in first lookup result (high priority). Unit: uncore_arm_cmn ",
->> +    .matching_pmu = "uncore_arm_cmn_0",
->> +};
->> +
->>   static const struct perf_pmu_test_event *sys_events[] = {
->>       &sys_ddr_pmu_write_cycles,
->>       &sys_ccn_pmu_read_cycles,
->> +    &sys_cmn_pmu_hnf_cache_miss,
->>       NULL
->>   };
->>   @@ -699,6 +714,46 @@ static int __test_uncore_pmu_event_aliases(struct perf_pmu_test_pmu *test_pmu)
->>               &sys_ccn_pmu_read_cycles,
->>           },
->>       },
->> +    {
->> +        .pmu = {
->> +            .name = (char *)"uncore_arm_cmn_0",
->> +            .is_uncore = 1,
->> +            .id = (char *)"43401",
->> +        },
->> +        .aliases = {
->> +            &sys_cmn_pmu_hnf_cache_miss,
->> +        },
->> +    },
->> +    {
->> +        .pmu = {
->> +            .name = (char *)"uncore_arm_cmn_0",
->> +            .is_uncore = 1,
->> +            .id = (char *)"43602",
->> +        },
->> +        .aliases = {
->> +            &sys_cmn_pmu_hnf_cache_miss,
->> +        },
->> +    },
->> +    {
->> +        .pmu = {
->> +            .name = (char *)"uncore_arm_cmn_1",
+>> CMN600/CMN650/CMN700/Ci700.
 > 
-> Shouldn't this match some perf_pmu_test_event entry with same matching_pmu member? But is perf_pmu_test_event.matching_pmu member ever used for any checking???
+> It would be good if you could provide a link to where you got these events. I think that it is the publicly available CMN TRM document.
 > 
 
-I need to double check because I was testing against 6.3-rc2.
+Ok, will do.
 
 Thanks,
 Jing
 
-> Thanks,
-> John
+>>
+>> Signed-off-by: Jing Zhang<renyu.zj@linux.alibaba.com>
 > 
->> +            .is_uncore = 1,
->> +            .id = (char *)"43c03",
->> +        },
->> +        .aliases = {
->> +            &sys_cmn_pmu_hnf_cache_miss,
->> +        },
->> +    },
->> +    {
->> +        .pmu = {
->> +            .name = (char *)"uncore_arm_cmn_1",
->> +            .is_uncore = 1,
->> +            .id = (char *)"43a01",
->> +        },
->> +        .aliases = {
->> +            &sys_cmn_pmu_hnf_cache_miss,
->> +        },
->> +    }
->>   };
->>     /* Test that aliases generated are as expected */
+> Apart from comments, above:
+> 
+> Reviewed-by: John Garry <john.g.garry@oracle.com>
