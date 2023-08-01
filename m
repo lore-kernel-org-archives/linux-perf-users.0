@@ -2,127 +2,176 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A92C41513
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Aug 2023 15:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798E9C001DF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Aug 2023 17:40:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233313AbjHAP5b (ORCPT
+        id S230254AbjHARkH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Aug 2023 11:57:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38818 "EHLO
+        Tue, 1 Aug 2023 13:40:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232545AbjHAP5b (ORCPT
+        with ESMTP id S229781AbjHARkG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Aug 2023 11:57:31 -0400
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89FCD1999;
-        Tue,  1 Aug 2023 08:57:15 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id D192A5C00FB;
-        Tue,  1 Aug 2023 11:57:14 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Tue, 01 Aug 2023 11:57:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=davidreaver.com;
-         h=cc:cc:content-transfer-encoding:content-type:date:date:from
-        :from:in-reply-to:message-id:mime-version:reply-to:sender
-        :subject:subject:to:to; s=fm3; t=1690905434; x=1690991834; bh=ty
-        2Jg2JcDl1vsDdHl2O0KnSHDnTuySWYs7sri+QdDRE=; b=y5QYxconx2yNgUnGRd
-        qWNidKlBBWnkxxusQK/EVP7tcJAM3buOWza73ay6fnKJOkRlTJ8l11qzJ4V7Vh00
-        leNF1jpqP5poLDtua3QXuquLJT6UoMRgAZY6H+3JVpP2IzCZFoPKSNWE6wSM6jHL
-        qVGuQyCnZOJ7zMAhUxsH5vhOxxT1CLyDFMNUuHYSHEqAu9Q6DxxZqlKIxdSRFaU+
-        WR2Fio8BFyD/5EKlRY3lh02+dEl9dHeTl2T5kDdPY8uBmfJyf7WE3Ov8hjbU0vys
-        20uFwB6N+eR7053yxMgHpYMxZs/AuB1q6XY1FQ+hCOILg1Pa8cSH8PdprOrpV/eE
-        pifQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:message-id:mime-version:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; t=1690905434; x=1690991834; bh=ty2Jg2JcDl1vs
-        DdHl2O0KnSHDnTuySWYs7sri+QdDRE=; b=wDKJzvE/xGU2KZr6wCLJO+4kaHY6p
-        DSbcMmzrZY7TL0h3Nc/ck3TO7+r110tKikjz53D1UddibQjMu/94Fq7DYHcTQoA2
-        2RwmC5BwBMpu8epWsWXDh8TscEVNmDYplsy1ea/+3QuOi1qmB6wEVR6yMZURdI+C
-        wRMLNlgvTLHmqBaLNEt/0E8vUnrjzGhZX+cdy1ODjlWOpYaeguZn7ZxujHNN2onw
-        Y8l0086PLuVKxfCexV9BEocxhb6OtMgvI0+iAE/U7i/Caglbibg5Hmrzt1mduNXh
-        /wts5At+5nRoa4wiGuM3CoRkMAKKXfWUrc/Y2oTA40wvkYeSaTWDU+qaw==
-X-ME-Sender: <xms:WivJZKgYxwr5F9B17UmCjlE4p1wCSYAVSG53Qv7aiEJ55LCpBJhReg>
-    <xme:WivJZLCLwimKmYOuIAwzzCw3pj-Nv4pUSEuJf7nH896Q0_OI13VmCAkQdAhTKikEm
-    15LlIOKl7nuyLAiDbE>
-X-ME-Received: <xmr:WivJZCHy9e520O9tApzExctx6ws2s6CagOA0bfX0Aju2jP5xP9SW9yFif1_j9BiIiIRWvoBNCxJ7q3QPH9c5pxtWs5c>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrjeeigdelvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeffrghvihguucft
-    vggrvhgvrhcuoehmvgesuggrvhhiughrvggrvhgvrhdrtghomheqnecuggftrfgrthhtvg
-    hrnhepvddvieefleeggfeftdejtdffheeuieffheejgefgffejveduueeugeetkeehjedv
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgvse
-    gurghvihgurhgvrghvvghrrdgtohhm
-X-ME-Proxy: <xmx:WivJZDQqkc-JHd3fKMOf5eAc84fqCf5WzH80WzQXmkj5KaeN4-DoPw>
-    <xmx:WivJZHx07QhvDivyC949iSNWzYqTwhRS71WV3mbJYYIywklrrIhJig>
-    <xmx:WivJZB6d-I5L2eo7wPrkiKSPEFUJt4efNWk8BrycGOddlDZqP9dVKg>
-    <xmx:WivJZEhj7sGnr-0x6ollsFHxaV7srl2zeEFFfRIXma42svx_qZ3Kxg>
-Feedback-ID: i67e946c9:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 1 Aug 2023 11:57:11 -0400 (EDT)
-From:   David Reaver <me@davidreaver.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>
+        Tue, 1 Aug 2023 13:40:06 -0400
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4955BE65
+        for <linux-perf-users@vger.kernel.org>; Tue,  1 Aug 2023 10:40:05 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-407db3e9669so19861cf.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Aug 2023 10:40:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1690911604; x=1691516404;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z4ttxZ9lvM9BRgPqD8KcTUo/Tqk/chLcWEpF3hi3Jtw=;
+        b=FcBMFuGzuHcmmy5rF69xdO99znqfnKnhx4Pr8GCZJbOTX9sSKgo1XkVCbe/TOOWWTy
+         kG7PvFMOMaS5dnQFt4etYAxJ2KWFFS70hQ8xEhLjFylSvgZZrBi2/8jkQ+jP4a0qhwjs
+         8Lgzi6hjaxmAEQx0H5hdNmgrTLluTlTJBpLng9/JseoebWPc12qD8CSqKJjKRXN0G21C
+         AbPBLSzAsMS7XQuUYgbE6cKoP/9bvOLRkpnwSusLgqpYEwAjCgEb/JpwO2i54s97f5hr
+         2w9hjTpC54HsNMUTrtieL2BeC0MoMKjBsbmNIihLSBI3nmnM94aY9/fg00zUTb7vN6V/
+         TuhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690911604; x=1691516404;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z4ttxZ9lvM9BRgPqD8KcTUo/Tqk/chLcWEpF3hi3Jtw=;
+        b=FI1w2Cr77wadoNdhux9OI3Y6O2SKhPSdWvO+kz1IIHxjmkclC2A5PXOER1M28TQH+l
+         906tPEhNiLBJuJ3pvJx6kCGEVx+LUQry5AdTb6XfZWEYv0NX759lrc0uMU5FGXoRlfNI
+         i4iSPiijYy1DWbwAEZYRqdCDk4PzKFuc+9hZQ8lhLKVsq1rWulkk+An/JdBxTAetVVb4
+         MTQoIyO+w1rmSvUd5RbujmZZV00yBD2zJk5hNaurjWb88KVevnzs0enF0QUoxStmH0uQ
+         6OiQumzjpumNl+GVCBClx5GUWqSVwpmFezDU9pQQCQEUzCZS8v8yKbMDORO1Uk33tRc0
+         H9ww==
+X-Gm-Message-State: ABy/qLY29tVmZW/KeVrWgW2n6NAnKp8vJG9BpmnG9/eWBiqGtJF5uxCm
+        AxI3Nr0oa1URD2wRrvJ6XIIDPaJoXI+rbd2nzkNZIg==
+X-Google-Smtp-Source: APBJJlGETBVMZMR1LPwpj6fIcpITK782kqS9VcG1LyI3VYRdrDhyvcbDs1fvheip5H6UVpkmAYE4OckMze6BFPmQB+M=
+X-Received: by 2002:a05:622a:115:b0:40d:eb06:d3cc with SMTP id
+ u21-20020a05622a011500b0040deb06d3ccmr681996qtw.7.1690911604254; Tue, 01 Aug
+ 2023 10:40:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230711055859.1242497-1-irogers@google.com> <182675ca-0905-0ed2-de94-0f7d4a256082@oracle.com>
+ <CAP-5=fXrOvkwrbEB0GGv6Xr5JOdrW7dzjOL=MkDdxX2McfnzYA@mail.gmail.com> <cd5814af-8ab0-6ab9-9b3c-b5081e54f199@oracle.com>
+In-Reply-To: <cd5814af-8ab0-6ab9-9b3c-b5081e54f199@oracle.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 1 Aug 2023 10:39:53 -0700
+Message-ID: <CAP-5=fU4c+kU0OYbPp0andZW33tHiewyoxkvXbrU36EyLKKZ2A@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] perf list: Remove duplicate PMUs
+To:     John Garry <john.g.garry@oracle.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        David Reaver <me@davidreaver.com>
-Subject: [PATCH] perf/x86/rapl: fix Using plain integer as NULL pointer warning
-Date:   Tue,  1 Aug 2023 08:56:51 -0700
-Message-ID: <20230801155651.108076-1-me@davidreaver.com>
-X-Mailer: git-send-email 2.41.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Change 0 to NULL when initializing the test field of perf_msr structs to
-avoid the following sparse warnings:
+On Tue, Jul 11, 2023 at 8:24=E2=80=AFAM John Garry <john.g.garry@oracle.com=
+> wrote:
+>
+>
+> >>> ```
+> >>> $ perf list
+> >>> ...
+> >>>     uncore_imc_free_running_0/data_read/               [Kernel PMU ev=
+ent]
+> >>>     uncore_imc_free_running_0/data_total/              [Kernel PMU ev=
+ent]
+> >>>     uncore_imc_free_running_0/data_write/              [Kernel PMU ev=
+ent]
+> >>>     uncore_imc_free_running_1/data_read/               [Kernel PMU ev=
+ent]
+> >>>     uncore_imc_free_running_1/data_total/              [Kernel PMU ev=
+ent]
+> >>>     uncore_imc_free_running_1/data_write/              [Kernel PMU ev=
+ent]
+> >>> ```
+> >>>
+> >>> After:
+> >>> ```
+> >>> $ perf list
+> >>> ...
+> >>>     uncore_imc_free_running/data_read/                 [Kernel PMU ev=
+ent]
+> >>>     uncore_imc_free_running/data_total/                [Kernel PMU ev=
+ent]
+> >>>     uncore_imc_free_running/data_write/                [Kernel PMU ev=
+ent]
+> >> So with this change can we run something like:
+> >>
+> >> perf stat -e uncore_imc_free_running/data_read/
+> >>
+> >> ?
+> > It is a long standing behavior of the event parser that we match the
+> > numeric suffixes, so:
+>
+> I guess that I missed this as I assume that it would not handle more
+> complex names, like hisi_sccl1_ddr3, which I was then interested in.
+>
+> >
+> > ```
+> > $ sudo perf stat -e uncore_imc_free_running/data_read/ -a sleep 1
+> >
+> > Performance counter stats for 'system wide':
+> >
+> >           6,969.93 MiB  uncore_imc_free_running/data_read/
+> >
+> >        1.001163027 seconds time elapsed
+> > ```
+> >
+> > The "uncore_" at the beginning is also optional, I kind of wish the
+> > "free_running" was too. The code doing this is:
+> > https://urldefense.com/v3/__https://git.kernel.org/pub/scm/linux/kernel=
+/git/perf/perf-tools-next.git/tree/tools/perf/util/parse-events.y?h=3Dperf-=
+tools-next*n316__;Iw!!ACWV5N9M2RV99hQ!JduVayRc--qLXHsoXWTlMUsO4NBUoBnKQHqP2=
+sx7VuwZiZzfVXaQZNBZuzO2Ie-twWQ1xu7nycBNFJ13LGk$
+> > adding a * after the PMU name in:
+> > asprintf(&pattern, "%s*", $1)
+> > Then using fnmatch here:
+> > https://urldefense.com/v3/__https://git.kernel.org/pub/scm/linux/kernel=
+/git/perf/perf-tools-next.git/tree/tools/perf/util/pmu.c?h=3Dperf-tools-nex=
+t*n1707__;Iw!!ACWV5N9M2RV99hQ!JduVayRc--qLXHsoXWTlMUsO4NBUoBnKQHqP2sx7VuwZi=
+ZzfVXaQZNBZuzO2Ie-twWQ1xu7nycBNa2_VzYE$
+> >
+> >> If so, does that match all PMUs whose name beings with
+> >> "uncore_imc_free_running" (and give aggregate result for those PMUs)?
+> > Yep. As we're matching with a filename '*' glob then it will actually
+> > potentially grab a bunch more. I think this should likely be made a
+> > lot more precise.
+> >
+> > The merging of the counters happens throughout the code, but it is set =
+up here:
+> > https://urldefense.com/v3/__https://git.kernel.org/pub/scm/linux/kernel=
+/git/perf/perf-tools-next.git/tree/tools/perf/util/stat.c?h=3Dperf-tools-ne=
+xt*n559__;Iw!!ACWV5N9M2RV99hQ!JduVayRc--qLXHsoXWTlMUsO4NBUoBnKQHqP2sx7VuwZi=
+ZzfVXaQZNBZuzO2Ie-twWQ1xu7nycBNiVEZvEE$
+> >
+> > I didn't write this behavior, it has pre-existed my contributions. I'm
+> > hoping to change the perf list behavior as we're seeing large server
+> > systems with getting on toward 100 PMUs, the events are replicated for
+> > each one and the perf list and testing behaviors are somewhat
+> > exploding in size.
+>
+> Sure, that is why I was advised PMU kernel drivers event names to be
+> unique per PMU, so that we can add an event alias in a JSON and then
+> kernel events are matched and removed from perf list.
+>
+> I suppose that your changes are an alternative to the problem of
+> mushrooming kernel event list.
 
-make C=2 arch/x86/events/rapl.o
+Thanks John, yep this is going after that problem. Could I get a
+reviewed/acked/tested-by for these changes?
 
-  CHECK   arch/x86/events/rapl.c
-...
-arch/x86/events/rapl.c:540:59: warning: Using plain integer as NULL pointer
-arch/x86/events/rapl.c:542:59: warning: Using plain integer as NULL pointer
-arch/x86/events/rapl.c:543:59: warning: Using plain integer as NULL pointer
-arch/x86/events/rapl.c:544:59: warning: Using plain integer as NULL pointer
+Thanks,
+Ian
 
-Signed-off-by: David Reaver <me@davidreaver.com>
----
- arch/x86/events/rapl.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index 52e6e7ed4f78..ae21bb2ff0ff 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -537,11 +537,11 @@ static struct perf_msr intel_rapl_spr_msrs[] = {
-  * - want to use same event codes across both architectures
-  */
- static struct perf_msr amd_rapl_msrs[] = {
--	[PERF_RAPL_PP0]  = { 0, &rapl_events_cores_group, 0, false, 0 },
-+	[PERF_RAPL_PP0]  = { 0, &rapl_events_cores_group, NULL, false, 0 },
- 	[PERF_RAPL_PKG]  = { MSR_AMD_PKG_ENERGY_STATUS,  &rapl_events_pkg_group,   test_msr, false, RAPL_MSR_MASK },
--	[PERF_RAPL_RAM]  = { 0, &rapl_events_ram_group,   0, false, 0 },
--	[PERF_RAPL_PP1]  = { 0, &rapl_events_gpu_group,   0, false, 0 },
--	[PERF_RAPL_PSYS] = { 0, &rapl_events_psys_group,  0, false, 0 },
-+	[PERF_RAPL_RAM]  = { 0, &rapl_events_ram_group,   NULL, false, 0 },
-+	[PERF_RAPL_PP1]  = { 0, &rapl_events_gpu_group,   NULL, false, 0 },
-+	[PERF_RAPL_PSYS] = { 0, &rapl_events_psys_group,  NULL, false, 0 },
- };
- 
- static int rapl_cpu_offline(unsigned int cpu)
+> Thanks,
+> John
