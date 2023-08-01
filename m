@@ -2,88 +2,164 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72235C001DE
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Aug 2023 00:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97012C04E69
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Aug 2023 01:36:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229916AbjHAAaE (ORCPT
+        id S231263AbjHABgN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Jul 2023 20:30:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41200 "EHLO
+        Mon, 31 Jul 2023 21:36:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229798AbjHAAaD (ORCPT
+        with ESMTP id S229585AbjHABgM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Jul 2023 20:30:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFDA01716;
-        Mon, 31 Jul 2023 17:30:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5F33461373;
-        Tue,  1 Aug 2023 00:30:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C069C433C8;
-        Tue,  1 Aug 2023 00:29:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690849801;
-        bh=6A/vRRp/3F+Q+LhbyAwBQLAhY9o/XYm4IbcM19KIrqc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QxciWeuDZaxQzAOsOd3KTAutoDjqb2mqR1+Lrq9qTOP2OxV1YmqmKLzJJItoBa6WS
-         ve8C9eVHuEKqiMSF453SGb8Z1zSxfr/R6kKlZXPj7q+tcKf5Xk8xIKSYhcISdO6ugZ
-         +W/qF/L41cgzzfp2x3X8R/KZ2mI/iPfs1QimNKmP11o1km6X9QeMmI89gmbj7O4KiE
-         H6doIxXz35VeAjnE3YVZ9YABFc7dy5sEKUMfdx3Wdz00+x/7eJMMDqMYRtyJmBO9ja
-         bnhmS3C8uyfj8MdoDf+i+RNMIWVAVYkk7yZpis4Wp2BkF1yUWHf8so6SFxufYYq4Xc
-         zFVcQCel2M3mw==
-Date:   Tue, 1 Aug 2023 09:29:56 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Georg =?UTF-8?B?TcO8bGxlcg==?= <georgmueller@gmx.net>
+        Mon, 31 Jul 2023 21:36:12 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78970114;
+        Mon, 31 Jul 2023 18:36:11 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id 2adb3069b0e04-4fe21e7f3d1so5528197e87.3;
+        Mon, 31 Jul 2023 18:36:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690853770; x=1691458570;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kTN64aQK1aLiDWyd71+xyKuSM4NGn6Hr4yVjOFLrX4Y=;
+        b=BuEGdnqVDsbrkk14K1tG6Ztj9Mi2l4o012+wxn8qUuWF0/XG7f/mKSUanj8c8KVPPf
+         6c5p6ZdK9XObNVdd0SjD0+yQJir6m0pDPmYWZBLefbuHr2UjoHWhVzZGPrETjphG4xOc
+         3NPHCL24vfW4MvA2R/fv2Z3/htkPcP/8fPYgPpKpkbLqaA08n0kZ5OpTGzMw0zIrdE/E
+         Yf6ZFuBvkTfRedDlshcL5co95VoGSev45ZEKi2Um0w7rMnxFRbaoSdZTYsZmtyYVS0gC
+         t5iHTKAthad36u9khz/tzFXDvBov+NEi6rfAEEOzqMSfg1rQu7GcnLm4G+Eo53jcTRSX
+         224w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690853770; x=1691458570;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kTN64aQK1aLiDWyd71+xyKuSM4NGn6Hr4yVjOFLrX4Y=;
+        b=NPU1y/oAyQxcN/331Wni/S02qgx6pUf+9ziAzTf34tyZrNAuBUCq7qxXUZYrNfmOTn
+         Z+XA+dYSFejPszspq0+wA3GkYzmjYF1y6skZfMLjbLAnxFMaFAqVVX1iWoZZYZw7FHTv
+         HOJR49nnlpppra/okM7RY9BusiaqEFraQd5ouvhkWfwAeH4fTxzMhMnbfmM2gqwVg2of
+         aFprrLb7zhduJP6nXRiK29ruFc9FyJ5kJ8wR5DmCfKZKXBfGA1xiRoyVWE1yw06Ehxfs
+         p6YEW5whC1It43cwDfz3D59kZWsKBKbByWyersqvM7V6YE0IyEm2RwkQ0c8SYsS4BbNG
+         HWCA==
+X-Gm-Message-State: ABy/qLbkYzeKEuWg4754aUKpho4dtjPGpIzQqGZOm/ey+y9Onvn+a/kZ
+        a/VW6oTUx06NIZv26gcbfmB5Rt206vqC0xsBN3E=
+X-Google-Smtp-Source: APBJJlFUaediJqXSE+1MQonIwaYh18YkYgKOOVYB4/tx6z3KZnFQ6py22N11b0aG6Hykpk8xq9dxOWPVIwRhDkaS4EI=
+X-Received: by 2002:ac2:4d97:0:b0:4f9:5404:af5 with SMTP id
+ g23-20020ac24d97000000b004f954040af5mr991330lfe.46.1690853769397; Mon, 31 Jul
+ 2023 18:36:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230726121618.19198-1-zegao@tencent.com> <20230726121618.19198-2-zegao@tencent.com>
+ <20230731113807.1a4a455c@gandalf.local.home>
+In-Reply-To: <20230731113807.1a4a455c@gandalf.local.home>
+From:   Ze Gao <zegao2021@gmail.com>
+Date:   Tue, 1 Aug 2023 09:35:58 +0800
+Message-ID: <CAD8CoPAym8fuL50vevxBxPy6-RU4kU49KV+Sz4OO0+Xh_doDCQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/3] sched, tracing: add to report task state in
+ symbolic chars
+To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf probe: skip test_uprobe_from_different_cu if there
- is no gcc
-Message-Id: <20230801092956.f03cd462fcf4939523ed4726@kernel.org>
-In-Reply-To: <4085b352-f5e8-c0e8-42cf-7a6ecf23282f@gmx.net>
-References: <20230728151812.454806-2-georgmueller@gmx.net>
-        <20230729093814.d48a7b4fb51fdd74ad50ba42@kernel.org>
-        <4085b352-f5e8-c0e8-42cf-7a6ecf23282f@gmx.net>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, 29 Jul 2023 12:59:50 +0200
-Georg Müller <georgmueller@gmx.net> wrote:
+Thanks Steven,
 
-> 
-> Am 29.07.23 um 02:38 schrieb Masami Hiramatsu (Google):
-> >
-> > Interesting, so clang will not generate DWARF or perf probe is not able to
-> > handle clang generated DWARF?
-> >
-> 
-> clang does not accept mixed -flto and non-lto CUs and the problem is not
-> reproducible by this sample code using clang if using -flto for all CUs.
-> There might be (bigger?) examples where the same issue is triggered by
-> clang and bigger examples (like systemd on fedora) where I ran into the
-> bug, but this small example only shows the problem when using gcc and
-> mixing -flto and non-lto CUs.
+Indeed this did not consider the struct alignment. I left the field order i=
+ntact
+because I was not sure whether the order here matters for reporting or pars=
+ing.
+Now I will fix this and send a v3, and again thanks for pointing it out.
 
-Thanks for the explanation! So the problem will be in the compiler side
-(and maybe fixed when it is updated.)
+Thanks,
+Ze
 
-Thank you,
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Mon, Jul 31, 2023 at 11:38=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
+g> wrote:
+>
+> On Wed, 26 Jul 2023 20:16:16 +0800
+> Ze Gao <zegao2021@gmail.com> wrote:
+>
+> > @@ -231,41 +253,29 @@ TRACE_EVENT(sched_switch,
+> >       TP_STRUCT__entry(
+> >               __array(        char,   prev_comm,      TASK_COMM_LEN   )
+> >               __field(        pid_t,  prev_pid                        )
+> > -             __field(        int,    prev_prio                       )
+> > -             __field(        long,   prev_state                      )
+> > +             __field(        short,  prev_prio                       )
+> > +             __field(        int,    prev_state                      )
+> > +             __field(        char,   prev_state_char                 )
+> >               __array(        char,   next_comm,      TASK_COMM_LEN   )
+> >               __field(        pid_t,  next_pid                        )
+> > -             __field(        int,    next_prio                       )
+> > +             __field(        short,  next_prio                       )
+> >       ),
+>
+> The above adds a bunch of holes. This needs to be reordered to condense t=
+he
+> event, we don't want to increase it. libtraceevent will handle reordering=
+.
+>
+> The above produces:
+>
+> struct {
+>         char    prev_comm[16];
+>         pid_t   prev_pid;
+>         short   prev_prio; <-- 2 character padding
+>         int     prev_state;
+>         char    prev_state_char;
+>         char    next_comm[16]; <- 3 character padding
+>         pid_t   next_pid;
+>         short   next_prio; <- 2 char padding
+> };
+>
+> (all events are at least 4 byte aligned, and are multiple of 4 bytes in
+> size, thus that last short of next_prio did nothing)
+>
+> The above is a total of 56 bytes (note, that is the same as the current
+> sched_switch event size);
+>
+> What the above should be:
+>
+>         TP_STRUCT__entry(
+>                 __field(        pid_t,  prev_pid                        )
+>                 __field(        pid_t,  next_pid                        )
+>                 __field(        short,  prev_prio                       )
+>                 __field(        short,  next_prio                       )
+>                 __field(        int,    prev_state                      )
+>                 __array(        char,   prev_comm,      TASK_COMM_LEN   )
+>                 __array(        char,   next_comm,      TASK_COMM_LEN   )
+>                 __field(        char,   prev_state_char                 )
+>         ),
+>
+>
+> Which would be:
+>
+> struct {
+>         pid_t   prev_pid;
+>         pid_t   next_pid;
+>         short   prev_prio;
+>         short   next_prio;
+>         int     prev_state;
+>         char    prev_comm[16];
+>         char    next_comm[16];
+>         char    prev_stat_char; <-- 3 characters of padding
+> }
+>
+> which would be 52 byte. Saving us 4 bytes per event. Which is a big deal!
+>
+> -- Steve
+>
