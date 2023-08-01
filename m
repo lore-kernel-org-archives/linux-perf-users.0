@@ -2,124 +2,100 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D20C00528
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Aug 2023 17:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A693C001DF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Aug 2023 18:20:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231450AbjHARs5 (ORCPT
+        id S229459AbjHASUZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Aug 2023 13:48:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47442 "EHLO
+        Tue, 1 Aug 2023 14:20:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230314AbjHARst (ORCPT
+        with ESMTP id S230127AbjHASUY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Aug 2023 13:48:49 -0400
-Received: from mgamail.intel.com (unknown [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 874581BF9;
-        Tue,  1 Aug 2023 10:48:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690912128; x=1722448128;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=eFiu+chGOa/DVboePjsv2TCyJ6fcGyeJGuMw5oR1IRI=;
-  b=eliWFbbAv5uEYQiVFHuDoO7LTawurhMXpo5SD96liOhaQ/C9aSYQNJAQ
-   sUjj1xYXlVbWyiVHT1LJHLenOSvG+yAk6gwrjJF93loActh5gUe7OK7zO
-   LUAIzKKk0FfSM2H2G3ULQn5ywfpsnhNZAWItUIL4eOuzOx9BdFeghMYiC
-   q41/cdbUEGMEktyahqpTPdVbVNxy5Gu42aPNiMNKZqaxaRKokXPoD8iIX
-   R8CMzDpFSXJKKw7pTCewLRfA+Dt9KeTCeB4aM+AexEtqFYERMs057CW+g
-   mgUwEpNfv2+3Ap1Rub2mC1tlIyxXYytrdmIZ/wd5Ep/5/R1C1CZE5LOYm
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10789"; a="455744170"
-X-IronPort-AV: E=Sophos;i="6.01,247,1684825200"; 
-   d="scan'208";a="455744170"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2023 10:48:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10789"; a="852570873"
-X-IronPort-AV: E=Sophos;i="6.01,247,1684825200"; 
-   d="scan'208";a="852570873"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 01 Aug 2023 10:48:47 -0700
-Received: from [10.213.165.139] (kliang2-mobl1.ccr.corp.intel.com [10.213.165.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 1 Aug 2023 14:20:24 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C5702684;
+        Tue,  1 Aug 2023 11:20:14 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id E55A258068A;
-        Tue,  1 Aug 2023 10:48:45 -0700 (PDT)
-Message-ID: <a0d5ec0a-e5d9-5938-fa6b-1d60b2aac019@linux.intel.com>
-Date:   Tue, 1 Aug 2023 13:48:45 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v1 0/4] Intel metric fixes and event updates
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2F92461644;
+        Tue,  1 Aug 2023 18:20:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 591A6C433C7;
+        Tue,  1 Aug 2023 18:20:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690914013;
+        bh=gsd932w3PMNapqXMwnESzIlhw5itErWu7WrLlJ3MjXs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bAxt3shh+3di5opI2s3Ot3GCRXzdxLiZrtA0ByDf2KtFbgcl2iDn9Vz2WfU66TYOa
+         lIz2AXizwNDo1ERj3ol3cdkuQimGjUfIZUtopdUjQVnxSfMgtYLhJxC9kX0z20a6Xm
+         sxz7wELXXgMk92NKWRkeXMWrcFbqlsC6ZRJZJpEPq46X3e0gMJQoKgOEAL9GQ753Jr
+         XjlzMIqzcY2+2EzWFA9+XAxlmdooFIE4tkp7veugcsEF3Bg38cuJtmmOOIgoTk2h+t
+         N4+8qXF9N1/JKjqlJlA4RwQzrZUbiLvUst1qW0i0H+ySLOuMOxUV+op8u6Y30NoXK7
+         hrur6BgLAvR/Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 75C9A405DE; Tue,  1 Aug 2023 15:20:10 -0300 (-03)
+Date:   Tue, 1 Aug 2023 15:20:10 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     James Clark <james.clark@arm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-perf-users@vger.kernel.org, renyu.zj@linux.alibaba.com,
+        john.g.garry@oracle.com, namhyung@kernel.org,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Weilin Wang <weilin.wang@intel.com>
-References: <20230801053634.1142634-1-irogers@google.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20230801053634.1142634-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Nick Forrington <nick.forrington@arm.com>,
+        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 4/5] perf vendor events arm64: Update N2-r0p3 and V2
+ metrics and events using Arm telemetry repo
+Message-ID: <ZMlM2rTqggT+0iGJ@kernel.org>
+References: <20230711100218.1651995-1-james.clark@arm.com>
+ <20230711100218.1651995-5-james.clark@arm.com>
+ <CAP-5=fVPriUQZN+OzDOVnMMe0y9QzRHuaBMgrCcSvbE+3ME=Lg@mail.gmail.com>
+ <59630da4-316b-55c4-c2c7-30c53b1ba642@arm.com>
+ <750344ea-d1a2-87c2-b790-38dd79e11223@arm.com>
+ <CAP-5=fU1z2+ZUFP0BdQyvy0DK_am9p=9p3goeB44M2cLiF7y7g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fU1z2+ZUFP0BdQyvy0DK_am9p=9p3goeB44M2cLiF7y7g@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Em Tue, Aug 01, 2023 at 08:56:35AM -0700, Ian Rogers escreveu:
+> On Tue, Aug 1, 2023 at 3:55 AM James Clark <james.clark@arm.com> wrote:
+> > On 12/07/2023 09:33, James Clark wrote:
+> > > On 12/07/2023 02:04, Ian Rogers wrote:
+> > >> It might be nice to add "beat" to the glossary:
+> > >> https://perf.wiki.kernel.org/index.php/Glossary
 
+> > > I requested an account and I will add it. There is a definition in the
+> > > Arm glossary here if, like me, you weren't sure:
 
-On 2023-08-01 1:36 a.m., Ian Rogers wrote:
-> The metric tma_info_pipeline_retire contains uops_retired.slots with
-> perf metric events. Patch 1 fixes this event sorting so that
-> uops_retired.slots isn't made a group leader as that needs to be
-> topdown.slots.
-> 
-> Patch 2 and 3 update the meteorlake and sapphirerapids events.
-> 
-> Patch 4 addresses an issue with event grouping discussed in:
-> https://lore.kernel.org/lkml/20230719001836.198363-3-irogers@google.com/
-> by adding and altering metric constraints. The constraints avoid
-> groups for metrics where the kernel PMU fails to not open the group
-> (the trigger for the weak group being removed).
-> 
-> Ian Rogers (4):
->   perf parse-events x86: Avoid sorting uops_retired.slots
->   perf vendor events intel: Update meteorlake to 1.04
->   perf vendor events intel: Update sapphirerapids to 1.15
->   perf vendor events intel: Update Icelake+ metric constraints
->
+> > I'm not sure if my wiki account request worked. I didn't get a response,
+> > and I also get a "your IP is blocked from editing" on the password reset
+> > page (this is an Arm internal IP).
+> > Do you know anything about the account request procedure?
 
-Thanks Ian.
+> The wiki is run by RedHat and Arnaldo is able to give permissions.
+> Arnaldo could you take a look?
 
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Lemme check.
 
-Thanks,
-Kan
-
->  tools/perf/arch/x86/util/evlist.c             |   7 +-
->  tools/perf/arch/x86/util/evsel.c              |   7 +-
->  .../arch/x86/alderlake/adl-metrics.json       |  11 +-
->  .../arch/x86/alderlaken/adln-metrics.json     |   2 +
->  .../arch/x86/icelake/icl-metrics.json         |  10 +-
->  .../arch/x86/icelakex/icx-metrics.json        |  10 +-
->  tools/perf/pmu-events/arch/x86/mapfile.csv    |   4 +-
->  .../pmu-events/arch/x86/meteorlake/cache.json | 165 ++++++++++++++++++
->  .../arch/x86/meteorlake/floating-point.json   |   8 +
->  .../arch/x86/meteorlake/frontend.json         |  56 ++++++
->  .../arch/x86/meteorlake/memory.json           |  80 +++++++++
->  .../pmu-events/arch/x86/meteorlake/other.json |  16 ++
->  .../arch/x86/meteorlake/pipeline.json         | 159 +++++++++++++++++
->  .../arch/x86/rocketlake/rkl-metrics.json      |  10 +-
->  .../arch/x86/sapphirerapids/other.json        |  18 ++
->  .../arch/x86/sapphirerapids/spr-metrics.json  |   9 +-
->  .../arch/x86/tigerlake/tgl-metrics.json       |  10 +-
->  17 files changed, 549 insertions(+), 33 deletions(-)
-> 
+- Arnaldo
