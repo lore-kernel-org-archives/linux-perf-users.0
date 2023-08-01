@@ -2,365 +2,148 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3684C001E0
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Aug 2023 07:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4392C41513
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Aug 2023 09:01:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230222AbjHAHJy (ORCPT
+        id S230416AbjHAJBi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Aug 2023 03:09:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37006 "EHLO
+        Tue, 1 Aug 2023 05:01:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229985AbjHAHJw (ORCPT
+        with ESMTP id S230372AbjHAJBh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Aug 2023 03:09:52 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A0CD1728
-        for <linux-perf-users@vger.kernel.org>; Tue,  1 Aug 2023 00:09:49 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-31751d7d96eso4466181f8f.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 01 Aug 2023 00:09:49 -0700 (PDT)
+        Tue, 1 Aug 2023 05:01:37 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A8511724;
+        Tue,  1 Aug 2023 02:01:33 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id 41be03b00d2f7-563de62f861so3209487a12.1;
+        Tue, 01 Aug 2023 02:01:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20221208.gappssmtp.com; s=20221208; t=1690873788; x=1691478588;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UGo71aOuZXwwURci+soWYsCVOvbsKQpoaAxtdIvWqfY=;
-        b=BSOivDUzCxZKUNC5L8sjje0+zge0a2fc5YHdfi85DNeAOoRGEgIGTcqx33zDhehXUy
-         Tt7V7oc7AXdyS4Z07ugpljCXzaHo07NLhCEc602JhEH2CrfZfj4V0JSY/u1pusKsKRCi
-         3dEAS1vw4Dlspgd8HsbvQ9iEZ6aQLEU6awYAAQi0ftreMsSfzRQQcq/2zZk5E08Hf5c6
-         O9/NC6WVNl9Dac+7/xznC6syWSbXtyGgyqW66SJZRzYFLqJpjuknRtiBNA3FKRuPdYh2
-         XLD9xTw//wf03tk4ufzIT/vJea+X5Amu/1ATkiBezk7738bCYN8ekEHG5rmHGE10cMUx
-         LktQ==
+        d=gmail.com; s=20221208; t=1690880493; x=1691485293;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HlJW6u1sZOpuT6avef9gnRgQCJ0eGQk1LzPcuYEotVk=;
+        b=UkLe+vQfHPi6Wc95/4hjftuk9iRk0jhNEqE3orIUoIVTRtaq15v09ltRjCB54SdA72
+         /gIQuQe2oD1/LUYD24wcG47jUuUX+NRG46UQ+Y5vh+WF4CbgcEfaOtGrOXC3cYZPuTBx
+         9OBrnOABp0paIPvr3GSYR5flJvHO/Wlal9m498QMG/gb96gPv3bjon/eqEAqmCSRpuEi
+         YDjJCE/cLf1By1SUpt5/z7anXxpm0pzPZDmj2imFyCXZgps3CAvXMReQuvj1HAZ4jGw+
+         6vnkHg3/KLATxw7y4SuX18pCcfZPMwp745oUhzSHHP1O0LsIoXi1bVxGexeELj89Fw34
+         D+bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690873788; x=1691478588;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UGo71aOuZXwwURci+soWYsCVOvbsKQpoaAxtdIvWqfY=;
-        b=ba4XIwQZt2F0ji+8lmIuEk3D+OKxYsDkWmL8hyyEdP0bBFSk/VAlUcRxsTq7wdz8pi
-         qBifr3CnRO6VrwYQfk8fQpbRTyFvm9Rz7AEwOOk0AMDBpAc5Q3oc8WU9VcA2a1LsuKzm
-         Iojp4/5SvTYFEbiC8ulDiYPo4Q+zGVS/tlrC5iFvEVwAM3L3cPLnJlxmf2AST2G0Fqd4
-         ukgBSRWzXBwC9RR6iTq+A3sb+9XXhhswhVZqjnJXaNt3XFcjZ3WvJfwIVHzGhC4FoCbR
-         8ptfexdMo1bSMyG90IGB5L6nU23M+bRT78F77bs8an9f0hWyXaWFfCWT1akuMqXCON2I
-         Kfcw==
-X-Gm-Message-State: ABy/qLa7D2yKC1Jg78UvoUgkYLnsb0narbv64LfsQxenSH9pMotKTZ6g
-        DwTAv2KL6nyDujE2Jjpwq9C0B13kSrst+sMUua+KXQ==
-X-Google-Smtp-Source: APBJJlEHOxpMX2BydZ4uFDoFLk1ucgaqo7z7bX7/yWGkeNeAipORRLEs8hijy/gGxbs9QHLEWT50Wsq1EHzWXJzVaTU=
-X-Received: by 2002:a5d:44c5:0:b0:317:5d3d:d387 with SMTP id
- z5-20020a5d44c5000000b003175d3dd387mr1456159wrr.25.1690873787797; Tue, 01 Aug
- 2023 00:09:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230727141428.962286-1-alexghiti@rivosinc.com>
- <20230727141428.962286-10-alexghiti@rivosinc.com> <CAP-5=fU5XYXrVnRUidpwjV2LiTsdebfidL43_Qo4Z7TBxMsVGA@mail.gmail.com>
- <CAHVXubgVAe1WsiZx5Ay+3KPK4u24k_vsnTwFFmBeVsHrGXwhfw@mail.gmail.com>
- <CAHVXubj80rQRShuDS09BeTrfR6nux0A68EMWLbeat8fd_Y3YdA@mail.gmail.com>
- <CAP-5=fWwzuGZ6a6Z38ndsb7gw7_uwS0a2VGXx08hMeiK8eZ91w@mail.gmail.com>
- <CAHVXubjhM9C1fw_Us=8+RuSJbW0pacFAk9gp7j2=BtMUPy_Byw@mail.gmail.com> <CAP-5=fUbiaVwSAhTbymyhdUPcVAXHiQZZexAOnrqid0LsPmfpw@mail.gmail.com>
-In-Reply-To: <CAP-5=fUbiaVwSAhTbymyhdUPcVAXHiQZZexAOnrqid0LsPmfpw@mail.gmail.com>
-From:   Alexandre Ghiti <alexghiti@rivosinc.com>
-Date:   Tue, 1 Aug 2023 09:09:36 +0200
-Message-ID: <CAHVXubgmbz4+Mhg4A9ziRtxSTOjLvx1=p2JPyGujBT7ervPZhQ@mail.gmail.com>
-Subject: Re: [PATCH v4 09/10] tools: lib: perf: Implement riscv mmap support
-To:     Ian Rogers <irogers@google.com>
-Cc:     Brendan Sweeney <brs@rivosinc.com>,
-        Palmer Dabbelt <palmer@rivosinc.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        d=1e100.net; s=20221208; t=1690880493; x=1691485293;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HlJW6u1sZOpuT6avef9gnRgQCJ0eGQk1LzPcuYEotVk=;
+        b=SklzSp5u27uy5l3TK7SCddnXujAm3q+oXjokgTfLk27fX3OecsXfOnzGoLij8Mpm8L
+         BQsWk3WbcvSoVoPuGcLQTobeMSakJXUw/OYYlkCl+Z45f8Tkj3swhbKdiFtbBhQ2jAFl
+         +AxL1A0jX353MOBna1bvXFEeF92th+Opdh/EiD2oKWaPlbj6He1HH2s/A63zZeILUu5X
+         uesx6juhljQggchk31wezibxUNKMJ5OEUKNIMDhvbEf0YatVV6aA7T648kx/RREAHAjR
+         6t8I+mpx7zbNuXqVDPccyTAf/uTtMuePLO5/6vZt3ikElQO1cPqeSWXglirunBU9G6q9
+         E8fw==
+X-Gm-Message-State: ABy/qLZh6nvaNqHEqmgEDSGN8UMk3/8KDKJHY+6/W8+qw0PT9ZpHCKLr
+        HrbUZ9pMcKatP/UC4UBxd58=
+X-Google-Smtp-Source: APBJJlF29a/YZq0gOiHwz58dkyP7GeqsFipTwefGHmApUHrxK1n3p3/gbYCZjjmiNXXWcJhV+gmQSg==
+X-Received: by 2002:a17:90b:f10:b0:268:b0b:a084 with SMTP id br16-20020a17090b0f1000b002680b0ba084mr10823169pjb.46.1690880492742;
+        Tue, 01 Aug 2023 02:01:32 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.20])
+        by smtp.googlemail.com with ESMTPSA id x34-20020a17090a6c2500b00264044cca0fsm1592523pjj.1.2023.08.01.02.01.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Aug 2023 02:01:32 -0700 (PDT)
+From:   Ze Gao <zegao2021@gmail.com>
+X-Google-Original-From: Ze Gao <zegao@tencent.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <atishp@atishpatra.org>,
-        Anup Patel <anup@brainfault.org>,
-        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-        Andrew Jones <ajones@ventanamicro.com>,
-        =?UTF-8?Q?R=C3=A9mi_Denis=2DCourmont?= <remi@remlab.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Atish Patra <atishp@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
+Subject: [RFC PATCH v3 0/6] add to report task state in symbolic chars from sched tracepoint
+Date:   Tue,  1 Aug 2023 17:01:18 +0800
+Message-Id: <20230801090124.8050-1-zegao@tencent.com>
+X-Mailer: git-send-email 2.40.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jul 31, 2023 at 6:46=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Mon, Jul 31, 2023 at 9:06=E2=80=AFAM Alexandre Ghiti <alexghiti@rivosi=
-nc.com> wrote:
-> >
-> > On Mon, Jul 31, 2023 at 5:10=E2=80=AFPM Ian Rogers <irogers@google.com>=
- wrote:
-> > >
-> > > On Mon, Jul 31, 2023 at 3:27=E2=80=AFAM Alexandre Ghiti <alexghiti@ri=
-vosinc.com> wrote:
-> > > >
-> > > > On Mon, Jul 31, 2023 at 12:15=E2=80=AFPM Alexandre Ghiti <alexghiti=
-@rivosinc.com> wrote:
-> > > > >
-> > > > > Hi Ian,
-> > > > >
-> > > > > On Fri, Jul 28, 2023 at 7:53=E2=80=AFPM Ian Rogers <irogers@googl=
-e.com> wrote:
-> > > > > >
-> > > > > > On Thu, Jul 27, 2023 at 7:28=E2=80=AFAM Alexandre Ghiti <alexgh=
-iti@rivosinc.com> wrote:
-> > > > > > >
-> > > > > > > riscv now supports mmaping hardware counters so add what's ne=
-eded to
-> > > > > > > take advantage of that in libperf.
-> > > > > > >
-> > > > > > > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> > > > > > > Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-> > > > > > > Reviewed-by: Atish Patra <atishp@rivosinc.com>
-> > > > > > > ---
-> > > > > > >  tools/lib/perf/mmap.c | 65 +++++++++++++++++++++++++++++++++=
-++++++++++
-> > > > > > >  1 file changed, 65 insertions(+)
-> > > > > > >
-> > > > > > > diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
-> > > > > > > index 0d1634cedf44..378a163f0554 100644
-> > > > > > > --- a/tools/lib/perf/mmap.c
-> > > > > > > +++ b/tools/lib/perf/mmap.c
-> > > > > > > @@ -392,6 +392,71 @@ static u64 read_perf_counter(unsigned in=
-t counter)
-> > > > > > >
-> > > > > > >  static u64 read_timestamp(void) { return read_sysreg(cntvct_=
-el0); }
-> > > > > > >
-> > > > > > > +#elif __riscv_xlen =3D=3D 64
-> > > > > >
-> > > > > > This is something of an odd guard, perhaps:
-> > > > > > #elif defined(__riscv) && __riscv_xlen =3D=3D 64
-> > > > > >
-> > > > > > That way it is more intention revealing that this is riscv code=
-. Could
-> > > > > > you add a comment relating to the __riscv_xlen ?
-> > > > >
-> > > > > I guess Andrew answered that already.
-> > > > >
-> > >
-> > > Not sure. I still think it looks weird:
-> > > ...
-> > > #if defined(__i386__) || defined(__x86_64__)
-> > > ...
-> > > #elif defined(__aarch64__)
-> > > ...
-> > > #elif __riscv_xlen =3D=3D 64
-> > > ...
-> > > #else
-> > > static u64 read_perf_counter(unsigned int counter __maybe_unused) { r=
-eturn 0; }
-> > > static u64 read_timestamp(void) { return 0; }
-> > > #endif
-> > >
-> > > The first two are clearly #ifdef-ing architecture specific assembly
-> > > code, under what conditions I get RISC-V code  =C2=AF\(=E3=83=84)/=C2=
-=AF At least worth
-> > > a comment like "csrr is only available when you have xlens of 64
-> > > because ..."
-> >
-> > __riscv_xlen indicates riscv64, which is the only target of this
-> > patchset. But if you prefer, I don't mind adding back the
-> > defined(__riscv) if I re-spin a new version.
->
-> This kind of begs the question as to why there is no __riscv64 ifdef.
-> The issue with xlen is it isn't intention revealing so for regular
-> people trying to understand the code it would be nice to document it.
+This is the 3rd attempt to fix the report task state issue in sched
+tracepint, you can check out previous discussions here:
 
-I understand, I'll add the defined(__riscv) and a comment to explain
-the __riscv_xlen.
+v1: https://lore.kernel.org/linux-trace-kernel/20230725072254.32045-1-zegao@tencent.com
+v2: https://lore.kernel.org/linux-trace-kernel/20230726121618.19198-1-zegao@tencent.com
 
->
-> > >
-> > > > > >
-> > > > > > > +
-> > > > > > > +/* TODO: implement rv32 support */
-> > > > > > > +
-> > > > > > > +#define CSR_CYCLE      0xc00
-> > > > > > > +#define CSR_TIME       0xc01
-> > > > > > > +
-> > > > > > > +#define csr_read(csr)                                       =
-   \
-> > > > > > > +({                                                          =
-   \
-> > > > > > > +       register unsigned long __v;                          =
-   \
-> > > > > > > +               __asm__ __volatile__ ("csrr %0, " #csr       =
-   \
-> > > > > > > +                : "=3Dr" (__v) :                            =
-     \
-> > > > > > > +                : "memory");                                =
-   \
-> > > > > >
-> > > > > > To avoid the macro pasting that could potentially go weird, cou=
-ld this be:
-> > > > > >
-> > > > > > __asm__ __volatile__ ("csrr %0, %1",
-> > > > > >   : "=3Dr"(__v) /* outputs */
-> > > > > >   : "i"(csr) /* inputs */
-> > > > > >   : "memory" /* clobbers */)
-> > > >
-> > > > Forgot to answer this one: it compiles, but I have to admit that I
-> > > > don't understand the difference and if that's correct (all macros i=
-n
-> > > > arch/riscv/include/asm/csr.h use # to do this) and what benefits it
-> > > > brings. Can you elaborate more on things that could "go weird"?
-> > >
-> > > So rather than use an input constraint for the asm block you are usin=
-g
-> > > the C preprocessor to paste in the csr argument. If csr is something
-> > > like "1" then it looks good and you'll get "csrr %0,1". If you pass
-> > > something like "1 << 31" then that will be pasted as "csrr %0, 1 <<
-> > > 31" and that starts to get weird in the context of being in the
-> > > assembler where it is unlikely the C operators work. Using the input
-> > > constraint avoids this, causes the C compiler to check the type of th=
-e
-> > > argument and you'll probably get more intelligible error messages as =
-a
-> > > consequence.
-> > >
-> >
-> > Thanks. So if I'm not mistaken, in this exact context, given we only
-> > use csr_read() through the csr_read_num() function, it seems ok right?
->
-> So you've formed a cargo cult and the justification is not wanting to
-> stop a copy-paste chain from somewhere else. This code itself will be
-> copy-pasted and we go to some ends to encourage that by placing parts
-> of it in include/uapi/linux/perf_event.h. It seems better to catch
-> this issue early rather than propagate it.
+FYI, this series are designed not to break anything now and still do the 
+1-1 correspondence int-char mapping for each distinct task state we want to
+report, and thus will not lose any details intended for debug purposes. Of
+course, this might be compromised because of bugs introduced due to my
+stupidity. So your sage comments are very important and appreciated!
 
-OK, nothing to argue here, I'll use your first proposition in the next vers=
-ion.
 
->
-> > > >
-> > > > Thanks again,
-> > > >
-> > > > Alex
-> > > >
-> > > > > >
-> > > > > > Also, why is this clobbering memory? Worth adding a comment.
-> > > > >
-> > > > > No idea, I see that it is also done this way in
-> > > > > arch/riscv/include/asm/csr.h. @Atish Kumar Patra , @Palmer Dabbel=
-t ?
-> > >
-> > > It would seem to make sense then not to have a memory constraint unti=
-l
-> > > we know why we're doing it?
-> > >
-> >
-> > I have just had the answer internally (thanks to @Brendan Sweeney):
-> > csr modifications can alter how the memory is accessed (satp which
-> > changes the address space, sum which allows/disallows userspace
-> > access...), so we need the memory barrier to make sure the compiler
-> > does not reorder the memory accesses.
->
-> The conditions you mention shouldn't apply here though? Even if you
-> add a memory barrier for the compiler what is stopping the hardware
-> reordering loads and stores? If it absolutely has to be there then a
-> comment something like "There is a bug is riscv where the csrr
-> instruction can clobber memory breaking future reads and some how this
-> constraint fixes it by ... ".
+diff from v2:
+1. reorder to condense sched_switch record structure
+2. fallback to older method to maintain backward compatibility
+   for perf/libtraceevent
+3. split housekeeping work into separate ones for readability
 
-You're right, it does not apply here, so I can remove this memory
-barrier. Regarding the hardware that could speculate across a csr
-instruction, that's dealt with in the riscv spec:
+--
 
-"In particular, a CSR access is performed after the execution of any
-prior instructions in program order whose behavior modifies or is
-modified by the CSR state and before the execution of any subsequent
-instructions in program order whose behavior modifies or is modified
-by the CSR state"
+In the status quo, we should see three different outcomes of the reported
+sched-out task state from perf-script, perf-sched-timehist, and Tp_printk
+of tracepoint sched_switch.  And it's not hard to figure out that the
+former two are built upon the third one, and the reason why we see this
+inconsistency is that the former two does not catch up with the internal
+change of reported task state definitions as the kernel evolves.
 
-Thanks for your comments,
+IMHO, exporting internal representations of task state in the tracepoint
+sched_switch is not a good practice and not encouraged at all, which can
+easily break userspace tools that relies on it. Especially when tracepoints
+are massively used in many observability tools nowadays due to its stable
+nature, which makes them no longer used for debug only purpose and we
+should be careful to decide what ought to be reported to userspace and what
+ought not.
 
-Alex
+Therefore, to fix the issues mentioned above for good, I proposed to add
+a new variable to report task state in sched_switch with a symbolic char
+along with the old hardcoded value, and save the further processing of
+userspace tools and spare them from knowing implementation details in the
+kernel.
 
->
-> Thanks,
-> Ian
->
-> > Thanks,
-> >
-> > Alex
-> >
-> > > Thanks,
-> > > Ian
-> > >
-> > > > >
-> > > > > Thanks for your comments!
-> > > > >
-> > > > > Alex
-> > > > >
-> > > > > >
-> > > > > > Thanks,
-> > > > > > Ian
-> > > > > >
-> > > > > > > +                __v;                                        =
-   \
-> > > > > > > +})
-> > > > > > > +
-> > > > > > > +static unsigned long csr_read_num(int csr_num)
-> > > > > > > +{
-> > > > > > > +#define switchcase_csr_read(__csr_num, __val)           {\
-> > > > > > > +       case __csr_num:                                 \
-> > > > > > > +               __val =3D csr_read(__csr_num);            \
-> > > > > > > +               break; }
-> > > > > > > +#define switchcase_csr_read_2(__csr_num, __val)         {\
-> > > > > > > +       switchcase_csr_read(__csr_num + 0, __val)        \
-> > > > > > > +       switchcase_csr_read(__csr_num + 1, __val)}
-> > > > > > > +#define switchcase_csr_read_4(__csr_num, __val)         {\
-> > > > > > > +       switchcase_csr_read_2(__csr_num + 0, __val)      \
-> > > > > > > +       switchcase_csr_read_2(__csr_num + 2, __val)}
-> > > > > > > +#define switchcase_csr_read_8(__csr_num, __val)         {\
-> > > > > > > +       switchcase_csr_read_4(__csr_num + 0, __val)      \
-> > > > > > > +       switchcase_csr_read_4(__csr_num + 4, __val)}
-> > > > > > > +#define switchcase_csr_read_16(__csr_num, __val)        {\
-> > > > > > > +       switchcase_csr_read_8(__csr_num + 0, __val)      \
-> > > > > > > +       switchcase_csr_read_8(__csr_num + 8, __val)}
-> > > > > > > +#define switchcase_csr_read_32(__csr_num, __val)        {\
-> > > > > > > +       switchcase_csr_read_16(__csr_num + 0, __val)     \
-> > > > > > > +       switchcase_csr_read_16(__csr_num + 16, __val)}
-> > > > > > > +
-> > > > > > > +       unsigned long ret =3D 0;
-> > > > > > > +
-> > > > > > > +       switch (csr_num) {
-> > > > > > > +       switchcase_csr_read_32(CSR_CYCLE, ret)
-> > > > > > > +       default:
-> > > > > > > +               break;
-> > > > > > > +       }
-> > > > > > > +
-> > > > > > > +       return ret;
-> > > > > > > +#undef switchcase_csr_read_32
-> > > > > > > +#undef switchcase_csr_read_16
-> > > > > > > +#undef switchcase_csr_read_8
-> > > > > > > +#undef switchcase_csr_read_4
-> > > > > > > +#undef switchcase_csr_read_2
-> > > > > > > +#undef switchcase_csr_read
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +static u64 read_perf_counter(unsigned int counter)
-> > > > > > > +{
-> > > > > > > +       return csr_read_num(CSR_CYCLE + counter);
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +static u64 read_timestamp(void)
-> > > > > > > +{
-> > > > > > > +       return csr_read_num(CSR_TIME);
-> > > > > > > +}
-> > > > > > > +
-> > > > > > >  #else
-> > > > > > >  static u64 read_perf_counter(unsigned int counter __maybe_un=
-used) { return 0; }
-> > > > > > >  static u64 read_timestamp(void) { return 0; }
-> > > > > > > --
-> > > > > > > 2.39.2
-> > > > > > >
+After this patch seires, we report 'RSDTtXZPI' the same as in procfs, plus
+a 'p' which denotes PREEMP_ACTIVE and is used for sched_switch tracepoint
+only.
+
+Reviews welcome!
+
+Regards,
+Ze
+
+Ze Gao (5):
+  perf sched: sync state char array with the kernel
+  perf sched: reorganize sched-out task state report code
+  sched, tracing: add to report task state in symbolic chars
+  sched, tracing: reorganize fields of switch event struct
+  perf sched: prefer to use prev_state_char introduced in sched_switch
+
+ include/trace/events/sched.h | 68 +++++++++++++++++-------------
+ tools/perf/builtin-sched.c   | 82 ++++++++++++++++--------------------
+ 2 files changed, 76 insertions(+), 74 deletions(-)
+
+Ze Gao (1):
+  libtraceevent: prefer to use prev_state_char introduced in
+    sched_switch
+
+ plugins/plugin_sched_switch.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+-- 
+2.40.1
+
