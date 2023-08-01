@@ -2,224 +2,88 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA43C001E0
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jul 2023 21:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72235C001DE
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Aug 2023 00:30:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230046AbjGaVQo (ORCPT
+        id S229916AbjHAAaE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Jul 2023 17:16:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40744 "EHLO
+        Mon, 31 Jul 2023 20:30:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229526AbjGaVQn (ORCPT
+        with ESMTP id S229798AbjHAAaD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Jul 2023 17:16:43 -0400
+        Mon, 31 Jul 2023 20:30:03 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7472110E3;
-        Mon, 31 Jul 2023 14:16:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFDA01716;
+        Mon, 31 Jul 2023 17:30:02 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 04529612DC;
-        Mon, 31 Jul 2023 21:16:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3CDEC433C8;
-        Mon, 31 Jul 2023 21:16:40 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5F33461373;
+        Tue,  1 Aug 2023 00:30:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C069C433C8;
+        Tue,  1 Aug 2023 00:29:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690838201;
-        bh=xcTqF7aOrNrqWKo1l81zdilo1yPMMlcZ5Ml2JwWWdb8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BRGq3BOfZl80YdgbPrb8M6ohUD9whYS9/PsDu6NVEknEnY3dd4+SKNBze0XeaBZAv
-         7ZeObuIDTBvBEf6U4o0TQabfkPafjWyaLejNGzUPwSGyBNb15aMJkI30oOCF/MUQTN
-         tTX2S4GI3oso1b5Mrl2moGGMWVzc81jJy/8vTTHQQM9eJG/0wzf8DRC6/4RTR4xFkk
-         F8KPx2pqslJIHiHPRKNIdR1TplXa3nrjh2I5Ddlg5GzgVOpH+BOvjgRDngBRdGez94
-         0LV8nAsGA5jwpG7wJqxMTSDp0/0/gjPpK/zWBCMxXI4epT5EJ1hTC7XJA/W+s1Zdaw
-         fPFt4wRcCB4GA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 64F7040096; Mon, 31 Jul 2023 18:16:38 -0300 (-03)
-Date:   Mon, 31 Jul 2023 18:16:38 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        s=k20201202; t=1690849801;
+        bh=6A/vRRp/3F+Q+LhbyAwBQLAhY9o/XYm4IbcM19KIrqc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QxciWeuDZaxQzAOsOd3KTAutoDjqb2mqR1+Lrq9qTOP2OxV1YmqmKLzJJItoBa6WS
+         ve8C9eVHuEKqiMSF453SGb8Z1zSxfr/R6kKlZXPj7q+tcKf5Xk8xIKSYhcISdO6ugZ
+         +W/qF/L41cgzzfp2x3X8R/KZ2mI/iPfs1QimNKmP11o1km6X9QeMmI89gmbj7O4KiE
+         H6doIxXz35VeAjnE3YVZ9YABFc7dy5sEKUMfdx3Wdz00+x/7eJMMDqMYRtyJmBO9ja
+         bnhmS3C8uyfj8MdoDf+i+RNMIWVAVYkk7yZpis4Wp2BkF1yUWHf8so6SFxufYYq4Xc
+         zFVcQCel2M3mw==
+Date:   Tue, 1 Aug 2023 09:29:56 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Georg =?UTF-8?B?TcO8bGxlcg==?= <georgmueller@gmx.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
-        Rob Herring <robh@kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH v1 4/6] perf build: Disable fewer flex warnings
-Message-ID: <ZMgkthavch7x/z+0@kernel.org>
-References: <20230728064917.767761-1-irogers@google.com>
- <20230728064917.767761-5-irogers@google.com>
- <a8833945-3f0a-7651-39ff-a01e7edc2b3a@arm.com>
- <ZMPJym7DnCkFH7aA@kernel.org>
- <ZMPKekDl+g5PeiH8@kernel.org>
- <CAP-5=fX2LOdd_34ysAYYB5zq5tr7dMje35Nw6hrLXTPLsOHoaw@mail.gmail.com>
- <ZMQEfIi/BYwpDIEB@kernel.org>
- <ZMQMQoCtBytgwB4i@kernel.org>
- <CAP-5=fUOD4hgQBmXjQh0HujO_39zQQhv_Wv5oirgAC4N8Ao1nw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fUOD4hgQBmXjQh0HujO_39zQQhv_Wv5oirgAC4N8Ao1nw@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf probe: skip test_uprobe_from_different_cu if there
+ is no gcc
+Message-Id: <20230801092956.f03cd462fcf4939523ed4726@kernel.org>
+In-Reply-To: <4085b352-f5e8-c0e8-42cf-7a6ecf23282f@gmx.net>
+References: <20230728151812.454806-2-georgmueller@gmx.net>
+        <20230729093814.d48a7b4fb51fdd74ad50ba42@kernel.org>
+        <4085b352-f5e8-c0e8-42cf-7a6ecf23282f@gmx.net>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jul 28, 2023 at 12:05:56PM -0700, Ian Rogers escreveu:
-> On Fri, Jul 28, 2023, 11:43 AM Arnaldo Carvalho de Melo <acme@kernel.org>
-> > > I haven't checked, lemme do it now.
+On Sat, 29 Jul 2023 12:59:50 +0200
+Georg Müller <georgmueller@gmx.net> wrote:
 
-> > It comes directly from flex's m4 files:
+> 
+> Am 29.07.23 um 02:38 schrieb Masami Hiramatsu (Google):
+> >
+> > Interesting, so clang will not generate DWARF or perf probe is not able to
+> > handle clang generated DWARF?
+> >
+> 
+> clang does not accept mixed -flto and non-lto CUs and the problem is not
+> reproducible by this sample code using clang if using -flto for all CUs.
+> There might be (bigger?) examples where the same issue is triggered by
+> clang and bigger examples (like systemd on fedora) where I ran into the
+> bug, but this small example only shows the problem when using gcc and
+> mixing -flto and non-lto CUs.
 
-> > https://github.com/westes/flex/blob/master/src/c99-flex.skl#L2044
+Thanks for the explanation! So the problem will be in the compiler side
+(and maybe fixed when it is updated.)
 
-> > So I'll keep the -Wno-misleading-indentation, ok?
- 
-> Makes sense, yes.
+Thank you,
 
-continuing, changed the version check to:
-
-commit f4da4419574536691c6b7843b6c48a3f97240404
-Author: Ian Rogers <irogers@google.com>
-Date:   Thu Jul 27 23:49:15 2023 -0700
-
-    perf build: Disable fewer flex warnings
-    
-    If flex is version 2.6.4, reduce the number of flex C warnings
-    disabled. Earlier flex versions have all C warnings disabled.
-    
-    Committer notes:
-    
-    Added this to the list of ignored warnings to get it building on
-    a Fedora 36 machine with flex 2.6.4:
-    
-      -Wno-misleading-indentation
-    
-    Noticed when building with:
-    
-      $ make LLVM=1 -C tools/perf NO_BPF_SKEL=1 DEBUG=1
-    
-    Take two:
-    
-    We can't just try to canonicalize flex versions by just removing the
-    dots, as we end up with:
-    
-            2.6.4 >= 2.5.37
-    
-    becoming:
-    
-            264 >= 2537
-    
-    Failing the build on flex 2.5.37, so instead use the back to the past
-    added $(call version_ge3,2.6.4,$(FLEX_VERSION)) variant to check for
-    that.
-    
-    Making sure $(FLEX_VERSION) keeps the dots as we may want to use 'sort
-    -V' or something nicer when available everywhere.
-    
-    Signed-off-by: Ian Rogers <irogers@google.com>
-    Cc: Adrian Hunter <adrian.hunter@intel.com>
-    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-    Cc: Andrii Nakryiko <andrii@kernel.org>
-    Cc: Eduard Zingerman <eddyz87@gmail.com>
-    Cc: Gaosheng Cui <cuigaosheng1@huawei.com>
-    Cc: Ingo Molnar <mingo@redhat.com>
-    Cc: Jiri Olsa <jolsa@kernel.org>
-    Cc: Kan Liang <kan.liang@linux.intel.com>
-    Cc: Mark Rutland <mark.rutland@arm.com>
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Cc: Nathan Chancellor <nathan@kernel.org>
-    Cc: Nick Desaulniers <ndesaulniers@google.com>
-    Cc: Peter Zijlstra <peterz@infradead.org>
-    Cc: Rob Herring <robh@kernel.org>
-    Cc: Tom Rix <trix@redhat.com>
-    Cc: bpf@vger.kernel.org
-    Cc: llvm@lists.linux.dev
-    Link: https://lore.kernel.org/r/20230728064917.767761-5-irogers@google.com
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index bb08149179e405ac..ae91e2786f1a4f55 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -1,3 +1,5 @@
-+include $(srctree)/tools/scripts/utilities.mak
-+
- perf-y += arm64-frame-pointer-unwind-support.o
- perf-y += addr_location.o
- perf-y += annotate.o
-@@ -279,13 +281,11 @@ $(OUTPUT)util/bpf-filter-bison.c $(OUTPUT)util/bpf-filter-bison.h: util/bpf-filt
- 	$(Q)$(call echo-cmd,bison)$(BISON) -v $< -d $(PARSER_DEBUG_BISON) $(BISON_FILE_PREFIX_MAP) \
- 		-o $(OUTPUT)util/bpf-filter-bison.c -p perf_bpf_filter_
- 
--FLEX_GE_26 := $(shell expr $(shell $(FLEX) --version | sed -e  's/flex \([0-9]\+\).\([0-9]\+\)/\1\2/g') \>\= 26)
--ifeq ($(FLEX_GE_26),1)
--  flex_flags := -Wno-switch-enum -Wno-switch-default -Wno-unused-function -Wno-redundant-decls -Wno-sign-compare -Wno-unused-parameter -Wno-missing-prototypes -Wno-missing-declarations
--  CC_HASNT_MISLEADING_INDENTATION := $(shell echo "int main(void) { return 0 }" | $(CC) -Werror -Wno-misleading-indentation -o /dev/null -xc - 2>&1 | grep -q -- -Wno-misleading-indentation ; echo $$?)
--  ifeq ($(CC_HASNT_MISLEADING_INDENTATION), 1)
--    flex_flags += -Wno-misleading-indentation
--  endif
-+FLEX_VERSION := $(shell $(FLEX) --version | cut -d' ' -f2)
-+
-+FLEX_GE_264 := $(call version_ge3,2.6.4,$(FLEX_VERSION))
-+ifeq ($(FLEX_GE_264),1)
-+  flex_flags := -Wno-redundant-decls -Wno-switch-default -Wno-unused-function -Wno-misleading-indentation
- else
-   flex_flags := -w
- endif
-
---------------------------------------------------------------------------
-
-with version_ge3 being:
-
-commit aa9e655a4d755c3c75eb3d200d87a3b695f602cf
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date:   Mon Jul 31 16:19:21 2023 -0300
-
-    tools build: Add a 3-component greater or equal version comparator
-    
-    The next cset needs to compare if a flex version is greater or equal
-    than another, but since there is no canonical, generally available way
-    to compare versions in the command line (sort -V, yeah, but...), just
-    use awk to canonicalize the versions like is also done in
-    scripts/rust_is_available.sh.
-    
-    Cc: Adrian Hunter <adrian.hunter@intel.com>
-    Cc: Ian Rogers <irogers@google.com>
-    Cc: Jiri Olsa <jolsa@kernel.org>
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-diff --git a/tools/scripts/utilities.mak b/tools/scripts/utilities.mak
-index 172e47273b5d995a..568a6541ecf98075 100644
---- a/tools/scripts/utilities.mak
-+++ b/tools/scripts/utilities.mak
-@@ -177,3 +177,13 @@ $(if $($(1)),$(call _ge_attempt,$($(1)),$(1)),$(call _ge_attempt,$(2)))
- endef
- _ge_attempt = $(or $(get-executable),$(call _gea_err,$(2)))
- _gea_err  = $(if $(1),$(error Please set '$(1)' appropriately))
-+
-+# version-ge3
-+#
-+# Usage $(call version_ge3,2.6.4,$(FLEX_VERSION))
-+#
-+# To compare if a 3 component version is greater or equal to anoter, first use
-+# was to check the flex version to see if we can use compiler warnings as
-+# errors for one of the cases flex generates code C compilers complains about.
-+#
-+version_ge3 = $(shell awk -F'.' '{ printf("%d\n", (10000000 * $$1 + 10000 * $$2 + $$3) >= (10000000 * $$4 + 10000 * $$5 + $$6)) }' <<< "$(1).$(2)")
-
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
