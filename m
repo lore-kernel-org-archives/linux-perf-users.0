@@ -2,183 +2,125 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 377B4C41513
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Aug 2023 13:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 686FBC001E0
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Aug 2023 13:56:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232211AbjHANmU (ORCPT
+        id S232110AbjHAN4Z (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Aug 2023 09:42:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47040 "EHLO
+        Tue, 1 Aug 2023 09:56:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230472AbjHANmS (ORCPT
+        with ESMTP id S233194AbjHAN4Y (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Aug 2023 09:42:18 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E76110DB;
-        Tue,  1 Aug 2023 06:42:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=kHEuKxJGDY+7U7sNajb0X1Ns5oYmL8eJ2Q/fI659OrA=; b=ZfzWa2Uwxfx+eILLpeM4bZQsyW
-        VIHueX5vDEdDRI82cfXR4kQANxgvUU+glgIgqAKKQIrG9bU1HRUdqrb/ektsFIgbG3bvkrj1mZ78W
-        Yf4k12V2I+l7HtScf9cbmt+3Lvu9PXMKHZkQSk3eXWQ3GnGTpf6JbbGRdOANcQ5iX+rnEDO9U32Z6
-        bbAFtKqNoBfgUd63qSEeQBofnohDAxTBzpWkJ0jarhkLP2AYDpEphQqwExP3pH95RgfJJIpv/HqJu
-        uRFH98SVcUHTyuCW7hjAusHnFF2ZBmBb2nK8/kcfMNlHt5tg+EqjSFr0x6J2PEJ5aO4vL0w2LdP8i
-        rYx0aHdg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qQpdA-00Eh3Q-0t;
-        Tue, 01 Aug 2023 13:41:44 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Tue, 1 Aug 2023 09:56:24 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B009EC;
+        Tue,  1 Aug 2023 06:56:23 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BF5D33001DD;
-        Tue,  1 Aug 2023 15:41:42 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9EE892066B201; Tue,  1 Aug 2023 15:41:42 +0200 (CEST)
-Date:   Tue, 1 Aug 2023 15:41:42 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ze Gao <zegao2021@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Subject: Re: [RFC PATCH v3 3/6] sched, tracing: add to report task state in
- symbolic chars
-Message-ID: <20230801134142.GC11704@hirez.programming.kicks-ass.net>
-References: <20230801090124.8050-1-zegao@tencent.com>
- <20230801090124.8050-4-zegao@tencent.com>
- <20230801113401.GC79828@hirez.programming.kicks-ass.net>
- <CAD8CoPA-cqe+hY8dHjO+6WhcL2VKy2Wq=rYSSkwUqBFRJ4ECWg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD8CoPA-cqe+hY8dHjO+6WhcL2VKy2Wq=rYSSkwUqBFRJ4ECWg@mail.gmail.com>
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A97E7615B3;
+        Tue,  1 Aug 2023 13:56:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E14C7C433C7;
+        Tue,  1 Aug 2023 13:56:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690898182;
+        bh=I1Ij8BnJcW1tW2XqkFNyuQvGHApl5ATLxgJtVhkT/RI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=k5UkqO1j+YNAkk8BaP6R0JIJM6lQ6RsuTaRSDKst877eWmclYtS9Y7u0ounhOGwEM
+         bwMGFP+sEgdW8U+TEqMWFVumshxJ8tNULHuTjxLslr83TzlQuBUFfoIhtX/b8Iz8nA
+         faspREvIXl2/5lLqiunpmKc/uqo4nCh37P1YpIvZfSrfIpXto5XxcSE8OftbJUjDdz
+         t30WuHEDDCYionvd/rwZf9lySlO/67/M7TRgv90MwZjvOHxZaUFNFIMWxIliZfYeS9
+         yFyS2HC2oqHGpN1j22kbWhSEMBItHQgn3MPM4eLZ6ZUNL23t44+mo1cvoPMNYA7G8V
+         qGdZa1rN+eBTA==
+Date:   Tue, 1 Aug 2023 22:56:18 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf probe: Show correct error about @symbol for uprobe
+Message-Id: <20230801225618.06cb86992ae30564e5b87554@kernel.org>
+In-Reply-To: <ZMkAq5yx3+EiQNkF@kernel.org>
+References: <169055397023.67089.12693645664676964310.stgit@devnote2>
+        <ZMkAq5yx3+EiQNkF@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Aug 01, 2023 at 09:03:51PM +0800, Ze Gao wrote:
+(To: Oleg)
 
-> It's just the design that exporting internal details is fundamentally wrong.
+On Tue, 1 Aug 2023 09:55:07 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-This is tracing... it wasn't supposed to be ABI (although it somehow
-ended up being one). But even then, things like PF_foo get exposed in
-procfs but even that we change.
-
-The whole point of tracing is to see internals in order to figure out
-wth is going wrong.
-
-> And even worse,  I did not see any userspace tool is aware of masqueraded
-> states like TASK_REPORT_IDLE and TASK_REPORT_MAX and let alone
-> parse it correctly.
-
-That's probably because I never use tools, I just look at the raw trace
-output -- sometimes an impromptu awk script. I'm pretty sure I ran with
-something like the below when I did the freezer rewrite -- or perhaps I
-just stuck in trace_printk() and didn't even bother with the
-tracepoints, I can't remember.
-
-> > Why do we need this character anyway, why not just print the state in
-> > hex and leave it at that? These single character state things are a
-> > relic, please just let them die.
+> Em Fri, Jul 28, 2023 at 11:19:30PM +0900, Masami Hiramatsu (Google) escreveu:
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > Since @symbol variable access is not supported by uprobe event, it must be
+> > correctly warn user instead of kernel version update.
 > 
-> I believe hex is ok only after having the reported task state mapping
-> appear in the uapi headers, otherwise it's still useless to userspace
-> especially for value like TASK_REPORT_IDLE and TASK_REPORT_MAX, which
-> need to dig into the kernel to see what the hell is going on here.
+> Thanks, less cryptic now, applied.
 > 
-> Thoughts?
+> But is that just a matter of writing code to support reading global
+> variables from an uprobe?
 
-If you're tracing the kernel, you had better know what the kernel is
-doing, otherwise you get to keep the pieces.
+Hm, maybe we can use "@+offset" for accessing symboled data, as far as
+it is loaded with the text section.
+Oleg, what do you think about accessing symbols in data section from
+uprobes? Can we access it from user-land IP-relative address?
 
-Anyway, if you're doing BPF then why do you care about the trace event
-at all, just attach to the raw tracepoint and consume @preemt, @prev,
-@next and @prev_state.
+Thank you,
 
----
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index fbb99a61f714..cb0c1251729e 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -186,36 +186,6 @@ DEFINE_EVENT(sched_wakeup_template, sched_wakeup_new,
- 	     TP_PROTO(struct task_struct *p),
- 	     TP_ARGS(p));
- 
--#ifdef CREATE_TRACE_POINTS
--static inline long __trace_sched_switch_state(bool preempt,
--					      unsigned int prev_state,
--					      struct task_struct *p)
--{
--	unsigned int state;
--
--#ifdef CONFIG_SCHED_DEBUG
--	BUG_ON(p != current);
--#endif /* CONFIG_SCHED_DEBUG */
--
--	/*
--	 * Preemption ignores task state, therefore preempted tasks are always
--	 * RUNNING (we will not have dequeued if state != RUNNING).
--	 */
--	if (preempt)
--		return TASK_REPORT_MAX;
--
--	/*
--	 * task_state_index() uses fls() and returns a value from 0-8 range.
--	 * Decrement it by 1 (except TASK_RUNNING state i.e 0) before using
--	 * it for left shift operation to get the correct task->state
--	 * mapping.
--	 */
--	state = __task_state_index(prev_state, p->exit_state);
--
--	return state ? (1 << (state - 1)) : state;
--}
--#endif /* CREATE_TRACE_POINTS */
--
- /*
-  * Tracepoint for task switches, performed by the scheduler:
-  */
-@@ -242,29 +212,16 @@ TRACE_EVENT(sched_switch,
- 		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
- 		__entry->prev_pid	= prev->pid;
- 		__entry->prev_prio	= prev->prio;
--		__entry->prev_state	= __trace_sched_switch_state(preempt, prev_state, prev);
-+		__entry->prev_state	= prev_state | (preempt * TASK_STATE_MAX);
- 		memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
- 		__entry->next_pid	= next->pid;
- 		__entry->next_prio	= next->prio;
- 		/* XXX SCHED_DEADLINE */
- 	),
- 
--	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%s%s ==> next_comm=%s next_pid=%d next_prio=%d",
-+	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%x ==> next_comm=%s next_pid=%d next_prio=%d",
- 		__entry->prev_comm, __entry->prev_pid, __entry->prev_prio,
--
--		(__entry->prev_state & (TASK_REPORT_MAX - 1)) ?
--		  __print_flags(__entry->prev_state & (TASK_REPORT_MAX - 1), "|",
--				{ TASK_INTERRUPTIBLE, "S" },
--				{ TASK_UNINTERRUPTIBLE, "D" },
--				{ __TASK_STOPPED, "T" },
--				{ __TASK_TRACED, "t" },
--				{ EXIT_DEAD, "X" },
--				{ EXIT_ZOMBIE, "Z" },
--				{ TASK_PARKED, "P" },
--				{ TASK_DEAD, "I" }) :
--		  "R",
--
--		__entry->prev_state & TASK_REPORT_MAX ? "+" : "",
-+		__entry->prev_state,
- 		__entry->next_comm, __entry->next_pid, __entry->next_prio)
- );
- 
+> 
+> - Arnaldo
+> 
+>  
+> > Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > Closes: https://lore.kernel.org/all/ZLWDEjvFjrrEJODp@kernel.org/
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > ---
+> >  tools/perf/util/probe-event.c |   13 +++++++++----
+> >  1 file changed, 9 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+> > index 6e2110d605fb..c1ded85fe859 100644
+> > --- a/tools/perf/util/probe-event.c
+> > +++ b/tools/perf/util/probe-event.c
+> > @@ -2800,13 +2800,18 @@ static void warn_uprobe_event_compat(struct probe_trace_event *tev)
+> >  	if (!tev->uprobes || tev->nargs == 0 || !buf)
+> >  		goto out;
+> >  
+> > -	for (i = 0; i < tev->nargs; i++)
+> > -		if (strglobmatch(tev->args[i].value, "[$@+-]*")) {
+> > -			pr_warning("Please upgrade your kernel to at least "
+> > -				   "3.14 to have access to feature %s\n",
+> > +	for (i = 0; i < tev->nargs; i++) {
+> > +		if (strchr(tev->args[i].value, '@')) {
+> > +			pr_warning("%s accesses a variable by symbol name, but that is not supported for user application probe.\n",
+> > +				   tev->args[i].value);
+> > +			break;
+> > +		}
+> > +		if (strglobmatch(tev->args[i].value, "[$+-]*")) {
+> > +			pr_warning("Please upgrade your kernel to at least 3.14 to have access to feature %s\n",
+> >  				   tev->args[i].value);
+> >  			break;
+> >  		}
+> > +	}
+> >  out:
+> >  	free(buf);
+> >  }
+> > 
+> 
+> -- 
+> 
+> - Arnaldo
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
