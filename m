@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76103C00528
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF361C0015E
 	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Aug 2023 05:37:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230406AbjHAFhE (ORCPT
+        id S230227AbjHAFhF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Aug 2023 01:37:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49672 "EHLO
+        Tue, 1 Aug 2023 01:37:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230227AbjHAFhA (ORCPT
+        with ESMTP id S229812AbjHAFg7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Aug 2023 01:37:00 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55D391FC0
-        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jul 2023 22:36:54 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d326cb4c97fso1705003276.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jul 2023 22:36:54 -0700 (PDT)
+        Tue, 1 Aug 2023 01:36:59 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9927C8F
+        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jul 2023 22:36:49 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-585f254c41aso37747967b3.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jul 2023 22:36:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1690868213; x=1691473013;
+        d=google.com; s=20221208; t=1690868209; x=1691473009;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UKKw+NoKhTAujkctGAEA03hT1bAPJjDpeY1EXDQF9cg=;
-        b=q6mr/otNvx2nbxcxVCrk74/og2gISIFG6v2fLfLC1kP8KTWbzsu4C4kRbqmhMLyDo2
-         4mzM/6+JtWILDXVoGkJdk7m6Fc0eWnqkzMNSwLpATn8rJHoJgWlDUBNS2+mPkdNJ1DU2
-         l6hLg+kVsntRrSILPpPc9IZ7/Q+L1LJLNr3jnxA0lhPivxDRQfM7hoHeAm6j1tq8qHF+
-         pxsbLHqC99bcCRvVb9ef3eVuOb70YIE9eTO39B/qleRyn7Mma0P4nYsf7cy/I26vmYCm
-         hpZnDMMtxvEDiwD5JAL2428WVYqiETYbI9CnWwcIbWQRX+Zobnccp4PYJBCZ4d5Ogwww
-         LzYQ==
+        bh=7cgKjdSs3G1HD7e5a1QJ2TPW0bOH8fEPCcMkC6M5juE=;
+        b=vasKg5Ucb7s834gs6TqGgTHy3yn7y2I64AU1KlEXsVFglMHUYI3YWwtIeYmJvvv7r1
+         J8h8xXYpI5jbWq2H53iOxymdAQ0Tbx2jcEvsDuO0ChxhooVaqtkxu4ir0iYA2vI/IYel
+         NCGM+o+vdH8s/IVNwLS6M5MOulScPi4J5PmFQlGNoKkzIy9Es4XPEvD/Mpn927LiyRBz
+         XHa0scMkWQc3+kY21TTAOfWtR2nFdnXSir3rgHtN2dcQHFN4PjhOz2j2T2XtsymDGMi2
+         iiAfovKi/QYXaEo/A7iRqgnc8YuNWzlhxcTfcGZyYaOq2tklUNXoMNnuvEXy53HwRZiK
+         Y1sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690868213; x=1691473013;
+        d=1e100.net; s=20221208; t=1690868209; x=1691473009;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UKKw+NoKhTAujkctGAEA03hT1bAPJjDpeY1EXDQF9cg=;
-        b=DpTErjdl/fYpoXTQSfTX3MaAMqaqHAk5bxKaVdWFlvVZKGKMEQZG+rLo8LAqJUiLDI
-         UeREZNqBYhbeS2Wgqj05qu/d+jFetdmXKghCe4NdpSUJOheW2HpWS0A2i69z5uGdLcsM
-         FnmmCDJnSXdIFgZ3LAfpIjac4Iq2dn8QkT+nfZKwX8safJEY65mxxWJbys4GZbrvIe9v
-         6qhzA4R1WDDJiO0mgYl4wIAYpuQeJQDKcTgDP/DIewRarbxKo2d0K52JQmcKQlEcYUmx
-         WgCbCxT8qTt8etYll6QLA7QU15hMCOpHqbF1ZfwSzQGsDoMluNySW5hpszNJ/onnjLbX
-         H7MA==
-X-Gm-Message-State: ABy/qLb2ozhNt3swGs2NYXF9I6NxKLYLkeemueMpPCV4QAcyybZFFyYb
-        bdbSouwBF9i0NGgNbOQ8zQsulzeqMvBQ
-X-Google-Smtp-Source: APBJJlGHBKhwYEiNXtpe+3148aniIERraU7cOk0yF95FuPWBpAxYzpg9M/tmYEo+B0FB56/TFySIN1uF3T1J
+        bh=7cgKjdSs3G1HD7e5a1QJ2TPW0bOH8fEPCcMkC6M5juE=;
+        b=dSbZBR3ZVwaQYZ+09E/COFGEU2uQAZ2rfn4FlGxLODcFhX7KJmx3LwC7yrjQTRylZz
+         SBIc16/LAO4Bb9NwOCjXqm+axNVBL6yqdWDHE1jCGi2CVjBWrWJNxEgsdmUtDmlUL8ct
+         bU4rF7KJjkeRGdvxOU7KB18akILlf+H8feAymknmV5nwEYAT4l6WONrRY1ONlN7OFQx3
+         u4TXFbYLIcOAIDmcS/927c8LbWn24Iw1LpE70MifI6cBGCxyuk705AgmokdTXs0GzDh+
+         WIwGqDr4bseRM04FeF01HTrl5pW6cSGBMSNhWGzgq1hDM9JtC7HruKnXPOeRNqVegSdb
+         AymA==
+X-Gm-Message-State: ABy/qLbnrVmZZ7ARGoV/vMXHrXkWBYcUb7zCMouHbFHJsYfLx8SecgcB
+        /5Ton584KI2L9HuC93dnYEP6Qmokm9iv
+X-Google-Smtp-Source: APBJJlHy6JFYSb9M9Oh886GADCpFJqSyjGvQ5kdRzdU6QgUVE9MfCqO3B63MHXpf8WNkAXKF78c6grWhGTtr
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:dd0a:f4b:6531:d8dc])
- (user=irogers job=sendgmr) by 2002:a25:ce91:0:b0:c4e:3060:41f9 with SMTP id
- x139-20020a25ce91000000b00c4e306041f9mr71542ybe.9.1690868213682; Mon, 31 Jul
- 2023 22:36:53 -0700 (PDT)
-Date:   Mon, 31 Jul 2023 22:36:33 -0700
+ (user=irogers job=sendgmr) by 2002:a81:a789:0:b0:586:5388:82ba with SMTP id
+ e131-20020a81a789000000b00586538882bamr12914ywh.6.1690868208792; Mon, 31 Jul
+ 2023 22:36:48 -0700 (PDT)
+Date:   Mon, 31 Jul 2023 22:36:31 -0700
 In-Reply-To: <20230801053634.1142634-1-irogers@google.com>
-Message-Id: <20230801053634.1142634-4-irogers@google.com>
+Message-Id: <20230801053634.1142634-2-irogers@google.com>
 Mime-Version: 1.0
 References: <20230801053634.1142634-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.585.gd2178a4bd4-goog
-Subject: [PATCH v1 3/4] perf vendor events intel: Update sapphirerapids to 1.15
+Subject: [PATCH v1 1/4] perf parse-events x86: Avoid sorting uops_retired.slots
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -75,59 +75,56 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-1.15 events were released in:
-https://github.com/intel/perfmon/commit/76dfb81a1148ec049fd9caae9c62529404da63df
-Adds the events OCR.DEMAND_DATA_RD.LOCAL_SOCKET_PMM and
-OCR.DEMAND_DATA_RD.PMM.
+As topdown.slots may appear as slots it may get confused with
+uops_retired.slots which is an invalid perf metric event group
+leader. Special case uops_retired.slots to avoid this confusion.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/arch/x86/mapfile.csv     |  2 +-
- .../arch/x86/sapphirerapids/other.json         | 18 ++++++++++++++++++
- 2 files changed, 19 insertions(+), 1 deletion(-)
+ tools/perf/arch/x86/util/evlist.c | 7 ++++---
+ tools/perf/arch/x86/util/evsel.c  | 7 +++----
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-index 9020d7a23c91..3a8770e29fe8 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -24,7 +24,7 @@ GenuineIntel-6-1[AEF],v3,nehalemep,core
- GenuineIntel-6-2E,v3,nehalemex,core
- GenuineIntel-6-A7,v1.01,rocketlake,core
- GenuineIntel-6-2A,v19,sandybridge,core
--GenuineIntel-6-(8F|CF),v1.14,sapphirerapids,core
-+GenuineIntel-6-(8F|CF),v1.15,sapphirerapids,core
- GenuineIntel-6-AF,v1.00,sierraforest,core
- GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
- GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v57,skylake,core
-diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/other.json b/tools/perf/pmu-events/arch/x86/sapphirerapids/other.json
-index 31b6be9fb8c7..442ef3807a9d 100644
---- a/tools/perf/pmu-events/arch/x86/sapphirerapids/other.json
-+++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/other.json
-@@ -76,6 +76,24 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts demand data reads that were supplied by PMM attached to this socket, whether or not in Sub NUMA Cluster(SNC) Mode.  In SNC Mode counts PMM accesses that are controlled by the close or distant SNC Cluster.",
-+        "EventCode": "0x2A,0x2B",
-+        "EventName": "OCR.DEMAND_DATA_RD.LOCAL_SOCKET_PMM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x700C00001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts demand data reads that were supplied by PMM.",
-+        "EventCode": "0x2A,0x2B",
-+        "EventName": "OCR.DEMAND_DATA_RD.PMM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x703C00001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand data reads that were supplied by DRAM attached to another socket.",
-         "EventCode": "0x2A,0x2B",
+diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
+index cbd582182932..b1ce0c52d88d 100644
+--- a/tools/perf/arch/x86/util/evlist.c
++++ b/tools/perf/arch/x86/util/evlist.c
+@@ -75,11 +75,12 @@ int arch_evlist__add_default_attrs(struct evlist *evlist,
+ 
+ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
+ {
+-	if (topdown_sys_has_perf_metrics() && evsel__sys_has_perf_metrics(lhs)) {
++	if (topdown_sys_has_perf_metrics() &&
++	    (arch_evsel__must_be_in_group(lhs) || arch_evsel__must_be_in_group(rhs))) {
+ 		/* Ensure the topdown slots comes first. */
+-		if (strcasestr(lhs->name, "slots"))
++		if (strcasestr(lhs->name, "slots") && !strcasestr(lhs->name, "uops_retired.slots"))
+ 			return -1;
+-		if (strcasestr(rhs->name, "slots"))
++		if (strcasestr(rhs->name, "slots") && !strcasestr(rhs->name, "uops_retired.slots"))
+ 			return 1;
+ 		/* Followed by topdown events. */
+ 		if (strcasestr(lhs->name, "topdown") && !strcasestr(rhs->name, "topdown"))
+diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
+index 81d22657922a..090d0f371891 100644
+--- a/tools/perf/arch/x86/util/evsel.c
++++ b/tools/perf/arch/x86/util/evsel.c
+@@ -40,12 +40,11 @@ bool evsel__sys_has_perf_metrics(const struct evsel *evsel)
+ 
+ bool arch_evsel__must_be_in_group(const struct evsel *evsel)
+ {
+-	if (!evsel__sys_has_perf_metrics(evsel))
++	if (!evsel__sys_has_perf_metrics(evsel) || !evsel->name ||
++	    strcasestr(evsel->name, "uops_retired.slots"))
+ 		return false;
+ 
+-	return evsel->name &&
+-		(strcasestr(evsel->name, "slots") ||
+-		 strcasestr(evsel->name, "topdown"));
++	return strcasestr(evsel->name, "topdown") || strcasestr(evsel->name, "slots");
+ }
+ 
+ int arch_evsel__hw_name(struct evsel *evsel, char *bf, size_t size)
 -- 
 2.41.0.585.gd2178a4bd4-goog
 
