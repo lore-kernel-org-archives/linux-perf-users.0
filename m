@@ -2,170 +2,157 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F072C41513
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Aug 2023 01:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD0BC001DE
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Aug 2023 02:30:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231166AbjHABhL (ORCPT
+        id S232099AbjHACaH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Jul 2023 21:37:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39484 "EHLO
+        Mon, 31 Jul 2023 22:30:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229585AbjHABhK (ORCPT
+        with ESMTP id S232094AbjHACaG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Jul 2023 21:37:10 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D56A114;
-        Mon, 31 Jul 2023 18:37:09 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id ffacd0b85a97d-31771bb4869so5336310f8f.0;
-        Mon, 31 Jul 2023 18:37:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690853828; x=1691458628;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hyXrFrMGa5vDv1JXbFyGkaG6866MRSC88OmLGwPocMw=;
-        b=VKfZWhFq52c6OvI9vU4cseSRxVuvU0E8af3iFDOR71GbqAD922EXpiKXitjh2F31pu
-         YRzb72EySjkdNdjBUVWbue8Ia5FCSY/Fw5LkdlqqKOO3wxJlrWhFio1zKVKc7lbDUbQO
-         k4uwtClPU9qCjx3QvCKGWrMc2EEuCflgKKc7P0mqkESSHqK2UHCbtdNjW+R5bbS0qQ89
-         3oPZKiIeAXfOQfjKYJN+/++HQOjJ4ohehQQVOT7bBO8vQ7MU6J/SBLvLzn/+DK8Ie5C6
-         cFPwW9/k0av7o53A3e68vAaGmzY5Q8Wz9JGQTjAHgGay+vVoMY0+IQW87wZDpO5UeT4Q
-         Da5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690853828; x=1691458628;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hyXrFrMGa5vDv1JXbFyGkaG6866MRSC88OmLGwPocMw=;
-        b=WCnoI1nHGRtxGexylTV2LU94OonH3DbVB16nS7o1v4LCA8Gfd3NlRCjIhFETf9WhO8
-         wiK0qclbWVmWXlnI9r8PIh3Q2fbz/BDw2SZpd9NVk1qmb7ZqoUln00CnqVLGdSDPpkUC
-         4AUmUqjLR3Ov8Hfo3y+Ox98HoeUhK2FYNlDf7Vy4AyeM19IkF0TXBHwb1MowDy0IUXuu
-         9cZAMSaScc/n+flM31Ea0iCRPzkGl8JNE75EyqhIZQ68JcgkTTEyqjqWFyp89jvlxOfs
-         WH3ZeUbGBtfqryqyKfXTRxxeokmvvWUrkxcIAbetkNXSajTilqMPRaLDlM3KxA9Ml8Ec
-         5Ckg==
-X-Gm-Message-State: ABy/qLaLMAlXTlrRN23XAaYLAVOK71oFpTm+eb8rLhvWUh5AGCesC1YA
-        orMkzmQ6cGzJ4950hhJthgo/oehvVtwfHYbXFbw=
-X-Google-Smtp-Source: APBJJlEbsLzxcwW0UPQPfoX9lY/xBDed6oSWGp+RCvL9uW91SfU8JefEyAGw2SqpuW2C6c+T8VeyRvu+l12nKPf8pkk=
-X-Received: by 2002:a5d:67c6:0:b0:317:6f5b:2fbe with SMTP id
- n6-20020a5d67c6000000b003176f5b2fbemr1047722wrw.69.1690853827446; Mon, 31 Jul
- 2023 18:37:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230726121618.19198-1-zegao@tencent.com> <20230726121618.19198-4-zegao@tencent.com>
- <20230731114003.43842c8e@gandalf.local.home>
-In-Reply-To: <20230731114003.43842c8e@gandalf.local.home>
-From:   Ze Gao <zegao2021@gmail.com>
-Date:   Tue, 1 Aug 2023 09:36:56 +0800
-Message-ID: <CAD8CoPB1hRZb5eRWBxw3SRH+Hcd7JWfDNqGMadB4+5mibJ17qg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 3/3] libtraceevent: use the new prev_state_char
- instead in tracepoint sched_switch
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Mon, 31 Jul 2023 22:30:06 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 166691BFD;
+        Mon, 31 Jul 2023 19:30:01 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9F3A9613EF;
+        Tue,  1 Aug 2023 02:30:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92EBCC433C7;
+        Tue,  1 Aug 2023 02:29:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690857000;
+        bh=JqTpuojuSmByA27/5WGpMBYobl6c+pIwWwOPzzkyoSk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=M59G1iH5RSuy/jK4mIM5hLWCgtxG6QNZHLZsxbkscK3O2uHaIhfgKrCYkun1biidL
+         h5BVJLdxwGiZox9SC4yuEbTvH+z0EzZiSzeNeGDkcpQtmDOGuz18ed6j+CDmBfYULM
+         FSWt+bWY62WmfOHlPVtv3pDus3nXq+Hv2dKdKaoX9WZClxjocAw8mWvKBuben0+vgo
+         CfssLd1IF/jInUY88692Dm3tGAJ3uXgHOW2UPvnhH5/PXNJIXRegBmf7wvWvoy10m2
+         gbzQd+7l7Xyzs++sY+u2JtDEluqmu65wPHHY8br4vZKr240aEYaxhq0CKW86BBwYOu
+         KKjk1TWfinwPQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C752240096; Mon, 31 Jul 2023 23:29:56 -0300 (-03)
+Date:   Mon, 31 Jul 2023 23:29:56 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        llvm@lists.linux.dev
+Subject: Re: [PATCH v1 4/6] perf build: Disable fewer flex warnings
+Message-ID: <ZMhuJK/5+pMThsFd@kernel.org>
+References: <20230728064917.767761-1-irogers@google.com>
+ <20230728064917.767761-5-irogers@google.com>
+ <a8833945-3f0a-7651-39ff-a01e7edc2b3a@arm.com>
+ <ZMPJym7DnCkFH7aA@kernel.org>
+ <ZMPKekDl+g5PeiH8@kernel.org>
+ <CAP-5=fX2LOdd_34ysAYYB5zq5tr7dMje35Nw6hrLXTPLsOHoaw@mail.gmail.com>
+ <ZMQEfIi/BYwpDIEB@kernel.org>
+ <ZMQMQoCtBytgwB4i@kernel.org>
+ <CAP-5=fUOD4hgQBmXjQh0HujO_39zQQhv_Wv5oirgAC4N8Ao1nw@mail.gmail.com>
+ <ZMgkthavch7x/z+0@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZMgkthavch7x/z+0@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Roger that!
+Em Mon, Jul 31, 2023 at 06:16:38PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Fri, Jul 28, 2023 at 12:05:56PM -0700, Ian Rogers escreveu:
+> > On Fri, Jul 28, 2023, 11:43 AM Arnaldo Carvalho de Melo <acme@kernel.org>
+> > > > I haven't checked, lemme do it now.
+> 
+> > > It comes directly from flex's m4 files:
+> 
+> > > https://github.com/westes/flex/blob/master/src/c99-flex.skl#L2044
+> 
+> > > So I'll keep the -Wno-misleading-indentation, ok?
+>  
+> > Makes sense, yes.
+> 
+> continuing, changed the version check to:
+     
+>     Committer notes:
+>     
+>     Added this to the list of ignored warnings to get it building on
+>     a Fedora 36 machine with flex 2.6.4:
+>     
+>       -Wno-misleading-indentation
+>     
+>     Noticed when building with:
+>     
+>       $ make LLVM=1 -C tools/perf NO_BPF_SKEL=1 DEBUG=1
+>     
+>     Take two:
+>     
+>     We can't just try to canonicalize flex versions by just removing the
+>     dots, as we end up with:
+>     
+>             2.6.4 >= 2.5.37
+>     
+>     becoming:
+>     
+>             264 >= 2537
+>     
+>     Failing the build on flex 2.5.37, so instead use the back to the past
+>     added $(call version_ge3,2.6.4,$(FLEX_VERSION)) variant to check for
+>     that.
+>     
+>     Making sure $(FLEX_VERSION) keeps the dots as we may want to use 'sort
+>     -V' or something nicer when available everywhere.
 
-Thanks,
-Ze
+Please take a look at the tmp.perf-tools-next on the perf-tools-next git
+tree, so far it passed on:
 
-On Mon, Jul 31, 2023 at 11:40=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
->
-> On Wed, 26 Jul 2023 20:16:18 +0800
-> Ze Gao <zegao2021@gmail.com> wrote:
->
-> > Since the sched_switch tracepoint introduces a new variable to
-> > report sched-out task state in symbolic char, we switch to use
-> > that instead to spare from knowing internal implementations
-> > in kernel.
->
-> This needs to be changed to check if the "prev_state_char" field exists,
-> and if not, then it must use the old method. Same for perf. The tools mus=
-t
-> work with older kernels.
->
-> -- Steve
->
-> >
-> > Signed-off-by: Ze Gao <zegao@tencent.com>
-> > ---
-> >  plugins/plugin_sched_switch.c | 29 ++++-------------------------
-> >  1 file changed, 4 insertions(+), 25 deletions(-)
-> >
-> > diff --git a/plugins/plugin_sched_switch.c b/plugins/plugin_sched_switc=
-h.c
-> > index 8752cae..5dbdc28 100644
-> > --- a/plugins/plugin_sched_switch.c
-> > +++ b/plugins/plugin_sched_switch.c
-> > @@ -9,27 +9,6 @@
-> >  #include "event-parse.h"
-> >  #include "trace-seq.h"
-> >
-> > -static void write_state(struct trace_seq *s, int val)
-> > -{
-> > -     const char states[] =3D "SDTtZXxW";
-> > -     int found =3D 0;
-> > -     int i;
-> > -
-> > -     for (i =3D 0; i < (sizeof(states) - 1); i++) {
-> > -             if (!(val & (1 << i)))
-> > -                     continue;
-> > -
-> > -             if (found)
-> > -                     trace_seq_putc(s, '|');
-> > -
-> > -             found =3D 1;
-> > -             trace_seq_putc(s, states[i]);
-> > -     }
-> > -
-> > -     if (!found)
-> > -             trace_seq_putc(s, 'R');
-> > -}
-> > -
-> >  static void write_and_save_comm(struct tep_format_field *field,
-> >                               struct tep_record *record,
-> >                               struct trace_seq *s, int pid)
-> > @@ -97,10 +76,10 @@ static int sched_switch_handler(struct trace_seq *s=
-,
-> >       trace_seq_printf(s, "%lld ", val);
-> >
-> >       if (tep_get_field_val(s, event, "prev_prio", record, &val, 1) =3D=
-=3D
-> > 0)
-> > -             trace_seq_printf(s, "[%d] ", (int) val);
-> > +             trace_seq_printf(s, "[%d] ", (short) val);
-> >
-> > -     if (tep_get_field_val(s,  event, "prev_state", record, &val, 1)
-> > =3D=3D 0)
-> > -             write_state(s, val);
-> > +     if (tep_get_field_val(s,  event, "prev_state_char", record,
-> > &val, 1) =3D=3D 0)
-> > +             trace_seq_putc(s, (char) val);
-> >
-> >       trace_seq_puts(s, " =3D=3D> ");
-> >
-> > @@ -115,7 +94,7 @@ static int sched_switch_handler(struct trace_seq *s,
-> >       trace_seq_printf(s, "%lld", val);
-> >
-> >       if (tep_get_field_val(s, event, "next_prio", record, &val, 1) =3D=
-=3D
-> > 0)
-> > -             trace_seq_printf(s, " [%d]", (int) val);
-> > +             trace_seq_printf(s, " [%d]", (short) val);
-> >
-> >       return 0;
-> >  }
->
+[perfbuilder@five ~]$ export BUILD_TARBALL=http://192.168.86.10/perf/perf-6.5.0-rc2.tar.xz
+[perfbuilder@five ~]$ time dm
+   1   131.37 almalinux:8                   : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-18) , clang version 15.0.7 (Red Hat 15.0.7-1.module_el8.8.0+3466+dfcbc058) flex 2.6.1
+   2   133.63 almalinux:9                   : Ok   gcc (GCC) 11.3.1 20221121 (Red Hat 11.3.1-4) , clang version 15.0.7 (Red Hat 15.0.7-2.el9) flex 2.6.4
+   3   151.31 alpine:3.15                   : Ok   gcc (Alpine 10.3.1_git20211027) 10.3.1 20211027 , Alpine clang version 12.0.1 flex 2.6.4
+   4   148.73 alpine:3.16                   : Ok   gcc (Alpine 11.2.1_git20220219) 11.2.1 20220219 , Alpine clang version 13.0.1 flex 2.6.4
+   5   126.35 alpine:3.17                   : Ok   gcc (Alpine 12.2.1_git20220924-r4) 12.2.1 20220924 , Alpine clang version 15.0.7 flex 2.6.4
+   6   125.43 alpine:3.18                   : Ok   gcc (Alpine 12.2.1_git20220924-r10) 12.2.1 20220924 , Alpine clang version 16.0.6 flex 2.6.4
+   7   143.12 alpine:edge                   : Ok   gcc (Alpine 13.1.1_git20230520) 13.1.1 20230520 , Alpine clang version 16.0.4 flex 2.6.4
+   8   102.10 amazonlinux:2                 : Ok   gcc (GCC) 7.3.1 20180712 (Red Hat 7.3.1-15) , clang version 11.1.0 (Amazon Linux 2 11.1.0-1.amzn2.0.2) flex 2.5.37
+   9    95.36 amazonlinux:2023              : Ok   gcc (GCC) 11.3.1 20221121 (Red Hat 11.3.1-4) , clang version 15.0.6 (Amazon Linux 15.0.6-3.amzn2023.0.2) flex 2.6.4
+  10    96.15 amazonlinux:devel             : Ok   gcc (GCC) 11.3.1 20221121 (Red Hat 11.3.1-4) , clang version 15.0.6 (Amazon Linux 15.0.6-3.amzn2023.0.2) flex 2.6.4
+  11   118.48 archlinux:base                : Ok   gcc (GCC) 12.2.0 , clang version 14.0.6 flex 2.6.4
+  12   106.42 centos:stream                 : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-18) , clang version 15.0.7 (Red Hat 15.0.7-1.module_el8.8.0+1258+af79b238) flex 2.6.1
+  13   127.88 clearlinux:latest             : Ok   gcc (Clear Linux OS for Intel Architecture) 13.1.1 20230720 releases/gcc-13.1.0-353-g9aac37ab8a , clang version 16.0.6 flex 2.6.4
+  14    88.12 debian:10                     : Ok   gcc (Debian 8.3.0-6) 8.3.0 , Debian clang version 11.0.1-2~deb10u1 flex 2.6.4
+  15   113.56 debian:11                     : Ok   gcc (Debian 10.2.1-6) 10.2.1 20210110 , Debian clang version 13.0.1-6~deb11u1 flex 2.6.4
+  16   122.58 debian:12                     : Ok   gcc (Debian 12.2.0-14) 12.2.0 , Debian clang version 14.0.6 flex 2.6.4
+  17   130.89 debian:experimental           : Ok   gcc (Debian 12.3.0-5) 12.3.0 , Debian clang version 14.0.6 flex 2.6.4
+  18    23.75 fedora:26                     : Ok   gcc (GCC) 7.3.1 20180130 (Red Hat 7.3.1-2)  flex 2.6.1
+  19    23.52 fedora:27                     : Ok   gcc (GCC) 7.3.1 20180712 (Red Hat 7.3.1-6)  flex 2.6.1
+  20    24.66 fedora:28                     : Ok   gcc (GCC) 8.3.1 20190223 (Red Hat 8.3.1-2)  flex 2.6.1
+  21    26.12 fedora:29                     : Ok   gcc (GCC) 8.3.1 20190223 (Red Hat 8.3.1-2)  flex 2.6.1
+  22    26.06 fedora:30                     : Ok   gcc (GCC) 9.3.1 20200408 (Red Hat 9.3.1-2)  flex 2.6.4
+
+Tomorrow I'll go back to perf-tools, to get what sat on linux-next
+pending-fixes and a few other fixes (the one reported by Thomas, etc)
+to send to Linus for v6.5.
+
+- Arnaldo
