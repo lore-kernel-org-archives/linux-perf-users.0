@@ -2,157 +2,149 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD0BC001DE
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Aug 2023 02:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E679EC0015E
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Aug 2023 03:33:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232099AbjHACaH (ORCPT
+        id S231977AbjHADdF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Jul 2023 22:30:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60490 "EHLO
+        Mon, 31 Jul 2023 23:33:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232094AbjHACaG (ORCPT
+        with ESMTP id S229510AbjHADc4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Jul 2023 22:30:06 -0400
+        Mon, 31 Jul 2023 23:32:56 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 166691BFD;
-        Mon, 31 Jul 2023 19:30:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94D4D1BC7
+        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jul 2023 20:32:55 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9F3A9613EF;
-        Tue,  1 Aug 2023 02:30:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92EBCC433C7;
-        Tue,  1 Aug 2023 02:29:59 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 332E761386
+        for <linux-perf-users@vger.kernel.org>; Tue,  1 Aug 2023 03:32:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 662D2C433C8;
+        Tue,  1 Aug 2023 03:32:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690857000;
-        bh=JqTpuojuSmByA27/5WGpMBYobl6c+pIwWwOPzzkyoSk=;
+        s=k20201202; t=1690860774;
+        bh=GgyquySW031NzJSZTo0h9xUSD72lX00C077HbyVzIqc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=M59G1iH5RSuy/jK4mIM5hLWCgtxG6QNZHLZsxbkscK3O2uHaIhfgKrCYkun1biidL
-         h5BVJLdxwGiZox9SC4yuEbTvH+z0EzZiSzeNeGDkcpQtmDOGuz18ed6j+CDmBfYULM
-         FSWt+bWY62WmfOHlPVtv3pDus3nXq+Hv2dKdKaoX9WZClxjocAw8mWvKBuben0+vgo
-         CfssLd1IF/jInUY88692Dm3tGAJ3uXgHOW2UPvnhH5/PXNJIXRegBmf7wvWvoy10m2
-         gbzQd+7l7Xyzs++sY+u2JtDEluqmu65wPHHY8br4vZKr240aEYaxhq0CKW86BBwYOu
-         KKjk1TWfinwPQ==
+        b=BmMBNodQmtfcmd1nuov8mOVZABXCVZWEsV2GPE40+iw5avU3j6IGEYk8xbfsKP6VP
+         WntsvvNnXWKdMfsdbIFDs1oeqdXLRIevRzrfNQVPttHdtkm+py2vN/o/zDNxUhZU1W
+         1kSWwofhZvKYiUxg9/SktDZm4Ei93SBy4hete523w4TpbQhqnl9llXdILgT6n956mx
+         D4ldfodqVhKl3gXQg2/bhMhyWjkvIuyTzkqWAAo2FLMNA5Is9ek195rUwmltRIcDqK
+         6amn1Dbpa+PFfVRtCzVmkhMUI343DjH3R1AklW3cHHw5lxLNhnNSk3tLJGyBJgmlCW
+         RtKqAMzqg2Fxw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C752240096; Mon, 31 Jul 2023 23:29:56 -0300 (-03)
-Date:   Mon, 31 Jul 2023 23:29:56 -0300
+        id DBF8640096; Tue,  1 Aug 2023 00:32:51 -0300 (-03)
+Date:   Tue, 1 Aug 2023 00:32:51 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
-        Rob Herring <robh@kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH v1 4/6] perf build: Disable fewer flex warnings
-Message-ID: <ZMhuJK/5+pMThsFd@kernel.org>
-References: <20230728064917.767761-1-irogers@google.com>
- <20230728064917.767761-5-irogers@google.com>
- <a8833945-3f0a-7651-39ff-a01e7edc2b3a@arm.com>
- <ZMPJym7DnCkFH7aA@kernel.org>
- <ZMPKekDl+g5PeiH8@kernel.org>
- <CAP-5=fX2LOdd_34ysAYYB5zq5tr7dMje35Nw6hrLXTPLsOHoaw@mail.gmail.com>
- <ZMQEfIi/BYwpDIEB@kernel.org>
- <ZMQMQoCtBytgwB4i@kernel.org>
- <CAP-5=fUOD4hgQBmXjQh0HujO_39zQQhv_Wv5oirgAC4N8Ao1nw@mail.gmail.com>
- <ZMgkthavch7x/z+0@kernel.org>
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>
+Subject: Re: perf test case 6 dumps core on s390 without PMU
+Message-ID: <ZMh84/oSgmzsiNz0@kernel.org>
+References: <f0508123-780b-3370-e64a-c78a350d76fa@linux.ibm.com>
+ <CAP-5=fVKbHc5K4LmmD0aCsB5xt_JAFBNKx7COvoSUEKQx2OzYQ@mail.gmail.com>
+ <128916c0-23f1-9e34-3488-906d6df6116f@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZMgkthavch7x/z+0@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <128916c0-23f1-9e34-3488-906d6df6116f@linux.ibm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jul 31, 2023 at 06:16:38PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Fri, Jul 28, 2023 at 12:05:56PM -0700, Ian Rogers escreveu:
-> > On Fri, Jul 28, 2023, 11:43 AM Arnaldo Carvalho de Melo <acme@kernel.org>
-> > > > I haven't checked, lemme do it now.
+Em Mon, Jul 31, 2023 at 11:42:31AM +0200, Thomas Richter escreveu:
+> On 7/28/23 17:32, Ian Rogers wrote:
+> > On Fri, Jul 28, 2023 at 7:30 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+> >>
+> >> Using Linux 6.5.0rc3 perf test case 6 dumps core on an s390 without
+> >> configured PMU (this can happen depending on customer machine configuration).
+> >>
+> >> In this configuration several perf test cases fail:
+> >>  # ./perf test 2>&1 | grep FAIL
+> >>   6.1: Test event parsing                                : FAILED!
+> >>  10.3: Parsing of PMU event table metrics                : FAILED!
+> >>  10.4: Parsing of PMU event table metrics with fake PMUs : FAILED!
+> >>  28: Use a dummy software event to keep tracking         : FAILED!
+> >>  35: Track with sched_switch                             : FAILED!
+> >>  66: Parse and process metrics                           : FAILED!
+> >>  #
+> >>
+> >> Even worse the test case 6 dumps core:
+> >>
+> >>  # ./perf test -F 6
+> >>   6: Parse event definition strings                      :
+> >>   6.1: Test event parsing                                :
+> >>  Segmentation fault (core dumped)
+> >>  #
+> > 
+> > Thanks for reporting this!
+> > 
+> >> The root cause for these failures and core dump is a missing
+> >> PMU, as can be seen by the debug output:
+> >>    ...
+> >>    Event test failure: test 57 'instructions:uep'
+> >>    running test 58 '{cycles,cache-misses,branch-misses}:e'
+> >>    No PMU found for 'cycles' <-- Here no PMU is found, because there is none!
+> >>    FAILED tests/parse-events.c:1516 wrong number of entries
+> >>    Event test failure: test 58 '{cycles,cache-misses,branch-misses}:e'
+> >> Here no PMU is found, because there is none!
+> >>
+> >>    ....
+> >>    running test 59 'cycles/name=name/'
+> >>    No PMU found for 'name'
+> >>    Segmentation fault (core dumped)
+> >>
+> >> Here the root cause in in function test__term_equal_term() variable
+> >> evsel->name is NULL:
+> >>
+> >>  # gdb ./perf
+> >> ....
+> >> Breakpoint 1, test__term_equal_term (evlist=0x1542c00) at\
+> >>                        tests/parse-events.c:1688
+> >> (gdb) p evsel->name
+> >> $3 = 0x3fff7fe3dc0 ""
+> >> (gdb) n
+> >>  691 TEST_ASSERT_VAL("wrong type", evsel->core.attr.type == PERF_TYPE_HARDWARE);
+> >> (gdb) n
+> >> 1692 TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+> >> (gdb) n
+> >> 1693 TEST_ASSERT_VAL("wrong name setting", strcmp(evsel->name, "name") == 0);
+> >> (gdb) n
+> >>
+> >> Program received signal SIGSEGV, Segmentation fault.
+> >>
+> >> I could fix this by checking for NULL pointer, but I have the
+> >> feeling that there is more to it. However I do not fully understand
+> >> the latest rework on the event handling.
+> >>
+> >> The other test cases listed above fail due to the same root cause,
+> >> no PMU found.
+> >>
+> >> Please advise. What should all these test return when a system does
+> >> not have any PMU defined at all?
+> > 
+> > So I was writing a response then figured out I've already fixed this
+> > but it looks like the patch hasn't been taken yet:
+> > https://lore.kernel.org/lkml/20230706183705.601412-1-irogers@google.com/
+> > 
+> > Arnaldo, could you take a look?
+> > 
+> > Thanks,
+> > Ian
+> > 
 > 
-> > > It comes directly from flex's m4 files:
+> Ian, 
 > 
-> > > https://github.com/westes/flex/blob/master/src/c99-flex.skl#L2044
-> 
-> > > So I'll keep the -Wno-misleading-indentation, ok?
->  
-> > Makes sense, yes.
-> 
-> continuing, changed the version check to:
-     
->     Committer notes:
->     
->     Added this to the list of ignored warnings to get it building on
->     a Fedora 36 machine with flex 2.6.4:
->     
->       -Wno-misleading-indentation
->     
->     Noticed when building with:
->     
->       $ make LLVM=1 -C tools/perf NO_BPF_SKEL=1 DEBUG=1
->     
->     Take two:
->     
->     We can't just try to canonicalize flex versions by just removing the
->     dots, as we end up with:
->     
->             2.6.4 >= 2.5.37
->     
->     becoming:
->     
->             264 >= 2537
->     
->     Failing the build on flex 2.5.37, so instead use the back to the past
->     added $(call version_ge3,2.6.4,$(FLEX_VERSION)) variant to check for
->     that.
->     
->     Making sure $(FLEX_VERSION) keeps the dots as we may want to use 'sort
->     -V' or something nicer when available everywhere.
+> thanks a lot. I applied both patches you mentioned above and the
+> test cases work fine.
+> You have my 
+> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
 
-Please take a look at the tmp.perf-tools-next on the perf-tools-next git
-tree, so far it passed on:
-
-[perfbuilder@five ~]$ export BUILD_TARBALL=http://192.168.86.10/perf/perf-6.5.0-rc2.tar.xz
-[perfbuilder@five ~]$ time dm
-   1   131.37 almalinux:8                   : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-18) , clang version 15.0.7 (Red Hat 15.0.7-1.module_el8.8.0+3466+dfcbc058) flex 2.6.1
-   2   133.63 almalinux:9                   : Ok   gcc (GCC) 11.3.1 20221121 (Red Hat 11.3.1-4) , clang version 15.0.7 (Red Hat 15.0.7-2.el9) flex 2.6.4
-   3   151.31 alpine:3.15                   : Ok   gcc (Alpine 10.3.1_git20211027) 10.3.1 20211027 , Alpine clang version 12.0.1 flex 2.6.4
-   4   148.73 alpine:3.16                   : Ok   gcc (Alpine 11.2.1_git20220219) 11.2.1 20220219 , Alpine clang version 13.0.1 flex 2.6.4
-   5   126.35 alpine:3.17                   : Ok   gcc (Alpine 12.2.1_git20220924-r4) 12.2.1 20220924 , Alpine clang version 15.0.7 flex 2.6.4
-   6   125.43 alpine:3.18                   : Ok   gcc (Alpine 12.2.1_git20220924-r10) 12.2.1 20220924 , Alpine clang version 16.0.6 flex 2.6.4
-   7   143.12 alpine:edge                   : Ok   gcc (Alpine 13.1.1_git20230520) 13.1.1 20230520 , Alpine clang version 16.0.4 flex 2.6.4
-   8   102.10 amazonlinux:2                 : Ok   gcc (GCC) 7.3.1 20180712 (Red Hat 7.3.1-15) , clang version 11.1.0 (Amazon Linux 2 11.1.0-1.amzn2.0.2) flex 2.5.37
-   9    95.36 amazonlinux:2023              : Ok   gcc (GCC) 11.3.1 20221121 (Red Hat 11.3.1-4) , clang version 15.0.6 (Amazon Linux 15.0.6-3.amzn2023.0.2) flex 2.6.4
-  10    96.15 amazonlinux:devel             : Ok   gcc (GCC) 11.3.1 20221121 (Red Hat 11.3.1-4) , clang version 15.0.6 (Amazon Linux 15.0.6-3.amzn2023.0.2) flex 2.6.4
-  11   118.48 archlinux:base                : Ok   gcc (GCC) 12.2.0 , clang version 14.0.6 flex 2.6.4
-  12   106.42 centos:stream                 : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-18) , clang version 15.0.7 (Red Hat 15.0.7-1.module_el8.8.0+1258+af79b238) flex 2.6.1
-  13   127.88 clearlinux:latest             : Ok   gcc (Clear Linux OS for Intel Architecture) 13.1.1 20230720 releases/gcc-13.1.0-353-g9aac37ab8a , clang version 16.0.6 flex 2.6.4
-  14    88.12 debian:10                     : Ok   gcc (Debian 8.3.0-6) 8.3.0 , Debian clang version 11.0.1-2~deb10u1 flex 2.6.4
-  15   113.56 debian:11                     : Ok   gcc (Debian 10.2.1-6) 10.2.1 20210110 , Debian clang version 13.0.1-6~deb11u1 flex 2.6.4
-  16   122.58 debian:12                     : Ok   gcc (Debian 12.2.0-14) 12.2.0 , Debian clang version 14.0.6 flex 2.6.4
-  17   130.89 debian:experimental           : Ok   gcc (Debian 12.3.0-5) 12.3.0 , Debian clang version 14.0.6 flex 2.6.4
-  18    23.75 fedora:26                     : Ok   gcc (GCC) 7.3.1 20180130 (Red Hat 7.3.1-2)  flex 2.6.1
-  19    23.52 fedora:27                     : Ok   gcc (GCC) 7.3.1 20180712 (Red Hat 7.3.1-6)  flex 2.6.1
-  20    24.66 fedora:28                     : Ok   gcc (GCC) 8.3.1 20190223 (Red Hat 8.3.1-2)  flex 2.6.1
-  21    26.12 fedora:29                     : Ok   gcc (GCC) 8.3.1 20190223 (Red Hat 8.3.1-2)  flex 2.6.1
-  22    26.06 fedora:30                     : Ok   gcc (GCC) 9.3.1 20200408 (Red Hat 9.3.1-2)  flex 2.6.4
-
-Tomorrow I'll go back to perf-tools, to get what sat on linux-next
-pending-fixes and a few other fixes (the one reported by Thomas, etc)
-to send to Linus for v6.5.
+Thanks, applied.
 
 - Arnaldo
+
