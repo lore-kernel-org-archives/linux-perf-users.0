@@ -2,56 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 176D1C00528
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Aug 2023 05:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76103C00528
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Aug 2023 05:37:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229891AbjHAFgt (ORCPT
+        id S230406AbjHAFhE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Aug 2023 01:36:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49612 "EHLO
+        Tue, 1 Aug 2023 01:37:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229658AbjHAFgs (ORCPT
+        with ESMTP id S230227AbjHAFhA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Aug 2023 01:36:48 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29A8B8F
-        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jul 2023 22:36:47 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d1ef70d6a02so5816694276.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jul 2023 22:36:47 -0700 (PDT)
+        Tue, 1 Aug 2023 01:37:00 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55D391FC0
+        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jul 2023 22:36:54 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d326cb4c97fso1705003276.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jul 2023 22:36:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1690868206; x=1691473006;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=cP8wdd+KwpsAv2ShtYOYpBxbm0STXFlV3eoDNJ7OHtg=;
-        b=mL9zuBLW/gfQT7MkFoHJ+Ct280XnyulVgddTXFXR9aFEfVDgnlG62wUTw3ESbdIiyl
-         53dwyeKWXPWJ73II12Xv2UkRxm8bFwaoIldw0C+qBeYD1XErQISsE/Ovs1qA+Op7sEI0
-         z8m+YnqQF7BgvnDQn1sQ0TCvhQybwd48KVaVQ8UvpPkU94zTxJkSor+/hqJaGqOEOJrT
-         WPCHBhrH9tA6+IV9a7T41Z3FyEUdrB39axZlWUOWB9d258SwAg18KQW6oV0DXDIdOlo2
-         77ule0hjeicz6K5g/s4go6sYONwttRDhVM5GuP/M8z3b4bZ7kS36z4ehNEdbTDLwFqp+
-         jSLg==
+        d=google.com; s=20221208; t=1690868213; x=1691473013;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UKKw+NoKhTAujkctGAEA03hT1bAPJjDpeY1EXDQF9cg=;
+        b=q6mr/otNvx2nbxcxVCrk74/og2gISIFG6v2fLfLC1kP8KTWbzsu4C4kRbqmhMLyDo2
+         4mzM/6+JtWILDXVoGkJdk7m6Fc0eWnqkzMNSwLpATn8rJHoJgWlDUBNS2+mPkdNJ1DU2
+         l6hLg+kVsntRrSILPpPc9IZ7/Q+L1LJLNr3jnxA0lhPivxDRQfM7hoHeAm6j1tq8qHF+
+         pxsbLHqC99bcCRvVb9ef3eVuOb70YIE9eTO39B/qleRyn7Mma0P4nYsf7cy/I26vmYCm
+         hpZnDMMtxvEDiwD5JAL2428WVYqiETYbI9CnWwcIbWQRX+Zobnccp4PYJBCZ4d5Ogwww
+         LzYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690868206; x=1691473006;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cP8wdd+KwpsAv2ShtYOYpBxbm0STXFlV3eoDNJ7OHtg=;
-        b=BfKUiOs3N9C9HXmprju7a5wEJx4TiZcUP1P6yKPIK9+XrozquHWQepQTZmnw+3vYZ4
-         7xp6G3NUOX7XWxTWb1wQDeMexEB9/MTV4mwxB4g/ExJ0Ai9D+APu+7sGMdxFm9A04V/d
-         Pg0OlvLUlO7danBqn546y3Zu+LX0aLYgAGswNknn4gDqCjjKUWfTuMWfi9PSp66DyVvj
-         R1rbNmoUfeTnHqYTMDYnASQ51Ae2xY+lC2SZDPRWjvR9iWPpCqaM5InhwZ9WgsamZ2q2
-         +aA1Z8zHKnuMKO4AkNpC1s/UbOjJ+zshKyovlYBHN/dVBHCWMupqqdaj2QjCReYF9voV
-         AyLA==
-X-Gm-Message-State: ABy/qLbHHwxgP92a6c52FQRedbncxpvZa9/81qwkXk6ZBMKcDuzqWbGQ
-        y8YzS/fSjf+SYy13ZmY+H3lHUcZ0yzMH
-X-Google-Smtp-Source: APBJJlHcD9Xco+3AePtBpEqjlsHJvHtlAXrE2v5r8KY+izHX0/bSjyG5kXlb056okjUC93Go4zLdNcKnNPuM
+        d=1e100.net; s=20221208; t=1690868213; x=1691473013;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UKKw+NoKhTAujkctGAEA03hT1bAPJjDpeY1EXDQF9cg=;
+        b=DpTErjdl/fYpoXTQSfTX3MaAMqaqHAk5bxKaVdWFlvVZKGKMEQZG+rLo8LAqJUiLDI
+         UeREZNqBYhbeS2Wgqj05qu/d+jFetdmXKghCe4NdpSUJOheW2HpWS0A2i69z5uGdLcsM
+         FnmmCDJnSXdIFgZ3LAfpIjac4Iq2dn8QkT+nfZKwX8safJEY65mxxWJbys4GZbrvIe9v
+         6qhzA4R1WDDJiO0mgYl4wIAYpuQeJQDKcTgDP/DIewRarbxKo2d0K52JQmcKQlEcYUmx
+         WgCbCxT8qTt8etYll6QLA7QU15hMCOpHqbF1ZfwSzQGsDoMluNySW5hpszNJ/onnjLbX
+         H7MA==
+X-Gm-Message-State: ABy/qLb2ozhNt3swGs2NYXF9I6NxKLYLkeemueMpPCV4QAcyybZFFyYb
+        bdbSouwBF9i0NGgNbOQ8zQsulzeqMvBQ
+X-Google-Smtp-Source: APBJJlGHBKhwYEiNXtpe+3148aniIERraU7cOk0yF95FuPWBpAxYzpg9M/tmYEo+B0FB56/TFySIN1uF3T1J
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:dd0a:f4b:6531:d8dc])
- (user=irogers job=sendgmr) by 2002:a25:ab86:0:b0:bc0:bfa7:7647 with SMTP id
- v6-20020a25ab86000000b00bc0bfa77647mr75590ybi.0.1690868206436; Mon, 31 Jul
- 2023 22:36:46 -0700 (PDT)
-Date:   Mon, 31 Jul 2023 22:36:30 -0700
-Message-Id: <20230801053634.1142634-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:ce91:0:b0:c4e:3060:41f9 with SMTP id
+ x139-20020a25ce91000000b00c4e306041f9mr71542ybe.9.1690868213682; Mon, 31 Jul
+ 2023 22:36:53 -0700 (PDT)
+Date:   Mon, 31 Jul 2023 22:36:33 -0700
+In-Reply-To: <20230801053634.1142634-1-irogers@google.com>
+Message-Id: <20230801053634.1142634-4-irogers@google.com>
 Mime-Version: 1.0
+References: <20230801053634.1142634-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.585.gd2178a4bd4-goog
-Subject: [PATCH v1 0/4] Intel metric fixes and event updates
+Subject: [PATCH v1 3/4] perf vendor events intel: Update sapphirerapids to 1.15
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -73,44 +75,59 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The metric tma_info_pipeline_retire contains uops_retired.slots with
-perf metric events. Patch 1 fixes this event sorting so that
-uops_retired.slots isn't made a group leader as that needs to be
-topdown.slots.
+1.15 events were released in:
+https://github.com/intel/perfmon/commit/76dfb81a1148ec049fd9caae9c62529404da63df
+Adds the events OCR.DEMAND_DATA_RD.LOCAL_SOCKET_PMM and
+OCR.DEMAND_DATA_RD.PMM.
 
-Patch 2 and 3 update the meteorlake and sapphirerapids events.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/pmu-events/arch/x86/mapfile.csv     |  2 +-
+ .../arch/x86/sapphirerapids/other.json         | 18 ++++++++++++++++++
+ 2 files changed, 19 insertions(+), 1 deletion(-)
 
-Patch 4 addresses an issue with event grouping discussed in:
-https://lore.kernel.org/lkml/20230719001836.198363-3-irogers@google.com/
-by adding and altering metric constraints. The constraints avoid
-groups for metrics where the kernel PMU fails to not open the group
-(the trigger for the weak group being removed).
-
-Ian Rogers (4):
-  perf parse-events x86: Avoid sorting uops_retired.slots
-  perf vendor events intel: Update meteorlake to 1.04
-  perf vendor events intel: Update sapphirerapids to 1.15
-  perf vendor events intel: Update Icelake+ metric constraints
-
- tools/perf/arch/x86/util/evlist.c             |   7 +-
- tools/perf/arch/x86/util/evsel.c              |   7 +-
- .../arch/x86/alderlake/adl-metrics.json       |  11 +-
- .../arch/x86/alderlaken/adln-metrics.json     |   2 +
- .../arch/x86/icelake/icl-metrics.json         |  10 +-
- .../arch/x86/icelakex/icx-metrics.json        |  10 +-
- tools/perf/pmu-events/arch/x86/mapfile.csv    |   4 +-
- .../pmu-events/arch/x86/meteorlake/cache.json | 165 ++++++++++++++++++
- .../arch/x86/meteorlake/floating-point.json   |   8 +
- .../arch/x86/meteorlake/frontend.json         |  56 ++++++
- .../arch/x86/meteorlake/memory.json           |  80 +++++++++
- .../pmu-events/arch/x86/meteorlake/other.json |  16 ++
- .../arch/x86/meteorlake/pipeline.json         | 159 +++++++++++++++++
- .../arch/x86/rocketlake/rkl-metrics.json      |  10 +-
- .../arch/x86/sapphirerapids/other.json        |  18 ++
- .../arch/x86/sapphirerapids/spr-metrics.json  |   9 +-
- .../arch/x86/tigerlake/tgl-metrics.json       |  10 +-
- 17 files changed, 549 insertions(+), 33 deletions(-)
-
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+index 9020d7a23c91..3a8770e29fe8 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -24,7 +24,7 @@ GenuineIntel-6-1[AEF],v3,nehalemep,core
+ GenuineIntel-6-2E,v3,nehalemex,core
+ GenuineIntel-6-A7,v1.01,rocketlake,core
+ GenuineIntel-6-2A,v19,sandybridge,core
+-GenuineIntel-6-(8F|CF),v1.14,sapphirerapids,core
++GenuineIntel-6-(8F|CF),v1.15,sapphirerapids,core
+ GenuineIntel-6-AF,v1.00,sierraforest,core
+ GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
+ GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v57,skylake,core
+diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/other.json b/tools/perf/pmu-events/arch/x86/sapphirerapids/other.json
+index 31b6be9fb8c7..442ef3807a9d 100644
+--- a/tools/perf/pmu-events/arch/x86/sapphirerapids/other.json
++++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/other.json
+@@ -76,6 +76,24 @@
+         "SampleAfterValue": "100003",
+         "UMask": "0x1"
+     },
++    {
++        "BriefDescription": "Counts demand data reads that were supplied by PMM attached to this socket, whether or not in Sub NUMA Cluster(SNC) Mode.  In SNC Mode counts PMM accesses that are controlled by the close or distant SNC Cluster.",
++        "EventCode": "0x2A,0x2B",
++        "EventName": "OCR.DEMAND_DATA_RD.LOCAL_SOCKET_PMM",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x700C00001",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts demand data reads that were supplied by PMM.",
++        "EventCode": "0x2A,0x2B",
++        "EventName": "OCR.DEMAND_DATA_RD.PMM",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x703C00001",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    },
+     {
+         "BriefDescription": "Counts demand data reads that were supplied by DRAM attached to another socket.",
+         "EventCode": "0x2A,0x2B",
 -- 
 2.41.0.585.gd2178a4bd4-goog
 
