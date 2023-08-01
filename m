@@ -2,125 +2,126 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 686FBC001E0
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Aug 2023 13:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90989C001E0
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Aug 2023 14:16:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232110AbjHAN4Z (ORCPT
+        id S233134AbjHAOQS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Aug 2023 09:56:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53876 "EHLO
+        Tue, 1 Aug 2023 10:16:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233194AbjHAN4Y (ORCPT
+        with ESMTP id S229665AbjHAOQR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Aug 2023 09:56:24 -0400
+        Tue, 1 Aug 2023 10:16:17 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B009EC;
-        Tue,  1 Aug 2023 06:56:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA295B1;
+        Tue,  1 Aug 2023 07:16:16 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A97E7615B3;
-        Tue,  1 Aug 2023 13:56:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E14C7C433C7;
-        Tue,  1 Aug 2023 13:56:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690898182;
-        bh=I1Ij8BnJcW1tW2XqkFNyuQvGHApl5ATLxgJtVhkT/RI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=k5UkqO1j+YNAkk8BaP6R0JIJM6lQ6RsuTaRSDKst877eWmclYtS9Y7u0ounhOGwEM
-         bwMGFP+sEgdW8U+TEqMWFVumshxJ8tNULHuTjxLslr83TzlQuBUFfoIhtX/b8Iz8nA
-         faspREvIXl2/5lLqiunpmKc/uqo4nCh37P1YpIvZfSrfIpXto5XxcSE8OftbJUjDdz
-         t30WuHEDDCYionvd/rwZf9lySlO/67/M7TRgv90MwZjvOHxZaUFNFIMWxIliZfYeS9
-         yFyS2HC2oqHGpN1j22kbWhSEMBItHQgn3MPM4eLZ6ZUNL23t44+mo1cvoPMNYA7G8V
-         qGdZa1rN+eBTA==
-Date:   Tue, 1 Aug 2023 22:56:18 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf probe: Show correct error about @symbol for uprobe
-Message-Id: <20230801225618.06cb86992ae30564e5b87554@kernel.org>
-In-Reply-To: <ZMkAq5yx3+EiQNkF@kernel.org>
-References: <169055397023.67089.12693645664676964310.stgit@devnote2>
-        <ZMkAq5yx3+EiQNkF@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4821C615CB;
+        Tue,  1 Aug 2023 14:16:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA1A9C433C8;
+        Tue,  1 Aug 2023 14:16:13 +0000 (UTC)
+Date:   Tue, 1 Aug 2023 10:16:12 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Ze Gao <zegao2021@gmail.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
+Subject: Re: [RFC PATCH v3 4/6] sched, tracing: reorganize fields of switch
+ event struct
+Message-ID: <20230801101612.0e083e2d@gandalf.local.home>
+In-Reply-To: <20230801090124.8050-5-zegao@tencent.com>
+References: <20230801090124.8050-1-zegao@tencent.com>
+        <20230801090124.8050-5-zegao@tencent.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-(To: Oleg)
+On Tue,  1 Aug 2023 17:01:22 +0800
+Ze Gao <zegao2021@gmail.com> wrote:
 
-On Tue, 1 Aug 2023 09:55:07 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-
-> Em Fri, Jul 28, 2023 at 11:19:30PM +0900, Masami Hiramatsu (Google) escreveu:
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Since @symbol variable access is not supported by uprobe event, it must be
-> > correctly warn user instead of kernel version update.
+> Report priorities in 'short' and prev_state in 'int' to save
+> some buffer space. And also reorder the fields so that we take
+> struct alignment into consideration to make the record compact.
 > 
-> Thanks, less cryptic now, applied.
-> 
-> But is that just a matter of writing code to support reading global
-> variables from an uprobe?
+> Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Signed-off-by: Ze Gao <zegao@tencent.com>
 
-Hm, maybe we can use "@+offset" for accessing symboled data, as far as
-it is loaded with the text section.
-Oleg, what do you think about accessing symbols in data section from
-uprobes? Can we access it from user-land IP-relative address?
+I'd swap this patch with patch 3. That is, make the field changes first.
+I'd like this to get in regardless of if the state_char is accepted. We may
+want to get this in first to see if there's any regressions before we add a
+state_char.
 
-Thank you,
+-- Steve
 
+
+> ---
+>  include/trace/events/sched.h | 22 +++++++++++-----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
 > 
-> - Arnaldo
-> 
+> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+> index e507901bcab8..36863ffb00c6 100644
+> --- a/include/trace/events/sched.h
+> +++ b/include/trace/events/sched.h
+> @@ -188,7 +188,7 @@ DEFINE_EVENT(sched_wakeup_template, sched_wakeup_new,
+>  	     TP_ARGS(p));
 >  
-> > Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > Closes: https://lore.kernel.org/all/ZLWDEjvFjrrEJODp@kernel.org/
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  tools/perf/util/probe-event.c |   13 +++++++++----
-> >  1 file changed, 9 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> > index 6e2110d605fb..c1ded85fe859 100644
-> > --- a/tools/perf/util/probe-event.c
-> > +++ b/tools/perf/util/probe-event.c
-> > @@ -2800,13 +2800,18 @@ static void warn_uprobe_event_compat(struct probe_trace_event *tev)
-> >  	if (!tev->uprobes || tev->nargs == 0 || !buf)
-> >  		goto out;
-> >  
-> > -	for (i = 0; i < tev->nargs; i++)
-> > -		if (strglobmatch(tev->args[i].value, "[$@+-]*")) {
-> > -			pr_warning("Please upgrade your kernel to at least "
-> > -				   "3.14 to have access to feature %s\n",
-> > +	for (i = 0; i < tev->nargs; i++) {
-> > +		if (strchr(tev->args[i].value, '@')) {
-> > +			pr_warning("%s accesses a variable by symbol name, but that is not supported for user application probe.\n",
-> > +				   tev->args[i].value);
-> > +			break;
-> > +		}
-> > +		if (strglobmatch(tev->args[i].value, "[$+-]*")) {
-> > +			pr_warning("Please upgrade your kernel to at least 3.14 to have access to feature %s\n",
-> >  				   tev->args[i].value);
-> >  			break;
-> >  		}
-> > +	}
-> >  out:
-> >  	free(buf);
-> >  }
-> > 
-> 
-> -- 
-> 
-> - Arnaldo
+>  #ifdef CREATE_TRACE_POINTS
+> -static inline long __trace_sched_switch_state(bool preempt,
+> +static inline int __trace_sched_switch_state(bool preempt,
+>  					      unsigned int prev_state,
+>  					      struct task_struct *p)
+>  {
+> @@ -251,25 +251,25 @@ TRACE_EVENT(sched_switch,
+>  	TP_ARGS(preempt, prev, next, prev_state),
+>  
+>  	TP_STRUCT__entry(
+> -		__array(	char,	prev_comm,	TASK_COMM_LEN	)
+>  		__field(	pid_t,	prev_pid			)
+> -		__field(	int,	prev_prio			)
+> -		__field(	long,	prev_state			)
+> -		__field(	char,	prev_state_char			)
+> -		__array(	char,	next_comm,	TASK_COMM_LEN	)
+>  		__field(	pid_t,	next_pid			)
+> -		__field(	int,	next_prio			)
+> +		__field(	short,	prev_prio			)
+> +		__field(	short,	next_prio			)
+> +		__field(	int,	prev_state			)
+> +		__array(	char,	prev_comm,	TASK_COMM_LEN	)
+> +		__array(	char,	next_comm,	TASK_COMM_LEN	)
+> +		__field(	char,	prev_state_char			)
+>  	),
+>  
+>  	TP_fast_assign(
+> -		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
+>  		__entry->prev_pid		= prev->pid;
+> -		__entry->prev_prio		= prev->prio;
+> +		__entry->next_pid		= next->pid;
+> +		__entry->prev_prio		= (short) prev->prio;
+> +		__entry->next_prio		= (short) next->prio;
+>  		__entry->prev_state		= __trace_sched_switch_state(preempt, prev_state, prev);
+>  		__entry->prev_state_char	= __trace_sched_switch_state_char(preempt, prev_state, prev);
+>  		memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
+> -		__entry->next_pid		= next->pid;
+> -		__entry->next_prio		= next->prio;
+> +		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
+>  		/* XXX SCHED_DEADLINE */
+>  	),
+>  
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
