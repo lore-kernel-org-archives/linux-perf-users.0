@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6951C001E0
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Aug 2023 12:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B92C41513
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Aug 2023 12:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234904AbjHBMtw (ORCPT
+        id S234833AbjHBMt5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Aug 2023 08:49:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41710 "EHLO
+        Wed, 2 Aug 2023 08:49:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234866AbjHBMtO (ORCPT
+        with ESMTP id S234818AbjHBMtT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Aug 2023 08:49:14 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2A4726B0;
-        Wed,  2 Aug 2023 05:49:08 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1bbd2761f1bso56941595ad.2;
-        Wed, 02 Aug 2023 05:49:08 -0700 (PDT)
+        Wed, 2 Aug 2023 08:49:19 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDEDA2D4A;
+        Wed,  2 Aug 2023 05:49:16 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1bbc64f9a91so57190995ad.0;
+        Wed, 02 Aug 2023 05:49:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690980548; x=1691585348;
+        d=gmail.com; s=20221208; t=1690980556; x=1691585356;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=g/qteU2mNw/BBJfHNte7O9hoGmnD/YD+enA+yhOHga4=;
-        b=OP/jxunnVEjIALdrKgklqzA4TO2+S7yZyoB1vbzcHPo2X6iSraTju6MNy/9+cLsb0I
-         taQTHYoyq2w90sy33wYlAJ3mIV/itOpiNrHrs8ni5c/sxk9SwynCw+cMAkmx5/3XaO23
-         uJSstfIzoSZPaoSyDGEbhJoGIP+LnCLdWcvbNVAOZHI77pnQhyMrAI1moxomYA2BNZJQ
-         KEGFxlUuaUpR+ot+U0zWAn2nNBi4288T02gfxTbIZsiyQb8R2sqC4SkhLv4DoMzQKMLa
-         1Sr8TCBwWEMtoFHmJ1CJzneu/JOAvkXbjmm1+wpAelgMux60eLIaTMMqTgpF/hrXJDtV
-         Zv0Q==
+        bh=KWetw+9fo7xpR+/Y1RDX5IOHvVHf8sfB8Rgzd3Bsv2A=;
+        b=GIHzjFSzPcLYW4yJrPyLa5ImpMP+/3NnozdLXPCWfIEItaUDWT708653DBDRF9JDF1
+         7KJP2GCIClBAH9TSQ1KVLatrwc9yTBnkpzhENvv4RrL7sEfnb7UiXjrEyIlloYFhdoPb
+         kV1D/qaJGKouufSXYhMmCQ6s3RuM7Snwrzt8TCemadIkH1WZ+Bjv5jWhtNkd1ZyZsdBX
+         V9GoTGqzCtbsRZqsjZNFncaj+eA6BDJ5scmBkGEoP4jvts/pO08/1t3W/xVXwEtFegRb
+         mzsuOG7V5o6E5TBzDQ56qCiReA6n102vgs9RiJ+P/P0i3axrYk1X/byHeLt3snHWyPwR
+         aBRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690980548; x=1691585348;
+        d=1e100.net; s=20221208; t=1690980556; x=1691585356;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=g/qteU2mNw/BBJfHNte7O9hoGmnD/YD+enA+yhOHga4=;
-        b=HuZjXGx9xMf6ygdAChCGhZOlf95spDLPOIU79YBTM7Mhj9o0TMnMT5jUWNXNQBJ8Ie
-         9c4cYOqXhddL82LgfYpaxJpk1MxQs4m0vG//pHpVsb91rV4FsXnA4eEIEvGTemgd1nQ2
-         +AMsTEQTBxaGp6IQQGGnUn29ykVea4e27DzrJqh9XfUSJL9HpHhdBaeKnQfffmggBRMX
-         sNf4twc//qGt4tnBMeFAGFOX6RwLUV1fUOskAXA2kzAkS5KTEQi0GmDE7LrwM6Nh4DZI
-         wMp8pZmlN4JEC5wrhYlTqTuIaEG2Mig0dgLuTyGCyXtHPk8b+0baDhgOgAUMN0/8uMRm
-         KXGA==
-X-Gm-Message-State: ABy/qLYa2kc1JvUWi7QX4cMe9H+F6Ts99fr20agiuPtmiRNH64Huz4ti
-        lvZIXTcR9W/EUS83BZI8Ri4=
-X-Google-Smtp-Source: APBJJlHA7AJrJkY/XmvFc7K43FnZWwxGk3ty+ElpOYp1l0MN4z7lr7JxaCvjQdtuVGYHvkLSxSWktQ==
-X-Received: by 2002:a17:902:dac4:b0:1b8:8dbd:e1a0 with SMTP id q4-20020a170902dac400b001b88dbde1a0mr18050733plx.13.1690980548101;
-        Wed, 02 Aug 2023 05:49:08 -0700 (PDT)
+        bh=KWetw+9fo7xpR+/Y1RDX5IOHvVHf8sfB8Rgzd3Bsv2A=;
+        b=RMSoKbTxu3CpfqqqlJ8ThXzPCJWfgfEffOJ+UcwW8a6y1beW0RG+b/SnFhC7ISv7J6
+         klf1g5KJosImE4XA5lCwxTdElzxzIzEKRC0anRqfTGYZHTVq8E9nMA1Y+cABTICiWdRP
+         OHmV6+J8uJE9ck4nuSaKbeL6ikmaHwioqzGVwbM75G4EfS7TuTVPUGwD+vMBipJ9CoFJ
+         gm4BhbZQmuCudJuwOKc/M9CrGWR/WtIRyToMm4D4+1u7gP5ml1CdIZcUVMiVscAheDag
+         gb9ROKYR/7ZZ7mXxZ+GF6Ro/JyERrMXvaxUr00+8PvzN3zMaR8rEvsrP6ROALB8f1g1A
+         O51g==
+X-Gm-Message-State: ABy/qLZuDCHWBNqKL7p9vDfX2eQe2sthYRGpbuwsAicoEU7GhDk9tWvK
+        TlQSUNChgeVRSVxMwds3nks=
+X-Google-Smtp-Source: APBJJlHw4hmPYrgetk+3UmXtsG7PL5InI9GFCxvW4F0oTwPBOrp7ldLy1FZuk2Y69spe/Xv1ftUHXA==
+X-Received: by 2002:a17:902:f551:b0:1ae:8892:7d27 with SMTP id h17-20020a170902f55100b001ae88927d27mr17956049plf.42.1690980556116;
+        Wed, 02 Aug 2023 05:49:16 -0700 (PDT)
 Received: from localhost.localdomain ([203.205.141.17])
-        by smtp.googlemail.com with ESMTPSA id x34-20020a17090a6c2500b00264044cca0fsm4811993pjj.1.2023.08.02.05.49.04
+        by smtp.googlemail.com with ESMTPSA id x34-20020a17090a6c2500b00264044cca0fsm4811993pjj.1.2023.08.02.05.49.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Aug 2023 05:49:07 -0700 (PDT)
+        Wed, 02 Aug 2023 05:49:15 -0700 (PDT)
 From:   Ze Gao <zegao2021@gmail.com>
 X-Google-Original-From: Ze Gao <zegao@tencent.com>
 To:     Adrian Hunter <adrian.hunter@intel.com>,
@@ -66,9 +66,9 @@ To:     Adrian Hunter <adrian.hunter@intel.com>,
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org,
         linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Subject: [RFC PATCH v5 5/7] sched, tracing: add to report task state in symbolic chars
-Date:   Wed,  2 Aug 2023 08:47:28 -0400
-Message-ID: <20230802124840.335638-6-zegao@tencent.com>
+Subject: [RFC PATCH v5 7/7] perf sched: prefer to use prev_state_char introduced in sched_switch
+Date:   Wed,  2 Aug 2023 08:47:30 -0400
+Message-ID: <20230802124840.335638-8-zegao@tencent.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20230802124840.335638-1-zegao@tencent.com>
 References: <20230802124840.335638-1-zegao@tencent.com>
@@ -78,112 +78,63 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Internal representations of task state are likely to be changed
-or ordered, and reporting them to userspace without exporting
-them as part of API is basically wrong, which can easily break
-a userspace observability tool as kernel evolves. For example,
-perf suffers from this and still reports wrong states as of this
-writing.
+Since the sched_switch tracepoint introduces a new variable to
+report sched-out task state in symbolic char, we prefer to use
+it to spare from knowing internal implementations in kernel.
 
-OTOH, some masqueraded states like TASK_REPORT_IDLE and
-TASK_REPORT_MAX are also reported inadvertently, which confuses
-things even more and most userspace tools do not even take them
-into consideration.
-
-So add a new variable in company with the old raw value to
-report task state in symbolic chars, which are self-explaining
-and no further translation is needed. Of course this does not
-break any userspace tool.
-
-Note for PREEMPT_ACTIVE, we introduce 'p' to report it and use
-the old conventions for the rest.
+Also we keep the old parsing logic intact but sync the state char
+array with the latest kernel.
 
 Signed-off-by: Ze Gao <zegao@tencent.com>
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Acked-by: Ian Rogers <irogers@google.com>
 ---
- include/trace/events/sched.h | 44 ++++++++++++++++++++++--------------
- 1 file changed, 27 insertions(+), 17 deletions(-)
+ tools/perf/builtin-sched.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 7d34db20b2c6..1c7b94793495 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -6,6 +6,7 @@
- #define _TRACE_SCHED_H
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index eb310d1a7625..7f76ba51e36d 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -837,7 +837,7 @@ replay_wakeup_event(struct perf_sched *sched,
  
- #include <linux/kthread.h>
-+#include <linux/sched.h>
- #include <linux/sched/numa_balancing.h>
- #include <linux/tracepoint.h>
- #include <linux/binfmts.h>
-@@ -214,6 +215,27 @@ static inline int __trace_sched_switch_state(bool preempt,
- 
- 	return state ? (1 << (state - 1)) : state;
+ static inline char task_state_char(int state)
+ {
+-	static const char state_to_char[] = "RSDTtXZPI";
++	static const char state_to_char[] = "RSDTtXZPIp";
+ 	unsigned bit = state ? ffs(state) : 0;
+ 	return bit < sizeof(state_to_char) - 1 ? state_to_char[bit] : '?';
  }
+@@ -845,8 +845,20 @@ static inline char task_state_char(int state)
+ static inline char get_task_prev_state(struct evsel *evsel,
+ 				       struct perf_sample *sample)
+ {
+-	const int prev_state = evsel__intval(evsel, sample, "prev_state");
+-	return task_state_char(prev_state);
++	char prev_state_char;
++	int prev_state;
 +
-+static inline char __trace_sched_switch_state_char(bool preempt,
-+						   unsigned int prev_state,
-+						   struct task_struct *p)
-+{
-+	long state;
++	//prefer to use prev_state_char
++	if (evsel__field(evsel, "prev_state_char"))
++		prev_state_char = (char) evsel__intval(evsel,
++				sample, "prev_state_char");
++	else {
++		prev_state = (int) evsel__intval(evsel,
++				sample, "prev_state");
++		prev_state_char = task_state_char(prev_state);
++	}
 +
-+#ifdef CONFIG_SCHED_DEBUG
-+	BUG_ON(p != current);
-+#endif /* CONFIG_SCHED_DEBUG */
-+
-+	/*
-+	 * For PREEMPT_ACTIVE, we introduce 'p' to report it and use the old
-+	 * conventions for the rest.
-+	 */
-+	if (preempt)
-+		return 'p';
-+
-+	state = __task_state_index(prev_state, p->exit_state);
-+	return task_index_to_char(state);
-+}
- #endif /* CREATE_TRACE_POINTS */
++	return prev_state_char;
+ }
  
- /*
-@@ -236,6 +258,7 @@ TRACE_EVENT(sched_switch,
- 		__field(	int,	prev_state			)
- 		__array(	char,	prev_comm,	TASK_COMM_LEN	)
- 		__array(	char,	next_comm,	TASK_COMM_LEN	)
-+		__field(	char,	prev_state_char			)
- 	),
+ static int replay_switch_event(struct perf_sched *sched,
+@@ -2143,7 +2155,7 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
+ 		else if (r->last_time) {
+ 			u64 dt_wait = tprev - r->last_time;
  
- 	TP_fast_assign(
-@@ -246,26 +269,13 @@ TRACE_EVENT(sched_switch,
- 		__entry->prev_state		= __trace_sched_switch_state(preempt, prev_state, prev);
- 		memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
- 		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
-+		__entry->prev_state_char	= __trace_sched_switch_state_char(preempt, prev_state, prev);
- 		/* XXX SCHED_DEADLINE */
- 	),
- 
--	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%s%s ==> next_comm=%s next_pid=%d next_prio=%d",
--		__entry->prev_comm, __entry->prev_pid, __entry->prev_prio,
--
--		(__entry->prev_state & (TASK_REPORT_MAX - 1)) ?
--		  __print_flags(__entry->prev_state & (TASK_REPORT_MAX - 1), "|",
--				{ TASK_INTERRUPTIBLE, "S" },
--				{ TASK_UNINTERRUPTIBLE, "D" },
--				{ __TASK_STOPPED, "T" },
--				{ __TASK_TRACED, "t" },
--				{ EXIT_DEAD, "X" },
--				{ EXIT_ZOMBIE, "Z" },
--				{ TASK_PARKED, "P" },
--				{ TASK_DEAD, "I" }) :
--		  "R",
--
--		__entry->prev_state & TASK_REPORT_MAX ? "+" : "",
--		__entry->next_comm, __entry->next_pid, __entry->next_prio)
-+	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%c ==> next_comm=%s next_pid=%d next_prio=%d",
-+		__entry->prev_comm, __entry->prev_pid, __entry->prev_prio, __entry->prev_state_char, __entry->next_comm,
-+		__entry->next_pid, __entry->next_prio)
- );
- 
- /*
+-			if (r->last_state == 'R')
++			if (r->last_state == 'R' || r->last_state == 'p')
+ 				r->dt_preempt = dt_wait;
+ 			else if (r->last_state == 'D')
+ 				r->dt_iowait = dt_wait;
 -- 
 2.41.0
 
