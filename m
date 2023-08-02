@@ -2,139 +2,180 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41696C04A94
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Aug 2023 17:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7825EC001DF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Aug 2023 19:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233853AbjHBRqU (ORCPT
+        id S229877AbjHBTAC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Aug 2023 13:46:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37612 "EHLO
+        Wed, 2 Aug 2023 15:00:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233914AbjHBRqQ (ORCPT
+        with ESMTP id S229475AbjHBTAB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Aug 2023 13:46:16 -0400
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9A5C1995
-        for <linux-perf-users@vger.kernel.org>; Wed,  2 Aug 2023 10:46:00 -0700 (PDT)
-Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-407db3e9669so21361cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Aug 2023 10:46:00 -0700 (PDT)
+        Wed, 2 Aug 2023 15:00:01 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51A63C3;
+        Wed,  2 Aug 2023 12:00:00 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1bbbbb77b38so1498345ad.3;
+        Wed, 02 Aug 2023 12:00:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1690998360; x=1691603160;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pRnB3SQFPEO+lQ4tIkO8yJNmnXET3SUA7+GoOMMOJYE=;
-        b=Q5jhLbhtUDjUgTY4iJro3YZPZZK3Qk6PnsZp1zN+y+IwuLp9nygqAr2FWHqQkFZQhp
-         Pu5q+Q7Co+7sjMDJXgn75YwWSnrWKeZlEKC6FnQrDffgi/Vc4sfReC/z7CpcB/ySHRK6
-         AQYR9+Pe7EaZAhx3EWPHAApcZ9plHHpM9LT3vWTdZQAN7GQ2RpqJKriagf/e/U6OCay3
-         SxFaVPLMCr79/eQFRmYCuFQL55PjGt3C51DhouaVfxNq9mbjV3pmY+c2vGIK5ptwpO+U
-         MCMB5jL8kKQurKGoO3PVTySgqRFKDc7YgpJiyDSHwPqPuCiIH1AAFYOPRI0hQCzbvERr
-         R2Qg==
+        d=gmail.com; s=20221208; t=1691002800; x=1691607600;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wK/nsG+p1ZVeBh1KHC2T5H7Nze4MLELKiO/q+jiRasI=;
+        b=SLwicSkhC9Icednrp6S3yyFO6DhJzZf2CsyG4EhAYHmZKY+KT1XdmDMYre6sg/9nXD
+         MgSRimrmSU0q+QBy1mZlFZ/eT4x39OWBSuoO0qeZwHS0eUqreq2rDeRXME6M9pAJ5d2d
+         JclRcB1udxKIsLRlyTZ8sODg6ik69CTg+/pVWov5MSTkOoBl02OX4sR/qmcPhZgCwM1c
+         PVsr7Q4Y5oewfVhbF9R38x1THfJ1fnzEav8UfExTbYVE7xvfVnixjYBaWfRCwrlO4TCO
+         ne+G0t8pLY7AL+PavCZLt5GYzTVXxUvzqbdaMUhjzDcnk+7jkatWkWIadp57Iw+MPTtZ
+         kQgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690998360; x=1691603160;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pRnB3SQFPEO+lQ4tIkO8yJNmnXET3SUA7+GoOMMOJYE=;
-        b=O0SQXQWjCw8+q4ZJT31cNyMdd2S1AgbgmQNfB4yvjSVWmVvGEuUg+wgNoIgfU5C9Wm
-         9Y3jNgcOMYau8a1Hp9mkUAjX+p4vMjrNhlSUn/nLi0JDVlcrZUe+xDs47u0oVluEORCO
-         eCmTL6Ge68taUBuAnYQz/HtNdY7UNEOZHyTgHoKw58Qow6aKZpv3EqoFCwZxM84NX8Db
-         554e7hIAuPD/AJOvytkWA3DV6Q6wQOAtYPcVYNLXE07SeF3MToUncuiWoh/6WwrLDobh
-         f1+Xwy1soQ4UkKnawjmEtaveoFDSWuhJcGO57U0QZb1QWJ23FpauIf8xEZknbYFrQHAd
-         4+DA==
-X-Gm-Message-State: ABy/qLYaizQRJuqoisAOc5pXNRtqI/9rPM1VUi33hAfmduRwtdqYWU8s
-        YNqtcBvhQb47ENCxtYu9Vogr/pBov0G6Bq/AriewWcQG9bj/fng+MVK0Vg==
-X-Google-Smtp-Source: APBJJlHSAEAPCDqvxmmhWFmFCxIZY73VuHevIxhoFQ8dCGTGp8WvT1cxhcp/eFUAyfWZzDrzlPle8NxzLMDkEI8Y8XE=
-X-Received: by 2002:a05:622a:3c6:b0:403:aa88:cf7e with SMTP id
- k6-20020a05622a03c600b00403aa88cf7emr1227934qtx.29.1690998359911; Wed, 02 Aug
- 2023 10:45:59 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1691002800; x=1691607600;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wK/nsG+p1ZVeBh1KHC2T5H7Nze4MLELKiO/q+jiRasI=;
+        b=TieCzPANLPB5tlY/37vVg+tJFdMAwdYiqE8fvO72iR+Gs/eoalTdRDYg7EAim3pRrw
+         xrlCiJV+ER1Np+OPDBaJErZ73c+mPEZ99XUdjWX/NKQRZqOas15xlsAZDs01oxpFNbgl
+         oS5LS0cAZYi5fVeCACZ4C/FWWGrfV7zSn2uulKZft9rlm6w019ouFUC8GkI42bFpN5qi
+         nUzED94MOZ4Vzcyn+340x/r+h1xW/cUVDjX63xu96dwmzd0ie14kxnxdu/dpkVeum1Cs
+         6F1MWCwetYi3n8dbDkTIfxkf3GJfWeP0uZlmicsdqXOuSe6f9ODXGVUWgyzCZCB93NJ9
+         /ZTg==
+X-Gm-Message-State: ABy/qLbg8pbu/Ly9+kEL4kw9O99OyDPhghUm7e6/OJ0hoa4Rzj4DSjCZ
+        MQ1n+pmJs/weuSr/FwGMk0I=
+X-Google-Smtp-Source: APBJJlEt2RJcmsvzveK84xRan/cpBdhSiDdbM7jqA4Nvz/7gHi+9jxaxSLpECtPWi8kWbGC2HC3X2Q==
+X-Received: by 2002:a17:902:7242:b0:1b5:532e:33b8 with SMTP id c2-20020a170902724200b001b5532e33b8mr13524790pll.35.1691002799585;
+        Wed, 02 Aug 2023 11:59:59 -0700 (PDT)
+Received: from yoga ([2400:1f00:13:9882:cd17:239a:4f43:dc90])
+        by smtp.gmail.com with ESMTPSA id iy15-20020a170903130f00b001b801044466sm12823093plb.114.2023.08.02.11.59.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Aug 2023 11:59:58 -0700 (PDT)
+From:   Anup Sharma <anupnewsmail@gmail.com>
+X-Google-Original-From: Anup Sharma <AnupSharma>
+Date:   Thu, 3 Aug 2023 00:29:51 +0530
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Anup Sharma <anupnewsmail@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC] Adding Support for Firefox's Gecko Profile Format
+Message-ID: <ZMqnp1kBv1ACIiGS@yoga>
+References: <ZIHPXV5/ZopqcSSc@yoga>
+ <ZIofrGKElc3nkNk0@yoga>
+ <CAP-5=fV9tXNpYHH9DW0cVbRoFLGvG9SNn-MUhuyKuVBRuDqjoA@mail.gmail.com>
+ <ZJyT8bt0LFLw6hKV@yoga>
+ <CAM9d7ch7TdagV+dzj6MCp4fY15Vc4oGJjKAoQDyc=BXqy7qi+A@mail.gmail.com>
+ <287bf3c8-fa0e-8c36-df14-7d728c63c265@intel.com>
+ <ZKQu00bJZwO+Fc6m@yoga>
+ <ZKRcTqAsKxF/Q3fQ@yoga>
+ <ZMFgIekihhoGFBpn@yoga>
+ <ZMFyi5S4JlFeZ/9c@kernel.org>
 MIME-Version: 1.0
-References: <F762DED397BFDFD1+20230802040315.106038-2-ye@kaige.org>
-In-Reply-To: <F762DED397BFDFD1+20230802040315.106038-2-ye@kaige.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 2 Aug 2023 10:45:47 -0700
-Message-ID: <CAP-5=fVTra0onRPsVq2guBkGhvuw7yvXNtjFJ5Eom9wrFZtsxA@mail.gmail.com>
-Subject: Re: [PATCH] perf stat-display: Check if snprintf()'s fmt argument is NULL
-To:     Kaige Ye <ye@kaige.org>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZMFyi5S4JlFeZ/9c@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Aug 1, 2023 at 9:04=E2=80=AFPM Kaige Ye <ye@kaige.org> wrote:
->
-> It is undefined behavior to pass NULL as snprintf()'s fmt argument.
-> Here is an example to trigger the problem:
->
->   $ perf stat --metric-only -x, -e instructions -- sleep 1
->   insn per cycle,
->   Segmentation fault (core dumped)
->
-> With this patch:
->
->   $ perf stat --metric-only -x, -e instructions -- sleep 1
->   insn per cycle,
->   ,
->
-> Signed-off-by: Kaige Ye <ye@kaige.org>
-> ---
->  tools/perf/util/stat-display.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-displa=
-y.c
-> index 7329b3340..e8936cffd 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -438,7 +438,7 @@ static void print_metric_csv(struct perf_stat_config =
-*config __maybe_unused,
->                 fprintf(out, "%s%s", config->csv_sep, config->csv_sep);
->                 return;
->         }
-> -       snprintf(buf, sizeof(buf), fmt, val);
-> +       snprintf(buf, sizeof(buf), fmt ?: "", val);
+On Wed, Jul 26, 2023 at 04:22:51PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Wed, Jul 26, 2023 at 11:34:17PM +0530, Anup Sharma escreveu:
+> > Dear all,
+> > 
+> > I want to share a recent development in our project that
+> > I have been working on this week. I have successfully
+> > implemented a new feature that allows users to directly
+> > open the browser and visualize the output of perf.data
+> > on Firefox Profiler.
+> 
+> Excellent news!
+>  
+> > To enhance user experience, I have made sure this option
+> > is enabled by default. Additionally, I've also added a
+> > handy command line argument, "--save-only," which allows
+> > users to save the output file as needed. This enhancement
+> > replaces the previous standard output method, providing a
+> > much-improved experience.
+> > 
+> > Moreover, Everything is processed locally, and no data is
+> > sent to any server.
+> 
+> That addresses the worry about sending possibly sensitive data over the
+> network by default, great.
+>  
+> > During this implementation, I had the opportunity to delve
+> > into several exciting topics, including threading, HTTP server,
+> > and CORS mechanisms. The learning process has been both
+> > challenging and rewarding.
+> 
+> Cool that you're so excited learning all this.
+>  
+> > Currently, I am in the process of performing some clean-up tasks.
+> > Once that is complete, I will be sharing the next version of the
+> > series, which includes this fantastic new feature, with all of
+> > you very soon.
+> > 
+> > Thank you for your ongoing support and encouragement.
+> 
+> Keep it up!
 
-Hi,
+This week, I'm working on documenting the gecko converter for our wiki.
+I've dedicated a significant amount of time to think about the content
+and how to approach it. So far, I've written sections covering the
+introduction to Firefox Profiler and the formatting guidelines(not
+published yet).
 
-I couldn't reproduce this error and the code immediately above here
-does null check fmt:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/stat-display.c?h=3Dperf-tools-next#n437
-Perhaps this is an older version of the perf tool? You can run "perf
-version" to determine this.
+However, I've left the usage part blank because I'm uncertain about how
+to enable gecko.py arguments when executing the "perf script gecko" command.
+I've looked at examples like flamegraph-report and sctop-report, but I'm
+still confused. I attempted to enable the script to take the gecko.py
+command example "perf script report gecko --save-only=profiler.json,"
+but this caused issues when running "perf script gecko -a sleep 3" again.
+This has left me feeling rather puzzled, and I would appreciate discussing
+this during our office hour, or any help here.
 
-Thanks,
-Ian
+Due to this blocker, I haven't been able to send the updated patch
+for test_gecko yet. However, I hope I'll find a solution soon and overcome
+this obstacle.
 
-
->         ends =3D vals =3D skip_spaces(buf);
->         while (isdigit(*ends) || *ends =3D=3D '.')
->                 ends++;
-> @@ -578,7 +578,7 @@ static void print_metric_only_csv(struct perf_stat_co=
-nfig *config __maybe_unused
->         if (!valid_only_metric(unit))
->                 return;
->         unit =3D fixunit(tbuf, os->evsel, unit);
-> -       snprintf(buf, sizeof buf, fmt, val);
-> +       snprintf(buf, sizeof(buf), fmt ?: "", val);
->         ends =3D vals =3D skip_spaces(buf);
->         while (isdigit(*ends) || *ends =3D=3D '.')
->                 ends++;
-> @@ -600,7 +600,7 @@ static void print_metric_only_json(struct perf_stat_c=
-onfig *config __maybe_unuse
->         if (!valid_only_metric(unit))
->                 return;
->         unit =3D fixunit(tbuf, os->evsel, unit);
-> -       snprintf(buf, sizeof(buf), fmt, val);
-> +       snprintf(buf, sizeof(buf), fmt ?: "", val);
->         ends =3D vals =3D skip_spaces(buf);
->         while (isdigit(*ends) || *ends =3D=3D '.')
->                 ends++;
-> --
-> 2.41.0
->
+> - Arnaldo
+> 
+> > Thanks,
+> > Anup
+> > 
+> > > > Regards,
+> > > > Anup
+> > > > > > 
+> > > > > >>
+> > > > > >> The second challenge revolved around the usage of event hooks provided with the perf script
+> > > > > >> python event handlers. I found myself deliberating between two approaches. The first
+> > > > > >> approach involved creating custom functions that would be called using the event
+> > > > > >> handlers. These functions would then save the data in an organized format within
+> > > > > >> globally created data structures. The alternative approach was to write the entire
+> > > > > >> logic inside the event handlers themselves.
+> > > > > >>
+> > > > > >> Additionally, I contemplated whether it would be more suitable to handle the creation of
+> > > > > >> a Gecko format for JSON and the profile format within the same script or to separate
+> > > > > >> them into different scripts.
+> > > > > >>
+> > > > > >> I will discuss this points during tomorrow's office hour.
+> > > > > >>
+> > > > > >> However, I have gained a deeper understanding of the problem at hand and will use this
+> > > > > >> knowledge to make more informed decisions and progress more effectively in the coming weeks.
+> > > > > > 
+> > > > > > Sounds like you did a good amount of research on how perf script
+> > > > > > works.  We can talk about the details in the meeting.
+> > > > > > 
+> > > > > > Thanks,
+> > > > > > Namhyung
+> > > > > 
+> 
+> -- 
+> 
+> - Arnaldo
