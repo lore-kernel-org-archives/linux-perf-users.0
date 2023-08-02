@@ -2,100 +2,166 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41631C001DF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Aug 2023 07:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89246C001DF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Aug 2023 08:04:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233794AbjHBHzM (ORCPT
+        id S232295AbjHBIEI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Aug 2023 03:55:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51870 "EHLO
+        Wed, 2 Aug 2023 04:04:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231490AbjHBHye (ORCPT
+        with ESMTP id S229958AbjHBIEF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Aug 2023 03:54:34 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 601305254;
-        Wed,  2 Aug 2023 00:52:28 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RG4173dLrzrS62;
-        Wed,  2 Aug 2023 15:51:23 +0800 (CST)
-Received: from localhost.localdomain (10.67.174.95) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Wed, 2 Aug 2023 15:52:25 +0800
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-        <james.clark@arm.com>, <tmricht@linux.ibm.com>,
-        <ak@linux.intel.com>, <anshuman.khandual@arm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-CC:     <yangjihong1@huawei.com>
-Subject: [PATCH v4 7/7] perf test: Add perf_event_attr test for record selected CPUs exclude_user
-Date:   Wed, 2 Aug 2023 07:49:48 +0000
-Message-ID: <20230802074948.136468-8-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.30.GIT
-In-Reply-To: <20230802074948.136468-1-yangjihong1@huawei.com>
-References: <20230802074948.136468-1-yangjihong1@huawei.com>
+        Wed, 2 Aug 2023 04:04:05 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58081E7D
+        for <linux-perf-users@vger.kernel.org>; Wed,  2 Aug 2023 01:04:03 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-3fb4146e8fcso3854435e9.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Aug 2023 01:04:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20221208.gappssmtp.com; s=20221208; t=1690963442; x=1691568242;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xQ/J00kEJAH5Xut374nMK9bufEJjwUvOp4VXeqDa+Tk=;
+        b=TR4+KtOpPWWB7zMxB9PgPgMQ/dmKpI2IOf32w75D9jzFT4t3NfzAhSGg405n8kCuhn
+         kyYUR4xFpYscU7oxOcPiJc2yOOlfvs9R4fNuiNBCQmV9beI/91TN+kKBuM5CI0EE8VBO
+         vMHyHKRvn3MFWlA61V26A+Rzez+kE2tM2iMadEmGEeYqCOIHazGf32wjXpL/NVOu7Dps
+         iJ2qq5Nn5iSwo9aR9TjLTcE+F1O+/en60hHyXmTZuO7Bt3BDY1tGvRzQETlyKtaTCMnY
+         oZhJX722C9T9OKR3dBJH9VHSZYG/uY3H9NJNAbfFSAZBZ5dJrFpk3B4IiHaTcFimTrUV
+         qTWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690963442; x=1691568242;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xQ/J00kEJAH5Xut374nMK9bufEJjwUvOp4VXeqDa+Tk=;
+        b=VKzJ8V5n/n0hAdwaY5apDAIr1UFXMfrUG6AamngxNzN+FKmMjBYJGWQ7OcF5lkQ8Qc
+         ZRDvk4h+ZGETVRrgdhqqJ+AD+YQoRCmDnPgWUasgaT/GH+MizVOSrBiUlLiIGQKRXnl2
+         k3WUshE36ZKcIkFRYIrJwu36e1DzwNaaE3j6eAQrctfgn3wtoyqfsd2aEvi6ZmPktrTY
+         GDwurdycERmrTTMe+ZvUJNUOV8uSn81hjUpqFYmBTjgQnTQ4VSAQ3pWQoI9RTCRNGWel
+         FDRnmliRoW/L6NxLOZj3oDL5OG7Yybqa597JHuM4luelsKr6JDUDqOzgbNwQa9lgjyqR
+         PJ1A==
+X-Gm-Message-State: ABy/qLbbw0SyPnpD/NO60VXlXmnXr88e23zACcV69xU3YsDIsVwfpt1s
+        KY2Tik6PUBVlz3LPQzwe4Azpww==
+X-Google-Smtp-Source: APBJJlGkfK1cMubjw5jAx7xv31P0b4h+hmVBpPD+Xx9CKLBF6Ee3UXefcdhFfKa5u+4OBBC3XEAG3Q==
+X-Received: by 2002:a7b:c394:0:b0:3fe:1b5e:82 with SMTP id s20-20020a7bc394000000b003fe1b5e0082mr3691989wmj.20.1690963441714;
+        Wed, 02 Aug 2023 01:04:01 -0700 (PDT)
+Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id x1-20020a5d54c1000000b003176f2d9ce5sm18338098wrv.71.2023.08.02.01.04.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Aug 2023 01:04:01 -0700 (PDT)
+From:   Alexandre Ghiti <alexghiti@rivosinc.com>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <atishp@atishpatra.org>,
+        Anup Patel <anup@brainfault.org>,
+        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+        Andrew Jones <ajones@ventanamicro.com>,
+        =?UTF-8?q?R=C3=A9mi=20Denis-Courmont?= <remi@remlab.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH v6 00/10] riscv: Allow userspace to directly access perf counters
+Date:   Wed,  2 Aug 2023 10:03:18 +0200
+Message-Id: <20230802080328.1213905-1-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.95]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If all (non-dummy) evsel have exclude_user, system_wide sideband is not
-needed. Add this test scenario.
+riscv used to allow direct access to cycle/time/instret counters,
+bypassing the perf framework, this patchset intends to allow the user to
+mmap any counter when accessed through perf.
 
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
----
- .../perf/tests/attr/test-record-C0-all-kernel | 32 +++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 tools/perf/tests/attr/test-record-C0-all-kernel
+**Important**: The default mode is now user access through perf only, not
+the legacy so some applications will break. However, we introduce a sysctl
+perf_user_access like arm64 does, which will allow to switch to the legacy
+mode described above.
 
-diff --git a/tools/perf/tests/attr/test-record-C0-all-kernel b/tools/perf/tests/attr/test-record-C0-all-kernel
-new file mode 100644
-index 000000000000..2d7549277c1e
---- /dev/null
-+++ b/tools/perf/tests/attr/test-record-C0-all-kernel
-@@ -0,0 +1,32 @@
-+[config]
-+command = record
-+args    = --no-bpf-event --all-kernel -C 0 kill >/dev/null 2>&1
-+ret     = 1
-+
-+[event:base-record]
-+cpu=0
-+
-+# no enable on exec for CPU attached
-+enable_on_exec=0
-+
-+# PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_TIME |
-+# PERF_SAMPLE_PERIOD | PERF_SAMPLE_IDENTIFIER
-+# + PERF_SAMPLE_CPU added by -C 0
-+sample_type=65927
-+
-+# Dummy event handles mmaps, comm and task.
-+mmap=0
-+comm=0
-+task=0
-+
-+# exclude_user for all-kernel option
-+exclude_user=1
-+
-+[event:system-wide-dummy]
-+
-+# system_wide is not need for all (non-dummy) events have exclude_user
-+cpu=0
-+
-+# exclude_user for all-kernel option
-+exclude_user=1
-+exclude_kernel=0
+This version needs openSBI v1.3 *and* a kernel fix that went upstream lately
+(https://lore.kernel.org/lkml/20230616114831.3186980-1-maz@kernel.org/T/).
+
+base-commit-tag: v6.5-rc1
+
+Changes in v6:
+- Replaced csr_read() preprocessor parsing of csr number with the
+  input constraint, as suggested by Ian
+- Added a defined(__riscv) and a comment to make things clearer, as
+  suggested by Ian
+
+Changes in v5:
+- Fix typo from Atish
+- Add RB from Atish and Andrew
+- Improve cover letter and patch 7 commit log to explain why we made the
+  choice to break userspace for security reasons, thanks Atish and Rémi
+- Rebase on top of v6.5-rc1
+
+Changes in v4:
+- Fixed some nits in riscv_pmu_sbi.c thanks to Andrew
+- Fixed the documentation thanks to Andrew
+- Added RB from Andrew \o/
+
+Changes in v3:
+- patch 1 now contains the ref to the faulty commit (no Fixes tag as it is only a comment), as Andrew suggested
+- Removed RISCV_PMU_LEGACY_TIME from patch 3, as Andrew suggested
+- Rename RISCV_PMU_PDEV_NAME to "riscv-pmu-sbi", patch4 is just cosmetic now, as Andrew suggested
+- Removed a few useless (and wrong) comments, as Andrew suggested
+- Simplify arch_perf_update_userpage code, as Andrew suggested
+- Documentation now mentions that time CSR is *always* accessible, whatever the mode, as suggested by Andrew
+- Removed CYCLEH reference and add TODO for rv32 support, as suggested by Atish
+- Do not rename the pmu instance as Atish suggested
+- Set pmc_width only if rdpmc is enabled and CONFIG_RISCV_PMU is set and the event is a hw event
+- Move arch_perf_update_userpage https://lore.kernel.org/lkml/20230616114831.3186980-1-maz@kernel.org/T/
+- **Switch to user mode access by default**
+
+Changes in v2:
+- Split into smaller patches, way better!
+- Add RB from Conor
+- Simplify the way we checked riscv architecture
+- Fix race mmap and other thread running on other cpus
+- Use hwc when available
+- Set all userspace access flags in event_init, too cumbersome to handle sysctl changes
+- Fix arch_perf_update_userpage for pmu other than riscv-pmu by renaming pmu driver
+- Fixed kernel test robot build error
+- Fixed documentation (Andrew and Bagas)
+- perf testsuite passes mmap tests in all 3 modes
+
+Alexandre Ghiti (10):
+  perf: Fix wrong comment about default event_idx
+  include: riscv: Fix wrong include guard in riscv_pmu.h
+  riscv: Make legacy counter enum match the HW numbering
+  drivers: perf: Rename riscv pmu sbi driver
+  riscv: Prepare for user-space perf event mmap support
+  drivers: perf: Implement perf event mmap support in the legacy backend
+  drivers: perf: Implement perf event mmap support in the SBI backend
+  Documentation: admin-guide: Add riscv sysctl_perf_user_access
+  tools: lib: perf: Implement riscv mmap support
+  perf: tests: Adapt mmap-basic.c for riscv
+
+ Documentation/admin-guide/sysctl/kernel.rst |  27 ++-
+ drivers/perf/riscv_pmu.c                    | 113 +++++++++++
+ drivers/perf/riscv_pmu_legacy.c             |  28 ++-
+ drivers/perf/riscv_pmu_sbi.c                | 196 +++++++++++++++++++-
+ include/linux/perf/riscv_pmu.h              |  12 +-
+ include/linux/perf_event.h                  |   3 +-
+ tools/lib/perf/mmap.c                       |  66 +++++++
+ tools/perf/tests/mmap-basic.c               |   6 +-
+ 8 files changed, 431 insertions(+), 20 deletions(-)
+
 -- 
-2.30.GIT
+2.39.2
 
