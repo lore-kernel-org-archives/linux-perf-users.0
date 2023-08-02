@@ -2,344 +2,139 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A400DC04A6A
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Aug 2023 17:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41696C04A94
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Aug 2023 17:46:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231374AbjHBRAs (ORCPT
+        id S233853AbjHBRqU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Aug 2023 13:00:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56756 "EHLO
+        Wed, 2 Aug 2023 13:46:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229987AbjHBRAr (ORCPT
+        with ESMTP id S233914AbjHBRqQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Aug 2023 13:00:47 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FC50173A
-        for <linux-perf-users@vger.kernel.org>; Wed,  2 Aug 2023 10:00:45 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-686b91c2744so5761b3a.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Aug 2023 10:00:45 -0700 (PDT)
+        Wed, 2 Aug 2023 13:46:16 -0400
+Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9A5C1995
+        for <linux-perf-users@vger.kernel.org>; Wed,  2 Aug 2023 10:46:00 -0700 (PDT)
+Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-407db3e9669so21361cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Aug 2023 10:46:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1690995644; x=1691600444;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=5+B58DisRU++lxI3dkapfCb6I7OQQyQFFvkAi8ErqZg=;
-        b=J8neAeGkf2CoJWJpyIKd5TnxQVyY7xmetW4rQZzJHaLb7TgOo4EGM4DuN9OX6MLu07
-         8Ef1lP6aKJcjqZ4xUsltwBvf4s+s1GuiOaeOj0TKs8GyZpZZVi7rKXJqfw/rwL9JoZSp
-         D4P7qcYHIvFcAq+ntANaLHg9d2QjMUpeozZaHeP9vpzB63QP1w4N1WOj/45nKiH+OS3q
-         8jpixFtvzsrqBQGW3/3RsLiJ/27o/YTLpdNUjGArcIIrILNTrVAbsfjHPiY6vUDy+M0H
-         G0YxXiSL5lCpfj5o5YJfHD2veUBCJpASZxTpnr+u6hjt6apxNotBacoT9IkyLnqVa0oy
-         xw0A==
+        d=google.com; s=20221208; t=1690998360; x=1691603160;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pRnB3SQFPEO+lQ4tIkO8yJNmnXET3SUA7+GoOMMOJYE=;
+        b=Q5jhLbhtUDjUgTY4iJro3YZPZZK3Qk6PnsZp1zN+y+IwuLp9nygqAr2FWHqQkFZQhp
+         Pu5q+Q7Co+7sjMDJXgn75YwWSnrWKeZlEKC6FnQrDffgi/Vc4sfReC/z7CpcB/ySHRK6
+         AQYR9+Pe7EaZAhx3EWPHAApcZ9plHHpM9LT3vWTdZQAN7GQ2RpqJKriagf/e/U6OCay3
+         SxFaVPLMCr79/eQFRmYCuFQL55PjGt3C51DhouaVfxNq9mbjV3pmY+c2vGIK5ptwpO+U
+         MCMB5jL8kKQurKGoO3PVTySgqRFKDc7YgpJiyDSHwPqPuCiIH1AAFYOPRI0hQCzbvERr
+         R2Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690995644; x=1691600444;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5+B58DisRU++lxI3dkapfCb6I7OQQyQFFvkAi8ErqZg=;
-        b=ISBsmB3RQ4O8Up7NwLRzDHWBHXap3USy47asjZXm0ijTZLhWKXRexnSut+c1pLorL9
-         V+XkO02vteTLgrp4sY6ClXFyfdP0KGR0sYLAFFlNS0G5bBS02MMVB3Jb7SjZxDEqo2cD
-         i2pV1KZg1kbC7HAyF6hkkYa4cYR79mCorSQI2Fc397EcG0Y7eqXFuX2Q4QyEEIgkQjP7
-         v/hpF7EXqgxNEoJgUVZMF4rZqzvMEyonErt8/WmvSdcmGXNCmVMUmwzWH9jjo7+zpain
-         y5ftK04gmVAi9nFFnU+oNysIpJ7ceo7Ag7Y55TWY9fI72DbrxvsGFZA/5OLham0RSeYs
-         he0A==
-X-Gm-Message-State: ABy/qLaGyokVtnXrNFGcYXPlbA4RirlTXH3vd6A4j2bR2J2U8MI3Uob2
-        JGK6/2Pm2Ih0iFGCLY/Q7GomPA==
-X-Google-Smtp-Source: APBJJlFNw2OnXf+1E1CcAO22Ccs1bxf6zgnYi8l0Tv5CSNRNipIMtTq0pXKBfXQ8uIoCkG0uniyksw==
-X-Received: by 2002:a05:6a20:8f07:b0:13e:c5a3:97f with SMTP id b7-20020a056a208f0700b0013ec5a3097fmr4160743pzk.42.1690995644422;
-        Wed, 02 Aug 2023 10:00:44 -0700 (PDT)
-Received: from leoy-huanghe.lan ([156.59.39.102])
-        by smtp.gmail.com with ESMTPSA id p12-20020aa7860c000000b006873770cbc6sm5897110pfn.50.2023.08.02.10.00.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Aug 2023 10:00:43 -0700 (PDT)
-Date:   Thu, 3 Aug 2023 01:00:38 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1] perf doc: Document ring buffer mechanism
-Message-ID: <20230802170038.GA1306442@leoy-huanghe.lan>
-References: <20230715035343.46737-1-leo.yan@linaro.org>
- <CAP-5=fVmBVA5XGac8BZks6UnjGaMv8bx_PhC6_YrWC2TGjw-Fg@mail.gmail.com>
+        d=1e100.net; s=20221208; t=1690998360; x=1691603160;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pRnB3SQFPEO+lQ4tIkO8yJNmnXET3SUA7+GoOMMOJYE=;
+        b=O0SQXQWjCw8+q4ZJT31cNyMdd2S1AgbgmQNfB4yvjSVWmVvGEuUg+wgNoIgfU5C9Wm
+         9Y3jNgcOMYau8a1Hp9mkUAjX+p4vMjrNhlSUn/nLi0JDVlcrZUe+xDs47u0oVluEORCO
+         eCmTL6Ge68taUBuAnYQz/HtNdY7UNEOZHyTgHoKw58Qow6aKZpv3EqoFCwZxM84NX8Db
+         554e7hIAuPD/AJOvytkWA3DV6Q6wQOAtYPcVYNLXE07SeF3MToUncuiWoh/6WwrLDobh
+         f1+Xwy1soQ4UkKnawjmEtaveoFDSWuhJcGO57U0QZb1QWJ23FpauIf8xEZknbYFrQHAd
+         4+DA==
+X-Gm-Message-State: ABy/qLYaizQRJuqoisAOc5pXNRtqI/9rPM1VUi33hAfmduRwtdqYWU8s
+        YNqtcBvhQb47ENCxtYu9Vogr/pBov0G6Bq/AriewWcQG9bj/fng+MVK0Vg==
+X-Google-Smtp-Source: APBJJlHSAEAPCDqvxmmhWFmFCxIZY73VuHevIxhoFQ8dCGTGp8WvT1cxhcp/eFUAyfWZzDrzlPle8NxzLMDkEI8Y8XE=
+X-Received: by 2002:a05:622a:3c6:b0:403:aa88:cf7e with SMTP id
+ k6-20020a05622a03c600b00403aa88cf7emr1227934qtx.29.1690998359911; Wed, 02 Aug
+ 2023 10:45:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVmBVA5XGac8BZks6UnjGaMv8bx_PhC6_YrWC2TGjw-Fg@mail.gmail.com>
+References: <F762DED397BFDFD1+20230802040315.106038-2-ye@kaige.org>
+In-Reply-To: <F762DED397BFDFD1+20230802040315.106038-2-ye@kaige.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 2 Aug 2023 10:45:47 -0700
+Message-ID: <CAP-5=fVTra0onRPsVq2guBkGhvuw7yvXNtjFJ5Eom9wrFZtsxA@mail.gmail.com>
+Subject: Re: [PATCH] perf stat-display: Check if snprintf()'s fmt argument is NULL
+To:     Kaige Ye <ye@kaige.org>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
+On Tue, Aug 1, 2023 at 9:04=E2=80=AFPM Kaige Ye <ye@kaige.org> wrote:
+>
+> It is undefined behavior to pass NULL as snprintf()'s fmt argument.
+> Here is an example to trigger the problem:
+>
+>   $ perf stat --metric-only -x, -e instructions -- sleep 1
+>   insn per cycle,
+>   Segmentation fault (core dumped)
+>
+> With this patch:
+>
+>   $ perf stat --metric-only -x, -e instructions -- sleep 1
+>   insn per cycle,
+>   ,
+>
+> Signed-off-by: Kaige Ye <ye@kaige.org>
+> ---
+>  tools/perf/util/stat-display.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-displa=
+y.c
+> index 7329b3340..e8936cffd 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -438,7 +438,7 @@ static void print_metric_csv(struct perf_stat_config =
+*config __maybe_unused,
+>                 fprintf(out, "%s%s", config->csv_sep, config->csv_sep);
+>                 return;
+>         }
+> -       snprintf(buf, sizeof(buf), fmt, val);
+> +       snprintf(buf, sizeof(buf), fmt ?: "", val);
 
-On Mon, Jul 17, 2023 at 02:27:11PM -0700, Ian Rogers wrote:
+Hi,
 
-[...]
-
-> > Thanks Ian's suggestion for upstreaming this documentation into Linux
-> > source code tree at the Jan of this year, also thanks my son Rowan for
-> > correcting me some grammer errors in this summer holiday.  Finally I
-> > heavily refactored this documentation and I think it's ready for
-> > reviewing.
-> 
-> This is awesome, thanks Leo for taking the time to do this! I've done
-> some readability nits
-
-Thanks a lot for review, Ian.
-
-I agreed with most of your comments.  Blow I just keep the comments for
-further discussion or give supplements, otherwise, I remove the rest
-comments and will reflect them in my new patch.
-
-[...]
-
-> > +Perf uses the same way to manage its ring buffer.  In implementation
-> > +there have two actors: a page contains a control structure and ring
-> > +buffer; the page containing the control structure is named as "user
-> > +page", the user page and the ring buffer are mapped into user space
-> > +with the continuous virtual address, since the user page and the ring
-> > +buffer are consecutive, from the control structure pointer it's
-> > +easily to know the ring buffer address.
-> 
-> nit: Perhaps reword a little as:
-> Perf uses the same way to manage its ring buffer. In the
-> implementation there are two key data structures held together in a
-> set of consecutive pages, the control structure and then the ring
-> buffer itself. The page with the control structure in is known as the
-> "user page". Being held in continuous virtual addresses simplifies
-> locating the ring buffer address, it is in the pages after the page
-> with the user page.
-> 
-> Off-topic: seems wasteful to allocate a full page for this.
-
-Arm CPUs support not only 4KiB page size, but also support 16KiB/64KiB
-page size, it does waste a bit memory for using a page for control
-structure.  But given the control structure need to be mapped to user
-space in page size unit, seems here have no room to optimize it.
-
-[...]
-
-> > +        user page                          ring buffer
-> > +  +---------+---------+   +---------------------------------------+
-> > +  |data_head|data_tail|...|   |   |***|***|***|***|***|   |   |   |
-> > +  +---------+---------+   +---------------------------------------+
-> > +      `          `--------------^                   ^
-> > +       `--------------------------------------------|
-> > +
-> > +            * : the data is filled by the writer.
-> > +           Figure 2: Perf ring buffer
-> > +
-> > +When using 'perf record' tool, we can specify the ring buffer size with
-> 
-> nit: s/using/using the/
-> 
-> > +option '-m' or '--mmap-pages=', finally the size will be rounded up to
-> 
-> nit: s/finally the size/the given size/
-> 
-> > +power of two with page unit.  Though the kernel allocates at once for
-> 
-> nit: s/power of two with page unit/a power of two that is a multiple
-> of a page size/
-> 
-> Off-topic-ish: Perhaps it is worth motivating why the page size must
-> be a power of 2. I'm guessing it is because this means that when
-> moving the pointers/indices they can be masked to cause wrapping,
-> rather than using division/modulus.
-
-Correct.  The comments in kernel/events/core.c verifies this guessing:
-
-"If we have rb pages ensure they're a power-of-two number, so we
-can do bitmasks instead of modulo."
-
-> Fwiw, I think this could also be
-> solved with a comparison, and the performance overhead could be
-> insignificant compared to the memory savings.
-
-I am not sure if a comparison is sufficient.  As you said, if the page
-number is not a power-of-two number, and page index increases
-monotonically, we need to compute modulus to get the offset.
-
-Agreed with you, we can consider to remove the limitaion of the page
-number must be power-of-two for memory saving and check what's the
-performance penalty.
-
-> > +all memory pages, it's deferred to map the pages to VMA area until
-> > +the perf tool accesses the buffer from the user space.  In other words,
-> > +at the first time accesses the buffer's page from user space in the perf
-> > +tool, a data abort exception for page fault is taken and the kernel
-> > +uses this occasion to map the page into process VMA, thus the perf tool
-> > +can continue to access the page after returning from exception.
-> 
-> nit: s/exception/the exception/
-> 
-> Off topic: Should the perf tool use something like the MAP_POPULATE
-> flag to reduce page faults, given the pages were allocated already in
-> the kernel? Tweaking tools/lib/perf/mmap.c to do this and running
-> "time perf record -a sleep 1" shows the minor page fault count going
-> from 7700 to 9700, so it seems like a bad idea.
-
-Hmm ... I got the opposite result, by observing page fault counting, I
-can see the improvement with adding the MAP_POPULATE flag.
-
-Before adding MAP_POPULATE flag:
-
-  # ./perf stat -- ./perf record -a sleep 1
-
-    5,359      page-faults                      #    2.409 K/sec
-    5,353      page-faults                      #    2.415 K/sec
-    5,353      page-faults                      #    2.425 K/sec
-
-  # ./perf stat -- ./perf record -e cs_etm/@tmc_etr0/ -a sleep 1
-
-    2,122      page-faults                      #    2.038 K/sec
-    2,121      page-faults                      #    2.001 K/sec
-    2,121      page-faults                      #    2.015 K/sec
-
-After adding MAP_POPULATE flag:
-
-  # ./perf stat -- ./perf record -a sleep 1
-
-    5,004      page-faults                      #    2.260 K/sec
-    5,002      page-faults                      #    2.253 K/sec
-    5,003      page-faults                      #    2.239 K/sec
-
-  # ./perf stat -- ./perf record -e cs_etm/@tmc_etr0/ -a sleep 1
-
-    1,082      page-faults                      #  856.589 /sec
-    1,082      page-faults                      #    1.002 K/sec
-    1,080      page-faults                      #    1.013 K/sec
-
-[...]
-
-> > +System wide mode
-> > +
-> > +By default if without specifying mode, or explicitly using option '–a'
-> > +or '––all–cpus', perf collects samples on all CPUs in the system wide
-> > +mode.
-> > +
-> > +In this mode, every CPU has its own ring buffer; all threads are
-> > +monitored during the running state and the samples are recorded into the
-> 
-> This doesn't cover the case of:
-> $ perf record benchmark
-> Where there will be a ring buffer on every CPU but events/sampling
-> will only be enabled for benchmark's threads, ie not all threads.
-
-Correct.  I wrongly thought it's the system-wide mode when don't
-specify option '-a', will add a 'default mode' to address above case.
-
-[...]
-
-> > When a sample is recorded into the ring buffer, the kernel event
-> > +core layer will wake up the perf process to read samples from the ring
-> > +buffer.
-> 
-> It isn't always necessary to wake the perf tool process. There is a
-> little bit more detail on different polling modes in the
-> perf_event_open man page in the section on "Overflow handling":
-> https://github.com/mkerrisk/man-pages/blob/master/man2/perf_event_open.2#L3062
-
-Exactly, perf ring buffer uses watermark as threshold, and only when
-cross the threshold the kernel notifies the user space.  I confirmed
-this in the function __perf_output_begin().
-
-So will rephrase as:
-
-"When a sample is recorded into the ring buffer, and the number of
-samples crossing the threshold, the kernel event core layer will wake up
-the perf process to read samples from the ring buffer."
-
-> > +
-> > +                     Perf
-> > +                     / | Read samples
-> > +           Polling  /  `--------------|               Ring buffer
-> > +                   v                  v    ;-------------------v
-> > +  +----------------+     +---------+---------+   +-------------------+
-> > +  |Event wait queue|     |data_head|data_tail|   |***|***|   |   |***|
-> > +  +----------------+     +---------+---------+   +-------------------+
-> > +           ^                  ^ `----------------------^
-> > +           | Wake up tasks    | Store samples
-> > +        +-----------------------------+
-> > +       |  Kernel event core layer    |
-> > +        +-----------------------------+
-> > +
-> > +            * : the data is filled by the writer.
-> > +           Figure 6: Writing and reading the ring buffer
-> > +
-> > +Because multiple events might share the same ring buffer for recording
-> > +samples, when any event sample is stored into the ring buffer, the
-> > +kernel event core layer iterates every event associated to the ring
-> > +buffer and wake up tasks on the wait queue of the events.  This is
-> > +fulfilled by the kernel function ring_buffer_wakeup().
-> 
-> I'm not sure about the use of "event" here. If you do:
-> $ perf stat -e "cycles,instructions"
-> Then cycles and instructions will each have a ring buffer, I'm not
-> sure it is possible to get them to share a ring buffer. I think here
-> you may be referring to side band events, like mmap2.
-
-Seems to me, this is incorrect.  Since 'perf stat' only read counters
-(via the kernel function perf_read()), it doesn't allocate ring buffer
-at all for events.  By using GDB, I can confirm the function
-perf_mmap__mmap() is never called for 'perf stat' command.
-
-Just clarify, 'perf stat' still mmap the 'user page' for control
-structure and for timer counter accessing, but this is not the same
-thing with ring buffer.
-
-[...]
-
-> > +In Linux kernel, the event core layer uses the structure perf_buffer to
-> > +track the buffer’s latest header, and it keeps the information for
-> > +buffer pages.  The structure perf_buffer manages ring buffer during its
-> > +life cycle, it is allocated once the ring buffer is created and released
-> > +when the ring buffer is destroyed.
-> > +
-> > +It’s possible for multiple events to write buffer concurrently.  For
-> > +instance, a software event and a hardware PMU event both are enabled for
-> > +profiling, when the software event is in the middle of sampling, the
-> > +hardware event maybe be overflow and its interrupt is triggered in this
-> > +case.  This leads to the race condition for updating perf_buffer::head.
-> > +In __perf_output_begin(), Linux kernel uses compare-and-swap atomicity
-> > +local_cmpxchg() to implement the lockless algorithm for protecting
-> > +perf_buffer::head.
-> 
-> In the case of:
-> $ perf record -e "instructions,faults"
-> faults is a software event but it won't share the ring buffer with
-> instructions. I think the atomicity exists for the side band events.
-
-I verified on my Arm64 board and confirmed that hardware events
-(instructions, cycles) share the same ring buffer with software event
-(faults).  Below is the captured log (truncated for more readable):
-
-  ...
-  => __perf_sw_event
-  => do_page_fault
-  => do_translation_fault
-  ...
-  ls-884     [003] ...2.   253.737217: perf_output_begin_forward: __perf_output_begin: rb=00000000720bac97 page=0 offset=1688 addr=0000000019392296 size=2408
-  
-  ...
-  => __perf_event_overflow
-  => perf_event_overflow
-  => armv8pmu_handle_irq
-  ...
-  ls-884     [003] d.h1.   253.737247: perf_output_begin_forward: __perf_output_begin: rb=00000000720bac97 page=0 offset=1736 addr=000000009e259b5a size=2360
-
-We can see for both software event and Armv8 PMU event, both use the
-same rb pointer (0x00000000720bac9), which means the software and
-hardware events store samples into the same ring buffer.  Thus the
-above description is valid.
-
-P.s. maybe the side band events are not a relevant topic, but I can
-see the side band events have dedicated ring buffer.
+I couldn't reproduce this error and the code immediately above here
+does null check fmt:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/stat-display.c?h=3Dperf-tools-next#n437
+Perhaps this is an older version of the perf tool? You can run "perf
+version" to determine this.
 
 Thanks,
-Leo
+Ian
+
+
+>         ends =3D vals =3D skip_spaces(buf);
+>         while (isdigit(*ends) || *ends =3D=3D '.')
+>                 ends++;
+> @@ -578,7 +578,7 @@ static void print_metric_only_csv(struct perf_stat_co=
+nfig *config __maybe_unused
+>         if (!valid_only_metric(unit))
+>                 return;
+>         unit =3D fixunit(tbuf, os->evsel, unit);
+> -       snprintf(buf, sizeof buf, fmt, val);
+> +       snprintf(buf, sizeof(buf), fmt ?: "", val);
+>         ends =3D vals =3D skip_spaces(buf);
+>         while (isdigit(*ends) || *ends =3D=3D '.')
+>                 ends++;
+> @@ -600,7 +600,7 @@ static void print_metric_only_json(struct perf_stat_c=
+onfig *config __maybe_unuse
+>         if (!valid_only_metric(unit))
+>                 return;
+>         unit =3D fixunit(tbuf, os->evsel, unit);
+> -       snprintf(buf, sizeof(buf), fmt, val);
+> +       snprintf(buf, sizeof(buf), fmt ?: "", val);
+>         ends =3D vals =3D skip_spaces(buf);
+>         while (isdigit(*ends) || *ends =3D=3D '.')
+>                 ends++;
+> --
+> 2.41.0
+>
