@@ -2,180 +2,127 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7825EC001DF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Aug 2023 19:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD284C001DF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Aug 2023 19:16:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229877AbjHBTAC (ORCPT
+        id S230076AbjHBTQc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Aug 2023 15:00:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55392 "EHLO
+        Wed, 2 Aug 2023 15:16:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229475AbjHBTAB (ORCPT
+        with ESMTP id S229707AbjHBTQb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Aug 2023 15:00:01 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51A63C3;
-        Wed,  2 Aug 2023 12:00:00 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1bbbbb77b38so1498345ad.3;
-        Wed, 02 Aug 2023 12:00:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691002800; x=1691607600;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wK/nsG+p1ZVeBh1KHC2T5H7Nze4MLELKiO/q+jiRasI=;
-        b=SLwicSkhC9Icednrp6S3yyFO6DhJzZf2CsyG4EhAYHmZKY+KT1XdmDMYre6sg/9nXD
-         MgSRimrmSU0q+QBy1mZlFZ/eT4x39OWBSuoO0qeZwHS0eUqreq2rDeRXME6M9pAJ5d2d
-         JclRcB1udxKIsLRlyTZ8sODg6ik69CTg+/pVWov5MSTkOoBl02OX4sR/qmcPhZgCwM1c
-         PVsr7Q4Y5oewfVhbF9R38x1THfJ1fnzEav8UfExTbYVE7xvfVnixjYBaWfRCwrlO4TCO
-         ne+G0t8pLY7AL+PavCZLt5GYzTVXxUvzqbdaMUhjzDcnk+7jkatWkWIadp57Iw+MPTtZ
-         kQgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691002800; x=1691607600;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wK/nsG+p1ZVeBh1KHC2T5H7Nze4MLELKiO/q+jiRasI=;
-        b=TieCzPANLPB5tlY/37vVg+tJFdMAwdYiqE8fvO72iR+Gs/eoalTdRDYg7EAim3pRrw
-         xrlCiJV+ER1Np+OPDBaJErZ73c+mPEZ99XUdjWX/NKQRZqOas15xlsAZDs01oxpFNbgl
-         oS5LS0cAZYi5fVeCACZ4C/FWWGrfV7zSn2uulKZft9rlm6w019ouFUC8GkI42bFpN5qi
-         nUzED94MOZ4Vzcyn+340x/r+h1xW/cUVDjX63xu96dwmzd0ie14kxnxdu/dpkVeum1Cs
-         6F1MWCwetYi3n8dbDkTIfxkf3GJfWeP0uZlmicsdqXOuSe6f9ODXGVUWgyzCZCB93NJ9
-         /ZTg==
-X-Gm-Message-State: ABy/qLbg8pbu/Ly9+kEL4kw9O99OyDPhghUm7e6/OJ0hoa4Rzj4DSjCZ
-        MQ1n+pmJs/weuSr/FwGMk0I=
-X-Google-Smtp-Source: APBJJlEt2RJcmsvzveK84xRan/cpBdhSiDdbM7jqA4Nvz/7gHi+9jxaxSLpECtPWi8kWbGC2HC3X2Q==
-X-Received: by 2002:a17:902:7242:b0:1b5:532e:33b8 with SMTP id c2-20020a170902724200b001b5532e33b8mr13524790pll.35.1691002799585;
-        Wed, 02 Aug 2023 11:59:59 -0700 (PDT)
-Received: from yoga ([2400:1f00:13:9882:cd17:239a:4f43:dc90])
-        by smtp.gmail.com with ESMTPSA id iy15-20020a170903130f00b001b801044466sm12823093plb.114.2023.08.02.11.59.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Aug 2023 11:59:58 -0700 (PDT)
-From:   Anup Sharma <anupnewsmail@gmail.com>
-X-Google-Original-From: Anup Sharma <AnupSharma>
-Date:   Thu, 3 Aug 2023 00:29:51 +0530
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Anup Sharma <anupnewsmail@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] Adding Support for Firefox's Gecko Profile Format
-Message-ID: <ZMqnp1kBv1ACIiGS@yoga>
-References: <ZIHPXV5/ZopqcSSc@yoga>
- <ZIofrGKElc3nkNk0@yoga>
- <CAP-5=fV9tXNpYHH9DW0cVbRoFLGvG9SNn-MUhuyKuVBRuDqjoA@mail.gmail.com>
- <ZJyT8bt0LFLw6hKV@yoga>
- <CAM9d7ch7TdagV+dzj6MCp4fY15Vc4oGJjKAoQDyc=BXqy7qi+A@mail.gmail.com>
- <287bf3c8-fa0e-8c36-df14-7d728c63c265@intel.com>
- <ZKQu00bJZwO+Fc6m@yoga>
- <ZKRcTqAsKxF/Q3fQ@yoga>
- <ZMFgIekihhoGFBpn@yoga>
- <ZMFyi5S4JlFeZ/9c@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZMFyi5S4JlFeZ/9c@kernel.org>
+        Wed, 2 Aug 2023 15:16:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03545E7D;
+        Wed,  2 Aug 2023 12:16:31 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 73C2B61ADB;
+        Wed,  2 Aug 2023 19:16:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE9D8C433C8;
+        Wed,  2 Aug 2023 19:16:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691003789;
+        bh=XBtPzjHQlXNIEQFLxSA/ttht8PBVws+eh+Spm9Nkkoo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Tnffh/SxD2Pjn+liTTmM1Pvc2lh1VRW6FzrlIqRiNgNSaC5W+VxiiYVzIISQ2Q6kO
+         Gscg6nPQ3PIPDBk4PTi24qW6Y45kUbIA/fKa+sglBgFHYPwVxtmZAFNPLrLBhZ54ih
+         od5C4emkLRQ5qa2W+Y/KaOY0L31r8affvuO6j1j1OEQMcZ5Y4dEoqZ+KZAL332oHPL
+         gfWJCa6CCVTJAOfCYQDWfIx5Id/0KcgtqyKqOvgMtJbko4sLlP8gxBZopaqcE9xO/8
+         KETQ/yBbUDD+lHfyE32XFHLQGGRCevdmBvyvxti1LshHX5xhkgRRqwBdGIH49F+8vO
+         +Igzi7c09aB5A==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1qRHKd-001T2k-Ap;
+        Wed, 02 Aug 2023 20:16:27 +0100
+Date:   Wed, 02 Aug 2023 20:16:17 +0100
+Message-ID: <86il9x5k72.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Rajnesh Kanwal <rkanwal@rivosinc.com>
+Cc:     anshuman.khandual@arm.com, acme@kernel.org, broonie@kernel.org,
+        catalin.marinas@arm.com, james.clark@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mingo@redhat.com, peterz@infradead.org, robh@kernel.org,
+        suzuki.poulose@arm.com, will@kernel.org, atishp@rivosinc.com
+Subject: Re: [PATCH V13 - RESEND 09/10] arm64/perf: Implement branch records save on task sched out
+In-Reply-To: <20230802115931.12212-1-rkanwal@rivosinc.com>
+References: <20230711082455.215983-10-anshuman.khandual@arm.com>
+        <20230802115931.12212-1-rkanwal@rivosinc.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: rkanwal@rivosinc.com, anshuman.khandual@arm.com, acme@kernel.org, broonie@kernel.org, catalin.marinas@arm.com, james.clark@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, peterz@infradead.org, robh@kernel.org, suzuki.poulose@arm.com, will@kernel.org, atishp@rivosinc.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 26, 2023 at 04:22:51PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Jul 26, 2023 at 11:34:17PM +0530, Anup Sharma escreveu:
-> > Dear all,
+On Wed, 02 Aug 2023 12:59:31 +0100,
+Rajnesh Kanwal <rkanwal@rivosinc.com> wrote:
+> 
+> >diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
+> >index 203cd4f350d5..2177632befa6 100644
+> >--- a/drivers/perf/arm_brbe.c
+> >+++ b/drivers/perf/arm_brbe.c
+> >@@ -165,6 +165,36 @@ static int stitch_stored_live_entries(struct brbe_regset *stored,
+> > 	return min(nr_live + nr_stored, nr_max);
+> > }
 > > 
-> > I want to share a recent development in our project that
-> > I have been working on this week. I have successfully
-> > implemented a new feature that allows users to directly
-> > open the browser and visualize the output of perf.data
-> > on Firefox Profiler.
+> >+static int brbe_branch_save(struct brbe_regset *live, int nr_hw_entries)
+> >+{
+> >+	u64 brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
+> >+	int nr_live;
+> >+
+> >+	write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
+> >+	isb();
+> >+
+> >+	nr_live = capture_brbe_regset(live, nr_hw_entries);
+> >+
+> >+	write_sysreg_s(brbfcr & ~BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
+> >+	isb();
+> >+
+> >+	return nr_live;
+> >+}
+> >+
+> >+void armv8pmu_branch_save(struct arm_pmu *arm_pmu, void *ctx)
+> >+{
+> >+	struct arm64_perf_task_context *task_ctx = ctx;
+> >+	struct brbe_regset live[BRBE_MAX_ENTRIES];
+> >+	int nr_live, nr_store, nr_hw_entries;
+> >+
+> >+	nr_hw_entries = brbe_get_numrec(arm_pmu->reg_brbidr);
+> >+	nr_live = brbe_branch_save(live, nr_hw_entries);
+> >+	nr_store = task_ctx->nr_brbe_records;
+> >+	nr_store = stitch_stored_live_entries(task_ctx->store, live, nr_store,
+> >+					      nr_live, nr_hw_entries);
+> >+	task_ctx->nr_brbe_records = nr_store;
+> >+}
 > 
-> Excellent news!
->  
-> > To enhance user experience, I have made sure this option
-> > is enabled by default. Additionally, I've also added a
-> > handy command line argument, "--save-only," which allows
-> > users to save the output file as needed. This enhancement
-> > replaces the previous standard output method, providing a
-> > much-improved experience.
-> > 
-> > Moreover, Everything is processed locally, and no data is
-> > sent to any server.
-> 
-> That addresses the worry about sending possibly sensitive data over the
-> network by default, great.
->  
-> > During this implementation, I had the opportunity to delve
-> > into several exciting topics, including threading, HTTP server,
-> > and CORS mechanisms. The learning process has been both
-> > challenging and rewarding.
-> 
-> Cool that you're so excited learning all this.
->  
-> > Currently, I am in the process of performing some clean-up tasks.
-> > Once that is complete, I will be sharing the next version of the
-> > series, which includes this fantastic new feature, with all of
-> > you very soon.
-> > 
-> > Thank you for your ongoing support and encouragement.
-> 
-> Keep it up!
+> Asking out-of-curiosity. Have you thought about virtualization use
+> case. Current LBR implementation create an event for the guest
+> and save/restore happens using the sched_task callback. (Correct me
+> if I am wrong). Given you are only saving and processing those saved
+> entries, how do you plan to expose the entries to the guest?
 
-This week, I'm working on documenting the gecko converter for our wiki.
-I've dedicated a significant amount of time to think about the content
-and how to approach it. So far, I've written sections covering the
-introduction to Firefox Profiler and the formatting guidelines(not
-published yet).
+Two possibilities:
 
-However, I've left the usage part blank because I'm uncertain about how
-to enable gecko.py arguments when executing the "perf script gecko" command.
-I've looked at examples like flamegraph-report and sctop-report, but I'm
-still confused. I attempted to enable the script to take the gecko.py
-command example "perf script report gecko --save-only=profiler.json,"
-but this caused issues when running "perf script gecko -a sleep 3" again.
-This has left me feeling rather puzzled, and I would appreciate discussing
-this during our office hour, or any help here.
+- either we perform a full save/restore of the registers so that host
+  and guest have isolated states
 
-Due to this blocker, I haven't been able to send the updated patch
-for test_gecko yet. However, I hope I'll find a solution soon and overcome
-this obstacle.
+- or we trap all BRBE accesses and piggy-back on the perf framework
+  for that, much like we already do for the PMU.
 
-> - Arnaldo
-> 
-> > Thanks,
-> > Anup
-> > 
-> > > > Regards,
-> > > > Anup
-> > > > > > 
-> > > > > >>
-> > > > > >> The second challenge revolved around the usage of event hooks provided with the perf script
-> > > > > >> python event handlers. I found myself deliberating between two approaches. The first
-> > > > > >> approach involved creating custom functions that would be called using the event
-> > > > > >> handlers. These functions would then save the data in an organized format within
-> > > > > >> globally created data structures. The alternative approach was to write the entire
-> > > > > >> logic inside the event handlers themselves.
-> > > > > >>
-> > > > > >> Additionally, I contemplated whether it would be more suitable to handle the creation of
-> > > > > >> a Gecko format for JSON and the profile format within the same script or to separate
-> > > > > >> them into different scripts.
-> > > > > >>
-> > > > > >> I will discuss this points during tomorrow's office hour.
-> > > > > >>
-> > > > > >> However, I have gained a deeper understanding of the problem at hand and will use this
-> > > > > >> knowledge to make more informed decisions and progress more effectively in the coming weeks.
-> > > > > > 
-> > > > > > Sounds like you did a good amount of research on how perf script
-> > > > > > works.  We can talk about the details in the meeting.
-> > > > > > 
-> > > > > > Thanks,
-> > > > > > Namhyung
-> > > > > 
-> 
-> -- 
-> 
-> - Arnaldo
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
