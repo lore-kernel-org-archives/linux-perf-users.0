@@ -2,156 +2,86 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2364DC001E0
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Aug 2023 14:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 138DBC04E69
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Aug 2023 14:36:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233354AbjHBO2g (ORCPT
+        id S231858AbjHBOgh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Aug 2023 10:28:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34650 "EHLO
+        Wed, 2 Aug 2023 10:36:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232733AbjHBO2f (ORCPT
+        with ESMTP id S232807AbjHBOgg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Aug 2023 10:28:35 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CFC71723;
-        Wed,  2 Aug 2023 07:28:27 -0700 (PDT)
+        Wed, 2 Aug 2023 10:36:36 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8109819B0;
+        Wed,  2 Aug 2023 07:36:35 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C65D0619B3;
-        Wed,  2 Aug 2023 14:28:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1B44C433C7;
-        Wed,  2 Aug 2023 14:28:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690986506;
-        bh=Z4JOTOXE88xHck3RMo4XJjkzZ+TXGkjviveE+ctMbxc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MzdqEgSPFmXZJINCHiAYXr0aqydeYRU8nvXGVdAKvsnZo77OkFFdGtgiUWLr/2G0y
-         JL6tTyhQJE8LIw30oRey+gJqdzTs1u04FRYAJrkAdw4mPVs3LYXlYMaQULzIFD4LxH
-         PY7hQX0OQcot636XJRSxAuK7S8hXxslLn7rML6oLggu3fxH3kHKMFXh8chYll1dZmq
-         Gz3hN2BujhBdTJvkOfElcafRoCHLmTyXRFq9r0vYHnmPaOYQvZPuUzCK7faTLMh4k7
-         9LnxAXvF5VBYVhXt8t6FeB0BbGNo+QHtR3EWcsIaZ6DoekDyGfGRq2MOYDgvxBRa7i
-         BSdiImK1bw2yA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6A0054012D; Wed,  2 Aug 2023 11:28:23 -0300 (-03)
-Date:   Wed, 2 Aug 2023 11:28:23 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com, wangnan0@huawei.com, jolsa@kernel.org,
-        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com
-Subject: Re: [PATCH 1/2 Resend] perf build: Update feature check for clang
- and llvm
-Message-ID: <ZMpoB1bYk+KfTDJA@kernel.org>
-References: <20230725150347.3479291-1-tmricht@linux.ibm.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1F8FE619C0;
+        Wed,  2 Aug 2023 14:36:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCC56C433C7;
+        Wed,  2 Aug 2023 14:36:32 +0000 (UTC)
+Date:   Wed, 2 Aug 2023 10:36:30 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Ze Gao <zegao2021@gmail.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
+Subject: Re: [RFC PATCH v4 1/7] libtraceevent: sync state char array with
+ the kernel
+Message-ID: <20230802103630.45d95c06@gandalf.local.home>
+In-Reply-To: <20230802121116.324604-2-zegao@tencent.com>
+References: <20230802121116.324604-1-zegao@tencent.com>
+        <20230802121116.324604-2-zegao@tencent.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230725150347.3479291-1-tmricht@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jul 25, 2023 at 05:03:46PM +0200, Thomas Richter escreveu:
-> Perf build auto-detects features and packages already installed
-> for its build. This is done in directory tools/build/feature. This
-> directory contains small sample programs. When they successfully
-> compile the necessary prereqs in form of libraries and header
-> files are present.
-> 
-> Such a check is also done for llvm and clang. And the checks fail.
-> 
-> Fix this and update to the latest C++ standard and use the
-> new library provided by clang (which contains new packaging)
-> see this link for reference:
->  https://fedoraproject.org/wiki/Changes/Stop-Shipping-Individual-Component-Libraries-In-clang-lib-Package
-> 
-> Output before:
->  # rm -f ./test-clang.bin; make test-clang.bin; ./test-clang.bin; \
-> 	ll test-clang.make.output
->  g++  -MD -Wall -Werror -o test-clang.bin test-clang.cpp \
-> 	 	> test-clang.make.output 2>&1 -std=gnu++14 \
-> 	-I/usr/include 		\
-> 	-L/usr/lib64		\
-> 	-Wl,--start-group -lclangBasic -lclangDriver	\
-> 	  -lclangFrontend -lclangEdit -lclangLex	\
-> 	  -lclangAST -Wl,--end-group 			\
-> 	-lLLVM-16	\
-> 			\
-> 	> test-clang.make.output 2>&1
->  make: *** [Makefile:356: test-clang.bin] Error 1
->  -bash: ./test-clang.bin: No such file or directory
->  -rw-r--r--. 1 root root 252041 Jul 12 09:56 test-clang.make.output
->  #
-> 
-> File test-clang.make.output contains many lines of unreferenced
-> symbols.
-> 
-> Output after:
->  # rm -f ./test-clang.bin; make test-clang.bin; ./test-clang.bin; \
-> 	cat test-clang.make.output
->  g++  -MD -Wall -Werror -o test-clang.bin test-clang.cpp \
-> 	 > test-clang.make.output 2>&1 -std=gnu++17	\
-> 	-I/usr/include 		\
-> 	-L/usr/lib64		\
-> 	-Wl,--start-group -lclang-cpp -Wl,--end-group	\
-> 	-lLLVM-16	\
-> 			\
-> 	> test-clang.make.output 2>&1
->  #
+On Wed,  2 Aug 2023 08:09:56 -0400
+Ze Gao <zegao2021@gmail.com> wrote:
 
-Thanks, tested and applied. Added some notes about needing to have
-'llvm-devel' and 'clang-devel' installed to do the tests.
+> Update state char array to match the latest kernel
+> definitions.
 
-- arnaldo
- 
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Can you send this separately to linux-trace-devel@vger.kernel.org?
+
+Thanks,
+
+-- Steve
+
+> 
+> Signed-off-by: Ze Gao <zegao@tencent.com>
 > ---
->  tools/build/feature/Makefile | 10 ++++------
->  1 file changed, 4 insertions(+), 6 deletions(-)
+>  plugins/plugin_sched_switch.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> index 2cd6dbbee088..3184f387990a 100644
-> --- a/tools/build/feature/Makefile
-> +++ b/tools/build/feature/Makefile
-> @@ -340,7 +340,7 @@ $(OUTPUT)test-jvmti-cmlr.bin:
->  	$(BUILD)
+> diff --git a/plugins/plugin_sched_switch.c b/plugins/plugin_sched_switch.c
+> index 8752cae..e0986ac 100644
+> --- a/plugins/plugin_sched_switch.c
+> +++ b/plugins/plugin_sched_switch.c
+> @@ -11,7 +11,7 @@
 >  
->  $(OUTPUT)test-llvm.bin:
-> -	$(BUILDXX) -std=gnu++14 				\
-> +	$(BUILDXX) -std=gnu++17 				\
->  		-I$(shell $(LLVM_CONFIG) --includedir) 		\
->  		-L$(shell $(LLVM_CONFIG) --libdir)		\
->  		$(shell $(LLVM_CONFIG) --libs Core BPF)		\
-> @@ -348,17 +348,15 @@ $(OUTPUT)test-llvm.bin:
->  		> $(@:.bin=.make.output) 2>&1
+>  static void write_state(struct trace_seq *s, int val)
+>  {
+> -	const char states[] = "SDTtZXxW";
+> +	const char states[] = "SDTtXZPI";
+>  	int found = 0;
+>  	int i;
 >  
->  $(OUTPUT)test-llvm-version.bin:
-> -	$(BUILDXX) -std=gnu++14					\
-> +	$(BUILDXX) -std=gnu++17					\
->  		-I$(shell $(LLVM_CONFIG) --includedir)		\
->  		> $(@:.bin=.make.output) 2>&1
->  
->  $(OUTPUT)test-clang.bin:
-> -	$(BUILDXX) -std=gnu++14					\
-> +	$(BUILDXX) -std=gnu++17					\
->  		-I$(shell $(LLVM_CONFIG) --includedir) 		\
->  		-L$(shell $(LLVM_CONFIG) --libdir)		\
-> -		-Wl,--start-group -lclangBasic -lclangDriver	\
-> -		  -lclangFrontend -lclangEdit -lclangLex	\
-> -		  -lclangAST -Wl,--end-group 			\
-> +		-Wl,--start-group -lclang-cpp -Wl,--end-group	\
->  		$(shell $(LLVM_CONFIG) --libs Core option)	\
->  		$(shell $(LLVM_CONFIG) --system-libs)		\
->  		> $(@:.bin=.make.output) 2>&1
-> -- 
-> 2.41.0
-> 
 
--- 
-
-- Arnaldo
