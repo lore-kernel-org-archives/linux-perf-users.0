@@ -2,86 +2,139 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 138DBC04E69
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Aug 2023 14:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A36C001E0
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Aug 2023 14:37:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231858AbjHBOgh (ORCPT
+        id S233899AbjHBOhz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Aug 2023 10:36:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38696 "EHLO
+        Wed, 2 Aug 2023 10:37:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232807AbjHBOgg (ORCPT
+        with ESMTP id S234140AbjHBOhw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Aug 2023 10:36:36 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8109819B0;
-        Wed,  2 Aug 2023 07:36:35 -0700 (PDT)
+        Wed, 2 Aug 2023 10:37:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4862C2D72;
+        Wed,  2 Aug 2023 07:37:38 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1F8FE619C0;
-        Wed,  2 Aug 2023 14:36:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCC56C433C7;
-        Wed,  2 Aug 2023 14:36:32 +0000 (UTC)
-Date:   Wed, 2 Aug 2023 10:36:30 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ze Gao <zegao2021@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Subject: Re: [RFC PATCH v4 1/7] libtraceevent: sync state char array with
- the kernel
-Message-ID: <20230802103630.45d95c06@gandalf.local.home>
-In-Reply-To: <20230802121116.324604-2-zegao@tencent.com>
-References: <20230802121116.324604-1-zegao@tencent.com>
-        <20230802121116.324604-2-zegao@tencent.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3DD6E619C9;
+        Wed,  2 Aug 2023 14:37:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CE81C433C8;
+        Wed,  2 Aug 2023 14:37:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690987056;
+        bh=NMSpb/FedQ2Q1UaqyvIdarexqyjFKk11UMeRZMF1ej8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Qd1ieRpQy2h3M3sv7lP41URGQR7hy6GlYIZvavk9oY822YMYvvnr+CcZLuN0DVgEV
+         M34L9w11IAq0rVFS30WQESNnZcbZ1kIz7A4AFneFd2X2oCxk7xDWWg8pF1g+ArexLe
+         b04FZ16j01/mCLjhbYUl3dQ2Gt9hFS2/d1w5QE890X4jtM/x9prWtziJeWuoTr91Et
+         mRDYcJATH4vDDkOi+ZCckfMxgLE+wjWKjamebpBI6qEbb5pOblwC52NWHzY29xc8QH
+         6w/tOh6H2xDUqKbltM95l6Tl/l/01KQax+FF/kIjMIdvkxZWmm58WAIq07VQsqExdN
+         A0Xez4zPo1kwg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id A04074012D; Wed,  2 Aug 2023 11:37:33 -0300 (-03)
+Date:   Wed, 2 Aug 2023 11:37:33 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        irogers@google.com, wangnan0@huawei.com, jolsa@kernel.org,
+        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com
+Subject: Re: [PATCH 2/2 Resend] perf build: Support llvm and clang support
+ compiled in
+Message-ID: <ZMpqLaqcQLHLrGNt@kernel.org>
+References: <20230725150347.3479291-1-tmricht@linux.ibm.com>
+ <20230725150347.3479291-2-tmricht@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230725150347.3479291-2-tmricht@linux.ibm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed,  2 Aug 2023 08:09:56 -0400
-Ze Gao <zegao2021@gmail.com> wrote:
-
-> Update state char array to match the latest kernel
-> definitions.
-
-Can you send this separately to linux-trace-devel@vger.kernel.org?
-
-Thanks,
-
--- Steve
-
+Em Tue, Jul 25, 2023 at 05:03:47PM +0200, Thomas Richter escreveu:
+> Perf build suports llvm and clang support compiled in.
+> Test case 56 builtin clang support provides a test case
+> which is always skipped.
 > 
-> Signed-off-by: Ze Gao <zegao@tencent.com>
+> Link perf with the latest llvm and clang libraries and
+> enable this test case.
+> 
+> Use 'make LIBCLANGLLVM=1' to include this support.
+> 
+> V2: Add Library patch before -lclang-cpp
+> 
+> Output before:
+>  # ./perf test 56
+>  56: builtin clang support                  :
+>  56.1: builtin clang compile C source to IR : Skip (not compiled in)
+>  56.2: builtin clang compile C source to ELF object: \
+> 	 				Skip (not compiled in)
+> 
+> Output after:
+>  # ./perf test 56
+>  56: builtin clang support                          :
+>  56.1: builtin clang compile C source to IR         : Ok
+>  56.2: builtin clang compile C source to ELF object : Ok
+>  #
+
+Thanks, tested and applied!
+
+- Arnaldo
+ 
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Cc: Wang Nan <wangnan0@huawei.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> 
+> From Ian Rogers
+> Build tested with LLVM 14 and 15 using:
+> BUILD_BPF_SKEL=1 LIBCLANGLLVM=1 LLVM_CONFIG=llvm-config-14
+> BUILD_BPF_SKEL=1 LIBCLANGLLVM=1 LLVM_CONFIG=llvm-config-15
+> 
+> Tested-by: Ian Rogers <irogers@google.com>
 > ---
->  plugins/plugin_sched_switch.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  tools/perf/Makefile.config | 2 +-
+>  tools/perf/Makefile.perf   | 5 +----
+>  2 files changed, 2 insertions(+), 5 deletions(-)
 > 
-> diff --git a/plugins/plugin_sched_switch.c b/plugins/plugin_sched_switch.c
-> index 8752cae..e0986ac 100644
-> --- a/plugins/plugin_sched_switch.c
-> +++ b/plugins/plugin_sched_switch.c
-> @@ -11,7 +11,7 @@
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index c5db0de49868..8e1d1fab9b4d 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -325,7 +325,7 @@ CORE_CFLAGS += -Wall
+>  CORE_CFLAGS += -Wextra
+>  CORE_CFLAGS += -std=gnu11
 >  
->  static void write_state(struct trace_seq *s, int val)
->  {
-> -	const char states[] = "SDTtZXxW";
-> +	const char states[] = "SDTtXZPI";
->  	int found = 0;
->  	int i;
+> -CXXFLAGS += -std=gnu++14 -fno-exceptions -fno-rtti
+> +CXXFLAGS += -std=gnu++17 -fno-exceptions -fno-rtti
+>  CXXFLAGS += -Wall
+>  CXXFLAGS += -fno-omit-frame-pointer
+>  CXXFLAGS += -ggdb3
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index 097316ef38e6..158a0733fc9d 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -426,10 +426,7 @@ EXTLIBS := $(call filter-out,$(EXCLUDE_EXTLIBS),$(EXTLIBS))
+>  LIBS = -Wl,--whole-archive $(PERFLIBS) $(EXTRA_PERFLIBS) -Wl,--no-whole-archive -Wl,--start-group $(EXTLIBS) -Wl,--end-group
 >  
+>  ifeq ($(USE_CLANG), 1)
+> -  CLANGLIBS_LIST = AST Basic CodeGen Driver Frontend Lex Tooling Edit Sema Analysis Parse Serialization
+> -  CLANGLIBS_NOEXT_LIST = $(foreach l,$(CLANGLIBS_LIST),$(shell $(LLVM_CONFIG) --libdir)/libclang$(l))
+> -  LIBCLANG = $(foreach l,$(CLANGLIBS_NOEXT_LIST),$(wildcard $(l).a $(l).so))
+> -  LIBS += -Wl,--start-group $(LIBCLANG) -Wl,--end-group
+> +  LIBS += -L$(shell $(LLVM_CONFIG) --libdir) -lclang-cpp
+>  endif
+>  
+>  ifeq ($(USE_LLVM), 1)
+> -- 
+> 2.41.0
+> 
 
+-- 
+
+- Arnaldo
