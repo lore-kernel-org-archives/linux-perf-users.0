@@ -2,131 +2,196 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 948B6C001DF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Aug 2023 09:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C2DC04A94
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Aug 2023 09:38:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234107AbjHBJcU (ORCPT
+        id S231510AbjHBJil (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Aug 2023 05:32:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43230 "EHLO
+        Wed, 2 Aug 2023 05:38:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231895AbjHBJcT (ORCPT
+        with ESMTP id S229629AbjHBJik (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Aug 2023 05:32:19 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7948127
-        for <linux-perf-users@vger.kernel.org>; Wed,  2 Aug 2023 02:32:16 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id 4fb4d7f45d1cf-5217ad95029so8940550a12.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Aug 2023 02:32:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1690968735; x=1691573535;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qF0aEgee+FPFz+iaQY2LrH7Juz8N6fO4KHzo5d0J5po=;
-        b=WK07xQ3FGA5WcpC5zdx0uDh/Lh1f8FHSywlLFabT48BunC8cffyAwiJnKW6W9ZHRhv
-         bdiDZKh6i0P4XosyLhKvMsVWmygqgp4Nn80eYXDBOUZZTPbZk/2eUYXuKJaH7TpmOyts
-         uouA7nAqrPVIUuVFeiYhOUUhrv3QHDWqOuZx2kCNJDNh2aH2eXWJ9YAiQWrdJMqwx2oh
-         9t1va6KIgdxlTSaxnMg37rZ9D2boo1lpHhH6ebbDqA3WQFowchWEJzIXd+bS1suntkFe
-         z/mJYKfIdrEi0/aoJC3VfeRW0y2kGAdMru/7TdNZy1piXEQ2WKmynJZBN+YHfGfUccEv
-         Txrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690968735; x=1691573535;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qF0aEgee+FPFz+iaQY2LrH7Juz8N6fO4KHzo5d0J5po=;
-        b=HHYNPThaUma6SVQmTO3K+EEv1KQJnbu48rqLaQBrKsvFH1vcVkbjJ9g+UbNswhxxi2
-         hsCJwIE97Rlh2Oau6XctI2t3yhj48Sk0i/5bWjhr0oCVdbD6QQd6Iy5FGX4X8bKwAIYK
-         HbS/AP3KyNG21DB3KHyOZE360O0002VZurtvOcL1yexxH6+FpRN8DtVuP+WLpHfkd1r9
-         S/tRaVRSxwws2wNwsleIVyMwsQgoGg3PJV5lP8zJQZs1v8nbAxy/JuKtxNcqtKSr4Ot2
-         FOY1JVvPKUcyM7D/J6cnuTYu91sp/V6tICHypjb20JcxCsjIAn1CcRKtPXBYmrAm1SAE
-         RScg==
-X-Gm-Message-State: ABy/qLbrEmSLJEMPN0MD0C9jbVkn7mzV2xnaa2Py+YLkPRbuDPPLn9sm
-        yGeOukIc8ig3u6XVeI72ue2chw==
-X-Google-Smtp-Source: APBJJlFF191bxevEKrX048Spx8AHXhdbVnhFYercC2XbYZV/VYGT7ptsY6UpNsEbfdmWvraciuM69A==
-X-Received: by 2002:a17:907:2bd7:b0:96f:e5af:ac5f with SMTP id gv23-20020a1709072bd700b0096fe5afac5fmr4440341ejc.47.1690968735457;
-        Wed, 02 Aug 2023 02:32:15 -0700 (PDT)
-Received: from localhost (212-5-140-29.ip.btc-net.bg. [212.5.140.29])
-        by smtp.gmail.com with ESMTPSA id v8-20020a17090690c800b00997e99a662bsm8741929ejw.20.2023.08.02.02.32.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Aug 2023 02:32:15 -0700 (PDT)
-Date:   Wed, 2 Aug 2023 12:32:12 +0300
-From:   Andrew Jones <ajones@ventanamicro.com>
-To:     Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <atishp@atishpatra.org>,
-        Anup Patel <anup@brainfault.org>,
-        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-        =?utf-8?B?UsOpbWk=?= Denis-Courmont <remi@remlab.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Atish Patra <atishp@rivosinc.com>
-Subject: Re: [PATCH v6 09/10] tools: lib: perf: Implement riscv mmap support
-Message-ID: <20230802-7c19a712ae071f68030ab5f2@orel>
-References: <20230802080328.1213905-1-alexghiti@rivosinc.com>
- <20230802080328.1213905-10-alexghiti@rivosinc.com>
+        Wed, 2 Aug 2023 05:38:40 -0400
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B6C0E48;
+        Wed,  2 Aug 2023 02:38:37 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0VoucCun_1690969112;
+Received: from 30.221.150.97(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VoucCun_1690969112)
+          by smtp.aliyun-inc.com;
+          Wed, 02 Aug 2023 17:38:33 +0800
+Message-ID: <8e207c71-5400-5427-ae83-a1e0b8f95e31@linux.alibaba.com>
+Date:   Wed, 2 Aug 2023 17:38:29 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230802080328.1213905-10-alexghiti@rivosinc.com>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.11.2
+Subject: Re: [PATCH v5 1/5] perf metric: Event "Compat" value supports
+ matching multiple identifiers
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+To:     John Garry <john.g.garry@oracle.com>
+Cc:     Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>
+References: <1690525040-77423-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1690525040-77423-2-git-send-email-renyu.zj@linux.alibaba.com>
+ <268b3891-be4b-5f63-eff3-7b6d83e906e9@oracle.com>
+ <0801b73c-6649-8c54-8dca-276efc2a4967@linux.alibaba.com>
+In-Reply-To: <0801b73c-6649-8c54-8dca-276efc2a4967@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Aug 02, 2023 at 10:03:27AM +0200, Alexandre Ghiti wrote:
-> riscv now supports mmaping hardware counters so add what's needed to
-> take advantage of that in libperf.
-> 
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-> Reviewed-by: Atish Patra <atishp@rivosinc.com>
-> ---
->  tools/lib/perf/mmap.c | 66 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 66 insertions(+)
-> 
-> diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
-> index 0d1634cedf44..2184814b37dd 100644
-> --- a/tools/lib/perf/mmap.c
-> +++ b/tools/lib/perf/mmap.c
-> @@ -392,6 +392,72 @@ static u64 read_perf_counter(unsigned int counter)
->  
->  static u64 read_timestamp(void) { return read_sysreg(cntvct_el0); }
->  
-> +/* __riscv_xlen contains the witdh of the native base integer, here 64-bit */
-> +#elif defined(__riscv) && __riscv_xlen == 64
-> +
-> +/* TODO: implement rv32 support */
-> +
-> +#define CSR_CYCLE	0xc00
-> +#define CSR_TIME	0xc01
-> +
-> +#define csr_read(csr)						\
-> +({								\
-> +	register unsigned long __v;				\
-> +		__asm__ __volatile__ ("csrr %0, %1"		\
-> +		 : "=r" (__v)					\
-> +		 : "i" (csr) : );				\
-> +		 __v;						\
 
-nit: no need for the indentation or line wrap,
 
-({
-	register unsigned long __v;
-	__asm__ __volatile__ ("csrr %0, %1" : "=r" (__v) : "i" (csr));
-	__v;
-})
+在 2023/7/31 下午6:59, Jing Zhang 写道:
+> 
+> 在 2023/7/28 下午4:11, John Garry 写道:
+>> On 28/07/2023 07:17, Jing Zhang wrote:
+>>> The jevent "Compat" is used for uncore PMU alias or metric definitions.
+>>>
+>>> The same PMU driver has different PMU identifiers due to different hardware
+>>> versions and types, but they may have some common PMU event/metric. Since a
+>>> Compat value can only match one identifier, when adding the same event
+>>> alias and metric to PMUs with different identifiers, each identifier needs
+>>> to be defined once, which is not streamlined enough.
+>>>
+>>> So let "Compat" value supports matching multiple identifiers. For example,
+>>> the Compat value {abcde;123*}
+>> why not use a comma-separated list? that is more common
+>>
+> 
+> Hi John,
+> 
+> I use a semicolon instead of a comma because I want to distinguish it from the function
+> of the comma in "Unit" and avoid confusion between the use of commas in "Unit" and "Compat".
+> Because in “Compat”, the semicolon means "or". So I think semicolons are more appropriate,
+> what do you think?
+> 
+>>> can match the PMU identifier "abcde" and the
+>>> the PMU identifier with the prefix "123",
+>>
+>> I have to admit that this is not a great example as it does not match an expected real-life scenario. I mean, I would not expect a PMU identifier for the same PMU to be in either format "abcde" or "123*". I would expect to be in only ever one format.
+>>
+> 
+> Get, I'll pick a more appropriate example {43401;436*}(CMN600 r0p0 and all CMN650).
+> 
+>>> where "*" is a wildcard.
+>>> Tokens in Unit field are delimited by ';' with no spaces.
+>>>
+>>> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+>>> ---
+>>>   tools/perf/util/metricgroup.c |  2 +-
+>>>   tools/perf/util/pmu.c         | 27 ++++++++++++++++++++++++++-
+>>>   tools/perf/util/pmu.h         |  1 +
+>>>   3 files changed, 28 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+>>> index 5e9c657..ff81bc5 100644
+>>> --- a/tools/perf/util/metricgroup.c
+>>> +++ b/tools/perf/util/metricgroup.c
+>>> @@ -477,7 +477,7 @@ static int metricgroup__sys_event_iter(const struct pmu_metric *pm,
+>>>         while ((pmu = perf_pmu__scan(pmu))) {
+>>>   -        if (!pmu->id || strcmp(pmu->id, pm->compat))
+>>> +        if (!pmu->id || !pmu_uncore_identifier_match(pmu->id, pm->compat))
+>>>               continue;
+>>>             return d->fn(pm, table, d->data);
+>>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+>>> index ad209c8..3ae249b 100644
+>>> --- a/tools/perf/util/pmu.c
+>>> +++ b/tools/perf/util/pmu.c
+>>> @@ -776,6 +776,31 @@ static bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
+>>>       return res;
+>>>   }
+>>>   +bool pmu_uncore_identifier_match(const char *id, const char *compat)
+>>> +{
+>>> +    char *tmp = NULL, *tok, *str;
+>>> +    bool res;
+>>> +    int n;
+>>> +
+>>> +    str = strdup(compat);
+>>
+>> why duplicate this? are you modifying something?
+>>
+> 
+> This is really a redundant step, I will remove it.
+> 
+
+Hi John,
+
+I reviewed this code again and found that it still needs to duplicate "compat" because "compat" is a
+const str* type and cannot be used as a parameter for the strtok_r function. If it is cast to char*,
+using "compat" as a parameter for strtok_r is also unsafe and can cause a "Segmentation fault" error.
+Therefore, let's keep the step of duplicating "compat".
 
 Thanks,
-drew
+Jing
+
+
+>>> +    if (!str)
+>>> +        return false;
+>>> +
+>>> +    tok = strtok_r(str, ";", &tmp);
+>>> +    for (; tok; tok = strtok_r(NULL, ";", &tmp)) {
+>>> +        n = strlen(tok);
+>>> +        if ((tok[n - 1] == '*' && !strncmp(id, tok, n - 1)) ||
+>>> +            !strcmp(id, tok)) {
+>>> +            res = true;
+>>> +            goto out;
+>>> +        }
+>>> +    }
+>>> +    res = false;
+>>> +out:
+>>> +    free(str);
+>>> +    return res;
+>>> +}
+>>> +
+>>>   struct pmu_add_cpu_aliases_map_data {
+>>>       struct list_head *head;
+>>>       const char *name;
+>>> @@ -847,7 +872,7 @@ static int pmu_add_sys_aliases_iter_fn(const struct pmu_event *pe,
+>>
+>> This is not for metrics specifically. You are really doing 2x things here. I suggest that you split the patch out into 1st pmu.c change and 2nd metricgroup.c change
+>>
+> 
+> Ok, will do.
+> 
+>>>       if (!pe->compat || !pe->pmu)
+>>>           return 0;
+>>>   -    if (!strcmp(pmu->id, pe->compat) &&
+>>> +    if (pmu_uncore_identifier_match(pmu->id, pe->compat) &&
+>>>           pmu_uncore_alias_match(pe->pmu, pmu->name)) {
+>>
+>> nit: let's change order to check alias and then identifier
+>>
+> 
+> Will do.
+> 
+> 
+> Thanks,
+> Jing
+> 
+>>>           __perf_pmu__new_alias(idata->head, -1,
+>>>                         (char *)pe->name,
+>>> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+>>> index b9a02de..9d4385d 100644
+>>> --- a/tools/perf/util/pmu.h
+>>> +++ b/tools/perf/util/pmu.h
+>>> @@ -241,6 +241,7 @@ void pmu_add_cpu_aliases_table(struct list_head *head, struct perf_pmu *pmu,
+>>>   char *perf_pmu__getcpuid(struct perf_pmu *pmu);
+>>>   const struct pmu_events_table *pmu_events_table__find(void);
+>>>   const struct pmu_metrics_table *pmu_metrics_table__find(void);
+>>> +bool pmu_uncore_identifier_match(const char *id, const char *compat);
+>>>   void perf_pmu_free_alias(struct perf_pmu_alias *alias);
+>>>     int perf_pmu__convert_scale(const char *scale, char **end, double *sval);
+>>
+>> Thanks,
+>> John
