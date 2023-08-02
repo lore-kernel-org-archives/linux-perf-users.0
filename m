@@ -2,267 +2,154 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C19C001E0
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Aug 2023 12:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DAEC41513
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Aug 2023 12:49:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229806AbjHBMl7 (ORCPT
+        id S234760AbjHBMtN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Aug 2023 08:41:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33770 "EHLO
+        Wed, 2 Aug 2023 08:49:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231641AbjHBMl6 (ORCPT
+        with ESMTP id S234746AbjHBMtA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Aug 2023 08:41:58 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AC4492D7D;
-        Wed,  2 Aug 2023 05:41:23 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B90B8113E;
-        Wed,  2 Aug 2023 05:41:00 -0700 (PDT)
-Received: from [10.57.89.109] (unknown [10.57.89.109])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 36A843F6C4;
-        Wed,  2 Aug 2023 05:40:15 -0700 (PDT)
-Message-ID: <6e8d5f13-865d-e39f-1e2e-96f2b447219b@arm.com>
-Date:   Wed, 2 Aug 2023 13:40:13 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.13.0
-Subject: Re: [PATCH V13 - RESEND 06/10] arm64/perf: Enable branch stack events
- via FEAT_BRBE
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Yang Shen <shenyang39@huawei.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
-Cc:     Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Wed, 2 Aug 2023 08:49:00 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 751382D62;
+        Wed,  2 Aug 2023 05:48:49 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1bba54f7eefso6138055ad.1;
+        Wed, 02 Aug 2023 05:48:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690980529; x=1691585329;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lSMxQO4QLj11rFq0SZ8NCKoM/Fqrwq/JbOlu6Igg0B4=;
+        b=h12faQrs/apclZ0PmxedI4aMnqe5yovVFOUP3c+TErQ6AnmeuL4TjkByvqCZV4oP4i
+         BntZP9A1zwZH5xvMLspXQZwvJtA2uxPjmkpk/c82KS+erzHy9ZC2Ncz/vZa7L+4dDACA
+         2fbnFwMh5vd2h1t3xk7RK7IKRTPsSmpD6sSUGTZi1FUAoWjy3wqwzn8xjiM1Hn2my0ll
+         15vQQZAE96/bbbETKYBO3U7NuZK980M3tZNXOKJAgSWxJtFlNIqhjBWy2DQNc2GDnCSc
+         hOgYwrjGyKoI3wynvIGHOsQQO6ux984N0r3YSuaDLkBGM0rlbyyp2OIZpK6isJ1jI10n
+         JC/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690980529; x=1691585329;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lSMxQO4QLj11rFq0SZ8NCKoM/Fqrwq/JbOlu6Igg0B4=;
+        b=bG+ndrkhYXfSI5mgkJ2ePMzhMUhiao84Bt08+tAK8EeHG6qcu1CzPshCqDItPAy3aS
+         IsIf+K6Y0dZw8yz6mER0/oSDW2C/IdWmFm5fETF9eVwBXsnzWIOCN6ySxvuhb6OOZTnl
+         Wqzav+42QEzQAx0GL9LmcfGwOa8PNEah9yTS+V0+kZ8DlzIUlmSPMNUgIy1wrll88lsG
+         1ZJZNDQ928kIthn/eTEqo/ntFHYJzNUutx9v2tbVlXcyqxydr/+YWHQTGgYadLVGizWH
+         pJCNr61PLXBmjBV+2eOvnzT5MIXgNeth4esbiM0JWZnM2ehJjpkjXmdaI4OqlPesOgo2
+         kQAQ==
+X-Gm-Message-State: ABy/qLZWxJVaRcc7UuQ75cLA+XfFzmTwrlkJtj6pz4S5FDyXln8CHsmq
+        tSMLotn0tNxjG6MnuZj4u38=
+X-Google-Smtp-Source: APBJJlGqiFEDeXrHpz/RMBL2cv+N5gAw/hBk7Ool/YUVwwJ+tm22LDsg6wRpYdv/0HKIK6jGiGI9Vw==
+X-Received: by 2002:a17:90a:8c96:b0:263:eb0e:5681 with SMTP id b22-20020a17090a8c9600b00263eb0e5681mr19375118pjo.3.1690980527682;
+        Wed, 02 Aug 2023 05:48:47 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.17])
+        by smtp.googlemail.com with ESMTPSA id x34-20020a17090a6c2500b00264044cca0fsm4811993pjj.1.2023.08.02.05.48.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Aug 2023 05:48:47 -0700 (PDT)
+From:   Ze Gao <zegao2021@gmail.com>
+X-Google-Original-From: Ze Gao <zegao@tencent.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <20230711082455.215983-1-anshuman.khandual@arm.com>
- <20230711082455.215983-7-anshuman.khandual@arm.com>
- <5c7c1ff3-1e2a-1258-7fa0-c82a9ab62646@huawei.com>
- <9d07e82a-06fb-a5f8-6f4f-f3c16784b9b7@arm.com>
- <3873f3b6-5e0b-360f-2f01-4584e15e960a@arm.com>
- <8b9d860f-f235-651e-3e48-34cdc489440d@arm.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <8b9d860f-f235-651e-3e48-34cdc489440d@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
+Subject: [RFC PATCH v5 0/7] fix task state report from sched tracepoint
+Date:   Wed,  2 Aug 2023 08:47:23 -0400
+Message-ID: <20230802124840.335638-1-zegao@tencent.com>
+X-Mailer: git-send-email 2.41.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 26/07/2023 06:32, Anshuman Khandual wrote:
-> 
-> 
-> On 7/25/23 18:59, Suzuki K Poulose wrote:
->> On 25/07/2023 12:42, Anshuman Khandual wrote:
->>> Hello Yang,
->>>
->>> On 7/25/23 12:42, Yang Shen wrote:
->>>>> +    if (!(branch_type & PERF_SAMPLE_BRANCH_NO_CYCLES))
->>>>> +        brbcr |= BRBCR_EL1_CC;
->>>>
->>>> Hi Anshuman,
->>>>
->>>> Here is problem about enable CYCLES_COUNT. The SPEC defines that the CYCLES_COUNT is only
->>>>
->>>> valid when the BRECR_EL1.CC & BRBCR_EL2.CC is true. And here the SPEC also defines that
->>>>
->>>> when PSTATE.EL == EL2 and HCR_EL2.E2h == '1', 'MSR BRBCR_EL1, <Xt>' means writing to
->>>>
->>>> BRBCR_EL2 actually. So 'armv8pmu_branch_enable' can only set the BRBCR_EL2.CC, while the
->>>>
->>>> BRECR_EL1.CC is still 0. The CYCLES_COUNT will be always 0 in records.
->>>
->>>
->>> Agreed, this is a valid problem i.e BRBCR_EL1.CC and BRBCR_EL2.CC both needs to be set
->>> for valid cycle count information regardless if the kernel runs in EL1 or EL2. A simple
->>> hack in the current code setting BRBCR_EL12.C, which in turn sets BRBCR_EL1.CC when the
->>> kernel runs in EL2 solves the problem.
->>>
->>>>
->>>> As a solution, maybe BRBCR_EL12 should be added for driver according to the registers definition.
->>>
->>> Right, will add the definition for BRBCR_EL12 in arch/arm64/tools/sysreg
->>>
->>>>
->>>> Or, do you have a more standard solution?
->>>
->>> Right, there are some nuances involved here.
->>>
->>> Kernel could boot
->>>      
->>> a. Directly into EL2 and stays in EL2 for good
->>> b. Directly into EL2 but switches into EL1
->>> c. Directly into EL1 without ever going into EL2
->>>
->>> In all the above cases BRBCR_EL1.CC and BRBCR_EL2.CC needs to be set when cycle count
->>> is requested in the perf event interface (event->attr.branch_sample_type) via clearing
->>> PERF_SAMPLE_BRANCH_NO_CYCLES.
->>>
->>>
->>> - For the case as in (c) where kernel boots into EL1 directly and hence cannot ever set
->>>     EL2 register, BRBCR_EL2.CC would be a booting requirement - updated in booting.rst
->>>
->>> - For the cases as in (a) and (b) kernel boots via EL2, hence there is an opportunity
->>>     to set both BRBCR_EL1.CC (via accessed BRBCR_EL12.CC) and BRBCR_EL2.CC. Depending on
->>
->> You don't need to use BRBCR_EL12, if you do it early enough, before
->> HCR_EL2.E2H == 1 is applied.
-> 
-> Agreed. Please find the code change which solves this reported problem, please
-> have a look and let me know if anything needs changing.
-> 
-> ------------------------------------------------------------------------------
->   Documentation/arch/arm64/booting.rst |  6 ++++
->   arch/arm64/include/asm/el2_setup.h   | 45 ++++++++++++++++++++++++++++
->   arch/arm64/tools/sysreg              | 38 +++++++++++++++++++++++
->   3 files changed, 89 insertions(+)
-> 
-> diff --git a/Documentation/arch/arm64/booting.rst b/Documentation/arch/arm64/booting.rst
-> index b57776a68f15..2276df285e83 100644
-> --- a/Documentation/arch/arm64/booting.rst
-> +++ b/Documentation/arch/arm64/booting.rst
-> @@ -349,6 +349,12 @@ Before jumping into the kernel, the following conditions must be met:
->   
->       - HWFGWTR_EL2.nSMPRI_EL1 (bit 54) must be initialised to 0b01.
->   
-> +  For CPUs with feature Branch Record Buffer Extension (FEAT_BRBE):
-> +
-> +  - If the kernel is entered at EL1 and EL2 is present:
-> +
-> +    - BRBCR_EL2.CC (bit 3) must be initialised to 0b1.
-> +
->     For CPUs with the Scalable Matrix Extension FA64 feature (FEAT_SME_FA64):
->   
->     - If EL3 is present:
-> diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
-> index 8e5ffb58f83e..75b04eff2dc7 100644
-> --- a/arch/arm64/include/asm/el2_setup.h
-> +++ b/arch/arm64/include/asm/el2_setup.h
-> @@ -150,6 +150,50 @@
->   	msr	cptr_el2, x0			// Disable copro. traps to EL2
->   .endm
->   
-> +/*
-> + * Enable BRBE cycle count
-> + *
-> + * BRBE requires both BRBCR_EL1.CC and BRBCR_EL2.CC fields, be set
-> + * for the cycle counts to be available in BRBINF<N>_EL1.CC during
-> + * branch record processing after a PMU interrupt. This enables CC
-> + * field on both these registers while still executing inside EL2.
-> + *
-> + * BRBE driver would still be able to toggle branch records cycle
-> + * count support via BRBCR_EL1.CC field regardless of whether the
-> + * kernel end up executing in EL1 or EL2.
-> + */
-> +.macro __init_el2_brbe
-> +	mrs	x1, id_aa64dfr0_el1
-> +	ubfx	x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
-> +	cbz	x1, .Lskip_brbe_cc_\@
-> +
-> +	mrs_s	x0, SYS_BRBCR_EL2
-> +	orr	x0, x0, BRBCR_EL2_CC
-> +	msr_s	SYS_BRBCR_EL2, x0
-> +
-> +	/*
-> +	 * Accessing BRBCR_EL1 register here does not require
-> +	 * BRBCR_EL12 addressing mode as HCR_EL2.E2H is still
-> +	 * clear. Regardless, check for HCR_E2H and be on the
-> +	 * safer side.
-> +	 */
-> +	mrs	x1, hcr_el2
-> +	and	x1, x1, #HCR_E2H
-> +	cbz	x1, .Lset_brbe_el1_direct_\@
-> +
-> +	mrs_s	x0, SYS_BRBCR_EL12
-> +	orr	x0, x0, BRBCR_EL12_CC
-> +	msr_s	SYS_BRBCR_EL12, x0
-> +	b	.Lskip_brbe_cc_\@
-> +
-> +.Lset_brbe_el1_direct_\@:
-> +	mrs_s	x0, SYS_BRBCR_EL1
-> +	orr	x0, x0, BRBCR_EL1_CC
-> +	msr_s	SYS_BRBCR_EL1, x0
-> +
-> +.Lskip_brbe_cc_\@:
-> +.endm
-> +
->   /* Disable any fine grained traps */
->   .macro __init_el2_fgt
->   	mrs	x1, id_aa64mmfr0_el1
-> @@ -224,6 +268,7 @@
->   	__init_el2_nvhe_idregs
->   	__init_el2_cptr
->   	__init_el2_fgt
-> +	__init_el2_brbe
->   .endm
->   
->   #ifndef __KVM_NVHE_HYPERVISOR__
-> diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
-> index 9892af96262f..7d1d6b3976b4 100644
-> --- a/arch/arm64/tools/sysreg
-> +++ b/arch/arm64/tools/sysreg
-> @@ -1048,6 +1048,44 @@ Enum	1:0	VALID
->   EndEnum
->   EndSysregFields
->   
-> +Sysreg	BRBCR_EL12	2	5	9	0	0
-> +Res0	63:24
-> +Field	23 	EXCEPTION
-> +Field	22 	ERTN
-> +Res0	21:9
-> +Field	8 	FZP
-> +Res0	7
-> +Enum	6:5	TS
-> +	0b01	VIRTUAL
-> +	0b10	GUEST_PHYSICAL
-> +	0b11	PHYSICAL
-> +EndEnum
-> +Field	4	MPRED
-> +Field	3	CC
-> +Res0	2
-> +Field	1	E1BRE
-> +Field	0	E0BRE
-> +EndSysreg
+This is the 5th attempt to fix the report task state issue in sched
+tracepint, you can check out previous discussions here:
 
-As this is exactly same as BRBCR_EL1, please could we use SysregFields
-for BRBCR_EL1 and reuse it here ?
+v1: https://lore.kernel.org/linux-trace-kernel/20230725072254.32045-1-zegao@tencent.com
+v2: https://lore.kernel.org/linux-trace-kernel/20230726121618.19198-1-zegao@tencent.com
+v3: https://lore.kernel.org/linux-trace-kernel/20230801090124.8050-1-zegao@tencent.com
+v4: sorry for my stupid copy-paste, which makes patch broken and cannot be applied
 
+Against v3, reorganize commits so that they can be cherry-picked
+individually if people indeed have strong opinion over this change.
 
+Note PATCH 1-4 are the normal fixes and cleanup whereas PATCH 5-7
+introduce new changes.
 
-> +
-> +Sysreg	BRBCR_EL2	2	4	9	0	0
-> +Res0	63:24
-> +Field	23 	EXCEPTION
-> +Field	22 	ERTN
-> +Res0	21:9
-> +Field	8 	FZP
-> +Res0	7
-> +Enum	6:5	TS
-> +	0b01	VIRTUAL
-> +	0b10	GUEST_PHYSICAL
-> +	0b11	PHYSICAL
-> +EndEnum
-> +Field	4	MPRED
-> +Field	3	CC
-> +Res0	2
-> +Field	1	E1BRE
+--
 
-E2BRE?
-> +Field	0	E0BRE
+FYI, this series are designed not to break anything now and still do the 
+1-1 correspondence int-char mapping for each distinct task state we want to
+report, and thus will not lose any details intended for debug purposes. Of
+course, this might be compromised because of bugs introduced due to my
+stupidity. So your sage comments are very important and appreciated!
 
-E0HBRE?
+--
 
-Rest looks good to me
+In the status quo, we should see three different outcomes of the reported
+sched-out task state from perf-script, perf-sched-timehist, and Tp_printk
+of tracepoint sched_switch.  And it's not hard to figure out that the
+former two are built upon the third one, and the reason why we see this
+inconsistency is that the former two does not catch up with the internal
+change of reported task state definitions as the kernel evolves.
 
-Suzuki
+IMHO, exporting internal representations of task state in the tracepoint
+sched_switch is not a good practice and not encouraged at all, which can
+easily break userspace tools that relies on it. Especially when tracepoints
+are massively used in many observability tools nowadays due to its stable
+nature, which makes them no longer used for debug only purpose and we
+should be careful to decide what ought to be reported to userspace and what
+ought not.
 
-> +EndSysreg
-> +
->   Sysreg	BRBCR_EL1	2	1	9	0	0
->   Res0	63:24
->   Field	23 	EXCEPTION
+Therefore, to fix the issues mentioned above for good, I proposed to add
+a new variable to report task state in sched_switch with a symbolic char
+along with the old hardcoded value, and save the further processing of
+userspace tools and spare them from knowing implementation details in the
+kernel.
+
+After this patch seires, we report 'RSDTtXZPI' the same as in procfs, plus
+a 'p' which denotes PREEMP_ACTIVE and is used for sched_switch tracepoint
+only.
+
+Reviews welcome!
+
+Regards,
+Ze
+
+--
+
+Ze Gao (5):
+  perf sched: sync state char array with the kernel
+  perf sched: reorganize sched-out task state report code
+  sched, tracing: reorganize fields of switch event struct
+  sched, tracing: add to report task state in symbolic chars
+  perf sched: prefer to use prev_state_char introduced in sched_switch
+
+ include/trace/events/sched.h | 68 +++++++++++++++++-------------
+ tools/perf/builtin-sched.c   | 82 ++++++++++++++++--------------------
+ 2 files changed, 76 insertions(+), 74 deletions(-)
+
+Ze Gao (2):
+  libtraceevent: sync state char array with the kernel
+  libtraceevent: prefer to use prev_state_char introduced in
+    sched_switch
+
+ plugins/plugin_sched_switch.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+-- 
+2.41.0
 
