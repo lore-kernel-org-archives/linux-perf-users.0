@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF58C00528
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Aug 2023 08:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B04C001DF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Aug 2023 08:10:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233542AbjHBIJN (ORCPT
+        id S233204AbjHBIKN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Aug 2023 04:09:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35696 "EHLO
+        Wed, 2 Aug 2023 04:10:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233475AbjHBIJM (ORCPT
+        with ESMTP id S233393AbjHBIKM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Aug 2023 04:09:12 -0400
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B085AE6D
-        for <linux-perf-users@vger.kernel.org>; Wed,  2 Aug 2023 01:09:09 -0700 (PDT)
-Received: by mail-wm1-x335.google.com with SMTP id 5b1f17b1804b1-3fe2bc2702cso12022845e9.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Aug 2023 01:09:09 -0700 (PDT)
+        Wed, 2 Aug 2023 04:10:12 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBC2819A
+        for <linux-perf-users@vger.kernel.org>; Wed,  2 Aug 2023 01:10:10 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-3fbef8ad9bbso69979485e9.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Aug 2023 01:10:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20221208.gappssmtp.com; s=20221208; t=1690963748; x=1691568548;
+        d=rivosinc-com.20221208.gappssmtp.com; s=20221208; t=1690963809; x=1691568609;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=R45KJ8XHyzPlJWiJBpBPEEo2H/ciDziDBY6xvMQUNYU=;
-        b=2tDCQHcAPyll8azBJd6dT6utA3BsWAqg/oeFquak3rYJTTSVdo+7F+w2jLC0HXv8rP
-         pSILAnhEcZPi6VbP6zEsHBU5f3qTJQHP3EE2PXKQXjx5fTw9kDg4LFayCR5OAAO+z2gm
-         U/X7Dyo5P3qgMxrRek/+0NJb2+XAYK88dRSmw8MDbWma56fqnwgGDE7DnLD5qCS605sb
-         yT3BVqmCRrTtQFQCn5Ws5VAlqKeqBN3E2tD0LfFdsejHXyXCNZKrWWATMGw+cdvnrzG6
-         zLHkbblQ35KnzPs3j1UkRmD6kXTA1rGz0Twg+Z48zziL+KDgO0SrapKM01E9D0C6Oklu
-         NcoA==
+        bh=7afbVzdz7i3XV0LSy+5KsI/iNIynDErY3gG58bPEFNo=;
+        b=qifnnd1mKlQIbmFMQtnxa9WqcewBxOF1/ulkKZ0PlwvTFCAGuQxSgo1kcwBebXtHjM
+         rpmSpxRKelVFPrBiLJFe6TQ/HsCgwCo4mpuiYtYIYNnDyIOebL6tMHLAyw9pigfIdHHi
+         xWN6KuEvcE6ua4CybzZrL4imUKgHHO9F7J6YzHT1QIOUgi1nqmPKRxp2h0G8Sofwog8U
+         gU3grY1tQXjUv6WVst3cwIliB/fUUp/K0iLvsma3syDq4RkO9KvWY5Ve6RUBV0YkrSuf
+         7rRQGfdNGtkkGsEX0dcr4Wp00mu9hOiOsCxFOWmXWX6hTlpNnA8n4hoeTtME5dj7noaR
+         p8kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690963748; x=1691568548;
+        d=1e100.net; s=20221208; t=1690963809; x=1691568609;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=R45KJ8XHyzPlJWiJBpBPEEo2H/ciDziDBY6xvMQUNYU=;
-        b=E25gteuQqKjfugR3z446J8QxednTuYFyeYwlVbw7CQfb9drFtDD2dS6uWPi7tNrO37
-         fIsExdomuC3q1r+7jHaHc/1NCtFzoFbVie1pQoUG/e3unnC/tScnnTgKOtNdn8YTiGqN
-         wGmOLq6LU0iyfYAXL6gFrSWhxTWTAQEtGviJnNcQe6vcvw1MXrNmYBFD9Y44K1lSZYOh
-         5UFp37UKZKzRRcGklbE5rYpavUL5Ps7MbBCzMFQDFRqiF7fNhyEFQVKirmrYbu2LzDOR
-         A4Ro4IlSeFo6L7wEXt6I+e9Fmtk8Z380sSr+LOIWGE3WmYOV7Pb0CvsQ8+M4yVHXKryz
-         Z7vA==
-X-Gm-Message-State: ABy/qLYAcSyTJFQafBZBKpevqT+lWombXxIgZp7xFAquSc7xYn7C2HmG
-        xkIJBsFwX+nGfrldzevoAAYeQQ==
-X-Google-Smtp-Source: APBJJlFUlQSRse2dEoorLdMBGniWPgB64VymNk/XGBMbL6DNGPgqSv6Jjauagm3vhVxcG56361bPrw==
-X-Received: by 2002:a7b:c010:0:b0:3fe:12a2:7d25 with SMTP id c16-20020a7bc010000000b003fe12a27d25mr4060313wmb.23.1690963748207;
-        Wed, 02 Aug 2023 01:09:08 -0700 (PDT)
+        bh=7afbVzdz7i3XV0LSy+5KsI/iNIynDErY3gG58bPEFNo=;
+        b=S/ewlJ3GwObYySdwcM8wzCZeUWRjwEbQniglq6gweeiMSZKits1w3M3C8iIJKlfLil
+         RvbzPbBkXOI/Xi/zx5gooiXaGP14cc7NVO7/OoqzqUEYd3/1IJSoIMqKbuYaAoqMV2HM
+         EQN8oxjvMFBwAlCBExOHPZ8uMOKFoFAkx7iyFDzPNJ3tpTPriCm9XgHkihK/X1JpdP90
+         AW6fSNWG3vsvj+zRn0c9symptzK8SmUjbu3Mo2ruSdscy/namdQe1LU6zOqghlilsKmc
+         4T+WiOVuMR9pAi/GhnQWU4epMWfCNlMKTAnQmGHTQtv7oPopOHUPNZUqcz7R4VS9gDtI
+         QatA==
+X-Gm-Message-State: ABy/qLb4J/oeR/LxJpDZsGw/DTdogf3EUQS4R+uWR2IncRxZ7YwBDB3e
+        YnKyzMy/3ScaAH+23bJTqzy09A==
+X-Google-Smtp-Source: APBJJlEKKkdTF9AhlPpANXIgbR1ENnZC75oX6YWqdfd3WINkVA6hfQ7Vkr1i/Nh2jbZi+6ixrXiGYg==
+X-Received: by 2002:a7b:c855:0:b0:3fc:616:b0db with SMTP id c21-20020a7bc855000000b003fc0616b0dbmr4218529wml.9.1690963809354;
+        Wed, 02 Aug 2023 01:10:09 -0700 (PDT)
 Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id 22-20020a05600c22d600b003fbb618f7adsm1006803wmg.15.2023.08.02.01.09.07
+        by smtp.gmail.com with ESMTPSA id w12-20020a5d404c000000b0031411b7087dsm18316163wrp.20.2023.08.02.01.10.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Aug 2023 01:09:07 -0700 (PDT)
+        Wed, 02 Aug 2023 01:10:09 -0700 (PDT)
 From:   Alexandre Ghiti <alexghiti@rivosinc.com>
 To:     Jonathan Corbet <corbet@lwn.net>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -74,9 +74,9 @@ To:     Jonathan Corbet <corbet@lwn.net>,
         linux-arm-kernel@lists.infradead.org
 Cc:     Alexandre Ghiti <alexghiti@rivosinc.com>,
         Atish Patra <atishp@rivosinc.com>
-Subject: [PATCH v6 05/10] riscv: Prepare for user-space perf event mmap support
-Date:   Wed,  2 Aug 2023 10:03:23 +0200
-Message-Id: <20230802080328.1213905-6-alexghiti@rivosinc.com>
+Subject: [PATCH v6 06/10] drivers: perf: Implement perf event mmap support in the legacy backend
+Date:   Wed,  2 Aug 2023 10:03:24 +0200
+Message-Id: <20230802080328.1213905-7-alexghiti@rivosinc.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230802080328.1213905-1-alexghiti@rivosinc.com>
 References: <20230802080328.1213905-1-alexghiti@rivosinc.com>
@@ -86,182 +86,60 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Provide all the necessary bits in the generic riscv pmu driver to be
-able to mmap perf events in userspace: the heavy lifting lies in the
-driver backend, namely the legacy and sbi implementations.
-
-Note that arch_perf_update_userpage is almost a copy of arm64 code.
+Implement the needed callbacks in the legacy driver so that we can
+directly access the counters through perf in userspace.
 
 Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
 Reviewed-by: Atish Patra <atishp@rivosinc.com>
 ---
- drivers/perf/riscv_pmu.c       | 105 +++++++++++++++++++++++++++++++++
- include/linux/perf/riscv_pmu.h |   4 ++
- 2 files changed, 109 insertions(+)
+ drivers/perf/riscv_pmu_legacy.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/drivers/perf/riscv_pmu.c b/drivers/perf/riscv_pmu.c
-index ebca5eab9c9b..432ad2e80ce3 100644
---- a/drivers/perf/riscv_pmu.c
-+++ b/drivers/perf/riscv_pmu.c
-@@ -14,9 +14,73 @@
- #include <linux/perf/riscv_pmu.h>
- #include <linux/printk.h>
- #include <linux/smp.h>
-+#include <linux/sched_clock.h>
- 
- #include <asm/sbi.h>
- 
-+static bool riscv_perf_user_access(struct perf_event *event)
-+{
-+	return ((event->attr.type == PERF_TYPE_HARDWARE) ||
-+		(event->attr.type == PERF_TYPE_HW_CACHE) ||
-+		(event->attr.type == PERF_TYPE_RAW)) &&
-+		!!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT);
-+}
-+
-+void arch_perf_update_userpage(struct perf_event *event,
-+			       struct perf_event_mmap_page *userpg, u64 now)
-+{
-+	struct clock_read_data *rd;
-+	unsigned int seq;
-+	u64 ns;
-+
-+	userpg->cap_user_time = 0;
-+	userpg->cap_user_time_zero = 0;
-+	userpg->cap_user_time_short = 0;
-+	userpg->cap_user_rdpmc = riscv_perf_user_access(event);
-+
-+	userpg->pmc_width = 64;
-+
-+	do {
-+		rd = sched_clock_read_begin(&seq);
-+
-+		userpg->time_mult = rd->mult;
-+		userpg->time_shift = rd->shift;
-+		userpg->time_zero = rd->epoch_ns;
-+		userpg->time_cycles = rd->epoch_cyc;
-+		userpg->time_mask = rd->sched_clock_mask;
-+
-+		/*
-+		 * Subtract the cycle base, such that software that
-+		 * doesn't know about cap_user_time_short still 'works'
-+		 * assuming no wraps.
-+		 */
-+		ns = mul_u64_u32_shr(rd->epoch_cyc, rd->mult, rd->shift);
-+		userpg->time_zero -= ns;
-+
-+	} while (sched_clock_read_retry(seq));
-+
-+	userpg->time_offset = userpg->time_zero - now;
-+
-+	/*
-+	 * time_shift is not expected to be greater than 31 due to
-+	 * the original published conversion algorithm shifting a
-+	 * 32-bit value (now specifies a 64-bit value) - refer
-+	 * perf_event_mmap_page documentation in perf_event.h.
-+	 */
-+	if (userpg->time_shift == 32) {
-+		userpg->time_shift = 31;
-+		userpg->time_mult >>= 1;
-+	}
-+
-+	/*
-+	 * Internal timekeeping for enabled/running/stopped times
-+	 * is always computed with the sched_clock.
-+	 */
-+	userpg->cap_user_time = 1;
-+	userpg->cap_user_time_zero = 1;
-+	userpg->cap_user_time_short = 1;
-+}
-+
- static unsigned long csr_read_num(int csr_num)
- {
- #define switchcase_csr_read(__csr_num, __val)		{\
-@@ -171,6 +235,8 @@ int riscv_pmu_event_set_period(struct perf_event *event)
- 
- 	local64_set(&hwc->prev_count, (u64)-left);
- 
-+	perf_event_update_userpage(event);
-+
- 	return overflow;
+diff --git a/drivers/perf/riscv_pmu_legacy.c b/drivers/perf/riscv_pmu_legacy.c
+index 6a000abc28bb..79fdd667922e 100644
+--- a/drivers/perf/riscv_pmu_legacy.c
++++ b/drivers/perf/riscv_pmu_legacy.c
+@@ -71,6 +71,29 @@ static void pmu_legacy_ctr_start(struct perf_event *event, u64 ival)
+ 	local64_set(&hwc->prev_count, initial_val);
  }
  
-@@ -267,6 +333,9 @@ static int riscv_pmu_event_init(struct perf_event *event)
- 	hwc->idx = -1;
- 	hwc->event_base = mapped_event;
- 
-+	if (rvpmu->event_init)
-+		rvpmu->event_init(event);
++static uint8_t pmu_legacy_csr_index(struct perf_event *event)
++{
++	return event->hw.idx;
++}
 +
- 	if (!is_sampling_event(event)) {
- 		/*
- 		 * For non-sampling runs, limit the sample_period to half
-@@ -283,6 +352,39 @@ static int riscv_pmu_event_init(struct perf_event *event)
- 	return 0;
++static void pmu_legacy_event_mapped(struct perf_event *event, struct mm_struct *mm)
++{
++	if (event->attr.config != PERF_COUNT_HW_CPU_CYCLES &&
++	    event->attr.config != PERF_COUNT_HW_INSTRUCTIONS)
++		return;
++
++	event->hw.flags |= PERF_EVENT_FLAG_USER_READ_CNT;
++}
++
++static void pmu_legacy_event_unmapped(struct perf_event *event, struct mm_struct *mm)
++{
++	if (event->attr.config != PERF_COUNT_HW_CPU_CYCLES &&
++	    event->attr.config != PERF_COUNT_HW_INSTRUCTIONS)
++		return;
++
++	event->hw.flags &= ~PERF_EVENT_FLAG_USER_READ_CNT;
++}
++
+ /*
+  * This is just a simple implementation to allow legacy implementations
+  * compatible with new RISC-V PMU driver framework.
+@@ -91,6 +114,9 @@ static void pmu_legacy_init(struct riscv_pmu *pmu)
+ 	pmu->ctr_get_width = NULL;
+ 	pmu->ctr_clear_idx = NULL;
+ 	pmu->ctr_read = pmu_legacy_read_ctr;
++	pmu->event_mapped = pmu_legacy_event_mapped;
++	pmu->event_unmapped = pmu_legacy_event_unmapped;
++	pmu->csr_index = pmu_legacy_csr_index;
+ 
+ 	perf_pmu_register(&pmu->pmu, "cpu", PERF_TYPE_RAW);
  }
- 
-+static int riscv_pmu_event_idx(struct perf_event *event)
-+{
-+	struct riscv_pmu *rvpmu = to_riscv_pmu(event->pmu);
-+
-+	if (!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT))
-+		return 0;
-+
-+	if (rvpmu->csr_index)
-+		return rvpmu->csr_index(event) + 1;
-+
-+	return 0;
-+}
-+
-+static void riscv_pmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
-+{
-+	struct riscv_pmu *rvpmu = to_riscv_pmu(event->pmu);
-+
-+	if (rvpmu->event_mapped) {
-+		rvpmu->event_mapped(event, mm);
-+		perf_event_update_userpage(event);
-+	}
-+}
-+
-+static void riscv_pmu_event_unmapped(struct perf_event *event, struct mm_struct *mm)
-+{
-+	struct riscv_pmu *rvpmu = to_riscv_pmu(event->pmu);
-+
-+	if (rvpmu->event_unmapped) {
-+		rvpmu->event_unmapped(event, mm);
-+		perf_event_update_userpage(event);
-+	}
-+}
-+
- struct riscv_pmu *riscv_pmu_alloc(void)
- {
- 	struct riscv_pmu *pmu;
-@@ -307,6 +409,9 @@ struct riscv_pmu *riscv_pmu_alloc(void)
- 	}
- 	pmu->pmu = (struct pmu) {
- 		.event_init	= riscv_pmu_event_init,
-+		.event_mapped	= riscv_pmu_event_mapped,
-+		.event_unmapped	= riscv_pmu_event_unmapped,
-+		.event_idx	= riscv_pmu_event_idx,
- 		.add		= riscv_pmu_add,
- 		.del		= riscv_pmu_del,
- 		.start		= riscv_pmu_start,
-diff --git a/include/linux/perf/riscv_pmu.h b/include/linux/perf/riscv_pmu.h
-index 5deeea0be7cb..43282e22ebe1 100644
---- a/include/linux/perf/riscv_pmu.h
-+++ b/include/linux/perf/riscv_pmu.h
-@@ -55,6 +55,10 @@ struct riscv_pmu {
- 	void		(*ctr_start)(struct perf_event *event, u64 init_val);
- 	void		(*ctr_stop)(struct perf_event *event, unsigned long flag);
- 	int		(*event_map)(struct perf_event *event, u64 *config);
-+	void		(*event_init)(struct perf_event *event);
-+	void		(*event_mapped)(struct perf_event *event, struct mm_struct *mm);
-+	void		(*event_unmapped)(struct perf_event *event, struct mm_struct *mm);
-+	uint8_t		(*csr_index)(struct perf_event *event);
- 
- 	struct cpu_hw_events	__percpu *hw_events;
- 	struct hlist_node	node;
 -- 
 2.39.2
 
