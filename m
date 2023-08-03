@@ -2,74 +2,87 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E0DC001DB
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 22:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 030F9C001DF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 22:52:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231301AbjHCWSY (ORCPT
+        id S231322AbjHCWwq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Aug 2023 18:18:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60176 "EHLO
+        Thu, 3 Aug 2023 18:52:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229542AbjHCWSX (ORCPT
+        with ESMTP id S230328AbjHCWwp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Aug 2023 18:18:23 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9BBB3598;
-        Thu,  3 Aug 2023 15:18:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691101102; x=1722637102;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=JzN2XbPsoJDABkLht7CpNWdDOSshQ7y20yYwZaLzqvQ=;
-  b=ZbuNC4BE96K0WurJXYkwne4S+0cExmIrXf4MUB69o+i5kKSUU65gfFtp
-   IMQyg3m179NyuD3UEJlDDgim7bt9EaEsQ+6Vz+JfNlY84zZJiHCYzGDbc
-   yYuWDSSXZDgVZT0mIN4BXcss5SmJ08bg3LbK5jXZtsNmzCW01Z8nAtodm
-   xiulMumuaQ+tpa1m9AjmfwQrpfUjQz+cZFFNErKCDlxNhOt2Mh+HB6NQk
-   zzi3fr6oP0dCdsZiis0sfYqTJxwuSyBpwh620Iio7IgevZSk11OB0kAbp
-   JiDm4//cu//6USfxTEY8Q08Uyt0y4ix6qB1aYgEScwCn8kaSl7fJxuAr9
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="373646347"
-X-IronPort-AV: E=Sophos;i="6.01,253,1684825200"; 
-   d="scan'208";a="373646347"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2023 15:18:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="903609565"
-X-IronPort-AV: E=Sophos;i="6.01,253,1684825200"; 
-   d="scan'208";a="903609565"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2023 15:18:22 -0700
-Date:   Thu, 3 Aug 2023 15:18:21 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Thu, 3 Aug 2023 18:52:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E9D2AC;
+        Thu,  3 Aug 2023 15:52:43 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3234561ED0;
+        Thu,  3 Aug 2023 22:52:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8B467C433C8;
+        Thu,  3 Aug 2023 22:52:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691103162;
+        bh=OIyXXsm8FvvLOGXhQpy/rnsQg7NCQW7MIKRY8FnIOuw=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=f9fzrFXAC+pVRDuA6p2+3jw1oR1NAgGB7+BwdxiTWNtxcQiLfbYc1IesdRE6owdSZ
+         XONB3GPrLprSwty0sdbU6EJQJIng/5Jv9VPKsXZwYgmuQlRCyMKAKxtGyJfUpO5igS
+         Uyc2TfciB78RLz41EDSgYPcIM4aZ3Z2zwEOqDx3ZTFr/3Gyik8EgXKv0lCUA997h3+
+         Q3YacZ7pjc6f4zxUQjhz/Uezfyw+ScdAhs71bB8SlpNkZznS1UC+Zo+ZJD3skfeTEP
+         3IR5ZcWglc/Yjm3Om2p4h5OjLJtMkHNx1OPdXoLE5kZT5tMemnGLEg90SAUzBWK8ev
+         VchPPzRu7fidg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 723B7C3274D;
+        Thu,  3 Aug 2023 22:52:42 +0000 (UTC)
+Subject: Re: [GIT PULL] perf tools fixes for v6.5: 2nd batch
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20230803214502.19504-1-acme@kernel.org>
+References: <20230803214502.19504-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20230803214502.19504-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.5-2-2023-08-03
+X-PR-Tracked-Commit-Id: 07d2b820fd75b96f550c93503f19c8cfcbc577cf
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c1a515d3c0270628df8ae5f5118ba859b85464a2
+Message-Id: <169110316244.15224.406660124051677766.pr-tracker-bot@kernel.org>
+Date:   Thu, 03 Aug 2023 22:52:42 +0000
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/3] Parse event sort/regroup fixes
-Message-ID: <ZMwnrVRlAKM4qhcl@tassilo>
-References: <20230719001836.198363-1-irogers@google.com>
- <ZLf4C/+x2ZSpb1Uz@kernel.org>
- <CAP-5=fWXd8KhvxnPjjFjtybNZ7BsN6n_55xFaEA_-Jda0g2+XQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fWXd8KhvxnPjjFjtybNZ7BsN6n_55xFaEA_-Jda0g2+XQ@mail.gmail.com>
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        =?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>,
+        Haixin Yu <yuhaixin.yhx@linux.alibaba.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-What's the status of this patch kit ? I don't see it in perf-tools-next
+The pull request you sent on Thu,  3 Aug 2023 18:45:02 -0300:
 
-It should be applied to any branches that have the original problem.
+> git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.5-2-2023-08-03
 
-Thanks,
--Andi
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c1a515d3c0270628df8ae5f5118ba859b85464a2
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
