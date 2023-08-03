@@ -2,74 +2,107 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B28FCC001DF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 20:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E587EC00528
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 20:45:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229590AbjHCUjB (ORCPT
+        id S232126AbjHCUpG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Aug 2023 16:39:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51010 "EHLO
+        Thu, 3 Aug 2023 16:45:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229495AbjHCUjA (ORCPT
+        with ESMTP id S230330AbjHCUpF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Aug 2023 16:39:00 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D44830EA;
-        Thu,  3 Aug 2023 13:38:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691095139; x=1722631139;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Ui8pT4QSnRjdR3WIhyY0tRtBQtjeMD2JTUos/SzfUik=;
-  b=APLlFhxEc9jim+fFeg+3ggbjyWonJOkuceEkF9KNyYmHUOA6CeSk5LY9
-   x+YnFroXIhTL5x8yb/0gy5KDn1tYnG2ATt3DEq3ksUUTCWj/502Y1d026
-   UQ2F3SOfACRHSNwmfm/A/r4nA3FrXzLY5OXxYd/H7DO/wVO4qU+/4AlY6
-   C+MGXtzGbsC284dJh72U3w42K0xgK7fhtUBzBv+RUYpWoQ73gLpi2JEhy
-   dHBEyjA0d3mK3UFpYN+w11Mb48cpG6lHn97ukjShOwes1D70FPzd0ldC2
-   zl86gNibYu9yctKy4r3VUvhYd9kAewGbU4nupprVmyakbuYR876mGt3EY
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="368891931"
-X-IronPort-AV: E=Sophos;i="6.01,253,1684825200"; 
-   d="scan'208";a="368891931"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2023 13:38:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="819818851"
-X-IronPort-AV: E=Sophos;i="6.01,253,1684825200"; 
-   d="scan'208";a="819818851"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2023 13:38:58 -0700
-Date:   Thu, 3 Aug 2023 13:38:57 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Ian Rogers <irogers@google.com>
+        Thu, 3 Aug 2023 16:45:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B661030EA;
+        Thu,  3 Aug 2023 13:45:04 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 487AF61EAF;
+        Thu,  3 Aug 2023 20:45:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E650C433C8;
+        Thu,  3 Aug 2023 20:45:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691095503;
+        bh=UXQA6Sp9+nMzLruVQvdX9wDbmeN6Do6qtEMNu/DE6z0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=piuUAmY1whkLscSpXc/ecQ8BF+bGTHOGX80qiBdapzrA+Bp6pea2GgyjsjrO3iaSL
+         W7inX5fZDlClWalQXBHohsJ1aNrw9Whlep2P1KaA6K0lAexF0S3JSZDr6YU0zsl03N
+         d7t04VvFvVGiFqNIYCXTbUD/QClspQch/oDS4KDivyBEk6PjfvftNfp+STUjiXf5S0
+         FF3nETvU7uUF4kMuEbb1OmY4t8wBKmD8yOFTy3Yy8Uyn8OdjTGnNh74vbN++jdzm1d
+         IbodNSFFZ+r91a2NHwzltgo4IDM+iUaneWm3x/NigJi07dpdk11SxVzsUR3CWTe7Ww
+         mslOqRW5y3jyQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 15BA1404DF; Thu,  3 Aug 2023 17:45:01 -0300 (-03)
+Date:   Thu, 3 Aug 2023 17:45:01 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Manank Patel <manank@manank.me>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Claire Jensen <cjense@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf stat: Don't display zero tool counts
-Message-ID: <ZMwQYTJeJ5cNfORr@tassilo>
-References: <20230801205452.3380578-1-irogers@google.com>
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        Jens Schleusener <Jens.Schleusener@fossies.org>
+Subject: Re: [PATCH] tools: perf: pmu-events: Fix typo poiint->point
+Message-ID: <ZMwRzQC+wBgJpDfr@kernel.org>
+References: <20230803-fix-typo-v1-1-b794378d594e@manank.me>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230801205452.3380578-1-irogers@google.com>
+In-Reply-To: <20230803-fix-typo-v1-1-b794378d594e@manank.me>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Aug 01, 2023 at 01:54:52PM -0700, Ian Rogers wrote:
-> Skip zero counts for tool events.
-> 
-> Reported-by: Andi Kleen <ak@linux.intel.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Em Thu, Aug 03, 2023 at 11:27:30AM +0530, Manank Patel escreveu:
+> Fix typo in file floating-point.json in /arch/x86/westmereep-dp
 
-Tested-by: Andi Kleen <ak@linux.intel.com>
+AFAIK these are generated using a tool, so the fix needs to go to the
+file from where the JSON files are generated, Ian?
+
+- Arnaldo
+ 
+> Reported-by: Jens Schleusener <Jens.Schleusener@fossies.org>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=205891
+> Signed-off-by: Manank Patel <manank@manank.me>
+> ---
+>  tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json b/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json
+> index c03f8990fa82..196ae1d9b157 100644
+> --- a/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json
+> +++ b/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json
+> @@ -8,7 +8,7 @@
+>          "UMask": "0x1"
+>      },
+>      {
+> -        "BriefDescription": "X87 Floating poiint assists for invalid input value (Precise Event)",
+> +        "BriefDescription": "X87 Floating point assists for invalid input value (Precise Event)",
+>          "EventCode": "0xF7",
+>          "EventName": "FP_ASSIST.INPUT",
+>          "PEBS": "1",
+> 
+> ---
+> base-commit: 5d0c230f1de8c7515b6567d9afba1f196fb4e2f4
+> change-id: 20230803-fix-typo-3cb207284310
+> 
+> Best regards,
+> -- 
+> Manank Patel <manank@manank.me>
+> 
+
+-- 
+
+- Arnaldo
