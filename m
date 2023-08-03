@@ -2,274 +2,132 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C0C5C001DB
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 21:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4A6C00528
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 21:45:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232731AbjHCVPD (ORCPT
+        id S230193AbjHCVpd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Aug 2023 17:15:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37942 "EHLO
+        Thu, 3 Aug 2023 17:45:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232617AbjHCVOn (ORCPT
+        with ESMTP id S232023AbjHCVpc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Aug 2023 17:14:43 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2100.outbound.protection.outlook.com [40.107.236.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE57B30F1;
-        Thu,  3 Aug 2023 14:14:39 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q9KKzvVCEGoXFvWnbr7G/d2zNu7uAnWnO2+djT/kWvctR+mOQqAoce08GOowp8lR6LlK4T3E8eoSFKUoLpyey+D/bwXWTfvm+oHEzYVSLeB8t6JYscJBTjfUZ53evZUV2UGaMzQOHAjVnazzJJq3F/JCBeaKOZyxzyPcnhO33aVqukJQbTGjJxLO3dtGvOi5UxGH2d+cCJ/CWXzHl+d5gYdz9R/T+eWcQ+fxVk8JG9SjJmwiQ68lMiUDd8s+u7OtuteOWK7pVlxqBF3idSa1WiOWVveQXW374RQO6CjeJhx62MCEx/kqK723JaK14n7x14LdSG+XXt9MajI1GRwfjw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NmURnsdEISgfZCIhNt+ekSWF8TMap142MoW3bRsj7TI=;
- b=jvPYv6AgEWSlzktf6TQDSHC6ifFEGpPqCzEAeSxR/yDZX0kxVAJaJL9VdjpP8sfj+NDsRncm7GKGNj6+FGUjPeQqdfZfJ7MhVqHkBoFOWm5IRYvRrzdCx5WSB5JJ+s8eFnLcZD/aXq/JAdPhNKgoRqEqj4PwhYwXNAqZ5sXTS2zJjV/fIV9EHCW/QouzpX5hk5mUdZYbTD5cOiCOaK9vihPQ1BLwLIg4YuX5w4t4CANf6FzQisRDwyR3IXbwOeAmfg2dhaoT7GasUzWo9t2hT41n7EX1Gu+qNosTUfTaM3gPSPg05oDi/XdUKS6IKbwJsNYAqNJxacl6vGWSCj5I3w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NmURnsdEISgfZCIhNt+ekSWF8TMap142MoW3bRsj7TI=;
- b=ncfNagmn8AglpnUviBBuU1/t4NEmaKW7qt8SHJ55y/2ita09prqst5uEkPm9gr4K6CGxacN6BHkHYGBzOeM33eqTgaKtEi3R4IF7bQL/NPS3gLs322s17Z6zA2TLUr3/r7lWzVEmPodJl1AO4L3L1K5MXkhBvCRtRz81FOPVqqw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from DM5PR0102MB3590.prod.exchangelabs.com (2603:10b6:4:a4::25) by
- SA3PR01MB8502.prod.exchangelabs.com (2603:10b6:806:39f::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6631.47; Thu, 3 Aug 2023 21:14:37 +0000
-Received: from DM5PR0102MB3590.prod.exchangelabs.com
- ([fe80::4e0f:49b:ee39:f08e]) by DM5PR0102MB3590.prod.exchangelabs.com
- ([fe80::4e0f:49b:ee39:f08e%6]) with mapi id 15.20.6631.046; Thu, 3 Aug 2023
- 21:14:37 +0000
-From:   Ilkka Koskinen <ilkka@os.amperecomputing.com>
-To:     John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Thu, 3 Aug 2023 17:45:32 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4AE43581;
+        Thu,  3 Aug 2023 14:45:22 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 44DF461ECB;
+        Thu,  3 Aug 2023 21:45:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 357CAC433C7;
+        Thu,  3 Aug 2023 21:45:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691099121;
+        bh=qvvdfwgWPZujmXX4thz1ZyE8vJWDROlDJz4/nG3UGYQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=UYA5zCZJ1tMRSNsOYyP0jQ3xWS/5ZMi743E75+DUcUbsVgb7qo2efSoy9/pWoO5RI
+         B7rz5SouqaQxNh6HMLkOIQB5kqE53+AaEWfTV2bxwzr42Z/ujvXOMT8C1ivh2Uw4Fx
+         43baM6/aZlSHQdgbdZuwI6n3hcAUiwHhBCPVnc5xK/wXVTAnGKa5GEln5OcNb3Sjga
+         sN0nHQc2M+OTWmy/s11KDHrahM6aX3ZzAlP421RoK1LkkiCc+5AUEGcLSSdRMTg9iG
+         ufpMyMy/8SnNGDnDmA+QNUT/nXpeCIrXYa/FlJaXmPkvVOChGZRwKmxN00er0VU5cV
+         ayKiQ08/20oTA==
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
-        Dave Kleikamp <dave.kleikamp@oracle.com>
-Subject: [PATCH 4/4] perf vendor events arm64: AmpereOne: Remove unsupported events
-Date:   Thu,  3 Aug 2023 14:13:31 -0700
-Message-Id: <20230803211331.140553-5-ilkka@os.amperecomputing.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230803211331.140553-1-ilkka@os.amperecomputing.com>
-References: <20230803211331.140553-1-ilkka@os.amperecomputing.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: CH2PR15CA0006.namprd15.prod.outlook.com
- (2603:10b6:610:51::16) To DM5PR0102MB3590.prod.exchangelabs.com
- (2603:10b6:4:a4::25)
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        =?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>,
+        Haixin Yu <yuhaixin.yhx@linux.alibaba.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [GIT PULL] perf tools fixes for v6.5: 2nd batch
+Date:   Thu,  3 Aug 2023 18:45:02 -0300
+Message-ID: <20230803214502.19504-1-acme@kernel.org>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM5PR0102MB3590:EE_|SA3PR01MB8502:EE_
-X-MS-Office365-Filtering-Correlation-Id: 95582e19-4872-4b03-bf1b-08db9466a491
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 57FYMErhU7ZTt43hORoR+0nrk/wW/Ekv12Pkq/CUs9YqtUcJkPtk8M/u2SDJga1stMD/x7dhnwJmkHRTRKaYBmMmsCRBUDE6ky8OacrTEOftEUI2AqefGUL21mjO+7qWoohG0UDRpkL2AVPJa9I7IWCIeRssGIfqjTBQbI4vD9dKaD/q1eUj3N9le6zbIj9dinULJSx4zsPz1nvDpy5WPv+DHJ5weTKu4CVGDLmmHm9t6Dh4j6k4lR12s+LynOHR96ZCcSaQn9olxJqtXwsbV9m+lTvtY+poCQ8FAuDIzrfYnCkP8k5wK7/sT8SUoAWraH03dSjZc47EKRgQetOEaVivuv8Q2y+gzl9LlSvIih4Lgohib6rZo0bBiPAB5Qg2bBJNkqkWC7HRr6PmQMKjXIPMjZu3hDrpAXrHe3A8SS2ANX5Hk0sF3R/+gSsOJe5M6ysCNjTpM6K0N0LHd0U18Po3JeCM+TwBGbx3fy/F54aQVe/2q1Gt/+OTyK2BA1rky0BSCDAnY72Gck3keIQ7UuBF0BBW6Q0U+u2CNcGKWtfixc7UhpuD595WBkppoIGPnXXVt0RiYu7oDRIU3ImAAKnPPrmZR9CYUosOnvjmoE/f8gnp3CWnKe3LTANXmI55
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR0102MB3590.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39850400004)(396003)(366004)(376002)(136003)(346002)(186005)(451199021)(86362001)(52116002)(54906003)(478600001)(110136005)(38100700002)(38350700002)(8676002)(1076003)(2616005)(6506007)(83380400001)(26005)(41300700001)(7416002)(8936002)(6486002)(6512007)(6666004)(2906002)(316002)(66556008)(66476007)(5660300002)(4326008)(66946007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?yRMGg3zN9MU/zdSaBPMwnulXHglV3DVS3yNqlJnSnPrs877XIXvW1aTLySMh?=
- =?us-ascii?Q?PoHCj6I13EKFfq2VAjFke2jPRbDDiXHAQxIWNcLlptL6fCxc0keRUnhbiaQe?=
- =?us-ascii?Q?Nz9yytAVHO70abB3+VP2aC2b6/CS2L4ftxWWLWhpBxcX2To/Q75krrg3tjv9?=
- =?us-ascii?Q?VWlOHA0HyYlJEq6pSyZe1gfsGw4vBPPNhO7tv3LkNGH27zbVzeEdK8eMuCvk?=
- =?us-ascii?Q?9+IZaoPgAxreQvlzBkB+8YkMx0KTZDuUcnCs8CeiDQnwLCvSwi6sHjhLrxYb?=
- =?us-ascii?Q?j3r14ojmqLD/VGQzcirZ8kATdkk/hjyP+UiUm3OhxSGXQEZqdyOM7YCTwOhA?=
- =?us-ascii?Q?HIpgW22qgt6o8wEy2PH7HzZFfXo263Szb9sGgHK9Jv+FIMbhM7HfN2dRcvrt?=
- =?us-ascii?Q?VwYxERKp6pK8/Fokg9g3klh2av7JsvFajSauZqFk3mBwQQYVU8OcLGQd7v6U?=
- =?us-ascii?Q?cKaXf6Ry2F6XMsHazejgoHOO3K/ihXaFCAE+QBjzXvVuPoPlYDsvswe6pf4g?=
- =?us-ascii?Q?frupEOQa1e+6nrQRGKyfMUfAgK90SvUMKkKbN1czrFkoL4mTWA/RUzM4PxWF?=
- =?us-ascii?Q?8jKLF6E7xvvfU3Pw+2Z7Ar/kGxgk2o31WHhralg718PT3LBKwZky/6eRXYxV?=
- =?us-ascii?Q?Tn5RWKXM+AfcqYAC7h+DFqVloMPffWW42ZmueP/hYZwSs8pgEIsNan5l/wmh?=
- =?us-ascii?Q?sFflvkPhymEKkqSEDBlv4RDY+LWdP9z7NDcAIShfW3QBUvJ+Pl4lAFJIS7mp?=
- =?us-ascii?Q?mzcNKcXzaSTXCp0r1XuHF6wo8a/71vHfvkevbp81UsnDwo6PXKP+qvQkEfy6?=
- =?us-ascii?Q?P26OG93d6NKw+VeHutDQ9611EZWmbgs60RAG8iipjndHWAAWFumIGG/PCTE8?=
- =?us-ascii?Q?7bMH2XatNj+7cmDCZ0xNKjYKrb6h7hWlbwdgdExdPyCwo5jag1pta+a8Vc4i?=
- =?us-ascii?Q?flf2JjCfg947+dCIQVL7xkSjE5IMPlVksuAxOJVJiq6yquvQmbLod8HbWz0h?=
- =?us-ascii?Q?tIg3HSy73V9hMjFvhTU+EP+mIdC8cDzpmeSg+vx6BeVxlTzmc3K00jSABMAw?=
- =?us-ascii?Q?iXnm0lzUDPnd0JnP+zBygteyaLN9FATnkOmahdBdcfU1k1XRq74R4zLrQBNF?=
- =?us-ascii?Q?8PsdFQzNw7UuMuFfEEBRojGJl5/O14JhD9bLqh+Qcvb5OBHmfj67KyWVvqos?=
- =?us-ascii?Q?lcT7nTnMTsh1DrQ2RrAtVPw+Wym+zWJ077/xxKVNPZgUTuj8KiWtao+Du0G7?=
- =?us-ascii?Q?ppr8eSMlIc2xeHg46rpC/6y0+CvdbZOOdScWjZA+hqFNrrSXf5BfT40EcUJn?=
- =?us-ascii?Q?2Hmw9ddh+ubO6IzbGh/5ySYKlddNUQegSl9IeudeSSXexiomS1OR6sa0YzQP?=
- =?us-ascii?Q?TZOQTj+x5ofLDVHL+3WuGHfbR22/Qr51Pb+vnZ1G/P8ExvEYPErf2iv+xlHA?=
- =?us-ascii?Q?kUkXe+7tXSu/iCH3VlfHSA2VWSey6KdSeKXqBh9zkyhFFcV+js2d0A4vIzBk?=
- =?us-ascii?Q?W39qtmk/gwkUDcAyVcx8N+Z7PUkZbe26X4aTJ4NkxBKzXyWjVMKkqB5HOpST?=
- =?us-ascii?Q?kxn4pHPq05gsmhkS4upZYxKC9m/ssiqVWtQs8yuo+wPgeAfIuFR9Z1Qm/NSS?=
- =?us-ascii?Q?bQ=3D=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 95582e19-4872-4b03-bf1b-08db9466a491
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR0102MB3590.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2023 21:14:37.3048
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: k8Vp8qQSDrggy+4k0OVNEkgQf7iayETMTy+Bk2AGj6SQvMNpsdriLE28NJVcjuDrOIA6WBo1ruT1JEW071msV+YOjARagL5gq65Rr2OEwZFA4bjyocjLjvddq+KgnY27
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR01MB8502
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Some of the events included in the ampereone/core-imp-def are not
-supported on AmpereOne, remove them.
+Hi Linus,
 
-Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
----
- .../arm64/ampere/ampereone/core-imp-def.json  | 120 ------------------
- 1 file changed, 120 deletions(-)
+	Please consider pulling,
 
-diff --git a/tools/perf/pmu-events/arch/arm64/ampere/ampereone/core-imp-def.json b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/core-imp-def.json
-index 95c30243f2b2..88b23b85e33c 100644
---- a/tools/perf/pmu-events/arch/arm64/ampere/ampereone/core-imp-def.json
-+++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/core-imp-def.json
-@@ -533,66 +533,6 @@
-         "EventName": "MMU_D_OTB_ALLOC",
-         "BriefDescription": "L2D OTB allocate"
-     },
--    {
--        "PublicDescription": "DTLB Translation cache hit on S1L2 walk cache entry",
--        "EventCode": "0xD801",
--        "EventName": "MMU_D_TRANS_CACHE_HIT_S1L2_WALK",
--        "BriefDescription": "DTLB Translation cache hit on S1L2 walk cache entry"
--    },
--    {
--        "PublicDescription": "DTLB Translation cache hit on S1L1 walk cache entry",
--        "EventCode": "0xD802",
--        "EventName": "MMU_D_TRANS_CACHE_HIT_S1L1_WALK",
--        "BriefDescription": "DTLB Translation cache hit on S1L1 walk cache entry"
--    },
--    {
--        "PublicDescription": "DTLB Translation cache hit on S1L0 walk cache entry",
--        "EventCode": "0xD803",
--        "EventName": "MMU_D_TRANS_CACHE_HIT_S1L0_WALK",
--        "BriefDescription": "DTLB Translation cache hit on S1L0 walk cache entry"
--    },
--    {
--        "PublicDescription": "DTLB Translation cache hit on S2L2 walk cache entry",
--        "EventCode": "0xD804",
--        "EventName": "MMU_D_TRANS_CACHE_HIT_S2L2_WALK",
--        "BriefDescription": "DTLB Translation cache hit on S2L2 walk cache entry"
--    },
--    {
--        "PublicDescription": "DTLB Translation cache hit on S2L1 walk cache entry",
--        "EventCode": "0xD805",
--        "EventName": "MMU_D_TRANS_CACHE_HIT_S2L1_WALK",
--        "BriefDescription": "DTLB Translation cache hit on S2L1 walk cache entry"
--    },
--    {
--        "PublicDescription": "DTLB Translation cache hit on S2L0 walk cache entry",
--        "EventCode": "0xD806",
--        "EventName": "MMU_D_TRANS_CACHE_HIT_S2L0_WALK",
--        "BriefDescription": "DTLB Translation cache hit on S2L0 walk cache entry"
--    },
--    {
--        "PublicDescription": "D-side S1 Page walk cache lookup",
--        "EventCode": "0xD807",
--        "EventName": "MMU_D_S1_WALK_CACHE_LOOKUP",
--        "BriefDescription": "D-side S1 Page walk cache lookup"
--    },
--    {
--        "PublicDescription": "D-side S1 Page walk cache refill",
--        "EventCode": "0xD808",
--        "EventName": "MMU_D_S1_WALK_CACHE_REFILL",
--        "BriefDescription": "D-side S1 Page walk cache refill"
--    },
--    {
--        "PublicDescription": "D-side S2 Page walk cache lookup",
--        "EventCode": "0xD809",
--        "EventName": "MMU_D_S2_WALK_CACHE_LOOKUP",
--        "BriefDescription": "D-side S2 Page walk cache lookup"
--    },
--    {
--        "PublicDescription": "D-side S2 Page walk cache refill",
--        "EventCode": "0xD80A",
--        "EventName": "MMU_D_S2_WALK_CACHE_REFILL",
--        "BriefDescription": "D-side S2 Page walk cache refill"
--    },
-     {
-         "PublicDescription": "D-side Stage1 tablewalk fault",
-         "EventCode": "0xD80B",
-@@ -617,66 +557,6 @@
-         "EventName": "MMU_I_OTB_ALLOC",
-         "BriefDescription": "L2I OTB allocate"
-     },
--    {
--        "PublicDescription": "ITLB Translation cache hit on S1L2 walk cache entry",
--        "EventCode": "0xD901",
--        "EventName": "MMU_I_TRANS_CACHE_HIT_S1L2_WALK",
--        "BriefDescription": "ITLB Translation cache hit on S1L2 walk cache entry"
--    },
--    {
--        "PublicDescription": "ITLB Translation cache hit on S1L1 walk cache entry",
--        "EventCode": "0xD902",
--        "EventName": "MMU_I_TRANS_CACHE_HIT_S1L1_WALK",
--        "BriefDescription": "ITLB Translation cache hit on S1L1 walk cache entry"
--    },
--    {
--        "PublicDescription": "ITLB Translation cache hit on S1L0 walk cache entry",
--        "EventCode": "0xD903",
--        "EventName": "MMU_I_TRANS_CACHE_HIT_S1L0_WALK",
--        "BriefDescription": "ITLB Translation cache hit on S1L0 walk cache entry"
--    },
--    {
--        "PublicDescription": "ITLB Translation cache hit on S2L2 walk cache entry",
--        "EventCode": "0xD904",
--        "EventName": "MMU_I_TRANS_CACHE_HIT_S2L2_WALK",
--        "BriefDescription": "ITLB Translation cache hit on S2L2 walk cache entry"
--    },
--    {
--        "PublicDescription": "ITLB Translation cache hit on S2L1 walk cache entry",
--        "EventCode": "0xD905",
--        "EventName": "MMU_I_TRANS_CACHE_HIT_S2L1_WALK",
--        "BriefDescription": "ITLB Translation cache hit on S2L1 walk cache entry"
--    },
--    {
--        "PublicDescription": "ITLB Translation cache hit on S2L0 walk cache entry",
--        "EventCode": "0xD906",
--        "EventName": "MMU_I_TRANS_CACHE_HIT_S2L0_WALK",
--        "BriefDescription": "ITLB Translation cache hit on S2L0 walk cache entry"
--    },
--    {
--        "PublicDescription": "I-side S1 Page walk cache lookup",
--        "EventCode": "0xD907",
--        "EventName": "MMU_I_S1_WALK_CACHE_LOOKUP",
--        "BriefDescription": "I-side S1 Page walk cache lookup"
--    },
--    {
--        "PublicDescription": "I-side S1 Page walk cache refill",
--        "EventCode": "0xD908",
--        "EventName": "MMU_I_S1_WALK_CACHE_REFILL",
--        "BriefDescription": "I-side S1 Page walk cache refill"
--    },
--    {
--        "PublicDescription": "I-side S2 Page walk cache lookup",
--        "EventCode": "0xD909",
--        "EventName": "MMU_I_S2_WALK_CACHE_LOOKUP",
--        "BriefDescription": "I-side S2 Page walk cache lookup"
--    },
--    {
--        "PublicDescription": "I-side S2 Page walk cache refill",
--        "EventCode": "0xD90A",
--        "EventName": "MMU_I_S2_WALK_CACHE_REFILL",
--        "BriefDescription": "I-side S2 Page walk cache refill"
--    },
-     {
-         "PublicDescription": "I-side Stage1 tablewalk fault",
-         "EventCode": "0xD90B",
--- 
-2.40.1
+Best regards,
 
+- Arnaldo
+
+
+The following changes since commit 6eaae198076080886b9e7d57f4ae06fa782f90ef:
+
+  Linux 6.5-rc3 (2023-07-23 15:24:10 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.5-2-2023-08-03
+
+for you to fetch changes up to 07d2b820fd75b96f550c93503f19c8cfcbc577cf:
+
+  perf test parse-events: Test complex name has required event format (2023-08-01 00:32:00 -0300)
+
+----------------------------------------------------------------
+perf tools fixes for 6.5: 2nd batch
+
+- Fix segfault in the powerpc specific arch_skip_callchain_idx function.
+  The patch doing the reference count init/exit that went into 6.5 missed
+  this function.
+
+- Fix regression reading the arm64 PMU cpu slots in sysfs, a patch removing
+  some code duplication ended up duplicating the /sysfs prefix for these files.
+
+- Fix grouping of events related to topdown, addressing a regression on the CSV
+  output produced by 'perf stat' noticed on the downstream tool toplev.
+
+- Fix the uprobe_from_different_cu 'perf test' entry, it is failing when
+  gcc isn't available, so we need to check that and skip the test if it
+  is not installed.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Athira Rajeev (1):
+      perf callchain powerpc: Fix addr location init during arch_skip_callchain_idx function
+
+Georg Müller (1):
+      perf test uprobe_from_different_cu: Skip if there is no gcc
+
+Haixin Yu (1):
+      perf pmu arm64: Fix reading the PMU cpu slots in sysfs
+
+Ian Rogers (5):
+      perf parse-events: Extra care around force grouped events
+      perf parse-events: When fixing group leaders always set the leader
+      perf parse-events: Only move force grouped evsels when sorting
+      perf pmus: Create placholder regardless of scanning core_only
+      perf test parse-events: Test complex name has required event format
+
+ tools/perf/arch/arm64/util/pmu.c                   |  7 +--
+ tools/perf/arch/powerpc/util/skip-callchain-idx.c  |  4 ++
+ tools/perf/tests/parse-events.c                    | 12 ++++-
+ .../tests/shell/test_uprobe_from_different_cu.sh   |  8 ++-
+ tools/perf/util/parse-events.c                     | 58 ++++++++++++++--------
+ tools/perf/util/pmu.c                              | 11 ++++
+ tools/perf/util/pmu.h                              |  1 +
+ tools/perf/util/pmus.c                             | 16 +++---
+ 8 files changed, 81 insertions(+), 36 deletions(-)
