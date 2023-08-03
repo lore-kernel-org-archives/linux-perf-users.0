@@ -2,60 +2,61 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC87C00528
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 10:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A12C04A6A
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 10:55:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235247AbjHCK3r (ORCPT
+        id S233870AbjHCKzs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Aug 2023 06:29:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60238 "EHLO
+        Thu, 3 Aug 2023 06:55:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235327AbjHCK3n (ORCPT
+        with ESMTP id S229710AbjHCKzq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Aug 2023 06:29:43 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD97330D5;
-        Thu,  3 Aug 2023 03:29:37 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-52229f084beso990243a12.2;
-        Thu, 03 Aug 2023 03:29:37 -0700 (PDT)
+        Thu, 3 Aug 2023 06:55:46 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB9341AB;
+        Thu,  3 Aug 2023 03:55:44 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-51a52a7d859so4194129a12.0;
+        Thu, 03 Aug 2023 03:55:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691058576; x=1691663376;
+        d=gmail.com; s=20221208; t=1691060143; x=1691664943;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4OiyaKIKW/8sCsLQAVeJ5l5BBs9EmO+LZdt/VsDvQqE=;
-        b=B5ETJzlglwZWPdHU0yRHyqFFHKvtHPuo406G1NvYc9QSbMLbJecDC4bt94oyCXdlJw
-         Vr7agCLRtVILSp7X1aRM/L7vDl/FjfrszUyY4M2MXhq+8Av+wX92+pvvcEJKEDKr9Cgt
-         uib3kAvxwOeXWJffWysJ1dSJ+YMQVKLAgCvRqbJkNpUN/PTFbkB8FWjwhuPqOrfNiF6I
-         QXoC68lcR2JLdNVmnBDQ2M/ELTMtpWw3R28tX+M/qpmBt9PyaypntzFmrasZ9lGxPniF
-         Rm9ml36Q5Bz6pngJaw30YmN8i284U9vROP2R3iBy9VMIyn77yxBQ5dKpw9FF9wZI4yjA
-         2afQ==
+        bh=mbQImGIoYqtoRkNqIk+yJGoSi/80qEOyrC5e+XSgi1k=;
+        b=scej0RhAsMPY3H4QUNINXN2VeRHixd9bGG8xsN72U6bKwVoBCvE3uQOcPb85lwTI7e
+         Nxm/anautxtLkz/chYBg9mUPZbjqa8nzz4J2nGmbyycfSOhl7U1SPxql/5Wg4/4nXJtt
+         uXd1ckeACPeURhBS95UT33Yo7aHfmKz2HYvoIc7Y5KwOQWfVOmN+sFgpHREgomyjhDBF
+         w47Qyz0kLuGT5K/swdN2f4FU6aIcD+nkbQMgJ0qsjG1x4ov1etrFTz6hNfPQ2V0kXk2Y
+         s+Bc4vbqFid3byB/IhykjvYzDEY7sZZMhL9weakfXjogXkV0kAICDvTIPXqZlVxrTHjT
+         TlTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691058576; x=1691663376;
+        d=1e100.net; s=20221208; t=1691060143; x=1691664943;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4OiyaKIKW/8sCsLQAVeJ5l5BBs9EmO+LZdt/VsDvQqE=;
-        b=g9uGVjBBULx0CwpRIOgFFb1f1m71KnZVjP7zmeSKLRVrmDMB6xCKZJzrIKQK18W5WL
-         MpFK/abdQroljxf1rWjY9W/TXN/5K3zgFKQeYCszlHzirPPUVB/28JX1B+EKxvxuQYMU
-         CeGxE7wFf2EXUweu+W8VNAtz+xgHMmrVUNaCKqm4MYRHYmqFqzTHTNo7uJUG5pVHRlgE
-         kkkmrId3kqMccaF9N5MF0lg5nrT3JXVrMOD8HKI5qShztACT5Hc6zIi9ic2jWvlQKR3s
-         tEBNv3MJdMc9zq+UXvifczY6vWu6EQUqeerLL/Dg/+4zKIvNm6PxXn2jxk+f8Ej0tW2s
-         +Q7w==
-X-Gm-Message-State: AOJu0Yy3VPxpEG0Glo15srb30Sp8SG3dNRrhgfIpEbvwo/SCR2pHXykX
-        yYW2Lec4LZP6vO+uENdzd9BKJCdX4wV4Zd16uHM=
-X-Google-Smtp-Source: AGHT+IGp7Lpf0GJIbsiAhvBEgTIkej2hv61cCS0dKshSarVPSyPkdoMcVPcZgccQwEaA+Lc4lSuWfL8lL02IMkIcTxU=
-X-Received: by 2002:a05:6402:150d:b0:523:9c:2dd3 with SMTP id
- f13-20020a056402150d00b00523009c2dd3mr3046034edw.40.1691058576140; Thu, 03
- Aug 2023 03:29:36 -0700 (PDT)
+        bh=mbQImGIoYqtoRkNqIk+yJGoSi/80qEOyrC5e+XSgi1k=;
+        b=DckqLAF1Je/bZUqebMUZRUXIVJfJaS8KrrKT9/am3bWZNMNbxonoVhnU5PsQ6KOIPm
+         XXFjUzbTXDUoibPVrlVOUKYjokhqnohszcPOoBANZDO45jj2EF/2Q2qE+xoiblH7Ujh0
+         HKpeW8QnsSCGVjcrLf4cRr0kMFzHReixLaIPkrFeBF6fRFfrdOEiLyXHKkaa1irSJ780
+         qMAnO4frbVsam2yiVxu+ynvGb3qgYwwVMFTYw0EArvk2UAIFcxc1/2ieQX3da2fuhFKq
+         QJXU4vsnrdtca27JDPtHgHYL2GVRz4elg/rQ6i9UwoxMTnl8V3NXqU9zjeK5Crh45y12
+         ZVZQ==
+X-Gm-Message-State: ABy/qLa9jKvAE1DO4v8tOcwJCOAdENOb0WLLCuSUHDdi7SNVinzDVBei
+        W1TcLWghAAQpyGiAdFw+Ba+jJYIpTtOCjpZyrZHbZCJTm95HrQ==
+X-Google-Smtp-Source: APBJJlHbHtPiFgLPGm45/6fntr2mqG6bus6N966l0sTWv17Wi4cwvMe1VkToxGlg3s6NA5N5ByPlZDumz/oZk9DUgns=
+X-Received: by 2002:a05:6402:517a:b0:522:582c:f427 with SMTP id
+ d26-20020a056402517a00b00522582cf427mr11174095ede.14.1691060143340; Thu, 03
+ Aug 2023 03:55:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230803083352.1585-1-zegao@tencent.com> <20230803083352.1585-2-zegao@tencent.com>
- <20230803050900.5007d2f5@gandalf.local.home>
-In-Reply-To: <20230803050900.5007d2f5@gandalf.local.home>
+References: <20230803083352.1585-1-zegao@tencent.com> <20230803083352.1585-5-zegao@tencent.com>
+ <20230803052930.33337082@gandalf.local.home>
+In-Reply-To: <20230803052930.33337082@gandalf.local.home>
 From:   Ze Gao <zegao2021@gmail.com>
-Date:   Thu, 3 Aug 2023 18:29:25 +0800
-Message-ID: <CAD8CoPDNEyf9LN8HfOTUR7c5npPPivJe8yncTWr756ZzPyZkNQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v6 1/5] perf sched: sync state char array with the kernel
+Date:   Thu, 3 Aug 2023 18:55:32 +0800
+Message-ID: <CAD8CoPBeqgF8bYDBb4WGuBPgTNBCki9-U2XsoY9r55HcBA1+-A@mail.gmail.com>
+Subject: Re: [RFC PATCH v6 4/5] sched, tracing: add to report task state in
+ symbolic chars
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -74,55 +75,161 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Aug 3, 2023 at 5:09=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
+On Thu, Aug 3, 2023 at 5:29=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
  wrote:
 >
-> On Thu,  3 Aug 2023 04:33:48 -0400
+> On Thu,  3 Aug 2023 04:33:51 -0400
 > Ze Gao <zegao2021@gmail.com> wrote:
 >
-> Hi Ze,
->
-> > Update state char array and then remove unused and stale
-> > macros, which are kernel internal representations and not
-> > encouraged to use anymore.
+> > Internal representations of task state are likely to be changed
+> > or ordered, and reporting them to userspace without exporting
+> > them as part of API is basically wrong, which can easily break
+> > a userspace observability tool as kernel evolves. For example,
+> > perf suffers from this and still reports wrong states as of this
+> > writing.
 > >
+> > OTOH, some masqueraded states like TASK_REPORT_IDLE and
+> > TASK_REPORT_MAX are also reported inadvertently, which confuses
+> > things even more and most userspace tools do not even take them
+> > into consideration.
+> >
+> > So add a new variable in company with the old raw value to
+> > report task state in symbolic chars, which are self-explaining
+> > and no further translation is needed. Of course this does not
+> > break any userspace tool.
+> >
+> > Note for PREEMPT_ACTIVE, we introduce 'p' to report it and use
+> > the old conventions for the rest.
 >
-> A couple of things.
+> The above is actually good.
 >
-> First, the change logs of every commit need to specify the "why". The
-> subject can say "what", but the change log really needs to explain why th=
-is
-> patch is important. For example, this patch is really two changes (and th=
-us
-> should actually be two patches). (I'll also comment on the other patches)
-
-Thanks for the feedback! Will elaborate the changes in each changelog.
-
-> 1. The update of the state char array. You should explain why it's being
-> updated. If it was wrong, it needs to state the commit that changed to ma=
-ke
-> that happen.
 >
-> 2. For the removing the stale macros, the change log can simply state tha=
-t
-> the macros are unused in the code and are being removed.
+> >
+> > Signed-off-by: Ze Gao <zegao@tencent.com>
+> > Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > Acked-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  include/trace/events/sched.h | 44 ++++++++++++++++++++++--------------
+> >  1 file changed, 27 insertions(+), 17 deletions(-)
+> >
+> > diff --git a/include/trace/events/sched.h b/include/trace/events/sched.=
+h
+> > index 43492daefa6f..ae5b486cc969 100644
+> > --- a/include/trace/events/sched.h
+> > +++ b/include/trace/events/sched.h
+> > @@ -6,6 +6,7 @@
+> >  #define _TRACE_SCHED_H
+> >
+> >  #include <linux/kthread.h>
+> > +#include <linux/sched.h>
+> >  #include <linux/sched/numa_balancing.h>
+> >  #include <linux/tracepoint.h>
+> >  #include <linux/binfmts.h>
+> > @@ -214,6 +215,27 @@ static inline short __trace_sched_switch_state(boo=
+l preempt,
+> >
+> >       return state ? (1 << (state - 1)) : state;
+> >  }
+> > +
+> > +static inline char __trace_sched_switch_state_char(bool preempt,
+> > +                                                unsigned int prev_stat=
+e,
+> > +                                                struct task_struct *p)
+> > +{
+> > +     long state;
+> > +
+> > +#ifdef CONFIG_SCHED_DEBUG
+> > +     WARN_ON_ONCE(p !=3D current);
+> > +#endif /* CONFIG_SCHED_DEBUG */
+> > +
+> > +     /*
+> > +      * For PREEMPT_ACTIVE, we introduce 'p' to report it and use the =
+old
+> > +      * conventions for the rest.
+> > +      */
+> > +     if (preempt)
+> > +             return 'p';
+> > +
+> > +     state =3D __task_state_index(prev_state, p->exit_state);
+> > +     return task_index_to_char(state);
+> > +}
+> >  #endif /* CREATE_TRACE_POINTS */
+> >
+> >  /*
+> > @@ -236,6 +258,7 @@ TRACE_EVENT(sched_switch,
+> >               __array(        char,   prev_comm,      TASK_COMM_LEN   )
+> >               __array(        char,   next_comm,      TASK_COMM_LEN   )
+> >               __field(        short,  prev_state                      )
+> > +             __field(        char,   prev_state_char                 )
+> >       ),
+> >
+> >       TP_fast_assign(
+> > @@ -246,26 +269,13 @@ TRACE_EVENT(sched_switch,
+> >               memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
+> >               memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
+> >               __entry->prev_state             =3D __trace_sched_switch_=
+state(preempt, prev_state, prev);
+> > +             __entry->prev_state_char        =3D __trace_sched_switch_=
+state_char(preempt, prev_state, prev);
+> >               /* XXX SCHED_DEADLINE */
+> >       ),
+> >
+> > -     TP_printk("prev_comm=3D%s prev_pid=3D%d prev_prio=3D%d prev_state=
+=3D%s%s =3D=3D> next_comm=3D%s next_pid=3D%d next_prio=3D%d",
+> > -             __entry->prev_comm, __entry->prev_pid, __entry->prev_prio=
+,
+> > -
+> > -             (__entry->prev_state & (TASK_REPORT_MAX - 1)) ?
+> > -               __print_flags(__entry->prev_state & (TASK_REPORT_MAX - =
+1), "|",
+> > -                             { TASK_INTERRUPTIBLE, "S" },
+> > -                             { TASK_UNINTERRUPTIBLE, "D" },
+> > -                             { __TASK_STOPPED, "T" },
+> > -                             { __TASK_TRACED, "t" },
+> > -                             { EXIT_DEAD, "X" },
+> > -                             { EXIT_ZOMBIE, "Z" },
+> > -                             { TASK_PARKED, "P" },
+> > -                             { TASK_DEAD, "I" }) :
+> > -               "R",
 >
-> Finally, I know you're eager to get this patch set in, but please hold of=
-f
-> sending a new version immediately after a comment or two. Some maintainer=
-s
-> prefer submitters to wait a week or so, otherwise you will tend to "spam"
-> their inboxes. There's more than one maintainer Cc'd on this series, and =
-you
-> need to be courteous not to send too many emails in a short period of tim=
-e.
+> I just realized, I have user space code that looks at this. As in the for=
+mat file we have:
+>
+> print fmt: "prev_comm=3D%s prev_pid=3D%d prev_prio=3D%d prev_state=3D%s%s=
+ =3D=3D> next_comm=3D%s next_pid=3D%d next_prio=3D%d", REC->prev_comm, REC-=
+>prev_pid, REC->prev_prio, (REC->prev_state & ((((0x00000000 | 0x00000001 |=
+ 0x00000002 | 0x00000004 | 0x00000008 | 0x00000010 | 0x00000020 | 0x0000004=
+0) + 1) << 1) - 1)) ? __print_flags(REC->prev_state & ((((0x00000000 | 0x00=
+000001 | 0x00000002 | 0x00000004 | 0x00000008 | 0x00000010 | 0x00000020 | 0=
+x00000040) + 1) << 1) - 1), "|", { 0x00000001, "S" }, { 0x00000002, "D" }, =
+{ 0x00000004, "T" }, { 0x00000008, "t" }, { 0x00000010, "X" }, { 0x00000020=
+, "Z" }, { 0x00000040, "P" }, { 0x00000080, "I" }) : "R", REC->prev_state &=
+ (((0x00000000 | 0x00000001 | 0x00000002 | 0x00000004 | 0x00000008 | 0x0000=
+0010 | 0x00000020 | 0x00000040) + 1) << 1) ? "+" : "", REC->next_comm, REC-=
+>next_pid, REC->next_prio
+>
+> And I have used this in applications to find out what values "S" and "D"
+> are.
+>
+> So, we need to keep that still. But we can add the prev_state_char to the
+> output too.
+>
+>   "prev_comm=3D%s prev_pid=3D%d prev_prio=3D%d prev_state=3D%s%s[%c] =3D=
+=3D> next_comm=3D%s next_pid=3D%d next_prio=3D%d"
 
-Noted!  Actually I'm in no rush and just to make sure people see the
-latest patches so they do not have to waste time on the old series.
+Good point!
 
-Will hold off to resolve all the comments in this thread.
+But I see Peter has strong opinions over this change badly. So I'm not
+sure if it's worth the effort to push this anymore :/ And apparently We
+failed to convince each other over this problem.
 
-And thanks for pointing this out.
+How about we only keep all the fixing patches and throw away this
+'prev_state_char' thing?
 
-Regards,
+Again, I'm not meant to upset anyone here.  But Tons of thanks for your
+sage reviews on this.
+
+Thoughts?
+
+Thanks,
 Ze
