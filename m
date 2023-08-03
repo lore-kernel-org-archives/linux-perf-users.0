@@ -2,60 +2,61 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B64C04A6A
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 12:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7EAC41513
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 12:37:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233487AbjHCM0J (ORCPT
+        id S233501AbjHCMhV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Aug 2023 08:26:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36790 "EHLO
+        Thu, 3 Aug 2023 08:37:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229548AbjHCM0I (ORCPT
+        with ESMTP id S234098AbjHCMhT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Aug 2023 08:26:08 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C6652708;
-        Thu,  3 Aug 2023 05:26:07 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-4fe28f92d8eso1557575e87.1;
-        Thu, 03 Aug 2023 05:26:07 -0700 (PDT)
+        Thu, 3 Aug 2023 08:37:19 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D308330EF;
+        Thu,  3 Aug 2023 05:37:17 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-99c10ba30afso440427866b.1;
+        Thu, 03 Aug 2023 05:37:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691065565; x=1691670365;
+        d=gmail.com; s=20221208; t=1691066236; x=1691671036;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=U7xgCKkYT+hLlKi0uXpqCkm09uupDae69VUERiZM6d4=;
-        b=TH0RxDwAIpUxTQEDVcB2OkyeulItBA1uFs9sRsr4ISCZ5eWCD395RD3Qrq5H0MqYiO
-         BeeX7+NRxfO0wzDzm67Dk6uQmHTOdlglTNSTk+Q3NC0dEHZssBtDtTOJQcM85qAdL8yv
-         +6ry35fra7fh8kK1eH3uIMJJapdYBtHjHN3NFVHuo9pXHMnelGn210/7XZq7V15gVw93
-         9EWkdvAqRWerbVz41FRaiD+ZashL1WEBg2kcm3tYOli8h0qKPum/xgEYya09/m8nqApA
-         bo4hZz3fIcjyGPHWCnbRVkWD2y0mlruNg3+OL4ydwzogP/fsZPOhxP6uPBPTzqO7nJBZ
-         aB6w==
+        bh=ppRRImnjb0wsMR8Fj1ZtcjVXFsDRqp3qO+UJYqzBAyE=;
+        b=P1F63pGUU6YN5E2omXCkAv2x/bzflrfH5ZmXIxOmgpY284FxRcGmwxv236F/pKiIkI
+         7NQdOOaY8eWnA5kbSNb6lvIWJLHmnokArH+LM2IZNERd2o3dBWVaQiNkBN8a4vpJCDYd
+         bpeosCO3ET2BfELH29DyK7i9xw6aP60Q2T26Y66WKtaMk+hBJqHdu9XH6MUzvy32fVpi
+         7t/Af3oQimCPuO2mVxBcEadKMuKJLNzva+n009M+NdCKKJmaOst6MftNvnR8qgTin0Af
+         AOxvRGiCuFGlvWazWe/3yl39PLAY6XfekaP6Q/pDsyxz0c20ez3u+SIjMa+QMyCS6RSq
+         WrDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691065565; x=1691670365;
+        d=1e100.net; s=20221208; t=1691066236; x=1691671036;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=U7xgCKkYT+hLlKi0uXpqCkm09uupDae69VUERiZM6d4=;
-        b=ko3Kr1iub6cFdMBD5zsVVttQJtXXKjQ4Kf8H8IXEmENq/+HcqXHLUey3Dehi5GW+7Z
-         tbwhDMguvMdAKYYzoLc1yThKzLhN28WMstapj8uEVKIhpRGfgF4GhmNeIt9IQF2PlJTE
-         pfPiXFeaj1ikGRMg1p6/SEy6aGd4ngrrI5T1ACtiJtb1ipYISbjnyTGImTfotwtBNIX7
-         XcNmq9CTE+EMhDWnNOUNTZkE3MZkZcMxLoIn4Xx8IxeSsbKWMXnRG8R114roBCv+HM1X
-         jQ15PZfF8gu6n5wGqq9V67a4J9g3t7Zl1szsUWaRrqfJSrgZ/stsXLANR8yo4i75596Y
-         1rXA==
-X-Gm-Message-State: ABy/qLaMEXBiET4rcmydxpdR/fjOKxiEV8Xjub1EZZSIV2V9i2sKoKGc
-        7dakP+XMvAPv5BXenAuTTUxlrD6UpkI00sJsy/0=
-X-Google-Smtp-Source: APBJJlEY2Id1slntd7GA6KTqIW+bJgWceOMRsDfOCtOnpp/QxiaKY66snxxJwMfldPZAi427INh96Ba4lnUIQOgJ9Ug=
-X-Received: by 2002:ac2:4301:0:b0:4f8:7781:9875 with SMTP id
- l1-20020ac24301000000b004f877819875mr6513277lfh.60.1691065565092; Thu, 03 Aug
- 2023 05:26:05 -0700 (PDT)
+        bh=ppRRImnjb0wsMR8Fj1ZtcjVXFsDRqp3qO+UJYqzBAyE=;
+        b=OfO0qDPMXeDnE4NFDMWXeuMfX9URoy5Lxr1G7QH1ml3/hHrRX5paMuyEgZk+s+fPhe
+         T4xBt0kVTqTAZ7Uc/1VQuuWag5U9zx7h+JlXPiYFZLjG/sZ7gmHqRYNfDymkdFdL/l8Q
+         jVhtJ2L5oxon++7/WPEA1HV8NPhx+6hPHGeZzK5UK52mplwu4D+WiID4ZURQayUT7RgN
+         WXR79yf5sp8+ozNiLRaECpK9rfHHV6ob7TmyHUozOznO6xjp+C567erfi5HC7R4Uc4wX
+         G/cwuH/TlEyAurTRF84bccK9a5JmKmMU+NPOFzTe1UcjgsZMV4zM7YBWwui3VMmkoyME
+         M/Vw==
+X-Gm-Message-State: ABy/qLZoWSG/CQXQNsI+ZwvmWAREEYhGc0PJNC6ZX++/VZBmdxwN9jvW
+        UaG7rYr+ve3dy++dndZTYqIRwt+/wygVkYUFxgQ=
+X-Google-Smtp-Source: APBJJlHI2a8HOTPwSZ8QCMLfU4WHwMQBsjDKFtfsERKOf5l/XJXKLUsburWGwRAjYucvWeKe+cbqoSS/bmzSXjNFPiI=
+X-Received: by 2002:a17:907:6daa:b0:99b:af5a:fc2c with SMTP id
+ sb42-20020a1709076daa00b0099baf5afc2cmr10439361ejc.26.1691066235869; Thu, 03
+ Aug 2023 05:37:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230803083352.1585-1-zegao@tencent.com> <20230803083352.1585-2-zegao@tencent.com>
- <20230803050900.5007d2f5@gandalf.local.home> <CAD8CoPDNEyf9LN8HfOTUR7c5npPPivJe8yncTWr756ZzPyZkNQ@mail.gmail.com>
-In-Reply-To: <CAD8CoPDNEyf9LN8HfOTUR7c5npPPivJe8yncTWr756ZzPyZkNQ@mail.gmail.com>
+References: <20230803083352.1585-1-zegao@tencent.com> <20230803083352.1585-3-zegao@tencent.com>
+ <20230803051011.4833785f@gandalf.local.home>
+In-Reply-To: <20230803051011.4833785f@gandalf.local.home>
 From:   Ze Gao <zegao2021@gmail.com>
-Date:   Thu, 3 Aug 2023 20:25:53 +0800
-Message-ID: <CAD8CoPBuXY7s6GXH1na-AB595U4u_t0JJB3uUchGr-0KijVS4Q@mail.gmail.com>
-Subject: Re: [RFC PATCH v6 1/5] perf sched: sync state char array with the kernel
+Date:   Thu, 3 Aug 2023 20:37:04 +0800
+Message-ID: <CAD8CoPC5YwEcyqH5nBziGTi5oHuGf1ucQF63UApSPtfGW-vjSQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v6 2/5] perf sched: reorganize sched-out task state
+ report code
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -74,87 +75,232 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+Hi Steven,
 
 THIS IS THE NEW CHANGELOG FOR THIS PATCH:
 
-    perf sched: sync state char array with the kernel
+    perf sched: reorganize sched-out task state report code
 
-    Since commit e936e8e459e14 ("perf tools: Adapt the
-    TASK_STATE_TO_CHAR_STR to new value in kernel space."),
-    the state char array that is used to interpret the
-    states of tasks being switched out have not synced
-    once with kernel definitions. Whereas the task report
-    logic is evolving over this time and the definition
-    of this state char array has been changed multiple
-    times. And this leads to inconsistency.
+    Passing around the task state reported by tracepoint as an
+    integer creates dependencies both on the task state macros
+    and TASK_STATE_TO_CHAR_STR.
 
-    As of this writing, perf timehist --state still reports
-    the wrong states because TASK_STATE_TO_CHAR_STR is too
-    outdated to use.
+    Actually we can simplify this by computing the state based
+    on TASK_STATE_TO_CHAR_STR and then pass the result as a
+    'char', which saves us from using these macros anymore.
+    So we can remove them for good.
 
-    So sync TASK_STATE_TO_CHAR_STR to match the latest kernel
-    definitions to fix it.
+    Note that sched_out_state() is basically doing the same
+    thing as task_state_char(), so combine them into one
+    and provide an intended helper get_task_prev_state() for
+    extracting task state from perf record.
+
+    IOW, this patch does not introduce any functional changes.
+    mainly for housekeeping.
 
     Signed-off-by: Ze Gao <zegao@tencent.com>
+
+Suggestions?
 
 Regards,
 Ze
 
-On Thu, Aug 3, 2023 at 6:29=E2=80=AFPM Ze Gao <zegao2021@gmail.com> wrote:
+On Thu, Aug 3, 2023 at 5:10=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
 >
-> On Thu, Aug 3, 2023 at 5:09=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
-> >
-> > On Thu,  3 Aug 2023 04:33:48 -0400
-> > Ze Gao <zegao2021@gmail.com> wrote:
-> >
-> > Hi Ze,
-> >
-> > > Update state char array and then remove unused and stale
-> > > macros, which are kernel internal representations and not
-> > > encouraged to use anymore.
-> > >
-> >
-> > A couple of things.
-> >
-> > First, the change logs of every commit need to specify the "why". The
-> > subject can say "what", but the change log really needs to explain why =
-this
-> > patch is important. For example, this patch is really two changes (and =
-thus
-> > should actually be two patches). (I'll also comment on the other patche=
-s)
+> On Thu,  3 Aug 2023 04:33:49 -0400
+> Ze Gao <zegao2021@gmail.com> wrote:
 >
-> Thanks for the feedback! Will elaborate the changes in each changelog.
+> > Mainly does housekeeping work and not introduce any
+> > functional change.
 >
-> > 1. The update of the state char array. You should explain why it's bein=
-g
-> > updated. If it was wrong, it needs to state the commit that changed to =
-make
-> > that happen.
+> This change log doesn't explain at all why this patch is needed, let alon=
+e
+> what it is even doing.
+>
+> -- Steve
+>
+>
 > >
-> > 2. For the removing the stale macros, the change log can simply state t=
-hat
-> > the macros are unused in the code and are being removed.
+> > Signed-off-by: Ze Gao <zegao@tencent.com>
+> > ---
+> >  tools/perf/builtin-sched.c | 59 +++++++++++++++++---------------------
+> >  1 file changed, 26 insertions(+), 33 deletions(-)
 > >
-> > Finally, I know you're eager to get this patch set in, but please hold =
-off
-> > sending a new version immediately after a comment or two. Some maintain=
-ers
-> > prefer submitters to wait a week or so, otherwise you will tend to "spa=
-m"
-> > their inboxes. There's more than one maintainer Cc'd on this series, an=
-d you
-> > need to be courteous not to send too many emails in a short period of t=
-ime.
+> > diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> > index 8dc8f071721c..5042874ba204 100644
+> > --- a/tools/perf/builtin-sched.c
+> > +++ b/tools/perf/builtin-sched.c
+> > @@ -94,11 +94,6 @@ struct sched_atom {
+> >
+> >  #define TASK_STATE_TO_CHAR_STR "RSDTtXZPI"
+> >
+> > -/* task state bitmask, copied from include/linux/sched.h */
+> > -#define TASK_RUNNING         0
+> > -#define TASK_INTERRUPTIBLE   1
+> > -#define TASK_UNINTERRUPTIBLE 2
+> > -
+> >  enum thread_state {
+> >       THREAD_SLEEPING =3D 0,
+> >       THREAD_WAIT_CPU,
+> > @@ -255,7 +250,7 @@ struct thread_runtime {
+> >       u64 total_preempt_time;
+> >       u64 total_delay_time;
+> >
+> > -     int last_state;
+> > +     char last_state;
+> >
+> >       char shortname[3];
+> >       bool comm_changed;
+> > @@ -425,7 +420,7 @@ static void add_sched_event_wakeup(struct perf_sche=
+d *sched, struct task_desc *t
+> >  }
+> >
+> >  static void add_sched_event_sleep(struct perf_sched *sched, struct tas=
+k_desc *task,
+> > -                               u64 timestamp, u64 task_state __maybe_u=
+nused)
+> > +                               u64 timestamp, char task_state __maybe_=
+unused)
+> >  {
+> >       struct sched_atom *event =3D get_new_event(task, timestamp);
+> >
+> > @@ -840,6 +835,22 @@ replay_wakeup_event(struct perf_sched *sched,
+> >       return 0;
+> >  }
+> >
+> > +static inline char task_state_char(int state)
+> > +{
+> > +     static const char state_to_char[] =3D "RSDTtXZPI";
+> > +     unsigned int bit =3D state ? ffs(state) : 0;
+> > +
+> > +     return bit < sizeof(state_to_char) - 1 ? state_to_char[bit] : '?'=
+;
+> > +}
+> > +
+> > +static inline char get_task_prev_state(struct evsel *evsel,
+> > +                                    struct perf_sample *sample)
+> > +{
+> > +     const int prev_state =3D evsel__intval(evsel, sample, "prev_state=
+");
+> > +
+> > +     return task_state_char(prev_state);
+> > +}
+> > +
+> >  static int replay_switch_event(struct perf_sched *sched,
+> >                              struct evsel *evsel,
+> >                              struct perf_sample *sample,
+> > @@ -849,7 +860,7 @@ static int replay_switch_event(struct perf_sched *s=
+ched,
+> >                  *next_comm  =3D evsel__strval(evsel, sample, "next_com=
+m");
+> >       const u32 prev_pid =3D evsel__intval(evsel, sample, "prev_pid"),
+> >                 next_pid =3D evsel__intval(evsel, sample, "next_pid");
+> > -     const u64 prev_state =3D evsel__intval(evsel, sample, "prev_state=
+");
+> > +     const char prev_state =3D get_task_prev_state(evsel, sample);
+> >       struct task_desc *prev, __maybe_unused *next;
+> >       u64 timestamp0, timestamp =3D sample->time;
+> >       int cpu =3D sample->cpu;
+> > @@ -1039,12 +1050,6 @@ static int thread_atoms_insert(struct perf_sched=
+ *sched, struct thread *thread)
+> >       return 0;
+> >  }
+> >
+> > -static char sched_out_state(u64 prev_state)
+> > -{
+> > -     const char *str =3D TASK_STATE_TO_CHAR_STR;
+> > -
+> > -     return str[prev_state];
+> > -}
+> >
+> >  static int
+> >  add_sched_out_event(struct work_atoms *atoms,
+> > @@ -1121,7 +1126,7 @@ static int latency_switch_event(struct perf_sched=
+ *sched,
+> >  {
+> >       const u32 prev_pid =3D evsel__intval(evsel, sample, "prev_pid"),
+> >                 next_pid =3D evsel__intval(evsel, sample, "next_pid");
+> > -     const u64 prev_state =3D evsel__intval(evsel, sample, "prev_state=
+");
+> > +     const char prev_state =3D get_task_prev_state(evsel, sample);
+> >       struct work_atoms *out_events, *in_events;
+> >       struct thread *sched_out, *sched_in;
+> >       u64 timestamp0, timestamp =3D sample->time;
+> > @@ -1157,7 +1162,7 @@ static int latency_switch_event(struct perf_sched=
+ *sched,
+> >                       goto out_put;
+> >               }
+> >       }
+> > -     if (add_sched_out_event(out_events, sched_out_state(prev_state), =
+timestamp))
+> > +     if (add_sched_out_event(out_events, prev_state, timestamp))
+> >               return -1;
+> >
+> >       in_events =3D thread_atoms_search(&sched->atom_root, sched_in, &s=
+ched->cmp_pid);
+> > @@ -2022,24 +2027,12 @@ static void timehist_header(struct perf_sched *=
+sched)
+> >       printf("\n");
+> >  }
+> >
+> > -static char task_state_char(struct thread *thread, int state)
+> > -{
+> > -     static const char state_to_char[] =3D TASK_STATE_TO_CHAR_STR;
+> > -     unsigned bit =3D state ? ffs(state) : 0;
+> > -
+> > -     /* 'I' for idle */
+> > -     if (thread__tid(thread) =3D=3D 0)
+> > -             return 'I';
+> > -
+> > -     return bit < sizeof(state_to_char) - 1 ? state_to_char[bit] : '?'=
+;
+> > -}
+> > -
+> >  static void timehist_print_sample(struct perf_sched *sched,
+> >                                 struct evsel *evsel,
+> >                                 struct perf_sample *sample,
+> >                                 struct addr_location *al,
+> >                                 struct thread *thread,
+> > -                               u64 t, int state)
+> > +                               u64 t, char state)
+> >  {
+> >       struct thread_runtime *tr =3D thread__priv(thread);
+> >       const char *next_comm =3D evsel__strval(evsel, sample, "next_comm=
+");
+> > @@ -2080,7 +2073,7 @@ static void timehist_print_sample(struct perf_sch=
+ed *sched,
+> >       print_sched_time(tr->dt_run, 6);
+> >
+> >       if (sched->show_state)
+> > -             printf(" %5c ", task_state_char(thread, state));
+> > +             printf(" %5c ", thread->tid =3D=3D 0 ? 'I' : state);
+> >
+> >       if (sched->show_next) {
+> >               snprintf(nstr, sizeof(nstr), "next: %s[%d]", next_comm, n=
+ext_pid);
+> > @@ -2152,9 +2145,9 @@ static void timehist_update_runtime_stats(struct =
+thread_runtime *r,
+> >               else if (r->last_time) {
+> >                       u64 dt_wait =3D tprev - r->last_time;
+> >
+> > -                     if (r->last_state =3D=3D TASK_RUNNING)
+> > +                     if (r->last_state =3D=3D 'R')
+> >                               r->dt_preempt =3D dt_wait;
+> > -                     else if (r->last_state =3D=3D TASK_UNINTERRUPTIBL=
+E)
+> > +                     else if (r->last_state =3D=3D 'D')
+> >                               r->dt_iowait =3D dt_wait;
+> >                       else
+> >                               r->dt_sleep =3D dt_wait;
+> > @@ -2579,7 +2572,7 @@ static int timehist_sched_change_event(struct per=
+f_tool *tool,
+> >       struct thread_runtime *tr =3D NULL;
+> >       u64 tprev, t =3D sample->time;
+> >       int rc =3D 0;
+> > -     int state =3D evsel__intval(evsel, sample, "prev_state");
+> > +     const char state =3D get_task_prev_state(evsel, sample);
+> >
+> >       addr_location__init(&al);
+> >       if (machine__resolve(machine, &al, sample) < 0) {
 >
-> Noted!  Actually I'm in no rush and just to make sure people see the
-> latest patches so they do not have to waste time on the old series.
->
-> Will hold off to resolve all the comments in this thread.
->
-> And thanks for pointing this out.
->
-> Regards,
-> Ze
