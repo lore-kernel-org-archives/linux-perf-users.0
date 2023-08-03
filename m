@@ -2,29 +2,29 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8670CC41513
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 09:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B452C04A6A
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 09:29:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231732AbjHCJTE (ORCPT
+        id S233754AbjHCJ3l (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Aug 2023 05:19:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53352 "EHLO
+        Thu, 3 Aug 2023 05:29:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234377AbjHCJSc (ORCPT
+        with ESMTP id S229792AbjHCJ3g (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Aug 2023 05:18:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C6BE2684;
-        Thu,  3 Aug 2023 02:18:31 -0700 (PDT)
+        Thu, 3 Aug 2023 05:29:36 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B15BDEE;
+        Thu,  3 Aug 2023 02:29:34 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EE9BE61CFB;
-        Thu,  3 Aug 2023 09:18:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D84B6C433C7;
-        Thu,  3 Aug 2023 09:18:28 +0000 (UTC)
-Date:   Thu, 3 Aug 2023 05:18:26 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4498561D10;
+        Thu,  3 Aug 2023 09:29:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E1BBC433C8;
+        Thu,  3 Aug 2023 09:29:31 +0000 (UTC)
+Date:   Thu, 3 Aug 2023 05:29:30 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     Ze Gao <zegao2021@gmail.com>
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
@@ -38,12 +38,12 @@ Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Subject: Re: [RFC PATCH v6 3/5] sched, tracing: reorganize fields of switch
- event struct
-Message-ID: <20230803051826.25ba7973@gandalf.local.home>
-In-Reply-To: <20230803083352.1585-4-zegao@tencent.com>
+Subject: Re: [RFC PATCH v6 4/5] sched, tracing: add to report task state in
+ symbolic chars
+Message-ID: <20230803052930.33337082@gandalf.local.home>
+In-Reply-To: <20230803083352.1585-5-zegao@tencent.com>
 References: <20230803083352.1585-1-zegao@tencent.com>
-        <20230803083352.1585-4-zegao@tencent.com>
+        <20230803083352.1585-5-zegao@tencent.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -52,81 +52,132 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu,  3 Aug 2023 04:33:50 -0400
+On Thu,  3 Aug 2023 04:33:51 -0400
 Ze Gao <zegao2021@gmail.com> wrote:
 
-> Report prioritiy and prev_state in 'short' to save some buffer
-> space. And also reorder the fields so that we take struct
-> alignment into consideration to make the record compact.
+> Internal representations of task state are likely to be changed
+> or ordered, and reporting them to userspace without exporting
+> them as part of API is basically wrong, which can easily break
+> a userspace observability tool as kernel evolves. For example,
+> perf suffers from this and still reports wrong states as of this
+> writing.
+> 
+> OTOH, some masqueraded states like TASK_REPORT_IDLE and
+> TASK_REPORT_MAX are also reported inadvertently, which confuses
+> things even more and most userspace tools do not even take them
+> into consideration.
+> 
+> So add a new variable in company with the old raw value to
+> report task state in symbolic chars, which are self-explaining
+> and no further translation is needed. Of course this does not
+> break any userspace tool.
+> 
+> Note for PREEMPT_ACTIVE, we introduce 'p' to report it and use
+> the old conventions for the rest.
 
-If I were to write this, I would have wrote:
+The above is actually good.
 
-  The prev_state field in the sched_switch event is assigned by
-  __trace_sched_switch_state(). The largest number that function will return
-  is TASK_REPORT_MAX which is just 0x100. There's no reason that the
-  prev_state field is a full 32 bits when it is using just 9 bits max. In
-  order to save space on the ring buffer, shrink the prev_state to 16 bits
-  (short).
 
-  Also, change the positions of the other fields to accommodate the short
-  value of prev_state to eliminate any holes that were created in the
-  structure.
-
-See the difference?
-
+> 
+> Signed-off-by: Ze Gao <zegao@tencent.com>
+> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Acked-by: Ian Rogers <irogers@google.com>
+> ---
+>  include/trace/events/sched.h | 44 ++++++++++++++++++++++--------------
+>  1 file changed, 27 insertions(+), 17 deletions(-)
+> 
+> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+> index 43492daefa6f..ae5b486cc969 100644
+> --- a/include/trace/events/sched.h
+> +++ b/include/trace/events/sched.h
+> @@ -6,6 +6,7 @@
+>  #define _TRACE_SCHED_H
 >  
->  #ifdef CREATE_TRACE_POINTS
-> -static inline long __trace_sched_switch_state(bool preempt,
-> +static inline short __trace_sched_switch_state(bool preempt,
->  					      unsigned int prev_state,
->  					      struct task_struct *p)
->  {
->  	unsigned int state;
+>  #include <linux/kthread.h>
+> +#include <linux/sched.h>
+>  #include <linux/sched/numa_balancing.h>
+>  #include <linux/tracepoint.h>
+>  #include <linux/binfmts.h>
+> @@ -214,6 +215,27 @@ static inline short __trace_sched_switch_state(bool preempt,
 >  
->  #ifdef CONFIG_SCHED_DEBUG
-> -	BUG_ON(p != current);
+>  	return state ? (1 << (state - 1)) : state;
+>  }
+> +
+> +static inline char __trace_sched_switch_state_char(bool preempt,
+> +						   unsigned int prev_state,
+> +						   struct task_struct *p)
+> +{
+> +	long state;
+> +
+> +#ifdef CONFIG_SCHED_DEBUG
 > +	WARN_ON_ONCE(p != current);
->  #endif /* CONFIG_SCHED_DEBUG */
-
-The above needs to be a separate patch.
-
--- Steve
-
+> +#endif /* CONFIG_SCHED_DEBUG */
+> +
+> +	/*
+> +	 * For PREEMPT_ACTIVE, we introduce 'p' to report it and use the old
+> +	 * conventions for the rest.
+> +	 */
+> +	if (preempt)
+> +		return 'p';
+> +
+> +	state = __task_state_index(prev_state, p->exit_state);
+> +	return task_index_to_char(state);
+> +}
+>  #endif /* CREATE_TRACE_POINTS */
 >  
->  	/*
-> @@ -229,23 +229,23 @@ TRACE_EVENT(sched_switch,
->  	TP_ARGS(preempt, prev, next, prev_state),
->  
->  	TP_STRUCT__entry(
-> -		__array(	char,	prev_comm,	TASK_COMM_LEN	)
->  		__field(	pid_t,	prev_pid			)
-> -		__field(	int,	prev_prio			)
-> -		__field(	long,	prev_state			)
-> -		__array(	char,	next_comm,	TASK_COMM_LEN	)
->  		__field(	pid_t,	next_pid			)
-> -		__field(	int,	next_prio			)
-> +		__field(	short,	prev_prio			)
-> +		__field(	short,	next_prio			)
-> +		__array(	char,	prev_comm,	TASK_COMM_LEN	)
-> +		__array(	char,	next_comm,	TASK_COMM_LEN	)
-> +		__field(	short,	prev_state			)
+>  /*
+> @@ -236,6 +258,7 @@ TRACE_EVENT(sched_switch,
+>  		__array(	char,	prev_comm,	TASK_COMM_LEN	)
+>  		__array(	char,	next_comm,	TASK_COMM_LEN	)
+>  		__field(	short,	prev_state			)
+> +		__field(	char,	prev_state_char			)
 >  	),
 >  
 >  	TP_fast_assign(
-> -		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
-> -		__entry->prev_pid	= prev->pid;
-> -		__entry->prev_prio	= prev->prio;
-> -		__entry->prev_state	= __trace_sched_switch_state(preempt, prev_state, prev);
-> +		__entry->prev_pid		= prev->pid;
-> +		__entry->next_pid		= next->pid;
-> +		__entry->prev_prio		= (short) prev->prio;
-> +		__entry->next_prio		= (short) next->prio;
+> @@ -246,26 +269,13 @@ TRACE_EVENT(sched_switch,
 >  		memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
-> -		__entry->next_pid	= next->pid;
-> -		__entry->next_prio	= next->prio;
-> +		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
-> +		__entry->prev_state		= __trace_sched_switch_state(preempt, prev_state, prev);
+>  		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
+>  		__entry->prev_state		= __trace_sched_switch_state(preempt, prev_state, prev);
+> +		__entry->prev_state_char	= __trace_sched_switch_state_char(preempt, prev_state, prev);
 >  		/* XXX SCHED_DEADLINE */
 >  	),
 >  
+> -	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%s%s ==> next_comm=%s next_pid=%d next_prio=%d",
+> -		__entry->prev_comm, __entry->prev_pid, __entry->prev_prio,
+> -
+> -		(__entry->prev_state & (TASK_REPORT_MAX - 1)) ?
+> -		  __print_flags(__entry->prev_state & (TASK_REPORT_MAX - 1), "|",
+> -				{ TASK_INTERRUPTIBLE, "S" },
+> -				{ TASK_UNINTERRUPTIBLE, "D" },
+> -				{ __TASK_STOPPED, "T" },
+> -				{ __TASK_TRACED, "t" },
+> -				{ EXIT_DEAD, "X" },
+> -				{ EXIT_ZOMBIE, "Z" },
+> -				{ TASK_PARKED, "P" },
+> -				{ TASK_DEAD, "I" }) :
+> -		  "R",
 
+I just realized, I have user space code that looks at this. As in the format file we have:
+
+print fmt: "prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%s%s ==> next_comm=%s next_pid=%d next_prio=%d", REC->prev_comm, REC->prev_pid, REC->prev_prio, (REC->prev_state & ((((0x00000000 | 0x00000001 | 0x00000002 | 0x00000004 | 0x00000008 | 0x00000010 | 0x00000020 | 0x00000040) + 1) << 1) - 1)) ? __print_flags(REC->prev_state & ((((0x00000000 | 0x00000001 | 0x00000002 | 0x00000004 | 0x00000008 | 0x00000010 | 0x00000020 | 0x00000040) + 1) << 1) - 1), "|", { 0x00000001, "S" }, { 0x00000002, "D" }, { 0x00000004, "T" }, { 0x00000008, "t" }, { 0x00000010, "X" }, { 0x00000020, "Z" }, { 0x00000040, "P" }, { 0x00000080, "I" }) : "R", REC->prev_state & (((0x00000000 | 0x00000001 | 0x00000002 | 0x00000004 | 0x00000008 | 0x00000010 | 0x00000020 | 0x00000040) + 1) << 1) ? "+" : "", REC->next_comm, REC->next_pid, REC->next_prio
+
+And I have used this in applications to find out what values "S" and "D"
+are.
+
+So, we need to keep that still. But we can add the prev_state_char to the
+output too.
+
+  "prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%s%s[%c] ==> next_comm=%s next_pid=%d next_prio=%d"
+
+> -
+> -		__entry->prev_state & TASK_REPORT_MAX ? "+" : "",
+> -		__entry->next_comm, __entry->next_pid, __entry->next_prio)
+> +	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%c ==> next_comm=%s next_pid=%d next_prio=%d",
+> +		__entry->prev_comm, __entry->prev_pid, __entry->prev_prio, __entry->prev_state_char, __entry->next_comm,
+> +		__entry->next_pid, __entry->next_prio)
+>  );
+>  
+>  /*
+
+
+-- Steve
