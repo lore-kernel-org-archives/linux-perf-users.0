@@ -2,252 +2,123 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00ECC04A6A
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 06:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC81C001DF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 07:24:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232450AbjHCG3k (ORCPT
+        id S229685AbjHCHYV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Aug 2023 02:29:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44094 "EHLO
+        Thu, 3 Aug 2023 03:24:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231705AbjHCG3h (ORCPT
+        with ESMTP id S231496AbjHCHYU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Aug 2023 02:29:37 -0400
-Received: from mgamail.intel.com (unknown [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E98AC30FD;
-        Wed,  2 Aug 2023 23:28:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691044131; x=1722580131;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=DFY0fqBXzhCaoxpgSJyR6bWlanS6eXto8oIiZiMluPE=;
-  b=kytnF7xg/OjDlxJQpP7DVi5Baf0pPf8OPMuJLkeW3c+Wg8v0x9fJQ7aV
-   7O0NegkMeD3THdlk9SzDI00erMP9j8OMKoeAj9kiT8qVjZPbo/etR533U
-   +qluWShOJc2tyAi9Xck8fac41zhNx8vfXboeKR52ohjNXpD+SgqY6rk0U
-   7SfK6I/pdLI5pvTb0l36zsAyw7F3XFAV+cxf0lpg4kOwrCkA01p6Eogfr
-   R3hd8Hs0m4vJ+CexRRQrVwhj/hyLoEVWaMMvy+PTXTp3wxrGQkENxwIGv
-   TuUFRt6aTPIFmf9XaIxlJz6xonBAQTFLnWdBfOsfo0y9gBV32QvgjIND/
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10790"; a="400719360"
-X-IronPort-AV: E=Sophos;i="6.01,251,1684825200"; 
-   d="scan'208";a="400719360"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2023 23:28:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10790"; a="799419874"
-X-IronPort-AV: E=Sophos;i="6.01,251,1684825200"; 
-   d="scan'208";a="799419874"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.36.218])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2023 23:28:45 -0700
-Message-ID: <bbfd8e23-db63-61fc-4f9e-25e993345b57@intel.com>
-Date:   Thu, 3 Aug 2023 09:28:40 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.13.1
-Subject: Re: [PATCH v4 4/7] perf record: Track sideband events for all CPUs
- when tracing selected CPUs
-Content-Language: en-US
-To:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, kan.liang@linux.intel.com,
-        james.clark@arm.com, tmricht@linux.ibm.com, ak@linux.intel.com,
-        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-References: <20230802074948.136468-1-yangjihong1@huawei.com>
- <20230802074948.136468-5-yangjihong1@huawei.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230802074948.136468-5-yangjihong1@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Thu, 3 Aug 2023 03:24:20 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F7782728;
+        Thu,  3 Aug 2023 00:24:19 -0700 (PDT)
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3737CHr6020247;
+        Thu, 3 Aug 2023 07:24:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=mQnhgyER8GBgfYUBL8z7TlFGJvwgG0B8IuItlBiT9ps=;
+ b=N4n4DDN8rwPKRH84PLe7qFu3drAoHgrwS/7AJNPYb5FD4CTNZTImNirwZrS+LgISfrsA
+ maIdH5zvnMFMTwluMqEcxX3T/AzxKjRLKfFJFQ/gjEpB2PvH6c+ZVYnqC1zaA1FMAW1H
+ IQ0dSEafXqFoqM8FyTtSmwhuXrmrK9gPDpetonn3a5RVz3FSLFlncuUc3QfrD3HIS6OE
+ pZ+rbel48Wq7DvRSTfN2S43ajaOGMWAmfRkc0KM2nVivp+meHLR+aCc5jglLdwXu/ugm
+ vhwdIBbwI6qGWVhpqUzfNO7Eb1RL7DWdwM3AXq2ylLY7JwcCMNPzRPyQ9rJ3aXh2vPWa EQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s87n20bwc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Aug 2023 07:24:11 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3737DNws025675;
+        Thu, 3 Aug 2023 07:24:11 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s87n20bvf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Aug 2023 07:24:11 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37356u2Y006099;
+        Thu, 3 Aug 2023 07:23:10 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+        by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3s5d3suyg8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Aug 2023 07:23:10 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3737N74v43712786
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 3 Aug 2023 07:23:07 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1056A2004B;
+        Thu,  3 Aug 2023 07:23:07 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B113120049;
+        Thu,  3 Aug 2023 07:23:03 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.51.166])
+        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Thu,  3 Aug 2023 07:23:03 +0000 (GMT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.500.231\))
+Subject: Re: [PATCH 1/1] perf tests task_analyzer: Check perf build options
+ for libtraceevent support
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <4qqzt2g2iuo2kri54jyr7tspfxfod4nzsuzajxk3butoxs2rww@rj4quuzpoeg3>
+Date:   Thu, 3 Aug 2023 12:52:50 +0530
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <BD9DB9F2-B277-4CAC-8FA5-9B8F970A2F88@linux.vnet.ibm.com>
+References: <20230725061649.34937-1-adityag@linux.ibm.com>
+ <ZMPWk5K63tadmDlU@kernel.org>
+ <CAP-5=fW1zkpJ4zr4ngz=6bZQuE6hOHo4AtXwUsVJK9oiDSc_mg@mail.gmail.com>
+ <ZMQJKmV3XtwtZJtO@kernel.org>
+ <4qqzt2g2iuo2kri54jyr7tspfxfod4nzsuzajxk3butoxs2rww@rj4quuzpoeg3>
+To:     Aditya Gupta <adityag@linux.ibm.com>
+X-Mailer: Apple Mail (2.3731.500.231)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: CmvHsLTZrtxyX6UJU0ojm84U5aqh6M3O
+X-Proofpoint-GUID: Jxt5LV32kCn4XDz3-m4Onv9wELHGeeNe
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-03_05,2023-08-01_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 suspectscore=0
+ mlxscore=0 impostorscore=0 bulkscore=0 adultscore=0 clxscore=1015
+ spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2308030062
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2/08/23 10:49, Yang Jihong wrote:
-> User space tasks can migrate between CPUs, we need to track side-band
-> events for all CPUs.
-> 
-> The specific scenarios are as follows:
-> 
->          CPU0                                 CPU1
->   perf record -C 0 start
->                               taskA starts to be created and executed
->                                 -> PERF_RECORD_COMM and PERF_RECORD_MMAP
->                                    events only deliver to CPU1
->                               ......
->                                 |
->                           migrate to CPU0
->                                 |
->   Running on CPU0    <----------/
->   ...
-> 
->   perf record -C 0 stop
-> 
-> Now perf samples the PC of taskA. However, perf does not record the
-> PERF_RECORD_COMM and PERF_RECORD_MMAP events of taskA.
-> Therefore, the comm and symbols of taskA cannot be parsed.
-> 
-> The solution is to record sideband events for all CPUs when tracing
-> selected CPUs. Because this modifies the default behavior, add related
-> comments to the perf record man page.
-> 
-> The sys_perf_event_open invoked is as follows:
-> 
->   # perf --debug verbose=3 record -e cpu-clock -C 1 true
->   <SNIP>
->   Opening: cpu-clock
->   ------------------------------------------------------------
->   perf_event_attr:
->     type                             1 (PERF_TYPE_SOFTWARE)
->     size                             136
->     config                           0 (PERF_COUNT_SW_CPU_CLOCK)
->     { sample_period, sample_freq }   4000
->     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->     read_format                      ID|LOST
->     disabled                         1
->     inherit                          1
->     freq                             1
->     sample_id_all                    1
->     exclude_guest                    1
->   ------------------------------------------------------------
->   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
->   Opening: dummy:u
->   ------------------------------------------------------------
->   perf_event_attr:
->     type                             1 (PERF_TYPE_SOFTWARE)
->     size                             136
->     config                           0x9 (PERF_COUNT_SW_DUMMY)
->     { sample_period, sample_freq }   1
->     sample_type                      IP|TID|TIME|CPU|IDENTIFIER
->     read_format                      ID|LOST
->     inherit                          1
->     exclude_kernel                   1
->     exclude_hv                       1
->     mmap                             1
->     comm                             1
->     task                             1
->     sample_id_all                    1
->     exclude_guest                    1
->     mmap2                            1
->     comm_exec                        1
->     ksymbol                          1
->     bpf_event                        1
->   ------------------------------------------------------------
->   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
->   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 7
->   sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 9
->   sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 10
->   sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 11
->   sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 12
->   sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 13
->   sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
->   <SNIP>
-> 
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> ---
->  tools/perf/Documentation/perf-record.txt |  3 ++
->  tools/perf/builtin-record.c              | 45 +++++++++++++++++++++++-
->  2 files changed, 47 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-> index 680396c56bd1..dac53ece51ab 100644
-> --- a/tools/perf/Documentation/perf-record.txt
-> +++ b/tools/perf/Documentation/perf-record.txt
-> @@ -388,6 +388,9 @@ comma-separated list with no space: 0,1. Ranges of CPUs are specified with -: 0-
->  In per-thread mode with inheritance mode on (default), samples are captured only when
->  the thread executes on the designated CPUs. Default is to monitor all CPUs.
->  
-> +User space tasks can migrate between CPUs, so when tracing selected CPUs,
-> +a dummy event is created to track sideband for all CPUs.
-> +
->  -B::
->  --no-buildid::
->  Do not save the build ids of binaries in the perf.data files. This skips
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 3ff9d972225e..468afeaac52d 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -908,10 +908,45 @@ static int record__config_off_cpu(struct record *rec)
->  	return off_cpu_prepare(rec->evlist, &rec->opts.target, &rec->opts);
->  }
->  
-> +static bool record__tracking_system_wide(struct record *rec)
-> +{
-> +	struct record_opts *opts = &rec->opts;
-> +	struct evlist *evlist = rec->evlist;
-> +	struct evsel *evsel;
-> +
-> +	/*
-> +	 * If all (non-dummy) evsel have exclude_user,
-> +	 * system_wide is not needed.
-> +	 *
-> +	 * all_kernel and all_user will overwrite exclude_kernel and
-> +	 * exclude_user of attr in evsel__config(), here need to check
-> +	 * all the three items.
-> +	 *
-> +	 * Sideband system wide if one of the following conditions is met:
-> +	 *
-> +	 *   - all_user is set, and there is a non-dummy event
-> +	 *   - all_user and all_kernel are not set, and there is
-> +	 *     a non-dummy event without exclude_user
-> +	 */
-
-Could start with:
-
-	if (opts->all_kernel)
-		return false;
-
-> +	evlist__for_each_entry(evlist, evsel) {
-> +		if (!evsel__is_dummy_event(evsel)) {
-> +			if (opts->all_user)
-> +				return true;
-> +
-> +			if (!opts->all_user && !opts->all_kernel &&
-
-!opts->all_user is always true here
-
-> +			    !evsel->core.attr.exclude_user)
-> +				return true;
-
-So then this could simply be:
-
-			if (opts->all_user || !evsel->core.attr.exclude_user)
-				return true;
 
 
-> +		}
-> +	}
-> +
-> +	return false;
-> +}
-> +
->  static int record__config_tracking_events(struct record *rec)
->  {
->  	struct record_opts *opts = &rec->opts;
->  	struct evlist *evlist = rec->evlist;
-> +	bool system_wide = false;
->  	struct evsel *evsel;
->  
->  	/*
-> @@ -921,7 +956,15 @@ static int record__config_tracking_events(struct record *rec)
->  	 */
->  	if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
->  	    perf_pmus__num_core_pmus() > 1) {
-> -		evsel = evlist__findnew_tracking_event(evlist, false);
-> +
-> +		/*
-> +		 * User space tasks can migrate between CPUs, so when tracing
-> +		 * selected CPUs, sideband for all CPUs is still needed.
-> +		 */
-> +		if (!!opts->target.cpu_list && record__tracking_system_wide(rec))
-> +			system_wide = true;
-> +
-> +		evsel = evlist__findnew_tracking_event(evlist, system_wide);
->  		if (!evsel)
->  			return -ENOMEM;
->  
+> On 03-Aug-2023, at 8:33 AM, Aditya Gupta <adityag@linux.ibm.com> =
+wrote:
+>=20
+> Hi Arnaldo,
+> I am working on a patch for 'perf version --has', and will send a =
+patch next
+
+Hi Aditya,
+
+I believe, it will be =E2=80=9Cperf build =E2=80=94has=E2=80=9D option. =
+And not =E2=80=9Cperf version =E2=80=94has=E2=80=9D  ?
+
+Thanks
+Athira
+> week using that instead of 'perf version --build-options'.
+>=20
+> You can skip this patch if not needed.
+>=20
+> Thanks,
+> - Aditya G
 
