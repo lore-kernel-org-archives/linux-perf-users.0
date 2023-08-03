@@ -2,46 +2,62 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C83C00528
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 09:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC87C00528
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 10:29:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234562AbjHCJwM (ORCPT
+        id S235247AbjHCK3r (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Aug 2023 05:52:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43000 "EHLO
+        Thu, 3 Aug 2023 06:29:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234270AbjHCJwL (ORCPT
+        with ESMTP id S235327AbjHCK3n (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Aug 2023 05:52:11 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D4353598;
-        Thu,  3 Aug 2023 02:52:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=qU8YEraO1AZOCSwuw27i3Y0ODQiAYGXh13HQoLBIsog=; b=BypKVbFo8h+COLtwnZ8ZtOTAvf
-        QpAkA5IB3tGo1sxQ/nQwWiSEp5tZteJsHWh/6NUpCvitGx1t+apHS48BUqI2gG6/k8gXggyj7HriI
-        pI4MkyEBHXGZIg+I/lYgECmu5b86GwUOyfHmBJc4Y/O7TaMl3x3TZPobcb/rQtvCNb3mGt3qjriNx
-        lRKg3ZQ3ntq2FRgrbwd/Sxo2RuCJqnfVJ/r2KtFgKTWIgvyihLzAeU9fyLaWlRd1AlWKUH/xqAmbb
-        8gP1dRwIz44Qjyy8VmTNdW8RA2UIPVhh3yxp/wFu4tOvhpf5V70xQGoelw4wmoEuh75td2CGlOHxt
-        EuOrmcJg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qRUzW-002vWx-FC; Thu, 03 Aug 2023 09:51:34 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 195AC3001DD;
-        Thu,  3 Aug 2023 11:51:32 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D05D1203719D9; Thu,  3 Aug 2023 11:51:32 +0200 (CEST)
-Date:   Thu, 3 Aug 2023 11:51:32 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
+        Thu, 3 Aug 2023 06:29:43 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD97330D5;
+        Thu,  3 Aug 2023 03:29:37 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-52229f084beso990243a12.2;
+        Thu, 03 Aug 2023 03:29:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691058576; x=1691663376;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4OiyaKIKW/8sCsLQAVeJ5l5BBs9EmO+LZdt/VsDvQqE=;
+        b=B5ETJzlglwZWPdHU0yRHyqFFHKvtHPuo406G1NvYc9QSbMLbJecDC4bt94oyCXdlJw
+         Vr7agCLRtVILSp7X1aRM/L7vDl/FjfrszUyY4M2MXhq+8Av+wX92+pvvcEJKEDKr9Cgt
+         uib3kAvxwOeXWJffWysJ1dSJ+YMQVKLAgCvRqbJkNpUN/PTFbkB8FWjwhuPqOrfNiF6I
+         QXoC68lcR2JLdNVmnBDQ2M/ELTMtpWw3R28tX+M/qpmBt9PyaypntzFmrasZ9lGxPniF
+         Rm9ml36Q5Bz6pngJaw30YmN8i284U9vROP2R3iBy9VMIyn77yxBQ5dKpw9FF9wZI4yjA
+         2afQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691058576; x=1691663376;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4OiyaKIKW/8sCsLQAVeJ5l5BBs9EmO+LZdt/VsDvQqE=;
+        b=g9uGVjBBULx0CwpRIOgFFb1f1m71KnZVjP7zmeSKLRVrmDMB6xCKZJzrIKQK18W5WL
+         MpFK/abdQroljxf1rWjY9W/TXN/5K3zgFKQeYCszlHzirPPUVB/28JX1B+EKxvxuQYMU
+         CeGxE7wFf2EXUweu+W8VNAtz+xgHMmrVUNaCKqm4MYRHYmqFqzTHTNo7uJUG5pVHRlgE
+         kkkmrId3kqMccaF9N5MF0lg5nrT3JXVrMOD8HKI5qShztACT5Hc6zIi9ic2jWvlQKR3s
+         tEBNv3MJdMc9zq+UXvifczY6vWu6EQUqeerLL/Dg/+4zKIvNm6PxXn2jxk+f8Ej0tW2s
+         +Q7w==
+X-Gm-Message-State: AOJu0Yy3VPxpEG0Glo15srb30Sp8SG3dNRrhgfIpEbvwo/SCR2pHXykX
+        yYW2Lec4LZP6vO+uENdzd9BKJCdX4wV4Zd16uHM=
+X-Google-Smtp-Source: AGHT+IGp7Lpf0GJIbsiAhvBEgTIkej2hv61cCS0dKshSarVPSyPkdoMcVPcZgccQwEaA+Lc4lSuWfL8lL02IMkIcTxU=
+X-Received: by 2002:a05:6402:150d:b0:523:9c:2dd3 with SMTP id
+ f13-20020a056402150d00b00523009c2dd3mr3046034edw.40.1691058576140; Thu, 03
+ Aug 2023 03:29:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230803083352.1585-1-zegao@tencent.com> <20230803083352.1585-2-zegao@tencent.com>
+ <20230803050900.5007d2f5@gandalf.local.home>
+In-Reply-To: <20230803050900.5007d2f5@gandalf.local.home>
+From:   Ze Gao <zegao2021@gmail.com>
+Date:   Thu, 3 Aug 2023 18:29:25 +0800
+Message-ID: <CAD8CoPDNEyf9LN8HfOTUR7c5npPPivJe8yncTWr756ZzPyZkNQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v6 1/5] perf sched: sync state char array with the kernel
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ze Gao <zegao2021@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ian Rogers <irogers@google.com>,
@@ -49,45 +65,64 @@ Cc:     Ze Gao <zegao2021@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Subject: Re: [RFC PATCH v6 3/5] sched, tracing: reorganize fields of switch
- event struct
-Message-ID: <20230803095132.GI212435@hirez.programming.kicks-ass.net>
-References: <20230803083352.1585-1-zegao@tencent.com>
- <20230803083352.1585-4-zegao@tencent.com>
- <20230803051826.25ba7973@gandalf.local.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230803051826.25ba7973@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Aug 03, 2023 at 05:18:26AM -0400, Steven Rostedt wrote:
-> On Thu,  3 Aug 2023 04:33:50 -0400
+On Thu, Aug 3, 2023 at 5:09=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
+>
+> On Thu,  3 Aug 2023 04:33:48 -0400
 > Ze Gao <zegao2021@gmail.com> wrote:
-> 
-> > Report prioritiy and prev_state in 'short' to save some buffer
-> > space. And also reorder the fields so that we take struct
-> > alignment into consideration to make the record compact.
-> 
-> If I were to write this, I would have wrote:
-> 
->   The prev_state field in the sched_switch event is assigned by
->   __trace_sched_switch_state(). The largest number that function will return
->   is TASK_REPORT_MAX which is just 0x100. There's no reason that the
->   prev_state field is a full 32 bits when it is using just 9 bits max. In
->   order to save space on the ring buffer, shrink the prev_state to 16 bits
->   (short).
-> 
->   Also, change the positions of the other fields to accommodate the short
->   value of prev_state to eliminate any holes that were created in the
->   structure.
-> 
-> See the difference?
+>
+> Hi Ze,
+>
+> > Update state char array and then remove unused and stale
+> > macros, which are kernel internal representations and not
+> > encouraged to use anymore.
+> >
+>
+> A couple of things.
+>
+> First, the change logs of every commit need to specify the "why". The
+> subject can say "what", but the change log really needs to explain why th=
+is
+> patch is important. For example, this patch is really two changes (and th=
+us
+> should actually be two patches). (I'll also comment on the other patches)
 
-This also doesn't mention you broke the data format for all trace events
-a while back to ensure people are using libtracefs and are thus
-confident this won't break things.
+Thanks for the feedback! Will elaborate the changes in each changelog.
+
+> 1. The update of the state char array. You should explain why it's being
+> updated. If it was wrong, it needs to state the commit that changed to ma=
+ke
+> that happen.
+>
+> 2. For the removing the stale macros, the change log can simply state tha=
+t
+> the macros are unused in the code and are being removed.
+>
+> Finally, I know you're eager to get this patch set in, but please hold of=
+f
+> sending a new version immediately after a comment or two. Some maintainer=
+s
+> prefer submitters to wait a week or so, otherwise you will tend to "spam"
+> their inboxes. There's more than one maintainer Cc'd on this series, and =
+you
+> need to be courteous not to send too many emails in a short period of tim=
+e.
+
+Noted!  Actually I'm in no rush and just to make sure people see the
+latest patches so they do not have to waste time on the old series.
+
+Will hold off to resolve all the comments in this thread.
+
+And thanks for pointing this out.
+
+Regards,
+Ze
