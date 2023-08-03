@@ -2,43 +2,30 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08863C04A6A
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 08:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E753C001DF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 09:09:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232494AbjHCI7l (ORCPT
+        id S234985AbjHCJJK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Aug 2023 04:59:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43952 "EHLO
+        Thu, 3 Aug 2023 05:09:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231460AbjHCI7k (ORCPT
+        with ESMTP id S234981AbjHCJJJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Aug 2023 04:59:40 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A35CAE43;
-        Thu,  3 Aug 2023 01:59:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=DFxy+9MsOX2CxBRtThLgeCAlgtgs8UAOqnC7kEA2lOc=; b=v+ZU04CXJ+36isCG8CyhFHBxf2
-        C0GXo4/GeS8WZ6FbmRYUXWs6W6Qa9nwFCgwwI82ZRLXXqBWjh5WoKzVogIjscqRQk+2G2EBitjazk
-        SA7mjowqGzWsaskGT8Gan3X0ho6LLi9LnZi+dHuhz2t7rnDj7JgGSnIQPF0muPUVX4e8teR1ovVdN
-        8Uhvr3yZ6pMK6Q/EVaujSQKZbN4TiVegBwhEs482iRVrFK+ltOFLsd1WptufEc9lxOSDgaodwAlLG
-        8r1cTnFCt7P6gTskD3MSc5tu5ZCj3xQJeOFMggA/2cgtZVFKGmb64gWqngI3gjfj8TGUqE5LZyPFr
-        XL5YVebQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qRUAn-002dqs-Qf; Thu, 03 Aug 2023 08:59:09 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Thu, 3 Aug 2023 05:09:09 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E0F1E7;
+        Thu,  3 Aug 2023 02:09:07 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 558F930007E;
-        Thu,  3 Aug 2023 10:59:09 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 161022066B20B; Thu,  3 Aug 2023 10:59:09 +0200 (CEST)
-Date:   Thu, 3 Aug 2023 10:59:09 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9627E61CFF;
+        Thu,  3 Aug 2023 09:09:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C4D9C433C7;
+        Thu,  3 Aug 2023 09:09:04 +0000 (UTC)
+Date:   Thu, 3 Aug 2023 05:09:00 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
 To:     Ze Gao <zegao2021@gmail.com>
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -48,46 +35,88 @@ Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Subject: Re: [RFC PATCH v6 4/5] sched, tracing: add to report task state in
- symbolic chars
-Message-ID: <20230803085909.GH212435@hirez.programming.kicks-ass.net>
+Subject: Re: [RFC PATCH v6 1/5] perf sched: sync state char array with the
+ kernel
+Message-ID: <20230803050900.5007d2f5@gandalf.local.home>
+In-Reply-To: <20230803083352.1585-2-zegao@tencent.com>
 References: <20230803083352.1585-1-zegao@tencent.com>
- <20230803083352.1585-5-zegao@tencent.com>
+        <20230803083352.1585-2-zegao@tencent.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230803083352.1585-5-zegao@tencent.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Aug 03, 2023 at 04:33:51AM -0400, Ze Gao wrote:
-> Internal representations of task state are likely to be changed
-> or ordered, and reporting them to userspace without exporting
-> them as part of API is basically wrong, which can easily break
-> a userspace observability tool as kernel evolves. For example,
-> perf suffers from this and still reports wrong states as of this
-> writing.
-> 
-> OTOH, some masqueraded states like TASK_REPORT_IDLE and
-> TASK_REPORT_MAX are also reported inadvertently, which confuses
-> things even more and most userspace tools do not even take them
-> into consideration.
-> 
-> So add a new variable in company with the old raw value to
-> report task state in symbolic chars, which are self-explaining
-> and no further translation is needed. Of course this does not
-> break any userspace tool.
-> 
-> Note for PREEMPT_ACTIVE, we introduce 'p' to report it and use
-> the old conventions for the rest.
-> 
-> Signed-off-by: Ze Gao <zegao@tencent.com>
-> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> Acked-by: Ian Rogers <irogers@google.com>
+On Thu,  3 Aug 2023 04:33:48 -0400
+Ze Gao <zegao2021@gmail.com> wrote:
 
-I'm not sure you've actually read any of the things I've written. I hate
-this. Not going to happen.
+Hi Ze,
+
+> Update state char array and then remove unused and stale
+> macros, which are kernel internal representations and not
+> encouraged to use anymore.
+> 
+
+A couple of things.
+
+First, the change logs of every commit need to specify the "why". The
+subject can say "what", but the change log really needs to explain why this
+patch is important. For example, this patch is really two changes (and thus
+should actually be two patches). (I'll also comment on the other patches)
+
+1. The update of the state char array. You should explain why it's being
+updated. If it was wrong, it needs to state the commit that changed to make
+that happen.
+
+2. For the removing the stale macros, the change log can simply state that
+the macros are unused in the code and are being removed.
+
+Finally, I know you're eager to get this patch set in, but please hold off
+sending a new version immediately after a comment or two. Some maintainers
+prefer submitters to wait a week or so, otherwise you will tend to "spam"
+their inboxes. There's more than one maintainer Cc'd on this series, and you
+need to be courteous not to send too many emails in a short period of time.
+
+-- Steve
+
+
+> Signed-off-by: Ze Gao <zegao@tencent.com>
+> ---
+>  tools/perf/builtin-sched.c | 13 +------------
+>  1 file changed, 1 insertion(+), 12 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index 9ab300b6f131..8dc8f071721c 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -92,23 +92,12 @@ struct sched_atom {
+>  	struct task_desc	*wakee;
+>  };
+>  
+> -#define TASK_STATE_TO_CHAR_STR "RSDTtZXxKWP"
+> +#define TASK_STATE_TO_CHAR_STR "RSDTtXZPI"
+>  
+>  /* task state bitmask, copied from include/linux/sched.h */
+>  #define TASK_RUNNING		0
+>  #define TASK_INTERRUPTIBLE	1
+>  #define TASK_UNINTERRUPTIBLE	2
+> -#define __TASK_STOPPED		4
+> -#define __TASK_TRACED		8
+> -/* in tsk->exit_state */
+> -#define EXIT_DEAD		16
+> -#define EXIT_ZOMBIE		32
+> -#define EXIT_TRACE		(EXIT_ZOMBIE | EXIT_DEAD)
+> -/* in tsk->state again */
+> -#define TASK_DEAD		64
+> -#define TASK_WAKEKILL		128
+> -#define TASK_WAKING		256
+> -#define TASK_PARKED		512
+>  
+>  enum thread_state {
+>  	THREAD_SLEEPING = 0,
+
