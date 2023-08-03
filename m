@@ -2,105 +2,121 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E587EC00528
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 20:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55652C001DF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 20:51:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232126AbjHCUpG (ORCPT
+        id S231460AbjHCUvw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Aug 2023 16:45:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52618 "EHLO
+        Thu, 3 Aug 2023 16:51:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230330AbjHCUpF (ORCPT
+        with ESMTP id S230523AbjHCUvv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Aug 2023 16:45:05 -0400
+        Thu, 3 Aug 2023 16:51:51 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B661030EA;
-        Thu,  3 Aug 2023 13:45:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 871E811F;
+        Thu,  3 Aug 2023 13:51:50 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 487AF61EAF;
-        Thu,  3 Aug 2023 20:45:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E650C433C8;
-        Thu,  3 Aug 2023 20:45:03 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2576861EA5;
+        Thu,  3 Aug 2023 20:51:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F0A4C433C8;
+        Thu,  3 Aug 2023 20:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691095503;
-        bh=UXQA6Sp9+nMzLruVQvdX9wDbmeN6Do6qtEMNu/DE6z0=;
+        s=k20201202; t=1691095909;
+        bh=V7wJi7Pcy7UiUd+kBOXn5BnCLDetBgZyMEtNsqBRtQE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=piuUAmY1whkLscSpXc/ecQ8BF+bGTHOGX80qiBdapzrA+Bp6pea2GgyjsjrO3iaSL
-         W7inX5fZDlClWalQXBHohsJ1aNrw9Whlep2P1KaA6K0lAexF0S3JSZDr6YU0zsl03N
-         d7t04VvFvVGiFqNIYCXTbUD/QClspQch/oDS4KDivyBEk6PjfvftNfp+STUjiXf5S0
-         FF3nETvU7uUF4kMuEbb1OmY4t8wBKmD8yOFTy3Yy8Uyn8OdjTGnNh74vbN++jdzm1d
-         IbodNSFFZ+r91a2NHwzltgo4IDM+iUaneWm3x/NigJi07dpdk11SxVzsUR3CWTe7Ww
-         mslOqRW5y3jyQ==
+        b=TxDyQr/rp2VehgeKDNILgILbKe2f43HJdbXTkm9VDeoTf/qFkWd5S1oNSTJWBbInf
+         FeG5syK5QK2w7BP79tRjHj8kll/wCvtg7OO78kpTa72GrI6QzsoDvrz/9d1PDLvywk
+         asElkm2RNXb/dxGQOvRx3JeW0LpHuA+Txrnas6XURqIfMsi7VBay9EeFgLW3yr2fq3
+         4hx3vYPm3rrwDiG6R3FPCmJuAvHrumwloRtlTqO2JVHs6qSOJkPD83y0YQXjcWgcZg
+         kzLI16Q37kP7DOkivNgd6ItfTQ3GoIRxz7JOhjCk26YTnQu0E5TddIp+0IQPpxqrPv
+         1Nf1z+UMYOInQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 15BA1404DF; Thu,  3 Aug 2023 17:45:01 -0300 (-03)
-Date:   Thu, 3 Aug 2023 17:45:01 -0300
+        id 48C58404DF; Thu,  3 Aug 2023 17:51:46 -0300 (-03)
+Date:   Thu, 3 Aug 2023 17:51:46 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Manank Patel <manank@manank.me>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        Jens Schleusener <Jens.Schleusener@fossies.org>
-Subject: Re: [PATCH] tools: perf: pmu-events: Fix typo poiint->point
-Message-ID: <ZMwRzQC+wBgJpDfr@kernel.org>
-References: <20230803-fix-typo-v1-1-b794378d594e@manank.me>
+To:     Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/3] perf dlfilter: Add a test for resolve_address()
+Message-ID: <ZMwTYsh8KIwphOR5@kernel.org>
+References: <20230731091857.10681-1-adrian.hunter@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230803-fix-typo-v1-1-b794378d594e@manank.me>
+In-Reply-To: <20230731091857.10681-1-adrian.hunter@intel.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Aug 03, 2023 at 11:27:30AM +0530, Manank Patel escreveu:
-> Fix typo in file floating-point.json in /arch/x86/westmereep-dp
+Em Mon, Jul 31, 2023 at 12:18:55PM +0300, Adrian Hunter escreveu:
+> Extend the "dlfilter C API" test to test
+> perf_dlfilter_fns.resolve_address(). The test currently fails, but passes
+> after a subsequent patch.
 
-AFAIK these are generated using a tool, so the fix needs to go to the
-file from where the JSON files are generated, Ian?
+Ian,
+
+	I think this is ok now, can you please take a look and perhaps
+provide an Acked-by or Reviewed-by?
 
 - Arnaldo
  
-> Reported-by: Jens Schleusener <Jens.Schleusener@fossies.org>
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=205891
-> Signed-off-by: Manank Patel <manank@manank.me>
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 > ---
->  tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  tools/perf/dlfilters/dlfilter-test-api-v0.c | 26 ++++++++++++++++++++-
+>  1 file changed, 25 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json b/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json
-> index c03f8990fa82..196ae1d9b157 100644
-> --- a/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json
-> +++ b/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json
-> @@ -8,7 +8,7 @@
->          "UMask": "0x1"
->      },
->      {
-> -        "BriefDescription": "X87 Floating poiint assists for invalid input value (Precise Event)",
-> +        "BriefDescription": "X87 Floating point assists for invalid input value (Precise Event)",
->          "EventCode": "0xF7",
->          "EventName": "FP_ASSIST.INPUT",
->          "PEBS": "1",
-> 
-> ---
-> base-commit: 5d0c230f1de8c7515b6567d9afba1f196fb4e2f4
-> change-id: 20230803-fix-typo-3cb207284310
-> 
-> Best regards,
+> diff --git a/tools/perf/dlfilters/dlfilter-test-api-v0.c b/tools/perf/dlfilters/dlfilter-test-api-v0.c
+> index b1f51efd67d6..72f263d49121 100644
+> --- a/tools/perf/dlfilters/dlfilter-test-api-v0.c
+> +++ b/tools/perf/dlfilters/dlfilter-test-api-v0.c
+> @@ -254,6 +254,30 @@ static int check_addr_al(void *ctx)
+>  	return 0;
+>  }
+>  
+> +static int check_address_al(void *ctx, const struct perf_dlfilter_sample *sample)
+> +{
+> +	struct perf_dlfilter_al address_al;
+> +	const struct perf_dlfilter_al *al;
+> +
+> +	al = perf_dlfilter_fns.resolve_ip(ctx);
+> +	if (!al)
+> +		return test_fail("resolve_ip() failed");
+> +
+> +	address_al.size = sizeof(address_al);
+> +	if (perf_dlfilter_fns.resolve_address(ctx, sample->ip, &address_al))
+> +		return test_fail("resolve_address() failed");
+> +
+> +	CHECK(address_al.sym && al->sym);
+> +	CHECK(!strcmp(address_al.sym, al->sym));
+> +	CHECK(address_al.addr == al->addr);
+> +	CHECK(address_al.sym_start == al->sym_start);
+> +	CHECK(address_al.sym_end == al->sym_end);
+> +	CHECK(address_al.dso && al->dso);
+> +	CHECK(!strcmp(address_al.dso, al->dso));
+> +
+> +	return 0;
+> +}
+> +
+>  static int check_attr(void *ctx)
+>  {
+>  	struct perf_event_attr *attr = perf_dlfilter_fns.attr(ctx);
+> @@ -290,7 +314,7 @@ static int do_checks(void *data, const struct perf_dlfilter_sample *sample, void
+>  	if (early && !d->do_early)
+>  		return 0;
+>  
+> -	if (check_al(ctx) || check_addr_al(ctx))
+> +	if (check_al(ctx) || check_addr_al(ctx) || check_address_al(ctx, sample))
+>  		return -1;
+>  
+>  	if (early)
 > -- 
-> Manank Patel <manank@manank.me>
+> 2.34.1
 > 
 
 -- 
