@@ -2,33 +2,32 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B762EC04A6A
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 14:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EC5C001DB
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 15:10:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235812AbjHCOpp (ORCPT
+        id S236939AbjHCPKw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Aug 2023 10:45:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56640 "EHLO
+        Thu, 3 Aug 2023 11:10:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234450AbjHCOpo (ORCPT
+        with ESMTP id S236909AbjHCPKh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Aug 2023 10:45:44 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF94A1BE4;
-        Thu,  3 Aug 2023 07:45:39 -0700 (PDT)
+        Thu, 3 Aug 2023 11:10:37 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFFD330EA;
+        Thu,  3 Aug 2023 08:10:35 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5D5B461DD3;
-        Thu,  3 Aug 2023 14:45:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 380BCC433C8;
-        Thu,  3 Aug 2023 14:45:37 +0000 (UTC)
-Date:   Thu, 3 Aug 2023 10:45:33 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0806361DF1;
+        Thu,  3 Aug 2023 15:10:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC8F2C433C8;
+        Thu,  3 Aug 2023 15:10:32 +0000 (UTC)
+Date:   Thu, 3 Aug 2023 11:10:31 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ze Gao <zegao2021@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+To:     Ze Gao <zegao2021@gmail.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ian Rogers <irogers@google.com>,
@@ -36,16 +35,15 @@ Cc:     Ze Gao <zegao2021@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Subject: Re: [RFC PATCH v6 3/5] sched, tracing: reorganize fields of switch
- event struct
-Message-ID: <20230803104533.2c95ade2@gandalf.local.home>
-In-Reply-To: <20230803095132.GI212435@hirez.programming.kicks-ass.net>
+Subject: Re: [RFC PATCH v6 1/5] perf sched: sync state char array with the
+ kernel
+Message-ID: <20230803111031.056b3446@gandalf.local.home>
+In-Reply-To: <20230803083352.1585-2-zegao@tencent.com>
 References: <20230803083352.1585-1-zegao@tencent.com>
-        <20230803083352.1585-4-zegao@tencent.com>
-        <20230803051826.25ba7973@gandalf.local.home>
-        <20230803095132.GI212435@hirez.programming.kicks-ass.net>
+        <20230803083352.1585-2-zegao@tencent.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -54,29 +52,68 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 3 Aug 2023 11:51:32 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Thu,  3 Aug 2023 04:33:48 -0400
+Ze Gao <zegao2021@gmail.com> wrote:
 
-> > 
-> > See the difference?  
+> Update state char array and then remove unused and stale
+> macros, which are kernel internal representations and not
+> encouraged to use anymore.
 > 
-> This also doesn't mention you broke the data format for all trace events
-> a while back to ensure people are using libtracefs and are thus
-> confident this won't break things.
+> Signed-off-by: Ze Gao <zegao@tencent.com>
+> ---
+>  tools/perf/builtin-sched.c | 13 +------------
+>  1 file changed, 1 insertion(+), 12 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index 9ab300b6f131..8dc8f071721c 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -92,23 +92,12 @@ struct sched_atom {
+>  	struct task_desc	*wakee;
+>  };
+>  
+> -#define TASK_STATE_TO_CHAR_STR "RSDTtZXxKWP"
+> +#define TASK_STATE_TO_CHAR_STR "RSDTtXZPI"
 
+Thinking about this more, this will always be wrong. Changing it just works
+for the kernel you made the change for, but if it is run on another kernel,
+it's broken again.
 
-It was the meta data that happened a while ago. As other events change all
-the time with this restriction (keeping field names around), I didn't
-realize that it was required for this change log. Doesn't hurt adding it.
+I actually wrote code once that basically just did a:
 
-More details on that:
+	struct trace_seq s;
 
- commit b000c8065 ("tracing: Remove the extra 4 bytes of padding in events")
+	trace_seq_init(&s);
+	tep_print_event(tep, &s, record, "%s", TEP_PRINT_INFO);
 
-This was to get rid of the padding that powertop relied on.
+then searched s.buffer for "prev_state=%s ", to find the state character.
 
-Nit, it's libtraceevent not libtracefs, as libtracefs gets you to the
-format files, but it's libtraceveent that parses them.
+That's because the kernel should always be up to date (and why I said I
+needed that string in the print_fmt).
 
+As perf has a tep handle, this could be a helper function to extract the
+state if needed, and get rind of relying on the above character array.
 
 -- Steve
+
+
+>  
+>  /* task state bitmask, copied from include/linux/sched.h */
+>  #define TASK_RUNNING		0
+>  #define TASK_INTERRUPTIBLE	1
+>  #define TASK_UNINTERRUPTIBLE	2
+> -#define __TASK_STOPPED		4
+> -#define __TASK_TRACED		8
+> -/* in tsk->exit_state */
+> -#define EXIT_DEAD		16
+> -#define EXIT_ZOMBIE		32
+> -#define EXIT_TRACE		(EXIT_ZOMBIE | EXIT_DEAD)
+> -/* in tsk->state again */
+> -#define TASK_DEAD		64
+> -#define TASK_WAKEKILL		128
+> -#define TASK_WAKING		256
+> -#define TASK_PARKED		512
+>  
+>  enum thread_state {
+>  	THREAD_SLEEPING = 0,
+
