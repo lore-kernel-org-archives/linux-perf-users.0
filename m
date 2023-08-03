@@ -2,82 +2,81 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A316DEB64DD
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 14:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B762EC04A6A
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 14:45:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236258AbjHCOgX (ORCPT
+        id S235812AbjHCOpp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Aug 2023 10:36:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44696 "EHLO
+        Thu, 3 Aug 2023 10:45:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236456AbjHCOf6 (ORCPT
+        with ESMTP id S234450AbjHCOpo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Aug 2023 10:35:58 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63889421F;
-        Thu,  3 Aug 2023 07:35:00 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:281:8300:73::5f6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 3 Aug 2023 10:45:44 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF94A1BE4;
+        Thu,  3 Aug 2023 07:45:39 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id D981A31A;
-        Thu,  3 Aug 2023 14:34:50 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net D981A31A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-        t=1691073291; bh=9FpXj138aLwSMechytCcdOziH9ecwbVXLIo416cCJSM=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=OqmViMk8ildYMdSqsIn1qFF3QJMBez6U4ObHC76vmvX24eEC+yx8/+lpKG5VHhDYg
-         gmIHTKk8XdXdVU3046ESQJOpMZBM6c8/vrKqETraoGzZx3+G5CtihQYk6mMdLGZ4HW
-         UDfSWWZ9BQrHXcKFGieWTKGjujM6EsuzlMQS+cyBXWxAsCh/9FG8rIMsgl0GPzUzlF
-         eZ72rcwhKRCfOj5mIi+O5QAQjQs2Yu/6hALnQH00151kqPLu6DXZjlwxt+DVWIRWWo
-         vwlmaQqLm276AbaMksBITB/y0Frcx6humpWOLYquHNZOV72tf8rPrBu0AFLb0DX6bf
-         XM3XLoZUKNPHA==
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Leo Yan <leo.yan@linaro.org>,
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5D5B461DD3;
+        Thu,  3 Aug 2023 14:45:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 380BCC433C8;
+        Thu,  3 Aug 2023 14:45:37 +0000 (UTC)
+Date:   Thu, 3 Aug 2023 10:45:33 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ze Gao <zegao2021@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v2] perf doc: Document ring buffer mechanism
-In-Reply-To: <20230803035037.1750340-1-leo.yan@linaro.org>
-References: <20230803035037.1750340-1-leo.yan@linaro.org>
-Date:   Thu, 03 Aug 2023 08:34:50 -0600
-Message-ID: <87v8dw6vp1.fsf@meer.lwn.net>
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>
+Subject: Re: [RFC PATCH v6 3/5] sched, tracing: reorganize fields of switch
+ event struct
+Message-ID: <20230803104533.2c95ade2@gandalf.local.home>
+In-Reply-To: <20230803095132.GI212435@hirez.programming.kicks-ass.net>
+References: <20230803083352.1585-1-zegao@tencent.com>
+        <20230803083352.1585-4-zegao@tencent.com>
+        <20230803051826.25ba7973@gandalf.local.home>
+        <20230803095132.GI212435@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Leo Yan <leo.yan@linaro.org> writes:
+On Thu, 3 Aug 2023 11:51:32 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-> In the Linux perf tool, the ring buffer serves not only as a medium for
-> transferring PMU event data but also as a vital mechanism for hardware
-> tracing using technologies like Intel PT and Arm CoreSight, etc.
->
-> Consequently, the ring buffer mechanism plays a crucial role by ensuring
-> high throughput for data transfer between the kernel and user space
-> while avoiding excessive overhead caused by the ring buffer itself.
->
-> This commit documents the ring buffer mechanism in detail.  It provides
-> an in-depth explanation of the implementation of both the generic ring
-> buffer and the AUX ring buffer.  Additionally, it covers how these ring
-> buffers support various tracing modes and explains the synchronization
-> with memory barriers.
->
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
+> > 
+> > See the difference?  
+> 
+> This also doesn't mention you broke the data format for all trace events
+> a while back to ensure people are using libtracefs and are thus
+> confident this won't break things.
 
-So this seems like good material from a very brief scan.  I do have to
-ask, though: why is it not in RST, and why not put it into the
-user-space API book?
 
-Thanks,
+It was the meta data that happened a while ago. As other events change all
+the time with this restriction (keeping field names around), I didn't
+realize that it was required for this change log. Doesn't hurt adding it.
 
-jon
+More details on that:
+
+ commit b000c8065 ("tracing: Remove the extra 4 bytes of padding in events")
+
+This was to get rid of the padding that powertop relied on.
+
+Nit, it's libtraceevent not libtracefs, as libtracefs gets you to the
+format files, but it's libtraceveent that parses them.
+
+
+-- Steve
