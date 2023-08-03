@@ -2,101 +2,240 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DF0C04A94
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 02:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E70C001DF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 03:24:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232084AbjHCCtu (ORCPT
+        id S233136AbjHCDYQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Aug 2023 22:49:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35904 "EHLO
+        Wed, 2 Aug 2023 23:24:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232496AbjHCCtt (ORCPT
+        with ESMTP id S231347AbjHCDYJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Aug 2023 22:49:49 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B9F81A7;
-        Wed,  2 Aug 2023 19:49:48 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-3fe2bc27029so5135715e9.3;
-        Wed, 02 Aug 2023 19:49:48 -0700 (PDT)
+        Wed, 2 Aug 2023 23:24:09 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1865126B2
+        for <linux-perf-users@vger.kernel.org>; Wed,  2 Aug 2023 20:24:08 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1bc3d94d40fso4606295ad.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Aug 2023 20:24:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691030986; x=1691635786;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gCPQBscIppb4GjnVbGcSI0bCg7csaBlCUm14FCMkX6c=;
-        b=FjPyiE61ftWT6m4u4qkPYqpp9J2NcwS3bub1o+sxO4igem/83rXk7tEzvBXEiJnpr4
-         epWWmV7ZaeUUy7Xf8De2/7ggieRxeBUGSkfJ+beM2/qQ/dXRBKW4JOrtktaf+yqKjDf/
-         79rNCBYHEwshtA9GKnGKQpNL5vb9gTgB8LUW6KL+50qfULK1Y5oI8d6Iy4krdzu8VMZv
-         ZPXYnynWoGVmzo7l2qQGVI9wVVhRRjYBFaJHC5pb059rIK7bkSAjUUeEqezv6PrXohTs
-         Jsudh65n2ZCHJYLn0OsFGN9M4C8osNi/LmCdTN6nc14K+Xq/MFI2QkG3Ul6uz+m/zbeD
-         dNQg==
+        d=linaro.org; s=google; t=1691033047; x=1691637847;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=O8Il73H/EAGTWQG8TXMHqYxWH5H3YnlW7g1lYr0WqbY=;
+        b=QLdGSUE6XDDTN4Asngv3TsGs5kBEYxf87gcrw0XEqhD59Eu0I4YdEyPiyh8FTHH50/
+         PidziU6/O0dd2EejB+YY79ODrtwSbijsdReh9vet/XNyYcK8V2j/WK0FwvQKbYQj05e4
+         rmx2J0Qhg6WD41aqMX27jdqRYzJpyTiQ3jUsxyqjQpuVnY4YTdkidm80rGl4yaBIH5IQ
+         aXu5rdaHvtuQi7S6xkkKurnMuqytejHAuwVPAbyC8TVJ3zrxhST0dGp0nPu0Tp3IMD0O
+         35K2WLFy1AEGmF6yF5lSa3ViOLNt4w/K7OMHCKhwI0JLhYZMIbaB0yKceE0mPPpYQQQD
+         u1FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691030986; x=1691635786;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gCPQBscIppb4GjnVbGcSI0bCg7csaBlCUm14FCMkX6c=;
-        b=Bmm5GzA68KSn71wTFIJ7XDhd9xG8HP9EFcktLhDMV/2WErcA7Yn0sIFLAN6sEynTYX
-         6qtTTVL+Ajq75Bq1km8UrddN6npU634vz104A6MD8sNLZVWjxD6tkarXaFZ2lP1+mYa4
-         ovfKH4rGxnFjC8MoFSFitg7KfJ7nkIHyzbm1IvgFjFc/AOen4FdDWMCwk8maHv2Vgp/2
-         Tr/ofiGAwPUmjxGgq22F1YdRzQXhzP0oczH8Zg9MEBvAb/G1aO0WzHpfjs4U+PiGGv/m
-         A6TJVm+w9GVhusipFOUqVSLt9rhoK0YBfZUGjl4j9HEacvaLtgJo6VTveJfcTNmEenFk
-         hT4w==
-X-Gm-Message-State: ABy/qLakRiKmLPvM+pDvV+wk9vTZZtMBPIwzcpcr2GwJsUmsJXsw0DN2
-        GZ+DeycvnMO1YNvCTJgogUIO5JxG2TXx3ECOyBo=
-X-Google-Smtp-Source: APBJJlEKCuZ55HVEdQWtOnyxHojOgwywxmC5gJVSWDn/Mtt/u5IvY5gFwYOmIg0wmkV5vcyCcAh0DFQDyneLvEtU4+U=
-X-Received: by 2002:a05:6000:18c:b0:317:5cfb:714e with SMTP id
- p12-20020a056000018c00b003175cfb714emr6168249wrx.55.1691030986503; Wed, 02
- Aug 2023 19:49:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230802121116.324604-1-zegao@tencent.com> <20230802121116.324604-2-zegao@tencent.com>
- <20230802103630.45d95c06@gandalf.local.home> <CAD8CoPAPjuE5Ni2aTJcS5=M8TNOLqp3t4gfL=iWVrx39a25r2Q@mail.gmail.com>
- <20230802223718.6e34d3ff@gandalf.local.home>
-In-Reply-To: <20230802223718.6e34d3ff@gandalf.local.home>
-From:   Ze Gao <zegao2021@gmail.com>
-Date:   Thu, 3 Aug 2023 10:49:35 +0800
-Message-ID: <CAD8CoPA7xZm+HUwRTbwroeBqC1umH36pu8pZNRS5fuOk9=u+LA@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 1/7] libtraceevent: sync state char array with the kernel
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        d=1e100.net; s=20221208; t=1691033047; x=1691637847;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O8Il73H/EAGTWQG8TXMHqYxWH5H3YnlW7g1lYr0WqbY=;
+        b=StU0/v5bPgHS3aCCePzL4kPWJhC6HYWwWfqPNW5MgE/HVUz7RPbLkcb8aCax7vGxRh
+         Cm97YxRXRQpQzsiytC3Xjgh5EQ1DHPngR2uQT33cXO8W8YLFFH7htSH70oL8LE+V02SX
+         KnI0jD+7rN7/etC5XpOIZVQ3YtzCHdbgrZElY3CkJeDsOhelOaWVucWh51RjswDHUUTE
+         r/hS0ORXalhp2wieycS//kX8cC7GVe+PHfh/nmQ7e1jSYhUkFHWdXSg45P6RgayVGVHC
+         gorpvaCK9DjuhfB37eVTBGj+Ia1hUQP1bwHxrb8dpOGkl4LdhjQGOah7HfLsmux2QGhB
+         ohKA==
+X-Gm-Message-State: ABy/qLZa8IggIbjQOoHpAhIiA4WqOVu1Lw/XzuEtv6WPQ1ZDZWXaT5UT
+        SGx9fKJE4mNUDiWIUm2R8mbbUQ==
+X-Google-Smtp-Source: APBJJlE9sAhV1fn+iSnn8+55Y+IAz3JuvH86wQ9aj00ZHban9LGMDYZw5LvDvncwvC9rc0bhlVO3xQ==
+X-Received: by 2002:a17:902:b714:b0:1bb:2020:be0d with SMTP id d20-20020a170902b71400b001bb2020be0dmr16136522pls.14.1691033047504;
+        Wed, 02 Aug 2023 20:24:07 -0700 (PDT)
+Received: from leoy-huanghe.lan ([156.59.39.102])
+        by smtp.gmail.com with ESMTPSA id h18-20020a170902f7d200b001b243a20f26sm13078343plw.273.2023.08.02.20.24.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Aug 2023 20:24:07 -0700 (PDT)
+Date:   Thu, 3 Aug 2023 11:23:57 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1] perf doc: Document ring buffer mechanism
+Message-ID: <20230803032357.GB1306442@leoy-huanghe.lan>
+References: <20230715035343.46737-1-leo.yan@linaro.org>
+ <CAP-5=fVmBVA5XGac8BZks6UnjGaMv8bx_PhC6_YrWC2TGjw-Fg@mail.gmail.com>
+ <CAP-5=fXHPCWKGrewGbfWWBCTKeZ2tYntPBkjL6grL94VN7uVpg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fXHPCWKGrewGbfWWBCTKeZ2tYntPBkjL6grL94VN7uVpg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Got it. Will send patches for libtraceevent separately, Combining
-patches from 2 different trees annoys me as well ;)
+On Mon, Jul 24, 2023 at 01:46:07PM -0700, Ian Rogers wrote:
 
-Regards,
-Ze
+[...]
 
-On Thu, Aug 3, 2023 at 10:37=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Thu, 3 Aug 2023 10:13:16 +0800
-> Ze Gao <zegao2021@gmail.com> wrote:
->
-> > FYI, I=E2=80=98ve already cc-ed to it.  Do you mean I need to resend th=
-is patch
-> > to linux-trace-devel@vger.kernel.org solely and exclude this one from
-> > this series?
-> >
->
-> I searched the Cc list and missed it. Anyway, you only need to Cc the
-> patches that touch libtracevent, and not the rest. No biggy, I just have =
-to
-> mark them as "Handled elsewhere" in patchwork.
->
-> -- Steve
+> Picking up from here.
+> 
+> > > +The mechanism of AUX ring buffer
+> > > +--------------------------------
+> > > +
+> > > +In this chapter, we will explain the implementation of the AUX ring
+> > > +buffer.  In the first part it will discuss the connection between the
+> > > +AUX ring buffer and the generic ring buffer, then the second part will
+> > > +examine how the AUX ring buffer co-works with the generic ring buffer,
+> > > +as well as the additional features introduced by the AUX ring buffer for
+> > > +the sampling mechanism.
+> > > +
+> > > +The relationship between AUX and generic ring buffers
+> > > +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > > +
+> > > +Generally, the AUX ring buffer is an auxiliary for the generic ring
+> > > +buffer.  The generic ring buffer is primarily used to store the event
+> > > +samples, and every event fromat complies with the definition in the
+> 
+> nit: s/fromat/format/
+> 
+> > > +union perf_event; the AUX ring buffer is for recording the hardware
+> > > +trace data, and the trace data format is hardware IP dependent.  The
+> > > +advantage of the AUX ring buffer is that it can de-couple the data
+> > > +transferring between the generic perf events and the hardware tracing.
+> 
+> I'm wondering if the wording of the last sentence can be made a little
+> easier. Perhaps:
+> The general use and advantage of the AUX ring buffer is that it
+> written to directly by hardware rather than by the kernel. For
+> example, regular profile samples that write to the generic ring buffer
+> cause an interrupt. Tracing execution requires a high number of
+> samples and using interrupts would be overwhelming for the generic
+> ring buffer mechanism. Having an aux buffer allows for a region of
+> memory more decoupled from the kernel and written to directly by
+> hardware tracing.
+
+Thanks for helping to rephrase.  It's clear and good for me, will add
+it into the next spin.
+
+> > > +The AUX ring buffer reuses the same algorithm with the generic ring
+> > > +buffer for the buffer management.  The control structure
+> > > +perf_event_mmap_page extends the new fields aux_head and aux_tail for
+> > > +the head and tail pointers of the AUX ring buffer.
+> > > +
+> > > +During the AUX trace initialisation, record_opts::auxtrace_mmap_pages
+> > > +is set for the AUX buffer size in page unit, otherwise, this option is
+> > > +the default value '0' which means a perf session is not attached to any
+> > > +AUX trace.
+> 
+> This jumps into a bunch of perf tool details that it would be nice to
+> discuss in more abstract terms. I think an important thing to mention
+> is that unlike the mmap of the regular perf ring buffer, the aux mmap
+> needs a second syscall.
+
+Agreed.  Combining with the followed sentence, I rephrased it as:
+
+During the initialisation phase, besides the mmap()-ed regular ring     
+buffer, the perf tool invokes a second syscall in the                   
+auxtrace_mmap__mmap() function for the mmap of the AUX buffer;          
+rb_alloc_aux() in the kernel allocates pages, these pages will be       
+deferred to map into VMA when handling the page fault, which is the
+same lazy mechanism with the regular ring buffer.
+
+> > > +
+> > > +When record_opts::auxtrace_mmap_pages is a non-zero value, the
+> > > +auxtrace_mmap__mmap() function invokes rb_alloc_aux() in the kernel for
+> > > +allocating kernel pages; these pages will be deferred to map into VMA
+> > > +when handling the page fault, which is the same lazy mechanism with the
+> > > +generic ring buffer.
+> > > +
+> > > +The AUX event and AUX trace data are two different things.  Likewise the
+> > > +PMU events, the AUX event will be saved into the generic ring buffer
+> > > +while the AUX trace data is stored in the AUX ring buffer.  As a result,
+> > > +the generic ring buffer and the AUX ring buffer are allocated in pairs,
+> > > +even if only one hardware trace event is enabled.
+> 
+> nit: s/The AUX event and/AUX events and/
+> 
+> Would the hardware trace event be the aux event? Perhaps an example
+> would be useful here.
+
+Good point.  I refined it as:
+
+AUX events and AUX trace data are two different things.  Let's see an
+example:
+
+        perf record -a -e cycles -e cs_etm/@tmc_etr0/ -- sleep 2
+
+The above command enables two events: one is the event 'cycles' from PMU
+and another is the AUX event 'cs_etm' from Arm CoreSight, both events
+are saved into the regular ring buffer while the CoreSight's trace data
+is stored in the AUX ring buffer.  As a result, the regular ring buffer
+and the AUX ring buffer are allocated in pairs.
+
+> > > +
+> > > +Now let's see the AUX ring buffer deployment in the perf modes.  For
+> > > +per-thread mode, perf tool allocates only one generic ring buffer and one
+> > > +AUX ring buffer for the whole session; for the system wide mode, perf
+> > > +allocates the generic ring buffer and the AUX ring buffer per CPU wise.
+> 
+> Perhaps mention per-thread with a CPU, as perf won't use per-thread
+> mode without a command line argument.
+
+Yeah, to make it clear, refined as:
+
+Now, let's see the AUX ring buffer deployment in the perf modes.  The   
+perf in default mode allocates the regular ring buffer and the AUX ring 
+buffer per CPU-wise, which is the same as the system wide mode, although
+the default mode records samples only for the profiled program, and the 
+latter mode profiles for all programs in the system.  For per-thread    
+mode, the perf tool allocates only one regular ring buffer and one AUX  
+ring buffer for the whole session.  For the per-CPU mode, the perf      
+allocates two kinds of ring buffers for CPUs specified by the option    
+'-C'.                                                                   
+
+[...]
+
+> > > +Once the hardware trace data is stored into AUX ring buffer, the
+> > > +function perf_aux_output_end() finishes two things:
+> > > +
+> > > +- It fills an event PERF_RECORD_AUX into the generic ring buffer, this
+> > > +event delivers the information of the start address and data size for a
+> > > +chunk of hardware trace data has been stored into the AUX ring buffer;
+> > > +
+> > > +- Since the hardware trace driver has stored new trace data into the AUX
+> > > +ring buffer, the argument 'size' indicates how many bytes have been
+> > > +consumed by the hardware tracing, thus perf_aux_output_end() updates the
+> > > +header pointer perf_buffer::aux_head to reflect the latest buffer usage.
+> > > +
+> 
+> Perhaps add a description of lost events?
+
+Good point.  I tweaked above sentences as:
+
+"Once the hardware trace data is stored into the AUX ring buffer, the PMU
+driver will stop hardware tracing by calling the pmu::stop() callback.  
+Similar to the regular ring buffer, the AUX ring buffer needs to apply  
+the memory synchronization mechanism as discussed in the section "Memory
+synchronization".  Since the AUX ring buffer is managed by the PMU      
+driver, the barrier (B), which is a writing barrier to ensure the trace 
+data is externally visible prior to updating the head pointer, is asked 
+to be implemented in the PMU driver.                                    
+                                                                        
+Then pmu::stop() can safely call the perf_aux_output_end() function to  
+finish two things:                                                      
+
+...
+
+At the end, the PMU driver will restart hardware tracing.  During this
+temporary suspending period, it will lose hardware trace data, which
+will introduce a discontinuity during decoding phase."
+
+[...]
+
+> Thanks again for all of this, sorry for the delay in the 2nd part of my review.
+
+Very appreciate your detailed review and many suggestions which helped
+to improve this doc a lot!
+
+Leo
