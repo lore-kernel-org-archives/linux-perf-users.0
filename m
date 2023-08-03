@@ -2,58 +2,46 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A227DC0015E
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 08:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA75DC04A6A
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 08:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231823AbjHCIgt (ORCPT
+        id S234355AbjHCIyR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Aug 2023 04:36:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55616 "EHLO
+        Thu, 3 Aug 2023 04:54:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234574AbjHCIgY (ORCPT
+        with ESMTP id S231331AbjHCIyQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Aug 2023 04:36:24 -0400
-Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C0A11BE;
-        Thu,  3 Aug 2023 01:34:58 -0700 (PDT)
-Received: by mail-oi1-x230.google.com with SMTP id 5614622812f47-3a6f87b2993so521799b6e.3;
-        Thu, 03 Aug 2023 01:34:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691051698; x=1691656498;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Tnemojx1FZtx2Li9vOAprJUm0iuiB3b7IS7depvyVaE=;
-        b=qSSSnjKGejBP6Yomeu290FoFNqM817vMqLWUN5KoweAJlOAnf1LB5lncn6seQpXWil
-         tbjfNCirCNiP9SBeViyFB3RGYCgWYh7VUrLz6oS2XiHjPycK7I+jkdA5ZNqzv2cqVxWZ
-         q2q8mMc9guZei4vo1SKOmgNXEySqpBlL2cXa6INxgqBXEvej8S0bTYOcgl3UAiD5jmh0
-         DOsUYTqjHJi6J2MtKIDJq3W/FEeptmBM3qNmk8P9tK++jUqIxN6aGdU3KXO5uwGZgVzX
-         T1M4sHHLx942q8pAAV4arLo2Mgefn28qbDrcoHSWQ1Lzv+kjn7eJP27AeHWmvF6rO9S6
-         9qow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691051698; x=1691656498;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Tnemojx1FZtx2Li9vOAprJUm0iuiB3b7IS7depvyVaE=;
-        b=JVHrdJhpSa+mKC0sNDK4kraYRrPQhzFbpo0gtl5aE3mfXcW7YlvK/b5fa4q1/HJ0VT
-         MwHCGVCZDP29c4JJMzrNfsDBCt9+l8EROBvBZzlUhRvfDrd9MwL2Nczvo0dFREi5xBlH
-         2zJwW2QyvTQRcSR6UPdxetaXXEVDYiuZJcRRhubUDxbDDJe/6z+EecikOuC4HhX9VOYQ
-         IipQs1uHagCtIUVILCExp0vhYh5fWG6AIevNjdt0YaEkZlPbGw8SYBiuYs/kgt78Na4B
-         gpW9y7soYIIFv9NBeTysybwLT1btx1FkLLWlkwNo2SiHM44GMN1/KCSxsqWF4LTSVjYI
-         VACQ==
-X-Gm-Message-State: ABy/qLZ1xrdhgb9HtObTjrXMw4sfsZ5Z3WD0rxoxVxlbyvP4QLNFrfN9
-        YWkd7SDaM1DL2u0Po6wIGCc=
-X-Google-Smtp-Source: APBJJlHWflpa9e3tqPcUwqWc2E59rG4/UJwb8mAf/NKYNLHdEjsGl9pgH1dWdTt6AQKnx3ToZ9ml4A==
-X-Received: by 2002:a05:6358:98a2:b0:134:c279:c829 with SMTP id q34-20020a05635898a200b00134c279c829mr9475891rwa.18.1691051697678;
-        Thu, 03 Aug 2023 01:34:57 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.83])
-        by smtp.googlemail.com with ESMTPSA id r6-20020a63b106000000b00563feb7113dsm12541876pgf.91.2023.08.03.01.34.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Aug 2023 01:34:57 -0700 (PDT)
-From:   Ze Gao <zegao2021@gmail.com>
-X-Google-Original-From: Ze Gao <zegao@tencent.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Thu, 3 Aug 2023 04:54:16 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 796BEE43;
+        Thu,  3 Aug 2023 01:54:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=G3dKS3PiyfTeGk+/L0aBzxktIOdUDrPMrl0WarMpWQQ=; b=Ia1vVio9qPQGTgm9A1rXOwAQvs
+        JdHxuflT57Mix99Tv3LruwRbE1jHPxlrI8ly2lXKqTgSNyxtnpLW4OPMI/YrbOz4lRyygGp0OCzCf
+        nuvOxZTE9hDXtjw/ML1v6wXGIlLP1/7jjMj/mPPR1iRNP3JhRfd/AlVuev525ENSTuBpoLUZND7cW
+        5PGXEbXG51yAdInstMTyFNCb01j+rWx7jEZsVrUTO7j1cwIKfeFS9yEvnnPGZY8yn/9FMlzve1fc4
+        dEcYOYqlRu3pr6SYW2qyA59vDs0RnkWYDBFHumuwSO5Gt7Z1yc/MTJt8hLJPUwWYcUGypRkIUW6St
+        GEDPh6jw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1qRU5X-00GgiW-2u;
+        Thu, 03 Aug 2023 08:53:44 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 59B6F30007E;
+        Thu,  3 Aug 2023 10:53:42 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 38DA5202F3A1A; Thu,  3 Aug 2023 10:53:42 +0200 (CEST)
+Date:   Thu, 3 Aug 2023 10:53:42 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ze Gao <zegao2021@gmail.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ian Rogers <irogers@google.com>,
@@ -61,79 +49,32 @@ To:     Adrian Hunter <adrian.hunter@intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Subject: [RFC PATCH v6 5/5] perf sched: prefer to use prev_state_char introduced in sched_switch
-Date:   Thu,  3 Aug 2023 04:33:52 -0400
-Message-ID: <20230803083352.1585-6-zegao@tencent.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230803083352.1585-1-zegao@tencent.com>
+Subject: Re: [RFC PATCH v6 3/5] sched, tracing: reorganize fields of switch
+ event struct
+Message-ID: <20230803085342.GG212435@hirez.programming.kicks-ass.net>
 References: <20230803083352.1585-1-zegao@tencent.com>
+ <20230803083352.1585-4-zegao@tencent.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230803083352.1585-4-zegao@tencent.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Since the sched_switch tracepoint introduces a new variable to
-report sched-out task state in symbolic char, we prefer to use
-it to spare from knowing internal implementations in kernel.
+On Thu, Aug 03, 2023 at 04:33:50AM -0400, Ze Gao wrote:
+> Report prioritiy and prev_state in 'short' to save some buffer
+> space. And also reorder the fields so that we take struct
+> alignment into consideration to make the record compact.
+> 
+> Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Signed-off-by: Ze Gao <zegao@tencent.com>
 
-Also we keep the old parsing logic intact but sync the state char
-array with the latest kernel.
+I am really getting fed up with this. This again doesn't list any
+reasons on why this is a sane thing to do.
 
-Signed-off-by: Ze Gao <zegao@tencent.com>
----
- tools/perf/builtin-sched.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 5042874ba204..6f99a36206c9 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -837,7 +837,7 @@ replay_wakeup_event(struct perf_sched *sched,
- 
- static inline char task_state_char(int state)
- {
--	static const char state_to_char[] = "RSDTtXZPI";
-+	static const char state_to_char[] = "RSDTtXZPIp";
- 	unsigned int bit = state ? ffs(state) : 0;
- 
- 	return bit < sizeof(state_to_char) - 1 ? state_to_char[bit] : '?';
-@@ -846,9 +846,20 @@ static inline char task_state_char(int state)
- static inline char get_task_prev_state(struct evsel *evsel,
- 				       struct perf_sample *sample)
- {
--	const int prev_state = evsel__intval(evsel, sample, "prev_state");
-+	char prev_state_char;
-+	int prev_state;
- 
--	return task_state_char(prev_state);
-+	/* prefer to use prev_state_char */
-+	if (evsel__field(evsel, "prev_state_char"))
-+		prev_state_char = (char) evsel__intval(evsel,
-+				sample, "prev_state_char");
-+	else {
-+		prev_state = (int) evsel__intval(evsel,
-+				sample, "prev_state");
-+		prev_state_char = task_state_char(prev_state);
-+	}
-+
-+	return prev_state_char;
- }
- 
- static int replay_switch_event(struct perf_sched *sched,
-@@ -2145,7 +2156,7 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
- 		else if (r->last_time) {
- 			u64 dt_wait = tprev - r->last_time;
- 
--			if (r->last_state == 'R')
-+			if (r->last_state == 'R' || r->last_state == 'p')
- 				r->dt_preempt = dt_wait;
- 			else if (r->last_state == 'D')
- 				r->dt_iowait = dt_wait;
--- 
-2.41.0
-
+Please review past discussions and collate the various things mentioned
+into this Changelog.
