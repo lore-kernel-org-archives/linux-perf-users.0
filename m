@@ -2,118 +2,115 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EC5C001DB
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 15:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D7CEB64DD
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 16:57:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236939AbjHCPKw (ORCPT
+        id S235305AbjHCQ5o (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Aug 2023 11:10:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42510 "EHLO
+        Thu, 3 Aug 2023 12:57:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236909AbjHCPKh (ORCPT
+        with ESMTP id S234543AbjHCQ5X (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Aug 2023 11:10:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFFD330EA;
-        Thu,  3 Aug 2023 08:10:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0806361DF1;
-        Thu,  3 Aug 2023 15:10:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC8F2C433C8;
-        Thu,  3 Aug 2023 15:10:32 +0000 (UTC)
-Date:   Thu, 3 Aug 2023 11:10:31 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ze Gao <zegao2021@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Thu, 3 Aug 2023 12:57:23 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D98BA468E
+        for <linux-perf-users@vger.kernel.org>; Thu,  3 Aug 2023 09:56:44 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-687087d8ddaso1032549b3a.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 03 Aug 2023 09:56:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1691081802; x=1691686602;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yF5iQrEfo52tfmrVUbalVYIcokRwhlgV2+zRKbvqOFM=;
+        b=FrQWtB+LlhO/fGuTpdFj6X8T+njpablkd6BqGtaQR6dU38C6ib70qfD5cOKM0sX8tP
+         vkketG1Y4QqHDnyjw/NLGu27ETnP1jjudf6MS2rwBqyJCj8mzCXttCu2aRnHiG3ZV4Sj
+         7UVQCowmLE2Tb6DiXLQbqq4l9EXCWAmSyBpXatwDfx7ccyMjHgjQ6hjxxn8TXOqqSo6A
+         IyZuP5InSMYiJ/S+pycG9WtBMJMcumI0juhxgPHZn9dOMyu4a6o7FvTP5WXItmmMX2Hb
+         ooIq0SZ703AEx+lDABnzxXaxQYHXSVC9Xof1INO3nklrmJnTTFYe78XfC14S61AFZsI7
+         vRXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691081802; x=1691686602;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yF5iQrEfo52tfmrVUbalVYIcokRwhlgV2+zRKbvqOFM=;
+        b=IKtlPWwhlaxBOD6r7oKn9DhLsrp9gyMYSoBwFIzntwO/3C6LHiLetnP3UD47XY5/JN
+         NWU1yErTQVNsyZI9mK2DvKNJFhZ3d5tb0YXxacwpnLgH/CLsom1Z9K3OnmUJ5nBekt5s
+         QHPhhkXajGJJ1i/n0ukxj1kacCy85vyTaCFKuGdbSVuivvYlQLSACGhs8COAZgSo3A1O
+         eQvys9YotzQxO6/qzLmhmpcl2zaM48+qQZOX6Q5x8Vy/VA2Zm5R7Km9jkb0edUm6IRqz
+         C69dezn5f1TkkFu27y6FqRUZagQnOe8NroMrR8MTaqophKWvEbYf/KTppFJ2PNKcxA3s
+         bpsw==
+X-Gm-Message-State: ABy/qLZsS6wwfCWK+IN+QHJWYyNceXgaGtz3dR7XZOkd0c6rAC723k2A
+        erE5DduTt0IQc3WRRgKtlBepkg==
+X-Google-Smtp-Source: APBJJlFo80PDH4xMdM5+Al+USUFkGWPutqXeBsPA9BpTVp0jH2AaGJhVIQUSn5ubrf3ontdYMnP5nw==
+X-Received: by 2002:a05:6a00:18a5:b0:686:24e1:d12e with SMTP id x37-20020a056a0018a500b0068624e1d12emr23614520pfh.30.1691081802601;
+        Thu, 03 Aug 2023 09:56:42 -0700 (PDT)
+Received: from leoy-huanghe.lan ([156.59.39.102])
+        by smtp.gmail.com with ESMTPSA id m13-20020aa7900d000000b006871859d9a1sm99853pfo.7.2023.08.03.09.56.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Aug 2023 09:56:42 -0700 (PDT)
+Date:   Fri, 4 Aug 2023 00:56:36 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Subject: Re: [RFC PATCH v6 1/5] perf sched: sync state char array with the
- kernel
-Message-ID: <20230803111031.056b3446@gandalf.local.home>
-In-Reply-To: <20230803083352.1585-2-zegao@tencent.com>
-References: <20230803083352.1585-1-zegao@tencent.com>
-        <20230803083352.1585-2-zegao@tencent.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2] perf doc: Document ring buffer mechanism
+Message-ID: <20230803165636.GB1783639@leoy-huanghe.lan>
+References: <20230803035037.1750340-1-leo.yan@linaro.org>
+ <87v8dw6vp1.fsf@meer.lwn.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87v8dw6vp1.fsf@meer.lwn.net>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu,  3 Aug 2023 04:33:48 -0400
-Ze Gao <zegao2021@gmail.com> wrote:
+Hi Jon,
 
-> Update state char array and then remove unused and stale
-> macros, which are kernel internal representations and not
-> encouraged to use anymore.
+On Thu, Aug 03, 2023 at 08:34:50AM -0600, Jonathan Corbet wrote:
+> Leo Yan <leo.yan@linaro.org> writes:
 > 
-> Signed-off-by: Ze Gao <zegao@tencent.com>
-> ---
->  tools/perf/builtin-sched.c | 13 +------------
->  1 file changed, 1 insertion(+), 12 deletions(-)
+> > In the Linux perf tool, the ring buffer serves not only as a medium for
+> > transferring PMU event data but also as a vital mechanism for hardware
+> > tracing using technologies like Intel PT and Arm CoreSight, etc.
+> >
+> > Consequently, the ring buffer mechanism plays a crucial role by ensuring
+> > high throughput for data transfer between the kernel and user space
+> > while avoiding excessive overhead caused by the ring buffer itself.
+> >
+> > This commit documents the ring buffer mechanism in detail.  It provides
+> > an in-depth explanation of the implementation of both the generic ring
+> > buffer and the AUX ring buffer.  Additionally, it covers how these ring
+> > buffers support various tracing modes and explains the synchronization
+> > with memory barriers.
+> >
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > ---
 > 
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 9ab300b6f131..8dc8f071721c 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -92,23 +92,12 @@ struct sched_atom {
->  	struct task_desc	*wakee;
->  };
->  
-> -#define TASK_STATE_TO_CHAR_STR "RSDTtZXxKWP"
-> +#define TASK_STATE_TO_CHAR_STR "RSDTtXZPI"
+> So this seems like good material from a very brief scan.  I do have to
+> ask, though: why is it not in RST, and why not put it into the
+> user-space API book?
 
-Thinking about this more, this will always be wrong. Changing it just works
-for the kernel you made the change for, but if it is run on another kernel,
-it's broken again.
+This documentation is Perf related topic, so my instinct is to place
+it into the folder tools/perf/Documentation/.
 
-I actually wrote code once that basically just did a:
+Strictly to say, the doc doesn't give formal introduction for the
+user-space APIs.  Given perf ring buffer is a mechanism for exchanging
+data between the kernel and user space, I am open for placing it in the
+folder Documentation/userspace-api/.
 
-	struct trace_seq s;
+I would like get opinions from the perf maintainers if possible, if we
+have agreenment I am glad to convert it to RST format.
 
-	trace_seq_init(&s);
-	tep_print_event(tep, &s, record, "%s", TEP_PRINT_INFO);
-
-then searched s.buffer for "prev_state=%s ", to find the state character.
-
-That's because the kernel should always be up to date (and why I said I
-needed that string in the print_fmt).
-
-As perf has a tep handle, this could be a helper function to extract the
-state if needed, and get rind of relying on the above character array.
-
--- Steve
-
-
->  
->  /* task state bitmask, copied from include/linux/sched.h */
->  #define TASK_RUNNING		0
->  #define TASK_INTERRUPTIBLE	1
->  #define TASK_UNINTERRUPTIBLE	2
-> -#define __TASK_STOPPED		4
-> -#define __TASK_TRACED		8
-> -/* in tsk->exit_state */
-> -#define EXIT_DEAD		16
-> -#define EXIT_ZOMBIE		32
-> -#define EXIT_TRACE		(EXIT_ZOMBIE | EXIT_DEAD)
-> -/* in tsk->state again */
-> -#define TASK_DEAD		64
-> -#define TASK_WAKEKILL		128
-> -#define TASK_WAKING		256
-> -#define TASK_PARKED		512
->  
->  enum thread_state {
->  	THREAD_SLEEPING = 0,
-
+Thanks,
+Leo
