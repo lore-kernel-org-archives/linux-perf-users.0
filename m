@@ -2,138 +2,122 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B0DC04A94
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Aug 2023 08:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB2DC41513
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Aug 2023 08:46:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233291AbjHDIFc (ORCPT
+        id S229581AbjHDIq5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Aug 2023 04:05:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49442 "EHLO
+        Fri, 4 Aug 2023 04:46:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230481AbjHDIFb (ORCPT
+        with ESMTP id S229510AbjHDIq4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Aug 2023 04:05:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBDCD1702;
-        Fri,  4 Aug 2023 01:05:30 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8922361F64;
-        Fri,  4 Aug 2023 08:05:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACD05C433CA;
-        Fri,  4 Aug 2023 08:05:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691136329;
-        bh=ubyMoECeBeUr7s+plEuVMhjJe7aLqEzb0m//FsbiETU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VNK7cIGD+7ZnRIYjoXmILMpbaDeYInXNBKa4o19rVM6uQZ9Na8BfKluJY6o8Dwwjp
-         na7Cfa0qfGhgpEAsYxvrOdZMEmw60EH/HdsCta6FXWGIecWrguZnri0rJnP9gaYJiX
-         1wfTGcjDsQ2wcOmhL7+PZNG0C69+DkWW24DrWzeJikWUF2ID4orY7JWkKq7RcaZneC
-         Wqfm0CVgFmz1kOuNXtzfSKPFwd+hIXDmMJTxz0niQtmWF7NO1gjltK63nV/ICoXMzv
-         HW5PgvwKevQ57biUN++JYm666XhAcpa9YvJpUuMP+BLJqsv4oEEnreT7+jEKG5ThAL
-         /L2jPgMRx8ciQ==
-Date:   Fri, 4 Aug 2023 17:05:26 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf probe: Show correct error about @symbol for uprobe
-Message-Id: <20230804170526.592ac8b2d2e53e37bc513c7f@kernel.org>
-In-Reply-To: <20230803173106.GA15866@redhat.com>
-References: <169055397023.67089.12693645664676964310.stgit@devnote2>
-        <ZMkAq5yx3+EiQNkF@kernel.org>
-        <20230801225618.06cb86992ae30564e5b87554@kernel.org>
-        <20230803173106.GA15866@redhat.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 4 Aug 2023 04:46:56 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDED549E4
+        for <linux-perf-users@vger.kernel.org>; Fri,  4 Aug 2023 01:46:50 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1bb775625e2so13132345ad.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 04 Aug 2023 01:46:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1691138810; x=1691743610;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mbSOiRVGFEbD9EWXxTVJOnnHg8d+rDuu3/77qsuWGAY=;
+        b=mTKhUE+JGonMOrp+U11/tBMX4H8FfKWZQStdZ0kGgD8kXE9e2eR4Lv18vxWCf6mTaP
+         LY4+qiYOxC93FwIpDIrSVCHyuTioULNkFXF2a+QoLha2SqYwyGJSPi5CYA9ytoYbWiPW
+         q69JBWaOPmKfdVCpn9ErI0fOYXnIqNPkOxFFiFr/sQhA0r1mpDJl06kqmUjFk+D3RXdq
+         xNTn6w7VxyaZ+F5V8UiwV/yLIVghhC0I0zlGsdZ44Z4pL7lqIgGSirXCKk/uJHvo0Ly6
+         LZEroLsSRhFsdiS4VKrRWsgDQrjgi0BjTuymSJkIf7vVGJm2XR5KnJlyry9ZjiCIIzPk
+         aTPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691138810; x=1691743610;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mbSOiRVGFEbD9EWXxTVJOnnHg8d+rDuu3/77qsuWGAY=;
+        b=CsvZXAeYmr5AqvTkm4D4msKlqvZmjLiJkR3h3Wi8wQ5YHG1LckdlDiYrAPDoABoqoq
+         I5shbZAA0mbJVN8VjbxjBjo0XE4iJeU080/0yDdqCtbJin6i+FEorxaGnsW6v9ak/tkn
+         KAnenRvwjE5wTQNEfJhvbhGXm5f5m6lulk4ej2p5rf3+FO1B2ECHshBN+XsNdWiQlvfr
+         duQXfmCHuWmm5AMKGKuR28s+RuY1vcc2WnAHR3PTzxrff84Nz0c6rGsgv5tiwZgc+s+a
+         Fp4+e0eCoqVMDZ1tMk6srCsraHWxJhSOfLUbKHrgEKzCMrAVWdOI3l73gMzmIr/msHVY
+         sQ8Q==
+X-Gm-Message-State: AOJu0YwhecmIXgdlxi3fblrYkTEir4tvEg/zv+nca8mwCITMZVggWWsc
+        S4lxioNy0hEL+7XwVGpvzhMhEw==
+X-Google-Smtp-Source: AGHT+IGR60gw8YUIy3tAbLMT54aqn9AAI5w43Ca2RZvHrPtaJgaKasmhKnHdgjtyfY5BfJujf3bf9g==
+X-Received: by 2002:a17:902:d492:b0:1b8:a67f:1c15 with SMTP id c18-20020a170902d49200b001b8a67f1c15mr1607154plg.25.1691138810102;
+        Fri, 04 Aug 2023 01:46:50 -0700 (PDT)
+Received: from leoy-yangtze.lan ([156.59.39.102])
+        by smtp.gmail.com with ESMTPSA id h4-20020a170902f7c400b001b8a3a0c928sm1203861plw.181.2023.08.04.01.46.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Aug 2023 01:46:49 -0700 (PDT)
+Date:   Fri, 4 Aug 2023 16:46:43 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Shuai Xue <xueshuai@linux.alibaba.com>
+Cc:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
+        james.clark@arm.com, mingo@redhat.com,
+        baolin.wang@linux.alibaba.com, acme@kernel.org,
+        mark.rutland@arm.com, jolsa@kernel.org, namhyung@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        nathan@kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] perf record: Update docs regarding the maximum
+ limitation of AUX area
+Message-ID: <20230804084643.GA589820@leoy-yangtze.lan>
+References: <20230804072945.85731-1-xueshuai@linux.alibaba.com>
+ <20230804072945.85731-3-xueshuai@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230804072945.85731-3-xueshuai@linux.alibaba.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 3 Aug 2023 19:31:06 +0200
-Oleg Nesterov <oleg@redhat.com> wrote:
-
-> Hi Masami,
+On Fri, Aug 04, 2023 at 03:29:45PM +0800, Shuai Xue wrote:
+> The maximum AUX area is limited by the page size of the system. Update
+> the documentation to reflect this.
 > 
-> On 08/01, Masami Hiramatsu wrote:
-> >
-> > Oleg, what do you think about accessing symbols in data section from
-> > uprobes? Can we access it from user-land IP-relative address?
+> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+> ---
+>  tools/perf/Documentation/perf-record.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> Sorry, I don't I understand... I don't even understand the context, can't
-> find the whole thread on lore.kernel.org/lkml. Plus I forgot EVERYTHING
-> I knew about tracing/uprobes anyway ;)
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> index 680396c56bd1..b0ee7b63da0e 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -292,6 +292,9 @@ OPTIONS
+>  	Also, by adding a comma, the number of mmap pages for AUX
+>  	area tracing can be specified.
+>  
+> +	The maximum AUX area is limited by the page size of the system. For
+> +	example with 4K pages configured, the maximum is 2GiB.
+> +
 
-Oh, but thank you for replying :)
+This statement is incorrect as it fails to give out prerequisites.
 
+E.g., on Arm64, for 4KiB, 16KiB or 64KiB base page size, different page
+size has different default values for MAX_ORDER.  Furthermore, MAX_ORDER
+can be set by config ARCH_FORCE_MAX_ORDER, thus we cannot arbitrarily
+say the maximum allocation size is 2GiB for 4KiB page size.
+
+Maybe we could consider to use a formula to present the avaliable
+maximum buffer size:
+
+     PAGE_SIZE << MAX_ORDER
+   ( ---------------------- ) * PAGE_SIZE
+      sizeof(page_pointer)
+
+   PAGE_SIZE << MAX_ORDER : the size of maximal physically
+   contiguous allocations, which is the maximum size can be
+   allocated by slab/slub.
+
+Thanks,
+Leo
+
+>  -g::
+>  	Enables call-graph (stack chain/backtrace) recording for both
+>  	kernel space and user space.
+> -- 
+> 2.39.3
 > 
-> but when I look at traceprobe_parse_probe_arg() paths it seems to me that
-> uprobe can fetch the IP-relative address, not sure about the syntax but
-> perhaps something like xxx=+OFFSET(%ip). The question is how tools/perf
-> can calculate this OFFSET. But I am sure you understand this all much
-> better than me.
-
-Yes, var=@+offset is the syntax. That will access the data in same file
-(and maybe in the same section?)
-
-> 
-> > > > --- a/tools/perf/util/probe-event.c
-> > > > +++ b/tools/perf/util/probe-event.c
-> > > > @@ -2800,13 +2800,18 @@ static void warn_uprobe_event_compat(struct probe_trace_event *tev)
-> > > >  	if (!tev->uprobes || tev->nargs == 0 || !buf)
-> > > >  		goto out;
-> > > >
-> > > > -	for (i = 0; i < tev->nargs; i++)
-> > > > -		if (strglobmatch(tev->args[i].value, "[$@+-]*")) {
-> > > > -			pr_warning("Please upgrade your kernel to at least "
-> > > > -				   "3.14 to have access to feature %s\n",
-> > > > +	for (i = 0; i < tev->nargs; i++) {
-> > > > +		if (strchr(tev->args[i].value, '@')) {
-> > > > +			pr_warning("%s accesses a variable by symbol name, but that is not supported for user application probe.\n",
-> > > > +				   tev->args[i].value);
-> > > > +			break;
-> 
-> IIUC without this change @symbol will trigger the
-> 
-> 			/* uprobes don't support symbols */
-> 			if (!(ctx->flags & TPARG_FL_KERNEL)) {
-> 				trace_probe_log_err(ctx->offset, SYM_ON_UPROBE);
-> 				return -EINVAL;
-> 			}
-> 
-> in parse_probe_arg(), right?
-
-Yes, that's right.
-
-> 
-> So FWIW the patch looks fine to me, but as you have mentioned tools/perf
-> could probably (try to) turn @symbol into @+symbol_offset_in_file...
-
-Yeah, that's a good point. Maybe I should try to find the data symbol
-and find the offset. One thing I'm not sure is the address in the data section
-maybe different from the address in the code section, and @+addr seems to
-point the data in the code section because it calculate the offset from
-the ip address.
-
-> 
-> In short, sorry for spam, I can't help ;)
-
-No problem and thanks for your reply.
-
-> 
-> And just in case, I am on PTO till Aug 14, won't be able to read emails
-> till then.
-> 
-> Oleg.
-> 
-
-Thank you!
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
