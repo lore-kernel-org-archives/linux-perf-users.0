@@ -2,115 +2,188 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29742C001DF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Aug 2023 11:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AD4C001DB
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Aug 2023 19:40:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229669AbjHDLrk (ORCPT
+        id S229488AbjHDTkS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Aug 2023 07:47:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46326 "EHLO
+        Fri, 4 Aug 2023 15:40:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229679AbjHDLrj (ORCPT
+        with ESMTP id S229379AbjHDTkR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Aug 2023 07:47:39 -0400
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7784180;
-        Fri,  4 Aug 2023 04:47:16 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0Vp0KRY2_1691149631;
-Received: from 30.240.114.112(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vp0KRY2_1691149631)
-          by smtp.aliyun-inc.com;
-          Fri, 04 Aug 2023 19:47:13 +0800
-Message-ID: <e67bf29d-ba43-f13c-cd93-8ec73b767c3a@linux.alibaba.com>
-Date:   Fri, 4 Aug 2023 19:47:09 +0800
+        Fri, 4 Aug 2023 15:40:17 -0400
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on20713.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe5b::713])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2197E7;
+        Fri,  4 Aug 2023 12:40:14 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gFftNMENjX4aZX/iY8Sq4bOy6Jfe7LSeQx0fK1k9ma5dQ6h+SK+A7G+vO76FmvRFBCVjKig1FeSkecqTUGxxEs1bD3KGE5kARgPa12U69xeLXccB++mwEcLJPc2nTpeg2PPhUCW5bmQW+5ZBK9/UHkQrku1VA5cI8BaggTBMihJE7x6mRG3XGTiB8vtKuJZFE3HivMApRV1lKHK9MI61+gaLdKUWcseQCh3+mFLrr7AGPi/T56h77cFuv5oMQYE7lxIbM2+ROU4RnaFc5Df73Dy/btKa/nYk4aBDom0Nsq7ggHxM0ouo0E/JRko8S2ZZ+xiCuRK9PPNbHqOJHPtZYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CKPAYwcRj8oWsc4yBSmVz2y3WCUJqIx6WmYInC2+76E=;
+ b=bCNpkEAudJMUqmIwhJhZOn3h6Euk01hVCAXsDzAZx5Z772Nvvup/hD0c7ZibUpdMVxba/XMbWJ5AFwZfcfCNTdlpXmwATC2o8vo6XPWXssmQY+7ynZRK+VanNpaQgbeJ4Bn5M48gvCxXZ0/iCNeTZbgOmtvGZnj9F1bNw1cKreduCHXic+0nfAhK2c1jF1EBauCYn0gGzySO0XWImDJ6OTb8Lxvs6W5qP2VvU6Fn11JD1c2pUGjbLNftkeT0Sa6WtHkDJQWBO9LGV3wnJ3JoHGqSxJZFFQ+IWkhcy2epu7PaEr+u8jjUb7bdNcHuIuBoRelfP/wgprXzHFIbaFCnig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CKPAYwcRj8oWsc4yBSmVz2y3WCUJqIx6WmYInC2+76E=;
+ b=qOeo3wifx24lMSd7OGgjleObA5Qh4NliwOdsID8eepEaLoyRlkNSm+fv1Zej6F/nSqr1n0eo5W/lzX+PBxhM24Ip+GO9kU8mtMoy7TkN69Vw17nmI/9L21Uzkwiz4DG51x3sVoE/GDdvCtpM1wlGTwBEjAJT8XiZbHX13NJlcV8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from DM5PR0102MB3590.prod.exchangelabs.com (2603:10b6:4:a4::25) by
+ SA1PR01MB6701.prod.exchangelabs.com (2603:10b6:806:1aa::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6652.21; Fri, 4 Aug 2023 19:40:10 +0000
+Received: from DM5PR0102MB3590.prod.exchangelabs.com
+ ([fe80::4e0f:49b:ee39:f08e]) by DM5PR0102MB3590.prod.exchangelabs.com
+ ([fe80::4e0f:49b:ee39:f08e%6]) with mapi id 15.20.6652.021; Fri, 4 Aug 2023
+ 19:40:10 +0000
+Date:   Fri, 4 Aug 2023 12:40:02 -0700 (PDT)
+From:   Ilkka Koskinen <ilkka@os.amperecomputing.com>
+To:     John Garry <john.g.garry@oracle.com>
+cc:     Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+        Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org,
+        Dave Kleikamp <dave.kleikamp@oracle.com>
+Subject: Re: [PATCH 2/4] perf vendor events arm64: AmpereOne: Mark affected
+ STALL_* events impacted by errata
+In-Reply-To: <b690cae6-ee9c-2c6b-a19e-60088cb8cb19@oracle.com>
+Message-ID: <d3da2a30-9e9-73c3-b1aa-aca508bd259@os.amperecomputing.com>
+References: <20230803211331.140553-1-ilkka@os.amperecomputing.com> <20230803211331.140553-3-ilkka@os.amperecomputing.com> <b690cae6-ee9c-2c6b-a19e-60088cb8cb19@oracle.com>
+Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-ClientProxiedBy: CH0PR04CA0030.namprd04.prod.outlook.com
+ (2603:10b6:610:76::35) To DM5PR0102MB3590.prod.exchangelabs.com
+ (2603:10b6:4:a4::25)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.13.1
-Subject: Re: [PATCH v4 2/2] perf record: Update docs regarding the maximum
- limitation of AUX area
-Content-Language: en-US
-To:     Leo Yan <leo.yan@linaro.org>, James Clark <james.clark@arm.com>
-Cc:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
-        mingo@redhat.com, baolin.wang@linux.alibaba.com, acme@kernel.org,
-        mark.rutland@arm.com, jolsa@kernel.org, namhyung@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        nathan@kernel.org, bpf@vger.kernel.org
-References: <20230804072945.85731-1-xueshuai@linux.alibaba.com>
- <20230804072945.85731-3-xueshuai@linux.alibaba.com>
- <20230804084643.GA589820@leoy-yangtze.lan>
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20230804084643.GA589820@leoy-yangtze.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM5PR0102MB3590:EE_|SA1PR01MB6701:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9d087235-3d9d-4ead-0f42-08db95229d37
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sRXaTJMdU7NHQ+T8+dCsjV4BdCvhJtIZQF0JSlhg98+CEF1Yv4QPjjRB+3Y79IAKTPsyK7FOyTuFapsEEPW5HmPerrZQqrjJrY1ELwWhUm5lUu2OtQygkrtQHFGs6YTRGgAOKaMRBoioTochy0AlO+7JD1fnHraWUY8aaoXTPq5BayniwcCBU7iYyINOAI3jpwqeeZGFKHBmO+kbgx8tI6YRk9WpNR+i73O5iN7Qyuxx1UItmbtHVij5QihPNR8edL19U7wMLJ3E6vwvLnYoXzC3PpSncbZnbmam4GZz1Ip2180enYc5aKKftnN/Uwhl0T9blJPpvSc/RPmL0yMuqLVReBmELScBwLQAJyCb6IIi0oP/nfxUHSqs1kmuJ4XvupXKcO7ExsIM37E19gLmvqUw7DGSDuz5+fu3REHOjZq11CXwZFItCEnXvXQPCVheYNZAIrvBgvtXT+Zg4fUitX+zSFh5qkCBhb+YK+DGdb1NpMJALmwr+Emis70DjfAv7MEcEOfbapm6oEmqMMWoBVRJRpQ7a87BjLNvxLNnFZNKH5qBzkn+YUBZADrflcwT8xxVxmtYcOuqCqX8lu/+nfxURGy1y75DkyAdAo47vcq69jMErGU2njKdrwml32BD
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR0102MB3590.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(136003)(366004)(346002)(39850400004)(396003)(186006)(451199021)(1800799003)(66476007)(66946007)(66556008)(4326008)(6916009)(2906002)(2616005)(38100700002)(38350700002)(53546011)(6506007)(7416002)(83380400001)(54906003)(86362001)(6512007)(26005)(478600001)(6486002)(52116002)(6666004)(8936002)(8676002)(5660300002)(41300700001)(316002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ns88MOQU19HfK0YpdhYyNDiQa3DMfXh/WAAADllcRn9/ycfYZRKbA58QhTv4?=
+ =?us-ascii?Q?eLhGqjl0Hw08EhoapYCNJh3/nL02DzHe6rauZ7FbKEK+DXJN675vm6+PS2Dx?=
+ =?us-ascii?Q?7uOBnrwN1mzWIoKybb7MvgnR+HwV0jwoHJGQDYsQD1ay7ZqQVagQeRLeX5e4?=
+ =?us-ascii?Q?AZd+X53R7zehWnxt0GWdnnYHKIvKw09A64aCrdwMRz3RQdWPFmxm6wGNviAk?=
+ =?us-ascii?Q?hy0IAIaBShrdDAvxg7WReGD8ze/7D9Ch2np7CAQ6pAOZHKCgBKHyQleYuV19?=
+ =?us-ascii?Q?9/w8efqvnF9XyqTj9fmeeFofAMYf6GqkDUmzdRyzqyU0b8LnIWRb4G1n2q8y?=
+ =?us-ascii?Q?MO+0DqWw/yrEO15DUue9DOBEdRp6/3O13EgrvE5j6uNo9MftHoPsApV8RaM5?=
+ =?us-ascii?Q?y4PXbyZz/I5wsJETC+XgtKz0vb5k9Gk8TfZ7SGhs4YufofP79Q2gbJK23bZH?=
+ =?us-ascii?Q?BxdvQoJiD2DJ/TdwoiLoYZ14z7bUIFy5cnfImjAD7qOL1ePIb99H9tYUdSDk?=
+ =?us-ascii?Q?KWr5FMzVcxRWHzIQjMvPQJY46FC4lPWDB00pAA2KGLT/vLjUl81BT/jV295z?=
+ =?us-ascii?Q?eUNeGCoknMrHuXJoEshnVN5djIOxNG8k7Hu6V6Dei+a1IGEiqxT6FxZKLPe9?=
+ =?us-ascii?Q?6QTr+4BfQl6VDUHByeJY+kghcM/iGeuw6DUP2L1qUwu85Zn7oiNzaHPU0/H9?=
+ =?us-ascii?Q?xSicJQntxFP0j6mapb1aFqxkfAs1593mNn1xJQbbFC5HNjHyxGPoK/A6hHSI?=
+ =?us-ascii?Q?wBLhkpSEk7A4b0aGpi8VJBKL2aGMyMjs/YY00hWjjRHdJkmEuf8konY5Fbf4?=
+ =?us-ascii?Q?K7xr0F2Puz+Mw/fkcsh44hj6iMv1i4jUuGOb0R+vo8OJR4xPmnJziPCumdT1?=
+ =?us-ascii?Q?te5H3N/Yw2k4ysAtkckQY1WW88tXbR9w+yQO99vN2WcTi6SfQ3tV9atEmU8G?=
+ =?us-ascii?Q?1z1G0vmiwB/bdlG3JUNCRY1VemtxPcNW5P7LiSWyl11h5GYKZgxnMQi0s2tX?=
+ =?us-ascii?Q?7GHSF1tk1xeLc9vU9k4C/W409aA+KwFlSJviS5qq2WhBwtSSyD2IIE48Ht+Q?=
+ =?us-ascii?Q?6t3rPMh9qpeP6qs4SK4dSxuywiqWto9l6tvY398h8/b1/dZ0toIGpPEjHBl1?=
+ =?us-ascii?Q?zMSA9ZSBTdJIqQ9PAlxnZ68Yk//048ptN12PUv2LcnTI8SpWfJJKcxdODTBF?=
+ =?us-ascii?Q?Vts9iLnqVTPVqqFr+rh1YLt0damukjgV/b3p8xvbC1eXPqBLUuQHL73N/AlG?=
+ =?us-ascii?Q?ODSjLFN711HbS7hH21vV/LoL98HfplHPDbte6a7XQj6G2U79gFZD+65Z6w15?=
+ =?us-ascii?Q?V+m6ITdMpdWqNt5qY3M94+rGN5SP6o2DDD34g5qUAeeBAejkaKKvpuLBv5nV?=
+ =?us-ascii?Q?70qz0E8MAVGpdOfFAHx57UkfIhuthU5rSHDUL7gewyfuNf29n4ptji799v9l?=
+ =?us-ascii?Q?UJ4ohORgLSfy/vJEUarLzyXrA+Ge9j1OTU783MBJHraaFEjifjbecyKdy/ex?=
+ =?us-ascii?Q?ke3/f8U6deXx3Om0pNSINuQlNKA3683k0eSu5YvDfGuyPqYg7pmaffi5Kj4I?=
+ =?us-ascii?Q?ecVvJxIpEZnZed60FiBHlzYKA65iMwA4ZoLFBvHUjfsou9mCcEnRp7s3N2yi?=
+ =?us-ascii?Q?PrRUUUE0RipS8koSg9CYh/I=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d087235-3d9d-4ead-0f42-08db95229d37
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR0102MB3590.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2023 19:40:10.4330
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zUSP9Z7z/+ix2CH01RqfMvBwPjKodVsKKzuzZHOB3d5iNTQhcqNfoUj9SN130JJg7QFLHxG11ZC6BAJX1vYnHiBIsSBS5vOsPhBhGHuY30Z6kByTr5UFmmgpqO0NW+mG
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR01MB6701
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 2023/8/4 16:46, Leo Yan wrote:
-> On Fri, Aug 04, 2023 at 03:29:45PM +0800, Shuai Xue wrote:
->> The maximum AUX area is limited by the page size of the system. Update
->> the documentation to reflect this.
->>
->> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+On Fri, 4 Aug 2023, John Garry wrote:
+
+> On 03/08/2023 22:13, Ilkka Koskinen wrote:
+>> Per errata AC03_CPU_29, STALL_SLOT_FRONTEND, STALL_FRONTEND, and STALL
+>> events are not counting as expected. The follow up metrics patch will
+>> include correct way to calculate the impacted events.
+>> 
+>> Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+>
+> Reviewed-by: John Garry <john.g.garry@oracle.com>
+>
 >> ---
->>  tools/perf/Documentation/perf-record.txt | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
->> index 680396c56bd1..b0ee7b63da0e 100644
->> --- a/tools/perf/Documentation/perf-record.txt
->> +++ b/tools/perf/Documentation/perf-record.txt
->> @@ -292,6 +292,9 @@ OPTIONS
->>  	Also, by adding a comma, the number of mmap pages for AUX
->>  	area tracing can be specified.
->>  
->> +	The maximum AUX area is limited by the page size of the system. For
->> +	example with 4K pages configured, the maximum is 2GiB.
->> +
-> 
-> This statement is incorrect as it fails to give out prerequisites.
-> 
-> E.g., on Arm64, for 4KiB, 16KiB or 64KiB base page size, different page
-> size has different default values for MAX_ORDER.  Furthermore, MAX_ORDER
-> can be set by config ARCH_FORCE_MAX_ORDER, thus we cannot arbitrarily
-> say the maximum allocation size is 2GiB for 4KiB page size.
-> 
+>>   .../arch/arm64/ampere/ampereone/pipeline.json        | 12 +++++++++---
+>>   1 file changed, 9 insertions(+), 3 deletions(-)
+>> 
+>> diff --git 
+>> a/tools/perf/pmu-events/arch/arm64/ampere/ampereone/pipeline.json 
+>> b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/pipeline.json
+>> index f9fae15f7555..711028377f3e 100644
+>> --- a/tools/perf/pmu-events/arch/arm64/ampere/ampereone/pipeline.json
+>> +++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/pipeline.json
+>> @@ -1,18 +1,24 @@
+>>   [
+>>       {
+>> -        "ArchStdEvent": "STALL_FRONTEND"
+>> +        "ArchStdEvent": "STALL_FRONTEND",
+>> +        "Errata": "Errata AC03_CPU_29",
+>> +        "BriefDescription": "Impacted by errata, use metrics instead -"
+>
+> why end with a '-'?
 
-Hi, Leo,
+That's a great question! I wish, I remembered why I did that. Looking at 
+other events with Errata field, they use '.'. I can fix those and submit 
+the patchset again.
 
-You are right, thank you for point this out.
+Cheers, Ilkka
 
-Maybe we could consider to use a formula to present the avaliable
-> maximum buffer size:
-> 
->      PAGE_SIZE << MAX_ORDER
->    ( ---------------------- ) * PAGE_SIZE
->       sizeof(page_pointer)
-> 
->    PAGE_SIZE << MAX_ORDER : the size of maximal physically
->    contiguous allocations, which is the maximum size can be
->    allocated by slab/slub.
-
-I agree that a formula to present that limitation is more accurate. But as
-@James commented in last v3, "Minor nit: I wouldn't expect a Perf tool user
-to know what "MAX_ORDER" is", how about to keep both:
-
-  The maximum AUX area is limited by the maximum physically contiguous memory
-  allocated from slab/slub. It can be calculated with following formula:
-
-
-     PAGE_SIZE << MAX_ORDER
-    ( ---------------------- ) * PAGE_SIZE
-       sizeof(page_pointer)
-
-  For example with 4K pages and MAX_ORDER=10 configured, the maximum AUX area
-  is 2GiB.
-
-Thank you.
-
-Best Regards,
-Shuai
-
-
+>
+>>       },
+>>       {
+>>           "ArchStdEvent": "STALL_BACKEND"
+>>       },
+>>       {
+>> -        "ArchStdEvent": "STALL"
+>> +        "ArchStdEvent": "STALL",
+>> +        "Errata": "Errata AC03_CPU_29",
+>> +        "BriefDescription": "Impacted by errata, use metrics instead -"
+>>       },
+>>       {
+>>           "ArchStdEvent": "STALL_SLOT_BACKEND"
+>>       },
+>>       {
+>> -        "ArchStdEvent": "STALL_SLOT_FRONTEND"
+>> +        "ArchStdEvent": "STALL_SLOT_FRONTEND",
+>> +        "Errata": "Errata AC03_CPU_29",
+>> +        "BriefDescription": "Impacted by errata, use metrics instead -"
+>>       },
+>>       {
+>>           "ArchStdEvent": "STALL_SLOT"
+>
+>
