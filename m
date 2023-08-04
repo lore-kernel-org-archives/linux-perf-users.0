@@ -2,51 +2,51 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED44C04A94
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Aug 2023 07:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC1DC04A94
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Aug 2023 07:08:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233957AbjHDHHT (ORCPT
+        id S233995AbjHDHIY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Aug 2023 03:07:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54118 "EHLO
+        Fri, 4 Aug 2023 03:08:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233975AbjHDHHS (ORCPT
+        with ESMTP id S234004AbjHDHIW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Aug 2023 03:07:18 -0400
+        Fri, 4 Aug 2023 03:08:22 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 275541724;
-        Fri,  4 Aug 2023 00:07:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02F59110;
+        Fri,  4 Aug 2023 00:08:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691132838; x=1722668838;
+  t=1691132901; x=1722668901;
   h=message-id:date:mime-version:subject:to:references:from:
    in-reply-to:content-transfer-encoding;
-  bh=XhBnO7O38nhcyi4NaA+y0fGHzyCETSMIHKwkyQg/vr8=;
-  b=cRuA5PJXKI6Pr7iZMMdwfJFejLcAnfVjN0WEQt5E26CygcUFAkF+p97M
-   tVbmH8yeks6NL0EyIwVF6sAx0B/TJUUuVt2IVKDI8FlyiLnaV/ACC8YTW
-   6Y8IZM3cShO7lmhdkG6gBx6WzqwX8pjEl8uZpJskNErnwYTS4pX1TCmac
-   Cr07Cb0UBpaG+NWegAlVdWMnc3wWhvrioP4uqTI3C1KrJpnSJ2BHe4NQd
-   G4C5tF7slSCHLfFj/VAAu8B/GpXZsvYrrohw45EM0vq+vHBChB0bhnS3O
-   77O7D0Hu28uP9yi2cf9Yp2uzGp4COrLA0xXvuvUZ4BN0f6L4ICkqw3PYS
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="370074613"
+  bh=PeK3rq0/0sJKhXFCcsADtf+QF8bnbSinQiZDECFRWEA=;
+  b=mqYd04hv5srsRsWtMIpnCOp/sB8Ah0z7LjaJQwWMFs10Z16G0AK6R79q
+   UQhPOs5td+1JPtz5TmyzEqrIbOO8AR8mBNCSC1vdJnv8tBzrS7gk+lXuY
+   CAGr6+3H1kJG/DBOsKZm1cdc5CZtt13xBbVMNI5TVrr1AV8nakRCdsG2R
+   Wqhw3IdmMX3M8ozFljsW9szR5QPNWwtkATziQVrhpgbSJ9h8rXPTvAYIP
+   +DX76ONMkYf58nlFHlVx2F3yAz/AsGE1wHoItSXyf/GtrllJQO6SOxKVj
+   KG5CHndCYmqJc+0UAbUY1GhkoyJBY/3Tn3A6togwgHGS9WEZ0F5g6LMPw
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="370074733"
 X-IronPort-AV: E=Sophos;i="6.01,254,1684825200"; 
-   d="scan'208";a="370074613"
+   d="scan'208";a="370074733"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2023 00:07:17 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2023 00:08:21 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="795280483"
+X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="795280730"
 X-IronPort-AV: E=Sophos;i="6.01,254,1684825200"; 
-   d="scan'208";a="795280483"
+   d="scan'208";a="795280730"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.37.129])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2023 00:07:12 -0700
-Message-ID: <f04991f8-7bca-d36f-2c86-6cf03437aa6d@intel.com>
-Date:   Fri, 4 Aug 2023 10:07:09 +0300
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2023 00:08:14 -0700
+Message-ID: <e81628fb-0b6d-ccd4-97a4-3afe09159ec4@intel.com>
+Date:   Fri, 4 Aug 2023 10:08:04 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Firefox/102.0 Thunderbird/102.13.1
-Subject: Re: [PATCH v5 6/7] perf test: Add test case for record sideband
- events
+Subject: Re: [PATCH v5 7/7] perf test: Add perf_event_attr test for record
+ selected CPUs exclude_user
 Content-Language: en-US
 To:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
         mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
@@ -56,11 +56,11 @@ To:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
         anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org
 References: <20230804020741.99806-1-yangjihong1@huawei.com>
- <20230804020741.99806-7-yangjihong1@huawei.com>
+ <20230804020741.99806-8-yangjihong1@huawei.com>
 From:   Adrian Hunter <adrian.hunter@intel.com>
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
  Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230804020741.99806-7-yangjihong1@huawei.com>
+In-Reply-To: <20230804020741.99806-8-yangjihong1@huawei.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -68,73 +68,69 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On 4/08/23 05:07, Yang Jihong wrote:
-> Add a new test case to record sideband events for all CPUs when tracing
-> selected CPUs
+> If all (non-dummy) evsel have exclude_user, system_wide sideband is not
+> needed. Add this test scenario.
 > 
 > Test result:
 > 
->   # ./perf test list 2>&1 | grep 'perf record sideband tests'
->    95: perf record sideband tests
->   # ./perf test 95
->    95: perf record sideband tests                                      : Ok
+>   # ./perf test list 2>&1 | grep 'Setup struct perf_event_attr'
+>    17: Setup struct perf_event_attr
+>   # ./perf test 17 -v
+>    17: Setup struct perf_event_attr                                    :
+>   --- start ---
+>   test child forked, pid 720198
+>   <SNIP>
+>   running './tests/attr/test-record-C0-all-kernel'
+>   <SNIP>
+>   test child finished with 0
+>   ---- end ----
+>   Setup struct perf_event_attr: Ok
 > 
 > Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 
 Tested-by: Adrian Hunter <adrian.hunter@intel.com>
 
 > ---
->  tools/perf/tests/shell/record_sideband.sh | 44 +++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100755 tools/perf/tests/shell/record_sideband.sh
+>  .../perf/tests/attr/test-record-C0-all-kernel | 32 +++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 tools/perf/tests/attr/test-record-C0-all-kernel
 > 
-> diff --git a/tools/perf/tests/shell/record_sideband.sh b/tools/perf/tests/shell/record_sideband.sh
-> new file mode 100755
-> index 000000000000..2ecf00011cb1
+> diff --git a/tools/perf/tests/attr/test-record-C0-all-kernel b/tools/perf/tests/attr/test-record-C0-all-kernel
+> new file mode 100644
+> index 000000000000..2d7549277c1e
 > --- /dev/null
-> +++ b/tools/perf/tests/shell/record_sideband.sh
-> @@ -0,0 +1,44 @@
-> +#!/bin/sh
-> +# perf record sideband tests
-> +# SPDX-License-Identifier: GPL-2.0
+> +++ b/tools/perf/tests/attr/test-record-C0-all-kernel
+> @@ -0,0 +1,32 @@
+> +[config]
+> +command = record
+> +args    = --no-bpf-event --all-kernel -C 0 kill >/dev/null 2>&1
+> +ret     = 1
 > +
-> +set -e
+> +[event:base-record]
+> +cpu=0
 > +
-> +err=0
-> +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+> +# no enable on exec for CPU attached
+> +enable_on_exec=0
 > +
-> +can_cpu_wide()
-> +{
-> +    if ! perf record -o ${perfdata} -BN --no-bpf-event -C $1 true 2>&1 >/dev/null
-> +    then
-> +        echo "record sideband test [Skipped cannot record cpu$1]"
-> +        err=2
-> +    fi
+> +# PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_TIME |
+> +# PERF_SAMPLE_PERIOD | PERF_SAMPLE_IDENTIFIER
+> +# + PERF_SAMPLE_CPU added by -C 0
+> +sample_type=65927
 > +
-> +    rm -f ${perfdata}
-> +    return $err
-> +}
+> +# Dummy event handles mmaps, comm and task.
+> +mmap=0
+> +comm=0
+> +task=0
 > +
-> +test_system_wide_tracking()
-> +{
-> +    # Need CPU 0 and CPU 1
-> +    can_cpu_wide 0 || return 0
-> +    can_cpu_wide 1 || return 0
+> +# exclude_user for all-kernel option
+> +exclude_user=1
 > +
-> +    # Record on CPU 0 a task running on CPU 1
-> +    perf record -BN --no-bpf-event -o ${perfdata} -C 0 -- taskset --cpu-list 1 true
+> +[event:system-wide-dummy]
 > +
-> +    # Should get MMAP events from CPU 1
-> +    mmap_cnt=`perf script -i ${perfdata} --show-mmap-events -C 1 2>/dev/null | grep MMAP | wc -l`
+> +# system_wide is not need for all (non-dummy) events have exclude_user
+> +cpu=0
 > +
-> +    rm -f ${perfdata}
-> +
-> +    if [ ${mmap_cnt} -gt 0 ] ; then
-> +        return 0
-> +    fi
-> +
-> +    echo "Failed to record MMAP events on CPU 1 when tracing CPU 0"
-> +    return 1
-> +}
-> +
-> +test_system_wide_tracking
+> +# exclude_user for all-kernel option
+> +exclude_user=1
+> +exclude_kernel=0
 
