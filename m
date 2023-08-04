@@ -2,87 +2,215 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 030F9C001DF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Aug 2023 22:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B70EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Aug 2023 01:43:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231322AbjHCWwq (ORCPT
+        id S230264AbjHDBnB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Aug 2023 18:52:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41036 "EHLO
+        Thu, 3 Aug 2023 21:43:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230328AbjHCWwp (ORCPT
+        with ESMTP id S232180AbjHDBnA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Aug 2023 18:52:45 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E9D2AC;
-        Thu,  3 Aug 2023 15:52:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3234561ED0;
-        Thu,  3 Aug 2023 22:52:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8B467C433C8;
-        Thu,  3 Aug 2023 22:52:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691103162;
-        bh=OIyXXsm8FvvLOGXhQpy/rnsQg7NCQW7MIKRY8FnIOuw=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=f9fzrFXAC+pVRDuA6p2+3jw1oR1NAgGB7+BwdxiTWNtxcQiLfbYc1IesdRE6owdSZ
-         XONB3GPrLprSwty0sdbU6EJQJIng/5Jv9VPKsXZwYgmuQlRCyMKAKxtGyJfUpO5igS
-         Uyc2TfciB78RLz41EDSgYPcIM4aZ3Z2zwEOqDx3ZTFr/3Gyik8EgXKv0lCUA997h3+
-         Q3YacZ7pjc6f4zxUQjhz/Uezfyw+ScdAhs71bB8SlpNkZznS1UC+Zo+ZJD3skfeTEP
-         3IR5ZcWglc/Yjm3Om2p4h5OjLJtMkHNx1OPdXoLE5kZT5tMemnGLEg90SAUzBWK8ev
-         VchPPzRu7fidg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 723B7C3274D;
-        Thu,  3 Aug 2023 22:52:42 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools fixes for v6.5: 2nd batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20230803214502.19504-1-acme@kernel.org>
-References: <20230803214502.19504-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20230803214502.19504-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.5-2-2023-08-03
-X-PR-Tracked-Commit-Id: 07d2b820fd75b96f550c93503f19c8cfcbc577cf
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c1a515d3c0270628df8ae5f5118ba859b85464a2
-Message-Id: <169110316244.15224.406660124051677766.pr-tracker-bot@kernel.org>
-Date:   Thu, 03 Aug 2023 22:52:42 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        =?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>,
-        Haixin Yu <yuhaixin.yhx@linux.alibaba.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Thu, 3 Aug 2023 21:43:00 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9087B10C7;
+        Thu,  3 Aug 2023 18:42:58 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RH7j12jkZzVjvb;
+        Fri,  4 Aug 2023 09:41:09 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Fri, 4 Aug 2023 09:42:55 +0800
+Subject: Re: [PATCH v4 4/7] perf record: Track sideband events for all CPUs
+ when tracing selected CPUs
+To:     Adrian Hunter <adrian.hunter@intel.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <irogers@google.com>,
+        <kan.liang@linux.intel.com>, <james.clark@arm.com>,
+        <tmricht@linux.ibm.com>, <ak@linux.intel.com>,
+        <anshuman.khandual@arm.com>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>
+References: <20230802074948.136468-1-yangjihong1@huawei.com>
+ <20230802074948.136468-5-yangjihong1@huawei.com>
+ <bbfd8e23-db63-61fc-4f9e-25e993345b57@intel.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <a1eedb1d-ea92-0e66-1013-874c06861682@huawei.com>
+Date:   Fri, 4 Aug 2023 09:42:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
+MIME-Version: 1.0
+In-Reply-To: <bbfd8e23-db63-61fc-4f9e-25e993345b57@intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Thu,  3 Aug 2023 18:45:02 -0300:
+Hello,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.5-2-2023-08-03
+On 2023/8/3 14:28, Adrian Hunter wrote:
+> On 2/08/23 10:49, Yang Jihong wrote:
+>> User space tasks can migrate between CPUs, we need to track side-band
+>> events for all CPUs.
+>>
+>> The specific scenarios are as follows:
+>>
+>>           CPU0                                 CPU1
+>>    perf record -C 0 start
+>>                                taskA starts to be created and executed
+>>                                  -> PERF_RECORD_COMM and PERF_RECORD_MMAP
+>>                                     events only deliver to CPU1
+>>                                ......
+>>                                  |
+>>                            migrate to CPU0
+>>                                  |
+>>    Running on CPU0    <----------/
+>>    ...
+>>
+>>    perf record -C 0 stop
+>>
+>> Now perf samples the PC of taskA. However, perf does not record the
+>> PERF_RECORD_COMM and PERF_RECORD_MMAP events of taskA.
+>> Therefore, the comm and symbols of taskA cannot be parsed.
+>>
+>> The solution is to record sideband events for all CPUs when tracing
+>> selected CPUs. Because this modifies the default behavior, add related
+>> comments to the perf record man page.
+>>
+>> The sys_perf_event_open invoked is as follows:
+>>
+>>    # perf --debug verbose=3 record -e cpu-clock -C 1 true
+>>    <SNIP>
+>>    Opening: cpu-clock
+>>    ------------------------------------------------------------
+>>    perf_event_attr:
+>>      type                             1 (PERF_TYPE_SOFTWARE)
+>>      size                             136
+>>      config                           0 (PERF_COUNT_SW_CPU_CLOCK)
+>>      { sample_period, sample_freq }   4000
+>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>      read_format                      ID|LOST
+>>      disabled                         1
+>>      inherit                          1
+>>      freq                             1
+>>      sample_id_all                    1
+>>      exclude_guest                    1
+>>    ------------------------------------------------------------
+>>    sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
+>>    Opening: dummy:u
+>>    ------------------------------------------------------------
+>>    perf_event_attr:
+>>      type                             1 (PERF_TYPE_SOFTWARE)
+>>      size                             136
+>>      config                           0x9 (PERF_COUNT_SW_DUMMY)
+>>      { sample_period, sample_freq }   1
+>>      sample_type                      IP|TID|TIME|CPU|IDENTIFIER
+>>      read_format                      ID|LOST
+>>      inherit                          1
+>>      exclude_kernel                   1
+>>      exclude_hv                       1
+>>      mmap                             1
+>>      comm                             1
+>>      task                             1
+>>      sample_id_all                    1
+>>      exclude_guest                    1
+>>      mmap2                            1
+>>      comm_exec                        1
+>>      ksymbol                          1
+>>      bpf_event                        1
+>>    ------------------------------------------------------------
+>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
+>>    sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 7
+>>    sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 9
+>>    sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 10
+>>    sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 11
+>>    sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 12
+>>    sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 13
+>>    sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
+>>    <SNIP>
+>>
+>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+>> ---
+>>   tools/perf/Documentation/perf-record.txt |  3 ++
+>>   tools/perf/builtin-record.c              | 45 +++++++++++++++++++++++-
+>>   2 files changed, 47 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+>> index 680396c56bd1..dac53ece51ab 100644
+>> --- a/tools/perf/Documentation/perf-record.txt
+>> +++ b/tools/perf/Documentation/perf-record.txt
+>> @@ -388,6 +388,9 @@ comma-separated list with no space: 0,1. Ranges of CPUs are specified with -: 0-
+>>   In per-thread mode with inheritance mode on (default), samples are captured only when
+>>   the thread executes on the designated CPUs. Default is to monitor all CPUs.
+>>   
+>> +User space tasks can migrate between CPUs, so when tracing selected CPUs,
+>> +a dummy event is created to track sideband for all CPUs.
+>> +
+>>   -B::
+>>   --no-buildid::
+>>   Do not save the build ids of binaries in the perf.data files. This skips
+>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+>> index 3ff9d972225e..468afeaac52d 100644
+>> --- a/tools/perf/builtin-record.c
+>> +++ b/tools/perf/builtin-record.c
+>> @@ -908,10 +908,45 @@ static int record__config_off_cpu(struct record *rec)
+>>   	return off_cpu_prepare(rec->evlist, &rec->opts.target, &rec->opts);
+>>   }
+>>   
+>> +static bool record__tracking_system_wide(struct record *rec)
+>> +{
+>> +	struct record_opts *opts = &rec->opts;
+>> +	struct evlist *evlist = rec->evlist;
+>> +	struct evsel *evsel;
+>> +
+>> +	/*
+>> +	 * If all (non-dummy) evsel have exclude_user,
+>> +	 * system_wide is not needed.
+>> +	 *
+>> +	 * all_kernel and all_user will overwrite exclude_kernel and
+>> +	 * exclude_user of attr in evsel__config(), here need to check
+>> +	 * all the three items.
+>> +	 *
+>> +	 * Sideband system wide if one of the following conditions is met:
+>> +	 *
+>> +	 *   - all_user is set, and there is a non-dummy event
+>> +	 *   - all_user and all_kernel are not set, and there is
+>> +	 *     a non-dummy event without exclude_user
+>> +	 */
+> 
+> Could start with:
+> 
+> 	if (opts->all_kernel)
+> 		return false;
+> 
+>> +	evlist__for_each_entry(evlist, evsel) {
+>> +		if (!evsel__is_dummy_event(evsel)) {
+>> +			if (opts->all_user)
+>> +				return true;
+>> +
+>> +			if (!opts->all_user && !opts->all_kernel &&
+> 
+> !opts->all_user is always true here
+> 
+>> +			    !evsel->core.attr.exclude_user)
+>> +				return true;
+> 
+> So then this could simply be:
+> 
+> 			if (opts->all_user || !evsel->core.attr.exclude_user)
+> 				return true;
+> 
+> 
+Thanks for correction. It will be modified in the next version according 
+to the above.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c1a515d3c0270628df8ae5f5118ba859b85464a2
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Thanks,
+Yang
