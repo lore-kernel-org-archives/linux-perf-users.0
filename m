@@ -2,169 +2,123 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5DFC001DE
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Aug 2023 09:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E267C001DE
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Aug 2023 09:14:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230054AbjHDJEL (ORCPT
+        id S230231AbjHDJOP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Aug 2023 05:04:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54244 "EHLO
+        Fri, 4 Aug 2023 05:14:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229910AbjHDJDl (ORCPT
+        with ESMTP id S229740AbjHDJNs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Aug 2023 05:03:41 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5335A5B84
-        for <linux-perf-users@vger.kernel.org>; Fri,  4 Aug 2023 01:59:56 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-686e29b058cso1386919b3a.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 04 Aug 2023 01:59:56 -0700 (PDT)
+        Fri, 4 Aug 2023 05:13:48 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EF266A7A
+        for <linux-perf-users@vger.kernel.org>; Fri,  4 Aug 2023 02:10:34 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-68783b2e40bso1321609b3a.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 04 Aug 2023 02:10:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1691139596; x=1691744396;
+        d=linaro.org; s=google; t=1691140233; x=1691745033;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HSY+DunDSeQrXcZFO969InECHp7DeoBzrBvcXm0lCi8=;
-        b=Zi879f1Qs8tIrrQbhdLIhIQRAA09qfYZU9EnmpEAs/KuVXdGGdx0kpQJqHsJkKLBz5
-         kYPsfGTVr02eVpS01e7CHYVEEqDDGscLRWy8fOMm0D0aQOCjtQkAyVuhicFKgn1q9BYZ
-         BmttrEZRAzCPpfsChu8Ous37sbvlLT59xdHvQw/Jydbl6xOS0Q2EmG733GnvV5xG8nhY
-         bYAuSlA1nSYxHxEXWyCUbE9Z63qBBBjjMq7i9oOS7ZPWjZqcCa+VIepNIogvymULzBqx
-         janw3G67sE8NBtLs17VEBzMdVZVlMdwg2EZBH96t3HpGvuuruW1sOUh5enABu3km1H0K
-         xmqA==
+        bh=fIgVcI/DAV+syZCzOifgnr1978K5ZgzsoAA4MZTsdr8=;
+        b=gfsJb+lP9iAhBqFb5nmJR6SFpsVvn9z6Qoa51edQoEd6CqKZdUnmyFX+sXP7iaW0Wn
+         aTqtp/hlkscVLQGHgh7Rou5pcYN3z9T1dJ8USTpCMhj1hSAKSiM2x1bFdiu9T90IiwHi
+         a/8ABoUc/gyiOntvYldRd82s9cLH4+JwXGlce7bknV93L0ruhwipZLpRuA3W5AP02aj4
+         0FuH1qObKYzEc0IBBqas8YjEBr1BtU6+dc170qqINX5kJhlP5wggAjyDbggxK3b8gG/7
+         aUebgtHN7zEKzom7WkL45iuRRh//yiq6zJzjR+zg64QQB211uhgWG6Z1oC17YUkIwUBS
+         6AEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691139596; x=1691744396;
+        d=1e100.net; s=20221208; t=1691140233; x=1691745033;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HSY+DunDSeQrXcZFO969InECHp7DeoBzrBvcXm0lCi8=;
-        b=jD5c2zH/ntdA8IT+3rcnP/mqWfRM8lCWkXT0k2OZVRcv9fT4Vz+Pa80oP65d85IYVY
-         zs/LcccArRvLqELvPXHQpK+E57W+94zMO/l8PWudnvBximV4FbkhLOKmDKVpW4MXT/qr
-         tKag8/07zYs6ulqlwbdeftIbrmFCAIbdModudDfZj4hwWqFCyYLNEeWtrO0d3VA2PZrD
-         g6R4R/Avg1itD0GSeTIdTFPfBdF5B++noS3Lks8XHHfUFAUwRYWT79GxA1E2JRBj5WTA
-         osepVi+0NFsejKkepMFZCCHn+yYCaLU736NPPXB8zU+NLofA6ONmfA7XPrRPSoZIVfHg
-         aSbQ==
-X-Gm-Message-State: AOJu0Yz4mXwkr4s4PYZYK+OV3tUdT/Ltcuf7hzKV9ciG1aDp8OyWVXME
-        0hOnzM5iYGRjVJ6GvjoGIag/zg==
-X-Google-Smtp-Source: AGHT+IF8J5czzbKu/eCtN3wCWVVm/XEbDfiwkdfOfPHo/4gwuCITkivYg61k8tLMjbRB+FJn2paCwA==
-X-Received: by 2002:a05:6a21:7185:b0:13d:bf07:7444 with SMTP id wq5-20020a056a21718500b0013dbf077444mr855425pzb.0.1691139595585;
-        Fri, 04 Aug 2023 01:59:55 -0700 (PDT)
+        bh=fIgVcI/DAV+syZCzOifgnr1978K5ZgzsoAA4MZTsdr8=;
+        b=heKkSGq8Xx9VcY6eMLp0mgXAS9XmkUf1rX7WTb0+kMD8Z6MJfwS7JwoaQlWnL8JIX5
+         re+SuUcovXjewgTTj5B0/uWdMz4cUOSni/v48dlFZnm83SCa/MjAxLUDz5cXK7dTrQL9
+         osfOE1+D26jPbUrOhk/8w/fT4Tuwr3UsQvyztdga3X/BtpPksjjylt0Je463N+AGDOzD
+         oDp5fiIxP94h4Oc7P8/X5Q8kfijk7DCfsWv/v1o08akBWhrFNlRN3ef77/ybZzWdlc23
+         sK6SOBzZCXnVrO6WrNhSgbK6S74PoKUeKlCs37gA+0bwuAfRLFGC9E69PXIuzh/VSRIB
+         vc5Q==
+X-Gm-Message-State: AOJu0Yww526OBt/lrP9zA959FTm5ST3jGE82hjXV/88fr+BCGR+1mI/c
+        zSNWerFlX8A3Jj3kELLec/ftXQ==
+X-Google-Smtp-Source: AGHT+IGQTzI2vosQeS/05F0bAnTIYQcz2dkP7E+eYl2x2kSGbAeqf2u97F51YVcj5qeB9WSEEZid6Q==
+X-Received: by 2002:a05:6a20:3d82:b0:12b:1686:3012 with SMTP id s2-20020a056a203d8200b0012b16863012mr986031pzi.3.1691140233508;
+        Fri, 04 Aug 2023 02:10:33 -0700 (PDT)
 Received: from leoy-yangtze.lan ([156.59.39.102])
-        by smtp.gmail.com with ESMTPSA id p25-20020a62ab19000000b006878cc942f1sm1142378pff.54.2023.08.04.01.59.50
+        by smtp.gmail.com with ESMTPSA id x19-20020a170902ea9300b001b1c4d875f5sm1254478plb.44.2023.08.04.02.10.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Aug 2023 01:59:55 -0700 (PDT)
-Date:   Fri, 4 Aug 2023 16:59:47 +0800
+        Fri, 04 Aug 2023 02:10:33 -0700 (PDT)
+Date:   Fri, 4 Aug 2023 17:10:27 +0800
 From:   Leo Yan <leo.yan@linaro.org>
-To:     Shuai Xue <xueshuai@linux.alibaba.com>
-Cc:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
-        james.clark@arm.com, mingo@redhat.com,
-        baolin.wang@linux.alibaba.com, acme@kernel.org,
-        mark.rutland@arm.com, jolsa@kernel.org, namhyung@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        nathan@kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] perf/core: Bail out early if the request AUX area
- is out of bound
-Message-ID: <20230804085947.GB589820@leoy-yangtze.lan>
-References: <20230804072945.85731-1-xueshuai@linux.alibaba.com>
- <20230804072945.85731-2-xueshuai@linux.alibaba.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2] perf doc: Document ring buffer mechanism
+Message-ID: <20230804091027.GC589820@leoy-yangtze.lan>
+References: <20230803035037.1750340-1-leo.yan@linaro.org>
+ <87v8dw6vp1.fsf@meer.lwn.net>
+ <20230803165636.GB1783639@leoy-huanghe.lan>
+ <ZMwTyVKPn0cRewEc@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230804072945.85731-2-xueshuai@linux.alibaba.com>
+In-Reply-To: <ZMwTyVKPn0cRewEc@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 04, 2023 at 03:29:44PM +0800, Shuai Xue wrote:
-> When perf-record with a large AUX area, e.g 4GB, it fails with:
+On Thu, Aug 03, 2023 at 05:53:29PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Aug 04, 2023 at 12:56:36AM +0800, Leo Yan escreveu:
+> > Hi Jon,
+> > 
+> > On Thu, Aug 03, 2023 at 08:34:50AM -0600, Jonathan Corbet wrote:
+> > > Leo Yan <leo.yan@linaro.org> writes:
+> > > 
+> > > > In the Linux perf tool, the ring buffer serves not only as a medium for
+> > > > transferring PMU event data but also as a vital mechanism for hardware
+> > > > tracing using technologies like Intel PT and Arm CoreSight, etc.
+> > > >
+> > > > Consequently, the ring buffer mechanism plays a crucial role by ensuring
+> > > > high throughput for data transfer between the kernel and user space
+> > > > while avoiding excessive overhead caused by the ring buffer itself.
+> > > >
+> > > > This commit documents the ring buffer mechanism in detail.  It provides
+> > > > an in-depth explanation of the implementation of both the generic ring
+> > > > buffer and the AUX ring buffer.  Additionally, it covers how these ring
+> > > > buffers support various tracing modes and explains the synchronization
+> > > > with memory barriers.
+> > > >
+> > > > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > > > ---
+> > > 
+> > > So this seems like good material from a very brief scan.  I do have to
+> > > ask, though: why is it not in RST, and why not put it into the
+> > > user-space API book?
+> > 
+> > This documentation is Perf related topic, so my instinct is to place
+> > it into the folder tools/perf/Documentation/.
+> > 
+> > Strictly to say, the doc doesn't give formal introduction for the
+> > user-space APIs.  Given perf ring buffer is a mechanism for exchanging
+> > data between the kernel and user space, I am open for placing it in the
+> > folder Documentation/userspace-api/.
+> > 
+> > I would like get opinions from the perf maintainers if possible, if we
+> > have agreenment I am glad to convert it to RST format.
 > 
->     #perf record -C 0 -m ,4G -e arm_spe_0// -- sleep 1
->     failed to mmap with 12 (Cannot allocate memory)
-> 
-> and it reveals a WARNING with __alloc_pages():
-> 
-> [   66.595604] ------------[ cut here ]------------
-> [   66.600206] WARNING: CPU: 44 PID: 17573 at mm/page_alloc.c:5568 __alloc_pages+0x1ec/0x248
-> [   66.608375] Modules linked in: ip6table_filter(E) ip6_tables(E) iptable_filter(E) ebtable_nat(E) ebtables(E) aes_ce_blk(E) vfat(E) fat(E) aes_ce_cipher(E) crct10dif_ce(E) ghash_ce(E) sm4_ce_cipher(E) sm4(E) sha2_ce(E) sha256_arm64(E) sha1_ce(E) acpi_ipmi(E) sbsa_gwdt(E) sg(E) ipmi_si(E) ipmi_devintf(E) ipmi_msghandler(E) ip_tables(E) sd_mod(E) ast(E) drm_kms_helper(E) syscopyarea(E) sysfillrect(E) nvme(E) sysimgblt(E) i2c_algo_bit(E) nvme_core(E) drm_shmem_helper(E) ahci(E) t10_pi(E) libahci(E) drm(E) crc64_rocksoft(E) i40e(E) crc64(E) libata(E) i2c_core(E)
-> [   66.657719] CPU: 44 PID: 17573 Comm: perf Kdump: loaded Tainted: G            E      6.3.0-rc4+ #58
-> [   66.666749] Hardware name: Default Default/Default, BIOS 1.2.M1.AL.P.139.00 03/22/2023
-> [   66.674650] pstate: 23400009 (nzCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
-> [   66.681597] pc : __alloc_pages+0x1ec/0x248
-> [   66.685680] lr : __kmalloc_large_node+0xc0/0x1f8
-> [   66.690285] sp : ffff800020523980
-> [   66.693585] pmr_save: 000000e0
-> [   66.696624] x29: ffff800020523980 x28: ffff000832975800 x27: 0000000000000000
-> [   66.703746] x26: 0000000000100000 x25: 0000000000100000 x24: ffff8000083615d0
-> [   66.710866] x23: 0000000000040dc0 x22: ffff000823d6d140 x21: 000000000000000b
-> [   66.717987] x20: 000000000000000b x19: 0000000000000000 x18: 0000000000000030
-> [   66.725108] x17: 0000000000000000 x16: ffff800008f05be8 x15: ffff000823d6d6d0
-> [   66.732229] x14: 0000000000000000 x13: 343373656761705f x12: 726e202c30206574
-> [   66.739350] x11: 00000000ffff7fff x10: 00000000ffff7fff x9 : ffff8000083af570
-> [   66.746471] x8 : 00000000000bffe8 x7 : c0000000ffff7fff x6 : 000000000005fff4
-> [   66.753592] x5 : 0000000000000000 x4 : ffff000823d6d8d8 x3 : 0000000000000000
-> [   66.760713] x2 : 0000000000000000 x1 : 0000000000000001 x0 : 0000000000040dc0
-> [   66.767834] Call trace:
-> [   66.770267]  __alloc_pages+0x1ec/0x248
-> [   66.774003]  __kmalloc_large_node+0xc0/0x1f8
-> [   66.778259]  __kmalloc_node+0x134/0x1e8
-> [   66.782081]  rb_alloc_aux+0xe0/0x298
-> [   66.785643]  perf_mmap+0x440/0x660
-> [   66.789031]  mmap_region+0x308/0x8a8
-> [   66.792593]  do_mmap+0x3c0/0x528
-> [   66.795807]  vm_mmap_pgoff+0xf4/0x1b8
-> [   66.799456]  ksys_mmap_pgoff+0x18c/0x218
-> [   66.803365]  __arm64_sys_mmap+0x38/0x58
-> [   66.807187]  invoke_syscall+0x50/0x128
-> [   66.810922]  el0_svc_common.constprop.0+0x58/0x188
-> [   66.815698]  do_el0_svc+0x34/0x50
-> [   66.818999]  el0_svc+0x34/0x108
-> [   66.822127]  el0t_64_sync_handler+0xb8/0xc0
-> [   66.826296]  el0t_64_sync+0x1a4/0x1a8
-> [   66.829946] ---[ end trace 0000000000000000 ]---
-> 
-> 'rb->aux_pages' allocated by kcalloc() is a pointer array which is used to
-> maintains AUX trace pages. The allocated page for this array is physically
-> contiguous (and virtually contiguous) with an order of 0..MAX_ORDER. If the
-> size of pointer array crosses the limitation set by MAX_ORDER, it reveals a
-> WARNING.
-> 
-> So bail out early with -ENOMEM if the request AUX area is out of bound,
-> e.g.:
-> 
->     #perf record -C 0 -m ,4G -e arm_spe_0// -- sleep 1
->     failed to mmap with 12 (Cannot allocate memory)
-> 
-> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-> ---
->  kernel/events/ring_buffer.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-> index a0433f37b024..c445e927368d 100644
-> --- a/kernel/events/ring_buffer.c
-> +++ b/kernel/events/ring_buffer.c
-> @@ -699,6 +699,9 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
->  		watermark = 0;
->  	}
->  
-> +	/* Can't allocate more than MAX_ORDER */
+> Yeah, I agree with Jon.
 
-The comment is confused.  I'd like to refine it as:
+Okay, I will spin a new patch based on this discussion.
 
-  /*
-   * kcalloc_node() is unable to allocate buffer if the size is larger
-   * than: PAGE_SIZE << MAX_ORDER; directly bail out in this case.
-   */
+Thanks for confirmation.
 
-To be honest, I am not sure if perf core maintainers like this kind
-thing or not.  Please seek their opinion before you move forward.
-
-Thanks,
 Leo
-
-> +	if (get_order((unsigned long)nr_pages * sizeof(void *)) > MAX_ORDER)
-> +		return -ENOMEM;
->  	rb->aux_pages = kcalloc_node(nr_pages, sizeof(void *), GFP_KERNEL,
->  				     node);
->  	if (!rb->aux_pages)
-> -- 
-> 2.39.3
-> 
