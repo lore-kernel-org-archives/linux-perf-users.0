@@ -2,182 +2,209 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6152C001DE
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Aug 2023 05:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700F1C001DE
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Aug 2023 05:10:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232913AbjHDFD2 (ORCPT
+        id S233659AbjHDFJ6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Aug 2023 01:03:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41294 "EHLO
+        Fri, 4 Aug 2023 01:09:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233343AbjHDFCX (ORCPT
+        with ESMTP id S233376AbjHDFHy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Aug 2023 01:02:23 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3C3A49F8
-        for <linux-perf-users@vger.kernel.org>; Thu,  3 Aug 2023 22:01:10 -0700 (PDT)
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37450NYZ017960;
-        Fri, 4 Aug 2023 05:01:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=pp1;
- bh=uz5ytYwwX0TTvJex0osI+8rjzdDDVk58bO2kCoOFohE=;
- b=f3R0DCm6WGByeiiB9VGS2a6E3+F5/GZqvTHqUcLHuk/jZzHD4VS0kjdbPR/uoviBG9DL
- L+mOCDlS5uMn4TdCsxuYX0pZQq9JSMg/VhlJeYWNNjMnU4lzrdCoMQgtLGU/622u118d
- UAhxtqYFtxHWeHyS+OnDZgtC4YC2Cp7vFUBS4ZNMFRWuq+ud0aSe1cq3q5CZhsoLcXB0
- 1R7iFViyXU+gEiAJFb6wAkcQDbPDHFFF8ED9dy5hedI8z4Vc9xcvsHyUpK9470n0Dyvc
- RgQexm9lw9t1YM9cmb7qytTqy4acR+2kLIJ53NzBl2LEKovbVHspRV3UGebGoDdhx4TT Zw== 
+        Fri, 4 Aug 2023 01:07:54 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B757422F
+        for <linux-perf-users@vger.kernel.org>; Thu,  3 Aug 2023 22:06:33 -0700 (PDT)
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37451WGg005647;
+        Fri, 4 Aug 2023 05:06:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=8jWZvA1aGpFjCOBg0jYFrI7oOxrDajEWvp2CUMYv0lQ=;
+ b=ZSogijEOdit3exECMH7E7plcnM2IwT5wwhkRHmN/MXputIwNe6Gw6qzGAuXCpH7HjBS5
+ a6HnLoVhc7tNAJ5DCDgZQYcC5I0gNBy0YQLhGylc/AZTS8eaaf/DabKq76LxS2ETPr7P
+ LAWxtHDLAiCbMZKLHCfYV0HZ8oUEEREibQPZR5XcVu6HBI16dsoRIMYxIn1Xp4j9PIQm
+ vsds+Jzh83jor4uhPnVPRNSDjfXyIt8ts0v7sIfMiIgVZs/eZC9vG/Lg8R/DekHjD3i5
+ 7IJ9az9q83ORGizYKcJeCkOIrIo+67djBeQ2HapLpVC89aHsEigF9+ocm9hlx+uu4mMQ 9A== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s8tt900bg-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s8tth09bu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Aug 2023 05:01:00 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 374510hY021409;
-        Fri, 4 Aug 2023 05:01:00 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s8tt900bc-1
+        Fri, 04 Aug 2023 05:06:27 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 374530vX010341;
+        Fri, 4 Aug 2023 05:05:41 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s8tth074g-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Aug 2023 05:01:00 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3744nBBc015848;
-        Fri, 4 Aug 2023 05:00:59 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3s8kn72rgj-1
+        Fri, 04 Aug 2023 05:05:41 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3744VKbH027825;
+        Fri, 4 Aug 2023 05:05:00 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+        by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3s8kp2tsk8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Aug 2023 05:00:59 +0000
+        Fri, 04 Aug 2023 05:05:00 +0000
 Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37450uGC60096818
+        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37454vvA39780818
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 4 Aug 2023 05:00:56 GMT
+        Fri, 4 Aug 2023 05:04:57 GMT
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 390F62004B;
-        Fri,  4 Aug 2023 05:00:56 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 5011920049;
+        Fri,  4 Aug 2023 05:04:57 +0000 (GMT)
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6CA2F20040;
-        Fri,  4 Aug 2023 05:00:53 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.75.173])
-        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Fri,  4 Aug 2023 05:00:52 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 7AD1D20040;
+        Fri,  4 Aug 2023 05:04:55 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.75.173])
+        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Fri,  4 Aug 2023 05:04:55 +0000 (GMT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.500.231\))
+Subject: Re: [PATCH 1/2] tools/perf/tests: perf all metrics test fails when
+ perf_event access is restricted
 From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
-        namhyung@kernel.org
-Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
-Subject: [PATCH V2 1/2] tools/perf/tests: perf all metrics test fails when perf_event access is restricted
-Date:   Fri,  4 Aug 2023 10:30:46 +0530
-Message-Id: <20230804050047.94240-1-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7chEpdJkpWuxZD2-w89SFBm9CU28MpLA40LV+=GaLJXS1w@mail.gmail.com>
+Date:   Fri, 4 Aug 2023 10:34:43 +0530
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E060270A-E282-4355-B26B-A2DEA7C0A2C6@linux.vnet.ibm.com>
+References: <20230615073803.54481-1-atrajeev@linux.vnet.ibm.com>
+ <AEE7B55C-BA6B-4E0E-A2E9-4E7EE09B4D50@linux.vnet.ibm.com>
+ <CAM9d7chEpdJkpWuxZD2-w89SFBm9CU28MpLA40LV+=GaLJXS1w@mail.gmail.com>
+To:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+X-Mailer: Apple Mail (2.3731.500.231)
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: JrSpfX10BWhY6wC-Nq2YaWKyO6o55NH_
-X-Proofpoint-GUID: NC0ELYwNzgxSxCEd3ajWm5d5gCUjiQ9K
+X-Proofpoint-GUID: c5mB2hctxqzsELpdsILsjGJohoABkovm
+X-Proofpoint-ORIG-GUID: gr4Z35uhCHC1qHUiMmXYRbFCf0OhuXTi
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-08-04_01,2023-08-03_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- phishscore=0 adultscore=0 malwarescore=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 mlxlogscore=999 spamscore=0 bulkscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
- definitions=main-2308040040
+ definitions=2023-08-04_02,2023-08-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
+ phishscore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
+ mlxlogscore=999 malwarescore=0 suspectscore=0 impostorscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2308040045
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Perf all metrics test fails as below when perf_event access
-is restricted.
 
-   ./perf test -v "perf all metrics test"
-   Metric 'Memory_RD_BW_Chip' not printed in:
-   Error:
-   Access to performance monitoring and observability operations is limited.
-   Enforced MAC policy settings (SELinux) can limit access to performance
-   —
-   access to performance monitoring and observability operations for processes
-   without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
-   —
-   test child finished with -1
-   ---- end ----
-   perf all metrics test: FAILED!
 
-The perf all metrics test picks the input events from
-"perf list --raw-dump metrics" and runs "perf stat -M "$m""
-for each of the metrics in the list. It fails here for some
-of the metrics which needs access, since it collects system
-wide resource details/statistics. Fix the testcase to skip
-those metric events. The check is added at two places:
-- When metric is run for workload monitoring
-- when metric is run for system wide.
+> On 05-Jul-2023, at 11:54 PM, Namhyung Kim <namhyung@kernel.org> wrote:
+>=20
+> On Mon, Jul 3, 2023 at 10:04=E2=80=AFPM Athira Rajeev
+> <atrajeev@linux.vnet.ibm.com> wrote:
+>>=20
+>>=20
+>>=20
+>>> On 15-Jun-2023, at 1:08 PM, Athira Rajeev =
+<atrajeev@linux.vnet.ibm.com> wrote:
+>>>=20
+>>> Perf all metrics test fails as below when perf_event access
+>>> is restricted.
+>>>=20
+>>>   ./perf test -v "perf all metrics test"
+>>>   Metric 'Memory_RD_BW_Chip' not printed in:
+>>>   Error:
+>>>   Access to performance monitoring and observability operations is =
+limited.
+>>>   Enforced MAC policy settings (SELinux) can limit access to =
+performance
+>>>   =E2=80=94
+>>>   access to performance monitoring and observability operations for =
+processes
+>>>   without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux =
+capability.
+>>>   =E2=80=94
+>>>   test child finished with -1
+>>>   ---- end ----
+>>>   perf all metrics test: FAILED!
+>=20
+> In my system, it fails like below:
+>=20
+>  $ ./perf test -v 101
+>  101: perf all metrics test                                           =
+:
+>  --- start ---
+>  test child forked, pid 398458
+>  Testing branch_misprediction_ratio
+>  Testing all_remote_links_outbound
+>  Metric 'all_remote_links_outbound' not printed in:
+>  Error:
+>  Invalid event (remote_outbound_data_controller_3:u) in per-thread
+> mode, enable system wide with '-a'.
+>  Testing nps1_die_to_dram
+>  ...
+>=20
+> Thanks,
+> Namhyung
 
-It could happen that some of the metric events are not valid
-in per-thread mode. Example from an x86 system:
 
-    $ ./perf stat -M smi_cycles true
-    Error:
-    Invalid event (msr/smi/u) in per-thread mode, enable system wide with '-a'.
 
-The test fallbacks to system wide if first stage fails.
-But when run with system wide for this metric, it hits the
-issue with access restriction.
+Hi Namhyung,
 
-    $ ./perf stat -M smi_cycles -a sleep 0.1
-    Error:
-    Access to performance monitoring and observability operations is limited.
+I have posted a V2 for this :
+[PATCH V2 1/2] tools/perf/tests: perf all metrics test fails when =
+perf_event access is restricted
+[PATCH V2 2/2] tools/perf/tests: perf all metricgroups test fails when =
+perf_event access is restricted
 
-Similar some events report not supported while running with system wide.
+Please review and test the V2 version, and let me know your feedback.
 
-Example from an x86 system:
+If any other metric fails even with this fix, that would be an event =
+fail I believe and not a test issue.
+But looking for your test results with the V2 patchset
 
-   $ ./perf stat -M tma_info_system_socket_clks -a sleep 0.1
+Thanks
+Athira
+>=20
+>>=20
+>>=20
+>> Hi,
+>>=20
+>> Looking for review comments on this patch.
+>>=20
+>> Thanks
+>>>=20
+>>> The perf all metrics test picks the input events from
+>>> "perf list --raw-dump metrics" and runs "perf stat -M "$m""
+>>> for each of the metrics in the list. It fails here for some
+>>> of the metrics which needs access, since it collects system
+>>> wide resource details/statistics. Fix the testcase to skip
+>>> those metric events.
+>>>=20
+>>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>>> ---
+>>> tools/perf/tests/shell/stat_all_metrics.sh | 4 +++-
+>>> 1 file changed, 3 insertions(+), 1 deletion(-)
+>>>=20
+>>> diff --git a/tools/perf/tests/shell/stat_all_metrics.sh =
+b/tools/perf/tests/shell/stat_all_metrics.sh
+>>> index 54774525e18a..14b96484a359 100755
+>>> --- a/tools/perf/tests/shell/stat_all_metrics.sh
+>>> +++ b/tools/perf/tests/shell/stat_all_metrics.sh
+>>> @@ -6,7 +6,9 @@ err=3D0
+>>> for m in $(perf list --raw-dump metrics); do
+>>>  echo "Testing $m"
+>>>  result=3D$(perf stat -M "$m" true 2>&1)
+>>> -  if [[ "$result" =3D~ ${m:0:50} ]] || [[ "$result" =3D~ "<not =
+supported>" ]]
+>>> +  # Skip if there is no access to perf_events monitoring
+>>> +  # and observability operations
+>>> +  if [[ "$result" =3D~ ${m:0:50} ]] || [[ "$result" =3D~ "<not =
+supported>" ]] || [[ "$result" =3D~ "Access to performance monitoring =
+and observability operations is limited" ]]
+>>>  then
+>>>    continue
+>>>  fi
+>>> --
+>>> 2.31.1
 
-   Performance counter stats for 'system wide':
-
-    <not supported>      cbox_0/event=0x0/u
-
-       0.102633747 seconds time elapsed
-
-Hence the checks for unsupported events and access restrictions is
-added for both cases.
-
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
-Changelog:
-v1 -> v2:
- Added the check for access restriction in workload as
- well as system wide check.
-
- tools/perf/tests/shell/stat_all_metrics.sh | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
-index 54774525e18a..b26420885560 100755
---- a/tools/perf/tests/shell/stat_all_metrics.sh
-+++ b/tools/perf/tests/shell/stat_all_metrics.sh
-@@ -1,18 +1,18 @@
- #!/bin/bash
- # perf all metrics test
- # SPDX-License-Identifier: GPL-2.0
--
- err=0
-+//list="tma_info_system_socket_clks"
- for m in $(perf list --raw-dump metrics); do
-   echo "Testing $m"
-   result=$(perf stat -M "$m" true 2>&1)
--  if [[ "$result" =~ ${m:0:50} ]] || [[ "$result" =~ "<not supported>" ]]
-+  if [[ "$result" =~ ${m:0:50} ]] || [[ "$result" =~ "<not supported>" ]] || [[ "$result" =~ "Access to performance monitoring and observability operations is limited" ]]
-   then
-     continue
-   fi
-   # Failed so try system wide.
-   result=$(perf stat -M "$m" -a sleep 0.01 2>&1)
--  if [[ "$result" =~ ${m:0:50} ]]
-+  if [[ "$result" =~ ${m:0:50} ]] || [[ "$result" =~ "<not supported>" ]] ||  [[ "$result" =~ "Access to performance monitoring and observability operations is limited" ]]
-   then
-     continue
-   fi
--- 
-2.31.1
 
