@@ -2,76 +2,150 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC28C41513
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Aug 2023 03:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A727C001DE
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Aug 2023 05:03:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231228AbjHDDlb (ORCPT
+        id S233480AbjHDFDR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Aug 2023 23:41:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48434 "EHLO
+        Fri, 4 Aug 2023 01:03:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229607AbjHDDl3 (ORCPT
+        with ESMTP id S231761AbjHDFCV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Aug 2023 23:41:29 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9752C449D;
-        Thu,  3 Aug 2023 20:41:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 344D761EFC;
-        Fri,  4 Aug 2023 03:41:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F4045C433C8;
-        Fri,  4 Aug 2023 03:41:25 +0000 (UTC)
-Date:   Thu, 3 Aug 2023 23:41:22 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ze Gao <zegao2021@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Subject: Re: [RFC PATCH v6 1/5] perf sched: sync state char array with the
- kernel
-Message-ID: <20230803234122.19b3d3a4@rorschach.local.home>
-In-Reply-To: <CAD8CoPAFN7Wor+LZVqTwy5krJ15tav6gSKRzGiaegF--Xak3HQ@mail.gmail.com>
-References: <20230803083352.1585-1-zegao@tencent.com>
-        <20230803083352.1585-2-zegao@tencent.com>
-        <20230803111031.056b3446@gandalf.local.home>
-        <CAD8CoPBy4Q1khVyhROMMnS=cfbSZuL0GCuSxMcKLRuTb2qtMjQ@mail.gmail.com>
-        <CAD8CoPA+rWQfEbuPdmRqk3+6Bpocm5oP2d-cku=Kz_-DSfUVjg@mail.gmail.com>
-        <CAD8CoPAFN7Wor+LZVqTwy5krJ15tav6gSKRzGiaegF--Xak3HQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Fri, 4 Aug 2023 01:02:21 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2E1249F2
+        for <linux-perf-users@vger.kernel.org>; Thu,  3 Aug 2023 22:01:10 -0700 (PDT)
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3744jQw3027127;
+        Fri, 4 Aug 2023 05:01:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=1pJRRbC0l4Yn2SJnIQkLf4d4xQmG5UoKmyPA/lII3do=;
+ b=bS9b9+fRqniBnBPglTYTSHqvUIdyAisVBg0BO+RKlloMNyHQG9n6/bSPkZA70Pc2kcCm
+ itwzjfa698sZn1/69+f42/H9lvb3XC0Df7KUd89r6mRMPY+t1jH3fafpuUi3gmagjomU
+ Vu6CszgUfqSxXug4P+bTXhPM9lJ8jRDoE9SQgxy5/V+uoIPal/kxzCi38AogXVfFYw29
+ e9bHWyb8b1bpBDWod+75Q89ciXh8ceZq/QigAZGISEdhpgsqPY9wt8Mg9BhuJFkqgDbk
+ ti2TWMLFXMJcsBDIYIs01GcK7OAxSpWmqQfG/wsloq6cCgYSWZZJRgcAqkrg6b1K3FYK ZA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s8tk3r9fx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Aug 2023 05:01:03 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3744mWhP002496;
+        Fri, 4 Aug 2023 05:01:03 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s8tk3r9fm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Aug 2023 05:01:03 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3744hOrc021566;
+        Fri, 4 Aug 2023 05:01:02 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+        by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3s8kmcas10-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Aug 2023 05:01:02 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37450x2p38142564
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 4 Aug 2023 05:00:59 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5ABC02004F;
+        Fri,  4 Aug 2023 05:00:59 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8E50D20040;
+        Fri,  4 Aug 2023 05:00:56 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.75.173])
+        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Fri,  4 Aug 2023 05:00:56 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
+        namhyung@kernel.org
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Subject: [PATCH V2 2/2] tools/perf/tests: perf all metricgroups test fails when perf_event access is restricted
+Date:   Fri,  4 Aug 2023 10:30:47 +0530
+Message-Id: <20230804050047.94240-2-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20230804050047.94240-1-atrajeev@linux.vnet.ibm.com>
+References: <20230804050047.94240-1-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: MVZc13Ldovncw75cxB8ubx-WHugrHGlJ
+X-Proofpoint-ORIG-GUID: rARAjlyShdjU28zs2OkP2XpR8bvSxQv4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-04_01,2023-08-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=999 malwarescore=0 suspectscore=0 adultscore=0
+ lowpriorityscore=0 bulkscore=0 impostorscore=0 clxscore=1015 phishscore=0
+ mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2308040040
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, 4 Aug 2023 11:19:06 +0800
-Ze Gao <zegao2021@gmail.com> wrote:
+Perf all metricgroups test fails as below when perf_event access
+is restricted.
 
-> I realize this is not perfect as well after second thoughts, since this does not
-> take offline use of perf into consideration.  People might run perf on different
-> machines than where the perf.data gets recorded, in which way what we get
-> from  /sys/kernel/debug/tracing/events/sched/sched_switch/format is likely
-> different from the perf.data.
+    ./perf test -v "perf all metricgroups test"
+    Testing Memory_BW
+    Error:
+    Access to performance monitoring and observability operations is limited.
+    Enforced MAC policy settings (SELinux) can limit access to performance
+    access to performance monitoring and observability operations for processes
+    without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
 
-If perf data files does what trace.dat files do, it should save the
-file formats in the data files. It should not be reading the kernel
-when reading the data file.
+    test child finished with -1
+    ---- end ----
+    perf all metricgroups test: FAILED!
 
-With trace-cmd, you can do: trace-cmd dump --events
+Fix the testcase to skip those metric events which needs perf_event access
+explicitly. The exit code of the testcase is based on return code of
+the perf stat command ( enabled by set -e option ). Hence save the
+exit status in a variable and use that to decide success or fail for the
+testcase.
 
-And it will show you all the formats of the events that it saved in the
-file.
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+Changelog:
+v1 -> v2:
+ Changed the condition to use "echo" and "grep" so it works on
+ Posix shell as well.
 
--- Steve
+ tools/perf/tests/shell/stat_all_metricgroups.sh | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/perf/tests/shell/stat_all_metricgroups.sh
+index cb35e488809a..eaa5e1172294 100755
+--- a/tools/perf/tests/shell/stat_all_metricgroups.sh
++++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
+@@ -2,11 +2,19 @@
+ # perf all metricgroups test
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-set -e
+-
+ for m in $(perf list --raw-dump metricgroups); do
+   echo "Testing $m"
+-  perf stat -M "$m" -a true
++  result=$(perf stat -M "$m" -a true 2>&1)
++  rc=$?
++  # Skip if there is no access to perf_events monitoring
++  # Otherwise exit based on the return code of perf comamnd.
++  if echo "$result" | grep -q "Access to performance monitoring and observability operations is limited";
++  then
++      continue
++  else
++      [ $rc -ne 0 ] && exit $rc
++  fi
++
+ done
+ 
+ exit 0
+-- 
+2.31.1
+
