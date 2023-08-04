@@ -2,63 +2,138 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E83C04A6A
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Aug 2023 07:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B0DC04A94
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Aug 2023 08:05:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234305AbjHDHdr (ORCPT
+        id S233291AbjHDIFc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Aug 2023 03:33:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35162 "EHLO
+        Fri, 4 Aug 2023 04:05:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234363AbjHDHdc (ORCPT
+        with ESMTP id S230481AbjHDIFb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Aug 2023 03:33:32 -0400
-Received: from out199-5.us.a.mail.aliyun.com (out199-5.us.a.mail.aliyun.com [47.90.199.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FCCC59F8;
-        Fri,  4 Aug 2023 00:32:32 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0Vp.c2HC_1691134188;
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vp.c2HC_1691134188)
-          by smtp.aliyun-inc.com;
-          Fri, 04 Aug 2023 15:29:53 +0800
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-To:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
-        james.clark@arm.com, leo.yan@linaro.org
-Cc:     mingo@redhat.com, baolin.wang@linux.alibaba.com, acme@kernel.org,
-        mark.rutland@arm.com, jolsa@kernel.org, namhyung@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        nathan@kernel.org, bpf@vger.kernel.org
-Subject: [PATCH v4 0/2] perf/core: Bail out early if the request AUX area is out of bound
-Date:   Fri,  4 Aug 2023 15:29:43 +0800
-Message-Id: <20230804072945.85731-1-xueshuai@linux.alibaba.com>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 4 Aug 2023 04:05:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBDCD1702;
+        Fri,  4 Aug 2023 01:05:30 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8922361F64;
+        Fri,  4 Aug 2023 08:05:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACD05C433CA;
+        Fri,  4 Aug 2023 08:05:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691136329;
+        bh=ubyMoECeBeUr7s+plEuVMhjJe7aLqEzb0m//FsbiETU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VNK7cIGD+7ZnRIYjoXmILMpbaDeYInXNBKa4o19rVM6uQZ9Na8BfKluJY6o8Dwwjp
+         na7Cfa0qfGhgpEAsYxvrOdZMEmw60EH/HdsCta6FXWGIecWrguZnri0rJnP9gaYJiX
+         1wfTGcjDsQ2wcOmhL7+PZNG0C69+DkWW24DrWzeJikWUF2ID4orY7JWkKq7RcaZneC
+         Wqfm0CVgFmz1kOuNXtzfSKPFwd+hIXDmMJTxz0niQtmWF7NO1gjltK63nV/ICoXMzv
+         HW5PgvwKevQ57biUN++JYm666XhAcpa9YvJpUuMP+BLJqsv4oEEnreT7+jEKG5ThAL
+         /L2jPgMRx8ciQ==
+Date:   Fri, 4 Aug 2023 17:05:26 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf probe: Show correct error about @symbol for uprobe
+Message-Id: <20230804170526.592ac8b2d2e53e37bc513c7f@kernel.org>
+In-Reply-To: <20230803173106.GA15866@redhat.com>
+References: <169055397023.67089.12693645664676964310.stgit@devnote2>
+        <ZMkAq5yx3+EiQNkF@kernel.org>
+        <20230801225618.06cb86992ae30564e5b87554@kernel.org>
+        <20230803173106.GA15866@redhat.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-changes since v3 (per James):
-- change to return with existing value -ENOMEM
-- split doc part to a separate patch since they are going to be merged through
-  separate trees.
+On Thu, 3 Aug 2023 19:31:06 +0200
+Oleg Nesterov <oleg@redhat.com> wrote:
 
-changes since v2:
-- remove unnecessary overflow check (per Peter)
+> Hi Masami,
+> 
+> On 08/01, Masami Hiramatsu wrote:
+> >
+> > Oleg, what do you think about accessing symbols in data section from
+> > uprobes? Can we access it from user-land IP-relative address?
+> 
+> Sorry, I don't I understand... I don't even understand the context, can't
+> find the whole thread on lore.kernel.org/lkml. Plus I forgot EVERYTHING
+> I knew about tracing/uprobes anyway ;)
 
-changes since v1:
-- drop out patch2 because it has been fixed on upstream (Thanks James for reminding)
-- move sanity check into rb_alloc_aux (per Leo)
-- add overflow check (per James)
+Oh, but thank you for replying :)
 
-Shuai Xue (2):
-  perf/core: Bail out early if the request AUX area is out of bound
-  perf record: Update docs regarding the maximum limitation of AUX area
+> 
+> but when I look at traceprobe_parse_probe_arg() paths it seems to me that
+> uprobe can fetch the IP-relative address, not sure about the syntax but
+> perhaps something like xxx=+OFFSET(%ip). The question is how tools/perf
+> can calculate this OFFSET. But I am sure you understand this all much
+> better than me.
 
- kernel/events/ring_buffer.c              | 3 +++
- tools/perf/Documentation/perf-record.txt | 3 +++
- 2 files changed, 6 insertions(+)
+Yes, var=@+offset is the syntax. That will access the data in same file
+(and maybe in the same section?)
+
+> 
+> > > > --- a/tools/perf/util/probe-event.c
+> > > > +++ b/tools/perf/util/probe-event.c
+> > > > @@ -2800,13 +2800,18 @@ static void warn_uprobe_event_compat(struct probe_trace_event *tev)
+> > > >  	if (!tev->uprobes || tev->nargs == 0 || !buf)
+> > > >  		goto out;
+> > > >
+> > > > -	for (i = 0; i < tev->nargs; i++)
+> > > > -		if (strglobmatch(tev->args[i].value, "[$@+-]*")) {
+> > > > -			pr_warning("Please upgrade your kernel to at least "
+> > > > -				   "3.14 to have access to feature %s\n",
+> > > > +	for (i = 0; i < tev->nargs; i++) {
+> > > > +		if (strchr(tev->args[i].value, '@')) {
+> > > > +			pr_warning("%s accesses a variable by symbol name, but that is not supported for user application probe.\n",
+> > > > +				   tev->args[i].value);
+> > > > +			break;
+> 
+> IIUC without this change @symbol will trigger the
+> 
+> 			/* uprobes don't support symbols */
+> 			if (!(ctx->flags & TPARG_FL_KERNEL)) {
+> 				trace_probe_log_err(ctx->offset, SYM_ON_UPROBE);
+> 				return -EINVAL;
+> 			}
+> 
+> in parse_probe_arg(), right?
+
+Yes, that's right.
+
+> 
+> So FWIW the patch looks fine to me, but as you have mentioned tools/perf
+> could probably (try to) turn @symbol into @+symbol_offset_in_file...
+
+Yeah, that's a good point. Maybe I should try to find the data symbol
+and find the offset. One thing I'm not sure is the address in the data section
+maybe different from the address in the code section, and @+addr seems to
+point the data in the code section because it calculate the offset from
+the ip address.
+
+> 
+> In short, sorry for spam, I can't help ;)
+
+No problem and thanks for your reply.
+
+> 
+> And just in case, I am on PTO till Aug 14, won't be able to read emails
+> till then.
+> 
+> Oleg.
+> 
+
+Thank you!
 
 -- 
-2.39.3
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
