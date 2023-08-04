@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AD4C001DB
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Aug 2023 19:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3165C04A6A
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Aug 2023 19:59:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229488AbjHDTkS (ORCPT
+        id S229962AbjHDT74 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Aug 2023 15:40:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56980 "EHLO
+        Fri, 4 Aug 2023 15:59:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229379AbjHDTkR (ORCPT
+        with ESMTP id S229636AbjHDT7z (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Aug 2023 15:40:17 -0400
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on20713.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe5b::713])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2197E7;
-        Fri,  4 Aug 2023 12:40:14 -0700 (PDT)
+        Fri, 4 Aug 2023 15:59:55 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11hn2239.outbound.protection.outlook.com [52.100.173.239])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54CACE70;
+        Fri,  4 Aug 2023 12:59:54 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gFftNMENjX4aZX/iY8Sq4bOy6Jfe7LSeQx0fK1k9ma5dQ6h+SK+A7G+vO76FmvRFBCVjKig1FeSkecqTUGxxEs1bD3KGE5kARgPa12U69xeLXccB++mwEcLJPc2nTpeg2PPhUCW5bmQW+5ZBK9/UHkQrku1VA5cI8BaggTBMihJE7x6mRG3XGTiB8vtKuJZFE3HivMApRV1lKHK9MI61+gaLdKUWcseQCh3+mFLrr7AGPi/T56h77cFuv5oMQYE7lxIbM2+ROU4RnaFc5Df73Dy/btKa/nYk4aBDom0Nsq7ggHxM0ouo0E/JRko8S2ZZ+xiCuRK9PPNbHqOJHPtZYA==
+ b=JCTTdef9NPmeoc/3HzVTagO53GnVS1RVNX4wwZE/5Qhme8Ov1wubjYYiqpqtjysP7qx6WhNlPkX5OROJWYaSNxuaZIEhfgyZ1t2W+Ll3/Zk5oqX8ybMez+u+R2Cody3HD4GJHbJnUz5E0wJcm55YY2ZevJI83etSnUJLvq+DLGWgj1p+uxaiLES+f2TZiONrxH9bpk3Hot8Wrl0Im+LZxYaxCTyl4UO1LXrhHtj3JhGtvhuMxkUf8dt7lP615vUZZ1giswxkN1JzRMgX+NhNAc7siqqctoRd0v4AJA3ktKqajf/YJAX27edMks7vQFB0/vohgTKyMI+WY+pbBCgCgg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CKPAYwcRj8oWsc4yBSmVz2y3WCUJqIx6WmYInC2+76E=;
- b=bCNpkEAudJMUqmIwhJhZOn3h6Euk01hVCAXsDzAZx5Z772Nvvup/hD0c7ZibUpdMVxba/XMbWJ5AFwZfcfCNTdlpXmwATC2o8vo6XPWXssmQY+7ynZRK+VanNpaQgbeJ4Bn5M48gvCxXZ0/iCNeTZbgOmtvGZnj9F1bNw1cKreduCHXic+0nfAhK2c1jF1EBauCYn0gGzySO0XWImDJ6OTb8Lxvs6W5qP2VvU6Fn11JD1c2pUGjbLNftkeT0Sa6WtHkDJQWBO9LGV3wnJ3JoHGqSxJZFFQ+IWkhcy2epu7PaEr+u8jjUb7bdNcHuIuBoRelfP/wgprXzHFIbaFCnig==
+ bh=CBY6+BqwWkOeyRqsgv2LxiSRiR/Nz4wlbM/qBRZ0Vak=;
+ b=SFyW3WBG9qbLIfaKWlZLalrSDqoJyqJAGd07y6ZRwtfhRchksVMW6jPuH0TaIUe7zaBNeiQUTFRv32wRvv/26nAHb4KJy+zWuLEeYLIfdWNEeJ+JSyuvGMXV0W7izdpJrGzLdomvwHHzjUAObNefDkviBp3yr2E7bfxRhcdln3iqGgJVPI2Rz8sqX7ewRoNuY7hT43sMay5BBh2Xj1Pbvi7nytw6xU2harUhJRG4+PuxiygKDVMO0qQcld+BMNHBvHw+FsXKMLWY4N80mnltdIOmqNLSGTc3yvMkdtNseTOgBqRm++q/H9f+WcPZ1pEfgo3yOVJYAjwI2lN3H1s+pQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
  header.from=os.amperecomputing.com; dkim=pass
@@ -30,19 +30,19 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=os.amperecomputing.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CKPAYwcRj8oWsc4yBSmVz2y3WCUJqIx6WmYInC2+76E=;
- b=qOeo3wifx24lMSd7OGgjleObA5Qh4NliwOdsID8eepEaLoyRlkNSm+fv1Zej6F/nSqr1n0eo5W/lzX+PBxhM24Ip+GO9kU8mtMoy7TkN69Vw17nmI/9L21Uzkwiz4DG51x3sVoE/GDdvCtpM1wlGTwBEjAJT8XiZbHX13NJlcV8=
+ bh=CBY6+BqwWkOeyRqsgv2LxiSRiR/Nz4wlbM/qBRZ0Vak=;
+ b=NziYm3XZ6xos0x1ud5PkNhoXOoLJAcuspXfbTviDh5IBM1kX6sAqtqmwmVCl8QRKvokR7sqJCNiQ5gzxB9+lR9ePoDbha5UkbfcK4j3r6cv6WnmsCmUH0grTMHXopLLUIPtSHFc29DZSJjumT3VkW6sGwVuTdj+RA0WWjXjGBcM=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
 Received: from DM5PR0102MB3590.prod.exchangelabs.com (2603:10b6:4:a4::25) by
- SA1PR01MB6701.prod.exchangelabs.com (2603:10b6:806:1aa::20) with Microsoft
+ BN0PR01MB6974.prod.exchangelabs.com (2603:10b6:408:16d::7) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6652.21; Fri, 4 Aug 2023 19:40:10 +0000
+ 15.20.6652.21; Fri, 4 Aug 2023 19:59:48 +0000
 Received: from DM5PR0102MB3590.prod.exchangelabs.com
  ([fe80::4e0f:49b:ee39:f08e]) by DM5PR0102MB3590.prod.exchangelabs.com
  ([fe80::4e0f:49b:ee39:f08e%6]) with mapi id 15.20.6652.021; Fri, 4 Aug 2023
- 19:40:10 +0000
-Date:   Fri, 4 Aug 2023 12:40:02 -0700 (PDT)
+ 19:59:48 +0000
+Date:   Fri, 4 Aug 2023 12:59:41 -0700 (PDT)
 From:   Ilkka Koskinen <ilkka@os.amperecomputing.com>
 To:     John Garry <john.g.garry@oracle.com>
 cc:     Ilkka Koskinen <ilkka@os.amperecomputing.com>,
@@ -62,128 +62,97 @@ cc:     Ilkka Koskinen <ilkka@os.amperecomputing.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org,
         Dave Kleikamp <dave.kleikamp@oracle.com>
-Subject: Re: [PATCH 2/4] perf vendor events arm64: AmpereOne: Mark affected
- STALL_* events impacted by errata
-In-Reply-To: <b690cae6-ee9c-2c6b-a19e-60088cb8cb19@oracle.com>
-Message-ID: <d3da2a30-9e9-73c3-b1aa-aca508bd259@os.amperecomputing.com>
-References: <20230803211331.140553-1-ilkka@os.amperecomputing.com> <20230803211331.140553-3-ilkka@os.amperecomputing.com> <b690cae6-ee9c-2c6b-a19e-60088cb8cb19@oracle.com>
+Subject: Re: [PATCH 3/4] perf vendor events arm64: Add AmpereOne metrics
+In-Reply-To: <ccce391b-da5e-584c-9c56-1de754df8362@oracle.com>
+Message-ID: <e5879193-515b-662c-8597-ca8ea8e3fb4@os.amperecomputing.com>
+References: <20230803211331.140553-1-ilkka@os.amperecomputing.com> <20230803211331.140553-4-ilkka@os.amperecomputing.com> <ccce391b-da5e-584c-9c56-1de754df8362@oracle.com>
 Content-Type: text/plain; charset=US-ASCII; format=flowed
-X-ClientProxiedBy: CH0PR04CA0030.namprd04.prod.outlook.com
- (2603:10b6:610:76::35) To DM5PR0102MB3590.prod.exchangelabs.com
+X-ClientProxiedBy: CH2PR17CA0002.namprd17.prod.outlook.com
+ (2603:10b6:610:53::12) To DM5PR0102MB3590.prod.exchangelabs.com
  (2603:10b6:4:a4::25)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM5PR0102MB3590:EE_|SA1PR01MB6701:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9d087235-3d9d-4ead-0f42-08db95229d37
+X-MS-TrafficTypeDiagnostic: DM5PR0102MB3590:EE_|BN0PR01MB6974:EE_
+X-MS-Office365-Filtering-Correlation-Id: f2c3e84c-0852-40f9-56fa-08db95255b4a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: sRXaTJMdU7NHQ+T8+dCsjV4BdCvhJtIZQF0JSlhg98+CEF1Yv4QPjjRB+3Y79IAKTPsyK7FOyTuFapsEEPW5HmPerrZQqrjJrY1ELwWhUm5lUu2OtQygkrtQHFGs6YTRGgAOKaMRBoioTochy0AlO+7JD1fnHraWUY8aaoXTPq5BayniwcCBU7iYyINOAI3jpwqeeZGFKHBmO+kbgx8tI6YRk9WpNR+i73O5iN7Qyuxx1UItmbtHVij5QihPNR8edL19U7wMLJ3E6vwvLnYoXzC3PpSncbZnbmam4GZz1Ip2180enYc5aKKftnN/Uwhl0T9blJPpvSc/RPmL0yMuqLVReBmELScBwLQAJyCb6IIi0oP/nfxUHSqs1kmuJ4XvupXKcO7ExsIM37E19gLmvqUw7DGSDuz5+fu3REHOjZq11CXwZFItCEnXvXQPCVheYNZAIrvBgvtXT+Zg4fUitX+zSFh5qkCBhb+YK+DGdb1NpMJALmwr+Emis70DjfAv7MEcEOfbapm6oEmqMMWoBVRJRpQ7a87BjLNvxLNnFZNKH5qBzkn+YUBZADrflcwT8xxVxmtYcOuqCqX8lu/+nfxURGy1y75DkyAdAo47vcq69jMErGU2njKdrwml32BD
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR0102MB3590.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(136003)(366004)(346002)(39850400004)(396003)(186006)(451199021)(1800799003)(66476007)(66946007)(66556008)(4326008)(6916009)(2906002)(2616005)(38100700002)(38350700002)(53546011)(6506007)(7416002)(83380400001)(54906003)(86362001)(6512007)(26005)(478600001)(6486002)(52116002)(6666004)(8936002)(8676002)(5660300002)(41300700001)(316002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?p3L1EQUouCeT74RZvykYNTXlMpN67A64DCeYQpiZ+P/E2unZzbm+E0SABbYv?=
+ =?us-ascii?Q?knF3IPWXXuBn1yQX5y45fpZYv0P3USNcvUBOwFDqN6JqAB0dNZCaKDa+b4YY?=
+ =?us-ascii?Q?/mbt5mJscNmIamrxQK/Ct3FOsvf200PstzYaGL6UGM9NQFDKBenOGRe7wnng?=
+ =?us-ascii?Q?A6oj3kMYvID57oFV1sdEdkVYZvmedUCAuOQHkTuFotuny12UR7rhz8Q/Q/cp?=
+ =?us-ascii?Q?4J4JZQbUBMRRUZ7e3v9C0m9t1Q0YjZx3IumdA9ZbN/MrYawkfPE9bV6xKfcb?=
+ =?us-ascii?Q?cqJc0xBW8qe4p+AAwMlp7g6cwNcZj6KznagtdEpJKqqTttHH+EDPSwpV/6te?=
+ =?us-ascii?Q?Y4Rl2AsVTJOzFhJqio6dJ82ATAeU9vXv9tuKG4trhZW4MXgR7I/BreDHsE7V?=
+ =?us-ascii?Q?qsKdOYiRCNMTeDysa02fwn0og8FPInAnz2wlZgbQdXAJ5QMNifcyfnEn9Yyf?=
+ =?us-ascii?Q?ZAkFPdlBDdT55Lizzoc8+nXyRvpAwTS8MBPd2ILjQnipnW7Pase1QsfBJgFf?=
+ =?us-ascii?Q?qDh8HFBZMdZefNZRvzVgO8popJRjgxAryDJUTQvLBq85QfeXEA0Az/N76vJW?=
+ =?us-ascii?Q?mceAO73qnzsCdh0KHy71+uOeyhK5QpCxf/NAXvldSb1snFw2uyrfPdm4CAOK?=
+ =?us-ascii?Q?D2PlNR/NLw7/RYQBwu3uPsqJDaKjSdVpRQMIwxjiKh3Mb66JrUjutqREmQsE?=
+ =?us-ascii?Q?u1HhAqvfKT4qfuW6Jwk/sLCavFzEBbLAqklnRJ1j7DTUkJa62bmoUcrn1eHM?=
+ =?us-ascii?Q?wDTt7f2LLHygzGdWxZHmMRtUnbsEKsw+Yo1aPFmgNXGYyTYwuua3hPNgpkH5?=
+ =?us-ascii?Q?HAZUmOv1nbR/8LapBHww6qnn7VB+vETvQSKzQHjSyYsUeHquRs5XJ4vYEagL?=
+ =?us-ascii?Q?NbYSHyY2Os2FGxLN7GPxCMc17q4jHtMubU5Z+Hc8PAmYuvVf/+/7mj++Mb9d?=
+ =?us-ascii?Q?3poeKUi5ZvqcjKvZ/07J3HUY41kpz2dhVxvz2b61FP8iFpdOCjMhJfiwYl8N?=
+ =?us-ascii?Q?Df/mkCyPFczfCsOe7bMgOBCu1EnlLbq4/4ngctcTj1N87T0=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:5;SRV:;IPV:NLI;SFV:SPM;H:DM5PR0102MB3590.prod.exchangelabs.com;PTR:;CAT:OSPM;SFS:(13230028)(4636009)(39850400004)(366004)(346002)(136003)(376002)(396003)(1800799003)(451199021)(186006)(2906002)(4744005)(52116002)(26005)(38350700002)(38100700002)(2616005)(53546011)(6506007)(7416002)(8676002)(8936002)(5660300002)(4326008)(6916009)(66556008)(66946007)(66476007)(316002)(41300700001)(6486002)(6512007)(6666004)(86362001)(54906003)(478600001)(58440200007);DIR:OUT;SFP:1501;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ns88MOQU19HfK0YpdhYyNDiQa3DMfXh/WAAADllcRn9/ycfYZRKbA58QhTv4?=
- =?us-ascii?Q?eLhGqjl0Hw08EhoapYCNJh3/nL02DzHe6rauZ7FbKEK+DXJN675vm6+PS2Dx?=
- =?us-ascii?Q?7uOBnrwN1mzWIoKybb7MvgnR+HwV0jwoHJGQDYsQD1ay7ZqQVagQeRLeX5e4?=
- =?us-ascii?Q?AZd+X53R7zehWnxt0GWdnnYHKIvKw09A64aCrdwMRz3RQdWPFmxm6wGNviAk?=
- =?us-ascii?Q?hy0IAIaBShrdDAvxg7WReGD8ze/7D9Ch2np7CAQ6pAOZHKCgBKHyQleYuV19?=
- =?us-ascii?Q?9/w8efqvnF9XyqTj9fmeeFofAMYf6GqkDUmzdRyzqyU0b8LnIWRb4G1n2q8y?=
- =?us-ascii?Q?MO+0DqWw/yrEO15DUue9DOBEdRp6/3O13EgrvE5j6uNo9MftHoPsApV8RaM5?=
- =?us-ascii?Q?y4PXbyZz/I5wsJETC+XgtKz0vb5k9Gk8TfZ7SGhs4YufofP79Q2gbJK23bZH?=
- =?us-ascii?Q?BxdvQoJiD2DJ/TdwoiLoYZ14z7bUIFy5cnfImjAD7qOL1ePIb99H9tYUdSDk?=
- =?us-ascii?Q?KWr5FMzVcxRWHzIQjMvPQJY46FC4lPWDB00pAA2KGLT/vLjUl81BT/jV295z?=
- =?us-ascii?Q?eUNeGCoknMrHuXJoEshnVN5djIOxNG8k7Hu6V6Dei+a1IGEiqxT6FxZKLPe9?=
- =?us-ascii?Q?6QTr+4BfQl6VDUHByeJY+kghcM/iGeuw6DUP2L1qUwu85Zn7oiNzaHPU0/H9?=
- =?us-ascii?Q?xSicJQntxFP0j6mapb1aFqxkfAs1593mNn1xJQbbFC5HNjHyxGPoK/A6hHSI?=
- =?us-ascii?Q?wBLhkpSEk7A4b0aGpi8VJBKL2aGMyMjs/YY00hWjjRHdJkmEuf8konY5Fbf4?=
- =?us-ascii?Q?K7xr0F2Puz+Mw/fkcsh44hj6iMv1i4jUuGOb0R+vo8OJR4xPmnJziPCumdT1?=
- =?us-ascii?Q?te5H3N/Yw2k4ysAtkckQY1WW88tXbR9w+yQO99vN2WcTi6SfQ3tV9atEmU8G?=
- =?us-ascii?Q?1z1G0vmiwB/bdlG3JUNCRY1VemtxPcNW5P7LiSWyl11h5GYKZgxnMQi0s2tX?=
- =?us-ascii?Q?7GHSF1tk1xeLc9vU9k4C/W409aA+KwFlSJviS5qq2WhBwtSSyD2IIE48Ht+Q?=
- =?us-ascii?Q?6t3rPMh9qpeP6qs4SK4dSxuywiqWto9l6tvY398h8/b1/dZ0toIGpPEjHBl1?=
- =?us-ascii?Q?zMSA9ZSBTdJIqQ9PAlxnZ68Yk//048ptN12PUv2LcnTI8SpWfJJKcxdODTBF?=
- =?us-ascii?Q?Vts9iLnqVTPVqqFr+rh1YLt0damukjgV/b3p8xvbC1eXPqBLUuQHL73N/AlG?=
- =?us-ascii?Q?ODSjLFN711HbS7hH21vV/LoL98HfplHPDbte6a7XQj6G2U79gFZD+65Z6w15?=
- =?us-ascii?Q?V+m6ITdMpdWqNt5qY3M94+rGN5SP6o2DDD34g5qUAeeBAejkaKKvpuLBv5nV?=
- =?us-ascii?Q?70qz0E8MAVGpdOfFAHx57UkfIhuthU5rSHDUL7gewyfuNf29n4ptji799v9l?=
- =?us-ascii?Q?UJ4ohORgLSfy/vJEUarLzyXrA+Ge9j1OTU783MBJHraaFEjifjbecyKdy/ex?=
- =?us-ascii?Q?ke3/f8U6deXx3Om0pNSINuQlNKA3683k0eSu5YvDfGuyPqYg7pmaffi5Kj4I?=
- =?us-ascii?Q?ecVvJxIpEZnZed60FiBHlzYKA65iMwA4ZoLFBvHUjfsou9mCcEnRp7s3N2yi?=
- =?us-ascii?Q?PrRUUUE0RipS8koSg9CYh/I=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?VWto5GRl3Oku9mVUGwXVaQH+mzpUO3gYho8D3w7wuQpmO/bmydQVE4XWALTS?=
+ =?us-ascii?Q?Ttd9DS8W9cewo3ysKLh3MaV01yt46YtMRWxmyXmIhzKsFMP1MUSgQ5AvUgxC?=
+ =?us-ascii?Q?ADJsOHVOngOvIFyIKJLDr4eSM26F0eF4DaFm4N7zyv5bfpccn9pvXWQMx1a9?=
+ =?us-ascii?Q?WF/EeAF0RFD5r3JVpqmjycFmBPQ0IjEY06BewRlgN2LfELiPIbIEWTVsjP/o?=
+ =?us-ascii?Q?BQrCaHvLw8zMmXUxbNcZW49qbMYcygWFTbTYZhCVacU4VWDQqrbZ3neTOFBR?=
+ =?us-ascii?Q?4jUNiM52Z0p1hLQxN4pUp7SOEk+5aK8/0y+bJ2k2z73k2yMEmlyOoonjp8FI?=
+ =?us-ascii?Q?KKS/78RVV8l8EStcGfezzuoOQ5R08eSKLiL3mRbNmnmY+s9iCyWt1Ktj15dZ?=
+ =?us-ascii?Q?EvwdfERdf8VDHGgnZIGMag3qHgI7SC6xXPHSKmSHbwV6peDXnf899pJ/EFSz?=
+ =?us-ascii?Q?7C8gEupHLSDI4S4o5NAul81Su5uOMOxHJnEQgqScs4gIOu78EEYrTKEx0csf?=
+ =?us-ascii?Q?XJ9eN9EgYvS6QNUPfkT2/URclw5T1tSFI3g+2gMwp40A1PoXhB8dc7iiGBs/?=
+ =?us-ascii?Q?rLN3ptrzEIPnBQUubNeiMW0kq8gEyqMKzT9aBEA2Q9E3zLq2HLAPOaKfKIvf?=
+ =?us-ascii?Q?YP5iT6wnzJ26RlzGRUoxIGJwvKORN+t0nSTuxAY3YLtnK7Un3Xf2X5+Vu6QQ?=
+ =?us-ascii?Q?RXpEsiz+TRW4VOQtBnKhilyxFOWdotE+YCSmpHF+7H2qQj8BamTBRWVFAm7l?=
+ =?us-ascii?Q?YbGhkDLW5HXC8lUbZMjWz0GxQQGaKNfXbkZP+58740fzFMOwCLAJy3mJBc6r?=
+ =?us-ascii?Q?FKrm1r3Mr7gevoJHz7KaN6oYdWOd+8iYU+EQFxdnZf3IIbbJ1O+7Ky6SQHa1?=
+ =?us-ascii?Q?gCaFNDElbzTTMpGqJ8fLy8S7+X50Hy1vBjDGYyVoDxwTTL4J97g1KbR8wxlL?=
+ =?us-ascii?Q?WKsPYh3FEjpwopJWLF090++BRg1fckf0uht54/Bca6CybzTQI947OdikcNjK?=
+ =?us-ascii?Q?kse5MiLjCYJBXyBvmkwzmGnNIY8Zh618QouDqWwyIcNltWFjzrJvMmaDcpNI?=
+ =?us-ascii?Q?SF7BdtBZ+L70b/FNmBuviyzfAQBZVWxKsfHc1Z2K9d7O3pwsjwuk/DRQ6Tme?=
+ =?us-ascii?Q?+NVLWcCpoP5LrU9RVb4JNOnHv3T8S34Ga8ZGyI48SlQnaN/mAeQvgUIu3ze7?=
+ =?us-ascii?Q?Fy22nlibMu3CTLWGK8gNb+4AaMrYzCrNo0Q/FhaTdUDoj0HlP3PSiOx3R+Y5?=
+ =?us-ascii?Q?4s4D4ofj7ORhzmE5Ssp6Z/KSdTrwCGtcnUPgeq2FSac20NbzT3tIPZbMMRAg?=
+ =?us-ascii?Q?vPlSDDuf9LY0ilf92Sku2ruEIDfxq3tpr+DTagTGuBnikmFc0COmLPJSWSm1?=
+ =?us-ascii?Q?65HGX4tsDUreDiT3JhivNdqbwifMVEn+Vo7alGOXF/bykNp/Q+qrEtxKutEd?=
+ =?us-ascii?Q?CQkxG/agjLd+0j6uJ8IXiU4CWtBf8YiiRZOruQVWHXsa9N0mjit160pDupX9?=
+ =?us-ascii?Q?oCoR2SO2trDUV6MyWuKSbtPpaF4BG1t9C4mX+HBwN7FLTXayN2XoyOpFdNkB?=
+ =?us-ascii?Q?3p0fPwspchtyXxZZToBR0epnhLAm6e1AHLlUI/+K326SGpqywMXmwVrztmIl?=
+ =?us-ascii?Q?i1G+pYxTgoUXlhbOpsIJQF8=3D?=
 X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9d087235-3d9d-4ead-0f42-08db95229d37
+X-MS-Exchange-CrossTenant-Network-Message-Id: f2c3e84c-0852-40f9-56fa-08db95255b4a
 X-MS-Exchange-CrossTenant-AuthSource: DM5PR0102MB3590.prod.exchangelabs.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2023 19:40:10.4330
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2023 19:59:48.3886
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zUSP9Z7z/+ix2CH01RqfMvBwPjKodVsKKzuzZHOB3d5iNTQhcqNfoUj9SN130JJg7QFLHxG11ZC6BAJX1vYnHiBIsSBS5vOsPhBhGHuY30Z6kByTr5UFmmgpqO0NW+mG
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR01MB6701
+X-MS-Exchange-CrossTenant-UserPrincipalName: +RpQhzloDVG4IpCxD8ntWI1oTFkNTnl9Zz/KDiLGyoXfHGXY4ibIor6skHl0suOLcrIztB2q1q5qWVRSEfk3imD43q8RiZse2pYMq9mscGGna2MeQ0SMXcWpldd5tC14
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR01MB6974
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
+Hi John
 
 On Fri, 4 Aug 2023, John Garry wrote:
-
 > On 03/08/2023 22:13, Ilkka Koskinen wrote:
->> Per errata AC03_CPU_29, STALL_SLOT_FRONTEND, STALL_FRONTEND, and STALL
->> events are not counting as expected. The follow up metrics patch will
->> include correct way to calculate the impacted events.
->> 
->> Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+>> This patch adds AmpereOne metrics. The metrics also work around
+>> the issue related to some of the events.
 >
-> Reviewed-by: John Garry <john.g.garry@oracle.com>
->
->> ---
->>   .../arch/arm64/ampere/ampereone/pipeline.json        | 12 +++++++++---
->>   1 file changed, 9 insertions(+), 3 deletions(-)
->> 
->> diff --git 
->> a/tools/perf/pmu-events/arch/arm64/ampere/ampereone/pipeline.json 
->> b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/pipeline.json
->> index f9fae15f7555..711028377f3e 100644
->> --- a/tools/perf/pmu-events/arch/arm64/ampere/ampereone/pipeline.json
->> +++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/pipeline.json
->> @@ -1,18 +1,24 @@
->>   [
->>       {
->> -        "ArchStdEvent": "STALL_FRONTEND"
->> +        "ArchStdEvent": "STALL_FRONTEND",
->> +        "Errata": "Errata AC03_CPU_29",
->> +        "BriefDescription": "Impacted by errata, use metrics instead -"
->
-> why end with a '-'?
+> Just curious, are these events/metrics described in some publically-available 
+> document?
 
-That's a great question! I wish, I remembered why I did that. Looking at 
-other events with Errata field, they use '.'. I can fix those and submit 
-the patchset again.
+I quickly checked that and there are a spreadsheet and a document 
+available, which list the supported PMUs, their events and metrics in the 
+customer connect website but that requires registering.
 
 Cheers, Ilkka
-
->
->>       },
->>       {
->>           "ArchStdEvent": "STALL_BACKEND"
->>       },
->>       {
->> -        "ArchStdEvent": "STALL"
->> +        "ArchStdEvent": "STALL",
->> +        "Errata": "Errata AC03_CPU_29",
->> +        "BriefDescription": "Impacted by errata, use metrics instead -"
->>       },
->>       {
->>           "ArchStdEvent": "STALL_SLOT_BACKEND"
->>       },
->>       {
->> -        "ArchStdEvent": "STALL_SLOT_FRONTEND"
->> +        "ArchStdEvent": "STALL_SLOT_FRONTEND",
->> +        "Errata": "Errata AC03_CPU_29",
->> +        "BriefDescription": "Impacted by errata, use metrics instead -"
->>       },
->>       {
->>           "ArchStdEvent": "STALL_SLOT"
->
->
