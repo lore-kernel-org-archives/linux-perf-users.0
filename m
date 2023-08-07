@@ -2,34 +2,53 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C54C001B0
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 10:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9974EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 10:48:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231360AbjHGKle (ORCPT
+        id S229785AbjHGKsp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Aug 2023 06:41:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57820 "EHLO
+        Mon, 7 Aug 2023 06:48:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231337AbjHGKld (ORCPT
+        with ESMTP id S229934AbjHGKso (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Aug 2023 06:41:33 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1CAC61701;
-        Mon,  7 Aug 2023 03:41:32 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65E681FB;
-        Mon,  7 Aug 2023 03:42:14 -0700 (PDT)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.32.139])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 875743F59C;
-        Mon,  7 Aug 2023 03:41:27 -0700 (PDT)
-Date:   Mon, 7 Aug 2023 11:41:24 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Mon, 7 Aug 2023 06:48:44 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FC4419B0;
+        Mon,  7 Aug 2023 03:47:54 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A6D16617A0;
+        Mon,  7 Aug 2023 10:47:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3C07C433C7;
+        Mon,  7 Aug 2023 10:47:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691405227;
+        bh=UAackwL7UM7HgpYl/6xaBi50e0epZnNRDwJYOlZupq4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XTR4HktOiAPHWP3h5fhk2wD4UGXcszx/1wmiz0cTUw4hgJdMG/oBFXfBL5g8PRXDm
+         yLyTKTnw9g7BoWrTvMncRJn8LkXHzRuxipnZVjx0vFvcXrqT4eR86TG5LTl5tNbObo
+         xJQ/FGp3frhFh6/f8dqgOoKdt8ON2EbmmdwfHh1i08coEHUQBuFyz/x83TcE1yqtjt
+         7TqWEYZDHjUKH3kW5qO6/n6uSTXpZqFvYnjjmhqi5LD4LAJSCsEkKcRIcR2CCWQAgo
+         Gs1ws/3JxfY+LKKLeFt9C8F81JN/6L0Q0raPKMl4v1iHyjfJxQnAsOOrha9B/6u7Tz
+         9Y1H3yabnBsiw==
+Received: from disco-boy.misterjones.org ([217.182.43.188] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1qSxlQ-002nFK-Gz;
+        Mon, 07 Aug 2023 11:47:04 +0100
+MIME-Version: 1.0
+Date:   Mon, 07 Aug 2023 11:47:04 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
         Sumit Garg <sumit.garg@linaro.org>,
         Daniel Thompson <daniel.thompson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
         linux-perf-users@vger.kernel.org, ito-yuichi@fujitsu.com,
         Chen-Yu Tsai <wens@csie.org>, Ard Biesheuvel <ardb@kernel.org>,
         Stephen Boyd <swboyd@chromium.org>,
@@ -40,80 +59,59 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Masayoshi Mizuma <msys.mizuma@gmail.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Ben Dooks <ben-linux@fluff.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Valentin Schneider <vschneid@redhat.com>,
         Wei Li <liwei391@huawei.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 0/7] arm64: Add debug IPI for backtraces / kgdb; try
- to use NMI for it
-Message-ID: <ZNDKVP2m-iiZCz3v@FVFF77S0Q05N.cambridge.arm.com>
+Subject: Re: [PATCH v9 7/7] arm64: kgdb: Roundup cpus using the debug IPI
+In-Reply-To: <ZNDHZLGds0DTN6zg@FVFF77S0Q05N.cambridge.arm.com>
 References: <20230601213440.2488667-1-dianders@chromium.org>
- <CAD=FV=V2fFqwg3f3KS29+AkggHFDbyYvfAb12DrDn_PF8+bJjA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=V2fFqwg3f3KS29+AkggHFDbyYvfAb12DrDn_PF8+bJjA@mail.gmail.com>
+ <20230601143109.v9.7.I2ef26d1b3bfbed2d10a281942b0da7d9854de05e@changeid>
+ <ZNDHZLGds0DTN6zg@FVFF77S0Q05N.cambridge.arm.com>
+User-Agent: Roundcube Webmail/1.4.13
+Message-ID: <a030019c7c5887d54b97054ed7d9af12@kernel.org>
+X-Sender: maz@kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 217.182.43.188
+X-SA-Exim-Rcpt-To: mark.rutland@arm.com, dianders@chromium.org, catalin.marinas@arm.com, will@kernel.org, sumit.garg@linaro.org, daniel.thompson@linaro.org, linux-perf-users@vger.kernel.org, ito-yuichi@fujitsu.com, wens@csie.org, ardb@kernel.org, swboyd@chromium.org, peterz@infradead.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kgdb-bugreport@lists.sourceforge.net, msys.mizuma@gmail.com, rafael.j.wysocki@intel.com, lecopzer.chen@mediatek.com, liwei391@huawei.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Doug,
-
-Apologies for the delay.
-
-On Mon, Jul 24, 2023 at 08:55:44AM -0700, Doug Anderson wrote:
-> On Thu, Jun 1, 2023 at 2:37 PM Douglas Anderson <dianders@chromium.org> wrote:
-> I'm looking for some ideas on what to do to move this patch series
-> forward. Thanks to Daniel, the kgdb patch is now in Linus's tree which
-> hopefully makes this simpler to land. I guess there is still the
-> irqchip dependency that will need to be sorted out, though...
+On 2023-08-07 11:28, Mark Rutland wrote:
+> On Thu, Jun 01, 2023 at 02:31:51PM -0700, Douglas Anderson wrote:
+>> From: Sumit Garg <sumit.garg@linaro.org>
+>> 
+>> Let's use the debug IPI for rounding up CPUs in kgdb. When the debug
+>> IPI is backed by an NMI (or pseudo NMI) then this will let us debug
+>> even hard locked CPUs. When the debug IPI isn't backed by an NMI then
+>> this won't really have any huge benefit but it will still work.
+>> 
+>> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+>> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>> ---
+>> 
+>> Changes in v9:
+>> - Remove fallback for when debug IPI isn't available.
+>> - Renamed "NMI IPI" to "debug IPI" since it might not be backed by 
+>> NMI.
+>> 
+>>  arch/arm64/kernel/ipi_debug.c |  5 +++++
+>>  arch/arm64/kernel/kgdb.c      | 14 ++++++++++++++
+>>  2 files changed, 19 insertions(+)
 > 
-> Even if folks aren't in agreement about whether this is ready to be
-> enabled in production, I don't think anything here is super
-> objectionable or controversial, is it? Can we land it? If you feel
-> like it needs extra review, would it help if I tried to drum up some
-> extra people to provide review feedback?
+> This looks fine to me, but I'd feel a bit happier if we had separate 
+> SGIs for
+> the backtrace and the KGDB callback as they're logically unrelated.
 
-Ignoring the soundness issues I mentioned before (which I'm slowly chipping
-away at, and you're likely lucky enough to avoid in practice)...
+Well, we're a bit stuck here.
 
-Having looked over the series, I think the GICv3 bit isn't quite right, but is
-easy enough to fix. I've commented on the patch with what I think we should
-have there.
+We have exactly *one* spare SGI with GICv3, as we lose 8 of them
+to the secure side. One possibility would be to mux some of the
+lesser used IPIs onto two SGIs (one with standard priority, and
+one with NMI priority).
 
-The only major thing otherwise from my PoV is the structure of the debug IPI
-framework. I'm not keen on that being a separate body of code and I think it
-should live in smp.c along with the other IPIs. I'd also strongly prefer if we
-could have separate IPI_CPU_BACKTRACE and IPI_CPU_KGDB IPIs, and I think we can
-do that either by unifying IPI_CPU_STOP && IPI_CPU_CRASH_STOP or by reclaiming
-IPI_WAKEUP by reusing a different IPI for the parking protocol (e.g.
-IPI_RESCHEDULE).
-
-I think it'd be nice if the series could enable NMIs for backtrace and the
-CPU_{,CRASH_}STOP cases, with KGDB being the bonus atop. That way it'd be
-clearly beneficial for anyone trying to debug lockups even if they're not a
-KGDB user.
-
-> Also: in case it's interesting to anyone, I've been doing benchmarks
-> on sc7180-trogdor devices in preparation for enabling this. On that
-> platform, I did manage to see about 4% reduction in a set of hackbench
-> numbers when fully enabling pseudo-NMI. However, when I instead ran
-> Speedometer 2.1 I saw no difference. See:
-> 
-> https://issuetracker.google.com/issues/197061987
-
-Thanks for the pointer!
-
-I know that there are a couple of things that we could do to slightly improve
-local_irq_*() when using pNMIs, though I suspect that the bulk of the cost
-there will come from the necessary synchronization.
-
-Thanks,
-Mark.
+         M.
+-- 
+Jazz is not dead. It just smells funny...
