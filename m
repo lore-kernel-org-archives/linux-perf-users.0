@@ -2,24 +2,24 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C23BEC41513
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 07:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7210AC04A94
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 07:51:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230367AbjHGHvm (ORCPT
+        id S230078AbjHGHvn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Aug 2023 03:51:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45514 "EHLO
+        Mon, 7 Aug 2023 03:51:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229733AbjHGHvl (ORCPT
+        with ESMTP id S230449AbjHGHvm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Aug 2023 03:51:41 -0400
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60CF210F4;
-        Mon,  7 Aug 2023 00:51:38 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VpC-01._1691394688;
-Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VpC-01._1691394688)
+        Mon, 7 Aug 2023 03:51:42 -0400
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBFF71701;
+        Mon,  7 Aug 2023 00:51:40 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R311e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VpC-03f_1691394695;
+Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VpC-03f_1691394695)
           by smtp.aliyun-inc.com;
-          Mon, 07 Aug 2023 15:51:34 +0800
+          Mon, 07 Aug 2023 15:51:36 +0800
 From:   Jing Zhang <renyu.zj@linux.alibaba.com>
 To:     John Garry <john.g.garry@oracle.com>,
         Ian Rogers <irogers@google.com>
@@ -39,42 +39,45 @@ Cc:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
         Zhuo Song <zhuo.song@linux.alibaba.com>,
         Jing Zhang <renyu.zj@linux.alibaba.com>,
         Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: [PATCH v6 0/7] Add aliases and metrics for Arm CMN
-Date:   Mon,  7 Aug 2023 15:51:18 +0800
-Message-Id: <1691394685-61240-1-git-send-email-renyu.zj@linux.alibaba.com>
+Subject: [PATCH v6 2/7] perf metric: "Compat" supports matching multiple identifiers
+Date:   Mon,  7 Aug 2023 15:51:20 +0800
+Message-Id: <1691394685-61240-3-git-send-email-renyu.zj@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1691394685-61240-1-git-send-email-renyu.zj@linux.alibaba.com>
+References: <1691394685-61240-1-git-send-email-renyu.zj@linux.alibaba.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Changes since v5:
-- Split the first patch out into 1st pmu.c change and 2nd metricgroup.c
-  change.
-- Change order to check alias and then identifier.
-- Fix matching_pmu.
-- Add event documentation links.
+The jevent "Compat" is used for uncore PMU alias or metric definitions.
 
-Jing Zhang (7):
-  perf pmu: "Compat" supports matching multiple identifiers
-  perf metric: "Compat" supports matching multiple identifiers
-  perf jevents: Support more event fields
-  perf test: Fix matching_pmu
-  perf test: Add pmu-event test for "Compat" and new event_field.
-  perf jevents: Add support for Arm CMN PMU aliasing
-  perf vendor events: Add JSON metrics for Arm CMN
+The same PMU driver has different PMU identifiers due to different
+hardware versions and types, but they may have some common PMU metric.
+Since a Compat value can only match one identifier, when adding the
+same metric to PMUs with different identifiers, each identifier needs
+to be defined once, which is not streamlined enough.
 
- .../pmu-events/arch/arm64/arm/cmn/sys/cmn.json     | 266 +++++++++++++++++++++
- .../pmu-events/arch/arm64/arm/cmn/sys/metric.json  |  74 ++++++
- .../pmu-events/arch/test/test_soc/sys/uncore.json  |   8 +
- tools/perf/pmu-events/jevents.py                   |  22 +-
- tools/perf/tests/pmu-events.c                      |  64 ++++-
- tools/perf/util/metricgroup.c                      |   2 +-
- tools/perf/util/pmu.c                              |  33 ++-
- tools/perf/util/pmu.h                              |   1 +
- 8 files changed, 457 insertions(+), 13 deletions(-)
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json
+So let "Compat" supports matching multiple identifiers for uncore PMU
+metric.
 
+Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+---
+ tools/perf/util/metricgroup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 5e9c657..ff81bc5 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -477,7 +477,7 @@ static int metricgroup__sys_event_iter(const struct pmu_metric *pm,
+ 
+ 	while ((pmu = perf_pmu__scan(pmu))) {
+ 
+-		if (!pmu->id || strcmp(pmu->id, pm->compat))
++		if (!pmu->id || !pmu_uncore_identifier_match(pmu->id, pm->compat))
+ 			continue;
+ 
+ 		return d->fn(pm, table, d->data);
 -- 
 1.8.3.1
 
