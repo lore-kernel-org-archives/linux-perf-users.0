@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83671EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 10:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAB8EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 10:23:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230107AbjHGKRy (ORCPT
+        id S230421AbjHGKXw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Aug 2023 06:17:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49224 "EHLO
+        Mon, 7 Aug 2023 06:23:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbjHGKRx (ORCPT
+        with ESMTP id S230013AbjHGKXw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Aug 2023 06:17:53 -0400
+        Mon, 7 Aug 2023 06:23:52 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3F92210F3;
-        Mon,  7 Aug 2023 03:17:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 941AB10F8;
+        Mon,  7 Aug 2023 03:23:50 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE9E61FB;
-        Mon,  7 Aug 2023 03:18:34 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 235D01FB;
+        Mon,  7 Aug 2023 03:24:33 -0700 (PDT)
 Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.32.139])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A99AB3F59C;
-        Mon,  7 Aug 2023 03:17:48 -0700 (PDT)
-Date:   Mon, 7 Aug 2023 11:17:45 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A24E3F59C;
+        Mon,  7 Aug 2023 03:23:47 -0700 (PDT)
+Date:   Mon, 7 Aug 2023 11:23:44 +0100
 From:   Mark Rutland <mark.rutland@arm.com>
 To:     Douglas Anderson <dianders@chromium.org>
 Cc:     Catalin Marinas <catalin.marinas@arm.com>,
@@ -40,113 +40,117 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Masayoshi Mizuma <msys.mizuma@gmail.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Ben Dooks <ben-linux@fluff.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Valentin Schneider <vschneid@redhat.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 4/7] arm64: smp: Assign and setup the debug IPI
-Message-ID: <ZNDEyT3mHCl0UQIV@FVFF77S0Q05N.cambridge.arm.com>
+Subject: Re: [PATCH v9 5/7] arm64: ipi_debug: Add support for backtrace using
+ the debug IPI
+Message-ID: <ZNDGMJW01avOMShn@FVFF77S0Q05N.cambridge.arm.com>
 References: <20230601213440.2488667-1-dianders@chromium.org>
- <20230601143109.v9.4.I6d7f7d5fa0aa293c8c3374194947254b93114d37@changeid>
+ <20230601143109.v9.5.I65981105e1f62550b0316625dd1e599deaf9e1aa@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230601143109.v9.4.I6d7f7d5fa0aa293c8c3374194947254b93114d37@changeid>
+In-Reply-To: <20230601143109.v9.5.I65981105e1f62550b0316625dd1e599deaf9e1aa@changeid>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 01, 2023 at 02:31:48PM -0700, Douglas Anderson wrote:
+On Thu, Jun 01, 2023 at 02:31:49PM -0700, Douglas Anderson wrote:
 > From: Sumit Garg <sumit.garg@linaro.org>
 > 
-> All current arm64 interrupt controllers have at least 8
-> IPIs. Currently we are only using 7 of them on arm64. Let's use the
-> 8th one as a debug IPI. This uses the new "debug IPI" infrastructure
-> which will try to allocate this IPI as an NMI/pseudo NMI if possible.
+> Enable arch_trigger_cpumask_backtrace() support on arm64 using the new
+> debug IPI. With this arm64 can now get backtraces in cases where
+> callers of the trigger_xyz_backtrace() class of functions don't check
+> the return code and implement a fallback. One example is
+> `kernel.softlockup_all_cpu_backtrace`. This also allows us to
+> backtrace hard locked up CPUs in cases where the debug IPI is backed
+> by an NMI (or pseudo NMI).
 > 
 > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-
-I think with my suggestion on the prior patch, we don't need the additional
-logic here.
-
 > ---
-> I could imagine that people object to using up the last free IPI on
-> interrupt controllers with only 8 IPIs. However, it shouldn't be a big
-> deal. If we later need an extra IPI, it shouldn't be too hard to
-> combine some of the existing ones. Presumably we could just get rid of
-> the "crash stop" IPI and have the normal "stop" IPI do the crash if
-> "waiting_for_crash_ipi" is non-zero
+> 
+> Changes in v9:
+> - Added comments that we might not be using NMI always.
+> - Renamed "NMI IPI" to "debug IPI" since it might not be backed by NMI.
+> - arch_trigger_cpumask_backtrace() no longer returns bool
+> 
+> Changes in v8:
+> - Removed "#ifdef CONFIG_SMP" since arm64 is always SMP
+> 
+>  arch/arm64/include/asm/irq.h  |  3 +++
+>  arch/arm64/kernel/ipi_debug.c | 25 +++++++++++++++++++++++--
+>  2 files changed, 26 insertions(+), 2 deletions(-)
 
-TBH, I'd love to unify the logic for IPI_CPU_STOP and IPI_CPU_CRASH_STOP as
-they have a bunch of pointless divergence.
+As with prior patches, I'd prefer if this lived in smp.c with the other IPI
+logic.
 
-We could also remove IPI_WAKEUP and replace that with something else (e.g.
-IPI_CALL_FUNC with an empty function) in order to free up an IPI.
+> 
+> diff --git a/arch/arm64/include/asm/irq.h b/arch/arm64/include/asm/irq.h
+> index fac08e18bcd5..be2d103f316e 100644
+> --- a/arch/arm64/include/asm/irq.h
+> +++ b/arch/arm64/include/asm/irq.h
+> @@ -6,6 +6,9 @@
+>  
+>  #include <asm-generic/irq.h>
+>  
+> +void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self);
+> +#define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
+> +
+>  struct pt_regs;
+>  
+>  int set_handle_irq(void (*handle_irq)(struct pt_regs *));
+> diff --git a/arch/arm64/kernel/ipi_debug.c b/arch/arm64/kernel/ipi_debug.c
+> index b57833e31eaf..6984ed507e1f 100644
+> --- a/arch/arm64/kernel/ipi_debug.c
+> +++ b/arch/arm64/kernel/ipi_debug.c
+> @@ -8,6 +8,7 @@
+>  
+>  #include <linux/interrupt.h>
+>  #include <linux/irq.h>
+> +#include <linux/nmi.h>
+>  #include <linux/smp.h>
+>  
+>  #include "ipi_debug.h"
+> @@ -24,11 +25,31 @@ void arm64_debug_ipi(cpumask_t *mask)
+>  	__ipi_send_mask(ipi_debug_desc, mask);
+>  }
+>  
+> +void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
+> +{
+> +	/*
+> +	 * NOTE: though nmi_trigger_cpumask_backtrace has "nmi_" in the name,
+> +	 * nothing about it truly needs to be backed by an NMI, it's just that
+> +	 * it's _allowed_ to be called from an NMI. If set_smp_debug_ipi()
+> +	 * failed to get an NMI (or pseudo-NMI) this will just be backed by a
+> +	 * regular IPI.
+> +	 */
+> +	nmi_trigger_cpumask_backtrace(mask, exclude_self, arm64_debug_ipi);
+> +}
+> +
+>  static irqreturn_t ipi_debug_handler(int irq, void *data)
+>  {
+> -	/* nop, NMI handlers for special features can be added here. */
+> +	irqreturn_t ret = IRQ_NONE;
+> +
+> +	/*
+> +	 * NOTE: Just like in arch_trigger_cpumask_backtrace(), we're calling
+> +	 * a function with "nmi_" in the name but it works fine even if we
+> +	 * are using a regulaor IPI.
+> +	 */
+> +	if (nmi_cpu_backtrace(get_irq_regs()))
+> +		ret = IRQ_HANDLED;
+>  
 
-I'd *also* prefer to have separate IPI_CPU_BACKTRACE and IPI_CPU_DEBUG as the
-backtrace logic is used for a bunch of things other than KGDB (e.g. RCU stalls,
-panic), and that would clearly separate the logic for the two cases.
+Does this need the printk_deferred_{enter,exit}() that 32-bit arm has?
 
 Thanks,
 Mark.
 
-> 
-> Changes in v9:
-> - Add a warning if we don't have enough IPIs for the NMI IPI
-> - Renamed "NMI IPI" to "debug IPI" since it might not be backed by NMI.
-> - Update commit description
-> 
-> Changes in v8:
-> - debug_ipi_setup() and debug_ipi_teardown() no longer take cpu param
-> 
->  arch/arm64/kernel/smp.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> index edd63894d61e..db019b49d3bd 100644
-> --- a/arch/arm64/kernel/smp.c
-> +++ b/arch/arm64/kernel/smp.c
-> @@ -53,6 +53,8 @@
->  
->  #include <trace/events/ipi.h>
->  
-> +#include "ipi_debug.h"
-> +
->  DEFINE_PER_CPU_READ_MOSTLY(int, cpu_number);
->  EXPORT_PER_CPU_SYMBOL(cpu_number);
->  
-> @@ -935,6 +937,8 @@ static void ipi_setup(int cpu)
->  
->  	for (i = 0; i < nr_ipi; i++)
->  		enable_percpu_irq(ipi_irq_base + i, 0);
-> +
-> +	debug_ipi_setup();
+> -	return IRQ_NONE;
+> +	return ret;
 >  }
 >  
->  #ifdef CONFIG_HOTPLUG_CPU
-> @@ -947,6 +951,8 @@ static void ipi_teardown(int cpu)
->  
->  	for (i = 0; i < nr_ipi; i++)
->  		disable_percpu_irq(ipi_irq_base + i);
-> +
-> +	debug_ipi_teardown();
->  }
->  #endif
->  
-> @@ -968,6 +974,11 @@ void __init set_smp_ipi_range(int ipi_base, int n)
->  		irq_set_status_flags(ipi_base + i, IRQ_HIDDEN);
->  	}
->  
-> +	if (n > nr_ipi)
-> +		set_smp_debug_ipi(ipi_base + nr_ipi);
-> +	else
-> +		WARN(1, "Not enough IPIs for NMI IPI\n");
-> +
->  	ipi_irq_base = ipi_base;
->  
->  	/* Setup the boot CPU immediately */
+>  void debug_ipi_setup(void)
 > -- 
 > 2.41.0.rc2.161.g9c6817b8e7-goog
 > 
