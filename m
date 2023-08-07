@@ -2,220 +2,217 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD40AC001DE
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 09:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2838EEB64DD
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 09:51:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231518AbjHGJYx (ORCPT
+        id S230104AbjHGJvC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Aug 2023 05:24:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54674 "EHLO
+        Mon, 7 Aug 2023 05:51:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231539AbjHGJYm (ORCPT
+        with ESMTP id S230179AbjHGJvC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Aug 2023 05:24:42 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A34901703;
-        Mon,  7 Aug 2023 02:24:40 -0700 (PDT)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 376NsPH6003828;
-        Mon, 7 Aug 2023 09:24:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=kk3TqHwKwwjEmPTefbV+rU4csHtt/LWvpcXL2FiFQEw=;
- b=muX7e/PIhoTR9SxpT/kbLvoxK16aLKwHcxWUOFSd2dwcJ/Nr4tmb9YsnygfhVG637j5z
- JbTem9mjMR478D3Xj0Z3yTX8errsGpxc/VaFembhqDGYxHDevXXmwP9F3oQ5eGjiSrO2
- iKxxpsRs8Ly6JFAAQiRywRYVPBaadBf6wWZT5kmX2DZ48qChR5IbrGCYoJWjbv06Qn9d
- xS+PEnkSizyB6tOAzv4n7os1l5QxlIcruwAompLlv9QhGVAY64ADd2rgYMMoAaS4DVHj
- Bad5ZxkVG45H7peGomeXKsq9VI8llH7hUcuRx4Udh6DEPFgjn9M75Wnz29bgXPoPUZxD ZA== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3s9cuejc2d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 07 Aug 2023 09:24:23 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3777ebxR023046;
-        Mon, 7 Aug 2023 09:24:11 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2109.outbound.protection.outlook.com [104.47.55.109])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3s9cv48x3d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 07 Aug 2023 09:24:11 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K2QL6lY8iVNUpMhbMvcUHwqVBbo1FvdjoWcylDAQlLe9Nr6rN9hSPWFUcqwWiJD5G/xzGg+8dc4bGA1ycRAdpvthzhcIDZidjsltAO39HDmwXxRy5KYiHccgmvgz+vUj6KWZ3qTpkAYU84ZlzHBM52NxPsNxxC9xMeqO5x+EOj/E1J3BG/nOQXEgVmnx+VCAsJ97qCxqyqwN3fpbn58WXfNEdc7KL3A6xHSoAylLfwmxzHuaeFLlIfP1awOBwjDSFbC9rfgApcALig+8jFhQXBe9FHJiYEa585k4nCPa4LjMX/viYde8UoMwbiVgxrv+OLZphuS/UXui8YbsyrSDkQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kk3TqHwKwwjEmPTefbV+rU4csHtt/LWvpcXL2FiFQEw=;
- b=J3yNbbN9MU0F++oUJIhn45/nLgW/OC68dECU3sX9oj7blcmo6c8yC/eQnp/4vhObznuJ8QHJFSTVNHFcgged0KPqZ9R459QTRjcTSGBujHXMlblg5ma6dyP6bftiSnUkqMLuxb0VudX2O2vL9SpZ564t3pPfFO9FLXl5tLXMRjPC1gCa/3qwFfNEbD2WP4DZdBOT5FRoFqITHnL+IEMIl9yXYkat/6WGyWugRpJ2rtdBiLFvjmh56heie8oi/z4rn/xq0GFnrdtpvoPjIApJdfWIiLF0R8fMcEC2RlSNeuDZbhYjFNFsXuxp1D2dKDXWVwgR2cnM5nUBvkVFhvzBUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kk3TqHwKwwjEmPTefbV+rU4csHtt/LWvpcXL2FiFQEw=;
- b=fvQrAb8yVnJa6kf2me9nCkgAskiJgkLlDcqJbHSPMu6fmwANkWZZI13d6s//ERQ0vWpPmpWPjPEBah0M6vMtskVTi6i52QaD9Vd6OY03gZZ1Hef8IVolzgznPO/AqNwnjZyOGFdlNLbKqbLt/2CePauhNjOR0SC+9ZSdmVxnbnI=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by IA0PR10MB6916.namprd10.prod.outlook.com (2603:10b6:208:430::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.26; Mon, 7 Aug
- 2023 09:24:09 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::ebfd:c49c:6b8:6fce]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::ebfd:c49c:6b8:6fce%6]) with mapi id 15.20.6652.026; Mon, 7 Aug 2023
- 09:24:08 +0000
-Message-ID: <50a8778a-ebe4-5b3b-9367-c8547d6d991d@oracle.com>
-Date:   Mon, 7 Aug 2023 10:24:02 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v6 3/7] perf jevents: Support more event fields
-Content-Language: en-US
-To:     Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Ian Rogers <irogers@google.com>
-Cc:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Mon, 7 Aug 2023 05:51:02 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EC7F71711;
+        Mon,  7 Aug 2023 02:50:45 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 990C31FB;
+        Mon,  7 Aug 2023 02:51:13 -0700 (PDT)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.32.139])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE1003F59C;
+        Mon,  7 Aug 2023 02:50:27 -0700 (PDT)
+Date:   Mon, 7 Aug 2023 10:50:25 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Douglas Anderson <dianders@chromium.org>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        linux-perf-users@vger.kernel.org, ito-yuichi@fujitsu.com,
+        Chen-Yu Tsai <wens@csie.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>
-References: <1691394685-61240-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1691394685-61240-4-git-send-email-renyu.zj@linux.alibaba.com>
-From:   John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <1691394685-61240-4-git-send-email-renyu.zj@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P123CA0047.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600::35)
- To DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        kgdb-bugreport@lists.sourceforge.net,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 1/7] irqchip/gic-v3: Enable support for SGIs to act as
+ NMIs
+Message-ID: <ZNC-YRQopO0PaIIo@FVFF77S0Q05N.cambridge.arm.com>
+References: <20230601213440.2488667-1-dianders@chromium.org>
+ <20230601143109.v9.1.I1223c11c88937bd0cbd9b086d4ef216985797302@changeid>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|IA0PR10MB6916:EE_
-X-MS-Office365-Filtering-Correlation-Id: ad2ea3aa-90f2-4539-f8a0-08db97280db0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YEB7Pv5C1vE5qv62dUu/H6LsvyWMW55MNFk/qe8TRZ6UmluWvVrw7pe/yZMPfvSErdwelkxYEsgujq5yiBA0YFCEFkheIqjY3NYYJhMN2RkcN3vH0nh+RzkynSa9DUX1jxBrwOydh8YaycPaY4MnkVnI8pkzD/RQTvCuGz+4D1OfAhVuV4H9R1qXUTzLOU/ymwUITs3NAbfCeLpcAwyTprXIdjNFcQqha6W6GAvrD/pSQ1bt1JXFFch6ns9L0FkWuX10iSKdoeT16DmJagw+CWqpLQMIJ9WXJQmdSWqzwh/dyb22cWGFWpA9kJOZklD6wuEUJXuH7E3FsFA9hROEctGDjW1wxbHQLLaiG2ljwB+4TO0klmMXSPawQVgHQ1vUY9dXBjmstHbq4bu7ZivTG7LcJmbNpHsH2jac5nY4xgHTCJqTJa12+rzRaSnLmqTWIsbFieAiIqBneEhxaR3Bpkggkvk7Uc4Z27zmnpV0/HegdgwM8f0f+SHC2d5wdJe+DtrKCpqytN+JYla5jNyd6W392qQyWDvtAOkYLTA2Kx9whm1tB9m4vkiJx7eE80ahCj/MFZ0PGC7cU1NF/KGKwqHsPQJZQ1Kkf7QxpfaB0F1/Kl+mYCp5FTYbWAF36Ik1ixzSG51Up5ei0uLXCpt8e9MLGd+xcqPCYBoA7CP/now=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(396003)(136003)(346002)(376002)(366004)(451199021)(186006)(1800799003)(2616005)(36756003)(6512007)(4326008)(316002)(86362001)(478600001)(54906003)(110136005)(38100700002)(6666004)(66946007)(36916002)(6486002)(66556008)(66476007)(31696002)(53546011)(6506007)(41300700001)(26005)(8676002)(8936002)(2906002)(7416002)(5660300002)(31686004)(21314003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?K1NTMEVReEFnbWhGN3VOSEUxUER6b3EwNDNGczNid0VzQVYxaC8rMXR3dVNE?=
- =?utf-8?B?Qzk0UzQzcE0zVFUyb3pMWFJiZkdFUzAwV0R0NjhWMVNJQ2Y3a3lxK3pjVjBQ?=
- =?utf-8?B?QnRjWlpzSU9ndTVJZDVpM2JYUGdqRWRRbnhYc2xuVnBBMTUxYnR2UzBWc2Ny?=
- =?utf-8?B?RkFCRXV1OU9mZ2lGV1lEdVRGc2tKY29kL2tLUWF1YzN2bG9DamlWczBYQmhr?=
- =?utf-8?B?WkxNOVJxWUx3b1JVVnhHZmd1WlY5WE50T2MydE53OEZqVCtQRlVta3Q1bzA5?=
- =?utf-8?B?NzkrejhRb1dSbTVPVW1RbjNMQUpzSzdGZDhudnMyOXp0bTBLSThZWXhpUVpU?=
- =?utf-8?B?STlWMXpueHVmMXVlWjRqWVdjNEFyWWhGclZQQkRJWEFRVm1KOEVPSHhwUVBG?=
- =?utf-8?B?RlkzZDRoM3hHdjl0QmtRMk1tYlJHaWR4eHYwV0wzdkpqYWZjMWFCUXhqbEdL?=
- =?utf-8?B?ckgzazdpY3haMk00dXBKVHZEV0VHQjNFc3BpR2xJODNENnJ0VFVEMktlb0lw?=
- =?utf-8?B?MU55T2N6QVhKUE9aNDh2VHVnSE9DcThRT05NUXgxc1czZUdkM2lqTmdCZ1lx?=
- =?utf-8?B?eFE0WEduTURObnFUdFM2cTZzc3Q0NGFKa3pwN0JQVFVaZE1EUjdpUDZuWHBz?=
- =?utf-8?B?NzFPSFNYVktpZmYzS3grcTJUZFBTVHZ0ei9qRW9HUmtTdkU4dys2dnJoVENL?=
- =?utf-8?B?K01rRzNVTmdqNlRtSnJwTFAvU3RtSFBLVmh6eDhsTHQzNHlCSHNjYVU4Mzdx?=
- =?utf-8?B?djhFdjhGTkFoSGpYVVpzV2dzcjUwaXFFNVMxU0JCV1NoUUV2b2hXbWtEWE9i?=
- =?utf-8?B?amtHMWlUOG5DL0xSQyt4V3NqUER0RGhLS09OT0hvRE03bnBybCs5L2V4TEZy?=
- =?utf-8?B?ZFUrNG82bmxseUZRMXU4cFRDUU9tWHg2MDhCTHVta0ozQ203UWMrVFNyYmZx?=
- =?utf-8?B?MndJaUFpbXhrbkJMcnNuK2NzbGhEYVZuQnJ5L2lNSXdZK3BwOXBYRFpHOVo5?=
- =?utf-8?B?QlZHb3NlZmpHOGlPSlVjUVFjOG9DT09TRG1RQ3AyNTNId1BLWG5TNE1LTm1C?=
- =?utf-8?B?SWp3RjhsMjg0R3d4UjhOWDdRUWJKOTRxaHpnZEx3dnJ5UW1yZStJU01tZVZL?=
- =?utf-8?B?ei9UWDBmRzhOVnZHV3VVbk5nWXJiTXFpbjZLNEpuWXJIOHI1b0gxUjBXdnFR?=
- =?utf-8?B?WVNXaWtCdDNDaEMyS09tR0hweTZoNTRqZmlGeWl3SjhORzNhbTRHTnhTazZP?=
- =?utf-8?B?ZmhIdDdUNzd4cUVybXZWTzVXVWFOYVlLakFMcmIwbGtPMnJOVkt3YmpoTWlK?=
- =?utf-8?B?bGZ5eE1ONTViRHkvUXRoY0ZCRHk5VzZnQWhZKzV0S05TTmdFdGtLT3VFQjZZ?=
- =?utf-8?B?QWo2TXFYNFFJaGZvSW1hMElkMEd2bzgwelFuajlFb3dYZHFnTXBYemE3OWxF?=
- =?utf-8?B?bGVKYW52RmpPSnFCY1hCZjNkbmNyWjdPYmZ6M3pRZEpVZkJKTjFYRkJ6OFo2?=
- =?utf-8?B?U2FGU21vS3RYNjJrOWFjSm9VMXJzNkxNUTBEa0pnVnA1Q1k2bE13UVFzMnlK?=
- =?utf-8?B?SFJJNlI1UjFZN3JOU2ZQQ1JxNEw1aVlvMUw2M1NUckk5ZTRSeE9oU3llb0Ur?=
- =?utf-8?B?UWticy9HcDRKK2oyYUJKUzJQRjZZVkJtR3AyczRQa1RFV1ZJOGhndTJkcmcv?=
- =?utf-8?B?UHNzYk9ybU9YZ1U5MzQvUzlESmM0aEkvZlJlZCtvN0hQNmxNbEkrMmx1bzda?=
- =?utf-8?B?NlRiRVV0WHZuQW9FOG1veGZzT0kxbXNLZmhpb3NBMFVjNTJvNXhzbmJxQmgx?=
- =?utf-8?B?cEx6cDJmVDhmYk1oQWN5czlRVHZZZmlhUlExODFqaytvSnN1dG9QRzBVWng2?=
- =?utf-8?B?bXJMZDkwSUJEVE1MeTY5ODJXRGczVnoxRmxackJDUHJ2SlZjQzJKUDRvV09U?=
- =?utf-8?B?U1hkbXpTNzRTcTZIelRqc2tSdW1MUjRBclduK1h1cytvaENRZTBqTTdCVXAz?=
- =?utf-8?B?ZlBZa2FhbnAzdkhDWGZUTUx5ZUxsaWFLSlRlenZ0Q2ovc1pGWUhieUd0N0FQ?=
- =?utf-8?B?bVJlRVMrYzIzL0Vpa01keW5hQUNRQmRuMDYvNE82TURERFBBbjFmbjlEdTdR?=
- =?utf-8?Q?Mcf83SxAL0Xr34IqNeC5Jk2ZH?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?cDgyNWllcnBpeVRQWFpXT2V0S2V4TE9XQStTbktYWnJFN0JNY3cySU1VUzBw?=
- =?utf-8?B?Yjd3UVc4WEx6SHFMemdlaU1uWXBhVmFGREdBaWFZTGNqRTZpR0FFQUtpYVJE?=
- =?utf-8?B?bGNzdzc2MnlUU1FmTFdEY0JPemNqT3ArMGFVRzlDeUlPY0xjTDlOd0RMTlAv?=
- =?utf-8?B?VERXY2EzcFpUdGNrUkxackxWVit1VXFDUXFITTFSWmlEUkd6WGtVdFd5c0VM?=
- =?utf-8?B?ZFh0ZXJWQk9PTHROazBVUi9VMjl1RUE5d1pSa3BWN2d3ODlvQ01JY0V4N1g4?=
- =?utf-8?B?dXd1ZGZwcVgwaDFkeHZyUDkwMVFxRitUeTZoMjFjOHB6L0JzOW9NazFJK21j?=
- =?utf-8?B?ODNNNTF4dzlnZWVlQjVBV1JORVRQRHFKZzVjR2RGdkZsK0FhdTU1bWJLWWVr?=
- =?utf-8?B?bCs2OVp2QmRTb041dlNONEZVVW0za3RZYmRQQjRuVzIvOHR3RzdxbVMvcXM5?=
- =?utf-8?B?SWlPMnRUMjg0MENHQWxEWUlXSjJXNzVZM1A2bGZyQy9iRG1JUXFlbWQxdkha?=
- =?utf-8?B?RHZORjk3NVJidnNtRVBFRHhTTGpZYTRORjFZN3hBYVg5RDgzSHJ0UHg1aHpu?=
- =?utf-8?B?czdOZVpIc1prT0xHY0s5TjJJVy85UlpiNk5KdDIrdFp4L2ZWOHVlTlpSdkxw?=
- =?utf-8?B?cklZV3lVWEdqcElWYzViZG1sWHVWSWtpWGFyU2RDWmtUSXFQaU9WL3R2aEM4?=
- =?utf-8?B?OTdxMEtkQWVkZVhrUDJrcEpGdTNZT05yM2VpK2tBZkV0d0p4dTBaVmxrSjNh?=
- =?utf-8?B?dkIvaWJ1WlRQamdBZkx3aE84My8va3MxYWRWdHgrVG92Z2dOZ3hDRzIvUFNK?=
- =?utf-8?B?MlUyVUlUTjd1L0cyd2Rtd29IV1YyNUh3Z2pYVjY2UUVsd3V2NUp5WUN6bjZO?=
- =?utf-8?B?MSt1VFhLUVNRMmU0WUVNNXRBSjZ4b1E1bUxicmVrNS9yWXhBcmw1RWJwZG1Z?=
- =?utf-8?B?dTc2OFJNVFVXVVhqZ3JRVU4xZnY1ZmRRbVBiYklxa2dxZHJuQSsvVXV6dkFj?=
- =?utf-8?B?eTQ1UEtKY3Z6d0NZc1M1eGV0SXY4cUUxcys0b0s1N01TaHVDNVh5K1A1VUt6?=
- =?utf-8?B?MjBmSDNORGU4MTFmK29GQU0yOSszeW1SemtRS2lqWk5UUys5eGtSWEdDdDlm?=
- =?utf-8?B?VXc4R1pYN0swRkVvZ0VlZktUNDkwTmNjMEhpUXdMRDlnUGwwRzljUUI0U0ox?=
- =?utf-8?B?TFFlWlgyVnpIQU5RZllDczg2MTQ5WDRRalMwQjBvWGhFOERzaCtjUlltbFFL?=
- =?utf-8?B?aEkxbk1ibk9URFB3dlZ5RDlmNFBxaWpWd1JKT2hPaCt0YlQxakdmVlZHVEtM?=
- =?utf-8?B?aWNBR3V0YWtkNk85ZTVJQnIxTWFFSWpzdWdXRFpaWTJOMWd0cEJrNWVWMkdt?=
- =?utf-8?B?ZU4reE1qZnRQUEM1Q3c0T2xrYTBSWHc3cGF6QmdmajVqWVNyck90NXAvR0VM?=
- =?utf-8?B?VVNTQjhqOVFkWXhJWWY1Yjl5UmJpZndBT0svOXBRN082Z1N6SWFVK1VxT0ZI?=
- =?utf-8?Q?FLkqPE=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad2ea3aa-90f2-4539-f8a0-08db97280db0
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2023 09:24:08.9059
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JXta7oCnMrBLtsMDO85RdEJHdWDuX0EtIeKRDJgCX2XN8rh2TtxpWN95rnrsBNhLbL41zQ/ddUyJy1xExl3TPw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR10MB6916
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-08-07_08,2023-08-03_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 bulkscore=0
- malwarescore=0 adultscore=0 phishscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
- definitions=main-2308070087
-X-Proofpoint-ORIG-GUID: R7KU4l7y9wztynwhiMY9vbc9ep9k8ug2
-X-Proofpoint-GUID: R7KU4l7y9wztynwhiMY9vbc9ep9k8ug2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230601143109.v9.1.I1223c11c88937bd0cbd9b086d4ef216985797302@changeid>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 07/08/2023 08:51, Jing Zhang wrote:
-> The usual event descriptions are "event=xxx" or "config=xxx", while the
-> event descriptions of CMN are "type=xxx, eventid=xxx" or more complex.
-> 
-> $cat /sys/bus/event_source/devices/arm_cmn_0/events/hnf_cache_fill
-> type=0x5,eventid=0x3
-> 
-> When adding aliases for events described as "event=xxx" or "config=xxx",
-> EventCode or ConfigCode can be used in the JSON files to describe the
-> events. But "eventid=xxx, type=xxx" cannot be supported at present.
-> 
-> If EventCode and ConfigCode is not added in the alias JSON file, the
-> event description will add "event=0" by default. So, even if the event
-> field is added to supplement "eventid=xxx" and "type=xxx", the final
-> parsing result will be "event=0, eventid=xxx, type=xxx".
-> 
-> Therefore, when EventCode and ConfigCode are missing in JSON, "event=0" is
-> no longer added by default. EventIdCode and Type are added to the event
-> field, and ConfigCode is moved into the event_field array which can also
-> guarantee its original function.
-> 
-> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+Hi Doug,
 
-I'll let Ian check this change as he is more familiar with this code.
+On Thu, Jun 01, 2023 at 02:31:45PM -0700, Douglas Anderson wrote:
+> From: Sumit Garg <sumit.garg@linaro.org>
+> 
+> Add support to handle SGIs as pseudo NMIs. As SGIs or IPIs default to a
+> special flow handler: handle_percpu_devid_fasteoi_ipi(), so skip NMI
+> handler update in case of SGIs.
 
-Thanks
+I couldn't find handle_percpu_devid_fasteoi_ipi() in mainline, and when
+researching I found that we changed that in commit:
 
+  6abbd6988971aaa6 ("irqchip/gic, gic-v3: Make SGIs use handle_percpu_devid_irq()")
+
+... which was in v5.11, so it looks like this is stale?
+
+Since that commit, SGIs are treated the same as PPIs/EPPIs, and use
+handle_percpu_devid_irq() by default.
+
+IIUC handle_percpu_devid_irq() isn't NMI safe, and so to run in an NMI context
+those should use handle_percpu_devid_fasteoi_nmi().
+
+Marc, does that sound right to you? i.e. SGI NMIs should be handled exactly the
+same as PPI NMIs, and use handle_percpu_devid_fasteoi_nmi()?
+
+I have some comments below assuming that SGI NMIs should use
+handle_percpu_devid_fasteoi_nmi().
+
+> Also, enable NMI support prior to gic_smp_init() as allocation of SGIs
+> as IRQs/NMIs happen as part of this routine.
+
+This bit looks fine to me.
+
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> Reviewed-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> Tested-by: Chen-Yu Tsai <wens@csie.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+> (no changes since v1)
+> 
+>  drivers/irqchip/irq-gic-v3.c | 29 +++++++++++++++++++++--------
+>  1 file changed, 21 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+> index 0c6c1af9a5b7..ed37e02d4c5f 100644
+> --- a/drivers/irqchip/irq-gic-v3.c
+> +++ b/drivers/irqchip/irq-gic-v3.c
+> @@ -525,6 +525,7 @@ static u32 gic_get_ppi_index(struct irq_data *d)
+>  static int gic_irq_nmi_setup(struct irq_data *d)
+>  {
+>  	struct irq_desc *desc = irq_to_desc(d->irq);
+> +	u32 idx;
+>  
+>  	if (!gic_supports_nmi())
+>  		return -EINVAL;
+> @@ -542,16 +543,22 @@ static int gic_irq_nmi_setup(struct irq_data *d)
+>  		return -EINVAL;
+>  
+>  	/* desc lock should already be held */
+> -	if (gic_irq_in_rdist(d)) {
+> -		u32 idx = gic_get_ppi_index(d);
+> +	switch (get_intid_range(d)) {
+> +	case SGI_RANGE:
+> +		break;
+> +	case PPI_RANGE:
+> +	case EPPI_RANGE:
+> +		idx = gic_get_ppi_index(d);
+>  
+>  		/* Setting up PPI as NMI, only switch handler for first NMI */
+>  		if (!refcount_inc_not_zero(&ppi_nmi_refs[idx])) {
+>  			refcount_set(&ppi_nmi_refs[idx], 1);
+>  			desc->handle_irq = handle_percpu_devid_fasteoi_nmi;
+>  		}
+> -	} else {
+> +		break;
+> +	default:
+>  		desc->handle_irq = handle_fasteoi_nmi;
+> +		break;
+>  	}
+
+As above, I reckon this isn't right, and we should treat all rdist interrupts
+(which are all percpu) the same.
+
+I reckon what we should be doing here is make ppi_nmi_refs cover all of the
+rdist interrupts (e.g. make that rdist_nmi_refs, add a gic_get_rdist_idx()
+helper), and then here have something like:
+
+	if (gic_irq_in_rdist(d)) {
+		u32 idx = gic_get_rdist_idx(d);
+
+		/* 
+		 * Setting up a percpu interrupt as NMI, only switch handler
+		 * for first NMI
+		 */
+		if (!refcount_inc_not_zero(&rdist_nmi_refs[idx])) {
+			refcount_set(&ppi_nmi_refs[idx], 1);
+			desc->handle_irq = handle_percpu_devid_fasteoi_nmi;
+		}
+	}
+
+... as an aside, it'd be nicer if we could switch the handler at request time,
+as then we wouldn't need the refcount at all, but I couldn't see a good irqchip
+hook to hang that off, so I don't think that needs to change as a prerequisite.
+
+>  
+>  	gic_irq_set_prio(d, GICD_INT_NMI_PRI);
+> @@ -562,6 +569,7 @@ static int gic_irq_nmi_setup(struct irq_data *d)
+>  static void gic_irq_nmi_teardown(struct irq_data *d)
+>  {
+>  	struct irq_desc *desc = irq_to_desc(d->irq);
+> +	u32 idx;
+>  
+>  	if (WARN_ON(!gic_supports_nmi()))
+>  		return;
+> @@ -579,14 +587,20 @@ static void gic_irq_nmi_teardown(struct irq_data *d)
+>  		return;
+>  
+>  	/* desc lock should already be held */
+> -	if (gic_irq_in_rdist(d)) {
+> -		u32 idx = gic_get_ppi_index(d);
+> +	switch (get_intid_range(d)) {
+> +	case SGI_RANGE:
+> +		break;
+> +	case PPI_RANGE:
+> +	case EPPI_RANGE:
+> +		idx = gic_get_ppi_index(d);
+>  
+>  		/* Tearing down NMI, only switch handler for last NMI */
+>  		if (refcount_dec_and_test(&ppi_nmi_refs[idx]))
+>  			desc->handle_irq = handle_percpu_devid_irq;
+> -	} else {
+> +		break;
+> +	default:
+>  		desc->handle_irq = handle_fasteoi_irq;
+> +		break;
+>  	}
+
+Same comments as for gic_irq_nmi_setup() here.
+
+>  
+>  	gic_irq_set_prio(d, GICD_INT_DEF_PRI);
+> @@ -2001,6 +2015,7 @@ static int __init gic_init_bases(phys_addr_t dist_phys_base,
+>  
+>  	gic_dist_init();
+>  	gic_cpu_init();
+> +	gic_enable_nmi_support();
+>  	gic_smp_init();
+>  	gic_cpu_pm_init();
+>  
+> @@ -2013,8 +2028,6 @@ static int __init gic_init_bases(phys_addr_t dist_phys_base,
+>  			gicv2m_init(handle, gic_data.domain);
+>  	}
+>  
+> -	gic_enable_nmi_support();
+> -
+
+This bit looks fine to me.
+
+Thanks,
+Mark.
