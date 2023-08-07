@@ -2,48 +2,29 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8EFC41513
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 11:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE51C10F19
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 11:24:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230335AbjHGLI1 (ORCPT
+        id S232583AbjHGLYB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Aug 2023 07:08:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45806 "EHLO
+        Mon, 7 Aug 2023 07:24:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230403AbjHGLI0 (ORCPT
+        with ESMTP id S232978AbjHGLXm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Aug 2023 07:08:26 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1657DB3;
-        Mon,  7 Aug 2023 04:08:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A8D456174C;
-        Mon,  7 Aug 2023 11:08:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC366C433C8;
-        Mon,  7 Aug 2023 11:08:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691406489;
-        bh=hdXUL/3D92Z9yQpqL5wt/vJLONqXakCcF546+DOh+4U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bqTc+RgIYDzXvN/ub1XcWMo75DJ473j6Le/czK/fcaloPVJ0mkaEJJsgVVKkZYoOL
-         p6iSlOJxz1bloA/USJIUET+SyQ3pd049jLEnWIjHZzhQLwLWeBTw1MtQhS0tXGbGqL
-         UF8KYn/EFViz3h/Kp6oa068ofm5bUsgq1QeIUMNen4Q6GmkHMz4A31vQgjgg8Ncyxh
-         Qch7XTyieVT0fX3uZXiWqtP7owdtTa5zZBRBlIg76RJwYy0b5b/ba6AZGYrnfgf+Xd
-         QkuhNkwf2sDNSwcgn2zFoveyBoCF2qNKxtfg3Hz77vsdrDUHWYfdAVv09u2hc618Vq
-         gslGUGqmNFhCQ==
-Received: from disco-boy.misterjones.org ([217.182.43.188] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1qSy5m-002ncO-Bw;
-        Mon, 07 Aug 2023 12:08:06 +0100
-MIME-Version: 1.0
-Date:   Mon, 07 Aug 2023 12:08:06 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
+        Mon, 7 Aug 2023 07:23:42 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 12426423F;
+        Mon,  7 Aug 2023 04:21:31 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD8911FB;
+        Mon,  7 Aug 2023 04:14:44 -0700 (PDT)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.32.139])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 268F03F59C;
+        Mon,  7 Aug 2023 04:13:59 -0700 (PDT)
+Date:   Mon, 7 Aug 2023 12:13:56 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
 Cc:     Douglas Anderson <dianders@chromium.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
@@ -61,85 +42,81 @@ Cc:     Douglas Anderson <dianders@chromium.org>,
         Lecopzer Chen <lecopzer.chen@mediatek.com>,
         Wei Li <liwei391@huawei.com>, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v9 7/7] arm64: kgdb: Roundup cpus using the debug IPI
-In-Reply-To: <ZNDNY_JfUxXm2vR5@FVFF77S0Q05N.cambridge.arm.com>
+Message-ID: <ZNDR9C8711K5EoNW@FVFF77S0Q05N.cambridge.arm.com>
 References: <20230601213440.2488667-1-dianders@chromium.org>
  <20230601143109.v9.7.I2ef26d1b3bfbed2d10a281942b0da7d9854de05e@changeid>
  <ZNDHZLGds0DTN6zg@FVFF77S0Q05N.cambridge.arm.com>
  <a030019c7c5887d54b97054ed7d9af12@kernel.org>
  <ZNDNY_JfUxXm2vR5@FVFF77S0Q05N.cambridge.arm.com>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <7a295fcb4ff02542ff6835a77182fce8@kernel.org>
-X-Sender: maz@kernel.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 217.182.43.188
-X-SA-Exim-Rcpt-To: mark.rutland@arm.com, dianders@chromium.org, catalin.marinas@arm.com, will@kernel.org, sumit.garg@linaro.org, daniel.thompson@linaro.org, linux-perf-users@vger.kernel.org, ito-yuichi@fujitsu.com, wens@csie.org, ardb@kernel.org, swboyd@chromium.org, peterz@infradead.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kgdb-bugreport@lists.sourceforge.net, msys.mizuma@gmail.com, rafael.j.wysocki@intel.com, lecopzer.chen@mediatek.com, liwei391@huawei.com, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+ <7a295fcb4ff02542ff6835a77182fce8@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7a295fcb4ff02542ff6835a77182fce8@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2023-08-07 11:54, Mark Rutland wrote:
-> On Mon, Aug 07, 2023 at 11:47:04AM +0100, Marc Zyngier wrote:
->> On 2023-08-07 11:28, Mark Rutland wrote:
->> > On Thu, Jun 01, 2023 at 02:31:51PM -0700, Douglas Anderson wrote:
->> > > From: Sumit Garg <sumit.garg@linaro.org>
->> > >
->> > > Let's use the debug IPI for rounding up CPUs in kgdb. When the debug
->> > > IPI is backed by an NMI (or pseudo NMI) then this will let us debug
->> > > even hard locked CPUs. When the debug IPI isn't backed by an NMI then
->> > > this won't really have any huge benefit but it will still work.
->> > >
->> > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
->> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
->> > > ---
->> > >
->> > > Changes in v9:
->> > > - Remove fallback for when debug IPI isn't available.
->> > > - Renamed "NMI IPI" to "debug IPI" since it might not be backed by
->> > > NMI.
->> > >
->> > >  arch/arm64/kernel/ipi_debug.c |  5 +++++
->> > >  arch/arm64/kernel/kgdb.c      | 14 ++++++++++++++
->> > >  2 files changed, 19 insertions(+)
->> >
->> > This looks fine to me, but I'd feel a bit happier if we had separate
->> > SGIs for
->> > the backtrace and the KGDB callback as they're logically unrelated.
->> 
->> Well, we're a bit stuck here.
->> 
->> We have exactly *one* spare SGI with GICv3, as we lose 8 of them
->> to the secure side. One possibility would be to mux some of the
->> lesser used IPIs onto two SGIs (one with standard priority, and
->> one with NMI priority).
+On Mon, Aug 07, 2023 at 12:08:06PM +0100, Marc Zyngier wrote:
+> On 2023-08-07 11:54, Mark Rutland wrote:
+> > On Mon, Aug 07, 2023 at 11:47:04AM +0100, Marc Zyngier wrote:
+> > > On 2023-08-07 11:28, Mark Rutland wrote:
+> > > > On Thu, Jun 01, 2023 at 02:31:51PM -0700, Douglas Anderson wrote:
+> > > > > From: Sumit Garg <sumit.garg@linaro.org>
+> > > > >
+> > > > > Let's use the debug IPI for rounding up CPUs in kgdb. When the debug
+> > > > > IPI is backed by an NMI (or pseudo NMI) then this will let us debug
+> > > > > even hard locked CPUs. When the debug IPI isn't backed by an NMI then
+> > > > > this won't really have any huge benefit but it will still work.
+> > > > >
+> > > > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > > > ---
+> > > > >
+> > > > > Changes in v9:
+> > > > > - Remove fallback for when debug IPI isn't available.
+> > > > > - Renamed "NMI IPI" to "debug IPI" since it might not be backed by
+> > > > > NMI.
+> > > > >
+> > > > >  arch/arm64/kernel/ipi_debug.c |  5 +++++
+> > > > >  arch/arm64/kernel/kgdb.c      | 14 ++++++++++++++
+> > > > >  2 files changed, 19 insertions(+)
+> > > >
+> > > > This looks fine to me, but I'd feel a bit happier if we had separate
+> > > > SGIs for
+> > > > the backtrace and the KGDB callback as they're logically unrelated.
+> > > 
+> > > Well, we're a bit stuck here.
+> > > 
+> > > We have exactly *one* spare SGI with GICv3, as we lose 8 of them
+> > > to the secure side. One possibility would be to mux some of the
+> > > lesser used IPIs onto two SGIs (one with standard priority, and
+> > > one with NMI priority).
+> > 
+> > Understood; Doug and I suggested two options for that:
+> > 
+> > 1) Unify/mux the IPI_CPU_STOP and IPI_CPU_CRASH_STOP IPIs
+> > 
+> >    The only *intended* difference between the two is that
+> > IPI_CPU_CRASH_STOP
+> >    calls crash_save_cpu() before trying to stop the CPU, but the
+> >    implementations have diverged significantly for unrelated reasons.
+> > 
+> > 2) Remove IPI_WAKEUP
+> > 
+> >    We only use IPI_WAKEUP for the ACPI parking protocol, and we could
+> > reuse
+> >    another IPI (e.g. IPI_RESCHEDULE) to achieve the same thing witout a
+> >    dedicated IPI.
 > 
-> Understood; Doug and I suggested two options for that:
+> Sure. My concern is that we're papering over the fundamental problem,
+> which is that IPIs are limited resource, and that we're bound to pile
+> more stuff on them.
 > 
-> 1) Unify/mux the IPI_CPU_STOP and IPI_CPU_CRASH_STOP IPIs
-> 
->    The only *intended* difference between the two is that 
-> IPI_CPU_CRASH_STOP
->    calls crash_save_cpu() before trying to stop the CPU, but the
->    implementations have diverged significantly for unrelated reasons.
-> 
-> 2) Remove IPI_WAKEUP
-> 
->    We only use IPI_WAKEUP for the ACPI parking protocol, and we could 
-> reuse
->    another IPI (e.g. IPI_RESCHEDULE) to achieve the same thing witout a
->    dedicated IPI.
+> I'm all for reclaiming the ones that can be merged, but we may ultimately
+> need a real fix for this.
 
-Sure. My concern is that we're papering over the fundamental problem,
-which is that IPIs are limited resource, and that we're bound to pile
-more stuff on them.
+Sure; I will bear that in mind.
 
-I'm all for reclaiming the ones that can be merged, but we may 
-ultimately
-need a real fix for this.
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Thanks,
+Mark.
