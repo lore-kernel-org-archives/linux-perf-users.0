@@ -2,128 +2,146 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96EB9EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 06:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875EDEB64DD
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 06:17:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229825AbjHGGKu (ORCPT
+        id S230421AbjHGGRB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Aug 2023 02:10:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60482 "EHLO
+        Mon, 7 Aug 2023 02:17:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229640AbjHGGKt (ORCPT
+        with ESMTP id S229640AbjHGGRB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Aug 2023 02:10:49 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6598810F9
-        for <linux-perf-users@vger.kernel.org>; Sun,  6 Aug 2023 23:10:48 -0700 (PDT)
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37765ZII001845;
-        Mon, 7 Aug 2023 06:10:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=J1saXD6lKUsQF9f0FBv7MqIMAgdIE5q/6fO5Zb6lFuM=;
- b=ZxFkqhU9SucuJEark9mBFAz6QlSOGoDxYNt1sTWMP2c+bCceWVVz/EJ3L1oTV6F9cJiq
- ZJNctLJVF6MTG/sm1W1OoaT8gDnSY3Xc4WEokimgFdx769GYtAQWvYuVliobYebW04uh
- hQiluMVWHEk82uerJ6VZc21R4YMTQLjV/9GKqL1/bUrOMRLQfZkMpJSBkE/mwMfP8WAG
- awnD1JSPHfF2hmWKAZE1Khl2TGlptu9eOC/BT9miAuJ/CLTO8EaD368i/NOji6BKyFIu
- jFBoGp8+iLyQHdsA4ZAqQsJQPmLaNp5kU3qkiKuFeMuZ8RWggARKKnvlwgD3/deT32Dq aA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sau1s0616-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Aug 2023 06:10:35 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37765lAZ002651;
-        Mon, 7 Aug 2023 06:10:35 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sau1s05tn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Aug 2023 06:10:35 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3774coxe001619;
-        Mon, 7 Aug 2023 06:10:31 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3sa2yjj4qc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Aug 2023 06:10:31 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3776ASKr20841130
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 7 Aug 2023 06:10:28 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7EAB520049;
-        Mon,  7 Aug 2023 06:10:28 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C736E2004B;
-        Mon,  7 Aug 2023 06:10:26 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.109.241.238])
-        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Mon,  7 Aug 2023 06:10:26 +0000 (GMT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.600.7\))
-Subject: Re: [PATCH] perf test: Fix parse-events tests to skip parametrized
- events
-From:   Sachin Sant <sachinp@linux.ibm.com>
-In-Reply-To: <20230807045016.23409-1-atrajeev@linux.vnet.ibm.com>
-Date:   Mon, 7 Aug 2023 11:40:16 +0530
-Cc:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
-        namhyung@kernel.org, kjain@linux.ibm.com,
-        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A776945C-DDE0-4A12-960E-50641D237C6F@linux.ibm.com>
-References: <20230807045016.23409-1-atrajeev@linux.vnet.ibm.com>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-X-Mailer: Apple Mail (2.3731.600.7)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: rSC2f4S_ChqHxkz94Re4MW6ghsvcgIVt
-X-Proofpoint-GUID: 2xWYGe8x1HyYwmoR9QX3ADz9UW6E60DZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-08-07_04,2023-08-03_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- clxscore=1015 impostorscore=0 priorityscore=1501 lowpriorityscore=0
- mlxscore=0 bulkscore=0 malwarescore=0 adultscore=0 phishscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2308070055
+        Mon, 7 Aug 2023 02:17:01 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 389331708;
+        Sun,  6 Aug 2023 23:16:58 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1bc3bec2c95so26748255ad.0;
+        Sun, 06 Aug 2023 23:16:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691389018; x=1691993818;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=hWSw1cLZzYS5vKRsvMKmSpxrp08yn5uIfOo+OozYAdo=;
+        b=HwU9SEaatG57jdR6wuZSqJMKyUNhDfa0uP8FImIbIgZV2rai1QGi3j9lqgqcDkdgHN
+         ctU0WN/y4VDsIie+cUCYuCCTSyGPldGAXIZsk5N7kNhh7JAZ0TFb4rijRhRINQaaWdO+
+         9O+I99F3LbnJkPR3cW6lmNjR4bQOiYOU6gXS9Vi4Zs+cvKmn4dg/e+n9jWirWYhiVnW3
+         UE0VH9a5LMHbqQuBRAbdcCAM7iuHzpbabC6C5Sszw5oCPrCB6bgIy81Ma+XnRCEzD3rF
+         OeRvy02qaVQIjOUqCzTSZrrmec7AuKXpSq/IJrVDuOo28EgpYyRBPmbum1U8+NXr//HW
+         gFUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691389018; x=1691993818;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hWSw1cLZzYS5vKRsvMKmSpxrp08yn5uIfOo+OozYAdo=;
+        b=ZdIlux3IaLKkHCq7yDnS8naLtLVqNvuDNFoLSk0rZkfR02mUTLHzIVUEhv+RkAOX9N
+         dLkqJV7oHTzE3QVx1PUKl1h1Mqem6R2fJ0AFTGZwhfeT+5wz2gc7cAiLI/FqGYESWVvl
+         13sVXLudkTjZAPisoTjMT+0CoD0xMMlfsPXrmQqUvwakYu2dBqQ3ywcWAkarhxMBoCkz
+         EwSex9tmR24TPCdBeRmJ6tICsIN6DMWtQmcQlemTkKSa21zpsjB8BSic1czT64sYeOlk
+         mHP6UYp7Sf2D1xAkAotw0Rcom9KDNncryainjFUBKrrKY2+OP5kLaC5BbjSu5lNeSZip
+         zN3g==
+X-Gm-Message-State: AOJu0YyItgi2kRKnNj+WBPzW9ThxI/Yc2aNV+4wvkYfDPRiuiCXBb5Tk
+        flBjZUtHpMyJvt+ByoLvWgM=
+X-Google-Smtp-Source: AGHT+IHAtwij15YfOFbneacM2RiSmvEA+/32SOpKBuYhB0VQfBVDprtR6R9BICxF3cWUOvANqCHrXQ==
+X-Received: by 2002:a17:903:228e:b0:1bb:d586:d29a with SMTP id b14-20020a170903228e00b001bbd586d29amr7565312plh.34.1691389017519;
+        Sun, 06 Aug 2023 23:16:57 -0700 (PDT)
+Received: from bangji.corp.google.com ([100.64.98.31])
+        by smtp.gmail.com with ESMTPSA id ju22-20020a170903429600b001bb9b5e86b7sm5907769plb.91.2023.08.06.23.16.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Aug 2023 23:16:56 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf tools: Handle old data in PERF_RECORD_ATTR
+Date:   Mon,  7 Aug 2023 15:16:52 +0900
+Message-ID: <20230807061652.2492167-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.41.0.640.ga95def55d0-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+The PERF_RECORD_ATTR is used for a pipe mode to describe an event with
+attribute and IDs.  The ID table comes after the attr and it calculate
+size of the table using the total record size and the attr size.
 
+  n_ids = (total_record_size - end_of_the_attr_field) / sizeof(u64)
 
-> On 07-Aug-2023, at 10:20 AM, Athira Rajeev =
-<atrajeev@linux.vnet.ibm.com> wrote:
->=20
-> Testcase "Parsing of all PMU events from sysfs" parse events for
-> all PMUs, and not just cpu. In case of powerpc, the PowerVM
-> environment supports events from hv_24x7 and hv_gpci PMU which
-> is of example format like below:
->=20
-> - hv_24x7/CPM_ADJUNCT_INST,domain=3D?,core=3D?/
-> - hv_gpci/event,partition_id=3D?/
->=20
-> The value for "?" needs to be filled in depending on system
-> configuration. It is better to skip these parametrized events
-> in this test as it is done in:
-> 'commit b50d691e50e6 ("perf test: Fix "all PMU test" to skip
-> parametrized events")' which handled a simialr instance with
-> "all PMU test".
->=20
-> Fix parse-events test to skip parametrized events since
-> it needs proper setup of the parameters.
->=20
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> =E2=80=94
+This is fine for most use cases, but sometimes it saves the pipe output
+in a file and then process it later.  And it becomes a problem if there
+is a change in attr size between the record and report.
 
-Thanks Athira for the fix. With this fix applied the reported problem
-Is fixed.
+  $ perf record -o- > perf-pipe.data  # old version
+  $ perf report -i- < perf-pipe.data  # new version
 
-6.1: Test event parsing                                            : Ok
-  6.2: Parsing of all PMU events from sysfs             : Ok
-  6.3: Parsing of given PMU events from sysfs        : Ok
+For example, if the attr size is 128 and it has 4 IDs, then it would
+save them in 168 byte like below:
 
-Tested-by: Sachin Sant <sachinp@linux.ibm.com>
+   8 byte: perf event header { .type = PERF_RECORD_ATTR, .size = 168 },
+ 128 byte: perf event attr { .size = 128, ... },
+  32 byte: event IDs [] = { 1234, 1235, 1236, 1237 },
 
-- Sachin
+But when report later, it thinks the attr size is 136 then it only read
+the last 3 entries as ID.
+
+   8 byte: perf event header { .type = PERF_RECORD_ATTR, .size = 168 },
+ 136 byte: perf event attr { .size = 136, ... },
+  24 byte: event IDs [] = { 1235, 1236, 1237 },  // 1234 is missing
+
+So it should use the recorded version of the attr.  The attr has the
+size field already then it should honor the size when reading data.
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/header.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 52fbf526fe74..f89321cbfdee 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -4381,7 +4381,8 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
+ 			     union perf_event *event,
+ 			     struct evlist **pevlist)
+ {
+-	u32 i, ids, n_ids;
++	u32 i, n_ids;
++	u64 *ids;
+ 	struct evsel *evsel;
+ 	struct evlist *evlist = *pevlist;
+ 
+@@ -4397,9 +4398,8 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
+ 
+ 	evlist__add(evlist, evsel);
+ 
+-	ids = event->header.size;
+-	ids -= (void *)&event->attr.id - (void *)event;
+-	n_ids = ids / sizeof(u64);
++	n_ids = event->header.size - sizeof(event->header) - event->attr.attr.size;
++	n_ids = n_ids / sizeof(u64);
+ 	/*
+ 	 * We don't have the cpu and thread maps on the header, so
+ 	 * for allocating the perf_sample_id table we fake 1 cpu and
+@@ -4408,8 +4408,9 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
+ 	if (perf_evsel__alloc_id(&evsel->core, 1, n_ids))
+ 		return -ENOMEM;
+ 
++	ids = (void *)&event->attr.attr + event->attr.attr.size;
+ 	for (i = 0; i < n_ids; i++) {
+-		perf_evlist__id_add(&evlist->core, &evsel->core, 0, i, event->attr.id[i]);
++		perf_evlist__id_add(&evlist->core, &evsel->core, 0, i, ids[i]);
+ 	}
+ 
+ 	return 0;
+-- 
+2.41.0.640.ga95def55d0-goog
+
