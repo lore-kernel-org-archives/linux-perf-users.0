@@ -2,223 +2,124 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED3FC00528
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 14:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F4AC001B0
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 14:51:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233976AbjHGOn6 (ORCPT
+        id S229517AbjHGOvs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Aug 2023 10:43:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51930 "EHLO
+        Mon, 7 Aug 2023 10:51:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233922AbjHGOn5 (ORCPT
+        with ESMTP id S229499AbjHGOvr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Aug 2023 10:43:57 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F404E10DC;
-        Mon,  7 Aug 2023 07:43:55 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C37B1FB;
-        Mon,  7 Aug 2023 07:44:38 -0700 (PDT)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.32.139])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 74E703F64C;
-        Mon,  7 Aug 2023 07:43:51 -0700 (PDT)
-Date:   Mon, 7 Aug 2023 15:43:46 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-perf-users@vger.kernel.org, ito-yuichi@fujitsu.com,
-        Chen-Yu Tsai <wens@csie.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
+        Mon, 7 Aug 2023 10:51:47 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E7E810CA;
+        Mon,  7 Aug 2023 07:51:46 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id 38308e7fff4ca-2b95d5ee18dso70944291fa.1;
+        Mon, 07 Aug 2023 07:51:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691419904; x=1692024704;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BWcN6N6fBgl6H9b9j23x5jmZELL/mtr85e3NmUCW+tE=;
+        b=CJQk3v5ecULIpzY/GD5uLeYieY961pwHb7RBn6dcUonOmVjBc7FYxAzSLHO1usELhF
+         s7XdhK2rZIsqpOp1f/J96hZf1yEy8p1LKsSaD2xHHg7oVVRVJyeQcJ4DPUkIh4lzExfm
+         BmZ+2E+Bq69PxPhaLTEsQwEJtOIHOT2aYCrL39PkSzkazTou27itvYdObzvxRqBbEpGV
+         zcX9P7X6L9RWNqQVaS/mm86udnrr3jOdo1RI0Sag36exBZvqvE/PoCKMCY55DkIGUOQ3
+         BrwSJ/DAimQBB+ZlE2XG3NYwhZnmzzOAqZBhQqXHZzoSVswfy5l5oq/MZMZP/yvPzbp4
+         3Eog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691419904; x=1692024704;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BWcN6N6fBgl6H9b9j23x5jmZELL/mtr85e3NmUCW+tE=;
+        b=eVovo6Yfe6DuARKNJFTLXI57i6LQWACyItfHzXe7C2AVbhj1DvSHKG6OEflkh/Rvi9
+         n19hIzlqjnAKeyfZ0d73osXD9sVu1o1GF5EfepQ1cJgnGimqN9ahSs3n3Pl7F3Q2JoGi
+         qHR1t/NZCgo+DCTDPE3aVoynQ8OKSDPszI75GTf7uHsRDa9NV4KlUBRgGjhYOZHGjKTd
+         ZGVUpBb3CWKtm6zozAw6HpGja9DIQjxZEEoB4svtB0EBnEh796dimngb6sawme70P1qg
+         T9H6AC8VrKIRrbTDRff9iuVILXtW5ozAadyOww//RRbGJIBw4d43KLSMvTW02irteTKh
+         89mg==
+X-Gm-Message-State: AOJu0YzJSWe0fPpy2JCmBWSQuJLVhecEEoiGvpHfjAHjVW684H1poKSl
+        8n1H2LJwhuak/SPwXcmSYEo=
+X-Google-Smtp-Source: AGHT+IHVLB884FPH0sIpgclDHewQ+6SbD5k1rJqafOOLtqSa59/WPw/C6BwuZgr7yCj2TRsyKRFXKg==
+X-Received: by 2002:a2e:90d4:0:b0:2b9:cd79:8f94 with SMTP id o20-20020a2e90d4000000b002b9cd798f94mr6669681ljg.39.1691419904201;
+        Mon, 07 Aug 2023 07:51:44 -0700 (PDT)
+Received: from localhost.localdomain ([46.248.82.114])
+        by smtp.gmail.com with ESMTPSA id z25-20020a170906271900b0099b4d86fbccsm5392785ejc.141.2023.08.07.07.51.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Aug 2023 07:51:43 -0700 (PDT)
+From:   Uros Bizjak <ubizjak@gmail.com>
+To:     x86@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Uros Bizjak <ubizjak@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        kgdb-bugreport@lists.sourceforge.net,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Ben Dooks <ben-linux@fluff.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Valentin Schneider <vschneid@redhat.com>,
-        Wei Li <liwei391@huawei.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 0/7] arm64: Add debug IPI for backtraces / kgdb; try
- to use NMI for it
-Message-ID: <ZNEDIlst3OVZF7P2@FVFF77S0Q05N.cambridge.arm.com>
-References: <20230601213440.2488667-1-dianders@chromium.org>
- <CAD=FV=V2fFqwg3f3KS29+AkggHFDbyYvfAb12DrDn_PF8+bJjA@mail.gmail.com>
- <ZNDKVP2m-iiZCz3v@FVFF77S0Q05N.cambridge.arm.com>
- <CAFA6WYMD4TRR5psUyhu2jhZ2XBMUfav3D7_eH1HE8VJfXc7Fuw@mail.gmail.com>
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: [PATCH 1/2] perf/x86/rapl: Stop doing cpu_relax in the cmpxchg loop
+Date:   Mon,  7 Aug 2023 16:51:14 +0200
+Message-ID: <20230807145134.3176-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFA6WYMD4TRR5psUyhu2jhZ2XBMUfav3D7_eH1HE8VJfXc7Fuw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Aug 07, 2023 at 06:16:24PM +0530, Sumit Garg wrote:
-> On Mon, 7 Aug 2023 at 16:11, Mark Rutland <mark.rutland@arm.com> wrote:
-> > On Mon, Jul 24, 2023 at 08:55:44AM -0700, Doug Anderson wrote:
-> > > On Thu, Jun 1, 2023 at 2:37 PM Douglas Anderson <dianders@chromium.org> wrote:
-> > I'd also strongly prefer if we
-> > could have separate IPI_CPU_BACKTRACE and IPI_CPU_KGDB IPIs,
-> 
-> With current logic of single debug IPI, it is not required for a user
-> to enable KGDB in order to use that IPI for backtrace. The original
-> motivation for this logic was that the IPIs are a scarce resource on
-> arm64 as per comments from Marc. So I am fine either way to keep them
-> separate or unified.
-> 
-> > and I think we can
-> > do that either by unifying IPI_CPU_STOP && IPI_CPU_CRASH_STOP or by reclaiming
-> > IPI_WAKEUP by reusing a different IPI for the parking protocol (e.g.
-> > IPI_RESCHEDULE).
-> 
-> That sounds like a good cleanup.
+According to the commit f5fe24ef17b5 ("lockref: stop doing cpu_relax
+in the cmpxchg loop"):
 
-I took a quick stab at removing IPI_WAKEUP, and it seems simple enough; patch
-below.
+"On the x86-64 architecture even a failing cmpxchg grants exclusive
+access to the cacheline, making it preferable to retry the failed op
+immediately instead of stalling with the pause instruction."
 
-Mark.
+Based on the above observation, remove cpu_relax from the
+cmpxchg loop of rapl_event_update.
 
-----<8----
-From 267401824576c1dd3bb6d380142c92f710098b67 Mon Sep 17 00:00:00 2001
-From: Mark Rutland <mark.rutland@arm.com>
-Date: Mon, 7 Aug 2023 15:05:47 +0100
-Subject: [PATCH] arm64: smp: Remove dedicated wakeup IPI
-
-To enable NMI backtrace and KGDB's NMI cpu roundup, we need to free up
-at least one dedicated IPI.
-
-On arm64 the IPI_WAKEUP IPI is only used for the ACPI parking protocol,
-which itself is only used on some very early ARMv8 systems which
-couldn't implement PSCI.
-
-Remove the IPI_WAKEUP IPI, and rely on the IPI_RESCHEDULE IPI to wake
-CPUs from the parked state. This will cause a tiny amonut of redundant
-work to check the thread flags, but this is miniscule in relation to the
-cost of taking and handling the IPI in the first place. We can safely
-handle redundant IPI_RESCHEDULE IPIs, so there should be no functional
-impact as a result of this change.
-
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Douglas Anderson <dianders@chromium.org>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Sumit Garg <sumit.garg@linaro.org>
-Cc: Will Deacon <will@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc. "H. Peter Anvin" <hpa@zytor.com>
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
 ---
- arch/arm64/include/asm/smp.h              |  4 ++--
- arch/arm64/kernel/acpi_parking_protocol.c |  2 +-
- arch/arm64/kernel/smp.c                   | 28 +++++++++--------------
- 3 files changed, 14 insertions(+), 20 deletions(-)
+ arch/x86/events/rapl.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
-index 9b31e6d0da174..798fd76a883a0 100644
---- a/arch/arm64/include/asm/smp.h
-+++ b/arch/arm64/include/asm/smp.h
-@@ -89,9 +89,9 @@ extern void arch_send_call_function_single_ipi(int cpu);
- extern void arch_send_call_function_ipi_mask(const struct cpumask *mask);
+diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+index 52e6e7ed4f78..e8e26733e17b 100644
+--- a/arch/x86/events/rapl.c
++++ b/arch/x86/events/rapl.c
+@@ -184,10 +184,8 @@ static u64 rapl_event_update(struct perf_event *event)
+ 	rdmsrl(event->hw.event_base, new_raw_count);
  
- #ifdef CONFIG_ARM64_ACPI_PARKING_PROTOCOL
--extern void arch_send_wakeup_ipi_mask(const struct cpumask *mask);
-+extern void arch_send_wakeup_ipi(int cpu);
- #else
--static inline void arch_send_wakeup_ipi_mask(const struct cpumask *mask)
-+static inline void arch_send_wakeup_ipi(int cpu)
- {
- 	BUILD_BUG();
- }
-diff --git a/arch/arm64/kernel/acpi_parking_protocol.c b/arch/arm64/kernel/acpi_parking_protocol.c
-index b1990e38aed0a..e1be29e608b71 100644
---- a/arch/arm64/kernel/acpi_parking_protocol.c
-+++ b/arch/arm64/kernel/acpi_parking_protocol.c
-@@ -103,7 +103,7 @@ static int acpi_parking_protocol_cpu_boot(unsigned int cpu)
- 		       &mailbox->entry_point);
- 	writel_relaxed(cpu_entry->gic_cpu_id, &mailbox->cpu_id);
+ 	if (local64_cmpxchg(&hwc->prev_count, prev_raw_count,
+-			    new_raw_count) != prev_raw_count) {
+-		cpu_relax();
++			    new_raw_count) != prev_raw_count)
+ 		goto again;
+-	}
  
--	arch_send_wakeup_ipi_mask(cpumask_of(cpu));
-+	arch_send_wakeup_ipi(cpu);
- 
- 	return 0;
- }
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index edd63894d61e8..be00c8c5c1711 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -72,7 +72,6 @@ enum ipi_msg_type {
- 	IPI_CPU_CRASH_STOP,
- 	IPI_TIMER,
- 	IPI_IRQ_WORK,
--	IPI_WAKEUP,
- 	NR_IPI
- };
- 
-@@ -764,7 +763,6 @@ static const char *ipi_types[NR_IPI] __tracepoint_string = {
- 	[IPI_CPU_CRASH_STOP]	= "CPU stop (for crash dump) interrupts",
- 	[IPI_TIMER]		= "Timer broadcast interrupts",
- 	[IPI_IRQ_WORK]		= "IRQ work interrupts",
--	[IPI_WAKEUP]		= "CPU wake-up interrupts",
- };
- 
- static void smp_cross_call(const struct cpumask *target, unsigned int ipinr);
-@@ -797,13 +795,6 @@ void arch_send_call_function_single_ipi(int cpu)
- 	smp_cross_call(cpumask_of(cpu), IPI_CALL_FUNC);
- }
- 
--#ifdef CONFIG_ARM64_ACPI_PARKING_PROTOCOL
--void arch_send_wakeup_ipi_mask(const struct cpumask *mask)
--{
--	smp_cross_call(mask, IPI_WAKEUP);
--}
--#endif
--
- #ifdef CONFIG_IRQ_WORK
- void arch_irq_work_raise(void)
- {
-@@ -897,14 +888,6 @@ static void do_handle_IPI(int ipinr)
- 		break;
- #endif
- 
--#ifdef CONFIG_ARM64_ACPI_PARKING_PROTOCOL
--	case IPI_WAKEUP:
--		WARN_ONCE(!acpi_parking_protocol_valid(cpu),
--			  "CPU%u: Wake-up IPI outside the ACPI parking protocol\n",
--			  cpu);
--		break;
--#endif
--
- 	default:
- 		pr_crit("CPU%u: Unknown IPI message 0x%x\n", cpu, ipinr);
- 		break;
-@@ -979,6 +962,17 @@ void arch_smp_send_reschedule(int cpu)
- 	smp_cross_call(cpumask_of(cpu), IPI_RESCHEDULE);
- }
- 
-+#ifdef CONFIG_ARM64_ACPI_PARKING_PROTOCOL
-+void arch_send_wakeup_ipi(int cpu)
-+{
-+	/*
-+	 * We use a scheduler IPI to wake the CPU as this avoids the need for a
-+	 * dedicated IPI and we can safely handle spurious scheduler IPIs.
-+	 */
-+	arch_smp_send_reschedule(cpu);
-+}
-+#endif
-+
- #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
- void tick_broadcast(const struct cpumask *mask)
- {
+ 	/*
+ 	 * Now we have the new raw value and have updated the prev
 -- 
-2.30.2
+2.41.0
 
