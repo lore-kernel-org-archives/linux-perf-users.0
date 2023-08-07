@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC14AC001B0
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 09:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D7DEB64DD
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 10:12:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230018AbjHGJxD (ORCPT
+        id S229504AbjHGKM0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Aug 2023 05:53:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39942 "EHLO
+        Mon, 7 Aug 2023 06:12:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229480AbjHGJxC (ORCPT
+        with ESMTP id S229496AbjHGKMZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Aug 2023 05:53:02 -0400
+        Mon, 7 Aug 2023 06:12:25 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D08E119AA;
-        Mon,  7 Aug 2023 02:52:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7B3F110EA;
+        Mon,  7 Aug 2023 03:12:23 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 015E01FB;
-        Mon,  7 Aug 2023 02:52:58 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 126241FB;
+        Mon,  7 Aug 2023 03:13:06 -0700 (PDT)
 Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.32.139])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 013183F59C;
-        Mon,  7 Aug 2023 02:52:11 -0700 (PDT)
-Date:   Mon, 7 Aug 2023 10:52:09 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B1A13F59C;
+        Mon,  7 Aug 2023 03:12:20 -0700 (PDT)
+Date:   Mon, 7 Aug 2023 11:12:17 +0100
 From:   Mark Rutland <mark.rutland@arm.com>
 To:     Douglas Anderson <dianders@chromium.org>
 Cc:     Catalin Marinas <catalin.marinas@arm.com>,
@@ -40,89 +40,292 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Masayoshi Mizuma <msys.mizuma@gmail.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 2/7] arm64: idle: Tag the arm64 idle functions as
- __cpuidle
-Message-ID: <ZNC-yX9bW1iRShbh@FVFF77S0Q05N.cambridge.arm.com>
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 3/7] arm64: Add framework for a debug IPI
+Message-ID: <ZNDDgRuNGzovddaO@FVFF77S0Q05N.cambridge.arm.com>
 References: <20230601213440.2488667-1-dianders@chromium.org>
- <20230601143109.v9.2.I4baba13e220bdd24d11400c67f137c35f07f82c7@changeid>
+ <20230601143109.v9.3.Ie6c132b96ebbbcddbf6954b9469ed40a6960343c@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230601143109.v9.2.I4baba13e220bdd24d11400c67f137c35f07f82c7@changeid>
+In-Reply-To: <20230601143109.v9.3.Ie6c132b96ebbbcddbf6954b9469ed40a6960343c@changeid>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 01, 2023 at 02:31:46PM -0700, Douglas Anderson wrote:
-> As per the (somewhat recent) comment before the definition of
-> `__cpuidle`, the tag is like `noinstr` but also marks a function so it
-> can be identified by cpu_in_idle(). Let'a add this.
+On Thu, Jun 01, 2023 at 02:31:47PM -0700, Douglas Anderson wrote:
+> From: Sumit Garg <sumit.garg@linaro.org>
 > 
-> After doing this then when we dump stack traces of all processors
-> using nmi_cpu_backtrace() then instead of getting useless backtraces
-> we get things like:
+> Introduce a framework for an IPI that will be used for debug
+> purposes. The primary use case of this IPI will be to generate stack
+> crawls on other CPUs, but it will also be used to round up CPUs for
+> kgdb.
 > 
->   NMI backtrace for cpu N skipped: idling at cpu_do_idle+0x94/0x98
+> When possible, we try to allocate this debug IPI as an NMI (or a
+> pseudo NMI). If that fails (due to CONFIG, an incompatible interrupt
+> controller, a quirk, missing the "irqchip.gicv3_pseudo_nmi=1" kernel
+> parameter, etc) we fall back to a normal IPI.
 > 
-> NOTE: this patch won't make cpu_in_idle() work perfectly for arm64,
-> but it doesn't hurt and does catch some cases. Specifically an example
-> that wasn't caught in my testing looked like this:
+> NOTE: hooking this up for CPU backtrace / kgdb will happen in a future
+> patch, this just adds the framework.
 > 
->  gic_cpu_sys_reg_init+0x1f8/0x314
->  gic_cpu_pm_notifier+0x40/0x78
->  raw_notifier_call_chain+0x5c/0x134
->  cpu_pm_notify+0x38/0x64
->  cpu_pm_exit+0x20/0x2c
->  psci_enter_idle_state+0x48/0x70
->  cpuidle_enter_state+0xb8/0x260
->  cpuidle_enter+0x44/0x5c
->  do_idle+0x188/0x30c
-> 
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 > Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-I don't have strong feelings either way for this, so:
+I think that we shouldn't add a framework in a separate file for this:
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+* This is very similar to our existing IPI management in smp.c, so it feels
+  like duplication, or at least another thing we'd like to keep in-sync.
+
+* We're going to want an NMI backtrace regardless of KGDB
+
+* We're going to want the IPI_CPU_STOP and IPI_CRASH_CPU_STOP IPIs to be NMIs
+  too.
+
+I reckon it'd be better to extend the existing IPI logic in smp.c to allow IPIs
+to be requested as NMIs, e.g.
+
+----
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index edd63894d61e8..48e6aa62c473e 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -33,6 +33,7 @@
+ #include <linux/kernel_stat.h>
+ #include <linux/kexec.h>
+ #include <linux/kvm_host.h>
++#include <linux/nmi.h>
+ 
+ #include <asm/alternative.h>
+ #include <asm/atomic.h>
+@@ -926,6 +927,21 @@ static void smp_cross_call(const struct cpumask *target, unsigned int ipinr)
+ 	__ipi_send_mask(ipi_desc[ipinr], target);
+ }
+ 
++static bool ipi_should_be_nmi(enum ipi_msg_type ipi)
++{
++	if (!system_uses_irq_prio_masking())
++		return false;
++
++	switch (ipi) {
++	/*
++	 * TODO: select NMI IPIs here
++	 */
++		return true;
++	default:
++		return false;
++	}
++}
++
+ static void ipi_setup(int cpu)
+ {
+ 	int i;
+@@ -933,8 +949,14 @@ static void ipi_setup(int cpu)
+ 	if (WARN_ON_ONCE(!ipi_irq_base))
+ 		return;
+ 
+-	for (i = 0; i < nr_ipi; i++)
+-		enable_percpu_irq(ipi_irq_base + i, 0);
++	for (i = 0; i < nr_ipi; i++) {
++		if (ipi_should_be_nmi(i)) {
++			prepare_percpu_nmi(ipi_irq_base + i);
++			enable_percpu_nmi(ipi_irq_base + i, 0);
++		} else {
++			enable_percpu_irq(ipi_irq_base + i, 0);
++		}
++	}
+ }
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+@@ -945,8 +967,14 @@ static void ipi_teardown(int cpu)
+ 	if (WARN_ON_ONCE(!ipi_irq_base))
+ 		return;
+ 
+-	for (i = 0; i < nr_ipi; i++)
+-		disable_percpu_irq(ipi_irq_base + i);
++	for (i = 0; i < nr_ipi; i++) {
++		if (ipi_should_be_nmi(i)) {
++			disable_percpu_nmi(ipi_irq_base + i);
++			teardown_percpu_nmi(ipi_irq_base + i);
++		} else {
++			disable_percpu_irq(ipi_irq_base + i);
++		}
++	}
+ }
+ #endif
+ 
+@@ -958,11 +986,19 @@ void __init set_smp_ipi_range(int ipi_base, int n)
+ 	nr_ipi = min(n, NR_IPI);
+ 
+ 	for (i = 0; i < nr_ipi; i++) {
+-		int err;
+-
+-		err = request_percpu_irq(ipi_base + i, ipi_handler,
+-					 "IPI", &cpu_number);
+-		WARN_ON(err);
++		int err = -EINVAL;
++
++		if (ipi_should_be_nmi(i)) {
++			err = request_percpu_nmi(ipi_base + i, ipi_handler,
++						 "IPI", &cpu_number);
++			WARN(err, "Could not request IPI %d as NMI, err=%d\n",
++			     i, err);
++		} else {
++			err = request_percpu_irq(ipi_base + i, ipi_handler,
++						 "IPI", &cpu_number);
++			WARN(err, "Could not request IPI %d as IRQ, err=%d\n",
++			     i, err);
++		}
+ 
+ 		ipi_desc[i] = irq_to_desc(ipi_base + i);
+ 		irq_set_status_flags(ipi_base + i, IRQ_HIDDEN);
+----
+
+... and then if we need an IPI for KGDB, we can add that to the existing list
+of IPIs, and have it requested/enabled/disabled as usual.
 
 Thanks,
 Mark.
 
 > ---
+> I didn't get any feedback from v8 patch #10 [1], but I went ahead and
+> folded it in here anyway since it really simplfies things. If people
+> don't like the fallback to regular IPI, I can also undo it.
+> 
+> [1] https://lore.kernel.org/r/20230419155341.v8.10.Ic3659997d6243139d0522fc3afcdfd88d7a5f030@changeid/
 > 
 > Changes in v9:
-> - Added to commit message that this doesn't catch all cases.
+> - Fold in v8 patch #10 ("Fallback to a regular IPI if NMI isn't enabled")
+> - Moved header file out of "include" since it didn't need to be there.
+> - Remove arm64_supports_nmi()
+> - Renamed "NMI IPI" to "debug IPI" since it might not be backed by NMI.
 > 
 > Changes in v8:
-> - "Tag the arm64 idle functions as __cpuidle" new for v8
+> - debug_ipi_setup() and debug_ipi_teardown() no longer take cpu param
 > 
->  arch/arm64/kernel/idle.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  arch/arm64/kernel/Makefile    |  2 +-
+>  arch/arm64/kernel/ipi_debug.c | 76 +++++++++++++++++++++++++++++++++++
+>  arch/arm64/kernel/ipi_debug.h | 13 ++++++
+>  3 files changed, 90 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm64/kernel/ipi_debug.c
+>  create mode 100644 arch/arm64/kernel/ipi_debug.h
 > 
-> diff --git a/arch/arm64/kernel/idle.c b/arch/arm64/kernel/idle.c
-> index c1125753fe9b..05cfb347ec26 100644
-> --- a/arch/arm64/kernel/idle.c
-> +++ b/arch/arm64/kernel/idle.c
-> @@ -20,7 +20,7 @@
->   *	ensure that interrupts are not masked at the PMR (because the core will
->   *	not wake up if we block the wake up signal in the interrupt controller).
->   */
-> -void noinstr cpu_do_idle(void)
-> +void __cpuidle cpu_do_idle(void)
->  {
->  	struct arm_cpuidle_irq_context context;
+> diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+> index cc22011ab66a..737838f803b7 100644
+> --- a/arch/arm64/kernel/Makefile
+> +++ b/arch/arm64/kernel/Makefile
+> @@ -34,7 +34,7 @@ obj-y			:= debug-monitors.o entry.o irq.o fpsimd.o		\
+>  			   cpufeature.o alternative.o cacheinfo.o		\
+>  			   smp.o smp_spin_table.o topology.o smccc-call.o	\
+>  			   syscall.o proton-pack.o idreg-override.o idle.o	\
+> -			   patching.o
+> +			   patching.o ipi_debug.o
 >  
-> @@ -35,7 +35,7 @@ void noinstr cpu_do_idle(void)
->  /*
->   * This is our default idle handler.
->   */
-> -void noinstr arch_cpu_idle(void)
-> +void __cpuidle arch_cpu_idle(void)
->  {
->  	/*
->  	 * This should do all the clock switching and wait for interrupt
+>  obj-$(CONFIG_COMPAT)			+= sys32.o signal32.o			\
+>  					   sys_compat.o
+> diff --git a/arch/arm64/kernel/ipi_debug.c b/arch/arm64/kernel/ipi_debug.c
+> new file mode 100644
+> index 000000000000..b57833e31eaf
+> --- /dev/null
+> +++ b/arch/arm64/kernel/ipi_debug.c
+> @@ -0,0 +1,76 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Debug IPI support
+> + *
+> + * Copyright (C) 2020 Linaro Limited
+> + * Author: Sumit Garg <sumit.garg@linaro.org>
+> + */
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/smp.h>
+> +
+> +#include "ipi_debug.h"
+> +
+> +static struct irq_desc *ipi_debug_desc __read_mostly;
+> +static int ipi_debug_id __read_mostly;
+> +static bool is_nmi;
+> +
+> +void arm64_debug_ipi(cpumask_t *mask)
+> +{
+> +	if (WARN_ON_ONCE(!ipi_debug_desc))
+> +		return;
+> +
+> +	__ipi_send_mask(ipi_debug_desc, mask);
+> +}
+> +
+> +static irqreturn_t ipi_debug_handler(int irq, void *data)
+> +{
+> +	/* nop, NMI handlers for special features can be added here. */
+> +
+> +	return IRQ_NONE;
+> +}
+> +
+> +void debug_ipi_setup(void)
+> +{
+> +	if (!ipi_debug_desc)
+> +		return;
+> +
+> +	if (is_nmi) {
+> +		if (!prepare_percpu_nmi(ipi_debug_id))
+> +			enable_percpu_nmi(ipi_debug_id, IRQ_TYPE_NONE);
+> +	} else {
+> +		enable_percpu_irq(ipi_debug_id, IRQ_TYPE_NONE);
+> +	}
+> +}
+> +
+> +void debug_ipi_teardown(void)
+> +{
+> +	if (!ipi_debug_desc)
+> +		return;
+> +
+> +	if (is_nmi) {
+> +		disable_percpu_nmi(ipi_debug_id);
+> +		teardown_percpu_nmi(ipi_debug_id);
+> +	} else {
+> +		disable_percpu_irq(ipi_debug_id);
+> +	}
+> +}
+> +
+> +void __init set_smp_debug_ipi(int ipi)
+> +{
+> +	int err;
+> +
+> +	if (!request_percpu_nmi(ipi, ipi_debug_handler, "IPI", &cpu_number)) {
+> +		is_nmi = true;
+> +	} else {
+> +		err = request_percpu_irq(ipi, ipi_debug_handler, "IPI", &cpu_number);
+> +		if (WARN_ON(err))
+> +			return;
+> +
+> +		irq_set_status_flags(ipi, IRQ_HIDDEN);
+> +	}
+> +
+> +	ipi_debug_desc = irq_to_desc(ipi);
+> +	ipi_debug_id = ipi;
+> +}
+> diff --git a/arch/arm64/kernel/ipi_debug.h b/arch/arm64/kernel/ipi_debug.h
+> new file mode 100644
+> index 000000000000..f6011a09282f
+> --- /dev/null
+> +++ b/arch/arm64/kernel/ipi_debug.h
+> @@ -0,0 +1,13 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __ASM_NMI_H
+> +#define __ASM_NMI_H
+> +
+> +#include <linux/cpumask.h>
+> +
+> +void arm64_debug_ipi(cpumask_t *mask);
+> +
+> +void set_smp_debug_ipi(int ipi);
+> +void debug_ipi_setup(void);
+> +void debug_ipi_teardown(void);
+> +
+> +#endif
 > -- 
 > 2.41.0.rc2.161.g9c6817b8e7-goog
 > 
