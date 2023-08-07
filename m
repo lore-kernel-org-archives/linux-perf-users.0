@@ -2,132 +2,81 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A559AC00528
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 14:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95567C001B0
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 14:54:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229570AbjHGOvt (ORCPT
+        id S229599AbjHGOyz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Aug 2023 10:51:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55422 "EHLO
+        Mon, 7 Aug 2023 10:54:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229538AbjHGOvs (ORCPT
+        with ESMTP id S229534AbjHGOyy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Aug 2023 10:51:48 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EC3E10CB;
-        Mon,  7 Aug 2023 07:51:47 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-99bcc0adab4so674393666b.2;
-        Mon, 07 Aug 2023 07:51:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691419905; x=1692024705;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9cm8cTsTs1NRIm6EldQMncAKGPYPbnoceUIC+MvOm3Y=;
-        b=PzuhEtCYHKoDyf4HVfut1KrGorVjsc98I4C9d1tFK3yVp0tsrF1nz+UGpjD3vAeg/V
-         Pi1bszrOHYit9YKoXgHaTEyJE8ziLUTOOx9eTnsLbayS9/70OnOdnlkBoIzbeaDVva+z
-         yIpNS637mrpMsvs2ooJf+/FYUaw/jXngR9OIOGN9p85JJlLEqYvYkUxXBq5bKAuzKHcY
-         9DL9VzSAzHibqJNzizZ9Qlt4Hh/3LLwrLUVKHzy6AsSWVtJgBoP0LnoTdDAHtVdibZMI
-         2Yc4A9fyggRJF31xMtyunWH7r2lFN3Moms6wW18pgPd0RcQZgeF9SEy2BPfvwo3yD8w2
-         XP6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691419905; x=1692024705;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9cm8cTsTs1NRIm6EldQMncAKGPYPbnoceUIC+MvOm3Y=;
-        b=dPvVklGXzCDUXOMECW23NZufMjEQ7iv6kjytqi316ctwK6xW/g4U2bV2/QYTWwKG6U
-         4u6xohCVgq7t+Z2kXR98aEZc4A5e1kYU/H7UBn1MrJh6CJ+WHSiPVD32VyFIZjxPxQA4
-         TWHQEef1656QCE8x+ObvB5Amo64SuZ+DeSBGnBauuYzg+wgcj4AGeraVp0fcHDPzk5VM
-         ORYmZHOVelbP+MhvcDoaqK5PHez6ApTB0uVgf8qjmTaAqn6ROnEG60P0wssHqo9a1d4j
-         hEIpOaYxUfY3D6laB7Xis4O2NWhqAn6A07GsUnQoy5VcnaEuTdQXJhxvj3vh3oE3ysaR
-         7j1Q==
-X-Gm-Message-State: AOJu0Yw99RTBieRvJBdbnWDFNm008dKDXAOAy/Ct2dons/A6vbe9bt2F
-        vYSRrQbYxBvpwkgw0qCVv+A=
-X-Google-Smtp-Source: AGHT+IG6MJ7UuwJYoOrJvawdee4jeFawmhku07p+D7zaOsoWPSSuahRcR6yHonvzPhr+4SuLjyvM8A==
-X-Received: by 2002:a17:906:76d7:b0:99c:ced6:842f with SMTP id q23-20020a17090676d700b0099cced6842fmr4081373ejn.10.1691419905351;
-        Mon, 07 Aug 2023 07:51:45 -0700 (PDT)
-Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id z25-20020a170906271900b0099b4d86fbccsm5392785ejc.141.2023.08.07.07.51.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Aug 2023 07:51:44 -0700 (PDT)
-From:   Uros Bizjak <ubizjak@gmail.com>
-To:     x86@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Uros Bizjak <ubizjak@gmail.com>,
+        Mon, 7 Aug 2023 10:54:54 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 291F0107;
+        Mon,  7 Aug 2023 07:54:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691420094; x=1722956094;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=BdAcThl5yIUwfNNvFSUWR4vsRYU002qXlLYHAIqkQ10=;
+  b=Y3dUPmkNJMdY4MYcLgMkSb3fzKTUSxiz96V2w3FCDaf9Smx5hJzK+PGX
+   LMcdV/yd7UpUHKgZf5cMH62hs1OzjjvOMx7uSTKewk0pyhk4lPsi7c/DS
+   t/YoNMjSdLb7iNKnkcFg/B/M3XPEPIXFW+DhOnjqVlE0FphhKn7MYweBO
+   7wWb/17L9ZMPnxEunHOT7+n8cJxm03f2pzh/e0XldxMca9US2CxOVr09b
+   YMFA1bcjVQwGFpryAxlK9NbU6GUZfSFtqCc2tLDgLCAngEYqyvSUOaz0Q
+   wJvAtF70M8lSl3sMUt3zN0OyiQt1QZoSIclC8s4DRgRQkVu8xDCqy4elE
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="401537300"
+X-IronPort-AV: E=Sophos;i="6.01,262,1684825200"; 
+   d="scan'208";a="401537300"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2023 07:54:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="904790742"
+X-IronPort-AV: E=Sophos;i="6.01,262,1684825200"; 
+   d="scan'208";a="904790742"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2023 07:54:52 -0700
+Date:   Mon, 7 Aug 2023 07:54:47 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: [PATCH 2/2] perf/x86/rapl: Use local64_try_cmpxchg in rapl_event_update
-Date:   Mon,  7 Aug 2023 16:51:15 +0200
-Message-ID: <20230807145134.3176-2-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230807145134.3176-1-ubizjak@gmail.com>
-References: <20230807145134.3176-1-ubizjak@gmail.com>
+        Kan Liang <kan.liang@linux.intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Claire Jensen <cjense@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf stat: Don't display zero tool counts
+Message-ID: <ZNEFt3w/wNCvdawF@tassilo>
+References: <20230801205452.3380578-1-irogers@google.com>
+ <ZMwUI/YtEHsO3Cc8@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZMwUI/YtEHsO3Cc8@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Use local64_try_cmpxchg instead of local64_cmpxchg (*ptr, old, new) == old.
-x86 CMPXCHG instruction returns success in ZF flag, so this change saves a
-compare after cmpxchg (and related move instruction in front of cmpxchg).
+On Thu, Aug 03, 2023 at 05:54:59PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Aug 01, 2023 at 01:54:52PM -0700, Ian Rogers escreveu:
+> > Skip zero counts for tool events.
+> > 
+> > Reported-by: Andi Kleen <ak@linux.intel.com>
+> 
+> Andi,
+> 
+> 	Have you tested this? Can we please have your Tested-by?
 
-Also, try_cmpxchg implicitly assigns old *ptr value to "old" when cmpxchg
-fails. There is no need to re-read the value in the loop.
+I thought I had sent it earlier?
 
-No functional change intended.
-
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc. "H. Peter Anvin" <hpa@zytor.com>
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
----
- arch/x86/events/rapl.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index e8e26733e17b..7c2376dae79d 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -179,13 +179,11 @@ static u64 rapl_event_update(struct perf_event *event)
- 	s64 delta, sdelta;
- 	int shift = RAPL_CNTR_WIDTH;
- 
--again:
- 	prev_raw_count = local64_read(&hwc->prev_count);
--	rdmsrl(event->hw.event_base, new_raw_count);
--
--	if (local64_cmpxchg(&hwc->prev_count, prev_raw_count,
--			    new_raw_count) != prev_raw_count)
--		goto again;
-+	do {
-+		rdmsrl(event->hw.event_base, new_raw_count);
-+	} while (!local64_try_cmpxchg(&hwc->prev_count,
-+				      &prev_raw_count, new_raw_count));
- 
- 	/*
- 	 * Now we have the new raw value and have updated the prev
--- 
-2.41.0
-
+Tested-by: Andi Kleen <ak@linux.intel.com>
