@@ -2,26 +2,74 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA9CC04FE1
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 07:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1977FC001DE
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 09:20:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229894AbjHGHwU (ORCPT
+        id S231434AbjHGJUV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Aug 2023 03:52:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45646 "EHLO
+        Mon, 7 Aug 2023 05:20:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231313AbjHGHvs (ORCPT
+        with ESMTP id S229588AbjHGJUT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Aug 2023 03:51:48 -0400
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2508171A;
-        Mon,  7 Aug 2023 00:51:45 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VpC-05Q_1691394699;
-Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VpC-05Q_1691394699)
-          by smtp.aliyun-inc.com;
-          Mon, 07 Aug 2023 15:51:40 +0800
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-To:     John Garry <john.g.garry@oracle.com>,
+        Mon, 7 Aug 2023 05:20:19 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6379EE68;
+        Mon,  7 Aug 2023 02:20:18 -0700 (PDT)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 376MvSbT013599;
+        Mon, 7 Aug 2023 09:19:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-03-30;
+ bh=IoX9Fvww4jlZ7oPqmNo5WsZZJu0sF2XIMPJR9tUMh8o=;
+ b=z4OCfc25/8gj+gKZMI+AbmhNPBOtfCP4tZ9G7RXuKiWTSu+/qfMbfBXxQd23gtdzIWxt
+ wmytxcS+pB1kSsaf7u/VqG0IPZMC3TWZCTelLMwERnR7TDX7YYiypPHoJJZpo52Gi0lB
+ O7BJguIkjNLOenIz6O4/kCz8UbIleMX7sSY7uSZI6gMMzqAGenhH6NxpQB7ioFCZDGYz
+ 33ybbM2hx/cn2n43NAkKgPTemVHjiVL8Xh9aKHrHLxQHqRjzGhbhoEwwv04ZPvEvpC6/
+ mCbf3AQlGG+cZOi+pT5Kp8h+5yGAWnAFmANuA/cd5S1KA/DTjBi9f8zuP1l9AVuDlygO pw== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3s9d73ac06-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 07 Aug 2023 09:19:51 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3777ebvp023046;
+        Mon, 7 Aug 2023 09:19:51 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2100.outbound.protection.outlook.com [104.47.58.100])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3s9cv48sf1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 07 Aug 2023 09:19:50 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=D0ENX3T5m6GiAzqQ1y2kUE3fnNHCbfPcPd2gVXx+WlqduA54A7kCWUoYGBgVNPmmqA7LSPF98C4e6a7bq+ja3SzB55pf2LXwr7wxHwOG25y54FRpQi6dcvdwSU2v5hAp5vCMA/EgKH0dVPMXPNSNAscpeL2aoZYC+Ka0+ihUM/3TBgdpropGoVDfJmAfuNI/mvVe3RGB6UehD7Jy6sKr5hnIOG/EMIP7SsR1t8z3xhY2ay/xmJtQNEwrDnKFcjDavEP2Wz8hDgkwZSJLExsvVi7y4d8g67aqpAm2j4aEhbkrt10X6rS/hUhsjBFPEGPC96EuSkF4TguPa1VAN/nyTg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IoX9Fvww4jlZ7oPqmNo5WsZZJu0sF2XIMPJR9tUMh8o=;
+ b=h5MsC9UkqbviJiENii7q3n4A9z40gfgeq/cNGtDOGfBcFipyRoZFzp4zewQzbfQaAunbj8VxFB23CUOa3bU6yIm1MGqSTXvG9AsV0TczC1AoRHR7OXiJfEd/RKuSwJDyJzWOfsrfb23Kei0BmV7XI47e7T1D556GueR2CEPKjnAjOEcjXT4H66yqDKnYDN3dcS20hB+f0VlLYF1yJY05mPA+0M4ppV+0YD44Vtcv+KgzzXRbeTEMmf0kXRtpmkg/jHG/HtqjgOMibBcD1R0yijs/ETuXjvxFWqr5yKaYf8sBSXtPVp+JUOQfjrNfhRwFs9gcN1hYKLJWJ9pBL/p/Mw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IoX9Fvww4jlZ7oPqmNo5WsZZJu0sF2XIMPJR9tUMh8o=;
+ b=FyfFCsy/B54aBB68kqJDE/XERZGgXzEM87ok8P8XgseQDjtV+A/ahzsiW+AaQmKDDiJEr2+PHD0nHPggB84gHitpxS7wKB5tQw3ivj6UaOOM5lhPqC4wd2Gp2xhPzYs9Q9Z7ECZxDaPCX/9loW//s4YjgXqtbMAsSIwP2mC/yNE=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by IA0PR10MB6916.namprd10.prod.outlook.com (2603:10b6:208:430::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.26; Mon, 7 Aug
+ 2023 09:19:49 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::ebfd:c49c:6b8:6fce]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::ebfd:c49c:6b8:6fce%6]) with mapi id 15.20.6652.026; Mon, 7 Aug 2023
+ 09:19:48 +0000
+Message-ID: <1a2c7977-2337-40d5-449b-18a3e3711686@oracle.com>
+Date:   Mon, 7 Aug 2023 10:19:41 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v6 1/7] perf pmu: "Compat" supports matching multiple
+ identifiers
+To:     Jing Zhang <renyu.zj@linux.alibaba.com>,
         Ian Rogers <irogers@google.com>
 Cc:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -37,326 +85,131 @@ Cc:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
         Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
         Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: [PATCH v6 6/7] perf jevents: Add support for Arm CMN PMU aliasing
-Date:   Mon,  7 Aug 2023 15:51:24 +0800
-Message-Id: <1691394685-61240-7-git-send-email-renyu.zj@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1691394685-61240-1-git-send-email-renyu.zj@linux.alibaba.com>
 References: <1691394685-61240-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1691394685-61240-2-git-send-email-renyu.zj@linux.alibaba.com>
+Content-Language: en-US
+From:   John Garry <john.g.garry@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <1691394685-61240-2-git-send-email-renyu.zj@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO2P265CA0265.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a1::13) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|IA0PR10MB6916:EE_
+X-MS-Office365-Filtering-Correlation-Id: a1421d8f-fdf5-46fb-790f-08db972772a7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: OR31rDsLa3TNE9t6/zjTy1qyV4cOld1SW/u44/MXK82XDDRWmj851+sfzhkaVxs3c+hE5byNkzABg9Xf+FZsbrmYU8tTst507o2FsQiYt1uXkj3W3/n0LUvbw7B/dk6y2cCJ4hJ1iPvi/UVJMY7hBKP9eXPDNUQQ4eEa03mqmxWJAJJw4UHRzPew7ZVzFBe9MlRyuQaNTNvL6Hb4tkT28Gjj4t4//PGscCHmvJAdwPUQ1f9Ml+zdaRwVDpsnwMdYzFBrDfwq45tak6bJIzmu+hNyKTdshRBOZcPlrCn0ErUi83p24qHXNURTpziFhhW4Uikb4tL+XWCvJiNsL6sHbkQgYGEq1/Fb7MDYD0seNzohsj/vl6t/e/k0knZKmhETeM4ShYni6yBSxAOi+7OpzeDPFXADva7XwrUiCsBCwBRziVHTKh7J1a0JJsjrAervlxiXv6zVvDk64oQoVr+8FH0a4V3YVnrk41d8+VrMHZ8NqO3yWCln/sYBdUa0qvtuDhVRC2KUleHjyvv7XDuScED4XtgNGz0HVC7CsuYQmdIBzXkpYQzWFghkwX+viNs2YbhOfs3d78YgT4vWHEO+taAfwX9HuHXdG1U8/PXxO71zC6gOwMSBxKITQrzAk8RyxItM2kwqEoLpzqXR68KGdQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(396003)(136003)(346002)(376002)(366004)(451199021)(186006)(1800799003)(2616005)(36756003)(6512007)(4326008)(316002)(86362001)(478600001)(54906003)(110136005)(38100700002)(6666004)(66946007)(36916002)(6486002)(66556008)(66476007)(31696002)(53546011)(6506007)(41300700001)(26005)(8676002)(8936002)(4744005)(2906002)(83380400001)(7416002)(5660300002)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TXQ1b0Yzb3dPaFRvdi91WksweTdoSkZEMnVGSGhSTDdjMVpTL0hrRWtXZVRB?=
+ =?utf-8?B?MlZhakNESkxNUlhJOGtMVkNBeVdiNjVrMWdHWGZ5N1BvV0FCTjFxdS81eVNB?=
+ =?utf-8?B?MGs4cHBaL05EY1BLSHlHZ2xEdG5xZWxBVy9wR3o4YW1YaGJFNzRNY29HZFIw?=
+ =?utf-8?B?RWtxV3l0NkdLYS9DNFJMa2tuMVVRSy8wTG0zT0VNTUpsUDcvZzFxOHBVZkt0?=
+ =?utf-8?B?MU94cTBPWkdJTkJFNDUvQTl3WklVVmNKQjBnOEYyMHFFSjN6QStYQkZ5cGRL?=
+ =?utf-8?B?aHVIM0I5dW11WGVaVkRBMEtQeEp2Z1BPaGc2OGNNY1llOHBzMjdtTWZjVmgw?=
+ =?utf-8?B?RzhlSVd5OTF6aEFrQXJ5SGxnM2NuQnRMNEh0b1ZHRFoyTzBsSnJiaG8zeWR1?=
+ =?utf-8?B?L1I2L1FHbTBWWEVGU010ZEo2ZFpqdVNMZjhVcTA4ZnRHVUFVbnZGaWpqd2Zl?=
+ =?utf-8?B?NTdwWjNUTTl2dWFnWDBxNUNIMi8xL1FDVEJTdVh1R2h5SEdWNEF5T3VzbWVv?=
+ =?utf-8?B?L0xjMXdoNVV3ZFpCeDkydEpmRFVhRmp5dTZBU1IrWWVWdlNkMlRiQ2t3dmFm?=
+ =?utf-8?B?cDBHK2M1RENCZnpmTFNLb2x3Y29CdU1WL09uOGNQMUJRMWFmSVBwbkhlUGth?=
+ =?utf-8?B?OEVDSGIvMzg1V0ttbjJrM3BySEpEUWN1OVk0UnYzZTZQd2JJVGNhYURjbmwx?=
+ =?utf-8?B?eTlJSFB4Zjh4ZnlOdm84VUlsZ1pQN2VhK1RFWm1memxleDdnRWQ3V08ybUl3?=
+ =?utf-8?B?ZFJMWm5XZzJuOFo4TnNMalFRL3JVcGdYRlFsRE1ONm90OG9lL2g1czNxVUF2?=
+ =?utf-8?B?eWpOSnVmR0hVMXVZYUtqOVMvSlJCdDQxS1RJeG5mVWx5eWx1MWtnVFlUb3pq?=
+ =?utf-8?B?bEV1c2tQaXBrZkJFSjVRZkZSWmVGZXQ1WXRvYjZ6bXFRV0FGMkJvYVowU3lL?=
+ =?utf-8?B?SStsMmhETGxVdGRBdVdHSFlTd1cvbE95NUZaSVpHMXFZRG5yalhxUDBveENm?=
+ =?utf-8?B?cElGeWQxOHpmNi92ZUw4SGdXaDY5eEUxbnc4TGFJS2J5QzFQNFBKOG9hamoz?=
+ =?utf-8?B?Q1lCOFNDNHEvR0orck9lYTBtVkFLU1pLbjVYbHJaTnIxWmRDSmhxMjl2bkMv?=
+ =?utf-8?B?SWQ2RXRsM1dZYUd3WFloRzJDcHJ3VmxUcTBSTWNkeXE4WWZBN3JnVFJaajRj?=
+ =?utf-8?B?d2M3aW9TRmprTGJtUHZzZ3F4Vm1WVmxCNk9sSTIycEh4OVcyK0VTeTltRlpL?=
+ =?utf-8?B?TTh1WDlhVTRwS3BYV3JjZzVsYVJXMGM4eFFBNm1sa0kvckYycWpQblE3Mzdr?=
+ =?utf-8?B?Y1dyQ0VIZldSK2VtQmV2V2swTGdhMzg4cnRVVitMK0dkTlBpWGRXRWNyU0Fs?=
+ =?utf-8?B?dzZ1VmcwdndYU3RQTVRPbU9QMEMxYldlVkhmQXR3ZldMQWUxdzErY2tyMFBD?=
+ =?utf-8?B?cStRT2ZhT0MwamowaU9ScGhjYldSc0o4d0FtelMxT0dFYXMvNWVHVmZjVXpo?=
+ =?utf-8?B?MFRPZHErR0p0aTJ0V09DNW1kcjB6bHI2WWhMd1NnSTNXNmtLUUwrUG1iUWpl?=
+ =?utf-8?B?eVdaYThuMm5IOU1WNjhSUHErVVYyOS92YWxMVC9lMjlWQ3lFQ1VVdThpbGlZ?=
+ =?utf-8?B?WXVMMWRtcC9vY1Y2OVNmb1hsQTZNYXBXYWFOSFI1SU54Ty9seTNQWkVLU1Fh?=
+ =?utf-8?B?M3hEQjB3elFJaTNRKzUwdklyVFJDbmwzczBQSjl5WDAzVG84dEs0SlJIT0J3?=
+ =?utf-8?B?T2Y4SVc3S0htQld0c0pHc0RLRmxIWXVjMVZJS0cwczdzTW5tdTUydE1PYWpS?=
+ =?utf-8?B?MlRtTm00a0FoRlU0cWp0NDc3dy83WExuK3dybS9BZ1JaaWZ3VXNaMUI3ckhm?=
+ =?utf-8?B?THd6SDRHblNKeUlVTW9vNHZ4UUtuWEY2aG0rWWZ6aDIyYkJ4bytCQTZtek9t?=
+ =?utf-8?B?OHU5MTRCWDlxU2o1bzkyWUU4d2ZFT3NRWmNmbDdRTHVTb3lhNVlBZGFVbTMw?=
+ =?utf-8?B?bjFndENoRGZoK25CVlBMVkl2dnlOa2RKWDFGc2JJVkl1ZERVZHNpRFBUdHN6?=
+ =?utf-8?B?RTRPNGlEYXV0T1RLUjBLTWRQS0M4N0ZWdFZqUDdLLzNjOHY1b0JTQzR3NElT?=
+ =?utf-8?Q?d3igXlaML35OomL2HVeW7QBsg?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?VWV5ajRqQmg0dWtOa1JCcXFQZWxEb21nZUVxdjAzQ2lJVWV4RmRhUHpKbTNp?=
+ =?utf-8?B?YTRjdGhBK0RUM3phZ0VnL00vaSthZ3duZ0hub3R4N3gyTWtPczFabHJWNnlV?=
+ =?utf-8?B?dDVldVJiQWNxL1d4MlM0UGJjZ0orRkVZR0J3MnpuaWhOR3NvRFY3ejg4cGNt?=
+ =?utf-8?B?Q2tIUjAvZnBUdFE1YWxuaVo2aW9reVdQV1VGakJNQkF3amY1NUo0dFBsN1l5?=
+ =?utf-8?B?bytIM1FBTjVCQ0RTeWZUTy9JTDZ5SXVxQS9IOFpaZXd0NkRvMUc5U09LYTJV?=
+ =?utf-8?B?SjNDcmFja0JpR3lWVy9aMjFDejY2RFhyRDBpbnZPcVNXTnRpaWhaNG5UTExP?=
+ =?utf-8?B?ZERScUhVaVVuek9qM1ZuclREa2xYaDNaeDlCVCtMbVdXd29WRnZsYlUwditt?=
+ =?utf-8?B?WGVGZ0tiMzN2RzdTbStuRVlVUEZ1blE0WVgxaUZRa3pzaWIxK3ZzeVdzT3h1?=
+ =?utf-8?B?WHpJemxveXFBalZJaUJTWFg3aWVaK0xlVUZXRHU2NXJVM3FZTm11ZGdJclJz?=
+ =?utf-8?B?NFhqMUMrZWVSN0V2WE9Ka2E4UzRCSW1FM0hVNklnWW9McE16aHhjaUVEQWhn?=
+ =?utf-8?B?TnJpeExlTElkUE1Ib0p4Wis5bFI4bHk0YkRXTlpJZi9KNmxYTlRSRUI0OGdP?=
+ =?utf-8?B?QjlQSi9QZzN6UWVLOVNDeWJueHllUnlKWVlUMldpOFpLaTFOME8wT3pLR0NJ?=
+ =?utf-8?B?ZXpYUU12YVBlYTNiTHFOem5rOXF2bjRmV0xsZ3FxU2Q1SFEydERBTzQrN0xp?=
+ =?utf-8?B?Q0VqMjd1SmpIOGFsVjFNRUtzclhOVG1OOHYreWRYS05lMFNUNkx4d1RDVTd1?=
+ =?utf-8?B?eGJxb080bmtSNVpvUHJ1YkRUbXQvcFhic21zOHpHY3FidnRWZnQzclRjNzBC?=
+ =?utf-8?B?bjltdTB4OWxSRnFRS011akhIdHk1cHQ3aW9PbktOMkhsVG5aV1pibitjZUh5?=
+ =?utf-8?B?ejB4V0g4Wk0zTGxpWjBIa1NRQWFwRU9vbXZzRU1WZDY1QUw1Qm5hRnd4SHI3?=
+ =?utf-8?B?Qi9FOWFBZUtNc3B2Y3FUTTduVzNqcStacm5MQmFUM1NyMVVsUUJ1Mk16UjQz?=
+ =?utf-8?B?MmNVY2hwOVVXRVFLYklRcjdWUGt3YWg5OWVScEkwSXBDazgraUdKSmU1OVJC?=
+ =?utf-8?B?V1gzWHhnUzIzaVFpTUdEOEZMTW1tRE1qcWx3eWdHejMzRThvcnBoM3JvaTRh?=
+ =?utf-8?B?djRxR2cwOGFEQmRoTEMyWExZWlM5QTJpSG1MczBOQjMzK1RQUkV2N1VCV2Mv?=
+ =?utf-8?B?YkQ0ZE5iTWsyUVp3VGZrT1J3ZURIMUs0MTNLTERtaFVYeUQvcno2TVJTWDdP?=
+ =?utf-8?B?QTNSWEd3MDZCTXNYbkVyUFZjd095OGUyL0pNaUhHMDJHNFo2NWJGQjhSLzlH?=
+ =?utf-8?B?aGFPWTJrSCtJMVM1TjZlM1JwNXdLT1ZuNHErVWhUWUZmVmtpYlRCN1hvMXN1?=
+ =?utf-8?B?bHc4WHhyVlU5STRsSkZ1Z2JaYnQ1cXJETDRmTmU1eHRFQXFBOTFDaVNVT2tC?=
+ =?utf-8?Q?a/YZ/0=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1421d8f-fdf5-46fb-790f-08db972772a7
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2023 09:19:48.8993
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5zpggnDz1Da4uJLQCEA/YR88xctPG92G1+XEMRDU9BnCv11uxFXbjBhp+576kLzVRnUDvH5vQA4mOYEKREObdQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR10MB6916
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-07_08,2023-08-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 bulkscore=0
+ malwarescore=0 adultscore=0 phishscore=0 mlxlogscore=999 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
+ definitions=main-2308070086
+X-Proofpoint-GUID: zbQtpHV74QPDK1jucMV64DsSU0CfWTDC
+X-Proofpoint-ORIG-GUID: zbQtpHV74QPDK1jucMV64DsSU0CfWTDC
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Currently just add aliases for part of Arm CMN PMU events which
-are general and compatible for any SoC and CMN-ANY.
+On 07/08/2023 08:51, Jing Zhang wrote:
+> The jevent "Compat" is used for uncore PMU alias or metric definitions.
+> 
+> The same PMU driver has different PMU identifiers due to different
+> hardware versions and types, but they may have some common PMU event.
+> Since a Compat value can only match one identifier, when adding the
+> same event alias to PMUs with different identifiers, each identifier
+> needs to be defined once, which is not streamlined enough.
+> 
+> So let "Compat" supports matching multiple identifiers for uncore PMU
+> alias. For example, the Compat value {43401;436*} can match the PMU
+> identifier "43401", that is, CMN600_r0p0, and the PMU identifier with
+> the prefix "436", that is, all CMN650, where "*" is a wildcard.
+> Tokens in Unit field are delimited by ';' with no spaces.
+> 
+> Signed-off-by: Jing Zhang<renyu.zj@linux.alibaba.com>
+> ---
 
-"Compat" value "434*;436*;43c*;43a*" means it is compatible with
-all CMN600/CMN650/CMN700/Ci700, which can be obtained from
-commit 7819e05a0dce ("perf/arm-cmn: Revamp model detection").
-
-The arm-cmn PMU events got from:
-[0] https://developer.arm.com/documentation/100180/0302/?lang=en
-[1] https://developer.arm.com/documentation/101408/0100/?lang=en
-[2] https://developer.arm.com/documentation/102308/0302/?lang=en
-[3] https://developer.arm.com/documentation/101569/0300/?lang=en
-
-Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
 Reviewed-by: John Garry <john.g.garry@oracle.com>
----
- .../pmu-events/arch/arm64/arm/cmn/sys/cmn.json     | 266 +++++++++++++++++++++
- tools/perf/pmu-events/jevents.py                   |   1 +
- 2 files changed, 267 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
-
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
-new file mode 100644
-index 0000000..e54036c
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
-@@ -0,0 +1,266 @@
-+[
-+	{
-+		"EventName": "hnf_cache_miss",
-+		"EventIdCode": "0x1",
-+		"Type": "0x5",
-+		"BriefDescription": "Counts total cache misses in first lookup result (high priority).",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "hnf_slc_sf_cache_access",
-+		"EventIdCode": "0x2",
-+		"Type": "0x5",
-+		"BriefDescription": "Counts number of cache accesses in first access (high priority).",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "hnf_cache_fill",
-+		"EventIdCode": "0x3",
-+		"Type": "0x5",
-+		"BriefDescription": "Counts total allocations in HN SLC (all cache line allocations to SLC).",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "hnf_pocq_retry",
-+		"EventIdCode": "0x4",
-+		"Type": "0x5",
-+		"BriefDescription": "Counts number of retried requests.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "hnf_pocq_reqs_recvd",
-+		"EventIdCode": "0x5",
-+		"Type": "0x5",
-+		"BriefDescription": "Counts number of requests that HN receives.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "hnf_sf_hit",
-+		"EventIdCode": "0x6",
-+		"Type": "0x5",
-+		"BriefDescription": "Counts number of SF hits.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "hnf_sf_evictions",
-+		"EventIdCode": "0x7",
-+		"Type": "0x5",
-+		"BriefDescription": "Counts number of SF eviction cache invalidations initiated.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "hnf_dir_snoops_sent",
-+		"EventIdCode": "0x8",
-+		"Type": "0x5",
-+		"BriefDescription": "Counts number of directed snoops sent (not including SF back invalidation).",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "hnf_brd_snoops_sent",
-+		"EventIdCode": "0x9",
-+		"Type": "0x5",
-+		"BriefDescription": "Counts number of multicast snoops sent (not including SF back invalidation).",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "hnf_slc_eviction",
-+		"EventIdCode": "0xa",
-+		"Type": "0x5",
-+		"BriefDescription": "Counts number of SLC evictions (dirty only).",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "hnf_slc_fill_invalid_way",
-+		"EventIdCode": "0xb",
-+		"Type": "0x5",
-+		"BriefDescription": "Counts number of SLC fills to an invalid way.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "hnf_mc_retries",
-+		"EventIdCode": "0xc",
-+		"Type": "0x5",
-+		"BriefDescription": "Counts number of retried transactions by the MC.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "hnf_mc_reqs",
-+		"EventIdCode": "0xd",
-+		"Type": "0x5",
-+		"BriefDescription": "Counts number of requests that are sent to MC.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "hnf_qos_hh_retry",
-+		"EventIdCode": "0xe",
-+		"Type": "0x5",
-+		"BriefDescription": "Counts number of times a HighHigh priority request is protocolretried at the HN‑F.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "rnid_s0_rdata_beats",
-+		"EventIdCode": "0x1",
-+		"Type": "0xa",
-+		"BriefDescription": "Number of RData beats (RVALID and RREADY) dispatched on port 0. This event measures the read bandwidth, including CMO responses.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "rnid_s1_rdata_beats",
-+		"EventIdCode": "0x2",
-+		"Type": "0xa",
-+		"BriefDescription": "Number of RData beats (RVALID and RREADY) dispatched on port 1. This event measures the read bandwidth, including CMO responses.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "rnid_s2_rdata_beats",
-+		"EventIdCode": "0x3",
-+		"Type": "0xa",
-+		"BriefDescription": "Number of RData beats (RVALID and RREADY) dispatched on port 2. This event measures the read bandwidth, including CMO responses.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "rnid_rxdat_flits",
-+		"EventIdCode": "0x4",
-+		"Type": "0xa",
-+		"BriefDescription": "Number of RXDAT flits received. This event measures the true read data bandwidth, excluding CMOs.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "rnid_txdat_flits",
-+		"EventIdCode": "0x5",
-+		"Type": "0xa",
-+		"BriefDescription": "Number of TXDAT flits dispatched. This event measures the write bandwidth.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "rnid_txreq_flits_total",
-+		"EventIdCode": "0x6",
-+		"Type": "0xa",
-+		"BriefDescription": "Number of TXREQ flits dispatched. This event measures the total request bandwidth.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "rnid_txreq_flits_retried",
-+		"EventIdCode": "0x7",
-+		"Type": "0xa",
-+		"BriefDescription": "Number of retried TXREQ flits dispatched. This event measures the retry rate.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "sbsx_txrsp_retryack",
-+		"EventIdCode": "0x4",
-+		"Type": "0x7",
-+		"BriefDescription": "Number of RXREQ flits dispatched. This event is a measure of the retry rate.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "sbsx_txdat_flitv",
-+		"EventIdCode": "0x5",
-+		"Type": "0x7",
-+		"BriefDescription": "Number of TXDAT flits dispatched from XP to SBSX. This event is a measure of the write bandwidth.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "sbsx_arvalid_no_arready",
-+		"EventIdCode": "0x21",
-+		"Type": "0x7",
-+		"BriefDescription": "Number of cycles the SBSX bridge is stalled because of backpressure on AR channel.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "sbsx_awvalid_no_awready",
-+		"EventIdCode": "0x22",
-+		"Type": "0x7",
-+		"BriefDescription": "Number of cycles the SBSX bridge is stalled because of backpressure on AW channel.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "sbsx_wvalid_no_wready",
-+		"EventIdCode": "0x23",
-+		"Type": "0x7",
-+		"BriefDescription": "Number of cycles the SBSX bridge is stalled because of backpressure on W channel.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "hni_txrsp_retryack",
-+		"EventIdCode": "0x2a",
-+		"Type": "0x4",
-+		"BriefDescription": "Number of RXREQ flits dispatched. This event is a measure of the retry rate.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "hni_arvalid_no_arready",
-+		"EventIdCode": "0x2b",
-+		"Type": "0x4",
-+		"BriefDescription": "Number of cycles the HN-I bridge is stalled because of backpressure on AR channel.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "hni_arready_no_arvalid",
-+		"EventIdCode": "0x2c",
-+		"Type": "0x4",
-+		"BriefDescription": "Number of cycles the AR channel is waiting for new requests from HN-I bridge.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "hni_awvalid_no_awready",
-+		"EventIdCode": "0x2d",
-+		"Type": "0x4",
-+		"BriefDescription": "Number of cycles the HN-I bridge is stalled because of backpressure on AW channel.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "hni_awready_no_awvalid",
-+		"EventIdCode": "0x2e",
-+		"Type": "0x4",
-+		"BriefDescription": "Number of cycles the AW channel is waiting for new requests from HN-I bridge.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "hni_wvalid_no_wready",
-+		"EventIdCode": "0x2f",
-+		"Type": "0x4",
-+		"BriefDescription": "Number of cycles the HN-I bridge is stalled because of backpressure on W channel.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	},
-+	{
-+		"EventName": "hni_txdat_stall",
-+		"EventIdCode": "0x30",
-+		"Type": "0x4",
-+		"BriefDescription": "TXDAT valid but no link credit available.",
-+		"Unit": "arm_cmn",
-+		"Compat": "434*;436*;43c*;43a*"
-+	}
-+]
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index 9c0f63a..bfdfb67 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -272,6 +272,7 @@ class JsonEvent:
-           'DFPMC': 'amd_df',
-           'cpu_core': 'cpu_core',
-           'cpu_atom': 'cpu_atom',
-+          'arm_cmn': 'arm_cmn',
-       }
-       return table[unit] if unit in table else f'uncore_{unit.lower()}'
- 
--- 
-1.8.3.1
-
