@@ -2,152 +2,117 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0341AEB64DD
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 04:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D954EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Aug 2023 05:41:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230090AbjHGEws (ORCPT
+        id S229490AbjHGFlH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Aug 2023 00:52:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40608 "EHLO
+        Mon, 7 Aug 2023 01:41:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229517AbjHGEwr (ORCPT
+        with ESMTP id S229632AbjHGFlF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Aug 2023 00:52:47 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DF39E8
-        for <linux-perf-users@vger.kernel.org>; Sun,  6 Aug 2023 21:52:46 -0700 (PDT)
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3774pSOO023131;
-        Mon, 7 Aug 2023 04:52:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=6h9oIQZ5wQGaAGzbKXiwKRd4JU/m5IdhoKvxub11GFo=;
- b=rQmtfINyfxNlz9puoARRj1Xck+MkE5fDL1ngTSg3mQF8kUwsSTYF568yJXz7VysWqgLH
- Oqw7aW7LvUAG6TzUn/Lfm83QSPloqohxvfl5qWdQtnmpkj6Fd3ONJ2CAiGsJR4onhqS3
- wXpaGN+HgRKtkPznAJmHcJ1VHa8vASWZ6Cg9QzQqnQ8UIFqITkYqdsmjv6acezbjO+BH
- 7EIDogTIm2nPoKezDnuM9Q7COR5Cb5N7PQgwh66VyWCIvw6xggL2cHfEGA3L8SUEPNhr
- tQWikW3VRZo9MlfGdWbEY62SSXoYgkl7cMLtcnMoVVGTEGrVJ9goAjNHkZ2WankZIoW4 XQ== 
+        Mon, 7 Aug 2023 01:41:05 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A59F10EF;
+        Sun,  6 Aug 2023 22:41:01 -0700 (PDT)
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3775UGTj011903;
+        Mon, 7 Aug 2023 05:40:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=pp1;
+ bh=+5oBXYTr6RIxgwheo+ZAGVe1UjNjK6JGfJu/y0rYJaQ=;
+ b=gO21QDVWyb6QjL6ag5f80EhnFXJKAJypYF1QCCRkT+2/E5Gu375fx8wQi1Di9s6ZaxSo
+ Athi3lHoos+xVJodwR4NZBYTdkj+vOJ/Z3BopFhibWtOO2R8nW2NRfYb/BKIMCQXTTkS
+ tlz+Q23jAwOcrMKZqC2Mj4m1XhRbOZNtND3dok1IwzKRNoTUiivHZ0x6mAilcP/Utk9O
+ pKN2gjwbInoaaFIe74d91rCfv85bNfQqf3+V+v6CimwrIV6MsboLf0+VSACDVu3X6AQ0
+ ZPWk/yp/SkVfJUOGHEfGFy2U+2Kuz8WwtjyeAu5IH3yq68q+liFm7tNhXTb6x/ogUKus ew== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sasg9rf5n-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sath90b2a-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Aug 2023 04:52:33 +0000
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3774feSH022656;
-        Mon, 7 Aug 2023 04:52:33 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sasg9rf5h-1
+        Mon, 07 Aug 2023 05:40:55 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3775UU2t012530;
+        Mon, 7 Aug 2023 05:40:54 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sath90b1y-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Aug 2023 04:52:33 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-        by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3773JY45030348;
-        Mon, 7 Aug 2023 04:52:32 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3sa1rmt481-1
+        Mon, 07 Aug 2023 05:40:54 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3775C5LP001888;
+        Mon, 7 Aug 2023 05:40:53 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3sa3f19sr9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Aug 2023 04:52:32 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3774qSJT4588150
+        Mon, 07 Aug 2023 05:40:53 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3775eoaN53019042
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 7 Aug 2023 04:52:29 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DAE9C20040;
-        Mon,  7 Aug 2023 04:52:28 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6BB5120049;
-        Mon,  7 Aug 2023 04:52:26 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.77.230])
-        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Mon,  7 Aug 2023 04:52:26 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
-        namhyung@kernel.org
-Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>
-Subject: [PATCH] tools/perf: Fix bpf__probe to set bpf_prog_type type only if differs from the desired one
-Date:   Mon,  7 Aug 2023 10:22:23 +0530
-Message-Id: <20230807045223.23452-1-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
+        Mon, 7 Aug 2023 05:40:50 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CCE6620043;
+        Mon,  7 Aug 2023 05:40:50 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B6CB020040;
+        Mon,  7 Aug 2023 05:40:48 +0000 (GMT)
+Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com (unknown [9.109.199.72])
+        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Mon,  7 Aug 2023 05:40:48 +0000 (GMT)
+Date:   Mon, 7 Aug 2023 11:10:46 +0530
+From:   Aditya Gupta <adityag@linux.ibm.com>
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] perf tests task_analyzer: Check perf build options
+ for libtraceevent support
+Message-ID: <gjdp7542qjhoohpgxnif3dhy4ozf3jy45migwg2phppy3yi6at@qyk7ncusvxhl>
+References: <20230725061649.34937-1-adityag@linux.ibm.com>
+ <ZMPWk5K63tadmDlU@kernel.org>
+ <CAP-5=fW1zkpJ4zr4ngz=6bZQuE6hOHo4AtXwUsVJK9oiDSc_mg@mail.gmail.com>
+ <ZMQJKmV3XtwtZJtO@kernel.org>
+ <4qqzt2g2iuo2kri54jyr7tspfxfod4nzsuzajxk3butoxs2rww@rj4quuzpoeg3>
+ <BD9DB9F2-B277-4CAC-8FA5-9B8F970A2F88@linux.vnet.ibm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <BD9DB9F2-B277-4CAC-8FA5-9B8F970A2F88@linux.vnet.ibm.com>
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: _6lVUVaakV_NuZWhDVWiKsrlwq-1z-Rl
-X-Proofpoint-ORIG-GUID: KXDVG629-T-mNNLga-7oJg9VF_OdI4P0
+X-Proofpoint-GUID: G6np9K8pV6QL02cBSMfQ9y3Vkg_mAmzB
+X-Proofpoint-ORIG-GUID: uz2-LLUsettz_hu62_m09-oFZkGM-p0R
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-08-07_02,2023-08-03_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- malwarescore=0 clxscore=1015 priorityscore=1501 mlxscore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=999 suspectscore=0
- impostorscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2306200000 definitions=main-2308070041
+ definitions=2023-08-07_03,2023-08-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ priorityscore=1501 mlxlogscore=789 bulkscore=0 impostorscore=0
+ phishscore=0 mlxscore=0 spamscore=0 clxscore=1015 suspectscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2308070050
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The test "BPF prologue generation" fails as below:
+On Thu, Aug 03, 2023 at 12:52:50PM +0530, Athira Rajeev wrote:
+> 
+> 
+> > On 03-Aug-2023, at 8:33 AM, Aditya Gupta <adityag@linux.ibm.com> wrote:
+> > 
+> > Hi Arnaldo,
+> > I am working on a patch for 'perf version --has', and will send a patch next
+> 
+> Hi Aditya,
+> 
+> I believe, it will be “perf build —has” option. And not “perf version —has”  ?
 
-   Writing event: p:perf_bpf_probe/func _text+10423200 f_mode=+20(%gpr3):x32 offset=%gpr4:s64 orig=%gpr5:s32
-   In map_prologue, ntevs=1
-   mapping[0]=0
-   libbpf: prog 'bpf_func__null_lseek': BPF program load failed: Permission denied
-   libbpf: prog 'bpf_func__null_lseek': -- BEGIN PROG LOAD LOG --
-   btf_vmlinux is malformed
-   reg type unsupported for arg#0 function bpf_func__null_lseek#5
-   0: R1=ctx(off=0,imm=0) R10=fp0
-   ;
-   0: (57) r3 &= 2
-   R3 !read_ok
-   processed 1 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
-   -- END PROG LOAD LOG --
-   libbpf: prog 'bpf_func__null_lseek': failed to load: -13
-   libbpf: failed to load object '[bpf_prologue_test]'
-   bpf: load objects failed: err=-13: (Permission denied)
-   Failed to add events selected by BPF
+Oh okay. I misread. Thanks for pointing it out Athira.
 
-This fails occurs after this commit:
-commit d6e6286a12e7 ("libbpf: disassociate section handler
-on explicit bpf_program__set_type() call")'
-
-With this change, SEC_DEF handler libbpf which is determined
-initially based on program's SEC() is set to NULL. The change
-is made because sec_def is not valid when user sets the program
-type with bpf_program__set_type function. This commit also fixed
-bpf_prog_test_load() helper in selftests/bpf to force-set program
-type only if it differs from the desired one.
-
-The "bpf__probe" function in util/bpf-loader.c, also calls
-bpf_program__set_type to set bpf_prog_type. Add similar fix in
-here as well to avoid setting sec_def to NULL.
-
-Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- tools/perf/util/bpf-loader.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-index 44cde27d6389..b8e0b430e302 100644
---- a/tools/perf/util/bpf-loader.c
-+++ b/tools/perf/util/bpf-loader.c
-@@ -870,12 +870,14 @@ int bpf__probe(struct bpf_object *obj)
- 			goto out;
- 		}
- 
--		if (priv->is_tp) {
-+		if (priv->is_tp && bpf_program__type(prog) != BPF_PROG_TYPE_TRACEPOINT) {
- 			bpf_program__set_type(prog, BPF_PROG_TYPE_TRACEPOINT);
- 			continue;
- 		}
- 
--		bpf_program__set_type(prog, BPF_PROG_TYPE_KPROBE);
-+		if (bpf_program__type(prog) != BPF_PROG_TYPE_KPROBE)
-+			bpf_program__set_type(prog, BPF_PROG_TYPE_KPROBE);
-+
- 		pev = &priv->pev;
- 
- 		err = convert_perf_probe_events(pev, 1);
--- 
-2.39.3
+Thanks,
+Aditya G
 
