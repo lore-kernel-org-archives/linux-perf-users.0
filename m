@@ -2,46 +2,52 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C22DC001B0
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Aug 2023 20:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA51C001B0
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Aug 2023 20:42:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231409AbjHHUmq (ORCPT
+        id S233077AbjHHUmt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Aug 2023 16:42:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54918 "EHLO
+        Tue, 8 Aug 2023 16:42:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229834AbjHHUls (ORCPT
+        with ESMTP id S235923AbjHHUmi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Aug 2023 16:41:48 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AAE78DCCF;
-        Tue,  8 Aug 2023 10:31:37 -0700 (PDT)
+        Tue, 8 Aug 2023 16:42:38 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 772E214FCE;
+        Tue,  8 Aug 2023 13:17:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691515897; x=1723051897;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=eqRRMLl2kIoz0ZwHwY02c6d7SX45/i2Q/jssTnU7/tA=;
-  b=JmKkWqIA0/GVc8tGbrgwAMTXe8xpEcUH9BPs/q6KFqCy17gspPRcU9tt
-   gHlw+wnwJLuV7Fodg4OpAbUUhbXXGYvgMawZB0jgDcA5Yvy5kLOug2/46
-   Drnu0Y0q0WoBxUaHzPyD1X1+sRwWPtSCjrzGb6T3B+DJhtF7PTnp0DAs+
-   gZWErGyyoNJ6gj0lgdg63WDAHo1C4HC6xV4LEY9DsD2E8TGRdiRL/2+Uu
-   fvoc+gNnp7IbctTqsqUp1GU48AF/HESn37ajJl7Ww8s83XJwCv6n/Rwyu
-   Wc8soxrGVCoNx0rTaLysemGQZFFmuVcUK4eW6ONkxk2b+0ej9NFqagzDG
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="434581748"
-X-IronPort-AV: E=Sophos;i="6.01,263,1684825200"; 
-   d="scan'208";a="434581748"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2023 23:25:12 -0700
+  t=1691525870; x=1723061870;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Es2qusPBI+Upp+gjA6iZyfm+jjbTtNkyAFCBl7xskTc=;
+  b=Rfxlzm9XeKKYL2yNMJEi7iizlRarU7HVJewbJ19rg+xMqHfomvnzTj0q
+   whAcCU5d6PqNv9IBiqySsYlyYSOrFzARtnTVonzzvTbflXvgn5qoUK2Ec
+   GixGjF8jO25LoNsrakTqU89Q9ruda3zGEa9fwnkCuHDiL8LZXF1FU763/
+   E0KlnfZn/sl8mq3wkm2MIVCUds8TSw9h7XVGrMYcddi8KkD/3b5bIc8eX
+   jJpmAbM3XyW7lgGnuR/WbDZdjIeIErkkN8EBW9CwzKbH0kRTFvV/HiyQ6
+   efwFPI8wp/HEHYIJM6ImpM51iaPHtjlk2CaNTUZybzigL3f4UBYeBMls4
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="355903484"
+X-IronPort-AV: E=Sophos;i="6.01,157,1684825200"; 
+   d="scan'208";a="355903484"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2023 13:17:18 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="734376741"
-X-IronPort-AV: E=Sophos;i="6.01,263,1684825200"; 
-   d="scan'208";a="734376741"
-Received: from dmi-pnp-i7.sh.intel.com ([10.239.159.155])
-  by fmsmga007.fm.intel.com with ESMTP; 07 Aug 2023 23:25:07 -0700
-From:   Dapeng Mi <dapeng1.mi@linux.intel.com>
-To:     Sean Christopherson <seanjc@google.com>,
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="708401073"
+X-IronPort-AV: E=Sophos;i="6.01,157,1684825200"; 
+   d="scan'208";a="708401073"
+Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 08 Aug 2023 13:17:12 -0700
+Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qTT8g-0005aM-2e;
+        Tue, 08 Aug 2023 20:17:10 +0000
+Date:   Wed, 9 Aug 2023 04:16:51 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Dapeng Mi <dapeng1.mi@linux.intel.com>,
+        Sean Christopherson <seanjc@google.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -53,292 +59,196 @@ To:     Sean Christopherson <seanjc@google.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>
-Cc:     kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Zhenyu Wang <zhenyuw@linux.intel.com>,
         Zhang Xiong <xiong.y.zhang@intel.com>,
         Lv Zhiyuan <zhiyuan.lv@intel.com>,
         Yang Weijiang <weijiang.yang@intel.com>,
-        Dapeng Mi <dapeng1.mi@intel.com>,
-        Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH RFV v2 00/13] Enable fixed counter 3 and topdown perf metrics for vPMU
-Date:   Tue,  8 Aug 2023 14:30:58 +0800
-Message-Id: <20230808063111.1870070-1-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+        Dapeng Mi <dapeng1.mi@intel.com>
+Subject: Re: [PATCH RFV v2 08/13] perf/core: Add new function
+ perf_event_topdown_metrics()
+Message-ID: <202308090418.vTakFy6e-lkp@intel.com>
+References: <20230808063111.1870070-9-dapeng1.mi@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230808063111.1870070-9-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The TopDown Microarchitecture Analysis (TMA) Method is a structured
-analysis methodology to identify critical performance bottlenecks in
-out-of-order processors. The details about topdown metrics support on
-Intel processors can be found in section "Performance Metrics" of Intel's
-SDM Volume 3[1]. Kernel enabling code has also been merged, see
-patchset[2] to learn more about the feature.
+Hi Dapeng,
 
-The TMA method is quite powerful and efficient to help developers to
-identify the performance bottleneck in the program. The TMA method has
-been integrated into multiple performance analysis tools, such as perf,
-Vtune. Developers can leverage TMA method to analyze their program's
-performance bottleneck easily with these tools and improve their program's
-performance. TMA method is becoming the most widely used performance
-analysis method on x86 platform. Currently the TMA method has been
-supported fairly well on Native, but it's still not supported in Guest
-environment. Since the environment difference between Host and Guest,
-even same program may show different performance bottleneck between Guest
-and Host. Obviously, the most straightforward and best method to
-profiling Guest performance bottleneck is to run the TMA method in Guest
-directly. So supporting topdown perf metrics in Guest becomes a real and
-important requirement and we hope this patchset can mitigate this gap.
+kernel test robot noticed the following build warnings:
 
-Like Xu posted a patch series to support guest Topdown[3], the patchset
-creates a group of topdown metric events in KVM by binding to fixed counter
-3 to obtain hardware values and the guest value of PERF_METRICS MSR is
-assembled based on the count of grouped metric events.
+[auto build test WARNING on next-20230808]
+[cannot apply to kvm/queue acme/perf/core tip/perf/core kvm/linux-next v6.5-rc5 v6.5-rc4 v6.5-rc3 linus/master v6.5-rc5]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-This patchset improves Like's proposal, it leverages mature vPMU PMC
-emulation framework and current perf topdown metric handling logic to
-support guest topdown metrics feature.
+url:    https://github.com/intel-lab-lkp/linux/commits/Dapeng-Mi/KVM-x86-pmu-Support-PMU-fixed-counter-3/20230809-030457
+base:   next-20230808
+patch link:    https://lore.kernel.org/r/20230808063111.1870070-9-dapeng1.mi%40linux.intel.com
+patch subject: [PATCH RFV v2 08/13] perf/core: Add new function perf_event_topdown_metrics()
+config: arm-randconfig-r046-20230808 (https://download.01.org/0day-ci/archive/20230809/202308090418.vTakFy6e-lkp@intel.com/config)
+compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)
+reproduce: (https://download.01.org/0day-ci/archive/20230809/202308090418.vTakFy6e-lkp@intel.com/reproduce)
 
-In current perf logic, an events group is required to handle the topdown
-metrics profiling, and the events group couples a slots event which
-acts events group leader and multiple metric events. To coordinate with
-the perf topdown metrics handing logic and reduce the code changes in
-KVM, we choose to follow current mature vPMU PMC emulation framework. The
-only difference is that we need to create a events group for fixed
-counter 3 and manipulate FIXED_CTR3 and PERF_METRICS MSRS together
-instead of a single event and only manipulating FIXED_CTR3 MSR.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308090418.vTakFy6e-lkp@intel.com/
 
-When guest writes PERF_METRICS MSR at first, KVM would create an event
-group which couples a slots event and a virtual metrics event. In this
-event group, slots event claims the fixed counter 3 HW resource and acts
-as group leader which is required by perf system. The virtual metrics
-event claims the PERF_METRICS MSR. This event group is just like the perf
-metrics events group on host and is scheduled by host perf system.
+All warnings (new ones prefixed by >>):
 
-In this proposal, the count of slots event is calculated and emulated
-on host and returned to guest just like other normal counters, but there
-is a difference for the metrics event processing. KVM doesn't calculate
-the real count of topdown metrics, it just stores the raw data of
-PERF_METRICS MSR and directly returnthe stored raw data to guest. Thus,
-guest can get the real HW PERF_METRICS data and guarantee the calculation
-accuracy of topdown metrics.
-
-Comparing with Like's patchset, this proposal brings two benefits.
-
-1. Reduce the created perf events number
-   Like's patchset needs to create 4 (Ice Lake) or 8 (Sapphire Rapids)
-   metric events, whereas this patchset only needs to create 1 metric
-   event.
-
-2. Increase the accuracy of metric calculation
-   Like's patchset needs to do twice metric count conversion. The first
-   conversion happens on perf system, perf topdown metrics handling
-   logic reads the metric percentage from PERF_METRICS MSR and times with
-   elapsed slots count and obtains the metric count. The second conversion
-   happens on KVM, KVM needs to convert the metric count back to metric
-   percentage by using metric count divide elapsed slots again and then
-   assembles the 4 or 8 metric percentage values to the virtual
-   PERF_METRICS MSR and return to Guest at last. Considering each metric
-   percentage in PERF_METRICS MSR is represented with only 8 bits, the
-   twice conversions (once multiplication and once division) definitely
-   cause accuracy loss in theory. Since this patchset directly returns
-   the raw data of PERF_METRICS MSR to guest, it won't have any accuracy
-   loss.
-
-The patchset is rebased on latest kvm-x86/next branch and it is tested
-on both Host and Guest (SPR Platform) with below perf commands. The 'foo'
-is a backend-bound benchmark. We can see the output of perf commands are
-quite close between host and guest.
-
-1. perf stat ./foo
-
-Host outputs:
-
- Performance counter stats for '/home/sdp/work/foo/foo':
-
-         26,525.25 msec task-clock                       #    1.000 CPUs utilized
-                 9      context-switches                 #    0.339 /sec
-                 2      cpu-migrations                   #    0.075 /sec
-                51      page-faults                      #    1.923 /sec
-   125,330,033,745      cycles                           #    4.725 GHz
-   238,172,965,287      instructions                     #    1.90  insn per cycle
-    44,904,300,430      branches                         #    1.693 G/sec
-        69,299,003      branch-misses                    #    0.15% of all branches
-   751,979,445,222      TOPDOWN.SLOTS                    #     59.2 %  tma_backend_bound
-                                                  #     38.0 %  tma_retiring
-                                                  #      0.8 %  tma_bad_speculation
-                                                  #      1.9 %  tma_frontend_bound
-   286,047,083,084      topdown-retiring
-    14,744,695,003      topdown-fe-bound
-   445,289,789,131      topdown-be-bound
-     5,897,878,000      topdown-bad-spec
-       138,674,397      INT_MISC.UOP_DROPPING            #    5.228 M/sec
-
-      26.528600835 seconds time elapsed
-
-      26.527849000 seconds user
-       0.000000000 seconds sys
-
-Guest outputs:
-
-  Performance counter stats for '/home/pnp/foo/foo':
-
-         29,051.43 msec task-clock                       #    1.000 CPUs utilized
-                10      context-switches                 #    0.344 /sec
-                 0      cpu-migrations                   #    0.000 /sec
-                51      page-faults                      #    1.756 /sec
-   125,337,801,996      cycles                           #    4.314 GHz
-   238,139,676,030      instructions                     #    1.90  insn per cycle
-    44,897,906,380      branches                         #    1.545 G/sec
-        69,402,326      branch-misses                    #    0.15% of all branches
-   752,022,710,490      TOPDOWN.SLOTS                    #     58.4 %  tma_backend_bound
-                                                  #     37.6 %  tma_retiring
-                                                  #      1.2 %  tma_bad_speculation
-                                                  #      2.7 %  tma_frontend_bound
-   283,114,432,184      topdown-retiring
-    20,643,760,680      topdown-fe-bound
-   439,417,191,619      topdown-be-bound
-     8,847,326,005      topdown-bad-spec
-       138,873,309      INT_MISC.UOP_DROPPING            #    4.780 M/sec
-
-      29.058833449 seconds time elapsed
-
-      29.048761000 seconds user
-       0.004003000 seconds sys
-
-2. perf stat -e slots ./foo
-
-Host outputs:
-
- Performance counter stats for '/home/sdp/work/foo/foo':
-
-   713,292,346,950      slots
-
-      25.472861484 seconds time elapsed
-
-      25.470978000 seconds user
-       0.000000000 seconds sys
-
-Guest outputs:
-
- Performance counter stats for '/home/pnp/foo/foo':
-
-   713,286,331,824      slots
-
-      25.264007882 seconds time elapsed
-
-      25.259790000 seconds user
-       0.004002000 seconds sys
-
-3.
-echo 0 > /proc/sys/kernel/nmi_watchdog
-echo 25 > /proc/sys/kernel/perf_cpu_time_max_percent
-echo 100000 > /proc/sys/kernel/perf_event_max_sample_rate
-echo 0 > /proc/sys/kernel/perf_cpu_time_max_percent
-perf record -e slots ./foo && perf report
-
-Host outputs:
-
-# Total Lost Samples: 0
-#
-# Samples: 109K of event 'slots'
-# Event count (approx.): 715723903347
-#
-# Overhead  Command  Shared Object     Symbol
-# ........  .......  ................  ..................................
-#
-    74.83%  foo      libc.so.6         [.] __random
-     7.22%  foo      foo               [.] qux
-     7.07%  foo      libc.so.6         [.] __random_r
-     5.40%  foo      foo               [.] main
-     1.82%  foo      foo               [.] bar
-     1.75%  foo      foo               [.] random@plt
-     1.73%  foo      foo               [.] foo
-     0.02%  foo      [kernel.vmlinux]  [k] arch_asym_cpu_priority
+   In file included from kernel/sched/build_policy.c:34:
+   In file included from kernel/sched/sched.h:61:
+   In file included from include/linux/syscalls_api.h:1:
+   In file included from include/linux/syscalls.h:90:
+   In file included from include/trace/syscall.h:7:
+   In file included from include/linux/trace_events.h:10:
+>> include/linux/perf_event.h:1793:18: warning: declaration of 'struct td_metrics' will not be visible outside of this function [-Wvisibility]
+                                                struct td_metrics *value)
+                                                       ^
+   1 warning generated.
+--
+   In file included from kernel/sched/fair.c:56:
+   In file included from kernel/sched/sched.h:61:
+   In file included from include/linux/syscalls_api.h:1:
+   In file included from include/linux/syscalls.h:90:
+   In file included from include/trace/syscall.h:7:
+   In file included from include/linux/trace_events.h:10:
+>> include/linux/perf_event.h:1793:18: warning: declaration of 'struct td_metrics' will not be visible outside of this function [-Wvisibility]
+                                                struct td_metrics *value)
+                                                       ^
+   kernel/sched/fair.c:702:6: warning: no previous prototype for function 'update_entity_lag' [-Wmissing-prototypes]
+   void update_entity_lag(struct cfs_rq *cfs_rq, struct sched_entity *se)
+        ^
+   kernel/sched/fair.c:702:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   void update_entity_lag(struct cfs_rq *cfs_rq, struct sched_entity *se)
+   ^
+   static 
+   kernel/sched/fair.c:12732:6: warning: no previous prototype for function 'free_fair_sched_group' [-Wmissing-prototypes]
+   void free_fair_sched_group(struct task_group *tg) { }
+        ^
+   kernel/sched/fair.c:12732:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   void free_fair_sched_group(struct task_group *tg) { }
+   ^
+   static 
+   kernel/sched/fair.c:12734:5: warning: no previous prototype for function 'alloc_fair_sched_group' [-Wmissing-prototypes]
+   int alloc_fair_sched_group(struct task_group *tg, struct task_group *parent)
+       ^
+   kernel/sched/fair.c:12734:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   int alloc_fair_sched_group(struct task_group *tg, struct task_group *parent)
+   ^
+   static 
+   kernel/sched/fair.c:12739:6: warning: no previous prototype for function 'online_fair_sched_group' [-Wmissing-prototypes]
+   void online_fair_sched_group(struct task_group *tg) { }
+        ^
+   kernel/sched/fair.c:12739:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   void online_fair_sched_group(struct task_group *tg) { }
+   ^
+   static 
+   kernel/sched/fair.c:12741:6: warning: no previous prototype for function 'unregister_fair_sched_group' [-Wmissing-prototypes]
+   void unregister_fair_sched_group(struct task_group *tg) { }
+        ^
+   kernel/sched/fair.c:12741:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   void unregister_fair_sched_group(struct task_group *tg) { }
+   ^
+   static 
+   kernel/sched/fair.c:503:20: warning: unused function 'list_del_leaf_cfs_rq' [-Wunused-function]
+   static inline void list_del_leaf_cfs_rq(struct cfs_rq *cfs_rq)
+                      ^
+   kernel/sched/fair.c:524:19: warning: unused function 'tg_is_idle' [-Wunused-function]
+   static inline int tg_is_idle(struct task_group *tg)
+                     ^
+   kernel/sched/fair.c:548:19: warning: unused function 'max_vruntime' [-Wunused-function]
+   static inline u64 max_vruntime(u64 max_vruntime, u64 vruntime)
+                     ^
+   kernel/sched/fair.c:1262:20: warning: unused function 'is_core_idle' [-Wunused-function]
+   static inline bool is_core_idle(int cpu)
+                      ^
+   kernel/sched/fair.c:3452:20: warning: unused function 'account_numa_enqueue' [-Wunused-function]
+   static inline void account_numa_enqueue(struct rq *rq, struct task_struct *p)
+                      ^
+   kernel/sched/fair.c:3456:20: warning: unused function 'account_numa_dequeue' [-Wunused-function]
+   static inline void account_numa_dequeue(struct rq *rq, struct task_struct *p)
+                      ^
+   kernel/sched/fair.c:3460:20: warning: unused function 'update_scan_period' [-Wunused-function]
+   static inline void update_scan_period(struct task_struct *p, int new_cpu)
+                      ^
+   kernel/sched/fair.c:4872:20: warning: unused function 'cfs_rq_is_decayed' [-Wunused-function]
+   static inline bool cfs_rq_is_decayed(struct cfs_rq *cfs_rq)
+                      ^
+   kernel/sched/fair.c:4887:20: warning: unused function 'remove_entity_load_avg' [-Wunused-function]
+   static inline void remove_entity_load_avg(struct sched_entity *se) {}
+                      ^
+   kernel/sched/fair.c:6259:20: warning: unused function 'cfs_bandwidth_used' [-Wunused-function]
+   static inline bool cfs_bandwidth_used(void)
+                      ^
+   kernel/sched/fair.c:6267:20: warning: unused function 'sync_throttle' [-Wunused-function]
+   static inline void sync_throttle(struct task_group *tg, int cpu) {}
+                      ^
+   kernel/sched/fair.c:6280:19: warning: unused function 'throttled_lb_pair' [-Wunused-function]
+   static inline int throttled_lb_pair(struct task_group *tg,
+                     ^
+   kernel/sched/fair.c:6291:37: warning: unused function 'tg_cfs_bandwidth' [-Wunused-function]
+   static inline struct cfs_bandwidth *tg_cfs_bandwidth(struct task_group *tg)
+                                       ^
+   kernel/sched/fair.c:6295:20: warning: unused function 'destroy_cfs_bandwidth' [-Wunused-function]
+   static inline void destroy_cfs_bandwidth(struct cfs_bandwidth *cfs_b) {}
+                      ^
+   kernel/sched/fair.c:6296:20: warning: unused function 'update_runtime_enabled' [-Wunused-function]
+   static inline void update_runtime_enabled(struct rq *rq) {}
+                      ^
+   kernel/sched/fair.c:6297:20: warning: unused function 'unthrottle_offline_cfs_rqs' [-Wunused-function]
+   static inline void unthrottle_offline_cfs_rqs(struct rq *rq) {}
+                      ^
+   22 warnings generated.
+--
+   In file included from kernel/sched/core.c:13:
+   In file included from include/linux/syscalls_api.h:1:
+   In file included from include/linux/syscalls.h:90:
+   In file included from include/trace/syscall.h:7:
+   In file included from include/linux/trace_events.h:10:
+>> include/linux/perf_event.h:1793:18: warning: declaration of 'struct td_metrics' will not be visible outside of this function [-Wvisibility]
+                                                struct td_metrics *value)
+                                                       ^
+   kernel/sched/core.c:3695:20: warning: unused function 'rq_has_pinned_tasks' [-Wunused-function]
+   static inline bool rq_has_pinned_tasks(struct rq *rq)
+                      ^
+   kernel/sched/core.c:5822:20: warning: unused function 'sched_tick_start' [-Wunused-function]
+   static inline void sched_tick_start(int cpu) { }
+                      ^
+   kernel/sched/core.c:5823:20: warning: unused function 'sched_tick_stop' [-Wunused-function]
+   static inline void sched_tick_stop(int cpu) { }
+                      ^
+   kernel/sched/core.c:6523:20: warning: unused function 'sched_core_cpu_starting' [-Wunused-function]
+   static inline void sched_core_cpu_starting(unsigned int cpu) {}
+                      ^
+   kernel/sched/core.c:6524:20: warning: unused function 'sched_core_cpu_deactivate' [-Wunused-function]
+   static inline void sched_core_cpu_deactivate(unsigned int cpu) {}
+                      ^
+   kernel/sched/core.c:6525:20: warning: unused function 'sched_core_cpu_dying' [-Wunused-function]
+   static inline void sched_core_cpu_dying(unsigned int cpu) {}
+                      ^
+   7 warnings generated.
 
 
-Guest outputs:
+vim +1793 include/linux/perf_event.h
 
-# Total Lost Samples: 0
-#
-# Samples: 7K of event 'slots'
-# Event count (approx.): 24532005986
-#
-# Overhead  Command  Shared Object     Symbol
-# ........  .......  ................  ....................
-#
-    75.21%  foo      libc.so.6         [.] __random
-     7.19%  foo      libc.so.6         [.] __random_r
-     7.12%  foo      foo               [.] qux
-     5.21%  foo      foo               [.] main
-     1.90%  foo      foo               [.] foo
-     1.81%  foo      foo               [.] bar
-     1.56%  foo      foo               [.] random@plt
-     0.00%  perf-ex  [kernel.vmlinux]  [k] native_write_msr
+  1791	
+  1792	static inline int perf_event_topdown_metrics(struct perf_event *event,
+> 1793						     struct td_metrics *value)
+  1794	{
+  1795		return 0;
+  1796	}
+  1797	#endif
+  1798	
 
-
-To support the guest topdown metrics feature, we have to do several
-fundamental changes for perf system and vPMU code, we tried to avoid
-these changes AMAP, but it seems it's inevitable. If you have any idea,
-please suggest.
-
-The fundamental changes:
-1. perf/core: Add function perf_event_create_group_kernel_counters()
-   Add a new API to create group events from kernel space
-2. perf/core: Add new function perf_event_topdown_metrics()
-   Add a new API to update topdown metrics values
-3. perf/x86/intel: Handle KVM virtual metrics event in perf system
-   Add virtual metrics event processing logic in topdown metrics
-processing code
-4. KVM: x86/pmu: Extend pmc_reprogram_counter() to create group events
-   Extend pmc_reprogram_counter() to be capable to create group events
-instead of just single event
-
-References:
-[1]: Intel 64 and IA-32 Architectures Software Developer Manual
- Combined Volumes: 1, 2A, 2B, 2C, 2D, 3A, 3B, 3C, 3D, and 4
-https://cdrdv2.intel.com/v1/dl/getContent/671200
-[2]: perf/x86/intel: Support TopDown metrics on Ice Lake
-https://lwn.net/ml/linux-kernel/20191203141212.7704-1-kan.liang@linux.intel.com/
-[3]: KVM: x86/pmu: Enable Fixed Counter3 and Topdown Perf Metrics
-https://lwn.net/ml/linux-kernel/20221212125844.41157-1-likexu@tencent.com/
-
-Dapeng Mi (13):
-  KVM: x86/pmu: Add Intel CPUID-hinted TopDown slots event
-  KVM: x86/pmu: Support PMU fixed counter 3
-  perf/core: Add function perf_event_group_leader_check()
-  perf/core: Add function perf_event_move_group()
-  perf/core: Add function perf_event_create_group_kernel_counters()
-  perf/x86: Fix typos and inconsistent indents in perf_event header
-  perf/x86: Add constraint for guest perf metrics event
-  perf/core: Add new function perf_event_topdown_metrics()
-  perf/x86/intel: Handle KVM virtual metrics event in perf system
-  KVM: x86/pmu: Extend pmc_reprogram_counter() to create group events
-  KVM: x86/pmu: Support topdown perf metrics feature
-  KVM: x86/pmu: Handle PERF_METRICS overflow
-  KVM: x86/pmu: Expose Topdown in MSR_IA32_PERF_CAPABILITIES
-
- arch/x86/events/intel/core.c      |  72 +++++--
- arch/x86/events/perf_event.h      |  10 +-
- arch/x86/include/asm/kvm_host.h   |  19 +-
- arch/x86/include/asm/perf_event.h |  21 +-
- arch/x86/kvm/pmu.c                | 142 +++++++++++--
- arch/x86/kvm/pmu.h                |  50 ++++-
- arch/x86/kvm/svm/pmu.c            |   2 +
- arch/x86/kvm/vmx/capabilities.h   |   1 +
- arch/x86/kvm/vmx/pmu_intel.c      |  67 ++++++
- arch/x86/kvm/vmx/vmx.c            |   2 +
- arch/x86/kvm/vmx/vmx.h            |   5 +
- arch/x86/kvm/x86.c                |   5 +-
- include/linux/perf_event.h        |  19 ++
- kernel/events/core.c              | 326 ++++++++++++++++++++----------
- 14 files changed, 590 insertions(+), 151 deletions(-)
-
-
-base-commit: 240f736891887939571854bd6d734b6c9291f22e
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
