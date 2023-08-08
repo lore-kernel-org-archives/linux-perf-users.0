@@ -2,44 +2,44 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B302C0729B
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Aug 2023 19:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98792C07E8D
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Aug 2023 19:02:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231392AbjHHTCl (ORCPT
+        id S232573AbjHHTCm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Aug 2023 15:02:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55866 "EHLO
+        Tue, 8 Aug 2023 15:02:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230043AbjHHTBy (ORCPT
+        with ESMTP id S233155AbjHHTBu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Aug 2023 15:01:54 -0400
+        Tue, 8 Aug 2023 15:01:50 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CA9B187EB2;
-        Tue,  8 Aug 2023 10:31:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8069A8DCDE;
+        Tue,  8 Aug 2023 10:31:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691515901; x=1723051901;
+  t=1691515899; x=1723051899;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=NJpOTnRSj8qqZCbQHRVgYJuiVfbmVTUNUDYhP4Pi3xk=;
-  b=asvFYbtzwOK4VtgIRVzN4RP+hi+JkooHmvZRT/ljyX1C1gVeaKG/vf49
-   WWCUJkpOiVTEcjgA6WK7Oxvi6yUzxGPRmccyvPKYEXgCg6M0tlIiMOAxw
-   GU4i8eCXCFN/poSb8LMTCH9ApdbdqaiNvgIBtbQzpclY7HQaCa4tVgrJK
-   V9UOirZjxX+T7O/gy029EoM1a5EJBYEe1qXzGY5fUXx7ztijDMdsljsoN
-   sjGkaon4xhYRSMt+oCFjtggaPnRlMAo50pt7R2FcF5cNwYmYBynn0wfx1
-   4dr+WFJNs05/n84ffbZZWvy4O2eJJ4Styj3WyFjg3TgN2kvMjHYdZ1AsU
+  bh=7C56/gt/RGvreA0L41MZxGhb9elLWu8ezfqy+Cf9NVY=;
+  b=nJECElYykVz7TU0yU1QDQ3LXTXHaMzhrIWvCZ3P2QQv7we92N08QA4wf
+   qgyivtU3WqYErA4eu//0Pqa5BGU0HDPXoyk1qTFNw/03++addTZPVoXDv
+   G7fklKwcc85Agya53jNaIJ4eYzpewVxwOkqDq5Nf34Qn+aGIB1FEQuso/
+   YNyziNu/yEbJjl8W05+5+FyfV4BrB3+z5OieAZNJhnynGN4WYD4DNtfN9
+   UJ9v9En+XXrfBszzGUOsowIy6HHAuK7+mSYLL0LAaHCkMp64MA0cUUkAI
+   s2V6CFX/7Q6LAG9KwJH7BDP1ZaaMNmBmtem/fpifq+6ad5R3ltKDibrow
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="434582091"
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="434581950"
 X-IronPort-AV: E=Sophos;i="6.01,263,1684825200"; 
-   d="scan'208";a="434582091"
+   d="scan'208";a="434581950"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2023 23:27:09 -0700
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2023 23:26:25 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="734377769"
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="734377665"
 X-IronPort-AV: E=Sophos;i="6.01,263,1684825200"; 
-   d="scan'208";a="734377769"
+   d="scan'208";a="734377665"
 Received: from dmi-pnp-i7.sh.intel.com ([10.239.159.155])
-  by fmsmga007.fm.intel.com with ESMTP; 07 Aug 2023 23:27:05 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 07 Aug 2023 23:26:20 -0700
 From:   Dapeng Mi <dapeng1.mi@linux.intel.com>
 To:     Sean Christopherson <seanjc@google.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
@@ -61,9 +61,9 @@ Cc:     kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Yang Weijiang <weijiang.yang@intel.com>,
         Dapeng Mi <dapeng1.mi@intel.com>,
         Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH RFV v2 07/13] perf/x86: Add constraint for guest perf metrics event
-Date:   Tue,  8 Aug 2023 14:31:05 +0800
-Message-Id: <20230808063111.1870070-8-dapeng1.mi@linux.intel.com>
+Subject: [PATCH RFV v2 04/13] perf/core: Add function perf_event_move_group()
+Date:   Tue,  8 Aug 2023 14:31:02 +0800
+Message-Id: <20230808063111.1870070-5-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230808063111.1870070-1-dapeng1.mi@linux.intel.com>
 References: <20230808063111.1870070-1-dapeng1.mi@linux.intel.com>
@@ -73,122 +73,128 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When guest wants to use PERF_METRICS MSR, a virtual metrics event needs
-to be created in the perf subsystem so that the guest can have exclusive
-ownership of the PERF_METRICS MSR.
+Extract the group moving code in function sys_perf_event_open() to create
+a new function perf_event_move_group().
 
-We introduce the new vmetrics constraint, so that we can couple this
-virtual metrics event with slots event as a events group to involves in
-the host perf system scheduling. Since Guest metric events are always
-recognized as vCPU process's events on host, they are time-sharing
-multiplexed with other host metric events, so that we choose bit 48
-(INTEL_PMC_IDX_METRIC_BASE) as the index of this virtual metrics event.
+The subsequent change would add a new function
+perf_event_create_group_kernel_counters() which is used to create group
+events in kernel space. The function also needs to do same group moving
+for group leader event just like function sys_perf_event_open() does. So
+extract the moving code into a separate function to avoid the code
+duplication.
 
-Co-developed-by: Yang Weijiang <weijiang.yang@intel.com>
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/intel/core.c      | 28 +++++++++++++++++++++-------
- arch/x86/events/perf_event.h      |  1 +
- arch/x86/include/asm/perf_event.h | 15 +++++++++++++++
- 3 files changed, 37 insertions(+), 7 deletions(-)
+ kernel/events/core.c | 82 ++++++++++++++++++++++++--------------------
+ 1 file changed, 45 insertions(+), 37 deletions(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 2a284ba951b7..60a2384cd936 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3147,17 +3147,26 @@ intel_bts_constraints(struct perf_event *event)
- 	return NULL;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 616391158d7c..15eb82d1a010 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -12399,6 +12399,48 @@ static int perf_event_group_leader_check(struct perf_event *group_leader,
+ 	return 0;
  }
  
-+static struct event_constraint *intel_virt_event_constraints[] __read_mostly = {
-+	&vlbr_constraint,
-+	&vmetrics_constraint,
-+};
++static void perf_event_move_group(struct perf_event *group_leader,
++				  struct perf_event_pmu_context *pmu_ctx,
++				  struct perf_event_context *ctx)
++{
++	struct perf_event *sibling;
 +
- /*
-- * Note: matches a fake event, like Fixed2.
-+ * Note: matches a virtual event, like vmetrics.
-  */
- static struct event_constraint *
--intel_vlbr_constraints(struct perf_event *event)
-+intel_virt_constraints(struct perf_event *event)
++	perf_remove_from_context(group_leader, 0);
++	put_pmu_ctx(group_leader->pmu_ctx);
++
++	for_each_sibling_event(sibling, group_leader) {
++		perf_remove_from_context(sibling, 0);
++		put_pmu_ctx(sibling->pmu_ctx);
++	}
++
++	/*
++	 * Install the group siblings before the group leader.
++	 *
++	 * Because a group leader will try and install the entire group
++	 * (through the sibling list, which is still in-tact), we can
++	 * end up with siblings installed in the wrong context.
++	 *
++	 * By installing siblings first we NO-OP because they're not
++	 * reachable through the group lists.
++	 */
++	for_each_sibling_event(sibling, group_leader) {
++		sibling->pmu_ctx = pmu_ctx;
++		get_pmu_ctx(pmu_ctx);
++		perf_event__state_init(sibling);
++		perf_install_in_context(ctx, sibling, sibling->cpu);
++	}
++
++	/*
++	 * Removing from the context ends up with disabled
++	 * event. What we want here is event in the initial
++	 * startup state, ready to be add into new context.
++	 */
++	group_leader->pmu_ctx = pmu_ctx;
++	get_pmu_ctx(pmu_ctx);
++	perf_event__state_init(group_leader);
++	perf_install_in_context(ctx, group_leader, group_leader->cpu);
++}
++
+ /**
+  * sys_perf_event_open - open a performance event, associate it to a task/cpu
+  *
+@@ -12414,7 +12456,7 @@ SYSCALL_DEFINE5(perf_event_open,
  {
--	struct event_constraint *c = &vlbr_constraint;
-+	int i;
-+	struct event_constraint *c;
+ 	struct perf_event *group_leader = NULL, *output_event = NULL;
+ 	struct perf_event_pmu_context *pmu_ctx;
+-	struct perf_event *event, *sibling;
++	struct perf_event *event;
+ 	struct perf_event_attr attr;
+ 	struct perf_event_context *ctx;
+ 	struct file *event_file = NULL;
+@@ -12646,42 +12688,8 @@ SYSCALL_DEFINE5(perf_event_open,
+ 	 * where we start modifying current state.
+ 	 */
  
--	if (unlikely(constraint_match(c, event->hw.config))) {
--		event->hw.flags |= c->flags;
--		return c;
-+	for (i = 0; i < ARRAY_SIZE(intel_virt_event_constraints); i++) {
-+		c = intel_virt_event_constraints[i];
-+		if (unlikely(constraint_match(c, event->hw.config))) {
-+			event->hw.flags |= c->flags;
-+			return c;
-+		}
- 	}
+-	if (move_group) {
+-		perf_remove_from_context(group_leader, 0);
+-		put_pmu_ctx(group_leader->pmu_ctx);
+-
+-		for_each_sibling_event(sibling, group_leader) {
+-			perf_remove_from_context(sibling, 0);
+-			put_pmu_ctx(sibling->pmu_ctx);
+-		}
+-
+-		/*
+-		 * Install the group siblings before the group leader.
+-		 *
+-		 * Because a group leader will try and install the entire group
+-		 * (through the sibling list, which is still in-tact), we can
+-		 * end up with siblings installed in the wrong context.
+-		 *
+-		 * By installing siblings first we NO-OP because they're not
+-		 * reachable through the group lists.
+-		 */
+-		for_each_sibling_event(sibling, group_leader) {
+-			sibling->pmu_ctx = pmu_ctx;
+-			get_pmu_ctx(pmu_ctx);
+-			perf_event__state_init(sibling);
+-			perf_install_in_context(ctx, sibling, sibling->cpu);
+-		}
+-
+-		/*
+-		 * Removing from the context ends up with disabled
+-		 * event. What we want here is event in the initial
+-		 * startup state, ready to be add into new context.
+-		 */
+-		group_leader->pmu_ctx = pmu_ctx;
+-		get_pmu_ctx(pmu_ctx);
+-		perf_event__state_init(group_leader);
+-		perf_install_in_context(ctx, group_leader, group_leader->cpu);
+-	}
++	if (move_group)
++		perf_event_move_group(group_leader, pmu_ctx, ctx);
  
- 	return NULL;
-@@ -3357,7 +3366,7 @@ __intel_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
- {
- 	struct event_constraint *c;
- 
--	c = intel_vlbr_constraints(event);
-+	c = intel_virt_constraints(event);
- 	if (c)
- 		return c;
- 
-@@ -5349,6 +5358,11 @@ static struct attribute *spr_tsx_events_attrs[] = {
- 	NULL,
- };
- 
-+struct event_constraint vmetrics_constraint =
-+	__EVENT_CONSTRAINT(INTEL_FIXED_VMETRICS_EVENT,
-+			   (1ULL << INTEL_PMC_IDX_FIXED_VMETRICS),
-+			   FIXED_EVENT_FLAGS, 1, 0, 0);
-+
- static ssize_t freeze_on_smi_show(struct device *cdev,
- 				  struct device_attribute *attr,
- 				  char *buf)
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index d6de4487348c..895c572f379c 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -1482,6 +1482,7 @@ void reserve_lbr_buffers(void);
- 
- extern struct event_constraint bts_constraint;
- extern struct event_constraint vlbr_constraint;
-+extern struct event_constraint vmetrics_constraint;
- 
- void intel_pmu_enable_bts(u64 config);
- 
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 63e1ce1f4b27..d767807aae91 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -390,6 +390,21 @@ static inline bool is_topdown_idx(int idx)
-  */
- #define INTEL_PMC_IDX_FIXED_VLBR		(GLOBAL_STATUS_LBRS_FROZEN_BIT)
- 
-+/*
-+ * We model guest TopDown metrics event tracing similarly.
-+ *
-+ * Guest metric events are recognized as vCPU process's events on host, they
-+ * would be time-sharing multiplexed with other host metric events, so that
-+ * we choose bit 48 (INTEL_PMC_IDX_METRIC_BASE) as the index of virtual
-+ * metrics event.
-+ */
-+#define INTEL_PMC_IDX_FIXED_VMETRICS		(INTEL_PMC_IDX_METRIC_BASE)
-+
-+/*
-+ * Pseudo-encoding the guest metrics event as event=0x00,umask=0x11,
-+ * since it would claim bit 48 which is effectively Fixed16.
-+ */
-+#define INTEL_FIXED_VMETRICS_EVENT		0x1100
- /*
-  * Pseudo-encoding the guest LBR event as event=0x00,umask=0x1b,
-  * since it would claim bit 58 which is effectively Fixed26.
+ 	/*
+ 	 * Precalculate sample_data sizes; do while holding ctx::mutex such
 -- 
 2.34.1
 
