@@ -2,253 +2,116 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C41FAC001B0
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Aug 2023 19:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A37FC001B0
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Aug 2023 20:02:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232560AbjHHTCm (ORCPT
+        id S233163AbjHHUCx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Aug 2023 15:02:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44154 "EHLO
+        Tue, 8 Aug 2023 16:02:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232975AbjHHTBu (ORCPT
+        with ESMTP id S233197AbjHHUCj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Aug 2023 15:01:50 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 252A58DCDA;
-        Tue,  8 Aug 2023 10:31:39 -0700 (PDT)
+        Tue, 8 Aug 2023 16:02:39 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C121488B03;
+        Tue,  8 Aug 2023 11:20:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691515898; x=1723051898;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=O8pf7f7oxoXEvzdcueT5j+AnOqZhPfLnr6A/Hm2lt40=;
-  b=MnR6ttFqU/yBONXExwo7HPpz4k62UzQHpaSzXS0VjcYQTkZnynRKpv+t
-   TM7Vu9ilFSoxsz2XwMdWnsHsZC88YJMx9tBCxu3bRZ1ngHQhHuHv3U0I3
-   4R1acUNy5zY/eVwes8vebLeEMD0POoLWVkXKWmDWVlQrakCAwdGxFIw9D
-   AtszYK7i/QSTpfwh/jv5a1BjMhPhbc6sx17BpDol6otH2frBFPZjYJtwm
-   JRoyEUHS2ZQkp461l/zXyRejSli0ERphQMtAII/g9gVxK16Jf0MrHndHe
-   Bvc5sChVf4P6oj6/weQYgTkLvQoSCyu8X/ephhg2YqUupbDNLp/4Hzi1h
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="434581921"
-X-IronPort-AV: E=Sophos;i="6.01,263,1684825200"; 
-   d="scan'208";a="434581921"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2023 23:26:17 -0700
+  t=1691518836; x=1723054836;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=cktqoN6sRZ8Mcvz8yn3Xtu3xKyhgq3NAFOvqgJPCRZg=;
+  b=Eq8VjCDqkUs+BE+BV2h8uUs/bf5gw2EKwU57k21Bjutt3HKE0ToBdXhi
+   0uBKplzWIkP4T9lB04U3PaYY6CaH8UNipTPlRoyei5zR/jUg0loTkym9s
+   zd06WTcOIBr4Wdgh/UHI1ppvVrIthUVKw6SwWncP1qoO3ifz+fTEcBPtT
+   /RCmDg+vzZFF9GuHdbJPP/viovBMpR21T27NU2unjd4eOetb4CwjkMHvU
+   abjBgtzmN5SXZaqPy2AE4usHMny71y67x0PZq4cYqkFw6nNaNHFCFKDT6
+   RTK4RrKsqoILmdVM3G1dcgK87GVmzso+kvRgr4tPeW+sfYm5mQ4kp7pA+
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="373681645"
+X-IronPort-AV: E=Sophos;i="6.01,157,1684825200"; 
+   d="scan'208";a="373681645"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2023 10:38:49 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="734377629"
-X-IronPort-AV: E=Sophos;i="6.01,263,1684825200"; 
-   d="scan'208";a="734377629"
-Received: from dmi-pnp-i7.sh.intel.com ([10.239.159.155])
-  by fmsmga007.fm.intel.com with ESMTP; 07 Aug 2023 23:26:12 -0700
-From:   Dapeng Mi <dapeng1.mi@linux.intel.com>
-To:     Sean Christopherson <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="708350174"
+X-IronPort-AV: E=Sophos;i="6.01,156,1684825200"; 
+   d="scan'208";a="708350174"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2023 10:38:49 -0700
+Date:   Tue, 8 Aug 2023 10:38:48 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Like Xu <likexu@tencent.com>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Zhang Xiong <xiong.y.zhang@intel.com>,
-        Lv Zhiyuan <zhiyuan.lv@intel.com>,
-        Yang Weijiang <weijiang.yang@intel.com>,
-        Dapeng Mi <dapeng1.mi@intel.com>,
-        Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH RFV v2 03/13] perf/core: Add function perf_event_group_leader_check()
-Date:   Tue,  8 Aug 2023 14:31:01 +0800
-Message-Id: <20230808063111.1870070-4-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230808063111.1870070-1-dapeng1.mi@linux.intel.com>
-References: <20230808063111.1870070-1-dapeng1.mi@linux.intel.com>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Claire Jensen <cjense@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf stat: Don't display zero tool counts
+Message-ID: <ZNJ9qBoBt2spEy4Y@tassilo>
+References: <20230801205452.3380578-1-irogers@google.com>
+ <ZMwUI/YtEHsO3Cc8@kernel.org>
+ <ZNEFt3w/wNCvdawF@tassilo>
+ <ZNFJatDztFNS90d3@kernel.org>
+ <ZNFMqzSAfno/+BcV@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZNFMqzSAfno/+BcV@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Extract the group leader checking code in function sys_perf_event_open()
-to create a new function perf_event_group_leader_check().
+On Mon, Aug 07, 2023 at 04:57:31PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Mon, Aug 07, 2023 at 04:43:38PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Mon, Aug 07, 2023 at 07:54:47AM -0700, Andi Kleen escreveu:
+> > > On Thu, Aug 03, 2023 at 05:54:59PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > Em Tue, Aug 01, 2023 at 01:54:52PM -0700, Ian Rogers escreveu:
+> > > > > Skip zero counts for tool events.
+> > > > > 
+> > > > > Reported-by: Andi Kleen <ak@linux.intel.com>
+> > > > 
+> > > > Andi,
+> > > > 
+> > > > 	Have you tested this? Can we please have your Tested-by?
+> > > 
+> > > I thought I had sent it earlier?
+> > > 
+> > > Tested-by: Andi Kleen <ak@linux.intel.com>
+> > 
+> > Yeah, you did it, sorry, somehow I didn't notice.
+> > 
+> > Applying.
+> 
+> Would be good to have the original link with your report and to figure
+> out the cset that introduced the problem, so that we could have a Fixes
+> tag to help justifying getting this into 6.5.
 
-The subsequent change would add a new function
-perf_event_create_group_kernel_counters() which is used to create group
-events in kernel space. The function also needs to do same check for group
-leader event just like function sys_perf_event_open() does. So extract
-the checking code into a separate function and avoid the code
-duplication.
+Just bisected it. The original patch was below. Remarkably it had a "Fixes"
+tag too)
 
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- kernel/events/core.c | 143 +++++++++++++++++++++++--------------------
- 1 file changed, 78 insertions(+), 65 deletions(-)
+My report was 
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 78ae7b6f90fd..616391158d7c 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -12324,6 +12324,81 @@ perf_check_permission(struct perf_event_attr *attr, struct task_struct *task)
- 	return is_capable || ptrace_may_access(task, ptrace_mode);
- }
- 
-+static int perf_event_group_leader_check(struct perf_event *group_leader,
-+					 struct perf_event *event,
-+					 struct perf_event_attr *attr,
-+					 struct perf_event_context *ctx,
-+					 struct pmu **pmu,
-+					 int *move_group)
-+{
-+	if (!group_leader)
-+		return 0;
-+
-+	/*
-+	 * Do not allow a recursive hierarchy (this new sibling
-+	 * becoming part of another group-sibling):
-+	 */
-+	if (group_leader->group_leader != group_leader)
-+		return -EINVAL;
-+
-+	/* All events in a group should have the same clock */
-+	if (group_leader->clock != event->clock)
-+		return -EINVAL;
-+
-+	/*
-+	 * Make sure we're both events for the same CPU;
-+	 * grouping events for different CPUs is broken; since
-+	 * you can never concurrently schedule them anyhow.
-+	 */
-+	if (group_leader->cpu != event->cpu)
-+		return -EINVAL;
-+
-+	/*
-+	 * Make sure we're both on the same context; either task or cpu.
-+	 */
-+	if (group_leader->ctx != ctx)
-+		return -EINVAL;
-+
-+	/*
-+	 * Only a group leader can be exclusive or pinned
-+	 */
-+	if (attr->exclusive || attr->pinned)
-+		return -EINVAL;
-+
-+	if (is_software_event(event) &&
-+	    !in_software_context(group_leader)) {
-+		/*
-+		 * If the event is a sw event, but the group_leader
-+		 * is on hw context.
-+		 *
-+		 * Allow the addition of software events to hw
-+		 * groups, this is safe because software events
-+		 * never fail to schedule.
-+		 *
-+		 * Note the comment that goes with struct
-+		 * perf_event_pmu_context.
-+		 */
-+		*pmu = group_leader->pmu_ctx->pmu;
-+	} else if (!is_software_event(event)) {
-+		if (is_software_event(group_leader) &&
-+		    (group_leader->group_caps & PERF_EV_CAP_SOFTWARE)) {
-+			/*
-+			 * In case the group is a pure software group, and we
-+			 * try to add a hardware event, move the whole group to
-+			 * the hardware context.
-+			 */
-+			*move_group = 1;
-+		}
-+
-+		/* Don't allow group of multiple hw events from different pmus */
-+		if (!in_software_context(group_leader) &&
-+		    group_leader->pmu_ctx->pmu != *pmu)
-+			return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * sys_perf_event_open - open a performance event, associate it to a task/cpu
-  *
-@@ -12518,71 +12593,9 @@ SYSCALL_DEFINE5(perf_event_open,
- 		}
- 	}
- 
--	if (group_leader) {
--		err = -EINVAL;
--
--		/*
--		 * Do not allow a recursive hierarchy (this new sibling
--		 * becoming part of another group-sibling):
--		 */
--		if (group_leader->group_leader != group_leader)
--			goto err_locked;
--
--		/* All events in a group should have the same clock */
--		if (group_leader->clock != event->clock)
--			goto err_locked;
--
--		/*
--		 * Make sure we're both events for the same CPU;
--		 * grouping events for different CPUs is broken; since
--		 * you can never concurrently schedule them anyhow.
--		 */
--		if (group_leader->cpu != event->cpu)
--			goto err_locked;
--
--		/*
--		 * Make sure we're both on the same context; either task or cpu.
--		 */
--		if (group_leader->ctx != ctx)
--			goto err_locked;
--
--		/*
--		 * Only a group leader can be exclusive or pinned
--		 */
--		if (attr.exclusive || attr.pinned)
--			goto err_locked;
--
--		if (is_software_event(event) &&
--		    !in_software_context(group_leader)) {
--			/*
--			 * If the event is a sw event, but the group_leader
--			 * is on hw context.
--			 *
--			 * Allow the addition of software events to hw
--			 * groups, this is safe because software events
--			 * never fail to schedule.
--			 *
--			 * Note the comment that goes with struct
--			 * perf_event_pmu_context.
--			 */
--			pmu = group_leader->pmu_ctx->pmu;
--		} else if (!is_software_event(event)) {
--			if (is_software_event(group_leader) &&
--			    (group_leader->group_caps & PERF_EV_CAP_SOFTWARE)) {
--				/*
--				 * In case the group is a pure software group, and we
--				 * try to add a hardware event, move the whole group to
--				 * the hardware context.
--				 */
--				move_group = 1;
--			}
--
--			/* Don't allow group of multiple hw events from different pmus */
--			if (!in_software_context(group_leader) &&
--			    group_leader->pmu_ctx->pmu != pmu)
--				goto err_locked;
--		}
--	}
-+	err = perf_event_group_leader_check(group_leader, event, &attr, ctx, &pmu, &move_group);
-+	if (err)
-+		goto err_locked;
- 
- 	/*
- 	 * Now that we're certain of the pmu; find the pmu_ctx.
--- 
-2.34.1
+https://lore.kernel.org/linux-perf-users/ZMlrzcVrVi1lTDmn@tassilo/
 
+commit b897613510890d6e92b6a276a20f6c3d96fe90e8
+Author: Namhyung Kim <namhyung@kernel.org>
+Date:   Tue Dec 6 09:58:04 2022 -0800
+
+    perf stat: Update event skip condition for system-wide per-thread mode and merged uncore and hybrid events
+
+    In print_counter_aggrdata(), it skips some events that has no aggregate
+    count.  It's actually for system-wide per-thread mode and merged uncore
+    and hybrid events.
+
+    Let's update the condition to check them explicitly.
+
+    Fixes: 91f85f98da7ab8c3 ("perf stat: Display event stats using aggr counts")
