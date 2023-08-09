@@ -2,112 +2,92 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C73EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Aug 2023 03:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BB0C41513
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Aug 2023 06:56:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229541AbjHID53 (ORCPT
+        id S230319AbjHIG4a convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Aug 2023 23:57:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40732 "EHLO
+        Wed, 9 Aug 2023 02:56:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229379AbjHID52 (ORCPT
+        with ESMTP id S230358AbjHIG43 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Aug 2023 23:57:28 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41BA510DC;
-        Tue,  8 Aug 2023 20:57:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691553448; x=1723089448;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zv0+2rI5B5teEQrq2dbURi5j/GcMeTdxtcdPjk3899g=;
-  b=lR1CvOq5VGwFZlMbLNbjLCnGyqmTo2OZ5Bbxe1OWozW/z0Pj5uhm/q7R
-   /voIIf7EdqrNkWgNtvVKNXu1BdQWM+QksIKUZzmse4RfP4LB1e598KR54
-   kx/wSKXMqdIGpqb8szgHFo3qdilyiS+dPaPWfjIfa35NFvb0v70D1fUvy
-   bb0g/BRhju4DDS+mAgF18/10tM+NnxrmljdAa2pqrZKhiIKVT1+JAk4vZ
-   mug2zdyixqI43cpUXLAvl9R8KWQzNYG8LNO5NxpAmp0gPy+s+4q98XTKR
-   5brZRqtuwHJhokjIMbmzTUi7XcsXIFk050uQ/QoxINYzcZw9z0GC9Mjb1
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="351322619"
-X-IronPort-AV: E=Sophos;i="6.01,158,1684825200"; 
-   d="scan'208";a="351322619"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2023 20:57:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="708541838"
-X-IronPort-AV: E=Sophos;i="6.01,158,1684825200"; 
-   d="scan'208";a="708541838"
-Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 08 Aug 2023 20:57:22 -0700
-Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qTaK0-0005nO-2y;
-        Wed, 09 Aug 2023 03:57:20 +0000
-Date:   Wed, 9 Aug 2023 11:57:04 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Huang Shijie <shijie@os.amperecomputing.com>, maz@kernel.org
-Cc:     oe-kbuild-all@lists.linux.dev, oliver.upton@linux.dev,
-        james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
-        catalin.marinas@arm.com, will@kernel.org, pbonzini@redhat.com,
-        ingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, patches@amperecomputing.com,
-        zwang@amperecomputing.com,
-        Huang Shijie <shijie@os.amperecomputing.com>
-Subject: Re: [PATCH] perf/core: fix the bug in the event multiplexing
-Message-ID: <202308091142.nsjuu1ek-lkp@intel.com>
-References: <20230809013953.7692-1-shijie@os.amperecomputing.com>
+        Wed, 9 Aug 2023 02:56:29 -0400
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1162F1FD4;
+        Tue,  8 Aug 2023 23:56:29 -0700 (PDT)
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-d3563cb41e9so5515386276.0;
+        Tue, 08 Aug 2023 23:56:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691564188; x=1692168988;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7c2ojFzdHZ+liacKOpIuuI9b60nNWMmDP0BaH1HEZBI=;
+        b=DnQTZR37/3m+L3SwSibUcDnpVdTBElkzZpATAdYl211W0IOTILw9hlXr5qcHi041N2
+         RIryC/cp/3V7xBj+ApkgTLQY664RlETPLSefcNr7akBRyO36oKPOCF5ZvhRP+ZKhe3DM
+         OiB1deguQ72pNNY9ffIOqDGbjDwqeBRcaaWqkocxQL8BLmJve1hBso7MV8SVc9EGm5Mb
+         Ur/K13XXa0M3L0Mbw0VN0wDYb2GhnEnFo86qw2cr/HiL8DJDJovw9qgWnknoiyzLxgVL
+         L6qnVKbQTh7TEHAxvEN57yBtdyhFrvC2H4+03qyNheFIp8VbxPdShtPz0/wWenMHStR9
+         M4kg==
+X-Gm-Message-State: AOJu0Yy16oTxlpMZ7eZaUNlPnS8jlywYDldT5SGam+wBj2iVtr+JiSsp
+        S2No8IEBlcz5P1y4xDHWTFnavsHA2mOokY4XPvE=
+X-Google-Smtp-Source: AGHT+IGdOZaA22wipBCNYsAFwmB08/wQlkuzZlmn/whmGXM8cJnVESICn4GS3578VkWMZZdkEquBdZxVr5R9z+p+raQ=
+X-Received: by 2002:a05:6902:102c:b0:d07:fd29:d752 with SMTP id
+ x12-20020a056902102c00b00d07fd29d752mr2106251ybt.6.1691564188235; Tue, 08 Aug
+ 2023 23:56:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230809013953.7692-1-shijie@os.amperecomputing.com>
+References: <20230728022447.1323563-1-namhyung@kernel.org> <ZMPMHNjX2IxsLbAe@kernel.org>
+In-Reply-To: <ZMPMHNjX2IxsLbAe@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 9 Aug 2023 15:56:17 +0900
+Message-ID: <CAM9d7cgqJatFn0tQVOxoQymFUruSzniPi5Okb1sotb6VLt+X_g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] perf build: Update build rule for generated files
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Anup Sharma <anupnewsmail@gmail.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Huang,
+Hi Arnaldo,
 
-kernel test robot noticed the following build warnings:
+On Fri, Jul 28, 2023 at 11:09 PM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Thu, Jul 27, 2023 at 07:24:46PM -0700, Namhyung Kim escreveu:
+> > The bison and flex generate C files from the source (.y and .l)
+> > files.  When O= option is used, they are saved in a separate directory
+> > but the default build rule assumes the .C files are in the source
+> > directory.  So it might read invalid file if there are generated files
+> > from an old version.  The same is true for the pmu-events files.
+> >
+> > For example, the following command would cause a build failure:
+> >
+> >   $ git checkout v6.3
+> >   $ make -C tools/perf  # build in the same directory
+> >
+> >   $ git checkout v6.5-rc2
+> >   $ mkdir build  # create a build directory
+> >   $ make -C tools/perf O=build  # build in a different directory but it
+> >                                 # refers files in the source directory
+> >
+> > Let's update the build rule to specify those cases explicitly to depend
+> > on the files in the output directory.
+> >
+> > Note that it's not a complete fix and it needs the next patch for the
+> > include path too.
+>
+> Applied, testing it on the container builds.
 
-[auto build test WARNING on kvm/queue]
-[also build test WARNING on kvmarm/next tip/perf/core linus/master v6.5-rc5 next-20230808]
-[cannot apply to acme/perf/core kvm/linux-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I don't see these commits in the perf-tools{,-next} yet.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Huang-Shijie/perf-core-fix-the-bug-in-the-event-multiplexing/20230809-094637
-base:   https://git.kernel.org/pub/scm/virt/kvm/kvm.git queue
-patch link:    https://lore.kernel.org/r/20230809013953.7692-1-shijie%40os.amperecomputing.com
-patch subject: [PATCH] perf/core: fix the bug in the event multiplexing
-config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20230809/202308091142.nsjuu1ek-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 12.3.0
-reproduce: (https://download.01.org/0day-ci/archive/20230809/202308091142.nsjuu1ek-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202308091142.nsjuu1ek-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> kernel/events/core.c:4232:13: warning: no previous prototype for 'arch_perf_rotate_pmu_set' [-Wmissing-prototypes]
-    4232 | void __weak arch_perf_rotate_pmu_set(void)
-         |             ^~~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/arch_perf_rotate_pmu_set +4232 kernel/events/core.c
-
-  4231	
-> 4232	void __weak arch_perf_rotate_pmu_set(void)
-  4233	{
-  4234	}
-  4235	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Namhyung
