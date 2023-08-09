@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CBEC001DB
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Aug 2023 00:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF6CC001B0
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Aug 2023 01:45:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231151AbjHIABB (ORCPT
+        id S230433AbjHIBpA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Aug 2023 20:01:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54796 "EHLO
+        Tue, 8 Aug 2023 21:45:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230504AbjHIABB (ORCPT
+        with ESMTP id S230195AbjHIBo7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Aug 2023 20:01:01 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2098.outbound.protection.outlook.com [40.107.93.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9ECAA1;
-        Tue,  8 Aug 2023 17:00:59 -0700 (PDT)
+        Tue, 8 Aug 2023 21:44:59 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2094.outbound.protection.outlook.com [40.107.220.94])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A39F1982;
+        Tue,  8 Aug 2023 18:44:58 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gDd2Og7PAVRS4sw61Y5+ykHOHqDWMpXLPG5PvqmvePJBaUTV3Nh4mMZXGT/GNcJcLtT6fmkTBbFsy2t7b8x+PZ9pC9Vn2MVEAK6qOMGj36WxroGUEnihboBA9L701SPc7hpDNxFTzhJtk5BRWa5jhFTHW/Z0IWIwlJQZaa4S15ut6Fj2yuJWQqwktsTbYkoJkI/OS/BUVWtuZ2uAPOUjH8H3Z/OBlAQWUvX8pouQ4kcLy8+BOa6gYdRw1g67BLxtLh6Lc1n+4pNdGQFwdsrsVW0N8wvhfCeOszBs8j6xZxI0YxA6d1UmGD6octB62axqrbsPWTtRp4LAKkUe3pyovg==
+ b=VdwyxeY5U9gHRkWaN5SI34MLTvlxR0VPdzE3sBCjjjvJV9e9ZsvfuPcYvKu78J6zSK5FH8m+MZLzmXvv8Ue11gv47jGkEFR2UeoyfTQwGMBhd3ZqoYA4Cm49B0BOb+bka6Iwjs0FUrkcPcZxTHs63gmsZx8qvrqMwND78/qlt97bPaBo88nHPfWjnu9c5pHz/1i/mcdcl3pPYQVilW6eu03dhXBnr7a1cPNiHWtNSwZNXU2ZYshsklQQKr99NfU0OMcRBK0NOqmSb9VS/uGJuF1qSQrrSQLQVIx0xtn6MXiOoB3aNdWqAymGvuCVb9Mb5LxLf6Ob1Csb5R7WoK5f7g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zE5i8YDPH78q79boaiIB9TCa/dbSPbr9lQMssaXToHs=;
- b=R1K299VAstb02ZMSBWKlqH4UfcItRkwT/9x0NZMECMVKz3eRUtDXhpBUFgRlF2NSeUIlVQfv4F06r+IjOs0UGZKC3PlLWV14dGHYtIQymrjqWNxZCz5ONyzNruWPV9JXxZDJISxETNRLyI4KtvkmxLOUZ0EjA0bioMaIBY3B75jhlxPCmoCsYF6xRs+zD/ZxQLKLQ+flIauG/HrdIfjgp9ALQ5uaGDp/r1pfe7nKVRZBF85z0UB7GEu5LhiDUnfUXHrczhamAXw1uqlFSOelU9RgdI6eb0/90gmQrI0d9nyfOgUUiYsPwAeHN1le/lYzKGGdwRbIUJ6Y70Fswjz4Gw==
+ bh=v9jg819mhanbD2rclFVjTh61HzjMSpSIt9SvwBwyAwI=;
+ b=Ww4IBuBRCdIcaqYNid4DJpsfTZ1PGA03MOtGJc4Kwmhggg3m1S1/DFkrxYMmfkLtPl6UVB7Yc5h18cA90NsHSFXG3PHod8TV/yE/Z+gyp8JKyAV8igqj2zkInnlXBmNIVDXyEbMxYuoyYrBnYhuu4Q/nYr12ybAavVloXc+wu4jsOc3ftVpSO/EbpnSseAHFyrlAi4AQDmDUAAJl/Dsy3e2VLNXhZBTIJgiJhLY1RXRviqYSaAB/DjBCNCnSpdLudTxpkkzikx8mzUMWsHsjqQ7qZ89mrjBuDYZeikLeoXDhBffLo4epFgHtWd1CKArGBgr1FhVAfT5t86AY7KPOnw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
  header.from=os.amperecomputing.com; dkim=pass
@@ -30,348 +30,263 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=os.amperecomputing.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zE5i8YDPH78q79boaiIB9TCa/dbSPbr9lQMssaXToHs=;
- b=um81hC10eVWsagSmk/Wa+F01xaNKWFlKF1Hpgt7rY3/cR/kVy3Sh7aw1vjjaqf3dKmHKylShg/QTc6KhcN14ZE2Qr5UADw6NYhScbbo1HjBZckOi7u0zVsH5SFo6CPyRgChTQpd1qFTE3UdMD1KVpVb75XW8STYaHsq1H7kixEA=
+ bh=v9jg819mhanbD2rclFVjTh61HzjMSpSIt9SvwBwyAwI=;
+ b=K4mVPy2e293ndoebZgoAkSwCGyAT5dZDXWqMpqWQ/i/WOMXFhbGEBOtzg6MlsPrd495XCYlxjyt3lWJkgXoN1OkuZquWc/YR+0rN7TXSsJakzWu0K3IJhKmkGYvewI6rKu7IKxa/XJDBY9c2mxCKh5K18sq5WRpeke2iQX8hQyk=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from DM5PR0102MB3590.prod.exchangelabs.com (2603:10b6:4:a4::25) by
- SA1PR01MB6624.prod.exchangelabs.com (2603:10b6:806:1a3::16) with Microsoft
+Received: from DM8PR01MB6824.prod.exchangelabs.com (2603:10b6:8:23::24) by
+ PH0PR01MB8118.prod.exchangelabs.com (2603:10b6:510:29c::19) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6652.27; Wed, 9 Aug 2023 00:00:56 +0000
-Received: from DM5PR0102MB3590.prod.exchangelabs.com
- ([fe80::4e0f:49b:ee39:f08e]) by DM5PR0102MB3590.prod.exchangelabs.com
- ([fe80::4e0f:49b:ee39:f08e%6]) with mapi id 15.20.6652.026; Wed, 9 Aug 2023
- 00:00:53 +0000
-Date:   Tue, 8 Aug 2023 17:00:41 -0700 (PDT)
-From:   Ilkka Koskinen <ilkka@os.amperecomputing.com>
-To:     John Garry <john.g.garry@oracle.com>
-cc:     Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-        Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Dave Kleikamp <dave.kleikamp@oracle.com>
-Subject: Re: [PATCH 3/4] perf vendor events arm64: Add AmpereOne metrics
-In-Reply-To: <90c18a64-4de6-a251-13d2-e6671a04c398@oracle.com>
-Message-ID: <fe49313-add2-a3a7-49f0-54dcf0dd8c84@os.amperecomputing.com>
-References: <20230803211331.140553-1-ilkka@os.amperecomputing.com> <20230803211331.140553-4-ilkka@os.amperecomputing.com> <ccce391b-da5e-584c-9c56-1de754df8362@oracle.com> <e5879193-515b-662c-8597-ca8ea8e3fb4@os.amperecomputing.com>
- <90c18a64-4de6-a251-13d2-e6671a04c398@oracle.com>
-Content-Type: text/plain; charset=US-ASCII; format=flowed
-X-ClientProxiedBy: CH2PR05CA0037.namprd05.prod.outlook.com
- (2603:10b6:610:38::14) To DM5PR0102MB3590.prod.exchangelabs.com
- (2603:10b6:4:a4::25)
+ 15.20.6652.25; Wed, 9 Aug 2023 01:44:53 +0000
+Received: from DM8PR01MB6824.prod.exchangelabs.com
+ ([fe80::d62f:d774:15b0:4a40]) by DM8PR01MB6824.prod.exchangelabs.com
+ ([fe80::d62f:d774:15b0:4a40%4]) with mapi id 15.20.6652.026; Wed, 9 Aug 2023
+ 01:44:52 +0000
+From:   Huang Shijie <shijie@os.amperecomputing.com>
+To:     maz@kernel.org
+Cc:     oliver.upton@linux.dev, james.morse@arm.com,
+        suzuki.poulose@arm.com, yuzenghui@huawei.com,
+        catalin.marinas@arm.com, will@kernel.org, pbonzini@redhat.com,
+        peterz@infradead.org, ingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, patches@amperecomputing.com,
+        zwang@amperecomputing.com,
+        Huang Shijie <shijie@os.amperecomputing.com>
+Subject: [PATCH] perf/core: fix the bug in the event multiplexing
+Date:   Wed,  9 Aug 2023 09:39:53 +0800
+Message-Id: <20230809013953.7692-1-shijie@os.amperecomputing.com>
+X-Mailer: git-send-email 2.39.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: CH2PR08CA0013.namprd08.prod.outlook.com
+ (2603:10b6:610:5a::23) To DM8PR01MB6824.prod.exchangelabs.com
+ (2603:10b6:8:23::24)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM5PR0102MB3590:EE_|SA1PR01MB6624:EE_
-X-MS-Office365-Filtering-Correlation-Id: 636b01fd-73cd-4218-77de-08db986bb283
+X-MS-TrafficTypeDiagnostic: DM8PR01MB6824:EE_|PH0PR01MB8118:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7a487444-e968-4013-b558-08db987a397d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: R4xMJUbkhfCT6KREO/Rid/vfGBIIJnd/KL+2yNEcXL+17U5t6kvDMc3Wesix8Mo17hgYz2b9pDE5zeZEKrtXyX3OAyA++r+nI2vKc9MMUojRdPW5jwxl9NB/uX21SFoWLLdlbs5HRUWjCpPffMX398CvnLKAuY1wxbh5YxiKG+I+4hlW+QNujenNFSks99l/I+uFVy3D6IlTfNtawh0yeHqp7QOa4hE/qnFrdd3wcjSysCItNQ9f9SJ0lKk5P/3tidCqWdUTGtSVoEz9+3gcFTyJ3xYiCBSMd15gkvxqDRGxRpf7qyiJbiNifLbeJf3ydasVVIz+sKy3qHAaSvrcV5BKAbU4NtEjFWaHvOB2l1uWGeQ9uBLeWTG0vRNJVEL+uNgwl57ZB+R7wlHKjf1+roN3nc8U8G1XZiMT/UvEKg5Zxj5jzg05EhC/Sd9qcb6dx9ghROKrUL0ILLt9+osU9GKatnKd/yiRJ0gWejV66XagKzgoyKnqs0Zhk986mA+vosUTsCk4zLpqQkrpfR1k8cb11msWAf7079QKfC8fGRA1oW6r04VdKaW3iC4vB9jSzm+lXFIx8sNNHHdBufSkXaAz7OLmVBVCa1yVrhJ/JyHuiB/T/AkmySrppQFKQrxs
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR0102MB3590.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(39850400004)(346002)(396003)(136003)(366004)(1800799006)(451199021)(186006)(7416002)(8676002)(5660300002)(8936002)(4326008)(41300700001)(316002)(83380400001)(86362001)(2906002)(6916009)(6512007)(6666004)(6486002)(52116002)(53546011)(26005)(6506007)(2616005)(66946007)(66556008)(66476007)(478600001)(54906003)(38350700002)(38100700002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: Tglo45JWWddTWQD06yjH232/bRukz0zfSrOACw6Coc3lqTwSvIz1Vjd/B4l/ITXxXf8WEeOdvPOc5kl7SPseJ/HLzb2wKawAXtRlKmNmBy2nt/NfLF0ZkYpKd7i2RO1FBMue7VojmUxuvJHocT9s2fswiGvGrseQ00q6anpc1kZIEelcb4zeSEDBQOadX88t4DbH5NhyLZAwVKDl56a4pB+XiYXj7p43jBzFJpmWPr6pQDpWGkT759wOBlPMtPfUR8BoCXKlNl8Vx4fkGc1mCAhQ/EOoTE717KRUCkq86W3QSr1Vx4gKa7O4N8hHLD06S+eUEGhSeSEoT4VLCHymJxxzRbZbJBdctrUca0F2tzseRRUi+gpJUm99PMqwKyfEUTEcxdWteX6gOqKE2VrB5nxXpLcmwv6FxtsJ2LhLXXSD1/zgFzGfWZivclc3NI9kpTXIXiDInt2qTkt+CVDRqoVQ/wfW334rcl3t/vJhCZ7Ynma9NcgTauZ+HCyuQrTzHZIIgzMwrGwn0V3PkZL0hbzed9W/mj+p7IN8wLAY3S7HGIHsRzKxuFqEzuW0qVBsBLyZluEzi5BOsXMP8v25jBDXkTBTrQDQQjFlgi9hiXLd/pU+TYXKIyrMaAyBDjPlkrsnR/Jf7MhKH3hPcxJCGg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR01MB6824.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(346002)(136003)(396003)(366004)(39850400004)(186006)(451199021)(1800799006)(2616005)(52116002)(2906002)(86362001)(1076003)(6512007)(6486002)(478600001)(26005)(107886003)(6506007)(41300700001)(8936002)(4326008)(8676002)(66556008)(7416002)(66946007)(316002)(38350700002)(38100700002)(5660300002)(66476007)(6916009)(83380400001)(309714004);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?tv6WP/9eacMRCDdny/wCElH8acZErP7mxxsv0CoTx/0SesJB6MNK4ikkbbLV?=
- =?us-ascii?Q?2rCBBKxe7cPZFXHezWk3lV1Y5iziR1rxSiJ3CQg4ZMkQVFKH3U8kufNwc1jl?=
- =?us-ascii?Q?7GmM2AT2Hu2D8axk1rQh/f78pbawW8JpKIFDYbokr9WlVlopxmVZnDlW7Avg?=
- =?us-ascii?Q?PvhVt3W678oV4GVHKqm+4q0dBwQ0QAmpC5ROOE/ZtNTzUSVewssgDBvaU9Ty?=
- =?us-ascii?Q?wUDEG2YdlXo728fMl4L8Re1sZwwb9AhYizBdaz4qCrs8Z9iglrMAW6zMYuRA?=
- =?us-ascii?Q?Wu3fCBCIaCLy0CP9J3/nw6DFugn/p/VG+LcSNSXJa5QBg9y6Q3/jocn8j4da?=
- =?us-ascii?Q?64A314I5QmFif1RtdD9gE2tGN/blRZq7zEJvKffyD9xNeSihleXgePwfwol8?=
- =?us-ascii?Q?cQchowwH/RzXE2atSLlSJUwcat5v/xWX1OpBcHWNyMq5F0QB9A1FRNq3Wm6y?=
- =?us-ascii?Q?SHmqHEmH3YJil2NMlQHe+fCEoeb5jRoZMoTcT3oUOb/zRNCMg9n5nevLwjVm?=
- =?us-ascii?Q?n2Weg6jQkzGt4hLkKSYeihBXGjyGqc0L8K3+HJ3SbZd9k6PBDln9Gh7Y1jpo?=
- =?us-ascii?Q?53Gq0rJibNVOPGUPpWM0ewrZsJaqXS8U5GTnnDwJ5c+w1ayRKTlO5FpxEErE?=
- =?us-ascii?Q?Vq22Xqs7mEIKpiGIMWMHFj9Gw5R4F/xqql7nGOi7GUAGTqtOT71K7KTtMvea?=
- =?us-ascii?Q?7lFmqr+l/cYmwvZvaKRWgz+W9H9FukpGErUnasSpjE9LxsWPs+Ca8de/2GAz?=
- =?us-ascii?Q?mq90949ZGgDD0+Gi1ovPi8TpJHiNt7Ri3FtcgMS0XzeZ7OtWGAv3ltht4SS6?=
- =?us-ascii?Q?bFH4E7a8ZQpi94vCDtzOXsFw5Ka+IhAxX7jInE6irV9kubQ43kaTuS+5whpA?=
- =?us-ascii?Q?Px45bZoEZp8gcdZpkawruw/zNnMkvPB4GgNQ96zS3aREEEorsPQvSH614X3X?=
- =?us-ascii?Q?mczaUoOMHt2/QiLQ4VohuS4q4Rae8gTf3oS3Z2wHaQZ+zGzcbMdBhdu9SYlQ?=
- =?us-ascii?Q?2VkGdWY5HzKegUhV35uS02jroY/IMhrxtcQPEruar6rIysVoYbz1Y6N+iMBW?=
- =?us-ascii?Q?gsN4EuL+vn/rovXQtvLeuaM0wo6vWVRr4vWcShsU0EMaL8KvCAgSYQD+nRd7?=
- =?us-ascii?Q?Q/6QtgjXPwjChkxW6ry/DMQAzzSzNKbI461uRc29MQ3KERdVKrISngaH4Wop?=
- =?us-ascii?Q?wbOUKFjQ0ilIfI3Xdogu+qxY/s33dS0++TOR74BIbVeIeJomvF57FuiIrEv3?=
- =?us-ascii?Q?91YFtgyIDXuttTMxuLP9HP05Lpr03X3DBUAFRDqeyiqLYjQBWrTjIpSXS7GZ?=
- =?us-ascii?Q?ossTU8T40OuhxQPudFzI1zVGX9yXvW8VlPC0DO5XyFsGMguI0pOOfrv4/QVf?=
- =?us-ascii?Q?CzDgQh6rIGGQv7YbilVzT08NmBtP0+QE79pQdXWsKoVMzZE4aq5wbGFmb8Ms?=
- =?us-ascii?Q?mAEAa4mDi9Fx8FimrYzzIAFga2bGjSrMgF7WAfi+thvT+ymcEyKUMywX+wHX?=
- =?us-ascii?Q?qXNwqIa4ztuVAPfyCcKQ6wJuZMysL22L0qzADxCGuC/40fqLRQDJTeS9ne85?=
- =?us-ascii?Q?4h5Bu6QFOJ/HVMYBJBGRQdpcE+Am1QHAqni+oiyQXN9GyjX6LSZeqb7ikqir?=
- =?us-ascii?Q?UQsTeYWIuKKyl6ybApxJyJA=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?/yl5zHIoDSMhGOQiK2uyTd9uVzpe0Mqr9K+FBQubuQzSKpZbYeG9ChMZ5XLi?=
+ =?us-ascii?Q?5VBT5AvNhXTsDllHj/sppide9TnMQ1FbXZwSv5lH+C4RsPbHmTyGAHvKRvY+?=
+ =?us-ascii?Q?HJ6mbqZQTo59THuJbCd3GSfwRsWOVxb5EzSsE7f4UrbFYDqBbDZpA2rom24A?=
+ =?us-ascii?Q?aD91vH1wNjn1GDS1qq/yQzfe5LoejYa0Gku4toudsLFoj2TwUwbb50c4pmuP?=
+ =?us-ascii?Q?MHb+hAJKf51EmKH2Vh0omK8k6lQtmRVyE3BZEjy4USyVYfYUEnKjtheSg6sD?=
+ =?us-ascii?Q?CSKU7Bq7QVI2Nh1hF0H9wZ2+xv87mLyhjQQf+Ifod4tyEka0W7bNecjvQO+/?=
+ =?us-ascii?Q?bohN7AYbwYTRxV4Hi7IvQPw3Zif+smyFrn9gizVqFiKq/5/kAKIdi5H6KyS6?=
+ =?us-ascii?Q?uexOiGMEdqubhroDW/O7eMyPb9KU3yZB7xhA2QSFk3KfurZLmD8sCmkiw4T2?=
+ =?us-ascii?Q?sM9Va3BmSCnxkShPGQsFHqMCdH9F7sX+hLjntzPnfwtl0vUPtTIQJAD5Hilw?=
+ =?us-ascii?Q?OKPceh1VKW4wKB0gR2O9LRm7olG1qP+5iWbWudH+UC2IcH//fjz+mAdUBQ5I?=
+ =?us-ascii?Q?2PQsYA/kUrUFZPmZJ6QaiLEW7B/XmoDkFefjtg16QloMW71JtE6YabKjSUlH?=
+ =?us-ascii?Q?LMy5HTjgtQ2reNvcRcE4EyUDx3wnWqHpWJRQ1q36/izW8HXXehvVSyunfyxl?=
+ =?us-ascii?Q?2xuUliuipHLlJP9xKCGSjTyLRnWCxlDCPwRCeU4e/MoOVnpS5VIjmWhUdv8T?=
+ =?us-ascii?Q?4dZd6YUCwpxALBdm46TqXzRaXU0CPH+H8XwmWMGhMeWRKi3ddi+o5AzDBv7H?=
+ =?us-ascii?Q?uP0Pjl1MxxULJCyvjEfyYlo3jQBXBQL8GJaN//Pil3Ztu2t71uR3AFC7OgFg?=
+ =?us-ascii?Q?sm+HC1FbK9G3t5n/L0doJg+oHkM/BwrepEx1bI/Hv47+ZnWHSntHKj+MceB5?=
+ =?us-ascii?Q?yLVuNS8V5PX10mTxazTrM2862enPAOCIWj59CLyfzGMoL/F1+/clxIX7bUrc?=
+ =?us-ascii?Q?ZrCD14ziBr1AnToqSo/RwrZtEUvAMmfzgJ4gNGFUC1VTeoCB31fZFG64cKIr?=
+ =?us-ascii?Q?AHUVNAPoSInlaENzAY0AYBJuIDQiKUw2l4Pi2phzDe+1Har67Qegmua6sQMR?=
+ =?us-ascii?Q?Wa2N/v2pgdwWalJ2aZmf8q5H18ay2zZWsqPWAbMo68b9dvO9iGgcNIdqZjY+?=
+ =?us-ascii?Q?Y3rRpaDi9/Y5Jy+0EBTNTCRL1jKwzjrwBqFpvVp/ACFgW3KsaDYQQYCVFoCA?=
+ =?us-ascii?Q?HKyAD3toGj774eDxPl70pCi7X1UnBsXAAtP2N/qSIJ6XFgFAeeJy3efyHLF4?=
+ =?us-ascii?Q?XDn9YYLywzCYZmu6bixS6iQWlb20U+0EFsJ1uIlL2KDAzO9AnXaqr9lfE5dj?=
+ =?us-ascii?Q?4GWmN5J7Fs0SxudjKy+jcmJky6xQtTwlhbFT3vGMjtZDH7PyBJydynna0UtM?=
+ =?us-ascii?Q?T8ydmzMjVBrb0KuKtUuh7Sj7yEMnz7qzxLK86j0nh082qZZtaOeR7NhLDz42?=
+ =?us-ascii?Q?kyDztckT2/ICs13fSqJ+skGfdyi8WCo7KH52EVkoVlvSABAdaWtcJeVW8P3N?=
+ =?us-ascii?Q?bng5edOeQnBSRXXy8DFblkNBVM6RDAz+KlgFe005f9LWofI97sKwZ4IenqP4?=
+ =?us-ascii?Q?iBYu18zJCkZaoPBT9qlGaUQ=3D?=
 X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 636b01fd-73cd-4218-77de-08db986bb283
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR0102MB3590.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a487444-e968-4013-b558-08db987a397d
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR01MB6824.prod.exchangelabs.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2023 00:00:53.1506
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2023 01:44:52.7626
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iG+chQzGWwuXHbqD7ZOIH4LOavDcJ2dey4F5I3AkpY36Pa3kB2bzSM4DeUYjazEFzzGKxyvCjyGexHQj5gonQ5+9/OUDsrFnM2lBeus2S21wm7Bs8VoG4xtcsFn9Yq38
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR01MB6624
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3cA2jnJxtuh0IGxpxwcF9Vj8PMFbV4wo4NiBNS9cnq5cQlrAAFmGshitJ2gb7I/7cRJfbiKrBhzrfHLlaR2cqx+ME+ppQB3i/YlZyf2oFcP0b9oUfIFNzRUcr5N0SULc
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR01MB8118
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+1.) Background.
+   1.1) In arm64, run a virtual guest with Qemu, and bind the guest
+        to core 33 and run program "a" in guest.
+        The code of "a" shows below:
+   	----------------------------------------------------------
+		#include <stdio.h>
 
+		int main()
+		{
+			unsigned long i = 0;
 
-On Mon, 7 Aug 2023, John Garry wrote:
-> On 04/08/2023 20:59, Ilkka Koskinen wrote:
->> 
->> Hi John
->> 
->> On Fri, 4 Aug 2023, John Garry wrote:
->>> On 03/08/2023 22:13, Ilkka Koskinen wrote:
->>>> This patch adds AmpereOne metrics. The metrics also work around
->>>> the issue related to some of the events.
->
-> Would these events be any metrics added which are not a "Topdown"? I guess 
-> no, since there are many, but I just don't know.
->
->>> 
->>> Just curious, are these events/metrics described in some 
->>> publically-available document?
->> 
->> I quickly checked that and there are a spreadsheet and a document 
->> available, which list the supported PMUs, their events and metrics in the 
->> customer connect website but that requires registering.
->> 
->
-> OK, thanks for the info. I ask is it always worthwhile mentioning a link in 
-> the changelog if publicly available.
+			for (;;) {
+				i++;
+			}
 
-I can certainly add a comment that the events are available at the 
-customer connect website.
+			printf("i:%ld\n", i);
+			return 0;
+		}
+   	----------------------------------------------------------
 
->
->
-> Just a few minor comments:
->
-> On 03/08/2023 22:13, Ilkka Koskinen wrote:
->> This patch adds AmpereOne metrics. The metrics also work around
->> the issue related to some of the events.
->>
->> Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
->> ---
->>   .../arch/arm64/ampere/ampereone/metrics.json  | 362 ++++++++++++++++++
->>   1 file changed, 362 insertions(+)
->>
->
-> ...
->
->> +    {
->> +	"MetricExpr": "CRYPTO_SPEC / OP_SPEC",
->> +	"BriefDescription": "Proportion of crypto data processing 
-> operations",
->> +	"MetricGroup": "Instruction",
->> +	"MetricName": "Crypto mix"
->> +    },
->> +    {
->> +	"MetricExpr": "VFP_SPEC / (duration_time *1000000000)",
->> +	"BriefDescription": "Giga-floating point operations per second",
->> +	"MetricGroup": "Instruction",
->> +	"MetricName": "GFLOPS_ISSUED"
->> +    },
->> +    {
->> +	"MetricExpr": "DP_SPEC / OP_SPEC",
->> +	"BriefDescription": "Proportion of integer data processing 
-> operations",
->> +	"MetricGroup": "Instruction",
->> +	"MetricName": "Integer mix"
->> +    },
->> +    {
->> +	"MetricExpr": "INST_RETIRED / CPU_CYCLES",
->> +	"BriefDescription": "Instructions per cycle",
->> +	"MetricGroup": "Instruction",
->> +	"MetricName": "IPC"
->> +    },
->> +    {
->> +	"MetricExpr": "LD_SPEC / OP_SPEC",
->> +	"BriefDescription": "Proportion of load operations",
->> +	"MetricGroup": "Instruction",
->> +	"MetricName": "Load mix"
->> +    },
->> +    {
->> +	"MetricExpr": "LDST_SPEC/ OP_SPEC",
->
-> mega nit: missing whitespace before '/'
+   1.2) Use the following perf command in host:
+      #perf stat -e cycles:G,cycles:H -C 33 -I 1000 sleep 1
+          #           time             counts unit events
+               1.000817400      3,299,471,572      cycles:G
+               1.000817400          3,240,586      cycles:H
 
-I'll fix it.
+       This result is correct, my cpu's frequency is 3.3G.
 
->
->> +	"BriefDescription": "Proportion of load & store operations",
->> +	"MetricGroup": "Instruction",
->> +	"MetricName": "Load-store mix"
->> +    },
->> +    {
->> +	"MetricExpr": "INST_RETIRED / (duration_time * 1000000)",
->
-> I think that we may use 1e6 here for shorthand - it helps avoid mistakes with 
-> too few or many '0's :)
+   1.3) Use the following perf command in host:
+      #perf stat -e cycles:G,cycles:H -C 33 -d -d  -I 1000 sleep 1
+            time             counts unit events
+     1.000831480        153,634,097      cycles:G                                                                (70.03%)
+     1.000831480      3,147,940,599      cycles:H                                                                (70.03%)
+     1.000831480      1,143,598,527      L1-dcache-loads                                                         (70.03%)
+     1.000831480              9,986      L1-dcache-load-misses            #    0.00% of all L1-dcache accesses   (70.03%)
+     1.000831480    <not supported>      LLC-loads
+     1.000831480    <not supported>      LLC-load-misses
+     1.000831480        580,887,696      L1-icache-loads                                                         (70.03%)
+     1.000831480             77,855      L1-icache-load-misses            #    0.01% of all L1-icache accesses   (70.03%)
+     1.000831480      6,112,224,612      dTLB-loads                                                              (70.03%)
+     1.000831480             16,222      dTLB-load-misses                 #    0.00% of all dTLB cache accesses  (69.94%)
+     1.000831480        590,015,996      iTLB-loads                                                              (59.95%)
+     1.000831480                505      iTLB-load-misses                 #    0.00% of all iTLB cache accesses  (59.95%)
 
-Oh, that's great. I don't think anyone needed to use those in arm64 and I 
-guess I didn't realize to take a look at other architectures. I'll change 
-all the numbers.
+       This result is wrong. The "cycle:G" should be nearly 3.3G.
 
->
->> +	"BriefDescription": "Millions of instructions per second",
->> +	"MetricGroup": "Instruction",
->> +	"MetricName": "MIPS_RETIRED"
->> +    },
->> +    {
->> +	"MetricExpr": "INST_SPEC / (duration_time * 1000000)",
->> +	"BriefDescription": "Millions of instructions per second",
->> +	"MetricGroup": "Instruction",
->> +	"MetricName": "MIPS_UTILIZATION"
->> +    },
->> +    {
->> +	"MetricExpr": "PC_WRITE_SPEC / OP_SPEC",
->> +	"BriefDescription": "Proportion of software change of PC operations",
->> +	"MetricGroup": "Instruction",
->> +	"MetricName": "PC write mix"
->> +    },
->> +    {
->> +	"MetricExpr": "ST_SPEC / OP_SPEC",
->> +	"BriefDescription": "Proportion of store operations",
->> +	"MetricGroup": "Instruction",
->> +	"MetricName": "Store mix"
->> +    },
->> +    {
->> +	"MetricExpr": "VFP_SPEC / OP_SPEC",
->> +	"BriefDescription": "Proportion of FP operations",
->> +	"MetricGroup": "Instruction",
->> +	"MetricName": "VFP mix"
->> +    },
->> +    {
->> +	"MetricExpr": "1 - (OP_RETIRED/ (CPU_CYCLES * 4))",
->> +	"BriefDescription": "Proportion of slots lost",
->> +	"MetricGroup": "Speculation / TDA",
->> +	"MetricName": "CPU lost"
->> +    },
->> +    {
->> +	"MetricExpr": "OP_RETIRED/ (CPU_CYCLES * 4)",
->> +	"BriefDescription": "Proportion of slots retiring",
->> +	"MetricGroup": "Speculation / TDA",
->> +	"MetricName": "CPU utilization"
->> +    },
->> +    {
->> +	"MetricExpr": "OP_RETIRED - OP_SPEC",
->> +	"BriefDescription": "Operations lost due to misspeculation",
->> +	"MetricGroup": "Speculation / TDA",
->> +	"MetricName": "Operations lost"
->> +    },
->> +    {
->> +	"MetricExpr": "1 - (OP_RETIRED / OP_SPEC)",
->> +	"BriefDescription": "Proportion of operations lost",
->> +	"MetricGroup": "Speculation / TDA",
->> +	"MetricName": "Operations lost (ratio)"
->> +    },
->> +    {
->> +	"MetricExpr": "OP_RETIRED / OP_SPEC",
->> +	"BriefDescription": "Proportion of operations retired",
->> +	"MetricGroup": "Speculation / TDA",
->> +	"MetricName": "Operations retired"
->> +    },
->> +    {
->> +	"MetricExpr": "STALL_BACKEND_CACHE / CPU_CYCLES",
->> +	"BriefDescription": "Proportion of cycles stalled and no operations 
-> issued to backend and cache miss",
->> +	"MetricGroup": "Stall",
->> +	"MetricName": "Stall backend cache cycles"
->> +    },
->> +    {
->> +	"MetricExpr": "STALL_BACKEND_RESOURCE / CPU_CYCLES",
->> +	"BriefDescription": "Proportion of cycles stalled and no operations 
-> issued to backend and resource full",
->> +	"MetricGroup": "Stall",
->> +	"MetricName": "Stall backend resource cycles"
->> +    },
->> +    {
->> +	"MetricExpr": "STALL_BACKEND_TLB / CPU_CYCLES",
->> +	"BriefDescription": "Proportion of cycles stalled and no operations 
-> issued to backend and TLB miss",
->> +	"MetricGroup": "Stall",
->> +	"MetricName": "Stall backend tlb cycles"
->> +    },
->> +    {
->> +	"MetricExpr": "STALL_FRONTEND_CACHE / CPU_CYCLES",
->> +	"BriefDescription": "Proportion of cycles stalled and no ops 
-> delivered from frontend and cache miss",
->> +	"MetricGroup": "Stall",
->> +	"MetricName": "Stall frontend cache cycles"
->> +    },
->> +    {
->> +	"MetricExpr": "STALL_FRONTEND_TLB / CPU_CYCLES",
->> +	"BriefDescription": "Proportion of cycles stalled and no ops 
-> delivered from frontend and TLB miss",
->> +	"MetricGroup": "Stall",
->> +	"MetricName": "Stall frontend tlb cycles"
->> +    },
->> +    {
->> +	"MetricExpr": "DTLB_WALK / L1D_TLB",
->> +	"BriefDescription": "D-side walk per d-side translation request",
->> +	"MetricGroup": "TLB",
->> +	"MetricName": "DTLB walks"
->> +    },
->> +    {
->> +	"MetricExpr": "ITLB_WALK / L1I_TLB",
->> +	"BriefDescription": "I-side walk per i-side translation request",
->> +	"MetricGroup": "TLB",
->> +	"MetricName": "ITLB walks"
->> +    },
->> +    {
->> +        "MetricExpr": "STALL_SLOT_BACKEND / (CPU_CYCLES * 4)",
->> +        "BriefDescription": "Fraction of slots backend bound",
->> +        "MetricGroup": "TopDownL1",
->
-> @Ian, should this be "Default;TopDownL1"?
->
->> +        "MetricName": "backend"
->
-> How about use consistent names with other other archs and arm64 platforms, 
-> like "backend_bound"? I did not check all names, but please consider this.
->
-> If 'perf topdown' is ever supported for arm64, we would prob rely on 
-> metricgroups, so would need use a fixed standard name here. Note that x86 
-> uses custom kernel events for this instead.
+2.) Root cause.
+	There is only 7 counters in my arm64 platform:
+	  (one cycle counter) + (6 normal counters)
 
-That's an excellent point. I'll reach out to our architect and we'll 
-change the names and groups in the patch and the document to be more 
-consistent to the existing ones.
+	In 1.3 above, we will use 10 event counters.
+	Since we only have 7 counters, the perf core will trigger
+       	event multiplexing in hrtimer:
+	     merge_sched_in() -->perf_mux_hrtimer_restart() -->
+	     perf_rotate_context().
 
->> +    },
->> +    {
->> +        "MetricExpr": "1 - (retiring + lost + backend)",
->> +        "BriefDescription": "Fraction of slots frontend bound",
->> +        "MetricGroup": "TopDownL1",
->> +        "MetricName": "frontend"
->
-> As above, it would be "frontend_bound"
+       In the perf_rotate_context(), it does not restore some PMU registers
+       as context_switch() does.  In context_switch():
+             kvm_sched_in()  --> kvm_vcpu_pmu_restore_guest()
+             kvm_sched_out() --> kvm_vcpu_pmu_restore_host()
 
-I'll fix it.
+       So we got wrong result.
 
-Cheers, Ilkka
+3.) About this patch.
+        3.1) Add arch_perf_rotate_pmu_set()
+        3.2) Add is_guest().
+	     Check the context for hrtimer.
+	3.3) In arm64's arch_perf_rotate_pmu_set(),
+       	     set the PMU registers by the context.
 
->
->> +    },
->> +    {
->> +        "MetricExpr": "((OP_SPEC - OP_RETIRED) / (CPU_CYCLES * 4))",
->> +        "BriefDescription": "Fraction of slots lost due to 
-> misspeculation",
->> +        "MetricGroup": "TopDownL1",
->> +        "MetricName": "lost"
->> +    },
->> +    {
->
->
+4.) Test result of this patch:
+      #perf stat -e cycles:G,cycles:H -C 33 -d -d  -I 1000 sleep 1
+            time             counts unit events
+     1.000817360      3,297,898,244      cycles:G                                                                (70.03%)
+     1.000817360          2,719,941      cycles:H                                                                (70.03%)
+     1.000817360            883,764      L1-dcache-loads                                                         (70.03%)
+     1.000817360             17,517      L1-dcache-load-misses            #    1.98% of all L1-dcache accesses   (70.03%)
+     1.000817360    <not supported>      LLC-loads
+     1.000817360    <not supported>      LLC-load-misses
+     1.000817360          1,033,816      L1-icache-loads                                                         (70.03%)
+     1.000817360            103,839      L1-icache-load-misses            #   10.04% of all L1-icache accesses   (70.03%)
+     1.000817360            982,401      dTLB-loads                                                              (70.03%)
+     1.000817360             28,272      dTLB-load-misses                 #    2.88% of all dTLB cache accesses  (69.94%)
+     1.000817360            972,072      iTLB-loads                                                              (59.95%)
+     1.000817360                772      iTLB-load-misses                 #    0.08% of all iTLB cache accesses  (59.95%)
+
+    The result is correct. The "cycle:G" is nearly 3.3G now.
+
+Signed-off-by: Huang Shijie <shijie@os.amperecomputing.com>
+---
+ arch/arm64/kvm/pmu.c     | 8 ++++++++
+ include/linux/kvm_host.h | 1 +
+ kernel/events/core.c     | 5 +++++
+ virt/kvm/kvm_main.c      | 9 +++++++++
+ 4 files changed, 23 insertions(+)
+
+diff --git a/arch/arm64/kvm/pmu.c b/arch/arm64/kvm/pmu.c
+index 121f1a14c829..a6815c3f0c4e 100644
+--- a/arch/arm64/kvm/pmu.c
++++ b/arch/arm64/kvm/pmu.c
+@@ -210,6 +210,14 @@ void kvm_vcpu_pmu_restore_host(struct kvm_vcpu *vcpu)
+ 	kvm_vcpu_pmu_disable_el0(events_guest);
+ }
+ 
++void arch_perf_rotate_pmu_set(void)
++{
++	if (is_guest())
++		kvm_vcpu_pmu_restore_guest(NULL);
++	else
++		kvm_vcpu_pmu_restore_host(NULL);
++}
++
+ /*
+  * With VHE, keep track of the PMUSERENR_EL0 value for the host EL0 on the pCPU
+  * where PMUSERENR_EL0 for the guest is loaded, since PMUSERENR_EL0 is switched
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 9d3ac7720da9..e350cbc8190f 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -931,6 +931,7 @@ void kvm_destroy_vcpus(struct kvm *kvm);
+ 
+ void vcpu_load(struct kvm_vcpu *vcpu);
+ void vcpu_put(struct kvm_vcpu *vcpu);
++bool is_guest(void);
+ 
+ #ifdef __KVM_HAVE_IOAPIC
+ void kvm_arch_post_irq_ack_notifier_list_update(struct kvm *kvm);
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 6fd9272eec6e..fe78f9d17eba 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -4229,6 +4229,10 @@ ctx_event_to_rotate(struct perf_event_pmu_context *pmu_ctx)
+ 	return event;
+ }
+ 
++void __weak arch_perf_rotate_pmu_set(void)
++{
++}
++
+ static bool perf_rotate_context(struct perf_cpu_pmu_context *cpc)
+ {
+ 	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+@@ -4282,6 +4286,7 @@ static bool perf_rotate_context(struct perf_cpu_pmu_context *cpc)
+ 	if (task_event || (task_epc && cpu_event))
+ 		__pmu_ctx_sched_in(task_epc->ctx, pmu);
+ 
++	arch_perf_rotate_pmu_set();
+ 	perf_pmu_enable(pmu);
+ 	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+ 
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index dfbaafbe3a00..a77d336552be 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -218,6 +218,15 @@ void vcpu_load(struct kvm_vcpu *vcpu)
+ }
+ EXPORT_SYMBOL_GPL(vcpu_load);
+ 
++/* Do we in the guest? */
++bool is_guest(void)
++{
++	struct kvm_vcpu *vcpu;
++
++	vcpu = __this_cpu_read(kvm_running_vcpu);
++	return !!vcpu;
++}
++
+ void vcpu_put(struct kvm_vcpu *vcpu)
+ {
+ 	preempt_disable();
+-- 
+2.39.2
+
