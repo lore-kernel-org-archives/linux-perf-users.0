@@ -2,212 +2,285 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BE2C001B0
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Aug 2023 20:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0075DC001E0
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Aug 2023 20:33:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230466AbjHIUBT (ORCPT
+        id S234469AbjHIUdC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Aug 2023 16:01:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43402 "EHLO
+        Wed, 9 Aug 2023 16:33:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231481AbjHIUBT (ORCPT
+        with ESMTP id S234475AbjHIUc7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Aug 2023 16:01:19 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4447DD2;
-        Wed,  9 Aug 2023 13:01:18 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1bc411e9d17so2081745ad.0;
-        Wed, 09 Aug 2023 13:01:18 -0700 (PDT)
+        Wed, 9 Aug 2023 16:32:59 -0400
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EB352111
+        for <linux-perf-users@vger.kernel.org>; Wed,  9 Aug 2023 13:32:58 -0700 (PDT)
+Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-407db3e9669so12201cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 09 Aug 2023 13:32:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691611278; x=1692216078;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HS88ftUTyzR3Q0GvZ4/QO9Y1ZAxs9zglfag3dq1XafI=;
-        b=nRoM0L2Wry6nncUwzn0RLyiuHAyBqiQXR9WzQBN1nEhLyTjwLvFMuL+TNsuascbDyN
-         PPCRUtsfD9CsabN0HGzyBzc7M2Dbs8tpceMQQZjMaA1nEKMuqZ0PUx4sUs7t4r6eNoER
-         097BItuKHgrE2F5z/16RatVM08Wl2mOcR/74MXd9q4JJjVApkGoDcWKempKrESOPm9iT
-         yI8adNsag3LqmsdIsd3nS0tJ1YBkn+F3WqOiOQ+2zCpabWZeC1eAQdh4B0An+DBHdPQ4
-         RQdSKu4OjWYQaxyFyagPrgtQDfI7ZleDfRUtRjq5VpIU5rolldDNmvY/bFOeHa9FG1jJ
-         5UdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691611278; x=1692216078;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20221208; t=1691613177; x=1692217977;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HS88ftUTyzR3Q0GvZ4/QO9Y1ZAxs9zglfag3dq1XafI=;
-        b=hbqy3tIqGSc0d/f3nj9Pz6WtsKyXoSfPNcYPMW736aWloXPmFQTPbNk+stJHqrO/iT
-         KmscVjajmC2/8n5r+vZi4kf0louUPQ9ZaLpcdsF4jjl2TSdQCOnkX2vaaMpWadhcCPvq
-         gLqEVcDlQtPAu9BZFDpqP+oTcO4h4PvgmGyn97H6cg4SQ1kHSkC1pCOnpD99RmLEOb0g
-         WN29yn/9pqrTZQxALFQ6mZ9M+oUb/xjrcw8xYMgTCHdEXaEyuduRl+9kVYb8Echgz5QD
-         /RIhOwQiZp5zA9j8DnBZFmi6HKOB3fzur4mH85oBh9a31WXQxYKnmKbHd8KnZGs599HB
-         JGaQ==
-X-Gm-Message-State: AOJu0YySmj7CO2hMEvT3TJeB9xbXfgES+dsM4J/V0ZgnEu59rpagUzer
-        8xhBoXJdYKFJANs8oVlYem0=
-X-Google-Smtp-Source: AGHT+IFOG2krU+ld7Ezro95lU0nUAvoAI2MtWQ+5LGTblfUXkndK/rofRwJs99wk6TIFICPtVIU1BQ==
-X-Received: by 2002:a17:902:ea02:b0:1bc:382b:6897 with SMTP id s2-20020a170902ea0200b001bc382b6897mr114934plg.13.1691611277411;
-        Wed, 09 Aug 2023 13:01:17 -0700 (PDT)
-Received: from yoga ([2400:1f00:13:9c9a:9cd0:55ee:75bd:a5c5])
-        by smtp.gmail.com with ESMTPSA id a2-20020a1709027d8200b001bc39aa63ebsm11571085plm.121.2023.08.09.13.01.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Aug 2023 13:01:16 -0700 (PDT)
-From:   Anup Sharma <anupnewsmail@gmail.com>
-X-Google-Original-From: Anup Sharma <AnupSharma>
-Date:   Thu, 10 Aug 2023 01:31:09 +0530
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org,
-        anupnewsmail@gmail.com
-Subject: Re: [RFC] Adding Support for Firefox's Gecko Profile Format
-Message-ID: <ZNPwhctOgd0RdtwO@yoga>
-References: <ZIofrGKElc3nkNk0@yoga>
- <CAP-5=fV9tXNpYHH9DW0cVbRoFLGvG9SNn-MUhuyKuVBRuDqjoA@mail.gmail.com>
- <ZJyT8bt0LFLw6hKV@yoga>
- <CAM9d7ch7TdagV+dzj6MCp4fY15Vc4oGJjKAoQDyc=BXqy7qi+A@mail.gmail.com>
- <287bf3c8-fa0e-8c36-df14-7d728c63c265@intel.com>
- <ZKQu00bJZwO+Fc6m@yoga>
- <ZKRcTqAsKxF/Q3fQ@yoga>
- <ZMFgIekihhoGFBpn@yoga>
- <ZMFyi5S4JlFeZ/9c@kernel.org>
- <ZMqnp1kBv1ACIiGS@yoga>
+        bh=4uxEA70Qpn19mpeD2IsqL/c/90TXAqEJ1FrvLFSCaYU=;
+        b=T6svRFN/mBHZ47SLJUO36cUQKf2a/CBB6QK95SmqvLnOlZTppYrbT66sJ0rniq2iNV
+         y8zZWZyssehYuimT2nIoHgq+OV+XDkmRgKadhvmzLeMtQX1zUZBE/Qjfn5Sxq9dJ7X6g
+         Q+gX2IrSoqgz0QP2zNV98Dra1gcgyBcj1HnSun3Iq+OcNDXbkSitMRkvP+jGE3zqVT/V
+         KOo+wrkqMi+uXeL9T5YPP/O4f+lUleeyrN1HCJj8SRRfEPj0O1I6+ve1ijQE+9BPxTob
+         aasmZ0iWHJlXhEPr5Hw++Hns6G7llc7NvX44jCN/3mFMTrpw8VxMNC7WhmQZDF0wk3Xu
+         4AOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691613177; x=1692217977;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4uxEA70Qpn19mpeD2IsqL/c/90TXAqEJ1FrvLFSCaYU=;
+        b=bPSmPmu0sfbzmzMvFw5/1rqqzV8KaF7JNIcN3W5mdYpu8qVr1Pix5LjpG1tI/2EXx6
+         +47Acbry4LPbUz6w+/pGrTjDnEI9eywr/617u4F2uQSZ84va/tJEfd+HILrMgT2teoWM
+         aze8buuvDR+PFawV2lLHixpd5rRnEfczEebjXpTULUhuHL5wc3VBf92MrlwruAC1FOVH
+         s4C+6iyldXCI0z9UnJ1XUrQ4j/M4+0RnK+mRV3BoHOEm8lSEZTIdM1RaLuoipLqzPrIp
+         YE8Dx3Y3ZdWvfsBYLSkD+YFE91cyQjUZkECH1SdEVk8SS8vY95a9lx3sUtKfKkHyfBap
+         HMbQ==
+X-Gm-Message-State: AOJu0Yw56n+0AGlusHpPHegBPuHQFZiWZdCFzO2inhfd4axzQG0Ofi/J
+        oZUe1kSMPr+5rkxSV4q9G+g81XR2n/bUBlOGaSyt7PHX67Glrn+ghSjKXw==
+X-Google-Smtp-Source: AGHT+IGeFJEZv9B22XLwThnF0HuyuOnNzKHMOqPy21ZBhN+U8yqT+W8FfR4r1C8WcfAGvYevUAjdjKqogwYRYmB4cIc=
+X-Received: by 2002:ac8:7f86:0:b0:403:dcd4:b9b1 with SMTP id
+ z6-20020ac87f86000000b00403dcd4b9b1mr206583qtj.18.1691613177356; Wed, 09 Aug
+ 2023 13:32:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZMqnp1kBv1ACIiGS@yoga>
+References: <CAP-5=fU10YCxZfq=dOUUPR0dRusbq=vzp5CqsOuz1aLVY16KAw@mail.gmail.com>
+ <CAP-5=fWOCE6+9MuiFziHz1o6Ej-FTDJa1fnkhYpifz7Rtazk8Q@mail.gmail.com>
+ <CAP-5=fXf-FmKb=D4h5VgxQ=w3T3+Nn3AP4ExR9YjnKFB=4m7bA@mail.gmail.com>
+ <CAP-5=fWSHpWx02+nB8joo0JbtNJXAEHFLBdY7n5W=tSbdpMGkg@mail.gmail.com>
+ <CAP-5=fX9OXTiiojNp-ut-_LOD2=6+mEN8iAt=UUGfmDu4q+F3Q@mail.gmail.com>
+ <CAP-5=fU6TWKQ8eDUM5UFfO2h6TgL9j7-43eWfZMTbwpRqHS6OA@mail.gmail.com>
+ <CAP-5=fX4Fj3phsny8zPueJpUaxN0jEhvJarc3ghz46RCtu0C+A@mail.gmail.com>
+ <CAP-5=fV6f3NeSbKatG0_LCROUr=2xdcrC7PnC3D0YprtCDaTow@mail.gmail.com> <CAP-5=fU2dPih+JPUOkoHyiFvMwd9KRHiKDtuNeatPsaE0VxbsQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fU2dPih+JPUOkoHyiFvMwd9KRHiKDtuNeatPsaE0VxbsQ@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 9 Aug 2023 13:32:44 -0700
+Message-ID: <CAP-5=fWRELRNg3guvsXu-PJU4MfJ+tj3zZRWpSrmCK5AP39ANg@mail.gmail.com>
+Subject: Re: Linux Perf Tool Office Hours
+To:     linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Anup Sharma <anupnewsmail@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Aug 03, 2023 at 12:29:51AM +0530, Anup Sharma wrote:
-> On Wed, Jul 26, 2023 at 04:22:51PM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Wed, Jul 26, 2023 at 11:34:17PM +0530, Anup Sharma escreveu:
-> > > Dear all,
-> > > 
-> > > I want to share a recent development in our project that
-> > > I have been working on this week. I have successfully
-> > > implemented a new feature that allows users to directly
-> > > open the browser and visualize the output of perf.data
-> > > on Firefox Profiler.
-> > 
-> > Excellent news!
-> >  
-> > > To enhance user experience, I have made sure this option
-> > > is enabled by default. Additionally, I've also added a
-> > > handy command line argument, "--save-only," which allows
-> > > users to save the output file as needed. This enhancement
-> > > replaces the previous standard output method, providing a
-> > > much-improved experience.
-> > > 
-> > > Moreover, Everything is processed locally, and no data is
-> > > sent to any server.
-> > 
-> > That addresses the worry about sending possibly sensitive data over the
-> > network by default, great.
-> >  
-> > > During this implementation, I had the opportunity to delve
-> > > into several exciting topics, including threading, HTTP server,
-> > > and CORS mechanisms. The learning process has been both
-> > > challenging and rewarding.
-> > 
-> > Cool that you're so excited learning all this.
-> >  
-> > > Currently, I am in the process of performing some clean-up tasks.
-> > > Once that is complete, I will be sharing the next version of the
-> > > series, which includes this fantastic new feature, with all of
-> > > you very soon.
-> > > 
-> > > Thank you for your ongoing support and encouragement.
-> > 
-> > Keep it up!
-> 
-> This week, I'm working on documenting the gecko converter for our wiki.
-> I've dedicated a significant amount of time to think about the content
-> and how to approach it. So far, I've written sections covering the
-> introduction to Firefox Profiler and the formatting guidelines(not
-> published yet).
-> 
-> However, I've left the usage part blank because I'm uncertain about how
-> to enable gecko.py arguments when executing the "perf script gecko" command.
-> I've looked at examples like flamegraph-report and sctop-report, but I'm
-> still confused. I attempted to enable the script to take the gecko.py
-> command example "perf script report gecko --save-only=profiler.json,"
-> but this caused issues when running "perf script gecko -a sleep 3" again.
-> This has left me feeling rather puzzled, and I would appreciate discussing
-> this during our office hour, or any help here.
-> 
-> Due to this blocker, I haven't been able to send the updated patch
-> for test_gecko yet. However, I hope I'll find a solution soon and overcome
-> this obstacle.
+Hi,
 
-Hello All,
-As discussed during last office hour, I was little occupied this week, so
-I haven't been able to make much progress on my TODO list. Nonetheless,
-I've resent a server patch and test script patch for your review. If I can
-get it reviewed it would be great to make further progress.
-
-I'm also working on writing documentation for our wiki. I've already written a
-bit, and you can see it here: https://perf.wiki.kernel.org/index.php/Tutorial#Firefox_Profiler.
-If you have any thoughts or suggestions, I'd appreciate hearing them. I'll add
-more details once I've sorted out some issues I'm having with certain commands.
-
-This week, I do not have a specific agenda. Hence, if we opt to skip this week's
-office hour, it wouldn't pose any inconvenience. Nevertheless, I am available if
-there are matters you wish to discuss.
-
-Here's what I have in mind to work on next:
-
-1. Making sure that gecko script args work with commands, like
-(perf script gecko --save-only=profile.json) or (perf script gecko --kernel-color=green),which
-aren't working right now.
-
-2. Trying out "perf record -p firefox" or using it with a specific process ID to
-see if the current script supports these recording commands.
-
-3. Adding page fault and one more event in stackTable in gecko script.
-
-4. Making the documentation better.
+Just a heads up that we plan to skip office hours tomorrow.
 
 Thanks,
-Anup
+Ian
 
-> > - Arnaldo
-> > 
+On Wed, Aug 2, 2023 at 1:09=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> First office hours of August tomorrow:
+>
+> Linux Perf Tool Office Hours
+> Thursday, August 3 =C2=B7 9:00 =E2=80=93 9:45am
+> Time zone: America/Los_Angeles
+> Google Meet joining info
+> Video call link: https://meet.google.com/jds-asbo-day
+> Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 018 892=
+=E2=80=AC#
+> More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252256983
+>
+> Thanks,
+> Ian
+>
+> On Wed, Jul 26, 2023 at 2:53=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > A reminder there is the usual office hours tomorrow. This is an
+> > excellent opportunity to ask questions and hear the latest on Anup's
+> > firefox profiler work.
+> >
+> > Linux Perf Tool Office Hours
+> > Thursday, July 27 =C2=B7 9:00 =E2=80=93 9:45am
+> > Time zone: America/Los_Angeles
+> > Google Meet joining info
+> > Video call link: https://meet.google.com/jds-asbo-day
+> > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 018 8=
+92=E2=80=AC#
+> > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252256983
+> >
+> > Thanks,
+> > Ian
+> >
+> > On Wed, Jul 19, 2023 at 3:29=E2=80=AFPM Ian Rogers <irogers@google.com>=
+ wrote:
+> > >
+> > > A reminder there is the usual office hours tomorrow:
+> > >
+> > > Linux Perf Tool Office Hours
+> > > Thursday, July 20 =C2=B7 9:00 =E2=80=93 9:45am
+> > > Time zone: America/Los_Angeles
+> > > Google Meet joining info
+> > > Video call link: https://meet.google.com/jds-asbo-day
+> > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 018=
+ 892=E2=80=AC#
+> > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252256983
+> > >
 > > > Thanks,
-> > > Anup
-> > > 
-> > > > > Regards,
-> > > > > Anup
-> > > > > > > 
-> > > > > > >>
-> > > > > > >> The second challenge revolved around the usage of event hooks provided with the perf script
-> > > > > > >> python event handlers. I found myself deliberating between two approaches. The first
-> > > > > > >> approach involved creating custom functions that would be called using the event
-> > > > > > >> handlers. These functions would then save the data in an organized format within
-> > > > > > >> globally created data structures. The alternative approach was to write the entire
-> > > > > > >> logic inside the event handlers themselves.
-> > > > > > >>
-> > > > > > >> Additionally, I contemplated whether it would be more suitable to handle the creation of
-> > > > > > >> a Gecko format for JSON and the profile format within the same script or to separate
-> > > > > > >> them into different scripts.
-> > > > > > >>
-> > > > > > >> I will discuss this points during tomorrow's office hour.
-> > > > > > >>
-> > > > > > >> However, I have gained a deeper understanding of the problem at hand and will use this
-> > > > > > >> knowledge to make more informed decisions and progress more effectively in the coming weeks.
-> > > > > > > 
-> > > > > > > Sounds like you did a good amount of research on how perf script
-> > > > > > > works.  We can talk about the details in the meeting.
-> > > > > > > 
+> > > Ian
+> > >
+> > > On Wed, Jul 12, 2023 at 3:42=E2=80=AFPM Ian Rogers <irogers@google.co=
+m> wrote:
+> > > >
+> > > > A reminder there are office hours tomorrow. This is a particular
+> > > > useful time to sync with Anup, the Linux Foundation Google
+> > > > Summer-of-Code contributor this year.
+> > > >
+> > > > Linux Perf Tool Office Hours
+> > > > Thursday, July 13 =C2=B7 9:00 =E2=80=93 9:45am
+> > > > Time zone: America/Los_Angeles
+> > > > Google Meet joining info
+> > > > Video call link: https://meet.google.com/jds-asbo-day
+> > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 0=
+18 892=E2=80=AC#
+> > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D66292522569=
+83
+> > > >
+> > > > Thanks!
+> > > > Ian
+> > > > On Thu, Jul 6, 2023 at 8:31=E2=80=AFAM Ian Rogers <irogers@google.c=
+om> wrote:
+> > > > >
+> > > > > Hi,
+> > > > >
+> > > > > Sorry for the late notice. Office hours today in 30 minutes.
+> > > > >
+> > > > > Linux Perf Tool Office Hours
+> > > > > Thursday, July 6 =C2=B7 9:00 =E2=80=93 9:45am
+> > > > > Time zone: America/Los_Angeles
+> > > > > Google Meet joining info
+> > > > > Video call link: https://meet.google.com/jds-asbo-day
+> > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817=
+ 018 892=E2=80=AC#
+> > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D662925225=
+6983
+> > > > >
+> > > > > Thanks,
+> > > > > Ian
+> > > > >
+> > > > > On Wed, Jun 21, 2023 at 3:15=E2=80=AFPM Ian Rogers <irogers@googl=
+e.com> wrote:
+> > > > > >
+> > > > > > Hi,
+> > > > > >
+> > > > > > Office hours reminder tomorrow. A chance to discuss any topics =
+of the
+> > > > > > day and for
+> > > > > > GSoC contributor sync.
+> > > > > >
+> > > > > > Linux Perf Tool Office Hours
+> > > > > > Thursday, June 22 =C2=B7 9:00 =E2=80=93 9:45am
+> > > > > > Time zone: America/Los_Angeles
+> > > > > > Google Meet joining info
+> > > > > > Video call link: https://meet.google.com/jds-asbo-day
+> > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA8=
+17 018 892=E2=80=AC#
+> > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252=
+256983
+> > > > > >
+> > > > > > Thanks,
+> > > > > > Ian
+> > > > > >
+> > > > > > On Wed, Jun 14, 2023 at 10:01=E2=80=AFAM Ian Rogers <irogers@go=
+ogle.com> wrote:
+> > > > > > >
+> > > > > > > Hi,
+> > > > > > >
+> > > > > > > Office hours reminder. A chance to discuss topics of the day =
+and for
+> > > > > > > GSoC contributor sync.
+> > > > > > >
+> > > > > > > Linux Perf Tool Office Hours
+> > > > > > > Thursday, June 15 =C2=B7 9:00 =E2=80=93 9:45am
+> > > > > > > Time zone: America/Los_Angeles
+> > > > > > > Google Meet joining info
+> > > > > > > Video call link: https://meet.google.com/jds-asbo-day
+> > > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=
+=AA817 018 892=E2=80=AC#
+> > > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D66292=
+52256983
+> > > > > > >
 > > > > > > > Thanks,
-> > > > > > > Namhyung
-> > > > > > 
-> > 
-> > -- 
-> > 
-> > - Arnaldo
+> > > > > > > Ian
+> > > > > > >
+> > > > > > > On Wed, Jun 7, 2023 at 9:14=E2=80=AFPM Ian Rogers <irogers@go=
+ogle.com> wrote:
+> > > > > > > >
+> > > > > > > > Hi,
+> > > > > > > >
+> > > > > > > > Office hours and chance for GSoC contributor sync slightly =
+earlier at
+> > > > > > > > 9am PT tomorrow:
+> > > > > > > >
+> > > > > > > > Linux Perf Tool Office Hours
+> > > > > > > > Thursday, June 8 =C2=B7 9:00 =E2=80=93 9:45am
+> > > > > > > > Time zone: America/Los_Angeles
+> > > > > > > > Google Meet joining info
+> > > > > > > > Video call link: https://meet.google.com/jds-asbo-day
+> > > > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=
+=AA817 018 892=E2=80=AC#
+> > > > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D662=
+9252256983
+> > > > > > > >
+> > > > > > > > If you'd like to randomly drop in, feel free. An issue I'm =
+keen to
+> > > > > > > > discuss is memory usage and memory leaks.
+> > > > > > > >
+> > > > > > > > Thanks,
+> > > > > > > > Ian
+> > > > > > > >
+> > > > > > > > On Wed, May 31, 2023 at 10:00=E2=80=AFAM Ian Rogers <iroger=
+s@google.com> wrote:
+> > > > > > > > >
+> > > > > > > > > Hi,
+> > > > > > > > >
+> > > > > > > > > On Monday the Google Summer-of-Code officially started an=
+d Anup is
+> > > > > > > > > this summer's contributor to the Linux perf tool! We've f=
+ound in the
+> > > > > > > > > past [1] that having office hours is a good chance for co=
+ntributors to
+> > > > > > > > > sync and also for those interested in the Linux perf tool=
+ to also
+> > > > > > > > > connect and share their problems and experiences. As such=
+ we plan on
+> > > > > > > > > running our first office hours for this summer tomorrow, =
+the details
+> > > > > > > > > are below:
+> > > > > > > > >
+> > > > > > > > > Linux Perf Tool Office Hours
+> > > > > > > > > Thursday, June 1 =C2=B7 9:30 =E2=80=93 10:30am
+> > > > > > > > > Time zone: America/Los_Angeles
+> > > > > > > > > Google Meet joining info
+> > > > > > > > > Video call link: https://meet.google.com/jds-asbo-day
+> > > > > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=
+=80=AA817 018 892=E2=80=AC#
+> > > > > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6=
+629252256983
+> > > > > > > > >
+> > > > > > > > > Please ask me and I'll be more than happy to add you to t=
+he calendar
+> > > > > > > > > invite for this. Over the summer we can adjust the timing=
+ of the
+> > > > > > > > > office hours to maximize participation, etc. so please re=
+ach out and
+> > > > > > > > > share concerns.
+> > > > > > > > >
+> > > > > > > > > Thanks,
+> > > > > > > > > Ian
+> > > > > > > > >
+> > > > > > > > > [1] https://lore.kernel.org/linux-perf-users/CAP-5=3DfWiQ=
+HvYZp5R=3Duw4xUwBiN1fBLBU8witPkYM+2r8tnYCOg@mail.gmail.com/
