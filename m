@@ -2,69 +2,111 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77239C001E0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 11:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FC8C001E0
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 18:09:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233374AbjHJLtl (ORCPT
+        id S234229AbjHJSJu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Aug 2023 07:49:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50792 "EHLO
+        Thu, 10 Aug 2023 14:09:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230205AbjHJLtl (ORCPT
+        with ESMTP id S232216AbjHJSJu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Aug 2023 07:49:41 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A8C1583;
-        Thu, 10 Aug 2023 04:49:40 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C26B8D75;
-        Thu, 10 Aug 2023 04:50:22 -0700 (PDT)
-Received: from [10.163.55.44] (unknown [10.163.55.44])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E71C63F64C;
-        Thu, 10 Aug 2023 04:49:35 -0700 (PDT)
-Message-ID: <8a92c349-8c72-db98-3fff-9a7d8a6b04fb@arm.com>
-Date:   Thu, 10 Aug 2023 17:19:32 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH V13 - RESEND 01/10] drivers: perf: arm_pmu: Add new
- sched_task() callback
-Content-Language: en-US
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, mark.rutland@arm.com,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Thu, 10 Aug 2023 14:09:50 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAC1A1703
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 11:09:49 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-58667d06607so15404367b3.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 11:09:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1691690989; x=1692295789;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=nykc+Kyyh1+8m1DKPGBWNjKw48feUTxYe7ZnBfqGNo0=;
+        b=SDdl8aJg4mXyp8R19oy/uvE3JdkPqurz8XeUyM6WDyjHBw3NfVAxYv6lFd1LfaGtrO
+         M9EBkXlSebuLnFcNDVfcg3G7WRrkhahXNTQI/eb7099wZsSyEzIzlOg6Sc1hpQ3ZHCgJ
+         4eAQA4V0hNa9z7OSwOs2BRoLVDaPYGhCt3yfRO7tsGskTplb6SV1BUusTNbKe4qRYXxK
+         wvooAEy9gOX1gv9o7nL/dbH60nM0IEaNeEmfJdBd1kg48kkofExkoEfAgYOgLGFA1Rfg
+         oC4He/il4f4WtFaLi5jHOUfQKFdna0FQ6FaAmJCV41z2csPeoil9k43q08v0nbvmqFi4
+         6KKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691690989; x=1692295789;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nykc+Kyyh1+8m1DKPGBWNjKw48feUTxYe7ZnBfqGNo0=;
+        b=k3WWvRuXvHp+z3DqVpPjhtJ31I+BnDzO+pFTbOb2U12TfJb3FhsGp1o0nEoWiV012c
+         wyM0BXmgn32lqsNWWRPmRQsDKjvvthoDFeiIeCdcf4yoCZEbRSU1PiBn6C0+pKtqfu0D
+         6sFCEGRIZrfAe9pDaiAVRscQkSw0B0/rsTGB+EVCZ55o0gZRli/Oy2/aYbrYFD84zHpH
+         GpTdyEtz5F8YYsWjfOspiLtp4ypaQeJmVjKguDajmgObUXfLWQwHvAdprcK32GoYEJ+z
+         Q95nMPtipkeuhHWPE14lZJYlUXFZbzPN613VjXWTG534JCLwYOi2rJf0j5AP+vEjGvnj
+         02rw==
+X-Gm-Message-State: AOJu0YzMJ33XyF7XLpAumfto5rByUQW57bHzMFRx2wV6jZYML+hQIc8N
+        xK8TKDo1URj+/kxcJESuOC4azkHzjeCK
+X-Google-Smtp-Source: AGHT+IHsDqiFQ83RfjseHv4SyvYwvf32issTCGV6LfFt41q7SQay0B9zQzK2Hlga9OqAvGFDAuEXfmOdDuxL
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:797f:302e:992f:97f2])
+ (user=irogers job=sendgmr) by 2002:a25:7404:0:b0:d04:d397:352d with SMTP id
+ p4-20020a257404000000b00d04d397352dmr52070ybc.4.1691690988871; Thu, 10 Aug
+ 2023 11:09:48 -0700 (PDT)
+Date:   Thu, 10 Aug 2023 11:09:44 -0700
+Message-Id: <20230810180944.2794188-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.41.0.640.ga95def55d0-goog
+Subject: [PATCH v1] perf script python: Fix python execution
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <20230711082455.215983-1-anshuman.khandual@arm.com>
- <20230711082455.215983-2-anshuman.khandual@arm.com>
- <0ed54ef6-e502-7c33-6e3f-08de76786245@arm.com>
- <20230810094146.GB5365@willie-the-truck>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20230810094146.GB5365@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Fix missing symbol seen in:
+```
+ 19: 'import perf' in python                                         :
+--- start ---
+test child forked, pid 2640936
+python usage test: "echo "import sys ; sys.path.insert(0, 'python'); import perf" | '/usr/bin/python3' "
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ImportError: tools/perf/python/perf.cpython-311-x86_64-linux-gnu.so: undefined symbol: perf_pmus__supports_extended_type
+test child finished with -1
+---- end ----
+'import perf' in python: FAILED!
+```
 
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/python.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-On 8/10/23 15:11, Will Deacon wrote:
-> On Thu, Aug 10, 2023 at 10:35:42AM +0530, Anshuman Khandual wrote:
->> I am just wondering - would it be possible for you to take this pre-requisite
->> patch stand alone for the upcoming merge window. This has been acked by Mark
->> earlier. Besides, I am also working on your other suggestions on the series,
->> and will respond soon. Thank you.
-> 
-> I can if it helps in some way, but I'm not seeing how it does. Can't you
-> just carry this along with the BRBE changes that use it? How does it benefit
-> anybody on its own?
-It might help de-clutter our conversation and focus on BRBE specific
-implementation stuff next time around in V14. Also this change here
-is quite harmless for any other thing, hence without much risk.
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 4eed8ec23994..c29f5f0bb552 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -113,6 +113,11 @@ bool evsel__is_aux_event(const struct evsel *evsel __maybe_unused)
+ 	return false;
+ }
+ 
++bool perf_pmus__supports_extended_type(void)
++{
++	return false;
++}
++
+ /*
+  * Add this one here not to drag util/metricgroup.c
+  */
+-- 
+2.41.0.640.ga95def55d0-goog
+
