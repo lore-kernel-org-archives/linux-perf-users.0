@@ -2,82 +2,117 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 591FAC001B0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 05:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04129C001B0
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 05:05:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232147AbjHJFCn (ORCPT
+        id S229488AbjHJFFw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Aug 2023 01:02:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36712 "EHLO
+        Thu, 10 Aug 2023 01:05:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229934AbjHJFCl (ORCPT
+        with ESMTP id S230311AbjHJFFv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Aug 2023 01:02:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DBE41BCF;
-        Wed,  9 Aug 2023 22:02:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DEB1264D22;
-        Thu, 10 Aug 2023 05:02:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 38E3AC433C8;
-        Thu, 10 Aug 2023 05:02:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691643760;
-        bh=A2VJ0L4yOT0ZO77U83OfwXD8T8Pk9HLu/MR2DsKOdfg=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=bGFPF4GDjBr8PtNT7jtFU9nPvk2snc3BZJtoLG+KortoJFMhHr1Wkry7/EbRKlBad
-         Px+TshPpUlC8gHpQvKN0VoXd443hX7cpu/Dmuv1+cDB1C0ZzLuuJsJIlqzd8x/juAa
-         kuFlEe2NRT0E5IsA1bV/WJoOBcaASUiDdb9PaTxUTpuJ+Ayjk3JLV/DjSirhppJXs3
-         8XV8yz3IEkQw8cXadLGFPRSK4Z5N6vFRM1XNEt3CVkUS8NW8AOJpqguy01J1DzjARO
-         x+Iq89z0PlWRqMv5oSLH2ps0cHa+BbXWBZGvMmpOxSv0WQLdVIpq6D87Zln9rxxwXS
-         NdUoldYWfDmFQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 26601C395C5;
-        Thu, 10 Aug 2023 05:02:40 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools fixes for v6.5: 3rd batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20230809211019.121189-1-acme@kernel.org>
-References: <20230809211019.121189-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20230809211019.121189-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.5-3-2023-08-09
-X-PR-Tracked-Commit-Id: 487ae3b42d1040b4cd5ff9754e7516b409204029
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b4f63b0f2d170b9dfae0de3fd2981424873cce2b
-Message-Id: <169164376014.10677.2525945242591254111.pr-tracker-bot@kernel.org>
-Date:   Thu, 10 Aug 2023 05:02:40 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
+        Thu, 10 Aug 2023 01:05:51 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A75B210E0;
+        Wed,  9 Aug 2023 22:05:50 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89704D75;
+        Wed,  9 Aug 2023 22:06:32 -0700 (PDT)
+Received: from [10.162.42.7] (unknown [10.162.42.7])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D8FF33F64C;
+        Wed,  9 Aug 2023 22:05:45 -0700 (PDT)
+Message-ID: <0ed54ef6-e502-7c33-6e3f-08de76786245@arm.com>
+Date:   Thu, 10 Aug 2023 10:35:42 +0530
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH V13 - RESEND 01/10] drivers: perf: arm_pmu: Add new
+ sched_task() callback
+Content-Language: en-US
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
+Cc:     Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        linux-perf-users@vger.kernel.org
+References: <20230711082455.215983-1-anshuman.khandual@arm.com>
+ <20230711082455.215983-2-anshuman.khandual@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20230711082455.215983-2-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Wed,  9 Aug 2023 18:10:19 -0300:
+Hello Will,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.5-3-2023-08-09
+I am just wondering - would it be possible for you to take this pre-requisite
+patch stand alone for the upcoming merge window. This has been acked by Mark
+earlier. Besides, I am also working on your other suggestions on the series,
+and will respond soon. Thank you.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b4f63b0f2d170b9dfae0de3fd2981424873cce2b
+- Anshuman
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+On 7/11/23 13:54, Anshuman Khandual wrote:
+> This adds armpmu_sched_task(), as generic pmu's sched_task() override which
+> in turn can utilize a new arm_pmu.sched_task() callback when available from
+> the arm_pmu instance. This new callback will be used while enabling BRBE in
+> ARMV8 PMU.
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Tested-by: James Clark <james.clark@arm.com>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  drivers/perf/arm_pmu.c       | 9 +++++++++
+>  include/linux/perf/arm_pmu.h | 1 +
+>  2 files changed, 10 insertions(+)
+> 
+> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+> index f6ccb2cd4dfc..c0475a96c2a0 100644
+> --- a/drivers/perf/arm_pmu.c
+> +++ b/drivers/perf/arm_pmu.c
+> @@ -519,6 +519,14 @@ static int armpmu_event_init(struct perf_event *event)
+>  	return __hw_perf_event_init(event);
+>  }
+>  
+> +static void armpmu_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in)
+> +{
+> +	struct arm_pmu *armpmu = to_arm_pmu(pmu_ctx->pmu);
+> +
+> +	if (armpmu->sched_task)
+> +		armpmu->sched_task(pmu_ctx, sched_in);
+> +}
+> +
+>  static void armpmu_enable(struct pmu *pmu)
+>  {
+>  	struct arm_pmu *armpmu = to_arm_pmu(pmu);
+> @@ -865,6 +873,7 @@ struct arm_pmu *armpmu_alloc(void)
+>  	}
+>  
+>  	pmu->pmu = (struct pmu) {
+> +		.sched_task	= armpmu_sched_task,
+>  		.pmu_enable	= armpmu_enable,
+>  		.pmu_disable	= armpmu_disable,
+>  		.event_init	= armpmu_event_init,
+> diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
+> index a0801f68762b..3d3bd944d630 100644
+> --- a/include/linux/perf/arm_pmu.h
+> +++ b/include/linux/perf/arm_pmu.h
+> @@ -102,6 +102,7 @@ struct arm_pmu {
+>  	void		(*stop)(struct arm_pmu *);
+>  	void		(*reset)(void *);
+>  	int		(*map_event)(struct perf_event *event);
+> +	void		(*sched_task)(struct perf_event_pmu_context *pmu_ctx, bool sched_in);
+>  	int		num_events;
+>  	bool		secure_access; /* 32-bit ARM only */
+>  #define ARMV8_PMUV3_MAX_COMMON_EVENTS		0x40
