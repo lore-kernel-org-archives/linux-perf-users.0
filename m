@@ -2,88 +2,82 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1800CC001B0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 02:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 591FAC001B0
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 05:02:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229746AbjHJCCH convert rfc822-to-8bit (ORCPT
+        id S232147AbjHJFCn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Aug 2023 22:02:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58908 "EHLO
+        Thu, 10 Aug 2023 01:02:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229611AbjHJCCG (ORCPT
+        with ESMTP id S229934AbjHJFCl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Aug 2023 22:02:06 -0400
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47769C6;
-        Wed,  9 Aug 2023 19:02:06 -0700 (PDT)
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-d4789fd9317so392267276.1;
-        Wed, 09 Aug 2023 19:02:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691632925; x=1692237725;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9pg7ID7Bt2SnW3Yar69Ra983Gv0keYFyvDeWnOq+8Bw=;
-        b=JZYdfD0ujJkp5v+NPrk6QkHPitiDGWJyD7PK9VSHGN4R6/q8Qj9NFAMHCIy6KgTPgW
-         xDnELUvoN1o2kRe9o3w86pT+LUZuVSK1z3kk47vp/vvNjk1TSQaLTt2hwoqFl8z47BvG
-         cB8VD4NL5ToLMuIA0K/Nw/cZjqG6jrJua0ypz6KYacQU8Ngtu6zdIGAGbw07Tw2hVa6+
-         YcKt7UfU+9W2a9pbjvr4zd6lHCMKpoToiikzJts6JwjakNyEyIJrvG33cBAgbxBi0M/5
-         /95+5DAkva99J/1hRhV3n1u7wHyM6kWFOWruA1rLJFto/8z9/Rt1Hx9EmVcDFRzWvh8W
-         VPUA==
-X-Gm-Message-State: AOJu0YzeUNTbockqAvizfCXVgcrZbKLa1BKe8wDyDBGsMPdKmz95ZOpI
-        n020x1EyUnJL15/4/m6nM4o/P0x5l8/7O3PLPOI=
-X-Google-Smtp-Source: AGHT+IHvYmVlQmcl/rv2AWIIEO5l1l22fcEAG3AsSxhUORT/eIakT8fMwzlQG7Oir6pbmnODStPB55N8dUzj8sFcBLo=
-X-Received: by 2002:a25:2fd2:0:b0:d19:824a:490e with SMTP id
- v201-20020a252fd2000000b00d19824a490emr1243486ybv.31.1691632925276; Wed, 09
- Aug 2023 19:02:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230728022447.1323563-1-namhyung@kernel.org> <ZMPMHNjX2IxsLbAe@kernel.org>
- <CAM9d7cgqJatFn0tQVOxoQymFUruSzniPi5Okb1sotb6VLt+X_g@mail.gmail.com> <ZNOUb1Q5ifyLju/q@kernel.org>
-In-Reply-To: <ZNOUb1Q5ifyLju/q@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 10 Aug 2023 11:01:53 +0900
-Message-ID: <CAM9d7ci19a2dHD8EesqJZqmfCA8=MWe2FkecryV9nOEfwvvO6g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] perf build: Update build rule for generated files
+        Thu, 10 Aug 2023 01:02:41 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DBE41BCF;
+        Wed,  9 Aug 2023 22:02:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DEB1264D22;
+        Thu, 10 Aug 2023 05:02:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 38E3AC433C8;
+        Thu, 10 Aug 2023 05:02:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691643760;
+        bh=A2VJ0L4yOT0ZO77U83OfwXD8T8Pk9HLu/MR2DsKOdfg=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=bGFPF4GDjBr8PtNT7jtFU9nPvk2snc3BZJtoLG+KortoJFMhHr1Wkry7/EbRKlBad
+         Px+TshPpUlC8gHpQvKN0VoXd443hX7cpu/Dmuv1+cDB1C0ZzLuuJsJIlqzd8x/juAa
+         kuFlEe2NRT0E5IsA1bV/WJoOBcaASUiDdb9PaTxUTpuJ+Ayjk3JLV/DjSirhppJXs3
+         8XV8yz3IEkQw8cXadLGFPRSK4Z5N6vFRM1XNEt3CVkUS8NW8AOJpqguy01J1DzjARO
+         x+Iq89z0PlWRqMv5oSLH2ps0cHa+BbXWBZGvMmpOxSv0WQLdVIpq6D87Zln9rxxwXS
+         NdUoldYWfDmFQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 26601C395C5;
+        Thu, 10 Aug 2023 05:02:40 +0000 (UTC)
+Subject: Re: [GIT PULL] perf tools fixes for v6.5: 3rd batch
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20230809211019.121189-1-acme@kernel.org>
+References: <20230809211019.121189-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20230809211019.121189-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.5-3-2023-08-09
+X-PR-Tracked-Commit-Id: 487ae3b42d1040b4cd5ff9754e7516b409204029
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b4f63b0f2d170b9dfae0de3fd2981424873cce2b
+Message-Id: <169164376014.10677.2525945242591254111.pr-tracker-bot@kernel.org>
+Date:   Thu, 10 Aug 2023 05:02:40 +0000
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
-        Anup Sharma <anupnewsmail@gmail.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Aug 9, 2023 at 10:28 PM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Wed, Aug 09, 2023 at 03:56:17PM +0900, Namhyung Kim escreveu:
-> > On Fri, Jul 28, 2023 at 11:09 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > Em Thu, Jul 27, 2023 at 07:24:46PM -0700, Namhyung Kim escreveu:
-> > > > Let's update the build rule to specify those cases explicitly to depend
-> > > > on the files in the output directory.
->
-> > > > Note that it's not a complete fix and it needs the next patch for the
-> > > > include path too.
->
-> > > Applied, testing it on the container builds.
->
-> > I don't see these commits in the perf-tools{,-next} yet.
->
-> 6 days  perf build: Include generated header files properly     Namhyung Kim    5       -9/+9
-> 6 days  perf build: Update build rule for generated files       Namhyung Kim    2       -0/+16
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/commit/?h=perf-tools-next&id=7822a8913f4c51c7d1aff793b525d60c3384fb5b
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/commit/?h=perf-tools-next&id=c7e97f215a4ad634b746804679f5937d25f77e29
->
-> Did I miss something?
+The pull request you sent on Wed,  9 Aug 2023 18:10:19 -0300:
 
-Oops, my bad.  I somehow overlooked the commits.
-Now I can see it in the perf-tools-next, sorry for the noise.
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.5-3-2023-08-09
 
-Thanks,
-Namhyung
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b4f63b0f2d170b9dfae0de3fd2981424873cce2b
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
