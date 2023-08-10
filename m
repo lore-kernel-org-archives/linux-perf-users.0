@@ -2,117 +2,180 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04129C001B0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 05:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0032C001B0
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 05:11:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229488AbjHJFFw (ORCPT
+        id S231991AbjHJFLN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Aug 2023 01:05:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60080 "EHLO
+        Thu, 10 Aug 2023 01:11:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230311AbjHJFFv (ORCPT
+        with ESMTP id S230093AbjHJFLM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Aug 2023 01:05:51 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A75B210E0;
-        Wed,  9 Aug 2023 22:05:50 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89704D75;
-        Wed,  9 Aug 2023 22:06:32 -0700 (PDT)
-Received: from [10.162.42.7] (unknown [10.162.42.7])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D8FF33F64C;
-        Wed,  9 Aug 2023 22:05:45 -0700 (PDT)
-Message-ID: <0ed54ef6-e502-7c33-6e3f-08de76786245@arm.com>
-Date:   Thu, 10 Aug 2023 10:35:42 +0530
+        Thu, 10 Aug 2023 01:11:12 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2131.outbound.protection.outlook.com [40.107.93.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77705196;
+        Wed,  9 Aug 2023 22:11:10 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HbkgY23cZN+yic2Jd22858E/2QHY6c1MQJd9onuMxxGoVhW3oryEaoJAWKCYcSjEsKFUEB5/4HIeEGbPn7e4EkipkOz9LnK7YZAkrveZpVMlrKvInW7mKAlQ0x3KxBTMcBU+6cS8fGzVNLNIFtKq9J1exW79UGRQuOo4frh+TMYT/KoZi0CGHQjqTx6ZLU3Ara3pP8cJme4t57hRrDVzLH0+Hfdc23FOZwbQGHqDRCci40KFYDCVnLJ+uUZPLVa05qDVjVUWlOo9OK+lyFS4jZVAgzTikW9we/Zixcd0lMXBjwCQ4CH92MfmJX80ck1jakh6rrzmtuKKBbu36jNsoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AUZQc6QjcrArPBbii/DtoKwXptWdANRmKLzdI70UGIA=;
+ b=dxuUxWjZaAFlHz/jigTs7/8gJfmk7BlJMLQE2KS4jiFhKk0hGZ7bPa6Qs7W/ESgyPufUFw8SWrbkF8wbbQZy+F0YqO7EV0ZuQcs8zwA6Q8nxRhDgUF8wqcGjx15yafpvrd1xnp5U/3bfGPtdWxeYhwZSbfiV4HII9IDFJtCEL6WkaU243syZSj2lVUft+fgouDP9zShI6ngfMgRIC1Ze9LBNy4q8CNrKxQGz/l65KYAVxEWh7JDCadLwDuQBh+JJoT3U7W7huSA5ZT+ndcCp3Bd1Ve7rQ8CRGUWdIUPk/8/TE8ud4XqqZRlNRUf3mGuuwml6unZmVb/vh3SnOl4zRg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AUZQc6QjcrArPBbii/DtoKwXptWdANRmKLzdI70UGIA=;
+ b=Gcj0fXnlMRyLZE9Kd+z7Eo7FW1ffuc341BAo0mhoCrtM+7NxCCv4SL1FiqCXj0ulUHPSfhP3YzMkUtKhmUf+vurn7O9vtRNFHVrNq+33AnaHDKRrI9GUe+C4F2B+1UlR+5RvIwNb2e8ZU4jZ4BIHsfgUfPx7fQaDGcGLIlu4UQI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from DM5PR0102MB3590.prod.exchangelabs.com (2603:10b6:4:a4::25) by
+ SJ0PR01MB7249.prod.exchangelabs.com (2603:10b6:a03:3e4::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6652.30; Thu, 10 Aug 2023 05:11:05 +0000
+Received: from DM5PR0102MB3590.prod.exchangelabs.com
+ ([fe80::4e0f:49b:ee39:f08e]) by DM5PR0102MB3590.prod.exchangelabs.com
+ ([fe80::4e0f:49b:ee39:f08e%6]) with mapi id 15.20.6652.029; Thu, 10 Aug 2023
+ 05:11:04 +0000
+Date:   Wed, 9 Aug 2023 22:10:51 -0700 (PDT)
+From:   Ilkka Koskinen <ilkka@os.amperecomputing.com>
+To:     John Garry <john.g.garry@oracle.com>
+cc:     irogers@google.com, acme@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ilkka@os.amperecomputing.com
+Subject: Re: [PATCH] perf jevents: Raise exception for no definition of a
+ arch std event
+In-Reply-To: <20230807111631.3033102-1-john.g.garry@oracle.com>
+Message-ID: <373e8253-656c-84dc-c05-b578e3725d@os.amperecomputing.com>
+References: <20230807111631.3033102-1-john.g.garry@oracle.com>
+Content-Type: text/plain; format=flowed; charset=US-ASCII
+X-ClientProxiedBy: CH0PR13CA0007.namprd13.prod.outlook.com
+ (2603:10b6:610:b1::12) To DM5PR0102MB3590.prod.exchangelabs.com
+ (2603:10b6:4:a4::25)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH V13 - RESEND 01/10] drivers: perf: arm_pmu: Add new
- sched_task() callback
-Content-Language: en-US
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
-Cc:     Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <20230711082455.215983-1-anshuman.khandual@arm.com>
- <20230711082455.215983-2-anshuman.khandual@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20230711082455.215983-2-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM5PR0102MB3590:EE_|SJ0PR01MB7249:EE_
+X-MS-Office365-Filtering-Correlation-Id: ca815d23-2a37-4841-0864-08db996031d8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: edtmM99xp+cgqTCTuk6OwyCpjA1o5+DM8tcnyz6zmCRRSZl9cI3e3pgYMfkSWNT4kzk3fq1zO+V1i2CS0kcX3AoyYREEAERHoVJ8RIEod9S7v3+G6eDjv/e15ybHC/zm29tu17CdMbFoFJvxSPskNyCJa0pvRV1UTw1fGWRtns4pI9rRGZv8QDkJPDw9+uzkQFl6VJlVf8hImLxIncuBRv52fpL5nS1fmEh3apDdxJZ2tbOcCbSL7rXEzKXKUaYQM/o/JB3Vr15/NkJUFswjQmgtzXFGrO4m2BRoeWsHMVdE00bS4SprZ0WFIP0xjbg9FhGkqj3hcTB+YW6w1RqfqLjJq5Om1Roni8G3hN5I1AZpYPtOH4yn1jLHNm3NfzUOlVuNwnP2NO+snyYO5UxruP3Ym+yq8dKAvVAL+icYkU2lTTcHC2f3sktT9sN5Hcnr0kSS9MQAII2IlUC2BQOlGvlTCRaBb8qpLn9LnJqQzsk4a5nij+9WDAOYVlAagf6wT9PGxZpzBXEtZ1hQSYo5ki16tzNt8ZnEX6GK6vm4SHGgQwMSesBDbYs3m/y17jQuEZzPZ1POIBxjGvePuFqiiHRNuWXBxJRNeBmp/eZohws=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR0102MB3590.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(366004)(346002)(376002)(396003)(39850400004)(1800799006)(451199021)(186006)(6666004)(83380400001)(2616005)(2906002)(478600001)(41300700001)(966005)(6512007)(6506007)(316002)(26005)(66476007)(66556008)(66946007)(6916009)(107886003)(4326008)(38100700002)(38350700002)(86362001)(6486002)(8936002)(5660300002)(8676002)(52116002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?RQV+j4+Iy6Lm3qfxUfxyOSubTRZMyIASf+kz4goGZXj34hVztBCY9ntEWria?=
+ =?us-ascii?Q?h/7QL+5sauK4Pe8yQdwG9fl0Hy9HmHZ9DaB+yeu/Kd3wRWGUjks/p6ipveg6?=
+ =?us-ascii?Q?7X6EG9nJi64lkFwMV8cJQBPdnXakAIMNR0wgSyE8NGGxpaZisXPUJq/Phy8i?=
+ =?us-ascii?Q?aVe2SOZZ4Eg5aBbH/jUi4XqmwhJfmYcAQoHOCoIF7NCUJmmNjoMk4NhahgU7?=
+ =?us-ascii?Q?2327zZyCH1K+faDSYPPOXH0RAufRztW73Cu9pGX9O70mBadFgK2W41J68oo2?=
+ =?us-ascii?Q?LXCCaJqlOcnnxpfzVTVLkfE8E9vD6pFv1le0H5PtaT+5gNQnOyulPlS0e7XX?=
+ =?us-ascii?Q?Lw9kpK+DD00+VZw064lNipHN8StbUEaEkAtmvblsYytJsrAVU4wAle35yrba?=
+ =?us-ascii?Q?O5tSFpLYp+TiP6l1yNURBZmZxuFNIiAEmoU2jxXA98dSJanEp3jAOo1ipHQT?=
+ =?us-ascii?Q?ayCBrB6egrHDcJsBKcMVsFC9QtamDpbnGGqR67Y13Hi/7wjUPaYrvgCX888T?=
+ =?us-ascii?Q?sweIyddeRUOy7yGUgPeFYxx6jvTvg/K9zn3W9XhgdqSsqFMlfoZRENWobbrl?=
+ =?us-ascii?Q?fCQXgGWNgvB1WpP+cqcCMQCogGNEjsIdS2yiuiEdYtAMf5diwXZFW4cQF75/?=
+ =?us-ascii?Q?j7UmX42q2woHd67JB5KvngJFH8jWvKD8WsQlma5k/tADL7l5TmHu1ScMO4cA?=
+ =?us-ascii?Q?JOewrJiMKYZtxDHh80cudAmDwMm77EMSHsB/W2mOZuyO4T0H8ECUQ57d3Pdl?=
+ =?us-ascii?Q?OZt1L7jgRXHfJuqG67+eWhfuQXocq4+eUUjgyeyolPV6HjGDDN8hmDgXfTI7?=
+ =?us-ascii?Q?3qqZqXJefjt6nU2p49PqlpX3/yEgSbMVSrrwT5PlQ+uf/tIqIQpf/aKq380i?=
+ =?us-ascii?Q?KQFSJoCFhxUfPJxmUsrI3NJ10XiLg0bQGAOOEfVHli726qD+/IOCRamEKSum?=
+ =?us-ascii?Q?l0W4jHqrgFWwyVF0n5TUhfNp3Cbb65K/oiRky6ht226yUC0RYbSKkoIdNIo0?=
+ =?us-ascii?Q?+ePrpefFR2YieP/73bZMTGy5ozF/mhCW4kC0ZwM1NlDGjh7YE28qgf0EfPMX?=
+ =?us-ascii?Q?6QQNqGhkJwevofFoGkGlAfSqPpXHMniO/kmclnQe51VEdZBqbrRVc64XFiGI?=
+ =?us-ascii?Q?kK6C4sYUBxWaehiLBkfyp9SCWT50IFd1d2D1vWNmg1Boz14EqyuHMWso5LvE?=
+ =?us-ascii?Q?tD7YapohFyQks7dtNbA/0rhmE0JZv4NT59SvA2D2hwvhmgIPyXbEG8OWfz2G?=
+ =?us-ascii?Q?P4gQ4XcjBB3vO+ZLphTBBoQr9bkSpr8GkMrpoMWi4J6HRiRrN2fMLaprxUHz?=
+ =?us-ascii?Q?DN8G/o+f/dDtbvOHJpm8RqTogmQVy1vwgFc0i23Y99WRVBmCBhsDq3EQmBTR?=
+ =?us-ascii?Q?qHjONKGnqv3dNnD0Meox8XrdjPG9IPX96n1h8lqxaZgXOX2mKBspb8HAFamP?=
+ =?us-ascii?Q?6tFtLZZrqgrSS8KE5kOxT9wVgTpj0w3ZfRfZPIRfStloxXoIJ0EEij1KHZRe?=
+ =?us-ascii?Q?WX1FfQ6ZZUynTcRvGA2NsZXWjghn8CuyT/fZSoggUTnHgAihyjJtTqoyReqd?=
+ =?us-ascii?Q?q//6nscTp2Eg+n4ODdqxS+h/v9QkFRunYIYxIyzsyZQOu+3CgOkAFczA62p8?=
+ =?us-ascii?Q?3PvBjhcXLo3B9wUn2JP3x9E=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca815d23-2a37-4841-0864-08db996031d8
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR0102MB3590.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2023 05:11:03.8852
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MwHS7MfKLww6FcO6gelPfkta6STVmFgO2110w0XTKK5AWRZHXohTVlh/p4+wTMuYSVya0Wk4NmkLv73EGPcfYUPWjAZ+rgCU8fptfFzUKnNvRSCj5ZACG4yDg8rz3HPa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR01MB7249
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello Will,
 
-I am just wondering - would it be possible for you to take this pre-requisite
-patch stand alone for the upcoming merge window. This has been acked by Mark
-earlier. Besides, I am also working on your other suggestions on the series,
-and will respond soon. Thank you.
+Hi John,
 
-- Anshuman
+On Mon, 7 Aug 2023, John Garry wrote:
+> Recently Ilkka reported that the JSONs for the AmpereOne arm64-based
+> platform included a dud event which referenced a non-existent arch std
+> event [0].
 
-On 7/11/23 13:54, Anshuman Khandual wrote:
-> This adds armpmu_sched_task(), as generic pmu's sched_task() override which
-> in turn can utilize a new arm_pmu.sched_task() callback when available from
-> the arm_pmu instance. This new callback will be used while enabling BRBE in
-> ARMV8 PMU.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Tested-by: James Clark <james.clark@arm.com>
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+I wish I had found the bug in my patch a long time ago but, in fact, it 
+was Dave Kleikamp who initially pointed it out to me and figured out the 
+difference between jevents.c and jevents.py when porting the patch to 5.15 
+kernel.
+
+http://lists.infradead.org/pipermail/linux-arm-kernel/2023-June/844874.html
+
+>
+> Previously in the times of jevents.c, we would raise an exception for this.
+>
+> This is still invalid, even though the current code just ignores such an
+> event.
+>
+> Re-introduce code to raise an exception for when no definition exists to
+> help catch as many invalid JSONs as possible.
+>
+> [0] https://lore.kernel.org/linux-perf-users/9e851e2a-26c7-ba78-cb20-be4337b2916a@oracle.com/
+>
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
+
+Thanks for the patch! I quickly tested it and it worked as expected. Just 
+in case this is needed:
+
+Tested-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+
+
+Cheers, Ilkka
+
 > ---
->  drivers/perf/arm_pmu.c       | 9 +++++++++
->  include/linux/perf/arm_pmu.h | 1 +
->  2 files changed, 10 insertions(+)
-> 
-> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-> index f6ccb2cd4dfc..c0475a96c2a0 100644
-> --- a/drivers/perf/arm_pmu.c
-> +++ b/drivers/perf/arm_pmu.c
-> @@ -519,6 +519,14 @@ static int armpmu_event_init(struct perf_event *event)
->  	return __hw_perf_event_init(event);
->  }
->  
-> +static void armpmu_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in)
-> +{
-> +	struct arm_pmu *armpmu = to_arm_pmu(pmu_ctx->pmu);
-> +
-> +	if (armpmu->sched_task)
-> +		armpmu->sched_task(pmu_ctx, sched_in);
-> +}
-> +
->  static void armpmu_enable(struct pmu *pmu)
->  {
->  	struct arm_pmu *armpmu = to_arm_pmu(pmu);
-> @@ -865,6 +873,7 @@ struct arm_pmu *armpmu_alloc(void)
->  	}
->  
->  	pmu->pmu = (struct pmu) {
-> +		.sched_task	= armpmu_sched_task,
->  		.pmu_enable	= armpmu_enable,
->  		.pmu_disable	= armpmu_disable,
->  		.event_init	= armpmu_event_init,
-> diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-> index a0801f68762b..3d3bd944d630 100644
-> --- a/include/linux/perf/arm_pmu.h
-> +++ b/include/linux/perf/arm_pmu.h
-> @@ -102,6 +102,7 @@ struct arm_pmu {
->  	void		(*stop)(struct arm_pmu *);
->  	void		(*reset)(void *);
->  	int		(*map_event)(struct perf_event *event);
-> +	void		(*sched_task)(struct perf_event_pmu_context *pmu_ctx, bool sched_in);
->  	int		num_events;
->  	bool		secure_access; /* 32-bit ARM only */
->  #define ARMV8_PMUV3_MAX_COMMON_EVENTS		0x40
+> Please do not apply before [0], above.
+>
+> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+> index 8cd561aa606a..98cccc3fcbbd 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+> @@ -347,12 +347,15 @@ class JsonEvent:
+>       if self.desc and not self.desc.endswith('. '):
+>         self.desc += '. '
+>       self.desc = (self.desc if self.desc else '') + ('Unit: ' + self.pmu + ' ')
+> -    if arch_std and arch_std.lower() in _arch_std_events:
+> -      event = _arch_std_events[arch_std.lower()].event
+> -      # Copy from the architecture standard event to self for undefined fields.
+> -      for attr, value in _arch_std_events[arch_std.lower()].__dict__.items():
+> -        if hasattr(self, attr) and not getattr(self, attr):
+> -          setattr(self, attr, value)
+> +    if arch_std:
+> +      if arch_std.lower() in _arch_std_events:
+> +        event = _arch_std_events[arch_std.lower()].event
+> +        # Copy from the architecture standard event to self for undefined fields.
+> +        for attr, value in _arch_std_events[arch_std.lower()].__dict__.items():
+> +          if hasattr(self, attr) and not getattr(self, attr):
+> +            setattr(self, attr, value)
+> +      else:
+> +        raise argparse.ArgumentTypeError('Cannot find arch std event:', arch_std)
+>
+>     self.event = real_event(self.name, event)
+>
+> -- 
+> 2.35.3
+>
+>
