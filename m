@@ -2,56 +2,56 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FC8C001E0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 18:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE58DC001DE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 18:49:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234229AbjHJSJu (ORCPT
+        id S236166AbjHJStE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Aug 2023 14:09:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41202 "EHLO
+        Thu, 10 Aug 2023 14:49:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232216AbjHJSJu (ORCPT
+        with ESMTP id S235326AbjHJStE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Aug 2023 14:09:50 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAC1A1703
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 11:09:49 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-58667d06607so15404367b3.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 11:09:49 -0700 (PDT)
+        Thu, 10 Aug 2023 14:49:04 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33FC22703
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 11:49:03 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-585fb08172bso16126357b3.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 11:49:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1691690989; x=1692295789;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+        d=google.com; s=20221208; t=1691693342; x=1692298142;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=nykc+Kyyh1+8m1DKPGBWNjKw48feUTxYe7ZnBfqGNo0=;
-        b=SDdl8aJg4mXyp8R19oy/uvE3JdkPqurz8XeUyM6WDyjHBw3NfVAxYv6lFd1LfaGtrO
-         M9EBkXlSebuLnFcNDVfcg3G7WRrkhahXNTQI/eb7099wZsSyEzIzlOg6Sc1hpQ3ZHCgJ
-         4eAQA4V0hNa9z7OSwOs2BRoLVDaPYGhCt3yfRO7tsGskTplb6SV1BUusTNbKe4qRYXxK
-         wvooAEy9gOX1gv9o7nL/dbH60nM0IEaNeEmfJdBd1kg48kkofExkoEfAgYOgLGFA1Rfg
-         oC4He/il4f4WtFaLi5jHOUfQKFdna0FQ6FaAmJCV41z2csPeoil9k43q08v0nbvmqFi4
-         6KKA==
+        bh=2WWD5RZ7txT2y+bELeSkVRhqrv7guu+AZxZ+/B7ig64=;
+        b=o6wAtGQZ+EMExEpuZahj/6wsFfkHVecrBuxbrUbdt4kWtVVWlsOch4CjsXbTwhXhxH
+         zxl0RCAPlpLOCS/l8jd8aiJFY1P8RgMKDRhXUzHclXHUuM+GygFj1DEKAOeIRB29b1kv
+         oSeQOZkYAoO6O808GInBOzO56yOKAMbzQf+rjffwfV5gfWwSX32XkyriMgY3psluxqNV
+         X9novVdNaiywNUONa6PhYsD787KsL9D2WtcSr+O3ajPI/SXxFqoYCiE8Zd5o782PqCaL
+         ALWFZ6CXNi2XIkKbUQHNSTnO6EGNfwEFqaEi04rZCxhtRHiWuOOQOkp/5m+co1mjQcXY
+         ttqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691690989; x=1692295789;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=1e100.net; s=20221208; t=1691693342; x=1692298142;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=nykc+Kyyh1+8m1DKPGBWNjKw48feUTxYe7ZnBfqGNo0=;
-        b=k3WWvRuXvHp+z3DqVpPjhtJ31I+BnDzO+pFTbOb2U12TfJb3FhsGp1o0nEoWiV012c
-         wyM0BXmgn32lqsNWWRPmRQsDKjvvthoDFeiIeCdcf4yoCZEbRSU1PiBn6C0+pKtqfu0D
-         6sFCEGRIZrfAe9pDaiAVRscQkSw0B0/rsTGB+EVCZ55o0gZRli/Oy2/aYbrYFD84zHpH
-         GpTdyEtz5F8YYsWjfOspiLtp4ypaQeJmVjKguDajmgObUXfLWQwHvAdprcK32GoYEJ+z
-         Q95nMPtipkeuhHWPE14lZJYlUXFZbzPN613VjXWTG534JCLwYOi2rJf0j5AP+vEjGvnj
-         02rw==
-X-Gm-Message-State: AOJu0YzMJ33XyF7XLpAumfto5rByUQW57bHzMFRx2wV6jZYML+hQIc8N
-        xK8TKDo1URj+/kxcJESuOC4azkHzjeCK
-X-Google-Smtp-Source: AGHT+IHsDqiFQ83RfjseHv4SyvYwvf32issTCGV6LfFt41q7SQay0B9zQzK2Hlga9OqAvGFDAuEXfmOdDuxL
+        bh=2WWD5RZ7txT2y+bELeSkVRhqrv7guu+AZxZ+/B7ig64=;
+        b=bnLdQVQgNC+PLTc4wm7F8aMoRnFzDWoCdB7oqbMDPCtMtgByfUkLhQCqfklKoneb+q
+         MvHK4RB42NZtBmIV7lV1Ul4kq55hbToS196Om9zvsOpWWxvFqybBv7hwa1CbYAgqM8Mt
+         jFNiCJWOuUADLf6M8No6jGok9yNIdE+mtxDNmM9uY7qHwHg6uELYHKjyR9L0pbBPjp9A
+         hpBNU5KUm45gg59wru3LfSpIw+JfIrSLnF7cpjmZwnjHgNhYl/tTsp25Ic/t/ab0eGYq
+         VUwDvbTiWr7F7arD6PGR+mwuPG1973clZDuHHVEzIi3t1/CLTN6D+P/lBxk1sRmfBw6U
+         5h+A==
+X-Gm-Message-State: AOJu0YyIX1mXre3o4iqS0RdmB6gazd6LQtWFprY1fuVJplpECCiCz1Am
+        9rMwXlmfcQidW62r/gTpYJxLCPPJJeAG
+X-Google-Smtp-Source: AGHT+IFE9EYsPE6iA3GxYy5BS/jQkuwPyiISjc4pFGXsdQlHdsFatosLNj3Mf8IlBuDHO64S2yFQbFam0TmK
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:797f:302e:992f:97f2])
- (user=irogers job=sendgmr) by 2002:a25:7404:0:b0:d04:d397:352d with SMTP id
- p4-20020a257404000000b00d04d397352dmr52070ybc.4.1691690988871; Thu, 10 Aug
- 2023 11:09:48 -0700 (PDT)
-Date:   Thu, 10 Aug 2023 11:09:44 -0700
-Message-Id: <20230810180944.2794188-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a81:af06:0:b0:581:7b58:5e70 with SMTP id
+ n6-20020a81af06000000b005817b585e70mr68906ywh.5.1691693342432; Thu, 10 Aug
+ 2023 11:49:02 -0700 (PDT)
+Date:   Thu, 10 Aug 2023 11:48:49 -0700
+Message-Id: <20230810184853.2860737-1-irogers@google.com>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.41.0.640.ga95def55d0-goog
-Subject: [PATCH v1] perf script python: Fix python execution
+Subject: [PATCH v1 0/4] Remove BPF event support
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -60,53 +60,139 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, Fangrui Song <maskray@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Andi Kleen <ak@linux.intel.com>, Leo Yan <leo.yan@linaro.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Carsten Haitzler <carsten.haitzler@arm.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
         Yang Jihong <yangjihong1@huawei.com>,
         James Clark <james.clark@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Yonghong Song <yhs@fb.com>, Rob Herring <robh@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org, llvm@lists.linux.dev,
+        Wang Nan <wangnan0@huawei.com>,
+        Wang ShaoBo <bobo.shaobowang@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        He Kuang <hekuang@huawei.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>
+Cc:     Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Fix missing symbol seen in:
-```
- 19: 'import perf' in python                                         :
---- start ---
-test child forked, pid 2640936
-python usage test: "echo "import sys ; sys.path.insert(0, 'python'); import perf" | '/usr/bin/python3' "
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-ImportError: tools/perf/python/perf.cpython-311-x86_64-linux-gnu.so: undefined symbol: perf_pmus__supports_extended_type
-test child finished with -1
----- end ----
-'import perf' in python: FAILED!
-```
+The patch series removes BPF event support as past commits have shown
+the support has bit rotten:
+https://lore.kernel.org/lkml/20230728001212.457900-1-irogers@google.com/
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/python.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Similar functionality is now available via the --filter option, that
+uses a BPF skeleton, and is therefore more compact and simpler to
+use. The simplicity coming from not having to build BPF object files.
 
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 4eed8ec23994..c29f5f0bb552 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -113,6 +113,11 @@ bool evsel__is_aux_event(const struct evsel *evsel __maybe_unused)
- 	return false;
- }
- 
-+bool perf_pmus__supports_extended_type(void)
-+{
-+	return false;
-+}
-+
- /*
-  * Add this one here not to drag util/metricgroup.c
-  */
+A different use case for the events was for syscall augmentation in
+perf trace. So that this isn't broken, and to make its use
+significantly simpler, the support is migrated to use a BPF
+skeleton. This means perf trace is much more likely to augment
+syscalls for users.
+
+Removal of BPF events was raised on LKML two weeks ago with the
+original authors cc-ed:
+https://lore.kernel.org/lkml/CAP-5=fXxGimJRXKf7bcaPqfjxxGcn1k3CspY_iSjQnpAKs3uFQ@mail.gmail.com/
+
+BPF events are described publicly in very few places but one is:
+https://www.brendangregg.com/perf.html#eBPF
+"eBPF is currently a little restricted and difficult to use from
+perf. It's getting better all the time. A different and currently
+easier way to access eBPF is via the bcc Python interface, which is
+described on my eBPF Tools page. On this page, I'll discuss perf."
+
+I don't think the "getting better all the time" is any longer true as
+BPF features are being added to perf primarily by using BPF
+skeletons. The given example is a filter and would be better supported
+via "perf record --filter".
+
+Ian Rogers (4):
+  perf parse-events: Remove BPF event support
+  perf trace: Migrate BPF augmentation to use a skeleton
+  perf bpf examples: With no BPF events remove examples
+  perf trace: Tidy comments
+
+ tools/perf/Documentation/perf-config.txt      |   33 -
+ tools/perf/Documentation/perf-record.txt      |   22 -
+ tools/perf/Makefile.config                    |   43 -
+ tools/perf/Makefile.perf                      |   19 +-
+ tools/perf/builtin-record.c                   |   45 -
+ tools/perf/builtin-trace.c                    |  310 +--
+ tools/perf/examples/bpf/5sec.c                |   53 -
+ tools/perf/examples/bpf/empty.c               |   12 -
+ tools/perf/examples/bpf/hello.c               |   27 -
+ tools/perf/examples/bpf/sys_enter_openat.c    |   33 -
+ tools/perf/perf.c                             |    2 -
+ tools/perf/tests/.gitignore                   |    5 -
+ tools/perf/tests/Build                        |   31 -
+ tools/perf/tests/bpf-script-example.c         |   60 -
+ tools/perf/tests/bpf-script-test-kbuild.c     |   21 -
+ tools/perf/tests/bpf-script-test-prologue.c   |   49 -
+ tools/perf/tests/bpf-script-test-relocation.c |   51 -
+ tools/perf/tests/bpf.c                        |  390 ----
+ tools/perf/tests/builtin-test.c               |    3 -
+ tools/perf/tests/clang.c                      |   32 -
+ tools/perf/tests/llvm.c                       |  219 --
+ tools/perf/tests/llvm.h                       |   31 -
+ tools/perf/tests/make                         |    2 -
+ tools/perf/tests/tests.h                      |    2 -
+ tools/perf/trace/beauty/beauty.h              |   15 +-
+ tools/perf/util/Build                         |    8 +-
+ tools/perf/util/bpf-loader.c                  | 2006 -----------------
+ tools/perf/util/bpf-loader.h                  |  216 --
+ .../bpf_skel/augmented_raw_syscalls.bpf.c}    |   35 +-
+ tools/perf/util/c++/Build                     |    5 -
+ tools/perf/util/c++/clang-c.h                 |   43 -
+ tools/perf/util/c++/clang-test.cpp            |   67 -
+ tools/perf/util/c++/clang.cpp                 |  225 --
+ tools/perf/util/c++/clang.h                   |   27 -
+ tools/perf/util/config.c                      |    4 -
+ tools/perf/util/llvm-utils.c                  |  612 -----
+ tools/perf/util/llvm-utils.h                  |   69 -
+ tools/perf/util/parse-events.c                |  268 ---
+ tools/perf/util/parse-events.h                |   15 -
+ tools/perf/util/parse-events.l                |   31 -
+ tools/perf/util/parse-events.y                |   44 +-
+ 41 files changed, 133 insertions(+), 5052 deletions(-)
+ delete mode 100644 tools/perf/examples/bpf/5sec.c
+ delete mode 100644 tools/perf/examples/bpf/empty.c
+ delete mode 100644 tools/perf/examples/bpf/hello.c
+ delete mode 100644 tools/perf/examples/bpf/sys_enter_openat.c
+ delete mode 100644 tools/perf/tests/.gitignore
+ delete mode 100644 tools/perf/tests/bpf-script-example.c
+ delete mode 100644 tools/perf/tests/bpf-script-test-kbuild.c
+ delete mode 100644 tools/perf/tests/bpf-script-test-prologue.c
+ delete mode 100644 tools/perf/tests/bpf-script-test-relocation.c
+ delete mode 100644 tools/perf/tests/bpf.c
+ delete mode 100644 tools/perf/tests/clang.c
+ delete mode 100644 tools/perf/tests/llvm.c
+ delete mode 100644 tools/perf/tests/llvm.h
+ delete mode 100644 tools/perf/util/bpf-loader.c
+ delete mode 100644 tools/perf/util/bpf-loader.h
+ rename tools/perf/{examples/bpf/augmented_raw_syscalls.c => util/bpf_skel/augmented_raw_syscalls.bpf.c} (93%)
+ delete mode 100644 tools/perf/util/c++/Build
+ delete mode 100644 tools/perf/util/c++/clang-c.h
+ delete mode 100644 tools/perf/util/c++/clang-test.cpp
+ delete mode 100644 tools/perf/util/c++/clang.cpp
+ delete mode 100644 tools/perf/util/c++/clang.h
+ delete mode 100644 tools/perf/util/llvm-utils.c
+ delete mode 100644 tools/perf/util/llvm-utils.h
+
 -- 
 2.41.0.640.ga95def55d0-goog
 
