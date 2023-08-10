@@ -2,185 +2,133 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9818CC001DE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 21:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EF3C001B0
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 22:03:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231256AbjHJVuT (ORCPT
+        id S231946AbjHJWDF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Aug 2023 17:50:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58756 "EHLO
+        Thu, 10 Aug 2023 18:03:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231173AbjHJVuM (ORCPT
+        with ESMTP id S231681AbjHJWDE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Aug 2023 17:50:12 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CE242738
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 14:50:12 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-cf4cb742715so1334609276.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 14:50:12 -0700 (PDT)
+        Thu, 10 Aug 2023 18:03:04 -0400
+Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54A1D30C7
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 15:02:51 -0700 (PDT)
+Received: by mail-il1-x12e.google.com with SMTP id e9e14a558f8ab-3490b737f9aso20805ab.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 15:02:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1691704211; x=1692309011;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nscFVL3MFrP2MCfpvE3b34w9xAwW74LjxwP+hgfykt8=;
-        b=5FZtuCkOD8r22iOeIWwQ4EsKC5V9oacrymly9BvtQDx+idhZLiswyd2Pn4fM+Y5yJU
-         gihlEkfRYcZf+1od12kgpm54yVKgJK7Kp02Fg5aaLqMXX4HvsMKCvC9IlLrzauKF1goE
-         emh076z/YKK/fJ62QXpR2rkG+QMHC/RaiZgTwNg4RY+ds/iLPnai5viHHZlucQ04R5L3
-         Ca1j1b//D1R+DowDCdlvDl6kX5Q4A0mIGMow6CEzNRF9TexLxzUgBNhUR7xvyfdU6aTS
-         rGbfEVmw188O8OYF7SOCwkgYPg6oVMYJtDt2P1rHtBnpwWPtJuCbvsdr5+w6ydavhOoU
-         S2YQ==
+        d=google.com; s=20221208; t=1691704970; x=1692309770;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WirRslw/0aDPkGhNScoiXM3zTY4G823fT91ETu+Lq6E=;
+        b=UkdroNGwQrguLsDBgIEgrLvfKjn25h5tidmJjeYWOg8t5dssZ1517XjbYhdh/tiPNO
+         EBpB6lGHrYvSxe5RzWSp9mAptNk9c7Meu+AWFWKissa9cQSd6+yCsJvq60LFZ+jCOIVe
+         Rr9sVB8JIfibwVkOG/suomrjoOrY2Geo4BFVDD8CLiVSW1pNChr4tcICXZFee5TT8RAD
+         PTG3bqf+yehy7fQNyjY/+xRXxvjckVSUSD5M+mjFhnQ5t5KXv1ApBtrP6GoofG9Sl8Hn
+         9PCfxaJ/p5/oV6OwPWYN3qCFQUI38smFiA3zq2al3YjMc6Mg2brfo88yQImylhrW4ewn
+         S55Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691704211; x=1692309011;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nscFVL3MFrP2MCfpvE3b34w9xAwW74LjxwP+hgfykt8=;
-        b=WFUQSsEQyKaXhjYL2nJR2itGuyeAJ0uNOz+eKHaXvr65LctB/u/zMLKdec8iWyNA/U
-         iSgYzhAabUbO5euTHWpBG8u6OQEGHhk0TeF+DMLsx3foQDoZ00mvupJ0ZvoK4GpvqAIw
-         Q0d2ejgwBvrG26O93kACw9tHZAYVNgPHfzLiwlqoN62ZdbWVhRFFjF85nEXaKs0G2J05
-         C2i1eGKum9h5Xff9LgJfSoVJZqpVq+Nlvxg8bakss/7+VD84l4MmSI2ClTiwUMlsuvmq
-         ABAajAOa1bfIczvZqSLpHbPuUnT5lWo+yB1um3FnuuB9D5X9zodrqYsVsfKR2GNdy3c9
-         JYGg==
-X-Gm-Message-State: AOJu0YwmYMnSl0fZZmMoGaNZbCnzm7IsV3G5FMM8aLoqVJbYGeOrHFhH
-        NbQDlA+HTI96HHTSpYNKjM7Aj8qFMd9F
-X-Google-Smtp-Source: AGHT+IFhhIft5gWXsXGy4semc/T7A1pqRtRHdrjo123kU3YRYq8kKu0kmsMFOr7Pr8tU4963zgfNzCg55EHG
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:797f:302e:992f:97f2])
- (user=irogers job=sendgmr) by 2002:a25:60d6:0:b0:d12:d6e4:a08d with SMTP id
- u205-20020a2560d6000000b00d12d6e4a08dmr51937ybb.7.1691704211412; Thu, 10 Aug
- 2023 14:50:11 -0700 (PDT)
-Date:   Thu, 10 Aug 2023 14:49:52 -0700
-In-Reply-To: <20230810214952.2934029-1-irogers@google.com>
-Message-Id: <20230810214952.2934029-4-irogers@google.com>
-Mime-Version: 1.0
-References: <20230810214952.2934029-1-irogers@google.com>
-X-Mailer: git-send-email 2.41.0.640.ga95def55d0-goog
-Subject: [PATCH v2 3/3] perf pmus: Don't print duplicate PMU suffix in list by default
+        d=1e100.net; s=20221208; t=1691704970; x=1692309770;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WirRslw/0aDPkGhNScoiXM3zTY4G823fT91ETu+Lq6E=;
+        b=WcrfQ0i8RU78KKFGQblniK4oXxxdLWaFgYH1BTQhA9kSxhO0LhV0xAsPIHPKp1AioU
+         DEGNIXWr6dLmi1HE2FhjVupDNmCKXl8hMJI6fSdpsX4P+kgT9GmVfxg1bscHoaBirBLO
+         49IY99xlVYpUTrcEhSge4cCYj3xeyxGyowJCUjuuvgq/GwSX2H1ueMHZlCiT76Ims9z9
+         v3gQLLa5yRWuoc62Yat1BcGiuybtCFPWgJUq88ffE6xh6d5NhCI/PbSnb2iWcIYmV7lt
+         oP6y98jJ5mnEBNovqBJD1j1LRPgmywYDrRoJBH2LGTfphrTeuahe/Y0PrV3xDD9Rbdda
+         f0gg==
+X-Gm-Message-State: AOJu0YyAIQJG2pDkcgwQ/EFSdnTL2e49krICi7ZL9253z/Dm28n6mtE3
+        UP9I0M/wpwWYcx/XMA66nV2JJlhODDb1ZibTZ1Z+oA==
+X-Google-Smtp-Source: AGHT+IEVz2QXUNlQHls+sgcBM1Gy6AYEvav8ViVH8f0MUbcqC3NuL9+xkH/d3pXnSUlrKBHYSG/nFcIRqELsmKHUvDg=
+X-Received: by 2002:a05:6e02:1987:b0:346:1919:7c9b with SMTP id
+ g7-20020a056e02198700b0034619197c9bmr112579ilf.26.1691704970628; Thu, 10 Aug
+ 2023 15:02:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230803-fix-typo-v1-1-b794378d594e@manank.me> <ZMwRzQC+wBgJpDfr@kernel.org>
+In-Reply-To: <ZMwRzQC+wBgJpDfr@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+Date:   Thu, 10 Aug 2023 15:02:37 -0700
+Message-ID: <CAP-5=fW_bC1s+43My1cXmF_og7SE4=8K=ZZn82WNSGqAo849oQ@mail.gmail.com>
+Subject: Re: [PATCH] tools: perf: pmu-events: Fix typo poiint->point
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Edward <edward.baker@intel.com>
+Cc:     Manank Patel <manank@manank.me>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        Jens Schleusener <Jens.Schleusener@fossies.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Duplicate PMUs are no longer printed by default but the suffix of the
-first is printed. When duplicate PMUs are being skipped avoid printing
-the suffix.
+On Thu, Aug 3, 2023 at 1:45=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+>
+> Em Thu, Aug 03, 2023 at 11:27:30AM +0530, Manank Patel escreveu:
+> > Fix typo in file floating-point.json in /arch/x86/westmereep-dp
+>
+> AFAIK these are generated using a tool, so the fix needs to go to the
+> file from where the JSON files are generated, Ian?
 
-Before:
-```
-$ perf list
-...
-  uncore_imc_free_running_0/data_read/               [Kernel PMU event]
-  uncore_imc_free_running_0/data_total/              [Kernel PMU event]
-  uncore_imc_free_running_0/data_write/              [Kernel PMU event]
-```
+Yes, these are generated by the script:
+https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+Added Edward Baker at Intel who can correct these issues at source.
 
-After:
-```
-$ perf list
-...
-  uncore_imc_free_running/data_read/                 [Kernel PMU event]
-  uncore_imc_free_running/data_total/                [Kernel PMU event]
-  uncore_imc_free_running/data_write/                [Kernel PMU event]
-...
-$ perf list -v
-  uncore_imc_free_running_0/data_read/               [Kernel PMU event]
-  uncore_imc_free_running_0/data_total/              [Kernel PMU event]
-  uncore_imc_free_running_0/data_write/              [Kernel PMU event]
-  uncore_imc_free_running_1/data_read/               [Kernel PMU event]
-  uncore_imc_free_running_1/data_total/              [Kernel PMU event]
-  uncore_imc_free_running_1/data_write/              [Kernel PMU event]
-...
-```
+Thanks,
+Ian
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/pmus.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
-
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index 5073843aca19..b0ecb2e5bdcc 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -440,10 +440,13 @@ static int sub_non_neg(int a, int b)
- }
- 
- static char *format_alias(char *buf, int len, const struct perf_pmu *pmu,
--			  const struct perf_pmu_alias *alias)
-+			  const struct perf_pmu_alias *alias, bool skip_duplicate_pmus)
- {
- 	struct parse_events_term *term;
--	int used = snprintf(buf, len, "%s/%s", pmu->name, alias->name);
-+	int pmu_name_len = skip_duplicate_pmus
-+		? pmu_name_len_no_suffix(pmu->name, /*num=*/NULL)
-+		: (int)strlen(pmu->name);
-+	int used = snprintf(buf, len, "%.*s/%s", pmu_name_len, pmu->name, alias->name);
- 
- 	list_for_each_entry(term, &alias->terms, list) {
- 		if (term->type_val == PARSE_EVENTS__TERM_TYPE_STR)
-@@ -473,9 +476,10 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
- 	int printed = 0;
- 	int len, j;
- 	struct sevent *aliases;
-+	bool skip_duplicate_pmus = print_cb->skip_duplicate_pmus(print_state);
- 	struct perf_pmu *(*scan_fn)(struct perf_pmu *);
- 
--	if (print_cb->skip_duplicate_pmus(print_state))
-+	if (skip_duplicate_pmus)
- 		scan_fn = perf_pmus__scan_skip_duplicates;
- 	else
- 		scan_fn = perf_pmus__scan;
-@@ -518,6 +522,7 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
- 			*desc = NULL, *long_desc = NULL,
- 			*encoding_desc = NULL, *topic = NULL,
- 			*pmu_name = NULL;
-+		int pmu_name_len;
- 		bool deprecated = false;
- 		size_t buf_used;
- 
-@@ -528,7 +533,8 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
- 		if (!aliases[j].event) {
- 			/* A selectable event. */
- 			pmu_name = aliases[j].pmu->name;
--			buf_used = snprintf(buf, sizeof(buf), "%s//", pmu_name) + 1;
-+			pmu_name_len = pmu_name_len_no_suffix(pmu_name, /*num=*/NULL);
-+			buf_used = snprintf(buf, sizeof(buf), "%.*s//", pmu_name_len, pmu_name) + 1;
- 			name = buf;
- 		} else {
- 			if (aliases[j].event->desc) {
-@@ -536,7 +542,7 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
- 				buf_used = 0;
- 			} else {
- 				name = format_alias(buf, sizeof(buf), aliases[j].pmu,
--						    aliases[j].event);
-+						    aliases[j].event, skip_duplicate_pmus);
- 				if (aliases[j].is_cpu) {
- 					alias = name;
- 					name = aliases[j].event->name;
-@@ -554,8 +560,10 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
- 			long_desc = aliases[j].event->long_desc;
- 			topic = aliases[j].event->topic;
- 			encoding_desc = buf + buf_used;
-+			pmu_name_len = pmu_name_len_no_suffix(pmu_name, /*num=*/NULL);
- 			buf_used += snprintf(buf + buf_used, sizeof(buf) - buf_used,
--					"%s/%s/", pmu_name, aliases[j].event->str) + 1;
-+					"%.*s/%s/", pmu_name_len, pmu_name,
-+					aliases[j].event->str) + 1;
- 			deprecated = aliases[j].event->deprecated;
- 		}
- 		print_cb->print_event(print_state,
--- 
-2.41.0.640.ga95def55d0-goog
-
+> - Arnaldo
+>
+> > Reported-by: Jens Schleusener <Jens.Schleusener@fossies.org>
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D205891
+> > Signed-off-by: Manank Patel <manank@manank.me>
+> > ---
+> >  tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json | 2 +=
+-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-poin=
+t.json b/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json
+> > index c03f8990fa82..196ae1d9b157 100644
+> > --- a/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json
+> > +++ b/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json
+> > @@ -8,7 +8,7 @@
+> >          "UMask": "0x1"
+> >      },
+> >      {
+> > -        "BriefDescription": "X87 Floating poiint assists for invalid i=
+nput value (Precise Event)",
+> > +        "BriefDescription": "X87 Floating point assists for invalid in=
+put value (Precise Event)",
+> >          "EventCode": "0xF7",
+> >          "EventName": "FP_ASSIST.INPUT",
+> >          "PEBS": "1",
+> >
+> > ---
+> > base-commit: 5d0c230f1de8c7515b6567d9afba1f196fb4e2f4
+> > change-id: 20230803-fix-typo-3cb207284310
+> >
+> > Best regards,
+> > --
+> > Manank Patel <manank@manank.me>
+> >
+>
+> --
+>
+> - Arnaldo
