@@ -2,41 +2,35 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BF8C001DE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 09:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77239C001E0
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 11:49:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233680AbjHJJly (ORCPT
+        id S233374AbjHJLtl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Aug 2023 05:41:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47566 "EHLO
+        Thu, 10 Aug 2023 07:49:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231441AbjHJJly (ORCPT
+        with ESMTP id S230205AbjHJLtl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Aug 2023 05:41:54 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E452C1AB;
-        Thu, 10 Aug 2023 02:41:53 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 669E5655E6;
-        Thu, 10 Aug 2023 09:41:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A65AC433C7;
-        Thu, 10 Aug 2023 09:41:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691660512;
-        bh=p2nLn3yquTs0SCyO0vU3BgZ6hHe2rp6uBgQbpbuZDnU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JeJKsKWAQqx0KbDgbO9MTUNKaZLkG3yBnXwWYlaqIc+5mKlHTcXAlCUW8QF66jdYX
-         RVBBR7fmX00hRniDyy4rbGRQCYRQHymmY9itjiwkkTz6G4bndjlcoD2Nj5Are1+BAE
-         6zgzfRCIjMP2cDeqTKoAP2dwMkaoRxsDlMc2syFMRczBNPcaLRXCfXfJyOZOaKXCcc
-         vg6FJeAEwMe6dN9JIidX8RjwMdWb9GehSnXd59dAZcTpOp6RSLvDsK5gsH0KBab3E1
-         dR8F2vxqC8FA+6spgsMGfQbOAind2ThGQdcPcOj9qSmTudWQKv2AVnRhs/XSpKc0c+
-         X7roMlUrVBIag==
-Date:   Thu, 10 Aug 2023 10:41:46 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
+        Thu, 10 Aug 2023 07:49:41 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A8C1583;
+        Thu, 10 Aug 2023 04:49:40 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C26B8D75;
+        Thu, 10 Aug 2023 04:50:22 -0700 (PDT)
+Received: from [10.163.55.44] (unknown [10.163.55.44])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E71C63F64C;
+        Thu, 10 Aug 2023 04:49:35 -0700 (PDT)
+Message-ID: <8a92c349-8c72-db98-3fff-9a7d8a6b04fb@arm.com>
+Date:   Thu, 10 Aug 2023 17:19:32 +0530
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH V13 - RESEND 01/10] drivers: perf: arm_pmu: Add new
+ sched_task() callback
+Content-Language: en-US
+To:     Will Deacon <will@kernel.org>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         catalin.marinas@arm.com, mark.rutland@arm.com,
         Mark Brown <broonie@kernel.org>,
@@ -47,29 +41,30 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V13 - RESEND 01/10] drivers: perf: arm_pmu: Add new
- sched_task() callback
-Message-ID: <20230810094146.GB5365@willie-the-truck>
 References: <20230711082455.215983-1-anshuman.khandual@arm.com>
  <20230711082455.215983-2-anshuman.khandual@arm.com>
  <0ed54ef6-e502-7c33-6e3f-08de76786245@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0ed54ef6-e502-7c33-6e3f-08de76786245@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+ <20230810094146.GB5365@willie-the-truck>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20230810094146.GB5365@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Aug 10, 2023 at 10:35:42AM +0530, Anshuman Khandual wrote:
-> I am just wondering - would it be possible for you to take this pre-requisite
-> patch stand alone for the upcoming merge window. This has been acked by Mark
-> earlier. Besides, I am also working on your other suggestions on the series,
-> and will respond soon. Thank you.
 
-I can if it helps in some way, but I'm not seeing how it does. Can't you
-just carry this along with the BRBE changes that use it? How does it benefit
-anybody on its own?
 
-Will
+On 8/10/23 15:11, Will Deacon wrote:
+> On Thu, Aug 10, 2023 at 10:35:42AM +0530, Anshuman Khandual wrote:
+>> I am just wondering - would it be possible for you to take this pre-requisite
+>> patch stand alone for the upcoming merge window. This has been acked by Mark
+>> earlier. Besides, I am also working on your other suggestions on the series,
+>> and will respond soon. Thank you.
+> 
+> I can if it helps in some way, but I'm not seeing how it does. Can't you
+> just carry this along with the BRBE changes that use it? How does it benefit
+> anybody on its own?
+It might help de-clutter our conversation and focus on BRBE specific
+implementation stuff next time around in V14. Also this change here
+is quite harmless for any other thing, hence without much risk.
