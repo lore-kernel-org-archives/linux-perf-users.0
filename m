@@ -2,255 +2,162 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3136AC001B0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 20:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DD6C001B0
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 20:57:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234337AbjHJUBf (ORCPT
+        id S229610AbjHJU5G (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Aug 2023 16:01:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60318 "EHLO
+        Thu, 10 Aug 2023 16:57:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232926AbjHJUBd (ORCPT
+        with ESMTP id S229544AbjHJU5F (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Aug 2023 16:01:33 -0400
-Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 706D62112
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 13:01:32 -0700 (PDT)
-Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-40c72caec5cso7761cf.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 13:01:32 -0700 (PDT)
+        Thu, 10 Aug 2023 16:57:05 -0400
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BE9D273C
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 13:57:01 -0700 (PDT)
+Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-407db3e9669so22141cf.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 13:57:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1691697691; x=1692302491;
+        d=google.com; s=20221208; t=1691701020; x=1692305820;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=s3a6HnsOh4DT9Ujbqfy0w0JsFhQjH8Jgx+l1c+nZXaM=;
-        b=2ndBwu2BV7oFMLU5bffiVgeEgwKkXTn1nottU+EVbhMqW4iKDL/mvIrehIQQy8gAGM
-         3zzQJJBR6Wri6OFLwV66Ig1HQxgxytaNGoQHfGBQZinf8uTkzpA7j/BFYK+JFh7f2t48
-         bUWFsURrXI9uNMxo9aDpdgFFe5kTA8NVFQ+WS622jTazjTYcFTjI2xbAy78Ra1xic4Lm
-         huzNXhitbKnu56x3gV7/V7eW5DshWEd5X6hyACj+u10Py9859Wv+cE7uJVUzk0226nNb
-         DvHY2HfzU44DMrFVyrS68KC7F9TcVreqO3xPPvpYjT0v1L5efBTIcRaTGuNoD55V1bT5
-         eTPw==
+        bh=H5qqUgL0dg2T9pVrYjXURmFg8YuxFP4dO5mEOfYEO2M=;
+        b=W+akMieWAswlIfuFRrrY9q9KbV2f+v4USW7AzAMFlE54Xwx282y4eK6XnXSpP7ITSn
+         zbzkEsQbPQ+azI07ouAc1GbojF3XyX6pUw6r+IImIy/ZmEtcq7kbDg8jRgOmgzzwM2qc
+         BvQNTtVCH/v4bOKolbtHdA61dAgbZNf1Qk0PXsvHQGYFuTRjsVetA6FB6RekHp6LHmi1
+         4uVzbreIqZFTsuqUZAwEAY+8DRjC5TrJGttTjXyda2HxdAqUIgVCgnNm+GjnA4i3rev9
+         /68b0mRMYuu/3nezr/X2j2GZ2h2eP1dvLhPoWFihE4PHP/lWb9m94PvU9+5tmDlMq9su
+         Z90g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691697691; x=1692302491;
+        d=1e100.net; s=20221208; t=1691701020; x=1692305820;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=s3a6HnsOh4DT9Ujbqfy0w0JsFhQjH8Jgx+l1c+nZXaM=;
-        b=NaaJukXTQfaU2q/kINj9EYlEtGVlB0l+8pFuBAn2xlvuQ3orvlHucOqC71OocW5KaB
-         GlDv7zoypygVmna9j6pQkofuG5bZiG+R90kw2Qs3P16HitY9rGCZVln/MdwFpGtY1Gqj
-         BiQhSHerU8DCCmAAkzNr4fH9IYAG+fFDOMtaH8LKMF0gsAmUe/b+jgprkHK8YU9rQj3e
-         Ejk02gFdynLw2Vlng8qIGrsQtg6H9j3d8+QpIrXtVlWf6VjaCBiVlOSyyvUZVioSkGKI
-         2hWrdWPMnTmyEsXys3H43M5PBAnzxstRgwPtlvR36UTkayzYGDrvS47rjobYsLNb7z72
-         HtjA==
-X-Gm-Message-State: AOJu0YxPPd5JrHub/6+KAMOVJY0dUx0WEzBwIdDDsv3nN9PBoLEZRala
-        bgHWT/RNDWxPJsgE9itEq+qm8+/Az2CF8cpp+bMvgQ==
-X-Google-Smtp-Source: AGHT+IEh1ar6vsvTxB784befVYzFQXdBfJs7Ecdw+6d5JHLlnXTAXE20SWwRi0jhJpu9Q0RNQFdghIAI12a8Bf7T8wY=
-X-Received: by 2002:ac8:5acc:0:b0:40f:d1f4:aa58 with SMTP id
- d12-20020ac85acc000000b0040fd1f4aa58mr72140qtd.8.1691697691298; Thu, 10 Aug
- 2023 13:01:31 -0700 (PDT)
+        bh=H5qqUgL0dg2T9pVrYjXURmFg8YuxFP4dO5mEOfYEO2M=;
+        b=Siuh9pQ/AUDCercz29BD7x41fY+4OJNe6ZSf7kR4A4jCYe1kqgaiWjwyCnPPoKooNp
+         KHpsFoSUA/OYpHlpxaZFIy/uKshFb1EdqHcXZ6/zdxS7IF086Sm32E0Fotw1h68KQzSw
+         CId/WAgAbFeHr9PnwlwqAe8g08qAgCvYhc/K4RsTMarakLxkA6+GeEa4vdFKsKldgUFi
+         n2lhUdY1Pp2aw1RGaiEF1dpJlh5od1ZbDmmCUGMFdg04pQ9byn/3eGFxL43qIiNjTNLr
+         43SpYvh7czWT0Ji06mLtMIKvdYiaZ+5dO0zq3owakQEEvSUihlMhq5HaZYvewHOn2LDl
+         KCGg==
+X-Gm-Message-State: AOJu0Yz9mlX8O2oSCQb7X5RG735+thK3vLHDfFxQ6qUIVTLRJqa6S3Rs
+        PnXv1ISuBZ4v+swhztyw+VG2EPz3nAYehomVwl4dIg==
+X-Google-Smtp-Source: AGHT+IFOGVrSscMtD1MpQ9ahMigqLBeatqurMF3bm5EZL0ZY2ZFI3yw7P+EW6G4iqJT+TAd0lU5WmbpthXdUKnKCRPI=
+X-Received: by 2002:a05:622a:18a1:b0:403:b242:3e30 with SMTP id
+ v33-20020a05622a18a100b00403b2423e30mr32095qtc.1.1691701020484; Thu, 10 Aug
+ 2023 13:57:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <ZNPocw1rC6d/v5RV@yoga>
-In-Reply-To: <ZNPocw1rC6d/v5RV@yoga>
+References: <20230807061652.2492167-1-namhyung@kernel.org>
+In-Reply-To: <20230807061652.2492167-1-namhyung@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 10 Aug 2023 13:01:20 -0700
-Message-ID: <CAP-5=fVJyx71LwbNRZqMp3qg=uufVLiaZ+q4-JzAoaE3HcJmUg@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Add support for testing gecko script
-To:     Anup Sharma <anupnewsmail@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+Date:   Thu, 10 Aug 2023 13:56:48 -0700
+Message-ID: <CAP-5=fXOjBUkxEPutpcNpe+V1+ADz2U9B3K8fjJy_L_6_nbxpQ@mail.gmail.com>
+Subject: Re: [PATCH] perf tools: Handle old data in PERF_RECORD_ATTR
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Aug 9, 2023 at 12:26=E2=80=AFPM Anup Sharma <anupnewsmail@gmail.com=
-> wrote:
+On Sun, Aug 6, 2023 at 11:16=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> This commit add support for testing gecko script. The test checks
-> for the presence of required sections such as "meta," "threads,"
-> "samples," "frameTable," "stackTable," "stringTable," and
-> "pausedRanges" which are few essential parameter to be present
-> in output file. Also it verifies the validity of the JSON format
-> using Python's JSON library if available.
+> The PERF_RECORD_ATTR is used for a pipe mode to describe an event with
+> attribute and IDs.  The ID table comes after the attr and it calculate
+> size of the table using the total record size and the attr size.
 >
-> Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
+>   n_ids =3D (total_record_size - end_of_the_attr_field) / sizeof(u64)
+>
+> This is fine for most use cases, but sometimes it saves the pipe output
+> in a file and then process it later.  And it becomes a problem if there
+> is a change in attr size between the record and report.
+>
+>   $ perf record -o- > perf-pipe.data  # old version
+>   $ perf report -i- < perf-pipe.data  # new version
+>
+> For example, if the attr size is 128 and it has 4 IDs, then it would
+> save them in 168 byte like below:
+>
+>    8 byte: perf event header { .type =3D PERF_RECORD_ATTR, .size =3D 168 =
+},
+>  128 byte: perf event attr { .size =3D 128, ... },
+>   32 byte: event IDs [] =3D { 1234, 1235, 1236, 1237 },
+>
+> But when report later, it thinks the attr size is 136 then it only read
+> the last 3 entries as ID.
+>
+>    8 byte: perf event header { .type =3D PERF_RECORD_ATTR, .size =3D 168 =
+},
+>  136 byte: perf event attr { .size =3D 136, ... },
+>   24 byte: event IDs [] =3D { 1235, 1236, 1237 },  // 1234 is missing
+>
+> So it should use the recorded version of the attr.  The attr has the
+> size field already then it should honor the size when reading data.
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Hi Anup,
-
-I was trying to test this and grabbing other patches didn't resolve
-the issue I see:
-```
-111: perf script gecko test                                          :
---- start ---
-test child forked, pid 2886031
-./tools/perf/tests/shell/test_gecko.sh: line 120: prepare_perf_data:
-command not found
-Testing Gecko Command
- Error: Couldn't find script `gecko'
-...
-```
-
-It can be useful when sending a patch like this to, under a ---, list
-patches necessary for testing.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
 > ---
->  tools/perf/tests/shell/test_gecko.sh | 131 +++++++++++++++++++++++++++
->  1 file changed, 131 insertions(+)
->  create mode 100644 tools/perf/tests/shell/test_gecko.sh
+>  tools/perf/util/header.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
 >
-> diff --git a/tools/perf/tests/shell/test_gecko.sh b/tools/perf/tests/shel=
-l/test_gecko.sh
-> new file mode 100644
-> index 000000000000..457c85474a62
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/test_gecko.sh
-> @@ -0,0 +1,131 @@
-> +#!/bin/bash
-> +# perf script gecko test
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +err=3D0
-> +
-> +cleanup() {
-> +  rm -rf gecko_profile.json
-> +  trap - exit term int
-> +}
-> +
-> +trap_cleanup() {
-> +  cleanup
-> +  exit 1
-> +}
-> +trap trap_cleanup exit term int
-> +
-> +report() {
-> +    if [ "$1" =3D 0 ]; then
-> +        echo "PASS: \"$2\""
-> +    else
-> +        echo "FAIL: \"$2\" Error message: \"$3\""
-> +        err=3D1
-> +    fi
-> +}
-> +
-> +find_str_or_fail() {
-> +    grep -q "$1" <<< "$2"
-> +    if [ "$?" !=3D 0 ]; then
-> +        report 1 "$3" "Failed to find required string:'${1}'."
-> +    else
-> +        report 0 "$3"
-> +    fi
-> +}
-> +
-> +# To validate the json format, check if python is installed
-> +if [ "$PYTHON" =3D "" ] ; then
-> +       if which python3 > /dev/null ; then
-> +               PYTHON=3Dpython3
-> +       elif which python > /dev/null ; then
-> +               PYTHON=3Dpython
-> +       else
-> +               echo Skipping JSON format check, python not detected plea=
-se set environment variable PYTHON.
-> +               PYTHON_NOT_AVAILABLE=3D1
-> +       fi
-> +fi
-> +
-> +# Check execution of perf script gecko command
-> +test_gecko_command() {
-> +    echo "Testing Gecko Command"
-> +    perf script gecko -a sleep 0.5
-> +       # Store the content of the file in the 'out' variable
-> +    out=3D$(< "gecko_profile.json")
-> +       # Get the length of the gecko_profile.json output in 'out'
-> +       length=3D${#out}
-> +       if [ "$length" -gt 0 ]; then
-> +        echo "PASS: \"Gecko Command\""
-> +    else
-> +        echo "FAIL: \"Gecko Command\""
-> +        err=3D1
-> +        exit
-> +    fi
-> +}
-> +
-> +# with the help of python json libary validate the json output
-> +if [ "$PYTHON_NOT_AVAILABLE" !=3D "0" ]; then
-> +       validate_json_format()
-> +       {
-> +               if [ "$out" ] ; then
-> +                       if [ "$PYTHON -c import json; json.load($out)" ];=
- then
-> +                               echo "PASS: \"The file contains valid JSO=
-N format\""
-> +                       else
-> +                               echo "FAIL: \"The file does not contain v=
-alid JSON format\""
-> +                               err=3D1
-> +                               exit
-> +                       fi
-> +               else
-> +                       echo "FAIL: \"File not found\""
-> +                       err=3D2
-> +                       exit
-> +               fi
-> +       }
-> +fi
-> +
-> +# validate output for the presence of "meta".
-> +test_meta() {
-> +    find_str_or_fail "meta" "$out" "${FUNCNAME[0]}"
-> +}
-> +
-> +# validate output for the presence of "threads".
-> +test_threads() {
-> +       find_str_or_fail "threads" "$out" "${FUNCNAME[0]}"
-> +}
-> +
-> +# validate output for the presence of "samples".
-> +test_samples() {
-> +       find_str_or_fail "samples" "$out" "${FUNCNAME[0]}"
-> +}
-> +
-> +# validate output for the presence of "frameTable".
-> +test_frametable() {
-> +       find_str_or_fail "frameTable" "$out" "${FUNCNAME[0]}"
-> +}
-> +
-> +# validate output for the presence of "stackTable".
-> +test_stacktable() {
-> +       find_str_or_fail "stackTable" "$out" "${FUNCNAME[0]}"
-> +}
-> +
-> +# validate output for the presence of "stringTable"
-> +test_stringtable() {
-> +       find_str_or_fail "stringTable" "$out" "${FUNCNAME[0]}"
-> +}
-> +
-> +# validate output for the presence of "pausedRanges".
-> +test_pauseranges(){
-> +       find_str_or_fail "pausedRanges" "$out" "${FUNCNAME[0]}"
-> +}
-> +
-> +prepare_perf_data
-> +test_gecko_command
-> +validate_json_format
-> +test_meta
-> +test_threads
-> +test_samples
-> +test_frametable
-> +test_stacktable
-> +test_stringtable
-> +test_pauseranges
-> +cleanup
-> +exit $err
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 52fbf526fe74..f89321cbfdee 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -4381,7 +4381,8 @@ int perf_event__process_attr(struct perf_tool *tool=
+ __maybe_unused,
+>                              union perf_event *event,
+>                              struct evlist **pevlist)
+>  {
+> -       u32 i, ids, n_ids;
+> +       u32 i, n_ids;
+> +       u64 *ids;
+>         struct evsel *evsel;
+>         struct evlist *evlist =3D *pevlist;
+>
+> @@ -4397,9 +4398,8 @@ int perf_event__process_attr(struct perf_tool *tool=
+ __maybe_unused,
+>
+>         evlist__add(evlist, evsel);
+>
+> -       ids =3D event->header.size;
+> -       ids -=3D (void *)&event->attr.id - (void *)event;
+> -       n_ids =3D ids / sizeof(u64);
+> +       n_ids =3D event->header.size - sizeof(event->header) - event->att=
+r.attr.size;
+> +       n_ids =3D n_ids / sizeof(u64);
+>         /*
+>          * We don't have the cpu and thread maps on the header, so
+>          * for allocating the perf_sample_id table we fake 1 cpu and
+> @@ -4408,8 +4408,9 @@ int perf_event__process_attr(struct perf_tool *tool=
+ __maybe_unused,
+>         if (perf_evsel__alloc_id(&evsel->core, 1, n_ids))
+>                 return -ENOMEM;
+>
+> +       ids =3D (void *)&event->attr.attr + event->attr.attr.size;
+>         for (i =3D 0; i < n_ids; i++) {
+> -               perf_evlist__id_add(&evlist->core, &evsel->core, 0, i, ev=
+ent->attr.id[i]);
+> +               perf_evlist__id_add(&evlist->core, &evsel->core, 0, i, id=
+s[i]);
+>         }
+>
+>         return 0;
 > --
-> 2.34.1
+> 2.41.0.640.ga95def55d0-goog
 >
