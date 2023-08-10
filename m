@@ -2,155 +2,155 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A655C04FE0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 18:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E914C001E0
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 19:27:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236220AbjHJSt3 (ORCPT
+        id S236487AbjHJT1a (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Aug 2023 14:49:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47594 "EHLO
+        Thu, 10 Aug 2023 15:27:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236221AbjHJSt1 (ORCPT
+        with ESMTP id S235878AbjHJT13 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Aug 2023 14:49:27 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5DCD26BC
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 11:49:12 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5840614b13cso23344347b3.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 11:49:12 -0700 (PDT)
+        Thu, 10 Aug 2023 15:27:29 -0400
+Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE47EC7
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 12:27:26 -0700 (PDT)
+Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-407db3e9669so67391cf.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 12:27:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1691693352; x=1692298152;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tAsvNbJV0xewLpRF082FT5wNDwT03/+fiaT2qH1TeCM=;
-        b=LTICTcE8hNlmMkRTMYp+FBqxbDFL9VxGqxqFwVsETwRzlpfMVOHp4IwneSAJSBQkLW
-         MR9vE7Rjc9bd3DeFHvMQP8MwP5RYD6a5WxQ3dvG5GDrq+CGWGrooh8LRg0e42SkY6AzY
-         6VEb/wJdzpqLgkk7j+sSRWYsx/L83/0hyDnfCC3mfVYVYkiWjp5yPKYVIcDaoxKO4sYN
-         dglRXksLGO1i0EsXt+LFA2SUAFs0jvlz62kG4mmRiThp2m1ODYM0xMJnyFu+1XmNkv5n
-         smJbqbdBAdyl8ANQVK3LF4L8WuTZxBBNYLJN95pwCuwjNk36KloINZCo8EMe0Pt9vGEe
-         Fg0g==
+        d=google.com; s=20221208; t=1691695646; x=1692300446;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zNnltR97BeMOnmf/YZYMujSXMH2ommF1rsHE9Oftg0w=;
+        b=m5swtl2RPkKGhH31c5dbSWWJzoE9Tb+6vSVU6lNJv/hCgc2tL5fjN/8xF3te1zxsz6
+         G+u5ltz59IfYdr/d1QWpN5VPjXVfRvNLzYsouwyNpVM2g3p6z0qam9cGkr3sO9ZqBqLG
+         2eJoNiqD6fbJfFYNl0pm/vkr4lMaFO+zhB8JnTEZcjfqa2kmsCMgO6xHGK7bHDwjgKGT
+         7NPrfmxSxNpf2CwJVFmW1PxppfQBppgY49YNTcjHAaiZbwqMPoIruJIyjdJG1zjF1SPc
+         eu3/hMX30UQaBEA6xZ0NDFGVq9AbTafsK0QJYzNAMRUUoq/Sv0H58lE8pE6z4ugBDaAM
+         c2vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691693352; x=1692298152;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tAsvNbJV0xewLpRF082FT5wNDwT03/+fiaT2qH1TeCM=;
-        b=AQI3um0Q72L/7pMwPMbRQnOQ6X/MadfUB/0gysBS581o5USW20gx0msJEhiSD+WH3p
-         vQ77lqyW8EkLP466m4STSb9Vz50exce3O7Mjn8FzkZCJqjHGmBOA4qKcnySPYLYapmDV
-         5DI8Wvqhfxi+/+gmfOOdb3WwQh0LJKtAWQ4ABG9FGiN4NYMGjAng9JlzVyXSECKaQxul
-         EPwoiyUUuvBBUp1zS14XGoq+1fkpz3DuN7nzbh09BKwvFCjm73PjbqiWF8+GpWW7Ufnd
-         awqOG42nHZHsmJLdq4DOkd9P5IEryFn+h5S6xTlP+4JuyW0heczQvWn4s/0GFHl1UobZ
-         oMEw==
-X-Gm-Message-State: AOJu0Yyo2dL/f/6Mt6yiuzN0uIa5BHzHgQVxl9Jl72MrT2lDij7YKe//
-        ld7Dmi6yuaJxvs253AOtrxyhhJdeWyGR
-X-Google-Smtp-Source: AGHT+IHBdD4d2FEkNC8Rl2S0IuPwZraSrCdQGQrFkVvxGTI5IiXMSHQJ/2/nwp5UpXIZ9kZNRHwcozJrils6
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:797f:302e:992f:97f2])
- (user=irogers job=sendgmr) by 2002:a81:7855:0:b0:586:e91a:46c2 with SMTP id
- t82-20020a817855000000b00586e91a46c2mr62264ywc.4.1691693351912; Thu, 10 Aug
- 2023 11:49:11 -0700 (PDT)
-Date:   Thu, 10 Aug 2023 11:48:53 -0700
-In-Reply-To: <20230810184853.2860737-1-irogers@google.com>
-Message-Id: <20230810184853.2860737-5-irogers@google.com>
-Mime-Version: 1.0
-References: <20230810184853.2860737-1-irogers@google.com>
-X-Mailer: git-send-email 2.41.0.640.ga95def55d0-goog
-Subject: [PATCH v1 4/4] perf trace: Tidy comments
+        d=1e100.net; s=20221208; t=1691695646; x=1692300446;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zNnltR97BeMOnmf/YZYMujSXMH2ommF1rsHE9Oftg0w=;
+        b=Aq2Q6fxbmAzs1ETjZHdm9VCRDUrzK8rV0bk+lE/o01uBimOrydxYcC9b0ON5n5T/1C
+         +wtU0Qq89f/lJUJZ0zm9owxxOm+EsLKGGz47xByPlftBhCKKHBhVmsjssL1+/5OBGwqT
+         S+joJZrCSTCKLXBu1Wsy0FPbmgz6qXnHTcQ047ywGYRavKcGFCsJnc2dGIKX3NBvjD0u
+         avXDDyJK7gxh3P7LtiqhavhRCyb5PZg3fLmd6E53VxwNwsyISsynTDRMLERkXhm+2pwt
+         WcoM525l7hFml5IG1c6Sv9mN222KiH3NpGDY170U6kb+HDfv/iX9H+UJWfCMf1+YZ2Yq
+         3yRA==
+X-Gm-Message-State: AOJu0YxBQOB0nqYayoxSiDqB7JOa5XQ/y3Brlj9e9ENs1yswoAbQOAiW
+        QoqgDFND7g25Hmyu/OLfPzb32H4Y1mmkL3gjwsVpJS2UKdMlx/Lacpr0WQ==
+X-Google-Smtp-Source: AGHT+IGVCtCr21eEdt4tIfAgdEow8iRngkIScUU7nCQAlw9xC6j2AxFQLwF17ebcJCOX84KXLOlsJW8OyMKgkV5yZVk=
+X-Received: by 2002:ac8:7f8e:0:b0:40f:dc70:fde2 with SMTP id
+ z14-20020ac87f8e000000b0040fdc70fde2mr61719qtj.26.1691695646021; Thu, 10 Aug
+ 2023 12:27:26 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230807111631.3033102-1-john.g.garry@oracle.com> <373e8253-656c-84dc-c05-b578e3725d@os.amperecomputing.com>
+In-Reply-To: <373e8253-656c-84dc-c05-b578e3725d@os.amperecomputing.com>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, Fangrui Song <maskray@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Andi Kleen <ak@linux.intel.com>, Leo Yan <leo.yan@linaro.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Carsten Haitzler <carsten.haitzler@arm.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Yonghong Song <yhs@fb.com>, Rob Herring <robh@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev,
-        Wang Nan <wangnan0@huawei.com>,
-        Wang ShaoBo <bobo.shaobowang@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        He Kuang <hekuang@huawei.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>
-Cc:     Ian Rogers <irogers@google.com>
+Date:   Thu, 10 Aug 2023 12:27:14 -0700
+Message-ID: <CAP-5=fVsePTVU2qeeUzVFkWA7Oxj6bgSq+yWzO=t3y283vOgOw@mail.gmail.com>
+Subject: Re: [PATCH] perf jevents: Raise exception for no definition of a arch
+ std event
+To:     Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Cc:     John Garry <john.g.garry@oracle.com>, acme@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Now tools/perf/examples/bpf/augmented_syscalls.c is
-tools/perf/util/bpf_skel/augmented_syscalls.bpf.c and not enabled as a
-BPF event, tidy the comments to reflect this.
+On Wed, Aug 9, 2023 at 10:11=E2=80=AFPM Ilkka Koskinen
+<ilkka@os.amperecomputing.com> wrote:
+>
+>
+> Hi John,
+>
+> On Mon, 7 Aug 2023, John Garry wrote:
+> > Recently Ilkka reported that the JSONs for the AmpereOne arm64-based
+> > platform included a dud event which referenced a non-existent arch std
+> > event [0].
+>
+> I wish I had found the bug in my patch a long time ago but, in fact, it
+> was Dave Kleikamp who initially pointed it out to me and figured out the
+> difference between jevents.c and jevents.py when porting the patch to 5.1=
+5
+> kernel.
+>
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2023-June/844874.ht=
+ml
+>
+> >
+> > Previously in the times of jevents.c, we would raise an exception for t=
+his.
+> >
+> > This is still invalid, even though the current code just ignores such a=
+n
+> > event.
+> >
+> > Re-introduce code to raise an exception for when no definition exists t=
+o
+> > help catch as many invalid JSONs as possible.
+> >
+> > [0] https://lore.kernel.org/linux-perf-users/9e851e2a-26c7-ba78-cb20-be=
+4337b2916a@oracle.com/
+> >
+> > Signed-off-by: John Garry <john.g.garry@oracle.com>
+>
+> Thanks for the patch! I quickly tested it and it worked as expected. Just
+> in case this is needed:
+>
+> Tested-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/trace/beauty/beauty.h                  | 15 +++++++--------
- .../util/bpf_skel/augmented_raw_syscalls.bpf.c    |  8 --------
- 2 files changed, 7 insertions(+), 16 deletions(-)
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
-index 3d12bf0f6d07..788e8f6bd90e 100644
---- a/tools/perf/trace/beauty/beauty.h
-+++ b/tools/perf/trace/beauty/beauty.h
-@@ -67,15 +67,14 @@ extern struct strarray strarray__socket_level;
- /**
-  * augmented_arg: extra payload for syscall pointer arguments
-  
-- * If perf_sample->raw_size is more than what a syscall sys_enter_FOO puts,
-- * then its the arguments contents, so that we can show more than just a
-+ * If perf_sample->raw_size is more than what a syscall sys_enter_FOO puts, then
-+ * its the arguments contents, so that we can show more than just a
-  * pointer. This will be done initially with eBPF, the start of that is at the
-- * tools/perf/examples/bpf/augmented_syscalls.c example for the openat, but
-- * will eventually be done automagically caching the running kernel tracefs
-- * events data into an eBPF C script, that then gets compiled and its .o file
-- * cached for subsequent use. For char pointers like the ones for 'open' like
-- * syscalls its easy, for the rest we should use DWARF or better, BTF, much
-- * more compact.
-+ * tools/perf/util/bpf_skel/augmented_syscalls.bpf.c that will eventually be
-+ * done automagically caching the running kernel tracefs events data into an
-+ * eBPF C script, that then gets compiled and its .o file cached for subsequent
-+ * use. For char pointers like the ones for 'open' like syscalls its easy, for
-+ * the rest we should use DWARF or better, BTF, much more compact.
-  *
-  * @size: 8 if all we need is an integer, otherwise all of the augmented arg.
-  * @int_arg: will be used for integer like pointer contents, like 'accept's 'upeer_addrlen'
-diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-index 70478b9460ee..0586c4118656 100644
---- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-+++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-@@ -2,16 +2,8 @@
- /*
-  * Augment the raw_syscalls tracepoints with the contents of the pointer arguments.
-  *
-- * Test it with:
-- *
-- * perf trace -e tools/perf/examples/bpf/augmented_raw_syscalls.c cat /etc/passwd > /dev/null
-- *
-  * This exactly matches what is marshalled into the raw_syscall:sys_enter
-  * payload expected by the 'perf trace' beautifiers.
-- *
-- * For now it just uses the existing tracepoint augmentation code in 'perf
-- * trace', in the next csets we'll hook up these with the sys_enter/sys_exit
-- * code that will combine entry/exit in a strace like way.
-  */
- 
- #include <linux/bpf.h>
--- 
-2.41.0.640.ga95def55d0-goog
+Thanks,
+Ian
 
+> Cheers, Ilkka
+>
+> > ---
+> > Please do not apply before [0], above.
+> >
+> > diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/j=
+events.py
+> > index 8cd561aa606a..98cccc3fcbbd 100755
+> > --- a/tools/perf/pmu-events/jevents.py
+> > +++ b/tools/perf/pmu-events/jevents.py
+> > @@ -347,12 +347,15 @@ class JsonEvent:
+> >       if self.desc and not self.desc.endswith('. '):
+> >         self.desc +=3D '. '
+> >       self.desc =3D (self.desc if self.desc else '') + ('Unit: ' + self=
+.pmu + ' ')
+> > -    if arch_std and arch_std.lower() in _arch_std_events:
+> > -      event =3D _arch_std_events[arch_std.lower()].event
+> > -      # Copy from the architecture standard event to self for undefine=
+d fields.
+> > -      for attr, value in _arch_std_events[arch_std.lower()].__dict__.i=
+tems():
+> > -        if hasattr(self, attr) and not getattr(self, attr):
+> > -          setattr(self, attr, value)
+> > +    if arch_std:
+> > +      if arch_std.lower() in _arch_std_events:
+> > +        event =3D _arch_std_events[arch_std.lower()].event
+> > +        # Copy from the architecture standard event to self for undefi=
+ned fields.
+> > +        for attr, value in _arch_std_events[arch_std.lower()].__dict__=
+.items():
+> > +          if hasattr(self, attr) and not getattr(self, attr):
+> > +            setattr(self, attr, value)
+> > +      else:
+> > +        raise argparse.ArgumentTypeError('Cannot find arch std event:'=
+, arch_std)
+> >
+> >     self.event =3D real_event(self.name, event)
+> >
+> > --
+> > 2.35.3
+> >
+> >
