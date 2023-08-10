@@ -2,114 +2,88 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF935C001B0
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Aug 2023 21:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1800CC001B0
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 02:02:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231145AbjHIVKc (ORCPT
+        id S229746AbjHJCCH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Aug 2023 17:10:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49530 "EHLO
+        Wed, 9 Aug 2023 22:02:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229686AbjHIVK3 (ORCPT
+        with ESMTP id S229611AbjHJCCG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Aug 2023 17:10:29 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3C8BE76;
-        Wed,  9 Aug 2023 14:10:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 676366456E;
-        Wed,  9 Aug 2023 21:10:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40E93C433C7;
-        Wed,  9 Aug 2023 21:10:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691615427;
-        bh=1Bz4ua4tQI2OB7DE+aHiPdC2coqzRjymHyknz6o31/M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=evaSqc4qbKrEEfvl4mpOPS1eNCF2T1pUZUoNfWeZKX2Wbn+iC4YAy1WEQKartH7wP
-         HuuJosOSEvZqslFGnJuUM8W7u0yfGwq9sO85fHVbCAvnT3V7YwKz1Hnm9GE2A5ib3z
-         oZtduAjlsUfsFGmEdfUYEAW8Toheednlce6lGw/2f3KJCA3GO4/6Pt/y44hFRBSYYP
-         aqkhHy/TXnT7YOPG9BYMF0Zds3Uqth+6K6wt/w5zbU4NYi+m72N9HrgeYyE/AoF1CW
-         q5nTigF10jTCkVpL7iUs3v8B41wRg3IA20bQ70uwfXFxr+9hsQw71iwcgIpbexnJYO
-         e7Vkh2TIQ/kUA==
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [GIT PULL] perf tools fixes for v6.5: 3rd batch
-Date:   Wed,  9 Aug 2023 18:10:19 -0300
-Message-ID: <20230809211019.121189-1-acme@kernel.org>
-X-Mailer: git-send-email 2.41.0
+        Wed, 9 Aug 2023 22:02:06 -0400
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47769C6;
+        Wed,  9 Aug 2023 19:02:06 -0700 (PDT)
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-d4789fd9317so392267276.1;
+        Wed, 09 Aug 2023 19:02:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691632925; x=1692237725;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9pg7ID7Bt2SnW3Yar69Ra983Gv0keYFyvDeWnOq+8Bw=;
+        b=JZYdfD0ujJkp5v+NPrk6QkHPitiDGWJyD7PK9VSHGN4R6/q8Qj9NFAMHCIy6KgTPgW
+         xDnELUvoN1o2kRe9o3w86pT+LUZuVSK1z3kk47vp/vvNjk1TSQaLTt2hwoqFl8z47BvG
+         cB8VD4NL5ToLMuIA0K/Nw/cZjqG6jrJua0ypz6KYacQU8Ngtu6zdIGAGbw07Tw2hVa6+
+         YcKt7UfU+9W2a9pbjvr4zd6lHCMKpoToiikzJts6JwjakNyEyIJrvG33cBAgbxBi0M/5
+         /95+5DAkva99J/1hRhV3n1u7wHyM6kWFOWruA1rLJFto/8z9/Rt1Hx9EmVcDFRzWvh8W
+         VPUA==
+X-Gm-Message-State: AOJu0YzeUNTbockqAvizfCXVgcrZbKLa1BKe8wDyDBGsMPdKmz95ZOpI
+        n020x1EyUnJL15/4/m6nM4o/P0x5l8/7O3PLPOI=
+X-Google-Smtp-Source: AGHT+IHvYmVlQmcl/rv2AWIIEO5l1l22fcEAG3AsSxhUORT/eIakT8fMwzlQG7Oir6pbmnODStPB55N8dUzj8sFcBLo=
+X-Received: by 2002:a25:2fd2:0:b0:d19:824a:490e with SMTP id
+ v201-20020a252fd2000000b00d19824a490emr1243486ybv.31.1691632925276; Wed, 09
+ Aug 2023 19:02:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230728022447.1323563-1-namhyung@kernel.org> <ZMPMHNjX2IxsLbAe@kernel.org>
+ <CAM9d7cgqJatFn0tQVOxoQymFUruSzniPi5Okb1sotb6VLt+X_g@mail.gmail.com> <ZNOUb1Q5ifyLju/q@kernel.org>
+In-Reply-To: <ZNOUb1Q5ifyLju/q@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Thu, 10 Aug 2023 11:01:53 +0900
+Message-ID: <CAM9d7ci19a2dHD8EesqJZqmfCA8=MWe2FkecryV9nOEfwvvO6g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] perf build: Update build rule for generated files
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Anup Sharma <anupnewsmail@gmail.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Linus,
+On Wed, Aug 9, 2023 at 10:28 PM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Wed, Aug 09, 2023 at 03:56:17PM +0900, Namhyung Kim escreveu:
+> > On Fri, Jul 28, 2023 at 11:09 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > > Em Thu, Jul 27, 2023 at 07:24:46PM -0700, Namhyung Kim escreveu:
+> > > > Let's update the build rule to specify those cases explicitly to depend
+> > > > on the files in the output directory.
+>
+> > > > Note that it's not a complete fix and it needs the next patch for the
+> > > > include path too.
+>
+> > > Applied, testing it on the container builds.
+>
+> > I don't see these commits in the perf-tools{,-next} yet.
+>
+> 6 days  perf build: Include generated header files properly     Namhyung Kim    5       -9/+9
+> 6 days  perf build: Update build rule for generated files       Namhyung Kim    2       -0/+16
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/commit/?h=perf-tools-next&id=7822a8913f4c51c7d1aff793b525d60c3384fb5b
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/commit/?h=perf-tools-next&id=c7e97f215a4ad634b746804679f5937d25f77e29
+>
+> Did I miss something?
 
-	Please consider pulling,
+Oops, my bad.  I somehow overlooked the commits.
+Now I can see it in the perf-tools-next, sorry for the noise.
 
-Best regards,
-
-- Arnaldo
-
-The following changes since commit 52a93d39b17dc7eb98b6aa3edb93943248e03b2f:
-
-  Linux 6.5-rc5 (2023-08-06 15:07:51 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.5-3-2023-08-09
-
-for you to fetch changes up to 487ae3b42d1040b4cd5ff9754e7516b409204029:
-
-  perf stat: Don't display zero tool counts (2023-08-08 14:33:57 -0300)
-
-----------------------------------------------------------------
-perf tools fixes for v6.5: 3rd batch
-
-- Revert a patch that unconditionally resolved addresses to inlines in
-  callchains, something that was done before when DWARF mode was asked
-  for, but could as well be done when just frame pointers (the default)
-  was selected. This enriches the callchains with inlines but the way to
-  resolve it is gross right now, relying on addr2line, and even if we come
-  up with an efficient way of processing all the associated DWARF info for
-  a big file as vmlinux is, this has to be something people opt-in, as it
-  will still result in overheads, so revert it until we get this done in a
-  saner way.
-
-- Update the x86 msr-index.h header with the kernel original, no change
-  in tooling output, just addresses a tools/perf build warning.
-
-- Resolve a regression where special "tool events", such as
-  "duration_time" were being presented for all CPUs, when it only makes
-  sense to show it for the workload, that is, just once.
-
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-----------------------------------------------------------------
-Arnaldo Carvalho de Melo (2):
-      Revert "perf report: Append inlines to non-DWARF callchains"
-      tools arch x86: Sync the msr-index.h copy with the kernel sources
-
-Ian Rogers (1):
-      perf stat: Don't display zero tool counts
-
- tools/arch/x86/include/asm/msr-index.h | 1 +
- tools/perf/util/machine.c              | 5 -----
- tools/perf/util/stat-display.c         | 5 +++++
- 3 files changed, 6 insertions(+), 5 deletions(-)
+Thanks,
+Namhyung
