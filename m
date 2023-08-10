@@ -2,62 +2,68 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E914C001E0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 19:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3136AC001B0
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 20:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236487AbjHJT1a (ORCPT
+        id S234337AbjHJUBf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Aug 2023 15:27:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52964 "EHLO
+        Thu, 10 Aug 2023 16:01:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235878AbjHJT13 (ORCPT
+        with ESMTP id S232926AbjHJUBd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Aug 2023 15:27:29 -0400
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE47EC7
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 12:27:26 -0700 (PDT)
-Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-407db3e9669so67391cf.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 12:27:26 -0700 (PDT)
+        Thu, 10 Aug 2023 16:01:33 -0400
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 706D62112
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 13:01:32 -0700 (PDT)
+Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-40c72caec5cso7761cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 13:01:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1691695646; x=1692300446;
+        d=google.com; s=20221208; t=1691697691; x=1692302491;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zNnltR97BeMOnmf/YZYMujSXMH2ommF1rsHE9Oftg0w=;
-        b=m5swtl2RPkKGhH31c5dbSWWJzoE9Tb+6vSVU6lNJv/hCgc2tL5fjN/8xF3te1zxsz6
-         G+u5ltz59IfYdr/d1QWpN5VPjXVfRvNLzYsouwyNpVM2g3p6z0qam9cGkr3sO9ZqBqLG
-         2eJoNiqD6fbJfFYNl0pm/vkr4lMaFO+zhB8JnTEZcjfqa2kmsCMgO6xHGK7bHDwjgKGT
-         7NPrfmxSxNpf2CwJVFmW1PxppfQBppgY49YNTcjHAaiZbwqMPoIruJIyjdJG1zjF1SPc
-         eu3/hMX30UQaBEA6xZ0NDFGVq9AbTafsK0QJYzNAMRUUoq/Sv0H58lE8pE6z4ugBDaAM
-         c2vw==
+        bh=s3a6HnsOh4DT9Ujbqfy0w0JsFhQjH8Jgx+l1c+nZXaM=;
+        b=2ndBwu2BV7oFMLU5bffiVgeEgwKkXTn1nottU+EVbhMqW4iKDL/mvIrehIQQy8gAGM
+         3zzQJJBR6Wri6OFLwV66Ig1HQxgxytaNGoQHfGBQZinf8uTkzpA7j/BFYK+JFh7f2t48
+         bUWFsURrXI9uNMxo9aDpdgFFe5kTA8NVFQ+WS622jTazjTYcFTjI2xbAy78Ra1xic4Lm
+         huzNXhitbKnu56x3gV7/V7eW5DshWEd5X6hyACj+u10Py9859Wv+cE7uJVUzk0226nNb
+         DvHY2HfzU44DMrFVyrS68KC7F9TcVreqO3xPPvpYjT0v1L5efBTIcRaTGuNoD55V1bT5
+         eTPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691695646; x=1692300446;
+        d=1e100.net; s=20221208; t=1691697691; x=1692302491;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zNnltR97BeMOnmf/YZYMujSXMH2ommF1rsHE9Oftg0w=;
-        b=Aq2Q6fxbmAzs1ETjZHdm9VCRDUrzK8rV0bk+lE/o01uBimOrydxYcC9b0ON5n5T/1C
-         +wtU0Qq89f/lJUJZ0zm9owxxOm+EsLKGGz47xByPlftBhCKKHBhVmsjssL1+/5OBGwqT
-         S+joJZrCSTCKLXBu1Wsy0FPbmgz6qXnHTcQ047ywGYRavKcGFCsJnc2dGIKX3NBvjD0u
-         avXDDyJK7gxh3P7LtiqhavhRCyb5PZg3fLmd6E53VxwNwsyISsynTDRMLERkXhm+2pwt
-         WcoM525l7hFml5IG1c6Sv9mN222KiH3NpGDY170U6kb+HDfv/iX9H+UJWfCMf1+YZ2Yq
-         3yRA==
-X-Gm-Message-State: AOJu0YxBQOB0nqYayoxSiDqB7JOa5XQ/y3Brlj9e9ENs1yswoAbQOAiW
-        QoqgDFND7g25Hmyu/OLfPzb32H4Y1mmkL3gjwsVpJS2UKdMlx/Lacpr0WQ==
-X-Google-Smtp-Source: AGHT+IGVCtCr21eEdt4tIfAgdEow8iRngkIScUU7nCQAlw9xC6j2AxFQLwF17ebcJCOX84KXLOlsJW8OyMKgkV5yZVk=
-X-Received: by 2002:ac8:7f8e:0:b0:40f:dc70:fde2 with SMTP id
- z14-20020ac87f8e000000b0040fdc70fde2mr61719qtj.26.1691695646021; Thu, 10 Aug
- 2023 12:27:26 -0700 (PDT)
+        bh=s3a6HnsOh4DT9Ujbqfy0w0JsFhQjH8Jgx+l1c+nZXaM=;
+        b=NaaJukXTQfaU2q/kINj9EYlEtGVlB0l+8pFuBAn2xlvuQ3orvlHucOqC71OocW5KaB
+         GlDv7zoypygVmna9j6pQkofuG5bZiG+R90kw2Qs3P16HitY9rGCZVln/MdwFpGtY1Gqj
+         BiQhSHerU8DCCmAAkzNr4fH9IYAG+fFDOMtaH8LKMF0gsAmUe/b+jgprkHK8YU9rQj3e
+         Ejk02gFdynLw2Vlng8qIGrsQtg6H9j3d8+QpIrXtVlWf6VjaCBiVlOSyyvUZVioSkGKI
+         2hWrdWPMnTmyEsXys3H43M5PBAnzxstRgwPtlvR36UTkayzYGDrvS47rjobYsLNb7z72
+         HtjA==
+X-Gm-Message-State: AOJu0YxPPd5JrHub/6+KAMOVJY0dUx0WEzBwIdDDsv3nN9PBoLEZRala
+        bgHWT/RNDWxPJsgE9itEq+qm8+/Az2CF8cpp+bMvgQ==
+X-Google-Smtp-Source: AGHT+IEh1ar6vsvTxB784befVYzFQXdBfJs7Ecdw+6d5JHLlnXTAXE20SWwRi0jhJpu9Q0RNQFdghIAI12a8Bf7T8wY=
+X-Received: by 2002:ac8:5acc:0:b0:40f:d1f4:aa58 with SMTP id
+ d12-20020ac85acc000000b0040fd1f4aa58mr72140qtd.8.1691697691298; Thu, 10 Aug
+ 2023 13:01:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230807111631.3033102-1-john.g.garry@oracle.com> <373e8253-656c-84dc-c05-b578e3725d@os.amperecomputing.com>
-In-Reply-To: <373e8253-656c-84dc-c05-b578e3725d@os.amperecomputing.com>
+References: <ZNPocw1rC6d/v5RV@yoga>
+In-Reply-To: <ZNPocw1rC6d/v5RV@yoga>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 10 Aug 2023 12:27:14 -0700
-Message-ID: <CAP-5=fVsePTVU2qeeUzVFkWA7Oxj6bgSq+yWzO=t3y283vOgOw@mail.gmail.com>
-Subject: Re: [PATCH] perf jevents: Raise exception for no definition of a arch
- std event
-To:     Ilkka Koskinen <ilkka@os.amperecomputing.com>
-Cc:     John Garry <john.g.garry@oracle.com>, acme@kernel.org,
+Date:   Thu, 10 Aug 2023 13:01:20 -0700
+Message-ID: <CAP-5=fVJyx71LwbNRZqMp3qg=uufVLiaZ+q4-JzAoaE3HcJmUg@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Add support for testing gecko script
+To:     Anup Sharma <anupnewsmail@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -65,92 +71,186 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Aug 9, 2023 at 10:11=E2=80=AFPM Ilkka Koskinen
-<ilkka@os.amperecomputing.com> wrote:
+On Wed, Aug 9, 2023 at 12:26=E2=80=AFPM Anup Sharma <anupnewsmail@gmail.com=
+> wrote:
 >
+> This commit add support for testing gecko script. The test checks
+> for the presence of required sections such as "meta," "threads,"
+> "samples," "frameTable," "stackTable," "stringTable," and
+> "pausedRanges" which are few essential parameter to be present
+> in output file. Also it verifies the validity of the JSON format
+> using Python's JSON library if available.
 >
-> Hi John,
->
-> On Mon, 7 Aug 2023, John Garry wrote:
-> > Recently Ilkka reported that the JSONs for the AmpereOne arm64-based
-> > platform included a dud event which referenced a non-existent arch std
-> > event [0].
->
-> I wish I had found the bug in my patch a long time ago but, in fact, it
-> was Dave Kleikamp who initially pointed it out to me and figured out the
-> difference between jevents.c and jevents.py when porting the patch to 5.1=
-5
-> kernel.
->
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2023-June/844874.ht=
-ml
->
-> >
-> > Previously in the times of jevents.c, we would raise an exception for t=
-his.
-> >
-> > This is still invalid, even though the current code just ignores such a=
-n
-> > event.
-> >
-> > Re-introduce code to raise an exception for when no definition exists t=
-o
-> > help catch as many invalid JSONs as possible.
-> >
-> > [0] https://lore.kernel.org/linux-perf-users/9e851e2a-26c7-ba78-cb20-be=
-4337b2916a@oracle.com/
-> >
-> > Signed-off-by: John Garry <john.g.garry@oracle.com>
->
-> Thanks for the patch! I quickly tested it and it worked as expected. Just
-> in case this is needed:
->
-> Tested-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+> Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Hi Anup,
+
+I was trying to test this and grabbing other patches didn't resolve
+the issue I see:
+```
+111: perf script gecko test                                          :
+--- start ---
+test child forked, pid 2886031
+./tools/perf/tests/shell/test_gecko.sh: line 120: prepare_perf_data:
+command not found
+Testing Gecko Command
+ Error: Couldn't find script `gecko'
+...
+```
+
+It can be useful when sending a patch like this to, under a ---, list
+patches necessary for testing.
 
 Thanks,
 Ian
 
-> Cheers, Ilkka
+> ---
+>  tools/perf/tests/shell/test_gecko.sh | 131 +++++++++++++++++++++++++++
+>  1 file changed, 131 insertions(+)
+>  create mode 100644 tools/perf/tests/shell/test_gecko.sh
 >
-> > ---
-> > Please do not apply before [0], above.
-> >
-> > diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/j=
-events.py
-> > index 8cd561aa606a..98cccc3fcbbd 100755
-> > --- a/tools/perf/pmu-events/jevents.py
-> > +++ b/tools/perf/pmu-events/jevents.py
-> > @@ -347,12 +347,15 @@ class JsonEvent:
-> >       if self.desc and not self.desc.endswith('. '):
-> >         self.desc +=3D '. '
-> >       self.desc =3D (self.desc if self.desc else '') + ('Unit: ' + self=
-.pmu + ' ')
-> > -    if arch_std and arch_std.lower() in _arch_std_events:
-> > -      event =3D _arch_std_events[arch_std.lower()].event
-> > -      # Copy from the architecture standard event to self for undefine=
-d fields.
-> > -      for attr, value in _arch_std_events[arch_std.lower()].__dict__.i=
-tems():
-> > -        if hasattr(self, attr) and not getattr(self, attr):
-> > -          setattr(self, attr, value)
-> > +    if arch_std:
-> > +      if arch_std.lower() in _arch_std_events:
-> > +        event =3D _arch_std_events[arch_std.lower()].event
-> > +        # Copy from the architecture standard event to self for undefi=
-ned fields.
-> > +        for attr, value in _arch_std_events[arch_std.lower()].__dict__=
-.items():
-> > +          if hasattr(self, attr) and not getattr(self, attr):
-> > +            setattr(self, attr, value)
-> > +      else:
-> > +        raise argparse.ArgumentTypeError('Cannot find arch std event:'=
-, arch_std)
-> >
-> >     self.event =3D real_event(self.name, event)
-> >
-> > --
-> > 2.35.3
-> >
-> >
+> diff --git a/tools/perf/tests/shell/test_gecko.sh b/tools/perf/tests/shel=
+l/test_gecko.sh
+> new file mode 100644
+> index 000000000000..457c85474a62
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/test_gecko.sh
+> @@ -0,0 +1,131 @@
+> +#!/bin/bash
+> +# perf script gecko test
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +err=3D0
+> +
+> +cleanup() {
+> +  rm -rf gecko_profile.json
+> +  trap - exit term int
+> +}
+> +
+> +trap_cleanup() {
+> +  cleanup
+> +  exit 1
+> +}
+> +trap trap_cleanup exit term int
+> +
+> +report() {
+> +    if [ "$1" =3D 0 ]; then
+> +        echo "PASS: \"$2\""
+> +    else
+> +        echo "FAIL: \"$2\" Error message: \"$3\""
+> +        err=3D1
+> +    fi
+> +}
+> +
+> +find_str_or_fail() {
+> +    grep -q "$1" <<< "$2"
+> +    if [ "$?" !=3D 0 ]; then
+> +        report 1 "$3" "Failed to find required string:'${1}'."
+> +    else
+> +        report 0 "$3"
+> +    fi
+> +}
+> +
+> +# To validate the json format, check if python is installed
+> +if [ "$PYTHON" =3D "" ] ; then
+> +       if which python3 > /dev/null ; then
+> +               PYTHON=3Dpython3
+> +       elif which python > /dev/null ; then
+> +               PYTHON=3Dpython
+> +       else
+> +               echo Skipping JSON format check, python not detected plea=
+se set environment variable PYTHON.
+> +               PYTHON_NOT_AVAILABLE=3D1
+> +       fi
+> +fi
+> +
+> +# Check execution of perf script gecko command
+> +test_gecko_command() {
+> +    echo "Testing Gecko Command"
+> +    perf script gecko -a sleep 0.5
+> +       # Store the content of the file in the 'out' variable
+> +    out=3D$(< "gecko_profile.json")
+> +       # Get the length of the gecko_profile.json output in 'out'
+> +       length=3D${#out}
+> +       if [ "$length" -gt 0 ]; then
+> +        echo "PASS: \"Gecko Command\""
+> +    else
+> +        echo "FAIL: \"Gecko Command\""
+> +        err=3D1
+> +        exit
+> +    fi
+> +}
+> +
+> +# with the help of python json libary validate the json output
+> +if [ "$PYTHON_NOT_AVAILABLE" !=3D "0" ]; then
+> +       validate_json_format()
+> +       {
+> +               if [ "$out" ] ; then
+> +                       if [ "$PYTHON -c import json; json.load($out)" ];=
+ then
+> +                               echo "PASS: \"The file contains valid JSO=
+N format\""
+> +                       else
+> +                               echo "FAIL: \"The file does not contain v=
+alid JSON format\""
+> +                               err=3D1
+> +                               exit
+> +                       fi
+> +               else
+> +                       echo "FAIL: \"File not found\""
+> +                       err=3D2
+> +                       exit
+> +               fi
+> +       }
+> +fi
+> +
+> +# validate output for the presence of "meta".
+> +test_meta() {
+> +    find_str_or_fail "meta" "$out" "${FUNCNAME[0]}"
+> +}
+> +
+> +# validate output for the presence of "threads".
+> +test_threads() {
+> +       find_str_or_fail "threads" "$out" "${FUNCNAME[0]}"
+> +}
+> +
+> +# validate output for the presence of "samples".
+> +test_samples() {
+> +       find_str_or_fail "samples" "$out" "${FUNCNAME[0]}"
+> +}
+> +
+> +# validate output for the presence of "frameTable".
+> +test_frametable() {
+> +       find_str_or_fail "frameTable" "$out" "${FUNCNAME[0]}"
+> +}
+> +
+> +# validate output for the presence of "stackTable".
+> +test_stacktable() {
+> +       find_str_or_fail "stackTable" "$out" "${FUNCNAME[0]}"
+> +}
+> +
+> +# validate output for the presence of "stringTable"
+> +test_stringtable() {
+> +       find_str_or_fail "stringTable" "$out" "${FUNCNAME[0]}"
+> +}
+> +
+> +# validate output for the presence of "pausedRanges".
+> +test_pauseranges(){
+> +       find_str_or_fail "pausedRanges" "$out" "${FUNCNAME[0]}"
+> +}
+> +
+> +prepare_perf_data
+> +test_gecko_command
+> +validate_json_format
+> +test_meta
+> +test_threads
+> +test_samples
+> +test_frametable
+> +test_stacktable
+> +test_stringtable
+> +test_pauseranges
+> +cleanup
+> +exit $err
+> --
+> 2.34.1
+>
