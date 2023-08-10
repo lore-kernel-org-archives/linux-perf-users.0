@@ -2,131 +2,178 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EF3C001B0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 22:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A72BDC001B0
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 22:07:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231946AbjHJWDF (ORCPT
+        id S230032AbjHJWHU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Aug 2023 18:03:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54478 "EHLO
+        Thu, 10 Aug 2023 18:07:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231681AbjHJWDE (ORCPT
+        with ESMTP id S229831AbjHJWHT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Aug 2023 18:03:04 -0400
-Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54A1D30C7
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 15:02:51 -0700 (PDT)
-Received: by mail-il1-x12e.google.com with SMTP id e9e14a558f8ab-3490b737f9aso20805ab.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 15:02:51 -0700 (PDT)
+        Thu, 10 Aug 2023 18:07:19 -0400
+Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88B172123
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 15:07:18 -0700 (PDT)
+Received: by mail-il1-x12a.google.com with SMTP id e9e14a558f8ab-3493d0f785dso17645ab.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 15:07:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1691704970; x=1692309770;
+        d=google.com; s=20221208; t=1691705238; x=1692310038;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WirRslw/0aDPkGhNScoiXM3zTY4G823fT91ETu+Lq6E=;
-        b=UkdroNGwQrguLsDBgIEgrLvfKjn25h5tidmJjeYWOg8t5dssZ1517XjbYhdh/tiPNO
-         EBpB6lGHrYvSxe5RzWSp9mAptNk9c7Meu+AWFWKissa9cQSd6+yCsJvq60LFZ+jCOIVe
-         Rr9sVB8JIfibwVkOG/suomrjoOrY2Geo4BFVDD8CLiVSW1pNChr4tcICXZFee5TT8RAD
-         PTG3bqf+yehy7fQNyjY/+xRXxvjckVSUSD5M+mjFhnQ5t5KXv1ApBtrP6GoofG9Sl8Hn
-         9PCfxaJ/p5/oV6OwPWYN3qCFQUI38smFiA3zq2al3YjMc6Mg2brfo88yQImylhrW4ewn
-         S55Q==
+        bh=aluvHDRByGNNDaSNSGZTBrI1PCu1IS2vHH7drDMeXMo=;
+        b=O5WOos64AEFan/sd6CK+w6zp9XUr4hfkOs73N2iQl4GwN8cYDtWCstWXzD/xDmlTSM
+         se4Ndhb24NLc2DjT/7f1sbBwLnNR1c6ZmhC++UXeEQWEYqw9DJW3CZXHws1p+JQouOve
+         V/+W/pHKWDugRH0PFfidlu6J+Db5jvQ6EqrNZRHX2GB5+pB3xCxz4u0zhp/iYelLgkr0
+         tgicCMFI1LdB9+x3IWZCcK2UJ9mdD1oxeA7tiHu+CmigQK0H1IZjVuc1unHy2TX4FGyb
+         rOTZw+4610e3GwlFGQ65BvJFJx1Ak11y5idjZ5qBfJPBP6cu26IXSOv4sj/yEfa6CYAp
+         qqdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691704970; x=1692309770;
+        d=1e100.net; s=20221208; t=1691705238; x=1692310038;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WirRslw/0aDPkGhNScoiXM3zTY4G823fT91ETu+Lq6E=;
-        b=WcrfQ0i8RU78KKFGQblniK4oXxxdLWaFgYH1BTQhA9kSxhO0LhV0xAsPIHPKp1AioU
-         DEGNIXWr6dLmi1HE2FhjVupDNmCKXl8hMJI6fSdpsX4P+kgT9GmVfxg1bscHoaBirBLO
-         49IY99xlVYpUTrcEhSge4cCYj3xeyxGyowJCUjuuvgq/GwSX2H1ueMHZlCiT76Ims9z9
-         v3gQLLa5yRWuoc62Yat1BcGiuybtCFPWgJUq88ffE6xh6d5NhCI/PbSnb2iWcIYmV7lt
-         oP6y98jJ5mnEBNovqBJD1j1LRPgmywYDrRoJBH2LGTfphrTeuahe/Y0PrV3xDD9Rbdda
-         f0gg==
-X-Gm-Message-State: AOJu0YyAIQJG2pDkcgwQ/EFSdnTL2e49krICi7ZL9253z/Dm28n6mtE3
-        UP9I0M/wpwWYcx/XMA66nV2JJlhODDb1ZibTZ1Z+oA==
-X-Google-Smtp-Source: AGHT+IEVz2QXUNlQHls+sgcBM1Gy6AYEvav8ViVH8f0MUbcqC3NuL9+xkH/d3pXnSUlrKBHYSG/nFcIRqELsmKHUvDg=
-X-Received: by 2002:a05:6e02:1987:b0:346:1919:7c9b with SMTP id
- g7-20020a056e02198700b0034619197c9bmr112579ilf.26.1691704970628; Thu, 10 Aug
- 2023 15:02:50 -0700 (PDT)
+        bh=aluvHDRByGNNDaSNSGZTBrI1PCu1IS2vHH7drDMeXMo=;
+        b=iPlj6mwb2K/aQwmY33e7u6+KbR2dbS4Fzr6QusTYRBdJHs0o2Yh0oRBbDpTZM7TmyG
+         QWnAEd9aWww00XM6wIWXhI2/CD2GUdbCRY7U8GQvAF96rCvycnK+wJ2vki4eOo24vGd3
+         I/7UIbDo53TcPadJclbFC3AB9pfS5y0Q+730B9TrUGVUwbDuYJHyJ/dULlS/B/DghX5J
+         3l4QLjfyPnMJoTl3NJxd/8/tti5SLNifDqn2E/SNeXlhfFg9yecOq9fhNnvWl38apOzr
+         R/DE/pLwmJWivRak0vNmTd6U5VGQUVX8LwM0YFnL05CXd6oHGOJjD9rAcvQK8affJcZT
+         xxfA==
+X-Gm-Message-State: AOJu0Yw8/vVI5yQXu80DMC5Kzy1KIw6vDimAVAjtoat3PLRHj3hyjdFT
+        eNffTqZIqySw1ygiRjs8jvNR2M+PJIyWwVITB3v5sg==
+X-Google-Smtp-Source: AGHT+IFDL+TfDeXb9KtUBUaYqM4JxMDgapXt4frF6nwQhqAShn/Ft9pBMlqDRC3GKWwYDQcWfkMGfsJqoxJvwW8l6pI=
+X-Received: by 2002:a05:6e02:160a:b0:348:8674:6706 with SMTP id
+ t10-20020a056e02160a00b0034886746706mr109307ilu.10.1691705237793; Thu, 10 Aug
+ 2023 15:07:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230803-fix-typo-v1-1-b794378d594e@manank.me> <ZMwRzQC+wBgJpDfr@kernel.org>
-In-Reply-To: <ZMwRzQC+wBgJpDfr@kernel.org>
+References: <20230725150347.3479291-1-tmricht@linux.ibm.com> <ZMpoB1bYk+KfTDJA@kernel.org>
+In-Reply-To: <ZMpoB1bYk+KfTDJA@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 10 Aug 2023 15:02:37 -0700
-Message-ID: <CAP-5=fW_bC1s+43My1cXmF_og7SE4=8K=ZZn82WNSGqAo849oQ@mail.gmail.com>
-Subject: Re: [PATCH] tools: perf: pmu-events: Fix typo poiint->point
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Edward <edward.baker@intel.com>
-Cc:     Manank Patel <manank@manank.me>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        Jens Schleusener <Jens.Schleusener@fossies.org>
+Date:   Thu, 10 Aug 2023 15:07:05 -0700
+Message-ID: <CAP-5=fUk4=4FNj6=zVKaoELL7duL-DzyRp1cAPQSYhFSKV1kow@mail.gmail.com>
+Subject: Re: [PATCH 1/2 Resend] perf build: Update feature check for clang and llvm
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        wangnan0@huawei.com, jolsa@kernel.org, svens@linux.ibm.com,
+        gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Aug 3, 2023 at 1:45=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
+On Wed, Aug 2, 2023 at 7:28=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
 l.org> wrote:
 >
-> Em Thu, Aug 03, 2023 at 11:27:30AM +0530, Manank Patel escreveu:
-> > Fix typo in file floating-point.json in /arch/x86/westmereep-dp
+> Em Tue, Jul 25, 2023 at 05:03:46PM +0200, Thomas Richter escreveu:
+> > Perf build auto-detects features and packages already installed
+> > for its build. This is done in directory tools/build/feature. This
+> > directory contains small sample programs. When they successfully
+> > compile the necessary prereqs in form of libraries and header
+> > files are present.
+> >
+> > Such a check is also done for llvm and clang. And the checks fail.
+> >
+> > Fix this and update to the latest C++ standard and use the
+> > new library provided by clang (which contains new packaging)
+> > see this link for reference:
+> >  https://fedoraproject.org/wiki/Changes/Stop-Shipping-Individual-Compon=
+ent-Libraries-In-clang-lib-Package
+> >
+> > Output before:
+> >  # rm -f ./test-clang.bin; make test-clang.bin; ./test-clang.bin; \
+> >       ll test-clang.make.output
+> >  g++  -MD -Wall -Werror -o test-clang.bin test-clang.cpp \
+> >               > test-clang.make.output 2>&1 -std=3Dgnu++14 \
+> >       -I/usr/include          \
+> >       -L/usr/lib64            \
+> >       -Wl,--start-group -lclangBasic -lclangDriver    \
+> >         -lclangFrontend -lclangEdit -lclangLex        \
+> >         -lclangAST -Wl,--end-group                    \
+> >       -lLLVM-16       \
+> >                       \
+> >       > test-clang.make.output 2>&1
+> >  make: *** [Makefile:356: test-clang.bin] Error 1
+> >  -bash: ./test-clang.bin: No such file or directory
+> >  -rw-r--r--. 1 root root 252041 Jul 12 09:56 test-clang.make.output
+> >  #
+> >
+> > File test-clang.make.output contains many lines of unreferenced
+> > symbols.
+> >
+> > Output after:
+> >  # rm -f ./test-clang.bin; make test-clang.bin; ./test-clang.bin; \
+> >       cat test-clang.make.output
+> >  g++  -MD -Wall -Werror -o test-clang.bin test-clang.cpp \
+> >        > test-clang.make.output 2>&1 -std=3Dgnu++17     \
+> >       -I/usr/include          \
+> >       -L/usr/lib64            \
+> >       -Wl,--start-group -lclang-cpp -Wl,--end-group   \
+> >       -lLLVM-16       \
+> >                       \
+> >       > test-clang.make.output 2>&1
+> >  #
 >
-> AFAIK these are generated using a tool, so the fix needs to go to the
-> file from where the JSON files are generated, Ian?
+> Thanks, tested and applied. Added some notes about needing to have
+> 'llvm-devel' and 'clang-devel' installed to do the tests.
+>
+> - arnaldo
+>
+> > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 
-Yes, these are generated by the script:
-https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
-Added Edward Baker at Intel who can correct these issues at source.
+Note, the libllvm and clang support was needed for BPF events which I
+propose removing in:
+https://lore.kernel.org/lkml/20230810184853.2860737-1-irogers@google.com/
+(Sorry, forgot to add Thomas to the to/cc line of those changes).
 
 Thanks,
 Ian
 
-> - Arnaldo
->
-> > Reported-by: Jens Schleusener <Jens.Schleusener@fossies.org>
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D205891
-> > Signed-off-by: Manank Patel <manank@manank.me>
 > > ---
-> >  tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json | 2 +=
--
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >  tools/build/feature/Makefile | 10 ++++------
+> >  1 file changed, 4 insertions(+), 6 deletions(-)
 > >
-> > diff --git a/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-poin=
-t.json b/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json
-> > index c03f8990fa82..196ae1d9b157 100644
-> > --- a/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json
-> > +++ b/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json
-> > @@ -8,7 +8,7 @@
-> >          "UMask": "0x1"
-> >      },
-> >      {
-> > -        "BriefDescription": "X87 Floating poiint assists for invalid i=
-nput value (Precise Event)",
-> > +        "BriefDescription": "X87 Floating point assists for invalid in=
-put value (Precise Event)",
-> >          "EventCode": "0xF7",
-> >          "EventName": "FP_ASSIST.INPUT",
-> >          "PEBS": "1",
+> > diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefil=
+e
+> > index 2cd6dbbee088..3184f387990a 100644
+> > --- a/tools/build/feature/Makefile
+> > +++ b/tools/build/feature/Makefile
+> > @@ -340,7 +340,7 @@ $(OUTPUT)test-jvmti-cmlr.bin:
+> >       $(BUILD)
 > >
-> > ---
-> > base-commit: 5d0c230f1de8c7515b6567d9afba1f196fb4e2f4
-> > change-id: 20230803-fix-typo-3cb207284310
+> >  $(OUTPUT)test-llvm.bin:
+> > -     $(BUILDXX) -std=3Dgnu++14                                 \
+> > +     $(BUILDXX) -std=3Dgnu++17                                 \
+> >               -I$(shell $(LLVM_CONFIG) --includedir)          \
+> >               -L$(shell $(LLVM_CONFIG) --libdir)              \
+> >               $(shell $(LLVM_CONFIG) --libs Core BPF)         \
+> > @@ -348,17 +348,15 @@ $(OUTPUT)test-llvm.bin:
+> >               > $(@:.bin=3D.make.output) 2>&1
 > >
-> > Best regards,
+> >  $(OUTPUT)test-llvm-version.bin:
+> > -     $(BUILDXX) -std=3Dgnu++14                                 \
+> > +     $(BUILDXX) -std=3Dgnu++17                                 \
+> >               -I$(shell $(LLVM_CONFIG) --includedir)          \
+> >               > $(@:.bin=3D.make.output) 2>&1
+> >
+> >  $(OUTPUT)test-clang.bin:
+> > -     $(BUILDXX) -std=3Dgnu++14                                 \
+> > +     $(BUILDXX) -std=3Dgnu++17                                 \
+> >               -I$(shell $(LLVM_CONFIG) --includedir)          \
+> >               -L$(shell $(LLVM_CONFIG) --libdir)              \
+> > -             -Wl,--start-group -lclangBasic -lclangDriver    \
+> > -               -lclangFrontend -lclangEdit -lclangLex        \
+> > -               -lclangAST -Wl,--end-group                    \
+> > +             -Wl,--start-group -lclang-cpp -Wl,--end-group   \
+> >               $(shell $(LLVM_CONFIG) --libs Core option)      \
+> >               $(shell $(LLVM_CONFIG) --system-libs)           \
+> >               > $(@:.bin=3D.make.output) 2>&1
 > > --
-> > Manank Patel <manank@manank.me>
+> > 2.41.0
 > >
 >
 > --
