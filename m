@@ -2,79 +2,62 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CADF8C001B0
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Aug 2023 14:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A37EBEB64DD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Aug 2023 15:15:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235402AbjHKOyn (ORCPT
+        id S232749AbjHKPPo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Aug 2023 10:54:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35690 "EHLO
+        Fri, 11 Aug 2023 11:15:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232651AbjHKOym (ORCPT
+        with ESMTP id S230127AbjHKPPn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Aug 2023 10:54:42 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F12D30CF;
-        Fri, 11 Aug 2023 07:54:41 -0700 (PDT)
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37BDH5Nr005336;
-        Fri, 11 Aug 2023 14:53:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=2Jm+PPVNoORZBuXFOmo6RQmoYr/XOU15qKJxudI7wUs=;
- b=lrPbwWn3/cc1aLbRDH0mP+E9qA5W40eWlg7s2jHzg1N8BwY1k7MCxGk4gySDV4LEXzmy
- Fj/aRrr62jmpp5IP/qMkvABdoHR0iAH1jl/PrNyd2ynUOwd9lIF7J9tN09/jtzahgQU5
- d+C8ho4bKxeIhpV7xtVCfL4H/7EYxHNY6UmBelxR9pt3NlUIxSjgintdyv+4207Y/PW/
- 45gAqKvLMYSuffXiURKvHttMYT+kcHoh36ocJBUmI6YvVmiV7lDrjvf1/mK+8bF+kOma
- f/gmVcaUoZxSH5nD9czSMptZAlZ/9Wy2FQHLzhJJLCfi2O/67Wh3BJs3KQpfxf3k4X68 pw== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3sd8y497dr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Aug 2023 14:53:57 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 37BETK1o033480;
-        Fri, 11 Aug 2023 14:53:56 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2047.outbound.protection.outlook.com [104.47.66.47])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3s9cvaf5rx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Aug 2023 14:53:56 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EPVtr3vumG8HGwfxN9S7lXV3CjOBNxLGRnu5PGIRA1HkM5wao0BNbhtX9dzbfgzZS3gXaav9fZ2tsY9PmsmPVwavnb0wt2bN6Cp/dG384pTJQRkNbS4SJ5y917DtDg/ldz7dW0EDASi+vqza+3JxfRifvQDGZ0YZnSR2MehQKS4bMK2gYw8NWt4RN0TZDrvPItoJ4dbd3ICXlaLkEgAyNWEJihKiyLZEQte9kf0SXvIcxxytsp3xAkF+9hXYDJO528HElWtXz8hly0phztISN8u8tyR7888uCtfF9ylFSwyKiWjGxRQ+HWgmLNx/2HzeL3XSCydPqmxXj5OFu4x7mg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2Jm+PPVNoORZBuXFOmo6RQmoYr/XOU15qKJxudI7wUs=;
- b=h+AG6CcdsIiSrOQ5eUeXLuKQYXNbSNYIvjFNALX0GfSKmOPpCbYwazAELcfvBVUaa1dBKZIRt1AkP6lYBDcHoFjV8F05YIQK9i+4W2agOn0yvXqC97Q+i8BHt5vMMKFUbvIA7HNunjpsAPYfLTaipLb9HqcOA3qQtNrt3NYyJh1F1hCY9M5703zBiTYkdvXLYhbaeo/TV1NA5DowQG8d3MlfSS3E9CG844l0pbqMzn4tl43wSGtPmbqdQV98nYGjCaq20yCSwU+n8z9A+m5T8bXffJoKNsw5GcxewCOrldSF/sKPg5jPQFRuQN1Zlm3fimkLr66x2RKpHBPdakko+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+        Fri, 11 Aug 2023 11:15:43 -0400
+Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 990E130C4
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Aug 2023 08:15:42 -0700 (PDT)
+Received: by mail-qt1-x836.google.com with SMTP id d75a77b69052e-40c72caec5cso237641cf.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Aug 2023 08:15:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2Jm+PPVNoORZBuXFOmo6RQmoYr/XOU15qKJxudI7wUs=;
- b=nV07OFjMyDgCp0LlxcDvYkTDpQOLun7ka5KqboIGu6LbDACeOV4/qMhSOraqIsoIuroiKfP9W5nlkT3/+27tzDoAmI/I4dmfZ+XhX+LYix+I7E4awGYrj8G1W1X/DITqr25NKaOHDw5Ht6U+2/vLNVMqtNRRlAHf6QurFyYli/M=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by IA0PR10MB7256.namprd10.prod.outlook.com (2603:10b6:208:3df::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.30; Fri, 11 Aug
- 2023 14:53:53 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::ebfd:c49c:6b8:6fce]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::ebfd:c49c:6b8:6fce%6]) with mapi id 15.20.6652.029; Fri, 11 Aug 2023
- 14:53:53 +0000
-Message-ID: <3415f9ca-72bc-9200-04ac-3848bee09733@oracle.com>
-Date:   Fri, 11 Aug 2023 15:53:49 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH v5 4/6] perf vendor events arm64: Update scale units and
- descriptions of common topdown metrics
-To:     James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, irogers@google.com,
-        renyu.zj@linux.alibaba.com
-Cc:     Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        d=google.com; s=20221208; t=1691766942; x=1692371742;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CCQOMCIJ3ODl+wGkuZQNLRUnlNxhV/C4QcKoC6aSRCU=;
+        b=nxhadB45gvyyW3RU+s6Rjz4Qte+JR0MKkNMB2g7qtsW9MX8Lpkg7dlLvDPUs+fmZ0t
+         7mE8bA0q+dcfIzEw6ieEuh2LuGBzYnuEcMlRzOpUz7+5ZGw0QZbiki7QNkTK29hhKcbs
+         ceq8Ek6TN+VwUTydTCjLXGsZUlo/dFjqOMvsdKlL1mK+v1RcDSFmPUErQFvLymt5wN0c
+         WFLQr2toFDRqSqFQx9vMdOVUso0vm/+bUBdFfGQNBbkd0N/zxgSsLDFB5L3GaljhIg87
+         zAL1drLoxBy8Eh9I7vcXFJQ+fuO5NeHglD5U7QOHHJ0FbLzikCrYF2FVaJA71gmxUPNn
+         EDoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691766942; x=1692371742;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CCQOMCIJ3ODl+wGkuZQNLRUnlNxhV/C4QcKoC6aSRCU=;
+        b=fCkbhk89E+z9b080fpRL/UnzuKGkzAg733biMMxxCzc2jd6GtM1VMjb0l8wlttHIEs
+         R7itpqhDMqDJNg4TIX+jlZFnildUZztqiC+77oPMzlnd/e6Ety1EcHhlh85K5MeBKoSW
+         kDK3B2Y9AwCs52UKaMyErEeuPd2pLRFMzCPwjJbAX4YuS8YFFJ/FmR6Xa4VcwqXyiYXB
+         JP79ZTyWRL4zycdjbj+Vh9rDDbjbvM+mEpDZCKdsdejpuKEsmJm5oQRcFx0YhIwnODlI
+         kzNP7jAWEBIvTxHgL7YBsIejL2AjwQdyNpoPqwvZ90l+MBsoAbeN0qrtZrxMpDdUqFVg
+         5MAw==
+X-Gm-Message-State: AOJu0YzvqwlxhWfVClYQHHU/0qZUhSu07lUeQF1v7KpqULoJQHv9qKUq
+        teIjtwWC/BFiRoAMnAqlNZKcXuXKe8Dc2tTQE06P0Q==
+X-Google-Smtp-Source: AGHT+IFAo1gfZpJm2w3fztRZ61lsrzHk0CI8mcd0eQ6JVoajj7kFVWXv4p9cq7MfOaNJMxVjMWV8oW3hL99mMtFDo3w=
+X-Received: by 2002:a05:622a:1888:b0:3f5:2006:50f1 with SMTP id
+ v8-20020a05622a188800b003f5200650f1mr240726qtc.12.1691766941556; Fri, 11 Aug
+ 2023 08:15:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230810214952.2934029-1-irogers@google.com> <20230810214952.2934029-2-irogers@google.com>
+ <ac57e637-7281-59b8-5658-3195e6d335f5@oracle.com>
+In-Reply-To: <ac57e637-7281-59b8-5658-3195e6d335f5@oracle.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 11 Aug 2023 08:15:30 -0700
+Message-ID: <CAP-5=fXETrt00wNVR6JifpHAF2kYHF9WU1z8uVfo+Gr7jw1S+g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] perf pmus: Sort pmus by name then suffix
+To:     John Garry <john.g.garry@oracle.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -82,136 +65,164 @@ Cc:     Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Kan Liang <kan.liang@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
         Kajol Jain <kjain@linux.ibm.com>,
-        Nick Forrington <nick.forrington@arm.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        Sohom Datta <sohomdatta1@gmail.com>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
-References: <20230811144017.491628-1-james.clark@arm.com>
- <20230811144017.491628-5-james.clark@arm.com>
-Content-Language: en-US
-From:   John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <20230811144017.491628-5-james.clark@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0395.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:18f::22) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|IA0PR10MB7256:EE_
-X-MS-Office365-Filtering-Correlation-Id: 90c3582c-8b44-403a-7a7e-08db9a7ac7f9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: r0NqWir8h+brIGxreb5jiwnPoq1EKpyNXI5A4iqfE9OlnlUWe/REZ9T7pTEm7lZoJNDi31G2DBrPMs26UwwRpiRIsL4JkC88V3j8GMK+CUi2rfpWWoL82GirVf/AXb9ZlkAdE6v2q1bRp4ps7fxPD/ySAdWgzJTmUtV8XBzbTv8KKSkDpZOfHBxvdwfeJC9en5k9pJRW3Tv6BwR/Ltdzf0kkMa8+xNCmnmYX0t8zxRZaoKIZo7q64ya98lAjkGngBUzKm1dTOT1Z2dSOm3Lo+yf0IWG532Xe/GUBhcX3gK5lVlt3UQNy1Y7KlehbU0RNVtJHM1SIBoTrx1pmrceHEDvSLjc/SDpOPNZMn79XHIoVrTVpf+hR7mXc2YW2CJoVtXtjUNSaBtGpQJ+nvC53giMDS1t9kmjxhwdEPciX9wCIEk1APEYNH6J6Sl8dYM99lna0VUeZMqdjbZ575usxXu3OLHjLEjypSqXEmC5/w0GJG2Qm1C0LmYHlKMrNBoUHnawjGKj04cUN4IcZODpnhGf1HQLTJNp3YhIqUmFJ0f1L8hGZe38vlr/Cvo5waDn6mEjnEeb4WzZVnoOc3MlRW/Rq1Pss8ADlJ7auaebf2n2iY9WkVYxb0cU/SE1ovXwamxX+NUi/xQhxCzeh3PpT/4Iqaccvk2KMAISc8/uzuqZOnYDLqp3tbo19H4jkgg5Q
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(136003)(396003)(366004)(39860400002)(376002)(451199021)(1800799006)(186006)(316002)(478600001)(6512007)(7416002)(36916002)(31696002)(2616005)(6666004)(5660300002)(6486002)(66556008)(66946007)(86362001)(31686004)(41300700001)(8676002)(8936002)(15650500001)(66476007)(4326008)(4744005)(83380400001)(36756003)(2906002)(53546011)(6506007)(26005)(54906003)(38100700002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SFlrVmZ5UnJlNzE1cjNPby9MOXlpYXczR0tGN1M1ekpackwrRE81bWljOXdH?=
- =?utf-8?B?UUR1UVNPYmZYRHlSU0tsK0xRUTA3L1YycmZmbi8xdUEwbEE0T2tSVHFDTmVr?=
- =?utf-8?B?OVNjakZOZFVqNUhxOFBVY0RsSlBKSUJCSjEvN0hNMlZTUFJhcVlwTlpvNE9o?=
- =?utf-8?B?aElwT3ExYWoyYVFoeTFzdklTWUx1VzJMbXB2U3Zra3g2U1VnY3h4QS93SkdE?=
- =?utf-8?B?YXdCM1NGNjZDb3Jpd1ZITU9aME1yOVk4L2EyQXNBcndkMTJKMnBFVUt0NFVa?=
- =?utf-8?B?MmtmaEo5VnpGRWxRcG5ZQkhsVXBNbElCSmVDQ2owOVNmQk00d1ZKTVpvMG85?=
- =?utf-8?B?eEFPYUhvY3hraUtIUTVmV3NZd3FVdy9YYzVNbXVYN3dBTWtXdWkxUlU1UnBy?=
- =?utf-8?B?VGRBdURlMThJci91ckh5enBlbWZUcXM3WGh2Mm16SW9JK0V6alM0aTNqVFJG?=
- =?utf-8?B?WDBxWlNnRENkS0E2MU9nWUNoc1JIamxES0YrRDRoTlk3MFNzRXVKb3NLVk5r?=
- =?utf-8?B?eHhVNDBOZUFBdkNQZ01DbWlTWUFXdlp0Z292dzkyWFZ2RktMSDN5Z04zNmJI?=
- =?utf-8?B?RGQ4TnBhbGkzcnFYZzBJZzB5VGRjMUZxMDY1R0pzbEZkdFE2K1lySjhzUEtv?=
- =?utf-8?B?ZjloVHdkWjNSSzZTakRtQjJrdEw4dGo0YzNVU2RVVTY3YzBhQ3RYVnBST1VV?=
- =?utf-8?B?c3FDbEk0dWxmakhGS0xZOWdJUkJjTVF2ckYydmJXUnpKZ25OY2JsWC80d3V5?=
- =?utf-8?B?MEhZcjFPU3pnVTkrYUJCajNodmRvRENjZDI5ZjdieGJZc2VJeElIdDlGeWxl?=
- =?utf-8?B?RGZnQnhqelVBWUxOTkZjcTB0cldIL0hkQVd2ZTYxMHNSbkpkTGE1dlg4TFU1?=
- =?utf-8?B?RUZ0YVNFbHBhblVRd2wrSmxDek04Y0gxdUFJd0dPYzhVbmhISzI5cWJreUh3?=
- =?utf-8?B?cVpRUVcwVTl2NWhDUDhkSGZkNUJTSVc2RXhGTUUxVmkvcDAzZGpiTm8rRSsw?=
- =?utf-8?B?TDNHaHI2VEt0bG5MZzMwVHdwc0ZKNHV5TWovNmo5K3diMnNFWW0xRHFESTNV?=
- =?utf-8?B?UDVweWx1VnVDSkxIcTlwRkE1NFMzWXpJNlpRbkV5UTlwNlM1empvUFFycXNR?=
- =?utf-8?B?M2lqUXlIQUtpODZ0V0VRajFCSGdTekhxVlMvWHc4UE1XRm93MHF4UGI5WkE5?=
- =?utf-8?B?OVBqcnNOQ0NIdnljb3kwY2lBbkhnbkErRE52cVhkNEczaEEzL21rN21Tei8r?=
- =?utf-8?B?dnVpQ0R5b280QzNGbWsvWjFoNkUvTmJaczcwa0w2elNaenhIZk5zL0FSbVN3?=
- =?utf-8?B?OXN6N2FkV0N6WkhlaTFYMng3RmtQMmk4MCtJSEdqN3NnN0Z6M1FkeWdseHU1?=
- =?utf-8?B?Mjg0cjUzalVxdmt1b3BocFY2RzdiUm9JUTYzK3FMc015NkEwZW1pUVhGUUd6?=
- =?utf-8?B?S1U2bER0K3RhVkxlRXNoWTluZHRzZmZNd1BIM2sxaE4wLy9wSHdSTm15NFQ2?=
- =?utf-8?B?bVh6dXZwNTAyVHEwaWwwNjhSZyt3eG5xblBwMmF0UlJKeS9VdFJxN1RETmpu?=
- =?utf-8?B?ckpFZjduTUNLNm1PQy9yWVZDUG1FZERuZXZodk1HaEpGZmpGT1pXUjY2MnhZ?=
- =?utf-8?B?OTBSNEpiQ3FpbjE3eEU4TDlCQWJzUTVaYVBMZjRhS3J2VG0xaU11SDZIbDZj?=
- =?utf-8?B?bi9EclhiWmZOb1BkWTJaTzRzM0dzeFpSQ1RZVENqczBsNVpuaUJIM25iaUwz?=
- =?utf-8?B?ZjVldndTU3JIdnZOL3RHQXZzSlIvQzdpM0lPTUhYNWprajc0ZDRvak9HNFRV?=
- =?utf-8?B?Q08yNTlJcXhMY01HV2plUkU4Z0pkUFgzTU1qNStKanpUYVNLOVZOaEdKbFJ4?=
- =?utf-8?B?OTlmZ0JhaExGTXA1dmRhVjNONzNMeDM0ZWsxM2R4dFlnQWpXSFlIQ1JwVGNY?=
- =?utf-8?B?RXJFNWlOMk5YN1ZLWTdqQUQ3RjNUZjhTaW1NQnpFTzB4R21yTTNtaXhCQTgy?=
- =?utf-8?B?b3hOSnRIMTl0WVRROEpjWWtpdWh0anFsVmxCQlByR29Yb2prSmZrT3ZwZ0My?=
- =?utf-8?B?T1Nia21PaUFobFE4L1pTMENrc0JOS0xlUVdzZlREUU92UGVJY3JrYldNWXQ5?=
- =?utf-8?Q?19r4cJaq9ZXh8nCe2Jmr+3tv5?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?UTZ1K1d6SjYvalZKcVFEZ281MmFteVE0YzdGcUdpK1lPK255clF2Znh1ckNs?=
- =?utf-8?B?S0hjRHBVUWJ4Q3VZVFlCTjJRTmZEQ0paWWZxT0piMVV5QjNpSnpiMjRRMjZm?=
- =?utf-8?B?WkF6cWVMcmlZN1k1SzYzS3hpT212bmoxWWk2OElrVGtodm5jS0RHSFo5OWdS?=
- =?utf-8?B?RnNUVGZtNFFwZVJmZy9MK1cyVnRmOHRVVlJveUllMXRWYWhxRmJBalExRWcy?=
- =?utf-8?B?UXY3aVFGNFBSYUwzSDRrUTJmTGlSbUtkeHozaW85dEFGbXZyc0d6MEt6QnBK?=
- =?utf-8?B?UHE4YTFBUE9OaVVYZnFUYThYek9kWWdqT1o0dTlYdis5dE1FdkZ1a2RCdVFh?=
- =?utf-8?B?ZTVQTXpvREswSkhTZWpIVEhFaTRDMHdDMmJxeFdXUWFNQUpRZmFOb1dkK2F3?=
- =?utf-8?B?dTJvT3AzS1M2ZHQ3RFVWN0R6c0Y5Z1BJZzBZdUEzZm5MZ0JGaTg4V3h6RkNJ?=
- =?utf-8?B?U0hxRnhPSlhLaFkyVkJQeU10dm1CUHVEa0JlZ2oxZEFzRHNtNndsRDcvcGdj?=
- =?utf-8?B?L3hQZEhPekpYRGhKdjRvai84K2ZjZVQ4cHlNTVJLUVJWbWNaYjJTMC9CRmhL?=
- =?utf-8?B?UDBGdUZrczRBeldHRVdNNkw5czMzdjlwVUlMMXFDYUtOWDBJU2lwMmlFVC82?=
- =?utf-8?B?WmJhZ2c3TW40QTY2MUdKUlRzaExoT1MrQjZHVHFQSm5RWWFjNVJqdWNkakhY?=
- =?utf-8?B?VEwycHlSemF0eUtET2xrQnd5K3FqTVI5akYzc1ZVOENNU0lONW80OTRPRXlp?=
- =?utf-8?B?NUVDR1BWbWhVSmhrMmhUSjEwa2c2dWhwVGtVMk01aTd3NkJGVWJoemxEMXZj?=
- =?utf-8?B?UlovMy93bVlaRkl5L0JtS0FoQWE1Sk9vVUVCdkl5R09tTS94VE9MQ1hjN0JC?=
- =?utf-8?B?cWlvQnhVazJBRGlweXV5NHlkRkJNRW1udW1lQWtSTlhTa3RqUjRkZ2gxTkh5?=
- =?utf-8?B?dkN5MVNvcHhNU3RDQUxjSlJrT2ZaeUJYN3FpcDNNVFJwOHJXUHNReCs2bUVn?=
- =?utf-8?B?K2Q2T0w1L2ZJYUxvVFlQRzVkdWhtdUMyQWhvejBmZk9Vd2QwQkl6K09tUXVD?=
- =?utf-8?B?MmY0WGw4VEdIdEZOaEpGbGZodDZRQzlNOWk4UHJqNjAzemtwcGE2RGRXNzZs?=
- =?utf-8?B?N1dNMVIyRW1aQ0E5dE9zOGt6Smx1YTBQQkV4U2R5SHdxZWtoa0V2QWlqSXhp?=
- =?utf-8?B?d2Q1YmxrdGJzcFU2RGxtMkN1ZDQ0R3FxK01Hc1E3cmpudDJOQXpVMzhqV2tC?=
- =?utf-8?B?RXJPM3pxaFVsVy9jRCtLeHVlSkMraGNiZDdURW9HUHZpa05yeWxHNUNKU3R0?=
- =?utf-8?B?VW82QWpSbTZQQnAwdUNmcTRnTk4zNG55ODVFYzVpVTRuVy94YW9FUmJPVER5?=
- =?utf-8?B?MGcrazhrYjR2c1ZiUlJsVDk1eXpkOUJ0Qi9PVFhreWt5QyszVGVBV3pRbUI3?=
- =?utf-8?B?OEdQcm1XNkl6QnV4Y2p4Q3ZwYmQveE5wTDc4TFpzUXYrTEV0d2EyMkJLVnls?=
- =?utf-8?B?ZzF4TFpHWVNGc2Jvck9xMEZ0UkY4cVViblZPSkpkYUZ5ajl6b0pYMkc5Rzgw?=
- =?utf-8?B?UVJiUFUvNnFpK2NoRkdPbWNmeGpMSE9lUUpkRkNyTCtWdWE2alMreTU0Y3Jk?=
- =?utf-8?B?anlvQUJLajgzYVphNndheEgvcHpHVFE9PQ==?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90c3582c-8b44-403a-7a7e-08db9a7ac7f9
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2023 14:53:53.7216
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7wd4ic19pLkvgmuDwJnQXlqGBFlVL87WlYm/Kl8BnViPbe/H4vBY8kIJsBiGJONMtxvX5r/KSFaMpWMUt3zgqQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR10MB7256
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-08-11_06,2023-08-10_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 bulkscore=0
- malwarescore=0 adultscore=0 phishscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
- definitions=main-2308110137
-X-Proofpoint-GUID: FtCxSEuQ8gLYh1fj7tlF5CLfNOzmuorQ
-X-Proofpoint-ORIG-GUID: FtCxSEuQ8gLYh1fj7tlF5CLfNOzmuorQ
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 11/08/2023 15:39, James Clark wrote:
-> Metrics will be published here [1] going forwards, but they have
-> slightly different scale units. To allow autogenerated metrics to be
-> added more easily, update the scale units to match.
-> 
-> The more detailed descriptions have also been taken and added to the
-> common file.
-> 
-> [1]:https://urldefense.com/v3/__https://gitlab.arm.com/telemetry-solution/telemetry-solution/-/tree/main/data/pmu/cpu/__;!!ACWV5N9M2RV99hQ!P1pT5PYzk0os04MQETZD2-22Rp9SCpDzrGV4g-wWDSx0667S3YYkIMArEI9wYBa2SlzR6Jnu2GKRjYJqOHnGrg$  
-> 
-> Acked-by: Ian Rogers<irogers@google.com>
-> Signed-off-by: James Clark<james.clark@arm.com>
+On Fri, Aug 11, 2023 at 7:00=E2=80=AFAM John Garry <john.g.garry@oracle.com=
+> wrote:
+>
+> On 10/08/2023 22:49, Ian Rogers wrote:
+> > Sort PMUs by name. If two PMUs have the same name but differ by
+> > suffix
+>
+> I think that the wording here can be improved. If they have the same
+> name, then they cannot differ. I think that you mean that two PMUs have
+> the same name apart from a difference in suffix.
 
-Reviewed-by: John Garry <john.g.garry@oracle.com>
+Sure.
+
+> > , sort the suffixes numerically.
+>
+> I don't know how this will affect some hisi pmus which have special
+> naming formats, like hisi_l3c_sscl1_4
+
+Anything not starting with uncore_ is assumed not to have a suffix.
+
+> > For example, "breakpoint" comes
+> > before "cpu", "uncore_imc_free_running_0" comes before
+> > "uncore_imc_free_running_1".
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >   tools/perf/util/pmus.c | 48 +++++++++++++++++++++++++++++++++++++++++=
++
+> >   1 file changed, 48 insertions(+)
+> >
+> > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> > index c58ba9fb6a36..3581710667b0 100644
+> > --- a/tools/perf/util/pmus.c
+> > +++ b/tools/perf/util/pmus.c
+> > @@ -1,8 +1,10 @@
+> >   // SPDX-License-Identifier: GPL-2.0
+> >   #include <linux/list.h>
+> > +#include <linux/list_sort.h>
+> >   #include <linux/zalloc.h>
+> >   #include <subcmd/pager.h>
+> >   #include <sys/types.h>
+> > +#include <ctype.h>
+> >   #include <dirent.h>
+> >   #include <pthread.h>
+> >   #include <string.h>
+> > @@ -33,6 +35,31 @@ static LIST_HEAD(other_pmus);
+> >   static bool read_sysfs_core_pmus;
+> >   static bool read_sysfs_all_pmus;
+> >
+> > +static int pmu_name_len_no_suffix(const char *str, unsigned long *num)
+> > +{
+> > +     int orig_len, len;
+> > +
+> > +     orig_len =3D len =3D strlen(str);
+> > +
+> > +     /* Non-uncore PMUs have their full length, for example, i915. */
+> > +     if (strncmp(str, "uncore_", 7))
+> > +             return len;
+> > +
+> > +     /*
+> > +      * Count trailing digits and '_', if '_{num}' suffix isn't presen=
+t use
+> > +      * the full length.
+> > +      */
+> > +     while (len > 0 && isdigit(str[len - 1]))
+> > +             len--;
+> > +
+> > +     if (len > 0 && len !=3D orig_len && str[len - 1] =3D=3D '_') {
+> > +             if (num)
+> > +                     *num =3D strtoul(&str[len], NULL, 10);
+> > +             return len - 1;
+> > +     }
+> > +     return orig_len;
+> > +}
+> > +
+> >   void perf_pmus__destroy(void)
+> >   {
+> >       struct perf_pmu *pmu, *tmp;
+> > @@ -122,6 +149,25 @@ static struct perf_pmu *perf_pmu__find2(int dirfd,=
+ const char *name)
+> >       return perf_pmu__lookup(core_pmu ? &core_pmus : &other_pmus, dirf=
+d, name);
+> >   }
+> >
+> > +static int pmus_cmp(void *priv __maybe_unused,
+> > +                 const struct list_head *lhs, const struct list_head *=
+rhs)
+> > +{
+> > +     unsigned long lhs_num, rhs_num;
+> > +     struct perf_pmu *lhs_pmu =3D container_of(lhs, struct perf_pmu, l=
+ist);
+> > +     struct perf_pmu *rhs_pmu =3D container_of(rhs, struct perf_pmu, l=
+ist);
+> > +     const char *lhs_pmu_name =3D lhs_pmu->name ?: "";
+> > +     const char *rhs_pmu_name =3D rhs_pmu->name ?: "";
+> > +     int lhs_pmu_name_len =3D pmu_name_len_no_suffix(lhs_pmu_name, &lh=
+s_num);
+> > +     int rhs_pmu_name_len =3D pmu_name_len_no_suffix(rhs_pmu_name, &rh=
+s_num);
+>
+>
+> This is a bit of a monster... at least it should have a comment on what
+> it is doing. Do you consider your own version of strncmp which can
+> handle numbers in the suffix as another solution?
+
+Sure, the intention is to be intention revealing getting a left hand
+and right hand pmu name, the length of the name part and the suffix
+number. I'm not sure a comment can do more than restate what the code
+is doing.
+
+> > +     int ret =3D strncmp(lhs_pmu_name, rhs_pmu_name,
+> > +                     lhs_pmu_name_len < rhs_pmu_name_len ? lhs_pmu_nam=
+e_len : rhs_pmu_name_len);
+>
+> Could min(lhs_pmu_name_len, rhs_pmu_name_len) be used here?
+
+Right, there is a suitable definition in linux/kernel.h
+
+> > +
+> > +     if (lhs_pmu_name_len !=3D rhs_pmu_name_len || ret !=3D 0 || lhs_p=
+mu_name_len =3D=3D 0)
+> > +             return ret;
+> > +
+> > +     return lhs_num < rhs_num ? -1 : (lhs_num > rhs_num ? 1 : 0);
+>
+> double ternary operator on same line ain't great - can this be changed
+> into multiple return statements and also commented.
+
+The alternative is:
+return lhs_num  - rhs_num;
+which removes the compares and has a bug around minimum integer
+everybody ignores.
+
+Thanks,
+Ian
+
+> > +}
+> > +
+> >   /* Add all pmus in sysfs to pmu list: */
+> >   static void pmu_read_sysfs(bool core_only)
+> >   {
+> > @@ -156,6 +202,8 @@ static void pmu_read_sysfs(bool core_only)
+> >               if (!perf_pmu__create_placeholder_core_pmu(&core_pmus))
+> >                       pr_err("Failure to set up any core PMUs\n");
+> >       }
+> > +     list_sort(NULL, &core_pmus, pmus_cmp);
+> > +     list_sort(NULL, &other_pmus, pmus_cmp);
+> >       if (!list_empty(&core_pmus)) {
+> >               read_sysfs_core_pmus =3D true;
+> >               if (!core_only)
+>
