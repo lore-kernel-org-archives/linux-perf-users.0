@@ -2,113 +2,167 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A217C001B0
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Aug 2023 13:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EEEC0015E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Aug 2023 13:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230083AbjHKNzx (ORCPT
+        id S231449AbjHKN4Z (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Aug 2023 09:55:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46214 "EHLO
+        Fri, 11 Aug 2023 09:56:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235297AbjHKNzc (ORCPT
+        with ESMTP id S234857AbjHKN4Z (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Aug 2023 09:55:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 865F92D78
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Aug 2023 06:55:31 -0700 (PDT)
+        Fri, 11 Aug 2023 09:56:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 467B81994;
+        Fri, 11 Aug 2023 06:56:24 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2661D63D30
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Aug 2023 13:55:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E4A9C433C8;
-        Fri, 11 Aug 2023 13:55:30 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C9AD565F21;
+        Fri, 11 Aug 2023 13:56:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F47C433C8;
+        Fri, 11 Aug 2023 13:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691762130;
-        bh=UkgBygCz01uYtfZgJPAYAw3hDod7s6by5RvrWS+roXo=;
+        s=k20201202; t=1691762183;
+        bh=Q3Hl7w6WKCAD7ULV6+CN4U/ror9uBAw+Rd10uVWdK5Y=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SJoM7tBWKvb4QgM+r9Iz12SUKJYpK/cuh/2g8Cpl6TNFH5/HSh/bMpWiOA12M00Y1
-         KZiZ/AA/LKUh2dLvijty78PHoNSXTpCbm5r7LZr+D7LEzncVcWtkgjyHAO7Y5robXj
-         KM4vpScUR7gTqBtmNP0iodH7b7gFqtRwufq5Q2bgo9nj3xAKvucGQhIuaJvbOBWI1x
-         Bs78+VBgH7TQ0Vqo+BVD3iSaHEE7K3N9G+tsr63rq/psgZjseSpA7NOyU2grvVajjc
-         vk3kzdKyav4wp1s1jN1eSsDez5OC0P1TFaicZTjHb5tJLj3cl7vCXCvIT22GxjuWt9
-         9Jk4O3c2Y/X3A==
+        b=MaEpxmKPlZQ38SDCXNQDIWGOtPboCoXMqc0/ODA4jiXm5SPDNYjnkYQfD/nCHB7vs
+         ApRHfKr6lLCkhegVPhfmF7A5EricqN3SCIILuBIVUcPueV+64/FzS7iRH75wmtiVpj
+         qANNpFdyRpGktd0krH8Ce8q+06GiXybdalJZwO24uRwR9HA/AvGHCLyJ9GdkZynsu5
+         RsFeN4f8wQWz9CItFo2GxXoChXGnX08vk2NG4RPZAQyfixPPDrUgSibixKz0uIeByP
+         W1S0wdVnylddSKMwtsy8TMP73n1eh/HlvkNYknxL6waetnBXlkisbo9iWzPtL7dxzq
+         5eg7A5U9DtFIw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 8A99F404DF; Fri, 11 Aug 2023 10:55:27 -0300 (-03)
-Date:   Fri, 11 Aug 2023 10:55:27 -0300
+        id D2C83404DF; Fri, 11 Aug 2023 10:56:20 -0300 (-03)
+Date:   Fri, 11 Aug 2023 10:56:20 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     jolsa@kernel.org, irogers@google.com, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com
-Subject: Re: [PATCH 1/2] tools/perf: Add text_end to "struct dso" to save
- .text section size
-Message-ID: <ZNY9zwZOs47ETwnU@kernel.org>
-References: <20230811052128.70282-1-atrajeev@linux.vnet.ibm.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] perf pmus: Sort pmus by name then suffix
+Message-ID: <ZNY+BHUFETc2eNib@kernel.org>
+References: <20230810214952.2934029-1-irogers@google.com>
+ <20230810214952.2934029-2-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230811052128.70282-1-atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20230810214952.2934029-2-irogers@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Aug 11, 2023 at 10:51:27AM +0530, Athira Rajeev escreveu:
-> Update "struct dso" to include new member "text_end".
-> This new field will represent the offset for end of text
-> section for a dso. This value is derived as:
-> sh_size (Size of section in byes) + sh_offset (Section file
-> offst) of the elf header for text.
+Em Thu, Aug 10, 2023 at 02:49:50PM -0700, Ian Rogers escreveu:
+> Sort PMUs by name. If two PMUs have the same name but differ by
+> suffix, sort the suffixes numerically. For example, "breakpoint" comes
+> before "cpu", "uncore_imc_free_running_0" comes before
+> "uncore_imc_free_running_1".
 
-You're stating what this patch does, but not why. So far was not needed,
-why now?
-
-Probably the second patch will have the answer, but please try to add
-the reason on the patch that introduces the new field.
-
-Thanks,
+Why is this needed?
 
 - Arnaldo
  
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/dso.h        | 1 +
->  tools/perf/util/symbol-elf.c | 4 +++-
->  2 files changed, 4 insertions(+), 1 deletion(-)
+>  tools/perf/util/pmus.c | 48 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
 > 
-> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-> index b41c9782c754..70fe0fe69bef 100644
-> --- a/tools/perf/util/dso.h
-> +++ b/tools/perf/util/dso.h
-> @@ -181,6 +181,7 @@ struct dso {
->  	u8		 rel;
->  	struct build_id	 bid;
->  	u64		 text_offset;
-> +	u64		 text_end;
->  	const char	 *short_name;
->  	const char	 *long_name;
->  	u16		 long_name_len;
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index 8bd466d1c2bd..252d26a59e64 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -1512,8 +1512,10 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
->  	}
+> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> index c58ba9fb6a36..3581710667b0 100644
+> --- a/tools/perf/util/pmus.c
+> +++ b/tools/perf/util/pmus.c
+> @@ -1,8 +1,10 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <linux/list.h>
+> +#include <linux/list_sort.h>
+>  #include <linux/zalloc.h>
+>  #include <subcmd/pager.h>
+>  #include <sys/types.h>
+> +#include <ctype.h>
+>  #include <dirent.h>
+>  #include <pthread.h>
+>  #include <string.h>
+> @@ -33,6 +35,31 @@ static LIST_HEAD(other_pmus);
+>  static bool read_sysfs_core_pmus;
+>  static bool read_sysfs_all_pmus;
 >  
->  	if (elf_section_by_name(runtime_ss->elf, &runtime_ss->ehdr, &tshdr,
-> -				".text", NULL))
-> +				".text", NULL)) {
->  		dso->text_offset = tshdr.sh_addr - tshdr.sh_offset;
-> +		dso->text_end = tshdr.sh_offset + tshdr.sh_size;
+> +static int pmu_name_len_no_suffix(const char *str, unsigned long *num)
+> +{
+> +	int orig_len, len;
+> +
+> +	orig_len = len = strlen(str);
+> +
+> +	/* Non-uncore PMUs have their full length, for example, i915. */
+> +	if (strncmp(str, "uncore_", 7))
+> +		return len;
+> +
+> +	/*
+> +	 * Count trailing digits and '_', if '_{num}' suffix isn't present use
+> +	 * the full length.
+> +	 */
+> +	while (len > 0 && isdigit(str[len - 1]))
+> +		len--;
+> +
+> +	if (len > 0 && len != orig_len && str[len - 1] == '_') {
+> +		if (num)
+> +			*num = strtoul(&str[len], NULL, 10);
+> +		return len - 1;
 > +	}
+> +	return orig_len;
+> +}
+> +
+>  void perf_pmus__destroy(void)
+>  {
+>  	struct perf_pmu *pmu, *tmp;
+> @@ -122,6 +149,25 @@ static struct perf_pmu *perf_pmu__find2(int dirfd, const char *name)
+>  	return perf_pmu__lookup(core_pmu ? &core_pmus : &other_pmus, dirfd, name);
+>  }
 >  
->  	if (runtime_ss->opdsec)
->  		opddata = elf_rawdata(runtime_ss->opdsec, NULL);
+> +static int pmus_cmp(void *priv __maybe_unused,
+> +		    const struct list_head *lhs, const struct list_head *rhs)
+> +{
+> +	unsigned long lhs_num, rhs_num;
+> +	struct perf_pmu *lhs_pmu = container_of(lhs, struct perf_pmu, list);
+> +	struct perf_pmu *rhs_pmu = container_of(rhs, struct perf_pmu, list);
+> +	const char *lhs_pmu_name = lhs_pmu->name ?: "";
+> +	const char *rhs_pmu_name = rhs_pmu->name ?: "";
+> +	int lhs_pmu_name_len = pmu_name_len_no_suffix(lhs_pmu_name, &lhs_num);
+> +	int rhs_pmu_name_len = pmu_name_len_no_suffix(rhs_pmu_name, &rhs_num);
+> +	int ret = strncmp(lhs_pmu_name, rhs_pmu_name,
+> +			lhs_pmu_name_len < rhs_pmu_name_len ? lhs_pmu_name_len : rhs_pmu_name_len);
+> +
+> +	if (lhs_pmu_name_len != rhs_pmu_name_len || ret != 0 || lhs_pmu_name_len == 0)
+> +		return ret;
+> +
+> +	return lhs_num < rhs_num ? -1 : (lhs_num > rhs_num ? 1 : 0);
+> +}
+> +
+>  /* Add all pmus in sysfs to pmu list: */
+>  static void pmu_read_sysfs(bool core_only)
+>  {
+> @@ -156,6 +202,8 @@ static void pmu_read_sysfs(bool core_only)
+>  		if (!perf_pmu__create_placeholder_core_pmu(&core_pmus))
+>  			pr_err("Failure to set up any core PMUs\n");
+>  	}
+> +	list_sort(NULL, &core_pmus, pmus_cmp);
+> +	list_sort(NULL, &other_pmus, pmus_cmp);
+>  	if (!list_empty(&core_pmus)) {
+>  		read_sysfs_core_pmus = true;
+>  		if (!core_only)
 > -- 
-> 2.31.1
+> 2.41.0.640.ga95def55d0-goog
 > 
 
 -- 
