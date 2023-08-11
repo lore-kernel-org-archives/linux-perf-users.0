@@ -2,167 +2,173 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D39EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Aug 2023 05:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C8CC001B0
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Aug 2023 09:49:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229658AbjHKFVs (ORCPT
+        id S235089AbjHKJtz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Aug 2023 01:21:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59188 "EHLO
+        Fri, 11 Aug 2023 05:49:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230172AbjHKFVr (ORCPT
+        with ESMTP id S234963AbjHKJtp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Aug 2023 01:21:47 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88E0A2D43
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 22:21:46 -0700 (PDT)
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37B5GpoN009360;
-        Fri, 11 Aug 2023 05:21:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=yY9Ic4vkRhI2XN8jbulU0fMzvwSbRo0HR28rcW9lyMs=;
- b=XYrqTT51S6zHXIO80JKVuF69XBC3kBl5/oFna2jttSJRZnQckmKzd58V5cu8q+JRJj8R
- x2t9A4QGGDN5dLcp1ljztBKnLYJ3I/PWva4GL0tEwLf2/kEl/jrpwZWCstBOqmAVo+vL
- Uzvj2+o+NIasaS96FtK6D6RmYkt1aVtNtGdcerJTsdCAfdcHsCDeY3G0NyZAqA/mWtBI
- +5HGodP4VPGeIKO4ZVcyjmJ3kMCAdE3xS83CCJeX59tCQm75ylFKa+ahfuDTPoz/TXGm
- id1E3+DBKCGUis6/5Yd3fPOkoUUbspb7wNcExCfgW3RbS1Ae2QQBOBdeI+8DJsHIj3qj UA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sdebtre1w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Aug 2023 05:21:41 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37B5F6ea003944;
-        Fri, 11 Aug 2023 05:21:41 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sdebtre1a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Aug 2023 05:21:41 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37B5H799006437;
-        Fri, 11 Aug 2023 05:21:39 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3sd2evd8et-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Aug 2023 05:21:39 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37B5LarC62521676
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Aug 2023 05:21:36 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 83FC92004D;
-        Fri, 11 Aug 2023 05:21:36 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5D4212004B;
-        Fri, 11 Aug 2023 05:21:34 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.95.190])
-        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Fri, 11 Aug 2023 05:21:34 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
-        namhyung@kernel.org
-Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
-Subject: [PATCH 2/2] tools/perf/tests: Fix object code reading to skip address that falls out of text section
-Date:   Fri, 11 Aug 2023 10:51:28 +0530
-Message-Id: <20230811052128.70282-2-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20230811052128.70282-1-atrajeev@linux.vnet.ibm.com>
-References: <20230811052128.70282-1-atrajeev@linux.vnet.ibm.com>
+        Fri, 11 Aug 2023 05:49:45 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0098E30CA
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Aug 2023 02:49:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691747384; x=1723283384;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=4OvXogAMzq1MUbx9QUPRVTXSgzW8v3KRMM78CixHbJY=;
+  b=TSQ8W3izSGagV/b22FpmXa2wPFyu/wOHTmDpfNM//tVQBeTzqL8FhLVD
+   cPEZOE+JLOCWs/Ie6Z0tWplFYZOMpBimknQUQDNJIi3TNlA0beyVaSnu+
+   i6Sv+TYUUGTZ2AxQRS/Hg7LX9HnMjozfKOA7R4f11grYyapuoTUUjfMnW
+   f3ck4hVMlxiWAimzC/aYCpqfkDT57g1ykYwZ5dD5UgHuLhQOQuyJ2jw80
+   lKlPs+R7k8gYvobKm4hkooGU+raAv0D2ekHMd0npUmIrIgFBXfmr6AvE7
+   zGL3H1uyG1mDOiJg3B4WehkPkBOm7JmEHGCxbdSZ9bIOGG9sraV+JWLhX
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="351962819"
+X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
+   d="scan'208";a="351962819"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2023 02:49:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="767614654"
+X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
+   d="scan'208";a="767614654"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.51.13])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2023 02:49:40 -0700
+Message-ID: <f21cbbed-8e51-fae1-9e77-56b5d239bafd@intel.com>
+Date:   Fri, 11 Aug 2023 12:49:35 +0300
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.14.0
+Subject: Re: [PATCH] tools/perf: Fix dso kernel load and symbol process to
+ correctly map dso to its long_name, type and adjust_symbols
+Content-Language: en-US
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
+        jolsa@kernel.org, irogers@google.com, namhyung@kernel.org
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+References: <20230811051546.70039-1-atrajeev@linux.vnet.ibm.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20230811051546.70039-1-atrajeev@linux.vnet.ibm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: NGrNqF1E5SHBtw-S9sjS4KTPUe2nH96Y
-X-Proofpoint-ORIG-GUID: n8ybU4m-j76Bu_RGe5xpHL5myXge38UA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-08-10_20,2023-08-10_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- bulkscore=0 adultscore=0 priorityscore=1501 impostorscore=0
- mlxlogscore=999 suspectscore=0 mlxscore=0 clxscore=1015 spamscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2308110046
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The testcase "Object code reading" fails in somecases
-for "fs_something" sub test as below:
+On 11/08/23 08:15, Athira Rajeev wrote:
+> Test "object cocde reading" fails sometimes for kernel address
+> as below:
+> 
+>     Reading object code for memory address: 0xc000000000004c3c
+>     File is: [kernel.kallsyms]
+>     On file address is: 0x14c3c
+>     dso__data_read_offset failed
+>     test child finished with -1
+>     ---- end ----
+>     Object code reading: FAILED!
+> 
+> Here the dso__data_read_offset fails for symbol address
+> 0xc000000000004c3c. This is because, the dso long_name here
+> is [kernel.kallsyms] and hence open_dso fails to open this
+> file. There is an incorrect dso to map handling here. The
+> key points here is:
+> - dso long_name is set to [kernel.kallsyms]. This file is
+>   not present and hence returns error
+> - DSO binary type is set to DSO_BINARY_TYPE__NOT_FOUND
+> - dso adjust_symbols is set to zero
+> 
+> In the end dso__data_read_offset() returns -1 and the address
+> 0x14c3c can not be resolved. Hence the test fails. But the
+> address actually maps to kernel dso
+> 
+>     # objdump -z -d --start-address=0xc000000000004c3c --stop-address=0xc000000000004cbc /home/athira/linux/vmlinux
+> 
+>     /home/athira/linux/vmlinux:     file format elf64-powerpcle
+> 
+>     Disassembly of section .head.text:
+> 
+>     c000000000004c3c <exc_virt_0x4c00_system_call+0x3c>:
+>     c000000000004c3c:	a6 02 9b 7d 	mfsrr1  r12
+>     c000000000004c40:	78 13 42 7c 	mr      r2,r2
+>     c000000000004c44:	18 00 4d e9 	ld      r10,24(r13)
+>     c000000000004c48:	60 c6 4a 61 	ori     r10,r10,50784
+>     c000000000004c4c:	a6 03 49 7d 	mtctr   r10
+> 
+> Fix the dso__process_kernel_symbol function to set the
+> binary_type and adjust_symbols. adjust_symbols is used by
+> function "map__rip_2objdump" which converts symbol start
+> address to objdump address. Also set the dso long_name during
+> dso__load_vmlinux function.
+> 
+> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 
-    Reading object code for memory address: 0xc008000007f0142c
-    File is: /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
-    On file address is: 0x1114cc
-    Objdump command is: objdump -z -d --start-address=0x11142c --stop-address=0x1114ac /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
-    objdump read too few bytes: 128
-    test child finished with -1
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-This can alo be reproduced when running perf record with
-workload that exercises fs_something() code. In the test
-setup, this is exercising xfs code since root is xfs.
-
-    # perf record ./a.out
-    # perf report -v |grep "xfs.ko"
-      0.76% a.out /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko  0xc008000007de5efc B [k] xlog_cil_commit
-      0.74% a.out  /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko  0xc008000007d5ae18 B [k] xfs_btree_key_offset
-      0.74% a.out  /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko  0xc008000007e11fd4 B [k] 0x0000000000112074
-
-Here addr "0xc008000007e11fd4" is not resolved. since this is a
-kernel module, its offset is from the DSO. Xfs module is loaded
-at 0xc008000007d00000
-
-   # cat /proc/modules | grep xfs
-    xfs 2228224 3 - Live 0xc008000007d00000
-
-And size is 0x220000. So its loaded between  0xc008000007d00000
-and 0xc008000007f20000. From objdump, text section is:
-    text 0010f7bc  0000000000000000 0000000000000000 000000a0 2**4
-
-Hence perf captured ip maps to 0x112074 which is:
-( ip - start of module ) + a0
-
-This offset 0x112074 falls out .text section which is up to 0x10f7bc
-In this case for module, the address 0xc008000007e11fd4 is pointing
-to stub instructions. This address range represents the module stubs
-which is allocated on module load and hence is not part of DSO offset.
-
-To address this issue in "object code reading", skip the sample if
-address falls out of text section and is within the module end.
-Use the "text_end" member of "struct dso" to do this check.
-
-To address this issue in "perf report", exploring an option of
-having stubs range as part of the /proc/kallsyms, so that perf
-report can resolve addresses in stubs range
-
-However this patch uses text_end to skip the stub range for
-Object code reading testcase.
-
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- tools/perf/tests/code-reading.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-index ed3815163d1b..911f8fa13677 100644
---- a/tools/perf/tests/code-reading.c
-+++ b/tools/perf/tests/code-reading.c
-@@ -269,6 +269,14 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
- 	if (addr + len > map__end(al.map))
- 		len = map__end(al.map) - addr;
- 
-+	/* Check if the ip offset falls in stubs sections for kernel modules */
-+	if (strstr(dso->long_name, ".ko")) {
-+		if ((al.addr < map__end(al.map)) && (al.addr > dso->text_end)) {
-+			pr_debug(" - skipping\n");
-+			goto out;
-+		}
-+	}
-+
- 	/* Read the object code using perf */
- 	ret_len = dso__data_read_offset(dso, maps__machine(thread__maps(thread)),
- 					al.addr, buf1, len);
--- 
-2.31.1
+> ---
+> Note: Found similar discussion here in thread:
+>       https://www.spinics.net/lists/linux-perf-users/msg06337.html
+>       where Adrian proposed the fix, but looks like this was
+>       not added to the perf. Hence addeed Suggested-by from Adrian.
+> 
+>       Additional to the fix proposed by Adrian, the patch also
+>       adds setting of adjust_symbols which is needed for
+>       map__rip_2objdump to convert symbol start to objdump address.
+> 
+>  tools/perf/util/symbol-elf.c |  2 ++
+>  tools/perf/util/symbol.c     | 15 ++++++++++-----
+>  2 files changed, 12 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> index 252d26a59e64..9e7eeaf616b8 100644
+> --- a/tools/perf/util/symbol-elf.c
+> +++ b/tools/perf/util/symbol-elf.c
+> @@ -1440,6 +1440,8 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+>  		curr_dso->kernel = dso->kernel;
+>  		curr_dso->long_name = dso->long_name;
+>  		curr_dso->long_name_len = dso->long_name_len;
+> +		curr_dso->binary_type = dso->binary_type;
+> +		curr_dso->adjust_symbols = dso->adjust_symbols;
+>  		curr_map = map__new2(start, curr_dso);
+>  		dso__put(curr_dso);
+>  		if (curr_map == NULL)
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index f849f9ef68e6..3f36675b7c8f 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -2204,15 +2204,20 @@ int dso__load_vmlinux(struct dso *dso, struct map *map,
+>  	if (symsrc__init(&ss, dso, symfs_vmlinux, symtab_type))
+>  		return -1;
+>  
+> +	/*
+> +	 * dso__load_sym() may copy 'dso' which will result in the copies having
+> +	 * an incorrect long name unless we set it here first.
+> +	 */
+> +	dso__set_long_name(dso, vmlinux, vmlinux_allocated);
+> +	if (dso->kernel == DSO_SPACE__KERNEL_GUEST)
+> +		dso->binary_type = DSO_BINARY_TYPE__GUEST_VMLINUX;
+> +	else
+> +		dso->binary_type = DSO_BINARY_TYPE__VMLINUX;
+> +
+>  	err = dso__load_sym(dso, map, &ss, &ss, 0);
+>  	symsrc__destroy(&ss);
+>  
+>  	if (err > 0) {
+> -		if (dso->kernel == DSO_SPACE__KERNEL_GUEST)
+> -			dso->binary_type = DSO_BINARY_TYPE__GUEST_VMLINUX;
+> -		else
+> -			dso->binary_type = DSO_BINARY_TYPE__VMLINUX;
+> -		dso__set_long_name(dso, vmlinux, vmlinux_allocated);
+>  		dso__set_loaded(dso);
+>  		pr_debug("Using %s for symbols\n", symfs_vmlinux);
+>  	}
 
