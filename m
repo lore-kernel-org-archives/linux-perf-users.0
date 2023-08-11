@@ -2,213 +2,115 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D29BC001DE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Aug 2023 22:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0473BC001B0
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Aug 2023 02:58:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229706AbjHJWjM (ORCPT
+        id S229719AbjHKC63 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Aug 2023 18:39:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43004 "EHLO
+        Thu, 10 Aug 2023 22:58:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229659AbjHJWjL (ORCPT
+        with ESMTP id S229549AbjHKC63 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Aug 2023 18:39:11 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2139.outbound.protection.outlook.com [40.107.220.139])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4BBD272E;
-        Thu, 10 Aug 2023 15:39:10 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JUEF+T4YQAW5j7auvWOOmP+nyrCLNl1Fuwvg/4YhaSAxobPdo+xlJeA2b6fKHjT+KMH1Uw3UqHBvhz82ZBBO8fYLbnrcYSceNhnjvRTUnqG3BerKutvPb6jOzuzYqHJVd0DxvVTNrWeEZ23le9ZA5VfyDzVCXwWA825QyiP8dtaCKR1WqiXSu+bQI7Zbh7HI3Crh+3oKbhBhu8zdPKh7v1hL6D6kdOzX3lIRVMbiX8ngNKL/a6w+56ci1EhZNAdclabFpnz4nHUYp5g18lp1YK4MmSXWp1M0yXuxru93ebApn6r0m3y0eZIIl1rG7EubNZqkcR7V5qTKIgbSnTUeMQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uwlxCHNs+AJYttHAZGi3rNrJ22MS0dW7dz1EvQheWoc=;
- b=TEBSK+HIjtJ6ZqQEdH1Vd2Bwel8Oa02tw/y81uNVUm92eN+csujBA1C0fe4czEmI/et1Ngr5hU9BjM8ITUMg/3WVTS92eAHikRI7V0b8S3UmJbti6jobv6Wig8gavM4o96RX3aLxMaChwoDQtsZnldLKUeHLd5iBLZ+y7DQtYHC0MwSJvP8S1DGPujBH18b5Z411MWF57luPN8T4ocNX++nO2NYxq5WO1YWnz5yTreKPBd9xVqbVH9edEFmSZUeWz2CzFY65Ssu2SuztYQohxapC0/GSoud+Xa5SD+VH5F6qXqFvRbczMR0KMIGRsKsjuDsboWsiMZL001XendONYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
+        Thu, 10 Aug 2023 22:58:29 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05EFDEA;
+        Thu, 10 Aug 2023 19:58:28 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1bc83a96067so11763815ad.0;
+        Thu, 10 Aug 2023 19:58:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uwlxCHNs+AJYttHAZGi3rNrJ22MS0dW7dz1EvQheWoc=;
- b=mkpkI9bqEww1SUkrfaInH2HPruNt3WlB/+pTe8h8xw9n9goJf8ptTs0At61zLp2DcNCsGzjK63fyO86dRz2fSH2fFMsLPV0vIp5u31KygSyRuyGcdEYNKhgqyij/t8opNXjXouSnDacbPql6W05yqvkRx39+A3/ng76Wiy5lAcU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from DM5PR0102MB3590.prod.exchangelabs.com (2603:10b6:4:a4::25) by
- DS7PR01MB7878.prod.exchangelabs.com (2603:10b6:8:81::10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6652.30; Thu, 10 Aug 2023 22:39:07 +0000
-Received: from DM5PR0102MB3590.prod.exchangelabs.com
- ([fe80::4e0f:49b:ee39:f08e]) by DM5PR0102MB3590.prod.exchangelabs.com
- ([fe80::4e0f:49b:ee39:f08e%6]) with mapi id 15.20.6652.029; Thu, 10 Aug 2023
- 22:39:06 +0000
-Date:   Thu, 10 Aug 2023 15:38:50 -0700 (PDT)
-From:   Ilkka Koskinen <ilkka@os.amperecomputing.com>
-To:     John Garry <john.g.garry@oracle.com>
-cc:     Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-        Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        d=gmail.com; s=20221208; t=1691722707; x=1692327507;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fpn1N1ZB0KetpAmPQkAbgnFDVJSzxAlzA4W3TfJjTiA=;
+        b=Cx4FUrEk1nD38+jb31BkywBQvWaqk4i2dYX9OOyMbyfUsUv8KA+cNNGvfQiR73t6AM
+         uUKiwV+bSXkg7ffmX87KSJsd5+PHcdPMMi11mkby4fHjBr3B3KN2gR1xwwoXi4Dc44HW
+         ag7CUWMiTgD9Tt6rLOFcNVF7oQrS7/gXhCGFA1IrLl8+AipoLRWbJj53eDL+u9yy/78E
+         ywo8ehQHIu2i5dDfUNZ2kFTHHWepHREz6SvA5H1fgOJlFCF774nxXdD7Sb7hKtg3MzaP
+         RbmzrVPoq1blGdJi6bj6gQebheVCEz1gADPRLgrmBAgX76TD8yXGuTJe3cFt6teSCANq
+         sgDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691722707; x=1692327507;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Fpn1N1ZB0KetpAmPQkAbgnFDVJSzxAlzA4W3TfJjTiA=;
+        b=UE6eHmUz4hwblKTVrK7xJ9D54bRvVnhBgROzjr2g6UVXKrdtkN2OejkYd9vV37mn34
+         lMEMuzCBVUWKV9fpvh8gIddJt1OhYYGtBkam6qwmU0UczBXYazkjbXBbl4t+ueiptbQa
+         06IFLsFrz1CAm+mVCG69FodkXkHiC5N5Om4s0mrTADm8RGVvqqUSmN3Py+aB3pJ+7tNI
+         gLIn1LAruWx5ITHiaIyzunXpMvVMR//0Ttw1WRlcrzuqAcvvVS5NY4AZsaV083zqZ8nJ
+         cKUQQMmWDLZtX41dTmWdQMS+1+iAKMlVRWBRJXnHbHmXZ2BzIEjOLm+K9GJ99QLg1CQO
+         4aBg==
+X-Gm-Message-State: AOJu0YwaplAHSwQpS3crTkkaBMNzYAwGUBZWkDbJdvQDUVc3UzbjQYkO
+        1RvSrkaUBb12sVS7tfe9zuTO4tv04/Y=
+X-Google-Smtp-Source: AGHT+IHg9TNQhcaP/GLS+YnbHFbq4WGUxaIpMTz2AzciDZzB/N+5ETuL0lZw5WLXuYlijQlzN6uldg==
+X-Received: by 2002:a17:902:dacc:b0:1b9:cc6b:408c with SMTP id q12-20020a170902dacc00b001b9cc6b408cmr579146plx.38.1691722707364;
+        Thu, 10 Aug 2023 19:58:27 -0700 (PDT)
+Received: from moohyul.svl.corp.google.com ([2620:15c:2a3:200:2328:6915:cbeb:39d4])
+        by smtp.gmail.com with ESMTPSA id b23-20020a170902b61700b001b9be3b94d3sm2526592pls.140.2023.08.10.19.58.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Aug 2023 19:58:26 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Dave Kleikamp <dave.kleikamp@oracle.com>
-Subject: Re: [PATCH 2/4] perf vendor events arm64: AmpereOne: Mark affected
- STALL_* events impacted by errata
-In-Reply-To: <d3da2a30-9e9-73c3-b1aa-aca508bd259@os.amperecomputing.com>
-Message-ID: <265ae2c0-d355-f282-4463-4a677d9969cd@os.amperecomputing.com>
-References: <20230803211331.140553-1-ilkka@os.amperecomputing.com> <20230803211331.140553-3-ilkka@os.amperecomputing.com> <b690cae6-ee9c-2c6b-a19e-60088cb8cb19@oracle.com> <d3da2a30-9e9-73c3-b1aa-aca508bd259@os.amperecomputing.com>
-Content-Type: text/plain; charset=US-ASCII; format=flowed
-X-ClientProxiedBy: CH0PR03CA0207.namprd03.prod.outlook.com
- (2603:10b6:610:e4::32) To DM5PR0102MB3590.prod.exchangelabs.com
- (2603:10b6:4:a4::25)
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/2] perf bpf-filter: Fix sample flag check with ||
+Date:   Thu, 10 Aug 2023 19:58:21 -0700
+Message-ID: <20230811025822.3859771-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.41.0.640.ga95def55d0-goog
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM5PR0102MB3590:EE_|DS7PR01MB7878:EE_
-X-MS-Office365-Filtering-Correlation-Id: 557bcfa6-e9ad-4fad-d937-08db99f29ac9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: eJl/wF+88fLnoj4EAPo51gBYvZN+u1dzw7ruN8yUTjA5SE2oWguron9fQo28Q9ythYTvZkhuWHnRz9rm1N82utQ2tXbuhNIugm9BLy5/+fctIj1/YJW2nk9FSbTQlW5F8pB6HpwHH4G51BgthsnwLJXuUEpd6d/m7PjmAuwB0Uw90TcrK+lfpLyWHEJ90AuQoOTf1nmWno3BWo8Hipv1Yx4J/zjEPr/PfT0EaAeAjRgcxGWCUKsaHzHRT4Twr1JfYd93WufDXJY2hgfCQ+zIOqgM/gv5LkrJR4bGbHE7KE3DIRrGJZthDzvWvacS2VP/MRmsABQ8CvB+Dx0lQ/dJX6+jyyx9isZj2o6bFEvIiPLNtr8dI8ALevx3XxUUn3hsXv9svcgY7/OTl76HQC/uUm25A4Dan3wwTx9gKTGZpZlL75e3tt4d1J/1vlsHg8MU4u1GENUaVbXKsgaZk3kHFQ5o5VO5vXV3sLRicBbejWReB3UMZ0czEddHeCwnT3Hl6CG3ZGxATOh32x3Mqpjh/eWXQ8Q1Yi+wU9EOTMTOIJysochIKkF2VdpvwYvxgmPHf0pRXz7TrYYkN0+++neM6NbQ9wtuoHKBSDCCrd0he5GLNivfhIc8MT1Ifqp/fCM3
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR0102MB3590.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(376002)(366004)(346002)(39850400004)(396003)(451199021)(186006)(1800799006)(53546011)(6666004)(478600001)(54906003)(66556008)(66946007)(6916009)(6506007)(6486002)(66476007)(26005)(6512007)(4326008)(2906002)(41300700001)(316002)(7416002)(5660300002)(8936002)(38100700002)(8676002)(86362001)(31696002)(38350700002)(83380400001)(2616005)(52116002)(31686004);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?oeWjxPX08foZe0uPWVmjkD1iCFyEYIK2le6qkryFEnlp8AlEbtvh/X4qHfhc?=
- =?us-ascii?Q?wp3jTio7FGR5mN7BjKxeWpUo+Ta5ZuPGiN9Twx0IlUf8bVd3axCde8KMsWM/?=
- =?us-ascii?Q?sqUvktj1ZnLv81YNTwyJzWzsol3BRmzL3yMgdGwbHR7p75VM8n9LkaZgLgUg?=
- =?us-ascii?Q?V7PQ8hl7PI6jtUPREQny6y37Nqx1NGnPjm6qSQcf53Q2ovQwbMUIn2Q83ZUC?=
- =?us-ascii?Q?kt4V+xwbWK9BTKWapkCkI0D+3H2u0lyWFvPmmNmpFSnAcvfe1eR8gzcGQ1AS?=
- =?us-ascii?Q?6Zd7nEvTOvLOAoPDKgdk2DnIxfry/P6pmRg6rw+Z6Q7fSki3dD5lsFobInd/?=
- =?us-ascii?Q?10/Sqj0CLad/c4m3bh/lT6DBlFPQgUwY4H8hkjLSCP5vDvs3EI6M6YCJfvkH?=
- =?us-ascii?Q?ZoSdLhl9HKQU24YD69LKcoSOZhACgKExFtmRaJpSTeIGQ2U6kZbzNda+0EVC?=
- =?us-ascii?Q?yUIISEZhR3LkrOrAmpEYfyzPjsLYCYepOmKSApK373UdBVXf+Eu4dfIqfanD?=
- =?us-ascii?Q?nTST2v9IQOdhOS/h07FdD2UH0KsQO4rnVA7GKKuun3K/Wv6NOdCEjyaUZ44Z?=
- =?us-ascii?Q?uBZAKVbRrInHNilcGlReoKTtpKBw+xxTZrLggP+wCxOt/g1d1gxvE4NRs0Ju?=
- =?us-ascii?Q?hMo2k6UBCWg17iXNUCK3zGQCvCqCNWmM5LAKJJe/dzCKe54/zAu+UWxs0S6K?=
- =?us-ascii?Q?QBrfiLSuFA8+STPIGS8M7ua6fVwD62jlXUbt7HVCIeGJgqmfiKsZYhbr3dHd?=
- =?us-ascii?Q?jneex4eWrXRxwr71Oh0nH5CInBtOnGEAsVRhFDdnlnZTsdjQH8646+jSahts?=
- =?us-ascii?Q?O1sWW5KQmPUrfG4efzYrl9aCYcE7PEgcvOiNpvQ8LyurlvfyToZ/F0nZTCCt?=
- =?us-ascii?Q?CLdGFlqSV0r5ZgmbccS7V/O4WTOvdj/FjeTtj347HgyfjIHFGxzgZV50ZSsJ?=
- =?us-ascii?Q?ANbPlvuQYIs8oXRMQWbl3timgxcWOkHkDH3VF0V7fyviFUHbdvN4ZcNINZ9y?=
- =?us-ascii?Q?u4Bk8Vu/wVWtiQQb6aTfs18niSD3FMAhMODoiESgHIQ8AjAoKGrZCXv8bzGA?=
- =?us-ascii?Q?2sD8Jav5ltfEBTnZH+0STD6bjTdl8pFdRFwzRAUUxTnNZSjHSK//rwYJVgYA?=
- =?us-ascii?Q?OKJOSj3+q2nRVYyGifrhpMWJJt+UlEVqoFJ6syNYXh6Aoh/uES30DpQTG/xN?=
- =?us-ascii?Q?D+g1M9f6+3p8SHEmhT0ZXC58cmr75KRniBTBt9uQyzuJ15uViIKPg7ZT8Y8x?=
- =?us-ascii?Q?PD1Zt7dOA1GlFhZV8KAnu+9dAfO0I6zoqEx6FCSAOm0teGBxSGCZo09efaR7?=
- =?us-ascii?Q?qK9fnb880GNYOVNPkFI2/oxMPTtX5xstr9zfbjLdDK9xQUlt8oez3Qffiwjk?=
- =?us-ascii?Q?El18LYZlv2xvtEr22savVkJYKoO6ybhURrFuaiV+i61rdhni+qNIfWijAb1H?=
- =?us-ascii?Q?I/VYg9188ZUlJXo6BUiC3vEmceMISIbOzoTpe+y83GGwIuFoWX8Vhl0pxn5d?=
- =?us-ascii?Q?6Td6MrbtdNcGS6BXESDGsCZMsGmdUT538RSZSR17gR4fmcbh4/Po426B5eGg?=
- =?us-ascii?Q?1cmvgLyJrohbCMrRP6pYu6Z9TBYIvR6nZ+mRgVF+DRK6ubTIhhiwy6lIC76I?=
- =?us-ascii?Q?Evm7+K2bIoLfh6x68gUyjHg=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 557bcfa6-e9ad-4fad-d937-08db99f29ac9
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR0102MB3590.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2023 22:39:06.4442
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QG/jpqdDjvY9iAA6geBIvClweymTQmBeO0rGjFztzU4g29E9bOaxU8HBx5urNLOFia8OFl1b3SKt7iJRe5NQwXKQ/achHSHlfZ2zlxPkConauzCmXUJBieJZ/of0Cf1V
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR01MB7878
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+For logical OR operator, the actual sample_flags are in the 'groups'
+list so it needs to check entries in the list instead.  Otherwise it
+would show the following error message.
 
+  $ sudo perf record -a -e cycles:p --filter 'period > 100 || weight > 0' sleep 1
+  Error: cycles:p event does not have sample flags 0
+  failed to set filter "BPF" on event cycles:p with 2 (No such file or directory)
 
-On Fri, 4 Aug 2023, Ilkka Koskinen wrote:
-> On Fri, 4 Aug 2023, John Garry wrote:
->
->> On 03/08/2023 22:13, Ilkka Koskinen wrote:
->>> Per errata AC03_CPU_29, STALL_SLOT_FRONTEND, STALL_FRONTEND, and STALL
->>> events are not counting as expected. The follow up metrics patch will
->>> include correct way to calculate the impacted events.
->>> 
->>> Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
->> 
->> Reviewed-by: John Garry <john.g.garry@oracle.com>
->> 
->>> ---
->>>   .../arch/arm64/ampere/ampereone/pipeline.json        | 12 +++++++++---
->>>   1 file changed, 9 insertions(+), 3 deletions(-)
->>> 
->>> diff --git 
->>> a/tools/perf/pmu-events/arch/arm64/ampere/ampereone/pipeline.json 
->>> b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/pipeline.json
->>> index f9fae15f7555..711028377f3e 100644
->>> --- a/tools/perf/pmu-events/arch/arm64/ampere/ampereone/pipeline.json
->>> +++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/pipeline.json
->>> @@ -1,18 +1,24 @@
->>>   [
->>>       {
->>> -        "ArchStdEvent": "STALL_FRONTEND"
->>> +        "ArchStdEvent": "STALL_FRONTEND",
->>> +        "Errata": "Errata AC03_CPU_29",
->>> +        "BriefDescription": "Impacted by errata, use metrics instead -"
->> 
->> why end with a '-'?
->
-> That's a great question! I wish, I remembered why I did that. Looking at 
-> other events with Errata field, they use '.'. I can fix those and submit the 
-> patchset again.
+Actually it should warn on 'weight' is used without WEIGHT flag.
 
-John, I took a look at it and it seems that if I use '.', perf will remove 
-it. Here are two examples:
+  Error: cycles:p event does not have PERF_SAMPLE_WEIGHT
+   Hint: please add -W option to perf record
+  failed to set filter "BPF" on event cycles:p with 2 (No such file or directory)
 
-metrics.json:
-"BriefDescription": "Impacted by errata, use metrics instead."
-
-# perf list
-[Impacted by errata, use metrics instead Spec update: Errata AC03_CPU_29]
-
-vs.
-
-"BriefDescription": "Impacted by errata, use metrics instead -"
-
-# perf list
-
-Impacted by errata, use metrics instead - Spec update: Errata AC03_CPU_29
-
+Fixes: 4310551b76e0 ("perf bpf filter: Show warning for missing sample flags")
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
+ tools/perf/util/bpf-filter.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-So, I believe, I probably used the hyphen to make the 'perf list' output a 
-little "prettier". Well, I just change to dot and it's fine.
+diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
+index 47f01df658d9..b51544996046 100644
+--- a/tools/perf/util/bpf-filter.c
++++ b/tools/perf/util/bpf-filter.c
+@@ -62,6 +62,16 @@ static int check_sample_flags(struct evsel *evsel, struct perf_bpf_filter_expr *
+ 	if (evsel->core.attr.sample_type & expr->sample_flags)
+ 		return 0;
+ 
++	if (expr->op == PBF_OP_GROUP_BEGIN) {
++		struct perf_bpf_filter_expr *group;
++
++		list_for_each_entry(group, &expr->groups, list) {
++			if (check_sample_flags(evsel, group) < 0)
++				return -1;
++		}
++		return 0;
++	}
++
+ 	info = get_sample_info(expr->sample_flags);
+ 	if (info == NULL) {
+ 		pr_err("Error: %s event does not have sample flags %lx\n",
+-- 
+2.41.0.640.ga95def55d0-goog
 
-Cheers, Ilkka
-
-
->>
->>>       },
->>>       {
->>>           "ArchStdEvent": "STALL_BACKEND"
->>>       },
->>>       {
->>> -        "ArchStdEvent": "STALL"
->>> +        "ArchStdEvent": "STALL",
->>> +        "Errata": "Errata AC03_CPU_29",
->>> +        "BriefDescription": "Impacted by errata, use metrics instead -"
->>>       },
->>>       {
->>>           "ArchStdEvent": "STALL_SLOT_BACKEND"
->>>       },
->>>       {
->>> -        "ArchStdEvent": "STALL_SLOT_FRONTEND"
->>> +        "ArchStdEvent": "STALL_SLOT_FRONTEND",
->>> +        "Errata": "Errata AC03_CPU_29",
->>> +        "BriefDescription": "Impacted by errata, use metrics instead -"
->>>       },
->>>       {
->>>           "ArchStdEvent": "STALL_SLOT"
->> 
->> 
->
