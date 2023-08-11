@@ -2,301 +2,215 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE6DC001B0
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Aug 2023 15:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2515EC0015E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Aug 2023 16:09:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236470AbjHKPyf (ORCPT
+        id S231449AbjHKQJs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Aug 2023 11:54:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59836 "EHLO
+        Fri, 11 Aug 2023 12:09:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236490AbjHKPyc (ORCPT
+        with ESMTP id S233840AbjHKQJr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Aug 2023 11:54:32 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3E83270F;
-        Fri, 11 Aug 2023 08:54:31 -0700 (PDT)
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37BDcH44002201;
-        Fri, 11 Aug 2023 15:54:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=AkiLn5ulzNASEhOTU6Nv7tktkhkMP53Y3PV/ViTb/qY=;
- b=0Y+KB6NW4RxhgdN7Cx+KVWzNYEX0nmHx5ImWKzsZchO6KmykIREKGi+H4jY5tiTt2OOV
- EcRcasz+UM4fQ2l30gnit6TzDYN0hmPTeoqWvnveYo51i1B6TKhQblJyYhCRFbUBIL6S
- drp4z7s88zHAsXSXvNkvfXiFfpJay+q2Oc4YWEimGeeskAA/N3u/JQe8xpzoprYDnKTg
- LkKNwOrEwITd0U0ZKDYB6+GtFkXEZJ8/3gj3cjnyoDbuvOLd7qKMFgR580TvlN5eqM7Z
- 2dphImNcAwYopOV9bLqwqLRVeqikWOEmhi4uxQEWYSkK2l6uDl6XErCbG2ZTKYNwxi4g Ng== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3sd8ychb11-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Aug 2023 15:54:03 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 37BEVDS0003104;
-        Fri, 11 Aug 2023 15:54:01 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2174.outbound.protection.outlook.com [104.47.55.174])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3s9cva98gu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Aug 2023 15:54:01 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FHlBaHPtbbWG5htwDUOm2SoZmlQeg7DpWwVmiZ7Qwhha9eAobGS648gm+ECQ6P+73pGzkUOWGJOuIcPADa5gfa/VoJrPBlug6CGZqsh8Yy8qj9N/iKhBXnmHNDy4FBh2x4Lc7ymw6bxek2NJB1q9ZtblhGtwXgCbPOYHlCA/PJS2m9AD2XRxOlxPUU5nuUoXIp1trXUfiyrZ9RzT+rBF2OhUDcfpzzOuk28ZSzJ2EIOXRGQ7MRaZMyYbmDuoXkYlinBzUbjDbeQXQC2ASB3St9jPCp3jjqDQKdyZzKSDMjFM/RBum+hI5ef63kNuEg3fuJSxA3MsPoPK3cZxtbF+QQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AkiLn5ulzNASEhOTU6Nv7tktkhkMP53Y3PV/ViTb/qY=;
- b=aKGBZ5Z7NUn3eooX1qNOdjKAyO8BBFq2hAX11RxGfOS+PHDRQYpKC6TjLJlo/9mFGS3oA3FQng6MOxsMYUMotzfrEtcc2WhJzsOPR+CN9x20n3+6iPf8p5VQWH76KLPqqK89PrR8YzIAImTh01UdGx8ZXym8ZaRePBlmH4uKtuf/pw/Tur0/UeOvdCOnP9bAxOVrLeP23AsQtDGbVqaB1+HcZIiuEk6giyf6i9v9soRGJNvIRp7h8fArBIOLTgZ+D6LY8TzcN3nx2WQe9veTdX6lhRX5Fl7E6+7By6Y4IiG8C1lDjlRy+JkDuqGnFohnoxlDpHnRtJ/bSdBgipHW/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+        Fri, 11 Aug 2023 12:09:47 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C567F10DE;
+        Fri, 11 Aug 2023 09:09:46 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-3fe4b95c371so12959845e9.1;
+        Fri, 11 Aug 2023 09:09:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AkiLn5ulzNASEhOTU6Nv7tktkhkMP53Y3PV/ViTb/qY=;
- b=MDYgvNike1Brzql8ePOqEF0foRA6VLoy/e5+Jd4oXYyVCMc8Bd7+jZLvJmDhIFBP2nKaNED2jBgLMZbrHJn7KgS1ocTchO4peABEBVHtNkVqx9w34SkSf7Jimco7DnIzRkjrcTA0e+6jAZN2CJrgZF/we6UgZiGQSOojjwA9guY=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by CH0PR10MB7498.namprd10.prod.outlook.com (2603:10b6:610:18e::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.30; Fri, 11 Aug
- 2023 15:54:00 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::ebfd:c49c:6b8:6fce]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::ebfd:c49c:6b8:6fce%6]) with mapi id 15.20.6652.029; Fri, 11 Aug 2023
- 15:53:59 +0000
-Message-ID: <be3193b2-2c0c-6e67-e7a9-d04d63a18059@oracle.com>
-Date:   Fri, 11 Aug 2023 16:53:56 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH v2 3/3] perf pmus: Don't print duplicate PMU suffix in
- list by default
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        d=gmail.com; s=20221208; t=1691770185; x=1692374985;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gj6RcIM5t5nz3eaWtpxz9vjlj23IfmgvBZ8zsd7klI8=;
+        b=muVl4Xl+lTMTvOpFocZFUmDiEvnMOY8PFCuwOkx56ORPFHaWulsQfIHWvc2KpPJg+w
+         DpFVVQ782tZV/qB4bHcFQST3Zx9E+SPLPnwLmx+lsPpCISssU1ZZTRs62PGarbC4B2XM
+         xZMnNyH10k0bZro92O6fshpbenTntEIOere/zh32An0uUBQeMiDdgfbXDmdBNpI7kwcC
+         JJ2ZEZz5VuY84U5BSvPG62mKY3hZJX/aoqJ+3Bs3XWBzbKLIQs+okNRY/DSKFAEzq4Lv
+         oNxtAWi9hQqmuIYCQoKSqAbeYAgotyS4g9DPbshX1Y3+MB29QEa6aDKrdlrlSM/EVmiG
+         hrCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691770185; x=1692374985;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gj6RcIM5t5nz3eaWtpxz9vjlj23IfmgvBZ8zsd7klI8=;
+        b=Wc3lMJU3gwArphdBtGGjWGbrsvUkItV1WHTuETZza9pDnPfROhsKO8pnyXHzclpA8H
+         Fk9WJb1uY/El9t/kBmnz6sQTYnnelieRcPScE7x9BbXGvx5piElsrWQLSomQGv2ByHH/
+         V27LQVIGGOJN2HslJZLGuHZTqROldc40qikX5k6YziZTmdSBmd8L4/xsrrI3mcVdT7/j
+         nDU/hruF0dRrFTehOU7k36VFFHtOuFMeRWcfcdyc2tLHLCdltcSZamYtoPVBtMpujey0
+         S/OHd9o4yuv1L8fJk/2YfyxMgrhmdgfJiB5pN89Cu8AzNvBlI49bF4xN3qdU0XkHID0i
+         u/5g==
+X-Gm-Message-State: AOJu0YxzNsKoAyraPfMYkah4iice+BZdFwuv7lGDYOR/o1AU5niyvU1e
+        fYOwEvYKGhOAC/g4+dPQy4w=
+X-Google-Smtp-Source: AGHT+IGcKf6v/9EVJ1A6GtZyZCJRuvnjFiatNiZiqH2sDuZt3qBsnnHi+Jv6+UD0KsEolE/9XDF+kg==
+X-Received: by 2002:a1c:6a14:0:b0:3fe:1c10:8d04 with SMTP id f20-20020a1c6a14000000b003fe1c108d04mr2014646wmc.19.1691770184869;
+        Fri, 11 Aug 2023 09:09:44 -0700 (PDT)
+Received: from krava (ip-94-113-247-30.net.vodafone.cz. [94.113.247.30])
+        by smtp.gmail.com with ESMTPSA id c6-20020a7bc846000000b003fe0a0e03fcsm8419320wml.12.2023.08.11.09.09.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Aug 2023 09:09:44 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Fri, 11 Aug 2023 18:09:41 +0200
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, Fangrui Song <maskray@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Andi Kleen <ak@linux.intel.com>, Leo Yan <leo.yan@linaro.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Carsten Haitzler <carsten.haitzler@arm.com>,
         Ravi Bangoria <ravi.bangoria@amd.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230810214952.2934029-1-irogers@google.com>
- <20230810214952.2934029-4-irogers@google.com>
-From:   John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <20230810214952.2934029-4-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P265CA0077.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2bd::8) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Yonghong Song <yhs@fb.com>, Rob Herring <robh@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org, llvm@lists.linux.dev,
+        Wang Nan <wangnan0@huawei.com>,
+        Wang ShaoBo <bobo.shaobowang@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        He Kuang <hekuang@huawei.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>
+Subject: Re: [PATCH v1 0/4] Remove BPF event support
+Message-ID: <ZNZdRfkWqqZVltt+@krava>
+References: <20230810184853.2860737-1-irogers@google.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|CH0PR10MB7498:EE_
-X-MS-Office365-Filtering-Correlation-Id: e6779d1f-c5ab-49d8-3af8-08db9a832d6c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qGGdxhE3C8cEx7ZNs7PZqVMCPGfSatFGwFWfAUgCriGovFzldz011QEO8aCwCwo+yiWU6JxTlHhLAaLd7k3iyV7bFiV1qH3fXsM6dUxlDYCmTh4cz9KDO72telw46XkoF8fE26CD2Da4gOyW6D0D9QalPYLSBooJtY0+wM+F0kdx4YOOKfj2TpbYaLXK+GNWnSoTSzF23HpdayuiPU1HAQ5XmdSwf9gQsoGrwtIoq1r+L4/mDGDgDj6tZqJHlRyc/X6RKVqDAXqKXW6mUV6bdwa6Pb5XYN4JBOcJ+G3Sk/meOMUs4EXfuZ8dKcVvnD3jhNizZF+eLbA+/GzT4102yJkZD8zxcaPewVVQwRBGvaGkbKnOegrvqhGb66MhIODFImWXyiH4NxEHXMyku1FnNjsO8utU3nkx+pEVUf2NeU2EEL9HiijKeSWFt1Ecz+PuZAvMIHAzfpCuO+dUP3DCbOK+7S4YsqldhohHO2Fycw82SDM0D3F75YrCktnrzvIfkw1Fi1bWv5alE7wyOdKJnuf+lqpJRcpNdMiYpLLyDZLkAQ7+QnEeHaoBZiEoK7p9joNBaYWuHz0MhIhDabaWDxf8hkPJtF8ANpCeRsAskEZh/ZbA238CrGXlEdCiw3xG6eirg+RwjyWo4pme2oiQt9lQ9eBthYpqrpT7MowpRYM=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(366004)(39860400002)(376002)(136003)(396003)(186006)(1800799006)(451199021)(31686004)(66946007)(66556008)(26005)(478600001)(6666004)(110136005)(36756003)(31696002)(66476007)(53546011)(6506007)(83380400001)(2616005)(6512007)(41300700001)(7416002)(6486002)(36916002)(2906002)(316002)(86362001)(8936002)(8676002)(5660300002)(921005)(38100700002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UWZDT29OMVZsOG1YUlVOVUMvSTE4S2NFM3FoVzY1UGZEWVZnV1Y5eEFXaldK?=
- =?utf-8?B?REhCZzdKREFnWXpwNFRNdXpSOFJ3NXpHVUpSNW8vN0xTdi9WejRuVnNGRTBn?=
- =?utf-8?B?NXU3aEYydTE1bW12cStLZU15a3RDQzgyU3FqRFpzSE5NZ0JQeWlYeDl1ZjBC?=
- =?utf-8?B?azRoZ2NobXBtSFlDa3VBQ2RKSnp4M0ZuK0xYbW10N2RDMlB1RjFRNGUvQ2hl?=
- =?utf-8?B?S2g0V0J1cHZ1alJRcFFlTFc3aEJVaDNMWHBmV0dheUFHRzhMbDlTVGVJMTln?=
- =?utf-8?B?TzNXN1E3Um5aVGxTVDh5VXc2REQvQ2g1ekFHMHp6YmRBenloM0Q2enhMZVY2?=
- =?utf-8?B?TkVFbmhaT3lQdC9ZUlRoSUJLcm5pT1lBUGUvZGlZR1k1UEdEMzFqTDkrNlZM?=
- =?utf-8?B?S2lIeE5INHh3WG5kUXlFLzNDYlZIeHRiZU1scXFMNy9rajNHUFowWmg5Nk1U?=
- =?utf-8?B?bzFWQWVkL1dDOHhkR2dKOS9XbEpqQlQ1Y05BMzgvbk9ac3l1RFVXTmZqN2ZJ?=
- =?utf-8?B?TDRkSjZBYTJheUUveHZDbGJuZUlDME9KcU9PUUV4eW82RG5oaC9oS2xlU0k3?=
- =?utf-8?B?Zm9LbzlaWUw4clhhdi9wSUUwVk4wZ25qeWh6Z3BKZFhOdTY0d2dCcGRHbjhM?=
- =?utf-8?B?YmgyRmRuTkRNcVMwNGNhc2xPc3lodDBjbEh3UmlRMFFiZzdMaStZRk1PLzRZ?=
- =?utf-8?B?SzA5cFNrRHBOSUhFV3dla2FISGtaWFptbFhsQXltcHNCd01QaVRMU0JGSVFK?=
- =?utf-8?B?dnBNNEk5ZWFPUVlEMmxwQkZJT2xkYVM2NzFNeEQ2eG56WjB2Y21xZ0U3TDM0?=
- =?utf-8?B?czVMVjExZ1ZGbDY3YlhCQzQ5b0lSMy9nTXo5R3lFUnNuVy91ZDBNb3BLWWhY?=
- =?utf-8?B?V2NrTGdEbzZUWkd6ZStxTDZzbTV2eGxiSnMwaHY1dDhnYXdQRW9hL1JFdkRK?=
- =?utf-8?B?UEtyeERkMVVacjVEVllidjdTQXNrSlBJM1FucHFzTDVYMVFSVEpOTk5UaTVz?=
- =?utf-8?B?U25WUHlEck1qRllaTGVqc1BPc1dmRHBKck9UWnVTY2VMcVpISkZNUFhNbkhJ?=
- =?utf-8?B?bFlpTkN5Y1hFNFBVUi9Id2k3Vm5SUUFJL3lTSnVwcVYyQ015WEM4eXd0ZXo4?=
- =?utf-8?B?dUFiRGxEN2M0amhKTVlwVkVNdElBR1praWRSZVFzb3pXenR2V002UWtZVWpR?=
- =?utf-8?B?VlpiN3l3Rk0xWDc4dnlINVFrb1QwUnVKemlmKytnb1VkSGFCZG45WE8zOUdq?=
- =?utf-8?B?TWdvaWFDVVoydEpWM0hSUXkyZkh5R3lDQUxLZlBDMHV1QXcvTGh6akRlQVBG?=
- =?utf-8?B?U2drUzJudjJXTlNhejQxKzdMTVpXYkFWd3FoaXVTWmxXOTI4MXgyRU9ybUlo?=
- =?utf-8?B?SjMrTW9CZS90SmVYbDJ5VHArSFJIdSt2K2lsYUd1bUVrUTlpZVdFdUJlZnJ4?=
- =?utf-8?B?S2dsZEJybnh2WGkzMTBCUFIxRVJCa2oyNEV2djJlNStERy9PbEt3YTNqSE5C?=
- =?utf-8?B?SG9ob2VsUENURDBkZlZpeGJGUnptMXdSbmNJNW40OW9UY21oWEtFNDdIcEtW?=
- =?utf-8?B?NGZNZmh3OTZET1NhSXpoUzFzU3BHNkFoZXVkajRmbzNTcmxJR2tVcXZ6Tlhy?=
- =?utf-8?B?QldXT0UyNkY0RXJhV3pKOFEvT0tXaG1xYW5zQzVTbnJTVmdpU3IycUdETlVY?=
- =?utf-8?B?cWZXNG1jNGZPMmlDT0RuRGE5cWVZWGpOSzF4MmJkbWxvVGhaSGpFTUhwYTBM?=
- =?utf-8?B?cld0MlNTeUwrdnpkaDdMU3RJY1kvNkpPVFloZzA1Tm5mek43R0c0cnBYenAr?=
- =?utf-8?B?Q256Ump0MHg1MllFQ0J1amE0QmNtZGdPclBBVDRzYkZCSlNOR1BPVThlb2Fr?=
- =?utf-8?B?TzA1b204Q2FHWTBBM0tjUFlhT0F4OXdLKyt5Nkhid1NEU2JRU2xTOG4zbnB5?=
- =?utf-8?B?aHdRU2tkbzdNWExjOU1ReW5wRDFoSUZ6TU5KRUFpaVZ1MUJheEFia0xhQWRS?=
- =?utf-8?B?YmV0NzFHTVlpRENldU1BaVpNdmJRWXBQN1BXU0hZSXFLVGZDUVQweWJrR1cv?=
- =?utf-8?B?UzZwVENGbFQ3NS9xcjYwYmFPWUk1MXRycCtSL29OZ1c1Uit2UmNGRXFkY3hN?=
- =?utf-8?Q?cFiz8RQbZ32+znzuhHZxA1Vji?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?aytYbjYyL1hVVXBKWmdDWVFDdUtaREVNb01CTjAxUm16WFhwUW94cUwvOGxJ?=
- =?utf-8?B?dVp5YytXZFRsaUt2ZmFtcDQ1blp6MU95bVNpMkVaekc5MS9IOExGQTcvVFZY?=
- =?utf-8?B?MG52WDhlcEVyYjRYOVNPWHZDeCsvQzI2S2J4M09zdWZRNmRTOFRaKzFjOE5q?=
- =?utf-8?B?cjBsOHAxRXhiZ29aMDF1NVExTmVIbUdpbTcvQ1hzck9kU0ZNdkxWVzhFQ3hV?=
- =?utf-8?B?blFqN3AyaGZtUzJtaE10NmFhcWFybHF0eUhhaE9GeWUxQWNYMFVtRkJSTVdx?=
- =?utf-8?B?bTV6bmZ0a2htUytSNFlVYzY4cS9pZTdzZUpxWUZXU3hrSHJ3bWNTOFFIenIy?=
- =?utf-8?B?Y0x5dC9sZWpJMytSMW9uNm96YnJ3cVJxeEFZVE1ZdlBMM3lOQ0kxL1Q0UGI3?=
- =?utf-8?B?RDVXNG9WMWIrT1VSMlBhQStJaENQTTRXU0pLbXNHMlNzbkxGQjlCMFZnTjBE?=
- =?utf-8?B?S0tINytrM3pKZWpKZU1paXJmZjB4YkUyVGV1b3JqaXRic0tVZDdPLzAydElm?=
- =?utf-8?B?Z1hvRzJyTlhDeHN0QmwwOFZUVWtLVGlCMThlRmlQSWhNMGhTOW82eHhkUEZy?=
- =?utf-8?B?YktyVENwZnpPRFpwbTZNOWNCNzBWeko2MWEyRzFKQzE2empBNTRuR1FLdVFx?=
- =?utf-8?B?bVAwM3pTNU4xTWpjZUJZdWhpYjZrUjFWVW1jWHNoNHpzbzI4UktHT1FlTWJ5?=
- =?utf-8?B?ckhqcFdaZEl5OUR2VEFSaHp0OWxXTzNLZ1Y2K3RSQzlKNzFGUk9TQWdTMW92?=
- =?utf-8?B?TWN3aU9uWG8vM0pSb0JyeVFpM2dsM1dUV3lVcUhSTkQ4OXRFS0lzODljVENT?=
- =?utf-8?B?YldhVkh5bWJRUnhZS2x3cE1aYzZCK3NhS2gxNTlPcVlxS0VvMU9DRGcxRHZZ?=
- =?utf-8?B?dFpnblZONEJpcTYzblNIYjBZbDdSR2lMakNCdjJZQ04xTG5kRldRbEt6ZUto?=
- =?utf-8?B?c2FyQlA0ajhsVklweVY4R0hpaWRVTEdnc0FyOHBuU2F3bVcxTXY0NXhFN3V2?=
- =?utf-8?B?UzZKTnlDQ3NxamRTNHUzQVJpdUFHcERJdk42b1d5eEEzajgrUU9ySTIrU0xu?=
- =?utf-8?B?V0hUakYyVWJiVTBuYVoyUXJEc3ZxOHZnOC9qcFQvNWZkRUxzR2R4RCs0OGtv?=
- =?utf-8?B?ZzdsNzRrdks3RjJ2TTVyb3RlT0JhTTduemxNMGdaN3Z3YzNSdFl2R2loL3M0?=
- =?utf-8?B?YWdGSHA1b2pCSmhCaXVhR0RPYUpySVdlZzdMTWVaN3pUWjZZZ29nalpLNjVT?=
- =?utf-8?B?dTRadGhIMDhVSTlnQVR3bkZ4M21zVXpJUGJsMlBsQU40aE9UdDdiak41Zkdo?=
- =?utf-8?B?ek8ydjhlYWs5L3Bjb0dLWlFEZldKQ3ZxTzloM1g1bmFGbHVScUZKNVN6OWJk?=
- =?utf-8?Q?JqCn0rtgZW5jy+h1ywCAbDo9PJPteVXw=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e6779d1f-c5ab-49d8-3af8-08db9a832d6c
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2023 15:53:59.8556
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: X9gQaYd++IXCxc8hUZMrp6cM0OFKJP5eVbd+A0OMxLAiTpUls4cx3e3mCyESXRy38i1m0NiAYoz5eBwHx/DYqg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB7498
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-08-11_07,2023-08-10_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
- adultscore=0 mlxscore=0 spamscore=0 suspectscore=0 malwarescore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2308110146
-X-Proofpoint-GUID: OoFpZWO5p9b6XIx-qJGvfFPhBW2zixOP
-X-Proofpoint-ORIG-GUID: OoFpZWO5p9b6XIx-qJGvfFPhBW2zixOP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230810184853.2860737-1-irogers@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 10/08/2023 22:49, Ian Rogers wrote:
-> Duplicate PMUs are no longer printed by default but the suffix of the
-> first is printed. When duplicate PMUs are being skipped avoid printing
-> the suffix.
+On Thu, Aug 10, 2023 at 11:48:49AM -0700, Ian Rogers wrote:
+> The patch series removes BPF event support as past commits have shown
+> the support has bit rotten:
+> https://lore.kernel.org/lkml/20230728001212.457900-1-irogers@google.com/
 > 
-> Before:
-> ```
-> $ perf list
-> ...
->    uncore_imc_free_running_0/data_read/               [Kernel PMU event]
->    uncore_imc_free_running_0/data_total/              [Kernel PMU event]
->    uncore_imc_free_running_0/data_write/              [Kernel PMU event]
-> ```
+> Similar functionality is now available via the --filter option, that
+> uses a BPF skeleton, and is therefore more compact and simpler to
+> use. The simplicity coming from not having to build BPF object files.
 > 
-> After:
-> ```
-> $ perf list
-> ...
->    uncore_imc_free_running/data_read/                 [Kernel PMU event]
->    uncore_imc_free_running/data_total/                [Kernel PMU event]
->    uncore_imc_free_running/data_write/                [Kernel PMU event]
-> ...
-> $ perf list -v
->    uncore_imc_free_running_0/data_read/               [Kernel PMU event]
->    uncore_imc_free_running_0/data_total/              [Kernel PMU event]
->    uncore_imc_free_running_0/data_write/              [Kernel PMU event]
->    uncore_imc_free_running_1/data_read/               [Kernel PMU event]
->    uncore_imc_free_running_1/data_total/              [Kernel PMU event]
->    uncore_imc_free_running_1/data_write/              [Kernel PMU event]
-> ...
-> ```
+> A different use case for the events was for syscall augmentation in
+> perf trace. So that this isn't broken, and to make its use
+> significantly simpler, the support is migrated to use a BPF
+> skeleton. This means perf trace is much more likely to augment
+> syscalls for users.
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->   tools/perf/util/pmus.c | 20 ++++++++++++++------
->   1 file changed, 14 insertions(+), 6 deletions(-)
+> Removal of BPF events was raised on LKML two weeks ago with the
+> original authors cc-ed:
+> https://lore.kernel.org/lkml/CAP-5=fXxGimJRXKf7bcaPqfjxxGcn1k3CspY_iSjQnpAKs3uFQ@mail.gmail.com/
 > 
-> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> index 5073843aca19..b0ecb2e5bdcc 100644
-> --- a/tools/perf/util/pmus.c
-> +++ b/tools/perf/util/pmus.c
-> @@ -440,10 +440,13 @@ static int sub_non_neg(int a, int b)
->   }
->   
->   static char *format_alias(char *buf, int len, const struct perf_pmu *pmu,
-> -			  const struct perf_pmu_alias *alias)
-> +			  const struct perf_pmu_alias *alias, bool skip_duplicate_pmus)
->   {
->   	struct parse_events_term *term;
-> -	int used = snprintf(buf, len, "%s/%s", pmu->name, alias->name);
-> +	int pmu_name_len = skip_duplicate_pmus
-> +		? pmu_name_len_no_suffix(pmu->name, /*num=*/NULL)
-> +		: (int)strlen(pmu->name);
-> +	int used = snprintf(buf, len, "%.*s/%s", pmu_name_len, pmu->name, alias->name);
->   
->   	list_for_each_entry(term, &alias->terms, list) {
->   		if (term->type_val == PARSE_EVENTS__TERM_TYPE_STR)
-> @@ -473,9 +476,10 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
->   	int printed = 0;
->   	int len, j;
->   	struct sevent *aliases;
-> +	bool skip_duplicate_pmus = print_cb->skip_duplicate_pmus(print_state);
+> BPF events are described publicly in very few places but one is:
+> https://www.brendangregg.com/perf.html#eBPF
+> "eBPF is currently a little restricted and difficult to use from
+> perf. It's getting better all the time. A different and currently
+> easier way to access eBPF is via the bcc Python interface, which is
+> described on my eBPF Tools page. On this page, I'll discuss perf."
+> 
+> I don't think the "getting better all the time" is any longer true as
+> BPF features are being added to perf primarily by using BPF
+> skeletons. The given example is a filter and would be better supported
+> via "perf record --filter".
 
-nit: that code could have been in the previous patch
+agreed, I don't think it's being really used as well,
+also caused problems with libbpf updates
 
->   	struct perf_pmu *(*scan_fn)(struct perf_pmu *);
->   
-> -	if (print_cb->skip_duplicate_pmus(print_state))
-> +	if (skip_duplicate_pmus)
->   		scan_fn = perf_pmus__scan_skip_duplicates;
->   	else
->   		scan_fn = perf_pmus__scan;
-> @@ -518,6 +522,7 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
->   			*desc = NULL, *long_desc = NULL,
->   			*encoding_desc = NULL, *topic = NULL,
->   			*pmu_name = NULL;
-> +		int pmu_name_len;
->   		bool deprecated = false;
->   		size_t buf_used;
->   
-> @@ -528,7 +533,8 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
->   		if (!aliases[j].event) {
->   			/* A selectable event. */
->   			pmu_name = aliases[j].pmu->name;
-> -			buf_used = snprintf(buf, sizeof(buf), "%s//", pmu_name) + 1;
-> +			pmu_name_len = pmu_name_len_no_suffix(pmu_name, /*num=*/NULL);
-> +			buf_used = snprintf(buf, sizeof(buf), "%.*s//", pmu_name_len, pmu_name) + 1;
->   			name = buf;
->   		} else {
->   			if (aliases[j].event->desc) {
-> @@ -536,7 +542,7 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
->   				buf_used = 0;
->   			} else {
->   				name = format_alias(buf, sizeof(buf), aliases[j].pmu,
-> -						    aliases[j].event);
-> +						    aliases[j].event, skip_duplicate_pmus);
->   				if (aliases[j].is_cpu) {
->   					alias = name;
->   					name = aliases[j].event->name;
-> @@ -554,8 +560,10 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
->   			long_desc = aliases[j].event->long_desc;
->   			topic = aliases[j].event->topic;
->   			encoding_desc = buf + buf_used;
-> +			pmu_name_len = pmu_name_len_no_suffix(pmu_name, /*num=*/NULL);
->   			buf_used += snprintf(buf + buf_used, sizeof(buf) - buf_used,
-> -					"%s/%s/", pmu_name, aliases[j].event->str) + 1;
-> +					"%.*s/%s/", pmu_name_len, pmu_name,
-> +					aliases[j].event->str) + 1;
->   			deprecated = aliases[j].event->deprecated;
->   		}
->   		print_cb->print_event(print_state,
+> 
+> Ian Rogers (4):
+>   perf parse-events: Remove BPF event support
+>   perf trace: Migrate BPF augmentation to use a skeleton
+>   perf bpf examples: With no BPF events remove examples
+>   perf trace: Tidy comments
+> 
+>  tools/perf/Documentation/perf-config.txt      |   33 -
+>  tools/perf/Documentation/perf-record.txt      |   22 -
+>  tools/perf/Makefile.config                    |   43 -
+>  tools/perf/Makefile.perf                      |   19 +-
+>  tools/perf/builtin-record.c                   |   45 -
+>  tools/perf/builtin-trace.c                    |  310 +--
+>  tools/perf/examples/bpf/5sec.c                |   53 -
+>  tools/perf/examples/bpf/empty.c               |   12 -
+>  tools/perf/examples/bpf/hello.c               |   27 -
+>  tools/perf/examples/bpf/sys_enter_openat.c    |   33 -
+>  tools/perf/perf.c                             |    2 -
+>  tools/perf/tests/.gitignore                   |    5 -
+>  tools/perf/tests/Build                        |   31 -
+>  tools/perf/tests/bpf-script-example.c         |   60 -
+>  tools/perf/tests/bpf-script-test-kbuild.c     |   21 -
+>  tools/perf/tests/bpf-script-test-prologue.c   |   49 -
+>  tools/perf/tests/bpf-script-test-relocation.c |   51 -
+>  tools/perf/tests/bpf.c                        |  390 ----
+>  tools/perf/tests/builtin-test.c               |    3 -
+>  tools/perf/tests/clang.c                      |   32 -
+>  tools/perf/tests/llvm.c                       |  219 --
+>  tools/perf/tests/llvm.h                       |   31 -
+>  tools/perf/tests/make                         |    2 -
+>  tools/perf/tests/tests.h                      |    2 -
+>  tools/perf/trace/beauty/beauty.h              |   15 +-
+>  tools/perf/util/Build                         |    8 +-
+>  tools/perf/util/bpf-loader.c                  | 2006 -----------------
+>  tools/perf/util/bpf-loader.h                  |  216 --
+>  .../bpf_skel/augmented_raw_syscalls.bpf.c}    |   35 +-
+>  tools/perf/util/c++/Build                     |    5 -
+>  tools/perf/util/c++/clang-c.h                 |   43 -
+>  tools/perf/util/c++/clang-test.cpp            |   67 -
+>  tools/perf/util/c++/clang.cpp                 |  225 --
+>  tools/perf/util/c++/clang.h                   |   27 -
+>  tools/perf/util/config.c                      |    4 -
+>  tools/perf/util/llvm-utils.c                  |  612 -----
+>  tools/perf/util/llvm-utils.h                  |   69 -
+>  tools/perf/util/parse-events.c                |  268 ---
+>  tools/perf/util/parse-events.h                |   15 -
+>  tools/perf/util/parse-events.l                |   31 -
+>  tools/perf/util/parse-events.y                |   44 +-
+>  41 files changed, 133 insertions(+), 5052 deletions(-)
 
+awesome :)) 
+
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+
+thanks,
+jirka
+
+>  delete mode 100644 tools/perf/examples/bpf/5sec.c
+>  delete mode 100644 tools/perf/examples/bpf/empty.c
+>  delete mode 100644 tools/perf/examples/bpf/hello.c
+>  delete mode 100644 tools/perf/examples/bpf/sys_enter_openat.c
+>  delete mode 100644 tools/perf/tests/.gitignore
+>  delete mode 100644 tools/perf/tests/bpf-script-example.c
+>  delete mode 100644 tools/perf/tests/bpf-script-test-kbuild.c
+>  delete mode 100644 tools/perf/tests/bpf-script-test-prologue.c
+>  delete mode 100644 tools/perf/tests/bpf-script-test-relocation.c
+>  delete mode 100644 tools/perf/tests/bpf.c
+>  delete mode 100644 tools/perf/tests/clang.c
+>  delete mode 100644 tools/perf/tests/llvm.c
+>  delete mode 100644 tools/perf/tests/llvm.h
+>  delete mode 100644 tools/perf/util/bpf-loader.c
+>  delete mode 100644 tools/perf/util/bpf-loader.h
+>  rename tools/perf/{examples/bpf/augmented_raw_syscalls.c => util/bpf_skel/augmented_raw_syscalls.bpf.c} (93%)
+>  delete mode 100644 tools/perf/util/c++/Build
+>  delete mode 100644 tools/perf/util/c++/clang-c.h
+>  delete mode 100644 tools/perf/util/c++/clang-test.cpp
+>  delete mode 100644 tools/perf/util/c++/clang.cpp
+>  delete mode 100644 tools/perf/util/c++/clang.h
+>  delete mode 100644 tools/perf/util/llvm-utils.c
+>  delete mode 100644 tools/perf/util/llvm-utils.h
+> 
+> -- 
+> 2.41.0.640.ga95def55d0-goog
+> 
