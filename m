@@ -2,237 +2,194 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D081FC001B0
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Aug 2023 02:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A94AAEB64DD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Aug 2023 05:17:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229549AbjHKC6a (ORCPT
+        id S231132AbjHKFRL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Aug 2023 22:58:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48074 "EHLO
+        Fri, 11 Aug 2023 01:17:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230147AbjHKC6a (ORCPT
+        with ESMTP id S229634AbjHKFRH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Aug 2023 22:58:30 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB9CC10D;
-        Thu, 10 Aug 2023 19:58:29 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-56546b45f30so1240684a12.3;
-        Thu, 10 Aug 2023 19:58:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691722709; x=1692327509;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p3HQQCbZUQgMGtswL7NtUKKa35Z1CAMIgNgpjGVzPks=;
-        b=U7Xg0vUCJn2dGjJvtFxShAyxZLabTC6A855FIb4VVng+t+Y0CInQo0q4KFdA+tcl9O
-         3qd3+KwDns4jY+p1cceG9q+ZYWt21k9p9AzKnss6WTlhmb93JZUqcOe44b2oPFyyDzaL
-         DgPBNix/z1JACyrEjb/4mcadFAKq6xcgF+EMHuRz/eQlpAwXqw8Qc21O8bzgcAcOSpe8
-         UlVCrcKyr6Bk0q/XPM0MSxote2JiaWfBAAmHkvKklxLVXuCRwVkFC6hiRYgj9mEIf0wf
-         txgYQVY99OciCLunnSfKv1tJrGRl6p46pBTPDsgA6ew/ebLOblujAnGiLCSrbDh7fzjh
-         pJkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691722709; x=1692327509;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=p3HQQCbZUQgMGtswL7NtUKKa35Z1CAMIgNgpjGVzPks=;
-        b=QMiUboyNqZ++1dqLZFZftl65KmMXJjGf/meNpW8hdL5Fc0Rt1Dib1XashoTa5VSlhT
-         FmZC0p3gYhRHAOUyw7xMNIvUZFRjWf10H5Aidtl577DcdBc/c2h0KaMQFboOsT1qP42y
-         Q2N9aIXBkExHcE1XA57FFT2kenz2Ug846jWwCSIP9DDY8dSmGCqtXYH3bU2g77BAQGG0
-         7K0NB5zAhNch91yrVYxYEBHuUEkxQBKxE5kXz7dDLRaNTyBsvI2psM8Ert0v6lyiesDp
-         50+2MxuVCIqUqGwo99MrBTUF3QXuYdm3lRIOVmCT6Ps54wQU/30vdY8vPjItCzsRecfB
-         TzeA==
-X-Gm-Message-State: AOJu0YwGA9XeivQC3Zrs2mteuQMUk205Oc90U1iAoolhpOAv1aAm+Zxu
-        ko3ToHm9Rz/IVmvzKG3IP+o=
-X-Google-Smtp-Source: AGHT+IGkhq4EEk97+eG9idjdjbCJGyNzpfRefSo/gUeuSxYRWCpeHRgoZlKGQW3MtXe1CcBkHtqHGg==
-X-Received: by 2002:a17:903:11c9:b0:1bb:ce4a:5893 with SMTP id q9-20020a17090311c900b001bbce4a5893mr842388plh.30.1691722708974;
-        Thu, 10 Aug 2023 19:58:28 -0700 (PDT)
-Received: from moohyul.svl.corp.google.com ([2620:15c:2a3:200:2328:6915:cbeb:39d4])
-        by smtp.gmail.com with ESMTPSA id b23-20020a170902b61700b001b9be3b94d3sm2526592pls.140.2023.08.10.19.58.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Aug 2023 19:58:28 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCH 2/2] perf test: Add perf record sample filtering test
-Date:   Thu, 10 Aug 2023 19:58:22 -0700
-Message-ID: <20230811025822.3859771-2-namhyung@kernel.org>
-X-Mailer: git-send-email 2.41.0.640.ga95def55d0-goog
-In-Reply-To: <20230811025822.3859771-1-namhyung@kernel.org>
-References: <20230811025822.3859771-1-namhyung@kernel.org>
-MIME-Version: 1.0
+        Fri, 11 Aug 2023 01:17:07 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE4A22D41
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Aug 2023 22:17:00 -0700 (PDT)
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37B58S4i015649;
+        Fri, 11 Aug 2023 05:15:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=Uozn107CQ0SK1JghVFmAEOg+1EQ/BBo1/ih3ynJcCAg=;
+ b=riDDfeAaukTY3ibkXpycVP8pm//OrAPm+34Rr+iT4cWYDg1GcYGlPmcy8gMoZSxSXqZX
+ b9imZBBPzwT9cMNMlxhZ/DVl2wML/Va1enAksHyCePlIRA0u2DXtoZyH+DMepzLLFMul
+ uRYpHnx++zPmrjrTPhpm0dQMqnZbEvEmM0Hd/wKXauZ0Ki8k/Eud6XZy103mTlzjVSKY
+ CACYQzkWfGeN8HwyFlDEI6mXfPDHOrveon0+t0PTEiLqJguUb1L/aGGr8toEPJ6nXi+j
+ J2v3giKo9kcwBBlBwPkNxG9Gi71pRREcja8V8gTTrWJWufRhYbMMqMl0LzxXrE1mReWd Yw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sdebtra9s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 11 Aug 2023 05:15:59 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37B58qjd017082;
+        Fri, 11 Aug 2023 05:15:58 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sdebtra9c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 11 Aug 2023 05:15:58 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37B3GAiC007592;
+        Fri, 11 Aug 2023 05:15:57 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+        by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3sa150091b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 11 Aug 2023 05:15:57 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37B5FrN261407532
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 11 Aug 2023 05:15:54 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D51882005A;
+        Fri, 11 Aug 2023 05:15:53 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9B8862004B;
+        Fri, 11 Aug 2023 05:15:51 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.95.190])
+        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Fri, 11 Aug 2023 05:15:51 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
+        namhyung@kernel.org
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH] tools/perf: Fix dso kernel load and symbol process to correctly map dso to its long_name, type and adjust_symbols
+Date:   Fri, 11 Aug 2023 10:45:46 +0530
+Message-Id: <20230811051546.70039-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 7UfOZkxg8wBYupvycD5b0M287Jtr4Nd1
+X-Proofpoint-ORIG-GUID: QQKkBCrB7lJCC0jWr2YkYYiMx9eY8q44
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-10_20,2023-08-10_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ bulkscore=0 adultscore=0 priorityscore=1501 impostorscore=0
+ mlxlogscore=999 suspectscore=0 mlxscore=0 clxscore=1015 spamscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2308110046
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-  $ sudo ./perf test 'sample filter' -v
-   94: perf record sample filtering (by BPF) tests                     :
-  --- start ---
-  test child forked, pid 3817527
-  Checking BPF-filter privilege
-  Basic bpf-filter test
-  Basic bpf-filter test [Success]
-  Failing bpf-filter test
-  Error: task-clock event does not have PERF_SAMPLE_CPU
-  Failing bpf-filter test [Success]
-  Group bpf-filter test
-  Error: task-clock event does not have PERF_SAMPLE_CPU
-  Error: task-clock event does not have PERF_SAMPLE_CODE_PAGE_SIZE
-  Group bpf-filter test [Success]
-  test child finished with 0
-  ---- end ----
-  perf record sample filtering (by BPF) tests: Ok
+Test "object cocde reading" fails sometimes for kernel address
+as below:
 
-Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+    Reading object code for memory address: 0xc000000000004c3c
+    File is: [kernel.kallsyms]
+    On file address is: 0x14c3c
+    dso__data_read_offset failed
+    test child finished with -1
+    ---- end ----
+    Object code reading: FAILED!
+
+Here the dso__data_read_offset fails for symbol address
+0xc000000000004c3c. This is because, the dso long_name here
+is [kernel.kallsyms] and hence open_dso fails to open this
+file. There is an incorrect dso to map handling here. The
+key points here is:
+- dso long_name is set to [kernel.kallsyms]. This file is
+  not present and hence returns error
+- DSO binary type is set to DSO_BINARY_TYPE__NOT_FOUND
+- dso adjust_symbols is set to zero
+
+In the end dso__data_read_offset() returns -1 and the address
+0x14c3c can not be resolved. Hence the test fails. But the
+address actually maps to kernel dso
+
+    # objdump -z -d --start-address=0xc000000000004c3c --stop-address=0xc000000000004cbc /home/athira/linux/vmlinux
+
+    /home/athira/linux/vmlinux:     file format elf64-powerpcle
+
+    Disassembly of section .head.text:
+
+    c000000000004c3c <exc_virt_0x4c00_system_call+0x3c>:
+    c000000000004c3c:	a6 02 9b 7d 	mfsrr1  r12
+    c000000000004c40:	78 13 42 7c 	mr      r2,r2
+    c000000000004c44:	18 00 4d e9 	ld      r10,24(r13)
+    c000000000004c48:	60 c6 4a 61 	ori     r10,r10,50784
+    c000000000004c4c:	a6 03 49 7d 	mtctr   r10
+
+Fix the dso__process_kernel_symbol function to set the
+binary_type and adjust_symbols. adjust_symbols is used by
+function "map__rip_2objdump" which converts symbol start
+address to objdump address. Also set the dso long_name during
+dso__load_vmlinux function.
+
+Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 ---
- tools/perf/tests/shell/record_bpf_filter.sh | 128 ++++++++++++++++++++
- 1 file changed, 128 insertions(+)
- create mode 100755 tools/perf/tests/shell/record_bpf_filter.sh
+Note: Found similar discussion here in thread:
+      https://www.spinics.net/lists/linux-perf-users/msg06337.html
+      where Adrian proposed the fix, but looks like this was
+      not added to the perf. Hence addeed Suggested-by from Adrian.
 
-diff --git a/tools/perf/tests/shell/record_bpf_filter.sh b/tools/perf/tests/shell/record_bpf_filter.sh
-new file mode 100755
-index 000000000000..e76ea861b92c
---- /dev/null
-+++ b/tools/perf/tests/shell/record_bpf_filter.sh
-@@ -0,0 +1,128 @@
-+#!/bin/sh
-+# perf record sample filtering (by BPF) tests
-+# SPDX-License-Identifier: GPL-2.0
+      Additional to the fix proposed by Adrian, the patch also
+      adds setting of adjust_symbols which is needed for
+      map__rip_2objdump to convert symbol start to objdump address.
+
+ tools/perf/util/symbol-elf.c |  2 ++
+ tools/perf/util/symbol.c     | 15 ++++++++++-----
+ 2 files changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 252d26a59e64..9e7eeaf616b8 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -1440,6 +1440,8 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+ 		curr_dso->kernel = dso->kernel;
+ 		curr_dso->long_name = dso->long_name;
+ 		curr_dso->long_name_len = dso->long_name_len;
++		curr_dso->binary_type = dso->binary_type;
++		curr_dso->adjust_symbols = dso->adjust_symbols;
+ 		curr_map = map__new2(start, curr_dso);
+ 		dso__put(curr_dso);
+ 		if (curr_map == NULL)
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index f849f9ef68e6..3f36675b7c8f 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -2204,15 +2204,20 @@ int dso__load_vmlinux(struct dso *dso, struct map *map,
+ 	if (symsrc__init(&ss, dso, symfs_vmlinux, symtab_type))
+ 		return -1;
+ 
++	/*
++	 * dso__load_sym() may copy 'dso' which will result in the copies having
++	 * an incorrect long name unless we set it here first.
++	 */
++	dso__set_long_name(dso, vmlinux, vmlinux_allocated);
++	if (dso->kernel == DSO_SPACE__KERNEL_GUEST)
++		dso->binary_type = DSO_BINARY_TYPE__GUEST_VMLINUX;
++	else
++		dso->binary_type = DSO_BINARY_TYPE__VMLINUX;
 +
-+set -e
-+
-+err=0
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+
-+cleanup() {
-+  rm -f "${perfdata}"
-+  rm -f "${perfdata}".old
-+  trap - EXIT TERM INT
-+}
-+
-+trap_cleanup() {
-+  cleanup
-+  exit 1
-+}
-+trap trap_cleanup EXIT TERM INT
-+
-+test_bpf_filter_priv() {
-+  echo "Checking BPF-filter privilege"
-+
-+  if [ "$(id -u)" != 0 ]
-+  then
-+    echo "bpf-filter test [Skipped permission]"
-+    err=2
-+    return
-+  fi
-+  if ! perf record -e task-clock --filter 'period > 1' \
-+	  -o /dev/null --quiet true 2>&1
-+  then
-+    echo "bpf-filter test [Skipped missing BPF support]"
-+    err=2
-+    return
-+  fi
-+}
-+
-+test_bpf_filter_basic() {
-+  echo "Basic bpf-filter test"
-+
-+  if ! perf record -e task-clock -c 10000 --filter 'ip < 0xffffffff00000000' \
-+	  -o "${perfdata}" true 2> /dev/null
-+  then
-+    echo "Basic bpf-filter test [Failed record]"
-+    err=1
-+    return
-+  fi
-+  if perf script -i "${perfdata}" -F ip | grep 'ffffffff[0-9a-f]*'
-+  then
-+    echo "Basic bpf-filter test [Failed invalid output]"
-+    err=1
-+    return
-+  fi
-+  echo "Basic bpf-filter test [Success]"
-+}
-+
-+test_bpf_filter_fail() {
-+  echo "Failing bpf-filter test"
-+
-+  # 'cpu' requires PERF_SAMPLE_CPU flag
-+  if ! perf record -e task-clock --filter 'cpu > 0' \
-+	  -o /dev/null true 2>&1 | grep PERF_SAMPLE_CPU
-+  then
-+    echo "Failing bpf-filter test [Failed forbidden CPU]"
-+    err=1
-+    return
-+  fi
-+
-+  if ! perf record --sample-cpu -e task-clock --filter 'cpu > 0' \
-+	  -o /dev/null true 2>/dev/null
-+  then
-+    echo "Failing bpf-filter test [Failed should succeed]"
-+    err=1
-+    return
-+  fi
-+
-+  echo "Failing bpf-filter test [Success]"
-+}
-+
-+test_bpf_filter_group() {
-+  echo "Group bpf-filter test"
-+
-+  if ! perf record -e task-clock --filter 'period > 1000 || ip > 0' \
-+	  -o /dev/null true 2>/dev/null
-+  then
-+    echo "Group bpf-filter test [Failed should succeed]"
-+    err=1
-+    return
-+  fi
-+
-+  if ! perf record -e task-clock --filter 'cpu > 0 || ip > 0' \
-+	  -o /dev/null true 2>&1 | grep PERF_SAMPLE_CPU
-+  then
-+    echo "Group bpf-filter test [Failed forbidden CPU]"
-+    err=1
-+    return
-+  fi
-+
-+  if ! perf record -e task-clock --filter 'period > 0 || code_pgsz > 4096' \
-+	  -o /dev/null true 2>&1 | grep PERF_SAMPLE_CODE_PAGE_SIZE
-+  then
-+    echo "Group bpf-filter test [Failed forbidden CODE_PAGE_SIZE]"
-+    err=1
-+    return
-+  fi
-+
-+  echo "Group bpf-filter test [Success]"
-+}
-+
-+
-+test_bpf_filter_priv
-+
-+if [ $err = 0 ]; then
-+  test_bpf_filter_basic
-+fi
-+
-+if [ $err = 0 ]; then
-+  test_bpf_filter_fail
-+fi
-+
-+if [ $err = 0 ]; then
-+  test_bpf_filter_group
-+fi
-+
-+cleanup
-+exit $err
+ 	err = dso__load_sym(dso, map, &ss, &ss, 0);
+ 	symsrc__destroy(&ss);
+ 
+ 	if (err > 0) {
+-		if (dso->kernel == DSO_SPACE__KERNEL_GUEST)
+-			dso->binary_type = DSO_BINARY_TYPE__GUEST_VMLINUX;
+-		else
+-			dso->binary_type = DSO_BINARY_TYPE__VMLINUX;
+-		dso__set_long_name(dso, vmlinux, vmlinux_allocated);
+ 		dso__set_loaded(dso);
+ 		pr_debug("Using %s for symbols\n", symfs_vmlinux);
+ 	}
 -- 
-2.41.0.640.ga95def55d0-goog
+2.31.1
 
