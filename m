@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF08C001E0
-	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Aug 2023 08:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B71C04E69
+	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Aug 2023 08:52:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236739AbjHLIwT (ORCPT
+        id S234928AbjHLIwU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 12 Aug 2023 04:52:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38350 "EHLO
+        Sat, 12 Aug 2023 04:52:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236086AbjHLIwD (ORCPT
+        with ESMTP id S236458AbjHLIwK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 12 Aug 2023 04:52:03 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 038072696;
-        Sat, 12 Aug 2023 01:52:05 -0700 (PDT)
+        Sat, 12 Aug 2023 04:52:10 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C4E8271E;
+        Sat, 12 Aug 2023 01:52:11 -0700 (PDT)
 Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RNDpP21LFztRQh;
-        Sat, 12 Aug 2023 16:48:29 +0800 (CST)
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4RNDsB4Xtbz1GDYQ;
+        Sat, 12 Aug 2023 16:50:54 +0800 (CST)
 Received: from localhost.localdomain (10.67.174.95) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Sat, 12 Aug 2023 16:52:00 +0800
+ 15.1.2507.27; Sat, 12 Aug 2023 16:52:08 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -31,9 +31,9 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <sandipan.das@amd.com>, <ravi.bangoria@amd.com>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
 CC:     <yangjihong1@huawei.com>
-Subject: [RFC v1 01/16] perf kwork: Fix incorrect and missing free atom in work_push_atom()
-Date:   Sat, 12 Aug 2023 08:49:02 +0000
-Message-ID: <20230812084917.169338-2-yangjihong1@huawei.com>
+Subject: [RFC v1 14/16] perf kwork top: Implements BPF-based cpu usage statistics
+Date:   Sat, 12 Aug 2023 08:49:15 +0000
+Message-ID: <20230812084917.169338-15-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
 In-Reply-To: <20230812084917.169338-1-yangjihong1@huawei.com>
 References: <20230812084917.169338-1-yangjihong1@huawei.com>
@@ -48,37 +48,823 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-1. Atoms are managed in page mode and should be released using atom_free()
-   instead of free().
-2. When the event does not match, the atom needs to free.
+Use bpf to collect statistics on the CPU usage based on perf BPF skeletons.
 
-Fixes: f98919ec4fcc ("perf kwork: Implement 'report' subcommand")
+Example usage:
+
+  # perf kwork top -h
+
+   Usage: perf kwork top [<options>]
+
+      -b, --use-bpf         Use BPF to measure task cpu usage
+      -C, --cpu <cpu>       list of cpus to profile
+      -i, --input <file>    input file name
+      -n, --name <name>     event name to profile
+      -s, --sort <key[,key2...]>
+                            sort by key(s): rate, runtime, tid
+          --time <str>      Time span for analysis (start,stop)
+
+  #
+  # perf kwork -k sched top -b
+  Starting trace, Hit <Ctrl+C> to stop and report
+  ^C
+  Total  : 160702.425 ms, 8 cpus
+  %Cpu(s):  36.00% id,   0.00% hi,   0.00% si
+  %Cpu0   [||||||||||||||||||              61.66%]
+  %Cpu1   [||||||||||||||||||              61.27%]
+  %Cpu2   [|||||||||||||||||||             66.40%]
+  %Cpu3   [||||||||||||||||||              61.28%]
+  %Cpu4   [||||||||||||||||||              61.82%]
+  %Cpu5   [|||||||||||||||||||||||         77.41%]
+  %Cpu6   [||||||||||||||||||              61.73%]
+  %Cpu7   [||||||||||||||||||              63.25%]
+
+        PID     SPID    %CPU           RUNTIME  COMMMAND
+    -------------------------------------------------------------
+          0        0   38.72       8089.463 ms  [swapper/1]
+          0        0   38.71       8084.547 ms  [swapper/3]
+          0        0   38.33       8007.532 ms  [swapper/0]
+          0        0   38.26       7992.985 ms  [swapper/6]
+          0        0   38.17       7971.865 ms  [swapper/4]
+          0        0   36.74       7447.765 ms  [swapper/7]
+          0        0   33.59       6486.942 ms  [swapper/2]
+          0        0   22.58       3771.268 ms  [swapper/5]
+       9545     9351    2.48        447.136 ms  sched-messaging
+       9574     9351    2.09        418.583 ms  sched-messaging
+       9724     9351    2.05        372.407 ms  sched-messaging
+       9531     9351    2.01        368.804 ms  sched-messaging
+       9512     9351    2.00        362.250 ms  sched-messaging
+       9514     9351    1.95        357.767 ms  sched-messaging
+       9538     9351    1.86        384.476 ms  sched-messaging
+       9712     9351    1.84        386.490 ms  sched-messaging
+       9723     9351    1.83        380.021 ms  sched-messaging
+       9722     9351    1.82        382.738 ms  sched-messaging
+       9517     9351    1.81        354.794 ms  sched-messaging
+       9559     9351    1.79        344.305 ms  sched-messaging
+       9725     9351    1.77        365.315 ms  sched-messaging
+  <SNIP>
+
+  # perf kwork -k sched top -b -n perf
+  Starting trace, Hit <Ctrl+C> to stop and report
+  ^C
+  Total  : 151563.332 ms, 8 cpus
+  %Cpu(s):  26.49% id,   0.00% hi,   0.00% si
+  %Cpu0   [                                 0.01%]
+  %Cpu1   [                                 0.00%]
+  %Cpu2   [                                 0.00%]
+  %Cpu3   [                                 0.00%]
+  %Cpu4   [                                 0.00%]
+  %Cpu5   [                                 0.00%]
+  %Cpu6   [                                 0.00%]
+  %Cpu7   [                                 0.00%]
+
+        PID     SPID    %CPU           RUNTIME  COMMMAND
+    -------------------------------------------------------------
+       9754     9754    0.01          2.303 ms  perf
+
+  #
+  # perf kwork -k sched top -b -C 2,3,4
+  Starting trace, Hit <Ctrl+C> to stop and report
+  ^C
+  Total  :  48016.721 ms, 3 cpus
+  %Cpu(s):  27.82% id,   0.00% hi,   0.00% si
+  %Cpu2   [||||||||||||||||||||||          74.68%]
+  %Cpu3   [|||||||||||||||||||||           71.06%]
+  %Cpu4   [|||||||||||||||||||||           70.91%]
+
+        PID     SPID    %CPU           RUNTIME  COMMMAND
+    -------------------------------------------------------------
+          0        0   29.08       4734.998 ms  [swapper/4]
+          0        0   28.93       4710.029 ms  [swapper/3]
+          0        0   25.31       3912.363 ms  [swapper/2]
+      10248    10158    1.62        264.931 ms  sched-messaging
+      10253    10158    1.62        265.136 ms  sched-messaging
+      10158    10158    1.60        263.013 ms  bash
+      10360    10158    1.49        243.639 ms  sched-messaging
+      10413    10158    1.48        238.604 ms  sched-messaging
+      10531    10158    1.47        234.067 ms  sched-messaging
+      10400    10158    1.47        240.631 ms  sched-messaging
+      10355    10158    1.47        230.586 ms  sched-messaging
+      10377    10158    1.43        234.835 ms  sched-messaging
+      10526    10158    1.42        232.045 ms  sched-messaging
+      10298    10158    1.41        222.396 ms  sched-messaging
+      10410    10158    1.38        221.853 ms  sched-messaging
+      10364    10158    1.38        226.042 ms  sched-messaging
+      10480    10158    1.36        213.633 ms  sched-messaging
+      10370    10158    1.36        223.620 ms  sched-messaging
+      10553    10158    1.34        217.169 ms  sched-messaging
+      10291    10158    1.34        211.516 ms  sched-messaging
+      10251    10158    1.34        218.813 ms  sched-messaging
+      10522    10158    1.33        218.498 ms  sched-messaging
+      10288    10158    1.33        216.787 ms  sched-messaging
+  <SNIP>
+
 Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 ---
- tools/perf/builtin-kwork.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/Documentation/perf-kwork.txt  |   5 +
+ tools/perf/Makefile.perf                 |   2 +-
+ tools/perf/builtin-kwork.c               |  62 ++++-
+ tools/perf/util/Build                    |   1 +
+ tools/perf/util/bpf_kwork_top.c          | 286 +++++++++++++++++++++++
+ tools/perf/util/bpf_skel/kwork_top.bpf.c | 187 +++++++++++++++
+ tools/perf/util/kwork.h                  |  26 +++
+ 7 files changed, 565 insertions(+), 4 deletions(-)
+ create mode 100644 tools/perf/util/bpf_kwork_top.c
+ create mode 100644 tools/perf/util/bpf_skel/kwork_top.bpf.c
 
+diff --git a/tools/perf/Documentation/perf-kwork.txt b/tools/perf/Documentation/perf-kwork.txt
+index 34d6c285e527..109ace1d5e90 100644
+--- a/tools/perf/Documentation/perf-kwork.txt
++++ b/tools/perf/Documentation/perf-kwork.txt
+@@ -33,6 +33,7 @@ There are several variants of 'perf kwork':
+         perf kwork latency -b
+         perf kwork timehist
+         perf kwork top
++        perf kwork top -b
+ 
+    By default it shows the individual work events such as irq, workqeueu,
+    including the run time and delay (time between raise and actually entry):
+@@ -181,6 +182,10 @@ OPTIONS for 'perf kwork timehist'
+ OPTIONS for 'perf kwork top'
+ ---------------------------------
+ 
++-b::
++--use-bpf::
++	Use BPF to measure task cpu usage.
++
+ -C::
+ --cpu::
+ 	Only show events for the given CPU(s) (comma separated list).
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 0ed7ee0c1665..bc61c0d0aae4 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -1054,7 +1054,7 @@ SKELETONS += $(SKEL_OUT)/bperf_leader.skel.h $(SKEL_OUT)/bperf_follower.skel.h
+ SKELETONS += $(SKEL_OUT)/bperf_cgroup.skel.h $(SKEL_OUT)/func_latency.skel.h
+ SKELETONS += $(SKEL_OUT)/off_cpu.skel.h $(SKEL_OUT)/lock_contention.skel.h
+ SKELETONS += $(SKEL_OUT)/kwork_trace.skel.h $(SKEL_OUT)/sample_filter.skel.h
+-SKELETONS += $(SKEL_OUT)/bench_uprobe.skel.h
++SKELETONS += $(SKEL_OUT)/bench_uprobe.skel.h $(SKEL_OUT)/kwork_top.skel.h
+ 
+ $(SKEL_TMP_OUT) $(LIBAPI_OUTPUT) $(LIBBPF_OUTPUT) $(LIBPERF_OUTPUT) $(LIBSUBCMD_OUTPUT) $(LIBSYMBOL_OUTPUT):
+ 	$(Q)$(MKDIR) -p $@
 diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-index 14bf7a8429e7..73b5dc099a8a 100644
+index d5949ff4bd15..04b966801643 100644
 --- a/tools/perf/builtin-kwork.c
 +++ b/tools/perf/builtin-kwork.c
-@@ -406,12 +406,14 @@ static int work_push_atom(struct perf_kwork *kwork,
+@@ -1619,8 +1619,14 @@ static void top_print_header(struct perf_kwork *kwork __maybe_unused)
+ 	int ret;
  
- 	work = work_findnew(&class->work_root, &key, &kwork->cmp_id);
- 	if (work == NULL) {
--		free(atom);
-+		atom_free(atom);
- 		return -1;
- 	}
+ 	printf("\n ");
+-	ret = printf(" %*s  %*s  %*s  %-*s",
++	ret = printf(" %*s %s%*s%s %*s  %*s  %-*s",
+ 		     PRINT_PID_WIDTH, "PID",
++
++		     kwork->use_bpf ? " " : "",
++		     kwork->use_bpf ? PRINT_PID_WIDTH : 0,
++		     kwork->use_bpf ? "SPID" : "",
++		     kwork->use_bpf ? " " : "",
++
+ 		     PRINT_CPU_USAGE_WIDTH, "%CPU",
+ 		     PRINT_RUNTIME_HEADER_WIDTH + RPINT_DECIMAL_WIDTH, "RUNTIME",
+ 		     PRINT_TASK_NAME_WIDTH, "COMMMAND");
+@@ -1639,6 +1645,12 @@ static int top_print_work(struct perf_kwork *kwork __maybe_unused, struct kwork_
+ 	 */
+ 	ret += printf(" %*ld ", PRINT_PID_WIDTH, work->id);
  
--	if (!profile_event_match(kwork, work, sample))
-+	if (!profile_event_match(kwork, work, sample)) {
-+		atom_free(atom);
- 		return 0;
++	/*
++	 * tgid
++	 */
++	if (kwork->use_bpf)
++		ret += printf(" %*d ", PRINT_PID_WIDTH, work->tgid);
++
+ 	/*
+ 	 * cpu usage
+ 	 */
+@@ -1656,7 +1668,13 @@ static int top_print_work(struct perf_kwork *kwork __maybe_unused, struct kwork_
+ 	/*
+ 	 * command
+ 	 */
+-	ret += printf(" %-*s", PRINT_TASK_NAME_WIDTH, work->name);
++	if (kwork->use_bpf)
++		ret += printf(" %s%s%s",
++			      work->is_kthread ? "[" : "",
++			      work->name,
++			      work->is_kthread ? "]" : "");
++	else
++		ret += printf(" %-*s", PRINT_TASK_NAME_WIDTH, work->name);
+ 
+ 	printf("\n");
+ 	return ret;
+@@ -2153,6 +2171,36 @@ static void perf_kwork__top_report(struct perf_kwork *kwork)
+ 	printf("\n");
+ }
+ 
++static int perf_kwork__top_bpf(struct perf_kwork *kwork)
++{
++	int ret;
++
++	signal(SIGINT, sig_handler);
++	signal(SIGTERM, sig_handler);
++
++	ret = perf_kwork__top_prepare_bpf(kwork);
++	if (ret)
++		return -1;
++
++	printf("Starting trace, Hit <Ctrl+C> to stop and report\n");
++
++	perf_kwork__top_start();
++
++	/*
++	 * a simple pause, wait here for stop signal
++	 */
++	pause();
++
++	perf_kwork__top_finish();
++
++	perf_kwork__top_read_bpf(kwork);
++
++	perf_kwork__top_cleanup_bpf();
++
++	return 0;
++
++}
++
+ static int perf_kwork__top(struct perf_kwork *kwork)
+ {
+ 	struct __top_cpus_runtime *cpus_runtime;
+@@ -2165,7 +2213,11 @@ static int perf_kwork__top(struct perf_kwork *kwork)
+ 	kwork->top_stat.cpus_runtime = cpus_runtime;
+ 	bitmap_zero(kwork->top_stat.all_cpus_bitmap, MAX_NR_CPUS);
+ 
+-	ret = perf_kwork__read_events(kwork);
++	if (kwork->use_bpf)
++		ret = perf_kwork__top_bpf(kwork);
++	else
++		ret = perf_kwork__read_events(kwork);
++
+ 	if (ret)
+ 		goto out;
+ 
+@@ -2380,6 +2432,10 @@ int cmd_kwork(int argc, const char **argv)
+ 		   "Time span for analysis (start,stop)"),
+ 	OPT_STRING('i', "input", &input_name, "file",
+ 		   "input file name"),
++#ifdef HAVE_BPF_SKEL
++	OPT_BOOLEAN('b', "use-bpf", &kwork.use_bpf,
++		    "Use BPF to measure task cpu usage"),
++#endif
+ 	OPT_PARENT(kwork_options)
+ 	};
+ 	const char *kwork_usage[] = {
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index d487aec0b458..a46ac80de366 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -165,6 +165,7 @@ endif
+ 
+ ifeq ($(CONFIG_LIBTRACEEVENT),y)
+   perf-$(CONFIG_PERF_BPF_SKEL) += bpf_kwork.o
++  perf-$(CONFIG_PERF_BPF_SKEL) += bpf_kwork_top.o
+ endif
+ 
+ perf-$(CONFIG_BPF_PROLOGUE) += bpf-prologue.o
+diff --git a/tools/perf/util/bpf_kwork_top.c b/tools/perf/util/bpf_kwork_top.c
+new file mode 100644
+index 000000000000..42897ea22c61
+--- /dev/null
++++ b/tools/perf/util/bpf_kwork_top.c
+@@ -0,0 +1,286 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * bpf_kwork_top.c
++ *
++ * Copyright (c) 2022  Huawei Inc,  Yang Jihong <yangjihong1@huawei.com>
++ */
++
++#include <time.h>
++#include <fcntl.h>
++#include <signal.h>
++#include <stdio.h>
++#include <unistd.h>
++
++#include <linux/time64.h>
++
++#include "util/debug.h"
++#include "util/evsel.h"
++#include "util/kwork.h"
++
++#include <bpf/bpf.h>
++#include <perf/cpumap.h>
++
++#include "util/bpf_skel/kwork_top.skel.h"
++
++/*
++ * This should be in sync with "util/kwork_top.bpf.c"
++ */
++#define MAX_COMMAND_LEN 16
++
++struct time_data {
++	__u64 timestamp;
++};
++
++struct work_data {
++	__u64 runtime;
++};
++
++struct task_data {
++	__u32 tgid;
++	__u32 is_kthread;
++	char comm[MAX_COMMAND_LEN];
++};
++
++struct work_key {
++	__u32 type;
++	__u32 pid;
++	__u64 task_p;
++};
++
++struct task_key {
++	__u32 pid;
++	__u32 cpu;
++};
++
++struct kwork_class_bpf {
++	struct kwork_class *class;
++	void (*load_prepare)(void);
++};
++
++static struct kwork_top_bpf *skel;
++
++void perf_kwork__top_start(void)
++{
++	struct timespec ts;
++
++	clock_gettime(CLOCK_MONOTONIC, &ts);
++	skel->bss->from_timestamp = (u64)ts.tv_sec * NSEC_PER_SEC + ts.tv_nsec;
++	skel->bss->enabled = 1;
++	pr_debug("perf kwork top start at: %lld\n", skel->bss->from_timestamp);
++}
++
++void perf_kwork__top_finish(void)
++{
++	struct timespec ts;
++
++	skel->bss->enabled = 0;
++	clock_gettime(CLOCK_MONOTONIC, &ts);
++	skel->bss->to_timestamp = (u64)ts.tv_sec * NSEC_PER_SEC + ts.tv_nsec;
++	pr_debug("perf kwork top finish at: %lld\n", skel->bss->to_timestamp);
++}
++
++static void sched_load_prepare(void)
++{
++	bpf_program__set_autoload(skel->progs.on_switch, true);
++}
++
++static struct kwork_class_bpf kwork_sched_bpf = {
++	.load_prepare = sched_load_prepare,
++};
++
++static struct kwork_class_bpf *
++kwork_class_bpf_supported_list[KWORK_CLASS_MAX] = {
++	[KWORK_CLASS_SCHED]	= &kwork_sched_bpf,
++};
++
++static bool valid_kwork_class_type(enum kwork_class_type type)
++{
++	return type >= 0 && type < KWORK_CLASS_MAX ? true : false;
++}
++
++static int setup_filters(struct perf_kwork *kwork)
++{
++	u8 val = 1;
++	int i, nr_cpus, fd;
++	struct perf_cpu_map *map;
++
++	if (kwork->cpu_list) {
++		fd = bpf_map__fd(skel->maps.kwork_top_cpu_filter);
++		if (fd < 0) {
++			pr_debug("Invalid cpu filter fd\n");
++			return -1;
++		}
++
++		map = perf_cpu_map__new(kwork->cpu_list);
++		if (!map) {
++			pr_debug("Invalid cpu_list\n");
++			return -1;
++		}
++
++		nr_cpus = libbpf_num_possible_cpus();
++		for (i = 0; i < perf_cpu_map__nr(map); i++) {
++			struct perf_cpu cpu = perf_cpu_map__cpu(map, i);
++
++			if (cpu.cpu >= nr_cpus) {
++				perf_cpu_map__put(map);
++				pr_err("Requested cpu %d too large\n", cpu.cpu);
++				return -1;
++			}
++			bpf_map_update_elem(fd, &cpu.cpu, &val, BPF_ANY);
++		}
++		perf_cpu_map__put(map);
++
++		skel->bss->has_cpu_filter = 1;
 +	}
++
++	return 0;
++}
++
++int perf_kwork__top_prepare_bpf(struct perf_kwork *kwork __maybe_unused)
++{
++	struct bpf_program *prog;
++	struct kwork_class *class;
++	struct kwork_class_bpf *class_bpf;
++	enum kwork_class_type type;
++
++	skel = kwork_top_bpf__open();
++	if (!skel) {
++		pr_debug("Failed to open kwork top skeleton\n");
++		return -1;
++	}
++
++	/*
++	 * set all progs to non-autoload,
++	 * then set corresponding progs according to config
++	 */
++	bpf_object__for_each_program(prog, skel->obj)
++		bpf_program__set_autoload(prog, false);
++
++	list_for_each_entry(class, &kwork->class_list, list) {
++		type = class->type;
++		if (!valid_kwork_class_type(type) ||
++		    !kwork_class_bpf_supported_list[type]) {
++			pr_err("Unsupported bpf trace class %s\n", class->name);
++			goto out;
++		}
++
++		class_bpf = kwork_class_bpf_supported_list[type];
++		class_bpf->class = class;
++
++		if (class_bpf->load_prepare)
++			class_bpf->load_prepare();
++	}
++
++	if (kwork_top_bpf__load(skel)) {
++		pr_debug("Failed to load kwork top skeleton\n");
++		goto out;
++	}
++
++	if (setup_filters(kwork))
++		goto out;
++
++	if (kwork_top_bpf__attach(skel)) {
++		pr_debug("Failed to attach kwork top skeleton\n");
++		goto out;
++	}
++
++	return 0;
++
++out:
++	kwork_top_bpf__destroy(skel);
++	return -1;
++}
++
++static void read_task_info(struct kwork_work *work)
++{
++	int fd;
++	struct task_data data;
++	struct task_key key = {
++		.pid = work->id,
++		.cpu = work->cpu,
++	};
++
++	fd = bpf_map__fd(skel->maps.kwork_top_tasks);
++	if (fd < 0) {
++		pr_debug("Invalid top tasks map fd\n");
++		return;
++	}
++
++	if (!bpf_map_lookup_elem(fd, &key, &data)) {
++		work->tgid = data.tgid;
++		work->is_kthread = data.is_kthread;
++		work->name = strdup(data.comm);
++	}
++}
++static int add_work(struct perf_kwork *kwork, struct work_key *key,
++		    struct work_data *data, int cpu)
++{
++	struct kwork_class_bpf *bpf_trace;
++	struct kwork_work *work;
++	struct kwork_work tmp = {
++		.id = key->pid,
++		.cpu = cpu,
++		.name = NULL,
++	};
++	enum kwork_class_type type = key->type;
++
++	if (!valid_kwork_class_type(type)) {
++		pr_debug("Invalid class type %d to add work\n", type);
++		return -1;
++	}
++
++	bpf_trace = kwork_class_bpf_supported_list[type];
++	tmp.class = bpf_trace->class;
++
++	work = perf_kwork_add_work(kwork, tmp.class, &tmp);
++	if (!work)
++		return -1;
++
++	work->total_runtime = data->runtime;
++	read_task_info(work);
++
++	return 0;
++}
++
++int perf_kwork__top_read_bpf(struct perf_kwork *kwork)
++{
++	int i, fd, nr_cpus;
++	struct work_data *data;
++	struct work_key key, prev;
++
++	fd = bpf_map__fd(skel->maps.kwork_top_works);
++	if (fd < 0) {
++		pr_debug("Invalid top runtime fd\n");
++		return -1;
++	}
++
++	nr_cpus = libbpf_num_possible_cpus();
++	data = calloc(nr_cpus, sizeof(struct work_data));
++	if (!data)
++		return -1;
++
++	memset(&prev, 0, sizeof(prev));
++	while (!bpf_map_get_next_key(fd, &prev, &key)) {
++		if ((bpf_map_lookup_elem(fd, &key, data)) != 0) {
++			pr_debug("Failed to lookup top elem\n");
++			return -1;
++		}
++
++		for (i = 0; i < nr_cpus; i++) {
++			if (data[i].runtime == 0)
++				continue;
++
++			if (add_work(kwork, &key, &data[i], i))
++				return -1;
++		}
++		prev = key;
++	}
++	free(data);
++
++	return 0;
++}
++
++void perf_kwork__top_cleanup_bpf(void)
++{
++	kwork_top_bpf__destroy(skel);
++}
+diff --git a/tools/perf/util/bpf_skel/kwork_top.bpf.c b/tools/perf/util/bpf_skel/kwork_top.bpf.c
+new file mode 100644
+index 000000000000..47ad61608ec7
+--- /dev/null
++++ b/tools/perf/util/bpf_skel/kwork_top.bpf.c
+@@ -0,0 +1,187 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++// Copyright (c) 2022, Huawei
++
++#include "vmlinux.h"
++#include <bpf/bpf_helpers.h>
++#include <bpf/bpf_tracing.h>
++#include <bpf/bpf_core_read.h>
++
++/*
++ * This should be in sync with "util/kwork.h"
++ */
++enum kwork_class_type {
++	KWORK_CLASS_IRQ,
++	KWORK_CLASS_SOFTIRQ,
++	KWORK_CLASS_WORKQUEUE,
++	KWORK_CLASS_SCHED,
++	KWORK_CLASS_MAX,
++};
++
++#define MAX_ENTRIES     102400
++#define MAX_NR_CPUS     2048
++#define PF_KTHREAD      0x00200000
++#define MAX_COMMAND_LEN 16
++
++struct time_data {
++	__u64 timestamp;
++};
++
++struct work_data {
++	__u64 runtime;
++};
++
++struct task_data {
++	__u32 tgid;
++	__u32 is_kthread;
++	char comm[MAX_COMMAND_LEN];
++};
++
++struct work_key {
++	__u32 type;
++	__u32 pid;
++	__u64 task_p;
++};
++
++struct task_key {
++	__u32 pid;
++	__u32 cpu;
++};
++
++struct {
++	__uint(type, BPF_MAP_TYPE_TASK_STORAGE);
++	__uint(map_flags, BPF_F_NO_PREALLOC);
++	__type(key, int);
++	__type(value, struct time_data);
++} kwork_top_task_time SEC(".maps");
++
++struct {
++	__uint(type, BPF_MAP_TYPE_HASH);
++	__uint(key_size, sizeof(struct task_key));
++	__uint(value_size, sizeof(struct task_data));
++	__uint(max_entries, MAX_ENTRIES);
++} kwork_top_tasks SEC(".maps");
++
++struct {
++	__uint(type, BPF_MAP_TYPE_PERCPU_HASH);
++	__uint(key_size, sizeof(struct work_key));
++	__uint(value_size, sizeof(struct work_data));
++	__uint(max_entries, MAX_ENTRIES);
++} kwork_top_works SEC(".maps");
++
++struct {
++	__uint(type, BPF_MAP_TYPE_HASH);
++	__uint(key_size, sizeof(u32));
++	__uint(value_size, sizeof(u8));
++	__uint(max_entries, MAX_NR_CPUS);
++} kwork_top_cpu_filter SEC(".maps");
++
++int enabled = 0;
++
++int has_cpu_filter = 0;
++
++__u64 from_timestamp = 0;
++__u64 to_timestamp = 0;
++
++static __always_inline int cpu_is_filtered(__u32 cpu)
++{
++	__u8 *cpu_val;
++
++	if (has_cpu_filter) {
++		cpu_val = bpf_map_lookup_elem(&kwork_top_cpu_filter, &cpu);
++		if (!cpu_val)
++			return 1;
++	}
++
++	return 0;
++}
++
++static __always_inline void update_task_info(struct task_struct *task, __u32 cpu)
++{
++	struct task_key key = {
++		.pid = task->pid,
++		.cpu = cpu,
++	};
++
++	if (!bpf_map_lookup_elem(&kwork_top_tasks, &key)) {
++		struct task_data data = {
++			.tgid = task->tgid,
++			.is_kthread = task->flags & PF_KTHREAD ? 1 : 0,
++		};
++		BPF_CORE_READ_STR_INTO(&data.comm, task, comm);
++
++		bpf_map_update_elem(&kwork_top_tasks, &key, &data, BPF_ANY);
++	}
++}
++
++static __always_inline void update_work(struct work_key *key, __u64 delta)
++{
++	struct work_data *data;
++
++	data = bpf_map_lookup_elem(&kwork_top_works, key);
++	if (data) {
++		data->runtime += delta;
++	} else {
++		struct work_data new_data = {
++			.runtime = delta,
++		};
++
++		bpf_map_update_elem(&kwork_top_works, key, &new_data, BPF_ANY);
++	}
++}
++
++static void on_sched_out(struct task_struct *task, __u64 ts, __u32 cpu)
++{
++	__u64 delta;
++	struct time_data *pelem;
++
++	pelem = bpf_task_storage_get(&kwork_top_task_time, task, NULL, 0);
++	if (pelem)
++		delta = ts - pelem->timestamp;
++	else
++		delta = ts - from_timestamp;
++
++	struct work_key key = {
++		.type = KWORK_CLASS_SCHED,
++		.pid = task->pid,
++		.task_p = (__u64)task,
++	};
++
++	update_work(&key, delta);
++	update_task_info(task, cpu);
++}
++
++static void on_sched_in(struct task_struct *task, __u64 ts)
++{
++	struct time_data *pelem;
++
++	pelem = bpf_task_storage_get(&kwork_top_task_time, task, NULL,
++				     BPF_LOCAL_STORAGE_GET_F_CREATE);
++	if (pelem)
++		pelem->timestamp = ts;
++}
++
++SEC("tp_btf/sched_switch")
++int on_switch(u64 *ctx)
++{
++	struct task_struct *prev, *next;
++
++	prev = (struct task_struct *)ctx[1];
++	next = (struct task_struct *)ctx[2];
++
++	if (!enabled)
++		return 0;
++
++	__u32 cpu = bpf_get_smp_processor_id();
++
++	if (cpu_is_filtered(cpu))
++		return 0;
++
++	__u64 ts = bpf_ktime_get_ns();
++
++	on_sched_out(prev, ts, cpu);
++	on_sched_in(next, ts);
++
++	return 0;
++}
++
++char LICENSE[] SEC("license") = "Dual BSD/GPL";
+diff --git a/tools/perf/util/kwork.h b/tools/perf/util/kwork.h
+index 723b34385df6..76fe2a821bcf 100644
+--- a/tools/perf/util/kwork.h
++++ b/tools/perf/util/kwork.h
+@@ -135,6 +135,8 @@ struct kwork_work {
+ 	 * top report
+ 	 */
+ 	u32 cpu_usage;
++	u32 tgid;
++	bool is_kthread;
+ };
  
- 	if (dst_type < KWORK_TRACE_MAX) {
- 		dst_atom = list_last_entry_or_null(&work->atom_list[dst_type],
+ struct kwork_class {
+@@ -264,6 +266,13 @@ void perf_kwork__report_cleanup_bpf(void);
+ void perf_kwork__trace_start(void);
+ void perf_kwork__trace_finish(void);
+ 
++int perf_kwork__top_prepare_bpf(struct perf_kwork *kwork);
++int perf_kwork__top_read_bpf(struct perf_kwork *kwork);
++void perf_kwork__top_cleanup_bpf(void);
++
++void perf_kwork__top_start(void);
++void perf_kwork__top_finish(void);
++
+ #else  /* !HAVE_BPF_SKEL */
+ 
+ static inline int
+@@ -283,6 +292,23 @@ static inline void perf_kwork__report_cleanup_bpf(void) {}
+ static inline void perf_kwork__trace_start(void) {}
+ static inline void perf_kwork__trace_finish(void) {}
+ 
++static inline int
++perf_kwork__top_prepare_bpf(struct perf_kwork *kwork __maybe_unused)
++{
++	return -1;
++}
++
++static inline int
++perf_kwork__top_read_bpf(struct perf_kwork *kwork __maybe_unused)
++{
++	return -1;
++}
++
++static inline void perf_kwork__top_cleanup_bpf(void) {}
++
++static inline void perf_kwork__top_start(void) {}
++static inline void perf_kwork__top_finish(void) {}
++
+ #endif  /* HAVE_BPF_SKEL */
+ 
+ #endif  /* PERF_UTIL_KWORK_H */
 -- 
 2.30.GIT
 
