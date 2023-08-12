@@ -2,229 +2,136 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 577B9C41513
-	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Aug 2023 08:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF367C001B0
+	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Aug 2023 21:36:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236622AbjHLIwX (ORCPT
+        id S229478AbjHLVge (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 12 Aug 2023 04:52:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52674 "EHLO
+        Sat, 12 Aug 2023 17:36:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236495AbjHLIwK (ORCPT
+        with ESMTP id S229447AbjHLVgd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 12 Aug 2023 04:52:10 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D30BD2D5B;
-        Sat, 12 Aug 2023 01:52:12 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.57])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RNDpc5sZLzNmjN;
-        Sat, 12 Aug 2023 16:48:40 +0800 (CST)
-Received: from localhost.localdomain (10.67.174.95) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Sat, 12 Aug 2023 16:52:10 +0800
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-        <sandipan.das@amd.com>, <ravi.bangoria@amd.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-CC:     <yangjihong1@huawei.com>
-Subject: [RFC v1 16/16] perf kwork top: Add BPF-based statistics on softirq event support
-Date:   Sat, 12 Aug 2023 08:49:17 +0000
-Message-ID: <20230812084917.169338-17-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.30.GIT
-In-Reply-To: <20230812084917.169338-1-yangjihong1@huawei.com>
-References: <20230812084917.169338-1-yangjihong1@huawei.com>
+        Sat, 12 Aug 2023 17:36:33 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 217571706;
+        Sat, 12 Aug 2023 14:36:36 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-68730bafa6bso2866339b3a.1;
+        Sat, 12 Aug 2023 14:36:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691876195; x=1692480995;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wa8XBwPigobobIYOZwDPIfHtzN+bm0HM3i60VeEtrcM=;
+        b=prRKN05ah5mxmdwO8fMp8t30JTrbepUytiLrBxzGKQopjwdyUTITmDIJVQCvoVYXop
+         HqYgo57kuM6ENZmTAjDseW3c4A0EjmbpLvfVD9u2zkX2jolxg0DG6MeA+GbDpjZDxNQC
+         mw6Vsj88KeIjeBPfNtPYBJZxjdX4a/laq8RncGFDR31R8zy1dkKpafPOEMLX/nW2c/WD
+         Clfh+/cy9NQNZncO5ZOjYUeIerP35iTIyB6hBYgYKMvH1LbXimGalKuPP+8922m2xGV3
+         K1txPKxpHzW2HpYTaKrp45sx5jb0CvVv/bjSsBZYZU9F8jHFIk77M1FpAv9S/bjZziOQ
+         4rmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691876195; x=1692480995;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wa8XBwPigobobIYOZwDPIfHtzN+bm0HM3i60VeEtrcM=;
+        b=Vwppb5GhaPu1dODd8N1DgEAEhITbbqJ3BvnNjnm88Jqi/rfbehAilDL1CxqUUSqsLl
+         M5bgFNISss/4zWqh5YOrDj5/Cgog5+Hxq/v8q2SDMUBpMfn3FrwDrcJas+nlUZlU3FT2
+         dKDBms3yPFrxEtIgnSEsFfshNeL7jEk2o01Lnmnlw9HTkcuQtQ8zuFQKMzXQtARBFlPR
+         2rPBU5I3MAsRX/UGXIQv/eNQMVZWrzTiAoYZm8k7uYQC9VEHOBSQRG93ibO00K7nD8ue
+         2MJ5oh/ybgEkp7J/agJa8wkvc/pfsrf+4fuJ5U03PN190tEPOkInGoe7p4VW7Solp36d
+         2T0Q==
+X-Gm-Message-State: AOJu0Yzqz2nLqnGXeiectUNaUJt2tzF5Y+sV+8ZAdSxupzok8RWa68la
+        eHEGrmVQCjgh4mWJiRKwc94=
+X-Google-Smtp-Source: AGHT+IHCq0iH/Az3xVQnRlfpxOcT6U40u9MnDlJ21dCfozsvHss0Bk4PcsZiVOh/cgNgHba0716MwQ==
+X-Received: by 2002:a05:6a20:8422:b0:13e:debc:3648 with SMTP id c34-20020a056a20842200b0013edebc3648mr10893039pzd.29.1691876195351;
+        Sat, 12 Aug 2023 14:36:35 -0700 (PDT)
+Received: from yoga ([2400:1f00:13:dd22:5ae5:bc57:c1e5:1a03])
+        by smtp.gmail.com with ESMTPSA id w20-20020a637b14000000b0055fd10306a2sm5674478pgc.75.2023.08.12.14.36.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Aug 2023 14:36:34 -0700 (PDT)
+Date:   Sun, 13 Aug 2023 03:06:27 +0530
+From:   Anup Sharma <anupnewsmail@gmail.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        =?utf-8?B?wqA=?= Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Anup Sharma <anupnewsmail@gmail.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] perf scripts python: Add support for input args in gecko
+ script
+Message-ID: <ZNf7W+EIrrCSHZN0@yoga>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.95]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Use bpf to collect statistics on softirq events based on perf BPF skeletons.
+Refines the argument handling mechanism in the "gecko-report"
+script to enable better compatibility and improved user
+experience. The script now differentiates between scenarios
+where arguments are provided for record and report cases
+where gecko.py arguments are passed.
 
-Example usage:
+Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
 
-  # perf kwork top -b
-  Starting trace, Hit <Ctrl+C> to stop and report
-  ^C
-  Total  : 135445.704 ms, 8 cpus
-  %Cpu(s):  28.35% id,   0.00% hi,   0.25% si
-  %Cpu0   [||||||||||||||||||||            69.85%]
-  %Cpu1   [||||||||||||||||||||||          74.10%]
-  %Cpu2   [|||||||||||||||||||||           71.18%]
-  %Cpu3   [||||||||||||||||||||            69.61%]
-  %Cpu4   [||||||||||||||||||||||          74.05%]
-  %Cpu5   [||||||||||||||||||||            69.33%]
-  %Cpu6   [||||||||||||||||||||            69.71%]
-  %Cpu7   [||||||||||||||||||||||          73.77%]
-
-        PID     SPID    %CPU           RUNTIME  COMMMAND
-    -------------------------------------------------------------
-          0        0   30.43       5271.005 ms  [swapper/5]
-          0        0   30.17       5226.644 ms  [swapper/3]
-          0        0   30.08       5210.257 ms  [swapper/6]
-          0        0   29.89       5177.177 ms  [swapper/0]
-          0        0   28.51       4938.672 ms  [swapper/2]
-          0        0   25.93       4223.464 ms  [swapper/7]
-          0        0   25.69       4181.411 ms  [swapper/4]
-          0        0   25.63       4173.804 ms  [swapper/1]
-      16665    16265    2.16        360.600 ms  sched-messaging
-      16537    16265    2.05        356.275 ms  sched-messaging
-      16503    16265    2.01        343.063 ms  sched-messaging
-      16424    16265    1.97        336.876 ms  sched-messaging
-      16580    16265    1.94        323.658 ms  sched-messaging
-      16515    16265    1.92        321.616 ms  sched-messaging
-      16659    16265    1.91        325.538 ms  sched-messaging
-      16634    16265    1.88        327.766 ms  sched-messaging
-      16454    16265    1.87        326.843 ms  sched-messaging
-      16382    16265    1.87        322.591 ms  sched-messaging
-      16642    16265    1.86        320.506 ms  sched-messaging
-      16582    16265    1.86        320.164 ms  sched-messaging
-      16315    16265    1.86        326.872 ms  sched-messaging
-      16637    16265    1.85        323.766 ms  sched-messaging
-      16506    16265    1.82        311.688 ms  sched-messaging
-      16512    16265    1.81        304.643 ms  sched-messaging
-      16560    16265    1.80        314.751 ms  sched-messaging
-      16320    16265    1.80        313.405 ms  sched-messaging
-      16442    16265    1.80        314.403 ms  sched-messaging
-      16626    16265    1.78        295.380 ms  sched-messaging
-      16600    16265    1.77        309.444 ms  sched-messaging
-      16550    16265    1.76        301.161 ms  sched-messaging
-      16525    16265    1.75        296.560 ms  sched-messaging
-      16314    16265    1.75        298.338 ms  sched-messaging
-      16595    16265    1.74        304.390 ms  sched-messaging
-      16555    16265    1.74        287.564 ms  sched-messaging
-      16520    16265    1.74        295.734 ms  sched-messaging
-      16507    16265    1.73        293.956 ms  sched-messaging
-      16593    16265    1.72        296.443 ms  sched-messaging
-      16531    16265    1.72        299.950 ms  sched-messaging
-      16281    16265    1.72        301.339 ms  sched-messaging
-  <SNIP>
-
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 ---
- tools/perf/util/bpf_kwork_top.c          | 11 ++++
- tools/perf/util/bpf_skel/kwork_top.bpf.c | 72 ++++++++++++++++++++++++
- 2 files changed, 83 insertions(+)
+Hi Arnaldo,
+Thanks for providing such a detail insights here:
 
-diff --git a/tools/perf/util/bpf_kwork_top.c b/tools/perf/util/bpf_kwork_top.c
-index 3998bd2a938f..1a607b94f44d 100644
---- a/tools/perf/util/bpf_kwork_top.c
-+++ b/tools/perf/util/bpf_kwork_top.c
-@@ -89,6 +89,16 @@ static struct kwork_class_bpf kwork_irq_bpf = {
- 	.load_prepare = irq_load_prepare,
- };
- 
-+static void softirq_load_prepare(void)
-+{
-+	bpf_program__set_autoload(skel->progs.on_softirq_entry, true);
-+	bpf_program__set_autoload(skel->progs.on_softirq_exit, true);
-+}
-+
-+static struct kwork_class_bpf kwork_softirq_bpf = {
-+	.load_prepare = softirq_load_prepare,
-+};
-+
- static void sched_load_prepare(void)
- {
- 	bpf_program__set_autoload(skel->progs.on_switch, true);
-@@ -101,6 +111,7 @@ static struct kwork_class_bpf kwork_sched_bpf = {
- static struct kwork_class_bpf *
- kwork_class_bpf_supported_list[KWORK_CLASS_MAX] = {
- 	[KWORK_CLASS_IRQ]	= &kwork_irq_bpf,
-+	[KWORK_CLASS_SOFTIRQ]	= &kwork_softirq_bpf,
- 	[KWORK_CLASS_SCHED]	= &kwork_sched_bpf,
- };
- 
-diff --git a/tools/perf/util/bpf_skel/kwork_top.bpf.c b/tools/perf/util/bpf_skel/kwork_top.bpf.c
-index 9c7dc62386c7..84c15ccbab44 100644
---- a/tools/perf/util/bpf_skel/kwork_top.bpf.c
-+++ b/tools/perf/util/bpf_skel/kwork_top.bpf.c
-@@ -263,4 +263,76 @@ int on_irq_handler_exit(u64 *cxt)
- 	return 0;
- }
- 
-+SEC("tp_btf/softirq_entry")
-+int on_softirq_entry(u64 *cxt)
-+{
-+	struct task_struct *task;
-+
-+	if (!enabled)
-+		return 0;
-+
-+	__u32 cpu = bpf_get_smp_processor_id();
-+
-+	if (cpu_is_filtered(cpu))
-+		return 0;
-+
-+	__u64 ts = bpf_ktime_get_ns();
-+
-+	task = (struct task_struct *)bpf_get_current_task();
-+	if (!task)
-+		return 0;
-+
-+	struct work_key key = {
-+		.type = KWORK_CLASS_SOFTIRQ,
-+		.pid = BPF_CORE_READ(task, pid),
-+		.task_p = (__u64)task,
-+	};
-+
-+	struct time_data data = {
-+		.timestamp = ts,
-+	};
-+
-+	bpf_map_update_elem(&kwork_top_irq_time, &key, &data, BPF_ANY);
-+
-+	return 0;
-+}
-+
-+SEC("tp_btf/softirq_exit")
-+int on_softirq_exit(u64 *cxt)
-+{
-+	__u64 delta;
-+	struct task_struct *task;
-+	struct time_data *pelem;
-+
-+	if (!enabled)
-+		return 0;
-+
-+	__u32 cpu = bpf_get_smp_processor_id();
-+
-+	if (cpu_is_filtered(cpu))
-+		return 0;
-+
-+	__u64 ts = bpf_ktime_get_ns();
-+
-+	task = (struct task_struct *)bpf_get_current_task();
-+	if (!task)
-+		return 0;
-+
-+	struct work_key key = {
-+		.type = KWORK_CLASS_SOFTIRQ,
-+		.pid = BPF_CORE_READ(task, pid),
-+		.task_p = (__u64)task,
-+	};
-+
-+	pelem = bpf_map_lookup_elem(&kwork_top_irq_time, &key);
-+	if (pelem)
-+		delta = ts - pelem->timestamp;
-+	else
-+		delta = ts - from_timestamp;
-+
-+	update_work(&key, delta);
-+
-+	return 0;
-+}
-+
- char LICENSE[] SEC("license") = "Dual BSD/GPL";
+https://lore.kernel.org/linux-perf-users/ZMJaDGhSnhIlK3Nd@kernel.org/
+
+I've successfully confirmed that the command "perf script gecko -a sleep 1"
+is functioning as expected. However, I encountered an issue when attempting
+to provide arguments such as "--user-color" and "--save-only" to the
+"gecko.py" script while using the "perf script gecko" or "perf script report
+gecko" commands.
+
+In order to understand the inner workings of how these commands are executed,
+I delved into the "buildin-script.c" code. From my investigation, it seems
+that the arguments are taken into account for the "record" functionality,
+rather than for "report."
+
+To address this  I added this changes.
+
+I've also documented the usage of this command in our wiki:
+https://perf.wiki.kernel.org/index.php/Tutorial#Firefox_Profiler
+
+For most cases where users do not require specific "gecko.py" arguments, the
+command "perf script gecko -a sleep 0.5" is sufficient. However, if users
+intend to provide particular arguments to "gecko.py," they should employ the
+command "perf script report gecko --save-only=cloud_cpu.json."
+
+I believe there might be an intelligent solution to streamline this process.
+Therefore, I would greatly appreciate your insights on this matter.
+---
+ tools/perf/scripts/python/bin/gecko-report | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+ mode change 100644 => 100755 tools/perf/scripts/python/bin/gecko-report
+
+diff --git a/tools/perf/scripts/python/bin/gecko-report b/tools/perf/scripts/python/bin/gecko-report
+old mode 100644
+new mode 100755
+index 0c12cc08f3ab..1867ec8d9757
+--- a/tools/perf/scripts/python/bin/gecko-report
++++ b/tools/perf/scripts/python/bin/gecko-report
+@@ -1,3 +1,7 @@
+ #!/bin/bash
+ # description: create firefox gecko profile json format from perf.data
+-perf script "$@" -s "$PERF_EXEC_PATH"/scripts/python/gecko.py
++if [ "$*" = "-i -" ]; then
++perf script -s "$PERF_EXEC_PATH"/scripts/python/gecko.py
++else
++perf script -s "$PERF_EXEC_PATH"/scripts/python/gecko.py -- "$@"
++fi
 -- 
-2.30.GIT
+2.34.1
 
