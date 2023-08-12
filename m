@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8131C001E0
-	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Aug 2023 08:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DFCC04E69
+	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Aug 2023 08:52:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236477AbjHLIwJ (ORCPT
+        id S235488AbjHLIwD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 12 Aug 2023 04:52:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52600 "EHLO
+        Sat, 12 Aug 2023 04:52:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236285AbjHLIwG (ORCPT
+        with ESMTP id S230023AbjHLIwC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 12 Aug 2023 04:52:06 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C6C12684;
-        Sat, 12 Aug 2023 01:52:09 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RNDs73NHFzrS89;
-        Sat, 12 Aug 2023 16:50:51 +0800 (CST)
+        Sat, 12 Aug 2023 04:52:02 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C9EA268C;
+        Sat, 12 Aug 2023 01:52:05 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4RNDq90mTnz2Bd18;
+        Sat, 12 Aug 2023 16:49:09 +0800 (CST)
 Received: from localhost.localdomain (10.67.174.95) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Sat, 12 Aug 2023 16:52:06 +0800
+ 15.1.2507.27; Sat, 12 Aug 2023 16:52:01 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -31,9 +31,9 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <sandipan.das@amd.com>, <ravi.bangoria@amd.com>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
 CC:     <yangjihong1@huawei.com>
-Subject: [RFC v1 10/16] perf evsel: Add evsel__intval_common() helper
-Date:   Sat, 12 Aug 2023 08:49:11 +0000
-Message-ID: <20230812084917.169338-11-yangjihong1@huawei.com>
+Subject: [RFC v1 02/16] perf kwork: Add the supported subcommands to the document
+Date:   Sat, 12 Aug 2023 08:49:03 +0000
+Message-ID: <20230812084917.169338-3-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
 In-Reply-To: <20230812084917.169338-1-yangjihong1@huawei.com>
 References: <20230812084917.169338-1-yangjihong1@huawei.com>
@@ -48,66 +48,29 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add evsel__intval_common() helper to search for common_field in
-tracepoint format.
+Add missing report, latency and timehist subcommands to the document.
 
+Fixes: f98919ec4fcc ("perf kwork: Implement 'report' subcommand")
+Fixes: ad3d9f7a929a ("perf kwork: Implement perf kwork latency")
+Fixes: bcc8b3e88d6f ("perf kwork: Implement perf kwork timehist")
 Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 ---
- tools/perf/util/evsel.c | 13 +++++++++++++
- tools/perf/util/evsel.h |  2 ++
- 2 files changed, 15 insertions(+)
+ tools/perf/Documentation/perf-kwork.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index e41bc4d9925f..f3ad2fa862bf 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2764,6 +2764,11 @@ struct tep_format_field *evsel__field(struct evsel *evsel, const char *name)
- 	return tep_find_field(evsel->tp_format, name);
- }
+diff --git a/tools/perf/Documentation/perf-kwork.txt b/tools/perf/Documentation/perf-kwork.txt
+index 3c36324712b6..482d6c52e2ed 100644
+--- a/tools/perf/Documentation/perf-kwork.txt
++++ b/tools/perf/Documentation/perf-kwork.txt
+@@ -8,7 +8,7 @@ perf-kwork - Tool to trace/measure kernel work properties (latencies)
+ SYNOPSIS
+ --------
+ [verse]
+-'perf kwork' {record}
++'perf kwork' {record|report|latency|timehist}
  
-+struct tep_format_field *evsel__common_field(struct evsel *evsel, const char *name)
-+{
-+	return tep_find_common_field(evsel->tp_format, name);
-+}
-+
- void *evsel__rawptr(struct evsel *evsel, struct perf_sample *sample, const char *name)
- {
- 	struct tep_format_field *field = evsel__field(evsel, name);
-@@ -2832,6 +2837,14 @@ u64 evsel__intval(struct evsel *evsel, struct perf_sample *sample, const char *n
- 
- 	return field ? format_field__intval(field, sample, evsel->needs_swap) : 0;
- }
-+
-+u64 evsel__intval_common(struct evsel *evsel, struct perf_sample *sample, const char *name)
-+{
-+	struct tep_format_field *field = evsel__common_field(evsel, name);
-+
-+	return field ? format_field__intval(field, sample, evsel->needs_swap) : 0;
-+}
-+
- #endif
- 
- bool evsel__fallback(struct evsel *evsel, int err, char *msg, size_t msgsize)
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 848534ec74fa..815be2491938 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -340,6 +340,7 @@ struct perf_sample;
- #ifdef HAVE_LIBTRACEEVENT
- void *evsel__rawptr(struct evsel *evsel, struct perf_sample *sample, const char *name);
- u64 evsel__intval(struct evsel *evsel, struct perf_sample *sample, const char *name);
-+u64 evsel__intval_common(struct evsel *evsel, struct perf_sample *sample, const char *name);
- 
- static inline char *evsel__strval(struct evsel *evsel, struct perf_sample *sample, const char *name)
- {
-@@ -352,6 +353,7 @@ struct tep_format_field;
- u64 format_field__intval(struct tep_format_field *field, struct perf_sample *sample, bool needs_swap);
- 
- struct tep_format_field *evsel__field(struct evsel *evsel, const char *name);
-+struct tep_format_field *evsel__common_field(struct evsel *evsel, const char *name);
- 
- static inline bool __evsel__match(const struct evsel *evsel, u32 type, u64 config)
- {
+ DESCRIPTION
+ -----------
 -- 
 2.30.GIT
 
