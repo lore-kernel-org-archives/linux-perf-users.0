@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBD0C001E0
-	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Aug 2023 08:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7456C001DB
+	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Aug 2023 08:52:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236265AbjHLIwF (ORCPT
+        id S236302AbjHLIwG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 12 Aug 2023 04:52:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38336 "EHLO
+        Sat, 12 Aug 2023 04:52:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235461AbjHLIwD (ORCPT
+        with ESMTP id S235796AbjHLIwD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Sat, 12 Aug 2023 04:52:03 -0400
 Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D80D2D44;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAFF42D52;
         Sat, 12 Aug 2023 01:52:06 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RNDpT48HjzNmnM;
-        Sat, 12 Aug 2023 16:48:33 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.57])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RNDrF20D9zTlp3;
+        Sat, 12 Aug 2023 16:50:05 +0800 (CST)
 Received: from localhost.localdomain (10.67.174.95) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Sat, 12 Aug 2023 16:52:02 +0800
+ 15.1.2507.27; Sat, 12 Aug 2023 16:52:04 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -31,9 +31,9 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <sandipan.das@amd.com>, <ravi.bangoria@amd.com>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
 CC:     <yangjihong1@huawei.com>
-Subject: [RFC v1 04/16] perf kwork: Add `kwork` and `src_type` to work_init() for struct kwork_class
-Date:   Sat, 12 Aug 2023 08:49:05 +0000
-Message-ID: <20230812084917.169338-5-yangjihong1@huawei.com>
+Subject: [RFC v1 06/16] perf kwork: Set default events list if not specified in setup_event_list()
+Date:   Sat, 12 Aug 2023 08:49:07 +0000
+Message-ID: <20230812084917.169338-7-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
 In-Reply-To: <20230812084917.169338-1-yangjihong1@huawei.com>
 References: <20230812084917.169338-1-yangjihong1@huawei.com>
@@ -48,109 +48,91 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-To support different types of reports, two parameters
-`struct perf_kwork * kwork` and `enum kwork_trace_type src_type` are added
-to work_init() of struct kwork_class for initialization in different
-scenarios.
-
-No functional change.
+Currently when no kwork event is specified, all events are configured by
+default. Now set to default event list string, which is more flexible and
+supports subsequent function extension.
+Also put setup_event_list() into each subcommand for different settings.
 
 Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 ---
- tools/perf/builtin-kwork.c | 16 +++++++++++-----
- tools/perf/util/kwork.h    |  6 ++++--
- 2 files changed, 15 insertions(+), 7 deletions(-)
+ tools/perf/builtin-kwork.c | 25 ++++++++++---------------
+ 1 file changed, 10 insertions(+), 15 deletions(-)
 
 diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-index de2fbb7c56c3..42ea59a957ae 100644
+index f620911a26a2..e859c34b23f3 100644
 --- a/tools/perf/builtin-kwork.c
 +++ b/tools/perf/builtin-kwork.c
-@@ -398,7 +398,7 @@ static int work_push_atom(struct perf_kwork *kwork,
- 	struct kwork_work *work, key;
+@@ -1623,8 +1623,11 @@ static void setup_event_list(struct perf_kwork *kwork,
+ 	struct kwork_class *class;
+ 	char *tmp, *tok, *str;
  
- 	BUG_ON(class->work_init == NULL);
--	class->work_init(class, &key, evsel, sample, machine);
-+	class->work_init(kwork, class, &key, src_type, evsel, sample, machine);
++	/*
++	 * set default events list if not specified
++	 */
+ 	if (kwork->event_list_str == NULL)
+-		goto null_event_list_str;
++		kwork->event_list_str = "irq, softirq, workqueue";
  
- 	atom = atom_new(kwork, sample);
- 	if (atom == NULL)
-@@ -445,7 +445,7 @@ static struct kwork_atom *work_pop_atom(struct perf_kwork *kwork,
- 	struct kwork_work *work, key;
+ 	str = strdup(kwork->event_list_str);
+ 	for (tok = strtok_r(str, ", ", &tmp);
+@@ -1643,17 +1646,6 @@ static void setup_event_list(struct perf_kwork *kwork,
+ 	}
+ 	free(str);
  
- 	BUG_ON(class->work_init == NULL);
--	class->work_init(class, &key, evsel, sample, machine);
-+	class->work_init(kwork, class, &key, src_type, evsel, sample, machine);
+-null_event_list_str:
+-	/*
+-	 * config all kwork events if not specified
+-	 */
+-	if (list_empty(&kwork->class_list)) {
+-		for (i = 0; i < KWORK_CLASS_MAX; i++) {
+-			list_add_tail(&kwork_class_supported_list[i]->list,
+-				      &kwork->class_list);
+-		}
+-	}
+-
+ 	pr_debug("Config event list:");
+ 	list_for_each_entry(class, &kwork->class_list, list)
+ 		pr_debug(" %s", class->name);
+@@ -1835,12 +1827,12 @@ int cmd_kwork(int argc, const char **argv)
+ 	if (!argc)
+ 		usage_with_options(kwork_usage, kwork_options);
  
- 	work = work_findnew(&class->work_root, &key, &kwork->cmp_id);
- 	if (ret_work != NULL)
-@@ -821,8 +821,10 @@ static int irq_class_init(struct kwork_class *class,
- 	return 0;
- }
+-	setup_event_list(&kwork, kwork_options, kwork_usage);
+ 	sort_dimension__add(&kwork, "id", &kwork.cmp_id);
  
--static void irq_work_init(struct kwork_class *class,
-+static void irq_work_init(struct perf_kwork *kwork __maybe_unused,
-+			  struct kwork_class *class,
- 			  struct kwork_work *work,
-+			  enum kwork_trace_type src_type __maybe_unused,
- 			  struct evsel *evsel,
- 			  struct perf_sample *sample,
- 			  struct machine *machine __maybe_unused)
-@@ -940,8 +942,10 @@ static char *evsel__softirq_name(struct evsel *evsel, u64 num)
- 	return name;
- }
- 
--static void softirq_work_init(struct kwork_class *class,
-+static void softirq_work_init(struct perf_kwork *kwork __maybe_unused,
-+			      struct kwork_class *class,
- 			      struct kwork_work *work,
-+			      enum kwork_trace_type src_type __maybe_unused,
- 			      struct evsel *evsel,
- 			      struct perf_sample *sample,
- 			      struct machine *machine __maybe_unused)
-@@ -1031,8 +1035,10 @@ static int workqueue_class_init(struct kwork_class *class,
- 	return 0;
- }
- 
--static void workqueue_work_init(struct kwork_class *class,
-+static void workqueue_work_init(struct perf_kwork *kwork __maybe_unused,
-+				struct kwork_class *class,
- 				struct kwork_work *work,
-+				enum kwork_trace_type src_type __maybe_unused,
- 				struct evsel *evsel,
- 				struct perf_sample *sample,
- 				struct machine *machine)
-diff --git a/tools/perf/util/kwork.h b/tools/perf/util/kwork.h
-index 53b7327550b8..736c7a08fb19 100644
---- a/tools/perf/util/kwork.h
-+++ b/tools/perf/util/kwork.h
-@@ -91,6 +91,7 @@ struct kwork_atom_page {
- 	DECLARE_BITMAP(bitmap, NR_ATOM_PER_PAGE);
- };
- 
-+struct perf_kwork;
- struct kwork_class;
- struct kwork_work {
- 	/*
-@@ -142,8 +143,10 @@ struct kwork_class {
- 	int (*class_init)(struct kwork_class *class,
- 			  struct perf_session *session);
- 
--	void (*work_init)(struct kwork_class *class,
-+	void (*work_init)(struct perf_kwork *kwork,
-+			  struct kwork_class *class,
- 			  struct kwork_work *work,
-+			  enum kwork_trace_type src_type,
- 			  struct evsel *evsel,
- 			  struct perf_sample *sample,
- 			  struct machine *machine);
-@@ -152,7 +155,6 @@ struct kwork_class {
- 			  char *buf, int len);
- };
- 
--struct perf_kwork;
- struct trace_kwork_handler {
- 	int (*raise_event)(struct perf_kwork *kwork,
- 			   struct kwork_class *class, struct evsel *evsel,
+-	if (strlen(argv[0]) > 2 && strstarts("record", argv[0]))
++	if (strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
++		setup_event_list(&kwork, kwork_options, kwork_usage);
+ 		return perf_kwork__record(&kwork, argc, argv);
+-	else if (strlen(argv[0]) > 2 && strstarts("report", argv[0])) {
++	} else if (strlen(argv[0]) > 2 && strstarts("report", argv[0])) {
+ 		kwork.sort_order = default_report_sort_order;
+ 		if (argc > 1) {
+ 			argc = parse_options(argc, argv, report_options, report_usage, 0);
+@@ -1849,6 +1841,7 @@ int cmd_kwork(int argc, const char **argv)
+ 		}
+ 		kwork.report = KWORK_REPORT_RUNTIME;
+ 		setup_sorting(&kwork, report_options, report_usage);
++		setup_event_list(&kwork, kwork_options, kwork_usage);
+ 		return perf_kwork__report(&kwork);
+ 	} else if (strlen(argv[0]) > 2 && strstarts("latency", argv[0])) {
+ 		kwork.sort_order = default_latency_sort_order;
+@@ -1859,6 +1852,7 @@ int cmd_kwork(int argc, const char **argv)
+ 		}
+ 		kwork.report = KWORK_REPORT_LATENCY;
+ 		setup_sorting(&kwork, latency_options, latency_usage);
++		setup_event_list(&kwork, kwork_options, kwork_usage);
+ 		return perf_kwork__report(&kwork);
+ 	} else if (strlen(argv[0]) > 2 && strstarts("timehist", argv[0])) {
+ 		if (argc > 1) {
+@@ -1867,6 +1861,7 @@ int cmd_kwork(int argc, const char **argv)
+ 				usage_with_options(timehist_usage, timehist_options);
+ 		}
+ 		kwork.report = KWORK_REPORT_TIMEHIST;
++		setup_event_list(&kwork, kwork_options, kwork_usage);
+ 		return perf_kwork__timehist(&kwork);
+ 	} else
+ 		usage_with_options(kwork_usage, kwork_options);
 -- 
 2.30.GIT
 
