@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 301E5C04A94
-	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Aug 2023 08:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2472BC001E0
+	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Aug 2023 08:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236626AbjHLIwO (ORCPT
+        id S236736AbjHLIwQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 12 Aug 2023 04:52:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52606 "EHLO
+        Sat, 12 Aug 2023 04:52:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236335AbjHLIwG (ORCPT
+        with ESMTP id S230023AbjHLIwH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 12 Aug 2023 04:52:06 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 791BB2696;
-        Sat, 12 Aug 2023 01:52:08 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RNDpX4V2HzNmj2;
-        Sat, 12 Aug 2023 16:48:36 +0800 (CST)
+        Sat, 12 Aug 2023 04:52:07 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A870268C;
+        Sat, 12 Aug 2023 01:52:09 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.57])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4RNDqG4PBmz2Bd1n;
+        Sat, 12 Aug 2023 16:49:14 +0800 (CST)
 Received: from localhost.localdomain (10.67.174.95) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Sat, 12 Aug 2023 16:52:05 +0800
+ 15.1.2507.27; Sat, 12 Aug 2023 16:52:07 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -31,9 +31,9 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <sandipan.das@amd.com>, <ravi.bangoria@amd.com>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
 CC:     <yangjihong1@huawei.com>
-Subject: [RFC v1 09/16] perf kwork: Implement perf kwork top
-Date:   Sat, 12 Aug 2023 08:49:10 +0000
-Message-ID: <20230812084917.169338-10-yangjihong1@huawei.com>
+Subject: [RFC v1 11/16] perf kwork top: Add statistics on hardirq event support
+Date:   Sat, 12 Aug 2023 08:49:12 +0000
+Message-ID: <20230812084917.169338-12-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
 In-Reply-To: <20230812084917.169338-1-yangjihong1@huawei.com>
 References: <20230812084917.169338-1-yangjihong1@huawei.com>
@@ -48,312 +48,107 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Some common tools for collecting statistics on CPU usage, such as top,
-obtain statistics from timer interrupt sampling, and then periodically
-read statistics from /proc/stat.
-
-This method has some deviations:
-1. In the tick interrupt, the time between the last tick and the current
-   tick is counted in the current task. However, the task may be running
-   only part of the time.
-2. For each task, the top tool periodically reads the /proc/{PID}/status
-   information. For tasks with a short life cycle, it may be missed.
-
-In conclusion, the top tool cannot accurately collect statistics on the
-CPU usage and running time of tasks.
-
-The statistical method based on sched_switch tracepoint can accurately
-calculate the CPU usage of all tasks. This method is applicable to
-scenarios where performance comparison data is of high precision.
+Calculate the runtime of the hardirq events and subtract it from
+the corresponding task runtime to improve the precision.
 
 Example usage:
 
-  # perf kwork
-
-   Usage: perf kwork [<options>] {record|report|latency|timehist|top}
-
-      -D, --dump-raw-trace  dump raw trace in ASCII
-      -f, --force           don't complain, do it
-      -k, --kwork <kwork>   list of kwork to profile (irq, softirq, workqueue, sched, etc)
-      -v, --verbose         be more verbose (show symbol address, etc)
-
-  # perf kwork -k sched record -- perf bench sched messaging -g 1 -l 10000
-  # Running 'sched/messaging' benchmark:
-  # 20 sender and receiver processes per group
-  # 1 groups == 40 processes run
-
-       Total time: 14.074 [sec]
+  # perf kwork -k sched,irq record -- perf record -o perf_record.data -a sleep 10
+  [ perf record: Woken up 2 times to write data ]
+  [ perf record: Captured and wrote 1.054 MB perf_record.data (18019 samples) ]
   [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 15.886 MB perf.data (129472 samples) ]
+  [ perf record: Captured and wrote 1.798 MB perf.data (16334 samples) ]
+  #
   # perf kwork top
 
-  Total  : 115708.178 ms, 8 cpus
-  %Cpu(s):   9.78% id
-  %Cpu0   [|||||||||||||||||||||||||||     90.55%]
-  %Cpu1   [|||||||||||||||||||||||||||     90.51%]
-  %Cpu2   [||||||||||||||||||||||||||      88.57%]
-  %Cpu3   [|||||||||||||||||||||||||||     91.18%]
-  %Cpu4   [|||||||||||||||||||||||||||     91.09%]
-  %Cpu5   [|||||||||||||||||||||||||||     90.88%]
-  %Cpu6   [||||||||||||||||||||||||||      88.64%]
-  %Cpu7   [|||||||||||||||||||||||||||     90.28%]
+  Total  : 139240.869 ms, 8 cpus
+  %Cpu(s):  94.91% id,   0.05% hi
+  %Cpu0   [                                 0.05%]
+  %Cpu1   [|                                5.00%]
+  %Cpu2   [                                 0.43%]
+  %Cpu3   [                                 0.57%]
+  %Cpu4   [                                 1.19%]
+  %Cpu5   [||||||                          20.46%]
+  %Cpu6   [                                 0.48%]
+  %Cpu7   [|||                             12.10%]
 
         PID    %CPU           RUNTIME  COMMMAND
     ----------------------------------------------------
-       4113   22.23       3221.547 ms  sched-messaging
-       4105   21.61       3131.495 ms  sched-messaging
-       4119   21.53       3120.937 ms  sched-messaging
-       4103   21.39       3101.614 ms  sched-messaging
-       4106   21.37       3095.209 ms  sched-messaging
-       4104   21.25       3077.269 ms  sched-messaging
-       4115   21.21       3073.188 ms  sched-messaging
-       4109   21.18       3069.022 ms  sched-messaging
-       4111   20.78       3010.033 ms  sched-messaging
-       4114   20.74       3007.073 ms  sched-messaging
-       4108   20.73       3002.137 ms  sched-messaging
-       4107   20.47       2967.292 ms  sched-messaging
-       4117   20.39       2955.335 ms  sched-messaging
-       4112   20.34       2947.080 ms  sched-messaging
-       4118   20.32       2942.519 ms  sched-messaging
-       4121   20.23       2929.865 ms  sched-messaging
-       4110   20.22       2930.078 ms  sched-messaging
-       4122   20.15       2919.542 ms  sched-messaging
-       4120   19.77       2866.032 ms  sched-messaging
-       4116   19.72       2857.660 ms  sched-messaging
-       4127   16.19       2346.334 ms  sched-messaging
-       4142   15.86       2297.600 ms  sched-messaging
-       4141   15.62       2262.646 ms  sched-messaging
-       4136   15.41       2231.408 ms  sched-messaging
-       4130   15.38       2227.008 ms  sched-messaging
-       4129   15.31       2217.692 ms  sched-messaging
-       4126   15.21       2201.711 ms  sched-messaging
-       4139   15.19       2200.722 ms  sched-messaging
-       4137   15.10       2188.633 ms  sched-messaging
-       4134   15.06       2182.082 ms  sched-messaging
-       4132   15.02       2177.530 ms  sched-messaging
-       4131   14.73       2131.973 ms  sched-messaging
-       4125   14.68       2125.439 ms  sched-messaging
-       4128   14.66       2122.255 ms  sched-messaging
-       4123   14.65       2122.113 ms  sched-messaging
-       4135   14.56       2107.144 ms  sched-messaging
-       4133   14.51       2103.549 ms  sched-messaging
-       4124   14.27       2066.671 ms  sched-messaging
-       4140   14.17       2052.251 ms  sched-messaging
-       4138   13.81       2000.361 ms  sched-messaging
-          0   11.42       1652.009 ms  swapper/2
-          0   11.35       1641.694 ms  swapper/6
-          0    9.71       1405.108 ms  swapper/7
-          0    9.48       1372.338 ms  swapper/1
-          0    9.44       1366.013 ms  swapper/0
-          0    9.11       1318.382 ms  swapper/5
-          0    8.90       1287.582 ms  swapper/4
-          0    8.81       1274.356 ms  swapper/3
-       4100    2.61        379.328 ms  perf
-       4101    1.16        169.487 ms  perf-exec
-        151    0.65         94.741 ms  systemd-resolve
-        249    0.36         53.030 ms  sd-resolve
-        153    0.14         21.405 ms  systemd-timesyn
-          1    0.10         16.200 ms  systemd
-         16    0.09         15.785 ms  rcu_preempt
-       4102    0.06          9.727 ms  perf
-       4095    0.03          5.464 ms  kworker/7:1
-         98    0.02          3.231 ms  jbd2/sda-8
-        353    0.02          4.115 ms  sshd
-         75    0.02          3.889 ms  kworker/2:1
-         73    0.01          1.552 ms  kworker/5:1
-         64    0.01          1.591 ms  kworker/4:1
-         74    0.01          1.952 ms  kworker/3:1
-         61    0.01          2.608 ms  kcompactd0
-        397    0.01          1.602 ms  kworker/1:1
-         69    0.01          1.817 ms  kworker/1:1H
-         10    0.01          2.553 ms  kworker/u16:0
-       2909    0.01          2.684 ms  kworker/0:2
-       1211    0.00          0.426 ms  kworker/7:0
-         97    0.00          0.153 ms  kworker/7:1H
-         51    0.00          0.100 ms  ksoftirqd/7
-        120    0.00          0.856 ms  systemd-journal
-         76    0.00          1.414 ms  kworker/6:1
-         46    0.00          0.246 ms  ksoftirqd/6
-         45    0.00          0.164 ms  migration/6
-         41    0.00          0.098 ms  ksoftirqd/5
-         40    0.00          0.207 ms  migration/5
-         86    0.00          1.339 ms  kworker/4:1H
-         36    0.00          0.252 ms  ksoftirqd/4
-         35    0.00          0.090 ms  migration/4
-         31    0.00          0.156 ms  ksoftirqd/3
-         30    0.00          0.073 ms  migration/3
-         26    0.00          0.180 ms  ksoftirqd/2
-         25    0.00          0.085 ms  migration/2
-         21    0.00          0.106 ms  ksoftirqd/1
-         20    0.00          0.118 ms  migration/1
-        302    0.00          1.440 ms  systemd-logind
-         17    0.00          0.132 ms  migration/0
-         15    0.00          0.255 ms  ksoftirqd/0
+          0   99.54      17325.622 ms  swapper/2
+          0   99.54      17327.527 ms  swapper/0
+          0   99.51      17319.909 ms  swapper/6
+          0   99.42      17304.934 ms  swapper/3
+          0   98.80      17197.385 ms  swapper/4
+          0   94.99      16534.991 ms  swapper/1
+          0   87.89      15295.264 ms  swapper/7
+          0   79.53      13843.182 ms  swapper/5
+       4252   36.50       6361.768 ms  perf
+       4256    1.17        205.215 ms  bash
+        151    0.53         93.298 ms  systemd-resolve
+       4254    0.39         69.468 ms  perf
+        423    0.34         59.368 ms  bash
+        412    0.29         51.204 ms  sshd
+        249    0.20         35.288 ms  sd-resolve
+         16    0.17         30.287 ms  rcu_preempt
+        153    0.09         17.266 ms  systemd-timesyn
+          1    0.09         17.078 ms  systemd
+       4253    0.07         12.457 ms  perf
+       4255    0.06         11.559 ms  perf
+       4234    0.03          6.105 ms  kworker/u16:1
+         69    0.03          6.259 ms  kworker/1:1H
+       4251    0.02          4.615 ms  perf
+       4095    0.02          4.890 ms  kworker/7:1
+         61    0.02          4.005 ms  kcompactd0
+         75    0.02          3.546 ms  kworker/2:1
+         97    0.01          3.106 ms  kworker/7:1H
+         98    0.01          1.995 ms  jbd2/sda-8
+       4088    0.01          1.779 ms  kworker/u16:3
+       2909    0.01          1.795 ms  kworker/0:2
+       4246    0.00          1.117 ms  kworker/7:2
+         51    0.00          0.327 ms  ksoftirqd/7
+         50    0.00          0.369 ms  migration/7
+        102    0.00          0.160 ms  kworker/6:1H
+         76    0.00          0.609 ms  kworker/6:1
+         45    0.00          0.779 ms  migration/6
+         87    0.00          0.504 ms  kworker/5:1H
+         73    0.00          1.130 ms  kworker/5:1
+         41    0.00          0.152 ms  ksoftirqd/5
+         40    0.00          0.702 ms  migration/5
+         64    0.00          0.316 ms  kworker/4:1
+         35    0.00          0.791 ms  migration/4
+        353    0.00          2.211 ms  sshd
+         74    0.00          0.272 ms  kworker/3:1
+         30    0.00          0.819 ms  migration/3
+         25    0.00          0.784 ms  migration/2
+        397    0.00          0.539 ms  kworker/1:1
+         21    0.00          1.600 ms  ksoftirqd/1
+         20    0.00          0.773 ms  migration/1
+         17    0.00          1.682 ms  migration/0
+         15    0.00          0.076 ms  ksoftirqd/0
 
 Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 ---
- tools/perf/Documentation/perf-kwork.txt |   5 +-
- tools/perf/builtin-kwork.c              | 387 +++++++++++++++++++++++-
- tools/perf/util/kwork.h                 |  22 ++
- 3 files changed, 412 insertions(+), 2 deletions(-)
+ tools/perf/builtin-kwork.c | 93 +++++++++++++++++++++++++++++++++++---
+ tools/perf/util/kwork.h    |  1 +
+ 2 files changed, 88 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-kwork.txt b/tools/perf/Documentation/perf-kwork.txt
-index 2092ab916ea9..0601fcb0feea 100644
---- a/tools/perf/Documentation/perf-kwork.txt
-+++ b/tools/perf/Documentation/perf-kwork.txt
-@@ -8,7 +8,7 @@ perf-kwork - Tool to trace/measure kernel work properties (latencies)
- SYNOPSIS
- --------
- [verse]
--'perf kwork' {record|report|latency|timehist}
-+'perf kwork' {record|report|latency|timehist|top}
- 
- DESCRIPTION
- -----------
-@@ -23,6 +23,8 @@ There are several variants of 'perf kwork':
- 
-   'perf kwork timehist' provides an analysis of kernel work events.
- 
-+  'perf kwork top' to report the task cpu usage.
-+
-     Example usage:
-         perf kwork record -- sleep 1
-         perf kwork report
-@@ -30,6 +32,7 @@ There are several variants of 'perf kwork':
-         perf kwork latency
-         perf kwork latency -b
-         perf kwork timehist
-+        perf kwork top
- 
-    By default it shows the individual work events such as irq, workqeueu,
-    including the run time and delay (time between raise and actually entry):
 diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-index 7d93951c2ed2..1b213af59135 100644
+index 1b213af59135..66ad8c2e8020 100644
 --- a/tools/perf/builtin-kwork.c
 +++ b/tools/perf/builtin-kwork.c
-@@ -45,6 +45,11 @@
- #define PRINT_BRACKETPAIR_WIDTH 2
- #define PRINT_TIME_UNIT_SEC_WIDTH 2
- #define PRINT_TIME_UNIT_MESC_WIDTH 3
-+#define PRINT_PID_WIDTH 7
-+#define PRINT_TASK_NAME_WIDTH 16
-+#define PRINT_CPU_USAGE_WIDTH 6
-+#define PRINT_CPU_USAGE_DECIMAL_WIDTH 2
-+#define PRINT_CPU_USAGE_HIST_WIDTH 30
- #define PRINT_RUNTIME_HEADER_WIDTH (PRINT_RUNTIME_WIDTH + PRINT_TIME_UNIT_MESC_WIDTH)
- #define PRINT_LATENCY_HEADER_WIDTH (PRINT_LATENCY_WIDTH + PRINT_TIME_UNIT_MESC_WIDTH)
- #define PRINT_TIMEHIST_CPU_WIDTH (PRINT_CPU_WIDTH + PRINT_BRACKETPAIR_WIDTH)
-@@ -131,6 +136,16 @@ static int max_latency_cmp(struct kwork_work *l, struct kwork_work *r)
- 	return 0;
+@@ -866,6 +866,36 @@ static int top_entry_event(struct perf_kwork *kwork,
+ 			      machine, NULL, true);
  }
  
-+static int cpu_usage_cmp(struct kwork_work *l, struct kwork_work *r)
++static int top_exit_event(struct perf_kwork *kwork,
++			  struct kwork_class *class,
++			  struct evsel *evsel,
++			  struct perf_sample *sample,
++			  struct machine *machine)
 +{
-+	if (l->cpu_usage > r->cpu_usage)
-+		return 1;
-+	if (l->cpu_usage < r->cpu_usage)
-+		return -1;
-+
-+	return 0;
-+}
-+
- static int sort_dimension__add(struct perf_kwork *kwork __maybe_unused,
- 			       const char *tok, struct list_head *list)
- {
-@@ -155,12 +170,17 @@ static int sort_dimension__add(struct perf_kwork *kwork __maybe_unused,
- 		.name = "avg",
- 		.cmp  = avg_latency_cmp,
- 	};
-+	static struct sort_dimension rate_sort_dimension = {
-+		.name = "rate",
-+		.cmp  = cpu_usage_cmp,
-+	};
- 	struct sort_dimension *available_sorts[] = {
- 		&id_sort_dimension,
- 		&max_sort_dimension,
- 		&count_sort_dimension,
- 		&runtime_sort_dimension,
- 		&avg_sort_dimension,
-+		&rate_sort_dimension,
- 	};
- 
- 	if (kwork->report == KWORK_REPORT_LATENCY)
-@@ -485,6 +505,38 @@ static struct kwork_atom *work_pop_atom(struct perf_kwork *kwork,
- 	return NULL;
- }
- 
-+static struct kwork_work *find_work_by_id(struct rb_root_cached *root,
-+					  u64 id, int cpu)
-+{
-+	struct rb_node *next;
-+	struct kwork_work *work;
-+
-+	next = rb_first_cached(root);
-+	while (next) {
-+		work = rb_entry(next, struct kwork_work, node);
-+		if ((cpu != -1 && work->id == id && work->cpu == cpu) ||
-+		    (cpu == -1 && work->id == id))
-+			return work;
-+
-+		next = rb_next(next);
-+	}
-+
-+	return NULL;
-+}
-+
-+static struct kwork_class *get_kwork_class(struct perf_kwork *kwork,
-+					   enum kwork_class_type type)
-+{
-+	struct kwork_class *class;
-+
-+	list_for_each_entry(class, &kwork->class_list, list) {
-+		if (class->type == type)
-+			return class;
-+	}
-+
-+	return NULL;
-+}
-+
- static void report_update_exit_event(struct kwork_work *work,
- 				     struct kwork_atom *atom,
- 				     struct perf_sample *sample)
-@@ -789,6 +841,54 @@ static int timehist_exit_event(struct perf_kwork *kwork,
- 	return ret;
- }
- 
-+static void top_update_runtime(struct kwork_work *work,
-+			       struct kwork_atom *atom,
-+			       struct perf_sample *sample)
-+{
-+	u64 delta;
-+	u64 exit_time = sample->time;
-+	u64 entry_time = atom->time;
-+
-+	if ((entry_time != 0) && (exit_time >= entry_time)) {
-+		delta = exit_time - entry_time;
-+		work->total_runtime += delta;
-+	}
-+}
-+
-+static int top_entry_event(struct perf_kwork *kwork,
-+			   struct kwork_class *class,
-+			   struct evsel *evsel,
-+			   struct perf_sample *sample,
-+			   struct machine *machine)
-+{
-+	return work_push_atom(kwork, class, KWORK_TRACE_ENTRY,
-+			      KWORK_TRACE_MAX, evsel, sample,
-+			      machine, NULL, true);
-+}
-+
-+static int top_sched_switch_event(struct perf_kwork *kwork,
-+				  struct kwork_class *class,
-+				  struct evsel *evsel,
-+				  struct perf_sample *sample,
-+				  struct machine *machine)
-+{
++	struct kwork_work *work, *sched_work;
++	struct kwork_class *sched_class;
 +	struct kwork_atom *atom;
-+	struct kwork_work *work;
 +
 +	atom = work_pop_atom(kwork, class, KWORK_TRACE_EXIT,
 +			     KWORK_TRACE_ENTRY, evsel, sample,
@@ -362,414 +157,154 @@ index 7d93951c2ed2..1b213af59135 100644
 +		return -1;
 +
 +	if (atom) {
-+		top_update_runtime(work, atom, sample);
++		sched_class = get_kwork_class(kwork, KWORK_CLASS_SCHED);
++		if (sched_class) {
++			sched_work = find_work_by_id(&sched_class->work_root,
++						     work->id, work->cpu);
++			if (sched_work)
++				top_update_runtime(work, atom, sample);
++		}
 +		atom_del(atom);
 +	}
 +
-+	return top_entry_event(kwork, class, evsel, sample, machine);
++	return 0;
 +}
 +
- static struct kwork_class kwork_irq;
- static int process_irq_handler_entry_event(struct perf_tool *tool,
- 					   struct evsel *evsel,
-@@ -1378,6 +1478,101 @@ static void print_bad_events(struct perf_kwork *kwork)
+ static int top_sched_switch_event(struct perf_kwork *kwork,
+ 				  struct kwork_class *class,
+ 				  struct evsel *evsel,
+@@ -933,7 +963,7 @@ static int irq_class_init(struct kwork_class *class,
+ 	return 0;
+ }
+ 
+-static void irq_work_init(struct perf_kwork *kwork __maybe_unused,
++static void irq_work_init(struct perf_kwork *kwork,
+ 			  struct kwork_class *class,
+ 			  struct kwork_work *work,
+ 			  enum kwork_trace_type src_type __maybe_unused,
+@@ -943,8 +973,14 @@ static void irq_work_init(struct perf_kwork *kwork __maybe_unused,
+ {
+ 	work->class = class;
+ 	work->cpu = sample->cpu;
+-	work->id = evsel__intval(evsel, sample, "irq");
+-	work->name = evsel__strval(evsel, sample, "name");
++
++	if (kwork->report == KWORK_REPORT_TOP) {
++		work->id = evsel__intval_common(evsel, sample, "common_pid");
++		work->name = NULL;
++	} else {
++		work->id = evsel__intval(evsel, sample, "irq");
++		work->name = evsel__strval(evsel, sample, "name");
++	}
+ }
+ 
+ static void irq_work_name(struct kwork_work *work, char *buf, int len)
+@@ -1510,6 +1546,7 @@ static void top_print_cpu_usage(struct perf_kwork *kwork)
+ {
+ 	struct kwork_top_stat *stat = &kwork->top_stat;
+ 	u64 idle_time = stat->cpus_runtime[MAX_NR_CPUS].idle;
++	u64 hardirq_time = stat->cpus_runtime[MAX_NR_CPUS].irq;
+ 	int cpus_nr = bitmap_weight(stat->all_cpus_bitmap, MAX_NR_CPUS);
+ 	u64 cpus_total_time = stat->cpus_runtime[MAX_NR_CPUS].total;
+ 
+@@ -1518,9 +1555,12 @@ static void top_print_cpu_usage(struct perf_kwork *kwork)
+ 	       (double)cpus_total_time / NSEC_PER_MSEC,
+ 	       cpus_nr);
+ 
+-	printf("%%Cpu(s): %*.*f%% id\n",
++	printf("%%Cpu(s): %*.*f%% id, %*.*f%% hi\n",
++	       PRINT_CPU_USAGE_WIDTH, PRINT_CPU_USAGE_DECIMAL_WIDTH,
++	       cpus_total_time ? (double)idle_time * 100 / cpus_total_time : 0,
++
+ 	       PRINT_CPU_USAGE_WIDTH, PRINT_CPU_USAGE_DECIMAL_WIDTH,
+-	       cpus_total_time ? (double)idle_time * 100 / cpus_total_time : 0);
++	       cpus_total_time ? (double)hardirq_time * 100 / cpus_total_time : 0);
+ 
+ 	top_print_per_cpu_load(kwork);
+ }
+@@ -1621,6 +1661,8 @@ static int perf_kwork__check_config(struct perf_kwork *kwork,
+ 		.exit_event  = timehist_exit_event,
+ 	};
+ 	static struct trace_kwork_handler top_ops = {
++		.entry_event        = timehist_entry_event,
++		.exit_event         = top_exit_event,
+ 		.sched_switch_event = top_sched_switch_event,
+ 	};
+ 
+@@ -1915,6 +1957,43 @@ static void top_calc_idle_time(struct perf_kwork *kwork,
  	}
  }
  
-+const char *graph_load = "||||||||||||||||||||||||||||||||||||||||||||||||";
-+const char *graph_idle = "                                                ";
-+static void top_print_per_cpu_load(struct perf_kwork *kwork)
++static void top_calc_irq_runtime(struct perf_kwork *kwork,
++				 enum kwork_class_type type,
++				 struct kwork_work *work)
 +{
-+	int i, load_width;
-+	u64 total, load, load_ratio;
 +	struct kwork_top_stat *stat = &kwork->top_stat;
 +
-+	for (i = 0; i < MAX_NR_CPUS; i++) {
-+		total = stat->cpus_runtime[i].total;
-+		load = stat->cpus_runtime[i].load;
-+		if (test_bit(i, stat->all_cpus_bitmap) && total) {
-+			load_ratio = load * 10000 / total;
-+			load_width = PRINT_CPU_USAGE_HIST_WIDTH *
-+				load_ratio / 10000;
++	if (type == KWORK_CLASS_IRQ) {
++		stat->cpus_runtime[work->cpu].irq += work->total_runtime;
++		stat->cpus_runtime[MAX_NR_CPUS].irq += work->total_runtime;
++	}
++}
 +
-+			printf("%%Cpu%-*d[%.*s%.*s %*.*f%%]\n",
-+			       PRINT_CPU_WIDTH, i,
-+			       load_width, graph_load,
-+			       PRINT_CPU_USAGE_HIST_WIDTH - load_width,
-+			       graph_idle,
-+			       PRINT_CPU_USAGE_WIDTH,
-+			       PRINT_CPU_USAGE_DECIMAL_WIDTH,
-+			       (double)load_ratio / 100);
++static void top_subtract_irq_runtime(struct perf_kwork *kwork,
++				     struct kwork_work *work)
++{
++	struct kwork_class *class;
++	struct kwork_work *data;
++	unsigned int i;
++	int irq_class_list[] = {KWORK_CLASS_IRQ};
++
++	for (i = 0; i < ARRAY_SIZE(irq_class_list); i++) {
++		class = get_kwork_class(kwork, irq_class_list[i]);
++		if (!class)
++			continue;
++
++		data = find_work_by_id(&class->work_root,
++				       work->id, work->cpu);
++		if (!data)
++			continue;
++
++		if (work->total_runtime > data->total_runtime) {
++			work->total_runtime -= data->total_runtime;
++			top_calc_irq_runtime(kwork, irq_class_list[i], data);
 +		}
 +	}
 +}
 +
-+static void top_print_cpu_usage(struct perf_kwork *kwork)
-+{
-+	struct kwork_top_stat *stat = &kwork->top_stat;
-+	u64 idle_time = stat->cpus_runtime[MAX_NR_CPUS].idle;
-+	int cpus_nr = bitmap_weight(stat->all_cpus_bitmap, MAX_NR_CPUS);
-+	u64 cpus_total_time = stat->cpus_runtime[MAX_NR_CPUS].total;
-+
-+	printf("Total  : %*.*f ms, %d cpus\n",
-+	       PRINT_RUNTIME_WIDTH, RPINT_DECIMAL_WIDTH,
-+	       (double)cpus_total_time / NSEC_PER_MSEC,
-+	       cpus_nr);
-+
-+	printf("%%Cpu(s): %*.*f%% id\n",
-+	       PRINT_CPU_USAGE_WIDTH, PRINT_CPU_USAGE_DECIMAL_WIDTH,
-+	       cpus_total_time ? (double)idle_time * 100 / cpus_total_time : 0);
-+
-+	top_print_per_cpu_load(kwork);
-+}
-+
-+static void top_print_header(struct perf_kwork *kwork __maybe_unused)
-+{
-+	int ret;
-+
-+	printf("\n ");
-+	ret = printf(" %*s  %*s  %*s  %-*s",
-+		     PRINT_PID_WIDTH, "PID",
-+		     PRINT_CPU_USAGE_WIDTH, "%CPU",
-+		     PRINT_RUNTIME_HEADER_WIDTH + RPINT_DECIMAL_WIDTH, "RUNTIME",
-+		     PRINT_TASK_NAME_WIDTH, "COMMMAND");
-+	printf("\n ");
-+	print_separator(ret);
-+}
-+
-+static int top_print_work(struct perf_kwork *kwork __maybe_unused, struct kwork_work *work)
-+{
-+	int ret = 0;
-+
-+	printf(" ");
-+
-+	/*
-+	 * pid
-+	 */
-+	ret += printf(" %*ld ", PRINT_PID_WIDTH, work->id);
-+
-+	/*
-+	 * cpu usage
-+	 */
-+	ret += printf(" %*.*f ",
-+		      PRINT_CPU_USAGE_WIDTH, PRINT_CPU_USAGE_DECIMAL_WIDTH,
-+		      (double)work->cpu_usage / 100);
-+
-+	/*
-+	 * total runtime
-+	 */
-+	ret += printf(" %*.*f ms ",
-+		      PRINT_RUNTIME_WIDTH + RPINT_DECIMAL_WIDTH, RPINT_DECIMAL_WIDTH,
-+		      (double)work->total_runtime / NSEC_PER_MSEC);
-+
-+	/*
-+	 * command
-+	 */
-+	ret += printf(" %-*s", PRINT_TASK_NAME_WIDTH, work->name);
-+
-+	printf("\n");
-+	return ret;
-+}
-+
- static void work_sort(struct perf_kwork *kwork,
- 		      struct kwork_class *class, struct rb_root_cached *root)
+ static void top_calc_cpu_usage(struct perf_kwork *kwork)
  {
-@@ -1425,6 +1620,9 @@ static int perf_kwork__check_config(struct perf_kwork *kwork,
- 		.entry_event = timehist_entry_event,
- 		.exit_event  = timehist_exit_event,
- 	};
-+	static struct trace_kwork_handler top_ops = {
-+		.sched_switch_event = top_sched_switch_event,
-+	};
+ 	struct kwork_class *class;
+@@ -1935,6 +2014,8 @@ static void top_calc_cpu_usage(struct perf_kwork *kwork)
  
- 	switch (kwork->report) {
- 	case KWORK_REPORT_RUNTIME:
-@@ -1436,6 +1634,9 @@ static int perf_kwork__check_config(struct perf_kwork *kwork,
- 	case KWORK_REPORT_TIMEHIST:
- 		kwork->tp_handler = &timehist_ops;
- 		break;
-+	case KWORK_REPORT_TOP:
-+		kwork->tp_handler = &top_ops;
-+		break;
- 	default:
- 		pr_debug("Invalid report type %d\n", kwork->report);
- 		return -1;
-@@ -1682,6 +1883,169 @@ static int perf_kwork__timehist(struct perf_kwork *kwork)
- 	return perf_kwork__read_events(kwork);
- }
+ 		__set_bit(work->cpu, stat->all_cpus_bitmap);
  
-+static void top_calc_total_runtime(struct perf_kwork *kwork)
-+{
-+	struct kwork_class *class;
-+	struct kwork_work *work;
-+	struct rb_node *next;
-+	struct kwork_top_stat *stat = &kwork->top_stat;
++		top_subtract_irq_runtime(kwork, work);
 +
-+	class = get_kwork_class(kwork, KWORK_CLASS_SCHED);
-+	if (!class)
-+		return;
-+
-+	next = rb_first_cached(&class->work_root);
-+	while (next) {
-+		work = rb_entry(next, struct kwork_work, node);
-+		BUG_ON(work->cpu >= MAX_NR_CPUS);
-+		stat->cpus_runtime[work->cpu].total += work->total_runtime;
-+		stat->cpus_runtime[MAX_NR_CPUS].total += work->total_runtime;
-+		next = rb_next(next);
-+	}
-+}
-+
-+static void top_calc_idle_time(struct perf_kwork *kwork,
-+				struct kwork_work *work)
-+{
-+	struct kwork_top_stat *stat = &kwork->top_stat;
-+
-+	if (work->id == 0) {
-+		stat->cpus_runtime[work->cpu].idle += work->total_runtime;
-+		stat->cpus_runtime[MAX_NR_CPUS].idle += work->total_runtime;
-+	}
-+}
-+
-+static void top_calc_cpu_usage(struct perf_kwork *kwork)
-+{
-+	struct kwork_class *class;
-+	struct kwork_work *work;
-+	struct rb_node *next;
-+	struct kwork_top_stat *stat = &kwork->top_stat;
-+
-+	class = get_kwork_class(kwork, KWORK_CLASS_SCHED);
-+	if (!class)
-+		return;
-+
-+	next = rb_first_cached(&class->work_root);
-+	while (next) {
-+		work = rb_entry(next, struct kwork_work, node);
-+
-+		if (work->total_runtime == 0)
-+			goto next;
-+
-+		__set_bit(work->cpu, stat->all_cpus_bitmap);
-+
-+		work->cpu_usage = work->total_runtime * 10000 /
-+			stat->cpus_runtime[work->cpu].total;
-+
-+		top_calc_idle_time(kwork, work);
-+next:
-+		next = rb_next(next);
-+	}
-+}
-+
-+static void top_calc_load_runtime(struct perf_kwork *kwork,
-+				  struct kwork_work *work)
-+{
-+	struct kwork_top_stat *stat = &kwork->top_stat;
-+
-+	if (work->id != 0) {
-+		stat->cpus_runtime[work->cpu].load += work->total_runtime;
-+		stat->cpus_runtime[MAX_NR_CPUS].load += work->total_runtime;
-+	}
-+}
-+
-+static void top_merge_tasks(struct perf_kwork *kwork)
-+{
-+	struct kwork_work *merged_work, *data;
-+	struct kwork_class *class;
-+	struct rb_node *node;
-+	int cpu;
-+	struct rb_root_cached merged_root = RB_ROOT_CACHED;
-+
-+	class = get_kwork_class(kwork, KWORK_CLASS_SCHED);
-+	if (!class)
-+		return;
-+
-+	for (;;) {
-+		node = rb_first_cached(&class->work_root);
-+		if (!node)
-+			break;
-+
-+		rb_erase_cached(node, &class->work_root);
-+		data = rb_entry(node, struct kwork_work, node);
-+
-+		cpu = data->cpu;
-+		merged_work = find_work_by_id(&merged_root, data->id,
-+					      data->id == 0 ? cpu : -1);
-+		if (!merged_work) {
-+			work_insert(&merged_root, data, &kwork->cmp_id);
-+		} else {
-+			merged_work->total_runtime += data->total_runtime;
-+			merged_work->cpu_usage += data->cpu_usage;
-+		}
-+
-+		top_calc_load_runtime(kwork, data);
-+	}
-+
-+	work_sort(kwork, class, &merged_root);
-+}
-+
-+static void perf_kwork__top_report(struct perf_kwork *kwork)
-+{
-+	struct kwork_work *work;
-+	struct rb_node *next;
-+
-+	printf("\n");
-+
-+	top_print_cpu_usage(kwork);
-+	top_print_header(kwork);
-+	next = rb_first_cached(&kwork->sorted_work_root);
-+	while (next) {
-+		work = rb_entry(next, struct kwork_work, node);
-+		process_skipped_events(kwork, work);
-+
-+		if (work->total_runtime == 0)
-+			goto next;
-+
-+		top_print_work(kwork, work);
-+
-+next:
-+		next = rb_next(next);
-+	}
-+
-+	printf("\n");
-+}
-+
-+static int perf_kwork__top(struct perf_kwork *kwork)
-+{
-+	struct __top_cpus_runtime *cpus_runtime;
-+	int ret = 0;
-+
-+	cpus_runtime = zalloc(sizeof(struct __top_cpus_runtime) * (MAX_NR_CPUS + 1));
-+	if (!cpus_runtime)
-+		return -1;
-+
-+	kwork->top_stat.cpus_runtime = cpus_runtime;
-+	bitmap_zero(kwork->top_stat.all_cpus_bitmap, MAX_NR_CPUS);
-+
-+	ret = perf_kwork__read_events(kwork);
-+	if (ret)
-+		goto out;
-+
-+	top_calc_total_runtime(kwork);
-+	top_calc_cpu_usage(kwork);
-+	top_merge_tasks(kwork);
-+
-+	setup_pager();
-+
-+	perf_kwork__top_report(kwork);
-+
-+out:
-+	free(kwork->top_stat.cpus_runtime);
-+	return ret;
-+}
-+
- static void setup_event_list(struct perf_kwork *kwork,
- 			     const struct option *options,
- 			     const char * const usage_msg[])
-@@ -1801,6 +2165,7 @@ int cmd_kwork(int argc, const char **argv)
- 	};
- 	static const char default_report_sort_order[] = "runtime, max, count";
- 	static const char default_latency_sort_order[] = "avg, max, count";
-+	static const char default_top_sort_order[] = "rate, runtime";
- 	const struct option kwork_options[] = {
- 	OPT_INCR('v', "verbose", &verbose,
- 		 "be more verbose (show symbol address, etc)"),
-@@ -1868,6 +2233,9 @@ int cmd_kwork(int argc, const char **argv)
- 		   "input file name"),
- 	OPT_PARENT(kwork_options)
- 	};
-+	const struct option top_options[] = {
-+	OPT_PARENT(kwork_options)
-+	};
- 	const char *kwork_usage[] = {
- 		NULL,
- 		NULL
-@@ -1884,8 +2252,12 @@ int cmd_kwork(int argc, const char **argv)
- 		"perf kwork timehist [<options>]",
- 		NULL
- 	};
-+	const char * const top_usage[] = {
-+		"perf kwork top [<options>]",
-+		NULL
-+	};
- 	const char *const kwork_subcommands[] = {
--		"record", "report", "latency", "timehist", NULL
-+		"record", "report", "latency", "timehist", "top", NULL
- 	};
+ 		work->cpu_usage = work->total_runtime * 10000 /
+ 			stat->cpus_runtime[work->cpu].total;
  
- 	argc = parse_options_subcommand(argc, argv, kwork_options,
-@@ -1930,6 +2302,19 @@ int cmd_kwork(int argc, const char **argv)
- 		kwork.report = KWORK_REPORT_TIMEHIST;
+@@ -2311,7 +2392,7 @@ int cmd_kwork(int argc, const char **argv)
+ 		}
+ 		kwork.report = KWORK_REPORT_TOP;
+ 		if (!kwork.event_list_str)
+-			kwork.event_list_str = "sched";
++			kwork.event_list_str = "sched, irq";
  		setup_event_list(&kwork, kwork_options, kwork_usage);
- 		return perf_kwork__timehist(&kwork);
-+	} else if (strlen(argv[0]) > 2 && strstarts("top", argv[0])) {
-+		kwork.sort_order = default_top_sort_order;
-+		if (argc > 1) {
-+			argc = parse_options(argc, argv, top_options, top_usage, 0);
-+			if (argc)
-+				usage_with_options(top_usage, top_options);
-+		}
-+		kwork.report = KWORK_REPORT_TOP;
-+		if (!kwork.event_list_str)
-+			kwork.event_list_str = "sched";
-+		setup_event_list(&kwork, kwork_options, kwork_usage);
-+		setup_sorting(&kwork, top_options, top_usage);
-+		return perf_kwork__top(&kwork);
- 	} else
- 		usage_with_options(kwork_usage, kwork_options);
- 
+ 		setup_sorting(&kwork, top_options, top_usage);
+ 		return perf_kwork__top(&kwork);
 diff --git a/tools/perf/util/kwork.h b/tools/perf/util/kwork.h
-index f8e9cdd1371a..41ed193d5d8b 100644
+index 41ed193d5d8b..b3e410d02043 100644
 --- a/tools/perf/util/kwork.h
 +++ b/tools/perf/util/kwork.h
-@@ -24,6 +24,7 @@ enum kwork_report_type {
- 	KWORK_REPORT_RUNTIME,
- 	KWORK_REPORT_LATENCY,
- 	KWORK_REPORT_TIMEHIST,
-+	KWORK_REPORT_TOP,
+@@ -183,6 +183,7 @@ struct trace_kwork_handler {
+ struct __top_cpus_runtime {
+ 	u64 load;
+ 	u64 idle;
++	u64 irq;
+ 	u64 total;
  };
  
- enum kwork_trace_type {
-@@ -129,6 +130,11 @@ struct kwork_work {
- 	u64 max_latency_start;
- 	u64 max_latency_end;
- 	u64 total_latency;
-+
-+	/*
-+	 * top report
-+	 */
-+	u32 cpu_usage;
- };
- 
- struct kwork_class {
-@@ -174,6 +180,17 @@ struct trace_kwork_handler {
- 				  struct perf_sample *sample, struct machine *machine);
- };
- 
-+struct __top_cpus_runtime {
-+	u64 load;
-+	u64 idle;
-+	u64 total;
-+};
-+
-+struct kwork_top_stat {
-+	DECLARE_BITMAP(all_cpus_bitmap, MAX_NR_CPUS);
-+	struct __top_cpus_runtime *cpus_runtime;
-+};
-+
- struct perf_kwork {
- 	/*
- 	 * metadata
-@@ -225,6 +242,11 @@ struct perf_kwork {
- 	u64 all_runtime;
- 	u64 all_count;
- 	u64 nr_skipped_events[KWORK_TRACE_MAX + 1];
-+
-+	/*
-+	 * perf kwork top data
-+	 */
-+	struct kwork_top_stat top_stat;
- };
- 
- struct kwork_work *perf_kwork_add_work(struct perf_kwork *kwork,
 -- 
 2.30.GIT
 
