@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 369FAC3DA40
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Aug 2023 22:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87679C04A6A
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Aug 2023 22:37:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233322AbjHNWcl (ORCPT
+        id S233342AbjHNWg2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Aug 2023 18:32:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50990 "EHLO
+        Mon, 14 Aug 2023 18:36:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233375AbjHNWcJ (ORCPT
+        with ESMTP id S232801AbjHNWgP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Aug 2023 18:32:09 -0400
-Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67787171A
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 15:32:08 -0700 (PDT)
-Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-40a47e8e38dso50161cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 15:32:08 -0700 (PDT)
+        Mon, 14 Aug 2023 18:36:15 -0400
+Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 618FE98
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 15:36:14 -0700 (PDT)
+Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-4036bd4fff1so65731cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 15:36:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692052327; x=1692657127;
+        d=google.com; s=20221208; t=1692052573; x=1692657373;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=h0v4FnmqJUNHFxpcdGxWVG1RSHYWgI5Vlaomsgih4R4=;
-        b=vKKN7+oMq72bqWVomalazt5YNByN/nNk2Dn7lmw11mJVlFXhkK9asfziYOw830m02L
-         2yfuwv88wcDeISRa9AEMzKyVhg3mwV1VTm+JEyghkJV3wdXdlprPw4D67PbSzWSnAG/9
-         XMdrXJCoI2UDWEMojTDEomri+NmoePXQ5wZ3Nz+v8pa829xl4lC5KElnB0oaSdyEFUzO
-         Tsd6JR3yfsf93URH4IA2U8MbavWtq9YHtA6dgMxgVDPuyDRyPihL1UHgwbqsuH6VnY22
-         46TzxTAL+uQ9pGHI/34aLGEjqp8PeVSjxdSDoFmbvL6P6+a/DXnFEC3oPPfPadQWrhtG
-         Eeow==
+        bh=1C4m61aAlyTvnZ9ddi6Qehi7I8S64IaXUtfMsyvoqcA=;
+        b=7lhpUtdqt/Xs7OI04RuTGLkbIWh7/yAb6a0IuFX9hkWkZuDOARGZQP2Gpm2Lfv/oJR
+         zBm+zmtOpuDyrw9DA+3B0x9ZGIdoE9Z95a6o3eXZwUx5r1vCOcIJwNwg/tMgb0N7IdNh
+         4ThIvIUkXO3WTdXk1vudwjS3C3fhbJJZsNbFhwlES+WmJ2cdP+3qZ3oFICjmgpMNZDjp
+         Il7bT9yl6JG4sThxj6Rs2ZsPl2WWS5+ql4BozfEjGcpHgwedeJGn5jPeAV3m6+j1Zfmr
+         9iTj3jjj7PnNpbFGlZijcNrmilYiT+l+fukiwrN4V1FwYaLhFb4eotjYsXfc/cLXr7IW
+         N/Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692052327; x=1692657127;
+        d=1e100.net; s=20221208; t=1692052573; x=1692657373;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=h0v4FnmqJUNHFxpcdGxWVG1RSHYWgI5Vlaomsgih4R4=;
-        b=fsidKeAYIKsfUcf/npTR1ADo+g1bQEgl7Dw8suNqr2bUFBUwHJU3ARzHZk9x772U0a
-         pA7ZcgklEcBVIosnINaYGPjqn8MuQT103l/9wbNGJtIFy5osV3M8U0bf4gMUr2qf7P1U
-         r3EhSvca/upSk6RfrkD06JU5MUS9KsBz2KeDk4HCtV2/MfIOScdqKfu52mCKC85Ey0Kx
-         JxbO/RZmCBIP+25cVLwTuqj3LOy2tF2jAUZX/GOlUVWHW6B/TuYXt4X/gecxVQQfjkS4
-         R2urny55DZUAih/aC57s8kXS6uOGea+m9sUOZrovpxUeGuN0XWbLBNBhWFPSn4mcEeIR
-         k/nw==
-X-Gm-Message-State: AOJu0YxT5RJ2ga4he76Vik0afUgVrHBcDTU1CXiaaAZBmd+/a53q3rUb
-        4NaH5Wd0IbA0dlVmesCOR2uTks3c8oOYiOJtyhVV1Q==
-X-Google-Smtp-Source: AGHT+IFCpOH67poqOkqhXuiGRzJSIHcyEgDSVGrJ9l31Y+IwX24BR/s2XSse/ekN9tMDP2fZKzGzXF3ueh37FSr1uME=
-X-Received: by 2002:a05:622a:10d:b0:3f4:f0fd:fe7e with SMTP id
- u13-20020a05622a010d00b003f4f0fdfe7emr691907qtw.3.1692052327482; Mon, 14 Aug
- 2023 15:32:07 -0700 (PDT)
+        bh=1C4m61aAlyTvnZ9ddi6Qehi7I8S64IaXUtfMsyvoqcA=;
+        b=hWRHbG5y6wg+IahR8aC7JPQ/JunTbH0g1SbN6m6YeD1f+WUNej8Z47Fohxb/b+u2c/
+         hTuV7sxeYWOATaVGsCKCQENjiVHWjmO5HjpwLv0dSbjcO0JxTVKQmTEicoEnDNv8ZBe0
+         2D0dK8TJhkAJr6BEsWhgJW22iv3ZY4mQd34WrDDNqm2cij7pPcALt5CluN0O9yvCz41H
+         +5Eq1bLvq5vY2BvmsObVPutfl+nbepyho5ASBa1sGYMU5dSAGy7ki4YZk5GSUyFjdCIN
+         bJlD2Drgk79DzvqNm7BDJd+SLj7Dm7spC7YQZdNZZNz6UNH9lmbIDesPtREeD7+BXF1B
+         2eMA==
+X-Gm-Message-State: AOJu0YzyENZ3kBpLfeK+4zEregMm7v9kzEHiR5VLG7Xkjg8DhVpYE4c7
+        V2YF+qNa6jgleNPrZ+tEw/M+mMI7sj+Oi7Sk/arQqw==
+X-Google-Smtp-Source: AGHT+IFgvtOxDbhWw1QDSy67l3m6qzzvvgJ8g0QuFwDdn4jcXkZuSbNV5gomHHV5ysls30V6ggWNWM56UbY48qVTW8A=
+X-Received: by 2002:a05:622a:18a1:b0:403:b242:3e30 with SMTP id
+ v33-20020a05622a18a100b00403b2423e30mr717216qtc.1.1692052573398; Mon, 14 Aug
+ 2023 15:36:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <1691394685-61240-1-git-send-email-renyu.zj@linux.alibaba.com> <1691394685-61240-4-git-send-email-renyu.zj@linux.alibaba.com>
-In-Reply-To: <1691394685-61240-4-git-send-email-renyu.zj@linux.alibaba.com>
+References: <1691394685-61240-1-git-send-email-renyu.zj@linux.alibaba.com> <1691394685-61240-7-git-send-email-renyu.zj@linux.alibaba.com>
+In-Reply-To: <1691394685-61240-7-git-send-email-renyu.zj@linux.alibaba.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 14 Aug 2023 15:31:55 -0700
-Message-ID: <CAP-5=fXFZffdRMFH+aFzFech2pjbfYyQ+fx+E-YnfMBHifD4gw@mail.gmail.com>
-Subject: Re: [PATCH v6 3/7] perf jevents: Support more event fields
+Date:   Mon, 14 Aug 2023 15:36:02 -0700
+Message-ID: <CAP-5=fWyLQrYt=LVS9SoxsuZuR5fmRaNOn+v8qxdYa6WH7WmMA@mail.gmail.com>
+Subject: Re: [PATCH v6 6/7] perf jevents: Add support for Arm CMN PMU aliasing
 To:     Jing Zhang <renyu.zj@linux.alibaba.com>
 Cc:     John Garry <john.g.garry@oracle.com>,
         Will Deacon <will@kernel.org>,
@@ -82,126 +82,357 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 On Mon, Aug 7, 2023 at 12:51=E2=80=AFAM Jing Zhang <renyu.zj@linux.alibaba.=
 com> wrote:
 >
-> The usual event descriptions are "event=3Dxxx" or "config=3Dxxx", while t=
-he
-> event descriptions of CMN are "type=3Dxxx, eventid=3Dxxx" or more complex=
-.
-
-I found this difficult to read in relation to the code. Perhaps:
-
-The previous code assumes an event has either an "event=3D" or "config"
-field at the beginning. For CMN neither of these may be present, as an
-event is typically "type=3Dxx,eventid=3Dxxx".
-
-I think the use of the name "type" here is unfortunate. It conflicts
-with the PMU's type as defined in perf_event_attr.
-
-In general I think the jevents.py code needs improving, the
-event_fields dictionary is convoluted, we shouldn't be afraid to
-change the event json for example to get rid of things like ExtSel, we
-should really ensure the formats in the events are valid for the PMU
-they are for.
-
-> $cat /sys/bus/event_source/devices/arm_cmn_0/events/hnf_cache_fill
-> type=3D0x5,eventid=3D0x3
+> Currently just add aliases for part of Arm CMN PMU events which
+> are general and compatible for any SoC and CMN-ANY.
 >
-> When adding aliases for events described as "event=3Dxxx" or "config=3Dxx=
-x",
-> EventCode or ConfigCode can be used in the JSON files to describe the
-> events. But "eventid=3Dxxx, type=3Dxxx" cannot be supported at present.
+> "Compat" value "434*;436*;43c*;43a*" means it is compatible with
+> all CMN600/CMN650/CMN700/Ci700, which can be obtained from
+> commit 7819e05a0dce ("perf/arm-cmn: Revamp model detection").
 >
-> If EventCode and ConfigCode is not added in the alias JSON file, the
-> event description will add "event=3D0" by default. So, even if the event
-> field is added to supplement "eventid=3Dxxx" and "type=3Dxxx", the final
-> parsing result will be "event=3D0, eventid=3Dxxx, type=3Dxxx".
->
-> Therefore, when EventCode and ConfigCode are missing in JSON, "event=3D0"=
- is
-> no longer added by default. EventIdCode and Type are added to the event
-> field, and ConfigCode is moved into the event_field array which can also
-> guarantee its original function.
+> The arm-cmn PMU events got from:
 
-A useful test can be to build with JEVENTS_ARCH=3Dall and confirm the
-before and after change generated pmu-events.c is the same.
-
-> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
-> ---
->  tools/perf/pmu-events/jevents.py | 21 +++++++++++++--------
->  1 file changed, 13 insertions(+), 8 deletions(-)
->
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
-ents.py
-> index f57a8f2..9c0f63a 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-> @@ -275,12 +275,6 @@ class JsonEvent:
->        }
->        return table[unit] if unit in table else f'uncore_{unit.lower()}'
->
-> -    eventcode =3D 0
-> -    if 'EventCode' in jd:
-> -      eventcode =3D int(jd['EventCode'].split(',', 1)[0], 0)
-> -    if 'ExtSel' in jd:
-> -      eventcode |=3D int(jd['ExtSel']) << 8
-> -    configcode =3D int(jd['ConfigCode'], 0) if 'ConfigCode' in jd else N=
-one
->      self.name =3D jd['EventName'].lower() if 'EventName' in jd else None
->      self.topic =3D ''
->      self.compat =3D jd.get('Compat')
-> @@ -317,7 +311,15 @@ class JsonEvent:
->      if precise and self.desc and '(Precise Event)' not in self.desc:
->        extra_desc +=3D ' (Must be precise)' if precise =3D=3D '2' else ('=
- (Precise '
->                                                                   'event)=
-')
-> -    event =3D f'config=3D{llx(configcode)}' if configcode is not None el=
-se f'event=3D{llx(eventcode)}'
-> +    eventcode =3D None
-> +    if 'EventCode' in jd:
-> +      eventcode =3D int(jd['EventCode'].split(',', 1)[0], 0)
-> +    if 'ExtSel' in jd:
-> +      if eventcode is None:
-> +        eventcode =3D int(jd['ExtSel']) << 8
-> +      else:
-> +        eventcode |=3D int(jd['ExtSel']) << 8
-> +    event =3D f'event=3D{llx(eventcode)}' if eventcode is not None else =
-None
->      event_fields =3D [
->          ('AnyThread', 'any=3D'),
->          ('PortMask', 'ch_mask=3D'),
-> @@ -327,10 +329,13 @@ class JsonEvent:
->          ('Invert', 'inv=3D'),
->          ('SampleAfterValue', 'period=3D'),
->          ('UMask', 'umask=3D'),
-> +        ('ConfigCode', 'config=3D'),
-
-This loses the int and potential base conversion of ConfigCode.
-Clearly the code was taking care to maintain this behavior so I
-suspect this change has broken something. JEVENTS_ARCH=3Dall should
-reveal the answer.
-
-> +        ('Type', 'type=3D'),
-> +        ('EventIdCode', 'eventid=3D'),
->      ]
->      for key, value in event_fields:
->        if key in jd and jd[key] !=3D '0':
-> -        event +=3D ',' + value + jd[key]
-> +        event =3D event + ',' + value + jd[key] if event is not None els=
-e value + jd[key]
-
-Perhaps initialize event above to the empty string then:
-
-if key in jd and jd[key] !=3D '0':
-  if event:
-     event +=3D ','
-  event +=3D value + jd[key]
+nit: The use of the words "events" and "aliases" can be confusing -
+aliases isn't specific as there may be a notion of other aliases like
+for PMU names. I think in the code base we should avoid to use
+"aliases" and just use "events".
 
 Thanks,
 Ian
 
->      if filter:
->        event +=3D f',{filter}'
->      if msr:
+> [0] https://developer.arm.com/documentation/100180/0302/?lang=3Den
+> [1] https://developer.arm.com/documentation/101408/0100/?lang=3Den
+> [2] https://developer.arm.com/documentation/102308/0302/?lang=3Den
+> [3] https://developer.arm.com/documentation/101569/0300/?lang=3Den
+>
+> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+> Reviewed-by: John Garry <john.g.garry@oracle.com>
+> ---
+>  .../pmu-events/arch/arm64/arm/cmn/sys/cmn.json     | 266 +++++++++++++++=
+++++++
+>  tools/perf/pmu-events/jevents.py                   |   1 +
+>  2 files changed, 267 insertions(+)
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
+>
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json b/tool=
+s/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
+> new file mode 100644
+> index 0000000..e54036c
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
+> @@ -0,0 +1,266 @@
+> +[
+> +       {
+> +               "EventName": "hnf_cache_miss",
+> +               "EventIdCode": "0x1",
+> +               "Type": "0x5",
+> +               "BriefDescription": "Counts total cache misses in first l=
+ookup result (high priority).",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "hnf_slc_sf_cache_access",
+> +               "EventIdCode": "0x2",
+> +               "Type": "0x5",
+> +               "BriefDescription": "Counts number of cache accesses in f=
+irst access (high priority).",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "hnf_cache_fill",
+> +               "EventIdCode": "0x3",
+> +               "Type": "0x5",
+> +               "BriefDescription": "Counts total allocations in HN SLC (=
+all cache line allocations to SLC).",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "hnf_pocq_retry",
+> +               "EventIdCode": "0x4",
+> +               "Type": "0x5",
+> +               "BriefDescription": "Counts number of retried requests.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "hnf_pocq_reqs_recvd",
+> +               "EventIdCode": "0x5",
+> +               "Type": "0x5",
+> +               "BriefDescription": "Counts number of requests that HN re=
+ceives.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "hnf_sf_hit",
+> +               "EventIdCode": "0x6",
+> +               "Type": "0x5",
+> +               "BriefDescription": "Counts number of SF hits.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "hnf_sf_evictions",
+> +               "EventIdCode": "0x7",
+> +               "Type": "0x5",
+> +               "BriefDescription": "Counts number of SF eviction cache i=
+nvalidations initiated.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "hnf_dir_snoops_sent",
+> +               "EventIdCode": "0x8",
+> +               "Type": "0x5",
+> +               "BriefDescription": "Counts number of directed snoops sen=
+t (not including SF back invalidation).",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "hnf_brd_snoops_sent",
+> +               "EventIdCode": "0x9",
+> +               "Type": "0x5",
+> +               "BriefDescription": "Counts number of multicast snoops se=
+nt (not including SF back invalidation).",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "hnf_slc_eviction",
+> +               "EventIdCode": "0xa",
+> +               "Type": "0x5",
+> +               "BriefDescription": "Counts number of SLC evictions (dirt=
+y only).",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "hnf_slc_fill_invalid_way",
+> +               "EventIdCode": "0xb",
+> +               "Type": "0x5",
+> +               "BriefDescription": "Counts number of SLC fills to an inv=
+alid way.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "hnf_mc_retries",
+> +               "EventIdCode": "0xc",
+> +               "Type": "0x5",
+> +               "BriefDescription": "Counts number of retried transaction=
+s by the MC.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "hnf_mc_reqs",
+> +               "EventIdCode": "0xd",
+> +               "Type": "0x5",
+> +               "BriefDescription": "Counts number of requests that are s=
+ent to MC.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "hnf_qos_hh_retry",
+> +               "EventIdCode": "0xe",
+> +               "Type": "0x5",
+> +               "BriefDescription": "Counts number of times a HighHigh pr=
+iority request is protocolretried at the HN=E2=80=91F.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "rnid_s0_rdata_beats",
+> +               "EventIdCode": "0x1",
+> +               "Type": "0xa",
+> +               "BriefDescription": "Number of RData beats (RVALID and RR=
+EADY) dispatched on port 0. This event measures the read bandwidth, includi=
+ng CMO responses.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "rnid_s1_rdata_beats",
+> +               "EventIdCode": "0x2",
+> +               "Type": "0xa",
+> +               "BriefDescription": "Number of RData beats (RVALID and RR=
+EADY) dispatched on port 1. This event measures the read bandwidth, includi=
+ng CMO responses.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "rnid_s2_rdata_beats",
+> +               "EventIdCode": "0x3",
+> +               "Type": "0xa",
+> +               "BriefDescription": "Number of RData beats (RVALID and RR=
+EADY) dispatched on port 2. This event measures the read bandwidth, includi=
+ng CMO responses.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "rnid_rxdat_flits",
+> +               "EventIdCode": "0x4",
+> +               "Type": "0xa",
+> +               "BriefDescription": "Number of RXDAT flits received. This=
+ event measures the true read data bandwidth, excluding CMOs.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "rnid_txdat_flits",
+> +               "EventIdCode": "0x5",
+> +               "Type": "0xa",
+> +               "BriefDescription": "Number of TXDAT flits dispatched. Th=
+is event measures the write bandwidth.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "rnid_txreq_flits_total",
+> +               "EventIdCode": "0x6",
+> +               "Type": "0xa",
+> +               "BriefDescription": "Number of TXREQ flits dispatched. Th=
+is event measures the total request bandwidth.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "rnid_txreq_flits_retried",
+> +               "EventIdCode": "0x7",
+> +               "Type": "0xa",
+> +               "BriefDescription": "Number of retried TXREQ flits dispat=
+ched. This event measures the retry rate.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "sbsx_txrsp_retryack",
+> +               "EventIdCode": "0x4",
+> +               "Type": "0x7",
+> +               "BriefDescription": "Number of RXREQ flits dispatched. Th=
+is event is a measure of the retry rate.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "sbsx_txdat_flitv",
+> +               "EventIdCode": "0x5",
+> +               "Type": "0x7",
+> +               "BriefDescription": "Number of TXDAT flits dispatched fro=
+m XP to SBSX. This event is a measure of the write bandwidth.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "sbsx_arvalid_no_arready",
+> +               "EventIdCode": "0x21",
+> +               "Type": "0x7",
+> +               "BriefDescription": "Number of cycles the SBSX bridge is =
+stalled because of backpressure on AR channel.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "sbsx_awvalid_no_awready",
+> +               "EventIdCode": "0x22",
+> +               "Type": "0x7",
+> +               "BriefDescription": "Number of cycles the SBSX bridge is =
+stalled because of backpressure on AW channel.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "sbsx_wvalid_no_wready",
+> +               "EventIdCode": "0x23",
+> +               "Type": "0x7",
+> +               "BriefDescription": "Number of cycles the SBSX bridge is =
+stalled because of backpressure on W channel.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "hni_txrsp_retryack",
+> +               "EventIdCode": "0x2a",
+> +               "Type": "0x4",
+> +               "BriefDescription": "Number of RXREQ flits dispatched. Th=
+is event is a measure of the retry rate.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "hni_arvalid_no_arready",
+> +               "EventIdCode": "0x2b",
+> +               "Type": "0x4",
+> +               "BriefDescription": "Number of cycles the HN-I bridge is =
+stalled because of backpressure on AR channel.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "hni_arready_no_arvalid",
+> +               "EventIdCode": "0x2c",
+> +               "Type": "0x4",
+> +               "BriefDescription": "Number of cycles the AR channel is w=
+aiting for new requests from HN-I bridge.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "hni_awvalid_no_awready",
+> +               "EventIdCode": "0x2d",
+> +               "Type": "0x4",
+> +               "BriefDescription": "Number of cycles the HN-I bridge is =
+stalled because of backpressure on AW channel.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "hni_awready_no_awvalid",
+> +               "EventIdCode": "0x2e",
+> +               "Type": "0x4",
+> +               "BriefDescription": "Number of cycles the AW channel is w=
+aiting for new requests from HN-I bridge.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "hni_wvalid_no_wready",
+> +               "EventIdCode": "0x2f",
+> +               "Type": "0x4",
+> +               "BriefDescription": "Number of cycles the HN-I bridge is =
+stalled because of backpressure on W channel.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       },
+> +       {
+> +               "EventName": "hni_txdat_stall",
+> +               "EventIdCode": "0x30",
+> +               "Type": "0x4",
+> +               "BriefDescription": "TXDAT valid but no link credit avail=
+able.",
+> +               "Unit": "arm_cmn",
+> +               "Compat": "434*;436*;43c*;43a*"
+> +       }
+> +]
+> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
+ents.py
+> index 9c0f63a..bfdfb67 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+> @@ -272,6 +272,7 @@ class JsonEvent:
+>            'DFPMC': 'amd_df',
+>            'cpu_core': 'cpu_core',
+>            'cpu_atom': 'cpu_atom',
+> +          'arm_cmn': 'arm_cmn',
+>        }
+>        return table[unit] if unit in table else f'uncore_{unit.lower()}'
+>
 > --
 > 1.8.3.1
 >
