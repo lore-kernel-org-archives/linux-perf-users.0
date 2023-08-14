@@ -2,202 +2,207 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15620C001E0
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Aug 2023 07:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A60EAC41513
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Aug 2023 11:29:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233578AbjHNHka (ORCPT
+        id S229990AbjHNL2r (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Aug 2023 03:40:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56446 "EHLO
+        Mon, 14 Aug 2023 07:28:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234319AbjHNHkW (ORCPT
+        with ESMTP id S234402AbjHNL2j (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Aug 2023 03:40:22 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1408DE73;
-        Mon, 14 Aug 2023 00:40:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691998821; x=1723534821;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=6EgNyeRC8oeSntQ+uFXQ98rQjYsSKgASYESs/c5A3pQ=;
-  b=duWm9oTFt04+VXsEmViewkyplAlVzBoPldmtClLq2go7wscyhlg2Rx3J
-   nHUMo+dEDCRF4YIec4rGzEgVCPZYdEBOev0orFkLlN/+Gjn0xK96aIRcE
-   IlalH53WiKyA2/RuOt+xzAP+KiwcQh2W0pk/jhl4JBcQvzF18TeqoRh5X
-   5CFEpTfl6tvZsSffus2LvIGW1IKobV+ArdRC9qgw2Q+AB0G+G97gSvtAZ
-   2TMuRD1RjpfDPKWelSjzpbwT6mjyjdPAb1uH1pBcjTzSKnHSWx4Jpljhw
-   tJtqmMRrqYp6s2RweOEovk0XogEC6hDWm6/umYCOmgVo/9CLm3vZbN++O
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10801"; a="369455997"
-X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
-   d="scan'208";a="369455997"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 00:40:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10801"; a="768355718"
-X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
-   d="scan'208";a="768355718"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.51.71])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 00:40:15 -0700
-Message-ID: <8198296c-7772-1252-16a6-ffa68e86a3f5@intel.com>
-Date:   Mon, 14 Aug 2023 10:40:11 +0300
+        Mon, 14 Aug 2023 07:28:39 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BED410C0
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 04:28:38 -0700 (PDT)
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37EBL8aX012280;
+        Mon, 14 Aug 2023 11:28:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=xgwqiDZp2DvI0lMdP2JgEOU6FwOA12CZ/1giC5ldBtY=;
+ b=jSpivltGEbbChuFdqGD/AdgA+w228zpmf1x0YaMioS4wGGsyeaaDLUubNbTIPMA7QTF0
+ itommKSqZZRn/iMHoAaZpUcocq9IzWdDIDVVNTcR/Xv+Bhwzm8V7QTZzzkKOC7ZxH6DB
+ sm0gStlLXeoQSqfeCkHn5lCdB96YAil4FaYbRnbyGS64dcHkGwSsnijFnYJ/wYhuVzJ9
+ xjyaJc3k7QABbNvi562DEO/LA/41k5O6jF8jUUtog5HYRScWRRG6Dh9iEoFpPP6XpeZ4
+ aeu4lwL812tFcHEIcT7GWqejDoNBbrXLiFNMWWW9C7TqXNLEdu1uhDNlbkR01Mq3hVp5 3w== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sfkak04uk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 14 Aug 2023 11:28:33 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37EBPIaX023660;
+        Mon, 14 Aug 2023 11:28:32 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sfkak04u1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 14 Aug 2023 11:28:32 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37EAtu8f007839;
+        Mon, 14 Aug 2023 11:28:31 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3senwjukdj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 14 Aug 2023 11:28:31 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37EBSR6q23921330
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 14 Aug 2023 11:28:27 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C342D20043;
+        Mon, 14 Aug 2023 11:28:27 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DCF1420040;
+        Mon, 14 Aug 2023 11:28:24 +0000 (GMT)
+Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com.com (unknown [9.43.123.95])
+        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Mon, 14 Aug 2023 11:28:24 +0000 (GMT)
+From:   Kajol Jain <kjain@linux.ibm.com>
+To:     acme@kernel.org
+Cc:     maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        disgoel@linux.ibm.com, kjain@linux.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org,
+        irogers@google.com, namhyung@kernel.org
+Subject: [PATCH 2/7] perf vendor events: Drop some of the JSON/events for power10 platform
+Date:   Mon, 14 Aug 2023 16:57:58 +0530
+Message-Id: <20230814112803.1508296-2-kjain@linux.ibm.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20230814112803.1508296-1-kjain@linux.ibm.com>
+References: <20230814112803.1508296-1-kjain@linux.ibm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.14.0
-Subject: Re: [PATCH v2 2/7] perf evlist: Add evlist__findnew_tracking_event()
- helper
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>
-Cc:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, kan.liang@linux.intel.com,
-        james.clark@arm.com, tmricht@linux.ibm.com, ak@linux.intel.com,
-        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-References: <20230715032915.97146-1-yangjihong1@huawei.com>
- <20230715032915.97146-3-yangjihong1@huawei.com>
- <CAP-5=fVysKhUn1YsUr0NBU2kVBDgkoczO861XwK5VCtkeYSRJA@mail.gmail.com>
- <085942cc-f6e7-a81b-243f-a739c91ecd72@intel.com>
- <CAP-5=fVmKmgsABpnsngT9L1QeaWaUxakHc1078LahGFqK4-riA@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CAP-5=fVmKmgsABpnsngT9L1QeaWaUxakHc1078LahGFqK4-riA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: pwPqrscDGbNmCnx9KSfDN2xoBBYoVTjh
+X-Proofpoint-GUID: QKiSdXai7Wkv-fnG9siF9_XYlEk7ohCG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-14_06,2023-08-10_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 phishscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
+ spamscore=0 adultscore=0 clxscore=1015 suspectscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2308140102
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 19/07/23 20:12, Ian Rogers wrote:
-> On Wed, Jul 19, 2023 at 9:59 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>
->> On 19/07/23 19:44, Ian Rogers wrote:
->>> On Fri, Jul 14, 2023 at 8:31 PM Yang Jihong <yangjihong1@huawei.com> wrote:
->>>>
->>>> Currently, intel-bts, intel-pt, and arm-spe may add a dummy event for
->>>> tracking to the evlist. We may need to search for the dummy event for
->>>> some settings. Therefore, add evlist__findnew_tracking_event() helper.
->>>>
->>>> evlist__findnew_tracking_event() also deal with system_wide maps if
->>>> system_wide is true.
->>>
->>> I'm wondering if we can simplify the naming in the API, we have "dummy
->>> event" which makes sense as we literally call the event "dummy",
->>> "sideband" which refers to the kind of samples/events the dummy event
->>> will record but "tracking" I think tends to get used as a verb rather
->>> than a noun. So I think evlist__findnew_tracking_event should be
->>> evlist__findnew_dummy_event.
->>
->> Except the tracking event has "tracking" set but there can be other dummy
->> events that do not.
-> 
-> Thanks! I'm wondering what a dummy event without tracking would be
-> used for - do you have a reference?
+Drop some of the JSON/events for power10 platform due to counter
+data mismatch.
 
-For example, text_poke events need to be recorded on all CPUs
-because changes to the kernel affect every CPU.  Another example.
-it can be interesting to capture switch events CPU-wide even if
-only some processes are being traced.
+Fixes: 32daa5d7899e ("perf vendor events: Initial JSON/events list for power10 platform")
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+---
+ .../arch/powerpc/power10/floating_point.json           |  7 -------
+ tools/perf/pmu-events/arch/powerpc/power10/marked.json | 10 ----------
+ tools/perf/pmu-events/arch/powerpc/power10/others.json |  5 -----
+ .../perf/pmu-events/arch/powerpc/power10/pipeline.json | 10 ----------
+ .../pmu-events/arch/powerpc/power10/translation.json   |  5 -----
+ 5 files changed, 37 deletions(-)
+ delete mode 100644 tools/perf/pmu-events/arch/powerpc/power10/floating_point.json
 
->                                     I don't see anything in
-> perf_event.h calling things like mmap2/comm in perf_event_attr
-> tracking. I'm not a fan of dummy due to it not being intention
-> revealing. Perhaps if we could go back in time  we could call the
-> event "sideband",
-
-Auxiliary events are inband with respect to the perf buffer.  Only
-when the "main" tracing could be considered to be the AUX area
-buffer, can the events in the perf buffer be considered sideband.
-
->                   maybe we should migrate to this. We have other
-> non-obvious uses of the term dummy like in cpumap:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/lib/perf/include/perf/cpumap.h?h=perf-tools-next#n24
-> If tracking can be on any event then does that make the functions
-> behavior more ambiguous if it means dummy+tracking not <any
-> event>+tracking?
-> 
-> Thanks,
-> Ian
-> 
->>>
->>> Thanks,
->>> Ian
->>>
->>>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
->>>> ---
->>>>  tools/perf/builtin-record.c | 11 +++--------
->>>>  tools/perf/util/evlist.c    | 18 ++++++++++++++++++
->>>>  tools/perf/util/evlist.h    |  1 +
->>>>  3 files changed, 22 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
->>>> index aec18db7ff23..ca83599cc50c 100644
->>>> --- a/tools/perf/builtin-record.c
->>>> +++ b/tools/perf/builtin-record.c
->>>> @@ -1295,14 +1295,9 @@ static int record__open(struct record *rec)
->>>>          */
->>>>         if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
->>>>             perf_pmus__num_core_pmus() > 1) {
->>>> -               pos = evlist__get_tracking_event(evlist);
->>>> -               if (!evsel__is_dummy_event(pos)) {
->>>> -                       /* Set up dummy event. */
->>>> -                       if (evlist__add_dummy(evlist))
->>>> -                               return -ENOMEM;
->>>> -                       pos = evlist__last(evlist);
->>>> -                       evlist__set_tracking_event(evlist, pos);
->>>> -               }
->>>> +               pos = evlist__findnew_tracking_event(evlist, false);
->>>> +               if (!pos)
->>>> +                       return -ENOMEM;
->>>>
->>>>                 /*
->>>>                  * Enable the dummy event when the process is forked for
->>>> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
->>>> index 7ef43f72098e..25c3ebe2c2f5 100644
->>>> --- a/tools/perf/util/evlist.c
->>>> +++ b/tools/perf/util/evlist.c
->>>> @@ -1694,6 +1694,24 @@ void evlist__set_tracking_event(struct evlist *evlist, struct evsel *tracking_ev
->>>>         tracking_evsel->tracking = true;
->>>>  }
->>>>
->>>> +struct evsel *evlist__findnew_tracking_event(struct evlist *evlist, bool system_wide)
->>>> +{
->>>> +       struct evsel *evsel;
->>>> +
->>>> +       evsel = evlist__get_tracking_event(evlist);
->>>> +       if (!evsel__is_dummy_event(evsel)) {
->>>> +               evsel = evlist__add_aux_dummy(evlist, system_wide);
->>>> +               if (!evsel)
->>>> +                       return NULL;
->>>> +
->>>> +               evlist__set_tracking_event(evlist, evsel);
->>>> +       } else if (system_wide) {
->>>> +               perf_evlist__go_system_wide(&evlist->core, &evsel->core);
->>>> +       }
->>>> +
->>>> +       return evsel;
->>>> +}
->>>> +
->>>>  struct evsel *evlist__find_evsel_by_str(struct evlist *evlist, const char *str)
->>>>  {
->>>>         struct evsel *evsel;
->>>> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
->>>> index 664c6bf7b3e0..98e7ddb2bd30 100644
->>>> --- a/tools/perf/util/evlist.h
->>>> +++ b/tools/perf/util/evlist.h
->>>> @@ -387,6 +387,7 @@ bool evlist_cpu_iterator__end(const struct evlist_cpu_iterator *evlist_cpu_itr);
->>>>
->>>>  struct evsel *evlist__get_tracking_event(struct evlist *evlist);
->>>>  void evlist__set_tracking_event(struct evlist *evlist, struct evsel *tracking_evsel);
->>>> +struct evsel *evlist__findnew_tracking_event(struct evlist *evlist, bool system_wide);
->>>>
->>>>  struct evsel *evlist__find_evsel_by_str(struct evlist *evlist, const char *str);
->>>>
->>>> --
->>>> 2.30.GIT
->>>>
->>
+diff --git a/tools/perf/pmu-events/arch/powerpc/power10/floating_point.json b/tools/perf/pmu-events/arch/powerpc/power10/floating_point.json
+deleted file mode 100644
+index 54acb55e2c8c..000000000000
+--- a/tools/perf/pmu-events/arch/powerpc/power10/floating_point.json
++++ /dev/null
+@@ -1,7 +0,0 @@
+-[
+-  {
+-    "EventCode": "0x4016E",
+-    "EventName": "PM_THRESH_NOT_MET",
+-    "BriefDescription": "Threshold counter did not meet threshold."
+-  }
+-]
+diff --git a/tools/perf/pmu-events/arch/powerpc/power10/marked.json b/tools/perf/pmu-events/arch/powerpc/power10/marked.json
+index 131f8d0e8831..f2436fc5537c 100644
+--- a/tools/perf/pmu-events/arch/powerpc/power10/marked.json
++++ b/tools/perf/pmu-events/arch/powerpc/power10/marked.json
+@@ -19,11 +19,6 @@
+     "EventName": "PM_MRK_BR_TAKEN_CMPL",
+     "BriefDescription": "Marked Branch Taken instruction completed."
+   },
+-  {
+-    "EventCode": "0x20112",
+-    "EventName": "PM_MRK_NTF_FIN",
+-    "BriefDescription": "The marked instruction became the oldest in the pipeline before it finished. It excludes instructions that finish at dispatch."
+-  },
+   {
+     "EventCode": "0x2C01C",
+     "EventName": "PM_EXEC_STALL_DMISS_OFF_CHIP",
+@@ -64,11 +59,6 @@
+     "EventName": "PM_L1_ICACHE_MISS",
+     "BriefDescription": "Demand instruction cache miss."
+   },
+-  {
+-    "EventCode": "0x30130",
+-    "EventName": "PM_MRK_INST_FIN",
+-    "BriefDescription": "marked instruction finished. Excludes instructions that finish at dispatch. Note that stores always finish twice since the address gets issued to the LSU and the data gets issued to the VSU."
+-  },
+   {
+     "EventCode": "0x34146",
+     "EventName": "PM_MRK_LD_CMPL",
+diff --git a/tools/perf/pmu-events/arch/powerpc/power10/others.json b/tools/perf/pmu-events/arch/powerpc/power10/others.json
+index a5319cdba89b..17c5424ef1ac 100644
+--- a/tools/perf/pmu-events/arch/powerpc/power10/others.json
++++ b/tools/perf/pmu-events/arch/powerpc/power10/others.json
+@@ -29,11 +29,6 @@
+     "EventName": "PM_DISP_SS0_2_INSTR_CYC",
+     "BriefDescription": "Cycles in which Superslice 0 dispatches either 1 or 2 instructions."
+   },
+-  {
+-    "EventCode": "0x1F15C",
+-    "EventName": "PM_MRK_STCX_L2_CYC",
+-    "BriefDescription": "Cycles spent in the nest portion of a marked Stcx instruction. It starts counting when the operation starts to drain to the L2 and it stops counting when the instruction retires from the Instruction Completion Table (ICT) in the Instruction Sequencing Unit (ISU)."
+-  },
+   {
+     "EventCode": "0x10066",
+     "EventName": "PM_ADJUNCT_CYC",
+diff --git a/tools/perf/pmu-events/arch/powerpc/power10/pipeline.json b/tools/perf/pmu-events/arch/powerpc/power10/pipeline.json
+index 449f57e8ba6a..799893c56f32 100644
+--- a/tools/perf/pmu-events/arch/powerpc/power10/pipeline.json
++++ b/tools/perf/pmu-events/arch/powerpc/power10/pipeline.json
+@@ -194,11 +194,6 @@
+     "EventName": "PM_TLBIE_FIN",
+     "BriefDescription": "TLBIE instruction finished in the LSU. Two TLBIEs can finish each cycle. All will be counted."
+   },
+-  {
+-    "EventCode": "0x3D058",
+-    "EventName": "PM_SCALAR_FSQRT_FDIV_ISSUE",
+-    "BriefDescription": "Scalar versions of four floating point operations: fdiv,fsqrt (xvdivdp, xvdivsp, xvsqrtdp, xvsqrtsp)."
+-  },
+   {
+     "EventCode": "0x30066",
+     "EventName": "PM_LSU_FIN",
+@@ -269,11 +264,6 @@
+     "EventName": "PM_IC_MISS_CMPL",
+     "BriefDescription": "Non-speculative instruction cache miss, counted at completion."
+   },
+-  {
+-    "EventCode": "0x4D050",
+-    "EventName": "PM_VSU_NON_FLOP_CMPL",
+-    "BriefDescription": "Non-floating point VSU instructions completed."
+-  },
+   {
+     "EventCode": "0x4D052",
+     "EventName": "PM_2FLOP_CMPL",
+diff --git a/tools/perf/pmu-events/arch/powerpc/power10/translation.json b/tools/perf/pmu-events/arch/powerpc/power10/translation.json
+index 3e47b804a0a8..961e2491e73f 100644
+--- a/tools/perf/pmu-events/arch/powerpc/power10/translation.json
++++ b/tools/perf/pmu-events/arch/powerpc/power10/translation.json
+@@ -4,11 +4,6 @@
+     "EventName": "PM_MRK_START_PROBE_NOP_CMPL",
+     "BriefDescription": "Marked Start probe nop (AND R0,R0,R0) completed."
+   },
+-  {
+-    "EventCode": "0x20016",
+-    "EventName": "PM_ST_FIN",
+-    "BriefDescription": "Store finish count. Includes speculative activity."
+-  },
+   {
+     "EventCode": "0x20018",
+     "EventName": "PM_ST_FWD",
+-- 
+2.39.3
 
