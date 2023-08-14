@@ -2,1834 +2,984 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FA5C04E69
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Aug 2023 11:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD7BC001B0
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Aug 2023 12:20:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234583AbjHNL3U (ORCPT
+        id S231528AbjHNMTz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Aug 2023 07:29:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39152 "EHLO
+        Mon, 14 Aug 2023 08:19:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234701AbjHNL2x (ORCPT
+        with ESMTP id S230233AbjHNMT1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Aug 2023 07:28:53 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBC5B10C0
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 04:28:48 -0700 (PDT)
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37EBL8rH012275;
-        Mon, 14 Aug 2023 11:28:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=Ee+zpHmspv+mMMm0P3MEYccCInqKwfOze40rb6tkvpQ=;
- b=QFY0PHkOkhmS3qVQsj6nss35VmyUeQScE95hriF6ATA68Rva0vNOCWW4NZSKH4xEMoz0
- 0IZrFtLS3Pwwk3l5bbUDHo/zee0QGtoCZqqZygOTOGzkUElU08WXKYHO1RN4fUw8YDX1
- q2/MlBE2Tn7uTK/KHgJrozRk+Ly/uvf1dKyR6gvjBu3c/NC1LHJbabRq44G1UmBULp3F
- U6dOO9BEQbIvhjJEg6gqIHbe6lqXFJUl26V0aYpw//nZnhMoYW7y68EhQfLMzUVlYUpC
- ax7kPK3zxOR9XGhL7zoR5XpcX1LOShPRdh/M8eNfZ6yk4Bh1vL0eo7hdKiVdehFU0B6m rA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sfkak04xx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 14 Aug 2023 11:28:40 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37EBNDHV017508;
-        Mon, 14 Aug 2023 11:28:39 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sfkak04xb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 14 Aug 2023 11:28:39 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-        by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37EAEQZ2002421;
-        Mon, 14 Aug 2023 11:28:38 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3sendmus74-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 14 Aug 2023 11:28:38 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37EBSYgE3801644
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Aug 2023 11:28:34 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 68F7F2004E;
-        Mon, 14 Aug 2023 11:28:34 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5705120040;
-        Mon, 14 Aug 2023 11:28:31 +0000 (GMT)
-Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com.com (unknown [9.43.123.95])
-        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Mon, 14 Aug 2023 11:28:31 +0000 (GMT)
-From:   Kajol Jain <kjain@linux.ibm.com>
-To:     acme@kernel.org
-Cc:     maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        disgoel@linux.ibm.com, kjain@linux.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com, namhyung@kernel.org
-Subject: [PATCH 4/7] perf vendor events: Move JSON/events to appropriate files for power10 platform
-Date:   Mon, 14 Aug 2023 16:58:00 +0530
-Message-Id: <20230814112803.1508296-4-kjain@linux.ibm.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20230814112803.1508296-1-kjain@linux.ibm.com>
-References: <20230814112803.1508296-1-kjain@linux.ibm.com>
+        Mon, 14 Aug 2023 08:19:27 -0400
+Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 415B8107
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 05:19:21 -0700 (PDT)
+Received: by mail-il1-x130.google.com with SMTP id e9e14a558f8ab-34977c2dc27so20416975ab.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 05:19:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1692015560; x=1692620360;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mMMAs0OBRGkeQvevBRaD/T+Qm699W/DL8MQxNI4lQ0I=;
+        b=Bky+rK22eTa1i4OA45Ncy1US8NO/01UCM+Ao5XASED6r5P9NKuSkl3CPaQUcVewqLS
+         8Xw13duR1wQFL1lB56Mb4yrrTic777ojjsDHOcLKySAUVJAsrLJmRA91Pu0v6lzCfRgz
+         JriI+Ri7yzJZHsXcHfCznm2jNShjEYw026RTppNqBHKmtPrexE5HJ6dMx7e0PLQSoC1G
+         B78xyA/ZV3INsHj1+9cMQnYlMtf3T5P11gie6Iq+SC34NChqXakjqzNvsyEw9Q7zUoB+
+         1k8mtSdKcTvwNwIB4uZZCnlbCjOjs1dhzpPO8aigpxxuz2nJ6dVcmsaH98RXWuLXEdpQ
+         xyRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692015560; x=1692620360;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mMMAs0OBRGkeQvevBRaD/T+Qm699W/DL8MQxNI4lQ0I=;
+        b=dpiRA5jjKmDOyVJ0WR6qkN0Qv5w7uEQtNSTToQoK+lewMpQsT36ndp6j2Vu9GCxRKC
+         kDVIwTXqOA5YM/a1qCZU4Q0juDpL4yc1K9xFfpk4CC1SjUG5J5s++WqNk6ci3bGSMYdt
+         rTKOaq1yO3ReJlITqdIWs2uKwXczEMHc8nhshWQLDq1RDTt0LPVzUjbOlXcCYcy3wH43
+         hIajcanWz+oEQwTkqJt0DHr900haaTrzphS70/2l/U6n3aSyE86+6T0oitIjgIpoQoe8
+         KDpQxkBnUWMmE4W3hseTQB4AkN1E4zY4bQfWAACPf1JhUOCREnRaxXimPK8vxVsCciBQ
+         Di6Q==
+X-Gm-Message-State: AOJu0YzJiNyga9+bQniRYSLTWAMM9HCPOAnhyMak/vm1B8MKkkIaA76M
+        74SBB+0tjIsAxWUhBWqZE+SG0hif0jJtyWEpbdDc9xzS
+X-Google-Smtp-Source: AGHT+IE5DIS/7bKK/tl0yq8JuzMSAn1O0kEHQlMVAHpSecmAdIFisfNU1EcLKM/ksWK3MKbGfbx9jQ==
+X-Received: by 2002:a05:6e02:106e:b0:347:693a:a52b with SMTP id q14-20020a056e02106e00b00347693aa52bmr11425984ilj.6.1692015560135;
+        Mon, 14 Aug 2023 05:19:20 -0700 (PDT)
+Received: from leoy-huanghe.lan ([150.230.248.162])
+        by smtp.gmail.com with ESMTPSA id w2-20020a639342000000b00553dcfc2179sm8505392pgm.52.2023.08.14.05.19.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Aug 2023 05:19:19 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v5] Documentation: userspace-api: Document perf ring buffer mechanism
+Date:   Mon, 14 Aug 2023 20:19:07 +0800
+Message-Id: <20230814121907.100340-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Q7sa4WYIRDU4vel24RHAum7PlBDn0zVW
-X-Proofpoint-GUID: 8p7eGFKCvaBELUm5AiPEBSIZT1m0k16A
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-08-14_06,2023-08-10_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 phishscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- spamscore=0 adultscore=0 clxscore=1015 suspectscore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2308140102
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Move some of the power10 JSON/events to appropriate files.
+In the Linux perf tool, the ring buffer serves not only as a medium for
+transferring PMU event data but also as a vital mechanism for hardware
+tracing using technologies like Intel PT and Arm CoreSight, etc.
 
-Fixes: 32daa5d7899e ("perf vendor events: Initial JSON/events list for power10 platform")
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+Consequently, the ring buffer mechanism plays a crucial role by ensuring
+high throughput for data transfer between the kernel and user space
+while avoiding excessive overhead caused by the ring buffer itself.
+
+This commit documents the ring buffer mechanism in detail.  It explains
+the implementation of both the regular ring buffer and the AUX ring
+buffer.  Additionally, it covers how these ring buffers support various
+tracing modes and explains the synchronization with memory barriers.
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- .../arch/powerpc/power10/cache.json           |  45 ----
- .../arch/powerpc/power10/floating_point.json  |  67 +++++
- .../arch/powerpc/power10/frontend.json        | 180 -------------
- .../arch/powerpc/power10/marked.json          | 186 ++++++++++---
- .../arch/powerpc/power10/memory.json          |  85 ------
- .../arch/powerpc/power10/others.json          | 192 ++------------
- .../arch/powerpc/power10/pipeline.json        | 247 ++++++++++++++----
- .../pmu-events/arch/powerpc/power10/pmc.json  | 193 +++++++++++++-
- .../arch/powerpc/power10/translation.json     |  35 ---
- 9 files changed, 616 insertions(+), 614 deletions(-)
- create mode 100644 tools/perf/pmu-events/arch/powerpc/power10/floating_point.json
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/power10/cache.json b/tools/perf/pmu-events/arch/powerpc/power10/cache.json
-index 9cb929bb64af..839ae26945fb 100644
---- a/tools/perf/pmu-events/arch/powerpc/power10/cache.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power10/cache.json
-@@ -1,54 +1,9 @@
- [
--  {
--    "EventCode": "0x1003C",
--    "EventName": "PM_EXEC_STALL_DMISS_L2L3",
--    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was waiting for a load miss to resolve from either the local L2 or local L3."
--  },
--  {
--    "EventCode": "0x1E054",
--    "EventName": "PM_EXEC_STALL_DMISS_L21_L31",
--    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was waiting for a load miss to resolve from another core's L2 or L3 on the same chip."
--  },
--  {
--    "EventCode": "0x34054",
--    "EventName": "PM_EXEC_STALL_DMISS_L2L3_NOCONFLICT",
--    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was waiting for a load miss to resolve from the local L2 or local L3, without a dispatch conflict."
--  },
--  {
--    "EventCode": "0x34056",
--    "EventName": "PM_EXEC_STALL_LOAD_FINISH",
--    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was finishing a load after its data was reloaded from a data source beyond the local L1; cycles in which the LSU was processing an L1-hit; cycles in which the next-to-finish (NTF) instruction merged with another load in the LMQ; cycles in which the NTF instruction is waiting for a data reload for a load miss, but the data comes back with a non-NTF instruction."
--  },
--  {
--    "EventCode": "0x3006C",
--    "EventName": "PM_RUN_CYC_SMT2_MODE",
--    "BriefDescription": "Cycles when this thread's run latch is set and the core is in SMT2 mode."
--  },
-   {
-     "EventCode": "0x300F4",
-     "EventName": "PM_RUN_INST_CMPL_CONC",
-     "BriefDescription": "PowerPC instruction completed by this thread when all threads in the core had the run-latch set."
-   },
--  {
--    "EventCode": "0x4C016",
--    "EventName": "PM_EXEC_STALL_DMISS_L2L3_CONFLICT",
--    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was waiting for a load miss to resolve from the local L2 or local L3, with a dispatch conflict."
--  },
--  {
--    "EventCode": "0x4D014",
--    "EventName": "PM_EXEC_STALL_LOAD",
--    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was a load instruction executing in the Load Store Unit."
--  },
--  {
--    "EventCode": "0x4D016",
--    "EventName": "PM_EXEC_STALL_PTESYNC",
--    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was a PTESYNC instruction executing in the Load Store Unit."
--  },
--  {
--    "EventCode": "0x401EA",
--    "EventName": "PM_THRESH_EXC_128",
--    "BriefDescription": "Threshold counter exceeded a value of 128."
--  },
-   {
-     "EventCode": "0x400F6",
-     "EventName": "PM_BR_MPRED_CMPL",
-diff --git a/tools/perf/pmu-events/arch/powerpc/power10/floating_point.json b/tools/perf/pmu-events/arch/powerpc/power10/floating_point.json
+Changes from v4:
+- Amended the documentation for the stable interface in the uapi header
+  (Namhyung Kim).
+
+Changes from v3:
+- Converted to RST format and moved from perf folder to the
+  userspace-api folder (Jonathan Corbet).
+
+Changes from v2:
+- Refined doc for Thomas's suggestions (Thomas Richter).
+
+Changes from v1:
+- Addressed Ian's comments and suggestions (Ian Rogers).
+
+
+ .../userspace-api/perf_ring_buffer.rst        | 867 ++++++++++++++++++
+ 1 file changed, 867 insertions(+)
+ create mode 100644 Documentation/userspace-api/perf_ring_buffer.rst
+
+diff --git a/Documentation/userspace-api/perf_ring_buffer.rst b/Documentation/userspace-api/perf_ring_buffer.rst
 new file mode 100644
-index 000000000000..e816cd10c129
+index 000000000000..ff9bd91250eb
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/powerpc/power10/floating_point.json
-@@ -0,0 +1,67 @@
-+[
-+  {
-+    "EventCode": "0x100F4",
-+    "EventName": "PM_FLOP_CMPL",
-+    "BriefDescription": "Floating Point Operations Completed. Includes any type. It counts once for each 1, 2, 4 or 8 flop instruction. Use PM_1|2|4|8_FLOP_CMPL events to count flops."
-+  },
-+  {
-+    "EventCode": "0x45050",
-+    "EventName": "PM_1FLOP_CMPL",
-+    "BriefDescription": "One floating point instruction completed (fadd, fmul, fsub, fcmp, fsel, fabs, fnabs, fres, fsqrte, fneg)."
-+  },
-+  {
-+    "EventCode": "0x45052",
-+    "EventName": "PM_4FLOP_CMPL",
-+    "BriefDescription": "Four floating point instruction completed (fadd, fmul, fsub, fcmp, fsel, fabs, fnabs, fres, fsqrte, fneg)."
-+  },
-+  {
-+    "EventCode": "0x45054",
-+    "EventName": "PM_FMA_CMPL",
-+    "BriefDescription": "Two floating point instruction completed (FMA class of instructions: fmadd, fnmadd, fmsub, fnmsub). Scalar instructions only."
-+  },
-+  {
-+    "EventCode": "0x45056",
-+    "EventName": "PM_SCALAR_FLOP_CMPL",
-+    "BriefDescription": "Scalar floating point instruction completed."
-+  },
-+  {
-+    "EventCode": "0x4505A",
-+    "EventName": "PM_SP_FLOP_CMPL",
-+    "BriefDescription": "Single Precision floating point instruction completed."
-+  },
-+  {
-+    "EventCode": "0x4505C",
-+    "EventName": "PM_MATH_FLOP_CMPL",
-+    "BriefDescription": "Math floating point instruction completed."
-+  },
-+  {
-+    "EventCode": "0x4D052",
-+    "EventName": "PM_2FLOP_CMPL",
-+    "BriefDescription": "Double Precision vector version of fmul, fsub, fcmp, fsel, fabs, fnabs, fres, fsqrte, fneg completed."
-+  },
-+  {
-+    "EventCode": "0x4D054",
-+    "EventName": "PM_8FLOP_CMPL",
-+    "BriefDescription": "Four Double Precision vector instruction completed."
-+  },
-+  {
-+    "EventCode": "0x4D056",
-+    "EventName": "PM_NON_FMA_FLOP_CMPL",
-+    "BriefDescription": "Non FMA instruction completed."
-+  },
-+  {
-+    "EventCode": "0x4D058",
-+    "EventName": "PM_VECTOR_FLOP_CMPL",
-+    "BriefDescription": "Vector floating point instruction completed."
-+  },
-+  {
-+    "EventCode": "0x4D05A",
-+    "EventName": "PM_NON_MATH_FLOP_CMPL",
-+    "BriefDescription": "Non Math instruction completed."
-+  },
-+  {
-+    "EventCode": "0x4D05C",
-+    "EventName": "PM_DPP_FLOP_CMPL",
-+    "BriefDescription": "Double-Precision or Quad-Precision instruction completed."
++++ b/Documentation/userspace-api/perf_ring_buffer.rst
+@@ -0,0 +1,867 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++================
++Perf ring buffer
++================
++
++.. CONTENTS
++
++    1. Introduction
++
++    2. Ring buffer implementation
++    2.1  Basic algorithm
++    2.2  Ring buffer for different tracing modes
++    2.2.1       Default mode
++    2.2.2       Per-thread mode
++    2.2.3       Per-CPU mode
++    2.2.4       System wide mode
++    2.3  Accessing buffer
++    2.3.1       Producer-consumer model
++    2.3.2       Writing samples into buffer
++    2.3.3       Reading samples from buffer
++    2.3.4       Memory synchronization
++
++    3. The mechanism of AUX ring buffer
++    3.1  The relationship between AUX and regular ring buffers
++    3.2  AUX events
++    3.3  Snapshot mode
++
++
++1. Introduction
++===============
++
++The ring buffer is a fundamental mechanism for data transfer.  perf uses
++ring buffers to transfer event data from kernel to user space, another
++kind of ring buffer which is so called auxiliary (AUX) ring buffer also
++plays an important role for hardware tracing with Intel PT, Arm
++CoreSight, etc.
++
++The ring buffer implementation is critical but it's also a very
++challenging work.  On the one hand, the kernel and perf tool in the user
++space use the ring buffer to exchange data and stores data into data
++file, thus the ring buffer needs to transfer data with high throughput;
++on the other hand, the ring buffer management should avoid significant
++overload to distract profiling results.
++
++This documentation dives into the details for perf ring buffer with two
++parts: firstly it explains the perf ring buffer implementation, then the
++second part discusses the AUX ring buffer mechanism.
++
++2. Ring buffer implementation
++=============================
++
++2.1 Basic algorithm
++-------------------
++
++That said, a typical ring buffer is managed by a head pointer and a tail
++pointer; the head pointer is manipulated by a writer and the tail
++pointer is updated by a reader respectively.
++
++::
++
++        +---------------------------+
++        |   |   |***|***|***|   |   |
++        +---------------------------+
++                `-> Tail    `-> Head
++
++        * : the data is filled by the writer.
++
++                Figure 1. Ring buffer
++
++Perf uses the same way to manage its ring buffer.  In the implementation
++there are two key data structures held together in a set of consecutive
++pages, the control structure and then the ring buffer itself.  The page
++with the control structure in is known as the "user page".  Being held
++in continuous virtual addresses simplifies locating the ring buffer
++address, it is in the pages after the page with the user page.
++
++The control structure is named as ``perf_event_mmap_page``, it contains a
++head pointer ``data_head`` and a tail pointer ``data_tail``.  When the
++kernel starts to fill records into the ring buffer, it updates the head
++pointer to reserve the memory so later it can safely store events into
++the buffer.  On the other side, when the user page is a writable mapping,
++the perf tool has the permission to update the tail pointer after consuming
++data from the ring buffer.  Yet another case is for the user page's
++read-only mapping, which is to be addressed in the section
++:ref:`writing_samples_into_buffer`.
++
++::
++
++          user page                          ring buffer
++    +---------+---------+   +---------------------------------------+
++    |data_head|data_tail|...|   |   |***|***|***|***|***|   |   |   |
++    +---------+---------+   +---------------------------------------+
++        `          `----------------^                   ^
++         `----------------------------------------------|
++
++              * : the data is filled by the writer.
++
++                Figure 2. Perf ring buffer
++
++When using the ``perf record`` tool, we can specify the ring buffer size
++with option ``-m`` or ``--mmap-pages=``, the given size will be rounded up
++to a power of two that is a multiple of a page size.  Though the kernel
++allocates at once for all memory pages, it's deferred to map the pages
++to VMA area until the perf tool accesses the buffer from the user space.
++In other words, at the first time accesses the buffer's page from user
++space in the perf tool, a data abort exception for page fault is taken
++and the kernel uses this occasion to map the page into process VMA
++(see ``perf_mmap_fault()``), thus the perf tool can continue to access
++the page after returning from the exception.
++
++2.2 Ring buffer for different tracing modes
++-------------------------------------------
++
++The perf profiles programs with different modes: default mode, per thread
++mode, per cpu mode, and system wide mode.  This section describes these
++modes and how the ring buffer meets requirements for them.  At last we
++will review the race conditions caused by these modes.
++
++2.2.1 Default mode
++^^^^^^^^^^^^^^^^^^
++
++Usually we execute ``perf record`` command followed by a profiling program
++name, like below command::
++
++        perf record test_program
++
++This command doesn't specify any options for CPU and thread modes, the
++perf tool applies the default mode on the perf event.  It maps all the
++CPUs in the system and the profiled program's PID on the perf event, and
++it enables inheritance mode on the event so that child tasks inherits
++the events.  As a result, the perf event is attributed as::
++
++    evsel::cpus::map[]    = { 0 .. _SC_NPROCESSORS_ONLN-1 }
++    evsel::threads::map[] = { pid }
++    evsel::attr::inherit  = 1
++
++These attributions finally will be reflected on the deployment of ring
++buffers.  As shown below, the perf tool allocates individual ring buffer
++for each CPU, but it only enables events for the profiled program rather
++than for all threads in the system.  The *T1* thread represents the
++thread context of the 'test_program', whereas *T2* and *T3* are irrelevant
++threads in the system.   The perf samples are exclusively collected for
++the *T1* thread and stored in the ring buffer associated with the CPU on
++which the *T1* thread is running.
++
++::
++
++              T1                      T2                 T1
++            +----+              +-----------+          +----+
++    CPU0    |xxxx|              |xxxxxxxxxxx|          |xxxx|
++            +----+--------------+-----------+----------+----+-------->
++              |                                          |
++              v                                          v
++            +-----------------------------------------------------+
++            |                  Ring buffer 0                      |
++            +-----------------------------------------------------+
++
++                   T1
++                 +-----+
++    CPU1         |xxxxx|
++            -----+-----+--------------------------------------------->
++                    |
++                    v
++            +-----------------------------------------------------+
++            |                  Ring buffer 1                      |
++            +-----------------------------------------------------+
++
++                                        T1              T3
++                                      +----+        +-------+
++    CPU2                              |xxxx|        |xxxxxxx|
++            --------------------------+----+--------+-------+-------->
++                                        |
++                                        v
++            +-----------------------------------------------------+
++            |                  Ring buffer 2                      |
++            +-----------------------------------------------------+
++
++                              T1
++                       +--------------+
++    CPU3               |xxxxxxxxxxxxxx|
++            -----------+--------------+------------------------------>
++                              |
++                              v
++            +-----------------------------------------------------+
++            |                  Ring buffer 3                      |
++            +-----------------------------------------------------+
++
++	    T1: Thread 1; T2: Thread 2; T3: Thread 3
++	    x: Thread is in running state
++
++                Figure 3. Ring buffer for default mode
++
++2.2.2 Per-thread mode
++^^^^^^^^^^^^^^^^^^^^^
++
++By specifying option ``--per-thread`` in perf command, e.g.
++
++::
++
++        perf record --per-thread test_program
++
++The perf event doesn't map to any CPUs and is only bound to the
++profiled process, thus, the perf event's attributions are::
++
++    evsel::cpus::map[0]   = { -1 }
++    evsel::threads::map[] = { pid }
++    evsel::attr::inherit  = 0
++
++In this mode, a single ring buffer is allocated for the profiled thread;
++if the thread is scheduled on a CPU, the events on that CPU will be
++enabled; and if the thread is scheduled out from the CPU, the events on
++the CPU will be disabled.  When the thread is migrated from one CPU to
++another, the events are to be disabled on the previous CPU and enabled
++on the next CPU correspondingly.
++
++::
++
++              T1                      T2                 T1
++            +----+              +-----------+          +----+
++    CPU0    |xxxx|              |xxxxxxxxxxx|          |xxxx|
++            +----+--------------+-----------+----------+----+-------->
++              |                                           |
++              |    T1                                     |
++              |  +-----+                                  |
++    CPU1      |  |xxxxx|                                  |
++            --|--+-----+----------------------------------|---------->
++              |     |                                     |
++              |     |                   T1            T3  |
++              |     |                 +----+        +---+ |
++    CPU2      |     |                 |xxxx|        |xxx| |
++            --|-----|-----------------+----+--------+---+-|---------->
++              |     |                   |                 |
++              |     |         T1        |                 |
++              |     |  +--------------+ |                 |
++    CPU3      |     |  |xxxxxxxxxxxxxx| |                 |
++            --|-----|--+--------------+-|-----------------|---------->
++              |     |         |         |                 |
++              v     v         v         v                 v
++            +-----------------------------------------------------+
++            |                  Ring buffer                        |
++            +-----------------------------------------------------+
++
++  	    T1: Thread 1
++  	    x: Thread is in running state
++
++                Figure 4. Ring buffer for per-thread mode
++
++When perf runs in per-thread mode, a ring buffer is allocated for the
++profiled thread *T1*.  The ring buffer is dedicated for thread *T1*, if the
++thread *T1* is running, the perf events will be recorded into the ring
++buffer; when the thread is sleeping, all associated events will be
++disabled, thus no trace data will be recorded into the ring buffer.
++
++2.2.3 Per-CPU mode
++^^^^^^^^^^^^^^^^^^
++
++The option ``-C`` is used to collect samples on the list of CPUs, for
++example the below perf command receives option ``-C 0,2``::
++
++	perf record -C 0,2 test_program
++
++It maps the perf event to CPUs 0 and 2, and the event is not associated to any
++PID.  Thus the perf event attributions are set as::
++
++    evsel::cpus::map[0]   = { 0, 2 }
++    evsel::threads::map[] = { -1 }
++    evsel::attr::inherit  = 0
++
++This results in the session of ``perf record`` will sample all threads on CPU0
++and CPU2, and be terminated until test_program exits.  Even there have tasks
++running on CPU1 and CPU3, since the ring buffer is absent for them, any
++activities on these two CPUs will be ignored.  A usage case is to combine the
++options for per-thread mode and per-CPU mode, e.g. the options ``–C 0,2`` and
++``––per–thread`` are specified together, the samples are recorded only when
++the profiled thread is scheduled on any of the listed CPUs.
++
++::
++
++              T1                      T2                 T1
++            +----+              +-----------+          +----+
++    CPU0    |xxxx|              |xxxxxxxxxxx|          |xxxx|
++            +----+--------------+-----------+----------+----+-------->
++              |                       |                  |
++              v                       v                  v
++            +-----------------------------------------------------+
++            |                  Ring buffer 0                      |
++            +-----------------------------------------------------+
++
++                   T1
++                 +-----+
++    CPU1         |xxxxx|
++            -----+-----+--------------------------------------------->
++
++                                        T1              T3
++                                      +----+        +-------+
++    CPU2                              |xxxx|        |xxxxxxx|
++            --------------------------+----+--------+-------+-------->
++                                        |               |
++                                        v               v
++            +-----------------------------------------------------+
++            |                  Ring buffer 1                      |
++            +-----------------------------------------------------+
++
++                              T1
++                       +--------------+
++    CPU3               |xxxxxxxxxxxxxx|
++            -----------+--------------+------------------------------>
++
++  	    T1: Thread 1; T2: Thread 2; T3: Thread 3
++  	    x: Thread is in running state
++
++                Figure 5. Ring buffer for per-CPU mode
++
++2.2.4 System wide mode
++^^^^^^^^^^^^^^^^^^^^^^
++
++By using option ``–a`` or ``––all–cpus``, perf collects samples on all CPUs
++for all tasks, we call it as the system wide mode, the command is::
++
++        perf record -a test_program
++
++Similar to the per-CPU mode, the perf event doesn't bind to any PID, and
++it maps to all CPUs in the system::
++
++   evsel::cpus::map[]    = { 0 .. _SC_NPROCESSORS_ONLN-1 }
++   evsel::threads::map[] = { -1 }
++   evsel::attr::inherit  = 0
++
++In the system wide mode, every CPU has its own ring buffer, all threads
++are monitored during the running state and the samples are recorded into
++the ring buffer belonging to the CPU which the events occurred on.
++
++::
++
++              T1                      T2                 T1
++            +----+              +-----------+          +----+
++    CPU0    |xxxx|              |xxxxxxxxxxx|          |xxxx|
++            +----+--------------+-----------+----------+----+-------->
++              |                       |                  |
++              v                       v                  v
++            +-----------------------------------------------------+
++            |                  Ring buffer 0                      |
++            +-----------------------------------------------------+
++
++                   T1
++                 +-----+
++    CPU1         |xxxxx|
++            -----+-----+--------------------------------------------->
++                    |
++                    v
++            +-----------------------------------------------------+
++            |                  Ring buffer 1                      |
++            +-----------------------------------------------------+
++
++                                        T1              T3
++                                      +----+        +-------+
++    CPU2                              |xxxx|        |xxxxxxx|
++            --------------------------+----+--------+-------+-------->
++                                        |               |
++                                        v               v
++            +-----------------------------------------------------+
++            |                  Ring buffer 2                      |
++            +-----------------------------------------------------+
++
++                              T1
++                       +--------------+
++    CPU3               |xxxxxxxxxxxxxx|
++            -----------+--------------+------------------------------>
++                              |
++                              v
++            +-----------------------------------------------------+
++            |                  Ring buffer 3                      |
++            +-----------------------------------------------------+
++
++  	    T1: Thread 1; T2: Thread 2; T3: Thread 3
++  	    x: Thread is in running state
++
++                Figure 6. Ring buffer for system wide mode
++
++2.3 Accessing buffer
++--------------------
++
++Based on the understanding of how the ring buffer is allocated in
++various modes, this section explains access the ring buffer.
++
++2.3.1 Producer-consumer model
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++In the Linux kernel, the PMU events can produce samples which are stored
++into the ring buffer; the perf command in user space consumes the
++samples by reading out data from the ring buffer and finally saves the
++data into the file for post analysis.  It’s a typical producer-consumer
++model for using the ring buffer.
++
++The perf process polls on the PMU events and sleeps when no events are
++incoming.  To prevent frequent exchanges between the kernel and user
++space, the kernel event core layer introduces a watermark, which is
++stored in the ``perf_buffer::watermark``.  When a sample is recorded into
++the ring buffer, and if the used buffer exceeds the watermark, the
++kernel wakes up the perf process to read samples from the ring buffer.
++
++::
++
++                       Perf
++                       / | Read samples
++             Polling  /  `--------------|               Ring buffer
++                     v                  v    ;---------------------v
++    +----------------+     +---------+---------+   +-------------------+
++    |Event wait queue|     |data_head|data_tail|   |***|***|   |   |***|
++    +----------------+     +---------+---------+   +-------------------+
++             ^                  ^ `------------------------^
++             | Wake up tasks    | Store samples
++          +-----------------------------+
++  	|  Kernel event core layer    |
++          +-----------------------------+
++
++              * : the data is filled by the writer.
++
++                Figure 7. Writing and reading the ring buffer
++
++When the kernel event core layer notifies the user space, because
++multiple events might share the same ring buffer for recording samples,
++the core layer iterates every event associated with the ring buffer and
++wakes up tasks waiting on the event.  This is fulfilled by the kernel
++function ``ring_buffer_wakeup()``.
++
++After the perf process is woken up, it starts to check the ring buffers
++one by one, if it finds any ring buffer containing samples it will read
++out the samples for statistics or saving into the data file.  Given the
++perf process is able to run on any CPU, this leads to the ring buffer
++potentially being accessed from multiple CPUs simultaneously, which
++causes race conditions.  The race condition handling is described in the
++section :ref:`memory_synchronization`.
++
++.. _writing_samples_into_buffer:
++
++2.3.2 Writing samples into buffer
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++Ring buffers are mapped as read-write mode or read-only mode, which is
++used for a normal ring buffer and an overwritable ring buffer
++respectively.
++
++The ring buffer in the read-write mode is mapped with the property
++``PROT_READ | PROT_WRITE``.  With the write permission, the perf tool
++updates the ``data_tail`` to indicate the data start position.  Combining
++with the head pointer ``data_head``, which works as the end position of
++the current data, the perf tool can easily know where read out the data
++from.
++
++Alternatively, in the read-only mode, only the kernel keeps to update
++the ``data_head`` while the user space cannot access the ``data_tail`` due
++to the mapping property ``PROT_READ``.
++
++Why ring buffers are mapped with above two different modes?  Here the
++write direction matters.  The forward writing starts to save data from
++the beginning of the ring buffer and wrap around when overflow, which is
++used with the read-write mode in the normal ring buffer.  When the
++consumer doesn't keep up with the producer, it would lose some data, the
++kernel keeps how many records it lost and generates the
++``PERF_RECORD_LOST`` records in the next time when it finds a space in the
++ring buffer.
++
++On the other hand, the backward writing saves the data from the end of
++the ring buffer and the ``data_head`` keeps the position of current data,
++the perf always knows where it starts to read and until the end of the
++ring buffer, thus it don't need the ``data_tail``.  This is why the perf
++uses the backward writing with the read-only mode for the overwritable
++ring buffer.  In this mode, it will not generate the PERF_RECORD_LOST
++records.
++
++When a sample is taken and saved into the ring buffer, the function
++``__perf_event_output()`` is used to fill samples into the ring buffer -
++which can support both the forward and the backward writing.  It calls
++below sub functions:
++
++- The sub function ``perf_prepare_sample()`` prepares sample fields based on
++  the sample type;
++- ``output_begin()`` is a function pointer, it’s passed dynamically via the
++  argument for different writing directions - it can be
++  ``perf_output_begin_forward()`` or ``perf_output_begin_backward()``.  This
++  step is to prepare the info for writing ring buffer, when it returns back
++  the ring buffer info is stored in structure ``perf_output_handle``;
++- ``perf_output_sample()`` outputs the sample into the ring buffer;
++- ``perf_output_end()`` updates the head pointer for user page so perf tool
++  can see the latest value.
++
++Let's see how the data structures are used to help the recording.
++
++::
++
++      struct perf_output_handle       /---->  struct perf_buffer
++    +---------------------------+     |     +--------------------+
++    |           *rb;            |-----|     |   local_t head;    |
++    +---------------------------+           +--------------------+
++    |        int page;          |           |    *user_page;     |
++    +---------------------------+           +--------------------+
++    |       void *addr;         |                      |
++    +---------------------------+                      v
++    |   unsigned long size;     |         struct perf_event_mmap_page
++    +---------------------------+           +--------------------+
++                                            |   __u64 data_head; |
++                                            +--------------------+
++                                            |   __u64 data_tail; |
++                                            +--------------------+
++
++                Figure 8. Data structures for writing ring buffer
++
++In Linux kernel, the event core layer uses the structure ``perf_buffer`` to
++track the buffer’s latest header, and it keeps the information for
++buffer pages.  The structure ``perf_buffer`` manages ring buffer during its
++life cycle, it is allocated once the ring buffer is created and released
++when the ring buffer is destroyed.
++
++It’s possible for multiple events to write buffer concurrently.  For
++instance, a software event and a hardware PMU event both are enabled for
++profiling, when the software event is in the middle of sampling, the
++hardware event maybe be overflow and its interrupt is triggered in this
++case.  This leads to the race condition for updating ``perf_buffer::head``.
++In ``__perf_output_begin()``, Linux kernel uses compare-and-swap atomicity
++``local_cmpxchg()`` to implement the lockless algorithm for protecting
++``perf_buffer::head``.
++
++The structure ``perf_output_handle`` serves as a temporary context for
++tracking the information related to the buffer.  For instance, the
++``perf_output_handle::rb`` field points to the global ``perf_buffer``
++structure.  Additionally, the ``perf_output_handle::addr`` field, based on the
++lockless algorithm, specifies the destination address where the sample data is
++to be stored.
++
++The advantages of the ``perf_output_handle`` structure is that it enables
++concurrent writing to the buffer by different events.  For the previous
++example, two instances of ``perf_output_handle`` serve as separate contexts
++for software events and hardware events.  This allows each event to
++reserve its own memory space within the ``out_begin()`` function, and
++``perf_output_handle::addr`` is used for populating the specific event.
++
++Once the sample data has been successfully stored in the buffer, the
++header of the ring buffer is synced from ``perf_buffer::head`` to
++``perf_event_mmap_page::data_head``, which is fulfilled in the function
++``perf_output_end()``.  This synchronization indicates to the perf tool that
++it is now safe to read the newly added samples from the user space.
++
++2.3.3 Reading samples from buffer
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++In the user space, the perf tool utilizes the ``perf_event_mmap_page``
++structure to handle the head and tail of the buffer.  It also uses
++``perf_mmap`` structure to keep track of a context for the ring buffer, this
++context includes information about the buffer's starting and ending
++addresses.  Additionally, the mask value can be utilized to compute the
++circular buffer pointer even for an overflow.
++
++Similar to the kernel, the perf tool in the user space first reads out
++the recorded data from the ring buffer, and then updates the buffer's
++tail pointer ``perf_event_mmap_page::data_tail``.
++
++.. _memory_synchronization:
++
++2.3.4 Memory synchronization
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++The modern CPUs with relaxed memory model cannot promise the memory
++ordering, this means it’s possible to access the ring buffer and the
++``perf_event_mmap_page`` structure out of order.  To assure the specific
++sequence for memory accessing perf ring buffer, memory barriers are
++used to assure the data dependency.  The rationale for the memory
++synchronization is as below::
++
++  Kernel                          User space
++
++  if (LOAD ->data_tail) {         LOAD ->data_head
++                   (A)            smp_rmb()        (C)
++    STORE $data                   LOAD $data
++    smp_wmb()      (B)            smp_mb()         (D)
++    STORE ->data_head             STORE ->data_tail
 +  }
-+]
-diff --git a/tools/perf/pmu-events/arch/powerpc/power10/frontend.json b/tools/perf/pmu-events/arch/powerpc/power10/frontend.json
-index 61e9e0222c87..dc0bb6c6338b 100644
---- a/tools/perf/pmu-events/arch/powerpc/power10/frontend.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power10/frontend.json
-@@ -1,64 +1,9 @@
- [
--  {
--    "EventCode": "0x10004",
--    "EventName": "PM_EXEC_STALL_TRANSLATION",
--    "BriefDescription": "Cycles in which the oldest instruction in the pipeline suffered a TLB miss or ERAT miss and waited for it to resolve."
--  },
--  {
--    "EventCode": "0x10006",
--    "EventName": "PM_DISP_STALL_HELD_OTHER_CYC",
--    "BriefDescription": "Cycles in which the next-to-complete (NTC) instruction is held at dispatch for any other reason."
--  },
--  {
--    "EventCode": "0x10010",
--    "EventName": "PM_PMC4_OVERFLOW",
--    "BriefDescription": "The event selected for PMC4 caused the event counter to overflow."
--  },
--  {
--    "EventCode": "0x10020",
--    "EventName": "PM_PMC4_REWIND",
--    "BriefDescription": "The speculative event selected for PMC4 rewinds and the counter for PMC4 is not charged."
--  },
--  {
--    "EventCode": "0x10038",
--    "EventName": "PM_DISP_STALL_TRANSLATION",
--    "BriefDescription": "Cycles when dispatch was stalled for this thread because the MMU was handling a translation miss."
--  },
--  {
--    "EventCode": "0x1003A",
--    "EventName": "PM_DISP_STALL_BR_MPRED_IC_L2",
--    "BriefDescription": "Cycles when dispatch was stalled while the instruction was fetched from the local L2 after suffering a branch mispredict."
--  },
--  {
--    "EventCode": "0x1D05E",
--    "EventName": "PM_DISP_STALL_HELD_HALT_CYC",
--    "BriefDescription": "Cycles in which the next-to-complete (NTC) instruction is held at dispatch because of power management."
--  },
--  {
--    "EventCode": "0x1E050",
--    "EventName": "PM_DISP_STALL_HELD_STF_MAPPER_CYC",
--    "BriefDescription": "Cycles in which the next-to-complete (NTC) instruction is held at dispatch because the STF mapper/SRB was full. Includes GPR (count, link, tar), VSR, VMR, FPR."
--  },
-   {
-     "EventCode": "0x1F054",
-     "EventName": "PM_DTLB_HIT",
-     "BriefDescription": "The PTE required by the instruction was resident in the TLB (data TLB access). When MMCR1[16]=0 this event counts only demand hits. When MMCR1[16]=1 this event includes demand and prefetch. Applies to both HPT and RPT."
-   },
--  {
--    "EventCode": "0x10064",
--    "EventName": "PM_DISP_STALL_IC_L2",
--    "BriefDescription": "Cycles when dispatch was stalled while the instruction was fetched from the local L2."
--  },
--  {
--    "EventCode": "0x101E8",
--    "EventName": "PM_THRESH_EXC_256",
--    "BriefDescription": "Threshold counter exceeded a count of 256."
--  },
--  {
--    "EventCode": "0x101EC",
--    "EventName": "PM_THRESH_MET",
--    "BriefDescription": "Threshold exceeded."
--  },
-   {
-     "EventCode": "0x100F2",
-     "EventName": "PM_1PLUS_PPC_CMPL",
-@@ -69,56 +14,6 @@
-     "EventName": "PM_IERAT_MISS",
-     "BriefDescription": "IERAT Reloaded to satisfy an IERAT miss. All page sizes are counted by this event. This event only counts instruction demand access."
-   },
--  {
--    "EventCode": "0x100F8",
--    "EventName": "PM_DISP_STALL_CYC",
--    "BriefDescription": "Cycles the ICT has no itags assigned to this thread (no instructions were dispatched during these cycles)."
--  },
--  {
--    "EventCode": "0x20006",
--    "EventName": "PM_DISP_STALL_HELD_ISSQ_FULL_CYC",
--    "BriefDescription": "Cycles in which the next-to-complete (NTC) instruction is held at dispatch due to Issue queue full. Includes issue queue and branch queue."
--  },
--  {
--    "EventCode": "0x20114",
--    "EventName": "PM_MRK_L2_RC_DISP",
--    "BriefDescription": "Marked instruction RC dispatched in L2."
--  },
--  {
--    "EventCode": "0x2C010",
--    "EventName": "PM_EXEC_STALL_LSU",
--    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was executing in the Load Store Unit. This does not include simple fixed point instructions."
--  },
--  {
--    "EventCode": "0x2C016",
--    "EventName": "PM_DISP_STALL_IERAT_ONLY_MISS",
--    "BriefDescription": "Cycles when dispatch was stalled while waiting to resolve an instruction ERAT miss."
--  },
--  {
--    "EventCode": "0x2C01E",
--    "EventName": "PM_DISP_STALL_BR_MPRED_IC_L3",
--    "BriefDescription": "Cycles when dispatch was stalled while the instruction was fetched from the local L3 after suffering a branch mispredict."
--  },
--  {
--    "EventCode": "0x2D01A",
--    "EventName": "PM_DISP_STALL_IC_MISS",
--    "BriefDescription": "Cycles when dispatch was stalled for this thread due to an instruction cache miss."
--  },
--  {
--    "EventCode": "0x2E018",
--    "EventName": "PM_DISP_STALL_FETCH",
--    "BriefDescription": "Cycles when dispatch was stalled for this thread because Fetch was being held."
--  },
--  {
--    "EventCode": "0x2E01A",
--    "EventName": "PM_DISP_STALL_HELD_XVFC_MAPPER_CYC",
--    "BriefDescription": "Cycles in which the next-to-complete (NTC) instruction is held at dispatch because the XVFC mapper/SRB was full."
--  },
--  {
--    "EventCode": "0x2C142",
--    "EventName": "PM_MRK_XFER_FROM_SRC_PMC2",
--    "BriefDescription": "For a marked data transfer instruction, the processor's L1 data cache was reloaded from the source specified in MMCR3[15:27]. If MMCR1[16|17] is 0 (default), this count includes only lines that were reloaded to satisfy a demand miss. If MMCR1[16|17] is 1, this count includes both demand misses and prefetch reloads."
--  },
-   {
-     "EventCode": "0x24050",
-     "EventName": "PM_IOPS_DISP",
-@@ -134,11 +29,6 @@
-     "EventName": "PM_BR_TAKEN_CMPL",
-     "BriefDescription": "Branch Taken instruction completed."
-   },
--  {
--    "EventCode": "0x30004",
--    "EventName": "PM_DISP_STALL_FLUSH",
--    "BriefDescription": "Cycles when dispatch was stalled because of a flush that happened to an instruction(s) that was not yet next-to-complete (NTC). PM_EXEC_STALL_NTC_FLUSH only includes instructions that were flushed after becoming NTC."
--  },
-   {
-     "EventCode": "0x3000A",
-     "EventName": "PM_DISP_STALL_ITLB_MISS",
-@@ -149,56 +39,16 @@
-     "EventName": "PM_FLUSH_COMPLETION",
-     "BriefDescription": "The instruction that was next to complete (oldest in the pipeline) did not complete because it suffered a flush."
-   },
--  {
--    "EventCode": "0x30014",
--    "EventName": "PM_EXEC_STALL_STORE",
--    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was a store instruction executing in the Load Store Unit."
--  },
--  {
--    "EventCode": "0x30018",
--    "EventName": "PM_DISP_STALL_HELD_SCOREBOARD_CYC",
--    "BriefDescription": "Cycles in which the next-to-complete (NTC) instruction is held at dispatch while waiting on the Scoreboard. This event combines VSCR and FPSCR together."
--  },
--  {
--    "EventCode": "0x30026",
--    "EventName": "PM_EXEC_STALL_STORE_MISS",
--    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was a store whose cache line was not resident in the L1 and was waiting for allocation of the missing line into the L1."
--  },
--  {
--    "EventCode": "0x3012A",
--    "EventName": "PM_MRK_L2_RC_DONE",
--    "BriefDescription": "L2 RC machine completed the transaction for the marked instruction."
--  },
-   {
-     "EventCode": "0x3F046",
-     "EventName": "PM_ITLB_HIT_1G",
-     "BriefDescription": "Instruction TLB hit (IERAT reload) page size 1G, which implies Radix Page Table translation is in use. When MMCR1[17]=0 this event counts only for demand misses. When MMCR1[17]=1 this event includes demand misses and prefetches."
-   },
--  {
--    "EventCode": "0x34058",
--    "EventName": "PM_DISP_STALL_BR_MPRED_ICMISS",
--    "BriefDescription": "Cycles when dispatch was stalled after a mispredicted branch resulted in an instruction cache miss."
--  },
--  {
--    "EventCode": "0x3D05C",
--    "EventName": "PM_DISP_STALL_HELD_RENAME_CYC",
--    "BriefDescription": "Cycles in which the next-to-complete (NTC) instruction is held at dispatch because the mapper/SRB was full. Includes GPR (count, link, tar), VSR, VMR, FPR and XVFC."
--  },
--  {
--    "EventCode": "0x3E052",
--    "EventName": "PM_DISP_STALL_IC_L3",
--    "BriefDescription": "Cycles when dispatch was stalled while the instruction was fetched from the local L3."
--  },
-   {
-     "EventCode": "0x3E054",
-     "EventName": "PM_LD_MISS_L1",
-     "BriefDescription": "Load missed L1, counted at finish time. LMQ merges are not included in this count. i.e. if a load instruction misses on an address that is already allocated on the LMQ, this event will not increment for that load). Note that this count is per slice, so if a load spans multiple slices this event will increment multiple times for a single load."
-   },
--  {
--    "EventCode": "0x301EA",
--    "EventName": "PM_THRESH_EXC_1024",
--    "BriefDescription": "Threshold counter exceeded a value of 1024."
--  },
-   {
-     "EventCode": "0x300FA",
-     "EventName": "PM_INST_FROM_L3MISS",
-@@ -209,36 +59,6 @@
-     "EventName": "PM_ISSUE_KILL",
-     "BriefDescription": "Cycles in which an instruction or group of instructions were cancelled after being issued. This event increments once per occurrence, regardless of how many instructions are included in the issue group."
-   },
--  {
--    "EventCode": "0x40116",
--    "EventName": "PM_MRK_LARX_FIN",
--    "BriefDescription": "Marked load and reserve instruction (LARX) finished. LARX and STCX are instructions used to acquire a lock."
--  },
--  {
--    "EventCode": "0x4C010",
--    "EventName": "PM_DISP_STALL_BR_MPRED_IC_L3MISS",
--    "BriefDescription": "Cycles when dispatch was stalled while the instruction was fetched from sources beyond the local L3 after suffering a mispredicted branch."
--  },
--  {
--    "EventCode": "0x4D01E",
--    "EventName": "PM_DISP_STALL_BR_MPRED",
--    "BriefDescription": "Cycles when dispatch was stalled for this thread due to a mispredicted branch."
--  },
--  {
--    "EventCode": "0x4E010",
--    "EventName": "PM_DISP_STALL_IC_L3MISS",
--    "BriefDescription": "Cycles when dispatch was stalled while the instruction was fetched from any source beyond the local L3."
--  },
--  {
--    "EventCode": "0x4E01A",
--    "EventName": "PM_DISP_STALL_HELD_CYC",
--    "BriefDescription": "Cycles in which the next-to-complete (NTC) instruction is held at dispatch for any reason."
--  },
--  {
--    "EventCode": "0x4003C",
--    "EventName": "PM_DISP_STALL_HELD_SYNC_CYC",
--    "BriefDescription": "Cycles in which the next-to-complete (NTC) instruction is held at dispatch because of a synchronizing instruction that requires the ICT to be empty before dispatch."
--  },
-   {
-     "EventCode": "0x44056",
-     "EventName": "PM_VECTOR_ST_CMPL",
-diff --git a/tools/perf/pmu-events/arch/powerpc/power10/marked.json b/tools/perf/pmu-events/arch/powerpc/power10/marked.json
-index f2436fc5537c..913b6515b870 100644
---- a/tools/perf/pmu-events/arch/powerpc/power10/marked.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power10/marked.json
-@@ -1,14 +1,29 @@
- [
--  {
--    "EventCode": "0x1002C",
--    "EventName": "PM_LD_PREFETCH_CACHE_LINE_MISS",
--    "BriefDescription": "The L1 cache was reloaded with a line that fulfills a prefetch request."
--  },
-   {
-     "EventCode": "0x10132",
-     "EventName": "PM_MRK_INST_ISSUED",
-     "BriefDescription": "Marked instruction issued. Note that stores always get issued twice, the address gets issued to the LSU and the data gets issued to the VSU. Also, issues can sometimes get killed/cancelled and cause multiple sequential issues for the same instruction."
-   },
-+  {
-+    "EventCode": "0x10134",
-+    "EventName": "PM_MRK_ST_DONE_L2",
-+    "BriefDescription": "Marked store completed in L2."
-+  },
-+  {
-+    "EventCode": "0x1C142",
-+    "EventName": "PM_MRK_XFER_FROM_SRC_PMC1",
-+    "BriefDescription": "For a marked data transfer instruction, the processor's L1 data cache was reloaded from the source specified in MMCR3[0:12]. If MMCR1[16|17] is 0 (default), this count includes only lines that were reloaded to satisfy a demand miss. If MMCR1[16|17] is 1, this count includes both demand misses and prefetch reloads."
-+  },
-+  {
-+    "EventCode": "0x1C144",
-+    "EventName": "PM_MRK_XFER_FROM_SRC_CYC_PMC1",
-+    "BriefDescription": "Cycles taken for a marked demand miss to reload a line from the source specified in MMCR3[0:12]."
-+  },
-+  {
-+    "EventCode": "0x1F150",
-+    "EventName": "PM_MRK_ST_L2_CYC",
-+    "BriefDescription": "Cycles from L2 RC dispatch to L2 RC completion."
-+  },
-   {
-     "EventCode": "0x101E0",
-     "EventName": "PM_MRK_INST_DISP",
-@@ -20,9 +35,39 @@
-     "BriefDescription": "Marked Branch Taken instruction completed."
-   },
-   {
--    "EventCode": "0x2C01C",
--    "EventName": "PM_EXEC_STALL_DMISS_OFF_CHIP",
--    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was waiting for a load miss to resolve from a remote chip."
-+    "EventCode": "0x101E4",
-+    "EventName": "PM_MRK_L1_ICACHE_MISS",
-+    "BriefDescription": "Marked instruction suffered an instruction cache miss."
-+  },
-+  {
-+    "EventCode": "0x101EA",
-+    "EventName": "PM_MRK_L1_RELOAD_VALID",
-+    "BriefDescription": "Marked demand reload."
-+  },
-+  {
-+    "EventCode": "0x20114",
-+    "EventName": "PM_MRK_L2_RC_DISP",
-+    "BriefDescription": "Marked instruction RC dispatched in L2."
-+  },
-+  {
-+    "EventCode": "0x2011C",
-+    "EventName": "PM_MRK_NTF_CYC",
-+    "BriefDescription": "Cycles in which the marked instruction is the oldest in the pipeline (next-to-finish or next-to-complete)."
-+  },
-+  {
-+    "EventCode": "0x20130",
-+    "EventName": "PM_MRK_INST_DECODED",
-+    "BriefDescription": "An instruction was marked at decode time. Random Instruction Sampling (RIS) only."
-+  },
-+  {
-+    "EventCode": "0x20132",
-+    "EventName": "PM_MRK_DFU_ISSUE",
-+    "BriefDescription": "The marked instruction was a decimal floating point operation issued to the VSU. Measured at issue time."
-+  },
-+  {
-+    "EventCode": "0x20134",
-+    "EventName": "PM_MRK_FXU_ISSUE",
-+    "BriefDescription": "The marked instruction was a fixed point operation issued to the VSU. Measured at issue time."
-   },
-   {
-     "EventCode": "0x20138",
-@@ -34,6 +79,16 @@
-     "EventName": "PM_MRK_BRU_FIN",
-     "BriefDescription": "Marked Branch instruction finished."
-   },
-+  {
-+    "EventCode": "0x2013C",
-+    "EventName": "PM_MRK_FX_LSU_FIN",
-+    "BriefDescription": "The marked instruction was simple fixed point that was issued to the store unit. Measured at finish time."
-+  },
-+  {
-+    "EventCode": "0x2C142",
-+    "EventName": "PM_MRK_XFER_FROM_SRC_PMC2",
-+    "BriefDescription": "For a marked data transfer instruction, the processor's L1 data cache was reloaded from the source specified in MMCR3[15:27]. If MMCR1[16|17] is 0 (default), this count includes only lines that were reloaded to satisfy a demand miss. If MMCR1[16|17] is 1, this count includes both demand misses and prefetch reloads."
-+  },
-   {
-     "EventCode": "0x2C144",
-     "EventName": "PM_MRK_XFER_FROM_SRC_CYC_PMC2",
-@@ -55,15 +110,50 @@
-     "BriefDescription": "A marked branch completed. All branches are included."
-   },
-   {
--    "EventCode": "0x200FD",
--    "EventName": "PM_L1_ICACHE_MISS",
--    "BriefDescription": "Demand instruction cache miss."
-+    "EventCode": "0x2D154",
-+    "EventName": "PM_MRK_DERAT_MISS_64K",
-+    "BriefDescription": "Data ERAT Miss (Data TLB Access) page size 64K for a marked instruction. When MMCR1[16]=0 this event counts only DERAT reloads for demand misses. When MMCR1[16]=1 this event includes demand misses and prefetches."
-+  },
-+  {
-+    "EventCode": "0x201E0",
-+    "EventName": "PM_MRK_DATA_FROM_MEMORY",
-+    "BriefDescription": "The processor's data cache was reloaded from local, remote, or distant memory due to a demand miss for a marked load."
-+  },
-+  {
-+    "EventCode": "0x201E2",
-+    "EventName": "PM_MRK_LD_MISS_L1",
-+    "BriefDescription": "Marked demand data load miss counted at finish time."
-+  },
-+  {
-+    "EventCode": "0x201E4",
-+    "EventName": "PM_MRK_DATA_FROM_L3MISS",
-+    "BriefDescription": "The processor's data cache was reloaded from a source other than the local core's L1, L2, or L3 due to a demand miss for a marked load."
-+  },
-+  {
-+    "EventCode": "0x3012A",
-+    "EventName": "PM_MRK_L2_RC_DONE",
-+    "BriefDescription": "L2 RC machine completed the transaction for the marked instruction."
-+  },
-+  {
-+    "EventCode": "0x30132",
-+    "EventName": "PM_MRK_VSU_FIN",
-+    "BriefDescription": "VSU marked instruction finished. Excludes simple FX instructions issued to the Store Unit."
-   },
-   {
-     "EventCode": "0x34146",
-     "EventName": "PM_MRK_LD_CMPL",
-     "BriefDescription": "Marked load instruction completed."
-   },
-+  {
-+    "EventCode": "0x3C142",
-+    "EventName": "PM_MRK_XFER_FROM_SRC_PMC3",
-+    "BriefDescription": "For a marked data transfer instruction, the processor's L1 data cache was reloaded from the source specified in MMCR3[30:42]. If MMCR1[16|17] is 0 (default), this count includes only lines that were reloaded to satisfy a demand miss. If MMCR1[16|17] is 1, this count includes both demand misses and prefetch reloads."
-+  },
-+  {
-+    "EventCode": "0x3C144",
-+    "EventName": "PM_MRK_XFER_FROM_SRC_CYC_PMC3",
-+    "BriefDescription": "Cycles taken for a marked demand miss to reload a line from the source specified in MMCR3[30:42]."
-+  },
-   {
-     "EventCode": "0x3E158",
-     "EventName": "PM_MRK_STCX_FAIL",
-@@ -75,9 +165,19 @@
-     "BriefDescription": "Marked store instruction finished."
-   },
-   {
--    "EventCode": "0x30068",
--    "EventName": "PM_L1_ICACHE_RELOADED_PREF",
--    "BriefDescription": "Counts all instruction cache prefetch reloads (includes demand turned into prefetch)."
-+    "EventCode": "0x3F150",
-+    "EventName": "PM_MRK_ST_DRAIN_CYC",
-+    "BriefDescription": "Cycles in which the marked store drained from the core to the L2."
-+  },
-+  {
-+    "EventCode": "0x30162",
-+    "EventName": "PM_MRK_ISSUE_DEPENDENT_LOAD",
-+    "BriefDescription": "The marked instruction was dependent on a load. It is eligible for issue kill."
-+  },
-+  {
-+    "EventCode": "0x301E2",
-+    "EventName": "PM_MRK_ST_CMPL",
-+    "BriefDescription": "Marked store completed and sent to nest. Note that this count excludes cache-inhibited stores."
-   },
-   {
-     "EventCode": "0x301E4",
-@@ -85,39 +185,44 @@
-     "BriefDescription": "Marked Branch Mispredicted. Includes direction and target."
-   },
-   {
--    "EventCode": "0x300F6",
--    "EventName": "PM_LD_DEMAND_MISS_L1",
--    "BriefDescription": "The L1 cache was reloaded with a line that fulfills a demand miss request. Counted at reload time, before finish."
-+    "EventCode": "0x40116",
-+    "EventName": "PM_MRK_LARX_FIN",
-+    "BriefDescription": "Marked load and reserve instruction (LARX) finished. LARX and STCX are instructions used to acquire a lock."
-+  },
-+  {
-+    "EventCode": "0x40132",
-+    "EventName": "PM_MRK_LSU_FIN",
-+    "BriefDescription": "LSU marked instruction finish."
-   },
-   {
--    "EventCode": "0x300FE",
--    "EventName": "PM_DATA_FROM_L3MISS",
--    "BriefDescription": "The processor's L1 data cache was reloaded from beyond the local core's L3 due to a demand miss."
-+    "EventCode": "0x44146",
-+    "EventName": "PM_MRK_STCX_CORE_CYC",
-+    "BriefDescription": "Cycles spent in the core portion of a marked STCX instruction. It starts counting when the instruction is decoded and stops counting when it drains into the L2."
-   },
-   {
--    "EventCode": "0x40012",
--    "EventName": "PM_L1_ICACHE_RELOADED_ALL",
--    "BriefDescription": "Counts all instruction cache reloads includes demand, prefetch, prefetch turned into demand and demand turned into prefetch."
-+    "EventCode": "0x4C142",
-+    "EventName": "PM_MRK_XFER_FROM_SRC_PMC4",
-+    "BriefDescription": "For a marked data transfer instruction, the processor's L1 data cache was reloaded from the source specified in MMCR3[45:57]. If MMCR1[16|17] is 0 (default), this count includes only lines that were reloaded to satisfy a demand miss. If MMCR1[16|17] is 1, this count includes both demand misses and prefetch reloads."
-   },
-   {
--    "EventCode": "0x40134",
--    "EventName": "PM_MRK_INST_TIMEO",
--    "BriefDescription": "Marked instruction finish timeout (instruction was lost)."
-+    "EventCode": "0x4C144",
-+    "EventName": "PM_MRK_XFER_FROM_SRC_CYC_PMC4",
-+    "BriefDescription": "Cycles taken for a marked demand miss to reload a line from the source specified in MMCR3[45:57]."
-   },
-   {
--    "EventCode": "0x4505A",
--    "EventName": "PM_SP_FLOP_CMPL",
--    "BriefDescription": "Single Precision floating point instruction completed."
-+    "EventCode": "0x4C15E",
-+    "EventName": "PM_MRK_DTLB_MISS_64K",
-+    "BriefDescription": "Marked Data TLB reload (after a miss) page size 64K. When MMCR1[16]=0 this event counts only for demand misses. When MMCR1[16]=1 this event includes demand misses and prefetches."
-   },
-   {
--    "EventCode": "0x4D058",
--    "EventName": "PM_VECTOR_FLOP_CMPL",
--    "BriefDescription": "Vector floating point instruction completed."
-+    "EventCode": "0x4E15E",
-+    "EventName": "PM_MRK_INST_FLUSHED",
-+    "BriefDescription": "The marked instruction was flushed."
-   },
-   {
--    "EventCode": "0x4D05A",
--    "EventName": "PM_NON_MATH_FLOP_CMPL",
--    "BriefDescription": "Non Math instruction completed."
-+    "EventCode": "0x40164",
-+    "EventName": "PM_MRK_DERAT_MISS_2M",
-+    "BriefDescription": "Data ERAT Miss (Data TLB Access) page size 2M for a marked instruction. When MMCR1[16]=0 this event counts only DERAT reloads for demand misses. When MMCR1[16]=1 this event includes demand misses and prefetches."
-   },
-   {
-     "EventCode": "0x401E0",
-@@ -125,8 +230,13 @@
-     "BriefDescription": "Marked instruction completed."
-   },
-   {
--    "EventCode": "0x400FE",
--    "EventName": "PM_DATA_FROM_MEMORY",
--    "BriefDescription": "The processor's data cache was reloaded from local, remote, or distant memory due to a demand miss."
-+    "EventCode": "0x401E6",
-+    "EventName": "PM_MRK_INST_FROM_L3MISS",
-+    "BriefDescription": "The processor's instruction cache was reloaded from beyond the local core's L3 due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x401E8",
-+    "EventName": "PM_MRK_DATA_FROM_L2MISS",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from a source beyond the local core's L2 due to a demand miss for a marked instruction."
-   }
- ]
-diff --git a/tools/perf/pmu-events/arch/powerpc/power10/memory.json b/tools/perf/pmu-events/arch/powerpc/power10/memory.json
-index c4c10ca98cad..b95a547a704b 100644
---- a/tools/perf/pmu-events/arch/powerpc/power10/memory.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power10/memory.json
-@@ -1,24 +1,9 @@
- [
--  {
--    "EventCode": "0x1000A",
--    "EventName": "PM_PMC3_REWIND",
--    "BriefDescription": "The speculative event selected for PMC3 rewinds and the counter for PMC3 is not charged."
--  },
-   {
-     "EventCode": "0x1C040",
-     "EventName": "PM_XFER_FROM_SRC_PMC1",
-     "BriefDescription": "The processor's L1 data cache was reloaded from the source specified in MMCR3[0:12]. If MMCR1[16|17] is 0 (default), this count includes only lines that were reloaded to satisfy a demand miss. If MMCR1[16|17] is 1, this count includes both demand misses and prefetch reloads."
-   },
--  {
--    "EventCode": "0x1C142",
--    "EventName": "PM_MRK_XFER_FROM_SRC_PMC1",
--    "BriefDescription": "For a marked data transfer instruction, the processor's L1 data cache was reloaded from the source specified in MMCR3[0:12]. If MMCR1[16|17] is 0 (default), this count includes only lines that were reloaded to satisfy a demand miss. If MMCR1[16|17] is 1, this count includes both demand misses and prefetch reloads."
--  },
--  {
--    "EventCode": "0x1C144",
--    "EventName": "PM_MRK_XFER_FROM_SRC_CYC_PMC1",
--    "BriefDescription": "Cycles taken for a marked demand miss to reload a line from the source specified in MMCR3[0:12]."
--  },
-   {
-     "EventCode": "0x1C056",
-     "EventName": "PM_DERAT_MISS_4K",
-@@ -34,26 +19,11 @@
-     "EventName": "PM_DTLB_MISS_2M",
-     "BriefDescription": "Data TLB reload (after a miss) page size 2M. Implies radix translation was used. When MMCR1[16]=0 this event counts only for demand misses. When MMCR1[16]=1 this event includes demand misses and prefetches."
-   },
--  {
--    "EventCode": "0x1E056",
--    "EventName": "PM_EXEC_STALL_STORE_PIPE",
--    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was executing in the store unit. This does not include cycles spent handling store misses, PTESYNC instructions or TLBIE instructions."
--  },
--  {
--    "EventCode": "0x1F150",
--    "EventName": "PM_MRK_ST_L2_CYC",
--    "BriefDescription": "Cycles from L2 RC dispatch to L2 RC completion."
--  },
-   {
-     "EventCode": "0x10062",
-     "EventName": "PM_LD_L3MISS_PEND_CYC",
-     "BriefDescription": "Cycles in which an L3 miss was pending for this thread."
-   },
--  {
--    "EventCode": "0x20010",
--    "EventName": "PM_PMC1_OVERFLOW",
--    "BriefDescription": "The event selected for PMC1 caused the event counter to overflow."
--  },
-   {
-     "EventCode": "0x2001A",
-     "EventName": "PM_ITLB_HIT",
-@@ -79,36 +49,16 @@
-     "EventName": "PM_DTLB_MISS_4K",
-     "BriefDescription": "Data TLB reload (after a miss) page size 4K. When MMCR1[16]=0 this event counts only for demand misses. When MMCR1[16]=1 this event includes demand misses and prefetches."
-   },
--  {
--    "EventCode": "0x2D154",
--    "EventName": "PM_MRK_DERAT_MISS_64K",
--    "BriefDescription": "Data ERAT Miss (Data TLB Access) page size 64K for a marked instruction. When MMCR1[16]=0 this event counts only DERAT reloads for demand misses. When MMCR1[16]=1 this event includes demand misses and prefetches."
--  },
-   {
-     "EventCode": "0x200F6",
-     "EventName": "PM_DERAT_MISS",
-     "BriefDescription": "DERAT Reloaded to satisfy a DERAT miss. All page sizes are counted by this event. When MMCR1[16]=0 this event counts only DERAT reloads for demand misses. When MMCR1[16]=1 this event includes demand misses and prefetches."
-   },
--  {
--    "EventCode": "0x30016",
--    "EventName": "PM_EXEC_STALL_DERAT_DTLB_MISS",
--    "BriefDescription": "Cycles in which the oldest instruction in the pipeline suffered a TLB miss and waited for it resolve."
--  },
-   {
-     "EventCode": "0x3C040",
-     "EventName": "PM_XFER_FROM_SRC_PMC3",
-     "BriefDescription": "The processor's L1 data cache was reloaded from the source specified in MMCR3[30:42]. If MMCR1[16|17] is 0 (default), this count includes only lines that were reloaded to satisfy a demand miss. If MMCR1[16|17] is 1, this count includes both demand misses and prefetch reloads."
-   },
--  {
--    "EventCode": "0x3C142",
--    "EventName": "PM_MRK_XFER_FROM_SRC_PMC3",
--    "BriefDescription": "For a marked data transfer instruction, the processor's L1 data cache was reloaded from the source specified in MMCR3[30:42]. If MMCR1[16|17] is 0 (default), this count includes only lines that were reloaded to satisfy a demand miss. If MMCR1[16|17] is 1, this count includes both demand misses and prefetch reloads."
--  },
--  {
--    "EventCode": "0x3C144",
--    "EventName": "PM_MRK_XFER_FROM_SRC_CYC_PMC3",
--    "BriefDescription": "Cycles taken for a marked demand miss to reload a line from the source specified in MMCR3[30:42]."
--  },
-   {
-     "EventCode": "0x3C054",
-     "EventName": "PM_DERAT_MISS_16M",
-@@ -124,21 +74,11 @@
-     "EventName": "PM_LARX_FIN",
-     "BriefDescription": "Load and reserve instruction (LARX) finished. LARX and STCX are instructions used to acquire a lock."
-   },
--  {
--    "EventCode": "0x301E2",
--    "EventName": "PM_MRK_ST_CMPL",
--    "BriefDescription": "Marked store completed and sent to nest. Note that this count excludes cache-inhibited stores."
--  },
-   {
-     "EventCode": "0x300FC",
-     "EventName": "PM_DTLB_MISS",
-     "BriefDescription": "The DPTEG required for the load/store instruction in execution was missing from the TLB. This event only counts for demand misses."
-   },
--  {
--    "EventCode": "0x4D02C",
--    "EventName": "PM_PMC1_REWIND",
--    "BriefDescription": "The speculative event selected for PMC1 rewinds and the counter for PMC1 is not charged."
--  },
-   {
-     "EventCode": "0x4003E",
-     "EventName": "PM_LD_CMPL",
-@@ -149,16 +89,6 @@
-     "EventName": "PM_XFER_FROM_SRC_PMC4",
-     "BriefDescription": "The processor's L1 data cache was reloaded from the source specified in MMCR3[45:57]. If MMCR1[16|17] is 0 (default), this count includes only lines that were reloaded to satisfy a demand miss. If MMCR1[16|17] is 1, this count includes both demand misses and prefetch reloads."
-   },
--  {
--    "EventCode": "0x4C142",
--    "EventName": "PM_MRK_XFER_FROM_SRC_PMC4",
--    "BriefDescription": "For a marked data transfer instruction, the processor's L1 data cache was reloaded from the source specified in MMCR3[45:57]. If MMCR1[16|17] is 0 (default), this count includes only lines that were reloaded to satisfy a demand miss. If MMCR1[16|17] is 1, this count includes both demand misses and prefetch reloads."
--  },
--  {
--    "EventCode": "0x4C144",
--    "EventName": "PM_MRK_XFER_FROM_SRC_CYC_PMC4",
--    "BriefDescription": "Cycles taken for a marked demand miss to reload a line from the source specified in MMCR3[45:57]."
--  },
-   {
-     "EventCode": "0x4C056",
-     "EventName": "PM_DTLB_MISS_16M",
-@@ -168,20 +98,5 @@
-     "EventCode": "0x4C05A",
-     "EventName": "PM_DTLB_MISS_1G",
-     "BriefDescription": "Data TLB reload (after a miss) page size 1G. Implies radix translation was used. When MMCR1[16]=0 this event counts only for demand misses. When MMCR1[16]=1 this event includes demand misses and prefetches."
--  },
--  {
--    "EventCode": "0x4C15E",
--    "EventName": "PM_MRK_DTLB_MISS_64K",
--    "BriefDescription": "Marked Data TLB reload (after a miss) page size 64K. When MMCR1[16]=0 this event counts only for demand misses. When MMCR1[16]=1 this event includes demand misses and prefetches."
--  },
--  {
--    "EventCode": "0x4D056",
--    "EventName": "PM_NON_FMA_FLOP_CMPL",
--    "BriefDescription": "Non FMA instruction completed."
--  },
--  {
--    "EventCode": "0x40164",
--    "EventName": "PM_MRK_DERAT_MISS_2M",
--    "BriefDescription": "Data ERAT Miss (Data TLB Access) page size 2M for a marked instruction. When MMCR1[16]=0 this event counts only DERAT reloads for demand misses. When MMCR1[16]=1 this event includes demand misses and prefetches."
-   }
- ]
-diff --git a/tools/perf/pmu-events/arch/powerpc/power10/others.json b/tools/perf/pmu-events/arch/powerpc/power10/others.json
-index 17c5424ef1ac..f09c00c89322 100644
---- a/tools/perf/pmu-events/arch/powerpc/power10/others.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power10/others.json
-@@ -1,23 +1,8 @@
- [
-   {
--    "EventCode": "0x10016",
--    "EventName": "PM_VSU0_ISSUE",
--    "BriefDescription": "VSU instruction issued to VSU pipe 0."
--  },
--  {
--    "EventCode": "0x1001C",
--    "EventName": "PM_ULTRAVISOR_INST_CMPL",
--    "BriefDescription": "PowerPC instruction completed while the thread was in ultravisor state."
--  },
--  {
--    "EventCode": "0x100F0",
--    "EventName": "PM_CYC",
--    "BriefDescription": "Processor cycles."
--  },
--  {
--    "EventCode": "0x10134",
--    "EventName": "PM_MRK_ST_DONE_L2",
--    "BriefDescription": "Marked store completed in L2."
-+    "EventCode": "0x1002C",
-+    "EventName": "PM_LD_PREFETCH_CACHE_LINE_MISS",
-+    "BriefDescription": "The L1 cache was reloaded with a line that fulfills a prefetch request."
-   },
-   {
-     "EventCode": "0x1505E",
-@@ -34,36 +19,11 @@
-     "EventName": "PM_ADJUNCT_CYC",
-     "BriefDescription": "Cycles in which the thread is in Adjunct state. MSR[S HV PR] bits = 011."
-   },
--  {
--    "EventCode": "0x101E4",
--    "EventName": "PM_MRK_L1_ICACHE_MISS",
--    "BriefDescription": "Marked instruction suffered an instruction cache miss."
--  },
--  {
--    "EventCode": "0x101EA",
--    "EventName": "PM_MRK_L1_RELOAD_VALID",
--    "BriefDescription": "Marked demand reload."
--  },
--  {
--    "EventCode": "0x100F4",
--    "EventName": "PM_FLOP_CMPL",
--    "BriefDescription": "Floating Point Operations Completed. Includes any type. It counts once for each 1, 2, 4 or 8 flop instruction. Use PM_1|2|4|8_FLOP_CMPL events to count flops."
--  },
--  {
--    "EventCode": "0x100FA",
--    "EventName": "PM_RUN_LATCH_ANY_THREAD_CYC",
--    "BriefDescription": "Cycles when at least one thread has the run latch set."
--  },
-   {
-     "EventCode": "0x100FC",
-     "EventName": "PM_LD_REF_L1",
-     "BriefDescription": "All L1 D cache load references counted at finish, gated by reject. In P9 and earlier this event counted only cacheable loads but in P10 both cacheable and non-cacheable loads are included."
-   },
--  {
--    "EventCode": "0x2000C",
--    "EventName": "PM_RUN_LATCH_ALL_THREADS_CYC",
--    "BriefDescription": "Cycles when the run latch is set for all threads."
--  },
-   {
-     "EventCode": "0x2E010",
-     "EventName": "PM_ADJUNCT_INST_CMPL",
-@@ -74,26 +34,6 @@
-     "EventName": "PM_STCX_FIN",
-     "BriefDescription": "Conditional store instruction (STCX) finished. LARX and STCX are instructions used to acquire a lock."
-   },
--  {
--    "EventCode": "0x20130",
--    "EventName": "PM_MRK_INST_DECODED",
--    "BriefDescription": "An instruction was marked at decode time. Random Instruction Sampling (RIS) only."
--  },
--  {
--    "EventCode": "0x20132",
--    "EventName": "PM_MRK_DFU_ISSUE",
--    "BriefDescription": "The marked instruction was a decimal floating point operation issued to the VSU. Measured at issue time."
--  },
--  {
--    "EventCode": "0x20134",
--    "EventName": "PM_MRK_FXU_ISSUE",
--    "BriefDescription": "The marked instruction was a fixed point operation issued to the VSU. Measured at issue time."
--  },
--  {
--    "EventCode": "0x2505C",
--    "EventName": "PM_VSU_ISSUE",
--    "BriefDescription": "At least one VSU instruction was issued to one of the VSU pipes. Up to 4 per cycle. Includes fixed point operations."
--  },
-   {
-     "EventCode": "0x2F054",
-     "EventName": "PM_DISP_SS1_2_INSTR_CYC",
-@@ -104,40 +44,15 @@
-     "EventName": "PM_DISP_SS1_4_INSTR_CYC",
-     "BriefDescription": "Cycles in which Superslice 1 dispatches either 3 or 4 instructions."
-   },
--  {
--    "EventCode": "0x2006C",
--    "EventName": "PM_RUN_CYC_SMT4_MODE",
--    "BriefDescription": "Cycles when this thread's run latch is set and the core is in SMT4 mode."
--  },
--  {
--    "EventCode": "0x201E0",
--    "EventName": "PM_MRK_DATA_FROM_MEMORY",
--    "BriefDescription": "The processor's data cache was reloaded from local, remote, or distant memory due to a demand miss for a marked load."
--  },
--  {
--    "EventCode": "0x201E4",
--    "EventName": "PM_MRK_DATA_FROM_L3MISS",
--    "BriefDescription": "The processor's L1 data cache was reloaded from beyond the local core's L3 due to a demand miss for a marked instruction."
--  },
--  {
--    "EventCode": "0x201E8",
--    "EventName": "PM_THRESH_EXC_512",
--    "BriefDescription": "Threshold counter exceeded a value of 512."
--  },
-   {
-     "EventCode": "0x200F2",
-     "EventName": "PM_INST_DISP",
-     "BriefDescription": "PowerPC instruction dispatched."
-   },
-   {
--    "EventCode": "0x30132",
--    "EventName": "PM_MRK_VSU_FIN",
--    "BriefDescription": "VSU marked instruction finished. Excludes simple FX instructions issued to the Store Unit."
--  },
--  {
--    "EventCode": "0x30038",
--    "EventName": "PM_EXEC_STALL_DMISS_LMEM",
--    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was waiting for a load miss to resolve from the local memory, local OpenCAPI cache, or local OpenCAPI memory."
-+    "EventCode": "0x200FD",
-+    "EventName": "PM_L1_ICACHE_MISS",
-+    "BriefDescription": "Demand instruction cache miss."
-   },
-   {
-     "EventCode": "0x3F04A",
-@@ -149,11 +64,6 @@
-     "EventName": "PM_PRIVILEGED_INST_CMPL",
-     "BriefDescription": "PowerPC instruction completed while the thread was in Privileged state."
-   },
--  {
--    "EventCode": "0x3F150",
--    "EventName": "PM_MRK_ST_DRAIN_CYC",
--    "BriefDescription": "Cycles in which the marked store drained from the core to the L2."
--  },
-   {
-     "EventCode": "0x3F054",
-     "EventName": "PM_DISP_SS0_4_INSTR_CYC",
-@@ -165,103 +75,43 @@
-     "BriefDescription": "Cycles in which Superslice 0 dispatches either 5, 6, 7 or 8 instructions."
-   },
-   {
--    "EventCode": "0x30162",
--    "EventName": "PM_MRK_ISSUE_DEPENDENT_LOAD",
--    "BriefDescription": "The marked instruction was dependent on a load. It is eligible for issue kill."
--  },
--  {
--    "EventCode": "0x40114",
--    "EventName": "PM_MRK_START_PROBE_NOP_DISP",
--    "BriefDescription": "Marked Start probe nop dispatched. Instruction AND R0,R0,R0."
--  },
--  {
--    "EventCode": "0x4001C",
--    "EventName": "PM_VSU_FIN",
--    "BriefDescription": "VSU instruction finished."
--  },
--  {
--    "EventCode": "0x4C01A",
--    "EventName": "PM_EXEC_STALL_DMISS_OFF_NODE",
--    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was waiting for a load miss to resolve from a distant chip."
--  },
--  {
--    "EventCode": "0x4D012",
--    "EventName": "PM_PMC3_SAVED",
--    "BriefDescription": "The conditions for the speculative event selected for PMC3 are met and PMC3 is charged."
--  },
--  {
--    "EventCode": "0x4D022",
--    "EventName": "PM_HYPERVISOR_INST_CMPL",
--    "BriefDescription": "PowerPC instruction completed while the thread was in hypervisor state."
--  },
--  {
--    "EventCode": "0x4D026",
--    "EventName": "PM_ULTRAVISOR_CYC",
--    "BriefDescription": "Cycles when the thread is in Ultravisor state. MSR[S HV PR]=110."
-+    "EventCode": "0x30068",
-+    "EventName": "PM_L1_ICACHE_RELOADED_PREF",
-+    "BriefDescription": "Counts all instruction cache prefetch reloads (includes demand turned into prefetch)."
-   },
-   {
--    "EventCode": "0x4D028",
--    "EventName": "PM_PRIVILEGED_CYC",
--    "BriefDescription": "Cycles when the thread is in Privileged state. MSR[S HV PR]=x00."
-+    "EventCode": "0x300F6",
-+    "EventName": "PM_LD_DEMAND_MISS_L1",
-+    "BriefDescription": "The L1 cache was reloaded with a line that fulfills a demand miss request. Counted at reload time, before finish."
-   },
-   {
--    "EventCode": "0x40030",
--    "EventName": "PM_INST_FIN",
--    "BriefDescription": "Instruction finished."
-+    "EventCode": "0x300FE",
-+    "EventName": "PM_DATA_FROM_L3MISS",
-+    "BriefDescription": "The processor's data cache was reloaded from a source other than the local core's L1, L2, or L3 due to a demand miss."
-   },
-   {
--    "EventCode": "0x44146",
--    "EventName": "PM_MRK_STCX_CORE_CYC",
--    "BriefDescription": "Cycles spent in the core portion of a marked STCX instruction. It starts counting when the instruction is decoded and stops counting when it drains into the L2."
-+    "EventCode": "0x40012",
-+    "EventName": "PM_L1_ICACHE_RELOADED_ALL",
-+    "BriefDescription": "Counts all instruction cache reloads includes demand, prefetch, prefetch turned into demand and demand turned into prefetch."
-   },
-   {
-     "EventCode": "0x44054",
-     "EventName": "PM_VECTOR_LD_CMPL",
-     "BriefDescription": "Vector load instruction completed."
-   },
--  {
--    "EventCode": "0x45054",
--    "EventName": "PM_FMA_CMPL",
--    "BriefDescription": "Two floating point instruction completed (FMA class of instructions: fmadd, fnmadd, fmsub, fnmsub). Scalar instructions only."
--  },
--  {
--    "EventCode": "0x45056",
--    "EventName": "PM_SCALAR_FLOP_CMPL",
--    "BriefDescription": "Scalar floating point instruction completed."
--  },
--  {
--    "EventCode": "0x4505C",
--    "EventName": "PM_MATH_FLOP_CMPL",
--    "BriefDescription": "Math floating point instruction completed."
--  },
-   {
-     "EventCode": "0x4D05E",
-     "EventName": "PM_BR_CMPL",
-     "BriefDescription": "A branch completed. All branches are included."
-   },
--  {
--    "EventCode": "0x4E15E",
--    "EventName": "PM_MRK_INST_FLUSHED",
--    "BriefDescription": "The marked instruction was flushed."
--  },
--  {
--    "EventCode": "0x401E6",
--    "EventName": "PM_MRK_INST_FROM_L3MISS",
--    "BriefDescription": "The processor's instruction cache was reloaded from beyond the local core's L3 due to a demand miss for a marked instruction."
--  },
--  {
--    "EventCode": "0x401E8",
--    "EventName": "PM_MRK_DATA_FROM_L2MISS",
--    "BriefDescription": "The processor's L1 data cache was reloaded from a source beyond the local core's L2 due to a demand miss for a marked instruction."
--  },
-   {
-     "EventCode": "0x400F0",
-     "EventName": "PM_LD_DEMAND_MISS_L1_FIN",
-     "BriefDescription": "Load missed L1, counted at finish time."
-   },
-   {
--    "EventCode": "0x500FA",
--    "EventName": "PM_RUN_INST_CMPL",
--    "BriefDescription": "PowerPC instruction completed while the run latch is set."
-+    "EventCode": "0x400FE",
-+    "EventName": "PM_DATA_FROM_MEMORY",
-+    "BriefDescription": "The processor's data cache was reloaded from local, remote, or distant memory due to a demand miss."
-   }
- ]
-diff --git a/tools/perf/pmu-events/arch/powerpc/power10/pipeline.json b/tools/perf/pmu-events/arch/powerpc/power10/pipeline.json
-index 799893c56f32..a8272a2f0517 100644
---- a/tools/perf/pmu-events/arch/powerpc/power10/pipeline.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power10/pipeline.json
-@@ -1,8 +1,13 @@
- [
-   {
--    "EventCode": "0x100FE",
--    "EventName": "PM_INST_CMPL",
--    "BriefDescription": "PowerPC instruction completed."
-+    "EventCode": "0x10004",
-+    "EventName": "PM_EXEC_STALL_TRANSLATION",
-+    "BriefDescription": "Cycles in which the oldest instruction in the pipeline suffered a TLB miss or ERAT miss and waited for it to resolve."
-+  },
-+  {
-+    "EventCode": "0x10006",
-+    "EventName": "PM_DISP_STALL_HELD_OTHER_CYC",
-+    "BriefDescription": "Cycles in which the next-to-complete (NTC) instruction is held at dispatch for any other reason."
-   },
-   {
-     "EventCode": "0x1000C",
-@@ -30,14 +35,19 @@
-     "BriefDescription": "Cycles in which an instruction reload is pending to satisfy a demand miss."
-   },
-   {
--    "EventCode": "0x10022",
--    "EventName": "PM_PMC2_SAVED",
--    "BriefDescription": "The conditions for the speculative event selected for PMC2 are met and PMC2 is charged."
-+    "EventCode": "0x10038",
-+    "EventName": "PM_DISP_STALL_TRANSLATION",
-+    "BriefDescription": "Cycles when dispatch was stalled for this thread because the MMU was handling a translation miss."
-   },
-   {
--    "EventCode": "0x10024",
--    "EventName": "PM_PMC5_OVERFLOW",
--    "BriefDescription": "The event selected for PMC5 caused the event counter to overflow."
-+    "EventCode": "0x1003A",
-+    "EventName": "PM_DISP_STALL_BR_MPRED_IC_L2",
-+    "BriefDescription": "Cycles when dispatch was stalled while the instruction was fetched from the local L2 after suffering a branch mispredict."
-+  },
-+  {
-+    "EventCode": "0x1003C",
-+    "EventName": "PM_EXEC_STALL_DMISS_L2L3",
-+    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was waiting for a load miss to resolve from either the local L2 or local L3."
-   },
-   {
-     "EventCode": "0x10058",
-@@ -54,11 +64,36 @@
-     "EventName": "PM_DERAT_MISS_2M",
-     "BriefDescription": "Data ERAT Miss (Data TLB Access) page size 2M. Implies radix translation. When MMCR1[16]=0 this event counts only DERAT reloads for demand misses. When MMCR1[16]=1 this event includes demand misses and prefetches."
-   },
-+  {
-+    "EventCode": "0x1D05E",
-+    "EventName": "PM_DISP_STALL_HELD_HALT_CYC",
-+    "BriefDescription": "Cycles in which the next-to-complete (NTC) instruction is held at dispatch because of power management."
-+  },
-+  {
-+    "EventCode": "0x1E050",
-+    "EventName": "PM_DISP_STALL_HELD_STF_MAPPER_CYC",
-+    "BriefDescription": "Cycles in which the next-to-complete (NTC) instruction is held at dispatch because the STF mapper/SRB was full. Includes GPR (count, link, tar), VSR, VMR, FPR."
-+  },
-+  {
-+    "EventCode": "0x1E054",
-+    "EventName": "PM_EXEC_STALL_DMISS_L21_L31",
-+    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was waiting for a load miss to resolve from another core's L2 or L3 on the same chip."
-+  },
-+  {
-+    "EventCode": "0x1E056",
-+    "EventName": "PM_EXEC_STALL_STORE_PIPE",
-+    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was executing in the store unit. This does not include cycles spent handling store misses, PTESYNC instructions or TLBIE instructions."
-+  },
-   {
-     "EventCode": "0x1E05A",
-     "EventName": "PM_CMPL_STALL_LWSYNC",
-     "BriefDescription": "Cycles in which the oldest instruction in the pipeline was a lwsync waiting to complete."
-   },
-+  {
-+    "EventCode": "0x10064",
-+    "EventName": "PM_DISP_STALL_IC_L2",
-+    "BriefDescription": "Cycles when dispatch was stalled while the instruction was fetched from the local L2."
-+  },
-   {
-     "EventCode": "0x10068",
-     "EventName": "PM_BR_FIN",
-@@ -70,9 +105,9 @@
-     "BriefDescription": "Simple fixed point instruction issued to the store unit. Measured at finish time."
-   },
-   {
--    "EventCode": "0x1006C",
--    "EventName": "PM_RUN_CYC_ST_MODE",
--    "BriefDescription": "Cycles when the run latch is set and the core is in ST mode."
-+    "EventCode": "0x100F8",
-+    "EventName": "PM_DISP_STALL_CYC",
-+    "BriefDescription": "Cycles the ICT has no itags assigned to this thread (no instructions were dispatched during these cycles)."
-   },
-   {
-     "EventCode": "0x20004",
-@@ -80,69 +115,114 @@
-     "BriefDescription": "Cycles in which the oldest instruction in the pipeline was dispatched but not issued yet."
-   },
-   {
--    "EventCode": "0x2000A",
--    "EventName": "PM_HYPERVISOR_CYC",
--    "BriefDescription": "Cycles when the thread is in Hypervisor state. MSR[S HV PR]=010."
-+    "EventCode": "0x20006",
-+    "EventName": "PM_DISP_STALL_HELD_ISSQ_FULL_CYC",
-+    "BriefDescription": "Cycles in which the next-to-complete (NTC) instruction is held at dispatch due to Issue queue full. Includes issue queue and branch queue."
-   },
-   {
-     "EventCode": "0x2000E",
-     "EventName": "PM_LSU_LD1_FIN",
-     "BriefDescription": "LSU Finished an internal operation in LD1 port."
-   },
-+  {
-+    "EventCode": "0x2C010",
-+    "EventName": "PM_EXEC_STALL_LSU",
-+    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was executing in the Load Store Unit. This does not include simple fixed point instructions."
-+  },
-   {
-     "EventCode": "0x2C014",
-     "EventName": "PM_CMPL_STALL_SPECIAL",
-     "BriefDescription": "Cycles in which the oldest instruction in the pipeline required special handling before completing."
-   },
-+  {
-+    "EventCode": "0x2C016",
-+    "EventName": "PM_DISP_STALL_IERAT_ONLY_MISS",
-+    "BriefDescription": "Cycles when dispatch was stalled while waiting to resolve an instruction ERAT miss."
-+  },
-   {
-     "EventCode": "0x2C018",
-     "EventName": "PM_EXEC_STALL_DMISS_L3MISS",
-     "BriefDescription": "Cycles in which the oldest instruction in the pipeline was waiting for a load miss to resolve from a source beyond the local L2 or local L3."
-   },
-+  {
-+    "EventCode": "0x2C01C",
-+    "EventName": "PM_EXEC_STALL_DMISS_OFF_CHIP",
-+    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was waiting for a load miss to resolve from a remote chip."
-+  },
-+  {
-+    "EventCode": "0x2C01E",
-+    "EventName": "PM_DISP_STALL_BR_MPRED_IC_L3",
-+    "BriefDescription": "Cycles when dispatch was stalled while the instruction was fetched from the local L3 after suffering a branch mispredict."
-+  },
-   {
-     "EventCode": "0x2D010",
-     "EventName": "PM_LSU_ST1_FIN",
-     "BriefDescription": "LSU Finished an internal operation in ST1 port."
-   },
-+  {
-+    "EventCode": "0x10016",
-+    "EventName": "PM_VSU0_ISSUE",
-+    "BriefDescription": "VSU instruction issued to VSU pipe 0."
-+  },
-   {
-     "EventCode": "0x2D012",
-     "EventName": "PM_VSU1_ISSUE",
-     "BriefDescription": "VSU instruction issued to VSU pipe 1."
-   },
-+  {
-+    "EventCode": "0x2505C",
-+    "EventName": "PM_VSU_ISSUE",
-+    "BriefDescription": "At least one VSU instruction was issued to one of the VSU pipes. Up to 4 per cycle. Includes fixed point operations."
-+  },
-+  {
-+    "EventCode": "0x4001C",
-+    "EventName": "PM_VSU_FIN",
-+    "BriefDescription": "VSU instruction finished."
-+  },
-   {
-     "EventCode": "0x2D018",
-     "EventName": "PM_EXEC_STALL_VSU",
-     "BriefDescription": "Cycles in which the oldest instruction in the pipeline was executing in the VSU (includes FXU, VSU, CRU)."
-   },
-+  {
-+    "EventCode": "0x2D01A",
-+    "EventName": "PM_DISP_STALL_IC_MISS",
-+    "BriefDescription": "Cycles when dispatch was stalled for this thread due to an instruction cache miss."
-+  },
-   {
-     "EventCode": "0x2D01C",
-     "EventName": "PM_CMPL_STALL_STCX",
-     "BriefDescription": "Cycles in which the oldest instruction in the pipeline was a stcx waiting for resolution from the nest before completing."
-   },
-+  {
-+    "EventCode": "0x2E018",
-+    "EventName": "PM_DISP_STALL_FETCH",
-+    "BriefDescription": "Cycles when dispatch was stalled for this thread because Fetch was being held."
-+  },
-+  {
-+    "EventCode": "0x2E01A",
-+    "EventName": "PM_DISP_STALL_HELD_XVFC_MAPPER_CYC",
-+    "BriefDescription": "Cycles in which the next-to-complete (NTC) instruction is held at dispatch because the XVFC mapper/SRB was full."
-+  },
-+  {
-+    "EventCode": "0x2E01C",
-+    "EventName": "PM_EXEC_STALL_TLBIE",
-+    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was a TLBIE instruction executing in the Load Store Unit."
-+  },
-   {
-     "EventCode": "0x2E01E",
-     "EventName": "PM_EXEC_STALL_NTC_FLUSH",
-     "BriefDescription": "Cycles in which the oldest instruction in the pipeline was executing in any unit before it was flushed. Note that if the flush of the oldest instruction happens after finish, the cycles from dispatch to issue will be included in PM_DISP_STALL and the cycles from issue to finish will be included in PM_EXEC_STALL and its corresponding children. This event will also count cycles when the previous next-to-finish (NTF) instruction is still completing and the new NTF instruction is stalled at dispatch."
-   },
--  {
--    "EventCode": "0x2013C",
--    "EventName": "PM_MRK_FX_LSU_FIN",
--    "BriefDescription": "The marked instruction was simple fixed point that was issued to the store unit. Measured at finish time."
--  },
-   {
-     "EventCode": "0x2405A",
-     "EventName": "PM_NTC_FIN",
-     "BriefDescription": "Cycles in which the oldest instruction in the pipeline (NTC) finishes. Note that instructions can finish out of order, therefore not all the instructions that finish have a Next-to-complete status."
-   },
-   {
--    "EventCode": "0x201E2",
--    "EventName": "PM_MRK_LD_MISS_L1",
--    "BriefDescription": "Marked demand data load miss counted at finish time."
--  },
--  {
--    "EventCode": "0x200F4",
--    "EventName": "PM_RUN_CYC",
--    "BriefDescription": "Processor cycles gated by the run latch."
-+    "EventCode": "0x30004",
-+    "EventName": "PM_DISP_STALL_FLUSH",
-+    "BriefDescription": "Cycles when dispatch was stalled because of a flush that happened to an instruction(s) that was not yet next-to-complete (NTC). PM_EXEC_STALL_NTC_FLUSH only includes instructions that were flushed after becoming NTC."
-   },
-   {
-     "EventCode": "0x30008",
-@@ -150,24 +230,29 @@
-     "BriefDescription": "Cycles in which the oldest instruction in the pipeline was waiting to finish in one of the execution units (BRU, LSU, VSU). Only cycles between issue and finish are counted in this category."
-   },
-   {
--    "EventCode": "0x3001A",
--    "EventName": "PM_LSU_ST2_FIN",
--    "BriefDescription": "LSU Finished an internal operation in ST2 port."
-+    "EventCode": "0x30014",
-+    "EventName": "PM_EXEC_STALL_STORE",
-+    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was a store instruction executing in the Load Store Unit."
-   },
-   {
--    "EventCode": "0x30020",
--    "EventName": "PM_PMC2_REWIND",
--    "BriefDescription": "The speculative event selected for PMC2 rewinds and the counter for PMC2 is not charged."
-+    "EventCode": "0x30016",
-+    "EventName": "PM_EXEC_STALL_DERAT_DTLB_MISS",
-+    "BriefDescription": "Cycles in which the oldest instruction in the pipeline suffered a TLB miss and waited for it resolve."
-   },
-   {
--    "EventCode": "0x30022",
--    "EventName": "PM_PMC4_SAVED",
--    "BriefDescription": "The conditions for the speculative event selected for PMC4 are met and PMC4 is charged."
-+    "EventCode": "0x30018",
-+    "EventName": "PM_DISP_STALL_HELD_SCOREBOARD_CYC",
-+    "BriefDescription": "Cycles in which the next-to-complete (NTC) instruction is held at dispatch while waiting on the Scoreboard. This event combines VSCR and FPSCR together."
-+  },
-+  {
-+    "EventCode": "0x3001A",
-+    "EventName": "PM_LSU_ST2_FIN",
-+    "BriefDescription": "LSU Finished an internal operation in ST2 port."
-   },
-   {
--    "EventCode": "0x30024",
--    "EventName": "PM_PMC6_OVERFLOW",
--    "BriefDescription": "The event selected for PMC6 caused the event counter to overflow."
-+    "EventCode": "0x30026",
-+    "EventName": "PM_EXEC_STALL_STORE_MISS",
-+    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was a store whose cache line was not resident in the L1 and was waiting for allocation of the missing line into the L1."
-   },
-   {
-     "EventCode": "0x30028",
-@@ -179,6 +264,11 @@
-     "EventName": "PM_EXEC_STALL_SIMPLE_FX",
-     "BriefDescription": "Cycles in which the oldest instruction in the pipeline was a simple fixed point instruction executing in the Load Store Unit."
-   },
-+  {
-+    "EventCode": "0x30038",
-+    "EventName": "PM_EXEC_STALL_DMISS_LMEM",
-+    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was waiting for a load miss to resolve from the local memory, local OpenCAPI cache, or local OpenCAPI memory."
-+  },
-   {
-     "EventCode": "0x3003A",
-     "EventName": "PM_CMPL_STALL_EXCEPTION",
-@@ -194,6 +284,31 @@
-     "EventName": "PM_TLBIE_FIN",
-     "BriefDescription": "TLBIE instruction finished in the LSU. Two TLBIEs can finish each cycle. All will be counted."
-   },
-+  {
-+    "EventCode": "0x34054",
-+    "EventName": "PM_EXEC_STALL_DMISS_L2L3_NOCONFLICT",
-+    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was waiting for a load miss to resolve from the local L2 or local L3, without a dispatch conflict."
-+  },
-+  {
-+    "EventCode": "0x34056",
-+    "EventName": "PM_EXEC_STALL_LOAD_FINISH",
-+    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was finishing a load after its data was reloaded from a data source beyond the local L1; cycles in which the LSU was processing an L1-hit; cycles in which the next-to-finish (NTF) instruction merged with another load in the LMQ; cycles in which the NTF instruction is waiting for a data reload for a load miss, but the data comes back with a non-NTF instruction."
-+  },
-+  {
-+    "EventCode": "0x34058",
-+    "EventName": "PM_DISP_STALL_BR_MPRED_ICMISS",
-+    "BriefDescription": "Cycles when dispatch was stalled after a mispredicted branch resulted in an instruction cache miss."
-+  },
-+  {
-+    "EventCode": "0x3D05C",
-+    "EventName": "PM_DISP_STALL_HELD_RENAME_CYC",
-+    "BriefDescription": "Cycles in which the next-to-complete (NTC) instruction is held at dispatch because the mapper/SRB was full. Includes GPR (count, link, tar), VSR, VMR, FPR and XVFC."
-+  },
-+  {
-+    "EventCode": "0x3E052",
-+    "EventName": "PM_DISP_STALL_IC_L3",
-+    "BriefDescription": "Cycles when dispatch was stalled while the instruction was fetched from the local L3."
-+  },
-   {
-     "EventCode": "0x30066",
-     "EventName": "PM_LSU_FIN",
-@@ -210,25 +325,45 @@
-     "BriefDescription": "Cycles in which both instructions in the ICT entry pair show as finished. These are the cycles between finish and completion for the oldest pair of instructions in the pipeline."
-   },
-   {
--    "EventCode": "0x40010",
--    "EventName": "PM_PMC3_OVERFLOW",
--    "BriefDescription": "The event selected for PMC3 caused the event counter to overflow."
-+    "EventCode": "0x4C010",
-+    "EventName": "PM_DISP_STALL_BR_MPRED_IC_L3MISS",
-+    "BriefDescription": "Cycles when dispatch was stalled while the instruction was fetched from sources beyond the local L3 after suffering a mispredicted branch."
-   },
-   {
-     "EventCode": "0x4C012",
-     "EventName": "PM_EXEC_STALL_DERAT_ONLY_MISS",
-     "BriefDescription": "Cycles in which the oldest instruction in the pipeline suffered an ERAT miss and waited for it resolve."
-   },
-+  {
-+    "EventCode": "0x4C016",
-+    "EventName": "PM_EXEC_STALL_DMISS_L2L3_CONFLICT",
-+    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was waiting for a load miss to resolve from the local L2 or local L3, with a dispatch conflict."
-+  },
-   {
-     "EventCode": "0x4C018",
-     "EventName": "PM_CMPL_STALL",
-     "BriefDescription": "Cycles in which the oldest instruction in the pipeline cannot complete because the thread was blocked for any reason."
-   },
-+  {
-+    "EventCode": "0x4C01A",
-+    "EventName": "PM_EXEC_STALL_DMISS_OFF_NODE",
-+    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was waiting for a load miss to resolve from a distant chip."
-+  },
-   {
-     "EventCode": "0x4C01E",
-     "EventName": "PM_LSU_ST3_FIN",
-     "BriefDescription": "LSU Finished an internal operation in ST3 port."
-   },
-+  {
-+    "EventCode": "0x4D014",
-+    "EventName": "PM_EXEC_STALL_LOAD",
-+    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was a load instruction executing in the Load Store Unit."
-+  },
-+  {
-+    "EventCode": "0x4D016",
-+    "EventName": "PM_EXEC_STALL_PTESYNC",
-+    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was a PTESYNC instruction executing in the Load Store Unit."
-+  },
-   {
-     "EventCode": "0x4D018",
-     "EventName": "PM_EXEC_STALL_BRU",
-@@ -244,31 +379,41 @@
-     "EventName": "PM_EXEC_STALL_TLBIEL",
-     "BriefDescription": "Cycles in which the oldest instruction in the pipeline was a TLBIEL instruction executing in the Load Store Unit. TLBIEL instructions have lower overhead than TLBIE instructions because they don't get set to the nest."
-   },
-+  {
-+    "EventCode": "0x4D01E",
-+    "EventName": "PM_DISP_STALL_BR_MPRED",
-+    "BriefDescription": "Cycles when dispatch was stalled for this thread due to a mispredicted branch."
-+  },
-+  {
-+    "EventCode": "0x4E010",
-+    "EventName": "PM_DISP_STALL_IC_L3MISS",
-+    "BriefDescription": "Cycles when dispatch was stalled while the instruction was fetched from any source beyond the local L3."
-+  },
-   {
-     "EventCode": "0x4E012",
-     "EventName": "PM_EXEC_STALL_UNKNOWN",
-     "BriefDescription": "Cycles in which the oldest instruction in the pipeline completed without an ntf_type pulse. The ntf_pulse was missed by the ISU because the next-to-finish (NTF) instruction finishes and completions came too close together."
-   },
-+  {
-+    "EventCode": "0x4E01A",
-+    "EventName": "PM_DISP_STALL_HELD_CYC",
-+    "BriefDescription": "Cycles in which the next-to-complete (NTC) instruction is held at dispatch for any reason."
-+  },
-   {
-     "EventCode": "0x4D020",
-     "EventName": "PM_VSU3_ISSUE",
-     "BriefDescription": "VSU instruction was issued to VSU pipe 3."
-   },
-   {
--    "EventCode": "0x40132",
--    "EventName": "PM_MRK_LSU_FIN",
--    "BriefDescription": "LSU marked instruction finish."
-+    "EventCode": "0x4003C",
-+    "EventName": "PM_DISP_STALL_HELD_SYNC_CYC",
-+    "BriefDescription": "Cycles in which the next-to-complete (NTC) instruction is held at dispatch because of a synchronizing instruction that requires the ICT to be empty before dispatch."
-   },
-   {
-     "EventCode": "0x45058",
-     "EventName": "PM_IC_MISS_CMPL",
-     "BriefDescription": "Non-speculative instruction cache miss, counted at completion."
-   },
--  {
--    "EventCode": "0x4D052",
--    "EventName": "PM_2FLOP_CMPL",
--    "BriefDescription": "Double Precision vector version of fmul, fsub, fcmp, fsel, fabs, fnabs, fres, fsqrte, fneg completed."
--  },
-   {
-     "EventCode": "0x400F2",
-     "EventName": "PM_1PLUS_PPC_DISP",
-diff --git a/tools/perf/pmu-events/arch/powerpc/power10/pmc.json b/tools/perf/pmu-events/arch/powerpc/power10/pmc.json
-index 364fedbfb490..0a2bf56ee7c1 100644
---- a/tools/perf/pmu-events/arch/powerpc/power10/pmc.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power10/pmc.json
-@@ -1,22 +1,197 @@
- [
-+  {
-+    "EventCode": "0x100FE",
-+    "EventName": "PM_INST_CMPL",
-+    "BriefDescription": "PowerPC instruction completed."
-+  },
-+  {
-+    "EventCode": "0x1000A",
-+    "EventName": "PM_PMC3_REWIND",
-+    "BriefDescription": "The speculative event selected for PMC3 rewinds and the counter for PMC3 is not charged."
-+  },
-+  {
-+    "EventCode": "0x10010",
-+    "EventName": "PM_PMC4_OVERFLOW",
-+    "BriefDescription": "The event selected for PMC4 caused the event counter to overflow."
-+  },
-+  {
-+    "EventCode": "0x1001C",
-+    "EventName": "PM_ULTRAVISOR_INST_CMPL",
-+    "BriefDescription": "PowerPC instruction completed while the thread was in ultravisor state."
-+  },
-+  {
-+    "EventCode": "0x100F0",
-+    "EventName": "PM_CYC",
-+    "BriefDescription": "Processor cycles."
-+  },
-+  {
-+    "EventCode": "0x10020",
-+    "EventName": "PM_PMC4_REWIND",
-+    "BriefDescription": "The speculative event selected for PMC4 rewinds and the counter for PMC4 is not charged."
-+  },
-+  {
-+    "EventCode": "0x10022",
-+    "EventName": "PM_PMC2_SAVED",
-+    "BriefDescription": "The conditions for the speculative event selected for PMC2 are met and PMC2 is charged."
-+  },
-+  {
-+    "EventCode": "0x10024",
-+    "EventName": "PM_PMC5_OVERFLOW",
-+    "BriefDescription": "The event selected for PMC5 caused the event counter to overflow."
-+  },
-+  {
-+    "EventCode": "0x1F15E",
-+    "EventName": "PM_MRK_START_PROBE_NOP_CMPL",
-+    "BriefDescription": "Marked Start probe nop (AND R0,R0,R0) completed."
-+  },
-+  {
-+    "EventCode": "0x1006C",
-+    "EventName": "PM_RUN_CYC_ST_MODE",
-+    "BriefDescription": "Cycles when the run latch is set and the core is in ST mode."
-+  },
-+  {
-+    "EventCode": "0x101E8",
-+    "EventName": "PM_THRESH_EXC_256",
-+    "BriefDescription": "Threshold counter exceeded a count of 256."
-+  },
-+  {
-+    "EventCode": "0x101EC",
-+    "EventName": "PM_THRESH_MET",
-+    "BriefDescription": "Threshold exceeded."
-+  },
-+  {
-+    "EventCode": "0x100FA",
-+    "EventName": "PM_RUN_LATCH_ANY_THREAD_CYC",
-+    "BriefDescription": "Cycles when at least one thread has the run latch set."
-+  },
-+  {
-+    "EventCode": "0x2000A",
-+    "EventName": "PM_HYPERVISOR_CYC",
-+    "BriefDescription": "Cycles when the thread is in Hypervisor state. MSR[S HV PR]=010."
-+  },
-+  {
-+    "EventCode": "0x2000C",
-+    "EventName": "PM_RUN_LATCH_ALL_THREADS_CYC",
-+    "BriefDescription": "Cycles when the run latch is set for all threads."
-+  },
-+  {
-+    "EventCode": "0x20010",
-+    "EventName": "PM_PMC1_OVERFLOW",
-+    "BriefDescription": "The event selected for PMC1 caused the event counter to overflow."
-+  },
-+  {
-+    "EventCode": "0x2006C",
-+    "EventName": "PM_RUN_CYC_SMT4_MODE",
-+    "BriefDescription": "Cycles when this thread's run latch is set and the core is in SMT4 mode."
-+  },
-+  {
-+    "EventCode": "0x201E6",
-+    "EventName": "PM_THRESH_EXC_32",
-+    "BriefDescription": "Threshold counter exceeded a value of 32."
-+  },
-+  {
-+    "EventCode": "0x201E8",
-+    "EventName": "PM_THRESH_EXC_512",
-+    "BriefDescription": "Threshold counter exceeded a value of 512."
-+  },
-+  {
-+    "EventCode": "0x200F4",
-+    "EventName": "PM_RUN_CYC",
-+    "BriefDescription": "Processor cycles gated by the run latch."
-+  },
-+  {
-+    "EventCode": "0x30010",
-+    "EventName": "PM_PMC2_OVERFLOW",
-+    "BriefDescription": "The event selected for PMC2 caused the event counter to overflow."
-+  },
-+  {
-+    "EventCode": "0x30020",
-+    "EventName": "PM_PMC2_REWIND",
-+    "BriefDescription": "The speculative event selected for PMC2 rewinds and the counter for PMC2 is not charged."
-+  },
-+  {
-+    "EventCode": "0x30022",
-+    "EventName": "PM_PMC4_SAVED",
-+    "BriefDescription": "The conditions for the speculative event selected for PMC4 are met and PMC4 is charged."
-+  },
-+  {
-+    "EventCode": "0x30024",
-+    "EventName": "PM_PMC6_OVERFLOW",
-+    "BriefDescription": "The event selected for PMC6 caused the event counter to overflow."
-+  },
-+  {
-+    "EventCode": "0x3006C",
-+    "EventName": "PM_RUN_CYC_SMT2_MODE",
-+    "BriefDescription": "Cycles when this thread's run latch is set and the core is in SMT2 mode."
-+  },
-   {
-     "EventCode": "0x301E8",
-     "EventName": "PM_THRESH_EXC_64",
-     "BriefDescription": "Threshold counter exceeded a value of 64."
-   },
-   {
--    "EventCode": "0x45050",
--    "EventName": "PM_1FLOP_CMPL",
--    "BriefDescription": "One floating point instruction completed (fadd, fmul, fsub, fcmp, fsel, fabs, fnabs, fres, fsqrte, fneg)."
-+    "EventCode": "0x301EA",
-+    "EventName": "PM_THRESH_EXC_1024",
-+    "BriefDescription": "Threshold counter exceeded a value of 1024."
-+  },
-+  {
-+    "EventCode": "0x40010",
-+    "EventName": "PM_PMC3_OVERFLOW",
-+    "BriefDescription": "The event selected for PMC3 caused the event counter to overflow."
-+  },
-+  {
-+    "EventCode": "0x40114",
-+    "EventName": "PM_MRK_START_PROBE_NOP_DISP",
-+    "BriefDescription": "Marked Start probe nop dispatched. Instruction AND R0,R0,R0."
-+  },
-+  {
-+    "EventCode": "0x4D010",
-+    "EventName": "PM_PMC1_SAVED",
-+    "BriefDescription": "The conditions for the speculative event selected for PMC1 are met and PMC1 is charged."
-+  },
-+  {
-+    "EventCode": "0x4D012",
-+    "EventName": "PM_PMC3_SAVED",
-+    "BriefDescription": "The conditions for the speculative event selected for PMC3 are met and PMC3 is charged."
-+  },
-+  {
-+    "EventCode": "0x4D022",
-+    "EventName": "PM_HYPERVISOR_INST_CMPL",
-+    "BriefDescription": "PowerPC instruction completed while the thread was in hypervisor state."
-+  },
-+  {
-+    "EventCode": "0x4D026",
-+    "EventName": "PM_ULTRAVISOR_CYC",
-+    "BriefDescription": "Cycles when the thread is in Ultravisor state. MSR[S HV PR]=110."
-+  },
-+  {
-+    "EventCode": "0x4D028",
-+    "EventName": "PM_PRIVILEGED_CYC",
-+    "BriefDescription": "Cycles when the thread is in Privileged state. MSR[S HV PR]=x00."
-+  },
-+  {
-+    "EventCode": "0x4D02C",
-+    "EventName": "PM_PMC1_REWIND",
-+    "BriefDescription": "The speculative event selected for PMC1 rewinds and the counter for PMC1 is not charged."
-+  },
-+  {
-+    "EventCode": "0x40030",
-+    "EventName": "PM_INST_FIN",
-+    "BriefDescription": "Instruction finished."
-+  },
-+  {
-+    "EventCode": "0x40134",
-+    "EventName": "PM_MRK_INST_TIMEO",
-+    "BriefDescription": "Marked instruction finish timeout (instruction was lost)."
-   },
-   {
--    "EventCode": "0x45052",
--    "EventName": "PM_4FLOP_CMPL",
--    "BriefDescription": "Four floating point instruction completed (fadd, fmul, fsub, fcmp, fsel, fabs, fnabs, fres, fsqrte, fneg)."
-+    "EventCode": "0x401EA",
-+    "EventName": "PM_THRESH_EXC_128",
-+    "BriefDescription": "Threshold counter exceeded a value of 128."
-   },
-   {
--    "EventCode": "0x4D054",
--    "EventName": "PM_8FLOP_CMPL",
--    "BriefDescription": "Four Double Precision vector instruction completed."
-+    "EventCode": "0x400FA",
-+    "EventName": "PM_RUN_INST_CMPL",
-+    "BriefDescription": "PowerPC instruction completed while the run latch is set."
-   }
- ]
-diff --git a/tools/perf/pmu-events/arch/powerpc/power10/translation.json b/tools/perf/pmu-events/arch/powerpc/power10/translation.json
-index 961e2491e73f..170c9aeb30d8 100644
---- a/tools/perf/pmu-events/arch/powerpc/power10/translation.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power10/translation.json
-@@ -1,29 +1,9 @@
- [
--  {
--    "EventCode": "0x1F15E",
--    "EventName": "PM_MRK_START_PROBE_NOP_CMPL",
--    "BriefDescription": "Marked Start probe nop (AND R0,R0,R0) completed."
--  },
-   {
-     "EventCode": "0x20018",
-     "EventName": "PM_ST_FWD",
-     "BriefDescription": "Store forwards that finished."
-   },
--  {
--    "EventCode": "0x2011C",
--    "EventName": "PM_MRK_NTF_CYC",
--    "BriefDescription": "Cycles in which the marked instruction is the oldest in the pipeline (next-to-finish or next-to-complete)."
--  },
--  {
--    "EventCode": "0x2E01C",
--    "EventName": "PM_EXEC_STALL_TLBIE",
--    "BriefDescription": "Cycles in which the oldest instruction in the pipeline was a TLBIE instruction executing in the Load Store Unit."
--  },
--  {
--    "EventCode": "0x201E6",
--    "EventName": "PM_THRESH_EXC_32",
--    "BriefDescription": "Threshold counter exceeded a value of 32."
--  },
-   {
-     "EventCode": "0x200F0",
-     "EventName": "PM_ST_CMPL",
-@@ -33,20 +13,5 @@
-     "EventCode": "0x200FE",
-     "EventName": "PM_DATA_FROM_L2MISS",
-     "BriefDescription": "The processor's L1 data cache was reloaded from a source beyond the local core's L2 due to a demand miss."
--  },
--  {
--    "EventCode": "0x30010",
--    "EventName": "PM_PMC2_OVERFLOW",
--    "BriefDescription": "The event selected for PMC2 caused the event counter to overflow."
--  },
--  {
--    "EventCode": "0x4D010",
--    "EventName": "PM_PMC1_SAVED",
--    "BriefDescription": "The conditions for the speculative event selected for PMC1 are met and PMC1 is charged."
--  },
--  {
--    "EventCode": "0x4D05C",
--    "EventName": "PM_DPP_FLOP_CMPL",
--    "BriefDescription": "Double-Precision or Quad-Precision instruction completed."
-   }
- ]
++
++The comments in tools/include/linux/ring_buffer.h gives nice description
++for why and how to use memory barriers, here we will just provide an
++alternative explanation:
++
++(A) is a control dependency so that CPU assures order between checking
++pointer ``perf_event_mmap_page::data_tail`` and filling sample into ring
++buffer;
++
++(D) pairs with (A).  (D) separates the ring buffer data reading from
++writing the pointer ``data_tail``, perf tool first consumes samples and then
++tells the kernel that the data chunk has been released.  Since a reading
++operation is followed by a writing operation, thus (D) is a full memory
++barrier.
++
++(B) is a writing barrier in the middle of two writing operations, which
++makes sure that recording a sample must be prior to updating the head
++pointer.
++
++(C) pairs with (B).  (C) is a read memory barrier to ensure the head
++pointer is fetched before reading samples.
++
++To implement the above algorithm, the ``perf_output_put_handle()`` function
++in the kernel and two helpers ``ring_buffer_read_head()`` and
++``ring_buffer_write_tail()`` in the user space are introduced, they rely
++on memory barriers as described above to ensure the data dependency.
++
++Some architectures support one-way permeable barrier with load-acquire
++and store-release operations, these barriers are more relaxed with less
++performance penalty, so (C) and (D) can be optimized to use barriers
++``smp_load_acquire()`` and ``smp_store_release()`` respectively.
++
++If an architecture doesn’t support load-acquire and store-release in its
++memory model, it will roll back to the old fashion of memory barrier
++operations.  In this case, ``smp_load_acquire()`` encapsulates
++``READ_ONCE()`` + ``smp_mb()``, since ``smp_mb()`` is costly,
++``ring_buffer_read_head()`` doesn't invoke ``smp_load_acquire()`` and it uses
++the barriers ``READ_ONCE()`` + ``smp_rmb()`` instead.
++
++3. The mechanism of AUX ring buffer
++===================================
++
++In this chapter, we will explain the implementation of the AUX ring
++buffer.  In the first part it will discuss the connection between the
++AUX ring buffer and the regular ring buffer, then the second part will
++examine how the AUX ring buffer co-works with the regular ring buffer,
++as well as the additional features introduced by the AUX ring buffer for
++the sampling mechanism.
++
++3.1 The relationship between AUX and regular ring buffers
++---------------------------------------------------------
++
++Generally, the AUX ring buffer is an auxiliary for the regular ring
++buffer.  The regular ring buffer is primarily used to store the event
++samples and every event format complies with the definition in the
++union ``perf_event``; the AUX ring buffer is for recording the hardware
++trace data and the trace data format is hardware IP dependent.
++
++The general use and advantage of the AUX ring buffer is that it is
++written directly by hardware rather than by the kernel.  For example,
++regular profile samples that write to the regular ring buffer cause an
++interrupt.  Tracing execution requires a high number of samples and
++using interrupts would be overwhelming for the regular ring buffer
++mechanism.  Having an AUX buffer allows for a region of memory more
++decoupled from the kernel and written to directly by hardware tracing.
++
++The AUX ring buffer reuses the same algorithm with the regular ring
++buffer for the buffer management.  The control structure
++``perf_event_mmap_page`` extends the new fields ``aux_head`` and ``aux_tail``
++for the head and tail pointers of the AUX ring buffer.
++
++During the initialisation phase, besides the mmap()-ed regular ring
++buffer, the perf tool invokes a second syscall in the
++``auxtrace_mmap__mmap()`` function for the mmap of the AUX buffer;
++``rb_alloc_aux()`` in the kernel allocates pages correspondingly, these
++pages will be deferred to map into VMA when handling the page fault,
++which is the same lazy mechanism with the regular ring buffer.
++
++AUX events and AUX trace data are two different things.  Let's see an
++example::
++
++        perf record -a -e cycles -e cs_etm/@tmc_etr0/ -- sleep 2
++
++The above command enables two events: one is the event *cycles* from PMU
++and another is the AUX event *cs_etm* from Arm CoreSight, both are saved
++into the regular ring buffer while the CoreSight's AUX trace data is
++stored in the AUX ring buffer.
++
++As a result, we can see the regular ring buffer and the AUX ring buffer
++are allocated in pairs.  The perf in default mode allocates the regular
++ring buffer and the AUX ring buffer per CPU-wise, which is the same as
++the system wide mode, however, the default mode records samples only for
++the profiled program, whereas the latter mode profiles for all programs
++in the system.  For per-thread mode, the perf tool allocates only one
++regular ring buffer and one AUX ring buffer for the whole session.  For
++the per-CPU mode, the perf allocates two kinds of ring buffers for CPUs
++specified by the option ``-C``.
++
++The below figure demonstrates the buffers' layout in the system wide
++mode; if there are any activities on one CPU, the AUX event samples and
++the hardware trace data will be recorded into the dedicated buffers for
++the CPU.
++
++::
++
++              T1                      T2                 T1
++            +----+              +-----------+          +----+
++    CPU0    |xxxx|              |xxxxxxxxxxx|          |xxxx|
++            +----+--------------+-----------+----------+----+-------->
++              |                       |                  |
++              v                       v                  v
++            +-----------------------------------------------------+
++            |                  Ring buffer 0                      |
++            +-----------------------------------------------------+
++              |                       |                  |
++              v                       v                  v
++            +-----------------------------------------------------+
++            |               AUX Ring buffer 0                     |
++            +-----------------------------------------------------+
++
++                   T1
++                 +-----+
++    CPU1         |xxxxx|
++            -----+-----+--------------------------------------------->
++                    |
++                    v
++            +-----------------------------------------------------+
++            |                  Ring buffer 1                      |
++            +-----------------------------------------------------+
++                    |
++                    v
++            +-----------------------------------------------------+
++            |               AUX Ring buffer 1                     |
++            +-----------------------------------------------------+
++
++                                        T1              T3
++                                      +----+        +-------+
++    CPU2                              |xxxx|        |xxxxxxx|
++            --------------------------+----+--------+-------+-------->
++                                        |               |
++                                        v               v
++            +-----------------------------------------------------+
++            |                  Ring buffer 2                      |
++            +-----------------------------------------------------+
++                                        |               |
++                                        v               v
++            +-----------------------------------------------------+
++            |               AUX Ring buffer 2                     |
++            +-----------------------------------------------------+
++
++                              T1
++                       +--------------+
++    CPU3               |xxxxxxxxxxxxxx|
++            -----------+--------------+------------------------------>
++                              |
++                              v
++            +-----------------------------------------------------+
++            |                  Ring buffer 3                      |
++            +-----------------------------------------------------+
++                              |
++                              v
++            +-----------------------------------------------------+
++            |               AUX Ring buffer 3                     |
++            +-----------------------------------------------------+
++
++  	    T1: Thread 1; T2: Thread 2; T3: Thread 3
++  	    x: Thread is in running state
++
++                Figure 9. AUX ring buffer for system wide mode
++
++3.2 AUX events
++--------------
++
++Similar to ``perf_output_begin()`` and ``perf_output_end()``'s working for the
++regular ring buffer, ``perf_aux_output_begin()`` and ``perf_aux_output_end()``
++serve for the AUX ring buffer for processing the hardware trace data.
++The structure ``perf_output_handle`` is used as a context to track the AUX
++buffer’s info.
++
++``perf_aux_output_begin()`` initializes the structure perf_output_handle.
++It fetches the AUX head pointer and assigns to ``perf_output_handle::head``,
++afterwards, the low level driver uses ``perf_output_handle::head`` as the
++start address for storing hardware trace data.
++
++Once the hardware trace data is stored into the AUX ring buffer, the PMU
++driver will stop hardware tracing by calling the ``pmu::stop()`` callback.
++Similar to the regular ring buffer, the AUX ring buffer needs to apply
++the memory synchronization mechanism as discussed in the section
++:ref:`memory_synchronization`.  Since the AUX ring buffer is managed by the
++PMU driver, the barrier (B), which is a writing barrier to ensure the trace
++data is externally visible prior to updating the head pointer, is asked
++to be implemented in the PMU driver.
++
++Then ``pmu::stop()`` can safely call the ``perf_aux_output_end()`` function to
++finish two things:
++
++- It fills an event ``PERF_RECORD_AUX`` into the regular ring buffer, this
++  event delivers the information of the start address and data size for a
++  chunk of hardware trace data has been stored into the AUX ring buffer;
++
++- Since the hardware trace driver has stored new trace data into the AUX
++  ring buffer, the argument *size* indicates how many bytes have been
++  consumed by the hardware tracing, thus ``perf_aux_output_end()`` updates the
++  header pointer ``perf_buffer::aux_head`` to reflect the latest buffer usage.
++
++At the end, the PMU driver will restart hardware tracing.  During this
++temporary suspending period, it will lose hardware trace data, which
++will introduce a discontinuity during decoding phase.
++
++The event ``PERF_RECORD_AUX`` presents an AUX event which is handled in the
++kernel, but it lacks the information for saving the AUX trace data in
++the perf file.  When the perf tool copies the trace data from AUX ring
++buffer to the perf data file, it synthesizes a ``PERF_RECORD_AUXTRACE``
++event which includes the offest and size of the AUX trace data in the
++perf file.  Afterwards, the perf tool reads out the AUX trace data from
++the perf file based on the ``PERF_RECORD_AUXTRACE`` events, and the
++``PERF_RECORD_AUX`` event is used to decode a chunk of data by correlating
++with time order.
++
++3.3 Snapshot mode
++-----------------
++
++Perf supports snapshot mode for AUX ring buffer, in this mode, users
++only record AUX trace data at a specific time point which users are
++interested in.  E.g. below gives an example of how to take snapshots
++with 1 second interval with Arm CoreSight::
++
++  perf record -e cs_etm/@tmc_etr0/u -S -a program &
++  PERFPID=$!
++  while true; do
++      kill -USR2 $PERFPID
++      sleep 1
++  done
++
++The main flow for snapshot mode is:
++
++- Before a snapshot is taken, the AUX ring buffer acts in free run mode.
++  During free run mode the perf doesn't record any of the AUX events and
++  trace data;
++
++- Once the perf tool receives the *USR2* signal, it triggers the callback
++  function ``auxtrace_record::snapshot_start()`` to deactivate hardware
++  tracing.  The kernel driver then populates the AUX ring buffer with the
++  hardware trace data, and the event ``PERF_RECORD_AUX`` is stored in the
++  regular ring buffer;
++
++- Then perf tool takes a snapshot, ``record__read_auxtrace_snapshot()``
++  reads out the hardware trace data from the AUX ring buffer and saves it
++  into perf data file;
++
++- After the snapshot is finished, ``auxtrace_record::snapshot_finish()``
++  restarts the PMU event for AUX tracing.
++
++The perf only accesses the head pointer ``perf_event_mmap_page::aux_head``
++in snapshot mode and doesn’t touch tail pointer ``aux_tail``, this is
++because the AUX ring buffer can overflow in free run mode, the tail
++pointer is useless in this case.  Alternatively, the callback
++``auxtrace_record::find_snapshot()`` is introduced for making the decision
++of whether the AUX ring buffer has been wrapped around or not, at the
++end it fixes up the AUX buffer's head which are used to calculate the
++trace data size.
++
++As we know, the buffers' deployment can be per-thread mode, per-CPU
++mode, or system wide mode, and the snapshot can be applied to any of
++these modes.  Below is an example of taking snapshot with system wide
++mode.
++
++::
++
++                                         Snapshot is taken
++                                                 |
++                                                 v
++                        +------------------------+
++                        |  AUX Ring buffer 0     | <- aux_head
++                        +------------------------+
++                                                 v
++                +--------------------------------+
++                |          AUX Ring buffer 1     | <- aux_head
++                +--------------------------------+
++                                                 v
++    +--------------------------------------------+
++    |                      AUX Ring buffer 2     | <- aux_head
++    +--------------------------------------------+
++                                                 v
++         +---------------------------------------+
++         |                 AUX Ring buffer 3     | <- aux_head
++         +---------------------------------------+
++
++                Figure 10. Snapshot with system wide mode
 -- 
-2.39.3
+2.34.1
 
