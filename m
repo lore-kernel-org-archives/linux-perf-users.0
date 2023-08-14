@@ -2,91 +2,152 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFF5C001DB
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Aug 2023 06:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04997C001DB
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Aug 2023 07:12:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232367AbjHNGIi (ORCPT
+        id S232693AbjHNHME (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Aug 2023 02:08:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39076 "EHLO
+        Mon, 14 Aug 2023 03:12:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233679AbjHNGId (ORCPT
+        with ESMTP id S234108AbjHNHLv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Aug 2023 02:08:33 -0400
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5CE6F4;
-        Sun, 13 Aug 2023 23:08:31 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VpgUTN2_1691993304;
-Received: from 30.221.149.204(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VpgUTN2_1691993304)
-          by smtp.aliyun-inc.com;
-          Mon, 14 Aug 2023 14:08:26 +0800
-Message-ID: <099acfd1-b32f-e325-ccd1-cfeff6667c58@linux.alibaba.com>
-Date:   Mon, 14 Aug 2023 14:08:24 +0800
+        Mon, 14 Aug 2023 03:11:51 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDD61E71;
+        Mon, 14 Aug 2023 00:11:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691997107; x=1723533107;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=5sM6DJTWLycTUGGe9xX3afJEUXb/a6vzz3ZM1xTgFVI=;
+  b=hnTBwD5zqkF6UQ/aVoCIph1UvmhFnSCANKJyzZhym45PbHIWEki7IAPP
+   PQHBpxSAEaqCsbTIkFJXtixi1PkPailRSq78wD/FqcztY2SpFZO3/4bvX
+   pYmaQTK/L9sdaP8ItREjyjm91E9QeJWFvIdVLGg13dcm/AbjThrn+wkFM
+   4L9vQUb276+5EjBjzCj7o+vnI5af7r7vKaWrW3XhYCIHwCXhj3VGX2gqt
+   KKIpd2LAGx+FRswsg5fuQOkuDcm1bn+UuGEzDD4BTbPVS0hEKcsPTHKIB
+   wQ27dO31Hgk4wabf33pjZl3xeEEzevdLJAS79OrKFyY0oTqCKDDKelQOj
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10801"; a="362129920"
+X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
+   d="scan'208";a="362129920"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 00:11:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10801"; a="762852526"
+X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
+   d="scan'208";a="762852526"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.51.71])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 00:11:45 -0700
+Message-ID: <b2332dd5-e01e-dc61-e19c-55cf9a684ca2@intel.com>
+Date:   Mon, 14 Aug 2023 10:11:40 +0300
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.13.0
-Subject: Re: [PATCH v6 3/7] perf jevents: Support more event fields
-To:     Ian Rogers <irogers@google.com>
-Cc:     John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.14.0
+Subject: Re: [PATCH] perf tools: Handle old data in PERF_RECORD_ATTR
+To:     Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>
-References: <1691394685-61240-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1691394685-61240-4-git-send-email-renyu.zj@linux.alibaba.com>
- <50a8778a-ebe4-5b3b-9367-c8547d6d991d@oracle.com>
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <50a8778a-ebe4-5b3b-9367-c8547d6d991d@oracle.com>
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+References: <20230807061652.2492167-1-namhyung@kernel.org>
+Content-Language: en-US
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20230807061652.2492167-1-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-在 2023/8/7 下午5:24, John Garry 写道:
-> On 07/08/2023 08:51, Jing Zhang wrote:
->> The usual event descriptions are "event=xxx" or "config=xxx", while the
->> event descriptions of CMN are "type=xxx, eventid=xxx" or more complex.
->>
->> $cat /sys/bus/event_source/devices/arm_cmn_0/events/hnf_cache_fill
->> type=0x5,eventid=0x3
->>
->> When adding aliases for events described as "event=xxx" or "config=xxx",
->> EventCode or ConfigCode can be used in the JSON files to describe the
->> events. But "eventid=xxx, type=xxx" cannot be supported at present.
->>
->> If EventCode and ConfigCode is not added in the alias JSON file, the
->> event description will add "event=0" by default. So, even if the event
->> field is added to supplement "eventid=xxx" and "type=xxx", the final
->> parsing result will be "event=0, eventid=xxx, type=xxx".
->>
->> Therefore, when EventCode and ConfigCode are missing in JSON, "event=0" is
->> no longer added by default. EventIdCode and Type are added to the event
->> field, and ConfigCode is moved into the event_field array which can also
->> guarantee its original function.
->>
->> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+On 7/08/23 09:16, Namhyung Kim wrote:
+> The PERF_RECORD_ATTR is used for a pipe mode to describe an event with
+> attribute and IDs.  The ID table comes after the attr and it calculate
+> size of the table using the total record size and the attr size.
 > 
-> I'll let Ian check this change as he is more familiar with this code.
+>   n_ids = (total_record_size - end_of_the_attr_field) / sizeof(u64)
 > 
+> This is fine for most use cases, but sometimes it saves the pipe output
+> in a file and then process it later.  And it becomes a problem if there
+> is a change in attr size between the record and report.
+> 
+>   $ perf record -o- > perf-pipe.data  # old version
+>   $ perf report -i- < perf-pipe.data  # new version
+> 
+> For example, if the attr size is 128 and it has 4 IDs, then it would
+> save them in 168 byte like below:
+> 
+>    8 byte: perf event header { .type = PERF_RECORD_ATTR, .size = 168 },
+>  128 byte: perf event attr { .size = 128, ... },
+>   32 byte: event IDs [] = { 1234, 1235, 1236, 1237 },
+> 
+> But when report later, it thinks the attr size is 136 then it only read
+> the last 3 entries as ID.
+> 
+>    8 byte: perf event header { .type = PERF_RECORD_ATTR, .size = 168 },
+>  136 byte: perf event attr { .size = 136, ... },
+>   24 byte: event IDs [] = { 1235, 1236, 1237 },  // 1234 is missing
+> 
+> So it should use the recorded version of the attr.  The attr has the
+> size field already then it should honor the size when reading data.
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/header.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 52fbf526fe74..f89321cbfdee 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -4381,7 +4381,8 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
+>  			     union perf_event *event,
+>  			     struct evlist **pevlist)
+>  {
+> -	u32 i, ids, n_ids;
+> +	u32 i, n_ids;
+> +	u64 *ids;
+>  	struct evsel *evsel;
+>  	struct evlist *evlist = *pevlist;
+>  
+> @@ -4397,9 +4398,8 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
+>  
+>  	evlist__add(evlist, evsel);
+>  
+> -	ids = event->header.size;
+> -	ids -= (void *)&event->attr.id - (void *)event;
+> -	n_ids = ids / sizeof(u64);
+> +	n_ids = event->header.size - sizeof(event->header) - event->attr.attr.size;
+> +	n_ids = n_ids / sizeof(u64);
+>  	/*
+>  	 * We don't have the cpu and thread maps on the header, so
+>  	 * for allocating the perf_sample_id table we fake 1 cpu and
+> @@ -4408,8 +4408,9 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
+>  	if (perf_evsel__alloc_id(&evsel->core, 1, n_ids))
+>  		return -ENOMEM;
+>  
+> +	ids = (void *)&event->attr.attr + event->attr.attr.size;
+>  	for (i = 0; i < n_ids; i++) {
+> -		perf_evlist__id_add(&evlist->core, &evsel->core, 0, i, event->attr.id[i]);
+> +		perf_evlist__id_add(&evlist->core, &evsel->core, 0, i, ids[i]);
+>  	}
+>  
+>  	return 0;
 
-Hi Ian,
+This is a good catch!
 
-Could you please help to review this change？:)
+It looks like perf_event__hdr_swap() might also have this problem.
 
-Thanks,
-Jing
+I wonder if we should remove 'id' from struct perf_record_header_attr
+since the position is not guaranteed?
+
+Probably could use a comment there either way.
+
+Also perhaps a fixes tag and cc stable
+
