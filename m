@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CFFC001E0
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Aug 2023 15:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EAFC001E0
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Aug 2023 16:10:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229475AbjHNP6c (ORCPT
+        id S229749AbjHNQKU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Aug 2023 11:58:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52532 "EHLO
+        Mon, 14 Aug 2023 12:10:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229557AbjHNP6E (ORCPT
+        with ESMTP id S231204AbjHNQJy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Aug 2023 11:58:04 -0400
-Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0E6DC3
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 08:58:02 -0700 (PDT)
-Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-407db3e9669so417301cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 08:58:02 -0700 (PDT)
+        Mon, 14 Aug 2023 12:09:54 -0400
+Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A30812D
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 09:09:53 -0700 (PDT)
+Received: by mail-il1-x135.google.com with SMTP id e9e14a558f8ab-3493d0f785dso294485ab.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 09:09:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692028682; x=1692633482;
+        d=google.com; s=20221208; t=1692029393; x=1692634193;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kFtWfjMi8Qxaqy1mP9aCny6+Rknh4mMvL18UBz6OtTA=;
-        b=wSysMIu+1i4kZ9+szbci6PSfGsQaGegae6HD40omqq4EMu4bKalCrBOhJKB+PnpkBu
-         gCnesMRoU2mnkQ6rTHz+eV5y64EXEvJEAet+Ct12/TfrYI9F+GOW0SF6H/KGF0IQ2tMk
-         KVGNM3cVeqbZMlgMcNkeIOlBxPx2TVLx6I5ESe6DR5q29p2s17SaraCCW1FgXrzpnmr/
-         fjqY6XjkMEYVTdXbAghw/5eqV31dOFoPtGVycrQO59TlpXxlIZjQkKaT+eKyAPh0A/Y/
-         NPriko0mxJUPjc6VvCE+4ID822jfkJw2p6LB98r/eNjizmVBzZEoeFyAh5jewRhHxkls
-         JLqQ==
+        bh=PKFeMrqK94GegmeRyLBOLbKgSzgcjuc1Zy3O5gheuo4=;
+        b=iV9UjdSbjzQV3L1le1SIt6bGeG09fJBGkZd1RqGK8SnnX09iGjXK75tZMsSF/khidz
+         maet11zIr9VIpgyAY39FeHpcS+kwLPjx4lOi8Z7HbmGIVNv6mgA1dzz8x9QM1SrIXmbQ
+         yYsxEYTZ25D9KlWoqHKKgN5zr8EKpRd6g1/0fFkl0D7o6lORnJsrQrm/ET5TF2+8ZBxF
+         Y47f+LTLp7Kpvvrn0TvVVCUUvVWC9Iu5WWv5zMJDVnXwwk+x541yAqJW26HprOA1XHZk
+         E0QxTcsGXGguEESFlpxQ2GhEwyVBY6lbrpQ0hLtJ9pmNs4wooIMrLq0ewW7vMlb0vNrx
+         Wn6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692028682; x=1692633482;
+        d=1e100.net; s=20221208; t=1692029393; x=1692634193;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kFtWfjMi8Qxaqy1mP9aCny6+Rknh4mMvL18UBz6OtTA=;
-        b=Meoh+fYTIvbpGPCuVxGC9tgiHblmmZBEQjf3Usf5ffU0Wat9AhZEUccniilM0Dgdnr
-         +vfWhCe8L6L6XEya4TGY95aoasZCrzIxYOFWHO9HFx6HjyfrfLF50Qb/iNrfBtH3FlbQ
-         NUAGBQfKLKDrsmXv6mvEe3QIuLFIFP+GWNr75lz9KZRni8CKI7Z49WvdePEV3nm6jCHx
-         iP3E9W1pYZHFmMAWq1QZd2mb4ts+eMNRMDLuatFV5yab+cQgWlvHXE9Zs48acvCo+lFv
-         g7YTW8jARPNnksYXvIin+/qXa1/MxuGUjWllO6n/GAMHN6R0BBELS7JjL3o9MR5Nm82l
-         iDtg==
-X-Gm-Message-State: AOJu0Yz07vrc7hHlelw5+zZK64uukQU93mDPPZ1o6R+ZH4EBuScfWQ8i
-        G4J4OrsGleQxhpogfQcUEsyi+ILS4PLQaEBnQZqfUQ==
-X-Google-Smtp-Source: AGHT+IHAa0hCkDgiBUN4c4IKMPXHZ+fKZxZU59RDWYNnrnLXXYvU/DTwIQS+FZw9RhO2Xg4TFvj3LOl0yr73KKkDHw4=
-X-Received: by 2002:ac8:5b51:0:b0:403:aa88:cf7e with SMTP id
- n17-20020ac85b51000000b00403aa88cf7emr542580qtw.29.1692028681933; Mon, 14 Aug
- 2023 08:58:01 -0700 (PDT)
+        bh=PKFeMrqK94GegmeRyLBOLbKgSzgcjuc1Zy3O5gheuo4=;
+        b=bS72WCYCX3TD4l2op7SZRNfYFILLa6cXAYHj7IQIvIuEXiOJB9WM4XYvPI8jZL8pte
+         5fFKxKHkIwkYqPLU+5GaRcluJtF1FMNR7iQA8p2vN9gY/QKehnnB4iMxjJ0hGlgqX7dV
+         a6+NBdjk+Ct3dNeHibxRZHnRn+plDkiWSYBJc9dEn4UoK+nGhGQ8wJys/m5e10lUFDxf
+         I5poGcIEq1D/IBvVLC9kBF7f1+OgOuiqpY2326hlNAjmfxXgGDoosC1HF3hNsgRxp2Iu
+         0+GvnQTd3ZDpFWTwr3y4esIykpvHw4telHYPbdABrrQQh5WvrP+/zil2OHb8lrGYjto9
+         BtyA==
+X-Gm-Message-State: AOJu0YyIgY92hLTr4OH9BFdhw3j8lUHfnwmM+wRhpVWxOGLYx2mPw4C2
+        TeDw2S8XAER4pkFBp/SiVIwnP0B5FNzOqBrToG882g==
+X-Google-Smtp-Source: AGHT+IECmRu9rbOVBUjHK1aM8KuplVK6jt8ut2k82txZOnsMvj4e6RTF9cIVsJ1tC8ALtOBHSBmrCg92JmHcdKam9wQ=
+X-Received: by 2002:a05:6e02:20c6:b0:349:7663:5669 with SMTP id
+ 6-20020a056e0220c600b0034976635669mr744757ilq.14.1692029392765; Mon, 14 Aug
+ 2023 09:09:52 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230810214952.2934029-1-irogers@google.com> <20230810214952.2934029-3-irogers@google.com>
- <0111c4b3-174b-84cb-2749-a88342b80498@oracle.com>
-In-Reply-To: <0111c4b3-174b-84cb-2749-a88342b80498@oracle.com>
+ <0111c4b3-174b-84cb-2749-a88342b80498@oracle.com> <CAP-5=fWPUxOkOorOEiNSWPVhSxi+ANSR=_2rEzF_7hyS=3hF0Q@mail.gmail.com>
+In-Reply-To: <CAP-5=fWPUxOkOorOEiNSWPVhSxi+ANSR=_2rEzF_7hyS=3hF0Q@mail.gmail.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 14 Aug 2023 08:57:50 -0700
-Message-ID: <CAP-5=fWPUxOkOorOEiNSWPVhSxi+ANSR=_2rEzF_7hyS=3hF0Q@mail.gmail.com>
+Date:   Mon, 14 Aug 2023 09:09:40 -0700
+Message-ID: <CAP-5=fVOp-FcRR5oLvMVvb0R3sMgd=qnORwZGwdK1BbcqOBhHA@mail.gmail.com>
 Subject: Re: [PATCH v2 2/3] perf pmus: Add scan that ignores duplicates, use
  for perf list
 To:     John Garry <john.g.garry@oracle.com>
@@ -76,185 +76,201 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 11, 2023 at 8:51=E2=80=AFAM John Garry <john.g.garry@oracle.com=
-> wrote:
+On Mon, Aug 14, 2023 at 8:57=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> On 10/08/2023 22:49, Ian Rogers wrote:
-> > When there are multiple PMUs that differ only by suffix, by default
-> > just list the first one and skip all others. As the PMUs are sorted,
-> > the scan routine checks that the PMU names match and the numbers are
-> > consecutive. If "-v" is passed to "perf list" then list all PMUs.
+> On Fri, Aug 11, 2023 at 8:51=E2=80=AFAM John Garry <john.g.garry@oracle.c=
+om> wrote:
+> >
+> > On 10/08/2023 22:49, Ian Rogers wrote:
+> > > When there are multiple PMUs that differ only by suffix, by default
+> > > just list the first one and skip all others. As the PMUs are sorted,
+> > > the scan routine checks that the PMU names match and the numbers are
+> > > consecutive. If "-v" is passed to "perf list" then list all PMUs.
+> >
+> > I really think that this should be merged with the next change. I don't
+> > like the intermediate step of by default only printing the first PMU.
 >
-> I really think that this should be merged with the next change. I don't
-> like the intermediate step of by default only printing the first PMU.
-
-Ack. I'll leave it as 3 patches and then leave it to Arnaldo squash as
-quite often he wants more patches.
-
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >   tools/perf/builtin-list.c      |  8 +++++
-> >   tools/perf/util/pmus.c         | 54 ++++++++++++++++++++++++++++++++-=
--
-> >   tools/perf/util/print-events.h |  1 +
-> >   3 files changed, 61 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-> > index 7fec2cca759f..8fe4ddf02c14 100644
-> > --- a/tools/perf/builtin-list.c
-> > +++ b/tools/perf/builtin-list.c
-> > @@ -423,6 +423,13 @@ static void json_print_metric(void *ps __maybe_unu=
-sed, const char *group,
-> >       strbuf_release(&buf);
-> >   }
-> >
-> > +static bool default_skip_duplicate_pmus(void *ps)
-> > +{
-> > +     struct print_state *print_state =3D ps;
-> > +
-> > +     return !print_state->long_desc;
-> > +}
-> > +
-> >   int cmd_list(int argc, const char **argv)
-> >   {
-> >       int i, ret =3D 0;
-> > @@ -434,6 +441,7 @@ int cmd_list(int argc, const char **argv)
-> >               .print_end =3D default_print_end,
-> >               .print_event =3D default_print_event,
-> >               .print_metric =3D default_print_metric,
-> > +             .skip_duplicate_pmus =3D default_skip_duplicate_pmus,
-> >       };
-> >       const char *cputype =3D NULL;
-> >       const char *unit_name =3D NULL;
-> > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> > index 3581710667b0..5073843aca19 100644
-> > --- a/tools/perf/util/pmus.c
-> > +++ b/tools/perf/util/pmus.c
-> > @@ -275,6 +275,50 @@ struct perf_pmu *perf_pmus__scan_core(struct perf_=
+> Ack. I'll leave it as 3 patches and then leave it to Arnaldo squash as
+> quite often he wants more patches.
+>
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >   tools/perf/builtin-list.c      |  8 +++++
+> > >   tools/perf/util/pmus.c         | 54 +++++++++++++++++++++++++++++++=
++--
+> > >   tools/perf/util/print-events.h |  1 +
+> > >   3 files changed, 61 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+> > > index 7fec2cca759f..8fe4ddf02c14 100644
+> > > --- a/tools/perf/builtin-list.c
+> > > +++ b/tools/perf/builtin-list.c
+> > > @@ -423,6 +423,13 @@ static void json_print_metric(void *ps __maybe_u=
+nused, const char *group,
+> > >       strbuf_release(&buf);
+> > >   }
+> > >
+> > > +static bool default_skip_duplicate_pmus(void *ps)
+> > > +{
+> > > +     struct print_state *print_state =3D ps;
+> > > +
+> > > +     return !print_state->long_desc;
+> > > +}
+> > > +
+> > >   int cmd_list(int argc, const char **argv)
+> > >   {
+> > >       int i, ret =3D 0;
+> > > @@ -434,6 +441,7 @@ int cmd_list(int argc, const char **argv)
+> > >               .print_end =3D default_print_end,
+> > >               .print_event =3D default_print_event,
+> > >               .print_metric =3D default_print_metric,
+> > > +             .skip_duplicate_pmus =3D default_skip_duplicate_pmus,
+> > >       };
+> > >       const char *cputype =3D NULL;
+> > >       const char *unit_name =3D NULL;
+> > > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> > > index 3581710667b0..5073843aca19 100644
+> > > --- a/tools/perf/util/pmus.c
+> > > +++ b/tools/perf/util/pmus.c
+> > > @@ -275,6 +275,50 @@ struct perf_pmu *perf_pmus__scan_core(struct per=
+f_pmu *pmu)
+> > >       return NULL;
+> > >   }
+> > >
+> > > +static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_=
 pmu *pmu)
-> >       return NULL;
-> >   }
+> > > +{
+> > > +     bool use_core_pmus =3D !pmu || pmu->is_core;
+> > > +     int last_pmu_name_len =3D 0;
+> > > +     unsigned long last_pmu_num =3D 0;
+> > > +     const char *last_pmu_name =3D (pmu && pmu->name) ? pmu->name : =
+"";
+> > > +
+> > > +     if (!pmu) {
+> > > +             pmu_read_sysfs(/*core_only=3D*/false);
+> > > +             pmu =3D list_prepare_entry(pmu, &core_pmus, list);
+> > > +     } else
+> > > +             last_pmu_name_len =3D pmu_name_len_no_suffix(pmu->name =
+?: "", &last_pmu_num);
+> > > +
+> > > +     if (use_core_pmus) {
+> > > +             list_for_each_entry_continue(pmu, &core_pmus, list) {
+> > > +                     unsigned long pmu_num =3D 0;
+> > > +                     int pmu_name_len =3D pmu_name_len_no_suffix(pmu=
+->name ?: "", &pmu_num);
+> > > +
+> > > +                     if (last_pmu_name_len =3D=3D pmu_name_len &&
+> > > +                         (last_pmu_num + 1 =3D=3D pmu_num) &&
+> > > +                         !strncmp(last_pmu_name, pmu->name ?: "", pm=
+u_name_len)) {
+> > > +                             last_pmu_num++;
+> > > +                             continue;
+> > > +                     }
+> > > +                     return pmu;
+> > > +             }
+> > > +             pmu =3D NULL;
 > >
-> > +static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pm=
-u *pmu)
-> > +{
-> > +     bool use_core_pmus =3D !pmu || pmu->is_core;
-> > +     int last_pmu_name_len =3D 0;
-> > +     unsigned long last_pmu_num =3D 0;
-> > +     const char *last_pmu_name =3D (pmu && pmu->name) ? pmu->name : ""=
-;
-> > +
-> > +     if (!pmu) {
-> > +             pmu_read_sysfs(/*core_only=3D*/false);
-> > +             pmu =3D list_prepare_entry(pmu, &core_pmus, list);
-> > +     } else
-> > +             last_pmu_name_len =3D pmu_name_len_no_suffix(pmu->name ?:=
- "", &last_pmu_num);
-> > +
-> > +     if (use_core_pmus) {
-> > +             list_for_each_entry_continue(pmu, &core_pmus, list) {
-> > +                     unsigned long pmu_num =3D 0;
-> > +                     int pmu_name_len =3D pmu_name_len_no_suffix(pmu->=
-name ?: "", &pmu_num);
-> > +
-> > +                     if (last_pmu_name_len =3D=3D pmu_name_len &&
-> > +                         (last_pmu_num + 1 =3D=3D pmu_num) &&
-> > +                         !strncmp(last_pmu_name, pmu->name ?: "", pmu_=
-name_len)) {
-> > +                             last_pmu_num++;
-> > +                             continue;
-> > +                     }
-> > +                     return pmu;
-> > +             }
-> > +             pmu =3D NULL;
+> > you assign pmu NULL
+> >
+> > > +             pmu =3D list_prepare_entry(pmu, &other_pmus, list);
+> >
+> > and then re-assign it. If list_prepare_entry() needs first arg =3D NULL=
+,
+> > then can just use NULL explicitly?
 >
-> you assign pmu NULL
->
-> > +             pmu =3D list_prepare_entry(pmu, &other_pmus, list);
->
-> and then re-assign it. If list_prepare_entry() needs first arg =3D NULL,
-> then can just use NULL explicitly?
+> Done.
 
-Done.
-
-> > +     }
-> > +     list_for_each_entry_continue(pmu, &other_pmus, list) {
-> > +             unsigned long pmu_num =3D 0;
-> > +             int pmu_name_len =3D pmu_name_len_no_suffix(pmu->name ?: =
-"", &pmu_num);
-> > +
-> > +             if (last_pmu_name_len =3D=3D pmu_name_len &&
-> > +                 (last_pmu_num + 1 =3D=3D pmu_num) &&
-> > +                 !strncmp(last_pmu_name, pmu->name ?: "", pmu_name_len=
-)) {
-> > +                     last_pmu_num++;
-> > +                     continue;
->
-> Can some of this code be factored out from the previous patch? It's
-> doing something similar, right?
-
-The previous patch implemented list sorting and a list comparator
-whilst this patch is skipping PMUs if they follow the pattern:
-uncore_xyz_0
-uncore_xyz_1 <- skip
-uncore_xyz_2 <- skip
-The pmu_name_len_no_suffix is factored out and shared between both
-routines. The comparator doesn't maintain state whilst this code does.
-So I don't see a way to refactor things further.
+So because of the macro magic in list_prepare_entry you can't
+explicitly pass NULL here as doing so yields:
+tools/include/linux/kernel.h:36:33: error: request for member =E2=80=98list=
+=E2=80=99
+in something not a structure or union
+  36 |         const typeof(((type *)0)->member) * __mptr =3D (ptr);     \
+      |                                 ^~
 
 Thanks,
 Ian
 
-> > +             }
-> > +             return pmu;
-> > +     }
-> > +     return NULL;
-> > +}
-> > +
-> >   const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str)
-> >   {
-> >       struct perf_pmu *pmu =3D NULL;
-> > @@ -429,10 +473,16 @@ void perf_pmus__print_pmu_events(const struct pri=
-nt_callbacks *print_cb, void *p
-> >       int printed =3D 0;
-> >       int len, j;
-> >       struct sevent *aliases;
-> > +     struct perf_pmu *(*scan_fn)(struct perf_pmu *);
-> > +
-> > +     if (print_cb->skip_duplicate_pmus(print_state))
-> > +             scan_fn =3D perf_pmus__scan_skip_duplicates;
-> > +     else
-> > +             scan_fn =3D perf_pmus__scan;
+> > > +     }
+> > > +     list_for_each_entry_continue(pmu, &other_pmus, list) {
+> > > +             unsigned long pmu_num =3D 0;
+> > > +             int pmu_name_len =3D pmu_name_len_no_suffix(pmu->name ?=
+: "", &pmu_num);
+> > > +
+> > > +             if (last_pmu_name_len =3D=3D pmu_name_len &&
+> > > +                 (last_pmu_num + 1 =3D=3D pmu_num) &&
+> > > +                 !strncmp(last_pmu_name, pmu->name ?: "", pmu_name_l=
+en)) {
+> > > +                     last_pmu_num++;
+> > > +                     continue;
 > >
-> >       pmu =3D NULL;
-> >       len =3D 0;
-> > -     while ((pmu =3D perf_pmus__scan(pmu)) !=3D NULL) {
-> > +     while ((pmu =3D scan_fn(pmu)) !=3D NULL) {
-> >               list_for_each_entry(event, &pmu->aliases, list)
-> >                       len++;
-> >               if (pmu->selectable)
-> > @@ -445,7 +495,7 @@ void perf_pmus__print_pmu_events(const struct print=
-_callbacks *print_cb, void *p
-> >       }
-> >       pmu =3D NULL;
-> >       j =3D 0;
-> > -     while ((pmu =3D perf_pmus__scan(pmu)) !=3D NULL) {
-> > +     while ((pmu =3D scan_fn(pmu)) !=3D NULL) {
-> >               bool is_cpu =3D pmu->is_core;
-> >
-> >               list_for_each_entry(event, &pmu->aliases, list) {
-> > diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-eve=
-nts.h
-> > index d7fab411e75c..bf4290bef0cd 100644
-> > --- a/tools/perf/util/print-events.h
-> > +++ b/tools/perf/util/print-events.h
-> > @@ -26,6 +26,7 @@ struct print_callbacks {
-> >                       const char *expr,
-> >                       const char *threshold,
-> >                       const char *unit);
-> > +     bool (*skip_duplicate_pmus)(void *print_state);
-> >   };
-> >
-> >   /** Print all events, the default when no options are specified. */
+> > Can some of this code be factored out from the previous patch? It's
+> > doing something similar, right?
 >
+> The previous patch implemented list sorting and a list comparator
+> whilst this patch is skipping PMUs if they follow the pattern:
+> uncore_xyz_0
+> uncore_xyz_1 <- skip
+> uncore_xyz_2 <- skip
+> The pmu_name_len_no_suffix is factored out and shared between both
+> routines. The comparator doesn't maintain state whilst this code does.
+> So I don't see a way to refactor things further.
+>
+> Thanks,
+> Ian
+>
+> > > +             }
+> > > +             return pmu;
+> > > +     }
+> > > +     return NULL;
+> > > +}
+> > > +
+> > >   const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *st=
+r)
+> > >   {
+> > >       struct perf_pmu *pmu =3D NULL;
+> > > @@ -429,10 +473,16 @@ void perf_pmus__print_pmu_events(const struct p=
+rint_callbacks *print_cb, void *p
+> > >       int printed =3D 0;
+> > >       int len, j;
+> > >       struct sevent *aliases;
+> > > +     struct perf_pmu *(*scan_fn)(struct perf_pmu *);
+> > > +
+> > > +     if (print_cb->skip_duplicate_pmus(print_state))
+> > > +             scan_fn =3D perf_pmus__scan_skip_duplicates;
+> > > +     else
+> > > +             scan_fn =3D perf_pmus__scan;
+> > >
+> > >       pmu =3D NULL;
+> > >       len =3D 0;
+> > > -     while ((pmu =3D perf_pmus__scan(pmu)) !=3D NULL) {
+> > > +     while ((pmu =3D scan_fn(pmu)) !=3D NULL) {
+> > >               list_for_each_entry(event, &pmu->aliases, list)
+> > >                       len++;
+> > >               if (pmu->selectable)
+> > > @@ -445,7 +495,7 @@ void perf_pmus__print_pmu_events(const struct pri=
+nt_callbacks *print_cb, void *p
+> > >       }
+> > >       pmu =3D NULL;
+> > >       j =3D 0;
+> > > -     while ((pmu =3D perf_pmus__scan(pmu)) !=3D NULL) {
+> > > +     while ((pmu =3D scan_fn(pmu)) !=3D NULL) {
+> > >               bool is_cpu =3D pmu->is_core;
+> > >
+> > >               list_for_each_entry(event, &pmu->aliases, list) {
+> > > diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-e=
+vents.h
+> > > index d7fab411e75c..bf4290bef0cd 100644
+> > > --- a/tools/perf/util/print-events.h
+> > > +++ b/tools/perf/util/print-events.h
+> > > @@ -26,6 +26,7 @@ struct print_callbacks {
+> > >                       const char *expr,
+> > >                       const char *threshold,
+> > >                       const char *unit);
+> > > +     bool (*skip_duplicate_pmus)(void *print_state);
+> > >   };
+> > >
+> > >   /** Print all events, the default when no options are specified. */
+> >
