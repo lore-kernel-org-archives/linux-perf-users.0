@@ -2,58 +2,56 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE85C001DB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8394DC41513
 	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Aug 2023 16:38:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229983AbjHNQiR (ORCPT
+        id S229568AbjHNQiQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Aug 2023 12:38:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50156 "EHLO
+        Mon, 14 Aug 2023 12:38:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232956AbjHNQiH (ORCPT
+        with ESMTP id S232918AbjHNQiE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Aug 2023 12:38:07 -0400
+        Mon, 14 Aug 2023 12:38:04 -0400
 Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 850D8124
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 09:38:05 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d67a458ff66so3541836276.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 09:38:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 759A911D
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 09:38:03 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d62858b0914so9629651276.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 09:38:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692031085; x=1692635885;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9M5Kp6au+xtW2CeK8507RoWf4CnApWNQmihr10EV/wQ=;
-        b=KGWwShhyYHQqv5ngOlRXeEsBiMOJRnDM/DZuzfqzoLDqOmXIQSl9ZimX0NceVp5F1g
-         my8S/oTKd1PbqI/7q6okf48Xe0Zio1rd3vVSZZTJiQCVclxVj3wYoCMubVQC6HkOyHz/
-         Gxum+O6N9bAwsmRs3ZoPYIDktu/+5SPTHz8tq3pcKOBQt++Pognjni7hyhL1FCpg2WKi
-         w75ayAGB5wl3ebgCuu8GQnL6C6di135YaTHIAzZ7RCFQdHbF074p3WnrfKgECTnbOEF3
-         00HFgKRyoJzzd8O6IN1z+kB+WGRRLt826eqXC0MgdrPOZ8OkucXRSZHD0h+7SiJgcW1B
-         duxw==
+        d=google.com; s=20221208; t=1692031082; x=1692635882;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=nFQ8vC5XQzgbvA+JsLCqADpM15IC2vMeMSJvkR1GdkU=;
+        b=bLOdGV5zU5g2foKHhovwgNU8bbs6HNM9yzvZqm2zF2ZeIzc0ylmy7dhFi1X777X7kV
+         Cg8bqf7tLDslXr1MWVYqDsJplRRbnXg1F6MLtu2PTPPdnQYFdRJwdXo0LMCmC0zU9Lsb
+         E+0mm5dS8xHK5Zfzdl9zBFgO9TmivGhb+NaXjnrn0/hwgRZkfSQg9ViW6gPGEIWjumHT
+         qD+ZINuoDLt1sCWCHVQ2D6RCLepOUc11T7/JPGhckrwBFfkXL4SFYqvM9/HvgndqN4vt
+         HA5ADHSxUBroAkrsSobeU9I2+XYnYQWA8n7qWndqeQeTYy6hrnFkA6VxoGN03W6uSwDe
+         80Cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692031085; x=1692635885;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9M5Kp6au+xtW2CeK8507RoWf4CnApWNQmihr10EV/wQ=;
-        b=bP4h55tnPApUiAtdQSDOtXzSBmPQrBh+uK5Au/YmMy37PR6PIrFhjIAWkm8kwzO5sm
-         0lQm9pDUhfr/EJaigVnSNjk0CT0xDxVaj1YNLum+rAQP4Vh8scFZYsG7cDi7jqS30Nnd
-         aEK5zBFf/uzu/4Eyq9nMukFiJiu8P3J9eoele6KxMYwQWKrNMmpB1TnwTPYYZizWUiCj
-         xR2nc1sNoNd3l266gEufq4n5hNufDYLeAD6nrJQFzcT0DRkcFijuwXJuqEJNu1LyBvo8
-         MB/x0eGmrHAhuSn5s6aXh+F7shx8UcQpXdURLuKvsIOfGiRC1y8ru0orHWGVkmqZ4Cki
-         1sBA==
-X-Gm-Message-State: AOJu0YxHeW4u2tZhLXR0Dj9dtZscCzgzHuSzw88Sbv3OthScJJ5zqRCG
-        RZEV06zCVPkrW+3nAOStHx7xyBanEcYo
-X-Google-Smtp-Source: AGHT+IGtd9vjdp1qvZb1M4Cmv9dej5Ze/an+8QoegeIi5mbhiIxJbZRrPKcsxOnBeYfjqARfHc8SO3fkXIGc
+        d=1e100.net; s=20221208; t=1692031082; x=1692635882;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nFQ8vC5XQzgbvA+JsLCqADpM15IC2vMeMSJvkR1GdkU=;
+        b=d/ZMFThmcDt+XYUYvraWG35x8jdH6VpIxBedXFLb73zaiQ3FUTJsDhojHFO2tsVpQC
+         93HQJmARCJDZybuZ2Qy1QSECtuvFYrTolA4gOrXlIrBZmgdw/9xxK300ekGQ32oYmu4u
+         NbKMF+Ch2oa8YZgnfltM7vysIZDXPiIkGmnDMS94Slhcko/oIjAeTGHARh1S6PyTMHGA
+         A6rr6M7itt2f35k9aqflPX535Z6nvVMQMu08fYbsvGSDXNxu0fkTDjWKw/LVkPMtob4a
+         ZgC4EY+QX7jT22XB8IZQ4eySQKzDSp7ZpGLkU8CgCCJViupI66EiciXkC4mukoEW8nte
+         OpJw==
+X-Gm-Message-State: AOJu0Yz3Fm0ckfVnCTZ6JH6lESKPfXeEcvIL6EwNVBn4h3xz7CY2nn1q
+        +hbVSrh5m3YLLCsQtHSPnglpntzrfyQX
+X-Google-Smtp-Source: AGHT+IGvxWe5XAH8eHCUck5OYb1/bre01R7f62ujA3WsqNi5U1902cjcsrT+MMekH4kJ+OvWVK4nJEhqw+OR
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a919:6125:510f:f0ef])
- (user=irogers job=sendgmr) by 2002:a25:ce53:0:b0:d4f:22c:69a3 with SMTP id
- x80-20020a25ce53000000b00d4f022c69a3mr123751ybe.10.1692031084826; Mon, 14 Aug
- 2023 09:38:04 -0700 (PDT)
-Date:   Mon, 14 Aug 2023 09:37:55 -0700
-In-Reply-To: <20230814163757.3077138-1-irogers@google.com>
-Message-Id: <20230814163757.3077138-2-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:23c9:0:b0:d47:3d35:1604 with SMTP id
+ j192-20020a2523c9000000b00d473d351604mr179595ybj.2.1692031082702; Mon, 14 Aug
+ 2023 09:38:02 -0700 (PDT)
+Date:   Mon, 14 Aug 2023 09:37:54 -0700
+Message-Id: <20230814163757.3077138-1-irogers@google.com>
 Mime-Version: 1.0
-References: <20230814163757.3077138-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.640.ga95def55d0-goog
-Subject: [PATCH v3 1/3] perf pmus: Sort pmus by name then suffix
+Subject: [PATCH v3 0/3] perf list: Remove duplicate PMUs
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -74,104 +72,62 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Sort PMUs by name. If two PMUs have the same name but differ by
-suffix, sort the suffixes numerically. For example, "breakpoint" comes
-before "cpu", "uncore_imc_free_running_0" comes before
-"uncore_imc_free_running_1". Suffixes need to be treated specially as
-otherwise they will be ordered like 0, 1, 10, 11, .., 2, 20, 21, ..,
-etc. Only PMUs starting 'uncore_' are considered to have a potential
-suffix.
+When there are multiple PMUs, differing by ordered suffixes, by
+default only display one. This avoids repeated listing of events, in
+particular when there are 10s of uncore PMUs. If "-v" is passed to
+"perf list" then still list all PMUs.
 
-Sorting of PMUs is done so that later patches can skip duplicate
-uncore PMUs that differ only by there suffix.
+Listing fewer PMU/event combinations helps speed the all PMU event
+tests.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/pmus.c | 48 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+Before:
+```
+$ perf list
+...
+  uncore_imc_free_running_0/data_read/               [Kernel PMU event]
+  uncore_imc_free_running_0/data_total/              [Kernel PMU event]
+  uncore_imc_free_running_0/data_write/              [Kernel PMU event]
+  uncore_imc_free_running_1/data_read/               [Kernel PMU event]
+  uncore_imc_free_running_1/data_total/              [Kernel PMU event]
+  uncore_imc_free_running_1/data_write/              [Kernel PMU event]
+```
 
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index c58ba9fb6a36..3581710667b0 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -1,8 +1,10 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/list.h>
-+#include <linux/list_sort.h>
- #include <linux/zalloc.h>
- #include <subcmd/pager.h>
- #include <sys/types.h>
-+#include <ctype.h>
- #include <dirent.h>
- #include <pthread.h>
- #include <string.h>
-@@ -33,6 +35,31 @@ static LIST_HEAD(other_pmus);
- static bool read_sysfs_core_pmus;
- static bool read_sysfs_all_pmus;
- 
-+static int pmu_name_len_no_suffix(const char *str, unsigned long *num)
-+{
-+	int orig_len, len;
-+
-+	orig_len = len = strlen(str);
-+
-+	/* Non-uncore PMUs have their full length, for example, i915. */
-+	if (strncmp(str, "uncore_", 7))
-+		return len;
-+
-+	/*
-+	 * Count trailing digits and '_', if '_{num}' suffix isn't present use
-+	 * the full length.
-+	 */
-+	while (len > 0 && isdigit(str[len - 1]))
-+		len--;
-+
-+	if (len > 0 && len != orig_len && str[len - 1] == '_') {
-+		if (num)
-+			*num = strtoul(&str[len], NULL, 10);
-+		return len - 1;
-+	}
-+	return orig_len;
-+}
-+
- void perf_pmus__destroy(void)
- {
- 	struct perf_pmu *pmu, *tmp;
-@@ -122,6 +149,25 @@ static struct perf_pmu *perf_pmu__find2(int dirfd, const char *name)
- 	return perf_pmu__lookup(core_pmu ? &core_pmus : &other_pmus, dirfd, name);
- }
- 
-+static int pmus_cmp(void *priv __maybe_unused,
-+		    const struct list_head *lhs, const struct list_head *rhs)
-+{
-+	unsigned long lhs_num, rhs_num;
-+	struct perf_pmu *lhs_pmu = container_of(lhs, struct perf_pmu, list);
-+	struct perf_pmu *rhs_pmu = container_of(rhs, struct perf_pmu, list);
-+	const char *lhs_pmu_name = lhs_pmu->name ?: "";
-+	const char *rhs_pmu_name = rhs_pmu->name ?: "";
-+	int lhs_pmu_name_len = pmu_name_len_no_suffix(lhs_pmu_name, &lhs_num);
-+	int rhs_pmu_name_len = pmu_name_len_no_suffix(rhs_pmu_name, &rhs_num);
-+	int ret = strncmp(lhs_pmu_name, rhs_pmu_name,
-+			lhs_pmu_name_len < rhs_pmu_name_len ? lhs_pmu_name_len : rhs_pmu_name_len);
-+
-+	if (lhs_pmu_name_len != rhs_pmu_name_len || ret != 0 || lhs_pmu_name_len == 0)
-+		return ret;
-+
-+	return lhs_num < rhs_num ? -1 : (lhs_num > rhs_num ? 1 : 0);
-+}
-+
- /* Add all pmus in sysfs to pmu list: */
- static void pmu_read_sysfs(bool core_only)
- {
-@@ -156,6 +202,8 @@ static void pmu_read_sysfs(bool core_only)
- 		if (!perf_pmu__create_placeholder_core_pmu(&core_pmus))
- 			pr_err("Failure to set up any core PMUs\n");
- 	}
-+	list_sort(NULL, &core_pmus, pmus_cmp);
-+	list_sort(NULL, &other_pmus, pmus_cmp);
- 	if (!list_empty(&core_pmus)) {
- 		read_sysfs_core_pmus = true;
- 		if (!core_only)
+After:
+```
+$ perf list
+...
+  uncore_imc_free_running/data_read/                 [Kernel PMU event]
+  uncore_imc_free_running/data_total/                [Kernel PMU event]
+  uncore_imc_free_running/data_write/                [Kernel PMU event]
+...
+$ perf list -v
+...
+  uncore_imc_free_running_0/data_read/               [Kernel PMU event]
+  uncore_imc_free_running_0/data_total/              [Kernel PMU event]
+  uncore_imc_free_running_0/data_write/              [Kernel PMU event]
+  uncore_imc_free_running_1/data_read/               [Kernel PMU event]
+  uncore_imc_free_running_1/data_total/              [Kernel PMU event]
+  uncore_imc_free_running_1/data_write/              [Kernel PMU event]
+...
+```
+
+The PMUs are sorted by name then suffix as a part of this change.
+
+v3: Add detail to patch 1 sorting commit message about the suffix and
+    why sorting is necessary.
+v2: List all PMUs when "-v" is passed as suggested by John Garry
+    <john.g.garry@oracle.com>.
+
+Ian Rogers (3):
+  perf pmus: Sort pmus by name then suffix
+  perf pmus: Add scan that ignores duplicates, use for perf list
+  perf pmus: Don't print duplicate PMU suffix in list by default
+
+ tools/perf/builtin-list.c      |   8 +++
+ tools/perf/util/pmus.c         | 120 +++++++++++++++++++++++++++++++--
+ tools/perf/util/print-events.h |   1 +
+ 3 files changed, 122 insertions(+), 7 deletions(-)
+
 -- 
 2.41.0.640.ga95def55d0-goog
 
