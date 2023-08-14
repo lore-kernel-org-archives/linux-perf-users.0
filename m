@@ -2,133 +2,152 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C86DBC41513
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Aug 2023 16:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F95EEB64DD
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Aug 2023 17:29:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231187AbjHNQpS (ORCPT
+        id S230303AbjHNR2y (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Aug 2023 12:45:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51276 "EHLO
+        Mon, 14 Aug 2023 13:28:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232954AbjHNQpM (ORCPT
+        with ESMTP id S230349AbjHNR2p (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Aug 2023 12:45:12 -0400
-Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C534FE61
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 09:45:10 -0700 (PDT)
-Received: by mail-il1-x12a.google.com with SMTP id e9e14a558f8ab-3493d0f785dso975ab.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 09:45:10 -0700 (PDT)
+        Mon, 14 Aug 2023 13:28:45 -0400
+Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4493F10D5
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 10:28:44 -0700 (PDT)
+Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-40c72caec5cso24631cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 10:28:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692031510; x=1692636310;
+        d=google.com; s=20221208; t=1692034123; x=1692638923;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LUOrFLsIZYMXOqsY5xgWwBV0ImqoZShpWf5IuSUgWgI=;
-        b=jI6Gr0FRrjvGeJMEI2J8ZnZVkqk3LIcr8NpGV+Y+d48pChX47ng6l8lIZluFd5qijf
-         Vy4Pc+avZR6i4rP9hCWvkX1U0Vn+evBgb/sam6zB/uLlpDMD8+c3BrrKzjB0JRBdI9H9
-         7LUSfD27s0IiFR2tak8vcZ1D8yQu4Z7UzYsjGDv3sDMH/nB6iDvgaT81tC4SkjjjKM9q
-         uuAHoeR4LGvJ3UXkY+9WMJuQbtdbtNM3VW93Wrwk+G/XZih4HW6Z3xtepuFT9Sxv9vYh
-         8QiKW1e+b3Y7vhVL9vVWPkbMEKrzIbCWOjDTSlDW5MGe7DcgscNk/PPPu6yIi9obT4lZ
-         SbgQ==
+        bh=q0ynxCVxUsDM8eCCK8zGMWKVxYfhvsg5eu7n+GQoFuQ=;
+        b=a7KJAsBue20iQVGuNyvMysMBgKWMtOWTM6XzXiDvi/muAuOej2tlwrMQrCD3oyr1DB
+         cV2ns+a8bqwUH+TUCAmi9NlLG2Klmv2cqPYYhX0eEzz8/Us/rkhd7DOIawTP+y50PlId
+         rsgIjlJ0WIvZJ8gamfhVHRmmhBWXjDMVt2rS/w/P7kdgMTWckIt63EL0bEqpEQmwZvEz
+         RiArh0Dj/1xSTv9YERC7CsBos76mhcl1FHMJ/Mmnnq8Ry2W6qtRA7CggnNGn/PXk9ws7
+         57pS14UA5b3R+0YbgPi56ZdMJGKScyM1DbucoyphXeBrpnrO7Ev139227jZ2HO9tJVdS
+         5NDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692031510; x=1692636310;
+        d=1e100.net; s=20221208; t=1692034123; x=1692638923;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LUOrFLsIZYMXOqsY5xgWwBV0ImqoZShpWf5IuSUgWgI=;
-        b=keDiR3hSSlhdz5Ty247LPEM7V3W8CGq/NjYa+Rg5UUZXgU0zrf2ls2XZSPYlDh3EP5
-         B9y501nuoOgGd6DYI/OTTQcFU3NvyjEJw8cThcVY9XSJ+ECd0Mu598aL0rFogEPEcnRe
-         FNzbEbDzpp0wEwzSmPBz2fbjkpYcemmb/3unA/M9gHkWAuId3sRsyUnQEy2L+J6mkYFj
-         /moBvD6a7dCjExrz2fANzQMf0yMY7oR6Hh2cSJpkrj92N6rwewzgPYYGzAUz7y6daDID
-         mtXUrtH+N5h7PqlsWYfHFxHtCA0wwNwXE+m+vn+YX+MVPrpEPkCOS1EoQwUI7uAeT6Ml
-         +L5Q==
-X-Gm-Message-State: AOJu0YzGHiVZYYiYanqPt9oFqwRpcDRQ7pm+2AhX77FREtqfK46UP9Z+
-        rycjbHpgAv6WsKoX6yM1mEVpqqZ0tdod+osWSuhf1Q==
-X-Google-Smtp-Source: AGHT+IHaVdS2tL6lFC4JIfMaRKMI72Pka+6x9A1yAAwchBWIR4AFgLTDvCZa48IjUvUxK8db50EWHKlDZ5LeoG7M3q8=
-X-Received: by 2002:a05:6e02:1d0d:b0:346:676f:3517 with SMTP id
- i13-20020a056e021d0d00b00346676f3517mr579011ila.11.1692031510069; Mon, 14 Aug
- 2023 09:45:10 -0700 (PDT)
+        bh=q0ynxCVxUsDM8eCCK8zGMWKVxYfhvsg5eu7n+GQoFuQ=;
+        b=gyDE6LYU4HTaviEWp7t1I8pWQ56b46BcJTR9HqA5cioKBRstDBXtXIuFG8VuaQtqjz
+         kHKbFoXuWi/UpiOFvBXOzxGrDgedbSHDgYkXBtSa89AoTw3Q4xSKhBNcW5ugYPFW3yPv
+         OjMAQN8gen9BYfkylk4cYLFdR4DrgCSmVQlJJGXIA+W1vUFC4yPxDB993C3QAxmVj5oQ
+         Wl0HJqL9IxZhGgZ3MtchbCSOn+dB78YjebBBSjKXDq0jF7qevTnlWKv0HmYYsQ3BSTdZ
+         aI1SMk27yXaPOUDXJSPL+VZnaW4XfgiDlBzVsxDdDXFqNfs43FYcmQ30Ycu+mIw2pRZY
+         R+4Q==
+X-Gm-Message-State: AOJu0YwBHovpjhBAegfpsf/3rl7DfjftG3Zxs0XJW3FzMA6nS/bnXGHQ
+        teEOvGOh5P/zeUhYfl/qE5Mg6VvIwbaIY+m9BxrW2Vsk7S4ns5VTuKvOhA==
+X-Google-Smtp-Source: AGHT+IGIS3JZ+2r/EEnDwIFyidh6lYHE1I0NcfM4xWHTNBXg77WSE7GmnjFls0IJH/XfCefVDf0IfUs+JAfNBepKA8k=
+X-Received: by 2002:ac8:4e55:0:b0:40f:ec54:973 with SMTP id
+ e21-20020ac84e55000000b0040fec540973mr695644qtw.22.1692034123260; Mon, 14 Aug
+ 2023 10:28:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230802080328.1213905-1-alexghiti@rivosinc.com> <20230802080328.1213905-11-alexghiti@rivosinc.com>
-In-Reply-To: <20230802080328.1213905-11-alexghiti@rivosinc.com>
+References: <20230731091857.10681-1-adrian.hunter@intel.com> <ZMwTYsh8KIwphOR5@kernel.org>
+In-Reply-To: <ZMwTYsh8KIwphOR5@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 14 Aug 2023 09:44:58 -0700
-Message-ID: <CAP-5=fVcMg7TL6W_jH61PW6dYMobuTs13d4JDuTAx=mxJ+PNtQ@mail.gmail.com>
-Subject: Re: [PATCH v6 10/10] perf: tests: Adapt mmap-basic.c for riscv
-To:     Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+Date:   Mon, 14 Aug 2023 10:28:29 -0700
+Message-ID: <CAP-5=fW+Y+4dk_TL2RuOJWwnqd3cvhVARoRVSdmhiiVaNwEnfw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] perf dlfilter: Add a test for resolve_address()
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <atishp@atishpatra.org>,
-        Anup Patel <anup@brainfault.org>,
-        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-        Andrew Jones <ajones@ventanamicro.com>,
-        =?UTF-8?Q?R=C3=A9mi_Denis=2DCourmont?= <remi@remlab.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Atish Patra <atishp@rivosinc.com>
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Aug 2, 2023 at 1:14=E2=80=AFAM Alexandre Ghiti <alexghiti@rivosinc.=
-com> wrote:
+On Thu, Aug 3, 2023 at 1:51=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
 >
-> riscv now supports mmaping hardware counters to userspace so adapt the te=
-st
-> to run on this architecture.
+> Em Mon, Jul 31, 2023 at 12:18:55PM +0300, Adrian Hunter escreveu:
+> > Extend the "dlfilter C API" test to test
+> > perf_dlfilter_fns.resolve_address(). The test currently fails, but pass=
+es
+> > after a subsequent patch.
 >
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-> Reviewed-by: Atish Patra <atishp@rivosinc.com>
+> Ian,
+>
+>         I think this is ok now, can you please take a look and perhaps
+> provide an Acked-by or Reviewed-by?
+
+Sorry, found this in my backlog. I'm a little confused over which
+patch series is current but they all lgtm.
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/tests/mmap-basic.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+> - Arnaldo
 >
-> diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.=
-c
-> index e68ca6229756..886a13a77a16 100644
-> --- a/tools/perf/tests/mmap-basic.c
-> +++ b/tools/perf/tests/mmap-basic.c
-> @@ -284,7 +284,8 @@ static struct test_case tests__basic_mmap[] =3D {
->                          "permissions"),
->         TEST_CASE_REASON("User space counter reading of instructions",
->                          mmap_user_read_instr,
-> -#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
-> +#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || =
-\
-> +                        (defined(__riscv) && __riscv_xlen =3D=3D 64)
->                          "permissions"
->  #else
->                          "unsupported"
-> @@ -292,7 +293,8 @@ static struct test_case tests__basic_mmap[] =3D {
->                 ),
->         TEST_CASE_REASON("User space counter reading of cycles",
->                          mmap_user_read_cycles,
-> -#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
-> +#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || =
-\
-> +                        (defined(__riscv) && __riscv_xlen =3D=3D 64)
->                          "permissions"
->  #else
->                          "unsupported"
+> > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> > ---
+> >  tools/perf/dlfilters/dlfilter-test-api-v0.c | 26 ++++++++++++++++++++-
+> >  1 file changed, 25 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/dlfilters/dlfilter-test-api-v0.c b/tools/perf/d=
+lfilters/dlfilter-test-api-v0.c
+> > index b1f51efd67d6..72f263d49121 100644
+> > --- a/tools/perf/dlfilters/dlfilter-test-api-v0.c
+> > +++ b/tools/perf/dlfilters/dlfilter-test-api-v0.c
+> > @@ -254,6 +254,30 @@ static int check_addr_al(void *ctx)
+> >       return 0;
+> >  }
+> >
+> > +static int check_address_al(void *ctx, const struct perf_dlfilter_samp=
+le *sample)
+> > +{
+> > +     struct perf_dlfilter_al address_al;
+> > +     const struct perf_dlfilter_al *al;
+> > +
+> > +     al =3D perf_dlfilter_fns.resolve_ip(ctx);
+> > +     if (!al)
+> > +             return test_fail("resolve_ip() failed");
+> > +
+> > +     address_al.size =3D sizeof(address_al);
+> > +     if (perf_dlfilter_fns.resolve_address(ctx, sample->ip, &address_a=
+l))
+> > +             return test_fail("resolve_address() failed");
+> > +
+> > +     CHECK(address_al.sym && al->sym);
+> > +     CHECK(!strcmp(address_al.sym, al->sym));
+> > +     CHECK(address_al.addr =3D=3D al->addr);
+> > +     CHECK(address_al.sym_start =3D=3D al->sym_start);
+> > +     CHECK(address_al.sym_end =3D=3D al->sym_end);
+> > +     CHECK(address_al.dso && al->dso);
+> > +     CHECK(!strcmp(address_al.dso, al->dso));
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  static int check_attr(void *ctx)
+> >  {
+> >       struct perf_event_attr *attr =3D perf_dlfilter_fns.attr(ctx);
+> > @@ -290,7 +314,7 @@ static int do_checks(void *data, const struct perf_=
+dlfilter_sample *sample, void
+> >       if (early && !d->do_early)
+> >               return 0;
+> >
+> > -     if (check_al(ctx) || check_addr_al(ctx))
+> > +     if (check_al(ctx) || check_addr_al(ctx) || check_address_al(ctx, =
+sample))
+> >               return -1;
+> >
+> >       if (early)
+> > --
+> > 2.34.1
+> >
+>
 > --
-> 2.39.2
 >
+> - Arnaldo
