@@ -2,152 +2,123 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04997C001DB
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Aug 2023 07:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCC7C04FDF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Aug 2023 07:26:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232693AbjHNHME (ORCPT
+        id S231278AbjHNHZ3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Aug 2023 03:12:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47510 "EHLO
+        Mon, 14 Aug 2023 03:25:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234108AbjHNHLv (ORCPT
+        with ESMTP id S234086AbjHNHY5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Aug 2023 03:11:51 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDD61E71;
-        Mon, 14 Aug 2023 00:11:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691997107; x=1723533107;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=5sM6DJTWLycTUGGe9xX3afJEUXb/a6vzz3ZM1xTgFVI=;
-  b=hnTBwD5zqkF6UQ/aVoCIph1UvmhFnSCANKJyzZhym45PbHIWEki7IAPP
-   PQHBpxSAEaqCsbTIkFJXtixi1PkPailRSq78wD/FqcztY2SpFZO3/4bvX
-   pYmaQTK/L9sdaP8ItREjyjm91E9QeJWFvIdVLGg13dcm/AbjThrn+wkFM
-   4L9vQUb276+5EjBjzCj7o+vnI5af7r7vKaWrW3XhYCIHwCXhj3VGX2gqt
-   KKIpd2LAGx+FRswsg5fuQOkuDcm1bn+UuGEzDD4BTbPVS0hEKcsPTHKIB
-   wQ27dO31Hgk4wabf33pjZl3xeEEzevdLJAS79OrKFyY0oTqCKDDKelQOj
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10801"; a="362129920"
-X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
-   d="scan'208";a="362129920"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 00:11:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10801"; a="762852526"
-X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
-   d="scan'208";a="762852526"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.51.71])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 00:11:45 -0700
-Message-ID: <b2332dd5-e01e-dc61-e19c-55cf9a684ca2@intel.com>
-Date:   Mon, 14 Aug 2023 10:11:40 +0300
+        Mon, 14 Aug 2023 03:24:57 -0400
+Received: from mail-oo1-xc30.google.com (mail-oo1-xc30.google.com [IPv6:2607:f8b0:4864:20::c30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7946AE75
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 00:24:56 -0700 (PDT)
+Received: by mail-oo1-xc30.google.com with SMTP id 006d021491bc7-56c87f89178so2836859eaf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Aug 2023 00:24:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1691997896; x=1692602696;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1NIpvt4nCqADNh0cqss2ffGGeYbGFw7fYt1kJmUbwbI=;
+        b=31OXeIf+mXMuFZp/BWOkz0flJ8KejbkRr6wUM0EaIWFsfCQ2zCsPBGNavW2kDotoRb
+         PsdgpoQL2gpaZ0ZXxpoLZllweTv3kJLm8VfWRPUbTrVZoBYG74ey9ou+i5DldGUtrvZj
+         jJo8ZTlGZFQdNoXY5rUkd1Dtmfa47V/md6csocIKsbUStnghTAD3XIMWY0LbcOKZVL8R
+         UKwErhue2XmH1yGzmSeWKwazVzfwuPeeEndpbu30PPUYDm1PkiRqb4L1jL+MuiOLySre
+         zsaUYQ2DFJEH6D56bGkqsrwwi4rw9bkrOJfrBGOe8CCOsCJd8M3TTqTmLu7vsFb8lZhj
+         caow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691997896; x=1692602696;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1NIpvt4nCqADNh0cqss2ffGGeYbGFw7fYt1kJmUbwbI=;
+        b=A0K+lGMM8lBAVArGiX4SNCzWRjzAF+Ms9HNigAWDAp8fvghq93Stx4dqWkmsyywl4q
+         pq/xYFXdCmQ+11CHHrPx+GcRwXQVAZBnd1Ev1YfXzafv9p97/Ci2JcQrbiTp7Da2cuiH
+         tDlr3y/5Z8FpWPXj8GaSkvyi62M77+slnkFEm0E+Ao5amshtADRqq2NRt/MADtKH0ttJ
+         KNonRMdiJCNOwwqENb1/zh8SH5mXK86Z+iZ2+AyPNc5Do6sJLIvzLUntsNFufI8gxdZ2
+         pSW+Qy7hY41kVZOS3B6VAsqcwxrB8DuLpvXWMyRMpKxdgLswD+EUn74E377CSWY2g3ys
+         7J2w==
+X-Gm-Message-State: AOJu0Yz5jT9luV+WoZb5+0OEi6PKy3cpwTEVFKJPUtF5Qfz4/0yKZjRr
+        N5mb4z2uPnIeorevEAczvFk9qoaf1vINzMoVhQRIjA==
+X-Google-Smtp-Source: AGHT+IGt7CaB2ILiQcKO7hsqp/eT61SdPAyp3n2bOb0VW67EKt7879WD8gVGObg51YEytXyya1GU1zsdE1LQEwcxEjQ=
+X-Received: by 2002:a05:6358:5906:b0:134:c37f:4b5c with SMTP id
+ g6-20020a056358590600b00134c37f4b5cmr6968498rwf.22.1691997895708; Mon, 14 Aug
+ 2023 00:24:55 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.14.0
-Subject: Re: [PATCH] perf tools: Handle old data in PERF_RECORD_ATTR
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <20230807061652.2492167-1-namhyung@kernel.org>
-Content-Language: en-US
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230807061652.2492167-1-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20230612090713.652690195@infradead.org> <20230612093537.614161713@infradead.org>
+In-Reply-To: <20230612093537.614161713@infradead.org>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 14 Aug 2023 09:24:44 +0200
+Message-ID: <CAMRc=MegBEQ1Anfh5UJe=OH0U_VX9ijMeh_hoWKxDyB511stsA@mail.gmail.com>
+Subject: Re: [PATCH v3 03/57] locking: Introduce __cleanup() based infrastructure
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     torvalds@linux-foundation.org, keescook@chromium.org,
+        gregkh@linuxfoundation.org, pbonzini@redhat.com,
+        masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
+        nicolas@fjasle.eu, catalin.marinas@arm.com, will@kernel.org,
+        vkoul@kernel.org, trix@redhat.com, ojeda@kernel.org,
+        mingo@redhat.com, longman@redhat.com, boqun.feng@gmail.com,
+        dennis@kernel.org, tj@kernel.org, cl@linux.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        adrian.hunter@intel.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, vschneid@redhat.com, paulmck@kernel.org,
+        frederic@kernel.org, quic_neeraju@quicinc.com,
+        joel@joelfernandes.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        rientjes@google.com, vbabka@suse.cz, roman.gushchin@linux.dev,
+        42.hyeyoo@gmail.com, apw@canonical.com, joe@perches.com,
+        dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
+        john.johansen@canonical.com, paul@paul-moore.com,
+        jmorris@namei.org, serge@hallyn.com, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        llvm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+        rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
+        tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
+        luc.vanoostenryck@gmail.com, Yury Norov <yury.norov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 7/08/23 09:16, Namhyung Kim wrote:
-> The PERF_RECORD_ATTR is used for a pipe mode to describe an event with
-> attribute and IDs.  The ID table comes after the attr and it calculate
-> size of the table using the total record size and the attr size.
-> 
->   n_ids = (total_record_size - end_of_the_attr_field) / sizeof(u64)
-> 
-> This is fine for most use cases, but sometimes it saves the pipe output
-> in a file and then process it later.  And it becomes a problem if there
-> is a change in attr size between the record and report.
-> 
->   $ perf record -o- > perf-pipe.data  # old version
->   $ perf report -i- < perf-pipe.data  # new version
-> 
-> For example, if the attr size is 128 and it has 4 IDs, then it would
-> save them in 168 byte like below:
-> 
->    8 byte: perf event header { .type = PERF_RECORD_ATTR, .size = 168 },
->  128 byte: perf event attr { .size = 128, ... },
->   32 byte: event IDs [] = { 1234, 1235, 1236, 1237 },
-> 
-> But when report later, it thinks the attr size is 136 then it only read
-> the last 3 entries as ID.
-> 
->    8 byte: perf event header { .type = PERF_RECORD_ATTR, .size = 168 },
->  136 byte: perf event attr { .size = 136, ... },
->   24 byte: event IDs [] = { 1235, 1236, 1237 },  // 1234 is missing
-> 
-> So it should use the recorded version of the attr.  The attr has the
-> size field already then it should honor the size when reading data.
-> 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/util/header.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index 52fbf526fe74..f89321cbfdee 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -4381,7 +4381,8 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
->  			     union perf_event *event,
->  			     struct evlist **pevlist)
->  {
-> -	u32 i, ids, n_ids;
-> +	u32 i, n_ids;
-> +	u64 *ids;
->  	struct evsel *evsel;
->  	struct evlist *evlist = *pevlist;
->  
-> @@ -4397,9 +4398,8 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
->  
->  	evlist__add(evlist, evsel);
->  
-> -	ids = event->header.size;
-> -	ids -= (void *)&event->attr.id - (void *)event;
-> -	n_ids = ids / sizeof(u64);
-> +	n_ids = event->header.size - sizeof(event->header) - event->attr.attr.size;
-> +	n_ids = n_ids / sizeof(u64);
->  	/*
->  	 * We don't have the cpu and thread maps on the header, so
->  	 * for allocating the perf_sample_id table we fake 1 cpu and
-> @@ -4408,8 +4408,9 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
->  	if (perf_evsel__alloc_id(&evsel->core, 1, n_ids))
->  		return -ENOMEM;
->  
-> +	ids = (void *)&event->attr.attr + event->attr.attr.size;
->  	for (i = 0; i < n_ids; i++) {
-> -		perf_evlist__id_add(&evlist->core, &evsel->core, 0, i, event->attr.id[i]);
-> +		perf_evlist__id_add(&evlist->core, &evsel->core, 0, i, ids[i]);
->  	}
->  
->  	return 0;
+On Mon, Jun 12, 2023 at 11:56=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
+rg> wrote:
+>
 
-This is a good catch!
+[snip]
 
-It looks like perf_event__hdr_swap() might also have this problem.
+> --- a/include/linux/slab.h
+> +++ b/include/linux/slab.h
+> @@ -17,6 +17,7 @@
+>  #include <linux/types.h>
+>  #include <linux/workqueue.h>
+>  #include <linux/percpu-refcount.h>
+> +#include <linux/cleanup.h>
+>
+>
+>  /*
+> @@ -211,6 +212,8 @@ void kfree(const void *objp);
+>  void kfree_sensitive(const void *objp);
+>  size_t __ksize(const void *objp);
+>
+> +DEFINE_FREE(kfree, void *, if (_T) kfree(_T))
+> +
 
-I wonder if we should remove 'id' from struct perf_record_header_attr
-since the position is not guaranteed?
+Peter,
 
-Probably could use a comment there either way.
+Yuri Norov pointed out to me (under a different cleanup patch) that
+kfree() handles NULL-pointers and there's no reason to check it again
+in DEFINE_FREE() macros. It seems right to me but I wanted to run it
+by you and check if there is maybe some reason I'm not seeing to doing
+it?
 
-Also perhaps a fixes tag and cc stable
+Bartosz
 
+[snip]
