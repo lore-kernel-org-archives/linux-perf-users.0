@@ -2,244 +2,192 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3984C001E0
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 10:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9978C001B0
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 12:26:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235692AbjHOKR2 (ORCPT
+        id S237178AbjHOMZ6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Aug 2023 06:17:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44132 "EHLO
+        Tue, 15 Aug 2023 08:25:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230476AbjHOKRZ (ORCPT
+        with ESMTP id S237164AbjHOMZf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Aug 2023 06:17:25 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4C083E63;
-        Tue, 15 Aug 2023 03:17:23 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08C021063;
-        Tue, 15 Aug 2023 03:18:05 -0700 (PDT)
-Received: from [10.57.2.104] (unknown [10.57.2.104])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF1CD3F762;
-        Tue, 15 Aug 2023 03:17:20 -0700 (PDT)
-Message-ID: <f5437bfc-e458-bc23-bc31-a308aa412463@arm.com>
-Date:   Tue, 15 Aug 2023 11:17:19 +0100
+        Tue, 15 Aug 2023 08:25:35 -0400
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E52A72726;
+        Tue, 15 Aug 2023 05:24:40 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VprzgML_1692102258;
+Received: from 30.221.150.39(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VprzgML_1692102258)
+          by smtp.aliyun-inc.com;
+          Tue, 15 Aug 2023 20:24:20 +0800
+Message-ID: <a5a5ca95-e4c7-74a9-c875-9feea7a1b642@linux.alibaba.com>
+Date:   Tue, 15 Aug 2023 20:24:17 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH V13 - RESEND 02/10] arm64/perf: Add BRBE registers and
- fields
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.13.0
+Subject: Re: [PATCH v6 3/7] perf jevents: Support more event fields
+To:     Ian Rogers <irogers@google.com>
+Cc:     John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <20230711082455.215983-1-anshuman.khandual@arm.com>
- <20230711082455.215983-3-anshuman.khandual@arm.com>
- <20230728162011.GA22050@willie-the-truck>
- <89ce4bc4-00c5-a763-3179-e1d3e9f198b7@arm.com>
- <937468a1-b325-7d05-8daf-765f911c9240@arm.com>
- <ZMd5gCOHqnGRc0Ja@FVFF77S0Q05N>
-Content-Language: en-US
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <ZMd5gCOHqnGRc0Ja@FVFF77S0Q05N>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>
+References: <1691394685-61240-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1691394685-61240-4-git-send-email-renyu.zj@linux.alibaba.com>
+ <CAP-5=fXFZffdRMFH+aFzFech2pjbfYyQ+fx+E-YnfMBHifD4gw@mail.gmail.com>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <CAP-5=fXFZffdRMFH+aFzFech2pjbfYyQ+fx+E-YnfMBHifD4gw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 31/07/2023 10:06, Mark Rutland wrote:
-> On Mon, Jul 31, 2023 at 08:03:21AM +0530, Anshuman Khandual wrote:
+在 2023/8/15 上午6:31, Ian Rogers 写道:
+> On Mon, Aug 7, 2023 at 12:51 AM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
 >>
+>> The usual event descriptions are "event=xxx" or "config=xxx", while the
+>> event descriptions of CMN are "type=xxx, eventid=xxx" or more complex.
+> 
+> I found this difficult to read in relation to the code. Perhaps:
+> 
+> The previous code assumes an event has either an "event=" or "config"
+> field at the beginning. For CMN neither of these may be present, as an
+> event is typically "type=xx,eventid=xxx".
+> 
+
+Thank you for providing a more accurate and readable description.
+I was indeed struggling with how to describe the problem more accurately before.
+
+> I think the use of the name "type" here is unfortunate. It conflicts
+> with the PMU's type as defined in perf_event_attr.
+> 
+
+I agree, but it would require modifying the driver, which is not currently being
+considered. In the meantime, I can describe the event_field as ('NodeType', 'type=').
+
+> In general I think the jevents.py code needs improving, the
+> event_fields dictionary is convoluted, we shouldn't be afraid to
+> change the event json for example to get rid of things like ExtSel, we
+> should really ensure the formats in the events are valid for the PMU
+> they are for.
+> 
+>> $cat /sys/bus/event_source/devices/arm_cmn_0/events/hnf_cache_fill
+>> type=0x5,eventid=0x3
 >>
->> On 7/28/23 22:22, James Clark wrote:
->>>
->>>
->>> On 28/07/2023 17:20, Will Deacon wrote:
->>>> On Tue, Jul 11, 2023 at 01:54:47PM +0530, Anshuman Khandual wrote:
->>>>> This adds BRBE related register definitions and various other related field
->>>>> macros there in. These will be used subsequently in a BRBE driver which is
->>>>> being added later on.
->>>>>
->>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
->>>>> Cc: Will Deacon <will@kernel.org>
->>>>> Cc: Marc Zyngier <maz@kernel.org>
->>>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>>> Cc: linux-arm-kernel@lists.infradead.org
->>>>> Cc: linux-kernel@vger.kernel.org
->>>>> Tested-by: James Clark <james.clark@arm.com>
->>>>> Reviewed-by: Mark Brown <broonie@kernel.org>
->>>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->>>>> ---
->>>>>  arch/arm64/include/asm/sysreg.h | 103 +++++++++++++++++++++
->>>>>  arch/arm64/tools/sysreg         | 158 ++++++++++++++++++++++++++++++++
->>>>>  2 files changed, 261 insertions(+)
->>>>>
->>>>> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
->>>>> index b481935e9314..f95e30c13c8b 100644
->>>>> --- a/arch/arm64/include/asm/sysreg.h
->>>>> +++ b/arch/arm64/include/asm/sysreg.h
->>>>> @@ -163,6 +163,109 @@
->>>>>  #define SYS_DBGDTRTX_EL0		sys_reg(2, 3, 0, 5, 0)
->>>>>  #define SYS_DBGVCR32_EL2		sys_reg(2, 4, 0, 7, 0)
->>>>>  
->>>>> +#define __SYS_BRBINFO(n)		sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10)) >> 2 + 0))
->>>>> +#define __SYS_BRBSRC(n)			sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10)) >> 2 + 1))
->>>>> +#define __SYS_BRBTGT(n)			sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10)) >> 2 + 2))
->>>>
->>>> It's that time on a Friday but... aren't these macros busted? I think you
->>>> need brackets before adding the offset, otherwise wouldn't, for example,
->>>> target registers 0-15 all access info register 0 and __SYS_BRBTGT(16) would
->>>> then start accessing source register 0?
->>>>
->>>> I'm surprised that the compiler doesn't warn about this, but even more
->>>> surprised that you managed to test this.
->>>>
->>>> Please tell me I'm wrong!
->>>>
->>>> Will
->>>
->>> No I think you are right, it is wrong. Luckily there is already an
->>> extraneous bracket so you you can fix it by moving one a place down:
->>>
->>>   sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10) >> 2) + 2))
->>>
->>> It's interesting because the test [1] is doing quite a bit and looking
->>> at the branch info, and that src and targets match up to function names.
->>> I also manually looked at the branch buffers and didn't see anything
->>> obviously wrong like things that looked like branch infos in the source
->>> or target fields. Will have to take another look to see if it would be
->>> possible for the test to catch this.
->>>
->>> James
->>>
->>> [1]:
->>> https://gitlab.arm.com/linux-arm/linux-jc/-/commit/3a7ddce70c2daadb63fcc511de0a89055ca48b32
+>> When adding aliases for events described as "event=xxx" or "config=xxx",
+>> EventCode or ConfigCode can be used in the JSON files to describe the
+>> events. But "eventid=xxx, type=xxx" cannot be supported at present.
 >>
->> ((((n) & 0x10)) >> 2 + 2) ---> ((((n) & 0x10) >> 2) + 2)
+>> If EventCode and ConfigCode is not added in the alias JSON file, the
+>> event description will add "event=0" by default. So, even if the event
+>> field is added to supplement "eventid=xxx" and "type=xxx", the final
+>> parsing result will be "event=0, eventid=xxx, type=xxx".
 >>
->> The additional brackets are useful in explicitly telling the compiler but
->> what it the compiler is just doing the right thing implicitly i.e computing
->> the shifting operation before doing the offset addition.
+>> Therefore, when EventCode and ConfigCode are missing in JSON, "event=0" is
+>> no longer added by default. EventIdCode and Type are added to the event
+>> field, and ConfigCode is moved into the event_field array which can also
+>> guarantee its original function.
 > 
-> No; that is not correct. In c, '+' has higher precedence than '>>'.
+> A useful test can be to build with JEVENTS_ARCH=all and confirm the
+> before and after change generated pmu-events.c is the same.
 > 
-> For 'a >> b + c' the compiler *must* treat that as 'a >> (b + c)', and not as
-> '(a >> b) + c'
+
+Okay, I will test it right away.
+
+>> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+>> ---
+>>  tools/perf/pmu-events/jevents.py | 21 +++++++++++++--------
+>>  1 file changed, 13 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+>> index f57a8f2..9c0f63a 100755
+>> --- a/tools/perf/pmu-events/jevents.py
+>> +++ b/tools/perf/pmu-events/jevents.py
+>> @@ -275,12 +275,6 @@ class JsonEvent:
+>>        }
+>>        return table[unit] if unit in table else f'uncore_{unit.lower()}'
+>>
+>> -    eventcode = 0
+>> -    if 'EventCode' in jd:
+>> -      eventcode = int(jd['EventCode'].split(',', 1)[0], 0)
+>> -    if 'ExtSel' in jd:
+>> -      eventcode |= int(jd['ExtSel']) << 8
+>> -    configcode = int(jd['ConfigCode'], 0) if 'ConfigCode' in jd else None
+>>      self.name = jd['EventName'].lower() if 'EventName' in jd else None
+>>      self.topic = ''
+>>      self.compat = jd.get('Compat')
+>> @@ -317,7 +311,15 @@ class JsonEvent:
+>>      if precise and self.desc and '(Precise Event)' not in self.desc:
+>>        extra_desc += ' (Must be precise)' if precise == '2' else (' (Precise '
+>>                                                                   'event)')
+>> -    event = f'config={llx(configcode)}' if configcode is not None else f'event={llx(eventcode)}'
+>> +    eventcode = None
+>> +    if 'EventCode' in jd:
+>> +      eventcode = int(jd['EventCode'].split(',', 1)[0], 0)
+>> +    if 'ExtSel' in jd:
+>> +      if eventcode is None:
+>> +        eventcode = int(jd['ExtSel']) << 8
+>> +      else:
+>> +        eventcode |= int(jd['ExtSel']) << 8
+>> +    event = f'event={llx(eventcode)}' if eventcode is not None else None
+>>      event_fields = [
+>>          ('AnyThread', 'any='),
+>>          ('PortMask', 'ch_mask='),
+>> @@ -327,10 +329,13 @@ class JsonEvent:
+>>          ('Invert', 'inv='),
+>>          ('SampleAfterValue', 'period='),
+>>          ('UMask', 'umask='),
+>> +        ('ConfigCode', 'config='),
 > 
-> That's trivial to test:
+> This loses the int and potential base conversion of ConfigCode.
+> Clearly the code was taking care to maintain this behavior so I
+> suspect this change has broken something. JEVENTS_ARCH=all should
+> reveal the answer.
 > 
-> | [mark@gravadlaks:~]% cat shiftadd.c 
-> | #include <stdio.h>
-> | 
-> | unsigned long logshiftadd(unsigned long a,
-> |                           unsigned long b,
-> |                           unsigned long c)
-> | {
-> |         printf("%ld >> %ld + %ld is %ld\n",
-> |                a, b, c, a >> b + c);
-> | }
-> | 
-> | int main(int argc, char *argv)
-> | {
-> |         logshiftadd(0, 0, 0);
-> |         logshiftadd(0, 0, 1);
-> |         logshiftadd(0, 0, 2);
-> |         printf("\n");
-> |         logshiftadd(1024, 0, 0);
-> |         logshiftadd(1024, 0, 1);
-> |         logshiftadd(1024, 0, 2);
-> |         printf("\n");
-> |         logshiftadd(1024, 2, 0);
-> |         logshiftadd(1024, 2, 1);
-> |         logshiftadd(1024, 2, 2);
-> | 
-> |         return 0;
-> | }
-> | [mark@gravadlaks:~]% gcc shiftadd.c -o shiftadd
-> | [mark@gravadlaks:~]% ./shiftadd 
-> | 0 >> 0 + 0 is 0
-> | 0 >> 0 + 1 is 0
-> | 0 >> 0 + 2 is 0
-> | 
-> | 1024 >> 0 + 0 is 1024
-> | 1024 >> 0 + 1 is 512
-> | 1024 >> 0 + 2 is 256
-> | 
-> | 1024 >> 2 + 0 is 256
-> | 1024 >> 2 + 1 is 128
-> | 1024 >> 2 + 2 is 64
+
+You are correct, I compared the generated pmu-events.c files before and after,
+and they are indeed different, with before:config=0x5 vs after:config=0x05. I will keep the
+original way of handling ConfigCode in the next version.
+
+>> +        ('Type', 'type='),
+>> +        ('EventIdCode', 'eventid='),
+>>      ]
+>>      for key, value in event_fields:
+>>        if key in jd and jd[key] != '0':
+>> -        event += ',' + value + jd[key]
+>> +        event = event + ',' + value + jd[key] if event is not None else value + jd[key]
 > 
->> During testing, all > those captured branch records looked alright.
+> Perhaps initialize event above to the empty string then:
 > 
-> I think we clearly need better testing here.
+> if key in jd and jd[key] != '0':
+>   if event:
+>      event += ','
+>   event += value + jd[key]
 > 
-> Thanks,
-> Mark.
 
-Hi Will and Mark,
+If the event is None, the statement event += value + jd[key] would result in an error.
+So, maybe I can use the following way:
 
-So I started looking into the test both with and without the fix,
-strangely I couldn't see any difference in the branch outputs, or
-anywhere in the driver where it would be flipping or filtering anything
-to make it only appear to be working. This was a bit confusing, but
-added up with the original point that the test was passing and it was
-actually doing something.
-
-So I started going deeper and found what the issue (non-issue) is.
-
-Firstly why is there no warning:
-
-The expression is stringified and passed to the assembler, so it skips
-the C compiler warning settings. I can send a patch to fix this, but all
-we need to do is get the compiler to evaluate the argument and then
-throw it away, luckily there are no other issues found even with an
-allyesconfig, so BRBE was the only thing with this bug:
-
- #define read_sysreg_s(r) ({
- 	u64 __val;
-+	u32 __maybe_unused __check_r = (u32)(r);
- 	asm volatile(__mrs_s("%0", r) : "=r" (__val));
- 	__val;					
- })
+if event:
+    event += ',' + value + jd[key]
+else:
+    event = value + jd[key]
 
 
-Secondly, why does BRBE actually work:
-
-Well the assembler (at least in my Clang toolchain) has a different
-order of operations to C. I put a minimal repro here:
-https://godbolt.org/z/YP9adh5xh
-
-You can see the op2 should be a 0b100000 (0x20) for BRBSRC and it
-appears to be, you can also see that moving the bracket makes no
-difference in this case.
-
-For some more evidence, the disassembler I have locally actually gives
-the correct register name, even when the bracket is wrong, and diffing
-the .o file gives no difference when moving the bracket:
-
-  0000000000000008 <main>:
-   8:   d503245f        bti     c
-   c:   d503201f        nop
-  10:   d503201f        nop
-  14:   2a1f03e0        mov     w0, wzr
-  18:   d5318028        mrs     x8, brbsrc0_el1
-  1c:   d5318128        mrs     x8, brbsrc1_el1
-  20:   d65f03c0        ret
-
-Seems completely crazy to me that this is actually the case. So maybe I
-am also wrong. Don't know if this counts as a compiler bug or it's just
-supposed to be like that.
-
-Thanks
-James
+Thanks,
+Jing
