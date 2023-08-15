@@ -2,30 +2,31 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9978C001B0
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 12:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B336C04A6A
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 12:34:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237178AbjHOMZ6 (ORCPT
+        id S237186AbjHOMeK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Aug 2023 08:25:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41060 "EHLO
+        Tue, 15 Aug 2023 08:34:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237164AbjHOMZf (ORCPT
+        with ESMTP id S237277AbjHOMdw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Aug 2023 08:25:35 -0400
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E52A72726;
-        Tue, 15 Aug 2023 05:24:40 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VprzgML_1692102258;
-Received: from 30.221.150.39(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VprzgML_1692102258)
+        Tue, 15 Aug 2023 08:33:52 -0400
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F5D91BF6;
+        Tue, 15 Aug 2023 05:33:44 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R371e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0Vps0sJO_1692102816;
+Received: from 30.221.150.39(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0Vps0sJO_1692102816)
           by smtp.aliyun-inc.com;
-          Tue, 15 Aug 2023 20:24:20 +0800
-Message-ID: <a5a5ca95-e4c7-74a9-c875-9feea7a1b642@linux.alibaba.com>
-Date:   Tue, 15 Aug 2023 20:24:17 +0800
+          Tue, 15 Aug 2023 20:33:38 +0800
+Message-ID: <30f6e625-cd3e-f846-e04d-667404f9f3c5@linux.alibaba.com>
+Date:   Tue, 15 Aug 2023 20:33:36 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.13.0
-Subject: Re: [PATCH v6 3/7] perf jevents: Support more event fields
+Subject: Re: [PATCH v6 5/7] perf test: Add pmu-event test for "Compat" and new
+ event_field.
 To:     Ian Rogers <irogers@google.com>
 Cc:     John Garry <john.g.garry@oracle.com>,
         Will Deacon <will@kernel.org>,
@@ -45,10 +46,10 @@ Cc:     John Garry <john.g.garry@oracle.com>,
         Zhuo Song <zhuo.song@linux.alibaba.com>,
         Shuai Xue <xueshuai@linux.alibaba.com>
 References: <1691394685-61240-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1691394685-61240-4-git-send-email-renyu.zj@linux.alibaba.com>
- <CAP-5=fXFZffdRMFH+aFzFech2pjbfYyQ+fx+E-YnfMBHifD4gw@mail.gmail.com>
+ <1691394685-61240-6-git-send-email-renyu.zj@linux.alibaba.com>
+ <CAP-5=fXPhtPCGYotDi2P_LeFPBMd8N+z_WAPwUT8eR+QiLLTMg@mail.gmail.com>
 From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <CAP-5=fXFZffdRMFH+aFzFech2pjbfYyQ+fx+E-YnfMBHifD4gw@mail.gmail.com>
+In-Reply-To: <CAP-5=fXPhtPCGYotDi2P_LeFPBMd8N+z_WAPwUT8eR+QiLLTMg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -57,137 +58,132 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-在 2023/8/15 上午6:31, Ian Rogers 写道:
+在 2023/8/15 上午9:11, Ian Rogers 写道:
 > On Mon, Aug 7, 2023 at 12:51 AM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
 >>
->> The usual event descriptions are "event=xxx" or "config=xxx", while the
->> event descriptions of CMN are "type=xxx, eventid=xxx" or more complex.
-> 
-> I found this difficult to read in relation to the code. Perhaps:
-> 
-> The previous code assumes an event has either an "event=" or "config"
-> field at the beginning. For CMN neither of these may be present, as an
-> event is typically "type=xx,eventid=xxx".
-> 
-
-Thank you for providing a more accurate and readable description.
-I was indeed struggling with how to describe the problem more accurately before.
-
-> I think the use of the name "type" here is unfortunate. It conflicts
-> with the PMU's type as defined in perf_event_attr.
-> 
-
-I agree, but it would require modifying the driver, which is not currently being
-considered. In the meantime, I can describe the event_field as ('NodeType', 'type=').
-
-> In general I think the jevents.py code needs improving, the
-> event_fields dictionary is convoluted, we shouldn't be afraid to
-> change the event json for example to get rid of things like ExtSel, we
-> should really ensure the formats in the events are valid for the PMU
-> they are for.
-> 
->> $cat /sys/bus/event_source/devices/arm_cmn_0/events/hnf_cache_fill
->> type=0x5,eventid=0x3
+>> Add new event test for uncore system event which is used to verify the
+>> functionality of "Compat" matching multiple identifiers and the new event
+>> fields "EventIdCode" and "Type".
 >>
->> When adding aliases for events described as "event=xxx" or "config=xxx",
->> EventCode or ConfigCode can be used in the JSON files to describe the
->> events. But "eventid=xxx, type=xxx" cannot be supported at present.
->>
->> If EventCode and ConfigCode is not added in the alias JSON file, the
->> event description will add "event=0" by default. So, even if the event
->> field is added to supplement "eventid=xxx" and "type=xxx", the final
->> parsing result will be "event=0, eventid=xxx, type=xxx".
->>
->> Therefore, when EventCode and ConfigCode are missing in JSON, "event=0" is
->> no longer added by default. EventIdCode and Type are added to the event
->> field, and ConfigCode is moved into the event_field array which can also
->> guarantee its original function.
-> 
-> A useful test can be to build with JEVENTS_ARCH=all and confirm the
-> before and after change generated pmu-events.c is the same.
-> 
-
-Okay, I will test it right away.
-
 >> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+> 
+> Did you test with NO_JEVENTS=1?
+> 
+
+You are absolutely right. I completely overlooked the case where NO_JEVENTS=1.
+
+
 >> ---
->>  tools/perf/pmu-events/jevents.py | 21 +++++++++++++--------
->>  1 file changed, 13 insertions(+), 8 deletions(-)
+>>  .../pmu-events/arch/test/test_soc/sys/uncore.json  |  8 ++++
+>>  tools/perf/tests/pmu-events.c                      | 55 ++++++++++++++++++++++
+>>  2 files changed, 63 insertions(+)
 >>
->> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
->> index f57a8f2..9c0f63a 100755
->> --- a/tools/perf/pmu-events/jevents.py
->> +++ b/tools/perf/pmu-events/jevents.py
->> @@ -275,12 +275,6 @@ class JsonEvent:
->>        }
->>        return table[unit] if unit in table else f'uncore_{unit.lower()}'
->>
->> -    eventcode = 0
->> -    if 'EventCode' in jd:
->> -      eventcode = int(jd['EventCode'].split(',', 1)[0], 0)
->> -    if 'ExtSel' in jd:
->> -      eventcode |= int(jd['ExtSel']) << 8
->> -    configcode = int(jd['ConfigCode'], 0) if 'ConfigCode' in jd else None
->>      self.name = jd['EventName'].lower() if 'EventName' in jd else None
->>      self.topic = ''
->>      self.compat = jd.get('Compat')
->> @@ -317,7 +311,15 @@ class JsonEvent:
->>      if precise and self.desc and '(Precise Event)' not in self.desc:
->>        extra_desc += ' (Must be precise)' if precise == '2' else (' (Precise '
->>                                                                   'event)')
->> -    event = f'config={llx(configcode)}' if configcode is not None else f'event={llx(eventcode)}'
->> +    eventcode = None
->> +    if 'EventCode' in jd:
->> +      eventcode = int(jd['EventCode'].split(',', 1)[0], 0)
->> +    if 'ExtSel' in jd:
->> +      if eventcode is None:
->> +        eventcode = int(jd['ExtSel']) << 8
->> +      else:
->> +        eventcode |= int(jd['ExtSel']) << 8
->> +    event = f'event={llx(eventcode)}' if eventcode is not None else None
->>      event_fields = [
->>          ('AnyThread', 'any='),
->>          ('PortMask', 'ch_mask='),
->> @@ -327,10 +329,13 @@ class JsonEvent:
->>          ('Invert', 'inv='),
->>          ('SampleAfterValue', 'period='),
->>          ('UMask', 'umask='),
->> +        ('ConfigCode', 'config='),
+>> diff --git a/tools/perf/pmu-events/arch/test/test_soc/sys/uncore.json b/tools/perf/pmu-events/arch/test/test_soc/sys/uncore.json
+>> index c7e7528..19ec595 100644
+>> --- a/tools/perf/pmu-events/arch/test/test_soc/sys/uncore.json
+>> +++ b/tools/perf/pmu-events/arch/test/test_soc/sys/uncore.json
+>> @@ -12,5 +12,13 @@
+>>             "EventName": "sys_ccn_pmu.read_cycles",
+>>             "Unit": "sys_ccn_pmu",
+>>             "Compat": "0x01"
+>> +   },
+>> +   {
+>> +           "BriefDescription": "Counts total cache misses in first lookup result (high priority).",
+>> +           "Type": "0x05",
+>> +           "EventIdCode": "0x01",
+>> +           "EventName": "sys_cmn_pmu.hnf_cache_miss",
+>> +           "Unit": "sys_cmn_pmu",
+>> +           "Compat": "434*;436*;43c*;43a01"
 > 
-> This loses the int and potential base conversion of ConfigCode.
-> Clearly the code was taking care to maintain this behavior so I
-> suspect this change has broken something. JEVENTS_ARCH=all should
-> reveal the answer.
+> I suspect this needs adding here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/pmu-events/empty-pmu-events.c?h=perf-tools-next#n247
 > 
-
-You are correct, I compared the generated pmu-events.c files before and after,
-and they are indeed different, with before:config=0x5 vs after:config=0x05. I will keep the
-original way of handling ConfigCode in the next version.
-
->> +        ('Type', 'type='),
->> +        ('EventIdCode', 'eventid='),
->>      ]
->>      for key, value in event_fields:
->>        if key in jd and jd[key] != '0':
->> -        event += ',' + value + jd[key]
->> +        event = event + ',' + value + jd[key] if event is not None else value + jd[key]
-> 
-> Perhaps initialize event above to the empty string then:
-> 
-> if key in jd and jd[key] != '0':
->   if event:
->      event += ','
->   event += value + jd[key]
-> 
-
-If the event is None, the statement event += value + jd[key] would result in an error.
-So, maybe I can use the following way:
-
-if event:
-    event += ',' + value + jd[key]
-else:
-    event = value + jd[key]
-
+After adding the relevant code in empty-pmu-events.c, it can successfully test with NO_JEVENTS=1.
 
 Thanks,
 Jing
+
+> Thanks,
+> Ian
+> 
+>>     }
+>>  ]
+>> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+>> index 3204252..79fb3e2 100644
+>> --- a/tools/perf/tests/pmu-events.c
+>> +++ b/tools/perf/tests/pmu-events.c
+>> @@ -255,9 +255,24 @@ struct perf_pmu_test_pmu {
+>>         .matching_pmu = "uncore_sys_ccn_pmu4",
+>>  };
+>>
+>> +static const struct perf_pmu_test_event sys_cmn_pmu_hnf_cache_miss = {
+>> +       .event = {
+>> +               .name = "sys_cmn_pmu.hnf_cache_miss",
+>> +               .event = "type=0x05,eventid=0x01",
+>> +               .desc = "Counts total cache misses in first lookup result (high priority). Unit: uncore_sys_cmn_pmu ",
+>> +               .topic = "uncore",
+>> +               .pmu = "uncore_sys_cmn_pmu",
+>> +               .compat = "434*;436*;43c*;43a01",
+>> +       },
+>> +       .alias_str = "type=0x5,eventid=0x1",
+>> +       .alias_long_desc = "Counts total cache misses in first lookup result (high priority). Unit: uncore_sys_cmn_pmu ",
+>> +       .matching_pmu = "uncore_sys_cmn_pmu0",
+>> +};
+>> +
+>>  static const struct perf_pmu_test_event *sys_events[] = {
+>>         &sys_ddr_pmu_write_cycles,
+>>         &sys_ccn_pmu_read_cycles,
+>> +       &sys_cmn_pmu_hnf_cache_miss,
+>>         NULL
+>>  };
+>>
+>> @@ -704,6 +719,46 @@ static int __test_uncore_pmu_event_aliases(struct perf_pmu_test_pmu *test_pmu)
+>>                         &sys_ccn_pmu_read_cycles,
+>>                 },
+>>         },
+>> +       {
+>> +               .pmu = {
+>> +                       .name = (char *)"uncore_sys_cmn_pmu0",
+>> +                       .is_uncore = 1,
+>> +                       .id = (char *)"43401",
+>> +               },
+>> +               .aliases = {
+>> +                       &sys_cmn_pmu_hnf_cache_miss,
+>> +               },
+>> +       },
+>> +       {
+>> +               .pmu = {
+>> +                       .name = (char *)"uncore_sys_cmn_pmu0",
+>> +                       .is_uncore = 1,
+>> +                       .id = (char *)"43602",
+>> +               },
+>> +               .aliases = {
+>> +                       &sys_cmn_pmu_hnf_cache_miss,
+>> +               },
+>> +       },
+>> +       {
+>> +               .pmu = {
+>> +                       .name = (char *)"uncore_sys_cmn_pmu0",
+>> +                       .is_uncore = 1,
+>> +                       .id = (char *)"43c03",
+>> +               },
+>> +               .aliases = {
+>> +                       &sys_cmn_pmu_hnf_cache_miss,
+>> +               },
+>> +       },
+>> +       {
+>> +               .pmu = {
+>> +                       .name = (char *)"uncore_sys_cmn_pmu0",
+>> +                       .is_uncore = 1,
+>> +                       .id = (char *)"43a01",
+>> +               },
+>> +               .aliases = {
+>> +                       &sys_cmn_pmu_hnf_cache_miss,
+>> +               },
+>> +       }
+>>  };
+>>
+>>  /* Test that aliases generated are as expected */
+>> --
+>> 1.8.3.1
+>>
