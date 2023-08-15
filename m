@@ -2,136 +2,95 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55451C001B0
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 17:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F8BC001B0
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 17:44:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238866AbjHORmP (ORCPT
+        id S238929AbjHORnx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Aug 2023 13:42:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51092 "EHLO
+        Tue, 15 Aug 2023 13:43:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238927AbjHORmJ (ORCPT
+        with ESMTP id S238935AbjHORnZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Aug 2023 13:42:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C3F31BD2;
-        Tue, 15 Aug 2023 10:42:08 -0700 (PDT)
+        Tue, 15 Aug 2023 13:43:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 746441BE2;
+        Tue, 15 Aug 2023 10:43:24 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2516C60F0B;
-        Tue, 15 Aug 2023 17:42:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49406C433C8;
-        Tue, 15 Aug 2023 17:42:07 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C2E9F62952;
+        Tue, 15 Aug 2023 17:43:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04422C433C8;
+        Tue, 15 Aug 2023 17:43:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692121327;
-        bh=kjqDWpUP6z5slpWqs3Zt6WzwVljhS5woggD1qaRxuYg=;
+        s=k20201202; t=1692121403;
+        bh=D8DPbSofSMpuxPgO7mTbMtJ0tw7xuZlEiWH0AVihSh8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R9xTJA+B6I1+pXAdLJZTxnFDKq0uV6y1++K5PeuYx76fSPZxK5bgjxKCRrnBbEQD8
-         l7EOigH7NMkbcPW+mC81F58sAaLaO0ATU49OWVd/+YnpR7K1lA2zPc/6uC4nUsQXqE
-         NRy02w7XSiPsY8wsV794/QHEnnwQgWIiknb1EQ5/fEeBvb950n31R4K4e6amvVCNQc
-         tJ/H+aanq4PzsrEI40N0ePXnLAmHILlxgxEf3k8XQLcEFr1BY2yOSZMdFYfTkevbRE
-         f6sezmmTDPivKjfDNLSd29jR0qdaMe921I13gEIbFBGQn8js3K9NwallUNTPv6yTis
-         ybSCosczoccsQ==
+        b=GXtfcDF1phykJmNYTay6DFBSOcQ2OSU+VF5ixNNcMJVpTCnsdbLgMJgaeMV4JPRAc
+         cynrjJFX3ekdarTTmbMAX9k6kWV61rwfOekYrgmru7p7RxKPIuklWZ3jtYU3ODWrNa
+         c+qWaydRkkkP+cP5CmeKhCWGTOfbn4XE9kOJNTrrnurM1l5iL6DHhL6wSXYxbniHn+
+         jbjyR7Ia8rDpvmqtMbb+oi0e898KlocmP56Dqp8QE6XBXanM8F7wZI1BO8A7lVggi1
+         uhA0v/HUxIJZuekU8Q8nlDrAIchJhwt40nOnPA+vV3yGDzFrzFKE0b3nA5MVGq7DrQ
+         5zmiEG3WMrB5A==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A286C404DF; Tue, 15 Aug 2023 14:42:04 -0300 (-03)
-Date:   Tue, 15 Aug 2023 14:42:04 -0300
+        id 6E72D404DF; Tue, 15 Aug 2023 14:43:20 -0300 (-03)
+Date:   Tue, 15 Aug 2023 14:43:20 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: Re: [PATCH 2/2] perf test: Add perf record sample filtering test
-Message-ID: <ZNu47CYXV0nuav+G@kernel.org>
-References: <20230811025822.3859771-1-namhyung@kernel.org>
- <20230811025822.3859771-2-namhyung@kernel.org>
- <ZNu2KrbgFPY69K2+@kernel.org>
+To:     Yang Jihong <yangjihong1@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        kan.liang@linux.intel.com, sandipan.das@amd.com,
+        ravi.bangoria@amd.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf evsel: Remove duplicate check for `field` in
+ evsel__intval()
+Message-ID: <ZNu5OKeGcJlxbvdm@kernel.org>
+References: <20230815221009.3641751-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZNu2KrbgFPY69K2+@kernel.org>
+In-Reply-To: <20230815221009.3641751-1-yangjihong1@huawei.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Aug 15, 2023 at 02:30:18PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Thu, Aug 10, 2023 at 07:58:22PM -0700, Namhyung Kim escreveu:
-> >   $ sudo ./perf test 'sample filter' -v
-> >    94: perf record sample filtering (by BPF) tests                     :
-> >   --- start ---
-> >   test child forked, pid 3817527
-> >   Checking BPF-filter privilege
-> >   Basic bpf-filter test
-> >   Basic bpf-filter test [Success]
-> >   Failing bpf-filter test
-> >   Error: task-clock event does not have PERF_SAMPLE_CPU
-> >   Failing bpf-filter test [Success]
-> >   Group bpf-filter test
-> >   Error: task-clock event does not have PERF_SAMPLE_CPU
-> >   Error: task-clock event does not have PERF_SAMPLE_CODE_PAGE_SIZE
-> >   Group bpf-filter test [Success]
-> >   test child finished with 0
-> >   ---- end ----
-> >   perf record sample filtering (by BPF) tests: Ok
+Em Tue, Aug 15, 2023 at 10:10:09PM +0000, Yang Jihong escreveu:
+> The `file` parameter in evsel__intval() is checked repeatedly, fix it.
 > 
-> [root@five ~]# perf test -v "by BPF"
->  91: perf record sample filtering (by BPF) tests                     :
-> --- start ---
-> test child forked, pid 64165
-> Checking BPF-filter privilege
-> Basic bpf-filter test
->  ffffffff97f4f688
->  ffffffff97f73859
->  ffffffff97412ce6
->  ffffffff976da215
->  ffffffff973a92bf
->  ffffffff97376ad7
->  ffffffff97f73859
-<SNIP
->  ffffffff971fdca5
->  ffffffff9737dbc4
->  ffffffff971b4e04
-> Basic bpf-filter test [Failed invalid output]
-> test child finished with -1
-> ---- end ----
-> perf record sample filtering (by BPF) tests: FAILED!
-> [root@five ~]#
+> No functional change.
+
+Thanks, applied.
+
+- Arnaldo
+
+ 
+> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> ---
+>  tools/perf/util/evsel.c | 3 ---
+>  1 file changed, 3 deletions(-)
 > 
-> [root@five ~]# uname -a
-> Linux five 6.2.15-100.fc36.x86_64 #1 SMP PREEMPT_DYNAMIC Thu May 11 16:51:53 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
-> [root@five ~]# 
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index e41bc4d9925f..0c50c443d456 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -2827,9 +2827,6 @@ u64 evsel__intval(struct evsel *evsel, struct perf_sample *sample, const char *n
+>  {
+>  	struct tep_format_field *field = evsel__field(evsel, name);
+>  
+> -	if (!field)
+> -		return 0;
+> -
+>  	return field ? format_field__intval(field, sample, evsel->needs_swap) : 0;
+>  }
+>  #endif
+> -- 
+> 2.39.2
+> 
 
-Above was on a AMD Ryzen 5950X, the following was on a lenovo t480s,
-Intel notebook:
+-- 
 
-[root@quaco ~]# uname -a
-Linux quaco 6.4.7-200.fc38.x86_64 #1 SMP PREEMPT_DYNAMIC Thu Jul 27 20:01:18 UTC 2023 x86_64 GNU/Linux
-[root@quaco ~]# perf test "filter"
- 30: Filter hist entries                                             : Ok
- 36: Filter fds with revents mask in a fdarray                       : Ok
- 67: dlfilter C API                                                  : Ok
- 91: perf record sample filtering (by BPF) tests                     : Ok
-[root@quaco ~]# perf test -v "by BPF"
- 91: perf record sample filtering (by BPF) tests                     :
---- start ---
-test child forked, pid 273609
-Checking BPF-filter privilege
-Basic bpf-filter test
-Basic bpf-filter test [Success]
-Failing bpf-filter test
-Error: task-clock event does not have PERF_SAMPLE_CPU
-Failing bpf-filter test [Success]
-Group bpf-filter test
-Error: task-clock event does not have PERF_SAMPLE_CPU
-Error: task-clock event does not have PERF_SAMPLE_CODE_PAGE_SIZE
-Group bpf-filter test [Success]
-test child finished with 0
----- end ----
-perf record sample filtering (by BPF) tests: Ok
-[root@quaco ~]#
+- Arnaldo
