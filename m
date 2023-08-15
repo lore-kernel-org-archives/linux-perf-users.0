@@ -2,41 +2,41 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFF9C001E0
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 18:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A978CC001B0
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 18:54:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239403AbjHOStR (ORCPT
+        id S236177AbjHOSyM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Aug 2023 14:49:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35172 "EHLO
+        Tue, 15 Aug 2023 14:54:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239484AbjHOStN (ORCPT
+        with ESMTP id S239614AbjHOSyK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Aug 2023 14:49:13 -0400
+        Tue, 15 Aug 2023 14:54:10 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 519CB2122;
-        Tue, 15 Aug 2023 11:48:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 993882101;
+        Tue, 15 Aug 2023 11:53:43 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 80B4465EEF;
-        Tue, 15 Aug 2023 18:45:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83888C433C7;
-        Tue, 15 Aug 2023 18:45:30 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 57B4465FDF;
+        Tue, 15 Aug 2023 18:52:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82C9BC433C7;
+        Tue, 15 Aug 2023 18:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692125130;
-        bh=iRqVcT0rx/WBeVqvZr8C3SmuYLCDnBwbzwYnneJXSK8=;
+        s=k20201202; t=1692125560;
+        bh=WI38EkMC1ok3h4umI619BS/8GW+2Fygzgx16kxgjLZQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oF9Q/hImdY6G1jhqdYXJP0Ku/URDmEnEu1wdvPRGFwSCIfV6MAKG2DYu0XvgHfoXl
-         mfFFxW+dy5g9tNSfv4YGNswzIuXYAfED8BGYGrZA1Lu80j3a70CBYLsOHqZMb9HNL4
-         X73Td1Wf6ZkNsXO1jfFgv2HgoUfVskhG27U0oOvFFFT5YYDZPg7o6jPi67Q7HV75nO
-         c/21A9DPoRe4gk8AEm2+mL/VPbfo1xHy3uBvM/FBBDSbiMXooBL79JvJ58i9z/qWfk
-         nxTGcpJ1M4hHoIFmmQ+3XYKDpCzAgxXB9vuIV/vJkyq/C4GUMI6WWqTkiq/FVhNzJY
-         dxXK1JFr66ozA==
+        b=bCHXvhDr3FPDfLnCiyo+/vOrd42yCp0baVzVj5QfHzvbX//WDDxVk1XpZxu3z8sfs
+         D68pEnKMtVuEfwBOzaPbyv3O0M68HwXc/YvBETXtR9DVYSp84sQXHqn+Eq3Y6eMa/n
+         RAdN+aYhiId9KQUx2CA/L7hSC4cV5diM4IdvU9MGSBnGzZ8GjePSMkCt45Ics7k2S7
+         SEm13/fOCuxzYFppC0l7fRAocERIn5PmvMoQt9UI8/R6JbzWXUhJIkwN1NpcKc/o0J
+         3UqFVGeRLznfDbpdJlIf25cjfJOfMxnpOmuEEI00MzpJBQ++TPEW80kEmxKmawMEND
+         rWCmcLR58WqLQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id EE356404DF; Tue, 15 Aug 2023 15:45:27 -0300 (-03)
-Date:   Tue, 15 Aug 2023 15:45:27 -0300
+        id 4A884404DF; Tue, 15 Aug 2023 15:52:38 -0300 (-03)
+Date:   Tue, 15 Aug 2023 15:52:38 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Leo Yan <leo.yan@linaro.org>, John Garry <john.g.garry@oracle.com>,
@@ -65,138 +65,60 @@ Cc:     Leo Yan <leo.yan@linaro.org>, John Garry <john.g.garry@oracle.com>,
         linux-perf-users@vger.kernel.org, linux-csky@vger.kernel.org,
         linux-riscv@lists.infradead.org
 Subject: Re: [PATCH v2 0/6] perf parse-regs: Refactor architecture functions
-Message-ID: <ZNvHx+KxIL6JzEl/@kernel.org>
+Message-ID: <ZNvJdsVmmAWLmfH6@kernel.org>
 References: <20230606014559.21783-1-leo.yan@linaro.org>
  <CAP-5=fV1m440mKc0R=m5C4N2NtoiixchtnpX2eR3PA_5hXbqEQ@mail.gmail.com>
  <ZNvCxM/ULdUfzHtR@kernel.org>
+ <ZNvHx+KxIL6JzEl/@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZNvCxM/ULdUfzHtR@kernel.org>
+In-Reply-To: <ZNvHx+KxIL6JzEl/@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Aug 15, 2023 at 03:24:04PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, Jul 12, 2023 at 03:37:36PM -0700, Ian Rogers escreveu:
-> > On Mon, Jun 5, 2023 at 6:46 PM Leo Yan <leo.yan@linaro.org> wrote:
-> > >
-> > > This patch series is to refactor arch related functions for register
-> > > parsing, which follows up the discussion for v1:
-> > > https://lore.kernel.org/lkml/20230520025537.1811986-1-leo.yan@linaro.org/
-> > >
-> > > Compared to patch series v1, this patch series introduces new functions
-> > > perf_arch_reg_{ip|sp}(), so this can allow the tool to support cross
-> > > analysis.
-> > >
-> > > To verify the cross analysis, I used below steps:
-> > >
-> > > - Firstly, I captured perf data on Arm64 machine:
-> > >
-> > >   $ perf record --call-graph fp -- ./test_program
-> > >
-> > >   Or ...
-> > >
-> > >   $ perf record --call-graph dwarf -- ./test_program
-> > >
-> > >   Then, I also archived associated debug data:
-> > >
-> > >   $ perf archive
-> > >
-> > > - Secondly, I copied the perf data file and debug tar file on my x86
-> > >   machine:
-> > >
-> > >   $ scp perf.data perf.data.tar.bz2 leoy@IP_ADDRESS:/target/path/
-> > >
-> > > - On x86 machine, I need to build perf for support multi-arch unwinding:
-> > >
-> > >   $ git clone http://git.savannah.gnu.org/r/libunwind.git
-> > >   $ cd libunwind
-> > >   $ autoreconf -i
-> > >
-> > >   # Build and install libunwind aarch64:
-> > >   $ ./configure prefix=/home/leoy/Work/tools/libunwind/install/ \
-> > >         --target=aarch64-linux-gnu CC=x86_64-linux-gnu-gcc
-> > >   $ make && make install
-> > >
-> > >   # Build and install libunwind x86:
-> > >   $ ./configure prefix=/home/leoy/Work/tools/libunwind/install/ \
-> > >         --target=x86_64-linux-gnu CC=x86_64-linux-gnu-gcc
-> > >   $ make && make install
-> > >
-> > > - Build perf tool for support multi-archs:
-> > >
-> > >   $ cd $LINUX/tools/perf
-> > >   $ make VF=1 DEBUG=1 LIBUNWIND_DIR=/home/leoy/Work/tools/libunwind/install
-> > >
-> > > At the end, I verified the x86 perf tool can do cross analysis for aarch64's
-> > > perf data file.
-> > >
-> > > Note, I still see x86 perf tool cannot display the complete callgraph
-> > > for aarch64, but it should not the issue caused by this series, which
-> > > will be addressed by separate patches.
-> > >
-> > > I also built this patch series on my Arm64 and x86 machines, both can
-> > > compile perf tool successfully; but I have no chance to build other
-> > > archs natively.
-> > >
-> > > Changes from v1:
-> > > - For support cross analysis for IP/SP registers, introduced patch 0002
-> > >   (James Clark, Ian Rogers).
-> > >
-> > >
-> > > Leo Yan (6):
-> > >   perf parse-regs: Refactor arch register parsing functions
-> > >   perf parse-regs: Introduce functions perf_arch_reg_{ip|sp}()
-> > >   perf unwind: Use perf_arch_reg_{ip|sp}() to substitute macros
-> > >   perf parse-regs: Remove unused macros PERF_REG_{IP|SP}
-> > >   perf parse-regs: Remove PERF_REGS_{MAX|MASK} from common code
-> > >   perf parse-regs: Move out arch specific header from util/perf_regs.h
-> > 
-> > Sorry for the slow review. For the series:
-> > Acked-by: Ian Rogers <irogers@google.com>
-> > 
-> > Some thoughts:
-> > uint64_t __perf_reg_ip_arm(void)
-> > uint64_t seems like we're giving a lot of space for future register
-> > encodings. I think some of the other functions use this size of value
-> > due to returning a bitmap/mask, but here it isn't clear and just feels
-> > excessive.
-> > 
-> > Do we need the "__" prefix on all the functions?
-> > 
-> > In Makefile.config there are NO_PERF_REGS and CONFIG_PERF_REGS then
-> > the define HAVE_PERF_REGS_SUPPORT. Is this still relevant? If we had
-> > an architecture with no support, couldn't it still read a perf.data
-> > file from a supported architecture? It would be nice to remove at
-> > least NO_PERF_REGS and HAVE_PERF_REGS_SUPPORT.
-> > 
-> > This change is very worthwhile fix and cleanup, it didn't introduce
-> > what is pondered above, hence the acked-by.
+Em Tue, Aug 15, 2023 at 03:45:27PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Agreed, applied to perf-tools-next, sorry for the delay.
 > 
-> Agreed, applied to perf-tools-next, sorry for the delay.
+> Had to add this to make 'perf test python' to work. Please run 'perf
+> test' before sending patches.
 
-Had to add this to make 'perf test python' to work. Please run 'perf
-test' before sending patches.
+One more, please also do a 'make -C tools/perf build-test', with it I
+caught this:
 
-- Arnaldo
+         make_no_libunwind_O: cd . && make NO_LIBUNWIND=1 FEATURES_DUMP=/var/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.yeEGyQq2HR DESTDIR=/tmp/tmp.ITgoO16jjH
+cd . && make NO_LIBUNWIND=1 FEATURES_DUMP=/var/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.yeEGyQq2HR DESTDIR=/tmp/tmp.ITgoO16jjH
 
-diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
-index d4c9b4cd35efa556..26e1c8d973ea0b95 100644
---- a/tools/perf/util/python-ext-sources
-+++ b/tools/perf/util/python-ext-sources
-@@ -40,3 +40,12 @@ util/rwsem.c
- util/hashmap.c
- util/perf_regs.c
- util/fncache.c
-+util/perf-regs-arch/perf_regs_aarch64.c
-+util/perf-regs-arch/perf_regs_arm.c
-+util/perf-regs-arch/perf_regs_csky.c
-+util/perf-regs-arch/perf_regs_loongarch.c
-+util/perf-regs-arch/perf_regs_mips.c
-+util/perf-regs-arch/perf_regs_powerpc.c
-+util/perf-regs-arch/perf_regs_riscv.c
-+util/perf-regs-arch/perf_regs_s390.c
-+util/perf-regs-arch/perf_regs_x86.c
+  CC      /tmp/tmp.yeEGyQq2HR/util/expr-flex.o
+util/unwind-libdw.c: In function ‘memory_read’:
+util/unwind-libdw.c:173:28: error: implicit declaration of function ‘perf_env__arch’ [-Werror=implicit-function-declaration]
+  173 |         const char *arch = perf_env__arch(ui->machine->env);
+      |                            ^~~~~~~~~~~~~~
+util/unwind-libdw.c:173:28: error: initialization of ‘const char *’ from ‘int’ makes pointer from integer without a cast [-Werror=int-conversion]
+util/unwind-libdw.c: In function ‘unwind__get_entries’:
+util/unwind-libdw.c:258:28: error: initialization of ‘const char *’ from ‘int’ makes pointer from integer without a cast [-Werror=int-conversion]
+  258 |         const char *arch = perf_env__arch(ui_buf.machine->env);
+      |                            ^~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
+make[6]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:98: /tmp/tmp.yeEGyQq2HR/util/unwind-libdw.o] Error 1
+make[6]: *** Waiting for unfinished jobs....
+make[5]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:150: util] Error 2
+make[4]: *** [Makefile.perf:662: /tmp/tmp.yeEGyQq2HR/perf-in.o] Error 2
+make[4]: *** Waiting for unfinished jobs....
+  CC      /tmp/tmp.yeEGyQq2HR/pmu-events/pmu-events.o
+  LD      /tmp/tmp.yeEGyQq2HR/pmu-events/pmu-events-in.o
+make[3]: *** [Makefile.perf:238: sub-make] Error 2
+make[2]: *** [Makefile:70: all] Error 2
+make[1]: *** [tests/make:337: make_no_libunwind_O] Error 1
+make: *** [Makefile:103: build-test] Error 2
+make: Leaving directory '/var/home/acme/git/perf-tools-next/tools/perf'
+
+real	1m29.784s
+user	10m41.597s
+sys	2m55.948s
+⬢[acme@toolbox perf-tools-next]$
+
+I'm trying to fix
