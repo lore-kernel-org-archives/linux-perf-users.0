@@ -2,41 +2,41 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A978CC001B0
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 18:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0BEC04FE0
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 18:58:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236177AbjHOSyM (ORCPT
+        id S239559AbjHOS6A (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Aug 2023 14:54:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51532 "EHLO
+        Tue, 15 Aug 2023 14:58:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239614AbjHOSyK (ORCPT
+        with ESMTP id S239618AbjHOS5u (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Aug 2023 14:54:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 993882101;
-        Tue, 15 Aug 2023 11:53:43 -0700 (PDT)
+        Tue, 15 Aug 2023 14:57:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F8F71FE2;
+        Tue, 15 Aug 2023 11:57:22 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 57B4465FDF;
-        Tue, 15 Aug 2023 18:52:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82C9BC433C7;
-        Tue, 15 Aug 2023 18:52:40 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1EC0961576;
+        Tue, 15 Aug 2023 18:57:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EB4AC433C7;
+        Tue, 15 Aug 2023 18:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692125560;
-        bh=WI38EkMC1ok3h4umI619BS/8GW+2Fygzgx16kxgjLZQ=;
+        s=k20201202; t=1692125840;
+        bh=WcEDKCUsjhr4cwMNn5jRu8EtHbRs3LwUKYQvvm6dKFA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bCHXvhDr3FPDfLnCiyo+/vOrd42yCp0baVzVj5QfHzvbX//WDDxVk1XpZxu3z8sfs
-         D68pEnKMtVuEfwBOzaPbyv3O0M68HwXc/YvBETXtR9DVYSp84sQXHqn+Eq3Y6eMa/n
-         RAdN+aYhiId9KQUx2CA/L7hSC4cV5diM4IdvU9MGSBnGzZ8GjePSMkCt45Ics7k2S7
-         SEm13/fOCuxzYFppC0l7fRAocERIn5PmvMoQt9UI8/R6JbzWXUhJIkwN1NpcKc/o0J
-         3UqFVGeRLznfDbpdJlIf25cjfJOfMxnpOmuEEI00MzpJBQ++TPEW80kEmxKmawMEND
-         rWCmcLR58WqLQ==
+        b=mI7eWHPhIZiEuHucqMXNlVCl1x0rvOt6iFKVikOxWJLEmHvVvicCOdqx2QI/+0PyH
+         9Wuq16EMnEYOsBqlmmXPzbEwap6c3d+3hRRjIjPxxokZ/U9nrqWgYAKmxcMQx0u1iR
+         rr2yFlKalA3pg7EGlX0IVsrn2SgaL3fZw+OTMRJG39uoAPmm0sLTVQg3juEZ5op+V6
+         2ubdQhTU4waT+TweStzeIjyqC/1W15gMYv7L00A0Df7SM9b+LEuwhBGKGpNfQ9QI8x
+         j1gDQK6CgRRtTAUAWgcj1Z3AUVNet3rD+0DWjlBQecKJ3AzWrhgC7xdeGi+Rj1yMlj
+         nBnOh33/kDssQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4A884404DF; Tue, 15 Aug 2023 15:52:38 -0300 (-03)
-Date:   Tue, 15 Aug 2023 15:52:38 -0300
+        id 93785404DF; Tue, 15 Aug 2023 15:57:17 -0300 (-03)
+Date:   Tue, 15 Aug 2023 15:57:17 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Leo Yan <leo.yan@linaro.org>, John Garry <john.g.garry@oracle.com>,
@@ -65,60 +65,70 @@ Cc:     Leo Yan <leo.yan@linaro.org>, John Garry <john.g.garry@oracle.com>,
         linux-perf-users@vger.kernel.org, linux-csky@vger.kernel.org,
         linux-riscv@lists.infradead.org
 Subject: Re: [PATCH v2 0/6] perf parse-regs: Refactor architecture functions
-Message-ID: <ZNvJdsVmmAWLmfH6@kernel.org>
+Message-ID: <ZNvKjeFkXY8ezf9e@kernel.org>
 References: <20230606014559.21783-1-leo.yan@linaro.org>
  <CAP-5=fV1m440mKc0R=m5C4N2NtoiixchtnpX2eR3PA_5hXbqEQ@mail.gmail.com>
  <ZNvCxM/ULdUfzHtR@kernel.org>
  <ZNvHx+KxIL6JzEl/@kernel.org>
+ <ZNvJdsVmmAWLmfH6@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZNvHx+KxIL6JzEl/@kernel.org>
+In-Reply-To: <ZNvJdsVmmAWLmfH6@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Aug 15, 2023 at 03:45:27PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Agreed, applied to perf-tools-next, sorry for the delay.
+Em Tue, Aug 15, 2023 at 03:52:38PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Tue, Aug 15, 2023 at 03:45:27PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > Agreed, applied to perf-tools-next, sorry for the delay.
+> > 
+> > Had to add this to make 'perf test python' to work. Please run 'perf
+> > test' before sending patches.
 > 
-> Had to add this to make 'perf test python' to work. Please run 'perf
-> test' before sending patches.
+> One more, please also do a 'make -C tools/perf build-test', with it I
+> caught this:
+> 
+>          make_no_libunwind_O: cd . && make NO_LIBUNWIND=1 FEATURES_DUMP=/var/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.yeEGyQq2HR DESTDIR=/tmp/tmp.ITgoO16jjH
+> cd . && make NO_LIBUNWIND=1 FEATURES_DUMP=/var/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.yeEGyQq2HR DESTDIR=/tmp/tmp.ITgoO16jjH
 
-One more, please also do a 'make -C tools/perf build-test', with it I
-caught this:
++#include "util/env.h"
 
-         make_no_libunwind_O: cd . && make NO_LIBUNWIND=1 FEATURES_DUMP=/var/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.yeEGyQq2HR DESTDIR=/tmp/tmp.ITgoO16jjH
-cd . && make NO_LIBUNWIND=1 FEATURES_DUMP=/var/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.yeEGyQq2HR DESTDIR=/tmp/tmp.ITgoO16jjH
+As now we need it for perf_env__arch(ui->machine->env)
+ 
+>   CC      /tmp/tmp.yeEGyQq2HR/util/expr-flex.o
+> util/unwind-libdw.c: In function ‘memory_read’:
+> util/unwind-libdw.c:173:28: error: implicit declaration of function ‘perf_env__arch’ [-Werror=implicit-function-declaration]
+>   173 |         const char *arch = perf_env__arch(ui->machine->env);
+>       |                            ^~~~~~~~~~~~~~
+> util/unwind-libdw.c:173:28: error: initialization of ‘const char *’ from ‘int’ makes pointer from integer without a cast [-Werror=int-conversion]
+> util/unwind-libdw.c: In function ‘unwind__get_entries’:
+> util/unwind-libdw.c:258:28: error: initialization of ‘const char *’ from ‘int’ makes pointer from integer without a cast [-Werror=int-conversion]
+>   258 |         const char *arch = perf_env__arch(ui_buf.machine->env);
+>       |                            ^~~~~~~~~~~~~~
+> cc1: all warnings being treated as errors
+> make[6]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:98: /tmp/tmp.yeEGyQq2HR/util/unwind-libdw.o] Error 1
+> make[6]: *** Waiting for unfinished jobs....
+> make[5]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:150: util] Error 2
+> make[4]: *** [Makefile.perf:662: /tmp/tmp.yeEGyQq2HR/perf-in.o] Error 2
+> make[4]: *** Waiting for unfinished jobs....
+>   CC      /tmp/tmp.yeEGyQq2HR/pmu-events/pmu-events.o
+>   LD      /tmp/tmp.yeEGyQq2HR/pmu-events/pmu-events-in.o
+> make[3]: *** [Makefile.perf:238: sub-make] Error 2
+> make[2]: *** [Makefile:70: all] Error 2
+> make[1]: *** [tests/make:337: make_no_libunwind_O] Error 1
+> make: *** [Makefile:103: build-test] Error 2
+> make: Leaving directory '/var/home/acme/git/perf-tools-next/tools/perf'
+> 
+> real	1m29.784s
+> user	10m41.597s
+> sys	2m55.948s
+> ⬢[acme@toolbox perf-tools-next]$
+> 
+> I'm trying to fix
 
-  CC      /tmp/tmp.yeEGyQq2HR/util/expr-flex.o
-util/unwind-libdw.c: In function ‘memory_read’:
-util/unwind-libdw.c:173:28: error: implicit declaration of function ‘perf_env__arch’ [-Werror=implicit-function-declaration]
-  173 |         const char *arch = perf_env__arch(ui->machine->env);
-      |                            ^~~~~~~~~~~~~~
-util/unwind-libdw.c:173:28: error: initialization of ‘const char *’ from ‘int’ makes pointer from integer without a cast [-Werror=int-conversion]
-util/unwind-libdw.c: In function ‘unwind__get_entries’:
-util/unwind-libdw.c:258:28: error: initialization of ‘const char *’ from ‘int’ makes pointer from integer without a cast [-Werror=int-conversion]
-  258 |         const char *arch = perf_env__arch(ui_buf.machine->env);
-      |                            ^~~~~~~~~~~~~~
-cc1: all warnings being treated as errors
-make[6]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:98: /tmp/tmp.yeEGyQq2HR/util/unwind-libdw.o] Error 1
-make[6]: *** Waiting for unfinished jobs....
-make[5]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:150: util] Error 2
-make[4]: *** [Makefile.perf:662: /tmp/tmp.yeEGyQq2HR/perf-in.o] Error 2
-make[4]: *** Waiting for unfinished jobs....
-  CC      /tmp/tmp.yeEGyQq2HR/pmu-events/pmu-events.o
-  LD      /tmp/tmp.yeEGyQq2HR/pmu-events/pmu-events-in.o
-make[3]: *** [Makefile.perf:238: sub-make] Error 2
-make[2]: *** [Makefile:70: all] Error 2
-make[1]: *** [tests/make:337: make_no_libunwind_O] Error 1
-make: *** [Makefile:103: build-test] Error 2
-make: Leaving directory '/var/home/acme/git/perf-tools-next/tools/perf'
+-- 
 
-real	1m29.784s
-user	10m41.597s
-sys	2m55.948s
-⬢[acme@toolbox perf-tools-next]$
-
-I'm trying to fix
+- Arnaldo
