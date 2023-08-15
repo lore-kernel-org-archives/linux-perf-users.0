@@ -2,132 +2,129 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7771AC04E69
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 03:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0D2C0015E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 08:17:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234103AbjHODlG (ORCPT
+        id S235563AbjHOIRR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Aug 2023 23:41:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54634 "EHLO
+        Tue, 15 Aug 2023 04:17:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234539AbjHODiC (ORCPT
+        with ESMTP id S235571AbjHOIRG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Aug 2023 23:38:02 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34D8F199E;
-        Mon, 14 Aug 2023 20:25:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692069948; x=1723605948;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=hYxRQBVIjQPWurYqWEgYetagwObrSeUZ9qM9B13jnXU=;
-  b=G0fOQ28xKhatUKMMbzg6apAYGGP2rVtmop/5RpL/pP1RsZTQLUmK9y0p
-   8nITOQrFGsoGr26Jlb8BgfyMGgawKUNUpsU+yxLebSWKcXgFxrL8Q/tkl
-   bfSocHbxMWnmlke+sd/6ELTM6iAmOwapoAuIIq7NV5XnY0HnzBZG3+Tix
-   MsZQJqHyL5poKPs+4iCKG6UxudrcJbf8M7/9PWNCzHJJeaSmIgJbBlXsc
-   dZT/2B9Dn8Tcq68KWSADQXtvji4fDvFW8MYG/1Y79nfsutmjSV13uNh4x
-   NlLaVdmPe08MsRc/04Cwqd7Embybl8g9jtOcIDM5grDlMpsfBCwFMyIME
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="362341461"
-X-IronPort-AV: E=Sophos;i="6.01,173,1684825200"; 
-   d="scan'208";a="362341461"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 20:25:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="799061073"
-X-IronPort-AV: E=Sophos;i="6.01,173,1684825200"; 
-   d="scan'208";a="799061073"
-Received: from dmi-pnp-i7.sh.intel.com ([10.239.159.155])
-  by fmsmga008.fm.intel.com with ESMTP; 14 Aug 2023 20:25:44 -0700
-From:   Dapeng Mi <dapeng1.mi@linux.intel.com>
-To:     Sean Christopherson <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Like Xu <likexu@tencent.com>
-Cc:     kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Zhang Xiong <xiong.y.zhang@intel.com>,
-        Lv Zhiyuan <zhiyuan.lv@intel.com>,
-        Dapeng Mi <dapeng1.mi@intel.com>,
-        Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH v2] KVM: x86/pmu: Manipulate FIXED_CTR_CTRL MSR with macros
-Date:   Tue, 15 Aug 2023 11:28:49 +0800
-Message-Id: <20230815032849.2929788-1-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+        Tue, 15 Aug 2023 04:17:06 -0400
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96E63E72
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Aug 2023 01:17:01 -0700 (PDT)
+Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-40c72caec5cso159121cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Aug 2023 01:17:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1692087420; x=1692692220;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pGGKDDNwGnFQDzqcRZv6uXfyy6kqSDcvWt33DukCwns=;
+        b=LHP7LRgi0HwWo/JsQoA/KJowFtt55lXAZ9F1CMz9YTK6LWVVxkJhkw2QNwXq+NV92v
+         m3sjTvjIfbAmMHZdetXXZZtW3B3VwoG7J5zab4YSZVqK6hzIcmEQkiLl/WyZX2+mYyqR
+         QQd65WXqP2zW2vWFBp9hPRLi3FP1JabL6s30FfuLcQLSjvZI1B1Mx6sB6+kbLqDJo7fI
+         6oSwAzG+AqDXCCvYtSHaGppdAX3mQIrWJv6myO8eCiz8YdCZ5/T2zZQuQHTvTfFrpObW
+         G0a8iBiqL6ddgdAJhm3de9XFaDnc8UfPniLeeQRTTp3Tnm5hoN33a50q26+TtOiT8ufx
+         uFQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692087420; x=1692692220;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pGGKDDNwGnFQDzqcRZv6uXfyy6kqSDcvWt33DukCwns=;
+        b=keq2R2CyBslQb5tXVQF2aaMpViHYkwDTHYST5jio2FnNeGquTxSvfUxlHrECu5vKlG
+         axvZU5A1NWefRVb8YEO+C2oWDAoQYi06CJkYmhyWoxN3XawceyL6eLmRCYyR0vC6KfOR
+         tHWHpXBnKvWsR+aJpru4GEgY27evT09q6zTcPlvhjQdK05ERKxhWWSrq134diIAAde/S
+         rDl+rHhRkjKJqYRExdYBh0Ax9ZLMiQasucChMmAWz8b2YU/8fJgMxg3ZZGljDoEtchnZ
+         F+kiRku0TnAqhH2iw23ysv5PXYI5zKBbSCpDgWHeT0+8HynQStfdogpY+6vzIaPir8KC
+         gJrA==
+X-Gm-Message-State: AOJu0YyLq5GrdFLoKHlONxcYQe7Xr1tVfJmKjurB0ID1JO2o3RxF9Yoo
+        IAJW2B5yzajQWMEl6QDRbWjFZ5RBLS09mR06KCS5LQ==
+X-Google-Smtp-Source: AGHT+IFJLjmq0YlyLOJA7m1XpDyTX80DZqvMd1mwYeyfAmBet8lx03RLtKBykd/NEr59kCdSXOpUh6UEJLM7doIDeGY=
+X-Received: by 2002:a05:622a:1888:b0:3f5:2006:50f1 with SMTP id
+ v8-20020a05622a188800b003f5200650f1mr814354qtc.12.1692087420657; Tue, 15 Aug
+ 2023 01:17:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230811025822.3859771-1-namhyung@kernel.org>
+In-Reply-To: <20230811025822.3859771-1-namhyung@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 15 Aug 2023 01:16:48 -0700
+Message-ID: <CAP-5=fXNTw8sYup-Gavn6u_NpTJv1DCSkxmAonCXdrxJp86MEw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf bpf-filter: Fix sample flag check with ||
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Magic numbers are used to manipulate the bit fields of
-FIXED_CTR_CTRL MSR. This is not read-friendly and use macros to replace
-these magic numbers to increase the readability.
+On Thu, Aug 10, 2023 at 7:58=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> For logical OR operator, the actual sample_flags are in the 'groups'
+> list so it needs to check entries in the list instead.  Otherwise it
+> would show the following error message.
+>
+>   $ sudo perf record -a -e cycles:p --filter 'period > 100 || weight > 0'=
+ sleep 1
+>   Error: cycles:p event does not have sample flags 0
+>   failed to set filter "BPF" on event cycles:p with 2 (No such file or di=
+rectory)
+>
+> Actually it should warn on 'weight' is used without WEIGHT flag.
+>
+>   Error: cycles:p event does not have PERF_SAMPLE_WEIGHT
+>    Hint: please add -W option to perf record
+>   failed to set filter "BPF" on event cycles:p with 2 (No such file or di=
+rectory)
+>
+> Fixes: 4310551b76e0 ("perf bpf filter: Show warning for missing sample fl=
+ags")
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- arch/x86/kvm/pmu.c | 10 +++++-----
- arch/x86/kvm/pmu.h |  6 ++++--
- 2 files changed, 9 insertions(+), 7 deletions(-)
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index edb89b51b383..fb4ef2da3e32 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -420,11 +420,11 @@ static void reprogram_counter(struct kvm_pmc *pmc)
- 	if (pmc_is_fixed(pmc)) {
- 		fixed_ctr_ctrl = fixed_ctrl_field(pmu->fixed_ctr_ctrl,
- 						  pmc->idx - INTEL_PMC_IDX_FIXED);
--		if (fixed_ctr_ctrl & 0x1)
-+		if (fixed_ctr_ctrl & INTEL_FIXED_0_KERNEL)
- 			eventsel |= ARCH_PERFMON_EVENTSEL_OS;
--		if (fixed_ctr_ctrl & 0x2)
-+		if (fixed_ctr_ctrl & INTEL_FIXED_0_USER)
- 			eventsel |= ARCH_PERFMON_EVENTSEL_USR;
--		if (fixed_ctr_ctrl & 0x8)
-+		if (fixed_ctr_ctrl & INTEL_FIXED_0_ENABLE_PMI)
- 			eventsel |= ARCH_PERFMON_EVENTSEL_INT;
- 		new_config = (u64)fixed_ctr_ctrl;
- 	}
-@@ -749,8 +749,8 @@ static inline bool cpl_is_matched(struct kvm_pmc *pmc)
- 	} else {
- 		config = fixed_ctrl_field(pmc_to_pmu(pmc)->fixed_ctr_ctrl,
- 					  pmc->idx - INTEL_PMC_IDX_FIXED);
--		select_os = config & 0x1;
--		select_user = config & 0x2;
-+		select_os = config & INTEL_FIXED_0_KERNEL;
-+		select_user = config & INTEL_FIXED_0_USER;
- 	}
- 
- 	return (static_call(kvm_x86_get_cpl)(pmc->vcpu) == 0) ? select_os : select_user;
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index 7d9ba301c090..ffda2ecc3a22 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -12,7 +12,8 @@
- 					  MSR_IA32_MISC_ENABLE_BTS_UNAVAIL)
- 
- /* retrieve the 4 bits for EN and PMI out of IA32_FIXED_CTR_CTRL */
--#define fixed_ctrl_field(ctrl_reg, idx) (((ctrl_reg) >> ((idx)*4)) & 0xf)
-+#define fixed_ctrl_field(ctrl_reg, idx) \
-+	(((ctrl_reg) >> ((idx) * INTEL_FIXED_BITS_STRIDE)) & INTEL_FIXED_BITS_MASK)
- 
- #define VMWARE_BACKDOOR_PMC_HOST_TSC		0x10000
- #define VMWARE_BACKDOOR_PMC_REAL_TIME		0x10001
-@@ -165,7 +166,8 @@ static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
- 
- 	if (pmc_is_fixed(pmc))
- 		return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
--					pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
-+					pmc->idx - INTEL_PMC_IDX_FIXED) &
-+					(INTEL_FIXED_0_KERNEL | INTEL_FIXED_0_USER);
- 
- 	return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
- }
+Thanks,
+Ian
 
-base-commit: 240f736891887939571854bd6d734b6c9291f22e
--- 
-2.34.1
-
+> ---
+>  tools/perf/util/bpf-filter.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
+> index 47f01df658d9..b51544996046 100644
+> --- a/tools/perf/util/bpf-filter.c
+> +++ b/tools/perf/util/bpf-filter.c
+> @@ -62,6 +62,16 @@ static int check_sample_flags(struct evsel *evsel, str=
+uct perf_bpf_filter_expr *
+>         if (evsel->core.attr.sample_type & expr->sample_flags)
+>                 return 0;
+>
+> +       if (expr->op =3D=3D PBF_OP_GROUP_BEGIN) {
+> +               struct perf_bpf_filter_expr *group;
+> +
+> +               list_for_each_entry(group, &expr->groups, list) {
+> +                       if (check_sample_flags(evsel, group) < 0)
+> +                               return -1;
+> +               }
+> +               return 0;
+> +       }
+> +
+>         info =3D get_sample_info(expr->sample_flags);
+>         if (info =3D=3D NULL) {
+>                 pr_err("Error: %s event does not have sample flags %lx\n"=
+,
+> --
+> 2.41.0.640.ga95def55d0-goog
+>
