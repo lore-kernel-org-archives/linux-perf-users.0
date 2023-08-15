@@ -2,386 +2,257 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8085C001B0
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 12:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 953DFC0015E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 13:06:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237217AbjHOMoB (ORCPT
+        id S234575AbjHONGN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Aug 2023 08:44:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35834 "EHLO
+        Tue, 15 Aug 2023 09:06:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237264AbjHOMni (ORCPT
+        with ESMTP id S237377AbjHONFx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Aug 2023 08:43:38 -0400
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC19A172A;
-        Tue, 15 Aug 2023 05:43:34 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0Vps.ZOj_1692103407;
-Received: from 30.221.150.39(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0Vps.ZOj_1692103407)
-          by smtp.aliyun-inc.com;
-          Tue, 15 Aug 2023 20:43:29 +0800
-Message-ID: <2b1fd6cd-69a0-c38d-c1c2-442dc36456a3@linux.alibaba.com>
-Date:   Tue, 15 Aug 2023 20:43:27 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.13.0
-Subject: Re: [PATCH v6 6/7] perf jevents: Add support for Arm CMN PMU aliasing
-To:     Ian Rogers <irogers@google.com>
-Cc:     John Garry <john.g.garry@oracle.com>,
+        Tue, 15 Aug 2023 09:05:53 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5B88C10C0;
+        Tue, 15 Aug 2023 06:05:48 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3BC931063;
+        Tue, 15 Aug 2023 06:06:30 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.3.119])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D01AC3F6C4;
+        Tue, 15 Aug 2023 06:05:45 -0700 (PDT)
+Date:   Tue, 15 Aug 2023 14:05:36 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     James Clark <james.clark@arm.com>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
         Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>
-References: <1691394685-61240-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1691394685-61240-7-git-send-email-renyu.zj@linux.alibaba.com>
- <CAP-5=fWyLQrYt=LVS9SoxsuZuR5fmRaNOn+v8qxdYa6WH7WmMA@mail.gmail.com>
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <CAP-5=fWyLQrYt=LVS9SoxsuZuR5fmRaNOn+v8qxdYa6WH7WmMA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V13 - RESEND 02/10] arm64/perf: Add BRBE registers and
+ fields
+Message-ID: <ZNt3mQeGbql4oi55@FVFF77S0Q05N>
+References: <20230711082455.215983-1-anshuman.khandual@arm.com>
+ <20230711082455.215983-3-anshuman.khandual@arm.com>
+ <20230728162011.GA22050@willie-the-truck>
+ <89ce4bc4-00c5-a763-3179-e1d3e9f198b7@arm.com>
+ <937468a1-b325-7d05-8daf-765f911c9240@arm.com>
+ <ZMd5gCOHqnGRc0Ja@FVFF77S0Q05N>
+ <f5437bfc-e458-bc23-bc31-a308aa412463@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f5437bfc-e458-bc23-bc31-a308aa412463@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-在 2023/8/15 上午6:36, Ian Rogers 写道:
-> On Mon, Aug 7, 2023 at 12:51 AM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
->>
->> Currently just add aliases for part of Arm CMN PMU events which
->> are general and compatible for any SoC and CMN-ANY.
->>
->> "Compat" value "434*;436*;43c*;43a*" means it is compatible with
->> all CMN600/CMN650/CMN700/Ci700, which can be obtained from
->> commit 7819e05a0dce ("perf/arm-cmn: Revamp model detection").
->>
->> The arm-cmn PMU events got from:
+On Tue, Aug 15, 2023 at 11:17:19AM +0100, James Clark wrote:
 > 
-> nit: The use of the words "events" and "aliases" can be confusing -
-> aliases isn't specific as there may be a notion of other aliases like
-> for PMU names. I think in the code base we should avoid to use
-> "aliases" and just use "events".
 > 
+> On 31/07/2023 10:06, Mark Rutland wrote:
+> > On Mon, Jul 31, 2023 at 08:03:21AM +0530, Anshuman Khandual wrote:
+> >>
+> >>
+> >> On 7/28/23 22:22, James Clark wrote:
+> >>>
+> >>>
+> >>> On 28/07/2023 17:20, Will Deacon wrote:
+> >>>> On Tue, Jul 11, 2023 at 01:54:47PM +0530, Anshuman Khandual wrote:
+> >>>>> This adds BRBE related register definitions and various other related field
+> >>>>> macros there in. These will be used subsequently in a BRBE driver which is
+> >>>>> being added later on.
+> >>>>>
+> >>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> >>>>> Cc: Will Deacon <will@kernel.org>
+> >>>>> Cc: Marc Zyngier <maz@kernel.org>
+> >>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+> >>>>> Cc: linux-arm-kernel@lists.infradead.org
+> >>>>> Cc: linux-kernel@vger.kernel.org
+> >>>>> Tested-by: James Clark <james.clark@arm.com>
+> >>>>> Reviewed-by: Mark Brown <broonie@kernel.org>
+> >>>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> >>>>> ---
+> >>>>>  arch/arm64/include/asm/sysreg.h | 103 +++++++++++++++++++++
+> >>>>>  arch/arm64/tools/sysreg         | 158 ++++++++++++++++++++++++++++++++
+> >>>>>  2 files changed, 261 insertions(+)
+> >>>>>
+> >>>>> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+> >>>>> index b481935e9314..f95e30c13c8b 100644
+> >>>>> --- a/arch/arm64/include/asm/sysreg.h
+> >>>>> +++ b/arch/arm64/include/asm/sysreg.h
+> >>>>> @@ -163,6 +163,109 @@
+> >>>>>  #define SYS_DBGDTRTX_EL0		sys_reg(2, 3, 0, 5, 0)
+> >>>>>  #define SYS_DBGVCR32_EL2		sys_reg(2, 4, 0, 7, 0)
+> >>>>>  
+> >>>>> +#define __SYS_BRBINFO(n)		sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10)) >> 2 + 0))
+> >>>>> +#define __SYS_BRBSRC(n)			sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10)) >> 2 + 1))
+> >>>>> +#define __SYS_BRBTGT(n)			sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10)) >> 2 + 2))
+> >>>>
+> >>>> It's that time on a Friday but... aren't these macros busted? I think you
+> >>>> need brackets before adding the offset, otherwise wouldn't, for example,
+> >>>> target registers 0-15 all access info register 0 and __SYS_BRBTGT(16) would
+> >>>> then start accessing source register 0?
+> >>>>
+> >>>> I'm surprised that the compiler doesn't warn about this, but even more
+> >>>> surprised that you managed to test this.
+> >>>>
+> >>>> Please tell me I'm wrong!
+> >>>>
+> >>>> Will
+> >>>
+> >>> No I think you are right, it is wrong. Luckily there is already an
+> >>> extraneous bracket so you you can fix it by moving one a place down:
+> >>>
+> >>>   sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10) >> 2) + 2))
+> >>>
+> >>> It's interesting because the test [1] is doing quite a bit and looking
+> >>> at the branch info, and that src and targets match up to function names.
+> >>> I also manually looked at the branch buffers and didn't see anything
+> >>> obviously wrong like things that looked like branch infos in the source
+> >>> or target fields. Will have to take another look to see if it would be
+> >>> possible for the test to catch this.
+> >>>
+> >>> James
+> >>>
+> >>> [1]:
+> >>> https://gitlab.arm.com/linux-arm/linux-jc/-/commit/3a7ddce70c2daadb63fcc511de0a89055ca48b32
+> >>
+> >> ((((n) & 0x10)) >> 2 + 2) ---> ((((n) & 0x10) >> 2) + 2)
+> >>
+> >> The additional brackets are useful in explicitly telling the compiler but
+> >> what it the compiler is just doing the right thing implicitly i.e computing
+> >> the shifting operation before doing the offset addition.
+> > 
+> > No; that is not correct. In c, '+' has higher precedence than '>>'.
+> > 
+> > For 'a >> b + c' the compiler *must* treat that as 'a >> (b + c)', and not as
+> > '(a >> b) + c'
+> > 
+> > That's trivial to test:
+> > 
+> > | [mark@gravadlaks:~]% cat shiftadd.c 
+> > | #include <stdio.h>
+> > | 
+> > | unsigned long logshiftadd(unsigned long a,
+> > |                           unsigned long b,
+> > |                           unsigned long c)
+> > | {
+> > |         printf("%ld >> %ld + %ld is %ld\n",
+> > |                a, b, c, a >> b + c);
+> > | }
+> > | 
+> > | int main(int argc, char *argv)
+> > | {
+> > |         logshiftadd(0, 0, 0);
+> > |         logshiftadd(0, 0, 1);
+> > |         logshiftadd(0, 0, 2);
+> > |         printf("\n");
+> > |         logshiftadd(1024, 0, 0);
+> > |         logshiftadd(1024, 0, 1);
+> > |         logshiftadd(1024, 0, 2);
+> > |         printf("\n");
+> > |         logshiftadd(1024, 2, 0);
+> > |         logshiftadd(1024, 2, 1);
+> > |         logshiftadd(1024, 2, 2);
+> > | 
+> > |         return 0;
+> > | }
+> > | [mark@gravadlaks:~]% gcc shiftadd.c -o shiftadd
+> > | [mark@gravadlaks:~]% ./shiftadd 
+> > | 0 >> 0 + 0 is 0
+> > | 0 >> 0 + 1 is 0
+> > | 0 >> 0 + 2 is 0
+> > | 
+> > | 1024 >> 0 + 0 is 1024
+> > | 1024 >> 0 + 1 is 512
+> > | 1024 >> 0 + 2 is 256
+> > | 
+> > | 1024 >> 2 + 0 is 256
+> > | 1024 >> 2 + 1 is 128
+> > | 1024 >> 2 + 2 is 64
+> > 
+> >> During testing, all > those captured branch records looked alright.
+> > 
+> > I think we clearly need better testing here.
+> > 
+> > Thanks,
+> > Mark.
+> 
+> Hi Will and Mark,
+> 
+> So I started looking into the test both with and without the fix,
+> strangely I couldn't see any difference in the branch outputs, or
+> anywhere in the driver where it would be flipping or filtering anything
+> to make it only appear to be working. This was a bit confusing, but
+> added up with the original point that the test was passing and it was
+> actually doing something.
+> 
+> So I started going deeper and found what the issue (non-issue) is.
+> 
+> Firstly why is there no warning:
+> 
+> The expression is stringified and passed to the assembler, so it skips
+> the C compiler warning settings. I can send a patch to fix this, but all
+> we need to do is get the compiler to evaluate the argument and then
+> throw it away, luckily there are no other issues found even with an
+> allyesconfig, so BRBE was the only thing with this bug:
+> 
+>  #define read_sysreg_s(r) ({
+>  	u64 __val;
+> +	u32 __maybe_unused __check_r = (u32)(r);
+>  	asm volatile(__mrs_s("%0", r) : "=r" (__val));
+>  	__val;					
+>  })
+> 
+> 
+> Secondly, why does BRBE actually work:
+> 
+> Well the assembler (at least in my Clang toolchain) has a different
+> order of operations to C. I put a minimal repro here:
+> https://godbolt.org/z/YP9adh5xh
+> 
+> You can see the op2 should be a 0b100000 (0x20) for BRBSRC and it
+> appears to be, you can also see that moving the bracket makes no
+> difference in this case.
+> 
+> For some more evidence, the disassembler I have locally actually gives
+> the correct register name, even when the bracket is wrong, and diffing
+> the .o file gives no difference when moving the bracket:
+> 
+>   0000000000000008 <main>:
+>    8:   d503245f        bti     c
+>    c:   d503201f        nop
+>   10:   d503201f        nop
+>   14:   2a1f03e0        mov     w0, wzr
+>   18:   d5318028        mrs     x8, brbsrc0_el1
+>   1c:   d5318128        mrs     x8, brbsrc1_el1
+>   20:   d65f03c0        ret
+> 
+> Seems completely crazy to me that this is actually the case. So maybe I
+> am also wrong. Don't know if this counts as a compiler bug or it's just
+> supposed to be like that.
 
-Thank you for your suggestions. But if I use "event" instead of "alias" here,
-it may not describe it clearly because essentially I am adding aliases to
-existing events rather than adding new events.
+From a quick dig, it's supposed to be like that: the GNU assembler uses a
+different operator precedence to C, and clang's assembler does the same for
+compatibility. What a great.
+
+Compare:
+
+  https://ftp.gnu.org/old-gnu/Manuals/gas-2.9.1/html_chapter/as_6.html#SEC66
+
+... with:
+
+  https://en.wikipedia.org/wiki/Operators_in_C_and_C%2B%2B#Operator_precedence
+
+Adding the brackets will make this work in either case, so I think that's the
+right thing to do for now.
 
 Thanks,
-Jing
-
-> Thanks,
-> Ian
-> 
->> [0] https://developer.arm.com/documentation/100180/0302/?lang=en
->> [1] https://developer.arm.com/documentation/101408/0100/?lang=en
->> [2] https://developer.arm.com/documentation/102308/0302/?lang=en
->> [3] https://developer.arm.com/documentation/101569/0300/?lang=en
->>
->> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
->> Reviewed-by: John Garry <john.g.garry@oracle.com>
->> ---
->>  .../pmu-events/arch/arm64/arm/cmn/sys/cmn.json     | 266 +++++++++++++++++++++
->>  tools/perf/pmu-events/jevents.py                   |   1 +
->>  2 files changed, 267 insertions(+)
->>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
->>
->> diff --git a/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
->> new file mode 100644
->> index 0000000..e54036c
->> --- /dev/null
->> +++ b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
->> @@ -0,0 +1,266 @@
->> +[
->> +       {
->> +               "EventName": "hnf_cache_miss",
->> +               "EventIdCode": "0x1",
->> +               "Type": "0x5",
->> +               "BriefDescription": "Counts total cache misses in first lookup result (high priority).",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "hnf_slc_sf_cache_access",
->> +               "EventIdCode": "0x2",
->> +               "Type": "0x5",
->> +               "BriefDescription": "Counts number of cache accesses in first access (high priority).",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "hnf_cache_fill",
->> +               "EventIdCode": "0x3",
->> +               "Type": "0x5",
->> +               "BriefDescription": "Counts total allocations in HN SLC (all cache line allocations to SLC).",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "hnf_pocq_retry",
->> +               "EventIdCode": "0x4",
->> +               "Type": "0x5",
->> +               "BriefDescription": "Counts number of retried requests.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "hnf_pocq_reqs_recvd",
->> +               "EventIdCode": "0x5",
->> +               "Type": "0x5",
->> +               "BriefDescription": "Counts number of requests that HN receives.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "hnf_sf_hit",
->> +               "EventIdCode": "0x6",
->> +               "Type": "0x5",
->> +               "BriefDescription": "Counts number of SF hits.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "hnf_sf_evictions",
->> +               "EventIdCode": "0x7",
->> +               "Type": "0x5",
->> +               "BriefDescription": "Counts number of SF eviction cache invalidations initiated.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "hnf_dir_snoops_sent",
->> +               "EventIdCode": "0x8",
->> +               "Type": "0x5",
->> +               "BriefDescription": "Counts number of directed snoops sent (not including SF back invalidation).",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "hnf_brd_snoops_sent",
->> +               "EventIdCode": "0x9",
->> +               "Type": "0x5",
->> +               "BriefDescription": "Counts number of multicast snoops sent (not including SF back invalidation).",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "hnf_slc_eviction",
->> +               "EventIdCode": "0xa",
->> +               "Type": "0x5",
->> +               "BriefDescription": "Counts number of SLC evictions (dirty only).",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "hnf_slc_fill_invalid_way",
->> +               "EventIdCode": "0xb",
->> +               "Type": "0x5",
->> +               "BriefDescription": "Counts number of SLC fills to an invalid way.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "hnf_mc_retries",
->> +               "EventIdCode": "0xc",
->> +               "Type": "0x5",
->> +               "BriefDescription": "Counts number of retried transactions by the MC.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "hnf_mc_reqs",
->> +               "EventIdCode": "0xd",
->> +               "Type": "0x5",
->> +               "BriefDescription": "Counts number of requests that are sent to MC.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "hnf_qos_hh_retry",
->> +               "EventIdCode": "0xe",
->> +               "Type": "0x5",
->> +               "BriefDescription": "Counts number of times a HighHigh priority request is protocolretried at the HN‑F.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "rnid_s0_rdata_beats",
->> +               "EventIdCode": "0x1",
->> +               "Type": "0xa",
->> +               "BriefDescription": "Number of RData beats (RVALID and RREADY) dispatched on port 0. This event measures the read bandwidth, including CMO responses.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "rnid_s1_rdata_beats",
->> +               "EventIdCode": "0x2",
->> +               "Type": "0xa",
->> +               "BriefDescription": "Number of RData beats (RVALID and RREADY) dispatched on port 1. This event measures the read bandwidth, including CMO responses.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "rnid_s2_rdata_beats",
->> +               "EventIdCode": "0x3",
->> +               "Type": "0xa",
->> +               "BriefDescription": "Number of RData beats (RVALID and RREADY) dispatched on port 2. This event measures the read bandwidth, including CMO responses.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "rnid_rxdat_flits",
->> +               "EventIdCode": "0x4",
->> +               "Type": "0xa",
->> +               "BriefDescription": "Number of RXDAT flits received. This event measures the true read data bandwidth, excluding CMOs.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "rnid_txdat_flits",
->> +               "EventIdCode": "0x5",
->> +               "Type": "0xa",
->> +               "BriefDescription": "Number of TXDAT flits dispatched. This event measures the write bandwidth.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "rnid_txreq_flits_total",
->> +               "EventIdCode": "0x6",
->> +               "Type": "0xa",
->> +               "BriefDescription": "Number of TXREQ flits dispatched. This event measures the total request bandwidth.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "rnid_txreq_flits_retried",
->> +               "EventIdCode": "0x7",
->> +               "Type": "0xa",
->> +               "BriefDescription": "Number of retried TXREQ flits dispatched. This event measures the retry rate.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "sbsx_txrsp_retryack",
->> +               "EventIdCode": "0x4",
->> +               "Type": "0x7",
->> +               "BriefDescription": "Number of RXREQ flits dispatched. This event is a measure of the retry rate.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "sbsx_txdat_flitv",
->> +               "EventIdCode": "0x5",
->> +               "Type": "0x7",
->> +               "BriefDescription": "Number of TXDAT flits dispatched from XP to SBSX. This event is a measure of the write bandwidth.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "sbsx_arvalid_no_arready",
->> +               "EventIdCode": "0x21",
->> +               "Type": "0x7",
->> +               "BriefDescription": "Number of cycles the SBSX bridge is stalled because of backpressure on AR channel.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "sbsx_awvalid_no_awready",
->> +               "EventIdCode": "0x22",
->> +               "Type": "0x7",
->> +               "BriefDescription": "Number of cycles the SBSX bridge is stalled because of backpressure on AW channel.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "sbsx_wvalid_no_wready",
->> +               "EventIdCode": "0x23",
->> +               "Type": "0x7",
->> +               "BriefDescription": "Number of cycles the SBSX bridge is stalled because of backpressure on W channel.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "hni_txrsp_retryack",
->> +               "EventIdCode": "0x2a",
->> +               "Type": "0x4",
->> +               "BriefDescription": "Number of RXREQ flits dispatched. This event is a measure of the retry rate.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "hni_arvalid_no_arready",
->> +               "EventIdCode": "0x2b",
->> +               "Type": "0x4",
->> +               "BriefDescription": "Number of cycles the HN-I bridge is stalled because of backpressure on AR channel.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "hni_arready_no_arvalid",
->> +               "EventIdCode": "0x2c",
->> +               "Type": "0x4",
->> +               "BriefDescription": "Number of cycles the AR channel is waiting for new requests from HN-I bridge.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "hni_awvalid_no_awready",
->> +               "EventIdCode": "0x2d",
->> +               "Type": "0x4",
->> +               "BriefDescription": "Number of cycles the HN-I bridge is stalled because of backpressure on AW channel.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "hni_awready_no_awvalid",
->> +               "EventIdCode": "0x2e",
->> +               "Type": "0x4",
->> +               "BriefDescription": "Number of cycles the AW channel is waiting for new requests from HN-I bridge.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "hni_wvalid_no_wready",
->> +               "EventIdCode": "0x2f",
->> +               "Type": "0x4",
->> +               "BriefDescription": "Number of cycles the HN-I bridge is stalled because of backpressure on W channel.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       },
->> +       {
->> +               "EventName": "hni_txdat_stall",
->> +               "EventIdCode": "0x30",
->> +               "Type": "0x4",
->> +               "BriefDescription": "TXDAT valid but no link credit available.",
->> +               "Unit": "arm_cmn",
->> +               "Compat": "434*;436*;43c*;43a*"
->> +       }
->> +]
->> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
->> index 9c0f63a..bfdfb67 100755
->> --- a/tools/perf/pmu-events/jevents.py
->> +++ b/tools/perf/pmu-events/jevents.py
->> @@ -272,6 +272,7 @@ class JsonEvent:
->>            'DFPMC': 'amd_df',
->>            'cpu_core': 'cpu_core',
->>            'cpu_atom': 'cpu_atom',
->> +          'arm_cmn': 'arm_cmn',
->>        }
->>        return table[unit] if unit in table else f'uncore_{unit.lower()}'
->>
->> --
->> 1.8.3.1
->>
+Mark.
