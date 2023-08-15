@@ -2,183 +2,201 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E52C04A6A
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 18:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFF9C001E0
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 18:49:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239065AbjHOS2w (ORCPT
+        id S239403AbjHOStR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Aug 2023 14:28:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58938 "EHLO
+        Tue, 15 Aug 2023 14:49:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239103AbjHOS2W (ORCPT
+        with ESMTP id S239484AbjHOStN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Aug 2023 14:28:22 -0400
+        Tue, 15 Aug 2023 14:49:13 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0E1C1BC1;
-        Tue, 15 Aug 2023 11:28:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 519CB2122;
+        Tue, 15 Aug 2023 11:48:39 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D435E636E1;
-        Tue, 15 Aug 2023 18:28:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13927C433C8;
-        Tue, 15 Aug 2023 18:28:08 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 80B4465EEF;
+        Tue, 15 Aug 2023 18:45:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83888C433C7;
+        Tue, 15 Aug 2023 18:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692124088;
-        bh=K+26otvjFP17cj7wEWOr2nFfsRJWCmK3+NoKvksgHS0=;
+        s=k20201202; t=1692125130;
+        bh=iRqVcT0rx/WBeVqvZr8C3SmuYLCDnBwbzwYnneJXSK8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RkdpQIw4DeWACFcizOeb+JqOBZSS+g1ZMqs3iIXgoXSa2nCvbbeW8sXmAg+TFraqQ
-         6Qw3rv5ntIRC2COrrk4eFL09IzgWeHrNqW8Xn1GsQfl4x0wLiSpsiuQx6/wqPA7Y4d
-         qG9qI54XfEmGTUk0YnVp7YQJ07bd++V/yHtpSFkCeBh9eHafjULLXBnI9FilEdvPiw
-         JjtqGE7Y8MFIrpG3UCeOlNxQWhWslwMWyDd7wLqAm6GWWZ/QSVSAbwxB0efsTbvpQu
-         UGaYpwSw2JakyBp7brO2aGob4ivUmK6r2HWMBIXxIAc7MqW2LwRJeKN98jnengdH5A
-         HVZXW6d+LKiZA==
+        b=oF9Q/hImdY6G1jhqdYXJP0Ku/URDmEnEu1wdvPRGFwSCIfV6MAKG2DYu0XvgHfoXl
+         mfFFxW+dy5g9tNSfv4YGNswzIuXYAfED8BGYGrZA1Lu80j3a70CBYLsOHqZMb9HNL4
+         X73Td1Wf6ZkNsXO1jfFgv2HgoUfVskhG27U0oOvFFFT5YYDZPg7o6jPi67Q7HV75nO
+         c/21A9DPoRe4gk8AEm2+mL/VPbfo1xHy3uBvM/FBBDSbiMXooBL79JvJ58i9z/qWfk
+         nxTGcpJ1M4hHoIFmmQ+3XYKDpCzAgxXB9vuIV/vJkyq/C4GUMI6WWqTkiq/FVhNzJY
+         dxXK1JFr66ozA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AFE01404DF; Tue, 15 Aug 2023 15:28:05 -0300 (-03)
-Date:   Tue, 15 Aug 2023 15:28:05 -0300
+        id EE356404DF; Tue, 15 Aug 2023 15:45:27 -0300 (-03)
+Date:   Tue, 15 Aug 2023 15:45:27 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     Alexandre Ghiti <alexghiti@rivosinc.com>,
-        Jonathan Corbet <corbet@lwn.net>,
+Cc:     Leo Yan <leo.yan@linaro.org>, John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Guo Ren <guoren@kernel.org>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <atishp@atishpatra.org>,
-        Anup Patel <anup@brainfault.org>,
-        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-        Andrew Jones <ajones@ventanamicro.com>,
-        =?iso-8859-1?Q?R=E9mi?= Denis-Courmont <remi@remlab.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Atish Patra <atishp@rivosinc.com>
-Subject: Re: [PATCH v6 09/10] tools: lib: perf: Implement riscv mmap support
-Message-ID: <ZNvDtR/zmlDngjBH@kernel.org>
-References: <20230802080328.1213905-1-alexghiti@rivosinc.com>
- <20230802080328.1213905-10-alexghiti@rivosinc.com>
- <CAP-5=fWZ8GDBn3fUUzjwknLq4KZV4tepX03oDn092zzboC8Dgw@mail.gmail.com>
+        Huacai Chen <chenhuacai@kernel.org>,
+        Ming Wang <wangming01@loongson.cn>,
+        Eric Lin <eric.lin@sifive.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Ivan Babrou <ivan@cloudflare.com>,
+        Fangrui Song <maskray@google.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-csky@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 0/6] perf parse-regs: Refactor architecture functions
+Message-ID: <ZNvHx+KxIL6JzEl/@kernel.org>
+References: <20230606014559.21783-1-leo.yan@linaro.org>
+ <CAP-5=fV1m440mKc0R=m5C4N2NtoiixchtnpX2eR3PA_5hXbqEQ@mail.gmail.com>
+ <ZNvCxM/ULdUfzHtR@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWZ8GDBn3fUUzjwknLq4KZV4tepX03oDn092zzboC8Dgw@mail.gmail.com>
+In-Reply-To: <ZNvCxM/ULdUfzHtR@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Aug 14, 2023 at 09:44:29AM -0700, Ian Rogers escreveu:
-> On Wed, Aug 2, 2023 at 1:13 AM Alexandre Ghiti <alexghiti@rivosinc.com> wrote:
-> >
-> > riscv now supports mmaping hardware counters so add what's needed to
-> > take advantage of that in libperf.
-> >
-> > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> > Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-> > Reviewed-by: Atish Patra <atishp@rivosinc.com>
+Em Tue, Aug 15, 2023 at 03:24:04PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Wed, Jul 12, 2023 at 03:37:36PM -0700, Ian Rogers escreveu:
+> > On Mon, Jun 5, 2023 at 6:46 PM Leo Yan <leo.yan@linaro.org> wrote:
+> > >
+> > > This patch series is to refactor arch related functions for register
+> > > parsing, which follows up the discussion for v1:
+> > > https://lore.kernel.org/lkml/20230520025537.1811986-1-leo.yan@linaro.org/
+> > >
+> > > Compared to patch series v1, this patch series introduces new functions
+> > > perf_arch_reg_{ip|sp}(), so this can allow the tool to support cross
+> > > analysis.
+> > >
+> > > To verify the cross analysis, I used below steps:
+> > >
+> > > - Firstly, I captured perf data on Arm64 machine:
+> > >
+> > >   $ perf record --call-graph fp -- ./test_program
+> > >
+> > >   Or ...
+> > >
+> > >   $ perf record --call-graph dwarf -- ./test_program
+> > >
+> > >   Then, I also archived associated debug data:
+> > >
+> > >   $ perf archive
+> > >
+> > > - Secondly, I copied the perf data file and debug tar file on my x86
+> > >   machine:
+> > >
+> > >   $ scp perf.data perf.data.tar.bz2 leoy@IP_ADDRESS:/target/path/
+> > >
+> > > - On x86 machine, I need to build perf for support multi-arch unwinding:
+> > >
+> > >   $ git clone http://git.savannah.gnu.org/r/libunwind.git
+> > >   $ cd libunwind
+> > >   $ autoreconf -i
+> > >
+> > >   # Build and install libunwind aarch64:
+> > >   $ ./configure prefix=/home/leoy/Work/tools/libunwind/install/ \
+> > >         --target=aarch64-linux-gnu CC=x86_64-linux-gnu-gcc
+> > >   $ make && make install
+> > >
+> > >   # Build and install libunwind x86:
+> > >   $ ./configure prefix=/home/leoy/Work/tools/libunwind/install/ \
+> > >         --target=x86_64-linux-gnu CC=x86_64-linux-gnu-gcc
+> > >   $ make && make install
+> > >
+> > > - Build perf tool for support multi-archs:
+> > >
+> > >   $ cd $LINUX/tools/perf
+> > >   $ make VF=1 DEBUG=1 LIBUNWIND_DIR=/home/leoy/Work/tools/libunwind/install
+> > >
+> > > At the end, I verified the x86 perf tool can do cross analysis for aarch64's
+> > > perf data file.
+> > >
+> > > Note, I still see x86 perf tool cannot display the complete callgraph
+> > > for aarch64, but it should not the issue caused by this series, which
+> > > will be addressed by separate patches.
+> > >
+> > > I also built this patch series on my Arm64 and x86 machines, both can
+> > > compile perf tool successfully; but I have no chance to build other
+> > > archs natively.
+> > >
+> > > Changes from v1:
+> > > - For support cross analysis for IP/SP registers, introduced patch 0002
+> > >   (James Clark, Ian Rogers).
+> > >
+> > >
+> > > Leo Yan (6):
+> > >   perf parse-regs: Refactor arch register parsing functions
+> > >   perf parse-regs: Introduce functions perf_arch_reg_{ip|sp}()
+> > >   perf unwind: Use perf_arch_reg_{ip|sp}() to substitute macros
+> > >   perf parse-regs: Remove unused macros PERF_REG_{IP|SP}
+> > >   perf parse-regs: Remove PERF_REGS_{MAX|MASK} from common code
+> > >   perf parse-regs: Move out arch specific header from util/perf_regs.h
+> > 
+> > Sorry for the slow review. For the series:
+> > Acked-by: Ian Rogers <irogers@google.com>
+> > 
+> > Some thoughts:
+> > uint64_t __perf_reg_ip_arm(void)
+> > uint64_t seems like we're giving a lot of space for future register
+> > encodings. I think some of the other functions use this size of value
+> > due to returning a bitmap/mask, but here it isn't clear and just feels
+> > excessive.
+> > 
+> > Do we need the "__" prefix on all the functions?
+> > 
+> > In Makefile.config there are NO_PERF_REGS and CONFIG_PERF_REGS then
+> > the define HAVE_PERF_REGS_SUPPORT. Is this still relevant? If we had
+> > an architecture with no support, couldn't it still read a perf.data
+> > file from a supported architecture? It would be nice to remove at
+> > least NO_PERF_REGS and HAVE_PERF_REGS_SUPPORT.
+> > 
+> > This change is very worthwhile fix and cleanup, it didn't introduce
+> > what is pondered above, hence the acked-by.
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> Agreed, applied to perf-tools-next, sorry for the delay.
 
-Thanks, applied.
+Had to add this to make 'perf test python' to work. Please run 'perf
+test' before sending patches.
 
 - Arnaldo
 
- 
-> Thanks,
-> Ian
-> 
-> > ---
-> >  tools/lib/perf/mmap.c | 66 +++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 66 insertions(+)
-> >
-> > diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
-> > index 0d1634cedf44..2184814b37dd 100644
-> > --- a/tools/lib/perf/mmap.c
-> > +++ b/tools/lib/perf/mmap.c
-> > @@ -392,6 +392,72 @@ static u64 read_perf_counter(unsigned int counter)
-> >
-> >  static u64 read_timestamp(void) { return read_sysreg(cntvct_el0); }
-> >
-> > +/* __riscv_xlen contains the witdh of the native base integer, here 64-bit */
-> > +#elif defined(__riscv) && __riscv_xlen == 64
-> > +
-> > +/* TODO: implement rv32 support */
-> > +
-> > +#define CSR_CYCLE      0xc00
-> > +#define CSR_TIME       0xc01
-> > +
-> > +#define csr_read(csr)                                          \
-> > +({                                                             \
-> > +       register unsigned long __v;                             \
-> > +               __asm__ __volatile__ ("csrr %0, %1"             \
-> > +                : "=r" (__v)                                   \
-> > +                : "i" (csr) : );                               \
-> > +                __v;                                           \
-> > +})
-> > +
-> > +static unsigned long csr_read_num(int csr_num)
-> > +{
-> > +#define switchcase_csr_read(__csr_num, __val)           {\
-> > +       case __csr_num:                                 \
-> > +               __val = csr_read(__csr_num);            \
-> > +               break; }
-> > +#define switchcase_csr_read_2(__csr_num, __val)         {\
-> > +       switchcase_csr_read(__csr_num + 0, __val)        \
-> > +       switchcase_csr_read(__csr_num + 1, __val)}
-> > +#define switchcase_csr_read_4(__csr_num, __val)         {\
-> > +       switchcase_csr_read_2(__csr_num + 0, __val)      \
-> > +       switchcase_csr_read_2(__csr_num + 2, __val)}
-> > +#define switchcase_csr_read_8(__csr_num, __val)         {\
-> > +       switchcase_csr_read_4(__csr_num + 0, __val)      \
-> > +       switchcase_csr_read_4(__csr_num + 4, __val)}
-> > +#define switchcase_csr_read_16(__csr_num, __val)        {\
-> > +       switchcase_csr_read_8(__csr_num + 0, __val)      \
-> > +       switchcase_csr_read_8(__csr_num + 8, __val)}
-> > +#define switchcase_csr_read_32(__csr_num, __val)        {\
-> > +       switchcase_csr_read_16(__csr_num + 0, __val)     \
-> > +       switchcase_csr_read_16(__csr_num + 16, __val)}
-> > +
-> > +       unsigned long ret = 0;
-> > +
-> > +       switch (csr_num) {
-> > +       switchcase_csr_read_32(CSR_CYCLE, ret)
-> > +       default:
-> > +               break;
-> > +       }
-> > +
-> > +       return ret;
-> > +#undef switchcase_csr_read_32
-> > +#undef switchcase_csr_read_16
-> > +#undef switchcase_csr_read_8
-> > +#undef switchcase_csr_read_4
-> > +#undef switchcase_csr_read_2
-> > +#undef switchcase_csr_read
-> > +}
-> > +
-> > +static u64 read_perf_counter(unsigned int counter)
-> > +{
-> > +       return csr_read_num(CSR_CYCLE + counter);
-> > +}
-> > +
-> > +static u64 read_timestamp(void)
-> > +{
-> > +       return csr_read_num(CSR_TIME);
-> > +}
-> > +
-> >  #else
-> >  static u64 read_perf_counter(unsigned int counter __maybe_unused) { return 0; }
-> >  static u64 read_timestamp(void) { return 0; }
-> > --
-> > 2.39.2
-> >
-
--- 
-
-- Arnaldo
+diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
+index d4c9b4cd35efa556..26e1c8d973ea0b95 100644
+--- a/tools/perf/util/python-ext-sources
++++ b/tools/perf/util/python-ext-sources
+@@ -40,3 +40,12 @@ util/rwsem.c
+ util/hashmap.c
+ util/perf_regs.c
+ util/fncache.c
++util/perf-regs-arch/perf_regs_aarch64.c
++util/perf-regs-arch/perf_regs_arm.c
++util/perf-regs-arch/perf_regs_csky.c
++util/perf-regs-arch/perf_regs_loongarch.c
++util/perf-regs-arch/perf_regs_mips.c
++util/perf-regs-arch/perf_regs_powerpc.c
++util/perf-regs-arch/perf_regs_riscv.c
++util/perf-regs-arch/perf_regs_s390.c
++util/perf-regs-arch/perf_regs_x86.c
