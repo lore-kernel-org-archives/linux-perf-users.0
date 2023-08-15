@@ -2,61 +2,74 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CD0C41513
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 08:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3FEC04A6A
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 08:59:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235745AbjHOIxD (ORCPT
+        id S235832AbjHOI7L (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Aug 2023 04:53:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54624 "EHLO
+        Tue, 15 Aug 2023 04:59:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235779AbjHOIwn (ORCPT
+        with ESMTP id S235943AbjHOI6T (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Aug 2023 04:52:43 -0400
-Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30F95199F
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Aug 2023 01:52:36 -0700 (PDT)
-Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-4036bd4fff1so165771cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Aug 2023 01:52:36 -0700 (PDT)
+        Tue, 15 Aug 2023 04:58:19 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 014D4210D;
+        Tue, 15 Aug 2023 01:56:56 -0700 (PDT)
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37EJOteP023680;
+        Tue, 15 Aug 2023 08:56:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-03-30;
+ bh=g9Ug5OS6yxC0VCLbrcWEpchqXaoacIphXZlcwlGdsu0=;
+ b=zhN+VXthQQQheKnoJL15quHh0bnvAIxU+wjrBIpbP0eLORLzgQMFfUabwPKbBCqWTj6X
+ 1rNY6dI+MtNzCts3LvEmVRJeocQGBogA62mctnMdA/k92B8fZX34BC0OLLl31qrFh8p9
+ Y5VmromExA3sOEps0pQ8/8E35p2DoU+fvLFjTprNHqLbSD47CiZcLlHRH0hPROycLjva
+ OpVJN40lO3H1iV7hhGJPVNTgYoKQwW9gkXAJcDgP1QUTwqAVhkoeCeCMc9Um9RtHnWWB
+ tTAyYByBTvmdxvq1sEoZ7/xLQRIZVmQvkNMdOvJdbbIi15yfLRppjGFBHCVX0kCp4Rlg tQ== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3se2w5v9ca-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Aug 2023 08:56:37 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 37F6A0GD039411;
+        Tue, 15 Aug 2023 08:56:36 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3sey6yv3wy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Aug 2023 08:56:36 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UcjDi9mnsCQTDF6cxXJpOAejEWykjilbOyYnPaU53eoD7iO8MFdhLZ7kWYnQRX7xyi4D5mErK7pVesJpqZa97IAjrXuaeBczoRdnof08u/RZb5NqXCoh5NpvIfi4KO4bYOgTnitUoyTEbKerjsOS4Lygjcp1xwZhSNe3R0VNOuMyLzUMZSam1QuqjU1VQ95S7H9dHC4+PiOlZAhhqagu/kQhmYBi7l1cqsT3UrSdLaAvhRmwGuueeIjqZEUlpuPaNmyoX+xqSeGKjagAqP8v1OylNFiFZvgqpgXnl96fdo0pI6Ry3Sn1hOq/KSvLWmyCOWPITciTa4O1FEGamVFQ5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=g9Ug5OS6yxC0VCLbrcWEpchqXaoacIphXZlcwlGdsu0=;
+ b=NdnYBBsQf/CdYwObhRKLcY41bMS1c+phAmXHV1iNr3F7Z7Jg3SRSAQ295qdlQOF4jh1LDrtLRxyJwePotLnIsntZZ5KRjKPsFT+9ulg7WxhuA0c7FuNVOoygYcg+zuZndHcd8B2siz+WVQJ8SpfOPEkrmzzjLDWy9XIwsb/rCVgHJt3RlnsgiYR1LOzA5pK/OavahSEDILrGAO8eJsiJZ4LRra8w5kK+oQaNdYaHBI21kzWDfbmZG4ylwpvXijqnG2JSUfd7YrbX3qyHbn8RxNsOk3qLx51fJ5O1EHdWUu0ReGSfFCnOuFxjkoTiJ2wonv9L4I2VGUo8JsEleEFVZw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692089555; x=1692694355;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f9VjqH/35gx4SW1CcQE2O+0pUOC2whkW3P2dy/Z+roE=;
-        b=pv2BFJwrIBWY12nTH+udKOJJOq9RgmJfmRocleBgJzQENzVM5MveB6rdgoXiv/zhD5
-         QhiPXrYnrEU3GHb0jCimfBS+/T4PBPI+0hQIWCdsyfQe9qBxYQ2CdQmVX+oGGBgeZ/w+
-         y3yiQmALuLFLxvyqWbx1vQew4PH26Jo8qqViSskh8uiwCbaIM12JjiWxaPkuZO1N6Kl7
-         uKC1g1/teeX7eyUBaGmQmXCJVWmhpe19M4g9gftJKDLCk4srRyV6zP8vnfm2lO4fi0iz
-         NIQGdIpHzu+Hz8KHOWOxAZXcObS04HJCOOFwfcXDmKIrF8WHIya5nto/+HB3ZFn+eIy/
-         0v9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692089555; x=1692694355;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f9VjqH/35gx4SW1CcQE2O+0pUOC2whkW3P2dy/Z+roE=;
-        b=VcGSDej5yCRwnsWrl4YaqOGHiSX0QR/vPECI8WPNISNIrh4TwvzUlv6eTJwc1g12yi
-         la8wGWetFmoUKBPZv6PMcimKP1gh23x3iNSsTwPAirsVCL8OZHpVpr0Z37gYKI1oxt8k
-         qJNnPQFr3J2pDwmAG9jDRO1eJbtB1V9itsqiFUjeYxqvUjvmrtTdME/zS6fo2Ls3QTOx
-         CONS8ABNFCMe/K3VOgPPfBsGB39GXyrE1HyiEsWTDPFwGN4Nkz3daQUQm/CI+V3MOyAO
-         k/RvmLIzvsxWRBb/AzrlZXVthbvai/K0Q5ruKNSu/xolC5K9ep0izbyUHoIqtN1ECChM
-         YZeA==
-X-Gm-Message-State: AOJu0YxEJxvJWv3bb4U+Bq0S9wb7SnURWPWN0rhyak32LNUQVELkd9ww
-        WCORpbBv6W1QKMR/7jRO9Avvcaw+4bIL0/nZeJml4g==
-X-Google-Smtp-Source: AGHT+IEThtJMOYNGiQ5vHPC4N6EJyedGztOz+uhL9gmbmIxuHCx5repjszxeqnhjBgQfxk8Cx4AFSLlLTZa4rZ9cx+E=
-X-Received: by 2002:a05:622a:1043:b0:3ef:302c:319e with SMTP id
- f3-20020a05622a104300b003ef302c319emr885247qte.8.1692089555285; Tue, 15 Aug
- 2023 01:52:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <ZNOS0vo58DnVLpD8@yoga> <CAP-5=fUeOw1RKHoYL3eXbq=H-bTTNviRO2t_-11DN9KP1uEZFQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fUeOw1RKHoYL3eXbq=H-bTTNviRO2t_-11DN9KP1uEZFQ@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 15 Aug 2023 01:52:24 -0700
-Message-ID: <CAP-5=fUdhin4AvnikpUdUDiZQU_waSgzC_1GwW5kLF1GhWhdCg@mail.gmail.com>
-Subject: Re: [RESEND PATCH] perf scripts python: launch the profiler UI on the
- default browser with the appropriate URL
-To:     Anup Sharma <anupnewsmail@gmail.com>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g9Ug5OS6yxC0VCLbrcWEpchqXaoacIphXZlcwlGdsu0=;
+ b=WVl0XbWocHY+NddYgsS3um23uje9fhYh1XoEqiaztfJxQkKpGh64uYGAGPKd8XGHx9ryqNN6OWg5OPbxv8SYdxZ6y6GGmx29py/d9qv0sAn0kq3SJzZE2Ha294b46I7yWS+djivIM1hk6nEOUG+VLuI4AwdVrxWotACegi6sDBU=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by SJ0PR10MB4431.namprd10.prod.outlook.com (2603:10b6:a03:2dc::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.24; Tue, 15 Aug
+ 2023 08:56:33 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::ebfd:c49c:6b8:6fce]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::ebfd:c49c:6b8:6fce%7]) with mapi id 15.20.6678.022; Tue, 15 Aug 2023
+ 08:56:33 +0000
+Message-ID: <0e528710-c89b-1561-774b-fabc283e0e72@oracle.com>
+Date:   Tue, 15 Aug 2023 09:56:28 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH v2 2/3] perf pmus: Add scan that ignores duplicates, use
+ for perf list
+To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -65,256 +78,220 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <20230810214952.2934029-1-irogers@google.com>
+ <20230810214952.2934029-3-irogers@google.com>
+ <0111c4b3-174b-84cb-2749-a88342b80498@oracle.com>
+ <CAP-5=fWPUxOkOorOEiNSWPVhSxi+ANSR=_2rEzF_7hyS=3hF0Q@mail.gmail.com>
+ <CAP-5=fVOp-FcRR5oLvMVvb0R3sMgd=qnORwZGwdK1BbcqOBhHA@mail.gmail.com>
+Content-Language: en-US
+From:   John Garry <john.g.garry@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <CAP-5=fVOp-FcRR5oLvMVvb0R3sMgd=qnORwZGwdK1BbcqOBhHA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LO2P123CA0084.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:138::17) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|SJ0PR10MB4431:EE_
+X-MS-Office365-Filtering-Correlation-Id: d4a420ec-ff44-4598-a698-08db9d6d8678
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: YIqUB97pPONI08HkvGGeGjCFIULFQKKuY9kVB2UkwU9MzjTh1jWnsxKHQZhu9C1jA7+1DKY81CBdvKZKeF2jfEyVKAfBHv1FCiusY+Z9DnThllUO0B8dOgr7IfqRPEXXb3pSvr3nXjByDLehpIMCKV7ZkAxzYhyyRi6Q7gIIxjVlX4S5pEv16i/F7fhHA5kHANC3G5CzR3E3KgcTsv/1mTny+JyeEj6Hi/govVCzrxtN2FOqtJoW3DIBASDi9TsF8yf4BSBl/cfljrdNpcP6HT1Kvmeh3VH3xWY+/ns5nIWYBHJbZSkXjNAJgd5Sne19I5144p+D2Q2QTtcTh1IP/+qtrTQRbLPQbBchqrYNsvJIzp1n/Y31uwU+NGgQjH9CI4zs1sFEfGFOBnFMB97ID4iw6n5bI0HyCf+qs8YposdBejkNWxJychokhWrt/BHTPzVLCtFlSNbfcjLIxKXdYfAhuWa60S/DV9fR8hzh4StbhuV/UVQ+mDf8MqXvaKyJOaxvDDwfG0pIlKTO8IEWsMJlXIFTUze8kGO74ar+nK63tC69yE05Mv4SngboFhNEcYv/Ze45Tw4kBZS8bsYKBDsrkpEc+iKeLCZ2yKOuxz62ycXbtPuHjfijn0qhKYShdcerzo/U4GgvQ/JhRzj43A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(346002)(39860400002)(396003)(366004)(136003)(186006)(1800799006)(451199021)(83380400001)(36756003)(31686004)(41300700001)(38100700002)(66946007)(478600001)(6512007)(54906003)(66476007)(66556008)(6916009)(316002)(8936002)(8676002)(5660300002)(4326008)(2616005)(86362001)(26005)(31696002)(6486002)(7416002)(6666004)(2906002)(53546011)(6506007)(36916002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TjdSMGdTWEpJQ3R0b0srUlNWSVVLTTdiSlhsMlEwTzk0ZllpQWtSYStqY0Jp?=
+ =?utf-8?B?RVhXdDdHMjUvZW5iNFYzdzhjUnI4MHJYQkl0QUVtS2R5bFp0YjlvMkNKc1ZP?=
+ =?utf-8?B?UGtLL05JUFhGd1d2dkV3aURQcUJVa1IxZzEzMTdHVXQ2NUk3Y3dqK3Y5VUll?=
+ =?utf-8?B?eTRVeloxQk9KTFBjcDRFdFRJMXpYMHdOdkdMNEw3Z1Z5bkYxdVlqNlJ5MDFz?=
+ =?utf-8?B?Znp5K25LcDdNazA5T3JNSVBBb1hlZVZqcG9mUTgrRXRyVTJjU1BWWDFOeU1u?=
+ =?utf-8?B?RFc3R3pHV3ZNUnhPbzc0Y2RDcktTNzZpU3ovTkp3VjF1MEgydzBkcWJrS0hz?=
+ =?utf-8?B?Y0F2N3FqWEZwSnQvODEzSko3K1hZZEVyRkhUUkovbytYU0FPdit0bm54akE4?=
+ =?utf-8?B?ZS9TMk40RkJxRGJGT1laZTlCS3JBdXJYd0lJUW9xZXBHWHJSeldFRms4RUxG?=
+ =?utf-8?B?Sm9tVjdRV216WmY3YUdCL0p1OWVEczFnb09oNTlpbEVvL2tKbGJhSUhMdWJ5?=
+ =?utf-8?B?aTlweElqQ2U1cVNSVDdSZjZVL2RlTGVIMW05WmF5NW1lTjNJZFJZOHR2bkhE?=
+ =?utf-8?B?NGZNUWV3NWRQNkRPeFRUQlFNTFdFUXJidjR0Z0U4dWpZVDlUQTBHeDVocytT?=
+ =?utf-8?B?SzhVUGlaZWFDTXU4MVV5ak5ob2xtTlpEbm43eDBLNWtNeWNNdkl0eFMwMkt2?=
+ =?utf-8?B?NHJzRXhnWlpJV0xmVklXTlVaeG4vSlRkcVVXcWhsYWkxeGpDelVGdGpkQmpT?=
+ =?utf-8?B?Qko4QlRnSC9JUEg5OWpNMi91UUdGNzREd0JTSlN0NEtHRlFtVUFNVVJyWWFz?=
+ =?utf-8?B?V0ZvamZNbEJrQ1YxMVBybGdaUXVxZ2dPYWsxak1CdFdmMVIxanNLZGJtNi9P?=
+ =?utf-8?B?MXpDb25jYi80QTlSOUpQa0ZQREw2TWpyZWZLS2EwYkRnQXdWeUZmakljaXZI?=
+ =?utf-8?B?Njc0STh3ZEE4UlRla3NjUmV3RytEUWVJTEt0ckl3aHFiQk43VThaNUgzRWMw?=
+ =?utf-8?B?U0ZRNWJ6OTFlQUtjUUJtS2hRR2hwMjJBbGNBZ0d3VjkrRVdCRzhkZDFMbUFx?=
+ =?utf-8?B?NTdWbVI5dE9lVitPZHlKdXdaUW9DN1RoT3V5UXpUbWV2VkRkQVljbTJVQXRF?=
+ =?utf-8?B?clVCTllyRmxKaXdIV1AwMnBzR0lGYlkxQWk3WVlyK0ZYR0x1elNrdG52TnVV?=
+ =?utf-8?B?eUlYRS9pdEtaRWdYRlRRNWlCb0g5Z3VFVFl4dFJGaks2MnV0cVR5ZXV5UHZj?=
+ =?utf-8?B?aVAzNnpXdDdNcndobGh3NWxDR24rdVVLanRna2N4ZjhrTHNTaVZuMW1renVa?=
+ =?utf-8?B?QTkzc2JXeXZrTnpXdDA4c2I0c05rUFc1QWIwVGJIV25CNi9xMHM1UFZuK0d3?=
+ =?utf-8?B?YlVxQU9odkZONHZGUVdsOUNIUXdKei9sbUNUbmJvV1F3ejJVMDlreXVlZVlr?=
+ =?utf-8?B?bENCVDlQc1BIV2FtNjVMMVk5RzU3V1lCYkhsOXEydzFSb3pDZFVIWXBtL2ht?=
+ =?utf-8?B?K01KUm9ETWw0K0YwTGFhNEtTMVJQVnlINENNeHg3Yjg3ODNMMWF2UGtjUysz?=
+ =?utf-8?B?Rm1LM21NcHpMRnFPNzhBRTNtUUdJNEJwcmJlVUtQN1hXOGk5dkoxYkI0ZGRs?=
+ =?utf-8?B?SHcrRmxSRVNHWUU3bE05RmFBRGlHRDFvclRsMkFMc0ZJMkExZW1ZZ1hkSWYx?=
+ =?utf-8?B?NldxSjErc29HU0tBZjdsRWI5T0lVWHExeERqZ2hTR0J2TzRtdTVKRlY5c2ZM?=
+ =?utf-8?B?a1pOYTVDNzdCd0EzVzB3eVZnWkZheU1aaVltZm03c3d3UWpMU3pRNTdTNmJS?=
+ =?utf-8?B?Q1RHVU9LcG5nL3gyV3AxN0RuVWJKNk5lS016NE5pemRtVVlla1phQVR5bDAx?=
+ =?utf-8?B?b2JEYlN0SzVRVlk2TExDdllsVVVhTTRSTnRpaGl6NWNmME9Md2VvbkwzVkZ1?=
+ =?utf-8?B?L2IxenQ1K2ZJR3BOcFFQNEVOWERkWnZLM01NT1RETzkzWXBabE5zcVllQkNJ?=
+ =?utf-8?B?L2JvQTNkQTVKMDlGTXNZeXZ4YkJnb0c4bk5yRGVXQ3BvN2hTR1hWSWlacERR?=
+ =?utf-8?B?NnZkMHA5cHorNi8wUkdVWmdVMWpRNlJsVDZGQVBQeVZuN1pOSmNkbFNRYTVS?=
+ =?utf-8?B?UDNhOERJaXBidGMxMmJxUTdBNmdiTkhOMU8rcGdHSDl3cE82Q0s4TUNEL0U4?=
+ =?utf-8?B?bXc9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?b2M3bnhlZHkyV2g1VUZHdDJzU29wSi9jdERrWGhDNGR1bFNwMkpGL09VaDQr?=
+ =?utf-8?B?OXB1OXovMkhLVFBMdExIREthaVFpYnVQMjdlQkVUNDl5andtTWRxUFZHbWFZ?=
+ =?utf-8?B?WktLOGhldlQwUEVXRnVCZE9FQ0greGhRNlVjWXcvZ0tYZldmekMxc2dEd0NF?=
+ =?utf-8?B?ZGZnU0tJdUR6eU8wMlBUcExubWNrNUJHcURyK1YrVnc3TzFIZFVzZGU1SUxo?=
+ =?utf-8?B?YXVVUUVucDNmN1NQdDkzTWo5NDAyMk5BbjZ0N3JhYW9OK0d2Z2VGLzc2Q0xh?=
+ =?utf-8?B?T1Q0ejdlaEQ1YWkzbkFmVjNFWmJMSnVNemlxMng1NlZBUlNtSjJ2REdMZjJo?=
+ =?utf-8?B?VS9tQVcrSkx6YXNFWHpBaEhJM1Yrb05wRlhuZkg4aWgrQTJOSXNHczVIT3dx?=
+ =?utf-8?B?cmxuZllvL1M0eGs5YkRiQnB0SXVMajRBUHZ6eEw1eHBkQjZvbnBjUXNXNmh1?=
+ =?utf-8?B?RHhPQUlyZytPeUFVQ2VNRkxZQnFORi9tOVZYZ1JVZytadk8xeFhoRmNJQ3NB?=
+ =?utf-8?B?elVNc2RmekRQeC81bUlVRTB1VlQzWS9DWGp6TEwxZ2psUWkxd3JacndTSlJC?=
+ =?utf-8?B?UUQzQU0weVdtUDB1ZFl4b05waHZRbGpncFRKbmZWb2x2T3dCcFBmdHVVKy80?=
+ =?utf-8?B?SUxTSVlyelNyOEdEUld1eCtjcWJZWEZuWFJDTEIwM1VNSm5UL1YvOWlUV0I0?=
+ =?utf-8?B?L2JPQWFJRE9wNVFZUzVybXFwNDFZRnNvd2RidDVwWUx4WW5QZGFYcDZUWURt?=
+ =?utf-8?B?enBEOGpHenJiMUZ3dkJ0cEdoS3ZPbUN6ZVg2WERSSVYveTNpTFd0ZmVSWU5W?=
+ =?utf-8?B?QU9YYjhycWs0cG03b3RGcWN1ejZHZDRDa1VxRjlDSUhyQ28zNVZIVlRxRGNo?=
+ =?utf-8?B?UkNrenVrK01EMDFwanF5S0FvV2psZzhzdVI0NmIzcVZNRkRSZWNKNTB0cGZQ?=
+ =?utf-8?B?dkN6SDNQNnh2SEd6WktyT3lnaWprdzNldUtWaEtBYW56OGw0SXlRRnV0NHNU?=
+ =?utf-8?B?VWkvSncraE9GR2V1U3VpUjduMjIwY2NMZTR6VEV0dUxxYWcwdUIzUlJ5OERB?=
+ =?utf-8?B?dFRNM2VIdFZYOWFsNFFmV2FtdVlCeVoyU3ZzalhQd0tHd3N0elV4QWJRTDNp?=
+ =?utf-8?B?c01POTZ6Ui9IeEJLVXlIaXJFcG92NTdML0JxME4yS09kY05abE1LdHQ1Q1Jz?=
+ =?utf-8?B?ankwb1pzM0VXMU9GL3BLNHYyazNwWW9oWEQrL2RycnE4b1dqSDN4VkN4VExX?=
+ =?utf-8?B?c1lBR1FuRnN1eGJlT01SbFNST3N3d0pPa3lYK2hDQ3ZhVzdjT296cjJNOU8v?=
+ =?utf-8?B?VGUyOStYblFHVlRNVElnZUw0VnFOcTNuVnM2dXRBZzhZWmJITDZJbHFJTEpO?=
+ =?utf-8?Q?FZpPs5DcO3JGDIRGGMI/j7hFE95p13ZY=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d4a420ec-ff44-4598-a698-08db9d6d8678
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Aug 2023 08:56:33.8438
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0dgXpcpGB5GKfYt6pP2s3RFRghf6DX/kTXlu2zLD5Y0oWj546hbWA7bNb0atGWQx3ojOHgMxXzXsm8L+z4sGnw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4431
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-15_08,2023-08-10_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 bulkscore=0
+ mlxlogscore=999 adultscore=0 suspectscore=0 malwarescore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
+ definitions=main-2308150080
+X-Proofpoint-ORIG-GUID: 7_V6_q0ahylIr6K7qKDFyxyPU3pFKrS1
+X-Proofpoint-GUID: 7_V6_q0ahylIr6K7qKDFyxyPU3pFKrS1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Aug 15, 2023 at 1:48=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Wed, Aug 9, 2023 at 6:21=E2=80=AFAM Anup Sharma <anupnewsmail@gmail.co=
-m> wrote:
-> >
-> > All required libraries have been imported and make sure that
-> > none of them are external dependencies. To achieve this, created
-> > a virt env and verified.
-> >
-> > Modified usage information and added combined command.
-> >
-> > Modified the main() function to read the --save-only command-line
-> > option and set the output_file variable accordingly.
-> >
-> > Modified the trace_end() function to check for the output_file variable=
-.
-> > If it is set, the profiler data is saved to a local file in Gecko
-> > Profile format, or the profiler.firefox.com is opened on the default br=
-owser.
-> >
-> > Included trace_begin() to initialize the Firefox Profiler and launch
-> > the default browser to display the profiler.firefox.com.
-> >
-> > Added a new function launchFirefox() to start a local server and launch=
- the
-> > profiler UI on the default browser with the appropriate URL.
-> >
-> > Created the "CORSRequestHandler" class to enable Cross-Origin Resource =
-Sharing.
-> >
-> > Summary:
-> > This integration now includes a exiting feature to conveniently host th=
-e
-> > Gecko Profile data on a local server and open it directly in the defaul=
-t
-> > web browser. This means that users can now effortlessly visualize and
-> > analyze the profiler results with just a single click. The addition of =
-the
-> > --save-only command-line option allows users to save the profiler outpu=
-t
-> > to a local file in Gecko Profile format, but the real highlight lies
-> > in the capability to seamlessly launch a local server, making the data
-> > accessible to Firefox Profiler via a web browser. In addition, it's
-> > important to highlight that all data are hosted locally, eliminating
-> > any concerns about data privacy rules and regulations.
-> >
-> > Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
->
-> Hi Anup,
->
-> I'm not able to replicate the behavior of a running server. What I get is=
-:
-> ```
-> $ sudo bash -c "export PERF_EXEC_PATH=3D`pwd`/tools/perf/ && perf script
-> gecko -F 99 -a sleep 1"
-> Staring Firefox Profiler on your default browser...
-> Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
-> [ perf gecko: Captured and wrote into gecko_profile.json ]
-> $
-> ```
-> ie the process immediately terminates. The same is true for
-> record/report. Could you take a look?
+On 14/08/2023 17:09, Ian Rogers wrote:
+> On Mon, Aug 14, 2023 at 8:57 AM Ian Rogers<irogers@google.com>  wrote:
+>> On Fri, Aug 11, 2023 at 8:51 AM John Garry<john.g.garry@oracle.com>  wrote:
+>>> On 10/08/2023 22:49, Ian Rogers wrote:
+>>>> When there are multiple PMUs that differ only by suffix, by default
+>>>> just list the first one and skip all others. As the PMUs are sorted,
+>>>> the scan routine checks that the PMU names match and the numbers are
+>>>> consecutive. If "-v" is passed to "perf list" then list all PMUs.
+>>> I really think that this should be merged with the next change. I don't
+>>> like the intermediate step of by default only printing the first PMU.
+>> Ack. I'll leave it as 3 patches and then leave it to Arnaldo squash as
+>> quite often he wants more patches.
 
-Ah, running as a user it is okay.
+Why are more patches desirable? I do like the approach of taking a bite 
+at a time, but we should also maintain ability to easily bisect and keep 
+logical steps as one.
 
-Tested-by: Ian Rogers <irogers@google.com>
+>>
+>>>> Signed-off-by: Ian Rogers<irogers@google.com>
+>>>> ---
+>>>>    tools/perf/builtin-list.c      |  8 +++++
+>>>>    tools/perf/util/pmus.c         | 54 ++++++++++++++++++++++++++++++++--
+>>>>    tools/perf/util/print-events.h |  1 +
+>>>>    3 files changed, 61 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+>>>> index 7fec2cca759f..8fe4ddf02c14 100644
+>>>> --- a/tools/perf/builtin-list.c
+>>>> +++ b/tools/perf/builtin-list.c
+>>>> @@ -423,6 +423,13 @@ static void json_print_metric(void *ps __maybe_unused, const char *group,
+>>>>        strbuf_release(&buf);
+>>>>    }
+>>>>
+>>>> +static bool default_skip_duplicate_pmus(void *ps)
+>>>> +{
+>>>> +     struct print_state *print_state = ps;
+>>>> +
+>>>> +     return !print_state->long_desc;
+>>>> +}
+>>>> +
+>>>>    int cmd_list(int argc, const char **argv)
+>>>>    {
+>>>>        int i, ret = 0;
+>>>> @@ -434,6 +441,7 @@ int cmd_list(int argc, const char **argv)
+>>>>                .print_end = default_print_end,
+>>>>                .print_event = default_print_event,
+>>>>                .print_metric = default_print_metric,
+>>>> +             .skip_duplicate_pmus = default_skip_duplicate_pmus,
+>>>>        };
+>>>>        const char *cputype = NULL;
+>>>>        const char *unit_name = NULL;
+>>>> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+>>>> index 3581710667b0..5073843aca19 100644
+>>>> --- a/tools/perf/util/pmus.c
+>>>> +++ b/tools/perf/util/pmus.c
+>>>> @@ -275,6 +275,50 @@ struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu)
+>>>>        return NULL;
+>>>>    }
+>>>>
+>>>> +static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
+>>>> +{
+>>>> +     bool use_core_pmus = !pmu || pmu->is_core;
+>>>> +     int last_pmu_name_len = 0;
+>>>> +     unsigned long last_pmu_num = 0;
+>>>> +     const char *last_pmu_name = (pmu && pmu->name) ? pmu->name : "";
+>>>> +
+>>>> +     if (!pmu) {
+>>>> +             pmu_read_sysfs(/*core_only=*/false);
+>>>> +             pmu = list_prepare_entry(pmu, &core_pmus, list);
+>>>> +     } else
+>>>> +             last_pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "", &last_pmu_num);
+>>>> +
+>>>> +     if (use_core_pmus) {
+>>>> +             list_for_each_entry_continue(pmu, &core_pmus, list) {
+>>>> +                     unsigned long pmu_num = 0;
+>>>> +                     int pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "", &pmu_num);
+>>>> +
+>>>> +                     if (last_pmu_name_len == pmu_name_len &&
+>>>> +                         (last_pmu_num + 1 == pmu_num) &&
+>>>> +                         !strncmp(last_pmu_name, pmu->name ?: "", pmu_name_len)) {
+>>>> +                             last_pmu_num++;
+>>>> +                             continue;
+>>>> +                     }
+>>>> +                     return pmu;
+>>>> +             }
+>>>> +             pmu = NULL;
+>>> you assign pmu NULL
+>>>
+>>>> +             pmu = list_prepare_entry(pmu, &other_pmus, list);
+>>> and then re-assign it. If list_prepare_entry() needs first arg = NULL,
+>>> then can just use NULL explicitly?
+>> Done.
+> So because of the macro magic in list_prepare_entry you can't
+> explicitly pass NULL here as doing so yields:
+> tools/include/linux/kernel.h:36:33: error: request for member ‘list’
+> in something not a structure or union
+>    36 |         const typeof(((type *)0)->member) * __mptr = (ptr);     \
+>        |                                 ^~
+
+ok, fine, so maybe add a comment as the code looks odd..
 
 Thanks,
-Ian
-
->
-> > ---
-> >  tools/perf/scripts/python/gecko.py | 70 +++++++++++++++++++++++++++---
-> >  1 file changed, 63 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/tools/perf/scripts/python/gecko.py b/tools/perf/scripts/py=
-thon/gecko.py
-> > index 278c3aed282a..bc5a72f94bfa 100644
-> > --- a/tools/perf/scripts/python/gecko.py
-> > +++ b/tools/perf/scripts/python/gecko.py
-> > @@ -1,4 +1,4 @@
-> > -# firefox-gecko-converter.py - Convert perf record output to Firefox's=
- gecko profile format
-> > +# gecko.py - Convert perf record output to Firefox's gecko profile for=
-mat
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  #
-> >  # The script converts perf.data to Gecko Profile Format,
-> > @@ -7,14 +7,26 @@
-> >  # Usage:
-> >  #
-> >  #     perf record -a -g -F 99 sleep 60
-> > -#     perf script report gecko > output.json
-> > +#     perf script report gecko
-> > +#
-> > +# Combined:
-> > +#
-> > +#     perf script gecko -F 99 -a sleep 60
-> >
-> >  import os
-> >  import sys
-> > +import time
-> >  import json
-> > +import string
-> > +import random
-> >  import argparse
-> > +import threading
-> > +import webbrowser
-> > +import urllib.parse
-> > +from os import system
-> >  from functools import reduce
-> >  from dataclasses import dataclass, field
-> > +from http.server import HTTPServer, SimpleHTTPRequestHandler, test
-> >  from typing import List, Dict, Optional, NamedTuple, Set, Tuple, Any
-> >
-> >  # Add the Perf-Trace-Util library to the Python path
-> > @@ -40,9 +52,15 @@ CATEGORIES =3D None
-> >  # The product name is used by the profiler UI to show the Operating sy=
-stem and Processor.
-> >  PRODUCT =3D os.popen('uname -op').read().strip()
-> >
-> > +# store the output file
-> > +output_file =3D None
-> > +
-> >  # Here key =3D tid, value =3D Thread
-> >  tid_to_thread =3D dict()
-> >
-> > +# The HTTP server is used to serve the profile to the profiler UI.
-> > +http_server_thread =3D None
-> > +
-> >  # The category index is used by the profiler UI to show the color of t=
-he flame graph.
-> >  USER_CATEGORY_INDEX =3D 0
-> >  KERNEL_CATEGORY_INDEX =3D 1
-> > @@ -278,9 +296,19 @@ def process_event(param_dict: Dict) -> None:
-> >                 tid_to_thread[tid] =3D thread
-> >         thread._add_sample(comm=3Dcomm, stack=3Dstack, time_ms=3Dtime_s=
-tamp)
-> >
-> > +def trace_begin() -> None:
-> > +       global output_file
-> > +       if (output_file is None):
-> > +               print("Staring Firefox Profiler on your default browser=
-...")
-> > +               global http_server_thread
-> > +               http_server_thread =3D threading.Thread(target=3Dtest, =
-args=3D(CORSRequestHandler, HTTPServer,))
-> > +               http_server_thread.daemon =3D True
-> > +               http_server_thread.start()
-> > +
-> >  # Trace_end runs at the end and will be used to aggregate
-> >  # the data into the final json object and print it out to stdout.
-> >  def trace_end() -> None:
-> > +       global output_file
-> >         threads =3D [thread._to_json_dict() for thread in tid_to_thread=
-.values()]
-> >
-> >         # Schema: https://github.com/firefox-devtools/profiler/blob/539=
-70305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L305
-> > @@ -305,22 +333,50 @@ def trace_end() -> None:
-> >                 "processes": [],
-> >                 "pausedRanges": [],
-> >         }
-> > -       json.dump(gecko_profile_with_meta, sys.stdout, indent=3D2)
-> > +       # launch the profiler on local host if not specified --save-onl=
-y args, otherwise print to file
-> > +       if (output_file is None):
-> > +               output_file =3D 'gecko_profile.json'
-> > +               with open(output_file, 'w') as f:
-> > +                       json.dump(gecko_profile_with_meta, f, indent=3D=
-2)
-> > +               launchFirefox(output_file)
-> > +               time.sleep(1)
-> > +               print(f'[ perf gecko: Captured and wrote into {output_f=
-ile} ]')
-> > +       else:
-> > +               print(f'[ perf gecko: Captured and wrote into {output_f=
-ile} ]')
-> > +               with open(output_file, 'w') as f:
-> > +                       json.dump(gecko_profile_with_meta, f, indent=3D=
-2)
-> > +
-> > +# Used to enable Cross-Origin Resource Sharing (CORS) for requests com=
-ing from 'https://profiler.firefox.com', allowing it to access resources fr=
-om this server.
-> > +class CORSRequestHandler(SimpleHTTPRequestHandler):
-> > +       def end_headers (self):
-> > +               self.send_header('Access-Control-Allow-Origin', 'https:=
-//profiler.firefox.com')
-> > +               SimpleHTTPRequestHandler.end_headers(self)
-> > +
-> > +# start a local server to serve the gecko_profile.json file to the pro=
-filer.firefox.com
-> > +def launchFirefox(file):
-> > +       safe_string =3D urllib.parse.quote_plus(f'http://localhost:8000=
-/{file}')
-> > +       url =3D 'https://profiler.firefox.com/from-url/' + safe_string
-> > +       webbrowser.open(f'{url}')
-> >
-> >  def main() -> None:
-> > +       global output_file
-> >         global CATEGORIES
-> > -       parser =3D argparse.ArgumentParser(description=3D"Convert perf.=
-data to Firefox\'s Gecko Profile format")
-> > +       parser =3D argparse.ArgumentParser(description=3D"Convert perf.=
-data to Firefox\'s Gecko Profile format which can be uploaded to profiler.f=
-irefox.com for visualization")
-> >
-> >         # Add the command-line options
-> >         # Colors must be defined according to this:
-> >         # https://github.com/firefox-devtools/profiler/blob/50124adbfa4=
-88adba6e2674a8f2618cf34b59cd2/res/css/categories.css
-> > -       parser.add_argument('--user-color', default=3D'yellow', help=3D=
-'Color for the User category')
-> > -       parser.add_argument('--kernel-color', default=3D'orange', help=
-=3D'Color for the Kernel category')
-> > +       parser.add_argument('--user-color', default=3D'yellow', help=3D=
-'Color for the User category', choices=3D['yellow', 'blue', 'purple', 'gree=
-n', 'orange', 'red', 'grey', 'magenta'])
-> > +       parser.add_argument('--kernel-color', default=3D'orange', help=
-=3D'Color for the Kernel category', choices=3D['yellow', 'blue', 'purple', =
-'green', 'orange', 'red', 'grey', 'magenta'])
-> > +       # If --save-only is specified, the output will be saved to a fi=
-le instead of opening Firefox's profiler directly.
-> > +       parser.add_argument('--save-only', help=3D'Save the output to a=
- file instead of opening Firefox\'s profiler')
-> > +
-> >         # Parse the command-line arguments
-> >         args =3D parser.parse_args()
-> >         # Access the values provided by the user
-> >         user_color =3D args.user_color
-> >         kernel_color =3D args.kernel_color
-> > +       output_file =3D args.save_only
-> >
-> >         CATEGORIES =3D [
-> >                 {
-> > @@ -336,4 +392,4 @@ def main() -> None:
-> >         ]
-> >
-> >  if __name__ =3D=3D '__main__':
-> > -    main()
-> > +       main()
-> > --
-> > 2.34.1
-> >
+John
