@@ -2,146 +2,129 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 234CEC001B0
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 17:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BFEC0015E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 18:10:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238969AbjHORzN (ORCPT
+        id S238258AbjHOSJx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Aug 2023 13:55:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56178 "EHLO
+        Tue, 15 Aug 2023 14:09:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239079AbjHORzH (ORCPT
+        with ESMTP id S238264AbjHOSJk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Aug 2023 13:55:07 -0400
+        Tue, 15 Aug 2023 14:09:40 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1D361FE1;
-        Tue, 15 Aug 2023 10:54:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF74E106;
+        Tue, 15 Aug 2023 11:09:39 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 46CA76294E;
-        Tue, 15 Aug 2023 17:54:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 826F4C433C8;
-        Tue, 15 Aug 2023 17:54:39 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 445CD653DD;
+        Tue, 15 Aug 2023 18:09:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73F85C433C7;
+        Tue, 15 Aug 2023 18:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692122079;
-        bh=v29yDhYqu508UQ8smlIqAL9ArZexf9sYdXW1jtQ2aSY=;
+        s=k20201202; t=1692122978;
+        bh=qKBDYXEsLAiqhhXTOyN5Rg5B1VHjDt+sAODeVHKcrY8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V5PBC9NgvXb+hUlkV3FwE13f6/nLqmwy1aNbcly67fXbELbyzRsbRD1agQfAJAtIv
-         PD7peKiprOF8VMP06evXjhxI3jcfv0OEfnuR1TXIH/AxlLcBjTxGqYX6qS3ECSoAq8
-         SLDMiEUShvpiSkTVQ1q4Lblg8Col124/G1uDkJzNSWYYLDTEk+TyJ5V7JlIK9uiotB
-         AvIY8zQIMGrHignUS/FrmapQkxPFfYq6agAW4uPiYL18EgQw+6ygoUZYX1PaP9QTdE
-         jvJADhrcvEuB7Iy1YXyxqfm9jBMwGX136JREc+FvQtdfdHR+Gd7kRoKNYoYWavVZcq
-         cloy8uf4O5Qiw==
+        b=iVwgRhXKMByL5SSCpROf5pwdgD6EnlmgvA5wNbCdiI17Ywl7RhJCUod2OzRasc6Cu
+         wrFVRJsB1akVw7TFbXBI8WN+bcb1BW16KLgQf8FAMBgFyx00WW4syQxZDxWQEyXtw0
+         NlS7DwREtJdM0UXoYYaBZLHpY46/Qh/k3yIXW7ApSSzsVPP1oxg1lQlzACXmxzvLA2
+         TkmzNhjeCgYJGyNjOB3Tn8e3By12hia6Bp0RGZkuWHgei4CJ8JvKwiCDRHI4hdGn0Z
+         5oO6ODIfyP/PDfvLduSDisU3EWOnHDAXYrAQuB+7Ddi9840T4Qk6ho9UqxUWwg90V1
+         M05PnPQbbuz8w==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id BAE8F404DF; Tue, 15 Aug 2023 14:54:36 -0300 (-03)
-Date:   Tue, 15 Aug 2023 14:54:36 -0300
+        id 0FB66404DF; Tue, 15 Aug 2023 15:09:36 -0300 (-03)
+Date:   Tue, 15 Aug 2023 15:09:35 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-perf-users@vger.kernel.org, irogers@google.com,
+        john.g.garry@oracle.com, renyu.zj@linux.alibaba.com,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/3] perf dlfilter: Add a test for resolve_address()
-Message-ID: <ZNu73JK+rmmTMGBN@kernel.org>
-References: <20230731091857.10681-1-adrian.hunter@intel.com>
- <ZMwTYsh8KIwphOR5@kernel.org>
- <CAP-5=fW+Y+4dk_TL2RuOJWwnqd3cvhVARoRVSdmhiiVaNwEnfw@mail.gmail.com>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Nick Forrington <nick.forrington@arm.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Sohom Datta <sohomdatta1@gmail.com>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
+Subject: Re: [PATCH v5 1/6] perf: cs-etm: Don't duplicate FIELD_GET()
+Message-ID: <ZNu/X/zt1RkXiJbL@kernel.org>
+References: <20230811144017.491628-1-james.clark@arm.com>
+ <20230811144017.491628-2-james.clark@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fW+Y+4dk_TL2RuOJWwnqd3cvhVARoRVSdmhiiVaNwEnfw@mail.gmail.com>
+In-Reply-To: <20230811144017.491628-2-james.clark@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Aug 14, 2023 at 10:28:29AM -0700, Ian Rogers escreveu:
-> On Thu, Aug 3, 2023 at 1:51 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >
-> > Em Mon, Jul 31, 2023 at 12:18:55PM +0300, Adrian Hunter escreveu:
-> > > Extend the "dlfilter C API" test to test
-> > > perf_dlfilter_fns.resolve_address(). The test currently fails, but passes
-> > > after a subsequent patch.
-> >
-> > Ian,
-> >
-> >         I think this is ok now, can you please take a look and perhaps
-> > provide an Acked-by or Reviewed-by?
-> 
-> Sorry, found this in my backlog. I'm a little confused over which
-> patch series is current but they all lgtm.
-> 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+Em Fri, Aug 11, 2023 at 03:39:18PM +0100, James Clark escreveu:
+> linux/bitfield.h can be included as long as linux/kernel.h is included
+> first, so change the order of the includes and drop the duplicate macro.
 
-Thanks, applied.
+Applied this one, to reduce the patch series size.
 
 - Arnaldo
-
  
-> Thanks,
-> Ian
+> Reviewed-by: John Garry <john.g.garry@oracle.com>
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>  tools/perf/util/cs-etm.c | 14 ++------------
+>  1 file changed, 2 insertions(+), 12 deletions(-)
 > 
-> > - Arnaldo
-> >
-> > > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> > > ---
-> > >  tools/perf/dlfilters/dlfilter-test-api-v0.c | 26 ++++++++++++++++++++-
-> > >  1 file changed, 25 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/tools/perf/dlfilters/dlfilter-test-api-v0.c b/tools/perf/dlfilters/dlfilter-test-api-v0.c
-> > > index b1f51efd67d6..72f263d49121 100644
-> > > --- a/tools/perf/dlfilters/dlfilter-test-api-v0.c
-> > > +++ b/tools/perf/dlfilters/dlfilter-test-api-v0.c
-> > > @@ -254,6 +254,30 @@ static int check_addr_al(void *ctx)
-> > >       return 0;
-> > >  }
-> > >
-> > > +static int check_address_al(void *ctx, const struct perf_dlfilter_sample *sample)
-> > > +{
-> > > +     struct perf_dlfilter_al address_al;
-> > > +     const struct perf_dlfilter_al *al;
-> > > +
-> > > +     al = perf_dlfilter_fns.resolve_ip(ctx);
-> > > +     if (!al)
-> > > +             return test_fail("resolve_ip() failed");
-> > > +
-> > > +     address_al.size = sizeof(address_al);
-> > > +     if (perf_dlfilter_fns.resolve_address(ctx, sample->ip, &address_al))
-> > > +             return test_fail("resolve_address() failed");
-> > > +
-> > > +     CHECK(address_al.sym && al->sym);
-> > > +     CHECK(!strcmp(address_al.sym, al->sym));
-> > > +     CHECK(address_al.addr == al->addr);
-> > > +     CHECK(address_al.sym_start == al->sym_start);
-> > > +     CHECK(address_al.sym_end == al->sym_end);
-> > > +     CHECK(address_al.dso && al->dso);
-> > > +     CHECK(!strcmp(address_al.dso, al->dso));
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > >  static int check_attr(void *ctx)
-> > >  {
-> > >       struct perf_event_attr *attr = perf_dlfilter_fns.attr(ctx);
-> > > @@ -290,7 +314,7 @@ static int do_checks(void *data, const struct perf_dlfilter_sample *sample, void
-> > >       if (early && !d->do_early)
-> > >               return 0;
-> > >
-> > > -     if (check_al(ctx) || check_addr_al(ctx))
-> > > +     if (check_al(ctx) || check_addr_al(ctx) || check_address_al(ctx, sample))
-> > >               return -1;
-> > >
-> > >       if (early)
-> > > --
-> > > 2.34.1
-> > >
-> >
-> > --
-> >
-> > - Arnaldo
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 1419b40dfbe8..9729d006550d 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -6,10 +6,11 @@
+>   * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
+>   */
+>  
+> +#include <linux/kernel.h>
+> +#include <linux/bitfield.h>
+>  #include <linux/bitops.h>
+>  #include <linux/coresight-pmu.h>
+>  #include <linux/err.h>
+> -#include <linux/kernel.h>
+>  #include <linux/log2.h>
+>  #include <linux/types.h>
+>  #include <linux/zalloc.h>
+> @@ -281,17 +282,6 @@ static int cs_etm__metadata_set_trace_id(u8 trace_chan_id, u64 *cpu_metadata)
+>  	return 0;
+>  }
+>  
+> -/*
+> - * FIELD_GET (linux/bitfield.h) not available outside kernel code,
+> - * and the header contains too many dependencies to just copy over,
+> - * so roll our own based on the original
+> - */
+> -#define __bf_shf(x) (__builtin_ffsll(x) - 1)
+> -#define FIELD_GET(_mask, _reg)						\
+> -	({								\
+> -		(typeof(_mask))(((_reg) & (_mask)) >> __bf_shf(_mask)); \
+> -	})
+> -
+>  /*
+>   * Get a metadata for a specific cpu from an array.
+>   *
+> -- 
+> 2.34.1
+> 
 
 -- 
 
