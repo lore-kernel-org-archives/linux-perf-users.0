@@ -2,41 +2,41 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37005C001B0
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 17:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55451C001B0
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Aug 2023 17:42:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238750AbjHORau (ORCPT
+        id S238866AbjHORmP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Aug 2023 13:30:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53622 "EHLO
+        Tue, 15 Aug 2023 13:42:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238873AbjHORaY (ORCPT
+        with ESMTP id S238927AbjHORmJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Aug 2023 13:30:24 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E624D1BD7;
-        Tue, 15 Aug 2023 10:30:22 -0700 (PDT)
+        Tue, 15 Aug 2023 13:42:09 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C3F31BD2;
+        Tue, 15 Aug 2023 10:42:08 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B71866220A;
-        Tue, 15 Aug 2023 17:30:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4D96C433C8;
-        Tue, 15 Aug 2023 17:30:21 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2516C60F0B;
+        Tue, 15 Aug 2023 17:42:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49406C433C8;
+        Tue, 15 Aug 2023 17:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692120622;
-        bh=xOZG1e26MXbNqXpqBlxuhCoDrHndmdyQG2THAK8ymSY=;
+        s=k20201202; t=1692121327;
+        bh=kjqDWpUP6z5slpWqs3Zt6WzwVljhS5woggD1qaRxuYg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=b/Phv3nTF7aTIHbAo4/7UwXSgkuWnYlZvJk8EjjYeoSIyMJBxCKmJUDssdhSKi7c8
-         4VT3QOY2B1gKkC6KB9pDEuaeRmbLgfM1gzj+eO4gDJan0lMNHgaavlfQ0zg90c97+/
-         z1Jq75/vKASjMsmSb7oLlg5HMb/2meeLSBYK0LFxIj7mUguYqNXUAmm+rXY/6V+IvN
-         Jeq0Cd8kHInDHnPRXxkXnPFT/3KwyTAycOfas807Rw0uq9GyRIyXnQ8ixZEDdQYlb7
-         7yrZSSOytP36kvxkcoYV5AUi3mGXD+Mq3+59E/KC6x6U5LVehIWXulYNtIQzVlOz2e
-         cpmEqmPhe+mCw==
+        b=R9xTJA+B6I1+pXAdLJZTxnFDKq0uV6y1++K5PeuYx76fSPZxK5bgjxKCRrnBbEQD8
+         l7EOigH7NMkbcPW+mC81F58sAaLaO0ATU49OWVd/+YnpR7K1lA2zPc/6uC4nUsQXqE
+         NRy02w7XSiPsY8wsV794/QHEnnwQgWIiknb1EQ5/fEeBvb950n31R4K4e6amvVCNQc
+         tJ/H+aanq4PzsrEI40N0ePXnLAmHILlxgxEf3k8XQLcEFr1BY2yOSZMdFYfTkevbRE
+         f6sezmmTDPivKjfDNLSd29jR0qdaMe921I13gEIbFBGQn8js3K9NwallUNTPv6yTis
+         ybSCosczoccsQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 9C56B404DF; Tue, 15 Aug 2023 14:30:18 -0300 (-03)
-Date:   Tue, 15 Aug 2023 14:30:18 -0300
+        id A286C404DF; Tue, 15 Aug 2023 14:42:04 -0300 (-03)
+Date:   Tue, 15 Aug 2023 14:42:04 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
@@ -47,267 +47,91 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org,
         Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 Subject: Re: [PATCH 2/2] perf test: Add perf record sample filtering test
-Message-ID: <ZNu2KrbgFPY69K2+@kernel.org>
+Message-ID: <ZNu47CYXV0nuav+G@kernel.org>
 References: <20230811025822.3859771-1-namhyung@kernel.org>
  <20230811025822.3859771-2-namhyung@kernel.org>
+ <ZNu2KrbgFPY69K2+@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230811025822.3859771-2-namhyung@kernel.org>
+In-Reply-To: <ZNu2KrbgFPY69K2+@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Aug 10, 2023 at 07:58:22PM -0700, Namhyung Kim escreveu:
->   $ sudo ./perf test 'sample filter' -v
->    94: perf record sample filtering (by BPF) tests                     :
->   --- start ---
->   test child forked, pid 3817527
->   Checking BPF-filter privilege
->   Basic bpf-filter test
->   Basic bpf-filter test [Success]
->   Failing bpf-filter test
->   Error: task-clock event does not have PERF_SAMPLE_CPU
->   Failing bpf-filter test [Success]
->   Group bpf-filter test
->   Error: task-clock event does not have PERF_SAMPLE_CPU
->   Error: task-clock event does not have PERF_SAMPLE_CODE_PAGE_SIZE
->   Group bpf-filter test [Success]
->   test child finished with 0
->   ---- end ----
->   perf record sample filtering (by BPF) tests: Ok
+Em Tue, Aug 15, 2023 at 02:30:18PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Thu, Aug 10, 2023 at 07:58:22PM -0700, Namhyung Kim escreveu:
+> >   $ sudo ./perf test 'sample filter' -v
+> >    94: perf record sample filtering (by BPF) tests                     :
+> >   --- start ---
+> >   test child forked, pid 3817527
+> >   Checking BPF-filter privilege
+> >   Basic bpf-filter test
+> >   Basic bpf-filter test [Success]
+> >   Failing bpf-filter test
+> >   Error: task-clock event does not have PERF_SAMPLE_CPU
+> >   Failing bpf-filter test [Success]
+> >   Group bpf-filter test
+> >   Error: task-clock event does not have PERF_SAMPLE_CPU
+> >   Error: task-clock event does not have PERF_SAMPLE_CODE_PAGE_SIZE
+> >   Group bpf-filter test [Success]
+> >   test child finished with 0
+> >   ---- end ----
+> >   perf record sample filtering (by BPF) tests: Ok
+> 
+> [root@five ~]# perf test -v "by BPF"
+>  91: perf record sample filtering (by BPF) tests                     :
+> --- start ---
+> test child forked, pid 64165
+> Checking BPF-filter privilege
+> Basic bpf-filter test
+>  ffffffff97f4f688
+>  ffffffff97f73859
+>  ffffffff97412ce6
+>  ffffffff976da215
+>  ffffffff973a92bf
+>  ffffffff97376ad7
+>  ffffffff97f73859
+<SNIP
+>  ffffffff971fdca5
+>  ffffffff9737dbc4
+>  ffffffff971b4e04
+> Basic bpf-filter test [Failed invalid output]
+> test child finished with -1
+> ---- end ----
+> perf record sample filtering (by BPF) tests: FAILED!
+> [root@five ~]#
+> 
+> [root@five ~]# uname -a
+> Linux five 6.2.15-100.fc36.x86_64 #1 SMP PREEMPT_DYNAMIC Thu May 11 16:51:53 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
+> [root@five ~]# 
 
-[root@five ~]# perf test -v "by BPF"
+Above was on a AMD Ryzen 5950X, the following was on a lenovo t480s,
+Intel notebook:
+
+[root@quaco ~]# uname -a
+Linux quaco 6.4.7-200.fc38.x86_64 #1 SMP PREEMPT_DYNAMIC Thu Jul 27 20:01:18 UTC 2023 x86_64 GNU/Linux
+[root@quaco ~]# perf test "filter"
+ 30: Filter hist entries                                             : Ok
+ 36: Filter fds with revents mask in a fdarray                       : Ok
+ 67: dlfilter C API                                                  : Ok
+ 91: perf record sample filtering (by BPF) tests                     : Ok
+[root@quaco ~]# perf test -v "by BPF"
  91: perf record sample filtering (by BPF) tests                     :
 --- start ---
-test child forked, pid 64165
+test child forked, pid 273609
 Checking BPF-filter privilege
 Basic bpf-filter test
- ffffffff97f4f688
- ffffffff97f73859
- ffffffff97412ce6
- ffffffff976da215
- ffffffff973a92bf
- ffffffff97376ad7
- ffffffff97f73859
- ffffffff97f7400c
- ffffffff97365116
- ffffffff97f73859
- ffffffff97f5320c
- ffffffff973ea351
- ffffffff97143774
- ffffffff9740f730
- ffffffff9736944f
- ffffffff973e593d
- ffffffff976e36c8
- ffffffffc12cf19b
- ffffffff976c79d5
- ffffffff9737d254
- ffffffff9737d254
- ffffffff9737d254
- ffffffff9737d254
- ffffffff9737d254
- ffffffff9737ca5f
- ffffffff9737d254
- ffffffff9737d254
- ffffffff9737d339
- ffffffff9737dcf3
- ffffffff9737dcf3
- ffffffff9737d254
- ffffffff973e442a
- ffffffff973713b8
- ffffffff973ea561
- ffffffff973712ee
- ffffffff973713b8
- ffffffff973713b8
- ffffffff973e43fa
- ffffffff971fa17e
- ffffffff971fa17e
- ffffffff973ac8ee
- ffffffff97f73859
- ffffffff9741082c
- ffffffff973ea34a
- ffffffff974148c6
- ffffffff974c97d5
- ffffffff97394b51
- ffffffff973916af
- ffffffff9737b5e3
- ffffffff976cf825
- ffffffff9737c58d
- ffffffff9788ab15
- ffffffff9732af89
- ffffffff97096ef3
- ffffffff973e92fd
- ffffffff9730a991
- ffffffff9739e2c5
- ffffffff9731cdc2
- ffffffff97f363c4
- ffffffff97f3915c
- ffffffff97f5d754
- ffffffff9718a181
- ffffffff9709b1a5
- ffffffff973710e4
- ffffffff97f52b27
- ffffffff9738b905
- ffffffff971fdca5
- ffffffff9737dbc4
- ffffffff971b4e04
-Basic bpf-filter test [Failed invalid output]
-test child finished with -1
+Basic bpf-filter test [Success]
+Failing bpf-filter test
+Error: task-clock event does not have PERF_SAMPLE_CPU
+Failing bpf-filter test [Success]
+Group bpf-filter test
+Error: task-clock event does not have PERF_SAMPLE_CPU
+Error: task-clock event does not have PERF_SAMPLE_CODE_PAGE_SIZE
+Group bpf-filter test [Success]
+test child finished with 0
 ---- end ----
-perf record sample filtering (by BPF) tests: FAILED!
-[root@five ~]#
-
-[root@five ~]# uname -a
-Linux five 6.2.15-100.fc36.x86_64 #1 SMP PREEMPT_DYNAMIC Thu May 11 16:51:53 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
-[root@five ~]# 
- 
-> Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/tests/shell/record_bpf_filter.sh | 128 ++++++++++++++++++++
->  1 file changed, 128 insertions(+)
->  create mode 100755 tools/perf/tests/shell/record_bpf_filter.sh
-> 
-> diff --git a/tools/perf/tests/shell/record_bpf_filter.sh b/tools/perf/tests/shell/record_bpf_filter.sh
-> new file mode 100755
-> index 000000000000..e76ea861b92c
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/record_bpf_filter.sh
-> @@ -0,0 +1,128 @@
-> +#!/bin/sh
-> +# perf record sample filtering (by BPF) tests
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +set -e
-> +
-> +err=0
-> +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> +
-> +cleanup() {
-> +  rm -f "${perfdata}"
-> +  rm -f "${perfdata}".old
-> +  trap - EXIT TERM INT
-> +}
-> +
-> +trap_cleanup() {
-> +  cleanup
-> +  exit 1
-> +}
-> +trap trap_cleanup EXIT TERM INT
-> +
-> +test_bpf_filter_priv() {
-> +  echo "Checking BPF-filter privilege"
-> +
-> +  if [ "$(id -u)" != 0 ]
-> +  then
-> +    echo "bpf-filter test [Skipped permission]"
-> +    err=2
-> +    return
-> +  fi
-> +  if ! perf record -e task-clock --filter 'period > 1' \
-> +	  -o /dev/null --quiet true 2>&1
-> +  then
-> +    echo "bpf-filter test [Skipped missing BPF support]"
-> +    err=2
-> +    return
-> +  fi
-> +}
-> +
-> +test_bpf_filter_basic() {
-> +  echo "Basic bpf-filter test"
-> +
-> +  if ! perf record -e task-clock -c 10000 --filter 'ip < 0xffffffff00000000' \
-> +	  -o "${perfdata}" true 2> /dev/null
-> +  then
-> +    echo "Basic bpf-filter test [Failed record]"
-> +    err=1
-> +    return
-> +  fi
-> +  if perf script -i "${perfdata}" -F ip | grep 'ffffffff[0-9a-f]*'
-> +  then
-> +    echo "Basic bpf-filter test [Failed invalid output]"
-> +    err=1
-> +    return
-> +  fi
-> +  echo "Basic bpf-filter test [Success]"
-> +}
-> +
-> +test_bpf_filter_fail() {
-> +  echo "Failing bpf-filter test"
-> +
-> +  # 'cpu' requires PERF_SAMPLE_CPU flag
-> +  if ! perf record -e task-clock --filter 'cpu > 0' \
-> +	  -o /dev/null true 2>&1 | grep PERF_SAMPLE_CPU
-> +  then
-> +    echo "Failing bpf-filter test [Failed forbidden CPU]"
-> +    err=1
-> +    return
-> +  fi
-> +
-> +  if ! perf record --sample-cpu -e task-clock --filter 'cpu > 0' \
-> +	  -o /dev/null true 2>/dev/null
-> +  then
-> +    echo "Failing bpf-filter test [Failed should succeed]"
-> +    err=1
-> +    return
-> +  fi
-> +
-> +  echo "Failing bpf-filter test [Success]"
-> +}
-> +
-> +test_bpf_filter_group() {
-> +  echo "Group bpf-filter test"
-> +
-> +  if ! perf record -e task-clock --filter 'period > 1000 || ip > 0' \
-> +	  -o /dev/null true 2>/dev/null
-> +  then
-> +    echo "Group bpf-filter test [Failed should succeed]"
-> +    err=1
-> +    return
-> +  fi
-> +
-> +  if ! perf record -e task-clock --filter 'cpu > 0 || ip > 0' \
-> +	  -o /dev/null true 2>&1 | grep PERF_SAMPLE_CPU
-> +  then
-> +    echo "Group bpf-filter test [Failed forbidden CPU]"
-> +    err=1
-> +    return
-> +  fi
-> +
-> +  if ! perf record -e task-clock --filter 'period > 0 || code_pgsz > 4096' \
-> +	  -o /dev/null true 2>&1 | grep PERF_SAMPLE_CODE_PAGE_SIZE
-> +  then
-> +    echo "Group bpf-filter test [Failed forbidden CODE_PAGE_SIZE]"
-> +    err=1
-> +    return
-> +  fi
-> +
-> +  echo "Group bpf-filter test [Success]"
-> +}
-> +
-> +
-> +test_bpf_filter_priv
-> +
-> +if [ $err = 0 ]; then
-> +  test_bpf_filter_basic
-> +fi
-> +
-> +if [ $err = 0 ]; then
-> +  test_bpf_filter_fail
-> +fi
-> +
-> +if [ $err = 0 ]; then
-> +  test_bpf_filter_group
-> +fi
-> +
-> +cleanup
-> +exit $err
-> -- 
-> 2.41.0.640.ga95def55d0-goog
-> 
-
--- 
-
-- Arnaldo
+perf record sample filtering (by BPF) tests: Ok
+[root@quaco ~]#
