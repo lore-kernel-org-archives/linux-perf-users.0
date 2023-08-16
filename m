@@ -2,33 +2,33 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2A1C001B0
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Aug 2023 09:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0B1C001B0
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Aug 2023 09:17:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243206AbjHPJO6 (ORCPT
+        id S236275AbjHPJQe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Aug 2023 05:14:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53054 "EHLO
+        Wed, 16 Aug 2023 05:16:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243231AbjHPJOj (ORCPT
+        with ESMTP id S243333AbjHPJQZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Aug 2023 05:14:39 -0400
+        Wed, 16 Aug 2023 05:16:25 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0FCA7173F;
-        Wed, 16 Aug 2023 02:14:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0C91326AE;
+        Wed, 16 Aug 2023 02:16:20 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4CC01063;
-        Wed, 16 Aug 2023 02:15:18 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E6EC11FB;
+        Wed, 16 Aug 2023 02:17:00 -0700 (PDT)
 Received: from [10.57.2.104] (unknown [10.57.2.104])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 952E63F64C;
-        Wed, 16 Aug 2023 02:14:34 -0700 (PDT)
-Message-ID: <fc71f840-8c4e-eeac-580b-5e0065a4cbee@arm.com>
-Date:   Wed, 16 Aug 2023 10:14:33 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 87ABE3F64C;
+        Wed, 16 Aug 2023 02:16:16 -0700 (PDT)
+Message-ID: <02706043-3c81-324d-60a6-ce71a20dfe31@arm.com>
+Date:   Wed, 16 Aug 2023 10:16:15 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
-Subject: Re: [PATCH v5 3/6] perf test: Add a test for the new Arm CPU ID
- comparison behavior
+Subject: Re: [PATCH v5 5/6] perf vendor events arm64: Update stall_slot
+ workaround for N2 r0p3
 Content-Language: en-US
 To:     John Garry <john.g.garry@oracle.com>,
         linux-perf-users@vger.kernel.org, irogers@google.com,
@@ -44,18 +44,18 @@ Cc:     Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Kajol Jain <kjain@linux.ibm.com>,
         Nick Forrington <nick.forrington@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
         Eduard Zingerman <eddyz87@gmail.com>,
         Sohom Datta <sohomdatta1@gmail.com>,
         Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
 References: <20230811144017.491628-1-james.clark@arm.com>
- <20230811144017.491628-4-james.clark@arm.com>
- <3c382d80-7666-8207-a534-0b20807d3f6c@oracle.com>
+ <20230811144017.491628-6-james.clark@arm.com>
+ <18140960-e8bd-a331-8322-db7254c43bdf@oracle.com>
 From:   James Clark <james.clark@arm.com>
-In-Reply-To: <3c382d80-7666-8207-a534-0b20807d3f6c@oracle.com>
+In-Reply-To: <18140960-e8bd-a331-8322-db7254c43bdf@oracle.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -64,146 +64,35 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 15/08/2023 10:47, John Garry wrote:
+On 15/08/2023 10:40, John Garry wrote:
 > On 11/08/2023 15:39, James Clark wrote:
->> Now that variant and revision fields are taken into account the behavior
->> is slightly more complicated so add a test to ensure that this behaves
->> as expected.
+>> N2 r0p3 doesn't require the workaround [1], so gating on (#slots - 5) no
+>> longer works because all N2s have 5 slots. Add a new expression builtin
+>> that allows calling strcmp_cpuid_str() and comparing CPUIDs in metric
+>> formulas.
 >>
->> Signed-off-by: James Clark <james.clark@arm.com>
+>> In this case, the commented formula looks like this:
+>>
+>>    strcmp_cpuid_str(0x410fd493)        # greater than or equal to N2 r0p3
+>>    | strcmp_cpuid_str(0x410fd490) ^ 1  # OR NOT any version of N2
+>>
+>> [1]:https://urldefense.com/v3/__https://gitlab.arm.com/telemetry-solution/telemetry-solution/-/blob/main/data/pmu/cpu/neoverse/neoverse-n2-r0p3.json__;!!ACWV5N9M2RV99hQ!MaXDALyhn3HmfLdPUZRKTItKxg73C-qP4aTNAAdFwzjW5cFEBTHtD-VyqBzUTFbXMvABB-daDD01AfI7um_BtA$  Signed-off-by: James Clark<james.clark@arm.com>
 >> ---
->>   tools/perf/arch/arm64/include/arch-tests.h |  3 ++
->>   tools/perf/arch/arm64/tests/Build          |  1 +
->>   tools/perf/arch/arm64/tests/arch-tests.c   |  4 +++
->>   tools/perf/arch/arm64/tests/cpuid-match.c  | 38 ++++++++++++++++++++++
->>   4 files changed, 46 insertions(+)
->>   create mode 100644 tools/perf/arch/arm64/tests/cpuid-match.c
->>
->> diff --git a/tools/perf/arch/arm64/include/arch-tests.h
->> b/tools/perf/arch/arm64/include/arch-tests.h
->> index 452b3d904521..474d7cf5afbd 100644
->> --- a/tools/perf/arch/arm64/include/arch-tests.h
->> +++ b/tools/perf/arch/arm64/include/arch-tests.h
->> @@ -2,6 +2,9 @@
->>   #ifndef ARCH_TESTS_H
->>   #define ARCH_TESTS_H
->>   +struct test_suite;
->> +
->> +int test__cpuid_match(struct test_suite *test, int subtest);
->>   extern struct test_suite *arch_tests[];
->>     #endif
->> diff --git a/tools/perf/arch/arm64/tests/Build
->> b/tools/perf/arch/arm64/tests/Build
->> index a61c06bdb757..e337c09e7f56 100644
->> --- a/tools/perf/arch/arm64/tests/Build
->> +++ b/tools/perf/arch/arm64/tests/Build
->> @@ -2,3 +2,4 @@ perf-y += regs_load.o
->>   perf-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
->>     perf-y += arch-tests.o
->> +perf-y += cpuid-match.o
->> diff --git a/tools/perf/arch/arm64/tests/arch-tests.c
->> b/tools/perf/arch/arm64/tests/arch-tests.c
->> index ad16b4f8f63e..74932e72c727 100644
->> --- a/tools/perf/arch/arm64/tests/arch-tests.c
->> +++ b/tools/perf/arch/arm64/tests/arch-tests.c
->> @@ -3,9 +3,13 @@
->>   #include "tests/tests.h"
->>   #include "arch-tests.h"
->>   +
->> +DEFINE_SUITE("arm64 CPUID matching", cpuid_match);
->> +
->>   struct test_suite *arch_tests[] = {
->>   #ifdef HAVE_DWARF_UNWIND_SUPPORT
->>       &suite__dwarf_unwind,
->>   #endif
->> +    &suite__cpuid_match,
->>       NULL,
->>   };
->> diff --git a/tools/perf/arch/arm64/tests/cpuid-match.c
->> b/tools/perf/arch/arm64/tests/cpuid-match.c
->> new file mode 100644
->> index 000000000000..af0871b54ae7
->> --- /dev/null
->> +++ b/tools/perf/arch/arm64/tests/cpuid-match.c
->> @@ -0,0 +1,38 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +#include <linux/compiler.h>
->> +
->> +#include "arch-tests.h"
->> +#include "tests/tests.h"
->> +#include "util/header.h"
->> +
->> +int test__cpuid_match(struct test_suite *test __maybe_unused,
->> +                 int subtest __maybe_unused)
->> +{
->> +    /* midr with no leading zeros matches */
->> +    if (strcmp_cpuid_str("0x410fd0c0", "0x00000000410fd0c0"))
->> +        return -1;
->> +    /* Upper case matches */
->> +    if (strcmp_cpuid_str("0x410fd0c0", "0x00000000410FD0C0"))
->> +        return -1;
->> +    /* r0p0 = r0p0 matches */
->> +    if (strcmp_cpuid_str("0x00000000410fd480", "0x00000000410fd480"))
->> +        return -1;
->> +    /* r0p1 > r0p0 matches */
->> +    if (strcmp_cpuid_str("0x00000000410fd480", "0x00000000410fd481"))
->> +        return -1;
->> +    /* r1p0 > r0p0 matches*/
->> +    if (strcmp_cpuid_str("0x00000000410fd480", "0x00000000411fd480"))
->> +        return -1;
->> +    /* r0p0 < r0p1 doesn't match */
->> +    if (!strcmp_cpuid_str("0x00000000410fd481", "0x00000000410fd480"))
->> +        return -1;
->> +    /* r0p0 < r1p0 doesn't match */
->> +    if (!strcmp_cpuid_str("0x00000000411fd480", "0x00000000410fd480"))
->> +        return -1;
->> +    /* Different CPU doesn't match */
->> +    if (!strcmp_cpuid_str("0x00000000410fd4c0", "0x00000000430f0af0"))
->> +        return -1;
->> +
->> +    return 0;
->> +}
->> +
+>>   tools/perf/arch/arm64/util/pmu.c               | 18 +-----------------
+>>   .../arch/arm64/arm/neoverse-n2-v2/metrics.json |  8 ++++----
+>>   tools/perf/pmu-events/metric.py                | 17 +++++++++++++++--
+>>   tools/perf/util/expr.c                         | 18 ++++++++++++++++++
+>>   tools/perf/util/expr.h                         |  1 +
+>>   tools/perf/util/expr.l                         |  1 +
+>>   tools/perf/util/expr.y                         |  8 +++++++-
+>>   tools/perf/util/pmu.c                          | 17 +++++++++++++++++
+>>   tools/perf/util/pmu.h                          |  1 +
+>>   9 files changed, 65 insertions(+), 24 deletions(-)
 > 
-> Would it be possible to put this in core test code, since x86 also
-> supports strcmp_cpuid_str()?
+> This patch looks ok, but I think that it would be better to separate out
+> the metrics.json change into a separate patch.
 > 
+Yep I thought about doing that, I can change it in the next version.
 
-That's how I started, but Ian suggested to move it to an arch specific
-folder because that's what it was testing.
-
-We could still add test__cpuid_match() in the x86 folder rather than
-adding it with #ifdefs, but I don't think it needs to be done here
-because I haven't touched the x86 code.
-
-> Maybe we would have an structure per arch of cpuids and expected
-> results, like
-> 
-> struct cpuid_match {
->     char *cpuid1;
->     char *cpuid1;
->     int expected_result;
-> };
-> 
-> 
-> #ifdef ARM64
->  cpuid_match_array[] = {
->     {"0x410fd0c0", "0x00000000410FD0C0", -1},
->     {"0x00000000410fd480", "0x00000000410fd480", -1},
->     ...
->     {} /* sentinel */
-> 
-> };
-> #else if defined(X86)
->  cpuid_match_array[] = {
->     {....}
->     ...
->     {} /* sentinel */
-> 
-> };
-> #else
-> /* no support */
-> #endif
-> 
 > Thanks,
 > John
