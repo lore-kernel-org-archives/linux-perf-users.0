@@ -2,41 +2,41 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1EFC001E0
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Aug 2023 16:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E73FC04FE0
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Aug 2023 16:16:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233983AbjHPQL4 (ORCPT
+        id S1344602AbjHPQPn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Aug 2023 12:11:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33326 "EHLO
+        Wed, 16 Aug 2023 12:15:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234312AbjHPQLZ (ORCPT
+        with ESMTP id S1344709AbjHPQPd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Aug 2023 12:11:25 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5FC4E2;
-        Wed, 16 Aug 2023 09:11:24 -0700 (PDT)
+        Wed, 16 Aug 2023 12:15:33 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D76232735;
+        Wed, 16 Aug 2023 09:15:30 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6A95264A17;
-        Wed, 16 Aug 2023 16:11:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88A8FC433C7;
-        Wed, 16 Aug 2023 16:11:23 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1361261E6B;
+        Wed, 16 Aug 2023 16:15:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33AFDC433C8;
+        Wed, 16 Aug 2023 16:15:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692202283;
-        bh=l0J8yDMBc74nmT7gwZGggcXqRVTFJWQG2J54M7XA4UI=;
+        s=k20201202; t=1692202528;
+        bh=OMgLR3TAr3QUpgpqAJtIIBRt8Ct7rrg/kr/lcSjos2A=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BPp0q5QqydyqEXh/RKGyCfuudu+haCSzEXo8u/ua6uYq8RgUjltDdIFycod4kJCTz
-         wY3Ml5pwlnFsI9dJgfIhOnzXzK2u6NbP1XZBby9cLzY/IJYiwylv8aJYaPTz0x7F2/
-         YFn+D40+ZYw7aP0iMym2qVoBRyQ5raJUMDztW96kPHz/58DnMl4Pqn0BJkJ58zXhTm
-         95D2m3ysSi2K+YNtDpffRR66V2DflNFOXqC668ykO5yNWSFZ2XM2EQ7+9cr0shykPk
-         GDA15EOwoKnlG7FhLiUEbK5L0y5Of4I6PgYkcQI0h5XDrCX1Zw6fjBHci1NjcRxcpu
-         M03bniOi6LiXw==
+        b=b5QxCJ4xFGNgNBzb1URIai5wj/jPmfXILqlqMg96XnhR+6JhOdcdZWjwVZf7fNnGn
+         ZcSY37sRWskbbb5NtiJVNFZQjSPlYDUdMxV55kh0kCa50tU3skqHbHbAYm0nj4lYfG
+         MnQcihtAidaY58rJ+sdV9oF0oturZ8BOctRNsGJAbgE72Pu5/MJRYeqhU5ZRr29FTN
+         NQkQBEiH8sQEqj7HpbBwdT4Tos/PCr6adj0RVR/JK/zy8PwukC4gtR+uZE5asUZ2e2
+         IVus2ObAFRrlsOjgrXaKqOq06bxqPQyq2mSBUR6msqI4NoviScZMfaNJrFcZDkqpK7
+         IYjw33VtVQPtQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E6BD6404DF; Wed, 16 Aug 2023 13:11:20 -0300 (-03)
-Date:   Wed, 16 Aug 2023 13:11:20 -0300
+        id EAB1E404DF; Wed, 16 Aug 2023 13:15:24 -0300 (-03)
+Date:   Wed, 16 Aug 2023 13:15:24 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     James Clark <james.clark@arm.com>
 Cc:     linux-perf-users@vger.kernel.org, irogers@google.com,
@@ -51,78 +51,106 @@ Cc:     linux-perf-users@vger.kernel.org, irogers@google.com,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
         Kan Liang <kan.liang@linux.intel.com>,
         Haixin Yu <yuhaixin.yhx@linux.alibaba.com>,
         Nick Forrington <nick.forrington@arm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
         Eduard Zingerman <eddyz87@gmail.com>,
         Sohom Datta <sohomdatta1@gmail.com>,
         Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 2/6] perf test: Add a test for the new Arm CPU ID
- comparison behavior
-Message-ID: <ZNz1KNaNhct35bzd@kernel.org>
+Subject: Re: [PATCH v6 3/6] perf vendor events arm64: Update scale units and
+ descriptions of common topdown metrics
+Message-ID: <ZNz2HO/NGsz+2Qaa@kernel.org>
 References: <20230816114841.1679234-1-james.clark@arm.com>
- <20230816114841.1679234-3-james.clark@arm.com>
+ <20230816114841.1679234-4-james.clark@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230816114841.1679234-3-james.clark@arm.com>
+In-Reply-To: <20230816114841.1679234-4-james.clark@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Aug 16, 2023 at 12:47:44PM +0100, James Clark escreveu:
-> +++ b/tools/perf/arch/arm64/tests/cpuid-match.c
-> @@ -0,0 +1,38 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <linux/compiler.h>
-> +
-> +#include "arch-tests.h"
-> +#include "tests/tests.h"
-> +#include "util/header.h"
-> +
-> +int test__cpuid_match(struct test_suite *test __maybe_unused,
-> +			     int subtest __maybe_unused)
-> +{
-> +	/* midr with no leading zeros matches */
-> +	if (strcmp_cpuid_str("0x410fd0c0", "0x00000000410fd0c0"))
-> +		return -1;
-> +	/* Upper case matches */
-> +	if (strcmp_cpuid_str("0x410fd0c0", "0x00000000410FD0C0"))
-> +		return -1;
-> +	/* r0p0 = r0p0 matches */
-> +	if (strcmp_cpuid_str("0x00000000410fd480", "0x00000000410fd480"))
-> +		return -1;
-> +	/* r0p1 > r0p0 matches */
-> +	if (strcmp_cpuid_str("0x00000000410fd480", "0x00000000410fd481"))
-> +		return -1;
-> +	/* r1p0 > r0p0 matches*/
-> +	if (strcmp_cpuid_str("0x00000000410fd480", "0x00000000411fd480"))
-> +		return -1;
-> +	/* r0p0 < r0p1 doesn't match */
-> +	if (!strcmp_cpuid_str("0x00000000410fd481", "0x00000000410fd480"))
-> +		return -1;
-> +	/* r0p0 < r1p0 doesn't match */
-> +	if (!strcmp_cpuid_str("0x00000000411fd480", "0x00000000410fd480"))
-> +		return -1;
-> +	/* Different CPU doesn't match */
-> +	if (!strcmp_cpuid_str("0x00000000410fd4c0", "0x00000000430f0af0"))
-> +		return -1;
-> +
-> +	return 0;
-> +}
-> +
+Em Wed, Aug 16, 2023 at 12:47:45PM +0100, James Clark escreveu:
+> Metrics will be published here [1] going forwards, but they have
+> slightly different scale units. To allow autogenerated metrics to be
+> added more easily, update the scale units to match.
+> 
+> The more detailed descriptions have also been taken and added to the
+> common file.
+> 
+> [1]: https://gitlab.arm.com/telemetry-solution/telemetry-solution/-/tree/main/data/pmu/cpu/
+
+This one I had cherry-picked and is already in perf-tools-next, I
+applied the others locally, will wait till later to see if people
+ack/object.
+
+- Arnaldo
+ 
+> Acked-by: Ian Rogers <irogers@google.com>
+> Reviewed-by: John Garry <john.g.garry@oracle.com>
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>  tools/perf/pmu-events/arch/arm64/sbsa.json | 24 +++++++++++-----------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
+> 
+> diff --git a/tools/perf/pmu-events/arch/arm64/sbsa.json b/tools/perf/pmu-events/arch/arm64/sbsa.json
+> index f90b338261ac..4eed79a28f6e 100644
+> --- a/tools/perf/pmu-events/arch/arm64/sbsa.json
+> +++ b/tools/perf/pmu-events/arch/arm64/sbsa.json
+> @@ -1,34 +1,34 @@
+>  [
+>      {
+> -        "MetricExpr": "stall_slot_frontend / (#slots * cpu_cycles)",
+> -        "BriefDescription": "Frontend bound L1 topdown metric",
+> +        "MetricExpr": "100 * (stall_slot_frontend / (#slots * cpu_cycles))",
+> +        "BriefDescription": "This metric is the percentage of total slots that were stalled due to resource constraints in the frontend of the processor.",
+>          "DefaultMetricgroupName": "TopdownL1",
+>          "MetricGroup": "Default;TopdownL1",
+>          "MetricName": "frontend_bound",
+> -        "ScaleUnit": "100%"
+> +        "ScaleUnit": "1percent of slots"
+>      },
+>      {
+> -        "MetricExpr": "(1 - op_retired / op_spec) * (1 - stall_slot / (#slots * cpu_cycles))",
+> -        "BriefDescription": "Bad speculation L1 topdown metric",
+> +        "MetricExpr": "100 * ((1 - op_retired / op_spec) * (1 - stall_slot / (#slots * cpu_cycles)))",
+> +        "BriefDescription": "This metric is the percentage of total slots that executed operations and didn't retire due to a pipeline flush.\nThis indicates cycles that were utilized but inefficiently.",
+>          "DefaultMetricgroupName": "TopdownL1",
+>          "MetricGroup": "Default;TopdownL1",
+>          "MetricName": "bad_speculation",
+> -        "ScaleUnit": "100%"
+> +        "ScaleUnit": "1percent of slots"
+>      },
+>      {
+> -        "MetricExpr": "(op_retired / op_spec) * (1 - stall_slot / (#slots * cpu_cycles))",
+> -        "BriefDescription": "Retiring L1 topdown metric",
+> +        "MetricExpr": "100 * ((op_retired / op_spec) * (1 - stall_slot / (#slots * cpu_cycles)))",
+> +        "BriefDescription": "This metric is the percentage of total slots that retired operations, which indicates cycles that were utilized efficiently.",
+>          "DefaultMetricgroupName": "TopdownL1",
+>          "MetricGroup": "Default;TopdownL1",
+>          "MetricName": "retiring",
+> -        "ScaleUnit": "100%"
+> +        "ScaleUnit": "1percent of slots"
+>      },
+>      {
+> -        "MetricExpr": "stall_slot_backend / (#slots * cpu_cycles)",
+> -        "BriefDescription": "Backend Bound L1 topdown metric",
+> +        "MetricExpr": "100 * (stall_slot_backend / (#slots * cpu_cycles))",
+> +        "BriefDescription": "This metric is the percentage of total slots that were stalled due to resource constraints in the backend of the processor.",
+>          "DefaultMetricgroupName": "TopdownL1",
+>          "MetricGroup": "Default;TopdownL1",
+>          "MetricName": "backend_bound",
+> -        "ScaleUnit": "100%"
+> +        "ScaleUnit": "1percent of slots"
+>      }
+>  ]
 > -- 
 > 2.34.1
 > 
-⬢[acme@toolbox perf-tools-next]$        git am ./v6_20230816_james_clark_perf_vendor_events_arm64_update_n2_and_v2_metrics_and_events_using_arm_telem.mbx
-Applying: perf test: Add a test for the new Arm CPU ID comparison behavior
-.git/rebase-apply/patch:93: new blank line at EOF.
-+
-warning: 1 line adds whitespace errors.
-⬢[acme@toolbox perf-tools-next]$
 
-I'm removing it
+-- 
+
+- Arnaldo
