@@ -2,48 +2,33 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46778C001E0
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Aug 2023 11:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBB5C41513
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Aug 2023 11:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244753AbjHPLs6 (ORCPT
+        id S244767AbjHPLt3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Aug 2023 07:48:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37548 "EHLO
+        Wed, 16 Aug 2023 07:49:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244774AbjHPLsg (ORCPT
+        with ESMTP id S244769AbjHPLtG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Aug 2023 07:48:36 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B3B3E68;
-        Wed, 16 Aug 2023 04:48:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E7D9C666EE;
-        Wed, 16 Aug 2023 11:48:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4427C433C8;
-        Wed, 16 Aug 2023 11:48:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692186514;
-        bh=v2m2BK3GGd11X74j40insUcmDxokoIf6Czvuxm4GLe0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kIQ+3GZqZqX0YR2G3PxIKU4z7PLWBtwM1cFVVGQ7TYpvNN9lOIKya5TYcEllvV5/r
-         +W8yXiXqVRP/pyu1E7I1vsZS3Jmp1oPKegOA3D++BcgVc2hV56aJ/5pykDa8EoW5RM
-         pn1sIBsV+LvX31A82MRtST79dD+bQ4uCQ6zuHoF9bLeJWYVhMYnHiEsAM3ZE+A5xhP
-         OlEOpJtaeMdzzlm7S5bBj8a/ri7rIyXml8SPM1N3iPUt7Pr4hNL9zEtmTp2QT6Jsj7
-         o/nDUGMASQ/yVc/jLwynWG2VYzo1rluHDyXfJ0BrGMmMW0oFDUNL9ETcMIMJlZfEuF
-         sn8f0KkVIYj8A==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 00D32404DF; Wed, 16 Aug 2023 08:48:30 -0300 (-03)
-Date:   Wed, 16 Aug 2023 08:48:30 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
+        Wed, 16 Aug 2023 07:49:06 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7B60B110;
+        Wed, 16 Aug 2023 04:49:04 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1EA4C1063;
+        Wed, 16 Aug 2023 04:49:45 -0700 (PDT)
+Received: from e127643.arm.com (unknown [10.57.4.137])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 738C43F64C;
+        Wed, 16 Aug 2023 04:49:00 -0700 (PDT)
+From:   James Clark <james.clark@arm.com>
+To:     linux-perf-users@vger.kernel.org, irogers@google.com,
+        john.g.garry@oracle.com, renyu.zj@linux.alibaba.com,
+        acme@kernel.org
+Cc:     James Clark <james.clark@arm.com>, Will Deacon <will@kernel.org>,
         Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -51,175 +36,138 @@ Cc:     Ian Rogers <irogers@google.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Guo Ren <guoren@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Ming Wang <wangming01@loongson.cn>,
-        Eric Lin <eric.lin@sifive.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Haixin Yu <yuhaixin.yhx@linux.alibaba.com>,
+        Nick Forrington <nick.forrington@arm.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Ivan Babrou <ivan@cloudflare.com>,
-        Fangrui Song <maskray@google.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-csky@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 0/6] perf parse-regs: Refactor architecture functions
-Message-ID: <ZNy3jg7xxBp4161E@kernel.org>
-References: <20230606014559.21783-1-leo.yan@linaro.org>
- <CAP-5=fV1m440mKc0R=m5C4N2NtoiixchtnpX2eR3PA_5hXbqEQ@mail.gmail.com>
- <ZNvCxM/ULdUfzHtR@kernel.org>
- <ZNvHx+KxIL6JzEl/@kernel.org>
- <ZNvJdsVmmAWLmfH6@kernel.org>
- <ZNvKjeFkXY8ezf9e@kernel.org>
- <20230816020715.GA135657@leoy-huanghe.lan>
- <ZNy3D6DV3Q9YjxKd@kernel.org>
+        Andrii Nakryiko <andrii@kernel.org>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Sohom Datta <sohomdatta1@gmail.com>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v6 0/6] perf vendor events arm64: Update N2 and V2 metrics and events using Arm telemetry repo
+Date:   Wed, 16 Aug 2023 12:47:42 +0100
+Message-Id: <20230816114841.1679234-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZNy3D6DV3Q9YjxKd@kernel.org>
-X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Aug 16, 2023 at 08:46:23AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, Aug 16, 2023 at 10:07:15AM +0800, Leo Yan escreveu:
-> > On Tue, Aug 15, 2023 at 03:57:17PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > Em Tue, Aug 15, 2023 at 03:52:38PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > > Em Tue, Aug 15, 2023 at 03:45:27PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > > > > Agreed, applied to perf-tools-next, sorry for the delay.
-> > > > > 
-> > > > > Had to add this to make 'perf test python' to work. Please run 'perf
-> > > > > test' before sending patches.
-> > > > 
-> > > > One more, please also do a 'make -C tools/perf build-test', with it I
-> > > > caught this:
-> > > > 
-> > > >          make_no_libunwind_O: cd . && make NO_LIBUNWIND=1 FEATURES_DUMP=/var/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.yeEGyQq2HR DESTDIR=/tmp/tmp.ITgoO16jjH
-> > > > cd . && make NO_LIBUNWIND=1 FEATURES_DUMP=/var/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.yeEGyQq2HR DESTDIR=/tmp/tmp.ITgoO16jjH
-> > > 
-> > > +#include "util/env.h"
-> > > 
-> > > As now we need it for perf_env__arch(ui->machine->env)
-> > 
-> > Sorry for inconvenience.
-> > 
-> > I saw this patch series has been picked into the branch:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=tmp.perf-tools-next
-> > 
-> > If want me to follow up, let me know.  Thank you!
-> 
-> Right, I'll fix this ones:
-> 
-> [perfbuilder@five ~]$ grep "unused variable" dm.log/*:*
-> dm.log/ubuntu:18.04-x-m68k:util/evsel.c:848:14: error: unused variable 'arch' [-Werror=unused-variable]
-> dm.log/ubuntu:18.04-x-riscv64:util/evsel.c:848:14: error: unused variable 'arch' [-Werror=unused-variable]
-> dm.log/ubuntu:18.04-x-sh4:util/evsel.c:848:14: error: unused variable 'arch' [-Werror=unused-variable]
-> dm.log/ubuntu:18.04-x-sparc64:util/evsel.c:848:14: error: unused variable 'arch' [-Werror=unused-variable]
-> [perfbuilder@five ~]$
-> 
-> And move that to perf-tools-next, we can go on from there.
-> 
-> The above is because we don't define CONFIG_PERF_REGS for these
-> architectures and thus that variable ends up not being used, so I'm
-> fixing up like below, in the cset where you made DWARF_MINIMAL_REGS
-> receive the arch parameter.
+This is a completely new approach from V3 [1], although the metrics and
+event descriptions are autogenerated, the topdown metrics have been
+manually edited to use #no_stall_errata (now directly comparing on the
+CPUID in v5). This removes the need to duplicate the whole set of JSONs
+when only the topdown metrics are different between N2 and V2.
 
-I added this to the cset commit message:
+The CPU ID comparison function still needs to change so that the new
+literal can compare on versions, but now no change is needed to mapfile
+or the PMU event generation code because we still only support one
+set of JSONs per CPU.
 
-Committer notes:
+[1]: https://lore.kernel.org/lkml/20230711100218.1651995-1-james.clark@arm.com/
 
-Make DWARF_MINIMAL_REGS() an inline function, so that we can use the
-__maybe_unused attribute for the 'arch' parameter, as this will avoid a
-build failure when that variable is unused in the callers. That happens
-when building on unsupported architectures, the ones without
-HAVE_PERF_REGS_SUPPORT defined.
+------
 
- 
-> Also I haven't checked how gracefully we react when processing a
-> perf.data collected in one of those unsupported arches, can you please
-> check?
-> 
-> - Arnaldo
-> 
-> diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-> index 790c1a26bbfe9b4b..de1673057e502de9 100644
-> --- a/tools/perf/util/perf_regs.h
-> +++ b/tools/perf/util/perf_regs.h
-> @@ -32,9 +32,6 @@ extern const struct sample_reg sample_reg_masks[];
->  
->  #include <perf_regs.h>
->  
-> -#define DWARF_MINIMAL_REGS(arch)	\
-> -	((1ULL << perf_arch_reg_ip(arch)) | (1ULL << perf_arch_reg_sp(arch)))
-> -
->  const char *perf_reg_name(int id, const char *arch);
->  int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
->  uint64_t perf_arch_reg_ip(const char *arch);
-> @@ -67,11 +64,19 @@ const char *__perf_reg_name_x86(int id);
->  uint64_t __perf_reg_ip_x86(void);
->  uint64_t __perf_reg_sp_x86(void);
->  
-> +static inline uint64_t DWARF_MINIMAL_REGS(const char *arch)
-> +{
-> +	return (1ULL << perf_arch_reg_ip(arch)) | (1ULL << perf_arch_reg_sp(arch));
-> +}
-> +
->  #else
->  #define PERF_REGS_MASK	0
->  #define PERF_REGS_MAX	0
->  
-> -#define DWARF_MINIMAL_REGS(arch)	PERF_REGS_MASK
-> +static inline uint64_t DWARF_MINIMAL_REGS(const char *arch __maybe_unused)
-> +{
-> +	return PERF_REGS_MASK;
-> +}
->  
->  static inline const char *perf_reg_name(int id __maybe_unused, const char *arch __maybe_unused)
->  {
->  
-> > > >   CC      /tmp/tmp.yeEGyQq2HR/util/expr-flex.o
-> > > > util/unwind-libdw.c: In function ‘memory_read’:
-> > > > util/unwind-libdw.c:173:28: error: implicit declaration of function ‘perf_env__arch’ [-Werror=implicit-function-declaration]
-> > > >   173 |         const char *arch = perf_env__arch(ui->machine->env);
-> > > >       |                            ^~~~~~~~~~~~~~
-> > > > util/unwind-libdw.c:173:28: error: initialization of ‘const char *’ from ‘int’ makes pointer from integer without a cast [-Werror=int-conversion]
-> > > > util/unwind-libdw.c: In function ‘unwind__get_entries’:
-> > > > util/unwind-libdw.c:258:28: error: initialization of ‘const char *’ from ‘int’ makes pointer from integer without a cast [-Werror=int-conversion]
-> > > >   258 |         const char *arch = perf_env__arch(ui_buf.machine->env);
-> > > >       |                            ^~~~~~~~~~~~~~
-> > > > cc1: all warnings being treated as errors
-> > > > make[6]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:98: /tmp/tmp.yeEGyQq2HR/util/unwind-libdw.o] Error 1
-> > > > make[6]: *** Waiting for unfinished jobs....
-> > > > make[5]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:150: util] Error 2
-> > > > make[4]: *** [Makefile.perf:662: /tmp/tmp.yeEGyQq2HR/perf-in.o] Error 2
-> > > > make[4]: *** Waiting for unfinished jobs....
-> > > >   CC      /tmp/tmp.yeEGyQq2HR/pmu-events/pmu-events.o
-> > > >   LD      /tmp/tmp.yeEGyQq2HR/pmu-events/pmu-events-in.o
-> > > > make[3]: *** [Makefile.perf:238: sub-make] Error 2
-> > > > make[2]: *** [Makefile:70: all] Error 2
-> > > > make[1]: *** [tests/make:337: make_no_libunwind_O] Error 1
-> > > > make: *** [Makefile:103: build-test] Error 2
-> > > > make: Leaving directory '/var/home/acme/git/perf-tools-next/tools/perf'
-> > > > 
-> > > > real	1m29.784s
-> > > > user	10m41.597s
-> > > > sys	2m55.948s
-> > > > ⬢[acme@toolbox perf-tools-next]$
-> > > > 
-> > > > I'm trying to fix
-> > > 
-> > > -- 
-> > > 
-> > > - Arnaldo
-> 
-> -- 
-> 
-> - Arnaldo
+Changes since v5:
+  * Split patch 5 into one to add the new expression builtin and one to
+    update the Arm metric formulas
+  * Make _get_cpuid() still return an error if reading the file fails
+  * Improve the return value comment on strcmp_cpuid_str()
+  * Remove the "The events json file with the highest matching version
+    is used." comment because that was only true in v2
+  * Drop patch 1 because it was applied (I kept patch 4 even though it
+    was applied so that there is some context)
+
+Changes since v4:
+  * Replace the #no_stall_errata literal with a more generic function
+    for comparing CPU IDs. This will hopefully keep configuration out
+    of the code and inside the JSONs
+
+Changes since v3:
+  * Instead of duplicating all the metrics, add a new expression
+    literal that can be used to share the same metrics between N2 and V2
+  * Move tests to arch/arm64/tests
+  * Remove changes from jevents.py and mapfile.csv
+
+Changes since v2:
+  * version -> variant in second commit message
+  * Add a bit more detail about version matching in the second commit
+    message
+  * Update the comments in pmu-events/arch/arm64/mapfile.csv to say that
+    variant and revision fields are now used
+  * Increase the CC list
+
+Changes since v1:
+  * Split last change into two so it doesn't hit the mailing list size
+    limit
+
+James Clark (6):
+  perf arm64: Allow version comparisons of CPU IDs
+  perf test: Add a test for the new Arm CPU ID comparison behavior
+  perf vendor events arm64: Update scale units and descriptions of
+    common topdown metrics
+  perf jevents: Add a new expression builtin strcmp_cpuid_str()
+  perf vendor events arm64: Update stall_slot workaround for N2 r0p3
+  perf vendor events arm64: Update N2 and V2 metrics and events using
+    Arm telemetry repo
+
+ tools/perf/arch/arm64/include/arch-tests.h    |   3 +
+ tools/perf/arch/arm64/tests/Build             |   1 +
+ tools/perf/arch/arm64/tests/arch-tests.c      |   4 +
+ tools/perf/arch/arm64/tests/cpuid-match.c     |  38 ++
+ tools/perf/arch/arm64/util/header.c           |  67 +++-
+ tools/perf/arch/arm64/util/pmu.c              |  18 +-
+ .../arch/arm64/arm/neoverse-n2-v2/branch.json |   8 -
+ .../arch/arm64/arm/neoverse-n2-v2/bus.json    |  18 +-
+ .../arch/arm64/arm/neoverse-n2-v2/cache.json  | 155 --------
+ .../arm64/arm/neoverse-n2-v2/exception.json   |  45 ++-
+ .../arm/neoverse-n2-v2/fp_operation.json      |  22 ++
+ .../arm64/arm/neoverse-n2-v2/general.json     |  10 +
+ .../arm64/arm/neoverse-n2-v2/instruction.json | 143 -------
+ .../arm64/arm/neoverse-n2-v2/l1d_cache.json   |  54 +++
+ .../arm64/arm/neoverse-n2-v2/l1i_cache.json   |  14 +
+ .../arm64/arm/neoverse-n2-v2/l2_cache.json    |  50 +++
+ .../arm64/arm/neoverse-n2-v2/l3_cache.json    |  22 ++
+ .../arm64/arm/neoverse-n2-v2/ll_cache.json    |  10 +
+ .../arch/arm64/arm/neoverse-n2-v2/memory.json |  39 +-
+ .../arm64/arm/neoverse-n2-v2/metrics.json     | 365 ++++++++++--------
+ .../arm64/arm/neoverse-n2-v2/pipeline.json    |  23 --
+ .../arm64/arm/neoverse-n2-v2/retired.json     |  30 ++
+ .../arch/arm64/arm/neoverse-n2-v2/spe.json    |  12 +-
+ .../arm/neoverse-n2-v2/spec_operation.json    | 110 ++++++
+ .../arch/arm64/arm/neoverse-n2-v2/stall.json  |  30 ++
+ .../arch/arm64/arm/neoverse-n2-v2/sve.json    |  50 +++
+ .../arch/arm64/arm/neoverse-n2-v2/tlb.json    |  66 ++++
+ .../arch/arm64/arm/neoverse-n2-v2/trace.json  |  27 +-
+ tools/perf/pmu-events/arch/arm64/sbsa.json    |  24 +-
+ tools/perf/pmu-events/metric.py               |  17 +-
+ tools/perf/util/expr.c                        |  18 +
+ tools/perf/util/expr.h                        |   1 +
+ tools/perf/util/expr.l                        |   1 +
+ tools/perf/util/expr.y                        |   8 +-
+ tools/perf/util/pmu.c                         |  17 +
+ tools/perf/util/pmu.h                         |   1 +
+ 36 files changed, 923 insertions(+), 598 deletions(-)
+ create mode 100644 tools/perf/arch/arm64/tests/cpuid-match.c
+ delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/branch.json
+ delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/fp_operation.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/general.json
+ delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/instruction.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/l1d_cache.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/l1i_cache.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/l2_cache.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/l3_cache.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/ll_cache.json
+ delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/pipeline.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/retired.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/spec_operation.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/stall.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/sve.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/tlb.json
 
 -- 
+2.34.1
 
-- Arnaldo
