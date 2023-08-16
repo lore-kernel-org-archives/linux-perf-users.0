@@ -2,157 +2,107 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 479F3C41513
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Aug 2023 02:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FDBC04A94
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Aug 2023 09:03:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241168AbjHPCH3 (ORCPT
+        id S234609AbjHPJC0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Aug 2023 22:07:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55234 "EHLO
+        Wed, 16 Aug 2023 05:02:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241185AbjHPCH3 (ORCPT
+        with ESMTP id S242992AbjHPJCO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Aug 2023 22:07:29 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 481D12127
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Aug 2023 19:07:28 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1bdbbede5d4so39128415ad.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Aug 2023 19:07:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1692151648; x=1692756448;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1cgPRSiv90OT3/SJL8ZMyRGl4jaRnBiBcYOX7OaylDE=;
-        b=sQMCdgdwxL3T4OXi4BlV/8FePNPTCIivYKVkWn7lRRSmnv5c9qZy5fs29K/KOgn29Y
-         O8HjNk71YBIgx74M3jMGU3NLOjIFS9rRDybcVMBz2bJESPp8ZeMJf139+YR9x/hnzLdK
-         D0Gv8oY475Le4AEIkHqSSKHQQo7i5EhKKU06ctzgup9rZYddS9+agRyqLXUdQKd3X3+P
-         K3GWm8qR+KCTSWmkUrwFHmWiaduwlS7z6JNuRPhqqDNHTDMq3oYDQ2T7uc9wG8tD2bZV
-         IWvkM3M+XBkk+S50u1wastmv7g7ljregVsfk60vECo7OjFjmkfrl3z5hhUIg5CxY2zhR
-         0drw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692151648; x=1692756448;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1cgPRSiv90OT3/SJL8ZMyRGl4jaRnBiBcYOX7OaylDE=;
-        b=ksP5kumOjctrtpEBnDXt1lUHENSDMIRxarncAOlPyQIQgVZdAXPr1EkW40mi1CVE6s
-         QLdDLhyqndyILGaZIuEnDgG2vAG8pbVfhYPJCXtJzo5htastAhjaJLxyy1ylEVVTqf3M
-         GvzLc4yY6YCgOLSJmy1JdNYQ3hLap7je6cFc3W8t7qktM+xNS22TQmNKmW6Xcf8T0ePE
-         pbb40IBZoVX1wGblZQS85GOWHT2omG2ZaANlRe7B/2g4ArNQUJHgGfo6yQfR9xOqFdTZ
-         GhcwdSvrdjfrLvNqhaIWWITSulNALQn9k7hogKmpDnN8vY0GN9FbyqdQEQititRIzK/C
-         10bA==
-X-Gm-Message-State: AOJu0YwkMzo3yByGo0RumvQvVIcZqBzzcPlPm8tdRh2DW4Ln9ETAVqix
-        gCo6sZbh76VNN2s9NIWc22cO/Q==
-X-Google-Smtp-Source: AGHT+IFCPpYmyWaib0MQfDL563rBcVuQf0cRysHOx8FVJ+qFoWVHApR2PRs6Is19nR5cTTuzLoiwuw==
-X-Received: by 2002:a17:903:2796:b0:1b8:8223:8bdd with SMTP id jw22-20020a170903279600b001b882238bddmr692922plb.59.1692151647664;
-        Tue, 15 Aug 2023 19:07:27 -0700 (PDT)
-Received: from leoy-huanghe.lan ([150.230.248.162])
-        by smtp.gmail.com with ESMTPSA id l2-20020a170902f68200b001b8943b37a5sm11673061plg.24.2023.08.15.19.07.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Aug 2023 19:07:27 -0700 (PDT)
-Date:   Wed, 16 Aug 2023 10:07:15 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
+        Wed, 16 Aug 2023 05:02:14 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4C4F51990;
+        Wed, 16 Aug 2023 02:02:12 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3409D1063;
+        Wed, 16 Aug 2023 02:02:53 -0700 (PDT)
+Received: from [10.57.2.104] (unknown [10.57.2.104])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 89E5A3F64C;
+        Wed, 16 Aug 2023 02:02:03 -0700 (PDT)
+Message-ID: <7676ff3a-4afc-a26a-8e20-521054298c72@arm.com>
+Date:   Wed, 16 Aug 2023 10:02:01 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v5 2/6] perf arm64: Allow version comparisons of CPU IDs
+Content-Language: en-US
+To:     John Garry <john.g.garry@oracle.com>,
+        linux-perf-users@vger.kernel.org, irogers@google.com,
+        renyu.zj@linux.alibaba.com
+Cc:     Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Guo Ren <guoren@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Ming Wang <wangming01@loongson.cn>,
-        Eric Lin <eric.lin@sifive.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Ivan Babrou <ivan@cloudflare.com>,
-        Fangrui Song <maskray@google.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-csky@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 0/6] perf parse-regs: Refactor architecture functions
-Message-ID: <20230816020715.GA135657@leoy-huanghe.lan>
-References: <20230606014559.21783-1-leo.yan@linaro.org>
- <CAP-5=fV1m440mKc0R=m5C4N2NtoiixchtnpX2eR3PA_5hXbqEQ@mail.gmail.com>
- <ZNvCxM/ULdUfzHtR@kernel.org>
- <ZNvHx+KxIL6JzEl/@kernel.org>
- <ZNvJdsVmmAWLmfH6@kernel.org>
- <ZNvKjeFkXY8ezf9e@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        Nick Forrington <nick.forrington@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Sohom Datta <sohomdatta1@gmail.com>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
+References: <20230811144017.491628-1-james.clark@arm.com>
+ <20230811144017.491628-3-james.clark@arm.com>
+ <47a32410-d9ca-627b-e8a3-f64d4a1ea95f@oracle.com>
+ <4c6a4729-8331-5c47-a81e-f92915e2e848@arm.com>
+ <eb23ad55-a46c-4ed7-d2b0-0dcf7d536f89@oracle.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <eb23ad55-a46c-4ed7-d2b0-0dcf7d536f89@oracle.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZNvKjeFkXY8ezf9e@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Aug 15, 2023 at 03:57:17PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Aug 15, 2023 at 03:52:38PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Tue, Aug 15, 2023 at 03:45:27PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > > Agreed, applied to perf-tools-next, sorry for the delay.
-> > > 
-> > > Had to add this to make 'perf test python' to work. Please run 'perf
-> > > test' before sending patches.
-> > 
-> > One more, please also do a 'make -C tools/perf build-test', with it I
-> > caught this:
-> > 
-> >          make_no_libunwind_O: cd . && make NO_LIBUNWIND=1 FEATURES_DUMP=/var/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.yeEGyQq2HR DESTDIR=/tmp/tmp.ITgoO16jjH
-> > cd . && make NO_LIBUNWIND=1 FEATURES_DUMP=/var/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.yeEGyQq2HR DESTDIR=/tmp/tmp.ITgoO16jjH
-> 
-> +#include "util/env.h"
-> 
-> As now we need it for perf_env__arch(ui->machine->env)
 
-Sorry for inconvenience.
 
-I saw this patch series has been picked into the branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=tmp.perf-tools-next
-
-If want me to follow up, let me know.  Thank you!
-
-> >   CC      /tmp/tmp.yeEGyQq2HR/util/expr-flex.o
-> > util/unwind-libdw.c: In function ‘memory_read’:
-> > util/unwind-libdw.c:173:28: error: implicit declaration of function ‘perf_env__arch’ [-Werror=implicit-function-declaration]
-> >   173 |         const char *arch = perf_env__arch(ui->machine->env);
-> >       |                            ^~~~~~~~~~~~~~
-> > util/unwind-libdw.c:173:28: error: initialization of ‘const char *’ from ‘int’ makes pointer from integer without a cast [-Werror=int-conversion]
-> > util/unwind-libdw.c: In function ‘unwind__get_entries’:
-> > util/unwind-libdw.c:258:28: error: initialization of ‘const char *’ from ‘int’ makes pointer from integer without a cast [-Werror=int-conversion]
-> >   258 |         const char *arch = perf_env__arch(ui_buf.machine->env);
-> >       |                            ^~~~~~~~~~~~~~
-> > cc1: all warnings being treated as errors
-> > make[6]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:98: /tmp/tmp.yeEGyQq2HR/util/unwind-libdw.o] Error 1
-> > make[6]: *** Waiting for unfinished jobs....
-> > make[5]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:150: util] Error 2
-> > make[4]: *** [Makefile.perf:662: /tmp/tmp.yeEGyQq2HR/perf-in.o] Error 2
-> > make[4]: *** Waiting for unfinished jobs....
-> >   CC      /tmp/tmp.yeEGyQq2HR/pmu-events/pmu-events.o
-> >   LD      /tmp/tmp.yeEGyQq2HR/pmu-events/pmu-events-in.o
-> > make[3]: *** [Makefile.perf:238: sub-make] Error 2
-> > make[2]: *** [Makefile:70: all] Error 2
-> > make[1]: *** [tests/make:337: make_no_libunwind_O] Error 1
-> > make: *** [Makefile:103: build-test] Error 2
-> > make: Leaving directory '/var/home/acme/git/perf-tools-next/tools/perf'
-> > 
-> > real	1m29.784s
-> > user	10m41.597s
-> > sys	2m55.948s
-> > ⬢[acme@toolbox perf-tools-next]$
-> > 
-> > I'm trying to fix
+On 14/08/2023 15:43, John Garry wrote:
+> On 14/08/2023 15:15, James Clark wrote:
+>>
+>> On 14/08/2023 14:07, John Garry wrote:
+>>> On 11/08/2023 15:39, James Clark wrote:
+>>>> Currently variant and revision fields are masked out of the MIDR so
+>>>> it's not possible to compare different versions of the same CPU.
+>>>> In a later commit a workaround will be removed just for N2 r0p3, so
+>>>> enable comparisons on version.
+>>>>
+>>>> This has the side effect of changing the MIDR stored in the header of
+>>>> the perf.data file to no longer have masked version fields.
+>>> Did you consider adding a raw version of _get_cpuid(), which returns the
+>>> full MIDR just for the purpose of caller strcmp_cpuid_str()?
+>> I did, but I thought that seeing as it would only be used in one place,
+>> and that changing the existing one didn't break anything, that it was
+>> better to not fragment the CPU ID interface. I thought it might also
+>> have repercussions for the other architectures as well. It would also
+>> mean that the MIDR that's stored in the header wouldn't have the version
+>> information, which if we're starting to do things with that could be bad.
+>>
+>> There are already callers of strcmp_cpuid_str() so it's probably best to
+>> keep it using the same get_cpuid() string. Unless there is a reason
+>> _not_  to do it? There isn't really anything that can't be done with it
+>> accepting/returning the full unmasked MIDR. If you want the old
+>> behavior, you just set the version fields to 0, which I've also used in
+>> a later patch and is already done in mapfile.csv
+>>
 > 
-> -- 
+> ok, fine, so we seems that we would be following x86 on this in terms of
+> using strcmp_cpuid_str(). It would be good to mention that there is
+> already a weak version of strcmp_cpuid_str() for !x86 in your commit
+> message.
 > 
-> - Arnaldo
+
+Yep I can add this.
+
+> Let me check your code again...
+> 
+> Thanks,
+> John
