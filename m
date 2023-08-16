@@ -2,72 +2,74 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85286C41513
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Aug 2023 10:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 321E7C001B0
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Aug 2023 10:28:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243795AbjHPKRA (ORCPT
+        id S243892AbjHPK2X (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Aug 2023 06:17:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60380 "EHLO
+        Wed, 16 Aug 2023 06:28:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243839AbjHPKQm (ORCPT
+        with ESMTP id S243897AbjHPK2K (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Aug 2023 06:16:42 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58380FE;
-        Wed, 16 Aug 2023 03:16:37 -0700 (PDT)
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37FNOeA8020087;
-        Wed, 16 Aug 2023 10:16:04 GMT
+        Wed, 16 Aug 2023 06:28:10 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A9B1BE6;
+        Wed, 16 Aug 2023 03:28:08 -0700 (PDT)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37FNPD45023195;
+        Wed, 16 Aug 2023 10:27:39 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
  subject : to : cc : references : from : in-reply-to : content-type :
  content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=o5plB0p+vDHcjuIfY3h1ytDzMaxPwfuUvMnJ+jtdcws=;
- b=jdD+HEFMvLmEW4BJlpHzbvLCeIhcNrov4CeLoPhFK64Jq6dkIPm2pS4K6eQiPnpauVJS
- 7t6MPIpKpgH4XE1/8M6oNDhKPg5FS8KViSwV1b+WPJsdVqbj2Wyv51qRJcSUehJ7Ykyu
- Q9Zya1aPl7HMDP2LXKwA0mMpL+9XeCQIuM3Wh0HLLrMy0LNpKf6PX7j0tSVyLMMRNhev
- bQVcJccgNoE9jocmbLRYIiot8/RsrSQ4Bw0rC0P2ogcnEVn9yOl5cAAcdgLYftPipk0P
- Z5gQO+qJmRQ0MB6G5dpnSI5/1At5yPJKIhIOaT0OWRZmODD2nCZrLDQj3c0uu1oo1CwA CQ== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3se2w5xq6v-1
+ bh=oPikfUwJ7HYgJSf8Byt0LrlXwhbW4WrYlpUEQPPs7EA=;
+ b=QQPt5XkQ5U67AOl5Uz08f0o3RQXuTuDEGu60D5eRPckPaqxOYRPKm1cZINLkHM467ero
+ hvy5yuBm6A2KJdoav1BlS15/a6xcckRdOw2+szvyaVEaCQg80madJmhR+2CJQAXCdjKa
+ OC4IfKH1xzgNdv1Gz/H/m7D6A4pTwrR8X9Y+j22ljdrGOFnKEeomDdxOvAnuutz/z8co
+ Cey/XyPao2jfG7G8s1AAxTWmKLKhUbQy3Bzdaa/bMH/d7hUmfZhLzTJoqySv1+sZmhhw
+ AUq3E6VcpTtbCpKGNk025L6/rLs/6C1LDTY0J5rgBkJ6N4oOkw/TCA4yykqgas9pIozx 5w== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3se2yfpnq7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Aug 2023 10:16:03 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 37G95Ipm039510;
-        Wed, 16 Aug 2023 10:16:03 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2169.outbound.protection.outlook.com [104.47.59.169])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3sey7185e9-1
+        Wed, 16 Aug 2023 10:27:38 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 37GABRw7000676;
+        Wed, 16 Aug 2023 10:27:37 GMT
+Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2174.outbound.protection.outlook.com [104.47.73.174])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3sey0s127a-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Aug 2023 10:16:03 +0000
+        Wed, 16 Aug 2023 10:27:37 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZcOqnF1YuuopX4ZAW7SahOPOZZcRMKwSRJ5pNLLd2BnunhDkPULT1dow8aTkpy5iWCxbBbbYqcClfR71kexNtKHn7FNXjEoUyjCjJUqBi+IlICp7UN+6v3qq+4md1bUN1NT5C7Jh5oMnAIY+iVDrVrlvZ0ejjUCzJIgJEeGbOAN8JQw7wI0hL5Pemn97rGdxllt7PuxTFz3Ni7UBAGAfOSzHMytaaPTl9TbB/qC6/wDcg9gv8ej+5odT+IwKM5b3G279SEYH2LBWcwbLY+zj67vtVGDPeM1QD8WxtC1XISdl/KcUdZS/5qtTLk4Sj5oR5BjUxm0LZrz8aWps0K7ypQ==
+ b=az1l7f3rcW454T08WhYz2n/7g8reTre07hgvwyLsxe+O6mrw26VSiFARsDHv+ABAi3FuNkCSU/EaWI4B1a394e9BvwyFO6B7/cn2pi2cSZAaFt8wW3wehP5gkQnHn9Y0qsVoObRM8AYUWrayQzwkYGGn6EHWKSQbSgGAOGUZDLfks74E1qqUg4jaxUGGErkDr4Qw+sTv6g70kFPds1OAQX5YdAs2+zuoTAgjRkwmJQvuyJwj/e0lXg9OsoX4FBUnvV4JzAu4IkIEZtmm9KG9IIfUI1XvAonq65sZJmrDEMjU7KRr1AZesBjRzyiiKDZgKxXSpZPRi8fSpXJBJU5DbA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=o5plB0p+vDHcjuIfY3h1ytDzMaxPwfuUvMnJ+jtdcws=;
- b=JS83R1BK8NT0oe2nDhst/Gr1roep7bym68En4KtP25hAlRHosz4E06uk0dujosdVD3LyrKBftu3ppqSGnjNgZBlcwtU4ajLfNa3EJglJ3UgzJzN+1BIDyjY758/oo1b2NdEuwKc8EgOCtu8kSJMljZvPn7h9EeMzIp/ZNhYZmwb2fGR8KmMD7SuzCjdVttk71sJkCM7N3QgGpXE4/g1LJxaFPv9aIlGnIXn2VpiLx9tEgQ/9+Ll+yNRqoB1/3KWOf5Xstj+h2vfO8eb45PhonFr/dPo2L/4k8ymQrzTj/OAWAdn+JuJHnEVnpX1OKk/AbRAYVUUBanEYAYL0iSxIMg==
+ bh=oPikfUwJ7HYgJSf8Byt0LrlXwhbW4WrYlpUEQPPs7EA=;
+ b=IvDD+s9IToy5BI7W+KJwcKbxhLefSIlPl2ZCeQBj7Io5BDbpg1wGY+Tdx+dCKAfU6DwSPuYrAbQOlGqkGy32a1p7kCNLlQttNu84aGLHpldFoLvYRrSdh+Ps/k0Ghfntu7lxNsRCPYJgIV2280W2jTZdeQvBPA89XaeYa+B4o+bUXuVhyiA7DLI5DdJIlGUNSuho2AkkPxbF5eK/nYf9tr0jRNAH7RnG8RpE3ifvos6l8Mvq3vm/2c4M88IMcb2Sfs84JubYdYHomXnJV6BJvWRh9KS9divTWM5mn27rVyVZeMU5TyBosHj+kloDDuRndpdUEjLR+GKYJYPqRSPdHg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o5plB0p+vDHcjuIfY3h1ytDzMaxPwfuUvMnJ+jtdcws=;
- b=s8yg752UAIwf9C2GecmyRwSz+lV5Jr4XSi4w99KicuMWuwOMGyaxn6smXmUc1rbHD/CYTki82QCsh0g99ChdNnFRWIc7g9J2Biutey4nBfmdG78GsnHq3i1SS0UUaRgMGdAC+2cRZKZcTrbWXkfHk2nxZ3Ogv+h6h94b1AYLty0=
+ bh=oPikfUwJ7HYgJSf8Byt0LrlXwhbW4WrYlpUEQPPs7EA=;
+ b=k9h/xq209cI0v/3D59N2X8sZpwybkQn7AIXfmpjIhbxG5fUkH4W7DYRnwhFGc9PGFxMah8rwWHaRsU/724lrmUPJXfTfOOKqd2QAkP/fZX763zT3TuNbPlWu1AjFECSFJVxedQLhVCfVhuT2eYZ6p4u5pwf82VuJbn+3y7v2+dk=
 Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by PH7PR10MB5770.namprd10.prod.outlook.com (2603:10b6:510:126::13) with
+ by PH7PR10MB6554.namprd10.prod.outlook.com (2603:10b6:510:205::5) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.26; Wed, 16 Aug
- 2023 10:16:00 +0000
+ 2023 10:27:35 +0000
 Received: from DM6PR10MB4313.namprd10.prod.outlook.com
  ([fe80::ebfd:c49c:6b8:6fce]) by DM6PR10MB4313.namprd10.prod.outlook.com
  ([fe80::ebfd:c49c:6b8:6fce%7]) with mapi id 15.20.6678.022; Wed, 16 Aug 2023
- 10:16:00 +0000
-Message-ID: <e1b9b766-c439-8bbf-0249-105113663cec@oracle.com>
-Date:   Wed, 16 Aug 2023 11:15:54 +0100
+ 10:27:34 +0000
+Message-ID: <ff8f7055-70c6-169c-1242-25e6c56f87db@oracle.com>
+Date:   Wed, 16 Aug 2023 11:27:27 +0100
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.14.0
-Subject: Re: [PATCH v5 2/6] perf arm64: Allow version comparisons of CPU IDs
+Subject: Re: [PATCH v5 3/6] perf test: Add a test for the new Arm CPU ID
+ comparison behavior
+Content-Language: en-US
 To:     James Clark <james.clark@arm.com>,
         linux-perf-users@vger.kernel.org, irogers@google.com,
         renyu.zj@linux.alibaba.com
@@ -82,281 +84,282 @@ Cc:     Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Nick Forrington <nick.forrington@arm.com>,
         Kajol Jain <kjain@linux.ibm.com>,
+        Nick Forrington <nick.forrington@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Eduard Zingerman <eddyz87@gmail.com>,
         Sohom Datta <sohomdatta1@gmail.com>,
         Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
 References: <20230811144017.491628-1-james.clark@arm.com>
- <20230811144017.491628-3-james.clark@arm.com>
- <d6b702fa-0b7b-63d4-cd84-eed4387663a7@oracle.com>
- <a82cc9a8-7700-fe71-cb0f-dc65eefcc22f@arm.com>
-Content-Language: en-US
+ <20230811144017.491628-4-james.clark@arm.com>
+ <3c382d80-7666-8207-a534-0b20807d3f6c@oracle.com>
+ <fc71f840-8c4e-eeac-580b-5e0065a4cbee@arm.com>
 From:   John Garry <john.g.garry@oracle.com>
 Organization: Oracle Corporation
-In-Reply-To: <a82cc9a8-7700-fe71-cb0f-dc65eefcc22f@arm.com>
+In-Reply-To: <fc71f840-8c4e-eeac-580b-5e0065a4cbee@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P302CA0039.GBRP302.PROD.OUTLOOK.COM
- (2603:10a6:600:317::12) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+X-ClientProxiedBy: AM0PR03CA0069.eurprd03.prod.outlook.com (2603:10a6:208::46)
+ To DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|PH7PR10MB5770:EE_
-X-MS-Office365-Filtering-Correlation-Id: 36796df2-402c-4b08-0d24-08db9e41c9da
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|PH7PR10MB6554:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7233c800-d5ad-4ad6-c959-08db9e4367d2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: fKtqRZWJ37WWqdiwNf7VkDcTXc8lMlPHqvq04ZXTAMOMTGTjosrt5t3bSavw74ED6/L366TRzS8EpneEWJT5RJeWar9qvj4sMKEljG1vyg4S7/Ce3B358FLohizeQsH3lRaLFl9XSgD036xPAQZU1pNIhHO73gtfkWmpVPNK035viNxFJICAIRSgPa9zIQantbuHjLv/z1IusTCKwLCb23r6aVNzEB0bSkd5JDLloqFkbZ6mTcoDBFoLSvGg0g0+M0O1YBkVc711UrG1nRxHqBddgmru3nqBAcIfNn9q5J9JM/w3htFu4yrRrc9eB9gpXAhmEOWlbxJymnHjz4/bXVkpttzO8w8TdKY9YzTsTLr7Eb73Qbn/7Qz/yW4ZZYHtoFutZ97yHlhkgyrE85lUlerDKzQwVb145Qd9aO+ZOxfgwj1Pd9Iw28ARkz7eYUmfQbopWORFdSazfsgWvV3nFJcLAiJtuN9kB1N8K8W5xex+v9vrMFQzspQB+fdUdT3UbBBQYIWK/3Ywq+CX5bPtsqwhh+8LWGaZpLsLci1TD5D1nMXbhcqaLxKWzMTdq6l0wr/d0ZBdo7ivrKo5kelo+dvZya0jJyuNXOAemeMqvZU+5FOgVLV/KkBEtibz+s4q0fyL0siv9HG5TnG6wW8GxQ==
+X-Microsoft-Antispam-Message-Info: WRw3WYJa6M4iwE5RZpTfRCIZ0rNL/zA3q1p8Vnru6rTFyoIBjtmEedBxcE3dwOu4JEyX2+cIu5fFMGPd07Jpv5Nj81tQVgk8wV6t5Z+fqYR8OQSIMfQRJci7RkEpj0Kl6IdqdJ8jBJOknztUyZTMbpb7fYZ8jHLMA0ZnwAqctdIWoravfpmEqbfwKIqK5Lp/nzNqcqEodCew/8ri8bmM6W5KHuUAdK4YFPd7LIveVkiti6L33Tjqw077Hlyirn2KyHrgdC3qPLe/W6kYF4z6SnhNnHounX2y1j9kXf0IXQY/INsE6YdjQZTV6h1N1Tuf4bfGZYo6/EzUM5Ux3qi9pmcqlGjtGO4H247SUUs+iwtdYmzBXB79X8xX7gGOkl4+uAsZUnB6pFwnXNM7OaQzlmT0+3zBe4qXP+/wiOsr95rDPwZntqHqFu8nq9AgF8tJjpmVKuBVN02kRg46M+ayqSLKr4kpf1fI/HdZBVGR3lMnrjhiYW6I8tlXGYv8g87TuxrXss4tXFKaGIzI2oKD52z1Ip5JvexDQO7tXIZ/ASrpC4ZXJ0kI+ohG3CZMjYJu5gfTFJhrH1lk/G49Pfaa9d/Zm1KJY7qcW5Z098yZ6nXFOtCJai19KKCYjg+5DSgrgKfJdW9Qmh5EyzwVvRPIyw==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(366004)(136003)(396003)(39860400002)(1800799009)(451199024)(186009)(2906002)(83380400001)(7416002)(86362001)(478600001)(31696002)(6506007)(36756003)(36916002)(6486002)(2616005)(6666004)(6512007)(53546011)(26005)(5660300002)(41300700001)(54906003)(316002)(66946007)(66556008)(66476007)(31686004)(8676002)(8936002)(4326008)(38100700002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UkQ3bWlWL0ZVM21vNzJEOFdOZ25KQ2xsUHhLb29oVllTUmVwWitJTUZ0UjBY?=
- =?utf-8?B?djEzaDcwLy9Ebjg3blllb2Faa09JSm9qajRpeVZib2lQSTJybG90OERYazd6?=
- =?utf-8?B?UXNnME0yU3VJUUlYTWZiY1ZnQTNMVXNjSlFGVGM5OTd4bitTeWNOMmVHd0ZU?=
- =?utf-8?B?WlBCQkdVSVVuekF2L1FkQ3hSSzNUZFJRKzc5bU5wYldrUHVhL2I0ZUVzK3VK?=
- =?utf-8?B?bFFSenBaV2RzRHNpK3JOeWFWUnBIUlE4ZnF2bjZGYUJIaTZlQXlhb21EYnZ6?=
- =?utf-8?B?UEM5U1pjeWxPWUtzZGZJWnExcXhFWDZKYVJ1UEpJY3pVbDRKNk02aldKNzJj?=
- =?utf-8?B?djRJa2d1aHp1NkFuOURPdjJqQnJ1K0ppdWtGU1BLZFZ1ck5hVUhJQkx4cnlH?=
- =?utf-8?B?aXBWT2hHVU0rRjBQcHo4ZDd4dVl6R0RORzdVTHVVd05tdWJQSExnQzg2elRo?=
- =?utf-8?B?bG5DdUZMNkxQVTJTWGNLTUw1QThzMWtTRkFQcWxOdW9idUFnVzFrd1FDN2V5?=
- =?utf-8?B?em81ekdsK0NhbjFLRkk1UXBBdlF1ZjBKU1RFQXFZdGoxblFOeU9LT3NkazIv?=
- =?utf-8?B?OGNWbGFTSkYrdERyeldiZDVMdHVmejMvZmU3RTV4NTJTbmpWeDdVZng3RUpx?=
- =?utf-8?B?Zll4Yk9sSzZFMzNBd0x1TkFqRC84RlFUUS9BWlE1N3RTSzZvbC9hQTlYWUpa?=
- =?utf-8?B?QWRzc1pvcGJrbTV3TjlwcHBpNHBpT2FIYkkxdXRuZUg3Z2xDTmJKbnJNTWRw?=
- =?utf-8?B?WDJ0Q0RJSytjcjV5SEFWTytNQm02Z1ArRFl1emI3R1I0QkxqYnJHOUJpL1Ez?=
- =?utf-8?B?cEk5M3BWdWpqWUt4Qlh2eWlsR3NVNlhoM0VUMEkrTFpPbERzRjdnaGtwUFJQ?=
- =?utf-8?B?cWlHL3RDVzlwUExwN0U0eFY3anc3THljczY4aisyMm9rYnhVMTJFTW5PaUNn?=
- =?utf-8?B?ZjNQNm5uS0d1OUYxUTRtcTJlRVRhTm4zeXphYkEzQnhiL281R2ZvTUI3QS9n?=
- =?utf-8?B?bWJpMWJQRHBwZE5pQlhzSTNETXV1M09JNlZueE5UNmpXQ2FvNStzSlB5am9n?=
- =?utf-8?B?dW1kMS9lcnptamlEejhJamhKdUhQeXdINGR4dVIrUVZyRWNTMEN0cUVBaUJ1?=
- =?utf-8?B?RU5IYzNscTRBY09qekNiTnRybURjRXdPcGg2eUdTNzlES1VMcnZwSlBNRnB4?=
- =?utf-8?B?c0NTbXVBWnZGOWZRSzRaM0hBVmpLUU04RVRSb1d5dVBvVGN6MmRDYzRMcjFM?=
- =?utf-8?B?dVdaQXNoVTN0NVFjVXI5YTJPcWdLWkxnZG85NkxDUkxXQnBzWXVaMHRiTUM5?=
- =?utf-8?B?eG5rU3loMlVtcVk3cHVKWWI0UEZRclRNMXZ0YlFrMUp1WnBhZEFyVTdweHFD?=
- =?utf-8?B?M29Uek14TFU3MCtoRU9ZQi9Tc0NqSTRqQW5MazRaY3ludGFMT2t6S3FzUXUv?=
- =?utf-8?B?T1dDTDdVblpkd0ZkaW95Y1d1ZHRIZE5VYlEzTHpEbk9IVHlxZEFxdWJwV0JU?=
- =?utf-8?B?QmE1NGI3d3c5eHZtWHV5cGlGTHJ3V28rYmV1OFFBSzhGZE9XV3FEL2pxa09M?=
- =?utf-8?B?SjhIVmZ0cTIyWCt0WERNbE0yb1E4ODY2dVYrdVRNSTdPT0szR0ZkUWJpMERG?=
- =?utf-8?B?dm9ENkIyOVBkVWZRRzlFS2pXOTdQWUU1WDhGM3EyM2EvZTdRNzVIT2xyV2RM?=
- =?utf-8?B?VXRPMk5SV2FPYXZiVDlSMEUzY2ZjQXordmE0NG5TMGFtODRkaVJUS0hDSXpv?=
- =?utf-8?B?cmV4YXFpc3VxZzA5ODl3VjcvOUlRMGVlMGM3VDB0bzFzQ0xLcXF3Z2dUbll3?=
- =?utf-8?B?WmtOak4vaHJFV1FTMzNkbnBGZGh3aFp0TlJkak5DbWtvdis2Rzg2Y3loZWhu?=
- =?utf-8?B?RzVaSE5FWnZzVS8wdC9JMlBiMC9KM3ZDWHRhM1VHUGdWd0lzeEtGWFBxSzFW?=
- =?utf-8?B?VXkvNEtWNm93UzRrdlUyUnNvY093Y2NmMWNsSWI3TVJtdkErYTJiZjJMYU96?=
- =?utf-8?B?LzRxTk5oQWVQck5sM3FBaXFtMGp6WXZpS0NPMVQrWHFGK2gyQ0pOaFpLdzE5?=
- =?utf-8?B?TFZkeHd3eDd2WHpEZGJ3Ti9lQkM4NitFL3JiUXZZQWRJQzF6QS9acE94NGgw?=
- =?utf-8?B?VHdwS0JDSTlKZlBtdU8vRnR0TVg1dit3RmYwbjVRNGJSVklTWjMxa3VXS0I0?=
- =?utf-8?B?OHc9PQ==?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?N0ladnhyODZLcDRHb3c1NUZsdGllaWxmS1lBSk9xLzl4bnBtODlINGdMSW1X?=
+ =?utf-8?B?S1BYMVluQXhVMWlaWndEYzNjMldselpzUGJDbEdlUVpCUDluU1NtQWp6cE5J?=
+ =?utf-8?B?SFBWZGhjUExSTXZDSk9ZVEdieUlVTnVGSjZGWEI0OWxqYlFPM0pNZ3g1K0l0?=
+ =?utf-8?B?dm1rZ1cwMmJrRC9KYnljdC9ieVVmSVMzN2t0QUNxMkZNK09UMzA3UHNBSHBO?=
+ =?utf-8?B?ajdNTWxRbnU2VGlxc1BPbTltMUhqcTFOMWJOeXE1aTk4djk5ZkVxeXJrd3dn?=
+ =?utf-8?B?K01QSGRGcVJBd2FQWDFjdThiSHc0NVAwSWFWVzRzMnJZVkpTNUlxbCtFRWNz?=
+ =?utf-8?B?Q2U4M0RYaXlIQWh6TFhITHVCY3lZQ1U0WFZTR3dJeHhnRDVXMXBkc0RBOXN4?=
+ =?utf-8?B?VXd4YnhidVJYQlROTHNZcDVjenFva2lqTW0ySW52VFcwaDExQzFyNmdmYnpk?=
+ =?utf-8?B?Z2RjL2pRVjVBSkJIdlRCRy8yQ3A2Z3puM0Rvd1FGM1lmbXB3dHhkM1hONkd6?=
+ =?utf-8?B?L0pITzFObWNZUGFlTmRhUGV1NStRMnNYRWRmNTlwME12enM3c2NNT3pFbVN2?=
+ =?utf-8?B?c3VHQUQrNnFlbHlCbEtzdVVvcCtKSkZTdDBwSzkzZzQxVWROSWVwZkFTZllI?=
+ =?utf-8?B?QUNFNFc3ejJmNWE4T0g0Y2o1d0xXK3l4TW5XQTAvbkZ5dGZwY3ZhOXg5aFpE?=
+ =?utf-8?B?MlMyNXVNTHdZSmRqcnNPQ0MwMy9NZEs1WW5OZld3dmZzNlh2WHMrajVFQXht?=
+ =?utf-8?B?NnppNnpPdjhKVmQ5dGZXREU5Q2puRk5abTFxMUJyOHZtQ096dUVMTElpTVNL?=
+ =?utf-8?B?dXVzWkoyK2VUTHo2YUkzUlBwOGsvZlA5dHp3c3IyemMrYUxQLzM1dmZrSmNh?=
+ =?utf-8?B?UHgxbFRhNU5HNm5JWVpUVFdsN0dhQ1loVHZEYTBObUsrdnpDR2g3bUJzRnFu?=
+ =?utf-8?B?dTJjRTV4UGFXa3pBR2RTQy9VV2pFaFFEVGU4bTdrdE52MzQwTnFzUExVSFNi?=
+ =?utf-8?B?SnF5NHQzQ2dPM3dnYUVsN3pGZ0FkTG9ZeHVZUG11T2VGeG15c213d1ZpWW8w?=
+ =?utf-8?B?Y3VqRTdiKzZQODUrVEdaNzBCZklpZkxvazQ3UGhpUVpzODJLak42bzdxa0NG?=
+ =?utf-8?B?SXRhNUtEbFFxZ0Q4aTU5Z1crVmdZRktoN3ludzdVS3dlem1UWHRkS3dXWnZG?=
+ =?utf-8?B?ZWRXTCtiUTN5amRjak1PdUZvMmxmLys5TUtmRG5VWk8zbUxkYzkyQ0VXOE9V?=
+ =?utf-8?B?Si9oWitVdUxXNGVoR0pxTFlTQkhvVFF2U0NyTGJkb0s5L2NtRnVraHh0U1No?=
+ =?utf-8?B?Z3dETjBvQWtPSTkzYmc2bCtkUUxReERUWCtkci9hUEFvYWFScWcyRTVDQlVP?=
+ =?utf-8?B?OXZkS050eE1iRlRQNGRVZUxhT2E1eVFuU20raC9LekhCQ3l0SFZKbDVWa0R1?=
+ =?utf-8?B?cGVHSmI4RU1rZEp3WjVzVHZWNnI3eXMvM3oydnd3Q0hwL0l0djBKYjBhbkIv?=
+ =?utf-8?B?SjVyREVQcGZkYUl5OVIxQ0UwTkpubjk1bnBOOEhTTzROeWF2QTByTDZpSnZ3?=
+ =?utf-8?B?UGN2TkwxVk93Q1F5VUdqY0RtMmQ2NitVcG5aOHk0K210R0d6eXdJNmxsaE1V?=
+ =?utf-8?B?TnloMHpjMFVZMU5jL3NOZ3oxcW4zYld4UHZFS3FjK1VNRWx1V1lMOVdFK2U3?=
+ =?utf-8?B?WDBHS2svYmNLL2hBaWtIdFhJUVdvR01PejQ4WGpCUWtJeXBTaHBSd0RwLzJ3?=
+ =?utf-8?B?bEQ1ckZUdnZRNXdFN3kwK3Y0U3JhUGdEL0R5S3VTNmxydFZKUmFobkNqZlRu?=
+ =?utf-8?B?MFpLWlFTU0JSaHZCYlY0ZzhsUC8vV0J6UnBUaWwyYWVvaEk4cDlYUDlhQjkz?=
+ =?utf-8?B?Uk05MkVncDJ2L2NxTFV4aVY0dVJVc3FjUmV4ZnJueHhMVGl6YjBoTmlzcms4?=
+ =?utf-8?B?OFUwVG93UHFWZldQMXVjRkczeTBFancyN1pOelhFcU1tM2Q1am8zSjV5T0gr?=
+ =?utf-8?B?RThrS2I2Q3cxcFpxL0U0M1BrZXpFUjk4KzN0OHhuOHFPUXo5bk9USklKWWRS?=
+ =?utf-8?B?VWRjVlRXMnFpaXBQaXBiYzZjN0RYZG5BTktWdFlkK0JNQ1ZYME1ZVWhkai9Z?=
+ =?utf-8?B?WHJESXZyMlhPV3lwNUJ6NXJUVnpJWXgxTW0xU29USmNOdm5lYmZiQVdSelB6?=
+ =?utf-8?B?OGc9PQ==?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?MkI2Q2J2dUZIUVRYd1F2Mk5kblJVNERESTR6aTJIMDJJUGFRMFNWaGx2OU5T?=
- =?utf-8?B?MnlOWW9yc3VTTlM2QkVSdkdJY0tLa2tWd3hoa2xueEZlR1BqTFNOc2p5dk5J?=
- =?utf-8?B?dTdRcFJWTXlkQVkwL1hPWGk3cGRmZTVBR2pQUDlZS3hVUW16cVo1TndZdHZB?=
- =?utf-8?B?NS9GdksrWU9QVlZxWDZVc3YxbXNBVjBoMVRmZzdESkJzWmxQaGpGQlhiYVQv?=
- =?utf-8?B?TmR2RWhUUFJxRHl3OE9NemQyeWlUNzZsODZFUEJnQjlBUURnMWxFZTltZGQz?=
- =?utf-8?B?YVJXMWM0QUdZWXVMcEpHQ2wwWEROZ0NCQlZkRkhSZEQ3ak8yMnBvTWhTNk5q?=
- =?utf-8?B?MGVzWmlhWTRFdG90cTNjRTlhbjN1Z1k1NmpPNnpiaUZsdys1bXNWYmYzemh2?=
- =?utf-8?B?OWVjQklBcU9UMTlhdjVPV3hqV1U5UEwzNXh5eU9iTlY3RXp4ajJYenNIM29V?=
- =?utf-8?B?NWlsbDA2VHpvZHdKeko5cVMrNkhOeVJReHZja2xEcUlqTVNUQVo0OFpMTzZr?=
- =?utf-8?B?cEE0UmdXdWN5bEhCemZPa2JsbGtDVTRtZEcwcy8zUm5JdUV2bWl0d3RoNlFl?=
- =?utf-8?B?Q0puOWg5YUZqYzd5VENTb1lBUEhTNE14bXJrdGkyNjhBamVieU14YXNZRTBi?=
- =?utf-8?B?MkpnSStZcWhnQXM2Vm1qZGYxd1I1a3VYWnh4Y0xaOWp0K1hEbUFSSnBiSVo4?=
- =?utf-8?B?MUEyY2hwVU5yajdRanhMODYyK3ZTNklsVVJhcFRBcUpFU1Z2OCtrVDFsb1lh?=
- =?utf-8?B?ZTZTSEVMc2M5c0tvTUFxbnZwTDlRekZFYlR5ajJMYzBqVmdZRVcra1g3SDZP?=
- =?utf-8?B?Z1hoemlzOEMzbkY3MFZadGJFTTRyaURPWnRWaGFtMXorelNmNDlVTXFSZXAz?=
- =?utf-8?B?dkExdVRTWGVHNjkyQjF1M3hGR2JhbFV5TXh4MXQyeW5EbmxEc01Pb3J1ZjQx?=
- =?utf-8?B?VXNkRFJFNCt4VEs5NDdjTHdvZXNabXR4VHQyVXRxeS9lazhoMVE1MjN3WFUv?=
- =?utf-8?B?R2ZLbWJuVytNOFZaTXNrQ1ZHL0JrQnJxRnhlOHh5SWw4Sk9sUWxFUUFxeHo2?=
- =?utf-8?B?OHhKeVlGdkRwcXZ1cHJ1RndEcHU5dmpmcFUwOGNwRy9UeU95QXJ5cStQNlBW?=
- =?utf-8?B?TkNBUFNPV1dXMjNsazh4bTNwdnNhREkzSDNyUHFqaXByUEE1ZEc4RlRWYlNo?=
- =?utf-8?B?YUNzUEJZTmVVRkptdlozZlBMbjEyeGVUazVHSnFBbzRWeHJ0a1dhcDM3NlBX?=
- =?utf-8?B?K1puc3kwbHYzWHlzb3NhTkplSnEzK1lFV29aVm5GSXZacVVQcGRqM3lxa0Zj?=
- =?utf-8?B?a01oTm9zcmROM2tPMmU1NmFCd0dsWmV4azdmZURuRDZ0MmdadWZhK2tzdlJs?=
- =?utf-8?B?NzM4dE1RR0U0MXNHMHlpV2NEem1ya3lZaERNbkpYSEk4WWJsTGtvUWZHd2tP?=
- =?utf-8?B?NkNEd0Q0MC95L0graUZ0YVV3TnpNUHlLYUtqZG41MHJBYVp0WnlMYmZ5ZDlw?=
- =?utf-8?B?OW5oZTNQRXZyajlIN0pTcTkvcHFuTzE2TUpKdmJFVkJJZE1xS2wzZTlqa3FG?=
- =?utf-8?B?UUU5QWpmeUE0NkdxQUZwVVZlZGp2S3FpNldoSDVSSS9EcUsrY1Y1TGl4dW1i?=
- =?utf-8?B?aFUwekh5cFdoSTNZKy93RndDUFZJQnc9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?ZmdQU3JnZkNVVEtFWFFWQjkweGdLL29ScGVhRUxKWDFybzlHM2txWDhwcEN5?=
+ =?utf-8?B?WkltaERtZXhCSzQvbFJYZU1KdmJ3SE96YmxRKzVZK2YrN045aGtEWTlVeW9r?=
+ =?utf-8?B?ZndmRHpEUzdjQnNmajlqSGhoQmxCNEluWVVMS2pCMnBGKzNYUnJ1enM2SUZZ?=
+ =?utf-8?B?NHM4WXFDai9JYlIyL29zeDJhbHY0UDlhaHMzU0JQU2tLMFh0U1R1TTMvcUVO?=
+ =?utf-8?B?VWYxSmhuQkFPaGNuRUhzd1NTVGo5Q2NObjBjeVV0TWhpamcxWVdPVmMyUXpu?=
+ =?utf-8?B?SStJTU45Qm1JU0dCYWNjQkFVbmVveWZVTlBxTnVXcWlXbDhBSXRpYWUvQVov?=
+ =?utf-8?B?djFyaFRnendzV3VRcVRhUU55TzFLd0hacGh6YjNDT1Rzd21JeUFoOHlybXZa?=
+ =?utf-8?B?cThJQnY4RjJBaXUwTTlRZnNJVFhORnRLdGRlWkFmODh2cW9tSHJIazduK292?=
+ =?utf-8?B?RElDQmNBSFMzcG5WMmczeG5Yc09ZUkgyVDdXdXlEaUx0YnUvdUxJZEVOd1BQ?=
+ =?utf-8?B?am5vT2cyQTVwWFF3STZsYWFtYjc4dXdiZG84TWFCTytIRkUrakVuL3ltWG56?=
+ =?utf-8?B?bThGSzJrS2s5VGl0Y25uWnRZbm5QcW9xTHNOMk8xWHpsMjZXYXZLaXBRZXNu?=
+ =?utf-8?B?aWFRcnBUZWJtRTNMbXpsU2xkNmhqMXE5SjNHcjhpazZIbm1mR2JGcnI2SEhP?=
+ =?utf-8?B?U3NjbUQrWGxIZGUyc0hoRm1MRkpxTFpMMVgxbVZMaDgrWlhmbmlRRUhzdkUv?=
+ =?utf-8?B?OHFoS0tmYWJva3ZoZDF6ZG1TUnRQOHdHTTRKMnJwam9KdnRBZ2ZJbGNjZlZP?=
+ =?utf-8?B?QndvaTJJa2hOZzlzcVpyMjRDTXFSb0Zoc3YyWE9CZXFDMTBWQlVvR09ZV0Ra?=
+ =?utf-8?B?VjJUZGVJTitiMzdCaVRRaklUUHRBeHREcnZFRzltamoyR1VPWTl1Y3Ezeno3?=
+ =?utf-8?B?RTh2TWNmKzM0dUhkRkpkcWhnblQ2ZWxzMWQ1d0JwWHR2WkpuUjMwdDRoNTJt?=
+ =?utf-8?B?NlpBamhFZm5US1ZMOWlGTXJQdTFtOWg0OTQ2bGxWeEtXZG5SRDhhdzBsSFYr?=
+ =?utf-8?B?eFRZNVlMeTN5QmovYXpHSkVvOTZmdDNVZEcreXd2bmh6UXA0a3diVTZBWGVX?=
+ =?utf-8?B?SmNSZG9OZGNHQTNsOE5qVHFMME05aWVhQTFseGZwL2hlQUY4TUV5Ri9VWFl0?=
+ =?utf-8?B?blNnK1JBNDBpZVZkRXFQdW5WdVppV1hPSHdYMnRGbnA5T0doU01xMXRwcm8v?=
+ =?utf-8?B?SmcyVGI4dzdEUktZcjcvalBVVzFnakpkanRIQXUwTmRsaXcwUmlPZ01NQnJk?=
+ =?utf-8?B?UWZVNVhFSE5aZ3VIeWVBeEpvWnYyYW11N1hpblRjbWwwRGZwdzdHU1ZXOHEr?=
+ =?utf-8?B?dGtQOTJ0NSs4OW5sYk8ycVNheUxPTUt1SkhTS0J3QkFqTUlxUlFtbVE0anRs?=
+ =?utf-8?B?bm5CN1F0Q2hKTjNsam0wM2ZWQ3l1TWFJTkVqTnlvcTh6ODlISzd0RFUzMXFm?=
+ =?utf-8?B?U1IvV1V6akRXM1JaYWNFZFRNdHluSjdXU3BCMEJwRkFzRmEzcUNhS1MwL014?=
+ =?utf-8?B?SDd3NzJXU2RYd0FiTGpGNysrSndzWEZjVTVhbzVVZGFBWFJ5c2QwNXY2NFJM?=
+ =?utf-8?B?elBQbm56dGVsdHdPdEdVa0RNMUhSUGc9PQ==?=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36796df2-402c-4b08-0d24-08db9e41c9da
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7233c800-d5ad-4ad6-c959-08db9e4367d2
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2023 10:16:00.1851
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2023 10:27:34.6727
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7RU9AQd5WdFyu02Z3dibDKkKXOqOCvValpTTpXSRBLaeMtzCJft99wt9fRm7P1H8fOE4KK6+8KUrb2eesvz3Eg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB5770
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8Yi/AG7Crevyww9VWnPUTtVkKj3rPTr1F5A6xRT/oE0JR3cYHQhOYCXsmPyRlsR3jodQP93FvcN2aRbLcTaygg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6554
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
  definitions=2023-08-16_09,2023-08-15_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 bulkscore=0
- mlxlogscore=999 adultscore=0 suspectscore=0 malwarescore=0 phishscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 mlxscore=0
+ spamscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
- definitions=main-2308160091
-X-Proofpoint-ORIG-GUID: kd8Ni_rtbrWpyTf6asaHoxvWQcVBlWsb
-X-Proofpoint-GUID: kd8Ni_rtbrWpyTf6asaHoxvWQcVBlWsb
+ definitions=main-2308160093
+X-Proofpoint-ORIG-GUID: bRxYQ380uMocEvu2ef2jkd18LbTwvO6M
+X-Proofpoint-GUID: bRxYQ380uMocEvu2ef2jkd18LbTwvO6M
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 16/08/2023 10:12, James Clark wrote:
+On 16/08/2023 10:14, James Clark wrote:
 > 
 > 
-> On 15/08/2023 10:35, John Garry wrote:
+> On 15/08/2023 10:47, John Garry wrote:
 >> On 11/08/2023 15:39, James Clark wrote:
->>> Currently variant and revision fields are masked out of the MIDR so
->>> it's not possible to compare different versions of the same CPU.
->>> In a later commit a workaround will be removed just for N2 r0p3, so
->>> enable comparisons on version.
+>>> Now that variant and revision fields are taken into account the behavior
+>>> is slightly more complicated so add a test to ensure that this behaves
+>>> as expected.
 >>>
->>> This has the side effect of changing the MIDR stored in the header of
->>> the perf.data file to no longer have masked version fields. It also
->>> affects the lookups in mapfile.csv, but as that currently only has
->>> zeroed version fields, it has no actual effect. The mapfile.csv
->>> documentation also states to zero the version fields, so unless this
->>> isn't done it will continue to have no effect.
+>>> Signed-off-by: James Clark <james.clark@arm.com>
+>>> ---
+>>>    tools/perf/arch/arm64/include/arch-tests.h |  3 ++
+>>>    tools/perf/arch/arm64/tests/Build          |  1 +
+>>>    tools/perf/arch/arm64/tests/arch-tests.c   |  4 +++
+>>>    tools/perf/arch/arm64/tests/cpuid-match.c  | 38 ++++++++++++++++++++++
+>>>    4 files changed, 46 insertions(+)
+>>>    create mode 100644 tools/perf/arch/arm64/tests/cpuid-match.c
 >>>
+>>> diff --git a/tools/perf/arch/arm64/include/arch-tests.h
+>>> b/tools/perf/arch/arm64/include/arch-tests.h
+>>> index 452b3d904521..474d7cf5afbd 100644
+>>> --- a/tools/perf/arch/arm64/include/arch-tests.h
+>>> +++ b/tools/perf/arch/arm64/include/arch-tests.h
+>>> @@ -2,6 +2,9 @@
+>>>    #ifndef ARCH_TESTS_H
+>>>    #define ARCH_TESTS_H
+>>>    +struct test_suite;
+>>> +
+>>> +int test__cpuid_match(struct test_suite *test, int subtest);
+>>>    extern struct test_suite *arch_tests[];
+>>>      #endif
+>>> diff --git a/tools/perf/arch/arm64/tests/Build
+>>> b/tools/perf/arch/arm64/tests/Build
+>>> index a61c06bdb757..e337c09e7f56 100644
+>>> --- a/tools/perf/arch/arm64/tests/Build
+>>> +++ b/tools/perf/arch/arm64/tests/Build
+>>> @@ -2,3 +2,4 @@ perf-y += regs_load.o
+>>>    perf-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
+>>>      perf-y += arch-tests.o
+>>> +perf-y += cpuid-match.o
+>>> diff --git a/tools/perf/arch/arm64/tests/arch-tests.c
+>>> b/tools/perf/arch/arm64/tests/arch-tests.c
+>>> index ad16b4f8f63e..74932e72c727 100644
+>>> --- a/tools/perf/arch/arm64/tests/arch-tests.c
+>>> +++ b/tools/perf/arch/arm64/tests/arch-tests.c
+>>> @@ -3,9 +3,13 @@
+>>>    #include "tests/tests.h"
+>>>    #include "arch-tests.h"
+>>>    +
+>>> +DEFINE_SUITE("arm64 CPUID matching", cpuid_match);
+>>> +
+>>>    struct test_suite *arch_tests[] = {
+>>>    #ifdef HAVE_DWARF_UNWIND_SUPPORT
+>>>        &suite__dwarf_unwind,
+>>>    #endif
+>>> +    &suite__cpuid_match,
+>>>        NULL,
+>>>    };
+>>> diff --git a/tools/perf/arch/arm64/tests/cpuid-match.c
+>>> b/tools/perf/arch/arm64/tests/cpuid-match.c
+>>> new file mode 100644
+>>> index 000000000000..af0871b54ae7
+>>> --- /dev/null
+>>> +++ b/tools/perf/arch/arm64/tests/cpuid-match.c
+>>> @@ -0,0 +1,38 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +#include <linux/compiler.h>
+>>> +
+>>> +#include "arch-tests.h"
+>>> +#include "tests/tests.h"
+>>> +#include "util/header.h"
+>>> +
+>>> +int test__cpuid_match(struct test_suite *test __maybe_unused,
+>>> +                 int subtest __maybe_unused)
+>>> +{
+>>> +    /* midr with no leading zeros matches */
+>>> +    if (strcmp_cpuid_str("0x410fd0c0", "0x00000000410fd0c0"))
+>>> +        return -1;
+>>> +    /* Upper case matches */
+>>> +    if (strcmp_cpuid_str("0x410fd0c0", "0x00000000410FD0C0"))
+>>> +        return -1;
+>>> +    /* r0p0 = r0p0 matches */
+>>> +    if (strcmp_cpuid_str("0x00000000410fd480", "0x00000000410fd480"))
+>>> +        return -1;
+>>> +    /* r0p1 > r0p0 matches */
+>>> +    if (strcmp_cpuid_str("0x00000000410fd480", "0x00000000410fd481"))
+>>> +        return -1;
+>>> +    /* r1p0 > r0p0 matches*/
+>>> +    if (strcmp_cpuid_str("0x00000000410fd480", "0x00000000411fd480"))
+>>> +        return -1;
+>>> +    /* r0p0 < r0p1 doesn't match */
+>>> +    if (!strcmp_cpuid_str("0x00000000410fd481", "0x00000000410fd480"))
+>>> +        return -1;
+>>> +    /* r0p0 < r1p0 doesn't match */
+>>> +    if (!strcmp_cpuid_str("0x00000000411fd480", "0x00000000410fd480"))
+>>> +        return -1;
+>>> +    /* Different CPU doesn't match */
+>>> +    if (!strcmp_cpuid_str("0x00000000410fd4c0", "0x00000000430f0af0"))
+>>> +        return -1;
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
 >>
->> This looks ok apart from a couple of comments, below.
+>> Would it be possible to put this in core test code, since x86 also
+>> supports strcmp_cpuid_str()?
+>>
+> 
+> That's how I started, but Ian suggested to move it to an arch specific
+> folder because that's what it was testing.
+> 
+
+Yeah, I see that comment now.
+
+> We could still add test__cpuid_match() in the x86 folder rather than
+> adding it with #ifdefs
+
+I was thinking to make cpuid_match_array[] exposed by the arch code and 
+have a "weak", i.e. version for other archs.
+
+, but I don't think it needs to be done here
+> because I haven't touched the x86 code.
+
+For the moment, I don't feel too strongly about this and it can be done 
+as a follow-up
+
+Reviewed-by: John Garry <john.g.garry@oracle.com>
+
+> 
+>> Maybe we would have an structure per arch of cpuids and expected
+>> results, like
+>>
+>> struct cpuid_match {
+>>      char *cpuid1;
+>>      char *cpuid1;
+>>      int expected_result;
+>> };
+>>
+>>
+>> #ifdef ARM64
+>>   cpuid_match_array[] = {
+>>      {"0x410fd0c0", "0x00000000410FD0C0", -1},
+>>      {"0x00000000410fd480", "0x00000000410fd480", -1},
+>>      ...
+>>      {} /* sentinel */
+>>
+>> };
+>> #else if defined(X86)
+>>   cpuid_match_array[] = {
+>>      {....}
+>>      ...
+>>      {} /* sentinel */
+>>
+>> };
+>> #else
+>> /* no support */
+>> #endif
 >>
 >> Thanks,
 >> John
->>
->>> Signed-off-by: James Clark <james.clark@arm.com>
->>> ---
->>>    tools/perf/arch/arm64/util/header.c | 64 ++++++++++++++++++++++-------
->>>    1 file changed, 50 insertions(+), 14 deletions(-)
->>>
->>> diff --git a/tools/perf/arch/arm64/util/header.c
->>> b/tools/perf/arch/arm64/util/header.c
->>> index 80b9f6287fe2..8f74e801e1ab 100644
->>> --- a/tools/perf/arch/arm64/util/header.c
->>> +++ b/tools/perf/arch/arm64/util/header.c
->>> @@ -1,3 +1,6 @@
->>> +#include <linux/kernel.h>
->>> +#include <linux/bits.h>
->>> +#include <linux/bitfield.h>
->>>    #include <stdio.h>
->>>    #include <stdlib.h>
->>>    #include <perf/cpumap.h>
->>> @@ -10,14 +13,12 @@
->>>      #define MIDR "/regs/identification/midr_el1"
->>>    #define MIDR_SIZE 19
->>> -#define MIDR_REVISION_MASK      0xf
->>> -#define MIDR_VARIANT_SHIFT      20
->>> -#define MIDR_VARIANT_MASK       (0xf << MIDR_VARIANT_SHIFT)
->>> +#define MIDR_REVISION_MASK      GENMASK(3, 0)
->>> +#define MIDR_VARIANT_MASK    GENMASK(23, 20)
->>>      static int _get_cpuid(char *buf, size_t sz, struct perf_cpu_map
->>> *cpus)
->>>    {
->>>        const char *sysfs = sysfs__mountpoint();
->>> -    u64 midr = 0;
->>>        int cpu;
->>>          if (!sysfs || sz < MIDR_SIZE)
->>> @@ -44,21 +45,11 @@ static int _get_cpuid(char *buf, size_t sz, struct
->>> perf_cpu_map *cpus)
->>>            }
->>>            fclose(file);
->>>    -        /* Ignore/clear Variant[23:20] and
->>> -         * Revision[3:0] of MIDR
->>> -         */
->>> -        midr = strtoul(buf, NULL, 16);
->>> -        midr &= (~(MIDR_VARIANT_MASK | MIDR_REVISION_MASK));
->>> -        scnprintf(buf, MIDR_SIZE, "0x%016lx", midr);
->>>            /* got midr break loop */
->>>            break;
->>>        }
->>>          perf_cpu_map__put(cpus);
->>> -
->>> -    if (!midr)
->>> -        return EINVAL;
->>
->> Is there a reason to drop this check?
->>
->> As I see, it is still checked in perf_pmu__getcpudid() ->
->> get_cpuid_str() -> _get_cpuid(), and we don't zero the buf allocated in
->> _get_cpuid()
->>
-> 
-> Ah yes, now if all the files fail to open or read then buf will be
-> uninitialized. I make it so that it will return EINVAL unless the
-> fgets() succeeds, but I don't think we need to add the strtoul() back in?
-
-Right, I don't think that the strtoul() is required.
-
-> 
->>> -
->>>        return 0;
->>>    }
->>>    @@ -99,3 +90,48 @@ char *get_cpuid_str(struct perf_pmu *pmu)
->>>          return buf;
->>>    }
->>> +
->>> +/*
->>> + * Return 0 if idstr is a higher or equal to version of the same part as
->>> + * mapcpuid.
->>
->> And what other values may be returned? If just 0/1, then can we have a
->> bool return value?
->>
-> 
-> I don't think that's best for consistency. All the other CPU ID
-> comparison functions return the strcmp style return values which is the
-> reverse of booleans. We could change them all to bool, but it would be a
-> big change, and they'd still have strcmp in the name which suggests
-> -1/0/1 return values (although -1 is never used here).
-> 
-> I will add to the comment that 1 is returned for a comparison failure
-> thought. That is missing.
-
-ok, fine.
-
-> 
->>> + *
->>> + * Therefore, if mapcpuid has 0 for revision and variant then any
->>> version of
->>> + * idstr will match as long as it's the same CPU type.
->>> + */
->>> +int strcmp_cpuid_str(const char *mapcpuid, const char *idstr)
->>> +{
->>> +    u64 map_id = strtoull(mapcpuid, NULL, 16);
->>> +    char map_id_variant = FIELD_GET(MIDR_VARIANT_MASK, map_id);
->>> +    char map_id_revision = FIELD_GET(MIDR_REVISION_MASK, map_id);
->>> +    u64 id = strtoull(idstr, NULL, 16);
->>> +    char id_variant = FIELD_GET(MIDR_VARIANT_MASK, id);
->>> +    char id_revision = FIELD_GET(MIDR_REVISION_MASK, id);
->>> +    u64 id_fields = ~(MIDR_VARIANT_MASK | MIDR_REVISION_MASK);
->>> +
->>> +    /* Compare without version first */
->>> +    if ((map_id & id_fields) != (id & id_fields))
->>> +        return 1;
->>> +
->>> +    /*
->>> +     * ID matches, now compare version.
->>> +     *
->>> +     * Arm revisions (like r0p0) are compared here like two digit semver
->>> +     * values eg. 1.3 < 2.0 < 2.1 < 2.2. The events json file with the
->>> +     * highest matching version is used.
->>> +     *
->>> +     *  r = high value = 'Variant' field in MIDR
->>> +     *  p = low value  = 'Revision' field in MIDR
->>> +     *
->>> +     */
->>> +    if (id_variant > map_id_variant)
->>> +        return 0;
->>> +
->>> +    if (id_variant == map_id_variant && id_revision >= map_id_revision)
->>> +        return 0;
->>> +
->>> +    /*
->>> +     * variant is less than mapfile variant or variants are the same but
->>> +     * the revision doesn't match. Return no match.
->>> +     */
->>> +    return 1;
->>> +}
->>
 
