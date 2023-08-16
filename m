@@ -2,287 +2,231 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A76E0C41513
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Aug 2023 16:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D34CC41513
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Aug 2023 17:11:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242723AbjHPQsg (ORCPT
+        id S245487AbjHPRKs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Aug 2023 12:48:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35832 "EHLO
+        Wed, 16 Aug 2023 13:10:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344982AbjHPQs1 (ORCPT
+        with ESMTP id S1345074AbjHPRKR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Aug 2023 12:48:27 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B68E2D77;
-        Wed, 16 Aug 2023 09:47:59 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1bc7e65ea44so251855ad.1;
-        Wed, 16 Aug 2023 09:47:59 -0700 (PDT)
+        Wed, 16 Aug 2023 13:10:17 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A7181FF3;
+        Wed, 16 Aug 2023 10:10:16 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1bee82fad0fso10805685ad.2;
+        Wed, 16 Aug 2023 10:10:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692204479; x=1692809279;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=nDe/l/Ozfv3j3x21lWXv71AW29b38gVITnv5F9XrJYs=;
-        b=F0OaPPagZ9kHgVebJ3/b8nnqwx2NV926ijl/yKwPVEo7IvTG/NTYCKGloyyVDg/Jnb
-         rElwDjZ/keXDpRowz+2oO+YvKv0kNR4au/goW3NLwBeUaPZFfYxco62TPK3CS0frv260
-         NHRqE93P6MIZvgbeuPiMLwbI7jb75cEoMimAB9VqcXNWlNbFm5Tr0oUPMP3o0xXzoJQH
-         NaPqx6uspH7KtMhRyk4hV/DimGorbqOHxJUih3hJUOsha/WzW9W9z+WOUnRcOuqdycsu
-         J6FzCElHAgaqAc2pbAUNMUQw/rlIaQ51aaLvaJTQOwXqUyPUQssh2jmSHWoRdqWQmm7H
-         teTA==
+        d=gmail.com; s=20221208; t=1692205816; x=1692810616;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JawVpR5OTeIO4yE8f0JeUM7XTh5q6dYLjRB79f5cI08=;
+        b=sVHDrk7B/wZ5AEqE/Qbh1eR3FJm1ISVYzGZRDOQidwL/1JSksovcT1ZTxiz0s04Rea
+         tADqaGYm5IQv/5qn6DY7UimuV/ulOKyfu/oX/3b2IC0MuGUnbA22KoYHh+xbaH2Uwb09
+         M/VZ1hwVPPNah+EezRnowsX3rgbpruKC5nK5x8AQZ48xPWcIKZ7G6EUCrvDSmRddaHbY
+         vDhUuDQnH03HtggoqP85Ne+XtACJzLlqJuIhuH3aPxFCrjEQ+xhTdegkUrT77eSkKveD
+         MpDelrV8ssy5vamrisuX+x9lU9mEaVyL1mHo0nyTXJbsKOelcnWJAS759lD9sV6zfA8c
+         0xaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692204479; x=1692809279;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nDe/l/Ozfv3j3x21lWXv71AW29b38gVITnv5F9XrJYs=;
-        b=hp4QIbrYU3oPXX8ZFlL9X0JZqtX9n4892QCZ1uVE1l7C/nK1rvHnSaJN7bPiC2sEr3
-         /GOdbIy+ks9CJEP3DhHaVmayXzJZOQNELLT2irJWlTg9ngx83eVa9HWXsuQ0hmSJYILA
-         FlmVRr72zER89PknRywGJBWANSB1mL0+/CyquogZYvJXWjWOW5rV35kSJMvwsKcqC/eu
-         yLFn2kNlrXOaMSl2Gx/kaz3Z6PV8Hql+CY/j6XbeedmpsiFzRr0SRbHna8utoxH1KPd1
-         fwpyfd8wWICKwjEaNbRxivWauG1wnmgJ0f3VGwAhHGUO2xgdZ2W2INDUTdIkox0tMhSG
-         tdHA==
-X-Gm-Message-State: AOJu0YxRRFAiem49Waf2DRt3vhpIKaMq6BVCoHU5bCw7Rh1QHaBu+HdZ
-        PHKsJ2XsuZ1mumTGT8G/DNs=
-X-Google-Smtp-Source: AGHT+IE2OU/RUM+rTvjq2wy0pIKDxI56U1jEOIfhGJ3H+GrJm2K4AoQRSnf+YASZM0rsoKM2FGzMZw==
-X-Received: by 2002:a17:902:da89:b0:1bc:4f04:17f4 with SMTP id j9-20020a170902da8900b001bc4f0417f4mr131151plx.30.1692204478473;
-        Wed, 16 Aug 2023 09:47:58 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1692205816; x=1692810616;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JawVpR5OTeIO4yE8f0JeUM7XTh5q6dYLjRB79f5cI08=;
+        b=PpZWd4fEADspgKXSnIBXMydmfMQRWDkssAIRxk5UtBZiZN8ui8LVREW4gEWA9kOfsv
+         nQa100QcWTGbWs3OKEnlSeKKAA4gCqALQEjPVZz0Z6Han5fSypwRkgvxSNZ2drkfYUuc
+         49bNuGWDMps7FtmqEKdmbuB4e6/NkYWmEPZ3ICVK1vRDc+zbiStQ/JbX7G3auNM4JISw
+         dbpDtC2W0FAVZbRv6si6xStyLqQDKyAkgr3n81s2f4Swxo1qkj+C2G4Xlvo5T0ih3HJA
+         DxzOEVNnKVCo48UqpjFxY/M+rj0qAjfnBPJfEBNugHHVSkdgq7/Qq2vbq3CFB/pu9BKw
+         MECQ==
+X-Gm-Message-State: AOJu0Ywneh4uYLmZWSb8cM+p7r/Dw+cd2hEVZaPb9HL0swXWO04lVBPY
+        xBcQsxXB8USBOHS3jMf2yLM=
+X-Google-Smtp-Source: AGHT+IFiESGusMWJoin8Pql+PLl40FKNQuZBdIYTUNs/n+IjBfSSs/L/YYiZSTh/lHLfSLi0EtGnyA==
+X-Received: by 2002:a17:902:ce90:b0:1b9:e937:9763 with SMTP id f16-20020a170902ce9000b001b9e9379763mr2762428plg.12.1692205815586;
+        Wed, 16 Aug 2023 10:10:15 -0700 (PDT)
 Received: from yoga ([2400:1f00:13:54f4:15af:3399:987d:c0db])
-        by smtp.gmail.com with ESMTPSA id u17-20020a63b551000000b00564be149a15sm12231355pgo.65.2023.08.16.09.47.53
+        by smtp.gmail.com with ESMTPSA id d11-20020a170903230b00b001b8af7f632asm13423132plh.176.2023.08.16.10.10.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Aug 2023 09:47:57 -0700 (PDT)
+        Wed, 16 Aug 2023 10:10:14 -0700 (PDT)
 From:   Anup Sharma <anupnewsmail@gmail.com>
 X-Google-Original-From: Anup Sharma <AnupSharma>
-Date:   Wed, 16 Aug 2023 22:17:50 +0530
-To:     Ian Rogers <irogers@google.com>
-Cc:     Anup Sharma <anupnewsmail@gmail.com>,
+Date:   Wed, 16 Aug 2023 22:40:07 +0530
+To:     Anup Sharma <anupnewsmail@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2] perf test: Add support for testing gecko script
-Message-ID: <ZNz9tqR4voB/cEB8@yoga>
-References: <ZNcxsN4Pvn5YPWsI@yoga>
- <ZNf9zM1mYAqCYqnf@yoga>
- <CAP-5=fWGb=h0NuU5tTTUVsgn-ScqZKqdTLHi5XuoL1jnPyyxpg@mail.gmail.com>
+        Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC] Adding Support for Firefox's Gecko Profile Format
+Message-ID: <ZN0C7yXk/aORpsI1@yoga>
+References: <CAP-5=fV9tXNpYHH9DW0cVbRoFLGvG9SNn-MUhuyKuVBRuDqjoA@mail.gmail.com>
+ <ZJyT8bt0LFLw6hKV@yoga>
+ <CAM9d7ch7TdagV+dzj6MCp4fY15Vc4oGJjKAoQDyc=BXqy7qi+A@mail.gmail.com>
+ <287bf3c8-fa0e-8c36-df14-7d728c63c265@intel.com>
+ <ZKQu00bJZwO+Fc6m@yoga>
+ <ZKRcTqAsKxF/Q3fQ@yoga>
+ <ZMFgIekihhoGFBpn@yoga>
+ <ZMFyi5S4JlFeZ/9c@kernel.org>
+ <ZMqnp1kBv1ACIiGS@yoga>
+ <ZNPwhctOgd0RdtwO@yoga>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWGb=h0NuU5tTTUVsgn-ScqZKqdTLHi5XuoL1jnPyyxpg@mail.gmail.com>
+In-Reply-To: <ZNPwhctOgd0RdtwO@yoga>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Aug 15, 2023 at 02:05:02AM -0700, Ian Rogers wrote:
-> On Sat, Aug 12, 2023 at 2:47 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
-> >
-> > On Sat, Aug 12, 2023 at 12:46:00PM +0530, Anup Sharma wrote:
-> > > This commit add support for testing gecko script. The test checks
-> > > for the presence of required sections such as "meta," "threads,"
-> > > "samples," "frameTable," "stackTable," "stringTable," and
-> > > "pausedRanges" which are few essential parameter to be present
-> > > in output file. Also it verifies the validity of the JSON format
-> > > using Python's JSON library if available.
-> > >
-> > > Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
-> > >
-> > > ---
-> > > Patch needed for testing:
-> > >     https://lore.kernel.org/linux-perf-users/ZNOS0vo58DnVLpD8@yoga/T/#u
-> >
-> > To run this script:
-> > ./test_gecko.sh
-> > or
-> > bash test_gecko.sh
-> >
-> > Expected output:
-> >
-> > Testing Gecko Command
-> > Staring Firefox Profiler on your default browser...
-> > Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
-> > 127.0.0.1 - - [13/Aug/2023 03:07:35] "GET /gecko_profile.json HTTP/1.1" 200 -
-> > [ perf gecko: Captured and wrote into gecko_profile.json ]
-> > PASS: "Gecko Command"
-> > PASS: "The file contains valid JSON format"
-> > PASS: "test_meta"
-> > PASS: "test_threads"
-> > PASS: "test_samples"
-> > PASS: "test_frametable"
-> > PASS: "test_stacktable"
-> > PASS: "test_stringtable"
-> > PASS: "test_pauseranges"
+On Thu, Aug 10, 2023 at 01:31:09AM +0530, Anup Sharma wrote:
+> On Thu, Aug 03, 2023 at 12:29:51AM +0530, Anup Sharma wrote:
+> > On Wed, Jul 26, 2023 at 04:22:51PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > Em Wed, Jul 26, 2023 at 11:34:17PM +0530, Anup Sharma escreveu:
+> > > > Dear all,
+> > > > 
+> > > > I want to share a recent development in our project that
+> > > > I have been working on this week. I have successfully
+> > > > implemented a new feature that allows users to directly
+> > > > open the browser and visualize the output of perf.data
+> > > > on Firefox Profiler.
+> > > 
+> > > Excellent news!
+> > >  
+> > > > To enhance user experience, I have made sure this option
+> > > > is enabled by default. Additionally, I've also added a
+> > > > handy command line argument, "--save-only," which allows
+> > > > users to save the output file as needed. This enhancement
+> > > > replaces the previous standard output method, providing a
+> > > > much-improved experience.
+> > > > 
+> > > > Moreover, Everything is processed locally, and no data is
+> > > > sent to any server.
+> > > 
+> > > That addresses the worry about sending possibly sensitive data over the
+> > > network by default, great.
+> > >  
+> > > > During this implementation, I had the opportunity to delve
+> > > > into several exciting topics, including threading, HTTP server,
+> > > > and CORS mechanisms. The learning process has been both
+> > > > challenging and rewarding.
+> > > 
+> > > Cool that you're so excited learning all this.
+> > >  
+> > > > Currently, I am in the process of performing some clean-up tasks.
+> > > > Once that is complete, I will be sharing the next version of the
+> > > > series, which includes this fantastic new feature, with all of
+> > > > you very soon.
+> > > > 
+> > > > Thank you for your ongoing support and encouragement.
+> > > 
+> > > Keep it up!
+> > 
+> > This week, I'm working on documenting the gecko converter for our wiki.
+> > I've dedicated a significant amount of time to think about the content
+> > and how to approach it. So far, I've written sections covering the
+> > introduction to Firefox Profiler and the formatting guidelines(not
+> > published yet).
+> > 
+> > However, I've left the usage part blank because I'm uncertain about how
+> > to enable gecko.py arguments when executing the "perf script gecko" command.
+> > I've looked at examples like flamegraph-report and sctop-report, but I'm
+> > still confused. I attempted to enable the script to take the gecko.py
+> > command example "perf script report gecko --save-only=profiler.json,"
+> > but this caused issues when running "perf script gecko -a sleep 3" again.
+> > This has left me feeling rather puzzled, and I would appreciate discussing
+> > this during our office hour, or any help here.
+> > 
+> > Due to this blocker, I haven't been able to send the updated patch
+> > for test_gecko yet. However, I hope I'll find a solution soon and overcome
+> > this obstacle.
 > 
-> Hi Anup,
+> Hello All,
+> As discussed during last office hour, I was little occupied this week, so
+> I haven't been able to make much progress on my TODO list. Nonetheless,
+> I've resent a server patch and test script patch for your review. If I can
+> get it reviewed it would be great to make further progress.
 > 
-> this works for me but when I run as root (using sudo) I need to set
-> PERF_EXEC_PATH. Running as a user it launches firefox profiler which I
-> don't think it should.
+> I'm also working on writing documentation for our wiki. I've already written a
+> bit, and you can see it here: https://perf.wiki.kernel.org/index.php/Tutorial#Firefox_Profiler.
+> If you have any thoughts or suggestions, I'd appreciate hearing them. I'll add
+> more details once I've sorted out some issues I'm having with certain commands.
+> 
+> This week, I do not have a specific agenda. Hence, if we opt to skip this week's
+> office hour, it wouldn't pose any inconvenience. Nevertheless, I am available if
+> there are matters you wish to discuss.
+> 
+> Here's what I have in mind to work on next:
+> 
+> 1. Making sure that gecko script args work with commands, like
+> (perf script gecko --save-only=profile.json) or (perf script gecko --kernel-color=green),which
+> aren't working right now.
 
-Hi Ian, thanks for testing this patch. I checked it seems like
-gecko.py Line 359: webbrowser.open(f'{url}') is not launching
-firefox or any browser when run as root. Few discussion have
-already taken place which I am looking right now:
-https://forums.opensuse.org/t/python-webbrowser-with-root/92189
-https://github.com/pyinstaller/pyinstaller/issues/6334
-I will check if there is any way to launch browser as both root
-and user.
+I have done this part and sent the patch for review.
+https://lore.kernel.org/all/ZNf7W+EIrrCSHZN0@yoga/
 
-Thanks,
-Anup
+> 2. Trying out "perf record -p firefox" or using it with a specific process ID to
+> see if the current script supports these recording commands.
+
+This is working with the existing script. I've tested it and documented it as well.
+https://perf.wiki.kernel.org/index.php/Tutorial#Firefox_Profiler
+
+> 3. Adding page fault and one more event in stackTable in gecko script.
+
+I have few doubt regarding this will discuss in office hour.
+
+> 4. Making the documentation better.
+
+I am trying to make it better, but I'm not sure if it's good enough. Here's the link:
+https://perf.wiki.kernel.org/index.php/Tutorial#Firefox_Profiler
+
+I also need to understand on how to prepare the final report for GSoC and
+planning to record a 5 min tutorial video on how to use the script.
+
+Moreover, I need to make the script run as a root user.
+
+This are few TODOs I have in mind. Please let me know if you have any suggestions.
 
 > Thanks,
-> Ian
+> Anup
 > 
-> > > changes in v2:
-> > >     - Removed uncessary prepare_perf_data.
-> > >     - provided patch which is required for testing this patch.
-> > > ---
-> > >  tools/perf/tests/shell/test_gecko.sh | 130 +++++++++++++++++++++++++++
-> > >  1 file changed, 130 insertions(+)
-> > >  create mode 100755 tools/perf/tests/shell/test_gecko.sh
-> > >
-> > > diff --git a/tools/perf/tests/shell/test_gecko.sh b/tools/perf/tests/shell/test_gecko.sh
-> > > new file mode 100755
-> > > index 000000000000..44160eff87fd
-> > > --- /dev/null
-> > > +++ b/tools/perf/tests/shell/test_gecko.sh
-> > > @@ -0,0 +1,130 @@
-> > > +#!/bin/bash
-> > > +# perf script gecko test
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +
-> > > +err=0
-> > > +
-> > > +cleanup() {
-> > > +  rm -rf gecko_profile.json
-> > > +  trap - exit term int
-> > > +}
-> > > +
-> > > +trap_cleanup() {
-> > > +  cleanup
-> > > +  exit 1
-> > > +}
-> > > +trap trap_cleanup exit term int
-> > > +
-> > > +report() {
-> > > +    if [ "$1" = 0 ]; then
-> > > +        echo "PASS: \"$2\""
-> > > +    else
-> > > +        echo "FAIL: \"$2\" Error message: \"$3\""
-> > > +        err=1
-> > > +    fi
-> > > +}
-> > > +
-> > > +find_str_or_fail() {
-> > > +    grep -q "$1" <<< "$2"
-> > > +    if [ "$?" != 0 ]; then
-> > > +        report 1 "$3" "Failed to find required string:'${1}'."
-> > > +    else
-> > > +        report 0 "$3"
-> > > +    fi
-> > > +}
-> > > +
-> > > +# To validate the json format, check if python is installed
-> > > +if [ "$PYTHON" = "" ] ; then
-> > > +     if which python3 > /dev/null ; then
-> > > +             PYTHON=python3
-> > > +     elif which python > /dev/null ; then
-> > > +             PYTHON=python
-> > > +     else
-> > > +             echo Skipping JSON format check, python not detected please set environment variable PYTHON.
-> > > +             PYTHON_NOT_AVAILABLE=1
-> > > +     fi
-> > > +fi
-> > > +
-> > > +# Check execution of perf script gecko command
-> > > +test_gecko_command() {
-> > > +    echo "Testing Gecko Command"
-> > > +    perf script gecko -a sleep 0.5
-> > > +    # Store the content of the file in the 'out' variable
-> > > +    out=$(< "gecko_profile.json")
-> > > +    # Get the length of the gecko_profile.json output in 'out'
-> > > +     length=${#out}
-> > > +     if [ "$length" -gt 0 ]; then
-> > > +        echo "PASS: \"Gecko Command\""
-> > > +    else
-> > > +        echo "FAIL: \"Gecko Command\""
-> > > +        err=1
-> > > +        exit
-> > > +    fi
-> > > +}
-> > > +
-> > > +# with the help of python json libary validate the json output
-> > > +if [ "$PYTHON_NOT_AVAILABLE" != "0" ]; then
-> > > +     validate_json_format()
-> > > +     {
-> > > +             if [ "$out" ] ; then
-> > > +                     if [ "$PYTHON -c import json; json.load($out)" ]; then
-> > > +                             echo "PASS: \"The file contains valid JSON format\""
-> > > +                     else
-> > > +                             echo "FAIL: \"The file does not contain valid JSON format\""
-> > > +                             err=1
-> > > +                             exit
-> > > +                     fi
-> > > +             else
-> > > +                     echo "FAIL: \"File not found\""
-> > > +                     err=2
-> > > +                     exit
-> > > +             fi
-> > > +     }
-> > > +fi
-> > > +
-> > > +# validate output for the presence of "meta".
-> > > +test_meta() {
-> > > +    find_str_or_fail "meta" "$out" "${FUNCNAME[0]}"
-> > > +}
-> > > +
-> > > +# validate output for the presence of "threads".
-> > > +test_threads() {
-> > > +     find_str_or_fail "threads" "$out" "${FUNCNAME[0]}"
-> > > +}
-> > > +
-> > > +# validate output for the presence of "samples".
-> > > +test_samples() {
-> > > +     find_str_or_fail "samples" "$out" "${FUNCNAME[0]}"
-> > > +}
-> > > +
-> > > +# validate output for the presence of "frameTable".
-> > > +test_frametable() {
-> > > +     find_str_or_fail "frameTable" "$out" "${FUNCNAME[0]}"
-> > > +}
-> > > +
-> > > +# validate output for the presence of "stackTable".
-> > > +test_stacktable() {
-> > > +     find_str_or_fail "stackTable" "$out" "${FUNCNAME[0]}"
-> > > +}
-> > > +
-> > > +# validate output for the presence of "stringTable"
-> > > +test_stringtable() {
-> > > +     find_str_or_fail "stringTable" "$out" "${FUNCNAME[0]}"
-> > > +}
-> > > +
-> > > +# validate output for the presence of "pausedRanges".
-> > > +test_pauseranges(){
-> > > +     find_str_or_fail "pausedRanges" "$out" "${FUNCNAME[0]}"
-> > > +}
-> > > +
-> > > +test_gecko_command
-> > > +validate_json_format
-> > > +test_meta
-> > > +test_threads
-> > > +test_samples
-> > > +test_frametable
-> > > +test_stacktable
-> > > +test_stringtable
-> > > +test_pauseranges
-> > > +cleanup
-> > > +exit $err
-> > > --
-> > > 2.34.1
-> > >
+> > > - Arnaldo
+> > > 
+> > > > Thanks,
+> > > > Anup
+> > > > 
+> > > > > > Regards,
+> > > > > > Anup
+> > > > > > > > 
+> > > > > > > >>
+> > > > > > > >> The second challenge revolved around the usage of event hooks provided with the perf script
+> > > > > > > >> python event handlers. I found myself deliberating between two approaches. The first
+> > > > > > > >> approach involved creating custom functions that would be called using the event
+> > > > > > > >> handlers. These functions would then save the data in an organized format within
+> > > > > > > >> globally created data structures. The alternative approach was to write the entire
+> > > > > > > >> logic inside the event handlers themselves.
+> > > > > > > >>
+> > > > > > > >> Additionally, I contemplated whether it would be more suitable to handle the creation of
+> > > > > > > >> a Gecko format for JSON and the profile format within the same script or to separate
+> > > > > > > >> them into different scripts.
+> > > > > > > >>
+> > > > > > > >> I will discuss this points during tomorrow's office hour.
+> > > > > > > >>
+> > > > > > > >> However, I have gained a deeper understanding of the problem at hand and will use this
+> > > > > > > >> knowledge to make more informed decisions and progress more effectively in the coming weeks.
+> > > > > > > > 
+> > > > > > > > Sounds like you did a good amount of research on how perf script
+> > > > > > > > works.  We can talk about the details in the meeting.
+> > > > > > > > 
+> > > > > > > > Thanks,
+> > > > > > > > Namhyung
+> > > > > > > 
+> > > 
+> > > -- 
+> > > 
+> > > - Arnaldo
