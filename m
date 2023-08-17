@@ -2,189 +2,304 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CE6C41513
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Aug 2023 03:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C80EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Aug 2023 06:17:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347850AbjHQDbX (ORCPT
+        id S1348173AbjHQGQc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Aug 2023 23:31:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35584 "EHLO
+        Thu, 17 Aug 2023 02:16:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347854AbjHQDbO (ORCPT
+        with ESMTP id S1346827AbjHQGQ0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Aug 2023 23:31:14 -0400
-Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5A332684
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Aug 2023 20:31:12 -0700 (PDT)
-Received: by mail-qt1-x82a.google.com with SMTP id d75a77b69052e-40c72caec5cso179981cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Aug 2023 20:31:12 -0700 (PDT)
+        Thu, 17 Aug 2023 02:16:26 -0400
+Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C449C2D57
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Aug 2023 23:16:24 -0700 (PDT)
+Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-40a47e8e38dso138671cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Aug 2023 23:16:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692243072; x=1692847872;
+        d=google.com; s=20221208; t=1692252984; x=1692857784;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4OZBeaJgZy+JtC76XaUX/QbDCUYKDpGHJgNlTIZgiv0=;
-        b=uihlZtlBlwbqRXrGgDB1cx3+tvFPoMptKF8xwFjYExbafSk6aawa6UDjyuuwD1NCMo
-         HmgeMUS4wDBpAmFqrT/tgWkUKwKndxmFzpDFO72Kas+XUk3o4IEQRmPYMwAmJYYE9Xsq
-         FQBC9dTf66m/hiST75GBrjP2qOP5ZNWatP0sMvW05t3LeGtTA6fnSHCB479i41DZg6sK
-         Dm0hxC7EtcRVLxDNpAvoWrIIv389qZiIWn6/GYOP0GA1ONg9UEKyACo+8oKSUttkcz+k
-         uzKWUBEkfO7Lg8P0EhcHtF6jpWDwhlkLDtrRoKTxbsq1KYi4uaXqpCdtXtR2zcQfA3Rv
-         2YMA==
+        bh=WDK3QgInK2ykhbFYvpWIXxMDwcr9shwZ5/2llewg4bo=;
+        b=0yu2qIRl9rYj5DxlBrU0LgnYY0FLdpN4UArInv8nKVe+Rm5wwCMrYOgeDcxYGmrXjl
+         TRigoly3+thgHsgk1Dr7JVAIlmR9DQyteIj9SGhO4ZgRAPLZFnOBrNFHKYOfFrCavH1e
+         CtJvWH1RHlQDnfuDhnFCKmYCj5fWldv4g3Dz3nChbl636ELNV8pN64D047vuOpDFm745
+         Ji73aLAoMXwF9rRHKtjs9M+jq5cEcrUGS8fAu7x6rWtAWoSpb3R7mCxhg7FotLJHimnE
+         GZ4FNiM/HPOl+DWBvh7Ni7leZtlWiQgNoRETst+sHNzjvcyhN5P8aFxu5uuUQR8uPpGE
+         4J9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692243072; x=1692847872;
+        d=1e100.net; s=20221208; t=1692252984; x=1692857784;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4OZBeaJgZy+JtC76XaUX/QbDCUYKDpGHJgNlTIZgiv0=;
-        b=UHw6Fq4eELnH9GCTO9fQCf7Fv1gAaR8Bl73cuDm1W52tq9RgI7icJF6MgLt6xZyR/k
-         pEHwEp5Av9VyoOVmlHDJ7So8KpYOMjeawzYJIFfaqccKYn4PB8KFlp2U2XM7F0iD19YI
-         9jodKDdRfJmXGWo51iXGn/s2JtsSzP5ibMRQ0He6UFoyuTMKFr2EkzAiy/yZAl9p43rr
-         TnY/eTTCb9tXkn5OjSR0j4USV2VYBwrE7W9/A3+oflu6fR6WxcfWTU4G8bq/TpKI16XJ
-         W22OsbSJUeHE/mXeKfdYPQ9DlZ5So3n0DrgqUreEYHRMECkcZKsQ4zz/gHvT5pMDfwcD
-         eMKQ==
-X-Gm-Message-State: AOJu0YzWYt3Ufr8c2dSpVK1tEJiPNWkj4GDKfmH8o5emxKJQe3ZS8KIV
-        dEnLSckKXKjaOisz+H9AOl0GK6qYGuUS+QYonnmwrg==
-X-Google-Smtp-Source: AGHT+IF5LHZK0NKxj/bs+fsND7QceZAiQkVA/xe91rJU9IS7u1PLQAPJLP27KZA6Rrgn2WZrntOL54K3FjA5+B5x12U=
-X-Received: by 2002:ac8:5bc9:0:b0:40f:d387:65d0 with SMTP id
- b9-20020ac85bc9000000b0040fd38765d0mr162112qtb.16.1692243071597; Wed, 16 Aug
- 2023 20:31:11 -0700 (PDT)
+        bh=WDK3QgInK2ykhbFYvpWIXxMDwcr9shwZ5/2llewg4bo=;
+        b=XXiMFXoNFEuL5v44kdUyHmK88iVgxyZ/vAE7WcKZdhBufsHUz32TFyYvAKiwk7TWlZ
+         vY6TJQGdAUFY7VOyObcRvzMuiBPWf1iRKSDRRM7xWbkmFgN2xZpkwGxY4V8O7eXTknfN
+         IFZ2vu/8EesKeitp33yX5nzTomeWetCjhLwUpDK9uxgNCbxVYR33nxbWwQitXqW33RAc
+         23LvPIZ3JZl9jgkfCg1IFRN3ky99XrSPcqYIw3pNs1UrUOpisPolyqSstQZbRwGYTSaB
+         Zzx8fq8bY6PMriXrlIMOrD2sExgDVhykOQGcHNLs6ak5EuSmzKbrJa7C54RDLnpw3UNF
+         2ZUg==
+X-Gm-Message-State: AOJu0Yzc+KWdHn4e2aCiICpnwBuze2d5g2tL2jTRNFUz67nUWVh1ILvn
+        bw/wHQNMlO2fAIG9gjsp9DfA++DpeNL5f9On073pIZ4fq//mOT6Jd+TEt8khs4w=
+X-Google-Smtp-Source: AGHT+IG6JVkduBKUcJMGKYxAmtvEPw2N2fE+eVFAwD48nCwVtvDNN1YPJ7Gz7+u7elnc0/SSdSoOoc5Nlmey7mzyH5o=
+X-Received: by 2002:a05:622a:1a18:b0:3f9:56c:1129 with SMTP id
+ f24-20020a05622a1a1800b003f9056c1129mr116759qtb.5.1692252983538; Wed, 16 Aug
+ 2023 23:16:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230815130722.1223744-1-liwei391@huawei.com>
-In-Reply-To: <20230815130722.1223744-1-liwei391@huawei.com>
+References: <CAP-5=fU10YCxZfq=dOUUPR0dRusbq=vzp5CqsOuz1aLVY16KAw@mail.gmail.com>
+ <CAP-5=fWOCE6+9MuiFziHz1o6Ej-FTDJa1fnkhYpifz7Rtazk8Q@mail.gmail.com>
+ <CAP-5=fXf-FmKb=D4h5VgxQ=w3T3+Nn3AP4ExR9YjnKFB=4m7bA@mail.gmail.com>
+ <CAP-5=fWSHpWx02+nB8joo0JbtNJXAEHFLBdY7n5W=tSbdpMGkg@mail.gmail.com>
+ <CAP-5=fX9OXTiiojNp-ut-_LOD2=6+mEN8iAt=UUGfmDu4q+F3Q@mail.gmail.com>
+ <CAP-5=fU6TWKQ8eDUM5UFfO2h6TgL9j7-43eWfZMTbwpRqHS6OA@mail.gmail.com>
+ <CAP-5=fX4Fj3phsny8zPueJpUaxN0jEhvJarc3ghz46RCtu0C+A@mail.gmail.com>
+ <CAP-5=fV6f3NeSbKatG0_LCROUr=2xdcrC7PnC3D0YprtCDaTow@mail.gmail.com>
+ <CAP-5=fU2dPih+JPUOkoHyiFvMwd9KRHiKDtuNeatPsaE0VxbsQ@mail.gmail.com> <CAP-5=fWRELRNg3guvsXu-PJU4MfJ+tj3zZRWpSrmCK5AP39ANg@mail.gmail.com>
+In-Reply-To: <CAP-5=fWRELRNg3guvsXu-PJU4MfJ+tj3zZRWpSrmCK5AP39ANg@mail.gmail.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 16 Aug 2023 20:31:00 -0700
-Message-ID: <CAP-5=fX2v=vV8eUX3x2i+vcYQQ=W9_tswh4VXy4nP9R3MPh=2Q@mail.gmail.com>
-Subject: Re: [PATCH] perf header: Fix missing PMU caps recording in write_pmu_caps
-To:     Wei Li <liwei391@huawei.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        K Prateek Nayak <kprateek.nayak@amd.com>,
-        linux-perf-users@vger.kernel.org, huawei.libin@huawei.com
+Date:   Wed, 16 Aug 2023 23:16:11 -0700
+Message-ID: <CAP-5=fVqbAej4aJV-BDsBSpgAnmad+RXC_0Z_81Ma8WZXUkNWg@mail.gmail.com>
+Subject: Re: Linux Perf Tool Office Hours
+To:     linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Anup Sharma <anupnewsmail@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Aug 15, 2023 at 6:10=E2=80=AFAM Wei Li <liwei391@huawei.com> wrote:
->
-> An error occurred when executing "perf script syscall-counts" on arm64:
->     Press control+C to stop and show the summary
->     0x6a7c [0x14]: failed to process type: 80
->
-> After debugging i found that it failed to process HEADER_PMU_CAPS, lookin=
-g
-> back on write_pmu_caps(), it get all pmus with caps except "cpu" first,
-> then handle the hybrid core pmus, and the uncore pmus finally.
->
-> But on arm64 platforms, the core pmu is named "armv8_pmuv3" etc, not "cpu=
-".
-> So it's counted but no caps recorded here, this is broken since commit
-> 178ddf3bad98 ("perf header: Avoid hybrid PMU list in write_pmu_caps"),
-> as the logic for determining hybrid is changed from name matching to "cor=
-e"
-> attribute judging.
->
-> To fix this, change the logic of recording pmu caps to be consistent with
-> the preceding counting, also make the code clear. The compatibility with
-> old perf tool is ignored since it has been already broken.
->
-> Fixes: 178ddf3bad98 ("perf header: Avoid hybrid PMU list in write_pmu_cap=
-s")
-> Signed-off-by: Wei Li <liwei391@huawei.com>
-> ---
->  tools/perf/util/header.c | 16 ++--------------
->  1 file changed, 2 insertions(+), 14 deletions(-)
->
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index 52fbf526fe74..7d2bd1fb8ef2 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -1618,22 +1618,10 @@ static int write_pmu_caps(struct feat_fd *ff,
->         if (!nr_pmu)
->                 return 0;
->
-> -       /*
-> -        * Write hybrid pmu caps first to maintain compatibility with
-> -        * older perf tool.
-> -        */
-> -       if (perf_pmus__num_core_pmus() > 1) {
-> -               pmu =3D NULL;
-> -               while ((pmu =3D perf_pmus__scan_core(pmu))) {
-> -                       ret =3D __write_pmu_caps(ff, pmu, true);
-> -                       if (ret < 0)
-> -                               return ret;
-> -               }
-> -       }
-> -
->         pmu =3D NULL;
->         while ((pmu =3D perf_pmus__scan(pmu))) {
-> -               if (pmu->is_core || !pmu->nr_caps)
-> +               if (!pmu->name || !strcmp(pmu->name, "cpu") ||
-> +                   !pmu->nr_caps)
->                         continue;
->
->                 ret =3D __write_pmu_caps(ff, pmu, true);
+Office hours tomorrow:
 
-Sorry for the breakage. I think all of the branches are interfering
-here, I think a simpler solution is:
-
-```
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1605,8 +1605,7 @@ static int write_pmu_caps(struct feat_fd *ff,
-       int ret;
-
-       while ((pmu =3D perf_pmus__scan(pmu))) {
--               if (!pmu->name || !strcmp(pmu->name, "cpu") ||
--                   perf_pmu__caps_parse(pmu) <=3D 0)
-+               if (perf_pmu__caps_parse(pmu) <=3D 0)
-                       continue;
-               nr_pmu++;
-       }
-@@ -1619,23 +1618,13 @@ static int write_pmu_caps(struct feat_fd *ff,
-               return 0;
-
-       /*
--        * Write hybrid pmu caps first to maintain compatibility with
--        * older perf tool.
-+        * Note older perf tools assume core PMUs come first, this is a pro=
-perty
-+        * of perf_pmus__scan.
-        */
--       if (perf_pmus__num_core_pmus() > 1) {
--               pmu =3D NULL;
--               while ((pmu =3D perf_pmus__scan_core(pmu))) {
--                       ret =3D __write_pmu_caps(ff, pmu, true);
--                       if (ret < 0)
--                               return ret;
--               }
--       }
--
-       pmu =3D NULL;
-       while ((pmu =3D perf_pmus__scan(pmu))) {
--               if (pmu->is_core || !pmu->nr_caps)
-+               if (perf_pmu__caps_parse(pmu) <=3D 0)
-                       continue;
--
-               ret =3D __write_pmu_caps(ff, pmu, true);
-               if (ret < 0)
-                       return ret;
-```
-
-Could you try it out?
+Linux Perf Tool Office Hours
+Thursday, August 17 =C2=B7 9:00 =E2=80=93 9:45am
+Time zone: America/Los_Angeles
+Google Meet joining info
+Video call link: https://meet.google.com/jds-asbo-day
+Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 018 892=
+=E2=80=AC#
+More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252256983
 
 Thanks,
 Ian
 
-> --
-> 2.25.1
+On Wed, Aug 9, 2023 at 1:32=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
 >
+> Hi,
+>
+> Just a heads up that we plan to skip office hours tomorrow.
+>
+> Thanks,
+> Ian
+>
+> On Wed, Aug 2, 2023 at 1:09=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+> >
+> > First office hours of August tomorrow:
+> >
+> > Linux Perf Tool Office Hours
+> > Thursday, August 3 =C2=B7 9:00 =E2=80=93 9:45am
+> > Time zone: America/Los_Angeles
+> > Google Meet joining info
+> > Video call link: https://meet.google.com/jds-asbo-day
+> > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 018 8=
+92=E2=80=AC#
+> > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252256983
+> >
+> > Thanks,
+> > Ian
+> >
+> > On Wed, Jul 26, 2023 at 2:53=E2=80=AFPM Ian Rogers <irogers@google.com>=
+ wrote:
+> > >
+> > > A reminder there is the usual office hours tomorrow. This is an
+> > > excellent opportunity to ask questions and hear the latest on Anup's
+> > > firefox profiler work.
+> > >
+> > > Linux Perf Tool Office Hours
+> > > Thursday, July 27 =C2=B7 9:00 =E2=80=93 9:45am
+> > > Time zone: America/Los_Angeles
+> > > Google Meet joining info
+> > > Video call link: https://meet.google.com/jds-asbo-day
+> > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 018=
+ 892=E2=80=AC#
+> > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252256983
+> > >
+> > > Thanks,
+> > > Ian
+> > >
+> > > On Wed, Jul 19, 2023 at 3:29=E2=80=AFPM Ian Rogers <irogers@google.co=
+m> wrote:
+> > > >
+> > > > A reminder there is the usual office hours tomorrow:
+> > > >
+> > > > Linux Perf Tool Office Hours
+> > > > Thursday, July 20 =C2=B7 9:00 =E2=80=93 9:45am
+> > > > Time zone: America/Los_Angeles
+> > > > Google Meet joining info
+> > > > Video call link: https://meet.google.com/jds-asbo-day
+> > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 0=
+18 892=E2=80=AC#
+> > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D66292522569=
+83
+> > > >
+> > > > Thanks,
+> > > > Ian
+> > > >
+> > > > On Wed, Jul 12, 2023 at 3:42=E2=80=AFPM Ian Rogers <irogers@google.=
+com> wrote:
+> > > > >
+> > > > > A reminder there are office hours tomorrow. This is a particular
+> > > > > useful time to sync with Anup, the Linux Foundation Google
+> > > > > Summer-of-Code contributor this year.
+> > > > >
+> > > > > Linux Perf Tool Office Hours
+> > > > > Thursday, July 13 =C2=B7 9:00 =E2=80=93 9:45am
+> > > > > Time zone: America/Los_Angeles
+> > > > > Google Meet joining info
+> > > > > Video call link: https://meet.google.com/jds-asbo-day
+> > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817=
+ 018 892=E2=80=AC#
+> > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D662925225=
+6983
+> > > > >
+> > > > > Thanks!
+> > > > > Ian
+> > > > > On Thu, Jul 6, 2023 at 8:31=E2=80=AFAM Ian Rogers <irogers@google=
+.com> wrote:
+> > > > > >
+> > > > > > Hi,
+> > > > > >
+> > > > > > Sorry for the late notice. Office hours today in 30 minutes.
+> > > > > >
+> > > > > > Linux Perf Tool Office Hours
+> > > > > > Thursday, July 6 =C2=B7 9:00 =E2=80=93 9:45am
+> > > > > > Time zone: America/Los_Angeles
+> > > > > > Google Meet joining info
+> > > > > > Video call link: https://meet.google.com/jds-asbo-day
+> > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA8=
+17 018 892=E2=80=AC#
+> > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252=
+256983
+> > > > > >
+> > > > > > Thanks,
+> > > > > > Ian
+> > > > > >
+> > > > > > On Wed, Jun 21, 2023 at 3:15=E2=80=AFPM Ian Rogers <irogers@goo=
+gle.com> wrote:
+> > > > > > >
+> > > > > > > Hi,
+> > > > > > >
+> > > > > > > Office hours reminder tomorrow. A chance to discuss any topic=
+s of the
+> > > > > > > day and for
+> > > > > > > GSoC contributor sync.
+> > > > > > >
+> > > > > > > Linux Perf Tool Office Hours
+> > > > > > > Thursday, June 22 =C2=B7 9:00 =E2=80=93 9:45am
+> > > > > > > Time zone: America/Los_Angeles
+> > > > > > > Google Meet joining info
+> > > > > > > Video call link: https://meet.google.com/jds-asbo-day
+> > > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=
+=AA817 018 892=E2=80=AC#
+> > > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D66292=
+52256983
+> > > > > > >
+> > > > > > > Thanks,
+> > > > > > > Ian
+> > > > > > >
+> > > > > > > On Wed, Jun 14, 2023 at 10:01=E2=80=AFAM Ian Rogers <irogers@=
+google.com> wrote:
+> > > > > > > >
+> > > > > > > > Hi,
+> > > > > > > >
+> > > > > > > > Office hours reminder. A chance to discuss topics of the da=
+y and for
+> > > > > > > > GSoC contributor sync.
+> > > > > > > >
+> > > > > > > > Linux Perf Tool Office Hours
+> > > > > > > > Thursday, June 15 =C2=B7 9:00 =E2=80=93 9:45am
+> > > > > > > > Time zone: America/Los_Angeles
+> > > > > > > > Google Meet joining info
+> > > > > > > > Video call link: https://meet.google.com/jds-asbo-day
+> > > > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=
+=AA817 018 892=E2=80=AC#
+> > > > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D662=
+9252256983
+> > > > > > > >
+> > > > > > > > Thanks,
+> > > > > > > > Ian
+> > > > > > > >
+> > > > > > > > On Wed, Jun 7, 2023 at 9:14=E2=80=AFPM Ian Rogers <irogers@=
+google.com> wrote:
+> > > > > > > > >
+> > > > > > > > > Hi,
+> > > > > > > > >
+> > > > > > > > > Office hours and chance for GSoC contributor sync slightl=
+y earlier at
+> > > > > > > > > 9am PT tomorrow:
+> > > > > > > > >
+> > > > > > > > > Linux Perf Tool Office Hours
+> > > > > > > > > Thursday, June 8 =C2=B7 9:00 =E2=80=93 9:45am
+> > > > > > > > > Time zone: America/Los_Angeles
+> > > > > > > > > Google Meet joining info
+> > > > > > > > > Video call link: https://meet.google.com/jds-asbo-day
+> > > > > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=
+=80=AA817 018 892=E2=80=AC#
+> > > > > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6=
+629252256983
+> > > > > > > > >
+> > > > > > > > > If you'd like to randomly drop in, feel free. An issue I'=
+m keen to
+> > > > > > > > > discuss is memory usage and memory leaks.
+> > > > > > > > >
+> > > > > > > > > Thanks,
+> > > > > > > > > Ian
+> > > > > > > > >
+> > > > > > > > > On Wed, May 31, 2023 at 10:00=E2=80=AFAM Ian Rogers <irog=
+ers@google.com> wrote:
+> > > > > > > > > >
+> > > > > > > > > > Hi,
+> > > > > > > > > >
+> > > > > > > > > > On Monday the Google Summer-of-Code officially started =
+and Anup is
+> > > > > > > > > > this summer's contributor to the Linux perf tool! We've=
+ found in the
+> > > > > > > > > > past [1] that having office hours is a good chance for =
+contributors to
+> > > > > > > > > > sync and also for those interested in the Linux perf to=
+ol to also
+> > > > > > > > > > connect and share their problems and experiences. As su=
+ch we plan on
+> > > > > > > > > > running our first office hours for this summer tomorrow=
+, the details
+> > > > > > > > > > are below:
+> > > > > > > > > >
+> > > > > > > > > > Linux Perf Tool Office Hours
+> > > > > > > > > > Thursday, June 1 =C2=B7 9:30 =E2=80=93 10:30am
+> > > > > > > > > > Time zone: America/Los_Angeles
+> > > > > > > > > > Google Meet joining info
+> > > > > > > > > > Video call link: https://meet.google.com/jds-asbo-day
+> > > > > > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =
+=E2=80=AA817 018 892=E2=80=AC#
+> > > > > > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=
+=3D6629252256983
+> > > > > > > > > >
+> > > > > > > > > > Please ask me and I'll be more than happy to add you to=
+ the calendar
+> > > > > > > > > > invite for this. Over the summer we can adjust the timi=
+ng of the
+> > > > > > > > > > office hours to maximize participation, etc. so please =
+reach out and
+> > > > > > > > > > share concerns.
+> > > > > > > > > >
+> > > > > > > > > > Thanks,
+> > > > > > > > > > Ian
+> > > > > > > > > >
+> > > > > > > > > > [1] https://lore.kernel.org/linux-perf-users/CAP-5=3DfW=
+iQHvYZp5R=3Duw4xUwBiN1fBLBU8witPkYM+2r8tnYCOg@mail.gmail.com/
