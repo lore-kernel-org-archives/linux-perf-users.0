@@ -2,56 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC30EC2FC0E
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Aug 2023 09:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B280BC2FC0E
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Aug 2023 09:24:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348491AbjHQJNa (ORCPT
+        id S1349504AbjHQJYQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Aug 2023 05:13:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47906 "EHLO
+        Thu, 17 Aug 2023 05:24:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349364AbjHQJNK (ORCPT
+        with ESMTP id S1349552AbjHQJYE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Aug 2023 05:13:10 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2D0A2684
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Aug 2023 02:13:03 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-68872cadc7cso1902981b3a.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Aug 2023 02:13:03 -0700 (PDT)
+        Thu, 17 Aug 2023 05:24:04 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2254E1FE2
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Aug 2023 02:24:03 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1bc5acc627dso51120065ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Aug 2023 02:24:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1692263583; x=1692868383;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=K91jE8EwBVM4Sp8konKF5372FTO4dIFG97TRQaKzO0E=;
-        b=xQHA384K0ZO0OrkqcjlZ6MKQ35pNbmw9PsSE4SF6cz2yKQ3DvFVOMQ4vWLngH8n3Zs
-         fXMdjr7lAbZajSWjm05I7a3lCsRNAN+Kp1Hk6y3ybWbpRnIPvZNzHngJggX1uKF3yQ5v
-         3nRKEF3MzfvDS1s5QwUjp05Z5euKAQ9TKU11o9wNgMddyQjbG+MskSZMHMcfQ3I959QT
-         0SSIkbPU0hxUBI8au0kBoaH3BoAEinsMkJTUNMvHnZkHve+ZSdreLauiStkkmDd1wfu9
-         YjJKb8dlZY4a8Gs1yZDci9Xh2D2U89tlo8115a6S1ppGfok08LT2gWwagiy32jv1zFOA
-         pAtw==
+        d=linaro.org; s=google; t=1692264242; x=1692869042;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KPbt6Jr4uE4XqkroaxTN40QvL9ZRwcamAUU0Alom8Ec=;
+        b=rI6iWAqTfcbFXuRszbw0kH7S7Efm8TDPPaTRvQfqQAODkeiPGEer1xsAgnG42yVQr9
+         L3URCg142nt5JV7OT34bh5MdV49Y/N9+vDCDkRWeow95/CTCqjeWhbS+mjW1SKxpI+D9
+         J9WzjfnihA0HQ3OQ22c1eO5ymIPPiWyFE5N0svVLR+mDVK7ijU0cJsuqAty+bKyRlhSv
+         iDYIQEtErdogHHIlKmTtsWRXCgeDabvOQyFBJjASvlFsk/Z9c3v+5wNsoGVLF9E3UmxC
+         iHBnf1Bbvrssr9ej6ikHkdY6q0moHRV3UoyFuEbAsd0tnfbURsGaT6Ui11pgMfahVMUN
+         f6vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692263583; x=1692868383;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K91jE8EwBVM4Sp8konKF5372FTO4dIFG97TRQaKzO0E=;
-        b=BgfevMP8MlP+5KGxcujp/wIBJz27m1j+i7T1meB1jLtqaZlpPM1UKCo0A6acMcovlF
-         rQpXm6MD4ciD+9otsFSNf/oHaOzMd7c9NQysGtlHCvLxe4r1j12zjAmi5NaZV/v3px4U
-         zg7K/xKmMIrkGpH9WvFFMlXLXVLiCQ8b7w+QDlla7bnCuoPDGoSnz5xsZWQeQJuLnF/i
-         BGeLtjt+u/2Te2B0b0x1gpBC8P5+onS4QoFzZbGmaMbfNG/U2yrQhSCa7wTe9/Gm53Sd
-         N33njapL141PtqqCNAt+ai2GV774b2oO7QXyT9Flc+Nzyw3VXUyANka6XKw7LpiD54Zo
-         bSkA==
-X-Gm-Message-State: AOJu0Yzo+VwF3SHD8uOlSANq+9cqequIgDF2HlzLx5LmXFFPVq2QU6GW
-        E2FoYc6axv9u/PnUpHBEcqUmWA==
-X-Google-Smtp-Source: AGHT+IEIqqs40KIfRVtyjO6BfEq3bmiOt6WXaiauiTs9IDaui+L8JnWcsz+icvL898LfGWIQpaV3xg==
-X-Received: by 2002:a05:6a20:3251:b0:130:b19d:ec1f with SMTP id hm17-20020a056a20325100b00130b19dec1fmr4423496pzc.11.1692263582886;
-        Thu, 17 Aug 2023 02:13:02 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1692264242; x=1692869042;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KPbt6Jr4uE4XqkroaxTN40QvL9ZRwcamAUU0Alom8Ec=;
+        b=WikR2YDMj8D+50BtGhE8BvEoyyaYPmKooC4GiZHdU4fvgJiigYODSqsSv8NxbuzW8F
+         fnDW5q/5Li2UkUaHP5sAlpbiLokmhvt1FhacuehtJCwnj/zFCYS3I5cJWC62Z+29IZcT
+         DoADmILBpaKykShAz6XMl/sh4eB0nKkJdOSrPp07UENH0DEFLM+Nl7tCcaK0haSUz8lH
+         FIXu3zyscCtD4TVdf4lhITujMd25asuXqSRmTo5cF7Lbq6J0WtrdEzo3t1bmbOFwgAfV
+         krqIwUI4EU5rG3P4c/0Q0w5RP8Ll5u57dDPzkZgZE8IBjB18MxmL23j34wjnIXC2alXx
+         NJOg==
+X-Gm-Message-State: AOJu0YzvBIN+yvuzZv6t1FmT7CeYseu7YKJzbV6w652E1vU+i5aQfFoR
+        RgHR7LqbP1BURsu7Ij9bg9IsGQ==
+X-Google-Smtp-Source: AGHT+IFk70YzOl9gPu9ed6IJstA4fhK4tebZKjgbqrU2bEbbFU9mBw3Ch4/wFSeVGfyDH7rTfUpgxw==
+X-Received: by 2002:a17:902:bd89:b0:1b8:95a1:847c with SMTP id q9-20020a170902bd8900b001b895a1847cmr3827038pls.40.1692264242560;
+        Thu, 17 Aug 2023 02:24:02 -0700 (PDT)
 Received: from leoy-huanghe.lan (211-75-219-204.hinet-ip.hinet.net. [211.75.219.204])
-        by smtp.gmail.com with ESMTPSA id f2-20020a170902ce8200b001bbfa86ca3bsm14709012plg.78.2023.08.17.02.12.56
+        by smtp.gmail.com with ESMTPSA id y22-20020a1709027c9600b001b8a85489a3sm14600942pll.262.2023.08.17.02.23.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Aug 2023 02:13:02 -0700 (PDT)
-Date:   Thu, 17 Aug 2023 17:12:54 +0800
+        Thu, 17 Aug 2023 02:24:02 -0700 (PDT)
+Date:   Thu, 17 Aug 2023 17:23:53 +0800
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -81,7 +80,7 @@ Cc:     Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org, linux-csky@vger.kernel.org,
         linux-riscv@lists.infradead.org
 Subject: Re: [PATCH v2 0/6] perf parse-regs: Refactor architecture functions
-Message-ID: <20230817091254.GA176609@leoy-huanghe.lan>
+Message-ID: <20230817092353.GB176609@leoy-huanghe.lan>
 References: <20230606014559.21783-1-leo.yan@linaro.org>
  <CAP-5=fV1m440mKc0R=m5C4N2NtoiixchtnpX2eR3PA_5hXbqEQ@mail.gmail.com>
  <ZNvCxM/ULdUfzHtR@kernel.org>
@@ -90,153 +89,36 @@ References: <20230606014559.21783-1-leo.yan@linaro.org>
  <ZNvKjeFkXY8ezf9e@kernel.org>
  <20230816020715.GA135657@leoy-huanghe.lan>
  <ZNy3D6DV3Q9YjxKd@kernel.org>
+ <ZNy3jg7xxBp4161E@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZNy3D6DV3Q9YjxKd@kernel.org>
+In-Reply-To: <ZNy3jg7xxBp4161E@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Aug 16, 2023 at 08:46:23AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Aug 16, 2023 at 10:07:15AM +0800, Leo Yan escreveu:
-> > On Tue, Aug 15, 2023 at 03:57:17PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > Em Tue, Aug 15, 2023 at 03:52:38PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > > Em Tue, Aug 15, 2023 at 03:45:27PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > > > > Agreed, applied to perf-tools-next, sorry for the delay.
-> > > > > 
-> > > > > Had to add this to make 'perf test python' to work. Please run 'perf
-> > > > > test' before sending patches.
-> > > > 
-> > > > One more, please also do a 'make -C tools/perf build-test', with it I
-> > > > caught this:
-> > > > 
-> > > >          make_no_libunwind_O: cd . && make NO_LIBUNWIND=1 FEATURES_DUMP=/var/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.yeEGyQq2HR DESTDIR=/tmp/tmp.ITgoO16jjH
-> > > > cd . && make NO_LIBUNWIND=1 FEATURES_DUMP=/var/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.yeEGyQq2HR DESTDIR=/tmp/tmp.ITgoO16jjH
-> > > 
-> > > +#include "util/env.h"
-> > > 
-> > > As now we need it for perf_env__arch(ui->machine->env)
+On Wed, Aug 16, 2023 at 08:48:30AM -0300, Arnaldo Carvalho de Melo wrote:
+
+[...]
+
+> > And move that to perf-tools-next, we can go on from there.
 > > 
-> > Sorry for inconvenience.
-> > 
-> > I saw this patch series has been picked into the branch:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=tmp.perf-tools-next
-> > 
-> > If want me to follow up, let me know.  Thank you!
+> > The above is because we don't define CONFIG_PERF_REGS for these
+> > architectures and thus that variable ends up not being used, so I'm
+> > fixing up like below, in the cset where you made DWARF_MINIMAL_REGS
+> > receive the arch parameter.
 > 
-> Right, I'll fix this ones:
+> I added this to the cset commit message:
 > 
-> [perfbuilder@five ~]$ grep "unused variable" dm.log/*:*
-> dm.log/ubuntu:18.04-x-m68k:util/evsel.c:848:14: error: unused variable 'arch' [-Werror=unused-variable]
-> dm.log/ubuntu:18.04-x-riscv64:util/evsel.c:848:14: error: unused variable 'arch' [-Werror=unused-variable]
-> dm.log/ubuntu:18.04-x-sh4:util/evsel.c:848:14: error: unused variable 'arch' [-Werror=unused-variable]
-> dm.log/ubuntu:18.04-x-sparc64:util/evsel.c:848:14: error: unused variable 'arch' [-Werror=unused-variable]
-> [perfbuilder@five ~]$
+> Committer notes:
 > 
-> And move that to perf-tools-next, we can go on from there.
-> 
-> The above is because we don't define CONFIG_PERF_REGS for these
-> architectures and thus that variable ends up not being used, so I'm
-> fixing up like below, in the cset where you made DWARF_MINIMAL_REGS
-> receive the arch parameter.
+> Make DWARF_MINIMAL_REGS() an inline function, so that we can use the
+> __maybe_unused attribute for the 'arch' parameter, as this will avoid a
+> build failure when that variable is unused in the callers. That happens
+> when building on unsupported architectures, the ones without
+> HAVE_PERF_REGS_SUPPORT defined.
 
-I reviewed your below amended change, it looks good to me.
+Looks good to me, thanks for fixing.
 
-And I tested the latest perf-tools-next branch for both native and cross
-register parsing with perf Arm64 binaries.  Looks good to me.
-
-Thanks a lot for fixing up!
-
-> Also I haven't checked how gracefully we react when processing a
-> perf.data collected in one of those unsupported arches, can you please
-> check?
-
-At the first glance, we can add checking arch support of register
-parsing in the function callchain_param_setup(), which is invoked by
-`perf report` and `perf script`, but we need to handle `perf top`
-specifically.  Or we can consider to add checking in the function
-__parse_callchain_report_opt().
-
-Anyway, I will look into deails and work out patches.
-
-Thanks,
 Leo
-
-> - Arnaldo
-> 
-> diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-> index 790c1a26bbfe9b4b..de1673057e502de9 100644
-> --- a/tools/perf/util/perf_regs.h
-> +++ b/tools/perf/util/perf_regs.h
-> @@ -32,9 +32,6 @@ extern const struct sample_reg sample_reg_masks[];
->  
->  #include <perf_regs.h>
->  
-> -#define DWARF_MINIMAL_REGS(arch)	\
-> -	((1ULL << perf_arch_reg_ip(arch)) | (1ULL << perf_arch_reg_sp(arch)))
-> -
->  const char *perf_reg_name(int id, const char *arch);
->  int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
->  uint64_t perf_arch_reg_ip(const char *arch);
-> @@ -67,11 +64,19 @@ const char *__perf_reg_name_x86(int id);
->  uint64_t __perf_reg_ip_x86(void);
->  uint64_t __perf_reg_sp_x86(void);
->  
-> +static inline uint64_t DWARF_MINIMAL_REGS(const char *arch)
-> +{
-> +	return (1ULL << perf_arch_reg_ip(arch)) | (1ULL << perf_arch_reg_sp(arch));
-> +}
-> +
->  #else
->  #define PERF_REGS_MASK	0
->  #define PERF_REGS_MAX	0
->  
-> -#define DWARF_MINIMAL_REGS(arch)	PERF_REGS_MASK
-> +static inline uint64_t DWARF_MINIMAL_REGS(const char *arch __maybe_unused)
-> +{
-> +	return PERF_REGS_MASK;
-> +}
->  
->  static inline const char *perf_reg_name(int id __maybe_unused, const char *arch __maybe_unused)
->  {
->  
-> > > >   CC      /tmp/tmp.yeEGyQq2HR/util/expr-flex.o
-> > > > util/unwind-libdw.c: In function ‘memory_read’:
-> > > > util/unwind-libdw.c:173:28: error: implicit declaration of function ‘perf_env__arch’ [-Werror=implicit-function-declaration]
-> > > >   173 |         const char *arch = perf_env__arch(ui->machine->env);
-> > > >       |                            ^~~~~~~~~~~~~~
-> > > > util/unwind-libdw.c:173:28: error: initialization of ‘const char *’ from ‘int’ makes pointer from integer without a cast [-Werror=int-conversion]
-> > > > util/unwind-libdw.c: In function ‘unwind__get_entries’:
-> > > > util/unwind-libdw.c:258:28: error: initialization of ‘const char *’ from ‘int’ makes pointer from integer without a cast [-Werror=int-conversion]
-> > > >   258 |         const char *arch = perf_env__arch(ui_buf.machine->env);
-> > > >       |                            ^~~~~~~~~~~~~~
-> > > > cc1: all warnings being treated as errors
-> > > > make[6]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:98: /tmp/tmp.yeEGyQq2HR/util/unwind-libdw.o] Error 1
-> > > > make[6]: *** Waiting for unfinished jobs....
-> > > > make[5]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:150: util] Error 2
-> > > > make[4]: *** [Makefile.perf:662: /tmp/tmp.yeEGyQq2HR/perf-in.o] Error 2
-> > > > make[4]: *** Waiting for unfinished jobs....
-> > > >   CC      /tmp/tmp.yeEGyQq2HR/pmu-events/pmu-events.o
-> > > >   LD      /tmp/tmp.yeEGyQq2HR/pmu-events/pmu-events-in.o
-> > > > make[3]: *** [Makefile.perf:238: sub-make] Error 2
-> > > > make[2]: *** [Makefile:70: all] Error 2
-> > > > make[1]: *** [tests/make:337: make_no_libunwind_O] Error 1
-> > > > make: *** [Makefile:103: build-test] Error 2
-> > > > make: Leaving directory '/var/home/acme/git/perf-tools-next/tools/perf'
-> > > > 
-> > > > real	1m29.784s
-> > > > user	10m41.597s
-> > > > sys	2m55.948s
-> > > > ⬢[acme@toolbox perf-tools-next]$
-> > > > 
-> > > > I'm trying to fix
-> > > 
-> > > -- 
-> > > 
-> > > - Arnaldo
-> 
-> -- 
-> 
-> - Arnaldo
