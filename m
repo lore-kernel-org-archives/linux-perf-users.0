@@ -2,158 +2,119 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF5DC3DA62
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Aug 2023 17:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF5FC3DA61
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Aug 2023 17:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353597AbjHQRJ5 (ORCPT
+        id S239126AbjHQROQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Aug 2023 13:09:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45448 "EHLO
+        Thu, 17 Aug 2023 13:14:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353860AbjHQRJk (ORCPT
+        with ESMTP id S1353954AbjHQRN7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Aug 2023 13:09:40 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6394B2D7D;
-        Thu, 17 Aug 2023 10:09:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692292174; x=1723828174;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ZDoG4BC7BU8zigefF8QntKolQiXhY+GRE3lIDVeLi9M=;
-  b=R0hvWEhix8E3UjFGqAYdCjp0M3De1yWXsI44xCW8JrZDmJQJNF1CktQS
-   prTPcOI7HTTvKVCa/Nqg93IFmrDovoQE0i5CHSnTRnV6BtL5ZztvfjzTV
-   96fsQj1UcYDcD9dyF5O08m7mX+52Z54ussRb6ARsH5h7tQnPIw161GGdm
-   JaXHw0YVOShWaczuCbRkVppQWAIepWdntfvbKyXO6wyh5jeJMsEeAIw6C
-   cAO4tcpkYkjtdL90HUFYjlb72bY0b92aPAtHzcPeMvhsuG5HM8nb2OKXi
-   l7V83xsFToHPqqnxYd6Ye738mzXySrZa95FhCCztGkUPxWqIoCFosVXYe
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10805"; a="370340878"
-X-IronPort-AV: E=Sophos;i="6.01,180,1684825200"; 
-   d="scan'208";a="370340878"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2023 10:07:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10805"; a="848944651"
-X-IronPort-AV: E=Sophos;i="6.01,180,1684825200"; 
-   d="scan'208";a="848944651"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 17 Aug 2023 10:07:00 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 8772EDE4; Thu, 17 Aug 2023 20:06:59 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thu, 17 Aug 2023 13:13:59 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57E50BF;
+        Thu, 17 Aug 2023 10:13:58 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E93FA63CE6;
+        Thu, 17 Aug 2023 17:13:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 242FBC433C8;
+        Thu, 17 Aug 2023 17:13:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692292437;
+        bh=RXUW5V6p1RTidRORXcrQZ5eIH/N11o40GsglBEZnvbQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cxs1Jbsjy0lTRs0rCLM1YU5vOHkyLFTi5aSRm2RbWwtPNaVXf+1168B82YvaY++LD
+         lXT2lwSOYDJ4aBi+tEgfjcvbNDua5uV0zMgpnGXH9/mAZDJxfaF0RwxcJMjYV1PmBW
+         FoJGT3VvO2oANemIWhzul3w7NzkMj2TSNMe3fjIK806ADHEl4ZZ3AW0kepOtEXuien
+         kyvfIfvGbRl4zowiwHJtl25f1NZf4ZWBmCwwjKZTCgUrux6yxv9Oqu+UPPR1WER9c+
+         fnWXdpWWr5kL29xEVABzUiTX8UzfxDFYSQaUVpcn8EOQ+qXF1YQyVwi+rome0uSj5+
+         jHpY1zqtoAFyQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2FC5F404DF; Thu, 17 Aug 2023 14:13:54 -0300 (-03)
+Date:   Thu, 17 Aug 2023 14:13:54 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [rfc, PATCH v1 1/1] min_heap: Make use of cmp_func_t and swap_func_t types
-Date:   Thu, 17 Aug 2023 20:06:56 +0300
-Message-Id: <20230817170656.731066-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Haixin Yu <yuhaixin.yhx@linux.alibaba.com>,
+        Nick Forrington <nick.forrington@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Sohom Datta <sohomdatta1@gmail.com>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, irogers@google.com,
+        renyu.zj@linux.alibaba.com
+Subject: Re: [PATCH v6 6/6] perf vendor events arm64: Update N2 and V2
+ metrics and events using Arm telemetry repo
+Message-ID: <ZN5VUkswJnwTaWZj@kernel.org>
+References: <20230816114841.1679234-1-james.clark@arm.com>
+ <20230816114841.1679234-7-james.clark@arm.com>
+ <81e404fb-0eae-e4b8-299a-54ac860fd1dd@oracle.com>
+ <43e5d3e9-fe5f-655d-a6d3-44d47081e1a4@arm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <43e5d3e9-fe5f-655d-a6d3-44d47081e1a4@arm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The types.h defines standard types for comparator and swap functions.
-Convert min_heap to use it.
+Em Thu, Aug 17, 2023 at 03:41:11PM +0100, James Clark escreveu:
+> 
+> 
+> On 17/08/2023 12:09, John Garry wrote:
+> > On 16/08/2023 12:47, James Clark wrote:
+> >> Apart from some slight naming and grouping differences, the new metrics
+> >> are functionally the same as the existing ones. Any missing metrics were
+> >> manually appended to the end of the auto generated file.
+> >>
+> >> For the events, the new data includes descriptions that may have product
+> >> specific details and new groupings that will be consistent with other
+> >> products.
+> >>
+> >> After generating the metrics from the telemetry repo [1], the following
+> >> manual steps were performed:
+> >>
+> >>   * Change the topdown expressions to compare on CPUID and use
+> >>     #slots so that the same data can be shared between N2 and V2. Apart
+> >>     from these modifications, the expressions now match more closely with
+> >>     the Arm telemetry data which will hopefully make future updates
+> >>     easier.
+> >>
+> >>   * Append some metrics from the old N2/V2 data that aren't present in
+> >>     the telemetry data. These will possibly be added to the
+> >>     telemetry-solution repo at a later time:
+> >>
+> >>      l3d_cache_mpki, l3d_cache_miss_rate, branch_pki, ipc_rate, spec_ipc,
+> >>      retired_rate, wasted_rate, branch_immed_spec_rate,
+> >>      branch_return_spec_rate, branch_indirect_spec_rate
+> >>
+> >> [1]:https://urldefense.com/v3/__https://gitlab.arm.com/telemetry-solution/telemetry-solution/-/blob/main/data/pmu/cpu/neoverse/neoverse-n2.json__;!!ACWV5N9M2RV99hQ!NW7DYe7T69u8RFn9WLyiCcoHm-8BtlxNK3PRw19udocwlwv0vQpjcSDT5XqGbWzvPQyFrG-eRkuu_VZt7cO8-Q$ 
+> >> Signed-off-by: James Clark<james.clark@arm.com>
+> > 
+> > Reviewed-by: John Garry <john.g.garry@oracle.com>
+> 
+> Thanks for the reviews!
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/min_heap.h | 8 ++++----
- kernel/events/core.c     | 4 ++--
- lib/test_min_heap.c      | 6 +++---
- 3 files changed, 9 insertions(+), 9 deletions(-)
+Thanks everybody, patches merged, reviewed-by tags collected.
 
-diff --git a/include/linux/min_heap.h b/include/linux/min_heap.h
-index 44077837385f..14da37caa235 100644
---- a/include/linux/min_heap.h
-+++ b/include/linux/min_heap.h
-@@ -26,8 +26,8 @@ struct min_heap {
-  */
- struct min_heap_callbacks {
- 	int elem_size;
--	bool (*less)(const void *lhs, const void *rhs);
--	void (*swp)(void *lhs, void *rhs);
-+	cmp_func_t less;
-+	swap_func_t swp;
- };
- 
- /* Sift the element at pos down the heap. */
-@@ -55,7 +55,7 @@ void min_heapify(struct min_heap *heap, int pos,
- 		}
- 		if (smallest == parent)
- 			break;
--		func->swp(smallest, parent);
-+		func->swp(smallest, parent, func->elem_size);
- 		if (smallest == left)
- 			pos = (pos * 2) + 1;
- 		else
-@@ -127,7 +127,7 @@ void min_heap_push(struct min_heap *heap, const void *element,
- 		parent = data + ((pos - 1) / 2) * func->elem_size;
- 		if (func->less(parent, child))
- 			break;
--		func->swp(parent, child);
-+		func->swp(parent, child, func->elem_size);
- 	}
- }
- 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 4c72a41f11af..fa344b916290 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -3639,7 +3639,7 @@ void __perf_event_task_sched_out(struct task_struct *task,
- 	perf_cgroup_switch(next);
- }
- 
--static bool perf_less_group_idx(const void *l, const void *r)
-+static int perf_less_group_idx(const void *l, const void *r)
- {
- 	const struct perf_event *le = *(const struct perf_event **)l;
- 	const struct perf_event *re = *(const struct perf_event **)r;
-@@ -3647,7 +3647,7 @@ static bool perf_less_group_idx(const void *l, const void *r)
- 	return le->group_index < re->group_index;
- }
- 
--static void swap_ptr(void *l, void *r)
-+static void swap_ptr(void *l, void *r, int size)
- {
- 	void **lp = l, **rp = r;
- 
-diff --git a/lib/test_min_heap.c b/lib/test_min_heap.c
-index 7b01b4387cfb..63d0b2f6c060 100644
---- a/lib/test_min_heap.c
-+++ b/lib/test_min_heap.c
-@@ -11,17 +11,17 @@
- #include <linux/printk.h>
- #include <linux/random.h>
- 
--static __init bool less_than(const void *lhs, const void *rhs)
-+static __init int less_than(const void *lhs, const void *rhs)
- {
- 	return *(int *)lhs < *(int *)rhs;
- }
- 
--static __init bool greater_than(const void *lhs, const void *rhs)
-+static __init int greater_than(const void *lhs, const void *rhs)
- {
- 	return *(int *)lhs > *(int *)rhs;
- }
- 
--static __init void swap_ints(void *lhs, void *rhs)
-+static __init void swap_ints(void *lhs, void *rhs, int size)
- {
- 	int temp = *(int *)lhs;
- 
--- 
-2.40.0.1.gaa8946217a0b
-
+- Arnaldo
