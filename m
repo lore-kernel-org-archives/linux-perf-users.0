@@ -2,119 +2,169 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF5FC3DA61
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Aug 2023 17:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08601C3DA62
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Aug 2023 17:20:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239126AbjHQROQ (ORCPT
+        id S1353930AbjHQRTh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Aug 2023 13:14:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60500 "EHLO
+        Thu, 17 Aug 2023 13:19:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353954AbjHQRN7 (ORCPT
+        with ESMTP id S1354018AbjHQRTc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Aug 2023 13:13:59 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57E50BF;
-        Thu, 17 Aug 2023 10:13:58 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E93FA63CE6;
-        Thu, 17 Aug 2023 17:13:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 242FBC433C8;
-        Thu, 17 Aug 2023 17:13:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692292437;
-        bh=RXUW5V6p1RTidRORXcrQZ5eIH/N11o40GsglBEZnvbQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cxs1Jbsjy0lTRs0rCLM1YU5vOHkyLFTi5aSRm2RbWwtPNaVXf+1168B82YvaY++LD
-         lXT2lwSOYDJ4aBi+tEgfjcvbNDua5uV0zMgpnGXH9/mAZDJxfaF0RwxcJMjYV1PmBW
-         FoJGT3VvO2oANemIWhzul3w7NzkMj2TSNMe3fjIK806ADHEl4ZZ3AW0kepOtEXuien
-         kyvfIfvGbRl4zowiwHJtl25f1NZf4ZWBmCwwjKZTCgUrux6yxv9Oqu+UPPR1WER9c+
-         fnWXdpWWr5kL29xEVABzUiTX8UzfxDFYSQaUVpcn8EOQ+qXF1YQyVwi+rome0uSj5+
-         jHpY1zqtoAFyQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2FC5F404DF; Thu, 17 Aug 2023 14:13:54 -0300 (-03)
-Date:   Thu, 17 Aug 2023 14:13:54 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Haixin Yu <yuhaixin.yhx@linux.alibaba.com>,
-        Nick Forrington <nick.forrington@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        Sohom Datta <sohomdatta1@gmail.com>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, irogers@google.com,
-        renyu.zj@linux.alibaba.com
-Subject: Re: [PATCH v6 6/6] perf vendor events arm64: Update N2 and V2
- metrics and events using Arm telemetry repo
-Message-ID: <ZN5VUkswJnwTaWZj@kernel.org>
-References: <20230816114841.1679234-1-james.clark@arm.com>
- <20230816114841.1679234-7-james.clark@arm.com>
- <81e404fb-0eae-e4b8-299a-54ac860fd1dd@oracle.com>
- <43e5d3e9-fe5f-655d-a6d3-44d47081e1a4@arm.com>
+        Thu, 17 Aug 2023 13:19:32 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB57435A5
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Aug 2023 10:19:20 -0700 (PDT)
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37HHF93D021303;
+        Thu, 17 Aug 2023 17:19:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=QLSg2qzUo14cYpfW5mzHaIscZ4KjRhgSBy2FTPq0BbY=;
+ b=p4evnJnizTQGqS7TOnLgRTs4W6tS2Q11cYwKi0qYcCuHaOkKIOYP2rknhsAV/tFeewSb
+ ykge56ljUc3E8B2EBX/dEz/m6tOPMYKoSOIzN+Y4AT8Cic7rI6RpZG4e9/93CDtT0haQ
+ UKBeqDRBn2pY2KUEnXvbF1DJZw/84SA1nrP9OWYLm41YiIMDV3h5VMk8N1hJ9B2W+Vii
+ ZGds6mIO6qgZ23WKqazZi1P0LNnPzldCsGngKu9o7Vvl+gZm+YDts3kTxS+eny2BQgwP
+ 5Y36iYiu0Ib9XO2e22zVjlFDoh2IDUsefof/cmr6vGGKhVOWt6WyVC63rmXmPCM2aVe7 fg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3shqsd83q9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 17 Aug 2023 17:19:05 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37HHHY9u030811;
+        Thu, 17 Aug 2023 17:19:05 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3shqsd83q0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 17 Aug 2023 17:19:05 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37HGFr6A007832;
+        Thu, 17 Aug 2023 17:19:04 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3senwkqpnr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 17 Aug 2023 17:19:04 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37HHJ1NF5833406
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 17 Aug 2023 17:19:01 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 801D420043;
+        Thu, 17 Aug 2023 17:19:01 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1168A20040;
+        Thu, 17 Aug 2023 17:18:59 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.32.94])
+        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Thu, 17 Aug 2023 17:18:58 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+        Disha Goel <disgoel@linux.ibm.com>
+Subject: [PATCH V2 2/2] tools/perf/tests: Fix object code reading to skip address that falls out of text section
+Date:   Thu, 17 Aug 2023 22:48:52 +0530
+Message-Id: <20230817171852.55629-2-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20230817171852.55629-1-atrajeev@linux.vnet.ibm.com>
+References: <20230817171852.55629-1-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <43e5d3e9-fe5f-655d-a6d3-44d47081e1a4@arm.com>
-X-Url:  http://acmel.wordpress.com
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 8HdpamhBB7Z8MPtC2gqZlWJ7BfjJMr-Z
+X-Proofpoint-GUID: TkTIgYBI5toKA9PJHgruvJW3w5AASBFM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-08-17_12,2023-08-17_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=999 malwarescore=0 lowpriorityscore=0 adultscore=0 spamscore=0
+ clxscore=1011 suspectscore=0 mlxscore=0 phishscore=0 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2308170153
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Aug 17, 2023 at 03:41:11PM +0100, James Clark escreveu:
-> 
-> 
-> On 17/08/2023 12:09, John Garry wrote:
-> > On 16/08/2023 12:47, James Clark wrote:
-> >> Apart from some slight naming and grouping differences, the new metrics
-> >> are functionally the same as the existing ones. Any missing metrics were
-> >> manually appended to the end of the auto generated file.
-> >>
-> >> For the events, the new data includes descriptions that may have product
-> >> specific details and new groupings that will be consistent with other
-> >> products.
-> >>
-> >> After generating the metrics from the telemetry repo [1], the following
-> >> manual steps were performed:
-> >>
-> >>   * Change the topdown expressions to compare on CPUID and use
-> >>     #slots so that the same data can be shared between N2 and V2. Apart
-> >>     from these modifications, the expressions now match more closely with
-> >>     the Arm telemetry data which will hopefully make future updates
-> >>     easier.
-> >>
-> >>   * Append some metrics from the old N2/V2 data that aren't present in
-> >>     the telemetry data. These will possibly be added to the
-> >>     telemetry-solution repo at a later time:
-> >>
-> >>      l3d_cache_mpki, l3d_cache_miss_rate, branch_pki, ipc_rate, spec_ipc,
-> >>      retired_rate, wasted_rate, branch_immed_spec_rate,
-> >>      branch_return_spec_rate, branch_indirect_spec_rate
-> >>
-> >> [1]:https://urldefense.com/v3/__https://gitlab.arm.com/telemetry-solution/telemetry-solution/-/blob/main/data/pmu/cpu/neoverse/neoverse-n2.json__;!!ACWV5N9M2RV99hQ!NW7DYe7T69u8RFn9WLyiCcoHm-8BtlxNK3PRw19udocwlwv0vQpjcSDT5XqGbWzvPQyFrG-eRkuu_VZt7cO8-Q$ 
-> >> Signed-off-by: James Clark<james.clark@arm.com>
-> > 
-> > Reviewed-by: John Garry <john.g.garry@oracle.com>
-> 
-> Thanks for the reviews!
+The testcase "Object code reading" fails in somecases
+for "fs_something" sub test as below:
 
-Thanks everybody, patches merged, reviewed-by tags collected.
+    Reading object code for memory address: 0xc008000007f0142c
+    File is: /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
+    On file address is: 0x1114cc
+    Objdump command is: objdump -z -d --start-address=0x11142c --stop-address=0x1114ac /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
+    objdump read too few bytes: 128
+    test child finished with -1
 
-- Arnaldo
+This can alo be reproduced when running perf record with
+workload that exercises fs_something() code. In the test
+setup, this is exercising xfs code since root is xfs.
+
+    # perf record ./a.out
+    # perf report -v |grep "xfs.ko"
+      0.76% a.out /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko  0xc008000007de5efc B [k] xlog_cil_commit
+      0.74% a.out  /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko  0xc008000007d5ae18 B [k] xfs_btree_key_offset
+      0.74% a.out  /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko  0xc008000007e11fd4 B [k] 0x0000000000112074
+
+Here addr "0xc008000007e11fd4" is not resolved. since this is a
+kernel module, its offset is from the DSO. Xfs module is loaded
+at 0xc008000007d00000
+
+   # cat /proc/modules | grep xfs
+    xfs 2228224 3 - Live 0xc008000007d00000
+
+And size is 0x220000. So its loaded between Â 0xc008000007d00000
+and 0xc008000007f20000. From objdump, text section is:
+    text 0010f7bc  0000000000000000 0000000000000000 000000a0 2**4
+
+Hence perf captured ip maps to 0x112074 which is:
+( ip - start of module ) + a0
+
+This offset 0x112074 falls out .text section which is up to 0x10f7bc
+In this case for module, the address 0xc008000007e11fd4 is pointing
+to stub instructions. This address range represents the module stubs
+which is allocated on module load and hence is not part of DSO offset.
+
+To address this issue in "object code reading", skip the sample if
+address falls out of text section and is within the module end.
+Use the "text_end" member of "struct dso" to do this check.
+
+To address this issue in "perf report", exploring an option of
+having stubs range as part of the /proc/kallsyms, so that perf
+report can resolve addresses in stubs range
+
+However this patch uses text_end to skip the stub range for
+Object code reading testcase.
+
+Reported-by: Disha Goel <disgoel@linux.ibm.com>
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+ tools/perf/tests/code-reading.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
+index ed3815163d1b..911f8fa13677 100644
+--- a/tools/perf/tests/code-reading.c
++++ b/tools/perf/tests/code-reading.c
+@@ -269,6 +269,14 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
+ 	if (addr + len > map__end(al.map))
+ 		len = map__end(al.map) - addr;
+ 
++	/* Check if the ip offset falls in stubs sections for kernel modules */
++	if (strstr(dso->long_name, ".ko")) {
++		if ((al.addr < map__end(al.map)) && (al.addr > dso->text_end)) {
++			pr_debug(" - skipping\n");
++			goto out;
++		}
++	}
++
+ 	/* Read the object code using perf */
+ 	ret_len = dso__data_read_offset(dso, maps__machine(thread__maps(thread)),
+ 					al.addr, buf1, len);
+-- 
+2.31.1
+
