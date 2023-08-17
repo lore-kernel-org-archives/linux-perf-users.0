@@ -2,91 +2,98 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112EFC2FC15
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Aug 2023 12:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B326C30630
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Aug 2023 14:52:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241610AbjHQM1O (ORCPT
+        id S1345938AbjHQOvc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Aug 2023 08:27:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54938 "EHLO
+        Thu, 17 Aug 2023 10:51:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350900AbjHQM1L (ORCPT
+        with ESMTP id S1352295AbjHQOvC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Aug 2023 08:27:11 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A251E271B;
-        Thu, 17 Aug 2023 05:27:09 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RRPL83spWztSHK;
-        Thu, 17 Aug 2023 20:23:28 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Thu, 17 Aug 2023 20:27:05 +0800
-Subject: Re: [PATCH v5 3/7] perf record: Move setting dummy tracking before
- record__init_thread_masks()
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     Ian Rogers <irogers@google.com>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <kan.liang@linux.intel.com>, <james.clark@arm.com>,
-        <tmricht@linux.ibm.com>, <ak@linux.intel.com>,
-        <anshuman.khandual@arm.com>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-References: <20230804020741.99806-1-yangjihong1@huawei.com>
- <20230804020741.99806-4-yangjihong1@huawei.com>
- <b8741176-dc9c-1ddb-6bb5-85293f3c61f7@intel.com>
- <CAP-5=fV2u+HwxwuCmz0uSo_dvbFAwwjvK_QvkorB+qbtMnwtZg@mail.gmail.com>
- <29111bbc-61af-4452-bf73-c3b32221989f@huawei.com>
-Message-ID: <753ead6a-3113-5e10-3249-09a33042b8f3@huawei.com>
-Date:   Thu, 17 Aug 2023 20:27:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Thu, 17 Aug 2023 10:51:02 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 667A494;
+        Thu, 17 Aug 2023 07:51:01 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 62C38D75;
+        Thu, 17 Aug 2023 07:42:05 -0700 (PDT)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C0BBA3F6C4;
+        Thu, 17 Aug 2023 07:41:20 -0700 (PDT)
+Message-ID: <43e5d3e9-fe5f-655d-a6d3-44d47081e1a4@arm.com>
+Date:   Thu, 17 Aug 2023 15:41:11 +0100
 MIME-Version: 1.0
-In-Reply-To: <29111bbc-61af-4452-bf73-c3b32221989f@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v6 6/6] perf vendor events arm64: Update N2 and V2 metrics
+ and events using Arm telemetry repo
 Content-Language: en-US
+To:     John Garry <john.g.garry@oracle.com>
+Cc:     Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Haixin Yu <yuhaixin.yhx@linux.alibaba.com>,
+        Nick Forrington <nick.forrington@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Sohom Datta <sohomdatta1@gmail.com>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, irogers@google.com,
+        renyu.zj@linux.alibaba.com, acme@kernel.org
+References: <20230816114841.1679234-1-james.clark@arm.com>
+ <20230816114841.1679234-7-james.clark@arm.com>
+ <81e404fb-0eae-e4b8-299a-54ac860fd1dd@oracle.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <81e404fb-0eae-e4b8-299a-54ac860fd1dd@oracle.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
 
-On 2023/8/15 9:57, Yang Jihong wrote:
-> Hello,
-> 
-> On 2023/8/15 4:29, Ian Rogers wrote:
->> On Thu, Aug 3, 2023 at 11:58 PM Adrian Hunter 
->> <adrian.hunter@intel.com> wrote:
->>>
->>> On 4/08/23 05:07, Yang Jihong wrote:
->>>> When dummy tracking go system wide, the mmap cpu mask is changed.
+
+On 17/08/2023 12:09, John Garry wrote:
+> On 16/08/2023 12:47, James Clark wrote:
+>> Apart from some slight naming and grouping differences, the new metrics
+>> are functionally the same as the existing ones. Any missing metrics were
+>> manually appended to the end of the auto generated file.
 >>
->> As previously commented, can we improve the quality of the function
->> names and commit messages? This sentence is particularly difficult to
->> understand, I don't understand it.
+>> For the events, the new data includes descriptions that may have product
+>> specific details and new groupings that will be consistent with other
+>> products.
+>>
+>> After generating the metrics from the telemetry repo [1], the following
+>> manual steps were performed:
+>>
+>>   * Change the topdown expressions to compare on CPUID and use
+>>     #slots so that the same data can be shared between N2 and V2. Apart
+>>     from these modifications, the expressions now match more closely with
+>>     the Arm telemetry data which will hopefully make future updates
+>>     easier.
+>>
+>>   * Append some metrics from the old N2/V2 data that aren't present in
+>>     the telemetry data. These will possibly be added to the
+>>     telemetry-solution repo at a later time:
+>>
+>>      l3d_cache_mpki, l3d_cache_miss_rate, branch_pki, ipc_rate, spec_ipc,
+>>      retired_rate, wasted_rate, branch_immed_spec_rate,
+>>      branch_return_spec_rate, branch_indirect_spec_rate
+>>
+>> [1]:https://urldefense.com/v3/__https://gitlab.arm.com/telemetry-solution/telemetry-solution/-/blob/main/data/pmu/cpu/neoverse/neoverse-n2.json__;!!ACWV5N9M2RV99hQ!NW7DYe7T69u8RFn9WLyiCcoHm-8BtlxNK3PRw19udocwlwv0vQpjcSDT5XqGbWzvPQyFrG-eRkuu_VZt7cO8-Q$ 
+>> Signed-off-by: James Clark<james.clark@arm.com>
 > 
-> OK. The commit messages will be modified. Please check whether the 
-> following description is clear:
-> 
-> User space tasks can migrate between CPUs, so when tracing selected 
-> CPUs, sideband for all CPUs is needed. In this case set the cpu map of 
-> the evsel to all online CPUs. This may modify the original cpu map of 
-> the evlist.
-> Therefore, need to check whether the preceding scenario exists before 
-> record__init_thread_masks().
-> Dummy tracking has been set in record__open(), move it before 
-> record__init_thread_masks() and add a helper for unified processing.
-> 
-Ian, do you have any questions about the commit message above? If it's 
-okay, I'll send the next version as above.
+> Reviewed-by: John Garry <john.g.garry@oracle.com>
 
-Thanks,
-Yang
+Thanks for the reviews!
