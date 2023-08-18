@@ -2,184 +2,324 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0656AC3DA6C
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Aug 2023 18:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83745C05052
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Aug 2023 03:13:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354478AbjHQSik (ORCPT
+        id S244196AbjHRDNJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Aug 2023 14:38:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42522 "EHLO
+        Thu, 17 Aug 2023 23:13:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354501AbjHQSiM (ORCPT
+        with ESMTP id S1357542AbjHRDNI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Aug 2023 14:38:12 -0400
-Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 624E4D3
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Aug 2023 11:38:11 -0700 (PDT)
-Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-407db3e9669so42721cf.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Aug 2023 11:38:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692297490; x=1692902290;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EBXuyN+ahMK3TbcSAx1pMX5YQur64tRC/lM98OoMLEM=;
-        b=XBZxBeIN0lBI1AMcgB9g7mGtwv891PkzGmYi+9B8s9C6Zm8uIx2PEaQtt9Za5yHEwy
-         fGFi5uPXNJZyBjBTZfJm2xVkE3zE9/+RT1OEROUrhtrsVDTyRaUr1SamR7/hi0ZoI6vT
-         owxi4SufEpgbgvhrgwjFjKX5Dz9Ye4HQFWeXebMmx84wDP0PjqP2+32Y1NcQxWA5KArA
-         OhT87ucoU7QClISylApED1Zf08IGqwhjpryMJR6KEu2zk8A51CDhd7ZKJmHCUGE7QICs
-         lIC6CKJY+kWJTgWurA4ksnCh4XeJWsn7ndoG9qI//SmY/ixkbLotNWEznt6wzi6Lm4OA
-         8HTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692297490; x=1692902290;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EBXuyN+ahMK3TbcSAx1pMX5YQur64tRC/lM98OoMLEM=;
-        b=hjFjQ/+rEuKBwn8/HiDk5hY/Mnrr6eu6AQEYJSem3axdlyLRvB7qSLtFovHfitD/TJ
-         3zft/SaiiHgbcFHGl2NgxTlM/7BxwHtu7eUFjTg5tglgxOgiQWffnpgjJ+OHJFFflODD
-         HVyYC6pvhgsZg0A/v1iaICVEcgSD0f8uCJ5TR7RIdV+2d5BNlkEIxQ+OxcxCpRQksLro
-         VCIRji5JapeWlUupVJaY7i0XChlXIQo3q0+PrMP3sGxUQE7Myh1+NjGBiqpuw5c3V91b
-         sBgTBVhrzxl/4ZR/G5BKXav6ZJ1deRgecobMBcXPd4kDwZ4UnyFZGdzpH8S8gYzkfha7
-         sfMA==
-X-Gm-Message-State: AOJu0YxgTOjJ1Ey0lb2xIQT2oKoaLOvfbM50TeC/g691ey4V/mCKEO/Y
-        Sll2kgEg/ksiXBsa5wkdvuNqfJJQi7KjeDIWulvL/A==
-X-Google-Smtp-Source: AGHT+IEa9b8tTW/2LEF3u0NHHlIEqrr58RmrKo4P/+dgsIVWsAHNyNloURXbZpi87Qv7ldVvmTkPDt3L0xvcsIeWpwA=
-X-Received: by 2002:ac8:5a8b:0:b0:40d:eb06:d3cc with SMTP id
- c11-20020ac85a8b000000b0040deb06d3ccmr30401qtc.7.1692297490348; Thu, 17 Aug
- 2023 11:38:10 -0700 (PDT)
+        Thu, 17 Aug 2023 23:13:08 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 492C530E1;
+        Thu, 17 Aug 2023 20:13:04 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 664EDD75;
+        Thu, 17 Aug 2023 20:13:44 -0700 (PDT)
+Received: from [10.162.40.16] (unknown [10.162.40.16])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 708173F762;
+        Thu, 17 Aug 2023 20:12:59 -0700 (PDT)
+Message-ID: <366bcaff-3c54-0c4d-633f-b6ef37c4e3f4@arm.com>
+Date:   Fri, 18 Aug 2023 08:42:56 +0530
 MIME-Version: 1.0
-References: <20230807045016.23409-1-atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20230807045016.23409-1-atrajeev@linux.vnet.ibm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 17 Aug 2023 11:37:59 -0700
-Message-ID: <CAP-5=fXJNqokOKJmu1n1kXUqaqabQrsXw42FVi-MrZb3Ss5R-A@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Fix parse-events tests to skip parametrized events
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH V13 - RESEND 00/10] arm64/perf: Enable branch stack
+ sampling
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, mark.rutland@arm.com,
+        Mark Brown <broonie@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+References: <20230711082455.215983-1-anshuman.khandual@arm.com>
+ <20230731130538.GA24881@willie-the-truck>
+Content-Language: en-US
+In-Reply-To: <20230731130538.GA24881@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Aug 6, 2023 at 9:50=E2=80=AFPM Athira Rajeev
-<atrajeev@linux.vnet.ibm.com> wrote:
->
-> Testcase "Parsing of all PMU events from sysfs" parse events for
-> all PMUs, and not just cpu. In case of powerpc, the PowerVM
-> environment supports events from hv_24x7 and hv_gpci PMU which
-> is of example format like below:
->
-> - hv_24x7/CPM_ADJUNCT_INST,domain=3D?,core=3D?/
-> - hv_gpci/event,partition_id=3D?/
->
-> The value for "?" needs to be filled in depending on system
-> configuration. It is better to skip these parametrized events
-> in this test as it is done in:
-> 'commit b50d691e50e6 ("perf test: Fix "all PMU test" to skip
-> parametrized events")' which handled a simialr instance with
-> "all PMU test".
+On 7/31/23 18:35, Will Deacon wrote:
+> Hi Anshuman,
 
-I'd say this is different, the "?" is really ugly. On other
-architectures the problem is solved by having >1 PMU, domain and core
-can be meta-data associated with the PMU. If we want to aggregate
-based on domain and core in the perf tool, it will need a different
-way of solving the problem for Power. Skipping the test is just
-pushing this problem down the road.
+Hello Will,
 
-> Fix parse-events test to skip parametrized events since
-> it needs proper setup of the parameters.
->
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
->  tools/perf/tests/parse-events.c | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->
-> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-eve=
-nts.c
-> index b2f82847e4c3..605373c7d005 100644
-> --- a/tools/perf/tests/parse-events.c
-> +++ b/tools/perf/tests/parse-events.c
-> @@ -2504,7 +2504,11 @@ static int test__pmu_events(struct test_suite *tes=
-t __maybe_unused, int subtest
->         while ((pmu =3D perf_pmus__scan(pmu)) !=3D NULL) {
->                 struct stat st;
->                 char path[PATH_MAX];
-> +               char pmu_event[PATH_MAX + 256];
+My apologies for the delayed response on this particular thread.
 
-By definition paths can't be longer than PATH_MAX.
+> 
+> On Tue, Jul 11, 2023 at 01:54:45PM +0530, Anshuman Khandual wrote:
+>> This series enables perf branch stack sampling support on arm64 platform
+>> via a new arch feature called Branch Record Buffer Extension (BRBE). All
+>> relevant register definitions could be accessed here.
+>>
+>> https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
+>>
+>> This series applies on 6.5-rc1.
+>>
+>> Changes in V13:
+> 
+> I had a go at reviewing this series and, aside from the macro issue I've
+> already pointed out, I really struggled with the way that you've put the
+> series together:
+> 
+>   - You incrementally introduce dead code, forcing the reviewer to keep
+>     previous patches in their head awaiting for a caller to come along
+>     later.
 
-> +               char *buf =3D NULL;
-> +               FILE *file;
->                 struct dirent *ent;
-> +               size_t len =3D 0;
->                 DIR *dir;
->                 int err;
->
-> @@ -2528,11 +2532,39 @@ static int test__pmu_events(struct test_suite *te=
-st __maybe_unused, int subtest
->                         struct evlist_test e =3D { .name =3D NULL, };
->                         char name[2 * NAME_MAX + 1 + 12 + 3];
->                         int test_ret;
-> +                       int skip =3D 0;
+Another way of looking at this would be to prepare existing infrastructure
+ready for an upcoming implementation which requires them later. This helps
+avoid doing all the changes together in a single code block/patch, making
+the entire function addition a giant monolith ?
 
-Prefer a boolean. Prefer is_event_parameterized over skip to make
-variable name more intention revealing.
+Don't we allow patch series to build on functions and structures, which are
+dead at the beginning, before enabling the entire function with a new config
+selectable right at the end ? The only difference here is, these are changes
+to various structures without their corresponding utilization some where in
+the patch but the real question here would be - is this way of organizing the
+patch series not allowed as per the kernel coding standards or guidelines ?
 
->
->                         /* Names containing . are special and cannot be u=
-sed directly */
->                         if (strchr(ent->d_name, '.'))
->                                 continue;
->
-> +                       /* exclude parametrized ones (name contains '?') =
-*/
-> +                       snprintf(pmu_event, PATH_MAX + 256, "%s%s", path,=
- ent->d_name);
+Regardless, if you prefer the suggested style for the series, I could switch
+to it.
 
-Use sizeof(pmu_event) rather than "PATH_MAX + 256".
+> 
+>     Example: Patch 4 literally just adds a new struct to the kernel.
 
-Thanks,
-Ian
+Which again follows the same principle as explained above, and Mark had acked
+that patch earlier. I had assumed that validated the principle about prior
+infrastructure building based patch series organization.
 
-> +                       file =3D fopen(pmu_event, "r");
-> +                       if (!file) {
-> +                               pr_debug("can't open pmu event file for '=
-%s'\n", ent->d_name);
-> +                               ret =3D combine_test_results(ret, TEST_FA=
-IL);
-> +                               continue;
-> +                       }
-> +
-> +                       if (getline(&buf, &len, file) < 0) {
-> +                               pr_debug(" pmu event: %s is a null event\=
-n", ent->d_name);
-> +                               ret =3D combine_test_results(ret, TEST_FA=
-IL);
-> +                               continue;
-> +                       }
-> +
-> +                       if (strchr(buf, '?'))
-> +                               skip =3D 1;
-> +
-> +                       free(buf);
-> +                       buf =3D NULL;
-> +                       fclose(file);
-> +
-> +                       if (skip =3D=3D 1) {
-> +                               pr_debug("skipping parametrized PMU event=
-: %s which contains ?\n", pmu_event);
-> +                               continue;
-> +                       }
-> +
->                         snprintf(name, sizeof(name), "%s/event=3D%s/u", p=
-mu->name, ent->d_name);
->
->                         e.name  =3D name;
-> --
-> 2.31.1
->
+> 
+>   - You change arch/arm/, where this driver shouldn't even be _compiled_
+>     despite adding CONFIG_ARM64_BRBE.
+
+These stubs are necessary to protect PMU drivers built on arm32 which share
+basic branch record processing abstraction at ARMV8 PMU level. It compiles
+successfully both on arm32 and arm64 platforms with these changes. Subject
+line for this patch clearly mentions that as well.
+
+arm64/perf: Add branch stack support in ARMV8 PMU
+
+This is adding abstraction for branch stack support, not the implementation.
+This actual implementation will come in the driver and gets enabled via the
+new config CONFIG_ARM64_BRBE.
+
+> 
+>     Example: Patch 5 adds some BRBE stubs to
+>              arch/arm/include/asm/arm_pmuv3.h
+
+Those are not BRBE stubs. Instead those are branch records processing stubs
+which is a higher abstraction layer at ARMV8 PMU level, before getting down
+into arm64 specific branch records implementation via FEAT_BRBE enabled in
+a subsequent driver patch.
+
+armv8_pmu driver is shared for arm32 and arm64. The patch is adding generic
+branch record stubs for both architectures, ensuring the armv8_pmu continues
+to be built successfully, and finally adds the arm64 implementation with
+FEAT_BRBE in the following patches.
+
+> 
+>   - You undo/rework code that was introduced earlier in the series
+> 
+>     Example: armv8pmu_branch_read() is introduced as a useless stub in
+>              patch 5, rewritten in patch 6 and then rewritten again in
+> 	     patch 10. Why should I waste time reviewing three versions
+> 	     of this function?
+
+[PATCH 5/10] adds callback for the branch records processing abstraction at
+ARMV8 PMU level, without an implementation any where. The ARMV8 PMUV3 based
+arm64 real implementation gets added later on via the BRBE driver, enabled
+with new CONFIG_ARM64_BRBE.
+
+armv8pmu_branch_read() is present at all these places.
+
+1. arch/arm/include/asm/arm_pmuv3.h:	Stub to protect the arm32 build
+2. arch/arm64/include/asm/perf_event.h:	Default stub without CONFIG_ARM64_BRBE
+3. arch/arm64/include/asm/perf_event.h:	Declaration with CONFIG_ARM64_BRBE
+4. drivers/perf/arm_brbe.c:		Definition with CONFIG_ARM64_BRBE
+5. drivers/perf/arm_pmuv3.c:		Actual call site during PMU IRQ
+
+armv8pmu_branch_read()
+
+- Gets added in [PATCH 5] as branch records stub without an implementation
+- Gets defined in [PATCH 6] in the BRBE driver (via CONFIG_ARM64_BRBE)
+- Gets re-defined in [PATCH 10] where the new stitching gets implemented
+
+Patch 6 added basic BRBE functionality. But patch 10 adds the necessary logic
+to stitch cached records to provide the maximum records possible without loss
+of continuity. I kept it separate to keep the complexity away. But I understand
+we could fold it in to single patch 6.
+
+> 
+>   - You make unrelated cosmetic changes to the existing code inside
+>     patches adding new features.
+> 
+>     Example: Patch 5 randomly removes some comments from the existing
+>              code.
+
+Mark had suggested to drop those comments earlier. I could still collect these
+unrelated comments removal, on a pre-requisite patch, if that is better. Just
+thought them to be too minor changes for a patch in itself.
+
+https://lore.kernel.org/all/Y8AZXQJUO6h5mlgq@FVFF77S0Q05N/
+
+Update: I have posted this cosmetic change as a separate patch which has been
+picked up for next merge window.
+
+https://lore.kernel.org/all/20230802090853.1190391-1-anshuman.khandual@arm.com/
+
+> 
+>   - The commit messages are, at best, useless and err more on the side
+>     of nonsensical.
+> 
+>     Example: Look at patch 3:
+> 
+>     | This updates 'struct arm_pmu' for branch stack sampling support being added
+>     | later. This adds an element 'reg_trbidr' to capture BRBE attribute details.
+>     | These updates here will help in tracking any branch stack sampling support.
+>     |
+>     | This also enables perf branch stack sampling event on all 'struct arm pmu',
+>     | supporting the feature but after removing the current gate that blocks such
+>     | events unconditionally in armpmu_event_init(). Instead a quick probe can be
+>     | initiated via arm_pmu->has_branch_stack to ascertain the support.
+> 
+>     If I remove everything that isn't just describing the code, I'm left with:
+> 
+>     - 'reg_trbidr' captures BRBE attribute details
+>     - These updates here will help in tracking any branch stack sampling support.
+>     - perf branch stack sampling event is now enabled when it is supported
+>     - Probing is quick
+
+I understand your concern here but this series has done many roundabouts, during
+the course of its development including multiple rewrites for the same function.
+Current 'reg_trbidr' construct was just added during V12. These high churns kept
+on adding new problems each time. I will try, and update the commit message here
+as suggested.
+
+> 
+>     But crucial information is missing:
+> 
+>     * What is BRBE?
+>     * What is a BRBE attribute?
+
+Just wondering - should this be part of cover-letter or in patch commit message ?
+
+>     * How are the details of an attribute captured?
+>     * How do these "updates" (which ones?) help in tracking branch stack sampling?
+>     * What is being tracked and why?
+>     * How quick is the probing and why do we care?
+>     * What is the perf branch stack sampling event and what does it mean
+>       to enable it? Does it offer something useful to the user?
+>     * Why do we want any of this?
+
+I will certainly be more careful in keeping these questions in mind while rewriting
+the commit messages.
+
+> 
+> (these examples are not intended to be an exhaustive list of things that
+> need fixing)
+
+There has been a very small set of folks reviewing and testing the series, hence
+the assumption that every one knows about the context was slowly slipping into
+the commit messages as well. But I will keep this in mind while re-writing the
+commit messages next time around.
+
+>> Overall, this makes the code needlessly difficult to review. However, I
+> don't reckon it's too much effort on your side to fix the things above.
+
+Sure, will get on fixing these things as suggested.
+
+> You've been doing this for long enough (on the author and reviewer side)
+> that I hope you see what I'm getting at. If not, try reviewing your own
+> patches right before you hit 'git send-email'; I pretty much always find
+> a problem with my own code that way.
+
+Thanks, I will try and incorporate your valuable suggestions going forward.
+
+> 
+> So, please, can you post a v14 which:
+> 
+>   1. Fixes the broken register access macros>
+
+Already fixed.
+
+> >   2. Adds some meaningful tests at the end of the series
+
+We already have some branch stack sampling tests for perf subsystem.
+
+tools/perf/tests/shell/test_brstack.sh
+
+James Clark is also trying to get some BRBE specific tests added there.
+
+https://gitlab.arm.com/linux-arm/linux-jc/-/commit/3a7ddce70c2daadb63fcc511de0a89055ca48b32
+
+Are you looking for some thing more ? Any particular suggestions ?
+
+>   3. Squashes the new driver code (i.e. at least everything in
+>      arm_brbe.c and possibly just everything under drivers/perf/) down
+>      into a single patch
+
+Please find the code change stats in drivers/perf/ directory for your reference.
+
+ drivers/perf/arm_brbe.c             | 716 ++++++++++++++++++++++++++++
+ drivers/perf/arm_brbe.h             | 270 +++++++++++
+ drivers/perf/arm_pmu.c              |  12 +-
+ drivers/perf/arm_pmuv3.c            | 110 ++++-
+
+Squashing drivers/perf/arm_brbe.c and drivers/perf/arm_brbe.h will blur these
+functions and fold them back into the base driver addition itself.
+
+- Base BRBE implementation enabling perf branch stack sampling support
+- sched_task() saving off older branch records when task schedules out
+- PMU IRQ branch records management accommodating saved older branch records
+
+But sure, if that is something preferred, will try and fold them down into a
+single patch. But will keep the higher level abstraction for branch records
+processing at ARV8 PMU level (shared between arm32 and arm64) in a separate
+patch before the BRBE based implementation.
+
+>   4. Does any _necessary_ cleanup or refactoring at the start of the
+>      series, leaving out cosmetic stuff for now
+
+Sure, will send out a clean up patch dropping those comments first.
+
+Update: Already sent that patch
+
+https://lore.kernel.org/all/20230802090853.1190391-1-anshuman.khandual@arm.com/
+
+>   5. Rewrites the commit messages following the guidelines in
+>      submitting-patches.rst. You don't need to talk about specific C
+>      expressions; we have the code for that already and if it's doing
+>      something subtle then you can add a comment.
+
+Sure, will try and improve the commit message as suggested.
+
+>   6. Resolves the open CYCLES_COUNT issue from Yang and Suzuki
+
+Already fixed.
+
+In order to summerize the patch series re-organization again, V14 will contain
+the patches in order.
+
+1.  drivers: perf: arm_pmu: Add new sched_task() callback
+2.  arm64/perf: Add BRBE registers and fields
+3.  arm64/perf: Add branch stack support in struct arm_pmu
+4.  arm64/perf: Add branch stack support in struct pmu_hw_events
+5.  arm64/perf: Add branch stack support in ARMV8 PMU
+6.  arm64/perf: Enable branch stack events via FEAT_BRBE
+ 
+I am just wondering if both PATCH 3 and PATCH 4 should be folded into PATCH 5
+which adds the perf branch stack sampling abstraction at ARMV8 PMU level.
+
+- Anshuman
