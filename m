@@ -2,120 +2,99 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C993EE4996
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Aug 2023 01:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A06EE4993
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Aug 2023 07:11:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232471AbjHUBaq (ORCPT
+        id S233576AbjHUHLl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 20 Aug 2023 21:30:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40538 "EHLO
+        Mon, 21 Aug 2023 03:11:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232433AbjHUBai (ORCPT
+        with ESMTP id S230118AbjHUHLk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 20 Aug 2023 21:30:38 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6F4CAF;
-        Sun, 20 Aug 2023 18:30:32 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RTZZd1t1yztS6p;
-        Mon, 21 Aug 2023 09:26:49 +0800 (CST)
-Received: from localhost.localdomain (10.67.174.95) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Mon, 21 Aug 2023 09:30:30 +0800
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-        <james.clark@arm.com>, <tmricht@linux.ibm.com>,
-        <ak@linux.intel.com>, <anshuman.khandual@arm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-CC:     <yangjihong1@huawei.com>
-Subject: [PATCH v6 6/7] perf test: Add test case for record sideband events
-Date:   Mon, 21 Aug 2023 01:27:33 +0000
-Message-ID: <20230821012734.18241-7-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.30.GIT
-In-Reply-To: <20230821012734.18241-1-yangjihong1@huawei.com>
-References: <20230821012734.18241-1-yangjihong1@huawei.com>
+        Mon, 21 Aug 2023 03:11:40 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10D2BAC
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Aug 2023 00:10:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1692601853;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7U5bfl+8GkQX2Ru+1ERv9dMSPVsL01uB88Kl7XRSQnE=;
+        b=U711aD/ZpG/mH3vriXVATmj62kXd59uI6af3T0QbsljVVA6vxIlqAdR2iOyvsv20McSUTv
+        ZXZqY2nE+oL5S0wcZ8bAI3u9Bp4KbSxwhBeR5xnrKf2SKwsjXvWdrgRze7a+eEeojQ7DLb
+        KB+lI5uE98KFQe3pG9A6dghGCbnabVs=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-534-qnr2m92vPaGjBEUA5hzi1w-1; Mon, 21 Aug 2023 03:10:50 -0400
+X-MC-Unique: qnr2m92vPaGjBEUA5hzi1w-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-3fe661c0323so19977215e9.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Aug 2023 00:10:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692601849; x=1693206649;
+        h=content-transfer-encoding:in-reply-to:organization:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7U5bfl+8GkQX2Ru+1ERv9dMSPVsL01uB88Kl7XRSQnE=;
+        b=TmEYPqgd0795rupyTlLAJDN8lAguMiC/mQewaXG68PhIdSuq7U0H6YYgpjAnb7b4Fp
+         sM2n29HTcj2EAk4BfFVh2ZVDxVY0FHk3hD3xXeMW6biP7PWWebRdKAqQewoYDhrIjFS7
+         hpBiC+iIdrJvcYr4z5W47MDZMmS6djlkCQPb0GkXIQZN4rpHMP7Gu2jyWuEPwl2VyxN/
+         VyqFPrD8WjpWh9ivUmvpvDe3s83vcBK1+u6GoQHalbZ/LEoInFtYqwZZ7H6+h1v2qfKG
+         tW0Lo/NfhG89fvI2We6469BiGJqA0u5auLzYygeV3ncktcg+fFp1BZkxCL7WIIK5JkSZ
+         +EfA==
+X-Gm-Message-State: AOJu0YzAmanCcZIkXUa+5VCWnClUDlPoq8LMhNTZIFuvi4s+68ZeuBQz
+        G0GDz58CVCaCHATnr4MYA7BW6Ukk/N6zg+/kaQyOhPUJ4e1K6OQrD/Y/M5ENPCNOfPzvsQ2ZVtM
+        Y2Ay9Oi5TqFaieeEnL2ITIxbbmqjZtQ==
+X-Received: by 2002:a05:600c:2117:b0:3fa:8c68:4aba with SMTP id u23-20020a05600c211700b003fa8c684abamr4085876wml.25.1692601849232;
+        Mon, 21 Aug 2023 00:10:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH7uYYKxazl0gdDW5+jbhdr1DMO67F+xV44FYK5z06H//ahedGsx1xXBk2h+YLibTlrepAj3A==
+X-Received: by 2002:a05:600c:2117:b0:3fa:8c68:4aba with SMTP id u23-20020a05600c211700b003fa8c684abamr4085861wml.25.1692601848880;
+        Mon, 21 Aug 2023 00:10:48 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c715:5e00:f3e5:9995:b58b:3782? (p200300cbc7155e00f3e59995b58b3782.dip0.t-ipconnect.de. [2003:cb:c715:5e00:f3e5:9995:b58b:3782])
+        by smtp.gmail.com with ESMTPSA id l22-20020a7bc456000000b003fe1afb99a9sm11649923wmi.11.2023.08.21.00.10.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Aug 2023 00:10:48 -0700 (PDT)
+Message-ID: <064da477-2348-9f55-b5c4-bdda60ee0fe3@redhat.com>
+Date:   Mon, 21 Aug 2023 09:10:47 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.95]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] mm: Add vmalloc_user_node()
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Uladzislau Rezki <urezki@gmail.com>
+Cc:     linux-mm@kvack.org, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230820194031.1395870-1-willy@infradead.org>
+Content-Language: en-US
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+In-Reply-To: <20230820194031.1395870-1-willy@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add a new test case to record sideband events for all CPUs when tracing
-selected CPUs
+On 20.08.23 21:40, Matthew Wilcox (Oracle) wrote:
+> Allow memory to be allocated on a specified node.  Use it in the
+> perf ring-buffer code.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+> I was looking at the perf ringbuffer code for other reasons, and I noticed
+> that everything else gets allocated on the specified node ... except
+> there's no way to do this for vmalloc.  I assume it'd be helpful here too.
 
-Test result:
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-  # ./perf test list 2>&1 | grep 'perf record sideband tests'
-   95: perf record sideband tests
-  # ./perf test 95
-   95: perf record sideband tests                                      : Ok
-
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-Tested-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/tests/shell/record_sideband.sh | 44 +++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100755 tools/perf/tests/shell/record_sideband.sh
-
-diff --git a/tools/perf/tests/shell/record_sideband.sh b/tools/perf/tests/shell/record_sideband.sh
-new file mode 100755
-index 000000000000..2ecf00011cb1
---- /dev/null
-+++ b/tools/perf/tests/shell/record_sideband.sh
-@@ -0,0 +1,44 @@
-+#!/bin/sh
-+# perf record sideband tests
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+err=0
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+
-+can_cpu_wide()
-+{
-+    if ! perf record -o ${perfdata} -BN --no-bpf-event -C $1 true 2>&1 >/dev/null
-+    then
-+        echo "record sideband test [Skipped cannot record cpu$1]"
-+        err=2
-+    fi
-+
-+    rm -f ${perfdata}
-+    return $err
-+}
-+
-+test_system_wide_tracking()
-+{
-+    # Need CPU 0 and CPU 1
-+    can_cpu_wide 0 || return 0
-+    can_cpu_wide 1 || return 0
-+
-+    # Record on CPU 0 a task running on CPU 1
-+    perf record -BN --no-bpf-event -o ${perfdata} -C 0 -- taskset --cpu-list 1 true
-+
-+    # Should get MMAP events from CPU 1
-+    mmap_cnt=`perf script -i ${perfdata} --show-mmap-events -C 1 2>/dev/null | grep MMAP | wc -l`
-+
-+    rm -f ${perfdata}
-+
-+    if [ ${mmap_cnt} -gt 0 ] ; then
-+        return 0
-+    fi
-+
-+    echo "Failed to record MMAP events on CPU 1 when tracing CPU 0"
-+    return 1
-+}
-+
-+test_system_wide_tracking
 -- 
-2.30.GIT
+Cheers,
+
+David / dhildenb
 
