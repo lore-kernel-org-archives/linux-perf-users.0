@@ -2,123 +2,90 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A134EE49AB
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Aug 2023 13:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F615EE49AE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Aug 2023 20:20:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229912AbjHUNy4 (ORCPT
+        id S230427AbjHUUU2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Aug 2023 09:54:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44218 "EHLO
+        Mon, 21 Aug 2023 16:20:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231940AbjHUNy4 (ORCPT
+        with ESMTP id S230426AbjHUUU1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Aug 2023 09:54:56 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBE3EE6;
-        Mon, 21 Aug 2023 06:54:54 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7886B63827;
-        Mon, 21 Aug 2023 13:54:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9894FC433CB;
-        Mon, 21 Aug 2023 13:54:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692626093;
-        bh=JzwwWYWCYGdvrkAehVkAsqLFKvXhhaUaRSamrxLX/ps=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=svKLOfyrj4t2AoMvq2t39D+KtWXk+Eob7vhxs4NsyPvSKHDj2uhoOUUjTOOa05sI/
-         DNxxbvdb3zL59215dkOnJ3tPoqzk0T/Imb3F6TNrRnT0IppEiey6dEUswqC8ej7JXx
-         BoZCcka/5BSqpC1Kb/hc8fxPthyc+OB1+LZpZOaMfbabFul0VIxV7eFx5/pwaDm0HD
-         SOThVDmIP9TeoINg1Y2AHMfp9zLMH0Z3eFoM22THmXY9dRBgJ2eIiYiqSLmTJQvCpm
-         HeiLMitXg+2Hd0EqqZUaJ9AKS5X6DdqIZq/+bvyYYQPavrD/AiUObKzWDuAC+fb/Hn
-         +ynPy3Np2ieGw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0AA9740722; Mon, 21 Aug 2023 10:54:51 -0300 (-03)
-Date:   Mon, 21 Aug 2023 10:54:50 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Kaige Ye <ye@kaige.org>, peterz@infradead.org, mingo@redhat.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf stat-display: Check if snprintf()'s fmt argument
- is NULL
-Message-ID: <ZONsqpxUYAJWjxM1@kernel.org>
-References: <01CA7674B690CA24+20230804020907.144562-2-ye@kaige.org>
- <CAP-5=fWxxaL7xqTFmButfVUEBCXB9PQOVovooMq+Z7NqP=10HA@mail.gmail.com>
+        Mon, 21 Aug 2023 16:20:27 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5D52101
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Aug 2023 13:20:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=ZjTkkOXXXSSKh7AkJZazpX1s5qsUP26GHpbaGZUnTo8=; b=RhSHMGYjzeabO+TPC6Vk0fsGAP
+        ESwQD+kA9n05mFH4V7x5E1E/PK7+hX6AVEwb0xfW5mvuGVGJgTKBnfxSxTrNj9bcH6p//Sh8Ak0uq
+        rPvFNvCQYo+40HrjKlG+G2jBE3tczpJuiIIO9bhjugOITLwOZalFgpX/o5/DZfdiMbMgRwny1WOEN
+        TVHwPs+hl9Ud0NYAy6FhPagROuHL0gCeWZ/nij+EVwy9Nu6WS1aGddneN0uBfZEpYcAEwIxdTi+Sc
+        3SSVYmvOzhYL04ZJaaKKd5yd719t3TJ4WW2WFT7uVRi/f6Ycmzg3N8KIwx/VWQCKMFfHizqP5zsRC
+        kUFKWb8A==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qYBNr-00CD6y-Av; Mon, 21 Aug 2023 20:20:19 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     linux-mm@kvack.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-perf-users@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, urezki@gmail.com,
+        hch@infradead.org, lstoakes@gmail.com
+Subject: [RFC PATCH 3/4] perf: Use vmalloc_to_folio()
+Date:   Mon, 21 Aug 2023 21:20:15 +0100
+Message-Id: <20230821202016.2910321-4-willy@infradead.org>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20230821202016.2910321-1-willy@infradead.org>
+References: <20230821202016.2910321-1-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWxxaL7xqTFmButfVUEBCXB9PQOVovooMq+Z7NqP=10HA@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Aug 14, 2023 at 01:24:06PM -0700, Ian Rogers escreveu:
-> On Thu, Aug 3, 2023 at 7:10 PM Kaige Ye <ye@kaige.org> wrote:
-> >
-> > It is undefined behavior to pass NULL as snprintf()'s fmt argument.
-> > Here is an example to trigger the problem:
-> >
-> >   $ perf stat --metric-only -x, -e instructions -- sleep 1
-> >   insn per cycle,
-> >   Segmentation fault (core dumped)
-> >
-> > With this patch:
-> >
-> >   $ perf stat --metric-only -x, -e instructions -- sleep 1
-> >   insn per cycle,
-> >   ,
-> >
-> > Signed-off-by: Kaige Ye <ye@kaige.org>
-> 
-> Thanks Kaige!
-> 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+Eliminate a use of page->mapping by using vmalloc_to_folio() instead.
 
-Thanks, applied.
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+---
+ include/linux/mm.h          | 5 +++++
+ kernel/events/ring_buffer.c | 4 ++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-- Arnaldo
-
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 840bae5f23b6..7d84a2843193 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -1134,6 +1134,11 @@ int region_intersects(resource_size_t offset, size_t size, unsigned long flags,
+ struct page *vmalloc_to_page(const void *addr);
+ unsigned long vmalloc_to_pfn(const void *addr);
  
-> > ---
-> > V1 -> V2: Addressed Ian's comments (Ian Rogers)
-> > ---
-> >  tools/perf/util/stat-display.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> > index 7329b3340..031888545 100644
-> > --- a/tools/perf/util/stat-display.c
-> > +++ b/tools/perf/util/stat-display.c
-> > @@ -578,7 +578,7 @@ static void print_metric_only_csv(struct perf_stat_config *config __maybe_unused
-> >         if (!valid_only_metric(unit))
-> >                 return;
-> >         unit = fixunit(tbuf, os->evsel, unit);
-> > -       snprintf(buf, sizeof buf, fmt, val);
-> > +       snprintf(buf, sizeof(buf), fmt ?: "", val);
-> >         ends = vals = skip_spaces(buf);
-> >         while (isdigit(*ends) || *ends == '.')
-> >                 ends++;
-> > @@ -600,7 +600,7 @@ static void print_metric_only_json(struct perf_stat_config *config __maybe_unuse
-> >         if (!valid_only_metric(unit))
-> >                 return;
-> >         unit = fixunit(tbuf, os->evsel, unit);
-> > -       snprintf(buf, sizeof(buf), fmt, val);
-> > +       snprintf(buf, sizeof(buf), fmt ?: "", val);
-> >         ends = vals = skip_spaces(buf);
-> >         while (isdigit(*ends) || *ends == '.')
-> >                 ends++;
-> >
-> > base-commit: f6b8436bede3e80226e8b2100279c4450c73806a
-> > --
-> > 2.41.0
-> >
-
++static inline struct folio *vmalloc_to_folio(const void *addr)
++{
++	return page_folio(vmalloc_to_page(addr));
++}
++
+ /*
+  * Determine if an address is within the vmalloc range
+  *
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index c73add132618..56939dc3bf33 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -873,9 +873,9 @@ __perf_mmap_to_page(struct perf_buffer *rb, unsigned long pgoff)
+ 
+ static void perf_mmap_unmark_page(void *addr)
+ {
+-	struct page *page = vmalloc_to_page(addr);
++	struct folio *folio = vmalloc_to_folio(addr);
+ 
+-	page->mapping = NULL;
++	folio->mapping = NULL;
+ }
+ 
+ static void rb_free_work(struct work_struct *work)
 -- 
+2.40.1
 
-- Arnaldo
