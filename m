@@ -2,120 +2,83 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B65C6EE4996
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Aug 2023 08:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5EEEE4993
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Aug 2023 09:01:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234193AbjHUIx6 (ORCPT
+        id S232785AbjHUJBf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Aug 2023 04:53:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48946 "EHLO
+        Mon, 21 Aug 2023 05:01:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230403AbjHUIx6 (ORCPT
+        with ESMTP id S232615AbjHUJBf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Aug 2023 04:53:58 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2159ABB;
-        Mon, 21 Aug 2023 01:53:55 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F0792F4;
-        Mon, 21 Aug 2023 01:54:36 -0700 (PDT)
-Received: from [10.162.42.6] (unknown [10.162.42.6])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B8D093F762;
-        Mon, 21 Aug 2023 01:53:50 -0700 (PDT)
-Message-ID: <3cfaa5ae-924c-19ff-acb6-809e3f27c0fe@arm.com>
-Date:   Mon, 21 Aug 2023 14:23:47 +0530
+        Mon, 21 Aug 2023 05:01:35 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5C81C4
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Aug 2023 02:00:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1692608457;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=x9CTxUC7/S4QALZTobYyZuHG+uh5iHA2aPDORTC57Fk=;
+        b=eGd/rv0V5NgoSyWoPJHwtSWw3omWliTACZLljxgQ58s8SMt9pa3PHUR4pFmmi7y12K7W/G
+        PPeSBjYs4O8AABm9jPz7v7CksueHfP01ImVvr409mqqeDRbpkB4rZ2ukNRrZvmv3X8gX4B
+        pimfI8SmQe9Zoa4Ar+T2NCTLhmxAgH4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-621-sv35uJdfPKC1MqEQE9scSg-1; Mon, 21 Aug 2023 05:00:55 -0400
+X-MC-Unique: sv35uJdfPKC1MqEQE9scSg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4E1A0801FA0;
+        Mon, 21 Aug 2023 09:00:55 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.45.226.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8D4B32026D76;
+        Mon, 21 Aug 2023 09:00:54 +0000 (UTC)
+From:   vmolnaro@redhat.com
+To:     linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com
+Cc:     mpetlan@redhat.com
+Subject: [PATCH 1/2] perf test lock_contention.sh: Skip test if the number of CPUs is low
+Date:   Mon, 21 Aug 2023 11:00:52 +0200
+Message-ID: <20230821090053.8807-1-vmolnaro@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH V13 - RESEND 00/10] arm64/perf: Enable branch stack
- sampling
-Content-Language: en-US
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, mark.rutland@arm.com,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <20230711082455.215983-1-anshuman.khandual@arm.com>
- <20230731130538.GA24881@willie-the-truck>
- <366bcaff-3c54-0c4d-633f-b6ef37c4e3f4@arm.com>
- <20230818175623.GA16509@willie-the-truck>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20230818175623.GA16509@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello Will,
+From: notValord <v.m.veverka@gmail.com>
 
-Separated this part out just to understand it better.
+Machines with less then 4 CPUs weren't consistently triggering lock
+events required for the test.
 
-On 8/18/23 23:26, Will Deacon wrote:
->> These stubs are necessary to protect PMU drivers built on arm32 which share
->> basic branch record processing abstraction at ARMV8 PMU level. It compiles
->> successfully both on arm32 and arm64 platforms with these changes. Subject
->> line for this patch clearly mentions that as well.
+Skip the test on those machines. The limit of 4 CPUs is set as it
+generates around 100 lock events for a test.
+---
+ tools/perf/tests/shell/lock_contention.sh | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> But they shouldn't be needed. When CONFIG_ARM64_BRBE is not selected, no
-> branch record processing functions should be needed, empty or otherwise.
+diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
+index f2cc187b618..1d3598ff6a0 100755
+--- a/tools/perf/tests/shell/lock_contention.sh
++++ b/tools/perf/tests/shell/lock_contention.sh
+@@ -31,6 +31,12 @@ check() {
+ 		echo "[Skip] No lock contention tracepoints"
+ 		err=2
+ 		exit
++	fi 
++
++	if [ `nproc` -lt 4 ]; then
++		echo "[Skip] Low number of CPUs (`nproc`), lock event cannot be triggered certainly"
++		err=2
++		exit
+ 	fi
+ }
+ 
+-- 
+2.41.0
 
-But that is not how the code is organized currently. CONFIG_ARM64_BRBE enables
-the driver to bring in BRBE HW specific branch stack callback implementation
-details. But these callbacks are always present at ARMV8 PMU level even without
-BRBE implementation as well. Hence these call sites are present, regardless of
-CONFIG_ARM64_BRBE.
-
-> The callers should not exist in the first place (i.e. the empty definitions
-
-But how to achieve that ? Branch stack needs to be driven along side normal PMU
-events, which in turn get driven from 'struct arm_pmu' callbacks. Hence branch
-stack callbacks too needs to be at ARMV8 PMU level, and closely tied to normal
-PMU event handling callbacks. Let's examine from where all these new callbacks
-are called from.
-
-* armv8pmu_disable_event()	---> armv8pmu_branch_disable()
-* armv8pmu_handle_irq()		---> armv8pmu_branch_read()
-* armv8pmu_sched_task()		---> armv8pmu_branch_save()
-* armv8pmu_sched_task()		---> armv8pmu_branch_reset()
-* armv8pmu_reset()		---> armv8pmu_branch_reset()
-* __armv8_pmuv3_map_event()	---> armv8pmu_branch_attr_valid()
-* __armv8pmu_probe_pmu()	---> armv8pmu_branch_probe()
-* armv8pmu_probe_pmu()		---> armv8pmu_task_ctx_cache_alloc()
-* armv8pmu_probe_pmu()		---> branch_records_alloc()
-
-Please note that, branch_records_alloc() being deferred allocation is only one
-that is platform agnostic.
-
-I did not intend to make any of the BRBE details visible at ARMV8 PMU level i.e
-right inside armv8pmu_XXXX() definitions, as ARMV8 PMU is shared between arm32
-and arm64 platforms.
-
-Hence these new branch stack callbacks are added along with required fallback
-stubs for build protection, so that the HW implementations can be hidden inside
-a new driver wrapped in CONFIG_ARM64_BRBE. Please note that these new branch
-stack functions are not 'struct arm_pmu' callbacks but instead normal helpers.
-
-> should live in the core driver code, not in the arch header, or the calling
-
-Driver code is compiled with CONFIG_ARM64_BRBE, hence the real definitions are
-there. Instead default stubs are required only when armv8pmu_branch_XXX() call
-backs are not defined. But are you suggesting that these stubs be moved inside
-drivers/perf/arm_pmuv3.c (where all call sites reside), so that there will be
-just one stub copy both for arm32 and arm64 platforms removing their duplicate
-definitions from arch headers i.e arch/arm64/include/asm/perf_event.h and
-arch/arm/include/asm/arm_pmuv3.h ?
-
-> code should not be compiled at all).
-
-Branch stack sampling is always enabled from core perf perspective without any
-config option to wrap around, hence calling code cannot be selectively enabled
-or disabled.
-
-- Anshuman
