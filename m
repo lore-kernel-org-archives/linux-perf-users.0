@@ -2,149 +2,149 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8265DEE4993
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Aug 2023 08:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE9BEE4996
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Aug 2023 08:36:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232992AbjHUIFo (ORCPT
+        id S234024AbjHUIgc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Aug 2023 04:05:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41948 "EHLO
+        Mon, 21 Aug 2023 04:36:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232820AbjHUIFo (ORCPT
+        with ESMTP id S229516AbjHUIgb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Aug 2023 04:05:44 -0400
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC0CAB5;
-        Mon, 21 Aug 2023 01:05:42 -0700 (PDT)
-Received: by mail-pg1-x52a.google.com with SMTP id 41be03b00d2f7-56963f2e48eso644558a12.1;
-        Mon, 21 Aug 2023 01:05:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692605142; x=1693209942;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=R8+twpAdIifafYak1GhoiEe0j1R1LSeO5MSc+/qvLN8=;
-        b=Ka8DRSvECpCdFUeZk0vxW8VciogcM/xYwqyXaQ2oK8MVmI2TeOfMbr+87kZz8OGZQC
-         n9K1/Zq746TVTx2NDvvR+9fHRuHjydnQA5MYNGhImGgrLNFBVSnvAUIrN2bQaZ/tjBWx
-         G+eXxQmhp5Ai7P0xeiSHxYYp3mBgT86LbZFXzx29gSW6JX4s6IvzLLwE4rLP+tZRsXag
-         jH5VXhjpDhNNnTH6lRFWcE2jWGQHKyPDy7s0uyZkUhgoFiBCyofaSgocjvr4dv2E2DyD
-         cTQnsBjb0EzV34gN6X1mKY8j71kFleSL0DggS3zwIOwmZZpOYz4AhfpD3OqPDN1qyyLW
-         mwmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692605142; x=1693209942;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=R8+twpAdIifafYak1GhoiEe0j1R1LSeO5MSc+/qvLN8=;
-        b=KZ6AXD2KYYoCvsFbmx1pjjDp/qQoHEMqe5wicPWVYO3+h32io2RWcxIf+0D/B2AaLH
-         K+DEVUldBAQ/K/vLM/dfMglW20L1YnIqm0pvNmCv7NlCYNLjlxVk7xVZ04r9sAn8Ikyc
-         ejpH/l7eVnCCHJnik/O+tYBjCDfu4YA5O3qvkJCrXuap6m2P0Rq3Lk0i+06MJkuLFbFl
-         PnVo8t+uwHhL/xECsy5iJXdgNJPzbmjQ9p7hfbuInGkMzKkSBTMesK9GbpnFdtX99ase
-         z6OMpqLNHzYi6aA/QSchuL4OfPpJHPawcz8fsZPC91Rn6OsHk6agssJNkYWGpWtitzET
-         83pw==
-X-Gm-Message-State: AOJu0Yx4g4lLbFrrolAknxGqrcE+afhVWlh4DahdtH3ZoxRVcdqLFEtF
-        jEV7ap92lts1j7K/Ma85Ic8=
-X-Google-Smtp-Source: AGHT+IEgR81aC7uWhmHDKjI6b8NW+OuEbTwRpJ1/iQciPPXKp7Bwr0gSiiUODOJhnGPjng9CIE0lgg==
-X-Received: by 2002:a17:90a:cb8f:b0:268:ce03:e17e with SMTP id a15-20020a17090acb8f00b00268ce03e17emr3142818pju.47.1692605142076;
-        Mon, 21 Aug 2023 01:05:42 -0700 (PDT)
-Received: from [192.168.255.10] ([103.7.29.32])
-        by smtp.gmail.com with ESMTPSA id l16-20020a17090aec1000b0026d462d34ffsm5274721pjy.47.2023.08.21.01.05.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Aug 2023 01:05:41 -0700 (PDT)
-Message-ID: <305fa208-e1d6-7e22-3156-11fd551a8dd1@gmail.com>
-Date:   Mon, 21 Aug 2023 16:05:32 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.14.0
-Subject: Re: [PATCH v2] KVM: x86/pmu: Manipulate FIXED_CTR_CTRL MSR with
- macros
-Content-Language: en-US
-To:     Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc:     kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Zhang Xiong <xiong.y.zhang@intel.com>,
-        Lv Zhiyuan <zhiyuan.lv@intel.com>,
-        Dapeng Mi <dapeng1.mi@intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>
-References: <20230815032849.2929788-1-dapeng1.mi@linux.intel.com>
-From:   Like Xu <like.xu.linux@gmail.com>
-In-Reply-To: <20230815032849.2929788-1-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Mon, 21 Aug 2023 04:36:31 -0400
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 561C1A6;
+        Mon, 21 Aug 2023 01:36:29 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R781e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VqEq89R_1692606980;
+Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VqEq89R_1692606980)
+          by smtp.aliyun-inc.com;
+          Mon, 21 Aug 2023 16:36:26 +0800
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+To:     John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>
+Cc:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>
+Subject: [PATCH v7 0/8] perf vendor events: Add JSON metrics for Arm CMN
+Date:   Mon, 21 Aug 2023 16:36:09 +0800
+Message-Id: <1692606977-92009-1-git-send-email-renyu.zj@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 15/8/2023 11:28 am, Dapeng Mi wrote:
-> Magic numbers are used to manipulate the bit fields of
-> FIXED_CTR_CTRL MSR. This is not read-friendly and use macros to replace
-> these magic numbers to increase the readability.
+Changes since v6:
+- Supplement the omitted EventCode;
+- Keep the original way of ConfigCode;
+- Supplement the test in empty-pmu-events.c, so that the pmu event test
+  can succeed when build with NO_JEVENT=1.
+- Link: https://lore.kernel.org/all/1691394685-61240-1-git-send-email-renyu.zj@linux.alibaba.com/
 
-More, reuse INTEL_FIXED_0_* macros for pmu->fixed_ctr_ctrl_mask, pls.
+Jing Zhang (8):
+  perf pmu: "Compat" supports matching multiple identifiers
+  perf metric: "Compat" supports matching multiple identifiers
+  perf vendor events: Supplement the omitted EventCode
+  perf jevents: Support more event fields
+  perf test: Make matching_pmu effective
+  perf test: Add pmu-event test for "Compat" and new event_field.
+  perf jevents: Add support for Arm CMN PMU aliasing
+  perf vendor events: Add JSON metrics for Arm CMN
 
-> 
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> ---
->   arch/x86/kvm/pmu.c | 10 +++++-----
->   arch/x86/kvm/pmu.h |  6 ++++--
->   2 files changed, 9 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> index edb89b51b383..fb4ef2da3e32 100644
-> --- a/arch/x86/kvm/pmu.c
-> +++ b/arch/x86/kvm/pmu.c
-> @@ -420,11 +420,11 @@ static void reprogram_counter(struct kvm_pmc *pmc)
->   	if (pmc_is_fixed(pmc)) {
->   		fixed_ctr_ctrl = fixed_ctrl_field(pmu->fixed_ctr_ctrl,
->   						  pmc->idx - INTEL_PMC_IDX_FIXED);
-> -		if (fixed_ctr_ctrl & 0x1)
-> +		if (fixed_ctr_ctrl & INTEL_FIXED_0_KERNEL)
->   			eventsel |= ARCH_PERFMON_EVENTSEL_OS;
-> -		if (fixed_ctr_ctrl & 0x2)
-> +		if (fixed_ctr_ctrl & INTEL_FIXED_0_USER)
->   			eventsel |= ARCH_PERFMON_EVENTSEL_USR;
-> -		if (fixed_ctr_ctrl & 0x8)
-> +		if (fixed_ctr_ctrl & INTEL_FIXED_0_ENABLE_PMI)
->   			eventsel |= ARCH_PERFMON_EVENTSEL_INT;
->   		new_config = (u64)fixed_ctr_ctrl;
->   	}
-> @@ -749,8 +749,8 @@ static inline bool cpl_is_matched(struct kvm_pmc *pmc)
->   	} else {
->   		config = fixed_ctrl_field(pmc_to_pmu(pmc)->fixed_ctr_ctrl,
->   					  pmc->idx - INTEL_PMC_IDX_FIXED);
-> -		select_os = config & 0x1;
-> -		select_user = config & 0x2;
-> +		select_os = config & INTEL_FIXED_0_KERNEL;
-> +		select_user = config & INTEL_FIXED_0_USER;
->   	}
->   
->   	return (static_call(kvm_x86_get_cpl)(pmc->vcpu) == 0) ? select_os : select_user;
-> diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-> index 7d9ba301c090..ffda2ecc3a22 100644
-> --- a/arch/x86/kvm/pmu.h
-> +++ b/arch/x86/kvm/pmu.h
-> @@ -12,7 +12,8 @@
->   					  MSR_IA32_MISC_ENABLE_BTS_UNAVAIL)
->   
->   /* retrieve the 4 bits for EN and PMI out of IA32_FIXED_CTR_CTRL */
-> -#define fixed_ctrl_field(ctrl_reg, idx) (((ctrl_reg) >> ((idx)*4)) & 0xf)
-> +#define fixed_ctrl_field(ctrl_reg, idx) \
-> +	(((ctrl_reg) >> ((idx) * INTEL_FIXED_BITS_STRIDE)) & INTEL_FIXED_BITS_MASK)
->   
->   #define VMWARE_BACKDOOR_PMC_HOST_TSC		0x10000
->   #define VMWARE_BACKDOOR_PMC_REAL_TIME		0x10001
-> @@ -165,7 +166,8 @@ static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
->   
->   	if (pmc_is_fixed(pmc))
->   		return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
-> -					pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
-> +					pmc->idx - INTEL_PMC_IDX_FIXED) &
-> +					(INTEL_FIXED_0_KERNEL | INTEL_FIXED_0_USER);
->   
->   	return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
->   }
-> 
-> base-commit: 240f736891887939571854bd6d734b6c9291f22e
+ .../pmu-events/arch/arm64/arm/cmn/sys/cmn.json     | 266 +++++++++++++++++++++
+ .../pmu-events/arch/arm64/arm/cmn/sys/metric.json  |  74 ++++++
+ .../pmu-events/arch/test/test_soc/sys/uncore.json  |   8 +
+ .../pmu-events/arch/x86/alderlake/pipeline.json    |   9 +
+ .../pmu-events/arch/x86/alderlaken/pipeline.json   |   3 +
+ .../pmu-events/arch/x86/broadwell/pipeline.json    |   4 +
+ .../pmu-events/arch/x86/broadwellde/pipeline.json  |   4 +
+ .../arch/x86/broadwellde/uncore-cache.json         |   2 +
+ .../arch/x86/broadwellde/uncore-interconnect.json  |   1 +
+ .../arch/x86/broadwellde/uncore-memory.json        |   1 +
+ .../arch/x86/broadwellde/uncore-power.json         |   1 +
+ .../pmu-events/arch/x86/broadwellx/pipeline.json   |   4 +
+ .../arch/x86/broadwellx/uncore-cache.json          |   2 +
+ .../arch/x86/broadwellx/uncore-interconnect.json   |  13 +
+ .../arch/x86/broadwellx/uncore-memory.json         |   2 +
+ .../arch/x86/broadwellx/uncore-power.json          |   1 +
+ .../pmu-events/arch/x86/cascadelakex/pipeline.json |   4 +
+ .../arch/x86/cascadelakex/uncore-cache.json        |   2 +
+ .../arch/x86/cascadelakex/uncore-interconnect.json |   1 +
+ .../arch/x86/cascadelakex/uncore-io.json           |   1 +
+ .../arch/x86/cascadelakex/uncore-memory.json       |   1 +
+ .../arch/x86/cascadelakex/uncore-power.json        |   1 +
+ .../pmu-events/arch/x86/elkhartlake/pipeline.json  |   2 +
+ .../pmu-events/arch/x86/goldmont/pipeline.json     |   3 +
+ .../pmu-events/arch/x86/goldmontplus/pipeline.json |   3 +
+ .../pmu-events/arch/x86/grandridge/pipeline.json   |   3 +
+ .../arch/x86/graniterapids/pipeline.json           |   4 +
+ .../perf/pmu-events/arch/x86/haswell/pipeline.json |   4 +
+ .../pmu-events/arch/x86/haswellx/pipeline.json     |   4 +
+ .../pmu-events/arch/x86/haswellx/uncore-cache.json |   2 +
+ .../arch/x86/haswellx/uncore-interconnect.json     |  14 ++
+ .../arch/x86/haswellx/uncore-memory.json           |   2 +
+ .../pmu-events/arch/x86/haswellx/uncore-power.json |   1 +
+ .../perf/pmu-events/arch/x86/icelake/pipeline.json |   4 +
+ .../pmu-events/arch/x86/icelakex/pipeline.json     |   4 +
+ .../pmu-events/arch/x86/icelakex/uncore-cache.json |   1 +
+ .../arch/x86/icelakex/uncore-interconnect.json     |   1 +
+ .../arch/x86/icelakex/uncore-memory.json           |   1 +
+ .../pmu-events/arch/x86/icelakex/uncore-power.json |   1 +
+ .../pmu-events/arch/x86/ivybridge/pipeline.json    |   3 +
+ .../perf/pmu-events/arch/x86/ivytown/pipeline.json |   4 +
+ .../pmu-events/arch/x86/ivytown/uncore-cache.json  |   2 +
+ .../arch/x86/ivytown/uncore-interconnect.json      |  11 +
+ .../pmu-events/arch/x86/ivytown/uncore-memory.json |   1 +
+ .../pmu-events/arch/x86/ivytown/uncore-power.json  |   1 +
+ .../pmu-events/arch/x86/jaketown/pipeline.json     |   4 +
+ .../pmu-events/arch/x86/jaketown/uncore-cache.json |   2 +
+ .../arch/x86/jaketown/uncore-interconnect.json     |  12 +
+ .../arch/x86/jaketown/uncore-memory.json           |   1 +
+ .../pmu-events/arch/x86/jaketown/uncore-power.json |   2 +
+ .../arch/x86/knightslanding/pipeline.json          |   3 +
+ .../arch/x86/knightslanding/uncore-cache.json      |   1 +
+ .../arch/x86/knightslanding/uncore-memory.json     |   4 +
+ .../pmu-events/arch/x86/meteorlake/pipeline.json   |   8 +
+ .../pmu-events/arch/x86/sandybridge/pipeline.json  |   4 +
+ .../arch/x86/sapphirerapids/pipeline.json          |   5 +
+ .../pmu-events/arch/x86/sierraforest/pipeline.json |   4 +
+ .../pmu-events/arch/x86/silvermont/pipeline.json   |   3 +
+ .../perf/pmu-events/arch/x86/skylake/pipeline.json |   4 +
+ .../pmu-events/arch/x86/skylakex/pipeline.json     |   4 +
+ .../pmu-events/arch/x86/skylakex/uncore-cache.json |   2 +
+ .../arch/x86/skylakex/uncore-interconnect.json     |   1 +
+ .../pmu-events/arch/x86/skylakex/uncore-io.json    |   1 +
+ .../arch/x86/skylakex/uncore-memory.json           |   1 +
+ .../pmu-events/arch/x86/skylakex/uncore-power.json |   1 +
+ .../pmu-events/arch/x86/snowridgex/pipeline.json   |   2 +
+ .../arch/x86/snowridgex/uncore-cache.json          |   1 +
+ .../arch/x86/snowridgex/uncore-interconnect.json   |   1 +
+ .../arch/x86/snowridgex/uncore-memory.json         |   1 +
+ .../arch/x86/snowridgex/uncore-power.json          |   1 +
+ .../pmu-events/arch/x86/tigerlake/pipeline.json    |   5 +
+ tools/perf/pmu-events/empty-pmu-events.c           |   8 +
+ tools/perf/pmu-events/jevents.py                   |  21 +-
+ tools/perf/tests/pmu-events.c                      |  64 ++++-
+ tools/perf/util/metricgroup.c                      |   2 +-
+ tools/perf/util/pmu.c                              |  33 ++-
+ tools/perf/util/pmu.h                              |   1 +
+ 77 files changed, 679 insertions(+), 9 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json
+
+-- 
+1.8.3.1
+
