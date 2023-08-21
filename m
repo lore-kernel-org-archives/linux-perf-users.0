@@ -2,150 +2,187 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9B3EE4996
-	for <linux-perf-users@archiver.kernel.org>; Sun, 20 Aug 2023 19:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DD5EE49A6
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Aug 2023 01:30:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229728AbjHTTnd (ORCPT
+        id S232332AbjHUBac (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 20 Aug 2023 15:43:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54604 "EHLO
+        Sun, 20 Aug 2023 21:30:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230245AbjHTTn3 (ORCPT
+        with ESMTP id S232328AbjHUBac (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 20 Aug 2023 15:43:29 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 885CF49EC;
-        Sun, 20 Aug 2023 12:40:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=yffIQNHXKypeq1zIbfQo6NWIljVNd0Nx7ZtnKKW0FkU=; b=I0Bjq8yycB77341iiR/zTAxcIT
-        vO+8N98DOUbc+RGu/Hqc9NyFi8XxjM7Ml3FihLSP6eYTbFqteKBbanuDDIeqYHLBc1UqJv/PPnI/b
-        EuMHcb5LEPsYDFkawKb47igSVrxW9de7/ZdedEsqOok3aN7UsiBVnaR9C6QO9fXOIIhAt3Osayuh/
-        o4dREqomZL9IE0AcG5x1+9nEr82plu1WwZzXQEkskM+PkoJguDPKst2yPvfzrGq8yQACK1k2b+xl8
-        otLkyw28y1S9EpqrT4tB88+5sMSLxVjr0fA/n5TzLXr4irModmrbclMIhIhdgi1b4elpL7nlF9Mn0
-        IDgQeMbw==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qXoHq-005r8H-Gc; Sun, 20 Aug 2023 19:40:34 +0000
-From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mm: Add vmalloc_user_node()
-Date:   Sun, 20 Aug 2023 20:40:31 +0100
-Message-Id: <20230820194031.1395870-1-willy@infradead.org>
-X-Mailer: git-send-email 2.37.1
+        Sun, 20 Aug 2023 21:30:32 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2428A7;
+        Sun, 20 Aug 2023 18:30:29 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4RTZd905jnz1L9Cl;
+        Mon, 21 Aug 2023 09:29:00 +0800 (CST)
+Received: from localhost.localdomain (10.67.174.95) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Mon, 21 Aug 2023 09:30:26 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+        <james.clark@arm.com>, <tmricht@linux.ibm.com>,
+        <ak@linux.intel.com>, <anshuman.khandual@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH v6 0/7] perf record: Track sideband events for all CPUs when tracing selected CPUs
+Date:   Mon, 21 Aug 2023 01:27:27 +0000
+Message-ID: <20230821012734.18241-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.95]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Allow memory to be allocated on a specified node.  Use it in the
-perf ring-buffer code.
+User space tasks can migrate between CPUs, track sideband events for all
+CPUs.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
-I was looking at the perf ringbuffer code for other reasons, and I noticed
-that everything else gets allocated on the specified node ... except
-there's no way to do this for vmalloc.  I assume it'd be helpful here too.
+The specific scenarios are as follows:
 
- include/linux/vmalloc.h     | 17 ++++++++++++++++-
- kernel/events/ring_buffer.c |  2 +-
- mm/vmalloc.c                |  9 +++++----
- 3 files changed, 22 insertions(+), 6 deletions(-)
+         CPU0                                 CPU1
+  perf record -C 0 start
+                              taskA starts to be created and executed
+                                -> PERF_RECORD_COMM and PERF_RECORD_MMAP
+                                   events only deliver to CPU1
+                              ......
+                                |
+                          migrate to CPU0
+                                |
+  Running on CPU0    <----------/
+  ...
 
-diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-index c720be70c8dd..030bfe1a60ab 100644
---- a/include/linux/vmalloc.h
-+++ b/include/linux/vmalloc.h
-@@ -6,6 +6,7 @@
- #include <linux/init.h>
- #include <linux/list.h>
- #include <linux/llist.h>
-+#include <linux/numa.h>
- #include <asm/page.h>		/* pgprot_t */
- #include <linux/rbtree.h>
- #include <linux/overflow.h>
-@@ -139,7 +140,7 @@ static inline unsigned long vmalloc_nr_pages(void) { return 0; }
- 
- extern void *vmalloc(unsigned long size) __alloc_size(1);
- extern void *vzalloc(unsigned long size) __alloc_size(1);
--extern void *vmalloc_user(unsigned long size) __alloc_size(1);
-+extern void *vmalloc_user_node(unsigned long size, int node) __alloc_size(1);
- extern void *vmalloc_node(unsigned long size, int node) __alloc_size(1);
- extern void *vzalloc_node(unsigned long size, int node) __alloc_size(1);
- extern void *vmalloc_32(unsigned long size) __alloc_size(1);
-@@ -158,6 +159,20 @@ extern void *vmalloc_array(size_t n, size_t size) __alloc_size(1, 2);
- extern void *__vcalloc(size_t n, size_t size, gfp_t flags) __alloc_size(1, 2);
- extern void *vcalloc(size_t n, size_t size) __alloc_size(1, 2);
- 
-+/**
-+ * vmalloc_user - allocate zeroed virtually contiguous memory for userspace
-+ * @size: allocation size
-+ *
-+ * The resulting memory area is zeroed so it can be mapped to userspace
-+ * without leaking data.
-+ *
-+ * Return: pointer to the allocated memory or %NULL on error
-+ */
-+static inline void *vmalloc_user(size_t size)
-+{
-+	return vmalloc_user_node(size, NUMA_NO_NODE);
-+}
-+
- extern void vfree(const void *addr);
- extern void vfree_atomic(const void *addr);
- 
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index cc90d5299005..c73add132618 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -918,7 +918,7 @@ struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
- 
- 	INIT_WORK(&rb->work, rb_free_work);
- 
--	all_buf = vmalloc_user((nr_pages + 1) * PAGE_SIZE);
-+	all_buf = vmalloc_user_node((nr_pages + 1) * PAGE_SIZE, node);
- 	if (!all_buf)
- 		goto fail_all_buf;
- 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 228a4a5312f2..3616bfe4348f 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -3461,22 +3461,23 @@ void *vzalloc(unsigned long size)
- EXPORT_SYMBOL(vzalloc);
- 
- /**
-- * vmalloc_user - allocate zeroed virtually contiguous memory for userspace
-+ * vmalloc_user_node - allocate zeroed virtually contiguous memory for userspace
-  * @size: allocation size
-+ * @node: NUMA node
-  *
-  * The resulting memory area is zeroed so it can be mapped to userspace
-  * without leaking data.
-  *
-  * Return: pointer to the allocated memory or %NULL on error
-  */
--void *vmalloc_user(unsigned long size)
-+void *vmalloc_user_node(unsigned long size, int node)
- {
- 	return __vmalloc_node_range(size, SHMLBA,  VMALLOC_START, VMALLOC_END,
- 				    GFP_KERNEL | __GFP_ZERO, PAGE_KERNEL,
--				    VM_USERMAP, NUMA_NO_NODE,
-+				    VM_USERMAP, node,
- 				    __builtin_return_address(0));
- }
--EXPORT_SYMBOL(vmalloc_user);
-+EXPORT_SYMBOL(vmalloc_user_node);
- 
- /**
-  * vmalloc_node - allocate memory on a specific node
+  perf record -C 0 stop
+
+Now perf samples the PC of taskA. However, perf does not record the
+PERF_RECORD_COMM and PERF_RECORD_COMM events of taskA.
+Therefore, the comm and symbols of taskA cannot be parsed.
+
+The sys_perf_event_open invoked is as follows:
+
+  # perf --debug verbose=3 record -e cpu-clock -C 1 true
+  <SNIP>
+  Opening: cpu-clock
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             1 (PERF_TYPE_SOFTWARE)
+    size                             136
+    config                           0 (PERF_COUNT_SW_CPU_CLOCK)
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+    read_format                      ID|LOST
+    disabled                         1
+    inherit                          1
+    freq                             1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
+  Opening: dummy:u
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             1 (PERF_TYPE_SOFTWARE)
+    size                             136
+    config                           0x9 (PERF_COUNT_SW_DUMMY)
+    { sample_period, sample_freq }   1
+    sample_type                      IP|TID|TIME|CPU|IDENTIFIER
+    read_format                      ID|LOST
+    inherit                          1
+    exclude_kernel                   1
+    exclude_hv                       1
+    mmap                             1
+    comm                             1
+    task                             1
+    sample_id_all                    1
+    exclude_guest                    1
+    mmap2                            1
+    comm_exec                        1
+    ksymbol                          1
+    bpf_event                        1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
+  sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 7
+  sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 9
+  sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 10
+  sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 11
+  sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 12
+  sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 13
+  sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
+  <SNIP>
+
+Changes since_v5:
+ - No code changes.
+ - Detailed commit message of patch3.
+ - Add Acked-by and Tested-by tags from Adrian Hunter.
+
+Changes since_v4:
+ - Simplify check code for record__tracking_system_wide().
+ - Add perf attr test result to commit message for patch 7.
+
+Changes since_v3:
+ - Check fall_kernel, all_user, and dummy or exclude_user when determining
+   whether system wide is required.
+
+Changes since_v2:
+ - Rename record_tracking.sh to record_sideband.sh in tools/perf/tests/shell.
+ - Remove "perf evlist: Skip dummy event sample_type check for evlist_config" patch.
+ - Add opts->all_kernel check in record__config_tracking_events().
+ - Add perf_event_attr test for record selected CPUs exclude_user.
+ - Update base-record & system-wide-dummy sample_type attr expected values for test-record-C0.
+
+Changes since v1:
+ - Add perf_evlist__go_system_wide() via internal/evlist.h instead of
+   exporting perf_evlist__propagate_maps().
+ - Use evlist__add_aux_dummy() instead of evlist__add_dummy() in
+   evlist__findnew_tracking_event().
+ - Add a parameter in evlist__findnew_tracking_event() to deal with
+   system_wide inside.
+ - Add sideband for all CPUs when tracing selected CPUs comments on
+   the perf record man page.
+ - Use "sideband events" instead of "tracking events".
+ - Adjust the patches Sequence.
+ - Add patch5 to skip dummy event sample_type check for evlist_config.
+ - Add patch6 to update system-wide-dummy attr values for perf test.
+
+Yang Jihong (7):
+  perf evlist: Add perf_evlist__go_system_wide() helper
+  perf evlist: Add evlist__findnew_tracking_event() helper
+  perf record: Move setting dummy tracking before
+    record__init_thread_masks()
+  perf record: Track sideband events for all CPUs when tracing selected
+    CPUs
+  perf test: Update base-record & system-wide-dummy attr expected values
+    for test-record-C0
+  perf test: Add test case for record sideband events
+  perf test: Add perf_event_attr test for record selected CPUs
+    exclude_user
+
+ tools/lib/perf/evlist.c                       |   9 ++
+ tools/lib/perf/include/internal/evlist.h      |   2 +
+ tools/perf/Documentation/perf-record.txt      |   3 +
+ tools/perf/builtin-record.c                   | 106 +++++++++++++-----
+ tools/perf/tests/attr/system-wide-dummy       |  14 ++-
+ tools/perf/tests/attr/test-record-C0          |   4 +-
+ .../perf/tests/attr/test-record-C0-all-kernel |  32 ++++++
+ tools/perf/tests/shell/record_sideband.sh     |  44 ++++++++
+ tools/perf/util/evlist.c                      |  18 +++
+ tools/perf/util/evlist.h                      |   1 +
+ 10 files changed, 198 insertions(+), 35 deletions(-)
+ create mode 100644 tools/perf/tests/attr/test-record-C0-all-kernel
+ create mode 100755 tools/perf/tests/shell/record_sideband.sh
+
 -- 
-2.40.1
+2.30.GIT
 
