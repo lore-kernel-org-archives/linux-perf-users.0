@@ -2,157 +2,183 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F9DEE4996
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Aug 2023 13:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1618EEE49A6
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Aug 2023 13:17:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235167AbjHUNB5 (ORCPT
+        id S232694AbjHUNRc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Aug 2023 09:01:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58468 "EHLO
+        Mon, 21 Aug 2023 09:17:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234093AbjHUNB5 (ORCPT
+        with ESMTP id S232651AbjHUNRb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Aug 2023 09:01:57 -0400
+        Mon, 21 Aug 2023 09:17:31 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BED7CD;
-        Mon, 21 Aug 2023 06:01:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62441102;
+        Mon, 21 Aug 2023 06:17:08 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DF476614F3;
-        Mon, 21 Aug 2023 13:01:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2088DC433D9;
-        Mon, 21 Aug 2023 13:01:54 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E64D5616C0;
+        Mon, 21 Aug 2023 13:16:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18D6DC433C7;
+        Mon, 21 Aug 2023 13:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692622914;
-        bh=jRjj6/i45ISAqAgmwrx/DQ8yITENPJ7mT9VW43TABG4=;
+        s=k20201202; t=1692623805;
+        bh=KPa/AwkosoOhlmZaq4JF40z1lU8eMUi0EpScWLPvrao=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Bw8TqkcrGyVtu2cNtKRWLUPkTS+l57cRbhbtkbmdP2e8xnnQWCUuSxVGese6DYpof
-         aH3Mof+PZiThtiwKMP/u7KdvAiO8rsWZ6VXZQufP69koIXniTaKr1D0BZvhruEiYSA
-         z9GxswYJUzzeN6qZYQn2Z+xHEaylL6/t38P1kuVAMcESfWrbJdXfjej+vEvrQXPlWD
-         y/sel6+ZgZnVree34y2UoNiiJm9rIie3ZStq3FxOIcxMMiiiarW12P7k9ny06PsFV8
-         K8n4OFGxQRXZ22SIpI4gadPsIVkpi0J16LWlZd1pWuYR9BaTmJk8RPqIUCelnuf7qO
-         y4OnfcVnX+cuA==
+        b=oQGcvU4wKYUz0g3IFUpnVo7fmvXH7c9xTWmCvN5nKublD+oTZFbwrvB3/fwz8vUXJ
+         9Nl6MsOfLIliTwSVVUKXvzsDRSq8wj1kmRmUkPv+xrfgUbT+uC7GSD1sgeCJk3CThJ
+         vpTdTDw3Tcn/dygVBsT2eM5u9/5AjyG5Qt1TXzW76qYiF78o2j7ALb78FbMI7YtxyN
+         p0dUhg52o9EIbf4VbRmGelqxpVrit3dcUW4kstNvfH+1ZxYa54rN2HYQKQwoNeeaTJ
+         w35WMwpMqKX1LySH82BEguEDeP9cepX6bYCiGi5zAFyLmFmTcoK1+gAoWKMLA7Y+B3
+         17Yhm6PEzfOnQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 919B940722; Mon, 21 Aug 2023 10:01:51 -0300 (-03)
-Date:   Mon, 21 Aug 2023 10:01:51 -0300
+        id 648F340722; Mon, 21 Aug 2023 10:16:42 -0300 (-03)
+Date:   Mon, 21 Aug 2023 10:16:42 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     John Garry <john.g.garry@oracle.com>
+To:     "liwei (GF)" <liwei391@huawei.com>
 Cc:     Ian Rogers <irogers@google.com>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        K Prateek Nayak <kprateek.nayak@amd.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf jevents: Raise exception for no definition of a
- arch std event
-Message-ID: <ZONgPy7pK7Qc7Cc6@kernel.org>
-References: <20230807111631.3033102-1-john.g.garry@oracle.com>
- <373e8253-656c-84dc-c05-b578e3725d@os.amperecomputing.com>
- <CAP-5=fVsePTVU2qeeUzVFkWA7Oxj6bgSq+yWzO=t3y283vOgOw@mail.gmail.com>
- <dd4bc3fe-5b8e-6e64-bcec-29263df43086@oracle.com>
+Subject: Re: [PATCH v1] perf header: Fix missing PMU caps
+Message-ID: <ZONjuqVhDNzWPIQ3@kernel.org>
+References: <20230818171952.3719251-1-irogers@google.com>
+ <b244a320-5f00-d382-a4ab-0168a80c55fe@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dd4bc3fe-5b8e-6e64-bcec-29263df43086@oracle.com>
+In-Reply-To: <b244a320-5f00-d382-a4ab-0168a80c55fe@huawei.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Aug 21, 2023 at 11:46:20AM +0100, John Garry escreveu:
-> On 10/08/2023 20:27, Ian Rogers wrote:
-> > On Wed, Aug 9, 2023 at 10:11 PM Ilkka Koskinen
-> > <ilkka@os.amperecomputing.com> wrote:
-> > > 
-> > > 
-> > > Hi John,
-> > > 
-> > > On Mon, 7 Aug 2023, John Garry wrote:
-> > > > Recently Ilkka reported that the JSONs for the AmpereOne arm64-based
-> > > > platform included a dud event which referenced a non-existent arch std
-> > > > event [0].
-> > > 
-> > > I wish I had found the bug in my patch a long time ago but, in fact, it
-> > > was Dave Kleikamp who initially pointed it out to me and figured out the
-> > > difference between jevents.c and jevents.py when porting the patch to 5.15
-> > > kernel.
-> > > 
-> > > https://urldefense.com/v3/__http://lists.infradead.org/pipermail/linux-arm-kernel/2023-June/844874.html__;!!ACWV5N9M2RV99hQ!It9EhKK4s2uBUJyQvLg-ruUfENAA6Sw7TWVo_hF8XmFoQ6q565iYafTnN-yoBNh3EQ1IFa2tHknUjNHs5dI$
-> > > 
-> > > > 
-> > > > Previously in the times of jevents.c, we would raise an exception for this.
-> > > > 
-> > > > This is still invalid, even though the current code just ignores such an
-> > > > event.
-> > > > 
-> > > > Re-introduce code to raise an exception for when no definition exists to
-> > > > help catch as many invalid JSONs as possible.
-> > > > 
-> > > > [0] https://urldefense.com/v3/__https://lore.kernel.org/linux-perf-users/9e851e2a-26c7-ba78-cb20-be4337b2916a@oracle.com/__;!!ACWV5N9M2RV99hQ!It9EhKK4s2uBUJyQvLg-ruUfENAA6Sw7TWVo_hF8XmFoQ6q565iYafTnN-yoBNh3EQ1IFa2tHknU_t28TiE$
-> > > > 
-> > > > Signed-off-by: John Garry <john.g.garry@oracle.com>
-> > > 
-> > > Thanks for the patch! I quickly tested it and it worked as expected. Just
-> > > in case this is needed:
-> > > 
-> > > Tested-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Em Sat, Aug 19, 2023 at 12:16:09PM +0800, liwei (GF) escreveu:
+> Hi Ian:
+> 
+> On 2023/8/19 1:19, Ian Rogers wrote:
+> > PMU caps are written as HEADER_PMU_CAPS or for the special case of the
+> > PMU "cpu" as HEADER_CPU_PMU_CAPS. As the PMU "cpu" is special, and not
+> > any "core" PMU, the logic had become broken and core PMUs not called
+> > "cpu" were not having their caps written. This affects ARM and s390
+> > non-hybrid PMUs.
 > > 
-> > Reviewed-by: Ian Rogers <irogers@google.com>
+> > Simplify the PMU caps writing logic to scan one fewer time and to be
+> > more explicit in its behavior.
+> > 
+> > Reported-by: Wei Li <liwei391@huawei.com>
+> > Fixes: 178ddf3bad98 ("perf header: Avoid hybrid PMU list in write_pmu_caps")
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/header.c | 31 ++++++++++++++++---------------
+> >  1 file changed, 16 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> > index 52fbf526fe74..13c71d28e0eb 100644
+> > --- a/tools/perf/util/header.c
+> > +++ b/tools/perf/util/header.c
+> > @@ -1605,8 +1605,15 @@ static int write_pmu_caps(struct feat_fd *ff,
+> >  	int ret;
+> >  
+> >  	while ((pmu = perf_pmus__scan(pmu))) {
+> > -		if (!pmu->name || !strcmp(pmu->name, "cpu") ||
+> > -		    perf_pmu__caps_parse(pmu) <= 0)
+> > +		if (!strcmp(pmu->name, "cpu")) {
 > 
-> Hi Arnaldo,
-> 
-> Can you consider applying this patch along with https://lore.kernel.org/linux-perf-users/CAP-5=fX2uE=B_Vb90nn5EV0mw+AJBpjDecP9w29OUn=j7HKPPg@mail.gmail.com/
-> 
-> I think that we should expect another version of that series with changes
-> elsewhere.
+> So you removed the check of 'pmu->name', does this check really redundant? since
+> we can find such checks in many places in the perf code. If not, i think it is
+> necessary for strcmp().
 
-Done, thanks for the ping.
+Indeed, when sorting in tools/perf/util/pmus.c in cmp_sevent() we have:
+
+        /* Order by PMU name. */
+        if (as->pmu != bs->pmu) {
+                a_pmu_name = a_pmu_name ?: (as->pmu->name ?: "");
+                b_pmu_name = b_pmu_name ?: (bs->pmu->name ?: "");
+                ret = strcmp(a_pmu_name, b_pmu_name);
+                if (ret)
+                        return ret;
+        }
+
+
+And even if in this specific case, for some reason, we could guarantee
+that pmu->name isn't NULL, then removing that check should be best left
+for a separate patch with an explanation as to why that is safe.
+
+Having it as:
+
+ 	while ((pmu = perf_pmus__scan(pmu))) {
+-		if (!pmu->name || !strcmp(pmu->name, "cpu") ||
+-		    perf_pmu__caps_parse(pmu) <= 0)
++		if (!pmu->name || !strcmp(pmu->name, "cpu")) {
+
+even eases a bit reviewing, as we see we're just removing that
+perf_pmu__caps_parse(pmu) line.
+
+Ian?
 
 - Arnaldo
+
  
+> > +			/*
+> > +			 * The "cpu" PMU is special and covered by
+> > +			 * HEADER_CPU_PMU_CAPS. Note, core PMUs are
+> > +			 * counted/written here for ARM, s390 and Intel hybrid.
+> > +			 */
+> > +			continue;
+> > +		}
+> > +		if (perf_pmu__caps_parse(pmu) <= 0)
+> >  			continue;
+> >  		nr_pmu++;
+> >  	}
+> > @@ -1619,23 +1626,17 @@ static int write_pmu_caps(struct feat_fd *ff,
+> >  		return 0;
+> >  
+> >  	/*
+> > -	 * Write hybrid pmu caps first to maintain compatibility with
+> > -	 * older perf tool.
+> > +	 * Note older perf tools assume core PMUs come first, this is a property
+> > +	 * of perf_pmus__scan.
+> >  	 */
+> > -	if (perf_pmus__num_core_pmus() > 1) {
+> > -		pmu = NULL;
+> > -		while ((pmu = perf_pmus__scan_core(pmu))) {
+> > -			ret = __write_pmu_caps(ff, pmu, true);
+> > -			if (ret < 0)
+> > -				return ret;
+> > -		}
+> > -	}
+> > -
+> >  	pmu = NULL;
+> >  	while ((pmu = perf_pmus__scan(pmu))) {
+> > -		if (pmu->is_core || !pmu->nr_caps)
+> > +		if (!strcmp(pmu->name, "cpu")) {
+> 
+> same here
+> 
 > Thanks,
-> John
+> Wei
 > 
-> > 
-> > Thanks,
-> > Ian
-> > 
-> > > Cheers, Ilkka
-> > > 
-> > > > ---
-> > > > Please do not apply before [0], above.
-> > > > 
-> > > > diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-> > > > index 8cd561aa606a..98cccc3fcbbd 100755
-> > > > --- a/tools/perf/pmu-events/jevents.py
-> > > > +++ b/tools/perf/pmu-events/jevents.py
-> > > > @@ -347,12 +347,15 @@ class JsonEvent:
-> > > >        if self.desc and not self.desc.endswith('. '):
-> > > >          self.desc += '. '
-> > > >        self.desc = (self.desc if self.desc else '') + ('Unit: ' + self.pmu + ' ')
-> > > > -    if arch_std and arch_std.lower() in _arch_std_events:
-> > > > -      event = _arch_std_events[arch_std.lower()].event
-> > > > -      # Copy from the architecture standard event to self for undefined fields.
-> > > > -      for attr, value in _arch_std_events[arch_std.lower()].__dict__.items():
-> > > > -        if hasattr(self, attr) and not getattr(self, attr):
-> > > > -          setattr(self, attr, value)
-> > > > +    if arch_std:
-> > > > +      if arch_std.lower() in _arch_std_events:
-> > > > +        event = _arch_std_events[arch_std.lower()].event
-> > > > +        # Copy from the architecture standard event to self for undefined fields.
-> > > > +        for attr, value in _arch_std_events[arch_std.lower()].__dict__.items():
-> > > > +          if hasattr(self, attr) and not getattr(self, attr):
-> > > > +            setattr(self, attr, value)
-> > > > +      else:
-> > > > +        raise argparse.ArgumentTypeError('Cannot find arch std event:', arch_std)
-> > > > 
-> > > >      self.event = real_event(self.name, event)
-> > > > 
-> > > > --
-> > > > 2.35.3
-> > > > 
-> > > > 
-> 
+> > +			/* Skip as above. */
+> > +			continue;
+> > +		}
+> > +		if (perf_pmu__caps_parse(pmu) <= 0)
+> >  			continue;
+> > -
+> >  		ret = __write_pmu_caps(ff, pmu, true);
+> >  		if (ret < 0)
+> >  			return ret;
 
 -- 
 
