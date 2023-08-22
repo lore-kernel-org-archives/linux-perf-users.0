@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1DCEE49A5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Aug 2023 23:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D35EE49AF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Aug 2023 23:16:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230527AbjHVXO1 (ORCPT
+        id S231660AbjHVXQl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Aug 2023 19:14:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35406 "EHLO
+        Tue, 22 Aug 2023 19:16:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229472AbjHVXO0 (ORCPT
+        with ESMTP id S231659AbjHVXQl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Aug 2023 19:14:26 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 266C210D
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Aug 2023 16:14:24 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-50091b91a83so1153398e87.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Aug 2023 16:14:24 -0700 (PDT)
+        Tue, 22 Aug 2023 19:16:41 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 975C3CE9
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Aug 2023 16:16:39 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-4ff9b389677so7676595e87.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Aug 2023 16:16:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692746062; x=1693350862;
+        d=chromium.org; s=google; t=1692746198; x=1693350998;
         h=cc:to:subject:message-id:date:user-agent:from:references
          :in-reply-to:mime-version:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=YSHMwkSWj+u0BB4H/Eo8pB+iKXhMpxFBtrURAK/KgwY=;
-        b=CFQLVEZLykqjzDO7usGcMJuYkJlvatCTEZRBqCa5ZQK+ctOL++F8hjWBQU/QQNbz1x
-         ddIRInCUD8C2fG5FUO/vHg+B/KkgFbXq2pbO7k6qHnqQrhMjV5f5cfy0sW+JF5vwePBo
-         HNM+NJz7fv46v8rG41AMguHMRE2oMWrER6LZ8=
+        bh=Ne+QvARLPyJmWPOSrJZ8X8fHhrReARdSQtc8gHYhPWM=;
+        b=izNsxqeDDqR8Taw686A/JA+R7wjulCx21d26ehlcDp+uRH97AKfo5hOYOJXQkMbFCy
+         M0FYJLb865lMOG1vVO6DMGqss7CgorD/JW37SopF2VFiIMH5VQV3NxymxZFo50zvh+1s
+         v8ycX3TpMlw7qflkWF5J5NBHcRsErx7InAtEE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692746062; x=1693350862;
+        d=1e100.net; s=20221208; t=1692746198; x=1693350998;
         h=cc:to:subject:message-id:date:user-agent:from:references
          :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YSHMwkSWj+u0BB4H/Eo8pB+iKXhMpxFBtrURAK/KgwY=;
-        b=M7jQIpjmzdfkz9CQ2H43kClDl/usvgFzUZNgQLcoKFR+Y/rpWBRtsj1x2wjCtRu8R4
-         KX2tIpqK5iT64v+eZoEPVgPlsbXA/6U7jBLXLkAy2/YMm0+vxaEQ02VWTjTlcvHUFvrm
-         EM0q1rQ/ujqHJgOjkANltoYWs2XH0O8GvdLw80aQ1AXuFtSaWGKzhihWQZ6GnLRgvQd7
-         OEBQnOwjt9WtiC2W/PP84Hq6n7wo9mvcmefTmDroWs5k2UsqkgXvHMaiSNlyYkROoGyO
-         VDhjp3cro8APqrvlo0nnVmWWSG7cH+EcW95TAirghjRhBW4WDwkxiZaovS7TOw9EeeIk
-         c6OA==
-X-Gm-Message-State: AOJu0YymzLjXo3Ak5biM7HdL/sFZ8+mcOeXb21B+nqsUqbDJ3E2r6wVu
-        mw7q7h502Eo+xX2jWdSKn+Z1vVfj3srMPv3lQM2VkA==
-X-Google-Smtp-Source: AGHT+IE9cNxYcnE+sNDcjWkiOsU52/mJjpudLz7kYq/Voq07K6+JEnzA+zqz02s367o6vNiTqYWr4E4Lc//Ttvw4Omw=
-X-Received: by 2002:a19:7b12:0:b0:4f6:2b25:194e with SMTP id
- w18-20020a197b12000000b004f62b25194emr6213559lfc.58.1692746062347; Tue, 22
- Aug 2023 16:14:22 -0700 (PDT)
+        bh=Ne+QvARLPyJmWPOSrJZ8X8fHhrReARdSQtc8gHYhPWM=;
+        b=Eh/gu/8VMXe+3mQhZ8zEi05GvninNX6IFO4HlBxnO8i836XNpKWM7WrzZXuD7i7w9Q
+         whqwDMAIWprqoHACO7jO9N+qhIQORdplqRWcEPDyMDw212Q/CUNREto7iZzfJfNcOGky
+         CxPALN4CRG6MIrhZmdoR6GHuYWXuXC/irRzU0t69GIwbClMdQiZKQqAsbO6SIzSE9vFo
+         MBRUB0Mo926mP2UI8D5wpoJHwi+/dBxYfRExZa7F7stEVaaqbj5/iZ96aNMBuPdqS9n4
+         b0nFC1MPWAFs5WCvoV2lRdL8NN0ZLv6Vz+1d4TBXZ722lvVovMjouknfEO9sEqxQy8Bf
+         eDTA==
+X-Gm-Message-State: AOJu0Yy1GY4gWzlsz2MzU5+odKZxiz0E+A/YgJ4/WDnJqr17Bp7kaZLV
+        GQTD20nVhu8zmTjMItI3BmmH2+/IiM4/l2SRSxGvEg==
+X-Google-Smtp-Source: AGHT+IEMIIqUR2cKKxkSn0Xl2le40m5jCfwmqglTjMHe6IOHN8s+YCUP9cEbCmqaWfq8WalCP496sNNT5QAilRON1vI=
+X-Received: by 2002:a05:6512:6ca:b0:4ff:9eed:b68d with SMTP id
+ u10-20020a05651206ca00b004ff9eedb68dmr9502586lff.58.1692746197816; Tue, 22
+ Aug 2023 16:16:37 -0700 (PDT)
 Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 22 Aug 2023 16:14:21 -0700
+ HTTPREST; Tue, 22 Aug 2023 16:16:37 -0700
 MIME-Version: 1.0
-In-Reply-To: <20230822142644.v10.2.I4baba13e220bdd24d11400c67f137c35f07f82c7@changeid>
-References: <20230822212927.249645-1-dianders@chromium.org> <20230822142644.v10.2.I4baba13e220bdd24d11400c67f137c35f07f82c7@changeid>
+In-Reply-To: <20230822142644.v10.3.I7209db47ef8ec151d3de61f59005bbc59fe8f113@changeid>
+References: <20230822212927.249645-1-dianders@chromium.org> <20230822142644.v10.3.I7209db47ef8ec151d3de61f59005bbc59fe8f113@changeid>
 From:   Stephen Boyd <swboyd@chromium.org>
 User-Agent: alot/0.10
-Date:   Tue, 22 Aug 2023 16:14:21 -0700
-Message-ID: <CAE-0n53QBBfX77ibE+NdWZa70VVOKkNnhn5BNhBk04XKEFKNJw@mail.gmail.com>
-Subject: Re: [PATCH v10 2/6] arm64: idle: Tag the arm64 idle functions as __cpuidle
+Date:   Tue, 22 Aug 2023 16:16:37 -0700
+Message-ID: <CAE-0n50va9r7wrRzbK2KduNPdNNimiKT9CkuP=meA6JaoMTpWw@mail.gmail.com>
+Subject: Re: [PATCH v10 3/6] arm64: smp: Remove dedicated wakeup IPI
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Daniel Thompson <daniel.thompson@linaro.org>,
         Douglas Anderson <dianders@chromium.org>,
@@ -71,59 +71,30 @@ Cc:     Lecopzer Chen <lecopzer.chen@mediatek.com>,
         Chen-Yu Tsai <wens@csie.org>, Ard Biesheuvel <ardb@kernel.org>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Guo Ren <guoren@kernel.org>, linux-kernel@vger.kernel.org
+        D Scott Phillips <scott@os.amperecomputing.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <philmd@linaro.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Valentin Schneider <vschneid@redhat.com>,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Quoting Douglas Anderson (2023-08-22 14:26:57)
-> As per the (somewhat recent) comment before the definition of
-> `__cpuidle`, the tag is like `noinstr` but also marks a function so it
-> can be identified by cpu_in_idle(). Let'a add this.
-
-s/Let'a/Let's/
-
-Maybe also define "this" to be "Let's add these markings to arm64
-cpuidle functions".
-
+Quoting Douglas Anderson (2023-08-22 14:26:58)
+> diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
+> index 9b31e6d0da17..798fd76a883a 100644
+> --- a/arch/arm64/include/asm/smp.h
+> +++ b/arch/arm64/include/asm/smp.h
+> @@ -89,9 +89,9 @@ extern void arch_send_call_function_single_ipi(int cpu);
+>  extern void arch_send_call_function_ipi_mask(const struct cpumask *mask);
 >
-> After doing this then when we dump stack traces of all processors
-> using nmi_cpu_backtrace() then instead of getting useless backtraces
-> we get things like:
+>  #ifdef CONFIG_ARM64_ACPI_PARKING_PROTOCOL
+> -extern void arch_send_wakeup_ipi_mask(const struct cpumask *mask);
+> +extern void arch_send_wakeup_ipi(int cpu);
 
-Sorry, this sentence is really hard for me to read. Perhaps:
-
-With this change we get useful backtraces like:
-
-   NMI backtrace for cpu N skipped: idling at cpu_do_idle+0x94/0x98
-
-instead of useless backtraces when dumping all processors using
-nmi_cpu_backtrace().
-
->
->   NMI backtrace for cpu N skipped: idling at cpu_do_idle+0x94/0x98
->
-> NOTE: this patch won't make cpu_in_idle() work perfectly for arm64,
-> but it doesn't hurt and does catch some cases. Specifically an example
-> that wasn't caught in my testing looked like this:
-
-I wonder if it improves locality of cpu idle code as well by moving the
-functions to the idle text section so any branch targets are closer.
-
->
->  gic_cpu_sys_reg_init+0x1f8/0x314
->  gic_cpu_pm_notifier+0x40/0x78
->  raw_notifier_call_chain+0x5c/0x134
->  cpu_pm_notify+0x38/0x64
->  cpu_pm_exit+0x20/0x2c
->  psci_enter_idle_state+0x48/0x70
->  cpuidle_enter_state+0xb8/0x260
->  cpuidle_enter+0x44/0x5c
->  do_idle+0x188/0x30c
->
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Is int used instead of unsigned int because we want to sometimes pass a
+negative value to indicate an error? Maybe it should be unsigned int.
