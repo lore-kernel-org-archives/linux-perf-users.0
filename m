@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D35EE49AF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Aug 2023 23:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCC7EE49AB
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Aug 2023 23:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231660AbjHVXQl (ORCPT
+        id S231706AbjHVXj5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Aug 2023 19:16:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48832 "EHLO
+        Tue, 22 Aug 2023 19:39:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231659AbjHVXQl (ORCPT
+        with ESMTP id S229890AbjHVXj4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Aug 2023 19:16:41 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 975C3CE9
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Aug 2023 16:16:39 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-4ff9b389677so7676595e87.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Aug 2023 16:16:39 -0700 (PDT)
+        Tue, 22 Aug 2023 19:39:56 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AAFCCF
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Aug 2023 16:39:54 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id 2adb3069b0e04-4ffae5bdc9aso5611328e87.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Aug 2023 16:39:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692746198; x=1693350998;
+        d=chromium.org; s=google; t=1692747593; x=1693352393;
         h=cc:to:subject:message-id:date:user-agent:from:references
          :in-reply-to:mime-version:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Ne+QvARLPyJmWPOSrJZ8X8fHhrReARdSQtc8gHYhPWM=;
-        b=izNsxqeDDqR8Taw686A/JA+R7wjulCx21d26ehlcDp+uRH97AKfo5hOYOJXQkMbFCy
-         M0FYJLb865lMOG1vVO6DMGqss7CgorD/JW37SopF2VFiIMH5VQV3NxymxZFo50zvh+1s
-         v8ycX3TpMlw7qflkWF5J5NBHcRsErx7InAtEE=
+        bh=BBnThSAKzhzR9rSGGQ+uW8RCv4yp0DSEOJ+0TVL56nk=;
+        b=QsWKy1jTDTWB52uTxFOi3zfsOweTLAKE3PIHrsWhMpiDKzBr4toJGch4TKmtMUvYqG
+         3GzQ1U9eZDhrRAtWdnMSLfjPzssVgU4ZTTvsHDjNjP5dg8GL+S8oOqqlNglvm4NnylKc
+         6+zHhcCs50LUOHQJb0msu4XGtH1LwbJGc0ftU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692746198; x=1693350998;
+        d=1e100.net; s=20221208; t=1692747593; x=1693352393;
         h=cc:to:subject:message-id:date:user-agent:from:references
          :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ne+QvARLPyJmWPOSrJZ8X8fHhrReARdSQtc8gHYhPWM=;
-        b=Eh/gu/8VMXe+3mQhZ8zEi05GvninNX6IFO4HlBxnO8i836XNpKWM7WrzZXuD7i7w9Q
-         whqwDMAIWprqoHACO7jO9N+qhIQORdplqRWcEPDyMDw212Q/CUNREto7iZzfJfNcOGky
-         CxPALN4CRG6MIrhZmdoR6GHuYWXuXC/irRzU0t69GIwbClMdQiZKQqAsbO6SIzSE9vFo
-         MBRUB0Mo926mP2UI8D5wpoJHwi+/dBxYfRExZa7F7stEVaaqbj5/iZ96aNMBuPdqS9n4
-         b0nFC1MPWAFs5WCvoV2lRdL8NN0ZLv6Vz+1d4TBXZ722lvVovMjouknfEO9sEqxQy8Bf
-         eDTA==
-X-Gm-Message-State: AOJu0Yy1GY4gWzlsz2MzU5+odKZxiz0E+A/YgJ4/WDnJqr17Bp7kaZLV
-        GQTD20nVhu8zmTjMItI3BmmH2+/IiM4/l2SRSxGvEg==
-X-Google-Smtp-Source: AGHT+IEMIIqUR2cKKxkSn0Xl2le40m5jCfwmqglTjMHe6IOHN8s+YCUP9cEbCmqaWfq8WalCP496sNNT5QAilRON1vI=
-X-Received: by 2002:a05:6512:6ca:b0:4ff:9eed:b68d with SMTP id
- u10-20020a05651206ca00b004ff9eedb68dmr9502586lff.58.1692746197816; Tue, 22
- Aug 2023 16:16:37 -0700 (PDT)
+        bh=BBnThSAKzhzR9rSGGQ+uW8RCv4yp0DSEOJ+0TVL56nk=;
+        b=W9rb2sHTvZ0C44xcpOJ7ZcPGgkGzz0+XrheSVzEnuf/VKT1h4ztxKerDXN6EC7bFNA
+         OyKSj72LhS7pVDoG3ccy0w+nLg/hAPQCqgUm60AYNSwOTXyExaUehg/1D5hMqNHAqrX+
+         wMzTaXvteUMtHjDIKOFpoIln+KiFzTm4Yn0FsbeWDq2FjPBunGDd4UgxN6jluAL64/IR
+         ri/nYerD3PDB9BvwxyYrKJVI7dmGwyf7inhUZKOkHyp1a9pt6RM4B2iH/ojgqpwb2Lm0
+         xXGecOGWmEyXWnCPenMiQBW8e2lmsRP5HtOmr6SkTOaiy/nF6/pzuNiSZrV3AEoB6y3c
+         SJSw==
+X-Gm-Message-State: AOJu0Yx9qFPqA9jxIfY4IlPvLAuMmZMKv+YUOCZq2KTMPzEfcER9x0oE
+        UYDbEc6q3dbX4QfEOexJixVigclXTqLMs++oantOhA==
+X-Google-Smtp-Source: AGHT+IGU9ghgpnimdTBYx+LsvN3eXoAUQ0e5d7XJpOiOkBBJbb3/8kf+cIH2Muh6sY0AYdzIn/S1uuiuvJTrDHYspL8=
+X-Received: by 2002:a05:6512:3045:b0:4fb:89b3:3374 with SMTP id
+ b5-20020a056512304500b004fb89b33374mr9771049lfb.54.1692747592254; Tue, 22 Aug
+ 2023 16:39:52 -0700 (PDT)
 Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 22 Aug 2023 16:16:37 -0700
+ HTTPREST; Tue, 22 Aug 2023 16:39:51 -0700
 MIME-Version: 1.0
-In-Reply-To: <20230822142644.v10.3.I7209db47ef8ec151d3de61f59005bbc59fe8f113@changeid>
-References: <20230822212927.249645-1-dianders@chromium.org> <20230822142644.v10.3.I7209db47ef8ec151d3de61f59005bbc59fe8f113@changeid>
+In-Reply-To: <20230822142644.v10.4.Ie6c132b96ebbbcddbf6954b9469ed40a6960343c@changeid>
+References: <20230822212927.249645-1-dianders@chromium.org> <20230822142644.v10.4.Ie6c132b96ebbbcddbf6954b9469ed40a6960343c@changeid>
 From:   Stephen Boyd <swboyd@chromium.org>
 User-Agent: alot/0.10
-Date:   Tue, 22 Aug 2023 16:16:37 -0700
-Message-ID: <CAE-0n50va9r7wrRzbK2KduNPdNNimiKT9CkuP=meA6JaoMTpWw@mail.gmail.com>
-Subject: Re: [PATCH v10 3/6] arm64: smp: Remove dedicated wakeup IPI
+Date:   Tue, 22 Aug 2023 16:39:51 -0700
+Message-ID: <CAE-0n52ZLr0qZ=9zN0kcXK2G5=sGKizGg5F9z4pLPjY_Xv6OJw@mail.gmail.com>
+Subject: Re: [PATCH v10 4/6] arm64: smp: Add arch support for backtrace using pseudo-NMI
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Daniel Thompson <daniel.thompson@linaro.org>,
         Douglas Anderson <dianders@chromium.org>,
@@ -74,9 +74,6 @@ Cc:     Lecopzer Chen <lecopzer.chen@mediatek.com>,
         D Scott Phillips <scott@os.amperecomputing.com>,
         Ingo Molnar <mingo@kernel.org>,
         Josh Poimboeuf <jpoimboe@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <philmd@linaro.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
         Valentin Schneider <vschneid@redhat.com>,
         linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
@@ -84,17 +81,35 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Quoting Douglas Anderson (2023-08-22 14:26:58)
-> diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
-> index 9b31e6d0da17..798fd76a883a 100644
-> --- a/arch/arm64/include/asm/smp.h
-> +++ b/arch/arm64/include/asm/smp.h
-> @@ -89,9 +89,9 @@ extern void arch_send_call_function_single_ipi(int cpu);
->  extern void arch_send_call_function_ipi_mask(const struct cpumask *mask);
+Quoting Douglas Anderson (2023-08-22 14:26:59)
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index bfe60adbc453..15b66dc1391b 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -845,6 +852,22 @@ static void __noreturn ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs
+>  #endif
+>  }
 >
->  #ifdef CONFIG_ARM64_ACPI_PARKING_PROTOCOL
-> -extern void arch_send_wakeup_ipi_mask(const struct cpumask *mask);
-> +extern void arch_send_wakeup_ipi(int cpu);
+> +void arm64_backtrace_ipi(cpumask_t *mask)
+> +{
+> +       __ipi_send_mask(ipi_desc[IPI_CPU_BACKTRACE], mask);
+> +}
+> +
+> +void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
+> +{
+> +       /*
+> +        * NOTE: though nmi_trigger_cpumask_backtrace has "nmi_" in the name,
+> +        * nothing about it truly needs to be backed by an NMI, it's just that
+> +        * it's _allowed_ to work with NMIs. If ipi_should_be_nmi() returned
+> +        * false our backtrace attempt will just be backed by a regular IPI.
 
-Is int used instead of unsigned int because we want to sometimes pass a
-negative value to indicate an error? Maybe it should be unsigned int.
+I think "backed by" is an idiom and may be confusing. Simplify by
+replacing "backed by" with "implemented using"?
+
+> +        */
+> +       nmi_trigger_cpumask_backtrace(mask, exclude_cpu, arm64_backtrace_ipi);
+> +}
+> +
+>  /*
+>   * Main handler for inter-processor interrupts
+>   */
