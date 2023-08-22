@@ -2,115 +2,109 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E91E1EE49A5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Aug 2023 05:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7E8EE4996
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Aug 2023 06:35:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232689AbjHVFHb (ORCPT
+        id S232999AbjHVGf6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Aug 2023 01:07:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46760 "EHLO
+        Tue, 22 Aug 2023 02:35:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231576AbjHVFH3 (ORCPT
+        with ESMTP id S231928AbjHVGf5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Aug 2023 01:07:29 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57073E42;
-        Mon, 21 Aug 2023 22:07:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692680821; x=1724216821;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=FjGrlNIY+vShUtvCpATT+KcAnzFBFFjm1ThsnaWT4H0=;
-  b=hL4xq9lgsSQmr0QH2YrhYekw7P1RpYJJFmTc+LXHKeTpoqWfk8acJwhn
-   EdlkNdZJ/UUIT1yZ4UX6VrimqPCmcKhjCFjYNahHRrQUjjYivi0muxx63
-   dNqBgXVOi/+NsrYFIYLHcLnFH6WhHgGXz+Mxugyv6Efsw9dzHQ5Ux2eUB
-   MsYV2pE/nOoAbhK2GOx1A7wds4RbGxONlfnCgtcZ/feuMV6jvGnpwfWz/
-   PnyLe4dQdyRoI0eYsJfSk+9XVBlL3ddBCBFzsW/vcgmFWgtorxetSXFVf
-   GVvRJjUETzXHJPZKAHXB/D/HLun3cATQObyZgZtDHiGsimJCUVE2wMexm
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="440146780"
-X-IronPort-AV: E=Sophos;i="6.01,192,1684825200"; 
-   d="scan'208";a="440146780"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 22:05:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="982737043"
-X-IronPort-AV: E=Sophos;i="6.01,192,1684825200"; 
-   d="scan'208";a="982737043"
-Received: from dmi-pnp-i7.sh.intel.com ([10.239.159.155])
-  by fmsmga006.fm.intel.com with ESMTP; 21 Aug 2023 22:05:12 -0700
-From:   Dapeng Mi <dapeng1.mi@linux.intel.com>
-To:     Sean Christopherson <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        Tue, 22 Aug 2023 02:35:57 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A693FBC;
+        Mon, 21 Aug 2023 23:35:51 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE0F12F4;
+        Mon, 21 Aug 2023 23:36:31 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.3.221])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A2D23F740;
+        Mon, 21 Aug 2023 23:35:48 -0700 (PDT)
+Date:   Tue, 22 Aug 2023 07:35:41 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-perf-users@vger.kernel.org, ito-yuichi@fujitsu.com,
+        Chen-Yu Tsai <wens@csie.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Like Xu <likexu@tencent.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Zhang Xiong <xiong.y.zhang@intel.com>,
-        Lv Zhiyuan <zhiyuan.lv@intel.com>,
-        Yang Weijiang <weijiang.yang@intel.com>,
-        Dapeng Mi <dapeng1.mi@intel.com>,
-        Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH RFC v3 13/13] KVM: x86/pmu: Expose Topdown in MSR_IA32_PERF_CAPABILITIES
-Date:   Tue, 22 Aug 2023 13:11:40 +0800
-Message-Id: <20230822051140.512879-14-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230822051140.512879-1-dapeng1.mi@linux.intel.com>
-References: <20230822051140.512879-1-dapeng1.mi@linux.intel.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        kgdb-bugreport@lists.sourceforge.net,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 5/7] arm64: ipi_debug: Add support for backtrace using
+ the debug IPI
+Message-ID: <ZORXPXbi3f8tUY-N@FVFF77S0Q05N>
+References: <20230601213440.2488667-1-dianders@chromium.org>
+ <20230601143109.v9.5.I65981105e1f62550b0316625dd1e599deaf9e1aa@changeid>
+ <ZNDGMJW01avOMShn@FVFF77S0Q05N.cambridge.arm.com>
+ <CAD=FV=Wz4Y836__Fo=Va8ek9BLEoTTbYx_zycBuVony37eOGVg@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD=FV=Wz4Y836__Fo=Va8ek9BLEoTTbYx_zycBuVony37eOGVg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Topdown support is enumerated via IA32_PERF_CAPABILITIES[bit 15]. Enable
-this bit for guest when the feature is available on host.
+On Mon, Aug 21, 2023 at 05:06:50PM -0700, Doug Anderson wrote:
+> On Mon, Aug 7, 2023 at 3:23 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> > On Thu, Jun 01, 2023 at 02:31:49PM -0700, Douglas Anderson wrote:
+> > > From: Sumit Garg <sumit.garg@linaro.org>
 
-Co-developed-by: Yang Weijiang <weijiang.yang@intel.com>
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- arch/x86/kvm/vmx/pmu_intel.c | 3 +++
- arch/x86/kvm/vmx/vmx.c       | 2 ++
- 2 files changed, 5 insertions(+)
+> > >  static irqreturn_t ipi_debug_handler(int irq, void *data)
+> > >  {
+> > > -     /* nop, NMI handlers for special features can be added here. */
+> > > +     irqreturn_t ret = IRQ_NONE;
+> > > +
+> > > +     /*
+> > > +      * NOTE: Just like in arch_trigger_cpumask_backtrace(), we're calling
+> > > +      * a function with "nmi_" in the name but it works fine even if we
+> > > +      * are using a regulaor IPI.
+> > > +      */
+> > > +     if (nmi_cpu_backtrace(get_irq_regs()))
+> > > +             ret = IRQ_HANDLED;
+> > >
+> >
+> > Does this need the printk_deferred_{enter,exit}() that 32-bit arm has?
+> 
+> I don't _think_ so, but I also don't _think_ it's needed for arm32.
+> ;-) Let me explain my logic and you can tell me if it sounds right to
+> you.
+> 
+> If we're doing the backtrace in pseudo-NMI context then we definitely
+> don't need it. Specifically, the printk_deferred_{enter,exit}() just
+> manages the per-cpu "printk_context" value. That value doesn't matter
+> if "in_nmi()" returns true.
+> 
+> If we're _not_ doing the backtrace in pseudo-NMI context then I think
+> we also don't need it. After all, if we're not in pseudo-NMI context
+> then it's perfectly fine to print, right?
+> 
+> While it's hard to know 100% for sure, my best guess is that in arm
+> this might have helped prevent stack traces from getting interspersed
+> among one another. I guess this is no longer needed as of commit
+> 55d6af1d6688 ("lib/nmi_backtrace: explicitly serialize banner and
+> regs")? In any case, when I tested this earlier things seemed to
+> printout fine without it...
 
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 04ccb8c6f7e4..5783cde00054 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -614,6 +614,9 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
- 		(((1ull << pmu->nr_arch_fixed_counters) - 1) << INTEL_PMC_IDX_FIXED));
- 	pmu->global_ctrl_mask = counter_mask;
- 
-+	if (intel_pmu_metrics_is_enabled(vcpu))
-+		pmu->global_ctrl_mask &= ~(1ULL << GLOBAL_CTRL_EN_PERF_METRICS);
-+
- 	/*
- 	 * GLOBAL_STATUS and GLOBAL_OVF_CONTROL (a.k.a. GLOBAL_STATUS_RESET)
- 	 * share reserved bit definitions.  The kernel just happens to use
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index e6849f780dba..69a425be55bf 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7827,6 +7827,8 @@ static u64 vmx_get_perf_capabilities(void)
- 			perf_cap &= ~PERF_CAP_PEBS_BASELINE;
- 	}
- 
-+	perf_cap |= host_perf_cap & PMU_CAP_PERF_METRICS;
-+
- 	return perf_cap;
- }
- 
--- 
-2.34.1
+Thanks for that explanation; that makes sense to me! Looking around a bit I see
+that x86 doesn't bother either.
 
+> That being said, it wouldn't hurt to include it here and I'll do it if you
+> want.
+
+No need -- I'm happy without it.
+
+Thanks,
+Mark.
