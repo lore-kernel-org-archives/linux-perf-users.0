@@ -2,220 +2,95 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 827E4EE4996
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Aug 2023 06:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEC0EE4996
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Aug 2023 08:01:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232919AbjHVGm5 (ORCPT
+        id S233703AbjHVIBJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Aug 2023 02:42:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50212 "EHLO
+        Tue, 22 Aug 2023 04:01:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232502AbjHVGm4 (ORCPT
+        with ESMTP id S233632AbjHVIAi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Aug 2023 02:42:56 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EEEC412C;
-        Mon, 21 Aug 2023 23:42:52 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 756332F4;
-        Mon, 21 Aug 2023 23:43:33 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.3.221])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C2863F740;
-        Mon, 21 Aug 2023 23:42:49 -0700 (PDT)
-Date:   Tue, 22 Aug 2023 07:42:47 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-perf-users@vger.kernel.org, ito-yuichi@fujitsu.com,
-        Chen-Yu Tsai <wens@csie.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        kgdb-bugreport@lists.sourceforge.net,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 3/7] arm64: Add framework for a debug IPI
-Message-ID: <ZORY51mF4alI41G1@FVFF77S0Q05N>
-References: <20230601213440.2488667-1-dianders@chromium.org>
- <20230601143109.v9.3.Ie6c132b96ebbbcddbf6954b9469ed40a6960343c@changeid>
- <ZNDDgRuNGzovddaO@FVFF77S0Q05N.cambridge.arm.com>
- <CAD=FV=VVJsJSc=uQWad4x0EV2-iROFcueW_=4VbM+0N0+aD96g@mail.gmail.com>
+        Tue, 22 Aug 2023 04:00:38 -0400
+X-Greylist: delayed 368 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 22 Aug 2023 01:00:36 PDT
+Received: from out-60.mta0.migadu.com (out-60.mta0.migadu.com [91.218.175.60])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 775B219B
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Aug 2023 01:00:36 -0700 (PDT)
+Message-ID: <ae429c8e-a5af-f598-d5e0-087e654e45b7@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1692690866;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+O4si5w/E2/akKLW5SoU9zs6iDaWmx/D6iWPQnxzVds=;
+        b=XYndpGqF8frJwSvaa1p+E3hZ19j/ot0to+7OlDpYIDalXVRVklTSvRGk/FDPExA/vSHkQF
+        +Uxye/vKrWGQ6NidKsTTtkOS/V2lUeesjtJkfRBw5jIj2cihm5w8tYQUFzOlBGJ+2xy5RI
+        /sSeWLcAiX08EMJH0pR1O7tOsxlZ7Rw=
+Date:   Tue, 22 Aug 2023 15:54:17 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Subject: Re: [RFC PATCH 3/4] perf: Use vmalloc_to_folio()
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>, linux-mm@kvack.org
+Cc:     linux-perf-users@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, urezki@gmail.com,
+        hch@infradead.org, lstoakes@gmail.com
+References: <20230821202016.2910321-1-willy@infradead.org>
+ <20230821202016.2910321-4-willy@infradead.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <20230821202016.2910321-4-willy@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=VVJsJSc=uQWad4x0EV2-iROFcueW_=4VbM+0N0+aD96g@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Aug 21, 2023 at 03:16:56PM -0700, Doug Anderson wrote:
-> Hi,
+在 2023/8/22 4:20, Matthew Wilcox (Oracle) 写道:
+> Eliminate a use of page->mapping by using vmalloc_to_folio() instead.
 > 
-> On Mon, Aug 7, 2023 at 3:12 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> >
-> > On Thu, Jun 01, 2023 at 02:31:47PM -0700, Douglas Anderson wrote:
-> > > From: Sumit Garg <sumit.garg@linaro.org>
-> > >
-> > > Introduce a framework for an IPI that will be used for debug
-> > > purposes. The primary use case of this IPI will be to generate stack
-> > > crawls on other CPUs, but it will also be used to round up CPUs for
-> > > kgdb.
-> > >
-> > > When possible, we try to allocate this debug IPI as an NMI (or a
-> > > pseudo NMI). If that fails (due to CONFIG, an incompatible interrupt
-> > > controller, a quirk, missing the "irqchip.gicv3_pseudo_nmi=1" kernel
-> > > parameter, etc) we fall back to a normal IPI.
-> > >
-> > > NOTE: hooking this up for CPU backtrace / kgdb will happen in a future
-> > > patch, this just adds the framework.
-> > >
-> > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> >
-> > I think that we shouldn't add a framework in a separate file for this:
-> >
-> > * This is very similar to our existing IPI management in smp.c, so it feels
-> >   like duplication, or at least another thing we'd like to keep in-sync.
-> >
-> > * We're going to want an NMI backtrace regardless of KGDB
-> >
-> > * We're going to want the IPI_CPU_STOP and IPI_CRASH_CPU_STOP IPIs to be NMIs
-> >   too.
-> >
-> > I reckon it'd be better to extend the existing IPI logic in smp.c to allow IPIs
-> > to be requested as NMIs, e.g.
-> >
-> > ----
-> > diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> > index edd63894d61e8..48e6aa62c473e 100644
-> > --- a/arch/arm64/kernel/smp.c
-> > +++ b/arch/arm64/kernel/smp.c
-> > @@ -33,6 +33,7 @@
-> >  #include <linux/kernel_stat.h>
-> >  #include <linux/kexec.h>
-> >  #include <linux/kvm_host.h>
-> > +#include <linux/nmi.h>
-> >
-> >  #include <asm/alternative.h>
-> >  #include <asm/atomic.h>
-> > @@ -926,6 +927,21 @@ static void smp_cross_call(const struct cpumask *target, unsigned int ipinr)
-> >         __ipi_send_mask(ipi_desc[ipinr], target);
-> >  }
-> >
-> > +static bool ipi_should_be_nmi(enum ipi_msg_type ipi)
-> > +{
-> > +       if (!system_uses_irq_prio_masking())
-> > +               return false;
-> > +
-> > +       switch (ipi) {
-> > +       /*
-> > +        * TODO: select NMI IPIs here
-> > +        */
-> > +               return true;
-> > +       default:
-> > +               return false;
-> > +       }
-> > +}
-> > +
-> >  static void ipi_setup(int cpu)
-> >  {
-> >         int i;
-> > @@ -933,8 +949,14 @@ static void ipi_setup(int cpu)
-> >         if (WARN_ON_ONCE(!ipi_irq_base))
-> >                 return;
-> >
-> > -       for (i = 0; i < nr_ipi; i++)
-> > -               enable_percpu_irq(ipi_irq_base + i, 0);
-> > +       for (i = 0; i < nr_ipi; i++) {
-> > +               if (ipi_should_be_nmi(i)) {
-> > +                       prepare_percpu_nmi(ipi_irq_base + i);
-> > +                       enable_percpu_nmi(ipi_irq_base + i, 0);
-> > +               } else {
-> > +                       enable_percpu_irq(ipi_irq_base + i, 0);
-> > +               }
-> > +       }
-> >  }
-> >
-> >  #ifdef CONFIG_HOTPLUG_CPU
-> > @@ -945,8 +967,14 @@ static void ipi_teardown(int cpu)
-> >         if (WARN_ON_ONCE(!ipi_irq_base))
-> >                 return;
-> >
-> > -       for (i = 0; i < nr_ipi; i++)
-> > -               disable_percpu_irq(ipi_irq_base + i);
-> > +       for (i = 0; i < nr_ipi; i++) {
-> > +               if (ipi_should_be_nmi(i)) {
-> > +                       disable_percpu_nmi(ipi_irq_base + i);
-> > +                       teardown_percpu_nmi(ipi_irq_base + i);
-> > +               } else {
-> > +                       disable_percpu_irq(ipi_irq_base + i);
-> > +               }
-> > +       }
-> >  }
-> >  #endif
-> >
-> > @@ -958,11 +986,19 @@ void __init set_smp_ipi_range(int ipi_base, int n)
-> >         nr_ipi = min(n, NR_IPI);
-> >
-> >         for (i = 0; i < nr_ipi; i++) {
-> > -               int err;
-> > -
-> > -               err = request_percpu_irq(ipi_base + i, ipi_handler,
-> > -                                        "IPI", &cpu_number);
-> > -               WARN_ON(err);
-> > +               int err = -EINVAL;
-> > +
-> > +               if (ipi_should_be_nmi(i)) {
-> > +                       err = request_percpu_nmi(ipi_base + i, ipi_handler,
-> > +                                                "IPI", &cpu_number);
-> > +                       WARN(err, "Could not request IPI %d as NMI, err=%d\n",
-> > +                            i, err);
-> > +               } else {
-> > +                       err = request_percpu_irq(ipi_base + i, ipi_handler,
-> > +                                                "IPI", &cpu_number);
-> > +                       WARN(err, "Could not request IPI %d as IRQ, err=%d\n",
-> > +                            i, err);
-> > +               }
-> >
-> >                 ipi_desc[i] = irq_to_desc(ipi_base + i);
-> >                 irq_set_status_flags(ipi_base + i, IRQ_HIDDEN);
-> > ----
-> >
-> > ... and then if we need an IPI for KGDB, we can add that to the existing list
-> > of IPIs, and have it requested/enabled/disabled as usual.
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>   include/linux/mm.h          | 5 +++++
+>   kernel/events/ring_buffer.c | 4 ++--
+>   2 files changed, 7 insertions(+), 2 deletions(-)
 > 
-> Sounds good. I'm starting to work on v10 incorporating your feedback.
-> A few quick questions:
-> 
-> 1. If I mostly take your patch above verbatim, do you have any
-> suggested tags for Author/Signed-off-by? I'd tend to set you as the
-> author but I can't do that because you didn't provide a
-> Signed-off-by...
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 840bae5f23b6..7d84a2843193 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -1134,6 +1134,11 @@ int region_intersects(resource_size_t offset, size_t size, unsigned long flags,
+>   struct page *vmalloc_to_page(const void *addr);
+>   unsigned long vmalloc_to_pfn(const void *addr);
+>   
+> +static inline struct folio *vmalloc_to_folio(const void *addr)
+> +{
+> +	return page_folio(vmalloc_to_page(addr));
+> +}
 
-Sorry about that. For the above:
+Thanks a lot. This function is very wonderful. It is also what I need.
 
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Zhu Yanjun
 
-If squashed into another patch, then feel free to use:
+> +
+>   /*
+>    * Determine if an address is within the vmalloc range
+>    *
+> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+> index c73add132618..56939dc3bf33 100644
+> --- a/kernel/events/ring_buffer.c
+> +++ b/kernel/events/ring_buffer.c
+> @@ -873,9 +873,9 @@ __perf_mmap_to_page(struct perf_buffer *rb, unsigned long pgoff)
+>   
+>   static void perf_mmap_unmark_page(void *addr)
+>   {
+> -	struct page *page = vmalloc_to_page(addr);
+> +	struct folio *folio = vmalloc_to_folio(addr);
+>   
+> -	page->mapping = NULL;
+> +	folio->mapping = NULL;
+>   }
+>   
+>   static void rb_free_work(struct work_struct *work)
 
-Co-developed-by: Mark Rutland <mark.rutland@arm.com>
-
-> 2. Would you prefer this patch on its own, or would you rather it be
-> squashed with the first user ("backtrace")? On its own, I think I have
-> to get rid of the "switch" statement in ipi_should_be_nmi() and just
-> return false;
-
-I reckon it makes sense to squash it with the first user.
-
-Thanks,
-Mark.
