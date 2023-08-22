@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9FBEE49AB
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Aug 2023 23:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABFEEE49AB
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Aug 2023 23:50:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231770AbjHVXlk (ORCPT
+        id S231797AbjHVXuH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Aug 2023 19:41:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48396 "EHLO
+        Tue, 22 Aug 2023 19:50:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229643AbjHVXlj (ORCPT
+        with ESMTP id S229882AbjHVXuH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Aug 2023 19:41:39 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE759CD9
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Aug 2023 16:41:37 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-4fe11652b64so7725334e87.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Aug 2023 16:41:37 -0700 (PDT)
+        Tue, 22 Aug 2023 19:50:07 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04286E46
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Aug 2023 16:50:05 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-4fe11652b64so7731281e87.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Aug 2023 16:50:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692747696; x=1693352496;
+        d=chromium.org; s=google; t=1692748203; x=1693353003;
         h=cc:to:subject:message-id:date:user-agent:from:references
          :in-reply-to:mime-version:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=m0ITuLKhlzaPZQWpkBry/7ALb2l4JBYh1AZmqI1V7FM=;
-        b=Y7w4OUtznxoS71/IslUNopqCMutP14NzKPcUtiLyCOnZerbLBGx6vJn5dkPegAHOds
-         biZnYSMOGTRwNZysAvohXQKG9JD/9dTXN6lhtQFPNpvGHYNaRP98qcGL+O7AFuso/ZL/
-         C24MllDubIzuurS/lnUb9pMBFaD7yR0RbeVOU=
+        bh=qIRpVWVNE+Q6hOPS1O2UFBquGTLRNlUx0pFJvzId0+0=;
+        b=BhX6h+6BHRigZyr1u1JtAp7x+mmpR1I23lvosD3zaZNEJXX7pP/KW3EXBris6W1P7e
+         vs9/tZZwB+VC8ChAJrIS+1KhMxnHEOU/+o4uVrktRj5hr3lf1evT/b3cjBenAKeA3z8T
+         s/D8szJzpHDjXwrT6WCkJx9yhbiS83OaR5MJs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692747696; x=1693352496;
+        d=1e100.net; s=20221208; t=1692748203; x=1693353003;
         h=cc:to:subject:message-id:date:user-agent:from:references
          :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=m0ITuLKhlzaPZQWpkBry/7ALb2l4JBYh1AZmqI1V7FM=;
-        b=OnKTfHhxkmZHQR5BjL4seh+9IXdc35dV7lsmyDc1bdpMX/GbzaUQPiBUbYJXgtUshV
-         xo3GNpMw+GbH3efBBwYtOMdmreAHeCu70VieBY3P7EJXrMrNLbjEHFDM7GRHTluNiL0x
-         9WpNiMcSwAbmVvsSnpy/e/3hVHnr9OTUI9yo/Rat/8ygGv6TGLfHIqZI01A7SLwZsMP3
-         gPuKlGDgZvIC7zm8RlJ9fGEZFcJ0YIiA+iBOuJsmKrdQitizXgV7lgZXAmf1mLUkHrax
-         jPMi/ol6xCUNvQVLFBG+aY2AsLdKwsrm+TvQ3pTDMlOvPuNjtQzDJ8XTG1Tk7jOYE90w
-         qqLA==
-X-Gm-Message-State: AOJu0YwMGesarTBskoVQHeWxt6eMAgJr228l6+swesOYPdthkeiYIA4I
-        wKZW8/pWZd4nmsDbSI6N6HQCJNr1AvB7B1uTvq+feIS4iM5+YuGz
-X-Google-Smtp-Source: AGHT+IEhLsAs1tdCvUcl8AJ/GjjhJa/5joZKAoaHiUriI6gZb72jKvliVBs4CN5qEiAdPBs1NXCLssMlgEeI5HQHyWk=
-X-Received: by 2002:a19:4305:0:b0:4fd:faa5:64ed with SMTP id
- q5-20020a194305000000b004fdfaa564edmr7217449lfa.11.1692747695945; Tue, 22 Aug
- 2023 16:41:35 -0700 (PDT)
+        bh=qIRpVWVNE+Q6hOPS1O2UFBquGTLRNlUx0pFJvzId0+0=;
+        b=E8Js/2urInEHAH+Uc2l25XNXFVBnJrlZFZ8yeQZg24aNupvuqO9J9vVkWrKuCjpDbC
+         1hv+gCgW13Pes3crYXaAnXKm2LT4S330jMXNGDnCYzunlpXL12Y8pfQynOCN0OYzrIIr
+         MjRk+egNSyGbu0fMYv0lJwfYKciLJe9QHFLSytXfnpVRyJBrHQQbk5kTcWemnoeoiuvV
+         sghkBDsKMl1R16VO50FVZSe1VT7PJ6iychItVDEQvFb92kVqNrz6CC0wIY1K74UssRz6
+         E7BSpdvpki6hbzlUrG1UrYapd1t5b9+BmcGzAo7rCZGzVK4mkbGtALQtWugiKeAwf6yg
+         iy0Q==
+X-Gm-Message-State: AOJu0YxHg5YnRISXQ7yNNn8ww4G514zmJplgf2bNGCf256jA8pIoU+Fr
+        BrHIDvA+ZLHX+zYzdz44LJZ8R2uOBtw4xmNPdEfnDw==
+X-Google-Smtp-Source: AGHT+IFOXOL7TfudL+WI3zrqXmcjUL0QfEpAn1uhs5Lxh0RVge5wSfxCqipfqw2m9ouwuXu63XSlC+8FIVbY5mT+mRU=
+X-Received: by 2002:a05:6512:3613:b0:500:8c19:d8c6 with SMTP id
+ f19-20020a056512361300b005008c19d8c6mr2483247lfs.58.1692748203300; Tue, 22
+ Aug 2023 16:50:03 -0700 (PDT)
 Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 22 Aug 2023 16:41:35 -0700
+ HTTPREST; Tue, 22 Aug 2023 16:50:02 -0700
 MIME-Version: 1.0
-In-Reply-To: <20230822142644.v10.5.Ifadbfd45b22c52edcb499034dd4783d096343260@changeid>
-References: <20230822212927.249645-1-dianders@chromium.org> <20230822142644.v10.5.Ifadbfd45b22c52edcb499034dd4783d096343260@changeid>
+In-Reply-To: <20230822142644.v10.6.I2ef26d1b3bfbed2d10a281942b0da7d9854de05e@changeid>
+References: <20230822212927.249645-1-dianders@chromium.org> <20230822142644.v10.6.I2ef26d1b3bfbed2d10a281942b0da7d9854de05e@changeid>
 From:   Stephen Boyd <swboyd@chromium.org>
 User-Agent: alot/0.10
-Date:   Tue, 22 Aug 2023 16:41:35 -0700
-Message-ID: <CAE-0n51weSj5thSdTdpKmQsycsQgc2MovsTanSUmQ4GEtYBcxw@mail.gmail.com>
-Subject: Re: [PATCH v10 5/6] arm64: smp: IPI_CPU_STOP and IPI_CPU_CRASH_STOP
- should try for NMI
+Date:   Tue, 22 Aug 2023 16:50:02 -0700
+Message-ID: <CAE-0n537USZdo+3902RzSvWYor2qx7bxoYckKs1jLeXFcg-NNA@mail.gmail.com>
+Subject: Re: [PATCH v10 6/6] arm64: kgdb: Implement kgdb_roundup_cpus() to
+ enable pseudo-NMI roundup
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Daniel Thompson <daniel.thompson@linaro.org>,
         Douglas Anderson <dianders@chromium.org>,
@@ -73,7 +73,6 @@ Cc:     Lecopzer Chen <lecopzer.chen@mediatek.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Masayoshi Mizuma <msys.mizuma@gmail.com>,
         D Scott Phillips <scott@os.amperecomputing.com>,
-        Ingo Molnar <mingo@kernel.org>,
         Josh Poimboeuf <jpoimboe@kernel.org>,
         Valentin Schneider <vschneid@redhat.com>,
         linux-kernel@vger.kernel.org
@@ -82,13 +81,23 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Quoting Douglas Anderson (2023-08-22 14:27:00)
-> There's no reason why IPI_CPU_STOP and IPI_CPU_CRASH_STOP can't be
-> handled as NMI. They are very simple and everything in them is
-> NMI-safe. Mark them as things to use NMI for if NMI is available.
->
-> Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
+Quoting Douglas Anderson (2023-08-22 14:27:01)
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index c51d54019f5f..5ee6b69b4360 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -75,10 +76,11 @@ enum ipi_msg_type {
+>         IPI_IRQ_WORK,
+>         NR_IPI,
+>         /*
+> -        * CPU_BACKTRACE is special and not included in NR_IPI
+> +        * CPU_BACKTRACE and KGDB_ROUNDUP are special and not included in NR_IPI
+>          * or tracable with trace_ipi_*
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+If this is going to be added to in the future then the comment could be
+more generic to avoid further updates.
+
+	 /*
+	  * Any enum equal to NR_IPI or less than MAX_IPI is special and
+	  * not included in NR_IPI ...
+	  /
