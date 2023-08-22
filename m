@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7E8EE4996
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Aug 2023 06:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 827E4EE4996
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Aug 2023 06:42:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232999AbjHVGf6 (ORCPT
+        id S232919AbjHVGm5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Aug 2023 02:35:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51750 "EHLO
+        Tue, 22 Aug 2023 02:42:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231928AbjHVGf5 (ORCPT
+        with ESMTP id S232502AbjHVGm4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Aug 2023 02:35:57 -0400
+        Tue, 22 Aug 2023 02:42:56 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A693FBC;
-        Mon, 21 Aug 2023 23:35:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EEEC412C;
+        Mon, 21 Aug 2023 23:42:52 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE0F12F4;
-        Mon, 21 Aug 2023 23:36:31 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 756332F4;
+        Mon, 21 Aug 2023 23:43:33 -0700 (PDT)
 Received: from FVFF77S0Q05N (unknown [10.57.3.221])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A2D23F740;
-        Mon, 21 Aug 2023 23:35:48 -0700 (PDT)
-Date:   Tue, 22 Aug 2023 07:35:41 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C2863F740;
+        Mon, 21 Aug 2023 23:42:49 -0700 (PDT)
+Date:   Tue, 22 Aug 2023 07:42:47 +0100
 From:   Mark Rutland <mark.rutland@arm.com>
 To:     Doug Anderson <dianders@chromium.org>
 Cc:     Catalin Marinas <catalin.marinas@arm.com>,
@@ -40,71 +40,182 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Masayoshi Mizuma <msys.mizuma@gmail.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 5/7] arm64: ipi_debug: Add support for backtrace using
- the debug IPI
-Message-ID: <ZORXPXbi3f8tUY-N@FVFF77S0Q05N>
+Subject: Re: [PATCH v9 3/7] arm64: Add framework for a debug IPI
+Message-ID: <ZORY51mF4alI41G1@FVFF77S0Q05N>
 References: <20230601213440.2488667-1-dianders@chromium.org>
- <20230601143109.v9.5.I65981105e1f62550b0316625dd1e599deaf9e1aa@changeid>
- <ZNDGMJW01avOMShn@FVFF77S0Q05N.cambridge.arm.com>
- <CAD=FV=Wz4Y836__Fo=Va8ek9BLEoTTbYx_zycBuVony37eOGVg@mail.gmail.com>
+ <20230601143109.v9.3.Ie6c132b96ebbbcddbf6954b9469ed40a6960343c@changeid>
+ <ZNDDgRuNGzovddaO@FVFF77S0Q05N.cambridge.arm.com>
+ <CAD=FV=VVJsJSc=uQWad4x0EV2-iROFcueW_=4VbM+0N0+aD96g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=Wz4Y836__Fo=Va8ek9BLEoTTbYx_zycBuVony37eOGVg@mail.gmail.com>
+In-Reply-To: <CAD=FV=VVJsJSc=uQWad4x0EV2-iROFcueW_=4VbM+0N0+aD96g@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Aug 21, 2023 at 05:06:50PM -0700, Doug Anderson wrote:
-> On Mon, Aug 7, 2023 at 3:23 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> > On Thu, Jun 01, 2023 at 02:31:49PM -0700, Douglas Anderson wrote:
-> > > From: Sumit Garg <sumit.garg@linaro.org>
-
-> > >  static irqreturn_t ipi_debug_handler(int irq, void *data)
-> > >  {
-> > > -     /* nop, NMI handlers for special features can be added here. */
-> > > +     irqreturn_t ret = IRQ_NONE;
-> > > +
-> > > +     /*
-> > > +      * NOTE: Just like in arch_trigger_cpumask_backtrace(), we're calling
-> > > +      * a function with "nmi_" in the name but it works fine even if we
-> > > +      * are using a regulaor IPI.
-> > > +      */
-> > > +     if (nmi_cpu_backtrace(get_irq_regs()))
-> > > +             ret = IRQ_HANDLED;
-> > >
+On Mon, Aug 21, 2023 at 03:16:56PM -0700, Doug Anderson wrote:
+> Hi,
+> 
+> On Mon, Aug 7, 2023 at 3:12 AM Mark Rutland <mark.rutland@arm.com> wrote:
 > >
-> > Does this need the printk_deferred_{enter,exit}() that 32-bit arm has?
+> > On Thu, Jun 01, 2023 at 02:31:47PM -0700, Douglas Anderson wrote:
+> > > From: Sumit Garg <sumit.garg@linaro.org>
+> > >
+> > > Introduce a framework for an IPI that will be used for debug
+> > > purposes. The primary use case of this IPI will be to generate stack
+> > > crawls on other CPUs, but it will also be used to round up CPUs for
+> > > kgdb.
+> > >
+> > > When possible, we try to allocate this debug IPI as an NMI (or a
+> > > pseudo NMI). If that fails (due to CONFIG, an incompatible interrupt
+> > > controller, a quirk, missing the "irqchip.gicv3_pseudo_nmi=1" kernel
+> > > parameter, etc) we fall back to a normal IPI.
+> > >
+> > > NOTE: hooking this up for CPU backtrace / kgdb will happen in a future
+> > > patch, this just adds the framework.
+> > >
+> > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> >
+> > I think that we shouldn't add a framework in a separate file for this:
+> >
+> > * This is very similar to our existing IPI management in smp.c, so it feels
+> >   like duplication, or at least another thing we'd like to keep in-sync.
+> >
+> > * We're going to want an NMI backtrace regardless of KGDB
+> >
+> > * We're going to want the IPI_CPU_STOP and IPI_CRASH_CPU_STOP IPIs to be NMIs
+> >   too.
+> >
+> > I reckon it'd be better to extend the existing IPI logic in smp.c to allow IPIs
+> > to be requested as NMIs, e.g.
+> >
+> > ----
+> > diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> > index edd63894d61e8..48e6aa62c473e 100644
+> > --- a/arch/arm64/kernel/smp.c
+> > +++ b/arch/arm64/kernel/smp.c
+> > @@ -33,6 +33,7 @@
+> >  #include <linux/kernel_stat.h>
+> >  #include <linux/kexec.h>
+> >  #include <linux/kvm_host.h>
+> > +#include <linux/nmi.h>
+> >
+> >  #include <asm/alternative.h>
+> >  #include <asm/atomic.h>
+> > @@ -926,6 +927,21 @@ static void smp_cross_call(const struct cpumask *target, unsigned int ipinr)
+> >         __ipi_send_mask(ipi_desc[ipinr], target);
+> >  }
+> >
+> > +static bool ipi_should_be_nmi(enum ipi_msg_type ipi)
+> > +{
+> > +       if (!system_uses_irq_prio_masking())
+> > +               return false;
+> > +
+> > +       switch (ipi) {
+> > +       /*
+> > +        * TODO: select NMI IPIs here
+> > +        */
+> > +               return true;
+> > +       default:
+> > +               return false;
+> > +       }
+> > +}
+> > +
+> >  static void ipi_setup(int cpu)
+> >  {
+> >         int i;
+> > @@ -933,8 +949,14 @@ static void ipi_setup(int cpu)
+> >         if (WARN_ON_ONCE(!ipi_irq_base))
+> >                 return;
+> >
+> > -       for (i = 0; i < nr_ipi; i++)
+> > -               enable_percpu_irq(ipi_irq_base + i, 0);
+> > +       for (i = 0; i < nr_ipi; i++) {
+> > +               if (ipi_should_be_nmi(i)) {
+> > +                       prepare_percpu_nmi(ipi_irq_base + i);
+> > +                       enable_percpu_nmi(ipi_irq_base + i, 0);
+> > +               } else {
+> > +                       enable_percpu_irq(ipi_irq_base + i, 0);
+> > +               }
+> > +       }
+> >  }
+> >
+> >  #ifdef CONFIG_HOTPLUG_CPU
+> > @@ -945,8 +967,14 @@ static void ipi_teardown(int cpu)
+> >         if (WARN_ON_ONCE(!ipi_irq_base))
+> >                 return;
+> >
+> > -       for (i = 0; i < nr_ipi; i++)
+> > -               disable_percpu_irq(ipi_irq_base + i);
+> > +       for (i = 0; i < nr_ipi; i++) {
+> > +               if (ipi_should_be_nmi(i)) {
+> > +                       disable_percpu_nmi(ipi_irq_base + i);
+> > +                       teardown_percpu_nmi(ipi_irq_base + i);
+> > +               } else {
+> > +                       disable_percpu_irq(ipi_irq_base + i);
+> > +               }
+> > +       }
+> >  }
+> >  #endif
+> >
+> > @@ -958,11 +986,19 @@ void __init set_smp_ipi_range(int ipi_base, int n)
+> >         nr_ipi = min(n, NR_IPI);
+> >
+> >         for (i = 0; i < nr_ipi; i++) {
+> > -               int err;
+> > -
+> > -               err = request_percpu_irq(ipi_base + i, ipi_handler,
+> > -                                        "IPI", &cpu_number);
+> > -               WARN_ON(err);
+> > +               int err = -EINVAL;
+> > +
+> > +               if (ipi_should_be_nmi(i)) {
+> > +                       err = request_percpu_nmi(ipi_base + i, ipi_handler,
+> > +                                                "IPI", &cpu_number);
+> > +                       WARN(err, "Could not request IPI %d as NMI, err=%d\n",
+> > +                            i, err);
+> > +               } else {
+> > +                       err = request_percpu_irq(ipi_base + i, ipi_handler,
+> > +                                                "IPI", &cpu_number);
+> > +                       WARN(err, "Could not request IPI %d as IRQ, err=%d\n",
+> > +                            i, err);
+> > +               }
+> >
+> >                 ipi_desc[i] = irq_to_desc(ipi_base + i);
+> >                 irq_set_status_flags(ipi_base + i, IRQ_HIDDEN);
+> > ----
+> >
+> > ... and then if we need an IPI for KGDB, we can add that to the existing list
+> > of IPIs, and have it requested/enabled/disabled as usual.
 > 
-> I don't _think_ so, but I also don't _think_ it's needed for arm32.
-> ;-) Let me explain my logic and you can tell me if it sounds right to
-> you.
+> Sounds good. I'm starting to work on v10 incorporating your feedback.
+> A few quick questions:
 > 
-> If we're doing the backtrace in pseudo-NMI context then we definitely
-> don't need it. Specifically, the printk_deferred_{enter,exit}() just
-> manages the per-cpu "printk_context" value. That value doesn't matter
-> if "in_nmi()" returns true.
-> 
-> If we're _not_ doing the backtrace in pseudo-NMI context then I think
-> we also don't need it. After all, if we're not in pseudo-NMI context
-> then it's perfectly fine to print, right?
-> 
-> While it's hard to know 100% for sure, my best guess is that in arm
-> this might have helped prevent stack traces from getting interspersed
-> among one another. I guess this is no longer needed as of commit
-> 55d6af1d6688 ("lib/nmi_backtrace: explicitly serialize banner and
-> regs")? In any case, when I tested this earlier things seemed to
-> printout fine without it...
+> 1. If I mostly take your patch above verbatim, do you have any
+> suggested tags for Author/Signed-off-by? I'd tend to set you as the
+> author but I can't do that because you didn't provide a
+> Signed-off-by...
 
-Thanks for that explanation; that makes sense to me! Looking around a bit I see
-that x86 doesn't bother either.
+Sorry about that. For the above:
 
-> That being said, it wouldn't hurt to include it here and I'll do it if you
-> want.
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
 
-No need -- I'm happy without it.
+If squashed into another patch, then feel free to use:
+
+Co-developed-by: Mark Rutland <mark.rutland@arm.com>
+
+> 2. Would you prefer this patch on its own, or would you rather it be
+> squashed with the first user ("backtrace")? On its own, I think I have
+> to get rid of the "switch" statement in ipi_should_be_nmi() and just
+> return false;
+
+I reckon it makes sense to squash it with the first user.
 
 Thanks,
 Mark.
