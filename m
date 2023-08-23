@@ -2,125 +2,116 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C27EE49A3
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 05:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 189FCEE49AB
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 07:11:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232767AbjHWF57 (ORCPT
+        id S232408AbjHWHLJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Aug 2023 01:57:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44898 "EHLO
+        Wed, 23 Aug 2023 03:11:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232761AbjHWF56 (ORCPT
+        with ESMTP id S231483AbjHWHLI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Aug 2023 01:57:58 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E77AA1;
-        Tue, 22 Aug 2023 22:57:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692770276; x=1724306276;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=PKQknWrLrf78uQf9GH3dL4JsbgZGq50+lfliSCkg8zA=;
-  b=S1eMAawR1CuhekvdXBA8ICsq3Tw7WOPyTHCxiptBOJZXebBP9zH4dhD4
-   mM/PHAAVfrzXSg1iMQa3VZdAo09aEp5lHbjDnLM1cLYJK/IdzHoRok4xh
-   1724o3zm+T2eCl+ZVX0m6Ux2LH/UJVS4qTxTSBkTPjPGP0UuQVSasv0gs
-   Br6U0epYiMPa27LpHiOfdrK1LirkyzZ/IbRZd/DwpVRJDpqhNaauAyXyV
-   DI0InLpBu7hbpc9nav1J+yyz53qx9Gt7GqDyyBeEeiuTVzX7RMh6MpNJ0
-   fBgNr5yZtwwNQtD3bU8QzBGMH/19OKvdQppAd56L9OldvqAXVqMm9MR3J
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="438009784"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="438009784"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 22:57:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="983140557"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="983140557"
-Received: from ebold-mobl1.ger.corp.intel.com (HELO tkristo-desk.bb.dnainternet.fi) ([10.251.213.156])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 22:57:51 -0700
-From:   Tero Kristo <tero.kristo@linux.intel.com>
-To:     dave.hansen@linux.intel.com, tglx@linutronix.de, x86@kernel.org,
-        bp@alien8.de
-Cc:     artem.bityutskiy@linux.intel.com, acme@kernel.org,
-        bpf@vger.kernel.org, namhyung@kernel.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com, hpa@zytor.com, mark.rutland@arm.com,
-        jolsa@kernel.org, adrian.hunter@intel.com,
-        alexander.shishkin@linux.intel.com, peterz@infradead.org
-Subject: [PATCH 2/2] perf/core: Allow reading package events from perf_event_read_local
-Date:   Wed, 23 Aug 2023 08:56:53 +0300
-Message-Id: <20230823055653.2964237-3-tero.kristo@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230823055653.2964237-1-tero.kristo@linux.intel.com>
-References: <20230823055653.2964237-1-tero.kristo@linux.intel.com>
+        Wed, 23 Aug 2023 03:11:08 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 078A3D1
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 00:11:05 -0700 (PDT)
+Received: from loongson.cn (unknown [112.20.109.102])
+        by gateway (Coremail) with SMTP id _____8Cx2eoIseVkhSIbAA--.50413S3;
+        Wed, 23 Aug 2023 15:11:04 +0800 (CST)
+Received: from [192.168.100.8] (unknown [112.20.109.102])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx4eQFseVkphphAA--.40032S3;
+        Wed, 23 Aug 2023 15:11:03 +0800 (CST)
+Message-ID: <8ead439a-63aa-434e-9d1e-3b1b05b6347b@loongson.cn>
+Date:   Wed, 23 Aug 2023 15:11:01 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] perf/trace: Fix mmap_flags for archs use generic
+ mman.h
+Content-Language: en-US
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     mingo@redhat.com, peterz@infradead.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        chenhuacai@kernel.org, linux-perf-users@vger.kernel.org,
+        loongson-kernel@lists.loongnix.cn, loongarch@lists.linux.dev
+References: <cover.1692694595.git.siyanteng@loongson.cn>
+ <03ddc1c0e01518df63aac88e561cd0ec3c1e0028.1692694595.git.siyanteng@loongson.cn>
+ <ZOT4Tuc6JGrbDqFW@kernel.org>
+From:   Yanteng Si <siyanteng@loongson.cn>
+In-Reply-To: <ZOT4Tuc6JGrbDqFW@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8Dx4eQFseVkphphAA--.40032S3
+X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Aw1kWFyxCw4UWr13ZFW3XFc_yoW8ur17pw
+        s5AayDG3WDXr1Yy3WxZFs0qF45Kr9FqFy5u3WDWwsrGF15Gr17Gr95AFsIkF15Xws0v3y2
+        9FWUur18tF1vvrbCm3ZEXasCq-sJn29KB7ZKAUJUUUUD529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+        xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+        AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+        tVWrXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+        8JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+        6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+        AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+        0xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
+        v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+        xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8aFAJUUUUU==
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Per-package perf events are typically registered with a single CPU only,
-however they can be read across all the CPUs within the package.
-Currently perf_event_read maps the event CPU according to the topology
-information to avoid an unnecessary SMP call, however
-perf_event_read_local deals with hard values and rejects a read with a
-failure if the CPU is not the one exactly registered. Allow similar
-mapping within the perf_event_read_local if the perf event in question
-can support this.
 
-This allows users like BPF code to read the package perf events properly
-across different CPUs within a package.
+在 2023/8/23 02:02, Arnaldo Carvalho de Melo 写道:
+> Em Tue, Aug 22, 2023 at 05:32:06PM +0800, Yanteng Si escreveu:
+>> Silence this warning:
+>>
+>> grep: /root/linux-next/tools/arch/xxxxx/include/uapi/asm//mman.h:
+>> No such file or directory
+>   
+>> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+>> ---
+>>   tools/perf/trace/beauty/mmap_flags.sh | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/trace/beauty/mmap_flags.sh b/tools/perf/trace/beauty/mmap_flags.sh
+>> index 3022597c8c17..d035b29fc5ec 100755
+>> --- a/tools/perf/trace/beauty/mmap_flags.sh
+>> +++ b/tools/perf/trace/beauty/mmap_flags.sh
+>> @@ -19,7 +19,7 @@ arch_mman=${arch_header_dir}/mman.h
+>>   
+>>   printf "static const char *mmap_flags[] = {\n"
+>>   regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
+>> -grep -E -q $regex ${arch_mman} && \
+>> +([ -f ${arch_mman} ] && grep -E -q $regex ${arch_mman}) && \
+>>   (grep -E $regex ${arch_mman} | \
+>>   	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
+>>   	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef MAP_%s\n#define MAP_%s %s\n#endif\n")
+> Humm, wouldn't this be simpler without that extra subshell? Like this:
+>
+> diff --git a/tools/perf/trace/beauty/mmap_flags.sh b/tools/perf/trace/beauty/mmap_flags.sh
+> index 3022597c8c178f21..0ac1886a83b5aceb 100755
+> --- a/tools/perf/trace/beauty/mmap_flags.sh
+> +++ b/tools/perf/trace/beauty/mmap_flags.sh
+> @@ -19,6 +19,7 @@ arch_mman=${arch_header_dir}/mman.h
+>   
+>   printf "static const char *mmap_flags[] = {\n"
+>   regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
+> +test -f ${arch_mman} && \
 
-Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
----
- kernel/events/core.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+The following lines have already used the [ ! -f ${arch_mman}, so let's 
+stay consistent？
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 78ae7b6f90fd..37db7c003b79 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4528,6 +4528,7 @@ int perf_event_read_local(struct perf_event *event, u64 *value,
- {
- 	unsigned long flags;
- 	int ret = 0;
-+	int event_cpu;
- 
- 	/*
- 	 * Disabling interrupts avoids all counter scheduling (context
-@@ -4551,15 +4552,19 @@ int perf_event_read_local(struct perf_event *event, u64 *value,
- 		goto out;
- 	}
- 
-+	/* Allow reading a per-package perf-event from local CPU also */
-+	event_cpu = READ_ONCE(event->oncpu);
-+	event_cpu = __perf_event_read_cpu(event, event_cpu);
-+
- 	/* If this is a per-CPU event, it must be for this CPU */
- 	if (!(event->attach_state & PERF_ATTACH_TASK) &&
--	    event->cpu != smp_processor_id()) {
-+	    event_cpu != smp_processor_id()) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
- 
- 	/* If this is a pinned event it must be running on this CPU */
--	if (event->attr.pinned && event->oncpu != smp_processor_id()) {
-+	if (event->attr.pinned && event_cpu != smp_processor_id()) {
- 		ret = -EBUSY;
- 		goto out;
- 	}
-@@ -4569,7 +4574,7 @@ int perf_event_read_local(struct perf_event *event, u64 *value,
- 	 * or local to this CPU. Furthermore it means its ACTIVE (otherwise
- 	 * oncpu == -1).
- 	 */
--	if (event->oncpu == smp_processor_id())
-+	if (event_cpu == smp_processor_id())
- 		event->pmu->read(event);
- 
- 	*value = local64_read(&event->count);
--- 
-2.25.1
+
+Thanks,
+
+Yanteng
+
+>   grep -E -q $regex ${arch_mman} && \
+>   (grep -E $regex ${arch_mman} | \
+>   	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
 
