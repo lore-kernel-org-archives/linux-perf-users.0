@@ -2,59 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD023EE49B0
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 08:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4568EEE49A0
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 08:14:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232930AbjHWIOU (ORCPT
+        id S232944AbjHWIO1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Aug 2023 04:14:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34516 "EHLO
+        Wed, 23 Aug 2023 04:14:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233715AbjHWIMh (ORCPT
+        with ESMTP id S233782AbjHWILH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Aug 2023 04:12:37 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 068A31984
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 01:09:35 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-58fbc0e0c6dso48684627b3.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 01:09:35 -0700 (PDT)
+        Wed, 23 Aug 2023 04:11:07 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA5BBCE6
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 01:09:22 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-58c9d29588aso70358107b3.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 01:09:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692778175; x=1693382975;
+        d=google.com; s=20221208; t=1692778162; x=1693382962;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=7+7xUX+eQzSie7iWr2Aj1jLiysTzidRjiqSjjI4y5Nk=;
-        b=KGzB2PREcs7owuua9gpo5mr9UCgvODDN4jNmDXQ31zJ8kKkY+8Xr/3r2UoXwLjOePS
-         K995kBSDC+RJdR30h2eK8/iNLOhSKskdWyoLgfI1S6WWIvjlf26gpbWQAnUWXcJRJNfY
-         /QCrLJ3LrQQ2lux2AtnVKQDte0QQl/LSPc0RJ7G/8jTqwBphx3j+BkaorZ8qNnEsuVRH
-         ld7PdetckaI4CSGfsLHt67Mn96NdZS2yYrIWZKCiXcojQNNV/rRqZ1MyWvQAvnVSnNDj
-         KVBTNy0H+WpKvBG1L0x8Fw5LdWroU+bq7lBqO+YDy/xx38C09qEmo6l1CzAtNUvAS0/Z
-         +XKw==
+        bh=tXvCFhL984TX2oQ47qDb/BYaP1EU6FGu4C4k2bcoWxA=;
+        b=d2ctvFcr4XNnEwl476cUwp8Ir8ybnDC28SJSGMpFfm3HWQyw6DeVHNNKOF2qZSfQL/
+         SFfKkvhanOKg/MhxxNwtbs5iHXcg6yQz+3K1BR/jH7TbgPHZ5W2aDSWuynYNLUENf4vM
+         hdVSpYlpMjLCEwCOP6A88bPMTrLIU4KT1tM95Hq2GQNL5d28EMRcpTQ7vS+PY4QIy5VS
+         Hr+tG9hvmXo+TwCpR/kov9shGLDR4zVThP9yDDLo7ipKpky3dybPMVywktOfFvBBaLLc
+         8ZwUDltEXVcQ/MNI1LYIZ7Pkf5QOoLXL0lGKRg0ZWmTgQvLq2KRmrGH7QX+u4e/JxafI
+         AMDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692778175; x=1693382975;
+        d=1e100.net; s=20221208; t=1692778162; x=1693382962;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7+7xUX+eQzSie7iWr2Aj1jLiysTzidRjiqSjjI4y5Nk=;
-        b=hBZj2Uui05BwlXyMQMh/xw/8LN8qqjyZx+B3uqE0D/wfG0XCsYqlbX78VfsPtaJmCu
-         iWQJ3KnAbE0ZQxw8ek42kch8oc4V2I58YKXqwNI608ACnrwjjMwpWvCoKZ6f3xp9i79s
-         JHaJYKNvdtTFQq4x/V/yF6I7X56clUXcAJeiehRUkV3G4K5jLtp/K11ydy5JDeoZ4Xrk
-         6WGj+delT+fvii76B3wyfRA3aVWgrJJPcWVFGtnvYBQXMHCW1QpyWZ6rAjJK5Q1BKDfn
-         0W/+jWvFOVeY8aJ2FLZA5NbJub3gI1DDDwwD2k8wpXqonK58ZW9ujPpEQts7/hLnaR1O
-         J7KQ==
-X-Gm-Message-State: AOJu0YwUAVvEEnj5iNkkiXIw+PinstAUXkojSQIENQ9EN/Z+xOJHBPDw
-        eLib83A3fCRISgRvKA/hkyU26P2WFs4N
-X-Google-Smtp-Source: AGHT+IGtVayvCY/26FeTbSge7z228B5Rx9Dif54L8QiVcNmurVKbVuktSmELWXGjAL3aqdwmXD23+nueZQhm
+        bh=tXvCFhL984TX2oQ47qDb/BYaP1EU6FGu4C4k2bcoWxA=;
+        b=WMYrVxfX3+dqZ1K+ytjv/MAYQ3bTr8re6P3lKU6hafG7NxXrS1rIlO0dtEvKaLpD1/
+         ccBzqV4YzAsk8ZmHumEYQadrVeANJRAJYD//iod9XlfNMTc4lc28235xlolRMyLDBZ8l
+         LDK3RVC9DoEdC3cay4++bIAASKVveFrs/HdAlXk+M0fE/M61zDz6CBGuKjf8NOBYmWNy
+         36Mw29LeL932DQpRXKGM8IFozwRHzOUWD+O7rz0xbW/aOZHHQ0SpY58W1udI1J2rWSv1
+         3OStKozCCEANK5+Z0li3Kn3RmFv8jo4yveKtY/MlWsN1iEfLHlfUVAFVgUNzAFx7B0RX
+         NrgA==
+X-Gm-Message-State: AOJu0YyFtNmtfxMRabJLqPx7mzJCOFkR/Vqb7ICWHZKhJ0qyn68Y2ffs
+        ZuE9F9OjHaY4VLi0+cjo7leK9o+bTzs9
+X-Google-Smtp-Source: AGHT+IHXFsqtea8U7dSOIUqSWapJui7ri3nA09iWxLIct/mbtTiUjfIR5ZaEbwTJ9gFdLqnPC3azMTOFhCFQ
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:3971:e84:f508:9a36])
- (user=irogers job=sendgmr) by 2002:a0d:ec05:0:b0:586:b332:8619 with SMTP id
- q5-20020a0dec05000000b00586b3328619mr150399ywn.7.1692778175150; Wed, 23 Aug
- 2023 01:09:35 -0700 (PDT)
-Date:   Wed, 23 Aug 2023 01:08:28 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:12c6:b0:d77:bcce:eb11 with SMTP
+ id j6-20020a05690212c600b00d77bcceeb11mr37382ybu.10.1692778162082; Wed, 23
+ Aug 2023 01:09:22 -0700 (PDT)
+Date:   Wed, 23 Aug 2023 01:08:23 -0700
 In-Reply-To: <20230823080828.1460376-1-irogers@google.com>
-Message-Id: <20230823080828.1460376-26-irogers@google.com>
+Message-Id: <20230823080828.1460376-21-irogers@google.com>
 Mime-Version: 1.0
 References: <20230823080828.1460376-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.rc1.204.g551eb34607-goog
-Subject: [PATCH v1 25/25] perf jevents: Sort strings in the big C string to
- reduce faults
+Subject: [PATCH v1 20/25] perf pmu: Cache json events table
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -79,86 +78,137 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Sort the strings within the big C string based on whether they were
-for a metric and then by when they were added. This helps group
-related strings and reduce minor faults by approximately 10 in 1740,
-about 0.57%.
+Cache the json events table so that finding it isn't done per
+event/alias. Change the events table find so that when the PMU is
+given, if the PMU has no json events return null. Update usage to
+always use the PMU variable.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/jevents.py | 31 +++++++++++++++++++++++--------
- 1 file changed, 23 insertions(+), 8 deletions(-)
+ tools/perf/pmu-events/jevents.py | 14 ++++++++++++--
+ tools/perf/tests/pmu-events.c    |  2 ++
+ tools/perf/util/pmu.c            | 17 ++++++++---------
+ tools/perf/util/pmu.h            |  4 ++++
+ 4 files changed, 26 insertions(+), 11 deletions(-)
 
 diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index 01335a452e70..e5bce57f5688 100755
+index 991fcf6cca64..f07864fabd54 100755
 --- a/tools/perf/pmu-events/jevents.py
 +++ b/tools/perf/pmu-events/jevents.py
-@@ -113,13 +113,24 @@ class BigCString:
-   strings: Set[str]
-   big_string: Sequence[str]
-   offsets: Dict[str, int]
-+  insert_number: int
-+  insert_point: Dict[str, int]
-+  metrics: Set[str]
+@@ -948,7 +948,7 @@ const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
+ {
+         const struct pmu_events_table *table = NULL;
+         char *cpuid = perf_pmu__getcpuid(pmu);
+-        int i;
++        size_t i;
  
-   def __init__(self):
-     self.strings = set()
-+    self.insert_number = 0;
-+    self.insert_point = {}
-+    self.metrics = set()
- 
--  def add(self, s: str) -> None:
-+  def add(self, s: str, metric: bool) -> None:
-     """Called to add to the big string."""
--    self.strings.add(s)
-+    if s not in self.strings:
-+      self.strings.add(s)
-+      self.insert_point[s] = self.insert_number
-+      self.insert_number += 1
-+      if metric:
-+        self.metrics.add(s)
- 
-   def compute(self) -> None:
-     """Called once all strings are added to compute the string and offsets."""
-@@ -160,8 +171,11 @@ class BigCString:
-     self.big_string = []
-     self.offsets = {}
- 
-+    def string_cmp_key(s: str) -> Tuple[bool, int, str]:
-+      return (s in self.metrics, self.insert_point[s], s)
+         /* on some platforms which uses cpus map, cpuid can be NULL for
+          * PMUs other than CORE PMUs.
+@@ -968,7 +968,17 @@ const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
+                 }
+         }
+         free(cpuid);
+-        return table;
++        if (!pmu)
++                return table;
 +
-     # Emit all strings that aren't folded in a sorted manner.
--    for s in sorted(self.strings):
-+    for s in sorted(self.strings, key=string_cmp_key):
-       if s not in folded_strings:
-         self.offsets[s] = big_string_offset
-         self.big_string.append(f'/* offset={big_string_offset} */ "')
-@@ -574,19 +588,20 @@ def preprocess_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
-       assert len(mgroup) > 1, parents
-       description = f"{metricgroup_descriptions[mgroup]}\\000"
-       mgroup = f"{mgroup}\\000"
--      _bcs.add(mgroup)
--      _bcs.add(description)
-+      _bcs.add(mgroup, metric=True)
-+      _bcs.add(description, metric=True)
-       _metricgroups[mgroup] = description
-     return
++        for (i = 0; i < table->num_pmus; i++) {
++                const struct pmu_table_entry *table_pmu = &table->pmus[i];
++                const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
++
++                if (pmu__name_match(pmu, pmu_name))
++                        return table;
++        }
++        return NULL;
+ }
  
-   topic = get_topic(item.name)
-   for event in read_json_events(item.path, topic):
-     pmu_name = f"{event.pmu}\\000"
--    _bcs.add(pmu_name)
-     if event.name:
--      _bcs.add(event.build_c_string(metric=False))
-+      _bcs.add(pmu_name, metric=False)
-+      _bcs.add(event.build_c_string(metric=False), metric=False)
-     if event.metric_name:
--      _bcs.add(event.build_c_string(metric=True))
-+      _bcs.add(pmu_name, metric=True)
-+      _bcs.add(event.build_c_string(metric=True), metric=True)
+ const struct pmu_metrics_table *perf_pmu__find_metrics_table(struct perf_pmu *pmu)
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index 34f0de182fa9..4fcb84fd1f65 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -544,6 +544,7 @@ static int __test_core_pmu_event_aliases(char *pmu_name, int *count)
+ 	INIT_LIST_HEAD(&pmu->list);
+ 	pmu->name = strdup(pmu_name);
  
- def process_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
-   """Process a JSON file during the main walk."""
++	pmu->events_table = table;
+ 	pmu_add_cpu_aliases_table(pmu, table);
+ 
+ 	res = pmu_events_table__find_event(table, pmu, "bp_l1_btb_correct", NULL, NULL);
+@@ -583,6 +584,7 @@ static int __test_uncore_pmu_event_aliases(struct perf_pmu_test_pmu *test_pmu)
+ 	events_table = find_core_events_table("testarch", "testcpu");
+ 	if (!events_table)
+ 		return -1;
++	pmu->events_table = events_table;
+ 	pmu_add_cpu_aliases_table(pmu, events_table);
+ 	pmu_add_sys_aliases(pmu);
+ 
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index a7d96e309843..dabae2019bd0 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -518,10 +518,10 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, int dirfd, const char *name
+ 	}
+ 	if (!pe) {
+ 		/* Update an event from sysfs with json data. */
+-		const struct pmu_events_table *table = perf_pmu__find_events_table(pmu);
+-
+-		if (table)
+-			pmu_events_table__find_event(table, pmu, name, update_alias, alias);
++		if (pmu->events_table) {
++			pmu_events_table__find_event(pmu->events_table, pmu, name,
++						     update_alias, alias);
++		}
+ 	}
+ 
+ 	/* Scan event and remove leading zeroes, spaces, newlines, some
+@@ -871,13 +871,10 @@ void pmu_add_cpu_aliases_table(struct perf_pmu *pmu, const struct pmu_events_tab
+ 
+ static void pmu_add_cpu_aliases(struct perf_pmu *pmu)
+ {
+-	const struct pmu_events_table *table;
+-
+-	table = perf_pmu__find_events_table(pmu);
+-	if (!table)
++	if (!pmu->events_table)
+ 		return;
+ 
+-	pmu_add_cpu_aliases_table(pmu, table);
++	pmu_add_cpu_aliases_table(pmu, pmu->events_table);
+ }
+ 
+ static int pmu_add_sys_aliases_iter_fn(const struct pmu_event *pe,
+@@ -988,6 +985,7 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char
+ 	if (pmu->is_uncore)
+ 		pmu->id = pmu_id(name);
+ 	pmu->max_precise = pmu_max_precise(dirfd, pmu);
++	pmu->events_table = perf_pmu__find_events_table(pmu);
+ 	pmu_add_cpu_aliases(pmu);
+ 	pmu_add_sys_aliases(pmu);
+ 	list_add_tail(&pmu->list, pmus);
+@@ -1001,6 +999,7 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char
+ 	return NULL;
+ }
+ 
++
+ /* Creates the PMU when sysfs scanning fails. */
+ struct perf_pmu *perf_pmu__create_placeholder_core_pmu(struct list_head *core_pmus)
+ {
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 2b1730152bc0..6bf0fbde4e85 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -114,6 +114,10 @@ struct perf_pmu {
+ 	 * from json events in pmu-events.c.
+ 	 */
+ 	struct list_head aliases;
++	/**
++	 * @events_table: The events table for json events in pmu-events.c.
++	 */
++	const struct pmu_events_table *events_table;
+ 	/** @caps_initialized: Has the list caps been initialized? */
+ 	bool caps_initialized;
+ 	/** @nr_caps: The length of the list caps. */
 -- 
 2.42.0.rc1.204.g551eb34607-goog
 
