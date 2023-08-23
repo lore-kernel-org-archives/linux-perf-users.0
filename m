@@ -2,183 +2,124 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EBFC27C40
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 17:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D4DC27C40
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 19:59:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237560AbjHWRlC (ORCPT
+        id S238413AbjHWT7C (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Aug 2023 13:41:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49322 "EHLO
+        Wed, 23 Aug 2023 15:59:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234559AbjHWRlC (ORCPT
+        with ESMTP id S235885AbjHWT6k (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Aug 2023 13:41:02 -0400
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFD6AE7E
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 10:40:42 -0700 (PDT)
-Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-407db3e9669so19721cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 10:40:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692812442; x=1693417242;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SzJTuhNrsz6VczjFndY8A/oFd6jwxo4RJUv1lWj5spE=;
-        b=QDYn5DwFs6g/OFkCNBnZJjEsg/pRRF24KQ7HLKe5/bBep6N2sihfAcnuQbb20qxejh
-         OW1IA8GCSQYYgxAAIu8IPCVI1GLUIRAY7C0+GZTzefsDLnApHWRtVXha4nHLXRc4aYl3
-         7qqHliJXbwK2dHY+27x4IODP0UKNQwEsE8sdCETedZymGLJedXtiKJ21oCbL7VThSAP3
-         gQ+sdQqFjtdyS/shcQMOQ+YZt9HRILuwgtzyZHBJBDqyoKqwBXB6wC+IkoCJ+2RvzX2E
-         WRMURqANne6R+jgNUL0nenVmhwx1C+U97Ra9UvCRumjvYWGc2JC5Ox7iKgdieHxblgP2
-         0A3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692812442; x=1693417242;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SzJTuhNrsz6VczjFndY8A/oFd6jwxo4RJUv1lWj5spE=;
-        b=PHHWlblvdWWgAy7C2uOG73i8rB1fHdzowGTG4Xh6mZPtS7PKm4B/ZC0G4hxftv/6bI
-         m5pehd0JYYhBrvzjO7w/Nc50Vo4BW2TmmrdGJA6NeunlaZBhwJlT/SfrsiDRAPUJfc2w
-         acOyAJQSXmUjSsSerhbdiVzK+mZKeCAdyKqFCpX1c+a3WoO0J3UWyG0loKk9pyVj7Ws3
-         CQx1JkDSNRQxLkZJTTe3L5GZW5iVdcxEqERvjb0UpVvNG8RYxPBCMv6KutFcKQuXHpUM
-         Hb7lZpQpnGIxpZ2XHaqUT19PeDhH9ScPaKK0lb2TNioodXOt/RFRijFDU0muN2ounf4F
-         DMtw==
-X-Gm-Message-State: AOJu0Ywhoj0x5RqcyFzpZvZRi4beJow2l1Oah/h80mARCBvX/q/D6nLH
-        +NDynNJe7imbjpRfOQU7eKGnKaiK5wTupT/4JFtbmA==
-X-Google-Smtp-Source: AGHT+IFLp2IxuH8zJE7PLcswVE5OaWRyBt/GsOYrQ+qhElOX3ZBtvehI0RJAoOpfQkIynEtEGDpin7XsGm2ujj9ceZM=
-X-Received: by 2002:a05:622a:41:b0:40f:db89:5246 with SMTP id
- y1-20020a05622a004100b0040fdb895246mr556992qtw.21.1692812441669; Wed, 23 Aug
- 2023 10:40:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230823080828.1460376-1-irogers@google.com> <ZOYsLZi44G84IWFk@kernel.org>
- <CAP-5=fXYDMo6GgSaLuC3YMNr66yAXLMyZoAOMpdgmMb=xazCOw@mail.gmail.com> <ZOY9t8W1APC/Hurk@kernel.org>
-In-Reply-To: <ZOY9t8W1APC/Hurk@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 23 Aug 2023 10:40:30 -0700
-Message-ID: <CAP-5=fUV82BBc6-G5QXrQ0wHeXUNYwxNciVjjG5FizcvtS-7DQ@mail.gmail.com>
-Subject: Re: [PATCH v1 00/25] Lazily load PMU data
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Wed, 23 Aug 2023 15:58:40 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EFB410C2;
+        Wed, 23 Aug 2023 12:58:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692820718; x=1724356718;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DWpi1WF0A7pyHfE5VmRDXpAMGPRbGG/nl9Ypmh1P914=;
+  b=nyDIT2AFpK1ES4zgfzQHeH5UL6FGF7/0LszlE6UaLLeQsz95D4rPnzvX
+   zDjzw2iJtaZ2vvDPXusJ5kc/DWjNbaDuDDeDx3+lqvOgrsrCXY8LqCJeY
+   0UuOuf/eaXt5OTQVWcgzga9LN4yViaVWxgv2Kq2QGip5e0Xb8Il5Tparv
+   8Iug42cQ47MGyXe0UjxkvIPwCvczchDLNnsB92akQFe5gotHzdA/sopOQ
+   dcm3GUZeGawvaTe1iEacfqBCYu+W6/JOAiEyZZ5i/tb6esmFHOu2AKlVm
+   W3aqQ/xZOrm3ONELORq+ugwrO//XNLSZff0zeHQaAeaTy/a91Uxhr/+OK
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="460619957"
+X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
+   d="scan'208";a="460619957"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 12:58:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="826848502"
+X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
+   d="scan'208";a="826848502"
+Received: from lkp-server02.sh.intel.com (HELO daf8bb0a381d) ([10.239.97.151])
+  by FMSMGA003.fm.intel.com with ESMTP; 23 Aug 2023 12:58:32 -0700
+Received: from kbuild by daf8bb0a381d with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qYtzj-0001Si-1b;
+        Wed, 23 Aug 2023 19:58:27 +0000
+Date:   Thu, 24 Aug 2023 03:58:11 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Douglas Anderson <dianders@chromium.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Rob Herring <robh@kernel.org>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     oe-kbuild-all@lists.linux.dev,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org,
+        kgdb-bugreport@lists.sourceforge.net, ito-yuichi@fujitsu.com,
+        Stephen Boyd <swboyd@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Chen-Yu Tsai <wens@csie.org>, Ard Biesheuvel <ardb@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        D Scott Phillips <scott@os.amperecomputing.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Valentin Schneider <vschneid@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 4/6] arm64: smp: Add arch support for backtrace using
+ pseudo-NMI
+Message-ID: <202308240309.hI0bjoys-lkp@intel.com>
+References: <20230822142644.v10.4.Ie6c132b96ebbbcddbf6954b9469ed40a6960343c@changeid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230822142644.v10.4.Ie6c132b96ebbbcddbf6954b9469ed40a6960343c@changeid>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Aug 23, 2023 at 10:11=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Wed, Aug 23, 2023 at 09:45:50AM -0700, Ian Rogers escreveu:
-> > On Wed, Aug 23, 2023, 8:56 AM Arnaldo Carvalho de Melo <acme@kernel.org=
->
-> > wrote:
-> >
-> > > Em Wed, Aug 23, 2023 at 01:08:03AM -0700, Ian Rogers escreveu:
-> > > > Lazily load PMU data both from sysfs and json files. Reorganize
-> > > > json data to be more PMU oriented to facilitate this, for
-> > > > example, json data is now sorted into arrays for their PMU.
-> > > >
-> > > > In refactoring the code some changes were made to get rid of maximu=
-m
-> > > > encoding sizes for events (256 bytes), with input files being direc=
-tly
-> > > > passed to the lex generated code. There is also a small event parse
-> > > > error message improvement.
-> > > >
-> > > > Some results from an Intel tigerlake laptop running Debian:
-> > > >
-> > > > Binary size reduction of 1.4% or 143,264 bytes because the PMU
-> > > > name no longer appears in the string.
-> > > >
-> > > > stat -e cpu/cycles/ minor faults reduced from 1733 to 1667, open ca=
-lls
-> > > reduced
-> > > > from 171 to 94.
-> > > >
-> > > > stat default minor faults reduced from 1085 to 1727, open calls red=
-uced
-> > > > from 654 to 343.
-> > > >
-> > > > Average PMU scanning reduced from 4720.641usec to 2927.293usec.
-> > > > Average core PMU scanning reduced from 1004.658usec to 232.668usec
-> > > > (4.3x faster).
-> > >
-> > > I'm now chasing this one when building it on ubuntu arm64
-> > >
-> >
-> > I'll fix and send a v2.
->
-> Its fixed already, I'm pushing it to tmp.perf-tools-next
+Hi Douglas,
 
-Thanks!
-Ian
+kernel test robot noticed the following build warnings:
 
-> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util=
-/cs-etm.c
-> index 7c51fa182b51dab0..b8d6a953fd7423e1 100644
-> --- a/tools/perf/arch/arm/util/cs-etm.c
-> +++ b/tools/perf/arch/arm/util/cs-etm.c
-> @@ -79,9 +79,9 @@ static int cs_etm_validate_context_id(struct auxtrace_r=
-ecord *itr,
->         int err;
->         u32 val;
->         u64 contextid =3D evsel->core.attr.config &
-> -               (perf_pmu__format_bits(&cs_etm_pmu->format, "contextid") =
-|
-> -                perf_pmu__format_bits(&cs_etm_pmu->format, "contextid1")=
- |
-> -                perf_pmu__format_bits(&cs_etm_pmu->format, "contextid2")=
-);
-> +               (perf_pmu__format_bits(cs_etm_pmu, "contextid") |
-> +                perf_pmu__format_bits(cs_etm_pmu, "contextid1") |
-> +                perf_pmu__format_bits(cs_etm_pmu, "contextid2"));
->
->         if (!contextid)
->                 return 0;
-> @@ -106,7 +106,7 @@ static int cs_etm_validate_context_id(struct auxtrace=
-_record *itr,
->         }
->
->         if (contextid &
-> -           perf_pmu__format_bits(&cs_etm_pmu->format, "contextid1")) {
-> +           perf_pmu__format_bits(cs_etm_pmu, "contextid1")) {
->                 /*
->                  * TRCIDR2.CIDSIZE, bit [9-5], indicates whether contextI=
-D
->                  * tracing is supported:
-> @@ -122,7 +122,7 @@ static int cs_etm_validate_context_id(struct auxtrace=
-_record *itr,
->         }
->
->         if (contextid &
-> -           perf_pmu__format_bits(&cs_etm_pmu->format, "contextid2")) {
-> +           perf_pmu__format_bits(cs_etm_pmu, "contextid2")) {
->                 /*
->                  * TRCIDR2.VMIDOPT[30:29] !=3D 0 and
->                  * TRCIDR2.VMIDSIZE[14:10] =3D=3D 0b00100 (32bit virtual =
-contextid)
-> @@ -151,7 +151,7 @@ static int cs_etm_validate_timestamp(struct auxtrace_=
-record *itr,
->         u32 val;
->
->         if (!(evsel->core.attr.config &
-> -             perf_pmu__format_bits(&cs_etm_pmu->format, "timestamp")))
-> +             perf_pmu__format_bits(cs_etm_pmu, "timestamp")))
->                 return 0;
->
->         if (!cs_etm_is_etmv4(itr, cpu)) {
+[auto build test WARNING on arm64/for-next/core]
+[also build test WARNING on tip/irq/core arm-perf/for-next/perf linus/master v6.5-rc7 next-20230823]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Douglas-Anderson/irqchip-gic-v3-Enable-support-for-SGIs-to-act-as-NMIs/20230823-053216
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
+patch link:    https://lore.kernel.org/r/20230822142644.v10.4.Ie6c132b96ebbbcddbf6954b9469ed40a6960343c%40changeid
+patch subject: [PATCH v10 4/6] arm64: smp: Add arch support for backtrace using pseudo-NMI
+config: arm64-randconfig-r026-20230823 (https://download.01.org/0day-ci/archive/20230824/202308240309.hI0bjoys-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 12.3.0
+reproduce: (https://download.01.org/0day-ci/archive/20230824/202308240309.hI0bjoys-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308240309.hI0bjoys-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> arch/arm64/kernel/smp.c:855:6: warning: no previous prototype for 'arm64_backtrace_ipi' [-Wmissing-prototypes]
+     855 | void arm64_backtrace_ipi(cpumask_t *mask)
+         |      ^~~~~~~~~~~~~~~~~~~
+
+
+vim +/arm64_backtrace_ipi +855 arch/arm64/kernel/smp.c
+
+   854	
+ > 855	void arm64_backtrace_ipi(cpumask_t *mask)
+   856	{
+   857		__ipi_send_mask(ipi_desc[IPI_CPU_BACKTRACE], mask);
+   858	}
+   859	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
