@@ -2,138 +2,83 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5D1EE49AD
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 04:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74001EE49A3
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 05:57:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232517AbjHWE0V convert rfc822-to-8bit (ORCPT
+        id S232749AbjHWF5t (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Aug 2023 00:26:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33650 "EHLO
+        Wed, 23 Aug 2023 01:57:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232348AbjHWE0U (ORCPT
+        with ESMTP id S231815AbjHWF5t (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Aug 2023 00:26:20 -0400
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C5C7E56;
-        Tue, 22 Aug 2023 21:26:18 -0700 (PDT)
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-48d0eb04c8cso888923e0c.0;
-        Tue, 22 Aug 2023 21:26:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692764777; x=1693369577;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nE6DTLfN3ouIo27YNTlsSzc6zc01NPTEWUx80jUS8mk=;
-        b=iKOkLQmyHLhL7TY7FiJrnfIETQhwca+/bPzrPldHu9VHDqjx/p8XYF6nRot/N/NQU8
-         2Yds6P4qCc3BV/yFtWfKVkQOBYQzGElHuDINMZZN4eiUEPpFssqpt8h5h28ztaauGJb0
-         ALpG/DhjmrkjanGh+hWY78r/jx+0PpXlhh9iKzI+KQ+8/Iko5zTznU2EBca0Mj2gdPR+
-         VyAuph9bcq4b7MplSByTlOyUcVa92JWkyb1Da5yGRR5gjzL68ETTHRy/i9ynjhYRqaQC
-         B2fRGSLOg2KLHWjzqBbVoZz8F3/HmYgaiquoGu3t9jA3Cs0otvMR9LPWyIYOCWFewbvg
-         A7Fw==
-X-Gm-Message-State: AOJu0YxMgSnIDwgX1P8W0Z7v3u3NsEKJdtu2Dn0ZnUMxCzmjLxHZp8Ol
-        itE2A5iHGPGUlTd8EoFVPQS4vtygZWjKNfRRsE0=
-X-Google-Smtp-Source: AGHT+IFO5xLcXF5NEqb9XiIxPrEIUso2679WWl2TFLuJB7mx3RgByBjshF1425w5r3W52E/2dq2JHixGHuQwqVElbQw=
-X-Received: by 2002:a1f:c386:0:b0:48d:5f5:e201 with SMTP id
- t128-20020a1fc386000000b0048d05f5e201mr5510580vkf.15.1692764777198; Tue, 22
- Aug 2023 21:26:17 -0700 (PDT)
+        Wed, 23 Aug 2023 01:57:49 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7909A1;
+        Tue, 22 Aug 2023 22:57:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692770267; x=1724306267;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=tXspCGGhfWZ9eYIgTV/JCqA8WbgbtQL3v61LQqkLziQ=;
+  b=P625QIS6Ek8CTPlBkoOzJzYJ59GGDahD7h0+TITphbX9w0W3n2gMJ7yv
+   efmHm0Aq8/GZCvq4/yvKMBtd9QtJ4f1MRkXutT8bQksxOQ67suPAkFCq6
+   4IhuJBAf8PUY9d9Dxq9aA9aFPV7spEZkrYzJIZkX488z2VKN5HxUSoDS1
+   QIGWrFCiBHVVfm8uNR5tRm4sKZjk0cJL35p9dSp4WEmuqPZaH9Zd1zWJV
+   YYCjUsgLNoTuNn/lyFUUANwk3U8qR+snujs+IN5SAKcGtkcXtzKclBf+B
+   VR6KsE4l4txPofPqVNrm2pbXHuwnjv77yH9wX7U6bQ1IZvLK7+QFsI7DX
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="438009715"
+X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
+   d="scan'208";a="438009715"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 22:57:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="983140550"
+X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
+   d="scan'208";a="983140550"
+Received: from ebold-mobl1.ger.corp.intel.com (HELO tkristo-desk.bb.dnainternet.fi) ([10.251.213.156])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 22:57:42 -0700
+From:   Tero Kristo <tero.kristo@linux.intel.com>
+To:     dave.hansen@linux.intel.com, tglx@linutronix.de, x86@kernel.org,
+        bp@alien8.de
+Cc:     artem.bityutskiy@linux.intel.com, acme@kernel.org,
+        bpf@vger.kernel.org, namhyung@kernel.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        irogers@google.com, hpa@zytor.com, mark.rutland@arm.com,
+        jolsa@kernel.org, adrian.hunter@intel.com,
+        alexander.shishkin@linux.intel.com, peterz@infradead.org
+Subject: [PATCH 0/2] perf/x86: Package residency counter improvements
+Date:   Wed, 23 Aug 2023 08:56:51 +0300
+Message-Id: <20230823055653.2964237-1-tero.kristo@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20230819093340.265817-1-leo.yan@linaro.org> <CAM9d7cj=ichFk4bVQSbyptqy9wo8GFm1Z1Q7QzfhMFLjewNF-Q@mail.gmail.com>
- <20230823023838.GF57731@leoy-huanghe.lan>
-In-Reply-To: <20230823023838.GF57731@leoy-huanghe.lan>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 22 Aug 2023 21:26:05 -0700
-Message-ID: <CAM9d7cgaMyH=vSjVEOBjLzBWbZOricm6aHcP9hfLsTJ_gUEh3g@mail.gmail.com>
-Subject: Re: [PATCH v6] Documentation: userspace-api: Document perf ring
- buffer mechanism
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Aug 22, 2023 at 7:38 PM Leo Yan <leo.yan@linaro.org> wrote:
->
-> Hi Namhyung,
->
-> On Tue, Aug 22, 2023 at 05:43:25PM -0700, Namhyung Kim wrote:
->
-> [...]
->
-> > > +2.3.2 Writing samples into buffer
-> > > +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> > > +
-> > > +Ring buffers are mapped as read-write mode or read-only mode, which is
-> > > +used for a normal ring buffer and an overwritable ring buffer
-> > > +respectively.
-> > > +
-> > > +The ring buffer in the read-write mode is mapped with the property
-> > > +``PROT_READ | PROT_WRITE``.  With the write permission, the perf tool
-> > > +updates the ``data_tail`` to indicate the data start position.  Combining
-> > > +with the head pointer ``data_head``, which works as the end position of
-> > > +the current data, the perf tool can easily know where read out the data
-> > > +from.
-> > > +
-> > > +Alternatively, in the read-only mode, only the kernel keeps to update
-> > > +the ``data_head`` while the user space cannot access the ``data_tail`` due
-> > > +to the mapping property ``PROT_READ``.
-> > > +
-> > > +Why ring buffers are mapped with above two different modes?  Here the
-> > > +write direction matters.  The forward writing starts to save data from
-> > > +the beginning of the ring buffer and wrap around when overflow, which is
-> > > +used with the read-write mode in the normal ring buffer.  When the
-> > > +consumer doesn't keep up with the producer, it would lose some data, the
-> > > +kernel keeps how many records it lost and generates the
-> > > +``PERF_RECORD_LOST`` records in the next time when it finds a space in the
-> > > +ring buffer.
-> >
-> > Thanks for the update.  It's unclear to me if all 4 combination of
-> > (rw, ro) x (fwd, bwd) are possible (yes!).  The rw mode and back-
-> > ward is also possible but just not used for perf tool.
->
-> I can add a matrix for the combinations:
->
->   The combination is supported in perf tool:
->
->   ---+------------+-----------
->      |  Forward   | Backward
->   ---+------------+-----------
->   rw |  Yes       |   No
->   ---+------------+-----------
->   ro |  X         |   Yes
->   ---+------------+-----------
->
->   Yes: is supported
->   No: is not supported
->   X: is not feasible
+Hello,
 
-I think they are all supported.  You can use rw mode with backward
-direction but it's just not intuitive.  Also ro mode with forward direction
-is working but there's a chance to miss the start position of the
-previous event.
+Following two patches address a couple of different issues with Intel
+C-state package residency counters, which are used to track power saving
+state usage on Intel chips. The patches don't have any dependencies to
+each other and can be applied separately.
 
-Thanks,
-Namhyung
+1) The residency counters are always read from the first CPU of the
+   package via an SMP call, even if they are available from any CPU.
+   This causes extra latency. Patch #1 fixes this issue by flagging
+   the perf event properly and allowing to execute it on any CPU of
+   the package.
+2) The residency counters are completely impossible to read from a BPF
+   program running on any other than the first CPU of the package, as the
+   SMP call is not available in this context. Patch #2 addresses this
+   issue by allowing the read of the perf event from the local CPU,
+   similar to what is done in perf_read_event(). This patch also allows
+   reading any other package scope perf events (RAPL/UNCORE) from
+   arbitrary CPUs on a package via BPF.
+
+-Tero
 
 
->
-> > And I think the description below in this section shows kernel
-> > internals too much.  Name of kernel functions and data structure
-> > is not an API and can be changed any time.  You can describe
-> > the logic without the names.
->
-> Understand, I agree this will introduce maintenance efforts in later.
->
-> I will refine the description and send a new patch.
->
-> Thanks for reviewing!
->
-> Leo
