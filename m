@@ -2,77 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FEAEE4993
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 12:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D542BEE49B2
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 12:16:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234799AbjHWMEo (ORCPT
+        id S234823AbjHWMQY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Aug 2023 08:04:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43318 "EHLO
+        Wed, 23 Aug 2023 08:16:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234801AbjHWMEX (ORCPT
+        with ESMTP id S234660AbjHWMQX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Aug 2023 08:04:23 -0400
-Received: from gandalf.ozlabs.org (mail.ozlabs.org [IPv6:2404:9400:2221:ea00::3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC6981718;
-        Wed, 23 Aug 2023 05:04:02 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4RW4cy2gyGz4x2R;
-        Wed, 23 Aug 2023 22:04:02 +1000 (AEST)
-From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-To:     Kajol Jain <kjain@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, disgoel@linux.ibm.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rdunlap@infradead.org
-In-Reply-To: <20230729073455.7918-1-kjain@linux.ibm.com>
-References: <20230729073455.7918-1-kjain@linux.ibm.com>
-Subject: Re: [PATCH v4 00/10] Add sysfs interface files to hv_gpci device to expose system information
-Message-Id: <169279175562.797584.14623659463630712570.b4-ty@ellerman.id.au>
-Date:   Wed, 23 Aug 2023 21:55:55 +1000
+        Wed, 23 Aug 2023 08:16:23 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46C12CD5
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 05:16:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=h0H52xtfgXFJKiojPzFRYLqgYQ7ep2Z8nxNUt3SOtYM=; b=GPm0QEcyStjGCZAY16pXw8tT+b
+        ldLMGoakETXe0XejoNRcudwYIKQzIrdWXzAZcSMrr9eePbxdW9yVWOq2/TbhzUdRRsotzxgRhERVR
+        DaHBHD8iTv+azZNBUSt4zK94JcrnisuibvxfnVfvtbCADNzSES0nB/+pJYJyWrWongStPFBubcP5M
+        o2hDjof0my04gfbzY/VjHI3oyZU40q5GWwnu2HKhnzMrAnNFyMtkMYabgx4+M4v+f3kAHCIaRSkNn
+        8qrpxDGHCU13dHtGuDFKZu1eHS4+H4iq1VB+GX8ac6fdvdGDjexaTu0KOGhvygtUTi5UetsCi+p69
+        heSlVxYw==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qYmmU-004l34-Sa; Wed, 23 Aug 2023 12:16:14 +0000
+Date:   Wed, 23 Aug 2023 13:16:14 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Yin Fengwei <fengwei.yin@intel.com>
+Cc:     linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        urezki@gmail.com, hch@infradead.org, lstoakes@gmail.com
+Subject: Re: [RFC PATCH 3/4] perf: Use vmalloc_to_folio()
+Message-ID: <ZOX4jq8Kir6yZCnO@casper.infradead.org>
+References: <20230821202016.2910321-1-willy@infradead.org>
+ <20230821202016.2910321-4-willy@infradead.org>
+ <627a43c1-048b-c6c7-62ab-28dc111a055e@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <627a43c1-048b-c6c7-62ab-28dc111a055e@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, 29 Jul 2023 13:04:45 +0530, Kajol Jain wrote:
-> The hcall H_GET_PERF_COUNTER_INFO can be used to get data related to
-> chips, dimms and system topology, by passing different counter request
-> values.
-> Patchset adds sysfs files to "/sys/devices/hv_gpci/interface/"
-> of hv_gpci pmu driver, which will expose system topology information
-> using H_GET_PERF_COUNTER_INFO hcall. The added sysfs files are
-> available for power10 and above platforms and needs root access
-> to read the data.
-> 
-> [...]
+On Wed, Aug 23, 2023 at 03:30:22PM +0800, Yin Fengwei wrote:
+> On 8/22/23 04:20, Matthew Wilcox (Oracle) wrote:
+> > +static inline struct folio *vmalloc_to_folio(const void *addr)
+> > +{
+> > +	return page_folio(vmalloc_to_page(addr));
+> I am wondering whether we should check the return value of vmalloc_to_page()?
 
-Applied to powerpc/next.
+That's a good question.  Almost every user of vmalloc_to_page() just
+assumes it works.  But it'll cost very little to check for NULL, so
+I'll put that into the next version.  Thanks!
 
-[01/10] powerpc/hv_gpci: Add sysfs file inside hv_gpci device to show processor bus topology information
-        https://git.kernel.org/powerpc/c/71f1c39647d8c9d4d54a861ec81f1ff17544bcb6
-[02/10] docs: ABI: sysfs-bus-event_source-devices-hv_gpci: Document processor_bus_topology sysfs interface file
-        https://git.kernel.org/powerpc/c/9caf9e2b8bae58e39501f6fb1fc9189009538ccc
-[03/10] powerpc/hv_gpci: Add sysfs file inside hv_gpci device to show processor config information
-        https://git.kernel.org/powerpc/c/1a160c2a13c66c9ad47436e73c821f3d26818733
-[04/10] docs: ABI: sysfs-bus-event_source-devices-hv_gpci: Document processor_config sysfs interface file
-        https://git.kernel.org/powerpc/c/3255171d3e861b14e4248a5c676099819cadfb6d
-[05/10] powerpc/hv_gpci: Add sysfs file inside hv_gpci device to show affinity domain via virtual processor information
-        https://git.kernel.org/powerpc/c/71a7ccb478fcfe1495bcabf4972d859b24264df7
-[06/10] docs: ABI: sysfs-bus-event_source-devices-hv_gpci: Document affinity_domain_via_virtual_processor sysfs interface file
-        https://git.kernel.org/powerpc/c/cc89ff3491b61cebc90b3394eb6b36635173d0dd
-[07/10] powerpc/hv_gpci: Add sysfs file inside hv_gpci device to show affinity domain via domain information
-        https://git.kernel.org/powerpc/c/a69a57cac1ec8995bb0b571dfccc3fe2f046719a
-[08/10] docs: ABI: sysfs-bus-event_source-devices-hv_gpci: Document affinity_domain_via_domain sysfs interface file
-        https://git.kernel.org/powerpc/c/ab7e991286e729b0018722591c04eb2fd31771b0
-[09/10] powerpc/hv_gpci: Add sysfs file inside hv_gpci device to show affinity domain via partition information
-        https://git.kernel.org/powerpc/c/a15e0d6a6929e737f71578ed4b05531fed5a96e8
-[10/10] docs: ABI: sysfs-bus-event_source-devices-hv_gpci: Document affinity_domain_via_partition sysfs interface file
-        https://git.kernel.org/powerpc/c/8df99066940b6c82a0851f13adf653827dc524f7
-
-cheers
