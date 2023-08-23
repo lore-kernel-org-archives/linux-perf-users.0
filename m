@@ -2,141 +2,152 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD7CC27C40
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 16:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CD2C3DA66
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 17:11:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237371AbjHWQz7 (ORCPT
+        id S235697AbjHWRL0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Aug 2023 12:55:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49164 "EHLO
+        Wed, 23 Aug 2023 13:11:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234205AbjHWQz6 (ORCPT
+        with ESMTP id S237665AbjHWRLZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Aug 2023 12:55:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17F6CE66;
-        Wed, 23 Aug 2023 09:55:56 -0700 (PDT)
+        Wed, 23 Aug 2023 13:11:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25FE7E66;
+        Wed, 23 Aug 2023 10:11:24 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A55C062E36;
-        Wed, 23 Aug 2023 16:55:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0AA0C433C7;
-        Wed, 23 Aug 2023 16:55:54 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A9C4B623EB;
+        Wed, 23 Aug 2023 17:11:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B708EC433C7;
+        Wed, 23 Aug 2023 17:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692809754;
-        bh=++6HhCwUPGOWOXz/P0X/vVAw0YbnEpCGFrio3lMQ3Y8=;
+        s=k20201202; t=1692810682;
+        bh=LJMJ1SvTLGZZ3fvMcAuL95vkY+dd+cFHsZfZUuFCK+g=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JAKTh5FZImC+h77+VqXozdKosY6YXBqcozXkt86lRDoT0uUmnO/OEf2dmeos0AKi2
-         nvuZjri7s4qfW2AIiMeJxIH8ubMErybJGZRkUDQGiQZKRaUYYFMO/+9J13IzCxT3gj
-         nLJBr56VuQ2pccCvA5t09JPH3onw0M5Xp8XtF9Gmlm6EMeJ1socehOefzIZDTU70HL
-         lT5g/mTeTgerFgutR79HMmC3rN9Xa64fFAkr0MCMgv8schPnYo0q4VuxCCmAcepYzA
-         HcBWx/Hzrin8dQ2THBqEXu5HSuAXplhwvK0Y00EsraUXs5OY5iaRU2NeRVVHrL94cL
-         po7tfIAzOJGaw==
+        b=CDUHjPuunFblXF9CeLztL/MufldPVdQjVwSBR69Cr4IESUWC5vEYPFFgcDWVHifnx
+         lZmvPMgojAf4mkQckmDj1IayHvhWESJwbqI0jlyR3MGqlRMRx2AVpLR308Yu3Ud4kF
+         i3D2uMlxLU+to8UzjRfoeiKKdPHCyvWMigHFqu4tWjUQY4Y9sEhF5McKX/eVKAkr2g
+         IT5aXjEZqr9eCi5rFp+Yz/VeLC70HppNwfRGlvCDzpR5H6Hf0BKFw9wyvGVl3YudbM
+         hcmHhTjuyEjnhege/k2vpw20MdGVK2TIyBlhZ+8lkdgWwSHLg73Hi5HRH/RLYhYBl7
+         qo2MjQX3BHrAQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B184A40722; Wed, 23 Aug 2023 13:55:51 -0300 (-03)
-Date:   Wed, 23 Aug 2023 13:55:51 -0300
+        id A97B340722; Wed, 23 Aug 2023 14:11:19 -0300 (-03)
+Date:   Wed, 23 Aug 2023 14:11:19 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
-        lkp@intel.com, Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [perf-tools-next:tmp.perf-tools-next] [perf dlfilter]
- f178a76b05: perf-sanity-tests.dlfilter_C_API.fail
-Message-ID: <ZOY6F1+o05kHOwMi@kernel.org>
-References: <202308232146.94d82cb4-oliver.sang@intel.com>
- <78a87ed2-3aa8-95ef-28ae-19961f7c4acb@intel.com>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Rob Herring <robh@kernel.org>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 00/25] Lazily load PMU data
+Message-ID: <ZOY9t8W1APC/Hurk@kernel.org>
+References: <20230823080828.1460376-1-irogers@google.com>
+ <ZOYsLZi44G84IWFk@kernel.org>
+ <CAP-5=fXYDMo6GgSaLuC3YMNr66yAXLMyZoAOMpdgmMb=xazCOw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <78a87ed2-3aa8-95ef-28ae-19961f7c4acb@intel.com>
+In-Reply-To: <CAP-5=fXYDMo6GgSaLuC3YMNr66yAXLMyZoAOMpdgmMb=xazCOw@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Aug 23, 2023 at 06:37:49PM +0300, Adrian Hunter escreveu:
-> On 23/08/23 17:57, kernel test robot wrote:
-> > kernel test robot noticed "perf-sanity-tests.dlfilter_C_API.fail" on:
-
-> > commit: f178a76b054fd046d212c3c67745146ff191a443 ("perf dlfilter: Add a test for resolve_address()")
-> > https://git.kernel.org/cgit/linux/kernel/git/perf/perf-tools-next.git tmp.perf-tools-next
-
-> > [test failed on linux-next/master 28c736b0e92e11bfe2b9997688213dc43cb22182]
- 
-> We sometimes make a test for an issue then fix it, so the new test fails,
-> but is fixed in a subsequent patch.  If you read the commit it says as much:
- 
-> commit f178a76b054fd046d212c3c67745146ff191a443
-> Author: Adrian Hunter <adrian.hunter@intel.com>
-> Date:   Mon Jul 31 12:18:55 2023 +0300
+Em Wed, Aug 23, 2023 at 09:45:50AM -0700, Ian Rogers escreveu:
+> On Wed, Aug 23, 2023, 8:56 AM Arnaldo Carvalho de Melo <acme@kernel.org>
+> wrote:
 > 
->     perf dlfilter: Add a test for resolve_address()
->     
->     Extend the "dlfilter C API" test to test
->     perf_dlfilter_fns.resolve_address(). The test currently fails, but passes
->     after a subsequent patch.
->     
->     Reviewed-by: Ian Rogers <irogers@google.com>
->     Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
->     Cc: Jiri Olsa <jolsa@kernel.org>
->     Cc: Namhyung Kim <namhyung@kernel.org>
->     Link: https://lore.kernel.org/r/20230731091857.10681-1-adrian.hunter@intel.com
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
- 
-> The fix is:
- 
-> 42c6dd9d23019ff339d0aca80a444eb71087050e perf dlfilter: Initialize addr_location before passing it to thread__find_symbol_fb()
-
-I wonder if we can automate this aspect of testing, by adding some
-markup that states that this _is supposed_ to fail, and if it doesn't,
-then we get a notification. It should probably also means that the next
-cset will make the test pass, ideas?
-
-- Arnaldo
-
-> > 
-> > in testcase: perf-sanity-tests
-> > version: perf-x86_64-00c7b5f4ddc5-1_20230402
-> > with following parameters:
-> > 
-> > 	perf_compiler: gcc
-> > 
-> > 
-> > 
-> > compiler: gcc-12
-> > test machine: 224 threads 2 sockets Intel(R) Xeon(R) Platinum 8480+ (Sapphire Rapids) with 256G memory
-> > 
-> > (please refer to attached dmesg/kmsg for entire log/backtrace)
-> > 
-> > 
-> > 
-> > 
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <oliver.sang@intel.com>
-> > | Closes: https://lore.kernel.org/oe-lkp/202308232146.94d82cb4-oliver.sang@intel.com
-> > 
-> > 
-> > 
-> >  66: Convert perf time to TSC                                        :
-> >  66.1: TSC support                                                   : Ok
-> >  66.2: Perf time to TSC                                              : Ok
-> >  67: dlfilter C API                                                  : FAILED!  <---
-> >  68: Sigtrap                                                         : Ok
-> > 
-> > 
-> > 
-> > The kernel config and materials to reproduce are available at:
-> > https://download.01.org/0day-ci/archive/20230823/202308232146.94d82cb4-oliver.sang@intel.com
-> > 
-> > 
-> > 
+> > Em Wed, Aug 23, 2023 at 01:08:03AM -0700, Ian Rogers escreveu:
+> > > Lazily load PMU data both from sysfs and json files. Reorganize
+> > > json data to be more PMU oriented to facilitate this, for
+> > > example, json data is now sorted into arrays for their PMU.
+> > >
+> > > In refactoring the code some changes were made to get rid of maximum
+> > > encoding sizes for events (256 bytes), with input files being directly
+> > > passed to the lex generated code. There is also a small event parse
+> > > error message improvement.
+> > >
+> > > Some results from an Intel tigerlake laptop running Debian:
+> > >
+> > > Binary size reduction of 1.4% or 143,264 bytes because the PMU
+> > > name no longer appears in the string.
+> > >
+> > > stat -e cpu/cycles/ minor faults reduced from 1733 to 1667, open calls
+> > reduced
+> > > from 171 to 94.
+> > >
+> > > stat default minor faults reduced from 1085 to 1727, open calls reduced
+> > > from 654 to 343.
+> > >
+> > > Average PMU scanning reduced from 4720.641usec to 2927.293usec.
+> > > Average core PMU scanning reduced from 1004.658usec to 232.668usec
+> > > (4.3x faster).
+> >
+> > I'm now chasing this one when building it on ubuntu arm64
+> >
 > 
+> I'll fix and send a v2.
 
--- 
+Its fixed already, I'm pushing it to tmp.perf-tools-next
 
-- Arnaldo
+diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+index 7c51fa182b51dab0..b8d6a953fd7423e1 100644
+--- a/tools/perf/arch/arm/util/cs-etm.c
++++ b/tools/perf/arch/arm/util/cs-etm.c
+@@ -79,9 +79,9 @@ static int cs_etm_validate_context_id(struct auxtrace_record *itr,
+ 	int err;
+ 	u32 val;
+ 	u64 contextid = evsel->core.attr.config &
+-		(perf_pmu__format_bits(&cs_etm_pmu->format, "contextid") |
+-		 perf_pmu__format_bits(&cs_etm_pmu->format, "contextid1") |
+-		 perf_pmu__format_bits(&cs_etm_pmu->format, "contextid2"));
++		(perf_pmu__format_bits(cs_etm_pmu, "contextid") |
++		 perf_pmu__format_bits(cs_etm_pmu, "contextid1") |
++		 perf_pmu__format_bits(cs_etm_pmu, "contextid2"));
+ 
+ 	if (!contextid)
+ 		return 0;
+@@ -106,7 +106,7 @@ static int cs_etm_validate_context_id(struct auxtrace_record *itr,
+ 	}
+ 
+ 	if (contextid &
+-	    perf_pmu__format_bits(&cs_etm_pmu->format, "contextid1")) {
++	    perf_pmu__format_bits(cs_etm_pmu, "contextid1")) {
+ 		/*
+ 		 * TRCIDR2.CIDSIZE, bit [9-5], indicates whether contextID
+ 		 * tracing is supported:
+@@ -122,7 +122,7 @@ static int cs_etm_validate_context_id(struct auxtrace_record *itr,
+ 	}
+ 
+ 	if (contextid &
+-	    perf_pmu__format_bits(&cs_etm_pmu->format, "contextid2")) {
++	    perf_pmu__format_bits(cs_etm_pmu, "contextid2")) {
+ 		/*
+ 		 * TRCIDR2.VMIDOPT[30:29] != 0 and
+ 		 * TRCIDR2.VMIDSIZE[14:10] == 0b00100 (32bit virtual contextid)
+@@ -151,7 +151,7 @@ static int cs_etm_validate_timestamp(struct auxtrace_record *itr,
+ 	u32 val;
+ 
+ 	if (!(evsel->core.attr.config &
+-	      perf_pmu__format_bits(&cs_etm_pmu->format, "timestamp")))
++	      perf_pmu__format_bits(cs_etm_pmu, "timestamp")))
+ 		return 0;
+ 
+ 	if (!cs_etm_is_etmv4(itr, cpu)) {
