@@ -2,118 +2,149 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D5CAEE49A0
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 11:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB57AEE49A0
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 11:40:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233622AbjHWLg6 (ORCPT
+        id S233297AbjHWLki (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Aug 2023 07:36:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41340 "EHLO
+        Wed, 23 Aug 2023 07:40:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233297AbjHWLg5 (ORCPT
+        with ESMTP id S231893AbjHWLki (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Aug 2023 07:36:57 -0400
+        Wed, 23 Aug 2023 07:40:38 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84998E5D
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 04:36:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 451E5CD0
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 04:40:36 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 122B565F4E
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 11:36:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12D3AC433C7;
-        Wed, 23 Aug 2023 11:36:51 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C6C20617A8
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 11:40:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF820C433C7;
+        Wed, 23 Aug 2023 11:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692790611;
-        bh=o8vy5BJWPXwe5Sc85tpSC7movFesjnPX1nkI7u08f4o=;
+        s=k20201202; t=1692790835;
+        bh=XhjUDJiBZc/LK1cO8MyJqrI655Qda8/Ttel6T3Lr93Q=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dRMYYoyjlauIdmlFOtqgAgHEYpVyKhSaIG0wbfmOoEesPPa0Iqlksw5ktSZIoUiql
-         tT+JQu6IIiG+2KF9x031McSW+wOXRbXMC6oKT9z95Nl19dp1tZbF+38+IWXOKgtCXl
-         OWc25vNL2gLATzr5V8B6L5zsEDx56CgzfvImp4Zo/9Qx1cpnbGBcsdJgaGN2oUt7LZ
-         fX4Geo7smizUI10ROOOdmgYLjSjDnMTaVEOjjLrxQ3BEyv8zBbnKIOxsnawNVz8oUF
-         IB+2MjqP1/j3KawHmKRiwYdsng2Z666p0gd6usdBlKxYL/S/DpcwOtELkGamnCAce3
-         6RX0Z0bQIeNbA==
+        b=h0NDEmxLqzsT/vm3aAFBa0fY2wA2eARy6Z9fGw8PpNuZbVD2xLJnX/8fG4ay+X568
+         I1kPHDqghweYC5cJd68RIxnQOuA1aek8VTsR0B3P8SkEiG0+3MHsklZgM+w8UKF0CH
+         QC/Ar/ZErYT3aWvJSk2RqG4gTZxnBJOO+BbT3ha+x+eNtxVDyKviLWaHNQdRZNOpZi
+         AZ0Nzl8gOJDgK61PlNu1ZLPDN0ctRRJ+zPG2JwAnmtEIPNiz4VRn+0wv3jLMDYaAKc
+         sKcEJfUioLYeN7hfrmrq8M2ehu0uhHgclpmqxm15ff9IV6c2AD5l8D333DbHjH4u8P
+         fsGU1ePn/OLbw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1191040722; Wed, 23 Aug 2023 08:36:49 -0300 (-03)
-Date:   Wed, 23 Aug 2023 08:36:49 -0300
+        id 9313E40722; Wed, 23 Aug 2023 08:40:32 -0300 (-03)
+Date:   Wed, 23 Aug 2023 08:40:32 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Yanteng Si <siyanteng@loongson.cn>
-Cc:     mingo@redhat.com, peterz@infradead.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        chenhuacai@kernel.org, linux-perf-users@vger.kernel.org,
-        loongson-kernel@lists.loongnix.cn, loongarch@lists.linux.dev
-Subject: Re: [PATCH v1 1/2] perf/trace: Fix mmap_flags for archs use generic
- mman.h
-Message-ID: <ZOXvUbQL67bdWfNz@kernel.org>
-References: <cover.1692694595.git.siyanteng@loongson.cn>
- <03ddc1c0e01518df63aac88e561cd0ec3c1e0028.1692694595.git.siyanteng@loongson.cn>
- <ZOT4Tuc6JGrbDqFW@kernel.org>
- <8ead439a-63aa-434e-9d1e-3b1b05b6347b@loongson.cn>
+To:     Kajol Jain <kjain@linux.ibm.com>
+Cc:     maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        disgoel@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-perf-users@vger.kernel.org, irogers@google.com,
+        namhyung@kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        Disha Goel <disgoel@linux.vnet.ibm.com>
+Subject: Re: [PATCH] perf test: Skip perf bench breakpoint run if no
+ breakpoints available
+Message-ID: <ZOXwMFmc8aMzZgBu@kernel.org>
+References: <20230823075103.190565-1-kjain@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8ead439a-63aa-434e-9d1e-3b1b05b6347b@loongson.cn>
+In-Reply-To: <20230823075103.190565-1-kjain@linux.ibm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Aug 23, 2023 at 03:11:01PM +0800, Yanteng Si escreveu:
+Em Wed, Aug 23, 2023 at 01:21:03PM +0530, Kajol Jain escreveu:
+> Based on commit 7d54a4acd8c1 ("perf test: Skip watchpoint
+> tests if no watchpoints available"), hardware breakpoints
+> are not available for power9 platform and because of that
+> perf bench breakpoint run fails on power9 platform.
+> Add code to check for the return value of perf_event_open()
+> in breakpoint run and skip the perf bench breakpoint run,
+> if hardware breakpoints are not available.
 > 
-> 在 2023/8/23 02:02, Arnaldo Carvalho de Melo 写道:
-> > Em Tue, Aug 22, 2023 at 05:32:06PM +0800, Yanteng Si escreveu:
-> > > Silence this warning:
-> > > 
-> > > grep: /root/linux-next/tools/arch/xxxxx/include/uapi/asm//mman.h:
-> > > No such file or directory
-> > > Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
-> > > ---
-> > >   tools/perf/trace/beauty/mmap_flags.sh | 2 +-
-> > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/tools/perf/trace/beauty/mmap_flags.sh b/tools/perf/trace/beauty/mmap_flags.sh
-> > > index 3022597c8c17..d035b29fc5ec 100755
-> > > --- a/tools/perf/trace/beauty/mmap_flags.sh
-> > > +++ b/tools/perf/trace/beauty/mmap_flags.sh
-> > > @@ -19,7 +19,7 @@ arch_mman=${arch_header_dir}/mman.h
-> > >   printf "static const char *mmap_flags[] = {\n"
-> > >   regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
-> > > -grep -E -q $regex ${arch_mman} && \
-> > > +([ -f ${arch_mman} ] && grep -E -q $regex ${arch_mman}) && \
-> > >   (grep -E $regex ${arch_mman} | \
-> > >   	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
-> > >   	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef MAP_%s\n#define MAP_%s %s\n#endif\n")
-> > Humm, wouldn't this be simpler without that extra subshell? Like this:
-> > 
-> > diff --git a/tools/perf/trace/beauty/mmap_flags.sh b/tools/perf/trace/beauty/mmap_flags.sh
-> > index 3022597c8c178f21..0ac1886a83b5aceb 100755
-> > --- a/tools/perf/trace/beauty/mmap_flags.sh
-> > +++ b/tools/perf/trace/beauty/mmap_flags.sh
-> > @@ -19,6 +19,7 @@ arch_mman=${arch_header_dir}/mman.h
-> >   printf "static const char *mmap_flags[] = {\n"
-> >   regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
-> > +test -f ${arch_mman} && \
+> Result on power9 system before patch changes:
+> [command]# perf bench breakpoint thread
+> perf_event_open: No such device
 > 
-> The following lines have already used the [ ! -f ${arch_mman}, so let's stay
-> consistent？
+> Result on power9 system after patch changes:
+> [command]# ./perf bench breakpoint thread
+> Skipping perf bench breakpoint thread: No hardware support
+> 
+> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
 
-Well, we can make it consistent by simplifying the other places where
-the long, equivalent test is being done, which I think is the way to go,
-agreed?
+Thanks, applied.
 
 - Arnaldo
- 
+
+> ---
+>  tools/perf/bench/breakpoint.c | 24 +++++++++++++++++++++---
+>  1 file changed, 21 insertions(+), 3 deletions(-)
 > 
-> Thanks,
-> 
-> Yanteng
-> 
-> >   grep -E -q $regex ${arch_mman} && \
-> >   (grep -E $regex ${arch_mman} | \
-> >   	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
+> diff --git a/tools/perf/bench/breakpoint.c b/tools/perf/bench/breakpoint.c
+> index 41385f89ffc7..dfd18f5db97d 100644
+> --- a/tools/perf/bench/breakpoint.c
+> +++ b/tools/perf/bench/breakpoint.c
+> @@ -47,6 +47,7 @@ struct breakpoint {
+>  static int breakpoint_setup(void *addr)
+>  {
+>  	struct perf_event_attr attr = { .size = 0, };
+> +	int fd;
+>  
+>  	attr.type = PERF_TYPE_BREAKPOINT;
+>  	attr.size = sizeof(attr);
+> @@ -56,7 +57,12 @@ static int breakpoint_setup(void *addr)
+>  	attr.bp_addr = (unsigned long)addr;
+>  	attr.bp_type = HW_BREAKPOINT_RW;
+>  	attr.bp_len = HW_BREAKPOINT_LEN_1;
+> -	return syscall(SYS_perf_event_open, &attr, 0, -1, -1, 0);
+> +	fd = syscall(SYS_perf_event_open, &attr, 0, -1, -1, 0);
+> +
+> +	if (fd < 0)
+> +		fd = -errno;
+> +
+> +	return fd;
+>  }
+>  
+>  static void *passive_thread(void *arg)
+> @@ -122,8 +128,14 @@ int bench_breakpoint_thread(int argc, const char **argv)
+>  
+>  	for (i = 0; i < thread_params.nbreakpoints; i++) {
+>  		breakpoints[i].fd = breakpoint_setup(&breakpoints[i].watched);
+> -		if (breakpoints[i].fd == -1)
+> +
+> +		if (breakpoints[i].fd < 0) {
+> +			if (breakpoints[i].fd == -ENODEV) {
+> +				printf("Skipping perf bench breakpoint thread: No hardware support\n");
+> +				return 0;
+> +			}
+>  			exit((perror("perf_event_open"), EXIT_FAILURE));
+> +		}
+>  	}
+>  	gettimeofday(&start, NULL);
+>  	for (i = 0; i < thread_params.nparallel; i++) {
+> @@ -196,8 +208,14 @@ int bench_breakpoint_enable(int argc, const char **argv)
+>  		exit(EXIT_FAILURE);
+>  	}
+>  	fd = breakpoint_setup(&watched);
+> -	if (fd == -1)
+> +
+> +	if (fd < 0) {
+> +		if (fd == -ENODEV) {
+> +			printf("Skipping perf bench breakpoint enable: No hardware support\n");
+> +			return 0;
+> +		}
+>  		exit((perror("perf_event_open"), EXIT_FAILURE));
+> +	}
+>  	nthreads = enable_params.npassive + enable_params.nactive;
+>  	threads = calloc(nthreads, sizeof(threads[0]));
+>  	if (!threads)
+> -- 
+> 2.39.3
 > 
 
 -- 
