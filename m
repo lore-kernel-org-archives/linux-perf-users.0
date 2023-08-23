@@ -2,151 +2,198 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE38EE49AF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 00:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53560EE49A5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 01:18:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231918AbjHWAu7 convert rfc822-to-8bit (ORCPT
+        id S231962AbjHWBSD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Aug 2023 20:50:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37348 "EHLO
+        Tue, 22 Aug 2023 21:18:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231909AbjHWAu6 (ORCPT
+        with ESMTP id S231479AbjHWBSD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Aug 2023 20:50:58 -0400
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04821E66;
-        Tue, 22 Aug 2023 17:50:39 -0700 (PDT)
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-48d0dbd62fbso1085774e0c.0;
-        Tue, 22 Aug 2023 17:50:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692751838; x=1693356638;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PyMgRhYU9G+QtE8w0+IVqsL5N0OkKQo9/1AmARUv6+8=;
-        b=hP3qFmKEVVCZ4+wPxWwQip8CCSldf/EfrzNoiidG2TZerBgOzJh9awSezAL14KRN2a
-         eX36c6j2+GMk3ev9KDFAiQOM5fb11hAqWGkgGxFP/hJ/HzlakB9KW+4rpO11s9cUK9ia
-         DFqDwPlxkzpbNLYJ/QJr/t2FsEF687eXkCtHSzUBagaicXf12be2tHr9xqJKF7bgAGL2
-         xTWRBzSYXYoR9ICY6pwU0ODe7cCGRr87bSXyIroIsa9uXAS1HvX7svjQFV+dW3+ZXiAc
-         olcrAUq/Z9St9NDXMuK4gonZVa9sc1B63rsy1xMYo5fmoOaZEUgxLdK0la2DY6b2zwem
-         iO4Q==
-X-Gm-Message-State: AOJu0Yz/lRvN5fB5WmR1gsGKdeOLlX5s68SZHPgiziOl5wkDltqe83tv
-        E3F+9Hlf3wTg2CZmg+uXmtK/5Mdj4WHTGqtwdIpw4iTU
-X-Google-Smtp-Source: AGHT+IF+q9chTK36QO/Yr/CDvZNxTbY8y5o2yQIG5ifA3m+Qtu13ER3+8ZnhDuOyyaWwB281Ou/V/EXGCSdX8WvlTW0=
-X-Received: by 2002:a05:6122:4083:b0:48f:8891:5ecd with SMTP id
- cb3-20020a056122408300b0048f88915ecdmr4053883vkb.8.1692751837929; Tue, 22 Aug
- 2023 17:50:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230811025822.3859771-1-namhyung@kernel.org> <20230811025822.3859771-2-namhyung@kernel.org>
- <ZNu2KrbgFPY69K2+@kernel.org> <ZNu47CYXV0nuav+G@kernel.org>
-In-Reply-To: <ZNu47CYXV0nuav+G@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 22 Aug 2023 17:50:26 -0700
-Message-ID: <CAM9d7ciZaH1KkGannC=69FgtyOO7M_1opu-xgdDCkske+en1jg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf test: Add perf record sample filtering test
+        Tue, 22 Aug 2023 21:18:03 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AB0CCFF;
+        Tue, 22 Aug 2023 18:18:01 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RVpDs6lmKzTkdD;
+        Wed, 23 Aug 2023 09:15:41 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Wed, 23 Aug 2023 09:17:56 +0800
+Subject: Re: [PATCH v6 0/7] perf record: Track sideband events for all CPUs
+ when tracing selected CPUs
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+References: <20230821012734.18241-1-yangjihong1@huawei.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+        <james.clark@arm.com>, <tmricht@linux.ibm.com>,
+        <ak@linux.intel.com>, <anshuman.khandual@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+Message-ID: <3a069f1b-4bf8-f2f9-00fc-3e69c8b6cfcf@huawei.com>
+Date:   Wed, 23 Aug 2023 09:17:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
+MIME-Version: 1.0
+In-Reply-To: <20230821012734.18241-1-yangjihong1@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hi Arnaldo,
 
-On Tue, Aug 15, 2023 at 10:42 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Tue, Aug 15, 2023 at 02:30:18PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Thu, Aug 10, 2023 at 07:58:22PM -0700, Namhyung Kim escreveu:
-> > >   $ sudo ./perf test 'sample filter' -v
-> > >    94: perf record sample filtering (by BPF) tests                     :
-> > >   --- start ---
-> > >   test child forked, pid 3817527
-> > >   Checking BPF-filter privilege
-> > >   Basic bpf-filter test
-> > >   Basic bpf-filter test [Success]
-> > >   Failing bpf-filter test
-> > >   Error: task-clock event does not have PERF_SAMPLE_CPU
-> > >   Failing bpf-filter test [Success]
-> > >   Group bpf-filter test
-> > >   Error: task-clock event does not have PERF_SAMPLE_CPU
-> > >   Error: task-clock event does not have PERF_SAMPLE_CODE_PAGE_SIZE
-> > >   Group bpf-filter test [Success]
-> > >   test child finished with 0
-> > >   ---- end ----
-> > >   perf record sample filtering (by BPF) tests: Ok
-> >
-> > [root@five ~]# perf test -v "by BPF"
-> >  91: perf record sample filtering (by BPF) tests                     :
-> > --- start ---
-> > test child forked, pid 64165
-> > Checking BPF-filter privilege
-> > Basic bpf-filter test
-> >  ffffffff97f4f688
-> >  ffffffff97f73859
-> >  ffffffff97412ce6
-> >  ffffffff976da215
-> >  ffffffff973a92bf
-> >  ffffffff97376ad7
-> >  ffffffff97f73859
-> <SNIP
-> >  ffffffff971fdca5
-> >  ffffffff9737dbc4
-> >  ffffffff971b4e04
-> > Basic bpf-filter test [Failed invalid output]
-> > test child finished with -1
-> > ---- end ----
-> > perf record sample filtering (by BPF) tests: FAILED!
-> > [root@five ~]#
-> >
-> > [root@five ~]# uname -a
-> > Linux five 6.2.15-100.fc36.x86_64 #1 SMP PREEMPT_DYNAMIC Thu May 11 16:51:53 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
-> > [root@five ~]#
->
-> Above was on a AMD Ryzen 5950X, the following was on a lenovo t480s,
-> Intel notebook:
+Can you consider applying this patchset ?
+Please let me know if there is anything that needs to be fixed.
 
-Thanks for the test.  I think it's a matter of the kernel version
-rather than the CPU vendor.  6.1 or before will fail the check
-in the beginning but 6.2 kernel lacks a feature to set sample
-flags for some fields and silently accept all samples.  IIRC it's
-added in v6.3.
+Yang,
+Thanks
 
-Probably I need to add a version check in the error path.
-
-Thanks,
-Namhyung
-
->
-> [root@quaco ~]# uname -a
-> Linux quaco 6.4.7-200.fc38.x86_64 #1 SMP PREEMPT_DYNAMIC Thu Jul 27 20:01:18 UTC 2023 x86_64 GNU/Linux
-> [root@quaco ~]# perf test "filter"
->  30: Filter hist entries                                             : Ok
->  36: Filter fds with revents mask in a fdarray                       : Ok
->  67: dlfilter C API                                                  : Ok
->  91: perf record sample filtering (by BPF) tests                     : Ok
-> [root@quaco ~]# perf test -v "by BPF"
->  91: perf record sample filtering (by BPF) tests                     :
-> --- start ---
-> test child forked, pid 273609
-> Checking BPF-filter privilege
-> Basic bpf-filter test
-> Basic bpf-filter test [Success]
-> Failing bpf-filter test
-> Error: task-clock event does not have PERF_SAMPLE_CPU
-> Failing bpf-filter test [Success]
-> Group bpf-filter test
-> Error: task-clock event does not have PERF_SAMPLE_CPU
-> Error: task-clock event does not have PERF_SAMPLE_CODE_PAGE_SIZE
-> Group bpf-filter test [Success]
-> test child finished with 0
-> ---- end ----
-> perf record sample filtering (by BPF) tests: Ok
-> [root@quaco ~]#
+On 2023/8/21 9:27, Yang Jihong wrote:
+> User space tasks can migrate between CPUs, track sideband events for all
+> CPUs.
+> 
+> The specific scenarios are as follows:
+> 
+>           CPU0                                 CPU1
+>    perf record -C 0 start
+>                                taskA starts to be created and executed
+>                                  -> PERF_RECORD_COMM and PERF_RECORD_MMAP
+>                                     events only deliver to CPU1
+>                                ......
+>                                  |
+>                            migrate to CPU0
+>                                  |
+>    Running on CPU0    <----------/
+>    ...
+> 
+>    perf record -C 0 stop
+> 
+> Now perf samples the PC of taskA. However, perf does not record the
+> PERF_RECORD_COMM and PERF_RECORD_COMM events of taskA.
+> Therefore, the comm and symbols of taskA cannot be parsed.
+> 
+> The sys_perf_event_open invoked is as follows:
+> 
+>    # perf --debug verbose=3 record -e cpu-clock -C 1 true
+>    <SNIP>
+>    Opening: cpu-clock
+>    ------------------------------------------------------------
+>    perf_event_attr:
+>      type                             1 (PERF_TYPE_SOFTWARE)
+>      size                             136
+>      config                           0 (PERF_COUNT_SW_CPU_CLOCK)
+>      { sample_period, sample_freq }   4000
+>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>      read_format                      ID|LOST
+>      disabled                         1
+>      inherit                          1
+>      freq                             1
+>      sample_id_all                    1
+>      exclude_guest                    1
+>    ------------------------------------------------------------
+>    sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
+>    Opening: dummy:u
+>    ------------------------------------------------------------
+>    perf_event_attr:
+>      type                             1 (PERF_TYPE_SOFTWARE)
+>      size                             136
+>      config                           0x9 (PERF_COUNT_SW_DUMMY)
+>      { sample_period, sample_freq }   1
+>      sample_type                      IP|TID|TIME|CPU|IDENTIFIER
+>      read_format                      ID|LOST
+>      inherit                          1
+>      exclude_kernel                   1
+>      exclude_hv                       1
+>      mmap                             1
+>      comm                             1
+>      task                             1
+>      sample_id_all                    1
+>      exclude_guest                    1
+>      mmap2                            1
+>      comm_exec                        1
+>      ksymbol                          1
+>      bpf_event                        1
+>    ------------------------------------------------------------
+>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
+>    sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 7
+>    sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 9
+>    sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 10
+>    sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 11
+>    sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 12
+>    sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 13
+>    sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
+>    <SNIP>
+> 
+> Changes since_v5:
+>   - No code changes.
+>   - Detailed commit message of patch3.
+>   - Add Acked-by and Tested-by tags from Adrian Hunter.
+> 
+> Changes since_v4:
+>   - Simplify check code for record__tracking_system_wide().
+>   - Add perf attr test result to commit message for patch 7.
+> 
+> Changes since_v3:
+>   - Check fall_kernel, all_user, and dummy or exclude_user when determining
+>     whether system wide is required.
+> 
+> Changes since_v2:
+>   - Rename record_tracking.sh to record_sideband.sh in tools/perf/tests/shell.
+>   - Remove "perf evlist: Skip dummy event sample_type check for evlist_config" patch.
+>   - Add opts->all_kernel check in record__config_tracking_events().
+>   - Add perf_event_attr test for record selected CPUs exclude_user.
+>   - Update base-record & system-wide-dummy sample_type attr expected values for test-record-C0.
+> 
+> Changes since v1:
+>   - Add perf_evlist__go_system_wide() via internal/evlist.h instead of
+>     exporting perf_evlist__propagate_maps().
+>   - Use evlist__add_aux_dummy() instead of evlist__add_dummy() in
+>     evlist__findnew_tracking_event().
+>   - Add a parameter in evlist__findnew_tracking_event() to deal with
+>     system_wide inside.
+>   - Add sideband for all CPUs when tracing selected CPUs comments on
+>     the perf record man page.
+>   - Use "sideband events" instead of "tracking events".
+>   - Adjust the patches Sequence.
+>   - Add patch5 to skip dummy event sample_type check for evlist_config.
+>   - Add patch6 to update system-wide-dummy attr values for perf test.
+> 
+> Yang Jihong (7):
+>    perf evlist: Add perf_evlist__go_system_wide() helper
+>    perf evlist: Add evlist__findnew_tracking_event() helper
+>    perf record: Move setting dummy tracking before
+>      record__init_thread_masks()
+>    perf record: Track sideband events for all CPUs when tracing selected
+>      CPUs
+>    perf test: Update base-record & system-wide-dummy attr expected values
+>      for test-record-C0
+>    perf test: Add test case for record sideband events
+>    perf test: Add perf_event_attr test for record selected CPUs
+>      exclude_user
+> 
+>   tools/lib/perf/evlist.c                       |   9 ++
+>   tools/lib/perf/include/internal/evlist.h      |   2 +
+>   tools/perf/Documentation/perf-record.txt      |   3 +
+>   tools/perf/builtin-record.c                   | 106 +++++++++++++-----
+>   tools/perf/tests/attr/system-wide-dummy       |  14 ++-
+>   tools/perf/tests/attr/test-record-C0          |   4 +-
+>   .../perf/tests/attr/test-record-C0-all-kernel |  32 ++++++
+>   tools/perf/tests/shell/record_sideband.sh     |  44 ++++++++
+>   tools/perf/util/evlist.c                      |  18 +++
+>   tools/perf/util/evlist.h                      |   1 +
+>   10 files changed, 198 insertions(+), 35 deletions(-)
+>   create mode 100644 tools/perf/tests/attr/test-record-C0-all-kernel
+>   create mode 100755 tools/perf/tests/shell/record_sideband.sh
+> 
