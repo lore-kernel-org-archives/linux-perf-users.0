@@ -2,198 +2,142 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53560EE49A5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 01:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 640B3EE49A5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 02:22:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231962AbjHWBSD (ORCPT
+        id S231946AbjHWCWu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Aug 2023 21:18:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40844 "EHLO
+        Tue, 22 Aug 2023 22:22:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231479AbjHWBSD (ORCPT
+        with ESMTP id S231936AbjHWCWt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Aug 2023 21:18:03 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AB0CCFF;
-        Tue, 22 Aug 2023 18:18:01 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RVpDs6lmKzTkdD;
-        Wed, 23 Aug 2023 09:15:41 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Wed, 23 Aug 2023 09:17:56 +0800
-Subject: Re: [PATCH v6 0/7] perf record: Track sideband events for all CPUs
- when tracing selected CPUs
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-References: <20230821012734.18241-1-yangjihong1@huawei.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-        <james.clark@arm.com>, <tmricht@linux.ibm.com>,
-        <ak@linux.intel.com>, <anshuman.khandual@arm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-Message-ID: <3a069f1b-4bf8-f2f9-00fc-3e69c8b6cfcf@huawei.com>
-Date:   Wed, 23 Aug 2023 09:17:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Tue, 22 Aug 2023 22:22:49 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D88CD3;
+        Tue, 22 Aug 2023 19:22:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692757367; x=1724293367;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=E2DY2rZ63Jkob00d6HBggLmef15UJ2Y9YFk0LbPi1i8=;
+  b=BCZ84vwnBF/m+vesZFYaUHWDLo5JzlBXg43TAs2k6cWUSZOAhksrXdoh
+   ZPu2FuqEsZz+yoMjI4KLxs35tY6Sq46G7h1/QXJuhIMokH7TL4b9FqZL8
+   kI+Sx3AM/3MOCoFWZrYkaeWdbHwWKvsX/BOcHa//mfF5qTyEfrW9th9CG
+   QSeUIaS+PQQBY0qg6EVgqw/0C0uh/48rfkU7WJOS/9oma2u9IJN9Phnwg
+   MNbIz+7ho3bziZaN1R+dgFCdUZJHsCLB0hXuAHjryuQNtrOabgv9YSgjc
+   IzaE0ukRmM9vemTYkQk1g8Sr8dfOnjNzu+R7CYtq7gYkGMWp877w7lyr9
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="372931310"
+X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
+   d="scan'208";a="372931310"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 19:22:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="765961314"
+X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
+   d="scan'208";a="765961314"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.93.5.53]) ([10.93.5.53])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 19:22:43 -0700
+Message-ID: <18e606ba-d6b2-02f0-1511-d949c4c1e6ed@linux.intel.com>
+Date:   Wed, 23 Aug 2023 10:22:41 +0800
 MIME-Version: 1.0
-In-Reply-To: <20230821012734.18241-1-yangjihong1@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH v2] KVM: x86/pmu: Manipulate FIXED_CTR_CTRL MSR with
+ macros
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+To:     Like Xu <like.xu.linux@gmail.com>
+Cc:     kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhang Xiong <xiong.y.zhang@intel.com>,
+        Lv Zhiyuan <zhiyuan.lv@intel.com>,
+        Dapeng Mi <dapeng1.mi@intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>
+References: <20230815032849.2929788-1-dapeng1.mi@linux.intel.com>
+ <305fa208-e1d6-7e22-3156-11fd551a8dd1@gmail.com>
+From:   "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <305fa208-e1d6-7e22-3156-11fd551a8dd1@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Arnaldo,
+On 8/21/2023 4:05 PM, Like Xu wrote:
+> On 15/8/2023 11:28 am, Dapeng Mi wrote:
+>> Magic numbers are used to manipulate the bit fields of
+>> FIXED_CTR_CTRL MSR. This is not read-friendly and use macros to replace
+>> these magic numbers to increase the readability.
+>
+> More, reuse INTEL_FIXED_0_* macros for pmu->fixed_ctr_ctrl_mask, pls.
 
-Can you consider applying this patchset ?
-Please let me know if there is anything that needs to be fixed.
-
-Yang,
-Thanks
-
-On 2023/8/21 9:27, Yang Jihong wrote:
-> User space tasks can migrate between CPUs, track sideband events for all
-> CPUs.
-> 
-> The specific scenarios are as follows:
-> 
->           CPU0                                 CPU1
->    perf record -C 0 start
->                                taskA starts to be created and executed
->                                  -> PERF_RECORD_COMM and PERF_RECORD_MMAP
->                                     events only deliver to CPU1
->                                ......
->                                  |
->                            migrate to CPU0
->                                  |
->    Running on CPU0    <----------/
->    ...
-> 
->    perf record -C 0 stop
-> 
-> Now perf samples the PC of taskA. However, perf does not record the
-> PERF_RECORD_COMM and PERF_RECORD_COMM events of taskA.
-> Therefore, the comm and symbols of taskA cannot be parsed.
-> 
-> The sys_perf_event_open invoked is as follows:
-> 
->    # perf --debug verbose=3 record -e cpu-clock -C 1 true
->    <SNIP>
->    Opening: cpu-clock
->    ------------------------------------------------------------
->    perf_event_attr:
->      type                             1 (PERF_TYPE_SOFTWARE)
->      size                             136
->      config                           0 (PERF_COUNT_SW_CPU_CLOCK)
->      { sample_period, sample_freq }   4000
->      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->      read_format                      ID|LOST
->      disabled                         1
->      inherit                          1
->      freq                             1
->      sample_id_all                    1
->      exclude_guest                    1
->    ------------------------------------------------------------
->    sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
->    Opening: dummy:u
->    ------------------------------------------------------------
->    perf_event_attr:
->      type                             1 (PERF_TYPE_SOFTWARE)
->      size                             136
->      config                           0x9 (PERF_COUNT_SW_DUMMY)
->      { sample_period, sample_freq }   1
->      sample_type                      IP|TID|TIME|CPU|IDENTIFIER
->      read_format                      ID|LOST
->      inherit                          1
->      exclude_kernel                   1
->      exclude_hv                       1
->      mmap                             1
->      comm                             1
->      task                             1
->      sample_id_all                    1
->      exclude_guest                    1
->      mmap2                            1
->      comm_exec                        1
->      ksymbol                          1
->      bpf_event                        1
->    ------------------------------------------------------------
->    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
->    sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 7
->    sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 9
->    sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 10
->    sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 11
->    sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 12
->    sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 13
->    sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
->    <SNIP>
-> 
-> Changes since_v5:
->   - No code changes.
->   - Detailed commit message of patch3.
->   - Add Acked-by and Tested-by tags from Adrian Hunter.
-> 
-> Changes since_v4:
->   - Simplify check code for record__tracking_system_wide().
->   - Add perf attr test result to commit message for patch 7.
-> 
-> Changes since_v3:
->   - Check fall_kernel, all_user, and dummy or exclude_user when determining
->     whether system wide is required.
-> 
-> Changes since_v2:
->   - Rename record_tracking.sh to record_sideband.sh in tools/perf/tests/shell.
->   - Remove "perf evlist: Skip dummy event sample_type check for evlist_config" patch.
->   - Add opts->all_kernel check in record__config_tracking_events().
->   - Add perf_event_attr test for record selected CPUs exclude_user.
->   - Update base-record & system-wide-dummy sample_type attr expected values for test-record-C0.
-> 
-> Changes since v1:
->   - Add perf_evlist__go_system_wide() via internal/evlist.h instead of
->     exporting perf_evlist__propagate_maps().
->   - Use evlist__add_aux_dummy() instead of evlist__add_dummy() in
->     evlist__findnew_tracking_event().
->   - Add a parameter in evlist__findnew_tracking_event() to deal with
->     system_wide inside.
->   - Add sideband for all CPUs when tracing selected CPUs comments on
->     the perf record man page.
->   - Use "sideband events" instead of "tracking events".
->   - Adjust the patches Sequence.
->   - Add patch5 to skip dummy event sample_type check for evlist_config.
->   - Add patch6 to update system-wide-dummy attr values for perf test.
-> 
-> Yang Jihong (7):
->    perf evlist: Add perf_evlist__go_system_wide() helper
->    perf evlist: Add evlist__findnew_tracking_event() helper
->    perf record: Move setting dummy tracking before
->      record__init_thread_masks()
->    perf record: Track sideband events for all CPUs when tracing selected
->      CPUs
->    perf test: Update base-record & system-wide-dummy attr expected values
->      for test-record-C0
->    perf test: Add test case for record sideband events
->    perf test: Add perf_event_attr test for record selected CPUs
->      exclude_user
-> 
->   tools/lib/perf/evlist.c                       |   9 ++
->   tools/lib/perf/include/internal/evlist.h      |   2 +
->   tools/perf/Documentation/perf-record.txt      |   3 +
->   tools/perf/builtin-record.c                   | 106 +++++++++++++-----
->   tools/perf/tests/attr/system-wide-dummy       |  14 ++-
->   tools/perf/tests/attr/test-record-C0          |   4 +-
->   .../perf/tests/attr/test-record-C0-all-kernel |  32 ++++++
->   tools/perf/tests/shell/record_sideband.sh     |  44 ++++++++
->   tools/perf/util/evlist.c                      |  18 +++
->   tools/perf/util/evlist.h                      |   1 +
->   10 files changed, 198 insertions(+), 35 deletions(-)
->   create mode 100644 tools/perf/tests/attr/test-record-C0-all-kernel
->   create mode 100755 tools/perf/tests/shell/record_sideband.sh
-> 
+Sure. Thanks.
+>
+>>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>   arch/x86/kvm/pmu.c | 10 +++++-----
+>>   arch/x86/kvm/pmu.h |  6 ++++--
+>>   2 files changed, 9 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+>> index edb89b51b383..fb4ef2da3e32 100644
+>> --- a/arch/x86/kvm/pmu.c
+>> +++ b/arch/x86/kvm/pmu.c
+>> @@ -420,11 +420,11 @@ static void reprogram_counter(struct kvm_pmc *pmc)
+>>       if (pmc_is_fixed(pmc)) {
+>>           fixed_ctr_ctrl = fixed_ctrl_field(pmu->fixed_ctr_ctrl,
+>>                             pmc->idx - INTEL_PMC_IDX_FIXED);
+>> -        if (fixed_ctr_ctrl & 0x1)
+>> +        if (fixed_ctr_ctrl & INTEL_FIXED_0_KERNEL)
+>>               eventsel |= ARCH_PERFMON_EVENTSEL_OS;
+>> -        if (fixed_ctr_ctrl & 0x2)
+>> +        if (fixed_ctr_ctrl & INTEL_FIXED_0_USER)
+>>               eventsel |= ARCH_PERFMON_EVENTSEL_USR;
+>> -        if (fixed_ctr_ctrl & 0x8)
+>> +        if (fixed_ctr_ctrl & INTEL_FIXED_0_ENABLE_PMI)
+>>               eventsel |= ARCH_PERFMON_EVENTSEL_INT;
+>>           new_config = (u64)fixed_ctr_ctrl;
+>>       }
+>> @@ -749,8 +749,8 @@ static inline bool cpl_is_matched(struct kvm_pmc 
+>> *pmc)
+>>       } else {
+>>           config = fixed_ctrl_field(pmc_to_pmu(pmc)->fixed_ctr_ctrl,
+>>                         pmc->idx - INTEL_PMC_IDX_FIXED);
+>> -        select_os = config & 0x1;
+>> -        select_user = config & 0x2;
+>> +        select_os = config & INTEL_FIXED_0_KERNEL;
+>> +        select_user = config & INTEL_FIXED_0_USER;
+>>       }
+>>         return (static_call(kvm_x86_get_cpl)(pmc->vcpu) == 0) ? 
+>> select_os : select_user;
+>> diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+>> index 7d9ba301c090..ffda2ecc3a22 100644
+>> --- a/arch/x86/kvm/pmu.h
+>> +++ b/arch/x86/kvm/pmu.h
+>> @@ -12,7 +12,8 @@
+>>                         MSR_IA32_MISC_ENABLE_BTS_UNAVAIL)
+>>     /* retrieve the 4 bits for EN and PMI out of IA32_FIXED_CTR_CTRL */
+>> -#define fixed_ctrl_field(ctrl_reg, idx) (((ctrl_reg) >> ((idx)*4)) & 
+>> 0xf)
+>> +#define fixed_ctrl_field(ctrl_reg, idx) \
+>> +    (((ctrl_reg) >> ((idx) * INTEL_FIXED_BITS_STRIDE)) & 
+>> INTEL_FIXED_BITS_MASK)
+>>     #define VMWARE_BACKDOOR_PMC_HOST_TSC        0x10000
+>>   #define VMWARE_BACKDOOR_PMC_REAL_TIME        0x10001
+>> @@ -165,7 +166,8 @@ static inline bool pmc_speculative_in_use(struct 
+>> kvm_pmc *pmc)
+>>         if (pmc_is_fixed(pmc))
+>>           return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
+>> -                    pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
+>> +                    pmc->idx - INTEL_PMC_IDX_FIXED) &
+>> +                    (INTEL_FIXED_0_KERNEL | INTEL_FIXED_0_USER);
+>>         return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
+>>   }
+>>
+>> base-commit: 240f736891887939571854bd6d734b6c9291f22e
