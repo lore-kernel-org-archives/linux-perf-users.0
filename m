@@ -2,163 +2,169 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B1AEE49B0
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 11:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E66EE49A0
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 11:35:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234132AbjHWLAc (ORCPT
+        id S234317AbjHWLfz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Aug 2023 07:00:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44054 "EHLO
+        Wed, 23 Aug 2023 07:35:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232127AbjHWLAb (ORCPT
+        with ESMTP id S231717AbjHWLfz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Aug 2023 07:00:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DB66CDF
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 04:00:29 -0700 (PDT)
+        Wed, 23 Aug 2023 07:35:55 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C239710FE;
+        Wed, 23 Aug 2023 04:35:20 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D262A623DC
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 11:00:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53631C433C8;
-        Wed, 23 Aug 2023 11:00:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 846F36604B;
+        Wed, 23 Aug 2023 11:34:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BA5CC433C7;
+        Wed, 23 Aug 2023 11:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692788428;
-        bh=145vx0TVt+huLKZKmow/nDxEuc+RGDcQOQiyklZqCuU=;
+        s=k20201202; t=1692790486;
+        bh=X+mD8swD/B1r/WRr0uFCG3p2J8HJeLmr49XtjHrY3rg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WaLv1hyywY6GxHQYm7UkTbyuFM5OYBaRPUpyxpjAAAO4P03kNp5gpdzUtfppjOXS0
-         YyFtYwl0S7xY2ZhxDMbyX0bm5/Fmq2vJW0z6fVs+KQvc1rvecRW4lNE7d26h3s7Jmx
-         AuYitMHtJWAU1flFJ4NGmO9agk8XFDQsDrtuw07UOT5nPpv4KJ5ZsWvlcOqdg3m5yy
-         UBGfIPl+EQgOdaHjlkxg0ZwIrhc+KYRbt+yZNbT078p//VgpM80+LaCQx/kCe5TemE
-         P3btYp2iuZOJ6rQuZMPyVe/XRN+6cIhIbxi5MT5JaPPN3KDfL1oM6RmJcddgQYu0ZB
-         YIbLE5fejZPWA==
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Wed, 23 Aug 2023 16:28:41 +0530
-From:   "Naveen N Rao" <naveen@kernel.org>
-To:     "Kajol Jain" <kjain@linux.ibm.com>, <acme@kernel.org>
-Cc:     <maddy@linux.ibm.com>, <atrajeev@linux.vnet.ibm.com>,
-        <disgoel@linux.ibm.com>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-perf-users@vger.kernel.org>, <irogers@google.com>,
-        <namhyung@kernel.org>, <naveen.n.rao@linux.vnet.ibm.com>,
-        "Disha Goel" <disgoel@linux.vnet.ibm.com>
-Subject: Re: [PATCH] perf test: Skip perf bench breakpoint run if no
- breakpoints available
-Message-Id: <CUZVDJPWI4GL.NVVOJTWE6U5S@naverao1-tp>
-X-Mailer: aerc 0.15.2
-References: <20230823075103.190565-1-kjain@linux.ibm.com>
-In-Reply-To: <20230823075103.190565-1-kjain@linux.ibm.com>
+        b=FFiQ3GR2WJwIDQIqUsxJjDMCH2ORBgAT83hGsRoK5oPSChQPW4l3qR1YRM57zy4Op
+         yOEftZUgZsehgNUDUAYyh2WHGGUeIV7g8/9iuLQeSecG+YxnpDLvl/euLaf+SfeoSZ
+         XshcwZurmE9w6FKZbKQ83Ye3j2d5Jl8y+huK6lFwEhd7wmU6wObKp+r2xbjUuQmLDF
+         iFI+4WjWaTHI2miFjqnzKBughovclp7caSW2TjoQ8pM7aYEzu2ltABCv8SSHsfWRrr
+         PNkMUw2SmCnTTpSlUtkCz6vbPp4ypLGH03btzxdTVLp9XAsUhR2mEEYzYrD0W9iy+0
+         743CN/c2mv4sw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 09DBD40722; Wed, 23 Aug 2023 08:34:44 -0300 (-03)
+Date:   Wed, 23 Aug 2023 08:34:43 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Subject: Re: [PATCH 2/2] perf test: Add perf record sample filtering test
+Message-ID: <ZOXu0xq7fgwsZ5Co@kernel.org>
+References: <20230811025822.3859771-1-namhyung@kernel.org>
+ <20230811025822.3859771-2-namhyung@kernel.org>
+ <ZNu2KrbgFPY69K2+@kernel.org>
+ <ZNu47CYXV0nuav+G@kernel.org>
+ <CAM9d7ciZaH1KkGannC=69FgtyOO7M_1opu-xgdDCkske+en1jg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7ciZaH1KkGannC=69FgtyOO7M_1opu-xgdDCkske+en1jg@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Kajol,
+Em Tue, Aug 22, 2023 at 05:50:26PM -0700, Namhyung Kim escreveu:
+> Hi Arnaldo,
+> 
+> On Tue, Aug 15, 2023 at 10:42 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > Em Tue, Aug 15, 2023 at 02:30:18PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > Em Thu, Aug 10, 2023 at 07:58:22PM -0700, Namhyung Kim escreveu:
+> > > >   $ sudo ./perf test 'sample filter' -v
+> > > >    94: perf record sample filtering (by BPF) tests                     :
+> > > >   --- start ---
+> > > >   test child forked, pid 3817527
+> > > >   Checking BPF-filter privilege
+> > > >   Basic bpf-filter test
+> > > >   Basic bpf-filter test [Success]
+> > > >   Failing bpf-filter test
+> > > >   Error: task-clock event does not have PERF_SAMPLE_CPU
+> > > >   Failing bpf-filter test [Success]
+> > > >   Group bpf-filter test
+> > > >   Error: task-clock event does not have PERF_SAMPLE_CPU
+> > > >   Error: task-clock event does not have PERF_SAMPLE_CODE_PAGE_SIZE
+> > > >   Group bpf-filter test [Success]
+> > > >   test child finished with 0
+> > > >   ---- end ----
+> > > >   perf record sample filtering (by BPF) tests: Ok
+> > >
+> > > [root@five ~]# perf test -v "by BPF"
+> > >  91: perf record sample filtering (by BPF) tests                     :
+> > > --- start ---
+> > > test child forked, pid 64165
+> > > Checking BPF-filter privilege
+> > > Basic bpf-filter test
+> > >  ffffffff97f4f688
+> > >  ffffffff97f73859
+> > >  ffffffff97412ce6
+> > >  ffffffff976da215
+> > >  ffffffff973a92bf
+> > >  ffffffff97376ad7
+> > >  ffffffff97f73859
+> > <SNIP
+> > >  ffffffff971fdca5
+> > >  ffffffff9737dbc4
+> > >  ffffffff971b4e04
+> > > Basic bpf-filter test [Failed invalid output]
+> > > test child finished with -1
+> > > ---- end ----
+> > > perf record sample filtering (by BPF) tests: FAILED!
+> > > [root@five ~]#
+> > >
+> > > [root@five ~]# uname -a
+> > > Linux five 6.2.15-100.fc36.x86_64 #1 SMP PREEMPT_DYNAMIC Thu May 11 16:51:53 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
+> > > [root@five ~]#
+> >
+> > Above was on a AMD Ryzen 5950X, the following was on a lenovo t480s,
+> > Intel notebook:
+> 
+> Thanks for the test.  I think it's a matter of the kernel version
+> rather than the CPU vendor.  6.1 or before will fail the check
+> in the beginning but 6.2 kernel lacks a feature to set sample
+> flags for some fields and silently accept all samples.  IIRC it's
+> added in v6.3.
+> 
+> Probably I need to add a version check in the error path.
 
-On Wed Aug 23, 2023 at 1:21 PM IST, Kajol Jain wrote:
-> Based on commit 7d54a4acd8c1 ("perf test: Skip watchpoint
-> tests if no watchpoints available"), hardware breakpoints
-> are not available for power9 platform and because of that
-> perf bench breakpoint run fails on power9 platform.
-> Add code to check for the return value of perf_event_open()
-> in breakpoint run and skip the perf bench breakpoint run,
-> if hardware breakpoints are not available.
->
-> Result on power9 system before patch changes:
-> [command]# perf bench breakpoint thread
-> perf_event_open: No such device
->
-> Result on power9 system after patch changes:
-> [command]# ./perf bench breakpoint thread
-> Skipping perf bench breakpoint thread: No hardware support
->
-> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> ---
->  tools/perf/bench/breakpoint.c | 24 +++++++++++++++++++++---
->  1 file changed, 21 insertions(+), 3 deletions(-)
+Yeah, we need to do a wider testing of all things enabled
+BUILD_BPF_SKEL=1, in more kernels, architectures, distributions.
 
-Thanks for fixing this to not report an error. A minor nit below, but=20
-otherwise:
-Acked-by: Naveen N Rao <naveen@kernel.org>
+Thanks for the feedback,
 
->
-> diff --git a/tools/perf/bench/breakpoint.c b/tools/perf/bench/breakpoint.=
-c
-> index 41385f89ffc7..dfd18f5db97d 100644
-> --- a/tools/perf/bench/breakpoint.c
-> +++ b/tools/perf/bench/breakpoint.c
-> @@ -47,6 +47,7 @@ struct breakpoint {
->  static int breakpoint_setup(void *addr)
->  {
->  	struct perf_event_attr attr =3D { .size =3D 0, };
-> +	int fd;
-> =20
->  	attr.type =3D PERF_TYPE_BREAKPOINT;
->  	attr.size =3D sizeof(attr);
-> @@ -56,7 +57,12 @@ static int breakpoint_setup(void *addr)
->  	attr.bp_addr =3D (unsigned long)addr;
->  	attr.bp_type =3D HW_BREAKPOINT_RW;
->  	attr.bp_len =3D HW_BREAKPOINT_LEN_1;
-> -	return syscall(SYS_perf_event_open, &attr, 0, -1, -1, 0);
-> +	fd =3D syscall(SYS_perf_event_open, &attr, 0, -1, -1, 0);
-> +
-> +	if (fd < 0)
-> +		fd =3D -errno;
-> +
-> +	return fd;
->  }
-> =20
->  static void *passive_thread(void *arg)
-> @@ -122,8 +128,14 @@ int bench_breakpoint_thread(int argc, const char **a=
-rgv)
-> =20
->  	for (i =3D 0; i < thread_params.nbreakpoints; i++) {
->  		breakpoints[i].fd =3D breakpoint_setup(&breakpoints[i].watched);
-> -		if (breakpoints[i].fd =3D=3D -1)
-> +
-> +		if (breakpoints[i].fd < 0) {
-> +			if (breakpoints[i].fd =3D=3D -ENODEV) {
-> +				printf("Skipping perf bench breakpoint thread: No hardware support\n=
-");
-> +				return 0;
+- Arnaldo
 
-Should we instead do 'exit(0)' here to stop further benchmarks? Perhaps:
-  err(EXIT_SUCCESS, "Skipping perf bench breakpoint thread: No hardware sup=
-port");
+ 
+> Thanks,
+> Namhyung
+> 
+> >
+> > [root@quaco ~]# uname -a
+> > Linux quaco 6.4.7-200.fc38.x86_64 #1 SMP PREEMPT_DYNAMIC Thu Jul 27 20:01:18 UTC 2023 x86_64 GNU/Linux
+> > [root@quaco ~]# perf test "filter"
+> >  30: Filter hist entries                                             : Ok
+> >  36: Filter fds with revents mask in a fdarray                       : Ok
+> >  67: dlfilter C API                                                  : Ok
+> >  91: perf record sample filtering (by BPF) tests                     : Ok
+> > [root@quaco ~]# perf test -v "by BPF"
+> >  91: perf record sample filtering (by BPF) tests                     :
+> > --- start ---
+> > test child forked, pid 273609
+> > Checking BPF-filter privilege
+> > Basic bpf-filter test
+> > Basic bpf-filter test [Success]
+> > Failing bpf-filter test
+> > Error: task-clock event does not have PERF_SAMPLE_CPU
+> > Failing bpf-filter test [Success]
+> > Group bpf-filter test
+> > Error: task-clock event does not have PERF_SAMPLE_CPU
+> > Error: task-clock event does not have PERF_SAMPLE_CODE_PAGE_SIZE
+> > Group bpf-filter test [Success]
+> > test child finished with 0
+> > ---- end ----
+> > perf record sample filtering (by BPF) tests: Ok
+> > [root@quaco ~]#
 
-EXIT_SUCCESS looks weird, but should help document that this is not an=20
-error.
+-- 
 
-> +			}
->  			exit((perror("perf_event_open"), EXIT_FAILURE));
-> +		}
->  	}
->  	gettimeofday(&start, NULL);
->  	for (i =3D 0; i < thread_params.nparallel; i++) {
-> @@ -196,8 +208,14 @@ int bench_breakpoint_enable(int argc, const char **a=
-rgv)
->  		exit(EXIT_FAILURE);
->  	}
->  	fd =3D breakpoint_setup(&watched);
-> -	if (fd =3D=3D -1)
-> +
-> +	if (fd < 0) {
-> +		if (fd =3D=3D -ENODEV) {
-> +			printf("Skipping perf bench breakpoint enable: No hardware support\n"=
-);
-> +			return 0;
-
-Here too.
-
-- Naveen
-
-> +		}
->  		exit((perror("perf_event_open"), EXIT_FAILURE));
-> +	}
->  	nthreads =3D enable_params.npassive + enable_params.nactive;
->  	threads =3D calloc(nthreads, sizeof(threads[0]));
->  	if (!threads)
-
+- Arnaldo
