@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C27EE49A0
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 08:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83184EE49AE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 08:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233664AbjHWIMB (ORCPT
+        id S231429AbjHWIOE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Aug 2023 04:12:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59626 "EHLO
+        Wed, 23 Aug 2023 04:14:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233721AbjHWIKp (ORCPT
+        with ESMTP id S233701AbjHWILm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Aug 2023 04:10:45 -0400
+        Wed, 23 Aug 2023 04:11:42 -0400
 Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 301B4170E
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 01:09:05 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-58caf216c55so119035147b3.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 01:09:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 983C01980
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 01:09:33 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-58d799aa369so74048107b3.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 01:09:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692778144; x=1693382944;
+        d=google.com; s=20221208; t=1692778173; x=1693382973;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=PD4Z1HSbPqI+PYDaeSuUcOyp8wCv3Hn6s79y+f2o9yA=;
-        b=5Swm+ynQycOaHY2H3lvYnF5DCgbMCPp2Sv3OWE7qagiXgBCCe1boVE0WGq7nxQvXzj
-         CNn4/Mi646rmZ5jdcfeOMnz+GzOD0RfaQplNuvosFY19OtuHo7JH5+Pq04S0x+QGfoOx
-         /t8MT1BODTjIZnhFR0tnqucNCgXv3Jgfti30qWbWtnItV99BuNvd2QROwAFv/1tpd2fS
-         hMriiLHHyevQS4UxahO9SboMcaXdyk3PQ888uvXfQZkEJvoDIcF0CrJI1q2KLudzmavK
-         hAmsz7IFjIa8bltOi8moEOm6mZiloDrrYmYjgqUj+ExFzlL52mxHv5xKy77xXeYxoOAN
-         qIdA==
+        bh=2qaJRxBCyklSMWuPm+izeLXJoqyCIVuwmc1TFOmlkgI=;
+        b=HYbuLJFmM89qjJvmBl3tRTcMNf1fLI3hJZEAeKXBIo84IZ5crxB9gYYh99GOFyv1E2
+         IExozTzs9hWyqs5K7X6i6Dqj8+JK+abPaMjSnOIlCNU8DFgUq+QUOZSn0Wpc4ulaMUkn
+         +lDYufL22mW0iEVm5peGIBsBp3Zt7eIeftICgATUgukRUH1eC42oN4H1P0pbzTbC5XA1
+         O7wJttqhKEgm4qGt9mjeX1qjs3/uKiYN8KLqNm7EAvQ+qOqx9J9IcLxhvILqcNYzgaxR
+         wroF2Q9peXqhmmUdSgfwi6nvIij1E+qUA5SO3lnrGIP83PTOh1Ggk/wYXAej36fKxVCX
+         Yzog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692778144; x=1693382944;
+        d=1e100.net; s=20221208; t=1692778173; x=1693382973;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PD4Z1HSbPqI+PYDaeSuUcOyp8wCv3Hn6s79y+f2o9yA=;
-        b=NNY1qAr7IUiw+Rn2wYSJvedmmHKdChr1TgQEhLiBtbLHjKXYyVO+bZgMQb/wUn57l6
-         d34iF27EVxSEuOSY1OSoRkCR2HZ/YatnF8iHn01eqVVZCnkYC+gGokgcE4j9jsLZYY5S
-         KdLaNqrR++er6RGSjWFYjWXlqrTBpJICroI4NFxchsDmE6RxerZ12xxx684sCAOsnNaz
-         fi0zcBKX0EnHqfPPZmvJJ9PBPr7DGF57E3NfUryodCmlDvGTO1M+4aTffQKVZztzF81p
-         I0lAjOmHaxuNpe9m7tI/LmKM+cLCpuGRkNYEynWLf4i3WyIK4aJIFyktjuDTpzwPNY2E
-         IVoQ==
-X-Gm-Message-State: AOJu0YwvCW4fqXBTsNyb40Jc5MV5CElk11unROjHC8Cq0U5OMO5oaXqg
-        HdRd4NXzU1TgU5uts9meqaLKiIMH51+y
-X-Google-Smtp-Source: AGHT+IFnVPI8k6B5G+QH3e0Bj9Dymv4VB/FhRNCGu7sBVEICr0moxZQsYBAXUeR9HMtreYF/f10tZbQYtHKi
+        bh=2qaJRxBCyklSMWuPm+izeLXJoqyCIVuwmc1TFOmlkgI=;
+        b=GQpqXF+Y9ZPZXuFSELIo5/uJWc10FxWV/XuOAKlt2hASyQ3rz8217vIHZel2aMJX/1
+         Qvr6VX+8gBohxJNJ+PkDUf90CkFoISOsuZuzlb8M+7jEkKVqBVOfXm1DdCrdcT2w0yaM
+         bnFw1fR0rmuPf2rgEW/4pDSib0YtiqzxMyAzmyuX0egi3NYwzNjW7Oorv4+JKUTWOpxS
+         rhvLQR/cpqECjql2V3MEKzV5UFAyjmcCUAVOUv0X4VsYPXnwXzLZAGJEp1Fzj1a4aYKZ
+         sF0abkzjZnsJHlbdgtaZkYbYqQ1vKf9xZ8kvg3S8j9JCKL7RzY197BIJ87r1z5u9k0i4
+         ozJQ==
+X-Gm-Message-State: AOJu0YxPzBqp9QhmI8jPUPWelaY5t0fOdv0/3oQlvHAMjXspqI5Djkfe
+        3hHtBiIUEyZs1OkFSJomEfqLmHd4cjTq
+X-Google-Smtp-Source: AGHT+IFEwGkpQOFrN5AJCbgmqj0oTABtx0SRmjN2OR1zrYEY5KKUgeFpToIA4RVOwawMiSdD1KbEnU9gqbtJ
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:3971:e84:f508:9a36])
- (user=irogers job=sendgmr) by 2002:a05:6902:566:b0:d15:53b5:509f with SMTP id
- a6-20020a056902056600b00d1553b5509fmr185925ybt.2.1692778144480; Wed, 23 Aug
- 2023 01:09:04 -0700 (PDT)
-Date:   Wed, 23 Aug 2023 01:08:16 -0700
+ (user=irogers job=sendgmr) by 2002:a81:b724:0:b0:583:a3c1:6b5a with SMTP id
+ v36-20020a81b724000000b00583a3c16b5amr140584ywh.4.1692778172847; Wed, 23 Aug
+ 2023 01:09:32 -0700 (PDT)
+Date:   Wed, 23 Aug 2023 01:08:27 -0700
 In-Reply-To: <20230823080828.1460376-1-irogers@google.com>
-Message-Id: <20230823080828.1460376-14-irogers@google.com>
+Message-Id: <20230823080828.1460376-25-irogers@google.com>
 Mime-Version: 1.0
 References: <20230823080828.1460376-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.rc1.204.g551eb34607-goog
-Subject: [PATCH v1 13/25] perf parse-events: Improve error message for double setting
+Subject: [PATCH v1 24/25] perf pmu: Lazily load sysfs aliases
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -78,135 +78,222 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Double setting information for an event would produce an error
-message associated with the PMU rather than the term that was
-double setting. Improve the error message to be on the term.
-
-Before:
-```
-$ perf stat -e 'cpu/inst_retired.any,inst_retired.any/' true
-event syntax error: 'cpu/inst_retired.any,inst_retired.any/'
-                     \___ Bad event or PMU
-
-Unabled to find PMU or event on a PMU of 'cpu'
-Run 'perf list' for a list of valid events
-```
-
-After:
-```
-$ perf stat -e 'cpu/inst_retired.any,inst_retired.any/' true
-event syntax error: '..etired.any,inst_retired.any/'
-                                  \___ Bad event or PMU
-
-Unabled to find PMU or event on a PMU of 'cpu'
-
-Initial error:
-event syntax error: '..etired.any,inst_retired.any/'
-                                  \___ Attempt to set event's scale twice
-Run 'perf list' for a list of valid events
-```
+Don't load sysfs aliases for a PMU when the PMU is first created,
+defer until an alias needs to be found. For the pmu-scan benchmark,
+average core PMU scanning is reduced by 30.8%, and average PMU
+scanning by 12.6%.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/parse-events.c |  2 +-
- tools/perf/util/pmu.c          | 34 +++++++++++++++++++++++++++-------
- tools/perf/util/pmu.h          |  2 +-
- 3 files changed, 29 insertions(+), 9 deletions(-)
+ tools/perf/tests/pmu-events.c |  2 +
+ tools/perf/util/pmu.c         | 81 ++++++++++++++++++-----------------
+ tools/perf/util/pmu.h         |  2 +
+ 3 files changed, 46 insertions(+), 39 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 7cad82a9f578..781747bedc3e 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1348,7 +1348,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- 		return evsel ? 0 : -ENOMEM;
- 	}
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index 9ac893ae5f0d..3dc1ebee4d9f 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -547,6 +547,7 @@ static int __test_core_pmu_event_aliases(char *pmu_name, int *count)
+ 	pmu->events_table = table;
+ 	pmu_add_cpu_aliases_table(pmu, table);
+ 	pmu->cpu_aliases_added = true;
++	pmu->sysfs_aliases_loaded = true;
  
--	if (!parse_state->fake_pmu && perf_pmu__check_alias(pmu, head_config, &info))
-+	if (!parse_state->fake_pmu && perf_pmu__check_alias(pmu, head_config, &info, err))
- 		return -EINVAL;
+ 	res = pmu_events_table__find_event(table, pmu, "bp_l1_btb_correct", NULL, NULL);
+ 	if (res != 0) {
+@@ -588,6 +589,7 @@ static int __test_uncore_pmu_event_aliases(struct perf_pmu_test_pmu *test_pmu)
+ 	pmu->events_table = events_table;
+ 	pmu_add_cpu_aliases_table(pmu, events_table);
+ 	pmu->cpu_aliases_added = true;
++	pmu->sysfs_aliases_loaded = true;
+ 	pmu_add_sys_aliases(pmu);
  
- 	if (verbose > 1) {
+ 	/* Count how many aliases we generated */
 diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 95872bee28ac..0036e41f6baf 100644
+index c547fe607f9f..fb437b50443f 100644
 --- a/tools/perf/util/pmu.c
 +++ b/tools/perf/util/pmu.c
-@@ -1439,17 +1439,33 @@ static struct perf_pmu_alias *pmu_find_alias(struct perf_pmu *pmu,
+@@ -115,6 +115,8 @@ struct perf_pmu_format {
+ 	bool loaded;
+ };
  
- 
- static int check_info_data(struct perf_pmu_alias *alias,
--			   struct perf_pmu_info *info)
-+			   struct perf_pmu_info *info,
-+			   struct parse_events_error *err,
-+			   int column)
++static int pmu_aliases_parse(struct perf_pmu *pmu);
++
+ static struct perf_pmu_format *perf_pmu__new_format(struct list_head *list, char *name)
  {
- 	/*
- 	 * Only one term in event definition can
- 	 * define unit, scale and snapshot, fail
- 	 * if there's more than one.
- 	 */
--	if ((info->unit && alias->unit[0]) ||
--	    (info->scale && alias->scale) ||
--	    (info->snapshot && alias->snapshot))
-+	if (info->unit && alias->unit[0]) {
-+		parse_events_error__handle(err, column,
-+					strdup("Attempt to set event's unit twice"),
-+					NULL);
-+		return -EINVAL;
+ 	struct perf_pmu_format *format;
+@@ -416,10 +418,15 @@ static void perf_pmu__del_aliases(struct perf_pmu *pmu)
+ 	}
+ }
+ 
+-static struct perf_pmu_alias *perf_pmu__find_alias(const struct perf_pmu *pmu, const char *name)
++static struct perf_pmu_alias *perf_pmu__find_alias(struct perf_pmu *pmu,
++						   const char *name,
++						   bool load)
+ {
+ 	struct perf_pmu_alias *alias;
+ 
++	if (load && !pmu->sysfs_aliases_loaded)
++		pmu_aliases_parse(pmu);
++
+ 	list_for_each_entry(alias, &pmu->aliases, list) {
+ 		if (!strcasecmp(alias->name, name))
+ 			return alias;
+@@ -501,7 +508,7 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
+ 	const char *long_desc = NULL, *topic = NULL, *unit = NULL, *pmu_name = NULL;
+ 	bool deprecated = false, perpkg = false;
+ 
+-	if (perf_pmu__find_alias(pmu, name)) {
++	if (perf_pmu__find_alias(pmu, name, /*load=*/ false)) {
+ 		/* Alias was already created/loaded. */
+ 		return 0;
+ 	}
+@@ -607,18 +614,33 @@ static inline bool pmu_alias_info_file(char *name)
+ }
+ 
+ /*
+- * Process all the sysfs attributes located under the directory
+- * specified in 'dir' parameter.
++ * Reading the pmu event aliases definition, which should be located at:
++ * /sys/bus/event_source/devices/<dev>/events as sysfs group attributes.
+  */
+-static int pmu_aliases_parse(struct perf_pmu *pmu, int dirfd)
++static int pmu_aliases_parse(struct perf_pmu *pmu)
+ {
++	char path[PATH_MAX];
+ 	struct dirent *evt_ent;
+ 	DIR *event_dir;
+-	int fd;
++	size_t len;
++	int fd, dir_fd;
+ 
+-	event_dir = fdopendir(dirfd);
+-	if (!event_dir)
++	len = perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
++	if (!len)
++		return 0;
++	scnprintf(path + len, sizeof(path) - len, "%s/events", pmu->name);
++
++	dir_fd = open(path, O_DIRECTORY);
++	if (dir_fd == -1) {
++		pmu->sysfs_aliases_loaded = true;
++		return 0;
 +	}
-+	if (info->scale && alias->scale) {
-+		parse_events_error__handle(err, column,
-+					strdup("Attempt to set event's scale twice"),
-+					NULL);
-+		return -EINVAL;
-+	}
-+	if (info->snapshot && alias->snapshot) {
-+		parse_events_error__handle(err, column,
-+					strdup("Attempt to set event snapshot twice"),
-+					NULL);
++
++	event_dir = fdopendir(dir_fd);
++	if (!event_dir){
++		close (dir_fd);
  		return -EINVAL;
 +	}
  
- 	if (alias->unit[0])
- 		info->unit = alias->unit;
-@@ -1468,7 +1484,7 @@ static int check_info_data(struct perf_pmu_alias *alias,
-  * defined for the alias
-  */
- int perf_pmu__check_alias(struct perf_pmu *pmu, struct list_head *head_terms,
--			  struct perf_pmu_info *info)
-+			  struct perf_pmu_info *info, struct parse_events_error *err)
- {
- 	struct parse_events_term *term, *h;
- 	struct perf_pmu_alias *alias;
-@@ -1489,10 +1505,14 @@ int perf_pmu__check_alias(struct perf_pmu *pmu, struct list_head *head_terms,
- 		if (!alias)
+ 	while ((evt_ent = readdir(event_dir))) {
+ 		char *name = evt_ent->d_name;
+@@ -633,7 +655,7 @@ static int pmu_aliases_parse(struct perf_pmu *pmu, int dirfd)
+ 		if (pmu_alias_info_file(name))
  			continue;
- 		ret = pmu_alias_terms(alias, &term->list);
--		if (ret)
-+		if (ret) {
-+			parse_events_error__handle(err, term->err_term,
-+						strdup("Failure to duplicate terms"),
-+						NULL);
- 			return ret;
-+		}
  
--		ret = check_info_data(alias, info);
-+		ret = check_info_data(alias, info, err, term->err_term);
- 		if (ret)
- 			return ret;
+-		fd = openat(dirfd, name, O_RDONLY);
++		fd = openat(dir_fd, name, O_RDONLY);
+ 		if (fd == -1) {
+ 			pr_debug("Cannot open %s\n", name);
+ 			continue;
+@@ -651,25 +673,8 @@ static int pmu_aliases_parse(struct perf_pmu *pmu, int dirfd)
+ 	}
  
+ 	closedir(event_dir);
+-	return 0;
+-}
+-
+-/*
+- * Reading the pmu event aliases definition, which should be located at:
+- * /sys/bus/event_source/devices/<dev>/events as sysfs group attributes.
+- */
+-static int pmu_aliases(struct perf_pmu *pmu, int dirfd, const char *name)
+-{
+-	int fd;
+-
+-	fd = perf_pmu__pathname_fd(dirfd, name, "events", O_DIRECTORY);
+-	if (fd < 0)
+-		return 0;
+-
+-	/* it'll close the fd */
+-	if (pmu_aliases_parse(pmu, fd))
+-		return -1;
+-
++	close (dir_fd);
++	pmu->sysfs_aliases_loaded = true;
+ 	return 0;
+ }
+ 
+@@ -1013,13 +1018,6 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char
+ 		free(pmu);
+ 		return NULL;
+ 	}
+-	/*
+-	 * Check the aliases first to avoid unnecessary work.
+-	 */
+-	if (pmu_aliases(pmu, dirfd, name)) {
+-		free(pmu);
+-		return NULL;
+-	}
+ 	pmu->is_core = is_pmu_core(name);
+ 	pmu->cpus = pmu_cpumask(dirfd, name, pmu->is_core);
+ 
+@@ -1434,7 +1432,7 @@ static struct perf_pmu_alias *pmu_find_alias(struct perf_pmu *pmu,
+ 		return NULL;
+ 	}
+ 
+-	alias = perf_pmu__find_alias(pmu, name);
++	alias = perf_pmu__find_alias(pmu, name, /*load=*/ true);
+ 	if (alias || pmu->cpu_aliases_added)
+ 		return alias;
+ 
+@@ -1443,7 +1441,7 @@ static struct perf_pmu_alias *pmu_find_alias(struct perf_pmu *pmu,
+ 	    pmu_events_table__find_event(pmu->events_table, pmu, name,
+ 				         pmu_add_cpu_aliases_map_callback,
+ 				         pmu) == 0) {
+-		alias = perf_pmu__find_alias(pmu, name);
++		alias = perf_pmu__find_alias(pmu, name, /*load=*/ false);
+ 	}
+ 	return alias;
+ }
+@@ -1616,7 +1614,7 @@ bool perf_pmu__auto_merge_stats(const struct perf_pmu *pmu)
+ 
+ bool perf_pmu__have_event(struct perf_pmu *pmu, const char *name)
+ {
+-	if (perf_pmu__find_alias(pmu, name) != NULL)
++	if (perf_pmu__find_alias(pmu, name, /*load=*/ true) != NULL)
+ 		return true;
+ 	if (pmu->cpu_aliases_added || !pmu->events_table)
+ 		return false;
+@@ -1625,7 +1623,12 @@ bool perf_pmu__have_event(struct perf_pmu *pmu, const char *name)
+ 
+ size_t perf_pmu__num_events(struct perf_pmu *pmu)
+ {
+-	size_t nr = pmu->sysfs_aliases;
++	size_t nr;
++
++	if (!pmu->sysfs_aliases_loaded)
++		pmu_aliases_parse(pmu);
++
++	nr = pmu->sysfs_aliases;
+ 
+ 	if (pmu->cpu_aliases_added)
+ 		 nr += pmu->loaded_json_aliases;
 diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index f37e3d75094f..03211de345c1 100644
+index 288d2908382a..bae0de3ed7a5 100644
 --- a/tools/perf/util/pmu.h
 +++ b/tools/perf/util/pmu.h
-@@ -185,7 +185,7 @@ int perf_pmu__config_terms(struct perf_pmu *pmu,
- __u64 perf_pmu__format_bits(struct perf_pmu *pmu, const char *name);
- int perf_pmu__format_type(struct perf_pmu *pmu, const char *name);
- int perf_pmu__check_alias(struct perf_pmu *pmu, struct list_head *head_terms,
--			  struct perf_pmu_info *info);
-+			  struct perf_pmu_info *info, struct parse_events_error *err);
- int perf_pmu__find_event(struct perf_pmu *pmu, const char *event, void *state, pmu_event_callback cb);
- 
- int perf_pmu__format_parse(struct perf_pmu *pmu, int dirfd, bool eager_load);
+@@ -122,6 +122,8 @@ struct perf_pmu {
+ 	uint32_t sysfs_aliases;
+ 	/** @sysfs_aliases: Number of json event aliases loaded. */
+ 	uint32_t loaded_json_aliases;
++	/** @sysfs_aliases_loaded: Are sysfs aliases loaded from disk? */
++	bool sysfs_aliases_loaded;
+ 	/**
+ 	 * @cpu_aliases_added: Have all json events table entries for the PMU
+ 	 * been added?
 -- 
 2.42.0.rc1.204.g551eb34607-goog
 
