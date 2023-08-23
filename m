@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC6FEE49A0
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 08:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6044EE4993
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 08:30:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233780AbjHWIOo (ORCPT
+        id S234324AbjHWIao (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Aug 2023 04:14:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46194 "EHLO
+        Wed, 23 Aug 2023 04:30:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233779AbjHWIKp (ORCPT
+        with ESMTP id S234993AbjHWI3X (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Aug 2023 04:10:45 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE94D1713
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 01:09:07 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5924b2aac52so13795227b3.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 01:09:07 -0700 (PDT)
+        Wed, 23 Aug 2023 04:29:23 -0400
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F42B1722
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 01:12:39 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-40c72caec5cso251041cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 01:12:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692778147; x=1693382947;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2BhHz8yEC3pLTHC5QxPQtooiXn41z8hQeFyuHW+faxU=;
-        b=HU8CMnAAS/RziILAg1+V2MuiV7wt756cyZBZvpvQQBvwc4jKJgrWKYRZHwYUZSMSAo
-         NmxcfyQGcfrwMnDoxtigjRv7aJi2XO1CuPwiPoAuIG+fJbvYpKHxRGRjoViIi4S86uqN
-         NrBpUPbak9vXU12UBuWxSRiLArx0Dr+yaZ4TXr8ovBXdGTkcYVk3Rq4ozIfLAmkjnyJ0
-         R7RyTiXoci56hBq7QoUaHY6E3iVJwo8XVU8TxCN6zTurtsHZ03IuSaZpsZpXiC5fiO8g
-         2x2dCBXG0IcrqxVC7m/ScNLEo7Ax2EajwvjNAtI2cDV3txn8b8Jhr9d2mDfXaNcbTw9N
-         cJCQ==
+        d=google.com; s=20221208; t=1692778359; x=1693383159;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+hAS0PucsjGJ0x+ONVaiQoPrUdvJWs0Q6o9fYxtLr1Y=;
+        b=jH89Lz24KB4c4HeG4wUCO0s6Q7VX+mz8HZQmZAsTCy1XOaRjkXM3VVAkCwsTGOXHau
+         /wipm8OF2SsaEqCBDl3n1ssRgdH+09Yjgdhe97QfoXAnESDZKP7M0x9YgEyAZP7V/U1/
+         ypUJOvwz9jzxWi6Oj60FWEhagE27LYaTRgcxAzmr12jWM/M1J2y7W4WUCJZWV234iawA
+         Pvh0pJ0HQKNg5P0RMiqlTYWjclXeBLGXQ0CWC5th8JfEat7EDEKmlLjwK509liO9qE9u
+         18df3qnXWzO9AI9J0lANmDZiHYBUL0VISHc72rVD01xI8mbIjpyuQpqGFe///Z4J3AfQ
+         9ZPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692778147; x=1693382947;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2BhHz8yEC3pLTHC5QxPQtooiXn41z8hQeFyuHW+faxU=;
-        b=BbCH/ntDQTTcz0DaNCm3t6Ujk31kZlYYGx4cu69uZubrqxg4NqfoaNHUe0LOpd+m/5
-         V4+qcamKBMb8aehiRqZcB9hcgVJM8JMC/GkHsjlEsePPyMVvQDt/8GrCF3ywR3O3zXIT
-         Czx31DwRkuNBj0wzt2wiScpbaamgJcUFGt1dzeGM21fmiBBCPEP9+5GlcOvnInP7PtIU
-         jU71qLobtXjGsGKgZzTTYHCSTX8as+odfzW7rZGzq6quBoAltduf1mHeZux6X6Abp9Hm
-         OZkJAJGATv6C7tlWbS1pYesoAn9LnsvLD9eDu3Ng6dWZ8nsgt9XnJqQ6usOOBJWeiX7o
-         DZTg==
-X-Gm-Message-State: AOJu0YyUilsBk5wxuKs537JRP7UcgZ8Vz+e1g3WRnAu3l+vfHfmfL4jE
-        d1Vmitag94DgqTRd1d0kepJcME4K++CZ
-X-Google-Smtp-Source: AGHT+IHvEGLSuiJK2HNeck85ZiiHP2D3xStux0XexeC+vrw08E08DpocMMf1g+zZgw+G5QzS6QJtJ0hHQQFS
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:3971:e84:f508:9a36])
- (user=irogers job=sendgmr) by 2002:a81:af0e:0:b0:58c:6ddd:d27c with SMTP id
- n14-20020a81af0e000000b0058c6dddd27cmr154296ywh.6.1692778147209; Wed, 23 Aug
- 2023 01:09:07 -0700 (PDT)
-Date:   Wed, 23 Aug 2023 01:08:17 -0700
-In-Reply-To: <20230823080828.1460376-1-irogers@google.com>
-Message-Id: <20230823080828.1460376-15-irogers@google.com>
-Mime-Version: 1.0
+        d=1e100.net; s=20221208; t=1692778359; x=1693383159;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+hAS0PucsjGJ0x+ONVaiQoPrUdvJWs0Q6o9fYxtLr1Y=;
+        b=Q6pTsr0kJvrLcMXQ7RJj5d1tePbU0LTnRGGIeTbPhMvATgutup0qXi5VYZlB3fiapM
+         BDL/LYyuGm+RZfk5hhiwDr4TVh3KaBpJuUURPTch4bWUAZAsMENq78pKg3lUxplsGOh2
+         WvIlA44gD/fKnOHJUiz3gz1+WvbyM2PHxTSEnM82L4FfJai2VyMGjXIvT6jhFBbzD1KK
+         RYAUM3zZ7Gjs4qseJLP751DtTRvXJHIpGriWpz6bE5z1I6Ua0ltDRqHTkrIseuudp+iK
+         u4zYkO3ED0NDIc70K2y5ALHV6/dtksStC52ZXhjHUYXViVRbTpJF2Ye7n/mVEAG8NJT1
+         z/TQ==
+X-Gm-Message-State: AOJu0YxqDDonpa+bCwxuBba5QZ4lDGod6ceE2wIfHtabxLH5VSz00eQ0
+        33lfEKO5vduX6DuT+yVj4VFshzk0SDwvrREjDeoGDw==
+X-Google-Smtp-Source: AGHT+IE77K8yRPmJ2SQORc9C/8F23EPMFOTtGihYaUoykwCv43DtexAo6gDBGFGSHRNTiHfVT1iWXndiEs+MoCe4pzk=
+X-Received: by 2002:ac8:5a47:0:b0:410:653f:90e8 with SMTP id
+ o7-20020ac85a47000000b00410653f90e8mr425655qta.11.1692778358905; Wed, 23 Aug
+ 2023 01:12:38 -0700 (PDT)
+MIME-Version: 1.0
 References: <20230823080828.1460376-1-irogers@google.com>
-X-Mailer: git-send-email 2.42.0.rc1.204.g551eb34607-goog
-Subject: [PATCH v1 14/25] perf s390 s390_cpumcfdg_dump: Don't scan all PMUs
+In-Reply-To: <20230823080828.1460376-1-irogers@google.com>
 From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 23 Aug 2023 01:12:27 -0700
+Message-ID: <CAP-5=fX3a=Ng=8Gd-DNx1+dKj7QEZJxMCFW_=brdU52ADuwf7g@mail.gmail.com>
+Subject: Re: [PATCH v1 00/25] Lazily load PMU data
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -74,147 +74,91 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Gaosheng Cui <cuigaosheng1@huawei.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Rather than scanning all PMUs for a counter name, scan the PMU
-associated with the evsel of the sample. This is done to remove a
-dependence on pmu-events.h.
+On Wed, Aug 23, 2023 at 1:08=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> Lazily load PMU data both from sysfs and json files. Reorganize
+> json data to be more PMU oriented to facilitate this, for
+> example, json data is now sorted into arrays for their PMU.
+>
+> In refactoring the code some changes were made to get rid of maximum
+> encoding sizes for events (256 bytes), with input files being directly
+> passed to the lex generated code. There is also a small event parse
+> error message improvement.
+>
+> Some results from an Intel tigerlake laptop running Debian:
+>
+> Binary size reduction of 1.4% or 143,264 bytes because the PMU
+> name no longer appears in the string.
+>
+> stat -e cpu/cycles/ minor faults reduced from 1733 to 1667, open calls re=
+duced
+> from 171 to 94.
+>
+> stat default minor faults reduced from 1085 to 1727, open calls reduced
+> from 654 to 343.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/s390-sample-raw.c | 50 ++++++++++++++++---------------
- 1 file changed, 26 insertions(+), 24 deletions(-)
+s/1085/1805/
 
-diff --git a/tools/perf/util/s390-sample-raw.c b/tools/perf/util/s390-sample-raw.c
-index 91330c874170..dc1ed3e95d4d 100644
---- a/tools/perf/util/s390-sample-raw.c
-+++ b/tools/perf/util/s390-sample-raw.c
-@@ -27,7 +27,7 @@
- #include "color.h"
- #include "sample-raw.h"
- #include "s390-cpumcf-kernel.h"
--#include "pmu-events/pmu-events.h"
-+#include "util/pmu.h"
- #include "util/sample.h"
- 
- static size_t ctrset_size(struct cf_ctrset_entry *set)
-@@ -132,56 +132,57 @@ static int get_counterset_start(int setnr)
- 
- struct get_counter_name_data {
- 	int wanted;
--	const char *result;
-+	char *result;
- };
- 
--static int get_counter_name_callback(const struct pmu_event *evp,
--				     const struct pmu_events_table *table __maybe_unused,
--				     void *vdata)
-+static int get_counter_name_callback(void *vdata, struct pmu_event_info *info)
- {
- 	struct get_counter_name_data *data = vdata;
- 	int rc, event_nr;
-+	const char *event_str;
- 
--	if (evp->name == NULL || evp->event == NULL)
-+	if (info->str == NULL)
- 		return 0;
--	rc = sscanf(evp->event, "event=%x", &event_nr);
-+
-+	event_str = strstr(info->str, "event=");
-+	if (!event_str)
-+		return 0;
-+
-+	rc = sscanf(event_str, "event=%x", &event_nr);
- 	if (rc == 1 && event_nr == data->wanted) {
--		data->result = evp->name;
-+		data->result = strdup(info->name);
- 		return 1; /* Terminate the search. */
- 	}
- 	return 0;
- }
- 
--/* Scan the PMU table and extract the logical name of a counter from the
-- * PMU events table. Input is the counter set and counter number with in the
-- * set. Construct the event number and use this as key. If they match return
-- * the name of this counter.
-+/* Scan the PMU and extract the logical name of a counter from the event. Input
-+ * is the counter set and counter number with in the set. Construct the event
-+ * number and use this as key. If they match return the name of this counter.
-  * If no match is found a NULL pointer is returned.
-  */
--static const char *get_counter_name(int set, int nr, const struct pmu_events_table *table)
-+static char *get_counter_name(int set, int nr, struct perf_pmu *pmu)
- {
- 	struct get_counter_name_data data = {
- 		.wanted = get_counterset_start(set) + nr,
- 		.result = NULL,
- 	};
- 
--	if (!table)
-+	if (!pmu)
- 		return NULL;
- 
--	pmu_events_table__for_each_event(table, get_counter_name_callback, &data);
-+	perf_pmu__for_each_event(pmu, &data, get_counter_name_callback);
- 	return data.result;
- }
- 
--static void s390_cpumcfdg_dump(struct perf_sample *sample)
-+static void s390_cpumcfdg_dump(struct perf_pmu *pmu, struct perf_sample *sample)
- {
- 	size_t i, len = sample->raw_size, offset = 0;
- 	unsigned char *buf = sample->raw_data;
- 	const char *color = PERF_COLOR_BLUE;
- 	struct cf_ctrset_entry *cep, ce;
--	const struct pmu_events_table *table;
- 	u64 *p;
- 
--	table = pmu_events_table__find();
- 	while (offset < len) {
- 		cep = (struct cf_ctrset_entry *)(buf + offset);
- 
-@@ -199,11 +200,12 @@ static void s390_cpumcfdg_dump(struct perf_sample *sample)
- 		color_fprintf(stdout, color, "    [%#08zx] Counterset:%d"
- 			      " Counters:%d\n", offset, ce.set, ce.ctr);
- 		for (i = 0, p = (u64 *)(cep + 1); i < ce.ctr; ++i, ++p) {
--			const char *ev_name = get_counter_name(ce.set, i, table);
-+			char *ev_name = get_counter_name(ce.set, i, pmu);
- 
- 			color_fprintf(stdout, color,
- 				      "\tCounter:%03d %s Value:%#018lx\n", i,
- 				      ev_name ?: "<unknown>", be64_to_cpu(*p));
-+			free(ev_name);
- 		}
- 		offset += ctrset_size(&ce);
- 	}
-@@ -216,14 +218,14 @@ static void s390_cpumcfdg_dump(struct perf_sample *sample)
-  */
- void evlist__s390_sample_raw(struct evlist *evlist, union perf_event *event, struct perf_sample *sample)
- {
--	struct evsel *ev_bc000;
-+	struct evsel *evsel;
- 
- 	if (event->header.type != PERF_RECORD_SAMPLE)
- 		return;
- 
--	ev_bc000 = evlist__event2evsel(evlist, event);
--	if (ev_bc000 == NULL ||
--	    ev_bc000->core.attr.config != PERF_EVENT_CPUM_CF_DIAG)
-+	evsel = evlist__event2evsel(evlist, event);
-+	if (evsel == NULL ||
-+	    evsel->core.attr.config != PERF_EVENT_CPUM_CF_DIAG)
- 		return;
- 
- 	/* Display raw data on screen */
-@@ -231,5 +233,5 @@ void evlist__s390_sample_raw(struct evlist *evlist, union perf_event *event, str
- 		pr_err("Invalid counter set data encountered\n");
- 		return;
- 	}
--	s390_cpumcfdg_dump(sample);
-+	s390_cpumcfdg_dump(evsel->pmu, sample);
- }
--- 
-2.42.0.rc1.204.g551eb34607-goog
+Thanks,
+Ian
 
+>
+> Average PMU scanning reduced from 4720.641usec to 2927.293usec.
+> Average core PMU scanning reduced from 1004.658usec to 232.668usec
+> (4.3x faster).
+>
+> Ian Rogers (25):
+>   perf script ibs: Remove unused include
+>   perf pmu: Avoid a path name copy
+>   perf pmu: Move perf_pmu__set_format to pmu.y
+>   perf pmu: Reduce scope of perf_pmu_error
+>   perf pmu: Avoid passing format list to perf_pmu__config_terms
+>   perf pmu: Avoid passing format list to perf_pmu__format_type
+>   perf pmu: Avoid passing format list to perf_pmu__format_bits
+>   perf pmu: Pass PMU rather than aliases and format
+>   perf pmu: Make the loading of formats lazy
+>   perf pmu: Abstract alias/event struct
+>   perf pmu-events: Add extra underscore to function names
+>   perf jevents: Group events by PMU
+>   perf parse-events: Improve error message for double setting
+>   perf s390 s390_cpumcfdg_dump: Don't scan all PMUs
+>   perf pmu-events: Reduce processed events by passing PMU
+>   perf pmu-events: Add pmu_events_table__find_event
+>   perf pmu: Parse sysfs events directly from a file
+>   perf pmu: Prefer passing pmu to aliases list
+>   perf pmu: Merge json events with sysfs at load time
+>   perf pmu: Cache json events table
+>   perf pmu: Lazily add json events
+>   perf pmu: Scan type early to fail an invalid PMU quickly
+>   perf pmu: Be lazy about loading event info files from sysfs
+>   perf pmu: Lazily load sysfs aliases
+>   perf jevents: Sort strings in the big C string to reduce faults
+>
+>  tools/perf/arch/x86/util/intel-pt.c      |  39 +-
+>  tools/perf/bench/pmu-scan.c              |   8 +-
+>  tools/perf/pmu-events/empty-pmu-events.c |  49 +-
+>  tools/perf/pmu-events/jevents.py         | 319 +++++++--
+>  tools/perf/pmu-events/pmu-events.h       |  15 +-
+>  tools/perf/tests/parse-events.c          |   2 +-
+>  tools/perf/tests/pmu-events.c            | 183 ++---
+>  tools/perf/tests/pmu.c                   |  76 +-
+>  tools/perf/util/amd-sample-raw.c         |   1 -
+>  tools/perf/util/metricgroup.c            |  10 +-
+>  tools/perf/util/parse-events.c           |  91 ++-
+>  tools/perf/util/parse-events.h           |   3 +-
+>  tools/perf/util/pmu.c                    | 872 +++++++++++++++--------
+>  tools/perf/util/pmu.h                    | 110 ++-
+>  tools/perf/util/pmu.y                    |  32 +-
+>  tools/perf/util/pmus.c                   | 230 ++----
+>  tools/perf/util/s390-sample-raw.c        |  50 +-
+>  17 files changed, 1251 insertions(+), 839 deletions(-)
+>
+> --
+> 2.42.0.rc1.204.g551eb34607-goog
+>
