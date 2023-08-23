@@ -2,124 +2,141 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D4DC27C40
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 19:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43341C3DA66
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 23:34:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238413AbjHWT7C (ORCPT
+        id S238772AbjHWXeQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Aug 2023 15:59:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35858 "EHLO
+        Wed, 23 Aug 2023 19:34:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235885AbjHWT6k (ORCPT
+        with ESMTP id S238834AbjHWXds (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Aug 2023 15:58:40 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EFB410C2;
-        Wed, 23 Aug 2023 12:58:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692820718; x=1724356718;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DWpi1WF0A7pyHfE5VmRDXpAMGPRbGG/nl9Ypmh1P914=;
-  b=nyDIT2AFpK1ES4zgfzQHeH5UL6FGF7/0LszlE6UaLLeQsz95D4rPnzvX
-   zDjzw2iJtaZ2vvDPXusJ5kc/DWjNbaDuDDeDx3+lqvOgrsrCXY8LqCJeY
-   0UuOuf/eaXt5OTQVWcgzga9LN4yViaVWxgv2Kq2QGip5e0Xb8Il5Tparv
-   8Iug42cQ47MGyXe0UjxkvIPwCvczchDLNnsB92akQFe5gotHzdA/sopOQ
-   dcm3GUZeGawvaTe1iEacfqBCYu+W6/JOAiEyZZ5i/tb6esmFHOu2AKlVm
-   W3aqQ/xZOrm3ONELORq+ugwrO//XNLSZff0zeHQaAeaTy/a91Uxhr/+OK
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="460619957"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="460619957"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 12:58:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="826848502"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="826848502"
-Received: from lkp-server02.sh.intel.com (HELO daf8bb0a381d) ([10.239.97.151])
-  by FMSMGA003.fm.intel.com with ESMTP; 23 Aug 2023 12:58:32 -0700
-Received: from kbuild by daf8bb0a381d with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qYtzj-0001Si-1b;
-        Wed, 23 Aug 2023 19:58:27 +0000
-Date:   Thu, 24 Aug 2023 03:58:11 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Douglas Anderson <dianders@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     oe-kbuild-all@lists.linux.dev,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        kgdb-bugreport@lists.sourceforge.net, ito-yuichi@fujitsu.com,
-        Stephen Boyd <swboyd@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Chen-Yu Tsai <wens@csie.org>, Ard Biesheuvel <ardb@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        D Scott Phillips <scott@os.amperecomputing.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Valentin Schneider <vschneid@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 4/6] arm64: smp: Add arch support for backtrace using
- pseudo-NMI
-Message-ID: <202308240309.hI0bjoys-lkp@intel.com>
-References: <20230822142644.v10.4.Ie6c132b96ebbbcddbf6954b9469ed40a6960343c@changeid>
+        Wed, 23 Aug 2023 19:33:48 -0400
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC2C510E3
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 16:33:45 -0700 (PDT)
+Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-40c72caec5cso140331cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 16:33:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1692833625; x=1693438425;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T1HwbLZ/6UV9m41vB7ZrxTzft0HTfsy78CUD/KThJ0A=;
+        b=xeuxGL/9dKhoAvf3Mz/shV3SUeCL0DPU8983yQ+TyZcBbh9hio4DVLuI48wY3MMXag
+         ztnyAZ0F68Vka1gZozNY3TIQNB7Hgk2lSjUna4ynNwCkgjCPUhYqbQu0k3aQwbwqbAoG
+         /rwBYj9OtyzeJj9sQcvtAZhYlZGp6OTBkHpYN1wuvVNugRSg70bh+pA4+N2ACyN6UC60
+         sDreUwL+PJwg/b5zEw/ZvbD3/aiRlhpyjLFrKXyCrcJS3FswUrpZnMQJGdiAIAiQJ+6B
+         uDd2xKzvyMf8TwNNmTtW7gkeY5LDUueW+SekFqO6FWqLbTNVkLefGpv+ntwZrjDfjA7W
+         pVgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692833625; x=1693438425;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=T1HwbLZ/6UV9m41vB7ZrxTzft0HTfsy78CUD/KThJ0A=;
+        b=Ln4BaVJ3fIPeREju4pg5OzmOYbTztEsJH7ABVKMouXBPUPkE2CgBed+9KXkTgAt4eo
+         YtCKSYO2a6LFbMLt13Wy3k4NmWzGxjkz35AFPc1wjSCaY2f/Zltu4Jx8GglQHZziJal9
+         AVMNoxRqh6XjCV/Z4e1vbdfHWo0dOlZ7LMCQN8C3QMWs4cVXFNJbxSWoha3vXWsDFmoM
+         zVrNwTRab4XEhCs/THkT5P22DqH8pr+TOO4/eVo3ylLyJV40b64njZHSqSasvBrnOKNu
+         rby5kUdgjAn9O9sYtysnqVnwgeabb7DTETxFwoP56tbN3hDDH9U6y+vwpm14xwmDPPG3
+         /2Yg==
+X-Gm-Message-State: AOJu0YwOT9+F47vPoGKz35ULCRqYUTtKEYYsfoJLimm0TLKxQXEhVRrP
+        NufwYpfJ2ehMq7YzUGcHoZ4nqhiCTcfryy57UU8VJg==
+X-Google-Smtp-Source: AGHT+IGhV/FfTJmHqD/C1LVCF6/AF9o56MKA5cHfS07QQtJwi6EHjelrKHAQmmucd9xYKxUW7Sj4CFAc2Q4N3gsIkoU=
+X-Received: by 2002:a05:622a:1746:b0:410:8ba3:21c7 with SMTP id
+ l6-20020a05622a174600b004108ba321c7mr666485qtk.18.1692833624856; Wed, 23 Aug
+ 2023 16:33:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230822142644.v10.4.Ie6c132b96ebbbcddbf6954b9469ed40a6960343c@changeid>
+References: <20230814163757.3077138-1-irogers@google.com>
+In-Reply-To: <20230814163757.3077138-1-irogers@google.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 23 Aug 2023 16:33:33 -0700
+Message-ID: <CAP-5=fVCxjQei-Jcg5OmOR2LTN2QwCqmmy=xixCamS0RsBtGOw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] perf list: Remove duplicate PMUs
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Douglas,
+On Mon, Aug 14, 2023 at 9:38=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> When there are multiple PMUs, differing by ordered suffixes, by
+> default only display one. This avoids repeated listing of events, in
+> particular when there are 10s of uncore PMUs. If "-v" is passed to
+> "perf list" then still list all PMUs.
+>
+> Listing fewer PMU/event combinations helps speed the all PMU event
+> tests.
+>
+> Before:
+> ```
+> $ perf list
+> ...
+>   uncore_imc_free_running_0/data_read/               [Kernel PMU event]
+>   uncore_imc_free_running_0/data_total/              [Kernel PMU event]
+>   uncore_imc_free_running_0/data_write/              [Kernel PMU event]
+>   uncore_imc_free_running_1/data_read/               [Kernel PMU event]
+>   uncore_imc_free_running_1/data_total/              [Kernel PMU event]
+>   uncore_imc_free_running_1/data_write/              [Kernel PMU event]
+> ```
+>
+> After:
+> ```
+> $ perf list
+> ...
+>   uncore_imc_free_running/data_read/                 [Kernel PMU event]
+>   uncore_imc_free_running/data_total/                [Kernel PMU event]
+>   uncore_imc_free_running/data_write/                [Kernel PMU event]
+> ...
+> $ perf list -v
+> ...
+>   uncore_imc_free_running_0/data_read/               [Kernel PMU event]
+>   uncore_imc_free_running_0/data_total/              [Kernel PMU event]
+>   uncore_imc_free_running_0/data_write/              [Kernel PMU event]
+>   uncore_imc_free_running_1/data_read/               [Kernel PMU event]
+>   uncore_imc_free_running_1/data_total/              [Kernel PMU event]
+>   uncore_imc_free_running_1/data_write/              [Kernel PMU event]
+> ...
+> ```
+>
+> The PMUs are sorted by name then suffix as a part of this change.
+>
+> v3: Add detail to patch 1 sorting commit message about the suffix and
+>     why sorting is necessary.
+> v2: List all PMUs when "-v" is passed as suggested by John Garry
+>     <john.g.garry@oracle.com>.
+>
+> Ian Rogers (3):
+>   perf pmus: Sort pmus by name then suffix
+>   perf pmus: Add scan that ignores duplicates, use for perf list
+>   perf pmus: Don't print duplicate PMU suffix in list by default
 
-kernel test robot noticed the following build warnings:
+Ping. Thanks,
+Ian
 
-[auto build test WARNING on arm64/for-next/core]
-[also build test WARNING on tip/irq/core arm-perf/for-next/perf linus/master v6.5-rc7 next-20230823]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Douglas-Anderson/irqchip-gic-v3-Enable-support-for-SGIs-to-act-as-NMIs/20230823-053216
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
-patch link:    https://lore.kernel.org/r/20230822142644.v10.4.Ie6c132b96ebbbcddbf6954b9469ed40a6960343c%40changeid
-patch subject: [PATCH v10 4/6] arm64: smp: Add arch support for backtrace using pseudo-NMI
-config: arm64-randconfig-r026-20230823 (https://download.01.org/0day-ci/archive/20230824/202308240309.hI0bjoys-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 12.3.0
-reproduce: (https://download.01.org/0day-ci/archive/20230824/202308240309.hI0bjoys-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202308240309.hI0bjoys-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> arch/arm64/kernel/smp.c:855:6: warning: no previous prototype for 'arm64_backtrace_ipi' [-Wmissing-prototypes]
-     855 | void arm64_backtrace_ipi(cpumask_t *mask)
-         |      ^~~~~~~~~~~~~~~~~~~
-
-
-vim +/arm64_backtrace_ipi +855 arch/arm64/kernel/smp.c
-
-   854	
- > 855	void arm64_backtrace_ipi(cpumask_t *mask)
-   856	{
-   857		__ipi_send_mask(ipi_desc[IPI_CPU_BACKTRACE], mask);
-   858	}
-   859	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>  tools/perf/builtin-list.c      |   8 +++
+>  tools/perf/util/pmus.c         | 120 +++++++++++++++++++++++++++++++--
+>  tools/perf/util/print-events.h |   1 +
+>  3 files changed, 122 insertions(+), 7 deletions(-)
+>
+> --
+> 2.41.0.640.ga95def55d0-goog
+>
