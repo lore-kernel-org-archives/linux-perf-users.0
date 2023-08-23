@@ -2,139 +2,173 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED4EEE49A0
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 15:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B1CEE4993
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 15:56:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236659AbjHWPiA (ORCPT
+        id S234786AbjHWP4g (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Aug 2023 11:38:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45716 "EHLO
+        Wed, 23 Aug 2023 11:56:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234563AbjHWPiA (ORCPT
+        with ESMTP id S235629AbjHWP4g (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Aug 2023 11:38:00 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80198E50;
-        Wed, 23 Aug 2023 08:37:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692805078; x=1724341078;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=fbd57d8EgQnBHxmiKKKRj62HefG0K1c5zKhZKQRHO4o=;
-  b=SjzuCHiIZxUhiPOHYmg1LeLlztKn2pFptL7zITqsiQThoQ9zEiFk81qJ
-   ATRXtYRhWQcgMK2qwoDZrOtU5VS6IwdI6ZBXOUqdaqCCAY3mon/em1MWc
-   vCA7ZXGrNjwniz1Mm1y6gcN9mHcRn8VXldlviRW9Y+uTJ5PjKqds4ZOh2
-   OSain6W40D3wNsvvZHgro3PKDGOmM/PnPQgJGlhOyj3pp6ozso2TM4iAZ
-   XXdyZJxrDx3o6eRkeuuXnU5eGC/tMl/hdJmVcoQR09MMkr+b99E91TdoR
-   aSR/XmC8KuL+XC3RHt6xjtvhJLSFqU0SG6Hvf3b0jLMR0lUcb3LLu+0Lz
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="374168934"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="374168934"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 08:37:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="686514914"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="686514914"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.55.188])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 08:37:54 -0700
-Message-ID: <78a87ed2-3aa8-95ef-28ae-19961f7c4acb@intel.com>
-Date:   Wed, 23 Aug 2023 18:37:49 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.14.0
-Subject: Re: [perf-tools-next:tmp.perf-tools-next] [perf dlfilter] f178a76b05:
- perf-sanity-tests.dlfilter_C_API.fail
-Content-Language: en-US
-To:     kernel test robot <oliver.sang@intel.com>
-Cc:     oe-lkp@lists.linux.dev, lkp@intel.com,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Wed, 23 Aug 2023 11:56:36 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2B69E5F;
+        Wed, 23 Aug 2023 08:56:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6B56E61593;
+        Wed, 23 Aug 2023 15:56:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B302C433C8;
+        Wed, 23 Aug 2023 15:56:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692806192;
+        bh=7gJ7d9y1sm6DjvQXX2n3/E/aVkpRumzZXdYTZT5fhL0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FbCLrkv3ZJ61R3+6pkRxoC/KgZ08r4IgXUsgiuYSB0U69lRQfDEop3d5foqyryTJq
+         duGpE+TBMZwSviWCr9Samz0R0NdZBDUaDnOzBW3St38sqLg2m69wWTjFAY6VMT17pf
+         NsfsM6CQQm9ia2EVCcSOmtN0/eU1ut5boQB3QlrpbXhmr3IOvCBI5dSJuBoNy+lLnO
+         aZcHZFJtD/++zE9aQg5JYy34A/SsSuTs2MJSOxZD0t3NUmw4gYi5VNS7B6uWz8eCIa
+         k3HnKXBMcOpI4YRBN+kbLqtoVZt1rrIgE5OjUpEKzWSdisTNprkzhQnRt8LY5CgeA6
+         rmHtZv0nsKwaw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 6F18240722; Wed, 23 Aug 2023 12:56:29 -0300 (-03)
+Date:   Wed, 23 Aug 2023 12:56:29 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Rob Herring <robh@kernel.org>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <202308232146.94d82cb4-oliver.sang@intel.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <202308232146.94d82cb4-oliver.sang@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v1 00/25] Lazily load PMU data
+Message-ID: <ZOYsLZi44G84IWFk@kernel.org>
+References: <20230823080828.1460376-1-irogers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230823080828.1460376-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 23/08/23 17:57, kernel test robot wrote:
+Em Wed, Aug 23, 2023 at 01:08:03AM -0700, Ian Rogers escreveu:
+> Lazily load PMU data both from sysfs and json files. Reorganize
+> json data to be more PMU oriented to facilitate this, for
+> example, json data is now sorted into arrays for their PMU.
 > 
+> In refactoring the code some changes were made to get rid of maximum
+> encoding sizes for events (256 bytes), with input files being directly
+> passed to the lex generated code. There is also a small event parse
+> error message improvement.
 > 
-> Hello,
+> Some results from an Intel tigerlake laptop running Debian:
 > 
-> kernel test robot noticed "perf-sanity-tests.dlfilter_C_API.fail" on:
+> Binary size reduction of 1.4% or 143,264 bytes because the PMU
+> name no longer appears in the string.
 > 
-> commit: f178a76b054fd046d212c3c67745146ff191a443 ("perf dlfilter: Add a test for resolve_address()")
-> https://git.kernel.org/cgit/linux/kernel/git/perf/perf-tools-next.git tmp.perf-tools-next
+> stat -e cpu/cycles/ minor faults reduced from 1733 to 1667, open calls reduced
+> from 171 to 94.
 > 
-> [test failed on linux-next/master 28c736b0e92e11bfe2b9997688213dc43cb22182]
+> stat default minor faults reduced from 1085 to 1727, open calls reduced
+> from 654 to 343.
+> 
+> Average PMU scanning reduced from 4720.641usec to 2927.293usec.
+> Average core PMU scanning reduced from 1004.658usec to 232.668usec
+> (4.3x faster).
 
-We sometimes make a test for an issue then fix it, so the new test fails,
-but is fixed in a subsequent patch.  If you read the commit it says as much:
+I'm now chasing this one when building it on ubuntu arm64
 
-commit f178a76b054fd046d212c3c67745146ff191a443
-Author: Adrian Hunter <adrian.hunter@intel.com>
-Date:   Mon Jul 31 12:18:55 2023 +0300
-
-    perf dlfilter: Add a test for resolve_address()
-    
-    Extend the "dlfilter C API" test to test
-    perf_dlfilter_fns.resolve_address(). The test currently fails, but passes
-    after a subsequent patch.
-    
-    Reviewed-by: Ian Rogers <irogers@google.com>
-    Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-    Cc: Jiri Olsa <jolsa@kernel.org>
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Link: https://lore.kernel.org/r/20230731091857.10681-1-adrian.hunter@intel.com
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-The fix is:
-
-42c6dd9d23019ff339d0aca80a444eb71087050e perf dlfilter: Initialize addr_location before passing it to thread__find_symbol_fb()
-> 
-> in testcase: perf-sanity-tests
-> version: perf-x86_64-00c7b5f4ddc5-1_20230402
-> with following parameters:
-> 
-> 	perf_compiler: gcc
-> 
-> 
-> 
-> compiler: gcc-12
-> test machine: 224 threads 2 sockets Intel(R) Xeon(R) Platinum 8480+ (Sapphire Rapids) with 256G memory
-> 
-> (please refer to attached dmesg/kmsg for entire log/backtrace)
-> 
-> 
-> 
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Closes: https://lore.kernel.org/oe-lkp/202308232146.94d82cb4-oliver.sang@intel.com
-> 
-> 
-> 
->  66: Convert perf time to TSC                                        :
->  66.1: TSC support                                                   : Ok
->  66.2: Perf time to TSC                                              : Ok
->  67: dlfilter C API                                                  : FAILED!  <---
->  68: Sigtrap                                                         : Ok
-> 
-> 
-> 
-> The kernel config and materials to reproduce are available at:
-> https://download.01.org/0day-ci/archive/20230823/202308232146.94d82cb4-oliver.sang@intel.com
-> 
-> 
-> 
+  CC      /tmp/build/perf/util/env.o
+arch/arm64/util/../../arm/util/cs-etm.c: In function 'cs_etm_validate_context_id':
+arch/arm64/util/../../arm/util/cs-etm.c:82:26: error: passing argument 1 of 'perf_pmu__format_bits' from incompatible pointer type [-Werror=incompatible-pointer-types]
+   (perf_pmu__format_bits(&cs_etm_pmu->format, "contextid") |
+                          ^
+In file included from arch/arm64/util/../../arm/util/../../../util/header.h:13:0,
+                 from arch/arm64/util/../../arm/util/../../../util/session.h:7,
+                 from arch/arm64/util/../../arm/util/cs-etm.c:31:
+arch/arm64/util/../../arm/util/../../../util/pmu.h:224:7: note: expected 'struct perf_pmu *' but argument is of type 'struct list_head *'
+ __u64 perf_pmu__format_bits(struct perf_pmu *pmu, const char *name);
+       ^~~~~~~~~~~~~~~~~~~~~
+arch/arm64/util/../../arm/util/cs-etm.c:83:26: error: passing argument 1 of 'perf_pmu__format_bits' from incompatible pointer type [-Werror=incompatible-pointer-types]
+    perf_pmu__format_bits(&cs_etm_pmu->format, "contextid1") |
+                          ^
+In file included from arch/arm64/util/../../arm/util/../../../util/header.h:13:0,
+                 from arch/arm64/util/../../arm/util/../../../util/session.h:7,
+                 from arch/arm64/util/../../arm/util/cs-etm.c:31:
+arch/arm64/util/../../arm/util/../../../util/pmu.h:224:7: note: expected 'struct perf_pmu *' but argument is of type 'struct list_head *'
+ __u64 perf_pmu__format_bits(struct perf_pmu *pmu, const char *name);
+       ^~~~~~~~~~~~~~~~~~~~~
+arch/arm64/util/../../arm/util/cs-etm.c:84:26: error: passing argument 1 of 'perf_pmu__format_bits' from incompatible pointer type [-Werror=incompatible-pointer-types]
+    perf_pmu__format_bits(&cs_etm_pmu->format, "contextid2"));
+                          ^
+In file included from arch/arm64/util/../../arm/util/../../../util/header.h:13:0,
+                 from arch/arm64/util/../../arm/util/../../../util/session.h:7,
+                 from arch/arm64/util/../../arm/util/cs-etm.c:31:
+arch/arm64/util/../../arm/util/../../../util/pmu.h:224:7: note: expected 'struct perf_pmu *' but argument is of type 'struct list_head *'
+ __u64 perf_pmu__format_bits(struct perf_pmu *pmu, const char *name);
+       ^~~~~~~~~~~~~~~~~~~~~
+arch/arm64/util/../../arm/util/cs-etm.c:109:28: error: passing argument 1 of 'perf_pmu__format_bits' from incompatible pointer type [-Werror=incompatible-pointer-types]
+      perf_pmu__format_bits(&cs_etm_pmu->format, "contextid1")) {
+                            ^
+In file included from arch/arm64/util/../../arm/util/../../../util/header.h:13:0,
+                 from arch/arm64/util/../../arm/util/../../../util/session.h:7,
+                 from arch/arm64/util/../../arm/util/cs-etm.c:31:
+arch/arm64/util/../../arm/util/../../../util/pmu.h:224:7: note: expected 'struct perf_pmu *' but argument is of type 'struct list_head *'
+ __u64 perf_pmu__format_bits(struct perf_pmu *pmu, const char *name);
+       ^~~~~~~~~~~~~~~~~~~~~
+arch/arm64/util/../../arm/util/cs-etm.c:125:28: error: passing argument 1 of 'perf_pmu__format_bits' from incompatible pointer type [-Werror=incompatible-pointer-types]
+      perf_pmu__format_bits(&cs_etm_pmu->format, "contextid2")) {
+                            ^
+In file included from arch/arm64/util/../../arm/util/../../../util/header.h:13:0,
+                 from arch/arm64/util/../../arm/util/../../../util/session.h:7,
+                 from arch/arm64/util/../../arm/util/cs-etm.c:31:
+arch/arm64/util/../../arm/util/../../../util/pmu.h:224:7: note: expected 'struct perf_pmu *' but argument is of type 'struct list_head *'
+ __u64 perf_pmu__format_bits(struct perf_pmu *pmu, const char *name);
+       ^~~~~~~~~~~~~~~~~~~~~
+  CC      /tmp/build/perf/bench/epoll-ctl.o
+arch/arm64/util/../../arm/util/cs-etm.c: In function 'cs_etm_validate_timestamp':
+arch/arm64/util/../../arm/util/cs-etm.c:154:30: error: passing argument 1 of 'perf_pmu__format_bits' from incompatible pointer type [-Werror=incompatible-pointer-types]
+        perf_pmu__format_bits(&cs_etm_pmu->format, "timestamp")))
+                              ^
+In file included from arch/arm64/util/../../arm/util/../../../util/header.h:13:0,
+                 from arch/arm64/util/../../arm/util/../../../util/session.h:7,
+                 from arch/arm64/util/../../arm/util/cs-etm.c:31:
+arch/arm64/util/../../arm/util/../../../util/pmu.h:224:7: note: expected 'struct perf_pmu *' but argument is of type 'struct list_head *'
+ __u64 perf_pmu__format_bits(struct perf_pmu *pmu, const char *name);
+       ^~~~~~~~~~~~~~~~~~~~~
+  CC      /tmp/build/perf/tests/vmlinux-kallsyms.o
+  CC      /tmp/build/perf/arch/arm64/util/mem-events.o
+  CC      /tmp/build/perf/bench/synthesize.o
+  CC      /tmp/build/perf/tests/perf-record.o
+  CC      /tmp/build/perf/bench/kallsyms-parse.o
+arch/arm64/util/arm-spe.c: In function 'arm_spe_recording_options':
+arch/arm64/util/arm-spe.c:233:30: error: passing argument 1 of 'perf_pmu__format_bits' from incompatible pointer type [-Werror=incompatible-pointer-types]
+  bit = perf_pmu__format_bits(&arm_spe_pmu->format, "pa_enable");
+                              ^
+In file included from arch/arm64/util/../../../util/header.h:13:0,
+                 from arch/arm64/util/../../../util/session.h:7,
+                 from arch/arm64/util/arm-spe.c:19:
+arch/arm64/util/../../../util/pmu.h:224:7: note: expected 'struct perf_pmu *' but argument is of type 'struct list_head *'
+ __u64 perf_pmu__format_bits(struct perf_pmu *pmu, const char *name);
+       ^~~~~~~~~~~~~~~~~~~~~
+  CC      /tmp/build/perf/bench/find-bit-bench.o
+  CC      /tmp/build/perf/tests/evsel-roundtrip-name.o
+  CC      /tmp/build/perf/bench/inject-buildid.o
+  CC      /tmp/build/perf/util/event.o
 
