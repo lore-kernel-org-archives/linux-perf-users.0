@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C85BDEE49AE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 08:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD023EE49B0
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Aug 2023 08:14:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231703AbjHWIOK (ORCPT
+        id S232930AbjHWIOU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Aug 2023 04:14:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59812 "EHLO
+        Wed, 23 Aug 2023 04:14:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233693AbjHWILe (ORCPT
+        with ESMTP id S233715AbjHWIMh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Aug 2023 04:11:34 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C935173C
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 01:09:31 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d7496b91389so6213120276.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 01:09:31 -0700 (PDT)
+        Wed, 23 Aug 2023 04:12:37 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 068A31984
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 01:09:35 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-58fbc0e0c6dso48684627b3.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 01:09:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692778170; x=1693382970;
+        d=google.com; s=20221208; t=1692778175; x=1693382975;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=sO0nlbdYRpBXpPj2SCUtbtEV/g4IZLNC6VGcNaYE9js=;
-        b=YVD+4vBEFiQzf4kVYZvEraiaWkZF5WarI2tHI4PfXpfRPLSCo9GX2y3E+LHTZ2RdYT
-         fFNJ17mYrIRSaqkNUcDlKTYS7PF9ssMtGBOofKZQ/HU8TPn6VMHoq8qr4Y+fT8jHyk9y
-         oSM++hKNJwP53jJml6aynN6Jrz0UQ4rTKEbDrtN4CcN4UaDIxfdM5HuodMqvZxOjP7vE
-         3U0oBdMQA3ZtgLMD6x8Ewua0UfjxXTT80GxJn/Mwsndog9G8eKzIcwEF4M9ECOi7kXWp
-         /ccaBKCzhotlgcGL2HDFAHR21WvwtO+qTd1DtskHmGGkJHeJENRQ9/3ZHclAbuoog3I/
-         y3Tw==
+        bh=7+7xUX+eQzSie7iWr2Aj1jLiysTzidRjiqSjjI4y5Nk=;
+        b=KGzB2PREcs7owuua9gpo5mr9UCgvODDN4jNmDXQ31zJ8kKkY+8Xr/3r2UoXwLjOePS
+         K995kBSDC+RJdR30h2eK8/iNLOhSKskdWyoLgfI1S6WWIvjlf26gpbWQAnUWXcJRJNfY
+         /QCrLJ3LrQQ2lux2AtnVKQDte0QQl/LSPc0RJ7G/8jTqwBphx3j+BkaorZ8qNnEsuVRH
+         ld7PdetckaI4CSGfsLHt67Mn96NdZS2yYrIWZKCiXcojQNNV/rRqZ1MyWvQAvnVSnNDj
+         KVBTNy0H+WpKvBG1L0x8Fw5LdWroU+bq7lBqO+YDy/xx38C09qEmo6l1CzAtNUvAS0/Z
+         +XKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692778170; x=1693382970;
+        d=1e100.net; s=20221208; t=1692778175; x=1693382975;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sO0nlbdYRpBXpPj2SCUtbtEV/g4IZLNC6VGcNaYE9js=;
-        b=U1tnB9pXLAACg6re1fQnBFfBDi+yj6de8WJsnfX11+rdwdQMH8O+FFR2NIJbiYlBiW
-         l+t44mBSTbOHWKMHkVTNUyz+hPHjokQHU0+iEMr0Hq5YLixwqju+8odVOgjp54W0zqci
-         1CGTl+IcEGwEv4/yLyX8iInKQcqfSH4HG+f8BJCy1IN0Uk3rIDx0kxqSzw1aSzY3qakN
-         QVOnPBYQFswgx8dIAhwf6JRK5YQsUCItfHrYQdY5+yA9cLWwE3vF5pP7ZkE+95POLzuf
-         +nmj9HTPJ/CUE08PnkKGYhnJlE4JiTsATrY7OYAW04K8jv3Q+DhzO2/ftXBE/CaWOrsr
-         18Ww==
-X-Gm-Message-State: AOJu0Yx6wrpRDZCCHajjyhvbq1dx2uwb/PR7Fr2nB2jU0sZVSMyt1g+l
-        9rmkMllzkWyd9C/r3j0bMH73aJk+Q/Hb
-X-Google-Smtp-Source: AGHT+IFcw6ORSo1i+RD3UKL/v2KyU9JDq2+rO9G6maG86y0uRyKzVhVlAiKR8i2TVGGqsDP2IDAyxs2O5VQh
+        bh=7+7xUX+eQzSie7iWr2Aj1jLiysTzidRjiqSjjI4y5Nk=;
+        b=hBZj2Uui05BwlXyMQMh/xw/8LN8qqjyZx+B3uqE0D/wfG0XCsYqlbX78VfsPtaJmCu
+         iWQJ3KnAbE0ZQxw8ek42kch8oc4V2I58YKXqwNI608ACnrwjjMwpWvCoKZ6f3xp9i79s
+         JHaJYKNvdtTFQq4x/V/yF6I7X56clUXcAJeiehRUkV3G4K5jLtp/K11ydy5JDeoZ4Xrk
+         6WGj+delT+fvii76B3wyfRA3aVWgrJJPcWVFGtnvYBQXMHCW1QpyWZ6rAjJK5Q1BKDfn
+         0W/+jWvFOVeY8aJ2FLZA5NbJub3gI1DDDwwD2k8wpXqonK58ZW9ujPpEQts7/hLnaR1O
+         J7KQ==
+X-Gm-Message-State: AOJu0YwUAVvEEnj5iNkkiXIw+PinstAUXkojSQIENQ9EN/Z+xOJHBPDw
+        eLib83A3fCRISgRvKA/hkyU26P2WFs4N
+X-Google-Smtp-Source: AGHT+IGtVayvCY/26FeTbSge7z228B5Rx9Dif54L8QiVcNmurVKbVuktSmELWXGjAL3aqdwmXD23+nueZQhm
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:3971:e84:f508:9a36])
- (user=irogers job=sendgmr) by 2002:a25:e68a:0:b0:d10:a33d:36b6 with SMTP id
- d132-20020a25e68a000000b00d10a33d36b6mr213223ybh.0.1692778170525; Wed, 23 Aug
- 2023 01:09:30 -0700 (PDT)
-Date:   Wed, 23 Aug 2023 01:08:26 -0700
+ (user=irogers job=sendgmr) by 2002:a0d:ec05:0:b0:586:b332:8619 with SMTP id
+ q5-20020a0dec05000000b00586b3328619mr150399ywn.7.1692778175150; Wed, 23 Aug
+ 2023 01:09:35 -0700 (PDT)
+Date:   Wed, 23 Aug 2023 01:08:28 -0700
 In-Reply-To: <20230823080828.1460376-1-irogers@google.com>
-Message-Id: <20230823080828.1460376-24-irogers@google.com>
+Message-Id: <20230823080828.1460376-26-irogers@google.com>
 Mime-Version: 1.0
 References: <20230823080828.1460376-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.rc1.204.g551eb34607-goog
-Subject: [PATCH v1 23/25] perf pmu: Be lazy about loading event info files
- from sysfs
+Subject: [PATCH v1 25/25] perf jevents: Sort strings in the big C string to
+ reduce faults
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -79,290 +79,86 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Event info is only needed when an event is parsed or when merging data
-from an json and sysfs event. Be lazy in its loading to reduce file
-accesses.
+Sort the strings within the big C string based on whether they were
+for a metric and then by when they were added. This helps group
+related strings and reduce minor faults by approximately 10 in 1740,
+about 0.57%.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/pmu.c | 128 +++++++++++++++++++++++++++---------------
- 1 file changed, 83 insertions(+), 45 deletions(-)
+ tools/perf/pmu-events/jevents.py | 31 +++++++++++++++++++++++--------
+ 1 file changed, 23 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index b4ba4f7f5e18..c547fe607f9f 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -58,6 +58,11 @@ struct perf_pmu_alias {
- 	struct list_head terms;
- 	/** @list: List element of struct perf_pmu aliases. */
- 	struct list_head list;
-+	/**
-+	 * @pmu_name: The name copied from the json struct pmu_event. This can
-+	 * differ from the PMU name as it won't have suffixes.
-+	 */
-+	char *pmu_name;
- 	/** @unit: Units for the event, such as bytes or cache lines. */
- 	char unit[UNIT_MAX_LEN+1];
- 	/** @scale: Value to scale read counter values by. */
-@@ -79,11 +84,10 @@ struct perf_pmu_alias {
- 	 * default.
- 	 */
- 	bool deprecated;
--	/**
--	 * @pmu_name: The name copied from the json struct pmu_event. This can
--	 * differ from the PMU name as it won't have suffixes.
--	 */
--	char *pmu_name;
-+	/** @from_sysfs: Was the alias from sysfs or a json event? */
-+	bool from_sysfs;
-+	/** @info_loaded: Have the scale, unit and other values been read from disk? */
-+	bool info_loaded;
- };
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 01335a452e70..e5bce57f5688 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -113,13 +113,24 @@ class BigCString:
+   strings: Set[str]
+   big_string: Sequence[str]
+   offsets: Dict[str, int]
++  insert_number: int
++  insert_point: Dict[str, int]
++  metrics: Set[str]
  
- /**
-@@ -276,17 +280,21 @@ int perf_pmu__convert_scale(const char *scale, char **end, double *sval)
- 	return ret;
- }
+   def __init__(self):
+     self.strings = set()
++    self.insert_number = 0;
++    self.insert_point = {}
++    self.metrics = set()
  
--static int perf_pmu__parse_scale(struct perf_pmu_alias *alias, int dirfd, const char *name)
-+static int perf_pmu__parse_scale(struct perf_pmu *pmu, struct perf_pmu_alias *alias)
- {
- 	struct stat st;
- 	ssize_t sret;
-+	size_t len;
- 	char scale[128];
- 	int fd, ret = -1;
- 	char path[PATH_MAX];
+-  def add(self, s: str) -> None:
++  def add(self, s: str, metric: bool) -> None:
+     """Called to add to the big string."""
+-    self.strings.add(s)
++    if s not in self.strings:
++      self.strings.add(s)
++      self.insert_point[s] = self.insert_number
++      self.insert_number += 1
++      if metric:
++        self.metrics.add(s)
  
--	scnprintf(path, PATH_MAX, "%s.scale", name);
-+	len = perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
-+	if (!len)
-+		return 0;
-+	scnprintf(path + len, sizeof(path) - len, "%s/%s.scale", pmu->name, alias->name);
+   def compute(self) -> None:
+     """Called once all strings are added to compute the string and offsets."""
+@@ -160,8 +171,11 @@ class BigCString:
+     self.big_string = []
+     self.offsets = {}
  
--	fd = openat(dirfd, path, O_RDONLY);
-+	fd = open(path, O_RDONLY);
- 	if (fd == -1)
- 		return -1;
- 
-@@ -308,15 +316,20 @@ static int perf_pmu__parse_scale(struct perf_pmu_alias *alias, int dirfd, const
- 	return ret;
- }
- 
--static int perf_pmu__parse_unit(struct perf_pmu_alias *alias, int dirfd, const char *name)
-+static int perf_pmu__parse_unit(struct perf_pmu *pmu, struct perf_pmu_alias *alias)
- {
- 	char path[PATH_MAX];
-+	size_t len;
- 	ssize_t sret;
- 	int fd;
- 
--	scnprintf(path, PATH_MAX, "%s.unit", name);
- 
--	fd = openat(dirfd, path, O_RDONLY);
-+	len = perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
-+	if (!len)
-+		return 0;
-+	scnprintf(path + len, sizeof(path) - len, "%s/%s.unit", pmu->name, alias->name);
++    def string_cmp_key(s: str) -> Tuple[bool, int, str]:
++      return (s in self.metrics, self.insert_point[s], s)
 +
-+	fd = open(path, O_RDONLY);
- 	if (fd == -1)
- 		return -1;
+     # Emit all strings that aren't folded in a sorted manner.
+-    for s in sorted(self.strings):
++    for s in sorted(self.strings, key=string_cmp_key):
+       if s not in folded_strings:
+         self.offsets[s] = big_string_offset
+         self.big_string.append(f'/* offset={big_string_offset} */ "')
+@@ -574,19 +588,20 @@ def preprocess_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
+       assert len(mgroup) > 1, parents
+       description = f"{metricgroup_descriptions[mgroup]}\\000"
+       mgroup = f"{mgroup}\\000"
+-      _bcs.add(mgroup)
+-      _bcs.add(description)
++      _bcs.add(mgroup, metric=True)
++      _bcs.add(description, metric=True)
+       _metricgroups[mgroup] = description
+     return
  
-@@ -339,14 +352,18 @@ static int perf_pmu__parse_unit(struct perf_pmu_alias *alias, int dirfd, const c
- }
+   topic = get_topic(item.name)
+   for event in read_json_events(item.path, topic):
+     pmu_name = f"{event.pmu}\\000"
+-    _bcs.add(pmu_name)
+     if event.name:
+-      _bcs.add(event.build_c_string(metric=False))
++      _bcs.add(pmu_name, metric=False)
++      _bcs.add(event.build_c_string(metric=False), metric=False)
+     if event.metric_name:
+-      _bcs.add(event.build_c_string(metric=True))
++      _bcs.add(pmu_name, metric=True)
++      _bcs.add(event.build_c_string(metric=True), metric=True)
  
- static int
--perf_pmu__parse_per_pkg(struct perf_pmu_alias *alias, int dirfd, const char *name)
-+perf_pmu__parse_per_pkg(struct perf_pmu *pmu, struct perf_pmu_alias *alias)
- {
- 	char path[PATH_MAX];
-+	size_t len;
- 	int fd;
- 
--	scnprintf(path, PATH_MAX, "%s.per-pkg", name);
-+	len = perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
-+	if (!len)
-+		return 0;
-+	scnprintf(path + len, sizeof(path) - len, "%s/%s.per-pkg", pmu->name, alias->name);
- 
--	fd = openat(dirfd, path, O_RDONLY);
-+	fd = open(path, O_RDONLY);
- 	if (fd == -1)
- 		return -1;
- 
-@@ -356,15 +373,18 @@ perf_pmu__parse_per_pkg(struct perf_pmu_alias *alias, int dirfd, const char *nam
- 	return 0;
- }
- 
--static int perf_pmu__parse_snapshot(struct perf_pmu_alias *alias,
--				    int dirfd, const char *name)
-+static int perf_pmu__parse_snapshot(struct perf_pmu *pmu, struct perf_pmu_alias *alias)
- {
- 	char path[PATH_MAX];
-+	size_t len;
- 	int fd;
- 
--	scnprintf(path, PATH_MAX, "%s.snapshot", name);
-+	len = perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
-+	if (!len)
-+		return 0;
-+	scnprintf(path + len, sizeof(path) - len, "%s/%s.snapshot", pmu->name, alias->name);
- 
--	fd = openat(dirfd, path, O_RDONLY);
-+	fd = open(path, O_RDONLY);
- 	if (fd == -1)
- 		return -1;
- 
-@@ -425,32 +445,52 @@ static bool assign_str(const char *name, const char *field, char **old_str,
- 	return true;
- }
- 
-+static void read_alias_info(struct perf_pmu *pmu, struct perf_pmu_alias *alias)
-+{
-+	if (!alias->from_sysfs || alias->info_loaded)
-+		return;
-+
-+	/*
-+	 * load unit name and scale if available
-+	 */
-+	perf_pmu__parse_unit(pmu, alias);
-+	perf_pmu__parse_scale(pmu, alias);
-+	perf_pmu__parse_per_pkg(pmu, alias);
-+	perf_pmu__parse_snapshot(pmu, alias);
-+}
-+
-+struct update_alias_data {
-+	struct perf_pmu *pmu;
-+	struct perf_pmu_alias *alias;
-+};
-+
- static int update_alias(const struct pmu_event *pe,
- 			const struct pmu_events_table *table __maybe_unused,
- 			void *vdata)
- {
--	struct perf_pmu_alias *alias = vdata;
-+	struct update_alias_data *data = vdata;
- 	int ret = 0;
- 
--	assign_str(pe->name, "desc", &alias->desc, pe->desc);
--	assign_str(pe->name, "long_desc", &alias->long_desc, pe->long_desc);
--	assign_str(pe->name, "topic", &alias->topic, pe->topic);
--	alias->per_pkg = pe->perpkg;
--	if (assign_str(pe->name, "value", &alias->str, pe->event)) {
--		parse_events_terms__purge(&alias->terms);
--		ret = parse_events_terms(&alias->terms, pe->event, /*input=*/NULL);
-+	read_alias_info(data->pmu, data->alias);
-+	assign_str(pe->name, "desc", &data->alias->desc, pe->desc);
-+	assign_str(pe->name, "long_desc", &data->alias->long_desc, pe->long_desc);
-+	assign_str(pe->name, "topic", &data->alias->topic, pe->topic);
-+	data->alias->per_pkg = pe->perpkg;
-+	if (assign_str(pe->name, "value", &data->alias->str, pe->event)) {
-+		parse_events_terms__purge(&data->alias->terms);
-+		ret = parse_events_terms(&data->alias->terms, pe->event, /*input=*/NULL);
- 	}
- 	if (!ret && pe->unit) {
- 		char *unit;
- 
--		ret = perf_pmu__convert_scale(pe->unit, &unit, &alias->scale);
-+		ret = perf_pmu__convert_scale(pe->unit, &unit, &data->alias->scale);
- 		if (!ret)
--			snprintf(alias->unit, sizeof(alias->unit), "%s", unit);
-+			snprintf(data->alias->unit, sizeof(data->alias->unit), "%s", unit);
- 	}
- 	return ret;
- }
- 
--static int perf_pmu__new_alias(struct perf_pmu *pmu, int dirfd, const char *name,
-+static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
- 				const char *desc, const char *val, FILE *val_fd,
- 				const struct pmu_event *pe)
- {
-@@ -494,16 +534,6 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, int dirfd, const char *name
- 	}
- 
- 	alias->name = strdup(name);
--	if (dirfd >= 0) {
--		/*
--		 * load unit name and scale if available
--		 */
--		perf_pmu__parse_unit(alias, dirfd, name);
--		perf_pmu__parse_scale(alias, dirfd, name);
--		perf_pmu__parse_per_pkg(alias, dirfd, name);
--		perf_pmu__parse_snapshot(alias, dirfd, name);
--	}
--
- 	alias->desc = desc ? strdup(desc) : NULL;
- 	alias->long_desc = long_desc ? strdup(long_desc) :
- 				desc ? strdup(desc) : NULL;
-@@ -518,9 +548,15 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, int dirfd, const char *name
- 	}
- 	if (!pe) {
- 		/* Update an event from sysfs with json data. */
-+		struct update_alias_data data = {
-+			.pmu = pmu,
-+			.alias = alias,
-+		};
-+
-+		alias->from_sysfs = true;
- 		if (pmu->events_table) {
- 			if (pmu_events_table__find_event(pmu->events_table, pmu, name,
--							 update_alias, alias) == 0)
-+							 update_alias, &data) == 0)
- 				pmu->loaded_json_aliases++;
- 		}
- 	}
-@@ -608,7 +644,7 @@ static int pmu_aliases_parse(struct perf_pmu *pmu, int dirfd)
- 			continue;
- 		}
- 
--		if (perf_pmu__new_alias(pmu, dirfd, name, /*desc=*/ NULL,
-+		if (perf_pmu__new_alias(pmu, name, /*desc=*/ NULL,
- 					/*val=*/ NULL, file, /*pe=*/ NULL) < 0)
- 			pr_debug("Cannot set up %s\n", name);
- 		fclose(file);
-@@ -861,7 +897,7 @@ static int pmu_add_cpu_aliases_map_callback(const struct pmu_event *pe,
- {
- 	struct perf_pmu *pmu = vdata;
- 
--	perf_pmu__new_alias(pmu, -1, pe->name, pe->desc, pe->event, /*val_fd=*/ NULL, pe);
-+	perf_pmu__new_alias(pmu, pe->name, pe->desc, pe->event, /*val_fd=*/ NULL, pe);
- 	return 0;
- }
- 
-@@ -897,7 +933,7 @@ static int pmu_add_sys_aliases_iter_fn(const struct pmu_event *pe,
- 
- 	if (!strcmp(pmu->id, pe->compat) &&
- 	    pmu_uncore_alias_match(pe->pmu, pmu->name)) {
--		perf_pmu__new_alias(pmu, -1,
-+		perf_pmu__new_alias(pmu,
- 				pe->name,
- 				pe->desc,
- 				pe->event,
-@@ -1413,11 +1449,13 @@ static struct perf_pmu_alias *pmu_find_alias(struct perf_pmu *pmu,
- }
- 
- 
--static int check_info_data(struct perf_pmu_alias *alias,
-+static int check_info_data(struct perf_pmu *pmu,
-+			   struct perf_pmu_alias *alias,
- 			   struct perf_pmu_info *info,
- 			   struct parse_events_error *err,
- 			   int column)
- {
-+	read_alias_info(pmu, alias);
- 	/*
- 	 * Only one term in event definition can
- 	 * define unit, scale and snapshot, fail
-@@ -1487,7 +1525,7 @@ int perf_pmu__check_alias(struct perf_pmu *pmu, struct list_head *head_terms,
- 			return ret;
- 		}
- 
--		ret = check_info_data(alias, info, err, term->err_term);
-+		ret = check_info_data(pmu, alias, info, err, term->err_term);
- 		if (ret)
- 			return ret;
- 
+ def process_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
+   """Process a JSON file during the main walk."""
 -- 
 2.42.0.rc1.204.g551eb34607-goog
 
