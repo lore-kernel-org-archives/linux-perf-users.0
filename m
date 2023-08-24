@@ -2,162 +2,383 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DF0C3DA66
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 01:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D125CC27C40
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 02:13:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239096AbjHXB65 (ORCPT
+        id S239239AbjHXCNK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Aug 2023 21:58:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39864 "EHLO
+        Wed, 23 Aug 2023 22:13:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239172AbjHXB60 (ORCPT
+        with ESMTP id S233104AbjHXCMi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Aug 2023 21:58:26 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B11310D0;
-        Wed, 23 Aug 2023 18:58:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692842303; x=1724378303;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=zr7H0wGlnhCSbEDuWo9f0W/Bc09ig1Y26FxrMMZFams=;
-  b=f+g3AcOlvcJhHgUHHQ1LPSYGF5GZbu7Gl9Zd1vt3us1E4m7fhurjh7XI
-   dy8AZba1T5ZxrcQqEL3qT1ElMxPnccX6lqD1xtPLc8PjevFw21d2Z5YWz
-   2nK5u3IAbwPLhWrOqTczWs+/CXElU8l+tANndSJwL2e5Pxzosij7tcrF+
-   HhXmb6wieDJwGB/K8SGrQdKPFPox2bVnSDPCSqBu24OMofe2jGVgfm+Y9
-   +P9MUvh6Z97kxt7x2mVY7FBun2+msXZLi9HCtnwZMxJaXEMep2UhCCtKV
-   bGjFdKHBWQ6d4iaUz+vBDfXazroNzfsT42TwkyrXDP/uMioAwxEtAI//A
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="460682472"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="460682472"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 18:58:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="713794457"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="713794457"
-Received: from dmi-pnp-i7.sh.intel.com ([10.239.159.155])
-  by orsmga006.jf.intel.com with ESMTP; 23 Aug 2023 18:58:16 -0700
-From:   Dapeng Mi <dapeng1.mi@linux.intel.com>
-To:     Sean Christopherson <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Like Xu <likexu@tencent.com>
-Cc:     kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Zhang Xiong <xiong.y.zhang@intel.com>,
-        Lv Zhiyuan <zhiyuan.lv@intel.com>,
-        Dapeng Mi <dapeng1.mi@intel.com>,
-        Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v3] KVM: x86/pmu: Manipulate FIXED_CTR_CTRL MSR with macros
-Date:   Thu, 24 Aug 2023 10:05:46 +0800
-Message-Id: <20230824020546.1108516-1-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+        Wed, 23 Aug 2023 22:12:38 -0400
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29B1FE75;
+        Wed, 23 Aug 2023 19:12:33 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VqS2I.A_1692843149;
+Received: from 30.221.146.144(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VqS2I.A_1692843149)
+          by smtp.aliyun-inc.com;
+          Thu, 24 Aug 2023 10:12:30 +0800
+Message-ID: <a646dfd0-1962-ba67-8a60-925e23d85730@linux.alibaba.com>
+Date:   Thu, 24 Aug 2023 10:12:28 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.14.0
+Subject: Re: [PATCH v7 7/8] perf jevents: Add support for Arm CMN PMU aliasing
+To:     Robin Murphy <robin.murphy@arm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>
+Cc:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>
+References: <1692606977-92009-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1692606977-92009-8-git-send-email-renyu.zj@linux.alibaba.com>
+ <46a0917c-e288-7ef9-d72d-cdd53bb52a0a@arm.com>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <46a0917c-e288-7ef9-d72d-cdd53bb52a0a@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Magic numbers are used to manipulate the bit fields of
-FIXED_CTR_CTRL MSR. This is not read-friendly and use macros to replace
-these magic numbers to increase the readability.
 
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- arch/x86/kvm/pmu.c           | 10 +++++-----
- arch/x86/kvm/pmu.h           |  6 ++++--
- arch/x86/kvm/vmx/pmu_intel.c | 11 ++++++++---
- 3 files changed, 17 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index edb89b51b383..fb4ef2da3e32 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -420,11 +420,11 @@ static void reprogram_counter(struct kvm_pmc *pmc)
- 	if (pmc_is_fixed(pmc)) {
- 		fixed_ctr_ctrl = fixed_ctrl_field(pmu->fixed_ctr_ctrl,
- 						  pmc->idx - INTEL_PMC_IDX_FIXED);
--		if (fixed_ctr_ctrl & 0x1)
-+		if (fixed_ctr_ctrl & INTEL_FIXED_0_KERNEL)
- 			eventsel |= ARCH_PERFMON_EVENTSEL_OS;
--		if (fixed_ctr_ctrl & 0x2)
-+		if (fixed_ctr_ctrl & INTEL_FIXED_0_USER)
- 			eventsel |= ARCH_PERFMON_EVENTSEL_USR;
--		if (fixed_ctr_ctrl & 0x8)
-+		if (fixed_ctr_ctrl & INTEL_FIXED_0_ENABLE_PMI)
- 			eventsel |= ARCH_PERFMON_EVENTSEL_INT;
- 		new_config = (u64)fixed_ctr_ctrl;
- 	}
-@@ -749,8 +749,8 @@ static inline bool cpl_is_matched(struct kvm_pmc *pmc)
- 	} else {
- 		config = fixed_ctrl_field(pmc_to_pmu(pmc)->fixed_ctr_ctrl,
- 					  pmc->idx - INTEL_PMC_IDX_FIXED);
--		select_os = config & 0x1;
--		select_user = config & 0x2;
-+		select_os = config & INTEL_FIXED_0_KERNEL;
-+		select_user = config & INTEL_FIXED_0_USER;
- 	}
- 
- 	return (static_call(kvm_x86_get_cpl)(pmc->vcpu) == 0) ? select_os : select_user;
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index 7d9ba301c090..ffda2ecc3a22 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -12,7 +12,8 @@
- 					  MSR_IA32_MISC_ENABLE_BTS_UNAVAIL)
- 
- /* retrieve the 4 bits for EN and PMI out of IA32_FIXED_CTR_CTRL */
--#define fixed_ctrl_field(ctrl_reg, idx) (((ctrl_reg) >> ((idx)*4)) & 0xf)
-+#define fixed_ctrl_field(ctrl_reg, idx) \
-+	(((ctrl_reg) >> ((idx) * INTEL_FIXED_BITS_STRIDE)) & INTEL_FIXED_BITS_MASK)
- 
- #define VMWARE_BACKDOOR_PMC_HOST_TSC		0x10000
- #define VMWARE_BACKDOOR_PMC_REAL_TIME		0x10001
-@@ -165,7 +166,8 @@ static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
- 
- 	if (pmc_is_fixed(pmc))
- 		return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
--					pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
-+					pmc->idx - INTEL_PMC_IDX_FIXED) &
-+					(INTEL_FIXED_0_KERNEL | INTEL_FIXED_0_USER);
- 
- 	return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
- }
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index f2efa0bf7ae8..b0ac55891cb7 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -548,8 +548,13 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
- 		setup_fixed_pmc_eventsel(pmu);
- 	}
- 
--	for (i = 0; i < pmu->nr_arch_fixed_counters; i++)
--		pmu->fixed_ctr_ctrl_mask &= ~(0xbull << (i * 4));
-+	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
-+		pmu->fixed_ctr_ctrl_mask &=
-+			 ~intel_fixed_bits_by_idx(i,
-+						  INTEL_FIXED_0_KERNEL |
-+						  INTEL_FIXED_0_USER |
-+						  INTEL_FIXED_0_ENABLE_PMI);
-+	}
- 	counter_mask = ~(((1ull << pmu->nr_arch_gp_counters) - 1) |
- 		(((1ull << pmu->nr_arch_fixed_counters) - 1) << INTEL_PMC_IDX_FIXED));
- 	pmu->global_ctrl_mask = counter_mask;
-@@ -595,7 +600,7 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
- 			pmu->reserved_bits &= ~ICL_EVENTSEL_ADAPTIVE;
- 			for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
- 				pmu->fixed_ctr_ctrl_mask &=
--					~(1ULL << (INTEL_PMC_IDX_FIXED + i * 4));
-+					~intel_fixed_bits_by_idx(i, ICL_FIXED_0_ADAPTIVE);
- 			}
- 			pmu->pebs_data_cfg_mask = ~0xff00000full;
- 		} else {
+在 2023/8/23 下午5:33, Robin Murphy 写道:
+> On 2023-08-21 09:36, Jing Zhang wrote:
+>> Currently just add aliases for part of Arm CMN PMU events which
+>> are general and compatible for any SoC and CMN-ANY.
+>>
+>> "Compat" value "434*;436*;43c*;43a*" means it is compatible with
+>> all CMN600/CMN650/CMN700/Ci700, which can be obtained from
+>> commit 7819e05a0dce ("perf/arm-cmn: Revamp model detection").
+>>
+>> The arm-cmn PMU events got from:
+>> [0] https://developer.arm.com/documentation/100180/0302/?lang=en
+>> [1] https://developer.arm.com/documentation/101408/0100/?lang=en
+>> [2] https://developer.arm.com/documentation/102308/0302/?lang=en
+>> [3] https://developer.arm.com/documentation/101569/0300/?lang=en
+>>
+>> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+>> Reviewed-by: John Garry <john.g.garry@oracle.com>
+>> ---
+>>   .../pmu-events/arch/arm64/arm/cmn/sys/cmn.json     | 266 +++++++++++++++++++++
+>>   tools/perf/pmu-events/jevents.py                   |   1 +
+>>   2 files changed, 267 insertions(+)
+>>   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
+>>
+>> diff --git a/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
+>> new file mode 100644
+>> index 0000000..30435a3
+>> --- /dev/null
+>> +++ b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
+>> @@ -0,0 +1,266 @@
+>> +[
+>> +    {
+>> +        "EventName": "hnf_cache_miss",
+>> +        "EventIdCode": "0x1",
+>> +        "NodeType": "0x5",
+> 
+> Given my other comment, I also think there would be no harm in just having these as:
+>     
+>         "ConfigCode" : "0x10005"
+> 
+> if you'd rather make life easier to begin with, then be able to come back and improve things later. IMO it doesn't affect the readability of the important values *all* that much, since it's not like they're tighly packed together in oddly-aligned bitfields.
+> 
 
-base-commit: fff2e47e6c3b8050ca26656693caa857e3a8b740
--- 
-2.34.1
+Thanks a lot! that's a great suggestion.  I hope to merge it in v6.6 first in the current way,
+and then I will improve it in CMN driver and perf tools later.
 
+Thanks,
+Jing
+
+
+> Thanks,
+> Robin.
+> 
+>> +        "BriefDescription": "Counts total cache misses in first lookup result (high priority).",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "hnf_slc_sf_cache_access",
+>> +        "EventIdCode": "0x2",
+>> +        "NodeType": "0x5",
+>> +        "BriefDescription": "Counts number of cache accesses in first access (high priority).",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "hnf_cache_fill",
+>> +        "EventIdCode": "0x3",
+>> +        "NodeType": "0x5",
+>> +        "BriefDescription": "Counts total allocations in HN SLC (all cache line allocations to SLC).",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "hnf_pocq_retry",
+>> +        "EventIdCode": "0x4",
+>> +        "NodeType": "0x5",
+>> +        "BriefDescription": "Counts number of retried requests.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "hnf_pocq_reqs_recvd",
+>> +        "EventIdCode": "0x5",
+>> +        "NodeType": "0x5",
+>> +        "BriefDescription": "Counts number of requests that HN receives.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "hnf_sf_hit",
+>> +        "EventIdCode": "0x6",
+>> +        "NodeType": "0x5",
+>> +        "BriefDescription": "Counts number of SF hits.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "hnf_sf_evictions",
+>> +        "EventIdCode": "0x7",
+>> +        "NodeType": "0x5",
+>> +        "BriefDescription": "Counts number of SF eviction cache invalidations initiated.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "hnf_dir_snoops_sent",
+>> +        "EventIdCode": "0x8",
+>> +        "NodeType": "0x5",
+>> +        "BriefDescription": "Counts number of directed snoops sent (not including SF back invalidation).",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "hnf_brd_snoops_sent",
+>> +        "EventIdCode": "0x9",
+>> +        "NodeType": "0x5",
+>> +        "BriefDescription": "Counts number of multicast snoops sent (not including SF back invalidation).",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "hnf_slc_eviction",
+>> +        "EventIdCode": "0xa",
+>> +        "NodeType": "0x5",
+>> +        "BriefDescription": "Counts number of SLC evictions (dirty only).",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "hnf_slc_fill_invalid_way",
+>> +        "EventIdCode": "0xb",
+>> +        "NodeType": "0x5",
+>> +        "BriefDescription": "Counts number of SLC fills to an invalid way.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "hnf_mc_retries",
+>> +        "EventIdCode": "0xc",
+>> +        "NodeType": "0x5",
+>> +        "BriefDescription": "Counts number of retried transactions by the MC.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "hnf_mc_reqs",
+>> +        "EventIdCode": "0xd",
+>> +        "NodeType": "0x5",
+>> +        "BriefDescription": "Counts number of requests that are sent to MC.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "hnf_qos_hh_retry",
+>> +        "EventIdCode": "0xe",
+>> +        "NodeType": "0x5",
+>> +        "BriefDescription": "Counts number of times a HighHigh priority request is protocolretried at the HN‑F.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "rnid_s0_rdata_beats",
+>> +        "EventIdCode": "0x1",
+>> +        "NodeType": "0xa",
+>> +        "BriefDescription": "Number of RData beats (RVALID and RREADY) dispatched on port 0. This event measures the read bandwidth, including CMO responses.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "rnid_s1_rdata_beats",
+>> +        "EventIdCode": "0x2",
+>> +        "NodeType": "0xa",
+>> +        "BriefDescription": "Number of RData beats (RVALID and RREADY) dispatched on port 1. This event measures the read bandwidth, including CMO responses.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "rnid_s2_rdata_beats",
+>> +        "EventIdCode": "0x3",
+>> +        "NodeType": "0xa",
+>> +        "BriefDescription": "Number of RData beats (RVALID and RREADY) dispatched on port 2. This event measures the read bandwidth, including CMO responses.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "rnid_rxdat_flits",
+>> +        "EventIdCode": "0x4",
+>> +        "NodeType": "0xa",
+>> +        "BriefDescription": "Number of RXDAT flits received. This event measures the true read data bandwidth, excluding CMOs.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "rnid_txdat_flits",
+>> +        "EventIdCode": "0x5",
+>> +        "NodeType": "0xa",
+>> +        "BriefDescription": "Number of TXDAT flits dispatched. This event measures the write bandwidth.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "rnid_txreq_flits_total",
+>> +        "EventIdCode": "0x6",
+>> +        "NodeType": "0xa",
+>> +        "BriefDescription": "Number of TXREQ flits dispatched. This event measures the total request bandwidth.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "rnid_txreq_flits_retried",
+>> +        "EventIdCode": "0x7",
+>> +        "NodeType": "0xa",
+>> +        "BriefDescription": "Number of retried TXREQ flits dispatched. This event measures the retry rate.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "sbsx_txrsp_retryack",
+>> +        "EventIdCode": "0x4",
+>> +        "NodeType": "0x7",
+>> +        "BriefDescription": "Number of RXREQ flits dispatched. This event is a measure of the retry rate.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "sbsx_txdat_flitv",
+>> +        "EventIdCode": "0x5",
+>> +        "NodeType": "0x7",
+>> +        "BriefDescription": "Number of TXDAT flits dispatched from XP to SBSX. This event is a measure of the write bandwidth.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "sbsx_arvalid_no_arready",
+>> +        "EventIdCode": "0x21",
+>> +        "NodeType": "0x7",
+>> +        "BriefDescription": "Number of cycles the SBSX bridge is stalled because of backpressure on AR channel.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "sbsx_awvalid_no_awready",
+>> +        "EventIdCode": "0x22",
+>> +        "NodeType": "0x7",
+>> +        "BriefDescription": "Number of cycles the SBSX bridge is stalled because of backpressure on AW channel.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "sbsx_wvalid_no_wready",
+>> +        "EventIdCode": "0x23",
+>> +        "NodeType": "0x7",
+>> +        "BriefDescription": "Number of cycles the SBSX bridge is stalled because of backpressure on W channel.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "hni_txrsp_retryack",
+>> +        "EventIdCode": "0x2a",
+>> +        "NodeType": "0x4",
+>> +        "BriefDescription": "Number of RXREQ flits dispatched. This event is a measure of the retry rate.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "hni_arvalid_no_arready",
+>> +        "EventIdCode": "0x2b",
+>> +        "NodeType": "0x4",
+>> +        "BriefDescription": "Number of cycles the HN-I bridge is stalled because of backpressure on AR channel.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "hni_arready_no_arvalid",
+>> +        "EventIdCode": "0x2c",
+>> +        "NodeType": "0x4",
+>> +        "BriefDescription": "Number of cycles the AR channel is waiting for new requests from HN-I bridge.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "hni_awvalid_no_awready",
+>> +        "EventIdCode": "0x2d",
+>> +        "NodeType": "0x4",
+>> +        "BriefDescription": "Number of cycles the HN-I bridge is stalled because of backpressure on AW channel.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "hni_awready_no_awvalid",
+>> +        "EventIdCode": "0x2e",
+>> +        "NodeType": "0x4",
+>> +        "BriefDescription": "Number of cycles the AW channel is waiting for new requests from HN-I bridge.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "hni_wvalid_no_wready",
+>> +        "EventIdCode": "0x2f",
+>> +        "NodeType": "0x4",
+>> +        "BriefDescription": "Number of cycles the HN-I bridge is stalled because of backpressure on W channel.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    },
+>> +    {
+>> +        "EventName": "hni_txdat_stall",
+>> +        "EventIdCode": "0x30",
+>> +        "NodeType": "0x4",
+>> +        "BriefDescription": "TXDAT valid but no link credit available.",
+>> +        "Unit": "arm_cmn",
+>> +        "Compat": "434*;436*;43c*;43a*"
+>> +    }
+>> +]
+>> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+>> index 369c8bf..935bd4b 100755
+>> --- a/tools/perf/pmu-events/jevents.py
+>> +++ b/tools/perf/pmu-events/jevents.py
+>> @@ -272,6 +272,7 @@ class JsonEvent:
+>>             'DFPMC': 'amd_df',
+>>             'cpu_core': 'cpu_core',
+>>             'cpu_atom': 'cpu_atom',
+>> +          'arm_cmn': 'arm_cmn',
+>>         }
+>>         return table[unit] if unit in table else f'uncore_{unit.lower()}'
+>>   
