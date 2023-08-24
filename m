@@ -2,67 +2,61 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A6BC3DA6F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 17:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A89C6FA8F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 18:02:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242838AbjHXRbx (ORCPT
+        id S242945AbjHXSCI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 24 Aug 2023 13:31:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34622 "EHLO
+        Thu, 24 Aug 2023 14:02:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242876AbjHXRbw (ORCPT
+        with ESMTP id S242962AbjHXSBw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 24 Aug 2023 13:31:52 -0400
-Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3387619B7
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 10:31:50 -0700 (PDT)
-Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-40a47e8e38dso24321cf.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 10:31:50 -0700 (PDT)
+        Thu, 24 Aug 2023 14:01:52 -0400
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D41131BE6
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 11:01:45 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-4036bd4fff1so39801cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 11:01:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692898309; x=1693503109; darn=vger.kernel.org;
+        d=google.com; s=20221208; t=1692900105; x=1693504905; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=C5NYspLPatoaGHxnDOw5o1c2qcpc2OSQyPvAfJjpWsY=;
-        b=q9R1lQKaeJYJSYiReqCHI0EjkndXWMEFuz2mre4y7dwU8sfWLYmKuyduwiPAn+1RYT
-         QJ5tAms0hyMdUc7IgtWmIYqT6umYuEEDMzvnZgKZOY9HKN0QP80aQB9YIWWbylms7YHY
-         rKXEJfUc+fvmhRLSyzXdyccYqEeYaGol5jpp94pKSvE8vvN1GtlRWokRzORMTqUqRNSk
-         VKkrj9NlwKsabktJpnutqI4SxiMhG7MLQ7cT+TXnx+gy1+4Se+OKkG4EV7I8f1+5KMkO
-         N9jB7NDq49OeuMAGAi3VR0XqgwlvEgBtxK+vYuKL/qGcgEqC0Nc92fftkqJgJlVew26H
-         0seQ==
+        bh=OIzsd1z1v5q0zT+t3tj7Zr/vc4gw5mWKfXzVBU6LAvY=;
+        b=l1ILoTfr+PR8gDX8IMy9mclysop/b4uO6h84xlQ6TC5iDBSbIZMjMLx5gEt0L2J6Df
+         lIIfzOFyl7x2e3pFCR3ukGtC9iBzIdzF9uCDOwC2m/tX6X8+NUZ8HsewcvMJRCiyXIDB
+         GqOwLzT2XPwou4ijIS4jJdBeclxwaY47OQUZr7xveHGz9UWqssieRIw6DXqaLlOxaKpK
+         8YVQt/qyn3FI8ulR8mt+hTMGuLeCLRByEHGHvvlzWZZW5gcC7JMlyv0zbCqnB/zLQrZw
+         9vRcOHpJdUGODFmMnXcdB4x8rVmiObGob4gu33P94pEXQ7mWlQ6vxvRkG3TfpeZQiD3I
+         hhug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692898309; x=1693503109;
+        d=1e100.net; s=20221208; t=1692900105; x=1693504905;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=C5NYspLPatoaGHxnDOw5o1c2qcpc2OSQyPvAfJjpWsY=;
-        b=A3FbpAYT1eWoJmdpS5zR0Txc/o0B5ttAFp+PjgqunbIRyWFVF4vqG4ivIvTmwGWL0O
-         hYyd9CXhUvYZAthdTVB5xI7hNvxqIJ55XcEk832vRrkew9onzBrM+Kmtobfp/RaeFrmv
-         HZW4jzI8peU0LBSQbuHqxeMBaGafdph1ao7n+ZPrA/LJp+sKMxBU1wlg2boy7qseCVST
-         Wahng5y9l83vGEgVHT1EQkLCYfFEBqH8gsZ1Bd1DOUHkFLNS9OyrsuhTSgeXmiO2Ygv8
-         g0wou52MOZ7PLhNmAqN3jKV8fcPenA2iGhV3xcAENxBymeXD+KX8KCpEfyimnkpSzG8+
-         oloA==
-X-Gm-Message-State: AOJu0YycEC39CbKTKOMQ4It1jx0ZajvJ6GyilLTS2N1bFTc4iYj9KRMK
-        RbkP+Kif9LyNdYhc6qrIrifP6LU+GhWoYX5mDVhn9w==
-X-Google-Smtp-Source: AGHT+IEjg75CKZcLLJGcqGqw1dzVXkcrlwxKEuNCTdQ7rOkDY2ROvgciZoQYzsKm7PvlmUhjMLYr5BwGycobXZUMbnU=
-X-Received: by 2002:ac8:7fc4:0:b0:412:9cd:473b with SMTP id
- b4-20020ac87fc4000000b0041209cd473bmr22689qtk.4.1692898309180; Thu, 24 Aug
- 2023 10:31:49 -0700 (PDT)
+        bh=OIzsd1z1v5q0zT+t3tj7Zr/vc4gw5mWKfXzVBU6LAvY=;
+        b=L8pLDRCjYTVWxqrb9J5GLJxrf36W4QZIfbfzM93GmxgrJU51afU3RDPW14kv78Wt8k
+         a1lgjKr7ovhBO+W5PLsGqX+LzQYKY7IfHYFoaoh9MtAJLZ+eV4xJv9fNNbpwW44zRU6S
+         uXrbJGg+6r1gu8ubnrIClRZH5yM+MZ6ymo99iMHN8DWXv02Oaqmx2tRocWTaFDeyYVGs
+         /cFBtg+WdLmrPZzht9rI3uv10Mk0OVS8kKJAMK97g68JIcXJei1N6o3W3Shewj7rq4Xq
+         W9NtehGBCKn1WUjTqrvhunMRvnAetBh9chRMCbq9l634DU9pzlh1IvYoMWCRdux49zLY
+         KTYQ==
+X-Gm-Message-State: AOJu0Yz7XyjQSIqR2HKIq1XA6O8lplXZ2JkFKy/wf5ltEXbHehvv6Bti
+        9CykEt4a4cC+w682Cw4mnrsYHoRtRvyAurPxp5+tAg==
+X-Google-Smtp-Source: AGHT+IFPU/hypYSgqHQIktrv1Xn7iaQwf2jWMDyKNDI1d9lVCy0v3wmU+EjCvPzxMr0Sd7UywtPTZqGWP4YHeKUemiU=
+X-Received: by 2002:ac8:5a83:0:b0:3ef:5f97:258f with SMTP id
+ c3-20020ac85a83000000b003ef5f97258fmr31883qtc.16.1692900104609; Thu, 24 Aug
+ 2023 11:01:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230824041330.266337-1-irogers@google.com> <20230824041330.266337-7-irogers@google.com>
- <ZOdiX4eJHFfFbQhi@kernel.org>
-In-Reply-To: <ZOdiX4eJHFfFbQhi@kernel.org>
+References: <20230824041330.266337-1-irogers@google.com> <ZOduqlhnP6+HNSUl@kernel.org>
+In-Reply-To: <ZOduqlhnP6+HNSUl@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 24 Aug 2023 10:31:37 -0700
-Message-ID: <CAP-5=fU3PVCFjyy_R2w9xWbjBWktsuz9+crKhZNGqUR2jdKMrw@mail.gmail.com>
-Subject: Re: [PATCH v2 06/18] perf s390 s390_cpumcfdg_dump: Don't scan all PMUs
+Date:   Thu, 24 Aug 2023 11:01:32 -0700
+Message-ID: <CAP-5=fXjJzHX9AsnAn-KHG03-D9RBCFdUsaybsAbpefHwcXagg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/18] Lazily load PMU data
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -84,182 +78,182 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Aug 24, 2023 at 7:00=E2=80=AFAM Arnaldo Carvalho de Melo
+On Thu, Aug 24, 2023 at 7:52=E2=80=AFAM Arnaldo Carvalho de Melo
 <acme@kernel.org> wrote:
 >
-> Em Wed, Aug 23, 2023 at 09:13:18PM -0700, Ian Rogers escreveu:
-> > Rather than scanning all PMUs for a counter name, scan the PMU
-> > associated with the evsel of the sample. This is done to remove a
-> > dependence on pmu-events.h.
+> Em Wed, Aug 23, 2023 at 09:13:12PM -0700, Ian Rogers escreveu:
+> > Lazily load PMU data both from sysfs and json files. Reorganize
+> > json data to be more PMU oriented to facilitate this, for
+> > example, json data is now sorted into arrays for their PMU.
+> >
+> > In refactoring the code some changes were made to get rid of maximum
+> > encoding sizes for events (256 bytes), with input files being directly
+> > passed to the lex generated code. There is also a small event parse
+> > error message improvement.
+> >
+> > Some results from an Intel tigerlake laptop running Debian:
+> >
+> > Binary size reduction of 5.3% or 552,864 bytes because the PMU
+> > name no longer appears in the string or desc field.
+> >
+> > stat -e cpu/cycles/ minor faults reduced from 1733 to 1667, open calls =
+reduced
+> > from 171 to 94.
+> >
+> > stat default minor faults reduced from 1805 to 1717, open calls reduced
+> > from 654 to 343.
+> >
+> > Average PMU scanning reduced from 4720.641usec to 2927.293usec.
+> > Average core PMU scanning reduced from 1004.658usec to 232.668usec
+> > (4.3x faster).
+> >
+> > v2: Add error path for failing strdup when allocating a format,
+> >     suggested by Arnaldo. Rebased on top of tmp.perf-tools-next
+> >     removing 8 patches. Added "perf jevents: Don't append Unit to
+> >     desc" to save yet more encoding json event space.
 >
-> I'm applying this one, and CCing the S/390 developers so that they can
-> try this and maybe provide an Acked-by/Tested-by,
+> So this is failing here:
+>
+> [acme@quaco ~]$ perf test 10
+>  10: PMU events                                 :
+>  10.1: PMU event table sanity                           : FAILED!
+>  10.2: PMU event map aliases                            : FAILED!
+>  10.3: Parsing of PMU event table metrics               : Ok
+>  10.4: Parsing of PMU event table metrics with fake PMUs: Ok
+>  10.5: Parsing of metric thresholds with fake PMUs      : Ok
+> [acme@quaco ~]$
+>
+> [root@quaco ~]# grep -m1 "model name" /proc/cpuinfo
+> model name      : Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz
+> [root@quaco ~]#
+>
+>
+> [root@quaco ~]# perf test -vv -F 10 |& head -40
+>  10: PMU events                                                      :
+>  10.1: PMU event table sanity                                        :
+> --- start ---
+> testing event table bp_l1_btb_correct: pass
+> testing event table bp_l2_btb_correct: pass
+> testing event table dispatch_blocked.any: pass
+> testing event table eist_trans: pass
+> testing event table l3_cache_rd: pass
+> testing event table segment_reg_loads.any: pass
+> testing event e1 uncore_hisi_ddrc.flux_wcmd: mismatched desc, DDRC write =
+commands vs DDRC write commands. Unit: hisi_sccl,ddrc
+>
+>
+> Strange:
+>
+>         if (!is_same(e1->desc, e2->desc)) {
+>                 pr_debug2("testing event e1 %s: mismatched desc, %s vs %s=
+\n",
+>                           e1->name, e1->desc, e2->desc);
+>                 return -1;
+>         }
+>
+> Adding "" around those descs:
+>
+> testing event e1 uncore_hisi_ddrc.flux_wcmd: mismatched desc, "DDRC write=
+ commands" vs "DDRC write commands. Unit: hisi_sccl,ddrc"
+>
+> I see, its the last patch, removing it the tests passes, please take a
+> look at tmp.perf-tools-next
+>
+> - Arnaldo
 
-Thanks Arnaldo! You're right that I wasn't able to test this s390
-change on an s390.
+Thanks, I'll address the issue (hardcoded assumption on jevents.py
+output) and resend the patch.
 
 Ian
 
-> - Arnaldo
+> ---- end ----
+> PMU events subtest 1: FAILED!
+>  10.2: PMU event map aliases                                         :
+> --- start ---
+> Using CPUID GenuineIntel-6-8E-A
+> testing aliases core PMU cpu: matched event bp_l1_btb_correct
+> testing aliases core PMU cpu: matched event bp_l2_btb_correct
+> testing aliases core PMU cpu: matched event segment_reg_loads.any
+> testing aliases core PMU cpu: matched event dispatch_blocked.any
+> testing aliases core PMU cpu: matched event eist_trans
+> testing aliases core PMU cpu: matched event l3_cache_rd
+> testing core PMU cpu aliases: pass
+> testing aliases PMU hisi_sccl1_ddrc2: mismatched desc, DDRC write command=
+s vs DDRC write commands. Unit: hisi_sccl,ddrc
+> testing aliases uncore PMU hisi_sccl1_ddrc2: could not match alias uncore=
+_hisi_ddrc.flux_wcmd
+> ---- end ----
+> PMU events subtest 2: FAILED!
+>  10.3: Parsing of PMU event table metrics                            :
+> --- start ---
+> Found metric 'CPI'
+> metric expr 1 / IPC for CPI
+> parsing metric: 1 / IPC
+> metric expr inst_retired.any / cpu_clk_unhalted.thread for IPC
+> parsing metric: inst_retired.any / cpu_clk_unhalted.thread
+> found event inst_retired.any
+> found event cpu_clk_unhalted.thread
+> Parsing metric events '{inst_retired.any/metric-id=3Dinst_retired.any/,cp=
+u_clk_unhalted.thread/metric-id=3Dcpu_clk_unhalted.thread/}:W'
+> Attempting to add event pmu 'inst_retired.any' with '(null),' that may re=
+sult in non-fatal errors
+> After aliases, add event pmu 'inst_retired.any' with '(null),' that may r=
+esult in non-fatal errors
+> Attempting to add event pmu 'cpu_clk_unhalted.thread' with '(null),' that=
+ may result in non-fatal errors
+> After aliases, add event pmu 'cpu_clk_unhalted.thread' with '(null),' tha=
+t may result in non-fatal errors
+> [root@quaco ~]#
 >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/s390-sample-raw.c | 50 ++++++++++++++++---------------
-> >  1 file changed, 26 insertions(+), 24 deletions(-)
-> >
-> > diff --git a/tools/perf/util/s390-sample-raw.c b/tools/perf/util/s390-s=
-ample-raw.c
-> > index 91330c874170..dc1ed3e95d4d 100644
-> > --- a/tools/perf/util/s390-sample-raw.c
-> > +++ b/tools/perf/util/s390-sample-raw.c
-> > @@ -27,7 +27,7 @@
-> >  #include "color.h"
-> >  #include "sample-raw.h"
-> >  #include "s390-cpumcf-kernel.h"
-> > -#include "pmu-events/pmu-events.h"
-> > +#include "util/pmu.h"
-> >  #include "util/sample.h"
-> >
-> >  static size_t ctrset_size(struct cf_ctrset_entry *set)
-> > @@ -132,56 +132,57 @@ static int get_counterset_start(int setnr)
-> >
-> >  struct get_counter_name_data {
-> >       int wanted;
-> > -     const char *result;
-> > +     char *result;
-> >  };
-> >
-> > -static int get_counter_name_callback(const struct pmu_event *evp,
-> > -                                  const struct pmu_events_table *table=
- __maybe_unused,
-> > -                                  void *vdata)
-> > +static int get_counter_name_callback(void *vdata, struct pmu_event_inf=
-o *info)
-> >  {
-> >       struct get_counter_name_data *data =3D vdata;
-> >       int rc, event_nr;
-> > +     const char *event_str;
-> >
-> > -     if (evp->name =3D=3D NULL || evp->event =3D=3D NULL)
-> > +     if (info->str =3D=3D NULL)
-> >               return 0;
-> > -     rc =3D sscanf(evp->event, "event=3D%x", &event_nr);
-> > +
-> > +     event_str =3D strstr(info->str, "event=3D");
-> > +     if (!event_str)
-> > +             return 0;
-> > +
-> > +     rc =3D sscanf(event_str, "event=3D%x", &event_nr);
-> >       if (rc =3D=3D 1 && event_nr =3D=3D data->wanted) {
-> > -             data->result =3D evp->name;
-> > +             data->result =3D strdup(info->name);
-> >               return 1; /* Terminate the search. */
-> >       }
-> >       return 0;
-> >  }
-> >
-> > -/* Scan the PMU table and extract the logical name of a counter from t=
-he
-> > - * PMU events table. Input is the counter set and counter number with =
-in the
-> > - * set. Construct the event number and use this as key. If they match =
-return
-> > - * the name of this counter.
-> > +/* Scan the PMU and extract the logical name of a counter from the eve=
-nt. Input
-> > + * is the counter set and counter number with in the set. Construct th=
-e event
-> > + * number and use this as key. If they match return the name of this c=
-ounter.
-> >   * If no match is found a NULL pointer is returned.
-> >   */
-> > -static const char *get_counter_name(int set, int nr, const struct pmu_=
-events_table *table)
-> > +static char *get_counter_name(int set, int nr, struct perf_pmu *pmu)
-> >  {
-> >       struct get_counter_name_data data =3D {
-> >               .wanted =3D get_counterset_start(set) + nr,
-> >               .result =3D NULL,
-> >       };
-> >
-> > -     if (!table)
-> > +     if (!pmu)
-> >               return NULL;
-> >
-> > -     pmu_events_table__for_each_event(table, get_counter_name_callback=
-, &data);
-> > +     perf_pmu__for_each_event(pmu, &data, get_counter_name_callback);
-> >       return data.result;
-> >  }
-> >
-> > -static void s390_cpumcfdg_dump(struct perf_sample *sample)
-> > +static void s390_cpumcfdg_dump(struct perf_pmu *pmu, struct perf_sampl=
-e *sample)
-> >  {
-> >       size_t i, len =3D sample->raw_size, offset =3D 0;
-> >       unsigned char *buf =3D sample->raw_data;
-> >       const char *color =3D PERF_COLOR_BLUE;
-> >       struct cf_ctrset_entry *cep, ce;
-> > -     const struct pmu_events_table *table;
-> >       u64 *p;
-> >
-> > -     table =3D pmu_events_table__find();
-> >       while (offset < len) {
-> >               cep =3D (struct cf_ctrset_entry *)(buf + offset);
-> >
-> > @@ -199,11 +200,12 @@ static void s390_cpumcfdg_dump(struct perf_sample=
- *sample)
-> >               color_fprintf(stdout, color, "    [%#08zx] Counterset:%d"
-> >                             " Counters:%d\n", offset, ce.set, ce.ctr);
-> >               for (i =3D 0, p =3D (u64 *)(cep + 1); i < ce.ctr; ++i, ++=
-p) {
-> > -                     const char *ev_name =3D get_counter_name(ce.set, =
-i, table);
-> > +                     char *ev_name =3D get_counter_name(ce.set, i, pmu=
-);
-> >
-> >                       color_fprintf(stdout, color,
-> >                                     "\tCounter:%03d %s Value:%#018lx\n"=
-, i,
-> >                                     ev_name ?: "<unknown>", be64_to_cpu=
-(*p));
-> > +                     free(ev_name);
-> >               }
-> >               offset +=3D ctrset_size(&ce);
-> >       }
-> > @@ -216,14 +218,14 @@ static void s390_cpumcfdg_dump(struct perf_sample=
- *sample)
-> >   */
-> >  void evlist__s390_sample_raw(struct evlist *evlist, union perf_event *=
-event, struct perf_sample *sample)
-> >  {
-> > -     struct evsel *ev_bc000;
-> > +     struct evsel *evsel;
-> >
-> >       if (event->header.type !=3D PERF_RECORD_SAMPLE)
-> >               return;
-> >
-> > -     ev_bc000 =3D evlist__event2evsel(evlist, event);
-> > -     if (ev_bc000 =3D=3D NULL ||
-> > -         ev_bc000->core.attr.config !=3D PERF_EVENT_CPUM_CF_DIAG)
-> > +     evsel =3D evlist__event2evsel(evlist, event);
-> > +     if (evsel =3D=3D NULL ||
-> > +         evsel->core.attr.config !=3D PERF_EVENT_CPUM_CF_DIAG)
-> >               return;
-> >
-> >       /* Display raw data on screen */
-> > @@ -231,5 +233,5 @@ void evlist__s390_sample_raw(struct evlist *evlist,=
- union perf_event *event, str
-> >               pr_err("Invalid counter set data encountered\n");
-> >               return;
-> >       }
-> > -     s390_cpumcfdg_dump(sample);
-> > +     s390_cpumcfdg_dump(evsel->pmu, sample);
-> >  }
-> > --
-> > 2.42.0.rc1.204.g551eb34607-goog
-> >
+> Trying on a AMD 5950x:
 >
-> --
->
-> - Arnaldo
+> [root@five ~]# perf test -F -vv 10 |& head -40
+>  10: PMU events                                                      :
+>  10.1: PMU event table sanity                                        :
+> --- start ---
+> testing event table bp_l1_btb_correct: pass
+> testing event table bp_l2_btb_correct: pass
+> testing event table dispatch_blocked.any: pass
+> testing event table eist_trans: pass
+> testing event table l3_cache_rd: pass
+> testing event table segment_reg_loads.any: pass
+> testing event e1 uncore_hisi_ddrc.flux_wcmd: mismatched desc, DDRC write =
+commands vs DDRC write commands. Unit: hisi_sccl,ddrc
+> ---- end ----
+> PMU events subtest 1: FAILED!
+>  10.2: PMU event map aliases                                         :
+> --- start ---
+> Using CPUID AuthenticAMD-25-21-0
+> testing aliases core PMU cpu: matched event bp_l1_btb_correct
+> testing aliases core PMU cpu: matched event bp_l2_btb_correct
+> testing aliases core PMU cpu: matched event segment_reg_loads.any
+> testing aliases core PMU cpu: matched event dispatch_blocked.any
+> testing aliases core PMU cpu: matched event eist_trans
+> testing aliases core PMU cpu: matched event l3_cache_rd
+> testing core PMU cpu aliases: pass
+> testing aliases PMU hisi_sccl1_ddrc2: mismatched desc, DDRC write command=
+s vs DDRC write commands. Unit: hisi_sccl,ddrc
+> testing aliases uncore PMU hisi_sccl1_ddrc2: could not match alias uncore=
+_hisi_ddrc.flux_wcmd
+> ---- end ----
+> PMU events subtest 2: FAILED!
+>  10.3: Parsing of PMU event table metrics                            :
+> --- start ---
+> Found metric 'CPI'
+> metric expr 1 / IPC for CPI
+> parsing metric: 1 / IPC
+> metric expr inst_retired.any / cpu_clk_unhalted.thread for IPC
+> parsing metric: inst_retired.any / cpu_clk_unhalted.thread
+> found event inst_retired.any
+> found event cpu_clk_unhalted.thread
+> Parsing metric events '{inst_retired.any/metric-id=3Dinst_retired.any/,cp=
+u_clk_unhalted.thread/metric-id=3Dcpu_clk_unhalted.thread/}:W'
+> Attempting to add event pmu 'inst_retired.any' with '(null),' that may re=
+sult in non-fatal errors
+> After aliases, add event pmu 'inst_retired.any' with '(null),' that may r=
+esult in non-fatal errors
+> Attempting to add event pmu 'cpu_clk_unhalted.thread' with '(null),' that=
+ may result in non-fatal errors
+> After aliases, add event pmu 'cpu_clk_unhalted.thread' with '(null),' tha=
+t may result in non-fatal errors
+> [root@five ~]#
