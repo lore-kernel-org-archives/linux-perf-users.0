@@ -2,242 +2,162 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8611FC3DA6F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 01:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DF0C3DA66
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 01:59:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239111AbjHXBlg (ORCPT
+        id S239096AbjHXB65 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Aug 2023 21:41:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45190 "EHLO
+        Wed, 23 Aug 2023 21:58:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239115AbjHXBlU (ORCPT
+        with ESMTP id S239172AbjHXB60 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Aug 2023 21:41:20 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8BC8C7;
-        Wed, 23 Aug 2023 18:41:18 -0700 (PDT)
+        Wed, 23 Aug 2023 21:58:26 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B11310D0;
+        Wed, 23 Aug 2023 18:58:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692841278; x=1724377278;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=rWvhqoCFiwkXcg9kZ6VbH+3TGxgwV+h7u8mIobDZ0Ls=;
-  b=G1NOhd1CV/dVGIMcswH1lPLCjoZ4YhkhC7/fjWWefi8t/s5Udwd0Zw72
-   TB7doWf+Ne6hl+Shc6aZVN84nC8cW5ln56wHAsTienWYJWTe8cIDRfEt6
-   qMUJIYSzWso7YlcBnOVVfrQrcWqq0xpObMsYgC0CRB+e77JXIehMBbNp8
-   04pdHJyoSK3lb7/UB1TpyMWZUi4m3t/Uu0JKfCNfw3eAO1Ro2IlDHS/Le
-   AWzMltcewwPjR4LsWNpUoCJ/jDAs4aApZpnNu2ixEfBV9VJiTDCggwGQm
-   Objbwdm9aRaaJxWImDYliiihkwxJRiFYZhIyFdEXf7+sHRR+q7A26pWl7
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="374290967"
+  t=1692842303; x=1724378303;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=zr7H0wGlnhCSbEDuWo9f0W/Bc09ig1Y26FxrMMZFams=;
+  b=f+g3AcOlvcJhHgUHHQ1LPSYGF5GZbu7Gl9Zd1vt3us1E4m7fhurjh7XI
+   dy8AZba1T5ZxrcQqEL3qT1ElMxPnccX6lqD1xtPLc8PjevFw21d2Z5YWz
+   2nK5u3IAbwPLhWrOqTczWs+/CXElU8l+tANndSJwL2e5Pxzosij7tcrF+
+   HhXmb6wieDJwGB/K8SGrQdKPFPox2bVnSDPCSqBu24OMofe2jGVgfm+Y9
+   +P9MUvh6Z97kxt7x2mVY7FBun2+msXZLi9HCtnwZMxJaXEMep2UhCCtKV
+   bGjFdKHBWQ6d4iaUz+vBDfXazroNzfsT42TwkyrXDP/uMioAwxEtAI//A
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="460682472"
 X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="374290967"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 18:41:18 -0700
+   d="scan'208";a="460682472"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 18:58:20 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="736859506"
+X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="713794457"
 X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="736859506"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orsmga002.jf.intel.com with ESMTP; 23 Aug 2023 18:41:17 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Wed, 23 Aug 2023 18:41:17 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Wed, 23 Aug 2023 18:41:16 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27 via Frontend Transport; Wed, 23 Aug 2023 18:41:16 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.27; Wed, 23 Aug 2023 18:41:15 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YWP6XLxv/OtHWCdmricVf+PLC2P8+MOUpD3pxGgElydIjX4pSwRCkQ0LSRhp+Vqcehgmmyx5KivX3Of47vDYrGDgb1urtpmxulPoejtyURwOgnJMiswYdx7gM5uO0VS+Uykmy3ynewIxa34HaPRcz71xlZaDAstrDdc681hh6lD9bQmP4Y3ViPMN3njuoHZb1vn/xReJ5PN6Y9gzwISmDMNlJQidRZXdVNc7xNsswKNr6mP3VfFICDHVo33wSPIbYMDJDNqfmw2mayBvbs7GTpKhMZZdGnHUuoGEaW7dR2A0F8XcYEdqYa9jApcakjc4f56oMUIqhzAvIfGcjYqvYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4SqXV+erY9LNKBupeBSTEswG9txdH/Bk9GhEVHNFPw0=;
- b=Avc/Mq7K/+umb6pT141kXZ+9xJQ9lj2LIizF53iXalgEIJW5knS9CETcr8O+zW0kUVcoon7X2rIP/LHTc2bwrKPMuMY7H0GD9RlPgmh/zKu7HyX18mAk5zBRBN+Q6pC/rljeiFEbE6oRH+WhyWQkd3JLjralp6kiDVsEcx2PPL+k/vRoYfUPEfZ9qhQHYO/hv3LmXM7Y5AtxcgJiEfHbRnUcVi96xj9HBImdR7tT1oLZmSQlVkHUDgjApA52a/oSNbPwBbHQu/JhceoFJmQcKx/9+yfmAoexRJpgxRwqy2LGToorktn4xethj/PxG/aWvZZYIKp5UckTaXIM5u8tLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB6779.namprd11.prod.outlook.com (2603:10b6:510:1ca::17)
- by SA3PR11MB8076.namprd11.prod.outlook.com (2603:10b6:806:2f0::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.26; Thu, 24 Aug
- 2023 01:41:13 +0000
-Received: from PH8PR11MB6779.namprd11.prod.outlook.com
- ([fe80::73c6:1231:e700:924]) by PH8PR11MB6779.namprd11.prod.outlook.com
- ([fe80::73c6:1231:e700:924%4]) with mapi id 15.20.6699.026; Thu, 24 Aug 2023
- 01:41:13 +0000
-Date:   Thu, 24 Aug 2023 09:41:02 +0800
-From:   Oliver Sang <oliver.sang@intel.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-CC:     <oe-lkp@lists.linux.dev>, <lkp@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <oliver.sang@intel.com>
-Subject: Re: [perf-tools-next:tmp.perf-tools-next] [perf dlfilter]
- f178a76b05: perf-sanity-tests.dlfilter_C_API.fail
-Message-ID: <ZOa1LnnwETWCQ6n5@xsang-OptiPlex-9020>
-References: <202308232146.94d82cb4-oliver.sang@intel.com>
- <78a87ed2-3aa8-95ef-28ae-19961f7c4acb@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <78a87ed2-3aa8-95ef-28ae-19961f7c4acb@intel.com>
-X-ClientProxiedBy: SI2PR04CA0004.apcprd04.prod.outlook.com
- (2603:1096:4:197::22) To PH8PR11MB6779.namprd11.prod.outlook.com
- (2603:10b6:510:1ca::17)
+   d="scan'208";a="713794457"
+Received: from dmi-pnp-i7.sh.intel.com ([10.239.159.155])
+  by orsmga006.jf.intel.com with ESMTP; 23 Aug 2023 18:58:16 -0700
+From:   Dapeng Mi <dapeng1.mi@linux.intel.com>
+To:     Sean Christopherson <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Like Xu <likexu@tencent.com>
+Cc:     kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhang Xiong <xiong.y.zhang@intel.com>,
+        Lv Zhiyuan <zhiyuan.lv@intel.com>,
+        Dapeng Mi <dapeng1.mi@intel.com>,
+        Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [Patch v3] KVM: x86/pmu: Manipulate FIXED_CTR_CTRL MSR with macros
+Date:   Thu, 24 Aug 2023 10:05:46 +0800
+Message-Id: <20230824020546.1108516-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB6779:EE_|SA3PR11MB8076:EE_
-X-MS-Office365-Filtering-Correlation-Id: a8b9fd84-8544-4e38-283b-08dba443332c
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: K6FdlkZxn2tC7lkbJuvwOfVs3wUFX/2uNCfAE8XhXBD4fPfwjuaxdXJ/42E58Y2Q67ZT76CiOyqBtXgGGFiRLkYcNA6lXcFeiCQkMKVy3og2rvKtRqUQ0EfcncLaghRr5IIJ5knp5GcWCR2iJVlqohMWgcPH/4k8m6qjHs/q/BeuyGGivDooX9noPw6g/dLSW0lx0ukiwUXIbqHqg7YVcdGX51bB6X6b53hWcgkW6bSK883vOyH/6ounr1fttyZWQDTRPjVpuIaeLFzePmZyJHaYS4tP7lr34sYnBF/sR2J/iEcCPYVgx5tPpxl5fOIxyT5EhRiOcbKDIeIPZ3m8C+2QVGBsGmXGP4cT7c0AHtojp4XbK28xwKOhUh8ibHudKYMFQnrbYOsYPagp9Imq94/sc9RGGlO4mghLvG0ptRpKsaQkIPrkwQ2D7erGGuitS2mVuo+p+ewTM+J2LVJFdIYcim9qBoDPOPurfSGWZ/mH9J+ITYyTjulL6Wj/cEI+UM8ie0bl23t5z/XtA+zf7jTSD7x28Dc9+ePDXsLtbQ25TjVxsR6ix6B34xD30yiTknltjIFhmOJQx9LIsRN0Tw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB6779.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(396003)(376002)(136003)(39860400002)(346002)(366004)(451199024)(186009)(1800799009)(33716001)(86362001)(82960400001)(44832011)(5660300002)(107886003)(26005)(8936002)(8676002)(4326008)(6862004)(2906002)(83380400001)(478600001)(966005)(6506007)(6486002)(66946007)(53546011)(54906003)(316002)(66476007)(6636002)(9686003)(6512007)(41300700001)(66556008)(6666004)(38100700002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?GyMPkH9DAfyvxioqOoJwOTDZK/IOv32cCPihTFEgpIynM/yDwNwqZiBR7pw4?=
- =?us-ascii?Q?ZeluwiLXPvIJc7tSx+mft1jVYSa40szJOEK7a55INKKixphG+YCQum2DdmSK?=
- =?us-ascii?Q?ftLfG1fxd6DYqXIbNwMNVn0WhHF0YuuR6EsJF29CLJY1ciOq7b96WFzFnKem?=
- =?us-ascii?Q?voSGmn53AntaloUdCfl5HW5JxtRSgA7WszFX57uDsK2oM+d9Gs1ele5ePixw?=
- =?us-ascii?Q?sUzrRFzDVowOIaCFn8rcm6vBUJQIHvnHbnonMjH8nwgnlr8hj7bTp/ThF7Mf?=
- =?us-ascii?Q?c0foNwpIGpBQB8VMuTQZEkaWHRtnZHIAhwbxZS+BWvsU58+sX3yYY7P7vcZs?=
- =?us-ascii?Q?kaZ7p7JP2DK2HUqmdMKxL4Hn0xoJB9R8jvLyPfxzk1TOo/BUaYP/8U83NwhL?=
- =?us-ascii?Q?nF9Oi4itJieCLBMb+Y7iGKnSWsMKaBQ03J/6miUfm69t/PXP7W/dvbCFjl75?=
- =?us-ascii?Q?JInQ9qG587yxEUOxSYXSu2BMHThO75uzySyOL5Zt/aBE+KPFkgvPFtLKqAB9?=
- =?us-ascii?Q?wPaLw+0yvwy8/3xK4CLHTfO+1Wrl8Su0XVF1yivHlLYuvx4wQkUU9chkU83z?=
- =?us-ascii?Q?LU/m7fO6IeYFEDNoJRSXbdBGEOPfdv85DJo86paxtxOCKU/3urtH/HBIwmmN?=
- =?us-ascii?Q?gZkhAVQCBaxuvkn0wXbFfg/c41rajaGjReIWhU25rlS9fzNnqR5LtIn9O4RR?=
- =?us-ascii?Q?QbbeIzrybRZCNY/CF1/soEnvyhbgKQnINln1M/BE8mBT/z1JXFh70jxwo2EY?=
- =?us-ascii?Q?lTXtvgJyItoT4I/XSHQ4PSIR/5syiMi5vFAPCBcbpkvEwCemRbqO4zeJ3Wpd?=
- =?us-ascii?Q?8ZLpxCiB0JCkKC5YXDE82pHOAxFg23KuHGIsyA/zx2pr4URzRbrcliDbDuxk?=
- =?us-ascii?Q?rA4iEH8zKFm7RITTit+R/mGIlEJD5pDsmbDx8xVJJszNnh+4fke4vo7p7amK?=
- =?us-ascii?Q?dXfc9GFsBcSPT3rL3DKF1xHD6TUh3T8r93fD8/teuu/Atj9scd5LLmwvHBZT?=
- =?us-ascii?Q?3VvW6zdC2aoI+OJlF6Rmow9wh4B8i8UeydZTov4rMOn2SxUFyngaTRxZJkrj?=
- =?us-ascii?Q?gIKoX8sMkNLR2dbPCbNEvxTAAdi1KhMnfss9clvBhsgoMcudoNZDxeE0L0Td?=
- =?us-ascii?Q?ShHJtQrGuMDLWvrScqWF/QK3VSNYHyjci/sx0T38Nv5MKMr/JcLP18GlTlPD?=
- =?us-ascii?Q?jKkOs0NEV/GzBvvyMxqV8CWXPERCwcG6A7EOFEpbiNgAnhu8Sq48LFLe9pCo?=
- =?us-ascii?Q?DMBjftTAxmc+xBlcXo7/5EcLHB1+h+ViJ0aZ7/QFjAu6FN2X292PrggJO8mN?=
- =?us-ascii?Q?BZ5FjLhhn5JyOfwspIYLGfChETCgYoYbAzHOnp/5J2NhZYfd0JCoEeYb46dj?=
- =?us-ascii?Q?ugjzVZszpeu6FvQ8nCgzMgsWnDgWHjqw833XqsGIjZ+qSZ82Y34PTAUrhxgk?=
- =?us-ascii?Q?XMbky+OdpSDJneCeDVUNxDEHDZnJ3ApNWJbz9m2USB4g41eU5c7lBSCDV2Fp?=
- =?us-ascii?Q?ERTgzLhZUE4zJpiYDPeeLLDYnMCm2eR/re1Pz1XCQ+OB/6xlfZi6ZpEBZ39A?=
- =?us-ascii?Q?z+Ay6hSCq6lUVeKrY6vEsawwl+0rB0uWbs4KvNIxj7UTmlsTR5YFYkRpZ28L?=
- =?us-ascii?Q?Bg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8b9fd84-8544-4e38-283b-08dba443332c
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB6779.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2023 01:41:13.4212
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XdSu8GiV2qY1hcBR4N1ViYl2j2BpCdPJbCl/GwmMEV6VCd5zlxg+Hy+ZJedjqDbHSvPVsbdxvHsI0u+DF0asqQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB8076
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-hi, Adrian Hunter,
+Magic numbers are used to manipulate the bit fields of
+FIXED_CTR_CTRL MSR. This is not read-friendly and use macros to replace
+these magic numbers to increase the readability.
 
-On Wed, Aug 23, 2023 at 06:37:49PM +0300, Adrian Hunter wrote:
-> On 23/08/23 17:57, kernel test robot wrote:
-> > 
-> > 
-> > Hello,
-> > 
-> > kernel test robot noticed "perf-sanity-tests.dlfilter_C_API.fail" on:
-> > 
-> > commit: f178a76b054fd046d212c3c67745146ff191a443 ("perf dlfilter: Add a test for resolve_address()")
-> > https://git.kernel.org/cgit/linux/kernel/git/perf/perf-tools-next.git tmp.perf-tools-next
-> > 
-> > [test failed on linux-next/master 28c736b0e92e11bfe2b9997688213dc43cb22182]
-> 
-> We sometimes make a test for an issue then fix it, so the new test fails,
-> but is fixed in a subsequent patch.  If you read the commit it says as much:
-> 
-> commit f178a76b054fd046d212c3c67745146ff191a443
-> Author: Adrian Hunter <adrian.hunter@intel.com>
-> Date:   Mon Jul 31 12:18:55 2023 +0300
-> 
->     perf dlfilter: Add a test for resolve_address()
->     
->     Extend the "dlfilter C API" test to test
->     perf_dlfilter_fns.resolve_address(). The test currently fails, but passes
->     after a subsequent patch.
->     
->     Reviewed-by: Ian Rogers <irogers@google.com>
->     Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
->     Cc: Jiri Olsa <jolsa@kernel.org>
->     Cc: Namhyung Kim <namhyung@kernel.org>
->     Link: https://lore.kernel.org/r/20230731091857.10681-1-adrian.hunter@intel.com
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> The fix is:
-> 
-> 42c6dd9d23019ff339d0aca80a444eb71087050e perf dlfilter: Initialize addr_location before passing it to thread__find_symbol_fb()
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+---
+ arch/x86/kvm/pmu.c           | 10 +++++-----
+ arch/x86/kvm/pmu.h           |  6 ++++--
+ arch/x86/kvm/vmx/pmu_intel.c | 11 ++++++++---
+ 3 files changed, 17 insertions(+), 10 deletions(-)
 
-thanks a lot for information!
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index edb89b51b383..fb4ef2da3e32 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -420,11 +420,11 @@ static void reprogram_counter(struct kvm_pmc *pmc)
+ 	if (pmc_is_fixed(pmc)) {
+ 		fixed_ctr_ctrl = fixed_ctrl_field(pmu->fixed_ctr_ctrl,
+ 						  pmc->idx - INTEL_PMC_IDX_FIXED);
+-		if (fixed_ctr_ctrl & 0x1)
++		if (fixed_ctr_ctrl & INTEL_FIXED_0_KERNEL)
+ 			eventsel |= ARCH_PERFMON_EVENTSEL_OS;
+-		if (fixed_ctr_ctrl & 0x2)
++		if (fixed_ctr_ctrl & INTEL_FIXED_0_USER)
+ 			eventsel |= ARCH_PERFMON_EVENTSEL_USR;
+-		if (fixed_ctr_ctrl & 0x8)
++		if (fixed_ctr_ctrl & INTEL_FIXED_0_ENABLE_PMI)
+ 			eventsel |= ARCH_PERFMON_EVENTSEL_INT;
+ 		new_config = (u64)fixed_ctr_ctrl;
+ 	}
+@@ -749,8 +749,8 @@ static inline bool cpl_is_matched(struct kvm_pmc *pmc)
+ 	} else {
+ 		config = fixed_ctrl_field(pmc_to_pmu(pmc)->fixed_ctr_ctrl,
+ 					  pmc->idx - INTEL_PMC_IDX_FIXED);
+-		select_os = config & 0x1;
+-		select_user = config & 0x2;
++		select_os = config & INTEL_FIXED_0_KERNEL;
++		select_user = config & INTEL_FIXED_0_USER;
+ 	}
+ 
+ 	return (static_call(kvm_x86_get_cpl)(pmc->vcpu) == 0) ? select_os : select_user;
+diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+index 7d9ba301c090..ffda2ecc3a22 100644
+--- a/arch/x86/kvm/pmu.h
++++ b/arch/x86/kvm/pmu.h
+@@ -12,7 +12,8 @@
+ 					  MSR_IA32_MISC_ENABLE_BTS_UNAVAIL)
+ 
+ /* retrieve the 4 bits for EN and PMI out of IA32_FIXED_CTR_CTRL */
+-#define fixed_ctrl_field(ctrl_reg, idx) (((ctrl_reg) >> ((idx)*4)) & 0xf)
++#define fixed_ctrl_field(ctrl_reg, idx) \
++	(((ctrl_reg) >> ((idx) * INTEL_FIXED_BITS_STRIDE)) & INTEL_FIXED_BITS_MASK)
+ 
+ #define VMWARE_BACKDOOR_PMC_HOST_TSC		0x10000
+ #define VMWARE_BACKDOOR_PMC_REAL_TIME		0x10001
+@@ -165,7 +166,8 @@ static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
+ 
+ 	if (pmc_is_fixed(pmc))
+ 		return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
+-					pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
++					pmc->idx - INTEL_PMC_IDX_FIXED) &
++					(INTEL_FIXED_0_KERNEL | INTEL_FIXED_0_USER);
+ 
+ 	return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
+ }
+diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+index f2efa0bf7ae8..b0ac55891cb7 100644
+--- a/arch/x86/kvm/vmx/pmu_intel.c
++++ b/arch/x86/kvm/vmx/pmu_intel.c
+@@ -548,8 +548,13 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ 		setup_fixed_pmc_eventsel(pmu);
+ 	}
+ 
+-	for (i = 0; i < pmu->nr_arch_fixed_counters; i++)
+-		pmu->fixed_ctr_ctrl_mask &= ~(0xbull << (i * 4));
++	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
++		pmu->fixed_ctr_ctrl_mask &=
++			 ~intel_fixed_bits_by_idx(i,
++						  INTEL_FIXED_0_KERNEL |
++						  INTEL_FIXED_0_USER |
++						  INTEL_FIXED_0_ENABLE_PMI);
++	}
+ 	counter_mask = ~(((1ull << pmu->nr_arch_gp_counters) - 1) |
+ 		(((1ull << pmu->nr_arch_fixed_counters) - 1) << INTEL_PMC_IDX_FIXED));
+ 	pmu->global_ctrl_mask = counter_mask;
+@@ -595,7 +600,7 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ 			pmu->reserved_bits &= ~ICL_EVENTSEL_ADAPTIVE;
+ 			for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
+ 				pmu->fixed_ctr_ctrl_mask &=
+-					~(1ULL << (INTEL_PMC_IDX_FIXED + i * 4));
++					~intel_fixed_bits_by_idx(i, ICL_FIXED_0_ADAPTIVE);
+ 			}
+ 			pmu->pebs_data_cfg_mask = ~0xff00000full;
+ 		} else {
 
-as above mentioned, when this auto-bisect done, it confirmed the issue still
-exists linux-next/master:
-[test failed on linux-next/master 28c736b0e92e11bfe2b9997688213dc43cb22182]
-which includes 42c6dd9d23019ff339d0aca80a444eb71087050e
+base-commit: fff2e47e6c3b8050ca26656693caa857e3a8b740
+-- 
+2.34.1
 
-we will test again on latest linux-next/master:
-e3f80d3eae76c (tag: next-20230823, linux-next/master, broonie-ci/next-master) Add linux-next specific files for 20230823
-and 42c6dd9d23019ff339d0aca80a444eb71087050e
-
-Thanks
-
-> > 
-> > in testcase: perf-sanity-tests
-> > version: perf-x86_64-00c7b5f4ddc5-1_20230402
-> > with following parameters:
-> > 
-> > 	perf_compiler: gcc
-> > 
-> > 
-> > 
-> > compiler: gcc-12
-> > test machine: 224 threads 2 sockets Intel(R) Xeon(R) Platinum 8480+ (Sapphire Rapids) with 256G memory
-> > 
-> > (please refer to attached dmesg/kmsg for entire log/backtrace)
-> > 
-> > 
-> > 
-> > 
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <oliver.sang@intel.com>
-> > | Closes: https://lore.kernel.org/oe-lkp/202308232146.94d82cb4-oliver.sang@intel.com
-> > 
-> > 
-> > 
-> >  66: Convert perf time to TSC                                        :
-> >  66.1: TSC support                                                   : Ok
-> >  66.2: Perf time to TSC                                              : Ok
-> >  67: dlfilter C API                                                  : FAILED!  <---
-> >  68: Sigtrap                                                         : Ok
-> > 
-> > 
-> > 
-> > The kernel config and materials to reproduce are available at:
-> > https://download.01.org/0day-ci/archive/20230823/202308232146.94d82cb4-oliver.sang@intel.com
-> > 
-> > 
-> > 
-> 
