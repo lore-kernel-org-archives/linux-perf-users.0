@@ -2,66 +2,65 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A89C6FA8F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 18:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB7CC83003
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 18:33:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242945AbjHXSCI (ORCPT
+        id S243045AbjHXSch (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 24 Aug 2023 14:02:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45576 "EHLO
+        Thu, 24 Aug 2023 14:32:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242962AbjHXSBw (ORCPT
+        with ESMTP id S243107AbjHXSca (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 24 Aug 2023 14:01:52 -0400
-Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D41131BE6
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 11:01:45 -0700 (PDT)
-Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-4036bd4fff1so39801cf.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 11:01:45 -0700 (PDT)
+        Thu, 24 Aug 2023 14:32:30 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE8CA1BF1
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 11:32:21 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d749c6d767dso154442276.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 11:32:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692900105; x=1693504905; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OIzsd1z1v5q0zT+t3tj7Zr/vc4gw5mWKfXzVBU6LAvY=;
-        b=l1ILoTfr+PR8gDX8IMy9mclysop/b4uO6h84xlQ6TC5iDBSbIZMjMLx5gEt0L2J6Df
-         lIIfzOFyl7x2e3pFCR3ukGtC9iBzIdzF9uCDOwC2m/tX6X8+NUZ8HsewcvMJRCiyXIDB
-         GqOwLzT2XPwou4ijIS4jJdBeclxwaY47OQUZr7xveHGz9UWqssieRIw6DXqaLlOxaKpK
-         8YVQt/qyn3FI8ulR8mt+hTMGuLeCLRByEHGHvvlzWZZW5gcC7JMlyv0zbCqnB/zLQrZw
-         9vRcOHpJdUGODFmMnXcdB4x8rVmiObGob4gu33P94pEXQ7mWlQ6vxvRkG3TfpeZQiD3I
-         hhug==
+        d=google.com; s=20221208; t=1692901941; x=1693506741;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MNeeSRjShfUBxK20UmYelF8xLtXN72q85W2K9O6AewU=;
+        b=6eeGKylvsVaRxqcWbxgaNrUL6kMoeIfCaARcdvzuxV1Qk1Nn5wH02JO8+6/0T4pV1I
+         WZmUizQ6I7z2UHZ1tEsl8/bmQ/3t26lY0YiMcdEUVv/YeXJ3T5rnY+ZSLgx30PsG0/o/
+         7fH1Z85JmLBIX+EOYlLRcAzB2CkGJhzgMadtQVB/p5Mn2yZ3zVRST+Eq42Fbp8jRT2Zd
+         XCGR9jx6OKM0EAIC0lPTeCjqT/M1FsSHOZaz/JFRbqlS3OkgzH4vWqw+QL1XXHBmKSkV
+         uLv9sMAKA9GD09u63qp4hIjQOv4ZRu31x5nmzCaDkhRqYrJgE0USb0fFiXEWT0sj0nb6
+         0vEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692900105; x=1693504905;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OIzsd1z1v5q0zT+t3tj7Zr/vc4gw5mWKfXzVBU6LAvY=;
-        b=L8pLDRCjYTVWxqrb9J5GLJxrf36W4QZIfbfzM93GmxgrJU51afU3RDPW14kv78Wt8k
-         a1lgjKr7ovhBO+W5PLsGqX+LzQYKY7IfHYFoaoh9MtAJLZ+eV4xJv9fNNbpwW44zRU6S
-         uXrbJGg+6r1gu8ubnrIClRZH5yM+MZ6ymo99iMHN8DWXv02Oaqmx2tRocWTaFDeyYVGs
-         /cFBtg+WdLmrPZzht9rI3uv10Mk0OVS8kKJAMK97g68JIcXJei1N6o3W3Shewj7rq4Xq
-         W9NtehGBCKn1WUjTqrvhunMRvnAetBh9chRMCbq9l634DU9pzlh1IvYoMWCRdux49zLY
-         KTYQ==
-X-Gm-Message-State: AOJu0Yz7XyjQSIqR2HKIq1XA6O8lplXZ2JkFKy/wf5ltEXbHehvv6Bti
-        9CykEt4a4cC+w682Cw4mnrsYHoRtRvyAurPxp5+tAg==
-X-Google-Smtp-Source: AGHT+IFPU/hypYSgqHQIktrv1Xn7iaQwf2jWMDyKNDI1d9lVCy0v3wmU+EjCvPzxMr0Sd7UywtPTZqGWP4YHeKUemiU=
-X-Received: by 2002:ac8:5a83:0:b0:3ef:5f97:258f with SMTP id
- c3-20020ac85a83000000b003ef5f97258fmr31883qtc.16.1692900104609; Thu, 24 Aug
- 2023 11:01:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230824041330.266337-1-irogers@google.com> <ZOduqlhnP6+HNSUl@kernel.org>
-In-Reply-To: <ZOduqlhnP6+HNSUl@kernel.org>
+        d=1e100.net; s=20221208; t=1692901941; x=1693506741;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MNeeSRjShfUBxK20UmYelF8xLtXN72q85W2K9O6AewU=;
+        b=eREkzIJz33PyVcigluM7b80WwYS9N7xyjqu55glUzbWDdxq5uBp6O5B0YdLPbSjMZz
+         afIMi5uMViibCiLPTfrGKpamPv9kyoL5Q43zdiT5uazsG5ZipX07x3MtROlZLsdkBkh5
+         ymSLQlynDa6SRj7NtbuxiGjGO7oixSlJ/OhyDrOiJzWifFqtyNk7tKa5gxxLCRkxbVQz
+         /AbOYsHJ3QBIIqQ+qdD15ui3vrJxCkFuZAo/wkuafVPXwgX8ERXQhZ4nS5nyU7KCiHGr
+         o9QAmVMKAvGMtUbZ/f8U/BEuzFBRG6tJofS1nI64IZiMwdMfPQtwks/6DnU0y8E9oU5+
+         2smQ==
+X-Gm-Message-State: AOJu0YyDXwdPapA31hzqekZ1cl2uZPrf1Bt8UMotjdMq2Tl3nD1LuM3V
+        ABozgM2ykhGUWuuwR0NgTb+UQbPwXpn8
+X-Google-Smtp-Source: AGHT+IEHDSXwTvSkKB3beLc6wwOSaR1G9iaM3BAUwl25BtxYOXui5MNMrOMvZkCSI2+nprUfgTJaaCdXNoGt
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:fbb9:d9e7:7405:2651])
+ (user=irogers job=sendgmr) by 2002:a25:bc8a:0:b0:d78:2f4c:7df with SMTP id
+ e10-20020a25bc8a000000b00d782f4c07dfmr315ybk.12.1692901941141; Thu, 24 Aug
+ 2023 11:32:21 -0700 (PDT)
+Date:   Thu, 24 Aug 2023 11:32:12 -0700
+Message-Id: <20230824183212.374787-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.42.0.rc2.253.gd59a3bf2b4-goog
+Subject: [PATCH v3] perf jevents: Don't append Unit to desc
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 24 Aug 2023 11:01:32 -0700
-Message-ID: <CAP-5=fXjJzHX9AsnAn-KHG03-D9RBCFdUsaybsAbpefHwcXagg@mail.gmail.com>
-Subject: Re: [PATCH v2 00/18] Lazily load PMU data
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         James Clark <james.clark@arm.com>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -73,187 +72,170 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Gaosheng Cui <cuigaosheng1@huawei.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Aug 24, 2023 at 7:52=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Wed, Aug 23, 2023 at 09:13:12PM -0700, Ian Rogers escreveu:
-> > Lazily load PMU data both from sysfs and json files. Reorganize
-> > json data to be more PMU oriented to facilitate this, for
-> > example, json data is now sorted into arrays for their PMU.
-> >
-> > In refactoring the code some changes were made to get rid of maximum
-> > encoding sizes for events (256 bytes), with input files being directly
-> > passed to the lex generated code. There is also a small event parse
-> > error message improvement.
-> >
-> > Some results from an Intel tigerlake laptop running Debian:
-> >
-> > Binary size reduction of 5.3% or 552,864 bytes because the PMU
-> > name no longer appears in the string or desc field.
-> >
-> > stat -e cpu/cycles/ minor faults reduced from 1733 to 1667, open calls =
-reduced
-> > from 171 to 94.
-> >
-> > stat default minor faults reduced from 1805 to 1717, open calls reduced
-> > from 654 to 343.
-> >
-> > Average PMU scanning reduced from 4720.641usec to 2927.293usec.
-> > Average core PMU scanning reduced from 1004.658usec to 232.668usec
-> > (4.3x faster).
-> >
-> > v2: Add error path for failing strdup when allocating a format,
-> >     suggested by Arnaldo. Rebased on top of tmp.perf-tools-next
-> >     removing 8 patches. Added "perf jevents: Don't append Unit to
-> >     desc" to save yet more encoding json event space.
->
-> So this is failing here:
->
-> [acme@quaco ~]$ perf test 10
->  10: PMU events                                 :
->  10.1: PMU event table sanity                           : FAILED!
->  10.2: PMU event map aliases                            : FAILED!
->  10.3: Parsing of PMU event table metrics               : Ok
->  10.4: Parsing of PMU event table metrics with fake PMUs: Ok
->  10.5: Parsing of metric thresholds with fake PMUs      : Ok
-> [acme@quaco ~]$
->
-> [root@quaco ~]# grep -m1 "model name" /proc/cpuinfo
-> model name      : Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz
-> [root@quaco ~]#
->
->
-> [root@quaco ~]# perf test -vv -F 10 |& head -40
->  10: PMU events                                                      :
->  10.1: PMU event table sanity                                        :
-> --- start ---
-> testing event table bp_l1_btb_correct: pass
-> testing event table bp_l2_btb_correct: pass
-> testing event table dispatch_blocked.any: pass
-> testing event table eist_trans: pass
-> testing event table l3_cache_rd: pass
-> testing event table segment_reg_loads.any: pass
-> testing event e1 uncore_hisi_ddrc.flux_wcmd: mismatched desc, DDRC write =
-commands vs DDRC write commands. Unit: hisi_sccl,ddrc
->
->
-> Strange:
->
->         if (!is_same(e1->desc, e2->desc)) {
->                 pr_debug2("testing event e1 %s: mismatched desc, %s vs %s=
-\n",
->                           e1->name, e1->desc, e2->desc);
->                 return -1;
->         }
->
-> Adding "" around those descs:
->
-> testing event e1 uncore_hisi_ddrc.flux_wcmd: mismatched desc, "DDRC write=
- commands" vs "DDRC write commands. Unit: hisi_sccl,ddrc"
->
-> I see, its the last patch, removing it the tests passes, please take a
-> look at tmp.perf-tools-next
->
-> - Arnaldo
+Unit with the PMU name is appended to desc in jevents.py, but on
+hybrid platforms it causes the desc to differ from the regular
+non-hybrid system with a PMU of 'cpu'. Having differing descs means
+the events don't deduplicate. To make the perf list output not differ,
+append the Unit on again in the perf list printing code.
 
-Thanks, I'll address the issue (hardcoded assumption on jevents.py
-output) and resend the patch.
+On x86 reduces the binary size by 409,600 bytes or about 4%. Update
+pmu-events test expectations to match the differently generated
+pmu-events.c code.
 
-Ian
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-list.c        | 13 ++++++++++++-
+ tools/perf/pmu-events/jevents.py |  7 -------
+ tools/perf/tests/pmu-events.c    | 22 +++++++++++-----------
+ 3 files changed, 23 insertions(+), 19 deletions(-)
 
-> ---- end ----
-> PMU events subtest 1: FAILED!
->  10.2: PMU event map aliases                                         :
-> --- start ---
-> Using CPUID GenuineIntel-6-8E-A
-> testing aliases core PMU cpu: matched event bp_l1_btb_correct
-> testing aliases core PMU cpu: matched event bp_l2_btb_correct
-> testing aliases core PMU cpu: matched event segment_reg_loads.any
-> testing aliases core PMU cpu: matched event dispatch_blocked.any
-> testing aliases core PMU cpu: matched event eist_trans
-> testing aliases core PMU cpu: matched event l3_cache_rd
-> testing core PMU cpu aliases: pass
-> testing aliases PMU hisi_sccl1_ddrc2: mismatched desc, DDRC write command=
-s vs DDRC write commands. Unit: hisi_sccl,ddrc
-> testing aliases uncore PMU hisi_sccl1_ddrc2: could not match alias uncore=
-_hisi_ddrc.flux_wcmd
-> ---- end ----
-> PMU events subtest 2: FAILED!
->  10.3: Parsing of PMU event table metrics                            :
-> --- start ---
-> Found metric 'CPI'
-> metric expr 1 / IPC for CPI
-> parsing metric: 1 / IPC
-> metric expr inst_retired.any / cpu_clk_unhalted.thread for IPC
-> parsing metric: inst_retired.any / cpu_clk_unhalted.thread
-> found event inst_retired.any
-> found event cpu_clk_unhalted.thread
-> Parsing metric events '{inst_retired.any/metric-id=3Dinst_retired.any/,cp=
-u_clk_unhalted.thread/metric-id=3Dcpu_clk_unhalted.thread/}:W'
-> Attempting to add event pmu 'inst_retired.any' with '(null),' that may re=
-sult in non-fatal errors
-> After aliases, add event pmu 'inst_retired.any' with '(null),' that may r=
-esult in non-fatal errors
-> Attempting to add event pmu 'cpu_clk_unhalted.thread' with '(null),' that=
- may result in non-fatal errors
-> After aliases, add event pmu 'cpu_clk_unhalted.thread' with '(null),' tha=
-t may result in non-fatal errors
-> [root@quaco ~]#
->
-> Trying on a AMD 5950x:
->
-> [root@five ~]# perf test -F -vv 10 |& head -40
->  10: PMU events                                                      :
->  10.1: PMU event table sanity                                        :
-> --- start ---
-> testing event table bp_l1_btb_correct: pass
-> testing event table bp_l2_btb_correct: pass
-> testing event table dispatch_blocked.any: pass
-> testing event table eist_trans: pass
-> testing event table l3_cache_rd: pass
-> testing event table segment_reg_loads.any: pass
-> testing event e1 uncore_hisi_ddrc.flux_wcmd: mismatched desc, DDRC write =
-commands vs DDRC write commands. Unit: hisi_sccl,ddrc
-> ---- end ----
-> PMU events subtest 1: FAILED!
->  10.2: PMU event map aliases                                         :
-> --- start ---
-> Using CPUID AuthenticAMD-25-21-0
-> testing aliases core PMU cpu: matched event bp_l1_btb_correct
-> testing aliases core PMU cpu: matched event bp_l2_btb_correct
-> testing aliases core PMU cpu: matched event segment_reg_loads.any
-> testing aliases core PMU cpu: matched event dispatch_blocked.any
-> testing aliases core PMU cpu: matched event eist_trans
-> testing aliases core PMU cpu: matched event l3_cache_rd
-> testing core PMU cpu aliases: pass
-> testing aliases PMU hisi_sccl1_ddrc2: mismatched desc, DDRC write command=
-s vs DDRC write commands. Unit: hisi_sccl,ddrc
-> testing aliases uncore PMU hisi_sccl1_ddrc2: could not match alias uncore=
-_hisi_ddrc.flux_wcmd
-> ---- end ----
-> PMU events subtest 2: FAILED!
->  10.3: Parsing of PMU event table metrics                            :
-> --- start ---
-> Found metric 'CPI'
-> metric expr 1 / IPC for CPI
-> parsing metric: 1 / IPC
-> metric expr inst_retired.any / cpu_clk_unhalted.thread for IPC
-> parsing metric: inst_retired.any / cpu_clk_unhalted.thread
-> found event inst_retired.any
-> found event cpu_clk_unhalted.thread
-> Parsing metric events '{inst_retired.any/metric-id=3Dinst_retired.any/,cp=
-u_clk_unhalted.thread/metric-id=3Dcpu_clk_unhalted.thread/}:W'
-> Attempting to add event pmu 'inst_retired.any' with '(null),' that may re=
-sult in non-fatal errors
-> After aliases, add event pmu 'inst_retired.any' with '(null),' that may r=
-esult in non-fatal errors
-> Attempting to add event pmu 'cpu_clk_unhalted.thread' with '(null),' that=
- may result in non-fatal errors
-> After aliases, add event pmu 'cpu_clk_unhalted.thread' with '(null),' tha=
-t may result in non-fatal errors
-> [root@five ~]#
+diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+index 7fec2cca759f..d8b9f606e734 100644
+--- a/tools/perf/builtin-list.c
++++ b/tools/perf/builtin-list.c
+@@ -145,9 +145,20 @@ static void default_print_event(void *ps, const char *pmu_name, const char *topi
+ 		putchar('\n');
+ 
+ 	if (desc && print_state->desc) {
++		char *desc_with_unit = NULL;
++		int desc_len = -1;
++
++		if (pmu_name && strcmp(pmu_name, "cpu")) {
++			desc_len = strlen(desc);
++			desc_len = asprintf(&desc_with_unit,
++					    desc[desc_len - 1] != '.'
++					      ? "%s. Unit: %s" : "%s Unit: %s",
++					    desc, pmu_name);
++		}
+ 		printf("%*s", 8, "[");
+-		wordwrap(desc, 8, pager_get_columns(), 0);
++		wordwrap(desc_len > 0 ? desc_with_unit : desc, 8, pager_get_columns(), 0);
+ 		printf("]\n");
++		free(desc_with_unit);
+ 	}
+ 	long_desc = long_desc ?: desc;
+ 	if (long_desc && print_state->long_desc) {
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index e5bce57f5688..712f80d7d071 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -357,13 +357,6 @@ class JsonEvent:
+       self.desc += extra_desc
+     if self.long_desc and extra_desc:
+       self.long_desc += extra_desc
+-    if self.pmu and self.pmu != 'cpu':
+-      if not self.desc:
+-        self.desc = 'Unit: ' + self.pmu
+-      else:
+-        if not self.desc.endswith('. '):
+-          self.desc += '. '
+-      self.desc += 'Unit: ' + self.pmu
+     if arch_std:
+       if arch_std.lower() in _arch_std_events:
+         event = _arch_std_events[arch_std.lower()].event
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index 3dc1ebee4d9f..28c8789c4305 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -129,7 +129,7 @@ static const struct perf_pmu_test_event uncore_hisi_ddrc_flux_wcmd = {
+ 	.event = {
+ 		.name = "uncore_hisi_ddrc.flux_wcmd",
+ 		.event = "event=0x2",
+-		.desc = "DDRC write commands. Unit: hisi_sccl,ddrc",
++		.desc = "DDRC write commands",
+ 		.topic = "uncore",
+ 		.long_desc = "DDRC write commands",
+ 		.pmu = "hisi_sccl,ddrc",
+@@ -143,7 +143,7 @@ static const struct perf_pmu_test_event unc_cbo_xsnp_response_miss_eviction = {
+ 	.event = {
+ 		.name = "unc_cbo_xsnp_response.miss_eviction",
+ 		.event = "event=0x22,umask=0x81",
+-		.desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core. Unit: uncore_cbox",
++		.desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core",
+ 		.topic = "uncore",
+ 		.long_desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core",
+ 		.pmu = "uncore_cbox",
+@@ -157,7 +157,7 @@ static const struct perf_pmu_test_event uncore_hyphen = {
+ 	.event = {
+ 		.name = "event-hyphen",
+ 		.event = "event=0xe0,umask=0x00",
+-		.desc = "UNC_CBO_HYPHEN. Unit: uncore_cbox",
++		.desc = "UNC_CBO_HYPHEN",
+ 		.topic = "uncore",
+ 		.long_desc = "UNC_CBO_HYPHEN",
+ 		.pmu = "uncore_cbox",
+@@ -171,7 +171,7 @@ static const struct perf_pmu_test_event uncore_two_hyph = {
+ 	.event = {
+ 		.name = "event-two-hyph",
+ 		.event = "event=0xc0,umask=0x00",
+-		.desc = "UNC_CBO_TWO_HYPH. Unit: uncore_cbox",
++		.desc = "UNC_CBO_TWO_HYPH",
+ 		.topic = "uncore",
+ 		.long_desc = "UNC_CBO_TWO_HYPH",
+ 		.pmu = "uncore_cbox",
+@@ -185,7 +185,7 @@ static const struct perf_pmu_test_event uncore_hisi_l3c_rd_hit_cpipe = {
+ 	.event = {
+ 		.name = "uncore_hisi_l3c.rd_hit_cpipe",
+ 		.event = "event=0x7",
+-		.desc = "Total read hits. Unit: hisi_sccl,l3c",
++		.desc = "Total read hits",
+ 		.topic = "uncore",
+ 		.long_desc = "Total read hits",
+ 		.pmu = "hisi_sccl,l3c",
+@@ -199,7 +199,7 @@ static const struct perf_pmu_test_event uncore_imc_free_running_cache_miss = {
+ 	.event = {
+ 		.name = "uncore_imc_free_running.cache_miss",
+ 		.event = "event=0x12",
+-		.desc = "Total cache misses. Unit: uncore_imc_free_running",
++		.desc = "Total cache misses",
+ 		.topic = "uncore",
+ 		.long_desc = "Total cache misses",
+ 		.pmu = "uncore_imc_free_running",
+@@ -213,7 +213,7 @@ static const struct perf_pmu_test_event uncore_imc_cache_hits = {
+ 	.event = {
+ 		.name = "uncore_imc.cache_hits",
+ 		.event = "event=0x34",
+-		.desc = "Total cache hits. Unit: uncore_imc",
++		.desc = "Total cache hits",
+ 		.topic = "uncore",
+ 		.long_desc = "Total cache hits",
+ 		.pmu = "uncore_imc",
+@@ -238,13 +238,13 @@ static const struct perf_pmu_test_event sys_ddr_pmu_write_cycles = {
+ 	.event = {
+ 		.name = "sys_ddr_pmu.write_cycles",
+ 		.event = "event=0x2b",
+-		.desc = "ddr write-cycles event. Unit: uncore_sys_ddr_pmu",
++		.desc = "ddr write-cycles event",
+ 		.topic = "uncore",
+ 		.pmu = "uncore_sys_ddr_pmu",
+ 		.compat = "v8",
+ 	},
+ 	.alias_str = "event=0x2b",
+-	.alias_long_desc = "ddr write-cycles event. Unit: uncore_sys_ddr_pmu",
++	.alias_long_desc = "ddr write-cycles event",
+ 	.matching_pmu = "uncore_sys_ddr_pmu",
+ };
+ 
+@@ -252,13 +252,13 @@ static const struct perf_pmu_test_event sys_ccn_pmu_read_cycles = {
+ 	.event = {
+ 		.name = "sys_ccn_pmu.read_cycles",
+ 		.event = "config=0x2c",
+-		.desc = "ccn read-cycles event. Unit: uncore_sys_ccn_pmu",
++		.desc = "ccn read-cycles event",
+ 		.topic = "uncore",
+ 		.pmu = "uncore_sys_ccn_pmu",
+ 		.compat = "0x01",
+ 	},
+ 	.alias_str = "config=0x2c",
+-	.alias_long_desc = "ccn read-cycles event. Unit: uncore_sys_ccn_pmu",
++	.alias_long_desc = "ccn read-cycles event",
+ 	.matching_pmu = "uncore_sys_ccn_pmu",
+ };
+ 
+-- 
+2.42.0.rc2.253.gd59a3bf2b4-goog
+
