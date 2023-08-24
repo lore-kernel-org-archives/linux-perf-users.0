@@ -2,165 +2,116 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DCEC71145
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 04:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBDDC6FA8F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 13:34:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238983AbjHXEqE (ORCPT
+        id S229893AbjHXNeJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 24 Aug 2023 00:46:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45604 "EHLO
+        Thu, 24 Aug 2023 09:34:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235637AbjHXEph (ORCPT
+        with ESMTP id S237216AbjHXNdj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 24 Aug 2023 00:45:37 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9845310E4;
-        Wed, 23 Aug 2023 21:45:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692852334; x=1724388334;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=u5rfwar6xDQhY6j+a05ycw0TEynTIX0ltSNr1oZYiI4=;
-  b=lgAssptPNRXliEUNNlBj0HI8H1DH6AEgAO1nzPdzOssdsid9t0IahSE8
-   cPu5gQ7PgPXtW6hvt+0KPr2DOh9wosxA1AYGnfgAK1Uhp+L1yRB2vPdjc
-   vhwh/wJELRZuh/PzBlWrNm2IuzxBCdXYhuqXXDgDYRPIxgXrdeXU5D8uM
-   FypSWw+ZwjP58aDWK/9X5hh0r9a6RMByoYk629g6xKQCTJP3IciwWrKKD
-   eX+z/inLFdkJpABJXY3szl12Ewsww+rIMUHVFj+o1/MFFnaek+VpSkd2V
-   XeIimRbgOlSjKJM1s3LQLFOnOFD+DB4F8yfRUxS99Zhf6b6ZQaTzd1/CI
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="440691013"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="440691013"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 21:45:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="860562597"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="860562597"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.212.187])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 21:45:29 -0700
-Message-ID: <8685878c-8de0-88b9-4434-f823620f6abf@intel.com>
-Date:   Thu, 24 Aug 2023 07:45:25 +0300
+        Thu, 24 Aug 2023 09:33:39 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC77519B3
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 06:33:13 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6183B6573D
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 13:33:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FD63C433C8;
+        Thu, 24 Aug 2023 13:33:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692883992;
+        bh=FP1acNfQmTZ7NjY1vwzgDhNQP+i8/znogMYIqAux0QI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=N28J/j+qPJ6Zpb5huvQ02SCdVbPVk3KPQByBmN9CpkwVMC3pswzrX1jtmAiWw0OEB
+         +uH1FN3d19tET3mZ/EcaJh4GTnKjz5Bw75Moog168RUXsz+cORtEi6lQZTpdmoConE
+         O9FondeKCoPaghibjNiu87RCElctMbqIhA7C1D8r4l1cgvIZWEzZujefyjQQYUsYG2
+         E853ew7wUIBp1E797xfQ1bU+UIhiGX6T6UaAtm+0FsdBHk3E95w/363xyOQFV2K0+A
+         ptWOCEdTHQHRs9bX7BQYJEoswFxO8r5Hi8rONN+a1hPdDn/enHXlGetBvaviVzvd/j
+         dtaLLht87KFVA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 069DF40722; Thu, 24 Aug 2023 10:33:09 -0300 (-03)
+Date:   Thu, 24 Aug 2023 10:33:09 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Yanteng Si <siyanteng@loongson.cn>
+Cc:     mingo@redhat.com, peterz@infradead.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        chenhuacai@kernel.org, linux-perf-users@vger.kernel.org,
+        loongson-kernel@lists.loongnix.cn, loongarch@lists.linux.dev
+Subject: Re: [PATCH v1 1/2] perf/trace: Fix mmap_flags for archs use generic
+ mman.h
+Message-ID: <ZOdcFUgZ7W6QEjRM@kernel.org>
+References: <cover.1692694595.git.siyanteng@loongson.cn>
+ <03ddc1c0e01518df63aac88e561cd0ec3c1e0028.1692694595.git.siyanteng@loongson.cn>
+ <ZOT4Tuc6JGrbDqFW@kernel.org>
+ <8ead439a-63aa-434e-9d1e-3b1b05b6347b@loongson.cn>
+ <ZOXvUbQL67bdWfNz@kernel.org>
+ <51632871-2e84-4c53-b4c0-647aea5c49dc@loongson.cn>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.14.0
-Subject: Re: [perf-tools-next:tmp.perf-tools-next] [perf dlfilter] f178a76b05:
- perf-sanity-tests.dlfilter_C_API.fail
-To:     Oliver Sang <oliver.sang@intel.com>
-Cc:     oe-lkp@lists.linux.dev, lkp@intel.com,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <202308232146.94d82cb4-oliver.sang@intel.com>
- <78a87ed2-3aa8-95ef-28ae-19961f7c4acb@intel.com>
- <ZOa1LnnwETWCQ6n5@xsang-OptiPlex-9020>
-Content-Language: en-US
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <ZOa1LnnwETWCQ6n5@xsang-OptiPlex-9020>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <51632871-2e84-4c53-b4c0-647aea5c49dc@loongson.cn>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 24/08/23 04:41, Oliver Sang wrote:
-> hi, Adrian Hunter,
+Em Thu, Aug 24, 2023 at 10:22:57AM +0800, Yanteng Si escreveu:
 > 
-> On Wed, Aug 23, 2023 at 06:37:49PM +0300, Adrian Hunter wrote:
->> On 23/08/23 17:57, kernel test robot wrote:
->>>
->>>
->>> Hello,
->>>
->>> kernel test robot noticed "perf-sanity-tests.dlfilter_C_API.fail" on:
->>>
->>> commit: f178a76b054fd046d212c3c67745146ff191a443 ("perf dlfilter: Add a test for resolve_address()")
->>> https://git.kernel.org/cgit/linux/kernel/git/perf/perf-tools-next.git tmp.perf-tools-next
->>>
->>> [test failed on linux-next/master 28c736b0e92e11bfe2b9997688213dc43cb22182]
->>
->> We sometimes make a test for an issue then fix it, so the new test fails,
->> but is fixed in a subsequent patch.  If you read the commit it says as much:
->>
->> commit f178a76b054fd046d212c3c67745146ff191a443
->> Author: Adrian Hunter <adrian.hunter@intel.com>
->> Date:   Mon Jul 31 12:18:55 2023 +0300
->>
->>     perf dlfilter: Add a test for resolve_address()
->>     
->>     Extend the "dlfilter C API" test to test
->>     perf_dlfilter_fns.resolve_address(). The test currently fails, but passes
->>     after a subsequent patch.
->>     
->>     Reviewed-by: Ian Rogers <irogers@google.com>
->>     Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
->>     Cc: Jiri Olsa <jolsa@kernel.org>
->>     Cc: Namhyung Kim <namhyung@kernel.org>
->>     Link: https://lore.kernel.org/r/20230731091857.10681-1-adrian.hunter@intel.com
->>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
->>
->> The fix is:
->>
->> 42c6dd9d23019ff339d0aca80a444eb71087050e perf dlfilter: Initialize addr_location before passing it to thread__find_symbol_fb()
+> 在 2023/8/23 19:36, Arnaldo Carvalho de Melo 写道:
+> > Em Wed, Aug 23, 2023 at 03:11:01PM +0800, Yanteng Si escreveu:
+> > > 在 2023/8/23 02:02, Arnaldo Carvalho de Melo 写道:
+> > > > Em Tue, Aug 22, 2023 at 05:32:06PM +0800, Yanteng Si escreveu:
+> > > > > Silence this warning:
+> > > > > 
+> > > > > grep: /root/linux-next/tools/arch/xxxxx/include/uapi/asm//mman.h:
+> > > > > No such file or directory
+> > > > > Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+> > > > > ---
+> > > > >    tools/perf/trace/beauty/mmap_flags.sh | 2 +-
+> > > > >    1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/tools/perf/trace/beauty/mmap_flags.sh b/tools/perf/trace/beauty/mmap_flags.sh
+> > > > > index 3022597c8c17..d035b29fc5ec 100755
+> > > > > --- a/tools/perf/trace/beauty/mmap_flags.sh
+> > > > > +++ b/tools/perf/trace/beauty/mmap_flags.sh
+> > > > > @@ -19,7 +19,7 @@ arch_mman=${arch_header_dir}/mman.h
+> > > > >    printf "static const char *mmap_flags[] = {\n"
+> > > > >    regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
+> > > > > -grep -E -q $regex ${arch_mman} && \
+> > > > > +([ -f ${arch_mman} ] && grep -E -q $regex ${arch_mman}) && \
+> > > > >    (grep -E $regex ${arch_mman} | \
+> > > > >    	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
+> > > > >    	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef MAP_%s\n#define MAP_%s %s\n#endif\n")
+> > > > Humm, wouldn't this be simpler without that extra subshell? Like this:
+> > > > 
+> > > > diff --git a/tools/perf/trace/beauty/mmap_flags.sh b/tools/perf/trace/beauty/mmap_flags.sh
+> > > > index 3022597c8c178f21..0ac1886a83b5aceb 100755
+> > > > --- a/tools/perf/trace/beauty/mmap_flags.sh
+> > > > +++ b/tools/perf/trace/beauty/mmap_flags.sh
+> > > > @@ -19,6 +19,7 @@ arch_mman=${arch_header_dir}/mman.h
+> > > >    printf "static const char *mmap_flags[] = {\n"
+> > > >    regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
+> > > > +test -f ${arch_mman} && \
+> > > The following lines have already used the [ ! -f ${arch_mman}, so let's stay
+> > > consistent？
+> > Well, we can make it consistent by simplifying the other places where
+> > the long, equivalent test is being done, which I think is the way to go,
+> > agreed?
 > 
-> thanks a lot for information!
-> 
-> as above mentioned, when this auto-bisect done, it confirmed the issue still
-> exists linux-next/master:
-> [test failed on linux-next/master 28c736b0e92e11bfe2b9997688213dc43cb22182]
-> which includes 42c6dd9d23019ff339d0aca80a444eb71087050e
-> 
-> we will test again on latest linux-next/master:
-> e3f80d3eae76c (tag: next-20230823, linux-next/master, broonie-ci/next-master) Add linux-next specific files for 20230823
-> and 42c6dd9d23019ff339d0aca80a444eb71087050e
-> 
-> Thanks
+> I agree, but this is not suitable to be done in the fix patch, I will split
+> it out and make a new patch.
 
-Could you include the output from:
+Sure, send the one with the fix, already using the simple form, then
+convert the rest to the simpler form.
 
-	perf test -v dlfilter
+Thanks,
 
-> 
->>>
->>> in testcase: perf-sanity-tests
->>> version: perf-x86_64-00c7b5f4ddc5-1_20230402
->>> with following parameters:
->>>
->>> 	perf_compiler: gcc
->>>
->>>
->>>
->>> compiler: gcc-12
->>> test machine: 224 threads 2 sockets Intel(R) Xeon(R) Platinum 8480+ (Sapphire Rapids) with 256G memory
->>>
->>> (please refer to attached dmesg/kmsg for entire log/backtrace)
->>>
->>>
->>>
->>>
->>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
->>> the same patch/commit), kindly add following tags
->>> | Reported-by: kernel test robot <oliver.sang@intel.com>
->>> | Closes: https://lore.kernel.org/oe-lkp/202308232146.94d82cb4-oliver.sang@intel.com
->>>
->>>
->>>
->>>  66: Convert perf time to TSC                                        :
->>>  66.1: TSC support                                                   : Ok
->>>  66.2: Perf time to TSC                                              : Ok
->>>  67: dlfilter C API                                                  : FAILED!  <---
->>>  68: Sigtrap                                                         : Ok
->>>
->>>
->>>
->>> The kernel config and materials to reproduce are available at:
->>> https://download.01.org/0day-ci/archive/20230823/202308232146.94d82cb4-oliver.sang@intel.com
->>>
->>>
->>>
->>
-
+- Arnaldo
