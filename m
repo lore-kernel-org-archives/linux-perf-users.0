@@ -2,129 +2,464 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B34C3DA66
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 02:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB08BC71145
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 02:24:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239428AbjHXCXu (ORCPT
+        id S239429AbjHXCYW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Aug 2023 22:23:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51678 "EHLO
+        Wed, 23 Aug 2023 22:24:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239561AbjHXCXj (ORCPT
+        with ESMTP id S239487AbjHXCYN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Aug 2023 22:23:39 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DCA6A171E
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 19:23:18 -0700 (PDT)
-Received: from loongson.cn (unknown [112.20.109.102])
-        by gateway (Coremail) with SMTP id _____8BxbOoFv+Zkul8bAA--.28569S3;
-        Thu, 24 Aug 2023 10:23:01 +0800 (CST)
-Received: from [192.168.100.8] (unknown [112.20.109.102])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxrM4Bv+ZksehhAA--.41658S3;
-        Thu, 24 Aug 2023 10:22:58 +0800 (CST)
-Message-ID: <51632871-2e84-4c53-b4c0-647aea5c49dc@loongson.cn>
-Date:   Thu, 24 Aug 2023 10:22:57 +0800
+        Wed, 23 Aug 2023 22:24:13 -0400
+Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EACF10DB
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 19:24:06 -0700 (PDT)
+Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-407db3e9669so113001cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 19:24:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1692843845; x=1693448645;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PstqU6Gbd+EHB9F+T6Y4FbLBk8Stp9sHkT9fV7KY848=;
+        b=fLE65W8XvuMuzKrt22REc1V4xxNm9POzekRL+io58Fcztc6mOfluKBvPzCeE8zmmtg
+         poWmvcome3bW9AdhsROs5O8cFtOptSenyO2+Nyuqtdt8fFvR/n8EhYsMMalF/Gea9LME
+         Kzv15fc3bbozVjY87uFabflOP/YKm0LEhVQVv8zT9FgT7MfAxkJahNCczDBLVQp6LPVF
+         86YRHjIQB906xy5cmQi2h4GsTGrXVUMrzq3/i97JjPZhzUssYHQZuL+0v0NRUYMU/N5p
+         QcyxSUTUTQHB9vTFBTOiadUDL/xepeQkajQcXRKm4qdkbEzMVD9dZdfWQ2BU3fK6Z6R0
+         tSWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692843845; x=1693448645;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PstqU6Gbd+EHB9F+T6Y4FbLBk8Stp9sHkT9fV7KY848=;
+        b=DdyeLCxyDhAni8FcoxDOOZNGNrJgF4hFIgeQv6SWAqxkAysL7F3L6A3TbgW8WY/4gq
+         60PsTN2SNyDhjoSNPAw/GGiKMrXKYgaHoDGhGFHPjQSVePN0EphE5tY6QAtEajSfQEBu
+         TM20re9vPOIeXgZSZza5XpwMUfuHCP8rhvZnRMCqmv0HMg7yKMrHz+Vw1ebm7orRIwym
+         FVawlatq8pJKN25gPJhikXtHqnwF45OaE7l9IJEEI4SX99kkYgkTmqXHRXkjxxuCx/aO
+         fRXOYEBy/HjH3q0ekNP/FRsnqBKBccPVgBOCGofreOh4wKQHQHpgS1R6PdPjAPsLoQnJ
+         uCqw==
+X-Gm-Message-State: AOJu0YxTMU7/QleUgAm08+Z09I0x4+eTWFnJnY2JEsrJ5Gj2QfbM3gQ9
+        Uviv3+Rj728RelDV66VAlbAF85u1CDcY3yP8k59nxg==
+X-Google-Smtp-Source: AGHT+IEx/eeJx4FWgWUR7BNKEDqWi7JocuWXeovqQDiJhlyWSifl4ScinGJSTMtBymCQpRnr0R832w6vn9re+TO4lpw=
+X-Received: by 2002:a05:622a:18a4:b0:412:16f:c44f with SMTP id
+ v36-20020a05622a18a400b00412016fc44fmr68913qtc.6.1692843845264; Wed, 23 Aug
+ 2023 19:24:05 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] perf/trace: Fix mmap_flags for archs use generic
- mman.h
-Content-Language: en-US
+References: <20230823080828.1460376-1-irogers@google.com> <20230823080828.1460376-10-irogers@google.com>
+ <ZOXzZ77klgCUXJ7f@kernel.org>
+In-Reply-To: <ZOXzZ77klgCUXJ7f@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 23 Aug 2023 19:23:52 -0700
+Message-ID: <CAP-5=fWS=tZs_-G72p8sHnJY6AdRttQ+2swuo=HZ=hjU-ZjP4A@mail.gmail.com>
+Subject: Re: [PATCH v1 09/25] perf pmu: Make the loading of formats lazy
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     mingo@redhat.com, peterz@infradead.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        chenhuacai@kernel.org, linux-perf-users@vger.kernel.org,
-        loongson-kernel@lists.loongnix.cn, loongarch@lists.linux.dev
-References: <cover.1692694595.git.siyanteng@loongson.cn>
- <03ddc1c0e01518df63aac88e561cd0ec3c1e0028.1692694595.git.siyanteng@loongson.cn>
- <ZOT4Tuc6JGrbDqFW@kernel.org>
- <8ead439a-63aa-434e-9d1e-3b1b05b6347b@loongson.cn>
- <ZOXvUbQL67bdWfNz@kernel.org>
-From:   Yanteng Si <siyanteng@loongson.cn>
-In-Reply-To: <ZOXvUbQL67bdWfNz@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8BxrM4Bv+ZksehhAA--.41658S3
-X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGryfXr47ZFy5Gr1fCrW8Xwc_yoW5Gr47pr
-        4rAayDGa1DXr15tw1IvFZ0qFs8K3sFqFy5uF1DWrs7GF98KF17Gr93AF4a9FyrXws8J3y2
-        9rWUur18KF4kZrgCm3ZEXasCq-sJn29KB7ZKAUJUUUUk529EdanIXcx71UUUUU7KY7ZEXa
-        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-        0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-        xVW8Jr0_Cr1UM2kKe7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-        AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-        tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-        8JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-        6r4UMxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-        AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-        0xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
-        v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
-        xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0L0ePUUUUU==
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Rob Herring <robh@kernel.org>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Wed, Aug 23, 2023 at 4:54=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Wed, Aug 23, 2023 at 01:08:12AM -0700, Ian Rogers escreveu:
+> > The sysfs format files are loaded eagerly in a PMU. Add a flag so that
+> > we create the format but only load the contents when necessary.
+> >
+> > Reduce the size of the value in struct perf_pmu_format and avoid holes
+> > so there is no additional space requirement.
+> >
+> > For "perf stat -e cycles true" this reduces the number of openat calls
+> > from 648 to 573 (about 12%). The benchmark pmu scan speed is improved
+> > by roughly 5%.
+> >
+> > Before: $ perf bench internals pmu-scan
+> > Computing performance of sysfs PMU event scan for 100 times
+> >   Average core PMU scanning took: 1061.100 usec (+- 9.965 usec)
+> >   Average PMU scanning took: 4725.300 usec (+- 260.599 usec)
+> >
+> > After: $ perf bench internals pmu-scan
+> > Computing performance of sysfs PMU event scan for 100 times
+> >   Average core PMU scanning took: 989.170 usec (+- 6.873 usec)
+> >   Average PMU scanning took: 4520.960 usec (+- 251.272 usec)
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/tests/pmu.c |   2 +-
+> >  tools/perf/util/pmu.c  | 140 +++++++++++++++++++++++++++--------------
+> >  tools/perf/util/pmu.h  |   5 +-
+> >  tools/perf/util/pmu.y  |  20 +++---
+> >  4 files changed, 102 insertions(+), 65 deletions(-)
+> >
+> > diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
+> > index 2c1c349a42e2..c204ed1f1a8b 100644
+> > --- a/tools/perf/tests/pmu.c
+> > +++ b/tools/perf/tests/pmu.c
+> > @@ -171,7 +171,7 @@ static int test__pmu(struct test_suite *test __mayb=
+e_unused, int subtest __maybe
+> >       }
+> >
+> >       pmu->name =3D strdup("perf-pmu-test");
+> > -     ret =3D perf_pmu__format_parse(pmu, fd);
+> > +     ret =3D perf_pmu__format_parse(pmu, fd, /*eager_load=3D*/true);
+> >       if (ret)
+> >               goto out;
+> >
+> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> > index 42f3249994ab..7c3de51bab08 100644
+> > --- a/tools/perf/util/pmu.c
+> > +++ b/tools/perf/util/pmu.c
+> > @@ -40,6 +40,10 @@ struct perf_pmu perf_pmu__fake;
+> >   * value=3DPERF_PMU_FORMAT_VALUE_CONFIG and bits 0 to 7 will be set.
+> >   */
+> >  struct perf_pmu_format {
+> > +     /** @list: Element on list within struct perf_pmu. */
+> > +     struct list_head list;
+> > +     /** @bits: Which config bits are set by this format value. */
+> > +     DECLARE_BITMAP(bits, PERF_PMU_FORMAT_BITS);
+> >       /** @name: The modifier/file name. */
+> >       char *name;
+> >       /**
+> > @@ -47,18 +51,75 @@ struct perf_pmu_format {
+> >        * are from PERF_PMU_FORMAT_VALUE_CONFIG to
+> >        * PERF_PMU_FORMAT_VALUE_CONFIG_END.
+> >        */
+> > -     int value;
+> > -     /** @bits: Which config bits are set by this format value. */
+> > -     DECLARE_BITMAP(bits, PERF_PMU_FORMAT_BITS);
+> > -     /** @list: Element on list within struct perf_pmu. */
+> > -     struct list_head list;
+> > +     u16 value;
+> > +     /** @loaded: Has the contents been loaded/parsed. */
+> > +     bool loaded;
+> >  };
+> >
+> > +static struct perf_pmu_format *perf_pmu__new_format(struct list_head *=
+list, char *name)
+> > +{
+> > +     struct perf_pmu_format *format;
+> > +
+> > +     format =3D zalloc(sizeof(*format));
+> > +     if (!format)
+> > +             return NULL;
+> > +
+> > +     format->name =3D strdup(name);
+>
+> We need to check this for failure, later you assume it is non-NULL,
+> calling strlen() on it, etc.
+>
+> I applied all the previous patches, will review the others later.
 
-在 2023/8/23 19:36, Arnaldo Carvalho de Melo 写道:
-> Em Wed, Aug 23, 2023 at 03:11:01PM +0800, Yanteng Si escreveu:
->> 在 2023/8/23 02:02, Arnaldo Carvalho de Melo 写道:
->>> Em Tue, Aug 22, 2023 at 05:32:06PM +0800, Yanteng Si escreveu:
->>>> Silence this warning:
->>>>
->>>> grep: /root/linux-next/tools/arch/xxxxx/include/uapi/asm//mman.h:
->>>> No such file or directory
->>>> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
->>>> ---
->>>>    tools/perf/trace/beauty/mmap_flags.sh | 2 +-
->>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/tools/perf/trace/beauty/mmap_flags.sh b/tools/perf/trace/beauty/mmap_flags.sh
->>>> index 3022597c8c17..d035b29fc5ec 100755
->>>> --- a/tools/perf/trace/beauty/mmap_flags.sh
->>>> +++ b/tools/perf/trace/beauty/mmap_flags.sh
->>>> @@ -19,7 +19,7 @@ arch_mman=${arch_header_dir}/mman.h
->>>>    printf "static const char *mmap_flags[] = {\n"
->>>>    regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
->>>> -grep -E -q $regex ${arch_mman} && \
->>>> +([ -f ${arch_mman} ] && grep -E -q $regex ${arch_mman}) && \
->>>>    (grep -E $regex ${arch_mman} | \
->>>>    	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
->>>>    	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef MAP_%s\n#define MAP_%s %s\n#endif\n")
->>> Humm, wouldn't this be simpler without that extra subshell? Like this:
->>>
->>> diff --git a/tools/perf/trace/beauty/mmap_flags.sh b/tools/perf/trace/beauty/mmap_flags.sh
->>> index 3022597c8c178f21..0ac1886a83b5aceb 100755
->>> --- a/tools/perf/trace/beauty/mmap_flags.sh
->>> +++ b/tools/perf/trace/beauty/mmap_flags.sh
->>> @@ -19,6 +19,7 @@ arch_mman=${arch_header_dir}/mman.h
->>>    printf "static const char *mmap_flags[] = {\n"
->>>    regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
->>> +test -f ${arch_mman} && \
->> The following lines have already used the [ ! -f ${arch_mman}, so let's stay
->> consistent？
-> Well, we can make it consistent by simplifying the other places where
-> the long, equivalent test is being done, which I think is the way to go,
-> agreed?
+Thanks, Arnaldo I'll fix this and rebase on to tmp.perf-tools-next for v2.
 
-I agree, but this is not suitable to be done in the fix patch, I will 
-split it out and make a new patch.
+> - Arnaldo
+>
+> > +     list_add_tail(&format->list, list);
+> > +     return format;
+> > +}
+> > +
+> > +/* Called at the end of parsing a format. */
+> > +void perf_pmu_format__set_value(void *vformat, int config, unsigned lo=
+ng *bits)
+> > +{
+> > +     struct perf_pmu_format *format =3D vformat;
+> > +
+> > +     format->value =3D config;
+> > +     memcpy(format->bits, bits, sizeof(format->bits));
+> > +}
+> > +
+> > +static void __perf_pmu_format__load(struct perf_pmu_format *format, FI=
+LE *file)
+> > +{
+> > +     void *scanner;
+> > +     int ret;
+> > +
+> > +     ret =3D perf_pmu_lex_init(&scanner);
+> > +     if (ret)
+> > +             return;
+> > +
+> > +     perf_pmu_set_in(file, scanner);
+> > +     ret =3D perf_pmu_parse(format, scanner);
+> > +     perf_pmu_lex_destroy(scanner);
+> > +     format->loaded =3D true;
+> > +}
+> > +
+> > +static void perf_pmu_format__load(struct perf_pmu *pmu, struct perf_pm=
+u_format *format)
+> > +{
+> > +     char path[PATH_MAX];
+> > +     FILE *file =3D NULL;
+> > +
+> > +     if (format->loaded)
+> > +             return;
+> > +
+> > +     if (!perf_pmu__pathname_scnprintf(path, sizeof(path), pmu->name, =
+"format"))
+> > +             return;
+> > +
+> > +     assert(strlen(path) + strlen(format->name) + 2 < sizeof(path));
+> > +     strcat(path, "/");
+> > +     strcat(path, format->name);
+> > +
+> > +     file =3D fopen(path, "r");
+> > +     if (!file)
+> > +             return;
+> > +     __perf_pmu_format__load(format, file);
+> > +     fclose(file);
+> > +}
+> > +
+> >  /*
+> >   * Parse & process all the sysfs attributes located under
+> >   * the directory specified in 'dir' parameter.
+> >   */
+> > -int perf_pmu__format_parse(struct perf_pmu *pmu, int dirfd)
+> > +int perf_pmu__format_parse(struct perf_pmu *pmu, int dirfd, bool eager=
+_load)
+> >  {
+> >       struct dirent *evt_ent;
+> >       DIR *format_dir;
+> > @@ -68,37 +129,35 @@ int perf_pmu__format_parse(struct perf_pmu *pmu, i=
+nt dirfd)
+> >       if (!format_dir)
+> >               return -EINVAL;
+> >
+> > -     while (!ret && (evt_ent =3D readdir(format_dir))) {
+> > +     while ((evt_ent =3D readdir(format_dir)) !=3D NULL) {
+> > +             struct perf_pmu_format *format;
+> >               char *name =3D evt_ent->d_name;
+> > -             int fd;
+> > -             void *scanner;
+> > -             FILE *file;
+> >
+> >               if (!strcmp(name, ".") || !strcmp(name, ".."))
+> >                       continue;
+> >
+> > -
+> > -             ret =3D -EINVAL;
+> > -             fd =3D openat(dirfd, name, O_RDONLY);
+> > -             if (fd < 0)
+> > -                     break;
+> > -
+> > -             file =3D fdopen(fd, "r");
+> > -             if (!file) {
+> > -                     close(fd);
+> > +             format =3D perf_pmu__new_format(&pmu->format, name);
+> > +             if (!format) {
+> > +                     ret =3D -ENOMEM;
+> >                       break;
+> >               }
+> >
+> > -             ret =3D perf_pmu_lex_init(&scanner);
+> > -             if (ret) {
+> > +             if (eager_load) {
+> > +                     FILE *file;
+> > +                     int fd =3D openat(dirfd, name, O_RDONLY);
+> > +
+> > +                     if (fd < 0) {
+> > +                             ret =3D -errno;
+> > +                             break;
+> > +                     }
+> > +                     file =3D fdopen(fd, "r");
+> > +                     if (!file) {
+> > +                             close(fd);
+> > +                             break;
+> > +                     }
+> > +                     __perf_pmu_format__load(format, file);
+> >                       fclose(file);
+> > -                     break;
+> >               }
+> > -
+> > -             perf_pmu_set_in(file, scanner);
+> > -             ret =3D perf_pmu_parse(&pmu->format, name, scanner);
+> > -             perf_pmu_lex_destroy(scanner);
+> > -             fclose(file);
+> >       }
+> >
+> >       closedir(format_dir);
+> > @@ -119,7 +178,7 @@ static int pmu_format(struct perf_pmu *pmu, int dir=
+fd, const char *name)
+> >               return 0;
+> >
+> >       /* it'll close the fd */
+> > -     if (perf_pmu__format_parse(pmu, fd))
+> > +     if (perf_pmu__format_parse(pmu, fd, /*eager_load=3D*/false))
+> >               return -1;
+> >
+> >       return 0;
+> > @@ -962,13 +1021,15 @@ void perf_pmu__warn_invalid_formats(struct perf_=
+pmu *pmu)
+> >       if (pmu =3D=3D &perf_pmu__fake)
+> >               return;
+> >
+> > -     list_for_each_entry(format, &pmu->format, list)
+> > +     list_for_each_entry(format, &pmu->format, list) {
+> > +             perf_pmu_format__load(pmu, format);
+> >               if (format->value >=3D PERF_PMU_FORMAT_VALUE_CONFIG_END) =
+{
+> >                       pr_warning("WARNING: '%s' format '%s' requires 'p=
+erf_event_attr::config%d'"
+> >                                  "which is not supported by this versio=
+n of perf!\n",
+> >                                  pmu->name, format->name, format->value=
+);
+> >                       return;
+> >               }
+> > +     }
+> >  }
+> >
+> >  bool evsel__is_aux_event(const struct evsel *evsel)
+> > @@ -1041,6 +1102,7 @@ int perf_pmu__format_type(struct perf_pmu *pmu, c=
+onst char *name)
+> >       if (!format)
+> >               return -1;
+> >
+> > +     perf_pmu_format__load(pmu, format);
+> >       return format->value;
+> >  }
+> >
+> > @@ -1177,7 +1239,7 @@ static int pmu_config_term(struct perf_pmu *pmu,
+> >               free(pmu_term);
+> >               return -EINVAL;
+> >       }
+> > -
+> > +     perf_pmu_format__load(pmu, format);
+> >       switch (format->value) {
+> >       case PERF_PMU_FORMAT_VALUE_CONFIG:
+> >               vp =3D &attr->config;
+> > @@ -1403,24 +1465,6 @@ struct perf_pmu_alias *perf_pmu__find_alias(stru=
+ct perf_pmu *pmu, const char *ev
+> >
+> >       return NULL;
+> >  }
+> > -
+> > -int perf_pmu__new_format(struct list_head *list, char *name,
+> > -                      int config, unsigned long *bits)
+> > -{
+> > -     struct perf_pmu_format *format;
+> > -
+> > -     format =3D zalloc(sizeof(*format));
+> > -     if (!format)
+> > -             return -ENOMEM;
+> > -
+> > -     format->name =3D strdup(name);
 
+The unchecked strdup was a copy-and-paste from here.
 
-Thanks
+Thanks,
+Ian
 
-Yanteng
-
+> > -     format->value =3D config;
+> > -     memcpy(format->bits, bits, sizeof(format->bits));
+> > -
+> > -     list_add_tail(&format->list, list);
+> > -     return 0;
+> > -}
+> > -
+> >  static void perf_pmu__del_formats(struct list_head *formats)
+> >  {
+> >       struct perf_pmu_format *fmt, *tmp;
+> > diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> > index c4268053c979..675c9b97f7bf 100644
+> > --- a/tools/perf/util/pmu.h
+> > +++ b/tools/perf/util/pmu.h
+> > @@ -227,9 +227,8 @@ int perf_pmu__check_alias(struct perf_pmu *pmu, str=
+uct list_head *head_terms,
+> >                         struct perf_pmu_info *info);
+> >  struct perf_pmu_alias *perf_pmu__find_alias(struct perf_pmu *pmu, cons=
+t char *event);
+> >
+> > -int perf_pmu__new_format(struct list_head *list, char *name,
+> > -                      int config, unsigned long *bits);
+> > -int perf_pmu__format_parse(struct perf_pmu *pmu, int dirfd);
+> > +int perf_pmu__format_parse(struct perf_pmu *pmu, int dirfd, bool eager=
+_load);
+> > +void perf_pmu_format__set_value(void *format, int config, unsigned lon=
+g *bits);
+> >  bool perf_pmu__has_format(const struct perf_pmu *pmu, const char *name=
+);
+> >
+> >  bool is_pmu_core(const char *name);
+> > diff --git a/tools/perf/util/pmu.y b/tools/perf/util/pmu.y
+> > index d861a5bfa3bd..600c8c158c8e 100644
+> > --- a/tools/perf/util/pmu.y
+> > +++ b/tools/perf/util/pmu.y
+> > @@ -1,6 +1,5 @@
+> >  %define api.pure full
+> > -%parse-param {struct list_head *format}
+> > -%parse-param {char *name}
+> > +%parse-param {void *format}
+> >  %parse-param {void *scanner}
+> >  %lex-param {void* scanner}
+> >
+> > @@ -21,7 +20,7 @@ do { \
+> >                  YYABORT; \
+> >  } while (0)
+> >
+> > -static void perf_pmu_error(struct list_head *list, char *name, void *s=
+canner, char const *msg);
+> > +static void perf_pmu_error(void *format, void *scanner, const char *ms=
+g);
+> >
+> >  static void perf_pmu__set_format(unsigned long *bits, long from, long =
+to)
+> >  {
+> > @@ -59,16 +58,12 @@ format_term
+> >  format_term:
+> >  PP_CONFIG ':' bits
+> >  {
+> > -     ABORT_ON(perf_pmu__new_format(format, name,
+> > -                                   PERF_PMU_FORMAT_VALUE_CONFIG,
+> > -                                   $3));
+> > +     perf_pmu_format__set_value(format, PERF_PMU_FORMAT_VALUE_CONFIG, =
+$3);
+> >  }
+> >  |
+> >  PP_CONFIG PP_VALUE ':' bits
+> >  {
+> > -     ABORT_ON(perf_pmu__new_format(format, name,
+> > -                                   $2,
+> > -                                   $4));
+> > +     perf_pmu_format__set_value(format, $2, $4);
+> >  }
+> >
+> >  bits:
+> > @@ -95,9 +90,8 @@ PP_VALUE
+> >
+> >  %%
+> >
+> > -static void perf_pmu_error(struct list_head *list __maybe_unused,
+> > -                 char *name __maybe_unused,
+> > -                 void *scanner __maybe_unused,
+> > -                 char const *msg __maybe_unused)
+> > +static void perf_pmu_error(void *format __maybe_unused,
+> > +                        void *scanner __maybe_unused,
+> > +                        const char *msg __maybe_unused)
+> >  {
+> >  }
+> > --
+> > 2.42.0.rc1.204.g551eb34607-goog
+> >
+>
+> --
 >
 > - Arnaldo
->   
->> Thanks,
->>
->> Yanteng
->>
->>>    grep -E -q $regex ${arch_mman} && \
->>>    (grep -E $regex ${arch_mman} | \
->>>    	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
-
