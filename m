@@ -2,225 +2,225 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDADC27C40
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 14:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3524DC3DA6F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 14:02:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236832AbjHXOAe (ORCPT
+        id S234711AbjHXOCR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 24 Aug 2023 10:00:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44146 "EHLO
+        Thu, 24 Aug 2023 10:02:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231989AbjHXOAF (ORCPT
+        with ESMTP id S241449AbjHXOBy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 24 Aug 2023 10:00:05 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B4C0E7A;
-        Thu, 24 Aug 2023 07:00:03 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        Thu, 24 Aug 2023 10:01:54 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2354F1BCD;
+        Thu, 24 Aug 2023 07:01:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692885710; x=1724421710;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=OXqsjRaerq3RRQ7ej7dGE6vPdNrHCZ6fWASkg7r8exk=;
+  b=CPGM8r2sYHCk3Ff9ZAuZ9i0O5blqkYNJN3sZJSZPHEmHgfzI9DKDezRv
+   sM/QWq47zMtHkM2HkDwY9D3drQFQJneHEnEGp8tubJ5ugu4nlwbzOCmox
+   BUYTPtwgN2tqmonRbT6x/AsPLJGug66ctlAwS8/yQ5Ify/CYEkbc+CxvR
+   9XY2XF6nZbgL3axvBjieMWHds1Pw1u3JkZ7xcFI276zRzFoPIIiC2H0uN
+   Ntb/a/eFhOldbuv5AxmsAQWL+wwtXhHhBfz2aR7MGrfKxgMDaWGBnDyrd
+   RAKde1svbL2vXa/Te72s8CpZg9jKKpXsSY3B2WWGRBsrv1v9fnvVrzO8h
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="377187743"
+X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
+   d="scan'208";a="377187743"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2023 06:33:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="730607246"
+X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
+   d="scan'208";a="730607246"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 24 Aug 2023 06:33:12 -0700
+Received: from [10.209.149.74] (kliang2-mobl1.ccr.corp.intel.com [10.209.149.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CEDEE65384;
-        Thu, 24 Aug 2023 14:00:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDBC9C433C7;
-        Thu, 24 Aug 2023 14:00:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692885602;
-        bh=oyQ7Y3sa5I8ZMyB/lp9x5Zm0BLOOgyy5pToR+nkA12M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dmWOCNXtobdEKPTRgdQCXkoCF6Qn4NNQ6poR1eos2vzyqdzRr0xIhm4i26hCUBHhL
-         cu5yaHeO6RvnY7jYFjbHDgFN7jowb/3AramCl8lf1Ts+RTIgTBsNIBpkF1Ks3slxL8
-         fcerm8WWSBGjY82vGqq4YZF59+6JBZKN+OfCvNIsse1xdv33kfi710q+VjNiZyyvel
-         zzNXuMPId3oiIuMtyrRbYKqPV53Pw/hxsgVq9sPBpwUIPgPnZv6kKarudl9NK/sEj/
-         9Mwa3MP4I0Oq5FBz3FRMi2UXjNOXE+T8/C3QbPV5LjxNtoNZTG67w/sJh44iJCytGv
-         R0H8P44BWmvVA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6C91640722; Thu, 24 Aug 2023 10:59:59 -0300 (-03)
-Date:   Thu, 24 Aug 2023 10:59:59 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+        by linux.intel.com (Postfix) with ESMTPS id B831F5808BA;
+        Thu, 24 Aug 2023 06:33:10 -0700 (PDT)
+Message-ID: <6913f6d8-7f01-f132-5375-e82b8aa2e0b9@linux.intel.com>
+Date:   Thu, 24 Aug 2023 09:33:09 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH v3 2/3] perf pmus: Add scan that ignores duplicates, use
+ for perf list
+Content-Language: en-US
 To:     Ian Rogers <irogers@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>
-Cc:     Heiko Carstens <hca@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
         Ravi Bangoria <ravi.bangoria@amd.com>,
-        Rob Herring <robh@kernel.org>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.g.garry@oracle.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 06/18] perf s390 s390_cpumcfdg_dump: Don't scan all
- PMUs
-Message-ID: <ZOdiX4eJHFfFbQhi@kernel.org>
-References: <20230824041330.266337-1-irogers@google.com>
- <20230824041330.266337-7-irogers@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230824041330.266337-7-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+References: <20230814163757.3077138-1-irogers@google.com>
+ <20230814163757.3077138-3-irogers@google.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20230814163757.3077138-3-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Aug 23, 2023 at 09:13:18PM -0700, Ian Rogers escreveu:
-> Rather than scanning all PMUs for a counter name, scan the PMU
-> associated with the evsel of the sample. This is done to remove a
-> dependence on pmu-events.h.
 
-I'm applying this one, and CCing the S/390 developers so that they can
-try this and maybe provide an Acked-by/Tested-by,
 
-- Arnaldo
- 
+On 2023-08-14 12:37 p.m., Ian Rogers wrote:
+> When there are multiple PMUs that differ only by suffix, by default
+> just list the first one and skip all others. As the PMUs are sorted,
+> the scan routine checks that the PMU names match and the numbers are
+> consecutive. 
+
+The suffix number may not be consecutive, especially for SPR and later
+platforms. Because the IDs are from the discovery table now, which is
+assigned by the HW. The physic IDs are not guaranteed to be consecutive.
+
+I don't think there is a plan to change it to logical IDs. Because
+sometimes people want to know the physic IDs. So they can locate the
+specific unit quickly.
+
+Thanks,
+Kan
+
+> If "-v" is passed to "perf list" then list all PMUs.
+> 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/s390-sample-raw.c | 50 ++++++++++++++++---------------
->  1 file changed, 26 insertions(+), 24 deletions(-)
+>  tools/perf/builtin-list.c      |  8 +++++
+>  tools/perf/util/pmus.c         | 54 ++++++++++++++++++++++++++++++++--
+>  tools/perf/util/print-events.h |  1 +
+>  3 files changed, 61 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/perf/util/s390-sample-raw.c b/tools/perf/util/s390-sample-raw.c
-> index 91330c874170..dc1ed3e95d4d 100644
-> --- a/tools/perf/util/s390-sample-raw.c
-> +++ b/tools/perf/util/s390-sample-raw.c
-> @@ -27,7 +27,7 @@
->  #include "color.h"
->  #include "sample-raw.h"
->  #include "s390-cpumcf-kernel.h"
-> -#include "pmu-events/pmu-events.h"
-> +#include "util/pmu.h"
->  #include "util/sample.h"
+> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+> index 7fec2cca759f..8fe4ddf02c14 100644
+> --- a/tools/perf/builtin-list.c
+> +++ b/tools/perf/builtin-list.c
+> @@ -423,6 +423,13 @@ static void json_print_metric(void *ps __maybe_unused, const char *group,
+>  	strbuf_release(&buf);
+>  }
 >  
->  static size_t ctrset_size(struct cf_ctrset_entry *set)
-> @@ -132,56 +132,57 @@ static int get_counterset_start(int setnr)
+> +static bool default_skip_duplicate_pmus(void *ps)
+> +{
+> +	struct print_state *print_state = ps;
+> +
+> +	return !print_state->long_desc;
+> +}
+> +
+>  int cmd_list(int argc, const char **argv)
+>  {
+>  	int i, ret = 0;
+> @@ -434,6 +441,7 @@ int cmd_list(int argc, const char **argv)
+>  		.print_end = default_print_end,
+>  		.print_event = default_print_event,
+>  		.print_metric = default_print_metric,
+> +		.skip_duplicate_pmus = default_skip_duplicate_pmus,
+>  	};
+>  	const char *cputype = NULL;
+>  	const char *unit_name = NULL;
+> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> index 3581710667b0..5073843aca19 100644
+> --- a/tools/perf/util/pmus.c
+> +++ b/tools/perf/util/pmus.c
+> @@ -275,6 +275,50 @@ struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu)
+>  	return NULL;
+>  }
 >  
->  struct get_counter_name_data {
->  	int wanted;
-> -	const char *result;
-> +	char *result;
+> +static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
+> +{
+> +	bool use_core_pmus = !pmu || pmu->is_core;
+> +	int last_pmu_name_len = 0;
+> +	unsigned long last_pmu_num = 0;
+> +	const char *last_pmu_name = (pmu && pmu->name) ? pmu->name : "";
+> +
+> +	if (!pmu) {
+> +		pmu_read_sysfs(/*core_only=*/false);
+> +		pmu = list_prepare_entry(pmu, &core_pmus, list);
+> +	} else
+> +		last_pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "", &last_pmu_num);
+> +
+> +	if (use_core_pmus) {
+> +		list_for_each_entry_continue(pmu, &core_pmus, list) {
+> +			unsigned long pmu_num = 0;
+> +			int pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "", &pmu_num);
+> +
+> +			if (last_pmu_name_len == pmu_name_len &&
+> +			    (last_pmu_num + 1 == pmu_num) &&
+> +			    !strncmp(last_pmu_name, pmu->name ?: "", pmu_name_len)) {
+> +				last_pmu_num++;
+> +				continue;
+> +			}
+> +			return pmu;
+> +		}
+> +		pmu = NULL;
+> +		pmu = list_prepare_entry(pmu, &other_pmus, list);
+> +	}
+> +	list_for_each_entry_continue(pmu, &other_pmus, list) {
+> +		unsigned long pmu_num = 0;
+> +		int pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "", &pmu_num);
+> +
+> +		if (last_pmu_name_len == pmu_name_len &&
+> +		    (last_pmu_num + 1 == pmu_num) &&
+> +		    !strncmp(last_pmu_name, pmu->name ?: "", pmu_name_len)) {
+> +			last_pmu_num++;
+> +			continue;
+> +		}
+> +		return pmu;
+> +	}
+> +	return NULL;
+> +}
+> +
+>  const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str)
+>  {
+>  	struct perf_pmu *pmu = NULL;
+> @@ -429,10 +473,16 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
+>  	int printed = 0;
+>  	int len, j;
+>  	struct sevent *aliases;
+> +	struct perf_pmu *(*scan_fn)(struct perf_pmu *);
+> +
+> +	if (print_cb->skip_duplicate_pmus(print_state))
+> +		scan_fn = perf_pmus__scan_skip_duplicates;
+> +	else
+> +		scan_fn = perf_pmus__scan;
+>  
+>  	pmu = NULL;
+>  	len = 0;
+> -	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
+> +	while ((pmu = scan_fn(pmu)) != NULL) {
+>  		list_for_each_entry(event, &pmu->aliases, list)
+>  			len++;
+>  		if (pmu->selectable)
+> @@ -445,7 +495,7 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
+>  	}
+>  	pmu = NULL;
+>  	j = 0;
+> -	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
+> +	while ((pmu = scan_fn(pmu)) != NULL) {
+>  		bool is_cpu = pmu->is_core;
+>  
+>  		list_for_each_entry(event, &pmu->aliases, list) {
+> diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-events.h
+> index d7fab411e75c..bf4290bef0cd 100644
+> --- a/tools/perf/util/print-events.h
+> +++ b/tools/perf/util/print-events.h
+> @@ -26,6 +26,7 @@ struct print_callbacks {
+>  			const char *expr,
+>  			const char *threshold,
+>  			const char *unit);
+> +	bool (*skip_duplicate_pmus)(void *print_state);
 >  };
 >  
-> -static int get_counter_name_callback(const struct pmu_event *evp,
-> -				     const struct pmu_events_table *table __maybe_unused,
-> -				     void *vdata)
-> +static int get_counter_name_callback(void *vdata, struct pmu_event_info *info)
->  {
->  	struct get_counter_name_data *data = vdata;
->  	int rc, event_nr;
-> +	const char *event_str;
->  
-> -	if (evp->name == NULL || evp->event == NULL)
-> +	if (info->str == NULL)
->  		return 0;
-> -	rc = sscanf(evp->event, "event=%x", &event_nr);
-> +
-> +	event_str = strstr(info->str, "event=");
-> +	if (!event_str)
-> +		return 0;
-> +
-> +	rc = sscanf(event_str, "event=%x", &event_nr);
->  	if (rc == 1 && event_nr == data->wanted) {
-> -		data->result = evp->name;
-> +		data->result = strdup(info->name);
->  		return 1; /* Terminate the search. */
->  	}
->  	return 0;
->  }
->  
-> -/* Scan the PMU table and extract the logical name of a counter from the
-> - * PMU events table. Input is the counter set and counter number with in the
-> - * set. Construct the event number and use this as key. If they match return
-> - * the name of this counter.
-> +/* Scan the PMU and extract the logical name of a counter from the event. Input
-> + * is the counter set and counter number with in the set. Construct the event
-> + * number and use this as key. If they match return the name of this counter.
->   * If no match is found a NULL pointer is returned.
->   */
-> -static const char *get_counter_name(int set, int nr, const struct pmu_events_table *table)
-> +static char *get_counter_name(int set, int nr, struct perf_pmu *pmu)
->  {
->  	struct get_counter_name_data data = {
->  		.wanted = get_counterset_start(set) + nr,
->  		.result = NULL,
->  	};
->  
-> -	if (!table)
-> +	if (!pmu)
->  		return NULL;
->  
-> -	pmu_events_table__for_each_event(table, get_counter_name_callback, &data);
-> +	perf_pmu__for_each_event(pmu, &data, get_counter_name_callback);
->  	return data.result;
->  }
->  
-> -static void s390_cpumcfdg_dump(struct perf_sample *sample)
-> +static void s390_cpumcfdg_dump(struct perf_pmu *pmu, struct perf_sample *sample)
->  {
->  	size_t i, len = sample->raw_size, offset = 0;
->  	unsigned char *buf = sample->raw_data;
->  	const char *color = PERF_COLOR_BLUE;
->  	struct cf_ctrset_entry *cep, ce;
-> -	const struct pmu_events_table *table;
->  	u64 *p;
->  
-> -	table = pmu_events_table__find();
->  	while (offset < len) {
->  		cep = (struct cf_ctrset_entry *)(buf + offset);
->  
-> @@ -199,11 +200,12 @@ static void s390_cpumcfdg_dump(struct perf_sample *sample)
->  		color_fprintf(stdout, color, "    [%#08zx] Counterset:%d"
->  			      " Counters:%d\n", offset, ce.set, ce.ctr);
->  		for (i = 0, p = (u64 *)(cep + 1); i < ce.ctr; ++i, ++p) {
-> -			const char *ev_name = get_counter_name(ce.set, i, table);
-> +			char *ev_name = get_counter_name(ce.set, i, pmu);
->  
->  			color_fprintf(stdout, color,
->  				      "\tCounter:%03d %s Value:%#018lx\n", i,
->  				      ev_name ?: "<unknown>", be64_to_cpu(*p));
-> +			free(ev_name);
->  		}
->  		offset += ctrset_size(&ce);
->  	}
-> @@ -216,14 +218,14 @@ static void s390_cpumcfdg_dump(struct perf_sample *sample)
->   */
->  void evlist__s390_sample_raw(struct evlist *evlist, union perf_event *event, struct perf_sample *sample)
->  {
-> -	struct evsel *ev_bc000;
-> +	struct evsel *evsel;
->  
->  	if (event->header.type != PERF_RECORD_SAMPLE)
->  		return;
->  
-> -	ev_bc000 = evlist__event2evsel(evlist, event);
-> -	if (ev_bc000 == NULL ||
-> -	    ev_bc000->core.attr.config != PERF_EVENT_CPUM_CF_DIAG)
-> +	evsel = evlist__event2evsel(evlist, event);
-> +	if (evsel == NULL ||
-> +	    evsel->core.attr.config != PERF_EVENT_CPUM_CF_DIAG)
->  		return;
->  
->  	/* Display raw data on screen */
-> @@ -231,5 +233,5 @@ void evlist__s390_sample_raw(struct evlist *evlist, union perf_event *event, str
->  		pr_err("Invalid counter set data encountered\n");
->  		return;
->  	}
-> -	s390_cpumcfdg_dump(sample);
-> +	s390_cpumcfdg_dump(evsel->pmu, sample);
->  }
-> -- 
-> 2.42.0.rc1.204.g551eb34607-goog
-> 
-
--- 
-
-- Arnaldo
+>  /** Print all events, the default when no options are specified. */
