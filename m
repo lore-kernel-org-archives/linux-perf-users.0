@@ -2,240 +2,261 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB7CC83003
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 18:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AAAC27C40
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 19:45:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243045AbjHXSch (ORCPT
+        id S243256AbjHXTod (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 24 Aug 2023 14:32:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45628 "EHLO
+        Thu, 24 Aug 2023 15:44:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243107AbjHXSca (ORCPT
+        with ESMTP id S243357AbjHXToG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 24 Aug 2023 14:32:30 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE8CA1BF1
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 11:32:21 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d749c6d767dso154442276.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 11:32:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692901941; x=1693506741;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=MNeeSRjShfUBxK20UmYelF8xLtXN72q85W2K9O6AewU=;
-        b=6eeGKylvsVaRxqcWbxgaNrUL6kMoeIfCaARcdvzuxV1Qk1Nn5wH02JO8+6/0T4pV1I
-         WZmUizQ6I7z2UHZ1tEsl8/bmQ/3t26lY0YiMcdEUVv/YeXJ3T5rnY+ZSLgx30PsG0/o/
-         7fH1Z85JmLBIX+EOYlLRcAzB2CkGJhzgMadtQVB/p5Mn2yZ3zVRST+Eq42Fbp8jRT2Zd
-         XCGR9jx6OKM0EAIC0lPTeCjqT/M1FsSHOZaz/JFRbqlS3OkgzH4vWqw+QL1XXHBmKSkV
-         uLv9sMAKA9GD09u63qp4hIjQOv4ZRu31x5nmzCaDkhRqYrJgE0USb0fFiXEWT0sj0nb6
-         0vEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692901941; x=1693506741;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MNeeSRjShfUBxK20UmYelF8xLtXN72q85W2K9O6AewU=;
-        b=eREkzIJz33PyVcigluM7b80WwYS9N7xyjqu55glUzbWDdxq5uBp6O5B0YdLPbSjMZz
-         afIMi5uMViibCiLPTfrGKpamPv9kyoL5Q43zdiT5uazsG5ZipX07x3MtROlZLsdkBkh5
-         ymSLQlynDa6SRj7NtbuxiGjGO7oixSlJ/OhyDrOiJzWifFqtyNk7tKa5gxxLCRkxbVQz
-         /AbOYsHJ3QBIIqQ+qdD15ui3vrJxCkFuZAo/wkuafVPXwgX8ERXQhZ4nS5nyU7KCiHGr
-         o9QAmVMKAvGMtUbZ/f8U/BEuzFBRG6tJofS1nI64IZiMwdMfPQtwks/6DnU0y8E9oU5+
-         2smQ==
-X-Gm-Message-State: AOJu0YyDXwdPapA31hzqekZ1cl2uZPrf1Bt8UMotjdMq2Tl3nD1LuM3V
-        ABozgM2ykhGUWuuwR0NgTb+UQbPwXpn8
-X-Google-Smtp-Source: AGHT+IEHDSXwTvSkKB3beLc6wwOSaR1G9iaM3BAUwl25BtxYOXui5MNMrOMvZkCSI2+nprUfgTJaaCdXNoGt
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:fbb9:d9e7:7405:2651])
- (user=irogers job=sendgmr) by 2002:a25:bc8a:0:b0:d78:2f4c:7df with SMTP id
- e10-20020a25bc8a000000b00d782f4c07dfmr315ybk.12.1692901941141; Thu, 24 Aug
- 2023 11:32:21 -0700 (PDT)
-Date:   Thu, 24 Aug 2023 11:32:12 -0700
-Message-Id: <20230824183212.374787-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.42.0.rc2.253.gd59a3bf2b4-goog
-Subject: [PATCH v3] perf jevents: Don't append Unit to desc
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Thu, 24 Aug 2023 15:44:06 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C2961BFE;
+        Thu, 24 Aug 2023 12:44:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692906244; x=1724442244;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=fV1APwoC3a7jsFF977tU3qGre6R99oeiNSF04RDqdJQ=;
+  b=VThv54sKb2T/ZjrTmkBDyC594gmBrdzcgOvSIKJQy09wDcIGcWfOTlKt
+   QRwuOmXNBKBKWjQXLFDHkDaDzyuX/8orFc0kA1h+2MJFLafvnxBDUmHA6
+   Boa10zxrNtJMUCLgjmkkRurodsYYSBn/WFHCtoZ2hye1IxeHc1naEajyk
+   QPNCpVRLxoRp/Eb0x4N9CPbu4zA7m9IUGAK2QSoaBgXWSEs62tWen6Tcy
+   iEJDTKazZLMF99LliwBc1gjzCZCol20LU3S6CRsInEPAy7YB20ySSSsQq
+   QI69tmspEnZA9csdMlQ4NsB8dWy+f46EN+H33YlFq5LYedJbt2eyuO8Hc
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="373417240"
+X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
+   d="scan'208";a="373417240"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2023 12:44:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="860831871"
+X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
+   d="scan'208";a="860831871"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 24 Aug 2023 12:44:02 -0700
+Received: from [10.213.176.150] (kliang2-mobl1.ccr.corp.intel.com [10.213.176.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id C784E580BA1;
+        Thu, 24 Aug 2023 12:44:00 -0700 (PDT)
+Message-ID: <6e3eae74-c89f-53a7-f954-bf36c7763316@linux.intel.com>
+Date:   Thu, 24 Aug 2023 15:43:59 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH v3 2/3] perf pmus: Add scan that ignores duplicates, use
+ for perf list
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
         Ravi Bangoria <ravi.bangoria@amd.com>,
-        Rob Herring <robh@kernel.org>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.g.garry@oracle.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <20230814163757.3077138-1-irogers@google.com>
+ <20230814163757.3077138-3-irogers@google.com>
+ <6913f6d8-7f01-f132-5375-e82b8aa2e0b9@linux.intel.com>
+ <CAP-5=fX3_dpxGU1qp2kisHQ13i1+tEO9B2KGi1Z7z3+nqigfRw@mail.gmail.com>
+Content-Language: en-US
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fX3_dpxGU1qp2kisHQ13i1+tEO9B2KGi1Z7z3+nqigfRw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Unit with the PMU name is appended to desc in jevents.py, but on
-hybrid platforms it causes the desc to differ from the regular
-non-hybrid system with a PMU of 'cpu'. Having differing descs means
-the events don't deduplicate. To make the perf list output not differ,
-append the Unit on again in the perf list printing code.
 
-On x86 reduces the binary size by 409,600 bytes or about 4%. Update
-pmu-events test expectations to match the differently generated
-pmu-events.c code.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-list.c        | 13 ++++++++++++-
- tools/perf/pmu-events/jevents.py |  7 -------
- tools/perf/tests/pmu-events.c    | 22 +++++++++++-----------
- 3 files changed, 23 insertions(+), 19 deletions(-)
+On 2023-08-24 1:30 p.m., Ian Rogers wrote:
+> On Thu, Aug 24, 2023 at 7:01 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>>
+>>
+>> On 2023-08-14 12:37 p.m., Ian Rogers wrote:
+>>> When there are multiple PMUs that differ only by suffix, by default
+>>> just list the first one and skip all others. As the PMUs are sorted,
+>>> the scan routine checks that the PMU names match and the numbers are
+>>> consecutive.
+>>
+>> The suffix number may not be consecutive, especially for SPR and later
+>> platforms. Because the IDs are from the discovery table now, which is
+>> assigned by the HW. The physic IDs are not guaranteed to be consecutive.
+>>
+>> I don't think there is a plan to change it to logical IDs. Because
+>> sometimes people want to know the physic IDs. So they can locate the
+>> specific unit quickly.
+> 
+> Thanks Kan,
+> 
+> I think this could lead to perf list merging some PMUs into one name
+> and not doing this for others. We could keep the existing behavior by
+> checking the numbers are consecutive but it'd come with some
+> complexity and runtime cost. We could just ignore the consecutive
+> property. We could just not try to solve the problem. What do you
+> think is the right strategy?
 
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 7fec2cca759f..d8b9f606e734 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -145,9 +145,20 @@ static void default_print_event(void *ps, const char *pmu_name, const char *topi
- 		putchar('\n');
- 
- 	if (desc && print_state->desc) {
-+		char *desc_with_unit = NULL;
-+		int desc_len = -1;
-+
-+		if (pmu_name && strcmp(pmu_name, "cpu")) {
-+			desc_len = strlen(desc);
-+			desc_len = asprintf(&desc_with_unit,
-+					    desc[desc_len - 1] != '.'
-+					      ? "%s. Unit: %s" : "%s Unit: %s",
-+					    desc, pmu_name);
-+		}
- 		printf("%*s", 8, "[");
--		wordwrap(desc, 8, pager_get_columns(), 0);
-+		wordwrap(desc_len > 0 ? desc_with_unit : desc, 8, pager_get_columns(), 0);
- 		printf("]\n");
-+		free(desc_with_unit);
- 	}
- 	long_desc = long_desc ?: desc;
- 	if (long_desc && print_state->long_desc) {
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index e5bce57f5688..712f80d7d071 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -357,13 +357,6 @@ class JsonEvent:
-       self.desc += extra_desc
-     if self.long_desc and extra_desc:
-       self.long_desc += extra_desc
--    if self.pmu and self.pmu != 'cpu':
--      if not self.desc:
--        self.desc = 'Unit: ' + self.pmu
--      else:
--        if not self.desc.endswith('. '):
--          self.desc += '. '
--      self.desc += 'Unit: ' + self.pmu
-     if arch_std:
-       if arch_std.lower() in _arch_std_events:
-         event = _arch_std_events[arch_std.lower()].event
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index 3dc1ebee4d9f..28c8789c4305 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -129,7 +129,7 @@ static const struct perf_pmu_test_event uncore_hisi_ddrc_flux_wcmd = {
- 	.event = {
- 		.name = "uncore_hisi_ddrc.flux_wcmd",
- 		.event = "event=0x2",
--		.desc = "DDRC write commands. Unit: hisi_sccl,ddrc",
-+		.desc = "DDRC write commands",
- 		.topic = "uncore",
- 		.long_desc = "DDRC write commands",
- 		.pmu = "hisi_sccl,ddrc",
-@@ -143,7 +143,7 @@ static const struct perf_pmu_test_event unc_cbo_xsnp_response_miss_eviction = {
- 	.event = {
- 		.name = "unc_cbo_xsnp_response.miss_eviction",
- 		.event = "event=0x22,umask=0x81",
--		.desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core. Unit: uncore_cbox",
-+		.desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core",
- 		.topic = "uncore",
- 		.long_desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core",
- 		.pmu = "uncore_cbox",
-@@ -157,7 +157,7 @@ static const struct perf_pmu_test_event uncore_hyphen = {
- 	.event = {
- 		.name = "event-hyphen",
- 		.event = "event=0xe0,umask=0x00",
--		.desc = "UNC_CBO_HYPHEN. Unit: uncore_cbox",
-+		.desc = "UNC_CBO_HYPHEN",
- 		.topic = "uncore",
- 		.long_desc = "UNC_CBO_HYPHEN",
- 		.pmu = "uncore_cbox",
-@@ -171,7 +171,7 @@ static const struct perf_pmu_test_event uncore_two_hyph = {
- 	.event = {
- 		.name = "event-two-hyph",
- 		.event = "event=0xc0,umask=0x00",
--		.desc = "UNC_CBO_TWO_HYPH. Unit: uncore_cbox",
-+		.desc = "UNC_CBO_TWO_HYPH",
- 		.topic = "uncore",
- 		.long_desc = "UNC_CBO_TWO_HYPH",
- 		.pmu = "uncore_cbox",
-@@ -185,7 +185,7 @@ static const struct perf_pmu_test_event uncore_hisi_l3c_rd_hit_cpipe = {
- 	.event = {
- 		.name = "uncore_hisi_l3c.rd_hit_cpipe",
- 		.event = "event=0x7",
--		.desc = "Total read hits. Unit: hisi_sccl,l3c",
-+		.desc = "Total read hits",
- 		.topic = "uncore",
- 		.long_desc = "Total read hits",
- 		.pmu = "hisi_sccl,l3c",
-@@ -199,7 +199,7 @@ static const struct perf_pmu_test_event uncore_imc_free_running_cache_miss = {
- 	.event = {
- 		.name = "uncore_imc_free_running.cache_miss",
- 		.event = "event=0x12",
--		.desc = "Total cache misses. Unit: uncore_imc_free_running",
-+		.desc = "Total cache misses",
- 		.topic = "uncore",
- 		.long_desc = "Total cache misses",
- 		.pmu = "uncore_imc_free_running",
-@@ -213,7 +213,7 @@ static const struct perf_pmu_test_event uncore_imc_cache_hits = {
- 	.event = {
- 		.name = "uncore_imc.cache_hits",
- 		.event = "event=0x34",
--		.desc = "Total cache hits. Unit: uncore_imc",
-+		.desc = "Total cache hits",
- 		.topic = "uncore",
- 		.long_desc = "Total cache hits",
- 		.pmu = "uncore_imc",
-@@ -238,13 +238,13 @@ static const struct perf_pmu_test_event sys_ddr_pmu_write_cycles = {
- 	.event = {
- 		.name = "sys_ddr_pmu.write_cycles",
- 		.event = "event=0x2b",
--		.desc = "ddr write-cycles event. Unit: uncore_sys_ddr_pmu",
-+		.desc = "ddr write-cycles event",
- 		.topic = "uncore",
- 		.pmu = "uncore_sys_ddr_pmu",
- 		.compat = "v8",
- 	},
- 	.alias_str = "event=0x2b",
--	.alias_long_desc = "ddr write-cycles event. Unit: uncore_sys_ddr_pmu",
-+	.alias_long_desc = "ddr write-cycles event",
- 	.matching_pmu = "uncore_sys_ddr_pmu",
- };
- 
-@@ -252,13 +252,13 @@ static const struct perf_pmu_test_event sys_ccn_pmu_read_cycles = {
- 	.event = {
- 		.name = "sys_ccn_pmu.read_cycles",
- 		.event = "config=0x2c",
--		.desc = "ccn read-cycles event. Unit: uncore_sys_ccn_pmu",
-+		.desc = "ccn read-cycles event",
- 		.topic = "uncore",
- 		.pmu = "uncore_sys_ccn_pmu",
- 		.compat = "0x01",
- 	},
- 	.alias_str = "config=0x2c",
--	.alias_long_desc = "ccn read-cycles event. Unit: uncore_sys_ccn_pmu",
-+	.alias_long_desc = "ccn read-cycles event",
- 	.matching_pmu = "uncore_sys_ccn_pmu",
- };
- 
--- 
-2.42.0.rc2.253.gd59a3bf2b4-goog
+I like the idea of merging the duplicate PMUs. My only concern is that
+the assumption of the consecutive may not work for all the uncore cases.
+If the IDs are 0,2,4,6, they cannot be merged successfully, right?
 
+Can we just ignore the consecutive check?
+Is there a problem if we just simply remove the "(last_pmu_num + 1 ==
+pmu_num) &&", and only compare the no_suffix name?
+
+Thanks,
+Kan
+
+> 
+> On other architectures they encode these numbers in different places
+> but generally with no underscore, so this change has no impact for
+> them. I'm keen to solve this problem as we're seeing large numbers of
+> PMUs that cause perf list to be spammy and the all PMU events test to
+> run for too long.>
+> Thanks,
+> Ian
+> 
+>> Thanks,
+>> Kan
+>>
+>>> If "-v" is passed to "perf list" then list all PMUs.
+>>>
+>>> Signed-off-by: Ian Rogers <irogers@google.com>
+>>> ---
+>>>  tools/perf/builtin-list.c      |  8 +++++
+>>>  tools/perf/util/pmus.c         | 54 ++++++++++++++++++++++++++++++++--
+>>>  tools/perf/util/print-events.h |  1 +
+>>>  3 files changed, 61 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+>>> index 7fec2cca759f..8fe4ddf02c14 100644
+>>> --- a/tools/perf/builtin-list.c
+>>> +++ b/tools/perf/builtin-list.c
+>>> @@ -423,6 +423,13 @@ static void json_print_metric(void *ps __maybe_unused, const char *group,
+>>>       strbuf_release(&buf);
+>>>  }
+>>>
+>>> +static bool default_skip_duplicate_pmus(void *ps)
+>>> +{
+>>> +     struct print_state *print_state = ps;
+>>> +
+>>> +     return !print_state->long_desc;
+>>> +}
+>>> +
+>>>  int cmd_list(int argc, const char **argv)
+>>>  {
+>>>       int i, ret = 0;
+>>> @@ -434,6 +441,7 @@ int cmd_list(int argc, const char **argv)
+>>>               .print_end = default_print_end,
+>>>               .print_event = default_print_event,
+>>>               .print_metric = default_print_metric,
+>>> +             .skip_duplicate_pmus = default_skip_duplicate_pmus,
+>>>       };
+>>>       const char *cputype = NULL;
+>>>       const char *unit_name = NULL;
+>>> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+>>> index 3581710667b0..5073843aca19 100644
+>>> --- a/tools/perf/util/pmus.c
+>>> +++ b/tools/perf/util/pmus.c
+>>> @@ -275,6 +275,50 @@ struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu)
+>>>       return NULL;
+>>>  }
+>>>
+>>> +static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
+>>> +{
+>>> +     bool use_core_pmus = !pmu || pmu->is_core;
+>>> +     int last_pmu_name_len = 0;
+>>> +     unsigned long last_pmu_num = 0;
+>>> +     const char *last_pmu_name = (pmu && pmu->name) ? pmu->name : "";
+>>> +
+>>> +     if (!pmu) {
+>>> +             pmu_read_sysfs(/*core_only=*/false);
+>>> +             pmu = list_prepare_entry(pmu, &core_pmus, list);
+>>> +     } else
+>>> +             last_pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "", &last_pmu_num);
+>>> +
+>>> +     if (use_core_pmus) {
+>>> +             list_for_each_entry_continue(pmu, &core_pmus, list) {
+>>> +                     unsigned long pmu_num = 0;
+>>> +                     int pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "", &pmu_num);
+>>> +
+>>> +                     if (last_pmu_name_len == pmu_name_len &&
+>>> +                         (last_pmu_num + 1 == pmu_num) &&
+>>> +                         !strncmp(last_pmu_name, pmu->name ?: "", pmu_name_len)) {
+>>> +                             last_pmu_num++;
+>>> +                             continue;
+>>> +                     }
+>>> +                     return pmu;
+>>> +             }
+>>> +             pmu = NULL;
+>>> +             pmu = list_prepare_entry(pmu, &other_pmus, list);
+>>> +     }
+>>> +     list_for_each_entry_continue(pmu, &other_pmus, list) {
+>>> +             unsigned long pmu_num = 0;
+>>> +             int pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "", &pmu_num);
+>>> +
+>>> +             if (last_pmu_name_len == pmu_name_len &&
+>>> +                 (last_pmu_num + 1 == pmu_num) &&
+>>> +                 !strncmp(last_pmu_name, pmu->name ?: "", pmu_name_len)) {
+>>> +                     last_pmu_num++;
+>>> +                     continue;
+>>> +             }
+>>> +             return pmu;
+>>> +     }
+>>> +     return NULL;
+>>> +}
+>>> +
+>>>  const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str)
+>>>  {
+>>>       struct perf_pmu *pmu = NULL;
+>>> @@ -429,10 +473,16 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
+>>>       int printed = 0;
+>>>       int len, j;
+>>>       struct sevent *aliases;
+>>> +     struct perf_pmu *(*scan_fn)(struct perf_pmu *);
+>>> +
+>>> +     if (print_cb->skip_duplicate_pmus(print_state))
+>>> +             scan_fn = perf_pmus__scan_skip_duplicates;
+>>> +     else
+>>> +             scan_fn = perf_pmus__scan;
+>>>
+>>>       pmu = NULL;
+>>>       len = 0;
+>>> -     while ((pmu = perf_pmus__scan(pmu)) != NULL) {
+>>> +     while ((pmu = scan_fn(pmu)) != NULL) {
+>>>               list_for_each_entry(event, &pmu->aliases, list)
+>>>                       len++;
+>>>               if (pmu->selectable)
+>>> @@ -445,7 +495,7 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
+>>>       }
+>>>       pmu = NULL;
+>>>       j = 0;
+>>> -     while ((pmu = perf_pmus__scan(pmu)) != NULL) {
+>>> +     while ((pmu = scan_fn(pmu)) != NULL) {
+>>>               bool is_cpu = pmu->is_core;
+>>>
+>>>               list_for_each_entry(event, &pmu->aliases, list) {
+>>> diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-events.h
+>>> index d7fab411e75c..bf4290bef0cd 100644
+>>> --- a/tools/perf/util/print-events.h
+>>> +++ b/tools/perf/util/print-events.h
+>>> @@ -26,6 +26,7 @@ struct print_callbacks {
+>>>                       const char *expr,
+>>>                       const char *threshold,
+>>>                       const char *unit);
+>>> +     bool (*skip_duplicate_pmus)(void *print_state);
+>>>  };
+>>>
+>>>  /** Print all events, the default when no options are specified. */
