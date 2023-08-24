@@ -2,327 +2,165 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A64C71145
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 04:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DCEC71145
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 04:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238822AbjHXEmH (ORCPT
+        id S238983AbjHXEqE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 24 Aug 2023 00:42:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42278 "EHLO
+        Thu, 24 Aug 2023 00:46:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239032AbjHXEmA (ORCPT
+        with ESMTP id S235637AbjHXEph (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 24 Aug 2023 00:42:00 -0400
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0037210E4
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 21:41:57 -0700 (PDT)
-Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-40c72caec5cso197281cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 21:41:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692852117; x=1693456917;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YxyBUJq2Gx4AIxx0Qqtw7Y4mB6OKThVmzCJz6Skp9EY=;
-        b=RCZf/7WGJzD+uQtolBZh7UPjVLH6LlQ4rNPv4aAYELfF5ufY2NUm+zWknMbq6n8utG
-         ZyNmlPe3ytq+FRyKuL0jkJWszjZDHW+43GVeF9CeYak9ISLESQRpjZXrhyBRHRuvMtzD
-         0Dvhbdkhor0EjjoQU2fL7falsXIa79kOzJ9iKVPo9EfzTWxEN+8U8KXkntLa6i6UySbD
-         Th5YtjTfBtv7NiNEQ5FOE191oaEyu6QzYwzKgjPqwi+7VXQvBGa98TTsagrm90Ws3WoA
-         op+C6mqDJxnQ3TeTx8sqA56e/uY4jO09CcqEjIsWgZEcSi4sqxgCOSuGu1irjUuRKUkh
-         LHcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692852117; x=1693456917;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YxyBUJq2Gx4AIxx0Qqtw7Y4mB6OKThVmzCJz6Skp9EY=;
-        b=Kr4EYjveRP5lqPXEeWFzpN7q65gKTn4aPt7zVY9KoxyItQDC9BHUpEhdprrVIhfv4I
-         wEVLmaNk8IO5Jq57uLxKHG70LuORGbaizKYNCIBJlPHfc10qcBPe2i4voY6MIbZpU8Gk
-         aaLKBAOGG2Zsbe9XNXTmdcPFqO3AI0Z5Wa6dtLtUWSa88PQiRuHHS13WW/3eEp4o03UE
-         TPjs5W8WrJqIbNa6+MacD2/2yuGTrGjphVE+blgF6aD7LmUDY6t2w2K5zY19oCUNZsOk
-         8509if75GVoGQFEkHlP4T9HVkQPaZQa/9a3aggsenSCP5bj7G4DWabZQnlbPIePG3duP
-         xy9w==
-X-Gm-Message-State: AOJu0YymCI+SyOMSuU3QYuEB/d0f8CnTiaAM/JSLCR3w6Nf6X1y8I6fu
-        c9qfxDBBap/M5eBgeXM/wpAQSSoLTNFjz3kwAJjiRzEdEYpaQPlG4urcOw==
-X-Google-Smtp-Source: AGHT+IEoQEqv/hwLhsBZaFiWkqP3VwGk1S/bC6+96tve8JK8xHCrkoBxeu3CWX6ZQH24c9/bOyflriyorKMiO2d2FxY=
-X-Received: by 2002:a05:622a:19a0:b0:410:916b:eb3f with SMTP id
- u32-20020a05622a19a000b00410916beb3fmr786091qtc.16.1692852116707; Wed, 23 Aug
- 2023 21:41:56 -0700 (PDT)
+        Thu, 24 Aug 2023 00:45:37 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9845310E4;
+        Wed, 23 Aug 2023 21:45:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692852334; x=1724388334;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=u5rfwar6xDQhY6j+a05ycw0TEynTIX0ltSNr1oZYiI4=;
+  b=lgAssptPNRXliEUNNlBj0HI8H1DH6AEgAO1nzPdzOssdsid9t0IahSE8
+   cPu5gQ7PgPXtW6hvt+0KPr2DOh9wosxA1AYGnfgAK1Uhp+L1yRB2vPdjc
+   vhwh/wJELRZuh/PzBlWrNm2IuzxBCdXYhuqXXDgDYRPIxgXrdeXU5D8uM
+   FypSWw+ZwjP58aDWK/9X5hh0r9a6RMByoYk629g6xKQCTJP3IciwWrKKD
+   eX+z/inLFdkJpABJXY3szl12Ewsww+rIMUHVFj+o1/MFFnaek+VpSkd2V
+   XeIimRbgOlSjKJM1s3LQLFOnOFD+DB4F8yfRUxS99Zhf6b6ZQaTzd1/CI
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="440691013"
+X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
+   d="scan'208";a="440691013"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 21:45:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="860562597"
+X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
+   d="scan'208";a="860562597"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.212.187])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 21:45:29 -0700
+Message-ID: <8685878c-8de0-88b9-4434-f823620f6abf@intel.com>
+Date:   Thu, 24 Aug 2023 07:45:25 +0300
 MIME-Version: 1.0
-References: <CAP-5=fU10YCxZfq=dOUUPR0dRusbq=vzp5CqsOuz1aLVY16KAw@mail.gmail.com>
- <CAP-5=fWOCE6+9MuiFziHz1o6Ej-FTDJa1fnkhYpifz7Rtazk8Q@mail.gmail.com>
- <CAP-5=fXf-FmKb=D4h5VgxQ=w3T3+Nn3AP4ExR9YjnKFB=4m7bA@mail.gmail.com>
- <CAP-5=fWSHpWx02+nB8joo0JbtNJXAEHFLBdY7n5W=tSbdpMGkg@mail.gmail.com>
- <CAP-5=fX9OXTiiojNp-ut-_LOD2=6+mEN8iAt=UUGfmDu4q+F3Q@mail.gmail.com>
- <CAP-5=fU6TWKQ8eDUM5UFfO2h6TgL9j7-43eWfZMTbwpRqHS6OA@mail.gmail.com>
- <CAP-5=fX4Fj3phsny8zPueJpUaxN0jEhvJarc3ghz46RCtu0C+A@mail.gmail.com>
- <CAP-5=fV6f3NeSbKatG0_LCROUr=2xdcrC7PnC3D0YprtCDaTow@mail.gmail.com>
- <CAP-5=fU2dPih+JPUOkoHyiFvMwd9KRHiKDtuNeatPsaE0VxbsQ@mail.gmail.com>
- <CAP-5=fWRELRNg3guvsXu-PJU4MfJ+tj3zZRWpSrmCK5AP39ANg@mail.gmail.com> <CAP-5=fVqbAej4aJV-BDsBSpgAnmad+RXC_0Z_81Ma8WZXUkNWg@mail.gmail.com>
-In-Reply-To: <CAP-5=fVqbAej4aJV-BDsBSpgAnmad+RXC_0Z_81Ma8WZXUkNWg@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 23 Aug 2023 21:41:44 -0700
-Message-ID: <CAP-5=fW38egHuXP+y1O=VFSW0vO79UqRxgsrOp94D+evaNb92g@mail.gmail.com>
-Subject: Re: Linux Perf Tool Office Hours
-To:     linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Anup Sharma <anupnewsmail@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.14.0
+Subject: Re: [perf-tools-next:tmp.perf-tools-next] [perf dlfilter] f178a76b05:
+ perf-sanity-tests.dlfilter_C_API.fail
+To:     Oliver Sang <oliver.sang@intel.com>
+Cc:     oe-lkp@lists.linux.dev, lkp@intel.com,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <202308232146.94d82cb4-oliver.sang@intel.com>
+ <78a87ed2-3aa8-95ef-28ae-19961f7c4acb@intel.com>
+ <ZOa1LnnwETWCQ6n5@xsang-OptiPlex-9020>
+Content-Language: en-US
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <ZOa1LnnwETWCQ6n5@xsang-OptiPlex-9020>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Office hours tomorrow:
+On 24/08/23 04:41, Oliver Sang wrote:
+> hi, Adrian Hunter,
+> 
+> On Wed, Aug 23, 2023 at 06:37:49PM +0300, Adrian Hunter wrote:
+>> On 23/08/23 17:57, kernel test robot wrote:
+>>>
+>>>
+>>> Hello,
+>>>
+>>> kernel test robot noticed "perf-sanity-tests.dlfilter_C_API.fail" on:
+>>>
+>>> commit: f178a76b054fd046d212c3c67745146ff191a443 ("perf dlfilter: Add a test for resolve_address()")
+>>> https://git.kernel.org/cgit/linux/kernel/git/perf/perf-tools-next.git tmp.perf-tools-next
+>>>
+>>> [test failed on linux-next/master 28c736b0e92e11bfe2b9997688213dc43cb22182]
+>>
+>> We sometimes make a test for an issue then fix it, so the new test fails,
+>> but is fixed in a subsequent patch.  If you read the commit it says as much:
+>>
+>> commit f178a76b054fd046d212c3c67745146ff191a443
+>> Author: Adrian Hunter <adrian.hunter@intel.com>
+>> Date:   Mon Jul 31 12:18:55 2023 +0300
+>>
+>>     perf dlfilter: Add a test for resolve_address()
+>>     
+>>     Extend the "dlfilter C API" test to test
+>>     perf_dlfilter_fns.resolve_address(). The test currently fails, but passes
+>>     after a subsequent patch.
+>>     
+>>     Reviewed-by: Ian Rogers <irogers@google.com>
+>>     Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+>>     Cc: Jiri Olsa <jolsa@kernel.org>
+>>     Cc: Namhyung Kim <namhyung@kernel.org>
+>>     Link: https://lore.kernel.org/r/20230731091857.10681-1-adrian.hunter@intel.com
+>>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>>
+>> The fix is:
+>>
+>> 42c6dd9d23019ff339d0aca80a444eb71087050e perf dlfilter: Initialize addr_location before passing it to thread__find_symbol_fb()
+> 
+> thanks a lot for information!
+> 
+> as above mentioned, when this auto-bisect done, it confirmed the issue still
+> exists linux-next/master:
+> [test failed on linux-next/master 28c736b0e92e11bfe2b9997688213dc43cb22182]
+> which includes 42c6dd9d23019ff339d0aca80a444eb71087050e
+> 
+> we will test again on latest linux-next/master:
+> e3f80d3eae76c (tag: next-20230823, linux-next/master, broonie-ci/next-master) Add linux-next specific files for 20230823
+> and 42c6dd9d23019ff339d0aca80a444eb71087050e
+> 
+> Thanks
 
-Linux Perf Tool Office Hours
-Thursday, August 24 =C2=B7 9:00 =E2=80=93 9:45am
-Time zone: America/Los_Angeles
-Google Meet joining info
-Video call link: https://meet.google.com/jds-asbo-day
-Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 018 892=
-=E2=80=AC#
-More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252256983
+Could you include the output from:
 
-Next week is the end of Google summer-of-code 2023 and so this will be
-a chance to talk with Anup before he wraps up.
+	perf test -v dlfilter
 
-Thanks,
-Ian
-On Wed, Aug 16, 2023 at 11:16=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> Office hours tomorrow:
->
-> Linux Perf Tool Office Hours
-> Thursday, August 17 =C2=B7 9:00 =E2=80=93 9:45am
-> Time zone: America/Los_Angeles
-> Google Meet joining info
-> Video call link: https://meet.google.com/jds-asbo-day
-> Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 018 892=
-=E2=80=AC#
-> More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252256983
->
-> Thanks,
-> Ian
->
-> On Wed, Aug 9, 2023 at 1:32=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
-> >
-> > Hi,
-> >
-> > Just a heads up that we plan to skip office hours tomorrow.
-> >
-> > Thanks,
-> > Ian
-> >
-> > On Wed, Aug 2, 2023 at 1:09=E2=80=AFPM Ian Rogers <irogers@google.com> =
-wrote:
-> > >
-> > > First office hours of August tomorrow:
-> > >
-> > > Linux Perf Tool Office Hours
-> > > Thursday, August 3 =C2=B7 9:00 =E2=80=93 9:45am
-> > > Time zone: America/Los_Angeles
-> > > Google Meet joining info
-> > > Video call link: https://meet.google.com/jds-asbo-day
-> > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 018=
- 892=E2=80=AC#
-> > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252256983
-> > >
-> > > Thanks,
-> > > Ian
-> > >
-> > > On Wed, Jul 26, 2023 at 2:53=E2=80=AFPM Ian Rogers <irogers@google.co=
-m> wrote:
-> > > >
-> > > > A reminder there is the usual office hours tomorrow. This is an
-> > > > excellent opportunity to ask questions and hear the latest on Anup'=
-s
-> > > > firefox profiler work.
-> > > >
-> > > > Linux Perf Tool Office Hours
-> > > > Thursday, July 27 =C2=B7 9:00 =E2=80=93 9:45am
-> > > > Time zone: America/Los_Angeles
-> > > > Google Meet joining info
-> > > > Video call link: https://meet.google.com/jds-asbo-day
-> > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 0=
-18 892=E2=80=AC#
-> > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D66292522569=
-83
-> > > >
-> > > > Thanks,
-> > > > Ian
-> > > >
-> > > > On Wed, Jul 19, 2023 at 3:29=E2=80=AFPM Ian Rogers <irogers@google.=
-com> wrote:
-> > > > >
-> > > > > A reminder there is the usual office hours tomorrow:
-> > > > >
-> > > > > Linux Perf Tool Office Hours
-> > > > > Thursday, July 20 =C2=B7 9:00 =E2=80=93 9:45am
-> > > > > Time zone: America/Los_Angeles
-> > > > > Google Meet joining info
-> > > > > Video call link: https://meet.google.com/jds-asbo-day
-> > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817=
- 018 892=E2=80=AC#
-> > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D662925225=
-6983
-> > > > >
-> > > > > Thanks,
-> > > > > Ian
-> > > > >
-> > > > > On Wed, Jul 12, 2023 at 3:42=E2=80=AFPM Ian Rogers <irogers@googl=
-e.com> wrote:
-> > > > > >
-> > > > > > A reminder there are office hours tomorrow. This is a particula=
-r
-> > > > > > useful time to sync with Anup, the Linux Foundation Google
-> > > > > > Summer-of-Code contributor this year.
-> > > > > >
-> > > > > > Linux Perf Tool Office Hours
-> > > > > > Thursday, July 13 =C2=B7 9:00 =E2=80=93 9:45am
-> > > > > > Time zone: America/Los_Angeles
-> > > > > > Google Meet joining info
-> > > > > > Video call link: https://meet.google.com/jds-asbo-day
-> > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA8=
-17 018 892=E2=80=AC#
-> > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252=
-256983
-> > > > > >
-> > > > > > Thanks!
-> > > > > > Ian
-> > > > > > On Thu, Jul 6, 2023 at 8:31=E2=80=AFAM Ian Rogers <irogers@goog=
-le.com> wrote:
-> > > > > > >
-> > > > > > > Hi,
-> > > > > > >
-> > > > > > > Sorry for the late notice. Office hours today in 30 minutes.
-> > > > > > >
-> > > > > > > Linux Perf Tool Office Hours
-> > > > > > > Thursday, July 6 =C2=B7 9:00 =E2=80=93 9:45am
-> > > > > > > Time zone: America/Los_Angeles
-> > > > > > > Google Meet joining info
-> > > > > > > Video call link: https://meet.google.com/jds-asbo-day
-> > > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=
-=AA817 018 892=E2=80=AC#
-> > > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D66292=
-52256983
-> > > > > > >
-> > > > > > > Thanks,
-> > > > > > > Ian
-> > > > > > >
-> > > > > > > On Wed, Jun 21, 2023 at 3:15=E2=80=AFPM Ian Rogers <irogers@g=
-oogle.com> wrote:
-> > > > > > > >
-> > > > > > > > Hi,
-> > > > > > > >
-> > > > > > > > Office hours reminder tomorrow. A chance to discuss any top=
-ics of the
-> > > > > > > > day and for
-> > > > > > > > GSoC contributor sync.
-> > > > > > > >
-> > > > > > > > Linux Perf Tool Office Hours
-> > > > > > > > Thursday, June 22 =C2=B7 9:00 =E2=80=93 9:45am
-> > > > > > > > Time zone: America/Los_Angeles
-> > > > > > > > Google Meet joining info
-> > > > > > > > Video call link: https://meet.google.com/jds-asbo-day
-> > > > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=
-=AA817 018 892=E2=80=AC#
-> > > > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D662=
-9252256983
-> > > > > > > >
-> > > > > > > > Thanks,
-> > > > > > > > Ian
-> > > > > > > >
-> > > > > > > > On Wed, Jun 14, 2023 at 10:01=E2=80=AFAM Ian Rogers <iroger=
-s@google.com> wrote:
-> > > > > > > > >
-> > > > > > > > > Hi,
-> > > > > > > > >
-> > > > > > > > > Office hours reminder. A chance to discuss topics of the =
-day and for
-> > > > > > > > > GSoC contributor sync.
-> > > > > > > > >
-> > > > > > > > > Linux Perf Tool Office Hours
-> > > > > > > > > Thursday, June 15 =C2=B7 9:00 =E2=80=93 9:45am
-> > > > > > > > > Time zone: America/Los_Angeles
-> > > > > > > > > Google Meet joining info
-> > > > > > > > > Video call link: https://meet.google.com/jds-asbo-day
-> > > > > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=
-=80=AA817 018 892=E2=80=AC#
-> > > > > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6=
-629252256983
-> > > > > > > > >
-> > > > > > > > > Thanks,
-> > > > > > > > > Ian
-> > > > > > > > >
-> > > > > > > > > On Wed, Jun 7, 2023 at 9:14=E2=80=AFPM Ian Rogers <iroger=
-s@google.com> wrote:
-> > > > > > > > > >
-> > > > > > > > > > Hi,
-> > > > > > > > > >
-> > > > > > > > > > Office hours and chance for GSoC contributor sync sligh=
-tly earlier at
-> > > > > > > > > > 9am PT tomorrow:
-> > > > > > > > > >
-> > > > > > > > > > Linux Perf Tool Office Hours
-> > > > > > > > > > Thursday, June 8 =C2=B7 9:00 =E2=80=93 9:45am
-> > > > > > > > > > Time zone: America/Los_Angeles
-> > > > > > > > > > Google Meet joining info
-> > > > > > > > > > Video call link: https://meet.google.com/jds-asbo-day
-> > > > > > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =
-=E2=80=AA817 018 892=E2=80=AC#
-> > > > > > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=
-=3D6629252256983
-> > > > > > > > > >
-> > > > > > > > > > If you'd like to randomly drop in, feel free. An issue =
-I'm keen to
-> > > > > > > > > > discuss is memory usage and memory leaks.
-> > > > > > > > > >
-> > > > > > > > > > Thanks,
-> > > > > > > > > > Ian
-> > > > > > > > > >
-> > > > > > > > > > On Wed, May 31, 2023 at 10:00=E2=80=AFAM Ian Rogers <ir=
-ogers@google.com> wrote:
-> > > > > > > > > > >
-> > > > > > > > > > > Hi,
-> > > > > > > > > > >
-> > > > > > > > > > > On Monday the Google Summer-of-Code officially starte=
-d and Anup is
-> > > > > > > > > > > this summer's contributor to the Linux perf tool! We'=
-ve found in the
-> > > > > > > > > > > past [1] that having office hours is a good chance fo=
-r contributors to
-> > > > > > > > > > > sync and also for those interested in the Linux perf =
-tool to also
-> > > > > > > > > > > connect and share their problems and experiences. As =
-such we plan on
-> > > > > > > > > > > running our first office hours for this summer tomorr=
-ow, the details
-> > > > > > > > > > > are below:
-> > > > > > > > > > >
-> > > > > > > > > > > Linux Perf Tool Office Hours
-> > > > > > > > > > > Thursday, June 1 =C2=B7 9:30 =E2=80=93 10:30am
-> > > > > > > > > > > Time zone: America/Los_Angeles
-> > > > > > > > > > > Google Meet joining info
-> > > > > > > > > > > Video call link: https://meet.google.com/jds-asbo-day
-> > > > > > > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =
-=E2=80=AA817 018 892=E2=80=AC#
-> > > > > > > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=
-=3D6629252256983
-> > > > > > > > > > >
-> > > > > > > > > > > Please ask me and I'll be more than happy to add you =
-to the calendar
-> > > > > > > > > > > invite for this. Over the summer we can adjust the ti=
-ming of the
-> > > > > > > > > > > office hours to maximize participation, etc. so pleas=
-e reach out and
-> > > > > > > > > > > share concerns.
-> > > > > > > > > > >
-> > > > > > > > > > > Thanks,
-> > > > > > > > > > > Ian
-> > > > > > > > > > >
-> > > > > > > > > > > [1] https://lore.kernel.org/linux-perf-users/CAP-5=3D=
-fWiQHvYZp5R=3Duw4xUwBiN1fBLBU8witPkYM+2r8tnYCOg@mail.gmail.com/
+> 
+>>>
+>>> in testcase: perf-sanity-tests
+>>> version: perf-x86_64-00c7b5f4ddc5-1_20230402
+>>> with following parameters:
+>>>
+>>> 	perf_compiler: gcc
+>>>
+>>>
+>>>
+>>> compiler: gcc-12
+>>> test machine: 224 threads 2 sockets Intel(R) Xeon(R) Platinum 8480+ (Sapphire Rapids) with 256G memory
+>>>
+>>> (please refer to attached dmesg/kmsg for entire log/backtrace)
+>>>
+>>>
+>>>
+>>>
+>>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>>> the same patch/commit), kindly add following tags
+>>> | Reported-by: kernel test robot <oliver.sang@intel.com>
+>>> | Closes: https://lore.kernel.org/oe-lkp/202308232146.94d82cb4-oliver.sang@intel.com
+>>>
+>>>
+>>>
+>>>  66: Convert perf time to TSC                                        :
+>>>  66.1: TSC support                                                   : Ok
+>>>  66.2: Perf time to TSC                                              : Ok
+>>>  67: dlfilter C API                                                  : FAILED!  <---
+>>>  68: Sigtrap                                                         : Ok
+>>>
+>>>
+>>>
+>>> The kernel config and materials to reproduce are available at:
+>>> https://download.01.org/0day-ci/archive/20230823/202308232146.94d82cb4-oliver.sang@intel.com
+>>>
+>>>
+>>>
+>>
+
