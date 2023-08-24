@@ -2,95 +2,225 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58630C27C40
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 13:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDADC27C40
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 14:01:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239166AbjHXNnT (ORCPT
+        id S236832AbjHXOAe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 24 Aug 2023 09:43:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51330 "EHLO
+        Thu, 24 Aug 2023 10:00:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241554AbjHXNmr (ORCPT
+        with ESMTP id S231989AbjHXOAF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 24 Aug 2023 09:42:47 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2D401FE3;
-        Thu, 24 Aug 2023 06:42:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692884536; x=1724420536;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=5bi7NMHfbfnMvZssrvzV0KCWgpKQPJHyrUAbgRnv6Bo=;
-  b=RQiWAfhtVNH+lPQP1J3DGmrjewvYQ9oLhYIwR1dSgI0NcnYJrFj1MzPJ
-   UjQGc1hhUf4SQijRsLZOoUjlwnDUAA8STafHTHvp4OSmOazruHyAAMnfX
-   /6ACNTSY7ZoaWAWPnbd4rcoFCbj/rXodC3+OKd7KpEZ2IxhM8/rhoalBm
-   7lMgTd0RVNDq1hQCvf9YUtdRVW5cy12A/eGojqwotKepAcTY7S2pvK7el
-   3kb3xdcP87xLjmNtiEN08M4oMEVk4ikEC/XDE2O8raC4hfJhjAmSMmsSD
-   0gF77AqXyABl31ygqDyWch5GDwTnBUD3KILfIczayKQy/az6eCYI/r/jI
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="440792673"
-X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
-   d="scan'208";a="440792673"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2023 06:29:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="802540175"
-X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
-   d="scan'208";a="802540175"
-Received: from abedekar-mobl1.ger.corp.intel.com (HELO ijarvine-mobl2.ger.corp.intel.com) ([10.251.213.29])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2023 06:29:37 -0700
-From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Thu, 24 Aug 2023 10:00:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B4C0E7A;
+        Thu, 24 Aug 2023 07:00:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CEDEE65384;
+        Thu, 24 Aug 2023 14:00:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDBC9C433C7;
+        Thu, 24 Aug 2023 14:00:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692885602;
+        bh=oyQ7Y3sa5I8ZMyB/lp9x5Zm0BLOOgyy5pToR+nkA12M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dmWOCNXtobdEKPTRgdQCXkoCF6Qn4NNQ6poR1eos2vzyqdzRr0xIhm4i26hCUBHhL
+         cu5yaHeO6RvnY7jYFjbHDgFN7jowb/3AramCl8lf1Ts+RTIgTBsNIBpkF1Ks3slxL8
+         fcerm8WWSBGjY82vGqq4YZF59+6JBZKN+OfCvNIsse1xdv33kfi710q+VjNiZyyvel
+         zzNXuMPId3oiIuMtyrRbYKqPV53Pw/hxsgVq9sPBpwUIPgPnZv6kKarudl9NK/sEj/
+         9Mwa3MP4I0Oq5FBz3FRMi2UXjNOXE+T8/C3QbPV5LjxNtoNZTG67w/sJh44iJCytGv
+         R0H8P44BWmvVA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 6C91640722; Thu, 24 Aug 2023 10:59:59 -0300 (-03)
+Date:   Thu, 24 Aug 2023 10:59:59 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>,
+        Thomas Richter <tmricht@linux.ibm.com>
+Cc:     Heiko Carstens <hca@linux.ibm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 14/14] perf/x86/uncore: Remove unnecessary ?: operator around pcibios_err_to_errno() call
-Date:   Thu, 24 Aug 2023 16:28:32 +0300
-Message-Id: <20230824132832.78705-15-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230824132832.78705-1-ilpo.jarvinen@linux.intel.com>
-References: <20230824132832.78705-1-ilpo.jarvinen@linux.intel.com>
+        James Clark <james.clark@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Rob Herring <robh@kernel.org>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 06/18] perf s390 s390_cpumcfdg_dump: Don't scan all
+ PMUs
+Message-ID: <ZOdiX4eJHFfFbQhi@kernel.org>
+References: <20230824041330.266337-1-irogers@google.com>
+ <20230824041330.266337-7-irogers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230824041330.266337-7-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If err == 0, pcibios_err_to_errno(err) returns 0 so the ?: construct
-can be removed.
+Em Wed, Aug 23, 2023 at 09:13:18PM -0700, Ian Rogers escreveu:
+> Rather than scanning all PMUs for a counter name, scan the PMU
+> associated with the evsel of the sample. This is done to remove a
+> dependence on pmu-events.h.
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- arch/x86/events/intel/uncore_snbep.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'm applying this one, and CCing the S/390 developers so that they can
+try this and maybe provide an Acked-by/Tested-by,
 
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index d49e90dc04a4..4d349986f76a 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -1502,7 +1502,7 @@ static int snbep_pci2phy_map_init(int devid, int nodeid_loc, int idmap_loc, bool
+- Arnaldo
  
- 	pci_dev_put(ubox_dev);
- 
--	return err ? pcibios_err_to_errno(err) : 0;
-+	return pcibios_err_to_errno(err);
- }
- 
- int snbep_uncore_pci_init(void)
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/s390-sample-raw.c | 50 ++++++++++++++++---------------
+>  1 file changed, 26 insertions(+), 24 deletions(-)
+> 
+> diff --git a/tools/perf/util/s390-sample-raw.c b/tools/perf/util/s390-sample-raw.c
+> index 91330c874170..dc1ed3e95d4d 100644
+> --- a/tools/perf/util/s390-sample-raw.c
+> +++ b/tools/perf/util/s390-sample-raw.c
+> @@ -27,7 +27,7 @@
+>  #include "color.h"
+>  #include "sample-raw.h"
+>  #include "s390-cpumcf-kernel.h"
+> -#include "pmu-events/pmu-events.h"
+> +#include "util/pmu.h"
+>  #include "util/sample.h"
+>  
+>  static size_t ctrset_size(struct cf_ctrset_entry *set)
+> @@ -132,56 +132,57 @@ static int get_counterset_start(int setnr)
+>  
+>  struct get_counter_name_data {
+>  	int wanted;
+> -	const char *result;
+> +	char *result;
+>  };
+>  
+> -static int get_counter_name_callback(const struct pmu_event *evp,
+> -				     const struct pmu_events_table *table __maybe_unused,
+> -				     void *vdata)
+> +static int get_counter_name_callback(void *vdata, struct pmu_event_info *info)
+>  {
+>  	struct get_counter_name_data *data = vdata;
+>  	int rc, event_nr;
+> +	const char *event_str;
+>  
+> -	if (evp->name == NULL || evp->event == NULL)
+> +	if (info->str == NULL)
+>  		return 0;
+> -	rc = sscanf(evp->event, "event=%x", &event_nr);
+> +
+> +	event_str = strstr(info->str, "event=");
+> +	if (!event_str)
+> +		return 0;
+> +
+> +	rc = sscanf(event_str, "event=%x", &event_nr);
+>  	if (rc == 1 && event_nr == data->wanted) {
+> -		data->result = evp->name;
+> +		data->result = strdup(info->name);
+>  		return 1; /* Terminate the search. */
+>  	}
+>  	return 0;
+>  }
+>  
+> -/* Scan the PMU table and extract the logical name of a counter from the
+> - * PMU events table. Input is the counter set and counter number with in the
+> - * set. Construct the event number and use this as key. If they match return
+> - * the name of this counter.
+> +/* Scan the PMU and extract the logical name of a counter from the event. Input
+> + * is the counter set and counter number with in the set. Construct the event
+> + * number and use this as key. If they match return the name of this counter.
+>   * If no match is found a NULL pointer is returned.
+>   */
+> -static const char *get_counter_name(int set, int nr, const struct pmu_events_table *table)
+> +static char *get_counter_name(int set, int nr, struct perf_pmu *pmu)
+>  {
+>  	struct get_counter_name_data data = {
+>  		.wanted = get_counterset_start(set) + nr,
+>  		.result = NULL,
+>  	};
+>  
+> -	if (!table)
+> +	if (!pmu)
+>  		return NULL;
+>  
+> -	pmu_events_table__for_each_event(table, get_counter_name_callback, &data);
+> +	perf_pmu__for_each_event(pmu, &data, get_counter_name_callback);
+>  	return data.result;
+>  }
+>  
+> -static void s390_cpumcfdg_dump(struct perf_sample *sample)
+> +static void s390_cpumcfdg_dump(struct perf_pmu *pmu, struct perf_sample *sample)
+>  {
+>  	size_t i, len = sample->raw_size, offset = 0;
+>  	unsigned char *buf = sample->raw_data;
+>  	const char *color = PERF_COLOR_BLUE;
+>  	struct cf_ctrset_entry *cep, ce;
+> -	const struct pmu_events_table *table;
+>  	u64 *p;
+>  
+> -	table = pmu_events_table__find();
+>  	while (offset < len) {
+>  		cep = (struct cf_ctrset_entry *)(buf + offset);
+>  
+> @@ -199,11 +200,12 @@ static void s390_cpumcfdg_dump(struct perf_sample *sample)
+>  		color_fprintf(stdout, color, "    [%#08zx] Counterset:%d"
+>  			      " Counters:%d\n", offset, ce.set, ce.ctr);
+>  		for (i = 0, p = (u64 *)(cep + 1); i < ce.ctr; ++i, ++p) {
+> -			const char *ev_name = get_counter_name(ce.set, i, table);
+> +			char *ev_name = get_counter_name(ce.set, i, pmu);
+>  
+>  			color_fprintf(stdout, color,
+>  				      "\tCounter:%03d %s Value:%#018lx\n", i,
+>  				      ev_name ?: "<unknown>", be64_to_cpu(*p));
+> +			free(ev_name);
+>  		}
+>  		offset += ctrset_size(&ce);
+>  	}
+> @@ -216,14 +218,14 @@ static void s390_cpumcfdg_dump(struct perf_sample *sample)
+>   */
+>  void evlist__s390_sample_raw(struct evlist *evlist, union perf_event *event, struct perf_sample *sample)
+>  {
+> -	struct evsel *ev_bc000;
+> +	struct evsel *evsel;
+>  
+>  	if (event->header.type != PERF_RECORD_SAMPLE)
+>  		return;
+>  
+> -	ev_bc000 = evlist__event2evsel(evlist, event);
+> -	if (ev_bc000 == NULL ||
+> -	    ev_bc000->core.attr.config != PERF_EVENT_CPUM_CF_DIAG)
+> +	evsel = evlist__event2evsel(evlist, event);
+> +	if (evsel == NULL ||
+> +	    evsel->core.attr.config != PERF_EVENT_CPUM_CF_DIAG)
+>  		return;
+>  
+>  	/* Display raw data on screen */
+> @@ -231,5 +233,5 @@ void evlist__s390_sample_raw(struct evlist *evlist, union perf_event *event, str
+>  		pr_err("Invalid counter set data encountered\n");
+>  		return;
+>  	}
+> -	s390_cpumcfdg_dump(sample);
+> +	s390_cpumcfdg_dump(evsel->pmu, sample);
+>  }
+> -- 
+> 2.42.0.rc1.204.g551eb34607-goog
+> 
+
 -- 
-2.30.2
 
+- Arnaldo
