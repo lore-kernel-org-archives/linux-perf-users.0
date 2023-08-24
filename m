@@ -2,116 +2,95 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBDDC6FA8F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 13:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58630C27C40
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 13:43:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229893AbjHXNeJ (ORCPT
+        id S239166AbjHXNnT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 24 Aug 2023 09:34:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44598 "EHLO
+        Thu, 24 Aug 2023 09:43:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237216AbjHXNdj (ORCPT
+        with ESMTP id S241554AbjHXNmr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 24 Aug 2023 09:33:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC77519B3
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 06:33:13 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6183B6573D
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 13:33:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FD63C433C8;
-        Thu, 24 Aug 2023 13:33:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692883992;
-        bh=FP1acNfQmTZ7NjY1vwzgDhNQP+i8/znogMYIqAux0QI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N28J/j+qPJ6Zpb5huvQ02SCdVbPVk3KPQByBmN9CpkwVMC3pswzrX1jtmAiWw0OEB
-         +uH1FN3d19tET3mZ/EcaJh4GTnKjz5Bw75Moog168RUXsz+cORtEi6lQZTpdmoConE
-         O9FondeKCoPaghibjNiu87RCElctMbqIhA7C1D8r4l1cgvIZWEzZujefyjQQYUsYG2
-         E853ew7wUIBp1E797xfQ1bU+UIhiGX6T6UaAtm+0FsdBHk3E95w/363xyOQFV2K0+A
-         ptWOCEdTHQHRs9bX7BQYJEoswFxO8r5Hi8rONN+a1hPdDn/enHXlGetBvaviVzvd/j
-         dtaLLht87KFVA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 069DF40722; Thu, 24 Aug 2023 10:33:09 -0300 (-03)
-Date:   Thu, 24 Aug 2023 10:33:09 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Yanteng Si <siyanteng@loongson.cn>
-Cc:     mingo@redhat.com, peterz@infradead.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        chenhuacai@kernel.org, linux-perf-users@vger.kernel.org,
-        loongson-kernel@lists.loongnix.cn, loongarch@lists.linux.dev
-Subject: Re: [PATCH v1 1/2] perf/trace: Fix mmap_flags for archs use generic
- mman.h
-Message-ID: <ZOdcFUgZ7W6QEjRM@kernel.org>
-References: <cover.1692694595.git.siyanteng@loongson.cn>
- <03ddc1c0e01518df63aac88e561cd0ec3c1e0028.1692694595.git.siyanteng@loongson.cn>
- <ZOT4Tuc6JGrbDqFW@kernel.org>
- <8ead439a-63aa-434e-9d1e-3b1b05b6347b@loongson.cn>
- <ZOXvUbQL67bdWfNz@kernel.org>
- <51632871-2e84-4c53-b4c0-647aea5c49dc@loongson.cn>
+        Thu, 24 Aug 2023 09:42:47 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2D401FE3;
+        Thu, 24 Aug 2023 06:42:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692884536; x=1724420536;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=5bi7NMHfbfnMvZssrvzV0KCWgpKQPJHyrUAbgRnv6Bo=;
+  b=RQiWAfhtVNH+lPQP1J3DGmrjewvYQ9oLhYIwR1dSgI0NcnYJrFj1MzPJ
+   UjQGc1hhUf4SQijRsLZOoUjlwnDUAA8STafHTHvp4OSmOazruHyAAMnfX
+   /6ACNTSY7ZoaWAWPnbd4rcoFCbj/rXodC3+OKd7KpEZ2IxhM8/rhoalBm
+   7lMgTd0RVNDq1hQCvf9YUtdRVW5cy12A/eGojqwotKepAcTY7S2pvK7el
+   3kb3xdcP87xLjmNtiEN08M4oMEVk4ikEC/XDE2O8raC4hfJhjAmSMmsSD
+   0gF77AqXyABl31ygqDyWch5GDwTnBUD3KILfIczayKQy/az6eCYI/r/jI
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="440792673"
+X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
+   d="scan'208";a="440792673"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2023 06:29:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="802540175"
+X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
+   d="scan'208";a="802540175"
+Received: from abedekar-mobl1.ger.corp.intel.com (HELO ijarvine-mobl2.ger.corp.intel.com) ([10.251.213.29])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2023 06:29:37 -0700
+From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 14/14] perf/x86/uncore: Remove unnecessary ?: operator around pcibios_err_to_errno() call
+Date:   Thu, 24 Aug 2023 16:28:32 +0300
+Message-Id: <20230824132832.78705-15-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230824132832.78705-1-ilpo.jarvinen@linux.intel.com>
+References: <20230824132832.78705-1-ilpo.jarvinen@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <51632871-2e84-4c53-b4c0-647aea5c49dc@loongson.cn>
-X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Aug 24, 2023 at 10:22:57AM +0800, Yanteng Si escreveu:
-> 
-> 在 2023/8/23 19:36, Arnaldo Carvalho de Melo 写道:
-> > Em Wed, Aug 23, 2023 at 03:11:01PM +0800, Yanteng Si escreveu:
-> > > 在 2023/8/23 02:02, Arnaldo Carvalho de Melo 写道:
-> > > > Em Tue, Aug 22, 2023 at 05:32:06PM +0800, Yanteng Si escreveu:
-> > > > > Silence this warning:
-> > > > > 
-> > > > > grep: /root/linux-next/tools/arch/xxxxx/include/uapi/asm//mman.h:
-> > > > > No such file or directory
-> > > > > Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
-> > > > > ---
-> > > > >    tools/perf/trace/beauty/mmap_flags.sh | 2 +-
-> > > > >    1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/tools/perf/trace/beauty/mmap_flags.sh b/tools/perf/trace/beauty/mmap_flags.sh
-> > > > > index 3022597c8c17..d035b29fc5ec 100755
-> > > > > --- a/tools/perf/trace/beauty/mmap_flags.sh
-> > > > > +++ b/tools/perf/trace/beauty/mmap_flags.sh
-> > > > > @@ -19,7 +19,7 @@ arch_mman=${arch_header_dir}/mman.h
-> > > > >    printf "static const char *mmap_flags[] = {\n"
-> > > > >    regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
-> > > > > -grep -E -q $regex ${arch_mman} && \
-> > > > > +([ -f ${arch_mman} ] && grep -E -q $regex ${arch_mman}) && \
-> > > > >    (grep -E $regex ${arch_mman} | \
-> > > > >    	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
-> > > > >    	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef MAP_%s\n#define MAP_%s %s\n#endif\n")
-> > > > Humm, wouldn't this be simpler without that extra subshell? Like this:
-> > > > 
-> > > > diff --git a/tools/perf/trace/beauty/mmap_flags.sh b/tools/perf/trace/beauty/mmap_flags.sh
-> > > > index 3022597c8c178f21..0ac1886a83b5aceb 100755
-> > > > --- a/tools/perf/trace/beauty/mmap_flags.sh
-> > > > +++ b/tools/perf/trace/beauty/mmap_flags.sh
-> > > > @@ -19,6 +19,7 @@ arch_mman=${arch_header_dir}/mman.h
-> > > >    printf "static const char *mmap_flags[] = {\n"
-> > > >    regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
-> > > > +test -f ${arch_mman} && \
-> > > The following lines have already used the [ ! -f ${arch_mman}, so let's stay
-> > > consistent？
-> > Well, we can make it consistent by simplifying the other places where
-> > the long, equivalent test is being done, which I think is the way to go,
-> > agreed?
-> 
-> I agree, but this is not suitable to be done in the fix patch, I will split
-> it out and make a new patch.
+If err == 0, pcibios_err_to_errno(err) returns 0 so the ?: construct
+can be removed.
 
-Sure, send the one with the fix, already using the simple form, then
-convert the rest to the simpler form.
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ arch/x86/events/intel/uncore_snbep.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
+diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+index d49e90dc04a4..4d349986f76a 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -1502,7 +1502,7 @@ static int snbep_pci2phy_map_init(int devid, int nodeid_loc, int idmap_loc, bool
+ 
+ 	pci_dev_put(ubox_dev);
+ 
+-	return err ? pcibios_err_to_errno(err) : 0;
++	return pcibios_err_to_errno(err);
+ }
+ 
+ int snbep_uncore_pci_init(void)
+-- 
+2.30.2
 
-- Arnaldo
