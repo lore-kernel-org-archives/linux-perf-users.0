@@ -2,367 +2,327 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 043ECEE49AB
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 04:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A64C71145
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Aug 2023 04:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239976AbjHXEO4 (ORCPT
+        id S238822AbjHXEmH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 24 Aug 2023 00:14:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50396 "EHLO
+        Thu, 24 Aug 2023 00:42:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240084AbjHXEOf (ORCPT
+        with ESMTP id S239032AbjHXEmA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 24 Aug 2023 00:14:35 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB3E010F9
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 21:14:22 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d6ce0c4489bso7213574276.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 21:14:22 -0700 (PDT)
+        Thu, 24 Aug 2023 00:42:00 -0400
+Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0037210E4
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 21:41:57 -0700 (PDT)
+Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-40c72caec5cso197281cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Aug 2023 21:41:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692850462; x=1693455262;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=d5aK29bVjoAy4Lg42V+uHrKm1O4Ro++evLmNFf4Bj+4=;
-        b=Ej47e+lD/6RUF8E+q/OUQboUGSy2GppKYeKdXAutMPAcnUr7Oca2I73HS0yMkqvY5h
-         y2Yxb0wZ7ScRzX0SnUqDplzs24HAFOEwAmn2mCsGXqmUfM3hwlahCn0u1QhA7mK6c8gU
-         B5gFziscdZojWeWII4OGzloZcOiq59cxPW5rPgR/JheuX0dkckaHIQTBK9HBQs07Fyzc
-         J7SCcFy9whThNyXSRk1H0UPmzj5gFSTLYmaiaUftdNUFZvRrkDujO9yQIzD7e+WTmqCg
-         C4XSZs4UaRILWM/KRW7hjR5qsGIs8h+lLjBk9kZIQIMysbgVI8ahGgEiFAa082FUxTv8
-         /jHQ==
+        d=google.com; s=20221208; t=1692852117; x=1693456917;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YxyBUJq2Gx4AIxx0Qqtw7Y4mB6OKThVmzCJz6Skp9EY=;
+        b=RCZf/7WGJzD+uQtolBZh7UPjVLH6LlQ4rNPv4aAYELfF5ufY2NUm+zWknMbq6n8utG
+         ZyNmlPe3ytq+FRyKuL0jkJWszjZDHW+43GVeF9CeYak9ISLESQRpjZXrhyBRHRuvMtzD
+         0Dvhbdkhor0EjjoQU2fL7falsXIa79kOzJ9iKVPo9EfzTWxEN+8U8KXkntLa6i6UySbD
+         Th5YtjTfBtv7NiNEQ5FOE191oaEyu6QzYwzKgjPqwi+7VXQvBGa98TTsagrm90Ws3WoA
+         op+C6mqDJxnQ3TeTx8sqA56e/uY4jO09CcqEjIsWgZEcSi4sqxgCOSuGu1irjUuRKUkh
+         LHcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692850462; x=1693455262;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d5aK29bVjoAy4Lg42V+uHrKm1O4Ro++evLmNFf4Bj+4=;
-        b=YkoGZQO/uRAryEsi3B2cjOmYYAqZEQDVfgst1LjUReBXqCk0tW/aKUK4BF+Qlo2ytv
-         Y7FuHoGg5OWnqB/I4/xBG4mC5It90lV3dWFuZcVoM56+/ZKI0xLl/V3/dCRc2y+cfoOP
-         n2ELcU6Z44FEvzfi8Ds70lEo3z5Us8fLtXOsuM1JkVtK8N5j9XR2FSmkV9cWxO/C5LCZ
-         aMLfVDD6QiBfWmhmxCl0ITdS/mzPnBSeoMKa12XDg2m6Dz7zCUqkba0wprCu5pEl4G1e
-         5ZYBFl4dl/+1SIqDXNNqD/U41GxLl9uqYxpaSc4zKP4pV0KQB1FHE38zAZQN3wrMjXBh
-         UKog==
-X-Gm-Message-State: AOJu0YzZ5gR6ivXKrzwdeBnRnNjPZXma2i39CYMlC4gA41rq8Xrt7z9l
-        LXtYYoWkmzGKswFvsd/nnXvxvefary4a
-X-Google-Smtp-Source: AGHT+IFnH0XPJnTREa9Kk0vTe/JHpq8PlttbOJfotvZXiFY17QPpGIDOlBQNjC+LqyK4y+pRGiO5kl4zlOYR
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:fbb9:d9e7:7405:2651])
- (user=irogers job=sendgmr) by 2002:a25:2442:0:b0:d11:6816:2d31 with SMTP id
- k63-20020a252442000000b00d1168162d31mr184546ybk.7.1692850462167; Wed, 23 Aug
- 2023 21:14:22 -0700 (PDT)
-Date:   Wed, 23 Aug 2023 21:13:27 -0700
-In-Reply-To: <20230824041330.266337-1-irogers@google.com>
-Message-Id: <20230824041330.266337-16-irogers@google.com>
-Mime-Version: 1.0
-References: <20230824041330.266337-1-irogers@google.com>
-X-Mailer: git-send-email 2.42.0.rc1.204.g551eb34607-goog
-Subject: [PATCH v2 15/18] perf pmu: Be lazy about loading event info files
- from sysfs
+        d=1e100.net; s=20221208; t=1692852117; x=1693456917;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YxyBUJq2Gx4AIxx0Qqtw7Y4mB6OKThVmzCJz6Skp9EY=;
+        b=Kr4EYjveRP5lqPXEeWFzpN7q65gKTn4aPt7zVY9KoxyItQDC9BHUpEhdprrVIhfv4I
+         wEVLmaNk8IO5Jq57uLxKHG70LuORGbaizKYNCIBJlPHfc10qcBPe2i4voY6MIbZpU8Gk
+         aaLKBAOGG2Zsbe9XNXTmdcPFqO3AI0Z5Wa6dtLtUWSa88PQiRuHHS13WW/3eEp4o03UE
+         TPjs5W8WrJqIbNa6+MacD2/2yuGTrGjphVE+blgF6aD7LmUDY6t2w2K5zY19oCUNZsOk
+         8509if75GVoGQFEkHlP4T9HVkQPaZQa/9a3aggsenSCP5bj7G4DWabZQnlbPIePG3duP
+         xy9w==
+X-Gm-Message-State: AOJu0YymCI+SyOMSuU3QYuEB/d0f8CnTiaAM/JSLCR3w6Nf6X1y8I6fu
+        c9qfxDBBap/M5eBgeXM/wpAQSSoLTNFjz3kwAJjiRzEdEYpaQPlG4urcOw==
+X-Google-Smtp-Source: AGHT+IEoQEqv/hwLhsBZaFiWkqP3VwGk1S/bC6+96tve8JK8xHCrkoBxeu3CWX6ZQH24c9/bOyflriyorKMiO2d2FxY=
+X-Received: by 2002:a05:622a:19a0:b0:410:916b:eb3f with SMTP id
+ u32-20020a05622a19a000b00410916beb3fmr786091qtc.16.1692852116707; Wed, 23 Aug
+ 2023 21:41:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAP-5=fU10YCxZfq=dOUUPR0dRusbq=vzp5CqsOuz1aLVY16KAw@mail.gmail.com>
+ <CAP-5=fWOCE6+9MuiFziHz1o6Ej-FTDJa1fnkhYpifz7Rtazk8Q@mail.gmail.com>
+ <CAP-5=fXf-FmKb=D4h5VgxQ=w3T3+Nn3AP4ExR9YjnKFB=4m7bA@mail.gmail.com>
+ <CAP-5=fWSHpWx02+nB8joo0JbtNJXAEHFLBdY7n5W=tSbdpMGkg@mail.gmail.com>
+ <CAP-5=fX9OXTiiojNp-ut-_LOD2=6+mEN8iAt=UUGfmDu4q+F3Q@mail.gmail.com>
+ <CAP-5=fU6TWKQ8eDUM5UFfO2h6TgL9j7-43eWfZMTbwpRqHS6OA@mail.gmail.com>
+ <CAP-5=fX4Fj3phsny8zPueJpUaxN0jEhvJarc3ghz46RCtu0C+A@mail.gmail.com>
+ <CAP-5=fV6f3NeSbKatG0_LCROUr=2xdcrC7PnC3D0YprtCDaTow@mail.gmail.com>
+ <CAP-5=fU2dPih+JPUOkoHyiFvMwd9KRHiKDtuNeatPsaE0VxbsQ@mail.gmail.com>
+ <CAP-5=fWRELRNg3guvsXu-PJU4MfJ+tj3zZRWpSrmCK5AP39ANg@mail.gmail.com> <CAP-5=fVqbAej4aJV-BDsBSpgAnmad+RXC_0Z_81Ma8WZXUkNWg@mail.gmail.com>
+In-Reply-To: <CAP-5=fVqbAej4aJV-BDsBSpgAnmad+RXC_0Z_81Ma8WZXUkNWg@mail.gmail.com>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Rob Herring <robh@kernel.org>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 23 Aug 2023 21:41:44 -0700
+Message-ID: <CAP-5=fW38egHuXP+y1O=VFSW0vO79UqRxgsrOp94D+evaNb92g@mail.gmail.com>
+Subject: Re: Linux Perf Tool Office Hours
+To:     linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Anup Sharma <anupnewsmail@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Event info is only needed when an event is parsed or when merging data
-from an json and sysfs event. Be lazy in its loading to reduce file
-accesses.
+Office hours tomorrow:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/pmu.c | 128 +++++++++++++++++++++++++++---------------
- 1 file changed, 83 insertions(+), 45 deletions(-)
+Linux Perf Tool Office Hours
+Thursday, August 24 =C2=B7 9:00 =E2=80=93 9:45am
+Time zone: America/Los_Angeles
+Google Meet joining info
+Video call link: https://meet.google.com/jds-asbo-day
+Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 018 892=
+=E2=80=AC#
+More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252256983
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 9e3b72d84168..493d3e59fd50 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -58,6 +58,11 @@ struct perf_pmu_alias {
- 	struct list_head terms;
- 	/** @list: List element of struct perf_pmu aliases. */
- 	struct list_head list;
-+	/**
-+	 * @pmu_name: The name copied from the json struct pmu_event. This can
-+	 * differ from the PMU name as it won't have suffixes.
-+	 */
-+	char *pmu_name;
- 	/** @unit: Units for the event, such as bytes or cache lines. */
- 	char unit[UNIT_MAX_LEN+1];
- 	/** @scale: Value to scale read counter values by. */
-@@ -79,11 +84,10 @@ struct perf_pmu_alias {
- 	 * default.
- 	 */
- 	bool deprecated;
--	/**
--	 * @pmu_name: The name copied from the json struct pmu_event. This can
--	 * differ from the PMU name as it won't have suffixes.
--	 */
--	char *pmu_name;
-+	/** @from_sysfs: Was the alias from sysfs or a json event? */
-+	bool from_sysfs;
-+	/** @info_loaded: Have the scale, unit and other values been read from disk? */
-+	bool info_loaded;
- };
- 
- /**
-@@ -280,17 +284,21 @@ int perf_pmu__convert_scale(const char *scale, char **end, double *sval)
- 	return ret;
- }
- 
--static int perf_pmu__parse_scale(struct perf_pmu_alias *alias, int dirfd, const char *name)
-+static int perf_pmu__parse_scale(struct perf_pmu *pmu, struct perf_pmu_alias *alias)
- {
- 	struct stat st;
- 	ssize_t sret;
-+	size_t len;
- 	char scale[128];
- 	int fd, ret = -1;
- 	char path[PATH_MAX];
- 
--	scnprintf(path, PATH_MAX, "%s.scale", name);
-+	len = perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
-+	if (!len)
-+		return 0;
-+	scnprintf(path + len, sizeof(path) - len, "%s/%s.scale", pmu->name, alias->name);
- 
--	fd = openat(dirfd, path, O_RDONLY);
-+	fd = open(path, O_RDONLY);
- 	if (fd == -1)
- 		return -1;
- 
-@@ -312,15 +320,20 @@ static int perf_pmu__parse_scale(struct perf_pmu_alias *alias, int dirfd, const
- 	return ret;
- }
- 
--static int perf_pmu__parse_unit(struct perf_pmu_alias *alias, int dirfd, const char *name)
-+static int perf_pmu__parse_unit(struct perf_pmu *pmu, struct perf_pmu_alias *alias)
- {
- 	char path[PATH_MAX];
-+	size_t len;
- 	ssize_t sret;
- 	int fd;
- 
--	scnprintf(path, PATH_MAX, "%s.unit", name);
- 
--	fd = openat(dirfd, path, O_RDONLY);
-+	len = perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
-+	if (!len)
-+		return 0;
-+	scnprintf(path + len, sizeof(path) - len, "%s/%s.unit", pmu->name, alias->name);
-+
-+	fd = open(path, O_RDONLY);
- 	if (fd == -1)
- 		return -1;
- 
-@@ -343,14 +356,18 @@ static int perf_pmu__parse_unit(struct perf_pmu_alias *alias, int dirfd, const c
- }
- 
- static int
--perf_pmu__parse_per_pkg(struct perf_pmu_alias *alias, int dirfd, const char *name)
-+perf_pmu__parse_per_pkg(struct perf_pmu *pmu, struct perf_pmu_alias *alias)
- {
- 	char path[PATH_MAX];
-+	size_t len;
- 	int fd;
- 
--	scnprintf(path, PATH_MAX, "%s.per-pkg", name);
-+	len = perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
-+	if (!len)
-+		return 0;
-+	scnprintf(path + len, sizeof(path) - len, "%s/%s.per-pkg", pmu->name, alias->name);
- 
--	fd = openat(dirfd, path, O_RDONLY);
-+	fd = open(path, O_RDONLY);
- 	if (fd == -1)
- 		return -1;
- 
-@@ -360,15 +377,18 @@ perf_pmu__parse_per_pkg(struct perf_pmu_alias *alias, int dirfd, const char *nam
- 	return 0;
- }
- 
--static int perf_pmu__parse_snapshot(struct perf_pmu_alias *alias,
--				    int dirfd, const char *name)
-+static int perf_pmu__parse_snapshot(struct perf_pmu *pmu, struct perf_pmu_alias *alias)
- {
- 	char path[PATH_MAX];
-+	size_t len;
- 	int fd;
- 
--	scnprintf(path, PATH_MAX, "%s.snapshot", name);
-+	len = perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
-+	if (!len)
-+		return 0;
-+	scnprintf(path + len, sizeof(path) - len, "%s/%s.snapshot", pmu->name, alias->name);
- 
--	fd = openat(dirfd, path, O_RDONLY);
-+	fd = open(path, O_RDONLY);
- 	if (fd == -1)
- 		return -1;
- 
-@@ -429,32 +449,52 @@ static bool assign_str(const char *name, const char *field, char **old_str,
- 	return true;
- }
- 
-+static void read_alias_info(struct perf_pmu *pmu, struct perf_pmu_alias *alias)
-+{
-+	if (!alias->from_sysfs || alias->info_loaded)
-+		return;
-+
-+	/*
-+	 * load unit name and scale if available
-+	 */
-+	perf_pmu__parse_unit(pmu, alias);
-+	perf_pmu__parse_scale(pmu, alias);
-+	perf_pmu__parse_per_pkg(pmu, alias);
-+	perf_pmu__parse_snapshot(pmu, alias);
-+}
-+
-+struct update_alias_data {
-+	struct perf_pmu *pmu;
-+	struct perf_pmu_alias *alias;
-+};
-+
- static int update_alias(const struct pmu_event *pe,
- 			const struct pmu_events_table *table __maybe_unused,
- 			void *vdata)
- {
--	struct perf_pmu_alias *alias = vdata;
-+	struct update_alias_data *data = vdata;
- 	int ret = 0;
- 
--	assign_str(pe->name, "desc", &alias->desc, pe->desc);
--	assign_str(pe->name, "long_desc", &alias->long_desc, pe->long_desc);
--	assign_str(pe->name, "topic", &alias->topic, pe->topic);
--	alias->per_pkg = pe->perpkg;
--	if (assign_str(pe->name, "value", &alias->str, pe->event)) {
--		parse_events_terms__purge(&alias->terms);
--		ret = parse_events_terms(&alias->terms, pe->event, /*input=*/NULL);
-+	read_alias_info(data->pmu, data->alias);
-+	assign_str(pe->name, "desc", &data->alias->desc, pe->desc);
-+	assign_str(pe->name, "long_desc", &data->alias->long_desc, pe->long_desc);
-+	assign_str(pe->name, "topic", &data->alias->topic, pe->topic);
-+	data->alias->per_pkg = pe->perpkg;
-+	if (assign_str(pe->name, "value", &data->alias->str, pe->event)) {
-+		parse_events_terms__purge(&data->alias->terms);
-+		ret = parse_events_terms(&data->alias->terms, pe->event, /*input=*/NULL);
- 	}
- 	if (!ret && pe->unit) {
- 		char *unit;
- 
--		ret = perf_pmu__convert_scale(pe->unit, &unit, &alias->scale);
-+		ret = perf_pmu__convert_scale(pe->unit, &unit, &data->alias->scale);
- 		if (!ret)
--			snprintf(alias->unit, sizeof(alias->unit), "%s", unit);
-+			snprintf(data->alias->unit, sizeof(data->alias->unit), "%s", unit);
- 	}
- 	return ret;
- }
- 
--static int perf_pmu__new_alias(struct perf_pmu *pmu, int dirfd, const char *name,
-+static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
- 				const char *desc, const char *val, FILE *val_fd,
- 				const struct pmu_event *pe)
- {
-@@ -498,16 +538,6 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, int dirfd, const char *name
- 	}
- 
- 	alias->name = strdup(name);
--	if (dirfd >= 0) {
--		/*
--		 * load unit name and scale if available
--		 */
--		perf_pmu__parse_unit(alias, dirfd, name);
--		perf_pmu__parse_scale(alias, dirfd, name);
--		perf_pmu__parse_per_pkg(alias, dirfd, name);
--		perf_pmu__parse_snapshot(alias, dirfd, name);
--	}
--
- 	alias->desc = desc ? strdup(desc) : NULL;
- 	alias->long_desc = long_desc ? strdup(long_desc) :
- 				desc ? strdup(desc) : NULL;
-@@ -522,9 +552,15 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, int dirfd, const char *name
- 	}
- 	if (!pe) {
- 		/* Update an event from sysfs with json data. */
-+		struct update_alias_data data = {
-+			.pmu = pmu,
-+			.alias = alias,
-+		};
-+
-+		alias->from_sysfs = true;
- 		if (pmu->events_table) {
- 			if (pmu_events_table__find_event(pmu->events_table, pmu, name,
--							 update_alias, alias) == 0)
-+							 update_alias, &data) == 0)
- 				pmu->loaded_json_aliases++;
- 		}
- 	}
-@@ -612,7 +648,7 @@ static int pmu_aliases_parse(struct perf_pmu *pmu, int dirfd)
- 			continue;
- 		}
- 
--		if (perf_pmu__new_alias(pmu, dirfd, name, /*desc=*/ NULL,
-+		if (perf_pmu__new_alias(pmu, name, /*desc=*/ NULL,
- 					/*val=*/ NULL, file, /*pe=*/ NULL) < 0)
- 			pr_debug("Cannot set up %s\n", name);
- 		fclose(file);
-@@ -865,7 +901,7 @@ static int pmu_add_cpu_aliases_map_callback(const struct pmu_event *pe,
- {
- 	struct perf_pmu *pmu = vdata;
- 
--	perf_pmu__new_alias(pmu, -1, pe->name, pe->desc, pe->event, /*val_fd=*/ NULL, pe);
-+	perf_pmu__new_alias(pmu, pe->name, pe->desc, pe->event, /*val_fd=*/ NULL, pe);
- 	return 0;
- }
- 
-@@ -901,7 +937,7 @@ static int pmu_add_sys_aliases_iter_fn(const struct pmu_event *pe,
- 
- 	if (!strcmp(pmu->id, pe->compat) &&
- 	    pmu_uncore_alias_match(pe->pmu, pmu->name)) {
--		perf_pmu__new_alias(pmu, -1,
-+		perf_pmu__new_alias(pmu,
- 				pe->name,
- 				pe->desc,
- 				pe->event,
-@@ -1417,11 +1453,13 @@ static struct perf_pmu_alias *pmu_find_alias(struct perf_pmu *pmu,
- }
- 
- 
--static int check_info_data(struct perf_pmu_alias *alias,
-+static int check_info_data(struct perf_pmu *pmu,
-+			   struct perf_pmu_alias *alias,
- 			   struct perf_pmu_info *info,
- 			   struct parse_events_error *err,
- 			   int column)
- {
-+	read_alias_info(pmu, alias);
- 	/*
- 	 * Only one term in event definition can
- 	 * define unit, scale and snapshot, fail
-@@ -1491,7 +1529,7 @@ int perf_pmu__check_alias(struct perf_pmu *pmu, struct list_head *head_terms,
- 			return ret;
- 		}
- 
--		ret = check_info_data(alias, info, err, term->err_term);
-+		ret = check_info_data(pmu, alias, info, err, term->err_term);
- 		if (ret)
- 			return ret;
- 
--- 
-2.42.0.rc1.204.g551eb34607-goog
+Next week is the end of Google summer-of-code 2023 and so this will be
+a chance to talk with Anup before he wraps up.
 
+Thanks,
+Ian
+On Wed, Aug 16, 2023 at 11:16=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> Office hours tomorrow:
+>
+> Linux Perf Tool Office Hours
+> Thursday, August 17 =C2=B7 9:00 =E2=80=93 9:45am
+> Time zone: America/Los_Angeles
+> Google Meet joining info
+> Video call link: https://meet.google.com/jds-asbo-day
+> Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 018 892=
+=E2=80=AC#
+> More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252256983
+>
+> Thanks,
+> Ian
+>
+> On Wed, Aug 9, 2023 at 1:32=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+> >
+> > Hi,
+> >
+> > Just a heads up that we plan to skip office hours tomorrow.
+> >
+> > Thanks,
+> > Ian
+> >
+> > On Wed, Aug 2, 2023 at 1:09=E2=80=AFPM Ian Rogers <irogers@google.com> =
+wrote:
+> > >
+> > > First office hours of August tomorrow:
+> > >
+> > > Linux Perf Tool Office Hours
+> > > Thursday, August 3 =C2=B7 9:00 =E2=80=93 9:45am
+> > > Time zone: America/Los_Angeles
+> > > Google Meet joining info
+> > > Video call link: https://meet.google.com/jds-asbo-day
+> > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 018=
+ 892=E2=80=AC#
+> > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252256983
+> > >
+> > > Thanks,
+> > > Ian
+> > >
+> > > On Wed, Jul 26, 2023 at 2:53=E2=80=AFPM Ian Rogers <irogers@google.co=
+m> wrote:
+> > > >
+> > > > A reminder there is the usual office hours tomorrow. This is an
+> > > > excellent opportunity to ask questions and hear the latest on Anup'=
+s
+> > > > firefox profiler work.
+> > > >
+> > > > Linux Perf Tool Office Hours
+> > > > Thursday, July 27 =C2=B7 9:00 =E2=80=93 9:45am
+> > > > Time zone: America/Los_Angeles
+> > > > Google Meet joining info
+> > > > Video call link: https://meet.google.com/jds-asbo-day
+> > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 0=
+18 892=E2=80=AC#
+> > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D66292522569=
+83
+> > > >
+> > > > Thanks,
+> > > > Ian
+> > > >
+> > > > On Wed, Jul 19, 2023 at 3:29=E2=80=AFPM Ian Rogers <irogers@google.=
+com> wrote:
+> > > > >
+> > > > > A reminder there is the usual office hours tomorrow:
+> > > > >
+> > > > > Linux Perf Tool Office Hours
+> > > > > Thursday, July 20 =C2=B7 9:00 =E2=80=93 9:45am
+> > > > > Time zone: America/Los_Angeles
+> > > > > Google Meet joining info
+> > > > > Video call link: https://meet.google.com/jds-asbo-day
+> > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817=
+ 018 892=E2=80=AC#
+> > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D662925225=
+6983
+> > > > >
+> > > > > Thanks,
+> > > > > Ian
+> > > > >
+> > > > > On Wed, Jul 12, 2023 at 3:42=E2=80=AFPM Ian Rogers <irogers@googl=
+e.com> wrote:
+> > > > > >
+> > > > > > A reminder there are office hours tomorrow. This is a particula=
+r
+> > > > > > useful time to sync with Anup, the Linux Foundation Google
+> > > > > > Summer-of-Code contributor this year.
+> > > > > >
+> > > > > > Linux Perf Tool Office Hours
+> > > > > > Thursday, July 13 =C2=B7 9:00 =E2=80=93 9:45am
+> > > > > > Time zone: America/Los_Angeles
+> > > > > > Google Meet joining info
+> > > > > > Video call link: https://meet.google.com/jds-asbo-day
+> > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA8=
+17 018 892=E2=80=AC#
+> > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252=
+256983
+> > > > > >
+> > > > > > Thanks!
+> > > > > > Ian
+> > > > > > On Thu, Jul 6, 2023 at 8:31=E2=80=AFAM Ian Rogers <irogers@goog=
+le.com> wrote:
+> > > > > > >
+> > > > > > > Hi,
+> > > > > > >
+> > > > > > > Sorry for the late notice. Office hours today in 30 minutes.
+> > > > > > >
+> > > > > > > Linux Perf Tool Office Hours
+> > > > > > > Thursday, July 6 =C2=B7 9:00 =E2=80=93 9:45am
+> > > > > > > Time zone: America/Los_Angeles
+> > > > > > > Google Meet joining info
+> > > > > > > Video call link: https://meet.google.com/jds-asbo-day
+> > > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=
+=AA817 018 892=E2=80=AC#
+> > > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D66292=
+52256983
+> > > > > > >
+> > > > > > > Thanks,
+> > > > > > > Ian
+> > > > > > >
+> > > > > > > On Wed, Jun 21, 2023 at 3:15=E2=80=AFPM Ian Rogers <irogers@g=
+oogle.com> wrote:
+> > > > > > > >
+> > > > > > > > Hi,
+> > > > > > > >
+> > > > > > > > Office hours reminder tomorrow. A chance to discuss any top=
+ics of the
+> > > > > > > > day and for
+> > > > > > > > GSoC contributor sync.
+> > > > > > > >
+> > > > > > > > Linux Perf Tool Office Hours
+> > > > > > > > Thursday, June 22 =C2=B7 9:00 =E2=80=93 9:45am
+> > > > > > > > Time zone: America/Los_Angeles
+> > > > > > > > Google Meet joining info
+> > > > > > > > Video call link: https://meet.google.com/jds-asbo-day
+> > > > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=
+=AA817 018 892=E2=80=AC#
+> > > > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D662=
+9252256983
+> > > > > > > >
+> > > > > > > > Thanks,
+> > > > > > > > Ian
+> > > > > > > >
+> > > > > > > > On Wed, Jun 14, 2023 at 10:01=E2=80=AFAM Ian Rogers <iroger=
+s@google.com> wrote:
+> > > > > > > > >
+> > > > > > > > > Hi,
+> > > > > > > > >
+> > > > > > > > > Office hours reminder. A chance to discuss topics of the =
+day and for
+> > > > > > > > > GSoC contributor sync.
+> > > > > > > > >
+> > > > > > > > > Linux Perf Tool Office Hours
+> > > > > > > > > Thursday, June 15 =C2=B7 9:00 =E2=80=93 9:45am
+> > > > > > > > > Time zone: America/Los_Angeles
+> > > > > > > > > Google Meet joining info
+> > > > > > > > > Video call link: https://meet.google.com/jds-asbo-day
+> > > > > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=
+=80=AA817 018 892=E2=80=AC#
+> > > > > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6=
+629252256983
+> > > > > > > > >
+> > > > > > > > > Thanks,
+> > > > > > > > > Ian
+> > > > > > > > >
+> > > > > > > > > On Wed, Jun 7, 2023 at 9:14=E2=80=AFPM Ian Rogers <iroger=
+s@google.com> wrote:
+> > > > > > > > > >
+> > > > > > > > > > Hi,
+> > > > > > > > > >
+> > > > > > > > > > Office hours and chance for GSoC contributor sync sligh=
+tly earlier at
+> > > > > > > > > > 9am PT tomorrow:
+> > > > > > > > > >
+> > > > > > > > > > Linux Perf Tool Office Hours
+> > > > > > > > > > Thursday, June 8 =C2=B7 9:00 =E2=80=93 9:45am
+> > > > > > > > > > Time zone: America/Los_Angeles
+> > > > > > > > > > Google Meet joining info
+> > > > > > > > > > Video call link: https://meet.google.com/jds-asbo-day
+> > > > > > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =
+=E2=80=AA817 018 892=E2=80=AC#
+> > > > > > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=
+=3D6629252256983
+> > > > > > > > > >
+> > > > > > > > > > If you'd like to randomly drop in, feel free. An issue =
+I'm keen to
+> > > > > > > > > > discuss is memory usage and memory leaks.
+> > > > > > > > > >
+> > > > > > > > > > Thanks,
+> > > > > > > > > > Ian
+> > > > > > > > > >
+> > > > > > > > > > On Wed, May 31, 2023 at 10:00=E2=80=AFAM Ian Rogers <ir=
+ogers@google.com> wrote:
+> > > > > > > > > > >
+> > > > > > > > > > > Hi,
+> > > > > > > > > > >
+> > > > > > > > > > > On Monday the Google Summer-of-Code officially starte=
+d and Anup is
+> > > > > > > > > > > this summer's contributor to the Linux perf tool! We'=
+ve found in the
+> > > > > > > > > > > past [1] that having office hours is a good chance fo=
+r contributors to
+> > > > > > > > > > > sync and also for those interested in the Linux perf =
+tool to also
+> > > > > > > > > > > connect and share their problems and experiences. As =
+such we plan on
+> > > > > > > > > > > running our first office hours for this summer tomorr=
+ow, the details
+> > > > > > > > > > > are below:
+> > > > > > > > > > >
+> > > > > > > > > > > Linux Perf Tool Office Hours
+> > > > > > > > > > > Thursday, June 1 =C2=B7 9:30 =E2=80=93 10:30am
+> > > > > > > > > > > Time zone: America/Los_Angeles
+> > > > > > > > > > > Google Meet joining info
+> > > > > > > > > > > Video call link: https://meet.google.com/jds-asbo-day
+> > > > > > > > > > > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =
+=E2=80=AA817 018 892=E2=80=AC#
+> > > > > > > > > > > More phone numbers: https://tel.meet/jds-asbo-day?pin=
+=3D6629252256983
+> > > > > > > > > > >
+> > > > > > > > > > > Please ask me and I'll be more than happy to add you =
+to the calendar
+> > > > > > > > > > > invite for this. Over the summer we can adjust the ti=
+ming of the
+> > > > > > > > > > > office hours to maximize participation, etc. so pleas=
+e reach out and
+> > > > > > > > > > > share concerns.
+> > > > > > > > > > >
+> > > > > > > > > > > Thanks,
+> > > > > > > > > > > Ian
+> > > > > > > > > > >
+> > > > > > > > > > > [1] https://lore.kernel.org/linux-perf-users/CAP-5=3D=
+fWiQHvYZp5R=3Duw4xUwBiN1fBLBU8witPkYM+2r8tnYCOg@mail.gmail.com/
