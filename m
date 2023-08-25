@@ -2,63 +2,63 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59615EE49A5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B1FC7EE2C
 	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 06:12:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241300AbjHYGLx (ORCPT
+        id S241317AbjHYGLy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 02:11:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48564 "EHLO
+        Fri, 25 Aug 2023 02:11:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241182AbjHYGLr (ORCPT
+        with ESMTP id S241280AbjHYGLt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 02:11:47 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90F421BF2;
-        Thu, 24 Aug 2023 23:11:44 -0700 (PDT)
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37P67bUv028819;
-        Fri, 25 Aug 2023 06:11:36 GMT
+        Fri, 25 Aug 2023 02:11:49 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D12C51BF2;
+        Thu, 24 Aug 2023 23:11:47 -0700 (PDT)
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37P67Cw5003974;
+        Fri, 25 Aug 2023 06:11:43 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=05xSB0wy7DyxsGs44RbVn0pD0nPihPcf+9C2gJQt4yk=;
- b=K9q4hRWePC5RgKG9h5Q+UblxrXcbu1ANsnHOHQ45n0DJpZe6jaY3EkuV5h7pbCam60u4
- 5magEtQwSOV920nsQHLaRpQK0Y/hPac+Fybq4NpsoWGILPvHKHyNqce1y7unkjKvyZFm
- 6gpCg6duHkbiMLzIcVr3KQqXtRLSsEVx7Lg15vCKTMx3dZdtLNeswbMS9mcio1E4LfZ+
- qhrdvajFdrsWmrr6z8mdL24I1ZMVlYbWwC0p3XQgnCJbY2TBTPr1XuPXGjbSuIfDijsX
- njQ+Uw3wuvE9hC5tE5skabLRJ2sAzcPTieJze3k3c7CFpUnvELgLoMxhthXMJq3ipXC+ SQ== 
+ bh=dE/Or6i1TzCiES71n9nI1/TR0UqSuY2ZEP4H24E1S1A=;
+ b=rOSan7c1GG81TkulV7fpKinpWZQb1lRExDDUzhZIY/WYOoYZfOF0AfFlCgfd4EjgFzGd
+ PbI6KZSEsCWHraztW1GjErBEkk7KjgKhvdX3zi8z4m+iP2pHkUoE6BQt9VOHuryYyS52
+ z9aFccqqhHAvf8M4Hoheu4vw/hUCSk2VVhOc3DRu5h98NrJ3egk2/kVKiguZVR0H+QVL
+ EWdMcltf4FNWdKB2E5OlbpVVUJqvQN1Zd2WswaSYgo1OJazWwDi2l2p4eMDkEqUDe9h6
+ HX3iGFeZALsqZUYYwSwi1p0F1JoV1Su2M+nKIVcddfnQNeews4fc157YevwIm21ZzoKM pw== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3spp808q9n-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3spp0ah1kh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Aug 2023 06:11:35 +0000
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37P67lpb030177;
-        Fri, 25 Aug 2023 06:11:35 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3spp808q9e-1
+        Fri, 25 Aug 2023 06:11:42 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37P69Q4W013115;
+        Fri, 25 Aug 2023 06:11:42 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3spp0ah1k8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Aug 2023 06:11:35 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-        by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37P5Qm8n016776;
-        Fri, 25 Aug 2023 06:11:34 GMT
+        Fri, 25 Aug 2023 06:11:42 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37P5cTHF018217;
+        Fri, 25 Aug 2023 06:11:41 GMT
 Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3sn22859dm-1
+        by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3sn21swa4e-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Aug 2023 06:11:34 +0000
+        Fri, 25 Aug 2023 06:11:41 +0000
 Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37P6BVPQ24576758
+        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37P6Bc3R9700036
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Aug 2023 06:11:31 GMT
+        Fri, 25 Aug 2023 06:11:38 GMT
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5E4FE2004B;
-        Fri, 25 Aug 2023 06:11:31 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 7B5DE2004B;
+        Fri, 25 Aug 2023 06:11:38 +0000 (GMT)
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4C98320049;
-        Fri, 25 Aug 2023 06:11:29 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 6A9DF20040;
+        Fri, 25 Aug 2023 06:11:36 +0000 (GMT)
 Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.in.ibm.com (unknown [9.109.199.72])
         by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Fri, 25 Aug 2023 06:11:29 +0000 (GMT)
+        Fri, 25 Aug 2023 06:11:36 +0000 (GMT)
 From:   Aditya Gupta <adityag@linux.ibm.com>
 To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
         namhyung@kernel.org
@@ -66,242 +66,89 @@ Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
         kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] perf build: introduce build subcommand
-Date:   Fri, 25 Aug 2023 11:41:22 +0530
-Message-ID: <20230825061125.24312-2-adityag@linux.ibm.com>
+Subject: [PATCH 4/4] tools/perf/tests: Update probe_vfs_getname.sh script to use perf build --has
+Date:   Fri, 25 Aug 2023 11:41:25 +0530
+Message-ID: <20230825061125.24312-5-adityag@linux.ibm.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20230825061125.24312-1-adityag@linux.ibm.com>
 References: <20230825061125.24312-1-adityag@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: NQwrb6HU9ELR4bg47H68yADuRhU-jD-N
-X-Proofpoint-ORIG-GUID: HABfQOZjad2WmgtXgyRZW6tGkxJboCNB
+X-Proofpoint-GUID: InAngQ_7Urp8YnBQEEoY9nOhqenaZ3-l
+X-Proofpoint-ORIG-GUID: 5_cnxoxgDU7PkUNS7EcwToeOXvBqeUFg
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
  definitions=2023-08-25_04,2023-08-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
- lowpriorityscore=0 malwarescore=0 spamscore=0 phishscore=0
- priorityscore=1501 bulkscore=0 impostorscore=0 suspectscore=0
- mlxlogscore=999 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ lowpriorityscore=0 suspectscore=0 spamscore=0 mlxscore=0 adultscore=0
+ priorityscore=1501 malwarescore=0 phishscore=0 clxscore=1015
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2308100000 definitions=main-2308250051
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Currently the presence of a feature is checked with a combination of
-perf version --build-options and greps, such as:
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 
-    perf version --build-options | grep " on .* HAVE_FEATURE"
+In probe_vfs_getname.sh, current we use "perf record --dry-run"
+to check for libtraceevent and skip the test if perf is not
+build with libtraceevent. Change the check to use "perf build --has"
+option
 
-Instead of this, introduce a subcommand "perf build --has", with which
-scripts can test for presence of a feature, such as:
-
-    perf build --has HAVE_FEATURE
-
-'perf build --has' command is expected to have exit status of 1 if feature is
-built-in, and 0 if not, -2 if feature is not known.
-
-A global array 'supported_features' has also been introduced that can be
-used by other commands like 'perf version --build-options', so that
-new features can be added in one place, with the array
-
-Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 ---
- tools/perf/Build           |  1 +
- tools/perf/builtin-build.c | 94 ++++++++++++++++++++++++++++++++++++++
- tools/perf/builtin.h       | 47 +++++++++++++++++++
- tools/perf/perf.c          |  1 +
- 4 files changed, 143 insertions(+)
- create mode 100644 tools/perf/builtin-build.c
+ tools/perf/tests/shell/lib/probe_vfs_getname.sh           | 4 ++--
+ tools/perf/tests/shell/record+probe_libc_inet_pton.sh     | 5 ++++-
+ tools/perf/tests/shell/record+script_probe_vfs_getname.sh | 5 ++++-
+ 3 files changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/Build b/tools/perf/Build
-index aa7623622834..b15294919e75 100644
---- a/tools/perf/Build
-+++ b/tools/perf/Build
-@@ -5,6 +5,7 @@ perf-y += builtin-diff.o
- perf-y += builtin-evlist.o
- perf-y += builtin-ftrace.o
- perf-y += builtin-help.o
-+perf-y += builtin-build.o
- perf-y += builtin-buildid-list.o
- perf-y += builtin-buildid-cache.o
- perf-y += builtin-kallsyms.o
-diff --git a/tools/perf/builtin-build.c b/tools/perf/builtin-build.c
-new file mode 100644
-index 000000000000..60af38c3bc64
---- /dev/null
-+++ b/tools/perf/builtin-build.c
-@@ -0,0 +1,94 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "builtin.h"
-+#include "color.h"
-+#include "util/debug.h"
-+#include "util/header.h"
-+#include <tools/config.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <string.h>
-+#include <subcmd/parse-options.h>
-+
-+struct build {
-+	const char *has;
-+};
-+
-+static struct build build;
-+
-+static struct option build_options[] = {
-+	OPT_STRING(0, "has", &build.has, NULL, "check if a feature is built in"),
-+	OPT_END(),
-+};
-+
-+static const char * const build_usage[] = {
-+	"perf build [<options>]",
-+	NULL
-+};
-+
-+static void on_off_print(const char *status)
-+{
-+	printf("[ ");
-+
-+	if (!strcmp(status, "OFF"))
-+		color_fprintf(stdout, PERF_COLOR_RED, "%-3s", status);
-+	else
-+		color_fprintf(stdout, PERF_COLOR_GREEN, "%-3s", status);
-+
-+	printf(" ]");
-+}
-+
-+static void status_print(const char *name, const char *macro,
-+			 const char *status)
-+{
-+	printf("%22s: ", name);
-+	on_off_print(status);
-+	printf("  # %s\n", macro);
-+}
-+
-+#define STATUS(feature)                                   \
-+do {                                                      \
-+	if (feature.is_builtin)                               \
-+		status_print(feature.name, feature.macro, "on");  \
-+	else                                                  \
-+		status_print(feature.name, feature.macro, "OFF"); \
-+} while (0)
-+
-+/**
-+ * check whether "feature" is built-in with perf
-+ * returns:
-+ *   -1: Feature not known
-+ *    0: Built-in
-+ *    1: NOT Built in
-+ */
-+static int has_support(const char *feature)
-+{
-+	int res = -1;
-+
-+	for (int i = 0; supported_features[i].name; ++i) {
-+		if (strcmp(feature, supported_features[i].name) == 0) {
-+			res = supported_features[i].is_builtin;
-+			STATUS(supported_features[i]);
-+			break;
-+		}
-+	}
-+
-+	if (res == -1) {
-+		color_fprintf(stdout, PERF_COLOR_RED, "Feature not known: %s", feature);
-+		return -2;
-+	}
-+
-+	return !res;
-+}
-+
-+int cmd_build(int argc, const char **argv)
-+{
-+	argc = parse_options(argc, argv, build_options, build_usage,
-+			     PARSE_OPT_STOP_AT_NON_OPTION);
-+
-+	printf("perf build %s\n", perf_version_string);
-+
-+	if (build.has)
-+		return has_support(build.has);
-+
-+	return 0;
-+}
-diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
-index f2ab5bae2150..f5b2b5d809ce 100644
---- a/tools/perf/builtin.h
-+++ b/tools/perf/builtin.h
-@@ -2,11 +2,58 @@
- #ifndef BUILTIN_H
- #define BUILTIN_H
+diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+index bf4c1fb71c4b..a5da9f035afe 100644
+--- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+@@ -27,7 +27,7 @@ skip_if_no_debuginfo() {
+ # check if perf is compiled with libtraceevent support
+ skip_no_probe_record_support() {
+ 	if [ $had_vfs_getname -eq 1 ] ; then
+-		perf record --dry-run -e $1 2>&1 | grep "libtraceevent is necessary for tracepoint support" && return 2
+-		return 1
++		perf build --has libtraceevent >/dev/null && return 1
++		return 2
+ 	fi
+ }
+diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+index 89214a6d9951..0c00e94b83ff 100755
+--- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+@@ -58,7 +58,10 @@ trace_libc_inet_pton_backtrace() {
  
-+#include <stddef.h>
-+#include <linux/compiler.h>
-+#include <tools/config.h>
-+
-+struct feature_support {
-+	const char *name;
-+	const char *macro;
-+	int is_builtin;
-+};
-+
-+#define FEATURE_SUPPORT(name_, macro_) { \
-+	.name = name_,                       \
-+	.macro = #macro_,                    \
-+	.is_builtin = IS_BUILTIN(macro_) }
-+
-+static struct feature_support supported_features[] __maybe_unused = {
-+	FEATURE_SUPPORT("dwarf", HAVE_DWARF_SUPPORT),
-+	FEATURE_SUPPORT("dwarf_getlocations", HAVE_DWARF_GETLOCATIONS_SUPPORT),
-+#ifndef HAVE_SYSCALL_TABLE_SUPPORT
-+	FEATURE_SUPPORT("libaudit", HAVE_LIBAUDIT_SUPPORT),
-+#endif
-+	FEATURE_SUPPORT("syscall_table", HAVE_SYSCALL_TABLE_SUPPORT),
-+	FEATURE_SUPPORT("libbfd", HAVE_LIBBFD_SUPPORT),
-+	FEATURE_SUPPORT("debuginfod", HAVE_DEBUGINFOD_SUPPORT),
-+	FEATURE_SUPPORT("libelf", HAVE_LIBELF_SUPPORT),
-+	FEATURE_SUPPORT("libnuma", HAVE_LIBNUMA_SUPPORT),
-+	FEATURE_SUPPORT("numa_num_possible_cpus", HAVE_LIBNUMA_SUPPORT),
-+	FEATURE_SUPPORT("libperl", HAVE_LIBPERL_SUPPORT),
-+	FEATURE_SUPPORT("libpython", HAVE_LIBPYTHON_SUPPORT),
-+	FEATURE_SUPPORT("libslang", HAVE_SLANG_SUPPORT),
-+	FEATURE_SUPPORT("libcrypto", HAVE_LIBCRYPTO_SUPPORT),
-+	FEATURE_SUPPORT("libunwind", HAVE_LIBUNWIND_SUPPORT),
-+	FEATURE_SUPPORT("libdw-dwarf-unwind", HAVE_DWARF_SUPPORT),
-+	FEATURE_SUPPORT("zlib", HAVE_ZLIB_SUPPORT),
-+	FEATURE_SUPPORT("lzma", HAVE_LZMA_SUPPORT),
-+	FEATURE_SUPPORT("get_cpuid", HAVE_AUXTRACE_SUPPORT),
-+	FEATURE_SUPPORT("bpf", HAVE_LIBBPF_SUPPORT),
-+	FEATURE_SUPPORT("aio", HAVE_AIO_SUPPORT),
-+	FEATURE_SUPPORT("zstd", HAVE_ZSTD_SUPPORT),
-+	FEATURE_SUPPORT("libpfm4", HAVE_LIBPFM),
-+	FEATURE_SUPPORT("libtraceevent", HAVE_LIBTRACEEVENT),
-+
-+	// this should remain at end, to know the array end
-+	FEATURE_SUPPORT(NULL, _)
-+};
-+
- void list_common_cmds_help(void);
- const char *help_unknown_cmd(const char *cmd);
+ 	# Check presence of libtraceevent support to run perf record
+ 	skip_no_probe_record_support "$event_name/$eventattr/"
+-	[ $? -eq 2 ] && return 2
++	if [ $? -eq 2 ]; then
++		echo "WARN: Skipping test trace_libc_inet_pton_backtrace. No libtraceevent support."
++		return 2
++	fi
  
- int cmd_annotate(int argc, const char **argv);
- int cmd_bench(int argc, const char **argv);
-+int cmd_build(int argc, const char **argv);
- int cmd_buildid_cache(int argc, const char **argv);
- int cmd_buildid_list(int argc, const char **argv);
- int cmd_config(int argc, const char **argv);
-diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-index d3fc8090413c..95a4a91b1144 100644
---- a/tools/perf/perf.c
-+++ b/tools/perf/perf.c
-@@ -48,6 +48,7 @@ struct cmd_struct {
+ 	perf record -e $event_name/$eventattr/ -o $perf_data ping -6 -c 1 ::1 > /dev/null 2>&1
+ 	# check if perf data file got created in above step.
+diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+index 7f664f1889d9..c7416d21fc92 100755
+--- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+@@ -19,7 +19,10 @@ record_open_file() {
+ 	echo "Recording open file:"
+ 	# Check presence of libtraceevent support to run perf record
+ 	skip_no_probe_record_support "probe:vfs_getname*"
+-	[ $? -eq 2 ] && return 2
++	if [ $? -eq 2 ]; then
++		echo "WARN: Skipping test record_open_file. No libtraceevent support"
++		return 2
++	fi
+ 	perf record -o ${perfdata} -e probe:vfs_getname\* touch $file
+ }
  
- static struct cmd_struct commands[] = {
- 	{ "archive",	NULL,	0 },
-+	{ "build", cmd_build, 0 },
- 	{ "buildid-cache", cmd_buildid_cache, 0 },
- 	{ "buildid-list", cmd_buildid_list, 0 },
- 	{ "config",	cmd_config,	0 },
 -- 
 2.41.0
 
