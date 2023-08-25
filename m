@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBDAC3DA66
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 04:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2752C7EE2C
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 05:18:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232582AbjHYEzX (ORCPT
+        id S234469AbjHYFKj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 00:55:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33266 "EHLO
+        Fri, 25 Aug 2023 01:10:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234540AbjHYEzQ (ORCPT
+        with ESMTP id S231649AbjHYFK0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 00:55:16 -0400
-Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB13F19A0
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 21:55:13 -0700 (PDT)
-Received: by mail-qt1-x82e.google.com with SMTP id d75a77b69052e-40a47e8e38dso103191cf.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 21:55:13 -0700 (PDT)
+        Fri, 25 Aug 2023 01:10:26 -0400
+Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A95081FC4
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 22:10:23 -0700 (PDT)
+Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-40c72caec5cso183591cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 22:10:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692939313; x=1693544113; darn=vger.kernel.org;
+        d=google.com; s=20221208; t=1692940223; x=1693545023; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UK9NVtWAgJG26oBVv+ugNcP8zu19Nzww0/cbuK0LKZU=;
-        b=MU6eA2NshUQx9YMB3iZZJtKoCm0v0il/KBTcCJK8yvtz1olQRcGk8RF05Sw1tWaaHH
-         x39al0Ob36T/KAkjLAwJ3VkChShoxX6035TVMxEZ9uE/HmteFSJurmKIKfLO6IXcU85/
-         NAmkac9Rz8MxV/sluc9ryyNnj6k8Xm3dRj0TKh2SMZ+Y7INnyCnJp7SeqU/ZrrhPOLEn
-         /8mvcc+wqr+2aq9kKnHhJk1G3tPZIo5qEYPZ035oN6BiGUirdCgOz8xeFjXtqKeB6u0W
-         DrUeqBHZQ9sctSnmGus72kA25KzSRyV3MWMtm1KMr8YkNIJCwZFijNiuhf7QLZfUSNkO
-         yfKQ==
+        bh=GM5LCWOrYHm+b9e2C3LWn/6EqDtDallIRoPwjyWLLgw=;
+        b=cXZ+tmtzRjieSP5Xc82Ks7jFzMg8fiOaMkycJmhKKPkjljsOVkzyH/k4zp4wnJ78Mt
+         +mxKPeG0+QxqQ9lfwag5nk8suLxcVA50s9HnNbTLWSmXo5XTuOCwbJ2j/9YMtolAxmcp
+         MHE2wZbU6UIL1jrO8Id3wM0Nl5WQYFjnXPMa0hoLnJCf3ZgfIem/atsQUDOLOudLDVAp
+         Jgc/mdtMFFOhma/WCYu6FklwtpgRalo9+AGt5a6c+MmwBxhG7EbiByqG8+f1BPKYv/my
+         Rku4mW0E04xzUCHMVNOFO1BOcxpiwWyY+pywM8zzzil5k724DRdy/GGlN3oFnnpxe2gD
+         0kXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692939313; x=1693544113;
+        d=1e100.net; s=20221208; t=1692940223; x=1693545023;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UK9NVtWAgJG26oBVv+ugNcP8zu19Nzww0/cbuK0LKZU=;
-        b=W5GquXVVM1T/Ff6GHt1oyGuN+W5TGlFIXCvWm+28u/V5X1J2ANC+JyRZYGSAFfKnGL
-         lZ7QNKrCxXZVuDAUB12CPKsnMxmeNnIYRDfOVzabcCYUX0cFRz81wkJHK45jBwCx2fDV
-         CoWiyTOLFQ4S6fRB8w7PA73glczNPET8TbtRvTA9Ikz1UNJIL0+8xqiHeg0jn3I5U9Nj
-         8zXayOIBsWmNfiI7GhcQek5sZCcFchbuELbvqcCwTWWIpXnXGoG9tlYsU7Rk3kXzKyys
-         13g/t/3rYNFMR/s8Cx2Es7Weq4EsnIb2Uj1nZeszTLV2P3xzn9F+ujzX/eWrIqBcQ6X4
-         fxzA==
-X-Gm-Message-State: AOJu0YzxFNQB8H5mQaZraa4rCOli2mMcOiqGgOR/QmBXtjNM5yQ7Zx3j
-        yj9xwDchlsyPe3358txYW1Cu93VdbEt9g5HOPvCZTQ==
-X-Google-Smtp-Source: AGHT+IFE9mZvnAi5E7Oy2yBGlF7nZ1VVggJms2FC9NjJexufTqRq5Fiy/5Hx4gqtsfzMZSkM/j2JQ3NKRnRjjVR3T3g=
-X-Received: by 2002:ac8:5ad2:0:b0:410:9d71:ba5d with SMTP id
- d18-20020ac85ad2000000b004109d71ba5dmr117201qtd.25.1692939312913; Thu, 24 Aug
- 2023 21:55:12 -0700 (PDT)
+        bh=GM5LCWOrYHm+b9e2C3LWn/6EqDtDallIRoPwjyWLLgw=;
+        b=lyWktt9OhflCYRKPP3EaUzZkmAJ3qIsyTi92C7enAYhuxQSWMTr8cwOQqyn0f8qmOL
+         J8fScs+64oiDNlyJanaEV+yadnW8CUYx0o5+GNjDS6UAIsptpD/LDOBueYAO7uqAG6Mw
+         novWcuETN4Y+EOWbovCHVlNoUp2GraP50xK0Rv93fjFjEsyN82cWCZyVwkfVbMtcWASk
+         GmELjE+qPIizoqLMPW18FR+qsIy8CkhOQ6UiS49YlulSzd1y/ACLcQPjOFeWCOuAKtVU
+         AtSQABjR9L8MhJ6HTvuGGPww051DPaWwd7WfDY+1ZDUzrm5ZB8UKMoPqB79Dm6zV7bLy
+         2ApA==
+X-Gm-Message-State: AOJu0YwpPm+t4oROtISTebXU6eYj565qyWKyKdM4sF8V29wnqplpXlby
+        IK29IX+PrNfqss8KoJiTnvft3Yt5rD6hk2VdrXDq7Q==
+X-Google-Smtp-Source: AGHT+IG0tyEVEUGxl0lrYufkgEyIAvw8yi4OGUx4DBfPxEbTqKQdXPhMUYiE/cswuweuW6BM+MOqktyYifRs7XltpYw=
+X-Received: by 2002:a05:622a:1897:b0:403:affb:3c03 with SMTP id
+ v23-20020a05622a189700b00403affb3c03mr163509qtc.10.1692940222719; Thu, 24 Aug
+ 2023 22:10:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230821012734.18241-1-yangjihong1@huawei.com> <20230821012734.18241-3-yangjihong1@huawei.com>
-In-Reply-To: <20230821012734.18241-3-yangjihong1@huawei.com>
+References: <20230821012734.18241-1-yangjihong1@huawei.com> <20230821012734.18241-4-yangjihong1@huawei.com>
+In-Reply-To: <20230821012734.18241-4-yangjihong1@huawei.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 24 Aug 2023 21:55:01 -0700
-Message-ID: <CAP-5=fVw9eO=rVLHL+XuaFxsfwD+ji2f9xWdOv3AkaYj9A+w0A@mail.gmail.com>
-Subject: Re: [PATCH v6 2/7] perf evlist: Add evlist__findnew_tracking_event() helper
+Date:   Thu, 24 Aug 2023 22:10:11 -0700
+Message-ID: <CAP-5=fW1zRmx4xxHLUySJ6jJ7NO5BTCcufN_=27gMak8bu6LMg@mail.gmail.com>
+Subject: Re: [PATCH v6 3/7] perf record: Move setting dummy tracking before record__init_thread_masks()
 To:     Yang Jihong <yangjihong1@huawei.com>
 Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
@@ -72,106 +72,195 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 On Sun, Aug 20, 2023 at 6:30=E2=80=AFPM Yang Jihong <yangjihong1@huawei.com=
 > wrote:
 >
-> Currently, intel-bts, intel-pt, and arm-spe may add a dummy event for
-> tracking to the evlist. We may need to search for the dummy event for
-> some settings. Therefore, add evlist__findnew_tracking_event() helper.
+> User space tasks can migrate between CPUs, so when tracing selected CPUs,
+> sideband for all CPUs is needed. In this case set the cpu map of the evse=
+l
+> to all online CPUs. This may modify the original cpu map of the evlist.
+> Therefore, need to check whether the preceding scenario exists before
+> record__init_thread_masks().
+> Dummy tracking has been set in record__open(), move it before
+> record__init_thread_masks() and add a helper for unified processing.
 
-Given the first two sentences I don't understand why this is
-evlist__findnew_tracking_event and not evlist__findnew_dummy_event?
-Are you setting tracking on other events other than dummy? If so, then
-the commit message isn't right. If not then I'd prefer not to use
-tracking event in the function name.
+I have a hard time understanding this commit message. Let me have a go:
 
+In order to set cpu maps correctly on dummy events they need to set up
+later. Factor out the dummy event initialization from record__open and
+move it to its own function record__setup_dummy_event. Move the call
+to the record__setup_dummy to before the call to
+record__init_thread_masks in cmd_record.
+
+> The sys_perf_event_open invoked is as follows:
 >
-> evlist__findnew_tracking_event() also deal with system_wide maps if
-> system_wide is true.
+>   # perf --debug verbose=3D3 record -e cpu-clock -D 100 true
+>   <SNIP>
+>   Opening: cpu-clock
+>   ------------------------------------------------------------
+>   perf_event_attr:
+>     type                             1 (PERF_TYPE_SOFTWARE)
+>     size                             136
+>     config                           0 (PERF_COUNT_SW_CPU_CLOCK)
+>     { sample_period, sample_freq }   4000
+>     sample_type                      IP|TID|TIME|PERIOD|IDENTIFIER
+>     read_format                      ID|LOST
+>     disabled                         1
+>     inherit                          1
+>     freq                             1
+>     sample_id_all                    1
+>     exclude_guest                    1
+>   ------------------------------------------------------------
+>   sys_perf_event_open: pid 10318  cpu 0  group_fd -1  flags 0x8 =3D 5
+>   sys_perf_event_open: pid 10318  cpu 1  group_fd -1  flags 0x8 =3D 6
+>   sys_perf_event_open: pid 10318  cpu 2  group_fd -1  flags 0x8 =3D 7
+>   sys_perf_event_open: pid 10318  cpu 3  group_fd -1  flags 0x8 =3D 9
+>   sys_perf_event_open: pid 10318  cpu 4  group_fd -1  flags 0x8 =3D 10
+>   sys_perf_event_open: pid 10318  cpu 5  group_fd -1  flags 0x8 =3D 11
+>   sys_perf_event_open: pid 10318  cpu 6  group_fd -1  flags 0x8 =3D 12
+>   sys_perf_event_open: pid 10318  cpu 7  group_fd -1  flags 0x8 =3D 13
+>   Opening: dummy:u
+>   ------------------------------------------------------------
+>   perf_event_attr:
+>     type                             1 (PERF_TYPE_SOFTWARE)
+>     size                             136
+>     config                           0x9 (PERF_COUNT_SW_DUMMY)
+>     { sample_period, sample_freq }   1
+>     sample_type                      IP|TID|TIME|IDENTIFIER
+>     read_format                      ID|LOST
+>     disabled                         1
+>     inherit                          1
+>     exclude_kernel                   1
+>     exclude_hv                       1
+>     mmap                             1
+>     comm                             1
+>     enable_on_exec                   1
+>     task                             1
+>     sample_id_all                    1
+>     exclude_guest                    1
+>     mmap2                            1
+>     comm_exec                        1
+>     ksymbol                          1
+>     bpf_event                        1
+>   ------------------------------------------------------------
+>   sys_perf_event_open: pid 10318  cpu 0  group_fd -1  flags 0x8 =3D 14
+>   sys_perf_event_open: pid 10318  cpu 1  group_fd -1  flags 0x8 =3D 15
+>   sys_perf_event_open: pid 10318  cpu 2  group_fd -1  flags 0x8 =3D 16
+>   sys_perf_event_open: pid 10318  cpu 3  group_fd -1  flags 0x8 =3D 17
+>   sys_perf_event_open: pid 10318  cpu 4  group_fd -1  flags 0x8 =3D 18
+>   sys_perf_event_open: pid 10318  cpu 5  group_fd -1  flags 0x8 =3D 19
+>   sys_perf_event_open: pid 10318  cpu 6  group_fd -1  flags 0x8 =3D 20
+>   sys_perf_event_open: pid 10318  cpu 7  group_fd -1  flags 0x8 =3D 21
+>   <SNIP>
+>
+> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+>  tools/perf/builtin-record.c | 59 +++++++++++++++++++++++--------------
+>  1 file changed, 37 insertions(+), 22 deletions(-)
+>
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 12edad8392cc..4ee94058028f 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -906,6 +906,37 @@ static int record__config_off_cpu(struct record *rec=
+)
+>         return off_cpu_prepare(rec->evlist, &rec->opts.target, &rec->opts=
+);
+>  }
+>
+> +static int record__config_tracking_events(struct record *rec)
+> +{
+> +       struct record_opts *opts =3D &rec->opts;
+> +       struct evlist *evlist =3D rec->evlist;
+> +       struct evsel *evsel;
+> +
+> +       /*
+> +        * For initial_delay, system wide or a hybrid system, we need to =
+add a
+> +        * dummy event so that we can track PERF_RECORD_MMAP to cover the=
+ delay
 
-Could you fix the explanation here, what does "deal with system_wide"
-mean? A kerneldoc comment and explanation of the system_wide argument
-would be useful.
+This code is explicitly talking about dummy events but the function is
+now renamed to call it a tracking event. I think the code should be
+consistent.
+
+> +        * of waiting or event synthesis.
+> +        */
+> +       if (opts->target.initial_delay || target__has_cpu(&opts->target) =
+||
+> +           perf_pmus__num_core_pmus() > 1) {
+> +               evsel =3D evlist__findnew_tracking_event(evlist, false);
+> +               if (!evsel)
+> +                       return -ENOMEM;
+> +
+> +               /*
+> +                * Enable the dummy event when the process is forked for
+
+Dummy again.
 
 Thanks,
 Ian
 
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
->  tools/perf/builtin-record.c | 11 +++--------
->  tools/perf/util/evlist.c    | 18 ++++++++++++++++++
->  tools/perf/util/evlist.h    |  1 +
->  3 files changed, 22 insertions(+), 8 deletions(-)
->
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 34bb31f08bb5..12edad8392cc 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -1293,14 +1293,9 @@ static int record__open(struct record *rec)
->          */
->         if (opts->target.initial_delay || target__has_cpu(&opts->target) =
-||
->             perf_pmus__num_core_pmus() > 1) {
-> -               pos =3D evlist__get_tracking_event(evlist);
-> -               if (!evsel__is_dummy_event(pos)) {
-> -                       /* Set up dummy event. */
-> -                       if (evlist__add_dummy(evlist))
-> -                               return -ENOMEM;
-> -                       pos =3D evlist__last(evlist);
-> -                       evlist__set_tracking_event(evlist, pos);
-> -               }
-> +               pos =3D evlist__findnew_tracking_event(evlist, false);
-> +               if (!pos)
-> +                       return -ENOMEM;
->
->                 /*
->                  * Enable the dummy event when the process is forked for
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index 7ef43f72098e..25c3ebe2c2f5 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -1694,6 +1694,24 @@ void evlist__set_tracking_event(struct evlist *evl=
-ist, struct evsel *tracking_ev
->         tracking_evsel->tracking =3D true;
->  }
->
-> +struct evsel *evlist__findnew_tracking_event(struct evlist *evlist, bool=
- system_wide)
-> +{
-> +       struct evsel *evsel;
-> +
-> +       evsel =3D evlist__get_tracking_event(evlist);
-> +       if (!evsel__is_dummy_event(evsel)) {
-> +               evsel =3D evlist__add_aux_dummy(evlist, system_wide);
-> +               if (!evsel)
-> +                       return NULL;
-> +
-> +               evlist__set_tracking_event(evlist, evsel);
-> +       } else if (system_wide) {
-> +               perf_evlist__go_system_wide(&evlist->core, &evsel->core);
+> +                * initial_delay, immediately for system wide.
+> +                */
+> +               if (opts->target.initial_delay && !evsel->immediate &&
+> +                   !target__has_cpu(&opts->target))
+> +                       evsel->core.attr.enable_on_exec =3D 1;
+> +               else
+> +                       evsel->immediate =3D 1;
 > +       }
 > +
-> +       return evsel;
+> +       return 0;
 > +}
 > +
->  struct evsel *evlist__find_evsel_by_str(struct evlist *evlist, const cha=
-r *str)
+>  static bool record__kcore_readable(struct machine *machine)
 >  {
->         struct evsel *evsel;
-> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> index 664c6bf7b3e0..98e7ddb2bd30 100644
-> --- a/tools/perf/util/evlist.h
-> +++ b/tools/perf/util/evlist.h
-> @@ -387,6 +387,7 @@ bool evlist_cpu_iterator__end(const struct evlist_cpu=
-_iterator *evlist_cpu_itr);
+>         char kcore[PATH_MAX];
+> @@ -1286,28 +1317,6 @@ static int record__open(struct record *rec)
+>         struct record_opts *opts =3D &rec->opts;
+>         int rc =3D 0;
 >
->  struct evsel *evlist__get_tracking_event(struct evlist *evlist);
->  void evlist__set_tracking_event(struct evlist *evlist, struct evsel *tra=
-cking_evsel);
-> +struct evsel *evlist__findnew_tracking_event(struct evlist *evlist, bool=
- system_wide);
+> -       /*
+> -        * For initial_delay, system wide or a hybrid system, we need to =
+add a
+> -        * dummy event so that we can track PERF_RECORD_MMAP to cover the=
+ delay
+> -        * of waiting or event synthesis.
+> -        */
+> -       if (opts->target.initial_delay || target__has_cpu(&opts->target) =
+||
+> -           perf_pmus__num_core_pmus() > 1) {
+> -               pos =3D evlist__findnew_tracking_event(evlist, false);
+> -               if (!pos)
+> -                       return -ENOMEM;
+> -
+> -               /*
+> -                * Enable the dummy event when the process is forked for
+> -                * initial_delay, immediately for system wide.
+> -                */
+> -               if (opts->target.initial_delay && !pos->immediate &&
+> -                   !target__has_cpu(&opts->target))
+> -                       pos->core.attr.enable_on_exec =3D 1;
+> -               else
+> -                       pos->immediate =3D 1;
+> -       }
+> -
+>         evlist__config(evlist, opts, &callchain_param);
 >
->  struct evsel *evlist__find_evsel_by_str(struct evlist *evlist, const cha=
-r *str);
+>         evlist__for_each_entry(evlist, pos) {
+> @@ -4190,6 +4199,12 @@ int cmd_record(int argc, const char **argv)
+>                 goto out;
+>         }
 >
+> +       err =3D record__config_tracking_events(rec);
+> +       if (err) {
+> +               pr_err("record__config_tracking_events failed, error %d\n=
+", err);
+> +               goto out;
+> +       }
+> +
+>         err =3D record__init_thread_masks(rec);
+>         if (err) {
+>                 pr_err("Failed to initialize parallel data streaming mask=
+s\n");
 > --
 > 2.30.GIT
 >
