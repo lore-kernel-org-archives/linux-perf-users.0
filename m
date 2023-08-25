@@ -2,138 +2,158 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6589C3DA66
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 08:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0137DC3DA6F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 08:41:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237465AbjHYIVG (ORCPT
+        id S243718AbjHYIkb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 04:21:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49224 "EHLO
+        Fri, 25 Aug 2023 04:40:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239827AbjHYIUm (ORCPT
+        with ESMTP id S243824AbjHYIkN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 04:20:42 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 871F21FF6;
-        Fri, 25 Aug 2023 01:20:40 -0700 (PDT)
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37P8DpQg023022;
-        Fri, 25 Aug 2023 08:20:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=plK0ltggfUhZCXMqRRvEdsoRYO1CcRL9FbetRxCGorg=;
- b=aLKd2xoZKG0FvMv+Dsi/Pb9Ac2Ni5sjLC/WwQ7jxOvmF1NKGxeg9pRNUZQS1hPkcq+5s
- KCAhREoWjuOkVWxlC7+JtMNIhu/yISRBvJ2OkNkR0TutVi6gBGUyHxjBtwza5a/tbCgK
- /friokjWgDXPrbzvCHd0gGSMmVoYqdmiYZpaRji6ej9hjW71l7yURJObSyG2aSFwxVRw
- bVVQw7a412m+U9fEbUUGB3Iss/zBo0Zf8CRCy+pNZLUj7GLRXsN+3PFU3yRHEixd9oTR
- 5Vlu73DM+RobuSNoMCz+F91NpE26xyhcjr3KGuUYqMZfHUobzV/+ByVGyM85WkLr124X Mw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sprbt0ege-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Aug 2023 08:20:04 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37P8EOrG028017;
-        Fri, 25 Aug 2023 08:20:03 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sprbt0efp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Aug 2023 08:20:02 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-        by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37P5plSi004090;
-        Fri, 25 Aug 2023 08:20:02 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3sn21rwyj8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Aug 2023 08:20:02 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37P8JwW821431022
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Aug 2023 08:19:58 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C7D7820040;
-        Fri, 25 Aug 2023 08:19:58 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 858932004D;
-        Fri, 25 Aug 2023 08:19:57 +0000 (GMT)
-Received: from [9.171.39.59] (unknown [9.171.39.59])
-        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Fri, 25 Aug 2023 08:19:57 +0000 (GMT)
-Message-ID: <428afeb4-d5ca-8115-73fc-881119a1cd51@linux.ibm.com>
-Date:   Fri, 25 Aug 2023 10:19:57 +0200
+        Fri, 25 Aug 2023 04:40:13 -0400
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5FE61FD4;
+        Fri, 25 Aug 2023 01:40:09 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VqWZWZJ_1692952804;
+Received: from 30.221.145.196(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VqWZWZJ_1692952804)
+          by smtp.aliyun-inc.com;
+          Fri, 25 Aug 2023 16:40:06 +0800
+Message-ID: <27446554-54dd-51f9-c3e9-e3aa225d8380@linux.alibaba.com>
+Date:   Fri, 25 Aug 2023 16:40:03 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2 06/18] perf s390 s390_cpumcfdg_dump: Don't scan all
- PMUs
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.14.0
+Subject: Re: [PATCH v7 1/8] perf pmu: "Compat" supports matching multiple
+ identifiers
+To:     Robin Murphy <robin.murphy@arm.com>,
+        John Garry <john.g.garry@oracle.com>,
         Ian Rogers <irogers@google.com>
-Cc:     Heiko Carstens <hca@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+Cc:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Rob Herring <robh@kernel.org>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230824041330.266337-1-irogers@google.com>
- <20230824041330.266337-7-irogers@google.com> <ZOdiX4eJHFfFbQhi@kernel.org>
-Content-Language: en-US
-From:   Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <ZOdiX4eJHFfFbQhi@kernel.org>
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>
+References: <1692606977-92009-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1692606977-92009-2-git-send-email-renyu.zj@linux.alibaba.com>
+ <cbd34ed6-3220-3c0c-74bc-46a2baa744e5@arm.com>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <cbd34ed6-3220-3c0c-74bc-46a2baa744e5@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: HlNeDYP3NQGonc-oeG0IFKSUm5pDR3GO
-X-Proofpoint-GUID: DokbMJ8vaqVqTQSKoX_7ynwKxYucjL9l
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-08-25_06,2023-08-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- impostorscore=0 bulkscore=0 suspectscore=0 adultscore=0 spamscore=0
- clxscore=1011 mlxscore=0 priorityscore=1501 malwarescore=0 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2308250070
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 8/24/23 15:59, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Aug 23, 2023 at 09:13:18PM -0700, Ian Rogers escreveu:
->> Rather than scanning all PMUs for a counter name, scan the PMU
->> associated with the evsel of the sample. This is done to remove a
->> dependence on pmu-events.h.
+
+
+在 2023/8/24 下午11:05, Robin Murphy 写道:
+> On 21/08/2023 9:36 am, Jing Zhang wrote:
+>> The jevent "Compat" is used for uncore PMU alias or metric definitions.
+>>
+>> The same PMU driver has different PMU identifiers due to different
+>> hardware versions and types, but they may have some common PMU event.
+>> Since a Compat value can only match one identifier, when adding the
+>> same event alias to PMUs with different identifiers, each identifier
+>> needs to be defined once, which is not streamlined enough.
+>>
+>> So let "Compat" supports matching multiple identifiers for uncore PMU
+>> alias. For example, the Compat value {43401;436*} can match the PMU
+>> identifier "43401", that is, CMN600_r0p0, and the PMU identifier with
+>> the prefix "436", that is, all CMN650, where "*" is a wildcard.
+>> Tokens in Unit field are delimited by ';' with no spaces.
 > 
-> I'm applying this one, and CCing the S/390 developers so that they can
-> try this and maybe provide an Acked-by/Tested-by,
+> I wonder is there any possibility of supporting multiple values as a JSON array, rather than a single delimited string? Otherwise, if we're putting restrictions on what characters a driver can expose as an identifier, then I think that really wants explicitly documenting. AFAICT there's currently not even any documentation of the de-facto ABI that it's expected to be a free-form string rather than completely arbitrary binary data.
 > 
-> - Arnaldo
 
+I'm sorry I almost missed this message, as it was in my spam folder.
 
-Arnaldo,
+If we put multiple values as an array, its parsing in jevent.py will become complicated.
+I agree that we need to document the character restrictions for driver identifier composition.
+Both Unit and Compat have the same problem, so certain characters need to be restricted in
+the identifiers and names of drivers. However, it seems that there is no such document.
 
-I have downloaded this patch set of 18 patches (using b4), but they do not
-apply on my git tree.
+Thanks,
+Jing
 
-Which git branch do I have to use to test this. Thanks a lot.
-
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Gregor Pillen
-Geschäftsführung: David Faller
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-
+> Thanks,
+> Robin.
+> 
+>> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+>> Reviewed-by: John Garry <john.g.garry@oracle.com>
+>> ---
+>>   tools/perf/util/pmu.c | 33 +++++++++++++++++++++++++++++++--
+>>   tools/perf/util/pmu.h |  1 +
+>>   2 files changed, 32 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+>> index ad209c8..6402423 100644
+>> --- a/tools/perf/util/pmu.c
+>> +++ b/tools/perf/util/pmu.c
+>> @@ -776,6 +776,35 @@ static bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
+>>       return res;
+>>   }
+>>   +bool pmu_uncore_identifier_match(const char *id, const char *compat)
+>> +{
+>> +    char *tmp = NULL, *tok, *str;
+>> +    bool res;
+>> +    int n;
+>> +
+>> +    /*
+>> +     * The strdup() call is necessary here because "compat" is a const str*
+>> +     * type and cannot be used as an argument to strtok_r().
+>> +     */
+>> +    str = strdup(compat);
+>> +    if (!str)
+>> +        return false;
+>> +
+>> +    tok = strtok_r(str, ";", &tmp);
+>> +    for (; tok; tok = strtok_r(NULL, ";", &tmp)) {
+>> +        n = strlen(tok);
+>> +        if ((tok[n - 1] == '*' && !strncmp(id, tok, n - 1)) ||
+>> +            !strcmp(id, tok)) {
+>> +            res = true;
+>> +            goto out;
+>> +        }
+>> +    }
+>> +    res = false;
+>> +out:
+>> +    free(str);
+>> +    return res;
+>> +}
+>> +
+>>   struct pmu_add_cpu_aliases_map_data {
+>>       struct list_head *head;
+>>       const char *name;
+>> @@ -847,8 +876,8 @@ static int pmu_add_sys_aliases_iter_fn(const struct pmu_event *pe,
+>>       if (!pe->compat || !pe->pmu)
+>>           return 0;
+>>   -    if (!strcmp(pmu->id, pe->compat) &&
+>> -        pmu_uncore_alias_match(pe->pmu, pmu->name)) {
+>> +    if (pmu_uncore_alias_match(pe->pmu, pmu->name) &&
+>> +        pmu_uncore_identifier_match(pmu->id, pe->compat)) {
+>>           __perf_pmu__new_alias(idata->head, -1,
+>>                         (char *)pe->name,
+>>                         (char *)pe->desc,
+>> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+>> index b9a02de..9d4385d 100644
+>> --- a/tools/perf/util/pmu.h
+>> +++ b/tools/perf/util/pmu.h
+>> @@ -241,6 +241,7 @@ void pmu_add_cpu_aliases_table(struct list_head *head, struct perf_pmu *pmu,
+>>   char *perf_pmu__getcpuid(struct perf_pmu *pmu);
+>>   const struct pmu_events_table *pmu_events_table__find(void);
+>>   const struct pmu_metrics_table *pmu_metrics_table__find(void);
+>> +bool pmu_uncore_identifier_match(const char *id, const char *compat);
+>>   void perf_pmu_free_alias(struct perf_pmu_alias *alias);
+>>     int perf_pmu__convert_scale(const char *scale, char **end, double *sval);
