@@ -2,116 +2,180 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FC9C3DA66
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 16:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C39C3DA66
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 16:50:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344068AbjHYQsM (ORCPT
+        id S1344081AbjHYQuY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 12:48:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39940 "EHLO
+        Fri, 25 Aug 2023 12:50:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344079AbjHYQsL (ORCPT
+        with ESMTP id S242902AbjHYQuC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 12:48:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA4A0E67;
-        Fri, 25 Aug 2023 09:48:09 -0700 (PDT)
+        Fri, 25 Aug 2023 12:50:02 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DE4BE67;
+        Fri, 25 Aug 2023 09:50:00 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 89097629C1;
-        Fri, 25 Aug 2023 16:48:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E72FCC433CB;
-        Fri, 25 Aug 2023 16:48:08 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 339C764984;
+        Fri, 25 Aug 2023 16:50:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61A17C433C7;
+        Fri, 25 Aug 2023 16:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692982088;
-        bh=Q79LYCwbEEcZzJqxzYl+4FUzvrTxSOie7i/yZqWDwTg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ie6Wt0NkLp4XAfqT8VvcAYFfUBhnLm5nzQ48i4VMlrJGX7NpUq5fOg5we1JlSjzD5
-         MyJuy95XrB6ooDD6qqTPgij00M+A/QzdsFyrizv+t1vr6noCySNUecSmMGs0WoVV4Y
-         f+RV1G19RrXva7PAAXzYZbsQGi2JnXwPCUS0UEhxToCieRvPGOXdpw3lg0sn8pFTXq
-         2b4Ckdb8kyjuWV4G+tizpktEIh7lmD+xzPrB2a4MVcEWP/187gJCbbGjZ61S6ILdR6
-         XkGBKEzoolYOoONor6LiupuQvDlX0C6LFZTPIK/9avxW5Uz28FeUNmftMTFWlK9+UF
-         04upIMvDHz66A==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-500913779f5so1738506e87.2;
-        Fri, 25 Aug 2023 09:48:08 -0700 (PDT)
-X-Gm-Message-State: AOJu0YxRnM9npOYCr4w/0l/pyjh6jgLaBMkeNCOPLtV0g2IhplIcoccA
-        IA01jxZhHQJ9kXAFRqvMY/0XC+H7axVSWUleQ2M=
-X-Google-Smtp-Source: AGHT+IGSW1A8/Tpphe6fWlm78FsnJvvdIjMAO9DAAkWifGczRpLUkAreq1u3GY30U9ATT7TcYLzs5/MPKUSkjKXR1v4=
-X-Received: by 2002:a19:e058:0:b0:4ff:b830:4b69 with SMTP id
- g24-20020a19e058000000b004ffb8304b69mr11319015lfj.6.1692982086875; Fri, 25
- Aug 2023 09:48:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230825164152.165610-1-namhyung@kernel.org> <20230825164152.165610-2-namhyung@kernel.org>
-In-Reply-To: <20230825164152.165610-2-namhyung@kernel.org>
-From:   Song Liu <song@kernel.org>
-Date:   Fri, 25 Aug 2023 09:47:54 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5u8Rd4XVF27eeW7CPhAdSF+wfnxKwWRnYPDsXV=_9_aA@mail.gmail.com>
-Message-ID: <CAPhsuW5u8Rd4XVF27eeW7CPhAdSF+wfnxKwWRnYPDsXV=_9_aA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] perf test: Fix perf stat bpf counters test on Intel
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        s=k20201202; t=1692982199;
+        bh=vvsvVFXVKOVeWLHgcXyoajMwjYUsYH9Hn/yqa6tSNn4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ID+9/Ov2qnUagaxhYIkHxJ0cUcul3Wmn/yl09JI/K976OrwCO+uT8FWdL9HDsUcAk
+         2lWYerN33mw4pxHjaCvwB8NyzON1rlLFIAs5k+oMSAViU1q0jw2qqNi6BUBCjw3f5S
+         7xuVcDUnxCRjdPF9TksekxusqSEIrp3czJlvYYbNIuYMJWFPrTqt1O4/kamsyqWqzF
+         9OrGbjGhn+Ah4wgHKE0AXHpxeFdQqe11XFmGKqEPqs6BcfZMFiS09aZV1XueCpAIlH
+         DfXPuIIL4Z9G18jEi/5dwoePkBF6gOOJogkNxgTbrX5Yt2hdkQbjPdL+ryrlgZFeIX
+         uEireeBuhWHBg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id DC10240722; Fri, 25 Aug 2023 13:49:56 -0300 (-03)
+Date:   Fri, 25 Aug 2023 13:49:56 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-        stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] perf pmus: Sort pmus by name then suffix
+Message-ID: <ZOjbtB5Ezk3UGcU8@kernel.org>
+References: <20230825135237.921058-1-irogers@google.com>
+ <20230825135237.921058-2-irogers@google.com>
+ <ZOi/KDRRrnkvJmkB@kernel.org>
+ <ZOjABa9ZfQgra/UX@kernel.org>
+ <CAP-5=fVw3heenOh8+JhjNy6Z__p16mv6Z_RiaqYOgjqSrfRKuQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVw3heenOh8+JhjNy6Z__p16mv6Z_RiaqYOgjqSrfRKuQ@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 25, 2023 at 9:41=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> As of now, bpf counters (bperf) don't support event groups.  But the
-> default perf stat includes topdown metrics if supported (on recent Intel
-> machines) which require groups.  That makes perf stat exiting.
->
->   $ sudo perf stat --bpf-counter true
->   bpf managed perf events do not yet support groups.
->
-> Actually the test explicitly uses cycles event only, but it missed to
-> pass the option when it checks the availability of the command.
->
-> Fixes: 2c0cb9f56020d ("perf test: Add a shell test for 'perf stat --bpf-c=
-ounters' new option")
-> Cc: stable@vger.kernel.org
-> Cc: Song Liu <song@kernel.org>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Em Fri, Aug 25, 2023 at 08:56:44AM -0700, Ian Rogers escreveu:
+> On Fri, Aug 25, 2023 at 7:51 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > Em Fri, Aug 25, 2023 at 11:48:08AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > Em Fri, Aug 25, 2023 at 06:52:36AM -0700, Ian Rogers escreveu:
+> > > > Sort PMUs by name. If two PMUs have the same name but differ by
+> > > > suffix, sort the suffixes numerically. For example, "breakpoint" comes
+> > > > before "cpu", "uncore_imc_free_running_0" comes before
+> > > > "uncore_imc_free_running_1". Suffixes need to be treated specially as
+> > > > otherwise they will be ordered like 0, 1, 10, 11, .., 2, 20, 21, ..,
+> > > > etc. Only PMUs starting 'uncore_' are considered to have a potential
+> > > > suffix.
+> > > >
+> > > > Sorting of PMUs is done so that later patches can skip duplicate
+> > > > uncore PMUs that differ only by there suffix.
+> > > >
+> > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > > ---
+> > > >  tools/perf/util/pmus.c | 48 ++++++++++++++++++++++++++++++++++++++++++
+> > > >  1 file changed, 48 insertions(+)
+> > > >
+> > > > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> > > > index 4dd5912617ff..b1f6a64693fe 100644
+> > > > --- a/tools/perf/util/pmus.c
+> > > > +++ b/tools/perf/util/pmus.c
+> > > > @@ -1,8 +1,10 @@
+> > > >  // SPDX-License-Identifier: GPL-2.0
+> > > >  #include <linux/list.h>
+> > > > +#include <linux/list_sort.h>
+> > > >  #include <linux/zalloc.h>
+> > > >  #include <subcmd/pager.h>
+> > > >  #include <sys/types.h>
+> > > > +#include <ctype.h>
+> > > >  #include <dirent.h>
+> > > >  #include <pthread.h>
+> > > >  #include <string.h>
+> > > > @@ -33,6 +35,31 @@ static LIST_HEAD(other_pmus);
+> > > >  static bool read_sysfs_core_pmus;
+> > > >  static bool read_sysfs_all_pmus;
+> > > >
+> > > > +static int pmu_name_len_no_suffix(const char *str, unsigned long *num)
+> > > > +{
+> > > > +   int orig_len, len;
+> > > > +
+> > > > +   orig_len = len = strlen(str);
+> > > > +
+> > > > +   /* Non-uncore PMUs have their full length, for example, i915. */
+> > > > +   if (strncmp(str, "uncore_", 7))
+> > > > +           return len;
+> > >
+> > > I applied the patch, but we have strstarts() for this case, to avoid
+> > > having to count the size of the prefix in tools/include/linux/string.h,
+> > > that we copied from the kernel sources:
+> > >
+> > > /**
+> > >  * strstarts - does @str start with @prefix?
+> > >  * @str: string to examine
+> > >  * @prefix: prefix to look for.
+> > >  */
+> > > static inline bool strstarts(const char *str, const char *prefix)
+> > > {
+> > >         return strncmp(str, prefix, strlen(prefix)) == 0;
+> > > }
+> > >
+> > > I'll change it, ok?
+> 
+> Makes sense to me. We also do this same strncmp here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/parse-events.y?h=perf-tools-next#n315
 
-Reviewed-by: Song Liu <song@kernel.org>
+I did it in this case, to keep 'git blame' info in place, will look for
+the other cases and do it.
 
-Thanks!
-Song
+This is something that should be automated somehow, maybe here is a good
+opportunity for checkpatch to do something useful :-)
 
-> ---
->  tools/perf/tests/shell/stat_bpf_counters.sh | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/tests/shell/stat_bpf_counters.sh b/tools/perf/tes=
-ts/shell/stat_bpf_counters.sh
-> index 513cd1e58e0e..a87bb2814b4c 100755
-> --- a/tools/perf/tests/shell/stat_bpf_counters.sh
-> +++ b/tools/perf/tests/shell/stat_bpf_counters.sh
-> @@ -22,10 +22,10 @@ compare_number()
->  }
->
->  # skip if --bpf-counters is not supported
-> -if ! perf stat --bpf-counters true > /dev/null 2>&1; then
-> +if ! perf stat -e cycles --bpf-counters true > /dev/null 2>&1; then
->         if [ "$1" =3D "-v" ]; then
->                 echo "Skipping: --bpf-counters not supported"
-> -               perf --no-pager stat --bpf-counters true || true
-> +               perf --no-pager stat -e cycles --bpf-counters true || tru=
-e
->         fi
->         exit 2
->  fi
-> --
-> 2.42.0.rc1.204.g551eb34607-goog
->
+- Arnaldo
+
+> So perhaps do a follow up patch cleaning up all instances of the not
+> use of strstarts.
+> 
+> Thanks,
+> Ian
+> 
+> > This:
+> >
+> > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> > index b1f6a64693fe0d49..bbf84ccc3aba7d5c 100644
+> > --- a/tools/perf/util/pmus.c
+> > +++ b/tools/perf/util/pmus.c
+> > @@ -1,6 +1,7 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >  #include <linux/list.h>
+> >  #include <linux/list_sort.h>
+> > +#include <linux/string.h>
+> >  #include <linux/zalloc.h>
+> >  #include <subcmd/pager.h>
+> >  #include <sys/types.h>
+> > @@ -42,7 +43,7 @@ static int pmu_name_len_no_suffix(const char *str, unsigned long *num)
+> >         orig_len = len = strlen(str);
+> >
+> >         /* Non-uncore PMUs have their full length, for example, i915. */
+> > -       if (strncmp(str, "uncore_", 7))
+> > +       if (!strstarts(str, "uncore_"))
+> >                 return len;
+> >
+> >         /*
+
+-- 
+
+- Arnaldo
