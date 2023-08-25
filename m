@@ -2,179 +2,110 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58EC5C71133
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 15:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E410C3DA66
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 16:42:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230012AbjHYP5V (ORCPT
+        id S1343942AbjHYQmL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 11:57:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50292 "EHLO
+        Fri, 25 Aug 2023 12:42:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237166AbjHYP47 (ORCPT
+        with ESMTP id S243298AbjHYQl6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 11:56:59 -0400
-Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A04722107
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Aug 2023 08:56:56 -0700 (PDT)
-Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-40a47e8e38dso238671cf.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Aug 2023 08:56:56 -0700 (PDT)
+        Fri, 25 Aug 2023 12:41:58 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E1DF2121;
+        Fri, 25 Aug 2023 09:41:55 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1bdc243d62bso8839825ad.3;
+        Fri, 25 Aug 2023 09:41:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692979016; x=1693583816; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f1dAiH5GroxRPQDayYuzzRlNNflrHbuT0xIRa5ImgrI=;
-        b=qC0rhWTNcr4ynYhixWygcQrUaKtsa7NwY5OpCerbuyD5vAoBeLTl6K+65SpD3VleVL
-         cW8MZK9mtkrXZBHAy3yL4voFmH92nA1sO6hQWtrTT2zFE5V2V1a5bd7H3pWzwQr2EiOB
-         qVvuPOvdO7P2giv6RpcFwlBB4sTHkqQ5tsj0inOcL9Dqd89egmIKgc/vLNwQ/EF4Zb/l
-         ImIHVYdRP9WMvkFbwZit17ry3r4SxI9kyICDOxLJZi/6ItvJdBA8k3obZ9onQv5WY12u
-         VNhTJbN8LyJTqv4RRFeRFD1MDcEnHXiq1QLP/q9UiyQCyICNfXoU+xQ8WZoGxQEQDRkV
-         NBkQ==
+        d=gmail.com; s=20221208; t=1692981715; x=1693586515;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=3QJes05NERO623clvngPrcz5iKhTHEmajQSFREZ7RHQ=;
+        b=jxoI1LtcqwdpP75jgx1mtveqD+kyGqFmGdEnkbMYOcHujRlLjYHHYhQYXblsfcddN3
+         MSi5+QuNpaYQexiECkD6C9k1uvbjs/HEPj5BQjOGTNvWI66TDeL3m81b0kckF5TGbzau
+         ayiRLNicgIvn9oPG3wc6zrIkaKp0LHISWiN+P+OsjyzwRFgpcyukZJ6PcwwRJ4DUcYLh
+         K+l0EbeVOSRoHoF5dnCra7QREkZrvdD0/ZCKrDWKrrnVx/wSEJfmJMhHr7oqNCot5mTU
+         nx0jvb2HfEdvn9Y6wyedZJ5sGsTLv5QYbGjXiSxx8o1Q1KN05CFfo9n7n2g2i+DXb0Pa
+         u3qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692979016; x=1693583816;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f1dAiH5GroxRPQDayYuzzRlNNflrHbuT0xIRa5ImgrI=;
-        b=ItQ+2iGYlW5erGDvw7RzKNGFRSJD2zmrEJV4d/daA2BcLTEq+X3YVlJcyaT7YEQSNM
-         WFMhY0D7QFde6JxN8b8bVRBr1nWZHnbM442VGxdKCRZwSgYpDVhMLe/GSRtMOcAZpyww
-         dbHiJN4ZUOrPVUGEUsbJzEkKDNyhbZjcOr25yrFRn6mxjnXjCPMBI51w61+Dm6ecYile
-         lmAZ7NxFuNZ84wfiCHxBajH5r8bfkcBhTRdudqDfY6ieRnRCFA+QSEfUG6KvjTUCV6lH
-         fQaNdoCkD0+UQLw+Dj0N2glHHId7HtECmTdwQKSZXZu2wUUiAv4YPR5eN3Awwbzv5L4u
-         8ilg==
-X-Gm-Message-State: AOJu0YxXboohRnZbDTamaGSt/leB7IRIFVzYVqLCfck0l2ZcHNte6icw
-        zyC5qf4KTErSwlz/QM7C28YEHICzT42MnZ7se3qg4w==
-X-Google-Smtp-Source: AGHT+IEqk0e4YMZ4a3MugEUIM7w9AotH/4rn0Djx7VAVkDRgfUmxfQRvFpNhz+EtdM0QXfuIIQstxhjB6U3Y+2pki4w=
-X-Received: by 2002:a05:622a:1705:b0:410:9855:acd with SMTP id
- h5-20020a05622a170500b0041098550acdmr295456qtk.14.1692979015582; Fri, 25 Aug
- 2023 08:56:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230825135237.921058-1-irogers@google.com> <20230825135237.921058-2-irogers@google.com>
- <ZOi/KDRRrnkvJmkB@kernel.org> <ZOjABa9ZfQgra/UX@kernel.org>
-In-Reply-To: <ZOjABa9ZfQgra/UX@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 25 Aug 2023 08:56:44 -0700
-Message-ID: <CAP-5=fVw3heenOh8+JhjNy6Z__p16mv6Z_RiaqYOgjqSrfRKuQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] perf pmus: Sort pmus by name then suffix
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        d=1e100.net; s=20221208; t=1692981715; x=1693586515;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3QJes05NERO623clvngPrcz5iKhTHEmajQSFREZ7RHQ=;
+        b=DCxvDGUG5at1sV/FGrzmf/tn9pjyOmc/vLH9FY6Bb+s3xW5KPNhQuersAhWWx1u1Pa
+         BAT4EthPLfXPLaH0xzvQb+ShqUVszLYvf2gVpD3lyxsmNe/PBYUZygF+n88g4ohtlQdP
+         sw+X8+mISQ0OEuXNGwz4/7GSEXFApY2vuQM8KzC1n94vygL8xqf8+S8jdREashhTtj/Y
+         OdhZYP+bQUEGaZm9kGizNL5ApNq29Bkx39J7lk4zQUuFr3S7MVWLWiH7Wq7wdNB1nfRh
+         TEL7GhQQ0S5a6CHsjcQxZCj9UHa9Vz/FvvXzdcSO5RO6Xyz9Zw1/UwTO283ZSWmeYITm
+         33OQ==
+X-Gm-Message-State: AOJu0YyfFsWMl//InjVDHd1H/zrKwJcC0Tbms9xuOU+2FqTPfj8DmG9x
+        WeXIlxs9XkXyCK/r617j5pRz5VR4Kkk=
+X-Google-Smtp-Source: AGHT+IF8i7jha5yussgSKZnvLHR2KUUvlM8uSielz0FaWw1Zw38xKLDQbajXkdl1d/zFB+agBHZJDg==
+X-Received: by 2002:a17:902:e884:b0:1bc:3944:9391 with SMTP id w4-20020a170902e88400b001bc39449391mr19002224plg.25.1692981714726;
+        Fri, 25 Aug 2023 09:41:54 -0700 (PDT)
+Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:a7ba:1788:3b00:4316])
+        by smtp.gmail.com with ESMTPSA id a6-20020a170902ecc600b001a5fccab02dsm1938755plh.177.2023.08.25.09.41.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Aug 2023 09:41:54 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH 1/3] perf test: Skip 6.2 kernel for bpf-filter test
+Date:   Fri, 25 Aug 2023 09:41:50 -0700
+Message-ID: <20230825164152.165610-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.42.0.rc1.204.g551eb34607-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 25, 2023 at 7:51=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Fri, Aug 25, 2023 at 11:48:08AM -0300, Arnaldo Carvalho de Melo escrev=
-eu:
-> > Em Fri, Aug 25, 2023 at 06:52:36AM -0700, Ian Rogers escreveu:
-> > > Sort PMUs by name. If two PMUs have the same name but differ by
-> > > suffix, sort the suffixes numerically. For example, "breakpoint" come=
-s
-> > > before "cpu", "uncore_imc_free_running_0" comes before
-> > > "uncore_imc_free_running_1". Suffixes need to be treated specially as
-> > > otherwise they will be ordered like 0, 1, 10, 11, .., 2, 20, 21, ..,
-> > > etc. Only PMUs starting 'uncore_' are considered to have a potential
-> > > suffix.
-> > >
-> > > Sorting of PMUs is done so that later patches can skip duplicate
-> > > uncore PMUs that differ only by there suffix.
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > >  tools/perf/util/pmus.c | 48 ++++++++++++++++++++++++++++++++++++++++=
-++
-> > >  1 file changed, 48 insertions(+)
-> > >
-> > > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> > > index 4dd5912617ff..b1f6a64693fe 100644
-> > > --- a/tools/perf/util/pmus.c
-> > > +++ b/tools/perf/util/pmus.c
-> > > @@ -1,8 +1,10 @@
-> > >  // SPDX-License-Identifier: GPL-2.0
-> > >  #include <linux/list.h>
-> > > +#include <linux/list_sort.h>
-> > >  #include <linux/zalloc.h>
-> > >  #include <subcmd/pager.h>
-> > >  #include <sys/types.h>
-> > > +#include <ctype.h>
-> > >  #include <dirent.h>
-> > >  #include <pthread.h>
-> > >  #include <string.h>
-> > > @@ -33,6 +35,31 @@ static LIST_HEAD(other_pmus);
-> > >  static bool read_sysfs_core_pmus;
-> > >  static bool read_sysfs_all_pmus;
-> > >
-> > > +static int pmu_name_len_no_suffix(const char *str, unsigned long *nu=
-m)
-> > > +{
-> > > +   int orig_len, len;
-> > > +
-> > > +   orig_len =3D len =3D strlen(str);
-> > > +
-> > > +   /* Non-uncore PMUs have their full length, for example, i915. */
-> > > +   if (strncmp(str, "uncore_", 7))
-> > > +           return len;
-> >
-> > I applied the patch, but we have strstarts() for this case, to avoid
-> > having to count the size of the prefix in tools/include/linux/string.h,
-> > that we copied from the kernel sources:
-> >
-> > /**
-> >  * strstarts - does @str start with @prefix?
-> >  * @str: string to examine
-> >  * @prefix: prefix to look for.
-> >  */
-> > static inline bool strstarts(const char *str, const char *prefix)
-> > {
-> >         return strncmp(str, prefix, strlen(prefix)) =3D=3D 0;
-> > }
-> >
-> > I'll change it, ok?
+The BPF sample filtering requires two kernel changes below:
+ * bpf_cast_to_kernel_ctx() kfunc (added in v6.2)
+ * setting perf_sample_data->sample_flags (finished in v6.3)
 
-Makes sense to me. We also do this same strncmp here:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/parse-events.y?h=3Dperf-tools-next#n315
-So perhaps do a follow up patch cleaning up all instances of the not
-use of strstarts.
+The perf tools can check bpf_cast_to_kernel_ctx() easily so it can
+refuse BPF filters on those old kernels (v6.1 and earlier).  But
+checking sample_flags appears to be difficult so current code won't
+work on v6.2 kernel.  That's unfortunate but I don't know what's the
+correct way to handle it.
 
-Thanks,
-Ian
+For now, let's skip v6.2 kernels explicitly (if failed) in the test.
 
-> This:
->
-> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> index b1f6a64693fe0d49..bbf84ccc3aba7d5c 100644
-> --- a/tools/perf/util/pmus.c
-> +++ b/tools/perf/util/pmus.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <linux/list.h>
->  #include <linux/list_sort.h>
-> +#include <linux/string.h>
->  #include <linux/zalloc.h>
->  #include <subcmd/pager.h>
->  #include <sys/types.h>
-> @@ -42,7 +43,7 @@ static int pmu_name_len_no_suffix(const char *str, unsi=
-gned long *num)
->         orig_len =3D len =3D strlen(str);
->
->         /* Non-uncore PMUs have their full length, for example, i915. */
-> -       if (strncmp(str, "uncore_", 7))
-> +       if (!strstarts(str, "uncore_"))
->                 return len;
->
->         /*
+Fixes: 9575ecdd198a ("perf test: Add perf record sample filtering test")
+Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/tests/shell/record_bpf_filter.sh | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/tools/perf/tests/shell/record_bpf_filter.sh b/tools/perf/tests/shell/record_bpf_filter.sh
+index e76ea861b92c..31c593966e8c 100755
+--- a/tools/perf/tests/shell/record_bpf_filter.sh
++++ b/tools/perf/tests/shell/record_bpf_filter.sh
+@@ -49,6 +49,12 @@ test_bpf_filter_basic() {
+   fi
+   if perf script -i "${perfdata}" -F ip | grep 'ffffffff[0-9a-f]*'
+   then
++    if uname -r | grep -q ^6.2
++    then
++      echo "Basic bpf-filter test [Skipped unsupported kernel]"
++      err=2
++      return
++    fi
+     echo "Basic bpf-filter test [Failed invalid output]"
+     err=1
+     return
+-- 
+2.42.0.rc1.204.g551eb34607-goog
+
