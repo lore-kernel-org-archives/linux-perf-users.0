@@ -2,158 +2,191 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E86C79F60
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 14:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACFEC71133
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 14:40:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240459AbjHYOIj convert rfc822-to-8bit (ORCPT
+        id S1343822AbjHYOkH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 10:08:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42062 "EHLO
+        Fri, 25 Aug 2023 10:40:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242076AbjHYOIL (ORCPT
+        with ESMTP id S1343819AbjHYOjg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 10:08:11 -0400
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF17E1BD9;
-        Fri, 25 Aug 2023 07:07:47 -0700 (PDT)
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-48d0ceedda1so391122e0c.3;
-        Fri, 25 Aug 2023 07:07:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692972405; x=1693577205;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8mQxmMAvnOZw0pwXo+btIZ2X2+HasX1mKXhjeR2nCxI=;
-        b=gNIH5jhizrlRTcw6YLt130Dc/YAWeHf6w8W8fdTO/TI6wfkX9Fa7cUuvrMotqQPD34
-         ebwnF2cYn8oTTY8JsN4s8RWOmChq8cDlCRoZ005If7LnqcnWwUar5mX3oelmOk3QjTbv
-         JNdVAsSN77h7hsyra1aXyla8ReY14fzolDpNGn/0uUnAK+rF/dj1FYzo9z0JQV8ZFKEc
-         EKCCW+YCTuogmzYNvQV0y3u8ndq6t7GvEuWXnP+ihDwXEx2+G8zsxPDw9zQfyScBJykv
-         t6tBvEHtTJeGPVEU75Tjgb/SW445lIBqzIVIgozcbnpN9y/vqs/gPK3r6DXrp38rw8zx
-         U0Aw==
-X-Gm-Message-State: AOJu0YxnVHhEzy+EvHS0n9D/4sNEVd9YrRSlbInWoakGQEtFSiNNxcJX
-        Q1WP1VUq6+bh0B0R4NONaFxnXkLGOGCh255EmkU=
-X-Google-Smtp-Source: AGHT+IE66ZqEeKIuG7KEqy3UzGM8u4dlPsgiisDqkM6WiMgDFej8tEo4JRRCrMyzpRh/d0ffD1s4Kk2U52oB4q81/Go=
-X-Received: by 2002:a1f:4a02:0:b0:48c:fc50:4292 with SMTP id
- x2-20020a1f4a02000000b0048cfc504292mr14506630vka.15.1692972405026; Fri, 25
- Aug 2023 07:06:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230807061652.2492167-1-namhyung@kernel.org> <b2332dd5-e01e-dc61-e19c-55cf9a684ca2@intel.com>
-In-Reply-To: <b2332dd5-e01e-dc61-e19c-55cf9a684ca2@intel.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 25 Aug 2023 07:06:32 -0700
-Message-ID: <CAM9d7chY9415RDQ0CBFQgy3VYw+Ah8JSFL8A=o5_JB-HD6N2qw@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: Handle old data in PERF_RECORD_ATTR
-To:     Adrian Hunter <adrian.hunter@intel.com>
+        Fri, 25 Aug 2023 10:39:36 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C67FEC;
+        Fri, 25 Aug 2023 07:39:34 -0700 (PDT)
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37PEbgfJ010282;
+        Fri, 25 Aug 2023 14:39:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=6+7zABpXZX1TgJmmvsZ0KlkGB5sbzJTpSi9a6XkCODQ=;
+ b=Udoza3nnUvKRvWwBzNxV81JIFZfZeYItWDqJhR+et3Dd50A8pxYGjlFJHXvUl/WnTHpZ
+ PSdgPX5HcR2GVCBhC8XDTyuRjr8yPHj8LnKndLETewcf4jbsbVwc9GAumgBLDtblkn8+
+ GWVlCDj9WsxqXSpZKed84Hes56JpVFwmj96WcAG6DB+Opq7t2CvfrdhOOD7eXo0cB1qn
+ 2eFPW7c3qXVo7wy0AmAfZAbqgB2FfO50yAVUtALCJMqH6w0AEb8rSYCBQ721wK7sRhKP
+ /qlLITdDJiWXlQw4Wp/FvDbhVKkGpPHyqOO7G54jdo1oMwr1j+kY/yQ0hlz7itlzr3+o yg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3spx2sg4vs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 25 Aug 2023 14:39:28 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37PEdBKO015511;
+        Fri, 25 Aug 2023 14:39:28 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3spx2sg4vd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 25 Aug 2023 14:39:28 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37PD2CLR004047;
+        Fri, 25 Aug 2023 14:39:27 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+        by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3sn21s086k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 25 Aug 2023 14:39:26 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37PEdN7X32637400
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Aug 2023 14:39:23 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B954B20040;
+        Fri, 25 Aug 2023 14:39:23 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2B45A2004D;
+        Fri, 25 Aug 2023 14:39:23 +0000 (GMT)
+Received: from [9.171.39.59] (unknown [9.171.39.59])
+        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Fri, 25 Aug 2023 14:39:23 +0000 (GMT)
+Message-ID: <4f2438fc-2360-8833-3751-fe3bc8b11afb@linux.ibm.com>
+Date:   Fri, 25 Aug 2023 16:39:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v2 06/18] perf s390 s390_cpumcfdg_dump: Don't scan all
+ PMUs
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Heiko Carstens <hca@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230824041330.266337-1-irogers@google.com>
+ <20230824041330.266337-7-irogers@google.com> <ZOdiX4eJHFfFbQhi@kernel.org>
+ <428afeb4-d5ca-8115-73fc-881119a1cd51@linux.ibm.com>
+ <CAP-5=fVt1vxK0CJ=aYjZzs4mushbxAx8056uxVQZUfsLAKpVoQ@mail.gmail.com>
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <CAP-5=fVt1vxK0CJ=aYjZzs4mushbxAx8056uxVQZUfsLAKpVoQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: wLyzL3BFUfWzBQhcyFxlrYCLGx5RC_YQ
+X-Proofpoint-GUID: Ifn6l6nB2jwwUsk2YRLRK7stbpmKonJt
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-08-25_13,2023-08-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 clxscore=1015 phishscore=0 mlxlogscore=999 bulkscore=0
+ suspectscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2308250129
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-HI Adrian,
+On 8/25/23 15:14, Ian Rogers wrote:
+> On Fri, Aug 25, 2023 at 1:20 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+>>
+>> On 8/24/23 15:59, Arnaldo Carvalho de Melo wrote:
+>>> Em Wed, Aug 23, 2023 at 09:13:18PM -0700, Ian Rogers escreveu:
+>>>> Rather than scanning all PMUs for a counter name, scan the PMU
+>>>> associated with the evsel of the sample. This is done to remove a
+>>>> dependence on pmu-events.h.
+>>>
+>>> I'm applying this one, and CCing the S/390 developers so that they can
+>>> try this and maybe provide an Acked-by/Tested-by,
+>>>
+>>> - Arnaldo
+>>
+>>
+>> Arnaldo,
+>>
+>> I have downloaded this patch set of 18 patches (using b4), but they do not
+>> apply on my git tree.
+>>
+>> Which git branch do I have to use to test this. Thanks a lot.
+> 
+> Hi Thomas,
+> 
+> the changes are in the perf-tools-next tree:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/
+> 
+> Thanks,
+> Ian
+> 
 
-Sorry for the late reply.
 
-On Mon, Aug 14, 2023 at 12:11 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 7/08/23 09:16, Namhyung Kim wrote:
-> > The PERF_RECORD_ATTR is used for a pipe mode to describe an event with
-> > attribute and IDs.  The ID table comes after the attr and it calculate
-> > size of the table using the total record size and the attr size.
-> >
-> >   n_ids = (total_record_size - end_of_the_attr_field) / sizeof(u64)
-> >
-> > This is fine for most use cases, but sometimes it saves the pipe output
-> > in a file and then process it later.  And it becomes a problem if there
-> > is a change in attr size between the record and report.
-> >
-> >   $ perf record -o- > perf-pipe.data  # old version
-> >   $ perf report -i- < perf-pipe.data  # new version
-> >
-> > For example, if the attr size is 128 and it has 4 IDs, then it would
-> > save them in 168 byte like below:
-> >
-> >    8 byte: perf event header { .type = PERF_RECORD_ATTR, .size = 168 },
-> >  128 byte: perf event attr { .size = 128, ... },
-> >   32 byte: event IDs [] = { 1234, 1235, 1236, 1237 },
-> >
-> > But when report later, it thinks the attr size is 136 then it only read
-> > the last 3 entries as ID.
-> >
-> >    8 byte: perf event header { .type = PERF_RECORD_ATTR, .size = 168 },
-> >  136 byte: perf event attr { .size = 136, ... },
-> >   24 byte: event IDs [] = { 1235, 1236, 1237 },  // 1234 is missing
-> >
-> > So it should use the recorded version of the attr.  The attr has the
-> > size field already then it should honor the size when reading data.
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/util/header.c | 11 ++++++-----
-> >  1 file changed, 6 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> > index 52fbf526fe74..f89321cbfdee 100644
-> > --- a/tools/perf/util/header.c
-> > +++ b/tools/perf/util/header.c
-> > @@ -4381,7 +4381,8 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
-> >                            union perf_event *event,
-> >                            struct evlist **pevlist)
-> >  {
-> > -     u32 i, ids, n_ids;
-> > +     u32 i, n_ids;
-> > +     u64 *ids;
-> >       struct evsel *evsel;
-> >       struct evlist *evlist = *pevlist;
-> >
-> > @@ -4397,9 +4398,8 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
-> >
-> >       evlist__add(evlist, evsel);
-> >
-> > -     ids = event->header.size;
-> > -     ids -= (void *)&event->attr.id - (void *)event;
-> > -     n_ids = ids / sizeof(u64);
-> > +     n_ids = event->header.size - sizeof(event->header) - event->attr.attr.size;
-> > +     n_ids = n_ids / sizeof(u64);
-> >       /*
-> >        * We don't have the cpu and thread maps on the header, so
-> >        * for allocating the perf_sample_id table we fake 1 cpu and
-> > @@ -4408,8 +4408,9 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
-> >       if (perf_evsel__alloc_id(&evsel->core, 1, n_ids))
-> >               return -ENOMEM;
-> >
-> > +     ids = (void *)&event->attr.attr + event->attr.attr.size;
-> >       for (i = 0; i < n_ids; i++) {
-> > -             perf_evlist__id_add(&evlist->core, &evsel->core, 0, i, event->attr.id[i]);
-> > +             perf_evlist__id_add(&evlist->core, &evsel->core, 0, i, ids[i]);
-> >       }
-> >
-> >       return 0;
->
-> This is a good catch!
->
-> It looks like perf_event__hdr_swap() might also have this problem.
+Hi Ian,
 
-You mean perf_event__hdr_attr_swap(), right?  Yeah, looks so.
-I'll change it too in v2.
+thanks for the pointer.
 
->
-> I wonder if we should remove 'id' from struct perf_record_header_attr
-> since the position is not guaranteed?
->
-> Probably could use a comment there either way.
+Unfurtunately this patch set fails again on s390.
+Here is the test output from the current 6.5.0rc7 kernel:
 
-Sounds good.  I'll remove the id field and add a comment.
+# ./perf test 6 10 'perf all metricgroups test' 'perf all metrics test'
+  6: Parse event definition strings                                  :
+  6.1: Test event parsing                                            : Ok
+  6.2: Parsing of all PMU events from sysfs                          : Ok
+  6.3: Parsing of given PMU events from sysfs                        : Ok
+  6.4: Parsing of aliased events from sysfs                          : Skip (no aliases in sysfs)
+  6.5: Parsing of aliased events                                     : Ok
+  6.6: Parsing of terms (event modifiers)                            : Ok
+ 10: PMU events                                                      :
+ 10.1: PMU event table sanity                                        : Ok
+ 10.2: PMU event map aliases                                         : Ok
+ 10.3: Parsing of PMU event table metrics                            : Ok
+ 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+ 10.5: Parsing of metric thresholds with fake PMUs                   : Ok
+ 95: perf all metricgroups test                                      : Ok
+ 96: perf all metrics test                                           : Ok
+# 
 
->
-> Also perhaps a fixes tag and cc stable
+This looks good.
 
-Sure, thanks for the review!
+However when I use the check-out from perf-tools-next, I get this output:
+# ./perf test 6 10 'perf all metricgroups test' 'perf all metrics test'
+  6: Parse event definition strings                                  :
+  6.1: Test event parsing                                            : Ok
+  6.2: Parsing of all PMU events from sysfs                          : FAILED!
+  6.3: Parsing of given PMU events from sysfs                        : Ok
+  6.4: Parsing of aliased events from sysfs                          : Skip (no aliases in sysfs)
+  6.5: Parsing of aliased events                                     : FAILED!
+  6.6: Parsing of terms (event modifiers)                            : Ok
+ 10: PMU events                                                      :
+ 10.1: PMU event table sanity                                        : Ok
+ 10.2: PMU event map aliases                                         : FAILED!
+ 10.3: Parsing of PMU event table metrics                            : Ok
+ 10.4: Parsing of PMU event table metrics with fake PMUs             : FAILED!
+ 10.5: Parsing of metric thresholds with fake PMUs                   : Ok
+ 93: perf all metricgroups test                                      : FAILED!
+ 94: perf all metrics test                                           : FAILED!
+# 
 
-Namhyung
+So some tests are failing again.
+
+I am out for the next two weeks, Sumanth Korikkar (on to list) might be able to help.
+Thanks a lot.
+
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: David Faller
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+
