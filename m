@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D5DEE49A6
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 02:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B78EE49B2
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 02:41:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241392AbjHYCkr (ORCPT
+        id S241949AbjHYCks (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 24 Aug 2023 22:40:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59550 "EHLO
+        Thu, 24 Aug 2023 22:40:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242020AbjHYCkh (ORCPT
+        with ESMTP id S242100AbjHYCkm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 24 Aug 2023 22:40:37 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E1F01FD4
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 19:40:35 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d749c6d767dso570787276.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 19:40:35 -0700 (PDT)
+        Thu, 24 Aug 2023 22:40:42 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 068C91BDB
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 19:40:40 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-58d9e327d3aso6812617b3.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 19:40:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692931234; x=1693536034;
+        d=google.com; s=20221208; t=1692931239; x=1693536039;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=6+zdRFvr84d+fBWt10B0hHI/TeqmfF3seVVv15ew7F8=;
-        b=HZSXLXGkuLPKgBuf4pk6J10eXiT7nvHcO4Exh1bIycY3L3BPD0nK3nX5wfOGHMWkDv
-         fOGkuKwMhGemx7niIQSm5B6O3bwh2/0NdB86qMH9C6emksooUVvhet30JMKyQh2/8Ftc
-         uRM999s3VRcT4ThF81DOXn0sQrFYDM/V3skOcZ0TaZeTpqp6uJHBEixUnhOsv7YIB6vU
-         WfbAcOLPK86fNr+Iv4agkDrrY71JNNbNgU+M3vOuMK4jKOGS0aIQzHZy5v952AFnwYgx
-         C4e04r+BRwB9Ud6KpXJe+k2b6OlJ6QK9VdDzYDudMRI3FVJHzcA1nw71vUwAvb3I4dih
-         +IGw==
+        bh=nEmDxZXfqmiXij1P26PReriZNwm7Tzx0wPywITAyVZs=;
+        b=0X4KsFbq6USzQWLK6dPK1VNHuT9qZ+6GnaNMLUTmFZL9XI5UK5j4OZhgw9gK4InZRb
+         kKS8+Eu64Phorz6npOSiBkB0rdM17BaYM7yjh0Z0203v9TJ3n5m155de8klBCzUoh1qS
+         DVybSs9v7pnVwF8qqaKXuD6n6BnWKTG/A/eJFRpmFlXZgSZx4uB9SxxAKn7HCl0s9FQS
+         3tyVb7DRO9MojxBY5WcOnOEHBtI7+uC63kASOKS8zXpI6IdUtcUw0E/Fm3T2FI38/lg4
+         xtceYZqS0Jw+LvOrNxpqcPEsRAwy6tD1pttwBM/aVoNlFOlyfZOlk+Ci4jcmKvHk4zQt
+         +D5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692931234; x=1693536034;
+        d=1e100.net; s=20221208; t=1692931239; x=1693536039;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6+zdRFvr84d+fBWt10B0hHI/TeqmfF3seVVv15ew7F8=;
-        b=N4dEXqL12WDXo4/5H+d1w41pQPn2PvK/SnKIIWagtu3wEijgiAgZdOXl1bIF0U64Wb
-         FP01K5eem9p+lQuH8P0KG9Ot7ZuRFPHeZ4UEZzjBxkxfJuvh53rfFZG5wdyMKk/1nasr
-         zQ8rQfMkNjHxSbIUu/YmBWfA0CsiHSUql4lSyJys4J9DmRhM1zTIi3MogfQurKcsHEW0
-         fM7Xa7svaJA2qv6Xfq1zB5TBeL1hFvbQLtYY3ffXrLMH2NKH1CByKKgVacc8aMEwPgzV
-         xDlwjNPj1e1XiO41pWMsnRo1KWwbV8uhIU6GmVFh6UhQc68q57Pt/v/UbigQqk2qwtDL
-         pBcQ==
-X-Gm-Message-State: AOJu0YxK9pGmhNV7dZDCVArWW9L2+DN+t72cuCZWJ63pZqODg9JgYynu
-        Nszu6MoQF2IaY2MOlL/+MmrwlVpW21r1
-X-Google-Smtp-Source: AGHT+IEzM4glBr+PazUhBNmMADT2m3Tq6v7cCwDbE9cQUy4ophVAFva8E+T9hCeg0cPS0+531uZjKd8AAFZM
+        bh=nEmDxZXfqmiXij1P26PReriZNwm7Tzx0wPywITAyVZs=;
+        b=XurHK+dsCrrQw1ydZUTI3jEpXBJEcWQTy/byapGJvnhElZG415vgGLg3x4xGhr992c
+         EOLyRYf2UIeOtTCi0WcLGySyRaLiegLobbRvnNrTduedYu2Q7aSK/xviXlFsuk59NELp
+         pkzt97eEK2PM6NQ/xrncY5HyJs7m7CdaBR922jIFp9x+8exRjhjDTjJ3vORhrKotdf3p
+         otjbSDjP76FW3e5PhVXewMqMqNh7GCi3H+2JMNGCm+N5XTNMsQD5WT4Im8bA9QOTR+Cs
+         IR+bggKT/ujG5KVHB1CZCh5BpqANL8bl+Flef4niHcOwybU5nR/F2ziGtRplg9ps+juP
+         cAcQ==
+X-Gm-Message-State: AOJu0Ywl8j/LomMmH8Lzf4BNAiKbHEX93u2GMcbmKlTzxuxLVVhFkHCB
+        w/uVqCz/DBJhMIhAFVQQTSpjaBLtSZjZ
+X-Google-Smtp-Source: AGHT+IFgEMlpncts413bII2U21Eeh/C12lVb7PU6bgessDFhUJEFalAJ7Hcxnx0KkdzL9w9raMJUEdJo8+6b
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:449e:d47b:bc6b:cb6b])
- (user=irogers job=sendgmr) by 2002:a25:aa06:0:b0:d15:d6da:7e97 with SMTP id
- s6-20020a25aa06000000b00d15d6da7e97mr319274ybi.3.1692931234631; Thu, 24 Aug
- 2023 19:40:34 -0700 (PDT)
-Date:   Thu, 24 Aug 2023 19:39:59 -0700
+ (user=irogers job=sendgmr) by 2002:a81:ae27:0:b0:584:41b7:30e7 with SMTP id
+ m39-20020a81ae27000000b0058441b730e7mr317527ywh.0.1692931239309; Thu, 24 Aug
+ 2023 19:40:39 -0700 (PDT)
+Date:   Thu, 24 Aug 2023 19:40:01 -0700
 In-Reply-To: <20230825024002.801955-1-irogers@google.com>
-Message-Id: <20230825024002.801955-4-irogers@google.com>
+Message-Id: <20230825024002.801955-6-irogers@google.com>
 Mime-Version: 1.0
 References: <20230825024002.801955-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.rc2.253.gd59a3bf2b4-goog
-Subject: [PATCH v2 3/6] perf parse-events: Make term's config const
+Subject: [PATCH v2 5/6] perf build-id: Simplify build_id_cache__cachedir
 From:   Ian Rogers <irogers@google.com>
 To:     John Garry <john.g.garry@oracle.com>,
         Will Deacon <will@kernel.org>,
@@ -86,170 +86,39 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This avoids casts in tests. Use zfree in a few places to avoid
-warnings about a freeing a const pointer.
+Initialize realname to NULL, rather than name. This avoids a cast and
+as realpath is either NULL or an allocated string, free can be called
+unconditionally.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/pmu.c         | 18 +++++++++---------
- tools/perf/util/parse-events.c | 10 +++++-----
- tools/perf/util/parse-events.h |  4 ++--
- tools/perf/util/pmu.c          |  2 +-
- 4 files changed, 17 insertions(+), 17 deletions(-)
+ tools/perf/util/build-id.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
-index c204ed1f1a8b..eb60e5f66859 100644
---- a/tools/perf/tests/pmu.c
-+++ b/tools/perf/tests/pmu.c
-@@ -28,55 +28,55 @@ static struct test_format {
- /* Simulated users input. */
- static struct parse_events_term test_terms[] = {
- 	{
--		.config    = (char *) "krava01",
-+		.config    = "krava01",
- 		.val.num   = 15,
- 		.type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
- 		.type_term = PARSE_EVENTS__TERM_TYPE_USER,
- 	},
- 	{
--		.config    = (char *) "krava02",
-+		.config    = "krava02",
- 		.val.num   = 170,
- 		.type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
- 		.type_term = PARSE_EVENTS__TERM_TYPE_USER,
- 	},
- 	{
--		.config    = (char *) "krava03",
-+		.config    = "krava03",
- 		.val.num   = 1,
- 		.type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
- 		.type_term = PARSE_EVENTS__TERM_TYPE_USER,
- 	},
- 	{
--		.config    = (char *) "krava11",
-+		.config    = "krava11",
- 		.val.num   = 27,
- 		.type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
- 		.type_term = PARSE_EVENTS__TERM_TYPE_USER,
- 	},
- 	{
--		.config    = (char *) "krava12",
-+		.config    = "krava12",
- 		.val.num   = 1,
- 		.type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
- 		.type_term = PARSE_EVENTS__TERM_TYPE_USER,
- 	},
- 	{
--		.config    = (char *) "krava13",
-+		.config    = "krava13",
- 		.val.num   = 2,
- 		.type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
- 		.type_term = PARSE_EVENTS__TERM_TYPE_USER,
- 	},
- 	{
--		.config    = (char *) "krava21",
-+		.config    = "krava21",
- 		.val.num   = 119,
- 		.type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
- 		.type_term = PARSE_EVENTS__TERM_TYPE_USER,
- 	},
- 	{
--		.config    = (char *) "krava22",
-+		.config    = "krava22",
- 		.val.num   = 11,
- 		.type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
- 		.type_term = PARSE_EVENTS__TERM_TYPE_USER,
- 	},
- 	{
--		.config    = (char *) "krava23",
-+		.config    = "krava23",
- 		.val.num   = 2,
- 		.type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
- 		.type_term = PARSE_EVENTS__TERM_TYPE_USER,
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 621bdd157a0f..4c812fbe0cf9 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -199,7 +199,7 @@ static void fix_raw(struct list_head *config_terms, struct perf_pmu *pmu)
- 			continue;
+diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+index 36728222a5b4..03c64b85383b 100644
+--- a/tools/perf/util/build-id.c
++++ b/tools/perf/util/build-id.c
+@@ -560,7 +560,7 @@ char *build_id_cache__cachedir(const char *sbuild_id, const char *name,
+ 			       struct nsinfo *nsi, bool is_kallsyms,
+ 			       bool is_vdso)
+ {
+-	char *realname = (char *)name, *filename;
++	char *realname = NULL, *filename;
+ 	bool slash = is_kallsyms || is_vdso;
  
- 		if (perf_pmu__have_event(pmu, term->val.str)) {
--			free(term->config);
-+			zfree(&term->config);
- 			term->config = term->val.str;
- 			term->type_val = PARSE_EVENTS__TERM_TYPE_NUM;
- 			term->type_term = PARSE_EVENTS__TERM_TYPE_USER;
-@@ -208,7 +208,7 @@ static void fix_raw(struct list_head *config_terms, struct perf_pmu *pmu)
- 			continue;
- 		}
+ 	if (!slash)
+@@ -571,9 +571,7 @@ char *build_id_cache__cachedir(const char *sbuild_id, const char *name,
+ 		     sbuild_id ? "/" : "", sbuild_id ?: "") < 0)
+ 		filename = NULL;
  
--		free(term->config);
-+		zfree(&term->config);
- 		term->config = strdup("config");
- 		errno = 0;
- 		num = strtoull(term->val.str + 1, NULL, 16);
-@@ -1416,7 +1416,7 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 	struct perf_pmu *pmu = NULL;
- 	YYLTYPE *loc = loc_;
- 	int ok = 0;
--	char *config;
-+	const char *config;
- 
- 	*listp = NULL;
- 
-@@ -1435,7 +1435,7 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 				   PARSE_EVENTS__TERM_TYPE_USER,
- 				   config, 1, false, NULL,
- 					NULL) < 0) {
--		free(config);
-+		zfree(&config);
- 		goto out_err;
- 	}
- 	list_add_tail(&term->list, head);
-@@ -2378,7 +2378,7 @@ static int new_term(struct parse_events_term **_term,
+-	if (!slash)
+-		free(realname);
+-
++	free(realname);
+ 	return filename;
  }
  
- int parse_events_term__num(struct parse_events_term **term,
--			   int type_term, char *config, u64 num,
-+			   int type_term, const char *config, u64 num,
- 			   bool no_value,
- 			   void *loc_term_, void *loc_val_)
- {
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index c4e8d8e94b28..6d75d853ce00 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -83,7 +83,7 @@ enum {
- };
- 
- struct parse_events_term {
--	char *config;
-+	const char *config;
- 	union {
- 		char *str;
- 		u64  num;
-@@ -138,7 +138,7 @@ bool parse_events__filter_pmu(const struct parse_events_state *parse_state,
- void parse_events__shrink_config_terms(void);
- int parse_events__is_hardcoded_term(struct parse_events_term *term);
- int parse_events_term__num(struct parse_events_term **term,
--			   int type_term, char *config, u64 num,
-+			   int type_term, const char *config, u64 num,
- 			   bool novalue,
- 			   void *loc_term, void *loc_val);
- int parse_events_term__str(struct parse_events_term **term,
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index a96ccc5c3b51..eb42f9830be7 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1418,7 +1418,7 @@ static struct perf_pmu_alias *pmu_find_alias(struct perf_pmu *pmu,
- 					     struct parse_events_term *term)
- {
- 	struct perf_pmu_alias *alias;
--	char *name;
-+	const char *name;
- 
- 	if (parse_events__is_hardcoded_term(term))
- 		return NULL;
 -- 
 2.42.0.rc2.253.gd59a3bf2b4-goog
 
