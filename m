@@ -2,177 +2,257 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEC4EE49A3
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 20:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DC2EE49A0
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 20:56:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231175AbjHYUX5 (ORCPT
+        id S230447AbjHYU4O (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 16:23:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54318 "EHLO
+        Fri, 25 Aug 2023 16:56:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229870AbjHYUXq (ORCPT
+        with ESMTP id S231287AbjHYU4J (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 16:23:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C1851BE6;
-        Fri, 25 Aug 2023 13:23:44 -0700 (PDT)
+        Fri, 25 Aug 2023 16:56:09 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B58A71FF0;
+        Fri, 25 Aug 2023 13:56:06 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 01C6163393;
-        Fri, 25 Aug 2023 20:23:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B060C433C8;
-        Fri, 25 Aug 2023 20:23:43 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4582462557;
+        Fri, 25 Aug 2023 20:56:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46937C433C8;
+        Fri, 25 Aug 2023 20:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692995023;
-        bh=ujj7khbjSaRWUyUcOo3NCNFjsV58vH0Ob3N5Qu66L/k=;
+        s=k20201202; t=1692996965;
+        bh=0yMxI1aqpUsVuQGJ9ksRgrZNIroKRdff7ovmW9cKQyc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qWK/lPNvKMSSbujXOvfvRN3rRaMx1NaZTo6YJHgkILetm2Wg6nd2t/DOikfiCINPj
-         +XhgYOQfAjcpsmDYHuYufMmEf+tV0GH3B2KL6nycgKid0qCx6w7lq0KhNy//pC+JgK
-         0bIw7GrhzpIJzroGvabKFw4UWO0Yg7FH9yuC3cxvK9wzIsRoiAqQDTGW3yq73ZACC0
-         1m2X4vxrxlIGEGlzGNQYRobMH0wgClq6Ngnoiji8RV1WkBp1q7HawBO3VbIyr4Cqj+
-         JxTYl1hP1kAXH66cq1ZVtpQSqmgUb8cnoT8qbH0UUBeP/vlLeYkrOcH8Z4MRwxhwWH
-         0nozh/eTrbmhg==
+        b=ln9CyAHe75vjlgji4MmonWOQTFHHVkVWzeZpKIfE1fh8DdBDrD6ovBdrJPtCaoTYz
+         UVIRnYftqWE/BcEawOcor2S2nNDs4WGF/KuJUrBWuOrYOYJFflfYuIGCotnMMG3eXM
+         sYNbWJSKarO5EueVpoRSO2iNoqbevUPzWvTUvF8mvK+O6gsT1u23bdmjBmPTN4AT8Z
+         pMr1qqci1e9c1MaTtJdo52b1gA2tptXiGqLf0FSGYpkCWYw8cHFyE3H402Ph7SwnwV
+         MfICHm8Ig8N3hQxsn9pSmJ2so9MsZ6evOMLfwVb1FozpOnpNuMJcR1ruZRq9I6Fyb/
+         pxR+01Jq+3xKg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 9BED340722; Fri, 25 Aug 2023 17:23:40 -0300 (-03)
-Date:   Fri, 25 Aug 2023 17:23:40 -0300
+        id BD5AC40722; Fri, 25 Aug 2023 17:56:02 -0300 (-03)
+Date:   Fri, 25 Aug 2023 17:56:02 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.g.garry@oracle.com>,
+        James Clark <james.clark@arm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] perf pmus: Sort pmus by name then suffix
-Message-ID: <ZOkNzHgJ0+mgfSPz@kernel.org>
-References: <20230825135237.921058-1-irogers@google.com>
- <20230825135237.921058-2-irogers@google.com>
+Subject: Re: [PATCH v2 06/18] perf s390 s390_cpumcfdg_dump: Don't scan all
+ PMUs
+Message-ID: <ZOkVYoN17A8wwP3k@kernel.org>
+References: <20230824041330.266337-1-irogers@google.com>
+ <20230824041330.266337-7-irogers@google.com>
+ <ZOdiX4eJHFfFbQhi@kernel.org>
+ <428afeb4-d5ca-8115-73fc-881119a1cd51@linux.ibm.com>
+ <CAP-5=fVt1vxK0CJ=aYjZzs4mushbxAx8056uxVQZUfsLAKpVoQ@mail.gmail.com>
+ <4f2438fc-2360-8833-3751-fe3bc8b11afb@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230825135237.921058-2-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4f2438fc-2360-8833-3751-fe3bc8b11afb@linux.ibm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Aug 25, 2023 at 06:52:36AM -0700, Ian Rogers escreveu:
-> Sort PMUs by name. If two PMUs have the same name but differ by
-> suffix, sort the suffixes numerically. For example, "breakpoint" comes
-> before "cpu", "uncore_imc_free_running_0" comes before
-> "uncore_imc_free_running_1". Suffixes need to be treated specially as
-> otherwise they will be ordered like 0, 1, 10, 11, .., 2, 20, 21, ..,
-> etc. Only PMUs starting 'uncore_' are considered to have a potential
-> suffix.
+Em Fri, Aug 25, 2023 at 04:39:22PM +0200, Thomas Richter escreveu:
+> On 8/25/23 15:14, Ian Rogers wrote:
+> > On Fri, Aug 25, 2023 at 1:20 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+
+> >> On 8/24/23 15:59, Arnaldo Carvalho de Melo wrote:
+> >>> Em Wed, Aug 23, 2023 at 09:13:18PM -0700, Ian Rogers escreveu:
+> >>>> Rather than scanning all PMUs for a counter name, scan the PMU
+> >>>> associated with the evsel of the sample. This is done to remove a
+> >>>> dependence on pmu-events.h.
+
+> >>> I'm applying this one, and CCing the S/390 developers so that they can
+> >>> try this and maybe provide an Acked-by/Tested-by,
+
+> >> I have downloaded this patch set of 18 patches (using b4), but they do not
+> >> apply on my git tree.
+
+> >> Which git branch do I have to use to test this. Thanks a lot.
+
+> > the changes are in the perf-tools-next tree:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/
+ 
+> Unfurtunately this patch set fails again on s390.
+> Here is the test output from the current 6.5.0rc7 kernel:
 > 
-> Sorting of PMUs is done so that later patches can skip duplicate
-> uncore PMUs that differ only by there suffix.
+> # ./perf test 6 10 'perf all metricgroups test' 'perf all metrics test'
+>   6: Parse event definition strings                                  :
+>   6.1: Test event parsing                                            : Ok
+>   6.2: Parsing of all PMU events from sysfs                          : Ok
+>   6.3: Parsing of given PMU events from sysfs                        : Ok
+>   6.4: Parsing of aliased events from sysfs                          : Skip (no aliases in sysfs)
+>   6.5: Parsing of aliased events                                     : Ok
+>   6.6: Parsing of terms (event modifiers)                            : Ok
+>  10: PMU events                                                      :
+>  10.1: PMU event table sanity                                        : Ok
+>  10.2: PMU event map aliases                                         : Ok
+>  10.3: Parsing of PMU event table metrics                            : Ok
+>  10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+>  10.5: Parsing of metric thresholds with fake PMUs                   : Ok
+>  95: perf all metricgroups test                                      : Ok
+>  96: perf all metrics test                                           : Ok
+> # 
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/pmus.c | 48 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
+> This looks good.
+
+Reproduced:
+
+# grep -E vendor_id\|^processor -m2 /proc/cpuinfo
+vendor_id       : IBM/S390
+processor 0: version = 00,  identification = 1A33E8,  machine = 2964
+#
+# perf test 6 10 'perf all metricgroups test' 'perf all metrics test'
+  6: Parse event definition strings                                  :
+  6.1: Test event parsing                                            : Ok
+  6.2: Parsing of all PMU events from sysfs                          : Ok
+  6.3: Parsing of given PMU events from sysfs                        : Ok
+  6.4: Parsing of aliased events from sysfs                          : Skip (no aliases in sysfs)
+  6.5: Parsing of aliased events                                     : Ok
+  6.6: Parsing of terms (event modifiers)                            : Ok
+ 10: PMU events                                                      :
+ 10.1: PMU event table sanity                                        : Ok
+ 10.2: PMU event map aliases                                         : Ok
+ 10.3: Parsing of PMU event table metrics                            : Ok
+ 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+ 10.5: Parsing of metric thresholds with fake PMUs                   : Ok
+ 95: perf all metricgroups test                                      : Ok
+ 96: perf all metrics test                                           : Ok
+# perf -v
+perf version 6.5.rc7.g6f0edbb833ec
+#
+ 
+> However when I use the check-out from perf-tools-next, I get this output:
+> # ./perf test 6 10 'perf all metricgroups test' 'perf all metrics test'
+>   6: Parse event definition strings                                  :
+>   6.1: Test event parsing                                            : Ok
+>   6.2: Parsing of all PMU events from sysfs                          : FAILED!
+>   6.3: Parsing of given PMU events from sysfs                        : Ok
+>   6.4: Parsing of aliased events from sysfs                          : Skip (no aliases in sysfs)
+>   6.5: Parsing of aliased events                                     : FAILED!
+>   6.6: Parsing of terms (event modifiers)                            : Ok
+>  10: PMU events                                                      :
+>  10.1: PMU event table sanity                                        : Ok
+>  10.2: PMU event map aliases                                         : FAILED!
+>  10.3: Parsing of PMU event table metrics                            : Ok
+>  10.4: Parsing of PMU event table metrics with fake PMUs             : FAILED!
+>  10.5: Parsing of metric thresholds with fake PMUs                   : Ok
+>  93: perf all metricgroups test                                      : FAILED!
+>  94: perf all metrics test                                           : FAILED!
+> # 
 > 
-> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> index 4dd5912617ff..b1f6a64693fe 100644
-> --- a/tools/perf/util/pmus.c
-> +++ b/tools/perf/util/pmus.c
-> @@ -1,8 +1,10 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <linux/list.h>
-> +#include <linux/list_sort.h>
->  #include <linux/zalloc.h>
->  #include <subcmd/pager.h>
->  #include <sys/types.h>
-> +#include <ctype.h>
->  #include <dirent.h>
->  #include <pthread.h>
->  #include <string.h>
-> @@ -33,6 +35,31 @@ static LIST_HEAD(other_pmus);
->  static bool read_sysfs_core_pmus;
->  static bool read_sysfs_all_pmus;
->  
-> +static int pmu_name_len_no_suffix(const char *str, unsigned long *num)
-> +{
-> +	int orig_len, len;
-> +
-> +	orig_len = len = strlen(str);
-> +
-> +	/* Non-uncore PMUs have their full length, for example, i915. */
-> +	if (strncmp(str, "uncore_", 7))
-> +		return len;
-> +
-> +	/*
-> +	 * Count trailing digits and '_', if '_{num}' suffix isn't present use
-> +	 * the full length.
-> +	 */
-> +	while (len > 0 && isdigit(str[len - 1]))
-> +		len--;
-> +
-> +	if (len > 0 && len != orig_len && str[len - 1] == '_') {
-> +		if (num)
-> +			*num = strtoul(&str[len], NULL, 10);
-> +		return len - 1;
-> +	}
-> +	return orig_len;
-> +}
-> +
->  void perf_pmus__destroy(void)
->  {
->  	struct perf_pmu *pmu, *tmp;
-> @@ -122,6 +149,25 @@ static struct perf_pmu *perf_pmu__find2(int dirfd, const char *name)
->  	return perf_pmu__lookup(core_pmu ? &core_pmus : &other_pmus, dirfd, name);
->  }
->  
-> +static int pmus_cmp(void *priv __maybe_unused,
-> +		    const struct list_head *lhs, const struct list_head *rhs)
-> +{
-> +	unsigned long lhs_num, rhs_num;
-> +	struct perf_pmu *lhs_pmu = container_of(lhs, struct perf_pmu, list);
-> +	struct perf_pmu *rhs_pmu = container_of(rhs, struct perf_pmu, list);
-> +	const char *lhs_pmu_name = lhs_pmu->name ?: "";
-> +	const char *rhs_pmu_name = rhs_pmu->name ?: "";
-> +	int lhs_pmu_name_len = pmu_name_len_no_suffix(lhs_pmu_name, &lhs_num);
-> +	int rhs_pmu_name_len = pmu_name_len_no_suffix(rhs_pmu_name, &rhs_num);
-> +	int ret = strncmp(lhs_pmu_name, rhs_pmu_name,
-> +			lhs_pmu_name_len < rhs_pmu_name_len ? lhs_pmu_name_len : rhs_pmu_name_len);
-> +
-> +	if (lhs_pmu_name_len != rhs_pmu_name_len || ret != 0 || lhs_pmu_name_len == 0)
-> +		return ret;
-> +
-> +	return lhs_num < rhs_num ? -1 : (lhs_num > rhs_num ? 1 : 0);
-> +}
+> So some tests are failing again.
+> 
+> I am out for the next two weeks, Sumanth Korikkar (on to list) might be able to help.
+> Thanks a lot.
 
-Also, I got this in some distros/gcc versions:
+[root@kernelqe3 linux]# git checkout perf-tools-next
+git Switched to branch 'perf-tools-next'
+Your branch is up to date with 'perf-tools-next/perf-tools-next'.
+[root@kernelqe3 linux]# git log --oneline -5
+eeb6b12992c4 (HEAD -> perf-tools-next, perf-tools-next/perf-tools-next) perf jevents: Don't append Unit to desc
+f208b2c6f984 (perf-tools-next/tmp.perf-tools-next) perf scripts python gecko: Launch the profiler UI on the default browser with the appropriate URL
+43803cb16f99 perf scripts python: Add support for input args in gecko script
+f85d120c46e7 perf jevents: Sort strings in the big C string to reduce faults
+8d4b6d37ea78 perf pmu: Lazily load sysfs aliases
+[root@kernelqe3 linux]# make BUILD_BPF_SKEL=1 -C tools/perf O=/tmp/build/perf install-bin
 
-  31    12.95 opensuse:15.5                 : FAIL gcc version 7.5.0 (SUSE Linux)
-    util/pmus.c: In function 'pmus_cmp':
-    util/pmus.c:169:57: error: 'lhs_num' may be used uninitialized in this function [-Werror=maybe-uninitialized]
-      return lhs_num < rhs_num ? -1 : (lhs_num > rhs_num ? 1 : 0);
-                                      ~~~~~~~~~~~~~~~~~~~~~~~^~~~
-    cc1: all warnings being treated as errors
-    make[3]: *** [/git/perf-6.5.0-rc5/tools/build/Makefile.build:150: util] Error 2
+[root@kernelqe3 linux]# perf -v
+perf version 6.5.rc5.geeb6b12992c4
+[root@kernelqe3 linux]# git log --oneline -1
+eeb6b12992c4 (HEAD -> perf-tools-next, perf-tools-next/perf-tools-next) perf jevents: Don't append Unit to desc
+[root@kernelqe3 linux]# perf test 6 10 'perf all metricgroups test' 'perf all metrics test'
+  6: Parse event definition strings                                  :
+  6.1: Test event parsing                                            : Ok
+  6.2: Parsing of all PMU events from sysfs                          : FAILED!
+  6.3: Parsing of given PMU events from sysfs                        : Ok
+  6.4: Parsing of aliased events from sysfs                          : Skip (no aliases in sysfs)
+  6.5: Parsing of aliased events                                     : FAILED!
+  6.6: Parsing of terms (event modifiers)                            : Ok
+ 10: PMU events                                                      :
+ 10.1: PMU event table sanity                                        : Ok
+ 10.2: PMU event map aliases                                         : FAILED!
+ 10.3: Parsing of PMU event table metrics                            : Ok
+ 10.4: Parsing of PMU event table metrics with fake PMUs             : FAILED!
+ 10.5: Parsing of metric thresholds with fake PMUs                   : Ok
+ 93: perf all metricgroups test                                      : FAILED!
+ 94: perf all metrics test                                           : FAILED!
+[root@kernelqe3 linux]#
 
-I applied this, please check.
+Bisecting the first problem:
 
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index bbf84ccc3aba7d5c..7316da1c0ddb8eaf 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -153,7 +153,7 @@ static struct perf_pmu *perf_pmu__find2(int dirfd, const char *name)
- static int pmus_cmp(void *priv __maybe_unused,
- 		    const struct list_head *lhs, const struct list_head *rhs)
- {
--	unsigned long lhs_num, rhs_num;
-+	unsigned long lhs_num = 0, rhs_num = 0;
- 	struct perf_pmu *lhs_pmu = container_of(lhs, struct perf_pmu, list);
- 	struct perf_pmu *rhs_pmu = container_of(rhs, struct perf_pmu, list);
- 	const char *lhs_pmu_name = lhs_pmu->name ?: "";
+ 10.2: PMU event map aliases                                         : FAILED!
+
+make: Leaving directory '/root/git/linux/tools/perf'
+  6: Parse event definition strings                                  :
+  6.1: Test event parsing                                            : Ok
+  6.2: Parsing of all PMU events from sysfs                          : Ok
+  6.3: Parsing of given PMU events from sysfs                        : Ok
+  6.4: Parsing of aliased events from sysfs                          : Skip (no aliases in sysfs)
+  6.5: Parsing of aliased events                                     : Ok
+  6.6: Parsing of terms (event modifiers)                            : Ok
+ 10: PMU events                                                      :
+ 10.1: PMU event table sanity                                        : Ok
+ 10.2: PMU event map aliases                                         : FAILED!
+ 10.3: Parsing of PMU event table metrics                            : Ok
+ 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+ 10.5: Parsing of metric thresholds with fake PMUs                   : Ok
+ 93: perf all metricgroups test                                      : Ok
+ 94: perf all metrics test                                           : Ok
+[root@kernelqe3 linux]# git bisect bad
+2e255b4f9f41f137d9e3dc4fae3603a9c2c3dd28 is the first bad commit
+commit 2e255b4f9f41f137d9e3dc4fae3603a9c2c3dd28
+Author: Ian Rogers <irogers@google.com>
+Date:   Wed Aug 23 21:13:16 2023 -0700
+
+    perf jevents: Group events by PMU
+
+    Prior to this change a cpuid would map to a list of events where the PMU
+    would be encoded alongside the event information. This change breaks
+    apart each group of events so that there is a group per PMU. A new table
+    is added with the PMU's name and the list of events, the original table
+    now holding an array of these per PMU tables.
+
+    These changes are to make it easier to get per PMU information about
+    events, rather than the current approach of scanning all events. The
+    perf binary size with BPF skeletons on x86 is reduced by about 1%. The
+    unidentified PMU is now always expanded to "cpu".
+
+    Signed-off-by: Ian Rogers <irogers@google.com>
+    Cc: Adrian Hunter <adrian.hunter@intel.com>
+    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+    Cc: Gaosheng Cui <cuigaosheng1@huawei.com>
+    Cc: Ingo Molnar <mingo@redhat.com>
+    Cc: James Clark <james.clark@arm.com>
+    Cc: Jing Zhang <renyu.zj@linux.alibaba.com>
+    Cc: Jiri Olsa <jolsa@kernel.org>
+    Cc: John Garry <john.g.garry@oracle.com>
+    Cc: Kajol Jain <kjain@linux.ibm.com>
+    Cc: Kan Liang <kan.liang@linux.intel.com>
+    Cc: Mark Rutland <mark.rutland@arm.com>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Cc: Peter Zijlstra <peterz@infradead.org>
+    Cc: Ravi Bangoria <ravi.bangoria@amd.com>
+    Cc: Rob Herring <robh@kernel.org>
+    Link: https://lore.kernel.org/r/20230824041330.266337-5-irogers@google.com
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+ tools/perf/pmu-events/jevents.py | 181 +++++++++++++++++++++++++++++----------
+ tools/perf/tests/pmu-events.c    |  30 ++++---
+ 2 files changed, 154 insertions(+), 57 deletions(-)
+[root@kernelqe3 linux]#
+
+
