@@ -2,109 +2,94 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD694C3DA6F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 05:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B59ECC3DA6F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 05:59:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231797AbjHYF5W (ORCPT
+        id S240055AbjHYF66 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 01:57:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46216 "EHLO
+        Fri, 25 Aug 2023 01:58:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234286AbjHYF5E (ORCPT
+        with ESMTP id S239639AbjHYF6g (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 01:57:04 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F47C1BC7;
-        Thu, 24 Aug 2023 22:56:59 -0700 (PDT)
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37P5mhtc000886;
-        Fri, 25 Aug 2023 05:56:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=fBcNg7nrqFTeiSI9dFwDO6F4qFylvBduUrHomehxa0o=;
- b=hf/EWLnjd9mN+C4jg29Mi4WXxDRdHFT2IbqHepdo4CdjG7yP4+V5SyBA/j/DB9Fjk0BX
- EruROpZkQrac2V0U1Mn8drjQBXmMqa12JiI4Lask+aC6S8KsuR0NzBgOHBWrDmtgcvpK
- UW3ykaMycMhAJeNMRbrgiXW75aLElc/2PQ9VH3lrlvOWqPWUuZqfc4L8PQNNIuubKDfh
- tUm+kRr9/dlbY45uwPyqkHWNu3nWw9UufPcvBnWxtt7v6Er6RPluc9h5APaEhBonlPF4
- ftcwrRAVEiZgiE8pC+sgnW3vkillmSce+/eI7DqVhNfCO8fJge5IenAxMc1OqOY/MIlK TQ== 
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3spp7yrfes-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Aug 2023 05:56:49 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37P5AiPH027388;
-        Fri, 25 Aug 2023 05:56:49 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3sn20sw8e4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Aug 2023 05:56:48 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37P5ujaw40894724
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Aug 2023 05:56:45 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B473C20040;
-        Fri, 25 Aug 2023 05:56:45 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 457192004D;
-        Fri, 25 Aug 2023 05:56:37 +0000 (GMT)
-Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com.com (unknown [9.43.34.48])
-        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Fri, 25 Aug 2023 05:56:36 +0000 (GMT)
-From:   Kajol Jain <kjain@linux.ibm.com>
-To:     mpe@ellerman.id.au
-Cc:     atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-        disgoel@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        kjain@linux.ibm.com,
-        Krishan Gopal Sarawast <krishang@linux.vnet.ibm.com>
-Subject: [PATCH] powerpc/perf/hv-24x7: Update domain value check
-Date:   Fri, 25 Aug 2023 11:26:01 +0530
-Message-Id: <20230825055601.360083-1-kjain@linux.ibm.com>
-X-Mailer: git-send-email 2.39.3
+        Fri, 25 Aug 2023 01:58:36 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E502419B5;
+        Thu, 24 Aug 2023 22:58:33 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RX8NT64B8zrSVf;
+        Fri, 25 Aug 2023 13:56:57 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Fri, 25 Aug 2023 13:58:29 +0800
+Subject: Re: [PATCH v6 2/7] perf evlist: Add evlist__findnew_tracking_event()
+ helper
+To:     Ian Rogers <irogers@google.com>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+        <james.clark@arm.com>, <tmricht@linux.ibm.com>,
+        <ak@linux.intel.com>, <anshuman.khandual@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+References: <20230821012734.18241-1-yangjihong1@huawei.com>
+ <20230821012734.18241-3-yangjihong1@huawei.com>
+ <CAP-5=fVw9eO=rVLHL+XuaFxsfwD+ji2f9xWdOv3AkaYj9A+w0A@mail.gmail.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <e9c7b1f0-a8d3-3d44-7901-398928ae5fef@huawei.com>
+Date:   Fri, 25 Aug 2023 13:58:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
+In-Reply-To: <CAP-5=fVw9eO=rVLHL+XuaFxsfwD+ji2f9xWdOv3AkaYj9A+w0A@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: drY0TB5CReKrbIZpSzvvpa_clyRS0WtC
-X-Proofpoint-ORIG-GUID: drY0TB5CReKrbIZpSzvvpa_clyRS0WtC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-08-25_04,2023-08-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- priorityscore=1501 lowpriorityscore=0 phishscore=0 adultscore=0
- clxscore=1011 mlxscore=0 suspectscore=0 bulkscore=0 impostorscore=0
- spamscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2308250046
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Valid domain value is in range 1 to HV_PERF_DOMAIN_MAX.
-Current code has check for domain value greater than or
-equal to HV_PERF_DOMAIN_MAX. But the check for domain value 0
-is missing.
-Fix this issue by adding check for domain value 0.
+Hello,
 
-Fixes: ebd4a5a3ebd9 ("powerpc/perf/hv-24x7: Minor improvements")
-Reported-by: Krishan Gopal Sarawast <krishang@linux.vnet.ibm.com> 
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
----
- arch/powerpc/perf/hv-24x7.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 2023/8/25 12:55, Ian Rogers wrote:
+> On Sun, Aug 20, 2023 at 6:30 PM Yang Jihong <yangjihong1@huawei.com> wrote:
+>>
+>> Currently, intel-bts, intel-pt, and arm-spe may add a dummy event for
+>> tracking to the evlist. We may need to search for the dummy event for
+>> some settings. Therefore, add evlist__findnew_tracking_event() helper.
+> 
+> Given the first two sentences I don't understand why this is
+> evlist__findnew_tracking_event and not evlist__findnew_dummy_event?
+> Are you setting tracking on other events other than dummy? If so, then
+> the commit message isn't right. If not then I'd prefer not to use
+> tracking event in the function name.
+> 
+Yes, add this helper to find tracking event for some setting, will 
+modify commit message, like as follows:
 
-diff --git a/arch/powerpc/perf/hv-24x7.c b/arch/powerpc/perf/hv-24x7.c
-index 317175791d23..644881cc1c00 100644
---- a/arch/powerpc/perf/hv-24x7.c
-+++ b/arch/powerpc/perf/hv-24x7.c
-@@ -1418,7 +1418,7 @@ static int h_24x7_event_init(struct perf_event *event)
- 	}
- 
- 	domain = event_get_domain(event);
--	if (domain >= HV_PERF_DOMAIN_MAX) {
-+	if (domain  == 0 || domain >= HV_PERF_DOMAIN_MAX) {
- 		pr_devel("invalid domain %d\n", domain);
- 		return -EINVAL;
- 	}
--- 
-2.35.3
+Currently, intel-bts, intel-pt, and arm-spe may add tracking event to 
+the evlist. We may need to search for the tracking event for
+some settings. Therefore, add evlist__findnew_tracking_event() helper.
 
+>>
+>> evlist__findnew_tracking_event() also deal with system_wide maps if
+>> system_wide is true.
+> 
+> Could you fix the explanation here, what does "deal with system_wide"
+> mean? A kerneldoc comment and explanation of the system_wide argument
+> would be useful.
+> 
+In the next version, details will be described as follows:
+
+If system_wide is true, evlist__findnew_tracking_event() set the cpu map 
+of the evsel to all online CPUs.
+
+Is such an explanation okay?
+
+Thanks,
+Yang
