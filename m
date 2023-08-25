@@ -2,153 +2,183 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A247EE49AB
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 06:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4068EC3DA6F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 06:13:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241302AbjHYGLy (ORCPT
+        id S235037AbjHYGM6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 02:11:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48584 "EHLO
+        Fri, 25 Aug 2023 02:12:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241253AbjHYGLr (ORCPT
+        with ESMTP id S241996AbjHYGMq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 02:11:47 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A2A31BF2;
-        Thu, 24 Aug 2023 23:11:46 -0700 (PDT)
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37P65swu028546;
-        Fri, 25 Aug 2023 06:11:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : content-transfer-encoding : mime-version; s=pp1;
- bh=U0v7jNIn3oQz0IQzr0PZRDKoIUVT5oQUvwSUQef7ELc=;
- b=DUx8Ju4S/A51o5RPnFkHk/2Azv2pqTM7TVJx5tabOsvB3DHblMMV4saOZwqhjQmEMRzV
- UfV9JceMg8faKGn7tV4/XxUo9Pmx9iUH457MlMDDPTiedhGK6Iz8pf1O5NjlszDKoCsW
- 9aZKwy64/2SoromXPYloFfL8gx0gLsS6S1ls4fLp6vwptnouENtaCjxngiq16ielW/Hf
- SCrRJvuZZIEm5JSHPq+W5chT7X28fTS+AWOOvVQOeJdr5KEWhehtFG2aNY2oHwFc3AKj
- uvYcYAHOmKMDIur4mEsxJgZEwNd5G6YcoJwezTmZ0Tr8V/fAIzrYDl288QCOgEkBnCwb Ag== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sppm30asn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Aug 2023 06:11:33 +0000
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37P66B3I031184;
-        Fri, 25 Aug 2023 06:11:33 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sppm30asg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Aug 2023 06:11:33 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37P5CBeU010269;
-        Fri, 25 Aug 2023 06:11:32 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3sn21t5abs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Aug 2023 06:11:31 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37P6BTZf15008396
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Aug 2023 06:11:29 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 03B7320049;
-        Fri, 25 Aug 2023 06:11:29 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E5A0E2004D;
-        Fri, 25 Aug 2023 06:11:26 +0000 (GMT)
-Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.in.ibm.com (unknown [9.109.199.72])
-        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Fri, 25 Aug 2023 06:11:26 +0000 (GMT)
-From:   Aditya Gupta <adityag@linux.ibm.com>
-To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
-        namhyung@kernel.org
-Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/4] Introduce perf build subcommand
-Date:   Fri, 25 Aug 2023 11:41:21 +0530
-Message-ID: <20230825061125.24312-1-adityag@linux.ibm.com>
-X-Mailer: git-send-email 2.41.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: aa1GcXspGqJlPLE35oWcI8QchDPeRk-F
-X-Proofpoint-GUID: eypVpzIXPBMLupNOKPPGsFRNpyjNvDwN
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Fri, 25 Aug 2023 02:12:46 -0400
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CB0E2120;
+        Thu, 24 Aug 2023 23:12:32 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VqW2Dho_1692943945;
+Received: from 30.221.145.196(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VqW2Dho_1692943945)
+          by smtp.aliyun-inc.com;
+          Fri, 25 Aug 2023 14:12:27 +0800
+Message-ID: <8f319bc9-8740-627e-09c7-934c30a053bc@linux.alibaba.com>
+Date:   Fri, 25 Aug 2023 14:12:25 +0800
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-08-25_04,2023-08-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 mlxlogscore=777 priorityscore=1501 impostorscore=0
- clxscore=1011 phishscore=0 mlxscore=0 adultscore=0 bulkscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2308250051
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.14.0
+Subject: Re: [PATCH v7 1/8] perf pmu: "Compat" supports matching multiple
+ identifiers
+To:     Ian Rogers <irogers@google.com>
+Cc:     John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>
+References: <1692606977-92009-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1692606977-92009-2-git-send-email-renyu.zj@linux.alibaba.com>
+ <CAP-5=fWK=wMuC1e9JE0MW8de4pNKH=48f8ydjCbMLjQ3S4zEjg@mail.gmail.com>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <CAP-5=fWK=wMuC1e9JE0MW8de4pNKH=48f8ydjCbMLjQ3S4zEjg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The Problem
-===========
 
-Currently the presence of a feature is checked with a combination of
-perf version --build-options and greps, such as:
 
-    perf version --build-options | grep " on .* HAVE_FEATURE"
+在 2023/8/25 下午12:11, Ian Rogers 写道:
+> On Mon, Aug 21, 2023 at 1:36 AM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
+>>
+>> The jevent "Compat" is used for uncore PMU alias or metric definitions.
+>>
+>> The same PMU driver has different PMU identifiers due to different
+>> hardware versions and types, but they may have some common PMU event.
+>> Since a Compat value can only match one identifier, when adding the
+>> same event alias to PMUs with different identifiers, each identifier
+>> needs to be defined once, which is not streamlined enough.
+>>
+>> So let "Compat" supports matching multiple identifiers for uncore PMU
+>> alias. For example, the Compat value {43401;436*} can match the PMU
+>> identifier "43401", that is, CMN600_r0p0, and the PMU identifier with
+>> the prefix "436", that is, all CMN650, where "*" is a wildcard.
+>> Tokens in Unit field are delimited by ';' with no spaces.
+>>
+>> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+>> Reviewed-by: John Garry <john.g.garry@oracle.com>
+>> ---
+>>  tools/perf/util/pmu.c | 33 +++++++++++++++++++++++++++++++--
+>>  tools/perf/util/pmu.h |  1 +
+>>  2 files changed, 32 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+>> index ad209c8..6402423 100644
+>> --- a/tools/perf/util/pmu.c
+>> +++ b/tools/perf/util/pmu.c
+>> @@ -776,6 +776,35 @@ static bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
+>>         return res;
+>>  }
+>>
+>> +bool pmu_uncore_identifier_match(const char *id, const char *compat)
+> 
+> static?
+> 
 
-Proposed solution
-=================
+This function needs to be called in utils/metricgroup.c, so it cannot be static.
 
-As suggested by contributors in:
-https://lore.kernel.org/linux-perf-users/ZMPWk5K63tadmDlU@kernel.org/
+>> +{
+>> +       char *tmp = NULL, *tok, *str;
+>> +       bool res;
+> 
+> Initialize to false to avoid the goto.
+> 
 
-Introduce a subcommand "perf build --has", with which
-scripts can test for presence of a feature, such as:
+ok，no problem.
 
-    perf build --has HAVE_FEATURE
+>> +       int n;
+> 
+> Move into the scope of the for loop, to reduce the scope.
+> 
 
-The usage of "perf version --build-options | grep" has been replaced in two
-tests, with "perf build --has" command
+ok
 
-Also, to not duplicate the same feature list at multiple places, a new global
-'supported_features' array has been introduced in builtin.h, so both commands
-'perf build --has' and 'perf version --build-options' use the same array
+>> +
+>> +       /*
+>> +        * The strdup() call is necessary here because "compat" is a const str*
+>> +        * type and cannot be used as an argument to strtok_r().
+>> +        */
+>> +       str = strdup(compat);
+>> +       if (!str)
+>> +               return false;
+>> +
+>> +       tok = strtok_r(str, ";", &tmp);
+>> +       for (; tok; tok = strtok_r(NULL, ";", &tmp)) {
+>> +               n = strlen(tok);
+>> +               if ((tok[n - 1] == '*' && !strncmp(id, tok, n - 1)) ||
+>> +                   !strcmp(id, tok)) {
+> 
+> We use fnmatch for a similar check:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/pmu.c?h=perf-tools-next#n1982
+> 
 
-'supported_features' feature is an array of 'struct feature_support', which
-also has the name of the feature, macro used to test it's presence, and a
-is_builtin member, which will be 0 if feature not built-in, and 1 if built-in
+ok
 
-Architectures Tested
-====================
-* x86_64
-* ppc64le
+>> +                       res = true;
+>> +                       goto out;
+> 
+> With "res=false;" above this can just be a regular break.
+> 
 
-Git tree
-========
+ok, thank you!
 
-Git tree with this patch series applied for testing:
-https://github.com/adi-g15-ibm/linux/tree/perf-build-has
-
-Aditya Gupta (3):
-  perf build: introduce build subcommand
-  perf version: update --build-options to use 'supported_features' array
-  perf tests task_analyzer: check perf build for libtraceevent support
-
-Athira Rajeev (1):
-  tools/perf/tests: Update probe_vfs_getname.sh script to use perf build
-    --has
-
- tools/perf/Build                              |  1 +
- tools/perf/builtin-build.c                    | 94 +++++++++++++++++++
- tools/perf/builtin-version.c                  | 39 ++------
- tools/perf/builtin.h                          | 47 ++++++++++
- tools/perf/perf.c                             |  1 +
- .../perf/tests/shell/lib/probe_vfs_getname.sh |  4 +-
- .../shell/record+probe_libc_inet_pton.sh      |  5 +-
- .../shell/record+script_probe_vfs_getname.sh  |  5 +-
- tools/perf/tests/shell/test_task_analyzer.sh  |  4 +-
- 9 files changed, 163 insertions(+), 37 deletions(-)
- create mode 100644 tools/perf/builtin-build.c
-
--- 
-2.41.0
-
+> Thanks,
+> Ian
+> 
+>> +               }
+>> +       }
+>> +       res = false;
+>> +out:
+>> +       free(str);
+>> +       return res;
+>> +}
+>> +
+>>  struct pmu_add_cpu_aliases_map_data {
+>>         struct list_head *head;
+>>         const char *name;
+>> @@ -847,8 +876,8 @@ static int pmu_add_sys_aliases_iter_fn(const struct pmu_event *pe,
+>>         if (!pe->compat || !pe->pmu)
+>>                 return 0;
+>>
+>> -       if (!strcmp(pmu->id, pe->compat) &&
+>> -           pmu_uncore_alias_match(pe->pmu, pmu->name)) {
+>> +       if (pmu_uncore_alias_match(pe->pmu, pmu->name) &&
+>> +           pmu_uncore_identifier_match(pmu->id, pe->compat)) {
+>>                 __perf_pmu__new_alias(idata->head, -1,
+>>                                       (char *)pe->name,
+>>                                       (char *)pe->desc,
+>> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+>> index b9a02de..9d4385d 100644
+>> --- a/tools/perf/util/pmu.h
+>> +++ b/tools/perf/util/pmu.h
+>> @@ -241,6 +241,7 @@ void pmu_add_cpu_aliases_table(struct list_head *head, struct perf_pmu *pmu,
+>>  char *perf_pmu__getcpuid(struct perf_pmu *pmu);
+>>  const struct pmu_events_table *pmu_events_table__find(void);
+>>  const struct pmu_metrics_table *pmu_metrics_table__find(void);
+>> +bool pmu_uncore_identifier_match(const char *id, const char *compat);
+>>  void perf_pmu_free_alias(struct perf_pmu_alias *alias);
+>>
+>>  int perf_pmu__convert_scale(const char *scale, char **end, double *sval);
+>> --
+>> 1.8.3.1
+>>
