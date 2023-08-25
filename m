@@ -2,31 +2,30 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 524DEC3DA66
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 06:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AABC7EE2C
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 06:48:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232303AbjHYGbi (ORCPT
+        id S242294AbjHYGrn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 02:31:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60044 "EHLO
+        Fri, 25 Aug 2023 02:47:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235789AbjHYGbH (ORCPT
+        with ESMTP id S242335AbjHYGrV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 02:31:07 -0400
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1D0E1FE9;
-        Thu, 24 Aug 2023 23:31:02 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VqW0XgJ_1692945056;
-Received: from 30.221.145.196(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VqW0XgJ_1692945056)
+        Fri, 25 Aug 2023 02:47:21 -0400
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD00CCD5;
+        Thu, 24 Aug 2023 23:47:17 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R891e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VqW3x5o_1692946031;
+Received: from 30.221.145.196(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VqW3x5o_1692946031)
           by smtp.aliyun-inc.com;
-          Fri, 25 Aug 2023 14:30:58 +0800
-Message-ID: <b8c31b95-9949-28ef-876f-6a3a30ff7aa6@linux.alibaba.com>
-Date:   Fri, 25 Aug 2023 14:30:56 +0800
+          Fri, 25 Aug 2023 14:47:13 +0800
+Message-ID: <364ae15e-6fdc-026e-a211-ec7348f0928f@linux.alibaba.com>
+Date:   Fri, 25 Aug 2023 14:47:10 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.14.0
-Subject: Re: [PATCH v7 6/8] perf test: Add pmu-event test for "Compat" and new
- event_field.
+Subject: Re: [PATCH v7 8/8] perf vendor events: Add JSON metrics for Arm CMN
 To:     Ian Rogers <irogers@google.com>
 Cc:     John Garry <john.g.garry@oracle.com>,
         Will Deacon <will@kernel.org>,
@@ -46,10 +45,10 @@ Cc:     John Garry <john.g.garry@oracle.com>,
         Zhuo Song <zhuo.song@linux.alibaba.com>,
         Shuai Xue <xueshuai@linux.alibaba.com>
 References: <1692606977-92009-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1692606977-92009-7-git-send-email-renyu.zj@linux.alibaba.com>
- <CAP-5=fUBZS49rPvBE-14K9QeWZQgd-BUsOXRmTsLRqPYyVSU=A@mail.gmail.com>
+ <1692606977-92009-9-git-send-email-renyu.zj@linux.alibaba.com>
+ <CAP-5=fU3-iuHd6Yd6SGtffZr92eMN3nb0NRM40KmqKPxKZobHA@mail.gmail.com>
 From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <CAP-5=fUBZS49rPvBE-14K9QeWZQgd-BUsOXRmTsLRqPYyVSU=A@mail.gmail.com>
+In-Reply-To: <CAP-5=fU3-iuHd6Yd6SGtffZr92eMN3nb0NRM40KmqKPxKZobHA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -58,22 +57,45 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-在 2023/8/25 下午12:30, Ian Rogers 写道:
+在 2023/8/25 下午12:13, Ian Rogers 写道:
 > On Mon, Aug 21, 2023 at 1:36 AM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
 >>
->> Add new event test for uncore system event which is used to verify the
->> functionality of "Compat" matching multiple identifiers and the new event
->> fields "EventIdCode" and "Type".
+>> Add JSON metrics for Arm CMN. Currently just add part of CMN PMU
+>> metrics which are general and compatible for any SoC with CMN-ANY.
 >>
 >> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+>> Reviewed-by: John Garry <john.g.garry@oracle.com>
+>> ---
+>>  .../pmu-events/arch/arm64/arm/cmn/sys/metric.json  | 74 ++++++++++++++++++++++
+>>  1 file changed, 74 insertions(+)
+>>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json
+>>
+>> diff --git a/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json
+>> new file mode 100644
+>> index 0000000..64db534
+>> --- /dev/null
+>> +++ b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json
+>> @@ -0,0 +1,74 @@
+>> +[
+>> +       {
+>> +               "MetricName": "slc_miss_rate",
+>> +               "BriefDescription": "The system level cache miss rate.",
+>> +               "MetricGroup": "cmn",
+>> +               "MetricExpr": "hnf_cache_miss / hnf_slc_sf_cache_access",
+>> +               "ScaleUnit": "100%",
+>> +               "Unit": "arm_cmn",
+>> +               "Compat": "434*;436*;43c*;43a*"
 > 
-> Thanks for the tests! I've no issue with them beside the already
-> mentioned ';'. This will need updating for:
-> https://lore.kernel.org/lkml/20230824183212.374787-1-irogers@google.com/
-> https://lore.kernel.org/lkml/20230825024002.801955-1-irogers@google.com/
+> Here a ';' is used as a separator, but for "Unit" ',' is used as a
+> separator. Is there a reason for the inconsistency?
 > 
 
-Ok, will do.
+John and I have previously discussed this issue, and in fact, I deliberately used ';'.
+
+I use a semicolon instead of a comma because I want to distinguish it from the function
+of the comma in "Unit" and avoid confusion between the use of commas in "Unit" and "Compat".
+Because in Unit, commas act as wildcards, and in “Compat”, the semicolon means "or". So
+I think semicolons are more appropriate.
 
 Thanks,
 Jing
@@ -81,125 +103,71 @@ Jing
 > Thanks,
 > Ian
 > 
->> ---
->>  .../pmu-events/arch/test/test_soc/sys/uncore.json  |  8 ++++
->>  tools/perf/pmu-events/empty-pmu-events.c           |  8 ++++
->>  tools/perf/tests/pmu-events.c                      | 55 ++++++++++++++++++++++
->>  3 files changed, 71 insertions(+)
->>
->> diff --git a/tools/perf/pmu-events/arch/test/test_soc/sys/uncore.json b/tools/perf/pmu-events/arch/test/test_soc/sys/uncore.json
->> index c7e7528..06b886d 100644
->> --- a/tools/perf/pmu-events/arch/test/test_soc/sys/uncore.json
->> +++ b/tools/perf/pmu-events/arch/test/test_soc/sys/uncore.json
->> @@ -12,5 +12,13 @@
->>             "EventName": "sys_ccn_pmu.read_cycles",
->>             "Unit": "sys_ccn_pmu",
->>             "Compat": "0x01"
->> +   },
->> +   {
->> +           "BriefDescription": "Counts total cache misses in first lookup result (high priority).",
->> +           "NodeType": "0x05",
->> +           "EventIdCode": "0x01",
->> +           "EventName": "sys_cmn_pmu.hnf_cache_miss",
->> +           "Unit": "sys_cmn_pmu",
->> +           "Compat": "434*;436*;43c*;43a01"
->>     }
->>  ]
->> diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
->> index e74defb..25be18a 100644
->> --- a/tools/perf/pmu-events/empty-pmu-events.c
->> +++ b/tools/perf/pmu-events/empty-pmu-events.c
->> @@ -245,6 +245,14 @@ struct pmu_events_map {
->>                 .pmu = "uncore_sys_ccn_pmu",
->>         },
->>         {
->> +               .name = "sys_cmn_pmu.hnf_cache_miss",
->> +               .event = "type=0x05,eventid=0x01",
->> +               .desc = "Counts total cache misses in first lookup result (high priority). Unit: uncore_sys_cmn_pmu ",
->> +               .compat = "434*;436*;43c*;43a01",
->> +               .topic = "uncore",
->> +               .pmu = "uncore_sys_cmn_pmu",
 >> +       },
 >> +       {
->>                 .name = 0,
->>                 .event = 0,
->>                 .desc = 0,
->> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
->> index 3204252..79fb3e2 100644
->> --- a/tools/perf/tests/pmu-events.c
->> +++ b/tools/perf/tests/pmu-events.c
->> @@ -255,9 +255,24 @@ struct perf_pmu_test_pmu {
->>         .matching_pmu = "uncore_sys_ccn_pmu4",
->>  };
->>
->> +static const struct perf_pmu_test_event sys_cmn_pmu_hnf_cache_miss = {
->> +       .event = {
->> +               .name = "sys_cmn_pmu.hnf_cache_miss",
->> +               .event = "type=0x05,eventid=0x01",
->> +               .desc = "Counts total cache misses in first lookup result (high priority). Unit: uncore_sys_cmn_pmu ",
->> +               .topic = "uncore",
->> +               .pmu = "uncore_sys_cmn_pmu",
->> +               .compat = "434*;436*;43c*;43a01",
->> +       },
->> +       .alias_str = "type=0x5,eventid=0x1",
->> +       .alias_long_desc = "Counts total cache misses in first lookup result (high priority). Unit: uncore_sys_cmn_pmu ",
->> +       .matching_pmu = "uncore_sys_cmn_pmu0",
->> +};
->> +
->>  static const struct perf_pmu_test_event *sys_events[] = {
->>         &sys_ddr_pmu_write_cycles,
->>         &sys_ccn_pmu_read_cycles,
->> +       &sys_cmn_pmu_hnf_cache_miss,
->>         NULL
->>  };
->>
->> @@ -704,6 +719,46 @@ static int __test_uncore_pmu_event_aliases(struct perf_pmu_test_pmu *test_pmu)
->>                         &sys_ccn_pmu_read_cycles,
->>                 },
->>         },
->> +       {
->> +               .pmu = {
->> +                       .name = (char *)"uncore_sys_cmn_pmu0",
->> +                       .is_uncore = 1,
->> +                       .id = (char *)"43401",
->> +               },
->> +               .aliases = {
->> +                       &sys_cmn_pmu_hnf_cache_miss,
->> +               },
+>> +               "MetricName": "hnf_message_retry_rate",
+>> +               "BriefDescription": "HN-F message retry rate indicates whether a lack of credits is causing the bottlenecks.",
+>> +               "MetricGroup": "cmn",
+>> +               "MetricExpr": "hnf_pocq_retry / hnf_pocq_reqs_recvd",
+>> +               "ScaleUnit": "100%",
+>> +               "Unit": "arm_cmn",
+>> +               "Compat": "434*;436*;43c*;43a*"
 >> +       },
 >> +       {
->> +               .pmu = {
->> +                       .name = (char *)"uncore_sys_cmn_pmu0",
->> +                       .is_uncore = 1,
->> +                       .id = (char *)"43602",
->> +               },
->> +               .aliases = {
->> +                       &sys_cmn_pmu_hnf_cache_miss,
->> +               },
+>> +               "MetricName": "sf_hit_rate",
+>> +               "BriefDescription": "Snoop filter hit rate can be used to measure the snoop filter efficiency.",
+>> +               "MetricGroup": "cmn",
+>> +               "MetricExpr": "hnf_sf_hit / hnf_slc_sf_cache_access",
+>> +               "ScaleUnit": "100%",
+>> +               "Unit": "arm_cmn",
+>> +               "Compat": "434*;436*;43c*;43a*"
 >> +       },
 >> +       {
->> +               .pmu = {
->> +                       .name = (char *)"uncore_sys_cmn_pmu0",
->> +                       .is_uncore = 1,
->> +                       .id = (char *)"43c03",
->> +               },
->> +               .aliases = {
->> +                       &sys_cmn_pmu_hnf_cache_miss,
->> +               },
+>> +               "MetricName": "mc_message_retry_rate",
+>> +               "BriefDescription": "The memory controller request retries rate indicates whether the memory controller is the bottleneck.",
+>> +               "MetricGroup": "cmn",
+>> +               "MetricExpr": "hnf_mc_retries / hnf_mc_reqs",
+>> +               "ScaleUnit": "100%",
+>> +               "Unit": "arm_cmn",
+>> +               "Compat": "434*;436*;43c*;43a*"
 >> +       },
 >> +       {
->> +               .pmu = {
->> +                       .name = (char *)"uncore_sys_cmn_pmu0",
->> +                       .is_uncore = 1,
->> +                       .id = (char *)"43a01",
->> +               },
->> +               .aliases = {
->> +                       &sys_cmn_pmu_hnf_cache_miss,
->> +               },
+>> +               "MetricName": "rni_actual_read_bandwidth.all",
+>> +               "BriefDescription": "This event measure the actual bandwidth that RN-I bridge sends to the interconnect.",
+>> +               "MetricGroup": "cmn",
+>> +               "MetricExpr": "rnid_rxdat_flits * 32 / 1e6 / duration_time",
+>> +               "ScaleUnit": "1MB/s",
+>> +               "Unit": "arm_cmn",
+>> +               "Compat": "434*;436*;43c*;43a*"
+>> +       },
+>> +       {
+>> +               "MetricName": "rni_actual_write_bandwidth.all",
+>> +               "BriefDescription": "This event measures the actual write bandwidth at RN-I bridges.",
+>> +               "MetricGroup": "cmn",
+>> +               "MetricExpr": "rnid_txdat_flits * 32 / 1e6 / duration_time",
+>> +               "ScaleUnit": "1MB/s",
+>> +               "Unit": "arm_cmn",
+>> +               "Compat": "434*;436*;43c*;43a*"
+>> +       },
+>> +       {
+>> +               "MetricName": "rni_retry_rate",
+>> +               "BriefDescription": "RN-I bridge retry rate indicates whether the memory controller is the bottleneck.",
+>> +               "MetricGroup": "cmn",
+>> +               "MetricExpr": "rnid_txreq_flits_retried / rnid_txreq_flits_total",
+>> +               "ScaleUnit": "100%",
+>> +               "Unit": "arm_cmn",
+>> +               "Compat": "434*;436*;43c*;43a*"
+>> +       },
+>> +       {
+>> +               "MetricName": "sbsx_actual_write_bandwidth.all",
+>> +               "BriefDescription": "sbsx actual write bandwidth.",
+>> +               "MetricGroup": "cmn",
+>> +               "MetricExpr": "sbsx_txdat_flitv * 32 / 1e6 / duration_time",
+>> +               "ScaleUnit": "1MB/s",
+>> +               "Unit": "arm_cmn",
+>> +               "Compat": "434*;436*;43c*;43a*"
 >> +       }
->>  };
->>
->>  /* Test that aliases generated are as expected */
+>> +]
 >> --
 >> 1.8.3.1
 >>
