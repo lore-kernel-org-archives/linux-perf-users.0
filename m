@@ -2,86 +2,119 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 410B4C71133
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 06:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 043ADC3DA6F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 06:12:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231479AbjHYGJo (ORCPT
+        id S240886AbjHYGLx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 02:09:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60454 "EHLO
+        Fri, 25 Aug 2023 02:11:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241397AbjHYGJU (ORCPT
+        with ESMTP id S241215AbjHYGLr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 02:09:20 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D3911BF2;
-        Thu, 24 Aug 2023 23:09:18 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RX8cv1JYnzrSjK;
-        Fri, 25 Aug 2023 14:07:43 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Fri, 25 Aug 2023 14:09:14 +0800
-Subject: Re: [PATCH v6 5/7] perf test: Update base-record & system-wide-dummy
- attr expected values for test-record-C0
-To:     Ian Rogers <irogers@google.com>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-        <james.clark@arm.com>, <tmricht@linux.ibm.com>,
-        <ak@linux.intel.com>, <anshuman.khandual@arm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-References: <20230821012734.18241-1-yangjihong1@huawei.com>
- <20230821012734.18241-6-yangjihong1@huawei.com>
- <CAP-5=fWK=vd4H6_SHpDw4rMN4eODSM5hmBY=rJ5F9fQMq-HcUg@mail.gmail.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <0dbca9a3-f377-cd46-b1c4-e0742a94fbb5@huawei.com>
-Date:   Fri, 25 Aug 2023 14:09:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Fri, 25 Aug 2023 02:11:47 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0017B1BF6;
+        Thu, 24 Aug 2023 23:11:45 -0700 (PDT)
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37P67ptE022870;
+        Fri, 25 Aug 2023 06:11:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=JSejrMbOPnIFxxBvs+4uXZ/okvtJjoiEbvH1XJhSq2Q=;
+ b=R26F+i2H+VP63alk1LGiJuZfHuqWpIEmq8PX0Web4VZ6BQoGp8v0vxGnrNj+Gp9N/vJ7
+ U1VlrxLR4GIUXFbHBfQ8DDp75AfQm2G348LD3boCfeTOSO7hpMWbfUH7/epIK6v9LHW4
+ jn5SJeFwlv6Gqk7dqHiPmSMt55H6ldtCJFXloCBpj5B9JW6Y+D4VqcZqlubsG4Ox7+f3
+ d9eHpLR8M/prtq0slkdZcnLUaTSWg64kFcFb1NsHszmws/bK2aIQWA08VgPHFlrfuAmj
+ ne/gNC6x5HSxN3KAnYP1XfNQVZb5j3cMyMVVixlxwxC77qcpW8WQ0IUVuRxZkP0QRgDJ +w== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sppm1065j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 25 Aug 2023 06:11:41 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37P69fsN026958;
+        Fri, 25 Aug 2023 06:11:40 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sppm10650-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 25 Aug 2023 06:11:40 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37P5X2UN004055;
+        Fri, 25 Aug 2023 06:11:39 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+        by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3sn21rw809-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 25 Aug 2023 06:11:39 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37P6BatM13959816
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Aug 2023 06:11:36 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2345520040;
+        Fri, 25 Aug 2023 06:11:36 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 09AFC20049;
+        Fri, 25 Aug 2023 06:11:34 +0000 (GMT)
+Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.in.ibm.com (unknown [9.109.199.72])
+        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Fri, 25 Aug 2023 06:11:33 +0000 (GMT)
+From:   Aditya Gupta <adityag@linux.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
+        namhyung@kernel.org
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/4] perf tests task_analyzer: check perf build for libtraceevent support
+Date:   Fri, 25 Aug 2023 11:41:24 +0530
+Message-ID: <20230825061125.24312-4-adityag@linux.ibm.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230825061125.24312-1-adityag@linux.ibm.com>
+References: <20230825061125.24312-1-adityag@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAP-5=fWK=vd4H6_SHpDw4rMN4eODSM5hmBY=rJ5F9fQMq-HcUg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 4EyVNeNti9rHT5Bhe-KwiwSbojf6vYJi
+X-Proofpoint-ORIG-GUID: sdA4SvNlQ21z0J883HghaUby7PEx-3xT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-08-25_04,2023-08-24_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxlogscore=914 phishscore=0 mlxscore=0
+ suspectscore=0 priorityscore=1501 bulkscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2308250051
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Currently we depend on output of 'perf record -e "sched:sched_switch"', to
+check whether perf was built with libtraceevent support.
 
-On 2023/8/25 13:22, Ian Rogers wrote:
-> On Sun, Aug 20, 2023 at 6:30 PM Yang Jihong <yangjihong1@huawei.com> wrote:
->>
->> 1. Because a dummy sideband event is added to the sampling of specified
->>     CPUs. When evlist contains evsel of different sample_type,
->>     evlist__config() will change the default PERF_SAMPLE_ID bit to
->>     PERF_SAMPLE_IDENTIFICATION bit.
->>     The attr sample_type expected value of base-record and system-wide-dummy
->>     in test-record-C0 needs to be updated.
->>
->> 2. The perf record uses evlist__add_aux_dummy() instead of
->>     evlist__add_dummy() to add a dummy event.
->>     The expected value of system-wide-dummy attr needs to be updated.
->>
->> The perf test result is as follows:
->>
->>    # ./perf test list  2>&1 | grep 'Setup struct perf_event_attr'
->>     17: Setup struct perf_event_attr
->>    # ./perf test 17
->>     17: Setup struct perf_event_attr                                    : Ok
-> 
-> Will the kernel test robot complain about the previous patches
-> breaking this test? It may be best to update the test while changing
-> the behavior in those patches.
-> 
-Okay, it'll be modified in the next version.
+Instead, a more straightforward approach can be to check the build options,
+using 'perf build --has libtraceevent', to check for libtraceevent support.
 
-Thanks,
-Yang
+Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
+---
+ tools/perf/tests/shell/test_task_analyzer.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/tests/shell/test_task_analyzer.sh b/tools/perf/tests/shell/test_task_analyzer.sh
+index 92d15154ba79..b4803e373fe5 100755
+--- a/tools/perf/tests/shell/test_task_analyzer.sh
++++ b/tools/perf/tests/shell/test_task_analyzer.sh
+@@ -52,8 +52,8 @@ find_str_or_fail() {
+ 
+ # check if perf is compiled with libtraceevent support
+ skip_no_probe_record_support() {
+-	perf version --build-options | grep -q " OFF .* HAVE_LIBTRACEEVENT" && return 2
+-	return 0
++	perf build --has libtraceevent >/dev/null && return 0
++	return 2
+ }
+ 
+ prepare_perf_data() {
+-- 
+2.41.0
+
