@@ -2,349 +2,150 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED164EE49A5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 13:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C028C79F60
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 14:08:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245294AbjHYNxX (ORCPT
+        id S1343906AbjHYOII (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 09:53:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58342 "EHLO
+        Fri, 25 Aug 2023 10:08:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245296AbjHYNwy (ORCPT
+        with ESMTP id S245693AbjHYOHN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 09:52:54 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8EA11BF2
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Aug 2023 06:52:51 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d74b711ec0dso1142879276.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Aug 2023 06:52:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692971571; x=1693576371;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/dYhn8H+dXW3Ipl8n1VYVJEnCo8cNL6TIPVh5uinwXQ=;
-        b=EHumlaJVyKkVBa9c0e20P0BWdp+1ernT6xK43PeNkHRWU8lqIeuZuQTQyVHAZyFyVq
-         Pb0jP3mccWS/k9mvxMJO1jxjBVr+FZcbGVSFk0Hoccdp2tnzAxSzMYDbHRcoAud7TKDZ
-         9zh/Dp6LrXj7vSSxEQOxMPqrF1bLvSn2wrV8qq+DxgXsiAtyKKJRuFkUpAz6w2IJdq6y
-         afeA3h1TpfcfWPTlqY+k6AeKyUQ+l4bcr1k34PtsSwPi9L0n12xyn5yV9KFFilA6gaYT
-         7wrZeH1jDEaripq6+87IKYI3N1AguLrCsgz+XW8Bj7laOPU3hTRxuOr4jX6capsWe5Y9
-         UsPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692971571; x=1693576371;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/dYhn8H+dXW3Ipl8n1VYVJEnCo8cNL6TIPVh5uinwXQ=;
-        b=K7JqHeAEcZdp5Sf6jRwzLDspdh26+SloO7qT08EdBuI7lpvLMpQ9uu/9l1Du+6vR1R
-         b81m6iEsFJlfsUN3uD7ysZhMYydE2NSj/aL7SWfxOSrdh3kKYACrzX/dw1WhH6ag6EqZ
-         A7OSQbiooYMocpYBrb6T3mxcHcC00/EhxSZUqjCpV5C46A8unuu6UCo+PrSJxaP3tvPR
-         V7IKnFiJwkR0S/G2QLnN2RBTE1zAxrzaRIY6/P9cIo2PqqVpVmsCOYAeDbpvVTPrmGlU
-         AsAVAE55R15JFPxDyeexCAujauEzvb3b2aPHD/10/adDqUTs1f/kB6dDxV7PRwdi4fSk
-         5CLg==
-X-Gm-Message-State: AOJu0YzpdSoR0gQ1t7UJ08nVLYWA07ahbpAVA4grDbKyAbYx4KEfLoWE
-        u/eSw9h1A5ucvKhVB+W7Z0buV73O0VCy
-X-Google-Smtp-Source: AGHT+IHvRqYILRSBMnoXywPyiF5I4pjA+sdKB05A8++FGoHLyxHqhOehETymctDBt2AGX3kLHoYuet9UDQ7E
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:449e:d47b:bc6b:cb6b])
- (user=irogers job=sendgmr) by 2002:a25:74c6:0:b0:d0c:c83b:94ed with SMTP id
- p189-20020a2574c6000000b00d0cc83b94edmr421918ybc.10.1692971570893; Fri, 25
- Aug 2023 06:52:50 -0700 (PDT)
-Date:   Fri, 25 Aug 2023 06:52:37 -0700
-In-Reply-To: <20230825135237.921058-1-irogers@google.com>
-Message-Id: <20230825135237.921058-3-irogers@google.com>
-Mime-Version: 1.0
-References: <20230825135237.921058-1-irogers@google.com>
-X-Mailer: git-send-email 2.42.0.rc2.253.gd59a3bf2b4-goog
-Subject: [PATCH v5 2/2] perf pmus: Skip duplicate PMUs and don't print list
- suffix by default
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Fri, 25 Aug 2023 10:07:13 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBC282689;
+        Fri, 25 Aug 2023 07:06:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692972408; x=1724508408;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=pWTAAgLlRZncja+IDv+iUtfr3L7H3/K6szkOOG/SR94=;
+  b=JU1uj7oO9xJ0C7svrfBe76YS3IEONIS3KoBmaewbjsK3WLvWo7/ifWxh
+   EIf099GLjYPXsmK/QWN734IBL7BJeCyjbaoDt8awytgWRWtuaQhuq1rtR
+   arWRlYMkBm6BwPiHZjx7ww++zdrfqRB9XXg5X1S+D1iR0QQDeemamQwkt
+   0d4kZ9d8iFK25SQqceWt+djgb4G4omCK2qCDi0Bs1evud2q6xiQFzGby2
+   m/WFLLNjwYhWw0ZVTmXgAghMsMdsIZr71UofHPZnsfJVo17RzOr1DBnRF
+   wQgIp3BQyw8JTA56ULGoXq+f+pAAL4gxzb6xcn9b7l1Q1uM1cfXmWXZDd
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10813"; a="355048105"
+X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
+   d="scan'208";a="355048105"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2023 07:05:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10813"; a="772482279"
+X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
+   d="scan'208";a="772482279"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 25 Aug 2023 07:05:49 -0700
+Received: from [10.209.146.71] (kliang2-mobl1.ccr.corp.intel.com [10.209.146.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 03D5D580C56;
+        Fri, 25 Aug 2023 07:05:47 -0700 (PDT)
+Message-ID: <166e2aad-5e17-3ffa-b140-05f174583ab2@linux.intel.com>
+Date:   Fri, 25 Aug 2023 10:05:46 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH v5 0/2] perf list: Remove duplicate PMUs
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
         Ravi Bangoria <ravi.bangoria@amd.com>,
         Kajol Jain <kjain@linux.ibm.com>,
         John Garry <john.g.garry@oracle.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <20230825135237.921058-1-irogers@google.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20230825135237.921058-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add a PMUs scan that ignores duplicates. When there are multiple PMUs
-that differ only by suffix, by default just list the first one and
-skip all others. The scan routine checks that the PMU names match but
-doesn't enforce that the numbers are consecutive as for some PMUs
-there are gaps. If "-v" is passed to "perf list" then list all PMUs.
 
-With the previous change duplicate PMUs are no longer printed but the
-suffix of the first is printed. When duplicate PMUs are being skipped
-avoid printing the suffix.
 
-Before:
-```
-$ perf list
-...
-  uncore_imc_free_running_0/data_read/               [Kernel PMU event]
-  uncore_imc_free_running_0/data_total/              [Kernel PMU event]
-  uncore_imc_free_running_0/data_write/              [Kernel PMU event]
-  uncore_imc_free_running_1/data_read/               [Kernel PMU event]
-  uncore_imc_free_running_1/data_total/              [Kernel PMU event]
-  uncore_imc_free_running_1/data_write/              [Kernel PMU event]
-```
+On 2023-08-25 9:52 a.m., Ian Rogers wrote:
+> When there are multiple PMUs, differing by ordered suffixes, by
+> default only display one. This avoids repeated listing of events, in
+> particular when there are 10s of uncore PMUs. If "-v" is passed to
+> "perf list" then still list all PMUs.
+> 
+> Listing fewer PMU/event combinations helps speed the all PMU event
+> tests.
+> 
+> Before:
+> ```
+> $ perf list
+> ...
+>   uncore_imc_free_running_0/data_read/               [Kernel PMU event]
+>   uncore_imc_free_running_0/data_total/              [Kernel PMU event]
+>   uncore_imc_free_running_0/data_write/              [Kernel PMU event]
+>   uncore_imc_free_running_1/data_read/               [Kernel PMU event]
+>   uncore_imc_free_running_1/data_total/              [Kernel PMU event]
+>   uncore_imc_free_running_1/data_write/              [Kernel PMU event]
+> ```
+> 
+> After:
+> ```
+> $ perf list
+> ...
+>   uncore_imc_free_running/data_read/                 [Kernel PMU event]
+>   uncore_imc_free_running/data_total/                [Kernel PMU event]
+>   uncore_imc_free_running/data_write/                [Kernel PMU event]
+> ...
+> $ perf list -v
+> ...
+>   uncore_imc_free_running_0/data_read/               [Kernel PMU event]
+>   uncore_imc_free_running_0/data_total/              [Kernel PMU event]
+>   uncore_imc_free_running_0/data_write/              [Kernel PMU event]
+>   uncore_imc_free_running_1/data_read/               [Kernel PMU event]
+>   uncore_imc_free_running_1/data_total/              [Kernel PMU event]
+>   uncore_imc_free_running_1/data_write/              [Kernel PMU event]
+> ...
+> ```
+> 
+> The PMUs are sorted by name then suffix as a part of this change.
+> 
+> v5: Improved the 2nd patch's commit message and removed an unused
+>     variable as suggested by Kan Liang <kan.liang@linux.intel.com>.
+> v4: Rebase on top of lazy PMU changes. Ignore numeric ordering due to
+>     gaps, suggested by Kan Liang <kan.liang@linux.intel.com>. Fold
+>     patches 2 & 3 as suggested by John Garry <john.g.garry@oracle.com>
+>     (done by accident as part of rebasing).
+> v3: Add detail to patch 1 sorting commit message about the suffix and
+>     why sorting is necessary.
+> v2: List all PMUs when "-v" is passed as suggested by John Garry
+>     <john.g.garry@oracle.com>.
+> 
+> Ian Rogers (2):
+>   perf pmus: Sort pmus by name then suffix
+>   perf pmus: Skip duplicate PMUs and don't print list suffix by default
 
-After:
-```
-$ perf list
-...
-  uncore_imc_free_running/data_read/                 [Kernel PMU event]
-  uncore_imc_free_running/data_total/                [Kernel PMU event]
-  uncore_imc_free_running/data_write/                [Kernel PMU event]
-...
-$ perf list -v
-  uncore_imc_free_running_0/data_read/               [Kernel PMU event]
-  uncore_imc_free_running_0/data_total/              [Kernel PMU event]
-  uncore_imc_free_running_0/data_write/              [Kernel PMU event]
-  uncore_imc_free_running_1/data_read/               [Kernel PMU event]
-  uncore_imc_free_running_1/data_total/              [Kernel PMU event]
-  uncore_imc_free_running_1/data_write/              [Kernel PMU event]
-...
-```
-Signed-off-by: Ian Rogers <irogers@google.com>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-list.c         |  8 +++++
- tools/perf/util/pmu.c             | 17 +++++++---
- tools/perf/util/pmu.h             |  3 +-
- tools/perf/util/pmus.c            | 53 ++++++++++++++++++++++++++++---
- tools/perf/util/pmus.h            |  2 ++
- tools/perf/util/print-events.h    |  1 +
- tools/perf/util/s390-sample-raw.c |  3 +-
- 7 files changed, 76 insertions(+), 11 deletions(-)
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 7fec2cca759f..8fe4ddf02c14 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -423,6 +423,13 @@ static void json_print_metric(void *ps __maybe_unused, const char *group,
- 	strbuf_release(&buf);
- }
- 
-+static bool default_skip_duplicate_pmus(void *ps)
-+{
-+	struct print_state *print_state = ps;
-+
-+	return !print_state->long_desc;
-+}
-+
- int cmd_list(int argc, const char **argv)
- {
- 	int i, ret = 0;
-@@ -434,6 +441,7 @@ int cmd_list(int argc, const char **argv)
- 		.print_end = default_print_end,
- 		.print_event = default_print_event,
- 		.print_metric = default_print_metric,
-+		.skip_duplicate_pmus = default_skip_duplicate_pmus,
- 	};
- 	const char *cputype = NULL;
- 	const char *unit_name = NULL;
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index bb2ca29cd7bd..b9ed829318c3 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1576,7 +1576,9 @@ int perf_pmu__find_event(struct perf_pmu *pmu, const char *event, void *state, p
- 		.cb = cb,
- 	};
- 
--	return perf_pmu__for_each_event(pmu, &args, find_event_callback);
-+	/* Sub-optimal, but function is only used by tests. */
-+	return perf_pmu__for_each_event(pmu, /*skip_duplicate_pmus=*/ false,
-+					&args, find_event_callback);
- }
- 
- static void perf_pmu__del_formats(struct list_head *formats)
-@@ -1650,10 +1652,13 @@ static int sub_non_neg(int a, int b)
- }
- 
- static char *format_alias(char *buf, int len, const struct perf_pmu *pmu,
--			  const struct perf_pmu_alias *alias)
-+			  const struct perf_pmu_alias *alias, bool skip_duplicate_pmus)
- {
- 	struct parse_events_term *term;
--	int used = snprintf(buf, len, "%s/%s", pmu->name, alias->name);
-+	int pmu_name_len = skip_duplicate_pmus
-+		? pmu_name_len_no_suffix(pmu->name, /*num=*/NULL)
-+		: (int)strlen(pmu->name);
-+	int used = snprintf(buf, len, "%.*s/%s", pmu_name_len, pmu->name, alias->name);
- 
- 	list_for_each_entry(term, &alias->terms, list) {
- 		if (term->type_val == PARSE_EVENTS__TERM_TYPE_STR)
-@@ -1675,7 +1680,8 @@ static char *format_alias(char *buf, int len, const struct perf_pmu *pmu,
- 	return buf;
- }
- 
--int perf_pmu__for_each_event(struct perf_pmu *pmu, void *state, pmu_event_callback cb)
-+int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
-+			     void *state, pmu_event_callback cb)
- {
- 	char buf[1024];
- 	struct perf_pmu_alias *event;
-@@ -1694,7 +1700,8 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, void *state, pmu_event_callba
- 			info.name = event->name;
- 			buf_used = 0;
- 		} else {
--			info.name = format_alias(buf, sizeof(buf), pmu, event);
-+			info.name = format_alias(buf, sizeof(buf), pmu, event,
-+						 skip_duplicate_pmus);
- 			if (pmu->is_core) {
- 				info.alias = info.name;
- 				info.name = event->name;
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index bae0de3ed7a5..b5c506f35b42 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -212,7 +212,8 @@ bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu);
- bool perf_pmu__auto_merge_stats(const struct perf_pmu *pmu);
- bool perf_pmu__have_event(struct perf_pmu *pmu, const char *name);
- size_t perf_pmu__num_events(struct perf_pmu *pmu);
--int perf_pmu__for_each_event(struct perf_pmu *pmu, void *state, pmu_event_callback cb);
-+int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
-+			     void *state, pmu_event_callback cb);
- bool pmu__name_match(const struct perf_pmu *pmu, const char *pmu_name);
- 
- /**
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index b1f6a64693fe..28909c9a32a1 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -35,7 +35,7 @@ static LIST_HEAD(other_pmus);
- static bool read_sysfs_core_pmus;
- static bool read_sysfs_all_pmus;
- 
--static int pmu_name_len_no_suffix(const char *str, unsigned long *num)
-+int pmu_name_len_no_suffix(const char *str, unsigned long *num)
- {
- 	int orig_len, len;
- 
-@@ -275,6 +275,43 @@ struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu)
- 	return NULL;
- }
- 
-+static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
-+{
-+	bool use_core_pmus = !pmu || pmu->is_core;
-+	int last_pmu_name_len = 0;
-+	const char *last_pmu_name = (pmu && pmu->name) ? pmu->name : "";
-+
-+	if (!pmu) {
-+		pmu_read_sysfs(/*core_only=*/false);
-+		pmu = list_prepare_entry(pmu, &core_pmus, list);
-+	} else
-+		last_pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "", NULL);
-+
-+	if (use_core_pmus) {
-+		list_for_each_entry_continue(pmu, &core_pmus, list) {
-+			int pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "", /*num=*/NULL);
-+
-+			if (last_pmu_name_len == pmu_name_len &&
-+			    !strncmp(last_pmu_name, pmu->name ?: "", pmu_name_len))
-+				continue;
-+
-+			return pmu;
-+		}
-+		pmu = NULL;
-+		pmu = list_prepare_entry(pmu, &other_pmus, list);
-+	}
-+	list_for_each_entry_continue(pmu, &other_pmus, list) {
-+		int pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "", /*num=*/NULL);
-+
-+		if (last_pmu_name_len == pmu_name_len &&
-+		    !strncmp(last_pmu_name, pmu->name ?: "", pmu_name_len))
-+			continue;
-+
-+		return pmu;
-+	}
-+	return NULL;
-+}
-+
- const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str)
- {
- 	struct perf_pmu *pmu = NULL;
-@@ -400,10 +437,17 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
- 	int len;
- 	struct sevent *aliases;
- 	struct events_callback_state state;
-+	bool skip_duplicate_pmus = print_cb->skip_duplicate_pmus(print_state);
-+	struct perf_pmu *(*scan_fn)(struct perf_pmu *);
-+
-+	if (skip_duplicate_pmus)
-+		scan_fn = perf_pmus__scan_skip_duplicates;
-+	else
-+		scan_fn = perf_pmus__scan;
- 
- 	pmu = NULL;
- 	len = 0;
--	while ((pmu = perf_pmus__scan(pmu)) != NULL)
-+	while ((pmu = scan_fn(pmu)) != NULL)
- 		len += perf_pmu__num_events(pmu);
- 
- 	aliases = zalloc(sizeof(struct sevent) * len);
-@@ -417,8 +461,9 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
- 		.aliases_len = len,
- 		.index = 0,
- 	};
--	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
--		perf_pmu__for_each_event(pmu, &state, perf_pmus__print_pmu_events__callback);
-+	while ((pmu = scan_fn(pmu)) != NULL) {
-+		perf_pmu__for_each_event(pmu, skip_duplicate_pmus, &state,
-+					 perf_pmus__print_pmu_events__callback);
- 	}
- 	qsort(aliases, len, sizeof(struct sevent), cmp_sevent);
- 	for (int j = 0; j < len; j++) {
-diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-index a21464432d0f..4c67153ac257 100644
---- a/tools/perf/util/pmus.h
-+++ b/tools/perf/util/pmus.h
-@@ -5,6 +5,8 @@
- struct perf_pmu;
- struct print_callbacks;
- 
-+int pmu_name_len_no_suffix(const char *str, unsigned long *num);
-+
- void perf_pmus__destroy(void);
- 
- struct perf_pmu *perf_pmus__find(const char *name);
-diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-events.h
-index d7fab411e75c..bf4290bef0cd 100644
---- a/tools/perf/util/print-events.h
-+++ b/tools/perf/util/print-events.h
-@@ -26,6 +26,7 @@ struct print_callbacks {
- 			const char *expr,
- 			const char *threshold,
- 			const char *unit);
-+	bool (*skip_duplicate_pmus)(void *print_state);
- };
- 
- /** Print all events, the default when no options are specified. */
-diff --git a/tools/perf/util/s390-sample-raw.c b/tools/perf/util/s390-sample-raw.c
-index dc1ed3e95d4d..115b16edb451 100644
---- a/tools/perf/util/s390-sample-raw.c
-+++ b/tools/perf/util/s390-sample-raw.c
-@@ -171,7 +171,8 @@ static char *get_counter_name(int set, int nr, struct perf_pmu *pmu)
- 	if (!pmu)
- 		return NULL;
- 
--	perf_pmu__for_each_event(pmu, &data, get_counter_name_callback);
-+	perf_pmu__for_each_event(pmu, /*skip_duplicate_pmus=*/ true,
-+				 &data, get_counter_name_callback);
- 	return data.result;
- }
- 
--- 
-2.42.0.rc2.253.gd59a3bf2b4-goog
+Thanks,
+Kan
 
+> 
+>  tools/perf/builtin-list.c         |  8 +++
+>  tools/perf/util/pmu.c             | 17 ++++--
+>  tools/perf/util/pmu.h             |  3 +-
+>  tools/perf/util/pmus.c            | 99 ++++++++++++++++++++++++++++++-
+>  tools/perf/util/pmus.h            |  2 +
+>  tools/perf/util/print-events.h    |  1 +
+>  tools/perf/util/s390-sample-raw.c |  3 +-
+>  7 files changed, 123 insertions(+), 10 deletions(-)
+> 
