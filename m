@@ -2,88 +2,125 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A70EE49A3
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 11:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 028FEC71133
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 13:15:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243273AbjHYL3G (ORCPT
+        id S244973AbjHYNOl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 07:29:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59806 "EHLO
+        Fri, 25 Aug 2023 09:14:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244575AbjHYL2t (ORCPT
+        with ESMTP id S244992AbjHYNOQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 07:28:49 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B31592107
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Aug 2023 04:28:25 -0700 (PDT)
-Received: from loongson.cn (unknown [112.20.109.102])
-        by gateway (Coremail) with SMTP id _____8BxJvFUkOhkr9AbAA--.57248S3;
-        Fri, 25 Aug 2023 19:28:20 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.109.102])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxF81QkOhk0l1jAA--.41739S4;
-        Fri, 25 Aug 2023 19:28:19 +0800 (CST)
-From:   Yanteng Si <siyanteng@loongson.cn>
-To:     acme@kernel.org
-Cc:     Yanteng Si <siyanteng@loongson.cn>, mingo@redhat.com,
-        peterz@infradead.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        chenhuacai@kernel.org, linux-perf-users@vger.kernel.org,
-        loongson-kernel@lists.loongnix.cn, loongarch@lists.linux.dev
-Subject: [PATCH v2 2/3] perf/trace: Fix mmap_flags for archs use generic mman.h
-Date:   Fri, 25 Aug 2023 19:28:03 +0800
-Message-Id: <42e8e3565d6035302907426c1e65483b2a4007f5.1692962043.git.siyanteng@loongson.cn>
-X-Mailer: git-send-email 2.31.4
-In-Reply-To: <cover.1692962043.git.siyanteng@loongson.cn>
-References: <cover.1692962043.git.siyanteng@loongson.cn>
+        Fri, 25 Aug 2023 09:14:16 -0400
+Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4454F1FFA
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Aug 2023 06:14:14 -0700 (PDT)
+Received: by mail-qt1-x82e.google.com with SMTP id d75a77b69052e-40c72caec5cso270771cf.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Aug 2023 06:14:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1692969253; x=1693574053; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e30ygpUnem0hnNXEifSCeb6KdAoBljm9WluqG1YNW+c=;
+        b=gOLCH/Lb00Mz/K9+MfGJuQI+gpTU/aXIcKyNJKEZRfJzEDN6z7Fjm/ZJJbJ3YFJf06
+         eEZ9ldF7S/Icc5bzc0VKBYNbeU2Kclv78vSvHcQuMOjlEpzLqHoZr0NZMr5ruim/O7ku
+         f/mAQ3KVcAv0X5g5UnawPC8HzBWAd9UaNmawz9AGlKCY7gPyLCEx+SvCVrh1lrTnmjzs
+         548i5lqvLT7ftR1D1YkWUYT1TM0sdZ+nGgApO2nZWlaQ4yTyT5Z6APgHjuH3kPXYbpgm
+         Cv4dERMbuC8XRr9opa0AA9JSfZYChbs/LgwDRIs3ry7dxIfK/yEXE89nkHKxoR4vXEAL
+         3Zjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692969253; x=1693574053;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e30ygpUnem0hnNXEifSCeb6KdAoBljm9WluqG1YNW+c=;
+        b=XJ+6BhwpnyaM8YAuu8GAqsw6dT04c7lthLwqFgUBBsaFeOrhzB0RGJjlbOQ4ea9Xg+
+         gktkndOoAJF1jbNOIwyycYODIm9t/vZPo8vdgnqdFiev3Xv9dks06FmvuqmhLOnYVlfW
+         tBehUTxWijVRFQCJS0tiNboblWLCg1C5EqJR/MS1eELNnlGxRlK4ZhUum5vyEeOszOGA
+         7fkVUzbvbvNDBoZqJwYy6sG/O5abZyB5vAPEyQPDLD0oQKKblufI8iLpmz7pVEZSNakR
+         vkJWkaQuTD0Tz+4SFd0nffLvnJCAocOlqWaEfXeVotsHtPufbPmRjtjEAxrLz1LE+F8W
+         nX/A==
+X-Gm-Message-State: AOJu0YxsxtrKNY9JN20CVS9tfXkl3lwyKpW6Fj7jg//qgLdaX7hasDDH
+        t+/m5edLGVXFpiI2txLYqO/m0SYwTs2UWDRUykj9ZA==
+X-Google-Smtp-Source: AGHT+IH+VlhSr/7ethdftBz4x+JgfAMJPFqEn9CO5of2hOfCYJWtOCDujhaXCutycQfctL9dyoDM5xODuPjY8K50w8s=
+X-Received: by 2002:ac8:7f96:0:b0:3f8:5b2:aef0 with SMTP id
+ z22-20020ac87f96000000b003f805b2aef0mr295265qtj.24.1692969253167; Fri, 25 Aug
+ 2023 06:14:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8CxF81QkOhk0l1jAA--.41739S4
-X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7GrW8urW5JrWDCF43XFW8GrX_yoWDuFX_K3
-        y29w10k345Jry2yF43u3s8Cw1kXan8AF93tr18Kw18Ary8XF18W3y7Aas7Ar15K34YgFn7
-        WF1fJr4DAwsxJosvyTuYvTs0mTUanT9S1TB71UUUUb7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-        s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-        cSsGvfJTRUUUbfkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-        vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-        w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-        WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-        GcCE3s1ln4kS14v26r1q6r43M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-        x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
-        McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-        1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-        Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-        AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-        cVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI
-        8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v2
-        6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUstxhDUUUU
+References: <20230824041330.266337-1-irogers@google.com> <20230824041330.266337-7-irogers@google.com>
+ <ZOdiX4eJHFfFbQhi@kernel.org> <428afeb4-d5ca-8115-73fc-881119a1cd51@linux.ibm.com>
+In-Reply-To: <428afeb4-d5ca-8115-73fc-881119a1cd51@linux.ibm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 25 Aug 2023 06:14:01 -0700
+Message-ID: <CAP-5=fVt1vxK0CJ=aYjZzs4mushbxAx8056uxVQZUfsLAKpVoQ@mail.gmail.com>
+Subject: Re: [PATCH v2 06/18] perf s390 s390_cpumcfdg_dump: Don't scan all PMUs
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Rob Herring <robh@kernel.org>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Silence this warning:
+On Fri, Aug 25, 2023 at 1:20=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
+om> wrote:
+>
+> On 8/24/23 15:59, Arnaldo Carvalho de Melo wrote:
+> > Em Wed, Aug 23, 2023 at 09:13:18PM -0700, Ian Rogers escreveu:
+> >> Rather than scanning all PMUs for a counter name, scan the PMU
+> >> associated with the evsel of the sample. This is done to remove a
+> >> dependence on pmu-events.h.
+> >
+> > I'm applying this one, and CCing the S/390 developers so that they can
+> > try this and maybe provide an Acked-by/Tested-by,
+> >
+> > - Arnaldo
+>
+>
+> Arnaldo,
+>
+> I have downloaded this patch set of 18 patches (using b4), but they do no=
+t
+> apply on my git tree.
+>
+> Which git branch do I have to use to test this. Thanks a lot.
 
-grep: /root/linux-next/tools/arch/xxxxx/include/uapi/asm//mman.h:
-No such file or directory
+Hi Thomas,
 
-Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
----
- tools/perf/trace/beauty/mmap_flags.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+the changes are in the perf-tools-next tree:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/
 
-diff --git a/tools/perf/trace/beauty/mmap_flags.sh b/tools/perf/trace/beauty/mmap_flags.sh
-index 3022597c8c17..d035b29fc5ec 100755
---- a/tools/perf/trace/beauty/mmap_flags.sh
-+++ b/tools/perf/trace/beauty/mmap_flags.sh
-@@ -19,7 +19,7 @@ arch_mman=${arch_header_dir}/mman.h
- 
- printf "static const char *mmap_flags[] = {\n"
- regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
--grep -E -q $regex ${arch_mman} && \
-+([ -f ${arch_mman} ] && grep -E -q $regex ${arch_mman}) && \
- (grep -E $regex ${arch_mman} | \
- 	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
- 	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef MAP_%s\n#define MAP_%s %s\n#endif\n")
--- 
-2.31.4
+Thanks,
+Ian
 
+> --
+> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, German=
+y
+> --
+> Vorsitzender des Aufsichtsrats: Gregor Pillen
+> Gesch=C3=A4ftsf=C3=BChrung: David Faller
+> Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht Stut=
+tgart, HRB 243294
+>
