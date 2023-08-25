@@ -2,152 +2,153 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4337C7EE2C
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 14:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF94C3DA66
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 15:26:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232011AbjHYOwA (ORCPT
+        id S238649AbjHYP0E (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 10:52:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46052 "EHLO
+        Fri, 25 Aug 2023 11:26:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343875AbjHYOvz (ORCPT
+        with ESMTP id S236050AbjHYP0B (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 10:51:55 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0EB9211E;
-        Fri, 25 Aug 2023 07:51:53 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7FCBC63735;
-        Fri, 25 Aug 2023 14:51:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B30C3C433C8;
-        Fri, 25 Aug 2023 14:51:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692975112;
-        bh=oDUKt2y776qkY7mlL5afAMt5eHtx+3g2kNGFrLjZHX4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IH1R55785YKVlrPnoaLltrfwFj5/1XNZaTHxlW0Whd/p1vItVd0Azr/nc4PMPHYtl
-         YFW4hz6C12e/y7pHSEaj4/rfVSKjUSf8b3ZfilAgKl7EX/57a9j4sk50NZn2sZ+31u
-         aF1vH5xd7hEfykIeQPRdeCQ4j3rOQVQ7E62FA4m3uYsAIVsYSPCqxGKl1AQ5CLLXO5
-         LDULB44z6irTmwDQ14VAuONjWwzJOFIEmvmhtORqyKRV+MO21S9Lvu213nFkCRgbYs
-         GKerhKEbLWLVd3uNQ6ectj25YrTVB2gMUIdFfb9SQ3Fvkbfx2T+obvOka1dZ76Qg4f
-         0CKVDeimIXC+Q==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C5AEC40722; Fri, 25 Aug 2023 11:51:49 -0300 (-03)
-Date:   Fri, 25 Aug 2023 11:51:49 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Fri, 25 Aug 2023 11:26:01 -0400
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1518D2134;
+        Fri, 25 Aug 2023 08:25:56 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-68a41031768so910476b3a.3;
+        Fri, 25 Aug 2023 08:25:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692977155; x=1693581955;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=uVEm7+1ZpaZQWr2bgHUfzl7YJu5UdkQlkIaC2+5AOr8=;
+        b=V2DAPtAP2YiMNmhoRB+6Fgu1VyiBnOg4q6HEPh14rBH713VmOtwSXEyVizcBsF1rev
+         mQ+rcwCv1OWamUtlrGjejVcHcQSLfb5vOCCtnKN25yJO8Cafgl6rIrNOnrFLlVVTvyvn
+         vddOxwcGfC+wxN5m5sRnIB3YA0H7tIEamEx4OJNIi1pai7E+Immiwhmi2uEUNirnAqlc
+         7prBfuHnB/+QyFEZDEKskQtf7cdYY4AmqFazJS+Gd/fN+EmTThNuTpwn4QdJ8Z5VWApy
+         QxkGNt6pTxNU8D654krE+z9MnaWWHvWG9zjvj1S+ePxvhZtNGWmqe7QUnxZa+yKtrGnk
+         8zOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692977155; x=1693581955;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uVEm7+1ZpaZQWr2bgHUfzl7YJu5UdkQlkIaC2+5AOr8=;
+        b=kIUGsoZiZkjT2a/eQC+hh2RsbVg6EqAS2brNFft+6RivVeJTA7g0804WJ6h7nHDJR6
+         PKJHSecn2TEawgg6H8DD6bgeQV6+inAN48b6BCEIHTG2AhnTXaoxpW3EocJRgcWFAXB2
+         c6Ldj5zYbiVAG52wiP5TC9Lgl7j6dYUdUUIUgzNFkSqYr90BrDZRYOREu26AAhGtL1dg
+         WRoHuNpUNBp8vSeGfs2mOvnb5yD06JbomyivtM6Kd7WieY7D8ldIjSxdWgSE11UzBSJ0
+         YvkWNkI6WAfRYNc3ly+FOgovLvfydu+BCBAo8gzxz1LmNvb318yOW/j2IVzUDE8uQiBr
+         3aWw==
+X-Gm-Message-State: AOJu0Yz8go98u/fwJsKDFgeCmqqXhFw70LFxW/vKp23jQnBsCiky8qZK
+        TZpfwJ+pBv5fWj7RS3cpYIgQcHjpJjU=
+X-Google-Smtp-Source: AGHT+IFTwQdNWRKUjc71WQe+NJ9LOhjD2xkoouMwBYmnuTBgPYuTt0QiSCrXMTk5TqjbWufUpqfykA==
+X-Received: by 2002:a05:6a20:3d81:b0:148:658a:a73d with SMTP id s1-20020a056a203d8100b00148658aa73dmr20056039pzi.5.1692977155329;
+        Fri, 25 Aug 2023 08:25:55 -0700 (PDT)
+Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:a7ba:1788:3b00:4316])
+        by smtp.gmail.com with ESMTPSA id y1-20020aa78541000000b006879493aca0sm1701748pfn.26.2023.08.25.08.25.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Aug 2023 08:25:54 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] perf pmus: Sort pmus by name then suffix
-Message-ID: <ZOjABa9ZfQgra/UX@kernel.org>
-References: <20230825135237.921058-1-irogers@google.com>
- <20230825135237.921058-2-irogers@google.com>
- <ZOi/KDRRrnkvJmkB@kernel.org>
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, stable@vger.kernel.org,
+        Tom Zanussi <zanussi@kernel.org>
+Subject: [PATCH v2 1/4] perf tools: Handle old data in PERF_RECORD_ATTR
+Date:   Fri, 25 Aug 2023 08:25:49 -0700
+Message-ID: <20230825152552.112913-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.42.0.rc1.204.g551eb34607-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZOi/KDRRrnkvJmkB@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Aug 25, 2023 at 11:48:08AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Fri, Aug 25, 2023 at 06:52:36AM -0700, Ian Rogers escreveu:
-> > Sort PMUs by name. If two PMUs have the same name but differ by
-> > suffix, sort the suffixes numerically. For example, "breakpoint" comes
-> > before "cpu", "uncore_imc_free_running_0" comes before
-> > "uncore_imc_free_running_1". Suffixes need to be treated specially as
-> > otherwise they will be ordered like 0, 1, 10, 11, .., 2, 20, 21, ..,
-> > etc. Only PMUs starting 'uncore_' are considered to have a potential
-> > suffix.
-> > 
-> > Sorting of PMUs is done so that later patches can skip duplicate
-> > uncore PMUs that differ only by there suffix.
-> > 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/pmus.c | 48 ++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 48 insertions(+)
-> > 
-> > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> > index 4dd5912617ff..b1f6a64693fe 100644
-> > --- a/tools/perf/util/pmus.c
-> > +++ b/tools/perf/util/pmus.c
-> > @@ -1,8 +1,10 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >  #include <linux/list.h>
-> > +#include <linux/list_sort.h>
-> >  #include <linux/zalloc.h>
-> >  #include <subcmd/pager.h>
-> >  #include <sys/types.h>
-> > +#include <ctype.h>
-> >  #include <dirent.h>
-> >  #include <pthread.h>
-> >  #include <string.h>
-> > @@ -33,6 +35,31 @@ static LIST_HEAD(other_pmus);
-> >  static bool read_sysfs_core_pmus;
-> >  static bool read_sysfs_all_pmus;
-> >  
-> > +static int pmu_name_len_no_suffix(const char *str, unsigned long *num)
-> > +{
-> > +	int orig_len, len;
-> > +
-> > +	orig_len = len = strlen(str);
-> > +
-> > +	/* Non-uncore PMUs have their full length, for example, i915. */
-> > +	if (strncmp(str, "uncore_", 7))
-> > +		return len;
-> 
-> I applied the patch, but we have strstarts() for this case, to avoid
-> having to count the size of the prefix in tools/include/linux/string.h,
-> that we copied from the kernel sources:
-> 
-> /**
->  * strstarts - does @str start with @prefix?
->  * @str: string to examine
->  * @prefix: prefix to look for.
->  */
-> static inline bool strstarts(const char *str, const char *prefix)
-> {
->         return strncmp(str, prefix, strlen(prefix)) == 0;
-> }
-> 
-> I'll change it, ok?
+The PERF_RECORD_ATTR is used for a pipe mode to describe an event with
+attribute and IDs.  The ID table comes after the attr and it calculate
+size of the table using the total record size and the attr size.
 
-This:
+  n_ids = (total_record_size - end_of_the_attr_field) / sizeof(u64)
 
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index b1f6a64693fe0d49..bbf84ccc3aba7d5c 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/list.h>
- #include <linux/list_sort.h>
-+#include <linux/string.h>
- #include <linux/zalloc.h>
- #include <subcmd/pager.h>
- #include <sys/types.h>
-@@ -42,7 +43,7 @@ static int pmu_name_len_no_suffix(const char *str, unsigned long *num)
- 	orig_len = len = strlen(str);
+This is fine for most use cases, but sometimes it saves the pipe output
+in a file and then process it later.  And it becomes a problem if there
+is a change in attr size between the record and report.
+
+  $ perf record -o- > perf-pipe.data  # old version
+  $ perf report -i- < perf-pipe.data  # new version
+
+For example, if the attr size is 128 and it has 4 IDs, then it would
+save them in 168 byte like below:
+
+   8 byte: perf event header { .type = PERF_RECORD_ATTR, .size = 168 },
+ 128 byte: perf event attr { .size = 128, ... },
+  32 byte: event IDs [] = { 1234, 1235, 1236, 1237 },
+
+But when report later, it thinks the attr size is 136 then it only read
+the last 3 entries as ID.
+
+   8 byte: perf event header { .type = PERF_RECORD_ATTR, .size = 168 },
+ 136 byte: perf event attr { .size = 136, ... },
+  24 byte: event IDs [] = { 1235, 1236, 1237 },  // 1234 is missing
+
+So it should use the recorded version of the attr.  The attr has the
+size field already then it should honor the size when reading data.
+
+Fixes: 2c46dbb517a10 ("perf: Convert perf header attrs into attr events")
+Cc: stable@vger.kernel.org
+Cc: Tom Zanussi <zanussi@kernel.org>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+Keep this version before the libperf change so that it can go through
+the stable versions.
+
+ tools/perf/util/header.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 52fbf526fe74..f89321cbfdee 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -4381,7 +4381,8 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
+ 			     union perf_event *event,
+ 			     struct evlist **pevlist)
+ {
+-	u32 i, ids, n_ids;
++	u32 i, n_ids;
++	u64 *ids;
+ 	struct evsel *evsel;
+ 	struct evlist *evlist = *pevlist;
  
- 	/* Non-uncore PMUs have their full length, for example, i915. */
--	if (strncmp(str, "uncore_", 7))
-+	if (!strstarts(str, "uncore_"))
- 		return len;
+@@ -4397,9 +4398,8 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
  
+ 	evlist__add(evlist, evsel);
+ 
+-	ids = event->header.size;
+-	ids -= (void *)&event->attr.id - (void *)event;
+-	n_ids = ids / sizeof(u64);
++	n_ids = event->header.size - sizeof(event->header) - event->attr.attr.size;
++	n_ids = n_ids / sizeof(u64);
  	/*
+ 	 * We don't have the cpu and thread maps on the header, so
+ 	 * for allocating the perf_sample_id table we fake 1 cpu and
+@@ -4408,8 +4408,9 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
+ 	if (perf_evsel__alloc_id(&evsel->core, 1, n_ids))
+ 		return -ENOMEM;
+ 
++	ids = (void *)&event->attr.attr + event->attr.attr.size;
+ 	for (i = 0; i < n_ids; i++) {
+-		perf_evlist__id_add(&evlist->core, &evsel->core, 0, i, event->attr.id[i]);
++		perf_evlist__id_add(&evlist->core, &evsel->core, 0, i, ids[i]);
+ 	}
+ 
+ 	return 0;
+-- 
+2.42.0.rc1.204.g551eb34607-goog
+
