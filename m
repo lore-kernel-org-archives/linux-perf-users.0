@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A588C3DA6F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 04:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0DEEE49A0
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 04:28:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236376AbjHYEQd (ORCPT
+        id S239419AbjHYE15 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 00:16:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46900 "EHLO
+        Fri, 25 Aug 2023 00:27:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238620AbjHYEQX (ORCPT
+        with ESMTP id S237162AbjHYE1e (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 00:16:23 -0400
-Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A97BA1FCE
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 21:16:21 -0700 (PDT)
-Received: by mail-qt1-x82a.google.com with SMTP id d75a77b69052e-407db3e9669so92451cf.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 21:16:21 -0700 (PDT)
+        Fri, 25 Aug 2023 00:27:34 -0400
+Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B0351FEB
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 21:27:32 -0700 (PDT)
+Received: by mail-il1-x12a.google.com with SMTP id e9e14a558f8ab-34bae839382so79775ab.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Aug 2023 21:27:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692936981; x=1693541781; darn=vger.kernel.org;
+        d=google.com; s=20221208; t=1692937651; x=1693542451; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hVJbwQJBz4fIhry+uL3sWXjwZFHZzrz63eCkxNfFeEg=;
-        b=e8bFzWmHf03M8HfSss8etDZ5SiePii+NFvLIl/lE9evGbFW/46KxPFfFpi/FKdXf9L
-         yG762qPEjASMfACqfYr74KkKfa3t5g2yrDljs6Yx2Fxff+xMQNBUlQe5In5+iO41SyrK
-         BZttaQpdEcjQaO7vLbpvsLyHj4fY9cO+veeZnzJeCnRWU68uSyWIGaPWS8PVBq8IFjV9
-         bY7RkHKJpC3k1g0GS372fbNpChD3Z4RF8bwawqTPCeYLsAS7pwUcgofErPQpGqYG8y5v
-         wINjKPyclsLFkBVb7rfIgzYpl7B3VcQR46j35HBTItzLgRFWAPrZ65A/A9APfuFCImBE
-         V0pA==
+        bh=6ECeZvJgWFqtvuD7lpXIBJzl5ySRLWKUmXwSQbbS8+U=;
+        b=CTKbdpKutG2ZtFvieJDjMh/qF+j9+oMKWYoFKNHfNCWNUYf9xKuvYv5vUWNuvmK7n+
+         488Twg616fT0l1WsmEGMUbHKeIQNXofmFP9k0W/n2wnEnn2onJ5AkjTT3wjBK5076JdN
+         LA1BK+A6fsuOMT/nda3HYH1V148TE4Mg4w47v0ZSj7SDkNwPyoJBxn21psMwMoA14Ic2
+         JEf16THyEGt33cVjmMdnBPb9z0q1pwOBP9wbhnps83eiaNYRMVzooWoSzHPNbHK2iX5F
+         16r5cx7q/GnVIpCBCAjYuCcvWWaNBcNzQgxArp2oN7TvB25qCkUIHCq2Gz4o57ikfCXe
+         Vd+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692936981; x=1693541781;
+        d=1e100.net; s=20221208; t=1692937651; x=1693542451;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hVJbwQJBz4fIhry+uL3sWXjwZFHZzrz63eCkxNfFeEg=;
-        b=bv6DbYzs+SO7eSI2H7GW6tsatEp7F7oS7hFml22bPzeiltn+TQ9JEMYZ/WIlmFidHL
-         AmoM+yfF7G52RVpZepvFObIH54TyQbKF/XyH/oCEuGB/OwgUF34gK6lMwNkc4JqX888K
-         xFj46fSaoo211Z1Ywt9ssA5GVERTzFOPJNBvMIv32BkdR5QnIyuQ7dRticIfuyfubOw5
-         kyhB6DZLxb9LeMFy5HSXS0BeNtdoWarLfN0mxx/aYTzTcYSCdbfa3rEIZewnEzOpNGm4
-         z/VZ8xmSXUX2Bcs1uAHvgItEc+4nuk004I8ml0CZJ2s9kcOLgQfGdfvnPQ25Ntwfh/JX
-         f+qw==
-X-Gm-Message-State: AOJu0YwSe+kyY2g7eNrDXFdl8eIyNLNH0DHaJyWpJdgJwz+OIua3U2FZ
-        r6oo7nbmDcyn+Mvq8QmrRQRi4GxTMZ59ZvSsRCX+ZQ==
-X-Google-Smtp-Source: AGHT+IE4V9Zc0SlNJEupRrn3MM6gX37NNqqjFDP7/Okcsn/QLAbipTiG1YcB7O1zkePViZ7vLYLb42kmb7ZQe197c/k=
-X-Received: by 2002:ac8:5a11:0:b0:3f6:97b4:1a4d with SMTP id
- n17-20020ac85a11000000b003f697b41a4dmr92615qta.23.1692936980740; Thu, 24 Aug
- 2023 21:16:20 -0700 (PDT)
+        bh=6ECeZvJgWFqtvuD7lpXIBJzl5ySRLWKUmXwSQbbS8+U=;
+        b=LdA8NJhAAJ6tZ2ABnmWUBL2QiPsd8ZzC//bV2PwsPyC1zee5UAvJ5R80vE/37oPpQ/
+         nD7bYhE45ZnLQ/XKInhxwy/iOyIDvLvgeWme5xPbVD7utY0qu3NSCUX2mK8peb85IAh1
+         r9LcDTzjU348VaFU4l8d0tY6kqkEm4bHmGeOX8C6OPRZ4A6MHvj+uokex+nPmEucBCJS
+         ThTLCSGfK26IQodrKOUoVoSph+UPANYzZ28pF+aRUSJuuMHWDJ84ldZT1zeb/yr/ZSa0
+         Me42w0TtpaOhuVpu+LUrBoHVFrDvGdO9J6xVdeR88Uw7nVbebK1WK8gxJlNJxm/uNllZ
+         037Q==
+X-Gm-Message-State: AOJu0YzX2SgoHlE/wVb2w1km5SaTsKN2iLblYPLskNI6PqVhrqbPBONc
+        nFzlEZeDu3eF2Ii3vPjUUvrcaQdv+uVYVtQRbgDQkQ==
+X-Google-Smtp-Source: AGHT+IFv/SzSk0p4koyu2JQ/XSi3hHVcudbdNIEaHl1uPsRmsmpaKPExCbP18OxKVldfw6PlA9l4VHrQF+Il/84PT/A=
+X-Received: by 2002:a05:6e02:1a0b:b0:348:f9a8:19d4 with SMTP id
+ s11-20020a056e021a0b00b00348f9a819d4mr88953ild.29.1692937651400; Thu, 24 Aug
+ 2023 21:27:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <1692606977-92009-1-git-send-email-renyu.zj@linux.alibaba.com> <1692606977-92009-3-git-send-email-renyu.zj@linux.alibaba.com>
-In-Reply-To: <1692606977-92009-3-git-send-email-renyu.zj@linux.alibaba.com>
+References: <1692606977-92009-1-git-send-email-renyu.zj@linux.alibaba.com> <1692606977-92009-6-git-send-email-renyu.zj@linux.alibaba.com>
+In-Reply-To: <1692606977-92009-6-git-send-email-renyu.zj@linux.alibaba.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 24 Aug 2023 21:16:08 -0700
-Message-ID: <CAP-5=fXnZq=5W7pzTcukRbQANF8VoW7rnz312JG09Wtk1tR1WQ@mail.gmail.com>
-Subject: Re: [PATCH v7 2/8] perf metric: "Compat" supports matching multiple identifiers
+Date:   Thu, 24 Aug 2023 21:27:19 -0700
+Message-ID: <CAP-5=fVfc1RQO_OnSFAU4rtKfSTiWpS5PghovFjuPxruty19LQ@mail.gmail.com>
+Subject: Re: [PATCH v7 5/8] perf test: Make matching_pmu effective
 To:     Jing Zhang <renyu.zj@linux.alibaba.com>
 Cc:     John Garry <john.g.garry@oracle.com>,
         Will Deacon <will@kernel.org>,
@@ -82,45 +82,64 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 On Mon, Aug 21, 2023 at 1:36=E2=80=AFAM Jing Zhang <renyu.zj@linux.alibaba.=
 com> wrote:
 >
-> The jevent "Compat" is used for uncore PMU alias or metric definitions.
->
-> The same PMU driver has different PMU identifiers due to different
-> hardware versions and types, but they may have some common PMU metric.
-> Since a Compat value can only match one identifier, when adding the
-> same metric to PMUs with different identifiers, each identifier needs
-> to be defined once, which is not streamlined enough.
->
-> So let "Compat" supports matching multiple identifiers for uncore PMU
-> metric.
->
-> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
-> Reviewed-by: John Garry <john.g.garry@oracle.com>
+> The perf_pmu_test_event.matching_pmu didn't work. No matter what its
+> value is, it does not affect the test results. So let matching_pmu be
+> used for matching perf_pmu_test_pmu.pmu.name.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Could you rebase this onto the latest perf-tools-next, I'd like to test thi=
+s.
 
 Thanks,
 Ian
 
+> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+> Reviewed-by: John Garry <john.g.garry@oracle.com>
 > ---
->  tools/perf/util/metricgroup.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  tools/perf/tests/pmu-events.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 >
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
+> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.=
 c
-> index 5e9c657..ff81bc5 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -477,7 +477,7 @@ static int metricgroup__sys_event_iter(const struct p=
-mu_metric *pm,
+> index 1dff863b..3204252 100644
+> --- a/tools/perf/tests/pmu-events.c
+> +++ b/tools/perf/tests/pmu-events.c
+> @@ -238,7 +238,7 @@ struct perf_pmu_test_pmu {
+>         },
+>         .alias_str =3D "event=3D0x2b",
+>         .alias_long_desc =3D "ddr write-cycles event. Unit: uncore_sys_dd=
+r_pmu ",
+> -       .matching_pmu =3D "uncore_sys_ddr_pmu",
+> +       .matching_pmu =3D "uncore_sys_ddr_pmu0",
+>  };
 >
->         while ((pmu =3D perf_pmu__scan(pmu))) {
+>  static const struct perf_pmu_test_event sys_ccn_pmu_read_cycles =3D {
+> @@ -252,7 +252,7 @@ struct perf_pmu_test_pmu {
+>         },
+>         .alias_str =3D "config=3D0x2c",
+>         .alias_long_desc =3D "ccn read-cycles event. Unit: uncore_sys_ccn=
+_pmu ",
+> -       .matching_pmu =3D "uncore_sys_ccn_pmu",
+> +       .matching_pmu =3D "uncore_sys_ccn_pmu4",
+>  };
 >
-> -               if (!pmu->id || strcmp(pmu->id, pm->compat))
-> +               if (!pmu->id || !pmu_uncore_identifier_match(pmu->id, pm-=
->compat))
->                         continue;
+>  static const struct perf_pmu_test_event *sys_events[] =3D {
+> @@ -599,6 +599,11 @@ static int __test_uncore_pmu_event_aliases(struct pe=
+rf_pmu_test_pmu *test_pmu)
+>                         struct pmu_event const *event =3D &test_event->ev=
+ent;
 >
->                 return d->fn(pm, table, d->data);
+>                         if (!strcmp(event->name, alias->name)) {
+> +                               if (strcmp(pmu_name, test_event->matching=
+_pmu)) {
+> +                                       pr_debug("testing aliases uncore =
+PMU %s: mismatched matching_pmu, %s vs %s\n",
+> +                                                       pmu_name, test_ev=
+ent->matching_pmu, pmu_name);
+> +                                       continue;
+> +                               }
+>                                 if (compare_alias_to_test_event(alias,
+>                                                         test_event,
+>                                                         pmu_name)) {
 > --
 > 1.8.3.1
 >
