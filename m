@@ -2,191 +2,129 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACFEC71133
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 14:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E726C7EE2C
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 14:47:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343822AbjHYOkH (ORCPT
+        id S231326AbjHYOqe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 10:40:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58804 "EHLO
+        Fri, 25 Aug 2023 10:46:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343819AbjHYOjg (ORCPT
+        with ESMTP id S240257AbjHYOq0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 10:39:36 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C67FEC;
-        Fri, 25 Aug 2023 07:39:34 -0700 (PDT)
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37PEbgfJ010282;
-        Fri, 25 Aug 2023 14:39:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=6+7zABpXZX1TgJmmvsZ0KlkGB5sbzJTpSi9a6XkCODQ=;
- b=Udoza3nnUvKRvWwBzNxV81JIFZfZeYItWDqJhR+et3Dd50A8pxYGjlFJHXvUl/WnTHpZ
- PSdgPX5HcR2GVCBhC8XDTyuRjr8yPHj8LnKndLETewcf4jbsbVwc9GAumgBLDtblkn8+
- GWVlCDj9WsxqXSpZKed84Hes56JpVFwmj96WcAG6DB+Opq7t2CvfrdhOOD7eXo0cB1qn
- 2eFPW7c3qXVo7wy0AmAfZAbqgB2FfO50yAVUtALCJMqH6w0AEb8rSYCBQ721wK7sRhKP
- /qlLITdDJiWXlQw4Wp/FvDbhVKkGpPHyqOO7G54jdo1oMwr1j+kY/yQ0hlz7itlzr3+o yg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3spx2sg4vs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Aug 2023 14:39:28 +0000
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37PEdBKO015511;
-        Fri, 25 Aug 2023 14:39:28 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3spx2sg4vd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Aug 2023 14:39:28 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-        by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37PD2CLR004047;
-        Fri, 25 Aug 2023 14:39:27 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-        by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3sn21s086k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Aug 2023 14:39:26 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37PEdN7X32637400
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Aug 2023 14:39:23 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B954B20040;
-        Fri, 25 Aug 2023 14:39:23 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2B45A2004D;
-        Fri, 25 Aug 2023 14:39:23 +0000 (GMT)
-Received: from [9.171.39.59] (unknown [9.171.39.59])
-        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Fri, 25 Aug 2023 14:39:23 +0000 (GMT)
-Message-ID: <4f2438fc-2360-8833-3751-fe3bc8b11afb@linux.ibm.com>
-Date:   Fri, 25 Aug 2023 16:39:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2 06/18] perf s390 s390_cpumcfdg_dump: Don't scan all
- PMUs
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
+        Fri, 25 Aug 2023 10:46:26 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D4CA2109;
+        Fri, 25 Aug 2023 07:46:24 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2A5A0622A2;
+        Fri, 25 Aug 2023 14:46:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 533A5C433C8;
+        Fri, 25 Aug 2023 14:46:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692974783;
+        bh=RId/5/iXShBVctnrrr6Y2T9OzHSw2h2nMjzM8MonGHU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=htCCQYUD30K7SwzsDohB/EpP+awpuWjKtGzxStaBNcvt7J8XtL7wKMOOVOv9aufd5
+         GeA9ROiqIhgOE/izPFtjmKdO1eVsL0V4xzrnrVoqcdaMH3fw2eYJj5dXxBD+RqpfHY
+         4/cFON8CIvDNd18NAHZYMXtP66R1eyaJpLm2v4xZjFkojNbUtRnijtYZNOprkDaNBL
+         txEcPfupPcz3MEaNF0BiSAgbYM1aFMKMP73/RVjIt7HRa6F46cFuMN5ofQOfJwIlXX
+         +h2n4SYTRxEJK6+Zcg07VF7+Kf4rb1pDiPkrOrLvj1TqgN6g98mcFDCwVvgRg5zb8L
+         +XfOgMU+ZSufg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 516C140722; Fri, 25 Aug 2023 11:46:20 -0300 (-03)
+Date:   Fri, 25 Aug 2023 11:46:20 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        James Clark <james.clark@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.g.garry@oracle.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230824041330.266337-1-irogers@google.com>
- <20230824041330.266337-7-irogers@google.com> <ZOdiX4eJHFfFbQhi@kernel.org>
- <428afeb4-d5ca-8115-73fc-881119a1cd51@linux.ibm.com>
- <CAP-5=fVt1vxK0CJ=aYjZzs4mushbxAx8056uxVQZUfsLAKpVoQ@mail.gmail.com>
-From:   Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <CAP-5=fVt1vxK0CJ=aYjZzs4mushbxAx8056uxVQZUfsLAKpVoQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: wLyzL3BFUfWzBQhcyFxlrYCLGx5RC_YQ
-X-Proofpoint-GUID: Ifn6l6nB2jwwUsk2YRLRK7stbpmKonJt
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+Subject: Re: [PATCH v5 0/2] perf list: Remove duplicate PMUs
+Message-ID: <ZOi+vNhyUd5oduBQ@kernel.org>
+References: <20230825135237.921058-1-irogers@google.com>
+ <166e2aad-5e17-3ffa-b140-05f174583ab2@linux.intel.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-08-25_13,2023-08-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 clxscore=1015 phishscore=0 mlxlogscore=999 bulkscore=0
- suspectscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2308250129
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <166e2aad-5e17-3ffa-b140-05f174583ab2@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 8/25/23 15:14, Ian Rogers wrote:
-> On Fri, Aug 25, 2023 at 1:20 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
->>
->> On 8/24/23 15:59, Arnaldo Carvalho de Melo wrote:
->>> Em Wed, Aug 23, 2023 at 09:13:18PM -0700, Ian Rogers escreveu:
->>>> Rather than scanning all PMUs for a counter name, scan the PMU
->>>> associated with the evsel of the sample. This is done to remove a
->>>> dependence on pmu-events.h.
->>>
->>> I'm applying this one, and CCing the S/390 developers so that they can
->>> try this and maybe provide an Acked-by/Tested-by,
->>>
->>> - Arnaldo
->>
->>
->> Arnaldo,
->>
->> I have downloaded this patch set of 18 patches (using b4), but they do not
->> apply on my git tree.
->>
->> Which git branch do I have to use to test this. Thanks a lot.
+Em Fri, Aug 25, 2023 at 10:05:46AM -0400, Liang, Kan escreveu:
+> On 2023-08-25 9:52 a.m., Ian Rogers wrote:
+> > When there are multiple PMUs, differing by ordered suffixes, by
+> > default only display one. This avoids repeated listing of events, in
+> > particular when there are 10s of uncore PMUs. If "-v" is passed to
+> > "perf list" then still list all PMUs.
+> > 
+> > Listing fewer PMU/event combinations helps speed the all PMU event
+> > tests.
+> > 
+> > Before:
+> > ```
+> > $ perf list
+> > ...
+> >   uncore_imc_free_running_0/data_read/               [Kernel PMU event]
+> >   uncore_imc_free_running_0/data_total/              [Kernel PMU event]
+> >   uncore_imc_free_running_0/data_write/              [Kernel PMU event]
+> >   uncore_imc_free_running_1/data_read/               [Kernel PMU event]
+> >   uncore_imc_free_running_1/data_total/              [Kernel PMU event]
+> >   uncore_imc_free_running_1/data_write/              [Kernel PMU event]
+> > ```
+> > 
+> > After:
+> > ```
+> > $ perf list
+> > ...
+> >   uncore_imc_free_running/data_read/                 [Kernel PMU event]
+> >   uncore_imc_free_running/data_total/                [Kernel PMU event]
+> >   uncore_imc_free_running/data_write/                [Kernel PMU event]
+> > ...
+> > $ perf list -v
+> > ...
+> >   uncore_imc_free_running_0/data_read/               [Kernel PMU event]
+> >   uncore_imc_free_running_0/data_total/              [Kernel PMU event]
+> >   uncore_imc_free_running_0/data_write/              [Kernel PMU event]
+> >   uncore_imc_free_running_1/data_read/               [Kernel PMU event]
+> >   uncore_imc_free_running_1/data_total/              [Kernel PMU event]
+> >   uncore_imc_free_running_1/data_write/              [Kernel PMU event]
+> > ...
+> > ```
+> > 
+> > The PMUs are sorted by name then suffix as a part of this change.
+> > 
+> > v5: Improved the 2nd patch's commit message and removed an unused
+> >     variable as suggested by Kan Liang <kan.liang@linux.intel.com>.
+> > v4: Rebase on top of lazy PMU changes. Ignore numeric ordering due to
+> >     gaps, suggested by Kan Liang <kan.liang@linux.intel.com>. Fold
+> >     patches 2 & 3 as suggested by John Garry <john.g.garry@oracle.com>
+> >     (done by accident as part of rebasing).
+> > v3: Add detail to patch 1 sorting commit message about the suffix and
+> >     why sorting is necessary.
+> > v2: List all PMUs when "-v" is passed as suggested by John Garry
+> >     <john.g.garry@oracle.com>.
+> > 
+> > Ian Rogers (2):
+> >   perf pmus: Sort pmus by name then suffix
+> >   perf pmus: Skip duplicate PMUs and don't print list suffix by default
 > 
-> Hi Thomas,
 > 
-> the changes are in the perf-tools-next tree:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/
-> 
-> Thanks,
-> Ian
-> 
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
+Thanks, applied.
 
-Hi Ian,
-
-thanks for the pointer.
-
-Unfurtunately this patch set fails again on s390.
-Here is the test output from the current 6.5.0rc7 kernel:
-
-# ./perf test 6 10 'perf all metricgroups test' 'perf all metrics test'
-  6: Parse event definition strings                                  :
-  6.1: Test event parsing                                            : Ok
-  6.2: Parsing of all PMU events from sysfs                          : Ok
-  6.3: Parsing of given PMU events from sysfs                        : Ok
-  6.4: Parsing of aliased events from sysfs                          : Skip (no aliases in sysfs)
-  6.5: Parsing of aliased events                                     : Ok
-  6.6: Parsing of terms (event modifiers)                            : Ok
- 10: PMU events                                                      :
- 10.1: PMU event table sanity                                        : Ok
- 10.2: PMU event map aliases                                         : Ok
- 10.3: Parsing of PMU event table metrics                            : Ok
- 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
- 10.5: Parsing of metric thresholds with fake PMUs                   : Ok
- 95: perf all metricgroups test                                      : Ok
- 96: perf all metrics test                                           : Ok
-# 
-
-This looks good.
-
-However when I use the check-out from perf-tools-next, I get this output:
-# ./perf test 6 10 'perf all metricgroups test' 'perf all metrics test'
-  6: Parse event definition strings                                  :
-  6.1: Test event parsing                                            : Ok
-  6.2: Parsing of all PMU events from sysfs                          : FAILED!
-  6.3: Parsing of given PMU events from sysfs                        : Ok
-  6.4: Parsing of aliased events from sysfs                          : Skip (no aliases in sysfs)
-  6.5: Parsing of aliased events                                     : FAILED!
-  6.6: Parsing of terms (event modifiers)                            : Ok
- 10: PMU events                                                      :
- 10.1: PMU event table sanity                                        : Ok
- 10.2: PMU event map aliases                                         : FAILED!
- 10.3: Parsing of PMU event table metrics                            : Ok
- 10.4: Parsing of PMU event table metrics with fake PMUs             : FAILED!
- 10.5: Parsing of metric thresholds with fake PMUs                   : Ok
- 93: perf all metricgroups test                                      : FAILED!
- 94: perf all metrics test                                           : FAILED!
-# 
-
-So some tests are failing again.
-
-I am out for the next two weeks, Sumanth Korikkar (on to list) might be able to help.
-Thanks a lot.
-
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Gregor Pillen
-Geschäftsführung: David Faller
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-
+- Arnaldo
