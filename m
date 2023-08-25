@@ -2,104 +2,179 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E034EE49A5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 15:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58EC5C71133
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 15:57:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238878AbjHYP0E (ORCPT
+        id S230012AbjHYP5V (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 11:26:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47590 "EHLO
+        Fri, 25 Aug 2023 11:57:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237464AbjHYP0C (ORCPT
+        with ESMTP id S237166AbjHYP47 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 11:26:02 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 473A72137;
-        Fri, 25 Aug 2023 08:26:00 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-68a3e271491so844135b3a.0;
-        Fri, 25 Aug 2023 08:26:00 -0700 (PDT)
+        Fri, 25 Aug 2023 11:56:59 -0400
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A04722107
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Aug 2023 08:56:56 -0700 (PDT)
+Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-40a47e8e38dso238671cf.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Aug 2023 08:56:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692977160; x=1693581960;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+        d=google.com; s=20221208; t=1692979016; x=1693583816; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2FJUnRDHEZaApoThKe1ItomuG6aOppIegF4bJQrMsxU=;
-        b=a+uJIwyuNnk3TVTQtZqW9uS+xJz2Gwe11uXTuYJQ3Skl544YB+I6cm+yPL8tms1KZm
-         Js8A08lH113Q4uSBGfsXo4vYVh5tg9DV8RgTqEgEVC1a1YfYoDuhQJj2BW99m6XlH6VM
-         NnfvgX3PfxRSbWunnGa/xh7tM2xd7Z4VE5qzdzN6FqmacCu7ZDF3SrgQwRpuRCizp6As
-         Sa2yvnKC9K9NowhzXxvsYZHymfhfxzJpByNxva0THoQ8WlMIBB2EaUi1a4Y+aGOEaK7u
-         ooxAZUhVDn6OZCtfAFnTPgjSWLGrap+yfutDs/iMdqhCcR8Xwd3wQcJd3XJHo09mrbNp
-         kMlw==
+        bh=f1dAiH5GroxRPQDayYuzzRlNNflrHbuT0xIRa5ImgrI=;
+        b=qC0rhWTNcr4ynYhixWygcQrUaKtsa7NwY5OpCerbuyD5vAoBeLTl6K+65SpD3VleVL
+         cW8MZK9mtkrXZBHAy3yL4voFmH92nA1sO6hQWtrTT2zFE5V2V1a5bd7H3pWzwQr2EiOB
+         qVvuPOvdO7P2giv6RpcFwlBB4sTHkqQ5tsj0inOcL9Dqd89egmIKgc/vLNwQ/EF4Zb/l
+         ImIHVYdRP9WMvkFbwZit17ry3r4SxI9kyICDOxLJZi/6ItvJdBA8k3obZ9onQv5WY12u
+         VNhTJbN8LyJTqv4RRFeRFD1MDcEnHXiq1QLP/q9UiyQCyICNfXoU+xQ8WZoGxQEQDRkV
+         NBkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692977160; x=1693581960;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=2FJUnRDHEZaApoThKe1ItomuG6aOppIegF4bJQrMsxU=;
-        b=fCcYr99YLwmi1wN2+wPlLH2i+Qb2ufjG9Ym6Vv7+IAZhy+TvRQGnZyTjK+hxv8+T6X
-         DNwm4YoeRkyJ13IYcMHZp8Rt+OvlkST286K3C2EeDFXD2cOtJZ8X4OG3wyKX8QiIUDNe
-         PphJorOhmtuYYcr0K1BPzT8+Dl5bWirStO45RILLWLZWz6YO2JTIuV18sXD8EENW3GE4
-         73V4Yp7JuSFpJ4HEKVe/W5mFRToyV4hBkJqR0bsTYjf9mrfe+zjlCIGgD5saqhMPdCYm
-         YNPRkuKlbqyGR8oK1e5iEiFZrZQpee6NouYQpdM1Xw69tn5mqiU9KS3zYQpY2SnAOTpM
-         o6GQ==
-X-Gm-Message-State: AOJu0YzqCS8doNiap9Zk9QKuh/30Ej9ZWkOUU75yKoBMsDHnN1h6+CcH
-        Btfle8zzVOtGU3aaOKxvVJE=
-X-Google-Smtp-Source: AGHT+IHSQAyMHvANuR7fSUjRBKdsbfh5Ib/PbKyDzJqOdw7KsjZX6sLG+DRCxBJbw2nlkZyV0q1Ipg==
-X-Received: by 2002:a05:6a20:3d13:b0:14c:6a05:dfbf with SMTP id y19-20020a056a203d1300b0014c6a05dfbfmr2897922pzi.60.1692977159611;
-        Fri, 25 Aug 2023 08:25:59 -0700 (PDT)
-Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:a7ba:1788:3b00:4316])
-        by smtp.gmail.com with ESMTPSA id y1-20020aa78541000000b006879493aca0sm1701748pfn.26.2023.08.25.08.25.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Aug 2023 08:25:59 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 4/4] tools/lib/perf: Get rid of attr.id field
-Date:   Fri, 25 Aug 2023 08:25:52 -0700
-Message-ID: <20230825152552.112913-4-namhyung@kernel.org>
-X-Mailer: git-send-email 2.42.0.rc1.204.g551eb34607-goog
-In-Reply-To: <20230825152552.112913-1-namhyung@kernel.org>
-References: <20230825152552.112913-1-namhyung@kernel.org>
+        d=1e100.net; s=20221208; t=1692979016; x=1693583816;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f1dAiH5GroxRPQDayYuzzRlNNflrHbuT0xIRa5ImgrI=;
+        b=ItQ+2iGYlW5erGDvw7RzKNGFRSJD2zmrEJV4d/daA2BcLTEq+X3YVlJcyaT7YEQSNM
+         WFMhY0D7QFde6JxN8b8bVRBr1nWZHnbM442VGxdKCRZwSgYpDVhMLe/GSRtMOcAZpyww
+         dbHiJN4ZUOrPVUGEUsbJzEkKDNyhbZjcOr25yrFRn6mxjnXjCPMBI51w61+Dm6ecYile
+         lmAZ7NxFuNZ84wfiCHxBajH5r8bfkcBhTRdudqDfY6ieRnRCFA+QSEfUG6KvjTUCV6lH
+         fQaNdoCkD0+UQLw+Dj0N2glHHId7HtECmTdwQKSZXZu2wUUiAv4YPR5eN3Awwbzv5L4u
+         8ilg==
+X-Gm-Message-State: AOJu0YxXboohRnZbDTamaGSt/leB7IRIFVzYVqLCfck0l2ZcHNte6icw
+        zyC5qf4KTErSwlz/QM7C28YEHICzT42MnZ7se3qg4w==
+X-Google-Smtp-Source: AGHT+IEqk0e4YMZ4a3MugEUIM7w9AotH/4rn0Djx7VAVkDRgfUmxfQRvFpNhz+EtdM0QXfuIIQstxhjB6U3Y+2pki4w=
+X-Received: by 2002:a05:622a:1705:b0:410:9855:acd with SMTP id
+ h5-20020a05622a170500b0041098550acdmr295456qtk.14.1692979015582; Fri, 25 Aug
+ 2023 08:56:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230825135237.921058-1-irogers@google.com> <20230825135237.921058-2-irogers@google.com>
+ <ZOi/KDRRrnkvJmkB@kernel.org> <ZOjABa9ZfQgra/UX@kernel.org>
+In-Reply-To: <ZOjABa9ZfQgra/UX@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 25 Aug 2023 08:56:44 -0700
+Message-ID: <CAP-5=fVw3heenOh8+JhjNy6Z__p16mv6Z_RiaqYOgjqSrfRKuQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] perf pmus: Sort pmus by name then suffix
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Now there's no in-tree user of the field.  To remove the possible bug
-later, let's get rid of the 'id' field and add a comment for that.
+On Fri, Aug 25, 2023 at 7:51=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Fri, Aug 25, 2023 at 11:48:08AM -0300, Arnaldo Carvalho de Melo escrev=
+eu:
+> > Em Fri, Aug 25, 2023 at 06:52:36AM -0700, Ian Rogers escreveu:
+> > > Sort PMUs by name. If two PMUs have the same name but differ by
+> > > suffix, sort the suffixes numerically. For example, "breakpoint" come=
+s
+> > > before "cpu", "uncore_imc_free_running_0" comes before
+> > > "uncore_imc_free_running_1". Suffixes need to be treated specially as
+> > > otherwise they will be ordered like 0, 1, 10, 11, .., 2, 20, 21, ..,
+> > > etc. Only PMUs starting 'uncore_' are considered to have a potential
+> > > suffix.
+> > >
+> > > Sorting of PMUs is done so that later patches can skip duplicate
+> > > uncore PMUs that differ only by there suffix.
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/perf/util/pmus.c | 48 ++++++++++++++++++++++++++++++++++++++++=
+++
+> > >  1 file changed, 48 insertions(+)
+> > >
+> > > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> > > index 4dd5912617ff..b1f6a64693fe 100644
+> > > --- a/tools/perf/util/pmus.c
+> > > +++ b/tools/perf/util/pmus.c
+> > > @@ -1,8 +1,10 @@
+> > >  // SPDX-License-Identifier: GPL-2.0
+> > >  #include <linux/list.h>
+> > > +#include <linux/list_sort.h>
+> > >  #include <linux/zalloc.h>
+> > >  #include <subcmd/pager.h>
+> > >  #include <sys/types.h>
+> > > +#include <ctype.h>
+> > >  #include <dirent.h>
+> > >  #include <pthread.h>
+> > >  #include <string.h>
+> > > @@ -33,6 +35,31 @@ static LIST_HEAD(other_pmus);
+> > >  static bool read_sysfs_core_pmus;
+> > >  static bool read_sysfs_all_pmus;
+> > >
+> > > +static int pmu_name_len_no_suffix(const char *str, unsigned long *nu=
+m)
+> > > +{
+> > > +   int orig_len, len;
+> > > +
+> > > +   orig_len =3D len =3D strlen(str);
+> > > +
+> > > +   /* Non-uncore PMUs have their full length, for example, i915. */
+> > > +   if (strncmp(str, "uncore_", 7))
+> > > +           return len;
+> >
+> > I applied the patch, but we have strstarts() for this case, to avoid
+> > having to count the size of the prefix in tools/include/linux/string.h,
+> > that we copied from the kernel sources:
+> >
+> > /**
+> >  * strstarts - does @str start with @prefix?
+> >  * @str: string to examine
+> >  * @prefix: prefix to look for.
+> >  */
+> > static inline bool strstarts(const char *str, const char *prefix)
+> > {
+> >         return strncmp(str, prefix, strlen(prefix)) =3D=3D 0;
+> > }
+> >
+> > I'll change it, ok?
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/lib/perf/include/perf/event.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Makes sense to me. We also do this same strncmp here:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/parse-events.y?h=3Dperf-tools-next#n315
+So perhaps do a follow up patch cleaning up all instances of the not
+use of strstarts.
 
-diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
-index e563dd8c3628..ae64090184d3 100644
---- a/tools/lib/perf/include/perf/event.h
-+++ b/tools/lib/perf/include/perf/event.h
-@@ -148,7 +148,13 @@ struct perf_record_switch {
- struct perf_record_header_attr {
- 	struct perf_event_header header;
- 	struct perf_event_attr	 attr;
--	__u64			 id[];
-+	/*
-+	 * Array of u64 id follows here but we cannot use a flexible array
-+	 * because size of attr in the data can be different then current
-+	 * version.  Please use perf_record_header_attr_id() below.
-+	 *
-+	 * __u64		 id[];  // do not use this
-+	 */
- };
- 
- /* Returns the pointer to id array based on the actual attr size. */
--- 
-2.42.0.rc1.204.g551eb34607-goog
+Thanks,
+Ian
 
+> This:
+>
+> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> index b1f6a64693fe0d49..bbf84ccc3aba7d5c 100644
+> --- a/tools/perf/util/pmus.c
+> +++ b/tools/perf/util/pmus.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <linux/list.h>
+>  #include <linux/list_sort.h>
+> +#include <linux/string.h>
+>  #include <linux/zalloc.h>
+>  #include <subcmd/pager.h>
+>  #include <sys/types.h>
+> @@ -42,7 +43,7 @@ static int pmu_name_len_no_suffix(const char *str, unsi=
+gned long *num)
+>         orig_len =3D len =3D strlen(str);
+>
+>         /* Non-uncore PMUs have their full length, for example, i915. */
+> -       if (strncmp(str, "uncore_", 7))
+> +       if (!strstarts(str, "uncore_"))
+>                 return len;
+>
+>         /*
