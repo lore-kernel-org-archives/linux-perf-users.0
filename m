@@ -2,32 +2,32 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D4CC71133
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 06:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2635EC71133
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 06:30:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238894AbjHYGPg (ORCPT
+        id S232300AbjHYGaC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 02:15:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43946 "EHLO
+        Fri, 25 Aug 2023 02:30:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242000AbjHYGPS (ORCPT
+        with ESMTP id S242197AbjHYG3o (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 02:15:18 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F59C2116;
-        Thu, 24 Aug 2023 23:15:12 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RX8j70sshztSKw;
-        Fri, 25 Aug 2023 14:11:23 +0800 (CST)
+        Fri, 25 Aug 2023 02:29:44 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD474211F;
+        Thu, 24 Aug 2023 23:29:09 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4RX93Y6s9Zz1L8wg;
+        Fri, 25 Aug 2023 14:27:21 +0800 (CST)
 Received: from [10.67.111.205] (10.67.111.205) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Fri, 25 Aug 2023 14:15:08 +0800
+ 15.1.2507.31; Fri, 25 Aug 2023 14:28:53 +0800
 Subject: Re: [PATCH v6 1/7] perf evlist: Add perf_evlist__go_system_wide()
  helper
-To:     Ian Rogers <irogers@google.com>
-CC:     Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+To:     Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -47,8 +47,8 @@ References: <20230821012734.18241-1-yangjihong1@huawei.com>
  <db2de7d0-d60d-33f8-3587-c776a3eb8fce@huawei.com>
  <CAP-5=fUtCHXDC5zOML4po8k1rQVPo9ybsTA8_AihepP6w8B5Kw@mail.gmail.com>
 From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <c447f442-2cc5-ab04-071e-1c26976dc828@huawei.com>
-Date:   Fri, 25 Aug 2023 14:15:07 +0800
+Message-ID: <49d6639e-66ac-16e9-8a54-4b0279f808ce@huawei.com>
+Date:   Fri, 25 Aug 2023 14:28:52 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.1
 MIME-Version: 1.0
@@ -57,7 +57,7 @@ Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
  kwepemm600003.china.huawei.com (7.193.23.202)
 X-CFilter-Loop: Reflected
 Precedence: bulk
@@ -138,8 +138,17 @@ On 2023/8/25 13:45, Ian Rogers wrote:
 > 
 > Yes, I think the naming isn't correct and the function being on evlist 
 > is misleading.
-> 
-Okay, I'll follow the above changes in the next version.
+Uh, I have a little problem here, too.
+
+Because perf_evlist__go_system_wide() needs to invoke the 
+__perf_evlist__propagate_maps(), which is a local function and is 
+located in the evlist.c file in tools/lib/perf/.
+So perf_evlist__go_system_wide() can only be located in this file. The 
+prefixes of all funcstions in this file are "perf_evlist__". Therefore, 
+it is better to use the original names.
+
+In addition, __perf_evlist__propagate_maps affects the evlist, so it is 
+not misleading.
 
 Thanks,
 Yang
