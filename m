@@ -2,66 +2,44 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 028FEC71133
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 13:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F64C3DA66
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 13:21:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244973AbjHYNOl (ORCPT
+        id S230090AbjHYNVG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 09:14:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44758 "EHLO
+        Fri, 25 Aug 2023 09:21:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244992AbjHYNOQ (ORCPT
+        with ESMTP id S245102AbjHYNVA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 09:14:16 -0400
-Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4454F1FFA
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Aug 2023 06:14:14 -0700 (PDT)
-Received: by mail-qt1-x82e.google.com with SMTP id d75a77b69052e-40c72caec5cso270771cf.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Aug 2023 06:14:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692969253; x=1693574053; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e30ygpUnem0hnNXEifSCeb6KdAoBljm9WluqG1YNW+c=;
-        b=gOLCH/Lb00Mz/K9+MfGJuQI+gpTU/aXIcKyNJKEZRfJzEDN6z7Fjm/ZJJbJ3YFJf06
-         eEZ9ldF7S/Icc5bzc0VKBYNbeU2Kclv78vSvHcQuMOjlEpzLqHoZr0NZMr5ruim/O7ku
-         f/mAQ3KVcAv0X5g5UnawPC8HzBWAd9UaNmawz9AGlKCY7gPyLCEx+SvCVrh1lrTnmjzs
-         548i5lqvLT7ftR1D1YkWUYT1TM0sdZ+nGgApO2nZWlaQ4yTyT5Z6APgHjuH3kPXYbpgm
-         Cv4dERMbuC8XRr9opa0AA9JSfZYChbs/LgwDRIs3ry7dxIfK/yEXE89nkHKxoR4vXEAL
-         3Zjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692969253; x=1693574053;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e30ygpUnem0hnNXEifSCeb6KdAoBljm9WluqG1YNW+c=;
-        b=XJ+6BhwpnyaM8YAuu8GAqsw6dT04c7lthLwqFgUBBsaFeOrhzB0RGJjlbOQ4ea9Xg+
-         gktkndOoAJF1jbNOIwyycYODIm9t/vZPo8vdgnqdFiev3Xv9dks06FmvuqmhLOnYVlfW
-         tBehUTxWijVRFQCJS0tiNboblWLCg1C5EqJR/MS1eELNnlGxRlK4ZhUum5vyEeOszOGA
-         7fkVUzbvbvNDBoZqJwYy6sG/O5abZyB5vAPEyQPDLD0oQKKblufI8iLpmz7pVEZSNakR
-         vkJWkaQuTD0Tz+4SFd0nffLvnJCAocOlqWaEfXeVotsHtPufbPmRjtjEAxrLz1LE+F8W
-         nX/A==
-X-Gm-Message-State: AOJu0YxsxtrKNY9JN20CVS9tfXkl3lwyKpW6Fj7jg//qgLdaX7hasDDH
-        t+/m5edLGVXFpiI2txLYqO/m0SYwTs2UWDRUykj9ZA==
-X-Google-Smtp-Source: AGHT+IH+VlhSr/7ethdftBz4x+JgfAMJPFqEn9CO5of2hOfCYJWtOCDujhaXCutycQfctL9dyoDM5xODuPjY8K50w8s=
-X-Received: by 2002:ac8:7f96:0:b0:3f8:5b2:aef0 with SMTP id
- z22-20020ac87f96000000b003f805b2aef0mr295265qtj.24.1692969253167; Fri, 25 Aug
- 2023 06:14:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230824041330.266337-1-irogers@google.com> <20230824041330.266337-7-irogers@google.com>
- <ZOdiX4eJHFfFbQhi@kernel.org> <428afeb4-d5ca-8115-73fc-881119a1cd51@linux.ibm.com>
-In-Reply-To: <428afeb4-d5ca-8115-73fc-881119a1cd51@linux.ibm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 25 Aug 2023 06:14:01 -0700
-Message-ID: <CAP-5=fVt1vxK0CJ=aYjZzs4mushbxAx8056uxVQZUfsLAKpVoQ@mail.gmail.com>
-Subject: Re: [PATCH v2 06/18] perf s390 s390_cpumcfdg_dump: Don't scan all PMUs
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        Fri, 25 Aug 2023 09:21:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E6A2198E;
+        Fri, 25 Aug 2023 06:20:58 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B7EB964F56;
+        Fri, 25 Aug 2023 13:20:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCEE1C433C8;
+        Fri, 25 Aug 2023 13:20:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692969657;
+        bh=hs2GT5+v8q271RR1T2B7yxIscf7b2px4sH5WHEoOSE0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sTDUDRoz0K9zUhg45Z/ESRSfvZYmA8Mr22cQEK9WCpu0pV6p4YaVZ1QLTfeE1JFTX
+         Vl9Bd6e1JKkgTg4G5HaQrN6Zqbr4CntS2XPkSO5Prk7vu5MsN3dvsWN+vs7hOPIkDv
+         10XmyWiq92ZV/81Q/B1hiS3/0nSBhW21qla9UyENV1m3IWvB3VDdUcRecNvvdBSEE1
+         9GgCzNwbVCPPweJvK6aMnpfaFiu+4xsIlf7WEEeu5WMu4/RQ9G3g3NNe/zMeHiUPJb
+         xyBSSPPHlIjyVMekFamOQuEfYAgGyV0YuvNeK6a0cNUUv6SvnOF5OyfcX4J/ead7sQ
+         xZuO9O20clUMg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2807740722; Fri, 25 Aug 2023 10:20:54 -0300 (-03)
+Date:   Fri, 25 Aug 2023 10:20:54 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     "liwei (GF)" <liwei391@huawei.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -69,58 +47,172 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Rob Herring <robh@kernel.org>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        Sean Christopherson <seanjc@google.com>,
+        K Prateek Nayak <kprateek.nayak@amd.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v1] perf header: Fix missing PMU caps
+Message-ID: <ZOiqtn0D8DuWHMKS@kernel.org>
+References: <20230818171952.3719251-1-irogers@google.com>
+ <b244a320-5f00-d382-a4ab-0168a80c55fe@huawei.com>
+ <ZONjuqVhDNzWPIQ3@kernel.org>
+ <CAP-5=fUW9VmBoxfeTHL3upqg-gZRuE6Gd3e0LhY_N5UP6Am5ew@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUW9VmBoxfeTHL3upqg-gZRuE6Gd3e0LhY_N5UP6Am5ew@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 25, 2023 at 1:20=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
-om> wrote:
->
-> On 8/24/23 15:59, Arnaldo Carvalho de Melo wrote:
-> > Em Wed, Aug 23, 2023 at 09:13:18PM -0700, Ian Rogers escreveu:
-> >> Rather than scanning all PMUs for a counter name, scan the PMU
-> >> associated with the evsel of the sample. This is done to remove a
-> >> dependence on pmu-events.h.
+Em Thu, Aug 24, 2023 at 03:54:00PM -0700, Ian Rogers escreveu:
+> On Mon, Aug 21, 2023 at 6:16 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
 > >
-> > I'm applying this one, and CCing the S/390 developers so that they can
-> > try this and maybe provide an Acked-by/Tested-by,
+> > Em Sat, Aug 19, 2023 at 12:16:09PM +0800, liwei (GF) escreveu:
+> > > Hi Ian:
+> > >
+> > > On 2023/8/19 1:19, Ian Rogers wrote:
+> > > > PMU caps are written as HEADER_PMU_CAPS or for the special case of the
+> > > > PMU "cpu" as HEADER_CPU_PMU_CAPS. As the PMU "cpu" is special, and not
+> > > > any "core" PMU, the logic had become broken and core PMUs not called
+> > > > "cpu" were not having their caps written. This affects ARM and s390
+> > > > non-hybrid PMUs.
+> > > >
+> > > > Simplify the PMU caps writing logic to scan one fewer time and to be
+> > > > more explicit in its behavior.
+> > > >
+> > > > Reported-by: Wei Li <liwei391@huawei.com>
+> > > > Fixes: 178ddf3bad98 ("perf header: Avoid hybrid PMU list in write_pmu_caps")
+> > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > > ---
+> > > >  tools/perf/util/header.c | 31 ++++++++++++++++---------------
+> > > >  1 file changed, 16 insertions(+), 15 deletions(-)
+> > > >
+> > > > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> > > > index 52fbf526fe74..13c71d28e0eb 100644
+> > > > --- a/tools/perf/util/header.c
+> > > > +++ b/tools/perf/util/header.c
+> > > > @@ -1605,8 +1605,15 @@ static int write_pmu_caps(struct feat_fd *ff,
+> > > >     int ret;
+> > > >
+> > > >     while ((pmu = perf_pmus__scan(pmu))) {
+> > > > -           if (!pmu->name || !strcmp(pmu->name, "cpu") ||
+> > > > -               perf_pmu__caps_parse(pmu) <= 0)
+> > > > +           if (!strcmp(pmu->name, "cpu")) {
+> > >
+> > > So you removed the check of 'pmu->name', does this check really redundant? since
+> > > we can find such checks in many places in the perf code. If not, i think it is
+> > > necessary for strcmp().
+> >
+> > Indeed, when sorting in tools/perf/util/pmus.c in cmp_sevent() we have:
+> >
+> >         /* Order by PMU name. */
+> >         if (as->pmu != bs->pmu) {
+> >                 a_pmu_name = a_pmu_name ?: (as->pmu->name ?: "");
+> >                 b_pmu_name = b_pmu_name ?: (bs->pmu->name ?: "");
+> >                 ret = strcmp(a_pmu_name, b_pmu_name);
+> >                 if (ret)
+> >                         return ret;
+> >         }
+> >
+> >
+> > And even if in this specific case, for some reason, we could guarantee
+> > that pmu->name isn't NULL, then removing that check should be best left
+> > for a separate patch with an explanation as to why that is safe.
+> >
+> > Having it as:
+> >
+> >         while ((pmu = perf_pmus__scan(pmu))) {
+> > -               if (!pmu->name || !strcmp(pmu->name, "cpu") ||
+> > -                   perf_pmu__caps_parse(pmu) <= 0)
+> > +               if (!pmu->name || !strcmp(pmu->name, "cpu")) {
+> >
+> > even eases a bit reviewing, as we see we're just removing that
+> > perf_pmu__caps_parse(pmu) line.
+> >
+> > Ian?
+> 
+> The pmu name is initialized with:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/pmu.c?h=perf-tools-next#n1001
+> pmu->name = strdup(name);
+> if (!pmu->name)
+> goto err;
+> 
+> so name can't be NULL, strdup of NULL is segv, as if it were pmu would
+> be NULL. I'll clean this up in an additional patch on top of this one.
+
+Ok, perhaps at some point we can introduce a perf_pmu__name_is(pmu,
+"cpu") and then have an assert for it not being NULL, as for some time
+those tests were performed.
+
+But thanks for checking, I'll apply the patches.
+
+- Arnaldo
+
+ 
+> Thanks,
+> Ian
+> 
+> > - Arnaldo
+> >
+> >
+> > > > +                   /*
+> > > > +                    * The "cpu" PMU is special and covered by
+> > > > +                    * HEADER_CPU_PMU_CAPS. Note, core PMUs are
+> > > > +                    * counted/written here for ARM, s390 and Intel hybrid.
+> > > > +                    */
+> > > > +                   continue;
+> > > > +           }
+> > > > +           if (perf_pmu__caps_parse(pmu) <= 0)
+> > > >                     continue;
+> > > >             nr_pmu++;
+> > > >     }
+> > > > @@ -1619,23 +1626,17 @@ static int write_pmu_caps(struct feat_fd *ff,
+> > > >             return 0;
+> > > >
+> > > >     /*
+> > > > -    * Write hybrid pmu caps first to maintain compatibility with
+> > > > -    * older perf tool.
+> > > > +    * Note older perf tools assume core PMUs come first, this is a property
+> > > > +    * of perf_pmus__scan.
+> > > >      */
+> > > > -   if (perf_pmus__num_core_pmus() > 1) {
+> > > > -           pmu = NULL;
+> > > > -           while ((pmu = perf_pmus__scan_core(pmu))) {
+> > > > -                   ret = __write_pmu_caps(ff, pmu, true);
+> > > > -                   if (ret < 0)
+> > > > -                           return ret;
+> > > > -           }
+> > > > -   }
+> > > > -
+> > > >     pmu = NULL;
+> > > >     while ((pmu = perf_pmus__scan(pmu))) {
+> > > > -           if (pmu->is_core || !pmu->nr_caps)
+> > > > +           if (!strcmp(pmu->name, "cpu")) {
+> > >
+> > > same here
+> > >
+> > > Thanks,
+> > > Wei
+> > >
+> > > > +                   /* Skip as above. */
+> > > > +                   continue;
+> > > > +           }
+> > > > +           if (perf_pmu__caps_parse(pmu) <= 0)
+> > > >                     continue;
+> > > > -
+> > > >             ret = __write_pmu_caps(ff, pmu, true);
+> > > >             if (ret < 0)
+> > > >                     return ret;
+> >
+> > --
 > >
 > > - Arnaldo
->
->
-> Arnaldo,
->
-> I have downloaded this patch set of 18 patches (using b4), but they do no=
-t
-> apply on my git tree.
->
-> Which git branch do I have to use to test this. Thanks a lot.
 
-Hi Thomas,
+-- 
 
-the changes are in the perf-tools-next tree:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/
-
-Thanks,
-Ian
-
-> --
-> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, German=
-y
-> --
-> Vorsitzender des Aufsichtsrats: Gregor Pillen
-> Gesch=C3=A4ftsf=C3=BChrung: David Faller
-> Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht Stut=
-tgart, HRB 243294
->
+- Arnaldo
