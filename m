@@ -2,72 +2,69 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A735CC83F04
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 22:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53860C83F06
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Aug 2023 22:57:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229529AbjHYWsm (ORCPT
+        id S229564AbjHYW5Q (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 18:48:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42874 "EHLO
+        Fri, 25 Aug 2023 18:57:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231305AbjHYWse (ORCPT
+        with ESMTP id S231176AbjHYW5L (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 18:48:34 -0400
-Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F19822711
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Aug 2023 15:48:27 -0700 (PDT)
-Received: by mail-qt1-x82e.google.com with SMTP id d75a77b69052e-407db3e9669so49551cf.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Aug 2023 15:48:27 -0700 (PDT)
+        Fri, 25 Aug 2023 18:57:11 -0400
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D40691BCC
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Aug 2023 15:57:07 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-4036bd4fff1so98401cf.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Aug 2023 15:57:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1693003707; x=1693608507; darn=vger.kernel.org;
+        d=google.com; s=20221208; t=1693004227; x=1693609027; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=B0+Rb1NaH1693pRmgNB2WCUfTWoZhGMII0HaR68nlzk=;
-        b=tf3jIpqpD0GtvBRQ+FXbU0Eu8K1SwVGqGpC7tkLl80vcjuXoyMOHEZrV8SQA3mjV/D
-         hyiij0dZXbNR+sukl7YkoEj/DB8I+S5VBi28qE7P0TYGGpQrW0LX8PlvEd+lLI71/Bk/
-         4HEyrbFNWJw30pV3m5Mq5VESnqQIq+NBSxUDWpGQ0tPSxFWRV87Ny68/wHiAynjqK1rT
-         vCyD5aKlmfklSxqqh/oOgz9LmNrBuRQHQzmfzn/uzpgoX2jDfGYVC5FtOqshEkYY/il1
-         kAOVKfW9PzIn3EVYJ7wihPawUU5Cv6vANXnf9ELYhNVK1v2qMMt7g9fWCnwdzaZhUsn5
-         digA==
+        bh=3pdeCQUIG8CuDNg2gW6Ye4By7O7gngEFxDImQvTFpk4=;
+        b=tpQqLfJWO47GVsZCEnOIZ+PPnMV6Jct19IwgBoslcyqj22m0gO3VOM3vIyjbVgz+C/
+         g/zoUS9Aopvlq3JlX4Id2fu/QFX8sUYzh7Su2PTOaqHwPAbTa6dpe9bvvAmsR8ELHJSl
+         LMmjQKKnX7k+dX3mCXD9sXz9rB9BrJA98vq1WS2B2mLCnshfHgLgOh7OlFUODowCndrm
+         +1DlcOPBbtA/ZsNFRSy0xaMkZaWa1A02PrXfBjqnyfvDk67d17tDpJzXuOEGfqi09QRv
+         D79ZzVsUHL0a+rSyx2umA7yVA80QbuDEJvFukmK8YH0FLYQ0H91cvkHpNc8xW1WGS7za
+         Ym4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693003707; x=1693608507;
+        d=1e100.net; s=20221208; t=1693004227; x=1693609027;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=B0+Rb1NaH1693pRmgNB2WCUfTWoZhGMII0HaR68nlzk=;
-        b=kO81hkUE4sLAseLwNfHOaatbEokflcgaAnEygALDDu+Zw/JISbbJHIA3s63NHi6C+P
-         YSLS9VI+DCdyUBLUzw/8xXGtXEPr4Be7u0XSjpSu+KWOc6t+YD68qP4TxtuP/3+W9Jlt
-         t6N0D21idi01+lpEb0f8AgCk+Z2nPb8WOzUBjf20ATmMvxTePg6mWGM3LI3uV88En1Hd
-         aQSJUcwAinFk+ndMhks2H060MLZM1GP4ohTd/yBeWUwh9Ni6FFpD4oq0bfh2KAlW/b3V
-         WLCaYGcAE3ow1U2WmfgFbhduQsSKBUhlcu/dyi1OUaOtL9iKBrhVV6z7v/JDfnNSX7R0
-         vFBg==
-X-Gm-Message-State: AOJu0YzdzpTUxL6qfg6PABaVoIq7NNDJuNJHzsv+jEpwSHgb4Z+o3YDq
-        mO9YCMZ16ntEmvKeVJbt2jqBm71tQjkarUPoJPanvg==
-X-Google-Smtp-Source: AGHT+IEZ4dcfZSm4MLJ2kwbowC+ba0bzL1TB4iEFiMAO4h5T19ZYLp8rdAdJUPN/VLVDO7ChZlK1qJ1qDVR+Y+eifNU=
-X-Received: by 2002:ac8:5fc5:0:b0:403:aa88:cf7e with SMTP id
- k5-20020ac85fc5000000b00403aa88cf7emr39147qta.29.1693003707025; Fri, 25 Aug
- 2023 15:48:27 -0700 (PDT)
+        bh=3pdeCQUIG8CuDNg2gW6Ye4By7O7gngEFxDImQvTFpk4=;
+        b=dgc1ujSOkfGsvNha8FTEnuHwdx8l5rRELy5TWbPBloxdmveqvNSd8Q6si4k8znL18c
+         MqfOUhMarZVDN6tklFrohkjBvONS11yttxwDj4CTREeeOR5hi5NoGJQD0Lbz7XkHfdOh
+         HFzJORqSBrZFJNLJF4VfL1N1LQhZ8T7MjemHPJVVg44fJKhXTLsb1+pC+TGHDSQrWaYW
+         kASi4crF1IpVZ7WuVAolgyEyEKH7I8Qtji7c4SoLg4Iq4kt+Js6pUvrf6nxfVYZpz6hx
+         ONI+eAATrKpE7csKp6ERTIA0FgyyCygLe8SnHu99tuZcWJJC1LHZ/9z4+7MZ6ySkHp3z
+         K6dw==
+X-Gm-Message-State: AOJu0YyA5hqYmMKoPUK/296Tv3rdHdDpQ+mW/y7yjghZw7uvGOXE9J5y
+        kkYfYaNBpBHDqJRqfQ9Vkjcn+gC88v5otP58mSOeMA==
+X-Google-Smtp-Source: AGHT+IFMbBaIbZ8vbaB75MQbqoDbu8E0C8Ec9zxuz4BxU7lU/J8XNgaVO6lCaRx+XzQQq4FCHx/7KEsGkwJtpvlsV8E=
+X-Received: by 2002:ac8:5f89:0:b0:405:47aa:7ffd with SMTP id
+ j9-20020ac85f89000000b0040547aa7ffdmr38495qta.19.1693004226468; Fri, 25 Aug
+ 2023 15:57:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230825135237.921058-1-irogers@google.com> <20230825135237.921058-2-irogers@google.com>
- <ZOkNzHgJ0+mgfSPz@kernel.org>
-In-Reply-To: <ZOkNzHgJ0+mgfSPz@kernel.org>
+References: <20230824041330.266337-1-irogers@google.com> <20230824041330.266337-7-irogers@google.com>
+ <ZOdiX4eJHFfFbQhi@kernel.org> <428afeb4-d5ca-8115-73fc-881119a1cd51@linux.ibm.com>
+ <CAP-5=fVt1vxK0CJ=aYjZzs4mushbxAx8056uxVQZUfsLAKpVoQ@mail.gmail.com>
+ <4f2438fc-2360-8833-3751-fe3bc8b11afb@linux.ibm.com> <ZOkVYoN17A8wwP3k@kernel.org>
+In-Reply-To: <ZOkVYoN17A8wwP3k@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 25 Aug 2023 15:48:11 -0700
-Message-ID: <CAP-5=fUiVWWrVvF7-Xr-9zR2_Q5_WiTTC-4r0p2fgxa8bGOHkg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] perf pmus: Sort pmus by name then suffix
+Date:   Fri, 25 Aug 2023 15:56:54 -0700
+Message-ID: <CAP-5=fUqLXdu2=TPSASFBbZ+B1oTFbuFra38z5YwYHWpX-V=hw@mail.gmail.com>
+Subject: Re: [PATCH v2 06/18] perf s390 s390_cpumcfdg_dump: Don't scan all PMUs
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.g.garry@oracle.com>,
+        James Clark <james.clark@arm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -75,139 +72,264 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 25, 2023 at 1:23=E2=80=AFPM Arnaldo Carvalho de Melo
+On Fri, Aug 25, 2023 at 1:56=E2=80=AFPM Arnaldo Carvalho de Melo
 <acme@kernel.org> wrote:
 >
-> Em Fri, Aug 25, 2023 at 06:52:36AM -0700, Ian Rogers escreveu:
-> > Sort PMUs by name. If two PMUs have the same name but differ by
-> > suffix, sort the suffixes numerically. For example, "breakpoint" comes
-> > before "cpu", "uncore_imc_free_running_0" comes before
-> > "uncore_imc_free_running_1". Suffixes need to be treated specially as
-> > otherwise they will be ordered like 0, 1, 10, 11, .., 2, 20, 21, ..,
-> > etc. Only PMUs starting 'uncore_' are considered to have a potential
-> > suffix.
-> >
-> > Sorting of PMUs is done so that later patches can skip duplicate
-> > uncore PMUs that differ only by there suffix.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/pmus.c | 48 ++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 48 insertions(+)
-> >
-> > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> > index 4dd5912617ff..b1f6a64693fe 100644
-> > --- a/tools/perf/util/pmus.c
-> > +++ b/tools/perf/util/pmus.c
-> > @@ -1,8 +1,10 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >  #include <linux/list.h>
-> > +#include <linux/list_sort.h>
-> >  #include <linux/zalloc.h>
-> >  #include <subcmd/pager.h>
-> >  #include <sys/types.h>
-> > +#include <ctype.h>
-> >  #include <dirent.h>
-> >  #include <pthread.h>
-> >  #include <string.h>
-> > @@ -33,6 +35,31 @@ static LIST_HEAD(other_pmus);
-> >  static bool read_sysfs_core_pmus;
-> >  static bool read_sysfs_all_pmus;
-> >
-> > +static int pmu_name_len_no_suffix(const char *str, unsigned long *num)
-> > +{
-> > +     int orig_len, len;
-> > +
-> > +     orig_len =3D len =3D strlen(str);
-> > +
-> > +     /* Non-uncore PMUs have their full length, for example, i915. */
-> > +     if (strncmp(str, "uncore_", 7))
-> > +             return len;
-> > +
-> > +     /*
-> > +      * Count trailing digits and '_', if '_{num}' suffix isn't presen=
-t use
-> > +      * the full length.
-> > +      */
-> > +     while (len > 0 && isdigit(str[len - 1]))
-> > +             len--;
-> > +
-> > +     if (len > 0 && len !=3D orig_len && str[len - 1] =3D=3D '_') {
-> > +             if (num)
-> > +                     *num =3D strtoul(&str[len], NULL, 10);
-> > +             return len - 1;
-> > +     }
-> > +     return orig_len;
-> > +}
-> > +
-> >  void perf_pmus__destroy(void)
-> >  {
-> >       struct perf_pmu *pmu, *tmp;
-> > @@ -122,6 +149,25 @@ static struct perf_pmu *perf_pmu__find2(int dirfd,=
- const char *name)
-> >       return perf_pmu__lookup(core_pmu ? &core_pmus : &other_pmus, dirf=
-d, name);
-> >  }
-> >
-> > +static int pmus_cmp(void *priv __maybe_unused,
-> > +                 const struct list_head *lhs, const struct list_head *=
-rhs)
-> > +{
-> > +     unsigned long lhs_num, rhs_num;
-> > +     struct perf_pmu *lhs_pmu =3D container_of(lhs, struct perf_pmu, l=
-ist);
-> > +     struct perf_pmu *rhs_pmu =3D container_of(rhs, struct perf_pmu, l=
-ist);
-> > +     const char *lhs_pmu_name =3D lhs_pmu->name ?: "";
-> > +     const char *rhs_pmu_name =3D rhs_pmu->name ?: "";
-> > +     int lhs_pmu_name_len =3D pmu_name_len_no_suffix(lhs_pmu_name, &lh=
-s_num);
-> > +     int rhs_pmu_name_len =3D pmu_name_len_no_suffix(rhs_pmu_name, &rh=
-s_num);
-> > +     int ret =3D strncmp(lhs_pmu_name, rhs_pmu_name,
-> > +                     lhs_pmu_name_len < rhs_pmu_name_len ? lhs_pmu_nam=
-e_len : rhs_pmu_name_len);
-> > +
-> > +     if (lhs_pmu_name_len !=3D rhs_pmu_name_len || ret !=3D 0 || lhs_p=
-mu_name_len =3D=3D 0)
-> > +             return ret;
-> > +
-> > +     return lhs_num < rhs_num ? -1 : (lhs_num > rhs_num ? 1 : 0);
-> > +}
+> Em Fri, Aug 25, 2023 at 04:39:22PM +0200, Thomas Richter escreveu:
+> > On 8/25/23 15:14, Ian Rogers wrote:
+> > > On Fri, Aug 25, 2023 at 1:20=E2=80=AFAM Thomas Richter <tmricht@linux=
+.ibm.com> wrote:
 >
-> Also, I got this in some distros/gcc versions:
+> > >> On 8/24/23 15:59, Arnaldo Carvalho de Melo wrote:
+> > >>> Em Wed, Aug 23, 2023 at 09:13:18PM -0700, Ian Rogers escreveu:
+> > >>>> Rather than scanning all PMUs for a counter name, scan the PMU
+> > >>>> associated with the evsel of the sample. This is done to remove a
+> > >>>> dependence on pmu-events.h.
 >
->   31    12.95 opensuse:15.5                 : FAIL gcc version 7.5.0 (SUS=
-E Linux)
->     util/pmus.c: In function 'pmus_cmp':
->     util/pmus.c:169:57: error: 'lhs_num' may be used uninitialized in thi=
-s function [-Werror=3Dmaybe-uninitialized]
->       return lhs_num < rhs_num ? -1 : (lhs_num > rhs_num ? 1 : 0);
->                                       ~~~~~~~~~~~~~~~~~~~~~~~^~~~
->     cc1: all warnings being treated as errors
->     make[3]: *** [/git/perf-6.5.0-rc5/tools/build/Makefile.build:150: uti=
-l] Error 2
+> > >>> I'm applying this one, and CCing the S/390 developers so that they =
+can
+> > >>> try this and maybe provide an Acked-by/Tested-by,
 >
-> I applied this, please check.
+> > >> I have downloaded this patch set of 18 patches (using b4), but they =
+do not
+> > >> apply on my git tree.
+>
+> > >> Which git branch do I have to use to test this. Thanks a lot.
+>
+> > > the changes are in the perf-tools-next tree:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/
+>
+> > Unfurtunately this patch set fails again on s390.
+> > Here is the test output from the current 6.5.0rc7 kernel:
+> >
+> > # ./perf test 6 10 'perf all metricgroups test' 'perf all metrics test'
+> >   6: Parse event definition strings                                  :
+> >   6.1: Test event parsing                                            : =
+Ok
+> >   6.2: Parsing of all PMU events from sysfs                          : =
+Ok
+> >   6.3: Parsing of given PMU events from sysfs                        : =
+Ok
+> >   6.4: Parsing of aliased events from sysfs                          : =
+Skip (no aliases in sysfs)
+> >   6.5: Parsing of aliased events                                     : =
+Ok
+> >   6.6: Parsing of terms (event modifiers)                            : =
+Ok
+> >  10: PMU events                                                      :
+> >  10.1: PMU event table sanity                                        : =
+Ok
+> >  10.2: PMU event map aliases                                         : =
+Ok
+> >  10.3: Parsing of PMU event table metrics                            : =
+Ok
+> >  10.4: Parsing of PMU event table metrics with fake PMUs             : =
+Ok
+> >  10.5: Parsing of metric thresholds with fake PMUs                   : =
+Ok
+> >  95: perf all metricgroups test                                      : =
+Ok
+> >  96: perf all metrics test                                           : =
+Ok
+> > #
+> >
+> > This looks good.
+>
+> Reproduced:
+>
+> # grep -E vendor_id\|^processor -m2 /proc/cpuinfo
+> vendor_id       : IBM/S390
+> processor 0: version =3D 00,  identification =3D 1A33E8,  machine =3D 296=
+4
+> #
+> # perf test 6 10 'perf all metricgroups test' 'perf all metrics test'
+>   6: Parse event definition strings                                  :
+>   6.1: Test event parsing                                            : Ok
+>   6.2: Parsing of all PMU events from sysfs                          : Ok
+>   6.3: Parsing of given PMU events from sysfs                        : Ok
+>   6.4: Parsing of aliased events from sysfs                          : Sk=
+ip (no aliases in sysfs)
+>   6.5: Parsing of aliased events                                     : Ok
+>   6.6: Parsing of terms (event modifiers)                            : Ok
+>  10: PMU events                                                      :
+>  10.1: PMU event table sanity                                        : Ok
+>  10.2: PMU event map aliases                                         : Ok
+>  10.3: Parsing of PMU event table metrics                            : Ok
+>  10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+>  10.5: Parsing of metric thresholds with fake PMUs                   : Ok
+>  95: perf all metricgroups test                                      : Ok
+>  96: perf all metrics test                                           : Ok
+> # perf -v
+> perf version 6.5.rc7.g6f0edbb833ec
+> #
+>
+> > However when I use the check-out from perf-tools-next, I get this outpu=
+t:
+> > # ./perf test 6 10 'perf all metricgroups test' 'perf all metrics test'
+> >   6: Parse event definition strings                                  :
+> >   6.1: Test event parsing                                            : =
+Ok
+> >   6.2: Parsing of all PMU events from sysfs                          : =
+FAILED!
+> >   6.3: Parsing of given PMU events from sysfs                        : =
+Ok
+> >   6.4: Parsing of aliased events from sysfs                          : =
+Skip (no aliases in sysfs)
+> >   6.5: Parsing of aliased events                                     : =
+FAILED!
+> >   6.6: Parsing of terms (event modifiers)                            : =
+Ok
+> >  10: PMU events                                                      :
+> >  10.1: PMU event table sanity                                        : =
+Ok
+> >  10.2: PMU event map aliases                                         : =
+FAILED!
+> >  10.3: Parsing of PMU event table metrics                            : =
+Ok
+> >  10.4: Parsing of PMU event table metrics with fake PMUs             : =
+FAILED!
+> >  10.5: Parsing of metric thresholds with fake PMUs                   : =
+Ok
+> >  93: perf all metricgroups test                                      : =
+FAILED!
+> >  94: perf all metrics test                                           : =
+FAILED!
+> > #
+> >
+> > So some tests are failing again.
+> >
+> > I am out for the next two weeks, Sumanth Korikkar (on to list) might be=
+ able to help.
+> > Thanks a lot.
+>
+> [root@kernelqe3 linux]# git checkout perf-tools-next
+> git Switched to branch 'perf-tools-next'
+> Your branch is up to date with 'perf-tools-next/perf-tools-next'.
+> [root@kernelqe3 linux]# git log --oneline -5
+> eeb6b12992c4 (HEAD -> perf-tools-next, perf-tools-next/perf-tools-next) p=
+erf jevents: Don't append Unit to desc
+> f208b2c6f984 (perf-tools-next/tmp.perf-tools-next) perf scripts python ge=
+cko: Launch the profiler UI on the default browser with the appropriate URL
+> 43803cb16f99 perf scripts python: Add support for input args in gecko scr=
+ipt
+> f85d120c46e7 perf jevents: Sort strings in the big C string to reduce fau=
+lts
+> 8d4b6d37ea78 perf pmu: Lazily load sysfs aliases
+> [root@kernelqe3 linux]# make BUILD_BPF_SKEL=3D1 -C tools/perf O=3D/tmp/bu=
+ild/perf install-bin
+>
+> [root@kernelqe3 linux]# perf -v
+> perf version 6.5.rc5.geeb6b12992c4
+> [root@kernelqe3 linux]# git log --oneline -1
+> eeb6b12992c4 (HEAD -> perf-tools-next, perf-tools-next/perf-tools-next) p=
+erf jevents: Don't append Unit to desc
+> [root@kernelqe3 linux]# perf test 6 10 'perf all metricgroups test' 'perf=
+ all metrics test'
+>   6: Parse event definition strings                                  :
+>   6.1: Test event parsing                                            : Ok
+>   6.2: Parsing of all PMU events from sysfs                          : FA=
+ILED!
+>   6.3: Parsing of given PMU events from sysfs                        : Ok
+>   6.4: Parsing of aliased events from sysfs                          : Sk=
+ip (no aliases in sysfs)
+>   6.5: Parsing of aliased events                                     : FA=
+ILED!
+>   6.6: Parsing of terms (event modifiers)                            : Ok
+>  10: PMU events                                                      :
+>  10.1: PMU event table sanity                                        : Ok
+>  10.2: PMU event map aliases                                         : FA=
+ILED!
+>  10.3: Parsing of PMU event table metrics                            : Ok
+>  10.4: Parsing of PMU event table metrics with fake PMUs             : FA=
+ILED!
+>  10.5: Parsing of metric thresholds with fake PMUs                   : Ok
+>  93: perf all metricgroups test                                      : FA=
+ILED!
+>  94: perf all metrics test                                           : FA=
+ILED!
+> [root@kernelqe3 linux]#
+>
+> Bisecting the first problem:
+>
+>  10.2: PMU event map aliases                                         : FA=
+ILED!
+>
+> make: Leaving directory '/root/git/linux/tools/perf'
+>   6: Parse event definition strings                                  :
+>   6.1: Test event parsing                                            : Ok
+>   6.2: Parsing of all PMU events from sysfs                          : Ok
+>   6.3: Parsing of given PMU events from sysfs                        : Ok
+>   6.4: Parsing of aliased events from sysfs                          : Sk=
+ip (no aliases in sysfs)
+>   6.5: Parsing of aliased events                                     : Ok
+>   6.6: Parsing of terms (event modifiers)                            : Ok
+>  10: PMU events                                                      :
+>  10.1: PMU event table sanity                                        : Ok
+>  10.2: PMU event map aliases                                         : FA=
+ILED!
+>  10.3: Parsing of PMU event table metrics                            : Ok
+>  10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+>  10.5: Parsing of metric thresholds with fake PMUs                   : Ok
+>  93: perf all metricgroups test                                      : Ok
+>  94: perf all metrics test                                           : Ok
+> [root@kernelqe3 linux]# git bisect bad
+> 2e255b4f9f41f137d9e3dc4fae3603a9c2c3dd28 is the first bad commit
+> commit 2e255b4f9f41f137d9e3dc4fae3603a9c2c3dd28
+> Author: Ian Rogers <irogers@google.com>
+> Date:   Wed Aug 23 21:13:16 2023 -0700
+>
+>     perf jevents: Group events by PMU
+>
+>     Prior to this change a cpuid would map to a list of events where the =
+PMU
+>     would be encoded alongside the event information. This change breaks
+>     apart each group of events so that there is a group per PMU. A new ta=
+ble
+>     is added with the PMU's name and the list of events, the original tab=
+le
+>     now holding an array of these per PMU tables.
+>
+>     These changes are to make it easier to get per PMU information about
+>     events, rather than the current approach of scanning all events. The
+>     perf binary size with BPF skeletons on x86 is reduced by about 1%. Th=
+e
+>     unidentified PMU is now always expanded to "cpu".
+>
+>     Signed-off-by: Ian Rogers <irogers@google.com>
+>     Cc: Adrian Hunter <adrian.hunter@intel.com>
+>     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>     Cc: Gaosheng Cui <cuigaosheng1@huawei.com>
+>     Cc: Ingo Molnar <mingo@redhat.com>
+>     Cc: James Clark <james.clark@arm.com>
+>     Cc: Jing Zhang <renyu.zj@linux.alibaba.com>
+>     Cc: Jiri Olsa <jolsa@kernel.org>
+>     Cc: John Garry <john.g.garry@oracle.com>
+>     Cc: Kajol Jain <kjain@linux.ibm.com>
+>     Cc: Kan Liang <kan.liang@linux.intel.com>
+>     Cc: Mark Rutland <mark.rutland@arm.com>
+>     Cc: Namhyung Kim <namhyung@kernel.org>
+>     Cc: Peter Zijlstra <peterz@infradead.org>
+>     Cc: Ravi Bangoria <ravi.bangoria@amd.com>
+>     Cc: Rob Herring <robh@kernel.org>
+>     Link: https://lore.kernel.org/r/20230824041330.266337-5-irogers@googl=
+e.com
+>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>
+>  tools/perf/pmu-events/jevents.py | 181 +++++++++++++++++++++++++++++----=
+------
+>  tools/perf/tests/pmu-events.c    |  30 ++++---
+>  2 files changed, 154 insertions(+), 57 deletions(-)
+> [root@kernelqe3 linux]#
+>
 
-Makes sense, thanks!
+This change defaulted events without a specified PMU to being for the
+PMU 'cpu', so that events in pmu-events.c were associated with a PMU
+and we could find per-PMU information easily. The test events have no
+PMU and so this has broken s390 where the the PMU should be "cpum_cf".
+It has probably also broken x86 hybrid and arm where their default PMU
+isn't cpu. I'll work on a fix, but the problem will be limited to the
+test.
 
+Thanks,
 Ian
-
-> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> index bbf84ccc3aba7d5c..7316da1c0ddb8eaf 100644
-> --- a/tools/perf/util/pmus.c
-> +++ b/tools/perf/util/pmus.c
-> @@ -153,7 +153,7 @@ static struct perf_pmu *perf_pmu__find2(int dirfd, co=
-nst char *name)
->  static int pmus_cmp(void *priv __maybe_unused,
->                     const struct list_head *lhs, const struct list_head *=
-rhs)
->  {
-> -       unsigned long lhs_num, rhs_num;
-> +       unsigned long lhs_num =3D 0, rhs_num =3D 0;
->         struct perf_pmu *lhs_pmu =3D container_of(lhs, struct perf_pmu, l=
-ist);
->         struct perf_pmu *rhs_pmu =3D container_of(rhs, struct perf_pmu, l=
-ist);
->         const char *lhs_pmu_name =3D lhs_pmu->name ?: "";
