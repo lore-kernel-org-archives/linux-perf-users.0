@@ -2,125 +2,133 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBF3C83F11
-	for <linux-perf-users@archiver.kernel.org>; Sat, 26 Aug 2023 01:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5E7C83F12
+	for <linux-perf-users@archiver.kernel.org>; Sat, 26 Aug 2023 03:30:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230129AbjHZBjW (ORCPT
+        id S231657AbjHZD3q (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 21:39:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60666 "EHLO
+        Fri, 25 Aug 2023 23:29:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229825AbjHZBiv (ORCPT
+        with ESMTP id S231574AbjHZD3N (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 21:38:51 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DD361BCD;
-        Fri, 25 Aug 2023 18:38:48 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 161D461B07;
-        Sat, 26 Aug 2023 01:38:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40E32C433C8;
-        Sat, 26 Aug 2023 01:38:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693013927;
-        bh=/GRdRBgIXWHmbqe390xRnh53Yf3/xECvBB01VrOXMAk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e485+cBL6dN3Hj5jjtlJV66UocwEcZ4e1Jib5rRnSFQYZL23TIeQM9ZcRToIs/rHp
-         yyzqTYSceh1mwL/ONvdZPyH9jyuPO0D7HwCZE4egwUfZ01vXCNeDhn8JoJfh2kZONC
-         I1UEpYdKybnzDN0PJPxfTzAbNIT3qkzw3+OMLyvEBqrUK42cRUDUb4lb3EwkUB6Qu0
-         53yxVDOLMpS6VirFlLdfTLZu3f8WdXrVgoJJ3b6B7ZCu+ZybIfNC+kHG0Ktvw72LBD
-         oQnhHtBx+d2rhyrvpsjp0/AUNkMvbUbjpmD+Ph5EuY+aYYpRaGUxkMf4xd+JuNECm2
-         GJhrt3FeQARRQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 27A9740722; Fri, 25 Aug 2023 22:38:44 -0300 (-03)
-Date:   Fri, 25 Aug 2023 22:38:44 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 06/18] perf s390 s390_cpumcfdg_dump: Don't scan all
- PMUs
-Message-ID: <ZOlXpJM/ognSPlcz@kernel.org>
-References: <20230824041330.266337-1-irogers@google.com>
- <20230824041330.266337-7-irogers@google.com>
- <ZOdiX4eJHFfFbQhi@kernel.org>
- <428afeb4-d5ca-8115-73fc-881119a1cd51@linux.ibm.com>
- <CAP-5=fVt1vxK0CJ=aYjZzs4mushbxAx8056uxVQZUfsLAKpVoQ@mail.gmail.com>
- <4f2438fc-2360-8833-3751-fe3bc8b11afb@linux.ibm.com>
- <ZOkVYoN17A8wwP3k@kernel.org>
- <CAP-5=fUqLXdu2=TPSASFBbZ+B1oTFbuFra38z5YwYHWpX-V=hw@mail.gmail.com>
+        Fri, 25 Aug 2023 23:29:13 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0440D213C;
+        Fri, 25 Aug 2023 20:29:11 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RXhzK2QsVzNmtS;
+        Sat, 26 Aug 2023 11:25:33 +0800 (CST)
+Received: from localhost.localdomain (10.67.174.95) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Sat, 26 Aug 2023 11:29:08 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+        <james.clark@arm.com>, <tmricht@linux.ibm.com>,
+        <ak@linux.intel.com>, <anshuman.khandual@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH v7 5/6] perf test: Add test case for record sideband events
+Date:   Sat, 26 Aug 2023 03:26:07 +0000
+Message-ID: <20230826032608.107261-6-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
+In-Reply-To: <20230826032608.107261-1-yangjihong1@huawei.com>
+References: <20230826032608.107261-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUqLXdu2=TPSASFBbZ+B1oTFbuFra38z5YwYHWpX-V=hw@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.95]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Aug 25, 2023 at 03:56:54PM -0700, Ian Rogers escreveu:
-> On Fri, Aug 25, 2023 at 1:56 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > [root@kernelqe3 linux]# git bisect bad
-> > 2e255b4f9f41f137d9e3dc4fae3603a9c2c3dd28 is the first bad commit
-> > commit 2e255b4f9f41f137d9e3dc4fae3603a9c2c3dd28
-> > Author: Ian Rogers <irogers@google.com>
-> > Date:   Wed Aug 23 21:13:16 2023 -0700
-> >
-> >     perf jevents: Group events by PMU
-> >
-> >     Prior to this change a cpuid would map to a list of events where the PMU
-> >     would be encoded alongside the event information. This change breaks
-> >     apart each group of events so that there is a group per PMU. A new table
-> >     is added with the PMU's name and the list of events, the original table
-> >     now holding an array of these per PMU tables.
-> >
-> >     These changes are to make it easier to get per PMU information about
-> >     events, rather than the current approach of scanning all events. The
-> >     perf binary size with BPF skeletons on x86 is reduced by about 1%. The
-> >     unidentified PMU is now always expanded to "cpu".
-> >
-> >     Signed-off-by: Ian Rogers <irogers@google.com>
-> >     Cc: Adrian Hunter <adrian.hunter@intel.com>
-> >     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> >     Cc: Gaosheng Cui <cuigaosheng1@huawei.com>
-> >     Cc: Ingo Molnar <mingo@redhat.com>
-> >     Cc: James Clark <james.clark@arm.com>
-> >     Cc: Jing Zhang <renyu.zj@linux.alibaba.com>
-> >     Cc: Jiri Olsa <jolsa@kernel.org>
-> >     Cc: John Garry <john.g.garry@oracle.com>
-> >     Cc: Kajol Jain <kjain@linux.ibm.com>
-> >     Cc: Kan Liang <kan.liang@linux.intel.com>
-> >     Cc: Mark Rutland <mark.rutland@arm.com>
-> >     Cc: Namhyung Kim <namhyung@kernel.org>
-> >     Cc: Peter Zijlstra <peterz@infradead.org>
-> >     Cc: Ravi Bangoria <ravi.bangoria@amd.com>
-> >     Cc: Rob Herring <robh@kernel.org>
-> >     Link: https://lore.kernel.org/r/20230824041330.266337-5-irogers@google.com
-> >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> >
-> >  tools/perf/pmu-events/jevents.py | 181 +++++++++++++++++++++++++++++----------
-> >  tools/perf/tests/pmu-events.c    |  30 ++++---
-> >  2 files changed, 154 insertions(+), 57 deletions(-)
-> > [root@kernelqe3 linux]#
-> 
-> This change defaulted events without a specified PMU to being for the
-> PMU 'cpu', so that events in pmu-events.c were associated with a PMU
-> and we could find per-PMU information easily. The test events have no
-> PMU and so this has broken s390 where the the PMU should be "cpum_cf".
-> It has probably also broken x86 hybrid and arm where their default PMU
-> isn't cpu. I'll work on a fix, but the problem will be limited to the
-> test.
+Add a new test case to record sideband events for all CPUs when tracing
+selected CPUs
 
-Ok, please use tmp.perf-tools-next as the basis for your work, that is
-what I have right now.
+Test result:
 
-- Arnaldo
+  # ./perf test list 2>&1 | grep 'perf record sideband tests'
+   95: perf record sideband tests
+  # ./perf test 95
+   95: perf record sideband tests                                      : Ok
+
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/perf/tests/shell/record_sideband.sh | 58 +++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
+ create mode 100755 tools/perf/tests/shell/record_sideband.sh
+
+diff --git a/tools/perf/tests/shell/record_sideband.sh b/tools/perf/tests/shell/record_sideband.sh
+new file mode 100755
+index 000000000000..5024a7ce0c51
+--- /dev/null
++++ b/tools/perf/tests/shell/record_sideband.sh
+@@ -0,0 +1,58 @@
++#!/bin/sh
++# perf record sideband tests
++# SPDX-License-Identifier: GPL-2.0
++
++set -e
++
++err=0
++perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++
++cleanup()
++{
++    rm -rf ${perfdata}
++    trap - EXIT TERM INT
++}
++
++trap_cleanup()
++{
++    cleanup
++    exit 1
++}
++trap trap_cleanup EXIT TERM INT
++
++can_cpu_wide()
++{
++    if ! perf record -o ${perfdata} -BN --no-bpf-event -C $1 true 2>&1 >/dev/null
++    then
++        echo "record sideband test [Skipped cannot record cpu$1]"
++        err=2
++    fi
++
++    rm -f ${perfdata}
++    return $err
++}
++
++test_system_wide_tracking()
++{
++    # Need CPU 0 and CPU 1
++    can_cpu_wide 0 || return 0
++    can_cpu_wide 1 || return 0
++
++    # Record on CPU 0 a task running on CPU 1
++    perf record -BN --no-bpf-event -o ${perfdata} -C 0 -- taskset --cpu-list 1 true
++
++    # Should get MMAP events from CPU 1
++    mmap_cnt=`perf script -i ${perfdata} --show-mmap-events -C 1 2>/dev/null | grep MMAP | wc -l`
++
++    if [ ${mmap_cnt} -gt 0 ] ; then
++        return 0
++    fi
++
++    echo "Failed to record MMAP events on CPU 1 when tracing CPU 0"
++    return 1
++}
++
++test_system_wide_tracking
++
++cleanup
++exit $err
+-- 
+2.30.GIT
+
