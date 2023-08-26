@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5E7C83F12
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 526BBC83F01
 	for <linux-perf-users@archiver.kernel.org>; Sat, 26 Aug 2023 03:30:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231657AbjHZD3q (ORCPT
+        id S231734AbjHZD3r (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 23:29:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42122 "EHLO
+        Fri, 25 Aug 2023 23:29:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231574AbjHZD3N (ORCPT
+        with ESMTP id S231501AbjHZD3N (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Fri, 25 Aug 2023 23:29:13 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0440D213C;
-        Fri, 25 Aug 2023 20:29:11 -0700 (PDT)
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C74262136;
+        Fri, 25 Aug 2023 20:29:08 -0700 (PDT)
 Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RXhzK2QsVzNmtS;
-        Sat, 26 Aug 2023 11:25:33 +0800 (CST)
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RXhz34CLLztS5r;
+        Sat, 26 Aug 2023 11:25:19 +0800 (CST)
 Received: from localhost.localdomain (10.67.174.95) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Sat, 26 Aug 2023 11:29:08 +0800
+ 15.1.2507.31; Sat, 26 Aug 2023 11:29:06 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -32,9 +32,9 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <ak@linux.intel.com>, <anshuman.khandual@arm.com>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
 CC:     <yangjihong1@huawei.com>
-Subject: [PATCH v7 5/6] perf test: Add test case for record sideband events
-Date:   Sat, 26 Aug 2023 03:26:07 +0000
-Message-ID: <20230826032608.107261-6-yangjihong1@huawei.com>
+Subject: [PATCH v7 1/6] perf evlist: Add perf_evlist__go_system_wide() helper
+Date:   Sat, 26 Aug 2023 03:26:03 +0000
+Message-ID: <20230826032608.107261-2-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
 In-Reply-To: <20230826032608.107261-1-yangjihong1@huawei.com>
 References: <20230826032608.107261-1-yangjihong1@huawei.com>
@@ -49,86 +49,45 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add a new test case to record sideband events for all CPUs when tracing
-selected CPUs
-
-Test result:
-
-  # ./perf test list 2>&1 | grep 'perf record sideband tests'
-   95: perf record sideband tests
-  # ./perf test 95
-   95: perf record sideband tests                                      : Ok
+For dummy events that keep tracking, we may need to modify its cpu_maps.
+For example, change the cpu_maps to record sideband events for all CPUS.
+Add perf_evlist__go_system_wide() helper to support this scenario.
 
 Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/tests/shell/record_sideband.sh | 58 +++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
- create mode 100755 tools/perf/tests/shell/record_sideband.sh
+ tools/lib/perf/evlist.c                  | 9 +++++++++
+ tools/lib/perf/include/internal/evlist.h | 2 ++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/tools/perf/tests/shell/record_sideband.sh b/tools/perf/tests/shell/record_sideband.sh
-new file mode 100755
-index 000000000000..5024a7ce0c51
---- /dev/null
-+++ b/tools/perf/tests/shell/record_sideband.sh
-@@ -0,0 +1,58 @@
-+#!/bin/sh
-+# perf record sideband tests
-+# SPDX-License-Identifier: GPL-2.0
+diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+index b8b066d0dc5e..3acbbccc1901 100644
+--- a/tools/lib/perf/evlist.c
++++ b/tools/lib/perf/evlist.c
+@@ -738,3 +738,12 @@ int perf_evlist__nr_groups(struct perf_evlist *evlist)
+ 	}
+ 	return nr_groups;
+ }
 +
-+set -e
-+
-+err=0
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+
-+cleanup()
++void perf_evlist__go_system_wide(struct perf_evlist *evlist, struct perf_evsel *evsel)
 +{
-+    rm -rf ${perfdata}
-+    trap - EXIT TERM INT
++	if (!evsel->system_wide) {
++		evsel->system_wide = true;
++		if (evlist->needs_map_propagation)
++			__perf_evlist__propagate_maps(evlist, evsel);
++	}
 +}
+diff --git a/tools/lib/perf/include/internal/evlist.h b/tools/lib/perf/include/internal/evlist.h
+index 3339bc2f1765..d86ffe8ed483 100644
+--- a/tools/lib/perf/include/internal/evlist.h
++++ b/tools/lib/perf/include/internal/evlist.h
+@@ -135,4 +135,6 @@ int perf_evlist__id_add_fd(struct perf_evlist *evlist,
+ void perf_evlist__reset_id_hash(struct perf_evlist *evlist);
+ 
+ void __perf_evlist__set_leader(struct list_head *list, struct perf_evsel *leader);
 +
-+trap_cleanup()
-+{
-+    cleanup
-+    exit 1
-+}
-+trap trap_cleanup EXIT TERM INT
-+
-+can_cpu_wide()
-+{
-+    if ! perf record -o ${perfdata} -BN --no-bpf-event -C $1 true 2>&1 >/dev/null
-+    then
-+        echo "record sideband test [Skipped cannot record cpu$1]"
-+        err=2
-+    fi
-+
-+    rm -f ${perfdata}
-+    return $err
-+}
-+
-+test_system_wide_tracking()
-+{
-+    # Need CPU 0 and CPU 1
-+    can_cpu_wide 0 || return 0
-+    can_cpu_wide 1 || return 0
-+
-+    # Record on CPU 0 a task running on CPU 1
-+    perf record -BN --no-bpf-event -o ${perfdata} -C 0 -- taskset --cpu-list 1 true
-+
-+    # Should get MMAP events from CPU 1
-+    mmap_cnt=`perf script -i ${perfdata} --show-mmap-events -C 1 2>/dev/null | grep MMAP | wc -l`
-+
-+    if [ ${mmap_cnt} -gt 0 ] ; then
-+        return 0
-+    fi
-+
-+    echo "Failed to record MMAP events on CPU 1 when tracing CPU 0"
-+    return 1
-+}
-+
-+test_system_wide_tracking
-+
-+cleanup
-+exit $err
++void perf_evlist__go_system_wide(struct perf_evlist *evlist, struct perf_evsel *evsel);
+ #endif /* __LIBPERF_INTERNAL_EVLIST_H */
 -- 
 2.30.GIT
 
