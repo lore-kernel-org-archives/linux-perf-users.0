@@ -2,154 +2,147 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03414C83F11
-	for <linux-perf-users@archiver.kernel.org>; Sat, 26 Aug 2023 09:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A14C83F01
+	for <linux-perf-users@archiver.kernel.org>; Sat, 26 Aug 2023 10:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229464AbjHZJvt (ORCPT
+        id S229747AbjHZKhD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 26 Aug 2023 05:51:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42908 "EHLO
+        Sat, 26 Aug 2023 06:37:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232445AbjHZJv2 (ORCPT
+        with ESMTP id S232251AbjHZKhA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 26 Aug 2023 05:51:28 -0400
-Received: from xry111.site (xry111.site [89.208.246.23])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2341D272B
-        for <linux-perf-users@vger.kernel.org>; Sat, 26 Aug 2023 02:51:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-        s=default; t=1693043373;
-        bh=p3YpqU+EAKVPZiCc8ygp7fZ6DxDfOkZsVuvVpGeDsb0=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=lo8WrC0yj0N2oePNH4BGfV6tGeikDFvWDHnki5gqibp9/ss5c3p9izU32AxoT/Do6
-         BXafWg0MwW3H43/W9Yw0rcrN5ppDK7KKFQWyTQTI1GIEObNUJCnrLl4DalNLObT319
-         NWM/b4xXkb0CFTqejgBjJhD1BdR4X85ft35lgf+A=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
+        Sat, 26 Aug 2023 06:37:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0C951FEC;
+        Sat, 26 Aug 2023 03:36:57 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
-        (Client did not present a certificate)
-        (Authenticated sender: xry111@xry111.site)
-        by xry111.site (Postfix) with ESMTPSA id 12E4F659C7;
-        Sat, 26 Aug 2023 05:49:30 -0400 (EDT)
-Message-ID: <ef11874aca952984d67ad5fb65b7fc1e265e2ef2.camel@xry111.site>
-Subject: Re: [PATCH v3 3/3] perf/trace: Use "test -f" instead of "[-f FILE]"
-From:   Xi Ruoyao <xry111@xry111.site>
-To:     Yanteng Si <siyanteng@loongson.cn>, acme@kernel.org
-Cc:     mingo@redhat.com, peterz@infradead.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        chenhuacai@kernel.org, linux-perf-users@vger.kernel.org,
-        loongson-kernel@lists.loongnix.cn, loongarch@lists.linux.dev
-Date:   Sat, 26 Aug 2023 17:49:29 +0800
-In-Reply-To: <b9fc1affbca15cbf18cc23905f823047b4e2f1b6.1693040967.git.siyanteng@loongson.cn>
-References: <cover.1693040967.git.siyanteng@loongson.cn>
-         <b9fc1affbca15cbf18cc23905f823047b4e2f1b6.1693040967.git.siyanteng@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 
-MIME-Version: 1.0
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 46FB760F1E;
+        Sat, 26 Aug 2023 10:36:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9021CC433C7;
+        Sat, 26 Aug 2023 10:36:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693046216;
+        bh=x1hOMfWCNnRRZv1VfAf0PBdXlkAf5G9BLURODcZBglk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=INzayd/CTmJb+InHsokVpOULz3x6muV25aBm0mPqEw5jfo+8CgFASIKNwIygd2qRz
+         ASLD4A6FPW2/bVKVqRWz9Tmnq3x/ryEhj7kB5JqwIIljpwsz0XyBaigRicvQ2MUxZ6
+         9SeIUiYTlUSOqPcXab93ZFCURk9AEjjZFPX74JkMLwEW6HV0sDIcL0L+UsNC0CW+Nd
+         ejD8KU80BIUMYLKxmIZusLkv+rADwxfx8fUZvvHSUgEcd64pNj+32X8SCWfv+DFrbE
+         K6iWQ3Csc4DwvMEQ8c/gLicqpfOPlgawDltamb847SQOFnwV6M/U2XavLzVM7jB+NL
+         xuWH/NY09ITuQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1qZqez-008Gjw-Rk;
+        Sat, 26 Aug 2023 11:36:54 +0100
+Date:   Sat, 26 Aug 2023 11:36:53 +0100
+Message-ID: <86bkeuf5tm.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        linux-perf-users@vger.kernel.org,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-arm-kernel@lists.infradead.org, ito-yuichi@fujitsu.com,
+        Stephen Boyd <swboyd@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v11 1/6] irqchip/gic-v3: Enable support for SGIs to act as NMIs
+In-Reply-To: <20230824083012.v11.1.I1223c11c88937bd0cbd9b086d4ef216985797302@changeid>
+References: <20230824153233.1006420-1-dianders@chromium.org>
+        <20230824083012.v11.1.I1223c11c88937bd0cbd9b086d4ef216985797302@changeid>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: dianders@chromium.org, mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org, sumit.garg@linaro.org, daniel.thompson@linaro.org, rafael.j.wysocki@intel.com, ardb@kernel.org, tglx@linutronix.de, kgdb-bugreport@lists.sourceforge.net, lecopzer.chen@mediatek.com, linux-perf-users@vger.kernel.org, msys.mizuma@gmail.com, wens@csie.org, linux-arm-kernel@lists.infradead.org, ito-yuichi@fujitsu.com, swboyd@chromium.org, peterz@infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, 2023-08-26 at 17:40 +0800, Yanteng Si wrote:
-> It will be simpler without that extra subshell, so
-> let's use "test -f".
-
-Sorry for duplicated reply (I replied to v2 minutes ago), but I cannot
-understand this sentence.  [ ... ] has nothing to do with subshell, it's
-just a syntax variant of "test".
-
-> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+On Thu, 24 Aug 2023 16:30:27 +0100,
+Douglas Anderson <dianders@chromium.org> wrote:
+> 
+> As of commit 6abbd6988971 ("irqchip/gic, gic-v3: Make SGIs use
+> handle_percpu_devid_irq()") SGIs are treated the same as PPIs/EPPIs
+> and use handle_percpu_devid_irq() by default. Unfortunately,
+> handle_percpu_devid_irq() isn't NMI safe, and so to run in an NMI
+> context those should use handle_percpu_devid_fasteoi_nmi().
+> 
+> In order to accomplish this, we just have to make room for SGIs in the
+> array of refcounts that keeps track of which interrupts are set as
+> NMI. We also rename the array and create a new indexing scheme that
+> accounts for SGIs.
+> 
+> Also, enable NMI support prior to gic_smp_init() as allocation of SGIs
+> as IRQs/NMIs happen as part of this routine.
+> 
+> Co-developed-by: Sumit Garg <sumit.garg@linaro.org>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
-> =C2=A0tools/perf/trace/beauty/mmap_flags.sh | 9 ++++++---
-> =C2=A0tools/perf/trace/beauty/mmap_prot.sh=C2=A0 | 5 +++--
-> =C2=A02 files changed, 9 insertions(+), 5 deletions(-)
->=20
-> diff --git a/tools/perf/trace/beauty/mmap_flags.sh
-> b/tools/perf/trace/beauty/mmap_flags.sh
-> index d035b29fc5ec..6ecdb3c5a99e 100755
-> --- a/tools/perf/trace/beauty/mmap_flags.sh
-> +++ b/tools/perf/trace/beauty/mmap_flags.sh
-> @@ -19,7 +19,8 @@ arch_mman=3D${arch_header_dir}/mman.h
-> =C2=A0
-> =C2=A0printf "static const char *mmap_flags[] =3D {\n"
-> =C2=A0regex=3D'^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:=
-]_]+
-> )[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
-> -([ -f ${arch_mman} ] && grep -E -q $regex ${arch_mman}) && \
-> +test -f ${arch_mman} && \
-> +grep -E -q $regex ${arch_mman} && \
-> =C2=A0(grep -E $regex ${arch_mman} | \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0sed -r "s/$regex/\2 \1 \1=
- \1 \2/g"=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0xargs printf "\t[ilog2(%s=
-) + 1] =3D \"%s\",\n#ifndef
-> MAP_%s\n#define MAP_%s %s\n#endif\n")
-> @@ -28,12 +29,14 @@ grep -E -q $regex ${linux_mman} && \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0grep -E -vw 'MAP_(UNINITI=
-ALIZED|TYPE|SHARED_VALIDATE)' | \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0sed -r "s/$regex/\2 \1 \1=
- \1 \2/g" | \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0xargs printf "\t[ilog2(%s=
-) + 1] =3D \"%s\",\n#ifndef
-> MAP_%s\n#define MAP_%s %s\n#endif\n")
-> -([ ! -f ${arch_mman} ] || grep -E -q
-> '#[[:space:]]*include[[:space:]]+.*uapi/asm-generic/mman.*'
-> ${arch_mman}) &&
-> +( ! test -f ${arch_mman} || \
-> +grep -E -q '#[[:space:]]*include[[:space:]]+.*uapi/asm-
-> generic/mman.*' ${arch_mman}) &&
-> =C2=A0(grep -E $regex ${header_dir}/mman-common.h | \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0grep -E -vw 'MAP_(UNINITI=
-ALIZED|TYPE|SHARED_VALIDATE)' | \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0sed -r "s/$regex/\2 \1 \1=
- \1 \2/g"=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0xargs printf "\t[ilog2(%s=
-) + 1] =3D \"%s\",\n#ifndef
-> MAP_%s\n#define MAP_%s %s\n#endif\n")
-> -([ ! -f ${arch_mman} ] || grep -E -q
-> '#[[:space:]]*include[[:space:]]+.*uapi/asm-generic/mman.h>.*'
-> ${arch_mman}) &&
-> +( ! test -f ${arch_mman} || \
-> +grep -E -q '#[[:space:]]*include[[:space:]]+.*uapi/asm-
-> generic/mman.h>.*' ${arch_mman}) &&
-> =C2=A0(grep -E $regex ${header_dir}/mman.h | \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0sed -r "s/$regex/\2 \1 \1=
- \1 \2/g"=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0xargs printf "\t[ilog2(%s=
-) + 1] =3D \"%s\",\n#ifndef
-> MAP_%s\n#define MAP_%s %s\n#endif\n")
-> diff --git a/tools/perf/trace/beauty/mmap_prot.sh
-> b/tools/perf/trace/beauty/mmap_prot.sh
-> index 49e8c865214b..4436fcd6e861 100755
-> --- a/tools/perf/trace/beauty/mmap_prot.sh
-> +++ b/tools/perf/trace/beauty/mmap_prot.sh
-> @@ -17,12 +17,13 @@ prefix=3D"PROT"
-> =C2=A0
-> =C2=A0printf "static const char *mmap_prot[] =3D {\n"
-> =C2=A0regex=3D`printf
-> '^[[:space:]]*#[[:space:]]*define[[:space:]]+%s_([[:alnum:]_]+)[[:spac
-> e:]]+(0x[[:xdigit:]]+)[[:space:]]*.*' ${prefix}`
-> -([ ! -f ${arch_mman} ] || grep -E -q
-> '#[[:space:]]*include[[:space:]]+.*uapi/asm-generic/mman.*'
-> ${arch_mman}) &&
-> +( ! test -f ${arch_mman} \
-> +|| grep -E -q '#[[:space:]]*include[[:space:]]+.*uapi/asm-
-> generic/mman.*' ${arch_mman}) &&
-> =C2=A0(grep -E $regex ${common_mman} | \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0grep -E -vw PROT_NONE | \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0sed -r "s/$regex/\2 \1 \1=
- \1 \2/g"=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0xargs printf "\t[ilog2(%s=
-) + 1] =3D \"%s\",\n#ifndef
-> ${prefix}_%s\n#define ${prefix}_%s %s\n#endif\n")
-> -[ -f ${arch_mman} ] && grep -E -q $regex ${arch_mman} &&
-> +test -f ${arch_mman} && grep -E -q $regex ${arch_mman} &&
-> =C2=A0(grep -E $regex ${arch_mman} | \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0grep -E -vw PROT_NONE | \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0sed -r "s/$regex/\2 \1 \1=
- \1 \2/g"=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| \
+> In v10 I removed the previous Reviewed-by and Tested-by tags since the
+> patch contents changed pretty drastically.
+> 
+> I'll also note that this change is a little more black magic to me
+> than others in this series. I don't have a massive amounts of
+> familiarity with all the moving parts of gic-v3, so I mostly just
+> followed Mark Rutland's advice [1]. Please pay extra attention to make
+> sure I didn't do anything too terrible.
+> 
+> Mark's advice wasn't a full patch and I ended up doing a bit of work
+> to translate it to reality, so I did not add him as "Co-developed-by"
+> here. Mark: if you would like this tag then please provide it and your
+> Signed-off-by. I certainly won't object.
+> 
+> [1] https://lore.kernel.org/r/ZNC-YRQopO0PaIIo@FVFF77S0Q05N.cambridge.arm.com
+> 
+> (no changes since v10)
+> 
+> Changes in v10:
+> - Rewrite as needed for 5.11+ as per Mark Rutland and Sumit.
+> 
+>  drivers/irqchip/irq-gic-v3.c | 54 ++++++++++++++++++++++++------------
+>  1 file changed, 36 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+> index eedfa8e9f077..49d18cf3f636 100644
+> --- a/drivers/irqchip/irq-gic-v3.c
+> +++ b/drivers/irqchip/irq-gic-v3.c
+> @@ -78,6 +78,8 @@ static DEFINE_STATIC_KEY_TRUE(supports_deactivate_key);
+>  #define GIC_LINE_NR	min(GICD_TYPER_SPIS(gic_data.rdists.gicd_typer), 1020U)
+>  #define GIC_ESPI_NR	GICD_TYPER_ESPIS(gic_data.rdists.gicd_typer)
+>  
+> +#define SGI_NR		16
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Why 16? We only allocate 8, as the other 8 are potentially stolen by
+the secure side. We do try and initialise them all so that they have a
+known state if they were actually configured as Group-1NS, but we
+don't use them.
+
+I understand that this simplifies the indexing in the rdist_nmi_refs
+array and I'm not going to cry over 32 wasted bytes, but this
+definitely deserves a comment.
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
