@@ -2,147 +2,136 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A14C83F01
-	for <linux-perf-users@archiver.kernel.org>; Sat, 26 Aug 2023 10:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C39C83F01
+	for <linux-perf-users@archiver.kernel.org>; Sat, 26 Aug 2023 14:46:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229747AbjHZKhD (ORCPT
+        id S229821AbjHZOpo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 26 Aug 2023 06:37:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59906 "EHLO
+        Sat, 26 Aug 2023 10:45:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232251AbjHZKhA (ORCPT
+        with ESMTP id S229638AbjHZOpc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 26 Aug 2023 06:37:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0C951FEC;
-        Sat, 26 Aug 2023 03:36:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 46FB760F1E;
-        Sat, 26 Aug 2023 10:36:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9021CC433C7;
-        Sat, 26 Aug 2023 10:36:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693046216;
-        bh=x1hOMfWCNnRRZv1VfAf0PBdXlkAf5G9BLURODcZBglk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=INzayd/CTmJb+InHsokVpOULz3x6muV25aBm0mPqEw5jfo+8CgFASIKNwIygd2qRz
-         ASLD4A6FPW2/bVKVqRWz9Tmnq3x/ryEhj7kB5JqwIIljpwsz0XyBaigRicvQ2MUxZ6
-         9SeIUiYTlUSOqPcXab93ZFCURk9AEjjZFPX74JkMLwEW6HV0sDIcL0L+UsNC0CW+Nd
-         ejD8KU80BIUMYLKxmIZusLkv+rADwxfx8fUZvvHSUgEcd64pNj+32X8SCWfv+DFrbE
-         K6iWQ3Csc4DwvMEQ8c/gLicqpfOPlgawDltamb847SQOFnwV6M/U2XavLzVM7jB+NL
-         xuWH/NY09ITuQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1qZqez-008Gjw-Rk;
-        Sat, 26 Aug 2023 11:36:54 +0100
-Date:   Sat, 26 Aug 2023 11:36:53 +0100
-Message-ID: <86bkeuf5tm.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        linux-perf-users@vger.kernel.org,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-arm-kernel@lists.infradead.org, ito-yuichi@fujitsu.com,
-        Stephen Boyd <swboyd@chromium.org>,
+        Sat, 26 Aug 2023 10:45:32 -0400
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EA9FE4E;
+        Sat, 26 Aug 2023 07:45:29 -0700 (PDT)
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-d746d030a86so1856151276.1;
+        Sat, 26 Aug 2023 07:45:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693061128; x=1693665928;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s5KOUY+kV96llNzphnz+NXqnkWdYpQAMYzH4mHsanEw=;
+        b=NAbp/ZaXpMFsoB6V0cVyPBWndoNveRantcsbi6RUxFHBfbvRiHTM7MHfmjzjT19eNg
+         +rXP9hwOEd1AilZnXS3S0uHe0QbvzSOLkX0pBDRyWe3MUUAsbtHoWN561cvIi6cSW7LD
+         mmAaNnmA571bCyvv+ZuJK5P8ptiu074DFlZGQjF1qVs3pCylfg9gsTF01doTkABSTXoa
+         3bO+HsdP3XxvTFnDtM+pnw0jaqfdEqvODkO+leDyIYTxWJ0SbcCBbS+OBTqOJ7HSxzEv
+         ebrVOgNp3VzLU0ZSOcE1DMNy0OFNhypLvWH3DKqM7O+Q8FixAEOl1uSTGAOMrhsK4r5b
+         PH8A==
+X-Gm-Message-State: AOJu0YxHD0g3Js6vvb63Cy7XDnKmKzhJuzjd0CCorCQ+9UiDcAGl8skw
+        PZpG6mnC14AZHNHdGdKpVizDB0xMyntXDusy0lU=
+X-Google-Smtp-Source: AGHT+IFAYkptAcqGhimlYDrGfJ08wtS++iZW74Ht3FSwP4Y1Gj6ZCgux+GNkdtTdhHnd8+he3zj4z+q6L/jxHRBTueg=
+X-Received: by 2002:a25:c552:0:b0:d78:441d:4d62 with SMTP id
+ v79-20020a25c552000000b00d78441d4d62mr3728385ybe.22.1693061128112; Sat, 26
+ Aug 2023 07:45:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230819093340.265817-1-leo.yan@linaro.org> <CAM9d7cj=ichFk4bVQSbyptqy9wo8GFm1Z1Q7QzfhMFLjewNF-Q@mail.gmail.com>
+ <20230823023838.GF57731@leoy-huanghe.lan> <CAM9d7cgaMyH=vSjVEOBjLzBWbZOricm6aHcP9hfLsTJ_gUEh3g@mail.gmail.com>
+ <20230826072957.GA75980@leoy-huanghe.lan>
+In-Reply-To: <20230826072957.GA75980@leoy-huanghe.lan>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Sat, 26 Aug 2023 07:45:15 -0700
+Message-ID: <CAM9d7cjkQAhponi_mO9yBHaBP3wB4cBcWc5B7yb_4nE2dQWpLw@mail.gmail.com>
+Subject: Re: [PATCH v6] Documentation: userspace-api: Document perf ring
+ buffer mechanism
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 1/6] irqchip/gic-v3: Enable support for SGIs to act as NMIs
-In-Reply-To: <20230824083012.v11.1.I1223c11c88937bd0cbd9b086d4ef216985797302@changeid>
-References: <20230824153233.1006420-1-dianders@chromium.org>
-        <20230824083012.v11.1.I1223c11c88937bd0cbd9b086d4ef216985797302@changeid>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: dianders@chromium.org, mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org, sumit.garg@linaro.org, daniel.thompson@linaro.org, rafael.j.wysocki@intel.com, ardb@kernel.org, tglx@linutronix.de, kgdb-bugreport@lists.sourceforge.net, lecopzer.chen@mediatek.com, linux-perf-users@vger.kernel.org, msys.mizuma@gmail.com, wens@csie.org, linux-arm-kernel@lists.infradead.org, ito-yuichi@fujitsu.com, swboyd@chromium.org, peterz@infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 24 Aug 2023 16:30:27 +0100,
-Douglas Anderson <dianders@chromium.org> wrote:
-> 
-> As of commit 6abbd6988971 ("irqchip/gic, gic-v3: Make SGIs use
-> handle_percpu_devid_irq()") SGIs are treated the same as PPIs/EPPIs
-> and use handle_percpu_devid_irq() by default. Unfortunately,
-> handle_percpu_devid_irq() isn't NMI safe, and so to run in an NMI
-> context those should use handle_percpu_devid_fasteoi_nmi().
-> 
-> In order to accomplish this, we just have to make room for SGIs in the
-> array of refcounts that keeps track of which interrupts are set as
-> NMI. We also rename the array and create a new indexing scheme that
-> accounts for SGIs.
-> 
-> Also, enable NMI support prior to gic_smp_init() as allocation of SGIs
-> as IRQs/NMIs happen as part of this routine.
-> 
-> Co-developed-by: Sumit Garg <sumit.garg@linaro.org>
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> In v10 I removed the previous Reviewed-by and Tested-by tags since the
-> patch contents changed pretty drastically.
-> 
-> I'll also note that this change is a little more black magic to me
-> than others in this series. I don't have a massive amounts of
-> familiarity with all the moving parts of gic-v3, so I mostly just
-> followed Mark Rutland's advice [1]. Please pay extra attention to make
-> sure I didn't do anything too terrible.
-> 
-> Mark's advice wasn't a full patch and I ended up doing a bit of work
-> to translate it to reality, so I did not add him as "Co-developed-by"
-> here. Mark: if you would like this tag then please provide it and your
-> Signed-off-by. I certainly won't object.
-> 
-> [1] https://lore.kernel.org/r/ZNC-YRQopO0PaIIo@FVFF77S0Q05N.cambridge.arm.com
-> 
-> (no changes since v10)
-> 
-> Changes in v10:
-> - Rewrite as needed for 5.11+ as per Mark Rutland and Sumit.
-> 
->  drivers/irqchip/irq-gic-v3.c | 54 ++++++++++++++++++++++++------------
->  1 file changed, 36 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-> index eedfa8e9f077..49d18cf3f636 100644
-> --- a/drivers/irqchip/irq-gic-v3.c
-> +++ b/drivers/irqchip/irq-gic-v3.c
-> @@ -78,6 +78,8 @@ static DEFINE_STATIC_KEY_TRUE(supports_deactivate_key);
->  #define GIC_LINE_NR	min(GICD_TYPER_SPIS(gic_data.rdists.gicd_typer), 1020U)
->  #define GIC_ESPI_NR	GICD_TYPER_ESPIS(gic_data.rdists.gicd_typer)
->  
-> +#define SGI_NR		16
+Hi Leo,
 
-Why 16? We only allocate 8, as the other 8 are potentially stolen by
-the secure side. We do try and initialise them all so that they have a
-known state if they were actually configured as Group-1NS, but we
-don't use them.
+On Sat, Aug 26, 2023 at 12:30 AM Leo Yan <leo.yan@linaro.org> wrote:
+>
+> Hi Namhyung,
+>
+> On Tue, Aug 22, 2023 at 09:26:05PM -0700, Namhyung Kim wrote:
+>
+> [...]
+>
+> > > > > +Why ring buffers are mapped with above two different modes?  Here the
+> > > > > +write direction matters.  The forward writing starts to save data from
+> > > > > +the beginning of the ring buffer and wrap around when overflow, which is
+> > > > > +used with the read-write mode in the normal ring buffer.  When the
+> > > > > +consumer doesn't keep up with the producer, it would lose some data, the
+> > > > > +kernel keeps how many records it lost and generates the
+> > > > > +``PERF_RECORD_LOST`` records in the next time when it finds a space in the
+> > > > > +ring buffer.
+> > > >
+> > > > Thanks for the update.  It's unclear to me if all 4 combination of
+> > > > (rw, ro) x (fwd, bwd) are possible (yes!).  The rw mode and back-
+> > > > ward is also possible but just not used for perf tool.
+> > >
+> > > I can add a matrix for the combinations:
+> > >
+> > >   The combination is supported in perf tool:
+> > >
+> > >   ---+------------+-----------
+> > >      |  Forward   | Backward
+> > >   ---+------------+-----------
+> > >   rw |  Yes       |   No
+> > >   ---+------------+-----------
+> > >   ro |  X         |   Yes
+> > >   ---+------------+-----------
+> > >
+> > >   Yes: is supported
+> > >   No: is not supported
+> > >   X: is not feasible
+> >
+> > I think they are all supported.  You can use rw mode with backward
+> > direction but it's just not intuitive.  Also ro mode with forward direction
+> > is working but there's a chance to miss the start position of the
+> > previous event.
+>
+> I am a bit confused for the all four modes are supported.
+>
+> From the code [1], we can see there have only two combinations:
+>
+> - overwrite + read-only mode (PROT_READ);
+> - no-overwrite + read-write mode (PROT_READ | PROT_WRITE);
+>
+> And I think perf tool must use the backward writing for "overwrite",
+> and use the forward writing for "non-overwrite" mode.  I think the
+> code [2] can help us to conclude this.
 
-I understand that this simplifies the indexing in the rdist_nmi_refs
-array and I'm not going to cry over 32 wasted bytes, but this
-definitely deserves a comment.
+I mean the kernel supports all the combinations but perf tool uses
+the selected two.  IIUC you are describing the kernel behavior, right?
 
-	M.
+Thanks,
+Namhyung
 
--- 
-Without deviation from the norm, progress is not possible.
+>
+> In the end, the perf tool doesn't support the combinations:
+>
+> - overwrite + read-write mode
+> - no-overwrite + read-only mode
+>
+> I have sent a v6 patch, please let me know if you have any concerns or
+> if I misunderstand anything.  Thanks!
+>
+> Leo
+>
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/lib/perf/evlist.c#n474
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/lib/perf/mmap.c#n141
