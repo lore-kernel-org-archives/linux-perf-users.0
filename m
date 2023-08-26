@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E15C83F18
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D15A0C83F19
 	for <linux-perf-users@archiver.kernel.org>; Sat, 26 Aug 2023 03:30:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231765AbjHZD3s (ORCPT
+        id S231768AbjHZD3s (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Fri, 25 Aug 2023 23:29:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42134 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231641AbjHZD3O (ORCPT
+        with ESMTP id S231638AbjHZD3N (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 23:29:14 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC237213A;
-        Fri, 25 Aug 2023 20:29:10 -0700 (PDT)
+        Fri, 25 Aug 2023 23:29:13 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C63E12132;
+        Fri, 25 Aug 2023 20:29:08 -0700 (PDT)
 Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RXhzJ5PYFzNmrH;
-        Sat, 26 Aug 2023 11:25:32 +0800 (CST)
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RXj1c3jwjzfbw5;
+        Sat, 26 Aug 2023 11:27:32 +0800 (CST)
 Received: from localhost.localdomain (10.67.174.95) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Sat, 26 Aug 2023 11:29:07 +0800
+ 15.1.2507.31; Sat, 26 Aug 2023 11:29:05 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -32,12 +32,10 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <ak@linux.intel.com>, <anshuman.khandual@arm.com>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
 CC:     <yangjihong1@huawei.com>
-Subject: [PATCH v7 4/6] perf record: Track sideband events for all CPUs when tracing selected CPUs
-Date:   Sat, 26 Aug 2023 03:26:06 +0000
-Message-ID: <20230826032608.107261-5-yangjihong1@huawei.com>
+Subject: [PATCH v7 0/6] perf record: Track sideband events for all CPUs when tracing selected CPUs
+Date:   Sat, 26 Aug 2023 03:26:02 +0000
+Message-ID: <20230826032608.107261-1-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
-In-Reply-To: <20230826032608.107261-1-yangjihong1@huawei.com>
-References: <20230826032608.107261-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -49,8 +47,8 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-User space tasks can migrate between CPUs, we need to track side-band
-events for all CPUs.
+User space tasks can migrate between CPUs, track sideband events for all
+CPUs.
 
 The specific scenarios are as follows:
 
@@ -69,12 +67,8 @@ The specific scenarios are as follows:
   perf record -C 0 stop
 
 Now perf samples the PC of taskA. However, perf does not record the
-PERF_RECORD_COMM and PERF_RECORD_MMAP events of taskA.
+PERF_RECORD_COMM and PERF_RECORD_COMM events of taskA.
 Therefore, the comm and symbols of taskA cannot be parsed.
-
-The solution is to record sideband events for all CPUs when tracing
-selected CPUs. Because this modifies the default behavior, add related
-comments to the perf record man page.
 
 The sys_perf_event_open invoked is as follows:
 
@@ -128,93 +122,85 @@ The sys_perf_event_open invoked is as follows:
   sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
   <SNIP>
 
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/Documentation/perf-record.txt |  3 ++
- tools/perf/builtin-record.c              | 44 +++++++++++++++++++++++-
- 2 files changed, 46 insertions(+), 1 deletion(-)
+Changes since_v6:
+ - Patch1:
+    1. No change.
+    2. Keep Acked-by tag from Adrian.
+ - Patch2:
+    1. Update commit message as suggested by Ian.
+    2. Keep Acked-by tag from Adrian because code is not modified.
+ - Patch3:
+    1. Update comment as suggested by Ian.
+    2. Merge original patch5 ("perf test: Update base-record & system-wide-dummy attr") as suggested by Ian.
+    3. Only merge commit, keep Acked-by tag from Adrian.
+ - Patch4:
+    1. No change. Because Adrian recommends not changing the function name.
+    2. Keep Acked-by tag from Adrian.
+ - Patch5:
+    1. Add cleanup on trap function as suggested by Ian.
+    2. Remove Tested-by tag from Adrian because the script is modified.
+ - Patch6:
+    1. Add Reviewed-by tag from Ian.
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index d5217be012d7..1889f66addf2 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -374,6 +374,9 @@ comma-separated list with no space: 0,1. Ranges of CPUs are specified with -: 0-
- In per-thread mode with inheritance mode on (default), samples are captured only when
- the thread executes on the designated CPUs. Default is to monitor all CPUs.
- 
-+User space tasks can migrate between CPUs, so when tracing selected CPUs,
-+a dummy event is created to track sideband for all CPUs.
-+
- -B::
- --no-buildid::
- Do not save the build ids of binaries in the perf.data files. This skips
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 83bd1f117191..21c571018148 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -906,10 +906,44 @@ static int record__config_off_cpu(struct record *rec)
- 	return off_cpu_prepare(rec->evlist, &rec->opts.target, &rec->opts);
- }
- 
-+static bool record__tracking_system_wide(struct record *rec)
-+{
-+	struct record_opts *opts = &rec->opts;
-+	struct evlist *evlist = rec->evlist;
-+	struct evsel *evsel;
-+
-+	/*
-+	 * If all (non-dummy) evsel have exclude_user,
-+	 * system_wide is not needed.
-+	 *
-+	 * all_kernel and all_user will overwrite exclude_kernel and
-+	 * exclude_user of attr in evsel__config(), here need to check
-+	 * all the three items.
-+	 *
-+	 * Sideband system wide if one of the following conditions is met:
-+	 *
-+	 *   - all_user is set, and there is a non-dummy event
-+	 *   - all_user and all_kernel are not set, and there is
-+	 *     a non-dummy event without exclude_user
-+	 */
-+	if (opts->all_kernel)
-+		return false;
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (!evsel__is_dummy_event(evsel)) {
-+			if (opts->all_user || !evsel->core.attr.exclude_user)
-+				return true;
-+		}
-+	}
-+
-+	return false;
-+}
-+
- static int record__config_tracking_events(struct record *rec)
- {
- 	struct record_opts *opts = &rec->opts;
- 	struct evlist *evlist = rec->evlist;
-+	bool system_wide = false;
- 	struct evsel *evsel;
- 
- 	/*
-@@ -919,7 +953,15 @@ static int record__config_tracking_events(struct record *rec)
- 	 */
- 	if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
- 	    perf_pmus__num_core_pmus() > 1) {
--		evsel = evlist__findnew_tracking_event(evlist, false);
-+
-+		/*
-+		 * User space tasks can migrate between CPUs, so when tracing
-+		 * selected CPUs, sideband for all CPUs is still needed.
-+		 */
-+		if (!!opts->target.cpu_list && record__tracking_system_wide(rec))
-+			system_wide = true;
-+
-+		evsel = evlist__findnew_tracking_event(evlist, system_wide);
- 		if (!evsel)
- 			return -ENOMEM;
- 
+Changes since_v5:
+ - No code changes.
+ - Detailed commit message of patch3.
+ - Add Acked-by and Tested-by tags from Adrian Hunter.
+
+Changes since_v4:
+ - Simplify check code for record__tracking_system_wide().
+ - Add perf attr test result to commit message for patch 7.
+
+Changes since_v3:
+ - Check fall_kernel, all_user, and dummy or exclude_user when determining
+   whether system wide is required.
+
+Changes since_v2:
+ - Rename record_tracking.sh to record_sideband.sh in tools/perf/tests/shell.
+ - Remove "perf evlist: Skip dummy event sample_type check for evlist_config" patch.
+ - Add opts->all_kernel check in record__config_tracking_events().
+ - Add perf_event_attr test for record selected CPUs exclude_user.
+ - Update base-record & system-wide-dummy sample_type attr expected values for test-record-C0.
+
+Changes since v1:
+ - Add perf_evlist__go_system_wide() via internal/evlist.h instead of
+   exporting perf_evlist__propagate_maps().
+ - Use evlist__add_aux_dummy() instead of evlist__add_dummy() in
+   evlist__findnew_tracking_event().
+ - Add a parameter in evlist__findnew_tracking_event() to deal with
+   system_wide inside.
+ - Add sideband for all CPUs when tracing selected CPUs comments on
+   the perf record man page.
+ - Use "sideband events" instead of "tracking events".
+ - Adjust the patches Sequence.
+ - Add patch5 to skip dummy event sample_type check for evlist_config.
+ - Add patch6 to update system-wide-dummy attr values for perf test.
+
+Yang Jihong (6):
+  perf evlist: Add perf_evlist__go_system_wide() helper
+  perf evlist: Add evlist__findnew_tracking_event() helper
+  perf record: Move setting tracking events before
+    record__init_thread_masks()
+  perf record: Track sideband events for all CPUs when tracing selected
+    CPUs
+  perf test: Add test case for record sideband events
+  perf test: Add perf_event_attr test for record selected CPUs
+    exclude_user
+
+ tools/lib/perf/evlist.c                       |   9 ++
+ tools/lib/perf/include/internal/evlist.h      |   2 +
+ tools/perf/Documentation/perf-record.txt      |   3 +
+ tools/perf/builtin-record.c                   | 106 +++++++++++++-----
+ tools/perf/tests/attr/system-wide-dummy       |  14 ++-
+ tools/perf/tests/attr/test-record-C0          |   4 +-
+ .../perf/tests/attr/test-record-C0-all-kernel |  32 ++++++
+ tools/perf/tests/shell/record_sideband.sh     |  58 ++++++++++
+ tools/perf/util/evlist.c                      |  18 +++
+ tools/perf/util/evlist.h                      |   1 +
+ 10 files changed, 212 insertions(+), 35 deletions(-)
+ create mode 100644 tools/perf/tests/attr/test-record-C0-all-kernel
+ create mode 100755 tools/perf/tests/shell/record_sideband.sh
+
 -- 
 2.30.GIT
 
