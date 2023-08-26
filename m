@@ -2,293 +2,213 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAD3C83F1A
-	for <linux-perf-users@archiver.kernel.org>; Sat, 26 Aug 2023 03:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2492C83F16
+	for <linux-perf-users@archiver.kernel.org>; Sat, 26 Aug 2023 06:22:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231769AbjHZD3t (ORCPT
+        id S229758AbjHZGWP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Aug 2023 23:29:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42116 "EHLO
+        Sat, 26 Aug 2023 02:22:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230417AbjHZD3N (ORCPT
+        with ESMTP id S231706AbjHZGWM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Aug 2023 23:29:13 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D5E72139;
-        Fri, 25 Aug 2023 20:29:10 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RXhz45YkjztSM6;
-        Sat, 26 Aug 2023 11:25:20 +0800 (CST)
-Received: from localhost.localdomain (10.67.174.95) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Sat, 26 Aug 2023 11:29:07 +0800
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-        <james.clark@arm.com>, <tmricht@linux.ibm.com>,
-        <ak@linux.intel.com>, <anshuman.khandual@arm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-CC:     <yangjihong1@huawei.com>
-Subject: [PATCH v7 3/6] perf record: Move setting tracking events before record__init_thread_masks()
-Date:   Sat, 26 Aug 2023 03:26:05 +0000
-Message-ID: <20230826032608.107261-4-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.30.GIT
-In-Reply-To: <20230826032608.107261-1-yangjihong1@huawei.com>
-References: <20230826032608.107261-1-yangjihong1@huawei.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.95]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+        Sat, 26 Aug 2023 02:22:12 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 987C02683
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Aug 2023 23:22:07 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-594e1154756so10978557b3.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Aug 2023 23:22:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1693030927; x=1693635727;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=RFQVboYu+kktG1+tXeHnttxhbtZCnqVNF8qlf7e9WxE=;
+        b=i6MGCuBUzrcwhd++Q/E3/0Gy73rr2OPrxc4zjgZyauZ7FZo3pLogzbHtM7/ZZdpIOA
+         xi4tDGaHEkAxAQ68NQrhKoXGYyG7fc6IXVYaami/WZE7glh1LU2iAFLT92THq7eeFgVf
+         R4p61ZDXqyDvxBWwQTSOgU21jbEImma8ZNXtppxUvHx6kyoQPwA8xgO3qp01kcLqTBH+
+         oDSWTbw+S5vDBHE7KqiR4PYRjO9dKOJRv8Ey1gryhJhE4mlUp71+oH3WtKeUIJTxGV0y
+         N62PjpMw0AplC/jKqLvpkGb3RN0dYPjQYu0pOVsjexJXMB0oo0rxMavqUMCkssAs0uPN
+         WUTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693030927; x=1693635727;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RFQVboYu+kktG1+tXeHnttxhbtZCnqVNF8qlf7e9WxE=;
+        b=TbofdxlYFUlKF7+dy9V/frJuTMiVQk+CytcAJ6qzIY/K13pXc4dkMLXFLsT1fyhzYz
+         ay4q52WpM6d3HvdzyQyinLCXxP65RWnRfMPRV12foqiES6zJ7x6w57Win7Mnq1zSVVe4
+         f+zO9YtRzFZoc0pWUKQlUk+ayD9iXnpg3HziYCwuHCi68c8BEw1m2Y7D81AItbssl2K8
+         BGdmrvZQ9nRppbWuRNqiBextWwesQkbvtwuDWlCTZArc66AX5zPaTuu/OY1LGmEq9iis
+         okBmV6RuHF2kpxhQeGj3zwJXcbCtNJ/jYPGXduQfEEy87CSTQiFmonIH7PwErRsEtZfm
+         m4TQ==
+X-Gm-Message-State: AOJu0YypZWJyLFjXsAo1ZdalK5CZQWGwSEuoZDeNUGKzdHnvr6tf/Mfj
+        8mYSmwh0ulmp8CZUjm+Xyg3D2iGXlryS
+X-Google-Smtp-Source: AGHT+IFIuIPm5S9+xu52QjoN0JXjgPeVqacz7WzK9+rPznPBejkHS9yA6ingSsBJFeLX9cc6VJUAd3ALshqh
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:7f44:ad7d:19a6:8de2])
+ (user=irogers job=sendgmr) by 2002:a25:bc8a:0:b0:d78:2f4c:7df with SMTP id
+ e10-20020a25bc8a000000b00d782f4c07dfmr295506ybk.12.1693030926800; Fri, 25 Aug
+ 2023 23:22:06 -0700 (PDT)
+Date:   Fri, 25 Aug 2023 23:22:03 -0700
+Message-Id: <20230826062203.1058041-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.42.0.rc2.253.gd59a3bf2b4-goog
+Subject: [PATCH v1] perf jevents: Use "default_core" for events with no Unit
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Thomas Richter <tmricht@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-User space tasks can migrate between CPUs, so when tracing selected CPUs,
-sideband for all CPUs is needed. In this case set the cpu map of the evsel
-to all online CPUs. This may modify the original cpu map of the evlist.
-Therefore, need to check whether the preceding scenario exists before
-record__init_thread_masks().
-Dummy tracking has been set in record__open(), move it before
-record__init_thread_masks() and add a helper for unified processing.
+The json Unit field encodes the name of the PMU to match the events
+to. When no name is given it has meant the "cpu" core PMU except for
+tests. On ARM, Intel hybrid and s390 the core PMU is named differently
+which means that using "cpu" for this case causes the events not to
+get matched to the PMU. Introduce a new "default_core" string for this
+case and in the pmu__name_match force all core PMUs to match this
+name.
 
-The sys_perf_event_open invoked is as follows:
-
-  # perf --debug verbose=3 record -e cpu-clock -D 100 true
-  <SNIP>
-  Opening: cpu-clock
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             1 (PERF_TYPE_SOFTWARE)
-    size                             136
-    config                           0 (PERF_COUNT_SW_CPU_CLOCK)
-    { sample_period, sample_freq }   4000
-    sample_type                      IP|TID|TIME|PERIOD|IDENTIFIER
-    read_format                      ID|LOST
-    disabled                         1
-    inherit                          1
-    freq                             1
-    sample_id_all                    1
-    exclude_guest                    1
-  ------------------------------------------------------------
-  sys_perf_event_open: pid 10318  cpu 0  group_fd -1  flags 0x8 = 5
-  sys_perf_event_open: pid 10318  cpu 1  group_fd -1  flags 0x8 = 6
-  sys_perf_event_open: pid 10318  cpu 2  group_fd -1  flags 0x8 = 7
-  sys_perf_event_open: pid 10318  cpu 3  group_fd -1  flags 0x8 = 9
-  sys_perf_event_open: pid 10318  cpu 4  group_fd -1  flags 0x8 = 10
-  sys_perf_event_open: pid 10318  cpu 5  group_fd -1  flags 0x8 = 11
-  sys_perf_event_open: pid 10318  cpu 6  group_fd -1  flags 0x8 = 12
-  sys_perf_event_open: pid 10318  cpu 7  group_fd -1  flags 0x8 = 13
-  Opening: dummy:u
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             1 (PERF_TYPE_SOFTWARE)
-    size                             136
-    config                           0x9 (PERF_COUNT_SW_DUMMY)
-    { sample_period, sample_freq }   1
-    sample_type                      IP|TID|TIME|IDENTIFIER
-    read_format                      ID|LOST
-    disabled                         1
-    inherit                          1
-    exclude_kernel                   1
-    exclude_hv                       1
-    mmap                             1
-    comm                             1
-    enable_on_exec                   1
-    task                             1
-    sample_id_all                    1
-    exclude_guest                    1
-    mmap2                            1
-    comm_exec                        1
-    ksymbol                          1
-    bpf_event                        1
-  ------------------------------------------------------------
-  sys_perf_event_open: pid 10318  cpu 0  group_fd -1  flags 0x8 = 14
-  sys_perf_event_open: pid 10318  cpu 1  group_fd -1  flags 0x8 = 15
-  sys_perf_event_open: pid 10318  cpu 2  group_fd -1  flags 0x8 = 16
-  sys_perf_event_open: pid 10318  cpu 3  group_fd -1  flags 0x8 = 17
-  sys_perf_event_open: pid 10318  cpu 4  group_fd -1  flags 0x8 = 18
-  sys_perf_event_open: pid 10318  cpu 5  group_fd -1  flags 0x8 = 19
-  sys_perf_event_open: pid 10318  cpu 6  group_fd -1  flags 0x8 = 20
-  sys_perf_event_open: pid 10318  cpu 7  group_fd -1  flags 0x8 = 21
-  <SNIP>
-
-perf test need to update base-record & system-wide-dummy attr expected values
-for test-record-C0:
-
-1. Because a dummy sideband event is added to the sampling of specified
-   CPUs. When evlist contains evsel of different sample_type,
-   evlist__config() will change the default PERF_SAMPLE_ID bit to
-   PERF_SAMPLE_IDENTIFICATION bit.
-   The attr sample_type expected value of base-record and system-wide-dummy
-   in test-record-C0 needs to be updated.
-
-2. The perf record uses evlist__add_aux_dummy() instead of
-   evlist__add_dummy() to add a dummy event.
-   The expected value of system-wide-dummy attr needs to be updated.
-
-The perf test result is as follows:
-
-  # ./perf test list  2>&1 | grep 'Setup struct perf_event_attr'
-   17: Setup struct perf_event_attr
-  # ./perf test 17
-   17: Setup struct perf_event_attr                                    : Ok
-
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Reported-by: Thomas Richter <tmricht@linux.ibm.com>
+Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Fixes: 2e255b4f9f41 ("perf jevents: Group events by PMU")
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-record.c             | 59 ++++++++++++++++---------
- tools/perf/tests/attr/system-wide-dummy | 14 +++---
- tools/perf/tests/attr/test-record-C0    |  4 +-
- 3 files changed, 47 insertions(+), 30 deletions(-)
+ tools/perf/pmu-events/jevents.py |  2 +-
+ tools/perf/tests/pmu-events.c    | 19 ++++++++++---------
+ tools/perf/util/pmu.c            |  7 ++++++-
+ 3 files changed, 17 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 12edad8392cc..83bd1f117191 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -906,6 +906,37 @@ static int record__config_off_cpu(struct record *rec)
- 	return off_cpu_prepare(rec->evlist, &rec->opts.target, &rec->opts);
- }
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 712f80d7d071..a7e88332276d 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -266,7 +266,7 @@ class JsonEvent:
+     def unit_to_pmu(unit: str) -> Optional[str]:
+       """Convert a JSON Unit to Linux PMU name."""
+       if not unit:
+-        return 'cpu'
++        return 'default_core'
+       # Comment brought over from jevents.c:
+       # it's not realistic to keep adding these, we need something more scalable ...
+       table = {
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index ce4da9b1d115..f5321fbdee79 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -44,7 +44,7 @@ struct perf_pmu_test_pmu {
  
-+static int record__config_tracking_events(struct record *rec)
-+{
-+	struct record_opts *opts = &rec->opts;
-+	struct evlist *evlist = rec->evlist;
-+	struct evsel *evsel;
-+
-+	/*
-+	 * For initial_delay, system wide or a hybrid system, we need to add
-+	 * tracking event so that we can track PERF_RECORD_MMAP to cover the
-+	 * delay of waiting or event synthesis.
-+	 */
-+	if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
-+	    perf_pmus__num_core_pmus() > 1) {
-+		evsel = evlist__findnew_tracking_event(evlist, false);
-+		if (!evsel)
-+			return -ENOMEM;
-+
-+		/*
-+		 * Enable the tracking event when the process is forked for
-+		 * initial_delay, immediately for system wide.
-+		 */
-+		if (opts->target.initial_delay && !evsel->immediate &&
-+		    !target__has_cpu(&opts->target))
-+			evsel->core.attr.enable_on_exec = 1;
-+		else
-+			evsel->immediate = 1;
-+	}
-+
-+	return 0;
-+}
-+
- static bool record__kcore_readable(struct machine *machine)
- {
- 	char kcore[PATH_MAX];
-@@ -1286,28 +1317,6 @@ static int record__open(struct record *rec)
- 	struct record_opts *opts = &rec->opts;
- 	int rc = 0;
+ static const struct perf_pmu_test_event bp_l1_btb_correct = {
+ 	.event = {
+-		.pmu = "cpu",
++		.pmu = "default_core",
+ 		.name = "bp_l1_btb_correct",
+ 		.event = "event=0x8a",
+ 		.desc = "L1 BTB Correction",
+@@ -56,7 +56,7 @@ static const struct perf_pmu_test_event bp_l1_btb_correct = {
  
--	/*
--	 * For initial_delay, system wide or a hybrid system, we need to add a
--	 * dummy event so that we can track PERF_RECORD_MMAP to cover the delay
--	 * of waiting or event synthesis.
--	 */
--	if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
--	    perf_pmus__num_core_pmus() > 1) {
--		pos = evlist__findnew_tracking_event(evlist, false);
--		if (!pos)
--			return -ENOMEM;
--
--		/*
--		 * Enable the dummy event when the process is forked for
--		 * initial_delay, immediately for system wide.
--		 */
--		if (opts->target.initial_delay && !pos->immediate &&
--		    !target__has_cpu(&opts->target))
--			pos->core.attr.enable_on_exec = 1;
--		else
--			pos->immediate = 1;
--	}
--
- 	evlist__config(evlist, opts, &callchain_param);
+ static const struct perf_pmu_test_event bp_l2_btb_correct = {
+ 	.event = {
+-		.pmu = "cpu",
++		.pmu = "default_core",
+ 		.name = "bp_l2_btb_correct",
+ 		.event = "event=0x8b",
+ 		.desc = "L2 BTB Correction",
+@@ -68,7 +68,7 @@ static const struct perf_pmu_test_event bp_l2_btb_correct = {
  
- 	evlist__for_each_entry(evlist, pos) {
-@@ -4190,6 +4199,12 @@ int cmd_record(int argc, const char **argv)
- 		goto out;
+ static const struct perf_pmu_test_event segment_reg_loads_any = {
+ 	.event = {
+-		.pmu = "cpu",
++		.pmu = "default_core",
+ 		.name = "segment_reg_loads.any",
+ 		.event = "event=0x6,period=200000,umask=0x80",
+ 		.desc = "Number of segment register loads",
+@@ -80,7 +80,7 @@ static const struct perf_pmu_test_event segment_reg_loads_any = {
+ 
+ static const struct perf_pmu_test_event dispatch_blocked_any = {
+ 	.event = {
+-		.pmu = "cpu",
++		.pmu = "default_core",
+ 		.name = "dispatch_blocked.any",
+ 		.event = "event=0x9,period=200000,umask=0x20",
+ 		.desc = "Memory cluster signals to block micro-op dispatch for any reason",
+@@ -92,7 +92,7 @@ static const struct perf_pmu_test_event dispatch_blocked_any = {
+ 
+ static const struct perf_pmu_test_event eist_trans = {
+ 	.event = {
+-		.pmu = "cpu",
++		.pmu = "default_core",
+ 		.name = "eist_trans",
+ 		.event = "event=0x3a,period=200000,umask=0x0",
+ 		.desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
+@@ -104,7 +104,7 @@ static const struct perf_pmu_test_event eist_trans = {
+ 
+ static const struct perf_pmu_test_event l3_cache_rd = {
+ 	.event = {
+-		.pmu = "cpu",
++		.pmu = "default_core",
+ 		.name = "l3_cache_rd",
+ 		.event = "event=0x40",
+ 		.desc = "L3 cache access, read",
+@@ -391,8 +391,8 @@ static int compare_alias_to_test_event(struct pmu_event_info *alias,
+ 		return -1;
  	}
  
-+	err = record__config_tracking_events(rec);
-+	if (err) {
-+		pr_err("record__config_tracking_events failed, error %d\n", err);
-+		goto out;
-+	}
-+
- 	err = record__init_thread_masks(rec);
- 	if (err) {
- 		pr_err("Failed to initialize parallel data streaming masks\n");
-diff --git a/tools/perf/tests/attr/system-wide-dummy b/tools/perf/tests/attr/system-wide-dummy
-index 2f3e3eb728eb..a1e1d6a263bf 100644
---- a/tools/perf/tests/attr/system-wide-dummy
-+++ b/tools/perf/tests/attr/system-wide-dummy
-@@ -9,8 +9,10 @@ flags=8
- type=1
- size=136
- config=9
--sample_period=4000
--sample_type=455
-+sample_period=1
-+# PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_TIME |
-+# PERF_SAMPLE_CPU | PERF_SAMPLE_IDENTIFIER
-+sample_type=65671
- read_format=4|20
- # Event will be enabled right away.
- disabled=0
-@@ -18,12 +20,12 @@ inherit=1
- pinned=0
- exclusive=0
- exclude_user=0
--exclude_kernel=0
--exclude_hv=0
-+exclude_kernel=1
-+exclude_hv=1
- exclude_idle=0
- mmap=1
- comm=1
--freq=1
-+freq=0
- inherit_stat=0
- enable_on_exec=0
- task=1
-@@ -32,7 +34,7 @@ precise_ip=0
- mmap_data=0
- sample_id_all=1
- exclude_host=0
--exclude_guest=0
-+exclude_guest=1
- exclude_callchain_kernel=0
- exclude_callchain_user=0
- mmap2=1
-diff --git a/tools/perf/tests/attr/test-record-C0 b/tools/perf/tests/attr/test-record-C0
-index 317730b906dd..198e8429a1bf 100644
---- a/tools/perf/tests/attr/test-record-C0
-+++ b/tools/perf/tests/attr/test-record-C0
-@@ -10,9 +10,9 @@ cpu=0
- enable_on_exec=0
+-
+-	if (!is_same(alias->pmu_name, test_event->event.pmu)) {
++	if (!is_same(alias->pmu_name, test_event->event.pmu) &&
++	    !is_same(alias->pmu_name, "default_core")) {
+ 		pr_debug("testing aliases PMU %s: mismatched pmu_name, %s vs %s\n",
+ 			  pmu_name, alias->pmu_name, test_event->event.pmu);
+ 		return -1;
+@@ -409,7 +409,7 @@ static int test__pmu_event_table_core_callback(const struct pmu_event *pe,
+ 	struct perf_pmu_test_event const **test_event_table;
+ 	bool found = false;
  
- # PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_TIME |
--# PERF_SAMPLE_ID | PERF_SAMPLE_PERIOD
-+# PERF_SAMPLE_PERIOD | PERF_SAMPLE_IDENTIFIER
- # + PERF_SAMPLE_CPU added by -C 0
--sample_type=455
-+sample_type=65927
+-	if (strcmp(pe->pmu, "cpu"))
++	if (strcmp(pe->pmu, "default_core"))
+ 		test_event_table = &uncore_events[0];
+ 	else
+ 		test_event_table = &core_events[0];
+@@ -543,6 +543,7 @@ static int __test_core_pmu_event_aliases(const char *pmu_name, int *count)
+ 	INIT_LIST_HEAD(&pmu->caps);
+ 	INIT_LIST_HEAD(&pmu->list);
+ 	pmu->name = strdup(pmu_name);
++	pmu->is_core = true;
  
- # Dummy event handles mmaps, comm and task.
- mmap=0
+ 	pmu->events_table = table;
+ 	pmu_add_cpu_aliases_table(pmu, table);
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 502fd58c3ea7..cde33e01959a 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1747,7 +1747,12 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
+ bool pmu__name_match(const struct perf_pmu *pmu, const char *pmu_name)
+ {
+ 	return !strcmp(pmu->name, pmu_name) ||
+-		(pmu->is_uncore && pmu_uncore_alias_match(pmu_name, pmu->name));
++		(pmu->is_uncore && pmu_uncore_alias_match(pmu_name, pmu->name)) ||
++		/*
++		 * jevents and tests use default_core as a marker for any core
++		 * PMU as the PMU name varies across architectures.
++		 */
++	        (pmu->is_core && !strcmp(pmu_name, "default_core"));
+ }
+ 
+ bool perf_pmu__is_software(const struct perf_pmu *pmu)
 -- 
-2.30.GIT
+2.42.0.rc2.253.gd59a3bf2b4-goog
 
