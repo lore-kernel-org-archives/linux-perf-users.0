@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFCAC83F14
-	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Aug 2023 13:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C608CC83F01
+	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Aug 2023 13:38:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230377AbjH0NhV (ORCPT
+        id S231134AbjH0Nhz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 27 Aug 2023 09:37:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49454 "EHLO
+        Sun, 27 Aug 2023 09:37:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231256AbjH0NhP (ORCPT
+        with ESMTP id S230527AbjH0NhX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 27 Aug 2023 09:37:15 -0400
-Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 092F7CC
-        for <linux-perf-users@vger.kernel.org>; Sun, 27 Aug 2023 06:37:13 -0700 (PDT)
-Received: by mail-ot1-x334.google.com with SMTP id 46e09a7af769-6bf04263dc8so671809a34.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 27 Aug 2023 06:37:13 -0700 (PDT)
+        Sun, 27 Aug 2023 09:37:23 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD5E111C
+        for <linux-perf-users@vger.kernel.org>; Sun, 27 Aug 2023 06:37:17 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-68a3cae6d94so2121177b3a.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 27 Aug 2023 06:37:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693143432; x=1693748232;
+        d=linaro.org; s=google; t=1693143437; x=1693748237;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bLA0Ib5AzCk7ti/k6S86lw9GLjw/BcXDEQAlpgT5UMY=;
-        b=A+OldztKXlooKdJuP3WB5Db5uysvd3ok8mrq9WgoyZG04+06r5yYXDJ66wkM95vZ9L
-         GPHj54kMT7uNFrI3fpv5NpmuuzBd0XFAh+RYEsKz6NuyQ6oX8yDk1vnqNXrPHwRvfzZn
-         YoCDfCAPqi6JnOKrIChPl3o8MRdGOkuquANX0KbvbIr7y1CQGr6JSiqJ3wnW6/YL8UwR
-         +iN5aULN4vnIWw+f6OeIRNYf6T5pkx8HmcwJzhLvzqrKCp3QVXMxfQu/vpkU15np1PDj
-         IrD9EQKShBRCs4xZ1CchqX5Ai+cboDIc83x9COaA1XbZ50BiJhAuBuo7+ksVr5NOg9PE
-         UNlw==
+        bh=7oz+CZy9YZvIlZYBV1Djf2HNAYZ0qDenfedTgUYUSqU=;
+        b=qKRwvWOY1eyvGUyQ4yR43oXGTcXp51nzbgsPPA3iMBiiNIbINN0whfRO1HWt1N+ST2
+         CXUB/FYM1uzJMhtRx35JS2MMHN3LLHNzflosP9qzDPpyURf6SjS5cz94G/SCQL2C2JF5
+         s5DteAYHqf+XtZuDKfn/Kunn0ZI4wCmhzyR3O1r6PQd/YBtFWq8a3XLTyJ2RkSjkxrtW
+         Qh5Uhk9whr6E0cI0QJZL1QQ5/AvzjPuB8zV7a7Rv/mmqOO57A8RNpIjx6ZzEFYlq1+sF
+         n3CrKAYNQ5gGQ1v3jIRqQmUhO2Ii4dmrRp6YwJgFwcVXvfQTgQA6f+8AgMRiVRWbbdwn
+         /iPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693143432; x=1693748232;
+        d=1e100.net; s=20221208; t=1693143437; x=1693748237;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bLA0Ib5AzCk7ti/k6S86lw9GLjw/BcXDEQAlpgT5UMY=;
-        b=QLVXxJVTmXO/2K/+UD4g5p6OiDsAMyT2P9rsq/Lerq1pT4hxtjGbvwmoG2cEqvhC4Y
-         q4gQvK5YQfcF+lx8lnVus/dqk3T2SAVFelaMTJMw0TdF4I8l4+EnnZ2i5sQlQZtGIrx5
-         eb2QB6iM5bBbHNPcyqrANO2M1AtcC09AIuzEJ/R/Yl67Mu1WEHj9yYPlLzOkGFRoyElf
-         7c0VHoDdqnMxitOnbjTax4DwUd3PHdZhyWD4lsEzK2R7C6iGUxSnxapAxV7m3X0IrfUg
-         jY02/47ubtndLlfW8tuTPK7kQrKE2JCBiAEvQ68bss4LNQ3rRaasQCTyWHtzEpz43Cr2
-         vYJQ==
-X-Gm-Message-State: AOJu0YyauKO6lSKDAsc6NPlgF/NHZ0mfRE5OK4BNOoq8daPLXhRM5iVl
-        2Hgremd1uPzSvz3nTniUJ35teQ==
-X-Google-Smtp-Source: AGHT+IHjn1XtKkD4mijnJVL6NgY8vzvVOpyDcVYvx81nneRxIK9gZ/MHZYfAlpmyu+5ADKt0rIuPZQ==
-X-Received: by 2002:a9d:784f:0:b0:6b9:c869:862c with SMTP id c15-20020a9d784f000000b006b9c869862cmr9871370otm.1.1693143432271;
-        Sun, 27 Aug 2023 06:37:12 -0700 (PDT)
+        bh=7oz+CZy9YZvIlZYBV1Djf2HNAYZ0qDenfedTgUYUSqU=;
+        b=V/tBwLM2CmB+rKSTSwyECsIj/UfwflMLjQWFr2ncREy/jDdtK9E0hKQUQtc67175om
+         5ZL+jO5fc5Q3pV9hHH9/7cgxPfqygmOP5S5ZTogJ+Deskr26qdNKYLZjbI232VZErI1H
+         OQIiBgqaeDp6K5EJlz2iRxlZnrS/tz7kN5Fxr4T4ts/TvlKpmx5zL+oXkApZdQsWfOlR
+         k1Hnnl1EqG4j8CsVt9vbT0fB6ZS7+p6Gk16IeouIaN1qEWwd/3zh7ql+ezwGRuh7mudu
+         /jE/wsybXZcumxJJ3xmv9leF5pgSDLIsZtJS4Y+CTLxQGFuEszEbQ+kUwEl9DbB3t+12
+         KF6Q==
+X-Gm-Message-State: AOJu0YwCYL34ZfMx1UB0mXoHVyce1TRCk/IzXnyaT3UNoDmW3Co5hSl1
+        8qR9feWwgsCzbLeITBkAoVNFpA==
+X-Google-Smtp-Source: AGHT+IFM1OLxJh7p3BbZWTvqmLncDv+R+8Ia/nGwyLEZihC31U0cm8ZufuP+x1zTdn2BYzeKF1n0OA==
+X-Received: by 2002:a05:6a21:7985:b0:14c:ca56:69f7 with SMTP id bh5-20020a056a21798500b0014cca5669f7mr4796294pzc.28.1693143437236;
+        Sun, 27 Aug 2023 06:37:17 -0700 (PDT)
 Received: from leoy-huanghe.lan (211-75-219-204.hinet-ip.hinet.net. [211.75.219.204])
-        by smtp.gmail.com with ESMTPSA id e29-20020a63371d000000b00565eb4fa8d1sm5273627pga.16.2023.08.27.06.37.07
+        by smtp.gmail.com with ESMTPSA id e29-20020a63371d000000b00565eb4fa8d1sm5273627pga.16.2023.08.27.06.37.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Aug 2023 06:37:11 -0700 (PDT)
+        Sun, 27 Aug 2023 06:37:16 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         James Clark <james.clark@arm.com>,
@@ -69,9 +69,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 1/2] perf cs-etm: Validate timestamp tracing in per-thread mode
-Date:   Sun, 27 Aug 2023 21:35:56 +0800
-Message-Id: <20230827133557.112494-2-leo.yan@linaro.org>
+Subject: [PATCH v1 2/2] perf cs-etm: Respect timestamp option
+Date:   Sun, 27 Aug 2023 21:35:57 +0800
+Message-Id: <20230827133557.112494-3-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230827133557.112494-1-leo.yan@linaro.org>
 References: <20230827133557.112494-1-leo.yan@linaro.org>
@@ -81,48 +81,63 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-So far, it's impossible to validate timestamp trace in Arm CoreSight when
-the perf is in the per-thread mode.  E.g. for the command:
+When users pass the option '--timestamp' or '-T' in the record command,
+all events will set the PERF_SAMPLE_TIME bit in the attribution.  In
+this case, the AUX event will record the kernel timestamp, but it
+doesn't mean Arm CoreSight enables timestamp packets in its hardware
+tracing.
 
-  perf record -e cs_etm/timestamp/ --per-thread -- ls
+If the option '--timestamp' or '-T' is set, this patch always enables
+Arm CoreSight timestamp, as a result, the bit 28 in event's config is to
+be set.
 
-The command enables config 'timestamp' for 'cs_etm' event in the
-per-thread mode.  In this case, the function cs_etm_validate_config()
-directly bails out and skips validation.
+Before:
 
-Given profiled process can be scheduled on any CPUs in the per-thread
-mode, this patch validates timestamp tracing for all CPUs when detect
-the CPU map is empty.
+  # perf record -e cs_etm// --per-thread --timestamp -- ls
+  # perf script --header-only
+  ...
+  # event : name = cs_etm//, , id = { 69 }, type = 12, size = 136,
+  config = 0, { sample_period, sample_freq } = 1,
+  sample_type = IP|TID|TIME|CPU|IDENTIFIER, read_format = ID|LOST,
+  disabled = 1, enable_on_exec = 1, sample_id_all = 1, exclude_guest = 1
+  ...
+
+After:
+
+  # perf record -e cs_etm// --per-thread --timestamp -- ls
+  # perf script --header-only
+  ...
+  # event : name = cs_etm//, , id = { 49 }, type = 12, size = 136,
+  config = 0x10000000, { sample_period, sample_freq } = 1,
+  sample_type = IP|TID|TIME|CPU|IDENTIFIER, read_format = ID|LOST,
+  disabled = 1, enable_on_exec = 1, sample_id_all = 1, exclude_guest = 1
+  ...
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/arch/arm/util/cs-etm.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ tools/perf/arch/arm/util/cs-etm.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index b8d6a953fd74..cf9ef9ba800b 100644
+index cf9ef9ba800b..58c506e9788d 100644
 --- a/tools/perf/arch/arm/util/cs-etm.c
 +++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -205,8 +205,17 @@ static int cs_etm_validate_config(struct auxtrace_record *itr,
- 	for (i = 0; i < cpu__max_cpu().cpu; i++) {
- 		struct perf_cpu cpu = { .cpu = i, };
+@@ -442,6 +442,15 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+ 					   "contextid", 1);
+ 	}
  
--		if (!perf_cpu_map__has(event_cpus, cpu) ||
--		    !perf_cpu_map__has(online_cpus, cpu))
-+		/*
-+		 * In per-cpu case, do the validation for CPUs to work with.
-+		 * In per-thread case, the CPU map is empty.  Since the traced
-+		 * program can run on any CPUs in this case, thus don't skip
-+		 * validation.
-+		 */
-+		if (!perf_cpu_map__empty(event_cpus) &&
-+		    !perf_cpu_map__has(event_cpus, cpu))
-+			continue;
++	/*
++	 * When the option '--timestamp' or '-T' is enabled, the PERF_SAMPLE_TIME
++	 * bit is set for all events.  In this case, always enable Arm CoreSight
++	 * timestamp tracing.
++	 */
++	if (opts->sample_time_set)
++		evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
++					   "timestamp", 1);
 +
-+		if (!perf_cpu_map__has(online_cpus, cpu))
- 			continue;
- 
- 		err = cs_etm_validate_context_id(itr, evsel, i);
+ 	/* Add dummy event to keep tracking */
+ 	err = parse_event(evlist, "dummy:u");
+ 	if (err)
 -- 
 2.34.1
 
