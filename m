@@ -2,136 +2,125 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E66C83F10
-	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Aug 2023 07:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D62C83F11
+	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Aug 2023 07:23:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229735AbjH0HSB (ORCPT
+        id S229708AbjH0HWu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 27 Aug 2023 03:18:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42628 "EHLO
+        Sun, 27 Aug 2023 03:22:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230016AbjH0HR6 (ORCPT
+        with ESMTP id S230112AbjH0HWc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 27 Aug 2023 03:17:58 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1A08129;
-        Sun, 27 Aug 2023 00:17:55 -0700 (PDT)
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37R7CM6S010096;
-        Sun, 27 Aug 2023 07:17:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- content-transfer-encoding : mime-version; s=pp1;
- bh=8TqO2I3AYHpbTmw9MMc+lTvNPXkao7+JWLACLYAasSI=;
- b=dL04pZ+gigjokI5elKluKbZxJusJR+umSCQe5nHcf2UAbuOEgh0UOgw9k7Z8MC5tbfFF
- KFDtFF8Ieh2Zj7gucXUA5xeHlMfzRZqoH1rnbciJZ+U8bRL5r64Nw+qTBJbAxtzyDgaY
- KJQbonJg6D+REFSFDWSCbS0VGbqMW7mBNlzvwwkscEsTb2Vdju5Tk2AnwytOlQxEgq3L
- vSMJkrq36WrsgYO0wA5b+vFUJN4sfENq2mrXL97WU3FJdS/H7RmNwUAnv7eR9YcrXyLm
- FldVs8BYPVzUO/b5r/Et3XS0vZcdjMP3N3cG+hbSVe6CEVpWtRwK8UbeWFa3KW+aFakE bA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sr1860g3t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 27 Aug 2023 07:17:40 +0000
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37R78gc5031708;
-        Sun, 27 Aug 2023 07:17:39 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sr1860g3q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 27 Aug 2023 07:17:39 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37R4wijx009855;
-        Sun, 27 Aug 2023 07:17:39 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3sqw7jskbu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 27 Aug 2023 07:17:39 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37R7HZuS21431002
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 27 Aug 2023 07:17:35 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C5FD72004B;
-        Sun, 27 Aug 2023 07:17:35 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7B93B20040;
-        Sun, 27 Aug 2023 07:17:33 +0000 (GMT)
-Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com (unknown [9.171.39.84])
-        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Sun, 27 Aug 2023 07:17:33 +0000 (GMT)
-Date:   Sun, 27 Aug 2023 12:47:30 +0530
-From:   Aditya Gupta <adityag@linux.ibm.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] Introduce perf build subcommand
-Message-ID: <mxcws2wtnrar2kiswwlkmdl2mqkbv3zvek3lx7qe7bpejea3aa@5ymqftm6zli7>
-References: <20230825061125.24312-1-adityag@linux.ibm.com>
- <CAM9d7cgBJ1WHRuVcZ4FArm=pctbs-npLB2Q8PLZWmdfaK3dCzg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAM9d7cgBJ1WHRuVcZ4FArm=pctbs-npLB2Q8PLZWmdfaK3dCzg@mail.gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: ViKBIEiWzXQV1JIEf0AMcWyNBAbyk9Ty
-X-Proofpoint-GUID: 9oGYJTrenTiPkQf4oSMBOd86caJGkkv2
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Sun, 27 Aug 2023 03:22:32 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBA2A1A6
+        for <linux-perf-users@vger.kernel.org>; Sun, 27 Aug 2023 00:22:28 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id 5b1f17b1804b1-400e8ca7e38so19321765e9.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 27 Aug 2023 00:22:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693120947; x=1693725747;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=w8xzhEQ3CLjRNHEHg0mtBbUNtrK+zL8cif/MOLW3IS4=;
+        b=YVi4N8Xs/E5aBn4t276/eQ5fzPCNwWi5YR/GbAdCMZs/BNOBDH+W3s6bI7P1u8zsYV
+         W1zUGgmnQc4FKoaxhcEmsofnPWjUHoeN04PiX1z78MPf7fKbvzIRc2y5NxUskxfqI6xv
+         WHCv9ZGpJ2Yft2wCFiVJ2aaHibgFPpk/5KGA3rMMRrdQU50bBAfCSSyU63tUVYjGcw4y
+         l5IPn8yuHFHnpTzyr4BTsefXRnJLKSc1wh47SqrnBnhZiF+0GmmwqAD5MQkvFK7KbMO3
+         cQYKWbmYCMs36g56/xXObQV/41U3eik/TBdWA6mgTbu5KJ5wPdjU7lEw7KCucwHkZF6/
+         XdIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693120947; x=1693725747;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w8xzhEQ3CLjRNHEHg0mtBbUNtrK+zL8cif/MOLW3IS4=;
+        b=ZGnfEEaRMGj9d58BZKKKw9xcM5uUpIj8k5pc5ctOHBsYSw0qXUjuWB3A1Fy+TaqLzQ
+         GZr4FyeQ5kfBmQ3Uw570cYzAHEzq8otmFjRTCDWZ+nr5UFbWGX4WPoS9kYlb7Qr2+lKL
+         AKNuWN+FQd8gurFwWX3En+cY5O7tDA42IVPcCE29m8hT+FDkNqJm4s0aa+0ckwaWI5s2
+         ohjSwzrVLGjeXbtY4aPW0u6mP4pW903lUXSRQo/rJR7oTTmvTv3M/gMqs7qsunpnGJgu
+         AfsG3BpXxZ2qSmxqhfv1NkUuzh8I9UG8VMgCGuzAXUawZ1MTeU94/WkN23AO0ppj0jIT
+         petQ==
+X-Gm-Message-State: AOJu0YxGkWu8326fO5f+kNHC695rHs7hv+qySIw6ANsqlvugNOeQfaoF
+        Oitom2De2VX6UESFz7KYTB+cRZSNlQ8=
+X-Google-Smtp-Source: AGHT+IGTJbdipN2x5xwsQ9dXCwW4NazzlCoMjJnzTDTOeN3NYrclaHxaRm1+F0Dt0aYG3q/C4Ka8mQ==
+X-Received: by 2002:a05:600c:258:b0:3fe:16f4:d865 with SMTP id 24-20020a05600c025800b003fe16f4d865mr16246287wmj.23.1693120947174;
+        Sun, 27 Aug 2023 00:22:27 -0700 (PDT)
+Received: from localhost ([2a00:23c5:dc8c:8701:1663:9a35:5a7b:1d76])
+        by smtp.gmail.com with ESMTPSA id o10-20020a1c750a000000b003fe29dc0ff2sm7118483wmc.21.2023.08.27.00.22.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Aug 2023 00:22:26 -0700 (PDT)
+Date:   Sun, 27 Aug 2023 08:22:25 +0100
+From:   Lorenzo Stoakes <lstoakes@gmail.com>
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        urezki@gmail.com, hch@infradead.org
+Subject: Re: [RFC PATCH 3/4] perf: Use vmalloc_to_folio()
+Message-ID: <f6082b94-afe0-4e59-b9e9-3c5091780797@lucifer.local>
+References: <20230821202016.2910321-1-willy@infradead.org>
+ <20230821202016.2910321-4-willy@infradead.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-08-27_04,2023-08-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- spamscore=0 lowpriorityscore=0 suspectscore=0 bulkscore=0 malwarescore=0
- adultscore=0 phishscore=0 impostorscore=0 clxscore=1015 mlxlogscore=844
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
- definitions=main-2308270064
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230821202016.2910321-4-willy@infradead.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On Mon, Aug 21, 2023 at 09:20:15PM +0100, Matthew Wilcox (Oracle) wrote:
+> Eliminate a use of page->mapping by using vmalloc_to_folio() instead.
+>
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>  include/linux/mm.h          | 5 +++++
+>  kernel/events/ring_buffer.c | 4 ++--
+>  2 files changed, 7 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 840bae5f23b6..7d84a2843193 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -1134,6 +1134,11 @@ int region_intersects(resource_size_t offset, size_t size, unsigned long flags,
+>  struct page *vmalloc_to_page(const void *addr);
+>  unsigned long vmalloc_to_pfn(const void *addr);
+>
+> +static inline struct folio *vmalloc_to_folio(const void *addr)
+> +{
+> +	return page_folio(vmalloc_to_page(addr));
+> +}
+> +
 
-On Fri, Aug 25, 2023 at 10:07:28AM -0700, Namhyung Kim wrote:
-> Hello,
-> 
-> On Thu, Aug 24, 2023 at 11:11 PM Aditya Gupta <adityag@linux.ibm.com> wrote:
-> >
-> > <...>
-> >
-> > Proposed solution
-> > =================
-> >
-> > As suggested by contributors in:
-> > https://lore.kernel.org/linux-perf-users/ZMPWk5K63tadmDlU@kernel.org/
-> >
-> > Introduce a subcommand "perf build --has", with which
-> > scripts can test for presence of a feature, such as:
-> >
-> >     perf build --has HAVE_FEATURE
-> >
-> > <...>
-> 
-> I'm not sure 'perf build' is a good name, it sounds like it needs to build
-> something.  Maybe 'perf check --feature XXX' ?
-> 
-> Then we can extend the perf check command to *check* system
-> settings like perf_event_paranoid, kptr_restrict, nmi_watchdog
-> and so on, and possibly provides some advice or even change
-> the values easily.
-> 
-> What do you think?
-> 
+Total nit, and quite possibly unnecessary, but it might be nice to have a
+comment pointing out that vmalloc_to_page can and will return tail pages hence
+the need for page_folio() and thus _compound_head().
 
-Sure, the said confusion due to 'build' makes sense. I will discuss with athira
-also and post a V2 with suggested change.
+This makes me wonder about a typedef or wrapper type which explicitly indicates
+that a function is _intentionally_ returning something that might be a head or a
+tail page. But perhaps once foliofication is complete, this is what struct page
+or its memdesc replacement will become?
 
-And, since a new subcommand is being introduced, where do I add a
-documentation, such that it can be visible in a manpage etc, similar to
-perf-version(1) ?
+>  /*
+>   * Determine if an address is within the vmalloc range
+>   *
+> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+> index c73add132618..56939dc3bf33 100644
+> --- a/kernel/events/ring_buffer.c
+> +++ b/kernel/events/ring_buffer.c
+> @@ -873,9 +873,9 @@ __perf_mmap_to_page(struct perf_buffer *rb, unsigned long pgoff)
+>
+>  static void perf_mmap_unmark_page(void *addr)
+>  {
+> -	struct page *page = vmalloc_to_page(addr);
+> +	struct folio *folio = vmalloc_to_folio(addr);
+>
+> -	page->mapping = NULL;
+> +	folio->mapping = NULL;
+>  }
+>
+>  static void rb_free_work(struct work_struct *work)
+> --
+> 2.40.1
+>
 
-Thanks,
-Aditya Gupta
-
+Reviewed-by: Lorenzo Stoakes <lstoakes@gmail.com>
