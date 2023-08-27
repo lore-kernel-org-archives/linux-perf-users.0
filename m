@@ -2,119 +2,177 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DC2C83F10
-	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Aug 2023 06:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4BEC83F13
+	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Aug 2023 07:04:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229665AbjH0G0v (ORCPT
+        id S229849AbjH0HDn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 27 Aug 2023 02:26:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57034 "EHLO
+        Sun, 27 Aug 2023 03:03:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229644AbjH0G00 (ORCPT
+        with ESMTP id S229847AbjH0HDO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 27 Aug 2023 02:26:26 -0400
-Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEF0B183;
-        Sat, 26 Aug 2023 23:26:24 -0700 (PDT)
-Received: by mail-ot1-x32e.google.com with SMTP id 46e09a7af769-6bcac140aaaso1699659a34.2;
-        Sat, 26 Aug 2023 23:26:24 -0700 (PDT)
+        Sun, 27 Aug 2023 03:03:14 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EF4B120;
+        Sun, 27 Aug 2023 00:03:11 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-3ff1c397405so21411035e9.3;
+        Sun, 27 Aug 2023 00:03:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693117584; x=1693722384;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=is4hdEOI3RMC28ap7RXYRRn6XWAL9LuOlIIP2UK2EQk=;
-        b=AjjdpOHvzg779w/Of0surKdzNRDpKMXy3ylVm6dM1w5Kz4JdNFUup9W7VPDvpHBFhd
-         Ph/0bfvPoY5HRmfNIMS8oyhItl2/AljKrpmPAUJXUhZEIer8AAGq+E9bvd34pxA/T0eE
-         x6WFG8iBVl7gm6XmhI8SPhU7HMxqcHTFirbQaGMGi4mlkGxsL9p5narZKuDcOu2vIKEs
-         /HJxbkcvzIVd7xGlx/qe+y8XPkBA4cCBW9pAZWi3gy+FqW8v16FInYrS9TW4sHxRd0yC
-         XzAPIksdEgk83r6Cbo60dB1fpHLCTjTg5JYmrPA27h/PtxoVxA7HuqrGAdagY+MxDOLN
-         y8JQ==
+        d=gmail.com; s=20221208; t=1693119790; x=1693724590;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iV4y6Ekr4RdgR6lmtQFo/ijea7yN94G6IUPIKArMQeo=;
+        b=aACccfRCQED+gEg5zgxIiU7QAEIC55kXPx7Wq+ly1RTG3eDM9+sY7LDLKttu4jWTDO
+         BG3Q0X8lqtUOHRwalmdrIZJfbF4PxLaf43Gry65I1taVZrmHZEXTVasrG9D/ju4GT+HO
+         wtaAlIjVfrN/3MNP+EDe60ffiI6rfNHF9hHdDKx8zMycIHs0Bn9LtSVmuUlct0jsQB+H
+         Jt/YHDt2KPys0FmrcBQmlRKEE1xcyVM6qpm+zmU/DhqJ4EKTRB1T9mbmMTL8G3ftfse/
+         vGv47KjTZJliP0ng65T2TFpaFlH4j4fOM4KzSuWoBRh/Bom4XR2md0HUhrPI25Tu8Rgx
+         3PLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693117584; x=1693722384;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=is4hdEOI3RMC28ap7RXYRRn6XWAL9LuOlIIP2UK2EQk=;
-        b=M1EvBFbR1MUDK6T22JZwCThl4IFZLs81vX2/aUU5iEB/6NHipHZIXkIStHU/edy6ah
-         R5GdsqOsFN4o9Gh+kZhI3sMJeVMTK1huyHdzjRWRKb5aZtI1y2CbkUaJIFmJgL1AeY97
-         J+SU46uJ2BdDhYawnBYZreNEV0JvarIdxZpDKv38D9u0MHaFJrNdD4qae/3YeV7lJIk4
-         Ib+9JmxLWlw3G3r90z6Wjxac1V3Auq+ioTa4/3ClZ2kSNXkcXHwNOWiWSnYXjyIbyNG6
-         xVBAKpHsid8J29CZDP4iVHid/7WDF6y7YhmSgnXN5uips9fXHjA6UTxN8XcibmKJLnjr
-         tl7w==
-X-Gm-Message-State: AOJu0YxJVJ6cfJke1XwP/H7gD5UwjrTxf24SSAqETWCkHz2gsam+/2qv
-        kBFFs3l2TZvxGa1sHVg1FGIoMa+TcQ5bxHO6
-X-Google-Smtp-Source: AGHT+IGX6VzJTxTXQ9al6dPCPbl1CP2jEd1WjWsEJ289iODA18d7miCRF+f+vYUhxB/CrGwoToljDw==
-X-Received: by 2002:a05:6830:45:b0:6b7:4a52:a33a with SMTP id d5-20020a056830004500b006b74a52a33amr9632937otp.14.1693117583908;
-        Sat, 26 Aug 2023 23:26:23 -0700 (PDT)
-Received: from yoga ([2400:1f00:13:c560:3cd7:28f4:78dd:ed95])
-        by smtp.gmail.com with ESMTPSA id y1-20020a1709029b8100b001b86492d724sm244009plp.223.2023.08.26.23.26.20
+        d=1e100.net; s=20221208; t=1693119790; x=1693724590;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iV4y6Ekr4RdgR6lmtQFo/ijea7yN94G6IUPIKArMQeo=;
+        b=N0HKz/DOtWKa4ZXpboUKwro7q0xk+WwdKE/isRcUI0A4XWJUWuRZDtZXAzlI6drFWg
+         ZCiFIf2pUUMQcNy1uJ9nduKfVOT9Ki//0QpetD8n41kHZn7ZRJS7nkIqJCfio8ZrP/Gd
+         1KzrUN589jnjp+llUA3UVuA4/dHrBDa0Qyd5f9WUk7mVDSzrYLRG6006UW1otev0QENe
+         7NwsvbGpVO93w27K/eKxoeB/zleue/Z7qFBrlhg5gRLj+kMXfNfPSDoT5Ogpoyaolb7/
+         mBOxypQsgCC6xasAwB5hrbWIPxa/ewdTOjV2oCEQqZrAWzNsIN7EjPOiV06Ab9AgTnbw
+         AHcg==
+X-Gm-Message-State: AOJu0Yzyz7pRQpzHVPwiAahZESeBC3jUvMg5fNluZawFLRdc13gHbKfU
+        28eVxNvyiDKsm4ih4z2l77FaaRJA/O4=
+X-Google-Smtp-Source: AGHT+IGz+nVEO6yAgt+pwnoQroxvPEu952BYqy05z1Y13fu9bXL3/S9IWFw8xdDSRLj+4J5oK/AhIQ==
+X-Received: by 2002:a05:600c:2191:b0:401:c075:d5b with SMTP id e17-20020a05600c219100b00401c0750d5bmr2277572wme.26.1693119789550;
+        Sun, 27 Aug 2023 00:03:09 -0700 (PDT)
+Received: from localhost ([2a00:23c5:dc8c:8701:1663:9a35:5a7b:1d76])
+        by smtp.gmail.com with ESMTPSA id t15-20020a7bc3cf000000b004013797efb6sm9867605wmj.9.2023.08.27.00.03.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Aug 2023 23:26:23 -0700 (PDT)
-From:   Anup Sharma <anupnewsmail@gmail.com>
-X-Google-Original-From: Anup Sharma <AnupSharma>
-Date:   Sun, 27 Aug 2023 11:56:17 +0530
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Sun, 27 Aug 2023 00:03:08 -0700 (PDT)
+Date:   Sun, 27 Aug 2023 08:03:07 +0100
+From:   Lorenzo Stoakes <lstoakes@gmail.com>
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     anupnewsmail@gmail.com
-Subject: [GSoC 23] Adding Support for Gecko Converter: Final Report
-Message-ID: <ZOrsiZA+C0zbWEQS@yoga>
+Subject: Re: [PATCH] mm: Add vmalloc_user_node()
+Message-ID: <9e369ffd-8577-4416-83eb-35c25ca4f838@lucifer.local>
+References: <20230820194031.1395870-1-willy@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20230820194031.1395870-1-willy@infradead.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Dear Perf Tool  Community,
+On Sun, Aug 20, 2023 at 08:40:31PM +0100, Matthew Wilcox (Oracle) wrote:
+> Allow memory to be allocated on a specified node.  Use it in the
+> perf ring-buffer code.
+>
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+> I was looking at the perf ringbuffer code for other reasons, and I noticed
+> that everything else gets allocated on the specified node ... except
+> there's no way to do this for vmalloc.  I assume it'd be helpful here too.
+>
+>  include/linux/vmalloc.h     | 17 ++++++++++++++++-
+>  kernel/events/ring_buffer.c |  2 +-
+>  mm/vmalloc.c                |  9 +++++----
+>  3 files changed, 22 insertions(+), 6 deletions(-)
+>
+> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+> index c720be70c8dd..030bfe1a60ab 100644
+> --- a/include/linux/vmalloc.h
+> +++ b/include/linux/vmalloc.h
+> @@ -6,6 +6,7 @@
+>  #include <linux/init.h>
+>  #include <linux/list.h>
+>  #include <linux/llist.h>
+> +#include <linux/numa.h>
+>  #include <asm/page.h>		/* pgprot_t */
+>  #include <linux/rbtree.h>
+>  #include <linux/overflow.h>
+> @@ -139,7 +140,7 @@ static inline unsigned long vmalloc_nr_pages(void) { return 0; }
+>
+>  extern void *vmalloc(unsigned long size) __alloc_size(1);
+>  extern void *vzalloc(unsigned long size) __alloc_size(1);
+> -extern void *vmalloc_user(unsigned long size) __alloc_size(1);
+> +extern void *vmalloc_user_node(unsigned long size, int node) __alloc_size(1);
+>  extern void *vmalloc_node(unsigned long size, int node) __alloc_size(1);
+>  extern void *vzalloc_node(unsigned long size, int node) __alloc_size(1);
+>  extern void *vmalloc_32(unsigned long size) __alloc_size(1);
+> @@ -158,6 +159,20 @@ extern void *vmalloc_array(size_t n, size_t size) __alloc_size(1, 2);
+>  extern void *__vcalloc(size_t n, size_t size, gfp_t flags) __alloc_size(1, 2);
+>  extern void *vcalloc(size_t n, size_t size) __alloc_size(1, 2);
+>
+> +/**
+> + * vmalloc_user - allocate zeroed virtually contiguous memory for userspace
+> + * @size: allocation size
+> + *
+> + * The resulting memory area is zeroed so it can be mapped to userspace
+> + * without leaking data.
+> + *
+> + * Return: pointer to the allocated memory or %NULL on error
+> + */
+> +static inline void *vmalloc_user(size_t size)
+> +{
+> +	return vmalloc_user_node(size, NUMA_NO_NODE);
+> +}
+> +
+>  extern void vfree(const void *addr);
+>  extern void vfree_atomic(const void *addr);
+>
+> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+> index cc90d5299005..c73add132618 100644
+> --- a/kernel/events/ring_buffer.c
+> +++ b/kernel/events/ring_buffer.c
+> @@ -918,7 +918,7 @@ struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
+>
+>  	INIT_WORK(&rb->work, rb_free_work);
+>
+> -	all_buf = vmalloc_user((nr_pages + 1) * PAGE_SIZE);
+> +	all_buf = vmalloc_user_node((nr_pages + 1) * PAGE_SIZE, node);
+>  	if (!all_buf)
+>  		goto fail_all_buf;
+>
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 228a4a5312f2..3616bfe4348f 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -3461,22 +3461,23 @@ void *vzalloc(unsigned long size)
+>  EXPORT_SYMBOL(vzalloc);
+>
+>  /**
+> - * vmalloc_user - allocate zeroed virtually contiguous memory for userspace
+> + * vmalloc_user_node - allocate zeroed virtually contiguous memory for userspace
+>   * @size: allocation size
+> + * @node: NUMA node
+>   *
+>   * The resulting memory area is zeroed so it can be mapped to userspace
+>   * without leaking data.
+>   *
+>   * Return: pointer to the allocated memory or %NULL on error
+>   */
+> -void *vmalloc_user(unsigned long size)
+> +void *vmalloc_user_node(unsigned long size, int node)
+>  {
+>  	return __vmalloc_node_range(size, SHMLBA,  VMALLOC_START, VMALLOC_END,
+>  				    GFP_KERNEL | __GFP_ZERO, PAGE_KERNEL,
+> -				    VM_USERMAP, NUMA_NO_NODE,
+> +				    VM_USERMAP, node,
+>  				    __builtin_return_address(0));
+>  }
+> -EXPORT_SYMBOL(vmalloc_user);
+> +EXPORT_SYMBOL(vmalloc_user_node);
+>
+>  /**
+>   * vmalloc_node - allocate memory on a specific node
+> --
+> 2.40.1
+>
 
-I hope this email finds you well. I'm excited to share the final report
-for the "Perf Data Converter" project, which I had the privilege to
-work on as part of the Google Summer of Code 2023 program.
-This project aimed to enhance the capabilities of the perf tool by adding
-support for the Gecko converter, and I'm pleased to present the outcomes
-of my efforts.
-
-Project Title: Perf Data Converter
-Organization: Linux Perf Tool, Linux Foundation, Google Summer of Code 2023
-GitHub: https://github.com/TwilightTechie
-
-Final Report Link: https://gist.github.com/TwilightTechie/94f6fc54413e7d88b751615ff280af17
-Short Presentation: https://www.youtube.com/watch?v=kfQLnkX3U2Y
-(will make it public very soon, looking for feedbacks).
-
-Throughout the summer, I collaborated closely with you all and other
-contributors to successfully integrate the Gecko converter into the
-perf tool. This integration enables effortless analysis using the
-Firefox profiler and streamlines the process of performance analysis.
-Notably, the project includes the addition of support to launch the
-profiler UI on the default browser, enhancing the user experience.
-
-Key Achievements:
-
-- Gecko Converter Integration
-- Profiler UI Launch Support
-- Comprehensive Testing and Test Coverage
-- Command Line Flexibility
-- Process Visualization Options
-
-I invite you to read the detailed final report to learn more about
-the project's achievements, contributions, and the next steps. Your
-feedback and insights are highly valuable to me as I continue to
-contribute to the Linux Perf Tool community.
-
-I would like to express my gratitude to the entire community for the
-support and guidance I received throughout this journey. Your contributions
-and feedback have been instrumental in making this project a success.
-
-I am thankful for the opportunity to be part of this dynamic and collaborative
-community, and I look forward to your thoughts on the final report.
-
-Best regards,
-Anup Sharma
+Reviewed-by: Lorenzo Stoakes <lstoakes@gmail.com>
