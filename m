@@ -2,243 +2,515 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C9EC83F01
-	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Aug 2023 08:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F792C83F10
+	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Aug 2023 11:02:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229737AbjH0IBc (ORCPT
+        id S229547AbjH0LBv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 27 Aug 2023 04:01:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47620 "EHLO
+        Sun, 27 Aug 2023 07:01:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230143AbjH0IBT (ORCPT
+        with ESMTP id S229379AbjH0LB3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 27 Aug 2023 04:01:19 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F2DE12E
-        for <linux-perf-users@vger.kernel.org>; Sun, 27 Aug 2023 01:01:07 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3fef56f7222so21621615e9.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 27 Aug 2023 01:01:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693123266; x=1693728066;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=czA0szAFhC2F1/m40SXjRmw3SdqXWgDEYhXx4X7fi80=;
-        b=D1ZukG5doBm0tEbqFoysL7nBViSCAdEUxO+cIWjcEIYXyM3dUS20DBNmKp2zhGan0H
-         /4MqfFLyg9rk+odRq/Zt85FtIDfjjfrgyroqc0FdycAQKFnExcRpV4DF6p3VpLGD3dWt
-         wGY5QsZa/HI2ojQZ8HY1gTNC0P61W+7SCXzqsETd5z4ZuoLYd0RxVmBard4dc+6xh/2M
-         steMJ19yYBVSVAl/ZHxuXCdImcSaR28TVMbWGPE8+v4tBY9u4xvKJBtRiPTWPnlQtZTl
-         /3OU4nCKzCyyiSw9O6+G3MBiLLBMkd7ayrjcxevowc2sm6b+kZXz0l2SQib95smUaJ5X
-         FSig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693123266; x=1693728066;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=czA0szAFhC2F1/m40SXjRmw3SdqXWgDEYhXx4X7fi80=;
-        b=AktVaHqKoo35/GZFGCQXsv3A7Z1/CjgwsGFPlCOefMAV6vsxMZGTnI4h5TiLSLhBmh
-         HdIA/3als+Te4UG8xb0xvBFUC/DVERcyHKTnGbHEx2EX3UhKitLXvhCDdJbiayuJZAOt
-         rdmZF0BCS9MMuK6uZ5NrPxzumh6Lts0m5hakHbAZ+j+qCDg7Tf2q4p/scuaNcs0CYVT/
-         52kCGKsqQCI6SXwJE2t5uZ6MuU08ecFRAGCKJyO9DHQgrF2SeQHO4k3L5RrCXcuk1rhl
-         BxcRrjS4G7fI7IhmtWa0rsY5onUmfzLb67ZhAfSHe4uqtxdIVEBz8GAoMDJJSMnZiuJK
-         YhNA==
-X-Gm-Message-State: AOJu0YzfM13d3RvQARmmasCgv2ILGJeW2ePAEUhnQJP9HX30hv5TWay3
-        MrfJXssGfjQtCj4TE0nn7/k=
-X-Google-Smtp-Source: AGHT+IHUrnfPfvDPgWLusou+HxQwmMB7kdj/hkSDPAj6cJyp9Gpya2d88mGBqYwK9rbJz5A62noiNw==
-X-Received: by 2002:a05:600c:2102:b0:3fc:dd9:91fd with SMTP id u2-20020a05600c210200b003fc0dd991fdmr16295938wml.40.1693123265990;
-        Sun, 27 Aug 2023 01:01:05 -0700 (PDT)
-Received: from localhost ([2a00:23c5:dc8c:8701:1663:9a35:5a7b:1d76])
-        by smtp.gmail.com with ESMTPSA id t16-20020a7bc3d0000000b00401c9228bf7sm640258wmj.18.2023.08.27.01.01.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Aug 2023 01:01:04 -0700 (PDT)
-Date:   Sun, 27 Aug 2023 09:01:04 +0100
-From:   Lorenzo Stoakes <lstoakes@gmail.com>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        urezki@gmail.com, hch@infradead.org
-Subject: Re: [RFC PATCH 4/4] perf: Use folios for the aux ringbuffer &
- pagefault path
-Message-ID: <5231893a-e5a5-4544-a6d2-2c98cbebca09@lucifer.local>
-References: <20230821202016.2910321-1-willy@infradead.org>
- <20230821202016.2910321-5-willy@infradead.org>
+        Sun, 27 Aug 2023 07:01:29 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9459109;
+        Sun, 27 Aug 2023 04:01:25 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 79D34614ED;
+        Sun, 27 Aug 2023 11:01:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B996DC433AD;
+        Sun, 27 Aug 2023 11:01:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693134084;
+        bh=MfJ/UMHbuSynMM/GxAyPBaVhYT2JNusI6qvDYcFszC8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GxtDEo36KFL4Eq9D+j531ld+Z5M9664jom7H004MJVS1AL1BxRsuE6XKd8jMkpZ6c
+         EC3JS8Z5m9AFUX4OaK/Ga16hYePuYW398Nx/Zqhdvfn4LKQpgcy6e87ZItZWar7MF/
+         eTvYR7v5Erqw2b8zgItQBTtCatX3wUby9udZHsyJurZgbhqbqhia+VFE6Tx8w2uBkG
+         sGwfQAMztxr3zp90tzpp9JjR4S+iZZFDHZsALo6U3ViE2OXt6MjGaCQsna2dl9+GTH
+         rrWQYz6Zyn3P0eF4tqkiYfMHAGwsCI8FB55y+/0KZIt/HUpJcSLdJx5WsjXIiJb80U
+         YAesunFWCMyZw==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5009d4a4897so3503076e87.0;
+        Sun, 27 Aug 2023 04:01:24 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yz2iVHQX8lGRJcz2z2b/B9zlBrOF+IsKS1xuFbpaYygBiV29NIP
+        1vV0Xhlf3p1dqG8VOm2wl/fd6/IwamADmsm3MMs=
+X-Google-Smtp-Source: AGHT+IFksJuf9T5ShxpD1z7Zlun7wRpOhgwYLBy12TJHiVKywsuMyIJhVuk6JXCNrVHgSTT5JhyH6Urvrj5WdETa/u0=
+X-Received: by 2002:a05:6512:3b98:b0:500:807a:f1b2 with SMTP id
+ g24-20020a0565123b9800b00500807af1b2mr19348689lfv.28.1693134082421; Sun, 27
+ Aug 2023 04:01:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230821202016.2910321-5-willy@infradead.org>
+References: <IA1PR20MB4953DD82D0116EC291C21777BBE2A@IA1PR20MB4953.namprd20.prod.outlook.com>
+In-Reply-To: <IA1PR20MB4953DD82D0116EC291C21777BBE2A@IA1PR20MB4953.namprd20.prod.outlook.com>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Sun, 27 Aug 2023 07:01:10 -0400
+X-Gmail-Original-Message-ID: <CAJF2gTRwB=H72j5ZfrQ2OS1rwqr7Gw2NCABteDLb01dzegDLqg@mail.gmail.com>
+Message-ID: <CAJF2gTRwB=H72j5ZfrQ2OS1rwqr7Gw2NCABteDLb01dzegDLqg@mail.gmail.com>
+Subject: Re: [PATCH V4] perf vendor events riscv: add T-HEAD C9xx JSON file
+To:     Inochi Amaoto <inochiama@outlook.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Nikita Shubin <n.shubin@yadro.com>, Wei Fu <wefu@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Aug 21, 2023 at 09:20:16PM +0100, Matthew Wilcox (Oracle) wrote:
-> Instead of allocating a non-compound page and splitting it, allocate
-> a folio and make its refcount the count of the number of pages in it.
-> That way, when we free each page in the folio, we'll only actually free
-> it when the last page in the folio is freed.  Keeping the memory intact
-> is better for the MM system than allocating it and splitting it.
+Thx for the patch.
+Tested-by: Guo Ren <guoren@kernel.org>
+
+On Sat, Aug 26, 2023 at 4:44=E2=80=AFAM Inochi Amaoto <inochiama@outlook.co=
+m> wrote:
 >
-> Now, instead of setting each page->mapping, we only set folio->mapping
-> which is better for our cacheline usage, as well as helping towards the
-> goal of eliminating page->mapping.  We remove the setting of page->index;
-> I do not believe this is needed.  And we return with the folio locked,
-> which the fault handler should have been doing all along.
+> Add json file of T-HEAD C9xx series events.
 >
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> The event idx (raw value) is summary as following:
+>
+> event id range   | support cpu
+>  0x01 - 0x2a     |  c906,c910,c920
+>
+> The event ids are based on the public document of T-HEAD and cover
+> the c900 series.
+>
+> These events are the max that c900 series support.
+> Since T-HEAD let manufacturers decide whether events are usable,
+> the final support of the perf events is determined by the pmu node
+> of the soc dtb.
+>
+> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
 > ---
->  kernel/events/core.c        | 13 +++++++---
->  kernel/events/ring_buffer.c | 51 ++++++++++++++++---------------------
->  2 files changed, 31 insertions(+), 33 deletions(-)
+> Change from V3:
+> 1. fix some typo in json file
+> 2. correct the event id range in commit
+> 3. rename directory to c900-legacy to identify the old T-HEAD cpus
 >
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 4c72a41f11af..59d4f7c48c8c 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -29,6 +29,7 @@
->  #include <linux/vmalloc.h>
->  #include <linux/hardirq.h>
->  #include <linux/hugetlb.h>
-> +#include <linux/pagemap.h>
->  #include <linux/rculist.h>
->  #include <linux/uaccess.h>
->  #include <linux/syscalls.h>
-> @@ -6083,6 +6084,7 @@ static vm_fault_t perf_mmap_fault(struct vm_fault *vmf)
->  {
->  	struct perf_event *event = vmf->vma->vm_file->private_data;
->  	struct perf_buffer *rb;
-> +	struct folio *folio;
->  	vm_fault_t ret = VM_FAULT_SIGBUS;
-
-Since we're explicitly returning VM_FAULT_LOCKED on success, perhaps worth
-simply renaming the unlock label to error and returning VM_FAULT_SIGBUS there?
-
-The FAULT_FLAG_MKWRITE branch can simply return vmf->pgoff == 0 ? 0 :
-VM_FAULT_SIGBUS;
-
+> This patch need the following patches for opensbi to function normaly:
+> https://lists.infradead.org/pipermail/opensbi/2023-August/005500.html
 >
->  	if (vmf->flags & FAULT_FLAG_MKWRITE) {
-> @@ -6102,12 +6104,15 @@ static vm_fault_t perf_mmap_fault(struct vm_fault *vmf)
->  	vmf->page = perf_mmap_to_page(rb, vmf->pgoff);
->  	if (!vmf->page)
->  		goto unlock;
-> +	folio = page_folio(vmf->page);
+> The dtb patch:
+> https://lists.infradead.org/pipermail/linux-riscv/2023-August/039040.html
 >
-> -	get_page(vmf->page);
-> -	vmf->page->mapping = vmf->vma->vm_file->f_mapping;
-> -	vmf->page->index   = vmf->pgoff;
-> +	folio_get(folio);
-> +	rcu_read_unlock();
-> +	folio_lock(folio);
-> +	if (!folio->mapping)
-> +		folio->mapping = vmf->vma->vm_file->f_mapping;
+> A test result on D1 board with mainline opensbi and mainline kernel:
+> [root@test perf]# ./perf stat -a \
+> >   -e l1_icache_access \
+> >   -e l1_icache_miss \
+> >   -e itlb_miss \
+> >   -e dtlb_miss \
+> >   -e jtlb_miss \
+> >   -e inst_branch_mispredict \
+> >   -e inst_branch \
+> >   -e inst_store \
+> >   -e l1_dcache_read_access \
+> >   -e l1_dcache_read_miss \
+> >   -e l1_dcache_write_access \
+> >   -e l1_dcache_write_miss \
+> >   -- openssl speed rsa2048
+> Doing 2048 bits private rsa's for 10s: 100 2048 bits private RSA's in 10.=
+06s
+> Doing 2048 bits public rsa's for 10s: 4051 2048 bits public RSA's in 10.0=
+0s
+> version: 3.1.2
+> built on: Sat Aug  5 14:56:47 2023 UTC
+> options: bn(64,64)
+> CPUINFO: N/A
+>                   sign    verify    sign/s verify/s
+> rsa 2048 bits 0.100600s 0.002469s      9.9    405.1
 >
-> -	ret = 0;
-> +	return VM_FAULT_LOCKED;
->  unlock:
->  	rcu_read_unlock();
+>  Performance counter stats for 'system wide':
 >
-> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-> index 56939dc3bf33..0a026e5ff4f5 100644
-> --- a/kernel/events/ring_buffer.c
-> +++ b/kernel/events/ring_buffer.c
-> @@ -606,39 +606,28 @@ long perf_output_copy_aux(struct perf_output_handle *aux_handle,
+>      7,120,831,110      l1_icache_access
+>          2,145,279      l1_icache_miss
+>          1,307,935      itlb_miss
+>          2,477,482      dtlb_miss
+>            402,760      jtlb_miss
+>          8,043,723      inst_branch_mispredict
+>        153,469,454      inst_branch
+>        537,300,381      inst_store
+>        947,508,099      l1_dcache_read_access
+>            770,550      l1_dcache_read_miss
+>        537,262,702      l1_dcache_write_access
+>            171,436      l1_dcache_write_miss
 >
->  #define PERF_AUX_GFP	(GFP_KERNEL | __GFP_ZERO | __GFP_NOWARN | __GFP_NORETRY)
+>       20.315046885 seconds time elapsed
 >
-> -static struct page *rb_alloc_aux_page(int node, int order)
-> +static struct folio *rb_alloc_aux_folio(int node, int order)
->  {
-> -	struct page *page;
-> +	struct folio *folio;
+> ---
+>  tools/perf/pmu-events/arch/riscv/mapfile.csv  |  1 +
+>  .../arch/riscv/thead/c900-legacy/cache.json   | 67 ++++++++++++++++
+>  .../riscv/thead/c900-legacy/firmware.json     | 68 ++++++++++++++++
+>  .../riscv/thead/c900-legacy/instruction.json  | 72 +++++++++++++++++
+>  .../riscv/thead/c900-legacy/microarch.json    | 80 +++++++++++++++++++
+>  5 files changed, 288 insertions(+)
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/thead/c900-legacy/ca=
+che.json
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/thead/c900-legacy/fi=
+rmware.json
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/thead/c900-legacy/in=
+struction.json
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/thead/c900-legacy/mi=
+croarch.json
 >
->  	if (order > MAX_ORDER)
->  		order = MAX_ORDER;
->
->  	do {
-> -		page = alloc_pages_node(node, PERF_AUX_GFP, order);
-> -	} while (!page && order--);
-> -
-> -	if (page && order) {
-> -		/*
-> -		 * Communicate the allocation size to the driver:
-> -		 * if we managed to secure a high-order allocation,
-> -		 * set its first page's private to this order;
-> -		 * !PagePrivate(page) means it's just a normal page.
-> -		 */
-> -		split_page(page, order);
-> -		SetPagePrivate(page);
-> -		set_page_private(page, order);
-
-I'm guessing this was used in conjunction with the page_private() logic
-that existed below and can simply be discarded now?
-
-> -	}
-> +		folio = __folio_alloc_node(PERF_AUX_GFP, order, node);
-> +	} while (!folio && order--);
->
-> -	return page;
-> +	if (order)
-> +		folio_ref_add(folio, (1 << order) - 1);
-
-Can't order go to -1 if we continue to fail to allocate a folio?
-
-> +	return folio;
->  }
->
->  static void rb_free_aux_page(struct perf_buffer *rb, int idx)
->  {
-> -	struct page *page = virt_to_page(rb->aux_pages[idx]);
-> +	struct folio *folio = virt_to_folio(rb->aux_pages[idx]);
->
-> -	ClearPagePrivate(page);
-> -	page->mapping = NULL;
-> -	__free_page(page);
-> +	folio->mapping = NULL;
-> +	folio_put(folio);
->  }
->
->  static void __rb_free_aux(struct perf_buffer *rb)
-> @@ -672,7 +661,7 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
->  		 pgoff_t pgoff, int nr_pages, long watermark, int flags)
->  {
->  	bool overwrite = !(flags & RING_BUFFER_WRITABLE);
-> -	int node = (event->cpu == -1) ? -1 : cpu_to_node(event->cpu);
-> +	int node = (event->cpu == -1) ? numa_mem_id() : cpu_to_node(event->cpu);
->  	int ret = -ENOMEM, max_order;
->
->  	if (!has_aux(event))
-> @@ -707,17 +696,21 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
->
->  	rb->free_aux = event->pmu->free_aux;
->  	for (rb->aux_nr_pages = 0; rb->aux_nr_pages < nr_pages;) {
-> -		struct page *page;
-> -		int last, order;
-> +		struct folio *folio;
-> +		unsigned int i, nr, order;
-> +		void *addr;
->
->  		order = min(max_order, ilog2(nr_pages - rb->aux_nr_pages));
-> -		page = rb_alloc_aux_page(node, order);
-> -		if (!page)
-> +		folio = rb_alloc_aux_folio(node, order);
-> +		if (!folio)
->  			goto out;
-> +		addr = folio_address(folio);
-> +		nr = folio_nr_pages(folio);
-
-I was going to raise the unspeakably annoying nit about this function returning
-a long, but then that made me wonder why, given folio->_folio_nr_pages is an
-unsigned int folio_nr_pages() returns a long in the first instance?
-
->
-> -		for (last = rb->aux_nr_pages + (1 << page_private(page));
-> -		     last > rb->aux_nr_pages; rb->aux_nr_pages++)
-> -			rb->aux_pages[rb->aux_nr_pages] = page_address(page++);
-> +		for (i = 0; i < nr; i++) {
-> +			rb->aux_pages[rb->aux_nr_pages++] = addr;
-> +			addr += PAGE_SIZE;
-> +		}
->  	}
->
->  	/*
+> diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pm=
+u-events/arch/riscv/mapfile.csv
+> index c61b3d6ef616..b42b65d09c36 100644
+> --- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
+> +++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
+> @@ -15,3 +15,4 @@
+>  #
+>  #MVENDORID-MARCHID-MIMPID,Version,Filename,EventType
+>  0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
+> +0x5b7-0x0-0x0,v1,thead/c900-legacy,core
+> diff --git a/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/cache.jso=
+n b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/cache.json
+> new file mode 100644
+> index 000000000000..2b142348d635
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/cache.json
+> @@ -0,0 +1,67 @@
+> +[
+> +  {
+> +    "EventName": "L1_ICACHE_ACCESS",
+> +    "EventCode": "0x00000001",
+> +    "BriefDescription": "L1 instruction cache access"
+> +  },
+> +  {
+> +    "EventName": "L1_ICACHE_MISS",
+> +    "EventCode": "0x00000002",
+> +    "BriefDescription": "L1 instruction cache miss"
+> +  },
+> +  {
+> +    "EventName": "ITLB_MISS",
+> +    "EventCode": "0x00000003",
+> +    "BriefDescription": "I-UTLB miss"
+> +  },
+> +  {
+> +    "EventName": "DTLB_MISS",
+> +    "EventCode": "0x00000004",
+> +    "BriefDescription": "D-UTLB miss"
+> +  },
+> +  {
+> +    "EventName": "JTLB_MISS",
+> +    "EventCode": "0x00000005",
+> +    "BriefDescription": "JTLB miss"
+> +  },
+> +  {
+> +    "EventName": "L1_DCACHE_READ_ACCESS",
+> +    "EventCode": "0x0000000c",
+> +    "BriefDescription": "L1 data cache read access"
+> +  },
+> +  {
+> +    "EventName": "L1_DCACHE_READ_MISS",
+> +    "EventCode": "0x0000000d",
+> +    "BriefDescription": "L1 data cache read miss"
+> +  },
+> +  {
+> +    "EventName": "L1_DCACHE_WRITE_ACCESS",
+> +    "EventCode": "0x0000000e",
+> +    "BriefDescription": "L1 data cache write access"
+> +  },
+> +  {
+> +    "EventName": "L1_DCACHE_WRITE_MISS",
+> +    "EventCode": "0x0000000f",
+> +    "BriefDescription": "L1 data cache write miss"
+> +  },
+> +  {
+> +    "EventName": "LL_CACHE_READ_ACCESS",
+> +    "EventCode": "0x00000010",
+> +    "BriefDescription": "LL Cache read access"
+> +  },
+> +  {
+> +    "EventName": "LL_CACHE_READ_MISS",
+> +    "EventCode": "0x00000011",
+> +    "BriefDescription": "LL Cache read miss"
+> +  },
+> +  {
+> +    "EventName": "LL_CACHE_WRITE_ACCESS",
+> +    "EventCode": "0x00000012",
+> +    "BriefDescription": "LL Cache write access"
+> +  },
+> +  {
+> +    "EventName": "LL_CACHE_WRITE_MISS",
+> +    "EventCode": "0x00000013",
+> +    "BriefDescription": "LL Cache write miss"
+> +  }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.=
+json b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.json
+> new file mode 100644
+> index 000000000000..9b4a032186a7
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.json
+> @@ -0,0 +1,68 @@
+> +[
+> +  {
+> +    "ArchStdEvent": "FW_MISALIGNED_LOAD"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_MISALIGNED_STORE"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_ACCESS_LOAD"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_ACCESS_STORE"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_ILLEGAL_INSN"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_SET_TIMER"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_IPI_SENT"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_IPI_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_FENCE_I_SENT"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_FENCE_I_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_SFENCE_VMA_SENT"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_GVMA_SENT"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_GVMA_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_SENT"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_VVMA_SENT"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_VVMA_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_SENT"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_RECEIVED"
+> +  }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/instructi=
+on.json b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/instruction.js=
+on
+> new file mode 100644
+> index 000000000000..c822b5373333
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/instruction.json
+> @@ -0,0 +1,72 @@
+> +[
+> +  {
+> +    "EventName": "INST_BRANCH_MISPREDICT",
+> +    "EventCode": "0x00000006",
+> +    "BriefDescription": "Mispredicted branch instructions"
+> +  },
+> +  {
+> +    "EventName": "INST_BRANCH",
+> +    "EventCode": "0x00000007",
+> +    "BriefDescription": "Retired branch instructions"
+> +  },
+> +  {
+> +    "EventName": "INST_JMP_MISPREDICT",
+> +    "EventCode": "0x00000008",
+> +    "BriefDescription": "Indirect branch mispredict"
+> +  },
+> +  {
+> +    "EventName": "INST_JMP",
+> +    "EventCode": "0x00000009",
+> +    "BriefDescription": "Retired jmp instructions"
+> +  },
+> +  {
+> +    "EventName": "INST_STORE",
+> +    "EventCode": "0x0000000b",
+> +    "BriefDescription": "Retired store instructions"
+> +  },
+> +  {
+> +    "EventName": "INST_ALU",
+> +    "EventCode": "0x0000001d",
+> +    "BriefDescription": "Retired ALU instructions"
+> +  },
+> +  {
+> +    "EventName": "INST_LDST",
+> +    "EventCode": "0x0000001e",
+> +    "BriefDescription": "Retired Load/Store instructions"
+> +  },
+> +  {
+> +    "EventName": "INST_VECTOR",
+> +    "EventCode": "0x0000001f",
+> +    "BriefDescription": "Retired Vector instructions"
+> +  },
+> +  {
+> +    "EventName": "INST_CSR",
+> +    "EventCode": "0x00000020",
+> +    "BriefDescription": "Retired CSR instructions"
+> +  },
+> +  {
+> +    "EventName": "INST_SYNC",
+> +    "EventCode": "0x00000021",
+> +    "BriefDescription": "Retired sync instructions (AMO/LR/SC instructio=
+ns)"
+> +  },
+> +  {
+> +    "EventName": "INST_UNALIGNED_ACCESS",
+> +    "EventCode": "0x00000022",
+> +    "BriefDescription": "Retired Store/Load instructions with unaligned =
+memory access"
+> +  },
+> +  {
+> +    "EventName": "INST_ECALL",
+> +    "EventCode": "0x00000025",
+> +    "BriefDescription": "Retired ecall instructions"
+> +  },
+> +  {
+> +    "EventName": "INST_LONG_JP",
+> +    "EventCode": "0x00000026",
+> +    "BriefDescription": "Retired long jump instructions"
+> +  },
+> +  {
+> +    "EventName": "INST_FP",
+> +    "EventCode": "0x0000002a",
+> +    "BriefDescription": "Retired FPU instructions"
+> +  }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/microarch=
+.json b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/microarch.json
+> new file mode 100644
+> index 000000000000..0ab6f288af91
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/microarch.json
+> @@ -0,0 +1,80 @@
+> +[
+> +  {
+> +    "EventName": "LSU_SPEC_FAIL",
+> +    "EventCode": "0x0000000a",
+> +    "BriefDescription": "LSU speculation fail"
+> +  },
+> +  {
+> +    "EventName": "IDU_RF_PIPE_FAIL",
+> +    "EventCode": "0x00000014",
+> +    "BriefDescription": "Instruction decode unit launch pipeline failed =
+in RF state"
+> +  },
+> +  {
+> +    "EventName": "IDU_RF_REG_FAIL",
+> +    "EventCode": "0x00000015",
+> +    "BriefDescription": "Instruction decode unit launch register file fa=
+il in RF state"
+> +  },
+> +  {
+> +    "EventName": "IDU_RF_INSTRUCTION",
+> +    "EventCode": "0x00000016",
+> +    "BriefDescription": "retired instruction count of Instruction decode=
+ unit in RF (Register File) stage"
+> +  },
+> +  {
+> +    "EventName": "LSU_4K_STALL",
+> +    "EventCode": "0x00000017",
+> +    "BriefDescription": "LSU stall times for long distance data access (=
+Over 4K)",
+> +    "PublicDescription": "This stall occurs when translate virtual addre=
+ss with page offset over 4k"
+> +  },
+> +  {
+> +    "EventName": "LSU_OTHER_STALL",
+> +    "EventCode": "0x00000018",
+> +    "BriefDescription": "LSU stall times for other reasons (except the 4=
+k stall)"
+> +  },
+> +  {
+> +    "EventName": "LSU_SQ_OTHER_DIS",
+> +    "EventCode": "0x00000019",
+> +    "BriefDescription": "LSU store queue discard others"
+> +  },
+> +  {
+> +    "EventName": "LSU_SQ_DATA_DISCARD",
+> +    "EventCode": "0x0000001a",
+> +    "BriefDescription": "LSU store queue discard data (uops)"
+> +  },
+> +  {
+> +    "EventName": "BRANCH_DIRECTION_MISPREDICTION",
+> +    "EventCode": "0x0000001b",
+> +    "BriefDescription": "Branch misprediction in BTB"
+> +  },
+> +  {
+> +    "EventName": "BRANCH_DIRECTION_PREDICTION",
+> +    "EventCode": "0x0000001c",
+> +    "BriefDescription": "All branch prediction in BTB",
+> +    "PublicDescription": "This event including both successful predictio=
+n and failed prediction in BTB"
+> +  },
+> +  {
+> +    "EventName": "INTERRUPT_ACK_COUNT",
+> +    "EventCode": "0x00000023",
+> +    "BriefDescription": "acknowledged interrupt count"
+> +  },
+> +  {
+> +    "EventName": "INTERRUPT_OFF_CYCLE",
+> +    "EventCode": "0x00000024",
+> +    "BriefDescription": "PLIC arbitration time when the interrupt is not=
+ responded",
+> +    "PublicDescription": "The arbitration time is recorded while meeting=
+ any of the following:\n- CPU is M-mode and MIE =3D=3D 0\n- CPU is S-mode a=
+nd delegation and SIE =3D=3D 0\n"
+> +  },
+> +  {
+> +    "EventName": "IFU_STALLED_CYCLE",
+> +    "EventCode": "0x00000027",
+> +    "BriefDescription": "Number of stall cycles of the instruction fetch=
+ unit (IFU)."
+> +  },
+> +  {
+> +    "EventName": "IDU_STALLED_CYCLE",
+> +    "EventCode": "0x00000028",
+> +    "BriefDescription": "hpcp_backend_stall Number of stall cycles of th=
+e instruction decoding unit (IDU) and next-level pipeline unit."
+> +  },
+> +  {
+> +    "EventName": "SYNC_STALL",
+> +    "EventCode": "0x00000029",
+> +    "BriefDescription": "Sync instruction stall cycle fence/fence.i/sync=
+/sfence"
+> +  }
+> +]
 > --
-> 2.40.1
+> 2.41.0
 >
+
+
+--=20
+Best Regards
+ Guo Ren
