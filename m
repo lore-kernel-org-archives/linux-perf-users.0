@@ -2,126 +2,100 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC44C83F16
-	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Aug 2023 11:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19377C83F01
+	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Aug 2023 13:37:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229699AbjH0LvK (ORCPT
+        id S231127AbjH0NhX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 27 Aug 2023 07:51:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52408 "EHLO
+        Sun, 27 Aug 2023 09:37:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229950AbjH0Lus (ORCPT
+        with ESMTP id S231238AbjH0NhK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 27 Aug 2023 07:50:48 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4340E19A
-        for <linux-perf-users@vger.kernel.org>; Sun, 27 Aug 2023 04:50:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=6AZBdh/XEDaA5kGBJST50i9hlDPyoWJs0bfL8AH3skI=; b=tQClh/kgCfLePckoa3SHirtrku
-        eMUZbfMPiFVC+jI00sELBWt2jmlDmtdF7FQr9h070OvviYn/TNGJsN8iX7L9MvKdQqZYJj/EQkHxd
-        qFbBBdy82TS+f7T77VpRK12Z0Bj7EVxt35Y/4/9pMHxPKxKfbEGN2sxuXeESMYf08XSzJRcpWrmLn
-        BjbtEBvSVbB/jv6vf1JjDVm0r1MZX56YBqrhxfo1UTpDWytdnkalnBu7sJabNvJUCbgWRlIUik5Ba
-        C/nArOEUzfi3ub60QcLQAx2m8OKpfMxUKXXXKseZ5F68wfwa6Um3XGH3l3hz0zZasw2aGS1N2uK+M
-        8lghF+pA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qaEHr-00BS80-El; Sun, 27 Aug 2023 11:50:35 +0000
-Date:   Sun, 27 Aug 2023 12:50:35 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Lorenzo Stoakes <lstoakes@gmail.com>
-Cc:     linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        urezki@gmail.com, hch@infradead.org
-Subject: Re: [RFC PATCH 4/4] perf: Use folios for the aux ringbuffer &
- pagefault path
-Message-ID: <ZOs4i4SPH6y2HE+R@casper.infradead.org>
-References: <20230821202016.2910321-1-willy@infradead.org>
- <20230821202016.2910321-5-willy@infradead.org>
- <5231893a-e5a5-4544-a6d2-2c98cbebca09@lucifer.local>
+        Sun, 27 Aug 2023 09:37:10 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DCD311C
+        for <linux-perf-users@vger.kernel.org>; Sun, 27 Aug 2023 06:37:08 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-68c0d886ea0so1454705b3a.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 27 Aug 2023 06:37:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1693143427; x=1693748227;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fxGmRwFDOPFQ2VNKBgkXhNqTcIAg/eEBzz2KL/VMfQ4=;
+        b=qLZ111W4W442a6ooOGzUM1cbV+FmoG1PtWYfNcmvLZNHMZ+S1Pe3QzAPziv/zKmvcd
+         HGmEe9NYUdjnAMUFVZEvaO8CcQr1R2pkl3hddzURsk0ho3GLlz90zpAgrpLi9lgbaqHo
+         4MRWRbUnieXVTh8DRru2qaPkLGmCYg7aJbBeH2/q0w6LCkldc/FCZJiEWOvbtkD2bUhr
+         Gh2mRYFUJZlVOl5pgshjbuiVcdRdrBSc2IPUS4mXdoocrfvpBV2wperkBtIfwC9COw3O
+         dRAhAp6lrv4r7oOr+BvJ+JMRpVYmj/0gC4bL++6SePVNdpH+FwvwkvPwPMcS3rLO4v6c
+         YYgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693143427; x=1693748227;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fxGmRwFDOPFQ2VNKBgkXhNqTcIAg/eEBzz2KL/VMfQ4=;
+        b=V/LIrvpROuZ+S+6uzqOJsgSp5IBSTKr//Ebkv6Rf3Yf/6AQeMB+5iAweughxeiWjc7
+         7M9Hvy6unJRPxQu6NCvoRs6dCvgF9EeW9KxRmUx/s0g4dEs8HWtBj4xNbTydZUgCtO1u
+         SFtgAiWJeF1Y7QtQHqi9DyTZ4teF341xZQn0fdmaTRKniflDLHVpeSYvAWx3X/9LohXS
+         Laesd4LJa7nXjpRuA/AUYPgX/UDd3SYWGezeluGljai0tgXzPh7Fe8o35RFoB87+MuTI
+         nRS4EarPvPF7gxpt9munfO6W5XhGpgMBp4xvfCdU0qwbCx30ttZIdSxVTb7Yii3grH2/
+         oqUQ==
+X-Gm-Message-State: AOJu0YwKzzlpQYtKFzzRr15s4QZS8oe70F5AHlfW1hsldIPZCly7NfMb
+        BrnUjmKltrxF3hG/853vdKGYzQ==
+X-Google-Smtp-Source: AGHT+IERYpuwTJTlj0ke5t7pAohCypc8C9ZeCEec+440h7vM7t37OT+xF5GUTjWJ6hrqtpi65H4oqg==
+X-Received: by 2002:a05:6a21:329f:b0:10f:be0:4dce with SMTP id yt31-20020a056a21329f00b0010f0be04dcemr30895212pzb.8.1693143427445;
+        Sun, 27 Aug 2023 06:37:07 -0700 (PDT)
+Received: from leoy-huanghe.lan (211-75-219-204.hinet-ip.hinet.net. [211.75.219.204])
+        by smtp.gmail.com with ESMTPSA id e29-20020a63371d000000b00565eb4fa8d1sm5273627pga.16.2023.08.27.06.37.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Aug 2023 06:37:06 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v1 0/2] perf cs-etm: Improve timestamp tracing
+Date:   Sun, 27 Aug 2023 21:35:55 +0800
+Message-Id: <20230827133557.112494-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5231893a-e5a5-4544-a6d2-2c98cbebca09@lucifer.local>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Aug 27, 2023 at 09:01:04AM +0100, Lorenzo Stoakes wrote:
-> On Mon, Aug 21, 2023 at 09:20:16PM +0100, Matthew Wilcox (Oracle) wrote:
-> > -	if (page && order) {
-> > -		/*
-> > -		 * Communicate the allocation size to the driver:
-> > -		 * if we managed to secure a high-order allocation,
-> > -		 * set its first page's private to this order;
-> > -		 * !PagePrivate(page) means it's just a normal page.
-> > -		 */
-> > -		split_page(page, order);
-> > -		SetPagePrivate(page);
-> > -		set_page_private(page, order);
-> 
-> I'm guessing this was used in conjunction with the page_private() logic
-> that existed below and can simply be discarded now?
+This patch series is to improve timestamp handling in per-thread mode.
 
-As far as I can tell, yes.
+The current code doesn't validate timestamp and always return success for
+per-thread mode, for a sane implementation, the first patch is to allow
+validation timestamp tracing in per-thread mode.
 
-> > -	}
-> > +		folio = __folio_alloc_node(PERF_AUX_GFP, order, node);
-> > +	} while (!folio && order--);
-> >
-> > -	return page;
-> > +	if (order)
-> > +		folio_ref_add(folio, (1 << order) - 1);
-> 
-> Can't order go to -1 if we continue to fail to allocate a folio?
+The second patch is to respect timestamp option "--timestamp" or "-T",
+when users set this option, the tool will automatically enable hardware
+timestamp tracing in Arm CoreSight.
 
-Hm, yes.
 
-> > @@ -707,17 +696,21 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
-> >
-> >  	rb->free_aux = event->pmu->free_aux;
-> >  	for (rb->aux_nr_pages = 0; rb->aux_nr_pages < nr_pages;) {
-> > -		struct page *page;
-> > -		int last, order;
-> > +		struct folio *folio;
-> > +		unsigned int i, nr, order;
-> > +		void *addr;
-> >
-> >  		order = min(max_order, ilog2(nr_pages - rb->aux_nr_pages));
-> > -		page = rb_alloc_aux_page(node, order);
-> > -		if (!page)
-> > +		folio = rb_alloc_aux_folio(node, order);
-> > +		if (!folio)
-> >  			goto out;
-> > +		addr = folio_address(folio);
-> > +		nr = folio_nr_pages(folio);
-> 
-> I was going to raise the unspeakably annoying nit about this function returning
-> a long, but then that made me wonder why, given folio->_folio_nr_pages is an
-> unsigned int folio_nr_pages() returns a long in the first instance?
+Leo Yan (2):
+  perf cs-etm: Validate timestamp tracing in per-thread mode
+  perf cs-etm: Respect timestamp option
 
-Futureproofing the API.  While I don't expect us to be allocating
-order-32 folios any time soon, and x86 has excluded p4d-sizes from the
-architecture, I don't want to have to go through and audit everywhere
-when it turns out we do want to support such a thing on some architecture.
+ tools/perf/arch/arm/util/cs-etm.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-(on x86 PMD - order 9, PUD - order 18, P4D - order 27, so we'd need a
-hypothetical P5D level, or a machine with, say 16k pages, which would
-go PMD-11, PUD-22, P4D-33, and be managing a folio of size 2^57 bytes)
-
-But supporting nr_pages stored directly in the otherwise wasted space
-in the folio seemed like a cheap win, and there was no reason to take
-up the extra 32 bits.
-
-Anyway, here, we know we're not getting back an arbitrary folio that
-somebody else allocated, we're allocating for ourselves, and we know we're
-allocating something rather smaller than that, so it's fine to calculate
-in terms of unsigned int.  If I were writing in rust, I'd use usize,
-but since nobody's done the work to make rust types available in C yet,
-I haven't done that either.
-
-We actually use usize as a variable name in a couple of hundred places,
-so turning it into a generally available type is harder than one might
-like.
+-- 
+2.34.1
 
