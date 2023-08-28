@@ -2,142 +2,166 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C608CC83F01
-	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Aug 2023 13:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15927C83F1C
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Aug 2023 02:43:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231134AbjH0Nhz (ORCPT
+        id S229379AbjH1Cmw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 27 Aug 2023 09:37:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53762 "EHLO
+        Sun, 27 Aug 2023 22:42:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230527AbjH0NhX (ORCPT
+        with ESMTP id S230088AbjH1Cmi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 27 Aug 2023 09:37:23 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD5E111C
-        for <linux-perf-users@vger.kernel.org>; Sun, 27 Aug 2023 06:37:17 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-68a3cae6d94so2121177b3a.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 27 Aug 2023 06:37:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693143437; x=1693748237;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7oz+CZy9YZvIlZYBV1Djf2HNAYZ0qDenfedTgUYUSqU=;
-        b=qKRwvWOY1eyvGUyQ4yR43oXGTcXp51nzbgsPPA3iMBiiNIbINN0whfRO1HWt1N+ST2
-         CXUB/FYM1uzJMhtRx35JS2MMHN3LLHNzflosP9qzDPpyURf6SjS5cz94G/SCQL2C2JF5
-         s5DteAYHqf+XtZuDKfn/Kunn0ZI4wCmhzyR3O1r6PQd/YBtFWq8a3XLTyJ2RkSjkxrtW
-         Qh5Uhk9whr6E0cI0QJZL1QQ5/AvzjPuB8zV7a7Rv/mmqOO57A8RNpIjx6ZzEFYlq1+sF
-         n3CrKAYNQ5gGQ1v3jIRqQmUhO2Ii4dmrRp6YwJgFwcVXvfQTgQA6f+8AgMRiVRWbbdwn
-         /iPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693143437; x=1693748237;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7oz+CZy9YZvIlZYBV1Djf2HNAYZ0qDenfedTgUYUSqU=;
-        b=V/tBwLM2CmB+rKSTSwyECsIj/UfwflMLjQWFr2ncREy/jDdtK9E0hKQUQtc67175om
-         5ZL+jO5fc5Q3pV9hHH9/7cgxPfqygmOP5S5ZTogJ+Deskr26qdNKYLZjbI232VZErI1H
-         OQIiBgqaeDp6K5EJlz2iRxlZnrS/tz7kN5Fxr4T4ts/TvlKpmx5zL+oXkApZdQsWfOlR
-         k1Hnnl1EqG4j8CsVt9vbT0fB6ZS7+p6Gk16IeouIaN1qEWwd/3zh7ql+ezwGRuh7mudu
-         /jE/wsybXZcumxJJ3xmv9leF5pgSDLIsZtJS4Y+CTLxQGFuEszEbQ+kUwEl9DbB3t+12
-         KF6Q==
-X-Gm-Message-State: AOJu0YwCYL34ZfMx1UB0mXoHVyce1TRCk/IzXnyaT3UNoDmW3Co5hSl1
-        8qR9feWwgsCzbLeITBkAoVNFpA==
-X-Google-Smtp-Source: AGHT+IFM1OLxJh7p3BbZWTvqmLncDv+R+8Ia/nGwyLEZihC31U0cm8ZufuP+x1zTdn2BYzeKF1n0OA==
-X-Received: by 2002:a05:6a21:7985:b0:14c:ca56:69f7 with SMTP id bh5-20020a056a21798500b0014cca5669f7mr4796294pzc.28.1693143437236;
-        Sun, 27 Aug 2023 06:37:17 -0700 (PDT)
-Received: from leoy-huanghe.lan (211-75-219-204.hinet-ip.hinet.net. [211.75.219.204])
-        by smtp.gmail.com with ESMTPSA id e29-20020a63371d000000b00565eb4fa8d1sm5273627pga.16.2023.08.27.06.37.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Aug 2023 06:37:16 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 2/2] perf cs-etm: Respect timestamp option
-Date:   Sun, 27 Aug 2023 21:35:57 +0800
-Message-Id: <20230827133557.112494-3-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230827133557.112494-1-leo.yan@linaro.org>
-References: <20230827133557.112494-1-leo.yan@linaro.org>
+        Sun, 27 Aug 2023 22:42:38 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CE49E188
+        for <linux-perf-users@vger.kernel.org>; Sun, 27 Aug 2023 19:42:30 -0700 (PDT)
+Received: from loongson.cn (unknown [112.20.109.102])
+        by gateway (Coremail) with SMTP id _____8Cxh+iVCexk+W4cAA--.22447S3;
+        Mon, 28 Aug 2023 10:42:29 +0800 (CST)
+Received: from [192.168.100.8] (unknown [112.20.109.102])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXSOSCexkYlhlAA--.30260S3;
+        Mon, 28 Aug 2023 10:42:27 +0800 (CST)
+Message-ID: <06fa9006-243c-4aac-9101-5c66251faa02@loongson.cn>
+Date:   Mon, 28 Aug 2023 10:42:26 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] perf/trace: Use "test -f" instead of "[-f FILE]"
+To:     Xi Ruoyao <xry111@xry111.site>, acme@kernel.org
+Cc:     mingo@redhat.com, peterz@infradead.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        chenhuacai@kernel.org, linux-perf-users@vger.kernel.org,
+        loongson-kernel@lists.loongnix.cn, loongarch@lists.linux.dev
+References: <cover.1693040967.git.siyanteng@loongson.cn>
+ <b9fc1affbca15cbf18cc23905f823047b4e2f1b6.1693040967.git.siyanteng@loongson.cn>
+ <ef11874aca952984d67ad5fb65b7fc1e265e2ef2.camel@xry111.site>
+Content-Language: en-US
+From:   Yanteng Si <siyanteng@loongson.cn>
+In-Reply-To: <ef11874aca952984d67ad5fb65b7fc1e265e2ef2.camel@xry111.site>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8BxXSOSCexkYlhlAA--.30260S3
+X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxuryfWr1Uur13ur1rXF4UKFX_yoWruF1fpa
+        n5Aas8GFW7Xr18Gw1xXFn8XFW5G3s2q3W5ur1kAFZrGr1UGry2qrWDZwnI9F15Xwsaq3yI
+        934Dur10vr1IqrXCm3ZEXasCq-sJn29KB7ZKAUJUUUUk529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+        xVW8Jr0_Cr1UM2kKe7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+        AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+        tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+        8JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+        6r4UMxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+        AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+        0xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
+        v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+        xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0L0ePUUUUU==
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When users pass the option '--timestamp' or '-T' in the record command,
-all events will set the PERF_SAMPLE_TIME bit in the attribution.  In
-this case, the AUX event will record the kernel timestamp, but it
-doesn't mean Arm CoreSight enables timestamp packets in its hardware
-tracing.
 
-If the option '--timestamp' or '-T' is set, this patch always enables
-Arm CoreSight timestamp, as a result, the bit 28 in event's config is to
-be set.
+在 2023/8/26 17:49, Xi Ruoyao 写道:
+> On Sat, 2023-08-26 at 17:40 +0800, Yanteng Si wrote:
+>> It will be simpler without that extra subshell, so
+>> let's use "test -f".
+> Sorry for duplicated reply (I replied to v2 minutes ago), but I cannot
+> understand this sentence.  [ ... ] has nothing to do with subshell, it's
+> just a syntax variant of "test".
+>
+Sorry, I mean is that "[" is part of the shell builtin test (and a 
+synonym for it),
 
-Before:
+  not a link to the external command /usr/bin/test.
 
-  # perf record -e cs_etm// --per-thread --timestamp -- ls
-  # perf script --header-only
-  ...
-  # event : name = cs_etm//, , id = { 69 }, type = 12, size = 136,
-  config = 0, { sample_period, sample_freq } = 1,
-  sample_type = IP|TID|TIME|CPU|IDENTIFIER, read_format = ID|LOST,
-  disabled = 1, enable_on_exec = 1, sample_id_all = 1, exclude_guest = 1
-  ...
+Using the "test" is simpler because it avoids a lot of "[]".
 
-After:
 
-  # perf record -e cs_etm// --per-thread --timestamp -- ls
-  # perf script --header-only
-  ...
-  # event : name = cs_etm//, , id = { 49 }, type = 12, size = 136,
-  config = 0x10000000, { sample_period, sample_freq } = 1,
-  sample_type = IP|TID|TIME|CPU|IDENTIFIER, read_format = ID|LOST,
-  disabled = 1, enable_on_exec = 1, sample_id_all = 1, exclude_guest = 1
-  ...
+I'm going to write that in v4, agree?
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/arch/arm/util/cs-etm.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
 
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index cf9ef9ba800b..58c506e9788d 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -442,6 +442,15 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
- 					   "contextid", 1);
- 	}
- 
-+	/*
-+	 * When the option '--timestamp' or '-T' is enabled, the PERF_SAMPLE_TIME
-+	 * bit is set for all events.  In this case, always enable Arm CoreSight
-+	 * timestamp tracing.
-+	 */
-+	if (opts->sample_time_set)
-+		evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
-+					   "timestamp", 1);
-+
- 	/* Add dummy event to keep tracking */
- 	err = parse_event(evlist, "dummy:u");
- 	if (err)
--- 
-2.34.1
+Thanks,
+
+Yanteng
+
+>> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+>> ---
+>>   tools/perf/trace/beauty/mmap_flags.sh | 9 ++++++---
+>>   tools/perf/trace/beauty/mmap_prot.sh  | 5 +++--
+>>   2 files changed, 9 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/tools/perf/trace/beauty/mmap_flags.sh
+>> b/tools/perf/trace/beauty/mmap_flags.sh
+>> index d035b29fc5ec..6ecdb3c5a99e 100755
+>> --- a/tools/perf/trace/beauty/mmap_flags.sh
+>> +++ b/tools/perf/trace/beauty/mmap_flags.sh
+>> @@ -19,7 +19,8 @@ arch_mman=${arch_header_dir}/mman.h
+>>   
+>>   printf "static const char *mmap_flags[] = {\n"
+>>   regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+
+>> )[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
+>> -([ -f ${arch_mman} ] && grep -E -q $regex ${arch_mman}) && \
+>> +test -f ${arch_mman} && \
+>> +grep -E -q $regex ${arch_mman} && \
+>>   (grep -E $regex ${arch_mman} | \
+>>          sed -r "s/$regex/\2 \1 \1 \1 \2/g"      | \
+>>          xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef
+>> MAP_%s\n#define MAP_%s %s\n#endif\n")
+>> @@ -28,12 +29,14 @@ grep -E -q $regex ${linux_mman} && \
+>>          grep -E -vw 'MAP_(UNINITIALIZED|TYPE|SHARED_VALIDATE)' | \
+>>          sed -r "s/$regex/\2 \1 \1 \1 \2/g" | \
+>>          xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef
+>> MAP_%s\n#define MAP_%s %s\n#endif\n")
+>> -([ ! -f ${arch_mman} ] || grep -E -q
+>> '#[[:space:]]*include[[:space:]]+.*uapi/asm-generic/mman.*'
+>> ${arch_mman}) &&
+>> +( ! test -f ${arch_mman} || \
+>> +grep -E -q '#[[:space:]]*include[[:space:]]+.*uapi/asm-
+>> generic/mman.*' ${arch_mman}) &&
+>>   (grep -E $regex ${header_dir}/mman-common.h | \
+>>          grep -E -vw 'MAP_(UNINITIALIZED|TYPE|SHARED_VALIDATE)' | \
+>>          sed -r "s/$regex/\2 \1 \1 \1 \2/g"      | \
+>>          xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef
+>> MAP_%s\n#define MAP_%s %s\n#endif\n")
+>> -([ ! -f ${arch_mman} ] || grep -E -q
+>> '#[[:space:]]*include[[:space:]]+.*uapi/asm-generic/mman.h>.*'
+>> ${arch_mman}) &&
+>> +( ! test -f ${arch_mman} || \
+>> +grep -E -q '#[[:space:]]*include[[:space:]]+.*uapi/asm-
+>> generic/mman.h>.*' ${arch_mman}) &&
+>>   (grep -E $regex ${header_dir}/mman.h | \
+>>          sed -r "s/$regex/\2 \1 \1 \1 \2/g"      | \
+>>          xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef
+>> MAP_%s\n#define MAP_%s %s\n#endif\n")
+>> diff --git a/tools/perf/trace/beauty/mmap_prot.sh
+>> b/tools/perf/trace/beauty/mmap_prot.sh
+>> index 49e8c865214b..4436fcd6e861 100755
+>> --- a/tools/perf/trace/beauty/mmap_prot.sh
+>> +++ b/tools/perf/trace/beauty/mmap_prot.sh
+>> @@ -17,12 +17,13 @@ prefix="PROT"
+>>   
+>>   printf "static const char *mmap_prot[] = {\n"
+>>   regex=`printf
+>> '^[[:space:]]*#[[:space:]]*define[[:space:]]+%s_([[:alnum:]_]+)[[:spac
+>> e:]]+(0x[[:xdigit:]]+)[[:space:]]*.*' ${prefix}`
+>> -([ ! -f ${arch_mman} ] || grep -E -q
+>> '#[[:space:]]*include[[:space:]]+.*uapi/asm-generic/mman.*'
+>> ${arch_mman}) &&
+>> +( ! test -f ${arch_mman} \
+>> +|| grep -E -q '#[[:space:]]*include[[:space:]]+.*uapi/asm-
+>> generic/mman.*' ${arch_mman}) &&
+>>   (grep -E $regex ${common_mman} | \
+>>          grep -E -vw PROT_NONE | \
+>>          sed -r "s/$regex/\2 \1 \1 \1 \2/g"      | \
+>>          xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef
+>> ${prefix}_%s\n#define ${prefix}_%s %s\n#endif\n")
+>> -[ -f ${arch_mman} ] && grep -E -q $regex ${arch_mman} &&
+>> +test -f ${arch_mman} && grep -E -q $regex ${arch_mman} &&
+>>   (grep -E $regex ${arch_mman} | \
+>>          grep -E -vw PROT_NONE | \
+>>          sed -r "s/$regex/\2 \1 \1 \1 \2/g"      | \
 
