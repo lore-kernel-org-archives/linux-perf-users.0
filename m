@@ -2,26 +2,26 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D9CC83F14
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Aug 2023 13:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2CCC83F1A
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Aug 2023 13:22:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235959AbjH2NVr (ORCPT
+        id S235981AbjH2NVx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 29 Aug 2023 09:21:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44486 "EHLO
+        Tue, 29 Aug 2023 09:21:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235987AbjH2NVX (ORCPT
+        with ESMTP id S235984AbjH2NVX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Tue, 29 Aug 2023 09:21:23 -0400
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9DF931A4
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Aug 2023 06:21:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 56483187
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Aug 2023 06:21:18 -0700 (PDT)
 Received: from loongson.cn (unknown [112.20.109.102])
-        by gateway (Coremail) with SMTP id _____8Dx_+vM8O1kuMQcAA--.57750S3;
+        by gateway (Coremail) with SMTP id _____8DxBfHM8O1kw8QcAA--.58939S3;
         Tue, 29 Aug 2023 21:21:16 +0800 (CST)
 Received: from localhost.localdomain (unknown [112.20.109.102])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8DxDc_K8O1k9nxmAA--.51623S2;
-        Tue, 29 Aug 2023 21:21:15 +0800 (CST)
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8DxDc_K8O1k9nxmAA--.51623S3;
+        Tue, 29 Aug 2023 21:21:16 +0800 (CST)
 From:   Yanteng Si <siyanteng@loongson.cn>
 To:     acme@kernel.org
 Cc:     Yanteng Si <siyanteng@loongson.cn>, mingo@redhat.com,
@@ -29,63 +29,75 @@ Cc:     Yanteng Si <siyanteng@loongson.cn>, mingo@redhat.com,
         alexander.shishkin@linux.intel.com, jolsa@kernel.org,
         namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
         chenhuacai@kernel.org, linux-perf-users@vger.kernel.org,
-        loongson-kernel@lists.loongnix.cn, loongarch@lists.linux.dev
-Subject: [PATCH v4 0/3] tools/perf: Add loongarch cpuinfo and fix build warning
-Date:   Tue, 29 Aug 2023 21:21:10 +0800
-Message-Id: <cover.1693315043.git.siyanteng@loongson.cn>
+        loongson-kernel@lists.loongnix.cn, loongarch@lists.linux.dev,
+        Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH v4 1/3] perf/tools: Allow to use cpuinfo on LoongArch
+Date:   Tue, 29 Aug 2023 21:21:11 +0800
+Message-Id: <76cfe6d6f89a2ad8fd863e02e495637c4e30556d.1693315043.git.siyanteng@loongson.cn>
 X-Mailer: git-send-email 2.31.4
+In-Reply-To: <cover.1693315043.git.siyanteng@loongson.cn>
+References: <cover.1693315043.git.siyanteng@loongson.cn>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8DxDc_K8O1k9nxmAA--.51623S2
+X-CM-TRANSID: AQAAf8DxDc_K8O1k9nxmAA--.51623S3
 X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj9xXoWruw47Gr4fWrykCw4UtFWfXrc_yoW3CFb_Za
-        1S93W8JryUCr9Yv3yak345Cr1xGFZrAr95tayDKa15Zry5JF1DWayDC3srZF1Yg3WYqrn3
-        Jw1fCrW5Aw4a9osvyTuYvTs0mTUanT9S1TB71UUUUbUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-        s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-        cSsGvfJTRUUUbfkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-        vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-        w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-        W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-        GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-        x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
-        McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-        1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-        Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-        AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-        cVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI
-        8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v2
-        6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4YLvDUUUU
+X-Coremail-Antispam: 1Uk129KBj93XoW7Aw4ktw4DZw43ur4UJFyrGrX_yoW8JFW7pr
+        WDC3y7tw45GF9xK3Zayan5XFW3Xrs7XFWfuws5K3y5Zr1Sywn7XryxXFs8KF47Xa4DJw1j
+        9r1DWr4DZFW8JrcCm3ZEXasCq-sJn29KB7ZKAUJUUUUk529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+        6rxl6s0DM2kKe7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+        kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
+        XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+        8JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+        6r4UMxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+        AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+        0xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
+        v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
+        xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0L0ePUUUUU==
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-v4:
-* Modify commit message. [3/3]
+Define these macros so that the CPU name can be displayed
+when running perf report and perf timechart.
 
-v3:
-* Using strcasest() correctly.
-* Picking Huacai's Acked tag, I seem to have lost it in the last version.
+Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+---
+ tools/perf/util/header.c    | 2 ++
+ tools/perf/util/svghelper.c | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-v2:
-* Switch to strcasestr().
-* Use "test -f" instead of "[-f FILE]".
-
-v1:
-* LoongArch and riscv don't have tools/arch/xxxxx/include/uapi/asm/mman.h,
-  let's modify the detection rules.
-* Allow to use cpuinfo on loongarch.
-
-Yanteng Si (3):
-  perf/tools: Allow to use cpuinfo on LoongArch
-  perf/trace: Fix mmap_flags for archs use generic mman.h
-  perf/trace: Use "test -f" instead of "[-f FILE]"
-
- tools/perf/trace/beauty/mmap_flags.sh | 7 +++++--
- tools/perf/trace/beauty/mmap_prot.sh  | 5 +++--
- tools/perf/util/header.c              | 2 ++
- tools/perf/util/svghelper.c           | 2 +-
- 4 files changed, 11 insertions(+), 5 deletions(-)
-
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 52fbf526fe74..c6e19192bd28 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -456,6 +456,8 @@ static int write_cpudesc(struct feat_fd *ff,
+ #define CPUINFO_PROC	{ "Processor", }
+ #elif defined(__xtensa__)
+ #define CPUINFO_PROC	{ "core ID", }
++#elif defined(__loongarch__)
++#define CPUINFO_PROC	{ "Model Name", }
+ #else
+ #define CPUINFO_PROC	{ "model name", }
+ #endif
+diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
+index 5c62d3118c41..2e141126b0d6 100644
+--- a/tools/perf/util/svghelper.c
++++ b/tools/perf/util/svghelper.c
+@@ -331,7 +331,7 @@ static char *cpu_model(void)
+ 	file = fopen("/proc/cpuinfo", "r");
+ 	if (file) {
+ 		while (fgets(buf, 255, file)) {
+-			if (strstr(buf, "model name")) {
++			if (strcasestr(buf, "model Name")) {
+ 				strlcpy(cpu_m, &buf[13], 255);
+ 				break;
+ 			}
 -- 
 2.31.4
 
