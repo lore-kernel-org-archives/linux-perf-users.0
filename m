@@ -2,125 +2,127 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3925EC83F14
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Aug 2023 10:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC73C83F12
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Aug 2023 10:47:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231223AbjH2Knf (ORCPT
+        id S232430AbjH2Kqy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 29 Aug 2023 06:43:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46092 "EHLO
+        Tue, 29 Aug 2023 06:46:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234757AbjH2KnD (ORCPT
+        with ESMTP id S232025AbjH2Kq0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 29 Aug 2023 06:43:03 -0400
-Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04BD019A
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Aug 2023 03:43:01 -0700 (PDT)
-Received: by mail-ua1-x935.google.com with SMTP id a1e0cc1a2514c-7a50bd29064so148594241.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Aug 2023 03:43:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693305780; x=1693910580;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=if6AepQI7oElnZuMvLx21VEEZIt+xpKV5k6pCG2vAcQ=;
-        b=sxW/8MKsFgaQv6oj2DYOdFIqJMY7vCRNz2YrVrNVE5kuOoFU5tK3Z35GnM7S9W6mG/
-         zHcRLCRPAn0NBss87wYnpzc6Q+PA5zuVTRKTyDuF6gWyaLsBE2Kfqj8FulddxOlr4FmQ
-         X8LZj/lWi1e7rThqBCQDDKVFwL7eX+R3Xvx6sY5wORrO+eQfkmwPLpSAUupoS57kQ93+
-         9gzqhkHMjd0Ttr7xEMqAIizl35CiZwvCaPim2px7QeCTFUzhAp4fyJnUinAVSwrcXKIJ
-         WN3BLLGHzMIKQQw+qV4+YSx5AJMUBBkrfh0X0moPV01siFJMXs622Wttsaeoil2iYy/I
-         Mklg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693305780; x=1693910580;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=if6AepQI7oElnZuMvLx21VEEZIt+xpKV5k6pCG2vAcQ=;
-        b=UjfedekLOONnV8Qh8vrw+QIULGw6XN4pxpuHH5V5LLnpeP339MXszXYhADVeVxg4wH
-         2OMutXFiaAdvehrDhWpeSu1jR2GUjL2eU44Z63r25UKdcxQqELJ9bx5VGUMmW+itrM1Y
-         6mCv9G8zo35PDG0MNbxIEhbbuulrHq4g+Tk5cb+1r0T/cbcUWNljv9xHdou80W9Orz+o
-         4M8PkruWWo6ebPEIc2WFvWaYubhexiZWPeL2E5hQoKPNt7ZyRIRrGsMJZzEQaSiZ6zMw
-         ySIiS+U/uRFAZRX9D1NC4txLmLjCrI1JVQUiJnW3BGDWXA/dceHQ90m1d1+ARNACdT4o
-         NZgQ==
-X-Gm-Message-State: AOJu0YzWX4EXkk9QI9cNkRM5p48yIMplqj2zxTKAlYw5FHsmwPcy3AGZ
-        MfUFr4NDZ0GMdhYCD5rK1hxRLAk+OyFX4dfwd0VIdw==
-X-Google-Smtp-Source: AGHT+IEPn80gj3WtM50v1h2lnAs5LtX1xABHIUxfXdo+y4pMuPPWvecGOP6nMiBOi3f6/P/CijM2bLXL3VVSMPVwGkE=
-X-Received: by 2002:a05:6102:3027:b0:44d:6320:b713 with SMTP id
- v7-20020a056102302700b0044d6320b713mr12795980vsa.0.1693305780098; Tue, 29 Aug
- 2023 03:43:00 -0700 (PDT)
+        Tue, 29 Aug 2023 06:46:26 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 879481AA;
+        Tue, 29 Aug 2023 03:46:23 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A246D2F4;
+        Tue, 29 Aug 2023 03:47:02 -0700 (PDT)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 154D03F738;
+        Tue, 29 Aug 2023 03:46:20 -0700 (PDT)
+Message-ID: <1299e1ff-2543-6ee5-dc32-bc098bd6bfe1@arm.com>
+Date:   Tue, 29 Aug 2023 11:46:12 +0100
 MIME-Version: 1.0
-References: <20230824153233.1006420-1-dianders@chromium.org> <20230824083012.v11.5.Ifadbfd45b22c52edcb499034dd4783d096343260@changeid>
-In-Reply-To: <20230824083012.v11.5.Ifadbfd45b22c52edcb499034dd4783d096343260@changeid>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Tue, 29 Aug 2023 16:12:49 +0530
-Message-ID: <CAFA6WYPV2GWP97xaE_Mx3vUNF_xUvmsedEHr8LbJLQ+LWK-YJw@mail.gmail.com>
-Subject: Re: [PATCH v11 5/6] arm64: smp: IPI_CPU_STOP and IPI_CPU_CRASH_STOP
- should try for NMI
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        linux-perf-users@vger.kernel.org,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-arm-kernel@lists.infradead.org, ito-yuichi@fujitsu.com,
-        Stephen Boyd <swboyd@chromium.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v2] perf vendor events arm64: Add AmpereOne metrics
+Content-Language: en-US
+To:     Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        D Scott Phillips <scott@os.amperecomputing.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Valentin Schneider <vschneid@redhat.com>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Kleikamp <dave.kleikamp@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org
+References: <20230826192352.3043220-1-ilkka@os.amperecomputing.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20230826192352.3043220-1-ilkka@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 24 Aug 2023 at 21:03, Douglas Anderson <dianders@chromium.org> wrote:
->
-> There's no reason why IPI_CPU_STOP and IPI_CPU_CRASH_STOP can't be
-> handled as NMI. They are very simple and everything in them is
-> NMI-safe. Mark them as things to use NMI for if NMI is available.
->
-> Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
 
--Sumit
-
+On 26/08/2023 20:23, Ilkka Koskinen wrote:
+> This patch adds AmpereOne metrics. The metrics also work around
+> the issue related to some of the events.
+> 
+> Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
 > ---
-> I don't actually have any good way to test/validate this patch. It's
-> added to the series at Mark's request.
->
-> (no changes since v10)
->
-> Changes in v10:
-> - ("IPI_CPU_STOP and IPI_CPU_CRASH_STOP should try for NMI") new for v10.
->
->  arch/arm64/kernel/smp.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> index c8896cbc5327..4566934aaf9f 100644
-> --- a/arch/arm64/kernel/smp.c
-> +++ b/arch/arm64/kernel/smp.c
-> @@ -946,6 +946,8 @@ static bool ipi_should_be_nmi(enum ipi_msg_type ipi)
->                 return false;
->
->         switch (ipi) {
-> +       case IPI_CPU_STOP:
-> +       case IPI_CPU_CRASH_STOP:
->         case IPI_CPU_BACKTRACE:
->                 return true;
->         default:
-> --
-> 2.42.0.rc1.204.g551eb34607-goog
->
+>  .../arch/arm64/ampere/ampereone/metrics.json  | 396 ++++++++++++++++++
+>  1 file changed, 396 insertions(+)
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/ampereone/metrics.json
+> 
+> diff --git a/tools/perf/pmu-events/arch/arm64/ampere/ampereone/metrics.json b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/metrics.json
+> new file mode 100644
+> index 000000000000..b623d8a9e3dc
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/metrics.json
+> @@ -0,0 +1,396 @@
+
+[...]
+
+> +    {
+> +        "MetricExpr": "STALL_SLOT_BACKEND / (CPU_CYCLES * 4)",
+> +        "BriefDescription": "Fraction of slots backend bound",
+> +        "MetricGroup": "Default;TopDownL1",
+> +        "MetricName": "backend_bound",
+> +        "ScaleUnit": "100%"
+> +    },
+
+Hi Ilkaa,
+
+For these topdown metrics, as long as they are the same as the standard
+one you can remove anything that is duplicated. This might make it
+easier to make changes across all the topdown metrics in the future and
+have consistent descriptions across CPUs. For example this backend_bound
+one could look like this:
+
+    {
+        "ArchStdEvent": "backend_bound",
+    }
+
+This assumes that you have the slots sysfs file available, otherwise you
+could leave only the formula in.
+
+We also decided to make the units for the topdown metrics "percent of
+slots" as we thought more specificity in the units was clearer.
+
+Thanks
+James
+
+> +    {
+> +        "MetricExpr": "1 - (retired_fraction + slots_lost_misspeculation_fraction + backend_bound)",
+> +        "BriefDescription": "Fraction of slots frontend bound",
+> +        "MetricGroup": "Default;TopDownL1",
+> +        "MetricName": "frontend_bound",
+> +        "ScaleUnit": "100%"
+> +    },
+> +    {
+> +        "MetricExpr": "(OP_SPEC - OP_RETIRED) / (CPU_CYCLES * 4)",
+> +        "BriefDescription": "Fraction of slots lost due to misspeculation",
+> +        "MetricGroup": "Default;TopDownL1",
+> +        "MetricName": "slots_lost_misspeculation_fraction",
+> +        "ScaleUnit": "100%"
+> +    },
+> +    {
+> +        "MetricExpr": "OP_RETIRED / (CPU_CYCLES * 4)",
+> +        "BriefDescription": "Fraction of slots retiring, useful work",
+> +        "MetricGroup": "Default;TopDownL1",
+> +        "MetricName": "retired_fraction",
+> +        "ScaleUnit": "100%"
+> +    },
+> +    {
