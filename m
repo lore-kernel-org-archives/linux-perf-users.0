@@ -2,525 +2,1180 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E340C83F12
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Aug 2023 21:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D50AC83F12
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Aug 2023 00:18:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232772AbjH1VkO (ORCPT
+        id S234313AbjH2ASC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 28 Aug 2023 17:40:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41266 "EHLO
+        Mon, 28 Aug 2023 20:18:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233810AbjH1Vj7 (ORCPT
+        with ESMTP id S234300AbjH2ARm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 28 Aug 2023 17:39:59 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55010106;
-        Mon, 28 Aug 2023 14:39:55 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D340765207;
-        Mon, 28 Aug 2023 21:39:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9E32C433C8;
-        Mon, 28 Aug 2023 21:39:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693258794;
-        bh=SL7ZXvTZ/YyVDdVd/eFfQNA5PexazLts/zY3zovhkf4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q9vJMlmGIPuNgzKp+wOiKKVJMtFLxkoGHCrR5q1LjS1XoSYWj5N+AqH+ZlW+EpxTp
-         r75UQRVqdIN9oPEXgi50mVQFfGlcxuEi66L4BXOeFLsa/oIMhyehNRAndW8sQyJzIc
-         Ag6O5CX70dv2tidoUaCkZRolwwqLVmvq16cNOErSZy+7Ten/VSCH2MLQzdFlUV83uF
-         udW4j1OiMuyYZxhSa9ZJgXxEriqcRcHsTPWfIqaBogYQGjCn2Gi+CpE3jPktOCr2xM
-         ljDE69Fc6A8AkQO1f+kGsTCcSU7pPYDqrz/raP84wpicdKfZebWrowlXSfhxHIkQOF
-         Y2lSydIDGT7Qw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 13FB540722; Mon, 28 Aug 2023 18:39:51 -0300 (-03)
-Date:   Mon, 28 Aug 2023 18:39:51 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
+        Mon, 28 Aug 2023 20:17:42 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62935BC
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Aug 2023 17:17:37 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d782a2ba9f9so7424565276.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Aug 2023 17:17:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1693268256; x=1693873056;
+        h=content-transfer-encoding:to:from:subject:mime-version:message-id
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4cvRRktNVhd6+oNlFM3REZnm5sCJoN2lZHM5uEfiIsM=;
+        b=WU4YfFPIGwffBVHKQwjuTsEtY/fYeA7+nYauflmktCeX6TUJFTVzR7Riaa74e4GxRH
+         3iGSXqskYIWyABocsLqN5EcDdfe7i+DcCAVI1zmFnHscoXowSlDoR0GGiCWTZgq4nF/+
+         H78uw5buE3esNK1ucvBgS8jXJsc6IcjemawTvXEP040GCucccsngd4NEV09BXkqWtAoa
+         lWvSauEfuiGKBFmBDqhvq/Ukr6rX0Lmek1aZBP1rO+Ws4qi6uId6zzMUlQBv65rAIgWh
+         vMX1cXR/HdZolg0xIAUKCIrkPPXhHn4EcMJmow4DYe4bjZYu/YHlT5vYxXJDuZKXgE7X
+         42GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693268256; x=1693873056;
+        h=content-transfer-encoding:to:from:subject:mime-version:message-id
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4cvRRktNVhd6+oNlFM3REZnm5sCJoN2lZHM5uEfiIsM=;
+        b=SPDcaq/eVDZk1fc3TaBpOFhEPf5IvjHou2YVXXzK+PYfZml2Z6ZD+DHCA7Hexq2KMT
+         vD25fmV4hb/I7qWrHMnxedFBgB9fBaIyBsl+LxFyNOyEJU+9Mm/qiOxlJq738UPjcI0i
+         toc1o5kV+McU+qoqspokMmcD7dU0JeYfQwPD+GkjpmSLuVjInt/N3zkeVB1ffFoBkP0B
+         kVMfzjxI1/FdNtSWm5f0Ttdql5cgZcqcCHp13huRzgYiHDMNVpRauJRKuohfSyM6VTv7
+         /AIVKYwZQcVuSYtUdGKes8OEln+YJ5zmEknt152eYw9wTnpMj5WPR339BXUfVzWgp7a9
+         Xkpg==
+X-Gm-Message-State: AOJu0YxELRxIomOs7Lvceq/h/RUcE5jTwElVthsytDUsfa5gXpS27xfm
+        fnNUFAerGyxVb1oF1LWZVz/BmsSmcROW
+X-Google-Smtp-Source: AGHT+IFCEEA3b6Xokz1bZDLIWR8fpreUfPk5y/JgaajbwgIWqdaKgtwCrj13WR22/MCe9LgDFYWzFynaNaG1
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:1e38:88dc:18c:7fc5])
+ (user=irogers job=sendgmr) by 2002:a05:6902:100d:b0:d47:3d35:1604 with SMTP
+ id w13-20020a056902100d00b00d473d351604mr48002ybt.2.1693268256666; Mon, 28
+ Aug 2023 17:17:36 -0700 (PDT)
+Date:   Mon, 28 Aug 2023 17:17:28 -0700
+Message-Id: <20230829001730.1352769-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.42.0.rc2.253.gd59a3bf2b4-goog
+Subject: [PATCH v2 1/3] perf vendor events intel: Add lunarlake v1.0
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 06/18] perf s390 s390_cpumcfdg_dump: Don't scan all
- PMUs
-Message-ID: <ZO0UJy9XdP7eFLxh@kernel.org>
-References: <20230824041330.266337-1-irogers@google.com>
- <20230824041330.266337-7-irogers@google.com>
- <ZOdiX4eJHFfFbQhi@kernel.org>
- <428afeb4-d5ca-8115-73fc-881119a1cd51@linux.ibm.com>
- <CAP-5=fVt1vxK0CJ=aYjZzs4mushbxAx8056uxVQZUfsLAKpVoQ@mail.gmail.com>
- <4f2438fc-2360-8833-3751-fe3bc8b11afb@linux.ibm.com>
- <ZOkVYoN17A8wwP3k@kernel.org>
- <CAP-5=fUqLXdu2=TPSASFBbZ+B1oTFbuFra38z5YwYHWpX-V=hw@mail.gmail.com>
- <ZOzdFPOLhNdd59PG@kernel.org>
- <ZOzfHEuJkXfajmWO@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZOzfHEuJkXfajmWO@kernel.org>
-X-Url:  http://acmel.wordpress.com
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Colin Ian King <colin.i.king@gmail.com>,
+        Edward Baker <edward.baker@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Aug 28, 2023 at 02:53:32PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, Aug 28, 2023 at 02:44:53PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Fri, Aug 25, 2023 at 03:56:54PM -0700, Ian Rogers escreveu:
-> > > On Fri, Aug 25, 2023 at 1:56 PM Arnaldo Carvalho de Melo
-> > > <acme@kernel.org> wrote:
-> > > >
-> > > > Em Fri, Aug 25, 2023 at 04:39:22PM +0200, Thomas Richter escreveu:
-> > > > > On 8/25/23 15:14, Ian Rogers wrote:
-> > > > > > On Fri, Aug 25, 2023 at 1:20 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
-> > > >
-> > > > > >> On 8/24/23 15:59, Arnaldo Carvalho de Melo wrote:
-> > > > > >>> Em Wed, Aug 23, 2023 at 09:13:18PM -0700, Ian Rogers escreveu:
-> > > > > >>>> Rather than scanning all PMUs for a counter name, scan the PMU
-> > > > > >>>> associated with the evsel of the sample. This is done to remove a
-> > > > > >>>> dependence on pmu-events.h.
-> > > >
-> > > > > >>> I'm applying this one, and CCing the S/390 developers so that they can
-> > > > > >>> try this and maybe provide an Acked-by/Tested-by,
-> > > >
-> > > > > >> I have downloaded this patch set of 18 patches (using b4), but they do not
-> > > > > >> apply on my git tree.
-> > > >
-> > > > > >> Which git branch do I have to use to test this. Thanks a lot.
-> > > >
-> > > > > > the changes are in the perf-tools-next tree:
-> > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/
-> > > >
-> > > > > Unfurtunately this patch set fails again on s390.
-> > > > > Here is the test output from the current 6.5.0rc7 kernel:
-> > > > >
-> > > > > # ./perf test 6 10 'perf all metricgroups test' 'perf all metrics test'
-> > > > >   6: Parse event definition strings                                  :
-> > > > >   6.1: Test event parsing                                            : Ok
-> > > > >   6.2: Parsing of all PMU events from sysfs                          : Ok
-> > > > >   6.3: Parsing of given PMU events from sysfs                        : Ok
-> > > > >   6.4: Parsing of aliased events from sysfs                          : Skip (no aliases in sysfs)
-> > > > >   6.5: Parsing of aliased events                                     : Ok
-> > > > >   6.6: Parsing of terms (event modifiers)                            : Ok
-> > > > >  10: PMU events                                                      :
-> > > > >  10.1: PMU event table sanity                                        : Ok
-> > > > >  10.2: PMU event map aliases                                         : Ok
-> > > > >  10.3: Parsing of PMU event table metrics                            : Ok
-> > > > >  10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
-> > > > >  10.5: Parsing of metric thresholds with fake PMUs                   : Ok
-> > > > >  95: perf all metricgroups test                                      : Ok
-> > > > >  96: perf all metrics test                                           : Ok
-> > > > > #
-> > > > >
-> > > > > This looks good.
-> > > >
-> > > > Reproduced:
-> > > >
-> > > > # grep -E vendor_id\|^processor -m2 /proc/cpuinfo
-> > > > vendor_id       : IBM/S390
-> > > > processor 0: version = 00,  identification = 1A33E8,  machine = 2964
-> > > > #
-> > > > # perf test 6 10 'perf all metricgroups test' 'perf all metrics test'
-> > > >   6: Parse event definition strings                                  :
-> > > >   6.1: Test event parsing                                            : Ok
-> > > >   6.2: Parsing of all PMU events from sysfs                          : Ok
-> > > >   6.3: Parsing of given PMU events from sysfs                        : Ok
-> > > >   6.4: Parsing of aliased events from sysfs                          : Skip (no aliases in sysfs)
-> > > >   6.5: Parsing of aliased events                                     : Ok
-> > > >   6.6: Parsing of terms (event modifiers)                            : Ok
-> > > >  10: PMU events                                                      :
-> > > >  10.1: PMU event table sanity                                        : Ok
-> > > >  10.2: PMU event map aliases                                         : Ok
-> > > >  10.3: Parsing of PMU event table metrics                            : Ok
-> > > >  10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
-> > > >  10.5: Parsing of metric thresholds with fake PMUs                   : Ok
-> > > >  95: perf all metricgroups test                                      : Ok
-> > > >  96: perf all metrics test                                           : Ok
-> > > > # perf -v
-> > > > perf version 6.5.rc7.g6f0edbb833ec
-> > > > #
-> > > >
-> > > > > However when I use the check-out from perf-tools-next, I get this output:
-> > > > > # ./perf test 6 10 'perf all metricgroups test' 'perf all metrics test'
-> > > > >   6: Parse event definition strings                                  :
-> > > > >   6.1: Test event parsing                                            : Ok
-> > > > >   6.2: Parsing of all PMU events from sysfs                          : FAILED!
-> > > > >   6.3: Parsing of given PMU events from sysfs                        : Ok
-> > > > >   6.4: Parsing of aliased events from sysfs                          : Skip (no aliases in sysfs)
-> > > > >   6.5: Parsing of aliased events                                     : FAILED!
-> > > > >   6.6: Parsing of terms (event modifiers)                            : Ok
-> > > > >  10: PMU events                                                      :
-> > > > >  10.1: PMU event table sanity                                        : Ok
-> > > > >  10.2: PMU event map aliases                                         : FAILED!
-> > > > >  10.3: Parsing of PMU event table metrics                            : Ok
-> > > > >  10.4: Parsing of PMU event table metrics with fake PMUs             : FAILED!
-> > > > >  10.5: Parsing of metric thresholds with fake PMUs                   : Ok
-> > > > >  93: perf all metricgroups test                                      : FAILED!
-> > > > >  94: perf all metrics test                                           : FAILED!
-> > > > > #
-> > > > >
-> > > > > So some tests are failing again.
-> > > > >
-> > > > > I am out for the next two weeks, Sumanth Korikkar (on to list) might be able to help.
-> > > > > Thanks a lot.
-> > > >
-> > > > [root@kernelqe3 linux]# git checkout perf-tools-next
-> > > > git Switched to branch 'perf-tools-next'
-> > > > Your branch is up to date with 'perf-tools-next/perf-tools-next'.
-> > > > [root@kernelqe3 linux]# git log --oneline -5
-> > > > eeb6b12992c4 (HEAD -> perf-tools-next, perf-tools-next/perf-tools-next) perf jevents: Don't append Unit to desc
-> > > > f208b2c6f984 (perf-tools-next/tmp.perf-tools-next) perf scripts python gecko: Launch the profiler UI on the default browser with the appropriate URL
-> > > > 43803cb16f99 perf scripts python: Add support for input args in gecko script
-> > > > f85d120c46e7 perf jevents: Sort strings in the big C string to reduce faults
-> > > > 8d4b6d37ea78 perf pmu: Lazily load sysfs aliases
-> > > > [root@kernelqe3 linux]# make BUILD_BPF_SKEL=1 -C tools/perf O=/tmp/build/perf install-bin
-> > > >
-> > > > [root@kernelqe3 linux]# perf -v
-> > > > perf version 6.5.rc5.geeb6b12992c4
-> > > > [root@kernelqe3 linux]# git log --oneline -1
-> > > > eeb6b12992c4 (HEAD -> perf-tools-next, perf-tools-next/perf-tools-next) perf jevents: Don't append Unit to desc
-> > > > [root@kernelqe3 linux]# perf test 6 10 'perf all metricgroups test' 'perf all metrics test'
-> > > >   6: Parse event definition strings                                  :
-> > > >   6.1: Test event parsing                                            : Ok
-> > > >   6.2: Parsing of all PMU events from sysfs                          : FAILED!
-> > > >   6.3: Parsing of given PMU events from sysfs                        : Ok
-> > > >   6.4: Parsing of aliased events from sysfs                          : Skip (no aliases in sysfs)
-> > > >   6.5: Parsing of aliased events                                     : FAILED!
-> > > >   6.6: Parsing of terms (event modifiers)                            : Ok
-> > > >  10: PMU events                                                      :
-> > > >  10.1: PMU event table sanity                                        : Ok
-> > > >  10.2: PMU event map aliases                                         : FAILED!
-> > > >  10.3: Parsing of PMU event table metrics                            : Ok
-> > > >  10.4: Parsing of PMU event table metrics with fake PMUs             : FAILED!
-> > > >  10.5: Parsing of metric thresholds with fake PMUs                   : Ok
-> > > >  93: perf all metricgroups test                                      : FAILED!
-> > > >  94: perf all metrics test                                           : FAILED!
-> > > > [root@kernelqe3 linux]#
-> > > >
-> > > > Bisecting the first problem:
-> > > >
-> > > >  10.2: PMU event map aliases                                         : FAILED!
-> > > >
-> > > > make: Leaving directory '/root/git/linux/tools/perf'
-> > > >   6: Parse event definition strings                                  :
-> > > >   6.1: Test event parsing                                            : Ok
-> > > >   6.2: Parsing of all PMU events from sysfs                          : Ok
-> > > >   6.3: Parsing of given PMU events from sysfs                        : Ok
-> > > >   6.4: Parsing of aliased events from sysfs                          : Skip (no aliases in sysfs)
-> > > >   6.5: Parsing of aliased events                                     : Ok
-> > > >   6.6: Parsing of terms (event modifiers)                            : Ok
-> > > >  10: PMU events                                                      :
-> > > >  10.1: PMU event table sanity                                        : Ok
-> > > >  10.2: PMU event map aliases                                         : FAILED!
-> > > >  10.3: Parsing of PMU event table metrics                            : Ok
-> > > >  10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
-> > > >  10.5: Parsing of metric thresholds with fake PMUs                   : Ok
-> > > >  93: perf all metricgroups test                                      : Ok
-> > > >  94: perf all metrics test                                           : Ok
-> > > > [root@kernelqe3 linux]# git bisect bad
-> > > > 2e255b4f9f41f137d9e3dc4fae3603a9c2c3dd28 is the first bad commit
-> > > > commit 2e255b4f9f41f137d9e3dc4fae3603a9c2c3dd28
-> > > > Author: Ian Rogers <irogers@google.com>
-> > > > Date:   Wed Aug 23 21:13:16 2023 -0700
-> > > >
-> > > >     perf jevents: Group events by PMU
-> > > >
-> > > >     Prior to this change a cpuid would map to a list of events where the PMU
-> > > >     would be encoded alongside the event information. This change breaks
-> > > >     apart each group of events so that there is a group per PMU. A new table
-> > > >     is added with the PMU's name and the list of events, the original table
-> > > >     now holding an array of these per PMU tables.
-> > > >
-> > > >     These changes are to make it easier to get per PMU information about
-> > > >     events, rather than the current approach of scanning all events. The
-> > > >     perf binary size with BPF skeletons on x86 is reduced by about 1%. The
-> > > >     unidentified PMU is now always expanded to "cpu".
-> > > >
-> > > >     Signed-off-by: Ian Rogers <irogers@google.com>
-> > > >     Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > > >     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > > >     Cc: Gaosheng Cui <cuigaosheng1@huawei.com>
-> > > >     Cc: Ingo Molnar <mingo@redhat.com>
-> > > >     Cc: James Clark <james.clark@arm.com>
-> > > >     Cc: Jing Zhang <renyu.zj@linux.alibaba.com>
-> > > >     Cc: Jiri Olsa <jolsa@kernel.org>
-> > > >     Cc: John Garry <john.g.garry@oracle.com>
-> > > >     Cc: Kajol Jain <kjain@linux.ibm.com>
-> > > >     Cc: Kan Liang <kan.liang@linux.intel.com>
-> > > >     Cc: Mark Rutland <mark.rutland@arm.com>
-> > > >     Cc: Namhyung Kim <namhyung@kernel.org>
-> > > >     Cc: Peter Zijlstra <peterz@infradead.org>
-> > > >     Cc: Ravi Bangoria <ravi.bangoria@amd.com>
-> > > >     Cc: Rob Herring <robh@kernel.org>
-> > > >     Link: https://lore.kernel.org/r/20230824041330.266337-5-irogers@google.com
-> > > >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > >
-> > > >  tools/perf/pmu-events/jevents.py | 181 +++++++++++++++++++++++++++++----------
-> > > >  tools/perf/tests/pmu-events.c    |  30 ++++---
-> > > >  2 files changed, 154 insertions(+), 57 deletions(-)
-> > > > [root@kernelqe3 linux]#
-> > > >
-> > > 
-> > > This change defaulted events without a specified PMU to being for the
-> > > PMU 'cpu', so that events in pmu-events.c were associated with a PMU
-> > > and we could find per-PMU information easily. The test events have no
-> > > PMU and so this has broken s390 where the the PMU should be "cpum_cf".
-> > > It has probably also broken x86 hybrid and arm where their default PMU
-> > > isn't cpu. I'll work on a fix, but the problem will be limited to the
-> > > test.
-> > 
-> > So, with your "default_core" branche we go to:
-> > 
-> > [root@kernelqe3 linux]# perf test 10
-> >  10: PMU events                                                      :
-> >  10.1: PMU event table sanity                                        : Ok
-> >  10.2: PMU event map aliases                                         : Ok
-> >  10.3: Parsing of PMU event table metrics                            : Ok
-> >  10.4: Parsing of PMU event table metrics with fake PMUs             : FAILED!
-> >  10.5: Parsing of metric thresholds with fake PMUs                   : Ok
-> > [root@kernelqe3 linux]# perf --version
-> > perf version 6.5.rc5.g3d63ae82aa12
-> > [root@kernelqe3 linux]#
-> > 
-> > The other tests:
-> > 
-> > [root@kernelqe3 linux]# perf --version
-> > perf version 6.5.rc5.g3d63ae82aa12
-> > [root@kernelqe3 linux]# perf test 6 10 'perf all metricgroups test' 'perf all metrics test'
-> >   6: Parse event definition strings                                  :
-> >   6.1: Test event parsing                                            : Ok
-> >   6.2: Parsing of all PMU events from sysfs                          : FAILED!
-> >   6.3: Parsing of given PMU events from sysfs                        : Ok
-> >   6.4: Parsing of aliased events from sysfs                          : Skip (no aliases in sysfs)
-> >   6.5: Parsing of aliased events                                     : FAILED!
-> >   6.6: Parsing of terms (event modifiers)                            : Ok
-> >  10: PMU events                                                      :
-> >  10.1: PMU event table sanity                                        : Ok
-> >  10.2: PMU event map aliases                                         : Ok
-> >  10.3: Parsing of PMU event table metrics                            : Ok
-> >  10.4: Parsing of PMU event table metrics with fake PMUs             : FAILED!
-> >  10.5: Parsing of metric thresholds with fake PMUs                   : Ok
-> >  93: perf all metricgroups test                                      : FAILED!
-> >  94: perf all metrics test                                           : FAILED!
-> > [root@kernelqe3 linux]#
-> > 
-> > Trying to bisect it now.
-> 
-> make: Leaving directory '/root/git/linux/tools/perf'
-> [root@kernelqe3 linux]# perf test 6
->   6: Parse event definition strings                                  :
->   6.1: Test event parsing                                            : Ok
->   6.2: Parsing of all PMU events from sysfs                          : FAILED!
->   6.3: Parsing of given PMU events from sysfs                        : Ok
->   6.4: Parsing of aliased events from sysfs                          : Skip (no aliases in sysfs)
->   6.5: Parsing of aliased events                                     : FAILED!
->   6.6: Parsing of terms (event modifiers)                            : Ok
-> [root@kernelqe3 linux]# git bisect bad
-> 8d4b6d37ea7862d230ad2e1bd4c7d2ff5e9acd53 is the first bad commit
-> commit 8d4b6d37ea7862d230ad2e1bd4c7d2ff5e9acd53
-> Author: Ian Rogers <irogers@google.com>
-> Date:   Wed Aug 23 21:13:28 2023 -0700
-> 
->     perf pmu: Lazily load sysfs aliases
-> 
->     Don't load sysfs aliases for a PMU when the PMU is first created, defer
->     until an alias needs to be found. For the pmu-scan benchmark, average
->     core PMU scanning is reduced by 30.8%, and average PMU scanning by
->     12.6%.
-> 
->     Signed-off-by: Ian Rogers <irogers@google.com>
->     Cc: Adrian Hunter <adrian.hunter@intel.com>
->     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->     Cc: Gaosheng Cui <cuigaosheng1@huawei.com>
->     Cc: Ingo Molnar <mingo@redhat.com>
->     Cc: James Clark <james.clark@arm.com>
->     Cc: Jing Zhang <renyu.zj@linux.alibaba.com>
->     Cc: Jiri Olsa <jolsa@kernel.org>
->     Cc: John Garry <john.g.garry@oracle.com>
->     Cc: Kajol Jain <kjain@linux.ibm.com>
->     Cc: Kan Liang <kan.liang@linux.intel.com>
->     Cc: Mark Rutland <mark.rutland@arm.com>
->     Cc: Namhyung Kim <namhyung@kernel.org>
->     Cc: Peter Zijlstra <peterz@infradead.org>
->     Cc: Ravi Bangoria <ravi.bangoria@amd.com>
->     Cc: Rob Herring <robh@kernel.org>
->     Link: https://lore.kernel.org/r/20230824041330.266337-17-irogers@google.com
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
->  tools/perf/tests/pmu-events.c |  2 ++
->  tools/perf/util/pmu.c         | 81 ++++++++++++++++++++++---------------------
->  tools/perf/util/pmu.h         |  2 ++
->  3 files changed, 46 insertions(+), 39 deletions(-)
-> [root@kernelqe3 linux]#
-> 
-> It is segfaulting:
-> 
->   6.2: Parsing of all PMU events from sysfs                          :
-> --- start ---
-> test child forked, pid 1202947
-> Using CPUID IBM,2964,400,N96,1.4,002f
-> perf: Segmentation fault
-> Obtained 16 stack frames.
-> perf(dump_stack+0x36) [0x1156dbe]
-> perf(sighandler_dump_stack+0x3a) [0x1156e8a]
-> [0x3fffd4790b6]
-> /lib64/libc.so.6(__strcasecmp+0x42) [0x3ffa889c51a]
-> perf() [0x11792ac]
-> perf(pmu_events_table__find_event+0x27c) [0x12432fc]
-> perf() [0x11777cc]
-> perf() [0x1179842]
-> perf(perf_pmu__check_alias+0x4f0) [0x1179e98]
-> perf(parse_events_add_pmu+0x72c) [0x1128e84]
-> perf(parse_events_parse+0x4d4) [0x11754d4]
-> perf(__parse_events+0xda) [0x112644a]
-> perf() [0x10cecb2]
-> perf() [0x10d3264]
-> perf() [0x10cb250]
-> perf(cmd_test+0x109e) [0x10cc756]
-> test child interrupted
-> ---- end ----
-> Parse event definition strings subtest 2: FAILED!
-> 
-> 
-> Starting program: /root/bin/perf test -F 6
-> [Thread debugging using libthread_db enabled]
-> Using host libthread_db library "/lib64/libthread_db.so.1".
->   6: Parse event definition strings                                  :
->   6.1: Test event parsing                                            : Ok
->   6.2: Parsing of all PMU events from sysfs                          :
-> Program received signal SIGSEGV, Segmentation fault.
-> 0x000003fffcf1c51a in strcasecmp () from /lib64/libc.so.6
-> #0  0x000003fffcf1c51a in strcasecmp () from /lib64/libc.so.6
-> #1  0x000000000123e518 in assign_str (name=0x1487cc3 "l1i_ondrawer_mem_sourced_writes", field=0x141eeba "value", old_str=0x18c12e0, new_str=0x1487d1f "event=0xb1") at util/pmu.c:449
-> #2  0x000000000123e82c in update_alias (pe=0x3ffffff8ac0, table=0x1555cb0 <pmu_events_map+160>, vdata=0x3ffffff8c40) at util/pmu.c:490
-> #3  0x000000000137b9dc in pmu_events_table.find_event ()
-> #4  0x000000000123ed4e in perf_pmu__new_alias (pmu=0x15ce490, name=0x23c2593 "L1I_ONDRAWER_MEM_SOURCED_WRITES", desc=0x0, val=0x0, val_fd=0x16058a0, pe=0x0) at util/pmu.c:569
-> #5  0x000000000123f370 in pmu_aliases_parse (pmu=0x15ce490) at util/pmu.c:673
-> #6  0x000000000123e3a2 in perf_pmu__find_alias (pmu=0x15ce490, name=0x238eb10 "L1D_OFFDRAWER_SCOL_L3_SOURCED_WRITES_IV", load=true) at util/pmu.c:432
-> #7  0x0000000001241bb2 in pmu_find_alias (pmu=0x15ce490, term=0x18409d0) at util/pmu.c:1439
-> #8  0x0000000001241f82 in perf_pmu__check_alias (pmu=0x15ce490, head_terms=0x21b14d0, info=0x3ffffffa238, err=0x3ffffffc4c8) at util/pmu.c:1519
-> #9  0x00000000011bbbd4 in parse_events_add_pmu (parse_state=0x3ffffffc2f0, list=0x21afec0, name=0x21c6430 "cpum_cf", head_config=0x21b14d0, auto_merge_stats=false, loc_=0x3ffffffb4d8) at util/parse-events.c:1351
-> #10 0x000000000123aa4c in parse_events_parse (_parse_state=0x3ffffffc2f0, scanner=0x15b9310) at util/parse-events.y:299
-> #11 0x00000000011bd190 in parse_events__scanner (str=0x3ffffffc68a "cpum_cf/event=L1D_OFFDRAWER_SCOL_L3_SOURCED_WRITES_IV/u", input=0x0, parse_state=0x3ffffffc2f0) at util/parse-events.c:1738
-> #12 0x00000000011bde00 in __parse_events (evlist=0x15b7030, str=0x3ffffffc68a "cpum_cf/event=L1D_OFFDRAWER_SCOL_L3_SOURCED_WRITES_IV/u", pmu_filter=0x0, err=0x3ffffffc4c8, fake_pmu=0x0, warn_if_reordered=true) at util/parse-events.c:2010
-> #13 0x0000000001121884 in parse_events (evlist=0x15b7030, str=0x3ffffffc68a "cpum_cf/event=L1D_OFFDRAWER_SCOL_L3_SOURCED_WRITES_IV/u", err=0x3ffffffc4c8) at /root/git/linux/tools/perf/util/parse-events.h:40
-> #14 0x0000000001134084 in test_event (e=0x3ffffffc5e0) at tests/parse-events.c:2393
-> #15 0x00000000011349ec in test__pmu_events (test=0x156b860 <suite.parse_events>, subtest=1) at tests/parse-events.c:2551
-> #16 0x000000000111f884 in run_test (test=0x156b860 <suite.parse_events>, subtest=1) at tests/builtin-test.c:242
-> #17 0x000000000111fa1a in test_and_print (t=0x156b860 <suite.parse_events>, subtest=1) at tests/builtin-test.c:271
-> #18 0x00000000011203fa in __cmd_test (argc=1, argv=0x3ffffffe5d0, skiplist=0x0) at tests/builtin-test.c:442
-> #19 0x0000000001120cca in cmd_test (argc=1, argv=0x3ffffffe5d0) at tests/builtin-test.c:564
-> #20 0x00000000011713a4 in run_builtin (p=0x1561190 <commands+600>, argc=3, argv=0x3ffffffe5d0) at perf.c:322
-> #21 0x0000000001171712 in handle_internal_command (argc=3, argv=0x3ffffffe5d0) at perf.c:375
-> #22 0x0000000001171920 in run_argv (argcp=0x3ffffffe304, argv=0x3ffffffe2f8) at perf.c:419
-> #23 0x0000000001171ce8 in main (argc=3, argv=0x3ffffffe5d0) at perf.c:535
-> (gdb)
-> 
-> (gdb) fr 1
-> #1  0x000000000123e518 in assign_str (name=0x1487cc3 "l1i_ondrawer_mem_sourced_writes", field=0x141eeba "value", old_str=0x18c12e0, new_str=0x1487d1f "event=0xb1") at util/pmu.c:449
-> 449		if (!new_str || !strcasecmp(*old_str, new_str))
-> (gdb) p new_str
-> $1 = 0x1487d1f "event=0xb1"
-> (gdb) p *old_str
-> $2 = 0x1 <error: Cannot access memory at address 0x1>
-> (gdb) p old_str
-> $3 = (char **) 0x18c12e0
-> (gdb)
+Add lunarlake events that were added at intel's perfmon site in:
+https://github.com/intel/perfmon/pull/97
+LNL: Release initial events
 
-Same thing on a hybrid ARM system:
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ .../pmu-events/arch/x86/lunarlake/cache.json  | 219 ++++++++++++++++++
+ .../arch/x86/lunarlake/frontend.json          |  27 +++
+ .../pmu-events/arch/x86/lunarlake/memory.json | 183 +++++++++++++++
+ .../pmu-events/arch/x86/lunarlake/other.json  |  62 +++++
+ .../arch/x86/lunarlake/pipeline.json          | 217 +++++++++++++++++
+ .../arch/x86/lunarlake/virtual-memory.json    |  56 +++++
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |   1 +
+ 7 files changed, 765 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/frontend.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/pipeline.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/virtual-memory=
+.json
 
-  6.5: Parsing of aliased events                                     :
---- start ---
-test child forked, pid 49658
-Using CPUID 0x00000000410fd082
-perf: Segmentation fault
-Obtained 16 stack frames.
-perf(sighandler_dump_stack+0x43) [0xaaaad58f5047]
-linux-vdso.so.1(+0x7a7) [0xffff978fb7a7]
-/lib/aarch64-linux-gnu/libc.so.6(__strcasecmp+0x2c) [0xffff96aa1dac]
-perf(+0x19378b) [0xaaaad591378b]
-perf(pmu_events_table__find_event+0x8b) [0xaaaad59d74cb]
-perf(+0x193f87) [0xaaaad5913f87]
-perf(+0x19433b) [0xaaaad591433b]
-perf(perf_pmu__have_event+0xd3) [0xaaaad5915c17]
-perf(parse_events_multi_pmu_add+0x137) [0xaaaad58cb787]
-perf(parse_events_parse+0x1247) [0xaaaad5912627]
-perf(+0x146c27) [0xaaaad58c6c27]
-perf(__parse_events+0x7b) [0xaaaad58c86bb]
-perf(+0xeed23) [0xaaaad586ed23]
-perf(+0xeb97b) [0xaaaad586b97b]
-perf(cmd_test+0x747) [0xaaaad586c477]
-perf(+0x11e64b) [0xaaaad589e64b]
-test child interrupted
----- end ----
-Parse event definition strings subtest 5: FAILED!
-  6.6: Parsing of terms (event modifiers)                            :
---- start ---
-test child forked, pid 49660
-running test 0 'config=10,config1,config2=3,config3=4,umask=1,read,r0xead'
-test child finished with 0
----- end ----
-Parse event definition strings subtest 6: Ok
-root@roc-rk3399-pc:~# grep -i "model name" /proc/cpuinfo
-root@roc-rk3399-pc:~# grep -i "model" /proc/cpuinfo
-root@roc-rk3399-pc:~# cat /proc/cpuinfo
-processor	: 0
-BogoMIPS	: 48.00
-Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
-CPU implementer	: 0x41
-CPU architecture: 8
-CPU variant	: 0x0
-CPU part	: 0xd03
-CPU revision	: 4
+diff --git a/tools/perf/pmu-events/arch/x86/lunarlake/cache.json b/tools/pe=
+rf/pmu-events/arch/x86/lunarlake/cache.json
+new file mode 100644
+index 000000000000..1823149067b5
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/lunarlake/cache.json
+@@ -0,0 +1,219 @@
++[
++    {
++        "BriefDescription": "Counts the number of L2 Cache Accesses Counts=
+ the total number of L2 Cache Accesses - sum of hits, misses, rejects  fron=
+t door requests for CRd/DRd/RFO/ItoM/L2 Prefetches only, per core event",
++        "EventCode": "0x24",
++        "EventName": "L2_REQUEST.ALL",
++        "PublicDescription": "Counts the number of L2 Cache Accesses Count=
+s the total number of L2 Cache Accesses - sum of hits, misses, rejects  fro=
+nt door requests for CRd/DRd/RFO/ItoM/L2 Prefetches only.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x7",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of cacheable memory request=
+s that miss in the LLC. Counts on a per core basis.",
++        "EventCode": "0x2e",
++        "EventName": "LONGEST_LAT_CACHE.MISS",
++        "PublicDescription": "Counts the number of cacheable memory reques=
+ts that miss in the Last Level Cache (LLC). Requests include demand loads, =
+reads for ownership (RFO), instruction fetches and L1 HW prefetches. If the=
+ platform has an L3 cache, the LLC is the L3 cache, otherwise it is the L2 =
+cache. Counts on a per core basis.",
++        "SampleAfterValue": "200003",
++        "UMask": "0x41",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Core-originated cacheable requests that misse=
+d L3  (Except hardware prefetches to the L3)",
++        "EventCode": "0x2e",
++        "EventName": "LONGEST_LAT_CACHE.MISS",
++        "PublicDescription": "Counts core-originated cacheable requests th=
+at miss the L3 cache (Longest Latency cache). Requests include data and cod=
+e reads, Reads-for-Ownership (RFOs), speculative accesses and hardware pref=
+etches to the L1 and L2.  It does not include hardware prefetches to the L3=
+, and may not count other types of requests to the L3.",
++        "SampleAfterValue": "100003",
++        "UMask": "0x41",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts the number of cacheable memory request=
+s that access the LLC. Counts on a per core basis.",
++        "EventCode": "0x2e",
++        "EventName": "LONGEST_LAT_CACHE.REFERENCE",
++        "PublicDescription": "Counts the number of cacheable memory reques=
+ts that access the Last Level Cache (LLC). Requests include demand loads, r=
+eads for ownership (RFO), instruction fetches and L1 HW prefetches. If the =
+platform has an L3 cache, the LLC is the L3 cache, otherwise it is the L2 c=
+ache. Counts on a per core basis.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x4f",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Core-originated cacheable requests that refer=
+ to L3 (Except hardware prefetches to the L3)",
++        "EventCode": "0x2e",
++        "EventName": "LONGEST_LAT_CACHE.REFERENCE",
++        "PublicDescription": "Counts core-originated cacheable requests to=
+ the L3 cache (Longest Latency cache). Requests include data and code reads=
+, Reads-for-Ownership (RFOs), speculative accesses and hardware prefetches =
+to the L1 and L2.  It does not include hardware prefetches to the L3, and m=
+ay not count other types of requests to the L3.",
++        "SampleAfterValue": "100003",
++        "UMask": "0x4f",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Retired load instructions.",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_INST_RETIRED.ALL_LOADS",
++        "PEBS": "1",
++        "PublicDescription": "Counts all retired load instructions. This e=
+vent accounts for SW prefetch instructions of PREFETCHNTA or PREFETCHT0/1/2=
+ or PREFETCHW.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x81",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Retired store instructions.",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_INST_RETIRED.ALL_STORES",
++        "PEBS": "1",
++        "PublicDescription": "Counts all retired store instructions.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x82",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts the number of load uops retired.",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.ALL_LOADS",
++        "PEBS": "1",
++        "SampleAfterValue": "200003",
++        "UMask": "0x81",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of store uops retired.",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.ALL_STORES",
++        "PEBS": "1",
++        "SampleAfterValue": "200003",
++        "UMask": "0x82",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_1024",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x400",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_128",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x80",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_16",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x10",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_2048",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x800",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_256",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x100",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_32",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x20",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_4",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x4",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_512",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x200",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_64",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x40",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_8",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x8",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of  stores uops retired sam=
+e as MEM_UOPS_RETIRED.ALL_STORES",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.STORE_LATENCY",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x6",
++        "Unit": "cpu_atom"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/x86/lunarlake/frontend.json b/tools=
+/perf/pmu-events/arch/x86/lunarlake/frontend.json
+new file mode 100644
+index 000000000000..5e4ef81b43d6
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/lunarlake/frontend.json
+@@ -0,0 +1,27 @@
++[
++    {
++        "BriefDescription": "Counts every time the code stream enters into=
+ a new cache line by walking sequential from the previous line or being red=
+irected by a jump.",
++        "EventCode": "0x80",
++        "EventName": "ICACHE.ACCESSES",
++        "SampleAfterValue": "200003",
++        "UMask": "0x3",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts every time the code stream enters into=
+ a new cache line by walking sequential from the previous line or being red=
+irected by a jump and the instruction cache registers bytes are not present=
+. -",
++        "EventCode": "0x80",
++        "EventName": "ICACHE.MISSES",
++        "SampleAfterValue": "200003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "This event counts a subset of the Topdown Slo=
+ts event that were no operation was delivered to the back-end pipeline due =
+to instruction fetch limitations when the back-end could have accepted more=
+ operations. Common examples include instruction cache misses or x86 instru=
+ction decode limitations.",
++        "EventCode": "0x9c",
++        "EventName": "IDQ_BUBBLES.CORE",
++        "PublicDescription": "This event counts a subset of the Topdown Sl=
+ots event that were no operation was delivered to the back-end pipeline due=
+ to instruction fetch limitations when the back-end could have accepted mor=
+e operations. Common examples include instruction cache misses or x86 instr=
+uction decode limitations.\nSoftware can use this event as the numerator fo=
+r the Frontend Bound metric (or top-level category) of the Top-down Microar=
+chitecture Analysis method.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/x86/lunarlake/memory.json b/tools/p=
+erf/pmu-events/arch/x86/lunarlake/memory.json
+new file mode 100644
+index 000000000000..51d70ba00bd4
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/lunarlake/memory.json
+@@ -0,0 +1,183 @@
++[
++    {
++        "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 1024 cycles.",
++        "Data_LA": "1",
++        "EventCode": "0xcd",
++        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_1024",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x400",
++        "PEBS": "2",
++        "PublicDescription": "Counts randomly selected loads when the late=
+ncy from first dispatch to completion is greater than 1024 cycles.  Reporte=
+d latency may be longer than just the memory latency.",
++        "SampleAfterValue": "53",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 128 cycles.",
++        "Data_LA": "1",
++        "EventCode": "0xcd",
++        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_128",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x80",
++        "PEBS": "2",
++        "PublicDescription": "Counts randomly selected loads when the late=
+ncy from first dispatch to completion is greater than 128 cycles.  Reported=
+ latency may be longer than just the memory latency.",
++        "SampleAfterValue": "1009",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 16 cycles.",
++        "Data_LA": "1",
++        "EventCode": "0xcd",
++        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_16",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x10",
++        "PEBS": "2",
++        "PublicDescription": "Counts randomly selected loads when the late=
+ncy from first dispatch to completion is greater than 16 cycles.  Reported =
+latency may be longer than just the memory latency.",
++        "SampleAfterValue": "20011",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 2048 cycles.",
++        "Data_LA": "1",
++        "EventCode": "0xcd",
++        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_2048",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x800",
++        "PEBS": "2",
++        "PublicDescription": "Counts randomly selected loads when the late=
+ncy from first dispatch to completion is greater than 2048 cycles.  Reporte=
+d latency may be longer than just the memory latency.",
++        "SampleAfterValue": "23",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 256 cycles.",
++        "Data_LA": "1",
++        "EventCode": "0xcd",
++        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_256",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x100",
++        "PEBS": "2",
++        "PublicDescription": "Counts randomly selected loads when the late=
+ncy from first dispatch to completion is greater than 256 cycles.  Reported=
+ latency may be longer than just the memory latency.",
++        "SampleAfterValue": "503",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 32 cycles.",
++        "Data_LA": "1",
++        "EventCode": "0xcd",
++        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_32",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x20",
++        "PEBS": "2",
++        "PublicDescription": "Counts randomly selected loads when the late=
+ncy from first dispatch to completion is greater than 32 cycles.  Reported =
+latency may be longer than just the memory latency.",
++        "SampleAfterValue": "100007",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 4 cycles.",
++        "Data_LA": "1",
++        "EventCode": "0xcd",
++        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_4",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x4",
++        "PEBS": "2",
++        "PublicDescription": "Counts randomly selected loads when the late=
+ncy from first dispatch to completion is greater than 4 cycles.  Reported l=
+atency may be longer than just the memory latency.",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 512 cycles.",
++        "Data_LA": "1",
++        "EventCode": "0xcd",
++        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_512",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x200",
++        "PEBS": "2",
++        "PublicDescription": "Counts randomly selected loads when the late=
+ncy from first dispatch to completion is greater than 512 cycles.  Reported=
+ latency may be longer than just the memory latency.",
++        "SampleAfterValue": "101",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 64 cycles.",
++        "Data_LA": "1",
++        "EventCode": "0xcd",
++        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_64",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x40",
++        "PEBS": "2",
++        "PublicDescription": "Counts randomly selected loads when the late=
+ncy from first dispatch to completion is greater than 64 cycles.  Reported =
+latency may be longer than just the memory latency.",
++        "SampleAfterValue": "2003",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 8 cycles.",
++        "Data_LA": "1",
++        "EventCode": "0xcd",
++        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_8",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x8",
++        "PEBS": "2",
++        "PublicDescription": "Counts randomly selected loads when the late=
+ncy from first dispatch to completion is greater than 8 cycles.  Reported l=
+atency may be longer than just the memory latency.",
++        "SampleAfterValue": "50021",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Retired memory store access operations. A PDi=
+st event for PEBS Store Latency Facility.",
++        "Data_LA": "1",
++        "EventCode": "0xcd",
++        "EventName": "MEM_TRANS_RETIRED.STORE_SAMPLE",
++        "PEBS": "2",
++        "PublicDescription": "Counts Retired memory accesses with at least=
+ 1 store operation. This PEBS event is the precisely-distributed (PDist) tr=
+igger covering all stores uops for sampling by the PEBS Store Latency Facil=
+ity. The facility is described in Intel SDM Volume 3 section 19.9.8",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts cacheable demand data reads were not s=
+upplied by the L3 cache.",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_DATA_RD.L3_MISS",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x3FBFC00001",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts demand data reads that were not suppli=
+ed by the L3 cache.",
++        "EventCode": "0x2A,0x2B",
++        "EventName": "OCR.DEMAND_DATA_RD.L3_MISS",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x3FBFC00001",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts demand reads for ownership, including =
+SWPREFETCHW which is an RFO were not supplied by the L3 cache.",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_RFO.L3_MISS",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x3FBFC00002",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts demand read for ownership (RFO) reques=
+ts and software prefetches for exclusive ownership (PREFETCHW) that were no=
+t supplied by the L3 cache.",
++        "EventCode": "0x2A,0x2B",
++        "EventName": "OCR.DEMAND_RFO.L3_MISS",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x3FBFC00002",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/x86/lunarlake/other.json b/tools/pe=
+rf/pmu-events/arch/x86/lunarlake/other.json
+new file mode 100644
+index 000000000000..69adaed5686d
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/lunarlake/other.json
+@@ -0,0 +1,62 @@
++[
++    {
++        "BriefDescription": "Counts cacheable demand data reads Catch all =
+value for any response types - this includes response types not define in t=
+he OCR.  If this is set all other response types will be ignored",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x10001",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts demand data reads that have any type o=
+f response.",
++        "EventCode": "0x2A,0x2B",
++        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x10001",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts cacheable demand data reads were suppl=
+ied by DRAM.",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_DATA_RD.DRAM",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x184000001",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts demand data reads that were supplied b=
+y DRAM.",
++        "EventCode": "0x2A,0x2B",
++        "EventName": "OCR.DEMAND_DATA_RD.DRAM",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x184000001",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts demand reads for ownership, including =
+SWPREFETCHW which is an RFO Catch all value for any response types - this i=
+ncludes response types not define in the OCR.  If this is set all other res=
+ponse types will be ignored",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x10002",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts demand read for ownership (RFO) reques=
+ts and software prefetches for exclusive ownership (PREFETCHW) that have an=
+y type of response.",
++        "EventCode": "0x2A,0x2B",
++        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x10002",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/x86/lunarlake/pipeline.json b/tools=
+/perf/pmu-events/arch/x86/lunarlake/pipeline.json
+new file mode 100644
+index 000000000000..2bde664fdc0f
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/lunarlake/pipeline.json
+@@ -0,0 +1,217 @@
++[
++    {
++        "BriefDescription": "Counts the total number of branch instruction=
+s retired for all branch types.",
++        "EventCode": "0xc4",
++        "EventName": "BR_INST_RETIRED.ALL_BRANCHES",
++        "PEBS": "1",
++        "PublicDescription": "Counts the total number of instructions in w=
+hich the instruction pointer (IP) of the processor is resteered due to a br=
+anch instruction and the branch instruction successfully retires.  All bran=
+ch type instructions are accounted for.",
++        "SampleAfterValue": "200003",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "All branch instructions retired.",
++        "EventCode": "0xc4",
++        "EventName": "BR_INST_RETIRED.ALL_BRANCHES",
++        "PEBS": "1",
++        "PublicDescription": "Counts all branch instructions retired.",
++        "SampleAfterValue": "400009",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts the total number of mispredicted branc=
+h instructions retired for all branch types.",
++        "EventCode": "0xc5",
++        "EventName": "BR_MISP_RETIRED.ALL_BRANCHES",
++        "PEBS": "1",
++        "PublicDescription": "Counts the total number of mispredicted bran=
+ch instructions retired.  All branch type instructions are accounted for.  =
+Prediction of the branch target address enables the processor to begin exec=
+uting instructions before the non-speculative execution path is known. The =
+branch prediction unit (BPU) predicts the target address based on the instr=
+uction pointer (IP) of the branch and on the execution path through which e=
+xecution reached this IP.    A branch misprediction occurs when the predict=
+ion is wrong, and results in discarding all instructions executed in the sp=
+eculative path and re-fetching from the correct path.",
++        "SampleAfterValue": "200003",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "All mispredicted branch instructions retired.=
+",
++        "EventCode": "0xc5",
++        "EventName": "BR_MISP_RETIRED.ALL_BRANCHES",
++        "PEBS": "1",
++        "PublicDescription": "Counts all the retired branch instructions t=
+hat were mispredicted by the processor. A branch misprediction occurs when =
+the processor incorrectly predicts the destination of the branch.  When the=
+ misprediction is discovered at execution, all the instructions executed in=
+ the wrong (speculative) path must be discarded, and the processor must sta=
+rt fetching from the correct path.",
++        "SampleAfterValue": "400009",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Fixed Counter: Counts the number of unhalted =
+core clock cycles",
++        "EventName": "CPU_CLK_UNHALTED.CORE",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of unhalted core clock cycl=
+es [This event is alias to CPU_CLK_UNHALTED.THREAD_P]",
++        "EventCode": "0x3c",
++        "EventName": "CPU_CLK_UNHALTED.CORE_P",
++        "SampleAfterValue": "2000003",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Fixed Counter: Counts the number of unhalted =
+reference clock cycles",
++        "EventName": "CPU_CLK_UNHALTED.REF_TSC",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x3",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Reference cycles when the core is not in halt=
+ state.",
++        "EventName": "CPU_CLK_UNHALTED.REF_TSC",
++        "PublicDescription": "Counts the number of reference cycles when t=
+he core is not in a halt state. The core enters the halt state when it is r=
+unning the HLT instruction or the MWAIT instruction. This event is not affe=
+cted by core frequency changes (for example, P states, TM2 transitions) but=
+ has the same incrementing frequency as the time stamp counter. This event =
+can approximate elapsed time while the core was not in a halt state. Note: =
+On all current platforms this event stops counting during 'throttling (TM)'=
+ states duty off periods the processor is 'halted'.  The counter update is =
+done at a lower clock rate then the core clock the overflow status bit for =
+this counter may appear 'sticky'.  After the counter has overflowed and sof=
+tware clears the overflow status bit and resets the counter to less than MA=
+X. The reset value to the counter is not clocked immediately so the overflo=
+w status bit will flip 'high (1)' and generate another PMI (if enabled) aft=
+er which the reset value gets clocked into the counter. Therefore, software=
+ will get the interrupt, read the overflow status bit '1 for bit 34 while t=
+he counter value is less than MAX. Software should ignore this case.",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x3",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Reference cycles when the core is not in halt=
+ state.",
++        "EventCode": "0x3c",
++        "EventName": "CPU_CLK_UNHALTED.REF_TSC_P",
++        "PublicDescription": "Counts the number of reference cycles when t=
+he core is not in a halt state. The core enters the halt state when it is r=
+unning the HLT instruction or the MWAIT instruction. This event is not affe=
+cted by core frequency changes (for example, P states, TM2 transitions) but=
+ has the same incrementing frequency as the time stamp counter. This event =
+can approximate elapsed time while the core was not in a halt state. Note: =
+On all current platforms this event stops counting during 'throttling (TM)'=
+ states duty off periods the processor is 'halted'.  The counter update is =
+done at a lower clock rate then the core clock the overflow status bit for =
+this counter may appear 'sticky'.  After the counter has overflowed and sof=
+tware clears the overflow status bit and resets the counter to less than MA=
+X. The reset value to the counter is not clocked immediately so the overflo=
+w status bit will flip 'high (1)' and generate another PMI (if enabled) aft=
+er which the reset value gets clocked into the counter. Therefore, software=
+ will get the interrupt, read the overflow status bit '1 for bit 34 while t=
+he counter value is less than MAX. Software should ignore this case.",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Core cycles when the thread is not in halt st=
+ate",
++        "EventName": "CPU_CLK_UNHALTED.THREAD",
++        "PublicDescription": "Counts the number of core cycles while the t=
+hread is not in a halt state. The thread enters the halt state when it is r=
+unning the HLT instruction. This event is a component in many key event rat=
+ios. The core frequency may change from time to time due to transitions ass=
+ociated with Enhanced Intel SpeedStep Technology or TM2. For this reason th=
+is event may have a changing ratio with regards to time. When the core freq=
+uency is constant, this event can approximate elapsed time while the core w=
+as not in the halt state. It is counted on a dedicated fixed counter, leavi=
+ng the eight programmable counters available for other events.",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x2",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts the number of unhalted core clock cycl=
+es [This event is alias to CPU_CLK_UNHALTED.CORE_P]",
++        "EventCode": "0x3c",
++        "EventName": "CPU_CLK_UNHALTED.THREAD_P",
++        "SampleAfterValue": "2000003",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Thread cycles when thread is not in halt stat=
+e",
++        "EventCode": "0x3c",
++        "EventName": "CPU_CLK_UNHALTED.THREAD_P",
++        "PublicDescription": "This is an architectural event that counts t=
+he number of thread cycles while the thread is not in a halt state. The thr=
+ead enters the halt state when it is running the HLT instruction. The core =
+frequency may change from time to time due to power or thermal throttling. =
+For this reason, this event may have a changing ratio with regards to wall =
+clock time.",
++        "SampleAfterValue": "2000003",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Fixed Counter: Counts the number of instructi=
+ons retired",
++        "EventName": "INST_RETIRED.ANY",
++        "PEBS": "1",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Number of instructions retired. Fixed Counter=
+ - architectural event",
++        "EventName": "INST_RETIRED.ANY",
++        "PEBS": "1",
++        "PublicDescription": "Counts the number of X86 instructions retire=
+d - an Architectural PerfMon event. Counting continues during hardware inte=
+rrupts, traps, and inside interrupt handlers. Notes: INST_RETIRED.ANY is co=
+unted by a designated fixed counter freeing up programmable counters to cou=
+nt other events. INST_RETIRED.ANY_P is counted by a programmable counter.",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts the number of instructions retired",
++        "EventCode": "0xc0",
++        "EventName": "INST_RETIRED.ANY_P",
++        "PEBS": "1",
++        "SampleAfterValue": "2000003",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Number of instructions retired. General Count=
+er - architectural event",
++        "EventCode": "0xc0",
++        "EventName": "INST_RETIRED.ANY_P",
++        "PEBS": "1",
++        "PublicDescription": "Counts the number of X86 instructions retire=
+d - an Architectural PerfMon event. Counting continues during hardware inte=
+rrupts, traps, and inside interrupt handlers. Notes: INST_RETIRED.ANY is co=
+unted by a designated fixed counter freeing up programmable counters to cou=
+nt other events. INST_RETIRED.ANY_P is counted by a programmable counter.",
++        "SampleAfterValue": "2000003",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts the number of occurrences a retired lo=
+ad gets blocked because its address partially overlaps with an older store =
+(size mismatch) - unknown_sta/bad_forward",
++        "EventCode": "0x03",
++        "EventName": "LD_BLOCKS.STORE_FORWARD",
++        "PEBS": "1",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Loads blocked due to overlapping with a prece=
+ding store that cannot be forwarded.",
++        "EventCode": "0x03",
++        "EventName": "LD_BLOCKS.STORE_FORWARD",
++        "PublicDescription": "Counts the number of times where store forwa=
+rding was prevented for a load operation. The most common case is a load bl=
+ocked due to the address of memory access (partially) overlapping with a pr=
+eceding uncompleted store. Note: See the table of not supported store forwa=
+rds in the Optimization Guide.",
++        "SampleAfterValue": "100003",
++        "UMask": "0x82",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "This event counts a subset of the Topdown Slo=
+ts event that were not consumed by the back-end pipeline due to lack of bac=
+k-end resources, as a result of memory subsystem delays, execution units li=
+mitations, or other conditions.",
++        "EventCode": "0xa4",
++        "EventName": "TOPDOWN.BACKEND_BOUND_SLOTS",
++        "PublicDescription": "This event counts a subset of the Topdown Sl=
+ots event that were not consumed by the back-end pipeline due to lack of ba=
+ck-end resources, as a result of memory subsystem delays, execution units l=
+imitations, or other conditions.\nSoftware can use this event as the numera=
+tor for the Backend Bound metric (or top-level category) of the Top-down Mi=
+croarchitecture Analysis method.",
++        "SampleAfterValue": "10000003",
++        "UMask": "0x2",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "TMA slots available for an unhalted logical p=
+rocessor. Fixed counter - architectural event",
++        "EventName": "TOPDOWN.SLOTS",
++        "PublicDescription": "Number of available slots for an unhalted lo=
+gical processor. The event increments by machine-width of the narrowest pip=
+eline as employed by the Top-down Microarchitecture Analysis method (TMA). =
+Software can use this event as the denominator for the top-level metrics of=
+ the TMA method. This architectural event is counted on a designated fixed =
+counter (Fixed Counter 3).",
++        "SampleAfterValue": "10000003",
++        "UMask": "0x4",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "TMA slots available for an unhalted logical p=
+rocessor. General counter - architectural event",
++        "EventCode": "0xa4",
++        "EventName": "TOPDOWN.SLOTS_P",
++        "PublicDescription": "Counts the number of available slots for an =
+unhalted logical processor. The event increments by machine-width of the na=
+rrowest pipeline as employed by the Top-down Microarchitecture Analysis met=
+hod.",
++        "SampleAfterValue": "10000003",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Fixed Counter: Counts the number of issue slo=
+ts that were not consumed by the backend because allocation is stalled due =
+to a mispredicted jump or a machine clear.",
++        "EventName": "TOPDOWN_BAD_SPECULATION.ALL",
++        "PublicDescription": "Fixed Counter: Counts the number of issue sl=
+ots that were not consumed by the backend because allocation is stalled due=
+ to a mispredicted jump or a machine clear.  Counts all issue slots blocked=
+ during this recovery window including relevant microcode flows and while u=
+ops are not yet available in the IQ. Also, includes the issue slots that we=
+re consumed by the backend but were thrown away because they were younger t=
+han the mispredict or machine clear.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of retirement slots not con=
+sumed due to backend stalls",
++        "EventCode": "0xa4",
++        "EventName": "TOPDOWN_BE_BOUND.ALL",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Fixed Counter: Counts the number of retiremen=
+t slots not consumed due to front end stalls",
++        "EventName": "TOPDOWN_FE_BOUND.ALL",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x6",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Fixed Counter: Counts the number of consumed =
+retirement slots.  Similar to UOPS_RETIRED.ALL",
++        "EventName": "TOPDOWN_RETIRING.ALL",
++        "PEBS": "1",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x7",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "This event counts a subset of the Topdown Slo=
+ts event that are utilized by operations that eventually get retired (commi=
+tted) by the processor pipeline. Usually, this event positively correlates =
+with higher performance  for example, as measured by the instructions-per-c=
+ycle metric.",
++        "EventCode": "0xc2",
++        "EventName": "UOPS_RETIRED.SLOTS",
++        "PublicDescription": "This event counts a subset of the Topdown Sl=
+ots event that are utilized by operations that eventually get retired (comm=
+itted) by the processor pipeline. Usually, this event positively correlates=
+ with higher performance  for example, as measured by the instructions-per-=
+cycle metric.\nSoftware can use this event as the numerator for the Retirin=
+g metric (or top-level category) of the Top-down Microarchitecture Analysis=
+ method.",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x2",
++        "Unit": "cpu_core"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/x86/lunarlake/virtual-memory.json b=
+/tools/perf/pmu-events/arch/x86/lunarlake/virtual-memory.json
+new file mode 100644
+index 000000000000..bb9458799f1c
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/lunarlake/virtual-memory.json
+@@ -0,0 +1,56 @@
++[
++    {
++        "BriefDescription": "Counts the number of page walks completed due=
+ to load DTLB misses to any page size.",
++        "EventCode": "0x08",
++        "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED",
++        "PublicDescription": "Counts the number of page walks completed du=
+e to loads (including SW prefetches) whose address translations missed in a=
+ll Translation Lookaside Buffer (TLB) levels and were mapped to any page si=
+ze. Includes page walks that page fault.",
++        "SampleAfterValue": "200003",
++        "UMask": "0xe",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Load miss in all TLB levels causes a page wal=
+k that completes. (All page sizes)",
++        "EventCode": "0x12",
++        "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED",
++        "PublicDescription": "Counts completed page walks  (all page sizes=
+) caused by demand data loads. This implies it missed in the DTLB and furth=
+er levels of TLB. The page walk can end with or without a fault.",
++        "SampleAfterValue": "100003",
++        "UMask": "0xe",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts the number of page walks completed due=
+ to store DTLB misses to any page size.",
++        "EventCode": "0x49",
++        "EventName": "DTLB_STORE_MISSES.WALK_COMPLETED",
++        "PublicDescription": "Counts the number of page walks completed du=
+e to stores whose address translations missed in all Translation Lookaside =
+Buffer (TLB) levels and were mapped to any page size.  Includes page walks =
+that page fault.",
++        "SampleAfterValue": "2000003",
++        "UMask": "0xe",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Store misses in all TLB levels causes a page =
+walk that completes. (All page sizes)",
++        "EventCode": "0x13",
++        "EventName": "DTLB_STORE_MISSES.WALK_COMPLETED",
++        "PublicDescription": "Counts completed page walks  (all page sizes=
+) caused by demand data stores. This implies it missed in the DTLB and furt=
+her levels of TLB. The page walk can end with or without a fault.",
++        "SampleAfterValue": "100003",
++        "UMask": "0xe",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts the number of page walks completed due=
+ to instruction fetch misses to any page size.",
++        "EventCode": "0x85",
++        "EventName": "ITLB_MISSES.WALK_COMPLETED",
++        "PublicDescription": "Counts the number of page walks completed du=
+e to instruction fetches whose address translations missed in all Translati=
+on Lookaside Buffer (TLB) levels and were mapped to any page size.  Include=
+s page walks that page fault.",
++        "SampleAfterValue": "2000003",
++        "UMask": "0xe",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Code miss in all TLB levels causes a page wal=
+k that completes. (All page sizes)",
++        "EventCode": "0x11",
++        "EventName": "ITLB_MISSES.WALK_COMPLETED",
++        "PublicDescription": "Counts completed page walks (all page sizes)=
+ caused by a code fetch. This implies it missed in the ITLB (Instruction TL=
+B) and further levels of TLB. The page walk can end with or without a fault=
+.",
++        "SampleAfterValue": "100003",
++        "UMask": "0xe",
++        "Unit": "cpu_core"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
+ents/arch/x86/mapfile.csv
+index 3a8770e29fe8..de9582f183cb 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -19,6 +19,7 @@ GenuineIntel-6-3A,v24,ivybridge,core
+ GenuineIntel-6-3E,v23,ivytown,core
+ GenuineIntel-6-2D,v23,jaketown,core
+ GenuineIntel-6-(57|85),v10,knightslanding,core
++GenuineIntel-6-BD,v1.00,lunarlake,core
+ GenuineIntel-6-A[AC],v1.04,meteorlake,core
+ GenuineIntel-6-1[AEF],v3,nehalemep,core
+ GenuineIntel-6-2E,v3,nehalemex,core
+--=20
+2.42.0.rc2.253.gd59a3bf2b4-goog
 
-processor	: 1
-BogoMIPS	: 48.00
-Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
-CPU implementer	: 0x41
-CPU architecture: 8
-CPU variant	: 0x0
-CPU part	: 0xd03
-CPU revision	: 4
-
-processor	: 2
-BogoMIPS	: 48.00
-Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
-CPU implementer	: 0x41
-CPU architecture: 8
-CPU variant	: 0x0
-CPU part	: 0xd03
-CPU revision	: 4
-
-processor	: 3
-BogoMIPS	: 48.00
-Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
-CPU implementer	: 0x41
-CPU architecture: 8
-CPU variant	: 0x0
-CPU part	: 0xd03
-CPU revision	: 4
-
-processor	: 4
-BogoMIPS	: 48.00
-Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
-CPU implementer	: 0x41
-CPU architecture: 8
-CPU variant	: 0x0
-CPU part	: 0xd08
-CPU revision	: 2
-
-processor	: 5
-BogoMIPS	: 48.00
-Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
-CPU implementer	: 0x41
-CPU architecture: 8
-CPU variant	: 0x0
-CPU part	: 0xd08
-CPU revision	: 2
-
-root@roc-rk3399-pc:~#
