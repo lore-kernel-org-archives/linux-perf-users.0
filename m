@@ -2,152 +2,318 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FF8C83F12
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Aug 2023 12:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF76C83F12
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Aug 2023 12:56:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233222AbjH2MZK (ORCPT
+        id S229815AbjH2M4Z (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 29 Aug 2023 08:25:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37128 "EHLO
+        Tue, 29 Aug 2023 08:56:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235429AbjH2MYz (ORCPT
+        with ESMTP id S230455AbjH2Mzx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 29 Aug 2023 08:24:55 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2076.outbound.protection.outlook.com [40.107.244.76])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99E41CC2;
-        Tue, 29 Aug 2023 05:24:41 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YvajXL4wGal6KA06+pkCkv+v0okx+LR/dwPgcfxZ9dG1Ej+dlTQA3nszWnXHFUj4Ux7rLQgVrEBmHkO/2jst7ivO1t6C/vpb0HCCZRHVdiEp37oW7V5KQVZkwHJl+w+jHmPg48k41VcQqZICk79I38sR5tm0mKOyG2eL0LAF6W5a1jsXmQfOhhK7u7jXEqxf2R4MuOR/AEDAlmg82JkJduK9FtyslfUJpztHnZBJ+A7/Pm1GtygNUUzmOkYGxIfWp6MTIARILpQko61uhofbF1VLkJjlAhcSsA+tKgbPXFELeujRbKsabC+eo10UdAlh9tMbK18r4of5ylWs+tLIdg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=P+Na58lhSeB4dAJM0uDwOy+vtvbU+C/Of+oQlxhDMao=;
- b=bln5H7REn3j9omOF3Hkkhgah2N2WTDctVtIchXmSbfzKmMOFgBobOIK/hR8eZdARrpvkSmow/2HKtB0u0/Er7h8KwJts1jO/HAYNiINABF/H+Vz8hLzBHvDswk+ZvSBqHglJWWhWxediqITHL2DetqJpjPuZ/QAf7z2HyibmPWxIRzkyZTYggrzNnmZmChXYNQ5C80Qz4bLXYhiBiSzzSeyy5/78jmqWARxI7zCIUcxGaZ39m7CtJQuVuXNsrkvRcsYd1HmJYBzvkL68yHLPrz0HqAoMsagXgERlYKmwaWIlUUBVBsyOdorNGX/DMxzchldfhJNI0SB+ALL8UiP9Ug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P+Na58lhSeB4dAJM0uDwOy+vtvbU+C/Of+oQlxhDMao=;
- b=rN6K1ir6Ge1uo3uBXIhEKAePaTEQMt6hDbB0RhF/oaZiUazrlrTwEnVLeJoBqibWURHqR6nDc4c0TCkEaTnzp/QVt+clwL8N5xVuHJBI3ow67lMOkKHl93bv0Z2fkfIp6MQ61FM8T1Uh7Eoe9GV3fu06QxmMqeKYA+S96/eoi5w=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB6584.namprd12.prod.outlook.com (2603:10b6:8:d0::6) by
- CO6PR12MB5426.namprd12.prod.outlook.com (2603:10b6:5:35d::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6745.18; Tue, 29 Aug 2023 12:24:39 +0000
-Received: from DS0PR12MB6584.namprd12.prod.outlook.com
- ([fe80::4b88:f989:984c:ea3b]) by DS0PR12MB6584.namprd12.prod.outlook.com
- ([fe80::4b88:f989:984c:ea3b%4]) with mapi id 15.20.6699.034; Tue, 29 Aug 2023
- 12:24:38 +0000
-Message-ID: <929ddd1f-dc15-079c-331d-13cc5f25a1a2@amd.com>
-Date:   Tue, 29 Aug 2023 17:54:23 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v7 0/6] perf record: Track sideband events for all CPUs
- when tracing selected CPUs
-Content-Language: en-US
-To:     Yang Jihong <yangjihong1@huawei.com>, acme@kernel.org,
-        irogers@google.com, jolsa@kernel.org, namhyung@kernel.org,
-        adrian.hunter@intel.com
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, kan.liang@linux.intel.com,
-        james.clark@arm.com, tmricht@linux.ibm.com, ak@linux.intel.com,
-        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20230826032608.107261-1-yangjihong1@huawei.com>
- <bcfabb85-4dc1-e642-4a82-f3b8cc009b0b@amd.com>
- <93abb0e0-1691-a887-f7b2-7591f83a8618@huawei.com>
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <93abb0e0-1691-a887-f7b2-7591f83a8618@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0226.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:eb::9) To DS0PR12MB6584.namprd12.prod.outlook.com
- (2603:10b6:8:d0::6)
+        Tue, 29 Aug 2023 08:55:53 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5F7629D;
+        Tue, 29 Aug 2023 05:55:49 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A8992F4;
+        Tue, 29 Aug 2023 05:56:28 -0700 (PDT)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F05AE3F64C;
+        Tue, 29 Aug 2023 05:55:47 -0700 (PDT)
+Message-ID: <15c1cc81-c131-7abf-1680-0bbc968e638b@arm.com>
+Date:   Tue, 29 Aug 2023 13:55:45 +0100
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6584:EE_|CO6PR12MB5426:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6c45bdf6-0c6b-4fa2-b3ce-08dba88ae9a0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6X/iABZGwBDpiAeALblqzqi5FgSf82UoB6EcZgUmxohzjsk3YN4txUnwcnBBrqo1aHQABJpPCccCE82eIkldvV6VzDJseymo6xwe73ioufYCGxGPesCHIic+/wpF4r16XoRADHnFS48RZI5M5UfpDUp0NFImUnUbMRKFXLW99Qv4vtmSwka4JeBmch80EysIDXOIpO0kdfvc7cBiVaw+DWHaZ9CjP3ngeTLO/AMIFLBazacsGCjrp7hD5dpnrl4M046MQVoYN5KVg2OPOdTTW3DDotLsoCAv4BK78ahRN+dpgholZfNfa7ic0kKm5Ntzj2+AtAHk5OD7Ftf5RkDTB92QVMgmI/6BzuNccHQDSdOQDqGPmB0VarVvLZAsA1FsVhU77Vp+yfltOmCXzV69dxhu4Og6PttyL7ZI2V9tp/ToiamOu3lFDRHLuH5Kjf74L5yx3yT7XohatVa1jftuycex+u3l0/5OueNdmuwJ2wtpcbFLOhKJXxIgcGCRXPYmUBXQNZi/cry+GTrcisX+JFq0QAA/2NpXzn4p+TWt0Iqc4wXBtmTSArIbgteZDq4TEkmw2mSocREl5+E59Sguz0cpsxgR5Wn0HsCuGJ6RO0tPfaZW7//X3EdPibinwjpX6VbIzJOYO69sqiLk9XFvTg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6584.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(396003)(376002)(136003)(346002)(1800799009)(451199024)(186009)(6512007)(38100700002)(316002)(41300700001)(4326008)(7416002)(2906002)(31696002)(4744005)(86362001)(2616005)(36756003)(26005)(5660300002)(44832011)(8676002)(8936002)(6666004)(6506007)(6486002)(66476007)(66556008)(66946007)(478600001)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cFpCNzBEajF4TnF0WWFwdTIwc1FkVHl1QnRWSlh3U0VFbzRvcFdTWk1RTVpI?=
- =?utf-8?B?bnhrakdTVlo1eWFUY3I5eUlCWW1vb0hNNWo0WW1RditwazNZSk9lWGVCYVVP?=
- =?utf-8?B?NmJ2eHpVeGdoUFlkTUdvTVdXZkRYZXBvZGRYOUhLcm9wUzc1cnV5L3pqNC8w?=
- =?utf-8?B?NUZKSkNJTzd1TGJBUXdnMGRPTnNsQ0Y3UTRpV1NINjhyVGFremV2VUdFc1lF?=
- =?utf-8?B?N3VHWCtCNEhTK29wRmQvTVE3VG9FbVRsZzhOQm9Zb0FVYlVJVDhDT1NDZHI3?=
- =?utf-8?B?SFo0OWJsSWJMYWgvZUxwNUtsYmxkbkdmTW45ZU91VmhtNVFrbHgzZVEzRnVa?=
- =?utf-8?B?a1FzdHhrcVNMV1g4T1pnckJEMEZ1T0hIa2ZFODRXUkN3c1VXNHRwQVZERnEr?=
- =?utf-8?B?YkgyT0thckMvNGR6WWpjVk1qVW9IUU1QZnNzb2tmcHV0eS9xbGhBQ0MyYktR?=
- =?utf-8?B?Wm9ucnljdldMQngrRmRBN2VGUklmR0RnNW9wSnZvaTVwb3l6bVdVL3NDcUZi?=
- =?utf-8?B?dk5sbStjR3FBOFVRcGJQWUNLUzRXbVVjQWJJZmdTUmVGVnFVNDZVc2s2OU1k?=
- =?utf-8?B?elBXc1BNQmhCazIxd3JlOGxJTTljQmZWTWdrV09iKzVCMGhuQWpZQTUyVVp6?=
- =?utf-8?B?N0ZRVHgxcGFIeHdxNHp0NFBMVWwyYkowRFBRT3plYSs0WmROcFdiTEhaallm?=
- =?utf-8?B?R0lPRzVWR1pUeGtFalBBanpMelZrQ0F4Uy9rTmoyVTVLZGZmQkJsM1ZEL0FO?=
- =?utf-8?B?d3JORSs5VUNTeDlrNGZ6Y2d1TnN4ZGJpNGxRQll1Tm5PWE9HUUVDZUVtcEVO?=
- =?utf-8?B?STJnQXdLUEpvNmMrSjVZMEVja0Y5TjFhcEhWdlVvWFZuNWJvSzRneS9uR1Jv?=
- =?utf-8?B?WmRsMXJPRE9ESUN0aWtqNU9BZmFjUlRheXV3bmEyaDNOVVh1bkYza0hJRlVs?=
- =?utf-8?B?MzVBWHFkYjdhS3NVM2NROFpqOVg2cHYwMFlTcTlNU2dzQW9GWXhqMjNyemlq?=
- =?utf-8?B?TFdGbzQ4bjIyN2Z6ODVsMDJFdTI1R0xFaTdFNGJrSGgyOS9HdkZtc3ZpY25i?=
- =?utf-8?B?S1N3eWFWN1dhdVZQTDJwdGVhVDZxRlU0bmdsQ2pidS83SGd1L1BvVE1EM2pJ?=
- =?utf-8?B?MFI2WHhNM0FlNVpqRXp1cGxXRzNncmx0c0QzMDlZOWttZVF0RzJRSmhValpL?=
- =?utf-8?B?T04xTUFrZmRWcm5oVi8wTGFiOVhYd0ZUMUp2V2VVYjREOVRkTDQwd3Fsdkgz?=
- =?utf-8?B?djZVMTRweHhFcE52S056bXlQZlJzV1ZIOVlETlkrTEVmT2hqWUh4RlFXRXU0?=
- =?utf-8?B?cHRnOEV0SGl1clA0ckJ3NzBQWENFRjhramRaN0Y4cmZRVFp2UGJreVBLSjFU?=
- =?utf-8?B?VUdiOXliYUJlZTBISkhIWEJqaStyaFZXaEYvV3hqYjF4T0p2VnJLQVZFU2VJ?=
- =?utf-8?B?ZTlic2hBNVdCellBemR6a0ZmNWthTEtlMDk4aFFUeHB6SVdLZ2xPWVhiMHRj?=
- =?utf-8?B?MFpSUmticFdOOUZsczRpMGlWNzMyWkkzN3doNzNuWEMwemJ5YjhHYlpaa2ZU?=
- =?utf-8?B?Sm9yTU1ObHZDbzNUeEFVRVM1WUNEdWdjZlBiSW1tRGNzQVFJbzBFU0ZlLzNk?=
- =?utf-8?B?SjMvSUdXOGV6ZjhWNnFMSFdMMlhVU1lCMG5GUE1ITDdnOXpDblpGR21HY05B?=
- =?utf-8?B?WFdtUTBSK0dxL25hZ2duU2Z5bDl6Y2d6OTNhMDRNYXZFclFmQkFvWHIyUlln?=
- =?utf-8?B?cCtPTHF6UlZ2b1RKajdlU1E4Z0lmZHlidzFydU9zYk1lVEpFbEpXcFdHWWgv?=
- =?utf-8?B?QnQ5SFRSVTR6aEVqTHZUZkFyMGlQcU9aZFJWU01ZUE1vaFRsNU5USEFDYTFq?=
- =?utf-8?B?V1UrQWcvWmlZeXBVMXViWTRIYVQ0S1VINVBVRlkwVnBFRDQzRGhvMkxwVWMv?=
- =?utf-8?B?amt5UVlsR0lVcFFKYVJjZWRKRjZ1V0RoekF3RVVtOTVTUlN5U1MzaHJBTDJE?=
- =?utf-8?B?OU1Ka0ZsZTQ0VUVIL0cwSHRpZ05rSjgrYkw2dGoybWRtd1B4ajNKS0RHa0s0?=
- =?utf-8?B?N0hXNEM2UlFEY3ZyZXdmODUySmNzaHYwZXpIc1VZVDZJUkY3RFNhN1FQakxG?=
- =?utf-8?Q?hcmlyZN8oKwVzqvfpt7AM3emb?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c45bdf6-0c6b-4fa2-b3ce-08dba88ae9a0
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6584.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2023 12:24:38.5489
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eicrnToBXSNdxo+hMDbhIwQCZB91vFXf92XJhU/boyBpHd7Q263sXScQFEIsSgPl0ouGgICEnV6alLlxHuRftg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR12MB5426
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: About ARM64 Kernel Instruction Trace
+Content-Language: en-US
+To:     scclevenger@os.amperecomputing.com, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     yang@os.amperecomputing.com
+References: <ed8cea4c-a261-60ca-f4e1-333ec73cca8f@os.amperecomputing.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <ed8cea4c-a261-60ca-f4e1-333ec73cca8f@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
->> Number of actual samples are same ~38K. However, the perf.data file is 5x
->> bigger because of additional sideband data.
+
+
+On 29/08/2023 05:44, Steve Clevenger wrote:
 > 
-> Yes, if record system wide sideband data, the amount of sideband events will increase proportionally, which is expected.
+> Ampere has been using the following command sequence to generate a 'perf
+> record' kernel instruction trace on an AmpereOne AARCH64 based systems
+> using a 6.3.0 Fedora distribution with CoreSight related patches.
 > 
->>
->> I'm pretty sure we don't need most of those additional data. So, thinking
->> loud, should we post-process perf.data file and filter out unnecessary data?
->>
 > 
-> I wonder if we can add a new function in perf inject.
+> [root@sut01sys-b212 kernel]# uname -a
+> Linux sut01sys-b212.scc-lab.amperecomputing.com 6.3.0-coresight-enabled+
+> #9 SMP PREEMPT_DYNAMIC Fri Jun 30 12:54:14 PDT 2023 aarch64 aarch64
+> aarch64 GNU/Linux
+> [root@sut01sys-b212 kernel]#
+> [root@sut01sys-b212 kernel]# timeout 45s perf record --kcore -o kcore -e
+> cs_etm/@tmc_etr63/k --per-thread taskset --cpu-list 15 dd if=/dev/zero
+> of=/dev/null
+> [ perf record: Woken up 41 times to write data ]
+> [ perf record: Captured and wrote 144.056 MB kcore ]
+> [root@sut01sys-b212 kernel]#
+> [root@sut01sys-b212 kernel]# ls -l ~/linux/vmlinux
+> -rwxr-xr-x. 1 root root 390426912 Jun 30 12:54 /home/stevec/linux/vmlinux*
+> [root@sut01sys-b212 kernel]#
+> [root@sut01sys-b212 kernel]# timeout 45s perf script --input
+> ./kcore/data -s ../../scripts/arm-cs-trace-disasm.py -F
+> cpu,event,ip,addr,sym – -d objdump -k ~/linux/vmlinux > ./perf.itrace
+> [root@sut01sys-b212 kernel]#
+> [root@sut01sys-b212 kernel]# ls -l perf.itrace
+> -rw-r--r--. 1 root root  485834744 Jul 17 14:18 perf.itrace
+> 
+> 
+> The executive summary is the code sections in vmlinux do not match the
+> actual code executing on the target due to self-modifying code
+> (alternate code sequences) in the kernel image. These sequences are
+> typically applied over nop place-holder instructions. This was verified
+> by comparing a location in the ./drivers/char/mem.c read_zero objdump
+> instruction stream to the memory resident instructions captured with the
+> TRACE32 ETM instruction trace feature. This particular instruction trace
+> example shows a disconnect. It displays a ‘b    ffff800008ab8a70
+> <read_zero+0x168>’ instruction at address 0xffff800008ab89e8 which did
+> not branch. The actual instruction present at 0xffff800008ab89e8 is a ‘nop’.
+>         .
+>         .
+>         ffff800008ab89a8:       1400000d        b       ffff800008ab89dc
+> <read_zero+0xd4>
+>               dd  8774/8774  [0015]         0.000000000  read_zero+0xa0
+>         ffff800008ab89dc <read_zero+0xd4>:
+>         ffff800008ab89dc:       9248f840        and     x0, x2,
+> #0xff7fffffffffffff
+>         ffff800008ab89e0:       aa1403e1        mov     x1, x20
+>         ffff800008ab89e4:       9418b6fb        bl      ffff8000090e65d0
+> <__arch_clear_user>
+>               dd  8774/8774  [0015]         0.000000000  read_zero+0xdc
+> ffff8000090e65d0 <__arch_clear_user>:
+>         ffff8000090e65d0:       d503245f        bti     c
+>         ffff8000090e65d4:       8b010002        add     x2, x0, x1
+>         ffff8000090e65d8:       f1002021        subs    x1, x1, #0x8
+>         ffff8000090e65dc:       54000104        b.mi    ffff8000090e65fc
+> <__arch_clear_user+0x2c>  // b.first
+>         ffff8000090e65e0:       f800081f        sttr    xzr, [x0]
+>         ffff8000090e65e4:       91002000        add     x0, x0, #0x8
+>         ffff8000090e65e8:       f1002021        subs    x1, x1, #0x8
+>         ffff8000090e65ec:       54ffffa8        b.hi    ffff8000090e65e0
+> <__arch_clear_user+0x10>  // b.pmore
+>               dd  8774/8774  [0015]         0.000000000
+> __arch_clear_user+0x1c
+> ...vec/linux/arch/arm64/lib/clear_user.S   31         b.hi    1b
+>         ffff8000090e65e0 <__arch_clear_user+0x10>:
+>         ffff8000090e65e0:       f800081f        sttr    xzr, [x0]
+>         ffff8000090e65e4:       91002000        add     x0, x0, #0x8
+>         ffff8000090e65e8:       f1002021        subs    x1, x1, #0x8
+>         ffff8000090e65ec:       54ffffa8        b.hi    ffff8000090e65e0
+> <__arch_clear_user+0x10>  // b.pmore
+>         .
+>         .
+>         ffff8000090e65f0:       f81f885f        sttr    xzr, [x2, #-8]
+>         ffff8000090e65f4:       d2800000        mov     x0, #0x0
+>                // #0
+>         ffff8000090e65f8:       d65f03c0        ret
+>               dd  8774/8774  [0015]         0.000000000
+> __arch_clear_user+0x28
+> ...vec/linux/arch/arm64/lib/clear_user.S   34         ret
+>         ffff800008ab89e8 <read_zero+0xe0>:
+>         ffff800008ab89e8:       14000022        b       ffff800008ab8a70
+> <read_zero+0x168>
+>         ffff800008ab89ec:       d503201f        nop
+>              dd  8774/8774  [0015]         0.000000000  read_zero+0xe4
+>                         /home/stevec/linux/drivers/char/mem.c     521
+>              left = clear_user(buf + cleared, chunk);
+>         ffff800008ab8a18 <read_zero+0x110>:
+>         ffff800008ab8a18:       8b14035a        add     x26, x26, x20
+>         ffff800008ab8a1c:       b5000360        cbnz    x0,
+> ffff800008ab8a88 <read_zero+0x180>
+>         ffff800008ab8a20:       f9400320        ldr     x0, [x25]
+>         ffff800008ab8a24:       cb140273        sub     x19, x19, x20
+>         .
+>         .
+> 
+> Ostensibly, the ‘perf record –kcore’ option produces a representative
+> image of the kernel. But this option does not produce suitable output to
+> generate ARM64 kernel instruction trace. perf doesn’t disassemble ARM64,
+> so the arm-cs-trace-disasm.py python script is used with the native
+> objdump utility to provide ARM64 disassembly from CoreSight trace
+> capture. objdump itself requires an ELF/DWARF file image + symbols to
+> generate the symbolic (+ line information for mixed source) disassembly.
+> The linux vmlinux image + symbols file is typically used for this
+> purpose. The kallsyms file is not formatted for objdump use. As an
+> experiment, I patched the executable code sections in a local copy of
+> vmlinux with the corresponding executable code segments extracted from
+> the kcore image using an Ampere internal ELF patch utility.
+> 
+> This patch utility leverages the (MIT Licensed) ELFIO open source
+> library API. These were the commands.
+> 
+> 
+> [root@sut01sys-b212 kernel]# timeout 30s perf record --kcore -o kcore -e
+> cs_etm/@tmc_etr63/k --per-thread taskset --cpu-list 15 dd if=/dev/zero
+> of=/dev/null
+> [ perf record: Woken up 25 times to write data ]
+> [ perf record: Captured and wrote 88.053 MB kcore ]
+> [root@sut01sys-b212 kernel]#
+> [root@sut01sys-b212 kernel]# ls -l ~/linux/vmlinux
+> -rwxr-xr-x. 1 root root 390426912 Jun 30 12:54 /home/stevec/linux/vmlinux*
+> [root@sut01sys-b212 kernel]# cp ~/linux/vmlinux .
+> [root@sut01sys-b212 kernel]# patch-elf --help
+> 
+> patch-elf overlays the kernel image from a local copy of
+> '/proc/kcore' to the  corresponding (by address) ELF sections
+> in a local copy of the vmlinux ELF file.
+> A local '/proc/kcore' is created by:
+>     'perf report --kcore -e cs_etm/@tmc_etr1/k ...'
+> The local (patched) vmlinux copy is used by:
+>     'perf script -s arm-cs-trace-disasm.py ...'
+> See the CoreSight Hardware-Assisted Trace Application Note for
+> use of the 'perf report' and 'perf script' commands.
+> 
+> Usage: patch-elf <--verbose> kcore_file vmlinux_file
+> [root@sut01sys-b212 kernel]#
+> [root@sut01sys-b212 kernel]# patch-elf kcore/kcore_dir/kcore ./vmlinux
+> ELF File kcore Properties
+> ELF file class:     ELF64
+> ELF file encoding:  Little endian
+> Machine:            ARM AArch64
+> Type:               Core file
+> Number of segments: 3
+> Number of sections: 0
+> 
+> ELF File vmlinux Properties
+> ELF file class:     ELF64
+> ELF file encoding:  Little endian
+> Machine:            ARM AArch64
+> Type:               Shared object file
+> Number of segments: 3
+> Number of sections: 43
+> 
+> Patching section[ 2] ffff800008010000  17997936 bytes
+> 
+> Patching section[15] ffff800009a31000  20480 bytes
+> 
+> Patching section[16] ffff800009a40000  612372 bytes
+> 
+> Patching section[17] ffff800009ad5818  24752 bytes
+> 
+> [root@sut01sys-b212 kernel]# ls -l ./vmlinux
+> -rwxr-xr-x. 1 root root 390426908 Jul 19 11:14 ./vmlinux*
+> [root@sut01sys-b212 kernel]#
+> [root@sut01sys-b212 kernel]# timeout 45s perf script --input
+> ./kcore/data -s ../../scripts/arm-cs-trace-disasm.py -F
+> cpu,event,ip,addr,sym – -d objdump -k ./vmlinux > ./perf.itrace
+> [root@sut01sys-b212 kernel]#
+> [root@sut01sys-b212 kernel]# ls -l perf.itrace
+> -rw-r--r--. 1 root root  32142060 Jul 19 11:18 perf.itrace
+> 
+> Here is the representative kernel instruction trace using a patched vmlinux.
+> 
+>         .
+>         .
+>         ffff800008ab89a8:       1400000d        b       ffff800008ab89dc
+> <read_zero+0xd4>
+>               dd  8774/8774  [0015]         0.000000000  read_zero+0xa0
+>         ffff800008ab89dc <read_zero+0xd4>:
+>         ffff800008ab89dc:       9248f840        and     x0, x2,
+> #0xff7fffffffffffff
+>         ffff800008ab89e0:       aa1403e1        mov     x1, x20
+>         ffff800008ab89e4:       9418b6fb        bl      ffff8000090e65d0
+> <__arch_clear_user>
+>               dd  8774/8774  [0015]         0.000000000  read_zero+0xdc
+> ffff8000090e65d0 <__arch_clear_user>:
+>         ffff8000090e65d0:       d503245f        bti     c
+>         ffff8000090e65d4:       8b010002        add     x2, x0, x1
+>         ffff8000090e65d8:       f1002021        subs    x1, x1, #0x8
+>         ffff8000090e65dc:       54000104        b.mi    ffff8000090e65fc
+> <__arch_clear_user+0x2c>  // b.first
+>         ffff8000090e65e0:       f800081f        sttr    xzr, [x0]
+>         ffff8000090e65e4:       91002000        add     x0, x0, #0x8
+>         ffff8000090e65e8:       f1002021        subs    x1, x1, #0x8
+>         ffff8000090e65ec:       54ffffa8        b.hi    ffff8000090e65e0
+> <__arch_clear_user+0x10>  // b.pmore
+>               dd  8774/8774  [0015]         0.000000000
+> __arch_clear_user+0x1c
+>         ffff8000090e65e0 <__arch_clear_user+0x10>:
+>         ffff8000090e65e0:       f800081f        sttr    xzr, [x0]
+>         ffff8000090e65e4:       91002000        add     x0, x0, #0x8
+>         ffff8000090e65e8:       f1002021        subs    x1, x1, #0x8
+>         ffff8000090e65ec:       54ffffa8        b.hi    ffff8000090e65e0
+> <__arch_clear_user+0x10>  // b.pmore
+>         .
+>         .
+>         ffff8000090e65f0:       f81f885f        sttr    xzr, [x2, #-8]
+>         ffff8000090e65f4:       d2800000        mov     x0, #0x0
+>                // #0
+>         ffff8000090e65f8:       d65f03c0        ret
+>               dd  8774/8774  [0015]         0.000000000
+> __arch_clear_user+0x28
+> ...vec/linux/arch/arm64/lib/clear_user.S   34         ret
+>         ffff800008ab89e8 <read_zero+0xe0>:
+>         ffff800008ab89e8:       d503201f        nop
+>         ffff800008ab89ec:       1400000b        b       ffff800008ab8a18
+> <read_zero+0x110>
+>               dd  8774/8774  [0015]         0.000000000  read_zero+0xe4
+>                          /home/stevec/linux/drivers/char/mem.c     521
+>               left = clear_user(buf + cleared, chunk);
+>         ffff800008ab8a18 <read_zero+0x110>:
+>         ffff800008ab8a18:       8b14035a        add     x26, x26, x20
+>         ffff800008ab8a1c:       b5000360        cbnz    x0,
+> ffff800008ab8a88 <read_zero+0x180>
+>         ffff800008ab8a20:       f9400320        ldr     x0, [x25]
+>         ffff800008ab8a24:       cb140273        sub     x19, x19, x20
+>         .
+>         .
+>         .
+> 
+> This begs the question what perf enhancements could be added to make
+> ARM64 kernel instruction trace easier to use? The process I’ve followed
+> is cumbersome, but could be done behind the scenes by perf. The caveat
+> is it requires a vmlinux which might not be available to an end user.
+> Here are 2 options.
+> 
+> 1.	'perf report -kcore'could use the process I’ve used here
+> transparently in the background. The plus side is the objdump feature of
+> mixed disassembly is available based on the current vmlinux.
+> 
 
-Ok. perf inject is one option. But shall we do it bydefault in perf-record?
-It's needed only when profiling target is set of cpus, not for systemwide or
-per-process mode.
+Hi Steve,
 
-> By reading perf.data and comparing tid of SAMPLE events and sideband events, we can filter out the sideband data of unmatched tasks.
+What you're saying makes sense to me. I think #1 sounds best, I'm not
+sure of the use-case where you wanted to make actionable decisions from
+the trace but wouldn't have vmlinux available? Maybe an end-user could
+be missing it, but I can only imagine use cases where you are actively
+building and developing the kernel.
 
-Yup. But AFAIK, perf-record keeps writing to perf.data and never does post-
-processing on it. So adding support for this will take a bit of effort. Not
-sure if we should do it as part of this series.
+> 2.	'perf report -kcore' generates an ELF + symbols file based on
+> kallsyms (and/or System.map). No vmlinux patching, so intermixed source
+> and disassembly wouldn’t be available. It’s a reasonable alternative
+> without relying on vmlinux.
+> 
+> It makes sense performance-wise to use an ARM64 disassembler directly
+> through perf. perf-script use of the arm-cs-trace-disasm.py python
+> script can be slow. I’m unfamiliar with the Intel implementation, but
+> perf-annotate uses objdump. Unfortunately, I can't seem to get annotate
+> to work for me. A patch operation is still be required if vmlinux is used.
+> 
 
-Thanks,
-Ravi
+We have had other reports about arm-cs-trace-disasm.py being slow. I had
+a plan to make it work with disassembly directly from Perf as that is
+available in other modes. For example the annotate mode in perf already
+works on Arm. What error are you getting with it exactly? It might
+require installation of the aarch64 objdump tool if you are running on
+x86, or provide the --objdump option?
+
+> I suspect the CoreSight/perf communities are aware of these issues.
+> Is there any ongoing work not known to the outside world?
+> 
+> Thanks and regards,
+> Steve C.
