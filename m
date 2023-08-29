@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC42C83F12
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Aug 2023 10:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13122C83F12
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Aug 2023 10:39:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235127AbjH2KhH (ORCPT
+        id S230150AbjH2Kiq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 29 Aug 2023 06:37:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42936 "EHLO
+        Tue, 29 Aug 2023 06:38:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235126AbjH2Kgp (ORCPT
+        with ESMTP id S232145AbjH2KiV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 29 Aug 2023 06:36:45 -0400
-Received: from mail-vs1-xe2f.google.com (mail-vs1-xe2f.google.com [IPv6:2607:f8b0:4864:20::e2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42459198
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Aug 2023 03:36:42 -0700 (PDT)
-Received: by mail-vs1-xe2f.google.com with SMTP id ada2fe7eead31-44d526f96fcso1285147137.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Aug 2023 03:36:42 -0700 (PDT)
+        Tue, 29 Aug 2023 06:38:21 -0400
+Received: from mail-ua1-x930.google.com (mail-ua1-x930.google.com [IPv6:2607:f8b0:4864:20::930])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 377281A3
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Aug 2023 03:38:18 -0700 (PDT)
+Received: by mail-ua1-x930.google.com with SMTP id a1e0cc1a2514c-791b8525b59so1589394241.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Aug 2023 03:38:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693305401; x=1693910201;
+        d=linaro.org; s=google; t=1693305497; x=1693910297;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=hVBkVLH3QC7fHZ/BEssrc+xOo41yz88ko37ylycWuSU=;
-        b=nETByJ1aa8cIYUWQbOS4D/ZJLgtAcE17So4tLSCO2AI0v8zsS9r0J7i1o10MrVinUD
-         jh9aPRpFjwK29fS65/wBJpt8ojCEfb1vjWz1gDVnxxuG7zmYwxFfX9OUu92DTBHMynrC
-         9GS/meqbm92mrtUGt4Rz2n1dzhhOJtp9me7y2NvDQWynXDNq/NGP4DlSFUy23omBoJHX
-         k4MpUe0cOGitK0YP6fR7j4MgQcnEF4+o0flBLOjtBXzyXFKPULr6ZWK/BAFfbWdAFWpQ
-         FduhvcMOlvHFkaDF73u4C0CvOQSfgn9H3aTNACnthq3EP6qDanXPM2mVVP+zwSdB3n4b
-         /+ow==
+        bh=+S+OFM/SaIRDO4CZ1HS1+M3zY1M1wtDfmawa09i8kOs=;
+        b=k18WsEYTY3SR8erQgVThbNFJcwf6j8oip5Wo2DTgEhMok+WoxDTppiV+l9fB+Qjtpj
+         pKaRjzpqn2phfhYnEwLwTcGUwZk6w1lIytKg5ddmpvEH5d3EkDzXtiLyLb38TkhYcRHn
+         CILIMjU98/jqzJ/2XadrR6NCYfEI+xleJpQWoaQEWcLE+6nDsWv6Lm4k5htDoK60R6xk
+         9QB9V1rmeKNQEC3ofe+B+01SF7rER2vxsy59W5aTIDD/j77mkw/mV2tz/+eLzXmDBkqh
+         cUtAAHMKSShlmJQ33CR6wnfFU3uWjdDUgCui+pzf5S5A+fZ/8Cd6AdHqGA+ShNF7rdBA
+         bXlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693305401; x=1693910201;
+        d=1e100.net; s=20221208; t=1693305497; x=1693910297;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hVBkVLH3QC7fHZ/BEssrc+xOo41yz88ko37ylycWuSU=;
-        b=e5i87y6AmUEnR9f8AnS2CNTSMHB0zSvmc4DYvz7lFPi1V29TtkJk/skKX4ddFbbzY4
-         6fk7QvT5LKukGrq1eguMnbL21Y77ZW0gM05RbNc76/M+9/Ju/2KTSsobRR0ZZgleh3PC
-         1hSA8R+DwOU3Adhj1RlyHKDGbWpwz7RdPE4MEDNL4ptmt9FkxaKg3QxclilPJpq4nNsa
-         deM4YTs45CmZwRn/UeYOYGV/UoIvOf8YBpjav0/Ub0omBGAfAOV4y+MLnf0kAlhQEnpf
-         qTt/5A16BeMDqYAewx34GsyXJvT9+WlELKDMAkTgznEd6T9FMFf8whjbxSGHLbq1ZLiO
-         sIyw==
-X-Gm-Message-State: AOJu0YzZ7g/Rm6C/yHScKYNhHp+PekFFMzLoi3NoW5grY6RESUKIsuLW
-        LCGKh1fIxqN3ttLX8Q1SovxwEXfeMlNMLGdWDPro1A==
-X-Google-Smtp-Source: AGHT+IHrytUJH5I8zDaQ5yGNluZPFNS9cgWFNHOsNNTu4Do+ZfLoGsBEhECaztap0PP4+h41sb3j5k/P8KpBhAaNXrM=
-X-Received: by 2002:a05:6102:b09:b0:44f:c528:6252 with SMTP id
- b9-20020a0561020b0900b0044fc5286252mr248799vst.2.1693305401145; Tue, 29 Aug
- 2023 03:36:41 -0700 (PDT)
+        bh=+S+OFM/SaIRDO4CZ1HS1+M3zY1M1wtDfmawa09i8kOs=;
+        b=ARVYh9mY4wGfnPi3Nli8WkA3qGl9UNctCS7XoltSQnHiZWL7PL1mVQup5Nr/LzUgO0
+         VdIHI1OY3DHHQvyRpg2r1Ft0wpbWJK4jgKQu+hwOQUrlgCrjK5BXSgjixSzxadeqd1BM
+         C5VTdb3XNwbbkVFDA3NEsA7SACA8RzvICpr8Pl2enpRn6HEVE9uu7tVZYkeYRuNbaC3u
+         gLOPioq10IbseatbUlni4/KLzXbt7Er7SBpbGbRo9F1gFVDAziQWKBurPwFhYWY3DLKG
+         8gIoTPItffGxpnWBgucZqb5VoicoUBXDpBU8mP59vfqk8n3DBz6zB/cz5+AAj7E3CwNr
+         c1Yg==
+X-Gm-Message-State: AOJu0YzYCgJ+Al2v5xcAxqKGaysdyjPEf4doGEFtfGlbv5t8RrACJ/Im
+        LsD7wkRM/KbJOCQ5FK0lloqK9aBWxfHz/+lanSowVA==
+X-Google-Smtp-Source: AGHT+IG4F5FrbB4LuavW+U011p9kyW0QyLMMxVW2gdfWcMm62cCwqrvaWq+v3KTsnGiFNLdYRP1OcPJsbCnuHRxqABU=
+X-Received: by 2002:a67:eb0b:0:b0:44d:4904:e080 with SMTP id
+ a11-20020a67eb0b000000b0044d4904e080mr21530579vso.31.1693305497289; Tue, 29
+ Aug 2023 03:38:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230824153233.1006420-1-dianders@chromium.org> <20230824083012.v11.1.I1223c11c88937bd0cbd9b086d4ef216985797302@changeid>
-In-Reply-To: <20230824083012.v11.1.I1223c11c88937bd0cbd9b086d4ef216985797302@changeid>
+References: <20230824153233.1006420-1-dianders@chromium.org> <20230824083012.v11.2.I4baba13e220bdd24d11400c67f137c35f07f82c7@changeid>
+In-Reply-To: <20230824083012.v11.2.I4baba13e220bdd24d11400c67f137c35f07f82c7@changeid>
 From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Tue, 29 Aug 2023 16:06:30 +0530
-Message-ID: <CAFA6WYO7u5WTS8dfzqPUcLpHWTH+3sMNVL-9ob0stHE_nJw24Q@mail.gmail.com>
-Subject: Re: [PATCH v11 1/6] irqchip/gic-v3: Enable support for SGIs to act as NMIs
+Date:   Tue, 29 Aug 2023 16:08:06 +0530
+Message-ID: <CAFA6WYM2xTxBaNf8fjg3n0HotTaHezsB_e+eNgXK3PsSfWKx4A@mail.gmail.com>
+Subject: Re: [PATCH v11 2/6] arm64: idle: Tag the arm64 idle functions as __cpuidle
 To:     Douglas Anderson <dianders@chromium.org>
 Cc:     Mark Rutland <mark.rutland@arm.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -71,6 +71,8 @@ Cc:     Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel@lists.infradead.org, ito-yuichi@fujitsu.com,
         Stephen Boyd <swboyd@chromium.org>,
         Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Guo Ren <guoren@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
@@ -79,183 +81,76 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Thu, 24 Aug 2023 at 21:03, Douglas Anderson <dianders@chromium.org> wrote:
 >
-> As of commit 6abbd6988971 ("irqchip/gic, gic-v3: Make SGIs use
-> handle_percpu_devid_irq()") SGIs are treated the same as PPIs/EPPIs
-> and use handle_percpu_devid_irq() by default. Unfortunately,
-> handle_percpu_devid_irq() isn't NMI safe, and so to run in an NMI
-> context those should use handle_percpu_devid_fasteoi_nmi().
+> As per the (somewhat recent) comment before the definition of
+> `__cpuidle`, the tag is like `noinstr` but also marks a function so it
+> can be identified by cpu_in_idle(). Let's add these markings to arm64
+> cpuidle functions
 >
-> In order to accomplish this, we just have to make room for SGIs in the
-> array of refcounts that keeps track of which interrupts are set as
-> NMI. We also rename the array and create a new indexing scheme that
-> accounts for SGIs.
+> With this change we get useful backtraces like:
 >
-> Also, enable NMI support prior to gic_smp_init() as allocation of SGIs
-> as IRQs/NMIs happen as part of this routine.
+>   NMI backtrace for cpu N skipped: idling at cpu_do_idle+0x94/0x98
 >
-> Co-developed-by: Sumit Garg <sumit.garg@linaro.org>
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> instead of useless backtraces when dumping all processors using
+> nmi_cpu_backtrace().
+>
+> NOTE: this patch won't make cpu_in_idle() work perfectly for arm64,
+> but it doesn't hurt and does catch some cases. Specifically an example
+> that wasn't caught in my testing looked like this:
+>
+>  gic_cpu_sys_reg_init+0x1f8/0x314
+>  gic_cpu_pm_notifier+0x40/0x78
+>  raw_notifier_call_chain+0x5c/0x134
+>  cpu_pm_notify+0x38/0x64
+>  cpu_pm_exit+0x20/0x2c
+>  psci_enter_idle_state+0x48/0x70
+>  cpuidle_enter_state+0xb8/0x260
+>  cpuidle_enter+0x44/0x5c
+>  do_idle+0x188/0x30c
+>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 > Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
-> In v10 I removed the previous Reviewed-by and Tested-by tags since the
-> patch contents changed pretty drastically.
 >
-> I'll also note that this change is a little more black magic to me
-> than others in this series. I don't have a massive amounts of
-> familiarity with all the moving parts of gic-v3, so I mostly just
-> followed Mark Rutland's advice [1]. Please pay extra attention to make
-> sure I didn't do anything too terrible.
 
-The changes look good to me. I am not sure if my review tag will be
-valuable here since I am a co-developer here.
+Acked-by: Sumit Garg <sumit.garg@linaro.org>
 
 -Sumit
 
+> Changes in v11:
+> - Updated commit message as per Stephen.
 >
-> Mark's advice wasn't a full patch and I ended up doing a bit of work
-> to translate it to reality, so I did not add him as "Co-developed-by"
-> here. Mark: if you would like this tag then please provide it and your
-> Signed-off-by. I certainly won't object.
+> Changes in v9:
+> - Added to commit message that this doesn't catch all cases.
 >
-> [1] https://lore.kernel.org/r/ZNC-YRQopO0PaIIo@FVFF77S0Q05N.cambridge.arm.com
+> Changes in v8:
+> - "Tag the arm64 idle functions as __cpuidle" new for v8
 >
-> (no changes since v10)
+>  arch/arm64/kernel/idle.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> Changes in v10:
-> - Rewrite as needed for 5.11+ as per Mark Rutland and Sumit.
->
->  drivers/irqchip/irq-gic-v3.c | 54 ++++++++++++++++++++++++------------
->  1 file changed, 36 insertions(+), 18 deletions(-)
->
-> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-> index eedfa8e9f077..49d18cf3f636 100644
-> --- a/drivers/irqchip/irq-gic-v3.c
-> +++ b/drivers/irqchip/irq-gic-v3.c
-> @@ -78,6 +78,8 @@ static DEFINE_STATIC_KEY_TRUE(supports_deactivate_key);
->  #define GIC_LINE_NR    min(GICD_TYPER_SPIS(gic_data.rdists.gicd_typer), 1020U)
->  #define GIC_ESPI_NR    GICD_TYPER_ESPIS(gic_data.rdists.gicd_typer)
->
-> +#define SGI_NR         16
-> +
->  /*
->   * The behaviours of RPR and PMR registers differ depending on the value of
->   * SCR_EL3.FIQ, and the behaviour of non-secure priority registers of the
-> @@ -125,8 +127,8 @@ EXPORT_SYMBOL(gic_nonsecure_priorities);
->                 __priority;                                             \
->         })
->
-> -/* ppi_nmi_refs[n] == number of cpus having ppi[n + 16] set as NMI */
-> -static refcount_t *ppi_nmi_refs;
-> +/* rdist_nmi_refs[n] == number of cpus having the rdist interrupt n set as NMI */
-> +static refcount_t *rdist_nmi_refs;
->
->  static struct gic_kvm_info gic_v3_kvm_info __initdata;
->  static DEFINE_PER_CPU(bool, has_rss);
-> @@ -519,9 +521,22 @@ static u32 __gic_get_ppi_index(irq_hw_number_t hwirq)
->         }
->  }
->
-> -static u32 gic_get_ppi_index(struct irq_data *d)
-> +static u32 __gic_get_rdist_idx(irq_hw_number_t hwirq)
-> +{
-> +       switch (__get_intid_range(hwirq)) {
-> +       case SGI_RANGE:
-> +       case PPI_RANGE:
-> +               return hwirq;
-> +       case EPPI_RANGE:
-> +               return hwirq - EPPI_BASE_INTID + 32;
-> +       default:
-> +               unreachable();
-> +       }
-> +}
-> +
-> +static u32 gic_get_rdist_idx(struct irq_data *d)
+> diff --git a/arch/arm64/kernel/idle.c b/arch/arm64/kernel/idle.c
+> index c1125753fe9b..05cfb347ec26 100644
+> --- a/arch/arm64/kernel/idle.c
+> +++ b/arch/arm64/kernel/idle.c
+> @@ -20,7 +20,7 @@
+>   *     ensure that interrupts are not masked at the PMR (because the core will
+>   *     not wake up if we block the wake up signal in the interrupt controller).
+>   */
+> -void noinstr cpu_do_idle(void)
+> +void __cpuidle cpu_do_idle(void)
 >  {
-> -       return __gic_get_ppi_index(d->hwirq);
-> +       return __gic_get_rdist_idx(d->hwirq);
->  }
+>         struct arm_cpuidle_irq_context context;
 >
->  static int gic_irq_nmi_setup(struct irq_data *d)
-> @@ -545,11 +560,14 @@ static int gic_irq_nmi_setup(struct irq_data *d)
->
->         /* desc lock should already be held */
->         if (gic_irq_in_rdist(d)) {
-> -               u32 idx = gic_get_ppi_index(d);
-> +               u32 idx = gic_get_rdist_idx(d);
->
-> -               /* Setting up PPI as NMI, only switch handler for first NMI */
-> -               if (!refcount_inc_not_zero(&ppi_nmi_refs[idx])) {
-> -                       refcount_set(&ppi_nmi_refs[idx], 1);
-> +               /*
-> +                * Setting up a percpu interrupt as NMI, only switch handler
-> +                * for first NMI
-> +                */
-> +               if (!refcount_inc_not_zero(&rdist_nmi_refs[idx])) {
-> +                       refcount_set(&rdist_nmi_refs[idx], 1);
->                         desc->handle_irq = handle_percpu_devid_fasteoi_nmi;
->                 }
->         } else {
-> @@ -582,10 +600,10 @@ static void gic_irq_nmi_teardown(struct irq_data *d)
->
->         /* desc lock should already be held */
->         if (gic_irq_in_rdist(d)) {
-> -               u32 idx = gic_get_ppi_index(d);
-> +               u32 idx = gic_get_rdist_idx(d);
->
->                 /* Tearing down NMI, only switch handler for last NMI */
-> -               if (refcount_dec_and_test(&ppi_nmi_refs[idx]))
-> +               if (refcount_dec_and_test(&rdist_nmi_refs[idx]))
->                         desc->handle_irq = handle_percpu_devid_irq;
->         } else {
->                 desc->handle_irq = handle_fasteoi_irq;
-> @@ -1279,10 +1297,10 @@ static void gic_cpu_init(void)
->         rbase = gic_data_rdist_sgi_base();
->
->         /* Configure SGIs/PPIs as non-secure Group-1 */
-> -       for (i = 0; i < gic_data.ppi_nr + 16; i += 32)
-> +       for (i = 0; i < gic_data.ppi_nr + SGI_NR; i += 32)
->                 writel_relaxed(~0, rbase + GICR_IGROUPR0 + i / 8);
->
-> -       gic_cpu_config(rbase, gic_data.ppi_nr + 16, gic_redist_wait_for_rwp);
-> +       gic_cpu_config(rbase, gic_data.ppi_nr + SGI_NR, gic_redist_wait_for_rwp);
->
->         /* initialise system registers */
->         gic_cpu_sys_reg_init();
-> @@ -1939,12 +1957,13 @@ static void gic_enable_nmi_support(void)
->                 return;
->         }
->
-> -       ppi_nmi_refs = kcalloc(gic_data.ppi_nr, sizeof(*ppi_nmi_refs), GFP_KERNEL);
-> -       if (!ppi_nmi_refs)
-> +       rdist_nmi_refs = kcalloc(gic_data.ppi_nr + SGI_NR,
-> +                                sizeof(*rdist_nmi_refs), GFP_KERNEL);
-> +       if (!rdist_nmi_refs)
->                 return;
->
-> -       for (i = 0; i < gic_data.ppi_nr; i++)
-> -               refcount_set(&ppi_nmi_refs[i], 0);
-> +       for (i = 0; i < gic_data.ppi_nr + SGI_NR; i++)
-> +               refcount_set(&rdist_nmi_refs[i], 0);
->
->         pr_info("Pseudo-NMIs enabled using %s ICC_PMR_EL1 synchronisation\n",
->                 gic_has_relaxed_pmr_sync() ? "relaxed" : "forced");
-> @@ -2061,6 +2080,7 @@ static int __init gic_init_bases(phys_addr_t dist_phys_base,
->
->         gic_dist_init();
->         gic_cpu_init();
-> +       gic_enable_nmi_support();
->         gic_smp_init();
->         gic_cpu_pm_init();
->
-> @@ -2073,8 +2093,6 @@ static int __init gic_init_bases(phys_addr_t dist_phys_base,
->                         gicv2m_init(handle, gic_data.domain);
->         }
->
-> -       gic_enable_nmi_support();
-> -
->         return 0;
->
->  out_free:
+> @@ -35,7 +35,7 @@ void noinstr cpu_do_idle(void)
+>  /*
+>   * This is our default idle handler.
+>   */
+> -void noinstr arch_cpu_idle(void)
+> +void __cpuidle arch_cpu_idle(void)
+>  {
+>         /*
+>          * This should do all the clock switching and wait for interrupt
 > --
 > 2.42.0.rc1.204.g551eb34607-goog
 >
