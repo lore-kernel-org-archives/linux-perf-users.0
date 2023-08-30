@@ -2,123 +2,108 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE2BC83F1D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 18:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57367C83F1B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 18:35:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234472AbjH3SfI (ORCPT
+        id S236232AbjH3SfK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Aug 2023 14:35:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37254 "EHLO
+        Wed, 30 Aug 2023 14:35:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245651AbjH3PsM (ORCPT
+        with ESMTP id S244551AbjH3NUi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Aug 2023 11:48:12 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 231A4122;
-        Wed, 30 Aug 2023 08:48:10 -0700 (PDT)
+        Wed, 30 Aug 2023 09:20:38 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA4F1A6;
+        Wed, 30 Aug 2023 06:20:36 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A2AD961FB9;
-        Wed, 30 Aug 2023 15:48:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD8BCC433C7;
-        Wed, 30 Aug 2023 15:48:08 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 38C54615F5;
+        Wed, 30 Aug 2023 13:20:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 80511C433C9;
+        Wed, 30 Aug 2023 13:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693410489;
-        bh=wnPJiJm7rQrsAoc2rWmWxlawY0FbhE1X+OSVa1CfQkg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BSUbGCgKqPv26pt2syJYnQN5yPQVVlwVb0WAg2KDZmNu4ATFh6yjTkfSztfa9oEr8
-         XM+icEUhh0cPNhJzbZswf8QrDpIo+F41XZJwSoVwD8N+VdG5F9BimXRC4ulIBmb9XF
-         Ntb41DAvA/gCaZW3MgF3SjOxidFDyzizQAOYKHZE815MryZEXv9U5YGQHoLkMRkS8i
-         v9arDRbeJaQySdvcHaiGbivJicgNHYIT7N8Kfq+XZ2Rm2/1lSZk7cjn1euP/yUQ8ah
-         DjdFwulViZMTjbmi7YSWoUpfWEmjjPahMHu0F0OeRrvnjaJkIbHDPIhOI/NEjfVov7
-         afBlwGV/yIPng==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0F6B840722; Wed, 30 Aug 2023 12:48:06 -0300 (-03)
-Date:   Wed, 30 Aug 2023 12:48:06 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>
-Subject: Re: [PATCH v1] perf pmu: Avoid uninitialized use of alias->str
-Message-ID: <ZO9ktixQq0Mq2PHU@kernel.org>
-References: <20230830000545.1638964-1-irogers@google.com>
- <CAM9d7ciUho=P8AnSq6inUudw15d8e=epke-XQFkpx5wuDgtikw@mail.gmail.com>
+        s=k20201202; t=1693401634;
+        bh=lU/0eFOBFVkuTE1IldAB8o4ifPlzPWcD6cixm0reo2A=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=bgzOKPRbpUn291lsqU9Z1dLg3L/B12TOne9+koWorFDPSeaeOhmTvGUyhG+gI2BjL
+         xXPEehjiwSkhyeGIYoF9Q1pA4XNU6fSdeogfImQ1EIV9keK0BLa+4TNeCLaYYcbyCO
+         7FnQaKKMDtuJIUdo1NuLBx1O3NjG3fZUffKkTqjJJI0NlZASxhdts9yqpli5nt45La
+         5wIp6B4CWg94mqnotehPPrsl6Z0Xqior9mZDZZ3hCMOrhauaBD2NUk3EzJ2zqDSuqq
+         atVcsLU96cpPto61Ly3S1JiE1NdGpyqSmp6DL+3VlITZL7meH19E5plCwb6Q6LEseh
+         lPU/joGQnSL5w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 629B6C64457;
+        Wed, 30 Aug 2023 13:20:34 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7ciUho=P8AnSq6inUudw15d8e=epke-XQFkpx5wuDgtikw@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+Subject: Re: [PATCH v6 00/10] riscv: Allow userspace to directly access perf
+ counters
+From:   patchwork-bot+linux-riscv@kernel.org
+Message-Id: <169340163439.19859.16491167037069434691.git-patchwork-notify@kernel.org>
+Date:   Wed, 30 Aug 2023 13:20:34 +0000
+References: <20230802080328.1213905-1-alexghiti@rivosinc.com>
+In-Reply-To: <20230802080328.1213905-1-alexghiti@rivosinc.com>
+To:     Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc:     linux-riscv@lists.infradead.org, corbet@lwn.net,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, atishp@atishpatra.org, anup@brainfault.org,
+        will@kernel.org, robh@kernel.org, ajones@ventanamicro.com,
+        remi@remlab.net, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Aug 29, 2023 at 07:23:58PM -0700, Namhyung Kim escreveu:
-> Hi Ian,
-> 
-> On Tue, Aug 29, 2023 at 5:05 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > alias is allocated with malloc allowing uninitialized memory to be
-> > accessed. The initialization of str was moved late after it could have
-> > been updated by a JSON event, however, this create a potential for an
-> > uninitialized use. Fix this by assigning str to NULL early. Testing on
-> > ARM (Raspberry Pi) showed a memory leak in the same code so add a
-> > zfree.
-> >
-> > Fixes: f63a536f03a2 ("perf pmu: Merge JSON events with sysfs at load time")
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+Hello:
 
-Thanks, applied.
+This series was applied to riscv/linux.git (for-next)
+by Palmer Dabbelt <palmer@rivosinc.com>:
 
-- Arnaldo
- 
-> Thanks,
-> Namhyung
+On Wed,  2 Aug 2023 10:03:18 +0200 you wrote:
+> riscv used to allow direct access to cycle/time/instret counters,
+> bypassing the perf framework, this patchset intends to allow the user to
+> mmap any counter when accessed through perf.
 > 
+> **Important**: The default mode is now user access through perf only, not
+> the legacy so some applications will break. However, we introduce a sysctl
+> perf_user_access like arm64 does, which will allow to switch to the legacy
+> mode described above.
 > 
-> > ---
-> >  tools/perf/util/pmu.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> > index cde33e01959a..b3f8f3f1e900 100644
-> > --- a/tools/perf/util/pmu.c
-> > +++ b/tools/perf/util/pmu.c
-> > @@ -532,6 +532,7 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
-> >         if (!alias)
-> >                 return -ENOMEM;
-> >
-> > +       alias->str = NULL;
-> >         INIT_LIST_HEAD(&alias->terms);
-> >         alias->scale = 1.0;
-> >         alias->unit[0] = '\0';
-> > @@ -593,6 +594,7 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
-> >                         ret += scnprintf(newval + ret, sizeof(newval) - ret,
-> >                                          "%s=%s", term->config, term->val.str);
-> >         }
-> > +       zfree(&alias->str);
-> >         alias->str = strdup(newval);
-> >         if (!pe)
-> >                 pmu->sysfs_aliases++;
-> > --
-> > 2.42.0.rc2.253.gd59a3bf2b4-goog
-> >
+> [...]
 
+Here is the summary with links:
+  - [v6,01/10] perf: Fix wrong comment about default event_idx
+    https://git.kernel.org/riscv/c/366d259ff597
+  - [v6,02/10] include: riscv: Fix wrong include guard in riscv_pmu.h
+    https://git.kernel.org/riscv/c/f117ae55b019
+  - [v6,03/10] riscv: Make legacy counter enum match the HW numbering
+    https://git.kernel.org/riscv/c/e8b785e98abb
+  - [v6,04/10] drivers: perf: Rename riscv pmu sbi driver
+    https://git.kernel.org/riscv/c/d5ac062d82d8
+  - [v6,05/10] riscv: Prepare for user-space perf event mmap support
+    https://git.kernel.org/riscv/c/83c5e13b8cbb
+  - [v6,06/10] drivers: perf: Implement perf event mmap support in the legacy backend
+    https://git.kernel.org/riscv/c/50be34282905
+  - [v6,07/10] drivers: perf: Implement perf event mmap support in the SBI backend
+    https://git.kernel.org/riscv/c/cc4c07c89aad
+  - [v6,08/10] Documentation: admin-guide: Add riscv sysctl_perf_user_access
+    https://git.kernel.org/riscv/c/57972127b20e
+  - [v6,09/10] tools: lib: perf: Implement riscv mmap support
+    https://git.kernel.org/riscv/c/60bd50116484
+  - [v6,10/10] perf: tests: Adapt mmap-basic.c for riscv
+    https://git.kernel.org/riscv/c/26ba042414a3
+
+You are awesome, thank you!
 -- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-- Arnaldo
+
