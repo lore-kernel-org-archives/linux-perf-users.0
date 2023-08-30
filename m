@@ -2,326 +2,103 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D75DC83F1A
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 18:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D5CC83F17
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 18:34:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230363AbjH3Sey (ORCPT
+        id S231153AbjH3Se4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Aug 2023 14:34:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49282 "EHLO
+        Wed, 30 Aug 2023 14:34:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343915AbjH3RPM (ORCPT
+        with ESMTP id S241803AbjH3HIC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Aug 2023 13:15:12 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9D387FF;
-        Wed, 30 Aug 2023 10:15:08 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 923CF2F4;
-        Wed, 30 Aug 2023 10:15:47 -0700 (PDT)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 36EA53F64C;
-        Wed, 30 Aug 2023 10:15:05 -0700 (PDT)
-Message-ID: <73b04666-803a-c121-403c-60d67fe44812@arm.com>
-Date:   Wed, 30 Aug 2023 18:14:59 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v6 4/6] perf jevents: Add a new expression builtin
- strcmp_cpuid_str()
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        John Garry <john.g.garry@oracle.com>
-Cc:     linux-perf-users@vger.kernel.org, renyu.zj@linux.alibaba.com,
-        acme@kernel.org, Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Wed, 30 Aug 2023 03:08:02 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC3211A3
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 00:07:59 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59263889eacso73243057b3.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 00:07:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1693379279; x=1693984079; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5NaHsU6gXgFOenHk7MfqZGVTVXuRwf+WJ70Gj+1DurU=;
+        b=6/GxsNd9Kywu8N8XjZIO0gtCnLdeXgprY6VCHDrGvNdNtgmQWcqKTR+ASayOySQdea
+         oBuJMJ0bS8QA18CQxHCZuERQQQQTUoRXf4QY9jedpUkKPTXNsSsEmh0nYtpN6CihA2x7
+         7kMZwLwOc6AMLS8MOuxrhPupvQDVMbQOV3uOtfQntIvadA20eEHV1a4ncqemahlUoVKf
+         KJZfb+dWMC1ProTCP+xXsqpUHwq7upPdAhJL5FZrhstZ486VOWSB4MZ2TvMP6TGG5LGL
+         6nxwg9L455g7bJv8sTozqXuIxGezChegJOoEztWFkxvv42t20X7xV6+wdW3LiT6zdI7T
+         9liA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693379279; x=1693984079;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5NaHsU6gXgFOenHk7MfqZGVTVXuRwf+WJ70Gj+1DurU=;
+        b=FV8M1mDy99zl+Qph3jrHff0Xs0ranJa50vgD15lZtWMwQeKWRu6AXqnfAHKjFdvCls
+         HX7dYTMnvv4OJWkvjZQFju9VV6yEiIiUOMDHRcoPJyqXANIj0k1LZJARY/oNnNikpVna
+         kSfo03YdGhcKG94a74dZBD6Q7PoAmLsubcecF7t/W0PjrZJ6dHJRc9KCXOXg/ugDu9va
+         d4GOZsWfSNZbfKbvQLSTCElw7T//NiBwkiAHBAU8HNG88qs+DuGRN6hkhdNHWBhaesy6
+         B4WNqwn9to2nqwOJk2pPAs5frSSdT02Wei/OQm+JSAfVSbdYBZ9r23K8flQNevJuSPOw
+         4/YQ==
+X-Gm-Message-State: AOJu0Yw2U3dvTEv/h/mEnkKtAiVv2AZHJDosQiTI8kRBk8KrWBzAfYa5
+        O2ha4kT4IR9PD2+VkamsE1UZSqBlcDsn
+X-Google-Smtp-Source: AGHT+IEsqhzZVskXpYnOT+qq+VkLTum6nBgxwvZomGfzTOhPcyfHGK9ecuI2vCBSfox/qM2B17EZrYy6QlAq
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:d623:3cd7:ecbc:8798])
+ (user=irogers job=sendgmr) by 2002:a25:d0e:0:b0:d63:8364:328 with SMTP id
+ 14-20020a250d0e000000b00d6383640328mr35188ybn.5.1693379278979; Wed, 30 Aug
+ 2023 00:07:58 -0700 (PDT)
+Date:   Wed, 30 Aug 2023 00:07:51 -0700
+Message-Id: <20230830070753.1821629-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.42.0.rc2.253.gd59a3bf2b4-goog
+Subject: [PATCH v1 1/3] perf parse-events: Minor help message improvements
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Haixin Yu <yuhaixin.yhx@linux.alibaba.com>,
-        Nick Forrington <nick.forrington@arm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        Sohom Datta <sohomdatta1@gmail.com>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20230816114841.1679234-1-james.clark@arm.com>
- <20230816114841.1679234-5-james.clark@arm.com>
- <CAP-5=fVZxtgxj62EFNzweNfENVHrc8DwExcUGH-3odz=ZmMrQA@mail.gmail.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <CAP-5=fVZxtgxj62EFNzweNfENVHrc8DwExcUGH-3odz=ZmMrQA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Be more specific and fix a typo.
 
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/parse-events.y | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On 30/08/2023 00:46, Ian Rogers wrote:
-> On Wed, Aug 16, 2023 at 4:52 AM James Clark <james.clark@arm.com> wrote:
->>
->> This will allow writing formulas that are conditional on a specific
->> CPU type or CPU version. It calls through to the existing
->> strcmp_cpuid_str() function in Perf which has a default weak version,
->> and an arch specific version for x86 and arm64.
->>
->> The function takes an 'ID' type value, which is a string. But in this
->> case Arm CPU IDs are hex numbers prefixed with '0x'. metric.py
->> assumes strings are only used by event names, and that they can't start
->> with a number ('0'), so an additional change has to be made to the
->> regex to convert hex numbers back to 'ID' types.
->>
->> Signed-off-by: James Clark <james.clark@arm.com>
->> ---
->>  tools/perf/arch/arm64/util/pmu.c | 18 +-----------------
->>  tools/perf/pmu-events/metric.py  | 17 +++++++++++++++--
->>  tools/perf/util/expr.c           | 18 ++++++++++++++++++
->>  tools/perf/util/expr.h           |  1 +
->>  tools/perf/util/expr.l           |  1 +
->>  tools/perf/util/expr.y           |  8 +++++++-
->>  tools/perf/util/pmu.c            | 17 +++++++++++++++++
->>  tools/perf/util/pmu.h            |  1 +
->>  8 files changed, 61 insertions(+), 20 deletions(-)
->>
->> diff --git a/tools/perf/arch/arm64/util/pmu.c b/tools/perf/arch/arm64/util/pmu.c
->> index 512a8f13c4de..615084eb88d8 100644
->> --- a/tools/perf/arch/arm64/util/pmu.c
->> +++ b/tools/perf/arch/arm64/util/pmu.c
->> @@ -2,28 +2,12 @@
->>
->>  #include <internal/cpumap.h>
->>  #include "../../../util/cpumap.h"
->> +#include "../../../util/header.h"
->>  #include "../../../util/pmu.h"
->>  #include "../../../util/pmus.h"
->>  #include <api/fs/fs.h>
->>  #include <math.h>
->>
->> -static struct perf_pmu *pmu__find_core_pmu(void)
->> -{
->> -       struct perf_pmu *pmu = NULL;
->> -
->> -       while ((pmu = perf_pmus__scan_core(pmu))) {
->> -               /*
->> -                * The cpumap should cover all CPUs. Otherwise, some CPUs may
->> -                * not support some events or have different event IDs.
->> -                */
->> -               if (RC_CHK_ACCESS(pmu->cpus)->nr != cpu__max_cpu().cpu)
->> -                       return NULL;
->> -
->> -               return pmu;
->> -       }
->> -       return NULL;
->> -}
->> -
->>  const struct pmu_metrics_table *pmu_metrics_table__find(void)
->>  {
->>         struct perf_pmu *pmu = pmu__find_core_pmu();
->> diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
->> index 85a3545f5b6a..0e9ec65d92ae 100644
->> --- a/tools/perf/pmu-events/metric.py
->> +++ b/tools/perf/pmu-events/metric.py
->> @@ -413,6 +413,10 @@ def has_event(event: Event) -> Function:
->>    # pylint: disable=invalid-name
->>    return Function('has_event', event)
->>
->> +def strcmp_cpuid_str(event: str) -> Function:
->> +  # pylint: disable=redefined-builtin
->> +  # pylint: disable=invalid-name
->> +  return Function('strcmp_cpuid_str', event)
->>
->>  class Metric:
->>    """An individual metric that will specifiable on the perf command line."""
->> @@ -541,14 +545,23 @@ def ParsePerfJson(orig: str) -> Expression:
->>    """
->>    # pylint: disable=eval-used
->>    py = orig.strip()
->> +  # First try to convert everything that looks like a string (event name) into Event(r"EVENT_NAME").
->> +  # This isn't very selective so is followed up by converting some unwanted conversions back again
->>    py = re.sub(r'([a-zA-Z][^-+/\* \\\(\),]*(?:\\.[^-+/\* \\\(\),]*)*)',
->>                r'Event(r"\1")', py)
->> +  # If it started with a # it should have been a literal, rather than an event name
->>    py = re.sub(r'#Event\(r"([^"]*)"\)', r'Literal("#\1")', py)
->> +  # Convert accidentally converted hex constants ("0Event(r"xDEADBEEF)"") back to a constant,
->> +  # but keep it wrapped in Event(), otherwise Python drops the 0x prefix and it gets interpreted as
->> +  # a double by the Bison parser
->> +  py = re.sub(r'0Event\(r"[xX]([0-9a-fA-F]*)"\)', r'Event("0x\1")', py)
->> +  # Convert accidentally converted scientific notation constants back
->>    py = re.sub(r'([0-9]+)Event\(r"(e[0-9]+)"\)', r'\1\2', py)
->> -  keywords = ['if', 'else', 'min', 'max', 'd_ratio', 'source_count', 'has_event']
->> +  # Convert all the known keywords back from events to just the keyword
->> +  keywords = ['if', 'else', 'min', 'max', 'd_ratio', 'source_count', 'has_event', 'strcmp_cpuid_str',
->> +              'cpuid_not_more_than']
->>    for kw in keywords:
->>      py = re.sub(rf'Event\(r"{kw}"\)', kw, py)
->> -
->>    try:
->>      parsed = ast.parse(py, mode='eval')
->>    except SyntaxError as e:
->> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
->> index 7410a165f68b..0985a3cbc6f9 100644
->> --- a/tools/perf/util/expr.c
->> +++ b/tools/perf/util/expr.c
->> @@ -13,6 +13,8 @@
->>  #include <util/expr-bison.h>
->>  #include <util/expr-flex.h>
->>  #include "util/hashmap.h"
->> +#include "util/header.h"
->> +#include "util/pmu.h"
->>  #include "smt.h"
->>  #include "tsc.h"
->>  #include <api/fs/fs.h>
->> @@ -495,3 +497,19 @@ double expr__has_event(const struct expr_parse_ctx *ctx, bool compute_ids, const
->>         evlist__delete(tmp);
->>         return ret;
->>  }
->> +
->> +double expr__strcmp_cpuid_str(const struct expr_parse_ctx *ctx __maybe_unused,
->> +                      bool compute_ids __maybe_unused, const char *test_id)
->> +{
->> +       double ret;
->> +       struct perf_pmu *pmu = pmu__find_core_pmu();
->> +       char *cpuid = perf_pmu__getcpuid(pmu);
->> +
->> +       if (!cpuid)
->> +               return NAN;
->> +
->> +       ret = !strcmp_cpuid_str(test_id, cpuid);
->> +
->> +       free(cpuid);
->> +       return ret;
->> +}
->> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
->> index 3c1e49b3e35d..c0cec29ddc29 100644
->> --- a/tools/perf/util/expr.h
->> +++ b/tools/perf/util/expr.h
->> @@ -55,5 +55,6 @@ double expr_id_data__value(const struct expr_id_data *data);
->>  double expr_id_data__source_count(const struct expr_id_data *data);
->>  double expr__get_literal(const char *literal, const struct expr_scanner_ctx *ctx);
->>  double expr__has_event(const struct expr_parse_ctx *ctx, bool compute_ids, const char *id);
->> +double expr__strcmp_cpuid_str(const struct expr_parse_ctx *ctx, bool compute_ids, const char *id);
->>
->>  #endif
->> diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
->> index dbb117414710..0feef0726c48 100644
->> --- a/tools/perf/util/expr.l
->> +++ b/tools/perf/util/expr.l
->> @@ -114,6 +114,7 @@ if          { return IF; }
->>  else           { return ELSE; }
->>  source_count   { return SOURCE_COUNT; }
->>  has_event      { return HAS_EVENT; }
->> +strcmp_cpuid_str       { return STRCMP_CPUID_STR; }
-> 
-> For the sake of coverage, it'd be nice to have a test case like:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/expr.c?h=tmp.perf-tools-next#n257
-> 
->>  {literal}      { return literal(yyscanner, sctx); }
->>  {number}       { return value(yyscanner); }
->>  {symbol}       { return str(yyscanner, ID, sctx->runtime); }
->> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
->> index 65d54a6f29ad..6c93b358cc2d 100644
->> --- a/tools/perf/util/expr.y
->> +++ b/tools/perf/util/expr.y
->> @@ -39,7 +39,7 @@ int expr_lex(YYSTYPE * yylval_param , void *yyscanner);
->>         } ids;
->>  }
->>
->> -%token ID NUMBER MIN MAX IF ELSE LITERAL D_RATIO SOURCE_COUNT HAS_EVENT EXPR_ERROR
->> +%token ID NUMBER MIN MAX IF ELSE LITERAL D_RATIO SOURCE_COUNT HAS_EVENT STRCMP_CPUID_STR EXPR_ERROR
->>  %left MIN MAX IF
->>  %left '|'
->>  %left '^'
->> @@ -207,6 +207,12 @@ expr: NUMBER
->>         $$.ids = NULL;
->>         free($3);
->>  }
->> +| STRCMP_CPUID_STR '(' ID ')'
->> +{
->> +       $$.val = expr__strcmp_cpuid_str(ctx, compute_ids, $3);
->> +       $$.ids = NULL;
->> +       free($3);
->> +}
->>  | expr '|' expr
->>  {
->>         if (is_const($1.val) && is_const($3.val)) {
->> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
->> index d5406effc169..a7f05e4dda97 100644
->> --- a/tools/perf/util/pmu.c
->> +++ b/tools/perf/util/pmu.c
->> @@ -1790,3 +1790,20 @@ void perf_pmu__delete(struct perf_pmu *pmu)
->>         zfree(&pmu->alias_name);
->>         free(pmu);
->>  }
->> +
->> +struct perf_pmu *pmu__find_core_pmu(void)
-> 
-> I think as this is scanning all PMUs it more logically belongs in
-> pmus.c than pmu.c.
-> 
->> +{
->> +       struct perf_pmu *pmu = NULL;
->> +
->> +       while ((pmu = perf_pmus__scan_core(pmu))) {
->> +               /*
->> +                * The cpumap should cover all CPUs. Otherwise, some CPUs may
->> +                * not support some events or have different event IDs.
->> +                */
->> +               if (RC_CHK_ACCESS(pmu->cpus)->nr != cpu__max_cpu().cpu)
-> 
-> The RC_CHK_ACCESS can be avoided using perf_cpu_map__nr.
-> 
-> Not all CPUs need to be online. I think the number for the PMU is
-> bound by the number online while cpu__max_cpu gives the maximum
-> present. It is common to workaround SMT vulnerabilities by making
-> cores offline in which case this would never be true. I think the
-> following is nearly equivalent and simpler:
-> 
-> perf_pmus__num_core_pmus > 1 ? NULL : perf_pmus__scan_core(NULL);
-> 
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index 3a9d4e2513b5..4a370c36a0d5 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -342,7 +342,7 @@ PE_NAME opt_pmu_config
+ 			struct parse_events_error *error = parse_state->error;
+ 			char *help;
+ 
+-			if (asprintf(&help, "Unabled to find PMU or event on a PMU of '%s'", $1) < 0)
++			if (asprintf(&help, "Unable to find PMU or event on a PMU of '%s'", $1) < 0)
+ 				help = NULL;
+ 			parse_events_error__handle(error, @1.first_column,
+ 						   strdup("Bad event or PMU"),
+@@ -368,7 +368,7 @@ PE_NAME sep_dc
+ 		struct parse_events_error *error = parse_state->error;
+ 		char *help;
+ 
+-		if (asprintf(&help, "Unabled to find PMU or event on a PMU of '%s'", $1) < 0)
++		if (asprintf(&help, "Unable to find event on a PMU of '%s'", $1) < 0)
+ 			help = NULL;
+ 		parse_events_error__handle(error, @1.first_column, strdup("Bad event name"), help);
+ 		free($1);
+-- 
+2.42.0.rc2.253.gd59a3bf2b4-goog
 
-I'm not sure about this one, I'm hesitant to change it because I only
-moved it out of the arm file and into the generic one and it seems like
-it could cause subtle issues.
-
-From the comment above the if statement, it seems like it intentionally
-refuses to return a PMU on heterogeneous systems, and the original
-commit message (e126bef55f1d) from John lines up with that too. I can't
-see exactly why it should be like that though.
-
-Although you could say that now I've pulled some Arm specific quirk into
-the generic code and we should re-think it. To me I don't see why it
-doesn't just unconditionally return the first core PMU it finds on any
-architecture, but I'd like to understand the original intention first.
-
-Apart from this one, I've done the other changes and will send patches.
-
-> Thanks,
-> Ian
-> 
->> +                       return NULL;
->> +
->> +               return pmu;
->> +       }
->> +       return NULL;
->> +}
->> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
->> index 6b414cecbad2..7ff925224165 100644
->> --- a/tools/perf/util/pmu.h
->> +++ b/tools/perf/util/pmu.h
->> @@ -289,5 +289,6 @@ int perf_pmu__pathname_fd(int dirfd, const char *pmu_name, const char *filename,
->>  struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char *lookup_name);
->>  struct perf_pmu *perf_pmu__create_placeholder_core_pmu(struct list_head *core_pmus);
->>  void perf_pmu__delete(struct perf_pmu *pmu);
->> +struct perf_pmu *pmu__find_core_pmu(void);
->>
->>  #endif /* __PMU_H */
->> --
->> 2.34.1
->>
