@@ -2,129 +2,111 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6EBC6FA8F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 20:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 490CBC83F01
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 20:29:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237803AbjH3U3e (ORCPT
+        id S239831AbjH3U37 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Aug 2023 16:29:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33314 "EHLO
+        Wed, 30 Aug 2023 16:29:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239988AbjH3U3Q (ORCPT
+        with ESMTP id S240571AbjH3U3Z (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Aug 2023 16:29:16 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32DE12115
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 12:15:23 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1c0d0bf18d7so112585ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 12:15:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1693422833; x=1694027633; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lm34Kk+maPdNp9rFuwAAy5O1fZmlUwsB3d8wqfk31DQ=;
-        b=IxsYCHG6Nk6zGFCs10sEUKXLQOmKVVyVQ++IL8B0eoTETfb5uV095EFJZbdukxk3bV
-         Nrdd9PjRFgVIlEnKBN+y6IzptAHi48g6nnnG2cftWyryt81H/x5z1nz4HbNnj1026ZTv
-         y8SB/aemdYvf0kADl31s2RDKTwyaheiUONXFM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693422833; x=1694027633;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lm34Kk+maPdNp9rFuwAAy5O1fZmlUwsB3d8wqfk31DQ=;
-        b=Mk/Q9fk+yI4oLWI6QQ+cF7hQ72oi8EdsOtlHNpumzTCvC+IS4Y83Bf9/MTGwE8qn1U
-         flNJJ+XvsJdPtueDj8PB257Vs1RJ6GX0BbnxBgEDCo1Sminb+Q4TRtpl7c/Cvny7dA6X
-         jROyahA6MnGJgT4fBYXl3xSCsL7A9fSU5FD2v6sQuo07iK37CqoXPAMSrj5dEkP2Nlvy
-         jnV2GCudXlau4bb2cHKuzK90z5yS4OSYq7I54LNb9b0PnumpIZEEQGNEoNarC09rF+H5
-         t3ATBZPmERY9tk7PdpoIKLUS0l3PKqxiJ83/Y2Ve7nAOlHoqqxb2kMg1lxOzccT1pQKv
-         t/Ow==
-X-Gm-Message-State: AOJu0Yx2hPypcInVNSZdBQl4ZPGIh7v7UQKlHoltQpqb5ruO6NKyralx
-        u5uygbe/T0UhQW75fTqCxHXPUA==
-X-Google-Smtp-Source: AGHT+IEt4V9Q3kKv3ps387mUFelpzuS3AhZ1ooWe7nWHiUV3yMAAUWymDyit8Cg7nWN79LlkVQ4iHQ==
-X-Received: by 2002:a17:902:b18d:b0:1b5:1467:c4e8 with SMTP id s13-20020a170902b18d00b001b51467c4e8mr2658054plr.15.1693422833430;
-        Wed, 30 Aug 2023 12:13:53 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:9d:2:e315:dec6:467c:83c5])
-        by smtp.gmail.com with ESMTPSA id c15-20020a170902d48f00b001bbdf32f011sm11338928plg.269.2023.08.30.12.13.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 12:13:52 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Tomohiro Misono <misono.tomohiro@fujitsu.com>,
-        Stephane Eranian <eranian@google.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <swboyd@chromium.org>, ito-yuichi@fujitsu.com,
-        linux-perf-users@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        D Scott Phillips <scott@os.amperecomputing.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Valentin Schneider <vschneid@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v12 7/7] arm64: smp: Mark IPI globals as __ro_after_init
-Date:   Wed, 30 Aug 2023 12:11:28 -0700
-Message-ID: <20230830121115.v12.7.I625d393afd71e1766ef73d3bfaac0b347a4afd19@changeid>
-X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
-In-Reply-To: <20230830191314.1618136-1-dianders@chromium.org>
-References: <20230830191314.1618136-1-dianders@chromium.org>
+        Wed, 30 Aug 2023 16:29:25 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3405A813B1;
+        Wed, 30 Aug 2023 12:38:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693424298; x=1724960298;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=AJ3HcgOEMdGaxD6ckht/79+NbXli1Xb4U4idLGp5F08=;
+  b=GylPcb34+V5PLcrSZF4T/uzb5Ht4/3x+rqjogAe6jBkt9yMg/iTU6P/A
+   3s839Nh8EuH4Znqe7ywxntb4G5CdtcL6ov8VUHhd4Bv3pa6ljId7u29wF
+   Llq4PpyrjMafIzEeB9YEQnHXTjJ9vbiJpQM0mOIBDPRZGUtCxbWx0EmVJ
+   JF9e1uiKxubY2LUukEkoGOD0RptT1t2hrvEn7R+0scqrC5wP7kbBf11fb
+   Ln2k8gTZbjUKIxcFP5poyoktBrE1+oVNXKbRAEjkVf/kMLXajqmQAF/TD
+   r1WA4b+L0Sa+5aYdvBiEmDZgNTvlp8gOsqjUXE9Uzo4aU4W8CUOVRrQLX
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="365937678"
+X-IronPort-AV: E=Sophos;i="6.02,214,1688454000"; 
+   d="scan'208";a="365937678"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2023 12:35:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="768517898"
+X-IronPort-AV: E=Sophos;i="6.02,214,1688454000"; 
+   d="scan'208";a="768517898"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 30 Aug 2023 12:35:00 -0700
+Received: from [10.212.2.57] (kliang2-mobl1.ccr.corp.intel.com [10.212.2.57])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 41997580C73;
+        Wed, 30 Aug 2023 12:34:58 -0700 (PDT)
+Message-ID: <127766c6-033c-dedb-2c56-7e1e7f8bd01b@linux.intel.com>
+Date:   Wed, 30 Aug 2023 15:34:56 -0400
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH v1 2/3] perf parse-events: Make common term list to strbuf
+ helper
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230830070753.1821629-1-irogers@google.com>
+ <20230830070753.1821629-2-irogers@google.com>
+ <4de84370-29f3-75ed-9c91-330636cdd790@linux.intel.com>
+ <CAP-5=fXMgeER2FkAF2jZOAP0c=sxqhU8scxew6jXQrEYjN_S=Q@mail.gmail.com>
+ <CAP-5=fUXG9tfN2nahiVpBDiggkhmhFiBZYubCSN6vG4voJ_X2A@mail.gmail.com>
+ <b976ef43-25ea-f24a-2c22-0976fafcf0f0@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <b976ef43-25ea-f24a-2c22-0976fafcf0f0@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Mark the three IPI-related globals in smp.c as "__ro_after_init" since
-they are only ever set in set_smp_ipi_range(), which is marked
-"__init". This is a better and more secure marking than the old
-"__read_mostly".
 
-Suggested-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-This patch is almost completely unrelated to the rest of the series
-other than the fact that it would cause a merge conflict with the
-series if sent separately. I tacked it on to this series in response
-to Stephen's feedback on v11 of this series [1]. If someone hates it
-(not sure why they would), it could be dropped. If someone loves it,
-it could be promoted to the start of the series and/or land on its own
-(resolving merge conflicts).
 
-[1] https://lore.kernel.org/r/CAE-0n52iVDgZa8XT8KTMj12c_ESSJt7f7A0fuZ_oAMMqpGcSzA@mail.gmail.com
+On 2023-08-30 2:29 p.m., Liang, Kan wrote:
+>> The problem
+>> is how we encode terms of an event name, it is indistinguishable when
+>> the of the user field is 1. I'll probably add something to fix this
+>> later, but it only impacts debug output and perf list, so I'm not
+>> overly worried. 
+> It should be OK for the debug output.
+>
 
-Changes in v12:
-- ("arm64: smp: Mark IPI globals as __ro_after_init") new for v12.
+Not just the debug output. It also impacts the perf list --detail.
 
- arch/arm64/kernel/smp.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+With the patch,
+perf list --detail | grep uops_retired.heavy -A 2
+  uops_retired.heavy
+       [Retired uops except the last uop of each instruction. Unit:
+cpu_core]
+        cpu_core/event=0xc2,period=0x1e8483,umask/
 
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 1a53e57c81d0..814d9aa93b21 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -84,9 +84,9 @@ enum ipi_msg_type {
- 	MAX_IPI
- };
- 
--static int ipi_irq_base __read_mostly;
--static int nr_ipi __read_mostly = NR_IPI;
--static struct irq_desc *ipi_desc[MAX_IPI] __read_mostly;
-+static int ipi_irq_base __ro_after_init;
-+static int nr_ipi __ro_after_init = NR_IPI;
-+static struct irq_desc *ipi_desc[MAX_IPI] __ro_after_init;
- 
- static void ipi_setup(int cpu);
- 
--- 
-2.42.0.283.g2d96d420d3-goog
+Without the patch,
+perf list --detail | grep uops_retired.heavy -A 2
+  uops_retired.heavy
+       [Retired uops except the last uop of each instruction. Unit:
+cpu_core]
+        cpu_core/event=0xc2,period=0x1e8483,umask=0x1/
+
+Thanks,
+Kan
+
+
 
