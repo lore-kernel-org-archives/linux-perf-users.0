@@ -2,126 +2,111 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A53F5C83F12
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 02:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0359C6FA8F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 02:25:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241677AbjH3CQo convert rfc822-to-8bit (ORCPT
+        id S229844AbjH3CYq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 29 Aug 2023 22:16:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33050 "EHLO
+        Tue, 29 Aug 2023 22:24:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241664AbjH3CQO (ORCPT
+        with ESMTP id S241698AbjH3CYO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 29 Aug 2023 22:16:14 -0400
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB3E01AE;
-        Tue, 29 Aug 2023 19:16:11 -0700 (PDT)
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-792979d4cb5so120508939f.2;
-        Tue, 29 Aug 2023 19:16:11 -0700 (PDT)
+        Tue, 29 Aug 2023 22:24:14 -0400
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF195CD2;
+        Tue, 29 Aug 2023 19:24:10 -0700 (PDT)
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-79266c8617eso179629139f.3;
+        Tue, 29 Aug 2023 19:24:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693361771; x=1693966571;
+        d=1e100.net; s=20221208; t=1693362250; x=1693967050;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CjFi6cUVZY0g7eLFe1AGRgz8trR5f1SXBrW6/YjzboQ=;
-        b=eaDfWgvfkUGvRzGX/Cjzz5eA9kPA/GTGa/hLpou7q4fuoZ9VSx05WCy0AOkgvhVqaY
-         f5W6csjksA4m++UixpG5Glv1gPmRPKtYYZJsK30z7Okbqlzq8YTmBK/lb8v6RWIPfPBL
-         C3SqZyw13lnkxtuPclM5To351+d/PNI6rZJ0VXFHTZ4NZUuLGeEWjkHXk9WUbL58kRW8
-         G70kyiK9EcVUvs4NuGTBwMNND1wD/EZdzPQxa8pF1ILy1fY4B12D0eOATyPnUlmmmmTQ
-         tF0fxgW2rlu8x33eq7BBza4NOPT4Qzj0xLRX1PNFSpktEA1RAi+pVZ/UzYVHoLL2+113
-         ZBrQ==
-X-Gm-Message-State: AOJu0YzhWqS6MLvXx+avQ4oIgofofrYz1COq4yxZsVFIQHwh6XvKtIRT
-        NKVFmsETBJ4151JFEq2ItPjNrqzpHNbCkFqNWAVMwxex
-X-Google-Smtp-Source: AGHT+IFbvE5KcHjMCpNqBiJFqddcYy3/FON1NepXaJumsQXY8SIPlKGArwrU2r+HbgY+nUfnzmwyPhpd4i56oOnioV0=
-X-Received: by 2002:a6b:e317:0:b0:790:9f0c:3069 with SMTP id
- u23-20020a6be317000000b007909f0c3069mr1138122ioc.9.1693361770797; Tue, 29 Aug
- 2023 19:16:10 -0700 (PDT)
+        bh=mstyt0rJV9jATAHbCU7sV0Q1Sdf6cQfb/l6RWW5e8sw=;
+        b=F3RbpGQfUI/v3CPNcvQKAMMjMnyXIqwhu+Zl7oSBm9UAk51gqqXFpi/pSgUXywjaal
+         c3Yn4GFj/209Y5NsMyobpQJVQZfXtb0JpoN2LZWqTW2zcIUqMweghy8mf/8SWuVdVc9K
+         5Xjg5Q3o8B04wgMaZPQK3N7k/NzXQspvSvWQ5j808bpQt8wi0tJbFAIhp9JyUi0EUro+
+         wxc4gJUFSQLby6hMQJ3rZ1iyyEhXqEfkCPPrfD1Wc5rHZCFCaJijqCaxAHXvQwHDV+Lf
+         zaS6dVxWLA5FRLAGBBSOugLuJw+qb3j1GQagdSBKSLvr9dmY7T2OcXWpnY2QuZvzadFG
+         aQpA==
+X-Gm-Message-State: AOJu0Ywic1SV0pwaUCeiu9hotjmP2/GBXd4lvigNNtiWGeskjBp/A7jk
+        1lpYxpbegFVMmC8hNp1eiJb0pGfb5aFD84XYpp8=
+X-Google-Smtp-Source: AGHT+IHnLxqWmkF13kvBfmjhF+wdReYl0t+LQDTGqJAgNHr8lNUsiOCr507OhgX6/BYB8jrMPDh3sSZsuvXf2HsAXhQ=
+X-Received: by 2002:a05:6602:218a:b0:795:fa0:c15 with SMTP id
+ b10-20020a056602218a00b007950fa00c15mr1318108iob.6.1693362250119; Tue, 29 Aug
+ 2023 19:24:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230825152552.112913-1-namhyung@kernel.org> <20230825152552.112913-3-namhyung@kernel.org>
- <150a4c24-6082-cf74-035d-c6cf4dacc46d@intel.com>
-In-Reply-To: <150a4c24-6082-cf74-035d-c6cf4dacc46d@intel.com>
+References: <20230830000545.1638964-1-irogers@google.com>
+In-Reply-To: <20230830000545.1638964-1-irogers@google.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 29 Aug 2023 19:15:58 -0700
-Message-ID: <CAM9d7cg5vaD6zUThLWSpL-j3nXJgs3PK=_ensRw8P0Xye-VcfA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] perf tools: Convert to perf_record_header_attr_id()
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
+Date:   Tue, 29 Aug 2023 19:23:58 -0700
+Message-ID: <CAM9d7ciUho=P8AnSq6inUudw15d8e=epke-XQFkpx5wuDgtikw@mail.gmail.com>
+Subject: Re: [PATCH v1] perf pmu: Avoid uninitialized use of alias->str
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Adrian,
+Hi Ian,
 
-On Mon, Aug 28, 2023 at 12:59 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+On Tue, Aug 29, 2023 at 5:05 PM Ian Rogers <irogers@google.com> wrote:
 >
-> On 25/08/23 18:25, Namhyung Kim wrote:
-> > Instead of accessing the attr.id directly, use the
-> > perf_record_header_attr_id() helper to handle old versions.
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/util/header.c           | 2 +-
-> >  tools/perf/util/session.c          | 4 ++--
-> >  tools/perf/util/synthetic-events.c | 2 +-
-> >  3 files changed, 4 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> > index f89321cbfdee..63967c34157d 100644
-> > --- a/tools/perf/util/header.c
-> > +++ b/tools/perf/util/header.c
-> > @@ -4408,7 +4408,7 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
-> >       if (perf_evsel__alloc_id(&evsel->core, 1, n_ids))
-> >               return -ENOMEM;
-> >
-> > -     ids = (void *)&event->attr.attr + event->attr.attr.size;
-> > +     ids = perf_record_header_attr_id(event);
-> >       for (i = 0; i < n_ids; i++) {
-> >               perf_evlist__id_add(&evlist->core, &evsel->core, 0, i, ids[i]);
-> >       }
-> > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> > index 00d18c74c090..1e9aa8ed15b6 100644
-> > --- a/tools/perf/util/session.c
-> > +++ b/tools/perf/util/session.c
-> > @@ -833,8 +833,8 @@ static void perf_event__hdr_attr_swap(union perf_event *event,
-> >       perf_event__attr_swap(&event->attr.attr);
-> >
-> >       size = event->header.size;
-> > -     size -= (void *)&event->attr.id - (void *)event;
-> > -     mem_bswap_64(event->attr.id, size);
-> > +     size -= perf_record_header_attr_id(event) - (void *)event;
-> > +     mem_bswap_64(perf_record_header_attr_id(event), size);
+> alias is allocated with malloc allowing uninitialized memory to be
+> accessed. The initialization of str was moved late after it could have
+> been updated by a JSON event, however, this create a potential for an
+> uninitialized use. Fix this by assigning str to NULL early. Testing on
+> ARM (Raspberry Pi) showed a memory leak in the same code so add a
+> zfree.
 >
-> Should this and below also be a fix for stable?
+> Fixes: f63a536f03a2 ("perf pmu: Merge JSON events with sysfs at load time")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Then it'd need the perf_record_header_attr_id() change as well.
-Also I'm not sure if it's really needed for stable as it's a pipe output
-(saved to a file though) so very unlikely to have a different endian.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
+
+> ---
+>  tools/perf/util/pmu.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> >  }
-> >
-> >  static void perf_event__event_update_swap(union perf_event *event,
-> > diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-> > index 45714a2785fd..a0579c7d7b9e 100644
-> > --- a/tools/perf/util/synthetic-events.c
-> > +++ b/tools/perf/util/synthetic-events.c
-> > @@ -2145,7 +2145,7 @@ int perf_event__synthesize_attr(struct perf_tool *tool, struct perf_event_attr *
-> >               return -ENOMEM;
-> >
-> >       ev->attr.attr = *attr;
-> > -     memcpy(ev->attr.id, id, ids * sizeof(u64));
-> > +     memcpy(perf_record_header_attr_id(ev), id, ids * sizeof(u64));
-> >
-> >       ev->attr.header.type = PERF_RECORD_HEADER_ATTR;
-> >       ev->attr.header.size = (u16)size;
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index cde33e01959a..b3f8f3f1e900 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -532,6 +532,7 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
+>         if (!alias)
+>                 return -ENOMEM;
+>
+> +       alias->str = NULL;
+>         INIT_LIST_HEAD(&alias->terms);
+>         alias->scale = 1.0;
+>         alias->unit[0] = '\0';
+> @@ -593,6 +594,7 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
+>                         ret += scnprintf(newval + ret, sizeof(newval) - ret,
+>                                          "%s=%s", term->config, term->val.str);
+>         }
+> +       zfree(&alias->str);
+>         alias->str = strdup(newval);
+>         if (!pe)
+>                 pmu->sysfs_aliases++;
+> --
+> 2.42.0.rc2.253.gd59a3bf2b4-goog
 >
