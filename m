@@ -2,111 +2,192 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 490CBC83F01
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 20:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C565C6FA8F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 20:31:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239831AbjH3U37 (ORCPT
+        id S239931AbjH3Ube (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Aug 2023 16:29:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33552 "EHLO
+        Wed, 30 Aug 2023 16:31:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240571AbjH3U3Z (ORCPT
+        with ESMTP id S240077AbjH3UbW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Aug 2023 16:29:25 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3405A813B1;
-        Wed, 30 Aug 2023 12:38:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693424298; x=1724960298;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=AJ3HcgOEMdGaxD6ckht/79+NbXli1Xb4U4idLGp5F08=;
-  b=GylPcb34+V5PLcrSZF4T/uzb5Ht4/3x+rqjogAe6jBkt9yMg/iTU6P/A
-   3s839Nh8EuH4Znqe7ywxntb4G5CdtcL6ov8VUHhd4Bv3pa6ljId7u29wF
-   Llq4PpyrjMafIzEeB9YEQnHXTjJ9vbiJpQM0mOIBDPRZGUtCxbWx0EmVJ
-   JF9e1uiKxubY2LUukEkoGOD0RptT1t2hrvEn7R+0scqrC5wP7kbBf11fb
-   Ln2k8gTZbjUKIxcFP5poyoktBrE1+oVNXKbRAEjkVf/kMLXajqmQAF/TD
-   r1WA4b+L0Sa+5aYdvBiEmDZgNTvlp8gOsqjUXE9Uzo4aU4W8CUOVRrQLX
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="365937678"
-X-IronPort-AV: E=Sophos;i="6.02,214,1688454000"; 
-   d="scan'208";a="365937678"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2023 12:35:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="768517898"
-X-IronPort-AV: E=Sophos;i="6.02,214,1688454000"; 
-   d="scan'208";a="768517898"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 30 Aug 2023 12:35:00 -0700
-Received: from [10.212.2.57] (kliang2-mobl1.ccr.corp.intel.com [10.212.2.57])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 41997580C73;
-        Wed, 30 Aug 2023 12:34:58 -0700 (PDT)
-Message-ID: <127766c6-033c-dedb-2c56-7e1e7f8bd01b@linux.intel.com>
-Date:   Wed, 30 Aug 2023 15:34:56 -0400
+        Wed, 30 Aug 2023 16:31:22 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AB0630E0
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 12:15:30 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1bc8a2f71eeso126475ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 12:15:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1693422829; x=1694027629; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=noX4yZdaLohQeeiEyvyLjmGW8lnsNXNGq5GJE9PggTY=;
+        b=ej6ZlDygJnZHnqUMyb7rvbNQyM2VKu3HHWmEHZt0i8TVXF29NO5x4QuSK6Tl0L16sb
+         zAcmwatPqGf/EV02wqs+3f8dTrlzCYDBw8+8bFrLlL/7yiz2z7jQPH/LoqFCEMW5DgYm
+         t1u/OZsPMhKqfTW5rGu59PdK+6yB9UoIIG2J0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693422829; x=1694027629;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=noX4yZdaLohQeeiEyvyLjmGW8lnsNXNGq5GJE9PggTY=;
+        b=lzCfSR9miur2ejjuSnGaUxh9hXoC0mN1fXejHE0WsK4pK7yzIlO3A9PiwsAnzL7bMl
+         qnXOGvXCa1Cr6wFtQOEfh1XGS0odgFTux16Mn3JT0gRUURuc3G8LslMy/XR2SuQoxb+v
+         S1Z1IJYQXidrOndwlbso+niybaq9ZCvLdzNR4dMWICN8P7hdiBdKVTIzAZD9363cNe1w
+         W7FrZH64eGaPwCIiy/welxJnAgkMSKRhqz1bJRsXCfi2Z9m9fO9rQDhhdCtuh/6d2bSx
+         5021rj8Ugkj0LVX+14JNKSlm8c0dup30OkdbCSuqssU00n64Q/A+SLslADVpKrDB9UOm
+         teqw==
+X-Gm-Message-State: AOJu0YyAowVeOe+f9zeoLxmjVo2h6NswrQo1x4CAUiBA4uXnsjW9TF3D
+        XKyladqSxYLlkfTzZ0J/w/0+ng==
+X-Google-Smtp-Source: AGHT+IGdb5Mb2GxsmI1BOhJNHIBP+oW3B+qOgeklBIYfkq+/l/caGuTOikwQNy7fuKfgn5kIZmdgGA==
+X-Received: by 2002:a17:902:ef93:b0:1b7:e49f:1d with SMTP id iz19-20020a170902ef9300b001b7e49f001dmr3090765plb.62.1693422829677;
+        Wed, 30 Aug 2023 12:13:49 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:9d:2:e315:dec6:467c:83c5])
+        by smtp.gmail.com with ESMTPSA id c15-20020a170902d48f00b001bbdf32f011sm11338928plg.269.2023.08.30.12.13.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Aug 2023 12:13:49 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Tomohiro Misono <misono.tomohiro@fujitsu.com>,
+        Stephane Eranian <eranian@google.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <swboyd@chromium.org>, ito-yuichi@fujitsu.com,
+        linux-perf-users@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        D Scott Phillips <scott@os.amperecomputing.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Valentin Schneider <vschneid@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v12 6/7] arm64: kgdb: Implement kgdb_roundup_cpus() to enable pseudo-NMI roundup
+Date:   Wed, 30 Aug 2023 12:11:27 -0700
+Message-ID: <20230830121115.v12.6.I2ef26d1b3bfbed2d10a281942b0da7d9854de05e@changeid>
+X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
+In-Reply-To: <20230830191314.1618136-1-dianders@chromium.org>
+References: <20230830191314.1618136-1-dianders@chromium.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH v1 2/3] perf parse-events: Make common term list to strbuf
- helper
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230830070753.1821629-1-irogers@google.com>
- <20230830070753.1821629-2-irogers@google.com>
- <4de84370-29f3-75ed-9c91-330636cdd790@linux.intel.com>
- <CAP-5=fXMgeER2FkAF2jZOAP0c=sxqhU8scxew6jXQrEYjN_S=Q@mail.gmail.com>
- <CAP-5=fUXG9tfN2nahiVpBDiggkhmhFiBZYubCSN6vG4voJ_X2A@mail.gmail.com>
- <b976ef43-25ea-f24a-2c22-0976fafcf0f0@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <b976ef43-25ea-f24a-2c22-0976fafcf0f0@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Up until now we've been using the generic (weak) implementation for
+kgdb_roundup_cpus() when using kgdb on arm64. Let's move to a custom
+one. The advantage here is that, when pseudo-NMI is enabled on a
+device, we'll be able to round up CPUs using pseudo-NMI. This allows
+us to debug CPUs that are stuck with interrupts disabled. If
+pseudo-NMIs are not enabled then we'll fallback to just using an IPI,
+which is still slightly better than the generic implementation since
+it avoids the potential situation described in the generic
+kgdb_call_nmi_hook().
 
+Co-developed-by: Sumit Garg <sumit.garg@linaro.org>
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+I debated whether this should be in "arch/arm64/kernel/smp.c" or if I
+should try to find a way for it to go into "arch/arm64/kernel/kgdb.c".
+In the end this is so little code that it didn't seem worth it to find
+a way to export the IPI defines or to otherwise come up with some API
+between kgdb.c and smp.c. If someone has strong feelings and wants
+this to change, please shout and give details of your preferred
+solution.
 
-On 2023-08-30 2:29 p.m., Liang, Kan wrote:
->> The problem
->> is how we encode terms of an event name, it is indistinguishable when
->> the of the user field is 1. I'll probably add something to fix this
->> later, but it only impacts debug output and perf list, so I'm not
->> overly worried. 
-> It should be OK for the debug output.
->
+FWIW, it seems like ~half the other platforms put this in "smp.c" with
+an ifdef for KGDB and the other half put it in "kgdb.c" with an ifdef
+for SMP. :-P
 
-Not just the debug output. It also impacts the perf list --detail.
+(no changes since v10)
 
-With the patch,
-perf list --detail | grep uops_retired.heavy -A 2
-  uops_retired.heavy
-       [Retired uops except the last uop of each instruction. Unit:
-cpu_core]
-        cpu_core/event=0xc2,period=0x1e8483,umask/
+Changes in v10:
+- Don't allocate the cpumask on the stack; just iterate.
+- Moved kgdb calls to smp.c to avoid needing to export IPI info.
+- kgdb now has its own IPI.
 
-Without the patch,
-perf list --detail | grep uops_retired.heavy -A 2
-  uops_retired.heavy
-       [Retired uops except the last uop of each instruction. Unit:
-cpu_core]
-        cpu_core/event=0xc2,period=0x1e8483,umask=0x1/
+Changes in v9:
+- Remove fallback for when debug IPI isn't available.
+- Renamed "NMI IPI" to "debug IPI" since it might not be backed by NMI.
 
-Thanks,
-Kan
+ arch/arm64/kernel/smp.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index 800c59cf9b64..1a53e57c81d0 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -32,6 +32,7 @@
+ #include <linux/irq_work.h>
+ #include <linux/kernel_stat.h>
+ #include <linux/kexec.h>
++#include <linux/kgdb.h>
+ #include <linux/kvm_host.h>
+ #include <linux/nmi.h>
+ 
+@@ -79,6 +80,7 @@ enum ipi_msg_type {
+ 	 * with trace_ipi_*
+ 	 */
+ 	IPI_CPU_BACKTRACE = NR_IPI,
++	IPI_KGDB_ROUNDUP,
+ 	MAX_IPI
+ };
+ 
+@@ -868,6 +870,22 @@ void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
+ 	nmi_trigger_cpumask_backtrace(mask, exclude_cpu, arm64_backtrace_ipi);
+ }
+ 
++#ifdef CONFIG_KGDB
++void kgdb_roundup_cpus(void)
++{
++	int this_cpu = raw_smp_processor_id();
++	int cpu;
++
++	for_each_online_cpu(cpu) {
++		/* No need to roundup ourselves */
++		if (cpu == this_cpu)
++			continue;
++
++		__ipi_send_single(ipi_desc[IPI_KGDB_ROUNDUP], cpu);
++	}
++}
++#endif
++
+ /*
+  * Main handler for inter-processor interrupts
+  */
+@@ -919,6 +937,10 @@ static void do_handle_IPI(int ipinr)
+ 		nmi_cpu_backtrace(get_irq_regs());
+ 		break;
+ 
++	case IPI_KGDB_ROUNDUP:
++		kgdb_nmicallback(cpu, get_irq_regs());
++		break;
++
+ 	default:
+ 		pr_crit("CPU%u: Unknown IPI message 0x%x\n", cpu, ipinr);
+ 		break;
+@@ -949,6 +971,7 @@ static bool ipi_should_be_nmi(enum ipi_msg_type ipi)
+ 	case IPI_CPU_STOP:
+ 	case IPI_CPU_CRASH_STOP:
+ 	case IPI_CPU_BACKTRACE:
++	case IPI_KGDB_ROUNDUP:
+ 		return true;
+ 	default:
+ 		return false;
+-- 
+2.42.0.283.g2d96d420d3-goog
 
