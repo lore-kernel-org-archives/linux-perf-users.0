@@ -2,191 +2,464 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0074C83F1B
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 18:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE54C6FA8F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 18:34:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234042AbjH3Set (ORCPT
+        id S234442AbjH3Sev (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Aug 2023 14:34:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35766 "EHLO
+        Wed, 30 Aug 2023 14:34:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241818AbjH3HIG (ORCPT
+        with ESMTP id S245296AbjH3PFF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Aug 2023 03:08:06 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 394771A6
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 00:08:04 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-58d799aa369so73838427b3.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 00:08:04 -0700 (PDT)
+        Wed, 30 Aug 2023 11:05:05 -0400
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30467AC
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 08:05:02 -0700 (PDT)
+Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-40c72caec5cso349691cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 08:05:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1693379283; x=1693984083; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=q+8JLAKIBIn048cO3B8TYmgEefYduNPXi4aPzlXEsfM=;
-        b=uiy8q8sY8t6J5j4MbQ+/fF/jLis8Fa14Arru3Q/ilXQqhOYb337WLLSbSYc6IggOkc
-         eIE3DhsBFDM4/OOSnVDEbOv4kMJUfD5cfD/ooL8VBm0m9YntuCsesfFXj++DoZbm9OUc
-         9kfnZv5h+taMY0AiLtmOmhnsa/ENcVCzcfFC7ZPdVarfGJ+phddJI9aybwUJEYxEDxM7
-         Lgn0cgz858RaygaeEdFn2nqmbSP8lG3H7ymCR6wRLYhAr6KgXiEVWf7K/3nwNwI88DWF
-         ntI2t86Rrn7IDYxNiMvlzKQUZ63pJWLrAA263p8tcVNvTDCDrxmiUmZQn/wOUJzsdzxc
-         bzZA==
+        d=google.com; s=20221208; t=1693407901; x=1694012701; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bRYvKIT+NMm0FQkbMRIkQEoaTCJBt0v+TWNADtS115I=;
+        b=CuMW3U9uDGqgMd12hkbR7XnCLQiiRfeKCpNzK7Dg5nx7DLfduvXu9fcRh8j7FTohc0
+         UF/eP8RgXUchi4Eoj8sprPEUQVT1lZ6OgIVi2jg/vFugZz6MIbWdm7AtJLl5CQ91izng
+         AOGshDhfEvzTwPYwFZO1G8bnxzEkbKzw6uTP5u4T37ELlZxwqj8v/rf1nMSPFhem7A/d
+         vS+/TIQK8GJ3HBMHYw7hYHqnklLQfRNnFcOYv3UTCAh05PlDVvWfCuiBRG2E/Az12wOA
+         K0WTNPlCRp+wTRiHR/0ugyyhZRSV5MnKb4pXmglb6kCC3HinugUHXJu5UlWPSNTEtwSY
+         Ce/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693379283; x=1693984083;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q+8JLAKIBIn048cO3B8TYmgEefYduNPXi4aPzlXEsfM=;
-        b=VChAmdUHqjQFVlpt4YzcGvkJIikpG0UzKKpt+nQAVqcrFbN24lOqCu5/Jql7zr8Vcy
-         Bt9we6ofVTj3S7q76LaewxzhLeEVb1aAxEadh6ghh9Bhd6qzU3AYZs1NFkCFA6pnTvUD
-         RdL2UzZwo1Mvnr9Vz2cq1b18wk8SkZuh5bQxEc1pBNTODpRT/JLSs+VjT3hRc+1bp9Bm
-         s82rVCoyt5ZBcDnvPDh/Atj2i1hwz0XIMg98ej/9/bH1PkhFVEhcADrVFVTATpDZES5G
-         Up3mXxFmvRSkddhGjleZLYPgSFVF05NLuPZhHMGd4ApYzcoJYSdjev2Lu5qqwOLala99
-         qehw==
-X-Gm-Message-State: AOJu0Yzi/iszI7xdWiutNRnxqgl2IUi/BvaP1y7mKa/XHMsApeNaFwpZ
-        0HAGstJTYval2E5+x1GMbi344i2PtTFy
-X-Google-Smtp-Source: AGHT+IGa4KqrG0JMXUrj92shCnvizPR/jPb6Je3MKgarqiiXASgu8g7j5hN7r28Ca/zboYqjEl/qgeCFNShf
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:d623:3cd7:ecbc:8798])
- (user=irogers job=sendgmr) by 2002:a25:34c3:0:b0:d0e:e780:81b3 with SMTP id
- b186-20020a2534c3000000b00d0ee78081b3mr31760yba.2.1693379283536; Wed, 30 Aug
- 2023 00:08:03 -0700 (PDT)
-Date:   Wed, 30 Aug 2023 00:07:53 -0700
-In-Reply-To: <20230830070753.1821629-1-irogers@google.com>
-Message-Id: <20230830070753.1821629-3-irogers@google.com>
-Mime-Version: 1.0
-References: <20230830070753.1821629-1-irogers@google.com>
-X-Mailer: git-send-email 2.42.0.rc2.253.gd59a3bf2b4-goog
-Subject: [PATCH v1 3/3] perf pmu: Remove str from perf_pmu_alias
+        d=1e100.net; s=20221208; t=1693407901; x=1694012701;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bRYvKIT+NMm0FQkbMRIkQEoaTCJBt0v+TWNADtS115I=;
+        b=hQ6ODL2YtFG+v7+dijdkPq8yT3tjhL9mIQF9loT6kQ/2lXbdwe3SwF29rq3Vdet2Ri
+         YqbzQdRZDzfI0q71mMrdet14UWqMODnhj25nzJ7ArJVdQ5XT+m3vM+desBaDfS2ec9vj
+         U7NfNQi/boWhcl/cybFJynLtU9wTdjJq2WUmvKb+JQ+aGKCQ/Kk8OlG2V9WRb/GJaSQa
+         mpX3iWQP8Wmgskyp38A7+c4eXz958d2/V+7YZf3rmd8s8FEWqXyz6lcYz91H+dB3x+32
+         KtcvbfEpqeIGOmi9CxhKUxHEbaWrpBc+5cjgFBPjz67Ra49mwDviCkXWeytjDXxXB75i
+         JAHw==
+X-Gm-Message-State: AOJu0YwoylK7T8VsbJvru8eGmhuz5qkAX5d557kJbsig9+sLvFBM75Ii
+        GCvD++sDcDNZLrgjn1lVWmT0OJWmpLkide5kwwFN7Q==
+X-Google-Smtp-Source: AGHT+IFKr/8eHU7nx4nhII4SQkmep3KQK2kJ+b6SDkbwn6j19R4ATJMpxOy7XE9WeoP+c7gd9Bg5NWh4eKbEeUQYsY8=
+X-Received: by 2002:ac8:4e4c:0:b0:40e:332b:ba30 with SMTP id
+ e12-20020ac84e4c000000b0040e332bba30mr493825qtw.23.1693407901070; Wed, 30 Aug
+ 2023 08:05:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230830070753.1821629-1-irogers@google.com> <20230830070753.1821629-2-irogers@google.com>
+ <4de84370-29f3-75ed-9c91-330636cdd790@linux.intel.com> <CAP-5=fXMgeER2FkAF2jZOAP0c=sxqhU8scxew6jXQrEYjN_S=Q@mail.gmail.com>
+In-Reply-To: <CAP-5=fXMgeER2FkAF2jZOAP0c=sxqhU8scxew6jXQrEYjN_S=Q@mail.gmail.com>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+Date:   Wed, 30 Aug 2023 08:04:48 -0700
+Message-ID: <CAP-5=fUXG9tfN2nahiVpBDiggkhmhFiBZYubCSN6vG4voJ_X2A@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] perf parse-events: Make common term list to strbuf helper
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
         James Clark <james.clark@arm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Currently the value is only used in perf list. Compute the value just
-when needed to avoid unnecessary overhead. Recycle the strbuf to avoid
-memory allocation overhead.
+On Wed, Aug 30, 2023 at 7:40=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Wed, Aug 30, 2023 at 7:15=E2=80=AFAM Liang, Kan <kan.liang@linux.intel=
+.com> wrote:
+> >
+> >
+> >
+> > On 2023-08-30 3:07 a.m., Ian Rogers wrote:
+> > > A term list is turned into a string for debug output and for the str
+> > > value in the alias. Add a helper to do this based on existing code,
+> > > but then fix for situations like events being identified. Use strbuf
+> > > to manage the dynamic memory allocation and remove the 256 byte
+> > > limit. Use in various places the string of the term list is required.
+> > >
+> > > Before:
+> > > ```
+> > > $ sudo perf stat -vv -e inst_retired.any true
+> > > Using CPUID GenuineIntel-6-8D-1
+> > > intel_pt default config: tsc,mtc,mtc_period=3D3,psb_period=3D3,pt,bra=
+nch
+> > > Attempting to add event pmu 'cpu' with 'inst_retired.any,' that may r=
+esult in non-fatal errors
+> > > After aliases, add event pmu 'cpu' with 'event,period,' that may resu=
+lt in non-fatal errors
+> > > inst_retired.any -> cpu/inst_retired.any/
+> > > ...
+> > > ```
+> > >
+> > > After:
+> > > ```
+> > > $ sudo perf stat -vv -e inst_retired.any true
+> > > Using CPUID GenuineIntel-6-8D-1
+> > > intel_pt default config: tsc,mtc,mtc_period=3D3,psb_period=3D3,pt,bra=
+nch
+> > > Attempt to add: cpu/inst_retired.any/
+> > > ..after resolving event: cpu/event=3D0xc0,period=3D0x1e8483/
+> > > inst_retired.any -> cpu/event=3D0xc0,period=3D0x1e8483/
+> > > ...
+> > > ```
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/perf/util/parse-events.c | 101 ++++++++++++++++++++++++-------=
+--
+> > >  tools/perf/util/parse-events.h |   2 +
+> > >  tools/perf/util/pmu.c          |  19 ++-----
+> > >  3 files changed, 81 insertions(+), 41 deletions(-)
+> >
+> > Which branch should I use to apply the patch?
+> > I tried the perf-tools-next branch, but there is some conflict.
+> > I'd like to do some tests on a hybrid machine.
+>
+> I was working on tmp.perf-tools-next but it is the same as
+> perf-tools-next currently [1]. I had this 2 line patch in place:
+> https://lore.kernel.org/lkml/20230830000545.1638964-1-irogers@google.com/
+> so that may be the conflict.
+>
+> Thanks,
+> Ian
+>
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/log/?h=3Dtmp.perf-tools-next
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/pmu.c | 33 ++++++++++-----------------------
- 1 file changed, 10 insertions(+), 23 deletions(-)
+Hmm.. for some reason I'm not seeing the message on LKML and so b4
+fails. Anyway, applying the patches and running on an Alderlake I see:
+```
+$ perf stat -vv -e inst_retired.any true
+Using CPUID GenuineIntel-6-97-2
+Attempt to add: cpu_atom/inst_retired.any/
+..after resolving event: cpu_atom/event=3D0xc0,period=3D0x1e8483/
+inst_retired.any -> cpu_atom/event=3D0xc0,period=3D0x1e8483/
+Attempt to add: cpu_core/inst_retired.any/
+..after resolving event: cpu_core/event=3D0xc0,period=3D0x1e8483/
+inst_retired.any -> cpu_core/event=3D0xc0,period=3D0x1e8483/
+...
+```
+The previous output was like:
+```
+$ perf stat -vv -e inst_retired.any true
+Using CPUID GenuineIntel-6-97-2
+Attempting to add event pmu 'cpu_core' with 'inst_retired.any,' that
+may result in non-fatal errors
+After aliases, add event pmu 'cpu_core' with 'event,period,' that may
+result in non-fatal errors
+inst_retired.any -> cpu_core/event=3D0xc0,period=3D0x1e8483/
+Attempting to add event pmu 'cpu_atom' with 'inst_retired.any,' that
+may result in non-fatal errors
+After aliases, add event pmu 'cpu_atom' with 'event,period,' that may
+result in non-fatal errors
+inst_retired.any -> cpu_atom/event=3D0xc0,period=3D0x1e8483/
+...
+```
+Perhaps a more interesting example is:
+```
+$ perf stat -vv -e UOPS_RETIRED.MS true
+Using CPUID GenuineIntel-6-97-2
+Attempt to add: cpu_atom/UOPS_RETIRED.MS/
+..after resolving event: cpu_atom/event=3D0xc2,period=3D0x1e8483,umask/
+UOPS_RETIRED.MS -> cpu_atom/event=3D0xc2,period=3D0x1e8483,umask/
+Attempt to add: cpu_core/UOPS_RETIRED.MS/
+..after resolving event:
+cpu_core/event=3D0xc2,period=3D0x1e8483,umask=3D0x4,frontend=3D0x8/
+UOPS_RETIRED.MS -> cpu_core/event=3D0xc2,period=3D0x1e8483,umask=3D0x4,fron=
+tend=3D0x8/
+...
+```
+The umask not being printed for the cpu_atom is an issue. The problem
+is how we encode terms of an event name, it is indistinguishable when
+the of the user field is 1. I'll probably add something to fix this
+later, but it only impacts debug output and perf list, so I'm not
+overly worried. We could go in the other direction and instead of
+printing say cpu_atom/UOPS_RETIRED.MS/ print
+cpu_atom/UOPS_RETIRED.MS=3D1/, but I thought that was uglier and more
+confusing.
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 8dbb7008877e..152cda84f273 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -51,11 +51,6 @@ struct perf_pmu_alias {
- 	 * json events.
- 	 */
- 	char *topic;
--	/**
--	 * @str: Comma separated parameter list like
--	 * "event=0xcd,umask=0x1,ldlat=0x3".
--	 */
--	char *str;
- 	/** @terms: Owned list of the original parsed parameters. */
- 	struct list_head terms;
- 	/** @list: List element of struct perf_pmu aliases. */
-@@ -408,7 +403,6 @@ static void perf_pmu_free_alias(struct perf_pmu_alias *newalias)
- 	zfree(&newalias->desc);
- 	zfree(&newalias->long_desc);
- 	zfree(&newalias->topic);
--	zfree(&newalias->str);
- 	zfree(&newalias->pmu_name);
- 	parse_events_terms__purge(&newalias->terms);
- 	free(newalias);
-@@ -489,7 +483,7 @@ static int update_alias(const struct pmu_event *pe,
- 	assign_str(pe->name, "long_desc", &data->alias->long_desc, pe->long_desc);
- 	assign_str(pe->name, "topic", &data->alias->topic, pe->topic);
- 	data->alias->per_pkg = pe->perpkg;
--	if (assign_str(pe->name, "value", &data->alias->str, pe->event)) {
-+	if (pe->event) {
- 		parse_events_terms__purge(&data->alias->terms);
- 		ret = parse_events_terms(&data->alias->terms, pe->event, /*input=*/NULL);
- 	}
-@@ -511,7 +505,6 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
- 	int ret;
- 	const char *long_desc = NULL, *topic = NULL, *unit = NULL, *pmu_name = NULL;
- 	bool deprecated = false, perpkg = false;
--	struct strbuf sb;
- 
- 	if (perf_pmu__find_alias(pmu, name, /*load=*/ false)) {
- 		/* Alias was already created/loaded. */
-@@ -531,7 +524,6 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
- 	if (!alias)
- 		return -ENOMEM;
- 
--	alias->str = NULL;
- 	INIT_LIST_HEAD(&alias->terms);
- 	alias->scale = 1.0;
- 	alias->unit[0] = '\0';
-@@ -574,17 +566,6 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
- 		}
- 	}
- 
--	/* Scan event and remove leading zeroes, spaces, newlines, some
--	 * platforms have terms specified as
--	 * event=0x0091 (read from files ../<PMU>/events/<FILE>
--	 * and terms specified as event=0x91 (read from JSON files).
--	 *
--	 * Rebuild string to make alias->str member comparable.
--	 */
--	zfree(&alias->str);
--	strbuf_init(&sb, /*hint=*/ 0);
--	parse_events_term__to_strbuf(&alias->terms, &sb);
--	alias->str = strbuf_detach(&sb, /*sz=*/ NULL);
- 	if (!pe)
- 		pmu->sysfs_aliases++;
- 	else
-@@ -1682,7 +1663,9 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
- 		.pmu = pmu,
- 	};
- 	int ret = 0;
-+	struct strbuf sb;
- 
-+	strbuf_init(&sb, /*hint=*/ 0);
- 	pmu_add_cpu_aliases(pmu);
- 	list_for_each_entry(event, &pmu->aliases, list) {
- 		size_t buf_used;
-@@ -1710,14 +1693,16 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
- 		info.desc = event->desc;
- 		info.long_desc = event->long_desc;
- 		info.encoding_desc = buf + buf_used;
-+		parse_events_term__to_strbuf(&event->terms, &sb);
- 		buf_used += snprintf(buf + buf_used, sizeof(buf) - buf_used,
--				"%s/%s/", info.pmu_name, event->str) + 1;
-+				"%s/%s/", info.pmu_name, sb.buf) + 1;
- 		info.topic = event->topic;
--		info.str = event->str;
-+		info.str = sb.buf;
- 		info.deprecated = event->deprecated;
- 		ret = cb(state, &info);
- 		if (ret)
--			return ret;
-+			goto out;
-+		strbuf_setlen(&sb, /*len=*/ 0);
- 	}
- 	if (pmu->selectable) {
- 		info.name = buf;
-@@ -1732,6 +1717,8 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
- 		info.deprecated = false;
- 		ret = cb(state, &info);
- 	}
-+out:
-+	strbuf_release(&sb);
- 	return ret;
- }
- 
--- 
-2.42.0.rc2.253.gd59a3bf2b4-goog
+Thanks,
+Ian
 
+> > Thanks,
+> > Kan
+> > >
+> > > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-e=
+vents.c
+> > > index 4c812fbe0cf9..0b941b58bdc0 100644
+> > > --- a/tools/perf/util/parse-events.c
+> > > +++ b/tools/perf/util/parse-events.c
+> > > @@ -13,7 +13,7 @@
+> > >  #include <subcmd/parse-options.h>
+> > >  #include "parse-events.h"
+> > >  #include "string2.h"
+> > > -#include "strlist.h"
+> > > +#include "strbuf.h"
+> > >  #include "debug.h"
+> > >  #include <api/fs/tracing_path.h>
+> > >  #include <perf/cpumap.h>
+> > > @@ -1303,19 +1303,6 @@ int parse_events_add_pmu(struct parse_events_s=
+tate *parse_state,
+> > >
+> > >       pmu =3D parse_state->fake_pmu ?: perf_pmus__find(name);
+> > >
+> > > -     if (verbose > 1 && !(pmu && pmu->selectable)) {
+> > > -             fprintf(stderr, "Attempting to add event pmu '%s' with =
+'",
+> > > -                     name);
+> > > -             if (head_config) {
+> > > -                     struct parse_events_term *term;
+> > > -
+> > > -                     list_for_each_entry(term, head_config, list) {
+> > > -                             fprintf(stderr, "%s,", term->config);
+> > > -                     }
+> > > -             }
+> > > -             fprintf(stderr, "' that may result in non-fatal errors\=
+n");
+> > > -     }
+> > > -
+> > >       if (!pmu) {
+> > >               char *err_str;
+> > >
+> > > @@ -1325,6 +1312,21 @@ int parse_events_add_pmu(struct parse_events_s=
+tate *parse_state,
+> > >                       parse_events_error__handle(err, loc->first_colu=
+mn, err_str, NULL);
+> > >               return -EINVAL;
+> > >       }
+> > > +
+> > > +     if (verbose > 1) {
+> > > +             struct strbuf sb;
+> > > +
+> > > +             strbuf_init(&sb, /*hint=3D*/ 0);
+> > > +             if (pmu->selectable && !head_config) {
+> > > +                     strbuf_addf(&sb, "%s//", name);
+> > > +             } else {
+> > > +                     strbuf_addf(&sb, "%s/", name);
+> > > +                     parse_events_term__to_strbuf(head_config, &sb);
+> > > +                     strbuf_addch(&sb, '/');
+> > > +             }
+> > > +             fprintf(stderr, "Attempt to add: %s\n", sb.buf);
+> > > +             strbuf_release(&sb);
+> > > +     }
+> > >       if (head_config)
+> > >               fix_raw(head_config, pmu);
+> > >
+> > > @@ -1349,16 +1351,12 @@ int parse_events_add_pmu(struct parse_events_=
+state *parse_state,
+> > >               return -EINVAL;
+> > >
+> > >       if (verbose > 1) {
+> > > -             fprintf(stderr, "After aliases, add event pmu '%s' with=
+ '",
+> > > -                     name);
+> > > -             if (head_config) {
+> > > -                     struct parse_events_term *term;
+> > > +             struct strbuf sb;
+> > >
+> > > -                     list_for_each_entry(term, head_config, list) {
+> > > -                             fprintf(stderr, "%s,", term->config);
+> > > -                     }
+> > > -             }
+> > > -             fprintf(stderr, "' that may result in non-fatal errors\=
+n");
+> > > +             strbuf_init(&sb, /*hint=3D*/ 0);
+> > > +             parse_events_term__to_strbuf(head_config, &sb);
+> > > +             fprintf(stderr, "..after resolving event: %s/%s/\n", na=
+me, sb.buf);
+> > > +             strbuf_release(&sb);
+> > >       }
+> > >
+> > >       /*
+> > > @@ -1460,7 +1458,12 @@ int parse_events_multi_pmu_add(struct parse_ev=
+ents_state *parse_state,
+> > >               parse_events_copy_term_list(head, &orig_head);
+> > >               if (!parse_events_add_pmu(parse_state, list, pmu->name,
+> > >                                         orig_head, auto_merge_stats, =
+loc)) {
+> > > -                     pr_debug("%s -> %s/%s/\n", str, pmu->name, str)=
+;
+> > > +                     struct strbuf sb;
+> > > +
+> > > +                     strbuf_init(&sb, /*hint=3D*/ 0);
+> > > +                     parse_events_term__to_strbuf(orig_head, &sb);
+> > > +                     pr_debug("%s -> %s/%s/\n", str, pmu->name, sb.b=
+uf);
+> > > +                     strbuf_release(&sb);
+> > >                       ok++;
+> > >               }
+> > >               parse_events_terms__delete(orig_head);
+> > > @@ -1469,7 +1472,12 @@ int parse_events_multi_pmu_add(struct parse_ev=
+ents_state *parse_state,
+> > >       if (parse_state->fake_pmu) {
+> > >               if (!parse_events_add_pmu(parse_state, list, str, head,
+> > >                                         /*auto_merge_stats=3D*/true, =
+loc)) {
+> > > -                     pr_debug("%s -> %s/%s/\n", str, "fake_pmu", str=
+);
+> > > +                     struct strbuf sb;
+> > > +
+> > > +                     strbuf_init(&sb, /*hint=3D*/ 0);
+> > > +                     parse_events_term__to_strbuf(head, &sb);
+> > > +                     pr_debug("%s -> %s/%s/\n", str, "fake_pmu", sb.=
+buf);
+> > > +                     strbuf_release(&sb);
+> > >                       ok++;
+> > >               }
+> > >       }
+> > > @@ -2085,7 +2093,7 @@ void parse_events_error__handle(struct parse_ev=
+ents_error *err, int idx,
+> > >               break;
+> > >       default:
+> > >               pr_debug("Multiple errors dropping message: %s (%s)\n",
+> > > -                     err->str, err->help);
+> > > +                     err->str, err->help ?: "<no help>");
+> > >               free(err->str);
+> > >               err->str =3D str;
+> > >               free(err->help);
+> > > @@ -2502,6 +2510,47 @@ void parse_events_terms__delete(struct list_he=
+ad *terms)
+> > >       free(terms);
+> > >  }
+> > >
+> > > +int parse_events_term__to_strbuf(struct list_head *term_list, struct=
+ strbuf *sb)
+> > > +{
+> > > +     struct parse_events_term *term;
+> > > +     bool first =3D true;
+> > > +
+> > > +     if (!term_list)
+> > > +             return 0;
+> > > +
+> > > +     list_for_each_entry(term, term_list, list) {
+> > > +             int ret;
+> > > +
+> > > +             if (!first) {
+> > > +                     ret =3D strbuf_addch(sb, ',');
+> > > +                     if (ret < 0)
+> > > +                             return ret;
+> > > +             }
+> > > +             first =3D false;
+> > > +
+> > > +             if (term->type_val =3D=3D PARSE_EVENTS__TERM_TYPE_NUM)
+> > > +                     if (term->type_term =3D=3D PARSE_EVENTS__TERM_T=
+YPE_USER && term->val.num =3D=3D 1)
+> > > +                             ret =3D strbuf_addf(sb, "%s", term->con=
+fig);
+> > > +                     else
+> > > +                             ret =3D strbuf_addf(sb, "%s=3D%#"PRIx64=
+, term->config, term->val.num);
+> > > +             else if (term->type_val =3D=3D PARSE_EVENTS__TERM_TYPE_=
+STR) {
+> > > +                     if (term->config) {
+> > > +                             ret =3D strbuf_addf(sb, "%s=3D", term->=
+config);
+> > > +                             if (ret < 0)
+> > > +                                     return ret;
+> > > +                     } else if (term->type_term < __PARSE_EVENTS__TE=
+RM_TYPE_NR) {
+> > > +                             ret =3D strbuf_addf(sb, "%s=3D", config=
+_term_names[term->type_term]);
+> > > +                             if (ret < 0)
+> > > +                                     return ret;
+> > > +                     }
+> > > +                     ret =3D strbuf_addf(sb, "%s", term->val.str);
+> > > +             }
+> > > +             if (ret < 0)
+> > > +                     return ret;
+> > > +     }
+> > > +     return 0;
+> > > +}
+> > > +
+> > >  void parse_events_evlist_error(struct parse_events_state *parse_stat=
+e,
+> > >                              int idx, const char *str)
+> > >  {
+> > > diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-e=
+vents.h
+> > > index 6d75d853ce00..20bdc35d6112 100644
+> > > --- a/tools/perf/util/parse-events.h
+> > > +++ b/tools/perf/util/parse-events.h
+> > > @@ -18,6 +18,7 @@ struct parse_events_error;
+> > >
+> > >  struct option;
+> > >  struct perf_pmu;
+> > > +struct strbuf;
+> > >
+> > >  const char *event_type(int type);
+> > >
+> > > @@ -152,6 +153,7 @@ int parse_events_term__clone(struct parse_events_=
+term **new,
+> > >  void parse_events_term__delete(struct parse_events_term *term);
+> > >  void parse_events_terms__delete(struct list_head *terms);
+> > >  void parse_events_terms__purge(struct list_head *terms);
+> > > +int parse_events_term__to_strbuf(struct list_head *term_list, struct=
+ strbuf *sb);
+> > >  int parse_events__modifier_event(struct list_head *list, char *str, =
+bool add);
+> > >  int parse_events__modifier_group(struct list_head *list, char *event=
+_mod);
+> > >  int parse_events_name(struct list_head *list, const char *name);
+> > > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> > > index b3f8f3f1e900..8dbb7008877e 100644
+> > > --- a/tools/perf/util/pmu.c
+> > > +++ b/tools/perf/util/pmu.c
+> > > @@ -507,12 +507,11 @@ static int perf_pmu__new_alias(struct perf_pmu =
+*pmu, const char *name,
+> > >                               const char *desc, const char *val, FILE=
+ *val_fd,
+> > >                               const struct pmu_event *pe)
+> > >  {
+> > > -     struct parse_events_term *term;
+> > >       struct perf_pmu_alias *alias;
+> > >       int ret;
+> > > -     char newval[256];
+> > >       const char *long_desc =3D NULL, *topic =3D NULL, *unit =3D NULL=
+, *pmu_name =3D NULL;
+> > >       bool deprecated =3D false, perpkg =3D false;
+> > > +     struct strbuf sb;
+> > >
+> > >       if (perf_pmu__find_alias(pmu, name, /*load=3D*/ false)) {
+> > >               /* Alias was already created/loaded. */
+> > > @@ -582,20 +581,10 @@ static int perf_pmu__new_alias(struct perf_pmu =
+*pmu, const char *name,
+> > >        *
+> > >        * Rebuild string to make alias->str member comparable.
+> > >        */
+> > > -     ret =3D 0;
+> > > -     list_for_each_entry(term, &alias->terms, list) {
+> > > -             if (ret)
+> > > -                     ret +=3D scnprintf(newval + ret, sizeof(newval)=
+ - ret,
+> > > -                                      ",");
+> > > -             if (term->type_val =3D=3D PARSE_EVENTS__TERM_TYPE_NUM)
+> > > -                     ret +=3D scnprintf(newval + ret, sizeof(newval)=
+ - ret,
+> > > -                                      "%s=3D%#x", term->config, term=
+->val.num);
+> > > -             else if (term->type_val =3D=3D PARSE_EVENTS__TERM_TYPE_=
+STR)
+> > > -                     ret +=3D scnprintf(newval + ret, sizeof(newval)=
+ - ret,
+> > > -                                      "%s=3D%s", term->config, term-=
+>val.str);
+> > > -     }
+> > >       zfree(&alias->str);
+> > > -     alias->str =3D strdup(newval);
+> > > +     strbuf_init(&sb, /*hint=3D*/ 0);
+> > > +     parse_events_term__to_strbuf(&alias->terms, &sb);
+> > > +     alias->str =3D strbuf_detach(&sb, /*sz=3D*/ NULL);
+> > >       if (!pe)
+> > >               pmu->sysfs_aliases++;
+> > >       else
