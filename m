@@ -2,344 +2,210 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8069FC83F1E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 18:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F07C83F01
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 19:03:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230133AbjH3SfL (ORCPT
+        id S234005AbjH3S7E (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Aug 2023 14:35:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37978 "EHLO
+        Wed, 30 Aug 2023 14:59:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244982AbjH3OPs (ORCPT
+        with ESMTP id S243151AbjH3SqU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Aug 2023 10:15:48 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24880122;
-        Wed, 30 Aug 2023 07:15:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693404942; x=1724940942;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=9nUsW9E756XKH/ZqO1z7yXlVxgWZzxBiBpaF8uclgFg=;
-  b=DunAO0krIXvY6VN1VojUmTvRU/W8gUyGm2VWI755G4BIcF46yNbrNe6k
-   uAn+KndoPkqTOtsmfIE7WxgO00F2rLNsV1yQYWeYufd5rKHcyow7XohEz
-   dp9z8YBWSrULCNqICBtllkHZHfJVgat/UYIqA5BSWhUt5qgGTBGlcir9w
-   Iyu8earbprqu7wTA74ryeg3HXLvb9AhkhDUkcpsMb8eFg5u4BmHf5PmCJ
-   TeHaC3TN/sj9Z/IyoEJ9NDLW3xECwoELqmbsUSj0Oeq6XwBukmhH9eW7y
-   mgeMi1pbIjs790jc3yzzp7XNloVKIhcFyGglHrKz2oSQu28WkwtVo2Uk8
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="365858269"
-X-IronPort-AV: E=Sophos;i="6.02,213,1688454000"; 
-   d="scan'208";a="365858269"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2023 07:11:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="985755279"
-X-IronPort-AV: E=Sophos;i="6.02,213,1688454000"; 
-   d="scan'208";a="985755279"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 30 Aug 2023 07:11:14 -0700
-Received: from [10.213.187.192] (kliang2-mobl1.ccr.corp.intel.com [10.213.187.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 4F3F2580C73;
-        Wed, 30 Aug 2023 07:11:13 -0700 (PDT)
-Message-ID: <4de84370-29f3-75ed-9c91-330636cdd790@linux.intel.com>
-Date:   Wed, 30 Aug 2023 10:11:11 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH v1 2/3] perf parse-events: Make common term list to strbuf
- helper
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
+        Wed, 30 Aug 2023 14:46:20 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on20717.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe5a::717])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A52810FF;
+        Wed, 30 Aug 2023 11:44:39 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bWo5iL27JgXkE/N1TcdMKa90qsDHvFiMS/UjMz1vJh0R3Jt5WtdptwFmOu80dZkxQ6ISzufdhc4l7xdNJi+aiiF7fUCqYkhIzYc5WnITWQBMroGdjpJjSPxT1OH4l41ISO4nCztanqGFAdfHTHDUdrM8saW5K1cYYt7hRw+KmVQTyHsxMb2PDAxF0//WAxCmCKV99jx5hkyNs824dcIkzgZCP/170RzT9gosFpOuXbmogMYjrR3+iPDkIxxmLEgYyRiKCmIxDWzh9kZOaUoozVISkqDQzBgGwP48LgNerzPsK5YBEJ952a06nUb6Fb1hkeakMt2WkCD9vFYvPdRQ5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VY5rr4fRuR/W2E4IDh55cQDh8mYna2XnENKF1qQd2ho=;
+ b=DET0hJf8oSzQIjJPJJ81RU/zVIzovHtpvXUKcySN67dVsjOUE64cE5Iu1rY6DXMapVsRESbNg+qf/acbNfTrc/+OG2E7xnsZy4QljwXMcfJoJSjxjqOJUldTyz+6E8qNFP7FNcY4v/iCdcjmE2QXIM3tY58pKAYOfctHtvhhIZAzrMND39IHi3Fks3oFt99615YkgP72LxYdLGqimabxF8e7ftv6xaHRzKR8kByUnvkeQglwwpngBR+pfCY8sfIdfP4fs5ksX5mhrvhMneeJBTbEp8iwa4PVHYlqFDOmlBs8P3U3up8e9X1Iwr30moXzr/Ayjq0gy2vyqruIue1hBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VY5rr4fRuR/W2E4IDh55cQDh8mYna2XnENKF1qQd2ho=;
+ b=N9QgHv9/XQ4NdT3NOlJynXFRe61XG/hR4k/d16nFvq+YyqdS/mDUqjSo9mciAr7tR45a1lyZvkQmqGNlmdeLIkqhqZmbjOOpkYeE1V+4VvtW4qLbduoRuifsbQBkM4n83zEOqPmEHN3ibugypaUPkDsQ3B4gweu6fB+9dGd4CqE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from DM5PR0102MB3590.prod.exchangelabs.com (2603:10b6:4:a4::25) by
+ LV2PR01MB7599.prod.exchangelabs.com (2603:10b6:408:177::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6745.18; Wed, 30 Aug 2023 18:43:04 +0000
+Received: from DM5PR0102MB3590.prod.exchangelabs.com
+ ([fe80::bfa4:8250:f526:5015]) by DM5PR0102MB3590.prod.exchangelabs.com
+ ([fe80::bfa4:8250:f526:5015%6]) with mapi id 15.20.6745.020; Wed, 30 Aug 2023
+ 18:43:04 +0000
+Date:   Wed, 30 Aug 2023 11:42:47 -0700 (PDT)
+From:   Ilkka Koskinen <ilkka@os.amperecomputing.com>
+To:     James Clark <james.clark@arm.com>
+cc:     Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230830070753.1821629-1-irogers@google.com>
- <20230830070753.1821629-2-irogers@google.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20230830070753.1821629-2-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Kleikamp <dave.kleikamp@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2] perf vendor events arm64: Add AmpereOne metrics
+In-Reply-To: <1299e1ff-2543-6ee5-dc32-bc098bd6bfe1@arm.com>
+Message-ID: <e674954c-dc8-d961-8ff1-ebcde95813b7@os.amperecomputing.com>
+References: <20230826192352.3043220-1-ilkka@os.amperecomputing.com> <1299e1ff-2543-6ee5-dc32-bc098bd6bfe1@arm.com>
+Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-ClientProxiedBy: CH0PR03CA0025.namprd03.prod.outlook.com
+ (2603:10b6:610:b0::30) To DM5PR0102MB3590.prod.exchangelabs.com
+ (2603:10b6:4:a4::25)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM5PR0102MB3590:EE_|LV2PR01MB7599:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9d3f433d-2f1b-457b-3f18-08dba988f1aa
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: SisURiHUjzoTy/DdXAN5z/+7I6Cs0HXuJWyBWkObtvnbIZpmGi10t1e3zpQjgXFG7PMfpBybxrfRYUSx3vlykUyQvK4ZG44f+fhO+3fjR/l204DEs9hrIruXPNYxE/bnlN+L7qoCW+gpZwloHeCqKlD4jGMY7uKRGMUOWS5ZAO9Vy/egbjXHfNvL7egXih2srmqICKc60Pho+gaDubs8diPKxEHVstwNwqBX/C3BYC0ldfki50JxlqtJ8wZqEC/jMS9Na9DSxbFLHnWI0ZEavTDZcqTqsa8PAKPaJyYL7s6iDgzLC/EemIriKbQ0iY4aB92pZHoh+/xxz3G50yYpWk7/9s4LDf6Fbad02OK6B3pneqk+o7NG55Z9meC6Cra+pNFEmQeiZGeN+SbrFMtvjw2KkOAGtKjwMP4WfVdtZD65yUkFNcY/Eez8CA9DLqaxF8F5osBpXPxpKdiomKmsikT6JhrCOhqzhjWbSKehElOD4ywM91e2Yul8Yp13+lA+isd1ZDS2BcEPFAHRZ8JQ6tk5ATL0fAN+TCkP5RMJ9YOnZQpcecDyjBnIDt1EVRzExu552JMrl3Y/IsfjQzwt8NHqnLUtI0pCzmEkWUpZ/9cYy7MqdoY1hT9ZgO2yiKeG
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR0102MB3590.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(39850400004)(396003)(136003)(346002)(366004)(376002)(186009)(451199024)(1800799009)(2906002)(7416002)(54906003)(66556008)(66476007)(6916009)(66946007)(316002)(41300700001)(8936002)(4326008)(8676002)(5660300002)(53546011)(6506007)(38350700002)(2616005)(52116002)(6486002)(6512007)(38100700002)(86362001)(478600001)(26005)(6666004)(83380400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?NN39IHBb4NQFFIP518DWfinyFtuQ1PdXIPQdQHsSZsrYGEP12C/WJw3si/T7?=
+ =?us-ascii?Q?kG9+ltaHFL2JDLzQA/RcnvKwsHrpc32NWmLEBOsRenz49zzaOBL48ByBq9zy?=
+ =?us-ascii?Q?SAanT5P0hw1iuQ9DrOClaCVUwqFBBtcH86bq+VnOCzF2YvT9rwN3NjMbiDvL?=
+ =?us-ascii?Q?9kQ1TBLeXXnPv3tG+IHx4G9oMzgRPXlZ5w2/NF8ARsDimGTJw6boFQyzWbrE?=
+ =?us-ascii?Q?u3U/xV+I7q3UG8+TyhF4VkMECDZk57zoZxB6HuyJcVLQyRM8JK0HutjeZQ1V?=
+ =?us-ascii?Q?QMOudY2oh33XSQXNdzs+4DGaNzltGxbKRfxS6ywsvjY0A7xNg51HHKJEHXvy?=
+ =?us-ascii?Q?weWxaMr1hjVDaE/Zuzm3bVPKSY3XkUhTyZHqohUqCsdh4sU9q5IlhHhHjdYL?=
+ =?us-ascii?Q?83CmgXl+o7fh+tDq6gDYW/txCp86cFf9tg/aQCFxyvKxLvn6fDTX0+E9Aj7z?=
+ =?us-ascii?Q?HenZM4R/ngr+PcqYkWaVzTTUPpxPRTYEHff1osl/pl4shPFKRnhoXb3lq3Dx?=
+ =?us-ascii?Q?UKJjsMPiFu7mgXkq8CyuX9QN09L1rJGDalhhrF7uKYmx73Ee+hnhtg6glyaH?=
+ =?us-ascii?Q?M74uqalm5oomMNPfFpMTnL8HzTATpTD7s6UAIsavDa0vpK0m192P4VhcP3NF?=
+ =?us-ascii?Q?Yj21b1V2gcrS22tKxQB26j3vpiiP4qsZHE+9P2CsS/pbCmnYn3dw80yYSsXz?=
+ =?us-ascii?Q?T6zr0RwJOPDriivt5vxpHceqsXwoajn1eix/tsfiPpErmhZnu9c6aG76TpCz?=
+ =?us-ascii?Q?/JbAV34UZ/u4sasj5LStLzqF5+LncdA0qVnduFwyf9gyTdQs8h9G6BLSfaHR?=
+ =?us-ascii?Q?BHbRHC4BwcdDm2JLyBahwtoVaEUvy8ip3VvW26lpfL268h0cMSTMtIkRoUmF?=
+ =?us-ascii?Q?ueT7pg+TsHX9P2dScgpaGLH+4PF8NiiTf3bfh81kb8QS8OGPGcyON6ROv6/x?=
+ =?us-ascii?Q?kQqTGKtHjiVtGrQUIwPu4VsthMjw4A3ZiSaMJANfbIkI+EkUeLa36iJ5+8jd?=
+ =?us-ascii?Q?Q0sC7oJYJE09LDbccLhPVW86vRL4Zprs6r4NkrcpeNzBXN6+219+ab1gcN+2?=
+ =?us-ascii?Q?ioJvSX9+CNfW3GDNlPEszz9ocUUrQzSnz9eZ7wzVMhERorQMvISVMKz1DdKk?=
+ =?us-ascii?Q?pLOG70P0Os6LjYdlLSZXjqXSEXvMhXV7RwlhMtXntxqBQo+cJjbOiFqX90ie?=
+ =?us-ascii?Q?tmww/yK2FGNvP3G206hQnY+0kXENVk3voczZtBTqXRloy6C0yyIquDr2JzyL?=
+ =?us-ascii?Q?yFrIc67rboGRGGIeaDMYqH5XQfO/EYvBYCO+mJrwGuN1TrYHepvH4VC8NsmA?=
+ =?us-ascii?Q?4/h9nTFL/2Xx2XnhPQGN/D4x8wpn7i3vgHr0zq8P6FuJKu86sZ1ygPnYHr/I?=
+ =?us-ascii?Q?iqZv2iiHsNnB42LVHKK0lf31V94hzbZ+tszyw0rALY5Tl+S4H25Wbyq/AAp4?=
+ =?us-ascii?Q?RVed2JNHqoRxKT7K6diQz1USjhHMQSwv8MJVQ4TRCx/fnuJXGmsgmPOuEdW7?=
+ =?us-ascii?Q?RLwBHwM+tTHAQC5QAAlNooP/c3oqCbYeFxoF/WMyKJPdstIxYpruCb4VcjcW?=
+ =?us-ascii?Q?jOuj0ipry8bBiiRqV1snvKqYM/t82GqAeUnBj0hboOuBax+MGYCZH5H37HlU?=
+ =?us-ascii?Q?ufsXuez7ToRKv4jf5Edr/Cw=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d3f433d-2f1b-457b-3f18-08dba988f1aa
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR0102MB3590.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Aug 2023 18:43:04.0535
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xgpFu6VjxejL/sF0m4UcNymhcvAG6qt09/eJE7rVXhRVjd9XvkEwlSKVbfsUzhSkIJ+sfybugx+SVGBsMxgXrZIL4kfK1i5odspzeamB15ZlUVK2REKyFGHDWS8kLpeu
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR01MB7599
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 2023-08-30 3:07 a.m., Ian Rogers wrote:
-> A term list is turned into a string for debug output and for the str
-> value in the alias. Add a helper to do this based on existing code,
-> but then fix for situations like events being identified. Use strbuf
-> to manage the dynamic memory allocation and remove the 256 byte
-> limit. Use in various places the string of the term list is required.
-> 
-> Before:
-> ```
-> $ sudo perf stat -vv -e inst_retired.any true
-> Using CPUID GenuineIntel-6-8D-1
-> intel_pt default config: tsc,mtc,mtc_period=3,psb_period=3,pt,branch
-> Attempting to add event pmu 'cpu' with 'inst_retired.any,' that may result in non-fatal errors
-> After aliases, add event pmu 'cpu' with 'event,period,' that may result in non-fatal errors
-> inst_retired.any -> cpu/inst_retired.any/
-> ...
-> ```
-> 
-> After:
-> ```
-> $ sudo perf stat -vv -e inst_retired.any true
-> Using CPUID GenuineIntel-6-8D-1
-> intel_pt default config: tsc,mtc,mtc_period=3,psb_period=3,pt,branch
-> Attempt to add: cpu/inst_retired.any/
-> ..after resolving event: cpu/event=0xc0,period=0x1e8483/
-> inst_retired.any -> cpu/event=0xc0,period=0x1e8483/
-> ...
-> ```
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/parse-events.c | 101 ++++++++++++++++++++++++---------
->  tools/perf/util/parse-events.h |   2 +
->  tools/perf/util/pmu.c          |  19 ++-----
->  3 files changed, 81 insertions(+), 41 deletions(-)
+Hi James,
 
-Which branch should I use to apply the patch?
-I tried the perf-tools-next branch, but there is some conflict.
-I'd like to do some tests on a hybrid machine.
+On Tue, 29 Aug 2023, James Clark wrote:
+>
+>
+> On 26/08/2023 20:23, Ilkka Koskinen wrote:
+>> This patch adds AmpereOne metrics. The metrics also work around
+>> the issue related to some of the events.
+>>
+>> Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+>> ---
+>>  .../arch/arm64/ampere/ampereone/metrics.json  | 396 ++++++++++++++++++
+>>  1 file changed, 396 insertions(+)
+>>  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/ampereone/metrics.json
+>>
+>> diff --git a/tools/perf/pmu-events/arch/arm64/ampere/ampereone/metrics.json b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/metrics.json
+>> new file mode 100644
+>> index 000000000000..b623d8a9e3dc
+>> --- /dev/null
+>> +++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/metrics.json
+>> @@ -0,0 +1,396 @@
+>
+> [...]
+>
+>> +    {
+>> +        "MetricExpr": "STALL_SLOT_BACKEND / (CPU_CYCLES * 4)",
+>> +        "BriefDescription": "Fraction of slots backend bound",
+>> +        "MetricGroup": "Default;TopDownL1",
+>> +        "MetricName": "backend_bound",
+>> +        "ScaleUnit": "100%"
+>> +    },
+>
+> Hi Ilkaa,
+>
+> For these topdown metrics, as long as they are the same as the standard
+> one you can remove anything that is duplicated. This might make it
+> easier to make changes across all the topdown metrics in the future and
+> have consistent descriptions across CPUs. For example this backend_bound
+> one could look like this:
+>
+>    {
+>        "ArchStdEvent": "backend_bound",
+>    }
 
-Thanks,
-Kan
-> 
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index 4c812fbe0cf9..0b941b58bdc0 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -13,7 +13,7 @@
->  #include <subcmd/parse-options.h>
->  #include "parse-events.h"
->  #include "string2.h"
-> -#include "strlist.h"
-> +#include "strbuf.h"
->  #include "debug.h"
->  #include <api/fs/tracing_path.h>
->  #include <perf/cpumap.h>
-> @@ -1303,19 +1303,6 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
->  
->  	pmu = parse_state->fake_pmu ?: perf_pmus__find(name);
->  
-> -	if (verbose > 1 && !(pmu && pmu->selectable)) {
-> -		fprintf(stderr, "Attempting to add event pmu '%s' with '",
-> -			name);
-> -		if (head_config) {
-> -			struct parse_events_term *term;
-> -
-> -			list_for_each_entry(term, head_config, list) {
-> -				fprintf(stderr, "%s,", term->config);
-> -			}
-> -		}
-> -		fprintf(stderr, "' that may result in non-fatal errors\n");
-> -	}
-> -
->  	if (!pmu) {
->  		char *err_str;
->  
-> @@ -1325,6 +1312,21 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
->  			parse_events_error__handle(err, loc->first_column, err_str, NULL);
->  		return -EINVAL;
->  	}
-> +
-> +	if (verbose > 1) {
-> +		struct strbuf sb;
-> +
-> +		strbuf_init(&sb, /*hint=*/ 0);
-> +		if (pmu->selectable && !head_config) {
-> +			strbuf_addf(&sb, "%s//", name);
-> +		} else {
-> +			strbuf_addf(&sb, "%s/", name);
-> +			parse_events_term__to_strbuf(head_config, &sb);
-> +			strbuf_addch(&sb, '/');
-> +		}
-> +		fprintf(stderr, "Attempt to add: %s\n", sb.buf);
-> +		strbuf_release(&sb);
-> +	}
->  	if (head_config)
->  		fix_raw(head_config, pmu);
->  
-> @@ -1349,16 +1351,12 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
->  		return -EINVAL;
->  
->  	if (verbose > 1) {
-> -		fprintf(stderr, "After aliases, add event pmu '%s' with '",
-> -			name);
-> -		if (head_config) {
-> -			struct parse_events_term *term;
-> +		struct strbuf sb;
->  
-> -			list_for_each_entry(term, head_config, list) {
-> -				fprintf(stderr, "%s,", term->config);
-> -			}
-> -		}
-> -		fprintf(stderr, "' that may result in non-fatal errors\n");
-> +		strbuf_init(&sb, /*hint=*/ 0);
-> +		parse_events_term__to_strbuf(head_config, &sb);
-> +		fprintf(stderr, "..after resolving event: %s/%s/\n", name, sb.buf);
-> +		strbuf_release(&sb);
->  	}
->  
->  	/*
-> @@ -1460,7 +1458,12 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
->  		parse_events_copy_term_list(head, &orig_head);
->  		if (!parse_events_add_pmu(parse_state, list, pmu->name,
->  					  orig_head, auto_merge_stats, loc)) {
-> -			pr_debug("%s -> %s/%s/\n", str, pmu->name, str);
-> +			struct strbuf sb;
-> +
-> +			strbuf_init(&sb, /*hint=*/ 0);
-> +			parse_events_term__to_strbuf(orig_head, &sb);
-> +			pr_debug("%s -> %s/%s/\n", str, pmu->name, sb.buf);
-> +			strbuf_release(&sb);
->  			ok++;
->  		}
->  		parse_events_terms__delete(orig_head);
-> @@ -1469,7 +1472,12 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
->  	if (parse_state->fake_pmu) {
->  		if (!parse_events_add_pmu(parse_state, list, str, head,
->  					  /*auto_merge_stats=*/true, loc)) {
-> -			pr_debug("%s -> %s/%s/\n", str, "fake_pmu", str);
-> +			struct strbuf sb;
-> +
-> +			strbuf_init(&sb, /*hint=*/ 0);
-> +			parse_events_term__to_strbuf(head, &sb);
-> +			pr_debug("%s -> %s/%s/\n", str, "fake_pmu", sb.buf);
-> +			strbuf_release(&sb);
->  			ok++;
->  		}
->  	}
-> @@ -2085,7 +2093,7 @@ void parse_events_error__handle(struct parse_events_error *err, int idx,
->  		break;
->  	default:
->  		pr_debug("Multiple errors dropping message: %s (%s)\n",
-> -			err->str, err->help);
-> +			err->str, err->help ?: "<no help>");
->  		free(err->str);
->  		err->str = str;
->  		free(err->help);
-> @@ -2502,6 +2510,47 @@ void parse_events_terms__delete(struct list_head *terms)
->  	free(terms);
->  }
->  
-> +int parse_events_term__to_strbuf(struct list_head *term_list, struct strbuf *sb)
-> +{
-> +	struct parse_events_term *term;
-> +	bool first = true;
-> +
-> +	if (!term_list)
-> +		return 0;
-> +
-> +	list_for_each_entry(term, term_list, list) {
-> +		int ret;
-> +
-> +		if (!first) {
-> +			ret = strbuf_addch(sb, ',');
-> +			if (ret < 0)
-> +				return ret;
-> +		}
-> +		first = false;
-> +
-> +		if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM)
-> +			if (term->type_term == PARSE_EVENTS__TERM_TYPE_USER && term->val.num == 1)
-> +				ret = strbuf_addf(sb, "%s", term->config);
-> +			else
-> +				ret = strbuf_addf(sb, "%s=%#"PRIx64, term->config, term->val.num);
-> +		else if (term->type_val == PARSE_EVENTS__TERM_TYPE_STR) {
-> +			if (term->config) {
-> +				ret = strbuf_addf(sb, "%s=", term->config);
-> +				if (ret < 0)
-> +					return ret;
-> +			} else if (term->type_term < __PARSE_EVENTS__TERM_TYPE_NR) {
-> +				ret = strbuf_addf(sb, "%s=", config_term_names[term->type_term]);
-> +				if (ret < 0)
-> +					return ret;
-> +			}
-> +			ret = strbuf_addf(sb, "%s", term->val.str);
-> +		}
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +	return 0;
-> +}
-> +
->  void parse_events_evlist_error(struct parse_events_state *parse_state,
->  			       int idx, const char *str)
->  {
-> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-> index 6d75d853ce00..20bdc35d6112 100644
-> --- a/tools/perf/util/parse-events.h
-> +++ b/tools/perf/util/parse-events.h
-> @@ -18,6 +18,7 @@ struct parse_events_error;
->  
->  struct option;
->  struct perf_pmu;
-> +struct strbuf;
->  
->  const char *event_type(int type);
->  
-> @@ -152,6 +153,7 @@ int parse_events_term__clone(struct parse_events_term **new,
->  void parse_events_term__delete(struct parse_events_term *term);
->  void parse_events_terms__delete(struct list_head *terms);
->  void parse_events_terms__purge(struct list_head *terms);
-> +int parse_events_term__to_strbuf(struct list_head *term_list, struct strbuf *sb);
->  int parse_events__modifier_event(struct list_head *list, char *str, bool add);
->  int parse_events__modifier_group(struct list_head *list, char *event_mod);
->  int parse_events_name(struct list_head *list, const char *name);
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index b3f8f3f1e900..8dbb7008877e 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -507,12 +507,11 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
->  				const char *desc, const char *val, FILE *val_fd,
->  				const struct pmu_event *pe)
->  {
-> -	struct parse_events_term *term;
->  	struct perf_pmu_alias *alias;
->  	int ret;
-> -	char newval[256];
->  	const char *long_desc = NULL, *topic = NULL, *unit = NULL, *pmu_name = NULL;
->  	bool deprecated = false, perpkg = false;
-> +	struct strbuf sb;
->  
->  	if (perf_pmu__find_alias(pmu, name, /*load=*/ false)) {
->  		/* Alias was already created/loaded. */
-> @@ -582,20 +581,10 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
->  	 *
->  	 * Rebuild string to make alias->str member comparable.
->  	 */
-> -	ret = 0;
-> -	list_for_each_entry(term, &alias->terms, list) {
-> -		if (ret)
-> -			ret += scnprintf(newval + ret, sizeof(newval) - ret,
-> -					 ",");
-> -		if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM)
-> -			ret += scnprintf(newval + ret, sizeof(newval) - ret,
-> -					 "%s=%#x", term->config, term->val.num);
-> -		else if (term->type_val == PARSE_EVENTS__TERM_TYPE_STR)
-> -			ret += scnprintf(newval + ret, sizeof(newval) - ret,
-> -					 "%s=%s", term->config, term->val.str);
-> -	}
->  	zfree(&alias->str);
-> -	alias->str = strdup(newval);
-> +	strbuf_init(&sb, /*hint=*/ 0);
-> +	parse_events_term__to_strbuf(&alias->terms, &sb);
-> +	alias->str = strbuf_detach(&sb, /*sz=*/ NULL);
->  	if (!pe)
->  		pmu->sysfs_aliases++;
->  	else
+Nice, basically the same way as architectured events.
+
+>
+> This assumes that you have the slots sysfs file available, otherwise you
+> could leave only the formula in.
+>
+> We also decided to make the units for the topdown metrics "percent of
+> slots" as we thought more specificity in the units was clearer.
+
+I'll take a look at those and update the patch accordingly.
+
+Cheers, Ilkka
+
+>
+> Thanks
+> James
+>
+>> +    {
+>> +        "MetricExpr": "1 - (retired_fraction + slots_lost_misspeculation_fraction + backend_bound)",
+>> +        "BriefDescription": "Fraction of slots frontend bound",
+>> +        "MetricGroup": "Default;TopDownL1",
+>> +        "MetricName": "frontend_bound",
+>> +        "ScaleUnit": "100%"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "(OP_SPEC - OP_RETIRED) / (CPU_CYCLES * 4)",
+>> +        "BriefDescription": "Fraction of slots lost due to misspeculation",
+>> +        "MetricGroup": "Default;TopDownL1",
+>> +        "MetricName": "slots_lost_misspeculation_fraction",
+>> +        "ScaleUnit": "100%"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "OP_RETIRED / (CPU_CYCLES * 4)",
+>> +        "BriefDescription": "Fraction of slots retiring, useful work",
+>> +        "MetricGroup": "Default;TopDownL1",
+>> +        "MetricName": "retired_fraction",
+>> +        "ScaleUnit": "100%"
+>> +    },
+>> +    {
+>
