@@ -2,88 +2,123 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BD4C83F1C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE2BC83F1D
 	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 18:35:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235654AbjH3SfE (ORCPT
+        id S234472AbjH3SfI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Aug 2023 14:35:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58672 "EHLO
+        Wed, 30 Aug 2023 14:35:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242582AbjH3JF4 (ORCPT
+        with ESMTP id S245651AbjH3PsM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Aug 2023 05:05:56 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7409ECCF;
-        Wed, 30 Aug 2023 02:05:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693386353; x=1724922353;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=B3xJHByR9FLreUMgknnXx21neDGe39Jnr+0yJmg88DY=;
-  b=Wnsq8t0eWFDSQ/6Esj30a0w7XuAj44dMDJsG+7cJNs4VOwNJ4DAKLqNF
-   pbNeSuwc1ml5oBxHdzXjRj/crzu2vG1db6yVHgqrWT9Jzhaw24DuMPZHz
-   UBjE7V6Kb0v25aLTusAm3r0u6QYdZQkIR7x6o+ZQWLY+597JLi67bPKVs
-   Kbm/vUCZ1uQZDjjXQFUvKDZrOhsEMWKfgNbx0hap1Cohe2Hek+g1P7YzP
-   qJFtzECyDLAnmBhlh/0AcvTxhZ0RmK723kuQLf7pu8xvMzokpt/ADJ2DB
-   fh+urvEb8KKa1ii2uAniPDvTjsRj+u6owkoeLi75Yw9EgbwoYRYscQeIK
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10817"; a="375545132"
-X-IronPort-AV: E=Sophos;i="6.02,213,1688454000"; 
-   d="scan'208";a="375545132"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2023 02:05:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10817"; a="739032896"
-X-IronPort-AV: E=Sophos;i="6.02,213,1688454000"; 
-   d="scan'208";a="739032896"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.47.102])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2023 02:05:49 -0700
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf dlfilter: Avoid leak in v0 API test use of resolve_address()
-Date:   Wed, 30 Aug 2023 12:05:39 +0300
-Message-Id: <20230830090539.68206-1-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
+        Wed, 30 Aug 2023 11:48:12 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 231A4122;
+        Wed, 30 Aug 2023 08:48:10 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A2AD961FB9;
+        Wed, 30 Aug 2023 15:48:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD8BCC433C7;
+        Wed, 30 Aug 2023 15:48:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693410489;
+        bh=wnPJiJm7rQrsAoc2rWmWxlawY0FbhE1X+OSVa1CfQkg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BSUbGCgKqPv26pt2syJYnQN5yPQVVlwVb0WAg2KDZmNu4ATFh6yjTkfSztfa9oEr8
+         XM+icEUhh0cPNhJzbZswf8QrDpIo+F41XZJwSoVwD8N+VdG5F9BimXRC4ulIBmb9XF
+         Ntb41DAvA/gCaZW3MgF3SjOxidFDyzizQAOYKHZE815MryZEXv9U5YGQHoLkMRkS8i
+         v9arDRbeJaQySdvcHaiGbivJicgNHYIT7N8Kfq+XZ2Rm2/1lSZk7cjn1euP/yUQ8ah
+         DjdFwulViZMTjbmi7YSWoUpfWEmjjPahMHu0F0OeRrvnjaJkIbHDPIhOI/NEjfVov7
+         afBlwGV/yIPng==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 0F6B840722; Wed, 30 Aug 2023 12:48:06 -0300 (-03)
+Date:   Wed, 30 Aug 2023 12:48:06 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>
+Subject: Re: [PATCH v1] perf pmu: Avoid uninitialized use of alias->str
+Message-ID: <ZO9ktixQq0Mq2PHU@kernel.org>
+References: <20230830000545.1638964-1-irogers@google.com>
+ <CAM9d7ciUho=P8AnSq6inUudw15d8e=epke-XQFkpx5wuDgtikw@mail.gmail.com>
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7ciUho=P8AnSq6inUudw15d8e=epke-XQFkpx5wuDgtikw@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The introduction of reference counting causes the v0 API
-perf_dlfilter_fns.resolve_address() to leak. v2 API introduced
-perf_dlfilter_fns.al_cleanup() to prevent that. For the v0 API, avoid the
-leak by exiting the addr_location immediately, since the documentation
-makes it clear that pointers obtained via perf_dlfilter_fns are not
-necessarily valid (dereferenceable) after 'filter_event' and
-'filter_event_early' return.
+Em Tue, Aug 29, 2023 at 07:23:58PM -0700, Namhyung Kim escreveu:
+> Hi Ian,
+> 
+> On Tue, Aug 29, 2023 at 5:05 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > alias is allocated with malloc allowing uninitialized memory to be
+> > accessed. The initialization of str was moved late after it could have
+> > been updated by a JSON event, however, this create a potential for an
+> > uninitialized use. Fix this by assigning str to NULL early. Testing on
+> > ARM (Raspberry Pi) showed a memory leak in the same code so add a
+> > zfree.
+> >
+> > Fixes: f63a536f03a2 ("perf pmu: Merge JSON events with sysfs at load time")
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202308232146.94d82cb4-oliver.sang@intel.com
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/util/dlfilter.c | 2 ++
- 1 file changed, 2 insertions(+)
+Thanks, applied.
 
-diff --git a/tools/perf/util/dlfilter.c b/tools/perf/util/dlfilter.c
-index e0f822ebb9b9..1dbf27822ee2 100644
---- a/tools/perf/util/dlfilter.c
-+++ b/tools/perf/util/dlfilter.c
-@@ -187,6 +187,8 @@ static __s32 dlfilter__resolve_address(void *ctx, __u64 address, struct perf_dlf
+- Arnaldo
  
- 	if (has_priv(d_al_p))
- 		d_al_p->priv = memdup(&al, sizeof(al));
-+	else /* Avoid leak for v0 API */
-+		addr_location__exit(&al);
- 
- 	return 0;
- }
+> Thanks,
+> Namhyung
+> 
+> 
+> > ---
+> >  tools/perf/util/pmu.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> > index cde33e01959a..b3f8f3f1e900 100644
+> > --- a/tools/perf/util/pmu.c
+> > +++ b/tools/perf/util/pmu.c
+> > @@ -532,6 +532,7 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
+> >         if (!alias)
+> >                 return -ENOMEM;
+> >
+> > +       alias->str = NULL;
+> >         INIT_LIST_HEAD(&alias->terms);
+> >         alias->scale = 1.0;
+> >         alias->unit[0] = '\0';
+> > @@ -593,6 +594,7 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
+> >                         ret += scnprintf(newval + ret, sizeof(newval) - ret,
+> >                                          "%s=%s", term->config, term->val.str);
+> >         }
+> > +       zfree(&alias->str);
+> >         alias->str = strdup(newval);
+> >         if (!pe)
+> >                 pmu->sysfs_aliases++;
+> > --
+> > 2.42.0.rc2.253.gd59a3bf2b4-goog
+> >
+
 -- 
-2.34.1
 
+- Arnaldo
