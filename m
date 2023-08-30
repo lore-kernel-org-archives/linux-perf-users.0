@@ -2,214 +2,435 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDFAC83F01
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 19:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A94C83F15
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 19:51:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237204AbjH3Tt6 (ORCPT
+        id S237981AbjH3Tvf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Aug 2023 15:49:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49524 "EHLO
+        Wed, 30 Aug 2023 15:51:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240401AbjH3Ttb (ORCPT
+        with ESMTP id S238289AbjH3TvN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Aug 2023 15:49:31 -0400
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57B0F26BE
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 12:15:43 -0700 (PDT)
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1c0bae4da38so98525ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 12:15:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1693422816; x=1694027616; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JDyOflW/myJYlvUctAoCcIDpgS4q3OQICcXlfqcE06A=;
-        b=mDUb5DKpf/5V2Ki9ysbRcBdV1UknqEQEggh4uWZaiLRv3aJOce1TY5cxrBacfKJEIq
-         +RG6jmN2n4lfZnmD1500F0yv29zDWZgrz14QwpbyxxmgDXW28rQQ3FiN/PMbldh6pKFl
-         ribvTwLhrs6qPueR/dVxeW4Z7Liy6XhYiTB1s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693422816; x=1694027616;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JDyOflW/myJYlvUctAoCcIDpgS4q3OQICcXlfqcE06A=;
-        b=RNIR9cQAiL5+Vu5xTT/tMjrQyuupTL4ezNmnTQmOz9NAj2ZeXSlTwxlMpr4SkVMmvP
-         oboxCFBwEeeNgYnd+kBB56D/FCkGoz/Zb6nQyXe2A3Vngm+waHvGCWmrJWQ2voryr7fv
-         ULDa4n3eCmHKoCUVXIC9YXk7pbbIHaszOko562uAUjb0BosKxLep5ljEEKYvrWs+J4Sc
-         1olnVgOX3YTetmpYUhkKj6lrcdr5Qv+zz82S/jk7R3D9qdRp4ZCGNgTj5S0KegzWNFld
-         CEyvh80yDPUe6Z2vSRL/sxhqJpfJuXE2wFa4Y9PACq3+ZBFBqyN6wvclASPb2uQhUuBf
-         iHmw==
-X-Gm-Message-State: AOJu0Yw43Atp4XVPIHIFZc8gCtSijuRvZ7CPssBCey10FmyY6I8PrISM
-        O2DMwkXjusKweuR3tiFEV4CJhg==
-X-Google-Smtp-Source: AGHT+IGIFKcBlvPX1UPhPdOymNrV4WzWDOO5asyuyncWbRsGOmjSkkWcqoVmoyXrNeHfI0T2bMbH7A==
-X-Received: by 2002:a17:902:c941:b0:1c0:bcbc:d67 with SMTP id i1-20020a170902c94100b001c0bcbc0d67mr767212pla.22.1693422815685;
-        Wed, 30 Aug 2023 12:13:35 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:9d:2:e315:dec6:467c:83c5])
-        by smtp.gmail.com with ESMTPSA id c15-20020a170902d48f00b001bbdf32f011sm11338928plg.269.2023.08.30.12.13.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 12:13:34 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Tomohiro Misono <misono.tomohiro@fujitsu.com>,
-        Stephane Eranian <eranian@google.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <swboyd@chromium.org>, ito-yuichi@fujitsu.com,
-        linux-perf-users@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        D Scott Phillips <scott@os.amperecomputing.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Valentin Schneider <vschneid@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v12 0/7] arm64: Add IPI for backtraces / kgdb; try to use NMI for some IPIs
-Date:   Wed, 30 Aug 2023 12:11:21 -0700
-Message-ID: <20230830191314.1618136-1-dianders@chromium.org>
-X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
+        Wed, 30 Aug 2023 15:51:13 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E89C1FEC;
+        Wed, 30 Aug 2023 11:32:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693420320; x=1724956320;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=UbGPAEXN7yfVCF+K7mc6tv4ql+AAY+yqcjPAa7pVsoI=;
+  b=ModfCCHU4lvdjBEAXZn2kkXKELta8QhJE+ztaQPjrRkdp7OacUnxxfMx
+   YNFDVF8Dhi8jItIWbQ8B5y8P03XBo98c7DVVMAnKxiosCusFAnwlQwKno
+   6d7c3YQo2GeyjRrex9lqtfwgascBkclxcPI+jmpau3FainGes08ZbSewv
+   pSw4EbdEyDlIvQjEKs2FxLiR8t+WYVe0SoXbZMVPslChrFSF/sdASzVD2
+   6a4taY+UYLLclrrEjWSvox1qfnucjKQ5DtVh6NPMZnQbSVH+7Z+KxQj23
+   9KmejzOGG5VjMMiojJLWkABg0PQkc0O9gfGTl7LMp3XmUOuDZDKBy+UP/
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="442080854"
+X-IronPort-AV: E=Sophos;i="6.02,214,1688454000"; 
+   d="scan'208";a="442080854"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2023 11:29:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="853825698"
+X-IronPort-AV: E=Sophos;i="6.02,214,1688454000"; 
+   d="scan'208";a="853825698"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 30 Aug 2023 11:29:54 -0700
+Received: from [10.212.2.57] (kliang2-mobl1.ccr.corp.intel.com [10.212.2.57])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 0FD38580C73;
+        Wed, 30 Aug 2023 11:29:51 -0700 (PDT)
+Message-ID: <b976ef43-25ea-f24a-2c22-0976fafcf0f0@linux.intel.com>
+Date:   Wed, 30 Aug 2023 14:29:50 -0400
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH v1 2/3] perf parse-events: Make common term list to strbuf
+ helper
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230830070753.1821629-1-irogers@google.com>
+ <20230830070753.1821629-2-irogers@google.com>
+ <4de84370-29f3-75ed-9c91-330636cdd790@linux.intel.com>
+ <CAP-5=fXMgeER2FkAF2jZOAP0c=sxqhU8scxew6jXQrEYjN_S=Q@mail.gmail.com>
+ <CAP-5=fUXG9tfN2nahiVpBDiggkhmhFiBZYubCSN6vG4voJ_X2A@mail.gmail.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fUXG9tfN2nahiVpBDiggkhmhFiBZYubCSN6vG4voJ_X2A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This is an attempt to resurrect Sumit's old patch series [1] that
-allowed us to use the arm64 pseudo-NMI to get backtraces of CPUs and
-also to round up CPUs in kdb/kgdb. The last post from Sumit that I
-could find was v7, so I started my series at v8. I haven't copied all
-of his old changelongs here, but you can find them from the link.
 
-This patch series targets v6.6. Specifically it can't land in v6.5
-since it depends on commit 8d539b84f1e3 ("nmi_backtrace: allow
-excluding an arbitrary CPU").
 
-It should be noted that Mark still feels there might be some corner
-cases where pseudo-NMI is not production ready [2] [3], but as far as
-I'm aware there are no concrete/documented issues. Regardless of
-whether this should be enabled for production, though, this series
-will be invaluable to anyone trying to debug crashes on arm64
-machines.
+On 2023-08-30 11:04 a.m., Ian Rogers wrote:
+> On Wed, Aug 30, 2023 at 7:40 AM Ian Rogers <irogers@google.com> wrote:
+>>
+>> On Wed, Aug 30, 2023 at 7:15 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>>
+>>>
+>>>
+>>> On 2023-08-30 3:07 a.m., Ian Rogers wrote:
+>>>> A term list is turned into a string for debug output and for the str
+>>>> value in the alias. Add a helper to do this based on existing code,
+>>>> but then fix for situations like events being identified. Use strbuf
+>>>> to manage the dynamic memory allocation and remove the 256 byte
+>>>> limit. Use in various places the string of the term list is required.
+>>>>
+>>>> Before:
+>>>> ```
+>>>> $ sudo perf stat -vv -e inst_retired.any true
+>>>> Using CPUID GenuineIntel-6-8D-1
+>>>> intel_pt default config: tsc,mtc,mtc_period=3,psb_period=3,pt,branch
+>>>> Attempting to add event pmu 'cpu' with 'inst_retired.any,' that may result in non-fatal errors
+>>>> After aliases, add event pmu 'cpu' with 'event,period,' that may result in non-fatal errors
+>>>> inst_retired.any -> cpu/inst_retired.any/
+>>>> ...
+>>>> ```
+>>>>
+>>>> After:
+>>>> ```
+>>>> $ sudo perf stat -vv -e inst_retired.any true
+>>>> Using CPUID GenuineIntel-6-8D-1
+>>>> intel_pt default config: tsc,mtc,mtc_period=3,psb_period=3,pt,branch
+>>>> Attempt to add: cpu/inst_retired.any/
+>>>> ..after resolving event: cpu/event=0xc0,period=0x1e8483/
+>>>> inst_retired.any -> cpu/event=0xc0,period=0x1e8483/
+>>>> ...
+>>>> ```
+>>>>
+>>>> Signed-off-by: Ian Rogers <irogers@google.com>
+>>>> ---
+>>>>  tools/perf/util/parse-events.c | 101 ++++++++++++++++++++++++---------
+>>>>  tools/perf/util/parse-events.h |   2 +
+>>>>  tools/perf/util/pmu.c          |  19 ++-----
+>>>>  3 files changed, 81 insertions(+), 41 deletions(-)
+>>>
+>>> Which branch should I use to apply the patch?
+>>> I tried the perf-tools-next branch, but there is some conflict.
+>>> I'd like to do some tests on a hybrid machine.
+>>
+>> I was working on tmp.perf-tools-next but it is the same as
+>> perf-tools-next currently [1]. I had this 2 line patch in place:
+>> https://lore.kernel.org/lkml/20230830000545.1638964-1-irogers@google.com/
 
-v12 of this series collects tags, fixes a few small nits in comments
-and commit messages from v11 and adds a new (and somewhat unrelated)
-small patch to the end of the series. There are no code changes other
-than the last patch, which is tiny.
+Yes, on top of this patch, I don't see the conflict anymore.
 
-v11 of this series addressed Stephen Boyd's feedback on v10 and added
-a missing "static" that the patches robot found.
+>> so that may be the conflict.
+>>
+>> Thanks,
+>> Ian
+>>
+>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/log/?h=tmp.perf-tools-next
+> 
+> Hmm.. for some reason I'm not seeing the message on LKML and so b4
+> fails. Anyway, applying the patches and running on an Alderlake I see:
+> ```
+> $ perf stat -vv -e inst_retired.any true
+> Using CPUID GenuineIntel-6-97-2
+> Attempt to add: cpu_atom/inst_retired.any/
+> ..after resolving event: cpu_atom/event=0xc0,period=0x1e8483/
+> inst_retired.any -> cpu_atom/event=0xc0,period=0x1e8483/
+> Attempt to add: cpu_core/inst_retired.any/
+> ..after resolving event: cpu_core/event=0xc0,period=0x1e8483/
+> inst_retired.any -> cpu_core/event=0xc0,period=0x1e8483/
+> ...
+> ```
+> The previous output was like:
+> ```
+> $ perf stat -vv -e inst_retired.any true
+> Using CPUID GenuineIntel-6-97-2
+> Attempting to add event pmu 'cpu_core' with 'inst_retired.any,' that
+> may result in non-fatal errors
+> After aliases, add event pmu 'cpu_core' with 'event,period,' that may
+> result in non-fatal errors
+> inst_retired.any -> cpu_core/event=0xc0,period=0x1e8483/
+> Attempting to add event pmu 'cpu_atom' with 'inst_retired.any,' that
+> may result in non-fatal errors
+> After aliases, add event pmu 'cpu_atom' with 'event,period,' that may
+> result in non-fatal errors
+> inst_retired.any -> cpu_atom/event=0xc0,period=0x1e8483/
+> ...
+> ```
+> Perhaps a more interesting example is:
+> ```
+> $ perf stat -vv -e UOPS_RETIRED.MS true
+> Using CPUID GenuineIntel-6-97-2
+> Attempt to add: cpu_atom/UOPS_RETIRED.MS/
+> ..after resolving event: cpu_atom/event=0xc2,period=0x1e8483,umask/
+> UOPS_RETIRED.MS -> cpu_atom/event=0xc2,period=0x1e8483,umask/
+> Attempt to add: cpu_core/UOPS_RETIRED.MS/
+> ..after resolving event:
+> cpu_core/event=0xc2,period=0x1e8483,umask=0x4,frontend=0x8/
+> UOPS_RETIRED.MS -> cpu_core/event=0xc2,period=0x1e8483,umask=0x4,frontend=0x8/
+> ...
+> ```
+> The umask not being printed for the cpu_atom is an issue. 
 
-v10 of this series attempted to address all of Mark's feedback on
-v9. As a quick summary:
-- It includes his patch to remove IPI_WAKEUP, freeing up an extra IPI.
-- It no longer combines the "kgdb" and "backtrace" IPIs. If we need
-  another IPI these could always be recombined later.
-- It promotes IPI_CPU_STOP and IPI_CPU_CRASH_STOP to NMI.
-- It puts nearly all the code directly in smp.c.
-- Several of the patches are squashed together.
-- Patch #6 ("kgdb: Provide a stub kgdb_nmicallback() if !CONFIG_KGDB")
-  was dropped from the series since it landed.
+Yes, I observed it as well.
 
-Between v8 and v9, I had cleaned up this patch series by integrating
-the 10th patch from v8 [4] into the whole series. As part of this, I
-renamed the "NMI IPI" to the "debug IPI" since it could now be backed
-by a regular IPI in the case that pseudo NMIs weren't available. With
-the fallback, this allowed me to drop some extra patches from the
-series. This feels (to me) to be pretty clean and hopefully others
-agree. Any patch I touched significantly I removed Masayoshi and
-Chen-Yu's tags from.
+> The problem
+> is how we encode terms of an event name, it is indistinguishable when
+> the of the user field is 1. I'll probably add something to fix this
+> later, but it only impacts debug output and perf list, so I'm not
+> overly worried. 
 
-...also in v8, I reorderd the patches a bit in a way that seemed a
-little cleaner to me.
+It should be OK for the debug output.
 
-Since v7, I have:
-* Addressed the small amount of feedback that was there for v7.
-* Rebased.
-* Added a new patch that prevents us from spamming the logs with idle
-  tasks.
-* Added an extra patch to gracefully fall back to regular IPIs if
-  pseudo-NMIs aren't there.
+> We could go in the other direction and instead of
+> printing say cpu_atom/UOPS_RETIRED.MS/ print
+> cpu_atom/UOPS_RETIRED.MS=1/, but I thought that was uglier and more
+> confusing.
 
-It can be noted that this patch series works very well with the recent
-"hardlockup" patches that have landed through Andrew Morton's tree and
-are currently in mainline. It works especially well with the "buddy"
-lockup detector.
+If there is no plan to fix it for now, it's better to keep it as is. The
+UOPS_RETIRED.MS=1 is confusing.
 
-[1] https://lore.kernel.org/linux-arm-kernel/1604317487-14543-1-git-send-email-sumit.garg@linaro.org/
-[2] https://lore.kernel.org/lkml/ZFvGqD%2F%2Fpm%2FlZb+p@FVFF77S0Q05N.cambridge.arm.com/
-[3] https://lore.kernel.org/lkml/ZNDKVP2m-iiZCz3v@FVFF77S0Q05N.cambridge.arm.com
-[4] https://lore.kernel.org/r/20230419155341.v8.10.Ic3659997d6243139d0522fc3afcdfd88d7a5f030@changeid/
-
-Changes in v12:
-- ("arm64: smp: Mark IPI globals as __ro_after_init") new for v12.
-- Added a comment about why we account for 16 SGIs when Linux uses 8.
-- Minor comment change to add "()" after nmi_trigger_cpumask_backtrace.
-- Updated the commit hash of the commit this depends on.
-
-Changes in v11:
-- Adjust comment about NR_IPI/MAX_IPI.
-- Don't use confusing "backed by" idiom in comment.
-- Made arm64_backtrace_ipi() static.
-- Updated commit message as per Stephen.
-- arch_send_wakeup_ipi() now takes an unsigned int.
-
-Changes in v10:
-- ("IPI_CPU_STOP and IPI_CPU_CRASH_STOP should try for NMI") new for v10.
-- ("arm64: smp: Remove dedicated wakeup IPI") new for v10.
-- Backtrace now directly supported in smp.c
-- Don't allocate the cpumask on the stack; just iterate.
-- Moved kgdb calls to smp.c to avoid needing to export IPI info.
-- Rewrite as needed for 5.11+ as per Mark Rutland and Sumit.
-- Squash backtrace into patch adding support for pseudo-NMI IPIs.
-- kgdb now has its own IPI.
-
-Changes in v9:
-- Added comments that we might not be using NMI always.
-- Added to commit message that this doesn't catch all cases.
-- Fold in v8 patch #10 ("Fallback to a regular IPI if NMI isn't enabled")
-- Moved header file out of "include" since it didn't need to be there.
-- Remove arm64_supports_nmi()
-- Remove fallback for when debug IPI isn't available.
-- Renamed "NMI IPI" to "debug IPI" since it might not be backed by NMI.
-- arch_trigger_cpumask_backtrace() no longer returns bool
-
-Changes in v8:
-- "Tag the arm64 idle functions as __cpuidle" new for v8
-- Removed "#ifdef CONFIG_SMP" since arm64 is always SMP
-- debug_ipi_setup() and debug_ipi_teardown() no longer take cpu param
-
-Douglas Anderson (6):
-  irqchip/gic-v3: Enable support for SGIs to act as NMIs
-  arm64: idle: Tag the arm64 idle functions as __cpuidle
-  arm64: smp: Add arch support for backtrace using pseudo-NMI
-  arm64: smp: IPI_CPU_STOP and IPI_CPU_CRASH_STOP should try for NMI
-  arm64: kgdb: Implement kgdb_roundup_cpus() to enable pseudo-NMI
-    roundup
-  arm64: smp: Mark IPI globals as __ro_after_init
-
-Mark Rutland (1):
-  arm64: smp: Remove dedicated wakeup IPI
-
- arch/arm64/include/asm/irq.h              |   3 +
- arch/arm64/include/asm/smp.h              |   4 +-
- arch/arm64/kernel/acpi_parking_protocol.c |   2 +-
- arch/arm64/kernel/idle.c                  |   4 +-
- arch/arm64/kernel/smp.c                   | 139 +++++++++++++++++-----
- drivers/irqchip/irq-gic-v3.c              |  59 ++++++---
- 6 files changed, 160 insertions(+), 51 deletions(-)
-
--- 
-2.42.0.283.g2d96d420d3-goog
-
+Thanks,
+Kan
+> 
+> Thanks,
+> Ian
+> 
+>>> Thanks,
+>>> Kan
+>>>>
+>>>> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+>>>> index 4c812fbe0cf9..0b941b58bdc0 100644
+>>>> --- a/tools/perf/util/parse-events.c
+>>>> +++ b/tools/perf/util/parse-events.c
+>>>> @@ -13,7 +13,7 @@
+>>>>  #include <subcmd/parse-options.h>
+>>>>  #include "parse-events.h"
+>>>>  #include "string2.h"
+>>>> -#include "strlist.h"
+>>>> +#include "strbuf.h"
+>>>>  #include "debug.h"
+>>>>  #include <api/fs/tracing_path.h>
+>>>>  #include <perf/cpumap.h>
+>>>> @@ -1303,19 +1303,6 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+>>>>
+>>>>       pmu = parse_state->fake_pmu ?: perf_pmus__find(name);
+>>>>
+>>>> -     if (verbose > 1 && !(pmu && pmu->selectable)) {
+>>>> -             fprintf(stderr, "Attempting to add event pmu '%s' with '",
+>>>> -                     name);
+>>>> -             if (head_config) {
+>>>> -                     struct parse_events_term *term;
+>>>> -
+>>>> -                     list_for_each_entry(term, head_config, list) {
+>>>> -                             fprintf(stderr, "%s,", term->config);
+>>>> -                     }
+>>>> -             }
+>>>> -             fprintf(stderr, "' that may result in non-fatal errors\n");
+>>>> -     }
+>>>> -
+>>>>       if (!pmu) {
+>>>>               char *err_str;
+>>>>
+>>>> @@ -1325,6 +1312,21 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+>>>>                       parse_events_error__handle(err, loc->first_column, err_str, NULL);
+>>>>               return -EINVAL;
+>>>>       }
+>>>> +
+>>>> +     if (verbose > 1) {
+>>>> +             struct strbuf sb;
+>>>> +
+>>>> +             strbuf_init(&sb, /*hint=*/ 0);
+>>>> +             if (pmu->selectable && !head_config) {
+>>>> +                     strbuf_addf(&sb, "%s//", name);
+>>>> +             } else {
+>>>> +                     strbuf_addf(&sb, "%s/", name);
+>>>> +                     parse_events_term__to_strbuf(head_config, &sb);
+>>>> +                     strbuf_addch(&sb, '/');
+>>>> +             }
+>>>> +             fprintf(stderr, "Attempt to add: %s\n", sb.buf);
+>>>> +             strbuf_release(&sb);
+>>>> +     }
+>>>>       if (head_config)
+>>>>               fix_raw(head_config, pmu);
+>>>>
+>>>> @@ -1349,16 +1351,12 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+>>>>               return -EINVAL;
+>>>>
+>>>>       if (verbose > 1) {
+>>>> -             fprintf(stderr, "After aliases, add event pmu '%s' with '",
+>>>> -                     name);
+>>>> -             if (head_config) {
+>>>> -                     struct parse_events_term *term;
+>>>> +             struct strbuf sb;
+>>>>
+>>>> -                     list_for_each_entry(term, head_config, list) {
+>>>> -                             fprintf(stderr, "%s,", term->config);
+>>>> -                     }
+>>>> -             }
+>>>> -             fprintf(stderr, "' that may result in non-fatal errors\n");
+>>>> +             strbuf_init(&sb, /*hint=*/ 0);
+>>>> +             parse_events_term__to_strbuf(head_config, &sb);
+>>>> +             fprintf(stderr, "..after resolving event: %s/%s/\n", name, sb.buf);
+>>>> +             strbuf_release(&sb);
+>>>>       }
+>>>>
+>>>>       /*
+>>>> @@ -1460,7 +1458,12 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+>>>>               parse_events_copy_term_list(head, &orig_head);
+>>>>               if (!parse_events_add_pmu(parse_state, list, pmu->name,
+>>>>                                         orig_head, auto_merge_stats, loc)) {
+>>>> -                     pr_debug("%s -> %s/%s/\n", str, pmu->name, str);
+>>>> +                     struct strbuf sb;
+>>>> +
+>>>> +                     strbuf_init(&sb, /*hint=*/ 0);
+>>>> +                     parse_events_term__to_strbuf(orig_head, &sb);
+>>>> +                     pr_debug("%s -> %s/%s/\n", str, pmu->name, sb.buf);
+>>>> +                     strbuf_release(&sb);
+>>>>                       ok++;
+>>>>               }
+>>>>               parse_events_terms__delete(orig_head);
+>>>> @@ -1469,7 +1472,12 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+>>>>       if (parse_state->fake_pmu) {
+>>>>               if (!parse_events_add_pmu(parse_state, list, str, head,
+>>>>                                         /*auto_merge_stats=*/true, loc)) {
+>>>> -                     pr_debug("%s -> %s/%s/\n", str, "fake_pmu", str);
+>>>> +                     struct strbuf sb;
+>>>> +
+>>>> +                     strbuf_init(&sb, /*hint=*/ 0);
+>>>> +                     parse_events_term__to_strbuf(head, &sb);
+>>>> +                     pr_debug("%s -> %s/%s/\n", str, "fake_pmu", sb.buf);
+>>>> +                     strbuf_release(&sb);
+>>>>                       ok++;
+>>>>               }
+>>>>       }
+>>>> @@ -2085,7 +2093,7 @@ void parse_events_error__handle(struct parse_events_error *err, int idx,
+>>>>               break;
+>>>>       default:
+>>>>               pr_debug("Multiple errors dropping message: %s (%s)\n",
+>>>> -                     err->str, err->help);
+>>>> +                     err->str, err->help ?: "<no help>");
+>>>>               free(err->str);
+>>>>               err->str = str;
+>>>>               free(err->help);
+>>>> @@ -2502,6 +2510,47 @@ void parse_events_terms__delete(struct list_head *terms)
+>>>>       free(terms);
+>>>>  }
+>>>>
+>>>> +int parse_events_term__to_strbuf(struct list_head *term_list, struct strbuf *sb)
+>>>> +{
+>>>> +     struct parse_events_term *term;
+>>>> +     bool first = true;
+>>>> +
+>>>> +     if (!term_list)
+>>>> +             return 0;
+>>>> +
+>>>> +     list_for_each_entry(term, term_list, list) {
+>>>> +             int ret;
+>>>> +
+>>>> +             if (!first) {
+>>>> +                     ret = strbuf_addch(sb, ',');
+>>>> +                     if (ret < 0)
+>>>> +                             return ret;
+>>>> +             }
+>>>> +             first = false;
+>>>> +
+>>>> +             if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM)
+>>>> +                     if (term->type_term == PARSE_EVENTS__TERM_TYPE_USER && term->val.num == 1)
+>>>> +                             ret = strbuf_addf(sb, "%s", term->config);
+>>>> +                     else
+>>>> +                             ret = strbuf_addf(sb, "%s=%#"PRIx64, term->config, term->val.num);
+>>>> +             else if (term->type_val == PARSE_EVENTS__TERM_TYPE_STR) {
+>>>> +                     if (term->config) {
+>>>> +                             ret = strbuf_addf(sb, "%s=", term->config);
+>>>> +                             if (ret < 0)
+>>>> +                                     return ret;
+>>>> +                     } else if (term->type_term < __PARSE_EVENTS__TERM_TYPE_NR) {
+>>>> +                             ret = strbuf_addf(sb, "%s=", config_term_names[term->type_term]);
+>>>> +                             if (ret < 0)
+>>>> +                                     return ret;
+>>>> +                     }
+>>>> +                     ret = strbuf_addf(sb, "%s", term->val.str);
+>>>> +             }
+>>>> +             if (ret < 0)
+>>>> +                     return ret;
+>>>> +     }
+>>>> +     return 0;
+>>>> +}
+>>>> +
+>>>>  void parse_events_evlist_error(struct parse_events_state *parse_state,
+>>>>                              int idx, const char *str)
+>>>>  {
+>>>> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+>>>> index 6d75d853ce00..20bdc35d6112 100644
+>>>> --- a/tools/perf/util/parse-events.h
+>>>> +++ b/tools/perf/util/parse-events.h
+>>>> @@ -18,6 +18,7 @@ struct parse_events_error;
+>>>>
+>>>>  struct option;
+>>>>  struct perf_pmu;
+>>>> +struct strbuf;
+>>>>
+>>>>  const char *event_type(int type);
+>>>>
+>>>> @@ -152,6 +153,7 @@ int parse_events_term__clone(struct parse_events_term **new,
+>>>>  void parse_events_term__delete(struct parse_events_term *term);
+>>>>  void parse_events_terms__delete(struct list_head *terms);
+>>>>  void parse_events_terms__purge(struct list_head *terms);
+>>>> +int parse_events_term__to_strbuf(struct list_head *term_list, struct strbuf *sb);
+>>>>  int parse_events__modifier_event(struct list_head *list, char *str, bool add);
+>>>>  int parse_events__modifier_group(struct list_head *list, char *event_mod);
+>>>>  int parse_events_name(struct list_head *list, const char *name);
+>>>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+>>>> index b3f8f3f1e900..8dbb7008877e 100644
+>>>> --- a/tools/perf/util/pmu.c
+>>>> +++ b/tools/perf/util/pmu.c
+>>>> @@ -507,12 +507,11 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
+>>>>                               const char *desc, const char *val, FILE *val_fd,
+>>>>                               const struct pmu_event *pe)
+>>>>  {
+>>>> -     struct parse_events_term *term;
+>>>>       struct perf_pmu_alias *alias;
+>>>>       int ret;
+>>>> -     char newval[256];
+>>>>       const char *long_desc = NULL, *topic = NULL, *unit = NULL, *pmu_name = NULL;
+>>>>       bool deprecated = false, perpkg = false;
+>>>> +     struct strbuf sb;
+>>>>
+>>>>       if (perf_pmu__find_alias(pmu, name, /*load=*/ false)) {
+>>>>               /* Alias was already created/loaded. */
+>>>> @@ -582,20 +581,10 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
+>>>>        *
+>>>>        * Rebuild string to make alias->str member comparable.
+>>>>        */
+>>>> -     ret = 0;
+>>>> -     list_for_each_entry(term, &alias->terms, list) {
+>>>> -             if (ret)
+>>>> -                     ret += scnprintf(newval + ret, sizeof(newval) - ret,
+>>>> -                                      ",");
+>>>> -             if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM)
+>>>> -                     ret += scnprintf(newval + ret, sizeof(newval) - ret,
+>>>> -                                      "%s=%#x", term->config, term->val.num);
+>>>> -             else if (term->type_val == PARSE_EVENTS__TERM_TYPE_STR)
+>>>> -                     ret += scnprintf(newval + ret, sizeof(newval) - ret,
+>>>> -                                      "%s=%s", term->config, term->val.str);
+>>>> -     }
+>>>>       zfree(&alias->str);
+>>>> -     alias->str = strdup(newval);
+>>>> +     strbuf_init(&sb, /*hint=*/ 0);
+>>>> +     parse_events_term__to_strbuf(&alias->terms, &sb);
+>>>> +     alias->str = strbuf_detach(&sb, /*sz=*/ NULL);
+>>>>       if (!pe)
+>>>>               pmu->sysfs_aliases++;
+>>>>       else
