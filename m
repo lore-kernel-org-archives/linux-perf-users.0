@@ -2,103 +2,234 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D5CC83F17
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 18:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE48C6FA8F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 18:35:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231153AbjH3Se4 (ORCPT
+        id S235393AbjH3Se5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Aug 2023 14:34:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35728 "EHLO
+        Wed, 30 Aug 2023 14:34:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241803AbjH3HIC (ORCPT
+        with ESMTP id S242529AbjH3JAV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Aug 2023 03:08:02 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC3211A3
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 00:07:59 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59263889eacso73243057b3.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 00:07:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1693379279; x=1693984079; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5NaHsU6gXgFOenHk7MfqZGVTVXuRwf+WJ70Gj+1DurU=;
-        b=6/GxsNd9Kywu8N8XjZIO0gtCnLdeXgprY6VCHDrGvNdNtgmQWcqKTR+ASayOySQdea
-         oBuJMJ0bS8QA18CQxHCZuERQQQQTUoRXf4QY9jedpUkKPTXNsSsEmh0nYtpN6CihA2x7
-         7kMZwLwOc6AMLS8MOuxrhPupvQDVMbQOV3uOtfQntIvadA20eEHV1a4ncqemahlUoVKf
-         KJZfb+dWMC1ProTCP+xXsqpUHwq7upPdAhJL5FZrhstZ486VOWSB4MZ2TvMP6TGG5LGL
-         6nxwg9L455g7bJv8sTozqXuIxGezChegJOoEztWFkxvv42t20X7xV6+wdW3LiT6zdI7T
-         9liA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693379279; x=1693984079;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5NaHsU6gXgFOenHk7MfqZGVTVXuRwf+WJ70Gj+1DurU=;
-        b=FV8M1mDy99zl+Qph3jrHff0Xs0ranJa50vgD15lZtWMwQeKWRu6AXqnfAHKjFdvCls
-         HX7dYTMnvv4OJWkvjZQFju9VV6yEiIiUOMDHRcoPJyqXANIj0k1LZJARY/oNnNikpVna
-         kSfo03YdGhcKG94a74dZBD6Q7PoAmLsubcecF7t/W0PjrZJ6dHJRc9KCXOXg/ugDu9va
-         d4GOZsWfSNZbfKbvQLSTCElw7T//NiBwkiAHBAU8HNG88qs+DuGRN6hkhdNHWBhaesy6
-         B4WNqwn9to2nqwOJk2pPAs5frSSdT02Wei/OQm+JSAfVSbdYBZ9r23K8flQNevJuSPOw
-         4/YQ==
-X-Gm-Message-State: AOJu0Yw2U3dvTEv/h/mEnkKtAiVv2AZHJDosQiTI8kRBk8KrWBzAfYa5
-        O2ha4kT4IR9PD2+VkamsE1UZSqBlcDsn
-X-Google-Smtp-Source: AGHT+IEsqhzZVskXpYnOT+qq+VkLTum6nBgxwvZomGfzTOhPcyfHGK9ecuI2vCBSfox/qM2B17EZrYy6QlAq
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:d623:3cd7:ecbc:8798])
- (user=irogers job=sendgmr) by 2002:a25:d0e:0:b0:d63:8364:328 with SMTP id
- 14-20020a250d0e000000b00d6383640328mr35188ybn.5.1693379278979; Wed, 30 Aug
- 2023 00:07:58 -0700 (PDT)
-Date:   Wed, 30 Aug 2023 00:07:51 -0700
-Message-Id: <20230830070753.1821629-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.42.0.rc2.253.gd59a3bf2b4-goog
-Subject: [PATCH v1 1/3] perf parse-events: Minor help message improvements
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Wed, 30 Aug 2023 05:00:21 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CCF63CC9;
+        Wed, 30 Aug 2023 02:00:17 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F28D32F4;
+        Wed, 30 Aug 2023 02:00:56 -0700 (PDT)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9DC903F64C;
+        Wed, 30 Aug 2023 02:00:15 -0700 (PDT)
+Message-ID: <4f493093-fe3e-0d17-1bdb-3c3545734f0c@arm.com>
+Date:   Wed, 30 Aug 2023 10:00:17 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+From:   James Clark <james.clark@arm.com>
+Subject: Re: [PATCH v1] perf jevents: Use "default_core" for events with no
+ Unit
+To:     Ian Rogers <irogers@google.com>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.g.garry@oracle.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <20230826062203.1058041-1-irogers@google.com>
+Content-Language: en-US
+In-Reply-To: <20230826062203.1058041-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Be more specific and fix a typo.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/parse-events.y | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 3a9d4e2513b5..4a370c36a0d5 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -342,7 +342,7 @@ PE_NAME opt_pmu_config
- 			struct parse_events_error *error = parse_state->error;
- 			char *help;
- 
--			if (asprintf(&help, "Unabled to find PMU or event on a PMU of '%s'", $1) < 0)
-+			if (asprintf(&help, "Unable to find PMU or event on a PMU of '%s'", $1) < 0)
- 				help = NULL;
- 			parse_events_error__handle(error, @1.first_column,
- 						   strdup("Bad event or PMU"),
-@@ -368,7 +368,7 @@ PE_NAME sep_dc
- 		struct parse_events_error *error = parse_state->error;
- 		char *help;
- 
--		if (asprintf(&help, "Unabled to find PMU or event on a PMU of '%s'", $1) < 0)
-+		if (asprintf(&help, "Unable to find event on a PMU of '%s'", $1) < 0)
- 			help = NULL;
- 		parse_events_error__handle(error, @1.first_column, strdup("Bad event name"), help);
- 		free($1);
--- 
-2.42.0.rc2.253.gd59a3bf2b4-goog
+On 26/08/2023 07:22, Ian Rogers wrote:
+> The json Unit field encodes the name of the PMU to match the events
+> to. When no name is given it has meant the "cpu" core PMU except for
+> tests. On ARM, Intel hybrid and s390 the core PMU is named differently
+> which means that using "cpu" for this case causes the events not to
+> get matched to the PMU. Introduce a new "default_core" string for this
+> case and in the pmu__name_match force all core PMUs to match this
+> name.
+> 
+> Reported-by: Thomas Richter <tmricht@linux.ibm.com>
+> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Fixes: 2e255b4f9f41 ("perf jevents: Group events by PMU")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
+Hi Ian,
+
+Running 'perf list' with this change I get "munmap_chunk(): invalid
+pointer". It's probably related to an earlier change though.
+
+Here's the stack:
+
+Program received signal SIGABRT, Aborted.
+__GI_raise (sig=sig@entry=6) at ../sysdeps/unix/sysv/linux/raise.c:50
+50	../sysdeps/unix/sysv/linux/raise.c: No such file or directory.
+(gdb) bt
+#0  __GI_raise (sig=sig@entry=6) at ../sysdeps/unix/sysv/linux/raise.c:50
+#1  0x0000fffff70adaac in __GI_abort () at abort.c:79
+#2  0x0000fffff70faf40 in __libc_message (action=action@entry=do_abort, fmt=fmt@entry=0xfffff71bc518 "%s\n")
+     at ../sysdeps/posix/libc_fatal.c:155
+#3  0x0000fffff7102344 in malloc_printerr (str=str@entry=0xfffff71b7ae0 "munmap_chunk(): invalid pointer") at malloc.c:5347
+#4  0x0000fffff7102644 in munmap_chunk (p=<optimized out>) at malloc.c:2830
+#5  0x0000aaaaaadc727c in __zfree (ptr=0xaaaaaaf89db0) at ../../lib/zalloc.c:13
+#6  0x0000aaaaaacbbbcc in assign_str (name=0xaaaaaae878c2 "l1d_cache_refill", field=0xaaaaaae4fb78 "value", old_str=0xaaaaaaf89db0,
+     new_str=0xaaaaaae878f7 "event=0x3") at util/pmu.c:454
+#7  0x0000aaaaaacbbdf4 in update_alias (pe=0xffffffffd450, table=0xaaaaaaf43870 <pmu_events_map+592>, vdata=0xffffffffd598)
+     at util/pmu.c:490
+#8  0x0000aaaaaadbc37c in pmu_events_table__find_event_pmu (table=0xaaaaaaf43870 <pmu_events_map+592>,
+     pmu=0xaaaaaaf43400 <pmu_events.arm_neoverse_n1>, name=0xaaaaaaf900b3 "l1d_cache_refill", fn=0xaaaaaacbbcc0 <update_alias>,
+     data=0xffffffffd598) at pmu-events/pmu-events.c:5359
+#9  0x0000aaaaaadbc598 in pmu_events_table__find_event (table=0xaaaaaaf43870 <pmu_events_map+592>, pmu=0xaaaaaaf8fcd0,
+     name=0xaaaaaaf900b3 "l1d_cache_refill", fn=0xaaaaaacbbcc0 <update_alias>, data=0xffffffffd598)
+     at pmu-events/pmu-events.c:5398
+#10 0x0000aaaaaacbc1f0 in perf_pmu__new_alias (pmu=0xaaaaaaf8fcd0, name=0xaaaaaaf900b3 "l1d_cache_refill", desc=0x0, val=0x0,
+     val_fd=0xaaaaaaf8a2e0, pe=0x0) at util/pmu.c:569
+#11 0x0000aaaaaacbc710 in pmu_aliases_parse (pmu=0xaaaaaaf8fcd0) at util/pmu.c:673
+#12 0x0000aaaaaacbf168 in perf_pmu__num_events (pmu=0xaaaaaaf8fcd0) at util/pmu.c:1633
+#13 0x0000aaaaaacc1e00 in perf_pmus__print_pmu_events (print_cb=0xffffffffe878, print_state=0xffffffffe898) at util/pmus.c:359
+#14 0x0000aaaaaac53810 in print_events (print_cb=0xffffffffe878, print_state=0xffffffffe898) at util/print-events.c:407
+#15 0x0000aaaaaab1cc30 in cmd_list (argc=0, argv=0xfffffffff0c0) at builtin-list.c:524
+#16 0x0000aaaaaac106f0 in run_builtin (p=0xaaaaaaf59580 <commands+240>, argc=2, argv=0xfffffffff0c0) at perf.c:322
+#17 0x0000aaaaaac109a4 in handle_internal_command (argc=2, argv=0xfffffffff0c0) at perf.c:375
+#18 0x0000aaaaaac10b5c in run_argv (argcp=0xffffffffeebc, argv=0xffffffffeeb0) at perf.c:419
+#19 0x0000aaaaaac10e84 in main (argc=2, argv=0xfffffffff0c0) at perf.c:535
+
+> ---
+>  tools/perf/pmu-events/jevents.py |  2 +-
+>  tools/perf/tests/pmu-events.c    | 19 ++++++++++---------
+>  tools/perf/util/pmu.c            |  7 ++++++-
+>  3 files changed, 17 insertions(+), 11 deletions(-)
+> 
+> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+> index 712f80d7d071..a7e88332276d 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+> @@ -266,7 +266,7 @@ class JsonEvent:
+>      def unit_to_pmu(unit: str) -> Optional[str]:
+>        """Convert a JSON Unit to Linux PMU name."""
+>        if not unit:
+> -        return 'cpu'
+> +        return 'default_core'
+>        # Comment brought over from jevents.c:
+>        # it's not realistic to keep adding these, we need something more scalable ...
+>        table = {
+> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+> index ce4da9b1d115..f5321fbdee79 100644
+> --- a/tools/perf/tests/pmu-events.c
+> +++ b/tools/perf/tests/pmu-events.c
+> @@ -44,7 +44,7 @@ struct perf_pmu_test_pmu {
+>  
+>  static const struct perf_pmu_test_event bp_l1_btb_correct = {
+>  	.event = {
+> -		.pmu = "cpu",
+> +		.pmu = "default_core",
+>  		.name = "bp_l1_btb_correct",
+>  		.event = "event=0x8a",
+>  		.desc = "L1 BTB Correction",
+> @@ -56,7 +56,7 @@ static const struct perf_pmu_test_event bp_l1_btb_correct = {
+>  
+>  static const struct perf_pmu_test_event bp_l2_btb_correct = {
+>  	.event = {
+> -		.pmu = "cpu",
+> +		.pmu = "default_core",
+>  		.name = "bp_l2_btb_correct",
+>  		.event = "event=0x8b",
+>  		.desc = "L2 BTB Correction",
+> @@ -68,7 +68,7 @@ static const struct perf_pmu_test_event bp_l2_btb_correct = {
+>  
+>  static const struct perf_pmu_test_event segment_reg_loads_any = {
+>  	.event = {
+> -		.pmu = "cpu",
+> +		.pmu = "default_core",
+>  		.name = "segment_reg_loads.any",
+>  		.event = "event=0x6,period=200000,umask=0x80",
+>  		.desc = "Number of segment register loads",
+> @@ -80,7 +80,7 @@ static const struct perf_pmu_test_event segment_reg_loads_any = {
+>  
+>  static const struct perf_pmu_test_event dispatch_blocked_any = {
+>  	.event = {
+> -		.pmu = "cpu",
+> +		.pmu = "default_core",
+>  		.name = "dispatch_blocked.any",
+>  		.event = "event=0x9,period=200000,umask=0x20",
+>  		.desc = "Memory cluster signals to block micro-op dispatch for any reason",
+> @@ -92,7 +92,7 @@ static const struct perf_pmu_test_event dispatch_blocked_any = {
+>  
+>  static const struct perf_pmu_test_event eist_trans = {
+>  	.event = {
+> -		.pmu = "cpu",
+> +		.pmu = "default_core",
+>  		.name = "eist_trans",
+>  		.event = "event=0x3a,period=200000,umask=0x0",
+>  		.desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
+> @@ -104,7 +104,7 @@ static const struct perf_pmu_test_event eist_trans = {
+>  
+>  static const struct perf_pmu_test_event l3_cache_rd = {
+>  	.event = {
+> -		.pmu = "cpu",
+> +		.pmu = "default_core",
+>  		.name = "l3_cache_rd",
+>  		.event = "event=0x40",
+>  		.desc = "L3 cache access, read",
+> @@ -391,8 +391,8 @@ static int compare_alias_to_test_event(struct pmu_event_info *alias,
+>  		return -1;
+>  	}
+>  
+> -
+> -	if (!is_same(alias->pmu_name, test_event->event.pmu)) {
+> +	if (!is_same(alias->pmu_name, test_event->event.pmu) &&
+> +	    !is_same(alias->pmu_name, "default_core")) {
+>  		pr_debug("testing aliases PMU %s: mismatched pmu_name, %s vs %s\n",
+>  			  pmu_name, alias->pmu_name, test_event->event.pmu);
+>  		return -1;
+> @@ -409,7 +409,7 @@ static int test__pmu_event_table_core_callback(const struct pmu_event *pe,
+>  	struct perf_pmu_test_event const **test_event_table;
+>  	bool found = false;
+>  
+> -	if (strcmp(pe->pmu, "cpu"))
+> +	if (strcmp(pe->pmu, "default_core"))
+>  		test_event_table = &uncore_events[0];
+>  	else
+>  		test_event_table = &core_events[0];
+> @@ -543,6 +543,7 @@ static int __test_core_pmu_event_aliases(const char *pmu_name, int *count)
+>  	INIT_LIST_HEAD(&pmu->caps);
+>  	INIT_LIST_HEAD(&pmu->list);
+>  	pmu->name = strdup(pmu_name);
+> +	pmu->is_core = true;
+>  
+>  	pmu->events_table = table;
+>  	pmu_add_cpu_aliases_table(pmu, table);
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 502fd58c3ea7..cde33e01959a 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -1747,7 +1747,12 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
+>  bool pmu__name_match(const struct perf_pmu *pmu, const char *pmu_name)
+>  {
+>  	return !strcmp(pmu->name, pmu_name) ||
+> -		(pmu->is_uncore && pmu_uncore_alias_match(pmu_name, pmu->name));
+> +		(pmu->is_uncore && pmu_uncore_alias_match(pmu_name, pmu->name)) ||
+> +		/*
+> +		 * jevents and tests use default_core as a marker for any core
+> +		 * PMU as the PMU name varies across architectures.
+> +		 */
+> +	        (pmu->is_core && !strcmp(pmu_name, "default_core"));
+>  }
+>  
+>  bool perf_pmu__is_software(const struct perf_pmu *pmu)
