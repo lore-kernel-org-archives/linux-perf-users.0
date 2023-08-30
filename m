@@ -2,116 +2,206 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35868C83F14
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 21:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE75CC6FA8F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 23:01:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240997AbjH3VPm (ORCPT
+        id S1344310AbjH3XBy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Aug 2023 17:15:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55420 "EHLO
+        Wed, 30 Aug 2023 19:01:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240966AbjH3VPl (ORCPT
+        with ESMTP id S1344304AbjH3XBx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Aug 2023 17:15:41 -0400
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AD07185
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 14:15:10 -0700 (PDT)
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-40c72caec5cso93941cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 14:15:10 -0700 (PDT)
+        Wed, 30 Aug 2023 19:01:53 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA9CD10C2;
+        Wed, 30 Aug 2023 16:01:32 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-68becf931bfso156672b3a.0;
+        Wed, 30 Aug 2023 16:01:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1693429979; x=1694034779; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1693436491; x=1694041291; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dDyEAkj4X8lyPE0FXDJBz2Vf111jV2n3SpJzSYcTvbU=;
-        b=5LX0cRX1qAYkVD5hbYA9f73QVkXLD5HsyrXG6+52kMtyb73QuxL0Wfq7Jh5i1k3x/d
-         PQnUDZIEYCt7ZQaJh6EK+XjV9igHgaA5Tj6nzZ0RTtAuHpvdiFzBSKkNRaopr2rSDIcA
-         b1KiSgvldZAgaUiRU5JUe6RbeJG/PXvd80E0oh2pA4b5Et/rVHbrzo6h36PrPnKuLP0q
-         Wsrx4UeNfBfO0Z7NPy95qMmBjjiNEB56AXCPsVZUyIFhLibCOAWGvOJ491G5Lp7cYkx2
-         T/t3UP66EbRMhj69Wk0wTwkUyCkJ0kUuQNuIJvrA4/Ra/GDizSCK5jtFOCnyX+lDEYwO
-         2B9g==
+        bh=38/N/H/GLJ5V8hDWHlfIwHE79LQlHYidyaRMNuJVW2I=;
+        b=iY0nP4F5gr5uu1Wxsfm3WEdPemKCrpt24jka5xz4SXjSES9M7l38aGKu2TB8d3JEcn
+         H4fCY2OAx41+OlPQ9sE9WLY7JBTj409x3CulZwJAEzj6vXxsLEKdBqG/M3idcWJvwYAF
+         srlVZvdqgcV4DPvPveh98cM6WNz3MfEV4N6fZ+dFqaGlPisr7u84SzA6lCze/YceB7FM
+         ZcU0/pIyjLFIskXpVAQCSTzaAPUdmzH5wrxuvSb7rCZDLPu1LnObNt5UnmP5/7Nq1C2U
+         wxOhGAXK3TiLbILTLnx+5KrW9GbnDBxlt22x+ofwNPD7/+EFe/vDmsd4oQqufzGgzA/k
+         kBFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693429979; x=1694034779;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dDyEAkj4X8lyPE0FXDJBz2Vf111jV2n3SpJzSYcTvbU=;
-        b=a0sg9W3uABKkmvg/K6c118Z9DIWJWeRcXUZ79pCSFvd3+HXIDqtELDLuz6gObFavMa
-         vk2Ge2iJiOHp50jS5HBNwfdcZZzhX+7FmVUFm/qZeNSh5jLr2B3pkNU0xGw8r6cxe/Yg
-         ko08ST3ETWtNENV9CeB+/BhovRr/B5sOtR4RXhqAdtFIIEaxBuABytem+yU6QqPWAnH+
-         1uNgNtFqPUIxuS2PS703GCFLJd/7Q02R9lMXZvkeqNKJfzFfSgSQXRNjtX+SRziLUmJH
-         LDvND38MDIuybD8LhpRTADvUbRgiMfC4QKi86CobYVk+h8IkdAk++fVMwtypcl0SQU1u
-         lkoA==
-X-Gm-Message-State: AOJu0YztK85Hb5PcDVU64VN/A5sAuWbOqY+vJUskkljXIqx2C6RbTrMV
-        11PyYPBzPs5FOGivKFt6ODN1o+v5Zcr2TY51n1dpaY29CkAlD16chV9VRQ==
-X-Google-Smtp-Source: AGHT+IElbYhhvOUi4NfPIKAhxIaRgsTl7PbbvXzQjUMQp1ZbV5tkfal7yheNpzAwaKYnnkhkBjrfsLZUTHF/Gn0CZZ8=
-X-Received: by 2002:ac8:5941:0:b0:3f8:5b2:aef0 with SMTP id
- 1-20020ac85941000000b003f805b2aef0mr84679qtz.24.1693429979372; Wed, 30 Aug
- 2023 14:12:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230830070753.1821629-1-irogers@google.com> <20230830070753.1821629-2-irogers@google.com>
- <4de84370-29f3-75ed-9c91-330636cdd790@linux.intel.com> <CAP-5=fXMgeER2FkAF2jZOAP0c=sxqhU8scxew6jXQrEYjN_S=Q@mail.gmail.com>
- <CAP-5=fUXG9tfN2nahiVpBDiggkhmhFiBZYubCSN6vG4voJ_X2A@mail.gmail.com>
- <b976ef43-25ea-f24a-2c22-0976fafcf0f0@linux.intel.com> <127766c6-033c-dedb-2c56-7e1e7f8bd01b@linux.intel.com>
-In-Reply-To: <127766c6-033c-dedb-2c56-7e1e7f8bd01b@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 30 Aug 2023 14:12:47 -0700
-Message-ID: <CAP-5=fVhEe7N+BQ+8MngjqxRXDBoo6xy065zTn_hdO1CRDTtLw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] perf parse-events: Make common term list to strbuf helper
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        d=1e100.net; s=20221208; t=1693436491; x=1694041291;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=38/N/H/GLJ5V8hDWHlfIwHE79LQlHYidyaRMNuJVW2I=;
+        b=QVvTyTpjG5YeMxBQ9c5gZtO5SNIqnMVs7zMw921AdWfonmz0MVaYVAvPcok6mFoptX
+         +sYi7mH9k2vRk7XjMFrx3ttdEDtHi73N9vQWoS+YKicFpl+wUQJiC0kptQ+Up1u8N8pQ
+         rC/ITP/CK7zXpb8zVEKTcFiHYSyIAyzfRh9C2E7kVerq1kQX3yA+ltwMs339qoG3kKNY
+         og0XklU7JhYGthZrOYgfnGKBR/o1ruKwbojwnlKyuX+ngqtmPAtywuSntYNb7fhjXD4E
+         y6yn0LdIJF1aCgWBmQh5TIQv/z6HglBi9vpNeb04Sl2+A5V2Wf+8rXRzBMQzVJpV8Bcs
+         CeRg==
+X-Gm-Message-State: AOJu0Yx0Diuy1SGauycxGAUM5WoFH9XTr3ETWgySq+lNnSPEazJY9elb
+        iLrshsVrFH39KWDSS4vQWUU=
+X-Google-Smtp-Source: AGHT+IFVBQ29ZdS7/4HgjFrEpJ24NutIBVg/N3aWKy2odlkHn9KE3ha9VEcT+aVWZaLO/JjElP21/A==
+X-Received: by 2002:a05:6a00:150b:b0:68b:ff3b:e140 with SMTP id q11-20020a056a00150b00b0068bff3be140mr3712127pfu.8.1693436490771;
+        Wed, 30 Aug 2023 16:01:30 -0700 (PDT)
+Received: from bangji.corp.google.com ([2620:15c:2c0:5:4366:cd91:1c34:2aa7])
+        by smtp.gmail.com with ESMTPSA id j13-20020aa7928d000000b00689f8dc26c2sm92531pfa.133.2023.08.30.16.01.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Aug 2023 16:01:30 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
+Subject: [PATCH 1/5] perf tools: Add read_all_cgroups() and __cgroup_find()
+Date:   Wed, 30 Aug 2023 16:01:22 -0700
+Message-ID: <20230830230126.260508-2-namhyung@kernel.org>
+X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
+In-Reply-To: <20230830230126.260508-1-namhyung@kernel.org>
+References: <20230830230126.260508-1-namhyung@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Aug 30, 2023 at 12:35=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.=
-com> wrote:
->
->
->
-> On 2023-08-30 2:29 p.m., Liang, Kan wrote:
-> >> The problem
-> >> is how we encode terms of an event name, it is indistinguishable when
-> >> the of the user field is 1. I'll probably add something to fix this
-> >> later, but it only impacts debug output and perf list, so I'm not
-> >> overly worried.
-> > It should be OK for the debug output.
-> >
->
-> Not just the debug output. It also impacts the perf list --detail.
->
-> With the patch,
-> perf list --detail | grep uops_retired.heavy -A 2
->   uops_retired.heavy
->        [Retired uops except the last uop of each instruction. Unit:
-> cpu_core]
->         cpu_core/event=3D0xc2,period=3D0x1e8483,umask/
->
-> Without the patch,
-> perf list --detail | grep uops_retired.heavy -A 2
->   uops_retired.heavy
->        [Retired uops except the last uop of each instruction. Unit:
-> cpu_core]
->         cpu_core/event=3D0xc2,period=3D0x1e8483,umask=3D0x1/
+The read_all_cgroups() is to build a tree of cgroups in the system and
+users can look up a cgroup using __cgroup_find().
 
-Right, nobody uses --detail ;-) I'll write the fix.
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/cgroup.c | 61 ++++++++++++++++++++++++++++++++++------
+ tools/perf/util/cgroup.h |  4 +++
+ 2 files changed, 57 insertions(+), 8 deletions(-)
 
-Thanks,
-Ian
+diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
+index bfb13306d82c..2e969d1464f4 100644
+--- a/tools/perf/util/cgroup.c
++++ b/tools/perf/util/cgroup.c
+@@ -48,28 +48,36 @@ static int open_cgroup(const char *name)
+ }
+ 
+ #ifdef HAVE_FILE_HANDLE
+-int read_cgroup_id(struct cgroup *cgrp)
++static u64 __read_cgroup_id(const char *path)
+ {
+-	char path[PATH_MAX + 1];
+-	char mnt[PATH_MAX + 1];
+ 	struct {
+ 		struct file_handle fh;
+ 		uint64_t cgroup_id;
+ 	} handle;
+ 	int mount_id;
+ 
++	handle.fh.handle_bytes = sizeof(handle.cgroup_id);
++	if (name_to_handle_at(AT_FDCWD, path, &handle.fh, &mount_id, 0) < 0)
++		return -1ULL;
++
++	return handle.cgroup_id;
++}
++
++int read_cgroup_id(struct cgroup *cgrp)
++{
++	char path[PATH_MAX + 1];
++	char mnt[PATH_MAX + 1];
++
+ 	if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1, "perf_event"))
+ 		return -1;
+ 
+ 	scnprintf(path, PATH_MAX, "%s/%s", mnt, cgrp->name);
+ 
+-	handle.fh.handle_bytes = sizeof(handle.cgroup_id);
+-	if (name_to_handle_at(AT_FDCWD, path, &handle.fh, &mount_id, 0) < 0)
+-		return -1;
+-
+-	cgrp->id = handle.cgroup_id;
++	cgrp->id = __read_cgroup_id(path);
+ 	return 0;
+ }
++#else
++static inline u64 __read_cgroup_id(const char *path) { return -1ULL; }
+ #endif  /* HAVE_FILE_HANDLE */
+ 
+ #ifndef CGROUP2_SUPER_MAGIC
+@@ -562,6 +570,11 @@ struct cgroup *cgroup__findnew(struct perf_env *env, uint64_t id,
+ 	return cgrp;
+ }
+ 
++struct cgroup *__cgroup__find(struct rb_root *root, uint64_t id)
++{
++	return __cgroup__findnew(root, id, /*create=*/false, /*path=*/NULL);
++}
++
+ struct cgroup *cgroup__find(struct perf_env *env, uint64_t id)
+ {
+ 	struct cgroup *cgrp;
+@@ -587,3 +600,35 @@ void perf_env__purge_cgroups(struct perf_env *env)
+ 	}
+ 	up_write(&env->cgroups.lock);
+ }
++
++void read_all_cgroups(struct rb_root *root)
++{
++	char mnt[PATH_MAX];
++	struct cgroup_name *cn;
++	int prefix_len;
++
++	if (cgroupfs_find_mountpoint(mnt, sizeof(mnt), "perf_event"))
++		return;
++
++	/* cgroup_name will have a full path, skip the root directory */
++	prefix_len = strlen(mnt);
++
++	/* collect all cgroups in the cgroup_list */
++	if (nftw(mnt, add_cgroup_name, 20, 0) < 0)
++		return;
++
++	list_for_each_entry(cn, &cgroup_list, list) {
++		const char *name;
++		u64 cgrp_id;
++
++		/* cgroup_name might have a full path, skip the prefix */
++		name = cn->name + prefix_len;
++		if (name[0] == '\0')
++			name = "/";
++
++		cgrp_id = __read_cgroup_id(cn->name);
++		__cgroup__findnew(root, cgrp_id, /*create=*/true, name);
++	}
++
++	release_cgroup_list();
++}
+diff --git a/tools/perf/util/cgroup.h b/tools/perf/util/cgroup.h
+index 12256b78608c..beb6fe1012ed 100644
+--- a/tools/perf/util/cgroup.h
++++ b/tools/perf/util/cgroup.h
+@@ -37,6 +37,7 @@ int parse_cgroups(const struct option *opt, const char *str, int unset);
+ struct cgroup *cgroup__findnew(struct perf_env *env, uint64_t id,
+ 			       const char *path);
+ struct cgroup *cgroup__find(struct perf_env *env, uint64_t id);
++struct cgroup *__cgroup__find(struct rb_root *root, uint64_t id);
+ 
+ void perf_env__purge_cgroups(struct perf_env *env);
+ 
+@@ -49,6 +50,9 @@ static inline int read_cgroup_id(struct cgroup *cgrp __maybe_unused)
+ }
+ #endif  /* HAVE_FILE_HANDLE */
+ 
++/* read all cgroups in the system and save them in the rbtree */
++void read_all_cgroups(struct rb_root *root);
++
+ int cgroup_is_v2(const char *subsys);
+ 
+ #endif /* __CGROUP_H__ */
+-- 
+2.42.0.283.g2d96d420d3-goog
 
-> Thanks,
-> Kan
->
->
->
