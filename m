@@ -2,58 +2,56 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E906C83F01
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 18:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8385FC6FA8F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 18:34:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230392AbjH3Sel (ORCPT
+        id S233193AbjH3Sen (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Aug 2023 14:34:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35742 "EHLO
+        Wed, 30 Aug 2023 14:34:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241806AbjH3HIF (ORCPT
+        with ESMTP id S242225AbjH3Haq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Aug 2023 03:08:05 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E94071A3
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 00:08:01 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d72f3290e6eso6204715276.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 00:08:01 -0700 (PDT)
+        Wed, 30 Aug 2023 03:30:46 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C70ACCA
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 00:30:41 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-58fc4291239so74612257b3.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 00:30:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1693379281; x=1693984081; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UWjR07DslEHoxFkUFyN0zk+/sh01QB5CImJEAdjEgaI=;
-        b=gWa6jtDYt2nnNVW71I/ujO7LKvN5KybGe78HYoeqlkxrlE7cvuCCBfiy6jxf7DHFl7
-         OJ7yMfCxrzSS//iFre3iEtDXtWWxqIowlQDrrt2l5GomNqJNxrYRZKp58xJzDKnmp7Fj
-         viv1qYwBH7TiIyip2Uw2mCAlc7si3yeWGbUhcqYYaeIZYrAN6HvKMB5fJSM1fPmsrBBZ
-         pMVD5HS4DFMs+Wtvi5gcQ87JZzSUDKzic4nSNLLGfm+FuXBJgdg1yURU9TORip/GFCSo
-         EgTEm6wEtsQ9bE2/qjkll4DOKTglRPspSqRhfeRDNcYiRbhk1vhxvKEpEekJyplnoXlZ
-         Kgcg==
+        d=google.com; s=20221208; t=1693380640; x=1693985440; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+VcEgrVJw9/Cn1VwNm/CzRA0xRzxNz/P7Du2BYg5res=;
+        b=WSOZtGRlcVXviTqT41lJUNAIQIVzdsLhT2HHtM+7Ff85C3UWIaThqt2tkZrjnSMyMp
+         ORbhkeNJaV0XYzJiDk6W/8MrOLDn7t7dZQyUd5TqnM/rBb5OsiSHSgFJbDODvlqznux9
+         HAo7VuloSEwZItdCANDP07jcAFDzUfAw4mORE5vsiWszdvHauanlhoYq2mQmXcEZM2kq
+         uVc8EAodSnnGetQvgBvTDM+EE23LGFB5x3atsH+8yxAFrwGfInmr8Q5Aw8SmdE4UarE3
+         ox3MBylZ1Xf4btY/keBe+pL8bhmuZ+i5Y6fbaX6/dG/Dhtw6mvEnLB7doWxl+P/p+wUc
+         6g/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693379281; x=1693984081;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UWjR07DslEHoxFkUFyN0zk+/sh01QB5CImJEAdjEgaI=;
-        b=Znlu933e1PJ/p9G8fRw0teO2/l0HGokodg3UL/UN3f5EOvhz+cmVcc4miODHBJ/78P
-         ztR6JJhhrF/fOYsRO3RhExoAFLJcx3PNjv5Q0qTlU0u8XVmEEMmPx5u+KAZ6J0i8u5ut
-         uv8QWZY3BHn20TQOoJu+89Og7nviDAdYiBvNQosY9D/kxPh5oWm9HTjW5HZyclgU8QaF
-         hPqcYVqQRlw5kzSAFhCxktBvYAw90+edxORkrK6Y2D6o428GXVTvjZDnIpkLXbsrMcpH
-         pWZbR4HATO11yXGx5mI3WIwdaFVpGNqUV5LcXTk+D6R1JsK4h4wRW110bh/FLq4OxIbI
-         lw0A==
-X-Gm-Message-State: AOJu0YwAvn1/vsdEzadcjJzxrBsKTWS0e0kOMxEGgqIFSlC/o7oLCXbn
-        /3K29QtLRIcXphTqOTTJdC9GaOsuD+1d
-X-Google-Smtp-Source: AGHT+IEiUIFYUkfVscPBJkODC6Qx/HUecER+pV/0rBrDnPCwkgaDU4OzTNBwXJyn+ptjwi+2rNPWt+FGCqQL
+        d=1e100.net; s=20221208; t=1693380640; x=1693985440;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+VcEgrVJw9/Cn1VwNm/CzRA0xRzxNz/P7Du2BYg5res=;
+        b=X4vacDhZkyqfL3hZxkSSLQTSyQoFTdvQKbwKi/W+Mfa82XVQpP+6ISnQMTAIC6QFAt
+         jNQOwWc3MeZHIKhX8cxEz8J3CHz0AfzlsY9+HsJT/pDC9ol5s658RdQEoc3A7/RoDqDp
+         yw0TW9Z/MXw5wO/uX3jinEWiR2Kj1DNYj32gG36IN3FqIiY/ZzMzTxFxOcVGyDr9VLgS
+         cV4q4lZy6JfAllT9OclZSS7+m4ohXqjm8bxPozuHUwPluZfpA6Pifj1Grd4Uw6SZPEmJ
+         g4ao6OFlNDwpiGMdYv7r0Fhr2zu5SKzkL31LHkNXCa5B/hmPX2KrX6g6BwZ1e3z3fGyJ
+         3Big==
+X-Gm-Message-State: AOJu0YzROO4VNHw8pKZCirDs+emqDsUM0O2EHWEzHp0/LJEM8lXV/CMR
+        k7qPw59dbsePNqnrVEFayhz3vBYIsyXH
+X-Google-Smtp-Source: AGHT+IGhjWpqdd6O0tWiW4u/Z4O9VmB0rjp/VgcmWd5FXOz24gEhwSmvRHVNBFKW+bu0uIcIsOcCfbsAlaRl
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:d623:3cd7:ecbc:8798])
- (user=irogers job=sendgmr) by 2002:a25:cc44:0:b0:d18:73fc:40af with SMTP id
- l65-20020a25cc44000000b00d1873fc40afmr33179ybf.5.1693379281209; Wed, 30 Aug
- 2023 00:08:01 -0700 (PDT)
-Date:   Wed, 30 Aug 2023 00:07:52 -0700
-In-Reply-To: <20230830070753.1821629-1-irogers@google.com>
-Message-Id: <20230830070753.1821629-2-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:dc05:0:b0:d47:8db3:8bc9 with SMTP id
+ y5-20020a25dc05000000b00d478db38bc9mr40344ybe.0.1693380640610; Wed, 30 Aug
+ 2023 00:30:40 -0700 (PDT)
+Date:   Wed, 30 Aug 2023 00:30:26 -0700
+Message-Id: <20230830073026.1829912-1-irogers@google.com>
 Mime-Version: 1.0
-References: <20230830070753.1821629-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.rc2.253.gd59a3bf2b4-goog
-Subject: [PATCH v1 2/3] perf parse-events: Make common term list to strbuf helper
+Subject: [PATCH v1] perf metric: Add #num_cpus_online literal
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -65,272 +63,69 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Kan Liang <kan.liang@linux.intel.com>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
         James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Perry Taylor <perry.taylor@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-A term list is turned into a string for debug output and for the str
-value in the alias. Add a helper to do this based on existing code,
-but then fix for situations like events being identified. Use strbuf
-to manage the dynamic memory allocation and remove the 256 byte
-limit. Use in various places the string of the term list is required.
-
-Before:
-```
-$ sudo perf stat -vv -e inst_retired.any true
-Using CPUID GenuineIntel-6-8D-1
-intel_pt default config: tsc,mtc,mtc_period=3,psb_period=3,pt,branch
-Attempting to add event pmu 'cpu' with 'inst_retired.any,' that may result in non-fatal errors
-After aliases, add event pmu 'cpu' with 'event,period,' that may result in non-fatal errors
-inst_retired.any -> cpu/inst_retired.any/
-...
-```
-
-After:
-```
-$ sudo perf stat -vv -e inst_retired.any true
-Using CPUID GenuineIntel-6-8D-1
-intel_pt default config: tsc,mtc,mtc_period=3,psb_period=3,pt,branch
-Attempt to add: cpu/inst_retired.any/
-..after resolving event: cpu/event=0xc0,period=0x1e8483/
-inst_retired.any -> cpu/event=0xc0,period=0x1e8483/
-...
-```
+Returns the number of CPUs online, unlike #num_cpus that returns the
+number present. Add a test of the property. This will be used in
+future Intel metrics.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/parse-events.c | 101 ++++++++++++++++++++++++---------
- tools/perf/util/parse-events.h |   2 +
- tools/perf/util/pmu.c          |  19 ++-----
- 3 files changed, 81 insertions(+), 41 deletions(-)
+ tools/perf/tests/expr.c | 5 ++++-
+ tools/perf/util/expr.c  | 7 +++++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 4c812fbe0cf9..0b941b58bdc0 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -13,7 +13,7 @@
- #include <subcmd/parse-options.h>
- #include "parse-events.h"
- #include "string2.h"
--#include "strlist.h"
-+#include "strbuf.h"
- #include "debug.h"
- #include <api/fs/tracing_path.h>
- #include <perf/cpumap.h>
-@@ -1303,19 +1303,6 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- 
- 	pmu = parse_state->fake_pmu ?: perf_pmus__find(name);
- 
--	if (verbose > 1 && !(pmu && pmu->selectable)) {
--		fprintf(stderr, "Attempting to add event pmu '%s' with '",
--			name);
--		if (head_config) {
--			struct parse_events_term *term;
--
--			list_for_each_entry(term, head_config, list) {
--				fprintf(stderr, "%s,", term->config);
--			}
--		}
--		fprintf(stderr, "' that may result in non-fatal errors\n");
--	}
--
- 	if (!pmu) {
- 		char *err_str;
- 
-@@ -1325,6 +1312,21 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- 			parse_events_error__handle(err, loc->first_column, err_str, NULL);
- 		return -EINVAL;
- 	}
-+
-+	if (verbose > 1) {
-+		struct strbuf sb;
-+
-+		strbuf_init(&sb, /*hint=*/ 0);
-+		if (pmu->selectable && !head_config) {
-+			strbuf_addf(&sb, "%s//", name);
-+		} else {
-+			strbuf_addf(&sb, "%s/", name);
-+			parse_events_term__to_strbuf(head_config, &sb);
-+			strbuf_addch(&sb, '/');
-+		}
-+		fprintf(stderr, "Attempt to add: %s\n", sb.buf);
-+		strbuf_release(&sb);
-+	}
- 	if (head_config)
- 		fix_raw(head_config, pmu);
- 
-@@ -1349,16 +1351,12 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- 		return -EINVAL;
- 
- 	if (verbose > 1) {
--		fprintf(stderr, "After aliases, add event pmu '%s' with '",
--			name);
--		if (head_config) {
--			struct parse_events_term *term;
-+		struct strbuf sb;
- 
--			list_for_each_entry(term, head_config, list) {
--				fprintf(stderr, "%s,", term->config);
--			}
--		}
--		fprintf(stderr, "' that may result in non-fatal errors\n");
-+		strbuf_init(&sb, /*hint=*/ 0);
-+		parse_events_term__to_strbuf(head_config, &sb);
-+		fprintf(stderr, "..after resolving event: %s/%s/\n", name, sb.buf);
-+		strbuf_release(&sb);
- 	}
- 
- 	/*
-@@ -1460,7 +1458,12 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 		parse_events_copy_term_list(head, &orig_head);
- 		if (!parse_events_add_pmu(parse_state, list, pmu->name,
- 					  orig_head, auto_merge_stats, loc)) {
--			pr_debug("%s -> %s/%s/\n", str, pmu->name, str);
-+			struct strbuf sb;
-+
-+			strbuf_init(&sb, /*hint=*/ 0);
-+			parse_events_term__to_strbuf(orig_head, &sb);
-+			pr_debug("%s -> %s/%s/\n", str, pmu->name, sb.buf);
-+			strbuf_release(&sb);
- 			ok++;
- 		}
- 		parse_events_terms__delete(orig_head);
-@@ -1469,7 +1472,12 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 	if (parse_state->fake_pmu) {
- 		if (!parse_events_add_pmu(parse_state, list, str, head,
- 					  /*auto_merge_stats=*/true, loc)) {
--			pr_debug("%s -> %s/%s/\n", str, "fake_pmu", str);
-+			struct strbuf sb;
-+
-+			strbuf_init(&sb, /*hint=*/ 0);
-+			parse_events_term__to_strbuf(head, &sb);
-+			pr_debug("%s -> %s/%s/\n", str, "fake_pmu", sb.buf);
-+			strbuf_release(&sb);
- 			ok++;
- 		}
- 	}
-@@ -2085,7 +2093,7 @@ void parse_events_error__handle(struct parse_events_error *err, int idx,
- 		break;
- 	default:
- 		pr_debug("Multiple errors dropping message: %s (%s)\n",
--			err->str, err->help);
-+			err->str, err->help ?: "<no help>");
- 		free(err->str);
- 		err->str = str;
- 		free(err->help);
-@@ -2502,6 +2510,47 @@ void parse_events_terms__delete(struct list_head *terms)
- 	free(terms);
- }
- 
-+int parse_events_term__to_strbuf(struct list_head *term_list, struct strbuf *sb)
-+{
-+	struct parse_events_term *term;
-+	bool first = true;
-+
-+	if (!term_list)
-+		return 0;
-+
-+	list_for_each_entry(term, term_list, list) {
-+		int ret;
-+
-+		if (!first) {
-+			ret = strbuf_addch(sb, ',');
-+			if (ret < 0)
-+				return ret;
-+		}
-+		first = false;
-+
-+		if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM)
-+			if (term->type_term == PARSE_EVENTS__TERM_TYPE_USER && term->val.num == 1)
-+				ret = strbuf_addf(sb, "%s", term->config);
-+			else
-+				ret = strbuf_addf(sb, "%s=%#"PRIx64, term->config, term->val.num);
-+		else if (term->type_val == PARSE_EVENTS__TERM_TYPE_STR) {
-+			if (term->config) {
-+				ret = strbuf_addf(sb, "%s=", term->config);
-+				if (ret < 0)
-+					return ret;
-+			} else if (term->type_term < __PARSE_EVENTS__TERM_TYPE_NR) {
-+				ret = strbuf_addf(sb, "%s=", config_term_names[term->type_term]);
-+				if (ret < 0)
-+					return ret;
-+			}
-+			ret = strbuf_addf(sb, "%s", term->val.str);
-+		}
-+		if (ret < 0)
-+			return ret;
-+	}
-+	return 0;
-+}
-+
- void parse_events_evlist_error(struct parse_events_state *parse_state,
- 			       int idx, const char *str)
+diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+index c1c3fcbc2753..81229fa4f1e9 100644
+--- a/tools/perf/tests/expr.c
++++ b/tools/perf/tests/expr.c
+@@ -70,7 +70,7 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
  {
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 6d75d853ce00..20bdc35d6112 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -18,6 +18,7 @@ struct parse_events_error;
- 
- struct option;
- struct perf_pmu;
-+struct strbuf;
- 
- const char *event_type(int type);
- 
-@@ -152,6 +153,7 @@ int parse_events_term__clone(struct parse_events_term **new,
- void parse_events_term__delete(struct parse_events_term *term);
- void parse_events_terms__delete(struct list_head *terms);
- void parse_events_terms__purge(struct list_head *terms);
-+int parse_events_term__to_strbuf(struct list_head *term_list, struct strbuf *sb);
- int parse_events__modifier_event(struct list_head *list, char *str, bool add);
- int parse_events__modifier_group(struct list_head *list, char *event_mod);
- int parse_events_name(struct list_head *list, const char *name);
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index b3f8f3f1e900..8dbb7008877e 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -507,12 +507,11 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
- 				const char *desc, const char *val, FILE *val_fd,
- 				const struct pmu_event *pe)
- {
--	struct parse_events_term *term;
- 	struct perf_pmu_alias *alias;
+ 	struct expr_id_data *val_ptr;
+ 	const char *p;
+-	double val, num_cpus, num_cores, num_dies, num_packages;
++	double val, num_cpus_online, num_cpus, num_cores, num_dies, num_packages;
  	int ret;
--	char newval[256];
- 	const char *long_desc = NULL, *topic = NULL, *unit = NULL, *pmu_name = NULL;
- 	bool deprecated = false, perpkg = false;
-+	struct strbuf sb;
+ 	struct expr_parse_ctx *ctx;
+ 	bool is_intel = false;
+@@ -227,7 +227,10 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
  
- 	if (perf_pmu__find_alias(pmu, name, /*load=*/ false)) {
- 		/* Alias was already created/loaded. */
-@@ -582,20 +581,10 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
- 	 *
- 	 * Rebuild string to make alias->str member comparable.
- 	 */
--	ret = 0;
--	list_for_each_entry(term, &alias->terms, list) {
--		if (ret)
--			ret += scnprintf(newval + ret, sizeof(newval) - ret,
--					 ",");
--		if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM)
--			ret += scnprintf(newval + ret, sizeof(newval) - ret,
--					 "%s=%#x", term->config, term->val.num);
--		else if (term->type_val == PARSE_EVENTS__TERM_TYPE_STR)
--			ret += scnprintf(newval + ret, sizeof(newval) - ret,
--					 "%s=%s", term->config, term->val.str);
--	}
- 	zfree(&alias->str);
--	alias->str = strdup(newval);
-+	strbuf_init(&sb, /*hint=*/ 0);
-+	parse_events_term__to_strbuf(&alias->terms, &sb);
-+	alias->str = strbuf_detach(&sb, /*sz=*/ NULL);
- 	if (!pe)
- 		pmu->sysfs_aliases++;
- 	else
+ 	/* Test toplogy constants appear well ordered. */
+ 	expr__ctx_clear(ctx);
++	TEST_ASSERT_VAL("#num_cpus_online",
++			expr__parse(&num_cpus_online, ctx, "#num_cpus_online") == 0);
+ 	TEST_ASSERT_VAL("#num_cpus", expr__parse(&num_cpus, ctx, "#num_cpus") == 0);
++	TEST_ASSERT_VAL("#num_cpus >= #num_cpus_online", num_cpus >= num_cpus_online);
+ 	TEST_ASSERT_VAL("#num_cores", expr__parse(&num_cores, ctx, "#num_cores") == 0);
+ 	TEST_ASSERT_VAL("#num_cpus >= #num_cores", num_cpus >= num_cores);
+ 	TEST_ASSERT_VAL("#num_dies", expr__parse(&num_dies, ctx, "#num_dies") == 0);
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index 0985a3cbc6f9..4488f306de78 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -427,6 +427,13 @@ double expr__get_literal(const char *literal, const struct expr_scanner_ctx *ctx
+ 		result = cpu__max_present_cpu().cpu;
+ 		goto out;
+ 	}
++	if (!strcmp("#num_cpus_online", literal)) {
++		struct perf_cpu_map *online = cpu_map__online();
++
++		if (online)
++			result = perf_cpu_map__nr(online);
++		goto out;
++	}
+ 
+ 	if (!strcasecmp("#system_tsc_freq", literal)) {
+ 		result = arch_get_tsc_freq();
 -- 
 2.42.0.rc2.253.gd59a3bf2b4-goog
 
