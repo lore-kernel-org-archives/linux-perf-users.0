@@ -2,210 +2,259 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F07C83F01
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 19:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B2AC83F01
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 19:49:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234005AbjH3S7E (ORCPT
+        id S235980AbjH3Ttl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Aug 2023 14:59:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50594 "EHLO
+        Wed, 30 Aug 2023 15:49:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243151AbjH3SqU (ORCPT
+        with ESMTP id S239466AbjH3TtU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Aug 2023 14:46:20 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on20717.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe5a::717])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A52810FF;
-        Wed, 30 Aug 2023 11:44:39 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bWo5iL27JgXkE/N1TcdMKa90qsDHvFiMS/UjMz1vJh0R3Jt5WtdptwFmOu80dZkxQ6ISzufdhc4l7xdNJi+aiiF7fUCqYkhIzYc5WnITWQBMroGdjpJjSPxT1OH4l41ISO4nCztanqGFAdfHTHDUdrM8saW5K1cYYt7hRw+KmVQTyHsxMb2PDAxF0//WAxCmCKV99jx5hkyNs824dcIkzgZCP/170RzT9gosFpOuXbmogMYjrR3+iPDkIxxmLEgYyRiKCmIxDWzh9kZOaUoozVISkqDQzBgGwP48LgNerzPsK5YBEJ952a06nUb6Fb1hkeakMt2WkCD9vFYvPdRQ5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VY5rr4fRuR/W2E4IDh55cQDh8mYna2XnENKF1qQd2ho=;
- b=DET0hJf8oSzQIjJPJJ81RU/zVIzovHtpvXUKcySN67dVsjOUE64cE5Iu1rY6DXMapVsRESbNg+qf/acbNfTrc/+OG2E7xnsZy4QljwXMcfJoJSjxjqOJUldTyz+6E8qNFP7FNcY4v/iCdcjmE2QXIM3tY58pKAYOfctHtvhhIZAzrMND39IHi3Fks3oFt99615YkgP72LxYdLGqimabxF8e7ftv6xaHRzKR8kByUnvkeQglwwpngBR+pfCY8sfIdfP4fs5ksX5mhrvhMneeJBTbEp8iwa4PVHYlqFDOmlBs8P3U3up8e9X1Iwr30moXzr/Ayjq0gy2vyqruIue1hBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
+        Wed, 30 Aug 2023 15:49:20 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72DB5137
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 12:15:13 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-68c0cb00fb3so2647b3a.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 12:15:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VY5rr4fRuR/W2E4IDh55cQDh8mYna2XnENKF1qQd2ho=;
- b=N9QgHv9/XQ4NdT3NOlJynXFRe61XG/hR4k/d16nFvq+YyqdS/mDUqjSo9mciAr7tR45a1lyZvkQmqGNlmdeLIkqhqZmbjOOpkYeE1V+4VvtW4qLbduoRuifsbQBkM4n83zEOqPmEHN3ibugypaUPkDsQ3B4gweu6fB+9dGd4CqE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from DM5PR0102MB3590.prod.exchangelabs.com (2603:10b6:4:a4::25) by
- LV2PR01MB7599.prod.exchangelabs.com (2603:10b6:408:177::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6745.18; Wed, 30 Aug 2023 18:43:04 +0000
-Received: from DM5PR0102MB3590.prod.exchangelabs.com
- ([fe80::bfa4:8250:f526:5015]) by DM5PR0102MB3590.prod.exchangelabs.com
- ([fe80::bfa4:8250:f526:5015%6]) with mapi id 15.20.6745.020; Wed, 30 Aug 2023
- 18:43:04 +0000
-Date:   Wed, 30 Aug 2023 11:42:47 -0700 (PDT)
-From:   Ilkka Koskinen <ilkka@os.amperecomputing.com>
-To:     James Clark <james.clark@arm.com>
-cc:     Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        d=chromium.org; s=google; t=1693422818; x=1694027618; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yfL7hyBseirw2ULKrzVmWf2hUa/6+UsGULqRK6gzzdQ=;
+        b=KWECH72bX1f5MsyFRIad4m0Bx39maIHmhTi/wzRulSiE5AyaBBqMAMYtA+5DhsMm+c
+         dcwra+tWcZ64TO828x7pDsguNi43Q2rIY1nIXAhb1dqvmWSj8+CrjihD6JMmv3u/Wqda
+         NxPU7mBuPHqz3NEOahewys2WOlR7WrFBoc2Bo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693422818; x=1694027618;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yfL7hyBseirw2ULKrzVmWf2hUa/6+UsGULqRK6gzzdQ=;
+        b=bsV03ykYVFKP3UojFhMzEX/mK7+bUbxd1mnpIZzjtlDYF/1//BAt4YxYZARKzt5Fg2
+         HvPZtRXsojwPccT+GSEOKXGaAiP2q2yr3tN/52h0cANG8OwpxP5ZRubzzqqJcm9W7wpO
+         hTLZcX06vztsWYs03fAOv5jVklIYSTIoAMZTlcemdkuXI7zJLAhaCczQan8NTq08E1hj
+         YaSMlntaXiw0EyiiEdwHL8i7dhOX4Ng7bia2yaVOez+3CNm3ugps2uDZMOGAQtka1CrK
+         uqFS3iIQvq+CE8ZLSYHArt/9GctYSf7D0bOdL0EiEZ5mDDy/11if1dckKqAudbY4d5uh
+         PsJw==
+X-Gm-Message-State: AOJu0Yxf5bIxi5HUps6hL9Iv+zE2LDPkAEa42zxyE6rgUJVxuMyIf/kk
+        GUNt3kJkisIywSHCgPJX4ZMr7Q==
+X-Google-Smtp-Source: AGHT+IGsRVBhxDwcrTroEG3U48LgMw7Y7iXGf6tvH99XoYoezCk7L0nZpJx4PQuaXGFWu2v93kvrxQ==
+X-Received: by 2002:a05:6a21:35c8:b0:14d:8dbe:1960 with SMTP id ba8-20020a056a2135c800b0014d8dbe1960mr2942041pzc.55.1693422817689;
+        Wed, 30 Aug 2023 12:13:37 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:9d:2:e315:dec6:467c:83c5])
+        by smtp.gmail.com with ESMTPSA id c15-20020a170902d48f00b001bbdf32f011sm11338928plg.269.2023.08.30.12.13.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Aug 2023 12:13:37 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Tomohiro Misono <misono.tomohiro@fujitsu.com>,
+        Stephane Eranian <eranian@google.com>,
+        kgdb-bugreport@lists.sourceforge.net,
         Peter Zijlstra <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Kleikamp <dave.kleikamp@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2] perf vendor events arm64: Add AmpereOne metrics
-In-Reply-To: <1299e1ff-2543-6ee5-dc32-bc098bd6bfe1@arm.com>
-Message-ID: <e674954c-dc8-d961-8ff1-ebcde95813b7@os.amperecomputing.com>
-References: <20230826192352.3043220-1-ilkka@os.amperecomputing.com> <1299e1ff-2543-6ee5-dc32-bc098bd6bfe1@arm.com>
-Content-Type: text/plain; charset=US-ASCII; format=flowed
-X-ClientProxiedBy: CH0PR03CA0025.namprd03.prod.outlook.com
- (2603:10b6:610:b0::30) To DM5PR0102MB3590.prod.exchangelabs.com
- (2603:10b6:4:a4::25)
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <swboyd@chromium.org>, ito-yuichi@fujitsu.com,
+        linux-perf-users@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v12 1/7] irqchip/gic-v3: Enable support for SGIs to act as NMIs
+Date:   Wed, 30 Aug 2023 12:11:22 -0700
+Message-ID: <20230830121115.v12.1.I1223c11c88937bd0cbd9b086d4ef216985797302@changeid>
+X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
+In-Reply-To: <20230830191314.1618136-1-dianders@chromium.org>
+References: <20230830191314.1618136-1-dianders@chromium.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM5PR0102MB3590:EE_|LV2PR01MB7599:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9d3f433d-2f1b-457b-3f18-08dba988f1aa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: SisURiHUjzoTy/DdXAN5z/+7I6Cs0HXuJWyBWkObtvnbIZpmGi10t1e3zpQjgXFG7PMfpBybxrfRYUSx3vlykUyQvK4ZG44f+fhO+3fjR/l204DEs9hrIruXPNYxE/bnlN+L7qoCW+gpZwloHeCqKlD4jGMY7uKRGMUOWS5ZAO9Vy/egbjXHfNvL7egXih2srmqICKc60Pho+gaDubs8diPKxEHVstwNwqBX/C3BYC0ldfki50JxlqtJ8wZqEC/jMS9Na9DSxbFLHnWI0ZEavTDZcqTqsa8PAKPaJyYL7s6iDgzLC/EemIriKbQ0iY4aB92pZHoh+/xxz3G50yYpWk7/9s4LDf6Fbad02OK6B3pneqk+o7NG55Z9meC6Cra+pNFEmQeiZGeN+SbrFMtvjw2KkOAGtKjwMP4WfVdtZD65yUkFNcY/Eez8CA9DLqaxF8F5osBpXPxpKdiomKmsikT6JhrCOhqzhjWbSKehElOD4ywM91e2Yul8Yp13+lA+isd1ZDS2BcEPFAHRZ8JQ6tk5ATL0fAN+TCkP5RMJ9YOnZQpcecDyjBnIDt1EVRzExu552JMrl3Y/IsfjQzwt8NHqnLUtI0pCzmEkWUpZ/9cYy7MqdoY1hT9ZgO2yiKeG
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR0102MB3590.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(39850400004)(396003)(136003)(346002)(366004)(376002)(186009)(451199024)(1800799009)(2906002)(7416002)(54906003)(66556008)(66476007)(6916009)(66946007)(316002)(41300700001)(8936002)(4326008)(8676002)(5660300002)(53546011)(6506007)(38350700002)(2616005)(52116002)(6486002)(6512007)(38100700002)(86362001)(478600001)(26005)(6666004)(83380400001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?NN39IHBb4NQFFIP518DWfinyFtuQ1PdXIPQdQHsSZsrYGEP12C/WJw3si/T7?=
- =?us-ascii?Q?kG9+ltaHFL2JDLzQA/RcnvKwsHrpc32NWmLEBOsRenz49zzaOBL48ByBq9zy?=
- =?us-ascii?Q?SAanT5P0hw1iuQ9DrOClaCVUwqFBBtcH86bq+VnOCzF2YvT9rwN3NjMbiDvL?=
- =?us-ascii?Q?9kQ1TBLeXXnPv3tG+IHx4G9oMzgRPXlZ5w2/NF8ARsDimGTJw6boFQyzWbrE?=
- =?us-ascii?Q?u3U/xV+I7q3UG8+TyhF4VkMECDZk57zoZxB6HuyJcVLQyRM8JK0HutjeZQ1V?=
- =?us-ascii?Q?QMOudY2oh33XSQXNdzs+4DGaNzltGxbKRfxS6ywsvjY0A7xNg51HHKJEHXvy?=
- =?us-ascii?Q?weWxaMr1hjVDaE/Zuzm3bVPKSY3XkUhTyZHqohUqCsdh4sU9q5IlhHhHjdYL?=
- =?us-ascii?Q?83CmgXl+o7fh+tDq6gDYW/txCp86cFf9tg/aQCFxyvKxLvn6fDTX0+E9Aj7z?=
- =?us-ascii?Q?HenZM4R/ngr+PcqYkWaVzTTUPpxPRTYEHff1osl/pl4shPFKRnhoXb3lq3Dx?=
- =?us-ascii?Q?UKJjsMPiFu7mgXkq8CyuX9QN09L1rJGDalhhrF7uKYmx73Ee+hnhtg6glyaH?=
- =?us-ascii?Q?M74uqalm5oomMNPfFpMTnL8HzTATpTD7s6UAIsavDa0vpK0m192P4VhcP3NF?=
- =?us-ascii?Q?Yj21b1V2gcrS22tKxQB26j3vpiiP4qsZHE+9P2CsS/pbCmnYn3dw80yYSsXz?=
- =?us-ascii?Q?T6zr0RwJOPDriivt5vxpHceqsXwoajn1eix/tsfiPpErmhZnu9c6aG76TpCz?=
- =?us-ascii?Q?/JbAV34UZ/u4sasj5LStLzqF5+LncdA0qVnduFwyf9gyTdQs8h9G6BLSfaHR?=
- =?us-ascii?Q?BHbRHC4BwcdDm2JLyBahwtoVaEUvy8ip3VvW26lpfL268h0cMSTMtIkRoUmF?=
- =?us-ascii?Q?ueT7pg+TsHX9P2dScgpaGLH+4PF8NiiTf3bfh81kb8QS8OGPGcyON6ROv6/x?=
- =?us-ascii?Q?kQqTGKtHjiVtGrQUIwPu4VsthMjw4A3ZiSaMJANfbIkI+EkUeLa36iJ5+8jd?=
- =?us-ascii?Q?Q0sC7oJYJE09LDbccLhPVW86vRL4Zprs6r4NkrcpeNzBXN6+219+ab1gcN+2?=
- =?us-ascii?Q?ioJvSX9+CNfW3GDNlPEszz9ocUUrQzSnz9eZ7wzVMhERorQMvISVMKz1DdKk?=
- =?us-ascii?Q?pLOG70P0Os6LjYdlLSZXjqXSEXvMhXV7RwlhMtXntxqBQo+cJjbOiFqX90ie?=
- =?us-ascii?Q?tmww/yK2FGNvP3G206hQnY+0kXENVk3voczZtBTqXRloy6C0yyIquDr2JzyL?=
- =?us-ascii?Q?yFrIc67rboGRGGIeaDMYqH5XQfO/EYvBYCO+mJrwGuN1TrYHepvH4VC8NsmA?=
- =?us-ascii?Q?4/h9nTFL/2Xx2XnhPQGN/D4x8wpn7i3vgHr0zq8P6FuJKu86sZ1ygPnYHr/I?=
- =?us-ascii?Q?iqZv2iiHsNnB42LVHKK0lf31V94hzbZ+tszyw0rALY5Tl+S4H25Wbyq/AAp4?=
- =?us-ascii?Q?RVed2JNHqoRxKT7K6diQz1USjhHMQSwv8MJVQ4TRCx/fnuJXGmsgmPOuEdW7?=
- =?us-ascii?Q?RLwBHwM+tTHAQC5QAAlNooP/c3oqCbYeFxoF/WMyKJPdstIxYpruCb4VcjcW?=
- =?us-ascii?Q?jOuj0ipry8bBiiRqV1snvKqYM/t82GqAeUnBj0hboOuBax+MGYCZH5H37HlU?=
- =?us-ascii?Q?ufsXuez7ToRKv4jf5Edr/Cw=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9d3f433d-2f1b-457b-3f18-08dba988f1aa
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR0102MB3590.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Aug 2023 18:43:04.0535
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xgpFu6VjxejL/sF0m4UcNymhcvAG6qt09/eJE7rVXhRVjd9XvkEwlSKVbfsUzhSkIJ+sfybugx+SVGBsMxgXrZIL4kfK1i5odspzeamB15ZlUVK2REKyFGHDWS8kLpeu
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR01MB7599
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+As of commit 6abbd6988971 ("irqchip/gic, gic-v3: Make SGIs use
+handle_percpu_devid_irq()") SGIs are treated the same as PPIs/EPPIs
+and use handle_percpu_devid_irq() by default. Unfortunately,
+handle_percpu_devid_irq() isn't NMI safe, and so to run in an NMI
+context those should use handle_percpu_devid_fasteoi_nmi().
 
+In order to accomplish this, we just have to make room for SGIs in the
+array of refcounts that keeps track of which interrupts are set as
+NMI. We also rename the array and create a new indexing scheme that
+accounts for SGIs.
 
-Hi James,
+Also, enable NMI support prior to gic_smp_init() as allocation of SGIs
+as IRQs/NMIs happen as part of this routine.
 
-On Tue, 29 Aug 2023, James Clark wrote:
->
->
-> On 26/08/2023 20:23, Ilkka Koskinen wrote:
->> This patch adds AmpereOne metrics. The metrics also work around
->> the issue related to some of the events.
->>
->> Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
->> ---
->>  .../arch/arm64/ampere/ampereone/metrics.json  | 396 ++++++++++++++++++
->>  1 file changed, 396 insertions(+)
->>  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/ampereone/metrics.json
->>
->> diff --git a/tools/perf/pmu-events/arch/arm64/ampere/ampereone/metrics.json b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/metrics.json
->> new file mode 100644
->> index 000000000000..b623d8a9e3dc
->> --- /dev/null
->> +++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/metrics.json
->> @@ -0,0 +1,396 @@
->
-> [...]
->
->> +    {
->> +        "MetricExpr": "STALL_SLOT_BACKEND / (CPU_CYCLES * 4)",
->> +        "BriefDescription": "Fraction of slots backend bound",
->> +        "MetricGroup": "Default;TopDownL1",
->> +        "MetricName": "backend_bound",
->> +        "ScaleUnit": "100%"
->> +    },
->
-> Hi Ilkaa,
->
-> For these topdown metrics, as long as they are the same as the standard
-> one you can remove anything that is duplicated. This might make it
-> easier to make changes across all the topdown metrics in the future and
-> have consistent descriptions across CPUs. For example this backend_bound
-> one could look like this:
->
->    {
->        "ArchStdEvent": "backend_bound",
->    }
+Co-developed-by: Sumit Garg <sumit.garg@linaro.org>
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+I'll note that this change is a little more black magic to me than
+others in this series. I don't have a massive amounts of familiarity
+with all the moving parts of gic-v3, so I mostly just followed Mark
+Rutland's advice [1]. Please pay extra attention to make sure I didn't
+do anything too terrible.
 
-Nice, basically the same way as architectured events.
+Mark's advice wasn't a full patch and I ended up doing a bit of work
+to translate it to reality, so I did not add him as "Co-developed-by"
+here. Mark: if you would like this tag then please provide it and your
+Signed-off-by. I certainly won't object.
 
->
-> This assumes that you have the slots sysfs file available, otherwise you
-> could leave only the formula in.
->
-> We also decided to make the units for the topdown metrics "percent of
-> slots" as we thought more specificity in the units was clearer.
+[1] https://lore.kernel.org/r/ZNC-YRQopO0PaIIo@FVFF77S0Q05N.cambridge.arm.com
 
-I'll take a look at those and update the patch accordingly.
+Changes in v12:
+- Added a comment about why we account for 16 SGIs when Linux uses 8.
 
-Cheers, Ilkka
+Changes in v10:
+- Rewrite as needed for 5.11+ as per Mark Rutland and Sumit.
 
->
-> Thanks
-> James
->
->> +    {
->> +        "MetricExpr": "1 - (retired_fraction + slots_lost_misspeculation_fraction + backend_bound)",
->> +        "BriefDescription": "Fraction of slots frontend bound",
->> +        "MetricGroup": "Default;TopDownL1",
->> +        "MetricName": "frontend_bound",
->> +        "ScaleUnit": "100%"
->> +    },
->> +    {
->> +        "MetricExpr": "(OP_SPEC - OP_RETIRED) / (CPU_CYCLES * 4)",
->> +        "BriefDescription": "Fraction of slots lost due to misspeculation",
->> +        "MetricGroup": "Default;TopDownL1",
->> +        "MetricName": "slots_lost_misspeculation_fraction",
->> +        "ScaleUnit": "100%"
->> +    },
->> +    {
->> +        "MetricExpr": "OP_RETIRED / (CPU_CYCLES * 4)",
->> +        "BriefDescription": "Fraction of slots retiring, useful work",
->> +        "MetricGroup": "Default;TopDownL1",
->> +        "MetricName": "retired_fraction",
->> +        "ScaleUnit": "100%"
->> +    },
->> +    {
->
+ drivers/irqchip/irq-gic-v3.c | 59 +++++++++++++++++++++++++-----------
+ 1 file changed, 41 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index eedfa8e9f077..8d20122ba0a8 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -78,6 +78,13 @@ static DEFINE_STATIC_KEY_TRUE(supports_deactivate_key);
+ #define GIC_LINE_NR	min(GICD_TYPER_SPIS(gic_data.rdists.gicd_typer), 1020U)
+ #define GIC_ESPI_NR	GICD_TYPER_ESPIS(gic_data.rdists.gicd_typer)
+ 
++/*
++ * There are 16 SGIs, though we only actually use 8 in Linux. The other 8 SGIs
++ * are potentially stolen by the secure side. Some code, especially code dealing
++ * with hwirq IDs, is simplified by accounting for all 16.
++ */
++#define SGI_NR		16
++
+ /*
+  * The behaviours of RPR and PMR registers differ depending on the value of
+  * SCR_EL3.FIQ, and the behaviour of non-secure priority registers of the
+@@ -125,8 +132,8 @@ EXPORT_SYMBOL(gic_nonsecure_priorities);
+ 		__priority;						\
+ 	})
+ 
+-/* ppi_nmi_refs[n] == number of cpus having ppi[n + 16] set as NMI */
+-static refcount_t *ppi_nmi_refs;
++/* rdist_nmi_refs[n] == number of cpus having the rdist interrupt n set as NMI */
++static refcount_t *rdist_nmi_refs;
+ 
+ static struct gic_kvm_info gic_v3_kvm_info __initdata;
+ static DEFINE_PER_CPU(bool, has_rss);
+@@ -519,9 +526,22 @@ static u32 __gic_get_ppi_index(irq_hw_number_t hwirq)
+ 	}
+ }
+ 
+-static u32 gic_get_ppi_index(struct irq_data *d)
++static u32 __gic_get_rdist_idx(irq_hw_number_t hwirq)
++{
++	switch (__get_intid_range(hwirq)) {
++	case SGI_RANGE:
++	case PPI_RANGE:
++		return hwirq;
++	case EPPI_RANGE:
++		return hwirq - EPPI_BASE_INTID + 32;
++	default:
++		unreachable();
++	}
++}
++
++static u32 gic_get_rdist_idx(struct irq_data *d)
+ {
+-	return __gic_get_ppi_index(d->hwirq);
++	return __gic_get_rdist_idx(d->hwirq);
+ }
+ 
+ static int gic_irq_nmi_setup(struct irq_data *d)
+@@ -545,11 +565,14 @@ static int gic_irq_nmi_setup(struct irq_data *d)
+ 
+ 	/* desc lock should already be held */
+ 	if (gic_irq_in_rdist(d)) {
+-		u32 idx = gic_get_ppi_index(d);
++		u32 idx = gic_get_rdist_idx(d);
+ 
+-		/* Setting up PPI as NMI, only switch handler for first NMI */
+-		if (!refcount_inc_not_zero(&ppi_nmi_refs[idx])) {
+-			refcount_set(&ppi_nmi_refs[idx], 1);
++		/*
++		 * Setting up a percpu interrupt as NMI, only switch handler
++		 * for first NMI
++		 */
++		if (!refcount_inc_not_zero(&rdist_nmi_refs[idx])) {
++			refcount_set(&rdist_nmi_refs[idx], 1);
+ 			desc->handle_irq = handle_percpu_devid_fasteoi_nmi;
+ 		}
+ 	} else {
+@@ -582,10 +605,10 @@ static void gic_irq_nmi_teardown(struct irq_data *d)
+ 
+ 	/* desc lock should already be held */
+ 	if (gic_irq_in_rdist(d)) {
+-		u32 idx = gic_get_ppi_index(d);
++		u32 idx = gic_get_rdist_idx(d);
+ 
+ 		/* Tearing down NMI, only switch handler for last NMI */
+-		if (refcount_dec_and_test(&ppi_nmi_refs[idx]))
++		if (refcount_dec_and_test(&rdist_nmi_refs[idx]))
+ 			desc->handle_irq = handle_percpu_devid_irq;
+ 	} else {
+ 		desc->handle_irq = handle_fasteoi_irq;
+@@ -1279,10 +1302,10 @@ static void gic_cpu_init(void)
+ 	rbase = gic_data_rdist_sgi_base();
+ 
+ 	/* Configure SGIs/PPIs as non-secure Group-1 */
+-	for (i = 0; i < gic_data.ppi_nr + 16; i += 32)
++	for (i = 0; i < gic_data.ppi_nr + SGI_NR; i += 32)
+ 		writel_relaxed(~0, rbase + GICR_IGROUPR0 + i / 8);
+ 
+-	gic_cpu_config(rbase, gic_data.ppi_nr + 16, gic_redist_wait_for_rwp);
++	gic_cpu_config(rbase, gic_data.ppi_nr + SGI_NR, gic_redist_wait_for_rwp);
+ 
+ 	/* initialise system registers */
+ 	gic_cpu_sys_reg_init();
+@@ -1939,12 +1962,13 @@ static void gic_enable_nmi_support(void)
+ 		return;
+ 	}
+ 
+-	ppi_nmi_refs = kcalloc(gic_data.ppi_nr, sizeof(*ppi_nmi_refs), GFP_KERNEL);
+-	if (!ppi_nmi_refs)
++	rdist_nmi_refs = kcalloc(gic_data.ppi_nr + SGI_NR,
++				 sizeof(*rdist_nmi_refs), GFP_KERNEL);
++	if (!rdist_nmi_refs)
+ 		return;
+ 
+-	for (i = 0; i < gic_data.ppi_nr; i++)
+-		refcount_set(&ppi_nmi_refs[i], 0);
++	for (i = 0; i < gic_data.ppi_nr + SGI_NR; i++)
++		refcount_set(&rdist_nmi_refs[i], 0);
+ 
+ 	pr_info("Pseudo-NMIs enabled using %s ICC_PMR_EL1 synchronisation\n",
+ 		gic_has_relaxed_pmr_sync() ? "relaxed" : "forced");
+@@ -2061,6 +2085,7 @@ static int __init gic_init_bases(phys_addr_t dist_phys_base,
+ 
+ 	gic_dist_init();
+ 	gic_cpu_init();
++	gic_enable_nmi_support();
+ 	gic_smp_init();
+ 	gic_cpu_pm_init();
+ 
+@@ -2073,8 +2098,6 @@ static int __init gic_init_bases(phys_addr_t dist_phys_base,
+ 			gicv2m_init(handle, gic_data.domain);
+ 	}
+ 
+-	gic_enable_nmi_support();
+-
+ 	return 0;
+ 
+ out_free:
+-- 
+2.42.0.283.g2d96d420d3-goog
+
