@@ -2,154 +2,101 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 626B7C83F16
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 20:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8FBC83F14
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Aug 2023 20:12:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235174AbjH3UHa (ORCPT
+        id S232653AbjH3UMP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Aug 2023 16:07:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42174 "EHLO
+        Wed, 30 Aug 2023 16:12:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240312AbjH3UHT (ORCPT
+        with ESMTP id S239499AbjH3UMB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Aug 2023 16:07:19 -0400
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABED7B971
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 12:53:08 -0700 (PDT)
-Received: by mail-yb1-xb35.google.com with SMTP id 3f1490d57ef6-d7766072ba4so1690885276.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Aug 2023 12:53:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1693425117; x=1694029917; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZcYgzJmdMLPe2IlWA1yPnnbUqn3VnbnF5Y/j/01p/cw=;
-        b=MAH1KJ7ofn8icSqyc9lDBhANHoHZsgHuPugXwdqxhPN+ar+ClbH0aKw+VWiyROjAk9
-         8lw4TqqupxF48LHhuYWtwX+BTk+1JCFTqv7Ro6KdnqQzFNhriSV5BjhhcFB5B1EnIpok
-         FzBATbkVz7FiyGGbaZ6bXtjoIapyTLVWGccfY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693425117; x=1694029917;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZcYgzJmdMLPe2IlWA1yPnnbUqn3VnbnF5Y/j/01p/cw=;
-        b=IyXGzUANHe9tqpWvIcHyHpgCBwQuVbF3RKEhOmo0HNqLhpVllUkMvXmYXdhWMBuYs2
-         /03MrTS6LQzecYZCI2uis/+p4IRakKo/jmPWKwoaTVB0bbYwVY45NG9mBcyNZKe2K6Ia
-         Pgvk5r2IhYiCcm+RnXuLx5HBmK49cC6i+4at2f86OHL/+4w64gNwJLZrOIlNfOXqkDjY
-         4GYYG0XTn2BEkxQNFJWX/mDlEWvLhYiG0AUYb7AYiXwNnEm1nhZXuLCMll9RBxI03PUo
-         NAPYEDAEXw296Tx6sBbWvXouyAcf0qhS84P37nvOXOtaOttaaTD0/cNPxNQnu/0CqLk7
-         DWsA==
-X-Gm-Message-State: AOJu0YwDW/B6ieQXQPa1a9HlWvCzbQTJkoumqE4g7tkkAB9jK54iR6/7
-        d+ME5ICNBveqMhRaVFqTEVGt8a6TJ21HgQu9H278AY9f
-X-Google-Smtp-Source: AGHT+IG6twoQxbusQyqNYajt9MUxkEGt9m+q9o/FOJcMdRNJj/VNJrOH6rag6dueRkF1UgSa1G+MZQ==
-X-Received: by 2002:a17:903:2448:b0:1bc:7312:78e2 with SMTP id l8-20020a170903244800b001bc731278e2mr835918pls.5.1693422820749;
-        Wed, 30 Aug 2023 12:13:40 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:9d:2:e315:dec6:467c:83c5])
-        by smtp.gmail.com with ESMTPSA id c15-20020a170902d48f00b001bbdf32f011sm11338928plg.269.2023.08.30.12.13.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 12:13:39 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Tomohiro Misono <misono.tomohiro@fujitsu.com>,
-        Stephane Eranian <eranian@google.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <swboyd@chromium.org>, ito-yuichi@fujitsu.com,
-        linux-perf-users@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH v12 2/7] arm64: idle: Tag the arm64 idle functions as __cpuidle
-Date:   Wed, 30 Aug 2023 12:11:23 -0700
-Message-ID: <20230830121115.v12.2.I4baba13e220bdd24d11400c67f137c35f07f82c7@changeid>
-X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
-In-Reply-To: <20230830191314.1618136-1-dianders@chromium.org>
-References: <20230830191314.1618136-1-dianders@chromium.org>
+        Wed, 30 Aug 2023 16:12:01 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBAD725713;
+        Wed, 30 Aug 2023 13:07:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 86F81614F4;
+        Wed, 30 Aug 2023 20:05:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0812C433C8;
+        Wed, 30 Aug 2023 20:05:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693425946;
+        bh=Eu3JeiLn+FdyhYJ/++T3ZVdqOXcLMXgLEZgEz6BHieA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FqYDMw/MCglscuBHNP78cT02H+fs6j1JpxS65Cj3ODCLBe36rO9JckrsJunt0Qacu
+         AO/apusZwQJSTYpQ/IMbVXDDTpGD5dUR8BYcCL9Z3DsSqrKlbrSwzB1Wh8iEvCuUV8
+         pJIjrkuiXALYEIUzIJkA9taf01+R1ipl682TJq/cM0W4+b8DUPTIPFEe66YprEk8r/
+         Zxighd+54d8kHL6uJPchjuhyLA8Sfrw+xbas4qmXwQn2O1fhppG085uXl3/HVFunLT
+         lX+ZprecWin2GWYrltPe4U5VPi6tiZnrOe3pWxHozm7X71HupiRVpp4oO9BYnEUeHS
+         AWca8XgTxGnRg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id BA5B540722; Wed, 30 Aug 2023 17:05:42 -0300 (-03)
+Date:   Wed, 30 Aug 2023 17:05:42 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Perry Taylor <perry.taylor@intel.com>,
+        Samantha Alt <samantha.alt@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Weilin Wang <weilin.wang@intel.com>,
+        Edward Baker <edward.baker@intel.com>
+Subject: Re: [PATCH v1] perf vendor events intel: Fix modifier in
+ tma_info_system_mem_parallel_reads
+Message-ID: <ZO+hFsYc3rYd5rDM@kernel.org>
+References: <20230830175543.1911892-1-irogers@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230830175543.1911892-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-As per the (somewhat recent) comment before the definition of
-`__cpuidle`, the tag is like `noinstr` but also marks a function so it
-can be identified by cpu_in_idle(). Let's add these markings to arm64
-cpuidle functions
+Em Wed, Aug 30, 2023 at 10:55:43AM -0700, Ian Rogers escreveu:
+> The metric is using the wrong format encoding. This fix is in the
+> converter script PR: https://github.com/intel/perfmon/pull/101
 
-With this change we get useful backtraces like:
+Thanks, applied.
 
-  NMI backtrace for cpu N skipped: idling at cpu_do_idle+0x94/0x98
+- Arnaldo
 
-instead of useless backtraces when dumping all processors using
-nmi_cpu_backtrace().
-
-NOTE: this patch won't make cpu_in_idle() work perfectly for arm64,
-but it doesn't hurt and does catch some cases. Specifically an example
-that wasn't caught in my testing looked like this:
-
- gic_cpu_sys_reg_init+0x1f8/0x314
- gic_cpu_pm_notifier+0x40/0x78
- raw_notifier_call_chain+0x5c/0x134
- cpu_pm_notify+0x38/0x64
- cpu_pm_exit+0x20/0x2c
- psci_enter_idle_state+0x48/0x70
- cpuidle_enter_state+0xb8/0x260
- cpuidle_enter+0x44/0x5c
- do_idle+0x188/0x30c
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Acked-by: Sumit Garg <sumit.garg@linaro.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
-(no changes since v11)
-
-Changes in v11:
-- Updated commit message as per Stephen.
-
-Changes in v9:
-- Added to commit message that this doesn't catch all cases.
-
-Changes in v8:
-- "Tag the arm64 idle functions as __cpuidle" new for v8
-
- arch/arm64/kernel/idle.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/kernel/idle.c b/arch/arm64/kernel/idle.c
-index c1125753fe9b..05cfb347ec26 100644
---- a/arch/arm64/kernel/idle.c
-+++ b/arch/arm64/kernel/idle.c
-@@ -20,7 +20,7 @@
-  *	ensure that interrupts are not masked at the PMR (because the core will
-  *	not wake up if we block the wake up signal in the interrupt controller).
-  */
--void noinstr cpu_do_idle(void)
-+void __cpuidle cpu_do_idle(void)
- {
- 	struct arm_cpuidle_irq_context context;
  
-@@ -35,7 +35,7 @@ void noinstr cpu_do_idle(void)
- /*
-  * This is our default idle handler.
-  */
--void noinstr arch_cpu_idle(void)
-+void __cpuidle arch_cpu_idle(void)
- {
- 	/*
- 	 * This should do all the clock switching and wait for interrupt
--- 
-2.42.0.283.g2d96d420d3-goog
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
+> index 94cb38540b5a..2795a404bb58 100644
+> --- a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
+> +++ b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
+> @@ -923,7 +923,7 @@
+>      },
+>      {
+>          "BriefDescription": "Average number of parallel data read requests to external memory",
+> -        "MetricExpr": "UNC_ARB_TRK_OCCUPANCY.DATA_READ / UNC_ARB_TRK_OCCUPANCY.DATA_READ@thresh\\=1@",
+> +        "MetricExpr": "UNC_ARB_TRK_OCCUPANCY.DATA_READ / UNC_ARB_TRK_OCCUPANCY.DATA_READ@cmask\\=1@",
+>          "MetricGroup": "Mem;MemoryBW;SoC",
+>          "MetricName": "tma_info_system_mem_parallel_reads",
+>          "PublicDescription": "Average number of parallel data read requests to external memory. Accounts for demand loads and L1/L2 prefetches"
+> -- 
+> 2.42.0.rc2.253.gd59a3bf2b4-goog
+> 
 
+-- 
+
+- Arnaldo
