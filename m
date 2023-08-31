@@ -2,196 +2,105 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9F4C83F01
-	for <linux-perf-users@archiver.kernel.org>; Thu, 31 Aug 2023 09:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEE5C83F01
+	for <linux-perf-users@archiver.kernel.org>; Thu, 31 Aug 2023 09:46:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343533AbjHaJnW (ORCPT
+        id S235673AbjHaJqB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 31 Aug 2023 05:43:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46334 "EHLO
+        Thu, 31 Aug 2023 05:46:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230374AbjHaJnW (ORCPT
+        with ESMTP id S233362AbjHaJqA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 31 Aug 2023 05:43:22 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 45029CFA;
-        Thu, 31 Aug 2023 02:43:19 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 743E9C15;
-        Thu, 31 Aug 2023 02:43:58 -0700 (PDT)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C2943F738;
-        Thu, 31 Aug 2023 02:43:17 -0700 (PDT)
-Message-ID: <1486ef1d-6c17-af0a-7df6-bc30640d4825@arm.com>
-Date:   Thu, 31 Aug 2023 10:43:11 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v1] perf jevents: Use "default_core" for events with no
- Unit
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Thu, 31 Aug 2023 05:46:00 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FC4D1A1;
+        Thu, 31 Aug 2023 02:45:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693475157; x=1725011157;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZZAGLbSH8eC0EwEQKiYztBPBDbomugZMJtC2h7cRgP0=;
+  b=i8/g9IHeIN/r6pzubobRm/Toh7/EZ05gxQlDkH3uDiU/TXUj5KdCPjVu
+   QHBw7GhBoEWNJ7oiIx4SIR2mUXvAIjVmrdU/9OC89a1P0B7NNp6CE++kq
+   /n29IU2nOa+4IO9kA5KNF4/bYZx6Otdc/+yW3TH1SwYwIQQ9GgfYpUyoE
+   b7Vq9nKwY6dGM7T1URPoNwPvUrtT/01/ZgnZZwm8frZrkBEsUF5ekBbi4
+   AfRz1mK56lygUddavO9TV12SM0ZqGK7DzP1Yy21kxgjff6suoQgabqxui
+   GK9f8XnuscSty2lsrE3Hu7nEP0tsSBOWPopD+o8BQ4NSPqHE1Q3QXWwII
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="356195676"
+X-IronPort-AV: E=Sophos;i="6.02,216,1688454000"; 
+   d="scan'208";a="356195676"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2023 02:45:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="829591088"
+X-IronPort-AV: E=Sophos;i="6.02,216,1688454000"; 
+   d="scan'208";a="829591088"
+Received: from lkp-server02.sh.intel.com (HELO daf8bb0a381d) ([10.239.97.151])
+  by FMSMGA003.fm.intel.com with ESMTP; 31 Aug 2023 02:45:54 -0700
+Received: from kbuild by daf8bb0a381d with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qbeFM-000BCf-2t;
+        Thu, 31 Aug 2023 09:45:52 +0000
+Date:   Thu, 31 Aug 2023 17:45:50 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Tianyi Liu <i.pear@outlook.com>, acme@kernel.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230826062203.1058041-1-irogers@google.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20230826062203.1058041-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Cc:     oe-kbuild-all@lists.linux.dev, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        adrian.hunter@intel.com, Tianyi Liu <i.pear@outlook.com>
+Subject: Re: [PATCH] Introduce callchains for guests
+Message-ID: <202308311743.uvv4Ras8-lkp@intel.com>
+References: <SY4P282MB10848199D3F93AA47A845B8B9DE5A@SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SY4P282MB10848199D3F93AA47A845B8B9DE5A@SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Tianyi,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on tip/perf/core]
+[also build test WARNING on acme/perf/core linus/master v6.5 next-20230831]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Tianyi-Liu/Introduce-callchains-for-guests/20230831-161333
+base:   tip/perf/core
+patch link:    https://lore.kernel.org/r/SY4P282MB10848199D3F93AA47A845B8B9DE5A%40SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM
+patch subject: [PATCH] Introduce callchains for guests
+config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20230831/202308311743.uvv4Ras8-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230831/202308311743.uvv4Ras8-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308311743.uvv4Ras8-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> kernel/events/callchain.c:48:13: warning: no previous prototype for 'perf_callchain_guest' [-Wmissing-prototypes]
+      48 | __weak void perf_callchain_guest(struct perf_callchain_entry_ctx *entry)
+         |             ^~~~~~~~~~~~~~~~~~~~
 
 
-On 26/08/2023 07:22, Ian Rogers wrote:
-> The json Unit field encodes the name of the PMU to match the events
-> to. When no name is given it has meant the "cpu" core PMU except for
-> tests. On ARM, Intel hybrid and s390 the core PMU is named differently
-> which means that using "cpu" for this case causes the events not to
-> get matched to the PMU. Introduce a new "default_core" string for this
-> case and in the pmu__name_match force all core PMUs to match this
-> name.
-> 
-> Reported-by: Thomas Richter <tmricht@linux.ibm.com>
-> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Fixes: 2e255b4f9f41 ("perf jevents: Group events by PMU")
-> Signed-off-by: Ian Rogers <irogers@google.com>
+vim +/perf_callchain_guest +48 kernel/events/callchain.c
 
-Reviewed-by: James Clark <james.clark@arm.com>
+    47	
+  > 48	__weak void perf_callchain_guest(struct perf_callchain_entry_ctx *entry)
+    49	{
+    50	}
+    51	
 
-> ---
->  tools/perf/pmu-events/jevents.py |  2 +-
->  tools/perf/tests/pmu-events.c    | 19 ++++++++++---------
->  tools/perf/util/pmu.c            |  7 ++++++-
->  3 files changed, 17 insertions(+), 11 deletions(-)
-> 
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-> index 712f80d7d071..a7e88332276d 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-> @@ -266,7 +266,7 @@ class JsonEvent:
->      def unit_to_pmu(unit: str) -> Optional[str]:
->        """Convert a JSON Unit to Linux PMU name."""
->        if not unit:
-> -        return 'cpu'
-> +        return 'default_core'
->        # Comment brought over from jevents.c:
->        # it's not realistic to keep adding these, we need something more scalable ...
->        table = {
-> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-> index ce4da9b1d115..f5321fbdee79 100644
-> --- a/tools/perf/tests/pmu-events.c
-> +++ b/tools/perf/tests/pmu-events.c
-> @@ -44,7 +44,7 @@ struct perf_pmu_test_pmu {
->  
->  static const struct perf_pmu_test_event bp_l1_btb_correct = {
->  	.event = {
-> -		.pmu = "cpu",
-> +		.pmu = "default_core",
->  		.name = "bp_l1_btb_correct",
->  		.event = "event=0x8a",
->  		.desc = "L1 BTB Correction",
-> @@ -56,7 +56,7 @@ static const struct perf_pmu_test_event bp_l1_btb_correct = {
->  
->  static const struct perf_pmu_test_event bp_l2_btb_correct = {
->  	.event = {
-> -		.pmu = "cpu",
-> +		.pmu = "default_core",
->  		.name = "bp_l2_btb_correct",
->  		.event = "event=0x8b",
->  		.desc = "L2 BTB Correction",
-> @@ -68,7 +68,7 @@ static const struct perf_pmu_test_event bp_l2_btb_correct = {
->  
->  static const struct perf_pmu_test_event segment_reg_loads_any = {
->  	.event = {
-> -		.pmu = "cpu",
-> +		.pmu = "default_core",
->  		.name = "segment_reg_loads.any",
->  		.event = "event=0x6,period=200000,umask=0x80",
->  		.desc = "Number of segment register loads",
-> @@ -80,7 +80,7 @@ static const struct perf_pmu_test_event segment_reg_loads_any = {
->  
->  static const struct perf_pmu_test_event dispatch_blocked_any = {
->  	.event = {
-> -		.pmu = "cpu",
-> +		.pmu = "default_core",
->  		.name = "dispatch_blocked.any",
->  		.event = "event=0x9,period=200000,umask=0x20",
->  		.desc = "Memory cluster signals to block micro-op dispatch for any reason",
-> @@ -92,7 +92,7 @@ static const struct perf_pmu_test_event dispatch_blocked_any = {
->  
->  static const struct perf_pmu_test_event eist_trans = {
->  	.event = {
-> -		.pmu = "cpu",
-> +		.pmu = "default_core",
->  		.name = "eist_trans",
->  		.event = "event=0x3a,period=200000,umask=0x0",
->  		.desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
-> @@ -104,7 +104,7 @@ static const struct perf_pmu_test_event eist_trans = {
->  
->  static const struct perf_pmu_test_event l3_cache_rd = {
->  	.event = {
-> -		.pmu = "cpu",
-> +		.pmu = "default_core",
->  		.name = "l3_cache_rd",
->  		.event = "event=0x40",
->  		.desc = "L3 cache access, read",
-> @@ -391,8 +391,8 @@ static int compare_alias_to_test_event(struct pmu_event_info *alias,
->  		return -1;
->  	}
->  
-> -
-> -	if (!is_same(alias->pmu_name, test_event->event.pmu)) {
-> +	if (!is_same(alias->pmu_name, test_event->event.pmu) &&
-> +	    !is_same(alias->pmu_name, "default_core")) {
->  		pr_debug("testing aliases PMU %s: mismatched pmu_name, %s vs %s\n",
->  			  pmu_name, alias->pmu_name, test_event->event.pmu);
->  		return -1;
-> @@ -409,7 +409,7 @@ static int test__pmu_event_table_core_callback(const struct pmu_event *pe,
->  	struct perf_pmu_test_event const **test_event_table;
->  	bool found = false;
->  
-> -	if (strcmp(pe->pmu, "cpu"))
-> +	if (strcmp(pe->pmu, "default_core"))
->  		test_event_table = &uncore_events[0];
->  	else
->  		test_event_table = &core_events[0];
-> @@ -543,6 +543,7 @@ static int __test_core_pmu_event_aliases(const char *pmu_name, int *count)
->  	INIT_LIST_HEAD(&pmu->caps);
->  	INIT_LIST_HEAD(&pmu->list);
->  	pmu->name = strdup(pmu_name);
-> +	pmu->is_core = true;
->  
->  	pmu->events_table = table;
->  	pmu_add_cpu_aliases_table(pmu, table);
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 502fd58c3ea7..cde33e01959a 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -1747,7 +1747,12 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
->  bool pmu__name_match(const struct perf_pmu *pmu, const char *pmu_name)
->  {
->  	return !strcmp(pmu->name, pmu_name) ||
-> -		(pmu->is_uncore && pmu_uncore_alias_match(pmu_name, pmu->name));
-> +		(pmu->is_uncore && pmu_uncore_alias_match(pmu_name, pmu->name)) ||
-> +		/*
-> +		 * jevents and tests use default_core as a marker for any core
-> +		 * PMU as the PMU name varies across architectures.
-> +		 */
-> +	        (pmu->is_core && !strcmp(pmu_name, "default_core"));
->  }
->  
->  bool perf_pmu__is_software(const struct perf_pmu *pmu)
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
