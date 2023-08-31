@@ -2,105 +2,110 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEE5C83F01
-	for <linux-perf-users@archiver.kernel.org>; Thu, 31 Aug 2023 09:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED93C83F17
+	for <linux-perf-users@archiver.kernel.org>; Thu, 31 Aug 2023 10:12:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235673AbjHaJqB (ORCPT
+        id S242741AbjHaKMy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 31 Aug 2023 05:46:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38060 "EHLO
+        Thu, 31 Aug 2023 06:12:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233362AbjHaJqA (ORCPT
+        with ESMTP id S238116AbjHaKMy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 31 Aug 2023 05:46:00 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FC4D1A1;
-        Thu, 31 Aug 2023 02:45:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693475157; x=1725011157;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZZAGLbSH8eC0EwEQKiYztBPBDbomugZMJtC2h7cRgP0=;
-  b=i8/g9IHeIN/r6pzubobRm/Toh7/EZ05gxQlDkH3uDiU/TXUj5KdCPjVu
-   QHBw7GhBoEWNJ7oiIx4SIR2mUXvAIjVmrdU/9OC89a1P0B7NNp6CE++kq
-   /n29IU2nOa+4IO9kA5KNF4/bYZx6Otdc/+yW3TH1SwYwIQQ9GgfYpUyoE
-   b7Vq9nKwY6dGM7T1URPoNwPvUrtT/01/ZgnZZwm8frZrkBEsUF5ekBbi4
-   AfRz1mK56lygUddavO9TV12SM0ZqGK7DzP1Yy21kxgjff6suoQgabqxui
-   GK9f8XnuscSty2lsrE3Hu7nEP0tsSBOWPopD+o8BQ4NSPqHE1Q3QXWwII
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="356195676"
-X-IronPort-AV: E=Sophos;i="6.02,216,1688454000"; 
-   d="scan'208";a="356195676"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2023 02:45:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="829591088"
-X-IronPort-AV: E=Sophos;i="6.02,216,1688454000"; 
-   d="scan'208";a="829591088"
-Received: from lkp-server02.sh.intel.com (HELO daf8bb0a381d) ([10.239.97.151])
-  by FMSMGA003.fm.intel.com with ESMTP; 31 Aug 2023 02:45:54 -0700
-Received: from kbuild by daf8bb0a381d with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qbeFM-000BCf-2t;
-        Thu, 31 Aug 2023 09:45:52 +0000
-Date:   Thu, 31 Aug 2023 17:45:50 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Tianyi Liu <i.pear@outlook.com>, acme@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     oe-kbuild-all@lists.linux.dev, mingo@redhat.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
-        adrian.hunter@intel.com, Tianyi Liu <i.pear@outlook.com>
-Subject: Re: [PATCH] Introduce callchains for guests
-Message-ID: <202308311743.uvv4Ras8-lkp@intel.com>
-References: <SY4P282MB10848199D3F93AA47A845B8B9DE5A@SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM>
+        Thu, 31 Aug 2023 06:12:54 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5AFDDE4A;
+        Thu, 31 Aug 2023 03:12:48 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5DF75C15;
+        Thu, 31 Aug 2023 03:13:27 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.3.201])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E2853F64C;
+        Thu, 31 Aug 2023 03:12:42 -0700 (PDT)
+Date:   Thu, 31 Aug 2023 11:12:34 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Tomohiro Misono <misono.tomohiro@fujitsu.com>,
+        Stephane Eranian <eranian@google.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <swboyd@chromium.org>, ito-yuichi@fujitsu.com,
+        linux-perf-users@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        D Scott Phillips <scott@os.amperecomputing.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Valentin Schneider <vschneid@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 5/7] arm64: smp: IPI_CPU_STOP and IPI_CPU_CRASH_STOP
+ should try for NMI
+Message-ID: <ZPBnkkDc9GSxrjmC@FVFF77S0Q05N>
+References: <20230830191314.1618136-1-dianders@chromium.org>
+ <20230830121115.v12.5.Ifadbfd45b22c52edcb499034dd4783d096343260@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SY4P282MB10848199D3F93AA47A845B8B9DE5A@SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM>
+In-Reply-To: <20230830121115.v12.5.Ifadbfd45b22c52edcb499034dd4783d096343260@changeid>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Tianyi,
+On Wed, Aug 30, 2023 at 12:11:26PM -0700, Douglas Anderson wrote:
+> There's no reason why IPI_CPU_STOP and IPI_CPU_CRASH_STOP can't be
+> handled as NMI. They are very simple and everything in them is
+> NMI-safe. Mark them as things to use NMI for if NMI is available.
+> 
+> Suggested-by: Mark Rutland <mark.rutland@arm.com>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> Reviewed-by: Misono Tomohiro <misono.tomohiro@fujitsu.com>
+> Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> I don't actually have any good way to test/validate this patch. It's
+> added to the series at Mark's request.
 
-kernel test robot noticed the following build warnings:
+I've just sent out an LKDTM test that can be used to test this:
 
-[auto build test WARNING on tip/perf/core]
-[also build test WARNING on acme/perf/core linus/master v6.5 next-20230831]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+  http://lore.kernel.org/lkml/20230831101026.3122590-1-mark.rutland@arm.com
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tianyi-Liu/Introduce-callchains-for-guests/20230831-161333
-base:   tip/perf/core
-patch link:    https://lore.kernel.org/r/SY4P282MB10848199D3F93AA47A845B8B9DE5A%40SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM
-patch subject: [PATCH] Introduce callchains for guests
-config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20230831/202308311743.uvv4Ras8-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230831/202308311743.uvv4Ras8-lkp@intel.com/reproduce)
+So FWIW:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202308311743.uvv4Ras8-lkp@intel.com/
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Tested-by: Mark Rutland <mark.rutland@arm.com>
 
-All warnings (new ones prefixed by >>):
+Mark.
 
->> kernel/events/callchain.c:48:13: warning: no previous prototype for 'perf_callchain_guest' [-Wmissing-prototypes]
-      48 | __weak void perf_callchain_guest(struct perf_callchain_entry_ctx *entry)
-         |             ^~~~~~~~~~~~~~~~~~~~
-
-
-vim +/perf_callchain_guest +48 kernel/events/callchain.c
-
-    47	
-  > 48	__weak void perf_callchain_guest(struct perf_callchain_entry_ctx *entry)
-    49	{
-    50	}
-    51	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> (no changes since v10)
+> 
+> Changes in v10:
+> - ("IPI_CPU_STOP and IPI_CPU_CRASH_STOP should try for NMI") new for v10.
+> 
+>  arch/arm64/kernel/smp.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index 28c904ca499a..800c59cf9b64 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -946,6 +946,8 @@ static bool ipi_should_be_nmi(enum ipi_msg_type ipi)
+>  		return false;
+>  
+>  	switch (ipi) {
+> +	case IPI_CPU_STOP:
+> +	case IPI_CPU_CRASH_STOP:
+>  	case IPI_CPU_BACKTRACE:
+>  		return true;
+>  	default:
+> -- 
+> 2.42.0.283.g2d96d420d3-goog
+> 
