@@ -2,56 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C1CC83F29
-	for <linux-perf-users@archiver.kernel.org>; Thu, 31 Aug 2023 07:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1799C83F2E
+	for <linux-perf-users@archiver.kernel.org>; Thu, 31 Aug 2023 07:14:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241666AbjHaHOp (ORCPT
+        id S233351AbjHaHOu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 31 Aug 2023 03:14:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60124 "EHLO
+        Thu, 31 Aug 2023 03:14:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231651AbjHaHOp (ORCPT
+        with ESMTP id S230311AbjHaHOr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 31 Aug 2023 03:14:45 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A7BC1A4
-        for <linux-perf-users@vger.kernel.org>; Thu, 31 Aug 2023 00:14:42 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d7b52f36714so362924276.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 31 Aug 2023 00:14:42 -0700 (PDT)
+        Thu, 31 Aug 2023 03:14:47 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA27E1A4
+        for <linux-perf-users@vger.kernel.org>; Thu, 31 Aug 2023 00:14:44 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59263889eacso8184827b3.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 31 Aug 2023 00:14:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1693466081; x=1694070881; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=PNPghSXfXGCF8iNdVb3qJhwXrSSWCCWSl9neVzBLPgs=;
-        b=NxmVOrMrGOj7svxPzXO4lrmsC2KSQggS27LuV8vJarN0N7dgXecFEdIALH5rn46HS7
-         bi29hbouVr/iHS2ZImki0ljZ0YPVksLqi6ON+FCRwiEpYRlpDuRGUMSV0qwekph7OGTO
-         EfItDuv0nf0Y3xSamEdbDr9qUs0i2dp7dpeDfrmYr1riAc6phKiV9YBELm13HlbiqFFS
-         aLN1t35OAUyr33xMzALiimbuqdPOlj4mAEutAy6aNkqxLNpqDWd/msEqYGtkDe/HIIrT
-         s0KAuLbvf5gzZY6E1jCsLdM56rsGucHSi7BsBYie8jK0SAPvpmSEathJkr2iiNmsbypN
-         EWGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693466081; x=1694070881;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20221208; t=1693466084; x=1694070884; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=PNPghSXfXGCF8iNdVb3qJhwXrSSWCCWSl9neVzBLPgs=;
-        b=S1Dmpio/g2aV+t+hRhM/skVW1GkV/QGMyTDH/70xn9MqbaODOs7LsvpQCCYejH6/NA
-         fu7Cwkdi/cllOl8NN758wRU2A3pCMiFonYUKckCZHT4lo/7+ebZjedQvklPhCty2Qzgn
-         6u2ICf09B1bSYSVq8Hql7qg1RA3qi18gJe+JTwISz7ds9OFgybKmviUQe3niMqf6UYbB
-         qv/yuQd6ZCAsvzAUvy607Xnn6V9iHe/eTdFaa8F3tfyce6vIvkQYR45cKDyaFB7us7KN
-         wiWdViKihVmpJk1xlpqGG1hA+Z5M9/nVqWf2Qzky0mtrany0fa6Tx8u82lFPiG5McGW/
-         /J6Q==
-X-Gm-Message-State: AOJu0YytP7YS8L44NB18qWIl1grD/kVldMyXlGzADgO0YxTejOZEZ2Uv
-        zWq4a5hNWhKHPlzZNLLwvNuTs3yV343X
-X-Google-Smtp-Source: AGHT+IGSXBWMPyRg5UZKwzuPxj5dS8Vszbq3Z5775/Cxnfe4gWJ+wi4rrmAHdy9E8H5a4PNidWNGphAzBZyC
+        bh=nr41kDdDeJzQNFW3nz+BwVQXTEOQ7IBxm5AfGxJhvdk=;
+        b=CDp1t5ekzB1vlkslgmD1Uk/jcoVrl3+7g5PSXl4YozmAl5uDxHIAY9MS+ISesQ3+hc
+         iayCQHlsCEVNC4K5sV47w1YI5OBrwhzYmSdPp0QjdFOSonULeV0BNcZmVzX579f7y8sS
+         BOYazvFmkN5p1HPfXTFUMUChn/wnAa4a2MYbq8E1HQdLmOSs0FU07nlne0o1Mlv6Wts3
+         6+JeDOIjM9UhX6KK1T1GHFLhKQisvuFHD6rHohmuvzFscwP+TAAWXa1LwnTk0Miy+6gO
+         gGl1R0kFtswnMEOiC+DMPsJykOOZOFOnc3j7vkxCnxGBPhW16R8o1nqs4Gx9IAr1FLSY
+         YsHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693466084; x=1694070884;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nr41kDdDeJzQNFW3nz+BwVQXTEOQ7IBxm5AfGxJhvdk=;
+        b=bth2Vrh+RO8jlbJPMvUKv5e6yK8l3q8UANNw8Bo4StF+Z8g1tukN2bQChOfhxftDmh
+         38KKSNap2wdv3geYW2j1SEXbj4Tv+lA66UP3H6YfQ3sFv2lotatXUezsNK6jfkR77sRt
+         KrTQ89WP2bc/vkcFA94ySNkd/aMne3FKLJzkDJnkzYv3WfvXm0Tu2jjE6LmYUu8NTN6O
+         X9DDWms/vtkkMijsyn+HS2PDns7piprufytObmfH0V9lbvnxydGorepvpG9xvf0eUgWQ
+         6RWJ2fp/lEdAL/DEpkQtBvvD+y3Lr4lwyc3hhdMQLxjItY573ZsJ7w0pbM43z1BBQs52
+         2MNA==
+X-Gm-Message-State: AOJu0YwFtxrEtgEFD8ligK7LWtOYZ5JJMpN9XZmYH7ns6JijGLYdQAE6
+        w7CkAZS914n9qzvR6536DYLe93bG1hB6
+X-Google-Smtp-Source: AGHT+IF5RuXo9qTB0bgfsrdHCQZZY+zjteXaXkJaflVMOpRzb34MoLKDR2Dz6HXv+Z6xBHIZ0Y+uYEedugR0
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:feef:cd5e:6353:57f0])
- (user=irogers job=sendgmr) by 2002:a25:d8d6:0:b0:d44:be8a:ca39 with SMTP id
- p205-20020a25d8d6000000b00d44be8aca39mr113898ybg.7.1693466081622; Thu, 31 Aug
- 2023 00:14:41 -0700 (PDT)
-Date:   Thu, 31 Aug 2023 00:14:18 -0700
-Message-Id: <20230831071421.2201358-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a81:af07:0:b0:56d:647:664b with SMTP id
+ n7-20020a81af07000000b0056d0647664bmr125753ywh.5.1693466083950; Thu, 31 Aug
+ 2023 00:14:43 -0700 (PDT)
+Date:   Thu, 31 Aug 2023 00:14:19 -0700
+In-Reply-To: <20230831071421.2201358-1-irogers@google.com>
+Message-Id: <20230831071421.2201358-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20230831071421.2201358-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.rc2.253.gd59a3bf2b4-goog
-Subject: [PATCH v1 0/3] perf list/debug output fixes
+Subject: [PATCH v1 1/3] perf list: Don't print Unit for default_core
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -71,28 +73,31 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Fix a long standing parse_events_term cloning bug so that the bad
-display of terms can be fixed and the code somewhat more intuitive:
-https://lore.kernel.org/lkml/20230830070753.1821629-2-irogers@google.com/
+default_core was added as a way to demark json events whose PMU should
+be whatever the default core PMU is, previously this had been assumed
+to be "cpu" but that fails on s390 and ARM. perf list displays the PMU
+in the event description to save storing it in json, but was still
+comparing against "cpu" and not "default_core", so update this.
 
-Fix a bug caused by the rename of 'cpu' to 'default_core' in perf list.
+Fixes: d2045f87154b ("perf jevents: Use "default_core" for events with no Unit")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-list.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Add more documentation, increase type safety and fix some related bugs
-where terms weren't initialized properly.
-
-Ian Rogers (3):
-  perf list: Don't print Unit for default_core
-  perf parse-events: Name the two term enums
-  perf parse-events: Fix propagation of term's no_value when cloning
-
- tools/perf/builtin-list.c      |   2 +-
- tools/perf/util/parse-events.c | 203 +++++++++++++++++++++++----------
- tools/perf/util/parse-events.h |  60 +++++++---
- tools/perf/util/parse-events.l |   2 +-
- tools/perf/util/parse-events.y |  27 +++--
- tools/perf/util/pmu.c          |   2 +-
- 6 files changed, 207 insertions(+), 89 deletions(-)
-
+diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+index 1ac47db4d66a..a343823c8ddf 100644
+--- a/tools/perf/builtin-list.c
++++ b/tools/perf/builtin-list.c
+@@ -148,7 +148,7 @@ static void default_print_event(void *ps, const char *pmu_name, const char *topi
+ 		char *desc_with_unit = NULL;
+ 		int desc_len = -1;
+ 
+-		if (pmu_name && strcmp(pmu_name, "cpu")) {
++		if (pmu_name && strcmp(pmu_name, "default_core")) {
+ 			desc_len = strlen(desc);
+ 			desc_len = asprintf(&desc_with_unit,
+ 					    desc[desc_len - 1] != '.'
 -- 
 2.42.0.rc2.253.gd59a3bf2b4-goog
 
