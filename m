@@ -2,110 +2,96 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED93C83F17
-	for <linux-perf-users@archiver.kernel.org>; Thu, 31 Aug 2023 10:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 684E7C83F17
+	for <linux-perf-users@archiver.kernel.org>; Thu, 31 Aug 2023 10:13:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242741AbjHaKMy (ORCPT
+        id S1343798AbjHaKNY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 31 Aug 2023 06:12:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60440 "EHLO
+        Thu, 31 Aug 2023 06:13:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238116AbjHaKMy (ORCPT
+        with ESMTP id S1343931AbjHaKNT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 31 Aug 2023 06:12:54 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5AFDDE4A;
-        Thu, 31 Aug 2023 03:12:48 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5DF75C15;
-        Thu, 31 Aug 2023 03:13:27 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.3.201])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E2853F64C;
-        Thu, 31 Aug 2023 03:12:42 -0700 (PDT)
-Date:   Thu, 31 Aug 2023 11:12:34 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Tomohiro Misono <misono.tomohiro@fujitsu.com>,
-        Stephane Eranian <eranian@google.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <swboyd@chromium.org>, ito-yuichi@fujitsu.com,
-        linux-perf-users@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        D Scott Phillips <scott@os.amperecomputing.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Valentin Schneider <vschneid@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 5/7] arm64: smp: IPI_CPU_STOP and IPI_CPU_CRASH_STOP
- should try for NMI
-Message-ID: <ZPBnkkDc9GSxrjmC@FVFF77S0Q05N>
-References: <20230830191314.1618136-1-dianders@chromium.org>
- <20230830121115.v12.5.Ifadbfd45b22c52edcb499034dd4783d096343260@changeid>
+        Thu, 31 Aug 2023 06:13:19 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3C9FCFA;
+        Thu, 31 Aug 2023 03:13:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693476790; x=1725012790;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=6wMeydwdwJo7Op9ZodxUKdYeGX1D4JWReZ6mfZiqEJQ=;
+  b=cSWAQ/VXdkQjrLXTtPB9sYdYs+3R3gWbaRB8JvDhhHvItzuAGjvk/uNd
+   fxnteKzspMal9naeL1Hd38VUFEiU0NZU2IRKdLZVWwcr2lpJ9NlPD/aMO
+   GTUAQjRc2SHSj4pK/jS2vibD3xCKRJhnhCT9oLDKX0RGHzcxn+fI0l54W
+   MEmYF+cFSYc7oi4MWESxseM7jX662SNQDnFz0Cqbqh/u0z9PJ+eWKe3Cp
+   WFRLblDZijkmnfEe8q40zXeHtQC1HYHxxtShPJLm/X+kblrSmAZfPRCZD
+   flgFE9NotKM5SmmXU9NCE6T0N4+aaJ9a30D5saSwtFQWoL9NZctH8M7JL
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="366087236"
+X-IronPort-AV: E=Sophos;i="6.02,216,1688454000"; 
+   d="scan'208";a="366087236"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2023 03:13:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="739449071"
+X-IronPort-AV: E=Sophos;i="6.02,216,1688454000"; 
+   d="scan'208";a="739449071"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.57.245])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2023 03:13:05 -0700
+Message-ID: <603dc4b9-31ae-1525-5668-7dbb1f64420b@intel.com>
+Date:   Thu, 31 Aug 2023 13:13:01 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230830121115.v12.5.Ifadbfd45b22c52edcb499034dd4783d096343260@changeid>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.15.0
+Subject: Re: [PATCH v7 0/6] perf record: Track sideband events for all CPUs
+ when tracing selected CPUs
+Content-Language: en-US
+To:     Ravi Bangoria <ravi.bangoria@amd.com>,
+        Yang Jihong <yangjihong1@huawei.com>, acme@kernel.org,
+        irogers@google.com, jolsa@kernel.org, namhyung@kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, kan.liang@linux.intel.com,
+        james.clark@arm.com, tmricht@linux.ibm.com, ak@linux.intel.com,
+        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+References: <20230826032608.107261-1-yangjihong1@huawei.com>
+ <bcfabb85-4dc1-e642-4a82-f3b8cc009b0b@amd.com>
+ <93abb0e0-1691-a887-f7b2-7591f83a8618@huawei.com>
+ <929ddd1f-dc15-079c-331d-13cc5f25a1a2@amd.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <929ddd1f-dc15-079c-331d-13cc5f25a1a2@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Aug 30, 2023 at 12:11:26PM -0700, Douglas Anderson wrote:
-> There's no reason why IPI_CPU_STOP and IPI_CPU_CRASH_STOP can't be
-> handled as NMI. They are very simple and everything in them is
-> NMI-safe. Mark them as things to use NMI for if NMI is available.
+On 29/08/23 15:24, Ravi Bangoria wrote:
+>>> Number of actual samples are same ~38K. However, the perf.data file is 5x
+>>> bigger because of additional sideband data.
+>>
+>> Yes, if record system wide sideband data, the amount of sideband events will increase proportionally, which is expected.
+>>
+>>>
+>>> I'm pretty sure we don't need most of those additional data. So, thinking
+>>> loud, should we post-process perf.data file and filter out unnecessary data?
+>>>
+>>
+>> I wonder if we can add a new function in perf inject.
 > 
-> Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> Reviewed-by: Misono Tomohiro <misono.tomohiro@fujitsu.com>
-> Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> I don't actually have any good way to test/validate this patch. It's
-> added to the series at Mark's request.
-
-I've just sent out an LKDTM test that can be used to test this:
-
-  http://lore.kernel.org/lkml/20230831101026.3122590-1-mark.rutland@arm.com
-
-So FWIW:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Tested-by: Mark Rutland <mark.rutland@arm.com>
-
-Mark.
-
+> Ok. perf inject is one option. But shall we do it bydefault in perf-record?
+> It's needed only when profiling target is set of cpus, not for systemwide or
+> per-process mode.
 > 
-> (no changes since v10)
+>> By reading perf.data and comparing tid of SAMPLE events and sideband events, we can filter out the sideband data of unmatched tasks.
 > 
-> Changes in v10:
-> - ("IPI_CPU_STOP and IPI_CPU_CRASH_STOP should try for NMI") new for v10.
-> 
->  arch/arm64/kernel/smp.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> index 28c904ca499a..800c59cf9b64 100644
-> --- a/arch/arm64/kernel/smp.c
-> +++ b/arch/arm64/kernel/smp.c
-> @@ -946,6 +946,8 @@ static bool ipi_should_be_nmi(enum ipi_msg_type ipi)
->  		return false;
->  
->  	switch (ipi) {
-> +	case IPI_CPU_STOP:
-> +	case IPI_CPU_CRASH_STOP:
->  	case IPI_CPU_BACKTRACE:
->  		return true;
->  	default:
-> -- 
-> 2.42.0.283.g2d96d420d3-goog
-> 
+> Yup. But AFAIK, perf-record keeps writing to perf.data and never does post-
+> processing on it. So adding support for this will take a bit of effort. Not
+> sure if we should do it as part of this series.
+
+I agree there could be more work, but probably better for a separate patch set.
+
