@@ -2,246 +2,189 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA54CC83F29
-	for <linux-perf-users@archiver.kernel.org>; Thu, 31 Aug 2023 07:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0BEC83F2B
+	for <linux-perf-users@archiver.kernel.org>; Thu, 31 Aug 2023 08:11:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344134AbjHaHO4 (ORCPT
+        id S230107AbjHaIL5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 31 Aug 2023 03:14:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33810 "EHLO
+        Thu, 31 Aug 2023 04:11:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245442AbjHaHOw (ORCPT
+        with ESMTP id S235889AbjHaIL4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 31 Aug 2023 03:14:52 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A121CD8
-        for <linux-perf-users@vger.kernel.org>; Thu, 31 Aug 2023 00:14:49 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d782f4b4feeso370917276.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 31 Aug 2023 00:14:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1693466089; x=1694070889; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=l5R5LTR1o+O1ggaXGLd8xlIboaGHj+v+QmwBBnwG6HY=;
-        b=Cq7lo1IsSWnaAKZ03XF+9nF2kWY28QTYe5oNRGuEcHsNbGNvP7TdnDOGPIRTfHrttJ
-         VPHFS5994RjABbYdG2WHEXx9uGCqCkyaIZViCcvri1mVjhvnwjRt6MuphLdDV3zWylqq
-         zPLypU1yIusm7/jnz9sa66XxDNPJRgB5526iQTwwIcvSot/EgLKgM+elkXV6GoP4r+Xw
-         T9YV6MixOAN+iXObYa1iJpKtIUnYssDC7IjYGO8eet7SWPtBDlhod1qLN7yPjLmnXkP0
-         yvFb+os9FinfF72UVvEaoIz7nn/TNX4oTjPGb4XanKs2opcSFa8Y8QA90a5FAjRmUDaB
-         NJKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693466089; x=1694070889;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l5R5LTR1o+O1ggaXGLd8xlIboaGHj+v+QmwBBnwG6HY=;
-        b=ab+rxpTnunqQp4M1EhV1umG6gtbL1wf3lGDn9Lrg/ZcscfJz/xM24mMkaIddqE75OH
-         QupvxUioi65QTCKpEaYfUAR5zfhj6RE/5LJlSPbxBo3K1zzZKPFeSLcwAMF4o53S/BsC
-         OpsvClweiHB3+f1OtOgDMfa+PcoXhFhzfAYMpslsjRsDTHnpD/4fv7mB175FYYrEI19U
-         j4SeHDFTN/3x9l8/D4wu7gGew09FyOsr6w8o5aQzGffUUX1rMnFwn/Q9D2YUbT2L6w7O
-         OLm3A+/svIBlKkNfkyFizk3k6yogMpU3ZRCb+sfkgHyZgN/hpu9seQfJm1iiaBOKmK2u
-         7kSQ==
-X-Gm-Message-State: AOJu0YwkzYKhhICEmbNE3TeHtWogUuqBk8wjv/qALJe2Z6P76DHKjj8t
-        xj4zuoLSuay1DInr8MTsY5nDlkboiNL1
-X-Google-Smtp-Source: AGHT+IFiIX1fcSRdJtWjhfy1sxtZ93298AD9cMAT4KuCQqTCkhOqdD4bkF/mJIFj3cYchCpTNuQwbz7hzFY4
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:feef:cd5e:6353:57f0])
- (user=irogers job=sendgmr) by 2002:a25:dc84:0:b0:d72:8661:ee29 with SMTP id
- y126-20020a25dc84000000b00d728661ee29mr123139ybe.2.1693466088813; Thu, 31 Aug
- 2023 00:14:48 -0700 (PDT)
-Date:   Thu, 31 Aug 2023 00:14:21 -0700
-In-Reply-To: <20230831071421.2201358-1-irogers@google.com>
-Message-Id: <20230831071421.2201358-4-irogers@google.com>
-Mime-Version: 1.0
-References: <20230831071421.2201358-1-irogers@google.com>
-X-Mailer: git-send-email 2.42.0.rc2.253.gd59a3bf2b4-goog
-Subject: [PATCH v1 3/3] perf parse-events: Fix propagation of term's no_value
- when cloning
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Rob Herring <robh@kernel.org>,
-        James Clark <james.clark@arm.com>,
+        Thu, 31 Aug 2023 04:11:56 -0400
+Received: from AUS01-ME3-obe.outbound.protection.outlook.com (mail-me3aus01olkn2159.outbound.protection.outlook.com [40.92.63.159])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22D7EE58;
+        Thu, 31 Aug 2023 01:11:27 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YycYX2AIqlmvtI9LGmpJZNLSWULLMk8jQXR5+q6pt3j94+xpToazHXqfeBtV523GneAhrs2BdSCQaHqfZ3AScqehUXixTEA2iL/K4gTcYic8iyO4s6d2GDyW2HO8IrLNrdcmqZ5x6pwTdbMRwekWoypjvNUeutS/J2TRGS+4vhGJqh3TfO/8daicB8rAwXbLvByTfekZlFOEZZ6ZI6QF3jkrQjcXuqMbKeHObEzyq1DnZDE84o85HWXNtMxLwSXpuSnb5L3MMW5X6oyQ/LzrHR1pRgNrGcvXEIad2nicjdaaFUFGyINKRbSrrnvwz8qr9Iw5mWLnCVwadi8sb+MEgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/HMHRrquBkHdDxfCq9TkdacyyvWzcgv1i6Otl7MO1yU=;
+ b=IIfW6BvMu/Mp+9nBu+GTXGUjNsYwT+cg71R5nZE9sgGGoSkkDKwfzdIGYyjRIqZLM4iOG5fTcUPrfjlZ/et5Q0kgcHQpuSGln6K0TYtfuCHnICB0vx30kPcrWew2FCoYPiWxPUTv4S4QYREPvLvzQtEcyVFN3XAR4Gc9qBnh4m6tDtvu4x6yfwEnxqMlfXf547Bn0smobkWCvOEGbyvRyf2jFMd6Y2Gm697mLxC34EglOZEn0cinbMZXM06vMO3j+B0idpWbSUg5ILKjoAqMaCbwJu321LUOfTcqQsMTWmD7NyI5XtZQvhlc9T1miL9juhu32SliyKS9zDFM+vW5hA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/HMHRrquBkHdDxfCq9TkdacyyvWzcgv1i6Otl7MO1yU=;
+ b=Di3il+lrISNtVL7oljKl+vqtqPT8KviNveZq7FOXZdwi/P5X9agZDDtuoGYYeaDZy4NqQgZsuYYm22x+zocgOXylgdraRpHQKKKlng6a3G14VIecw/iOemZSRvf0t2ToyoKg/CWItEDy2VQ6Gy25sIMLIO8MqSW8RJY4r7GBvZ/V/yuD23nDNletKrTSTkWRG0wE76aGLtxekEKfk8XA++34rRfbYvwkddFgjmiPn7X63s2XzUvcMoP+cORjW4dXhHJHnctew1r0mzPw3qy9+gMgoxu4xZuXpOe+NjlOmIRAiqEeg0u41WYq656OIYmz0Lq5fSL2s4TixnesP0c4eA==
+Received: from SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:ac::13) by
+ ME4P282MB0918.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:91::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6745.21; Thu, 31 Aug 2023 08:10:58 +0000
+Received: from SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM
+ ([fe80::62ca:cc8a:e3db:1f2c]) by SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM
+ ([fe80::62ca:cc8a:e3db:1f2c%7]) with mapi id 15.20.6745.020; Thu, 31 Aug 2023
+ 08:10:58 +0000
+From:   Tianyi Liu <i.pear@outlook.com>
+To:     peterz@infradead.org, acme@kernel.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        Tianyi Liu <i.pear@outlook.com>
+Subject: [PATCH] Introduce callchains for guests
+Date:   Thu, 31 Aug 2023 16:09:02 +0800
+Message-ID: <SY4P282MB10848199D3F93AA47A845B8B9DE5A@SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM>
+X-Mailer: git-send-email 2.41.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN:  [c1vncLW2AR9MozWZ8tubht75zN203V6fqsIXXdca01pTNSOGsm/xwQ==]
+X-ClientProxiedBy: SI1PR02CA0060.apcprd02.prod.outlook.com
+ (2603:1096:4:1f5::17) To SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:ac::13)
+X-Microsoft-Original-Message-ID: <20230831080902.9722-1-i.pear@outlook.com>
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SY4P282MB1084:EE_|ME4P282MB0918:EE_
+X-MS-Office365-Filtering-Correlation-Id: 555e74bc-7a99-42a6-89ad-08dba9f9ce51
+X-MS-Exchange-SLBlob-MailProps: ymJijV9pwJlABLGYt43ueJtBBtu40BKZa4WU8pYfCrH9IJReMd27yZPHp2W9fo5Tf2neb+ssx1wDx3gCkCeqJTkAtSS7PfplQVcnPFX5ifoKVwvQLEz5h3XPjDKV/zffnilZjlYYuHM+PQHE907ZJAReZpU9jPYyD6JlZuHyHSt1m5Whfd8NYcGe+3Myx8xQiPuLNh5sfMcppqjHxFgO69PbRBPO9apk77CLBXYeDsRK0cCNWS4N2nIpK1D6RG29PKEiM5EIKA6kmkMXtYrYVFRcxplyKa23hDDQZLUBB4UaS053zQD6BuCB0GSHMxRIDN+4sOsXrfgnBC1UOKCt/AK8X0/gqPa3wc2IMpIixnrsGeZcIikDbl3UV6oRhGIu0x4wa91EFkWCDnA2o+9MICoOjzZ4NGfiO5eWTReaJtvY4wkLD5Os9dgD8dmTQtD8P6Y/QNXR5y0aBg32Mcs2D/mmsLtGwdP8wsKk42Qu3369RCnTfXuXWPpoGZn+DdDJ6sCVco32jSkyj1hHj7A5lgFnnkSuy4hbk/aGxgI/KRr2AcrjeNWJeI3APAKTUqiMgP+TUe5ZmfgkqAzEd55BpU8YiW8ABfoXPuBw8hy/9Q8hB6lIeqxIWjQVlHNjJ0AOam40lLZ3CSQFifoPE0IOaMx/EKl7nxkCBMfkd829fWy9jg0kK7HXRxJwvfpIAmyJPuyyRVSOvMIz0fI7ZyFk8jwyRViEDxOfVHxjFIUDvCIGVD81IpOqDHCKEVXdlbElL/xep/oHKSjjs4yV6nrOfdLqPEQSczqyQY3E6cTxcvkXbBPHKE8arinu5TIs8XgC
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: A2qDovwZol7aRqBSRm8BdAqkWb/2IkpLVBqOEyhMV5WLvDZzqnKtEcMrYoRIFzQHWbqdQI1WCdxnEJb0Z2F9T4yceHaJaqr1mpgRooM//07wazbXSaVx1oTAc07Cvattae5mARTTaAbrIR0v2GBYYLQcurrD4JRmjGy4RR3fY+6S0tNCiv05P+/r59PP1QYZAcJvJ5hF3sGb3gvTj5PuCTSn7zqRA8Te2qgkbkhpRIlTNu0/idOZx0BwqqR1gxziIB3ckNS1dx6XbMkHWKPR+rJVMxlhD/2YaSzTsx4fNNg3GWYR3xByHIqtHhOTzgGpSYSp4Y3epS8TBw3gjPKVlvAf9aycqGovZnHHNiVowkliiTMeRbQkgbBULB8IaEcwKmRnfKLtQQnXGSvLhdCpCP0oKhza7H10T2PY0Y5o24pemDhHujpgvwhooHF42yX3g1VJ+rAB6uZAu70S0ix0IlOnAsw/WDP9sNJoA5nqItqObP/zw7WYeR95gOUynID9wRhnUm1r8KfHXl6tF8MqvOi0CxUtTTGUYvV27Noylr48DIB2Zg3UPc0Ho95vDqL8pooNhPoyC5aOa/LYWXSNfxebsPetaRgtj2cHkl6d15U=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?GPM4Rv/4QUGyvRfRl7uV3zaH5R+MPiQldSAZ+4JVM8QlpuCcy+H60mqw8ux9?=
+ =?us-ascii?Q?owFOEtjVPd7215YPEXDpz7q2WbhZvOO8pz/3JcRz26kvQvJ/g6HTdmqqKklN?=
+ =?us-ascii?Q?b961e33N8VfpCx2HV/IIpcVDpU6pQYNwkiV4mxZiMEdtNMBtxrhsCrPpgF0z?=
+ =?us-ascii?Q?juz1kCB3MAdKlcOzufLRF130oBAkmCZ1Vtn5MX9Ozsa+VV+me0fqdfjLPzSA?=
+ =?us-ascii?Q?BvUEXC6wcmq+I13oc1KrooLuUEZdJbxU5laJLBKXfdMgbPQasW4tV+gDfC/o?=
+ =?us-ascii?Q?Pz4VpoEvtSK/42d5h2i9M/3WmM26v0/aB/3euiqGBPHzYbEWcg+sVkQYOBaX?=
+ =?us-ascii?Q?FfAE82AK8xyiB4fVbWZvx7YTj/tDhZCBovoubmLfQHLX4d4xwJgOy9pslNeu?=
+ =?us-ascii?Q?VeQe56DFwt7dvqjFIaythQOce4+kEHiBsXUjqm03ByBvZEwgy00m5oWcyBRj?=
+ =?us-ascii?Q?iz5x3v/vOGtLnB71iy9esG+e3YMUtRehXaKI4NEWXYtePXCYs9QKfaPVN097?=
+ =?us-ascii?Q?22xZjvyVAYG0UqUaTQkVl5C3K5wctaWLILovcHWHzJS1aTzYPhnZlDE1dGfS?=
+ =?us-ascii?Q?qsqpflPMvAU4VZzi/I/VmSZZv1fqc48ZZiE5X/p5Fg29QuLjhIqdzGM/VeP3?=
+ =?us-ascii?Q?+7QOGOSMJjbZET7or/lYl9Rzj6MM4YU0cNhnR1xIBrg3A2P+jvFN87HB4Dq/?=
+ =?us-ascii?Q?+gXndsPG72qcueGI96bRBPTJNyVVO+ZLoN8fmUzJrkOfpXnEEX6V0HXSYN+w?=
+ =?us-ascii?Q?fWAqq2csTu78/J4JfX7XChq2ZpyOighaOcgV0ULhH4bU+pPuLtul+eRE1p0L?=
+ =?us-ascii?Q?4rH6CitYZQhsisL9lljJY/pr07yN55fJafN5RBnTQJh6asOmKmKc8Nhq/Jpb?=
+ =?us-ascii?Q?Rmg49E4nNldpGNd1EACqoRDsIIoAZns51Z0ozDfb6IC4O7jG/g0AMCato9eJ?=
+ =?us-ascii?Q?6M0ZZ7kQC2id1Jc7nmLZ1rlxkgr3J2nTIlNDaWhiz5htLURBkXH1oQSPC2d7?=
+ =?us-ascii?Q?vdbt/EG2ltLV6s6nbwE0S1ffsevnulWGZh8KZnTOOUGRWWO2USPHn9UcPXwn?=
+ =?us-ascii?Q?0fmhPiqgaV5W42zhG9Oo1toG8OuwO0t5wy57gtFfuSqN3bmXQ+9rS4+xchlo?=
+ =?us-ascii?Q?Y1YVAsoUefMe2uz7CVi1/0eYmbSJgqAGtTYVRMzq0yuuFabQOJ67CoNM8s1i?=
+ =?us-ascii?Q?a2JDPk0s/DXj1cl8UO3/oGjNLPZXJGIRg1g6FqM9Q9DIW0vheZj/+BpXKbGk?=
+ =?us-ascii?Q?Y4z9V5w5Jj0+vDWndbga?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 555e74bc-7a99-42a6-89ad-08dba9f9ce51
+X-MS-Exchange-CrossTenant-AuthSource: SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2023 08:10:58.0595
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ME4P282MB0918
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The no_value field in parse_events_term indicates that the val
-variable isn't used, the case for an event name. Cloning wasn't
-propagating this, making cloned event name terms appearing to have a
-constant assinged to them. Working around the bug would check for a
-value of 1 assigned to value, but then this meant a user value of 1
-couldn't be differentiated causing the value to be lost in debug
-printing and perf list.
+This patch serves as the foundation for enabling callchains for guests,
+(used by `perf kvm`). This functionality is useful for me, and I
+noticed it holds the top spot on the perf wiki TODO list [1], so I'd like
+to implement it. This patch introduces a `perf_callchain_guest` interface,
+which different architectures can implement according to their own
+specifications.
 
-The change fixes the cloning and updates the "val.num ==/!= 1" tests
-to use no_value instead. To better check the no_value is set
-appropriately parameter comments are added for constant values. This
-found that no_value wasn't set correctly in
-parse_events_multi_pmu_add, which matters now that no_value is used to
-indicate an event name.
+This is part of a series of patches. Since these patches are spread across
+various modules like perf, kvm, arch/*, I plan to first submit some
+foundational patches and gradually submit the complete implementation.
+The full implementation can be found at [2], and it has been tested on
+an x86_64 machine.
 
-Fixes: 7a6e91644708 ("perf parse-events: Make common term list to strbuf helper")
-Fixes: 99e7138eb789 ("perf tools: Fail on using multiple bits long terms without value")
-Signed-off-by: Ian Rogers <irogers@google.com>
+Since perf tools currently do not support callchain types with
+PERF_CONTEXT_GUEST*, I temporarily used PERF_CONTEXT_KERNEL for ease of
+testing and validation. This will be rectified once the perf tools patches
+are applied.
+
+Furthermore, do you think it's necessary to introduce a new guest filter
+in the parameters of `get_perf_callchain`? Alternatively, should we add
+two separate filters, `guest_user` and `guest_kernel`, to make these
+filters entirely independent?
+
+This is my first time submitting a patch for a new feature in the kernel,
+and I would greatly appreciate any suggestions.
+
+[1] https://perf.wiki.kernel.org/index.php/Todo
+[2] https://github.com/i-Pear/linux/pull/2/files
+
+Signed-off-by: Tianyi Liu <i.pear@outlook.com>
 ---
- tools/perf/util/parse-events.c | 29 +++++++++++++----------------
- tools/perf/util/parse-events.y |  9 +++++----
- tools/perf/util/pmu.c          |  2 +-
- 3 files changed, 19 insertions(+), 21 deletions(-)
+ kernel/events/callchain.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 51b73207e9f4..68fe2c4ff49f 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1510,8 +1510,8 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 
- 	if (parse_events_term__num(&term,
- 				   PARSE_EVENTS__TERM_TYPE_USER,
--				   config, 1, false, NULL,
--					NULL) < 0) {
-+				   config, /*num=*/1, /*novalue=*/true,
-+				   loc, /*loc_val=*/NULL) < 0) {
- 		zfree(&config);
- 		goto out_err;
- 	}
-@@ -2482,7 +2482,7 @@ int parse_events_term__num(struct parse_events_term **term,
- 		.err_val   = loc_val  ? loc_val->first_column  : 0,
- 	};
- 
--	return new_term(term, &temp, NULL, num);
-+	return new_term(term, &temp, /*str=*/NULL, num);
+diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+index 1273be84392c..eacb6ccf7034 100644
+--- a/kernel/events/callchain.c
++++ b/kernel/events/callchain.c
+@@ -45,6 +45,10 @@ __weak void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
+ {
  }
  
- int parse_events_term__str(struct parse_events_term **term,
-@@ -2501,7 +2501,7 @@ int parse_events_term__str(struct parse_events_term **term,
- 		.err_val   = loc_val  ? loc_val->first_column  : 0,
- 	};
- 
--	return new_term(term, &temp, str, 0);
-+	return new_term(term, &temp, str, /*num=*/0);
- }
- 
- int parse_events_term__term(struct parse_events_term **term,
-@@ -2518,26 +2518,21 @@ int parse_events_term__clone(struct parse_events_term **new,
- 			     struct parse_events_term *term)
++__weak void perf_callchain_guest(struct perf_callchain_entry_ctx *entry)
++{
++}
++
+ static void release_callchain_buffers_rcu(struct rcu_head *head)
  {
- 	char *str;
--	struct parse_events_term temp = {
--		.type_val  = term->type_val,
--		.type_term = term->type_term,
--		.config    = NULL,
--		.err_term  = term->err_term,
--		.err_val   = term->err_val,
--	};
-+	struct parse_events_term temp = *term;
+ 	struct callchain_cpus_entries *entries;
+@@ -183,6 +187,7 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
+ 	struct perf_callchain_entry *entry;
+ 	struct perf_callchain_entry_ctx ctx;
+ 	int rctx;
++	unsigned int guest_state;
  
-+	temp.used = false;
- 	if (term->config) {
- 		temp.config = strdup(term->config);
- 		if (!temp.config)
- 			return -ENOMEM;
- 	}
- 	if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM)
--		return new_term(new, &temp, NULL, term->val.num);
-+		return new_term(new, &temp, /*str=*/NULL, term->val.num);
+ 	entry = get_callchain_entry(&rctx);
+ 	if (!entry)
+@@ -194,6 +199,26 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
+ 	ctx.contexts       = 0;
+ 	ctx.contexts_maxed = false;
  
- 	str = strdup(term->val.str);
- 	if (!str)
- 		return -ENOMEM;
--	return new_term(new, &temp, str, 0);
-+	return new_term(new, &temp, str, /*num=*/0);
- }
- 
- void parse_events_term__delete(struct parse_events_term *term)
-@@ -2611,20 +2606,22 @@ int parse_events_term__to_strbuf(struct list_head *term_list, struct strbuf *sb)
- 		first = false;
- 
- 		if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM)
--			if (term->type_term == PARSE_EVENTS__TERM_TYPE_USER && term->val.num == 1)
-+			if (term->no_value) {
-+				assert(term->type_term == PARSE_EVENTS__TERM_TYPE_USER);
- 				ret = strbuf_addf(sb, "%s", term->config);
--			else
-+			} else
- 				ret = strbuf_addf(sb, "%s=%#"PRIx64, term->config, term->val.num);
- 		else if (term->type_val == PARSE_EVENTS__TERM_TYPE_STR) {
- 			if (term->config) {
- 				ret = strbuf_addf(sb, "%s=", term->config);
- 				if (ret < 0)
- 					return ret;
--			} else if (term->type_term < __PARSE_EVENTS__TERM_TYPE_NR) {
-+			} else if ((unsigned int)term->type_term < __PARSE_EVENTS__TERM_TYPE_NR) {
- 				ret = strbuf_addf(sb, "%s=", config_term_name(term->type_term));
- 				if (ret < 0)
- 					return ret;
- 			}
-+			assert(!term->no_value);
- 			ret = strbuf_addf(sb, "%s", term->val.str);
- 		}
- 		if (ret < 0)
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 534daed91c50..4a305df61f74 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -712,7 +712,7 @@ name_or_raw '=' PE_VALUE
- {
- 	struct parse_events_term *term;
- 	int err = parse_events_term__num(&term, PARSE_EVENTS__TERM_TYPE_USER,
--					 $1, $3, false, &@1, &@3);
-+					 $1, $3, /*novalue=*/false, &@1, &@3);
- 
- 	if (err) {
- 		free($1);
-@@ -739,7 +739,7 @@ PE_LEGACY_CACHE
- {
- 	struct parse_events_term *term;
- 	int err = parse_events_term__num(&term, PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE,
--					 $1, 1, true, &@1, NULL);
-+					 $1, /*num=*/1, /*novalue=*/true, &@1, /*loc_val=*/NULL);
- 
- 	if (err) {
- 		free($1);
-@@ -752,7 +752,7 @@ PE_NAME
- {
- 	struct parse_events_term *term;
- 	int err = parse_events_term__num(&term, PARSE_EVENTS__TERM_TYPE_USER,
--					 $1, 1, true, &@1, NULL);
-+					 $1, /*num=*/1, /*novalue=*/true, &@1, /*loc_val=*/NULL);
- 
- 	if (err) {
- 		free($1);
-@@ -765,7 +765,8 @@ PE_TERM_HW
- {
- 	struct parse_events_term *term;
- 	int err = parse_events_term__num(&term, PARSE_EVENTS__TERM_TYPE_HARDWARE,
--					 $1.str, $1.num & 255, false, &@1, NULL);
-+					 $1.str, $1.num & 255, /*novalue=*/false,
-+					 &@1, /*loc_val=*/NULL);
- 
- 	if (err) {
- 		free($1.str);
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 152cda84f273..d85602aa4b9f 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1396,7 +1396,7 @@ static struct perf_pmu_alias *pmu_find_alias(struct perf_pmu *pmu,
- 		return NULL;
- 
- 	if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM) {
--		if (term->val.num != 1)
-+		if (!term->no_value)
- 			return NULL;
- 		if (pmu_find_format(&pmu->format, term->config))
- 			return NULL;
++	guest_state = perf_guest_state();
++	if (guest_state) {
++		if (add_mark) {
++			if (guest_state & PERF_GUEST_USER)
++				/*
++				 * TODO: Change this to PERF_CONTEXT_GUEST_USER,
++				 * which is currently not recognized by perf utils.
++				 */
++				perf_callchain_store_context(&ctx, PERF_CONTEXT_KERNEL);
++			else
++				/*
++				 * TODO: Change this to PERF_CONTEXT_GUEST_KERNEL,
++				 * which is currently not recognized by perf utils.
++				 */
++				perf_callchain_store_context(&ctx, PERF_CONTEXT_KERNEL);
++		}
++		perf_callchain_guest(&ctx);
++		goto exit_put;
++	}
++
+ 	if (kernel && !user_mode(regs)) {
+ 		if (add_mark)
+ 			perf_callchain_store_context(&ctx, PERF_CONTEXT_KERNEL);
 -- 
-2.42.0.rc2.253.gd59a3bf2b4-goog
+2.34.1
 
