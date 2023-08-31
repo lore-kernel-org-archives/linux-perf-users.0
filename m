@@ -2,254 +2,253 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B97C5C83F10
-	for <linux-perf-users@archiver.kernel.org>; Thu, 31 Aug 2023 08:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14893C83F10
+	for <linux-perf-users@archiver.kernel.org>; Thu, 31 Aug 2023 09:33:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233933AbjHaIxz (ORCPT
+        id S243560AbjHaJdb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 31 Aug 2023 04:53:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50440 "EHLO
+        Thu, 31 Aug 2023 05:33:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231590AbjHaIxz (ORCPT
+        with ESMTP id S245463AbjHaJda (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 31 Aug 2023 04:53:55 -0400
+        Thu, 31 Aug 2023 05:33:30 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F0D54CE6;
-        Thu, 31 Aug 2023 01:53:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 53C02CFE;
+        Thu, 31 Aug 2023 02:33:26 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 23063C15;
-        Thu, 31 Aug 2023 01:54:29 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.3.201])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A85423F738;
-        Thu, 31 Aug 2023 01:53:46 -0700 (PDT)
-Date:   Thu, 31 Aug 2023 09:53:37 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Tomohiro Misono <misono.tomohiro@fujitsu.com>,
-        Stephane Eranian <eranian@google.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <swboyd@chromium.org>, ito-yuichi@fujitsu.com,
-        linux-perf-users@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 1/7] irqchip/gic-v3: Enable support for SGIs to act
- as NMIs
-Message-ID: <ZPBVB_z3FTl2nBy0@FVFF77S0Q05N>
-References: <20230830191314.1618136-1-dianders@chromium.org>
- <20230830121115.v12.1.I1223c11c88937bd0cbd9b086d4ef216985797302@changeid>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 80B84FEC;
+        Thu, 31 Aug 2023 02:34:05 -0700 (PDT)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 28F593F738;
+        Thu, 31 Aug 2023 02:33:24 -0700 (PDT)
+Message-ID: <4e2783e2-6b7f-8c8d-67cc-16cd6626caa9@arm.com>
+Date:   Thu, 31 Aug 2023 10:33:26 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230830121115.v12.1.I1223c11c88937bd0cbd9b086d4ef216985797302@changeid>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v1] perf jevents: Use "default_core" for events with no
+ Unit
+To:     Ian Rogers <irogers@google.com>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230826062203.1058041-1-irogers@google.com>
+ <4f493093-fe3e-0d17-1bdb-3c3545734f0c@arm.com>
+ <CAP-5=fVcc-0xUe1SnHCBUiDEWBc1VA3O52SsOAV3LDV3nZo=jg@mail.gmail.com>
+Content-Language: en-US
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <CAP-5=fVcc-0xUe1SnHCBUiDEWBc1VA3O52SsOAV3LDV3nZo=jg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Aug 30, 2023 at 12:11:22PM -0700, Douglas Anderson wrote:
-> As of commit 6abbd6988971 ("irqchip/gic, gic-v3: Make SGIs use
-> handle_percpu_devid_irq()") SGIs are treated the same as PPIs/EPPIs
-> and use handle_percpu_devid_irq() by default. Unfortunately,
-> handle_percpu_devid_irq() isn't NMI safe, and so to run in an NMI
-> context those should use handle_percpu_devid_fasteoi_nmi().
-> 
-> In order to accomplish this, we just have to make room for SGIs in the
-> array of refcounts that keeps track of which interrupts are set as
-> NMI. We also rename the array and create a new indexing scheme that
-> accounts for SGIs.
-> 
-> Also, enable NMI support prior to gic_smp_init() as allocation of SGIs
-> as IRQs/NMIs happen as part of this routine.
-> 
-> Co-developed-by: Sumit Garg <sumit.garg@linaro.org>
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> I'll note that this change is a little more black magic to me than
-> others in this series. I don't have a massive amounts of familiarity
-> with all the moving parts of gic-v3, so I mostly just followed Mark
-> Rutland's advice [1]. Please pay extra attention to make sure I didn't
-> do anything too terrible.
-> 
-> Mark's advice wasn't a full patch and I ended up doing a bit of work
-> to translate it to reality, so I did not add him as "Co-developed-by"
-> here. Mark: if you would like this tag then please provide it and your
-> Signed-off-by. I certainly won't object.
 
-That's all reasonable, and I'm perfectly happy without a tag.
 
-I have one trivial nit below, but with or without that fixed up:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
+On 30/08/2023 14:06, Ian Rogers wrote:
+> On Wed, Aug 30, 2023 at 2:00 AM James Clark <james.clark@arm.com> wrote:
+>>
+>>
+>>
+>> On 26/08/2023 07:22, Ian Rogers wrote:
+>>> The json Unit field encodes the name of the PMU to match the events
+>>> to. When no name is given it has meant the "cpu" core PMU except for
+>>> tests. On ARM, Intel hybrid and s390 the core PMU is named differently
+>>> which means that using "cpu" for this case causes the events not to
+>>> get matched to the PMU. Introduce a new "default_core" string for this
+>>> case and in the pmu__name_match force all core PMUs to match this
+>>> name.
+>>>
+>>> Reported-by: Thomas Richter <tmricht@linux.ibm.com>
+>>> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+>>> Fixes: 2e255b4f9f41 ("perf jevents: Group events by PMU")
+>>> Signed-off-by: Ian Rogers <irogers@google.com>
+>>
+>> Hi Ian,
+>>
+>> Running 'perf list' with this change I get "munmap_chunk(): invalid
+>> pointer". It's probably related to an earlier change though.
+>>
+>> Here's the stack:
+>>
+>> Program received signal SIGABRT, Aborted.
+>> __GI_raise (sig=sig@entry=6) at ../sysdeps/unix/sysv/linux/raise.c:50
+>> 50      ../sysdeps/unix/sysv/linux/raise.c: No such file or directory.
+>> (gdb) bt
+>> #0  __GI_raise (sig=sig@entry=6) at ../sysdeps/unix/sysv/linux/raise.c:50
+>> #1  0x0000fffff70adaac in __GI_abort () at abort.c:79
+>> #2  0x0000fffff70faf40 in __libc_message (action=action@entry=do_abort, fmt=fmt@entry=0xfffff71bc518 "%s\n")
+>>      at ../sysdeps/posix/libc_fatal.c:155
+>> #3  0x0000fffff7102344 in malloc_printerr (str=str@entry=0xfffff71b7ae0 "munmap_chunk(): invalid pointer") at malloc.c:5347
+>> #4  0x0000fffff7102644 in munmap_chunk (p=<optimized out>) at malloc.c:2830
+>> #5  0x0000aaaaaadc727c in __zfree (ptr=0xaaaaaaf89db0) at ../../lib/zalloc.c:13
+>> #6  0x0000aaaaaacbbbcc in assign_str (name=0xaaaaaae878c2 "l1d_cache_refill", field=0xaaaaaae4fb78 "value", old_str=0xaaaaaaf89db0,
+>>      new_str=0xaaaaaae878f7 "event=0x3") at util/pmu.c:454
+>> #7  0x0000aaaaaacbbdf4 in update_alias (pe=0xffffffffd450, table=0xaaaaaaf43870 <pmu_events_map+592>, vdata=0xffffffffd598)
+>>      at util/pmu.c:490
+>> #8  0x0000aaaaaadbc37c in pmu_events_table__find_event_pmu (table=0xaaaaaaf43870 <pmu_events_map+592>,
+>>      pmu=0xaaaaaaf43400 <pmu_events.arm_neoverse_n1>, name=0xaaaaaaf900b3 "l1d_cache_refill", fn=0xaaaaaacbbcc0 <update_alias>,
+>>      data=0xffffffffd598) at pmu-events/pmu-events.c:5359
+>> #9  0x0000aaaaaadbc598 in pmu_events_table__find_event (table=0xaaaaaaf43870 <pmu_events_map+592>, pmu=0xaaaaaaf8fcd0,
+>>      name=0xaaaaaaf900b3 "l1d_cache_refill", fn=0xaaaaaacbbcc0 <update_alias>, data=0xffffffffd598)
+>>      at pmu-events/pmu-events.c:5398
+>> #10 0x0000aaaaaacbc1f0 in perf_pmu__new_alias (pmu=0xaaaaaaf8fcd0, name=0xaaaaaaf900b3 "l1d_cache_refill", desc=0x0, val=0x0,
+>>      val_fd=0xaaaaaaf8a2e0, pe=0x0) at util/pmu.c:569
+>> #11 0x0000aaaaaacbc710 in pmu_aliases_parse (pmu=0xaaaaaaf8fcd0) at util/pmu.c:673
+>> #12 0x0000aaaaaacbf168 in perf_pmu__num_events (pmu=0xaaaaaaf8fcd0) at util/pmu.c:1633
+>> #13 0x0000aaaaaacc1e00 in perf_pmus__print_pmu_events (print_cb=0xffffffffe878, print_state=0xffffffffe898) at util/pmus.c:359
+>> #14 0x0000aaaaaac53810 in print_events (print_cb=0xffffffffe878, print_state=0xffffffffe898) at util/print-events.c:407
+>> #15 0x0000aaaaaab1cc30 in cmd_list (argc=0, argv=0xfffffffff0c0) at builtin-list.c:524
+>> #16 0x0000aaaaaac106f0 in run_builtin (p=0xaaaaaaf59580 <commands+240>, argc=2, argv=0xfffffffff0c0) at perf.c:322
+>> #17 0x0000aaaaaac109a4 in handle_internal_command (argc=2, argv=0xfffffffff0c0) at perf.c:375
+>> #18 0x0000aaaaaac10b5c in run_argv (argcp=0xffffffffeebc, argv=0xffffffffeeb0) at perf.c:419
+>> #19 0x0000aaaaaac10e84 in main (argc=2, argv=0xfffffffff0c0) at perf.c:535
 > 
-> [1] https://lore.kernel.org/r/ZNC-YRQopO0PaIIo@FVFF77S0Q05N.cambridge.arm.com
+> Hi James,
 > 
-> Changes in v12:
-> - Added a comment about why we account for 16 SGIs when Linux uses 8.
+> Could you try adding:
+> https://lore.kernel.org/lkml/20230830000545.1638964-1-irogers@google.com/
+> which I believe fixes the problem.
 > 
-> Changes in v10:
-> - Rewrite as needed for 5.11+ as per Mark Rutland and Sumit.
+> Thanks,
+> Ian
 > 
->  drivers/irqchip/irq-gic-v3.c | 59 +++++++++++++++++++++++++-----------
->  1 file changed, 41 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-> index eedfa8e9f077..8d20122ba0a8 100644
-> --- a/drivers/irqchip/irq-gic-v3.c
-> +++ b/drivers/irqchip/irq-gic-v3.c
-> @@ -78,6 +78,13 @@ static DEFINE_STATIC_KEY_TRUE(supports_deactivate_key);
->  #define GIC_LINE_NR	min(GICD_TYPER_SPIS(gic_data.rdists.gicd_typer), 1020U)
->  #define GIC_ESPI_NR	GICD_TYPER_ESPIS(gic_data.rdists.gicd_typer)
->  
-> +/*
-> + * There are 16 SGIs, though we only actually use 8 in Linux. The other 8 SGIs
-> + * are potentially stolen by the secure side. Some code, especially code dealing
-> + * with hwirq IDs, is simplified by accounting for all 16.
-> + */
-> +#define SGI_NR		16
-> +
->  /*
->   * The behaviours of RPR and PMR registers differ depending on the value of
->   * SCR_EL3.FIQ, and the behaviour of non-secure priority registers of the
-> @@ -125,8 +132,8 @@ EXPORT_SYMBOL(gic_nonsecure_priorities);
->  		__priority;						\
->  	})
->  
-> -/* ppi_nmi_refs[n] == number of cpus having ppi[n + 16] set as NMI */
-> -static refcount_t *ppi_nmi_refs;
-> +/* rdist_nmi_refs[n] == number of cpus having the rdist interrupt n set as NMI */
-> +static refcount_t *rdist_nmi_refs;
->  
->  static struct gic_kvm_info gic_v3_kvm_info __initdata;
->  static DEFINE_PER_CPU(bool, has_rss);
-> @@ -519,9 +526,22 @@ static u32 __gic_get_ppi_index(irq_hw_number_t hwirq)
->  	}
->  }
->  
-> -static u32 gic_get_ppi_index(struct irq_data *d)
-> +static u32 __gic_get_rdist_idx(irq_hw_number_t hwirq)
-> +{
-> +	switch (__get_intid_range(hwirq)) {
-> +	case SGI_RANGE:
-> +	case PPI_RANGE:
-> +		return hwirq;
-> +	case EPPI_RANGE:
-> +		return hwirq - EPPI_BASE_INTID + 32;
-> +	default:
-> +		unreachable();
-> +	}
-> +}
-> +
-> +static u32 gic_get_rdist_idx(struct irq_data *d)
->  {
-> -	return __gic_get_ppi_index(d->hwirq);
-> +	return __gic_get_rdist_idx(d->hwirq);
->  }
 
-Nit: It would be nicer to call this gic_get_rdist_index() to match
-gic_get_ppi_index(); likewise with __gic_get_rdist_index().
+Yep that fixes it.
 
-That's my fault given I suggested the gic_get_rdist_idx() name in:
-
-  https://lore.kernel.org/linux-arm-kernel/ZNC-YRQopO0PaIIo@FVFF77S0Q05N.cambridge.arm.com/
-
-... so sorry about that!
-
-Mark.
-
->  
->  static int gic_irq_nmi_setup(struct irq_data *d)
-> @@ -545,11 +565,14 @@ static int gic_irq_nmi_setup(struct irq_data *d)
->  
->  	/* desc lock should already be held */
->  	if (gic_irq_in_rdist(d)) {
-> -		u32 idx = gic_get_ppi_index(d);
-> +		u32 idx = gic_get_rdist_idx(d);
->  
-> -		/* Setting up PPI as NMI, only switch handler for first NMI */
-> -		if (!refcount_inc_not_zero(&ppi_nmi_refs[idx])) {
-> -			refcount_set(&ppi_nmi_refs[idx], 1);
-> +		/*
-> +		 * Setting up a percpu interrupt as NMI, only switch handler
-> +		 * for first NMI
-> +		 */
-> +		if (!refcount_inc_not_zero(&rdist_nmi_refs[idx])) {
-> +			refcount_set(&rdist_nmi_refs[idx], 1);
->  			desc->handle_irq = handle_percpu_devid_fasteoi_nmi;
->  		}
->  	} else {
-> @@ -582,10 +605,10 @@ static void gic_irq_nmi_teardown(struct irq_data *d)
->  
->  	/* desc lock should already be held */
->  	if (gic_irq_in_rdist(d)) {
-> -		u32 idx = gic_get_ppi_index(d);
-> +		u32 idx = gic_get_rdist_idx(d);
->  
->  		/* Tearing down NMI, only switch handler for last NMI */
-> -		if (refcount_dec_and_test(&ppi_nmi_refs[idx]))
-> +		if (refcount_dec_and_test(&rdist_nmi_refs[idx]))
->  			desc->handle_irq = handle_percpu_devid_irq;
->  	} else {
->  		desc->handle_irq = handle_fasteoi_irq;
-> @@ -1279,10 +1302,10 @@ static void gic_cpu_init(void)
->  	rbase = gic_data_rdist_sgi_base();
->  
->  	/* Configure SGIs/PPIs as non-secure Group-1 */
-> -	for (i = 0; i < gic_data.ppi_nr + 16; i += 32)
-> +	for (i = 0; i < gic_data.ppi_nr + SGI_NR; i += 32)
->  		writel_relaxed(~0, rbase + GICR_IGROUPR0 + i / 8);
->  
-> -	gic_cpu_config(rbase, gic_data.ppi_nr + 16, gic_redist_wait_for_rwp);
-> +	gic_cpu_config(rbase, gic_data.ppi_nr + SGI_NR, gic_redist_wait_for_rwp);
->  
->  	/* initialise system registers */
->  	gic_cpu_sys_reg_init();
-> @@ -1939,12 +1962,13 @@ static void gic_enable_nmi_support(void)
->  		return;
->  	}
->  
-> -	ppi_nmi_refs = kcalloc(gic_data.ppi_nr, sizeof(*ppi_nmi_refs), GFP_KERNEL);
-> -	if (!ppi_nmi_refs)
-> +	rdist_nmi_refs = kcalloc(gic_data.ppi_nr + SGI_NR,
-> +				 sizeof(*rdist_nmi_refs), GFP_KERNEL);
-> +	if (!rdist_nmi_refs)
->  		return;
->  
-> -	for (i = 0; i < gic_data.ppi_nr; i++)
-> -		refcount_set(&ppi_nmi_refs[i], 0);
-> +	for (i = 0; i < gic_data.ppi_nr + SGI_NR; i++)
-> +		refcount_set(&rdist_nmi_refs[i], 0);
->  
->  	pr_info("Pseudo-NMIs enabled using %s ICC_PMR_EL1 synchronisation\n",
->  		gic_has_relaxed_pmr_sync() ? "relaxed" : "forced");
-> @@ -2061,6 +2085,7 @@ static int __init gic_init_bases(phys_addr_t dist_phys_base,
->  
->  	gic_dist_init();
->  	gic_cpu_init();
-> +	gic_enable_nmi_support();
->  	gic_smp_init();
->  	gic_cpu_pm_init();
->  
-> @@ -2073,8 +2098,6 @@ static int __init gic_init_bases(phys_addr_t dist_phys_base,
->  			gicv2m_init(handle, gic_data.domain);
->  	}
->  
-> -	gic_enable_nmi_support();
-> -
->  	return 0;
->  
->  out_free:
-> -- 
-> 2.42.0.283.g2d96d420d3-goog
-> 
+>>> ---
+>>>  tools/perf/pmu-events/jevents.py |  2 +-
+>>>  tools/perf/tests/pmu-events.c    | 19 ++++++++++---------
+>>>  tools/perf/util/pmu.c            |  7 ++++++-
+>>>  3 files changed, 17 insertions(+), 11 deletions(-)
+>>>
+>>> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+>>> index 712f80d7d071..a7e88332276d 100755
+>>> --- a/tools/perf/pmu-events/jevents.py
+>>> +++ b/tools/perf/pmu-events/jevents.py
+>>> @@ -266,7 +266,7 @@ class JsonEvent:
+>>>      def unit_to_pmu(unit: str) -> Optional[str]:
+>>>        """Convert a JSON Unit to Linux PMU name."""
+>>>        if not unit:
+>>> -        return 'cpu'
+>>> +        return 'default_core'
+>>>        # Comment brought over from jevents.c:
+>>>        # it's not realistic to keep adding these, we need something more scalable ...
+>>>        table = {
+>>> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+>>> index ce4da9b1d115..f5321fbdee79 100644
+>>> --- a/tools/perf/tests/pmu-events.c
+>>> +++ b/tools/perf/tests/pmu-events.c
+>>> @@ -44,7 +44,7 @@ struct perf_pmu_test_pmu {
+>>>
+>>>  static const struct perf_pmu_test_event bp_l1_btb_correct = {
+>>>       .event = {
+>>> -             .pmu = "cpu",
+>>> +             .pmu = "default_core",
+>>>               .name = "bp_l1_btb_correct",
+>>>               .event = "event=0x8a",
+>>>               .desc = "L1 BTB Correction",
+>>> @@ -56,7 +56,7 @@ static const struct perf_pmu_test_event bp_l1_btb_correct = {
+>>>
+>>>  static const struct perf_pmu_test_event bp_l2_btb_correct = {
+>>>       .event = {
+>>> -             .pmu = "cpu",
+>>> +             .pmu = "default_core",
+>>>               .name = "bp_l2_btb_correct",
+>>>               .event = "event=0x8b",
+>>>               .desc = "L2 BTB Correction",
+>>> @@ -68,7 +68,7 @@ static const struct perf_pmu_test_event bp_l2_btb_correct = {
+>>>
+>>>  static const struct perf_pmu_test_event segment_reg_loads_any = {
+>>>       .event = {
+>>> -             .pmu = "cpu",
+>>> +             .pmu = "default_core",
+>>>               .name = "segment_reg_loads.any",
+>>>               .event = "event=0x6,period=200000,umask=0x80",
+>>>               .desc = "Number of segment register loads",
+>>> @@ -80,7 +80,7 @@ static const struct perf_pmu_test_event segment_reg_loads_any = {
+>>>
+>>>  static const struct perf_pmu_test_event dispatch_blocked_any = {
+>>>       .event = {
+>>> -             .pmu = "cpu",
+>>> +             .pmu = "default_core",
+>>>               .name = "dispatch_blocked.any",
+>>>               .event = "event=0x9,period=200000,umask=0x20",
+>>>               .desc = "Memory cluster signals to block micro-op dispatch for any reason",
+>>> @@ -92,7 +92,7 @@ static const struct perf_pmu_test_event dispatch_blocked_any = {
+>>>
+>>>  static const struct perf_pmu_test_event eist_trans = {
+>>>       .event = {
+>>> -             .pmu = "cpu",
+>>> +             .pmu = "default_core",
+>>>               .name = "eist_trans",
+>>>               .event = "event=0x3a,period=200000,umask=0x0",
+>>>               .desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
+>>> @@ -104,7 +104,7 @@ static const struct perf_pmu_test_event eist_trans = {
+>>>
+>>>  static const struct perf_pmu_test_event l3_cache_rd = {
+>>>       .event = {
+>>> -             .pmu = "cpu",
+>>> +             .pmu = "default_core",
+>>>               .name = "l3_cache_rd",
+>>>               .event = "event=0x40",
+>>>               .desc = "L3 cache access, read",
+>>> @@ -391,8 +391,8 @@ static int compare_alias_to_test_event(struct pmu_event_info *alias,
+>>>               return -1;
+>>>       }
+>>>
+>>> -
+>>> -     if (!is_same(alias->pmu_name, test_event->event.pmu)) {
+>>> +     if (!is_same(alias->pmu_name, test_event->event.pmu) &&
+>>> +         !is_same(alias->pmu_name, "default_core")) {
+>>>               pr_debug("testing aliases PMU %s: mismatched pmu_name, %s vs %s\n",
+>>>                         pmu_name, alias->pmu_name, test_event->event.pmu);
+>>>               return -1;
+>>> @@ -409,7 +409,7 @@ static int test__pmu_event_table_core_callback(const struct pmu_event *pe,
+>>>       struct perf_pmu_test_event const **test_event_table;
+>>>       bool found = false;
+>>>
+>>> -     if (strcmp(pe->pmu, "cpu"))
+>>> +     if (strcmp(pe->pmu, "default_core"))
+>>>               test_event_table = &uncore_events[0];
+>>>       else
+>>>               test_event_table = &core_events[0];
+>>> @@ -543,6 +543,7 @@ static int __test_core_pmu_event_aliases(const char *pmu_name, int *count)
+>>>       INIT_LIST_HEAD(&pmu->caps);
+>>>       INIT_LIST_HEAD(&pmu->list);
+>>>       pmu->name = strdup(pmu_name);
+>>> +     pmu->is_core = true;
+>>>
+>>>       pmu->events_table = table;
+>>>       pmu_add_cpu_aliases_table(pmu, table);
+>>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+>>> index 502fd58c3ea7..cde33e01959a 100644
+>>> --- a/tools/perf/util/pmu.c
+>>> +++ b/tools/perf/util/pmu.c
+>>> @@ -1747,7 +1747,12 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
+>>>  bool pmu__name_match(const struct perf_pmu *pmu, const char *pmu_name)
+>>>  {
+>>>       return !strcmp(pmu->name, pmu_name) ||
+>>> -             (pmu->is_uncore && pmu_uncore_alias_match(pmu_name, pmu->name));
+>>> +             (pmu->is_uncore && pmu_uncore_alias_match(pmu_name, pmu->name)) ||
+>>> +             /*
+>>> +              * jevents and tests use default_core as a marker for any core
+>>> +              * PMU as the PMU name varies across architectures.
+>>> +              */
+>>> +             (pmu->is_core && !strcmp(pmu_name, "default_core"));
+>>>  }
+>>>
+>>>  bool perf_pmu__is_software(const struct perf_pmu *pmu)
