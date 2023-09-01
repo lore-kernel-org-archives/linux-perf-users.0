@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6260CA0FFA
-	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Sep 2023 23:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E01C5CA0FF8
+	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Sep 2023 23:40:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349714AbjIAXkI (ORCPT
+        id S1351180AbjIAXkM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 1 Sep 2023 19:40:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49480 "EHLO
+        Fri, 1 Sep 2023 19:40:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351119AbjIAXkG (ORCPT
+        with ESMTP id S1351184AbjIAXkJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 1 Sep 2023 19:40:06 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2A8918C
-        for <linux-perf-users@vger.kernel.org>; Fri,  1 Sep 2023 16:40:02 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d7ea08906b3so629979276.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 01 Sep 2023 16:40:02 -0700 (PDT)
+        Fri, 1 Sep 2023 19:40:09 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5685810D4
+        for <linux-perf-users@vger.kernel.org>; Fri,  1 Sep 2023 16:40:05 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-58d428d4956so28366567b3.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 01 Sep 2023 16:40:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1693611602; x=1694216402; darn=vger.kernel.org;
+        d=google.com; s=20221208; t=1693611604; x=1694216404; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=C63LVzjWcO3ndeq3MzPqAiYpz2niIb7tc9p39BJtXA8=;
-        b=XdK4WHvzZp8jFngZbtqSZEyN4jObptHN6VJGzVb+MZ0tITK9f2GcHjVwv2q3efgAyX
-         Mza9vXVSr/lzuyfD71zk7O0CTjCoN9dgwD7dGqGC4KCYBjmwTRskQn9PDTi8zYacaYuJ
-         ponRj+Uaz/13wRNn9SQ5Bo9Fnc9dHq/uH9uTKqFbkOElWVON/LyfJxQu3PN92n7lX/7I
-         marUnhbwWVhcl10EO7l6Gi2shkmhkPJ3sZl7j8IN6t7ewcgri7poGVdmY3xcvcGfJBPY
-         63U+QEQImaZgUD4G9clvymFG6U3dBeJcXO/0YPJicblBf9Rw7Q92GVjnyS/RXoS2hLFN
-         MclQ==
+        bh=AtbstwhM750foArngOjUdnAW59K1Cmw/OZwRlfXgIkY=;
+        b=TYtXB7v9zsUdWQ6sLfeY8PnHjcWOV0WLJiJDtxt6ot85BpCnsW6WnTP9Mnq3MKdNT4
+         Pj42gueetRrytTcxJO+5DW5y3OaRChSciz1qkFsiIKF8x26F6zUmY+DNIhnwpKcC68Uu
+         cqeOIQGYIwImnfGUK5Ehy7+srqlczb2RJ5LvE8JWi4f6eOB5WrJ9J4zr5+NlDGd7gLzC
+         DxpMIZ59kKzDc8PxDRciWoSjKV50QPHXxFTEC5pvY+ppzZmMhbBi5Zd7cmhRIYn+lvUY
+         ALFCJ/FfTpr0DunQHUrVm4a5g/yytxfUat69htEOJ6zGzsOd8H6LmCPrOeiXRIEAk4gs
+         MRIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693611602; x=1694216402;
+        d=1e100.net; s=20221208; t=1693611604; x=1694216404;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=C63LVzjWcO3ndeq3MzPqAiYpz2niIb7tc9p39BJtXA8=;
-        b=dM2fBqB9b7xoG4gYI+iAVZFxmoNr5QP5JY7NCy8kEtPyI+aDxjF/OZMR64/720vvvp
-         Wi1axOBwRqDohAQhiziOqbynyVmYsrgvH+43RXTneED/Q4fIqImrMmxAsYn2EaPBeGZr
-         NAkd6j6UYH/g8/lU+zGfqsH92WIpvXqOSdAqa2MsdtB//sd1JpuM1vLSIGPyWJWUxlve
-         YO+uUg4aZX1k0ML9kkhIKPVCM3RZGf4uaX9LsdABfZa3HlWop+3vtmM6HfE4desOJ8uY
-         wqfkL7kKjDp5JAaWVSE9mkeDuDmNBZE4HKiuS6N6QJ7w2fivuY42pjoE1gNKWvtOAzyU
-         wbOQ==
-X-Gm-Message-State: AOJu0YyWbYje3C3ytFJOkLEY/67CdWKNe/Ew3u2lYcOxngHxC17G9eaz
-        MOOXtVnwsPP/QhjhZlOtAwU485ESbf5t
-X-Google-Smtp-Source: AGHT+IEyHLDuphPT30DQMKZHhdOPGSECuXA4i3XXyQtARv5DAwk13yZSs/Jb5JOIlf6bYlei49bg4zhdw1En
+        bh=AtbstwhM750foArngOjUdnAW59K1Cmw/OZwRlfXgIkY=;
+        b=Z7sXCsfWNtuPOKLap8Nok3LxqQus9FKU7DZe6y3tOMs03pBdpCRnhDlFiDXyKpc9/d
+         c1qCNmA3dO7p6H0HI0ii5u8nACvjJxsOfe0xiiOtALWI5zR/BzKVShTNxrshCJFWENOx
+         hc/8Lu6NZf4ry0ad8Yu1QxHFlqVz1hp2UI6ZVTAvoh8hy5Ur5BANdP5fsLuhPppgmox6
+         rbfkrTHJxvjK8vp4MbHV8nsVxCit0SgONgRvQSA8PmFmQN32q5PfZQu9qMFpzzKCJ6Jg
+         e9woGAdsIrVA2egGfROOl/iJBhCuuvJ7OYmEbX5T8WnA2vb9f+UTEX7Fw1LHNAJbn9ID
+         l3Fw==
+X-Gm-Message-State: AOJu0YytWskXX93bqHy3HZjh9ezkftiP25HGGgzCmnl2bv5UtoMDZzs/
+        a3/J75WnxemdMU3Hbi0bnkksPYVyaCNf
+X-Google-Smtp-Source: AGHT+IFozOA0unARbKlIA5NDlu3aa8OXlOHN2umEvQTZ/DQ+Ne+XCm4U9pCE0/1bB1SisVgkkjSp4kquQDMf
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:51bc:d985:dbbd:10b])
- (user=irogers job=sendgmr) by 2002:a25:dc82:0:b0:d74:6bcc:7b22 with SMTP id
- y124-20020a25dc82000000b00d746bcc7b22mr99667ybe.6.1693611602279; Fri, 01 Sep
- 2023 16:40:02 -0700 (PDT)
-Date:   Fri,  1 Sep 2023 16:39:46 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:721:b0:586:5d03:67c8 with SMTP id
+ bt1-20020a05690c072100b005865d0367c8mr114526ywb.3.1693611604484; Fri, 01 Sep
+ 2023 16:40:04 -0700 (PDT)
+Date:   Fri,  1 Sep 2023 16:39:47 -0700
 In-Reply-To: <20230901233949.2930562-1-irogers@google.com>
-Message-Id: <20230901233949.2930562-3-irogers@google.com>
+Message-Id: <20230901233949.2930562-4-irogers@google.com>
 Mime-Version: 1.0
 References: <20230901233949.2930562-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
-Subject: [PATCH v1 3/6] perf parse-events: Tidy up str parameter
+Subject: [PATCH v1 4/6] perf parse-events: Avoid enum casts
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -73,84 +73,106 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add a const and rename str to event_name.
+Add term_type to union of values returned by the lexer to avoid casts
+to and from an integer.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/parse-events.c | 13 +++++++------
- tools/perf/util/parse-events.h |  2 +-
- 2 files changed, 8 insertions(+), 7 deletions(-)
+ tools/perf/util/parse-events.l |  2 +-
+ tools/perf/util/parse-events.y | 25 +++++++++++--------------
+ 2 files changed, 12 insertions(+), 15 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index e9e3623f3fed..283c559a35b4 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1482,7 +1482,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+index 4ef4b6f171a0..7bdf0565a92c 100644
+--- a/tools/perf/util/parse-events.l
++++ b/tools/perf/util/parse-events.l
+@@ -120,7 +120,7 @@ static int term(yyscan_t scanner, enum parse_events__term_type type)
+ {
+ 	YYSTYPE *yylval = parse_events_get_lval(scanner);
+ 
+-	yylval->num = type;
++	yylval->term_type = type;
+ 	return PE_TERM;
  }
  
- int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
--			       char *str, struct list_head *head,
-+			       const char *event_name, struct list_head *head,
- 			       struct list_head **listp, void *loc_)
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index 4a305df61f74..4fae7847d13b 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -70,7 +70,7 @@ static void free_list_evsel(struct list_head* list_evsel)
+ %type <num> PE_VALUE_SYM_HW
+ %type <num> PE_VALUE_SYM_SW
+ %type <num> PE_VALUE_SYM_TOOL
+-%type <num> PE_TERM
++%type <term_type> PE_TERM
+ %type <num> value_sym
+ %type <str> PE_RAW
+ %type <str> PE_NAME
+@@ -111,6 +111,7 @@ static void free_list_evsel(struct list_head* list_evsel)
+ {
+ 	char *str;
+ 	u64 num;
++	enum parse_events__term_type term_type;
+ 	struct list_head *list_evsel;
+ 	struct list_head *list_terms;
+ 	struct parse_events_term *term;
+@@ -778,8 +779,7 @@ PE_TERM_HW
+ PE_TERM '=' name_or_legacy
  {
  	struct parse_events_term *term;
-@@ -1502,7 +1502,8 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+-	int err = parse_events_term__str(&term, (enum parse_events__term_type)$1,
+-					/*config=*/NULL, $3, &@1, &@3);
++	int err = parse_events_term__str(&term, $1, /*config=*/NULL, $3, &@1, &@3);
  
- 		INIT_LIST_HEAD(head);
- 	}
--	config = strdup(str);
-+
-+	config = strdup(event_name);
- 	if (!config)
- 		goto out_err;
+ 	if (err) {
+ 		free($3);
+@@ -791,8 +791,7 @@ PE_TERM '=' name_or_legacy
+ PE_TERM '=' PE_TERM_HW
+ {
+ 	struct parse_events_term *term;
+-	int err = parse_events_term__str(&term, (enum parse_events__term_type)$1,
+-					 /*config=*/NULL, $3.str, &@1, &@3);
++	int err = parse_events_term__str(&term, $1, /*config=*/NULL, $3.str, &@1, &@3);
  
-@@ -1528,7 +1529,7 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 		if (parse_events__filter_pmu(parse_state, pmu))
- 			continue;
+ 	if (err) {
+ 		free($3.str);
+@@ -804,10 +803,7 @@ PE_TERM '=' PE_TERM_HW
+ PE_TERM '=' PE_TERM
+ {
+ 	struct parse_events_term *term;
+-	int err = parse_events_term__term(&term,
+-					  (enum parse_events__term_type)$1,
+-					  (enum parse_events__term_type)$3,
+-					  &@1, &@3);
++	int err = parse_events_term__term(&term, $1, $3, &@1, &@3);
  
--		if (!perf_pmu__have_event(pmu, str))
-+		if (!perf_pmu__have_event(pmu, event_name))
- 			continue;
+ 	if (err)
+ 		PE_ABORT(err);
+@@ -818,8 +814,9 @@ PE_TERM '=' PE_TERM
+ PE_TERM '=' PE_VALUE
+ {
+ 	struct parse_events_term *term;
+-	int err = parse_events_term__num(&term, (enum parse_events__term_type)$1,
+-					 /*config=*/NULL, $3, /*novalue=*/false, &@1, &@3);
++	int err = parse_events_term__num(&term, $1,
++					 /*config=*/NULL, $3, /*novalue=*/false,
++					 &@1, &@3);
  
- 		auto_merge_stats = perf_pmu__auto_merge_stats(pmu);
-@@ -1539,7 +1540,7 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+ 	if (err)
+ 		PE_ABORT(err);
+@@ -830,9 +827,9 @@ PE_TERM '=' PE_VALUE
+ PE_TERM
+ {
+ 	struct parse_events_term *term;
+-	int err = parse_events_term__num(&term, (enum parse_events__term_type)$1,
+-					/*config=*/NULL, /*num=*/1, /*novalue=*/true,
+-					&@1, /*loc_val=*/NULL);
++	int err = parse_events_term__num(&term, $1,
++					 /*config=*/NULL, /*num=*/1, /*novalue=*/true,
++					 &@1, /*loc_val=*/NULL);
  
- 			strbuf_init(&sb, /*hint=*/ 0);
- 			parse_events_term__to_strbuf(orig_head, &sb);
--			pr_debug("%s -> %s/%s/\n", str, pmu->name, sb.buf);
-+			pr_debug("%s -> %s/%s/\n", event_name, pmu->name, sb.buf);
- 			strbuf_release(&sb);
- 			ok++;
- 		}
-@@ -1547,13 +1548,13 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 	}
- 
- 	if (parse_state->fake_pmu) {
--		if (!parse_events_add_pmu(parse_state, list, str, head,
-+		if (!parse_events_add_pmu(parse_state, list, event_name, head,
- 					  /*auto_merge_stats=*/true, loc)) {
- 			struct strbuf sb;
- 
- 			strbuf_init(&sb, /*hint=*/ 0);
- 			parse_events_term__to_strbuf(head, &sb);
--			pr_debug("%s -> %s/%s/\n", str, "fake_pmu", sb.buf);
-+			pr_debug("%s -> %s/%s/\n", event_name, "fake_pmu", sb.buf);
- 			strbuf_release(&sb);
- 			ok++;
- 		}
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 594e5d2dc67f..36a67ef7b35a 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -217,7 +217,7 @@ struct evsel *parse_events__add_event(int idx, struct perf_event_attr *attr,
- 				      struct perf_pmu *pmu);
- 
- int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
--			       char *str,
-+			       const char *event_name,
- 			       struct list_head *head_config,
- 			       struct list_head **listp, void *loc);
- 
+ 	if (err)
+ 		PE_ABORT(err);
 -- 
 2.42.0.283.g2d96d420d3-goog
 
