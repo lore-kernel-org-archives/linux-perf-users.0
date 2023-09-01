@@ -2,111 +2,81 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FABC83F2F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 31 Aug 2023 19:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C6ECA0FE1
+	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Sep 2023 13:37:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230245AbjHaTZ1 (ORCPT
+        id S1349773AbjIANhm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 31 Aug 2023 15:25:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56088 "EHLO
+        Fri, 1 Sep 2023 09:37:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230137AbjHaTZ0 (ORCPT
+        with ESMTP id S233098AbjIANhl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 31 Aug 2023 15:25:26 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31F9C1BF;
-        Thu, 31 Aug 2023 12:25:24 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C44F56252F;
-        Thu, 31 Aug 2023 19:25:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0BDFC433C9;
-        Thu, 31 Aug 2023 19:25:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693509923;
-        bh=iIRc5Ix5Kg1oYFJwWyasGAi6WX06E00nlXjSEafSnHU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VsjV+o/JAqZq+CCMHKZfiBYRQ51+nE9UzY5/cJTQSathbLQLEx+t00NfsUJ2f2XwF
-         rhdPaZacBAzcefKT+rNMvssS/fst3C6HPVJ8ldCvV/2lFTrmZsDg3H+BwoqyY3wTCZ
-         9zysaic6amGMKfOqayEF6+59gq5qSKrIJvF7r795V3O1kAca484eekGF2CyzUhf9ic
-         alTjnMOytH2yXCfgwUIyDn8i9rNpLxIWhcZwFVDssJRZbhxaL2+Xz+AQ+6yYyta4i8
-         LhQaBooyXkF1ruMSZeiLZezE2BkaNmm39flmWtmEmtMk5On0X7WXuDT+hNqJbx3nOE
-         Re191jYcsOiTA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 106D640722; Thu, 31 Aug 2023 16:25:20 -0300 (-03)
-Date:   Thu, 31 Aug 2023 16:25:19 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     "Liang, Kan" <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Rob Herring <robh@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/3] perf list/debug output fixes
-Message-ID: <ZPDpH2HauctN2nwo@kernel.org>
-References: <20230831071421.2201358-1-irogers@google.com>
- <c2affcc9-468f-bf4c-a080-65b31e05a83f@linux.intel.com>
- <CAP-5=fWdH_1or1yhH3pqFymnK=-w=OTzx63mVgknFNgqxf6T+A@mail.gmail.com>
+        Fri, 1 Sep 2023 09:37:41 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5E5A6E77;
+        Fri,  1 Sep 2023 06:37:37 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 920D3FEC;
+        Fri,  1 Sep 2023 06:38:15 -0700 (PDT)
+Received: from localhost.localdomain (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id ABB273F844;
+        Fri,  1 Sep 2023 06:37:35 -0700 (PDT)
+From:   James Clark <james.clark@arm.com>
+To:     linux-perf-users@vger.kernel.org
+Cc:     James Clark <james.clark@arm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] perf cs-etm: Bump minimum OpenCSD version to ensure a bugfix is present
+Date:   Fri,  1 Sep 2023 14:37:15 +0100
+Message-Id: <20230901133716.677499-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWdH_1or1yhH3pqFymnK=-w=OTzx63mVgknFNgqxf6T+A@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Aug 31, 2023 at 11:41:51AM -0700, Ian Rogers escreveu:
-> On Thu, Aug 31, 2023 at 11:28 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
-> >
-> >
-> >
-> > On 2023-08-31 3:14 a.m., Ian Rogers wrote:
-> > > Fix a long standing parse_events_term cloning bug so that the bad
-> > > display of terms can be fixed and the code somewhat more intuitive:
-> > > https://lore.kernel.org/lkml/20230830070753.1821629-2-irogers@google.com/
-> > >
-> >
-> > Tested-by: Kan Liang <kan.liang@linux.intel.com>
-> 
-> Thanks Kan!
-> Ian
+Since commit d927ef5004ef ("perf cs-etm: Add exception level consistency
+check"), the exception that was added to Perf will be triggered unless
+the following bugfix from OpenCSD is present:
 
-Thanks, applied.
+ - _Version 1.2.1_:
+  - __Bugfix__:
+    ETM4x / ETE - output of context elements to client can in some
+    circumstances be delayed until after subsequent atoms have been
+    processed leading to incorrect memory decode access via the client
+    callbacks. Fixed to flush context elements immediately they are
+    committed.
 
-- Arnaldo
+Rather than remove the assert and silently fail, just increase the
+minimum version requirement to avoid hard to debug issues and
+regressions.
+
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/build/feature/test-libopencsd.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/build/feature/test-libopencsd.c b/tools/build/feature/test-libopencsd.c
+index eb6303ff446e..4cfcef9da3e4 100644
+--- a/tools/build/feature/test-libopencsd.c
++++ b/tools/build/feature/test-libopencsd.c
+@@ -4,9 +4,9 @@
+ /*
+  * Check OpenCSD library version is sufficient to provide required features
+  */
+-#define OCSD_MIN_VER ((1 << 16) | (1 << 8) | (1))
++#define OCSD_MIN_VER ((1 << 16) | (2 << 8) | (1))
+ #if !defined(OCSD_VER_NUM) || (OCSD_VER_NUM < OCSD_MIN_VER)
+-#error "OpenCSD >= 1.1.1 is required"
++#error "OpenCSD >= 1.2.1 is required"
+ #endif
  
-> > Thanks,
-> > Kan
-> >
-> > > Fix a bug caused by the rename of 'cpu' to 'default_core' in perf list.
-> > >
-> > > Add more documentation, increase type safety and fix some related bugs
-> > > where terms weren't initialized properly.
-> > >
-> > > Ian Rogers (3):
-> > >   perf list: Don't print Unit for default_core
-> > >   perf parse-events: Name the two term enums
-> > >   perf parse-events: Fix propagation of term's no_value when cloning
-> > >
-> > >  tools/perf/builtin-list.c      |   2 +-
-> > >  tools/perf/util/parse-events.c | 203 +++++++++++++++++++++++----------
-> > >  tools/perf/util/parse-events.h |  60 +++++++---
-> > >  tools/perf/util/parse-events.l |   2 +-
-> > >  tools/perf/util/parse-events.y |  27 +++--
-> > >  tools/perf/util/pmu.c          |   2 +-
-> > >  6 files changed, 207 insertions(+), 89 deletions(-)
-> > >
-
+ int main(void)
 -- 
+2.34.1
 
-- Arnaldo
