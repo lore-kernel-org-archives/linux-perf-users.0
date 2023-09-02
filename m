@@ -2,128 +2,140 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9786CCA0FFC
-	for <linux-perf-users@archiver.kernel.org>; Sat,  2 Sep 2023 08:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C6B4C71153
+	for <linux-perf-users@archiver.kernel.org>; Sat,  2 Sep 2023 11:11:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351825AbjIBIO5 (ORCPT
+        id S1352019AbjIBLLW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 2 Sep 2023 04:14:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51838 "EHLO
+        Sat, 2 Sep 2023 07:11:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351823AbjIBIO5 (ORCPT
+        with ESMTP id S229479AbjIBLLW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 2 Sep 2023 04:14:57 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FA4010FB
-        for <linux-perf-users@vger.kernel.org>; Sat,  2 Sep 2023 01:14:53 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id ffacd0b85a97d-31ad779e6b3so2347383f8f.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 02 Sep 2023 01:14:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693642492; x=1694247292; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+orQorNPUo6KSCKW6crP6TptJaHrZr+1uo8TeED/eMM=;
-        b=nuZ7LRCDD8Uo0ziB4avRDvxh3CiHggpsd6IwGJfl/ncOMWAhtIZmW89GBWLG3Iq4Wi
-         3iVMlz+fAydBoXUMGH+YdmZUIHci/sGFT/dQdIbMLs/RdyUIOwdCftc7soaWf59n/lRK
-         611hxVDO60UDa/+erHJgd5k36l0Ez1bEi3XLSsOTSUzifJQ5ARUA0U0vDdTStvB0OwVQ
-         1gCIbYpbPo4xWADWNtusAiil5TWKjuKlapUF/yPLhDOnVF+4rK66dujkPY4vGWC98sq8
-         VZl5gSpPuGNstOg6Mg6XL16j4c9XyTeyLeElqZ72v+Nf7KKZ7thI7izzNzD5Wr03yXIb
-         YdZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693642492; x=1694247292;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+orQorNPUo6KSCKW6crP6TptJaHrZr+1uo8TeED/eMM=;
-        b=ALlzilrcMuhvDaIcBFerBOajq1OgElKJnqDg/5IlarSOo6f5jDwvsTCS6BDIxWbvA2
-         Pc/hYkpMQInMVsE4ek+LrHnwR+K2g1WkFvSqO49w1rSQPhTFfcqe938EA+ERB6K0v9Zq
-         eSCDDLjnqucEWdD4+h88UMne9tsBy2DWNywhiIiNvWlxMIXjS/0zSshWr57TTPJ4Rwp8
-         E/0zJqUFPA8V3YSoQ2jG9Mjc7Iyobdw4wTp+lPpCnPquB8UW7BxqORIFydB2d+2cZbtB
-         BaX1XHDAeELx6EiSGJe6mkUgTIGnZYrrRtbd/RgSug/8L6pdaoJ2/Hcj/lWy5QC8uucO
-         LvYw==
-X-Gm-Message-State: AOJu0YxNAzPkKiBMvN645903EBjTCeNis9lLSsFcnQ2XcwBC+eS/tcv7
-        ZeV/Q95/p37tIFX57E5+3qXOVoJlnyPZ/pxDOFW3IA==
-X-Google-Smtp-Source: AGHT+IGssLJAq5Eqm+CddbR0K32DVSCl5LIdA8ZBywnBACFN/kb7Lsv+HAqT8RQFL4H3Tgao+QSAiuwK1bcmHfczBuY=
-X-Received: by 2002:a05:6000:1081:b0:319:79a9:4d9e with SMTP id
- y1-20020a056000108100b0031979a94d9emr3340613wrw.44.1693642491915; Sat, 02 Sep
- 2023 01:14:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230819093340.265817-1-leo.yan@linaro.org> <CAM9d7cj=ichFk4bVQSbyptqy9wo8GFm1Z1Q7QzfhMFLjewNF-Q@mail.gmail.com>
- <20230823023838.GF57731@leoy-huanghe.lan> <CAM9d7cgaMyH=vSjVEOBjLzBWbZOricm6aHcP9hfLsTJ_gUEh3g@mail.gmail.com>
- <20230826072957.GA75980@leoy-huanghe.lan> <CAM9d7cjkQAhponi_mO9yBHaBP3wB4cBcWc5B7yb_4nE2dQWpLw@mail.gmail.com>
-In-Reply-To: <CAM9d7cjkQAhponi_mO9yBHaBP3wB4cBcWc5B7yb_4nE2dQWpLw@mail.gmail.com>
-From:   Leo Yan <leo.yan@linaro.org>
-Date:   Sat, 2 Sep 2023 16:14:40 +0800
-Message-ID: <CALZQ+UOvBe9352td44g3+qCqGGmLLq3=ObRyfQ=JXucY-MX9Gg@mail.gmail.com>
-Subject: Re: [PATCH v6] Documentation: userspace-api: Document perf ring
- buffer mechanism
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Sat, 2 Sep 2023 07:11:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEB26E5B;
+        Sat,  2 Sep 2023 04:11:19 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4D00260ABD;
+        Sat,  2 Sep 2023 11:11:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E38BC433C8;
+        Sat,  2 Sep 2023 11:11:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693653078;
+        bh=UUmZbegS54x8YszypsKqjuWfpppoUM06IXqVKKqUn+A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=r5PsOi7OIT2dwbDaHo6q53FeCjFePvyOsO51psdH3OW4VJZfXjcCu/wr9FC6jLV1D
+         Jm79ndlmEvkeW72Dbt8eZtk3/tfaIdUPXI3sbMDTO7+SpFNKxGh9yqcSzTYt8l0ySA
+         HUUpomsLAnDHBc3L7kZ0j/MArMIr+kuhyCwEIbiIxzxt9P7lLZ1CcD+lb/VLjKtJZQ
+         NGk5LY9Yje4GBPjQdGydOtte9SoF3fOjUSypCBMmXfI5CnmJ9cjwwX8d4X09GIRnKU
+         izfkhpbtucKw2xCRK7/wT8YuaXKmjTqGvOY9MUGvmJDmB7+6uoEKX47rnASSE0gE4p
+         xebTgBlL8yUlQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id DBCB640722; Sat,  2 Sep 2023 08:11:15 -0300 (-03)
+Date:   Sat, 2 Sep 2023 08:11:15 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        James Clark <james.clark@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/6] perf parse-events: Fixes relating to no_value
+ terms
+Message-ID: <ZPMYU2lvkhfmPYyG@kernel.org>
+References: <20230901233949.2930562-1-irogers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230901233949.2930562-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Namhyung,
+Em Fri, Sep 01, 2023 at 04:39:44PM -0700, Ian Rogers escreveu:
+> A term may have no value in which case it is assumed to have a value
+> of 1. It doesn't just apply to alias/event terms so change the
+> parse_events_term__to_strbuf assert.
+> 
+> Commit 99e7138eb789 ("perf tools: Fail on using multiple bits long
+> terms without value") made it so that no_value terms could only be for
+> a single bit. Prior to commit 64199ae4b8a3 ("perf parse-events: Fix
+> propagation of term's no_value when cloning") this missed a test case
+> where config1 had no_value.
+> 
+> Fixes: 64199ae4b8a3 ("perf parse-events: Fix propagation of term's no_value when cloning")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-On Sat, Aug 26, 2023 at 07:45:15AM -0700, Namhyung Kim wrote:
+I'm trying to minimize the number of patches that aren't strict fixes
+this late in the process for v6.6, so I think I'll get just this first
+one and defer the other cleanups/improvements for v6.7, ok?
 
-[...]
+Thanks,
 
-> > > >   The combination is supported in perf tool:
-> > > >
-> > > >   ---+------------+-----------
-> > > >      |  Forward   | Backward
-> > > >   ---+------------+-----------
-> > > >   rw |  Yes       |   No
-> > > >   ---+------------+-----------
-> > > >   ro |  X         |   Yes
-> > > >   ---+------------+-----------
-> > > >
-> > > >   Yes: is supported
-> > > >   No: is not supported
-> > > >   X: is not feasible
-> > >
-> > > I think they are all supported.  You can use rw mode with backward
-> > > direction but it's just not intuitive.  Also ro mode with forward direction
-> > > is working but there's a chance to miss the start position of the
-> > > previous event.
-> >
-> > I am a bit confused for the all four modes are supported.
-> >
-> > From the code [1], we can see there have only two combinations:
-> >
-> > - overwrite + read-only mode (PROT_READ);
-> > - no-overwrite + read-write mode (PROT_READ | PROT_WRITE);
-> >
-> > And I think perf tool must use the backward writing for "overwrite",
-> > and use the forward writing for "non-overwrite" mode.  I think the
-> > code [2] can help us to conclude this.
->
-> I mean the kernel supports all the combinations but perf tool uses
-> the selected two.  IIUC you are describing the kernel behavior, right?
+- Arnaldo
 
-You are right.  I read the kernel code again and get the same conclusion
-with you.
+> ---
+>  tools/perf/tests/parse-events.c | 2 +-
+>  tools/perf/util/parse-events.c  | 2 +-
+>  tools/perf/util/parse-events.h  | 4 ++--
+>  3 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+> index d86076d575ed..d47f1f871164 100644
+> --- a/tools/perf/tests/parse-events.c
+> +++ b/tools/perf/tests/parse-events.c
+> @@ -2170,7 +2170,7 @@ static const struct evlist_test test__events[] = {
+>  
+>  static const struct evlist_test test__events_pmu[] = {
+>  	{
+> -		.name  = "cpu/config=10,config1,config2=3,period=1000/u",
+> +		.name  = "cpu/config=10,config1=1,config2=3,period=1000/u",
+>  		.valid = test__pmu_cpu_valid,
+>  		.check = test__checkevent_pmu,
+>  		/* 0 */
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 68fe2c4ff49f..65608a3cba81 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -2607,7 +2607,7 @@ int parse_events_term__to_strbuf(struct list_head *term_list, struct strbuf *sb)
+>  
+>  		if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM)
+>  			if (term->no_value) {
+> -				assert(term->type_term == PARSE_EVENTS__TERM_TYPE_USER);
+> +				assert(term->val.num == 1);
+>  				ret = strbuf_addf(sb, "%s", term->config);
+>  			} else
+>  				ret = strbuf_addf(sb, "%s=%#"PRIx64, term->config, term->val.num);
+> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+> index 855b0725c5d4..594e5d2dc67f 100644
+> --- a/tools/perf/util/parse-events.h
+> +++ b/tools/perf/util/parse-events.h
+> @@ -124,8 +124,8 @@ struct parse_events_term {
+>  	 */
+>  	bool weak;
+>  	/**
+> -	 * @no_value: Is there no value. TODO: this should really be part of
+> -	 * type_val.
+> +	 * @no_value: Is there no value. If a numeric term has no value then the
+> +	 * value is assumed to be 1. An event name also has no value.
+>  	 */
+>  	bool no_value;
+>  };
+> -- 
+> 2.42.0.283.g2d96d420d3-goog
+> 
 
-The kernel code is general enough, which supports forward and backward
-writing directions and doesn't assume the direction is bound to any
-specific ring buffer mode.  On the other hand, the perf tool selects
-the combinations of the direction and mapping property for two modes:
-one is the non-overwrite mode and another is the overwritable mode.
+-- 
 
-In the next spin, I'd like to add a subsection "Ring buffer modes" to
-describe the implementation in the kernel and userspace respectively,
-hope this can avoid confusion.
-
-Thanks a lot for suggestion!
-
-
-Leo
+- Arnaldo
