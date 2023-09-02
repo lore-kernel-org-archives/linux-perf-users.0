@@ -2,134 +2,128 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC4DCA0FF6
-	for <linux-perf-users@archiver.kernel.org>; Sat,  2 Sep 2023 02:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9786CCA0FFC
+	for <linux-perf-users@archiver.kernel.org>; Sat,  2 Sep 2023 08:14:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351492AbjIBCxb (ORCPT
+        id S1351825AbjIBIO5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 1 Sep 2023 22:53:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60222 "EHLO
+        Sat, 2 Sep 2023 04:14:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351490AbjIBCxb (ORCPT
+        with ESMTP id S1351823AbjIBIO5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 1 Sep 2023 22:53:31 -0400
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD4C710FF
-        for <linux-perf-users@vger.kernel.org>; Fri,  1 Sep 2023 19:53:23 -0700 (PDT)
-Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-407db3e9669so94111cf.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 01 Sep 2023 19:53:23 -0700 (PDT)
+        Sat, 2 Sep 2023 04:14:57 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FA4010FB
+        for <linux-perf-users@vger.kernel.org>; Sat,  2 Sep 2023 01:14:53 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id ffacd0b85a97d-31ad779e6b3so2347383f8f.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 02 Sep 2023 01:14:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1693623203; x=1694228003; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NzkOnQtKNGiM1YTWs4J/M9/KYVJbjv//nRJ8yNZOh/k=;
-        b=yFsV5OgSVT8r41ixeyIYPoB3qxi5t3E+mIQfQp+wZDtIgxJ0VHnhg+3mKsofJkSviU
-         GxhG+llIMQsy4m2eHlfeveycHZcCUrpzV3ATywvXmePsVPyS4gaf1dJ6rZoW6kdnT8PO
-         iHW9L4kVtJ06Eeb7flFfnHpH8BqNmZB+jQB0xc86wGNGncxKzuZyqXurZFKQzfXamvA5
-         zbmin6Kwth8P4EqwH6EKO/kys7mcO8EAPYRuMdkkzf4HkNoKH6AVunF1Zq+3d80OzMLY
-         7oLvVQR4j2NH6/fIZD5DMFkLf0KKmmPg7QvuuYNurH1O3S68RWdkBbeO/QGgu6uEhckw
-         dOGQ==
+        d=linaro.org; s=google; t=1693642492; x=1694247292; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+orQorNPUo6KSCKW6crP6TptJaHrZr+1uo8TeED/eMM=;
+        b=nuZ7LRCDD8Uo0ziB4avRDvxh3CiHggpsd6IwGJfl/ncOMWAhtIZmW89GBWLG3Iq4Wi
+         3iVMlz+fAydBoXUMGH+YdmZUIHci/sGFT/dQdIbMLs/RdyUIOwdCftc7soaWf59n/lRK
+         611hxVDO60UDa/+erHJgd5k36l0Ez1bEi3XLSsOTSUzifJQ5ARUA0U0vDdTStvB0OwVQ
+         1gCIbYpbPo4xWADWNtusAiil5TWKjuKlapUF/yPLhDOnVF+4rK66dujkPY4vGWC98sq8
+         VZl5gSpPuGNstOg6Mg6XL16j4c9XyTeyLeElqZ72v+Nf7KKZ7thI7izzNzD5Wr03yXIb
+         YdZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693623203; x=1694228003;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NzkOnQtKNGiM1YTWs4J/M9/KYVJbjv//nRJ8yNZOh/k=;
-        b=TExo0Wu/OHaTDePB67sIx/IjN9RNda2MwOn4Mf8N2rUBL66j5aMi9RiOOPVvqMZn/C
-         ofS+AbbKZNXxiqsTgVZLalVsEKhgkwrnFYOksOs/fB5BO+1c6SU6/m3Zvl6p7qjPOTWx
-         R+zHwx00Nhm9SJzalDWGNkdzaiP3+PwwzyzUihLiOLzcJw2XKMMjZ3UDor48DOT9/k/v
-         AchQfn0rOR7tBkltI6MXcZdgt5hLt2E+ldXLS2DMw203roqxZrau+PMXQKGPQ+ayLATm
-         6bM++oXhwz1uTMIRzyjq6LsdoXvw9IBSmYDGSGF2tJCKlgUgtSO2KuqovxPwcNdDzx5z
-         ETMw==
-X-Gm-Message-State: AOJu0YwXe3p7Jx0loDYNu7EWzaJB5BUa2AoSnYP866gPSrCrjJ8ufnBB
-        PpbRMFtV/OwJsBjJeqgPjqz5B04rk2rwamygnbEXCw==
-X-Google-Smtp-Source: AGHT+IGDve+ej3TXXzQ0XpRkzxdbaZeG1kLo8i8+uBgAiipGByMizS26AACkgSjE9MWkAgtylHLhBK9OAjb2L/IUrkk=
-X-Received: by 2002:ac8:5bc5:0:b0:3ef:5f97:258f with SMTP id
- b5-20020ac85bc5000000b003ef5f97258fmr116238qtb.16.1693623202605; Fri, 01 Sep
- 2023 19:53:22 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1693642492; x=1694247292;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+orQorNPUo6KSCKW6crP6TptJaHrZr+1uo8TeED/eMM=;
+        b=ALlzilrcMuhvDaIcBFerBOajq1OgElKJnqDg/5IlarSOo6f5jDwvsTCS6BDIxWbvA2
+         Pc/hYkpMQInMVsE4ek+LrHnwR+K2g1WkFvSqO49w1rSQPhTFfcqe938EA+ERB6K0v9Zq
+         eSCDDLjnqucEWdD4+h88UMne9tsBy2DWNywhiIiNvWlxMIXjS/0zSshWr57TTPJ4Rwp8
+         E/0zJqUFPA8V3YSoQ2jG9Mjc7Iyobdw4wTp+lPpCnPquB8UW7BxqORIFydB2d+2cZbtB
+         BaX1XHDAeELx6EiSGJe6mkUgTIGnZYrrRtbd/RgSug/8L6pdaoJ2/Hcj/lWy5QC8uucO
+         LvYw==
+X-Gm-Message-State: AOJu0YxNAzPkKiBMvN645903EBjTCeNis9lLSsFcnQ2XcwBC+eS/tcv7
+        ZeV/Q95/p37tIFX57E5+3qXOVoJlnyPZ/pxDOFW3IA==
+X-Google-Smtp-Source: AGHT+IGssLJAq5Eqm+CddbR0K32DVSCl5LIdA8ZBywnBACFN/kb7Lsv+HAqT8RQFL4H3Tgao+QSAiuwK1bcmHfczBuY=
+X-Received: by 2002:a05:6000:1081:b0:319:79a9:4d9e with SMTP id
+ y1-20020a056000108100b0031979a94d9emr3340613wrw.44.1693642491915; Sat, 02 Sep
+ 2023 01:14:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230831151632.124985-1-james.clark@arm.com>
-In-Reply-To: <20230831151632.124985-1-james.clark@arm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 1 Sep 2023 19:53:10 -0700
-Message-ID: <CAP-5=fVrF34FYUZ=vKHPVUbkTiCTBnmQuZVyeS2JWGBjS_eerw@mail.gmail.com>
-Subject: Re: [PATCH 0/7] perf: strcmp_cpuid_str() expression fixups
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+References: <20230819093340.265817-1-leo.yan@linaro.org> <CAM9d7cj=ichFk4bVQSbyptqy9wo8GFm1Z1Q7QzfhMFLjewNF-Q@mail.gmail.com>
+ <20230823023838.GF57731@leoy-huanghe.lan> <CAM9d7cgaMyH=vSjVEOBjLzBWbZOricm6aHcP9hfLsTJ_gUEh3g@mail.gmail.com>
+ <20230826072957.GA75980@leoy-huanghe.lan> <CAM9d7cjkQAhponi_mO9yBHaBP3wB4cBcWc5B7yb_4nE2dQWpLw@mail.gmail.com>
+In-Reply-To: <CAM9d7cjkQAhponi_mO9yBHaBP3wB4cBcWc5B7yb_4nE2dQWpLw@mail.gmail.com>
+From:   Leo Yan <leo.yan@linaro.org>
+Date:   Sat, 2 Sep 2023 16:14:40 +0800
+Message-ID: <CALZQ+UOvBe9352td44g3+qCqGGmLLq3=ObRyfQ=JXucY-MX9Gg@mail.gmail.com>
+Subject: Re: [PATCH v6] Documentation: userspace-api: Document perf ring
+ buffer mechanism
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Haixin Yu <yuhaixin.yhx@linux.alibaba.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        Chen Zhongjin <chenzhongjin@huawei.com>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Liam Howlett <liam.howlett@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+        Jiri Olsa <jolsa@kernel.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Aug 31, 2023 at 8:16=E2=80=AFAM James Clark <james.clark@arm.com> w=
-rote:
->
-> Set of fixes related to the comments here [1]. Mainly cleanups,
-> additional tests and refactoring since adding the new strcmp_cpuid_str()
-> metric expression.
->
-> I added the string replace function to the perf utils
-> rather than tools/lib/string.c because it didn't seem
-> easy to add tests for tools/lib.
->
-> [1]: https://lore.kernel.org/linux-arm-kernel/CAP-5=3DfVnUx0BnJC7X1rrm42O=
-D7Bk=3DZsHWNwAZMBYyB7yWhBfhQ@mail.gmail.com/
->
-> James Clark (7):
->   perf test: Check result of has_event(cycles) test
->   perf jevents: Remove unused keyword
->   perf util: Add a function for replacing characters in a string
->   perf test: Add a test for strcmp_cpuid_str() expression
->   perf pmu: Move pmu__find_core_pmu() to pmus.c
->   perf pmus: Simplify perf_pmus__find_core_pmu()
->   perf pmu: Remove unused function
+Hi Namhyung,
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+On Sat, Aug 26, 2023 at 07:45:15AM -0700, Namhyung Kim wrote:
 
-Thanks,
-Ian
+[...]
 
->  tools/perf/arch/arm64/util/pmu.c | 20 ++++++-------
->  tools/perf/pmu-events/metric.py  |  3 +-
->  tools/perf/tests/Build           |  1 +
->  tools/perf/tests/builtin-test.c  |  1 +
->  tools/perf/tests/expr.c          | 33 ++++++++++++++++++----
->  tools/perf/tests/tests.h         |  1 +
->  tools/perf/tests/util.c          | 30 ++++++++++++++++++++
->  tools/perf/util/expr.c           |  2 +-
->  tools/perf/util/pmu.c            | 22 ---------------
->  tools/perf/util/pmu.h            |  3 +-
->  tools/perf/util/pmus.c           |  6 ++++
->  tools/perf/util/string.c         | 48 ++++++++++++++++++++++++++++++++
->  tools/perf/util/string2.h        |  1 +
->  13 files changed, 127 insertions(+), 44 deletions(-)
->  create mode 100644 tools/perf/tests/util.c
+> > > >   The combination is supported in perf tool:
+> > > >
+> > > >   ---+------------+-----------
+> > > >      |  Forward   | Backward
+> > > >   ---+------------+-----------
+> > > >   rw |  Yes       |   No
+> > > >   ---+------------+-----------
+> > > >   ro |  X         |   Yes
+> > > >   ---+------------+-----------
+> > > >
+> > > >   Yes: is supported
+> > > >   No: is not supported
+> > > >   X: is not feasible
+> > >
+> > > I think they are all supported.  You can use rw mode with backward
+> > > direction but it's just not intuitive.  Also ro mode with forward direction
+> > > is working but there's a chance to miss the start position of the
+> > > previous event.
+> >
+> > I am a bit confused for the all four modes are supported.
+> >
+> > From the code [1], we can see there have only two combinations:
+> >
+> > - overwrite + read-only mode (PROT_READ);
+> > - no-overwrite + read-write mode (PROT_READ | PROT_WRITE);
+> >
+> > And I think perf tool must use the backward writing for "overwrite",
+> > and use the forward writing for "non-overwrite" mode.  I think the
+> > code [2] can help us to conclude this.
 >
-> --
-> 2.34.1
->
+> I mean the kernel supports all the combinations but perf tool uses
+> the selected two.  IIUC you are describing the kernel behavior, right?
+
+You are right.  I read the kernel code again and get the same conclusion
+with you.
+
+The kernel code is general enough, which supports forward and backward
+writing directions and doesn't assume the direction is bound to any
+specific ring buffer mode.  On the other hand, the perf tool selects
+the combinations of the direction and mapping property for two modes:
+one is the non-overwrite mode and another is the overwritable mode.
+
+In the next spin, I'd like to add a subsection "Ring buffer modes" to
+describe the implementation in the kernel and userspace respectively,
+hope this can avoid confusion.
+
+Thanks a lot for suggestion!
+
+
+Leo
