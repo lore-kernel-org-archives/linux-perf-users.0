@@ -2,171 +2,368 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82127C71153
-	for <linux-perf-users@archiver.kernel.org>; Sat,  2 Sep 2023 16:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 046F4C83F2C
+	for <linux-perf-users@archiver.kernel.org>; Sun,  3 Sep 2023 11:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234423AbjIBQ2d (ORCPT
+        id S236668AbjICLrk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 2 Sep 2023 12:28:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33378 "EHLO
+        Sun, 3 Sep 2023 07:47:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234379AbjIBQ2d (ORCPT
+        with ESMTP id S236665AbjICLrj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 2 Sep 2023 12:28:33 -0400
-Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DFB71B1
-        for <linux-perf-users@vger.kernel.org>; Sat,  2 Sep 2023 09:28:29 -0700 (PDT)
-Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-414b35e686cso122321cf.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 02 Sep 2023 09:28:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1693672108; x=1694276908; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2EzO8S4Wgh7aLnDzjIxs6gMwkMUowdVILp40w0jb3Y4=;
-        b=NEExwjUHJ9/EanixSe0yfg6Sw51X50L1ub9WUz6WNUpSkC5fV0A/H81+RvT+j2EANC
-         qkPLVsrhbJ8kldIshxJ3/GnrDHtlSRegcK5VwkatUMiW4vgtiU3O7R3fzFXLAyNJDWL0
-         q8hpuqQYy3PMEeSQvrlDdAW0g7GYq31Lb4pee2MiUfwh3ZWhfbgxrPL1iUlZrsdXq00Q
-         tcuqFGanw4SN06obaW/arti9Js4yzo3yxl7eebRVe6IShWQIXdA9Vf5CSELBbtWZCInP
-         veZ2C3FbWLhQngJwXi4ISkjzOgj0XsUeIHI89GPrbQ3XRegNJqo5E5eVLmyo1ZIGWCV4
-         sERg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693672108; x=1694276908;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2EzO8S4Wgh7aLnDzjIxs6gMwkMUowdVILp40w0jb3Y4=;
-        b=hRsupQYJ7y5ZkSxTgRxRglZ/Iw6qLjVYEp29AW6XA/A0GiqMZfr73t9jjk8xc/QMDL
-         qa1XvMoOCGqVlMjk76tbXaSsWu4urwsR3y7Nm6l9T0UrpLVdo/CEL7P7pHKFlV7l5qsG
-         1EiLFJKu3Ka09pF1wb9hUuqUKfozYFXN9W4qmpYwONeRd9JDjFqEauD5cy2hr7EVm3VF
-         q7J105AW0cieLRHuHX0+f/g2J9a7ZQYo3IIXEbYQE9M5yQbTLs9SUmGEKnBmF8/6Ev2V
-         cxsCWiRU9PpX0BlWmyS5+Us5pSSFWJhY2orPhN/DIavoOQ/TBwUsaheH11nvXh81ZU3i
-         d5EQ==
-X-Gm-Message-State: AOJu0YzpII0O5mOv9wGQp5/RZof9TkDD29wv3PXzsT+QgAv48ifxb1Wa
-        o1ha5fBXF6GbxaLBGNmVQ8QwCl6jK6PfmP8JrXrhqw==
-X-Google-Smtp-Source: AGHT+IEKMy80sTC1s8FDtCBrWDPYntvznx6mxqd4AqN03guFXd18x6Nt+TizIqK72/hvER4kV8aZDbsUMn9oBQnNzY4=
-X-Received: by 2002:ac8:5852:0:b0:403:96e3:4745 with SMTP id
- h18-20020ac85852000000b0040396e34745mr192243qth.20.1693672107993; Sat, 02 Sep
- 2023 09:28:27 -0700 (PDT)
+        Sun, 3 Sep 2023 07:47:39 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23586126;
+        Sun,  3 Sep 2023 04:47:36 -0700 (PDT)
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 383Bd7FM023912;
+        Sun, 3 Sep 2023 11:47:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=7/qzzqZDZY2en0Oo+RtwLKoDTLsxQP53D7wuM++KXGg=;
+ b=USMeUKdUacQBZLYCT23qrFnNnpdz6Axz3NZKiughfFbUO08aoH6b3pUFoY+j0skfGJpe
+ J32QckguxpuuFYS26DV19z90SkYVv+qKgagSzrpt1nt6rO8BCEFwfRad5NWEWkP1pl3m
+ T7xLWIPgGpdPPEcvGkdK0i/tEsgSM8kZKSeTGh5F5AEZKIPDPxTFE/luOSwW87cY82C9
+ EhwuaS3dHqi4deVnopiOng6OjmhlFoxA2thGpNlayCFK9kkO8CCVxXXqqRNRs0bKrZx9
+ 8VpNCHm/QDYk+COen8TVLeDqbKWI2UpT7180VqSL9/1vWjzOBQ+wxoMEtqG7k1jNwQmt nA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3svs7b884v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 03 Sep 2023 11:47:31 +0000
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 383BdJWH024768;
+        Sun, 3 Sep 2023 11:47:31 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3svs7b884u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 03 Sep 2023 11:47:31 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3839p0gO021441;
+        Sun, 3 Sep 2023 11:47:30 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+        by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3svfrxu5vf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 03 Sep 2023 11:47:30 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 383BlRGr19202652
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 3 Sep 2023 11:47:27 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 886332004B;
+        Sun,  3 Sep 2023 11:47:27 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5996920043;
+        Sun,  3 Sep 2023 11:47:25 +0000 (GMT)
+Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com.com (unknown [9.171.15.154])
+        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Sun,  3 Sep 2023 11:47:25 +0000 (GMT)
+From:   Aditya Gupta <adityag@linux.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
+        namhyung@kernel.org
+Cc:     linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/4] perf check: introduce check subcommand
+Date:   Sun,  3 Sep 2023 17:17:18 +0530
+Message-ID: <20230903114721.190733-2-adityag@linux.ibm.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230903114721.190733-1-adityag@linux.ibm.com>
+References: <20230903114721.190733-1-adityag@linux.ibm.com>
 MIME-Version: 1.0
-References: <20230901233949.2930562-1-irogers@google.com> <ZPMYU2lvkhfmPYyG@kernel.org>
-In-Reply-To: <ZPMYU2lvkhfmPYyG@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Sat, 2 Sep 2023 09:28:15 -0700
-Message-ID: <CAP-5=fVHNE2JDcZ1cbX=vj1kxHWWescjizKprjCKe+yL0xxuCQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/6] perf parse-events: Fixes relating to no_value terms
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Rob Herring <robh@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: t4ODsbb94TDq7fV9dLTNyMK_9_ZHKnVm
+X-Proofpoint-GUID: g_loMOxvW8P9dS_atuV3doF-mLNgrV9O
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-03_09,2023-08-31_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 clxscore=1015 spamscore=0 mlxscore=0 adultscore=0
+ malwarescore=0 mlxlogscore=999 lowpriorityscore=0 priorityscore=1501
+ bulkscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309030108
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Sep 2, 2023 at 4:11=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> Em Fri, Sep 01, 2023 at 04:39:44PM -0700, Ian Rogers escreveu:
-> > A term may have no value in which case it is assumed to have a value
-> > of 1. It doesn't just apply to alias/event terms so change the
-> > parse_events_term__to_strbuf assert.
-> >
-> > Commit 99e7138eb789 ("perf tools: Fail on using multiple bits long
-> > terms without value") made it so that no_value terms could only be for
-> > a single bit. Prior to commit 64199ae4b8a3 ("perf parse-events: Fix
-> > propagation of term's no_value when cloning") this missed a test case
-> > where config1 had no_value.
-> >
-> > Fixes: 64199ae4b8a3 ("perf parse-events: Fix propagation of term's no_v=
-alue when cloning")
-> > Signed-off-by: Ian Rogers <irogers@google.com>
->
-> I'm trying to minimize the number of patches that aren't strict fixes
-> this late in the process for v6.6, so I think I'll get just this first
-> one and defer the other cleanups/improvements for v6.7, ok?
+Currently the presence of a feature is checked with a combination of
+perf version --build-options and greps, such as:
 
-Makes sense, this is why I put the fix first in the series.
+    perf version --build-options | grep " on .* HAVE_FEATURE"
 
-Thanks,
-Ian
+Instead of this, introduce a subcommand "perf check --feature", with which
+scripts can test for presence of a feature, such as:
 
-> Thanks,
->
-> - Arnaldo
->
-> > ---
-> >  tools/perf/tests/parse-events.c | 2 +-
-> >  tools/perf/util/parse-events.c  | 2 +-
-> >  tools/perf/util/parse-events.h  | 4 ++--
-> >  3 files changed, 4 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-e=
-vents.c
-> > index d86076d575ed..d47f1f871164 100644
-> > --- a/tools/perf/tests/parse-events.c
-> > +++ b/tools/perf/tests/parse-events.c
-> > @@ -2170,7 +2170,7 @@ static const struct evlist_test test__events[] =
-=3D {
-> >
-> >  static const struct evlist_test test__events_pmu[] =3D {
-> >       {
-> > -             .name  =3D "cpu/config=3D10,config1,config2=3D3,period=3D=
-1000/u",
-> > +             .name  =3D "cpu/config=3D10,config1=3D1,config2=3D3,perio=
-d=3D1000/u",
-> >               .valid =3D test__pmu_cpu_valid,
-> >               .check =3D test__checkevent_pmu,
-> >               /* 0 */
-> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-eve=
-nts.c
-> > index 68fe2c4ff49f..65608a3cba81 100644
-> > --- a/tools/perf/util/parse-events.c
-> > +++ b/tools/perf/util/parse-events.c
-> > @@ -2607,7 +2607,7 @@ int parse_events_term__to_strbuf(struct list_head=
- *term_list, struct strbuf *sb)
-> >
-> >               if (term->type_val =3D=3D PARSE_EVENTS__TERM_TYPE_NUM)
-> >                       if (term->no_value) {
-> > -                             assert(term->type_term =3D=3D PARSE_EVENT=
-S__TERM_TYPE_USER);
-> > +                             assert(term->val.num =3D=3D 1);
-> >                               ret =3D strbuf_addf(sb, "%s", term->confi=
-g);
-> >                       } else
-> >                               ret =3D strbuf_addf(sb, "%s=3D%#"PRIx64, =
-term->config, term->val.num);
-> > diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-eve=
-nts.h
-> > index 855b0725c5d4..594e5d2dc67f 100644
-> > --- a/tools/perf/util/parse-events.h
-> > +++ b/tools/perf/util/parse-events.h
-> > @@ -124,8 +124,8 @@ struct parse_events_term {
-> >        */
-> >       bool weak;
-> >       /**
-> > -      * @no_value: Is there no value. TODO: this should really be part=
- of
-> > -      * type_val.
-> > +      * @no_value: Is there no value. If a numeric term has no value t=
-hen the
-> > +      * value is assumed to be 1. An event name also has no value.
-> >        */
-> >       bool no_value;
-> >  };
-> > --
-> > 2.42.0.283.g2d96d420d3-goog
-> >
->
-> --
->
-> - Arnaldo
+    perf check --feature HAVE_FEATURE
+
+'perf check --feature' command is expected to have exit status of 1 if feature is
+built-in, and 0 if not, -2 if feature is not known.
+
+A global array 'supported_features' has also been introduced that can be
+used by other commands like 'perf version --build-options', so that
+new features can be added in one place, with the array
+
+Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
+---
+ tools/perf/Build                        |  1 +
+ tools/perf/Documentation/perf-check.txt | 53 ++++++++++++++
+ tools/perf/builtin-check.c              | 95 +++++++++++++++++++++++++
+ tools/perf/builtin.h                    | 47 ++++++++++++
+ tools/perf/perf.c                       |  1 +
+ 5 files changed, 197 insertions(+)
+ create mode 100644 tools/perf/Documentation/perf-check.txt
+ create mode 100644 tools/perf/builtin-check.c
+
+diff --git a/tools/perf/Build b/tools/perf/Build
+index aa7623622834..a55a797c1b5f 100644
+--- a/tools/perf/Build
++++ b/tools/perf/Build
+@@ -1,5 +1,6 @@
+ perf-y += builtin-bench.o
+ perf-y += builtin-annotate.o
++perf-y += builtin-check.o
+ perf-y += builtin-config.o
+ perf-y += builtin-diff.o
+ perf-y += builtin-evlist.o
+diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documentation/perf-check.txt
+new file mode 100644
+index 000000000000..ee4331838be5
+--- /dev/null
++++ b/tools/perf/Documentation/perf-check.txt
+@@ -0,0 +1,53 @@
++perf-check(1)
++===============
++
++NAME
++----
++perf-check - check features in perf
++
++SYNOPSIS
++--------
++'perf check' [--feature]
++
++DESCRIPTION
++-----------
++With no options given, the 'perf check' just prints the perf version
++on the standard output.
++
++If the option '--feature' is given, then status of feature is printed
++on the standard output, ie. whether it is compiled-in/built-in or not
++
++OPTIONS
++-------
++--feature::
++        Print whether a feature is compiled-in or not. A feature name/macro is
++        required to be passed after this flag
++
++        Example Usage:
++                perf check --feature libtraceevent
++                perf check --feature HAVE_LIBTRACEEVENT
++
++        Supported feature names/macro:
++                dwarf      /  HAVE_DWARF_SUPPORT
++                dwarf_getlocations  /  HAVE_DWARF_GETLOCATIONS_SUPPORT
++                libaudit   /  HAVE_LIBAUDIT_SUPPORT
++                syscall_table       /  HAVE_SYSCALL_TABLE_SUPPORT
++                libbfd     /  HAVE_LIBBFD_SUPPORT
++                debuginfod /  HAVE_DEBUGINFOD_SUPPORT
++                libelf     /  HAVE_LIBELF_SUPPORT
++                libnuma    /  HAVE_LIBNUMA_SUPPORT
++                numa_num_possible_cpus  /  HAVE_LIBNUMA_SUPPORT
++                libperl    /  HAVE_LIBPERL_SUPPORT
++                libpython  /  HAVE_LIBPYTHON_SUPPORT
++                libslang   /  HAVE_SLANG_SUPPORT
++                libcrypto  /  HAVE_LIBCRYPTO_SUPPORT
++                libunwind  /  HAVE_LIBUNWIND_SUPPORT
++                libdw-dwarf-unwind  /  HAVE_DWARF_SUPPORT
++                zlib       /  HAVE_ZLIB_SUPPORT
++                lzma       /  HAVE_LZMA_SUPPORT
++                get_cpuid  /  HAVE_AUXTRACE_SUPPORT
++                bpf        /  HAVE_LIBBPF_SUPPORT
++                aio        /  HAVE_AIO_SUPPORT
++                zstd       /  HAVE_ZSTD_SUPPORT
++                libpfm4    /  HAVE_LIBPFM
++                libtraceevent      /  HAVE_LIBTRACEEVENT
+diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
+new file mode 100644
+index 000000000000..3dee72426c30
+--- /dev/null
++++ b/tools/perf/builtin-check.c
+@@ -0,0 +1,95 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "builtin.h"
++#include "color.h"
++#include "util/debug.h"
++#include "util/header.h"
++#include <tools/config.h>
++#include <stdbool.h>
++#include <stdio.h>
++#include <string.h>
++#include <subcmd/parse-options.h>
++
++struct check {
++	const char *feature;
++};
++
++static struct check check;
++
++static struct option check_options[] = {
++	OPT_STRING(0, "feature", &check.feature, NULL, "check if a feature is built in"),
++	OPT_END(),
++};
++
++static const char * const check_usage[] = {
++	"perf check [<options>]",
++	NULL
++};
++
++static void on_off_print(const char *status)
++{
++	printf("[ ");
++
++	if (!strcmp(status, "OFF"))
++		color_fprintf(stdout, PERF_COLOR_RED, "%-3s", status);
++	else
++		color_fprintf(stdout, PERF_COLOR_GREEN, "%-3s", status);
++
++	printf(" ]");
++}
++
++static void status_print(const char *name, const char *macro,
++			 const char *status)
++{
++	printf("%22s: ", name);
++	on_off_print(status);
++	printf("  # %s\n", macro);
++}
++
++#define STATUS(feature)                                   \
++do {                                                      \
++	if (feature.is_builtin)                               \
++		status_print(feature.name, feature.macro, "on");  \
++	else                                                  \
++		status_print(feature.name, feature.macro, "OFF"); \
++} while (0)
++
++/**
++ * check whether "feature" is built-in with perf
++ * returns:
++ *   -1: Feature not known
++ *    0: Built-in
++ *    1: NOT Built in
++ */
++static int has_support(const char *feature)
++{
++	int res = -1;
++
++	for (int i = 0; supported_features[i].name; ++i) {
++		if ((strcmp(feature, supported_features[i].name) == 0) ||
++			(strcmp(feature, supported_features[i].macro) == 0)) {
++			res = supported_features[i].is_builtin;
++			STATUS(supported_features[i]);
++			break;
++		}
++	}
++
++	if (res == -1) {
++		color_fprintf(stdout, PERF_COLOR_RED, "Feature not known: %s", feature);
++		return -2;
++	}
++
++	return !res;
++}
++
++int cmd_check(int argc, const char **argv)
++{
++	argc = parse_options(argc, argv, check_options, check_usage,
++			     PARSE_OPT_STOP_AT_NON_OPTION);
++
++	printf("perf check %s\n", perf_version_string);
++
++	if (check.feature)
++		return has_support(check.feature);
++
++	return 0;
++}
+diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
+index f2ab5bae2150..6683ea6d3b60 100644
+--- a/tools/perf/builtin.h
++++ b/tools/perf/builtin.h
+@@ -2,6 +2,52 @@
+ #ifndef BUILTIN_H
+ #define BUILTIN_H
+ 
++#include <stddef.h>
++#include <linux/compiler.h>
++#include <tools/config.h>
++
++struct feature_support {
++	const char *name;
++	const char *macro;
++	int is_builtin;
++};
++
++#define FEATURE_SUPPORT(name_, macro_) { \
++	.name = name_,                       \
++	.macro = #macro_,                    \
++	.is_builtin = IS_BUILTIN(macro_) }
++
++static struct feature_support supported_features[] __maybe_unused = {
++	FEATURE_SUPPORT("dwarf", HAVE_DWARF_SUPPORT),
++	FEATURE_SUPPORT("dwarf_getlocations", HAVE_DWARF_GETLOCATIONS_SUPPORT),
++#ifndef HAVE_SYSCALL_TABLE_SUPPORT
++	FEATURE_SUPPORT("libaudit", HAVE_LIBAUDIT_SUPPORT),
++#endif
++	FEATURE_SUPPORT("syscall_table", HAVE_SYSCALL_TABLE_SUPPORT),
++	FEATURE_SUPPORT("libbfd", HAVE_LIBBFD_SUPPORT),
++	FEATURE_SUPPORT("debuginfod", HAVE_DEBUGINFOD_SUPPORT),
++	FEATURE_SUPPORT("libelf", HAVE_LIBELF_SUPPORT),
++	FEATURE_SUPPORT("libnuma", HAVE_LIBNUMA_SUPPORT),
++	FEATURE_SUPPORT("numa_num_possible_cpus", HAVE_LIBNUMA_SUPPORT),
++	FEATURE_SUPPORT("libperl", HAVE_LIBPERL_SUPPORT),
++	FEATURE_SUPPORT("libpython", HAVE_LIBPYTHON_SUPPORT),
++	FEATURE_SUPPORT("libslang", HAVE_SLANG_SUPPORT),
++	FEATURE_SUPPORT("libcrypto", HAVE_LIBCRYPTO_SUPPORT),
++	FEATURE_SUPPORT("libunwind", HAVE_LIBUNWIND_SUPPORT),
++	FEATURE_SUPPORT("libdw-dwarf-unwind", HAVE_DWARF_SUPPORT),
++	FEATURE_SUPPORT("zlib", HAVE_ZLIB_SUPPORT),
++	FEATURE_SUPPORT("lzma", HAVE_LZMA_SUPPORT),
++	FEATURE_SUPPORT("get_cpuid", HAVE_AUXTRACE_SUPPORT),
++	FEATURE_SUPPORT("bpf", HAVE_LIBBPF_SUPPORT),
++	FEATURE_SUPPORT("aio", HAVE_AIO_SUPPORT),
++	FEATURE_SUPPORT("zstd", HAVE_ZSTD_SUPPORT),
++	FEATURE_SUPPORT("libpfm4", HAVE_LIBPFM),
++	FEATURE_SUPPORT("libtraceevent", HAVE_LIBTRACEEVENT),
++
++	// this should remain at end, to know the array end
++	FEATURE_SUPPORT(NULL, _)
++};
++
+ void list_common_cmds_help(void);
+ const char *help_unknown_cmd(const char *cmd);
+ 
+@@ -9,6 +55,7 @@ int cmd_annotate(int argc, const char **argv);
+ int cmd_bench(int argc, const char **argv);
+ int cmd_buildid_cache(int argc, const char **argv);
+ int cmd_buildid_list(int argc, const char **argv);
++int cmd_check(int argc, const char **argv);
+ int cmd_config(int argc, const char **argv);
+ int cmd_c2c(int argc, const char **argv);
+ int cmd_diff(int argc, const char **argv);
+diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+index d3fc8090413c..83dc0ac42fdb 100644
+--- a/tools/perf/perf.c
++++ b/tools/perf/perf.c
+@@ -50,6 +50,7 @@ static struct cmd_struct commands[] = {
+ 	{ "archive",	NULL,	0 },
+ 	{ "buildid-cache", cmd_buildid_cache, 0 },
+ 	{ "buildid-list", cmd_buildid_list, 0 },
++	{ "check", cmd_check, 0 },
+ 	{ "config",	cmd_config,	0 },
+ 	{ "c2c",	cmd_c2c,	0 },
+ 	{ "diff",	cmd_diff,	0 },
+-- 
+2.41.0
+
