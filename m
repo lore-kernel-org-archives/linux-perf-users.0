@@ -2,62 +2,35 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC56C83F2C
-	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Sep 2023 14:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B017C83F2C
+	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Sep 2023 15:09:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237281AbjIDO4n (ORCPT
+        id S1346116AbjIDPJs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 4 Sep 2023 10:56:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59776 "EHLO
+        Mon, 4 Sep 2023 11:09:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234695AbjIDO4m (ORCPT
+        with ESMTP id S235331AbjIDPJs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 4 Sep 2023 10:56:42 -0400
-Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFCD1A9
-        for <linux-perf-users@vger.kernel.org>; Mon,  4 Sep 2023 07:56:38 -0700 (PDT)
-Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-414b35e686cso386971cf.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 04 Sep 2023 07:56:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1693839398; x=1694444198; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B8dnXbe6GgMXG/QAPAnuqzyd8DFJuI3wGF/AqzBGZE0=;
-        b=s6X7ErhMRXTxoRPswpczGG9BLMbuT0YcrHfTJ3G0tQyLyV6kCdFCaACG3qGqmKF4Jj
-         NFvNDnr569GPJ5Ex+lJb5T2L4VtXcH7OiJUBeKFsE2qD1IBZaf6rnS85R6lEs/YaMMtf
-         wLcpyQ+LEn6R3X6juCzqz4KBDDXS8aITdMsOW9ZdwxIM/Q916SYcztZw6xEQdxTCv2g0
-         bmJUZ5lIbxwOo+OdG3OOSNnPhtWRU4W2OE6xwOOxjSIkNLuv4OETadq+KDGH3XzxyshE
-         Cyl4VuhgoysYa+18+dZhp+uaLbn3LWWYoOimKuFh0IF1STmtg4PqIWv2yiIFtRj3HVN4
-         StRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693839398; x=1694444198;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B8dnXbe6GgMXG/QAPAnuqzyd8DFJuI3wGF/AqzBGZE0=;
-        b=De/2wngk0TPX2hvs020EFTIdjH93YUnkr+NBW5HG6rvRz66HSDImaGx70ZkSXbPDA+
-         DKWGohVbaMAJko+WJ3foje/BroBwH1Q1q89eToizLxgPf8/0SCwshBkrBTkvnUPVWsbu
-         ZI4bEUy3829s4buQtcP3GsBs9ZYsXma1ZlFtCHh+E8Oa8E3RRD+kBafkK2Z12aHQ5sAX
-         33m449JOlkiAazY1LrOwTF+siO7ribK04aA4jnT1r+rAr/mwPBoyo+WI2lQODZ/qYabQ
-         aznkxd0/THjoUiGozZhysllfll5VZLdxI+yHSc78Gw8OUMCMTwSLNu0qLdp561PVTioS
-         nHWQ==
-X-Gm-Message-State: AOJu0YzC1n8unCGUrXquaGqPNALjokIgwbMyr01q3aW6eGk9RkLewYuS
-        X6v0IFLkm3H23QqwQZ05xFgMtIKH0kpKzG8ozz0EUA==
-X-Google-Smtp-Source: AGHT+IFpe3Dvh7nmW/wCBzxTCHHMjcosW4dHk2wlflmIKdWhbxuKM+OmTZAODzw5dGa6Jt+tJikYPOCFPIxRkzy2Ck8=
-X-Received: by 2002:a05:622a:1d0:b0:410:8ba3:21c7 with SMTP id
- t16-20020a05622a01d000b004108ba321c7mr368058qtw.18.1693839397645; Mon, 04 Sep
- 2023 07:56:37 -0700 (PDT)
+        Mon, 4 Sep 2023 11:09:48 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4EE15E5B;
+        Mon,  4 Sep 2023 08:09:42 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9E27143D;
+        Mon,  4 Sep 2023 08:10:19 -0700 (PDT)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 70DCF3F738;
+        Mon,  4 Sep 2023 08:09:39 -0700 (PDT)
+Message-ID: <a8779d0e-041e-e1c3-4c0b-27b55eae3286@arm.com>
+Date:   Mon, 4 Sep 2023 16:09:40 +0100
 MIME-Version: 1.0
-References: <20230728001212.457900-1-irogers@google.com> <20230728001212.457900-3-irogers@google.com>
- <77361428-5970-5031-e204-7aefcd9cbebc@arm.com>
-In-Reply-To: <77361428-5970-5031-e204-7aefcd9cbebc@arm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 4 Sep 2023 07:56:25 -0700
-Message-ID: <CAP-5=fVATGaoeaSEk5jjoGDY=pJkFThU2t2sixfwjouxisor=w@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
 Subject: Re: [PATCH v1 2/3] perf tools: Revert enable indices setting syntax
  for BPF map
-To:     James Clark <james.clark@arm.com>
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         "coresight@lists.linaro.org" <coresight@lists.linaro.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -75,312 +48,320 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <20230728001212.457900-1-irogers@google.com>
+ <20230728001212.457900-3-irogers@google.com>
+ <77361428-5970-5031-e204-7aefcd9cbebc@arm.com>
+ <CAP-5=fVATGaoeaSEk5jjoGDY=pJkFThU2t2sixfwjouxisor=w@mail.gmail.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <CAP-5=fVATGaoeaSEk5jjoGDY=pJkFThU2t2sixfwjouxisor=w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Sep 4, 2023 at 4:02=E2=80=AFAM James Clark <james.clark@arm.com> wr=
-ote:
->
->
->
-> On 28/07/2023 01:12, Ian Rogers wrote:
-> > This reverts commit e571e029bdbf ("perf tools: Enable indices setting
-> > syntax for BPF map").
-> >
-> > The reverted commit added a notion of arrays that could be set as
-> > event terms for BPF events. The parsing hasn't worked over multiple
-> > Linux releases. Given the broken nature of the parsing it appears the
-> > code isn't in use, nor could I find a way for it to be used to add a
-> > test.
-> >
-> > The original commit contains a test in the commit message,
-> > however, running it yields:
-> > ```
-> > $ perf record -e './test_bpf_map_3.c/map:channel.value[0,1,2,3...5]=3D1=
-01/' usleep 2
-> > event syntax error: '..pf_map_3.c/map:channel.value[0,1,2,3...5]=3D101/=
-'
-> >                                   \___ parser error
-> > Run 'perf list' for a list of valid events
-> >
-> >  Usage: perf record [<options>] [<command>]
-> >     or: perf record [<options>] -- <command> [<options>]
-> >
-> >     -e, --event <event>   event selector. use 'perf list' to list avail=
-able events
-> > ```
-> >
-> > Given the code can't be used this commit reverts and removes it.
-> >
->
-> Hi Ian,
->
-> Unfortunately this revert breaks Coresight sink argument parsing.
->
-> Before:
->
->   $ perf record -e cs_etm/@tmc_etr0/ -- true
->   [ perf record: Woken up 1 times to write data ]
->   [ perf record: Captured and wrote 4.008 MB perf.data ]
->
-> After:
->
->   $ perf record -e cs_etm/@tmc_etr0/ -- true
->   event syntax error: 'cs_etm/@tmc_etr0/'
->                            \___ parser error
->
-> I can't really see how it's related to the array syntax that the commit
-> messages mention, but it could either be that the revert wasn't applied
-> cleanly or just some unintended side effect.
->
-> We should probably add a cross platform parsing test for Coresight
-> arguments, but I don't know whether we should just blindly revert the
-> revert for now, or work on a new change that explicitly fixes the
-> Coresight case.
 
-Agreed, I'll take a look. Any chance you could post the full error
-message? I suspect there's a first error hiding in there too.
 
-Thanks,
-Ian
+On 04/09/2023 15:56, Ian Rogers wrote:
+> On Mon, Sep 4, 2023 at 4:02 AM James Clark <james.clark@arm.com> wrote:
+>>
+>>
+>>
+>> On 28/07/2023 01:12, Ian Rogers wrote:
+>>> This reverts commit e571e029bdbf ("perf tools: Enable indices setting
+>>> syntax for BPF map").
+>>>
+>>> The reverted commit added a notion of arrays that could be set as
+>>> event terms for BPF events. The parsing hasn't worked over multiple
+>>> Linux releases. Given the broken nature of the parsing it appears the
+>>> code isn't in use, nor could I find a way for it to be used to add a
+>>> test.
+>>>
+>>> The original commit contains a test in the commit message,
+>>> however, running it yields:
+>>> ```
+>>> $ perf record -e './test_bpf_map_3.c/map:channel.value[0,1,2,3...5]=101/' usleep 2
+>>> event syntax error: '..pf_map_3.c/map:channel.value[0,1,2,3...5]=101/'
+>>>                                   \___ parser error
+>>> Run 'perf list' for a list of valid events
+>>>
+>>>  Usage: perf record [<options>] [<command>]
+>>>     or: perf record [<options>] -- <command> [<options>]
+>>>
+>>>     -e, --event <event>   event selector. use 'perf list' to list available events
+>>> ```
+>>>
+>>> Given the code can't be used this commit reverts and removes it.
+>>>
+>>
+>> Hi Ian,
+>>
+>> Unfortunately this revert breaks Coresight sink argument parsing.
+>>
+>> Before:
+>>
+>>   $ perf record -e cs_etm/@tmc_etr0/ -- true
+>>   [ perf record: Woken up 1 times to write data ]
+>>   [ perf record: Captured and wrote 4.008 MB perf.data ]
+>>
+>> After:
+>>
+>>   $ perf record -e cs_etm/@tmc_etr0/ -- true
+>>   event syntax error: 'cs_etm/@tmc_etr0/'
+>>                            \___ parser error
+>>
+>> I can't really see how it's related to the array syntax that the commit
+>> messages mention, but it could either be that the revert wasn't applied
+>> cleanly or just some unintended side effect.
+>>
+>> We should probably add a cross platform parsing test for Coresight
+>> arguments, but I don't know whether we should just blindly revert the
+>> revert for now, or work on a new change that explicitly fixes the
+>> Coresight case.
+> 
+> Agreed, I'll take a look. Any chance you could post the full error
+> message? I suspect there's a first error hiding in there too.
+> 
+> Thanks,
+> Ian
+> 
 
-> Thanks
-> James
->
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/parse-events.c |   8 +--
-> >  tools/perf/util/parse-events.l |  11 ---
-> >  tools/perf/util/parse-events.y | 122 ---------------------------------
-> >  3 files changed, 1 insertion(+), 140 deletions(-)
-> >
-> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-eve=
-nts.c
-> > index 02647313c918..0e2004511cf5 100644
-> > --- a/tools/perf/util/parse-events.c
-> > +++ b/tools/perf/util/parse-events.c
-> > @@ -800,13 +800,7 @@ parse_events_config_bpf(struct parse_events_state =
-*parse_state,
-> >
-> >                       parse_events_error__handle(parse_state->error, id=
-x,
-> >                                               strdup(errbuf),
-> > -                                             strdup(
-> > -"Hint:\tValid config terms:\n"
-> > -"     \tmap:[<arraymap>].value<indices>=3D[value]\n"
-> > -"     \tmap:[<eventmap>].event<indices>=3D[event]\n"
-> > -"\n"
-> > -"     \twhere <indices> is something like [0,3...5] or [all]\n"
-> > -"     \t(add -v to see detail)"));
-> > +                                             NULL);
-> >                       return err;
-> >               }
-> >       }
-> > diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-eve=
-nts.l
-> > index 99335ec586ae..d7d084cc4140 100644
-> > --- a/tools/perf/util/parse-events.l
-> > +++ b/tools/perf/util/parse-events.l
-> > @@ -175,7 +175,6 @@ do {                                               =
-       \
-> >  %x mem
-> >  %s config
-> >  %x event
-> > -%x array
-> >
-> >  group                [^,{}/]*[{][^}]*[}][^,{}/]*
-> >  event_pmu    [^,{}/]+[/][^/]*[/][^,{}/]*
-> > @@ -251,14 +250,6 @@ non_digit        [^0-9]
-> >               }
-> >  }
-> >
-> > -<array>{
-> > -"]"                  { BEGIN(config); return ']'; }
-> > -{num_dec}            { return value(yyscanner, 10); }
-> > -{num_hex}            { return value(yyscanner, 16); }
-> > -,                    { return ','; }
-> > -"\.\.\."             { return PE_ARRAY_RANGE; }
-> > -}
-> > -
-> >  <config>{
-> >       /*
-> >        * Please update config_term_names when new static term is added.
-> > @@ -302,8 +293,6 @@ r0x{num_raw_hex}  { return str(yyscanner, PE_RAW); =
-}
-> >  {lc_type}-{lc_op_result}     { return lc_str(yyscanner, _parse_state);=
- }
-> >  {lc_type}-{lc_op_result}-{lc_op_result}      { return lc_str(yyscanner=
-, _parse_state); }
-> >  {name_minus}         { return str(yyscanner, PE_NAME); }
-> > -\[all\]                      { return PE_ARRAY_ALL; }
-> > -"["                  { BEGIN(array); return '['; }
-> >  @{drv_cfg_term}              { return drv_str(yyscanner, PE_DRV_CFG_TE=
-RM); }
-> >  }
-> >
-> > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-eve=
-nts.y
-> > index 454577f7aff6..5a90e7874c59 100644
-> > --- a/tools/perf/util/parse-events.y
-> > +++ b/tools/perf/util/parse-events.y
-> > @@ -64,7 +64,6 @@ static void free_list_evsel(struct list_head* list_ev=
-sel)
-> >  %token PE_LEGACY_CACHE
-> >  %token PE_PREFIX_MEM
-> >  %token PE_ERROR
-> > -%token PE_ARRAY_ALL PE_ARRAY_RANGE
-> >  %token PE_DRV_CFG_TERM
-> >  %token PE_TERM_HW
-> >  %type <num> PE_VALUE
-> > @@ -108,11 +107,6 @@ static void free_list_evsel(struct list_head* list=
-_evsel)
-> >  %type <list_evsel> groups
-> >  %destructor { free_list_evsel ($$); } <list_evsel>
-> >  %type <tracepoint_name> tracepoint_name
-> > -%destructor { free ($$.sys); free ($$.event); } <tracepoint_name>
-> > -%type <array> array
-> > -%type <array> array_term
-> > -%type <array> array_terms
-> > -%destructor { free ($$.ranges); } <array>
-> >  %type <hardware_term> PE_TERM_HW
-> >  %destructor { free ($$.str); } <hardware_term>
-> >
-> > @@ -127,7 +121,6 @@ static void free_list_evsel(struct list_head* list_=
-evsel)
-> >               char *sys;
-> >               char *event;
-> >       } tracepoint_name;
-> > -     struct parse_events_array array;
-> >       struct hardware_term {
-> >               char *str;
-> >               u64 num;
-> > @@ -878,121 +871,6 @@ PE_TERM
-> >
-> >       $$ =3D term;
-> >  }
-> > -|
-> > -name_or_raw array '=3D' name_or_legacy
-> > -{
-> > -     struct parse_events_term *term;
-> > -     int err =3D parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE=
-_USER, $1, $4, &@1, &@4);
-> > -
-> > -     if (err) {
-> > -             free($1);
-> > -             free($4);
-> > -             free($2.ranges);
-> > -             PE_ABORT(err);
-> > -     }
-> > -     term->array =3D $2;
-> > -     $$ =3D term;
-> > -}
-> > -|
-> > -name_or_raw array '=3D' PE_VALUE
-> > -{
-> > -     struct parse_events_term *term;
-> > -     int err =3D parse_events_term__num(&term, PARSE_EVENTS__TERM_TYPE=
-_USER, $1, $4, false, &@1, &@4);
-> > -
-> > -     if (err) {
-> > -             free($1);
-> > -             free($2.ranges);
-> > -             PE_ABORT(err);
-> > -     }
-> > -     term->array =3D $2;
-> > -     $$ =3D term;
-> > -}
-> > -|
-> > -PE_DRV_CFG_TERM
-> > -{
-> > -     struct parse_events_term *term;
-> > -     char *config =3D strdup($1);
-> > -     int err;
-> > -
-> > -     if (!config)
-> > -             YYNOMEM;
-> > -     err =3D parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE_DRV=
-_CFG, config, $1, &@1, NULL);
-> > -     if (err) {
-> > -             free($1);
-> > -             free(config);
-> > -             PE_ABORT(err);
-> > -     }
-> > -     $$ =3D term;
-> > -}
-> > -
-> > -array:
-> > -'[' array_terms ']'
-> > -{
-> > -     $$ =3D $2;
-> > -}
-> > -|
-> > -PE_ARRAY_ALL
-> > -{
-> > -     $$.nr_ranges =3D 0;
-> > -     $$.ranges =3D NULL;
-> > -}
-> > -
-> > -array_terms:
-> > -array_terms ',' array_term
-> > -{
-> > -     struct parse_events_array new_array;
-> > -
-> > -     new_array.nr_ranges =3D $1.nr_ranges + $3.nr_ranges;
-> > -     new_array.ranges =3D realloc($1.ranges,
-> > -                             sizeof(new_array.ranges[0]) *
-> > -                             new_array.nr_ranges);
-> > -     if (!new_array.ranges)
-> > -             YYNOMEM;
-> > -     memcpy(&new_array.ranges[$1.nr_ranges], $3.ranges,
-> > -            $3.nr_ranges * sizeof(new_array.ranges[0]));
-> > -     free($3.ranges);
-> > -     $$ =3D new_array;
-> > -}
-> > -|
-> > -array_term
-> > -
-> > -array_term:
-> > -PE_VALUE
-> > -{
-> > -     struct parse_events_array array;
-> > -
-> > -     array.nr_ranges =3D 1;
-> > -     array.ranges =3D malloc(sizeof(array.ranges[0]));
-> > -     if (!array.ranges)
-> > -             YYNOMEM;
-> > -     array.ranges[0].start =3D $1;
-> > -     array.ranges[0].length =3D 1;
-> > -     $$ =3D array;
-> > -}
-> > -|
-> > -PE_VALUE PE_ARRAY_RANGE PE_VALUE
-> > -{
-> > -     struct parse_events_array array;
-> > -
-> > -     if ($3 < $1) {
-> > -             struct parse_events_state *parse_state =3D _parse_state;
-> > -             struct parse_events_error *error =3D parse_state->error;
-> > -             char *err_str;
-> > -
-> > -             if (asprintf(&err_str, "Expected '%ld' to be less-than '%=
-ld'", $3, $1) < 0)
-> > -                     err_str =3D NULL;
-> > -
-> > -             parse_events_error__handle(error, @1.first_column, err_st=
-r, NULL);
-> > -             YYABORT;
-> > -     }
-> > -     array.nr_ranges =3D 1;
-> > -     array.ranges =3D malloc(sizeof(array.ranges[0]));
-> > -     if (!array.ranges)
-> > -             YYNOMEM;
-> > -     array.ranges[0].start =3D $1;
-> > -     array.ranges[0].length =3D $3 - $1 + 1;
-> > -     $$ =3D array;
-> > -}
-> >
-> >  sep_dc: ':' |
-> >
+No that seems to be the whole thing, running with -vvv and pasting
+everything:
+
+
+$ perf record -e cs_etm/@tmc_etr0/ -vvv -- true
+event syntax error: 'cs_etm/@tmc_etr0/'
+                           \___ parser error
+Run 'perf list' for a list of valid events
+
+ Usage: perf record [<options>] [<command>]
+    or: perf record [<options>] -- <command> [<options>]
+
+    -e, --event <event>   event selector. use 'perf list' to list
+available events
+
+
+I previously mentioned that this is a Coresight thing, but I saw that it
+may actually be the more generic "drv_str". Unless nothing other than
+Coresight is using it, then it's just a Coresight thing.
+
+>> Thanks
+>> James
+>>
+>>> Signed-off-by: Ian Rogers <irogers@google.com>
+>>> ---
+>>>  tools/perf/util/parse-events.c |   8 +--
+>>>  tools/perf/util/parse-events.l |  11 ---
+>>>  tools/perf/util/parse-events.y | 122 ---------------------------------
+>>>  3 files changed, 1 insertion(+), 140 deletions(-)
+>>>
+>>> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+>>> index 02647313c918..0e2004511cf5 100644
+>>> --- a/tools/perf/util/parse-events.c
+>>> +++ b/tools/perf/util/parse-events.c
+>>> @@ -800,13 +800,7 @@ parse_events_config_bpf(struct parse_events_state *parse_state,
+>>>
+>>>                       parse_events_error__handle(parse_state->error, idx,
+>>>                                               strdup(errbuf),
+>>> -                                             strdup(
+>>> -"Hint:\tValid config terms:\n"
+>>> -"     \tmap:[<arraymap>].value<indices>=[value]\n"
+>>> -"     \tmap:[<eventmap>].event<indices>=[event]\n"
+>>> -"\n"
+>>> -"     \twhere <indices> is something like [0,3...5] or [all]\n"
+>>> -"     \t(add -v to see detail)"));
+>>> +                                             NULL);
+>>>                       return err;
+>>>               }
+>>>       }
+>>> diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+>>> index 99335ec586ae..d7d084cc4140 100644
+>>> --- a/tools/perf/util/parse-events.l
+>>> +++ b/tools/perf/util/parse-events.l
+>>> @@ -175,7 +175,6 @@ do {                                                      \
+>>>  %x mem
+>>>  %s config
+>>>  %x event
+>>> -%x array
+>>>
+>>>  group                [^,{}/]*[{][^}]*[}][^,{}/]*
+>>>  event_pmu    [^,{}/]+[/][^/]*[/][^,{}/]*
+>>> @@ -251,14 +250,6 @@ non_digit        [^0-9]
+>>>               }
+>>>  }
+>>>
+>>> -<array>{
+>>> -"]"                  { BEGIN(config); return ']'; }
+>>> -{num_dec}            { return value(yyscanner, 10); }
+>>> -{num_hex}            { return value(yyscanner, 16); }
+>>> -,                    { return ','; }
+>>> -"\.\.\."             { return PE_ARRAY_RANGE; }
+>>> -}
+>>> -
+>>>  <config>{
+>>>       /*
+>>>        * Please update config_term_names when new static term is added.
+>>> @@ -302,8 +293,6 @@ r0x{num_raw_hex}  { return str(yyscanner, PE_RAW); }
+>>>  {lc_type}-{lc_op_result}     { return lc_str(yyscanner, _parse_state); }
+>>>  {lc_type}-{lc_op_result}-{lc_op_result}      { return lc_str(yyscanner, _parse_state); }
+>>>  {name_minus}         { return str(yyscanner, PE_NAME); }
+>>> -\[all\]                      { return PE_ARRAY_ALL; }
+>>> -"["                  { BEGIN(array); return '['; }
+>>>  @{drv_cfg_term}              { return drv_str(yyscanner, PE_DRV_CFG_TERM); }
+>>>  }
+>>>
+>>> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+>>> index 454577f7aff6..5a90e7874c59 100644
+>>> --- a/tools/perf/util/parse-events.y
+>>> +++ b/tools/perf/util/parse-events.y
+>>> @@ -64,7 +64,6 @@ static void free_list_evsel(struct list_head* list_evsel)
+>>>  %token PE_LEGACY_CACHE
+>>>  %token PE_PREFIX_MEM
+>>>  %token PE_ERROR
+>>> -%token PE_ARRAY_ALL PE_ARRAY_RANGE
+>>>  %token PE_DRV_CFG_TERM
+>>>  %token PE_TERM_HW
+>>>  %type <num> PE_VALUE
+>>> @@ -108,11 +107,6 @@ static void free_list_evsel(struct list_head* list_evsel)
+>>>  %type <list_evsel> groups
+>>>  %destructor { free_list_evsel ($$); } <list_evsel>
+>>>  %type <tracepoint_name> tracepoint_name
+>>> -%destructor { free ($$.sys); free ($$.event); } <tracepoint_name>
+>>> -%type <array> array
+>>> -%type <array> array_term
+>>> -%type <array> array_terms
+>>> -%destructor { free ($$.ranges); } <array>
+>>>  %type <hardware_term> PE_TERM_HW
+>>>  %destructor { free ($$.str); } <hardware_term>
+>>>
+>>> @@ -127,7 +121,6 @@ static void free_list_evsel(struct list_head* list_evsel)
+>>>               char *sys;
+>>>               char *event;
+>>>       } tracepoint_name;
+>>> -     struct parse_events_array array;
+>>>       struct hardware_term {
+>>>               char *str;
+>>>               u64 num;
+>>> @@ -878,121 +871,6 @@ PE_TERM
+>>>
+>>>       $$ = term;
+>>>  }
+>>> -|
+>>> -name_or_raw array '=' name_or_legacy
+>>> -{
+>>> -     struct parse_events_term *term;
+>>> -     int err = parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE_USER, $1, $4, &@1, &@4);
+>>> -
+>>> -     if (err) {
+>>> -             free($1);
+>>> -             free($4);
+>>> -             free($2.ranges);
+>>> -             PE_ABORT(err);
+>>> -     }
+>>> -     term->array = $2;
+>>> -     $$ = term;
+>>> -}
+>>> -|
+>>> -name_or_raw array '=' PE_VALUE
+>>> -{
+>>> -     struct parse_events_term *term;
+>>> -     int err = parse_events_term__num(&term, PARSE_EVENTS__TERM_TYPE_USER, $1, $4, false, &@1, &@4);
+>>> -
+>>> -     if (err) {
+>>> -             free($1);
+>>> -             free($2.ranges);
+>>> -             PE_ABORT(err);
+>>> -     }
+>>> -     term->array = $2;
+>>> -     $$ = term;
+>>> -}
+>>> -|
+>>> -PE_DRV_CFG_TERM
+>>> -{
+>>> -     struct parse_events_term *term;
+>>> -     char *config = strdup($1);
+>>> -     int err;
+>>> -
+>>> -     if (!config)
+>>> -             YYNOMEM;
+>>> -     err = parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE_DRV_CFG, config, $1, &@1, NULL);
+>>> -     if (err) {
+>>> -             free($1);
+>>> -             free(config);
+>>> -             PE_ABORT(err);
+>>> -     }
+>>> -     $$ = term;
+>>> -}
+>>> -
+>>> -array:
+>>> -'[' array_terms ']'
+>>> -{
+>>> -     $$ = $2;
+>>> -}
+>>> -|
+>>> -PE_ARRAY_ALL
+>>> -{
+>>> -     $$.nr_ranges = 0;
+>>> -     $$.ranges = NULL;
+>>> -}
+>>> -
+>>> -array_terms:
+>>> -array_terms ',' array_term
+>>> -{
+>>> -     struct parse_events_array new_array;
+>>> -
+>>> -     new_array.nr_ranges = $1.nr_ranges + $3.nr_ranges;
+>>> -     new_array.ranges = realloc($1.ranges,
+>>> -                             sizeof(new_array.ranges[0]) *
+>>> -                             new_array.nr_ranges);
+>>> -     if (!new_array.ranges)
+>>> -             YYNOMEM;
+>>> -     memcpy(&new_array.ranges[$1.nr_ranges], $3.ranges,
+>>> -            $3.nr_ranges * sizeof(new_array.ranges[0]));
+>>> -     free($3.ranges);
+>>> -     $$ = new_array;
+>>> -}
+>>> -|
+>>> -array_term
+>>> -
+>>> -array_term:
+>>> -PE_VALUE
+>>> -{
+>>> -     struct parse_events_array array;
+>>> -
+>>> -     array.nr_ranges = 1;
+>>> -     array.ranges = malloc(sizeof(array.ranges[0]));
+>>> -     if (!array.ranges)
+>>> -             YYNOMEM;
+>>> -     array.ranges[0].start = $1;
+>>> -     array.ranges[0].length = 1;
+>>> -     $$ = array;
+>>> -}
+>>> -|
+>>> -PE_VALUE PE_ARRAY_RANGE PE_VALUE
+>>> -{
+>>> -     struct parse_events_array array;
+>>> -
+>>> -     if ($3 < $1) {
+>>> -             struct parse_events_state *parse_state = _parse_state;
+>>> -             struct parse_events_error *error = parse_state->error;
+>>> -             char *err_str;
+>>> -
+>>> -             if (asprintf(&err_str, "Expected '%ld' to be less-than '%ld'", $3, $1) < 0)
+>>> -                     err_str = NULL;
+>>> -
+>>> -             parse_events_error__handle(error, @1.first_column, err_str, NULL);
+>>> -             YYABORT;
+>>> -     }
+>>> -     array.nr_ranges = 1;
+>>> -     array.ranges = malloc(sizeof(array.ranges[0]));
+>>> -     if (!array.ranges)
+>>> -             YYNOMEM;
+>>> -     array.ranges[0].start = $1;
+>>> -     array.ranges[0].length = $3 - $1 + 1;
+>>> -     $$ = array;
+>>> -}
+>>>
+>>>  sep_dc: ':' |
+>>>
