@@ -2,138 +2,222 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9FEC83F2C
-	for <linux-perf-users@archiver.kernel.org>; Sun,  3 Sep 2023 11:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3337C83F2C
+	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Sep 2023 02:36:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236855AbjICLyY (ORCPT
+        id S1350240AbjIDCgz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 3 Sep 2023 07:54:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46166 "EHLO
+        Sun, 3 Sep 2023 22:36:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232740AbjICLyX (ORCPT
+        with ESMTP id S241802AbjIDCgy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 3 Sep 2023 07:54:23 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0470C11D;
-        Sun,  3 Sep 2023 04:54:20 -0700 (PDT)
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 383Bo8oM032397;
-        Sun, 3 Sep 2023 11:54:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- content-transfer-encoding : mime-version; s=pp1;
- bh=U60Ko/vDXCR/KHZtcvfK5O0nVYP5xS42HAqoAERab60=;
- b=sqtJVB9iQHMW9toUroB6MONHtBCiFLO3IATD/BSaCKDS2yIFg+szKMfMdWqifjpospXm
- EBwu+ucLxSIPDrBVNrFPTL8lyhL9x3JGyvngParBH8R9By1Y2MmZKPJ0cVUE0fbG+qKH
- fpZuF0tvOPXd4+H8kkMcxBfT/edZq3rTz5CUu9S67E53zYmTFAd7sGt9IQc/gA3ikDYA
- RN9jUhavkCTCudm0fe8UghyqMV5m3Tl+WUvLwZXVs2CVcdutHZKqwskdZeWW/V9RnvIU
- r0+fkTVU1/Bil1Va0roVzOJHqwSZRoyCyZiiUVylFY6x+Wvt2AvQsMp0fwbJCmA3nqGj vw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3svsm6r195-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 03 Sep 2023 11:54:12 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 383BqDpA005301;
-        Sun, 3 Sep 2023 11:54:11 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3svsm6r192-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 03 Sep 2023 11:54:11 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3838uMOu012217;
-        Sun, 3 Sep 2023 11:54:11 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-        by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3svhkjajg3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 03 Sep 2023 11:54:10 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 383Bs8ed25428572
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 3 Sep 2023 11:54:08 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 325C62004D;
-        Sun,  3 Sep 2023 11:54:08 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EC9BD20043;
-        Sun,  3 Sep 2023 11:54:05 +0000 (GMT)
-Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com (unknown [9.171.15.154])
-        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Sun,  3 Sep 2023 11:54:05 +0000 (GMT)
-Date:   Sun, 3 Sep 2023 17:23:52 +0530
-From:   Aditya Gupta <adityag@linux.ibm.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] Introduce perf build subcommand
-Message-ID: <u754ryppddl3rqhadhchgily7yb5idjuhriqzohjwfkzooeqoa@qxumwwhym555>
-References: <20230825061125.24312-1-adityag@linux.ibm.com>
- <CAM9d7cgBJ1WHRuVcZ4FArm=pctbs-npLB2Q8PLZWmdfaK3dCzg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAM9d7cgBJ1WHRuVcZ4FArm=pctbs-npLB2Q8PLZWmdfaK3dCzg@mail.gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: jJpuN0uaI3HwO4G2-V_jT3OKlATsphXv
-X-Proofpoint-GUID: -xXfUdUzqs38kRD5dK9wCWdOmJcQGI-Q
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Sun, 3 Sep 2023 22:36:54 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6484010A;
+        Sun,  3 Sep 2023 19:36:50 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RfCQt41r6zrS65;
+        Mon,  4 Sep 2023 10:35:02 +0800 (CST)
+Received: from localhost.localdomain (10.67.174.95) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Mon, 4 Sep 2023 10:36:47 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+        <james.clark@arm.com>, <tmricht@linux.ibm.com>,
+        <ak@linux.intel.com>, <anshuman.khandual@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH v8 0/6] perf record: Track sideband events for all CPUs when tracing selected CPUs
+Date:   Mon, 4 Sep 2023 02:33:34 +0000
+Message-ID: <20230904023340.12707-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-03_09,2023-08-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 mlxlogscore=643 malwarescore=0 clxscore=1015
- bulkscore=0 adultscore=0 spamscore=0 lowpriorityscore=0 impostorscore=0
- mlxscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2309030108
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.95]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello Namhyung,
+User space tasks can migrate between CPUs, track sideband events for all
+CPUs.
 
-On Fri, Aug 25, 2023 at 10:07:28AM -0700, Namhyung Kim wrote:
-> On Thu, Aug 24, 2023 at 11:11 PM Aditya Gupta <adityag@linux.ibm.com> wrote:
-> >
-> > The Problem
-> > ===========
-> >
-> > Currently the presence of a feature is checked with a combination of
-> > perf version --build-options and greps, such as:
-> >
-> >     perf version --build-options | grep " on .* HAVE_FEATURE"
-> >
-> > Proposed solution
-> > =================
-> >
-> > As suggested by contributors in:
-> > https://lore.kernel.org/linux-perf-users/ZMPWk5K63tadmDlU@kernel.org/
-> >
-> > Introduce a subcommand "perf build --has", with which
-> > scripts can test for presence of a feature, such as:
-> >
-> >     perf build --has HAVE_FEATURE
-> >
-> > The usage of "perf version --build-options | grep" has been replaced in two
-> > tests, with "perf build --has" command
-> 
-> I'm not sure 'perf build' is a good name, it sounds like it needs to build
-> something.  Maybe 'perf check --feature XXX' ?
-> 
-> Then we can extend the perf check command to *check* system
-> settings like perf_event_paranoid, kptr_restrict, nmi_watchdog
-> and so on, and possibly provides some advice or even change
-> the values easily.
-> 
-> What do you think?
+The specific scenarios are as follows:
 
-Thanks for the suggestion, we agree with it.
-I have sent the updated patch series, but it's again from V1 since the subcommand changed.
+         CPU0                                 CPU1
+  perf record -C 0 start
+                              taskA starts to be created and executed
+                                -> PERF_RECORD_COMM and PERF_RECORD_MMAP
+                                   events only deliver to CPU1
+                              ......
+                                |
+                          migrate to CPU0
+                                |
+  Running on CPU0    <----------/
+  ...
 
-Patch series: https://lore.kernel.org/linux-perf-users/20230903114721.190733-1-adityag@linux.ibm.com
+  perf record -C 0 stop
 
-Thanks,
-Aditya Gupta
+Now perf samples the PC of taskA. However, perf does not record the
+PERF_RECORD_COMM and PERF_RECORD_COMM events of taskA.
+Therefore, the comm and symbols of taskA cannot be parsed.
+
+The sys_perf_event_open invoked is as follows:
+
+  # perf --debug verbose=3 record -e cpu-clock -C 1 true
+  <SNIP>
+  Opening: cpu-clock
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             1 (PERF_TYPE_SOFTWARE)
+    size                             136
+    config                           0 (PERF_COUNT_SW_CPU_CLOCK)
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+    read_format                      ID|LOST
+    disabled                         1
+    inherit                          1
+    freq                             1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
+  Opening: dummy:u
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             1 (PERF_TYPE_SOFTWARE)
+    size                             136
+    config                           0x9 (PERF_COUNT_SW_DUMMY)
+    { sample_period, sample_freq }   1
+    sample_type                      IP|TID|TIME|CPU|IDENTIFIER
+    read_format                      ID|LOST
+    inherit                          1
+    exclude_kernel                   1
+    exclude_hv                       1
+    mmap                             1
+    comm                             1
+    task                             1
+    sample_id_all                    1
+    exclude_guest                    1
+    mmap2                            1
+    comm_exec                        1
+    ksymbol                          1
+    bpf_event                        1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
+  sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 7
+  sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 9
+  sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 10
+  sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 11
+  sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 12
+  sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 13
+  sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
+  <SNIP>
+
+Changes since_v7:
+ - The condition for requiring system_wide sideband is changed to
+   "as long as a non-dummy event exists" (patch4).
+ - Modify the corresponding test case to record only dummy event (patch6).
+ - Thanks to tested-by tag from Ravi, but because the solution is modified,
+   the tested-by tag of Ravi is not added to this version.
+
+Changes since_v6:
+ - Patch1:
+    1. No change.
+    2. Keep Acked-by tag from Adrian.
+ - Patch2:
+    1. Update commit message as suggested by Ian.
+    2. Keep Acked-by tag from Adrian because code is not modified.
+ - Patch3:
+    1. Update comment as suggested by Ian.
+    2. Merge original patch5 ("perf test: Update base-record & system-wide-dummy attr") as suggested by Ian.
+    3. Only merge commit, keep Acked-by tag from Adrian.
+ - Patch4:
+    1. No change. Because Adrian recommends not changing the function name.
+    2. Keep Acked-by tag from Adrian.
+ - Patch5:
+    1. Add cleanup on trap function as suggested by Ian.
+    2. Remove Tested-by tag from Adrian because the script is modified.
+ - Patch6:
+    1. Add Reviewed-by tag from Ian.
+
+Changes since_v5:
+ - No code changes.
+ - Detailed commit message of patch3.
+ - Add Acked-by and Tested-by tags from Adrian Hunter.
+
+Changes since_v4:
+ - Simplify check code for record__tracking_system_wide().
+ - Add perf attr test result to commit message for patch 7.
+
+Changes since_v3:
+ - Check fall_kernel, all_user, and dummy or exclude_user when determining
+   whether system wide is required.
+
+Changes since_v2:
+ - Rename record_tracking.sh to record_sideband.sh in tools/perf/tests/shell.
+ - Remove "perf evlist: Skip dummy event sample_type check for evlist_config" patch.
+ - Add opts->all_kernel check in record__config_tracking_events().
+ - Add perf_event_attr test for record selected CPUs exclude_user.
+ - Update base-record & system-wide-dummy sample_type attr expected values for test-record-C0.
+
+Changes since v1:
+ - Add perf_evlist__go_system_wide() via internal/evlist.h instead of
+   exporting perf_evlist__propagate_maps().
+ - Use evlist__add_aux_dummy() instead of evlist__add_dummy() in
+   evlist__findnew_tracking_event().
+ - Add a parameter in evlist__findnew_tracking_event() to deal with
+   system_wide inside.
+ - Add sideband for all CPUs when tracing selected CPUs comments on
+   the perf record man page.
+ - Use "sideband events" instead of "tracking events".
+ - Adjust the patches Sequence.
+ - Add patch5 to skip dummy event sample_type check for evlist_config.
+ - Add patch6 to update system-wide-dummy attr values for perf test.
+
+Yang Jihong (6):
+  perf evlist: Add perf_evlist__go_system_wide() helper
+  perf evlist: Add evlist__findnew_tracking_event() helper
+  perf record: Move setting tracking events before
+    record__init_thread_masks()
+  perf record: Track sideband events for all CPUs when tracing selected
+    CPUs
+  perf test: Add test case for record sideband events
+  perf test: Add perf_event_attr test for record selected CPUs
+    exclude_user
+
+Yang Jihong (6):
+  perf evlist: Add perf_evlist__go_system_wide() helper
+  perf evlist: Add evlist__findnew_tracking_event() helper
+  perf record: Move setting tracking events before
+    record__init_thread_masks()
+  perf record: Track sideband events for all CPUs when tracing selected
+    CPUs
+  perf test: Add test case for record sideband events
+  perf test: Add perf_event_attr test for record dummy event
+
+ tools/lib/perf/evlist.c                    |  9 +++
+ tools/lib/perf/include/internal/evlist.h   |  2 +
+ tools/perf/Documentation/perf-record.txt   |  3 +
+ tools/perf/builtin-record.c                | 92 +++++++++++++++-------
+ tools/perf/tests/attr/system-wide-dummy    | 14 ++--
+ tools/perf/tests/attr/test-record-C0       |  4 +-
+ tools/perf/tests/attr/test-record-dummy-C0 | 55 +++++++++++++
+ tools/perf/tests/shell/record_sideband.sh  | 58 ++++++++++++++
+ tools/perf/util/evlist.c                   | 18 +++++
+ tools/perf/util/evlist.h                   |  1 +
+ 10 files changed, 221 insertions(+), 35 deletions(-)
+ create mode 100644 tools/perf/tests/attr/test-record-dummy-C0
+ create mode 100755 tools/perf/tests/shell/record_sideband.sh
+
+-- 
+2.30.GIT
 
