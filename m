@@ -2,293 +2,164 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5232ACA0FF3
-	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Sep 2023 02:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D76C71153
+	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Sep 2023 03:29:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350947AbjIDCg4 (ORCPT
+        id S235087AbjIDD3F (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 3 Sep 2023 22:36:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60478 "EHLO
+        Sun, 3 Sep 2023 23:29:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350934AbjIDCg4 (ORCPT
+        with ESMTP id S233225AbjIDD3F (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 3 Sep 2023 22:36:56 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C77610E;
-        Sun,  3 Sep 2023 19:36:52 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RfCNk1Xb5zNmqx;
-        Mon,  4 Sep 2023 10:33:10 +0800 (CST)
-Received: from localhost.localdomain (10.67.174.95) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Mon, 4 Sep 2023 10:36:48 +0800
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-        <james.clark@arm.com>, <tmricht@linux.ibm.com>,
-        <ak@linux.intel.com>, <anshuman.khandual@arm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-CC:     <yangjihong1@huawei.com>
-Subject: [PATCH v8 3/6] perf record: Move setting tracking events before record__init_thread_masks()
-Date:   Mon, 4 Sep 2023 02:33:37 +0000
-Message-ID: <20230904023340.12707-4-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.30.GIT
-In-Reply-To: <20230904023340.12707-1-yangjihong1@huawei.com>
-References: <20230904023340.12707-1-yangjihong1@huawei.com>
+        Sun, 3 Sep 2023 23:29:05 -0400
+Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9019C1
+        for <linux-perf-users@vger.kernel.org>; Sun,  3 Sep 2023 20:29:00 -0700 (PDT)
+Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-414ba610766so134661cf.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 03 Sep 2023 20:29:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1693798140; x=1694402940; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7deoe6GKhFpc+m67Hlb6XpoWBoI8jcvPYFdC1NBI18E=;
+        b=f0UkjQPVZLS35/683sE9Topltynn1uueMUc1mXgVROtG2fUvnEOqKtytWKhxUKqEK/
+         0aBO9wj74V4uOL5AQaJjklFux7KY9zbz1CHYUWZdHFMRFsxi2CuxOa0JwKXDNtnDKTVz
+         CKNWCMCvM/vmplkGAXROVhPBjXHoFFPZwggBVzV+KL7Fh6B4ospjik/PA+6UCV2pOpgi
+         rgW1VffOHu6YvVI0PJZJoam9psWp6sEQvXAyFtZS7C2MbuOEW7VEW2TeA1zDPdwvVhvg
+         PLaV83ED65i/dyArDeh/xN3ZnZjhtuvUylbha6HaqytWkwTyxxVJecJz+USHcQW06pul
+         BeYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693798140; x=1694402940;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7deoe6GKhFpc+m67Hlb6XpoWBoI8jcvPYFdC1NBI18E=;
+        b=Y4b8+ikQsXP1k/ILRE/1crdYOzf4W7OT8gi1VHdhhTni7vdoFHvPapw87Ar/ZYrn9r
+         0bNdK3EbaHTFPUbhxvRaj5h8tmkCo4Pei0CX7M1yMHhuxmlcrDt0L/mRNsQfbv1WAf38
+         /A2tluV1pWvzvs+maSH5zJ+p/Sg+QocYwPB4P4GBYpuIGdGp1OK31y8X4N8sZrDsBVP+
+         Ji5Jg2ADUcDwdY1myqXqtaM2VAVMaZ+umhlvfiW3IwXciYUQe+QQv2iyeyODWpEy/51V
+         w0v3mdCfcJhC902nCn8siF3UeqmuB1IkHSTuYOLyMi6dFoT7pErUKGZ9xGohI+9RSTtB
+         L2cQ==
+X-Gm-Message-State: AOJu0YxnGN1Me9olPTb5QAoc24SatRXxTY0mKj8HT1lY8xxZKdx600L+
+        MiPVorJXAMv/v6pYHvWreyxY2GkvRDNYW+ez4C2L5Q==
+X-Google-Smtp-Source: AGHT+IGpSZA5b0THqLBucCAWJlFUihqilCsAwDngJNJeRAOaion0lQdf4xoRZy/rGwGk+pRPS1y9EbG705O13KUZr6M=
+X-Received: by 2002:a05:622a:341:b0:412:7cc4:a0f4 with SMTP id
+ r1-20020a05622a034100b004127cc4a0f4mr224747qtw.8.1693798139968; Sun, 03 Sep
+ 2023 20:28:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.95]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+References: <20230830230126.260508-1-namhyung@kernel.org>
+In-Reply-To: <20230830230126.260508-1-namhyung@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Sun, 3 Sep 2023 20:28:48 -0700
+Message-ID: <CAP-5=fWQGsBBku+vuRpxia8faVkJeR1Rp5PmoAd63LcDM3FYXg@mail.gmail.com>
+Subject: Re: [PATCHSET 0/5] perf lock contention: Add cgroup support (v1)
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-User space tasks can migrate between CPUs, so when tracing selected CPUs,
-sideband for all CPUs is needed. In this case set the cpu map of the evsel
-to all online CPUs. This may modify the original cpu map of the evlist.
-Therefore, need to check whether the preceding scenario exists before
-record__init_thread_masks().
-Dummy tracking has been set in record__open(), move it before
-record__init_thread_masks() and add a helper for unified processing.
+On Wed, Aug 30, 2023 at 4:01=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> Hello,
+>
+> The cgroup support comes with two flavors.  One is to aggregate the
+> result by cgroups and the other is to filter result for the given
+> cgroups.  For now, it only works in BPF mode.
+>
+> The first one is -g/--lock-cgroup option to show lock stats by cgroups
+> like below.  The cgroup names were shortened for brevity:
+>
+>   $ sudo perf lock con -abg perf bench sched messaging
+>    contended   total wait     max wait     avg wait   cgroup
+>
+>         1052      3.34 ms     84.71 us      3.17 us   /app-org.gnome.Term=
+inal.slice/vte-spawn-52221fb8-b33f-4a52-b5c3-e35d1e6fc0e0.scope
+>           13    106.60 us     11.48 us      8.20 us   /session.slice/org.=
+gnome.Shell@x11.service
+>           12     21.20 us      4.93 us      1.77 us   /
+>            3     12.10 us      8.80 us      4.03 us   /session-4.scope
+>            2     10.98 us      7.50 us      5.49 us   /app-gnome-firefox\=
+x2desr-34054.scope
+>            2      6.04 us      4.88 us      3.02 us   /app-gnome-google\x=
+2dchrome-6442.scope
+>            1      5.63 us      5.63 us      5.63 us   /app-org.gnome.Term=
+inal.slice/gnome-terminal-server.service
+>            1      3.51 us      3.51 us      3.51 us   /pipewire.service
+>            1      2.15 us      2.15 us      2.15 us   /pipewire-pulse.ser=
+vice
+>            1       742 ns       742 ns       742 ns   /dbus.service
+>
+> The other is -G/--cgroup-filter option to show lock stats only from the
+> given cgroups.  It doesn't support cgroup hierarchy and regex matching.
+>
+>   $ sudo perf lock con -abt -G / perf bench sched messaging
+>    contended   total wait     max wait     avg wait          pid   comm
+>
+>            2     10.58 us      8.39 us      5.29 us       257552   kworke=
+r/4:1
+>            2      9.76 us      7.96 us      4.88 us            0   swappe=
+r
+>            4      5.36 us      2.09 us      1.34 us       255462   kworke=
+r/0:2
+>            3      3.33 us      1.48 us      1.11 us       257680   kworke=
+r/3:1
+>            2      2.59 us      1.46 us      1.29 us       257478   kworke=
+r/2:2
+>            1      1.50 us      1.50 us      1.50 us           15   rcu_pr=
+eempt
+>
+> You can also use these two options together. :)
+>
+> The two more test cases were added to the existing lock contention test.
+>
+> The code is available at 'perf/lock-cgroup-v1' branch in the tree below.
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+>
+>
+> Thanks,
+> Namhyung
+>
+>
+> Namhyung Kim (5):
+>   perf tools: Add read_all_cgroups() and __cgroup_find()
+>   perf lock contention: Prepare to handle cgroups
+>   perf lock contention: Add -g/--lock-cgroup option
+>   perf lock contention: Add -G/--cgroup-filter option
+>   perf test: Improve perf lock contention test
 
-The sys_perf_event_open invoked is as follows:
+Series:
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-  # perf --debug verbose=3 record -e cpu-clock -D 100 true
-  <SNIP>
-  Opening: cpu-clock
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             1 (PERF_TYPE_SOFTWARE)
-    size                             136
-    config                           0 (PERF_COUNT_SW_CPU_CLOCK)
-    { sample_period, sample_freq }   4000
-    sample_type                      IP|TID|TIME|PERIOD|IDENTIFIER
-    read_format                      ID|LOST
-    disabled                         1
-    inherit                          1
-    freq                             1
-    sample_id_all                    1
-    exclude_guest                    1
-  ------------------------------------------------------------
-  sys_perf_event_open: pid 10318  cpu 0  group_fd -1  flags 0x8 = 5
-  sys_perf_event_open: pid 10318  cpu 1  group_fd -1  flags 0x8 = 6
-  sys_perf_event_open: pid 10318  cpu 2  group_fd -1  flags 0x8 = 7
-  sys_perf_event_open: pid 10318  cpu 3  group_fd -1  flags 0x8 = 9
-  sys_perf_event_open: pid 10318  cpu 4  group_fd -1  flags 0x8 = 10
-  sys_perf_event_open: pid 10318  cpu 5  group_fd -1  flags 0x8 = 11
-  sys_perf_event_open: pid 10318  cpu 6  group_fd -1  flags 0x8 = 12
-  sys_perf_event_open: pid 10318  cpu 7  group_fd -1  flags 0x8 = 13
-  Opening: dummy:u
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             1 (PERF_TYPE_SOFTWARE)
-    size                             136
-    config                           0x9 (PERF_COUNT_SW_DUMMY)
-    { sample_period, sample_freq }   1
-    sample_type                      IP|TID|TIME|IDENTIFIER
-    read_format                      ID|LOST
-    disabled                         1
-    inherit                          1
-    exclude_kernel                   1
-    exclude_hv                       1
-    mmap                             1
-    comm                             1
-    enable_on_exec                   1
-    task                             1
-    sample_id_all                    1
-    exclude_guest                    1
-    mmap2                            1
-    comm_exec                        1
-    ksymbol                          1
-    bpf_event                        1
-  ------------------------------------------------------------
-  sys_perf_event_open: pid 10318  cpu 0  group_fd -1  flags 0x8 = 14
-  sys_perf_event_open: pid 10318  cpu 1  group_fd -1  flags 0x8 = 15
-  sys_perf_event_open: pid 10318  cpu 2  group_fd -1  flags 0x8 = 16
-  sys_perf_event_open: pid 10318  cpu 3  group_fd -1  flags 0x8 = 17
-  sys_perf_event_open: pid 10318  cpu 4  group_fd -1  flags 0x8 = 18
-  sys_perf_event_open: pid 10318  cpu 5  group_fd -1  flags 0x8 = 19
-  sys_perf_event_open: pid 10318  cpu 6  group_fd -1  flags 0x8 = 20
-  sys_perf_event_open: pid 10318  cpu 7  group_fd -1  flags 0x8 = 21
-  <SNIP>
+Thanks,
+Ian
 
-perf test need to update base-record & system-wide-dummy attr expected values
-for test-record-C0:
-
-1. Because a dummy sideband event is added to the sampling of specified
-   CPUs. When evlist contains evsel of different sample_type,
-   evlist__config() will change the default PERF_SAMPLE_ID bit to
-   PERF_SAMPLE_IDENTIFICATION bit.
-   The attr sample_type expected value of base-record and system-wide-dummy
-   in test-record-C0 needs to be updated.
-
-2. The perf record uses evlist__add_aux_dummy() instead of
-   evlist__add_dummy() to add a dummy event.
-   The expected value of system-wide-dummy attr needs to be updated.
-
-The perf test result is as follows:
-
-  # ./perf test list  2>&1 | grep 'Setup struct perf_event_attr'
-   17: Setup struct perf_event_attr
-  # ./perf test 17
-   17: Setup struct perf_event_attr                                    : Ok
-
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/builtin-record.c             | 59 ++++++++++++++++---------
- tools/perf/tests/attr/system-wide-dummy | 14 +++---
- tools/perf/tests/attr/test-record-C0    |  4 +-
- 3 files changed, 47 insertions(+), 30 deletions(-)
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 12edad8392cc..83bd1f117191 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -906,6 +906,37 @@ static int record__config_off_cpu(struct record *rec)
- 	return off_cpu_prepare(rec->evlist, &rec->opts.target, &rec->opts);
- }
- 
-+static int record__config_tracking_events(struct record *rec)
-+{
-+	struct record_opts *opts = &rec->opts;
-+	struct evlist *evlist = rec->evlist;
-+	struct evsel *evsel;
-+
-+	/*
-+	 * For initial_delay, system wide or a hybrid system, we need to add
-+	 * tracking event so that we can track PERF_RECORD_MMAP to cover the
-+	 * delay of waiting or event synthesis.
-+	 */
-+	if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
-+	    perf_pmus__num_core_pmus() > 1) {
-+		evsel = evlist__findnew_tracking_event(evlist, false);
-+		if (!evsel)
-+			return -ENOMEM;
-+
-+		/*
-+		 * Enable the tracking event when the process is forked for
-+		 * initial_delay, immediately for system wide.
-+		 */
-+		if (opts->target.initial_delay && !evsel->immediate &&
-+		    !target__has_cpu(&opts->target))
-+			evsel->core.attr.enable_on_exec = 1;
-+		else
-+			evsel->immediate = 1;
-+	}
-+
-+	return 0;
-+}
-+
- static bool record__kcore_readable(struct machine *machine)
- {
- 	char kcore[PATH_MAX];
-@@ -1286,28 +1317,6 @@ static int record__open(struct record *rec)
- 	struct record_opts *opts = &rec->opts;
- 	int rc = 0;
- 
--	/*
--	 * For initial_delay, system wide or a hybrid system, we need to add a
--	 * dummy event so that we can track PERF_RECORD_MMAP to cover the delay
--	 * of waiting or event synthesis.
--	 */
--	if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
--	    perf_pmus__num_core_pmus() > 1) {
--		pos = evlist__findnew_tracking_event(evlist, false);
--		if (!pos)
--			return -ENOMEM;
--
--		/*
--		 * Enable the dummy event when the process is forked for
--		 * initial_delay, immediately for system wide.
--		 */
--		if (opts->target.initial_delay && !pos->immediate &&
--		    !target__has_cpu(&opts->target))
--			pos->core.attr.enable_on_exec = 1;
--		else
--			pos->immediate = 1;
--	}
--
- 	evlist__config(evlist, opts, &callchain_param);
- 
- 	evlist__for_each_entry(evlist, pos) {
-@@ -4190,6 +4199,12 @@ int cmd_record(int argc, const char **argv)
- 		goto out;
- 	}
- 
-+	err = record__config_tracking_events(rec);
-+	if (err) {
-+		pr_err("record__config_tracking_events failed, error %d\n", err);
-+		goto out;
-+	}
-+
- 	err = record__init_thread_masks(rec);
- 	if (err) {
- 		pr_err("Failed to initialize parallel data streaming masks\n");
-diff --git a/tools/perf/tests/attr/system-wide-dummy b/tools/perf/tests/attr/system-wide-dummy
-index 2f3e3eb728eb..a1e1d6a263bf 100644
---- a/tools/perf/tests/attr/system-wide-dummy
-+++ b/tools/perf/tests/attr/system-wide-dummy
-@@ -9,8 +9,10 @@ flags=8
- type=1
- size=136
- config=9
--sample_period=4000
--sample_type=455
-+sample_period=1
-+# PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_TIME |
-+# PERF_SAMPLE_CPU | PERF_SAMPLE_IDENTIFIER
-+sample_type=65671
- read_format=4|20
- # Event will be enabled right away.
- disabled=0
-@@ -18,12 +20,12 @@ inherit=1
- pinned=0
- exclusive=0
- exclude_user=0
--exclude_kernel=0
--exclude_hv=0
-+exclude_kernel=1
-+exclude_hv=1
- exclude_idle=0
- mmap=1
- comm=1
--freq=1
-+freq=0
- inherit_stat=0
- enable_on_exec=0
- task=1
-@@ -32,7 +34,7 @@ precise_ip=0
- mmap_data=0
- sample_id_all=1
- exclude_host=0
--exclude_guest=0
-+exclude_guest=1
- exclude_callchain_kernel=0
- exclude_callchain_user=0
- mmap2=1
-diff --git a/tools/perf/tests/attr/test-record-C0 b/tools/perf/tests/attr/test-record-C0
-index 317730b906dd..198e8429a1bf 100644
---- a/tools/perf/tests/attr/test-record-C0
-+++ b/tools/perf/tests/attr/test-record-C0
-@@ -10,9 +10,9 @@ cpu=0
- enable_on_exec=0
- 
- # PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_TIME |
--# PERF_SAMPLE_ID | PERF_SAMPLE_PERIOD
-+# PERF_SAMPLE_PERIOD | PERF_SAMPLE_IDENTIFIER
- # + PERF_SAMPLE_CPU added by -C 0
--sample_type=455
-+sample_type=65927
- 
- # Dummy event handles mmaps, comm and task.
- mmap=0
--- 
-2.30.GIT
-
+>  tools/perf/Documentation/perf-lock.txt        |  8 ++
+>  tools/perf/builtin-lock.c                     | 99 ++++++++++++++++++-
+>  tools/perf/tests/shell/lock_contention.sh     | 45 +++++++++
+>  tools/perf/util/bpf_lock_contention.c         | 51 +++++++++-
+>  .../perf/util/bpf_skel/lock_contention.bpf.c  | 48 ++++++++-
+>  tools/perf/util/bpf_skel/lock_data.h          |  3 +-
+>  tools/perf/util/cgroup.c                      | 63 ++++++++++--
+>  tools/perf/util/cgroup.h                      |  5 +
+>  tools/perf/util/lock-contention.h             | 10 +-
+>  9 files changed, 312 insertions(+), 20 deletions(-)
+>
+>
+> base-commit: d2045f87154bf67a50ebefe28d2ca0e1e3f8eef1
+> --
+> 2.42.0.283.g2d96d420d3-goog
+>
