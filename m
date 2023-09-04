@@ -2,536 +2,385 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBCFC83F33
-	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Sep 2023 14:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC56C83F2C
+	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Sep 2023 14:56:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350381AbjIDOyY (ORCPT
+        id S237281AbjIDO4n (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 4 Sep 2023 10:54:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47536 "EHLO
+        Mon, 4 Sep 2023 10:56:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229867AbjIDOyX (ORCPT
+        with ESMTP id S234695AbjIDO4m (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 4 Sep 2023 10:54:23 -0400
+        Mon, 4 Sep 2023 10:56:42 -0400
 Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6909CC5
-        for <linux-perf-users@vger.kernel.org>; Mon,  4 Sep 2023 07:54:18 -0700 (PDT)
-Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-414ba610766so286791cf.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 04 Sep 2023 07:54:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFCD1A9
+        for <linux-perf-users@vger.kernel.org>; Mon,  4 Sep 2023 07:56:38 -0700 (PDT)
+Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-414b35e686cso386971cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 Sep 2023 07:56:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1693839258; x=1694444058; darn=vger.kernel.org;
+        d=google.com; s=20221208; t=1693839398; x=1694444198; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=o9hfWfWY22r/nAQN4Fk2G0eS7ww0D8iDK5bgmn+N/bU=;
-        b=rWt+rEgC2w4kt+7SdCipjUDeFLpLtyTFeEoYZ7ne6DKykuca2bbnA1KaN+AqbtBfSu
-         gspESAGyDSSMTdlnLV7f7yxv8VZ+DDQLOcOJ7p2RD/R2fERGnlxlSX+Hq7N+rcqg/8S9
-         NdXU6eNkNYK5CRSMMkGWVR6WwuHPbfMxvSob6D4SNj6K7xug5pkWGLK+ahXamQd71Bnb
-         1qh8ndu/Lpx+IB6MH17sZutHezmZ5yxDkC4D1txnXTFR3rWFNXAYFrZqt/IsFW5jEkTL
-         qymkxe88HAVeXryyah3DzBIQxoaNytQKggN70YqlyQVSHZxd3jr0fxV/7Es6NhP0kvky
-         FQ0g==
+        bh=B8dnXbe6GgMXG/QAPAnuqzyd8DFJuI3wGF/AqzBGZE0=;
+        b=s6X7ErhMRXTxoRPswpczGG9BLMbuT0YcrHfTJ3G0tQyLyV6kCdFCaACG3qGqmKF4Jj
+         NFvNDnr569GPJ5Ex+lJb5T2L4VtXcH7OiJUBeKFsE2qD1IBZaf6rnS85R6lEs/YaMMtf
+         wLcpyQ+LEn6R3X6juCzqz4KBDDXS8aITdMsOW9ZdwxIM/Q916SYcztZw6xEQdxTCv2g0
+         bmJUZ5lIbxwOo+OdG3OOSNnPhtWRU4W2OE6xwOOxjSIkNLuv4OETadq+KDGH3XzxyshE
+         Cyl4VuhgoysYa+18+dZhp+uaLbn3LWWYoOimKuFh0IF1STmtg4PqIWv2yiIFtRj3HVN4
+         StRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693839258; x=1694444058;
+        d=1e100.net; s=20221208; t=1693839398; x=1694444198;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=o9hfWfWY22r/nAQN4Fk2G0eS7ww0D8iDK5bgmn+N/bU=;
-        b=hnr9kzoWwxqYjqjFWSzfWxcweVi1wht62YY5mZSIJ4T2R3c4TSpoASpH88r+rhlOly
-         9M3Imqokndxqo6g4hVEYmGAosXgq92bHkHXEhLIFbeGo96i2uCGTtnYirGUo7xNsLgKT
-         fwhLCPFIQqRc1ayjcGm5NRX1cLCWoawb/WXPzd1QuNHSE2kCWgrodUnOrmJ4sjmhdrPa
-         0hUEPgvzSaavXuVdnTmyNQTPLaa8guwUjWht5S7J21IaQr+5W53UJT7ly+Voy6y77hjC
-         RGygnhH4kF3HFrvlHZc6d+nllgOYhzOmDb7ntktJSIAjGyi9W/CyIwuj0KC8JDzH9VU5
-         ZQXA==
-X-Gm-Message-State: AOJu0YxEtWXDxpMkOlDd3HYoLnyOZu5D9vWusFUrOZtwdTYLclbp9u0X
-        X/Pokg0emtxJgRqE4gI2v88fswD+mfLdRyLD5sPydw==
-X-Google-Smtp-Source: AGHT+IHlilG1ZOHhzUqmSGKqiusLBAl2QErUcciTBiukxokv+Jqy6ZzicHxwmn9Fd0mEcrYdriNE6Sv0Ge0GOuaZvb0=
-X-Received: by 2002:a05:622a:1a08:b0:410:a4cb:9045 with SMTP id
- f8-20020a05622a1a0800b00410a4cb9045mr296128qtb.18.1693839257823; Mon, 04 Sep
- 2023 07:54:17 -0700 (PDT)
+        bh=B8dnXbe6GgMXG/QAPAnuqzyd8DFJuI3wGF/AqzBGZE0=;
+        b=De/2wngk0TPX2hvs020EFTIdjH93YUnkr+NBW5HG6rvRz66HSDImaGx70ZkSXbPDA+
+         DKWGohVbaMAJko+WJ3foje/BroBwH1Q1q89eToizLxgPf8/0SCwshBkrBTkvnUPVWsbu
+         ZI4bEUy3829s4buQtcP3GsBs9ZYsXma1ZlFtCHh+E8Oa8E3RRD+kBafkK2Z12aHQ5sAX
+         33m449JOlkiAazY1LrOwTF+siO7ribK04aA4jnT1r+rAr/mwPBoyo+WI2lQODZ/qYabQ
+         aznkxd0/THjoUiGozZhysllfll5VZLdxI+yHSc78Gw8OUMCMTwSLNu0qLdp561PVTioS
+         nHWQ==
+X-Gm-Message-State: AOJu0YzC1n8unCGUrXquaGqPNALjokIgwbMyr01q3aW6eGk9RkLewYuS
+        X6v0IFLkm3H23QqwQZ05xFgMtIKH0kpKzG8ozz0EUA==
+X-Google-Smtp-Source: AGHT+IFpe3Dvh7nmW/wCBzxTCHHMjcosW4dHk2wlflmIKdWhbxuKM+OmTZAODzw5dGa6Jt+tJikYPOCFPIxRkzy2Ck8=
+X-Received: by 2002:a05:622a:1d0:b0:410:8ba3:21c7 with SMTP id
+ t16-20020a05622a01d000b004108ba321c7mr368058qtw.18.1693839397645; Mon, 04 Sep
+ 2023 07:56:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230812084917.169338-1-yangjihong1@huawei.com>
- <CAP-5=fXYBD2LYo9Fx8Uky+RKx+qfPypo7nkqA1YnYMS3iVwryw@mail.gmail.com> <61f78bea-0846-1e7a-b64e-470a3f59285a@huawei.com>
-In-Reply-To: <61f78bea-0846-1e7a-b64e-470a3f59285a@huawei.com>
+References: <20230728001212.457900-1-irogers@google.com> <20230728001212.457900-3-irogers@google.com>
+ <77361428-5970-5031-e204-7aefcd9cbebc@arm.com>
+In-Reply-To: <77361428-5970-5031-e204-7aefcd9cbebc@arm.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 4 Sep 2023 07:54:05 -0700
-Message-ID: <CAP-5=fVTM3xV9feaZv4z53Pv-AM9Ldj7SC8rZcNsMwJcj2ZViQ@mail.gmail.com>
-Subject: Re: [RFC v1 00/16] perf kwork: Implement perf kwork top
-To:     Yang Jihong <yangjihong1@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com,
-        kan.liang@linux.intel.com, sandipan.das@amd.com,
-        ravi.bangoria@amd.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
+Date:   Mon, 4 Sep 2023 07:56:25 -0700
+Message-ID: <CAP-5=fVATGaoeaSEk5jjoGDY=pJkFThU2t2sixfwjouxisor=w@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] perf tools: Revert enable indices setting syntax
+ for BPF map
+To:     James Clark <james.clark@arm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        "coresight@lists.linaro.org" <coresight@lists.linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, Wang Nan <wangnan0@huawei.com>,
+        Wang ShaoBo <bobo.shaobowang@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        He Kuang <hekuang@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Sep 4, 2023 at 4:59=E2=80=AFAM Yang Jihong <yangjihong1@huawei.com>=
- wrote:
+On Mon, Sep 4, 2023 at 4:02=E2=80=AFAM James Clark <james.clark@arm.com> wr=
+ote:
 >
-> Hello,
 >
-> On 2023/9/4 13:13, Ian Rogers wrote:
-> > On Sat, Aug 12, 2023 at 1:52=E2=80=AFAM Yang Jihong <yangjihong1@huawei=
-.com> wrote:
-> >>
-> >> Some common tools for collecting statistics on CPU usage, such as top,
-> >> obtain statistics from timer interrupt sampling, and then periodically
-> >> read statistics from /proc/stat.
-> >>
-> >> This method has some deviations:
-> >> 1. In the tick interrupt, the time between the last tick and the curre=
-nt
-> >>     tick is counted in the current task. However, the task may be runn=
-ing
-> >>     only part of the time.
-> >> 2. For each task, the top tool periodically reads the /proc/{PID}/stat=
-us
-> >>     information. For tasks with a short life cycle, it may be missed.
-> >>
-> >> In conclusion, the top tool cannot accurately collect statistics on th=
-e
-> >> CPU usage and running time of tasks.
-> >>
-> >> The statistical method based on sched_switch tracepoint can accurately
-> >> calculate the CPU usage of all tasks. This method is applicable to
-> >> scenarios where performance comparison data is of high precision.
-> >>
-> >> In addition to parsing the perf.data file, the provides BPF-based CPU =
-usage
-> >> statistics to reduce the load of the perf process.
-> >>
-> >> Example usage:
-> >>
-> >>    # perf kwork top -h
-> >>
-> >>     Usage: perf kwork top [<options>]
-> >>
-> >>        -C, --cpu <cpu>       list of cpus to profile
-> >>        -i, --input <file>    input file name
-> >>        -n, --name <name>     event name to profile
-> >>        -s, --sort <key[,key2...]>
-> >>                              sort by key(s): rate, runtime, tid
-> >>            --time <str>      Time span for analysis (start,stop)
-> >>
-> >>    # ./perf kwork -k sched,irq,softirq record -- ./perf bench sched me=
-ssaging -g 1 -l 10000
-> >>    # Running 'sched/messaging' benchmark:
-> >>    # 20 sender and receiver processes per group
-> >>    # 1 groups =3D=3D 40 processes run
-> >>
-> >>         Total time: 1.854 [sec]
-> >>    [ perf record: Woken up 13 times to write data ]
-> >>    [ perf record: Captured and wrote 27.436 MB perf.data (235986 sampl=
-es) ]
-> >>    #
-> >>    # perf kwork top
-> >>
-> >>    Total  :  22419.068 ms, 12 cpus
-> >>    %Cpu(s):  17.99% id,   0.00% hi,   0.09% si
-> >>    %Cpu0   [||||||||||||||||||||||||        82.56%]
-> >>    %Cpu1   [||||||||||||||||||||||||        81.73%]
-> >>    %Cpu2   [||||||||||||||||||||||||        83.00%]
-> >>    %Cpu3   [||||||||||||||||||||||||        81.01%]
-> >>    %Cpu4   [||||||||||||||||||||||||        81.66%]
-> >>    %Cpu5   [||||||||||||||||||||||||        82.10%]
-> >>    %Cpu6   [||||||||||||||||||||||||        81.65%]
-> >>    %Cpu7   [||||||||||||||||||||||||        82.00%]
-> >>    %Cpu8   [||||||||||||||||||||||||        82.54%]
-> >>    %Cpu9   [||||||||||||||||||||||||        81.02%]
-> >>    %Cpu10  [||||||||||||||||||||||||        81.78%]
-> >>    %Cpu11  [||||||||||||||||||||||||        81.87%]
-> >>
-> >>          PID    %CPU           RUNTIME  COMMMAND
-> >>      ----------------------------------------------------
-> >>      2913025   27.62        516.976 ms  sched-messaging
-> >>      2913017   27.56        516.273 ms  sched-messaging
-> >>      2913018   27.56        516.152 ms  sched-messaging
-> >>      2913008   27.54        515.447 ms  sched-messaging
-> >>      2913010   27.50        514.890 ms  sched-messaging
-> >>      2913007   27.48        514.411 ms  sched-messaging
-> >>      2913015   27.36        512.563 ms  sched-messaging
-> >>      2913026   27.35        512.198 ms  sched-messaging
-> >>      2913011   27.32        511.632 ms  sched-messaging
-> >>      2913014   27.32        511.381 ms  sched-messaging
-> >>      2913012   27.30        511.138 ms  sched-messaging
-> >>      2913013   27.30        511.109 ms  sched-messaging
-> >>      2913009   27.30        510.997 ms  sched-messaging
-> >>      2913019   27.25        510.488 ms  sched-messaging
-> >>      2913021   27.23        509.661 ms  sched-messaging
-> >>      2913023   27.21        509.400 ms  sched-messaging
-> >>      2913020   27.20        509.677 ms  sched-messaging
-> >>      2913022   27.19        509.061 ms  sched-messaging
-> >>      2913016   27.18        509.231 ms  sched-messaging
-> >>      2913024   27.18        509.108 ms  sched-messaging
-> >>      2912999   21.79        407.929 ms  sched-messaging
-> >>      2913000   21.78        408.045 ms  sched-messaging
-> >>      2912998   21.75        407.579 ms  sched-messaging
-> >>      2912993   21.69        406.166 ms  sched-messaging
-> >>      2912991   21.59        404.378 ms  sched-messaging
-> >>      2912992   21.57        403.845 ms  sched-messaging
-> >>      2913005   21.56        403.715 ms  sched-messaging
-> >>      2913001   21.55        403.803 ms  sched-messaging
-> >>      2912990   21.54        403.601 ms  sched-messaging
-> >>      2912994   21.52        403.087 ms  sched-messaging
-> >>      2912995   21.49        402.421 ms  sched-messaging
-> >>      2912996   21.48        402.666 ms  sched-messaging
-> >>      2912989   21.46        402.303 ms  sched-messaging
-> >>      2913003   21.46        402.034 ms  sched-messaging
-> >>      2912988   21.44        401.820 ms  sched-messaging
-> >>      2913004   21.37        400.242 ms  sched-messaging
-> >>      2912987   21.28        398.512 ms  sched-messaging
-> >>      2913002   21.27        398.759 ms  sched-messaging
-> >>      2912997   21.27        398.518 ms  sched-messaging
-> >>      2913006   21.23        397.888 ms  sched-messaging
-> >>            0   18.89        353.061 ms  swapper/3
-> >>            0   18.89        353.026 ms  swapper/9
-> >>            0   18.26        341.190 ms  swapper/6
-> >>            0   18.25        341.048 ms  swapper/4
-> >>            0   18.13        338.844 ms  swapper/10
-> >>            0   18.12        338.686 ms  swapper/1
-> >>            0   18.05        337.333 ms  swapper/11
-> >>            0   17.92        334.903 ms  swapper/7
-> >>            0   17.80        332.691 ms  swapper/5
-> >>            0   17.38        324.762 ms  swapper/8
-> >>            0   17.29        323.102 ms  swapper/0
-> >>            0   16.89        315.630 ms  swapper/2
-> >>      2912984    2.10         39.452 ms  perf
-> >>      2912985    0.73         14.004 ms  sched-messaging
-> >>       660381    0.14          3.527 ms  containerd
-> >>      3006112    0.07          1.402 ms  redis-server
-> >>      2904655    0.05          1.071 ms  kworker/0:0
-> >>       659822    0.03          1.729 ms  containerd
-> >>       659824    0.03          1.346 ms  containerd
-> >>         1053    0.01          0.353 ms  zabbix_agentd
-> >>      2895571    0.01          0.349 ms  kworker/8:1
-> >>           10    0.00          0.535 ms  rcu_sched
-> >>      2912192    0.00          0.272 ms  kworker/u24:2
-> >>      2903540    0.00          0.182 ms  sshd
-> >>          801    0.00          0.120 ms  jbd2/sda4-8
-> >>      2929605    0.00          0.108 ms  grpc_global_tim
-> >>      2912986    0.00          0.075 ms  perf
-> >>      2897765    0.00          0.073 ms  kworker/7:1
-> >>      2912817    0.00          0.070 ms  kworker/2:1
-> >>       391756    0.00          0.067 ms  grpc_global_tim
-> >>      2901459    0.00          0.056 ms  kworker/3:0
-> >>      2908185    0.00          0.052 ms  kworker/10:1
-> >>      2901521    0.00          0.050 ms  kworker/6:1
-> >>      2902444    0.00          0.046 ms  kworker/5:1
-> >>      2898513    0.00          0.041 ms  kworker/1:1
-> >>      2912280    0.00          0.039 ms  kworker/11:3
-> >>         1057    0.00          0.037 ms  zabbix_agentd
-> >>      2908010    0.00          0.037 ms  kworker/9:3
-> >>      2912951    0.00          0.036 ms  kworker/4:3
-> >>          793    0.00          0.027 ms  multipathd
-> >>           42    0.00          0.023 ms  ksoftirqd/5
-> >>            9    0.00          0.022 ms  ksoftirqd/0
-> >>           24    0.00          0.019 ms  ksoftirqd/2
-> >>           59    0.00          0.019 ms  migration/8
-> >>      2929607    0.00          0.018 ms  wecode-db
-> >>           29    0.00          0.012 ms  migration/3
-> >>           11    0.00          0.012 ms  migration/0
-> >>           65    0.00          0.012 ms  migration/9
-> >>           17    0.00          0.011 ms  migration/1
-> >>           71    0.00          0.011 ms  migration/10
-> >>           53    0.00          0.011 ms  migration/7
-> >>           23    0.00          0.011 ms  migration/2
-> >>           47    0.00          0.011 ms  migration/6
-> >>          789    0.00          0.010 ms  multipathd
-> >>           35    0.00          0.010 ms  migration/4
-> >>          480    0.00          0.009 ms  kworker/4:1H
-> >>           41    0.00          0.008 ms  migration/5
-> >>           54    0.00          0.006 ms  ksoftirqd/7
-> >>           36    0.00          0.005 ms  ksoftirqd/4
-> >>           72    0.00          0.005 ms  ksoftirqd/10
-> >>           66    0.00          0.005 ms  ksoftirqd/9
-> >>           30    0.00          0.004 ms  ksoftirqd/3
-> >>      2898362    0.00          0.003 ms  kworker/u24:0
-> >>
-> >>    # perf kwork top -C 2,4,5
-> >>
-> >>    Total  :   5604.885 ms, 3 cpus
-> >>    %Cpu(s):  17.65% id,   0.00% hi,   0.09% si
-> >>    %Cpu2   [||||||||||||||||||||||||        83.00%]
-> >>    %Cpu4   [||||||||||||||||||||||||        81.66%]
-> >>    %Cpu5   [||||||||||||||||||||||||        82.10%]
-> >>
-> >>          PID    %CPU           RUNTIME  COMMMAND
-> >>      ----------------------------------------------------
-> >>            0   18.25        341.048 ms  swapper/4
-> >>            0   17.80        332.691 ms  swapper/5
-> >>            0   16.89        315.630 ms  swapper/2
-> >>      2913012    8.99        168.201 ms  sched-messaging
-> >>      2913021    8.74        163.456 ms  sched-messaging
-> >>      2913026    8.34        156.120 ms  sched-messaging
-> >>      2913010    8.14        152.372 ms  sched-messaging
-> >>      2913007    7.74        144.754 ms  sched-messaging
-> >>      2913016    7.42        138.977 ms  sched-messaging
-> >>      2913022    7.28        136.279 ms  sched-messaging
-> >>      2913013    7.00        130.894 ms  sched-messaging
-> >>      2913019    6.96        130.455 ms  sched-messaging
-> >>      2913023    6.91        129.364 ms  sched-messaging
-> >>      2913008    6.47        121.331 ms  sched-messaging
-> >>      2913018    6.47        121.124 ms  sched-messaging
-> >>      2912994    6.42        120.213 ms  sched-messaging
-> >>      2913025    6.42        120.140 ms  sched-messaging
-> >>      2913020    6.37        119.386 ms  sched-messaging
-> >>      2913011    6.35        118.921 ms  sched-messaging
-> >>      2913014    6.24        116.779 ms  sched-messaging
-> >>      2913009    6.01        112.661 ms  sched-messaging
-> >>      2913005    5.96        111.587 ms  sched-messaging
-> >>      2913003    5.94        111.142 ms  sched-messaging
-> >>      2913024    5.87        109.876 ms  sched-messaging
-> >>      2912988    5.84        109.396 ms  sched-messaging
-> >>      2912987    5.80        108.550 ms  sched-messaging
-> >>      2912990    5.51        103.322 ms  sched-messaging
-> >>      2912993    5.45        102.045 ms  sched-messaging
-> >>      2912996    5.42        101.622 ms  sched-messaging
-> >>      2913006    5.42        101.592 ms  sched-messaging
-> >>      2913000    5.41        101.511 ms  sched-messaging
-> >>      2913002    5.41        101.420 ms  sched-messaging
-> >>      2912997    5.40        101.315 ms  sched-messaging
-> >>      2913004    5.33         99.872 ms  sched-messaging
-> >>      2913015    5.29         99.252 ms  sched-messaging
-> >>      2913017    5.22         97.822 ms  sched-messaging
-> >>      2912991    5.11         95.773 ms  sched-messaging
-> >>      2912992    5.11         95.579 ms  sched-messaging
-> >>      2913001    5.07         95.033 ms  sched-messaging
-> >>      2912989    4.93         92.425 ms  sched-messaging
-> >>      2912995    4.85         90.892 ms  sched-messaging
-> >>      2912998    4.78         89.617 ms  sched-messaging
-> >>      2912999    4.56         85.576 ms  sched-messaging
-> >>      3006112    0.07          1.402 ms  redis-server
-> >>       660381    0.02          0.566 ms  containerd
-> >>      2912984    0.02          0.452 ms  perf
-> >>       659824    0.01          0.369 ms  containerd
-> >>       659822    0.00          0.316 ms  containerd
-> >>           10    0.00          0.176 ms  rcu_sched
-> >>          801    0.00          0.120 ms  jbd2/sda4-8
-> >>      2912985    0.00          0.107 ms  sched-messaging
-> >>      2912986    0.00          0.075 ms  perf
-> >>      2912817    0.00          0.070 ms  kworker/2:1
-> >>      2912192    0.00          0.056 ms  kworker/u24:2
-> >>      2929605    0.00          0.046 ms  grpc_global_tim
-> >>      2902444    0.00          0.046 ms  kworker/5:1
-> >>      2912951    0.00          0.036 ms  kworker/4:3
-> >>           42    0.00          0.023 ms  ksoftirqd/5
-> >>           24    0.00          0.019 ms  ksoftirqd/2
-> >>           23    0.00          0.011 ms  migration/2
-> >>           35    0.00          0.010 ms  migration/4
-> >>          480    0.00          0.009 ms  kworker/4:1H
-> >>           41    0.00          0.008 ms  migration/5
-> >>           36    0.00          0.005 ms  ksoftirqd/4
-> >>
-> >>    # perf kwork top -n perf
-> >>
-> >>    Total  :  22419.068 ms, 12 cpus
-> >>    %Cpu(s):  17.99% id,   0.00% hi,   0.09% si
-> >>    %Cpu0   [                                 0.00%]
-> >>    %Cpu1   [                                 0.00%]
-> >>    %Cpu2   [                                 0.02%]
-> >>    %Cpu3   [                                 0.00%]
-> >>    %Cpu4   [                                 0.00%]
-> >>    %Cpu5   [                                 0.00%]
-> >>    %Cpu6   [                                 0.00%]
-> >>    %Cpu7   [                                 0.00%]
-> >>    %Cpu8   [                                 0.03%]
-> >>    %Cpu9   [                                 0.09%]
-> >>    %Cpu10  [                                 0.00%]
-> >>    %Cpu11  [                                 1.96%]
-> >>
-> >>          PID    %CPU           RUNTIME  COMMMAND
-> >>      ----------------------------------------------------
-> >>      2912984    2.10         39.452 ms  perf
-> >>      2912986    0.00          0.075 ms  perf
-> >>
-> >>    # perf kwork top -s tid -n sched-messaging
-> >>
-> >>    Total  :  22419.068 ms, 12 cpus
-> >>    %Cpu(s):  17.99% id,   0.00% hi,   0.09% si
-> >>    %Cpu0   [||||||||||||||||||||||||        81.80%]
-> >>    %Cpu1   [||||||||||||||||||||||||        81.65%]
-> >>    %Cpu2   [||||||||||||||||||||||||        82.88%]
-> >>    %Cpu3   [||||||||||||||||||||||||        80.96%]
-> >>    %Cpu4   [||||||||||||||||||||||||        81.64%]
-> >>    %Cpu5   [||||||||||||||||||||||||        82.04%]
-> >>    %Cpu6   [||||||||||||||||||||||||        81.63%]
-> >>    %Cpu7   [||||||||||||||||||||||||        81.97%]
-> >>    %Cpu8   [||||||||||||||||||||||||        82.43%]
-> >>    %Cpu9   [||||||||||||||||||||||||        80.86%]
-> >>    %Cpu10  [||||||||||||||||||||||||        81.72%]
-> >>    %Cpu11  [|||||||||||||||||||||||         79.89%]
-> >>
-> >>          PID    %CPU           RUNTIME  COMMMAND
-> >>      ----------------------------------------------------
-> >>      2912985    0.04          1.111 ms  sched-messaging
-> >>      2912987   21.28        398.512 ms  sched-messaging
-> >>      2912988   21.44        401.820 ms  sched-messaging
-> >>      2912989   21.46        402.303 ms  sched-messaging
-> >>      2912990   21.54        403.601 ms  sched-messaging
-> >>      2912991   21.59        404.378 ms  sched-messaging
-> >>      2912992   21.57        403.845 ms  sched-messaging
-> >>      2912993   21.69        406.166 ms  sched-messaging
-> >>      2912994   21.52        403.087 ms  sched-messaging
-> >>      2912995   21.49        402.421 ms  sched-messaging
-> >>      2912996   21.48        402.666 ms  sched-messaging
-> >>      2912997   21.27        398.518 ms  sched-messaging
-> >>      2912998   21.75        407.579 ms  sched-messaging
-> >>      2912999   21.79        407.929 ms  sched-messaging
-> >>      2913000   21.78        408.045 ms  sched-messaging
-> >>      2913001   21.55        403.803 ms  sched-messaging
-> >>      2913002   21.27        398.759 ms  sched-messaging
-> >>      2913003   21.46        402.034 ms  sched-messaging
-> >>      2913004   21.37        400.242 ms  sched-messaging
-> >>      2913005   21.56        403.715 ms  sched-messaging
-> >>      2913006   21.23        397.888 ms  sched-messaging
-> >>      2913007   27.48        514.411 ms  sched-messaging
-> >>      2913008   27.54        515.447 ms  sched-messaging
-> >>      2913009   27.30        510.997 ms  sched-messaging
-> >>      2913010   27.50        514.890 ms  sched-messaging
-> >>      2913011   27.32        511.632 ms  sched-messaging
-> >>      2913012   27.30        511.138 ms  sched-messaging
-> >>      2913013   27.30        511.109 ms  sched-messaging
-> >>      2913014   27.32        511.381 ms  sched-messaging
-> >>      2913015   27.36        512.563 ms  sched-messaging
-> >>      2913016   27.18        509.231 ms  sched-messaging
-> >>      2913017   27.56        516.273 ms  sched-messaging
-> >>      2913018   27.56        516.152 ms  sched-messaging
-> >>      2913019   27.25        510.488 ms  sched-messaging
-> >>      2913020   27.20        509.677 ms  sched-messaging
-> >>      2913021   27.23        509.661 ms  sched-messaging
-> >>      2913022   27.19        509.061 ms  sched-messaging
-> >>      2913023   27.21        509.400 ms  sched-messaging
-> >>      2913024   27.18        509.108 ms  sched-messaging
-> >>      2913025   27.62        516.976 ms  sched-messaging
-> >>      2913026   27.35        512.198 ms  sched-messaging
-> >>
-> >>    # perf kwork top -b
-> >>    Starting trace, Hit <Ctrl+C> to stop and report
-> >>    ^C
-> >>    Total  :  89209.004 ms, 4 cpus
-> >>    %Cpu(s):  13.47% id,   0.01% hi,   0.24% si
-> >>    %Cpu0   [|||||||||||||||||||||||||       86.08%]
-> >>    %Cpu1   [||||||||||||||||||||||||||      87.08%]
-> >>    %Cpu2   [|||||||||||||||||||||||||       86.10%]
-> >>    %Cpu3   [|||||||||||||||||||||||||       85.86%]
-> >>
-> >>          PID     SPID    %CPU           RUNTIME  COMMMAND
-> >>      -------------------------------------------------------------
-> >>            0        0   13.86       3092.482 ms  [swapper/3]
-> >>            0        0   13.71       3057.756 ms  [swapper/0]
-> >>            0        0   13.65       3044.987 ms  [swapper/2]
-> >>            0        0   12.63       2818.079 ms  [swapper/1]
-> >>          320      320    1.32        295.427 ms  bash
-> >>          414      320    1.09        247.658 ms  sched-messaging
-> >>          678      320    1.09        246.881 ms  sched-messaging
-> >>          354      320    1.09        246.683 ms  sched-messaging
-> >>          409      320    1.08        246.839 ms  sched-messaging
-> >>          554      320    1.07        243.045 ms  sched-messaging
-> >>          405      320    1.04        237.340 ms  sched-messaging
-> >>          525      320    1.04        235.718 ms  sched-messaging
-> >>          486      320    1.03        235.369 ms  sched-messaging
-> >>          714      320    1.03        235.142 ms  sched-messaging
-> >>          435      320    1.03        233.290 ms  sched-messaging
-> >>          408      320    1.03        231.687 ms  sched-messaging
-> >>          716      320    1.02        233.513 ms  sched-messaging
-> >>          453      320    1.02        233.181 ms  sched-messaging
-> >>          522      320    1.02        230.101 ms  sched-messaging
-> >>          651      320    1.02        229.554 ms  sched-messaging
-> >>          418      320    1.01        231.359 ms  sched-messaging
-> >>          644      320    1.01        229.848 ms  sched-messaging
-> >>          535      320    1.01        229.655 ms  sched-messaging
-> >>          536      320    1.01        229.147 ms  sched-messaging
-> >>          410      320    1.01        227.700 ms  sched-messaging
-> >>          689      320    1.00        227.988 ms  sched-messaging
-> >>          412      320    1.00        227.052 ms  sched-messaging
-> >>          489      320    1.00        226.374 ms  sched-messaging
-> >>          521      320    1.00        225.499 ms  sched-messaging
-> >>          530      320    1.00        225.262 ms  sched-messaging
-> >>          681      320    1.00        225.187 ms  sched-messaging
-> >>          415      320    0.99        225.714 ms  sched-messaging
-> >>          643      320    0.99        225.090 ms  sched-messaging
-> >>          325      320    0.99        223.385 ms  sched-messaging
-> >>          498      320    0.99        222.936 ms  sched-messaging
-> >>          413      320    0.98        225.213 ms  sched-messaging
-> >>          645      320    0.98        223.211 ms  sched-messaging
-> >>          544      320    0.98        222.714 ms  sched-messaging
-> >>          441      320    0.98        222.590 ms  sched-messaging
-> >>          697      320    0.98        222.426 ms  sched-messaging
-> >>          523      320    0.98        221.841 ms  sched-messaging
-> >>          402      320    0.98        221.776 ms  sched-messaging
-> >>    <SNIP>
-> >>
-> >> Yang Jihong (16):
-> >>    perf kwork: Fix incorrect and missing free atom in work_push_atom()
-> >>    perf kwork: Add the supported subcommands to the document
-> >>    perf kwork: Set ordered_events for perf_tool
-> >>    perf kwork: Add `kwork` and `src_type` to work_init() for struct
-> >>      kwork_class
-> >>    perf kwork: Overwrite original atom in the list when a new atom is
-> >>      pushed.
-> >>    perf kwork: Set default events list if not specified in
-> >>      setup_event_list()
-> >>    perf kwork: Add sched record support
-> >>    perf kwork: Add `root` parameter to work_sort()
-> >>    perf kwork: Implement perf kwork top
-> >>    perf evsel: Add evsel__intval_common() helper
-> >>    perf kwork top: Add statistics on hardirq event support
-> >>    perf kwork top: Add statistics on softirq event support
-> >>    perf kwork top: Add -C/--cpu -i/--input -n/--name -s/--sort --time
-> >>      options
-> >>    perf kwork top: Implements BPF-based cpu usage statistics
-> >>    perf kwork top: Add BPF-based statistics on hardirq event support
-> >>    perf kwork top: Add BPF-based statistics on softirq event support
+>
+> On 28/07/2023 01:12, Ian Rogers wrote:
+> > This reverts commit e571e029bdbf ("perf tools: Enable indices setting
+> > syntax for BPF map").
 > >
-> > Besides documentation nits, series:
-> > Reviewed-by: Ian Rogers <irogers@google.com>
->
-> Thanks for reivew.
->
+> > The reverted commit added a notion of arrays that could be set as
+> > event terms for BPF events. The parsing hasn't worked over multiple
+> > Linux releases. Given the broken nature of the parsing it appears the
+> > code isn't in use, nor could I find a way for it to be used to add a
+> > test.
 > >
-> > Whilst looking at the series, could we clean up
-> > tools/perf/util/kwork.h ? Generally none of the structs are commented.
->
-> Okay, I'll put up a separate patch and add comments about it.
-> > Some like:
-> >  > struct kwork_atom {
-> >         struct list_head list;
-> >         u64 time;
-> >         struct kwork_atom *prev;
+> > The original commit contains a test in the commit message,
+> > however, running it yields:
+> > ```
+> > $ perf record -e './test_bpf_map_3.c/map:channel.value[0,1,2,3...5]=3D1=
+01/' usleep 2
+> > event syntax error: '..pf_map_3.c/map:channel.value[0,1,2,3...5]=3D101/=
+'
+> >                                   \___ parser error
+> > Run 'perf list' for a list of valid events
 > >
-> >         void *page_addr;
-> >         unsigned long bit_inpage;
-> > };
+> >  Usage: perf record [<options>] [<command>]
+> >     or: perf record [<options>] -- <command> [<options>]
 > >
-> > Why is it an atom? Why is there a prev when the kwork_atom is also on
-> > a list (which has a prev) ?
+> >     -e, --event <event>   event selector. use 'perf list' to list avail=
+able events
+> > ```
 > >
-> An atom indicates a minimum granularity event.
-> For example, an "irq_hander_entry" event of an IRQ whose irqnum=3D=3D10 i=
-s
-> an atom.
+> > Given the code can't be used this commit reverts and removes it.
+> >
 >
-> The prev member is used to store the sequence of events.
-> For example, the sequence of events is as follows:
-> raise -> entry -> exit
+> Hi Ian,
 >
-> Then:
-> entry_atom->prev =3D raise_atom
+> Unfortunately this revert breaks Coresight sink argument parsing.
 >
-> This relationship needs to be saved because need to calculate latency
-> time and running time at the same time in the "perf kwork timehist"
+> Before:
+>
+>   $ perf record -e cs_etm/@tmc_etr0/ -- true
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 4.008 MB perf.data ]
+>
+> After:
+>
+>   $ perf record -e cs_etm/@tmc_etr0/ -- true
+>   event syntax error: 'cs_etm/@tmc_etr0/'
+>                            \___ parser error
+>
+> I can't really see how it's related to the array syntax that the commit
+> messages mention, but it could either be that the revert wasn't applied
+> cleanly or just some unintended side effect.
+>
+> We should probably add a cross platform parsing test for Coresight
+> arguments, but I don't know whether we should just blindly revert the
+> revert for now, or work on a new change that explicitly fixes the
+> Coresight case.
 
-Thanks Yang, this is good context. Could it be added to the header
-file? I'm also wondering at some point we should start generating
-kerneldoc from comments in the code. I don't know if you want to look
-into kerneldoc style comments.
+Agreed, I'll take a look. Any chance you could post the full error
+message? I suspect there's a first error hiding in there too.
 
 Thanks,
 Ian
 
-> Thanks,
-> Yang
+> Thanks
+> James
+>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/parse-events.c |   8 +--
+> >  tools/perf/util/parse-events.l |  11 ---
+> >  tools/perf/util/parse-events.y | 122 ---------------------------------
+> >  3 files changed, 1 insertion(+), 140 deletions(-)
+> >
+> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-eve=
+nts.c
+> > index 02647313c918..0e2004511cf5 100644
+> > --- a/tools/perf/util/parse-events.c
+> > +++ b/tools/perf/util/parse-events.c
+> > @@ -800,13 +800,7 @@ parse_events_config_bpf(struct parse_events_state =
+*parse_state,
+> >
+> >                       parse_events_error__handle(parse_state->error, id=
+x,
+> >                                               strdup(errbuf),
+> > -                                             strdup(
+> > -"Hint:\tValid config terms:\n"
+> > -"     \tmap:[<arraymap>].value<indices>=3D[value]\n"
+> > -"     \tmap:[<eventmap>].event<indices>=3D[event]\n"
+> > -"\n"
+> > -"     \twhere <indices> is something like [0,3...5] or [all]\n"
+> > -"     \t(add -v to see detail)"));
+> > +                                             NULL);
+> >                       return err;
+> >               }
+> >       }
+> > diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-eve=
+nts.l
+> > index 99335ec586ae..d7d084cc4140 100644
+> > --- a/tools/perf/util/parse-events.l
+> > +++ b/tools/perf/util/parse-events.l
+> > @@ -175,7 +175,6 @@ do {                                               =
+       \
+> >  %x mem
+> >  %s config
+> >  %x event
+> > -%x array
+> >
+> >  group                [^,{}/]*[{][^}]*[}][^,{}/]*
+> >  event_pmu    [^,{}/]+[/][^/]*[/][^,{}/]*
+> > @@ -251,14 +250,6 @@ non_digit        [^0-9]
+> >               }
+> >  }
+> >
+> > -<array>{
+> > -"]"                  { BEGIN(config); return ']'; }
+> > -{num_dec}            { return value(yyscanner, 10); }
+> > -{num_hex}            { return value(yyscanner, 16); }
+> > -,                    { return ','; }
+> > -"\.\.\."             { return PE_ARRAY_RANGE; }
+> > -}
+> > -
+> >  <config>{
+> >       /*
+> >        * Please update config_term_names when new static term is added.
+> > @@ -302,8 +293,6 @@ r0x{num_raw_hex}  { return str(yyscanner, PE_RAW); =
+}
+> >  {lc_type}-{lc_op_result}     { return lc_str(yyscanner, _parse_state);=
+ }
+> >  {lc_type}-{lc_op_result}-{lc_op_result}      { return lc_str(yyscanner=
+, _parse_state); }
+> >  {name_minus}         { return str(yyscanner, PE_NAME); }
+> > -\[all\]                      { return PE_ARRAY_ALL; }
+> > -"["                  { BEGIN(array); return '['; }
+> >  @{drv_cfg_term}              { return drv_str(yyscanner, PE_DRV_CFG_TE=
+RM); }
+> >  }
+> >
+> > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-eve=
+nts.y
+> > index 454577f7aff6..5a90e7874c59 100644
+> > --- a/tools/perf/util/parse-events.y
+> > +++ b/tools/perf/util/parse-events.y
+> > @@ -64,7 +64,6 @@ static void free_list_evsel(struct list_head* list_ev=
+sel)
+> >  %token PE_LEGACY_CACHE
+> >  %token PE_PREFIX_MEM
+> >  %token PE_ERROR
+> > -%token PE_ARRAY_ALL PE_ARRAY_RANGE
+> >  %token PE_DRV_CFG_TERM
+> >  %token PE_TERM_HW
+> >  %type <num> PE_VALUE
+> > @@ -108,11 +107,6 @@ static void free_list_evsel(struct list_head* list=
+_evsel)
+> >  %type <list_evsel> groups
+> >  %destructor { free_list_evsel ($$); } <list_evsel>
+> >  %type <tracepoint_name> tracepoint_name
+> > -%destructor { free ($$.sys); free ($$.event); } <tracepoint_name>
+> > -%type <array> array
+> > -%type <array> array_term
+> > -%type <array> array_terms
+> > -%destructor { free ($$.ranges); } <array>
+> >  %type <hardware_term> PE_TERM_HW
+> >  %destructor { free ($$.str); } <hardware_term>
+> >
+> > @@ -127,7 +121,6 @@ static void free_list_evsel(struct list_head* list_=
+evsel)
+> >               char *sys;
+> >               char *event;
+> >       } tracepoint_name;
+> > -     struct parse_events_array array;
+> >       struct hardware_term {
+> >               char *str;
+> >               u64 num;
+> > @@ -878,121 +871,6 @@ PE_TERM
+> >
+> >       $$ =3D term;
+> >  }
+> > -|
+> > -name_or_raw array '=3D' name_or_legacy
+> > -{
+> > -     struct parse_events_term *term;
+> > -     int err =3D parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE=
+_USER, $1, $4, &@1, &@4);
+> > -
+> > -     if (err) {
+> > -             free($1);
+> > -             free($4);
+> > -             free($2.ranges);
+> > -             PE_ABORT(err);
+> > -     }
+> > -     term->array =3D $2;
+> > -     $$ =3D term;
+> > -}
+> > -|
+> > -name_or_raw array '=3D' PE_VALUE
+> > -{
+> > -     struct parse_events_term *term;
+> > -     int err =3D parse_events_term__num(&term, PARSE_EVENTS__TERM_TYPE=
+_USER, $1, $4, false, &@1, &@4);
+> > -
+> > -     if (err) {
+> > -             free($1);
+> > -             free($2.ranges);
+> > -             PE_ABORT(err);
+> > -     }
+> > -     term->array =3D $2;
+> > -     $$ =3D term;
+> > -}
+> > -|
+> > -PE_DRV_CFG_TERM
+> > -{
+> > -     struct parse_events_term *term;
+> > -     char *config =3D strdup($1);
+> > -     int err;
+> > -
+> > -     if (!config)
+> > -             YYNOMEM;
+> > -     err =3D parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE_DRV=
+_CFG, config, $1, &@1, NULL);
+> > -     if (err) {
+> > -             free($1);
+> > -             free(config);
+> > -             PE_ABORT(err);
+> > -     }
+> > -     $$ =3D term;
+> > -}
+> > -
+> > -array:
+> > -'[' array_terms ']'
+> > -{
+> > -     $$ =3D $2;
+> > -}
+> > -|
+> > -PE_ARRAY_ALL
+> > -{
+> > -     $$.nr_ranges =3D 0;
+> > -     $$.ranges =3D NULL;
+> > -}
+> > -
+> > -array_terms:
+> > -array_terms ',' array_term
+> > -{
+> > -     struct parse_events_array new_array;
+> > -
+> > -     new_array.nr_ranges =3D $1.nr_ranges + $3.nr_ranges;
+> > -     new_array.ranges =3D realloc($1.ranges,
+> > -                             sizeof(new_array.ranges[0]) *
+> > -                             new_array.nr_ranges);
+> > -     if (!new_array.ranges)
+> > -             YYNOMEM;
+> > -     memcpy(&new_array.ranges[$1.nr_ranges], $3.ranges,
+> > -            $3.nr_ranges * sizeof(new_array.ranges[0]));
+> > -     free($3.ranges);
+> > -     $$ =3D new_array;
+> > -}
+> > -|
+> > -array_term
+> > -
+> > -array_term:
+> > -PE_VALUE
+> > -{
+> > -     struct parse_events_array array;
+> > -
+> > -     array.nr_ranges =3D 1;
+> > -     array.ranges =3D malloc(sizeof(array.ranges[0]));
+> > -     if (!array.ranges)
+> > -             YYNOMEM;
+> > -     array.ranges[0].start =3D $1;
+> > -     array.ranges[0].length =3D 1;
+> > -     $$ =3D array;
+> > -}
+> > -|
+> > -PE_VALUE PE_ARRAY_RANGE PE_VALUE
+> > -{
+> > -     struct parse_events_array array;
+> > -
+> > -     if ($3 < $1) {
+> > -             struct parse_events_state *parse_state =3D _parse_state;
+> > -             struct parse_events_error *error =3D parse_state->error;
+> > -             char *err_str;
+> > -
+> > -             if (asprintf(&err_str, "Expected '%ld' to be less-than '%=
+ld'", $3, $1) < 0)
+> > -                     err_str =3D NULL;
+> > -
+> > -             parse_events_error__handle(error, @1.first_column, err_st=
+r, NULL);
+> > -             YYABORT;
+> > -     }
+> > -     array.nr_ranges =3D 1;
+> > -     array.ranges =3D malloc(sizeof(array.ranges[0]));
+> > -     if (!array.ranges)
+> > -             YYNOMEM;
+> > -     array.ranges[0].start =3D $1;
+> > -     array.ranges[0].length =3D $3 - $1 + 1;
+> > -     $$ =3D array;
+> > -}
+> >
+> >  sep_dc: ':' |
+> >
