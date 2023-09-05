@@ -2,119 +2,120 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 253EBCA0FFA
-	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Sep 2023 16:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B447CA0FF3
+	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Sep 2023 16:02:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232208AbjIEQCK (ORCPT
+        id S235425AbjIEQCN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 5 Sep 2023 12:02:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58282 "EHLO
+        Tue, 5 Sep 2023 12:02:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354107AbjIEJjo (ORCPT
+        with ESMTP id S1354560AbjIEMkP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 5 Sep 2023 05:39:44 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 566C21A7;
-        Tue,  5 Sep 2023 02:39:40 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0C5D011FB;
-        Tue,  5 Sep 2023 02:40:18 -0700 (PDT)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7F9D93F793;
-        Tue,  5 Sep 2023 02:39:38 -0700 (PDT)
-Message-ID: <c4833297-da67-3337-b3d1-b628b1282a8a@arm.com>
-Date:   Tue, 5 Sep 2023 10:39:38 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v1 1/6] perf parse-events: Fixes relating to no_value
- terms
-Content-Language: en-US
+        Tue, 5 Sep 2023 08:40:15 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9C6F18D;
+        Tue,  5 Sep 2023 05:40:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 59731B811EA;
+        Tue,  5 Sep 2023 12:40:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCC99C433C7;
+        Tue,  5 Sep 2023 12:40:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693917606;
+        bh=ZUN15+7Vyk5IoUudEUqouA7xZLURmNHDNxbTpmZ1Jj8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FK80e1jI90yRK9VG2Wng+aZqrLbvt80jBUqkksvYVN/xcWCXrZTuf1mbaeXQdfH4P
+         5bE/D3E9J0ow5PYvTy+ABeCaeMlMsYwVtPcP5gC3rgfBDzkpCs213oiK6e8yYDdHfC
+         YOuhhNSd9yvEvsfjRvhxYqIs7khKR1OQhsAvXv6Mis9nVvO46R2KToA6IVqvCRGrpG
+         j9qSGwo0lcgw5NheBEFVNJuuMPkzskFP7VM3lWmlgVB36TqYtCrpbzN2XaoucNBoLd
+         MrWyQpu5XxePXEQMqVMbnf0BhRwru/VylosH8aGNUw67118fYpK03RKmh80SiXezDy
+         HnEW1YLfrJvuw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id DBA3840722; Tue,  5 Sep 2023 09:40:02 -0300 (-03)
+Date:   Tue, 5 Sep 2023 09:40:02 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-References: <20230901233949.2930562-1-irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Rob Herring <robh@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20230901233949.2930562-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        James Clark <james.clark@arm.com>
+Subject: Re: [PATCH v1] perf parse-events: Fix driver config term
+Message-ID: <ZPchophIpGM+gT4f@kernel.org>
+References: <20230905033805.3094293-1-irogers@google.com>
+ <CAP-5=fVWNnV792eVDiiMMF0gs88Ao7o1=VLeGBZOWm6MjO3kng@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVWNnV792eVDiiMMF0gs88Ao7o1=VLeGBZOWm6MjO3kng@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 02/09/2023 00:39, Ian Rogers wrote:
-> A term may have no value in which case it is assumed to have a value
-> of 1. It doesn't just apply to alias/event terms so change the
-> parse_events_term__to_strbuf assert.
+Em Mon, Sep 04, 2023 at 08:51:37PM -0700, Ian Rogers escreveu:
+> On Mon, Sep 4, 2023 at 8:38 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > Inadvertently deleted in commit 30f4ade33d64 ("perf tools: Revert
+> > enable indices setting syntax for BPF map").
+> >
 > 
-> Commit 99e7138eb789 ("perf tools: Fail on using multiple bits long
-> terms without value") made it so that no_value terms could only be for
-> a single bit. Prior to commit 64199ae4b8a3 ("perf parse-events: Fix
-> propagation of term's no_value when cloning") this missed a test case
-> where config1 had no_value.
+> Sorry, should also have:
+> Fixes: 30f4ade33d64 ("perf tools: Revert enable indices setting syntax
+> for BPF map")
+
+I added it, thanks.
+ 
+> Thanks,
+> Ian
 > 
-> Fixes: 64199ae4b8a3 ("perf parse-events: Fix propagation of term's no_value when cloning")
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> > Reported-by: James Clark <james.clark@arm.com>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/parse-events.y | 17 +++++++++++++++++
+> >  1 file changed, 17 insertions(+)
+> >
+> > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+> > index 4a305df61f74..21bfe7e0d944 100644
+> > --- a/tools/perf/util/parse-events.y
+> > +++ b/tools/perf/util/parse-events.y
+> > @@ -839,6 +839,23 @@ PE_TERM
+> >
+> >         $$ = term;
+> >  }
+> > +|
+> > +PE_DRV_CFG_TERM
+> > +{
+> > +       struct parse_events_term *term;
+> > +       char *config = strdup($1);
+> > +       int err;
+> > +
+> > +       if (!config)
+> > +               YYNOMEM;
+> > +       err = parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE_DRV_CFG, config, $1, &@1, NULL);
+> > +       if (err) {
+> > +               free($1);
+> > +               free(config);
+> > +               PE_ABORT(err);
+> > +       }
+> > +       $$ = term;
+> > +}
+> >
+> >  sep_dc: ':' |
+> >
+> > --
+> > 2.42.0.283.g2d96d420d3-goog
+> >
 
-For the whole set:
+-- 
 
-Reviewed-by: James Clark <james.clark@arm.com>
-
-> ---
->  tools/perf/tests/parse-events.c | 2 +-
->  tools/perf/util/parse-events.c  | 2 +-
->  tools/perf/util/parse-events.h  | 4 ++--
->  3 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-> index d86076d575ed..d47f1f871164 100644
-> --- a/tools/perf/tests/parse-events.c
-> +++ b/tools/perf/tests/parse-events.c
-> @@ -2170,7 +2170,7 @@ static const struct evlist_test test__events[] = {
->  
->  static const struct evlist_test test__events_pmu[] = {
->  	{
-> -		.name  = "cpu/config=10,config1,config2=3,period=1000/u",
-> +		.name  = "cpu/config=10,config1=1,config2=3,period=1000/u",
->  		.valid = test__pmu_cpu_valid,
->  		.check = test__checkevent_pmu,
->  		/* 0 */
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index 68fe2c4ff49f..65608a3cba81 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -2607,7 +2607,7 @@ int parse_events_term__to_strbuf(struct list_head *term_list, struct strbuf *sb)
->  
->  		if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM)
->  			if (term->no_value) {
-> -				assert(term->type_term == PARSE_EVENTS__TERM_TYPE_USER);
-> +				assert(term->val.num == 1);
->  				ret = strbuf_addf(sb, "%s", term->config);
->  			} else
->  				ret = strbuf_addf(sb, "%s=%#"PRIx64, term->config, term->val.num);
-> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-> index 855b0725c5d4..594e5d2dc67f 100644
-> --- a/tools/perf/util/parse-events.h
-> +++ b/tools/perf/util/parse-events.h
-> @@ -124,8 +124,8 @@ struct parse_events_term {
->  	 */
->  	bool weak;
->  	/**
-> -	 * @no_value: Is there no value. TODO: this should really be part of
-> -	 * type_val.
-> +	 * @no_value: Is there no value. If a numeric term has no value then the
-> +	 * value is assumed to be 1. An event name also has no value.
->  	 */
->  	bool no_value;
->  };
+- Arnaldo
