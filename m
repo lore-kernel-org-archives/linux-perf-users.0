@@ -2,53 +2,49 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA678C71153
-	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Sep 2023 15:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 253EBCA0FFA
+	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Sep 2023 16:02:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233456AbjIDPZo (ORCPT
+        id S232208AbjIEQCK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 4 Sep 2023 11:25:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49866 "EHLO
+        Tue, 5 Sep 2023 12:02:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229801AbjIDPZo (ORCPT
+        with ESMTP id S1354107AbjIEJjo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 4 Sep 2023 11:25:44 -0400
+        Tue, 5 Sep 2023 05:39:44 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5D6F2132;
-        Mon,  4 Sep 2023 08:25:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 566C21A7;
+        Tue,  5 Sep 2023 02:39:40 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D5B6143D;
-        Mon,  4 Sep 2023 08:26:18 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0C5D011FB;
+        Tue,  5 Sep 2023 02:40:18 -0700 (PDT)
 Received: from [192.168.1.3] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D99AD3F738;
-        Mon,  4 Sep 2023 08:25:37 -0700 (PDT)
-Message-ID: <2a7f6d40-6502-d389-f691-488e3d9b9005@arm.com>
-Date:   Mon, 4 Sep 2023 16:25:38 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7F9D93F793;
+        Tue,  5 Sep 2023 02:39:38 -0700 (PDT)
+Message-ID: <c4833297-da67-3337-b3d1-b628b1282a8a@arm.com>
+Date:   Tue, 5 Sep 2023 10:39:38 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
-Subject: Re: [PATCH v1 2/2] perf cs-etm: Respect timestamp option
+Subject: Re: [PATCH v1 1/6] perf parse-events: Fixes relating to no_value
+ terms
 Content-Language: en-US
-To:     Leo Yan <leo.yan@linaro.org>
-References: <20230827133557.112494-1-leo.yan@linaro.org>
- <20230827133557.112494-3-leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+To:     Ian Rogers <irogers@google.com>
+References: <20230901233949.2930562-1-irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Rob Herring <robh@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20230827133557.112494-3-leo.yan@linaro.org>
+In-Reply-To: <20230901233949.2930562-1-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -57,64 +53,68 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 27/08/2023 14:35, Leo Yan wrote:
-> When users pass the option '--timestamp' or '-T' in the record command,
-> all events will set the PERF_SAMPLE_TIME bit in the attribution.  In
-> this case, the AUX event will record the kernel timestamp, but it
-> doesn't mean Arm CoreSight enables timestamp packets in its hardware
-> tracing.
+On 02/09/2023 00:39, Ian Rogers wrote:
+> A term may have no value in which case it is assumed to have a value
+> of 1. It doesn't just apply to alias/event terms so change the
+> parse_events_term__to_strbuf assert.
 > 
-> If the option '--timestamp' or '-T' is set, this patch always enables
-> Arm CoreSight timestamp, as a result, the bit 28 in event's config is to
-> be set.
+> Commit 99e7138eb789 ("perf tools: Fail on using multiple bits long
+> terms without value") made it so that no_value terms could only be for
+> a single bit. Prior to commit 64199ae4b8a3 ("perf parse-events: Fix
+> propagation of term's no_value when cloning") this missed a test case
+> where config1 had no_value.
 > 
-> Before:
-> 
->   # perf record -e cs_etm// --per-thread --timestamp -- ls
->   # perf script --header-only
->   ...
->   # event : name = cs_etm//, , id = { 69 }, type = 12, size = 136,
->   config = 0, { sample_period, sample_freq } = 1,
->   sample_type = IP|TID|TIME|CPU|IDENTIFIER, read_format = ID|LOST,
->   disabled = 1, enable_on_exec = 1, sample_id_all = 1, exclude_guest = 1
->   ...
-> 
-> After:
-> 
->   # perf record -e cs_etm// --per-thread --timestamp -- ls
->   # perf script --header-only
->   ...
->   # event : name = cs_etm//, , id = { 49 }, type = 12, size = 136,
->   config = 0x10000000, { sample_period, sample_freq } = 1,
->   sample_type = IP|TID|TIME|CPU|IDENTIFIER, read_format = ID|LOST,
->   disabled = 1, enable_on_exec = 1, sample_id_all = 1, exclude_guest = 1
->   ...
-> 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> Fixes: 64199ae4b8a3 ("perf parse-events: Fix propagation of term's no_value when cloning")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+
+For the whole set:
 
 Reviewed-by: James Clark <james.clark@arm.com>
 
 > ---
->  tools/perf/arch/arm/util/cs-etm.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  tools/perf/tests/parse-events.c | 2 +-
+>  tools/perf/util/parse-events.c  | 2 +-
+>  tools/perf/util/parse-events.h  | 4 ++--
+>  3 files changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-> index cf9ef9ba800b..58c506e9788d 100644
-> --- a/tools/perf/arch/arm/util/cs-etm.c
-> +++ b/tools/perf/arch/arm/util/cs-etm.c
-> @@ -442,6 +442,15 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
->  					   "contextid", 1);
->  	}
+> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+> index d86076d575ed..d47f1f871164 100644
+> --- a/tools/perf/tests/parse-events.c
+> +++ b/tools/perf/tests/parse-events.c
+> @@ -2170,7 +2170,7 @@ static const struct evlist_test test__events[] = {
 >  
-> +	/*
-> +	 * When the option '--timestamp' or '-T' is enabled, the PERF_SAMPLE_TIME
-> +	 * bit is set for all events.  In this case, always enable Arm CoreSight
-> +	 * timestamp tracing.
-> +	 */
-> +	if (opts->sample_time_set)
-> +		evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
-> +					   "timestamp", 1);
-> +
->  	/* Add dummy event to keep tracking */
->  	err = parse_event(evlist, "dummy:u");
->  	if (err)
+>  static const struct evlist_test test__events_pmu[] = {
+>  	{
+> -		.name  = "cpu/config=10,config1,config2=3,period=1000/u",
+> +		.name  = "cpu/config=10,config1=1,config2=3,period=1000/u",
+>  		.valid = test__pmu_cpu_valid,
+>  		.check = test__checkevent_pmu,
+>  		/* 0 */
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 68fe2c4ff49f..65608a3cba81 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -2607,7 +2607,7 @@ int parse_events_term__to_strbuf(struct list_head *term_list, struct strbuf *sb)
+>  
+>  		if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM)
+>  			if (term->no_value) {
+> -				assert(term->type_term == PARSE_EVENTS__TERM_TYPE_USER);
+> +				assert(term->val.num == 1);
+>  				ret = strbuf_addf(sb, "%s", term->config);
+>  			} else
+>  				ret = strbuf_addf(sb, "%s=%#"PRIx64, term->config, term->val.num);
+> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+> index 855b0725c5d4..594e5d2dc67f 100644
+> --- a/tools/perf/util/parse-events.h
+> +++ b/tools/perf/util/parse-events.h
+> @@ -124,8 +124,8 @@ struct parse_events_term {
+>  	 */
+>  	bool weak;
+>  	/**
+> -	 * @no_value: Is there no value. TODO: this should really be part of
+> -	 * type_val.
+> +	 * @no_value: Is there no value. If a numeric term has no value then the
+> +	 * value is assumed to be 1. An event name also has no value.
+>  	 */
+>  	bool no_value;
+>  };
