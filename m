@@ -2,58 +2,56 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D494CA0FFA
-	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Sep 2023 18:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B696CCA0FFA
+	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Sep 2023 18:19:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236644AbjIESSw (ORCPT
+        id S240958AbjIESTE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 5 Sep 2023 14:18:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33714 "EHLO
+        Tue, 5 Sep 2023 14:19:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237719AbjIESSf (ORCPT
+        with ESMTP id S241015AbjIESSp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 5 Sep 2023 14:18:35 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1B211986
-        for <linux-perf-users@vger.kernel.org>; Tue,  5 Sep 2023 11:17:13 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-58e4d2b7d16so32075447b3.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 05 Sep 2023 11:17:13 -0700 (PDT)
+        Tue, 5 Sep 2023 14:18:45 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AA34211C
+        for <linux-perf-users@vger.kernel.org>; Tue,  5 Sep 2023 11:17:30 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d7eaffe2f99so2372485276.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 05 Sep 2023 11:17:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1693937769; x=1694542569; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8XqA+7q5S8GcuFEv94zqkxsospEdyuEhg8U7iQVn4Bg=;
-        b=0gK75Xe2qwZoaOCnfybp/uWLsuOVio7NQdVkmSjerjNW0V3TgwKa2cVBwBQu0REegb
-         Q0FfVP0sIe3yG1jy+YI7m3cV51XdiRkcdPUtWUb8U6f8kHyX75CE6fiOj5aC1cKsdUdV
-         Sk8pLWC7pgRxZdyqcc6ZSt8AVfxKSEY1XRe+BuZH6J+B64NebnjOOjfV1kfecMXLX4jK
-         j9e7WCVWxhxCgyeP2y1FtDJD13nqbu90bV5IYmZEL7vjSQWpuCGQZvl4h9tdDMlzAUF9
-         WyBtA05liWTpYKFSPhh6CzwWZY1MM7EAT4cEC1yZFVvLq2nmyvanImuZeijGsu6t3GTt
-         lMMA==
+        d=google.com; s=20221208; t=1693937764; x=1694542564; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Y07qFiYECd11N+vNvyoUjAree2R1P2rvhI0ssuxH2Wo=;
+        b=5AooYeZNFOvx3uewyZLZ1QCM1ZfEoxMP6OKst4zb64nG0X8JVlR6sUzXXWNks2OFho
+         PV/jBAHLGv/5sAsNbNeV3YdHXXWTx1qMRfUIlaK2/b48cffEyLVqzrMBw4YMwcT1JEbZ
+         RCXA2wuayqPP1rTM8EGzVxkj6jyDpQzyaedOt9PBg1mf1ZvlcYaMA0oWr0DporGZ21gA
+         V195vh9iaGZFBaTdxryJB4SNQ6r12pYTIlm2MlYHDR+ahR3BuThbFCpDOC/OdaqoGfJA
+         VS7mGQFz0en0pcEE4KvA0HrzCr7Bo6lhKTgisNpIsv3jHYGCNT/OZjJ/95GBTXeHZ926
+         6htQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693937769; x=1694542569;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8XqA+7q5S8GcuFEv94zqkxsospEdyuEhg8U7iQVn4Bg=;
-        b=VXnZG2GUuHA8kqWFAgGMcrMxzI5pCR12d6TKBFys4rc7stwL6DKWpnJHo+lNSH/7N+
-         6+sL57p78if3CKJ9TR/kpklzoP/WYh4MqDdoXh9PYA64k9lq+XdZXI2I4VWqm/FmO/a2
-         VGyUyvM3SDg4duUNr+PUunicigvTmCV3ul8/DWeYQQgWJW5bB3hH3xTGzba5pG5tagCx
-         tHSZJykNPg1glcMOUNkCkIu+hboOskIDSaj+RPKsS3FVB09IpilYwXkR48I/in+r/Wnk
-         ixHNP0YaVmabWIikQrnUY3s1nTqCWca11K+EP9WlUw1jyrFgWvEs0zhCExJ+hyK/Q0P8
-         r6Gg==
-X-Gm-Message-State: AOJu0YyuM9mg8XkvTqkjsj63338ZeB68GOrVwaTyKI2JdMUkuIXrY6AT
-        sPfpyGSqxCHXhs0zYyauRln49oX4wzOJ
-X-Google-Smtp-Source: AGHT+IGg80w1b+ouYPhBbnVvKUQ0/xUemtvB+rChC83tYWEcPTgI+TgyrY14wNh4lQjnwp9XhrOBGFV9Ev0N
+        d=1e100.net; s=20221208; t=1693937764; x=1694542564;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Y07qFiYECd11N+vNvyoUjAree2R1P2rvhI0ssuxH2Wo=;
+        b=k/GyzkmWMhQVhPS5kCHIfNv+zfkrObbFrvCbviX6SkFVG/ow6c1G8WKMcAXUN+moJh
+         MvqQlPOOvbALu2iHBUMmV0sj2wSAh4XBsHun96oVElRlEMJjv53qjL/0NAWIkTm4gu4K
+         Yc7P9wTE5/TtQ58lu0RsSH0jnKrJKwAGInxC3rdOeONpGEdwUUxXby59AaJEkm1VDMnJ
+         gRfC5hM8xsT2wuJbAyOFoOt9Nva4An8n4oVSDJfGBce2742w2SG1ArfmaBI2OLA55hyd
+         3C7sWaCDaEk5wuvLpXFB+oLS6ijgdlpJLfXyuZtvsqlK07crKi1SmoqvtywELtsQh9Cu
+         0IcQ==
+X-Gm-Message-State: AOJu0YytMOM6ZF2yeKfmsYc1CeeB/zBJt7Fph7At/bB3JVuRSr+b3IYN
+        0+oDC0i5htsFJJAS+QgM6CLtPH8zWRk5
+X-Google-Smtp-Source: AGHT+IGKRFAQrI1REpVPNXdfYLh5y8eD2YG5x0DJqWAPOVbWUocmJHtuWN0HGbLbFiPnjQkJF1YHSzpLpx7e
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:1e0b:753:60d0:6c22])
- (user=irogers job=sendgmr) by 2002:a81:ef04:0:b0:595:870c:1554 with SMTP id
- o4-20020a81ef04000000b00595870c1554mr431925ywm.5.1693937768958; Tue, 05 Sep
- 2023 11:16:08 -0700 (PDT)
-Date:   Tue,  5 Sep 2023 11:15:54 -0700
-In-Reply-To: <20230905181554.3202873-1-irogers@google.com>
-Message-Id: <20230905181554.3202873-3-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:6902:180c:b0:d0f:a0a6:8e87 with SMTP
+ id cf12-20020a056902180c00b00d0fa0a68e87mr308639ybb.2.1693937764506; Tue, 05
+ Sep 2023 11:16:04 -0700 (PDT)
+Date:   Tue,  5 Sep 2023 11:15:52 -0700
+Message-Id: <20230905181554.3202873-1-irogers@google.com>
 Mime-Version: 1.0
-References: <20230905181554.3202873-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
-Subject: [PATCH v1 3/3] perf completion: Support completion of metrics/metricgroups
+Subject: [PATCH v1 1/3] perf completion: Restrict completion of events to events
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -71,28 +69,36 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Allow metrics to expand for -M or --metrics options.
+perf list will list libpfm4 events and metrics which aren't valid
+options to the '-e' option. Restrict the events gathered so that
+invalid ones aren't shown.
+
+Before:
+$ perf stat -e <tab><tab>
+Display all 633 possibilities? (y or n)
+
+After:
+$ perf stat -e <tab><tab>
+Display all 375 possibilities? (y or n)
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/perf-completion.sh | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/perf-completion.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/perf/perf-completion.sh b/tools/perf/perf-completion.sh
-index 319ad724b97a..f224d79b89e6 100644
+index 978249d7868c..40cfc30ad7ad 100644
 --- a/tools/perf/perf-completion.sh
 +++ b/tools/perf/perf-completion.sh
-@@ -202,6 +202,10 @@ __perf_main ()
+@@ -164,7 +164,7 @@ __perf_main ()
  		$prev_skip_opts == @(record|stat|top) ]]; then
- 	        local evts=$($cmd list --raw-dump pfm)
- 		__perfcomp "$evts" "$cur"
-+	elif [[ $prev == @("-M"|"--metrics") &&
-+		$prev_skip_opts == @(stat) ]]; then
-+	        local metrics=$($cmd list --raw-dump metric metricgroup)
-+		__perfcomp "$metrics" "$cur"
- 	else
- 		# List subcommands for perf commands
- 		if [[ $prev_skip_opts == @(kvm|kmem|mem|lock|sched|
+ 
+ 		local cur1=${COMP_WORDS[COMP_CWORD]}
+-		local raw_evts=$($cmd list --raw-dump)
++		local raw_evts=$($cmd list --raw-dump hw sw cache tracepoint pmu sdt)
+ 		local arr s tmp result cpu_evts
+ 
+ 		# aarch64 doesn't have /sys/bus/event_source/devices/cpu/events
 -- 
 2.42.0.283.g2d96d420d3-goog
 
