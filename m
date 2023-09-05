@@ -2,51 +2,51 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE660CA0FF3
-	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Sep 2023 16:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A56BC83F2C
+	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Sep 2023 16:37:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235615AbjIEQCZ (ORCPT
+        id S234113AbjIEQhY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 5 Sep 2023 12:02:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60872 "EHLO
+        Tue, 5 Sep 2023 12:37:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354838AbjIEOy5 (ORCPT
+        with ESMTP id S241415AbjIEQKD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 5 Sep 2023 10:54:57 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2041.outbound.protection.outlook.com [40.107.94.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E7F7113;
-        Tue,  5 Sep 2023 07:54:52 -0700 (PDT)
+        Tue, 5 Sep 2023 12:10:03 -0400
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2061a.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e83::61a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36BC71BCB;
+        Tue,  5 Sep 2023 09:02:17 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VVSnAXWFHBDNtK+rxMeJDC7013LWLldAROteX8Ze9chxSr4DIdHZJGLpZ53Yul6OAk4IwhSslCC+ec+1nAxfMSpVqK9I8T02ZW/ci4Gz95YYhB950fmPNvyIHlxNFKkJc+ix4HQ6n8PImK9+q3mMqGchYBR+VloLT/yWpgg4PHUiIKusWQUOnTZmH6lfMbzsbU9/3X0aaS7m84lxK23JdPhnovOANFupIkBv0KkIZOFm0YM4i9ValKjAyp8/1qiJjqFPOlP4AyJz2PO6iQnA3IrQYabj8disa16a5ononVBnC8JmqfQFYGy7pHIzl2m9QUv+IFSFTRPgN3395QF/Gw==
+ b=mX0eXshGCaHsgDAzFTf4dOPttQJsTHsge8X54Aj5QKbcos5BIP+o0FnoKCmDei8aNY63ckScEwzfhHtwfJ3KUk1qY5aAHgCvh/kmh0vdhIhiGFRONNfv6zN7CKch0Dz4bMgckkCJwS4KZGxu4wrp934j4VRclEfITwfk2kKk5z+o40/KKjxhuMzd/dfua6RSjkAoJgbpx+/6fhEtNhEDCpp9p3hrxiwJZkyfOAxVReT9EETodJXGjj8kyzdiTHQikQw1bKkhTsAzp0AX117qZBI5Sc/t8njeS4zfeqD7ToMi7dut6yrrEUE3V3p0UNhvsduBEanlzvlA0hZw1NHOMw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vc2/Ryvggu9lzX0DGkqDlM6IZKwbqOq7wT9izvp74ts=;
- b=AZKqfcRuH1ofkEmEFayU7j4UM4cbb9mjyFaMWKhOcrIk8pHFRtWxUAZuUFt4/xty0ki7PTpVHb6AoqYKbJt/sc1Tcemc+lqL4s/J6B/ZQhiulIzQ6o6M3zvTMrnsDqTpXq/bc7qtiyuGCJaKBeE5J8+g6XKToqF5wbIVojje/ZiqbOKIvL5eoPvNti1Oe+eCVWqeVROCMOzY2Oa3PysAqpQ3m/3OWDex8Fnov5w86Y6naw1Mlv5nL3Y2DZeUja4Lxs7uVmjmWUApWaLz52/xnUpTwtYRUMzOuu20twlivaRS5sZS7iPksFXYnZqGumrj7vSKjI97/Snxx4xckNWuCw==
+ bh=4Gnnso5zIiYvxAJ0lWmkewY0PcrxQVsKSk0JpJ3+E8w=;
+ b=bRBymqeE3qvafF1K8RkYfGzjyj++mS/rK0CB8PdMLPoHY/B4b0zgb44UMauKbxHW5LfxGQpfxELGT9dWMRhtw02gZ0bFKpwE81YLEId/UAIO5kvLmsn1e6ixp+Xovo5IvgPiAOr2hj58/ow2xL21xuAtbQLDrdtp7HTSK/tDOjkT4jFHEyJDCagySq0VYwvnbYjaRtIJARLR+ijvzPFBBsTjbbCDT60hDOhHe86ZhWI9RnwIBSeIVrVaFsrte5Q5zH92yjonQ1f+lgts3GAerXAiIaLDfsXsLVE4UWgGWuyjyDB28iWFCS1aSfUlSeDrE0/5Ck/FVZRKovGa/cwGXg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vc2/Ryvggu9lzX0DGkqDlM6IZKwbqOq7wT9izvp74ts=;
- b=bdQXyzXSWFoSsxFVGvflH5eGI9apTMwWSrz9bAHxeQW6ofVGbjzV6HU/cq8CzimBXS5EJOuFxfEpBVLN0cWAQZJ8DWhAIui80b3JgAvOsi42KMkQWwdFO3sLyjyHbZsbxf7Z4X+jdJTnnQNNsFnkOqt6tnmwmvwqMBwadH+BMSo=
+ bh=4Gnnso5zIiYvxAJ0lWmkewY0PcrxQVsKSk0JpJ3+E8w=;
+ b=Buav8YAxmRKx6jrN+eWK66nDcIMuR7eamFJRngbKD4HFYWyptxZp8uO/75HTBvoIdGuoDwokfIvQK7VFFOaJS2JkY8rv5eahsvzPrnTC4UCCZeQBd73he4qZjl4BLMD5llugHXP6Y3b1h9AcC+vmeINLC0cNqV3H5PziA6pUwwc=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DM4PR12MB5229.namprd12.prod.outlook.com (2603:10b6:5:398::12)
- by MW4PR12MB5626.namprd12.prod.outlook.com (2603:10b6:303:169::13) with
+ by DS7PR12MB6190.namprd12.prod.outlook.com (2603:10b6:8:99::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.33; Tue, 5 Sep
- 2023 14:54:49 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.32; Tue, 5 Sep
+ 2023 16:00:31 +0000
 Received: from DM4PR12MB5229.namprd12.prod.outlook.com
  ([fe80::d267:7b8b:844f:8bcd]) by DM4PR12MB5229.namprd12.prod.outlook.com
  ([fe80::d267:7b8b:844f:8bcd%7]) with mapi id 15.20.6745.030; Tue, 5 Sep 2023
- 14:54:49 +0000
-Message-ID: <f792b2e1-381a-d37d-d862-427838de1e4f@amd.com>
-Date:   Tue, 5 Sep 2023 09:54:47 -0500
+ 16:00:31 +0000
+Message-ID: <aa466f6f-9b21-7bf6-84de-82b3aa722f36@amd.com>
+Date:   Tue, 5 Sep 2023 11:00:26 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.0
-Subject: Re: [PATCH 08/13] perf/x86/amd: Add framework to save/restore host
- IBS state
+Subject: Re: [PATCH 12/13] KVM: SVM: Enable IBS virtualization on non SEV-ES
+ and SEV-ES guests
 Content-Language: en-US
 To:     Manali Shukla <manali.shukla@amd.com>, kvm@vger.kernel.org,
         seanjc@google.com
@@ -55,368 +55,221 @@ Cc:     linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org,
         bp@alien8.de, santosh.shukla@amd.com, ravi.bangoria@amd.com,
         nikunj@amd.com
 References: <20230904095347.14994-1-manali.shukla@amd.com>
- <20230904095347.14994-9-manali.shukla@amd.com>
+ <20230904095347.14994-13-manali.shukla@amd.com>
 From:   Tom Lendacky <thomas.lendacky@amd.com>
-In-Reply-To: <20230904095347.14994-9-manali.shukla@amd.com>
+In-Reply-To: <20230904095347.14994-13-manali.shukla@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SA1P222CA0182.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:3c4::20) To DM4PR12MB5229.namprd12.prod.outlook.com
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DM6PR08CA0029.namprd08.prod.outlook.com
+ (2603:10b6:5:80::42) To DM4PR12MB5229.namprd12.prod.outlook.com
  (2603:10b6:5:398::12)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5229:EE_|MW4PR12MB5626:EE_
-X-MS-Office365-Filtering-Correlation-Id: 440aa950-ccce-4aec-01b2-08dbae200d9d
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5229:EE_|DS7PR12MB6190:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1329ca06-72b4-40bf-0437-08dbae29399e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: fF9L5ZhWWJuDMsVV7ZgP3TBMeLmty7pamy7hu4qWIYDPXSxRvkdwQsafZmBTXwK+sRHypRWOtcfz1mkwbIvHMtZpsZQd7+m2IS4FwmqetUc97vLddJXrHgWnI19lrtOnf8vocLwcCo96PUcsmMPi8zzdiySPb8fYnjLHo6qzHploRHXBNuK2f5+x8jqxMIaObbZVKia1jRId6KeKwg8E2VIuVV9rGyw5hDdlZecKi6ugoAoAlx4DPNHLzRc9Op5B7RQRNTZKJ8iSKUGVWIg1FSzQEHkrzyWVhu13w4CMrVUq/BQty3ZwRUilt1QrkT1of50UXJ+0PeTf36hEnedfgaMnuwhlQjxmHx8YnwAvc8T6KHVKkQHFudQXAmNcMnB3YQVz8PfHT49Q72Bn8NDTn0S8Ra4POuxZpoMxTZc3mB3uLxDVHBVHj3l3Nq4/Rx6bJl2av8z0d9deNj567bBgSaTkb93x/9r3SdAqYEXH72MCeTB8Dgk/arQ0gfAzOd3Mc3r5VTCaHXcK1Fb/Uj18BkQJl14YqYzdzbWcpLdl0DnC8In2Y9399IJ7YyC5rgww5tVZHp4YSdq6uyICm4UvP+qSHzDXzIAyjFQ+R9q8Ekv/gixzNXZ7Ki3MJXEd62uRgQe/H5mHS4FoeLmComwkBw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5229.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(366004)(376002)(396003)(346002)(136003)(451199024)(1800799009)(186009)(5660300002)(316002)(2906002)(66476007)(66556008)(36756003)(66946007)(8676002)(4326008)(8936002)(31686004)(41300700001)(53546011)(6486002)(6506007)(26005)(6512007)(38100700002)(478600001)(966005)(2616005)(83380400001)(31696002)(86362001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: 7yedxH1wF3v+rnIuw7Z+cbep7OqdyCVOpi/lQY1McY73/+WfDzRBQWEndSRFpeq6MLCIreXZAFROhsSJhSpRD47UYxURVYbqXpnstEyw/nwqLpve98ctd+GT+0tL/mGWC/U+xjQboaQrRZe+XS8zzBpMxDBZl0VK+9nqN++rT73GdiGhzNHKXKEVsn9tlbeWXh86Fg2512dFfEV7G1rljEZs23z7KikGqhAmYfxmZnO2J1DT3z8RwRlhIfsO3M7vTrplqp/FCwb9TdWLtdoNq4UydjzQh4kGlLdnxzZntaGljKglExkhC7LKOnTj0ydGcdhb9u8X0lAeJZp+pW1wu+ZzeCnmNlp7Zp9VGF5Tbh3d3Cm0LAmUuBB545wca8iw+Th3xWKILXsHBjrXDu5MMvoUKQMTGA54zd+ULu1y8P3jD2/2cUqkwius7QbNagVy66aoWA8lethpTzPXPz1wPEQA3i7bAoq/TR+BBrcvc2oBtOIIux46Z1KfBkXBL60RiSTZOVSQDRaspGKXQQ77qkJfJ+VWdyqFOHQ5ZNHFbc4Hwc4iKVnb3alitDwRbfz/hGG5a2yT1M6lwNAHiUTp2U6KSGJpfWgEcROo+tiLN16e4QaEF7LWCVrmIo4rgfwIMS6dfBhQdEhXcZLWaCUO6g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5229.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(39860400002)(366004)(376002)(346002)(136003)(186009)(1800799009)(451199024)(53546011)(6486002)(6506007)(41300700001)(478600001)(2906002)(36756003)(6512007)(38100700002)(316002)(31696002)(66476007)(66946007)(66556008)(86362001)(6666004)(8936002)(8676002)(4326008)(31686004)(26005)(2616005)(83380400001)(5660300002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZDM0dUp6RlNSc1NiZllwVGNnUG9tMVBUbWFHZ2MzVXRhWVBacStTN0kybnQy?=
- =?utf-8?B?WWltemVMRHo0aFR0eHVRVkZLMUlLMnNZbHhDKzEyZ2xZTjI3Q3ZGY1BPK3BY?=
- =?utf-8?B?RXgvb25TU2JUWjFjSVJvQXlBRmI2ZS9XNWF2MzhvdTk4VjVFUTVhZTRJK2Qx?=
- =?utf-8?B?cGxGTkFIZmZqbkdoTXA4dEtOZHBzV0RNZVJVenl6WUpQRE52NHJSdFVWN2Vq?=
- =?utf-8?B?anY5YlZQaDlDUXViTHplT0JuV1haTTk0dVJoOTJqTE9sMnBXeGdrcURLREdI?=
- =?utf-8?B?bk41RTQ5dVphenVtWjJTQTRPTk5jbGpDWVR1YUZveFliYWE5K25BMzc1TTBF?=
- =?utf-8?B?OEw5b2VYMGw2UmpiN2Q4MXM4WDBXZWVxKzFtRGpYdEphUGtPbHJjMDVmNmJx?=
- =?utf-8?B?b05lZ21XeUEyNWJCVmRaRTFFMVVkeEYrbHNycUlEL0xkemZHUmJDUmF2alBZ?=
- =?utf-8?B?cEo5RUUweGowMVl0bk9pVitFWjFXMmVGbDhRVElyaGRGMkZobXFhc3hJTVpM?=
- =?utf-8?B?cUliY1RLS0ZKSjA5bG5uSmFJc1FETHlpdVhlTlhPMG15dkV3Y2xNdDBtRDZo?=
- =?utf-8?B?TnZrdHdFMU83QUpoSWZaSFJlM3IvcnZnSUgzZ2pCRnRPeGlBcVdDRG1Xc0Fq?=
- =?utf-8?B?S1hqaVhyRE81UzZqd04xc0NscXVtcHplaER1UzJpKzVIMkFmVitneldVYzlv?=
- =?utf-8?B?YkJyK3dySC9uR3hhUkNaNWoyUGU0Y2ZRMzhLdUpGUVNyaVdaV3YwQmxPK01P?=
- =?utf-8?B?RG5nNVF5TERscWhHVlR5S0hTcjIva0hBQm9KaEpqRHZLemRVd3VHQnU0WFdP?=
- =?utf-8?B?endROS9tbzhxVFhhZUJkS2dKbHpPa1RNTmxTSUx3Rkt5ZTV1SlpOdlNiTk95?=
- =?utf-8?B?czF3YWdsL2pSVDZUbjM2bU9hTUp1N1RubHlKVFZOcFd6bEtrWnVVbGZodVBL?=
- =?utf-8?B?N2w3RDdSRk54MXV2MElUcm5ubTBjZWpQSDNMSmhRK3RiNjluVnFvWmVTQzNL?=
- =?utf-8?B?MFhDUE1CdnRGZVhERkNHSTNuL1Ava1cvZVQ1andlN1d3d0s2Q1p2emUrRXp2?=
- =?utf-8?B?N1lpcloxSWprTkZPOUswMGJXY3d0aUE5bHVvZGtDbzMrb20vMG8rekVPZ3ZQ?=
- =?utf-8?B?dXlBNitHellsTHNLczR3OEZPTDBGV1QwdGdNcFBDWk5VRU94ZnBicHZZdFpQ?=
- =?utf-8?B?am1WL2JvSi91cUtuQURYVXJUTVlQSTkvYWdkK2FSVEIxcFA5UmR5alE5QVVw?=
- =?utf-8?B?cjV0TVFFQlBpb3pYTXJ3d1V4TUd1aThnRE5qbHZtdlpzUlVieUJQTEVJQ2k5?=
- =?utf-8?B?V2pvK1N1R1QzNDIxOFpEVlVSa0lNYUNtY3oxYldoay92MTNLN2owazFxemNK?=
- =?utf-8?B?NU54L1BucXoyaXdFOE1UdHhvVWFSdWtnUGE3N0E0MnQ3T3N5RkEzWGhPR1RN?=
- =?utf-8?B?K3pHQ0FlcEY3eGh1bkhiVWJkZ3RDUUIxZFlYc0pmdytjQzNpSC9KWDlYR3d3?=
- =?utf-8?B?bU01ZVE5MHVxMEFPdmRTelJuZ0hJWm85Sks1aThzRDdqN1U2UE1RZE1OVHEx?=
- =?utf-8?B?aC9yZmp4dGczdmJ2bTZiQzFiOUpuenY0NHZaSUZWb2xtdTZCNHlrNFRKaFY5?=
- =?utf-8?B?TVJtWjBWcmRJUHoyMWRQSUVxeUFMQkZ2K2VFc2hxUkM1SEsxZGQrTS9RQkxV?=
- =?utf-8?B?dE9EMnNHMVVVbngwUUk1NDBETDJxTlBPQjFwT2oyZGR0WGdEL01zUDhlTnJ5?=
- =?utf-8?B?Yi9HVjlTWDFMNE9pc1krei90b0hsNzNvMDBmdzBVY1JPZ3gzZHlJaEd5YVBp?=
- =?utf-8?B?UldpdVNiV0tLODlRNjREMFV6b2hPK1BNU3pEQ1hDVlJ5WEYzUTQ2RjBOdHRj?=
- =?utf-8?B?Q3ZubzhHMVVUV09xYmtzTjFtb3U1Sk9PWjd2RzA1OENxYisrckNsWmpMVTFz?=
- =?utf-8?B?YndkVk8vQnFEVTBxTzgvUzkwQTNDVWhTSDVFL0ZzeVlRdUpIa0RWWWkzV0J3?=
- =?utf-8?B?aFBhQzdHZk5ubFpuc3hOQS9Hbm5BM3hUMHZ6U3R5ZUdibEV4ZEtFQzdBUGdH?=
- =?utf-8?B?Y1krMWpxK1FibklyaktiN1BGOVBOWXF0UFZpdmIvTDdndG8rbzc0c3hTV2tZ?=
- =?utf-8?Q?yaC/85nAYcgtVxx7MOgOta76H?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZTVIY3YwRWFYZUJHbXJCeWpsRGx6clExUjdJUTdoaGp0WnR1UmQ1SkpBdHVE?=
+ =?utf-8?B?Slc1MXJRdnhtUXY5OUhiRnpIV2E3bmpvc3hHVmZ6Uld1alZqZnFtMklkQllq?=
+ =?utf-8?B?eStVZ0VsUVJLNi9OcnVsU1YrRGdRMDQ3Ny9iL3VMV0dFaXgxR3ZzZ1FUT1VR?=
+ =?utf-8?B?cVZnOGdKeS9PZ3VkbWFiNnp5Y2hUemhwR1VLcHJCOStJbUl0cDhWaWRQKzNj?=
+ =?utf-8?B?d3NBSU5pdm9La3p4UDVZZWdwRlVyTU9id01zcXVnTlgwN05DQTBjanlZd1ND?=
+ =?utf-8?B?T1QzZzUwNWJFbkFxZkxoTHZLeVNCODMyWHFCcUZLNnBlb1dGY1NPTVRlQ0w3?=
+ =?utf-8?B?NVFwOWdiUTUvbmF5Y0ZEOFNIaVlPQUIxY0ZKbUZCT0hBUFBSR3BuaGN6TDNY?=
+ =?utf-8?B?cFVwVkR3ZldPVDJRWnhYWmZZcXJWdm5LRG5WMGJuRkh3eURVZzRsRzVQcHQ5?=
+ =?utf-8?B?Y1pqTjNFcDh1TFFta0hZakxtWkN5K3pZSm9BWEVicjBCa2xqaklrZFJoTEI2?=
+ =?utf-8?B?ci9mdkhPTTJVeWpvMnZ3SUFlWnhIQWI1ZHoybWh6QU5MOUFFTnFXWThrS1JG?=
+ =?utf-8?B?TFhSaXIrUTN4RmdPenZSdjhPZ2NRcHZBbU1DQ2l4aHNpeEQ5aXcxbkJzOVdz?=
+ =?utf-8?B?TThpVVlUWUR0R2hQVEpFQjRsREx0T3VUMkp1Mk44NE54VlNJaS9UMjkvQURN?=
+ =?utf-8?B?U1JJOGFZa3FaYXArR21zUlNtNTNEVXA5TEdTUkk3UVBJMGxnTEp0S1ZlRDEr?=
+ =?utf-8?B?dXhqWndsN0xxbXdndGR3WGJyS1h0cFdIYmdZZXFhOGo2L3JyS2NyQXFJVytk?=
+ =?utf-8?B?ZWRkZ1lvZzRudUNEK3dacDhYTHdDZjN6OXhheXNiSGlkSDhxMS9SRFRvMExn?=
+ =?utf-8?B?M2J0WUtOTGNGSW0zQm9Vd2tPVU1IK2doMWFKYUw4NXFvaTBXQk5kVnRsM3hl?=
+ =?utf-8?B?V3g5bktQcVVBZm9pK0dta3VwTWFMdzIxREZnWVh6QmlxVU1wbEw2bjVWZ2x6?=
+ =?utf-8?B?aWJyMFN0bVp4WUhhNXRJUjZGWVoya3h5UEpzbm5nWHFpVk1Ud1NQbzZqdWJY?=
+ =?utf-8?B?QUNWangxY0pIbEsrd0J1YXA5WlhXVGZyQ29nQnJmT1VlVm9lR0dySUx5Y21o?=
+ =?utf-8?B?RUM0ekpROTVKQ1hSREtuVUIyNUNtaTJYdUpkUU9FYVk5R2tnckJNZCsyS1Fp?=
+ =?utf-8?B?V3N1eWpqVnlCY3FLbXFZSUt6cUhyVlNRNFF1R09sRC9DRmYvcXl2RHo1bjF5?=
+ =?utf-8?B?OHNFUk5LMEJFdHUvM3Q5aUE5UHdaT3BvUGNjRkdwVzV2elVuR3JxN2hpaVpU?=
+ =?utf-8?B?dzFVMTJwSlpiNFYvS1N2WndndUNMK1IzcEhGY3dBRlJYOEZoQW1wYkVTRWZO?=
+ =?utf-8?B?YzRab2Y4czZSZ05FNGlxS1lyOXZSYm5mbUFxN2NNWDkyTjRVUDE5a1NiSFNw?=
+ =?utf-8?B?MndkYXc0U0IyMEtRVytrMGxEWnNXQ2dUenZ3ai9EeFdtdzNHeTkyS3k0UDhl?=
+ =?utf-8?B?cVljZWRBQ1E2b0FrQStXbFE4OVpuRmZnek5OY3pBUVBRT0owVjJydHRDdGU2?=
+ =?utf-8?B?aGNtY1gzbllCeDBKU3BVM0kvbGs3cjl2aFBCMmpNakVOYUlSeXMvblhadmZR?=
+ =?utf-8?B?RWFCWjg5OWpNOTY0NUY5K1U2VXg4RVQ3Y09XK2hxeGFNblRzNmkwV1BORkxF?=
+ =?utf-8?B?eXN2emVPdVZnTWFrS3VXNEo5N1NQQ09LMlgzQ3RIMExEeWpnMXBodm02RnZB?=
+ =?utf-8?B?bzVtcTd3Qkd5ODVZSlFxY2lROTNOemowV0J3ZkZVZ2VoZVUrUzdkYU56V21Q?=
+ =?utf-8?B?bnRJcDNrcmswWkxsR05scTdMUStxQVRvaWJEU2d5LzNQd3R1OGJiQWljb0du?=
+ =?utf-8?B?QXpya3dmdkQ5b01YczczMXdZMFloLy9jNng2KzJIMTk0c0E5dzR4RCs2b0Mv?=
+ =?utf-8?B?c2ZjRll2VkNLbVhCMHcxc0VIOHZ4cUZjWTJQZkJTTGc2QldoMVFZdk4rQlpy?=
+ =?utf-8?B?WllKZG14NXE4QkpVSTVoYlF1NHVXUlAzTzRsSkZmYlQzV1Z1cmhISHptVUJ4?=
+ =?utf-8?B?VjN0MVZyZWZvQkYvb3N1LzBMNWZ1ckxPcmVKa2h1UTE0T1dKd2JabFBEcEJS?=
+ =?utf-8?Q?GPJkwF6uKuMX0hzMZR29iUZgS?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 440aa950-ccce-4aec-01b2-08dbae200d9d
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1329ca06-72b4-40bf-0437-08dbae29399e
 X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5229.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2023 14:54:49.5701
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2023 16:00:31.5253
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dG7AJWNidnh0Ycsob8aGELPf31MKTnPYaTjJRd82oi2iAmMVb4oiPAlFdglV7FxbqYl5vhSS7YRW78jyjJ+wKg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB5626
+X-MS-Exchange-CrossTenant-UserPrincipalName: 45s6ubFNFiKFmoNGL8CwX2xn/Qu7dTezy52XwnKJ48O0c1A7PbtTHPM01VKZPMBibeJAskv8LhKzrgyXb081kA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6190
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On 9/4/23 04:53, Manali Shukla wrote:
-> Since IBS registers falls under swap type C [1], only the guest state
+> To enable IBS virtualization capability on non SEV-ES guests, bit 2
+> at offset 0xb8 in VMCB is set to 1 for non SEV-ES guests.
 
-s/falls/fall/
+s/for non SEV-ES guests//
 
-> is saved and restored automatically by the hardware. Host state needs
-> to be saved and restored manually by the hypervisor. Note that, saving
-> and restoring of host IBS state happens only when IBS is active on
-> host to avoid unnecessary rdmsrs/wrmsrs.
 > 
-> Also, hypervisor needs to disable host IBS before VMRUN and re-enable
-> it after VMEXIT [2]. However, disabling and enabling of IBS leads to
-> subtle races between software and hardware since IBS_*_CTL registers
-> contain both control and result bits in the same MSR.
-> 
-> Consider the following scenario, hypervisor reads IBS control MSR and
-> finds enable=1 (control bit) and valid=0 (result bit). While kernel is
-> clearing enable bit in its local copy, IBS hardware sets valid bit to
-> 1 in the MSR. Software, who is unaware of the change done by IBS
-> hardware, overwrites IBS MSR with enable=0 and valid=0. Note that,
-> this situation occurs while NMIs are disabled. So CPU will receive IBS
-> NMI only after STGI. However, the IBS driver won't handle NMI because
-> of the valid bit being 0. Since the real source of NMI was IBS, nobody
-> else will also handle it which will result in the unknown NMIs.
-> 
-> Handle the above mentioned race by keeping track of different actions
-> performed by KVM on IBS:
-> 
->    WINDOW_START: After CLGI and before VMRUN. KVM informs IBS driver
->                  about its intention to enable IBS for the guest. Thus
-> 		IBS should be disabled on host and IBS host register
-> 		state should be saved.
->    WINDOW_STOPPING: After VMEXIT and before STGI. KVM informs IBS driver
->                  that it's done using IBS inside the guest and thus host
-> 		IBS state should be restored followed by re-enabling
-> 		IBS for host.
->    WINDOW_STOPPED: After STGI. CPU will receive any pending NMI if it
->                  was raised between CLGI and STGI. NMI will be marked
-> 		as handled by IBS driver if WINDOW_STOPPED action is
->                  _not performed, valid bit is _not_ set and a valid
->                  IBS event exists. However, IBS sample won't be generated.
-> 
-> [1]: https://bugzilla.kernel.org/attachment.cgi?id=304653
->       AMD64 Architecture Programmer’s Manual, Vol 2, Appendix B Layout
->       of VMCB, Table B-3 Swap Types.
-> 
-> [2]: https://bugzilla.kernel.org/attachment.cgi?id=304653
->       AMD64 Architecture Programmer’s Manual, Vol 2, Section 15.38
->       Instruction-Based Sampling Virtualization.
+> To enable IBS virtualization capability on SEV-ES guests, bit 12 in
+> SEV_FEATURES in VMSA is set to 1 for SEV-ES guests.
+
+s/for SEV-ES guests//
+
 > 
 > Signed-off-by: Manali Shukla <manali.shukla@amd.com>
 > ---
->   arch/x86/events/amd/Makefile      |   2 +-
->   arch/x86/events/amd/ibs.c         |  23 +++++++
->   arch/x86/events/amd/vibs.c        | 101 ++++++++++++++++++++++++++++++
->   arch/x86/include/asm/perf_event.h |  27 ++++++++
->   4 files changed, 152 insertions(+), 1 deletion(-)
->   create mode 100644 arch/x86/events/amd/vibs.c
+>   arch/x86/include/asm/svm.h |  4 ++++
+>   arch/x86/kvm/svm/sev.c     |  5 ++++-
+>   arch/x86/kvm/svm/svm.c     | 26 +++++++++++++++++++++++++-
+>   3 files changed, 33 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/x86/events/amd/Makefile b/arch/x86/events/amd/Makefile
-> index 527d947eb76b..13c2980db9a7 100644
-> --- a/arch/x86/events/amd/Makefile
-> +++ b/arch/x86/events/amd/Makefile
-> @@ -2,7 +2,7 @@
->   obj-$(CONFIG_CPU_SUP_AMD)		+= core.o lbr.o
->   obj-$(CONFIG_PERF_EVENTS_AMD_BRS)	+= brs.o
->   obj-$(CONFIG_PERF_EVENTS_AMD_POWER)	+= power.o
-> -obj-$(CONFIG_X86_LOCAL_APIC)		+= ibs.o
-> +obj-$(CONFIG_X86_LOCAL_APIC)		+= ibs.o vibs.o
->   obj-$(CONFIG_PERF_EVENTS_AMD_UNCORE)	+= amd-uncore.o
->   amd-uncore-objs				:= uncore.o
->   ifdef CONFIG_AMD_IOMMU
-> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-> index 6911c5399d02..359464f2910d 100644
-> --- a/arch/x86/events/amd/ibs.c
-> +++ b/arch/x86/events/amd/ibs.c
-> @@ -1039,6 +1039,16 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
+> diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
+> index 58b60842a3b7..a31bf803b993 100644
+> --- a/arch/x86/include/asm/svm.h
+> +++ b/arch/x86/include/asm/svm.h
+> @@ -215,6 +215,8 @@ struct __attribute__ ((__packed__)) vmcb_control_area {
+>   #define LBR_CTL_ENABLE_MASK BIT_ULL(0)
+>   #define VIRTUAL_VMLOAD_VMSAVE_ENABLE_MASK BIT_ULL(1)
+>   
+> +#define VIRTUAL_IBS_ENABLE_MASK BIT_ULL(2)
+> +
+>   #define SVM_INTERRUPT_SHADOW_MASK	BIT_ULL(0)
+>   #define SVM_GUEST_INTERRUPT_MASK	BIT_ULL(1)
+>   
+> @@ -259,6 +261,8 @@ struct __attribute__ ((__packed__)) vmcb_control_area {
+>   
+>   #define VMCB_AVIC_APIC_BAR_MASK				0xFFFFFFFFFF000ULL
+>   
+> +#define SVM_SEV_ES_FEAT_VIBS				BIT(12)
+
+Based on the SNP series, this shouldn't be added in between all the AVIC 
+features, but rather after them, just before the vmcb_seg struct. And 
+probably best to just call it SVM_SEV_FEAT_VIBS.
+
+> +
+>   #define AVIC_UNACCEL_ACCESS_WRITE_MASK		1
+>   #define AVIC_UNACCEL_ACCESS_OFFSET_MASK		0xFF0
+>   #define AVIC_UNACCEL_ACCESS_VECTOR_MASK		0xFFFFFFFF
+> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> index 41706335cedd..e0ef3a2323d6 100644
+> --- a/arch/x86/kvm/svm/sev.c
+> +++ b/arch/x86/kvm/svm/sev.c
+> @@ -59,7 +59,7 @@ module_param_named(sev_es, sev_es_enabled, bool, 0444);
+>   #define sev_es_enabled false
+>   #endif /* CONFIG_KVM_AMD_SEV */
+>   
+> -static bool sev_es_vibs_enabled;
+> +static bool sev_es_vibs_enabled = true;
+
+No need to change this if you follow my comment from the previous patch. 
+Also, maybe this should just be called sev_es_vibs, since it's more a 
+capability (similar to how in svm.c it is just vibs).
+
+>   static u8 sev_enc_bit;
+>   static DECLARE_RWSEM(sev_deactivate_lock);
+>   static DEFINE_MUTEX(sev_bitmap_lock);
+> @@ -607,6 +607,9 @@ static int sev_es_sync_vmsa(struct vcpu_svm *svm)
+>   	save->xss  = svm->vcpu.arch.ia32_xss;
+>   	save->dr6  = svm->vcpu.arch.dr6;
+>   
+> +	if (svm->ibs_enabled && sev_es_vibs_enabled)
+
+This should solely rely on svm->ibs_enabled, which means that 
+svm->ibs_enabled should have previously been set to false if 
+sev_es_vibs_enabled is false.
+
+> +		save->sev_features |= SVM_SEV_ES_FEAT_VIBS;
+> +
+>   	pr_debug("Virtual Machine Save Area (VMSA):\n");
+>   	print_hex_dump_debug("", DUMP_PREFIX_NONE, 16, 1, save, sizeof(*save), false);
+>   
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index 0cfe23bb144a..b85120f0d3ac 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -234,7 +234,7 @@ static int lbrv = true;
+>   module_param(lbrv, int, 0444);
+>   
+>   /* enable/disable IBS virtualization */
+> -static int vibs;
+> +static int vibs = true;
+>   module_param(vibs, int, 0444);
+>   
+>   static int tsc_scaling = true;
+> @@ -1245,10 +1245,13 @@ static inline void init_vmcb_after_set_cpuid(struct kvm_vcpu *vcpu)
+>   		/*
+>   		 * If hardware supports VIBS then no need to intercept IBS MSRS
+>   		 * when VIBS is enabled in guest.
+> +		 *
+> +		 * Enable VIBS by setting bit 2 at offset 0xb8 in VMCB.
 >   		 */
->   		if (test_and_clear_bit(IBS_STOPPED, pcpu->state))
->   			return 1;
-> +		/*
-> +		 * Catch NMIs generated in an active IBS window: Incoming NMIs
-> +		 * from an active IBS window might have the VALID bit cleared
-> +		 * when it is supposed to be set due to a race. The reason for
-> +		 * the race is ENABLE and VALID bits for MSR_AMD64_IBSFETCHCTL
-> +		 * and MSR_AMD64_IBSOPCTL being in their same respective MSRs.
-> +		 * Ignore all such NMIs and treat them as handled.
-> +		 */
-> +		if (amd_vibs_ignore_nmi())
-> +			return 1;
->   
->   		return 0;
->   	}
-> @@ -1542,3 +1552,16 @@ static __init int amd_ibs_init(void)
->   
->   /* Since we need the pci subsystem to init ibs we can't do this earlier: */
->   device_initcall(amd_ibs_init);
-> +
-> +static inline bool get_ibs_state(struct perf_ibs *perf_ibs)
-> +{
-> +	struct cpu_perf_ibs *pcpu = this_cpu_ptr(perf_ibs->pcpu);
-> +
-> +	return test_bit(IBS_STARTED, pcpu->state);
-> +}
-> +
-> +bool is_amd_ibs_started(void)
-> +{
-> +	return get_ibs_state(&perf_ibs_fetch) || get_ibs_state(&perf_ibs_op);
-> +}
-> +EXPORT_SYMBOL_GPL(is_amd_ibs_started);
+>   		if (vibs) {
+>   			if (guest_cpuid_has(&svm->vcpu, X86_FEATURE_IBS)) {
+>   				svm_ibs_msr_interception(svm, false);
+> +				svm->vmcb->control.virt_ext |= VIRTUAL_IBS_ENABLE_MASK;
 
-If this is only used by the IBS support, it shouldn't have an 
-EXPORT_SYMBOL_GPL.
-
-> diff --git a/arch/x86/events/amd/vibs.c b/arch/x86/events/amd/vibs.c
-> new file mode 100644
-> index 000000000000..273a60f1cb7f
-> --- /dev/null
-> +++ b/arch/x86/events/amd/vibs.c
-> @@ -0,0 +1,101 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + *  Virtualized Performance events - AMD VIBS
-> + *
-> + *  Copyright (C) 2023 Advanced Micro Devices, Inc., Manali Shukla
-> + *
-> + *  For licencing details see kernel-base/COPYING
-> + */
-> +
-> +#include <linux/perf_event.h>
-> +
-> +DEFINE_PER_CPU(bool, vibs_window_active);
-> +
-> +static bool amd_disable_ibs_fetch(u64 *ibs_fetch_ctl)
-> +{
-> +	*ibs_fetch_ctl = __rdmsr(MSR_AMD64_IBSFETCHCTL);
-> +	if (!(*ibs_fetch_ctl & IBS_FETCH_ENABLE))
-> +		return false;
-> +
-> +	native_wrmsrl(MSR_AMD64_IBSFETCHCTL, *ibs_fetch_ctl & ~IBS_FETCH_ENABLE);
-> +
-> +	return true;
-> +}
-> +
-> +static u64 amd_disable_ibs_op(u64 *ibs_op_ctl)
-> +{
-> +	*ibs_op_ctl = __rdmsr(MSR_AMD64_IBSOPCTL);
-> +	if (!(*ibs_op_ctl & IBS_OP_ENABLE))
-> +		return false;
-> +
-> +	native_wrmsrl(MSR_AMD64_IBSOPCTL, *ibs_op_ctl & ~IBS_OP_ENABLE);
-> +
-> +	return true;
-> +}
-> +
-> +static void amd_restore_ibs_fetch(u64 ibs_fetch_ctl)
-> +{
-> +	native_wrmsrl(MSR_AMD64_IBSFETCHCTL, ibs_fetch_ctl);
-> +}
-> +
-> +static void amd_restore_ibs_op(u64 ibs_op_ctl)
-> +{
-> +	native_wrmsrl(MSR_AMD64_IBSOPCTL, ibs_op_ctl);
-> +}
-> +
-> +bool amd_vibs_ignore_nmi(void)
-> +{
-> +	return __this_cpu_read(vibs_window_active);
-> +}
-> +EXPORT_SYMBOL_GPL(amd_vibs_ignore_nmi);
-
-If this is only used by the IBS support, it shouldn't have an 
-EXPORT_SYMBOL_GPL.
-
-> +
-> +bool amd_vibs_window(enum amd_vibs_window_state state, u64 *f_ctl,
-> +		     u64 *o_ctl)
-> +{
-> +	bool f_active, o_active;
-> +
-> +	switch (state) {
-> +	case WINDOW_START:
-> +		if (!f_ctl || !o_ctl)
-> +			return false;
-> +
-> +		if (!is_amd_ibs_started())
-> +			return false;
-> +
-> +		f_active = amd_disable_ibs_fetch(f_ctl);
-> +		o_active = amd_disable_ibs_op(o_ctl);
-> +		__this_cpu_write(vibs_window_active, (f_active || o_active));
-> +		break;
-> +
-> +	case WINDOW_STOPPING:
-> +		if (!f_ctl || !o_ctl)
-> +			return false;
-> +
-> +		if (__this_cpu_read(vibs_window_active))
-
-Shouldn't this be if (!__this_cpu_read(vibs_window_active)) ?
-
-> +			return false;
-> +
-> +		if (*f_ctl & IBS_FETCH_ENABLE)
-> +			amd_restore_ibs_fetch(*f_ctl);
-> +		if (*o_ctl & IBS_OP_ENABLE)
-> +			amd_restore_ibs_op(*o_ctl);
-
-Nit, these if checks could go into the restore functions to make this look 
-a bit cleaner, but that's just from my point of view.
-
-> +
-> +		break;
-> +
-> +	case WINDOW_STOPPED:
-> +		/*
-> +		 * This state is executed right after STGI (which is executed
-> +		 * after VMEXIT).  By this time, host IBS states are already
-> +		 * restored in WINDOW_STOPPING state, so f_ctl and o_ctl will
-> +		 * be passed as NULL for this state.
-> +		 */
-> +		if (__this_cpu_read(vibs_window_active))
-> +			__this_cpu_write(vibs_window_active, false);
-
-Any reason not to just issue __this_cpu_write(vibs_window_active, false) 
-without the if check?
-
-> +		break;
-> +
-> +	default:
-> +		return false;
-> +	}
-> +
-> +	return __this_cpu_read(vibs_window_active);
-
-You could just issue a return true or return false (depending on the case) 
-instead of having the break statements, e.g.:
-
-For WINDOW_START replace break with return (f_active || o_active)
-For WINDOW_STOPPING replace break with return true
-For WINDOW_STOPPED replace break with return false
-
-> +}
-> +EXPORT_SYMBOL_GPL(amd_vibs_window);
-> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-> index 85a9fd5a3ec3..b87c235e0e1e 100644
-> --- a/arch/x86/include/asm/perf_event.h
-> +++ b/arch/x86/include/asm/perf_event.h
-> @@ -486,6 +486,12 @@ struct pebs_xmm {
->   #define IBS_OP_MAX_CNT_EXT_MASK	(0x7FULL<<20)	/* separate upper 7 bits */
->   #define IBS_RIP_INVALID		(1ULL<<38)
->   
-> +enum amd_vibs_window_state {
-> +	WINDOW_START = 0,
-> +	WINDOW_STOPPING,
-> +	WINDOW_STOPPED,
-> +};
-> +
->   #ifdef CONFIG_X86_LOCAL_APIC
->   extern u32 get_ibs_caps(void);
->   extern int forward_event_to_ibs(struct perf_event *event);
-> @@ -584,6 +590,27 @@ static inline void intel_pt_handle_vmx(int on)
->   }
->   #endif
->   
-> +#if defined(CONFIG_X86_LOCAL_APIC) && defined(CONFIG_CPU_SUP_AMD)
-> +extern bool amd_vibs_window(enum amd_vibs_window_state state, u64 *vibs_fetch_ctl,
-> +			    u64 *vibs_op_ctl);
-> +extern bool is_amd_ibs_started(void);
-> +extern bool amd_vibs_ignore_nmi(void);
-
-And if the two above functions aren't EXPORT_SYMBOL_GPL, then they could 
-go somewhere else instead of here.
+This appears to do this for any type of guest, is this valid to do for 
+SEV-ES guests?
 
 Thanks,
 Tom
 
-> +#else
-> +static inline bool amd_vibs_window(enum amd_vibs_window_state state, u64 *vibs_fetch_ctl,
-> +				  u64 *vibs_op_ctl)
+>   				svm->ibs_enabled = true;
+>   
+>   				/*
+> @@ -5166,6 +5169,24 @@ static __init void svm_adjust_mmio_mask(void)
+>   	kvm_mmu_set_mmio_spte_mask(mask, mask, PT_WRITABLE_MASK | PT_USER_MASK);
+>   }
+>   
+> +static void svm_ibs_set_cpu_caps(void)
 > +{
-> +	return false;
+> +	kvm_cpu_cap_set(X86_FEATURE_IBS);
+> +	kvm_cpu_cap_set(X86_FEATURE_EXTLVT);
+> +	kvm_cpu_cap_set(X86_FEATURE_EXTAPIC);
+> +	kvm_cpu_cap_set(X86_FEATURE_IBS_AVAIL);
+> +	kvm_cpu_cap_set(X86_FEATURE_IBS_FETCHSAM);
+> +	kvm_cpu_cap_set(X86_FEATURE_IBS_OPSAM);
+> +	kvm_cpu_cap_set(X86_FEATURE_IBS_RDWROPCNT);
+> +	kvm_cpu_cap_set(X86_FEATURE_IBS_OPCNT);
+> +	kvm_cpu_cap_set(X86_FEATURE_IBS_BRNTRGT);
+> +	kvm_cpu_cap_set(X86_FEATURE_IBS_OPCNTEXT);
+> +	kvm_cpu_cap_set(X86_FEATURE_IBS_RIPINVALIDCHK);
+> +	kvm_cpu_cap_set(X86_FEATURE_IBS_OPBRNFUSE);
+> +	kvm_cpu_cap_set(X86_FEATURE_IBS_FETCHCTLEXTD);
+> +	kvm_cpu_cap_set(X86_FEATURE_IBS_ZEN4_EXT);
 > +}
-> +static inline bool is_amd_ibs_started(void)
-> +{
-> +	return false;
-> +}
-> +static inline bool amd_vibs_ignore_nmi(void)
-> +{
-> +	return false;
-> +}
-> +#endif
 > +
->   #if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_AMD)
->    extern void amd_pmu_enable_virt(void);
->    extern void amd_pmu_disable_virt(void);
+>   static __init void svm_set_cpu_caps(void)
+>   {
+>   	kvm_set_cpu_caps();
+> @@ -5208,6 +5229,9 @@ static __init void svm_set_cpu_caps(void)
+>   		kvm_cpu_cap_set(X86_FEATURE_SVME_ADDR_CHK);
+>   	}
+>   
+> +	if (vibs)
+> +		svm_ibs_set_cpu_caps();
+> +
+>   	/* CPUID 0x80000008 */
+>   	if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
+>   	    boot_cpu_has(X86_FEATURE_AMD_SSBD))
