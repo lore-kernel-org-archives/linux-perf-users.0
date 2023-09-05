@@ -2,608 +2,123 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89008CA0FF8
-	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Sep 2023 16:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F05CA0FE2
+	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Sep 2023 16:02:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235595AbjIEQCV (ORCPT
+        id S235501AbjIEQCS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 5 Sep 2023 12:02:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47834 "EHLO
+        Tue, 5 Sep 2023 12:02:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354440AbjIELlW (ORCPT
+        with ESMTP id S244900AbjIEBd4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 5 Sep 2023 07:41:22 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F7C41AE
-        for <linux-perf-users@vger.kernel.org>; Tue,  5 Sep 2023 04:41:17 -0700 (PDT)
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 385Bcquf000658;
-        Tue, 5 Sep 2023 11:41:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=NW4FzMz6UpipfR6mOGfFWM09jdtytMIE4L3Xw9K3oDo=;
- b=WpU797F7hdVsjyDAWI7jkPtDK/bEH3Lo2ZMF+0uyTW81CG76M0PGFsNWcxXtFtaGs9nf
- nBkzvd1uPrNt3JpKKQJ7u2Noipj95Xzw0wYMhl4xNozXKxguVIlDiZ5JH6aXym8KQf1f
- jPYiF2U/k5UFVt07gZMa3oSGXV8HEzSkMkBEOLKiqOEai4xFbq8hcU/BXoWwnb0FXVPr
- p8u83HuJucGQalYr1Fe+6j7BkGNy/RJIg0syXPiKfilSp6dkHugojtadyyQpOdrTtG/m
- xtfmAHBVK+p3PZajMLnZQ7jjrv+5i7BpUjGIV+Rk2gpZTcUk2MS4OQ7JUHdJedlW8aoW uQ== 
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3swtk8k0us-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 Sep 2023 11:41:10 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 385BEAwC011145;
-        Tue, 5 Sep 2023 11:41:09 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3svj31hn8k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 Sep 2023 11:41:09 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 385Bf6qM26542656
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 Sep 2023 11:41:06 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7C7AD2004B;
-        Tue,  5 Sep 2023 11:41:06 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 39FCF20043;
-        Tue,  5 Sep 2023 11:41:04 +0000 (GMT)
-Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com.com (unknown [9.43.100.85])
-        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Tue,  5 Sep 2023 11:41:03 +0000 (GMT)
-From:   Kajol Jain <kjain@linux.ibm.com>
-To:     acme@kernel.org
-Cc:     maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        disgoel@linux.ibm.com, kjain@linux.ibm.com,
-        linux-perf-users@vger.kernel.org, namhyung@kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 2/3] perf vendor events: Update JSON/events for power10 platform
-Date:   Tue,  5 Sep 2023 17:10:38 +0530
-Message-Id: <20230905114039.176645-2-kjain@linux.ibm.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20230905114039.176645-1-kjain@linux.ibm.com>
-References: <20230905114039.176645-1-kjain@linux.ibm.com>
+        Mon, 4 Sep 2023 21:33:56 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B49DCC5
+        for <linux-perf-users@vger.kernel.org>; Mon,  4 Sep 2023 18:33:53 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id 98e67ed59e1d1-27183f4ccc1so931591a91.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 Sep 2023 18:33:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1693877633; x=1694482433; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6S8Zr6qvg1Ao4DxVpdQ4RADfHwn46fbVmt8Nq/6N2T8=;
+        b=gCZjUL0OOc5vrqUQ1EslFtA7E8KovwlzkIN7BUlC4P7rkcJMdN/R/FruxpjMnmfdU0
+         qatxD5w84iIv0h6ALhtvDEpZDUrkFK6CSlSPobP2yxah5SRBsDJNJzZN8uMqjtE2m0ee
+         0m0nnajZGvvvMB0tKLylxduEbFnHbkO+CaTw5ViTbE90DLQmxz8oQ1zEg0C5v5EEfNle
+         NUAWIiRA9mL5GfdIhvGA8n82rb8uM6A0qLi9MnPmnAP6Bjc0WewxhFltupA1gvC+ZuWJ
+         2o6rh/EnM0ESvhGkluE9FuSY3omR+o06x++2at5l7Pp+GSkuIkOmdHww+Ny/ApRKMlWu
+         9SUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693877633; x=1694482433;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6S8Zr6qvg1Ao4DxVpdQ4RADfHwn46fbVmt8Nq/6N2T8=;
+        b=PIqXS4OGkuzgckCnJCpjHS0cCQ/j4uxzMUcp9YRTaZJzvbzmOxWCwRBfvm6Z+FRD2Y
+         0ZwVmZIUG+V+qIpC+AHKyQ/BgSAiGyXl8G4U3th/TlBux+sy+XSCbbsJFTHX9xO3ePLf
+         /y9n1lSQGii36xor1+8Ps+w5AHRgMXGdpRsVE8K6YcIvpu0adfZWUU9knzKvuqoCO55d
+         ddRrVs5qQ5hIEGTirysyZ9dqi+7V1Smycnm1Zk6l3CQ0z8qjEnM/eEk5J95XPXTyfZ38
+         AwthFW3Wn31iJI/Z3lvpLVczpFcchB/btBBRvSauwu5OohGAbKtD0gVo6ZzWcr+vyAiz
+         qj1w==
+X-Gm-Message-State: AOJu0YytiHzjKIFW7aY7W449tNz6UfJ1WCyVQipwB/wFRnaxg6hQ6HvP
+        h3lE383DNvCIBEp56+zzxGwBgw==
+X-Google-Smtp-Source: AGHT+IHXumvH4mpK+FtuZ8UBv3wR5yIPoKGnroc4pvxo61RJr3QNYTKh8hRpX35n/csahdAepThgNw==
+X-Received: by 2002:a17:902:f689:b0:1bf:205f:c02c with SMTP id l9-20020a170902f68900b001bf205fc02cmr11406801plg.58.1693877632918;
+        Mon, 04 Sep 2023 18:33:52 -0700 (PDT)
+Received: from leoy-huanghe ([223.104.5.47])
+        by smtp.gmail.com with ESMTPSA id l11-20020a170902f68b00b001b8af7f632asm8116268plg.176.2023.09.04.18.33.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Sep 2023 18:33:52 -0700 (PDT)
+Date:   Tue, 5 Sep 2023 09:33:38 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] perf cs-etm: Validate timestamp tracing in
+ per-thread mode
+Message-ID: <20230905013214.GE114383@leoy-huanghe>
+References: <20230827133557.112494-1-leo.yan@linaro.org>
+ <20230827133557.112494-2-leo.yan@linaro.org>
+ <8eb9b2c0-1dbb-8a93-fc4e-463a6daadb9c@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ewbNSioy1QlPKsg-BN-zoT7Ycq0xKZP2
-X-Proofpoint-ORIG-GUID: ewbNSioy1QlPKsg-BN-zoT7Ycq0xKZP2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-05_10,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 priorityscore=1501 adultscore=0 spamscore=0 phishscore=0
- clxscore=1015 malwarescore=0 mlxscore=0 impostorscore=0 bulkscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2309050103
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8eb9b2c0-1dbb-8a93-fc4e-463a6daadb9c@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Update JSON/Events list with additional data-source events
-for power10 platform.
+On Mon, Sep 04, 2023 at 04:23:43PM +0100, James Clark wrote:
+> 
+> On 27/08/2023 14:35, Leo Yan wrote:
+> > So far, it's impossible to validate timestamp trace in Arm CoreSight when
+> > the perf is in the per-thread mode.  E.g. for the command:
+> > 
+> >   perf record -e cs_etm/timestamp/ --per-thread -- ls
+> > 
+> > The command enables config 'timestamp' for 'cs_etm' event in the
+> > per-thread mode.  In this case, the function cs_etm_validate_config()
+> > directly bails out and skips validation.
+> > 
+> > Given profiled process can be scheduled on any CPUs in the per-thread
+> > mode, this patch validates timestamp tracing for all CPUs when detect
+> > the CPU map is empty.
+> 
+> There is an edge case where the profiled process is known by the user to
+> be pinned to a specific CPU, rather than possibly running on all CPUs,
+> so this isn't always true.
 
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
----
- .../arch/powerpc/power10/datasource.json      | 505 ++++++++++++++++++
- 1 file changed, 505 insertions(+)
+Good point.
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/power10/datasource.json b/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
-index 12cfb9785433..6b0356f2d301 100644
---- a/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
-@@ -1278,5 +1278,510 @@
-     "EventCode": "0x0A4240000000C142",
-     "EventName": "PM_MRK_DATA_FROM_NON_REGENT_L2L3_MOD",
-     "BriefDescription": "The processor's L1 data cache was reloaded with a line in the M (exclusive) state from another core's L2 or L3 on the same chip in a different regent due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0A4240000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_NON_REGENT_L2L3_MOD_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a line in the M (exclusive) state from another core's L2 or L3 on the same chip in a different regent due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0A0300000000C142",
-+    "EventName": "PM_MRK_INST_FROM_NON_REGENT_L2L3",
-+    "BriefDescription": "The processor's instruction cache was reloaded from another core's L2 or L3 on the same chip in a different regent due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0A0340000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_NON_REGENT_L2L3",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from another core's L2 or L3 on the same chip in a different regent due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0A0300000010C142",
-+    "EventName": "PM_MRK_INST_FROM_NON_REGENT_L2L3_ALL",
-+    "BriefDescription": "The processor's instruction cache was reloaded from another core's L2 or L3 on the same chip in a different regent due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0A0340000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_NON_REGENT_L2L3_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from another core's L2 or L3 on the same chip in a different regent due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x094100000000C142",
-+    "EventName": "PM_MRK_INST_FROM_LMEM",
-+    "BriefDescription": "The processor's instruction cache was reloaded from the local chip's memory due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x094040000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_LMEM",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from the local chip's memory due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x094100000010C142",
-+    "EventName": "PM_MRK_INST_FROM_LMEM_ALL",
-+    "BriefDescription": "The processor's instruction cache was reloaded from the local chip's memory due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x094040000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_LMEM_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from the local chip's memory due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x098040000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_L_OC_CACHE",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from the local chip's OpenCAPI cache due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x098040000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_L_OC_CACHE_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from the local chip's OpenCAPI cache due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x09C040000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_L_OC_MEM",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from the local chip's OpenCAPI memory due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x09C040000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_L_OC_MEM_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from the local chip's OpenCAPI memory due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x098100000000C142",
-+    "EventName": "PM_MRK_INST_FROM_L_OC_ANY",
-+    "BriefDescription": "The processor's instruction cache was reloaded from the local chip's OpenCAPI cache or memory due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x098140000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_L_OC_ANY",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from the local chip's OpenCAPI cache or memory due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x098100000010C142",
-+    "EventName": "PM_MRK_INST_FROM_L_OC_ANY_ALL",
-+    "BriefDescription": "The processor's instruction cache was reloaded from the local chip's OpenCAPI cache or memory due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x098140000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_L_OC_ANY_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from the local chip's OpenCAPI cache or memory due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C0040000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_RL2_SHR",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a valid line that was not in the M (exclusive) state from another core's L2 from a remote chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C0040000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_RL2_SHR_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a valid line that was not in the M (exclusive) state from another core's L2 from a remote chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C4040000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_RL2_MOD",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a line in the M (exclusive) state from another core's L2 from a remote chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C4040000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_RL2_MOD_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a line in the M (exclusive) state from another core's L2 from a remote chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C0100000000C142",
-+    "EventName": "PM_MRK_INST_FROM_RL2",
-+    "BriefDescription": "The processor's instruction cache was reloaded from another core's L2 from a remote chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C0140000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_RL2",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from another core's L2 from a remote chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C0100000010C142",
-+    "EventName": "PM_MRK_INST_FROM_RL2_ALL",
-+    "BriefDescription": "The processor's instruction cache was reloaded from another core's L2 from a remote chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C0140000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_RL2_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from another core's L2 from a remote chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C8040000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_RL3_SHR",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a valid line that was not in the M (exclusive) state from another core's L3 from a remote chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C8040000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_RL3_SHR_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a valid line that was not in the M (exclusive) state from another core's L3 from a remote chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0CC040000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_RL3_MOD",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a line in the M (exclusive) state from another core's L3 from a remote chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0CC040000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_RL3_MOD_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a line in the M (exclusive) state from another core's L3 from a remote chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C8100000000C142",
-+    "EventName": "PM_MRK_INST_FROM_RL3",
-+    "BriefDescription": "The processor's instruction cache was reloaded from another core's L3 from a remote chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C8140000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_RL3",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from another core's L3 from a remote chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C8100000010C142",
-+    "EventName": "PM_MRK_INST_FROM_RL3_ALL",
-+    "BriefDescription": "The processor's instruction cache was reloaded from another core's L3 from a remote chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C8140000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_RL3_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from another core's L3 from a remote chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C0240000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_RL2L3_SHR",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a valid line that was not in the M (exclusive) state from another core's L2 or L3 from a remote chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C0240000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_RL2L3_SHR_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a valid line that was not in the M (exclusive) state from another core's L2 or L3 from a remote chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C4240000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_RL2L3_MOD",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a line in the M (exclusive) state from another core's L2 or L3 from a remote chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C4240000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_RL2L3_MOD_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a line in the M (exclusive) state from another core's L2 or L3 from a remote chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C0300000000C142",
-+    "EventName": "PM_MRK_INST_FROM_RL2L3",
-+    "BriefDescription": "The processor's instruction cache was reloaded from another core's L2 or L3 from a remote chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C0340000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_RL2L3",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from another core's L2 or L3 from a remote chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C0300000010C142",
-+    "EventName": "PM_MRK_INST_FROM_RL2L3_ALL",
-+    "BriefDescription": "The processor's instruction cache was reloaded from another core's L2 or L3 from a remote chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C0340000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_RL2L3_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from another core's L2 or L3 from a remote chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0D4100000000C142",
-+    "EventName": "PM_MRK_INST_FROM_RMEM",
-+    "BriefDescription": "The processor's instruction cache was reloaded from remote memory (MC slow) due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0D4040000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_RMEM",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from remote memory (MC slow) due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0D4100000010C142",
-+    "EventName": "PM_MRK_INST_FROM_RMEM_ALL",
-+    "BriefDescription": "The processor's instruction cache was reloaded from remote memory (MC slow) due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0D4040000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_RMEM_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from remote memory (MC slow) due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0D8040000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_R_OC_CACHE",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from a remote chip's OpenCAPI cache due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0D8040000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_R_OC_CACHE_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from a remote chip's OpenCAPI cache due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0DC040000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_R_OC_MEM",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from a remote chip's OpenCAPI memory due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0DC040000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_R_OC_MEM_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from a remote chip's OpenCAPI memory due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0D8100000000C142",
-+    "EventName": "PM_MRK_INST_FROM_R_OC_ANY",
-+    "BriefDescription": "The processor's instruction cache was reloaded from a remote chip's OpenCAPI cache or memory due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0D8140000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_R_OC_ANY",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from a remote chip's OpenCAPI cache or memory due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0D8100000010C142",
-+    "EventName": "PM_MRK_INST_FROM_R_OC_ANY_ALL",
-+    "BriefDescription": "The processor's instruction cache was reloaded from a remote chip's OpenCAPI cache or memory due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0D8140000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_R_OC_ANY_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from a remote chip's OpenCAPI cache or memory due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E0040000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_DL2_SHR",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a valid line that was not in the M (exclusive) state from another core's L2 from a distant chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E0040000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_DL2_SHR_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a valid line that was not in the M (exclusive) state from another core's L2 from a distant chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E4040000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_DL2_MOD",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a line in the M (exclusive) state from another core's L2 from a distant chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E4040000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_DL2_MOD_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a line in the M (exclusive) state from another core's L2 from a distant chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E0100000000C142",
-+    "EventName": "PM_MRK_INST_FROM_DL2",
-+    "BriefDescription": "The processor's instruction cache was reloaded from another core's L2 from a distant chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E0140000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_DL2",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from another core's L2 from a distant chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E0100000010C142",
-+    "EventName": "PM_MRK_INST_FROM_DL2_ALL",
-+    "BriefDescription": "The processor's instruction cache was reloaded from another core's L2 from a distant chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E0140000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_DL2_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from another core's L2 from a distant chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E8040000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_DL3_SHR",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a valid line that was not in the M (exclusive) state from another core's L3 from a distant chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E8040000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_DL3_SHR_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a valid line that was not in the M (exclusive) state from another core's L3 from a distant chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0EC040000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_DL3_MOD",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a line in the M (exclusive) state from another core's L3 from a distant chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0EC040000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_DL3_MOD_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a line in the M (exclusive) state from another core's L3 from a distant chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E8100000000C142",
-+    "EventName": "PM_MRK_INST_FROM_DL3",
-+    "BriefDescription": "The processor's instruction cache was reloaded from another core's L3 from a distant chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E8140000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_DL3",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from another core's L3 from a distant chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E8100000010C142",
-+    "EventName": "PM_MRK_INST_FROM_DL3_ALL",
-+    "BriefDescription": "The processor's instruction cache was reloaded from another core's L3 from a distant chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E8140000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_DL3_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from another core's L3 from a distant chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E0240000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_DL2L3_SHR",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a valid line that was not in the M (exclusive) state from another core's L2 or L3 from a distant chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E0240000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_DL2L3_SHR_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a valid line that was not in the M (exclusive) state from another core's L2 or L3 from a distant chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E4240000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_DL2L3_MOD",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a line in the M (exclusive) state from another core's L2 or L3 from a distant chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E4240000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_DL2L3_MOD_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded with a line in the M (exclusive) state from another core's L2 or L3 from a distant chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E0300000000C142",
-+    "EventName": "PM_MRK_INST_FROM_DL2L3",
-+    "BriefDescription": "The processor's instruction cache was reloaded from another core's L2 or L3 from a distant chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E0340000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_DL2L3",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from another core's L2 or L3 from a distant chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E0300000010C142",
-+    "EventName": "PM_MRK_INST_FROM_DL2L3_ALL",
-+    "BriefDescription": "The processor's instruction cache was reloaded from another core's L2 or L3 from a distant chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0E0340000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_DL2L3_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from another core's L2 or L3 from a distant chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0F4100000000C142",
-+    "EventName": "PM_MRK_INST_FROM_DMEM",
-+    "BriefDescription": "The processor's instruction cache was reloaded from distant memory (MC slow) due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0F4040000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_DMEM",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from distant memory (MC slow) due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0F4100000010C142",
-+    "EventName": "PM_MRK_INST_FROM_DMEM_ALL",
-+    "BriefDescription": "The processor's instruction cache was reloaded from distant memory (MC slow) due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0F4040000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_DMEM_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from distant memory (MC slow) due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0F8040000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_D_OC_CACHE",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from a distant chip's OpenCAPI cache due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0F8040000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_D_OC_CACHE_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from a distant chip's OpenCAPI cache due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0FC040000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_D_OC_MEM",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from a distant chip's OpenCAPI memory due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0FC040000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_D_OC_MEM_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from a distant chip's OpenCAPI memory due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0F8100000000C142",
-+    "EventName": "PM_MRK_INST_FROM_D_OC_ANY",
-+    "BriefDescription": "The processor's instruction cache was reloaded from a distant chip's OpenCAPI cache or memory due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0F8140000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_D_OC_ANY",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from a distant chip's OpenCAPI cache or memory due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0F8100000010C142",
-+    "EventName": "PM_MRK_INST_FROM_D_OC_ANY_ALL",
-+    "BriefDescription": "The processor's instruction cache was reloaded from a distant chip's OpenCAPI cache or memory due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0F8140000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_D_OC_ANY_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from a distant chip's OpenCAPI cache or memory due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x080B00000000C142",
-+    "EventName": "PM_MRK_INST_FROM_ONCHIP_CACHE",
-+    "BriefDescription": "The processor's instruction cache was reloaded from another core's L2 or L3 from the same chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x080B40000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_ONCHIP_CACHE",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from another core's L2 or L3 from the same chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x080B00000010C142",
-+    "EventName": "PM_MRK_INST_FROM_ONCHIP_CACHE_ALL",
-+    "BriefDescription": "The processor's instruction cache was reloaded from another core's L2 or L3 from the same chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x080B40000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_ONCHIP_CACHE_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from another core's L2 or L3 from the same chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C0B00000000C142",
-+    "EventName": "PM_MRK_INST_FROM_OFFCHIP_CACHE",
-+    "BriefDescription": "The processor's instruction cache was reloaded from another core's L2 or L3 from a different chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C0B40000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_OFFCHIP_CACHE",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from another core's L2 or L3 from a different chip due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C0B00000010C142",
-+    "EventName": "PM_MRK_INST_FROM_OFFCHIP_CACHE_ALL",
-+    "BriefDescription": "The processor's instruction cache was reloaded from another core's L2 or L3 from a different chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x0C0B40000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_OFFCHIP_CACHE_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from another core's L2 or L3 from a different chip due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x095900000000C142",
-+    "EventName": "PM_MRK_INST_FROM_ANY_MEMORY",
-+    "BriefDescription": "The processor's instruction cache was reloaded from any chip's memory (MC slow) due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x095840000000C142",
-+    "EventName": "PM_MRK_DATA_FROM_ANY_MEMORY",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from any chip's memory (MC slow) due to a demand miss for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x095900000010C142",
-+    "EventName": "PM_MRK_INST_FROM_ANY_MEMORY_ALL",
-+    "BriefDescription": "The processor's instruction cache was reloaded from any chip's memory (MC slow) due to a demand miss or prefetch reload for a marked instruction."
-+  },
-+  {
-+    "EventCode": "0x095840000020C142",
-+    "EventName": "PM_MRK_DATA_FROM_ANY_MEMORY_ALL",
-+    "BriefDescription": "The processor's L1 data cache was reloaded from any chip's memory (MC slow) due to a demand miss or prefetch reload for a marked instruction."
-   }
- ]
--- 
-2.39.3
+However, when a process is pinned to specific CPUs, we still can
+dynamically change the scheduling affinity to any other CPUs by using
+taskset command or calling sched_setaffinity().  From a perf session's
+pespective, it is sane to validate timestamp tracing for all online
+CPUs for per-thread mode.
 
+> But I think that can be worked around by changing it to a per-cpu
+> session to get around the new error. Given that this validation was only
+> supposed to be best effort information and not get in the way you could
+> say to not make it more restrictive.
+> 
+> But it's quite a small edge case so either way:
+> 
+> Reviewed-by: James Clark <james.clark@arm.com>
+
+Thanks for review!
+
+Leo
