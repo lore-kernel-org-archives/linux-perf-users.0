@@ -2,274 +2,505 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A56BC83F2C
-	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Sep 2023 16:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20181CA0FFB
+	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Sep 2023 17:49:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234113AbjIEQhY (ORCPT
+        id S234841AbjIERtj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 5 Sep 2023 12:37:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50770 "EHLO
+        Tue, 5 Sep 2023 13:49:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241415AbjIEQKD (ORCPT
+        with ESMTP id S237572AbjIERt1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 5 Sep 2023 12:10:03 -0400
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2061a.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e83::61a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36BC71BCB;
-        Tue,  5 Sep 2023 09:02:17 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mX0eXshGCaHsgDAzFTf4dOPttQJsTHsge8X54Aj5QKbcos5BIP+o0FnoKCmDei8aNY63ckScEwzfhHtwfJ3KUk1qY5aAHgCvh/kmh0vdhIhiGFRONNfv6zN7CKch0Dz4bMgckkCJwS4KZGxu4wrp934j4VRclEfITwfk2kKk5z+o40/KKjxhuMzd/dfua6RSjkAoJgbpx+/6fhEtNhEDCpp9p3hrxiwJZkyfOAxVReT9EETodJXGjj8kyzdiTHQikQw1bKkhTsAzp0AX117qZBI5Sc/t8njeS4zfeqD7ToMi7dut6yrrEUE3V3p0UNhvsduBEanlzvlA0hZw1NHOMw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4Gnnso5zIiYvxAJ0lWmkewY0PcrxQVsKSk0JpJ3+E8w=;
- b=bRBymqeE3qvafF1K8RkYfGzjyj++mS/rK0CB8PdMLPoHY/B4b0zgb44UMauKbxHW5LfxGQpfxELGT9dWMRhtw02gZ0bFKpwE81YLEId/UAIO5kvLmsn1e6ixp+Xovo5IvgPiAOr2hj58/ow2xL21xuAtbQLDrdtp7HTSK/tDOjkT4jFHEyJDCagySq0VYwvnbYjaRtIJARLR+ijvzPFBBsTjbbCDT60hDOhHe86ZhWI9RnwIBSeIVrVaFsrte5Q5zH92yjonQ1f+lgts3GAerXAiIaLDfsXsLVE4UWgGWuyjyDB28iWFCS1aSfUlSeDrE0/5Ck/FVZRKovGa/cwGXg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4Gnnso5zIiYvxAJ0lWmkewY0PcrxQVsKSk0JpJ3+E8w=;
- b=Buav8YAxmRKx6jrN+eWK66nDcIMuR7eamFJRngbKD4HFYWyptxZp8uO/75HTBvoIdGuoDwokfIvQK7VFFOaJS2JkY8rv5eahsvzPrnTC4UCCZeQBd73he4qZjl4BLMD5llugHXP6Y3b1h9AcC+vmeINLC0cNqV3H5PziA6pUwwc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5229.namprd12.prod.outlook.com (2603:10b6:5:398::12)
- by DS7PR12MB6190.namprd12.prod.outlook.com (2603:10b6:8:99::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.32; Tue, 5 Sep
- 2023 16:00:31 +0000
-Received: from DM4PR12MB5229.namprd12.prod.outlook.com
- ([fe80::d267:7b8b:844f:8bcd]) by DM4PR12MB5229.namprd12.prod.outlook.com
- ([fe80::d267:7b8b:844f:8bcd%7]) with mapi id 15.20.6745.030; Tue, 5 Sep 2023
- 16:00:31 +0000
-Message-ID: <aa466f6f-9b21-7bf6-84de-82b3aa722f36@amd.com>
-Date:   Tue, 5 Sep 2023 11:00:26 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [PATCH 12/13] KVM: SVM: Enable IBS virtualization on non SEV-ES
- and SEV-ES guests
-Content-Language: en-US
-To:     Manali Shukla <manali.shukla@amd.com>, kvm@vger.kernel.org,
-        seanjc@google.com
-Cc:     linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        x86@kernel.org, pbonzini@redhat.com, peterz@infradead.org,
-        bp@alien8.de, santosh.shukla@amd.com, ravi.bangoria@amd.com,
-        nikunj@amd.com
-References: <20230904095347.14994-1-manali.shukla@amd.com>
- <20230904095347.14994-13-manali.shukla@amd.com>
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-In-Reply-To: <20230904095347.14994-13-manali.shukla@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM6PR08CA0029.namprd08.prod.outlook.com
- (2603:10b6:5:80::42) To DM4PR12MB5229.namprd12.prod.outlook.com
- (2603:10b6:5:398::12)
+        Tue, 5 Sep 2023 13:49:27 -0400
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0000DF53C;
+        Tue,  5 Sep 2023 10:33:00 -0700 (PDT)
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-79536bc669dso109246239f.3;
+        Tue, 05 Sep 2023 10:33:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693935057; x=1694539857;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DO1FPtedkL47l4TfFe1IxuBcYOsSdt2mnyn3ookT8H0=;
+        b=KeS/0lzLe4arM9GikLR5okGniCW5Yd0SFyxEkcJ31awtRiZMbJixYCzGtRBx97kMGF
+         hQBJERCNnhh9dxwijEgtnzFvyFfQDqy0mGfGuRsITVi/XxWQwXCN46aOp3YHLtqGcMeI
+         vwwXIsFK9Y3wxnB9aeOeejdTZetV0sSo8pAVcIx+GESqi5A6d49MnpvgkS/dl4P0eEXW
+         yZiZTV7L4M+XGPi96pPGr/WAqBUJtHtPAuoZ4adJrIuTmTdLeI6JV4LxhdGtZXviT8L6
+         6kENeQpYnXzUDYfn/X+CaT8/0obrRIkyB9FuHqY5fc4TJN8wtvYGOPBKFMxalYcCrSLA
+         Tizg==
+X-Gm-Message-State: AOJu0YzTESYJAJnklAvYPayLzOxwO9tISUGHPS4Y+2oLhEYfCXRgMf2i
+        UhG7LZ27S1qwROXIBJZ1x/n3QAWjWs+fYRAol3k=
+X-Google-Smtp-Source: AGHT+IHtteEAVcF3a6dBQVFAMiOijOcuoMZoT0qI0UGD52X/zurM+ZxwTiXAT0FEU0whUmY7A38sBD5vS8FG9EdnUWc=
+X-Received: by 2002:a6b:4904:0:b0:787:953:514b with SMTP id
+ u4-20020a6b4904000000b007870953514bmr16237718iob.3.1693935056803; Tue, 05 Sep
+ 2023 10:30:56 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5229:EE_|DS7PR12MB6190:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1329ca06-72b4-40bf-0437-08dbae29399e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7yedxH1wF3v+rnIuw7Z+cbep7OqdyCVOpi/lQY1McY73/+WfDzRBQWEndSRFpeq6MLCIreXZAFROhsSJhSpRD47UYxURVYbqXpnstEyw/nwqLpve98ctd+GT+0tL/mGWC/U+xjQboaQrRZe+XS8zzBpMxDBZl0VK+9nqN++rT73GdiGhzNHKXKEVsn9tlbeWXh86Fg2512dFfEV7G1rljEZs23z7KikGqhAmYfxmZnO2J1DT3z8RwRlhIfsO3M7vTrplqp/FCwb9TdWLtdoNq4UydjzQh4kGlLdnxzZntaGljKglExkhC7LKOnTj0ydGcdhb9u8X0lAeJZp+pW1wu+ZzeCnmNlp7Zp9VGF5Tbh3d3Cm0LAmUuBB545wca8iw+Th3xWKILXsHBjrXDu5MMvoUKQMTGA54zd+ULu1y8P3jD2/2cUqkwius7QbNagVy66aoWA8lethpTzPXPz1wPEQA3i7bAoq/TR+BBrcvc2oBtOIIux46Z1KfBkXBL60RiSTZOVSQDRaspGKXQQ77qkJfJ+VWdyqFOHQ5ZNHFbc4Hwc4iKVnb3alitDwRbfz/hGG5a2yT1M6lwNAHiUTp2U6KSGJpfWgEcROo+tiLN16e4QaEF7LWCVrmIo4rgfwIMS6dfBhQdEhXcZLWaCUO6g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5229.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(39860400002)(366004)(376002)(346002)(136003)(186009)(1800799009)(451199024)(53546011)(6486002)(6506007)(41300700001)(478600001)(2906002)(36756003)(6512007)(38100700002)(316002)(31696002)(66476007)(66946007)(66556008)(86362001)(6666004)(8936002)(8676002)(4326008)(31686004)(26005)(2616005)(83380400001)(5660300002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZTVIY3YwRWFYZUJHbXJCeWpsRGx6clExUjdJUTdoaGp0WnR1UmQ1SkpBdHVE?=
- =?utf-8?B?Slc1MXJRdnhtUXY5OUhiRnpIV2E3bmpvc3hHVmZ6Uld1alZqZnFtMklkQllq?=
- =?utf-8?B?eStVZ0VsUVJLNi9OcnVsU1YrRGdRMDQ3Ny9iL3VMV0dFaXgxR3ZzZ1FUT1VR?=
- =?utf-8?B?cVZnOGdKeS9PZ3VkbWFiNnp5Y2hUemhwR1VLcHJCOStJbUl0cDhWaWRQKzNj?=
- =?utf-8?B?d3NBSU5pdm9La3p4UDVZZWdwRlVyTU9id01zcXVnTlgwN05DQTBjanlZd1ND?=
- =?utf-8?B?T1QzZzUwNWJFbkFxZkxoTHZLeVNCODMyWHFCcUZLNnBlb1dGY1NPTVRlQ0w3?=
- =?utf-8?B?NVFwOWdiUTUvbmF5Y0ZEOFNIaVlPQUIxY0ZKbUZCT0hBUFBSR3BuaGN6TDNY?=
- =?utf-8?B?cFVwVkR3ZldPVDJRWnhYWmZZcXJWdm5LRG5WMGJuRkh3eURVZzRsRzVQcHQ5?=
- =?utf-8?B?Y1pqTjNFcDh1TFFta0hZakxtWkN5K3pZSm9BWEVicjBCa2xqaklrZFJoTEI2?=
- =?utf-8?B?ci9mdkhPTTJVeWpvMnZ3SUFlWnhIQWI1ZHoybWh6QU5MOUFFTnFXWThrS1JG?=
- =?utf-8?B?TFhSaXIrUTN4RmdPenZSdjhPZ2NRcHZBbU1DQ2l4aHNpeEQ5aXcxbkJzOVdz?=
- =?utf-8?B?TThpVVlUWUR0R2hQVEpFQjRsREx0T3VUMkp1Mk44NE54VlNJaS9UMjkvQURN?=
- =?utf-8?B?U1JJOGFZa3FaYXArR21zUlNtNTNEVXA5TEdTUkk3UVBJMGxnTEp0S1ZlRDEr?=
- =?utf-8?B?dXhqWndsN0xxbXdndGR3WGJyS1h0cFdIYmdZZXFhOGo2L3JyS2NyQXFJVytk?=
- =?utf-8?B?ZWRkZ1lvZzRudUNEK3dacDhYTHdDZjN6OXhheXNiSGlkSDhxMS9SRFRvMExn?=
- =?utf-8?B?M2J0WUtOTGNGSW0zQm9Vd2tPVU1IK2doMWFKYUw4NXFvaTBXQk5kVnRsM3hl?=
- =?utf-8?B?V3g5bktQcVVBZm9pK0dta3VwTWFMdzIxREZnWVh6QmlxVU1wbEw2bjVWZ2x6?=
- =?utf-8?B?aWJyMFN0bVp4WUhhNXRJUjZGWVoya3h5UEpzbm5nWHFpVk1Ud1NQbzZqdWJY?=
- =?utf-8?B?QUNWangxY0pIbEsrd0J1YXA5WlhXVGZyQ29nQnJmT1VlVm9lR0dySUx5Y21o?=
- =?utf-8?B?RUM0ekpROTVKQ1hSREtuVUIyNUNtaTJYdUpkUU9FYVk5R2tnckJNZCsyS1Fp?=
- =?utf-8?B?V3N1eWpqVnlCY3FLbXFZSUt6cUhyVlNRNFF1R09sRC9DRmYvcXl2RHo1bjF5?=
- =?utf-8?B?OHNFUk5LMEJFdHUvM3Q5aUE5UHdaT3BvUGNjRkdwVzV2elVuR3JxN2hpaVpU?=
- =?utf-8?B?dzFVMTJwSlpiNFYvS1N2WndndUNMK1IzcEhGY3dBRlJYOEZoQW1wYkVTRWZO?=
- =?utf-8?B?YzRab2Y4czZSZ05FNGlxS1lyOXZSYm5mbUFxN2NNWDkyTjRVUDE5a1NiSFNw?=
- =?utf-8?B?MndkYXc0U0IyMEtRVytrMGxEWnNXQ2dUenZ3ai9EeFdtdzNHeTkyS3k0UDhl?=
- =?utf-8?B?cVljZWRBQ1E2b0FrQStXbFE4OVpuRmZnek5OY3pBUVBRT0owVjJydHRDdGU2?=
- =?utf-8?B?aGNtY1gzbllCeDBKU3BVM0kvbGs3cjl2aFBCMmpNakVOYUlSeXMvblhadmZR?=
- =?utf-8?B?RWFCWjg5OWpNOTY0NUY5K1U2VXg4RVQ3Y09XK2hxeGFNblRzNmkwV1BORkxF?=
- =?utf-8?B?eXN2emVPdVZnTWFrS3VXNEo5N1NQQ09LMlgzQ3RIMExEeWpnMXBodm02RnZB?=
- =?utf-8?B?bzVtcTd3Qkd5ODVZSlFxY2lROTNOemowV0J3ZkZVZ2VoZVUrUzdkYU56V21Q?=
- =?utf-8?B?bnRJcDNrcmswWkxsR05scTdMUStxQVRvaWJEU2d5LzNQd3R1OGJiQWljb0du?=
- =?utf-8?B?QXpya3dmdkQ5b01YczczMXdZMFloLy9jNng2KzJIMTk0c0E5dzR4RCs2b0Mv?=
- =?utf-8?B?c2ZjRll2VkNLbVhCMHcxc0VIOHZ4cUZjWTJQZkJTTGc2QldoMVFZdk4rQlpy?=
- =?utf-8?B?WllKZG14NXE4QkpVSTVoYlF1NHVXUlAzTzRsSkZmYlQzV1Z1cmhISHptVUJ4?=
- =?utf-8?B?VjN0MVZyZWZvQkYvb3N1LzBMNWZ1ckxPcmVKa2h1UTE0T1dKd2JabFBEcEJS?=
- =?utf-8?Q?GPJkwF6uKuMX0hzMZR29iUZgS?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1329ca06-72b4-40bf-0437-08dbae29399e
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5229.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2023 16:00:31.5253
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 45s6ubFNFiKFmoNGL8CwX2xn/Qu7dTezy52XwnKJ48O0c1A7PbtTHPM01VKZPMBibeJAskv8LhKzrgyXb081kA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6190
+References: <20230620170027.1861012-1-weilin.wang@intel.com>
+ <CAM9d7cichi8QpVFjCDUf8e5aJEuZg1JPHtMBEs_FSNtsm8VoeA@mail.gmail.com> <CAM9d7chBM_z=vNKsLFTLVevXgd8=ZfS_XSX=999+jitrTJodTA@mail.gmail.com>
+In-Reply-To: <CAM9d7chBM_z=vNKsLFTLVevXgd8=ZfS_XSX=999+jitrTJodTA@mail.gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 5 Sep 2023 10:30:45 -0700
+Message-ID: <CAM9d7cjd022T5n6TyD96M_T5KNjHTDgjfK_mKKTZYMmKEKi58w@mail.gmail.com>
+Subject: Re: [PATCH v5 0/3] Add metric value validation test
+To:     Weilin Wang <weilin.wang@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Samantha Alt <samantha.alt@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>, ravi.bangoria@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 9/4/23 04:53, Manali Shukla wrote:
-> To enable IBS virtualization capability on non SEV-ES guests, bit 2
-> at offset 0xb8 in VMCB is set to 1 for non SEV-ES guests.
+Hello Weilin,
 
-s/for non SEV-ES guests//
-
-> 
-> To enable IBS virtualization capability on SEV-ES guests, bit 12 in
-> SEV_FEATURES in VMSA is set to 1 for SEV-ES guests.
-
-s/for SEV-ES guests//
-
-> 
-> Signed-off-by: Manali Shukla <manali.shukla@amd.com>
-> ---
->   arch/x86/include/asm/svm.h |  4 ++++
->   arch/x86/kvm/svm/sev.c     |  5 ++++-
->   arch/x86/kvm/svm/svm.c     | 26 +++++++++++++++++++++++++-
->   3 files changed, 33 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-> index 58b60842a3b7..a31bf803b993 100644
-> --- a/arch/x86/include/asm/svm.h
-> +++ b/arch/x86/include/asm/svm.h
-> @@ -215,6 +215,8 @@ struct __attribute__ ((__packed__)) vmcb_control_area {
->   #define LBR_CTL_ENABLE_MASK BIT_ULL(0)
->   #define VIRTUAL_VMLOAD_VMSAVE_ENABLE_MASK BIT_ULL(1)
->   
-> +#define VIRTUAL_IBS_ENABLE_MASK BIT_ULL(2)
-> +
->   #define SVM_INTERRUPT_SHADOW_MASK	BIT_ULL(0)
->   #define SVM_GUEST_INTERRUPT_MASK	BIT_ULL(1)
->   
-> @@ -259,6 +261,8 @@ struct __attribute__ ((__packed__)) vmcb_control_area {
->   
->   #define VMCB_AVIC_APIC_BAR_MASK				0xFFFFFFFFFF000ULL
->   
-> +#define SVM_SEV_ES_FEAT_VIBS				BIT(12)
-
-Based on the SNP series, this shouldn't be added in between all the AVIC 
-features, but rather after them, just before the vmcb_seg struct. And 
-probably best to just call it SVM_SEV_FEAT_VIBS.
-
-> +
->   #define AVIC_UNACCEL_ACCESS_WRITE_MASK		1
->   #define AVIC_UNACCEL_ACCESS_OFFSET_MASK		0xFF0
->   #define AVIC_UNACCEL_ACCESS_VECTOR_MASK		0xFFFFFFFF
-> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> index 41706335cedd..e0ef3a2323d6 100644
-> --- a/arch/x86/kvm/svm/sev.c
-> +++ b/arch/x86/kvm/svm/sev.c
-> @@ -59,7 +59,7 @@ module_param_named(sev_es, sev_es_enabled, bool, 0444);
->   #define sev_es_enabled false
->   #endif /* CONFIG_KVM_AMD_SEV */
->   
-> -static bool sev_es_vibs_enabled;
-> +static bool sev_es_vibs_enabled = true;
-
-No need to change this if you follow my comment from the previous patch. 
-Also, maybe this should just be called sev_es_vibs, since it's more a 
-capability (similar to how in svm.c it is just vibs).
-
->   static u8 sev_enc_bit;
->   static DECLARE_RWSEM(sev_deactivate_lock);
->   static DEFINE_MUTEX(sev_bitmap_lock);
-> @@ -607,6 +607,9 @@ static int sev_es_sync_vmsa(struct vcpu_svm *svm)
->   	save->xss  = svm->vcpu.arch.ia32_xss;
->   	save->dr6  = svm->vcpu.arch.dr6;
->   
-> +	if (svm->ibs_enabled && sev_es_vibs_enabled)
-
-This should solely rely on svm->ibs_enabled, which means that 
-svm->ibs_enabled should have previously been set to false if 
-sev_es_vibs_enabled is false.
-
-> +		save->sev_features |= SVM_SEV_ES_FEAT_VIBS;
-> +
->   	pr_debug("Virtual Machine Save Area (VMSA):\n");
->   	print_hex_dump_debug("", DUMP_PREFIX_NONE, 16, 1, save, sizeof(*save), false);
->   
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 0cfe23bb144a..b85120f0d3ac 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -234,7 +234,7 @@ static int lbrv = true;
->   module_param(lbrv, int, 0444);
->   
->   /* enable/disable IBS virtualization */
-> -static int vibs;
-> +static int vibs = true;
->   module_param(vibs, int, 0444);
->   
->   static int tsc_scaling = true;
-> @@ -1245,10 +1245,13 @@ static inline void init_vmcb_after_set_cpuid(struct kvm_vcpu *vcpu)
->   		/*
->   		 * If hardware supports VIBS then no need to intercept IBS MSRS
->   		 * when VIBS is enabled in guest.
-> +		 *
-> +		 * Enable VIBS by setting bit 2 at offset 0xb8 in VMCB.
->   		 */
->   		if (vibs) {
->   			if (guest_cpuid_has(&svm->vcpu, X86_FEATURE_IBS)) {
->   				svm_ibs_msr_interception(svm, false);
-> +				svm->vmcb->control.virt_ext |= VIRTUAL_IBS_ENABLE_MASK;
-
-This appears to do this for any type of guest, is this valid to do for 
-SEV-ES guests?
+Now I'm seeing occasional failures in this test.  Can you please take a look?
 
 Thanks,
-Tom
+Namhyung
 
->   				svm->ibs_enabled = true;
->   
->   				/*
-> @@ -5166,6 +5169,24 @@ static __init void svm_adjust_mmio_mask(void)
->   	kvm_mmu_set_mmio_spte_mask(mask, mask, PT_WRITABLE_MASK | PT_USER_MASK);
->   }
->   
-> +static void svm_ibs_set_cpu_caps(void)
-> +{
-> +	kvm_cpu_cap_set(X86_FEATURE_IBS);
-> +	kvm_cpu_cap_set(X86_FEATURE_EXTLVT);
-> +	kvm_cpu_cap_set(X86_FEATURE_EXTAPIC);
-> +	kvm_cpu_cap_set(X86_FEATURE_IBS_AVAIL);
-> +	kvm_cpu_cap_set(X86_FEATURE_IBS_FETCHSAM);
-> +	kvm_cpu_cap_set(X86_FEATURE_IBS_OPSAM);
-> +	kvm_cpu_cap_set(X86_FEATURE_IBS_RDWROPCNT);
-> +	kvm_cpu_cap_set(X86_FEATURE_IBS_OPCNT);
-> +	kvm_cpu_cap_set(X86_FEATURE_IBS_BRNTRGT);
-> +	kvm_cpu_cap_set(X86_FEATURE_IBS_OPCNTEXT);
-> +	kvm_cpu_cap_set(X86_FEATURE_IBS_RIPINVALIDCHK);
-> +	kvm_cpu_cap_set(X86_FEATURE_IBS_OPBRNFUSE);
-> +	kvm_cpu_cap_set(X86_FEATURE_IBS_FETCHCTLEXTD);
-> +	kvm_cpu_cap_set(X86_FEATURE_IBS_ZEN4_EXT);
-> +}
-> +
->   static __init void svm_set_cpu_caps(void)
->   {
->   	kvm_set_cpu_caps();
-> @@ -5208,6 +5229,9 @@ static __init void svm_set_cpu_caps(void)
->   		kvm_cpu_cap_set(X86_FEATURE_SVME_ADDR_CHK);
->   	}
->   
-> +	if (vibs)
-> +		svm_ibs_set_cpu_caps();
-> +
->   	/* CPUID 0x80000008 */
->   	if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
->   	    boot_cpu_has(X86_FEATURE_AMD_SSBD))
+
+--8<--
+
+$ sudo ./perf test -v 105
+105: perf metrics value validation                                   :
+--- start ---
+test child forked, pid 78217
+Launch python validation script ./tests/shell/lib/perf_metric_validation.py
+Output will be stored in: /tmp/__perf_test.program.ymbCm
+Starting perf collection
+Long workload: perf bench futex hash -r 2 -s
+perf stat -j -M tma_branch_mispredicts -a true
+perf stat -j -M tma_info_memory_core_l2_cache_fill_bw -a true
+perf stat -j -M tma_retiring -a true
+perf stat -j -M tma_info_bad_spec_branch_misprediction_cost -a true
+perf stat -j -M tma_port_0 -a true
+perf stat -j -M tma_itlb_misses -a true
+perf stat -j -M tma_other_light_ops -a true
+perf stat -j -M smi_cycles -a true
+perf stat -j -M c7_core_residency -a true
+perf stat -j -M tma_split_stores -a true
+perf stat -j -M tma_info_frontend_dsb_coverage -a true
+perf stat -j -M tma_info_frontend_icache_miss_latency -a true
+perf stat -j -M tma_store_stlb_hit -a true
+perf stat -j -M tma_dram_bound -a true
+perf stat -j -M tma_info_system_dram_bw_use -a true
+perf stat -j -M tma_info_bad_spec_ipmisp_cond_taken -a true
+perf stat -j -M tma_info_botlnk_l0_core_bound_likely -a true
+perf stat -j -M tma_machine_clears -a true
+perf stat -j -M tma_info_system_kernel_cpi -a true
+perf stat -j -M tma_decoder0_alone -a true
+perf stat -j -M tma_info_system_cpu_utilization -a true
+perf stat -j -M tma_clears_resteers -a true
+perf stat -j -M tma_fp_vector_512b -a true
+perf stat -j -M tma_dtlb_store -a true
+perf stat -j -M tma_info_branches_cond_nt -a true
+perf stat -j -M tma_info_memory_core_l3_cache_access_bw -a true
+perf stat -j -M tma_info_memory_oro_load_l2_mlp -a true
+perf stat -j -M c8_pkg_residency -a true
+perf stat -j -M tma_mem_bandwidth -a true
+perf stat -j -M tma_fp_vector_256b -a true
+perf stat -j -M tma_branch_resteers -a true
+perf stat -j -M tma_false_sharing -a true
+perf stat -j -M tma_info_core_ilp -a true
+perf stat -j -M tma_bad_speculation -a true
+perf stat -j -M tma_info_system_power_license1_utilization -a true
+perf stat -j -M tma_load_stlb_miss -a true
+perf stat -j -M tma_info_system_average_frequency -a true
+perf stat -j -M tma_info_frontend_fetch_upc -a true
+perf stat -j -M tma_info_branches_cond_tk -a true
+perf stat -j -M tma_info_bad_spec_ipmispredict -a true
+perf stat -j -M tma_info_branches_callret -a true
+perf stat -j -M tma_info_inst_mix_iparith_avx512 -a true
+perf stat -j -M tma_info_frontend_l2mpki_code_all -a true
+perf stat -j -M tma_divider -a true
+perf stat -j -M tma_info_system_mem_parallel_reads -a true
+perf stat -j -M tma_info_branches_jump -a true
+perf stat -j -M tma_mixing_vectors -a true
+perf stat -j -M tma_cisc -a true
+perf stat -j -M tma_info_thread_ipc -a true
+perf stat -j -M tma_lcp -a true
+perf stat -j -M tma_assists -a true
+perf stat -j -M tma_dtlb_load -a true
+perf stat -j -M tma_info_memory_load_miss_real_latency -a true
+perf stat -j -M tma_fetch_latency -a true
+perf stat -j -M tma_info_bad_spec_ipmisp_ret -a true
+perf stat -j -M tma_sq_full -a true
+perf stat -j -M tma_info_pipeline_retire -a true
+perf stat -j -M tma_info_memory_tlb_page_walks_utilization -a true
+perf stat -j -M tma_store_latency -a true
+perf stat -j -M tma_port_5 -a true
+perf stat -j -M tma_info_memory_thread_l2_cache_fill_bw_1t -a true
+perf stat -j -M tma_load_op_utilization -a true
+perf stat -j -M tma_info_frontend_lsd_coverage -a true
+perf stat -j -M tma_info_memory_thread_l3_cache_access_bw_1t -a true
+perf stat -j -M tma_l3_hit_latency -a true
+perf stat -j -M tma_info_system_kernel_utilization -a true
+perf stat -j -M tma_backend_bound -a true
+perf stat -j -M c7_pkg_residency -a true
+perf stat -j -M tma_info_memory_fb_hpki -a true
+perf stat -j -M tma_info_botlnk_l2_ic_misses -a true
+perf stat -j -M tma_info_memory_l3mpki -a true
+perf stat -j -M tma_l1_bound -a true
+perf stat -j -M c6_pkg_residency -a true
+perf stat -j -M tma_nop_instructions -a true
+perf stat -j -M tma_load_stlb_hit -a true
+perf stat -j -M tma_microcode_sequencer -a true
+perf stat -j -M tma_mem_latency -a true
+perf stat -j -M tma_data_sharing -a true
+perf stat -j -M tma_core_bound -a true
+perf stat -j -M tma_store_bound -a true
+perf stat -j -M tma_store_op_utilization -a true
+perf stat -j -M tsx_aborted_cycles -a true
+perf stat -j -M tma_mispredicts_resteers -a true
+perf stat -j -M tma_memory_operations -a true
+perf stat -j -M tma_info_memory_oro_data_l2_mlp -a true
+perf stat -j -M tma_4k_aliasing -a true
+perf stat -j -M c10_pkg_residency -a true
+perf stat -j -M tma_info_memory_mlp -a true
+perf stat -j -M tma_fp_vector -a true
+perf stat -j -M tma_info_bottleneck_big_code -a true
+perf stat -j -M tma_info_core_flopc -a true
+perf stat -j -M tma_memory_bound -a true
+perf stat -j -M tma_info_memory_core_l3_cache_fill_bw -a true
+perf stat -j -M tma_alu_op_utilization -a true
+perf stat -j -M c9_pkg_residency -a true
+perf stat -j -M tma_info_system_gflops -a true
+perf stat -j -M tma_split_loads -a true
+perf stat -j -M c2_pkg_residency -a true
+perf stat -j -M tsx_cycles_per_transaction -a true
+perf stat -j -M tma_branch_instructions -a true
+perf stat -j -M tma_ms_switches -a true
+perf stat -j -M c6_core_residency -a true
+perf stat -j -M tma_streaming_stores -a true
+perf stat -j -M tma_l3_bound -a true
+perf stat -j -M tma_info_memory_l2mpki_load -a true
+perf stat -j -M tma_slow_pause -a true
+perf stat -j -M tma_info_frontend_ipunknown_branch -a true
+perf stat -j -M tma_contested_accesses -a true
+perf stat -j -M tma_info_bottleneck_branching_overhead -a true
+perf stat -j -M tma_x87_use -a true
+perf stat -j -M tma_frontend_bound -a true
+perf stat -j -M tma_store_fwd_blk -a true
+perf stat -j -M tma_info_system_mem_request_latency -a true
+perf stat -j -M tma_info_bad_spec_ipmisp_indirect -a true
+perf stat -j -M tma_info_system_turbo_utilization -a true
+perf stat -j -M tma_heavy_operations -a true
+perf stat -j -M tma_light_operations -a true
+perf stat -j -M tma_ports_utilization -a true
+perf stat -j -M tma_info_memory_l2hpki_load -a true
+perf stat -j -M tma_dsb_switches -a true
+perf stat -j -M tma_info_memory_l1mpki -a true
+perf stat -j -M tma_info_memory_core_l1d_cache_fill_bw -a true
+perf stat -j -M tma_info_core_core_clks -a true
+perf stat -j -M tma_info_memory_tlb_code_stlb_mpki -a true
+perf stat -j -M tma_info_memory_tlb_load_stlb_mpki -a true
+perf stat -j -M tma_info_system_mem_read_latency -a true
+perf stat -j -M tma_ports_utilized_2 -a true
+perf stat -j -M tma_info_inst_mix_iparith -a true
+perf stat -j -M tma_ports_utilized_3m -a true
+perf stat -j -M tma_info_system_smt_2t_utilization -a true
+perf stat -j -M tma_info_thread_slots -a true
+perf stat -j -M tma_info_thread_clks -a true
+perf stat -j -M tma_info_core_coreipc -a true
+perf stat -j -M tma_info_memory_oro_load_l3_miss_latency -a true
+perf stat -j -M tma_info_inst_mix_iparith_scalar_sp -a true
+perf stat -j -M tma_lock_latency -a true
+perf stat -j -M tma_info_inst_mix_ipflop -a true
+perf stat -j -M tma_unknown_branches -a true
+perf stat -j -M tma_info_bottleneck_memory_latency -a true
+perf stat -j -M tma_serializing_operation -a true
+perf stat -j -M tma_lsd -a true
+perf stat -j -M tma_info_system_ipfarbranch -a true
+perf stat -j -M tma_info_inst_mix_iptb -a true
+perf stat -j -M tma_info_botlnk_l2_dsb_misses -a true
+perf stat -j -M tma_mite -a true
+perf stat -j -M tma_icache_misses -a true
+perf stat -j -M tma_info_memory_l1mpki_load -a true
+perf stat -j -M tma_fp_arith -a true
+perf stat -j -M tma_info_memory_l2hpki_all -a true
+perf stat -j -M tma_port_1 -a true
+perf stat -j -M tma_info_system_power_license0_utilization -a true
+perf stat -j -M tma_mite_4wide -a true
+perf stat -j -M tma_info_frontend_dsb_switch_cost -a true
+perf stat -j -M tma_info_thread_execute_per_issue -a true
+perf stat -j -M tma_info_bad_spec_ipmisp_cond_ntaken -a true
+perf stat -j -M tma_fp_scalar -a true
+perf stat -j -M tma_info_inst_mix_ipswpf -a true
+perf stat -j -M tma_info_inst_mix_bptkbranch -a true
+perf stat -j -M tma_info_memory_l2mpki_all -a true
+perf stat -j -M tma_info_inst_mix_instructions -a true
+perf stat -j -M tma_info_inst_mix_ipload -a true
+perf stat -j -M tma_info_thread_slots_utilization -a true
+perf stat -j -M tma_info_thread_cpi -a true
+perf stat -j -M tma_info_bottleneck_instruction_fetch_bw -a true
+perf stat -j -M tma_info_inst_mix_ipbranch -a true
+perf stat -j -M tma_ports_utilized_1 -a true
+perf stat -j -M tma_info_inst_mix_iparith_avx256 -a true
+perf stat -j -M tma_store_stlb_miss -a true
+perf stat -j -M tma_dsb -a true
+perf stat -j -M smi_num -a true
+perf stat -j -M tsx_transactional_cycles -a true
+perf stat -j -M tma_fp_vector_128b -a true
+perf stat -j -M tma_fetch_bandwidth -a true
+perf stat -j -M tma_fb_full -a true
+perf stat -j -M tma_info_bottleneck_mispredictions -a true
+perf stat -j -M tma_port_6 -a true
+perf stat -j -M tma_info_frontend_l2mpki_code -a true
+perf stat -j -M tma_info_core_fp_arith_utilization -a true
+perf stat -j -M tma_info_inst_mix_iparith_avx128 -a true
+perf stat -j -M tma_info_memory_l2mpki -a true
+perf stat -j -M tma_info_bottleneck_memory_bandwidth -a true
+perf stat -j -M tma_info_memory_thread_l1d_cache_fill_bw_1t -a true
+perf stat -j -M tma_info_memory_oro_load_l2_miss_latency -a true
+perf stat -j -M c3_pkg_residency -a true
+perf stat -j -M tma_few_uops_instructions -a true
+perf stat -j -M tma_info_pipeline_execute -a true
+perf stat -j -M tma_info_frontend_ipdsb_miss_ret -a true
+perf stat -j -M tma_info_memory_thread_l3_cache_fill_bw_1t -a true
+perf stat -j -M tma_info_thread_uptb -a true
+perf stat -j -M tma_info_inst_mix_ipcall -a true
+perf stat -j -M tma_l2_bound -a true
+perf stat -j -M tma_ports_utilized_0 -a true
+perf stat -j -M tma_info_bottleneck_memory_data_tlbs -a true
+perf stat -j -M tma_info_inst_mix_iparith_scalar_dp -a true
+perf stat -j -M tma_info_inst_mix_ipstore -a true
+perf stat -j -M tma_info_branches_other_branches -a true
+perf stat -j -M tma_info_thread_uoppi -a true
+perf stat -j -M tma_info_system_power_license2_utilization -a true
+perf stat -j -M tsx_cycles_per_elision -a true
+perf stat -j -M tma_info_memory_tlb_store_stlb_mpki -a true
+perf stat -j -M
+tma_backend_bound,tma_bad_speculation,tma_retiring,tma_frontend_bound
+-a perf bench futex hash -r 2 -s
+# Running 'futex/hash' benchmark:
+Run summary [PID 78627]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 1625344 operations/sec (+- 0.78%), total secs = 2
+perf stat -j -M
+tma_fetch_bandwidth,tma_frontend_bound,tma_fetch_latency -a perf bench
+futex hash -r 2 -s
+# Running 'futex/hash' benchmark:
+Run summary [PID 78637]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 1622144 operations/sec (+- 0.25%), total secs = 2
+perf stat -j -M
+tma_machine_clears,tma_branch_mispredicts,tma_bad_speculation -a perf
+bench futex hash -r 2 -s
+# Running 'futex/hash' benchmark:
+Run summary [PID 78647]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 1503103 operations/sec (+- 1.58%), total secs = 2
+perf stat -j -M tma_core_bound,tma_memory_bound,tma_backend_bound -a
+perf bench futex hash -r 2 -s
+# Running 'futex/hash' benchmark:
+Run summary [PID 78680]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 1415935 operations/sec (+- 2.26%), total secs = 2
+perf stat -j -M tma_heavy_operations,tma_light_operations,tma_retiring
+-a perf bench futex hash -r 2 -s
+# Running 'futex/hash' benchmark:
+Run summary [PID 78690]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 1519872 operations/sec (+- 0.38%), total secs = 2
+perf stat -j -M tma_other_light_ops -a perf bench futex hash -r 2 -s
+# Running 'futex/hash' benchmark:
+Run summary [PID 78700]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 1490816 operations/sec (+- 0.21%), total secs = 2
+perf stat -j -M tma_split_stores -a perf bench futex hash -r 2 -s
+# Running 'futex/hash' benchmark:
+Run summary [PID 78710]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 1474816 operations/sec (+- 0.25%), total secs = 2
+perf stat -j -M tma_store_stlb_hit -a perf bench futex hash -r 2 -s
+# Running 'futex/hash' benchmark:
+Run summary [PID 78721]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 1460032 operations/sec (+- 0.35%), total secs = 2
+perf stat -j -M tma_dram_bound -a perf bench futex hash -r 2 -s
+# Running 'futex/hash' benchmark:
+Run summary [PID 78732]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 1421632 operations/sec (+- 0.56%), total secs = 2
+perf stat -j -M tma_dtlb_store -a perf bench futex hash -r 2 -s
+# Running 'futex/hash' benchmark:
+Run summary [PID 78742]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 1431424 operations/sec (+- 0.24%), total secs = 2
+perf stat -j -M tma_mem_bandwidth -a perf bench futex hash -r 2 -s
+# Running 'futex/hash' benchmark:
+Run summary [PID 78752]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 1344768 operations/sec (+- 1.51%), total secs = 2
+perf stat -j -M tma_l3_hit_latency -a perf bench futex hash -r 2 -s
+# Running 'futex/hash' benchmark:
+Run summary [PID 78765]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 1369728 operations/sec (+- 1.18%), total secs = 2
+perf stat -j -M tma_mem_latency -a perf bench futex hash -r 2 -s
+# Running 'futex/hash' benchmark:
+Run summary [PID 78776]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 1361536 operations/sec (+- 0.79%), total secs = 2
+perf stat -j -M tma_data_sharing -a perf bench futex hash -r 2 -s
+# Running 'futex/hash' benchmark:
+Run summary [PID 78786]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 1302656 operations/sec (+- 1.90%), total secs = 2
+perf stat -j -M tma_memory_operations -a perf bench futex hash -r 2 -s
+# Running 'futex/hash' benchmark:
+Run summary [PID 78797]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 1333184 operations/sec (+- 1.08%), total secs = 2
+perf stat -j -M tma_4k_aliasing -a perf bench futex hash -r 2 -s
+# Running 'futex/hash' benchmark:
+Run summary [PID 78807]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 1268352 operations/sec (+- 2.13%), total secs = 2
+perf stat -j -M tma_l3_bound -a perf bench futex hash -r 2 -s
+# Running 'futex/hash' benchmark:
+Run summary [PID 78827]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 1289408 operations/sec (+- 2.65%), total secs = 2
+perf stat -j -M tma_store_fwd_blk -a perf bench futex hash -r 2 -s
+# Running 'futex/hash' benchmark:
+Run summary [PID 78847]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 1176256 operations/sec (+- 1.57%), total secs = 2
+perf stat -j -M tma_lock_latency -a perf bench futex hash -r 2 -s
+# Running 'futex/hash' benchmark:
+Run summary [PID 78857]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 1050112 operations/sec (+- 2.42%), total secs = 2
+perf stat -j -M tma_store_stlb_miss -a perf bench futex hash -r 2 -s
+# Running 'futex/hash' benchmark:
+Run summary [PID 78867]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 1117248 operations/sec (+- 1.96%), total secs = 2
+perf stat -j -M tma_l2_bound -a perf bench futex hash -r 2 -s
+# Running 'futex/hash' benchmark:
+Run summary [PID 78877]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 1174847 operations/sec (+- 0.74%), total secs = 2
+Workload:  perf bench futex hash -r 2 -s
+Total metrics collected:  197
+Non-negative metric count:  197
+Total Test Count:  100
+Passed Test Count:  96
+Test validation finished. Final report:
+[
+    {
+        "Workload": "perf bench futex hash -r 2 -s",
+        "Report": {
+            "Metric Validation Statistics": {
+                "Total Rule Count": 100,
+                "Passed Rule Count": 96
+            },
+            "Tests in Category": {
+                "PositiveValueTest": {
+                    "Total Tests": 197,
+                    "Passed Tests": 197,
+                    "Failed Tests": []
+                },
+                "RelationshipTest": {
+                    "Total Tests": 5,
+                    "Passed Tests": 5,
+                    "Failed Tests": []
+                },
+                "SingleMetricTest": {
+                    "Total Tests": 95,
+                    "Passed Tests": 91,
+                    "Failed Tests": [
+                        {
+                            "RuleIndex": 6,
+                            "RangeLower": "0",
+                            "RangeUpper": "100",
+                            "ErrorThreshold": 5,
+                            "Failure": [
+                                {
+                                    "MetricName": "tma_split_stores",
+                                    "CollectedValue": []
+                                },
+                                {
+                                    "MetricName": "tma_4k_aliasing",
+                                    "CollectedValue": []
+                                },
+                                {
+                                    "MetricName": "tma_l3_bound",
+                                    "CollectedValue": []
+                                },
+                                {
+                                    "MetricName": "tma_store_fwd_blk",
+                                    "CollectedValue": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "Errors": []
+        }
+    }
+]
+test child finished with -1
+---- end ----
+perf metrics value validation: FAILED!
+
+
+
+On Thu, Jun 22, 2023 at 2:35 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> On Wed, Jun 21, 2023 at 5:08 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hello,
+> >
+> > On Tue, Jun 20, 2023 at 10:00 AM Weilin Wang <weilin.wang@intel.com> wrote:
+> > >
+> > > This is the fifth version of metric value validation tests.
+> > >
+> > > We made the following changes from v4 to v5:
+> > >  - Update "()" to "{}" to avoid creating sub shell and successfully skip test on non-Intel
+> > >  platform. [Ravi]
+> > >
+> > > v4: https://lore.kernel.org/lkml/20230618172820.751560-1-weilin.wang@intel.com/
+> > >
+> > > Weilin Wang (3):
+> > >   perf test: Add metric value validation test
+> > >   perf test: Add skip list for metrics known would fail
+> > >   perf test: Rerun failed metrics with longer workload
+> >
+> > Tested-by: Namhyung Kim <namhyung@kernel.org>
+>
+> Applied to perf-tools-next, thanks!
