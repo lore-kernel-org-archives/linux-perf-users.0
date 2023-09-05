@@ -2,91 +2,67 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04805CA0FF3
-	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Sep 2023 16:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CA5CA0FF3
+	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Sep 2023 16:02:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231622AbjIEQCT (ORCPT
+        id S235612AbjIEQCY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 5 Sep 2023 12:02:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50302 "EHLO
+        Tue, 5 Sep 2023 12:02:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353929AbjIEIkm (ORCPT
+        with ESMTP id S1354908AbjIEPsD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 5 Sep 2023 04:40:42 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 92BB8E6;
-        Tue,  5 Sep 2023 01:40:36 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0129E11FB;
-        Tue,  5 Sep 2023 01:41:14 -0700 (PDT)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B0D283F766;
-        Tue,  5 Sep 2023 01:40:34 -0700 (PDT)
-Message-ID: <d7bae298-9d83-1bff-15a2-4ebe433ec8af@arm.com>
-Date:   Tue, 5 Sep 2023 09:40:30 +0100
+        Tue, 5 Sep 2023 11:48:03 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50012E6;
+        Tue,  5 Sep 2023 08:47:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=oN1/o7F9/6LDlcpPRnnV2k1YHO8uJPGZqhYNkDc/YIo=; b=WrGusg59kaQkS1bKn5H01f0gKg
+        /Zog6xOLqLuP7nyE56bIAiu5u3y/LtZ7X720Y9BKz22djt+hADbaAKmg0rjgRmOgi7Nntwa8c+uJq
+        Msgbsf0Xvu3+gPt1OhXlGS3O6AUry+pjrFJz8Rkp2ZS1BQdx0L48PW9buBKUvuSOU4mO66CnTLvqO
+        bAGa4+Ju3dxwsC6JCJFRc8ery0xZsSnqLAZuTQ7qOXJmTRn6dD/VSxWIl3hudvUweNzpO3cixady/
+        mbw/+MSdoiPJXauGuwx9J0LzGaiqFt7y05Ix+oDmH91bqX+1qyBqhsDvrN0zyqeP8eaXZ0d34lU0s
+        TdjmnmUw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qdYHJ-00B6Fg-3c; Tue, 05 Sep 2023 15:47:45 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BF4D0300687; Tue,  5 Sep 2023 17:47:44 +0200 (CEST)
+Date:   Tue, 5 Sep 2023 17:47:44 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Manali Shukla <manali.shukla@amd.com>
+Cc:     kvm@vger.kernel.org, seanjc@google.com, linux-doc@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, x86@kernel.org,
+        pbonzini@redhat.com, bp@alien8.de, santosh.shukla@amd.com,
+        ravi.bangoria@amd.com, thomas.lendacky@amd.com, nikunj@amd.com
+Subject: Re: [PATCH 00/13] Implement support for IBS virtualization
+Message-ID: <20230905154744.GB28379@noisy.programming.kicks-ass.net>
+References: <20230904095347.14994-1-manali.shukla@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v1] perf parse-events: Fix driver config term
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-References: <20230905033805.3094293-1-irogers@google.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20230905033805.3094293-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230904095347.14994-1-manali.shukla@amd.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Mon, Sep 04, 2023 at 09:53:34AM +0000, Manali Shukla wrote:
 
+> Note that, since IBS registers are swap type C [2], the hypervisor is
+> responsible for saving and restoring of IBS host state. Hypervisor
+> does so only when IBS is active on the host to avoid unnecessary
+> rdmsrs/wrmsrs. Hypervisor needs to disable host IBS before saving the
+> state and enter the guest. After a guest exit, the hypervisor needs to
+> restore host IBS state and re-enable IBS.
 
-On 05/09/2023 04:38, Ian Rogers wrote:
-> Inadvertently deleted in commit 30f4ade33d64 ("perf tools: Revert
-> enable indices setting syntax for BPF map").
-> 
-> Reported-by: James Clark <james.clark@arm.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/parse-events.y | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-> index 4a305df61f74..21bfe7e0d944 100644
-> --- a/tools/perf/util/parse-events.y
-> +++ b/tools/perf/util/parse-events.y
-> @@ -839,6 +839,23 @@ PE_TERM
->  
->  	$$ = term;
->  }
-> +|
-> +PE_DRV_CFG_TERM
-> +{
-> +	struct parse_events_term *term;
-> +	char *config = strdup($1);
-> +	int err;
-> +
-> +	if (!config)
-> +		YYNOMEM;
-> +	err = parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE_DRV_CFG, config, $1, &@1, NULL);
-> +	if (err) {
-> +		free($1);
-> +		free(config);
-> +		PE_ABORT(err);
-> +	}
-> +	$$ = term;
-> +}
->  
->  sep_dc: ':' |
->  
+Why do you think it is OK for a guest to disable the host IBS when
+entering a guest? Perhaps the host was wanting to profile the guest.
 
-Reviewed-by: James Clark <james.clark@arm.com>
+Only when perf_event_attr::exclude_guest is set is this allowed,
+otherwise you have to respect the host running IBS and you're not
+allowed to touch it.
+
+Host trumps guest etc..
