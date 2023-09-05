@@ -2,524 +2,561 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BB2CA0FF3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF776C83F2C
 	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Sep 2023 16:02:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235697AbjIEQC1 (ORCPT
+        id S230172AbjIEQC0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 5 Sep 2023 12:02:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48046 "EHLO
+        Tue, 5 Sep 2023 12:02:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243831AbjIEBBQ (ORCPT
+        with ESMTP id S1354442AbjIELlc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 4 Sep 2023 21:01:16 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08D151B9;
-        Mon,  4 Sep 2023 18:01:08 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RfnG00V3wzrSbS;
-        Tue,  5 Sep 2023 08:59:20 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Tue, 5 Sep 2023 09:01:05 +0800
-Subject: Re: [RFC v1 00/16] perf kwork: Implement perf kwork top
-To:     Ian Rogers <irogers@google.com>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-        <sandipan.das@amd.com>, <ravi.bangoria@amd.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-References: <20230812084917.169338-1-yangjihong1@huawei.com>
- <CAP-5=fXYBD2LYo9Fx8Uky+RKx+qfPypo7nkqA1YnYMS3iVwryw@mail.gmail.com>
- <61f78bea-0846-1e7a-b64e-470a3f59285a@huawei.com>
- <CAP-5=fVTM3xV9feaZv4z53Pv-AM9Ldj7SC8rZcNsMwJcj2ZViQ@mail.gmail.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <a92b118e-2820-f2a3-015a-aa0c959afc26@huawei.com>
-Date:   Tue, 5 Sep 2023 09:01:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Tue, 5 Sep 2023 07:41:32 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 016201AD
+        for <linux-perf-users@vger.kernel.org>; Tue,  5 Sep 2023 04:41:27 -0700 (PDT)
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 385BcofA000329;
+        Tue, 5 Sep 2023 11:41:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=ORn7litIpstzuD0uULWjNNFDZSKEhy8vEiVXUQ3RoLo=;
+ b=cfCvmGnovZyOT/Z4t8682MHIQM6GwxS1yq5qwndbLOaZ4r11xanzq2S34vcxxeZt3J4a
+ EjXmnN4J1Ah0NbOh/BJCtV0hQ7hvJoThwDJVQ90iTbXzKUvhrHKuUL64ubIToI4kaucs
+ 3GpePoG22onLIyLe1ZnFYGWDStHCteh8I3RvMXITlCVreD6CQGpHuqVv0+F+ggPwfQLR
+ vGrfdUyHVQS7K95wHhKeSvskoWQztH9gciC5acZCLyoz5pDpV4xD2fVzuwxwIIqI6ONz
+ ZEWtGcVRNpF0r+H6mztfw6ebyxtX91R17kdn+cJhNpIynE0MPa7DNQMIwvhEhD2naMB2 LA== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3swtk8k12v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 Sep 2023 11:41:21 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 385A7b9G006611;
+        Tue, 5 Sep 2023 11:41:19 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3svgvka1r0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 Sep 2023 11:41:19 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 385BfBCQ46334402
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 5 Sep 2023 11:41:12 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BD97C20043;
+        Tue,  5 Sep 2023 11:41:11 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 23F3120040;
+        Tue,  5 Sep 2023 11:41:09 +0000 (GMT)
+Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com.com (unknown [9.43.100.85])
+        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Tue,  5 Sep 2023 11:41:08 +0000 (GMT)
+From:   Kajol Jain <kjain@linux.ibm.com>
+To:     acme@kernel.org
+Cc:     maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        disgoel@linux.ibm.com, kjain@linux.ibm.com,
+        linux-perf-users@vger.kernel.org, namhyung@kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v2 3/3] perf vendor events: Update metric events for power10 platform
+Date:   Tue,  5 Sep 2023 17:10:39 +0530
+Message-Id: <20230905114039.176645-3-kjain@linux.ibm.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20230905114039.176645-1-kjain@linux.ibm.com>
+References: <20230905114039.176645-1-kjain@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAP-5=fVTM3xV9feaZv4z53Pv-AM9Ldj7SC8rZcNsMwJcj2ZViQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: aiWQX65khYpWypCWHn4_KbvR9PGUFxun
+X-Proofpoint-ORIG-GUID: aiWQX65khYpWypCWHn4_KbvR9PGUFxun
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-05_10,2023-09-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 priorityscore=1501 adultscore=0 spamscore=0 phishscore=0
+ clxscore=1015 malwarescore=0 mlxscore=0 impostorscore=0 bulkscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309050103
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Update JSON/events for power10 platform with additional metrics.
 
-On 2023/9/4 22:54, Ian Rogers wrote:
-> On Mon, Sep 4, 2023 at 4:59 AM Yang Jihong <yangjihong1@huawei.com> wrote:
->>
->> Hello,
->>
->> On 2023/9/4 13:13, Ian Rogers wrote:
->>> On Sat, Aug 12, 2023 at 1:52 AM Yang Jihong <yangjihong1@huawei.com> wrote:
->>>>
->>>> Some common tools for collecting statistics on CPU usage, such as top,
->>>> obtain statistics from timer interrupt sampling, and then periodically
->>>> read statistics from /proc/stat.
->>>>
->>>> This method has some deviations:
->>>> 1. In the tick interrupt, the time between the last tick and the current
->>>>      tick is counted in the current task. However, the task may be running
->>>>      only part of the time.
->>>> 2. For each task, the top tool periodically reads the /proc/{PID}/status
->>>>      information. For tasks with a short life cycle, it may be missed.
->>>>
->>>> In conclusion, the top tool cannot accurately collect statistics on the
->>>> CPU usage and running time of tasks.
->>>>
->>>> The statistical method based on sched_switch tracepoint can accurately
->>>> calculate the CPU usage of all tasks. This method is applicable to
->>>> scenarios where performance comparison data is of high precision.
->>>>
->>>> In addition to parsing the perf.data file, the provides BPF-based CPU usage
->>>> statistics to reduce the load of the perf process.
->>>>
->>>> Example usage:
->>>>
->>>>     # perf kwork top -h
->>>>
->>>>      Usage: perf kwork top [<options>]
->>>>
->>>>         -C, --cpu <cpu>       list of cpus to profile
->>>>         -i, --input <file>    input file name
->>>>         -n, --name <name>     event name to profile
->>>>         -s, --sort <key[,key2...]>
->>>>                               sort by key(s): rate, runtime, tid
->>>>             --time <str>      Time span for analysis (start,stop)
->>>>
->>>>     # ./perf kwork -k sched,irq,softirq record -- ./perf bench sched messaging -g 1 -l 10000
->>>>     # Running 'sched/messaging' benchmark:
->>>>     # 20 sender and receiver processes per group
->>>>     # 1 groups == 40 processes run
->>>>
->>>>          Total time: 1.854 [sec]
->>>>     [ perf record: Woken up 13 times to write data ]
->>>>     [ perf record: Captured and wrote 27.436 MB perf.data (235986 samples) ]
->>>>     #
->>>>     # perf kwork top
->>>>
->>>>     Total  :  22419.068 ms, 12 cpus
->>>>     %Cpu(s):  17.99% id,   0.00% hi,   0.09% si
->>>>     %Cpu0   [||||||||||||||||||||||||        82.56%]
->>>>     %Cpu1   [||||||||||||||||||||||||        81.73%]
->>>>     %Cpu2   [||||||||||||||||||||||||        83.00%]
->>>>     %Cpu3   [||||||||||||||||||||||||        81.01%]
->>>>     %Cpu4   [||||||||||||||||||||||||        81.66%]
->>>>     %Cpu5   [||||||||||||||||||||||||        82.10%]
->>>>     %Cpu6   [||||||||||||||||||||||||        81.65%]
->>>>     %Cpu7   [||||||||||||||||||||||||        82.00%]
->>>>     %Cpu8   [||||||||||||||||||||||||        82.54%]
->>>>     %Cpu9   [||||||||||||||||||||||||        81.02%]
->>>>     %Cpu10  [||||||||||||||||||||||||        81.78%]
->>>>     %Cpu11  [||||||||||||||||||||||||        81.87%]
->>>>
->>>>           PID    %CPU           RUNTIME  COMMMAND
->>>>       ----------------------------------------------------
->>>>       2913025   27.62        516.976 ms  sched-messaging
->>>>       2913017   27.56        516.273 ms  sched-messaging
->>>>       2913018   27.56        516.152 ms  sched-messaging
->>>>       2913008   27.54        515.447 ms  sched-messaging
->>>>       2913010   27.50        514.890 ms  sched-messaging
->>>>       2913007   27.48        514.411 ms  sched-messaging
->>>>       2913015   27.36        512.563 ms  sched-messaging
->>>>       2913026   27.35        512.198 ms  sched-messaging
->>>>       2913011   27.32        511.632 ms  sched-messaging
->>>>       2913014   27.32        511.381 ms  sched-messaging
->>>>       2913012   27.30        511.138 ms  sched-messaging
->>>>       2913013   27.30        511.109 ms  sched-messaging
->>>>       2913009   27.30        510.997 ms  sched-messaging
->>>>       2913019   27.25        510.488 ms  sched-messaging
->>>>       2913021   27.23        509.661 ms  sched-messaging
->>>>       2913023   27.21        509.400 ms  sched-messaging
->>>>       2913020   27.20        509.677 ms  sched-messaging
->>>>       2913022   27.19        509.061 ms  sched-messaging
->>>>       2913016   27.18        509.231 ms  sched-messaging
->>>>       2913024   27.18        509.108 ms  sched-messaging
->>>>       2912999   21.79        407.929 ms  sched-messaging
->>>>       2913000   21.78        408.045 ms  sched-messaging
->>>>       2912998   21.75        407.579 ms  sched-messaging
->>>>       2912993   21.69        406.166 ms  sched-messaging
->>>>       2912991   21.59        404.378 ms  sched-messaging
->>>>       2912992   21.57        403.845 ms  sched-messaging
->>>>       2913005   21.56        403.715 ms  sched-messaging
->>>>       2913001   21.55        403.803 ms  sched-messaging
->>>>       2912990   21.54        403.601 ms  sched-messaging
->>>>       2912994   21.52        403.087 ms  sched-messaging
->>>>       2912995   21.49        402.421 ms  sched-messaging
->>>>       2912996   21.48        402.666 ms  sched-messaging
->>>>       2912989   21.46        402.303 ms  sched-messaging
->>>>       2913003   21.46        402.034 ms  sched-messaging
->>>>       2912988   21.44        401.820 ms  sched-messaging
->>>>       2913004   21.37        400.242 ms  sched-messaging
->>>>       2912987   21.28        398.512 ms  sched-messaging
->>>>       2913002   21.27        398.759 ms  sched-messaging
->>>>       2912997   21.27        398.518 ms  sched-messaging
->>>>       2913006   21.23        397.888 ms  sched-messaging
->>>>             0   18.89        353.061 ms  swapper/3
->>>>             0   18.89        353.026 ms  swapper/9
->>>>             0   18.26        341.190 ms  swapper/6
->>>>             0   18.25        341.048 ms  swapper/4
->>>>             0   18.13        338.844 ms  swapper/10
->>>>             0   18.12        338.686 ms  swapper/1
->>>>             0   18.05        337.333 ms  swapper/11
->>>>             0   17.92        334.903 ms  swapper/7
->>>>             0   17.80        332.691 ms  swapper/5
->>>>             0   17.38        324.762 ms  swapper/8
->>>>             0   17.29        323.102 ms  swapper/0
->>>>             0   16.89        315.630 ms  swapper/2
->>>>       2912984    2.10         39.452 ms  perf
->>>>       2912985    0.73         14.004 ms  sched-messaging
->>>>        660381    0.14          3.527 ms  containerd
->>>>       3006112    0.07          1.402 ms  redis-server
->>>>       2904655    0.05          1.071 ms  kworker/0:0
->>>>        659822    0.03          1.729 ms  containerd
->>>>        659824    0.03          1.346 ms  containerd
->>>>          1053    0.01          0.353 ms  zabbix_agentd
->>>>       2895571    0.01          0.349 ms  kworker/8:1
->>>>            10    0.00          0.535 ms  rcu_sched
->>>>       2912192    0.00          0.272 ms  kworker/u24:2
->>>>       2903540    0.00          0.182 ms  sshd
->>>>           801    0.00          0.120 ms  jbd2/sda4-8
->>>>       2929605    0.00          0.108 ms  grpc_global_tim
->>>>       2912986    0.00          0.075 ms  perf
->>>>       2897765    0.00          0.073 ms  kworker/7:1
->>>>       2912817    0.00          0.070 ms  kworker/2:1
->>>>        391756    0.00          0.067 ms  grpc_global_tim
->>>>       2901459    0.00          0.056 ms  kworker/3:0
->>>>       2908185    0.00          0.052 ms  kworker/10:1
->>>>       2901521    0.00          0.050 ms  kworker/6:1
->>>>       2902444    0.00          0.046 ms  kworker/5:1
->>>>       2898513    0.00          0.041 ms  kworker/1:1
->>>>       2912280    0.00          0.039 ms  kworker/11:3
->>>>          1057    0.00          0.037 ms  zabbix_agentd
->>>>       2908010    0.00          0.037 ms  kworker/9:3
->>>>       2912951    0.00          0.036 ms  kworker/4:3
->>>>           793    0.00          0.027 ms  multipathd
->>>>            42    0.00          0.023 ms  ksoftirqd/5
->>>>             9    0.00          0.022 ms  ksoftirqd/0
->>>>            24    0.00          0.019 ms  ksoftirqd/2
->>>>            59    0.00          0.019 ms  migration/8
->>>>       2929607    0.00          0.018 ms  wecode-db
->>>>            29    0.00          0.012 ms  migration/3
->>>>            11    0.00          0.012 ms  migration/0
->>>>            65    0.00          0.012 ms  migration/9
->>>>            17    0.00          0.011 ms  migration/1
->>>>            71    0.00          0.011 ms  migration/10
->>>>            53    0.00          0.011 ms  migration/7
->>>>            23    0.00          0.011 ms  migration/2
->>>>            47    0.00          0.011 ms  migration/6
->>>>           789    0.00          0.010 ms  multipathd
->>>>            35    0.00          0.010 ms  migration/4
->>>>           480    0.00          0.009 ms  kworker/4:1H
->>>>            41    0.00          0.008 ms  migration/5
->>>>            54    0.00          0.006 ms  ksoftirqd/7
->>>>            36    0.00          0.005 ms  ksoftirqd/4
->>>>            72    0.00          0.005 ms  ksoftirqd/10
->>>>            66    0.00          0.005 ms  ksoftirqd/9
->>>>            30    0.00          0.004 ms  ksoftirqd/3
->>>>       2898362    0.00          0.003 ms  kworker/u24:0
->>>>
->>>>     # perf kwork top -C 2,4,5
->>>>
->>>>     Total  :   5604.885 ms, 3 cpus
->>>>     %Cpu(s):  17.65% id,   0.00% hi,   0.09% si
->>>>     %Cpu2   [||||||||||||||||||||||||        83.00%]
->>>>     %Cpu4   [||||||||||||||||||||||||        81.66%]
->>>>     %Cpu5   [||||||||||||||||||||||||        82.10%]
->>>>
->>>>           PID    %CPU           RUNTIME  COMMMAND
->>>>       ----------------------------------------------------
->>>>             0   18.25        341.048 ms  swapper/4
->>>>             0   17.80        332.691 ms  swapper/5
->>>>             0   16.89        315.630 ms  swapper/2
->>>>       2913012    8.99        168.201 ms  sched-messaging
->>>>       2913021    8.74        163.456 ms  sched-messaging
->>>>       2913026    8.34        156.120 ms  sched-messaging
->>>>       2913010    8.14        152.372 ms  sched-messaging
->>>>       2913007    7.74        144.754 ms  sched-messaging
->>>>       2913016    7.42        138.977 ms  sched-messaging
->>>>       2913022    7.28        136.279 ms  sched-messaging
->>>>       2913013    7.00        130.894 ms  sched-messaging
->>>>       2913019    6.96        130.455 ms  sched-messaging
->>>>       2913023    6.91        129.364 ms  sched-messaging
->>>>       2913008    6.47        121.331 ms  sched-messaging
->>>>       2913018    6.47        121.124 ms  sched-messaging
->>>>       2912994    6.42        120.213 ms  sched-messaging
->>>>       2913025    6.42        120.140 ms  sched-messaging
->>>>       2913020    6.37        119.386 ms  sched-messaging
->>>>       2913011    6.35        118.921 ms  sched-messaging
->>>>       2913014    6.24        116.779 ms  sched-messaging
->>>>       2913009    6.01        112.661 ms  sched-messaging
->>>>       2913005    5.96        111.587 ms  sched-messaging
->>>>       2913003    5.94        111.142 ms  sched-messaging
->>>>       2913024    5.87        109.876 ms  sched-messaging
->>>>       2912988    5.84        109.396 ms  sched-messaging
->>>>       2912987    5.80        108.550 ms  sched-messaging
->>>>       2912990    5.51        103.322 ms  sched-messaging
->>>>       2912993    5.45        102.045 ms  sched-messaging
->>>>       2912996    5.42        101.622 ms  sched-messaging
->>>>       2913006    5.42        101.592 ms  sched-messaging
->>>>       2913000    5.41        101.511 ms  sched-messaging
->>>>       2913002    5.41        101.420 ms  sched-messaging
->>>>       2912997    5.40        101.315 ms  sched-messaging
->>>>       2913004    5.33         99.872 ms  sched-messaging
->>>>       2913015    5.29         99.252 ms  sched-messaging
->>>>       2913017    5.22         97.822 ms  sched-messaging
->>>>       2912991    5.11         95.773 ms  sched-messaging
->>>>       2912992    5.11         95.579 ms  sched-messaging
->>>>       2913001    5.07         95.033 ms  sched-messaging
->>>>       2912989    4.93         92.425 ms  sched-messaging
->>>>       2912995    4.85         90.892 ms  sched-messaging
->>>>       2912998    4.78         89.617 ms  sched-messaging
->>>>       2912999    4.56         85.576 ms  sched-messaging
->>>>       3006112    0.07          1.402 ms  redis-server
->>>>        660381    0.02          0.566 ms  containerd
->>>>       2912984    0.02          0.452 ms  perf
->>>>        659824    0.01          0.369 ms  containerd
->>>>        659822    0.00          0.316 ms  containerd
->>>>            10    0.00          0.176 ms  rcu_sched
->>>>           801    0.00          0.120 ms  jbd2/sda4-8
->>>>       2912985    0.00          0.107 ms  sched-messaging
->>>>       2912986    0.00          0.075 ms  perf
->>>>       2912817    0.00          0.070 ms  kworker/2:1
->>>>       2912192    0.00          0.056 ms  kworker/u24:2
->>>>       2929605    0.00          0.046 ms  grpc_global_tim
->>>>       2902444    0.00          0.046 ms  kworker/5:1
->>>>       2912951    0.00          0.036 ms  kworker/4:3
->>>>            42    0.00          0.023 ms  ksoftirqd/5
->>>>            24    0.00          0.019 ms  ksoftirqd/2
->>>>            23    0.00          0.011 ms  migration/2
->>>>            35    0.00          0.010 ms  migration/4
->>>>           480    0.00          0.009 ms  kworker/4:1H
->>>>            41    0.00          0.008 ms  migration/5
->>>>            36    0.00          0.005 ms  ksoftirqd/4
->>>>
->>>>     # perf kwork top -n perf
->>>>
->>>>     Total  :  22419.068 ms, 12 cpus
->>>>     %Cpu(s):  17.99% id,   0.00% hi,   0.09% si
->>>>     %Cpu0   [                                 0.00%]
->>>>     %Cpu1   [                                 0.00%]
->>>>     %Cpu2   [                                 0.02%]
->>>>     %Cpu3   [                                 0.00%]
->>>>     %Cpu4   [                                 0.00%]
->>>>     %Cpu5   [                                 0.00%]
->>>>     %Cpu6   [                                 0.00%]
->>>>     %Cpu7   [                                 0.00%]
->>>>     %Cpu8   [                                 0.03%]
->>>>     %Cpu9   [                                 0.09%]
->>>>     %Cpu10  [                                 0.00%]
->>>>     %Cpu11  [                                 1.96%]
->>>>
->>>>           PID    %CPU           RUNTIME  COMMMAND
->>>>       ----------------------------------------------------
->>>>       2912984    2.10         39.452 ms  perf
->>>>       2912986    0.00          0.075 ms  perf
->>>>
->>>>     # perf kwork top -s tid -n sched-messaging
->>>>
->>>>     Total  :  22419.068 ms, 12 cpus
->>>>     %Cpu(s):  17.99% id,   0.00% hi,   0.09% si
->>>>     %Cpu0   [||||||||||||||||||||||||        81.80%]
->>>>     %Cpu1   [||||||||||||||||||||||||        81.65%]
->>>>     %Cpu2   [||||||||||||||||||||||||        82.88%]
->>>>     %Cpu3   [||||||||||||||||||||||||        80.96%]
->>>>     %Cpu4   [||||||||||||||||||||||||        81.64%]
->>>>     %Cpu5   [||||||||||||||||||||||||        82.04%]
->>>>     %Cpu6   [||||||||||||||||||||||||        81.63%]
->>>>     %Cpu7   [||||||||||||||||||||||||        81.97%]
->>>>     %Cpu8   [||||||||||||||||||||||||        82.43%]
->>>>     %Cpu9   [||||||||||||||||||||||||        80.86%]
->>>>     %Cpu10  [||||||||||||||||||||||||        81.72%]
->>>>     %Cpu11  [|||||||||||||||||||||||         79.89%]
->>>>
->>>>           PID    %CPU           RUNTIME  COMMMAND
->>>>       ----------------------------------------------------
->>>>       2912985    0.04          1.111 ms  sched-messaging
->>>>       2912987   21.28        398.512 ms  sched-messaging
->>>>       2912988   21.44        401.820 ms  sched-messaging
->>>>       2912989   21.46        402.303 ms  sched-messaging
->>>>       2912990   21.54        403.601 ms  sched-messaging
->>>>       2912991   21.59        404.378 ms  sched-messaging
->>>>       2912992   21.57        403.845 ms  sched-messaging
->>>>       2912993   21.69        406.166 ms  sched-messaging
->>>>       2912994   21.52        403.087 ms  sched-messaging
->>>>       2912995   21.49        402.421 ms  sched-messaging
->>>>       2912996   21.48        402.666 ms  sched-messaging
->>>>       2912997   21.27        398.518 ms  sched-messaging
->>>>       2912998   21.75        407.579 ms  sched-messaging
->>>>       2912999   21.79        407.929 ms  sched-messaging
->>>>       2913000   21.78        408.045 ms  sched-messaging
->>>>       2913001   21.55        403.803 ms  sched-messaging
->>>>       2913002   21.27        398.759 ms  sched-messaging
->>>>       2913003   21.46        402.034 ms  sched-messaging
->>>>       2913004   21.37        400.242 ms  sched-messaging
->>>>       2913005   21.56        403.715 ms  sched-messaging
->>>>       2913006   21.23        397.888 ms  sched-messaging
->>>>       2913007   27.48        514.411 ms  sched-messaging
->>>>       2913008   27.54        515.447 ms  sched-messaging
->>>>       2913009   27.30        510.997 ms  sched-messaging
->>>>       2913010   27.50        514.890 ms  sched-messaging
->>>>       2913011   27.32        511.632 ms  sched-messaging
->>>>       2913012   27.30        511.138 ms  sched-messaging
->>>>       2913013   27.30        511.109 ms  sched-messaging
->>>>       2913014   27.32        511.381 ms  sched-messaging
->>>>       2913015   27.36        512.563 ms  sched-messaging
->>>>       2913016   27.18        509.231 ms  sched-messaging
->>>>       2913017   27.56        516.273 ms  sched-messaging
->>>>       2913018   27.56        516.152 ms  sched-messaging
->>>>       2913019   27.25        510.488 ms  sched-messaging
->>>>       2913020   27.20        509.677 ms  sched-messaging
->>>>       2913021   27.23        509.661 ms  sched-messaging
->>>>       2913022   27.19        509.061 ms  sched-messaging
->>>>       2913023   27.21        509.400 ms  sched-messaging
->>>>       2913024   27.18        509.108 ms  sched-messaging
->>>>       2913025   27.62        516.976 ms  sched-messaging
->>>>       2913026   27.35        512.198 ms  sched-messaging
->>>>
->>>>     # perf kwork top -b
->>>>     Starting trace, Hit <Ctrl+C> to stop and report
->>>>     ^C
->>>>     Total  :  89209.004 ms, 4 cpus
->>>>     %Cpu(s):  13.47% id,   0.01% hi,   0.24% si
->>>>     %Cpu0   [|||||||||||||||||||||||||       86.08%]
->>>>     %Cpu1   [||||||||||||||||||||||||||      87.08%]
->>>>     %Cpu2   [|||||||||||||||||||||||||       86.10%]
->>>>     %Cpu3   [|||||||||||||||||||||||||       85.86%]
->>>>
->>>>           PID     SPID    %CPU           RUNTIME  COMMMAND
->>>>       -------------------------------------------------------------
->>>>             0        0   13.86       3092.482 ms  [swapper/3]
->>>>             0        0   13.71       3057.756 ms  [swapper/0]
->>>>             0        0   13.65       3044.987 ms  [swapper/2]
->>>>             0        0   12.63       2818.079 ms  [swapper/1]
->>>>           320      320    1.32        295.427 ms  bash
->>>>           414      320    1.09        247.658 ms  sched-messaging
->>>>           678      320    1.09        246.881 ms  sched-messaging
->>>>           354      320    1.09        246.683 ms  sched-messaging
->>>>           409      320    1.08        246.839 ms  sched-messaging
->>>>           554      320    1.07        243.045 ms  sched-messaging
->>>>           405      320    1.04        237.340 ms  sched-messaging
->>>>           525      320    1.04        235.718 ms  sched-messaging
->>>>           486      320    1.03        235.369 ms  sched-messaging
->>>>           714      320    1.03        235.142 ms  sched-messaging
->>>>           435      320    1.03        233.290 ms  sched-messaging
->>>>           408      320    1.03        231.687 ms  sched-messaging
->>>>           716      320    1.02        233.513 ms  sched-messaging
->>>>           453      320    1.02        233.181 ms  sched-messaging
->>>>           522      320    1.02        230.101 ms  sched-messaging
->>>>           651      320    1.02        229.554 ms  sched-messaging
->>>>           418      320    1.01        231.359 ms  sched-messaging
->>>>           644      320    1.01        229.848 ms  sched-messaging
->>>>           535      320    1.01        229.655 ms  sched-messaging
->>>>           536      320    1.01        229.147 ms  sched-messaging
->>>>           410      320    1.01        227.700 ms  sched-messaging
->>>>           689      320    1.00        227.988 ms  sched-messaging
->>>>           412      320    1.00        227.052 ms  sched-messaging
->>>>           489      320    1.00        226.374 ms  sched-messaging
->>>>           521      320    1.00        225.499 ms  sched-messaging
->>>>           530      320    1.00        225.262 ms  sched-messaging
->>>>           681      320    1.00        225.187 ms  sched-messaging
->>>>           415      320    0.99        225.714 ms  sched-messaging
->>>>           643      320    0.99        225.090 ms  sched-messaging
->>>>           325      320    0.99        223.385 ms  sched-messaging
->>>>           498      320    0.99        222.936 ms  sched-messaging
->>>>           413      320    0.98        225.213 ms  sched-messaging
->>>>           645      320    0.98        223.211 ms  sched-messaging
->>>>           544      320    0.98        222.714 ms  sched-messaging
->>>>           441      320    0.98        222.590 ms  sched-messaging
->>>>           697      320    0.98        222.426 ms  sched-messaging
->>>>           523      320    0.98        221.841 ms  sched-messaging
->>>>           402      320    0.98        221.776 ms  sched-messaging
->>>>     <SNIP>
->>>>
->>>> Yang Jihong (16):
->>>>     perf kwork: Fix incorrect and missing free atom in work_push_atom()
->>>>     perf kwork: Add the supported subcommands to the document
->>>>     perf kwork: Set ordered_events for perf_tool
->>>>     perf kwork: Add `kwork` and `src_type` to work_init() for struct
->>>>       kwork_class
->>>>     perf kwork: Overwrite original atom in the list when a new atom is
->>>>       pushed.
->>>>     perf kwork: Set default events list if not specified in
->>>>       setup_event_list()
->>>>     perf kwork: Add sched record support
->>>>     perf kwork: Add `root` parameter to work_sort()
->>>>     perf kwork: Implement perf kwork top
->>>>     perf evsel: Add evsel__intval_common() helper
->>>>     perf kwork top: Add statistics on hardirq event support
->>>>     perf kwork top: Add statistics on softirq event support
->>>>     perf kwork top: Add -C/--cpu -i/--input -n/--name -s/--sort --time
->>>>       options
->>>>     perf kwork top: Implements BPF-based cpu usage statistics
->>>>     perf kwork top: Add BPF-based statistics on hardirq event support
->>>>     perf kwork top: Add BPF-based statistics on softirq event support
->>>
->>> Besides documentation nits, series:
->>> Reviewed-by: Ian Rogers <irogers@google.com>
->>
->> Thanks for reivew.
->>
->>>
->>> Whilst looking at the series, could we clean up
->>> tools/perf/util/kwork.h ? Generally none of the structs are commented.
->>
->> Okay, I'll put up a separate patch and add comments about it.
->>> Some like:
->>>   > struct kwork_atom {
->>>          struct list_head list;
->>>          u64 time;
->>>          struct kwork_atom *prev;
->>>
->>>          void *page_addr;
->>>          unsigned long bit_inpage;
->>> };
->>>
->>> Why is it an atom? Why is there a prev when the kwork_atom is also on
->>> a list (which has a prev) ?
->>>
->> An atom indicates a minimum granularity event.
->> For example, an "irq_hander_entry" event of an IRQ whose irqnum==10 is
->> an atom.
->>
->> The prev member is used to store the sequence of events.
->> For example, the sequence of events is as follows:
->> raise -> entry -> exit
->>
->> Then:
->> entry_atom->prev = raise_atom
->>
->> This relationship needs to be saved because need to calculate latency
->> time and running time at the same time in the "perf kwork timehist"
-> 
-> Thanks Yang, this is good context. Could it be added to the header
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+---
+ .../arch/powerpc/power10/metrics.json         | 388 ++++++++++++++++++
+ 1 file changed, 388 insertions(+)
 
-Okay, I can submit a separate patch with comments.
+diff --git a/tools/perf/pmu-events/arch/powerpc/power10/metrics.json b/tools/perf/pmu-events/arch/powerpc/power10/metrics.json
+index 4d66b75c6ad5..a36621858ea3 100644
+--- a/tools/perf/pmu-events/arch/powerpc/power10/metrics.json
++++ b/tools/perf/pmu-events/arch/powerpc/power10/metrics.json
+@@ -434,6 +434,13 @@
+         "MetricName": "L1_INST_MISS_RATE",
+         "ScaleUnit": "1%"
+     },
++    {
++        "BriefDescription": "Percentage of completed instructions that were demand fetches that missed the L1 and L2 instruction cache",
++        "MetricExpr": "PM_INST_FROM_L2MISS * 100 / PM_RUN_INST_CMPL",
++        "MetricGroup": "General",
++        "MetricName": "L2_INST_MISS_RATE",
++        "ScaleUnit": "1%"
++    },
+     {
+         "BriefDescription": "Percentage of completed instructions that were demand fetches that reloaded from beyond the L3 icache",
+         "MetricExpr": "PM_INST_FROM_L3MISS / PM_RUN_INST_CMPL * 100",
+@@ -466,6 +473,13 @@
+         "MetricGroup": "General",
+         "MetricName": "LOADS_PER_INST"
+     },
++    {
++        "BriefDescription": "Percentage of demand loads that reloaded from the L2 per completed instruction",
++        "MetricExpr": "PM_DATA_FROM_L2 * 100 / PM_RUN_INST_CMPL",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_L2_RATE",
++        "ScaleUnit": "1%"
++    },
+     {
+         "BriefDescription": "Percentage of demand loads that reloaded from beyond the L2 per completed instruction",
+         "MetricExpr": "PM_DATA_FROM_L2MISS / PM_RUN_INST_CMPL * 100",
+@@ -473,6 +487,34 @@
+         "MetricName": "DL1_RELOAD_FROM_L2_MISS_RATE",
+         "ScaleUnit": "1%"
+     },
++    {
++        "BriefDescription": "Percentage of demand loads that reloaded using modified data from another core's L2 or L3 on a remote chip, per completed instruction",
++        "MetricExpr": "PM_DATA_FROM_RL2L3_MOD * 100 / PM_RUN_INST_CMPL",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_RL2L3_MOD_RATE",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand loads that reloaded using shared data from another core's L2 or L3 on a remote chip, per completed instruction",
++        "MetricExpr": "PM_DATA_FROM_RL2L3_SHR * 100 / PM_RUN_INST_CMPL",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_RL2L3_SHR_RATE",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand loads that reloaded from the L3 per completed instruction",
++        "MetricExpr": "PM_DATA_FROM_L3 * 100 / PM_RUN_INST_CMPL",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_L3_RATE",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand loads that reloaded with data brought into the L3 by prefetch per completed instruction",
++        "MetricExpr": "PM_DATA_FROM_L3_MEPF * 100 / PM_RUN_INST_CMPL",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_L3_MEPF_RATE",
++        "ScaleUnit": "1%"
++    },
+     {
+         "BriefDescription": "Percentage of demand loads that reloaded from beyond the L3 per completed instruction",
+         "MetricExpr": "PM_DATA_FROM_L3MISS / PM_RUN_INST_CMPL * 100",
+@@ -480,6 +522,66 @@
+         "MetricName": "DL1_RELOAD_FROM_L3_MISS_RATE",
+         "ScaleUnit": "1%"
+     },
++    {
++        "BriefDescription": "Percentage of demand loads that reloaded using modified data from another core's L2 or L3 on a distant chip, per completed instruction",
++        "MetricExpr": "PM_DATA_FROM_DL2L3_MOD * 100 / PM_RUN_INST_CMPL",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_DL2L3_MOD_RATE",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand loads that reloaded using shared data from another core's L2 or L3 on a distant chip, per completed instruction",
++        "MetricExpr": "PM_DATA_FROM_DL2L3_SHR * 100 / PM_RUN_INST_CMPL",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_DL2L3_SHR_RATE",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand loads that reloaded from local memory per completed instruction",
++        "MetricExpr": "PM_DATA_FROM_LMEM * 100 / PM_RUN_INST_CMPL",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_LMEM_RATE",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand loads that reloaded from remote memory per completed instruction",
++        "MetricExpr": "PM_DATA_FROM_RMEM * 100 / PM_RUN_INST_CMPL",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_RMEM_RATE",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand loads that reloaded from distant memory per completed instruction",
++        "MetricExpr": "PM_DATA_FROM_DMEM * 100 / PM_RUN_INST_CMPL",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_DMEM_RATE",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of data reloads from local memory per data reloads from any memory",
++        "MetricExpr": "PM_DATA_FROM_LMEM * 100 / (PM_DATA_FROM_LMEM + PM_DATA_FROM_RMEM + PM_DATA_FROM_DMEM)",
++        "MetricGroup": "Memory",
++        "MetricName": "MEM_LOCALITY",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Number of data reloads from local memory per data reloads from remote memory",
++        "MetricExpr": "PM_DATA_FROM_LMEM / PM_DATA_FROM_RMEM",
++        "MetricGroup": "Memory",
++        "MetricName": "LD_LMEM_PER_LD_RMEM"
++    },
++    {
++        "BriefDescription": "Number of data reloads from local memory per data reloads from distant memory",
++        "MetricExpr": "PM_DATA_FROM_LMEM / PM_DATA_FROM_DMEM",
++        "MetricGroup": "Memory",
++        "MetricName": "LD_LMEM_PER_LD_DMEM"
++    },
++    {
++        "BriefDescription": "Number of data reloads from local memory per data reloads from distant and remote memory",
++        "MetricExpr": "PM_DATA_FROM_LMEM / (PM_DATA_FROM_DMEM + PM_DATA_FROM_RMEM)",
++        "MetricGroup": "Memory",
++        "MetricName": "LD_LMEM_PER_LD_MEM"
++    },
+     {
+         "BriefDescription": "Percentage of ITLB misses per completed run instruction",
+         "MetricExpr": "PM_ITLB_MISS / PM_RUN_INST_CMPL * 100",
+@@ -487,6 +589,12 @@
+         "MetricName": "ITLB_MISS_RATE",
+         "ScaleUnit": "1%"
+     },
++    {
++        "BriefDescription": "Number of data reloads from remote memory per data reloads from distant memory",
++        "MetricExpr": "PM_DATA_FROM_RMEM / PM_DATA_FROM_DMEM",
++        "MetricGroup": "Memory",
++        "MetricName": "LD_RMEM_PER_LD_DMEM"
++    },
+     {
+         "BriefDescription": "Percentage of DERAT misses with 4k page size per completed instruction",
+         "MetricExpr": "PM_DERAT_MISS_4K / PM_RUN_INST_CMPL * 100",
+@@ -501,6 +609,76 @@
+         "MetricName": "DERAT_64K_MISS_RATE",
+         "ScaleUnit": "1%"
+     },
++    {
++        "BriefDescription": "Percentage of ICache misses that were reloaded from the L2",
++        "MetricExpr": "PM_INST_FROM_L2 * 100 / PM_L1_ICACHE_MISS",
++        "MetricGroup": "Instruction_Stats",
++        "MetricName": "INST_FROM_L2",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of ICache misses that were reloaded from the L3",
++        "MetricExpr": "PM_INST_FROM_L3 * 100 / PM_L1_ICACHE_MISS",
++        "MetricGroup": "Instruction_Stats",
++        "MetricName": "INST_FROM_L3",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of ICache misses that were reloaded from local memory",
++        "MetricExpr": "PM_INST_FROM_LMEM * 100 / PM_L1_ICACHE_MISS",
++        "MetricGroup": "Instruction_Stats",
++        "MetricName": "INST_FROM_LMEM",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of ICache misses that were reloaded from remote memory",
++        "MetricExpr": "PM_INST_FROM_RMEM * 100 / PM_L1_ICACHE_MISS",
++        "MetricGroup": "Instruction_Stats",
++        "MetricName": "INST_FROM_RMEM",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of ICache misses that were reloaded from distant memory",
++        "MetricExpr": "PM_INST_FROM_DMEM * 100 / PM_L1_ICACHE_MISS",
++        "MetricGroup": "Instruction_Stats",
++        "MetricName": "INST_FROM_DMEM",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of ICache reloads from the L2 per completed instruction",
++        "MetricExpr": "PM_INST_FROM_L2 * 100 / PM_RUN_INST_CMPL",
++        "MetricGroup": "Instruction_Misses",
++        "MetricName": "INST_FROM_L2_RATE",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of ICache reloads from the L3 per completed instruction",
++        "MetricExpr": "PM_INST_FROM_L3 * 100 / PM_RUN_INST_CMPL",
++        "MetricGroup": "Instruction_Misses",
++        "MetricName": "INST_FROM_L3_RATE",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of ICache reloads from local memory per completed instruction",
++        "MetricExpr": "PM_INST_FROM_LMEM * 100 / PM_RUN_INST_CMPL",
++        "MetricGroup": "Instruction_Misses",
++        "MetricName": "INST_FROM_LMEM_RATE",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of ICache reloads from remote memory per completed instruction",
++        "MetricExpr": "PM_INST_FROM_RMEM * 100 / PM_RUN_INST_CMPL",
++        "MetricGroup": "Instruction_Misses",
++        "MetricName": "INST_FROM_RMEM_RATE",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of ICache reloads from distant memory per completed instruction",
++        "MetricExpr": "PM_INST_FROM_DMEM * 100 / PM_RUN_INST_CMPL",
++        "MetricGroup": "Instruction_Misses",
++        "MetricName": "INST_FROM_DMEM_RATE",
++        "ScaleUnit": "1%"
++    },
+     {
+         "BriefDescription": "Average number of run cycles per completed instruction",
+         "MetricExpr": "PM_RUN_CYC / PM_RUN_INST_CMPL",
+@@ -607,6 +785,13 @@
+         "MetricName": "DL1_MISS_RELOADS",
+         "ScaleUnit": "1%"
+     },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from the local L2",
++        "MetricExpr": "PM_DATA_FROM_L2 * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_L2",
++        "ScaleUnit": "1%"
++    },
+     {
+         "BriefDescription": "Percentage of demand load misses that reloaded from beyond the local L2",
+         "MetricExpr": "PM_DATA_FROM_L2MISS / PM_LD_DEMAND_MISS_L1 * 100",
+@@ -614,6 +799,13 @@
+         "MetricName": "DL1_RELOAD_FROM_L2_MISS",
+         "ScaleUnit": "1%"
+     },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from the local L3",
++        "MetricExpr": "PM_DATA_FROM_L3 * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_L3",
++        "ScaleUnit": "1%"
++    },
+     {
+         "BriefDescription": "Percentage of demand load misses that reloaded from beyond the local L3",
+         "MetricExpr": "PM_DATA_FROM_L3MISS / PM_LD_DEMAND_MISS_L1 * 100",
+@@ -621,6 +813,188 @@
+         "MetricName": "DL1_RELOAD_FROM_L3_MISS",
+         "ScaleUnit": "1%"
+     },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from the local L3 with modified data",
++        "MetricExpr": "PM_DATA_FROM_L3_MEPF * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_L3_MEPF",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from another core's L2 on the same regent with modified data",
++        "MetricExpr": "PM_DATA_FROM_L21_REGENT_MOD * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_L21_REGENT_MOD",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from another core's L2 on the same regent with shared data",
++        "MetricExpr": "PM_DATA_FROM_L21_REGENT_SHR * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_L21_REGENT_SHR",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from another core's L2 on the same chip in a different regent with modified data",
++        "MetricExpr": "PM_DATA_FROM_L21_NON_REGENT_MOD * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_L21_NON_REGENT_MOD",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from another core's L2 on the same chip in a different regent with shared data",
++        "MetricExpr": "PM_DATA_FROM_L21_NON_REGENT_SHR * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_L21_NON_REGENT_SHR",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from another core's L3 on the same regent with modified data",
++        "MetricExpr": "PM_DATA_FROM_L31_REGENT_MOD * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_L31_REGENT_MOD",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from another core's L3 on the same regent with shared data",
++        "MetricExpr": "PM_DATA_FROM_L31_REGENT_SHR * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_L31_REGENT_SHR",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from another core's L3 on the same chip in a different regent with modified data",
++        "MetricExpr": "PM_DATA_FROM_L31_NON_REGENT_MOD * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_L31_NON_REGENT_MOD",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from another core's L3 on the same chip in a different regent with shared data",
++        "MetricExpr": "PM_DATA_FROM_L31_NON_REGENT_SHR * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_L31_NON_REGENT_SHR",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from another core's L2 on a remote chip with modified data",
++        "MetricExpr": "PM_DATA_FROM_RL2_MOD * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_RL2_MOD",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from another core's L2 on a remote chip with shared data",
++        "MetricExpr": "PM_DATA_FROM_RL2_SHR * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_RL2_SHR",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from another core's L3 on a remote chip with modified data",
++        "MetricExpr": "PM_DATA_FROM_RL3_MOD * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_RL3_MOD",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from another core's L3 on a remote chip with shared data",
++        "MetricExpr": "PM_DATA_FROM_RL3_SHR * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_RL3_SHR",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from another core's L2 on a distant chip with modified data",
++        "MetricExpr": "PM_DATA_FROM_DL2_MOD * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_DL2_MOD",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from another core's L2 on a distant chip with shared data",
++        "MetricExpr": "PM_DATA_FROM_DL2_SHR * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_DL2_SHR",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from another core's L3 on a distant chip with modified data",
++        "MetricExpr": "PM_DATA_FROM_DL3_MOD * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_DL3_MOD",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from another core's L3 on a distant chip with shared data",
++        "MetricExpr": "PM_DATA_FROM_DL3_SHR * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_DL3_SHR",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from the local chip's memory",
++        "MetricExpr": "PM_DATA_FROM_LMEM * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_LMEM",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from the local chip's OpenCAPI Cache",
++        "MetricExpr": "PM_DATA_FROM_L_OC_CACHE * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_L_OC_CACHE",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from the local chip's OpenCAPI memory",
++        "MetricExpr": "PM_DATA_FROM_L_OC_MEM * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_L_OC_MEM",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from a remote chip's memory",
++        "MetricExpr": "PM_DATA_FROM_RMEM * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_RMEM",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from a remote chip's OpenCAPI Cache",
++        "MetricExpr": "PM_DATA_FROM_R_OC_CACHE * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_R_OC_CACHE",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from a remote chip's OpenCAPI memory",
++        "MetricExpr": "PM_DATA_FROM_R_OC_MEM * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_R_OC_MEM",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from a distant chip's memory",
++        "MetricExpr": "PM_DATA_FROM_DMEM * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_DMEM",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from a distant chip's OpenCAPI Cache",
++        "MetricExpr": "PM_DATA_FROM_D_OC_CACHE * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_D_OC_CACHE",
++        "ScaleUnit": "1%"
++    },
++    {
++        "BriefDescription": "Percentage of demand load misses that reloaded from a distant chip's OpenCAPI memory",
++        "MetricExpr": "PM_DATA_FROM_D_OC_MEM * 100 / PM_LD_DEMAND_MISS_L1",
++        "MetricGroup": "dL1_Reloads",
++        "MetricName": "DL1_RELOAD_FROM_D_OC_MEM",
++        "ScaleUnit": "1%"
++    },
+     {
+         "BriefDescription": "Percentage of cycles stalled due to the NTC instruction waiting for a load miss to resolve from a source beyond the local L2 and local L3",
+         "MetricExpr": "DMISS_L3MISS_STALL_CPI / RUN_CPI * 100",
+@@ -686,6 +1060,13 @@
+         "MetricName": "DERAT_MISS_RELOAD",
+         "ScaleUnit": "1%"
+     },
++    {
++        "BriefDescription": "Percentage of ICache misses that were reloaded from beyond the local L2",
++        "MetricExpr": "PM_INST_FROM_L2MISS * 100 / PM_L1_ICACHE_MISS",
++        "MetricGroup": "Instruction_Misses",
++        "MetricName": "INST_FROM_L2_MISS",
++        "ScaleUnit": "1%"
++    },
+     {
+         "BriefDescription": "Percentage of icache misses that were reloaded from beyond the local L3",
+         "MetricExpr": "PM_INST_FROM_L3MISS / PM_L1_ICACHE_MISS * 100",
+@@ -693,6 +1074,13 @@
+         "MetricName": "INST_FROM_L3_MISS",
+         "ScaleUnit": "1%"
+     },
++    {
++        "BriefDescription": "Percentage of ICache reloads from beyond the L2 per completed instruction",
++        "MetricExpr": "PM_INST_FROM_L2MISS * 100 / PM_RUN_INST_CMPL",
++        "MetricGroup": "Instruction_Misses",
++        "MetricName": "INST_FROM_L2_MISS_RATE",
++        "ScaleUnit": "1%"
++    },
+     {
+         "BriefDescription": "Percentage of icache reloads from the beyond the L3 per completed instruction",
+         "MetricExpr": "PM_INST_FROM_L3MISS / PM_RUN_INST_CMPL * 100",
+-- 
+2.39.3
 
-> file? I'm also wondering at some point we should start generating
-> kerneldoc from comments in the code. I don't know if you want to look
-> into kerneldoc style comments.
-
-Of course, would you like to tell me how to do it?
-Not just perf kwork, but the whole perf tool code, I can do some work on 
-this.
-
-> 
-> Thanks,
-> Ian
-> 
->> Thanks,
->> Yang
-> 
-> .
-> 
