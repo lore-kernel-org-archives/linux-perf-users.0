@@ -2,136 +2,207 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF38EE14B1
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 16:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD01FEE14BC
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 17:49:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239217AbjIFQvv (ORCPT
+        id S242391AbjIFRtM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Sep 2023 12:51:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42710 "EHLO
+        Wed, 6 Sep 2023 13:49:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230147AbjIFQvv (ORCPT
+        with ESMTP id S241786AbjIFRtL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Sep 2023 12:51:51 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A454C1997
-        for <linux-perf-users@vger.kernel.org>; Wed,  6 Sep 2023 09:51:47 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18ABFC433C7;
-        Wed,  6 Sep 2023 16:51:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694019107;
-        bh=Afp+5e3h3qkcnDmeFS6QQtQJmifDGZKvVS8J1uw5LyA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vAiSxp2cIJfthgsEAemWi9TfMOERtwrq/f0ajU5Md1QCDl+fq1bNGIdPeGFKGrQGg
-         j5mB5NIrqsQq2rBgz+rXtvVRMWze7vYwAzxofnuRi29q8Lenr4ayGc3b4OMOtJRKic
-         68cnd/Xk+3DwdGv5/08hQ/d0gXz2lcpsHU1snmeA867Z9sJM5PYlww16isk5ZzWxoK
-         IMZsSWxIHeiVQUbb9KbaH31+NplxBnaxi+k+MqDImg3QmEwztGyxAbvkbq0P27EL14
-         SQ8D558XK7E7B7ooJ8DGYZaP8I6+MyzTiLPOQHJpotA8F1oXnTj2s7W0f53qYiFg3e
-         KgZ8EkA/q5r9Q==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 66A1F403F4; Wed,  6 Sep 2023 13:51:44 -0300 (-03)
-Date:   Wed, 6 Sep 2023 13:51:44 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     vmolnaro@redhat.com
-Cc:     linux-perf-users@vger.kernel.org, acme@redhat.com,
-        mpetlan@redhat.com
-Subject: Re: [PATCH 2/2] perf test stat+shadow_stat.sh: Add threshold for
- rounding errors
-Message-ID: <ZPiuIMDR3bhml9pu@kernel.org>
-References: <20230821090053.8807-1-vmolnaro@redhat.com>
- <20230821090053.8807-2-vmolnaro@redhat.com>
+        Wed, 6 Sep 2023 13:49:11 -0400
+Received: from mail-oo1-xc2e.google.com (mail-oo1-xc2e.google.com [IPv6:2607:f8b0:4864:20::c2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 942E2BD;
+        Wed,  6 Sep 2023 10:49:07 -0700 (PDT)
+Received: by mail-oo1-xc2e.google.com with SMTP id 006d021491bc7-5733789a44cso39161eaf.2;
+        Wed, 06 Sep 2023 10:49:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694022547; x=1694627347; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PBQ5G2FX24MM3CgYsRh2BznK6RgK/ifaz8ZcxdhCQEw=;
+        b=oF1j3wX38wASrXvwTUlviqu0776yIpO+kr6NBdV7ZdWyYP4d+PgL6kwyOMRbSLFp37
+         SXZdJmr5fnVtSQ3yigypioWqWina5SUSsD9Id2pS4Oamh2JQPq2AGLA7XVH8/TGpZIFz
+         kNCRFHedsPjbuOgflqYwBJq0PrEiyHuyFGwpAO5+DyhZjs42nFr7bsUUadaE8pzlUT0/
+         vtJ9FVylM3MeOxDcZlaaGhQKE+dc5Cd0Ie2of6j0YxR9bxS+cy1jitVziLG58T2t8vq6
+         PKboA3E+6iFPd+5XOw7OF8wA75xnyXUy48tgWP2VJvSnSAfgnTLaoPqYUSNq/Fe8Xf5A
+         I1wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1694022547; x=1694627347;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=PBQ5G2FX24MM3CgYsRh2BznK6RgK/ifaz8ZcxdhCQEw=;
+        b=BSINu5f1WUNKl4X7t9E9kfY888qWUzV00ciP5WIkEF9nlF2r6DzUh1pSt73rF5YiZb
+         kuCjMuEeEJaqROJlZRJ3wVu5Ct6n87YHkvtPR8xlkOmw+ELrMrEk3G5ruX7+g2QPA7RV
+         gGQN/eCPx8E1lVK7PSj3ZHQv0sNhkHP//y3+l8503GR2fergTJTNHQdg/xGXRtB1j0Vr
+         4S53ZEj6ez7gc5/63Lp/liYac3InvLlYUwyV675GXjnZ7sKa/9y73KFW+tzRpaMVm4mx
+         kiV4b9vdxkZs4zc41lWbo5/mXlcXI1CA3bvZUpKxyvBcJrTG10uLYhYeOX/x/rcIbUrj
+         PxSA==
+X-Gm-Message-State: AOJu0Yz8+Yw1Jx1sEfg5t2gLhf4PurYa5zJ/oSUNwkpG3bg/OFQmCBgM
+        w/+/xWe90L4dYH0VKMHMhIU=
+X-Google-Smtp-Source: AGHT+IHpaczWiQhmc3kppZcNKp/jtOF7byv8+L0SKDn71OBpR5ykPGEvw9W9yP2nZqPQQ13gIgQm/Q==
+X-Received: by 2002:a05:6358:418b:b0:13c:cdef:25ab with SMTP id w11-20020a056358418b00b0013ccdef25abmr3499752rwc.24.1694022546735;
+        Wed, 06 Sep 2023 10:49:06 -0700 (PDT)
+Received: from bangji.corp.google.com ([2620:15c:2c0:5:5035:1b47:9a3f:312c])
+        by smtp.gmail.com with ESMTPSA id p11-20020a17090ad30b00b00262eccfa29fsm63564pju.33.2023.09.06.10.49.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Sep 2023 10:49:06 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
+Subject: [PATCH 1/5] perf tools: Add read_all_cgroups() and __cgroup_find()
+Date:   Wed,  6 Sep 2023 10:48:59 -0700
+Message-ID: <20230906174903.346486-2-namhyung@kernel.org>
+X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
+In-Reply-To: <20230906174903.346486-1-namhyung@kernel.org>
+References: <20230906174903.346486-1-namhyung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230821090053.8807-2-vmolnaro@redhat.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Aug 21, 2023 at 11:00:53AM +0200, vmolnaro@redhat.com escreveu:
-> From: notValord <v.m.veverka@gmail.com>
+The read_all_cgroups() is to build a tree of cgroups in the system and
+users can look up a cgroup using __cgroup_find().
 
-Hi, is the above the same person as vmolnaro@redhat.com? Can we please
-have the full name and use that as the From and also the Signed-off-by?
+Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/cgroup.c | 61 ++++++++++++++++++++++++++++++++++------
+ tools/perf/util/cgroup.h |  4 +++
+ 2 files changed, 57 insertions(+), 8 deletions(-)
 
-Thanks,
-
-- Arnaldo
+diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
+index bfb13306d82c..2e969d1464f4 100644
+--- a/tools/perf/util/cgroup.c
++++ b/tools/perf/util/cgroup.c
+@@ -48,28 +48,36 @@ static int open_cgroup(const char *name)
+ }
  
-> The test was failing in specific scenarios due to imperfection of FP
-> arithmetics. The `bc` command wasn't correctly rounding the result
-> of division causing the failure.
-> 
-> Replace the `bc` with `awk` which should work with more decimal
-> places and add a threshold to catch any possible rounding errors.
-> The acceptable rounding error is set to 0.01 when the test
-> passes with a warning message.
-> ---
->  tools/perf/tests/shell/stat+shadow_stat.sh | 30 +++++++++++++++++-----
->  1 file changed, 24 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/stat+shadow_stat.sh b/tools/perf/tests/shell/stat+shadow_stat.sh
-> index 0e9cba84e75..73c990fe5ee 100755
-> --- a/tools/perf/tests/shell/stat+shadow_stat.sh
-> +++ b/tools/perf/tests/shell/stat+shadow_stat.sh
-> @@ -4,6 +4,8 @@
->  
->  set -e
->  
-> +TRESHOLD=0.015
-> +
->  # skip if system-wide mode is forbidden
->  perf stat -a true > /dev/null 2>&1 || exit 2
->  
-> @@ -33,10 +35,18 @@ test_global_aggr()
->  		fi
->  
->  		# use printf for rounding and a leading zero
-> -		res=`printf "%.2f" "$(echo "scale=6; $num / $cyc" | bc -q)"`
-> +		res=`echo $num $cyc | awk '{printf "%.2f", $1 / $2}'`
->  		if [ "$ipc" != "$res" ]; then
-> -			echo "IPC is different: $res != $ipc  ($num / $cyc)"
-> -			exit 1
-> +			# check the difference from the real result for FP imperfections
-> +			diff=`echo $ipc $res $TRESHOLD | \
-> +			awk '{x = ($1 - $2) < 0 ? ($2 - $1) : ($1 - $2); print (x > $3)}'`
-> +
-> +			if [ $diff -eq 1 ]; then
-> +				echo "IPC is different: $res != $ipc  ($num / $cyc)"
-> +				exit 1
-> +			fi
-> +
-> +			echo "Warning: Difference of IPC is under the treshold"
->  		fi
->  	done
->  }
-> @@ -67,10 +77,18 @@ test_no_aggr()
->  		fi
->  
->  		# use printf for rounding and a leading zero
-> -		res=`printf "%.2f" "$(echo "scale=6; $num / $cyc" | bc -q)"`
-> +		res=`echo $num $cyc | awk '{printf "%.2f", $1 / $2}'`
->  		if [ "$ipc" != "$res" ]; then
-> -			echo "IPC is different for $cpu: $res != $ipc  ($num / $cyc)"
-> -			exit 1
-> +			# check difference from the real result for FP imperfections
-> +			diff=`echo $ipc $res $TRESHOLD | \
-> +			awk '{x = ($1 - $2) < 0 ? ($2 - $1) : ($1 - $2); print (x > $3)}'`
-> +
-> +			if [ $diff -eq 1 ]; then
-> +				echo "IPC is different: $res != $ipc  ($num / $cyc)"
-> +				exit 1
-> +			fi
-> +
-> +			echo "Warning: Difference of IPC is under the treshold"
->  		fi
->  	done
->  }
-> -- 
-> 2.41.0
-> 
-
+ #ifdef HAVE_FILE_HANDLE
+-int read_cgroup_id(struct cgroup *cgrp)
++static u64 __read_cgroup_id(const char *path)
+ {
+-	char path[PATH_MAX + 1];
+-	char mnt[PATH_MAX + 1];
+ 	struct {
+ 		struct file_handle fh;
+ 		uint64_t cgroup_id;
+ 	} handle;
+ 	int mount_id;
+ 
++	handle.fh.handle_bytes = sizeof(handle.cgroup_id);
++	if (name_to_handle_at(AT_FDCWD, path, &handle.fh, &mount_id, 0) < 0)
++		return -1ULL;
++
++	return handle.cgroup_id;
++}
++
++int read_cgroup_id(struct cgroup *cgrp)
++{
++	char path[PATH_MAX + 1];
++	char mnt[PATH_MAX + 1];
++
+ 	if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1, "perf_event"))
+ 		return -1;
+ 
+ 	scnprintf(path, PATH_MAX, "%s/%s", mnt, cgrp->name);
+ 
+-	handle.fh.handle_bytes = sizeof(handle.cgroup_id);
+-	if (name_to_handle_at(AT_FDCWD, path, &handle.fh, &mount_id, 0) < 0)
+-		return -1;
+-
+-	cgrp->id = handle.cgroup_id;
++	cgrp->id = __read_cgroup_id(path);
+ 	return 0;
+ }
++#else
++static inline u64 __read_cgroup_id(const char *path) { return -1ULL; }
+ #endif  /* HAVE_FILE_HANDLE */
+ 
+ #ifndef CGROUP2_SUPER_MAGIC
+@@ -562,6 +570,11 @@ struct cgroup *cgroup__findnew(struct perf_env *env, uint64_t id,
+ 	return cgrp;
+ }
+ 
++struct cgroup *__cgroup__find(struct rb_root *root, uint64_t id)
++{
++	return __cgroup__findnew(root, id, /*create=*/false, /*path=*/NULL);
++}
++
+ struct cgroup *cgroup__find(struct perf_env *env, uint64_t id)
+ {
+ 	struct cgroup *cgrp;
+@@ -587,3 +600,35 @@ void perf_env__purge_cgroups(struct perf_env *env)
+ 	}
+ 	up_write(&env->cgroups.lock);
+ }
++
++void read_all_cgroups(struct rb_root *root)
++{
++	char mnt[PATH_MAX];
++	struct cgroup_name *cn;
++	int prefix_len;
++
++	if (cgroupfs_find_mountpoint(mnt, sizeof(mnt), "perf_event"))
++		return;
++
++	/* cgroup_name will have a full path, skip the root directory */
++	prefix_len = strlen(mnt);
++
++	/* collect all cgroups in the cgroup_list */
++	if (nftw(mnt, add_cgroup_name, 20, 0) < 0)
++		return;
++
++	list_for_each_entry(cn, &cgroup_list, list) {
++		const char *name;
++		u64 cgrp_id;
++
++		/* cgroup_name might have a full path, skip the prefix */
++		name = cn->name + prefix_len;
++		if (name[0] == '\0')
++			name = "/";
++
++		cgrp_id = __read_cgroup_id(cn->name);
++		__cgroup__findnew(root, cgrp_id, /*create=*/true, name);
++	}
++
++	release_cgroup_list();
++}
+diff --git a/tools/perf/util/cgroup.h b/tools/perf/util/cgroup.h
+index 12256b78608c..beb6fe1012ed 100644
+--- a/tools/perf/util/cgroup.h
++++ b/tools/perf/util/cgroup.h
+@@ -37,6 +37,7 @@ int parse_cgroups(const struct option *opt, const char *str, int unset);
+ struct cgroup *cgroup__findnew(struct perf_env *env, uint64_t id,
+ 			       const char *path);
+ struct cgroup *cgroup__find(struct perf_env *env, uint64_t id);
++struct cgroup *__cgroup__find(struct rb_root *root, uint64_t id);
+ 
+ void perf_env__purge_cgroups(struct perf_env *env);
+ 
+@@ -49,6 +50,9 @@ static inline int read_cgroup_id(struct cgroup *cgrp __maybe_unused)
+ }
+ #endif  /* HAVE_FILE_HANDLE */
+ 
++/* read all cgroups in the system and save them in the rbtree */
++void read_all_cgroups(struct rb_root *root);
++
+ int cgroup_is_v2(const char *subsys);
+ 
+ #endif /* __CGROUP_H__ */
 -- 
+2.42.0.283.g2d96d420d3-goog
 
-- Arnaldo
