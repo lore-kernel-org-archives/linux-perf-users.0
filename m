@@ -2,129 +2,164 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E7CEB8FAD
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 02:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8919EB8FAD
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 03:27:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229921AbjIFC6h convert rfc822-to-8bit (ORCPT
+        id S231684AbjIFD1w (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 5 Sep 2023 22:58:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60518 "EHLO
+        Tue, 5 Sep 2023 23:27:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229525AbjIFC6h (ORCPT
+        with ESMTP id S229783AbjIFD1v (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 5 Sep 2023 22:58:37 -0400
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0FA1184;
-        Tue,  5 Sep 2023 19:58:33 -0700 (PDT)
-Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7927611c54bso122465639f.2;
-        Tue, 05 Sep 2023 19:58:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693969113; x=1694573913;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AHA/CZb972+rGa7PLzhmGS/p+N4WJm97/nO5EcN6Ds0=;
-        b=NlN/oKT7bQy8nCJs/omupGkBXd+pqHs2IpN8/vTYY9TDF5XiHMlXR2Jks2yYd/14qa
-         l7D+n7Ov5I+OG3oij4ZrQgbPnP/HfB1XAvrSuyt5eOiggsY7cS9P4sHXu993KD9DMWju
-         Etj5naAeoEWdCsd+VQKWuldA5E+ZcpTU12pYS5Uu7pX+O1c8gcPwoEZ6B63dygmeDKLL
-         UTIR4A1GljrLXQlHtdW5C6p5I8y7Rb7jtM3FpdKWS55z4FATqrUME8yIDOVTtpqzIAdf
-         LpZ4mk9oqVosvEyK36odw1d6wGkmLe9fVCVOqNIl2nHd5RNR5FUhv3y0iEv9nDZSH0Zn
-         678g==
-X-Gm-Message-State: AOJu0Yw9iNxDQNLmGg1repnOjvskN33Qujj7gks/h5KNdIpPtcoz6emA
-        mKm/T/NGugJGiSFVjMX4DhxTYms1abcY4oHIWIU=
-X-Google-Smtp-Source: AGHT+IE1NKfVkyq0xjvB5OEQlRNdJKCYn+xWS/xXnPlmvVgeEIkorpw8TMN4A9uEblACZ55eTblk5/Ui7tsOHcdCiOs=
-X-Received: by 2002:a5d:8449:0:b0:792:4cfc:178f with SMTP id
- w9-20020a5d8449000000b007924cfc178fmr15961626ior.16.1693969112902; Tue, 05
- Sep 2023 19:58:32 -0700 (PDT)
+        Tue, 5 Sep 2023 23:27:51 -0400
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B33EFCE8;
+        Tue,  5 Sep 2023 20:27:46 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R881e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0VrRuUhU_1693970860;
+Received: from 30.240.113.202(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VrRuUhU_1693970860)
+          by smtp.aliyun-inc.com;
+          Wed, 06 Sep 2023 11:27:43 +0800
+Message-ID: <bad0d23d-a66e-0558-469b-a2dd1d5eb497@linux.alibaba.com>
+Date:   Wed, 6 Sep 2023 11:27:38 +0800
 MIME-Version: 1.0
-References: <20230906003912.3317462-1-irogers@google.com>
-In-Reply-To: <20230906003912.3317462-1-irogers@google.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 5 Sep 2023 19:58:20 -0700
-Message-ID: <CAM9d7cgBZufrSWQhSeipV35_y3Kb1EWSoqtXMvLBnCFaoS9Atg@mail.gmail.com>
-Subject: Re: [PATCH v1] perf stat: Fix aggr mode initialization
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.14.0
+Subject: Re: [PATCH v4 1/2] perf/core: Bail out early if the request AUX area
+ is out of bound
+Content-Language: en-US
+From:   Shuai Xue <xueshuai@linux.alibaba.com>
+To:     Leo Yan <leo.yan@linaro.org>, James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     alexander.shishkin@linux.intel.com, mingo@redhat.com,
+        baolin.wang@linux.alibaba.com, acme@kernel.org,
+        mark.rutland@arm.com, jolsa@kernel.org, namhyung@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        nathan@kernel.org, bpf@vger.kernel.org
+References: <20230804072945.85731-1-xueshuai@linux.alibaba.com>
+ <20230804072945.85731-2-xueshuai@linux.alibaba.com>
+ <20230804085947.GB589820@leoy-yangtze.lan>
+ <534c5e53-07bb-07bd-0435-76a10b55228d@linux.alibaba.com>
+In-Reply-To: <534c5e53-07bb-07bd-0435-76a10b55228d@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
-
-On Tue, Sep 5, 2023 at 5:39 PM Ian Rogers <irogers@google.com> wrote:
->
-> Generating metrics llc_code_read_mpi_demand_plus_prefetch,
-> llc_data_read_mpi_demand_plus_prefetch,
-> llc_miss_local_memory_bandwidth_read,
-> llc_miss_local_memory_bandwidth_write,
-> nllc_miss_remote_memory_bandwidth_read, memory_bandwidth_read,
-> memory_bandwidth_write, uncore_frequency, upi_data_transmit_bw,
-> C2_Pkg_Residency, C3_Core_Residency, C3_Pkg_Residency,
-> C6_Core_Residency, C6_Pkg_Residency, C7_Core_Residency,
-> C7_Pkg_Residency, UNCORE_FREQ and tma_info_system_socket_clks would
-> trigger an address sanitizer heap-buffer-overflows on a SkylakeX.
->
-> ```
-> ==2567752==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x5020003ed098 at pc 0x5621a816654e bp 0x7fffb55d4da0 sp 0x7fffb55d4d98
-> READ of size 4 at 0x5020003eee78 thread T0
->     #0 0x558265d6654d in aggr_cpu_id__is_empty tools/perf/util/cpumap.c:694:12
->     #1 0x558265c914da in perf_stat__get_aggr tools/perf/builtin-stat.c:1490:6
->     #2 0x558265c914da in perf_stat__get_global_cached tools/perf/builtin-stat.c:1530:9
->     #3 0x558265e53290 in should_skip_zero_counter tools/perf/util/stat-display.c:947:31
->     #4 0x558265e53290 in print_counter_aggrdata tools/perf/util/stat-display.c:985:18
->     #5 0x558265e51931 in print_counter tools/perf/util/stat-display.c:1110:3
->     #6 0x558265e51931 in evlist__print_counters tools/perf/util/stat-display.c:1571:5
->     #7 0x558265c8ec87 in print_counters tools/perf/builtin-stat.c:981:2
->     #8 0x558265c8cc71 in cmd_stat tools/perf/builtin-stat.c:2837:3
->     #9 0x558265bb9bd4 in run_builtin tools/perf/perf.c:323:11
->     #10 0x558265bb98eb in handle_internal_command tools/perf/perf.c:377:8
->     #11 0x558265bb9389 in run_argv tools/perf/perf.c:421:2
->     #12 0x558265bb9389 in main tools/perf/perf.c:537:3
-> ```
->
-> The issue was the use of testing a cpumap with NULL rather than using
-> empty, as a map containing the dummy value isn't NULL and the -1
-> results in an empty aggr map being allocated which legitimately
-> overflows when any member is accessed.
-
-Right, evlist__create_maps() set it to non-NULL.
-
->
-> Fixes: 8a96f454f566 ("perf stat: Avoid SEGV if core.cpus isn't set")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks,
-Namhyung
 
 
-> ---
->  tools/perf/builtin-stat.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 07b48f6df48e..a3af805a1d57 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -1622,7 +1622,7 @@ static int perf_stat_init_aggr_mode(void)
->          * taking the highest cpu number to be the size of
->          * the aggregation translate cpumap.
->          */
-> -       if (evsel_list->core.user_requested_cpus)
-> +       if (!perf_cpu_map__empty(evsel_list->core.user_requested_cpus))
->                 nr = perf_cpu_map__max(evsel_list->core.user_requested_cpus).cpu;
->         else
->                 nr = 0;
-> --
-> 2.42.0.283.g2d96d420d3-goog
->
+On 2023/8/4 19:24, Shuai Xue wrote:
+> 
+> 
+> On 2023/8/4 16:59, Leo Yan wrote:
+>> On Fri, Aug 04, 2023 at 03:29:44PM +0800, Shuai Xue wrote:
+>>> When perf-record with a large AUX area, e.g 4GB, it fails with:
+>>>
+>>>     #perf record -C 0 -m ,4G -e arm_spe_0// -- sleep 1
+>>>     failed to mmap with 12 (Cannot allocate memory)
+>>>
+>>> and it reveals a WARNING with __alloc_pages():
+>>>
+>>> [   66.595604] ------------[ cut here ]------------
+>>> [   66.600206] WARNING: CPU: 44 PID: 17573 at mm/page_alloc.c:5568 __alloc_pages+0x1ec/0x248
+>>> [   66.608375] Modules linked in: ip6table_filter(E) ip6_tables(E) iptable_filter(E) ebtable_nat(E) ebtables(E) aes_ce_blk(E) vfat(E) fat(E) aes_ce_cipher(E) crct10dif_ce(E) ghash_ce(E) sm4_ce_cipher(E) sm4(E) sha2_ce(E) sha256_arm64(E) sha1_ce(E) acpi_ipmi(E) sbsa_gwdt(E) sg(E) ipmi_si(E) ipmi_devintf(E) ipmi_msghandler(E) ip_tables(E) sd_mod(E) ast(E) drm_kms_helper(E) syscopyarea(E) sysfillrect(E) nvme(E) sysimgblt(E) i2c_algo_bit(E) nvme_core(E) drm_shmem_helper(E) ahci(E) t10_pi(E) libahci(E) drm(E) crc64_rocksoft(E) i40e(E) crc64(E) libata(E) i2c_core(E)
+>>> [   66.657719] CPU: 44 PID: 17573 Comm: perf Kdump: loaded Tainted: G            E      6.3.0-rc4+ #58
+>>> [   66.666749] Hardware name: Default Default/Default, BIOS 1.2.M1.AL.P.139.00 03/22/2023
+>>> [   66.674650] pstate: 23400009 (nzCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
+>>> [   66.681597] pc : __alloc_pages+0x1ec/0x248
+>>> [   66.685680] lr : __kmalloc_large_node+0xc0/0x1f8
+>>> [   66.690285] sp : ffff800020523980
+>>> [   66.693585] pmr_save: 000000e0
+>>> [   66.696624] x29: ffff800020523980 x28: ffff000832975800 x27: 0000000000000000
+>>> [   66.703746] x26: 0000000000100000 x25: 0000000000100000 x24: ffff8000083615d0
+>>> [   66.710866] x23: 0000000000040dc0 x22: ffff000823d6d140 x21: 000000000000000b
+>>> [   66.717987] x20: 000000000000000b x19: 0000000000000000 x18: 0000000000000030
+>>> [   66.725108] x17: 0000000000000000 x16: ffff800008f05be8 x15: ffff000823d6d6d0
+>>> [   66.732229] x14: 0000000000000000 x13: 343373656761705f x12: 726e202c30206574
+>>> [   66.739350] x11: 00000000ffff7fff x10: 00000000ffff7fff x9 : ffff8000083af570
+>>> [   66.746471] x8 : 00000000000bffe8 x7 : c0000000ffff7fff x6 : 000000000005fff4
+>>> [   66.753592] x5 : 0000000000000000 x4 : ffff000823d6d8d8 x3 : 0000000000000000
+>>> [   66.760713] x2 : 0000000000000000 x1 : 0000000000000001 x0 : 0000000000040dc0
+>>> [   66.767834] Call trace:
+>>> [   66.770267]  __alloc_pages+0x1ec/0x248
+>>> [   66.774003]  __kmalloc_large_node+0xc0/0x1f8
+>>> [   66.778259]  __kmalloc_node+0x134/0x1e8
+>>> [   66.782081]  rb_alloc_aux+0xe0/0x298
+>>> [   66.785643]  perf_mmap+0x440/0x660
+>>> [   66.789031]  mmap_region+0x308/0x8a8
+>>> [   66.792593]  do_mmap+0x3c0/0x528
+>>> [   66.795807]  vm_mmap_pgoff+0xf4/0x1b8
+>>> [   66.799456]  ksys_mmap_pgoff+0x18c/0x218
+>>> [   66.803365]  __arm64_sys_mmap+0x38/0x58
+>>> [   66.807187]  invoke_syscall+0x50/0x128
+>>> [   66.810922]  el0_svc_common.constprop.0+0x58/0x188
+>>> [   66.815698]  do_el0_svc+0x34/0x50
+>>> [   66.818999]  el0_svc+0x34/0x108
+>>> [   66.822127]  el0t_64_sync_handler+0xb8/0xc0
+>>> [   66.826296]  el0t_64_sync+0x1a4/0x1a8
+>>> [   66.829946] ---[ end trace 0000000000000000 ]---
+>>>
+>>> 'rb->aux_pages' allocated by kcalloc() is a pointer array which is used to
+>>> maintains AUX trace pages. The allocated page for this array is physically
+>>> contiguous (and virtually contiguous) with an order of 0..MAX_ORDER. If the
+>>> size of pointer array crosses the limitation set by MAX_ORDER, it reveals a
+>>> WARNING.
+>>>
+>>> So bail out early with -ENOMEM if the request AUX area is out of bound,
+>>> e.g.:
+>>>
+>>>     #perf record -C 0 -m ,4G -e arm_spe_0// -- sleep 1
+>>>     failed to mmap with 12 (Cannot allocate memory)
+>>>
+>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>>> ---
+>>>  kernel/events/ring_buffer.c | 3 +++
+>>>  1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+>>> index a0433f37b024..c445e927368d 100644
+>>> --- a/kernel/events/ring_buffer.c
+>>> +++ b/kernel/events/ring_buffer.c
+>>> @@ -699,6 +699,9 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
+>>>  		watermark = 0;
+>>>  	}
+>>>  
+>>> +	/* Can't allocate more than MAX_ORDER */
+>>
+>> The comment is confused.  I'd like to refine it as:
+>>
+>>   /*
+>>    * kcalloc_node() is unable to allocate buffer if the size is larger
+>>    * than: PAGE_SIZE << MAX_ORDER; directly bail out in this case.
+>>    */
+> 
+> Hi, Leo,
+> 
+> Thank you for your quick feedback. The comment is simplified from Peter's reply in v2
+> version. Your refined comment is more detailed and it makes sense to me, I would like
+> to adopt it if @Peter has no other opinions.
+> 
+>> To be honest, I am not sure if perf core maintainers like this kind
+>> thing or not.  Please seek their opinion before you move forward.
+>>
+> 
+> and hi, all perf core maintainers,
+> 
+> I have not received explicit objection from perf core maintainers @Peter or @James so
+> I moved forward to address their comments. It's fine to me to wait for more opinions from
+> perf core maintainers.
+> 
+> Best Regards,
+> Shuai
+> 
+
+Hi, Leo, and all folks,
+
+Any more comments? Should I move forward to send a new patch?
+
+Thank you.
+
+Best Regards,
+Shuai
