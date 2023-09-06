@@ -2,238 +2,117 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0642EE14AC
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 16:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED73EE14B0
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 16:38:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235309AbjIFQJU (ORCPT
+        id S235653AbjIFQie (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Sep 2023 12:09:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53182 "EHLO
+        Wed, 6 Sep 2023 12:38:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237886AbjIFQJU (ORCPT
+        with ESMTP id S231196AbjIFQie (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Sep 2023 12:09:20 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EEF41BC1;
-        Wed,  6 Sep 2023 09:08:46 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A38CC433C8;
-        Wed,  6 Sep 2023 16:08:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694016492;
-        bh=SPpLKHtX8Y6oT9mdiYFoueHVffAY85S/NIcUtHBuU9U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jWWJoz+cfRZlDiTYU3bMgF6FVPVKOzxuYcmL5Am1dziWPFwACKuhVhrAFiBhH1sAb
-         RpvFyM4vpLL35D4NZgdLg2MF2IbxK65tDynDHDmh3p6b8N6vqQs+CcsCRKfcUF/gso
-         ZiwFXKCVaRBQg+koPO48ORhHx5F8cr/CHXfIGSA2TNfsmn1PaK2CnWdddeXfN72un2
-         afdKrUgQRbRVyh/fQ5Fiy6tmuXl5B9QDYmRpM3w5WrNBeb2gWI4/qw/lBpM+8zrIZe
-         QisP55Ph7+5WCkU7+Gbilh6Er2LpquqQJLHAwIa7LhZRClYkKPy470mQtz6efvIbNL
-         Qi2u4hiKXyrSw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C2D31403F4; Wed,  6 Sep 2023 13:08:09 -0300 (-03)
-Date:   Wed, 6 Sep 2023 13:08:09 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Yang Jihong <yangjihong1@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        kan.liang@linux.intel.com, james.clark@arm.com,
-        tmricht@linux.ibm.com, ak@linux.intel.com,
-        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v8 0/6] perf record: Track sideband events for all CPUs
- when tracing selected CPUs
-Message-ID: <ZPij6XjhdUW3nIqU@kernel.org>
-References: <20230904023340.12707-1-yangjihong1@huawei.com>
+        Wed, 6 Sep 2023 12:38:34 -0400
+Received: from out0-219.mail.aliyun.com (out0-219.mail.aliyun.com [140.205.0.219])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94A341738;
+        Wed,  6 Sep 2023 09:38:29 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047204;MF=libang.li@antgroup.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---.UZ2fPb0_1694018302;
+Received: from localhost(mailfrom:libang.li@antgroup.com fp:SMTPD_---.UZ2fPb0_1694018302)
+          by smtp.aliyun-inc.com;
+          Thu, 07 Sep 2023 00:38:23 +0800
+From:   "=?UTF-8?B?5p2O5qOSKOS8r+WFrik=?=" <libang.li@antgroup.com>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org
+Cc:     <gregkh@linuxfoundation.org>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "=?UTF-8?B?5p2O5qOSKOS8r+WFrik=?=" <libang.li@antgroup.com>
+Subject: [PATCH 6.1.y] perf/core: Fix possible deadlock in sys_perf_event_open()
+Date:   Thu, 07 Sep 2023 00:38:21 +0800
+Message-Id: <20230906163821.85031-1-libang.li@antgroup.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230904023340.12707-1-yangjihong1@huawei.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Sep 04, 2023 at 02:33:34AM +0000, Yang Jihong escreveu:
-> User space tasks can migrate between CPUs, track sideband events for all
-> CPUs.
-> 
-> The specific scenarios are as follows:
-> 
->          CPU0                                 CPU1
->   perf record -C 0 start
->                               taskA starts to be created and executed
->                                 -> PERF_RECORD_COMM and PERF_RECORD_MMAP
->                                    events only deliver to CPU1
->                               ......
->                                 |
->                           migrate to CPU0
->                                 |
->   Running on CPU0    <----------/
->   ...
-> 
->   perf record -C 0 stop
-> 
-> Now perf samples the PC of taskA. However, perf does not record the
-> PERF_RECORD_COMM and PERF_RECORD_COMM events of taskA.
-> Therefore, the comm and symbols of taskA cannot be parsed.
-> 
-> The sys_perf_event_open invoked is as follows:
-> 
->   # perf --debug verbose=3 record -e cpu-clock -C 1 true
->   <SNIP>
->   Opening: cpu-clock
->   ------------------------------------------------------------
->   perf_event_attr:
->     type                             1 (PERF_TYPE_SOFTWARE)
->     size                             136
->     config                           0 (PERF_COUNT_SW_CPU_CLOCK)
->     { sample_period, sample_freq }   4000
->     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->     read_format                      ID|LOST
->     disabled                         1
->     inherit                          1
->     freq                             1
->     sample_id_all                    1
->     exclude_guest                    1
->   ------------------------------------------------------------
->   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
->   Opening: dummy:u
->   ------------------------------------------------------------
->   perf_event_attr:
->     type                             1 (PERF_TYPE_SOFTWARE)
->     size                             136
->     config                           0x9 (PERF_COUNT_SW_DUMMY)
->     { sample_period, sample_freq }   1
->     sample_type                      IP|TID|TIME|CPU|IDENTIFIER
->     read_format                      ID|LOST
->     inherit                          1
->     exclude_kernel                   1
->     exclude_hv                       1
->     mmap                             1
->     comm                             1
->     task                             1
->     sample_id_all                    1
->     exclude_guest                    1
->     mmap2                            1
->     comm_exec                        1
->     ksymbol                          1
->     bpf_event                        1
->   ------------------------------------------------------------
->   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
->   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 7
->   sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 9
->   sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 10
->   sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 11
->   sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 12
->   sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 13
->   sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
->   <SNIP>
-> 
-> Changes since_v7:
->  - The condition for requiring system_wide sideband is changed to
->    "as long as a non-dummy event exists" (patch4).
->  - Modify the corresponding test case to record only dummy event (patch6).
->  - Thanks to tested-by tag from Ravi, but because the solution is modified,
->    the tested-by tag of Ravi is not added to this version.
-> 
-> Changes since_v6:
->  - Patch1:
->     1. No change.
->     2. Keep Acked-by tag from Adrian.
->  - Patch2:
->     1. Update commit message as suggested by Ian.
->     2. Keep Acked-by tag from Adrian because code is not modified.
->  - Patch3:
->     1. Update comment as suggested by Ian.
->     2. Merge original patch5 ("perf test: Update base-record & system-wide-dummy attr") as suggested by Ian.
->     3. Only merge commit, keep Acked-by tag from Adrian.
->  - Patch4:
->     1. No change. Because Adrian recommends not changing the function name.
->     2. Keep Acked-by tag from Adrian.
->  - Patch5:
->     1. Add cleanup on trap function as suggested by Ian.
->     2. Remove Tested-by tag from Adrian because the script is modified.
->  - Patch6:
->     1. Add Reviewed-by tag from Ian.
+In certain scenarios, gctx and ctx may be equal in the
+__perf_event_ctx_lock_double() function, resulting in a deadlock.
 
-I'm in doubt about these Acked-by/Reviewed-by tags, do they still stand? They are
-not in the latest series, can you please check?
+Thread 1, thread 2 and thread 3 belong to the same process, and the
+process number is assumed to be M. The deadlock scenario is as follows:
 
-- Arnaldo
+1) Thread 1 creates a pure software group through the system call
+   sys_perf_event_open() and returns an fd, assuming the value of fd is N.
+   The parameters of sys_perf_event_open() are as follows.
+
+   For example:
+    perf_event_attr.type = PERF_TYPE_SOFTWARE;
+    pid = M;
+    cpu = 0;
+    group_fd = -1;
+    flags = 0;
+    N = sys_perf_event_open(&perf_event_attr, pid, cpu, group_fd, flags);
+
+2) Thread 2 and thread 3 call the perf_event_open() function concurrently
+   with the same parameters on a different cpu. And use the fd generated
+   by thread 1 as group_fd. The parameters of sys_perf_event_open() are
+   as follows.
+
+   For example:
+    perf_event_attr.type = PERF_TYPE_HARDWARE;
+    pid = M;
+    cpu = 0;
+    group_fd = N;
+    flags = 0;
+    sys_perf_event_open(&perf_event_attr, pid, cpu, group_fd, flags);
+
+3) In the __perf_event_ctx_lock_double function, assuming that thread 2
+   successfully acquires gctx->mutex and ctx->mutex first, thread 3 will
+   wait here. At the same time, thread 2 will move the pure software gruop
+   to the hardware context and change group_leader->ctx to the hardware
+   context.
+
+4) When thread 2 releases gctx->mutex and ctx->mutex, thread 3 acquires
+   gctx->mutex and ctx->mutex. And find that group_leader->ctx != gctx,
+   then reacquires gctx. At this time, gctx is equal to the ctx of thread
+   3, triggering a deadlock.
+
+Fixes: 321027c1fe77 ("perf/core: Fix concurrent sys_perf_event_open() vs. 'move_group' race")
+Signed-off-by: Bang Li <libang.li@antgroup.com>
+---
+ kernel/events/core.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index db1065daabb6..8af980cdd3a5 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -12161,6 +12161,11 @@ __perf_event_ctx_lock_double(struct perf_event *group_leader,
+ 	}
+ 	rcu_read_unlock();
  
-> Changes since_v5:
->  - No code changes.
->  - Detailed commit message of patch3.
->  - Add Acked-by and Tested-by tags from Adrian Hunter.
-> 
-> Changes since_v4:
->  - Simplify check code for record__tracking_system_wide().
->  - Add perf attr test result to commit message for patch 7.
-> 
-> Changes since_v3:
->  - Check fall_kernel, all_user, and dummy or exclude_user when determining
->    whether system wide is required.
-> 
-> Changes since_v2:
->  - Rename record_tracking.sh to record_sideband.sh in tools/perf/tests/shell.
->  - Remove "perf evlist: Skip dummy event sample_type check for evlist_config" patch.
->  - Add opts->all_kernel check in record__config_tracking_events().
->  - Add perf_event_attr test for record selected CPUs exclude_user.
->  - Update base-record & system-wide-dummy sample_type attr expected values for test-record-C0.
-> 
-> Changes since v1:
->  - Add perf_evlist__go_system_wide() via internal/evlist.h instead of
->    exporting perf_evlist__propagate_maps().
->  - Use evlist__add_aux_dummy() instead of evlist__add_dummy() in
->    evlist__findnew_tracking_event().
->  - Add a parameter in evlist__findnew_tracking_event() to deal with
->    system_wide inside.
->  - Add sideband for all CPUs when tracing selected CPUs comments on
->    the perf record man page.
->  - Use "sideband events" instead of "tracking events".
->  - Adjust the patches Sequence.
->  - Add patch5 to skip dummy event sample_type check for evlist_config.
->  - Add patch6 to update system-wide-dummy attr values for perf test.
-> 
-> Yang Jihong (6):
->   perf evlist: Add perf_evlist__go_system_wide() helper
->   perf evlist: Add evlist__findnew_tracking_event() helper
->   perf record: Move setting tracking events before
->     record__init_thread_masks()
->   perf record: Track sideband events for all CPUs when tracing selected
->     CPUs
->   perf test: Add test case for record sideband events
->   perf test: Add perf_event_attr test for record selected CPUs
->     exclude_user
-> 
-> Yang Jihong (6):
->   perf evlist: Add perf_evlist__go_system_wide() helper
->   perf evlist: Add evlist__findnew_tracking_event() helper
->   perf record: Move setting tracking events before
->     record__init_thread_masks()
->   perf record: Track sideband events for all CPUs when tracing selected
->     CPUs
->   perf test: Add test case for record sideband events
->   perf test: Add perf_event_attr test for record dummy event
-> 
->  tools/lib/perf/evlist.c                    |  9 +++
->  tools/lib/perf/include/internal/evlist.h   |  2 +
->  tools/perf/Documentation/perf-record.txt   |  3 +
->  tools/perf/builtin-record.c                | 92 +++++++++++++++-------
->  tools/perf/tests/attr/system-wide-dummy    | 14 ++--
->  tools/perf/tests/attr/test-record-C0       |  4 +-
->  tools/perf/tests/attr/test-record-dummy-C0 | 55 +++++++++++++
->  tools/perf/tests/shell/record_sideband.sh  | 58 ++++++++++++++
->  tools/perf/util/evlist.c                   | 18 +++++
->  tools/perf/util/evlist.h                   |  1 +
->  10 files changed, 221 insertions(+), 35 deletions(-)
->  create mode 100644 tools/perf/tests/attr/test-record-dummy-C0
->  create mode 100755 tools/perf/tests/shell/record_sideband.sh
-> 
-> -- 
-> 2.30.GIT
-> 
-
++	if (gctx == ctx) {
++		put_ctx(gctx);
++		return NULL;
++	}
++
+ 	mutex_lock_double(&gctx->mutex, &ctx->mutex);
+ 
+ 	if (group_leader->ctx != gctx) {
+@@ -12465,6 +12470,11 @@ SYSCALL_DEFINE5(perf_event_open,
+ 
+ 	if (move_group) {
+ 		gctx = __perf_event_ctx_lock_double(group_leader, ctx);
++		if (unlikely(!gctx)) {
++			mutex_lock(&ctx->mutex);
++			move_group = 0;
++			goto not_move_group;
++		}
+ 
+ 		if (gctx->task == TASK_TOMBSTONE) {
+ 			err = -ESRCH;
 -- 
+2.19.1.6.gb485710b
 
-- Arnaldo
