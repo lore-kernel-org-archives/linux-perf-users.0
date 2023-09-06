@@ -2,96 +2,231 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70325EE14A5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 15:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3D3EE14A0
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 15:38:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230521AbjIFPSw (ORCPT
+        id S242598AbjIFPiY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Sep 2023 11:18:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39538 "EHLO
+        Wed, 6 Sep 2023 11:38:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229903AbjIFPSw (ORCPT
+        with ESMTP id S240214AbjIFPiY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Sep 2023 11:18:52 -0400
+        Wed, 6 Sep 2023 11:38:24 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE85BE6B;
-        Wed,  6 Sep 2023 08:18:48 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16506C433C8;
-        Wed,  6 Sep 2023 15:18:48 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED98E6B;
+        Wed,  6 Sep 2023 08:38:20 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B04FDC433C8;
+        Wed,  6 Sep 2023 15:38:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694013528;
-        bh=yQ0Z23Zi8vpt2reo1u33VyPF/URjsB49sQKSs1lkV0g=;
+        s=k20201202; t=1694014700;
+        bh=u7o/1IrYDxHmPHoEPJYlxEJhId0q8woRVu5tZnNykBE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fw1sxYmiMiSJqGZP6RvSzA0KGNwnoVb4NMyBgnswTrUM08IvSlIqgfBvAsZsvYNfV
-         g3Caoq9QVdI1mE82mJtUwL0FX6rr36brxpDxiRzeimsSZIj/0Bad4rv/YsO/wcg9J8
-         4hja5rGYQuIaM75ZrNfprKifyGqISvdRbX9jI7xQJf5tD8KNlfdmvVpjMx06ch+xjt
-         0XHgnJ3iC12n1G95dygwvXydP1I9Yc/M0Ewwn0PrJPJarqAgTpPdbmsYozdFfnUYKt
-         yGyHVdThSrq66GOc1JUTnPDEEdkSfdBxSSMjUpaEFrY+h7ZV54djAds5chFvoiJFPg
-         yzBb1qT4xkTOg==
+        b=fIxIB1OobEomc9sdmxE5eD249OA4R7w/M/lSkoDwIorxmdnsxlMM6IpTWP+9Hb719
+         Y9S82qrQq19IhBGtc4Ec/WLFo0DkkHMqqD9OLoIthiXEeERt/5ZothDJRsXsOtRsv7
+         vZ5H4zC8N28Lb0otCxAby9GLwkLmfrBPnGWOltFfI4qDp35QlZWgKG3zg1jxyhBrCk
+         mHbYL0IAJa3lRxsRcLwUasRB9F1gl0MEqdZ1XQ1p/YtINY9bxqqeipM4otFe+MZnWe
+         R1YcNKkq6lIkhsBHrMvCa7eZahBlxM1/VygJDUPEITIYJeH/NoHaOhVfrIQq4HoD9L
+         VduPnLx3hv4wQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id EE3A4403F4; Wed,  6 Sep 2023 12:18:44 -0300 (-03)
-Date:   Wed, 6 Sep 2023 12:18:44 -0300
+        id 08EEF403F4; Wed,  6 Sep 2023 12:38:17 -0300 (-03)
+Date:   Wed, 6 Sep 2023 12:38:16 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v1 1/3] perf completion: Restrict completion of events to
- events
-Message-ID: <ZPiYVCO2XMLwMxo7@kernel.org>
-References: <20230905181554.3202873-1-irogers@google.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
+Subject: Re: [PATCH 1/5] perf tools: Add read_all_cgroups() and
+ __cgroup_find()
+Message-ID: <ZPic6Fegc7PGSvmp@kernel.org>
+References: <20230830230126.260508-1-namhyung@kernel.org>
+ <20230830230126.260508-2-namhyung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230905181554.3202873-1-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230830230126.260508-2-namhyung@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Sep 05, 2023 at 11:15:52AM -0700, Ian Rogers escreveu:
-> perf list will list libpfm4 events and metrics which aren't valid
-> options to the '-e' option. Restrict the events gathered so that
-> invalid ones aren't shown.
-> 
-> Before:
-> $ perf stat -e <tab><tab>
-> Display all 633 possibilities? (y or n)
-> 
-> After:
-> $ perf stat -e <tab><tab>
-> Display all 375 possibilities? (y or n)
+Em Wed, Aug 30, 2023 at 04:01:22PM -0700, Namhyung Kim escreveu:
+> The read_all_cgroups() is to build a tree of cgroups in the system and
+> users can look up a cgroup using __cgroup_find().
 
+⬢[acme@toolbox perf-tools-next]$ alias m='make -k BUILD_BPF_SKEL=1 CORESIGHT=1 O=/tmp/build/perf-tools-next -C tools/perf install-bin && git status && perf test python'
+⬢[acme@toolbox perf-tools-next]$ m
+make: Entering directory '/var/home/acme/git/perf-tools-next/tools/perf'
+  BUILD:   Doing 'make -j32' parallel build
+Warning: Kernel ABI header differences:
+  diff -u tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_event.h
+  diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
+  diff -u tools/arch/x86/include/asm/msr-index.h arch/x86/include/asm/msr-index.h
+  diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64/include/uapi/asm/perf_regs.h
 
-Thanks, tested and applied.
+  INSTALL libsubcmd_headers
+  INSTALL libperf_headers
+  INSTALL libapi_headers
+  INSTALL libsymbol_headers
+  INSTALL libbpf_headers
+  CC      /tmp/build/perf-tools-next/builtin-lock.o
+  CC      /tmp/build/perf-tools-next/util/bpf_lock_contention.o
+builtin-lock.c: In function ‘__cmd_contention’:
+builtin-lock.c:2162:9: error: too few arguments to function ‘lock_contention_finish’
+ 2162 |         lock_contention_finish();
+      |         ^~~~~~~~~~~~~~~~~~~~~~
+In file included from builtin-lock.c:14:
+util/lock-contention.h:156:5: note: declared here
+  156 | int lock_contention_finish(struct lock_contention *con);
+      |     ^~~~~~~~~~~~~~~~~~~~~~
+make[3]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/builtin-lock.o] Error 1
+make[3]: *** Waiting for unfinished jobs....
+util/bpf_lock_contention.c: In function ‘lock_contention_get_name’:
+util/bpf_lock_contention.c:231:34: error: ‘struct contention_key’ has no member named ‘lock_addr_or_cgroup’
+  231 |                 u64 cgrp_id = key->lock_addr_or_cgroup;
+      |                                  ^~
+make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/util/bpf_lock_contention.o] Error 1
+make[3]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:150: util] Error 2
+make[2]: *** [Makefile.perf:662: /tmp/build/perf-tools-next/perf-in.o] Error 2
+make[1]: *** [Makefile.perf:238: sub-make] Error 2
+make: *** [Makefile:113: install-bin] Error 2
+make: Leaving directory '/var/home/acme/git/perf-tools-next/tools/perf'
+⬢[acme@toolbox perf-tools-next]$
+
+Trying to figure this out.
 
 - Arnaldo
-
  
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  tools/perf/perf-completion.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  tools/perf/util/cgroup.c | 61 ++++++++++++++++++++++++++++++++++------
+>  tools/perf/util/cgroup.h |  4 +++
+>  2 files changed, 57 insertions(+), 8 deletions(-)
 > 
-> diff --git a/tools/perf/perf-completion.sh b/tools/perf/perf-completion.sh
-> index 978249d7868c..40cfc30ad7ad 100644
-> --- a/tools/perf/perf-completion.sh
-> +++ b/tools/perf/perf-completion.sh
-> @@ -164,7 +164,7 @@ __perf_main ()
->  		$prev_skip_opts == @(record|stat|top) ]]; then
+> diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
+> index bfb13306d82c..2e969d1464f4 100644
+> --- a/tools/perf/util/cgroup.c
+> +++ b/tools/perf/util/cgroup.c
+> @@ -48,28 +48,36 @@ static int open_cgroup(const char *name)
+>  }
 >  
->  		local cur1=${COMP_WORDS[COMP_CWORD]}
-> -		local raw_evts=$($cmd list --raw-dump)
-> +		local raw_evts=$($cmd list --raw-dump hw sw cache tracepoint pmu sdt)
->  		local arr s tmp result cpu_evts
+>  #ifdef HAVE_FILE_HANDLE
+> -int read_cgroup_id(struct cgroup *cgrp)
+> +static u64 __read_cgroup_id(const char *path)
+>  {
+> -	char path[PATH_MAX + 1];
+> -	char mnt[PATH_MAX + 1];
+>  	struct {
+>  		struct file_handle fh;
+>  		uint64_t cgroup_id;
+>  	} handle;
+>  	int mount_id;
 >  
->  		# aarch64 doesn't have /sys/bus/event_source/devices/cpu/events
+> +	handle.fh.handle_bytes = sizeof(handle.cgroup_id);
+> +	if (name_to_handle_at(AT_FDCWD, path, &handle.fh, &mount_id, 0) < 0)
+> +		return -1ULL;
+> +
+> +	return handle.cgroup_id;
+> +}
+> +
+> +int read_cgroup_id(struct cgroup *cgrp)
+> +{
+> +	char path[PATH_MAX + 1];
+> +	char mnt[PATH_MAX + 1];
+> +
+>  	if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1, "perf_event"))
+>  		return -1;
+>  
+>  	scnprintf(path, PATH_MAX, "%s/%s", mnt, cgrp->name);
+>  
+> -	handle.fh.handle_bytes = sizeof(handle.cgroup_id);
+> -	if (name_to_handle_at(AT_FDCWD, path, &handle.fh, &mount_id, 0) < 0)
+> -		return -1;
+> -
+> -	cgrp->id = handle.cgroup_id;
+> +	cgrp->id = __read_cgroup_id(path);
+>  	return 0;
+>  }
+> +#else
+> +static inline u64 __read_cgroup_id(const char *path) { return -1ULL; }
+>  #endif  /* HAVE_FILE_HANDLE */
+>  
+>  #ifndef CGROUP2_SUPER_MAGIC
+> @@ -562,6 +570,11 @@ struct cgroup *cgroup__findnew(struct perf_env *env, uint64_t id,
+>  	return cgrp;
+>  }
+>  
+> +struct cgroup *__cgroup__find(struct rb_root *root, uint64_t id)
+> +{
+> +	return __cgroup__findnew(root, id, /*create=*/false, /*path=*/NULL);
+> +}
+> +
+>  struct cgroup *cgroup__find(struct perf_env *env, uint64_t id)
+>  {
+>  	struct cgroup *cgrp;
+> @@ -587,3 +600,35 @@ void perf_env__purge_cgroups(struct perf_env *env)
+>  	}
+>  	up_write(&env->cgroups.lock);
+>  }
+> +
+> +void read_all_cgroups(struct rb_root *root)
+> +{
+> +	char mnt[PATH_MAX];
+> +	struct cgroup_name *cn;
+> +	int prefix_len;
+> +
+> +	if (cgroupfs_find_mountpoint(mnt, sizeof(mnt), "perf_event"))
+> +		return;
+> +
+> +	/* cgroup_name will have a full path, skip the root directory */
+> +	prefix_len = strlen(mnt);
+> +
+> +	/* collect all cgroups in the cgroup_list */
+> +	if (nftw(mnt, add_cgroup_name, 20, 0) < 0)
+> +		return;
+> +
+> +	list_for_each_entry(cn, &cgroup_list, list) {
+> +		const char *name;
+> +		u64 cgrp_id;
+> +
+> +		/* cgroup_name might have a full path, skip the prefix */
+> +		name = cn->name + prefix_len;
+> +		if (name[0] == '\0')
+> +			name = "/";
+> +
+> +		cgrp_id = __read_cgroup_id(cn->name);
+> +		__cgroup__findnew(root, cgrp_id, /*create=*/true, name);
+> +	}
+> +
+> +	release_cgroup_list();
+> +}
+> diff --git a/tools/perf/util/cgroup.h b/tools/perf/util/cgroup.h
+> index 12256b78608c..beb6fe1012ed 100644
+> --- a/tools/perf/util/cgroup.h
+> +++ b/tools/perf/util/cgroup.h
+> @@ -37,6 +37,7 @@ int parse_cgroups(const struct option *opt, const char *str, int unset);
+>  struct cgroup *cgroup__findnew(struct perf_env *env, uint64_t id,
+>  			       const char *path);
+>  struct cgroup *cgroup__find(struct perf_env *env, uint64_t id);
+> +struct cgroup *__cgroup__find(struct rb_root *root, uint64_t id);
+>  
+>  void perf_env__purge_cgroups(struct perf_env *env);
+>  
+> @@ -49,6 +50,9 @@ static inline int read_cgroup_id(struct cgroup *cgrp __maybe_unused)
+>  }
+>  #endif  /* HAVE_FILE_HANDLE */
+>  
+> +/* read all cgroups in the system and save them in the rbtree */
+> +void read_all_cgroups(struct rb_root *root);
+> +
+>  int cgroup_is_v2(const char *subsys);
+>  
+>  #endif /* __CGROUP_H__ */
 > -- 
 > 2.42.0.283.g2d96d420d3-goog
 > 
