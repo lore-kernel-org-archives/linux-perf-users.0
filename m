@@ -2,90 +2,67 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B3DEE14C3
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 19:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADD2EE14D0
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 21:28:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242714AbjIFT4w (ORCPT
+        id S231781AbjIFV2U (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Sep 2023 15:56:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46170 "EHLO
+        Wed, 6 Sep 2023 17:28:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242365AbjIFT4t (ORCPT
+        with ESMTP id S235806AbjIFV2U (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Sep 2023 15:56:49 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 794D51724;
-        Wed,  6 Sep 2023 12:56:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=tNQcoLWY9CzZHv+AXiRRCA7yaPZ7C/eBrW9+xao1bYk=; b=nU1fo0gn6cRebQhnfV67K0ys6o
-        JAa/YH3FSm9R+6z2pjiEcXa9HbrD0VlOqAtWKoyI8r31RTASYFBRTV8Lx+umAc9hf6z6mE1W7tAEW
-        0UJBYvFecnYMoQY404UkRYxaGqFasx7AybOI7NpCUcZvvpqJp/5p75yseHLrSPSQvUGPaJsPT9uwD
-        cKL95XusxbRsadiaVqCdHKjbK3zicvtSpAnJ2O1Clasj7UAsmswcws5WfGUFXqxVTFQYjUCcSzb3n
-        Vissht3242FaE7eS2TdEALwwM/2K/1nUsAjZa9FyOSLOiG2d0a+l8sfRrvFAg4qZH6WOVODF1X9BE
-        poY0/AOg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qdydP-001Fl5-00;
-        Wed, 06 Sep 2023 19:56:24 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BD8FA3003F2; Wed,  6 Sep 2023 21:56:19 +0200 (CEST)
-Date:   Wed, 6 Sep 2023 21:56:19 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Manali Shukla <manali.shukla@amd.com>
-Cc:     kvm@vger.kernel.org, seanjc@google.com, linux-doc@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, x86@kernel.org,
-        pbonzini@redhat.com, bp@alien8.de, santosh.shukla@amd.com,
-        ravi.bangoria@amd.com, thomas.lendacky@amd.com, nikunj@amd.com
-Subject: Re: [PATCH 00/13] Implement support for IBS virtualization
-Message-ID: <20230906195619.GD28278@noisy.programming.kicks-ass.net>
-References: <20230904095347.14994-1-manali.shukla@amd.com>
- <20230905154744.GB28379@noisy.programming.kicks-ass.net>
- <012c9897-51d7-87d3-e0e5-3856fa9644e5@amd.com>
+        Wed, 6 Sep 2023 17:28:20 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 023B319BB;
+        Wed,  6 Sep 2023 14:28:11 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 628A3C433C8;
+        Wed,  6 Sep 2023 21:28:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694035691;
+        bh=97KtZLFki8TYIdeuSt8RiztJLygVCH9CnWN8bj1BXpI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DgUoVWuBhBn5cDUBE7Kd5AczoOgQGiWzZmBVbqSMtB0k59yLwIB3tCUnZqhN5Zl/6
+         GWeWLkJXdiueV9biyBGWJLqBU9HREI9ZNbpRNmG20oWvV4i8/4Wv3qisShK92srKOc
+         9COjCv2WBoHT5q5Rsr3ft6aWQfSHjfAdSwi0Ec4Plr8y7eo4+/Drt/DiISeIFFRRb6
+         RiPLG+YrgIRW5v4YZME797MEZF2c/CQIljO1INuM6u06N8yi4GGh3RblMAFJTb/zvi
+         7oMe5ZmvxD8cieZj9KBd6nRTZlD7tZ+gd8Qbqb5zkGbLVnW5hyR8uWU9mR70fai9Wq
+         LWyOYRavyebeQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 8524F403F4; Wed,  6 Sep 2023 18:28:08 -0300 (-03)
+Date:   Wed, 6 Sep 2023 18:28:08 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
+Subject: Re: [PATCHSET 0/5] perf lock contention: Add cgroup support (v2)
+Message-ID: <ZPju6GNFy3sALgRb@kernel.org>
+References: <20230906174903.346486-1-namhyung@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <012c9897-51d7-87d3-e0e5-3856fa9644e5@amd.com>
+In-Reply-To: <20230906174903.346486-1-namhyung@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 06, 2023 at 09:08:25PM +0530, Manali Shukla wrote:
-> Hi Peter,
+Em Wed, Sep 06, 2023 at 10:48:58AM -0700, Namhyung Kim escreveu:
+> Hello,
 > 
-> Thank you for looking into this.
+> The cgroup support comes with two flavors.  One is to aggregate the
+> result by cgroups and the other is to filter result for the given
+> cgroups.  For now, it only works in BPF mode.
 > 
-> On 9/5/2023 9:17 PM, Peter Zijlstra wrote:
-> > On Mon, Sep 04, 2023 at 09:53:34AM +0000, Manali Shukla wrote:
-> > 
-> >> Note that, since IBS registers are swap type C [2], the hypervisor is
-> >> responsible for saving and restoring of IBS host state. Hypervisor
-> >> does so only when IBS is active on the host to avoid unnecessary
-> >> rdmsrs/wrmsrs. Hypervisor needs to disable host IBS before saving the
-> >> state and enter the guest. After a guest exit, the hypervisor needs to
-> >> restore host IBS state and re-enable IBS.
-> > 
-> > Why do you think it is OK for a guest to disable the host IBS when
-> > entering a guest? Perhaps the host was wanting to profile the guest.
-> > 
-> 
-> 1. Since IBS registers are of swap type C [1], only guest state is saved
-> and restored by the hardware. Host state needs to be saved and restored by
-> hypervisor. In order to save IBS registers correctly, IBS needs to be
-> disabled before saving the IBS registers.
-> 
-> 2. As per APM [2],
-> "When a VMRUN is executed to an SEV-ES guest with IBS virtualization enabled, the
-> IbsFetchCtl[IbsFetchEn] and IbsOpCtl[IbsOpEn] MSR bits must be 0. If either of 
-> these bits are not 0, the VMRUN will fail with a VMEXIT_INVALID error code."
-> This is enforced by hardware on SEV-ES guests when VIBS is enabled on SEV-ES
-> guests.
+> * v2 changes
+>  - fix compiler errors  (Arnaldo)
+>  - add Reviewed-by from Ian
 
-I'm not sure I'm fluent in virt speak (in fact, I'm sure I'm not). Is
-the above saying that a host can never IBS profile a guest?
+Thanks, applied, tested, pushing to tmp.perf-tools-next.
 
-Does the current IBS thing assert perf_event_attr::exclude_guest is set?
-
-I can't quickly find anything :-(
+- Arnaldo
