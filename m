@@ -2,254 +2,137 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7B3EE14A0
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 15:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C9DEE14A0
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 15:48:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233330AbjIFPlW (ORCPT
+        id S241899AbjIFPsZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Sep 2023 11:41:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47472 "EHLO
+        Wed, 6 Sep 2023 11:48:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232304AbjIFPlV (ORCPT
+        with ESMTP id S241875AbjIFPsY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Sep 2023 11:41:21 -0400
+        Wed, 6 Sep 2023 11:48:24 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAE08BC;
-        Wed,  6 Sep 2023 08:41:14 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06B24C433C8;
-        Wed,  6 Sep 2023 15:41:14 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F4B91981;
+        Wed,  6 Sep 2023 08:48:18 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6142EC433C7;
+        Wed,  6 Sep 2023 15:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694014874;
-        bh=iiJZWAYxRtMc9lZR5UR45Z+cgCiGl6bOaoOUTY43tKQ=;
+        s=k20201202; t=1694015298;
+        bh=Oq6bPmBRfJhsaD10lj3/EquoCsuawRNx+URf+GvTXo0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JqGXf2/Udd6tPkNGB6BxfD7B3G8DLA2MXFB48pYVIXoto+e+rH2Z+0h4WyKNKMPNP
-         qOIjRPnn1LXxEWxTHyhX4F0Yc870yzXtJo946EJi0EkHgua0+FGMixto252I6Gcsmr
-         bfaR4PsCw+ISnOp3+a+PkxeKn26/Nfl8Ddzf0D8ZifPiHQy03myUeAKfux7egvKMpt
-         FfDVKKeAtpnUd+HpCNq0rbvnJpHZCN1ca2aZ4eWNwyrzOHPf6+euQedGvdN3eKyZlr
-         VyW79zLVp9CobeucyZ0gKWIp3jdrsH6EGowKrQpy2uhcwZRLmRdzYC6kHjqMW7AuGt
-         4CxszOcv2+tGA==
+        b=K4Vh9phBlahXj25dD9WYMH/h/vy4q2aY+D5Dewi2Mfqu1MleynLVxMwLpthq8xagg
+         JVKeUrlGUKfLSW1+2AzvWpeAtu/ASQcXPg+MoVfWbYd85MkW4CfDE3ryrQcvwb8Vra
+         ZX23/MKtD/6ylwdZxwlUlVCInS6VXvkhd8M4E1DOUdJnVzkSI0BXo4T/ZfNc5ZPnS+
+         7a6VWygCXkj8PPXG0mukYN5J9Z5F6d4wNU2d9v4oZMSV68H1h+b+4ULiCknR0tOABg
+         kMhop76vrmeSJIoFKrRxrtUrJ6Fx7qi14y2uOysG41J0G+DtXA3aket3bjvyQiP1GM
+         5d4hl7foBSTjg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E47A2403F4; Wed,  6 Sep 2023 12:41:11 -0300 (-03)
-Date:   Wed, 6 Sep 2023 12:41:11 -0300
+        id 07563403F4; Wed,  6 Sep 2023 12:48:15 -0300 (-03)
+Date:   Wed, 6 Sep 2023 12:48:15 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+To:     James Clark <james.clark@arm.com>
+Cc:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
-Subject: Re: [PATCH 1/5] perf tools: Add read_all_cgroups() and
- __cgroup_find()
-Message-ID: <ZPidlwe2yXEDZB+U@kernel.org>
-References: <20230830230126.260508-1-namhyung@kernel.org>
- <20230830230126.260508-2-namhyung@kernel.org>
- <ZPic6Fegc7PGSvmp@kernel.org>
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/6] perf parse-events: Fixes relating to no_value
+ terms
+Message-ID: <ZPifPw4vinwRd4gO@kernel.org>
+References: <20230901233949.2930562-1-irogers@google.com>
+ <c4833297-da67-3337-b3d1-b628b1282a8a@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZPic6Fegc7PGSvmp@kernel.org>
+In-Reply-To: <c4833297-da67-3337-b3d1-b628b1282a8a@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Sep 06, 2023 at 12:38:17PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, Aug 30, 2023 at 04:01:22PM -0700, Namhyung Kim escreveu:
-> > The read_all_cgroups() is to build a tree of cgroups in the system and
-> > users can look up a cgroup using __cgroup_find().
+Em Tue, Sep 05, 2023 at 10:39:38AM +0100, James Clark escreveu:
 > 
-> ⬢[acme@toolbox perf-tools-next]$ alias m='make -k BUILD_BPF_SKEL=1 CORESIGHT=1 O=/tmp/build/perf-tools-next -C tools/perf install-bin && git status && perf test python'
-> ⬢[acme@toolbox perf-tools-next]$ m
-> make: Entering directory '/var/home/acme/git/perf-tools-next/tools/perf'
->   BUILD:   Doing 'make -j32' parallel build
-> Warning: Kernel ABI header differences:
->   diff -u tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_event.h
->   diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
->   diff -u tools/arch/x86/include/asm/msr-index.h arch/x86/include/asm/msr-index.h
->   diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64/include/uapi/asm/perf_regs.h
 > 
->   INSTALL libsubcmd_headers
->   INSTALL libperf_headers
->   INSTALL libapi_headers
->   INSTALL libsymbol_headers
->   INSTALL libbpf_headers
->   CC      /tmp/build/perf-tools-next/builtin-lock.o
->   CC      /tmp/build/perf-tools-next/util/bpf_lock_contention.o
-> builtin-lock.c: In function ‘__cmd_contention’:
-> builtin-lock.c:2162:9: error: too few arguments to function ‘lock_contention_finish’
->  2162 |         lock_contention_finish();
->       |         ^~~~~~~~~~~~~~~~~~~~~~
-> In file included from builtin-lock.c:14:
-> util/lock-contention.h:156:5: note: declared here
->   156 | int lock_contention_finish(struct lock_contention *con);
->       |     ^~~~~~~~~~~~~~~~~~~~~~
-> make[3]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/builtin-lock.o] Error 1
-> make[3]: *** Waiting for unfinished jobs....
-> util/bpf_lock_contention.c: In function ‘lock_contention_get_name’:
-> util/bpf_lock_contention.c:231:34: error: ‘struct contention_key’ has no member named ‘lock_addr_or_cgroup’
->   231 |                 u64 cgrp_id = key->lock_addr_or_cgroup;
->       |                                  ^~
-> make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/util/bpf_lock_contention.o] Error 1
-> make[3]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:150: util] Error 2
-> make[2]: *** [Makefile.perf:662: /tmp/build/perf-tools-next/perf-in.o] Error 2
-> make[1]: *** [Makefile.perf:238: sub-make] Error 2
-> make: *** [Makefile:113: install-bin] Error 2
-> make: Leaving directory '/var/home/acme/git/perf-tools-next/tools/perf'
-> ⬢[acme@toolbox perf-tools-next]$
+> On 02/09/2023 00:39, Ian Rogers wrote:
+> > A term may have no value in which case it is assumed to have a value
+> > of 1. It doesn't just apply to alias/event terms so change the
+> > parse_events_term__to_strbuf assert.
+> > 
+> > Commit 99e7138eb789 ("perf tools: Fail on using multiple bits long
+> > terms without value") made it so that no_value terms could only be for
+> > a single bit. Prior to commit 64199ae4b8a3 ("perf parse-events: Fix
+> > propagation of term's no_value when cloning") this missed a test case
+> > where config1 had no_value.
+> > 
+> > Fixes: 64199ae4b8a3 ("perf parse-events: Fix propagation of term's no_value when cloning")
+> > Signed-off-by: Ian Rogers <irogers@google.com>
 > 
-> Trying to figure this out.
+> For the whole set:
+> 
+> Reviewed-by: James Clark <james.clark@arm.com>
 
-So it works on the following patch:
-
-⬢[acme@toolbox perf-tools-next]$ git log --oneline -5
-94a54d498ae35c66 (HEAD) perf lock contention: Add -g/--lock-cgroup option
-defe88978441a00d perf lock contention: Prepare to handle cgroups
-cc0717270d2f0daa perf cgroup: Add read_all_cgroups() and __cgroup_find()
-752d73a1dd62cd4a perf shell completion: Support completion of metrics/metricgroups
-72aa5816258bf9fe perf completion: Support completion of libpfm4 events
-⬢[acme@toolbox perf-tools-next]$
-
-Please check and submit a v2.
+Thanks for providing it, in the future please consider replying to the
+cover letter (0/6) to do that, so that b4 can collect it, doing it for
+the 1st patch it will collect just for it, not for the whole set as you
+intended.
 
 - Arnaldo
  
-> - Arnaldo
->  
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > > ---
-> >  tools/perf/util/cgroup.c | 61 ++++++++++++++++++++++++++++++++++------
-> >  tools/perf/util/cgroup.h |  4 +++
-> >  2 files changed, 57 insertions(+), 8 deletions(-)
+> >  tools/perf/tests/parse-events.c | 2 +-
+> >  tools/perf/util/parse-events.c  | 2 +-
+> >  tools/perf/util/parse-events.h  | 4 ++--
+> >  3 files changed, 4 insertions(+), 4 deletions(-)
 > > 
-> > diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
-> > index bfb13306d82c..2e969d1464f4 100644
-> > --- a/tools/perf/util/cgroup.c
-> > +++ b/tools/perf/util/cgroup.c
-> > @@ -48,28 +48,36 @@ static int open_cgroup(const char *name)
-> >  }
+> > diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+> > index d86076d575ed..d47f1f871164 100644
+> > --- a/tools/perf/tests/parse-events.c
+> > +++ b/tools/perf/tests/parse-events.c
+> > @@ -2170,7 +2170,7 @@ static const struct evlist_test test__events[] = {
 > >  
-> >  #ifdef HAVE_FILE_HANDLE
-> > -int read_cgroup_id(struct cgroup *cgrp)
-> > +static u64 __read_cgroup_id(const char *path)
-> >  {
-> > -	char path[PATH_MAX + 1];
-> > -	char mnt[PATH_MAX + 1];
-> >  	struct {
-> >  		struct file_handle fh;
-> >  		uint64_t cgroup_id;
-> >  	} handle;
-> >  	int mount_id;
+> >  static const struct evlist_test test__events_pmu[] = {
+> >  	{
+> > -		.name  = "cpu/config=10,config1,config2=3,period=1000/u",
+> > +		.name  = "cpu/config=10,config1=1,config2=3,period=1000/u",
+> >  		.valid = test__pmu_cpu_valid,
+> >  		.check = test__checkevent_pmu,
+> >  		/* 0 */
+> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> > index 68fe2c4ff49f..65608a3cba81 100644
+> > --- a/tools/perf/util/parse-events.c
+> > +++ b/tools/perf/util/parse-events.c
+> > @@ -2607,7 +2607,7 @@ int parse_events_term__to_strbuf(struct list_head *term_list, struct strbuf *sb)
 > >  
-> > +	handle.fh.handle_bytes = sizeof(handle.cgroup_id);
-> > +	if (name_to_handle_at(AT_FDCWD, path, &handle.fh, &mount_id, 0) < 0)
-> > +		return -1ULL;
-> > +
-> > +	return handle.cgroup_id;
-> > +}
-> > +
-> > +int read_cgroup_id(struct cgroup *cgrp)
-> > +{
-> > +	char path[PATH_MAX + 1];
-> > +	char mnt[PATH_MAX + 1];
-> > +
-> >  	if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1, "perf_event"))
-> >  		return -1;
-> >  
-> >  	scnprintf(path, PATH_MAX, "%s/%s", mnt, cgrp->name);
-> >  
-> > -	handle.fh.handle_bytes = sizeof(handle.cgroup_id);
-> > -	if (name_to_handle_at(AT_FDCWD, path, &handle.fh, &mount_id, 0) < 0)
-> > -		return -1;
-> > -
-> > -	cgrp->id = handle.cgroup_id;
-> > +	cgrp->id = __read_cgroup_id(path);
-> >  	return 0;
-> >  }
-> > +#else
-> > +static inline u64 __read_cgroup_id(const char *path) { return -1ULL; }
-> >  #endif  /* HAVE_FILE_HANDLE */
-> >  
-> >  #ifndef CGROUP2_SUPER_MAGIC
-> > @@ -562,6 +570,11 @@ struct cgroup *cgroup__findnew(struct perf_env *env, uint64_t id,
-> >  	return cgrp;
-> >  }
-> >  
-> > +struct cgroup *__cgroup__find(struct rb_root *root, uint64_t id)
-> > +{
-> > +	return __cgroup__findnew(root, id, /*create=*/false, /*path=*/NULL);
-> > +}
-> > +
-> >  struct cgroup *cgroup__find(struct perf_env *env, uint64_t id)
-> >  {
-> >  	struct cgroup *cgrp;
-> > @@ -587,3 +600,35 @@ void perf_env__purge_cgroups(struct perf_env *env)
-> >  	}
-> >  	up_write(&env->cgroups.lock);
-> >  }
-> > +
-> > +void read_all_cgroups(struct rb_root *root)
-> > +{
-> > +	char mnt[PATH_MAX];
-> > +	struct cgroup_name *cn;
-> > +	int prefix_len;
-> > +
-> > +	if (cgroupfs_find_mountpoint(mnt, sizeof(mnt), "perf_event"))
-> > +		return;
-> > +
-> > +	/* cgroup_name will have a full path, skip the root directory */
-> > +	prefix_len = strlen(mnt);
-> > +
-> > +	/* collect all cgroups in the cgroup_list */
-> > +	if (nftw(mnt, add_cgroup_name, 20, 0) < 0)
-> > +		return;
-> > +
-> > +	list_for_each_entry(cn, &cgroup_list, list) {
-> > +		const char *name;
-> > +		u64 cgrp_id;
-> > +
-> > +		/* cgroup_name might have a full path, skip the prefix */
-> > +		name = cn->name + prefix_len;
-> > +		if (name[0] == '\0')
-> > +			name = "/";
-> > +
-> > +		cgrp_id = __read_cgroup_id(cn->name);
-> > +		__cgroup__findnew(root, cgrp_id, /*create=*/true, name);
-> > +	}
-> > +
-> > +	release_cgroup_list();
-> > +}
-> > diff --git a/tools/perf/util/cgroup.h b/tools/perf/util/cgroup.h
-> > index 12256b78608c..beb6fe1012ed 100644
-> > --- a/tools/perf/util/cgroup.h
-> > +++ b/tools/perf/util/cgroup.h
-> > @@ -37,6 +37,7 @@ int parse_cgroups(const struct option *opt, const char *str, int unset);
-> >  struct cgroup *cgroup__findnew(struct perf_env *env, uint64_t id,
-> >  			       const char *path);
-> >  struct cgroup *cgroup__find(struct perf_env *env, uint64_t id);
-> > +struct cgroup *__cgroup__find(struct rb_root *root, uint64_t id);
-> >  
-> >  void perf_env__purge_cgroups(struct perf_env *env);
-> >  
-> > @@ -49,6 +50,9 @@ static inline int read_cgroup_id(struct cgroup *cgrp __maybe_unused)
-> >  }
-> >  #endif  /* HAVE_FILE_HANDLE */
-> >  
-> > +/* read all cgroups in the system and save them in the rbtree */
-> > +void read_all_cgroups(struct rb_root *root);
-> > +
-> >  int cgroup_is_v2(const char *subsys);
-> >  
-> >  #endif /* __CGROUP_H__ */
-> > -- 
-> > 2.42.0.283.g2d96d420d3-goog
-> > 
-> 
-> -- 
-> 
-> - Arnaldo
+> >  		if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM)
+> >  			if (term->no_value) {
+> > -				assert(term->type_term == PARSE_EVENTS__TERM_TYPE_USER);
+> > +				assert(term->val.num == 1);
+> >  				ret = strbuf_addf(sb, "%s", term->config);
+> >  			} else
+> >  				ret = strbuf_addf(sb, "%s=%#"PRIx64, term->config, term->val.num);
+> > diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+> > index 855b0725c5d4..594e5d2dc67f 100644
+> > --- a/tools/perf/util/parse-events.h
+> > +++ b/tools/perf/util/parse-events.h
+> > @@ -124,8 +124,8 @@ struct parse_events_term {
+> >  	 */
+> >  	bool weak;
+> >  	/**
+> > -	 * @no_value: Is there no value. TODO: this should really be part of
+> > -	 * type_val.
+> > +	 * @no_value: Is there no value. If a numeric term has no value then the
+> > +	 * value is assumed to be 1. An event name also has no value.
+> >  	 */
+> >  	bool no_value;
+> >  };
 
 -- 
 
