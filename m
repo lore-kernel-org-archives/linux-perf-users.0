@@ -2,35 +2,35 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C9DEE14A0
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 15:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E316EE14A0
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 15:51:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241899AbjIFPsZ (ORCPT
+        id S242605AbjIFPv2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Sep 2023 11:48:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53280 "EHLO
+        Wed, 6 Sep 2023 11:51:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241875AbjIFPsY (ORCPT
+        with ESMTP id S229804AbjIFPvZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Sep 2023 11:48:24 -0400
+        Wed, 6 Sep 2023 11:51:25 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F4B91981;
-        Wed,  6 Sep 2023 08:48:18 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6142EC433C7;
-        Wed,  6 Sep 2023 15:48:18 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 989DABC;
+        Wed,  6 Sep 2023 08:51:21 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F39CC433C7;
+        Wed,  6 Sep 2023 15:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694015298;
-        bh=Oq6bPmBRfJhsaD10lj3/EquoCsuawRNx+URf+GvTXo0=;
+        s=k20201202; t=1694015481;
+        bh=ZTx1V9SBRgyay3CMxakat22dukdFU6Xt0g57zO9x/g0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K4Vh9phBlahXj25dD9WYMH/h/vy4q2aY+D5Dewi2Mfqu1MleynLVxMwLpthq8xagg
-         JVKeUrlGUKfLSW1+2AzvWpeAtu/ASQcXPg+MoVfWbYd85MkW4CfDE3ryrQcvwb8Vra
-         ZX23/MKtD/6ylwdZxwlUlVCInS6VXvkhd8M4E1DOUdJnVzkSI0BXo4T/ZfNc5ZPnS+
-         7a6VWygCXkj8PPXG0mukYN5J9Z5F6d4wNU2d9v4oZMSV68H1h+b+4ULiCknR0tOABg
-         kMhop76vrmeSJIoFKrRxrtUrJ6Fx7qi14y2uOysG41J0G+DtXA3aket3bjvyQiP1GM
-         5d4hl7foBSTjg==
+        b=AE6XxU75ThI9ffjE9QXI6OKjbmc8MOfOmxyKEa3H2p9X3yplkfiFWbcn9AF90eQan
+         Xitp8bSAAmwb1owUCyv4Yj8h+fz0NEx906OwuOp5QHYSkcWAaQYXBGc9QCS0EtJZYB
+         MR0IZ0hwu2ttSCZg4APmxRb7DMO53Ty3Gb1CV78dVsqL1ZPvjbbIAhgz/yLVOKEb1p
+         DTzZxOdYa3L3ot3LraQIwz2r72kX3sx7yddrOAkigZQNWssO9/6J58qjB0pFZtSVgE
+         uKIsbJUOTmnSb3suYrm5tqZ3UvkNYUnQ4K4M9Y6hQvrB8uaMnaJzC9Gy5hHKmNP30g
+         kZ4fNwCPAS17w==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 07563403F4; Wed,  6 Sep 2023 12:48:15 -0300 (-03)
-Date:   Wed, 6 Sep 2023 12:48:15 -0300
+        id 5A5F6403F4; Wed,  6 Sep 2023 12:51:18 -0300 (-03)
+Date:   Wed, 6 Sep 2023 12:51:18 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     James Clark <james.clark@arm.com>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -46,7 +46,7 @@ Cc:     Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v1 1/6] perf parse-events: Fixes relating to no_value
  terms
-Message-ID: <ZPifPw4vinwRd4gO@kernel.org>
+Message-ID: <ZPif9qjHVXbxdA0O@kernel.org>
 References: <20230901233949.2930562-1-irogers@google.com>
  <c4833297-da67-3337-b3d1-b628b1282a8a@arm.com>
 MIME-Version: 1.0
@@ -79,12 +79,10 @@ Em Tue, Sep 05, 2023 at 10:39:38AM +0100, James Clark escreveu:
 > 
 > Reviewed-by: James Clark <james.clark@arm.com>
 
-Thanks for providing it, in the future please consider replying to the
-cover letter (0/6) to do that, so that b4 can collect it, doing it for
-the 1st patch it will collect just for it, not for the whole set as you
-intended.
+Thanks, applied.
 
 - Arnaldo
+
  
 > > ---
 > >  tools/perf/tests/parse-events.c | 2 +-
