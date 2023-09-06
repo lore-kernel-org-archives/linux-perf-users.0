@@ -2,235 +2,174 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3D3EE14A0
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 15:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1275EEE14A0
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 15:38:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242598AbjIFPiY (ORCPT
+        id S240029AbjIFPiv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Sep 2023 11:38:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47164 "EHLO
+        Wed, 6 Sep 2023 11:38:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240214AbjIFPiY (ORCPT
+        with ESMTP id S235322AbjIFPiu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Sep 2023 11:38:24 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED98E6B;
-        Wed,  6 Sep 2023 08:38:20 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B04FDC433C8;
-        Wed,  6 Sep 2023 15:38:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694014700;
-        bh=u7o/1IrYDxHmPHoEPJYlxEJhId0q8woRVu5tZnNykBE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fIxIB1OobEomc9sdmxE5eD249OA4R7w/M/lSkoDwIorxmdnsxlMM6IpTWP+9Hb719
-         Y9S82qrQq19IhBGtc4Ec/WLFo0DkkHMqqD9OLoIthiXEeERt/5ZothDJRsXsOtRsv7
-         vZ5H4zC8N28Lb0otCxAby9GLwkLmfrBPnGWOltFfI4qDp35QlZWgKG3zg1jxyhBrCk
-         mHbYL0IAJa3lRxsRcLwUasRB9F1gl0MEqdZ1XQ1p/YtINY9bxqqeipM4otFe+MZnWe
-         R1YcNKkq6lIkhsBHrMvCa7eZahBlxM1/VygJDUPEITIYJeH/NoHaOhVfrIQq4HoD9L
-         VduPnLx3hv4wQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 08EEF403F4; Wed,  6 Sep 2023 12:38:17 -0300 (-03)
-Date:   Wed, 6 Sep 2023 12:38:16 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
-Subject: Re: [PATCH 1/5] perf tools: Add read_all_cgroups() and
- __cgroup_find()
-Message-ID: <ZPic6Fegc7PGSvmp@kernel.org>
-References: <20230830230126.260508-1-namhyung@kernel.org>
- <20230830230126.260508-2-namhyung@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        Wed, 6 Sep 2023 11:38:50 -0400
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2071.outbound.protection.outlook.com [40.107.95.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFACC171C;
+        Wed,  6 Sep 2023 08:38:46 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BLbBxEKK+2En05mUIxo/h89peDtFQtvgcdF2eUMFzLouoeaPo4DYgocZ49x3p2KXnI8wfhfAprC8shc7u4RYAZwekFcUBr08TLJfW0HJ+uM+V9FE5kk5KF51521jJtFEZouXh2+g+Kcm8SueoSSrVUwUqxY/Zzx8SpnAGSL63zVwkSlgAz2hfdUEreOX4sy1/1mRP33neVwuf98ep5dbTXsOB0v/hPfcOi8hjzyS6oULtKCUhug7twY8bf5AMAmxySveTT596BIpe7kfGlyokOkT5Mm/XXgMUB7RzXMK91UgQDLf5c/iVTaGCcYl8b0txZE5AFMNcdL0j50bGBQT7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LsSKv4C1o4o/BdlFWXsabfIJHJW4nOtvCvxKRxQAH0A=;
+ b=Aqgvkb5kyqqPrjONIOkYOP735Gg5nSfmCvCWvUhsREtyXKWdPRvVpXzMJmqpubXyN8ddMkGduL6jlLFsoUKd6X9IcHKal8SxgYNikoVdvNNTfhJiB/aGDrlo86czZq9Vrc3fMlNGE8aNWODWSs1hMilUaba8pdjSFJwEk2s1fl5JJ5d98Y67E26k5RH3KrH8ew/THX8jasniGcuvJnpzpBZwMoe7+rDyJN3h7pR/8NMwb56zHH3wx8SfPXXtfaZQEGv2f50C0tTr+l0T7I4pnKEgZqNXuUQVtyVJKUnOzWGO6iHbBjYu/YoBBg1fychAVt9DI1Hrd1CRzG5eB6SSMA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LsSKv4C1o4o/BdlFWXsabfIJHJW4nOtvCvxKRxQAH0A=;
+ b=z63xSP6CC8sx1cT+4WJzYYtQmCQZxmrIf+cqMWZPGcN75/pYkZLv6a53VokZyCFGKW9Hw5CaME6QNFM6pg0CXWmc5H1nVUAycdA9fELajrCBTH8C7x893B7d2bOJ/WdYogzcRDpWAZPTltPneOfmqemqBFdDBWs1zAPlu+nIG5Q=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS7PR12MB6214.namprd12.prod.outlook.com (2603:10b6:8:96::13) by
+ MW6PR12MB8957.namprd12.prod.outlook.com (2603:10b6:303:23a::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6745.36; Wed, 6 Sep 2023 15:38:42 +0000
+Received: from DS7PR12MB6214.namprd12.prod.outlook.com
+ ([fe80::6f26:6cea:cd82:df23]) by DS7PR12MB6214.namprd12.prod.outlook.com
+ ([fe80::6f26:6cea:cd82:df23%3]) with mapi id 15.20.6745.034; Wed, 6 Sep 2023
+ 15:38:42 +0000
+Message-ID: <012c9897-51d7-87d3-e0e5-3856fa9644e5@amd.com>
+Date:   Wed, 6 Sep 2023 21:08:25 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH 00/13] Implement support for IBS virtualization
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     kvm@vger.kernel.org, seanjc@google.com, linux-doc@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, x86@kernel.org,
+        pbonzini@redhat.com, bp@alien8.de, santosh.shukla@amd.com,
+        ravi.bangoria@amd.com, thomas.lendacky@amd.com, nikunj@amd.com
+References: <20230904095347.14994-1-manali.shukla@amd.com>
+ <20230905154744.GB28379@noisy.programming.kicks-ass.net>
+From:   Manali Shukla <manali.shukla@amd.com>
+In-Reply-To: <20230905154744.GB28379@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230830230126.260508-2-namhyung@kernel.org>
-X-Url:  http://acmel.wordpress.com
+X-ClientProxiedBy: PN3PR01CA0062.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:99::11) To DS7PR12MB6214.namprd12.prod.outlook.com
+ (2603:10b6:8:96::13)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB6214:EE_|MW6PR12MB8957:EE_
+X-MS-Office365-Filtering-Correlation-Id: b18b5e96-772b-4959-4e4f-08dbaeef5910
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 0GvFEBYRMVvJuUy8pzPgNFZSF1TvkBCB9fDNz5q8ESMNr8bEHrHGEkCVZ1j/4bfUorr3dZO0K1NbooN0LszWsyKaPd/pYFy0ztK9fUW6z0HhQ9I+6RMHWTLskNvQiuI0M77YZCZLl8IXVrrAaYsEHmihuR8N2kzUE0HncR57qwo4Vb9o5QGkVp5gry2Px3knk0VE8q7GHxD5vneEutzqqqzc+D/kBF1yDIReoSq8tWR9eMH3mXZX9npQsF+IlfH/njF+bGO52UQPvAa5DQSHTkuTU6IJTubHmmHYdzWHV2bjs8Spj2vhReuT/JfKDHc/39mmhh02hyxTX3twsiv5EmKCqexI259x0waXqFJD3Zj3vJZkcpK0FB55PEJxeINSU+F1oN85YbdI7BHXASkF4pIWF5bJvLzW7ErtSkCJYS7HgtMYGd6Vq3dgtZ0KWcvyqc2ZguYBnfvudnJXE3juKiMpAED3DHXW/Jwz4VHWPfRqoF33QVz+se2de+gAAmkRFehKH65pKQD4tXdu1AL0sFbzklW+jOp+I8T32XuwY+zJI2gC9XHvniqZnLvruA/ZXtUBL+oPqHBQEd+tVgGhFq+ufB/au3Z/c3qT08/W6jyjVXGpA13uUpSbIbD9Ge+S7WfpQVaj+4E9MPe0vaaDXw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6214.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(39860400002)(376002)(346002)(366004)(396003)(451199024)(186009)(1800799009)(53546011)(6486002)(6506007)(6666004)(6512007)(478600001)(83380400001)(966005)(26005)(2616005)(2906002)(44832011)(6916009)(66476007)(66556008)(41300700001)(66946007)(316002)(5660300002)(4326008)(8936002)(8676002)(86362001)(31696002)(36756003)(38100700002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TGZDODVGK2pydmN0WDhpR1M0bHdFYXI5WjIwcUphcHcxQmZnTlE5a3NsTjZF?=
+ =?utf-8?B?RTM5Yk9UR25JQTRqMVVobFAraFZsSXU0b3VLR0I4aVQrUE8vTEp5aytCMWxT?=
+ =?utf-8?B?cmgwVTdXR09XaWhNTXl5NDErVGhvbG5RWVZhb252OTV0Y3hqNURiSnVuaENB?=
+ =?utf-8?B?dWNMMkRlc0VIKzQyZEhQWGszVVp6N0l3TGszNzE0dEdxRURaamptOCtGcUVs?=
+ =?utf-8?B?NG4xWmU1OWlZdEJ0cFJ3UlMxZWw1THNSUE4vMEt5VzhYR1U0UFNWSW8zcmEz?=
+ =?utf-8?B?ZHFNclFyK1MxM0xaWGRUYy9qbW1WdCtMTEdlNFczS29DdGZFQk9BQzdZRGk4?=
+ =?utf-8?B?bXF3MHVVTVIvcEZDMDBrTllFNFpsaWJZUWpEY2UzTGdlL21zclEvNit6R1Jr?=
+ =?utf-8?B?bjJHSkt4UTR3QWdRZHFKYzhKN0U0OUZ0SDNnWm5lQUxOUk5kSVl2aUlYWXcy?=
+ =?utf-8?B?VUhicE14MmZTNUlsSjRlUkZuRkdHdVVBUlhFQ09tblVpU0IzcE16V2ZHYS9E?=
+ =?utf-8?B?aEtWeUJXcUlFUWozcnpoZXNacFU0ODRQcXBpeHdQN01adVFNS2FuY1hja2Rq?=
+ =?utf-8?B?MHNaWFpmVnpoTFZicU9jeWJYNWRVdm10QUJEUFcxTDRxdGRQTWh2ZTRzOXJt?=
+ =?utf-8?B?UUtHclZSbkdWaXFIU3F3SlFPL3dyNnpNNWlxZHpGeUo4UEtyWWVlWHp6QmdW?=
+ =?utf-8?B?RVU3N3Vib1VWUGt2bXlhN3pKbXE5SFJuTkZkRUYwOElsRDVnT2RpZUN2emV2?=
+ =?utf-8?B?Mk1Ha2YvSXRMeDVRa1V3NlA2dys1TzdYcjVHcTBLaXRpeVVjcVQ2aTJZUjNq?=
+ =?utf-8?B?RHlmblVGbk41aTlqdGJlMUo0NzB1QURmOFB4L0dHSWV3OHovUnh6a3MyVmU4?=
+ =?utf-8?B?NmZqMUd5czFCcCs4TTV2VmROMklLMzN3T2NScjRZRjVudlpzaW9XdjN2MWV0?=
+ =?utf-8?B?MEVUKzFlT1RMQVBLTC9JTXgvNkY5T2ZqWXU2VGdad0dEc2FBUm1OZVZJdDFI?=
+ =?utf-8?B?MmV6bWtyU2h1cGtpVXlrQmxvYlU3YVJ1R2UvZnJIVnlZaldtci9McEVob3pU?=
+ =?utf-8?B?ZTh5V21PVC9GTmNlSUxZNGs5SVk4b01VM0x6RjV4UGN5T2tuOS96VldNM00w?=
+ =?utf-8?B?YnBIcUZIeFdLYThRZkIyYlZrWHhWR0pzU1dlcHA0am1ZZUpJQnhzSk9lYTU0?=
+ =?utf-8?B?Wm56Qi9DWGRqTHZlcFJXMThKd2RkajBCcXNMVlVLUlRYVzBjcWtaQVN1a0lJ?=
+ =?utf-8?B?SFFXQWFDS0VGOXFCQ25EVHgxbVdncUMvNGV0eVZkM3YxcnVxZmgvUkpvdU5H?=
+ =?utf-8?B?bHdldDhWdGpDTVVsL2diT1FvZ0NDNlRlcXRMVFNEazI2c1V4VTdQdmhnNHh1?=
+ =?utf-8?B?TCtmNlNaUXRyVklqVmhlSGZyRVYyendFUHhsdVdZOFY5SWl6czNzUzdvNFlH?=
+ =?utf-8?B?akxRZW1PVHBtWm44SWJhZWN4eS93OG5HOGwxZTExdGxlMy80bWl4MzY0cmxD?=
+ =?utf-8?B?VEVZOUlIcWpQbHMxS3NRNW5WdDBJVjFYdUdXdm5JM1krd2tha0NkY3N1ODZ1?=
+ =?utf-8?B?eEk0b3JnN2VzQmxpTWNST042WkZiTkowOTlCMHNMU2FuV0tTcDNHZUxUbXJY?=
+ =?utf-8?B?Ri84N2tnbUVGMTJmQ3ZBenJDbXFhMUFHVmx1OTg1dldhT010dE80NzNkREJJ?=
+ =?utf-8?B?Y3M0eDZhSTF1Yk15ZG9rTUQ5OGRhWFpDMk4wU3NyaExicDIxeU9UQkYycGIw?=
+ =?utf-8?B?SGpJeHk0Wk1ramsweUlGbGRBb2gyRU5GTjU3aG03ajJVcDNtblByazRRWkQz?=
+ =?utf-8?B?TU9leGQvTXZMS3YxQmhGMFlsWnZSZ1k5MnJwNFNnNjF0NmVhdW9zamNUWGNV?=
+ =?utf-8?B?R3Q0K2VvM1R3bldwVVg4b3A2bVFxc1pScTlGWmxkdlFJSzBSQTh3clNEK0xk?=
+ =?utf-8?B?UW12ZEswSzJ0dHlzUHhMN0dlZ3I5U29NUmp0SDFiQVNkVzRXUGlnbmhNblhj?=
+ =?utf-8?B?SzZ6Uzl2VVNNZ0o4RWJsLytWanMvYkw5ZFR0MnArRExsVFFKeTJsMUZyWFh3?=
+ =?utf-8?B?REU2WDFTYzM3TDlLMVE2OVBDU2ZiNFZyd3Q5ckRyUGlDNlQ4b2JtTzBrNDJW?=
+ =?utf-8?Q?ZoSJDQqg02fn69IcoGG9VdTF9?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b18b5e96-772b-4959-4e4f-08dbaeef5910
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6214.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Sep 2023 15:38:42.2107
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eDAe8HKeHyLljb9+Cda9NJR/7GUFg9OjAXp/yjIDXYRhovPG3/NqlNJpDw0V5lkKhuPD9CVdk+VNyhXbbAoftg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8957
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Aug 30, 2023 at 04:01:22PM -0700, Namhyung Kim escreveu:
-> The read_all_cgroups() is to build a tree of cgroups in the system and
-> users can look up a cgroup using __cgroup_find().
+Hi Peter,
 
-⬢[acme@toolbox perf-tools-next]$ alias m='make -k BUILD_BPF_SKEL=1 CORESIGHT=1 O=/tmp/build/perf-tools-next -C tools/perf install-bin && git status && perf test python'
-⬢[acme@toolbox perf-tools-next]$ m
-make: Entering directory '/var/home/acme/git/perf-tools-next/tools/perf'
-  BUILD:   Doing 'make -j32' parallel build
-Warning: Kernel ABI header differences:
-  diff -u tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_event.h
-  diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
-  diff -u tools/arch/x86/include/asm/msr-index.h arch/x86/include/asm/msr-index.h
-  diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64/include/uapi/asm/perf_regs.h
+Thank you for looking into this.
 
-  INSTALL libsubcmd_headers
-  INSTALL libperf_headers
-  INSTALL libapi_headers
-  INSTALL libsymbol_headers
-  INSTALL libbpf_headers
-  CC      /tmp/build/perf-tools-next/builtin-lock.o
-  CC      /tmp/build/perf-tools-next/util/bpf_lock_contention.o
-builtin-lock.c: In function ‘__cmd_contention’:
-builtin-lock.c:2162:9: error: too few arguments to function ‘lock_contention_finish’
- 2162 |         lock_contention_finish();
-      |         ^~~~~~~~~~~~~~~~~~~~~~
-In file included from builtin-lock.c:14:
-util/lock-contention.h:156:5: note: declared here
-  156 | int lock_contention_finish(struct lock_contention *con);
-      |     ^~~~~~~~~~~~~~~~~~~~~~
-make[3]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/builtin-lock.o] Error 1
-make[3]: *** Waiting for unfinished jobs....
-util/bpf_lock_contention.c: In function ‘lock_contention_get_name’:
-util/bpf_lock_contention.c:231:34: error: ‘struct contention_key’ has no member named ‘lock_addr_or_cgroup’
-  231 |                 u64 cgrp_id = key->lock_addr_or_cgroup;
-      |                                  ^~
-make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/util/bpf_lock_contention.o] Error 1
-make[3]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:150: util] Error 2
-make[2]: *** [Makefile.perf:662: /tmp/build/perf-tools-next/perf-in.o] Error 2
-make[1]: *** [Makefile.perf:238: sub-make] Error 2
-make: *** [Makefile:113: install-bin] Error 2
-make: Leaving directory '/var/home/acme/git/perf-tools-next/tools/perf'
-⬢[acme@toolbox perf-tools-next]$
-
-Trying to figure this out.
-
-- Arnaldo
- 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/util/cgroup.c | 61 ++++++++++++++++++++++++++++++++++------
->  tools/perf/util/cgroup.h |  4 +++
->  2 files changed, 57 insertions(+), 8 deletions(-)
+On 9/5/2023 9:17 PM, Peter Zijlstra wrote:
+> On Mon, Sep 04, 2023 at 09:53:34AM +0000, Manali Shukla wrote:
 > 
-> diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
-> index bfb13306d82c..2e969d1464f4 100644
-> --- a/tools/perf/util/cgroup.c
-> +++ b/tools/perf/util/cgroup.c
-> @@ -48,28 +48,36 @@ static int open_cgroup(const char *name)
->  }
->  
->  #ifdef HAVE_FILE_HANDLE
-> -int read_cgroup_id(struct cgroup *cgrp)
-> +static u64 __read_cgroup_id(const char *path)
->  {
-> -	char path[PATH_MAX + 1];
-> -	char mnt[PATH_MAX + 1];
->  	struct {
->  		struct file_handle fh;
->  		uint64_t cgroup_id;
->  	} handle;
->  	int mount_id;
->  
-> +	handle.fh.handle_bytes = sizeof(handle.cgroup_id);
-> +	if (name_to_handle_at(AT_FDCWD, path, &handle.fh, &mount_id, 0) < 0)
-> +		return -1ULL;
-> +
-> +	return handle.cgroup_id;
-> +}
-> +
-> +int read_cgroup_id(struct cgroup *cgrp)
-> +{
-> +	char path[PATH_MAX + 1];
-> +	char mnt[PATH_MAX + 1];
-> +
->  	if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1, "perf_event"))
->  		return -1;
->  
->  	scnprintf(path, PATH_MAX, "%s/%s", mnt, cgrp->name);
->  
-> -	handle.fh.handle_bytes = sizeof(handle.cgroup_id);
-> -	if (name_to_handle_at(AT_FDCWD, path, &handle.fh, &mount_id, 0) < 0)
-> -		return -1;
-> -
-> -	cgrp->id = handle.cgroup_id;
-> +	cgrp->id = __read_cgroup_id(path);
->  	return 0;
->  }
-> +#else
-> +static inline u64 __read_cgroup_id(const char *path) { return -1ULL; }
->  #endif  /* HAVE_FILE_HANDLE */
->  
->  #ifndef CGROUP2_SUPER_MAGIC
-> @@ -562,6 +570,11 @@ struct cgroup *cgroup__findnew(struct perf_env *env, uint64_t id,
->  	return cgrp;
->  }
->  
-> +struct cgroup *__cgroup__find(struct rb_root *root, uint64_t id)
-> +{
-> +	return __cgroup__findnew(root, id, /*create=*/false, /*path=*/NULL);
-> +}
-> +
->  struct cgroup *cgroup__find(struct perf_env *env, uint64_t id)
->  {
->  	struct cgroup *cgrp;
-> @@ -587,3 +600,35 @@ void perf_env__purge_cgroups(struct perf_env *env)
->  	}
->  	up_write(&env->cgroups.lock);
->  }
-> +
-> +void read_all_cgroups(struct rb_root *root)
-> +{
-> +	char mnt[PATH_MAX];
-> +	struct cgroup_name *cn;
-> +	int prefix_len;
-> +
-> +	if (cgroupfs_find_mountpoint(mnt, sizeof(mnt), "perf_event"))
-> +		return;
-> +
-> +	/* cgroup_name will have a full path, skip the root directory */
-> +	prefix_len = strlen(mnt);
-> +
-> +	/* collect all cgroups in the cgroup_list */
-> +	if (nftw(mnt, add_cgroup_name, 20, 0) < 0)
-> +		return;
-> +
-> +	list_for_each_entry(cn, &cgroup_list, list) {
-> +		const char *name;
-> +		u64 cgrp_id;
-> +
-> +		/* cgroup_name might have a full path, skip the prefix */
-> +		name = cn->name + prefix_len;
-> +		if (name[0] == '\0')
-> +			name = "/";
-> +
-> +		cgrp_id = __read_cgroup_id(cn->name);
-> +		__cgroup__findnew(root, cgrp_id, /*create=*/true, name);
-> +	}
-> +
-> +	release_cgroup_list();
-> +}
-> diff --git a/tools/perf/util/cgroup.h b/tools/perf/util/cgroup.h
-> index 12256b78608c..beb6fe1012ed 100644
-> --- a/tools/perf/util/cgroup.h
-> +++ b/tools/perf/util/cgroup.h
-> @@ -37,6 +37,7 @@ int parse_cgroups(const struct option *opt, const char *str, int unset);
->  struct cgroup *cgroup__findnew(struct perf_env *env, uint64_t id,
->  			       const char *path);
->  struct cgroup *cgroup__find(struct perf_env *env, uint64_t id);
-> +struct cgroup *__cgroup__find(struct rb_root *root, uint64_t id);
->  
->  void perf_env__purge_cgroups(struct perf_env *env);
->  
-> @@ -49,6 +50,9 @@ static inline int read_cgroup_id(struct cgroup *cgrp __maybe_unused)
->  }
->  #endif  /* HAVE_FILE_HANDLE */
->  
-> +/* read all cgroups in the system and save them in the rbtree */
-> +void read_all_cgroups(struct rb_root *root);
-> +
->  int cgroup_is_v2(const char *subsys);
->  
->  #endif /* __CGROUP_H__ */
-> -- 
-> 2.42.0.283.g2d96d420d3-goog
+>> Note that, since IBS registers are swap type C [2], the hypervisor is
+>> responsible for saving and restoring of IBS host state. Hypervisor
+>> does so only when IBS is active on the host to avoid unnecessary
+>> rdmsrs/wrmsrs. Hypervisor needs to disable host IBS before saving the
+>> state and enter the guest. After a guest exit, the hypervisor needs to
+>> restore host IBS state and re-enable IBS.
+> 
+> Why do you think it is OK for a guest to disable the host IBS when
+> entering a guest? Perhaps the host was wanting to profile the guest.
 > 
 
--- 
+1. Since IBS registers are of swap type C [1], only guest state is saved
+and restored by the hardware. Host state needs to be saved and restored by
+hypervisor. In order to save IBS registers correctly, IBS needs to be
+disabled before saving the IBS registers.
 
-- Arnaldo
+2. As per APM [2],
+"When a VMRUN is executed to an SEV-ES guest with IBS virtualization enabled, the
+IbsFetchCtl[IbsFetchEn] and IbsOpCtl[IbsOpEn] MSR bits must be 0. If either of 
+these bits are not 0, the VMRUN will fail with a VMEXIT_INVALID error code."
+This is enforced by hardware on SEV-ES guests when VIBS is enabled on SEV-ES
+guests.
+
+3. VIBS is not enabled by default. It can be enabled by an explicit
+qemu command line option "-cpu +ibs". Guest should be invoked without
+this option when host wants to profile the guest.
+
+[1] https://bugzilla.kernel.org/attachment.cgi?id=304653
+    AMD64 Architecture Programmer’s Manual, Vol 2, Appendix B. Layout
+    of VMCB,
+    Table B-2. VMCB Layout, State Save Area 
+    Table B-4. VMSA Layout, State Save Area for SEV-ES
+    
+[2] https://bugzilla.kernel.org/attachment.cgi?id=304653
+    AMD64 Architecture Programmer’s Manual, Vol 2, Section 15.38,
+    Instruction-Based Sampling Virtualization
+
+
+> Only when perf_event_attr::exclude_guest is set is this allowed,
+> otherwise you have to respect the host running IBS and you're not
+> allowed to touch it.
+> 
+> Host trumps guest etc..
+
+
+- Manali
