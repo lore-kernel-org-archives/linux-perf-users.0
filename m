@@ -2,173 +2,220 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 305D9EE14A0
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 16:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAA5EE14A0
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 16:06:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237982AbjIFQFx (ORCPT
+        id S241571AbjIFQGS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Sep 2023 12:05:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47266 "EHLO
+        Wed, 6 Sep 2023 12:06:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236655AbjIFQFx (ORCPT
+        with ESMTP id S233890AbjIFQGS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Sep 2023 12:05:53 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FEE3173A;
-        Wed,  6 Sep 2023 09:05:13 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FE0CC433C8;
-        Wed,  6 Sep 2023 16:05:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694016310;
-        bh=OK71vxZgIPSFKzRD3pJIZZrGhwDGR1MLNQCuyleuACU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=leExYLPjORRqpCxcdOgfyhRo/rlFsVrhu14CDXb4ln59PrLJBGFlxkruEfyaIk6V2
-         okGTJ539VYXSTUWb6RtDVzTPD0/T7pNM7ImdCQXB4P9VzpVN6+3R9VCDJbQZ1cFqQT
-         s4hKc6DuPaDv7TKnYAWGr2T3mB8shw9hihG680ApNTa3BLHTBLEQbhWbQfbXhcd/Im
-         e8e2b2OT8SVtN0qUYx3cqYWSGrKmmhFvRmU+lAcVNH7onBvBrie1r+6uCJhRB2zQ2t
-         th1p+LghzPPV5J6UDRwc3+/y/e4JfGvHIW8FxqZRdL03pZMelo/00G+9f18k2MSvAf
-         dy2K9F3mMMyFA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B4351403F4; Wed,  6 Sep 2023 13:05:06 -0300 (-03)
-Date:   Wed, 6 Sep 2023 13:05:06 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jing Zhang <renyu.zj@linux.alibaba.com>
-Cc:     John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Wed, 6 Sep 2023 12:06:18 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8251199A
+        for <linux-perf-users@vger.kernel.org>; Wed,  6 Sep 2023 09:06:01 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1c364fb8a4cso5395905ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Sep 2023 09:06:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1694016361; x=1694621161; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=40QKmfVrm/S2M2VgYVRI0LFwAITDoJdd6JPq7BaPxzU=;
+        b=EHewpnxFNiToa1Rq40mWgKjL+KTuqWXK+Ahri5AKPnNqtOqzu6dkblTkIKHF8tn0Er
+         LmyhyXb+kTVTpJ1okOshQg6VZcohLquOTblfq3mMwDJ8eOnJ6cKUxfGWcVd54Zf4fux8
+         H3HAW7+x5049xRRgqb7A9h8xdT39+5JadmLHs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1694016361; x=1694621161;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=40QKmfVrm/S2M2VgYVRI0LFwAITDoJdd6JPq7BaPxzU=;
+        b=ZFwXIjB1XxniRD6AZT3b3P/jyR7i7QEQEiFv2qf/me+wOeN4+1GsyTfcH34OHGDNwp
+         2KQEV+wHLwxX4aJakRLYaW2T9VG2aa1cmvM1WR2Fa0oX8lGBdQKhQunaULNt9acGbxfw
+         90Nali8Qa79lBmHiAW0jlYctnpungjTofSKP5PTQIv3+cBPrSBBDbg7Wa/vd9CKNsOpy
+         04zsuYdNoCvFTAmyaETBfaGJN8a3q2ngS3CJ2sJbt68k8T15TEML/AXGy5jiyXGKvOKY
+         8TQh4VL5TfwZAzJO4/ODeyjkFSsySVziC6sLG7cdfPyTDUeJiOCtCnH1H8jQeVMVP/lh
+         dGiQ==
+X-Gm-Message-State: AOJu0YxnsB/MHd5Y3dXKBQJB1Eo4eW/6GqWQtxw5tdAnd9kPV3LXTUz2
+        AXPzS1AWy0ov0l8iXWlXnArNIg==
+X-Google-Smtp-Source: AGHT+IEw+PXUwhie7KJ2E87OyohhJv30VQYXEUCgPe7wkvDQHzvzLZKdXR/46xhEPqhJn/sSFLk6lw==
+X-Received: by 2002:a17:903:495:b0:1bb:8e13:deba with SMTP id jj21-20020a170903049500b001bb8e13debamr14919135plb.11.1694016360921;
+        Wed, 06 Sep 2023 09:06:00 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:9d:2:4a07:e00a:fdae:750b])
+        by smtp.gmail.com with ESMTPSA id ju19-20020a170903429300b001b8c689060dsm11338859plb.28.2023.09.06.09.05.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Sep 2023 09:06:00 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Tomohiro Misono <misono.tomohiro@fujitsu.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: Re: [PATCH v7 0/8] perf vendor events: Add JSON metrics for Arm CMN
-Message-ID: <ZPijMsM7GsHYtPse@kernel.org>
-References: <1692606977-92009-1-git-send-email-renyu.zj@linux.alibaba.com>
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-perf-users@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>, ito-yuichi@fujitsu.com,
+        Douglas Anderson <dianders@chromium.org>,
+        gautham.shenoy@amd.com, jpoimboe@kernel.org, keescook@chromium.org,
+        linux-kernel@vger.kernel.org, mingo@kernel.org, philmd@linaro.org,
+        samitolvanen@google.com, scott@os.amperecomputing.com,
+        vschneid@redhat.com
+Subject: [PATCH v13 0/7] arm64: Add IPI for backtraces / kgdb; try to use NMI for some IPIs
+Date:   Wed,  6 Sep 2023 09:02:55 -0700
+Message-ID: <20230906160505.2431857-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1692606977-92009-1-git-send-email-renyu.zj@linux.alibaba.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Aug 21, 2023 at 04:36:09PM +0800, Jing Zhang escreveu:
-> Changes since v6:
-> - Supplement the omitted EventCode;
-> - Keep the original way of ConfigCode;
-> - Supplement the test in empty-pmu-events.c, so that the pmu event test
->   can succeed when build with NO_JEVENT=1.
-> - Link: https://lore.kernel.org/all/1691394685-61240-1-git-send-email-renyu.zj@linux.alibaba.com/
+This is an attempt to resurrect Sumit's old patch series [1] that
+allowed us to use the arm64 pseudo-NMI to get backtraces of CPUs and
+also to round up CPUs in kdb/kgdb. The last post from Sumit that I
+could find was v7, so I started my series at v8. I haven't copied all
+of his old changelongs here, but you can find them from the link.
 
-Waiting for a v8, from what I saw there are several more review comments
-to address, right?
+This patch series targets v6.6. Specifically it can't land in v6.5
+since it depends on commit 8d539b84f1e3 ("nmi_backtrace: allow
+excluding an arbitrary CPU").
 
-- Arnaldo
- 
-> Jing Zhang (8):
->   perf pmu: "Compat" supports matching multiple identifiers
->   perf metric: "Compat" supports matching multiple identifiers
->   perf vendor events: Supplement the omitted EventCode
->   perf jevents: Support more event fields
->   perf test: Make matching_pmu effective
->   perf test: Add pmu-event test for "Compat" and new event_field.
->   perf jevents: Add support for Arm CMN PMU aliasing
->   perf vendor events: Add JSON metrics for Arm CMN
-> 
->  .../pmu-events/arch/arm64/arm/cmn/sys/cmn.json     | 266 +++++++++++++++++++++
->  .../pmu-events/arch/arm64/arm/cmn/sys/metric.json  |  74 ++++++
->  .../pmu-events/arch/test/test_soc/sys/uncore.json  |   8 +
->  .../pmu-events/arch/x86/alderlake/pipeline.json    |   9 +
->  .../pmu-events/arch/x86/alderlaken/pipeline.json   |   3 +
->  .../pmu-events/arch/x86/broadwell/pipeline.json    |   4 +
->  .../pmu-events/arch/x86/broadwellde/pipeline.json  |   4 +
->  .../arch/x86/broadwellde/uncore-cache.json         |   2 +
->  .../arch/x86/broadwellde/uncore-interconnect.json  |   1 +
->  .../arch/x86/broadwellde/uncore-memory.json        |   1 +
->  .../arch/x86/broadwellde/uncore-power.json         |   1 +
->  .../pmu-events/arch/x86/broadwellx/pipeline.json   |   4 +
->  .../arch/x86/broadwellx/uncore-cache.json          |   2 +
->  .../arch/x86/broadwellx/uncore-interconnect.json   |  13 +
->  .../arch/x86/broadwellx/uncore-memory.json         |   2 +
->  .../arch/x86/broadwellx/uncore-power.json          |   1 +
->  .../pmu-events/arch/x86/cascadelakex/pipeline.json |   4 +
->  .../arch/x86/cascadelakex/uncore-cache.json        |   2 +
->  .../arch/x86/cascadelakex/uncore-interconnect.json |   1 +
->  .../arch/x86/cascadelakex/uncore-io.json           |   1 +
->  .../arch/x86/cascadelakex/uncore-memory.json       |   1 +
->  .../arch/x86/cascadelakex/uncore-power.json        |   1 +
->  .../pmu-events/arch/x86/elkhartlake/pipeline.json  |   2 +
->  .../pmu-events/arch/x86/goldmont/pipeline.json     |   3 +
->  .../pmu-events/arch/x86/goldmontplus/pipeline.json |   3 +
->  .../pmu-events/arch/x86/grandridge/pipeline.json   |   3 +
->  .../arch/x86/graniterapids/pipeline.json           |   4 +
->  .../perf/pmu-events/arch/x86/haswell/pipeline.json |   4 +
->  .../pmu-events/arch/x86/haswellx/pipeline.json     |   4 +
->  .../pmu-events/arch/x86/haswellx/uncore-cache.json |   2 +
->  .../arch/x86/haswellx/uncore-interconnect.json     |  14 ++
->  .../arch/x86/haswellx/uncore-memory.json           |   2 +
->  .../pmu-events/arch/x86/haswellx/uncore-power.json |   1 +
->  .../perf/pmu-events/arch/x86/icelake/pipeline.json |   4 +
->  .../pmu-events/arch/x86/icelakex/pipeline.json     |   4 +
->  .../pmu-events/arch/x86/icelakex/uncore-cache.json |   1 +
->  .../arch/x86/icelakex/uncore-interconnect.json     |   1 +
->  .../arch/x86/icelakex/uncore-memory.json           |   1 +
->  .../pmu-events/arch/x86/icelakex/uncore-power.json |   1 +
->  .../pmu-events/arch/x86/ivybridge/pipeline.json    |   3 +
->  .../perf/pmu-events/arch/x86/ivytown/pipeline.json |   4 +
->  .../pmu-events/arch/x86/ivytown/uncore-cache.json  |   2 +
->  .../arch/x86/ivytown/uncore-interconnect.json      |  11 +
->  .../pmu-events/arch/x86/ivytown/uncore-memory.json |   1 +
->  .../pmu-events/arch/x86/ivytown/uncore-power.json  |   1 +
->  .../pmu-events/arch/x86/jaketown/pipeline.json     |   4 +
->  .../pmu-events/arch/x86/jaketown/uncore-cache.json |   2 +
->  .../arch/x86/jaketown/uncore-interconnect.json     |  12 +
->  .../arch/x86/jaketown/uncore-memory.json           |   1 +
->  .../pmu-events/arch/x86/jaketown/uncore-power.json |   2 +
->  .../arch/x86/knightslanding/pipeline.json          |   3 +
->  .../arch/x86/knightslanding/uncore-cache.json      |   1 +
->  .../arch/x86/knightslanding/uncore-memory.json     |   4 +
->  .../pmu-events/arch/x86/meteorlake/pipeline.json   |   8 +
->  .../pmu-events/arch/x86/sandybridge/pipeline.json  |   4 +
->  .../arch/x86/sapphirerapids/pipeline.json          |   5 +
->  .../pmu-events/arch/x86/sierraforest/pipeline.json |   4 +
->  .../pmu-events/arch/x86/silvermont/pipeline.json   |   3 +
->  .../perf/pmu-events/arch/x86/skylake/pipeline.json |   4 +
->  .../pmu-events/arch/x86/skylakex/pipeline.json     |   4 +
->  .../pmu-events/arch/x86/skylakex/uncore-cache.json |   2 +
->  .../arch/x86/skylakex/uncore-interconnect.json     |   1 +
->  .../pmu-events/arch/x86/skylakex/uncore-io.json    |   1 +
->  .../arch/x86/skylakex/uncore-memory.json           |   1 +
->  .../pmu-events/arch/x86/skylakex/uncore-power.json |   1 +
->  .../pmu-events/arch/x86/snowridgex/pipeline.json   |   2 +
->  .../arch/x86/snowridgex/uncore-cache.json          |   1 +
->  .../arch/x86/snowridgex/uncore-interconnect.json   |   1 +
->  .../arch/x86/snowridgex/uncore-memory.json         |   1 +
->  .../arch/x86/snowridgex/uncore-power.json          |   1 +
->  .../pmu-events/arch/x86/tigerlake/pipeline.json    |   5 +
->  tools/perf/pmu-events/empty-pmu-events.c           |   8 +
->  tools/perf/pmu-events/jevents.py                   |  21 +-
->  tools/perf/tests/pmu-events.c                      |  64 ++++-
->  tools/perf/util/metricgroup.c                      |   2 +-
->  tools/perf/util/pmu.c                              |  33 ++-
->  tools/perf/util/pmu.h                              |   1 +
->  77 files changed, 679 insertions(+), 9 deletions(-)
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json
-> 
-> -- 
-> 1.8.3.1
-> 
+It should be noted that Mark still feels there might be some corner
+cases where pseudo-NMI is not production ready [2] [3], but as far as
+I'm aware there are no concrete/documented issues. Regardless of
+whether this should be enabled for production, though, this series
+will be invaluable to anyone trying to debug crashes on arm64
+machines.
+
+v13 of this series fixes a nit with the names of two functions and
+collects more tags. There are no code changes other than the renames
+and these have no functional impact. I believe that the series is
+ready to land. As per the note in patch #1, I'm hoping for an Ack from
+Marc Zyngier on patch #1 and then the whole series can land through
+the arm64 tree.
+
+v12 of this series collects tags, fixes a few small nits in comments
+and commit messages from v11 and adds a new (and somewhat unrelated)
+small patch to the end of the series. There are no code changes other
+than the last patch, which is tiny.
+
+v11 of this series addressed Stephen Boyd's feedback on v10 and added
+a missing "static" that the patches robot found.
+
+v10 of this series attempted to address all of Mark's feedback on
+v9. As a quick summary:
+- It includes his patch to remove IPI_WAKEUP, freeing up an extra IPI.
+- It no longer combines the "kgdb" and "backtrace" IPIs. If we need
+  another IPI these could always be recombined later.
+- It promotes IPI_CPU_STOP and IPI_CPU_CRASH_STOP to NMI.
+- It puts nearly all the code directly in smp.c.
+- Several of the patches are squashed together.
+- Patch #6 ("kgdb: Provide a stub kgdb_nmicallback() if !CONFIG_KGDB")
+  was dropped from the series since it landed.
+
+Between v8 and v9, I had cleaned up this patch series by integrating
+the 10th patch from v8 [4] into the whole series. As part of this, I
+renamed the "NMI IPI" to the "debug IPI" since it could now be backed
+by a regular IPI in the case that pseudo NMIs weren't available. With
+the fallback, this allowed me to drop some extra patches from the
+series. This feels (to me) to be pretty clean and hopefully others
+agree. Any patch I touched significantly I removed Masayoshi and
+Chen-Yu's tags from.
+
+...also in v8, I reorderd the patches a bit in a way that seemed a
+little cleaner to me.
+
+Since v7, I have:
+* Addressed the small amount of feedback that was there for v7.
+* Rebased.
+* Added a new patch that prevents us from spamming the logs with idle
+  tasks.
+* Added an extra patch to gracefully fall back to regular IPIs if
+  pseudo-NMIs aren't there.
+
+It can be noted that this patch series works very well with the recent
+"hardlockup" patches that have landed through Andrew Morton's tree and
+are currently in mainline. It works especially well with the "buddy"
+lockup detector.
+
+[1] https://lore.kernel.org/linux-arm-kernel/1604317487-14543-1-git-send-email-sumit.garg@linaro.org/
+[2] https://lore.kernel.org/lkml/ZFvGqD%2F%2Fpm%2FlZb+p@FVFF77S0Q05N.cambridge.arm.com/
+[3] https://lore.kernel.org/lkml/ZNDKVP2m-iiZCz3v@FVFF77S0Q05N.cambridge.arm.com
+[4] https://lore.kernel.org/r/20230419155341.v8.10.Ic3659997d6243139d0522fc3afcdfd88d7a5f030@changeid/
+
+Changes in v13:
+- s/_idx/_index/ on the patch to make function names consistent.
+
+Changes in v12:
+- ("arm64: smp: Mark IPI globals as __ro_after_init") new for v12.
+- Added a comment about why we account for 16 SGIs when Linux uses 8.
+- Minor comment change to add "()" after nmi_trigger_cpumask_backtrace.
+- Updated the commit hash of the commit this depends on.
+
+Changes in v11:
+- Adjust comment about NR_IPI/MAX_IPI.
+- Don't use confusing "backed by" idiom in comment.
+- Made arm64_backtrace_ipi() static.
+- Updated commit message as per Stephen.
+- arch_send_wakeup_ipi() now takes an unsigned int.
+
+Changes in v10:
+- ("IPI_CPU_STOP and IPI_CPU_CRASH_STOP should try for NMI") new for v10.
+- ("arm64: smp: Remove dedicated wakeup IPI") new for v10.
+- Backtrace now directly supported in smp.c
+- Don't allocate the cpumask on the stack; just iterate.
+- Moved kgdb calls to smp.c to avoid needing to export IPI info.
+- Rewrite as needed for 5.11+ as per Mark Rutland and Sumit.
+- Squash backtrace into patch adding support for pseudo-NMI IPIs.
+- kgdb now has its own IPI.
+
+Changes in v9:
+- Added comments that we might not be using NMI always.
+- Added to commit message that this doesn't catch all cases.
+- Fold in v8 patch #10 ("Fallback to a regular IPI if NMI isn't enabled")
+- Moved header file out of "include" since it didn't need to be there.
+- Remove arm64_supports_nmi()
+- Remove fallback for when debug IPI isn't available.
+- Renamed "NMI IPI" to "debug IPI" since it might not be backed by NMI.
+- arch_trigger_cpumask_backtrace() no longer returns bool
+
+Changes in v8:
+- "Tag the arm64 idle functions as __cpuidle" new for v8
+- Removed "#ifdef CONFIG_SMP" since arm64 is always SMP
+- debug_ipi_setup() and debug_ipi_teardown() no longer take cpu param
+
+Douglas Anderson (6):
+  irqchip/gic-v3: Enable support for SGIs to act as NMIs
+  arm64: idle: Tag the arm64 idle functions as __cpuidle
+  arm64: smp: Add arch support for backtrace using pseudo-NMI
+  arm64: smp: IPI_CPU_STOP and IPI_CPU_CRASH_STOP should try for NMI
+  arm64: kgdb: Implement kgdb_roundup_cpus() to enable pseudo-NMI
+    roundup
+  arm64: smp: Mark IPI globals as __ro_after_init
+
+Mark Rutland (1):
+  arm64: smp: Remove dedicated wakeup IPI
+
+ arch/arm64/include/asm/irq.h              |   3 +
+ arch/arm64/include/asm/smp.h              |   4 +-
+ arch/arm64/kernel/acpi_parking_protocol.c |   2 +-
+ arch/arm64/kernel/idle.c                  |   4 +-
+ arch/arm64/kernel/smp.c                   | 139 +++++++++++++++++-----
+ drivers/irqchip/irq-gic-v3.c              |  59 ++++++---
+ 6 files changed, 160 insertions(+), 51 deletions(-)
 
 -- 
+2.42.0.283.g2d96d420d3-goog
 
-- Arnaldo
