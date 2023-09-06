@@ -2,54 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6198CEE14C0
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 17:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB82EE14C1
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 17:49:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243140AbjIFRtM (ORCPT
+        id S242566AbjIFRtO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Sep 2023 13:49:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58060 "EHLO
+        Wed, 6 Sep 2023 13:49:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242051AbjIFRtM (ORCPT
+        with ESMTP id S243296AbjIFRtN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Sep 2023 13:49:12 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 729E119AE;
-        Wed,  6 Sep 2023 10:49:07 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id 98e67ed59e1d1-26f57f02442so73335a91.0;
-        Wed, 06 Sep 2023 10:49:07 -0700 (PDT)
+        Wed, 6 Sep 2023 13:49:13 -0400
+Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEEBA19A2;
+        Wed,  6 Sep 2023 10:49:08 -0700 (PDT)
+Received: by mail-oi1-x232.google.com with SMTP id 5614622812f47-3aa1c04668bso75709b6e.0;
+        Wed, 06 Sep 2023 10:49:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694022545; x=1694627345; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=rbxxF3pN1PaPN9re65XUx8AyYVj3neI58zu4FlTZdnI=;
-        b=NneKSSnWP9k+Gmm3c9BjmStAPPkEeTLG2eX/mfZpZM5S9zX1hplXVI9360FVdF7d5W
-         PiOZcVESIaTDZ4QwgnvJF0C2wBVEpVfxshE1ru7VGjgzwOFBDilVcfArLZ6zow7lTlGq
-         sWM5mpYKJJt8IIwmpSP+9IdNhEe+nx1mTroGNl0oxCcXgieqai8jxCWVIarvNfYDQTzM
-         BojYSmvCktpBFwdQ4XewDLv3OIssPI48kRvBmGlguWSzLl9SsFl6JF5LXEN6Pn/5FrpK
-         7RSqV+My3sjnZG2zo2igf0gGzOjAzqF2eZJJehyD0i7Nt0evVQsSRIvHeqxJ1GR6aivK
-         eZIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1694022545; x=1694627345;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1694022548; x=1694627348; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rbxxF3pN1PaPN9re65XUx8AyYVj3neI58zu4FlTZdnI=;
-        b=hgxyMHcDcLIDEScEBudu4NNmu+F9NU1h14XLzhKezQRAXyb12zA8XlH+MX1nkHGmcZ
-         w3hWACXsdGIDKqYbTtdazv2RXSbmqxSQ96Fl48vjt+5mwpqBrv5lM8vw+OkMUsigQG2h
-         Mi1aphQvLprheAhjB5aV1pCZEinfeNQ4H45RWNKK4W5JLSJGFtrnjV090ZvxnrDmSm4U
-         iy6ImFrIQR7SPY+89Q4vXtG/q/4ezOLJYiqaKoonQVrju55PR5A9Gln+tTZwuz+gHLPQ
-         AuLLzOf+VYYqkzplmlnlTZH5l2A+mny/d8NlS7sl2lgGQH6v7im/Yw1vgq9HPIu341BE
-         C/Ew==
-X-Gm-Message-State: AOJu0Yy8o9hEA/RZ7v+vLHlGtPWLMCqkyGYzGv2Ya+Ppe+8jTYaf+9Jx
-        plVTvSIn8vV2yd0impF+JiU=
-X-Google-Smtp-Source: AGHT+IHIsJB5k5MtRKBtd9SIsU3bq2FtvyoDxLeB6d+PFGwSuPycpKDnvgaXIq9FsjtETtPqxw3hMQ==
-X-Received: by 2002:a17:90a:2acf:b0:26b:36dc:2f08 with SMTP id i15-20020a17090a2acf00b0026b36dc2f08mr14447576pjg.46.1694022545392;
-        Wed, 06 Sep 2023 10:49:05 -0700 (PDT)
+        bh=QuYzt7xPG0E87DLY3ah52THY+sk0KT9cUifgWh31Iso=;
+        b=aavKP7yubnssInvx5jwrrn/KAHNUR1SRl+Mjzs/cFCaSpZisZ5FlZRIg4sKVfL2weH
+         Wlr1tFNS1zY4wgIvAkU3OaXrQRPmHSCSiDn41WCIbx6kIXqCGs/A1uivogKrrP7GExmK
+         5bVfSiWL4dw1Nj8yhUymn7RaOcmW6HGIz1R/sB+0xqiqdqpxSiPVShMs1WOMf2bsyNHu
+         DSJTuP1RML/+MsxmIawd1MCObGG+4bImU4PQ64SMgjSFuAQ9NuZZECekE2HtxKN2mKsh
+         WpAeQXHNoo3XGC56+/8AkWANGfwUPjRNHO4bW/WR0se05cpFnHCtNq3UsdbRyv6WwU9q
+         DgCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1694022548; x=1694627348;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=QuYzt7xPG0E87DLY3ah52THY+sk0KT9cUifgWh31Iso=;
+        b=gombU1DvGZrN6Mfnb9Chl0FTybAPPlbln5EIbh3QKKOQYGnPTd/Mx21QSUuWVd8cmq
+         kU7m5RJVKv21G3NSvFasboq+skfFvrO80eXCdhwhkUCgzluOKwirsHeEek6AOzxzgDtv
+         a3ffw+Avs5NktP1S3mR4z2nO7WwxEKOv4CvBDjb6NNnZczu4PADete/pFW7y51JRYkwz
+         PB8IkP0LXyHIR/TAEOR1GfKNq/TPpiSciguRdz3X+z3BbTsTI2jd5N6626W6lzvpnC+F
+         Eab2X2UJWC1Oa5HJg6jVg5gk9aA6gNy6kwanAATn1gt7RSuWW8HYZAgWmf5npnXuDnQ9
+         JvXQ==
+X-Gm-Message-State: AOJu0YyrDKnsg24TOOqFcSBOgAiXQjQYLjGn+/CS/pkPkhfyGwGWLODj
+        9qdwlJC1fNDoW0ZFQD5K0Jw=
+X-Google-Smtp-Source: AGHT+IFY2Tb5xL1bNPvdrxTNqpVVBf/kIm5+SACfJQs8hNOKEbD/qvTA1tmmk5PNw99wWdNZX36A/g==
+X-Received: by 2002:a05:6808:b2e:b0:3a6:febf:fb with SMTP id t14-20020a0568080b2e00b003a6febf00fbmr15011434oij.22.1694022548067;
+        Wed, 06 Sep 2023 10:49:08 -0700 (PDT)
 Received: from bangji.corp.google.com ([2620:15c:2c0:5:5035:1b47:9a3f:312c])
-        by smtp.gmail.com with ESMTPSA id p11-20020a17090ad30b00b00262eccfa29fsm63564pju.33.2023.09.06.10.49.04
+        by smtp.gmail.com with ESMTPSA id p11-20020a17090ad30b00b00262eccfa29fsm63564pju.33.2023.09.06.10.49.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Sep 2023 10:49:04 -0700 (PDT)
+        Wed, 06 Sep 2023 10:49:07 -0700 (PDT)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -61,89 +62,152 @@ Cc:     Ian Rogers <irogers@google.com>,
         LKML <linux-kernel@vger.kernel.org>,
         linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
         Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
-Subject: [PATCHSET 0/5] perf lock contention: Add cgroup support (v2)
-Date:   Wed,  6 Sep 2023 10:48:58 -0700
-Message-ID: <20230906174903.346486-1-namhyung@kernel.org>
+Subject: [PATCH 2/5] perf lock contention: Prepare to handle cgroups
+Date:   Wed,  6 Sep 2023 10:49:00 -0700
+Message-ID: <20230906174903.346486-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
+In-Reply-To: <20230906174903.346486-1-namhyung@kernel.org>
+References: <20230906174903.346486-1-namhyung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Save cgroup info and display cgroup names if requested.  This is a
+preparation for the next patch.
 
-The cgroup support comes with two flavors.  One is to aggregate the
-result by cgroups and the other is to filter result for the given
-cgroups.  For now, it only works in BPF mode.
+Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/builtin-lock.c             |  3 ++-
+ tools/perf/util/bpf_lock_contention.c | 26 +++++++++++++++++++++++++-
+ tools/perf/util/lock-contention.h     |  9 +++++++--
+ 3 files changed, 34 insertions(+), 4 deletions(-)
 
-* v2 changes
- - fix compiler errors  (Arnaldo)
- - add Reviewed-by from Ian
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index b141f2134274..06430980dfd7 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -2040,6 +2040,7 @@ static int __cmd_contention(int argc, const char **argv)
+ 		.filters = &filters,
+ 		.save_callstack = needs_callstack(),
+ 		.owner = show_lock_owner,
++		.cgroups = RB_ROOT,
+ 	};
  
-The first one is -g/--lock-cgroup option to show lock stats by cgroups
-like below.  The cgroup names were shortened for brevity:
-
-  $ sudo perf lock con -abg perf bench sched messaging
-   contended   total wait     max wait     avg wait   cgroup
-
-        1052      3.34 ms     84.71 us      3.17 us   /app-org.gnome.Terminal.slice/vte-spawn-52221fb8-b33f-4a52-b5c3-e35d1e6fc0e0.scope
-          13    106.60 us     11.48 us      8.20 us   /session.slice/org.gnome.Shell@x11.service
-          12     21.20 us      4.93 us      1.77 us   /
-           3     12.10 us      8.80 us      4.03 us   /session-4.scope
-           2     10.98 us      7.50 us      5.49 us   /app-gnome-firefox\x2desr-34054.scope
-           2      6.04 us      4.88 us      3.02 us   /app-gnome-google\x2dchrome-6442.scope
-           1      5.63 us      5.63 us      5.63 us   /app-org.gnome.Terminal.slice/gnome-terminal-server.service
-           1      3.51 us      3.51 us      3.51 us   /pipewire.service
-           1      2.15 us      2.15 us      2.15 us   /pipewire-pulse.service
-           1       742 ns       742 ns       742 ns   /dbus.service
-
-The other is -G/--cgroup-filter option to show lock stats only from the
-given cgroups.  It doesn't support cgroup hierarchy and regex matching.
-
-  $ sudo perf lock con -abt -G / perf bench sched messaging
-   contended   total wait     max wait     avg wait          pid   comm
-
-           2     10.58 us      8.39 us      5.29 us       257552   kworker/4:1
-           2      9.76 us      7.96 us      4.88 us            0   swapper
-           4      5.36 us      2.09 us      1.34 us       255462   kworker/0:2
-           3      3.33 us      1.48 us      1.11 us       257680   kworker/3:1
-           2      2.59 us      1.46 us      1.29 us       257478   kworker/2:2
-           1      1.50 us      1.50 us      1.50 us           15   rcu_preempt
-
-You can also use these two options together. :)
-
-The two more test cases were added to the existing lock contention test.
-
-The code is available at 'perf/lock-cgroup-v2' branch in the tree below.
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-
-
-Thanks,
-Namhyung
-
-
-Namhyung Kim (5):
-  perf tools: Add read_all_cgroups() and __cgroup_find()
-  perf lock contention: Prepare to handle cgroups
-  perf lock contention: Add -g/--lock-cgroup option
-  perf lock contention: Add -G/--cgroup-filter option
-  perf test: Improve perf lock contention test
-
- tools/perf/Documentation/perf-lock.txt        |  8 ++
- tools/perf/builtin-lock.c                     | 99 ++++++++++++++++++-
- tools/perf/tests/shell/lock_contention.sh     | 45 +++++++++
- tools/perf/util/bpf_lock_contention.c         | 51 +++++++++-
- .../perf/util/bpf_skel/lock_contention.bpf.c  | 48 ++++++++-
- tools/perf/util/bpf_skel/lock_data.h          |  3 +-
- tools/perf/util/cgroup.c                      | 63 ++++++++++--
- tools/perf/util/cgroup.h                      |  5 +
- tools/perf/util/lock-contention.h             | 10 +-
- 9 files changed, 312 insertions(+), 20 deletions(-)
-
-
-base-commit: 45fc4628c15ab2cb7b2f53354b21db63f0a41f81
+ 	lockhash_table = calloc(LOCKHASH_SIZE, sizeof(*lockhash_table));
+@@ -2158,7 +2159,7 @@ static int __cmd_contention(int argc, const char **argv)
+ out_delete:
+ 	lock_filter_finish();
+ 	evlist__delete(con.evlist);
+-	lock_contention_finish();
++	lock_contention_finish(&con);
+ 	perf_session__delete(session);
+ 	zfree(&lockhash_table);
+ 	return err;
+diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
+index e7dddf0127bc..c6bd7c9b2d57 100644
+--- a/tools/perf/util/bpf_lock_contention.c
++++ b/tools/perf/util/bpf_lock_contention.c
+@@ -1,4 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include "util/cgroup.h"
+ #include "util/debug.h"
+ #include "util/evlist.h"
+ #include "util/machine.h"
+@@ -151,6 +152,10 @@ int lock_contention_prepare(struct lock_contention *con)
+ 	skel->bss->needs_callstack = con->save_callstack;
+ 	skel->bss->lock_owner = con->owner;
+ 
++	if (con->use_cgroup) {
++		read_all_cgroups(&con->cgroups);
++	}
++
+ 	bpf_program__set_autoload(skel->progs.collect_lock_syms, false);
+ 
+ 	lock_contention_bpf__attach(skel);
+@@ -222,6 +227,17 @@ static const char *lock_contention_get_name(struct lock_contention *con,
+ 		return "";
+ 	}
+ 
++	if (con->use_cgroup) {
++		u64 cgrp_id = key->lock_addr;
++		struct cgroup *cgrp = __cgroup__find(&con->cgroups, cgrp_id);
++
++		if (cgrp)
++			return cgrp->name;
++
++		snprintf(name_buf, sizeof(name_buf), "cgroup:%lu", cgrp_id);
++		return name_buf;
++	}
++
+ 	/* LOCK_AGGR_CALLER: skip lock internal functions */
+ 	while (machine__is_lock_function(machine, stack_trace[idx]) &&
+ 	       idx < con->max_stack - 1)
+@@ -364,12 +380,20 @@ int lock_contention_read(struct lock_contention *con)
+ 	return err;
+ }
+ 
+-int lock_contention_finish(void)
++int lock_contention_finish(struct lock_contention *con)
+ {
+ 	if (skel) {
+ 		skel->bss->enabled = 0;
+ 		lock_contention_bpf__destroy(skel);
+ 	}
+ 
++	while (!RB_EMPTY_ROOT(&con->cgroups)) {
++		struct rb_node *node = rb_first(&con->cgroups);
++		struct cgroup *cgrp = rb_entry(node, struct cgroup, node);
++
++		rb_erase(node, &con->cgroups);
++		cgroup__put(cgrp);
++	}
++
+ 	return 0;
+ }
+diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
+index fa16532c971c..70423966d778 100644
+--- a/tools/perf/util/lock-contention.h
++++ b/tools/perf/util/lock-contention.h
+@@ -136,6 +136,7 @@ struct lock_contention {
+ 	struct hlist_head *result;
+ 	struct lock_filter *filters;
+ 	struct lock_contention_fails fails;
++	struct rb_root cgroups;
+ 	unsigned long map_nr_entries;
+ 	int max_stack;
+ 	int stack_skip;
+@@ -143,6 +144,7 @@ struct lock_contention {
+ 	int owner;
+ 	int nr_filtered;
+ 	bool save_callstack;
++	bool use_cgroup;
+ };
+ 
+ #ifdef HAVE_BPF_SKEL
+@@ -151,7 +153,7 @@ int lock_contention_prepare(struct lock_contention *con);
+ int lock_contention_start(void);
+ int lock_contention_stop(void);
+ int lock_contention_read(struct lock_contention *con);
+-int lock_contention_finish(void);
++int lock_contention_finish(struct lock_contention *con);
+ 
+ #else  /* !HAVE_BPF_SKEL */
+ 
+@@ -162,7 +164,10 @@ static inline int lock_contention_prepare(struct lock_contention *con __maybe_un
+ 
+ static inline int lock_contention_start(void) { return 0; }
+ static inline int lock_contention_stop(void) { return 0; }
+-static inline int lock_contention_finish(void) { return 0; }
++static inline int lock_contention_finish(struct lock_contention *con __maybe_unused)
++{
++	return 0;
++}
+ 
+ static inline int lock_contention_read(struct lock_contention *con __maybe_unused)
+ {
 -- 
 2.42.0.283.g2d96d420d3-goog
 
