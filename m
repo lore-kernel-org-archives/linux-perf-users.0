@@ -2,400 +2,104 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB1BEE14C3
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 19:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E97A6EE14D3
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Sep 2023 19:46:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231578AbjIFT3U (ORCPT
+        id S244245AbjIFTqN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Sep 2023 15:29:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35834 "EHLO
+        Wed, 6 Sep 2023 15:46:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230152AbjIFT3T (ORCPT
+        with ESMTP id S231865AbjIFTqL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Sep 2023 15:29:19 -0400
+        Wed, 6 Sep 2023 15:46:11 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45B3C173B;
-        Wed,  6 Sep 2023 12:29:15 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76740C433C7;
-        Wed,  6 Sep 2023 19:29:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694028554;
-        bh=2kov9/TKrJmdoLxE+jOCbxIrVesxxxeaC6ZimLlagpY=;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B8DD10F1;
+        Wed,  6 Sep 2023 12:46:06 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95A2BC433C7;
+        Wed,  6 Sep 2023 19:46:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1694029566;
+        bh=b3ahWp9uGucvjkWBa+4Q7o6tAHZIBp0zKXsW4RcP77M=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gvCXsBjWMR5/uRk2WyOrENoyaqYbq4C1rfzon4UyyFO++f4JtbH2z5BBcmobF0gH8
-         u7UIjQz1wkxxM96qbYaIXbZej2NvRemMGNumybNlJREqHs/btECJDiIUU4CpezprP4
-         OvrFzZBkHBGhQwcwmtOU3BsbTME2zfVwuk9ZLsvO5w7kNrMqr+Q6JF4cxqqGY+du72
-         1Z9Ek3U8tOomAXmdvkm4TDKVpxErkGHVJpcCnMIqitLvIZAi3e34pod6HwCf+8oZn7
-         cwzCilikc8i+FqJiKDEePCfYvvhx/+gKFSXbBzouO/0KZouNeSnGhnjvAnHt70Vy8D
-         TV0jTPZHUxbHg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7EBAD403F4; Wed,  6 Sep 2023 16:29:11 -0300 (-03)
-Date:   Wed, 6 Sep 2023 16:29:11 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
-Subject: Re: [PATCH 3/5] perf lock contention: Add -g/--lock-cgroup option
-Message-ID: <ZPjTB3tj+/b90+BF@kernel.org>
-References: <20230906174903.346486-1-namhyung@kernel.org>
- <20230906174903.346486-4-namhyung@kernel.org>
- <ZPjRpY6FINE0iBr3@kernel.org>
+        b=W7dDnkIS8NtzH9aeDLHBwbxpV9xLBZs7MfBssUVPbl3q+Lb74CqSxUsH0BFRJcQhm
+         7n1N3XubaKAZrcCjY9XxhXuvnl+YZwIHQrRky8Wa1Y8ySSWeUrVY6mZs9m92M1gS86
+         zrWqPzWbeV30IkDxfy1z0yRB6LWRvfrOAkOg0DZQ=
+Date:   Wed, 6 Sep 2023 20:46:02 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     =?utf-8?B?5p2O5qOSKOS8r+WFrik=?= <libang.li@antgroup.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6.1.y] perf/core: Fix possible deadlock in
+ sys_perf_event_open()
+Message-ID: <2023090652-obsessed-scrutiny-d388@gregkh>
+References: <20230906163821.85031-1-libang.li@antgroup.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZPjRpY6FINE0iBr3@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230906163821.85031-1-libang.li@antgroup.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Sep 06, 2023 at 04:23:17PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, Sep 06, 2023 at 10:49:01AM -0700, Namhyung Kim escreveu:
-> > The -g option shows lock contention stats break down by cgroups.
-> > Add LOCK_AGGR_CGROUP mode and use it instead of use_cgroup field.
-> > 
-> >   $ sudo ./perf lock con -abg sleep 1
-> >    contended   total wait     max wait     avg wait   cgroup
-> > 
-> >            8     15.70 us      6.34 us      1.96 us   /
-> >            2      1.48 us       747 ns       738 ns   /user.slice/.../app.slice/app-gnome-google\x2dchrome-6442.scope
-> >            1       848 ns       848 ns       848 ns   /user.slice/.../session.slice/org.gnome.Shell@x11.service
-> >            1       220 ns       220 ns       220 ns   /user.slice/.../session.slice/pipewire-pulse.service
-> > 
-> > For now, the cgroup mode only works with BPF (-b).
+On Thu, Sep 07, 2023 at 12:38:21AM +0800, 李棒(伯兮) wrote:
+> In certain scenarios, gctx and ctx may be equal in the
+> __perf_event_ctx_lock_double() function, resulting in a deadlock.
 > 
-> Can we try to be consistent with other tools?
+> Thread 1, thread 2 and thread 3 belong to the same process, and the
+> process number is assumed to be M. The deadlock scenario is as follows:
 > 
-> [root@quaco ~]# perf record -h -g
+> 1) Thread 1 creates a pure software group through the system call
+>    sys_perf_event_open() and returns an fd, assuming the value of fd is N.
+>    The parameters of sys_perf_event_open() are as follows.
 > 
->  Usage: perf record [<options>] [<command>]
->     or: perf record [<options>] -- <command> [<options>]
+>    For example:
+>     perf_event_attr.type = PERF_TYPE_SOFTWARE;
+>     pid = M;
+>     cpu = 0;
+>     group_fd = -1;
+>     flags = 0;
+>     N = sys_perf_event_open(&perf_event_attr, pid, cpu, group_fd, flags);
 > 
->     -g                    enables call-graph recording
+> 2) Thread 2 and thread 3 call the perf_event_open() function concurrently
+>    with the same parameters on a different cpu. And use the fd generated
+>    by thread 1 as group_fd. The parameters of sys_perf_event_open() are
+>    as follows.
 > 
-> [root@quaco ~]# perf record -h -G
+>    For example:
+>     perf_event_attr.type = PERF_TYPE_HARDWARE;
+>     pid = M;
+>     cpu = 0;
+>     group_fd = N;
+>     flags = 0;
+>     sys_perf_event_open(&perf_event_attr, pid, cpu, group_fd, flags);
 > 
->  Usage: perf record [<options>] [<command>]
->     or: perf record [<options>] -- <command> [<options>]
+> 3) In the __perf_event_ctx_lock_double function, assuming that thread 2
+>    successfully acquires gctx->mutex and ctx->mutex first, thread 3 will
+>    wait here. At the same time, thread 2 will move the pure software gruop
+>    to the hardware context and change group_leader->ctx to the hardware
+>    context.
 > 
->     -G, --cgroup <name>   monitor event in cgroup name only
+> 4) When thread 2 releases gctx->mutex and ctx->mutex, thread 3 acquires
+>    gctx->mutex and ctx->mutex. And find that group_leader->ctx != gctx,
+>    then reacquires gctx. At this time, gctx is equal to the ctx of thread
+>    3, triggering a deadlock.
 > 
-> [root@quaco ~]# set -o vi
-> [root@quaco ~]# perf lock contention -h -G
+> Fixes: 321027c1fe77 ("perf/core: Fix concurrent sys_perf_event_open() vs. 'move_group' race")
+> Signed-off-by: Bang Li <libang.li@antgroup.com>
+> ---
+>  kernel/events/core.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
->  Usage: perf lock contention [<options>]
-> 
-> 
-> [root@quaco ~]#
-> 
-> I.e. use -G in this patch?
-> 
-> If you agree I can fixup things here, otherwise why not?
 
-I see that you use -G in 4/5, unsure now, but this looks like --sort in
-'perf report', no?
+<formletter>
 
-- Arnaldo
- 
-> - Arnaldo
->  
-> > Reviewed-by: Ian Rogers <irogers@google.com>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/Documentation/perf-lock.txt        |  4 ++
-> >  tools/perf/builtin-lock.c                     | 40 ++++++++++++++++++-
-> >  tools/perf/util/bpf_lock_contention.c         | 16 +++++---
-> >  .../perf/util/bpf_skel/lock_contention.bpf.c  | 31 +++++++++++++-
-> >  tools/perf/util/bpf_skel/lock_data.h          |  3 +-
-> >  tools/perf/util/lock-contention.h             |  1 -
-> >  6 files changed, 85 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
-> > index 30eea576721f..61c491df72b8 100644
-> > --- a/tools/perf/Documentation/perf-lock.txt
-> > +++ b/tools/perf/Documentation/perf-lock.txt
-> > @@ -208,6 +208,10 @@ CONTENTION OPTIONS
-> >  	Show results using a CSV-style output to make it easy to import directly
-> >  	into spreadsheets. Columns are separated by the string specified in SEP.
-> >  
-> > +-g::
-> > +--lock-cgroup::
-> > +	Show lock contention stat by cgroup.  Requires --use-bpf.
-> > +
-> >  
-> >  SEE ALSO
-> >  --------
-> > diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> > index 06430980dfd7..b98948dd40ba 100644
-> > --- a/tools/perf/builtin-lock.c
-> > +++ b/tools/perf/builtin-lock.c
-> > @@ -60,6 +60,7 @@ static bool combine_locks;
-> >  static bool show_thread_stats;
-> >  static bool show_lock_addrs;
-> >  static bool show_lock_owner;
-> > +static bool show_lock_cgroups;
-> >  static bool use_bpf;
-> >  static unsigned long bpf_map_entries = MAX_ENTRIES;
-> >  static int max_stack_depth = CONTENTION_STACK_DEPTH;
-> > @@ -619,6 +620,7 @@ static int get_key_by_aggr_mode_simple(u64 *key, u64 addr, u32 tid)
-> >  		*key = tid;
-> >  		break;
-> >  	case LOCK_AGGR_CALLER:
-> > +	case LOCK_AGGR_CGROUP:
-> >  	default:
-> >  		pr_err("Invalid aggregation mode: %d\n", aggr_mode);
-> >  		return -EINVAL;
-> > @@ -1103,6 +1105,7 @@ static int report_lock_contention_begin_event(struct evsel *evsel,
-> >  			if (lock_contention_caller(evsel, sample, buf, sizeof(buf)) < 0)
-> >  				name = "Unknown";
-> >  			break;
-> > +		case LOCK_AGGR_CGROUP:
-> >  		case LOCK_AGGR_TASK:
-> >  		default:
-> >  			break;
-> > @@ -1653,6 +1656,9 @@ static void print_header_stdio(void)
-> >  	case LOCK_AGGR_ADDR:
-> >  		fprintf(lock_output, "  %16s   %s\n\n", "address", "symbol");
-> >  		break;
-> > +	case LOCK_AGGR_CGROUP:
-> > +		fprintf(lock_output, "  %s\n\n", "cgroup");
-> > +		break;
-> >  	default:
-> >  		break;
-> >  	}
-> > @@ -1680,6 +1686,9 @@ static void print_header_csv(const char *sep)
-> >  	case LOCK_AGGR_ADDR:
-> >  		fprintf(lock_output, "%s%s %s%s %s\n", "address", sep, "symbol", sep, "type");
-> >  		break;
-> > +	case LOCK_AGGR_CGROUP:
-> > +		fprintf(lock_output, "%s\n", "cgroup");
-> > +		break;
-> >  	default:
-> >  		break;
-> >  	}
-> > @@ -1720,6 +1729,9 @@ static void print_lock_stat_stdio(struct lock_contention *con, struct lock_stat
-> >  		fprintf(lock_output, "  %016llx   %s (%s)\n", (unsigned long long)st->addr,
-> >  			st->name, get_type_name(st->flags));
-> >  		break;
-> > +	case LOCK_AGGR_CGROUP:
-> > +		fprintf(lock_output, "  %s\n", st->name);
-> > +		break;
-> >  	default:
-> >  		break;
-> >  	}
-> > @@ -1770,6 +1782,9 @@ static void print_lock_stat_csv(struct lock_contention *con, struct lock_stat *s
-> >  		fprintf(lock_output, "%llx%s %s%s %s\n", (unsigned long long)st->addr, sep,
-> >  			st->name, sep, get_type_name(st->flags));
-> >  		break;
-> > +	case LOCK_AGGR_CGROUP:
-> > +		fprintf(lock_output, "%s\n",st->name);
-> > +		break;
-> >  	default:
-> >  		break;
-> >  	}
-> > @@ -1999,6 +2014,27 @@ static int check_lock_contention_options(const struct option *options,
-> >  		return -1;
-> >  	}
-> >  
-> > +	if (show_lock_cgroups && !use_bpf) {
-> > +		pr_err("Cgroups are available only with BPF\n");
-> > +		parse_options_usage(usage, options, "lock-cgroup", 0);
-> > +		parse_options_usage(NULL, options, "use-bpf", 0);
-> > +		return -1;
-> > +	}
-> > +
-> > +	if (show_lock_cgroups && show_lock_addrs) {
-> > +		pr_err("Cannot use cgroup and addr mode together\n");
-> > +		parse_options_usage(usage, options, "lock-cgroup", 0);
-> > +		parse_options_usage(NULL, options, "lock-addr", 0);
-> > +		return -1;
-> > +	}
-> > +
-> > +	if (show_lock_cgroups && show_thread_stats) {
-> > +		pr_err("Cannot use cgroup and thread mode together\n");
-> > +		parse_options_usage(usage, options, "lock-cgroup", 0);
-> > +		parse_options_usage(NULL, options, "threads", 0);
-> > +		return -1;
-> > +	}
-> > +
-> >  	if (symbol_conf.field_sep) {
-> >  		if (strstr(symbol_conf.field_sep, ":") || /* part of type flags */
-> >  		    strstr(symbol_conf.field_sep, "+") || /* part of caller offset */
-> > @@ -2060,7 +2096,8 @@ static int __cmd_contention(int argc, const char **argv)
-> >  	con.machine = &session->machines.host;
-> >  
-> >  	con.aggr_mode = aggr_mode = show_thread_stats ? LOCK_AGGR_TASK :
-> > -		show_lock_addrs ? LOCK_AGGR_ADDR : LOCK_AGGR_CALLER;
-> > +		show_lock_addrs ? LOCK_AGGR_ADDR :
-> > +		show_lock_cgroups ? LOCK_AGGR_CGROUP : LOCK_AGGR_CALLER;
-> >  
-> >  	if (con.aggr_mode == LOCK_AGGR_CALLER)
-> >  		con.save_callstack = true;
-> > @@ -2524,6 +2561,7 @@ int cmd_lock(int argc, const char **argv)
-> >  	OPT_BOOLEAN('o', "lock-owner", &show_lock_owner, "show lock owners instead of waiters"),
-> >  	OPT_STRING_NOEMPTY('x', "field-separator", &symbol_conf.field_sep, "separator",
-> >  		   "print result in CSV format with custom separator"),
-> > +	OPT_BOOLEAN('g', "lock-cgroup", &show_lock_cgroups, "show lock stats by cgroup"),
-> >  	OPT_PARENT(lock_options)
-> >  	};
-> >  
-> > diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-> > index c6bd7c9b2d57..42753a0dfdc5 100644
-> > --- a/tools/perf/util/bpf_lock_contention.c
-> > +++ b/tools/perf/util/bpf_lock_contention.c
-> > @@ -152,7 +152,10 @@ int lock_contention_prepare(struct lock_contention *con)
-> >  	skel->bss->needs_callstack = con->save_callstack;
-> >  	skel->bss->lock_owner = con->owner;
-> >  
-> > -	if (con->use_cgroup) {
-> > +	if (con->aggr_mode == LOCK_AGGR_CGROUP) {
-> > +		if (cgroup_is_v2("perf_event"))
-> > +			skel->bss->use_cgroup_v2 = 1;
-> > +
-> >  		read_all_cgroups(&con->cgroups);
-> >  	}
-> >  
-> > @@ -214,12 +217,12 @@ static const char *lock_contention_get_name(struct lock_contention *con,
-> >  			return "siglock";
-> >  
-> >  		/* global locks with symbols */
-> > -		sym = machine__find_kernel_symbol(machine, key->lock_addr, &kmap);
-> > +		sym = machine__find_kernel_symbol(machine, key->lock_addr_or_cgroup, &kmap);
-> >  		if (sym)
-> >  			return sym->name;
-> >  
-> >  		/* try semi-global locks collected separately */
-> > -		if (!bpf_map_lookup_elem(lock_fd, &key->lock_addr, &flags)) {
-> > +		if (!bpf_map_lookup_elem(lock_fd, &key->lock_addr_or_cgroup, &flags)) {
-> >  			if (flags == LOCK_CLASS_RQLOCK)
-> >  				return "rq_lock";
-> >  		}
-> > @@ -227,8 +230,8 @@ static const char *lock_contention_get_name(struct lock_contention *con,
-> >  		return "";
-> >  	}
-> >  
-> > -	if (con->use_cgroup) {
-> > -		u64 cgrp_id = key->lock_addr;
-> > +	if (con->aggr_mode == LOCK_AGGR_CGROUP) {
-> > +		u64 cgrp_id = key->lock_addr_or_cgroup;
-> >  		struct cgroup *cgrp = __cgroup__find(&con->cgroups, cgrp_id);
-> >  
-> >  		if (cgrp)
-> > @@ -329,7 +332,8 @@ int lock_contention_read(struct lock_contention *con)
-> >  			ls_key = key.pid;
-> >  			break;
-> >  		case LOCK_AGGR_ADDR:
-> > -			ls_key = key.lock_addr;
-> > +		case LOCK_AGGR_CGROUP:
-> > +			ls_key = key.lock_addr_or_cgroup;
-> >  			break;
-> >  		default:
-> >  			goto next;
-> > diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> > index 8d3cfbb3cc65..823354999022 100644
-> > --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> > +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> > @@ -118,6 +118,9 @@ int needs_callstack;
-> >  int stack_skip;
-> >  int lock_owner;
-> >  
-> > +int use_cgroup_v2;
-> > +int perf_subsys_id = -1;
-> > +
-> >  /* determine the key of lock stat */
-> >  int aggr_mode;
-> >  
-> > @@ -130,6 +133,29 @@ int data_fail;
-> >  int task_map_full;
-> >  int data_map_full;
-> >  
-> > +static inline __u64 get_current_cgroup_id(void)
-> > +{
-> > +	struct task_struct *task;
-> > +	struct cgroup *cgrp;
-> > +
-> > +	if (use_cgroup_v2)
-> > +		return bpf_get_current_cgroup_id();
-> > +
-> > +	task = bpf_get_current_task_btf();
-> > +
-> > +	if (perf_subsys_id == -1) {
-> > +#if __has_builtin(__builtin_preserve_enum_value)
-> > +		perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id,
-> > +						     perf_event_cgrp_id);
-> > +#else
-> > +		perf_subsys_id = perf_event_cgrp_id;
-> > +#endif
-> > +	}
-> > +
-> > +	cgrp = BPF_CORE_READ(task, cgroups, subsys[perf_subsys_id], cgroup);
-> > +	return BPF_CORE_READ(cgrp, kn, id);
-> > +}
-> > +
-> >  static inline int can_record(u64 *ctx)
-> >  {
-> >  	if (has_cpu) {
-> > @@ -364,10 +390,13 @@ int contention_end(u64 *ctx)
-> >  			key.stack_id = pelem->stack_id;
-> >  		break;
-> >  	case LOCK_AGGR_ADDR:
-> > -		key.lock_addr = pelem->lock;
-> > +		key.lock_addr_or_cgroup = pelem->lock;
-> >  		if (needs_callstack)
-> >  			key.stack_id = pelem->stack_id;
-> >  		break;
-> > +	case LOCK_AGGR_CGROUP:
-> > +		key.lock_addr_or_cgroup = get_current_cgroup_id();
-> > +		break;
-> >  	default:
-> >  		/* should not happen */
-> >  		return 0;
-> > diff --git a/tools/perf/util/bpf_skel/lock_data.h b/tools/perf/util/bpf_skel/lock_data.h
-> > index 260062a9f2ab..08482daf61be 100644
-> > --- a/tools/perf/util/bpf_skel/lock_data.h
-> > +++ b/tools/perf/util/bpf_skel/lock_data.h
-> > @@ -6,7 +6,7 @@
-> >  struct contention_key {
-> >  	u32 stack_id;
-> >  	u32 pid;
-> > -	u64 lock_addr;
-> > +	u64 lock_addr_or_cgroup;
-> >  };
-> >  
-> >  #define TASK_COMM_LEN  16
-> > @@ -39,6 +39,7 @@ enum lock_aggr_mode {
-> >  	LOCK_AGGR_ADDR = 0,
-> >  	LOCK_AGGR_TASK,
-> >  	LOCK_AGGR_CALLER,
-> > +	LOCK_AGGR_CGROUP,
-> >  };
-> >  
-> >  enum lock_class_sym {
-> > diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
-> > index 70423966d778..a073cc6a82d2 100644
-> > --- a/tools/perf/util/lock-contention.h
-> > +++ b/tools/perf/util/lock-contention.h
-> > @@ -144,7 +144,6 @@ struct lock_contention {
-> >  	int owner;
-> >  	int nr_filtered;
-> >  	bool save_callstack;
-> > -	bool use_cgroup;
-> >  };
-> >  
-> >  #ifdef HAVE_BPF_SKEL
-> > -- 
-> > 2.42.0.283.g2d96d420d3-goog
-> > 
-> 
-> -- 
-> 
-> - Arnaldo
+This is not the correct way to submit patches for inclusion in the
+stable kernel tree.  Please read:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+for how to do this properly.
 
--- 
-
-- Arnaldo
+</formletter>
