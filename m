@@ -2,92 +2,199 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FFFEC8743
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Sep 2023 16:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C432FEC8744
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Sep 2023 16:46:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233514AbjIGQlV convert rfc822-to-8bit (ORCPT
+        id S242850AbjIGQqI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Sep 2023 12:41:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44238 "EHLO
+        Thu, 7 Sep 2023 12:46:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241212AbjIGQlB (ORCPT
+        with ESMTP id S242129AbjIGQqG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Sep 2023 12:41:01 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A30A10CF;
-        Thu,  7 Sep 2023 09:40:24 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id 3f1490d57ef6-d7e6d9665bcso1026784276.1;
-        Thu, 07 Sep 2023 09:40:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1694104450; x=1694709250;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ok2CriQTwYEsC/n/gnqFCKaHzQ1Eyzk+MG3g9UT+Zeo=;
-        b=ksTlNc/0kx7NBz0A/4U6s9BBl7CTT4Ouul33W4ducuPCzsEBtAPqtkx71axozn9wl8
-         oXkmv1Bv0KYBrqhewHlHfpvJ9fyzTz1CcayVdJLU2oTvOO61rzTprYlhEFBjOhm/v+xS
-         CZ9AUp108nOOyWw/Zn66hiaEi5zH+F5SQIsPSWbm1VysogAMUkVEdQdMWJeVnBLjB3yR
-         1oasg8ovuXD/9EBOezg+UccdKmSpieUZMsbEGfj+/tOctJhFjgy61LD3BIIcOuiAX0BX
-         PcNmwT1zI27hhDvN9veCiJR3VQBXJDAxryY257gNrNC5EmwMIdqWat7cGNlSVsfpejgx
-         xv+A==
-X-Gm-Message-State: AOJu0YwU/1WJlpqa9ziLQRYX7ZSMfObRHUa3xmtSh/Fq6/7+O8zjaVX+
-        +BcycOXK0p0y4BuWNUcwvWY2KR4teaocHrsqJCI=
-X-Google-Smtp-Source: AGHT+IFORxOKHFqeh0WuVDZ5nkcMQqs+D80xPEyaTNXZH9YVDY5S2r6XCDnHRzxMvQHfnVxnd4F/z76XRWY+TerP/Kg=
-X-Received: by 2002:a05:6902:120e:b0:d77:e463:7c0e with SMTP id
- s14-20020a056902120e00b00d77e4637c0emr24999040ybu.50.1694104450584; Thu, 07
- Sep 2023 09:34:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230620170027.1861012-1-weilin.wang@intel.com>
- <CAM9d7cichi8QpVFjCDUf8e5aJEuZg1JPHtMBEs_FSNtsm8VoeA@mail.gmail.com>
- <CAM9d7chBM_z=vNKsLFTLVevXgd8=ZfS_XSX=999+jitrTJodTA@mail.gmail.com>
- <CAM9d7cjd022T5n6TyD96M_T5KNjHTDgjfK_mKKTZYMmKEKi58w@mail.gmail.com> <CO6PR11MB56356C7AA628AB72DC33D3ADEEEEA@CO6PR11MB5635.namprd11.prod.outlook.com>
-In-Reply-To: <CO6PR11MB56356C7AA628AB72DC33D3ADEEEEA@CO6PR11MB5635.namprd11.prod.outlook.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 7 Sep 2023 09:33:58 -0700
-Message-ID: <CAM9d7cij=Ph_esnEwDVSRYZRi9i_GOgRfa7rK_DjihX1rnk_HA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/3] Add metric value validation test
-To:     "Wang, Weilin" <weilin.wang@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        "Hunter, Adrian" <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        "Alt, Samantha" <samantha.alt@intel.com>,
-        "Taylor, Perry" <perry.taylor@intel.com>,
-        "Biggers, Caleb" <caleb.biggers@intel.com>,
-        "ravi.bangoria@amd.com" <ravi.bangoria@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Thu, 7 Sep 2023 12:46:06 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 186C01FFB
+        for <linux-perf-users@vger.kernel.org>; Thu,  7 Sep 2023 09:39:55 -0700 (PDT)
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 387Fo6di009659;
+        Thu, 7 Sep 2023 15:55:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=DlK2KDcs67VhPntfaLp7idki9xz6KkCol91doJwrMJI=;
+ b=XDfKQ1nYxcQ/ECsw1AqX2NHowGnDosv4TDBlXP4BPyVJNgfMqs8wxVmGUTWiVSOcwX0p
+ YNqqGUDkoIb9V/S7nkq/yVxKzQjJWWMI1vPB8NZgIg3FdfMVksSKwnCx/72tf9j/JGAG
+ Qa69N4+Rsuyu43vFvEnvwNduR7sYa3+po0F+nd7kUC6UyrfDg+hn/lyxM6LY/IGEZUKC
+ HTuaJEA85m7mIBFXryXvfZVljFg8PLYHYuwqKL8DncHXyoigpeGXOzSqdd5Oz3YccAav
+ HHdm+uCAfgWnX9h8U7mPOKkYVacCFk4fH2eSZxwq19C9CB//ALIAbPMiov81aWeLI8Sl 4A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3syg2puhj1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 Sep 2023 15:55:00 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 387FaR89013522;
+        Thu, 7 Sep 2023 15:54:59 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3syg2puhht-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 Sep 2023 15:54:59 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 387EJfNe006651;
+        Thu, 7 Sep 2023 15:54:58 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3svgvkvkm1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 Sep 2023 15:54:58 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 387Fstdn23397034
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 7 Sep 2023 15:54:55 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E2B7120043;
+        Thu,  7 Sep 2023 15:54:54 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CC1D120040;
+        Thu,  7 Sep 2023 15:54:52 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.9.102])
+        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Thu,  7 Sep 2023 15:54:52 +0000 (GMT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
+Subject: Re: [PATCH V2 1/2] tools/perf: Add text_end to "struct dso" to save
+ .text section size
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <a407d3fd-6d40-060d-eb0c-c880e09b2a5f@intel.com>
+Date:   Thu, 7 Sep 2023 21:24:40 +0530
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>,
+        linux-perf-users@vger.kernel.org,
+        Disha Goel <disgoel@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <4FB560DB-E78D-4E17-AD11-B88F6C7EAA27@linux.vnet.ibm.com>
+References: <20230817171852.55629-1-atrajeev@linux.vnet.ibm.com>
+ <a407d3fd-6d40-060d-eb0c-c880e09b2a5f@intel.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+X-Mailer: Apple Mail (2.3731.700.6)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 1HgtdVv_7vDH2PW3FxQl2Rowlosd9BKh
+X-Proofpoint-ORIG-GUID: 6KWl0N7iDhycF0fSlu5Yv_JwrkYG1lML
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-07_07,2023-09-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 phishscore=0 suspectscore=0
+ priorityscore=1501 mlxlogscore=999 adultscore=0 impostorscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
+ definitions=main-2309070138
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 6, 2023 at 9:58 PM Wang, Weilin <weilin.wang@intel.com> wrote:
->
-> Hi Namhyung,
->
-> The report shows there are four metrics return with no values. Do you know which processor this was tested on?
 
-It's a laptop with 11th gen CPUs (tigerlake).
 
-$ head /proc/cpuinfo
-processor    : 0
-vendor_id    : GenuineIntel
-cpu family    : 6
-model        : 140
-model name    : 11th Gen Intel(R) Core(TM) i7-1185G7 @ 3.00GHz
-stepping    : 1
-microcode    : 0xac
-cpu MHz        : 3899.531
-cache size    : 12288 KB
-physical id    : 0
+> On 18-Aug-2023, at 12:07 PM, Adrian Hunter <adrian.hunter@intel.com> =
+wrote:
+>=20
+> On 17/08/23 20:18, Athira Rajeev wrote:
+>> Update "struct dso" to include new member "text_end".
+>> This new field will represent the offset for end of text
+>> section for a dso. This value is derived as:
+>> sh_size (Size of section in byes) + sh_offset (Section file
+>> offst) of the elf header for text.
+>>=20
+>> To resolve the address from a sample, perf looks at the
+>> DSO maps. In case of address from a kernel module, there
+>> were some address found to be not resolved. This was
+>> observed while running perf test for "Object code reading".
+>> Though the ip falls beteen the start address of the loaded
+>> module (perf map->start ) and end address ( perf map->end),
+>> it was unresolved.
+>>=20
+>> Example:
+>>=20
+>>    Reading object code for memory address: 0xc008000007f0142c
+>>    File is: /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
+>>    On file address is: 0x1114cc
+>>    Objdump command is: objdump -z -d --start-address=3D0x11142c =
+--stop-address=3D0x1114ac /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
+>>    objdump read too few bytes: 128
+>>    test child finished with -1
+>>=20
+>> Here, module is loaded at:
+>>    # cat /proc/modules | grep xfs
+>>    xfs 2228224 3 - Live 0xc008000007d00000
+>>=20
+>> =46rom objdump for xfs module, text section is:
+>>    text 0010f7bc  0000000000000000 0000000000000000 000000a0 2**4
+>>=20
+>> Here the offset for 0xc008000007f0142c ie  0x112074 falls out
+>> .text section which is up to 0x10f7bc.
+>>=20
+>> In this case for module, the address 0xc008000007e11fd4 is pointing
+>> to stub instructions. This address range represents the module stubs
+>> which is allocated on module load and hence is not part of DSO =
+offset.
+>>=20
+>> To identify such  address, which falls out of text
+>> section and within module end, added the new field "text_end" to
+>> "struct dso".
+>>=20
+>> Reported-by: Disha Goel <disgoel@linux.ibm.com>
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>> ---
+>> Changelog:
+>>   v1 -> v2:
+>>   Changed commit message to explain need for "text_end"
+>>=20
+>> tools/perf/util/dso.h        | 1 +
+>> tools/perf/util/symbol-elf.c | 4 +++-
+>> 2 files changed, 4 insertions(+), 1 deletion(-)
+>>=20
+>> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+>> index b41c9782c754..70fe0fe69bef 100644
+>> --- a/tools/perf/util/dso.h
+>> +++ b/tools/perf/util/dso.h
+>> @@ -181,6 +181,7 @@ struct dso {
+>> u8  rel;
+>> struct build_id  bid;
+>> u64  text_offset;
+>> + u64  text_end;
+>> const char  *short_name;
+>> const char  *long_name;
+>> u16  long_name_len;
+>> diff --git a/tools/perf/util/symbol-elf.c =
+b/tools/perf/util/symbol-elf.c
+>> index 8bd466d1c2bd..252d26a59e64 100644
+>> --- a/tools/perf/util/symbol-elf.c
+>> +++ b/tools/perf/util/symbol-elf.c
+>> @@ -1512,8 +1512,10 @@ dso__load_sym_internal(struct dso *dso, struct =
+map *map, struct symsrc *syms_ss,
+>> }
+>>=20
+>> if (elf_section_by_name(runtime_ss->elf, &runtime_ss->ehdr, &tshdr,
+>> - ".text", NULL))
+>> + ".text", NULL)) {
+>> dso->text_offset =3D tshdr.sh_addr - tshdr.sh_offset;
+>> + dso->text_end =3D tshdr.sh_offset + tshdr.sh_size;
+>> + }
+>>=20
+>> if (runtime_ss->opdsec)
+>> opddata =3D elf_rawdata(runtime_ss->opdsec, NULL);
+>=20
+> Should probably amend dso__load_bfd_symbols() also
 
->
-> I can look into the test and see if I could improve the final report to make it easier to debug when fails.
+Hi Adrian,
 
-Thanks,
-Namhyung
+Thanks for checking. Will address this in V2=20
+
+Thanks
+Athira
+
+
