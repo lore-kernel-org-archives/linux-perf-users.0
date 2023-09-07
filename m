@@ -2,179 +2,178 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DA0EC8743
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF96BEC874C
 	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Sep 2023 16:59:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235731AbjIGQ7b (ORCPT
+        id S236224AbjIGQ7b (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Thu, 7 Sep 2023 12:59:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59986 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244356AbjIGQiX (ORCPT
+        with ESMTP id S243688AbjIGQrr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Sep 2023 12:38:23 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD182210C;
-        Thu,  7 Sep 2023 09:23:02 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C3F0C43395;
-        Thu,  7 Sep 2023 16:06:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694102791;
-        bh=wTTVey9YZJtMRL2JwAl4Bl6GOm8D1pcSnWWALoFSdIQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ly3WQ1iEc2TELoq4i1Tuj7guxul+pO6MqtfVJ2o+DC+ddi//R2z3/Qj+UfygKr1/b
-         hN/xZyEhZvyZ8A8v7+fkILHcGAcQHz2ACAyX93Vew8vm0wXizP0Pu021F1V19+eipM
-         Ah08TKcNIoBMLkTi5RGgLfODGHxxuI+egvLERORHZm/GwrCYpwJL6/WpGWDck1ptMt
-         H8BOphEpWe8O7ax68EN1bn/9ApNiwMIrUuwOVIB3+e7vVtCGL9ACDgdeMAb519/oE5
-         BxURPeoB3eRlC8xBqxJ2NzYFZJWPz5zGWjQfSJxdKwGRbqwuz5OJ4knfwGobNVP5h9
-         dLyMIJZybOlEQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 31F4A403F4; Thu,  7 Sep 2023 13:06:28 -0300 (-03)
-Date:   Thu, 7 Sep 2023 13:06:28 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jing Zhang <renyu.zj@linux.alibaba.com>
-Cc:     John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: Re: [PATCH v8 0/8] Add metrics for Arm CMN
-Message-ID: <ZPn1BEzAoQa/ogtL@kernel.org>
-References: <1694087913-46144-1-git-send-email-renyu.zj@linux.alibaba.com>
+        Thu, 7 Sep 2023 12:47:47 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAAAD2130
+        for <linux-perf-users@vger.kernel.org>; Thu,  7 Sep 2023 09:47:22 -0700 (PDT)
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 387Gchk3017994;
+        Thu, 7 Sep 2023 16:45:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=Pvrn9AmGzmJM5Eqnf/RzG8rYCfF3vmMqlngUuIcbBEw=;
+ b=a1nO/hAWK6wF0FkRY8qlLl5Mnk7vSN89n0V5QWTQu2xtIuruhFi0dzXJ1CTD2AUSOi3a
+ hzlU8V618wRg2RYIdnTkUHxGlkuqSOQ3aJyWfhIr/ze84KFiztDf2Wn70SCr/b6qZptU
+ SPsE5zu0EYzTx6uKu56MqcdFd/1EgoqTEcCEvDjEDlgLtQOpjaziIAZAHQwGzGmtKirz
+ +9SM5Zj+IGeLEQ629b26ktY3EeEVSsfOWvZ6xxaKzdRmLeLrcuhqGZs97GUVMC83VfXI
+ SgzdIm4uoHTWFlgZAqFsdfnsPA0K0u/t8KoK1JTQOVG+/b9iIqt1W8OjTJepVhx5MrLb ow== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sygy8ad44-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 Sep 2023 16:45:43 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 387GdbG8022796;
+        Thu, 7 Sep 2023 16:45:42 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sygy8ad3w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 Sep 2023 16:45:42 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 387FM3Uv001614;
+        Thu, 7 Sep 2023 16:45:42 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+        by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3svfct5hfk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 Sep 2023 16:45:41 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 387Gjd7C23855768
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 7 Sep 2023 16:45:39 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 363AE20043;
+        Thu,  7 Sep 2023 16:45:39 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BFB6020040;
+        Thu,  7 Sep 2023 16:45:36 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.9.102])
+        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Thu,  7 Sep 2023 16:45:36 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+        Disha Goel <disgoel@linux.ibm.com>
+Subject: [V2 2/2] tools/perf/tests: Fix object code reading to skip address that falls out of text section
+Date:   Thu,  7 Sep 2023 22:15:29 +0530
+Message-Id: <20230907164529.36222-2-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20230907164529.36222-1-atrajeev@linux.vnet.ibm.com>
+References: <20230907164529.36222-1-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1694087913-46144-1-git-send-email-renyu.zj@linux.alibaba.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: UtAwaBShcro13XtNZhSjVJT0rMsfFUis
+X-Proofpoint-ORIG-GUID: -OTo03DPzw7Ob1bvkHnT5Wv_46pkI3Rm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-07_08,2023-09-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 phishscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0
+ spamscore=0 adultscore=0 malwarescore=0 bulkscore=0 priorityscore=1501
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309070147
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Sep 07, 2023 at 07:58:25PM +0800, Jing Zhang escreveu:
-> Changes since v7:
-> - Optimized pmu_uncore_identifier_match().
-> - Added all missing "event=0" in JSON file.
-> - Rebase this series onto the latest perf-tools-next.
-> - Link: https://lore.kernel.org/all/1692606977-92009-1-git-send-email-renyu.zj@linux.alibaba.com/
+The testcase "Object code reading" fails in somecases
+for "fs_something" sub test as below:
 
-Can you please refresh on top of what is in the tmp.perf-tools-next
-branch at:
+    Reading object code for memory address: 0xc008000007f0142c
+    File is: /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
+    On file address is: 0x1114cc
+    Objdump command is: objdump -z -d --start-address=0x11142c --stop-address=0x1114ac /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
+    objdump read too few bytes: 128
+    test child finished with -1
 
-git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git
+This can alo be reproduced when running perf record with
+workload that exercises fs_something() code. In the test
+setup, this is exercising xfs code since root is xfs.
 
-patch 3/8 has some fuzz and b4 is not finding it in the mailing list,
-probably the patch is too large? Do you have some git tree somewhere I
-can use to pull from?
+    # perf record ./a.out
+    # perf report -v |grep "xfs.ko"
+      0.76% a.out /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko  0xc008000007de5efc B [k] xlog_cil_commit
+      0.74% a.out  /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko  0xc008000007d5ae18 B [k] xfs_btree_key_offset
+      0.74% a.out  /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko  0xc008000007e11fd4 B [k] 0x0000000000112074
 
-- Arnaldo
+Here addr "0xc008000007e11fd4" is not resolved. since this is a
+kernel module, its offset is from the DSO. Xfs module is loaded
+at 0xc008000007d00000
+
+   # cat /proc/modules | grep xfs
+    xfs 2228224 3 - Live 0xc008000007d00000
+
+And size is 0x220000. So its loaded between  0xc008000007d00000
+and 0xc008000007f20000. From objdump, text section is:
+    text 0010f7bc  0000000000000000 0000000000000000 000000a0 2**4
+
+Hence perf captured ip maps to 0x112074 which is:
+( ip - start of module ) + a0
+
+This offset 0x112074 falls out .text section which is up to 0x10f7bc
+In this case for module, the address 0xc008000007e11fd4 is pointing
+to stub instructions. This address range represents the module stubs
+which is allocated on module load and hence is not part of DSO offset.
+
+To address this issue in "object code reading", skip the sample if
+address falls out of text section and is within the module end.
+Use the "text_end" member of "struct dso" to do this check.
+
+To address this issue in "perf report", exploring an option of
+having stubs range as part of the /proc/kallsyms, so that perf
+report can resolve addresses in stubs range
+
+However this patch uses text_end to skip the stub range for
+Object code reading testcase.
+
+Reported-by: Disha Goel <disgoel@linux.ibm.com>
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+Changelog:
+ v1 -> v2:
+ Updated comment to add description on which arch has stub and
+ reason for skipping as suggested by Adrian
+
+ tools/perf/tests/code-reading.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
+index ed3815163d1b..3cf6c2d42416 100644
+--- a/tools/perf/tests/code-reading.c
++++ b/tools/perf/tests/code-reading.c
+@@ -269,6 +269,18 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
+ 	if (addr + len > map__end(al.map))
+ 		len = map__end(al.map) - addr;
  
-> Jing Zhang (8):
->   perf pmu: "Compat" supports matching multiple identifiers
->   perf metric: "Compat" supports matching multiple identifiers
->   perf vendor events: Supplement the omitted EventCode
->   perf jevents: Support more event fields
->   perf test: Make matching_pmu effective
->   perf test: Add pmu-event test for "Compat" and new event_field.
->   perf jevents: Add support for Arm CMN PMU aliasing
->   perf vendor events: Add JSON metrics for Arm CMN
-> 
->  .../pmu-events/arch/arm64/arm/cmn/sys/cmn.json     | 266 +++++++++++++++++++++
->  .../pmu-events/arch/arm64/arm/cmn/sys/metric.json  |  74 ++++++
->  .../pmu-events/arch/test/test_soc/sys/uncore.json  |   8 +
->  .../pmu-events/arch/x86/alderlake/pipeline.json    |   9 +
->  .../pmu-events/arch/x86/alderlaken/pipeline.json   |   3 +
->  .../pmu-events/arch/x86/broadwell/pipeline.json    |   4 +
->  .../pmu-events/arch/x86/broadwellde/pipeline.json  |   4 +
->  .../arch/x86/broadwellde/uncore-cache.json         |   2 +
->  .../arch/x86/broadwellde/uncore-interconnect.json  |   1 +
->  .../arch/x86/broadwellde/uncore-memory.json        |   1 +
->  .../arch/x86/broadwellde/uncore-power.json         |   1 +
->  .../pmu-events/arch/x86/broadwellx/pipeline.json   |   4 +
->  .../arch/x86/broadwellx/uncore-cache.json          |   2 +
->  .../arch/x86/broadwellx/uncore-interconnect.json   |  13 +
->  .../arch/x86/broadwellx/uncore-memory.json         |   2 +
->  .../arch/x86/broadwellx/uncore-power.json          |   1 +
->  .../pmu-events/arch/x86/cascadelakex/pipeline.json |   4 +
->  .../arch/x86/cascadelakex/uncore-cache.json        |   2 +
->  .../arch/x86/cascadelakex/uncore-interconnect.json |   1 +
->  .../arch/x86/cascadelakex/uncore-io.json           |   1 +
->  .../arch/x86/cascadelakex/uncore-memory.json       |   1 +
->  .../arch/x86/cascadelakex/uncore-power.json        |   1 +
->  .../pmu-events/arch/x86/elkhartlake/pipeline.json  |   2 +
->  .../pmu-events/arch/x86/goldmont/pipeline.json     |   3 +
->  .../pmu-events/arch/x86/goldmontplus/pipeline.json |   3 +
->  .../pmu-events/arch/x86/grandridge/pipeline.json   |   3 +
->  .../arch/x86/graniterapids/pipeline.json           |   4 +
->  .../perf/pmu-events/arch/x86/haswell/pipeline.json |   4 +
->  .../pmu-events/arch/x86/haswellx/pipeline.json     |   4 +
->  .../pmu-events/arch/x86/haswellx/uncore-cache.json |   2 +
->  .../arch/x86/haswellx/uncore-interconnect.json     |  14 ++
->  .../arch/x86/haswellx/uncore-memory.json           |   2 +
->  .../pmu-events/arch/x86/haswellx/uncore-power.json |   1 +
->  .../perf/pmu-events/arch/x86/icelake/pipeline.json |   5 +
->  .../pmu-events/arch/x86/icelakex/pipeline.json     |   5 +
->  .../pmu-events/arch/x86/icelakex/uncore-cache.json |   1 +
->  .../arch/x86/icelakex/uncore-interconnect.json     |   1 +
->  .../arch/x86/icelakex/uncore-memory.json           |   1 +
->  .../pmu-events/arch/x86/icelakex/uncore-power.json |   1 +
->  .../pmu-events/arch/x86/ivybridge/pipeline.json    |   3 +
->  .../perf/pmu-events/arch/x86/ivytown/pipeline.json |   4 +
->  .../pmu-events/arch/x86/ivytown/uncore-cache.json  |   2 +
->  .../arch/x86/ivytown/uncore-interconnect.json      |  11 +
->  .../pmu-events/arch/x86/ivytown/uncore-memory.json |   1 +
->  .../pmu-events/arch/x86/ivytown/uncore-power.json  |   1 +
->  .../pmu-events/arch/x86/jaketown/pipeline.json     |   4 +
->  .../pmu-events/arch/x86/jaketown/uncore-cache.json |   2 +
->  .../arch/x86/jaketown/uncore-interconnect.json     |  12 +
->  .../arch/x86/jaketown/uncore-memory.json           |   1 +
->  .../pmu-events/arch/x86/jaketown/uncore-power.json |   2 +
->  .../arch/x86/knightslanding/pipeline.json          |   3 +
->  .../arch/x86/knightslanding/uncore-cache.json      |   1 +
->  .../arch/x86/knightslanding/uncore-memory.json     |   4 +
->  .../pmu-events/arch/x86/meteorlake/pipeline.json   |   9 +
->  .../pmu-events/arch/x86/rocketlake/pipeline.json   |   3 +
->  .../pmu-events/arch/x86/sandybridge/pipeline.json  |   4 +
->  .../arch/x86/sapphirerapids/pipeline.json          |   5 +
->  .../pmu-events/arch/x86/sierraforest/pipeline.json |   4 +
->  .../pmu-events/arch/x86/silvermont/pipeline.json   |   3 +
->  .../perf/pmu-events/arch/x86/skylake/pipeline.json |   4 +
->  .../pmu-events/arch/x86/skylakex/pipeline.json     |   4 +
->  .../pmu-events/arch/x86/skylakex/uncore-cache.json |   2 +
->  .../arch/x86/skylakex/uncore-interconnect.json     |   1 +
->  .../pmu-events/arch/x86/skylakex/uncore-io.json    |   1 +
->  .../arch/x86/skylakex/uncore-memory.json           |   1 +
->  .../pmu-events/arch/x86/skylakex/uncore-power.json |   1 +
->  .../pmu-events/arch/x86/snowridgex/pipeline.json   |   2 +
->  .../arch/x86/snowridgex/uncore-cache.json          |   1 +
->  .../arch/x86/snowridgex/uncore-interconnect.json   |   1 +
->  .../arch/x86/snowridgex/uncore-memory.json         |   1 +
->  .../arch/x86/snowridgex/uncore-power.json          |   1 +
->  .../pmu-events/arch/x86/tigerlake/pipeline.json    |   5 +
->  tools/perf/pmu-events/empty-pmu-events.c           |   8 +
->  tools/perf/pmu-events/jevents.py                   |  21 +-
->  tools/perf/tests/pmu-events.c                      |  65 ++++-
->  tools/perf/util/metricgroup.c                      |   2 +-
->  tools/perf/util/pmu.c                              |  28 ++-
->  tools/perf/util/pmu.h                              |   1 +
->  78 files changed, 681 insertions(+), 9 deletions(-)
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json
-> 
-> -- 
-> 1.8.3.1
-> 
-
++	/*
++	 * Some architectures (ex: powerpc) have stubs (trampolines) in kernel
++	 * modules to manage long jumps. Check if the ip offset falls in stubs
++	 * sections for kernel modules. And skip module address after text end
++	 */
++	if (strstr(dso->long_name, ".ko")) {
++		if (al.addr > dso->text_end) {
++			pr_debug("skipping the module address %#"PRIx64" after text end\n", al.addr);
++			goto out;
++		}
++	}
++
+ 	/* Read the object code using perf */
+ 	ret_len = dso__data_read_offset(dso, maps__machine(thread__maps(thread)),
+ 					al.addr, buf1, len);
 -- 
+2.31.1
 
-- Arnaldo
