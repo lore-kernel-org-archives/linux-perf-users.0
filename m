@@ -2,172 +2,126 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40CD5EC8752
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Sep 2023 18:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FDEEC875C
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Sep 2023 21:05:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344014AbjIGS2v (ORCPT
+        id S232877AbjIGVFo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Sep 2023 14:28:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44130 "EHLO
+        Thu, 7 Sep 2023 17:05:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236140AbjIGS2s (ORCPT
+        with ESMTP id S232813AbjIGVFn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Sep 2023 14:28:48 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9642FC4
-        for <linux-perf-users@vger.kernel.org>; Thu,  7 Sep 2023 11:28:28 -0700 (PDT)
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 387Gckx2014947;
-        Thu, 7 Sep 2023 17:15:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=CRdb1SnuerVfXkkvHbHxQXRxBw2ZjpF3AYd2nC5UEfY=;
- b=XimzL3i/gWVOZK0lEn97gQbUIQyqYlBJEbMMZ5k4yiu97LL/SsKeHzx93MDJcYPaYTmn
- rSYgOJgbO/drSJDSTTgiuYWu9QLjCGPa51xMfZd1RkWz3cTLTgTKJI3WAMOLb+OaNVfq
- KYkEzGgN4/EC5Aq9nYBZ0ogzwcD+qMzzIF4IT0XuoEmQKrJH9ZX9bc+xq/6Dw2HLLfh1
- 1EEt3juGlGsNOBBjzge8t3XKY5G4j2hxcn6SpVgMarQV2rF6psLOgMzNRlJI/t2izAim
- vIYyz9E/g1uKRcr9fVcjl5K6FbEhG633+q25ZZ3Z6E4+kyjXUzUMGyPQyvagYijswmon hw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3syhf5tc8r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 Sep 2023 17:15:57 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 387GcsSS015650;
-        Thu, 7 Sep 2023 17:15:57 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3syhf5tc8c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 Sep 2023 17:15:57 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 387GrM53011121;
-        Thu, 7 Sep 2023 17:15:56 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3svj324whd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 Sep 2023 17:15:56 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 387HFrLY24642178
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 7 Sep 2023 17:15:53 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BB15C20043;
-        Thu,  7 Sep 2023 17:15:53 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6C07520040;
-        Thu,  7 Sep 2023 17:15:51 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.9.102])
-        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Thu,  7 Sep 2023 17:15:51 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        irogers@google.com, namhyung@kernel.org
-Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
-Subject: [PATCH 3/3] tests/shell: Fix shellcheck warnings for SC2153 in multiple scripts
-Date:   Thu,  7 Sep 2023 22:45:40 +0530
-Message-Id: <20230907171540.36736-4-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20230907171540.36736-1-atrajeev@linux.vnet.ibm.com>
-References: <20230907171540.36736-1-atrajeev@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: tLZnW3qVxwWhWPkL_SnofljJJd2-E_vw
-X-Proofpoint-GUID: OpG1ltHIZNqWKq7OqjWNgsw4V15DGNBn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-07_09,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- bulkscore=0 mlxlogscore=999 clxscore=1015 adultscore=0 suspectscore=0
- spamscore=0 malwarescore=0 impostorscore=0 lowpriorityscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
- definitions=main-2309070152
+        Thu, 7 Sep 2023 17:05:43 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C8371BCB
+        for <linux-perf-users@vger.kernel.org>; Thu,  7 Sep 2023 14:05:38 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-58e49935630so25092167b3.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Sep 2023 14:05:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1694120737; x=1694725537; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=dnyMsDgiX5vgIpgNk8THjYlZnq9260AQc9Onv7oS0O8=;
+        b=XPD77feUZ4xInmA0jtgTl8BMRlL8A99/aZ42tYalUhBIMur5rr8oGdTfHFrrp+dCOx
+         2p+CCrs0/k1eCnPvlH/FrRdi8ViYBG0BAQ7B4PpOsP6ebuuJODJ8EcoPvYLAdyxWPBrO
+         pR0F9Jt7zdyTIyL1aabh27GaBamVo/ju+l5fUq/u/8Bm7ReqJopKHQPMHkU3nazyp9AC
+         46FK2YCT24mZFaFluhb+acUhgL8OHl9ESGoFE6O3FTB8Cik/4aa13MdbKTDBFycuB/rR
+         IZ4DpxpZKGhIl/H8ADA9rCmmuXfBkFvO6RLlJS4+9HSkwIrQc8w4h13CqxUm+MT2SsMg
+         khVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694120737; x=1694725537;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dnyMsDgiX5vgIpgNk8THjYlZnq9260AQc9Onv7oS0O8=;
+        b=ZzPJ3wpZq1JbGWgyoAAOwZxvvVwkri2/bUcy4kULUXLjICyPPYUQBj7A5dhed4QeGN
+         lz2TtzqEAMrmtWU9l8N4AApM+LjT6m9KESBa2etwTMTwqK5goMPX4TBbTcWrRtXaEoFP
+         8i0I/cHKBAF98QFkr6WD6U2m/ecJXgX7v2/IRPz6M7BPkWKVZDOdQG9S+6k4C3FuqgNC
+         6+Q/s6JyYamYHXyT9KqSd//3sGGP9lbMy4kGKkRY/fd1OKdjX4TbBBVzj/gWUYt89b7E
+         X+iaRqC+Tt6WNAD/3+BeTJdRB3T9cwuzaJmFwtWT/l2TSmJG+50IIf72kukI4uKRnWLy
+         4I/w==
+X-Gm-Message-State: AOJu0Yzh/hs+AQxrrNmfVnTyTPw3te+yHmz4h64pVV5jc+TzksfdWl/Q
+        Q7aVIPzZwX/0w9NcoOCUUCKoPLoC8bjI
+X-Google-Smtp-Source: AGHT+IGTPbYEN9QntgCC8Qk74o1xFC3ceEtnfcYbnQvG1l9e5gI3/scYqclOQxzhCRBR5VqtB1seyJB6RyI7
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:e535:39a0:5730:b9dd])
+ (user=irogers job=sendgmr) by 2002:a81:e244:0:b0:595:9e93:60c8 with SMTP id
+ z4-20020a81e244000000b005959e9360c8mr108471ywl.1.1694120737296; Thu, 07 Sep
+ 2023 14:05:37 -0700 (PDT)
+Date:   Thu,  7 Sep 2023 14:05:33 -0700
+Message-Id: <20230907210533.3712979-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
+Subject: [PATCH v1] perf parse-events: Avoid erange from hex numbers
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Running shellcheck on some of the shell scripts, throws
-below warning on shellcheck v0.6. Example:
+We specify that a "num_hex" comprises 1 or more digits, however, that
+allows strtoull to fail with ERANGE. Limit the number of hex digits to
+being between 1 and 16.
 
-   In tests/shell/coresight/asm_pure_loop.sh line 14:
-   DATA="$DATD/perf-$TEST-$DATV.data"
-          ^---^ SC2153: Possible misspelling: DATD may not be assigned, but DATA is.
+Before:
+```
+$ perf stat -e 'cpu/rE7574c47490475745/' true
+perf: util/parse-events.c:215: fix_raw: Assertion `errno == 0' failed.
+Aborted (core dumped)
+```
 
-Here, DATD is exported from "lib/coresight.sh" and this
-warning can be ignored. Use "shellcheck disable=" to ignore
-this check.
+After:
+```
+$ perf stat -e 'cpu/rE7574c47490475745/' true
+event syntax error: 'cpu/rE7574c47490475745/'
+                         \___ Bad event or PMU
 
-Signed-off-by:  Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Unable to find PMU or event on a PMU of 'cpu'
+
+Initial error:
+event syntax error: 'cpu/rE7574c47490475745/'
+                         \___ unknown term 'rE7574c47490475745' for pmu 'cpu'
+
+valid terms: event,pc,edge,offcore_rsp,ldlat,inv,umask,frontend,cmask,config,config1,config2,config3,name,period,percore,metric-id
+Run 'perf list' for a list of valid events
+
+ Usage: perf stat [<options>] [<command>]
+
+    -e, --event <event>   event selector. use 'perf list' to list available events
+```
+
+Issue found through fuzz testing.
+
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/coresight/asm_pure_loop.sh            | 1 +
- tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh     | 1 +
- tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh | 1 +
- tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh  | 1 +
- tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh    | 1 +
- 5 files changed, 5 insertions(+)
+ tools/perf/util/parse-events.l | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/shell/coresight/asm_pure_loop.sh b/tools/perf/tests/shell/coresight/asm_pure_loop.sh
-index 04387061e9f3..2d65defb7e0f 100755
---- a/tools/perf/tests/shell/coresight/asm_pure_loop.sh
-+++ b/tools/perf/tests/shell/coresight/asm_pure_loop.sh
-@@ -11,6 +11,7 @@ TEST="asm_pure_loop"
+diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+index 4ef4b6f171a0..f7df52b22c39 100644
+--- a/tools/perf/util/parse-events.l
++++ b/tools/perf/util/parse-events.l
+@@ -156,8 +156,8 @@ event_pmu	[^,{}/]+[/][^/]*[/][^,{}/]*
+ event		[^,{}/]+
  
- ARGS=""
- DATV="out"
-+# shellcheck disable=SC2153
- DATA="$DATD/perf-$TEST-$DATV.data"
- 
- perf record $PERFRECOPT -o "$DATA" "$BIN" $ARGS
-diff --git a/tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh b/tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh
-index c17e442ac741..ddcc9bb850f5 100755
---- a/tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh
-+++ b/tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh
-@@ -11,6 +11,7 @@ TEST="memcpy_thread"
- 
- ARGS="16 10 1"
- DATV="16k_10"
-+# shellcheck disable=SC2153
- DATA="$DATD/perf-$TEST-$DATV.data"
- 
- perf record $PERFRECOPT -o "$DATA" "$BIN" $ARGS
-diff --git a/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh b/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
-index e47c4e955d0e..2ce5e139b2fd 100755
---- a/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
-+++ b/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
-@@ -11,6 +11,7 @@ TEST="thread_loop"
- 
- ARGS="10 1"
- DATV="check-tid-10th"
-+# shellcheck disable=SC2153
- DATA="$DATD/perf-$TEST-$DATV.data"
- STDO="$DATD/perf-$TEST-$DATV.stdout"
- 
-diff --git a/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh b/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
-index 8bf94a02e384..3ad9498753d7 100755
---- a/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
-+++ b/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
-@@ -11,6 +11,7 @@ TEST="thread_loop"
- 
- ARGS="2 20"
- DATV="check-tid-2th"
-+# shellcheck disable=SC2153
- DATA="$DATD/perf-$TEST-$DATV.data"
- STDO="$DATD/perf-$TEST-$DATV.stdout"
- 
-diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh b/tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
-index 0dc9ef424233..4fbb4a29aad3 100755
---- a/tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
-+++ b/tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
-@@ -11,6 +11,7 @@ TEST="unroll_loop_thread"
- 
- ARGS="10"
- DATV="10"
-+# shellcheck disable=SC2153
- DATA="$DATD/perf-$TEST-$DATV.data"
- 
- perf record $PERFRECOPT -o "$DATA" "$BIN" $ARGS
+ num_dec		[0-9]+
+-num_hex		0x[a-fA-F0-9]+
+-num_raw_hex	[a-fA-F0-9]+
++num_hex		0x[a-fA-F0-9]{1,16}
++num_raw_hex	[a-fA-F0-9]{1,16}
+ name		[a-zA-Z_*?\[\]][a-zA-Z0-9_*?.\[\]!\-]*
+ name_tag	[\'][a-zA-Z_*?\[\]][a-zA-Z0-9_*?\-,\.\[\]:=]*[\']
+ name_minus	[a-zA-Z_*?][a-zA-Z0-9\-_*?.:]*
 -- 
-2.31.1
+2.42.0.283.g2d96d420d3-goog
 
