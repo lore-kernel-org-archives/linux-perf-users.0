@@ -2,210 +2,170 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01291EC873A
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Sep 2023 16:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECBAEC8738
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Sep 2023 16:12:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235752AbjIGQGk (ORCPT
+        id S233336AbjIGQMX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Sep 2023 12:06:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42220 "EHLO
+        Thu, 7 Sep 2023 12:12:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232297AbjIGQGV (ORCPT
+        with ESMTP id S236517AbjIGQLy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Sep 2023 12:06:21 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 561291FED
-        for <linux-perf-users@vger.kernel.org>; Thu,  7 Sep 2023 08:57:38 -0700 (PDT)
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 387FdE0m000353;
-        Thu, 7 Sep 2023 15:56:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=3PJMAKNBMgb1JiVgtXz+Tkd9c7G31YFDAEJMC7cu55s=;
- b=MEzQ7pIZaDFzuxlea3gHl1VyhGybcjD3Owij4Zq3CJeBB0g/4qCtcnmOXsK6R1Z96PYV
- Ehzpyp6wFdqbhpI7ywLalRBdr+UBDDhkGt0oIsOCfujfxHbzJ//UvWsuIYC+0CA+bWiz
- n66rf7KUt9cB0NLZ0/2yJ/J/ZKWo7FGZ+E+6KJymUL1LKCoqF4uevNS5+L/w+6tkRnn/
- YnK3eX9Fb3WEXT/55ZmpgsEFgPLrJbyhhJi3nTlPfbd8FUTzDbhsN8DcJUgtYHrtK97m
- fMqnmY2Pc8eTcVomjbHCh1qA/Khc4/W4wwQgURMS8rM0CvbmJKzCh7LwxWjoj4tLZXFw +g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3syfcuktm9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 Sep 2023 15:56:09 +0000
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 387FddYD002008;
-        Thu, 7 Sep 2023 15:56:08 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3syfcuktm3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 Sep 2023 15:56:08 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-        by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 387DjtLE026809;
-        Thu, 7 Sep 2023 15:56:07 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3svgcnvtt0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 Sep 2023 15:56:07 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 387Fu4lT16908942
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 7 Sep 2023 15:56:04 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 92AD020043;
-        Thu,  7 Sep 2023 15:56:04 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6151D20040;
-        Thu,  7 Sep 2023 15:56:02 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.9.102])
-        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Thu,  7 Sep 2023 15:56:02 +0000 (GMT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
-Subject: Re: [PATCH V2 2/2] tools/perf/tests: Fix object code reading to skip
- address that falls out of text section
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <da3492ac-5473-f25b-f229-f213242321b1@intel.com>
-Date:   Thu, 7 Sep 2023 21:25:50 +0530
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        namhyung@kernel.org, maddy@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, linux-perf-users@vger.kernel.org,
-        Disha Goel <disgoel@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
+        Thu, 7 Sep 2023 12:11:54 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B7FF5191
+        for <linux-perf-users@vger.kernel.org>; Thu,  7 Sep 2023 09:08:49 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-529fb04a234so1561771a12.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Sep 2023 09:08:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1694102855; x=1694707655; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AlqiYu4W6Rw8b3OUfLdEXFPD32dWiZ3Dy4bMwhxUd4E=;
+        b=R5nbxaCY0U5N2JyuXc6I0PKh9fDThBO39VuHSRgw+fllMrpN2IQJViUBz4L9PffrfY
+         Knc4QLbNNePSW6LdSwv6cSQIuZd6yTtH0ixjBthF6HCW4k0fV4ak3uPLJHrhRaLXXPpW
+         zXA7KwK2AZ497J6eLOVhCslSp1IMe2P9VWGQb0ILfRp5p37yOaEQ7KoJCTNEBkbKL15U
+         zu2VWLsVQDxNv7JwfOdKZ5whhpP+GUDmqGlzaR7A7TbVsC2ff85T2LjI+Entj5tpAk7U
+         LmdlvqYKe43guk3hFDimb32od0IOnTUJIl0SVTOXO+K7MvO66toXX9q4TU4RLk8mP4t8
+         DjRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1694102855; x=1694707655;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AlqiYu4W6Rw8b3OUfLdEXFPD32dWiZ3Dy4bMwhxUd4E=;
+        b=jNU5fHNpg0KVopcvaR03KY+QGHuIlCBFTo2+7wOLVDp7EiDVqDNqAgcVgII8tUMBxB
+         F/7Z10LU+SqnZ3nkwlI0m4hzpmLDx1CI7LuFhK8rDrjWkUp0taTjFkbnb7iep3TWSKQo
+         51qaDxPRRlkZZ/2zifYWQWBEzGl/axdq3Fr5tp/KwOjtkeYvkdXl1Jtc021T6nV1XKZK
+         HUGH0hGJIBGxNi/564ocw1I4iae3JW+T/ucBDXo59fDGxJkI76Ckim0lNXzPrbn+0kUC
+         3N417n0ItqSSn/LD9yfukIxfSlfAwfX4K8CvAfggTKvnUK1eu9Fr/Y8RHbk9jh1EIPji
+         hcog==
+X-Gm-Message-State: AOJu0Yx6KFoXQYxKgivcbuceMojMkbvQzzaLtRHbqkb9mokuemZqkvQ8
+        VzX6QOATh7cO42CwwpYwC6hbvYhWkW7o+AFiSKty9abZNX1KhSD17Vf4Tg==
+X-Google-Smtp-Source: AGHT+IFZKvLvDrcUUt1AdJGgmJG9It2BwH1JwdrdkbJnayvU4ppYimD21mX/yyhLW9K0tMnO6jb+LUunyIXhKsgJQIw=
+X-Received: by 2002:a05:6512:706:b0:4f8:62a6:8b2 with SMTP id
+ b6-20020a056512070600b004f862a608b2mr4812176lfs.46.1694092023638; Thu, 07 Sep
+ 2023 06:07:03 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230907021635.1002738-1-peterlin@andestech.com> <20230907021635.1002738-3-peterlin@andestech.com>
+In-Reply-To: <20230907021635.1002738-3-peterlin@andestech.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Thu, 7 Sep 2023 18:36:52 +0530
+Message-ID: <CAAhSdy0iy_7-XaE0s97J8jUESUzV-4BMsxsJ8QFNDyHgtv63ZA@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/4] irqchip/riscv-intc: Support large non-standard
+ hwirq number
+To:     Yu Chien Peter Lin <peterlin@andestech.com>
+Cc:     linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu,
+        conor.dooley@microchip.com, atishp@atishpatra.org,
+        prabhakar.mahadev-lad.rj@bp.renesas.com, ajones@ventanamicro.com,
+        heiko@sntech.de, samuel@sholland.org, geert+renesas@glider.be,
+        n.shubin@yadro.com, dminus@andestech.com, ycliang@andestech.com,
+        tim609@andestech.com, locus84@andestech.com, dylan@andestech.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <CA07D95F-CEDF-43B2-99B5-D71262E0FC2F@linux.vnet.ibm.com>
-References: <20230817171852.55629-1-atrajeev@linux.vnet.ibm.com>
- <20230817171852.55629-2-atrajeev@linux.vnet.ibm.com>
- <da3492ac-5473-f25b-f229-f213242321b1@intel.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-X-Mailer: Apple Mail (2.3731.700.6)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Ghh8gS9syppGOoE5asJU4YMlH9SZmyUC
-X-Proofpoint-GUID: AXB6GwPEHRvRt6mAh7sBwEL4zX4HWfLU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-07_07,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 adultscore=0 clxscore=1015 phishscore=0 mlxlogscore=999
- mlxscore=0 bulkscore=0 lowpriorityscore=0 spamscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2309070138
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Thu, Sep 7, 2023 at 7:48=E2=80=AFAM Yu Chien Peter Lin
+<peterlin@andestech.com> wrote:
+>
+> Currently, the implementation of the RISC-V INTC driver uses the
+> interrupt cause as hwirq and has a limitation of supporting a
+> maximum of 64 hwirqs. However, according to the privileged spec,
+> interrupt cause >=3D 16 are defined for platform use.
+>
+> This limitation prevents us from fully utilizing the available
+> local interrupt sources. Additionally, the hwirqs used on RISC-V
+> are sparse, with only interrupt numbers 1, 5 and 9 (plus Sscofpmf
+> or T-Head's PMU irq) being currently used for supervisor mode.
+>
+> The patch switches to using irq_domain_create_tree() which
+> creates the radix tree map, allowing us to handle a larger
+> number of hwirqs.
+>
+> Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+> Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
+> Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
+>
+> ---
+> There are 3 hwirqs of local interrupt source exceed 64 defined in
+> AX45MP datasheet [1] Table 56: AX45MP-1C scause Value After Trap:
+> - 256+16 Slave port ECC error interrupt (S-mode)
+> - 256+17 Bus write transaction error interrupt (S-mode)
+> - 256+18 Performance monitor overflow interrupt(S-mode)
+>
+> [1] http://www.andestech.com/wp-content/uploads/AX45MP-1C-Rev.-5.0.0-Data=
+sheet.pdf
+> ---
+>  drivers/irqchip/irq-riscv-intc.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv=
+-intc.c
+> index 4adeee1bc391..76e1229c45de 100644
+> --- a/drivers/irqchip/irq-riscv-intc.c
+> +++ b/drivers/irqchip/irq-riscv-intc.c
+> @@ -24,8 +24,8 @@ static asmlinkage void riscv_intc_irq(struct pt_regs *r=
+egs)
+>  {
+>         unsigned long cause =3D regs->cause & ~CAUSE_IRQ_FLAG;
+>
+> -       if (unlikely(cause >=3D BITS_PER_LONG))
+> -               panic("unexpected interrupt cause");
+> +       if (!irq_find_mapping(intc_domain, cause))
+> +               panic("unexpected interrupt cause: %ld", cause);
 
+Checking irq_find_mapping() is redundant here instead check the return
+value of generic_handle_domain_irq() and print warning on error.
 
-> On 18-Aug-2023, at 12:45 PM, Adrian Hunter <adrian.hunter@intel.com> =
-wrote:
->=20
-> On 17/08/23 20:18, Athira Rajeev wrote:
->> The testcase "Object code reading" fails in somecases
->> for "fs_something" sub test as below:
->>=20
->>    Reading object code for memory address: 0xc008000007f0142c
->>    File is: /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
->>    On file address is: 0x1114cc
->>    Objdump command is: objdump -z -d --start-address=3D0x11142c =
---stop-address=3D0x1114ac /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
->>    objdump read too few bytes: 128
->>    test child finished with -1
->>=20
->> This can alo be reproduced when running perf record with
->> workload that exercises fs_something() code. In the test
->> setup, this is exercising xfs code since root is xfs.
->>=20
->>    # perf record ./a.out
->>    # perf report -v |grep "xfs.ko"
->>      0.76% a.out /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko  =
-0xc008000007de5efc B [k] xlog_cil_commit
->>      0.74% a.out  /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko  =
-0xc008000007d5ae18 B [k] xfs_btree_key_offset
->>      0.74% a.out  /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko  =
-0xc008000007e11fd4 B [k] 0x0000000000112074
->>=20
->> Here addr "0xc008000007e11fd4" is not resolved. since this is a
->> kernel module, its offset is from the DSO. Xfs module is loaded
->> at 0xc008000007d00000
->>=20
->>   # cat /proc/modules | grep xfs
->>    xfs 2228224 3 - Live 0xc008000007d00000
->>=20
->> And size is 0x220000. So its loaded between  0xc008000007d00000
->> and 0xc008000007f20000. =46rom objdump, text section is:
->>    text 0010f7bc  0000000000000000 0000000000000000 000000a0 2**4
->>=20
->> Hence perf captured ip maps to 0x112074 which is:
->> ( ip - start of module ) + a0
->>=20
->> This offset 0x112074 falls out .text section which is up to 0x10f7bc
->> In this case for module, the address 0xc008000007e11fd4 is pointing
->> to stub instructions. This address range represents the module stubs
->> which is allocated on module load and hence is not part of DSO =
-offset.
->>=20
->> To address this issue in "object code reading", skip the sample if
->> address falls out of text section and is within the module end.
->> Use the "text_end" member of "struct dso" to do this check.
->>=20
->> To address this issue in "perf report", exploring an option of
->> having stubs range as part of the /proc/kallsyms, so that perf
->> report can resolve addresses in stubs range
->>=20
->> However this patch uses text_end to skip the stub range for
->> Object code reading testcase.
->>=20
->> Reported-by: Disha Goel <disgoel@linux.ibm.com>
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> ---
->> tools/perf/tests/code-reading.c | 8 ++++++++
->> 1 file changed, 8 insertions(+)
->>=20
->> diff --git a/tools/perf/tests/code-reading.c =
-b/tools/perf/tests/code-reading.c
->> index ed3815163d1b..911f8fa13677 100644
->> --- a/tools/perf/tests/code-reading.c
->> +++ b/tools/perf/tests/code-reading.c
->> @@ -269,6 +269,14 @@ static int read_object_code(u64 addr, size_t =
-len, u8 cpumode,
->> if (addr + len > map__end(al.map))
->> len =3D map__end(al.map) - addr;
->>=20
->> + /* Check if the ip offset falls in stubs sections for kernel =
-modules */
->=20
-> What arches have stubs - maybe expand the comment a bit e.g.
-> "Some architectures (such as blah blah) have stubs (trampolines) in =
-kernel modules to manage long jumps=E2=80=9D
-Ok
->=20
->> + if (strstr(dso->long_name, ".ko")) {
->> + if ((al.addr < map__end(al.map)) && (al.addr > dso->text_end)) {
->=20
-> Why check al.addr < map__end(al.map) ?  addr must be on the map =
-mustn't it?
+>
+>         generic_handle_domain_irq(intc_domain, cause);
+>  }
+> @@ -117,8 +117,8 @@ static int __init riscv_intc_init_common(struct fwnod=
+e_handle *fn)
+>  {
+>         int rc;
+>
+> -       intc_domain =3D irq_domain_create_linear(fn, BITS_PER_LONG,
+> -                                              &riscv_intc_domain_ops, NU=
+LL);
+> +       intc_domain =3D irq_domain_create_tree(fn, &riscv_intc_domain_ops=
+,
+> +                                            NULL);
 
-Yes, you are right.=20
->=20
-> Also please remove redundant parentheses.
->=20
->> + pr_debug(" - skipping\n");
->=20
-> "skipping" but why.  Maybe "skipping module address after text end"
+This is incomplete because you have additional customization on-top-of
+vanilla RISC-V INTC.
 
-Sure, will post V2 with these changes
+I suggest to do the following:
+1) Define an enum of types of INTC (such as generic, andestech, etc)
+2) Define new compatible string "andestec,cpu-intc" for you custom INTC
+    and pass that information to riscv_intc_init_common()
+3) Extend riscv_intc_domain_map() to use custom andestech_intc_chip
+    for the custom local irqs. The andestech_intc_chip will provide andes
+    specific mask/unmask mechanism.
 
-Thanks
-Athira
->=20
->> + goto out;
->> + }
->> + }
->> +
->> /* Read the object code using perf */
->> ret_len =3D dso__data_read_offset(dso, =
-maps__machine(thread__maps(thread)),
->> al.addr, buf1, len);
+>         if (!intc_domain) {
+>                 pr_err("unable to add IRQ domain\n");
+>                 return -ENXIO;
+> @@ -132,8 +132,6 @@ static int __init riscv_intc_init_common(struct fwnod=
+e_handle *fn)
+>
+>         riscv_set_intc_hwnode_fn(riscv_intc_hwnode);
+>
+> -       pr_info("%d local interrupts mapped\n", BITS_PER_LONG);
+> -
+>         return 0;
+>  }
+>
+> --
+> 2.34.1
+>
 
-
+Regards,
+Anup
