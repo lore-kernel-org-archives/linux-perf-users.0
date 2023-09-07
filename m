@@ -2,119 +2,125 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D154AEC875E
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Sep 2023 23:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8DAEC875F
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Sep 2023 23:50:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229481AbjIGXL6 (ORCPT
+        id S232029AbjIGXul (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Sep 2023 19:11:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44974 "EHLO
+        Thu, 7 Sep 2023 19:50:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235054AbjIGXL5 (ORCPT
+        with ESMTP id S230033AbjIGXul (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Sep 2023 19:11:57 -0400
+        Thu, 7 Sep 2023 19:50:41 -0400
 Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACCF21BDB
-        for <linux-perf-users@vger.kernel.org>; Thu,  7 Sep 2023 16:11:42 -0700 (PDT)
-Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-414c54b2551so76921cf.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 Sep 2023 16:11:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42C901BCB
+        for <linux-perf-users@vger.kernel.org>; Thu,  7 Sep 2023 16:50:37 -0700 (PDT)
+Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-414dff0a8ecso148431cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Sep 2023 16:50:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1694128302; x=1694733102; darn=vger.kernel.org;
+        d=google.com; s=20221208; t=1694130636; x=1694735436; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8iOwyz8CzNzxeEbnqXiR5e1k7kQJndb/v6qGP/KlU5c=;
-        b=PGwst7yZ+9YC15ETlTIunfT/AXA0zYfCs9SVfgHQ/UTp//jzihb+Hr6lmoYfzyzqzv
-         wbfRHdQ0pOHXY9TCXLXIf5w70dKRsDtUmiYyQjO0guHccSEQqrrlz7zF1cIjvnKT6WJ9
-         H3F760stkcH+9mZncG9a122PjBIYRSAOhoHX1VDp6G/xjLfd763UJq3i0q9Dp8nS2jb5
-         yl+CscTLEj4OeQIihOA8Dy0QGLp13zgTzQmhhQ6/fY+u5kyfCusIoEeN7qXssO3iXheh
-         E2qUWrVf51yuHLLz62VTZKC+ykldjHFpBk2m8vXMohgNr+GHKR/jpHOO0+a2lKCYhydT
-         UyTw==
+        bh=lI7lyyNrHMidQz42MaI4SQgbCij4QziFNgwQ58DIUNU=;
+        b=gKN929xihfNNAn3Gz7vOtDvIr/MrCtT8/uroIfTL/7zmpt8v7SfySDl1qTeKHAco98
+         DVPDrc051/S+v50KdjoTesvIUHu8jb+Dqi29BXUb8Ma0QM6pH5+naPzvFy/GE+inOhvW
+         Rui7KsHwq2CsQMDZ3ghQFFjnOjqHtcpAHhLB/XcKAYn8HeBMegx4AazPfqUNzvVNkjqH
+         7eW65mt4BhlvJv4HwajvioLbsu7Si1/WyK74LtH0qQrOA6sdgdxvMoxS2sy4zoEWUm45
+         NTyf2wsAguynohQ9/96hqfaITaPVFv04L7+1xK+RreQ4HigIlUUnkh4jbBZJnwHcEjxU
+         zfuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694128302; x=1694733102;
+        d=1e100.net; s=20230601; t=1694130636; x=1694735436;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8iOwyz8CzNzxeEbnqXiR5e1k7kQJndb/v6qGP/KlU5c=;
-        b=PeF0bXkh/Fgeu5ELzC64n/gFniOAiuxiPFyP6lWt0VDnaqJxR6uRE1REbPppNaPjj2
-         QomF3RVDrxdfXvFIrM/mLNuUTuWpphZXsj0SvBLuJmmxN3K/AsSaZGZ/cNi4uajcuWAC
-         7pLvUTBgzYnpBa4wVIZmq2soycO2zCnIWSL7tMFrFzcXdwviM4N7PzovNmA760WL7xCe
-         APi7BPu5psERN0iTMEVZXnJqt2osWTrLjajyl94OMrs+U2ldB/lWC2zNZ1lbaAQk4o9q
-         Q3Fq/rg1a1k+Kgw4xYOOwVD+B8CrJov5hFwvjuJr2W5GVehm9YGdIpyMzd9EXp6qz+mq
-         SSnQ==
-X-Gm-Message-State: AOJu0YyF4VCWrkJ5T9M+CXd6nfB2e0cT9yvvCX5fG48ijM6jVRYTNC+5
-        wHCuEudeacW0ChOJY9zF3jBL0Uwj4nkGwGBacqs9yjZOhU3KAtgNDTgDGw==
-X-Google-Smtp-Source: AGHT+IHqjOGGOf03SUyJXcNjq12YhvYgwirQdUZbUw/yPbr8VokjKW/iOtKeXXObOST3yIVdnPwATDNCyhEvKF+hOeM=
-X-Received: by 2002:ac8:7f44:0:b0:3de:1aaa:42f5 with SMTP id
- g4-20020ac87f44000000b003de1aaa42f5mr60853qtk.15.1694128301642; Thu, 07 Sep
- 2023 16:11:41 -0700 (PDT)
+        bh=lI7lyyNrHMidQz42MaI4SQgbCij4QziFNgwQ58DIUNU=;
+        b=IbQjcGkDHmFA3CqDhxq1mGX7rtt52XQKKYDAIO7i1vMWaqmiycfJyasXhud1Zimh0u
+         59QhEOISb3DKVaOR9P7OvbrjwnKFA6vRKt32s+xcWYhku3g+BR16DsZqYqMmH7DEkbaz
+         ck7py0QGIWZXEbuOE/XUAbN5qjJ3ZCvu42kbW3Rim77P2e1wpszJds6oPzhqKRnvxx7P
+         Ni6ESlfCZ1NsTGEYXK/coU27MlXWb7Qkjkuabks3Bp4UxCBXymRnPyrNXoT6RnIWYB8k
+         0TCOA6xEwoWPWoKsgO5EgPgjhd/johZum2OzAligyXMoTHQC7rEPOkI9Hq34m0ukz/Vy
+         noRQ==
+X-Gm-Message-State: AOJu0YzVak5HLi37ZmPiSvmftGBWD51K67z0s8atsR1WLuJ+bFw0UuPp
+        I0/mvkYlv6njOakJ9LYK64JlRRRLHKvv3gpfcoO36Q==
+X-Google-Smtp-Source: AGHT+IFIrqZFQD5DkBaHyX2450phYhAeUfIeuOhvTy5PjEIztUJEcgP8OQU4IbkYjWqd9kpOx3DBHv79ZeEZsdcTcVM=
+X-Received: by 2002:a05:622a:1893:b0:40f:c60d:1c79 with SMTP id
+ v19-20020a05622a189300b0040fc60d1c79mr113357qtc.28.1694130636327; Thu, 07 Sep
+ 2023 16:50:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230907171944.36953-1-atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20230907171944.36953-1-atrajeev@linux.vnet.ibm.com>
+References: <20230907171540.36736-1-atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20230907171540.36736-1-atrajeev@linux.vnet.ibm.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 7 Sep 2023 16:11:29 -0700
-Message-ID: <CAP-5=fXSAzpdf0dH4kdPKRVjonC2wBF2oD56_=2NE0iBs96EOA@mail.gmail.com>
-Subject: Re: [PATCH] tools/perf: Add includes for detected configs in Makefile.perf
+Date:   Thu, 7 Sep 2023 16:50:23 -0700
+Message-ID: <CAP-5=fXVSh0q6cQwQdGR-jxTTec_s43geZ02gEekrFbSvCKnZw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Fix for shellcheck issues with version "0.6"
 To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 Cc:     acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
         namhyung@kernel.org, linux-perf-users@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+        root <root@ltcden13-lp4.aus.stglabs.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 7, 2023 at 10:19=E2=80=AFAM Athira Rajeev
+On Thu, Sep 7, 2023 at 10:17=E2=80=AFAM Athira Rajeev
 <atrajeev@linux.vnet.ibm.com> wrote:
 >
-> Makefile.perf uses "CONFIG_*" checks in the code. Example the config
-> for libtraceevent is used to set PYTHON_EXT_SRCS
+> From: root <root@ltcden13-lp4.aus.stglabs.ibm.com>
 >
->         ifeq ($(CONFIG_LIBTRACEEVENT),y)
->           PYTHON_EXT_SRCS :=3D $(shell grep -v ^\# util/python-ext-source=
-s)
->         else
->           PYTHON_EXT_SRCS :=3D $(shell grep -v '^\#\|util/trace-event.c' =
-util/python-ext-sources)
->         endif
+> shellcheck was run on perf tool shell scripts s a pre-requisite
+> to include a build option for shellcheck discussed here:
+> https://www.spinics.net/lists/linux-perf-users/msg25553.html
 >
-> But this is not picking the value for CONFIG_LIBTRACEEVENT that is
-> set using the settings in Makefile.config. Include the file
-> ".config-detected" so that make will use the system detected
-> configuration in the CONFIG checks. This will fix isues that
-> could arise when other "CONFIG_*" checks are added to Makefile.perf
-> in future as well.
+> And fixes were added for the coding/formatting issues in
+> two patchsets:
+> https://lore.kernel.org/linux-perf-users/20230613164145.50488-1-atrajeev@=
+linux.vnet.ibm.com/
+> https://lore.kernel.org/linux-perf-users/20230709182800.53002-1-atrajeev@=
+linux.vnet.ibm.com/
 >
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
->  tools/perf/Makefile.perf | 3 +++
->  1 file changed, 3 insertions(+)
+> Three additional issues are observed with shellcheck "0.6" and
+> this patchset covers those. With this patchset,
 >
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 37af6df7b978..6764b0e156f4 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -351,6 +351,9 @@ export PYTHON_EXTBUILD_LIB PYTHON_EXTBUILD_TMP
+> # for F in $(find tests/shell/ -perm -o=3Dx -name '*.sh'); do shellcheck =
+-S warning $F; done
+> # echo $?
+> 0
 >
->  python-clean :=3D $(call QUIET_CLEAN, python) $(RM) -r $(PYTHON_EXTBUILD=
-) $(OUTPUT)python/perf*.so
->
-> +# Use the detected configuration
-> +include .config-detected
+> Athira Rajeev (3):
+>   tests/shell: Fix shellcheck SC1090 to handle the location of sourced
+>     files
+>   tests/shell: Fix shellcheck issues in tests/shell/stat+shadow_stat.sh
+>     tetscase
+>   tests/shell: Fix shellcheck warnings for SC2153 in multiple scripts
 
-Good catch! I think it should look like:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/build/Makefile.build?h=3Dperf-tools-next#n40
+Series:
+Tested-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> +
->  ifeq ($(CONFIG_LIBTRACEEVENT),y)
->    PYTHON_EXT_SRCS :=3D $(shell grep -v ^\# util/python-ext-sources)
->  else
+>  tools/perf/tests/shell/coresight/asm_pure_loop.sh            | 4 ++++
+>  tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh     | 4 ++++
+>  tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh | 4 ++++
+>  tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh  | 4 ++++
+>  tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh    | 4 ++++
+>  tools/perf/tests/shell/probe_vfs_getname.sh                  | 2 ++
+>  tools/perf/tests/shell/record+probe_libc_inet_pton.sh        | 2 ++
+>  tools/perf/tests/shell/record+script_probe_vfs_getname.sh    | 2 ++
+>  tools/perf/tests/shell/record.sh                             | 1 +
+>  tools/perf/tests/shell/stat+csv_output.sh                    | 1 +
+>  tools/perf/tests/shell/stat+csv_summary.sh                   | 4 ++--
+>  tools/perf/tests/shell/stat+shadow_stat.sh                   | 4 ++--
+>  tools/perf/tests/shell/stat+std_output.sh                    | 1 +
+>  tools/perf/tests/shell/test_intel_pt.sh                      | 1 +
+>  tools/perf/tests/shell/trace+probe_vfs_getname.sh            | 1 +
+>  15 files changed, 35 insertions(+), 4 deletions(-)
+>
 > --
 > 2.31.1
 >
