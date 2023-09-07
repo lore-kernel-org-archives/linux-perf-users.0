@@ -2,171 +2,334 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F146EE14C3
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Sep 2023 02:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F9AEE14C3
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Sep 2023 02:49:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237152AbjIGCm3 (ORCPT
+        id S234672AbjIGCtQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Sep 2023 22:42:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51020 "EHLO
+        Wed, 6 Sep 2023 22:49:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229507AbjIGCm3 (ORCPT
+        with ESMTP id S232160AbjIGCtP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Sep 2023 22:42:29 -0400
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3391A1997;
-        Wed,  6 Sep 2023 19:42:24 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R761e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VrVXchl_1694054538;
-Received: from 30.221.145.55(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VrVXchl_1694054538)
-          by smtp.aliyun-inc.com;
-          Thu, 07 Sep 2023 10:42:20 +0800
-Message-ID: <3563c30f-eaa1-8bb4-fa6c-2f41c2b30f7d@linux.alibaba.com>
-Date:   Thu, 7 Sep 2023 10:42:17 +0800
+        Wed, 6 Sep 2023 22:49:15 -0400
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1374F1BE4
+        for <linux-perf-users@vger.kernel.org>; Wed,  6 Sep 2023 19:48:38 -0700 (PDT)
+Received: by mail-qt1-x82a.google.com with SMTP id d75a77b69052e-4121788397fso8061071cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Sep 2023 19:48:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1694054917; x=1694659717; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mlwEYNiTM8Cohgu2gjOqDt0be1L8BydneonWvv+KYiQ=;
+        b=CXGvr3bn++ZZJ2NA7L4GstdoVuaZHDl+LQFvFY3/p1vYwN1IeMhV/ZAn0wUzNfUSU6
+         V7hWOJIzCyEuixmaifSwAEg46htBbdEvoVHmFpqCEoUZ3NdqREapwMLjfloFXf3ewHZ2
+         IA4X1XBNor3wRif9Gz82leNCjFandc78a94gG/QL6jly285cDGKIIn6iYYiNRS7QutPk
+         H6jd05DYsVg5CuByY7QlVn0ElEbmMA7/l/xsI4djJakDDhXG+cGSiqlGw8K03gESI+KU
+         P1jQIKRJoiYvEj4B2mxwY4o5WJqkSRvJ/6ZfbULYqV5Xc8OtRYFN4qM5KBaDQKCHliTi
+         Pt8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1694054917; x=1694659717;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mlwEYNiTM8Cohgu2gjOqDt0be1L8BydneonWvv+KYiQ=;
+        b=f2svOcEP5fBZzxhwDzR9buZfwP5T5i6zeXlnxIqMDKWoai4++hw8+VQqOVBiivAlOl
+         9BylcNEzHLsyttlR/XLPK4kpqkOrr02RwM3nVoR68C+3Ks/xbR8wEnJt3DSjwwxdjdzc
+         nzuA97jhnRu0UKa5YFcoXYqcxC9NbiBTjACHlFYEQDT9CRtoHgWo29/YZyZVZ4dNHDyK
+         znpPfrwysYKhuevUNRAtVLo38BJODHFEhoXCU00sfuAYYAtAUwnOpjiPMHxesJ183MWm
+         H3lhFE+TW1e+i6M7XyIMN4mpVznw419M8fNR4nTEvYIEuXNUgelZQWfJtvjNwi6C+tby
+         gG9Q==
+X-Gm-Message-State: AOJu0YyRu4LLfgTBKu8iXDTVU5j1O19O+tYrOP/Uf3nqiTI2MPZLqJVn
+        6ik6NtIZaCzKSDsenFx54gtuAw==
+X-Google-Smtp-Source: AGHT+IFxlfKMLrAkviW1qIhzefmuqsCtQfSLTGBzsN3tPpVhNGe/PhSlkWguR9Zyl6I65Vz43TAi1A==
+X-Received: by 2002:a05:622a:1889:b0:410:a562:b420 with SMTP id v9-20020a05622a188900b00410a562b420mr2039164qtc.4.1694054917081;
+        Wed, 06 Sep 2023 19:48:37 -0700 (PDT)
+Received: from ?IPV6:2600:1700:2000:b002:152:b734:8158:65af? ([2600:1700:2000:b002:152:b734:8158:65af])
+        by smtp.gmail.com with ESMTPSA id jd19-20020a05622a719300b00400a99b8b38sm5814949qtb.78.2023.09.06.19.48.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Sep 2023 19:48:36 -0700 (PDT)
+Message-ID: <82a82449-3af0-4756-881a-b31b6b187e6c@sifive.com>
+Date:   Wed, 6 Sep 2023 21:48:35 -0500
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.14.0
-Subject: Re: [PATCH v7 0/8] perf vendor events: Add JSON metrics for Arm CMN
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>
-References: <1692606977-92009-1-git-send-email-renyu.zj@linux.alibaba.com>
- <ZPijMsM7GsHYtPse@kernel.org>
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <ZPijMsM7GsHYtPse@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] riscv: errata: Add Andes PMU errata
+To:     Yu Chien Peter Lin <peterlin@andestech.com>
+Cc:     ajones@ventanamicro.com, heiko@sntech.de, samuel@sholland.org,
+        geert+renesas@glider.be, n.shubin@yadro.com, dminus@andestech.com,
+        ycliang@andestech.com, tim609@andestech.com, locus84@andestech.com,
+        dylan@andestech.com, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu,
+        conor.dooley@microchip.com, atishp@atishpatra.org,
+        anup@brainfault.org, prabhakar.mahadev-lad.rj@bp.renesas.com
+References: <20230907021635.1002738-1-peterlin@andestech.com>
+ <20230907021635.1002738-4-peterlin@andestech.com>
+Content-Language: en-US
+From:   Samuel Holland <samuel.holland@sifive.com>
+In-Reply-To: <20230907021635.1002738-4-peterlin@andestech.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-在 2023/9/7 上午12:05, Arnaldo Carvalho de Melo 写道:
-> Em Mon, Aug 21, 2023 at 04:36:09PM +0800, Jing Zhang escreveu:
->> Changes since v6:
->> - Supplement the omitted EventCode;
->> - Keep the original way of ConfigCode;
->> - Supplement the test in empty-pmu-events.c, so that the pmu event test
->>   can succeed when build with NO_JEVENT=1.
->> - Link: https://lore.kernel.org/all/1691394685-61240-1-git-send-email-renyu.zj@linux.alibaba.com/
+On 2023-09-06 9:16 PM, Yu Chien Peter Lin wrote:
+> Before the ratification of Sscofpmf, the Andes PMU extension
+> implements the same mechanism and is compatible with existing
+> SBI PMU driver of perf to support event sampling and mode
+> filtering with programmable hardware performance counters.
 > 
-> Waiting for a v8, from what I saw there are several more review comments
-> to address, right?
+> This patch adds PMU support for Andes 45-series CPUs by
+> introducing a CPU errata.
 > 
-
-Yes, I will send v8 soon.
-
-Thanks,
-Jing
-
-> - Arnaldo
+> Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+> Signed-off-by: Locus Wei-Han Chen <locus84@andestech.com>
+> Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
+> Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
+> ---
+>  arch/riscv/Kconfig.errata            | 13 ++++++++
+>  arch/riscv/errata/andes/errata.c     | 45 +++++++++++++++++++++++++++-
+>  arch/riscv/include/asm/errata_list.h | 43 ++++++++++++++++++++++++--
+>  drivers/perf/riscv_pmu_sbi.c         | 20 +++++++++----
+>  4 files changed, 111 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/riscv/Kconfig.errata b/arch/riscv/Kconfig.errata
+> index 92c779764b27..a342b209c169 100644
+> --- a/arch/riscv/Kconfig.errata
+> +++ b/arch/riscv/Kconfig.errata
+> @@ -21,6 +21,19 @@ config ERRATA_ANDES_CMO
 >  
->> Jing Zhang (8):
->>   perf pmu: "Compat" supports matching multiple identifiers
->>   perf metric: "Compat" supports matching multiple identifiers
->>   perf vendor events: Supplement the omitted EventCode
->>   perf jevents: Support more event fields
->>   perf test: Make matching_pmu effective
->>   perf test: Add pmu-event test for "Compat" and new event_field.
->>   perf jevents: Add support for Arm CMN PMU aliasing
->>   perf vendor events: Add JSON metrics for Arm CMN
->>
->>  .../pmu-events/arch/arm64/arm/cmn/sys/cmn.json     | 266 +++++++++++++++++++++
->>  .../pmu-events/arch/arm64/arm/cmn/sys/metric.json  |  74 ++++++
->>  .../pmu-events/arch/test/test_soc/sys/uncore.json  |   8 +
->>  .../pmu-events/arch/x86/alderlake/pipeline.json    |   9 +
->>  .../pmu-events/arch/x86/alderlaken/pipeline.json   |   3 +
->>  .../pmu-events/arch/x86/broadwell/pipeline.json    |   4 +
->>  .../pmu-events/arch/x86/broadwellde/pipeline.json  |   4 +
->>  .../arch/x86/broadwellde/uncore-cache.json         |   2 +
->>  .../arch/x86/broadwellde/uncore-interconnect.json  |   1 +
->>  .../arch/x86/broadwellde/uncore-memory.json        |   1 +
->>  .../arch/x86/broadwellde/uncore-power.json         |   1 +
->>  .../pmu-events/arch/x86/broadwellx/pipeline.json   |   4 +
->>  .../arch/x86/broadwellx/uncore-cache.json          |   2 +
->>  .../arch/x86/broadwellx/uncore-interconnect.json   |  13 +
->>  .../arch/x86/broadwellx/uncore-memory.json         |   2 +
->>  .../arch/x86/broadwellx/uncore-power.json          |   1 +
->>  .../pmu-events/arch/x86/cascadelakex/pipeline.json |   4 +
->>  .../arch/x86/cascadelakex/uncore-cache.json        |   2 +
->>  .../arch/x86/cascadelakex/uncore-interconnect.json |   1 +
->>  .../arch/x86/cascadelakex/uncore-io.json           |   1 +
->>  .../arch/x86/cascadelakex/uncore-memory.json       |   1 +
->>  .../arch/x86/cascadelakex/uncore-power.json        |   1 +
->>  .../pmu-events/arch/x86/elkhartlake/pipeline.json  |   2 +
->>  .../pmu-events/arch/x86/goldmont/pipeline.json     |   3 +
->>  .../pmu-events/arch/x86/goldmontplus/pipeline.json |   3 +
->>  .../pmu-events/arch/x86/grandridge/pipeline.json   |   3 +
->>  .../arch/x86/graniterapids/pipeline.json           |   4 +
->>  .../perf/pmu-events/arch/x86/haswell/pipeline.json |   4 +
->>  .../pmu-events/arch/x86/haswellx/pipeline.json     |   4 +
->>  .../pmu-events/arch/x86/haswellx/uncore-cache.json |   2 +
->>  .../arch/x86/haswellx/uncore-interconnect.json     |  14 ++
->>  .../arch/x86/haswellx/uncore-memory.json           |   2 +
->>  .../pmu-events/arch/x86/haswellx/uncore-power.json |   1 +
->>  .../perf/pmu-events/arch/x86/icelake/pipeline.json |   4 +
->>  .../pmu-events/arch/x86/icelakex/pipeline.json     |   4 +
->>  .../pmu-events/arch/x86/icelakex/uncore-cache.json |   1 +
->>  .../arch/x86/icelakex/uncore-interconnect.json     |   1 +
->>  .../arch/x86/icelakex/uncore-memory.json           |   1 +
->>  .../pmu-events/arch/x86/icelakex/uncore-power.json |   1 +
->>  .../pmu-events/arch/x86/ivybridge/pipeline.json    |   3 +
->>  .../perf/pmu-events/arch/x86/ivytown/pipeline.json |   4 +
->>  .../pmu-events/arch/x86/ivytown/uncore-cache.json  |   2 +
->>  .../arch/x86/ivytown/uncore-interconnect.json      |  11 +
->>  .../pmu-events/arch/x86/ivytown/uncore-memory.json |   1 +
->>  .../pmu-events/arch/x86/ivytown/uncore-power.json  |   1 +
->>  .../pmu-events/arch/x86/jaketown/pipeline.json     |   4 +
->>  .../pmu-events/arch/x86/jaketown/uncore-cache.json |   2 +
->>  .../arch/x86/jaketown/uncore-interconnect.json     |  12 +
->>  .../arch/x86/jaketown/uncore-memory.json           |   1 +
->>  .../pmu-events/arch/x86/jaketown/uncore-power.json |   2 +
->>  .../arch/x86/knightslanding/pipeline.json          |   3 +
->>  .../arch/x86/knightslanding/uncore-cache.json      |   1 +
->>  .../arch/x86/knightslanding/uncore-memory.json     |   4 +
->>  .../pmu-events/arch/x86/meteorlake/pipeline.json   |   8 +
->>  .../pmu-events/arch/x86/sandybridge/pipeline.json  |   4 +
->>  .../arch/x86/sapphirerapids/pipeline.json          |   5 +
->>  .../pmu-events/arch/x86/sierraforest/pipeline.json |   4 +
->>  .../pmu-events/arch/x86/silvermont/pipeline.json   |   3 +
->>  .../perf/pmu-events/arch/x86/skylake/pipeline.json |   4 +
->>  .../pmu-events/arch/x86/skylakex/pipeline.json     |   4 +
->>  .../pmu-events/arch/x86/skylakex/uncore-cache.json |   2 +
->>  .../arch/x86/skylakex/uncore-interconnect.json     |   1 +
->>  .../pmu-events/arch/x86/skylakex/uncore-io.json    |   1 +
->>  .../arch/x86/skylakex/uncore-memory.json           |   1 +
->>  .../pmu-events/arch/x86/skylakex/uncore-power.json |   1 +
->>  .../pmu-events/arch/x86/snowridgex/pipeline.json   |   2 +
->>  .../arch/x86/snowridgex/uncore-cache.json          |   1 +
->>  .../arch/x86/snowridgex/uncore-interconnect.json   |   1 +
->>  .../arch/x86/snowridgex/uncore-memory.json         |   1 +
->>  .../arch/x86/snowridgex/uncore-power.json          |   1 +
->>  .../pmu-events/arch/x86/tigerlake/pipeline.json    |   5 +
->>  tools/perf/pmu-events/empty-pmu-events.c           |   8 +
->>  tools/perf/pmu-events/jevents.py                   |  21 +-
->>  tools/perf/tests/pmu-events.c                      |  64 ++++-
->>  tools/perf/util/metricgroup.c                      |   2 +-
->>  tools/perf/util/pmu.c                              |  33 ++-
->>  tools/perf/util/pmu.h                              |   1 +
->>  77 files changed, 679 insertions(+), 9 deletions(-)
->>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
->>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json
->>
->> -- 
->> 1.8.3.1
->>
-> 
+>  	  If you don't know what to do here, say "Y".
+>  
+> +config ERRATA_ANDES_PMU
+> +	bool "Apply Andes PMU errata"
+> +	depends on ERRATA_ANDES && RISCV_PMU_SBI
+> +	default y
+> +	help
+> +	  The Andes 45-series cores implement a PMU overflow extension
+> +	  very similar to the core SSCOFPMF extension.
+> +
+> +	  This will apply the overflow errata to handle the non-standard
+> +	  behaviour via the regular SBI PMU driver and interface.
+> +
+> +	  If you don't know what to do here, say "Y".
+> +
+>  config ERRATA_SIFIVE
+>  	bool "SiFive errata"
+>  	depends on RISCV_ALTERNATIVE
+> diff --git a/arch/riscv/errata/andes/errata.c b/arch/riscv/errata/andes/errata.c
+> index d2e1abcac967..19256691f1ba 100644
+> --- a/arch/riscv/errata/andes/errata.c
+> +++ b/arch/riscv/errata/andes/errata.c
+> @@ -56,11 +56,54 @@ static bool errata_probe_iocp(unsigned int stage, unsigned long arch_id, unsigne
+>  	return true;
+>  }
+>  
+> +static bool errata_probe_pmu(unsigned int stage,
+> +			     unsigned long arch_id, unsigned long impid)
+> +{
+> +	if (!IS_ENABLED(CONFIG_ERRATA_ANDES_PMU))
+> +		return false;
+> +
+> +	if ((arch_id & 0xff) != 0x45)
+> +		return false;
+> +
+> +	if (stage == RISCV_ALTERNATIVES_EARLY_BOOT)
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+> +static u32 andes_errata_probe(unsigned int stage,
+> +			      unsigned long archid, unsigned long impid)
+> +{
+> +	u32 cpu_req_errata = 0;
+> +
+> +	if (errata_probe_pmu(stage, archid, impid))
+> +		cpu_req_errata |= BIT(ERRATA_ANDES_PMU);
+> +
+> +	return cpu_req_errata;
+> +}
+> +
+>  void __init_or_module andes_errata_patch_func(struct alt_entry *begin, struct alt_entry *end,
+>  					      unsigned long archid, unsigned long impid,
+>  					      unsigned int stage)
+>  {
+> +	struct alt_entry *alt;
+> +	u32 cpu_req_errata = andes_errata_probe(stage, archid, impid);
+> +	u32 tmp;
+> +
+>  	errata_probe_iocp(stage, archid, impid);
+>  
+> -	/* we have nothing to patch here ATM so just return back */
+> +	for (alt = begin; alt < end; alt++) {
+> +		if (alt->vendor_id != ANDES_VENDOR_ID)
+> +			continue;
+> +		if (alt->patch_id >= ERRATA_ANDES_NUMBER)
+> +			continue;
+> +
+> +		tmp = (1U << alt->patch_id);
+> +		if (cpu_req_errata & tmp) {
+> +			mutex_lock(&text_mutex);
+> +			patch_text_nosync(ALT_OLD_PTR(alt), ALT_ALT_PTR(alt),
+> +					  alt->alt_len);
+> +			mutex_unlock(&text_mutex);
+> +		}
+> +	}
+>  }
+> diff --git a/arch/riscv/include/asm/errata_list.h b/arch/riscv/include/asm/errata_list.h
+> index 56ab40e64092..bb4c276e2c7f 100644
+> --- a/arch/riscv/include/asm/errata_list.h
+> +++ b/arch/riscv/include/asm/errata_list.h
+> @@ -13,7 +13,8 @@
+>  
+>  #ifdef CONFIG_ERRATA_ANDES
+>  #define ERRATA_ANDES_NO_IOCP 0
+> -#define ERRATA_ANDES_NUMBER 1
+> +#define ERRATA_ANDES_PMU 1
+> +#define ERRATA_ANDES_NUMBER 2
+>  #endif
+>  
+>  #ifdef CONFIG_ERRATA_SIFIVE
+> @@ -150,15 +151,51 @@ asm volatile(ALTERNATIVE_2(						\
+>  #define THEAD_C9XX_RV_IRQ_PMU			17
+>  #define THEAD_C9XX_CSR_SCOUNTEROF		0x5c5
+>  
+> +#define ANDES_RV_IRQ_PMU			18
+> +#define ANDES_SLI_CAUSE_BASE			256
+> +#define ANDES_CSR_SCOUNTEROF			0x9d4
+> +#define ANDES_CSR_SLIE				0x9c4
+> +#define ANDES_CSR_SLIP				0x9c5
+> +
+>  #define ALT_SBI_PMU_OVERFLOW(__ovl)					\
+> -asm volatile(ALTERNATIVE(						\
+> +asm volatile(ALTERNATIVE_2(						\
+>  	"csrr %0, " __stringify(CSR_SSCOUNTOVF),			\
+>  	"csrr %0, " __stringify(THEAD_C9XX_CSR_SCOUNTEROF),		\
+>  		THEAD_VENDOR_ID, ERRATA_THEAD_PMU,			\
+> -		CONFIG_ERRATA_THEAD_PMU)				\
+> +		CONFIG_ERRATA_THEAD_PMU,				\
+> +	"csrr %0, " __stringify(ANDES_CSR_SCOUNTEROF),			\
+> +		ANDES_VENDOR_ID, ERRATA_ANDES_PMU,			\
+> +		CONFIG_ERRATA_ANDES_PMU)				\
+>  	: "=r" (__ovl) :						\
+>  	: "memory")
+>  
+> +#define ALT_SBI_PMU_OVF_CLEAR_PENDING(__irq_num)			\
+> +asm volatile(ALTERNATIVE(						\
+> +	"csrc " __stringify(CSR_IP) ", %0\n\t",				\
+> +	"csrc " __stringify(ANDES_CSR_SLIP) ", %0\n\t",			\
+> +		ANDES_VENDOR_ID, ERRATA_ANDES_PMU,			\
+> +		CONFIG_ERRATA_ANDES_PMU)				\
+> +	: : "r"(BIT(__irq_num))						\
+> +	: "memory")
+> +
+> +#define ALT_SBI_PMU_OVF_DISABLE(__irq_num)				\
+> +asm volatile(ALTERNATIVE(						\
+> +	"csrc " __stringify(CSR_IE) ", %0\n\t",				\
+> +	"csrc " __stringify(ANDES_CSR_SLIE) ", %0\n\t",			\
+> +		ANDES_VENDOR_ID, ERRATA_ANDES_PMU,			\
+> +		CONFIG_ERRATA_ANDES_PMU)				\
+> +	: : "r"(BIT(__irq_num))						\
+> +	: "memory")
+> +
+> +#define ALT_SBI_PMU_OVF_ENABLE(__irq_num)				\
+> +asm volatile(ALTERNATIVE(						\
+> +	"csrs " __stringify(CSR_IE) ", %0\n\t",				\
+> +	"csrs " __stringify(ANDES_CSR_SLIE) ", %0\n\t",			\
+> +		ANDES_VENDOR_ID, ERRATA_ANDES_PMU,			\
+> +		CONFIG_ERRATA_ANDES_PMU)				\
+> +	: : "r"(BIT(__irq_num))						\
+> +	: "memory")
+> +
+>  #endif /* __ASSEMBLY__ */
+>  
+>  #endif
+> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+> index 9a51053b1f99..8b67f202d2ae 100644
+> --- a/drivers/perf/riscv_pmu_sbi.c
+> +++ b/drivers/perf/riscv_pmu_sbi.c
+> @@ -687,7 +687,7 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, void *dev)
+>  	fidx = find_first_bit(cpu_hw_evt->used_hw_ctrs, RISCV_MAX_COUNTERS);
+>  	event = cpu_hw_evt->events[fidx];
+>  	if (!event) {
+> -		csr_clear(CSR_SIP, BIT(riscv_pmu_irq_num));
+> +		ALT_SBI_PMU_OVF_CLEAR_PENDING(riscv_pmu_irq_num);
+>  		return IRQ_NONE;
+>  	}
+>  
+> @@ -701,7 +701,7 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, void *dev)
+>  	 * Overflow interrupt pending bit should only be cleared after stopping
+>  	 * all the counters to avoid any race condition.
+>  	 */
+> -	csr_clear(CSR_SIP, BIT(riscv_pmu_irq_num));
+> +	ALT_SBI_PMU_OVF_CLEAR_PENDING(riscv_pmu_irq_num);
+>  
+>  	/* No overflow bit is set */
+>  	if (!overflow)
+> @@ -773,8 +773,8 @@ static int pmu_sbi_starting_cpu(unsigned int cpu, struct hlist_node *node)
+>  
+>  	if (riscv_pmu_use_irq) {
+>  		cpu_hw_evt->irq = riscv_pmu_irq;
+> -		csr_clear(CSR_IP, BIT(riscv_pmu_irq_num));
+> -		csr_set(CSR_IE, BIT(riscv_pmu_irq_num));
+> +		ALT_SBI_PMU_OVF_CLEAR_PENDING(riscv_pmu_irq_num);
+> +		ALT_SBI_PMU_OVF_ENABLE(riscv_pmu_irq_num);
+>  		enable_percpu_irq(riscv_pmu_irq, IRQ_TYPE_NONE);
+>  	}
+>  
+> @@ -785,7 +785,7 @@ static int pmu_sbi_dying_cpu(unsigned int cpu, struct hlist_node *node)
+>  {
+>  	if (riscv_pmu_use_irq) {
+>  		disable_percpu_irq(riscv_pmu_irq);
+> -		csr_clear(CSR_IE, BIT(riscv_pmu_irq_num));
+> +		ALT_SBI_PMU_OVF_DISABLE(riscv_pmu_irq_num);
+>  	}
+>  
+>  	/* Disable all counters access for user mode now */
+> @@ -809,6 +809,10 @@ static int pmu_sbi_setup_irqs(struct riscv_pmu *pmu, struct platform_device *pde
+>  		   riscv_cached_mimpid(0) == 0) {
+>  		riscv_pmu_irq_num = THEAD_C9XX_RV_IRQ_PMU;
+>  		riscv_pmu_use_irq = true;
+> +	} else if (IS_ENABLED(CONFIG_ERRATA_ANDES_PMU) &&
+> +		   riscv_cached_mvendorid(0) == ANDES_VENDOR_ID) {
+> +		riscv_pmu_irq_num = ANDES_RV_IRQ_PMU;
+> +		riscv_pmu_use_irq = true;
+>  	}
+>  
+>  	if (!riscv_pmu_use_irq)
+> @@ -821,7 +825,11 @@ static int pmu_sbi_setup_irqs(struct riscv_pmu *pmu, struct platform_device *pde
+>  		return -ENODEV;
+>  	}
+>  
+> -	riscv_pmu_irq = irq_create_mapping(domain, riscv_pmu_irq_num);
+> +	if (IS_ENABLED(CONFIG_ERRATA_ANDES_PMU))
+> +		riscv_pmu_irq = irq_create_mapping(
+> +			domain, ANDES_SLI_CAUSE_BASE + riscv_pmu_irq_num);
+> +	else
+> +		riscv_pmu_irq = irq_create_mapping(domain, riscv_pmu_irq_num);
+
+If the code here needs to be different, then it must check that it is actually
+running on an Andes core, not just that the errata Kconfig option is enabled.
+
+However, I suggest setting riscv_pmu_irq_num to the real IRQ number:
+  riscv_pmu_irq_num = ANDES_SLI_CAUSE_BASE + ANDES_RV_IRQ_PMU;
+and then adding a new variable for the mask:
+  riscv_pmu_irq_mask = BIT(riscv_pmu_irq_num % BITS_PER_LONG);
+which handles the large IRQ number somewhat more generically, and reduces the
+number of bit operations needed elsewhere in the driver.
+
+Or we could use IRQ chip operations here instead of direct CSR acccess. But
+maybe the direct CSR access is needed for performance?
+
+Regards,
+Samuel
+
+>  	if (!riscv_pmu_irq) {
+>  		pr_err("Failed to map PMU interrupt for node\n");
+>  		return -ENODEV;
+
