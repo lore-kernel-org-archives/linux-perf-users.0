@@ -2,175 +2,350 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8EBEC8738
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Sep 2023 16:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DE9EC873D
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Sep 2023 16:32:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237653AbjIGQOk (ORCPT
+        id S231696AbjIGQcW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Sep 2023 12:14:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46930 "EHLO
+        Thu, 7 Sep 2023 12:32:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237768AbjIGQOE (ORCPT
+        with ESMTP id S238648AbjIGQbn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Sep 2023 12:14:04 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on20618.outbound.protection.outlook.com [IPv6:2a01:111:f400:7eab::618])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E19EB2D52;
-        Thu,  7 Sep 2023 08:51:34 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UZWkS2ZbZZVadP9Kd/ek3VNNpj3r3RXGflvWFVExbIqRXsQr9Vzf67GD1rhnv5c0MULbKYv3gVM/zNMzSm51PVRDKmI3KDvEu6hGTBHx7+mtUN+iuX7CnUjZNCFkECRyaIIsz1qglodLDrq4poM7RHsmLjAiIouNmMvAEtJlJqK4cLrURfG5eXe6hDoEaqgV14X/WO3JDbagdhkQbrPI+9WMHHK9GoBXXqjG6GQfHiisQ5HBNa5qvP8Nqg6RhZHH2oYSMQ81F6Slyh1NMInfkRjEbuhYzYsQTNe8xyNdnGNNa3nYh+VQpPXYhDm4MjhNnzCW4yfno1/yJAYapXAJgw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AYWjHRkwlu/BFY3LNZPdrNtx8ypbk4Yila7LEHB7WTs=;
- b=FqVMXwjiAQjnIbK0RAz59qwGas9Ob2kmd9iqGVvUhHNoqnvKuWPIjHGsv5kNaUl52zo5aKHr4Iob1nxd138yMicscbp8oFIULR2b3qhPjjLteUOa74TkkquyrmbSMHN8I/CbCkCKLqlF1qCB7ixJMCJ4GDZd/gRJXY45RqrdFrv/VLr6poAAMFN/00RjzY/gmyGG/qg3fTpn239bxKB89ddOvi/6PkY0HnIqWEDWcvLXWkcCL0iNra1sFqGLZQH2GhhLRD4LfJUyLTS9XsJsbL3OYC3WnJTR5zEDzZ1Z7BRKg7ZA0DW2VpzE0ToM2qOtI58x4ixLIyqoqZlrVsf89A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AYWjHRkwlu/BFY3LNZPdrNtx8ypbk4Yila7LEHB7WTs=;
- b=civKQIBueI/m4FTJca1a70N/wcGHsnCvOm9kGORWFMRb9aEDmLT5Pv5W4i0oJdu+pUTXlJt6k6i1pnWpmqBUBTRCXgNTZmbHsqToDSFN4N9uVsKUE5nZsKEoxnkXw3L1i9/pMu4NHFLZ6jBOJOWaWM+dN3HPy1yHAAo5lckd+UY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB6214.namprd12.prod.outlook.com (2603:10b6:8:96::13) by
- DM6PR12MB4265.namprd12.prod.outlook.com (2603:10b6:5:211::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6768.30; Thu, 7 Sep 2023 15:50:06 +0000
-Received: from DS7PR12MB6214.namprd12.prod.outlook.com
- ([fe80::6f26:6cea:cd82:df23]) by DS7PR12MB6214.namprd12.prod.outlook.com
- ([fe80::6f26:6cea:cd82:df23%3]) with mapi id 15.20.6745.034; Thu, 7 Sep 2023
- 15:50:06 +0000
-Message-ID: <188f7a79-ad47-eddd-a185-174e0970ad22@amd.com>
-Date:   Thu, 7 Sep 2023 21:19:51 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH 00/13] Implement support for IBS virtualization
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     kvm@vger.kernel.org, seanjc@google.com, linux-doc@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, x86@kernel.org,
-        pbonzini@redhat.com, bp@alien8.de, santosh.shukla@amd.com,
-        ravi.bangoria@amd.com, thomas.lendacky@amd.com, nikunj@amd.com
-References: <20230904095347.14994-1-manali.shukla@amd.com>
- <20230905154744.GB28379@noisy.programming.kicks-ass.net>
- <012c9897-51d7-87d3-e0e5-3856fa9644e5@amd.com>
- <20230906195619.GD28278@noisy.programming.kicks-ass.net>
-From:   Manali Shukla <manali.shukla@amd.com>
-In-Reply-To: <20230906195619.GD28278@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0157.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:c8::19) To DS7PR12MB6214.namprd12.prod.outlook.com
- (2603:10b6:8:96::13)
+        Thu, 7 Sep 2023 12:31:43 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE3C05FC7;
+        Thu,  7 Sep 2023 09:22:01 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16B44C433B7;
+        Thu,  7 Sep 2023 09:27:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694078832;
+        bh=gfUw2CkyuebGdf6kVXtdNFVCIy9rVDXi7vP0kJLGY6E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JchFbwdcXWKMDtudwax6UKpVWB+B5U/v1vOXAZ44MZyf32x5/DDnprw96ijz2katQ
+         6teeKX/1gteMf2HuzGtY6wrep9ZbqKHl8KSmIT3qOrxjbmg5CwtnOKvw5z/zrR6aYv
+         AocwKLwjM9QiskyDl+ptZ9qmutu6SxW/OPE610xdTgJKgWeIu9jM6xhNX4C9z9ZjAj
+         0tjG+ByI5lBEWcOE08A0+TVxhpZLqkRmlUB2gYJyV4HZKxj/dmpz+MYn0IVul97MeF
+         4oGEEAR9P1J4yUsCGK0gKhqnW8ZvFM6TM6ARt4h9lDwxgGSEPoH8YmJp5GubRmRJsf
+         4PU9JR2Bu+qHw==
+Date:   Thu, 7 Sep 2023 10:27:03 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Yu Chien Peter Lin <peterlin@andestech.com>
+Cc:     linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu,
+        conor.dooley@microchip.com, atishp@atishpatra.org,
+        anup@brainfault.org, prabhakar.mahadev-lad.rj@bp.renesas.com,
+        ajones@ventanamicro.com, heiko@sntech.de, samuel@sholland.org,
+        geert+renesas@glider.be, n.shubin@yadro.com, dminus@andestech.com,
+        ycliang@andestech.com, tim609@andestech.com, locus84@andestech.com,
+        dylan@andestech.com
+Subject: Re: [PATCH 3/4] riscv: errata: Add Andes PMU errata
+Message-ID: <20230907-158e1f7e1e866d8c02726c9c@fedora>
+References: <20230907021635.1002738-1-peterlin@andestech.com>
+ <20230907021635.1002738-4-peterlin@andestech.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB6214:EE_|DM6PR12MB4265:EE_
-X-MS-Office365-Filtering-Correlation-Id: 94ef0fc6-113c-4061-582b-08dbafba1b42
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +jPFkNNK0gtIxTzDU6amgB8mx6euHRBeirxzzwfSmmtf72FzJcvTz48fXkDiFCrXoKJgFs3+ceUoxQnBrI6KCDUQ3dIkANiRfUEmxNNLxGYG4BsGtws9ZieoAn0A7M90DDKk+jGzDK+SeObeJ+8gpha8PgMR0090PCO8eaFNGrzuTFAh50zb2oNiY6pSQMoxG4e40aVmXWZJrKAYXuUQmyU9R27FwxV88hWVJ34tUmewtdasY2S2jsbXDoAdNDT3hkqhAodFTwEGCiGU28c7AP5eGcshszudP+lGpgCgiNca7CY0M1jtA93hBGY9e0f5uYO4CLjnnRWE+qgK/FOOIu/iSBYs81mIN4kO8tO2En5Rxxargnng+MPgFpCt88xCVUpAfni9wQIikmIdFWBMDSr+pU19XPFdVeEqY4XcDS4R6VgT6C1LBezhCgd2qV90B64uvvTb6A/dQvFYB0jfSJcZWRtWf4pqN3YYCEot8rsGoUXVRZ+H0GrY+Ia1f4hQWWj+JtbJjOnig4QNWBK3mVuALH+uyjbPUrKB22h2x8R8bIUKBYiBhxgSVp2FcV+vscEFUzv03CD07SWeG3445BC8bneNdw7ELK7AsnG+XaD9LUBNsUGkbVReri28YmwgHBMQU75n8fLK0shdTWWvpw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6214.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(396003)(366004)(376002)(136003)(39860400002)(186009)(1800799009)(451199024)(4326008)(5660300002)(8936002)(8676002)(41300700001)(66556008)(66476007)(66946007)(44832011)(31686004)(316002)(6916009)(2906002)(38100700002)(83380400001)(6512007)(53546011)(2616005)(26005)(86362001)(31696002)(36756003)(478600001)(6506007)(6486002)(6666004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VzdDb1QvZ0RjTnNKUUF0VG45VTIrWlNVVUlRRThTR3M5OW9NbzE4Uyt3QXVL?=
- =?utf-8?B?dUk2VzMxZFh3Q0ZRbE9rSTU5SGlTK2s3eGRtN0dGWEk1MVNhS1oyY3NWR29X?=
- =?utf-8?B?NkpNejBndksxWWUvNHBMUkxrYmZmRzMyZ0MvYmlHOWN4UFdKa2p0aWVVMGcx?=
- =?utf-8?B?SUt0bDBteThMTWt5M3hxVU8zTTBxbThGRURPS1U1VjEvZE0zb2lqOTZRa0pG?=
- =?utf-8?B?bzVVSTc3TjRkU09ReXJtaGRTaHdadTFVOVcwWkJpcXJHazVjaVZ5QlQ5S3Qr?=
- =?utf-8?B?QU9pNHUxamxxZEg0WmpVLzJ3ekNNVUpKVkZMbXBodlV0QWVxaE9KbmxDM0ZI?=
- =?utf-8?B?anY4OExSLzFZLytxQjRMRTYyeURBck5zYy9kbU5tUUJxZWJNdk5rbWNoR0Nh?=
- =?utf-8?B?VTVUVDZwcWpNcnY2YU9wS3ZyYlExRDNLVVVLbFY1ejZadzFEMW9HT3Bqa3Vy?=
- =?utf-8?B?c0d2Q09zVnZJRzFldFZnV3QrbnphMXpUYzhueGdROWRTZ1h0QW5Hc2duM3dI?=
- =?utf-8?B?OTA4U2VCSS9zMjRNRUpIa1lpWkkwdFo4eEE3amxpMCtlNzNLRndQdGNoMjUw?=
- =?utf-8?B?Q1U4dDIwdUtkOTcrb0hWRm81Y0E3VTRabUJCOStkdHUxT29kQmJDOFFTTmFk?=
- =?utf-8?B?QkMwN1pHL1duOWZ6dHZXQjB4UytiS3NuUzNjRVRMMjM2eGNUNU1hVnI0a25S?=
- =?utf-8?B?OXZMOUM2MjEvWVFrTm5RS1hweXdLTU1rMDFLcjlyZTMvS0I3WEhkbDZJQVRB?=
- =?utf-8?B?RU9uQ09lNGVPRm1Ndy9yQkNacTBwR2l1VXArb2dJcktZazV0cUZTdjZ0cWtv?=
- =?utf-8?B?YWM1ZjRxVEZNejhYbmFrZnQrc3I0VGhXK3RNRkF0YXZRQkJ3VkdycC90VCt5?=
- =?utf-8?B?azN5UTVsOGQ0d0xpaVdFMVM1YjNaQTdUZ0xJOFluOFhXaXo3OHNrWncvUnp2?=
- =?utf-8?B?aDF5V2FaaFhPTkdnOVVXL2NGek5pMUNtcHh2TkFiQWhKMnl4cGtZTCsvamp3?=
- =?utf-8?B?QXlzeWNwYURXZ3NWZUY4WGlKbTk0RkxTQ2lNa3FITWtMeE15Tm9CWU5TdC95?=
- =?utf-8?B?WXk5MDg1eE9hY2JKSGxnZ1JzZDM5L2pacUZRZmtqV21IaHFKRWF1dlhFekFs?=
- =?utf-8?B?RDV3Q3g3a1hrNDRDQ1VNT001dU5Wd05iTnhhZlVQaHBRRjR0N2xqcWJUTmE4?=
- =?utf-8?B?M29xU0s1bVBuN2FjaUpnY3NsaGR0L0RyZUJJQTVqWG1wM2RBRXEyanhIdXNl?=
- =?utf-8?B?ckF0S25OakpCTnNsMUtTVGlHeFVSQzN2WWIzQmhhR3N4TEVNaEtaS2VEWFph?=
- =?utf-8?B?aWN1NmpMTVh1UG56dm5CWkN3NGtMZnhvWm12aVR5SmJwQW1sTFBRL1E5Nmtm?=
- =?utf-8?B?emJhK1Q5MXVxSitQbWU0RmhqWGU4STNlS2N5MmRQN3FxNVVCUzN1OXlOK1Vs?=
- =?utf-8?B?VjE4R01HYmxtS3hjcjhGcWNxbVJicnExZzk4bEp3UEZ0N1Ewa1RpTitobmVN?=
- =?utf-8?B?RUdWMFZDL2JWMEVYSjRWUXdqUE5XSUdDVy9iVDVEN3E0NkloRDJUOUxwRXVj?=
- =?utf-8?B?UVVSaVk0d3NTaW0xZFRhQlRUSVVOK3ZaK0xSdlR1THZIN3FsZysvaEN2b2xZ?=
- =?utf-8?B?bVByS3BCWlBsa3ZhUjBXSWtCN2tFYllKeitvL3lzT3lTd21KVkpva1hSSlcr?=
- =?utf-8?B?MmJuWExQQ29ldXlLU1ptay90WVNzY2FLTXJuU0ZxazV5TzMyUVRCZkwvaEx0?=
- =?utf-8?B?d21DT1ZEeHhzZWNxU2pNNXNkRnZiY2MrYjBkd0tpamFnQ1IvRkZCbVZiM1l5?=
- =?utf-8?B?N1c4MXlnSTJVcTd1Wi9Jc2huNUJKTmp5YzROS3lTeGxZZTVaZGZqUnA2cTBm?=
- =?utf-8?B?M0d1SHFUekpOdUdLVE1MWjNEMXcyVmEvVTJYcmpBdFpzWGZPMVQwZ2g0ZXFR?=
- =?utf-8?B?VHdZWG5hRVFuckdUZlh4NHlteGh5OUVybnhyaUtuQkJOTGRnWE00bzdnMDFm?=
- =?utf-8?B?NzlFZkc2ek9Md3BVazRua0Y5aU1qSXIwTG1iTm9PaFIvbTBnV2p2V1Z0aUxr?=
- =?utf-8?B?ZzIwTUExdVg3YWNZQTh4U2tmZnc2T3hCUndiVUszRzEzY2ZDczN3TUNFNlF2?=
- =?utf-8?Q?7PAKhSUIheEBPGI4AAaUNTsgn?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 94ef0fc6-113c-4061-582b-08dbafba1b42
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6214.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2023 15:50:06.3673
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RQEc7v8rco+30TUwdpO0LwCXXoBchN6rioMn/mOXkzsyxwABVoPJIfymL08txBg6C+JNzpKgOKbi82+OJ437Vw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4265
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="jMdrE/NsI/M9lmQR"
+Content-Disposition: inline
+In-Reply-To: <20230907021635.1002738-4-peterlin@andestech.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Peter,
 
-On 9/7/2023 1:26 AM, Peter Zijlstra wrote:
-> On Wed, Sep 06, 2023 at 09:08:25PM +0530, Manali Shukla wrote:
->> Hi Peter,
->>
->> Thank you for looking into this.
->>
->> On 9/5/2023 9:17 PM, Peter Zijlstra wrote:
->>> On Mon, Sep 04, 2023 at 09:53:34AM +0000, Manali Shukla wrote:
->>>
->>>> Note that, since IBS registers are swap type C [2], the hypervisor is
->>>> responsible for saving and restoring of IBS host state. Hypervisor
->>>> does so only when IBS is active on the host to avoid unnecessary
->>>> rdmsrs/wrmsrs. Hypervisor needs to disable host IBS before saving the
->>>> state and enter the guest. After a guest exit, the hypervisor needs to
->>>> restore host IBS state and re-enable IBS.
->>>
->>> Why do you think it is OK for a guest to disable the host IBS when
->>> entering a guest? Perhaps the host was wanting to profile the guest.
->>>
->>
->> 1. Since IBS registers are of swap type C [1], only guest state is saved
->> and restored by the hardware. Host state needs to be saved and restored by
->> hypervisor. In order to save IBS registers correctly, IBS needs to be
->> disabled before saving the IBS registers.
->>
->> 2. As per APM [2],
->> "When a VMRUN is executed to an SEV-ES guest with IBS virtualization enabled, the
->> IbsFetchCtl[IbsFetchEn] and IbsOpCtl[IbsOpEn] MSR bits must be 0. If either of 
->> these bits are not 0, the VMRUN will fail with a VMEXIT_INVALID error code."
->> This is enforced by hardware on SEV-ES guests when VIBS is enabled on SEV-ES
->> guests.
-> 
-> I'm not sure I'm fluent in virt speak (in fact, I'm sure I'm not). Is
-> the above saying that a host can never IBS profile a guest?
+--jMdrE/NsI/M9lmQR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Host can profile a guest with IBS if VIBS is disabled for the guest. This is
-the default behavior. Host can not profile guest if VIBS is enabled for guest.
+Hey,
 
-> 
-> Does the current IBS thing assert perf_event_attr::exclude_guest is set?
+On Thu, Sep 07, 2023 at 10:16:34AM +0800, Yu Chien Peter Lin wrote:
+> Before the ratification of Sscofpmf, the Andes PMU extension
+> implements the same mechanism and is compatible with existing
+> SBI PMU driver of perf to support event sampling and mode
+> filtering with programmable hardware performance counters.
 
-Unlike AMD core pmu, IBS doesn't have Host/Guest filtering capability, thus
-perf_event_open() fails if exclude_guest is set for an IBS event.
+If it actually was, you'd not need to modify the driver ;)
 
-> 
-> I can't quickly find anything :-(
+> This patch adds PMU support for Andes 45-series CPUs by
+> introducing a CPU errata.
 
-Thank you,
-Manali
+I don't really understand this in all honesty. You don't have Sscofpmf
+support with a bug, you have something that is Sscofpmf-adjactent that
+predates it. Why claim to support an extension that you do not, only to
+have to come along and try to clean things up afterwards, instead of
+accurately declaring what you do support from the outset?
 
+(and just because someone already got away with it, doesn't mean that
+you get a free pass on it, sorry)
+
+Thanks,
+Conor.
+
+> Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+> Signed-off-by: Locus Wei-Han Chen <locus84@andestech.com>
+
+btw, what did Locus Wei-Han Chen do here? Are you missing
+a Co-developed-by: tag?
+
+> Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
+> Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
+> ---
+>  arch/riscv/Kconfig.errata            | 13 ++++++++
+>  arch/riscv/errata/andes/errata.c     | 45 +++++++++++++++++++++++++++-
+>  arch/riscv/include/asm/errata_list.h | 43 ++++++++++++++++++++++++--
+>  drivers/perf/riscv_pmu_sbi.c         | 20 +++++++++----
+>  4 files changed, 111 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/arch/riscv/Kconfig.errata b/arch/riscv/Kconfig.errata
+> index 92c779764b27..a342b209c169 100644
+> --- a/arch/riscv/Kconfig.errata
+> +++ b/arch/riscv/Kconfig.errata
+> @@ -21,6 +21,19 @@ config ERRATA_ANDES_CMO
+> =20
+>  	  If you don't know what to do here, say "Y".
+> =20
+> +config ERRATA_ANDES_PMU
+> +	bool "Apply Andes PMU errata"
+> +	depends on ERRATA_ANDES && RISCV_PMU_SBI
+> +	default y
+> +	help
+> +	  The Andes 45-series cores implement a PMU overflow extension
+> +	  very similar to the core SSCOFPMF extension.
+> +
+> +	  This will apply the overflow errata to handle the non-standard
+> +	  behaviour via the regular SBI PMU driver and interface.
+> +
+> +	  If you don't know what to do here, say "Y".
+> +
+>  config ERRATA_SIFIVE
+>  	bool "SiFive errata"
+>  	depends on RISCV_ALTERNATIVE
+> diff --git a/arch/riscv/errata/andes/errata.c b/arch/riscv/errata/andes/e=
+rrata.c
+> index d2e1abcac967..19256691f1ba 100644
+> --- a/arch/riscv/errata/andes/errata.c
+> +++ b/arch/riscv/errata/andes/errata.c
+> @@ -56,11 +56,54 @@ static bool errata_probe_iocp(unsigned int stage, uns=
+igned long arch_id, unsigne
+>  	return true;
+>  }
+> =20
+> +static bool errata_probe_pmu(unsigned int stage,
+> +			     unsigned long arch_id, unsigned long impid)
+> +{
+> +	if (!IS_ENABLED(CONFIG_ERRATA_ANDES_PMU))
+> +		return false;
+> +
+> +	if ((arch_id & 0xff) !=3D 0x45)
+> +		return false;
+> +
+> +	if (stage =3D=3D RISCV_ALTERNATIVES_EARLY_BOOT)
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+> +static u32 andes_errata_probe(unsigned int stage,
+> +			      unsigned long archid, unsigned long impid)
+> +{
+> +	u32 cpu_req_errata =3D 0;
+> +
+> +	if (errata_probe_pmu(stage, archid, impid))
+> +		cpu_req_errata |=3D BIT(ERRATA_ANDES_PMU);
+> +
+> +	return cpu_req_errata;
+> +}
+> +
+>  void __init_or_module andes_errata_patch_func(struct alt_entry *begin, s=
+truct alt_entry *end,
+>  					      unsigned long archid, unsigned long impid,
+>  					      unsigned int stage)
+>  {
+> +	struct alt_entry *alt;
+> +	u32 cpu_req_errata =3D andes_errata_probe(stage, archid, impid);
+> +	u32 tmp;
+> +
+>  	errata_probe_iocp(stage, archid, impid);
+> =20
+> -	/* we have nothing to patch here ATM so just return back */
+> +	for (alt =3D begin; alt < end; alt++) {
+> +		if (alt->vendor_id !=3D ANDES_VENDOR_ID)
+> +			continue;
+> +		if (alt->patch_id >=3D ERRATA_ANDES_NUMBER)
+> +			continue;
+> +
+> +		tmp =3D (1U << alt->patch_id);
+> +		if (cpu_req_errata & tmp) {
+> +			mutex_lock(&text_mutex);
+> +			patch_text_nosync(ALT_OLD_PTR(alt), ALT_ALT_PTR(alt),
+> +					  alt->alt_len);
+> +			mutex_unlock(&text_mutex);
+> +		}
+> +	}
+>  }
+> diff --git a/arch/riscv/include/asm/errata_list.h b/arch/riscv/include/as=
+m/errata_list.h
+> index 56ab40e64092..bb4c276e2c7f 100644
+> --- a/arch/riscv/include/asm/errata_list.h
+> +++ b/arch/riscv/include/asm/errata_list.h
+> @@ -13,7 +13,8 @@
+> =20
+>  #ifdef CONFIG_ERRATA_ANDES
+>  #define ERRATA_ANDES_NO_IOCP 0
+> -#define ERRATA_ANDES_NUMBER 1
+> +#define ERRATA_ANDES_PMU 1
+> +#define ERRATA_ANDES_NUMBER 2
+>  #endif
+> =20
+>  #ifdef CONFIG_ERRATA_SIFIVE
+> @@ -150,15 +151,51 @@ asm volatile(ALTERNATIVE_2(						\
+>  #define THEAD_C9XX_RV_IRQ_PMU			17
+>  #define THEAD_C9XX_CSR_SCOUNTEROF		0x5c5
+> =20
+> +#define ANDES_RV_IRQ_PMU			18
+> +#define ANDES_SLI_CAUSE_BASE			256
+> +#define ANDES_CSR_SCOUNTEROF			0x9d4
+> +#define ANDES_CSR_SLIE				0x9c4
+> +#define ANDES_CSR_SLIP				0x9c5
+> +
+>  #define ALT_SBI_PMU_OVERFLOW(__ovl)					\
+> -asm volatile(ALTERNATIVE(						\
+> +asm volatile(ALTERNATIVE_2(						\
+>  	"csrr %0, " __stringify(CSR_SSCOUNTOVF),			\
+>  	"csrr %0, " __stringify(THEAD_C9XX_CSR_SCOUNTEROF),		\
+>  		THEAD_VENDOR_ID, ERRATA_THEAD_PMU,			\
+> -		CONFIG_ERRATA_THEAD_PMU)				\
+> +		CONFIG_ERRATA_THEAD_PMU,				\
+> +	"csrr %0, " __stringify(ANDES_CSR_SCOUNTEROF),			\
+> +		ANDES_VENDOR_ID, ERRATA_ANDES_PMU,			\
+> +		CONFIG_ERRATA_ANDES_PMU)				\
+>  	: "=3Dr" (__ovl) :						\
+>  	: "memory")
+> =20
+> +#define ALT_SBI_PMU_OVF_CLEAR_PENDING(__irq_num)			\
+> +asm volatile(ALTERNATIVE(						\
+> +	"csrc " __stringify(CSR_IP) ", %0\n\t",				\
+> +	"csrc " __stringify(ANDES_CSR_SLIP) ", %0\n\t",			\
+> +		ANDES_VENDOR_ID, ERRATA_ANDES_PMU,			\
+> +		CONFIG_ERRATA_ANDES_PMU)				\
+> +	: : "r"(BIT(__irq_num))						\
+> +	: "memory")
+> +
+> +#define ALT_SBI_PMU_OVF_DISABLE(__irq_num)				\
+> +asm volatile(ALTERNATIVE(						\
+> +	"csrc " __stringify(CSR_IE) ", %0\n\t",				\
+> +	"csrc " __stringify(ANDES_CSR_SLIE) ", %0\n\t",			\
+> +		ANDES_VENDOR_ID, ERRATA_ANDES_PMU,			\
+> +		CONFIG_ERRATA_ANDES_PMU)				\
+> +	: : "r"(BIT(__irq_num))						\
+> +	: "memory")
+> +
+> +#define ALT_SBI_PMU_OVF_ENABLE(__irq_num)				\
+> +asm volatile(ALTERNATIVE(						\
+> +	"csrs " __stringify(CSR_IE) ", %0\n\t",				\
+> +	"csrs " __stringify(ANDES_CSR_SLIE) ", %0\n\t",			\
+> +		ANDES_VENDOR_ID, ERRATA_ANDES_PMU,			\
+> +		CONFIG_ERRATA_ANDES_PMU)				\
+> +	: : "r"(BIT(__irq_num))						\
+> +	: "memory")
+> +
+>  #endif /* __ASSEMBLY__ */
+> =20
+>  #endif
+> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+> index 9a51053b1f99..8b67f202d2ae 100644
+> --- a/drivers/perf/riscv_pmu_sbi.c
+> +++ b/drivers/perf/riscv_pmu_sbi.c
+> @@ -687,7 +687,7 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, void =
+*dev)
+>  	fidx =3D find_first_bit(cpu_hw_evt->used_hw_ctrs, RISCV_MAX_COUNTERS);
+>  	event =3D cpu_hw_evt->events[fidx];
+>  	if (!event) {
+> -		csr_clear(CSR_SIP, BIT(riscv_pmu_irq_num));
+> +		ALT_SBI_PMU_OVF_CLEAR_PENDING(riscv_pmu_irq_num);
+>  		return IRQ_NONE;
+>  	}
+> =20
+> @@ -701,7 +701,7 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, void =
+*dev)
+>  	 * Overflow interrupt pending bit should only be cleared after stopping
+>  	 * all the counters to avoid any race condition.
+>  	 */
+> -	csr_clear(CSR_SIP, BIT(riscv_pmu_irq_num));
+> +	ALT_SBI_PMU_OVF_CLEAR_PENDING(riscv_pmu_irq_num);
+> =20
+>  	/* No overflow bit is set */
+>  	if (!overflow)
+> @@ -773,8 +773,8 @@ static int pmu_sbi_starting_cpu(unsigned int cpu, str=
+uct hlist_node *node)
+> =20
+>  	if (riscv_pmu_use_irq) {
+>  		cpu_hw_evt->irq =3D riscv_pmu_irq;
+> -		csr_clear(CSR_IP, BIT(riscv_pmu_irq_num));
+> -		csr_set(CSR_IE, BIT(riscv_pmu_irq_num));
+> +		ALT_SBI_PMU_OVF_CLEAR_PENDING(riscv_pmu_irq_num);
+> +		ALT_SBI_PMU_OVF_ENABLE(riscv_pmu_irq_num);
+>  		enable_percpu_irq(riscv_pmu_irq, IRQ_TYPE_NONE);
+>  	}
+> =20
+> @@ -785,7 +785,7 @@ static int pmu_sbi_dying_cpu(unsigned int cpu, struct=
+ hlist_node *node)
+>  {
+>  	if (riscv_pmu_use_irq) {
+>  		disable_percpu_irq(riscv_pmu_irq);
+> -		csr_clear(CSR_IE, BIT(riscv_pmu_irq_num));
+> +		ALT_SBI_PMU_OVF_DISABLE(riscv_pmu_irq_num);
+>  	}
+> =20
+>  	/* Disable all counters access for user mode now */
+> @@ -809,6 +809,10 @@ static int pmu_sbi_setup_irqs(struct riscv_pmu *pmu,=
+ struct platform_device *pde
+>  		   riscv_cached_mimpid(0) =3D=3D 0) {
+>  		riscv_pmu_irq_num =3D THEAD_C9XX_RV_IRQ_PMU;
+>  		riscv_pmu_use_irq =3D true;
+> +	} else if (IS_ENABLED(CONFIG_ERRATA_ANDES_PMU) &&
+> +		   riscv_cached_mvendorid(0) =3D=3D ANDES_VENDOR_ID) {
+> +		riscv_pmu_irq_num =3D ANDES_RV_IRQ_PMU;
+> +		riscv_pmu_use_irq =3D true;
+>  	}
+> =20
+>  	if (!riscv_pmu_use_irq)
+> @@ -821,7 +825,11 @@ static int pmu_sbi_setup_irqs(struct riscv_pmu *pmu,=
+ struct platform_device *pde
+>  		return -ENODEV;
+>  	}
+> =20
+> -	riscv_pmu_irq =3D irq_create_mapping(domain, riscv_pmu_irq_num);
+> +	if (IS_ENABLED(CONFIG_ERRATA_ANDES_PMU))
+> +		riscv_pmu_irq =3D irq_create_mapping(
+> +			domain, ANDES_SLI_CAUSE_BASE + riscv_pmu_irq_num);
+> +	else
+> +		riscv_pmu_irq =3D irq_create_mapping(domain, riscv_pmu_irq_num);
+>  	if (!riscv_pmu_irq) {
+>  		pr_err("Failed to map PMU interrupt for node\n");
+>  		return -ENODEV;
+> --=20
+> 2.34.1
+>=20
+>=20
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
+--jMdrE/NsI/M9lmQR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZPmXYwAKCRB4tDGHoIJi
+0pxmAP9b/N+QTuiiGLQEWlt7cn6OD1zZfzRKLSdkzb5rJKST1gD/W1NhzNBFX6Y3
+bbE/vGgenMSmSIfKQAabZpl6s63mtwI=
+=Oz/Z
+-----END PGP SIGNATURE-----
+
+--jMdrE/NsI/M9lmQR--
