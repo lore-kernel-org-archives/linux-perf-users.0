@@ -2,178 +2,101 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE3DEEB56E
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Sep 2023 21:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D499EEB565
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Sep 2023 23:56:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237633AbjIHVd7 (ORCPT
+        id S240228AbjIHX4U convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Sep 2023 17:33:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45704 "EHLO
+        Fri, 8 Sep 2023 19:56:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234754AbjIHVd7 (ORCPT
+        with ESMTP id S232694AbjIHX4U (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Sep 2023 17:33:59 -0400
-Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4E2319B6
-        for <linux-perf-users@vger.kernel.org>; Fri,  8 Sep 2023 14:33:54 -0700 (PDT)
-Received: by mail-qt1-x836.google.com with SMTP id d75a77b69052e-415155b2796so15641cf.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 08 Sep 2023 14:33:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1694208833; x=1694813633; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MfevmZn91fM44hLIGV+jcd6pMniaGx21p0N0a1MPeVE=;
-        b=gX6KbGLdrBPz72zZsMh0QuMXItgz2kQ3sT7OKZZ9Sn8tIc1HCZOA0lQQpWGy/LLz/y
-         CxnYxWhEPQzUl+JvGi8F2u5s5K/VLIfYqNX4pEr54n3YI27UBCCxB0BW5g0SdlXXakyk
-         lRxswXRim1um09G3jrR5TaWERaxmk5aHQLlsCH6vH35LRVBVv0oHBwYDV6zvYfCP1cLT
-         ZuVvqWNJ9UQuUAsYY7G6dRfEpzl+QJXsw7WI9TTqskl99FGXohths96kxzabTLLo3oeN
-         bpoHi94PEOzLxmhDmHVG8Ru9QZNRWRpVajflZEUgJ4j3AieFB+V2bzxUkxyjO1bq7Jq1
-         Tuug==
+        Fri, 8 Sep 2023 19:56:20 -0400
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91102133;
+        Fri,  8 Sep 2023 16:56:16 -0700 (PDT)
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-d7f0a60a159so2283369276.0;
+        Fri, 08 Sep 2023 16:56:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694208833; x=1694813633;
+        d=1e100.net; s=20230601; t=1694217376; x=1694822176;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MfevmZn91fM44hLIGV+jcd6pMniaGx21p0N0a1MPeVE=;
-        b=skSKb8wfhjFcLukaQvVWQkAQeDtu71w6C4RaNTKTRiMDkLGcm9qsAwx+tKXUhxW8Is
-         Qz3KqZ4Da9tiL/vmQC1BdPv5dr8ZcpZUR57R1eSmXtCag/i1/DrXhRG02+78P+VVq34Q
-         koS6Y0iWdF9IiGNZXn9+tD3+JXlEzVenaXbiNJqrvjM07naoPJUwE4KHighIrOw6wvg1
-         0ITVnMceBzQNnHOmR1coXwMHfb9a97q4EgbdbmwjuiT6IismtlW1DJ/lLQPoy88ydKrs
-         FSSfEstD4euVppLgu73rX1DhoENT5aSidPwmfN2DsRQ+U5OtL8aARHYI9707B+n82oYe
-         FtmQ==
-X-Gm-Message-State: AOJu0YwOO3wsc7TEp4j9Rcu0UL7T2jLqGA9+W4EglYkqW4qrQRDRqjNY
-        Fr6al9vY0GpsOC4gjb1se/093ltl1xxo9Dp8jWZCBA==
-X-Google-Smtp-Source: AGHT+IEB2DSWIsThRYGIKiW5I1btJGsunl21Q8x3POOJYXKwt9gvHrhKcTHa8i4HIpqm/vkNmwHL21RVvIAD6Wwgv0E=
-X-Received: by 2002:a05:622a:453:b0:3f8:5b2:aef0 with SMTP id
- o19-20020a05622a045300b003f805b2aef0mr391151qtx.24.1694208833608; Fri, 08 Sep
- 2023 14:33:53 -0700 (PDT)
+        bh=3fduUCFN1Wge3LY7Pmf8tbiG6qwcGsnDEnR60i43Dug=;
+        b=uH11FijiQ1Cp33fWFePd7hgSZQUlzYJTIf+bXK8CISCER2enTpP4hdykyB2cIadaZJ
+         V6q1vQlqt5cC15D/qnkscOm6bWdzrri47sFEdCBbLLhD692LS0MimBsFSQnFaMF/6t0I
+         ENmI5YAI55/P+r0uOlYxJX/5c1x/jekyKWYkwEuysiO63OQoHDUD8j16NEhL1/uM0VNS
+         FW9W0C+8MrmXvVGvS/Y0YBlyb97eJdiaQPDLzRDOFvarsmxPj6X3WE0abBu8VxsSKbgA
+         nZmXnX1KA1Sqn0hDjOl24Ibf8JOs+iI/2vLn7xka5sNPlfPHwuMr74QFUsUCpfxwTm9+
+         xBpw==
+X-Gm-Message-State: AOJu0Yw1f6yYFJcB/jlVl29b2rdTA29ZsNJzZ7ZadybBaRGQ3UGLhkWz
+        8lrYHqxRoKL1VosWDyXFdCcQ81EkEQborCWjXMY=
+X-Google-Smtp-Source: AGHT+IFpPpodW4aTMB2R61kpjLaDyqIbx6kCtrohLpibG63gjKxeOMguL8CNXvS7QlLEljxFwDZi+X53sPI3clZKjkM=
+X-Received: by 2002:a25:9208:0:b0:d44:19e9:4c6d with SMTP id
+ b8-20020a259208000000b00d4419e94c6dmr3611037ybo.65.1694217375658; Fri, 08 Sep
+ 2023 16:56:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <1694087913-46144-1-git-send-email-renyu.zj@linux.alibaba.com> <1694087913-46144-2-git-send-email-renyu.zj@linux.alibaba.com>
-In-Reply-To: <1694087913-46144-2-git-send-email-renyu.zj@linux.alibaba.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 8 Sep 2023 14:33:42 -0700
-Message-ID: <CAP-5=fVWcQrqLeuc-k4HRNrNdb_=9CbqTSOAX=HDR7f=j8b0Hg@mail.gmail.com>
-Subject: Re: [PATCH v8 1/8] perf pmu: "Compat" supports matching multiple identifiers
-To:     Jing Zhang <renyu.zj@linux.alibaba.com>
-Cc:     John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+References: <20230908052216.566148-1-namhyung@kernel.org> <CAP-5=fUtEvW9h7N=w3vvYBB3vytnTXJsXrHDD6zLA2DzYFOBHQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fUtEvW9h7N=w3vvYBB3vytnTXJsXrHDD6zLA2DzYFOBHQ@mail.gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 8 Sep 2023 16:56:04 -0700
+Message-ID: <CAM9d7cj1rEjGy0QM2tkJhBn=hac-9Jya+ZJ4SNhBmB29u5KVMg@mail.gmail.com>
+Subject: Re: [PATCH] perf annotate: Add more x86 mov instruction cases
+To:     Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 7, 2023 at 4:58=E2=80=AFAM Jing Zhang <renyu.zj@linux.alibaba.c=
-om> wrote:
->
-> The jevent "Compat" is used for uncore PMU alias or metric definitions.
->
-> The same PMU driver has different PMU identifiers due to different
-> hardware versions and types, but they may have some common PMU event.
-> Since a Compat value can only match one identifier, when adding the
-> same event alias to PMUs with different identifiers, each identifier
-> needs to be defined once, which is not streamlined enough.
->
-> So let "Compat" supports matching multiple identifiers for uncore PMU
-> alias. For example, the Compat value {43401;436*} can match the PMU
-> identifier "43401", that is, CMN600_r0p0, and the PMU identifier with
-> the prefix "436", that is, all CMN650, where "*" is a wildcard.
-> Tokens in Unit field are delimited by ';' with no spaces.
->
-> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
-> Reviewed-by: John Garry <john.g.garry@oracle.com>
-> ---
->  tools/perf/util/pmu.c | 28 ++++++++++++++++++++++++++--
->  tools/perf/util/pmu.h |  1 +
->  2 files changed, 27 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index e215985..c3c3818 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -875,6 +875,30 @@ static bool pmu_uncore_alias_match(const char *pmu_n=
-ame, const char *name)
->         return res;
->  }
->
-> +bool pmu_uncore_identifier_match(const char *id, const char *compat)
-> +{
-> +       char *tmp =3D NULL, *tok, *str;
-> +       bool res =3D false;
-> +
-> +       /*
-> +        * The strdup() call is necessary here because "compat" is a cons=
-t str*
-> +        * type and cannot be used as an argument to strtok_r().
-> +        */
-> +       str =3D strdup(compat);
-> +       if (!str)
-> +               return false;
-> +
-> +       tok =3D strtok_r(str, ";", &tmp);
+Hi Ian,
 
-Did the comma vs semicolon difference get explained? It seems to add
-inconsistency to use a semicolon.
+On Thu, Sep 7, 2023 at 11:24 PM Ian Rogers <irogers@google.com> wrote:
+>
+> On Thu, Sep 7, 2023 at 10:22 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Instructions with sign- and zero- extention like movsbl and movzwq were
+> > not handled properly.  As it can check different size suffix (-b, -w, -l
+> > or -q) we can omit that and add the common parts even though some
+> > combinations are not possible.
+> >
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/arch/x86/annotate/instructions.c | 9 ++++++---
+> >  1 file changed, 6 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arch/x86/annotate/instructions.c
+> > index 5f4ac4fc7fcf..5cdf457f5cbe 100644
+> > --- a/tools/perf/arch/x86/annotate/instructions.c
+> > +++ b/tools/perf/arch/x86/annotate/instructions.c
+> > @@ -74,12 +74,15 @@ static struct ins x86__instructions[] = {
+> >         { .name = "movdqa",     .ops = &mov_ops,  },
+> >         { .name = "movdqu",     .ops = &mov_ops,  },
+> >         { .name = "movsd",      .ops = &mov_ops,  },
+> > -       { .name = "movslq",     .ops = &mov_ops,  },
+> >         { .name = "movss",      .ops = &mov_ops,  },
+> > +       { .name = "movsb",      .ops = &mov_ops,  },
+> > +       { .name = "movsw",      .ops = &mov_ops,  },
+> > +       { .name = "movsl",      .ops = &mov_ops,  },
+>
+> In Intel's manual some of these names are "Move Data From String to
+> String" operations, movsb and movsw in particular. These instructions
+> can be used to make simple memcpy loops. Could it be the past omission
+> was deliberate due to the different way the addressing works in the
+> instructions?
+
+I don't know but in terms of instruction parsing, they are the same
+"MOVE" with two operands.  I'm not aware of anything in perf with
+the operands of these instructions.  So I guess it'd be fine to add
+these instructions even if they have different underlying behaviors.
 
 Thanks,
-Ian
-
-> +       for (; tok; tok =3D strtok_r(NULL, ";", &tmp)) {
-> +               if (!fnmatch(tok, id, FNM_CASEFOLD)) {
-> +                       res =3D true;
-> +                       break;
-> +               }
-> +       }
-> +       free(str);
-> +       return res;
-> +}
-> +
->  static int pmu_add_cpu_aliases_map_callback(const struct pmu_event *pe,
->                                         const struct pmu_events_table *ta=
-ble __maybe_unused,
->                                         void *vdata)
-> @@ -915,8 +939,8 @@ static int pmu_add_sys_aliases_iter_fn(const struct p=
-mu_event *pe,
->         if (!pe->compat || !pe->pmu)
->                 return 0;
->
-> -       if (!strcmp(pmu->id, pe->compat) &&
-> -           pmu_uncore_alias_match(pe->pmu, pmu->name)) {
-> +       if (pmu_uncore_alias_match(pe->pmu, pmu->name) &&
-> +                       pmu_uncore_identifier_match(pmu->id, pe->compat))=
- {
->                 perf_pmu__new_alias(pmu,
->                                 pe->name,
->                                 pe->desc,
-> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> index bd5d804..1bf5cf1 100644
-> --- a/tools/perf/util/pmu.h
-> +++ b/tools/perf/util/pmu.h
-> @@ -240,6 +240,7 @@ void pmu_add_cpu_aliases_table(struct perf_pmu *pmu,
->  char *perf_pmu__getcpuid(struct perf_pmu *pmu);
->  const struct pmu_events_table *pmu_events_table__find(void);
->  const struct pmu_metrics_table *pmu_metrics_table__find(void);
-> +bool pmu_uncore_identifier_match(const char *id, const char *compat);
->
->  int perf_pmu__convert_scale(const char *scale, char **end, double *sval)=
-;
->
-> --
-> 1.8.3.1
->
+Namhyung
