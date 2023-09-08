@@ -2,32 +2,32 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 331E3EEB56B
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Sep 2023 18:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76ABFEEB562
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Sep 2023 18:16:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343591AbjIHSQR (ORCPT
+        id S232221AbjIHSQe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Sep 2023 14:16:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50324 "EHLO
+        Fri, 8 Sep 2023 14:16:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343590AbjIHSQP (ORCPT
+        with ESMTP id S234868AbjIHSQd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Sep 2023 14:16:15 -0400
+        Fri, 8 Sep 2023 14:16:33 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09B3E2102;
-        Fri,  8 Sep 2023 11:15:46 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 955A2C433D9;
-        Fri,  8 Sep 2023 18:02:31 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED35B212C;
+        Fri,  8 Sep 2023 11:16:07 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25167C433B7;
+        Fri,  8 Sep 2023 18:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694196153;
-        bh=+yIye7JzDwrKLqLolNpGU0vRcq5V9EywPX5jFKl87jE=;
+        s=k20201202; t=1694196228;
+        bh=Z8jMNZqZI+xq24lkZ695Dl+JDwo18OcYpFoIJOVram0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PijsPi/c+Y8QaudVnr1IF8leB/bb73d0hZlHOXReokWHG4MjxfuinBQ7KGa61jyJx
-         2iveiJA4qnYqN1hfua0n8hfmX06Gq5P3uoJqEM8P3j6HA4HhY7RaunHEWBNYs8/fcM
-         WareVlHCpfY3rDuAxu4jP5gcBLTtWoPKnvu+iLM1HMtIkDmPU1UmvoXMj8jCl52brT
-         JyHFw+x9DaiGH+82BX1yjkC9DERq8y8U6eRbtkbs3FgKHEq1b0G4ySoCjbBXjl3P6F
-         Mpnpj0oLN9d5InH3Pw/6kigJ3SqHVSQqNu/s7CyFRkgLuF6AOELmlbapQF5D9zpCii
-         Pcvfhrpr12+/A==
+        b=pjite3g+uZwC2teNRMrOszjh/hIvfvk6ODMngGMPrW+ufDxzzpi4zYiluanDV/cYd
+         s3imFyVwG85HuXTFg9ikdVDgCnkSUDhxYSjfwf/rVgam/njhz7umDz+gRujoHgyYYP
+         F0ZNV1TXyFZP2N6Zf8/t9FG14sRgV8kyWyuOeWDfuuTLe6VuM5xA9/Zw7cywj3x4nY
+         vUu0ZELwXddlbJO6+7JZggTktxOixrqYS/6l84nh6oXkSXNpR+9gbUQaFXx4Cdoc9e
+         MkjY3Ry/MfL7LvdTJDH5vRwQQc4qKHeEkmspva4bCm6ZnMJ0S1+1LDUeE/pUT6Cmv9
+         HlbHEZDvUBd1w==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Tomislav Novak <tnovak@meta.com>,
@@ -39,16 +39,16 @@ Cc:     Tomislav Novak <tnovak@meta.com>,
         mingo@redhat.com, acme@kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 08/10] hw_breakpoint: fix single-stepping when using bpf_overflow_handler
-Date:   Fri,  8 Sep 2023 14:02:00 -0400
-Message-Id: <20230908180203.3458330-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 8/8] hw_breakpoint: fix single-stepping when using bpf_overflow_handler
+Date:   Fri,  8 Sep 2023 14:03:19 -0400
+Message-Id: <20230908180320.3458596-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230908180203.3458330-1-sashal@kernel.org>
-References: <20230908180203.3458330-1-sashal@kernel.org>
+In-Reply-To: <20230908180320.3458596-1-sashal@kernel.org>
+References: <20230908180320.3458596-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.52
+X-stable-base: Linux 5.10.194
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -96,7 +96,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  3 files changed, 25 insertions(+), 9 deletions(-)
 
 diff --git a/arch/arm/kernel/hw_breakpoint.c b/arch/arm/kernel/hw_breakpoint.c
-index 054e9199f30db..dc0fb7a813715 100644
+index b1423fb130ea4..8f1fa7aac31fb 100644
 --- a/arch/arm/kernel/hw_breakpoint.c
 +++ b/arch/arm/kernel/hw_breakpoint.c
 @@ -626,7 +626,7 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
@@ -136,10 +136,10 @@ index 054e9199f30db..dc0fb7a813715 100644
  			goto unlock;
  		}
 diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-index b29a311bb0552..9659a9555c63a 100644
+index 712e97c03e54c..e5a0c38f1b5ee 100644
 --- a/arch/arm64/kernel/hw_breakpoint.c
 +++ b/arch/arm64/kernel/hw_breakpoint.c
-@@ -654,7 +654,7 @@ static int breakpoint_handler(unsigned long unused, unsigned long esr,
+@@ -654,7 +654,7 @@ static int breakpoint_handler(unsigned long unused, unsigned int esr,
  		perf_bp_event(bp, regs);
  
  		/* Do we need to handle the stepping? */
@@ -158,10 +158,10 @@ index b29a311bb0552..9659a9555c63a 100644
  
  	info->trigger = addr;
 diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 0031f7b4d9aba..63fae3c7ae430 100644
+index 67a50c78232fe..93dffe2f3fff2 100644
 --- a/include/linux/perf_event.h
 +++ b/include/linux/perf_event.h
-@@ -1139,15 +1139,31 @@ extern int perf_event_output(struct perf_event *event,
+@@ -1069,15 +1069,31 @@ extern int perf_event_output(struct perf_event *event,
  			     struct pt_regs *regs);
  
  static inline bool
