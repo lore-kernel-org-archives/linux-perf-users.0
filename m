@@ -2,72 +2,163 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A03EE7FF6
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Sep 2023 13:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA4BEE800B
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Sep 2023 14:17:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232036AbjIHNbe (ORCPT
+        id S236607AbjIHORf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Sep 2023 09:31:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53110 "EHLO
+        Fri, 8 Sep 2023 10:17:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229498AbjIHNbe (ORCPT
+        with ESMTP id S232278AbjIHORf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Sep 2023 09:31:34 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63BC619BC;
-        Fri,  8 Sep 2023 06:31:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=TQKWOfY+iS0XtMOemRYfYqcvGehYFsyz+lsbAvmWQBg=; b=IE4IuO3f7ZfICVOmPxBOxmPKMP
-        BVvtm3tlC9Fkm6m023ngfZHnP4SnavAeqGqXpMV0meWCcNPgoI4uOXn0+Un9T1CTUtaLFrDIk6tp2
-        Mf7opQjS3UB2Lm/YwkrPZt320KhUdv+Xu8824dvzDn9ufum8Bj5LvTES6PUFat9PUf9LYgnptHIpP
-        QKcuAp4S/VEPeJj6RzFC7B0o6LTtqTD2VIIpuNNTKCXJFxU/vA1Qf6DShsIbOaWsKlUDlfVGJWqqp
-        3LLjicSUT2MrAMTf09bgkh+N/P20mGxQ93DER4zLqktpngI2UoMCBy0d82hR7DN/2+RtwXoS1GM94
-        0sSG2uXg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qebZr-002YCs-2e;
-        Fri, 08 Sep 2023 13:31:17 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3FD52300472; Fri,  8 Sep 2023 15:31:15 +0200 (CEST)
-Date:   Fri, 8 Sep 2023 15:31:14 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Manali Shukla <manali.shukla@amd.com>
-Cc:     kvm@vger.kernel.org, seanjc@google.com, linux-doc@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, x86@kernel.org,
-        pbonzini@redhat.com, bp@alien8.de, santosh.shukla@amd.com,
-        ravi.bangoria@amd.com, thomas.lendacky@amd.com, nikunj@amd.com
-Subject: Re: [PATCH 00/13] Implement support for IBS virtualization
-Message-ID: <20230908133114.GK19320@noisy.programming.kicks-ass.net>
-References: <20230904095347.14994-1-manali.shukla@amd.com>
- <20230905154744.GB28379@noisy.programming.kicks-ass.net>
- <012c9897-51d7-87d3-e0e5-3856fa9644e5@amd.com>
- <20230906195619.GD28278@noisy.programming.kicks-ass.net>
- <188f7a79-ad47-eddd-a185-174e0970ad22@amd.com>
+        Fri, 8 Sep 2023 10:17:35 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A2B41BF8
+        for <linux-perf-users@vger.kernel.org>; Fri,  8 Sep 2023 07:17:30 -0700 (PDT)
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 388E9bpx006336;
+        Fri, 8 Sep 2023 14:17:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
+ from : in-reply-to : date : cc : message-id : references : to :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=XV+3s/W8iqjhoMoial6jZIiBLUDPzSOHN7enpDKgUvM=;
+ b=DYEJUADsdEODEjr6IO/dBgwMsdBxqFefoP1wVGXk8PshgXgpZrFJ39OI63OAzn7uPsgO
+ NAUJi/KrtcFmB8DWqvqmlIALrne8k5TNE4/m/r8P5bHtzDBBknihFgBnGsLlhC27VzCr
+ jaQD8Q4p8TljDfesgzERy7KJEUxFXIx+TnmQxLzf48c/CHfNC8QTbNfjNGEvM1L9pF40
+ J+oGJ4h4ZJwn8dVzxy6Q6kMdEnUhxh7Vn6hTzOzOUIsmV+nA7g/0z0lcNJ0i9KT3FV6e
+ Zuo+1IFfV7MmB+TAsUJOoQk8R5OMq6pyV7yIRlWh3zFSJvNE6sIAsl+W+a2WRiXwxVOs Sg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t04vsrq9r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Sep 2023 14:17:19 +0000
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 388E9jau007575;
+        Fri, 8 Sep 2023 14:17:18 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t04vsrq9e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Sep 2023 14:17:18 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 388C3ecf012232;
+        Fri, 8 Sep 2023 14:17:18 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+        by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3svhkkkta4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Sep 2023 14:17:18 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 388EHFAU46400246
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 8 Sep 2023 14:17:15 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 59A992004B;
+        Fri,  8 Sep 2023 14:17:15 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5C38D2004D;
+        Fri,  8 Sep 2023 14:17:13 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.123.252])
+        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Fri,  8 Sep 2023 14:17:13 +0000 (GMT)
+Content-Type: text/plain;
+        charset=utf-8
+Subject: Re: [PATCH 0/3] Fix for shellcheck issues with version "0.6"
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <CAP-5=fXVSh0q6cQwQdGR-jxTTec_s43geZ02gEekrFbSvCKnZw@mail.gmail.com>
+Date:   Fri, 8 Sep 2023 19:47:01 +0530
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>
+Message-Id: <67DF02AD-62FD-4E7B-9F85-A14166BD18AD@linux.vnet.ibm.com>
+References: <20230907171540.36736-1-atrajeev@linux.vnet.ibm.com>
+ <CAP-5=fXVSh0q6cQwQdGR-jxTTec_s43geZ02gEekrFbSvCKnZw@mail.gmail.com>
+To:     Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+X-Mailer: Apple Mail (2.3731.700.6)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: jbOL6B6xDCYoouKNQcICJgcZybxt-oAQ
+X-Proofpoint-ORIG-GUID: ls4BhvdG2P0PDuddmy6eFPLsHqyP2h-s
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <188f7a79-ad47-eddd-a185-174e0970ad22@amd.com>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-08_10,2023-09-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ priorityscore=1501 suspectscore=0 adultscore=0 mlxscore=0 bulkscore=0
+ impostorscore=0 mlxlogscore=999 lowpriorityscore=0 spamscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309080130
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 07, 2023 at 09:19:51PM +0530, Manali Shukla wrote:
 
-> > I'm not sure I'm fluent in virt speak (in fact, I'm sure I'm not). Is
-> > the above saying that a host can never IBS profile a guest?
-> 
-> Host can profile a guest with IBS if VIBS is disabled for the guest. This is
-> the default behavior. Host can not profile guest if VIBS is enabled for guest.
-> 
-> > 
-> > Does the current IBS thing assert perf_event_attr::exclude_guest is set?
-> 
-> Unlike AMD core pmu, IBS doesn't have Host/Guest filtering capability, thus
-> perf_event_open() fails if exclude_guest is set for an IBS event.
 
-Then you must not allow VIBS if a host cpu-wide IBS counter exists.
+> On 08-Sep-2023, at 5:20 AM, Ian Rogers <irogers@google.com> wrote:
+>=20
+> On Thu, Sep 7, 2023 at 10:17=E2=80=AFAM Athira Rajeev
+> <atrajeev@linux.vnet.ibm.com> wrote:
+>>=20
+>> From: root <root@ltcden13-lp4.aus.stglabs.ibm.com>
+>>=20
+>> shellcheck was run on perf tool shell scripts s a pre-requisite
+>> to include a build option for shellcheck discussed here:
+>> https://www.spinics.net/lists/linux-perf-users/msg25553.html
+>>=20
+>> And fixes were added for the coding/formatting issues in
+>> two patchsets:
+>> https://lore.kernel.org/linux-perf-users/20230613164145.50488-1-atrajeev=
+@linux.vnet.ibm.com/
+>> https://lore.kernel.org/linux-perf-users/20230709182800.53002-1-atrajeev=
+@linux.vnet.ibm.com/
+>>=20
+>> Three additional issues are observed with shellcheck "0.6" and
+>> this patchset covers those. With this patchset,
+>>=20
+>> # for F in $(find tests/shell/ -perm -o=3Dx -name '*.sh'); do shellcheck=
+ -S warning $F; done
+>> # echo $?
+>> 0
+>>=20
+>> Athira Rajeev (3):
+>>  tests/shell: Fix shellcheck SC1090 to handle the location of sourced
+>>    files
+>>  tests/shell: Fix shellcheck issues in tests/shell/stat+shadow_stat.sh
+>>    tetscase
+>>  tests/shell: Fix shellcheck warnings for SC2153 in multiple scripts
+>=20
+> Series:
+> Tested-by: Ian Rogers <irogers@google.com>
+>=20
+> Thanks,
+> Ian
 
-Also, VIBS reads like it can be (ab)used as a filter.
+Thanks Ian for checking the patch series
+
+Athira
+>=20
+>> tools/perf/tests/shell/coresight/asm_pure_loop.sh            | 4 ++++
+>> tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh     | 4 ++++
+>> tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh | 4 ++++
+>> tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh  | 4 ++++
+>> tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh    | 4 ++++
+>> tools/perf/tests/shell/probe_vfs_getname.sh                  | 2 ++
+>> tools/perf/tests/shell/record+probe_libc_inet_pton.sh        | 2 ++
+>> tools/perf/tests/shell/record+script_probe_vfs_getname.sh    | 2 ++
+>> tools/perf/tests/shell/record.sh                             | 1 +
+>> tools/perf/tests/shell/stat+csv_output.sh                    | 1 +
+>> tools/perf/tests/shell/stat+csv_summary.sh                   | 4 ++--
+>> tools/perf/tests/shell/stat+shadow_stat.sh                   | 4 ++--
+>> tools/perf/tests/shell/stat+std_output.sh                    | 1 +
+>> tools/perf/tests/shell/test_intel_pt.sh                      | 1 +
+>> tools/perf/tests/shell/trace+probe_vfs_getname.sh            | 1 +
+>> 15 files changed, 35 insertions(+), 4 deletions(-)
+>>=20
+>> --
+>> 2.31.1
+
+
