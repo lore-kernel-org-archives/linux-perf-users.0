@@ -2,107 +2,134 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0B0EE57C5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Sep 2023 05:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCC8EE57C5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Sep 2023 05:35:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236219AbjIHFWY (ORCPT
+        id S233894AbjIHFfD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Sep 2023 01:22:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52430 "EHLO
+        Fri, 8 Sep 2023 01:35:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231911AbjIHFWX (ORCPT
+        with ESMTP id S230208AbjIHFfC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Sep 2023 01:22:23 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DC501997;
-        Thu,  7 Sep 2023 22:22:20 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-68e29792976so1468873b3a.2;
-        Thu, 07 Sep 2023 22:22:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694150539; x=1694755339; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=YYqMjXvyP9eSuVfonZy2BlNb/nZfEBjIJ7oDG/l+S0M=;
-        b=deamZDClQtv6qKiBwBWh08o7pesMuY+qtaSkf7ExbCOtQFgbQbbCbsSH9fbNakmKJn
-         iWdSpsjUjcCRYqB1eZSxcsqV8eLSgy2eeOJXcjr2PpqMd+ua7zpIigsvY8KJOvwHjD0Y
-         D8dL8tCCQnAlK7sIQFhX8kRm4YqwwW0zzyBhtuDpqoagsNjr4Cyzn3kVTVJpob5zPPkE
-         QQf7EBH6TsUldu3S3e+j9aYqRIwwHxL4ReDHaJZFJY4GebXkYemfzvVhw9VQRp5fWCkH
-         ComaJ3awA8t3eIyo1ZtUqF2PBOZSZLoWPc6eaiTNQh22EncdIp3h8sBbUfjXsDFuF1U/
-         WilA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694150539; x=1694755339;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YYqMjXvyP9eSuVfonZy2BlNb/nZfEBjIJ7oDG/l+S0M=;
-        b=UsRhUcEQdvYBvxb5Y2uUzMvgStA/k/M0ELFAUuZGjMz/UMR4/Z6u57Lopz8OI6NuaH
-         cX+GGoIjeBultr8za2Arp5iK0aW1qVv3wbS4tx2Qjeic8SKoxpsfpmk9crV6brg6ZPid
-         Pq8BNlpJEcugQTaPvL5OA1BY97WPUSMAB+AV/Ng+fojJMQsslSnOiSLv2StBEvSgXPZR
-         033/vucJg42gka/q3UBdLI8BKvL3RxhA6F5opQ1SgpL0k12VY0JCR9Bs7kDq4aEewZiR
-         IrLXcydNJbWPR7UlYpCr8vpnbbnlZSUsj3ZSmnYDHeJFspdLHm5uy3/xfv2dvET0Sh9B
-         leSA==
-X-Gm-Message-State: AOJu0YwDobpmFJWLBZQWz59uC5iOHrl2RjcPXXlUAtvuHCy8d8ImgPBa
-        b8e5AbXCtgkX9e6ptmg3sCE=
-X-Google-Smtp-Source: AGHT+IFM2Q/0ux5uBmIxvZlzMmD7GKxrROjh2tqj3TcHd6VWJsdSd4JkqY6THXJQ1p74npzmfSriWw==
-X-Received: by 2002:a05:6a00:1346:b0:68e:264f:d9ff with SMTP id k6-20020a056a00134600b0068e264fd9ffmr1620319pfu.15.1694150539475;
-        Thu, 07 Sep 2023 22:22:19 -0700 (PDT)
-Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:7e3a:75cb:af9d:24ea])
-        by smtp.gmail.com with ESMTPSA id g9-20020aa78189000000b00682c1db7551sm537445pfi.49.2023.09.07.22.22.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Sep 2023 22:22:19 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf annotate: Add more x86 mov instruction cases
-Date:   Thu,  7 Sep 2023 22:22:16 -0700
-Message-ID: <20230908052216.566148-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 8 Sep 2023 01:35:02 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC6A219AB
+        for <linux-perf-users@vger.kernel.org>; Thu,  7 Sep 2023 22:34:58 -0700 (PDT)
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3884dFNv030246;
+        Fri, 8 Sep 2023 05:34:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=IojGGN4k9PhjOTjGTzYF5mBqzccJUXOLnP6JomWQxyY=;
+ b=SFD9zNUy+cgxSbXtBnR9nuY36hbHjyvV4TyV7GzJP4bzzwV1egU36P/t1DHr3IUcMNou
+ r/CsJpLysyC1drxN0plmYUXtLXKQIj/AAnRmG69/UHikulmk5jOFcf73vdPW3ALyUT2x
+ PLPM60P3r6COonKFaup8vTTysjS1GEBeIDNIBEEJeshEnZur2jIJw8i18U0pBDicZhoq
+ gUG+GDEsX26WZeFCFd7D36r6GwWbKC/RE5igg5kvBTmAcIDIh6HmGC9Z1mg90yMEO5Se
+ H/TNA4w6vZf6FhqCdFwZYSk/ceEOXxa8duf6Q7T7n4bBuzo8+E9FDkHSa9jWHVo8UGjo Rg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sys0j4u14-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Sep 2023 05:34:32 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3885GKaQ026040;
+        Fri, 8 Sep 2023 05:34:32 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sys0j4u09-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Sep 2023 05:34:32 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3883mVSk001624;
+        Fri, 8 Sep 2023 05:34:31 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+        by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3svfct9rpq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Sep 2023 05:34:31 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3885YSe846334228
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 8 Sep 2023 05:34:28 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CA33B2004B;
+        Fri,  8 Sep 2023 05:34:28 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9CE1720040;
+        Fri,  8 Sep 2023 05:34:26 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.109.241.220])
+        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Fri,  8 Sep 2023 05:34:26 +0000 (GMT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
+Subject: Re: [PATCH V2] perf test: Fix parse-events tests to skip parametrized
+ events
+From:   Sachin Sant <sachinp@linux.ibm.com>
+In-Reply-To: <20230907165933.36442-1-atrajeev@linux.vnet.ibm.com>
+Date:   Fri, 8 Sep 2023 11:04:14 +0530
+Cc:     acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org,
+        Kajol Jain <kjain@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        disgoel@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <1F3D650F-91B5-4570-85D2-A925320BE7AE@linux.ibm.com>
+References: <20230907165933.36442-1-atrajeev@linux.vnet.ibm.com>
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+X-Mailer: Apple Mail (2.3731.700.6)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Ncwsrs04b4s9ZRI7YTYEROvyP4bbozc5
+X-Proofpoint-ORIG-GUID: 6YcKZ6TZ9YDNIE33NRW5NF3B0g7Xvwaz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-08_02,2023-09-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=999 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ clxscore=1011 adultscore=0 spamscore=0 phishscore=0 priorityscore=1501
+ bulkscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309080046
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Instructions with sign- and zero- extention like movsbl and movzwq were
-not handled properly.  As it can check different size suffix (-b, -w, -l
-or -q) we can omit that and add the common parts even though some
-combinations are not possible.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/arch/x86/annotate/instructions.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arch/x86/annotate/instructions.c
-index 5f4ac4fc7fcf..5cdf457f5cbe 100644
---- a/tools/perf/arch/x86/annotate/instructions.c
-+++ b/tools/perf/arch/x86/annotate/instructions.c
-@@ -74,12 +74,15 @@ static struct ins x86__instructions[] = {
- 	{ .name = "movdqa",	.ops = &mov_ops,  },
- 	{ .name = "movdqu",	.ops = &mov_ops,  },
- 	{ .name = "movsd",	.ops = &mov_ops,  },
--	{ .name = "movslq",	.ops = &mov_ops,  },
- 	{ .name = "movss",	.ops = &mov_ops,  },
-+	{ .name = "movsb",	.ops = &mov_ops,  },
-+	{ .name = "movsw",	.ops = &mov_ops,  },
-+	{ .name = "movsl",	.ops = &mov_ops,  },
- 	{ .name = "movupd",	.ops = &mov_ops,  },
- 	{ .name = "movups",	.ops = &mov_ops,  },
--	{ .name = "movzbl",	.ops = &mov_ops,  },
--	{ .name = "movzwl",	.ops = &mov_ops,  },
-+	{ .name = "movzb",	.ops = &mov_ops,  },
-+	{ .name = "movzw",	.ops = &mov_ops,  },
-+	{ .name = "movzl",	.ops = &mov_ops,  },
- 	{ .name = "mulsd",	.ops = &mov_ops,  },
- 	{ .name = "mulss",	.ops = &mov_ops,  },
- 	{ .name = "nop",	.ops = &nop_ops,  },
--- 
-2.42.0.283.g2d96d420d3-goog
+> On 07-Sep-2023, at 10:29 PM, Athira Rajeev =
+<atrajeev@linux.vnet.ibm.com> wrote:
+>=20
+> Testcase "Parsing of all PMU events from sysfs" parse events for
+> all PMUs, and not just cpu. In case of powerpc, the PowerVM
+> environment supports events from hv_24x7 and hv_gpci PMU which
+> is of example format like below:
+>=20
+> - hv_24x7/CPM_ADJUNCT_INST,domain=3D?,core=3D?/
+> - hv_gpci/event,partition_id=3D?/
+>=20
+> The value for "?" needs to be filled in depending on system
+> configuration. It is better to skip these parametrized events
+> in this test as it is done in:
+> 'commit b50d691e50e6 ("perf test: Fix "all PMU test" to skip
+> parametrized events")' which handled a simialr instance with
+> "all PMU test".
+>=20
+> Fix parse-events test to skip parametrized events since
+> it needs proper setup of the parameters.
+>=20
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> ---
+> Changelog:
+> v1 -> v2:
+> Addressed review comments from Ian. Updated size of
+> pmu event name variable and changed bool name which is
+> used to skip the test.
+>=20
 
+The patch fixes the reported issue.
+
+6.2: Parsing of all PMU events from sysfs                          : Ok
+6.3: Parsing of given PMU events from sysfs                        : Ok
+
+Tested-by: Sachin Sant <sachinp@linux.ibm.com>
+
+- Sachin=
