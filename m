@@ -2,134 +2,120 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCC8EE57C5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Sep 2023 05:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 735A7EE57CA
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Sep 2023 06:24:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233894AbjIHFfD (ORCPT
+        id S237529AbjIHGYF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Sep 2023 01:35:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40612 "EHLO
+        Fri, 8 Sep 2023 02:24:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230208AbjIHFfC (ORCPT
+        with ESMTP id S230500AbjIHGYE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Sep 2023 01:35:02 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC6A219AB
-        for <linux-perf-users@vger.kernel.org>; Thu,  7 Sep 2023 22:34:58 -0700 (PDT)
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3884dFNv030246;
-        Fri, 8 Sep 2023 05:34:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=IojGGN4k9PhjOTjGTzYF5mBqzccJUXOLnP6JomWQxyY=;
- b=SFD9zNUy+cgxSbXtBnR9nuY36hbHjyvV4TyV7GzJP4bzzwV1egU36P/t1DHr3IUcMNou
- r/CsJpLysyC1drxN0plmYUXtLXKQIj/AAnRmG69/UHikulmk5jOFcf73vdPW3ALyUT2x
- PLPM60P3r6COonKFaup8vTTysjS1GEBeIDNIBEEJeshEnZur2jIJw8i18U0pBDicZhoq
- gUG+GDEsX26WZeFCFd7D36r6GwWbKC/RE5igg5kvBTmAcIDIh6HmGC9Z1mg90yMEO5Se
- H/TNA4w6vZf6FhqCdFwZYSk/ceEOXxa8duf6Q7T7n4bBuzo8+E9FDkHSa9jWHVo8UGjo Rg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sys0j4u14-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Sep 2023 05:34:32 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3885GKaQ026040;
-        Fri, 8 Sep 2023 05:34:32 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sys0j4u09-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Sep 2023 05:34:32 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3883mVSk001624;
-        Fri, 8 Sep 2023 05:34:31 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-        by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3svfct9rpq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Sep 2023 05:34:31 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3885YSe846334228
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 Sep 2023 05:34:28 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CA33B2004B;
-        Fri,  8 Sep 2023 05:34:28 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9CE1720040;
-        Fri,  8 Sep 2023 05:34:26 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.109.241.220])
-        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Fri,  8 Sep 2023 05:34:26 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
-Subject: Re: [PATCH V2] perf test: Fix parse-events tests to skip parametrized
- events
-From:   Sachin Sant <sachinp@linux.ibm.com>
-In-Reply-To: <20230907165933.36442-1-atrajeev@linux.vnet.ibm.com>
-Date:   Fri, 8 Sep 2023 11:04:14 +0530
-Cc:     acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        irogers@google.com, namhyung@kernel.org,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        disgoel@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org
+        Fri, 8 Sep 2023 02:24:04 -0400
+Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE67019AE
+        for <linux-perf-users@vger.kernel.org>; Thu,  7 Sep 2023 23:23:59 -0700 (PDT)
+Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-414ba610766so208591cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Sep 2023 23:23:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1694154239; x=1694759039; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TBd0PEKDa0GklZY+3jaMMJ9dni8AGLqK5Rg/U8MR1Nk=;
+        b=XxxugHaHyCpPfOdNB7o23Fxr6uih9bGN0jcgHZJqaa54RS8y/mUK3Io1gLnY3nW5cq
+         B46nF7iVJs6PlBgXSDfaQYLoKTWGBFo4a2U+AC7eloX9sPQRNZoJ9teDUqVsXylq+wGu
+         xftz1j1Jm+h/KzAx12myRQfYRjXiK0TrSFoMm0kdCbXo6rX/8oPlAWzOp/Wb4oU/Mv5y
+         rvGnI7FnCq/XMUK30Ln5AfE1mJ5qM2oLtKEJSjIv1R3c/Jl3UD00RZmMZGfjwiGfrS9h
+         WRMgA2TXuaM9Y4TuTgIZPhEsGjoALWIxy+UKYHtvHbp6vDP1yUiSG9vYbS+ksMGu7FLE
+         ZxlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694154239; x=1694759039;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TBd0PEKDa0GklZY+3jaMMJ9dni8AGLqK5Rg/U8MR1Nk=;
+        b=KFgHnUZBUnkMmEDTbTb9j3QI76dhY4DkT6kfs9eEqSyLGkaj110igRw+KmXQJrk68X
+         nhb3JhMaILDE31v7gN0NEIGyLmmaXyBzG0iHdjKqZm3eA2FWM8zKz/BYCbpP20viuRIS
+         LStqcb12ZuiRqoskLWkSTg5GOvjS462sIWtKTnXoMeAxUGSeki7tg1SSJkf/Cb/PnWry
+         knZ+DnUWekeGYvakb7naWe81nbzDlEtvUxFInprUKrrPlV6KbusB43FwjXgepNoXGspV
+         GoppbARxNHMncVwaWyzQfJ76xm4XGuz8qw9x5qrdT5fw9RXuPCvZr028KykqQNH5esY2
+         SUIg==
+X-Gm-Message-State: AOJu0YyJXTfv88CCm4XGGuoRQgHoiVwxv01tWWWioRFDR+AJNc4dSaI6
+        sbJ+LcFUSVIWlFcqUb8wBpOPph3cxYb5hNyAPxZJDQ==
+X-Google-Smtp-Source: AGHT+IEcYwEKNhzhb/oN2gICOT6FKzcOxeFWdr7HQvla5c8T0wJmYsDcsmPUMvIPR6VVA1RlVpe6FYtCFG1iDW+cXcE=
+X-Received: by 2002:a05:622a:1315:b0:3ef:5f97:258f with SMTP id
+ v21-20020a05622a131500b003ef5f97258fmr168200qtk.16.1694154238897; Thu, 07 Sep
+ 2023 23:23:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230908052216.566148-1-namhyung@kernel.org>
+In-Reply-To: <20230908052216.566148-1-namhyung@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 7 Sep 2023 23:23:46 -0700
+Message-ID: <CAP-5=fUtEvW9h7N=w3vvYBB3vytnTXJsXrHDD6zLA2DzYFOBHQ@mail.gmail.com>
+Subject: Re: [PATCH] perf annotate: Add more x86 mov instruction cases
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <1F3D650F-91B5-4570-85D2-A925320BE7AE@linux.ibm.com>
-References: <20230907165933.36442-1-atrajeev@linux.vnet.ibm.com>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-X-Mailer: Apple Mail (2.3731.700.6)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Ncwsrs04b4s9ZRI7YTYEROvyP4bbozc5
-X-Proofpoint-ORIG-GUID: 6YcKZ6TZ9YDNIE33NRW5NF3B0g7Xvwaz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-08_02,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=999 lowpriorityscore=0 mlxscore=0 impostorscore=0
- clxscore=1011 adultscore=0 spamscore=0 phishscore=0 priorityscore=1501
- bulkscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2309080046
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-> On 07-Sep-2023, at 10:29 PM, Athira Rajeev =
-<atrajeev@linux.vnet.ibm.com> wrote:
->=20
-> Testcase "Parsing of all PMU events from sysfs" parse events for
-> all PMUs, and not just cpu. In case of powerpc, the PowerVM
-> environment supports events from hv_24x7 and hv_gpci PMU which
-> is of example format like below:
->=20
-> - hv_24x7/CPM_ADJUNCT_INST,domain=3D?,core=3D?/
-> - hv_gpci/event,partition_id=3D?/
->=20
-> The value for "?" needs to be filled in depending on system
-> configuration. It is better to skip these parametrized events
-> in this test as it is done in:
-> 'commit b50d691e50e6 ("perf test: Fix "all PMU test" to skip
-> parametrized events")' which handled a simialr instance with
-> "all PMU test".
->=20
-> Fix parse-events test to skip parametrized events since
-> it needs proper setup of the parameters.
->=20
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+On Thu, Sep 7, 2023 at 10:22=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> Instructions with sign- and zero- extention like movsbl and movzwq were
+> not handled properly.  As it can check different size suffix (-b, -w, -l
+> or -q) we can omit that and add the common parts even though some
+> combinations are not possible.
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
-> Changelog:
-> v1 -> v2:
-> Addressed review comments from Ian. Updated size of
-> pmu event name variable and changed bool name which is
-> used to skip the test.
->=20
+>  tools/perf/arch/x86/annotate/instructions.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arc=
+h/x86/annotate/instructions.c
+> index 5f4ac4fc7fcf..5cdf457f5cbe 100644
+> --- a/tools/perf/arch/x86/annotate/instructions.c
+> +++ b/tools/perf/arch/x86/annotate/instructions.c
+> @@ -74,12 +74,15 @@ static struct ins x86__instructions[] =3D {
+>         { .name =3D "movdqa",     .ops =3D &mov_ops,  },
+>         { .name =3D "movdqu",     .ops =3D &mov_ops,  },
+>         { .name =3D "movsd",      .ops =3D &mov_ops,  },
+> -       { .name =3D "movslq",     .ops =3D &mov_ops,  },
+>         { .name =3D "movss",      .ops =3D &mov_ops,  },
+> +       { .name =3D "movsb",      .ops =3D &mov_ops,  },
+> +       { .name =3D "movsw",      .ops =3D &mov_ops,  },
+> +       { .name =3D "movsl",      .ops =3D &mov_ops,  },
 
-The patch fixes the reported issue.
+In Intel's manual some of these names are "Move Data From String to
+String" operations, movsb and movsw in particular. These instructions
+can be used to make simple memcpy loops. Could it be the past omission
+was deliberate due to the different way the addressing works in the
+instructions?
 
-6.2: Parsing of all PMU events from sysfs                          : Ok
-6.3: Parsing of given PMU events from sysfs                        : Ok
+Thanks,
+Ian
 
-Tested-by: Sachin Sant <sachinp@linux.ibm.com>
-
-- Sachin=
+>         { .name =3D "movupd",     .ops =3D &mov_ops,  },
+>         { .name =3D "movups",     .ops =3D &mov_ops,  },
+> -       { .name =3D "movzbl",     .ops =3D &mov_ops,  },
+> -       { .name =3D "movzwl",     .ops =3D &mov_ops,  },
+> +       { .name =3D "movzb",      .ops =3D &mov_ops,  },
+> +       { .name =3D "movzw",      .ops =3D &mov_ops,  },
+> +       { .name =3D "movzl",      .ops =3D &mov_ops,  },
+>         { .name =3D "mulsd",      .ops =3D &mov_ops,  },
+>         { .name =3D "mulss",      .ops =3D &mov_ops,  },
+>         { .name =3D "nop",        .ops =3D &nop_ops,  },
+> --
+> 2.42.0.283.g2d96d420d3-goog
+>
