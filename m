@@ -2,200 +2,178 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76ABFEEB562
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Sep 2023 18:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE3DEEB56E
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Sep 2023 21:33:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232221AbjIHSQe (ORCPT
+        id S237633AbjIHVd7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Sep 2023 14:16:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60192 "EHLO
+        Fri, 8 Sep 2023 17:33:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234868AbjIHSQd (ORCPT
+        with ESMTP id S234754AbjIHVd7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Sep 2023 14:16:33 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED35B212C;
-        Fri,  8 Sep 2023 11:16:07 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25167C433B7;
-        Fri,  8 Sep 2023 18:03:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694196228;
-        bh=Z8jMNZqZI+xq24lkZ695Dl+JDwo18OcYpFoIJOVram0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pjite3g+uZwC2teNRMrOszjh/hIvfvk6ODMngGMPrW+ufDxzzpi4zYiluanDV/cYd
-         s3imFyVwG85HuXTFg9ikdVDgCnkSUDhxYSjfwf/rVgam/njhz7umDz+gRujoHgyYYP
-         F0ZNV1TXyFZP2N6Zf8/t9FG14sRgV8kyWyuOeWDfuuTLe6VuM5xA9/Zw7cywj3x4nY
-         vUu0ZELwXddlbJO6+7JZggTktxOixrqYS/6l84nh6oXkSXNpR+9gbUQaFXx4Cdoc9e
-         MkjY3Ry/MfL7LvdTJDH5vRwQQc4qKHeEkmspva4bCm6ZnMJ0S1+1LDUeE/pUT6Cmv9
-         HlbHEZDvUBd1w==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomislav Novak <tnovak@meta.com>,
-        Samuel Gosselin <sgosselin@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        mark.rutland@arm.com, linux@armlinux.org.uk, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 8/8] hw_breakpoint: fix single-stepping when using bpf_overflow_handler
-Date:   Fri,  8 Sep 2023 14:03:19 -0400
-Message-Id: <20230908180320.3458596-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230908180320.3458596-1-sashal@kernel.org>
-References: <20230908180320.3458596-1-sashal@kernel.org>
+        Fri, 8 Sep 2023 17:33:59 -0400
+Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4E2319B6
+        for <linux-perf-users@vger.kernel.org>; Fri,  8 Sep 2023 14:33:54 -0700 (PDT)
+Received: by mail-qt1-x836.google.com with SMTP id d75a77b69052e-415155b2796so15641cf.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 08 Sep 2023 14:33:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1694208833; x=1694813633; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MfevmZn91fM44hLIGV+jcd6pMniaGx21p0N0a1MPeVE=;
+        b=gX6KbGLdrBPz72zZsMh0QuMXItgz2kQ3sT7OKZZ9Sn8tIc1HCZOA0lQQpWGy/LLz/y
+         CxnYxWhEPQzUl+JvGi8F2u5s5K/VLIfYqNX4pEr54n3YI27UBCCxB0BW5g0SdlXXakyk
+         lRxswXRim1um09G3jrR5TaWERaxmk5aHQLlsCH6vH35LRVBVv0oHBwYDV6zvYfCP1cLT
+         ZuVvqWNJ9UQuUAsYY7G6dRfEpzl+QJXsw7WI9TTqskl99FGXohths96kxzabTLLo3oeN
+         bpoHi94PEOzLxmhDmHVG8Ru9QZNRWRpVajflZEUgJ4j3AieFB+V2bzxUkxyjO1bq7Jq1
+         Tuug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694208833; x=1694813633;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MfevmZn91fM44hLIGV+jcd6pMniaGx21p0N0a1MPeVE=;
+        b=skSKb8wfhjFcLukaQvVWQkAQeDtu71w6C4RaNTKTRiMDkLGcm9qsAwx+tKXUhxW8Is
+         Qz3KqZ4Da9tiL/vmQC1BdPv5dr8ZcpZUR57R1eSmXtCag/i1/DrXhRG02+78P+VVq34Q
+         koS6Y0iWdF9IiGNZXn9+tD3+JXlEzVenaXbiNJqrvjM07naoPJUwE4KHighIrOw6wvg1
+         0ITVnMceBzQNnHOmR1coXwMHfb9a97q4EgbdbmwjuiT6IismtlW1DJ/lLQPoy88ydKrs
+         FSSfEstD4euVppLgu73rX1DhoENT5aSidPwmfN2DsRQ+U5OtL8aARHYI9707B+n82oYe
+         FtmQ==
+X-Gm-Message-State: AOJu0YwOO3wsc7TEp4j9Rcu0UL7T2jLqGA9+W4EglYkqW4qrQRDRqjNY
+        Fr6al9vY0GpsOC4gjb1se/093ltl1xxo9Dp8jWZCBA==
+X-Google-Smtp-Source: AGHT+IEB2DSWIsThRYGIKiW5I1btJGsunl21Q8x3POOJYXKwt9gvHrhKcTHa8i4HIpqm/vkNmwHL21RVvIAD6Wwgv0E=
+X-Received: by 2002:a05:622a:453:b0:3f8:5b2:aef0 with SMTP id
+ o19-20020a05622a045300b003f805b2aef0mr391151qtx.24.1694208833608; Fri, 08 Sep
+ 2023 14:33:53 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.194
-Content-Transfer-Encoding: 8bit
+References: <1694087913-46144-1-git-send-email-renyu.zj@linux.alibaba.com> <1694087913-46144-2-git-send-email-renyu.zj@linux.alibaba.com>
+In-Reply-To: <1694087913-46144-2-git-send-email-renyu.zj@linux.alibaba.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 8 Sep 2023 14:33:42 -0700
+Message-ID: <CAP-5=fVWcQrqLeuc-k4HRNrNdb_=9CbqTSOAX=HDR7f=j8b0Hg@mail.gmail.com>
+Subject: Re: [PATCH v8 1/8] perf pmu: "Compat" supports matching multiple identifiers
+To:     Jing Zhang <renyu.zj@linux.alibaba.com>
+Cc:     John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Tomislav Novak <tnovak@meta.com>
+On Thu, Sep 7, 2023 at 4:58=E2=80=AFAM Jing Zhang <renyu.zj@linux.alibaba.c=
+om> wrote:
+>
+> The jevent "Compat" is used for uncore PMU alias or metric definitions.
+>
+> The same PMU driver has different PMU identifiers due to different
+> hardware versions and types, but they may have some common PMU event.
+> Since a Compat value can only match one identifier, when adding the
+> same event alias to PMUs with different identifiers, each identifier
+> needs to be defined once, which is not streamlined enough.
+>
+> So let "Compat" supports matching multiple identifiers for uncore PMU
+> alias. For example, the Compat value {43401;436*} can match the PMU
+> identifier "43401", that is, CMN600_r0p0, and the PMU identifier with
+> the prefix "436", that is, all CMN650, where "*" is a wildcard.
+> Tokens in Unit field are delimited by ';' with no spaces.
+>
+> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+> Reviewed-by: John Garry <john.g.garry@oracle.com>
+> ---
+>  tools/perf/util/pmu.c | 28 ++++++++++++++++++++++++++--
+>  tools/perf/util/pmu.h |  1 +
+>  2 files changed, 27 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index e215985..c3c3818 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -875,6 +875,30 @@ static bool pmu_uncore_alias_match(const char *pmu_n=
+ame, const char *name)
+>         return res;
+>  }
+>
+> +bool pmu_uncore_identifier_match(const char *id, const char *compat)
+> +{
+> +       char *tmp =3D NULL, *tok, *str;
+> +       bool res =3D false;
+> +
+> +       /*
+> +        * The strdup() call is necessary here because "compat" is a cons=
+t str*
+> +        * type and cannot be used as an argument to strtok_r().
+> +        */
+> +       str =3D strdup(compat);
+> +       if (!str)
+> +               return false;
+> +
+> +       tok =3D strtok_r(str, ";", &tmp);
 
-[ Upstream commit d11a69873d9a7435fe6a48531e165ab80a8b1221 ]
+Did the comma vs semicolon difference get explained? It seems to add
+inconsistency to use a semicolon.
 
-Arm platforms use is_default_overflow_handler() to determine if the
-hw_breakpoint code should single-step over the breakpoint trigger or
-let the custom handler deal with it.
+Thanks,
+Ian
 
-Since bpf_overflow_handler() currently isn't recognized as a default
-handler, attaching a BPF program to a PERF_TYPE_BREAKPOINT event causes
-it to keep firing (the instruction triggering the data abort exception
-is never skipped). For example:
-
-  # bpftrace -e 'watchpoint:0x10000:4:w { print("hit") }' -c ./test
-  Attaching 1 probe...
-  hit
-  hit
-  [...]
-  ^C
-
-(./test performs a single 4-byte store to 0x10000)
-
-This patch replaces the check with uses_default_overflow_handler(),
-which accounts for the bpf_overflow_handler() case by also testing
-if one of the perf_event_output functions gets invoked indirectly,
-via orig_default_handler.
-
-Signed-off-by: Tomislav Novak <tnovak@meta.com>
-Tested-by: Samuel Gosselin <sgosselin@google.com> # arm64
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/linux-arm-kernel/20220923203644.2731604-1-tnovak@fb.com/
-Link: https://lore.kernel.org/r/20230605191923.1219974-1-tnovak@meta.com
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/kernel/hw_breakpoint.c   |  8 ++++----
- arch/arm64/kernel/hw_breakpoint.c |  4 ++--
- include/linux/perf_event.h        | 22 +++++++++++++++++++---
- 3 files changed, 25 insertions(+), 9 deletions(-)
-
-diff --git a/arch/arm/kernel/hw_breakpoint.c b/arch/arm/kernel/hw_breakpoint.c
-index b1423fb130ea4..8f1fa7aac31fb 100644
---- a/arch/arm/kernel/hw_breakpoint.c
-+++ b/arch/arm/kernel/hw_breakpoint.c
-@@ -626,7 +626,7 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
- 	hw->address &= ~alignment_mask;
- 	hw->ctrl.len <<= offset;
- 
--	if (is_default_overflow_handler(bp)) {
-+	if (uses_default_overflow_handler(bp)) {
- 		/*
- 		 * Mismatch breakpoints are required for single-stepping
- 		 * breakpoints.
-@@ -798,7 +798,7 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
- 		 * Otherwise, insert a temporary mismatch breakpoint so that
- 		 * we can single-step over the watchpoint trigger.
- 		 */
--		if (!is_default_overflow_handler(wp))
-+		if (!uses_default_overflow_handler(wp))
- 			continue;
- step:
- 		enable_single_step(wp, instruction_pointer(regs));
-@@ -811,7 +811,7 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
- 		info->trigger = addr;
- 		pr_debug("watchpoint fired: address = 0x%x\n", info->trigger);
- 		perf_bp_event(wp, regs);
--		if (is_default_overflow_handler(wp))
-+		if (uses_default_overflow_handler(wp))
- 			enable_single_step(wp, instruction_pointer(regs));
- 	}
- 
-@@ -886,7 +886,7 @@ static void breakpoint_handler(unsigned long unknown, struct pt_regs *regs)
- 			info->trigger = addr;
- 			pr_debug("breakpoint fired: address = 0x%x\n", addr);
- 			perf_bp_event(bp, regs);
--			if (is_default_overflow_handler(bp))
-+			if (uses_default_overflow_handler(bp))
- 				enable_single_step(bp, addr);
- 			goto unlock;
- 		}
-diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-index 712e97c03e54c..e5a0c38f1b5ee 100644
---- a/arch/arm64/kernel/hw_breakpoint.c
-+++ b/arch/arm64/kernel/hw_breakpoint.c
-@@ -654,7 +654,7 @@ static int breakpoint_handler(unsigned long unused, unsigned int esr,
- 		perf_bp_event(bp, regs);
- 
- 		/* Do we need to handle the stepping? */
--		if (is_default_overflow_handler(bp))
-+		if (uses_default_overflow_handler(bp))
- 			step = 1;
- unlock:
- 		rcu_read_unlock();
-@@ -733,7 +733,7 @@ static u64 get_distance_from_watchpoint(unsigned long addr, u64 val,
- static int watchpoint_report(struct perf_event *wp, unsigned long addr,
- 			     struct pt_regs *regs)
+> +       for (; tok; tok =3D strtok_r(NULL, ";", &tmp)) {
+> +               if (!fnmatch(tok, id, FNM_CASEFOLD)) {
+> +                       res =3D true;
+> +                       break;
+> +               }
+> +       }
+> +       free(str);
+> +       return res;
+> +}
+> +
+>  static int pmu_add_cpu_aliases_map_callback(const struct pmu_event *pe,
+>                                         const struct pmu_events_table *ta=
+ble __maybe_unused,
+>                                         void *vdata)
+> @@ -915,8 +939,8 @@ static int pmu_add_sys_aliases_iter_fn(const struct p=
+mu_event *pe,
+>         if (!pe->compat || !pe->pmu)
+>                 return 0;
+>
+> -       if (!strcmp(pmu->id, pe->compat) &&
+> -           pmu_uncore_alias_match(pe->pmu, pmu->name)) {
+> +       if (pmu_uncore_alias_match(pe->pmu, pmu->name) &&
+> +                       pmu_uncore_identifier_match(pmu->id, pe->compat))=
  {
--	int step = is_default_overflow_handler(wp);
-+	int step = uses_default_overflow_handler(wp);
- 	struct arch_hw_breakpoint *info = counter_arch_bp(wp);
- 
- 	info->trigger = addr;
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 67a50c78232fe..93dffe2f3fff2 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1069,15 +1069,31 @@ extern int perf_event_output(struct perf_event *event,
- 			     struct pt_regs *regs);
- 
- static inline bool
--is_default_overflow_handler(struct perf_event *event)
-+__is_default_overflow_handler(perf_overflow_handler_t overflow_handler)
- {
--	if (likely(event->overflow_handler == perf_event_output_forward))
-+	if (likely(overflow_handler == perf_event_output_forward))
- 		return true;
--	if (unlikely(event->overflow_handler == perf_event_output_backward))
-+	if (unlikely(overflow_handler == perf_event_output_backward))
- 		return true;
- 	return false;
- }
- 
-+#define is_default_overflow_handler(event) \
-+	__is_default_overflow_handler((event)->overflow_handler)
-+
-+#ifdef CONFIG_BPF_SYSCALL
-+static inline bool uses_default_overflow_handler(struct perf_event *event)
-+{
-+	if (likely(is_default_overflow_handler(event)))
-+		return true;
-+
-+	return __is_default_overflow_handler(event->orig_overflow_handler);
-+}
-+#else
-+#define uses_default_overflow_handler(event) \
-+	is_default_overflow_handler(event)
-+#endif
-+
- extern void
- perf_event_header__init_id(struct perf_event_header *header,
- 			   struct perf_sample_data *data,
--- 
-2.40.1
-
+>                 perf_pmu__new_alias(pmu,
+>                                 pe->name,
+>                                 pe->desc,
+> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> index bd5d804..1bf5cf1 100644
+> --- a/tools/perf/util/pmu.h
+> +++ b/tools/perf/util/pmu.h
+> @@ -240,6 +240,7 @@ void pmu_add_cpu_aliases_table(struct perf_pmu *pmu,
+>  char *perf_pmu__getcpuid(struct perf_pmu *pmu);
+>  const struct pmu_events_table *pmu_events_table__find(void);
+>  const struct pmu_metrics_table *pmu_metrics_table__find(void);
+> +bool pmu_uncore_identifier_match(const char *id, const char *compat);
+>
+>  int perf_pmu__convert_scale(const char *scale, char **end, double *sval)=
+;
+>
+> --
+> 1.8.3.1
+>
