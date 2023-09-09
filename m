@@ -2,32 +2,32 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455FCEEB57A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A77EEB57D
 	for <linux-perf-users@archiver.kernel.org>; Sat,  9 Sep 2023 01:42:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236890AbjIIBmU (ORCPT
+        id S240787AbjIIBmV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Sep 2023 21:42:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39606 "EHLO
+        Fri, 8 Sep 2023 21:42:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231584AbjIIBmT (ORCPT
+        with ESMTP id S234529AbjIIBmU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Sep 2023 21:42:19 -0400
+        Fri, 8 Sep 2023 21:42:20 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61DD11716;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E7441FE7;
         Fri,  8 Sep 2023 18:42:15 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A13EBC433C8;
-        Sat,  9 Sep 2023 00:24:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 967A2C4167D;
+        Sat,  9 Sep 2023 00:23:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694219057;
-        bh=x9Y7FBkg3BsPqNSt7nwbTb/lNAKoOPQFp4cDPtwA/10=;
+        s=k20201202; t=1694219041;
+        bh=kA478PEecCt3vyxSqYOoFJ19TD2X6Ic5k0Wpr/WWTSc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SIRoSCPwRV+YhhJtgm/4LfhnteW+9GsxP+hqm0SWNMQpmpBlyQJhoD49GC3zdWG5r
-         sv2GfUUGNbLDMVLCrG73y4cBdv211nFEp11PhSSqm6LcGPeOswL0jueE9a17vn7sB7
-         PQCFfnKzxsL+EGhQPFh+JNECT8DbYrsFLywXSPe6qc/pMMWWNoRtrpgelTAHZJUJIg
-         LAbeutkYeO0QwQq3UMQw6tLxIqvwCyQcQJ1Ersr7ZY1y61CaimOOvxWMioDfX1nzkS
-         zK7PUfAYhp4dssVPJIiQ2WtLCxJOP+tLjY90gXMYULK8hf69VRohqP37MEfYa8NBYF
-         YVnYrsoLsfUFQ==
+        b=juwrDmDyAJzl+NZ+gbEpWy8ZVdH3j8ppa8OWykr3shbfoFAj2Jg4Wn/S/QaF5twK+
+         9EFfgl2DxEagS5RKnJKAfjxa9oSu9t3WRjfGJO19CIsEJlf/4rqlJCE5zq5whnfslc
+         N2iT/2QVH/EFAVX7H4y1Hh8sOzcaFcmtvLqqEar9mF0t903/eRmmp9WAVHz2xm8CZc
+         p/TuldHNO/Qdl6IL8UUnLobp3x+SE01IFsdbwVx666QTEE0mOElXTgXBnAchN/0jAp
+         RoFsmH1KrkioW+jHwx/Cao3MtjmphsxtJ41o85JMpsGaDyeRvja+7X2DTxVnYWuQcL
+         Vdn9465Rmpdpw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Tomislav Novak <tnovak@fb.com>,
@@ -40,16 +40,16 @@ Cc:     Tomislav Novak <tnovak@fb.com>,
         mingo@redhat.com, acme@kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 4/6] ARM: 9316/1: hw_breakpoint: fix single-stepping when using bpf_overflow_handler
-Date:   Fri,  8 Sep 2023 20:24:03 -0400
-Message-Id: <20230909002406.3578776-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 4/5] ARM: 9316/1: hw_breakpoint: fix single-stepping when using bpf_overflow_handler
+Date:   Fri,  8 Sep 2023 20:23:48 -0400
+Message-Id: <20230909002351.3578696-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230909002406.3578776-1-sashal@kernel.org>
-References: <20230909002406.3578776-1-sashal@kernel.org>
+In-Reply-To: <20230909002351.3578696-1-sashal@kernel.org>
+References: <20230909002351.3578696-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.256
+X-stable-base: Linux 5.10.194
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -97,10 +97,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  3 files changed, 25 insertions(+), 9 deletions(-)
 
 diff --git a/arch/arm/kernel/hw_breakpoint.c b/arch/arm/kernel/hw_breakpoint.c
-index b06d9ea07c846..a69dd64a84017 100644
+index b1423fb130ea4..8f1fa7aac31fb 100644
 --- a/arch/arm/kernel/hw_breakpoint.c
 +++ b/arch/arm/kernel/hw_breakpoint.c
-@@ -623,7 +623,7 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
+@@ -626,7 +626,7 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
  	hw->address &= ~alignment_mask;
  	hw->ctrl.len <<= offset;
  
@@ -109,7 +109,7 @@ index b06d9ea07c846..a69dd64a84017 100644
  		/*
  		 * Mismatch breakpoints are required for single-stepping
  		 * breakpoints.
-@@ -795,7 +795,7 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
+@@ -798,7 +798,7 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
  		 * Otherwise, insert a temporary mismatch breakpoint so that
  		 * we can single-step over the watchpoint trigger.
  		 */
@@ -118,7 +118,7 @@ index b06d9ea07c846..a69dd64a84017 100644
  			continue;
  step:
  		enable_single_step(wp, instruction_pointer(regs));
-@@ -808,7 +808,7 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
+@@ -811,7 +811,7 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
  		info->trigger = addr;
  		pr_debug("watchpoint fired: address = 0x%x\n", info->trigger);
  		perf_bp_event(wp, regs);
@@ -127,7 +127,7 @@ index b06d9ea07c846..a69dd64a84017 100644
  			enable_single_step(wp, instruction_pointer(regs));
  	}
  
-@@ -883,7 +883,7 @@ static void breakpoint_handler(unsigned long unknown, struct pt_regs *regs)
+@@ -886,7 +886,7 @@ static void breakpoint_handler(unsigned long unknown, struct pt_regs *regs)
  			info->trigger = addr;
  			pr_debug("breakpoint fired: address = 0x%x\n", addr);
  			perf_bp_event(bp, regs);
@@ -137,7 +137,7 @@ index b06d9ea07c846..a69dd64a84017 100644
  			goto unlock;
  		}
 diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-index b4a1607958246..534578eba556e 100644
+index 712e97c03e54c..e5a0c38f1b5ee 100644
 --- a/arch/arm64/kernel/hw_breakpoint.c
 +++ b/arch/arm64/kernel/hw_breakpoint.c
 @@ -654,7 +654,7 @@ static int breakpoint_handler(unsigned long unused, unsigned int esr,
@@ -159,10 +159,10 @@ index b4a1607958246..534578eba556e 100644
  
  	info->trigger = addr;
 diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index b7ac395513c0f..c99e2f851d312 100644
+index 67a50c78232fe..93dffe2f3fff2 100644
 --- a/include/linux/perf_event.h
 +++ b/include/linux/perf_event.h
-@@ -1018,15 +1018,31 @@ extern int perf_event_output(struct perf_event *event,
+@@ -1069,15 +1069,31 @@ extern int perf_event_output(struct perf_event *event,
  			     struct pt_regs *regs);
  
  static inline bool
