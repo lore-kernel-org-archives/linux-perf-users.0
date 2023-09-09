@@ -2,101 +2,201 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D499EEB565
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Sep 2023 23:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 434A9EEB57A
+	for <linux-perf-users@archiver.kernel.org>; Sat,  9 Sep 2023 00:22:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240228AbjIHX4U convert rfc822-to-8bit (ORCPT
+        id S1345423AbjIIAWf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Sep 2023 19:56:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54624 "EHLO
+        Fri, 8 Sep 2023 20:22:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232694AbjIHX4U (ORCPT
+        with ESMTP id S1345397AbjIIAWe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Sep 2023 19:56:20 -0400
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91102133;
-        Fri,  8 Sep 2023 16:56:16 -0700 (PDT)
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-d7f0a60a159so2283369276.0;
-        Fri, 08 Sep 2023 16:56:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694217376; x=1694822176;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3fduUCFN1Wge3LY7Pmf8tbiG6qwcGsnDEnR60i43Dug=;
-        b=uH11FijiQ1Cp33fWFePd7hgSZQUlzYJTIf+bXK8CISCER2enTpP4hdykyB2cIadaZJ
-         V6q1vQlqt5cC15D/qnkscOm6bWdzrri47sFEdCBbLLhD692LS0MimBsFSQnFaMF/6t0I
-         ENmI5YAI55/P+r0uOlYxJX/5c1x/jekyKWYkwEuysiO63OQoHDUD8j16NEhL1/uM0VNS
-         FW9W0C+8MrmXvVGvS/Y0YBlyb97eJdiaQPDLzRDOFvarsmxPj6X3WE0abBu8VxsSKbgA
-         nZmXnX1KA1Sqn0hDjOl24Ibf8JOs+iI/2vLn7xka5sNPlfPHwuMr74QFUsUCpfxwTm9+
-         xBpw==
-X-Gm-Message-State: AOJu0Yw1f6yYFJcB/jlVl29b2rdTA29ZsNJzZ7ZadybBaRGQ3UGLhkWz
-        8lrYHqxRoKL1VosWDyXFdCcQ81EkEQborCWjXMY=
-X-Google-Smtp-Source: AGHT+IFpPpodW4aTMB2R61kpjLaDyqIbx6kCtrohLpibG63gjKxeOMguL8CNXvS7QlLEljxFwDZi+X53sPI3clZKjkM=
-X-Received: by 2002:a25:9208:0:b0:d44:19e9:4c6d with SMTP id
- b8-20020a259208000000b00d4419e94c6dmr3611037ybo.65.1694217375658; Fri, 08 Sep
- 2023 16:56:15 -0700 (PDT)
+        Fri, 8 Sep 2023 20:22:34 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B4182114;
+        Fri,  8 Sep 2023 17:22:21 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AD7EC433C7;
+        Sat,  9 Sep 2023 00:22:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694218941;
+        bh=EMEb7t64qwqWqHDqyZbi1Vmp4nBmUq/EHsW+q698ROw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aT9XuSdn8blis0MaRWsIDxheeT8NBo+qEw/nricP/o5sE4nRiVDUswl6Cx1AP2z8w
+         0rKIU0G/XkW4bt/GWR6MsqCx3LbekiBSbvvxEg1z/+xsLRP7R8igovqG9ywwtfJqlj
+         LiNaQ36Cm1waA+uUCiR6a6SfjLMKBaFtLKbUoAU1FGUhzq0RiS/P0HFtJr4KCCx16z
+         wxUAssBO0dx7nmcwyDGmmG5CDI3wDN1+BYKBu79l72puNtdKjhXNKxzI2OUf+76Pqs
+         O+A31nqaI1PlQORv82M8YZyuMbQLbdkSNB1Hzee85fgV9K9sslS5zCae/i15oQ5HtW
+         /fCoZ1nBYZHlw==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tomislav Novak <tnovak@fb.com>,
+        Samuel Gosselin <sgosselin@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>, will@kernel.org,
+        mark.rutland@arm.com, linux@armlinux.org.uk, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.5 07/11] ARM: 9316/1: hw_breakpoint: fix single-stepping when using bpf_overflow_handler
+Date:   Fri,  8 Sep 2023 20:22:00 -0400
+Message-Id: <20230909002205.3578068-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230909002205.3578068-1-sashal@kernel.org>
+References: <20230909002205.3578068-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20230908052216.566148-1-namhyung@kernel.org> <CAP-5=fUtEvW9h7N=w3vvYBB3vytnTXJsXrHDD6zLA2DzYFOBHQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fUtEvW9h7N=w3vvYBB3vytnTXJsXrHDD6zLA2DzYFOBHQ@mail.gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 8 Sep 2023 16:56:04 -0700
-Message-ID: <CAM9d7cj1rEjGy0QM2tkJhBn=hac-9Jya+ZJ4SNhBmB29u5KVMg@mail.gmail.com>
-Subject: Re: [PATCH] perf annotate: Add more x86 mov instruction cases
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.5.2
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
+From: Tomislav Novak <tnovak@fb.com>
 
-On Thu, Sep 7, 2023 at 11:24 PM Ian Rogers <irogers@google.com> wrote:
->
-> On Thu, Sep 7, 2023 at 10:22 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Instructions with sign- and zero- extention like movsbl and movzwq were
-> > not handled properly.  As it can check different size suffix (-b, -w, -l
-> > or -q) we can omit that and add the common parts even though some
-> > combinations are not possible.
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/arch/x86/annotate/instructions.c | 9 ++++++---
-> >  1 file changed, 6 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arch/x86/annotate/instructions.c
-> > index 5f4ac4fc7fcf..5cdf457f5cbe 100644
-> > --- a/tools/perf/arch/x86/annotate/instructions.c
-> > +++ b/tools/perf/arch/x86/annotate/instructions.c
-> > @@ -74,12 +74,15 @@ static struct ins x86__instructions[] = {
-> >         { .name = "movdqa",     .ops = &mov_ops,  },
-> >         { .name = "movdqu",     .ops = &mov_ops,  },
-> >         { .name = "movsd",      .ops = &mov_ops,  },
-> > -       { .name = "movslq",     .ops = &mov_ops,  },
-> >         { .name = "movss",      .ops = &mov_ops,  },
-> > +       { .name = "movsb",      .ops = &mov_ops,  },
-> > +       { .name = "movsw",      .ops = &mov_ops,  },
-> > +       { .name = "movsl",      .ops = &mov_ops,  },
->
-> In Intel's manual some of these names are "Move Data From String to
-> String" operations, movsb and movsw in particular. These instructions
-> can be used to make simple memcpy loops. Could it be the past omission
-> was deliberate due to the different way the addressing works in the
-> instructions?
+[ Upstream commit e6b51532d5273eeefba84106daea3d392c602837 ]
 
-I don't know but in terms of instruction parsing, they are the same
-"MOVE" with two operands.  I'm not aware of anything in perf with
-the operands of these instructions.  So I guess it'd be fine to add
-these instructions even if they have different underlying behaviors.
+Arm platforms use is_default_overflow_handler() to determine if the
+hw_breakpoint code should single-step over the breakpoint trigger or
+let the custom handler deal with it.
 
-Thanks,
-Namhyung
+Since bpf_overflow_handler() currently isn't recognized as a default
+handler, attaching a BPF program to a PERF_TYPE_BREAKPOINT event causes
+it to keep firing (the instruction triggering the data abort exception
+is never skipped). For example:
+
+  # bpftrace -e 'watchpoint:0x10000:4:w { print("hit") }' -c ./test
+  Attaching 1 probe...
+  hit
+  hit
+  [...]
+  ^C
+
+(./test performs a single 4-byte store to 0x10000)
+
+This patch replaces the check with uses_default_overflow_handler(),
+which accounts for the bpf_overflow_handler() case by also testing
+if one of the perf_event_output functions gets invoked indirectly,
+via orig_default_handler.
+
+Link: https://lore.kernel.org/linux-arm-kernel/20220923203644.2731604-1-tnovak@fb.com/
+
+Signed-off-by: Tomislav Novak <tnovak@fb.com>
+Tested-by: Samuel Gosselin <sgosselin@google.com> # arm64
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Acked-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/kernel/hw_breakpoint.c   |  8 ++++----
+ arch/arm64/kernel/hw_breakpoint.c |  4 ++--
+ include/linux/perf_event.h        | 22 +++++++++++++++++++---
+ 3 files changed, 25 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm/kernel/hw_breakpoint.c b/arch/arm/kernel/hw_breakpoint.c
+index 054e9199f30db..dc0fb7a813715 100644
+--- a/arch/arm/kernel/hw_breakpoint.c
++++ b/arch/arm/kernel/hw_breakpoint.c
+@@ -626,7 +626,7 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
+ 	hw->address &= ~alignment_mask;
+ 	hw->ctrl.len <<= offset;
+ 
+-	if (is_default_overflow_handler(bp)) {
++	if (uses_default_overflow_handler(bp)) {
+ 		/*
+ 		 * Mismatch breakpoints are required for single-stepping
+ 		 * breakpoints.
+@@ -798,7 +798,7 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
+ 		 * Otherwise, insert a temporary mismatch breakpoint so that
+ 		 * we can single-step over the watchpoint trigger.
+ 		 */
+-		if (!is_default_overflow_handler(wp))
++		if (!uses_default_overflow_handler(wp))
+ 			continue;
+ step:
+ 		enable_single_step(wp, instruction_pointer(regs));
+@@ -811,7 +811,7 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
+ 		info->trigger = addr;
+ 		pr_debug("watchpoint fired: address = 0x%x\n", info->trigger);
+ 		perf_bp_event(wp, regs);
+-		if (is_default_overflow_handler(wp))
++		if (uses_default_overflow_handler(wp))
+ 			enable_single_step(wp, instruction_pointer(regs));
+ 	}
+ 
+@@ -886,7 +886,7 @@ static void breakpoint_handler(unsigned long unknown, struct pt_regs *regs)
+ 			info->trigger = addr;
+ 			pr_debug("breakpoint fired: address = 0x%x\n", addr);
+ 			perf_bp_event(bp, regs);
+-			if (is_default_overflow_handler(bp))
++			if (uses_default_overflow_handler(bp))
+ 				enable_single_step(bp, addr);
+ 			goto unlock;
+ 		}
+diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
+index db2a1861bb978..35225632d70ad 100644
+--- a/arch/arm64/kernel/hw_breakpoint.c
++++ b/arch/arm64/kernel/hw_breakpoint.c
+@@ -654,7 +654,7 @@ static int breakpoint_handler(unsigned long unused, unsigned long esr,
+ 		perf_bp_event(bp, regs);
+ 
+ 		/* Do we need to handle the stepping? */
+-		if (is_default_overflow_handler(bp))
++		if (uses_default_overflow_handler(bp))
+ 			step = 1;
+ unlock:
+ 		rcu_read_unlock();
+@@ -733,7 +733,7 @@ static u64 get_distance_from_watchpoint(unsigned long addr, u64 val,
+ static int watchpoint_report(struct perf_event *wp, unsigned long addr,
+ 			     struct pt_regs *regs)
+ {
+-	int step = is_default_overflow_handler(wp);
++	int step = uses_default_overflow_handler(wp);
+ 	struct arch_hw_breakpoint *info = counter_arch_bp(wp);
+ 
+ 	info->trigger = addr;
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 2166a69e3bf2e..e657916c9509c 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1316,15 +1316,31 @@ extern int perf_event_output(struct perf_event *event,
+ 			     struct pt_regs *regs);
+ 
+ static inline bool
+-is_default_overflow_handler(struct perf_event *event)
++__is_default_overflow_handler(perf_overflow_handler_t overflow_handler)
+ {
+-	if (likely(event->overflow_handler == perf_event_output_forward))
++	if (likely(overflow_handler == perf_event_output_forward))
+ 		return true;
+-	if (unlikely(event->overflow_handler == perf_event_output_backward))
++	if (unlikely(overflow_handler == perf_event_output_backward))
+ 		return true;
+ 	return false;
+ }
+ 
++#define is_default_overflow_handler(event) \
++	__is_default_overflow_handler((event)->overflow_handler)
++
++#ifdef CONFIG_BPF_SYSCALL
++static inline bool uses_default_overflow_handler(struct perf_event *event)
++{
++	if (likely(is_default_overflow_handler(event)))
++		return true;
++
++	return __is_default_overflow_handler(event->orig_overflow_handler);
++}
++#else
++#define uses_default_overflow_handler(event) \
++	is_default_overflow_handler(event)
++#endif
++
+ extern void
+ perf_event_header__init_id(struct perf_event_header *header,
+ 			   struct perf_sample_data *data,
+-- 
+2.40.1
+
