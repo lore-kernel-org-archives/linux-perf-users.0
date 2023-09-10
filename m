@@ -2,59 +2,51 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706B4EE57DF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 10 Sep 2023 16:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3262EE49A4
+	for <linux-perf-users@archiver.kernel.org>; Sun, 10 Sep 2023 18:08:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231754AbjIJQVA (ORCPT
+        id S236200AbjIJSIv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 10 Sep 2023 12:21:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48840 "EHLO
+        Sun, 10 Sep 2023 14:08:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230177AbjIJQVA (ORCPT
+        with ESMTP id S229636AbjIJSIu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 10 Sep 2023 12:21:00 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC0D91A5;
-        Sun, 10 Sep 2023 09:20:55 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-99c93638322so777556866b.1;
-        Sun, 10 Sep 2023 09:20:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694362854; x=1694967654; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=ng6BvSWrmtyxNhyAHyI/hbTxjJRF3fVcx0Yq4Iv9jAk=;
-        b=pXbMx/MHgkxhssnkjgFAl7w/qlDa/KwmeDdyQ0o2HsEjKj9bPnd+v9c8pXgLysl/j6
-         EigvuBKaBf0tdaE3mTtkZYwWlmRqKxBMaaaCWi6gRbwEBfanCKW9PoNtIEHcXAMhJG2+
-         VInWaQHgR/Wy1Rq77AA+u6otVHW03v2w3g9rHcmoL3eU0NvW3iaUHWIdPKKhdVPzcrtB
-         0BAHfw1isE+i7nlPMb63OnYYCPq3Sz34Cdjd+LBwOVrViTGFXzwqMl82Q7hnCyux5cFw
-         stfyMQYTiYn9Bg5J03pKdb6xgCfSxiNEOoPoQ8MbJlCkTUVzEO3sDG36T6h7LMaP7Xyl
-         27Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694362854; x=1694967654;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ng6BvSWrmtyxNhyAHyI/hbTxjJRF3fVcx0Yq4Iv9jAk=;
-        b=ZkofB+ekcPXCcamxQFcHZJ3mRW+45/ve5SSto3tBCnslFpdoSAdhbNK+8hYA88put7
-         UMrxUahv99feyZHF5Em2ni/VGnxXq9q+EIhSlDqyzj8xcnIgo4YVkOtXOdgNwdYlJTJC
-         ot87UR0Nkb0BNXlExtS9LaHr4767OikHQaZjUxCp8qmKKCPcdpDOycPuxLBcfKjWEGSU
-         2p+skeD3MXDOmrMrwm0NUXDqE02w7bY0QI4FKzpQw/MSuVJNC9TDoKOidU7U8bXT5Izp
-         l/m5Fln7r4ik5syxXIBrC9X6PGS2azI/veoBTESCarsALJ5yBccXUw8fgzK1KJevpPR1
-         36hw==
-X-Gm-Message-State: AOJu0YzbhApeylmRmu3bOhhUJqy0tc85LjMRMLGVW5oRiCJp8SKU3N3c
-        tM+hG6cmRriLz1uwS0ZAC0Pi/LdDczw=
-X-Google-Smtp-Source: AGHT+IGCMRegEDmfhY3X7vWaNn94jbCgTeUUHMHEqqC+CxFGZQy/psWwhSFG2QM46Vm34HmN/IF0+Q==
-X-Received: by 2002:a17:907:1c94:b0:982:a022:a540 with SMTP id nb20-20020a1709071c9400b00982a022a540mr17799320ejc.11.1694362854037;
-        Sun, 10 Sep 2023 09:20:54 -0700 (PDT)
-Received: from gmail.com (84-236-113-167.pool.digikabel.hu. [84.236.113.167])
-        by smtp.gmail.com with ESMTPSA id m14-20020aa7d34e000000b0052a1a623267sm3507563edr.62.2023.09.10.09.20.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Sep 2023 09:20:53 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date:   Sun, 10 Sep 2023 18:20:51 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
+        Sun, 10 Sep 2023 14:08:50 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E87A9188;
+        Sun, 10 Sep 2023 11:08:46 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 81B86C433C8;
+        Sun, 10 Sep 2023 18:08:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694369326;
+        bh=J0aaIBeWFyBrzvKntuSVVFSamTzOmO++30dugFF8XoI=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=of7eB3fAgWSOZLU8dnQSHEiNfMK/S+wWxXj57amNjbPXGF5f/oN7R7SlZpX/yrUC7
+         CWx8GdXFf4xAL3zVlBf/l8mHAjwi2ZaUyWmiooMvc/A9sMojGUUSLofNB76UnjbGNY
+         AWaz7FH7pERw/kUCFBTG2yr5zCtkIS+JYOeC27vnL/FKse1sqJmZPCUIyUg1HkHxbQ
+         KmRbu8Lw5PmamPSfrUqm5qATargBYWnhdF8QWRoXZWE6uavq85nPsysJXLGMNgwHS9
+         jy5vuND4v6s9Ji/ahqjNFqK1vmjv2sM0r/Xlks0HPnr9XBxc9wyRQuxmRJz4UFf6i0
+         v2EA+SgGYbBtQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6CA64C04E27;
+        Sun, 10 Sep 2023 18:08:46 +0000 (UTC)
+Subject: Re: [GIT PULL] perf events fix
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <ZP3s4yKcWtgCn6zb@gmail.com>
+References: <ZP3s4yKcWtgCn6zb@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <ZP3s4yKcWtgCn6zb@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2023-09-10
+X-PR-Tracked-Commit-Id: 6f7f984fa85b305799076a1bcec941b9377587de
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: e79dbf03d87b2d9978d76ddc1c06424b07b215ad
+Message-Id: <169436932643.25650.16162340598525455096.pr-tracker-bot@kernel.org>
+Date:   Sun, 10 Sep 2023 18:08:46 +0000
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Jiri Olsa <jolsa@kernel.org>,
@@ -64,59 +56,19 @@ Cc:     linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
         Thomas Gleixner <tglx@linutronix.de>,
         Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] perf events fix
-Message-ID: <ZP3s4yKcWtgCn6zb@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Linus,
+The pull request you sent on Sun, 10 Sep 2023 18:20:51 +0200:
 
-Please pull the latest perf/urgent git tree from:
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2023-09-10
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2023-09-10
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/e79dbf03d87b2d9978d76ddc1c06424b07b215ad
 
-   # HEAD: 6f7f984fa85b305799076a1bcec941b9377587de perf/x86/uncore: Correct the number of CHAs on EMR
+Thank you!
 
-Work around a firmware bug in the uncore PMU driver,
-affecting certain Intel systems.
-
- Thanks,
-
-	Ingo
-
------------------->
-Kan Liang (1):
-      perf/x86/uncore: Correct the number of CHAs on EMR
-
-
- arch/x86/events/intel/uncore_snbep.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index 4d349986f76a..8250f0f59c2b 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -6474,8 +6474,18 @@ void spr_uncore_cpu_init(void)
- 
- 	type = uncore_find_type_by_id(uncore_msr_uncores, UNCORE_SPR_CHA);
- 	if (type) {
-+		/*
-+		 * The value from the discovery table (stored in the type->num_boxes
-+		 * of UNCORE_SPR_CHA) is incorrect on some SPR variants because of a
-+		 * firmware bug. Using the value from SPR_MSR_UNC_CBO_CONFIG to replace it.
-+		 */
- 		rdmsrl(SPR_MSR_UNC_CBO_CONFIG, num_cbo);
--		type->num_boxes = num_cbo;
-+		/*
-+		 * The MSR doesn't work on the EMR XCC, but the firmware bug doesn't impact
-+		 * the EMR XCC. Don't let the value from the MSR replace the existing value.
-+		 */
-+		if (num_cbo)
-+			type->num_boxes = num_cbo;
- 	}
- 	spr_uncore_iio_free_running.num_boxes = uncore_type_max_boxes(uncore_msr_uncores, UNCORE_SPR_IIO);
- }
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
