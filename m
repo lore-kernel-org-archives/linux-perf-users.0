@@ -2,201 +2,88 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CEBEEB57F
-	for <linux-perf-users@archiver.kernel.org>; Sat,  9 Sep 2023 01:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A61E5EE49BF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 10 Sep 2023 03:18:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243168AbjIIBmV (ORCPT
+        id S1346018AbjIJDRp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Sep 2023 21:42:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39636 "EHLO
+        Sat, 9 Sep 2023 23:17:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234679AbjIIBmU (ORCPT
+        with ESMTP id S1345971AbjIJDRb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Sep 2023 21:42:20 -0400
+        Sat, 9 Sep 2023 23:17:31 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F2541FE9;
-        Fri,  8 Sep 2023 18:42:16 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD7EDC43142;
-        Sat,  9 Sep 2023 00:23:38 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CB1B18F;
+        Sat,  9 Sep 2023 20:17:25 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1B043C433C8;
+        Sun, 10 Sep 2023 03:17:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694219020;
-        bh=BSc07xeurCiwVFC8WSL79H93QUZI3TK8omvd6rhdKi8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g9sj/yT8A7HwLXzzZ2o9vr6oD7ZXkNGAXBaLyDAKMo/JL8ABHGiGTBHcMhwVsin4S
-         9FiZwNrWVhj885+7aZ1X1JEKWEjZg+J3PIGmaMLfogvJgwO2Z/J8ohnW6ol7vdNW+L
-         iidEcKiiBdkNwzpB5skzzLJ1rHzsvzt8QZg3RXSMPWLQyMEPJrT1PWCsmdqdFIX+DW
-         5JGNAvPII6fjIkteCS0GZiz1c+gHS6G2asRv3yoBwleW6A7kAwx8vbeFypQpF0+H6D
-         7eQM5Eg/GH4OG2Kv7nONsueuIti26kJwuVNFzvd7L7JDluYvGjTgy1yp5CaDRHCb51
-         n110+a3GUGZrQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomislav Novak <tnovak@fb.com>,
-        Samuel Gosselin <sgosselin@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>, will@kernel.org,
-        mark.rutland@arm.com, linux@armlinux.org.uk, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 4/7] ARM: 9316/1: hw_breakpoint: fix single-stepping when using bpf_overflow_handler
-Date:   Fri,  8 Sep 2023 20:23:23 -0400
-Message-Id: <20230909002329.3578534-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230909002329.3578534-1-sashal@kernel.org>
-References: <20230909002329.3578534-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.131
-Content-Transfer-Encoding: 8bit
+        s=k20201202; t=1694315845;
+        bh=ouyStzZ3ETADqbo0bPWUlWLVuVUFgRfFzX299oq7b7s=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=Z2Es5jUeXfsH8ZDBWiVAhIoilqpNr014R9j4Eyc5BRnIDxd5/h/FnT+LWYELY+W2U
+         aJkbM9ikAvk3K2e24b5/85Pc91rOlhMcRM8Icdcf9M0pUzB3t6imZrFiJkt5Z9gP44
+         XFeg9NraEpXP9DbAAFTyaKX0U9oINg79ywF1GW9bMz1yaPC9GR0KPpgQaeOf9mBijt
+         05VE5WlNhev/aFU2xkEk+WvGji9HGhWgUDetbmTRD+v+RGbzWPMkGTiENJ/GlLJwA9
+         q+j6+t8TmtkHEkNL7qjEzZQ6vzBwgf0rmcbpPJJFyVgljYn2h0MLjUcm3pQljoe6Jm
+         Xve3A44T9yKLA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0888BE22AFC;
+        Sun, 10 Sep 2023 03:17:25 +0000 (UTC)
+Subject: Re: [GIT PULL] perf tools changes for v6.6
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20230906005330.373916-1-acme@kernel.org>
+References: <20230906005330.373916-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20230906005330.373916-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-for-v6.6-1-2023-09-05
+X-PR-Tracked-Commit-Id: 45fc4628c15ab2cb7b2f53354b21db63f0a41f81
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 535a265d7f0dd50d8c3a4f8b4f3a452d56bd160f
+Message-Id: <169431584502.25659.1703863725780355599.pr-tracker-bot@kernel.org>
+Date:   Sun, 10 Sep 2023 03:17:25 +0000
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Aditya Gupta <adityag@linux.ibm.com>,
+        Akanksha J N <akanksha@linux.ibm.com>,
+        Anup Sharma <anupnewsmail@gmail.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Lu Hongfei <luhongfei@vivo.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Xiu Jianfeng <xiujianfeng@huawei.com>,
+        Alexandre Ghiti <alexghiti@rivosinc.com>,
+        Palmer Dabbelt <palmer@rivosinc.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Tomislav Novak <tnovak@fb.com>
+The pull request you sent on Tue,  5 Sep 2023 21:53:30 -0300:
 
-[ Upstream commit e6b51532d5273eeefba84106daea3d392c602837 ]
+> git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-for-v6.6-1-2023-09-05
 
-Arm platforms use is_default_overflow_handler() to determine if the
-hw_breakpoint code should single-step over the breakpoint trigger or
-let the custom handler deal with it.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/535a265d7f0dd50d8c3a4f8b4f3a452d56bd160f
 
-Since bpf_overflow_handler() currently isn't recognized as a default
-handler, attaching a BPF program to a PERF_TYPE_BREAKPOINT event causes
-it to keep firing (the instruction triggering the data abort exception
-is never skipped). For example:
+Thank you!
 
-  # bpftrace -e 'watchpoint:0x10000:4:w { print("hit") }' -c ./test
-  Attaching 1 probe...
-  hit
-  hit
-  [...]
-  ^C
-
-(./test performs a single 4-byte store to 0x10000)
-
-This patch replaces the check with uses_default_overflow_handler(),
-which accounts for the bpf_overflow_handler() case by also testing
-if one of the perf_event_output functions gets invoked indirectly,
-via orig_default_handler.
-
-Link: https://lore.kernel.org/linux-arm-kernel/20220923203644.2731604-1-tnovak@fb.com/
-
-Signed-off-by: Tomislav Novak <tnovak@fb.com>
-Tested-by: Samuel Gosselin <sgosselin@google.com> # arm64
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/kernel/hw_breakpoint.c   |  8 ++++----
- arch/arm64/kernel/hw_breakpoint.c |  4 ++--
- include/linux/perf_event.h        | 22 +++++++++++++++++++---
- 3 files changed, 25 insertions(+), 9 deletions(-)
-
-diff --git a/arch/arm/kernel/hw_breakpoint.c b/arch/arm/kernel/hw_breakpoint.c
-index b1423fb130ea4..8f1fa7aac31fb 100644
---- a/arch/arm/kernel/hw_breakpoint.c
-+++ b/arch/arm/kernel/hw_breakpoint.c
-@@ -626,7 +626,7 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
- 	hw->address &= ~alignment_mask;
- 	hw->ctrl.len <<= offset;
- 
--	if (is_default_overflow_handler(bp)) {
-+	if (uses_default_overflow_handler(bp)) {
- 		/*
- 		 * Mismatch breakpoints are required for single-stepping
- 		 * breakpoints.
-@@ -798,7 +798,7 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
- 		 * Otherwise, insert a temporary mismatch breakpoint so that
- 		 * we can single-step over the watchpoint trigger.
- 		 */
--		if (!is_default_overflow_handler(wp))
-+		if (!uses_default_overflow_handler(wp))
- 			continue;
- step:
- 		enable_single_step(wp, instruction_pointer(regs));
-@@ -811,7 +811,7 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
- 		info->trigger = addr;
- 		pr_debug("watchpoint fired: address = 0x%x\n", info->trigger);
- 		perf_bp_event(wp, regs);
--		if (is_default_overflow_handler(wp))
-+		if (uses_default_overflow_handler(wp))
- 			enable_single_step(wp, instruction_pointer(regs));
- 	}
- 
-@@ -886,7 +886,7 @@ static void breakpoint_handler(unsigned long unknown, struct pt_regs *regs)
- 			info->trigger = addr;
- 			pr_debug("breakpoint fired: address = 0x%x\n", addr);
- 			perf_bp_event(bp, regs);
--			if (is_default_overflow_handler(bp))
-+			if (uses_default_overflow_handler(bp))
- 				enable_single_step(bp, addr);
- 			goto unlock;
- 		}
-diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-index 2a7f21314cde6..c30fa24458328 100644
---- a/arch/arm64/kernel/hw_breakpoint.c
-+++ b/arch/arm64/kernel/hw_breakpoint.c
-@@ -654,7 +654,7 @@ static int breakpoint_handler(unsigned long unused, unsigned long esr,
- 		perf_bp_event(bp, regs);
- 
- 		/* Do we need to handle the stepping? */
--		if (is_default_overflow_handler(bp))
-+		if (uses_default_overflow_handler(bp))
- 			step = 1;
- unlock:
- 		rcu_read_unlock();
-@@ -733,7 +733,7 @@ static u64 get_distance_from_watchpoint(unsigned long addr, u64 val,
- static int watchpoint_report(struct perf_event *wp, unsigned long addr,
- 			     struct pt_regs *regs)
- {
--	int step = is_default_overflow_handler(wp);
-+	int step = uses_default_overflow_handler(wp);
- 	struct arch_hw_breakpoint *info = counter_arch_bp(wp);
- 
- 	info->trigger = addr;
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 014eb0a963fcb..5806fc4dc7e59 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1084,15 +1084,31 @@ extern int perf_event_output(struct perf_event *event,
- 			     struct pt_regs *regs);
- 
- static inline bool
--is_default_overflow_handler(struct perf_event *event)
-+__is_default_overflow_handler(perf_overflow_handler_t overflow_handler)
- {
--	if (likely(event->overflow_handler == perf_event_output_forward))
-+	if (likely(overflow_handler == perf_event_output_forward))
- 		return true;
--	if (unlikely(event->overflow_handler == perf_event_output_backward))
-+	if (unlikely(overflow_handler == perf_event_output_backward))
- 		return true;
- 	return false;
- }
- 
-+#define is_default_overflow_handler(event) \
-+	__is_default_overflow_handler((event)->overflow_handler)
-+
-+#ifdef CONFIG_BPF_SYSCALL
-+static inline bool uses_default_overflow_handler(struct perf_event *event)
-+{
-+	if (likely(is_default_overflow_handler(event)))
-+		return true;
-+
-+	return __is_default_overflow_handler(event->orig_overflow_handler);
-+}
-+#else
-+#define uses_default_overflow_handler(event) \
-+	is_default_overflow_handler(event)
-+#endif
-+
- extern void
- perf_event_header__init_id(struct perf_event_header *header,
- 			   struct perf_sample_data *data,
 -- 
-2.40.1
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
