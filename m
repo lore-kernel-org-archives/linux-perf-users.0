@@ -2,29 +2,29 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A220EE49A4
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Sep 2023 02:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4579DEE7FF4
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Sep 2023 08:06:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231270AbjIKCty (ORCPT
+        id S234932AbjIKIG2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 10 Sep 2023 22:49:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59462 "EHLO
+        Mon, 11 Sep 2023 04:06:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232983AbjIKCty (ORCPT
+        with ESMTP id S234892AbjIKIG0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 10 Sep 2023 22:49:54 -0400
+        Mon, 11 Sep 2023 04:06:26 -0400
 Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC598B0;
-        Sun, 10 Sep 2023 19:49:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CB0310F6;
+        Mon, 11 Sep 2023 01:06:08 -0700 (PDT)
 Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-        by Atcsqr.andestech.com with ESMTP id 38B2mndQ062834;
-        Mon, 11 Sep 2023 10:48:49 +0800 (+08)
+        by Atcsqr.andestech.com with ESMTP id 38B856Gv066313;
+        Mon, 11 Sep 2023 16:05:06 +0800 (+08)
         (envelope-from peterlin@andestech.com)
 Received: from APC323 (10.0.12.98) by ATCPCS16.andestech.com (10.0.1.222) with
- Microsoft SMTP Server id 14.3.498.0; Mon, 11 Sep 2023 10:48:48 +0800
-Date:   Mon, 11 Sep 2023 10:48:44 +0800
+ Microsoft SMTP Server id 14.3.498.0; Mon, 11 Sep 2023 16:05:03 +0800
+Date:   Mon, 11 Sep 2023 16:04:59 +0800
 From:   Yu-Chien Peter Lin <peterlin@andestech.com>
-To:     Conor Dooley <conor@kernel.org>
+To:     =?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
 CC:     <linux-riscv@lists.infradead.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
@@ -37,91 +37,87 @@ CC:     <linux-riscv@lists.infradead.org>,
         <n.shubin@yadro.com>, <dminus@andestech.com>,
         <ycliang@andestech.com>, <tim609@andestech.com>,
         <locus84@andestech.com>, <dylan@andestech.com>
-Subject: Re: [PATCH 3/4] riscv: errata: Add Andes PMU errata
-Message-ID: <ZP6ADIAqZn0kkxwB@APC323>
+Subject: Re: [RFC PATCH 2/4] irqchip/riscv-intc: Support large non-standard
+ hwirq number
+Message-ID: <ZP7KKyjj6QObXAyb@APC323>
 References: <20230907021635.1002738-1-peterlin@andestech.com>
- <20230907021635.1002738-4-peterlin@andestech.com>
- <20230907-158e1f7e1e866d8c02726c9c@fedora>
- <20230907-7bc08398d2f95c14e1c0bc76@fedora>
+ <20230907021635.1002738-3-peterlin@andestech.com>
+ <ff6302ae-a114-4ef0-be87-a5fa34c3aab5@rivosinc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <20230907-7bc08398d2f95c14e1c0bc76@fedora>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ff6302ae-a114-4ef0-be87-a5fa34c3aab5@rivosinc.com>
 User-Agent: Mutt/2.2.10 (2023-03-25)
 X-Originating-IP: [10.0.12.98]
 X-DNSRBL: 
-X-MAIL: Atcsqr.andestech.com 38B2mndQ062834
+X-MAIL: Atcsqr.andestech.com 38B856Gv066313
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 07, 2023 at 12:02:46PM +0100, Conor Dooley wrote:
-> On Thu, Sep 07, 2023 at 10:27:03AM +0100, Conor Dooley wrote:
-> > Hey,
-> > 
-> > On Thu, Sep 07, 2023 at 10:16:34AM +0800, Yu Chien Peter Lin wrote:
-> > > Before the ratification of Sscofpmf, the Andes PMU extension
-> > > implements the same mechanism and is compatible with existing
-> > > SBI PMU driver of perf to support event sampling and mode
-> > > filtering with programmable hardware performance counters.
-> > 
-> > If it actually was, you'd not need to modify the driver ;)
-> > 
-> > > This patch adds PMU support for Andes 45-series CPUs by
-> > > introducing a CPU errata.
-> > 
-> > I don't really understand this in all honesty. You don't have Sscofpmf
-> > support with a bug, you have something that is Sscofpmf-adjactent that
-> > predates it. Why claim to support an extension that you do not, only to
-> > have to come along and try to clean things up afterwards, instead of
-> > accurately declaring what you do support from the outset?
+On Thu, Sep 07, 2023 at 12:22:55PM +0200, Clément Léger wrote:
 > 
-> Reading this again, I don't think that I have been particularly clear,
-> sorry. My point is that this is not a fix for a bug in your
-> implementation of Sscofpmf, but rather adding probing for what is
-> effectively a custom ISA extension that happens to be very similar to
-> the standard one. As it is not an implementation bug, errata should
-> not be abused to support vendor extensions, and either DT or ACPI should
-> be used to inform the operating system about its presence.
 > 
-> Cheers,
-> Conor.
+> On 07/09/2023 04:16, Yu Chien Peter Lin wrote:
+> > Currently, the implementation of the RISC-V INTC driver uses the
+> > interrupt cause as hwirq and has a limitation of supporting a
+> > maximum of 64 hwirqs. However, according to the privileged spec,
+> > interrupt cause >= 16 are defined for platform use.
+> > 
+> > This limitation prevents us from fully utilizing the available
+> > local interrupt sources. Additionally, the hwirqs used on RISC-V
+> > are sparse, with only interrupt numbers 1, 5 and 9 (plus Sscofpmf
+> > or T-Head's PMU irq) being currently used for supervisor mode.
+> > 
+> > The patch switches to using irq_domain_create_tree() which
+> > creates the radix tree map, allowing us to handle a larger
+> > number of hwirqs.
+> > 
+> > Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+> > Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
+> > Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
+> > 
+> > ---
+> > There are 3 hwirqs of local interrupt source exceed 64 defined in
+> > AX45MP datasheet [1] Table 56: AX45MP-1C scause Value After Trap:
+> > - 256+16 Slave port ECC error interrupt (S-mode)
+> > - 256+17 Bus write transaction error interrupt (S-mode)
+> > - 256+18 Performance monitor overflow interrupt(S-mode)
+> > 
+> > [1] http://www.andestech.com/wp-content/uploads/AX45MP-1C-Rev.-5.0.0-Datasheet.pdf
+> > ---
+> >  drivers/irqchip/irq-riscv-intc.c | 10 ++++------
+> >  1 file changed, 4 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
+> > index 4adeee1bc391..76e1229c45de 100644
+> > --- a/drivers/irqchip/irq-riscv-intc.c
+> > +++ b/drivers/irqchip/irq-riscv-intc.c
+> > @@ -24,8 +24,8 @@ static asmlinkage void riscv_intc_irq(struct pt_regs *regs)
+> >  {
+> >  	unsigned long cause = regs->cause & ~CAUSE_IRQ_FLAG;
+> >  
+> > -	if (unlikely(cause >= BITS_PER_LONG))
+> > -		panic("unexpected interrupt cause");
+> > +	if (!irq_find_mapping(intc_domain, cause))
+> > +		panic("unexpected interrupt cause: %ld", cause);
 > 
-> > 
-> > (and just because someone already got away with it, doesn't mean that
-> > you get a free pass on it, sorry)
+> Hi Yu,
+> 
+> It seems like generic_handle_domain_irq() returns -EINVAL if provided
+> with NULL (which will happen if the interrupt does not have a mapping
+> due to __irq_resolve_mapping returning NULL) so maybe it is possible to
+> remove this check (since __irq_resolve_mapping() is also called by
+> generic_handle_domain_irq()) and panic if generic_handle_domain_irq()
+> returns -EINVAL ? That would avoid calling __irq_resolve_mapping() twice
+> for really rare cases.
+> 
+> Clément
 
-Apologize for any confusion caused by the name. I thought it would make it
-easier to find the related functions and files in OpenSBI, didn't expect
-that it may have misled people to abuse the use of errata, you are right,
-I should have chosen my words more carefully.
+Hi Clément,
 
-In my opinion, this is simply a pre-sepc solution to enable missing perf
-features before the standard is finalized. The underlying logic remains the
-same, so we can still use the errata to patch a few lines of CSR accesses
-and align with other vendors. This way, we can make minimal changes and
-avoid performance overhead to the driver.
-
-> > Thanks,
-> > Conor.
-> > 
-> > > Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
-> > > Signed-off-by: Locus Wei-Han Chen <locus84@andestech.com>
-> > 
-> > btw, what did Locus Wei-Han Chen do here? Are you missing
-> > a Co-developed-by: tag?
-
-Yes I missed the CD-tag, will fix it.
-Thanks for the review.
-
-> > > Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
-> > > Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
-> > > ---
-> > >  arch/riscv/Kconfig.errata            | 13 ++++++++
-> > >  arch/riscv/errata/andes/errata.c     | 45 +++++++++++++++++++++++++++-
-> > >  arch/riscv/include/asm/errata_list.h | 43 ++++++++++++++++++++++++--
-> > >  drivers/perf/riscv_pmu_sbi.c         | 20 +++++++++----
-> > >  4 files changed, 111 insertions(+), 10 deletions(-)
+Thanks for catching this, will fix it in the patch v2.
 
 Best regards,
 Peter Lin
