@@ -2,389 +2,153 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43742CA0EC2
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Sep 2023 21:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 677F8CA0EC7
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Sep 2023 21:36:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242009AbjIKV1x (ORCPT
+        id S242146AbjIKV17 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 11 Sep 2023 17:27:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41786 "EHLO
+        Mon, 11 Sep 2023 17:27:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243867AbjIKSDj (ORCPT
+        with ESMTP id S237312AbjIKMch (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Sep 2023 14:03:39 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 860B9106;
-        Mon, 11 Sep 2023 11:03:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694455413; x=1725991413;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=x1tjhQxmdQdx5EsHOtgg9rRyw85WQlvkAklT8BA7Zes=;
-  b=KRaMhSm4niB7tq/e2sNS8xHGUbfZooDPWMTN2gimame55xImhF8ZV0Kf
-   IvHM7DMVG+nJEaNgOXbOq7hKSXgd0y5jW/dCcTYKEOa2pEOZVxNf5rSuu
-   YPf95DEIgeQyB8P4ErgfA+yAA4B4owQuifM0ipACunwazajLkJxiz4J1X
-   O5LjSjQogS6Jpnxzu5vdRGUBHHBxGjow5Te7qTDMEEHMdbm0MxozbeVeU
-   fmagzLsL4rqv8Q6FL+ku8iLvy0tHaYVaGFDlBisAHKCWshNW3yBRxRo7T
-   u5YkykopNEAcHDI6iBzhZ6gCSgLHhChgnIitpuqZuFbh9x57PbShpVhm8
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="368417020"
-X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="368417020"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 11:03:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="808905983"
-X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="808905983"
-Received: from sohilmeh.sc.intel.com ([172.25.103.65])
-  by fmsmga008.fm.intel.com with ESMTP; 11 Sep 2023 11:03:30 -0700
-From:   Sohil Mehta <sohil.mehta@intel.com>
-To:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Cc:     Sohil Mehta <sohil.mehta@intel.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Sergei Trofimovich <slyich@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rohan McLure <rmclure@linux.ibm.com>,
-        Andreas Schwab <schwab@linux-m68k.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Deepak Gupta <debug@rivosinc.com>, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH 2/2] arch: Reserve map_shadow_stack() syscall number for all architectures
-Date:   Mon, 11 Sep 2023 18:02:10 +0000
-Message-Id: <20230911180210.1060504-3-sohil.mehta@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230911180210.1060504-1-sohil.mehta@intel.com>
-References: <20230911180210.1060504-1-sohil.mehta@intel.com>
+        Mon, 11 Sep 2023 08:32:37 -0400
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A67D1B9;
+        Mon, 11 Sep 2023 05:32:31 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ARBd5cpM8HN4OHAb4nFFpuoCWiLLM1DUO9QlaGVBNeK00Z7OZaG99LleyXdoa9jk4J3uyWP6j1KXX5JuqkBWZrvWJkDAYu695vz4Q7IP3f3CWCXcs+8JwE3fccRoAbI5PkcKv2/mU+eWnS+6HKOuWWWd0PT5JtrMK3aT4Q+vfMaJnrxdNppup7cJWO7Y0VfhbGW18hn6uM6oEnrMau+XxV7a+3pQH3f1WTqMZEPBubczeKNe6mbYu7drI7gUjKdh3ogcnWtOjS8r/RTqAdOr2wNfZ6zNXZsHeUv/Nqfbn+q9b1uMwehIQp8RJwFUNjePuXl9qokIB/CBYh7YbcgvNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0IqaO0oI05QFVkd12zKfaf+VAzNIBB6KQ/s1ycUrvtY=;
+ b=MPuG4686ahSQo0A8h927gBCiZutUYuj3+1W1v+67UNDu6pUZ+nI4O6T6Y6xMtOKg+qc9b6JrnZ9O6mAkqA48nxRGOIfjhIygKDnFUtyYkmapC+XvsDep9a2cWMsxGqLmBuXuAMJJq7rz7sKLvlRchBwv0Zuvt0ZIycQ8tBPSaz276GNa9zLvUuoIN0tP7ywrNU1XydSsW7tyxJRZtKU74aNejMbuVJqoKZxIIGdgQKdqEHzlpySTJjP0sMiijXdqkQKriQU0CmUxcQqPOyptLBCK0VF8M1hEHFkITQ5k9aHO4X8vFTZ9kQply1HzSvQfjzmzG8mwNN1V1bPwyjxhDg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0IqaO0oI05QFVkd12zKfaf+VAzNIBB6KQ/s1ycUrvtY=;
+ b=F886aNKjfQeTRvYjtGCEhdDamMd3RHnOx7Sep/oz38yloW7mSZeIBVsiyHjuQAk481KGXsL0mH0YRcTO0guCaIQ6Oegv5pLCe2egTnrPteWl8mXKyXUKidsRXx8HN/xdEdsKMxI4w8boHAitAzTizhu3Gwp6/xqXwcgoKCP3Y78=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS7PR12MB6214.namprd12.prod.outlook.com (2603:10b6:8:96::13) by
+ PH7PR12MB9067.namprd12.prod.outlook.com (2603:10b6:510:1f5::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6768.30; Mon, 11 Sep 2023 12:32:28 +0000
+Received: from DS7PR12MB6214.namprd12.prod.outlook.com
+ ([fe80::6f26:6cea:cd82:df23]) by DS7PR12MB6214.namprd12.prod.outlook.com
+ ([fe80::6f26:6cea:cd82:df23%3]) with mapi id 15.20.6768.029; Mon, 11 Sep 2023
+ 12:32:28 +0000
+Message-ID: <f98687e0-1fee-8208-261f-d93152871f00@amd.com>
+Date:   Mon, 11 Sep 2023 18:02:13 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH 00/13] Implement support for IBS virtualization
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     kvm@vger.kernel.org, seanjc@google.com, linux-doc@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, x86@kernel.org,
+        pbonzini@redhat.com, bp@alien8.de, santosh.shukla@amd.com,
+        ravi.bangoria@amd.com, thomas.lendacky@amd.com, nikunj@amd.com
+References: <20230904095347.14994-1-manali.shukla@amd.com>
+ <20230905154744.GB28379@noisy.programming.kicks-ass.net>
+ <012c9897-51d7-87d3-e0e5-3856fa9644e5@amd.com>
+ <20230906195619.GD28278@noisy.programming.kicks-ass.net>
+ <188f7a79-ad47-eddd-a185-174e0970ad22@amd.com>
+ <20230908133114.GK19320@noisy.programming.kicks-ass.net>
+From:   Manali Shukla <manali.shukla@amd.com>
+In-Reply-To: <20230908133114.GK19320@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0230.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:eb::15) To DS7PR12MB6214.namprd12.prod.outlook.com
+ (2603:10b6:8:96::13)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB6214:EE_|PH7PR12MB9067:EE_
+X-MS-Office365-Filtering-Correlation-Id: 80262a78-36d3-4f54-ba9b-08dbb2c3290e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: GNs/fXMyq7JDra8bTEdwYovkdcC3PE5KdP/mdBzQltp5cBq9+2WFY5+9YqOmw8WBcX8CluTjuaHCmp4EjzbQg9O3LBJs1snBxV8G7Gdw68JEKeueBTumAQ/7MamSdhmpQ74RWuBxWL8oINg9hHkIBv7Rncj3c/4nYvJyfqkoaNCFALohquYDckti+TS5ka7jyiyAtLDnR/6TbCohDYMzspwJ70FIpBVmrM984rqtfdpNeC7QmS9s/GiSVj3JEREp0FQjPe3kjakgl6Jk4vMVVKDFToVVZ1MABlnfCHNe25MlF+33TLUmfslDIwXvycRvq/NF7LayhhM1uMDCdxaLI0GbH2WiG7b5xQCaUhGbmMb42QyAJfaPXD6QBKcRKZQVEsMvp4pSC52VdR1qOBvYUeZ7KVQowD/Vz8VA9bwRKTrGxilwEgdq6nj+L73CVqcqIn5O06AG4aD56GgtE8KZjnnd5C5TgatOR+V8vHsNeDLSoAkZ1ubjDa7J54ZETDowbUjo//F17oByjsh9n2fB1HbBEi5lWED+l7bHCJOzLWyWfUM9WYf3lOPeabyfEjHQA5QNMm6FlDPft3te8UUkxySXzqgkAQfmVFJTMPQXXGiPe9ZTaHXIImmKEo4DOXUL2iEUf4MXBFJqfHzNJ35v8Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6214.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(136003)(366004)(346002)(39860400002)(451199024)(186009)(1800799009)(31686004)(53546011)(6666004)(6486002)(6506007)(36756003)(86362001)(38100700002)(26005)(6512007)(31696002)(2616005)(41300700001)(2906002)(83380400001)(478600001)(8936002)(4326008)(5660300002)(316002)(6916009)(8676002)(66556008)(44832011)(66476007)(66946007)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bU5va3RkYXhsbkZMeFE3ZDJUR0dIVXNwNk94RXU3R2JhS0ZCT3pxUWVPUDlm?=
+ =?utf-8?B?NVA5T0hrdVV2SGFNT21BQ2JYdk5jbkRoSlNUU1Y3QVBJMWM3M1Y1ZlN4OEN0?=
+ =?utf-8?B?ajQybU9Sdm5FM1hsSEJYY25wb21zM0djNlMwTlA3dDU1bGVjUW1iazhmWFJ4?=
+ =?utf-8?B?am43cWJTaWQvWHpBNUpPdGt3dERmcnE4Q09TS2h3ZDVLNDJtQVE4SmlCUnNL?=
+ =?utf-8?B?VUdUK1o3dVZLTTF0cHIyMEtJMjJHMEt4bHk2N0N5QjdWYlVnTmtDbDNEeXYv?=
+ =?utf-8?B?RDRuYXJzcXNUbTIyUnlUVnVRbU9lbHZlbTlPdmNteDRIQXhKbituNjl5Yy85?=
+ =?utf-8?B?WnlvZDl4OGFCdStlUWVidU53V1d3dFdMYTRxdldENzJDN1d2eGZ6OTBJTk1W?=
+ =?utf-8?B?aGtVVHBvTHZiVUJ5TkpVNzdsOTI2L3oyTmxuUndralIxRjNpSjZLRUMyMGk2?=
+ =?utf-8?B?cjFQS1BZU1Y5QU1HUHZoV250ZHlGbHoxTlE0V3hJZmNwc0Z5UHJHL0VVeEpz?=
+ =?utf-8?B?dlZwOGlqOWgyYkJnZFNha3JuaVZIY3pvZzV3M2YwMlFtaHpidlNnRExjSlFC?=
+ =?utf-8?B?RlhQc3h6MmZiV3hobjFaZ3Q2dGRvNzRrVkVRdUNMOU9tSU5JZFdJdURIT0pG?=
+ =?utf-8?B?UUh1eFBtTXl4WGtsTXg0V1ZiL3VlYTBNM0FGTXFIelZtYjFyRW9IN1RCaUth?=
+ =?utf-8?B?UkVTQVBiVkViTnZiaTQxNmlVZTNlQ0x1aGp3aEhleE5BLzBITFZnVy9rdElt?=
+ =?utf-8?B?YkcvZ2l2aytzaGlrcmkxYVlYaFpDa3A3dG5HOEJvamY3cjZUTzZsUDNOT0RL?=
+ =?utf-8?B?a3p1RkY0K2ErK000N1hwMXl6SGp0Rys2T2ZIajdZd2pTajFoRjhyQm9kVnBv?=
+ =?utf-8?B?NEpXanAyWmR1djgzMUtHenJVS1VNM3N3NnFDTE0zbmsydlZxZy9KeWVVUWcr?=
+ =?utf-8?B?V0RNMkRnQkFNYnVFKzhqSEludzVyS1lQaXV4eUw2Qm1BdUxoMTZPRURKVXRM?=
+ =?utf-8?B?RkR4TnM4ZWpHbGhXY2pNdXphQnFvZjJkdVphd0JYOUNaeWxrK0tNcjJ6SWFi?=
+ =?utf-8?B?dkJTTmZqYXVRbzByWWFxUVhrdk1BWk14Z0tTMHVrZFBKMHpCdjlMRjN4N1Iy?=
+ =?utf-8?B?V1hsUlMwL1AzenF5MXNLc3ZCbkgzZE1GV2QzSW1QeGhXWmkyeU1sczdFdHJa?=
+ =?utf-8?B?bTFGdExRR0RNazh0M3I2YWtRd3ZNSmZYSVcwMG1nTzJwWDkydG1oRTlrNU95?=
+ =?utf-8?B?dlpnL09ISWsxcTNZam5lL2hheUhhZmtpZHRkSEhCM3c2QlJ4ZE5weWVPbGZI?=
+ =?utf-8?B?bUoxWTU1QzhOTjl2Q3N1a2VhV2ZmVWw5SUVFelhvU1hJQmRINlFDdG9tNXQz?=
+ =?utf-8?B?S0huc044elRUd0pEa2RPMTdpcE9FZndsdk9lMXJpa3N6ZDcrY2d1UzZERzRS?=
+ =?utf-8?B?Z0ZmaW9YS1dxYmRqNUc1OTB3UTlpVFFyZ3RDbklxREZIZGJ6REhkQzNWRkZv?=
+ =?utf-8?B?VEpyWmpLTVF2cVhoaUxWVXJub0kyeWJVajdiV0R5akhCNUNIZ3ZsT3RxL01J?=
+ =?utf-8?B?OFN3VlY3b0hzbnBadUVDNjNja1A3M29uYnRidkJzcjJYaVJFZC9pdGtic3U2?=
+ =?utf-8?B?dzRPWUV3TmJRRUo5YVdzWWF3YzRjS09PeXJDb2svRW0zNG55QkFoUG5YNjdl?=
+ =?utf-8?B?Yng0dGhQYXNpRkNiY2poTnRFdEtMTTJLcTZyS3ZxZHk4OWFHNlBCVkJGa1FS?=
+ =?utf-8?B?a21ZNkdBMW5kWjZQVzlPWVE0bFZJU3I5bVdQdGVQR29hciszNlp5VzF0VkZk?=
+ =?utf-8?B?U2pDZW9saDZRNjJUb3NtMXBjODRGa3AzcnJhd2wvdHFnZXBZTGFYd0xzUytM?=
+ =?utf-8?B?T1ltTTFpRXVnQ3dtQm0zeXVyVVZUbU0vYThMdEg1MWFzVmhPNUhFbWJLOSs4?=
+ =?utf-8?B?bzFNMG1rS2s5NFJ0UUdxNUdUVkloajBQWkpHS1grVXk3bzNkcFlVWjNMTkNI?=
+ =?utf-8?B?QmNhZU9wUTZ5UFFudndXQXVlbzJpZXlFVU91aEtVc3d2T3Y3c3pZb20xNWsy?=
+ =?utf-8?B?bkJnTEZ0MGZHNXlTcWJIcFYwZGdRcEpHWkZsd21Pbk0zdWQ2SjkwV0NCY0to?=
+ =?utf-8?Q?5bzEyGGZyHr3tUDoiG4KEeFkf?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 80262a78-36d3-4f54-ba9b-08dbb2c3290e
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6214.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2023 12:32:28.5190
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DmCZ9+eOw/YtZOfEVzgqV2Z2IaXBdENFpzXQ2ZfprYsY8mt4HR8cyHTTqonrEX6Hy366IuAC5n6Djmnigebviw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9067
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Support for map_shadow_stack() was recently added but it is an x86
-only system call for now. There is a possibility that other
-architectures (namely, arm64 and Risc-V) that are implementing support
-for shadow stacks, might need to add support for it.
+On 9/8/2023 7:01 PM, Peter Zijlstra wrote:
+> On Thu, Sep 07, 2023 at 09:19:51PM +0530, Manali Shukla wrote:
+> 
+>>> I'm not sure I'm fluent in virt speak (in fact, I'm sure I'm not). Is
+>>> the above saying that a host can never IBS profile a guest?
+>>
+>> Host can profile a guest with IBS if VIBS is disabled for the guest. This is
+>> the default behavior. Host can not profile guest if VIBS is enabled for guest.
+>>
+>>>
+>>> Does the current IBS thing assert perf_event_attr::exclude_guest is set?
+>>
+>> Unlike AMD core pmu, IBS doesn't have Host/Guest filtering capability, thus
+>> perf_event_open() fails if exclude_guest is set for an IBS event.
+> 
+> Then you must not allow VIBS if a host cpu-wide IBS counter exists.
+> 
+> Also, VIBS reads like it can be (ab)used as a filter.
 
-Independent of that, reserving arch-specific syscall numbers in the
-syscall tables of all architectures is good practice and would help
-avoid future conflicts.
+I think I get your point: If host IBS with exclude_guest=0 doesn't capture
+guest samples because of VIBS, it is an unintended behavior.
 
-Note, map_shadow_stack() was assigned #453 since #452 was taken by
-fchmodat2().
+But if a guest cannot use IBS because a host is using it, that is also
+unacceptable behavior.
 
-Link:https://lore.kernel.org/lkml/20230830234752.19858-1-dave.hansen@linux.intel.com/
+Let me think over it and come back.
 
-Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
----
- arch/alpha/kernel/syscalls/syscall.tbl              | 1 +
- arch/arm/tools/syscall.tbl                          | 1 +
- arch/arm64/include/asm/unistd.h                     | 2 +-
- arch/arm64/include/asm/unistd32.h                   | 2 ++
- arch/ia64/kernel/syscalls/syscall.tbl               | 1 +
- arch/m68k/kernel/syscalls/syscall.tbl               | 1 +
- arch/microblaze/kernel/syscalls/syscall.tbl         | 1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl           | 1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl           | 1 +
- arch/mips/kernel/syscalls/syscall_o32.tbl           | 1 +
- arch/parisc/kernel/syscalls/syscall.tbl             | 1 +
- arch/powerpc/kernel/syscalls/syscall.tbl            | 1 +
- arch/s390/kernel/syscalls/syscall.tbl               | 1 +
- arch/sh/kernel/syscalls/syscall.tbl                 | 1 +
- arch/sparc/kernel/syscalls/syscall.tbl              | 1 +
- arch/x86/entry/syscalls/syscall_32.tbl              | 1 +
- arch/xtensa/kernel/syscalls/syscall.tbl             | 1 +
- include/uapi/asm-generic/unistd.h                   | 5 ++++-
- tools/include/uapi/asm-generic/unistd.h             | 5 ++++-
- tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl | 1 +
- tools/perf/arch/powerpc/entry/syscalls/syscall.tbl  | 1 +
- tools/perf/arch/s390/entry/syscalls/syscall.tbl     | 1 +
- tools/perf/arch/x86/entry/syscalls/syscall_64.tbl   | 1 +
- 23 files changed, 30 insertions(+), 3 deletions(-)
-
-diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
-index ad37569d0507..6e8479c96e65 100644
---- a/arch/alpha/kernel/syscalls/syscall.tbl
-+++ b/arch/alpha/kernel/syscalls/syscall.tbl
-@@ -492,3 +492,4 @@
- 560	common	set_mempolicy_home_node		sys_ni_syscall
- 561	common	cachestat			sys_cachestat
- 562	common	fchmodat2			sys_fchmodat2
-+563	common	map_shadow_stack		sys_map_shadow_stack
-diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-index c572d6c3dee0..6d494dfbf5e4 100644
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@ -466,3 +466,4 @@
- 450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
- 451	common	cachestat			sys_cachestat
- 452	common	fchmodat2			sys_fchmodat2
-+453	common	map_shadow_stack		sys_map_shadow_stack
-diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
-index bd77253b62e0..6a28fb91b85d 100644
---- a/arch/arm64/include/asm/unistd.h
-+++ b/arch/arm64/include/asm/unistd.h
-@@ -39,7 +39,7 @@
- #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
- #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
- 
--#define __NR_compat_syscalls		453
-+#define __NR_compat_syscalls		454
- #endif
- 
- #define __ARCH_WANT_SYS_CLONE
-diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
-index 78b68311ec81..a201d842ec82 100644
---- a/arch/arm64/include/asm/unistd32.h
-+++ b/arch/arm64/include/asm/unistd32.h
-@@ -911,6 +911,8 @@ __SYSCALL(__NR_set_mempolicy_home_node, sys_set_mempolicy_home_node)
- __SYSCALL(__NR_cachestat, sys_cachestat)
- #define __NR_fchmodat2 452
- __SYSCALL(__NR_fchmodat2, sys_fchmodat2)
-+#define __NR_map_shadow_stack 453
-+__SYSCALL(__NR_map_shadow_stack, sys_map_shadow_stack)
- 
- /*
-  * Please add new compat syscalls above this comment and update
-diff --git a/arch/ia64/kernel/syscalls/syscall.tbl b/arch/ia64/kernel/syscalls/syscall.tbl
-index 83d8609aec03..be02ce9d376f 100644
---- a/arch/ia64/kernel/syscalls/syscall.tbl
-+++ b/arch/ia64/kernel/syscalls/syscall.tbl
-@@ -373,3 +373,4 @@
- 450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
- 451	common	cachestat			sys_cachestat
- 452	common	fchmodat2			sys_fchmodat2
-+453	common	map_shadow_stack		sys_map_shadow_stack
-diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
-index 259ceb125367..bee2d2f7f82c 100644
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@ -452,3 +452,4 @@
- 450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
- 451	common	cachestat			sys_cachestat
- 452	common	fchmodat2			sys_fchmodat2
-+453	common	map_shadow_stack		sys_map_shadow_stack
-diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
-index a3798c2637fd..09eda7ed91b0 100644
---- a/arch/microblaze/kernel/syscalls/syscall.tbl
-+++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-@@ -458,3 +458,4 @@
- 450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
- 451	common	cachestat			sys_cachestat
- 452	common	fchmodat2			sys_fchmodat2
-+453	common	map_shadow_stack		sys_map_shadow_stack
-diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-index 152034b8e0a0..3c02cc3886ca 100644
---- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@ -391,3 +391,4 @@
- 450	n32	set_mempolicy_home_node		sys_set_mempolicy_home_node
- 451	n32	cachestat			sys_cachestat
- 452	n32	fchmodat2			sys_fchmodat2
-+453	n32	map_shadow_stack		sys_map_shadow_stack
-diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
-index cb5e757f6621..aa9ed6a7cb48 100644
---- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-@@ -367,3 +367,4 @@
- 450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
- 451	n64	cachestat			sys_cachestat
- 452	n64	fchmodat2			sys_fchmodat2
-+453	n64	map_shadow_stack		sys_map_shadow_stack
-diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-index 1a646813afdc..756f6feb21c2 100644
---- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@ -440,3 +440,4 @@
- 450	o32	set_mempolicy_home_node		sys_set_mempolicy_home_node
- 451	o32	cachestat			sys_cachestat
- 452	o32	fchmodat2			sys_fchmodat2
-+453	o32	map_shadow_stack		sys_map_shadow_stack
-diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-index e97c175b56f9..c80eedbe0170 100644
---- a/arch/parisc/kernel/syscalls/syscall.tbl
-+++ b/arch/parisc/kernel/syscalls/syscall.tbl
-@@ -451,3 +451,4 @@
- 450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
- 451	common	cachestat			sys_cachestat
- 452	common	fchmodat2			sys_fchmodat2
-+453	common	map_shadow_stack		sys_map_shadow_stack
-diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-index 20e50586e8a2..2767b8a42636 100644
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -539,3 +539,4 @@
- 450 	nospu	set_mempolicy_home_node		sys_set_mempolicy_home_node
- 451	common	cachestat			sys_cachestat
- 452	common	fchmodat2			sys_fchmodat2
-+453	common	map_shadow_stack		sys_map_shadow_stack
-diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-index 0122cc156952..22249c07e556 100644
---- a/arch/s390/kernel/syscalls/syscall.tbl
-+++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@ -455,3 +455,4 @@
- 450  common	set_mempolicy_home_node	sys_set_mempolicy_home_node	sys_set_mempolicy_home_node
- 451  common	cachestat		sys_cachestat			sys_cachestat
- 452  common	fchmodat2		sys_fchmodat2			sys_fchmodat2
-+453  common	map_shadow_stack	sys_map_shadow_stack		sys_map_shadow_stack
-diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
-index e90d585c4d3e..5ccfe6fbb6b1 100644
---- a/arch/sh/kernel/syscalls/syscall.tbl
-+++ b/arch/sh/kernel/syscalls/syscall.tbl
-@@ -455,3 +455,4 @@
- 450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
- 451	common	cachestat			sys_cachestat
- 452	common	fchmodat2			sys_fchmodat2
-+453	common	map_shadow_stack		sys_map_shadow_stack
-diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
-index 4ed06c71c43f..b2d664edebdd 100644
---- a/arch/sparc/kernel/syscalls/syscall.tbl
-+++ b/arch/sparc/kernel/syscalls/syscall.tbl
-@@ -498,3 +498,4 @@
- 450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
- 451	common	cachestat			sys_cachestat
- 452	common	fchmodat2			sys_fchmodat2
-+453	common	map_shadow_stack		sys_map_shadow_stack
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index 2d0b1bd866ea..743a7ef5a4b9 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -457,3 +457,4 @@
- 450	i386	set_mempolicy_home_node		sys_set_mempolicy_home_node
- 451	i386	cachestat		sys_cachestat
- 452	i386	fchmodat2		sys_fchmodat2
-+453	i386	map_shadow_stack	sys_map_shadow_stack
-diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
-index fc1a4f3c81d9..94e6bcc2bec7 100644
---- a/arch/xtensa/kernel/syscalls/syscall.tbl
-+++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-@@ -423,3 +423,4 @@
- 450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
- 451	common	cachestat			sys_cachestat
- 452	common	fchmodat2			sys_fchmodat2
-+453	common	map_shadow_stack		sys_map_shadow_stack
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index abe087c53b4b..203ae30d7761 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -823,8 +823,11 @@ __SYSCALL(__NR_cachestat, sys_cachestat)
- #define __NR_fchmodat2 452
- __SYSCALL(__NR_fchmodat2, sys_fchmodat2)
- 
-+#define __NR_map_shadow_stack 453
-+__SYSCALL(__NR_map_shadow_stack, sys_map_shadow_stack)
-+
- #undef __NR_syscalls
--#define __NR_syscalls 453
-+#define __NR_syscalls 454
- 
- /*
-  * 32 bit systems traditionally used different
-diff --git a/tools/include/uapi/asm-generic/unistd.h b/tools/include/uapi/asm-generic/unistd.h
-index abe087c53b4b..203ae30d7761 100644
---- a/tools/include/uapi/asm-generic/unistd.h
-+++ b/tools/include/uapi/asm-generic/unistd.h
-@@ -823,8 +823,11 @@ __SYSCALL(__NR_cachestat, sys_cachestat)
- #define __NR_fchmodat2 452
- __SYSCALL(__NR_fchmodat2, sys_fchmodat2)
- 
-+#define __NR_map_shadow_stack 453
-+__SYSCALL(__NR_map_shadow_stack, sys_map_shadow_stack)
-+
- #undef __NR_syscalls
--#define __NR_syscalls 453
-+#define __NR_syscalls 454
- 
- /*
-  * 32 bit systems traditionally used different
-diff --git a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-index cb5e757f6621..aa9ed6a7cb48 100644
---- a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-+++ b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-@@ -367,3 +367,4 @@
- 450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
- 451	n64	cachestat			sys_cachestat
- 452	n64	fchmodat2			sys_fchmodat2
-+453	n64	map_shadow_stack		sys_map_shadow_stack
-diff --git a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-index 20e50586e8a2..2767b8a42636 100644
---- a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-+++ b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-@@ -539,3 +539,4 @@
- 450 	nospu	set_mempolicy_home_node		sys_set_mempolicy_home_node
- 451	common	cachestat			sys_cachestat
- 452	common	fchmodat2			sys_fchmodat2
-+453	common	map_shadow_stack		sys_map_shadow_stack
-diff --git a/tools/perf/arch/s390/entry/syscalls/syscall.tbl b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-index 0122cc156952..22249c07e556 100644
---- a/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-+++ b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-@@ -455,3 +455,4 @@
- 450  common	set_mempolicy_home_node	sys_set_mempolicy_home_node	sys_set_mempolicy_home_node
- 451  common	cachestat		sys_cachestat			sys_cachestat
- 452  common	fchmodat2		sys_fchmodat2			sys_fchmodat2
-+453  common	map_shadow_stack	sys_map_shadow_stack		sys_map_shadow_stack
-diff --git a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-index a5db10ddf540..6a5819362530 100644
---- a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -374,6 +374,7 @@
- 450	common	set_mempolicy_home_node	sys_set_mempolicy_home_node
- 451	common	cachestat		sys_cachestat
- 452	common  fchmodat2		sys_fchmodat2
-+453	common	map_shadow_stack	sys_map_shadow_stack
- 
- #
- # Due to a historical design error, certain syscalls are numbered differently
--- 
-2.34.1
-
+- Manali
