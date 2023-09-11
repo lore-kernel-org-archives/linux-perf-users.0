@@ -2,154 +2,91 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C97EFEE57DF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Sep 2023 08:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146E8CA0ED2
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Sep 2023 21:31:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231862AbjIKINm (ORCPT
+        id S235520AbjIKV0J (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 11 Sep 2023 04:13:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55008 "EHLO
+        Mon, 11 Sep 2023 17:26:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231817AbjIKINj (ORCPT
+        with ESMTP id S235524AbjIKIvT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Sep 2023 04:13:39 -0400
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FA3DD9;
-        Mon, 11 Sep 2023 01:13:33 -0700 (PDT)
-Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-        by Atcsqr.andestech.com with ESMTP id 38B8CmIs070091;
-        Mon, 11 Sep 2023 16:12:48 +0800 (+08)
-        (envelope-from peterlin@andestech.com)
-Received: from APC323 (10.0.12.98) by ATCPCS16.andestech.com (10.0.1.222) with
- Microsoft SMTP Server id 14.3.498.0; Mon, 11 Sep 2023 16:12:45 +0800
-Date:   Mon, 11 Sep 2023 16:12:45 +0800
-From:   Yu-Chien Peter Lin <peterlin@andestech.com>
-To:     Anup Patel <anup@brainfault.org>
-CC:     <linux-riscv@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-        <aou@eecs.berkeley.edu>, <conor.dooley@microchip.com>,
-        <atishp@atishpatra.org>, <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        <ajones@ventanamicro.com>, <heiko@sntech.de>,
-        <samuel@sholland.org>, <geert+renesas@glider.be>,
-        <n.shubin@yadro.com>, <dminus@andestech.com>,
-        <ycliang@andestech.com>, <tim609@andestech.com>,
-        <locus84@andestech.com>, <dylan@andestech.com>
-Subject: Re: [RFC PATCH 2/4] irqchip/riscv-intc: Support large non-standard
- hwirq number
-Message-ID: <ZP7L_ahJOBXnCSP7@APC323>
-References: <20230907021635.1002738-1-peterlin@andestech.com>
- <20230907021635.1002738-3-peterlin@andestech.com>
- <CAAhSdy0iy_7-XaE0s97J8jUESUzV-4BMsxsJ8QFNDyHgtv63ZA@mail.gmail.com>
+        Mon, 11 Sep 2023 04:51:19 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1B4291A2;
+        Mon, 11 Sep 2023 01:51:14 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE163D75;
+        Mon, 11 Sep 2023 01:51:50 -0700 (PDT)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 936563F5A1;
+        Mon, 11 Sep 2023 01:51:12 -0700 (PDT)
+Message-ID: <446ec4c1-e97f-a5a1-9830-693dd7eec52d@arm.com>
+Date:   Mon, 11 Sep 2023 09:51:09 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhSdy0iy_7-XaE0s97J8jUESUzV-4BMsxsJ8QFNDyHgtv63ZA@mail.gmail.com>
-User-Agent: Mutt/2.2.10 (2023-03-25)
-X-Originating-IP: [10.0.12.98]
-X-DNSRBL: 
-X-MAIL: Atcsqr.andestech.com 38B8CmIs070091
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH] perf test: Update cs_etm testcase for Arm ETE
+To:     Ruidong Tian <tianruidong@linux.alibaba.com>
+Cc:     coresight@lists.linaro.org, mike.leach@linaro.org,
+        alexander.shishkin@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "acme@kernel.org" <acme@kernel.org>
+References: <20230911065541.91293-1-tianruidong@linux.alibaba.com>
+Content-Language: en-US
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20230911065541.91293-1-tianruidong@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 07, 2023 at 06:36:52PM +0530, Anup Patel wrote:
-> On Thu, Sep 7, 2023 at 7:48 AM Yu Chien Peter Lin
-> <peterlin@andestech.com> wrote:
-> >
-> > Currently, the implementation of the RISC-V INTC driver uses the
-> > interrupt cause as hwirq and has a limitation of supporting a
-> > maximum of 64 hwirqs. However, according to the privileged spec,
-> > interrupt cause >= 16 are defined for platform use.
-> >
-> > This limitation prevents us from fully utilizing the available
-> > local interrupt sources. Additionally, the hwirqs used on RISC-V
-> > are sparse, with only interrupt numbers 1, 5 and 9 (plus Sscofpmf
-> > or T-Head's PMU irq) being currently used for supervisor mode.
-> >
-> > The patch switches to using irq_domain_create_tree() which
-> > creates the radix tree map, allowing us to handle a larger
-> > number of hwirqs.
-> >
-> > Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
-> > Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
-> > Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
-> >
-> > ---
-> > There are 3 hwirqs of local interrupt source exceed 64 defined in
-> > AX45MP datasheet [1] Table 56: AX45MP-1C scause Value After Trap:
-> > - 256+16 Slave port ECC error interrupt (S-mode)
-> > - 256+17 Bus write transaction error interrupt (S-mode)
-> > - 256+18 Performance monitor overflow interrupt(S-mode)
-> >
-> > [1] http://www.andestech.com/wp-content/uploads/AX45MP-1C-Rev.-5.0.0-Datasheet.pdf
-> > ---
-> >  drivers/irqchip/irq-riscv-intc.c | 10 ++++------
-> >  1 file changed, 4 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
-> > index 4adeee1bc391..76e1229c45de 100644
-> > --- a/drivers/irqchip/irq-riscv-intc.c
-> > +++ b/drivers/irqchip/irq-riscv-intc.c
-> > @@ -24,8 +24,8 @@ static asmlinkage void riscv_intc_irq(struct pt_regs *regs)
-> >  {
-> >         unsigned long cause = regs->cause & ~CAUSE_IRQ_FLAG;
-> >
-> > -       if (unlikely(cause >= BITS_PER_LONG))
-> > -               panic("unexpected interrupt cause");
-> > +       if (!irq_find_mapping(intc_domain, cause))
-> > +               panic("unexpected interrupt cause: %ld", cause);
-> 
-> Checking irq_find_mapping() is redundant here instead check the return
-> value of generic_handle_domain_irq() and print warning on error.
-> 
-> >
-> >         generic_handle_domain_irq(intc_domain, cause);
-> >  }
-> > @@ -117,8 +117,8 @@ static int __init riscv_intc_init_common(struct fwnode_handle *fn)
-> >  {
-> >         int rc;
-> >
-> > -       intc_domain = irq_domain_create_linear(fn, BITS_PER_LONG,
-> > -                                              &riscv_intc_domain_ops, NULL);
-> > +       intc_domain = irq_domain_create_tree(fn, &riscv_intc_domain_ops,
-> > +                                            NULL);
-> 
-> This is incomplete because you have additional customization on-top-of
-> vanilla RISC-V INTC.
-> 
-> I suggest to do the following:
-> 1) Define an enum of types of INTC (such as generic, andestech, etc)
-> 2) Define new compatible string "andestec,cpu-intc" for you custom INTC
->     and pass that information to riscv_intc_init_common()
-> 3) Extend riscv_intc_domain_map() to use custom andestech_intc_chip
->     for the custom local irqs. The andestech_intc_chip will provide andes
->     specific mask/unmask mechanism.
 
-Hi Anup,
 
-Sure, we will introduce the Andes INTC for a custom IRQ chip.
-
-Thanks,
-Peter Lin
-
-> >         if (!intc_domain) {
-> >                 pr_err("unable to add IRQ domain\n");
-> >                 return -ENXIO;
-> > @@ -132,8 +132,6 @@ static int __init riscv_intc_init_common(struct fwnode_handle *fn)
-> >
-> >         riscv_set_intc_hwnode_fn(riscv_intc_hwnode);
-> >
-> > -       pr_info("%d local interrupts mapped\n", BITS_PER_LONG);
-> > -
-> >         return 0;
-> >  }
-> >
-> > --
-> > 2.34.1
-> >
+On 11/09/2023 07:55, Ruidong Tian wrote:
+> Add ETE as one of the supported device types in perf cs_etm testcase.
 > 
-> Regards,
-> Anup
+> Signed-off-by: Ruidong Tian <tianruidong@linux.alibaba.com>
+> ---
+>  tools/perf/tests/shell/test_arm_coresight.sh | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
+> index f1bf5621160f..fe78c4626e45 100755
+> --- a/tools/perf/tests/shell/test_arm_coresight.sh
+> +++ b/tools/perf/tests/shell/test_arm_coresight.sh
+> @@ -11,6 +11,19 @@
+>  
+>  glb_err=0
+>  
+> +cs_etm_dev_name() {
+> +	cs_etm_path=$(find  /sys/bus/event_source/devices/cs_etm/ -name cpu* -print -quit)
+> +	trcdevarch=$(cat ${cs_etm_path}/mgmt/trcdevarch)
+> +	archhver=$((($trcdevarch >> 12) & 0xf))
+> +	archpart=$(($trcdevarch & 0xfff))
+> +
+> +	if [ $archhver -eq 5 -a "$(printf "0x%X\n" $archpart)" = "0xA13" ] ; then
+> +		echo "ete"
+> +	else
+> +		echo "etm"
+> +	fi
+> +}
+> +
+>  skip_if_no_cs_etm_event() {
+>  	perf list | grep -q 'cs_etm//' && return 0
+>  
+> @@ -136,7 +149,7 @@ arm_cs_iterate_devices() {
+>  
+>  arm_cs_etm_traverse_path_test() {
+>  	# Iterate for every ETM device
+> -	for dev in /sys/bus/coresight/devices/etm*; do
+> +	for dev in /sys/bus/coresight/devices/$(cs_etm_dev_name)*; do
+>  
+>  		# Find the ETM device belonging to which CPU
+>  		cpu=`cat $dev/cpu`
+
+Reviewed-by: James Clark <james.clark@arm.com>
