@@ -2,80 +2,126 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 132CDC71153
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Sep 2023 02:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A220EE49A4
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Sep 2023 02:49:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232768AbjIKCkQ (ORCPT
+        id S231270AbjIKCty (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 10 Sep 2023 22:40:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57670 "EHLO
+        Sun, 10 Sep 2023 22:49:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230096AbjIKCkQ (ORCPT
+        with ESMTP id S232983AbjIKCty (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 10 Sep 2023 22:40:16 -0400
+        Sun, 10 Sep 2023 22:49:54 -0400
 Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F39DA99;
-        Sun, 10 Sep 2023 19:40:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC598B0;
+        Sun, 10 Sep 2023 19:49:47 -0700 (PDT)
 Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-        by Atcsqr.andestech.com with ESMTP id 38B2d6rT053136;
-        Mon, 11 Sep 2023 10:39:06 +0800 (+08)
+        by Atcsqr.andestech.com with ESMTP id 38B2mndQ062834;
+        Mon, 11 Sep 2023 10:48:49 +0800 (+08)
         (envelope-from peterlin@andestech.com)
 Received: from APC323 (10.0.12.98) by ATCPCS16.andestech.com (10.0.1.222) with
- Microsoft SMTP Server id 14.3.498.0; Mon, 11 Sep 2023 10:39:03 +0800
-Date:   Mon, 11 Sep 2023 10:38:56 +0800
+ Microsoft SMTP Server id 14.3.498.0; Mon, 11 Sep 2023 10:48:48 +0800
+Date:   Mon, 11 Sep 2023 10:48:44 +0800
 From:   Yu-Chien Peter Lin <peterlin@andestech.com>
-To:     Samuel Holland <samuel.holland@sifive.com>
-CC:     <ajones@ventanamicro.com>, <heiko@sntech.de>,
-        <samuel@sholland.org>, <geert+renesas@glider.be>,
-        <n.shubin@yadro.com>, <dminus@andestech.com>,
-        <ycliang@andestech.com>, <tim609@andestech.com>,
-        <locus84@andestech.com>, <dylan@andestech.com>,
-        <linux-riscv@lists.infradead.org>,
+To:     Conor Dooley <conor@kernel.org>
+CC:     <linux-riscv@lists.infradead.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
         <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
         <aou@eecs.berkeley.edu>, <conor.dooley@microchip.com>,
         <atishp@atishpatra.org>, <anup@brainfault.org>,
-        <prabhakar.mahadev-lad.rj@bp.renesas.com>
+        <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        <ajones@ventanamicro.com>, <heiko@sntech.de>,
+        <samuel@sholland.org>, <geert+renesas@glider.be>,
+        <n.shubin@yadro.com>, <dminus@andestech.com>,
+        <ycliang@andestech.com>, <tim609@andestech.com>,
+        <locus84@andestech.com>, <dylan@andestech.com>
 Subject: Re: [PATCH 3/4] riscv: errata: Add Andes PMU errata
-Message-ID: <ZP59wF5Knq3G7On_@APC323>
+Message-ID: <ZP6ADIAqZn0kkxwB@APC323>
 References: <20230907021635.1002738-1-peterlin@andestech.com>
  <20230907021635.1002738-4-peterlin@andestech.com>
- <82a82449-3af0-4756-881a-b31b6b187e6c@sifive.com>
+ <20230907-158e1f7e1e866d8c02726c9c@fedora>
+ <20230907-7bc08398d2f95c14e1c0bc76@fedora>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <82a82449-3af0-4756-881a-b31b6b187e6c@sifive.com>
+In-Reply-To: <20230907-7bc08398d2f95c14e1c0bc76@fedora>
 User-Agent: Mutt/2.2.10 (2023-03-25)
 X-Originating-IP: [10.0.12.98]
 X-DNSRBL: 
-X-MAIL: Atcsqr.andestech.com 38B2d6rT053136
+X-MAIL: Atcsqr.andestech.com 38B2mndQ062834
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Samuel,
-
-On Wed, Sep 06, 2023 at 09:48:35PM -0500, Samuel Holland wrote:
-> If the code here needs to be different, then it must check that it is actually
-> running on an Andes core, not just that the errata Kconfig option is enabled.
-
-Thank you for catching this, will fix in PATCH v2.
-
-> However, I suggest setting riscv_pmu_irq_num to the real IRQ number:
->   riscv_pmu_irq_num = ANDES_SLI_CAUSE_BASE + ANDES_RV_IRQ_PMU;
-> and then adding a new variable for the mask:
->   riscv_pmu_irq_mask = BIT(riscv_pmu_irq_num % BITS_PER_LONG);
-> which handles the large IRQ number somewhat more generically, and reduces the
-> number of bit operations needed elsewhere in the driver.
-
-I will make changes according to your suggestions. Thank you!
-
-> Or we could use IRQ chip operations here instead of direct CSR acccess. But
-> maybe the direct CSR access is needed for performance?
+On Thu, Sep 07, 2023 at 12:02:46PM +0100, Conor Dooley wrote:
+> On Thu, Sep 07, 2023 at 10:27:03AM +0100, Conor Dooley wrote:
+> > Hey,
+> > 
+> > On Thu, Sep 07, 2023 at 10:16:34AM +0800, Yu Chien Peter Lin wrote:
+> > > Before the ratification of Sscofpmf, the Andes PMU extension
+> > > implements the same mechanism and is compatible with existing
+> > > SBI PMU driver of perf to support event sampling and mode
+> > > filtering with programmable hardware performance counters.
+> > 
+> > If it actually was, you'd not need to modify the driver ;)
+> > 
+> > > This patch adds PMU support for Andes 45-series CPUs by
+> > > introducing a CPU errata.
+> > 
+> > I don't really understand this in all honesty. You don't have Sscofpmf
+> > support with a bug, you have something that is Sscofpmf-adjactent that
+> > predates it. Why claim to support an extension that you do not, only to
+> > have to come along and try to clean things up afterwards, instead of
+> > accurately declaring what you do support from the outset?
 > 
-> Regards,
-> Samuel
+> Reading this again, I don't think that I have been particularly clear,
+> sorry. My point is that this is not a fix for a bug in your
+> implementation of Sscofpmf, but rather adding probing for what is
+> effectively a custom ISA extension that happens to be very similar to
+> the standard one. As it is not an implementation bug, errata should
+> not be abused to support vendor extensions, and either DT or ACPI should
+> be used to inform the operating system about its presence.
+> 
+> Cheers,
+> Conor.
+> 
+> > 
+> > (and just because someone already got away with it, doesn't mean that
+> > you get a free pass on it, sorry)
+
+Apologize for any confusion caused by the name. I thought it would make it
+easier to find the related functions and files in OpenSBI, didn't expect
+that it may have misled people to abuse the use of errata, you are right,
+I should have chosen my words more carefully.
+
+In my opinion, this is simply a pre-sepc solution to enable missing perf
+features before the standard is finalized. The underlying logic remains the
+same, so we can still use the errata to patch a few lines of CSR accesses
+and align with other vendors. This way, we can make minimal changes and
+avoid performance overhead to the driver.
+
+> > Thanks,
+> > Conor.
+> > 
+> > > Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+> > > Signed-off-by: Locus Wei-Han Chen <locus84@andestech.com>
+> > 
+> > btw, what did Locus Wei-Han Chen do here? Are you missing
+> > a Co-developed-by: tag?
+
+Yes I missed the CD-tag, will fix it.
+Thanks for the review.
+
+> > > Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
+> > > Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
+> > > ---
+> > >  arch/riscv/Kconfig.errata            | 13 ++++++++
+> > >  arch/riscv/errata/andes/errata.c     | 45 +++++++++++++++++++++++++++-
+> > >  arch/riscv/include/asm/errata_list.h | 43 ++++++++++++++++++++++++--
+> > >  drivers/perf/riscv_pmu_sbi.c         | 20 +++++++++----
+> > >  4 files changed, 111 insertions(+), 10 deletions(-)
 
 Best regards,
 Peter Lin
