@@ -2,242 +2,183 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7090CA0EC5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Sep 2023 21:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12102CA0EC2
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Sep 2023 21:36:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239799AbjIKV1l (ORCPT
+        id S240077AbjIKV1p (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 11 Sep 2023 17:27:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39458 "EHLO
+        Mon, 11 Sep 2023 17:27:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243704AbjIKRcn (ORCPT
+        with ESMTP id S243860AbjIKSDf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Sep 2023 13:32:43 -0400
-Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EC1F1B9
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Sep 2023 10:32:38 -0700 (PDT)
-Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-414ba610766so25591cf.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Sep 2023 10:32:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1694453557; x=1695058357; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vS06nh80KVOxCFrHKBzqbQxcQAoLQCJ5U5egzLZgpvg=;
-        b=hSh0fiY+s1CC1IB4r862zcw/5DKCCf85AF480c8QKu0+YQtUfbDhL9wtVNaGdsLrZ0
-         Dowx21XZhq7KtUJhltvrCrkMqh8ks2bdvnrnNeXY+xKSMB90Eqxl8xsqYTxYgfd/W4A2
-         JGKqLsTlaAqzAXIWlK9C2flf6D7sMqEwt4iYivr6eRoDV5DmykkPAuIE92svGUjd9l1b
-         /4wg4V8J/zytPe3CXrowh5nmtVELwtnFQIrPKzkOFF/C2ruemP2xofL4EXDxLSuaHsNG
-         1PJoGrF3t0M/3Q509sPpClbFwoIMVNJwnhCDNuX5Zu4f/1gJfq8xshpYMpcxUTn7UBKd
-         xP/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694453557; x=1695058357;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vS06nh80KVOxCFrHKBzqbQxcQAoLQCJ5U5egzLZgpvg=;
-        b=AqQR0gPzFmbvviFldTN5dtvMEOeaUwO+xwCnL2CLfyMbpSoju0T1P+QpFTGjVaJxtN
-         ZPTqRWJuTQdbJkQXI+ZrPV19kwyuJJLhyn3CtJ7dGvA2VxE/qaWI53dgRihQBX2YIOcT
-         4TJYOhPF3VEzM/BxF9zjlvQ5Tz08P3iog0NMsaK67VRUIEWNpwsM0EB7bteb1s4dQrkD
-         4grcznGx/PV7meEH6Xvzb7h1FCvjcyTvbGQAHflvRSuLcJgBqHUQWlxIBISS40PNeahC
-         r67D6AQ8bJW+Fy3aG7bVKsSexiuO4MW0uQbmyUeG5nJc86Hz71T+sevNarnceoRsJG/X
-         jXag==
-X-Gm-Message-State: AOJu0YwO97lP6ZF9I5ipVra0wKnSypmIpcATy1fUDI6ozSZcREai1pDI
-        Rj05z8PoOPb0HBVdLqqfxawBxYMEEFB0EfDqcZwFKQ==
-X-Google-Smtp-Source: AGHT+IFB8vpoAIVESpU9czT1w5x6NETkoKez+IqbAgOCvDM9Mj42QoUPaJWihBoHkb7DhpDrqULeeeUau23CM5Xzwdo=
-X-Received: by 2002:a05:622a:13ce:b0:412:16f:c44f with SMTP id
- p14-20020a05622a13ce00b00412016fc44fmr26090qtk.6.1694453557215; Mon, 11 Sep
- 2023 10:32:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <1694087913-46144-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1694087913-46144-2-git-send-email-renyu.zj@linux.alibaba.com>
- <CAP-5=fVWcQrqLeuc-k4HRNrNdb_=9CbqTSOAX=HDR7f=j8b0Hg@mail.gmail.com> <8bab7404-8e24-8606-558c-db3495429f2f@linux.alibaba.com>
-In-Reply-To: <8bab7404-8e24-8606-558c-db3495429f2f@linux.alibaba.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 11 Sep 2023 10:32:25 -0700
-Message-ID: <CAP-5=fU4jWHnbt8BirMZHa7cuLhkAAMAfD28AdRc23zx-e3EyQ@mail.gmail.com>
-Subject: Re: [PATCH v8 1/8] perf pmu: "Compat" supports matching multiple identifiers
-To:     Jing Zhang <renyu.zj@linux.alibaba.com>
-Cc:     John Garry <john.g.garry@oracle.com>,
+        Mon, 11 Sep 2023 14:03:35 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69642103;
+        Mon, 11 Sep 2023 11:03:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694455410; x=1725991410;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=zl8mXYrGXcNEkRuXh0xk4b0ia0PVFV5ULgLWpewd6CU=;
+  b=U4v3XrnuRR+s2r4mfijiqKQ/5ps/7t3+g4ruev7VR4roxr2cgplvIVzA
+   awMMmzDnux/ak7RsNPNKzxFpAg2DHp8Wes9t+tJ9inOaPthayftlQ6ges
+   WQ9q2gKcaPhjvRwYfUT6PM/zzAw1qVpRevZsZ/v8NZkS/9DDs7jNRnkRf
+   qbEtlPF1T2KsU0o2laDsSnDDIZ/HsRwfy73ql3GgL6EMtyvCvbrveOPqL
+   T9ZqQSFh481gPOzDV3ej0/G+lgpib2XYtK5BQhsUxQylmcjg5QuwwZzqx
+   gLLUSEiqZ4QKy4niDKVqeeGx+7AQyjjlJJ+BBgtjKIWm7MtCHPUL6/GJV
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="368416973"
+X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
+   d="scan'208";a="368416973"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 11:03:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="808905960"
+X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
+   d="scan'208";a="808905960"
+Received: from sohilmeh.sc.intel.com ([172.25.103.65])
+  by fmsmga008.fm.intel.com with ESMTP; 11 Sep 2023 11:03:28 -0700
+From:   Sohil Mehta <sohil.mehta@intel.com>
+To:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Cc:     Sohil Mehta <sohil.mehta@intel.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Sergei Trofimovich <slyich@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rohan McLure <rmclure@linux.ibm.com>,
+        Andreas Schwab <schwab@linux-m68k.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Deepak Gupta <debug@rivosinc.com>, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/2] tools headers UAPI: Sync fchmodat2() syscall table entries
+Date:   Mon, 11 Sep 2023 18:02:09 +0000
+Message-Id: <20230911180210.1060504-2-sohil.mehta@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230911180210.1060504-1-sohil.mehta@intel.com>
+References: <20230911180210.1060504-1-sohil.mehta@intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Sep 10, 2023 at 7:32=E2=80=AFPM Jing Zhang <renyu.zj@linux.alibaba.=
-com> wrote:
->
->
->
-> =E5=9C=A8 2023/9/9 =E4=B8=8A=E5=8D=885:33, Ian Rogers =E5=86=99=E9=81=93:
-> > On Thu, Sep 7, 2023 at 4:58=E2=80=AFAM Jing Zhang <renyu.zj@linux.aliba=
-ba.com> wrote:
-> >>
-> >> The jevent "Compat" is used for uncore PMU alias or metric definitions=
-.
-> >>
-> >> The same PMU driver has different PMU identifiers due to different
-> >> hardware versions and types, but they may have some common PMU event.
-> >> Since a Compat value can only match one identifier, when adding the
-> >> same event alias to PMUs with different identifiers, each identifier
-> >> needs to be defined once, which is not streamlined enough.
-> >>
-> >> So let "Compat" supports matching multiple identifiers for uncore PMU
-> >> alias. For example, the Compat value {43401;436*} can match the PMU
-> >> identifier "43401", that is, CMN600_r0p0, and the PMU identifier with
-> >> the prefix "436", that is, all CMN650, where "*" is a wildcard.
-> >> Tokens in Unit field are delimited by ';' with no spaces.
-> >>
-> >> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
-> >> Reviewed-by: John Garry <john.g.garry@oracle.com>
-> >> ---
-> >>  tools/perf/util/pmu.c | 28 ++++++++++++++++++++++++++--
-> >>  tools/perf/util/pmu.h |  1 +
-> >>  2 files changed, 27 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> >> index e215985..c3c3818 100644
-> >> --- a/tools/perf/util/pmu.c
-> >> +++ b/tools/perf/util/pmu.c
-> >> @@ -875,6 +875,30 @@ static bool pmu_uncore_alias_match(const char *pm=
-u_name, const char *name)
-> >>         return res;
-> >>  }
-> >>
-> >> +bool pmu_uncore_identifier_match(const char *id, const char *compat)
-> >> +{
-> >> +       char *tmp =3D NULL, *tok, *str;
-> >> +       bool res =3D false;
-> >> +
-> >> +       /*
-> >> +        * The strdup() call is necessary here because "compat" is a c=
-onst str*
-> >> +        * type and cannot be used as an argument to strtok_r().
-> >> +        */
-> >> +       str =3D strdup(compat);
-> >> +       if (!str)
-> >> +               return false;
-> >> +
-> >> +       tok =3D strtok_r(str, ";", &tmp);
-> >
-> > Did the comma vs semicolon difference get explained? It seems to add
-> > inconsistency to use a semicolon.
-> >
->
-> Hi Ian,
->
-> Yes, I explained the reason for using semicolons instead of commas in v7.
->
-> I use a semicolon instead of a comma because I want to distinguish it fro=
-m the function
-> of the comma in "Unit" and avoid confusion between the use of commas in "=
-Unit" and "Compat".
-> Because in Unit, commas act as wildcards, and in =E2=80=9CCompat=E2=80=9D=
-, the semicolon means =E2=80=9Cor=E2=80=9D. So
-> I think semicolons are more appropriate.
->
-> John also raised this issue earlier, and we finally agreed to use semicol=
-ons.
-> What do you think?
+The syscall table entries in the core kernel and perf are expected to be
+in sync. This would fix perf build warnings and also add support for
+fchmodat2 in 'perf trace'.
 
-I'm okay with it, but thanks for capturing the why of this. I'd like
-at some point to make the wildcarding of things less ad hoc. For
-example, on x86 we use regular expressions to match cpuid:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/pmu-events/arch/x86/mapfile.csv?h=3Dperf-tools-next
-but file name style matching for pmus:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/pmu.c?h=3Dperf-tools-next#n1974
-Given that we're okay with regular expressions then I don't see why
-everything shouldn't be a regular expression. This could, for example,
-make matching PMUs more specific than just adding a star and doing a
-file name match. For an example of why this is weird, on my laptop:
-```
-$ perf stat -e i/actual-frequency/ true
+Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
+---
+ tools/include/uapi/asm-generic/unistd.h             | 5 ++++-
+ tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl | 1 +
+ tools/perf/arch/powerpc/entry/syscalls/syscall.tbl  | 1 +
+ tools/perf/arch/s390/entry/syscalls/syscall.tbl     | 1 +
+ tools/perf/arch/x86/entry/syscalls/syscall_64.tbl   | 1 +
+ 5 files changed, 8 insertions(+), 1 deletion(-)
 
-Performance counter stats for 'system wide':
+diff --git a/tools/include/uapi/asm-generic/unistd.h b/tools/include/uapi/asm-generic/unistd.h
+index fd6c1cb585db..abe087c53b4b 100644
+--- a/tools/include/uapi/asm-generic/unistd.h
++++ b/tools/include/uapi/asm-generic/unistd.h
+@@ -820,8 +820,11 @@ __SYSCALL(__NR_set_mempolicy_home_node, sys_set_mempolicy_home_node)
+ #define __NR_cachestat 451
+ __SYSCALL(__NR_cachestat, sys_cachestat)
+ 
++#define __NR_fchmodat2 452
++__SYSCALL(__NR_fchmodat2, sys_fchmodat2)
++
+ #undef __NR_syscalls
+-#define __NR_syscalls 452
++#define __NR_syscalls 453
+ 
+ /*
+  * 32 bit systems traditionally used different
+diff --git a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
+index cfda2511badf..cb5e757f6621 100644
+--- a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
++++ b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
+@@ -366,3 +366,4 @@
+ 449	n64	futex_waitv			sys_futex_waitv
+ 450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
+ 451	n64	cachestat			sys_cachestat
++452	n64	fchmodat2			sys_fchmodat2
+diff --git a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
+index 8c0b08b7a80e..20e50586e8a2 100644
+--- a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
++++ b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
+@@ -538,3 +538,4 @@
+ 449	common  futex_waitv                     sys_futex_waitv
+ 450 	nospu	set_mempolicy_home_node		sys_set_mempolicy_home_node
+ 451	common	cachestat			sys_cachestat
++452	common	fchmodat2			sys_fchmodat2
+diff --git a/tools/perf/arch/s390/entry/syscalls/syscall.tbl b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
+index a6935af2235c..0122cc156952 100644
+--- a/tools/perf/arch/s390/entry/syscalls/syscall.tbl
++++ b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
+@@ -454,3 +454,4 @@
+ 449  common	futex_waitv		sys_futex_waitv			sys_futex_waitv
+ 450  common	set_mempolicy_home_node	sys_set_mempolicy_home_node	sys_set_mempolicy_home_node
+ 451  common	cachestat		sys_cachestat			sys_cachestat
++452  common	fchmodat2		sys_fchmodat2			sys_fchmodat2
+diff --git a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
+index 227538b0ce80..a5db10ddf540 100644
+--- a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -373,6 +373,7 @@
+ 449	common	futex_waitv		sys_futex_waitv
+ 450	common	set_mempolicy_home_node	sys_set_mempolicy_home_node
+ 451	common	cachestat		sys_cachestat
++452	common  fchmodat2		sys_fchmodat2
+ 
+ #
+ # Due to a historical design error, certain syscalls are numbered differently
+-- 
+2.34.1
 
-                0      i/actual-frequency/
-
-      0.001168195 seconds time elapsed
-```
-The PMU I used here as 'i' is /sys/devices/i915 as we allow arbitrary
-numbers after a PMU name for cases of multiple uncore PMUs.
-
-My feeling longer term is that the matching distinction of Unit and
-Compat, comma and semi-colon, would be better captured with regular
-expressions as I think they show the intent in the matching more
-clearly.
-
-Thanks,
-Ian
-
-
-> Thanks,
-> Jing
->
-> > Thanks,
-> > Ian
-> >
-> >> +       for (; tok; tok =3D strtok_r(NULL, ";", &tmp)) {
-> >> +               if (!fnmatch(tok, id, FNM_CASEFOLD)) {
-> >> +                       res =3D true;
-> >> +                       break;
-> >> +               }
-> >> +       }
-> >> +       free(str);
-> >> +       return res;
-> >> +}
-> >> +
-> >>  static int pmu_add_cpu_aliases_map_callback(const struct pmu_event *p=
-e,
-> >>                                         const struct pmu_events_table =
-*table __maybe_unused,
-> >>                                         void *vdata)
-> >> @@ -915,8 +939,8 @@ static int pmu_add_sys_aliases_iter_fn(const struc=
-t pmu_event *pe,
-> >>         if (!pe->compat || !pe->pmu)
-> >>                 return 0;
-> >>
-> >> -       if (!strcmp(pmu->id, pe->compat) &&
-> >> -           pmu_uncore_alias_match(pe->pmu, pmu->name)) {
-> >> +       if (pmu_uncore_alias_match(pe->pmu, pmu->name) &&
-> >> +                       pmu_uncore_identifier_match(pmu->id, pe->compa=
-t)) {
-> >>                 perf_pmu__new_alias(pmu,
-> >>                                 pe->name,
-> >>                                 pe->desc,
-> >> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> >> index bd5d804..1bf5cf1 100644
-> >> --- a/tools/perf/util/pmu.h
-> >> +++ b/tools/perf/util/pmu.h
-> >> @@ -240,6 +240,7 @@ void pmu_add_cpu_aliases_table(struct perf_pmu *pm=
-u,
-> >>  char *perf_pmu__getcpuid(struct perf_pmu *pmu);
-> >>  const struct pmu_events_table *pmu_events_table__find(void);
-> >>  const struct pmu_metrics_table *pmu_metrics_table__find(void);
-> >> +bool pmu_uncore_identifier_match(const char *id, const char *compat);
-> >>
-> >>  int perf_pmu__convert_scale(const char *scale, char **end, double *sv=
-al);
-> >>
-> >> --
-> >> 1.8.3.1
-> >>
