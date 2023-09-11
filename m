@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBF0CA0ED0
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Sep 2023 21:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32279CA0EC2
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Sep 2023 21:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346364AbjIKV2M (ORCPT
+        id S243810AbjIKV2J (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 11 Sep 2023 17:28:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43076 "EHLO
+        Mon, 11 Sep 2023 17:28:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243337AbjIKRGP (ORCPT
+        with ESMTP id S243343AbjIKRGV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Sep 2023 13:06:15 -0400
-Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDBA5121
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Sep 2023 10:06:11 -0700 (PDT)
-Received: by mail-pg1-x549.google.com with SMTP id 41be03b00d2f7-5701dbeaf9fso6271639a12.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Sep 2023 10:06:11 -0700 (PDT)
+        Mon, 11 Sep 2023 13:06:21 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BB8012A
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Sep 2023 10:06:17 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59b6083fa00so32002947b3.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Sep 2023 10:06:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1694451971; x=1695056771; darn=vger.kernel.org;
+        d=google.com; s=20221208; t=1694451976; x=1695056776; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=1Vzz2XipswXqhRAZU8hIAWN5QKsHwhXA4M9PtsNSBLg=;
-        b=YWCOnLA3d4/1GNUUBAPQ7IGBWC9j9mXhT7x0i2jwYLaTNsKaNXktq7Oo0GS4HN20XH
-         D1x2yETJaiV4uDvGIoS6zXvlugijlRvIJMEKFnAIepyz6nUx7atxJAvwCSDeR4p3Z39S
-         qan3tfA0QYt6XRy30ikBmsZB/MfvX23i26yLDzClGhRoX0rt0IlLIvV+23h5ssKYpBKd
-         B84NpEqQnuqrdbVuNLHb3OIWny4mgBoXqMOjFxlTLcPLl4cUHSE3nNhNnD4zy9YAwE1C
-         YgAMxrRyzLkrSrjOpIlSMo2bcifnDylyzpaGeVxDEi71j5LffHk6ae0AsuR3LnEoMoN8
-         j6WA==
+        bh=pRCYGoTjjcBophstCTgDgCPllSE9scm8ZFVfCDuwbMQ=;
+        b=4EHxcPJv77hNl+7rXblAISOV1A5jk322xPjjLWmpMWPApLC5mtbFAJjcNlH/Cfg0CV
+         O4Jx8u2UoxHzmuqKrimsynrN06cQkxtX9fXVdOuG9E/J532NH6RydHBMGQY+rkPG+3oV
+         QoxZLzbBaS13lijfJ3LnmNyuamfwOYCRAEXIFm0FqN8XcR2ig4nOfKPAzoZ9+kXJ4LlV
+         V+dfaqvgUx9ZjdZxbMIatpcOgN2WIxC+N9C1zcBsPvrLDZecvVNpXcKhf890rtMsPmoZ
+         KtaiiEx1kJQHQoIH1if+RJy+7cRTz+g2OMSdGauz2KRabhBA7SBJa7mXVt8034MJDPN6
+         r5AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694451971; x=1695056771;
+        d=1e100.net; s=20230601; t=1694451976; x=1695056776;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1Vzz2XipswXqhRAZU8hIAWN5QKsHwhXA4M9PtsNSBLg=;
-        b=LZA6s1Zq5UDA7DpVlu/+y0YQ11YWiIC25+PyUI7Xixd959xggC38RyhBS5fu4jr5Ss
-         rrvTcBEv1pNzFvW/vLFnHId56aZVOoibtoUEmd1DxiOdP5TbnJYOtrGgq3799SFoFaEx
-         VwXA6xstexVFW+5JxQG4A61EigPmQaIPhTMq98Lbh2A1mEpVICWKaqlJQ2k6SloI8PUl
-         sNyhZDmFcdI7DhAscCgrqrQwng9BLZnvDvydmaq/sslCP6AAkE+W9a1jDky8j8lRSMbE
-         72LYgiROLJiKb3BrL/ZbtSIsPYI8X7aWFt3U0z7o9JszhcWYhJhtY2zmhrLf8Uc9jNVt
-         WOaw==
-X-Gm-Message-State: AOJu0YyAxN05v1aq8xgfGVYmlosJV1VwdlsC4uUANwexTvCMWIGASs/s
-        knKzHP/2tIss/VR99wWZ2q/WCAOIP9Z0
-X-Google-Smtp-Source: AGHT+IGIhSAWZ1imjQEKI5kVl5ekILjaw0OmXTbC9BInGiGxTOTdQVla++ZMTYyGVj4IXpyev+Ua2Gvq2EsG
+        bh=pRCYGoTjjcBophstCTgDgCPllSE9scm8ZFVfCDuwbMQ=;
+        b=pamL+OgWc2vr0DQt4CkbXZqFPyBfxzl8doXJmu2SqG4JNWHU3qywEjarBDCeizEfpP
+         /1P3p6CxJ6MKWzk6+4B45g3Ignuiz7N4U1O+bp9imKPNdMP+FmWYHzwgxl83xlLVRJhb
+         jPJacybniM70Kqb/FYr4YBbPy0CjhVuOaKiDITQ9zQMexQfWB7dNwX3zcp6eWeZQJloQ
+         nIoqISq8S8BJ0rpEhWxC8EmXEzn0zXUYUZR7OZod4no2ENtngPY1VfavKIYim+GiC+43
+         e7VYpJQrGoxDI91rYdRJMAvxs+2fDIJnPXSfhoYBEjUouBw+soDZ+Bs1j+XOhgu4ujPq
+         AUFA==
+X-Gm-Message-State: AOJu0YwvlLX5z9EyNKp1keX/bkiQurJTAHLzTVwRet29rrZaPr9Rdpz4
+        mb7wTf4aNNWcOBqKrus19CnDe412aIag
+X-Google-Smtp-Source: AGHT+IEYtgLkZOmrsQVv+5dnEAGGCmzF/e5/Bc/ESvtcLe0YzUoWzx6RXlKagJYsvqgnlYoolnqNvo6bX6Qr
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6a92:55a:3ba0:c74b])
- (user=irogers job=sendgmr) by 2002:a65:6ab5:0:b0:573:f899:b6f with SMTP id
- x21-20020a656ab5000000b00573f8990b6fmr2287578pgu.10.1694451971254; Mon, 11
- Sep 2023 10:06:11 -0700 (PDT)
-Date:   Mon, 11 Sep 2023 10:05:57 -0700
+ (user=irogers job=sendgmr) by 2002:a25:aa73:0:b0:d72:8661:ee25 with SMTP id
+ s106-20020a25aa73000000b00d728661ee25mr214482ybi.2.1694451976506; Mon, 11 Sep
+ 2023 10:06:16 -0700 (PDT)
+Date:   Mon, 11 Sep 2023 10:05:59 -0700
 In-Reply-To: <20230911170559.4037734-1-irogers@google.com>
-Message-Id: <20230911170559.4037734-3-irogers@google.com>
+Message-Id: <20230911170559.4037734-5-irogers@google.com>
 Mime-Version: 1.0
 References: <20230911170559.4037734-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
-Subject: [PATCH v1 3/5] perf expr: Make YYDEBUG dependent on doing a debug build
+Subject: [PATCH v1 5/5] perf bpf-filter: Add YYDEBUG
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -76,27 +76,28 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 YYDEBUG enables line numbers and other error helpers in the generated
-expr-bison.c. These shouldn't be generated when debugging
-isn't enabled.
+bpf-filter-bison.c. Conditionally enabled only for debug builds.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.y | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/util/bpf-filter.y | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-index 6c93b358cc2d..e364790babb5 100644
---- a/tools/perf/util/expr.y
-+++ b/tools/perf/util/expr.y
-@@ -1,6 +1,8 @@
- /* Simple expression parser */
+diff --git a/tools/perf/util/bpf-filter.y b/tools/perf/util/bpf-filter.y
+index 5dfa948fc986..0e4d6de3c2ad 100644
+--- a/tools/perf/util/bpf-filter.y
++++ b/tools/perf/util/bpf-filter.y
+@@ -3,6 +3,10 @@
+ 
  %{
+ 
 +#ifndef NDEBUG
- #define YYDEBUG 1
++#define YYDEBUG 1
 +#endif
- #include <assert.h>
- #include <math.h>
- #include <stdlib.h>
++
+ #include <stdio.h>
+ #include <string.h>
+ #include <linux/compiler.h>
 -- 
 2.42.0.283.g2d96d420d3-goog
 
