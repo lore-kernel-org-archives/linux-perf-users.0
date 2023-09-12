@@ -2,142 +2,121 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F111EE3F0F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Sep 2023 19:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D86EEE3F0F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Sep 2023 19:26:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231695AbjILTS6 (ORCPT
+        id S235851AbjILT0x (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Sep 2023 15:18:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59384 "EHLO
+        Tue, 12 Sep 2023 15:26:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229946AbjILTS6 (ORCPT
+        with ESMTP id S229520AbjILT0w (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Sep 2023 15:18:58 -0400
+        Tue, 12 Sep 2023 15:26:52 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4E7FC1;
-        Tue, 12 Sep 2023 12:18:54 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38188C433C8;
-        Tue, 12 Sep 2023 19:18:54 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFA5218D;
+        Tue, 12 Sep 2023 12:26:48 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DE84C433C7;
+        Tue, 12 Sep 2023 19:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694546334;
-        bh=OITpLtQ4al9uXlZ9wlLgOEDSs4UNoAkK/SHtaEiAm68=;
+        s=k20201202; t=1694546808;
+        bh=VKmYlBUpT/bsf1QKh+D267MgH+5GNHBssL6sD/Ma3Zo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tW1/u2Nrd3m0/SyPTnCSvag/nRVYHtR2K1WTX6TBVry7siEFCFb0+whyVyESatu8L
-         G949bVT5+6Q+966HsR23oIX2yGnWxG5CjRAiM1TIGG+zjz2XygrxO+TTXSY4q0PvV4
-         VrGOTDRJURpNPN9LMx89f11av3CRWAm/4Z4ZBvuE/L4XzKFiBY2fmRN0Gg+cTas91d
-         gcKQJGpstDMJjX8YDmL0kE3yUl2e89maTFyCI0uSvXTxnC3LlPqoApeMUif0dR7aSQ
-         jxqf3LFYAI6Qg1JoSkaUAm5x+6NeC29iuUOVEjeYbGbc9Q8x4gpiIDRI7a7Jt/QuAy
-         75nCj3IxZaN4A==
+        b=JHOBkBbSNmOqERjudtzSv/JeaolTlSARYp8FJBxijm+lV2WsBYmAVdLEAUeDdh9MW
+         L8B4BZ/k6gYBbs8lBKUpuMFlVZ+af5a4BpoYgz0SDdKJoO0LFhGveOEE9/PoLPZlsh
+         FRSwoQTg63vDWylJ1ifvXqi8njDsu+WcecfH30yNpP+B6BiwzlANAUZAVM4cFFd+2+
+         u2aSA9FyhjffhisEfbGuChfzor8dOrwv0QaOOiJpjmiyqtZx/yn3vVNPkSaW8noA5h
+         yhzSKqjsJZ7h5m2i+taMPdWXCt+bL/zaiHzJZPBLuTALgrZCC9Ufeod9mFp1TmMaI9
+         z6p3w6xfUJrzg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C6C3C403F4; Tue, 12 Sep 2023 16:18:50 -0300 (-03)
-Date:   Tue, 12 Sep 2023 16:18:50 -0300
+        id 38587403F4; Tue, 12 Sep 2023 16:26:45 -0300 (-03)
+Date:   Tue, 12 Sep 2023 16:26:45 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-perf-users@vger.kernel.org, irogers@google.com,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Kang Minchul <tegongkang@gmail.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] perf list: Avoid a hardcoded cpu PMU name
-Message-ID: <ZQC5mmDtasr5/vDH@kernel.org>
-References: <20230906234416.3472339-1-irogers@google.com>
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Haixin Yu <yuhaixin.yhx@linux.alibaba.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Chen Zhongjin <chenzhongjin@huawei.com>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Liam Howlett <liam.howlett@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 5/7] perf pmu: Move pmu__find_core_pmu() to pmus.c
+Message-ID: <ZQC7da2AM9ih8RMz@kernel.org>
+References: <20230831151632.124985-1-james.clark@arm.com>
+ <20230831151632.124985-6-james.clark@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230906234416.3472339-1-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230831151632.124985-6-james.clark@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Sep 06, 2023 at 04:44:15PM -0700, Ian Rogers escreveu:
-> Use the first core PMU instead.
+Em Thu, Aug 31, 2023 at 04:16:16PM +0100, James Clark escreveu:
+> pmu__find_core_pmu() more logically belongs in pmus.c because it
+> iterates over all PMUs, so move it to pmus.c
 > 
-> On a Raspberry Pi, before:
-> ```
-> $ perf list
-> ...
->   cpu/t1=v1[,t2=v2,t3 ...]/modifier                  [Raw hardware event descriptor]
->        [(see 'man perf-list' on how to encode it)]
-> ...
-> ```
-> After:
-> ```
+> At the same time rename it to perf_pmus__find_core_pmu() to match the
+> naming convention in this file.
 > 
-> $ perf list
-> ...
->   armv8_cortex_a72/t1=v1[,t2=v2,t3 ...]/modifier     [Raw hardware event descriptor]
->        [(see 'man perf-list' on how to encode it)]
-> ...
-> ```
+> Signed-off-by: James Clark <james.clark@arm.com>
 
-Thanks, applied the two patches.
+So, this one is hitting this:
 
-- Arnaldo
+  CC      /tmp/build/perf-tools-next/util/expr.o
+In file included from /var/home/acme/git/perf-tools-next/tools/include/linux/list.h:7,
+                 from util/pmus.c:2:
+In function ‘perf_pmus__scan_core’,
+    inlined from ‘perf_pmus__find_core_pmu’ at util/pmus.c:601:16:
+/var/home/acme/git/perf-tools-next/tools/include/linux/kernel.h:36:45: error: array subscript 0 is outside array bounds of ‘struct list_head[1]’ [-Werror=array-bounds]
+   36 |         const typeof(((type *)0)->member) * __mptr = (ptr);     \
+      |                                             ^~~~~~
+/var/home/acme/git/perf-tools-next/tools/include/linux/list.h:352:9: note: in expansion of macro ‘container_of’
+  352 |         container_of(ptr, type, member)
+      |         ^~~~~~~~~~~~
+/var/home/acme/git/perf-tools-next/tools/include/linux/list.h:404:9: note: in expansion of macro ‘list_entry’
+  404 |         list_entry((pos)->member.next, typeof(*(pos)), member)
+      |         ^~~~~~~~~~
+/var/home/acme/git/perf-tools-next/tools/include/linux/list.h:494:20: note: in expansion of macro ‘list_next_entry’
+  494 |         for (pos = list_next_entry(pos, member);                        \
+      |                    ^~~~~~~~~~~~~~~
+util/pmus.c:274:9: note: in expansion of macro ‘list_for_each_entry_continue’
+  274 |         list_for_each_entry_continue(pmu, &core_pmus, list)
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+util/pmus.c: In function ‘perf_pmus__find_core_pmu’:
+util/pmus.c:35:18: note: at offset -128 into object ‘core_pmus’ of size 16
+   35 | static LIST_HEAD(core_pmus);
+      |                  ^~~~~~~~~
+/var/home/acme/git/perf-tools-next/tools/include/linux/list.h:23:26: note: in definition of macro ‘LIST_HEAD’
+   23 |         struct list_head name = LIST_HEAD_INIT(name)
+      |                          ^~~~
+cc1: all warnings being treated as errors
+make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/util/pmus.o] Error 1
+make[4]: *** Waiting for unfinished jobs....
+  LD      /tmp/build/perf-tools-next/ui/browsers/perf-in.o
 
- 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/print-events.c | 28 +++++++++++++++++-----------
->  1 file changed, 17 insertions(+), 11 deletions(-)
-> 
-> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-> index a7566edc86a3..b0fc48be623f 100644
-> --- a/tools/perf/util/print-events.c
-> +++ b/tools/perf/util/print-events.c
-> @@ -395,6 +395,8 @@ void print_symbol_events(const struct print_callbacks *print_cb, void *print_sta
->   */
->  void print_events(const struct print_callbacks *print_cb, void *print_state)
->  {
-> +	char *tmp;
-> +
->  	print_symbol_events(print_cb, print_state, PERF_TYPE_HARDWARE,
->  			event_symbols_hw, PERF_COUNT_HW_MAX);
->  	print_symbol_events(print_cb, print_state, PERF_TYPE_SOFTWARE,
-> @@ -418,17 +420,21 @@ void print_events(const struct print_callbacks *print_cb, void *print_state)
->  			/*long_desc=*/NULL,
->  			/*encoding_desc=*/NULL);
->  
-> -	print_cb->print_event(print_state,
-> -			/*topic=*/NULL,
-> -			/*pmu_name=*/NULL,
-> -			"cpu/t1=v1[,t2=v2,t3 ...]/modifier",
-> -			/*event_alias=*/NULL,
-> -			/*scale_unit=*/NULL,
-> -			/*deprecated=*/false,
-> -			event_type_descriptors[PERF_TYPE_RAW],
-> -			"(see 'man perf-list' on how to encode it)",
-> -			/*long_desc=*/NULL,
-> -			/*encoding_desc=*/NULL);
-> +	if (asprintf(&tmp, "%s/t1=v1[,t2=v2,t3 ...]/modifier",
-> +		     perf_pmus__scan_core(/*pmu=*/NULL)->name) > 0) {
-> +		print_cb->print_event(print_state,
-> +				/*topic=*/NULL,
-> +				/*pmu_name=*/NULL,
-> +				tmp,
-> +				/*event_alias=*/NULL,
-> +				/*scale_unit=*/NULL,
-> +				/*deprecated=*/false,
-> +				event_type_descriptors[PERF_TYPE_RAW],
-> +				"(see 'man perf-list' on how to encode it)",
-> +				/*long_desc=*/NULL,
-> +				/*encoding_desc=*/NULL);
-> +		free(tmp);
-> +	}
->  
->  	print_cb->print_event(print_state,
->  			/*topic=*/NULL,
-> -- 
-> 2.42.0.283.g2d96d420d3-goog
-> 
 
--- 
+So I applied up to 4/7
+
+Please continue from what will be in tmp.perf-tools-next in some
+jiffies.
 
 - Arnaldo
