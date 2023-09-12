@@ -2,195 +2,365 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AE2CA0ECB
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Sep 2023 02:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C065CA0EC6
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Sep 2023 03:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237517AbjILC2C (ORCPT
+        id S241280AbjILDEn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 11 Sep 2023 22:28:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58626 "EHLO
+        Mon, 11 Sep 2023 23:04:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237451AbjILC1w (ORCPT
+        with ESMTP id S241085AbjILDEd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Sep 2023 22:27:52 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DCB013CC27
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Sep 2023 18:52:17 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-53fa455cd94so3622756a12.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Sep 2023 18:52:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694483537; x=1695088337; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kwpiguO0UbnqrBVAgkTOyqOA0TbUDGD6mC+sN7KskI0=;
-        b=SSR/t5MpaatJ+M7XunRAUauQ2DEx/YNGZ0dHkjXSA2jwlV4Scttg8nIv6Rgoizrt2q
-         AlDTg5DOoZuxDPb9LN2UnfKGss8bNt2AMuSuG25qp2MGcrviteLs/5nrg3/7/iq0lBYA
-         UkoOMM5TJ3zVzxA3rQ5OsldNN8D44E4zJVWO2hEteYhsq5QgTlWQ3MyXXsOxliW2wUqk
-         OhGxiaQn1pppEcTRJZwF6bE84z7nG8HlpDU0quo2Z2ClIb9FmcNLuwJt2QGz2a+XDlSE
-         yKvNAYHWtaAhFE08HuxxBl8pBB6ixK32BP9K89ud9E3LNQSDn1cFoCXwMvL3O1hdxn68
-         5Ozg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694483537; x=1695088337;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kwpiguO0UbnqrBVAgkTOyqOA0TbUDGD6mC+sN7KskI0=;
-        b=UPoTvBxTagbQp/RlTPShTPT7RG4o6azXNUXkttIjV+4ltTNC6eKXI8QXghvvQ2O5Cp
-         /chnwEYubUthmtOKBRWv4RnxYJ27inrHxrLq9C8GOqOJysJJdiISlOSV+GZvzqak88qL
-         NItDn07EsqGoJNlyfinfT+8XCQMS3A1URcQFLDGc/zELWJhia431jx32KGl7W05yZSGw
-         e4rJmhp9aKyZK6X5wqAvWBW8cQUztOG7Ew9z1mlZNT2tydzZQdCUcRPMmF6mFvnXvaDr
-         ZeW4vG2utOymEJASgeRRrDdGgkMhyfF5+Hz5tan3xhBjRJ+ROWYPKucu4gzn9QhVlQO0
-         KePA==
-X-Gm-Message-State: AOJu0Yx8LhODYCYwk2odm3mPOsZZyL/0lAlxP3kDVBKkpVxiyrIS3r7w
-        lfS1/NY/+66Dtzw6qtlLUCe6+w==
-X-Google-Smtp-Source: AGHT+IF/LWkrzxBsF4AhQ5qgJsif8/E6lwiCAOPaiSUpQOXYS8By3op3abZdkkmIE99m2dH1kStZ6Q==
-X-Received: by 2002:a05:6a21:47ca:b0:14b:f365:288a with SMTP id as10-20020a056a2147ca00b0014bf365288amr7505296pzc.47.1694483536714;
-        Mon, 11 Sep 2023 18:52:16 -0700 (PDT)
-Received: from leoy-huanghe ([98.98.49.243])
-        by smtp.gmail.com with ESMTPSA id on10-20020a17090b1d0a00b0026b76edd607sm6414392pjb.15.2023.09.11.18.52.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Sep 2023 18:52:16 -0700 (PDT)
-Date:   Tue, 12 Sep 2023 09:52:04 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf cs-etm: Fix kernel timestamp handling
-Message-ID: <20230912015204.GA122656@leoy-huanghe>
-References: <20230910092413.53538-1-leo.yan@linaro.org>
- <04823db9-ed6c-0695-b9de-5a63bfa0aa5a@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Mon, 11 Sep 2023 23:04:33 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FA102484F;
+        Mon, 11 Sep 2023 19:36:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694486208; x=1726022208;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=j8WU7CIx0A9coWIQlmMRM4wy5VpCgf1zqjAwmi6aDNc=;
+  b=ZhcOXrfQZLjVJYQkjjZBU4kDrYl4g4Fxz3lK6mOgRixy4FjPg0lkZjjA
+   c2Z2DIjSzQhp9xlQckpl0yzX+bR3qaRDdHhb8TAfZEm3ATyE4esXq7gYv
+   3qRhModlDWXrzF3zQmli9f8W7qmjwUcEFpQyyUJIU8zK97v6XQjQtHY91
+   NuuZ3S6R/870nLOackvecxuMR0506Crk8zgOcfq0I5kXJVKA78+CZWxB3
+   cho1MDnU0AkPUCsCaEV8jeCwoiHikKYS/YR5Lpg3JzJEIoRT3Lu+F54qI
+   eIagSpRSHrDpvmZfnVxIfFl2orsNqNrzkoKQ/ZcmiFbadSkJMYuZd4ECv
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="363292886"
+X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
+   d="scan'208";a="363292886"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 19:36:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="809046776"
+X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
+   d="scan'208";a="809046776"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmsmga008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Sep 2023 19:36:47 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Mon, 11 Sep 2023 19:36:46 -0700
+Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Mon, 11 Sep 2023 19:36:46 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32 via Frontend Transport; Mon, 11 Sep 2023 19:36:46 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.176)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.32; Mon, 11 Sep 2023 19:36:46 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ncieXwRb9cDWnPWCDFzBev3MbJwBgzO2GukmKesrpBqwo+Cy27hcP3WchoxC4xlwyATENNavb0YsvlyzKT1xUKamnmE5V4rlr96fFjBOJSi7+rCCqxfb88kN2GMxqmDX86SBhZGKOMRS0VllmtwMIilHGcheCdDl0jDzQoOaDMYr4EzrKkbzJcLETWB3amM/5bFNoZtrJ9GC08bhRUNK4HdzqDFfEM0u7EcZaQASCztEfvirk0glc3boMxLPsSj38YAgEsmVfA51Zsu6UdIH2jIUUps91Fns8zxF4XmPoD/6LIfF+o2psHA2HPVFqaPuJh4EKh8mOifMeb5yQfDSCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6Y2IW2gGA6+RkRb/e7gayzNf0HuctXl1HdndLJxAbm0=;
+ b=Im9pr9pb3LPVutkLeM+EfmnMHeNSV0VzKkYE1J/1mj7wfbHRrlvgSnswzPmY6mobPBptvCnawmww3SbcvuyEXt5qo+sXLlAHwY8V1eIZ3+0VSP8lrnH15D44kGAO2Nry9SBLwB7/yFEGOZmnD5no+N5uzlZuGzxsy4exPBgofkmhYbtF7fd2NIJjIUHc7Ip7s5h/UE6a3i38kjSxVsQ2P5rKidMr4oYMNMXlQlD+54gHEJF4nSm0nea/saiGg6447iXyt/hl8HnXbuTTrWIJkWcvRl0CWtlVHf2l7OnaTeZ7UNjOH8TM+A/Uj+hYv8DlayfcmEocM0SGCzH/lX7hgA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB6780.namprd11.prod.outlook.com (2603:10b6:510:1cb::11)
+ by BL1PR11MB5527.namprd11.prod.outlook.com (2603:10b6:208:317::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.35; Tue, 12 Sep
+ 2023 02:36:43 +0000
+Received: from PH8PR11MB6780.namprd11.prod.outlook.com
+ ([fe80::5d9f:7e54:4218:159f]) by PH8PR11MB6780.namprd11.prod.outlook.com
+ ([fe80::5d9f:7e54:4218:159f%7]) with mapi id 15.20.6768.029; Tue, 12 Sep 2023
+ 02:36:43 +0000
+Date:   Tue, 12 Sep 2023 10:36:31 +0800
+From:   Chao Gao <chao.gao@intel.com>
+To:     Manali Shukla <manali.shukla@amd.com>
+CC:     <kvm@vger.kernel.org>, <seanjc@google.com>,
+        <linux-doc@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <x86@kernel.org>, <pbonzini@redhat.com>, <peterz@infradead.org>,
+        <bp@alien8.de>, <santosh.shukla@amd.com>, <ravi.bangoria@amd.com>,
+        <thomas.lendacky@amd.com>, <nikunj@amd.com>
+Subject: Re: [PATCH 03/13] KVM: x86: Add emulation support for Extented LVT
+ registers
+Message-ID: <ZP/Or2UqdA/EIzE7@chao-email>
+References: <20230904095347.14994-1-manali.shukla@amd.com>
+ <20230904095347.14994-4-manali.shukla@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <04823db9-ed6c-0695-b9de-5a63bfa0aa5a@arm.com>
+In-Reply-To: <20230904095347.14994-4-manali.shukla@amd.com>
+X-ClientProxiedBy: SI1PR02CA0029.apcprd02.prod.outlook.com
+ (2603:1096:4:1f4::20) To PH8PR11MB6780.namprd11.prod.outlook.com
+ (2603:10b6:510:1cb::11)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB6780:EE_|BL1PR11MB5527:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2451751d-3b2b-445c-8212-08dbb33919b6
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: cnibbsaVlAH/sJHcK1G8sOUHjj/Nxd78GKa5MewGGscEDHjSpzCUIE9Gy3NtWsFlqAJe2pIVguchULepCLSSo23ikxBF4bX8FUJmuRO9X1IKrcapNg+jU1parT/RnbnFI3QYpi8iK9eOA+ghXyy0UKyEyp0KNI0K6FzT0vXDPan5ciIgaLsyISBVSE18Qedg57RudGdHpbJUx4fSAvoVvipTJaW6cgn50x98cGxWDQWNZLipm/uWEEGe3XTG4HvV2BIsBMhDWUaesk7vUAH817lyf8ReGwQlPTCYLq3LReTXgG4s5PltjbcUKu2BSrSwild4/3yR5+zIYv2se9sZ5deXuuOlIPl+/Bhv7mChtHCvx26QxJmhwLVRm2VvPJmIj5IvjkdLVtAixDCa4XEVrkXoQvBxE/Tlbe8dI/ylSW4N+p17wnXl6Byem5WsKm4kUZll/HIGU7cO9kZTIa9g9e71nqWMNytpLLZgOxrgi5AUZhV/AvCYkjbGaCUVEWy+Rs7U0X5RIvScLKtvMQ+EQn83p22ha2i1vt9SxU5yj3U=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB6780.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(136003)(366004)(346002)(396003)(376002)(39860400002)(1800799009)(451199024)(186009)(5660300002)(44832011)(66946007)(6916009)(316002)(41300700001)(4326008)(8676002)(8936002)(66556008)(66476007)(33716001)(478600001)(38100700002)(6506007)(6486002)(9686003)(7416002)(6666004)(86362001)(26005)(2906002)(83380400001)(6512007)(82960400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?o6uhJCkP0xI8yG+3y9L04ceRmLz0WxscQndLmMVwtoXczI3IABn+/Bqn0n2n?=
+ =?us-ascii?Q?C+W0CwVC1Bvtbrqivezrgf+iVQokDCHsWq/TfMsvdO5AGH5ftCKEs/usXCRf?=
+ =?us-ascii?Q?N/awYNYq9m5pyuTAqEBaAc6jSDu3vxd1aoR2UZGyNdEiM0jIggXmnBVylfmv?=
+ =?us-ascii?Q?16/O31Xs3MTGB2q5jCk7wYpmr4AqQLwk1zyGXma6j6HeaDT5bi27upobaSjl?=
+ =?us-ascii?Q?56jAjUMPboir+G6IJsJ+svWKSEiUX3YXIQEOZzR0y49eJjWUkTcN29EhC+u7?=
+ =?us-ascii?Q?kpYMJjUVPYGUC59F2q7/OED+rnXXWWnwdt+LWJpZ83J6zulw29DNFvdtuwDB?=
+ =?us-ascii?Q?2izWgeP4KyDAiAruXiLdZMUBBPXiBRtUs3PE7jz8ejDGjUh6Yo6KfzBsKWdX?=
+ =?us-ascii?Q?eCEEvCNrN26Qx3lcMwHcykABnKwxUiHTS433EWye3Foz6bxosiQxF5+r14T5?=
+ =?us-ascii?Q?4SY7+/55tpe6NrM9YtPUb8nvHMrqIqzS1XH1HBXLWtqV8IarFmWT86GIm7mp?=
+ =?us-ascii?Q?3NpHpK90JSzQ+kVPm2sMJe28BEbR5PGvx1zLRVl88gOnkX/7rBX7L5rGNKTy?=
+ =?us-ascii?Q?ccVoemcug4CDDmMbpSLQKIsUA0TbQrWEWdiWCDIKKsH3VfZS1ZohhrDR8+hu?=
+ =?us-ascii?Q?c7MVpObDI8IoSfccBxnE+bHrB+uYmyklU9PTihzyJdTJ6WyRiZL2p1S6dRTt?=
+ =?us-ascii?Q?AzbDDX3Iqq6ZhEASskvLvTkqqGf5fYLb51iXQvIF1rIvCPp0qHDJG8s4Yn1i?=
+ =?us-ascii?Q?1cGUDx+GMQm8aS28k6tr7FRts2wZ/odY0W4qNG9HGAV+FwTyGobWou5Pbdn5?=
+ =?us-ascii?Q?UGo6QGfjNix6HXRlrgkdn+F6gkWpGAej7qNWi+jZJiD+NJ2MYNs6ERRtQx4m?=
+ =?us-ascii?Q?5Q5TDhtLxlludJA1ahS70ybPihPhZMFE/tSiJwiISSAhgfhcHDH2Ly5v4Bk2?=
+ =?us-ascii?Q?IfaufkuTYI0ltQhjnxYUkm16EZl4xDIqjBHosEmkT6jnvTRgIPYDBkKSTvgS?=
+ =?us-ascii?Q?CGxkLBToMeSXDOrTxRBtuKiSYzDeO1zaPja+d5Vf3BYr9u+Mnc3phgKyYXxe?=
+ =?us-ascii?Q?eiVQseLqP21Veo0Zjw0GBmN/QYxHxvHkb1xtrSS+ud/tC7dWAVnbBZpavVSk?=
+ =?us-ascii?Q?rv5wWaz5jQ2YcQpr5TxSlTepJvWnaBg7AfWUTW+w0jlmwWFpEgdTWBW/IwS0?=
+ =?us-ascii?Q?GlnKPMyTdcURh3AQZ1snFGBFlFTfUdpRR0gmXj5AsJk7XayG6KZT8UFXOmhh?=
+ =?us-ascii?Q?MaQRMtWA8ysMje1iK3BmE7pSudQP95Cl7XDTAtueHPd26NUX5zkFF4U3EB2Y?=
+ =?us-ascii?Q?SeylTpnJ+mUJGQlKFooRG8etvvau6iZcnsMWIts1LLQsc8hzbda+she+BPYe?=
+ =?us-ascii?Q?DpQsLdfmBurJNYeZpDdGeWA+7hOiJc9qzMcZj7PBARCdhjn6qJBN/2qRRptx?=
+ =?us-ascii?Q?jioweufV212WS6ZwNhdWV9XoLmfwU+VBrJwDzatGGmot7nWnxbUXiCIEH/4r?=
+ =?us-ascii?Q?0UGsMJ1jSuqLlfm4F74wsuGyGnTvXdJkpmVD9/5Kv8TTltfSDvtOqcEa0kXg?=
+ =?us-ascii?Q?WSacmLxtTJXOqc6eb4dKPUM9W/RpSeCMhneDSvT9?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2451751d-3b2b-445c-8212-08dbb33919b6
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB6780.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Sep 2023 02:36:43.2048
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jnZK2YgZu1C2yJfNEPAj4U4hn+CWMveusUfjT6b6eANJ9s9PCG2Q4pnlOxd+eMWTsDDNVi6RU4v9AF3nof6ZRQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5527
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi James,
-
-On Mon, Sep 11, 2023 at 02:24:09PM +0100, James Clark wrote:
-
-[...]
-
-> > The current code can support both timestamp sources when synthesizing
-> > samples. However, the decoding flow only relies on the hardware
-> > timestamp.  If the hardware timestamp is zero, it becomes impossible to
-> > decode the trace data.  Consequently, in this case, the commands below
-> > won't output any samples:
-> > 
-> >     perf record -e cs_etm// --per-thread --timestamp -- ls
-> >     perf script
+On Mon, Sep 04, 2023 at 09:53:37AM +0000, Manali Shukla wrote:
+>From: Santosh Shukla <santosh.shukla@amd.com>
+>
+>The local interrupts are extended to include more LVT registers in
+>order to allow additional interrupt sources, like Instruction Based
+>Sampling (IBS) and many more.
+>
+>Currently there are four additional LVT registers defined and they are
+>located at APIC offsets 500h-530h.
+>
+>AMD IBS driver is designed to use EXTLVT (Extended interrupt local
+>vector table) by default for driver initialization.
+>
+>Extended LVT registers are required to be emulated to initialize the
+>guest IBS driver successfully.
+>
+>Please refer to Section 16.4.5 in AMD Programmer's Manual Volume 2 at
+>https://bugzilla.kernel.org/attachment.cgi?id=304653 for more details
+>on EXTLVT.
+>
+>Signed-off-by: Santosh Shukla <santosh.shukla@amd.com>
+>Co-developed-by: Manali Shukla <manali.shukla@amd.com>
+>Signed-off-by: Manali Shukla <manali.shukla@amd.com>
+>---
+> arch/x86/include/asm/apicdef.h | 14 ++++++++
+> arch/x86/kvm/lapic.c           | 66 ++++++++++++++++++++++++++++++++--
+> arch/x86/kvm/lapic.h           |  1 +
+> arch/x86/kvm/svm/avic.c        |  4 +++
+> 4 files changed, 83 insertions(+), 2 deletions(-)
+>
+>diff --git a/arch/x86/include/asm/apicdef.h b/arch/x86/include/asm/apicdef.h
+>index 4b125e5b3187..ac50919d10be 100644
+>--- a/arch/x86/include/asm/apicdef.h
+>+++ b/arch/x86/include/asm/apicdef.h
+>@@ -139,6 +139,20 @@
+> #define		APIC_EILVT_MSG_EXT	0x7
+> #define		APIC_EILVT_MASKED	(1 << 16)
 > 
-> Hi Leo,
+>+/*
+>+ * Initialize extended APIC registers to the default value when guest is started
+>+ * and EXTAPIC feature is enabled on the guest.
+>+ *
+>+ * APIC_EFEAT is a read only Extended APIC feature register, whose default value
+>+ * is 0x00040007.
+
+bits 0/1/2 indicate other features. If KVM sets them to 1s, KVM needs to
+enumerate the corresponding features.
+
+>+ *
+>+ * APIC_ECTRL is a read-write Extended APIC control register, whose default value
+>+ * is 0x0.
+>+ */
+>+
+>+#define		APIC_EFEAT_DEFAULT	0x00040007
+>+#define		APIC_ECTRL_DEFAULT	0x0
+>+
+> #define APIC_BASE (fix_to_virt(FIX_APIC_BASE))
+> #define APIC_BASE_MSR		0x800
+> #define APIC_X2APIC_ID_MSR	0x802
+>diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+>index 7c1bd8594f1b..88985c481fe8 100644
+>--- a/arch/x86/kvm/lapic.c
+>+++ b/arch/x86/kvm/lapic.c
+>@@ -1599,9 +1599,13 @@ static inline struct kvm_lapic *to_lapic(struct kvm_io_device *dev)
+> }
 > 
-> I couldn't reproduce this issue, even when hard coding the hardware
-> timestamp to zero in cs_etm_decoder__do_hard_timestamp() like this:
+> #define APIC_REG_MASK(reg)	(1ull << ((reg) >> 4))
+>+#define APIC_REG_EXT_MASK(reg)	(1ull << (((reg) >> 4) - 0x40))
+> #define APIC_REGS_MASK(first, count) \
+> 	(APIC_REG_MASK(first) * ((1ull << (count)) - 1))
 > 
->  converted_timestamp = 0;
-
-I reproduced this issue on the Juno-r2 board, its "etm->has_virtual_ts"
-is always false and Arm CoreSight timestamp packets are zeros.
-
-Besides set "converted_timestamp = 0", it might need to hard code
-"etm->has_virtual_ts" to false?
-
-> I'm not sure why this would result in no samples being generated either,
-> because we don't actually use the timestamps for anything yet [1]. We
-> always wait until the very end of the file before decoding to ensure
-> that all of the mmaps are loaded. And the timestamp is just assigned to
-> the samples, but they shouldn't affect whether they are generated or not.
+>+#define APIC_LAST_REG_OFFSET		0x3f0
+>+#define APIC_EXT_LAST_REG_OFFSET	0x530
+>+
+> u64 kvm_lapic_readable_reg_mask(struct kvm_lapic *apic)
+> {
+> 	/* Leave bits '0' for reserved and write-only registers. */
+>@@ -1643,6 +1647,8 @@ EXPORT_SYMBOL_GPL(kvm_lapic_readable_reg_mask);
+> static int kvm_lapic_reg_read(struct kvm_lapic *apic, u32 offset, int len,
+> 			      void *data)
+> {
+>+	u64 valid_reg_ext_mask = 0;
+>+	unsigned int last_reg = APIC_LAST_REG_OFFSET;
+> 	unsigned char alignment = offset & 0xf;
+> 	u32 result;
 > 
-> Unless there is something else I'm missing?
+>@@ -1652,13 +1658,44 @@ static int kvm_lapic_reg_read(struct kvm_lapic *apic, u32 offset, int len,
+> 	 */
+> 	WARN_ON_ONCE(apic_x2apic_mode(apic) && offset == APIC_ICR);
+> 
+>+	/*
+>+	 * The local interrupts are extended to include LVT registers to allow
+>+	 * additional interrupt sources when the EXTAPIC feature bit is enabled.
+>+	 * The Extended Interrupt LVT registers are located at APIC offsets 400-530h.
+>+	 */
+>+	if (guest_cpuid_has(apic->vcpu, X86_FEATURE_EXTAPIC)) {
+>+		valid_reg_ext_mask =
+>+			APIC_REG_EXT_MASK(APIC_EFEAT) |
+>+			APIC_REG_EXT_MASK(APIC_ECTRL) |
+>+			APIC_REG_EXT_MASK(APIC_EILVTn(0)) |
+>+			APIC_REG_EXT_MASK(APIC_EILVTn(1)) |
+>+			APIC_REG_EXT_MASK(APIC_EILVTn(2)) |
+>+			APIC_REG_EXT_MASK(APIC_EILVTn(3));
+>+		last_reg = APIC_EXT_LAST_REG_OFFSET;
+>+	}
+>+
+> 	if (alignment + len > 4)
+> 		return 1;
+> 
+>-	if (offset > 0x3f0 ||
+>-	    !(kvm_lapic_readable_reg_mask(apic) & APIC_REG_MASK(offset)))
+>+	if (offset > last_reg)
+> 		return 1;
+> 
+>+	switch (offset) {
+>+	/*
+>+	 * Section 16.3.2 in the AMD Programmer's Manual Volume 2 states:
+>+	 * "APIC registers are aligned to 16-byte offsets and must be accessed
+>+	 * using naturally-aligned DWORD size read and writes."
+>+	 */
+>+	case KVM_APIC_REG_SIZE ... KVM_APIC_EXT_REG_SIZE - 16:
+>+		if (!(valid_reg_ext_mask & APIC_REG_EXT_MASK(offset)))
+>+			return 1;
+>+		break;
+>+	default:
+>+		if (!(kvm_lapic_readable_reg_mask(apic) & APIC_REG_MASK(offset)))
+>+			return 1;
+>+
+>+	}
+>+
+> 	result = __apic_read(apic, offset & ~0xf);
+> 
+> 	trace_kvm_apic_read(offset, result);
+>@@ -2386,6 +2423,12 @@ static int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
+> 		else
+> 			kvm_apic_send_ipi(apic, APIC_DEST_SELF | val, 0);
+> 		break;
+>+	case APIC_EILVTn(0):
+>+	case APIC_EILVTn(1):
+>+	case APIC_EILVTn(2):
+>+	case APIC_EILVTn(3):
+>+		kvm_lapic_set_reg(apic, reg, val);
+>+		break;
 
-Let's review below code.
+APIC_ECTRL is writable, so, I think it should be handled here.
 
-cs_etm__queue_first_cs_timestamp() retrieves trace data and decodes it,
-and breaks the while loop until it find the timestamp is not zero or no
-trace data is avaliable.  When the timestamp is always zero, the while
-loop continues to drop the CoreSight trace data and don't synthesize
-samples.
+> 	default:
+> 		ret = 1;
+> 		break;
+>@@ -2664,6 +2707,25 @@ void kvm_inhibit_apic_access_page(struct kvm_vcpu *vcpu)
+> 	kvm_vcpu_srcu_read_lock(vcpu);
+> }
+> 
+>+/*
+>+ * Initialize extended APIC registers to the default value when guest is
+>+ * started. The extended APIC registers should only be initialized when the
+>+ * EXTAPIC feature is enabled on the guest.
+>+ */
+>+void kvm_apic_init_eilvt_regs(struct kvm_vcpu *vcpu)
+>+{
+>+	struct kvm_lapic *apic = vcpu->arch.apic;
+>+	int i;
+>+
+>+	if (guest_cpuid_has(vcpu, X86_FEATURE_EXTAPIC)) {
 
-  cs_etm__queue_first_cs_timestamp()
-  {
-      ...
+Do you need to check hardware support here?
 
-      while(1) {
-          ret = cs_etm__get_data_block(etmq);
-          if (ret <= 0)
-              goto out;
+>+		kvm_lapic_set_reg(apic, APIC_EFEAT, APIC_EFEAT_DEFAULT);
+>+		kvm_lapic_set_reg(apic, APIC_ECTRL, APIC_ECTRL_DEFAULT);
+>+		for (i = 0; i < APIC_EILVT_NR_MAX; i++)
+>+			kvm_lapic_set_reg(apic, APIC_EILVTn(i), APIC_EILVT_MASKED);
+>+	}
+>+}
+>+EXPORT_SYMBOL_GPL(kvm_apic_init_eilvt_regs);
 
-          ret = cs_etm__decode_data_block(etmq);
-          if (ret)
-              goto out;
+looks Extended APIC space is generic to x86. Can you just call this function
+from kvm_vcpu_after_set_cpuid()?  then there is no need to expose this function.
 
-          cs_timestamp = cs_etm__etmq_get_timestamp(etmq, &trace_chan_id);
-          /* We found a timestamp, no need to continue. */
-          if (cs_timestamp)
-              break;
+>+
+> void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
 
-          cs_etm__clear_all_packet_queues(etmq);
-      }
-  }
+The extended APIC space should be re-initialized on reset. Right?
 
-> Also, in cs_etm__queue_first_cs_timestamp(), cs_timestamp is used for
-> sorting the decoding order between CPUs, but if the hardware timestamp
-> is 0, then it's 0 on all trace.
-
-Correct.
-
-> So the sorting would be the same if you change that to be the kernel
-> timestamp. They're all still the same
-> static number, but just a different number (because we wait until the
-> end of the file, 'latest_kernel_timestamp' is always the timestamp of
-> the last AUX event in the file).
-
-If we use the 'latest_kernel_timestamp' as timestamp, it's non-zero
-timestamp rather than all timestamp '0'.  Yes, 'latest_kernel_timestamp'
-is a coarse kernel timestamp which is shared by all trace data recorded
-in the AUX event, though it's a static number, it can allow us to break
-the while loop mentioned above.
-
-I understand 'latest_kernel_timestamp' is inaccurate for sorting, but
-as least now it exists in current code, quotes from util/cs-etm.c:
-
-  /*
-   * Record the latest kernel timestamp available in the header   
-   * for samples so that synthesised samples occur from this point
-   * onwards.
-   */
-  if (sample->time && (sample->time != (u64)-1))
-        etm->latest_kernel_timestamp = sample->time;
-
-> [1]: I still plan to change the decoding to decode up to the current
-> time in the file, rather than waiting for the end of the file before
-> starting. That way decoding trace when there were overlapping mmap
-> regions in time will be more accurate.
-
-Thanks for heading up.  I am not sure if I understand this correctly,
-but seems to me it is a good thing to try for using overlapping mmap
-events.
-
-Just a side topic, if an Arm platform connect the Arm timer counter to
-Arm CoreSight, and detect virtual timestamp is false (thus
-etm->has_virtual_ts is 0).  I think this might happen on some legacy
-platforms, can we use some ways to allow users to still use the Arm
-CoreSight timestamp in this case?  E.g. we can force set
-etm->has_virtual_ts to 1 when user specify the config
-'-e cs_etm/timestamp/'.
-
-Thanks,
-Leo
+> {
+> 	struct kvm_lapic *apic = vcpu->arch.apic;
+>diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+>index ad6c48938733..b0c7393cd6af 100644
+>--- a/arch/x86/kvm/lapic.h
+>+++ b/arch/x86/kvm/lapic.h
+>@@ -93,6 +93,7 @@ int kvm_apic_accept_pic_intr(struct kvm_vcpu *vcpu);
+> int kvm_get_apic_interrupt(struct kvm_vcpu *vcpu);
+> int kvm_apic_accept_events(struct kvm_vcpu *vcpu);
+> void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event);
+>+void kvm_apic_init_eilvt_regs(struct kvm_vcpu *vcpu);
+> u64 kvm_lapic_get_cr8(struct kvm_vcpu *vcpu);
+> void kvm_lapic_set_tpr(struct kvm_vcpu *vcpu, unsigned long cr8);
+> void kvm_lapic_set_eoi(struct kvm_vcpu *vcpu);
+>diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
+>index cfc8ab773025..081075674b1d 100644
+>--- a/arch/x86/kvm/svm/avic.c
+>+++ b/arch/x86/kvm/svm/avic.c
+>@@ -679,6 +679,10 @@ static bool is_avic_unaccelerated_access_trap(u32 offset)
+> 	case APIC_LVTERR:
+> 	case APIC_TMICT:
+> 	case APIC_TDCR:
+>+	case APIC_EILVTn(0):
+>+	case APIC_EILVTn(1):
+>+	case APIC_EILVTn(2):
+>+	case APIC_EILVTn(3):
+> 		ret = true;
+> 		break;
+> 	default:
+>-- 
+>2.34.1
+>
