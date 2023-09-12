@@ -2,150 +2,107 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED86CA0FE9
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Sep 2023 20:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1844EE3F22
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Sep 2023 20:47:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231858AbjILUcu (ORCPT
+        id S231858AbjILUrj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Sep 2023 16:32:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39808 "EHLO
+        Tue, 12 Sep 2023 16:47:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235866AbjILUct (ORCPT
+        with ESMTP id S229683AbjILUri (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Sep 2023 16:32:49 -0400
+        Tue, 12 Sep 2023 16:47:38 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1EBF189;
-        Tue, 12 Sep 2023 13:32:37 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C201C433C9;
-        Tue, 12 Sep 2023 20:32:37 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D45BEE64;
+        Tue, 12 Sep 2023 13:47:34 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42FB2C433C8;
+        Tue, 12 Sep 2023 20:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694550757;
-        bh=+ayGb/8rfO8sMl9eGtsq7VjyvF/TUJehfrAzBanbfd4=;
+        s=k20201202; t=1694551654;
+        bh=VVtwekb5c6SImWXWuWHyxmTmEMM/b8uhPzUHF1OjzCc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u/IcWo3sNlbJnyWNLoZPnR8JHYf5ZkFCoVkPRX/IMR5XDzEVlKC4PWvCS5pFai/17
-         WcY7QwF/WZGvngVEPshytqECTdIpRrh8uyDPiZsUjRH6VkH9y8Fx5zapUSoM3TbXcV
-         IhoD+roMDvhyd9a0qgdkqOmcmPGQ+RwIZr2VIh83x1J9luh55U57nL8iR8CBlyY023
-         IhXkmwoB7cPfvAllzy6yCQLDsmeOgoTDPdAJEAuHIvoflZxGAJEBLm9i79f4/RqnpZ
-         WUXNcdSM8dGi1pttoL86DSRlrV4tdrVilceKAiDULEADHeeFg8IsX06/sZJoLPg7NJ
-         jlW0Ew9fiW0IQ==
+        b=UXIi5uB6dxKea+sfVj3+f4RSYhz+XDKjyaolBDqisWYnrhdI6gscakENj8CqP0ctz
+         dVqb4WMM9VNUw1dTSdlUkgiGHfi7P+ULq+d0FwJR26/6tBzoWEYvl0D+LBIxp3G7f4
+         3na3pQPfOdbhy2OzuJxmbPImk4/Hk2cgkKA884wBLkvBak2xddo/qu1I6IPuiqmnjM
+         Htih/LU9503YfJB81p2fi9xtWsB3n1fjk/dKxmQilO7bhhU4rZ4jEYnYEF59BnF5Xb
+         z+pKjaCYQKJXo83UczMwh9cfWLWydcWgHmxsqucARU6xKDJyWk5QVD+YOGzlu+cml9
+         sH66xoj/BpGrw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6A29A403F4; Tue, 12 Sep 2023 17:32:34 -0300 (-03)
-Date:   Tue, 12 Sep 2023 17:32:34 -0300
+        id AC4D2403F4; Tue, 12 Sep 2023 17:47:31 -0300 (-03)
+Date:   Tue, 12 Sep 2023 17:47:31 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        kan.liang@linux.intel.com, james.clark@arm.com,
-        tmricht@linux.ibm.com, ak@linux.intel.com,
-        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v8 0/6] perf record: Track sideband events for all CPUs
- when tracing selected CPUs
-Message-ID: <ZQDK4kZhwyZL/8tx@kernel.org>
-References: <20230904023340.12707-1-yangjihong1@huawei.com>
- <453bd95c-932d-c60a-bd7b-96f87bc7779a@amd.com>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH v1 1/5] perf parse-events: Remove unused header files
+Message-ID: <ZQDOY1z5dEGhpFDM@kernel.org>
+References: <20230911170559.4037734-1-irogers@google.com>
+ <CAM9d7cg4nc5rpW9jL-RPJP7w4Rg8h7t4A-EkHTE9rWF=Nm6bBQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <453bd95c-932d-c60a-bd7b-96f87bc7779a@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7cg4nc5rpW9jL-RPJP7w4Rg8h7t4A-EkHTE9rWF=Nm6bBQ@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Sep 12, 2023 at 02:41:56PM +0530, Ravi Bangoria escreveu:
-> On 04-Sep-23 8:03 AM, Yang Jihong wrote:
-> > User space tasks can migrate between CPUs, track sideband events for all
-> > CPUs.
-> > 
-> > The specific scenarios are as follows:
-> > 
-> >          CPU0                                 CPU1
-> >   perf record -C 0 start
-> >                               taskA starts to be created and executed
-> >                                 -> PERF_RECORD_COMM and PERF_RECORD_MMAP
-> >                                    events only deliver to CPU1
-> >                               ......
-> >                                 |
-> >                           migrate to CPU0
-> >                                 |
-> >   Running on CPU0    <----------/
-> >   ...
-> > 
-> >   perf record -C 0 stop
-> > 
-> > Now perf samples the PC of taskA. However, perf does not record the
-> > PERF_RECORD_COMM and PERF_RECORD_COMM events of taskA.
-> > Therefore, the comm and symbols of taskA cannot be parsed.
-> > 
-> > The sys_perf_event_open invoked is as follows:
-> > 
-> >   # perf --debug verbose=3 record -e cpu-clock -C 1 true
-> >   <SNIP>
-> >   Opening: cpu-clock
-> >   ------------------------------------------------------------
-> >   perf_event_attr:
-> >     type                             1 (PERF_TYPE_SOFTWARE)
-> >     size                             136
-> >     config                           0 (PERF_COUNT_SW_CPU_CLOCK)
-> >     { sample_period, sample_freq }   4000
-> >     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
-> >     read_format                      ID|LOST
-> >     disabled                         1
-> >     inherit                          1
-> >     freq                             1
-> >     sample_id_all                    1
-> >     exclude_guest                    1
-> >   ------------------------------------------------------------
-> >   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
-> >   Opening: dummy:u
-> >   ------------------------------------------------------------
-> >   perf_event_attr:
-> >     type                             1 (PERF_TYPE_SOFTWARE)
-> >     size                             136
-> >     config                           0x9 (PERF_COUNT_SW_DUMMY)
-> >     { sample_period, sample_freq }   1
-> >     sample_type                      IP|TID|TIME|CPU|IDENTIFIER
-> >     read_format                      ID|LOST
-> >     inherit                          1
-> >     exclude_kernel                   1
-> >     exclude_hv                       1
-> >     mmap                             1
-> >     comm                             1
-> >     task                             1
-> >     sample_id_all                    1
-> >     exclude_guest                    1
-> >     mmap2                            1
-> >     comm_exec                        1
-> >     ksymbol                          1
-> >     bpf_event                        1
-> >   ------------------------------------------------------------
-> >   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
-> >   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 7
-> >   sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 9
-> >   sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 10
-> >   sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 11
-> >   sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 12
-> >   sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 13
-> >   sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
-> >   <SNIP>
-> > 
-> > Changes since_v7:
-> >  - The condition for requiring system_wide sideband is changed to
-> >    "as long as a non-dummy event exists" (patch4).
-> >  - Modify the corresponding test case to record only dummy event (patch6).
-> >  - Thanks to tested-by tag from Ravi, but because the solution is modified,
-> >    the tested-by tag of Ravi is not added to this version.
+Em Mon, Sep 11, 2023 at 10:58:18PM -0700, Namhyung Kim escreveu:
+> On Mon, Sep 11, 2023 at 10:06 AM Ian Rogers <irogers@google.com> wrote:
+> >
+> > The fnmatch header is now used in the PMU matching logic in pmu.c.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
 > 
-> I've re-tested v8 with my simple test.
-> 
-> Tested-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 
-Thanks, applied to the csets that were still sitting in an umpublished
-perf-tools-next local branch, soon public.
+
+Thanks, applied the series.
 
 - Arnaldo
 
+ 
+> Thanks,
+> Namhyung
+> 
+> > ---
+> >  tools/perf/util/parse-events.y | 3 ---
+> >  1 file changed, 3 deletions(-)
+> >
+> > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+> > index 21bfe7e0d944..ef03728b7ea3 100644
+> > --- a/tools/perf/util/parse-events.y
+> > +++ b/tools/perf/util/parse-events.y
+> > @@ -9,11 +9,8 @@
+> >  #define YYDEBUG 1
+> >
+> >  #include <errno.h>
+> > -#include <fnmatch.h>
+> > -#include <stdio.h>
+> >  #include <linux/compiler.h>
+> >  #include <linux/types.h>
+> > -#include <linux/zalloc.h>
+> >  #include "pmu.h"
+> >  #include "pmus.h"
+> >  #include "evsel.h"
+> > --
+> > 2.42.0.283.g2d96d420d3-goog
+> >
+
+-- 
+
+- Arnaldo
