@@ -2,213 +2,134 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C4CCA0ECE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Sep 2023 06:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D46BACA0ECE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Sep 2023 06:38:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229944AbjILGdZ (ORCPT
+        id S230108AbjILGir (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Sep 2023 02:33:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49428 "EHLO
+        Tue, 12 Sep 2023 02:38:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230024AbjILGdY (ORCPT
+        with ESMTP id S229672AbjILGir (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Sep 2023 02:33:24 -0400
+        Tue, 12 Sep 2023 02:38:47 -0400
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4027AF
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Sep 2023 23:33:19 -0700 (PDT)
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38C68VO8021002;
-        Tue, 12 Sep 2023 06:32:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
- from : in-reply-to : date : cc : message-id : references : to :
- content-transfer-encoding : mime-version; s=pp1;
- bh=Fu7tq+b058Ajqq3XTD1GxC0ZloO//yLnbNmgJSEs0Ac=;
- b=PcXSaz9vZhceuNr+4+nGavoaUFgeC271RGJZpaf7n1qff8ziIakKS/WQ4Bmidp80bbNm
- K+X7nHlceWK2+qM/xDXPCDxpqwgPM7ghgh1/VYcVxfcfR4I7Qj2DU82CTj9+nPzup648
- pAcp9/iHonRNMFDuwDXfQbh4xy6PqgNMO0WS45KTAMJ7ItP1vxM1/02OFc39KN5ATkjM
- nJ1CmMkqT7joZ1eF8o4urpcGmm4mZd21fZIbqCUJ6ZD0rNr9NBtryZOYhsMMsZ3tlTRH
- KG8zxdLmLZRlWJYsPhqY2qOu6UElo/z1F00h4afHEvU05EN07vRuZ8bshh90LHAeqQy7 DQ== 
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60EB1E76
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Sep 2023 23:38:43 -0700 (PDT)
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38C6aeQZ003197;
+        Tue, 12 Sep 2023 06:38:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=mHX5r4EE7M9edmf1gTkvH6HdkVNl1vwejw5sDbrux50=;
+ b=IHnDcBjurkl7JIy6f9AIYHvJe8tLelrehvBSI3RxLTcVU1PRwQz/8N/sDk22qU+4wACs
+ ZvYy8ccsuhxzpq1vpAsUerQfttgKlnjghcN57dUzQKuo1XY9QBdJLLcSlrB4XpEPkpmW
+ mwkRpcBsp0N/vfqMCK1VqhtQsusu37ddDW0zVArcnCc6gqdXa8zgfBRbcdqt/qnfvHg/
+ U+pTtJp97nqZ+u6XYqN50ACkWG3WpD103JFxDEZrlOiUBmAQ5997sw55hK9ammsvhJic
+ jAgcTU6KnyKJzOmx68nkgZxVh9Oc6eILiAdJDQnp3E06o+C5J3YAppwNYCXdp92+JPCv 5Q== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t2j6erw1f-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t2hv51ck5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Sep 2023 06:32:59 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38C6ALpX027587;
-        Tue, 12 Sep 2023 06:32:58 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t2j6ervxc-1
+        Tue, 12 Sep 2023 06:38:30 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38C6cUtl009875;
+        Tue, 12 Sep 2023 06:38:30 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t2hv51cjs-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Sep 2023 06:32:58 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38C552QD011980;
-        Tue, 12 Sep 2023 06:32:55 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3t15r1rbcf-1
+        Tue, 12 Sep 2023 06:38:30 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38C6Kxre002724;
+        Tue, 12 Sep 2023 06:38:28 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3t14hkrstn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Sep 2023 06:32:55 +0000
+        Tue, 12 Sep 2023 06:38:28 +0000
 Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38C6Wqo644433920
+        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38C6cPMf45809970
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Sep 2023 06:32:53 GMT
+        Tue, 12 Sep 2023 06:38:25 GMT
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CDE0420049;
-        Tue, 12 Sep 2023 06:32:52 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 7DD3420049;
+        Tue, 12 Sep 2023 06:38:25 +0000 (GMT)
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 52DFA20040;
-        Tue, 12 Sep 2023 06:32:49 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.60.12])
-        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Tue, 12 Sep 2023 06:32:49 +0000 (GMT)
-Content-Type: text/plain;
-        charset=utf-8
-Subject: Re: [PATCH V2] tools/perf: Add includes for detected configs in
- Makefile.perf
+        by IMSVA (Postfix) with ESMTP id 27BC920040;
+        Tue, 12 Sep 2023 06:38:22 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.60.12])
+        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Tue, 12 Sep 2023 06:38:21 +0000 (GMT)
 From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <CAP-5=fVZacRGiU2e1_vW8WWd4tF6f2msbBvA7+U7VqkRinR31w@mail.gmail.com>
-Date:   Tue, 12 Sep 2023 12:02:36 +0530
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>, disgoel@linux.vnet.ibm.com
-Message-Id: <6C1BA86A-ED51-48C2-8EFC-9659542B6A83@linux.vnet.ibm.com>
-References: <20230908145045.47408-1-atrajeev@linux.vnet.ibm.com>
- <CAP-5=fVZacRGiU2e1_vW8WWd4tF6f2msbBvA7+U7VqkRinR31w@mail.gmail.com>
-To:     Ian Rogers <irogers@google.com>
-X-Mailer: Apple Mail (2.3731.700.6)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: d_t5fstYpZPCNCDvHkioo8-PzoJwybgD
-X-Proofpoint-ORIG-GUID: yW5gUdUD1rarBAFqewYyi9GjqiSDtpva
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
+        namhyung@kernel.org
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Subject: [PATCH V3] tools/perf: Add includes for detected configs in Makefile.perf
+Date:   Tue, 12 Sep 2023 12:08:07 +0530
+Message-Id: <20230912063807.74250-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: ywloclwEZv9rTynK_qG3jP0fkLL_jCVy
+X-Proofpoint-GUID: LY3L4GxxZf1010LV6G6GnXywxUHKVrx7
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
  definitions=2023-09-12_03,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- mlxscore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
- impostorscore=0 bulkscore=0 suspectscore=0 adultscore=0 phishscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ malwarescore=0 lowpriorityscore=0 priorityscore=1501 mlxscore=0
+ clxscore=1015 bulkscore=0 spamscore=0 mlxlogscore=999 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2308100000 definitions=main-2309120054
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Makefile.perf uses "CONFIG_*" checks in the code. Example the config
+for libtraceevent is used to set PYTHON_EXT_SRCS
 
+	ifeq ($(CONFIG_LIBTRACEEVENT),y)
+	  PYTHON_EXT_SRCS := $(shell grep -v ^\# util/python-ext-sources)
+	else
+	  PYTHON_EXT_SRCS := $(shell grep -v '^\#\|util/trace-event.c' util/python-ext-sources)
+	endif
 
-> On 08-Sep-2023, at 9:45 PM, Ian Rogers <irogers@google.com> wrote:
->=20
-> On Fri, Sep 8, 2023 at 7:51=E2=80=AFAM Athira Rajeev
-> <atrajeev@linux.vnet.ibm.com> wrote:
->>=20
->> Makefile.perf uses "CONFIG_*" checks in the code. Example the config
->> for libtraceevent is used to set PYTHON_EXT_SRCS
->>=20
->>        ifeq ($(CONFIG_LIBTRACEEVENT),y)
->>          PYTHON_EXT_SRCS :=3D $(shell grep -v ^\# util/python-ext-source=
-s)
->>        else
->>          PYTHON_EXT_SRCS :=3D $(shell grep -v '^\#\|util/trace-event.c' =
-util/python-ext-sources)
->>        endif
->>=20
->> But this is not picking the value for CONFIG_LIBTRACEEVENT that is
->> set using the settings in Makefile.config. Include the file
->> ".config-detected" so that make will use the system detected
->> configuration in the CONFIG checks. This will fix isues that
->> could arise when other "CONFIG_*" checks are added to Makefile.perf
->> in future as well.
->>=20
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> ---
->> Changelog:
->> v1 -> v2:
->> Added $(OUTPUT) prefix to config-detected as pointed
->> out by Ian
->>=20
->> tools/perf/Makefile.perf | 3 +++
->> 1 file changed, 3 insertions(+)
->>=20
->> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
->> index 37af6df7b978..66b9dc61c32f 100644
->> --- a/tools/perf/Makefile.perf
->> +++ b/tools/perf/Makefile.perf
->> @@ -351,6 +351,9 @@ export PYTHON_EXTBUILD_LIB PYTHON_EXTBUILD_TMP
->>=20
->> python-clean :=3D $(call QUIET_CLEAN, python) $(RM) -r $(PYTHON_EXTBUILD=
-) $(OUTPUT)python/perf*.so
->>=20
->> +# Use the detected configuration
->> +include $(OUTPUT).config-detected
->=20
-> The Makefile.build version also has a "-include" rather than "include"
-> in case the .config-detected file is missing. In Makefile.perf
-> including Makefile.config is optional:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/=
-tree/tools/perf/Makefile.perf?h=3Dperf-tools-next#n253
->=20
-> and there are certain targets that where we don't include it:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/=
-tree/tools/perf/Makefile.perf?h=3Dperf-tools-next#n200
->=20
-> So playing devil's advocate, if we ran "make clean" we'd remove
-> .config-detected:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/=
-tree/tools/perf/Makefile.perf?h=3Dperf-tools-next#n1131
->=20
-> If we then ran "make tags" then we wouldn't include Makefile.config
-> and so .config-detected wouldn't be generated and I think the build
-> would fail due to a missing include here. So I think this should be
-> -include or perhaps:
+But this is not picking the value for CONFIG_LIBTRACEEVENT that is
+set using the settings in Makefile.config. Include the file
+".config-detected" so that make will use the system detected
+configuration in the CONFIG checks. This will fix isues that
+could arise when other "CONFIG_*" checks are added to Makefile.perf
+in future as well.
 
-Hi Ian
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+Changelog:
+v2 -> v3:
+Added -include since in some cases make clean or make
+will fail when config is not included and if config-detected
+file is not present.
 
-Thanks for checking in detail. Yes, make clean in perf fails with just =E2=
-=80=9Cinclude=E2=80=9D
+v1 -> v2:
+Added $(OUTPUT) prefix to config-detected as pointed
+out by Ian
 
-# make clean
-Makefile.perf:355: .config-detected: No such file or directory
-make[1]: *** No rule to make target '.config-detected'.  Stop.
-make: *** [Makefile:90: clean] Error 2
-
-
-Below change will be correct as you pointed:
+ tools/perf/Makefile.perf | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 66b9dc61c32f..f6fdc2d5a92f 100644
+index 37af6df7b978..f6fdc2d5a92f 100644
 --- a/tools/perf/Makefile.perf
 +++ b/tools/perf/Makefile.perf
-@@ -352,7 +352,7 @@ export PYTHON_EXTBUILD_LIB PYTHON_EXTBUILD_TMP
- python-clean :=3D $(call QUIET_CLEAN, python) $(RM) -r $(PYTHON_EXTBUILD) =
-$(OUTPUT)python/perf*.so
-   # Use the detected configuration
--include $(OUTPUT).config-detected
+@@ -351,6 +351,9 @@ export PYTHON_EXTBUILD_LIB PYTHON_EXTBUILD_TMP
+ 
+ python-clean := $(call QUIET_CLEAN, python) $(RM) -r $(PYTHON_EXTBUILD) $(OUTPUT)python/perf*.so
+ 
++# Use the detected configuration
 +-include $(OUTPUT).config-detected
-   ifeq ($(CONFIG_LIBTRACEEVENT),y)
-   PYTHON_EXT_SRCS :=3D $(shell grep -v ^\# util/python-ext-sources)
-
-
-I could test to make sure it includes the file when it is present and picks=
- the detected configs correctly as well with this change.
-Adding this change in V3=20
-
-Thanks
-Athira
->=20
-> ifeq ($(config),1)
-> include $(OUTPUT).config-detected
-> endif
->=20
-> Thanks,
-> Ian
->=20
->> +
->> ifeq ($(CONFIG_LIBTRACEEVENT),y)
->>   PYTHON_EXT_SRCS :=3D $(shell grep -v ^\# util/python-ext-sources)
->> else
->> --
->> 2.31.1
-
++
+ ifeq ($(CONFIG_LIBTRACEEVENT),y)
+   PYTHON_EXT_SRCS := $(shell grep -v ^\# util/python-ext-sources)
+ else
+-- 
+2.31.1
 
