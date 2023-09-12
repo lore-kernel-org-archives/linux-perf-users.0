@@ -2,136 +2,104 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B354CA0EC3
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Sep 2023 12:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4EECA0ECA
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Sep 2023 12:43:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234391AbjILMXB (ORCPT
+        id S235201AbjILMoB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Sep 2023 08:23:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33132 "EHLO
+        Tue, 12 Sep 2023 08:44:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231127AbjILMXA (ORCPT
+        with ESMTP id S231248AbjILMoA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Sep 2023 08:23:00 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 862F710D5
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Sep 2023 05:22:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694521329;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CDEPHFopRZA+PuiZRei3lkTc2CBm4TBtrZiF0tF5PU0=;
-        b=B/m5a4Tt1yDGXbF6KuJ1TVmaP2r8xXu9OXgSZTziiIHKD9EeHfEnIRW9OnAop3OMWrxLcq
-        vZrVyy35+9fqh7dZXE74cMP8J1qWL/sDTQqyUL1QK7T4GkXdT8sMT60sy8EZ7jXe0+afbY
-        ouVaYzn3AFh3XyHF/H00KY8YR55broI=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-533-RuqSgqdtPSGiXNcA801LVA-1; Tue, 12 Sep 2023 08:22:08 -0400
-X-MC-Unique: RuqSgqdtPSGiXNcA801LVA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E5E443800BD2;
-        Tue, 12 Sep 2023 12:22:07 +0000 (UTC)
-Received: from Diego (unknown [10.39.208.41])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A5B0A40C6EA8;
-        Tue, 12 Sep 2023 12:22:06 +0000 (UTC)
-Date:   Tue, 12 Sep 2023 14:22:04 +0200 (CEST)
-From:   Michael Petlan <mpetlan@redhat.com>
-X-X-Sender: Michael@Diego
-To:     vmolnaro@redhat.com
-cc:     linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com
-Subject: Re: [PATCH 2/2] perf test stat+shadow_stat.sh: Add threshold for
- rounding errors
-In-Reply-To: <20230912121926.12111-2-vmolnaro@redhat.com>
-Message-ID: <alpine.LRH.2.20.2309121421440.3810@Diego>
-References: <20230912121926.12111-1-vmolnaro@redhat.com> <20230912121926.12111-2-vmolnaro@redhat.com>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
-MIME-Version: 1.0
+        Tue, 12 Sep 2023 08:44:00 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B76F9F;
+        Tue, 12 Sep 2023 05:43:56 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 092B0C433C7;
+        Tue, 12 Sep 2023 12:43:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694522636;
+        bh=vDRcqUDqXbFXurXPW7gwG53pXOp3uFkEpLpaY//XLWw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=eS3rQfqFviXYu+moVkZOlwmkwVPzUvcKYZ6kmQqhBUWYHE/xjCAQ7CXO2N5uVxw4W
+         +2NFYlBY9p3u3wuCAMoi93ZDa3HnNJpp/LL0ho1Z3ZBeDFSm5h2OZZXbt7i6lLwHir
+         N63GSMMd0zM7AJIwua+0xGV2eQAxPdHIGR/jYq141Q20Jn/J/O+F11DumpRi/gychQ
+         7UrKCfdDb9LNb1xBIXtLn5fvcodVm7sTf1NRD61uc9+Q4jyJPsNbEhRg0O9Sp1HMnR
+         hNqZxJ2MQWNbGz+DrdBXWSFfcbnQHrYhZaWA5g/G+p+Yt7/r7Q0nOoBCXyZRFS/bRT
+         tFg1/wPUaidWQ==
+Received: from [104.132.96.100] (helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1qg2kC-00CGSX-R9;
+        Tue, 12 Sep 2023 13:43:53 +0100
+Date:   Tue, 12 Sep 2023 13:43:44 +0100
+Message-ID: <87il8f4l4v.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Tomohiro Misono <misono.tomohiro@fujitsu.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-perf-users@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>, ito-yuichi@fujitsu.com,
+        Chen-Yu Tsai <wenst@chromium.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v13 1/7] irqchip/gic-v3: Enable support for SGIs to act as NMIs
+In-Reply-To: <20230906090246.v13.1.I1223c11c88937bd0cbd9b086d4ef216985797302@changeid>
+References: <20230906160505.2431857-1-dianders@chromium.org>
+        <20230906090246.v13.1.I1223c11c88937bd0cbd9b086d4ef216985797302@changeid>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+X-SA-Exim-Connect-IP: 104.132.96.100
+X-SA-Exim-Rcpt-To: dianders@chromium.org, mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org, sumit.garg@linaro.org, daniel.thompson@linaro.org, linux-arm-kernel@lists.infradead.org, rafael.j.wysocki@intel.com, lecopzer.chen@mediatek.com, wens@csie.org, misono.tomohiro@fujitsu.com, peterz@infradead.org, msys.mizuma@gmail.com, eranian@google.com, ardb@kernel.org, kgdb-bugreport@lists.sourceforge.net, swboyd@chromium.org, linux-perf-users@vger.kernel.org, tglx@linutronix.de, ito-yuichi@fujitsu.com, wenst@chromium.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, 12 Sep 2023, vmolnaro@redhat.com wrote:
-> From: Veronika Molnarova <vmolnaro@redhat.com>
+On Wed, 06 Sep 2023 17:02:56 +0100,
+Douglas Anderson <dianders@chromium.org> wrote:
 > 
-> The test was failing in specific scenarios due to imperfection of FP
-> arithmetics. The `bc` command wasn't correctly rounding the result
-> of division causing the failure.
+> As of commit 6abbd6988971 ("irqchip/gic, gic-v3: Make SGIs use
+> handle_percpu_devid_irq()") SGIs are treated the same as PPIs/EPPIs
+> and use handle_percpu_devid_irq() by default. Unfortunately,
+> handle_percpu_devid_irq() isn't NMI safe, and so to run in an NMI
+> context those should use handle_percpu_devid_fasteoi_nmi().
 > 
-> Replace the `bc` with `awk` which should work with more decimal
-> places and add a threshold to catch any possible rounding errors.
-> The acceptable rounding error is set to 0.01 when the test
-> passes with a warning message.
+> In order to accomplish this, we just have to make room for SGIs in the
+> array of refcounts that keeps track of which interrupts are set as
+> NMI. We also rename the array and create a new indexing scheme that
+> accounts for SGIs.
+> 
+> Also, enable NMI support prior to gic_smp_init() as allocation of SGIs
+> as IRQs/NMIs happen as part of this routine.
+> 
+> Co-developed-by: Sumit Garg <sumit.garg@linaro.org>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> Tested-by: Chen-Yu Tsai <wenst@chromium.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-Acked-by: Michael Petlan <mpetlan@redhat.com>
-> ---
->  tools/perf/tests/shell/stat+shadow_stat.sh | 30 +++++++++++++++++-----
->  1 file changed, 24 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/stat+shadow_stat.sh b/tools/perf/tests/shell/stat+shadow_stat.sh
-> index 0e9cba84e75..73c990fe5ee 100755
-> --- a/tools/perf/tests/shell/stat+shadow_stat.sh
-> +++ b/tools/perf/tests/shell/stat+shadow_stat.sh
-> @@ -4,6 +4,8 @@
->  
->  set -e
->  
-> +TRESHOLD=0.015
-> +
->  # skip if system-wide mode is forbidden
->  perf stat -a true > /dev/null 2>&1 || exit 2
->  
-> @@ -33,10 +35,18 @@ test_global_aggr()
->  		fi
->  
->  		# use printf for rounding and a leading zero
-> -		res=`printf "%.2f" "$(echo "scale=6; $num / $cyc" | bc -q)"`
-> +		res=`echo $num $cyc | awk '{printf "%.2f", $1 / $2}'`
->  		if [ "$ipc" != "$res" ]; then
-> -			echo "IPC is different: $res != $ipc  ($num / $cyc)"
-> -			exit 1
-> +			# check the difference from the real result for FP imperfections
-> +			diff=`echo $ipc $res $TRESHOLD | \
-> +			awk '{x = ($1 - $2) < 0 ? ($2 - $1) : ($1 - $2); print (x > $3)}'`
-> +
-> +			if [ $diff -eq 1 ]; then
-> +				echo "IPC is different: $res != $ipc  ($num / $cyc)"
-> +				exit 1
-> +			fi
-> +
-> +			echo "Warning: Difference of IPC is under the treshold"
->  		fi
->  	done
->  }
-> @@ -67,10 +77,18 @@ test_no_aggr()
->  		fi
->  
->  		# use printf for rounding and a leading zero
-> -		res=`printf "%.2f" "$(echo "scale=6; $num / $cyc" | bc -q)"`
-> +		res=`echo $num $cyc | awk '{printf "%.2f", $1 / $2}'`
->  		if [ "$ipc" != "$res" ]; then
-> -			echo "IPC is different for $cpu: $res != $ipc  ($num / $cyc)"
-> -			exit 1
-> +			# check difference from the real result for FP imperfections
-> +			diff=`echo $ipc $res $TRESHOLD | \
-> +			awk '{x = ($1 - $2) < 0 ? ($2 - $1) : ($1 - $2); print (x > $3)}'`
-> +
-> +			if [ $diff -eq 1 ]; then
-> +				echo "IPC is different: $res != $ipc  ($num / $cyc)"
-> +				exit 1
-> +			fi
-> +
-> +			echo "Warning: Difference of IPC is under the treshold"
->  		fi
->  	done
->  }
-> -- 
-> 2.41.0
-> 
-> 
+Acked-by: Marc Zyngier <maz@kernel.org>
 
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
