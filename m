@@ -2,38 +2,38 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D86EEE3F0F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Sep 2023 19:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9B3EE3F0F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Sep 2023 19:34:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235851AbjILT0x (ORCPT
+        id S237577AbjILTeV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Sep 2023 15:26:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34554 "EHLO
+        Tue, 12 Sep 2023 15:34:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229520AbjILT0w (ORCPT
+        with ESMTP id S234590AbjILTeU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Sep 2023 15:26:52 -0400
+        Tue, 12 Sep 2023 15:34:20 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFA5218D;
-        Tue, 12 Sep 2023 12:26:48 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DE84C433C7;
-        Tue, 12 Sep 2023 19:26:48 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D0AC199;
+        Tue, 12 Sep 2023 12:34:16 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B3EAC433C7;
+        Tue, 12 Sep 2023 19:34:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694546808;
-        bh=VKmYlBUpT/bsf1QKh+D267MgH+5GNHBssL6sD/Ma3Zo=;
+        s=k20201202; t=1694547256;
+        bh=HleCnHPsfjZykYXaJ8HvlvfvgC8Bo/85PJq2XL1IkKI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JHOBkBbSNmOqERjudtzSv/JeaolTlSARYp8FJBxijm+lV2WsBYmAVdLEAUeDdh9MW
-         L8B4BZ/k6gYBbs8lBKUpuMFlVZ+af5a4BpoYgz0SDdKJoO0LFhGveOEE9/PoLPZlsh
-         FRSwoQTg63vDWylJ1ifvXqi8njDsu+WcecfH30yNpP+B6BiwzlANAUZAVM4cFFd+2+
-         u2aSA9FyhjffhisEfbGuChfzor8dOrwv0QaOOiJpjmiyqtZx/yn3vVNPkSaW8noA5h
-         yhzSKqjsJZ7h5m2i+taMPdWXCt+bL/zaiHzJZPBLuTALgrZCC9Ufeod9mFp1TmMaI9
-         z6p3w6xfUJrzg==
+        b=mSzXhisWNHHc5X3OcKTem4wY9TkOdKKVFvfxajxJRXmjekb6hbUhAM+wqsq49DL+i
+         rsyl7wWexdGbMVxENT1fkIcGzBfPN57pXkQ7cbA/fitCSoaCvzx4j6CKEz4kP5oKuO
+         u4s6dT6V99Sn7mxrkFDQslehzIBGcbaD08c2ueJbkVbmglOkRhAFREuKS4MoICgiIB
+         cMaSYYyqIoK+XRHzWrEx4Zg5kyOzJ5u25Encrh8T+4rwOpsSEyYpjygmMkPZJkJdge
+         Q4dRaxvWYJs6DhecUY4uDlnGyFqZ4SeLBu+VFMIb5iH4Ciwwe2+tzBMPMApUyoOuqt
+         VSF/LY+oP8nYA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 38587403F4; Tue, 12 Sep 2023 16:26:45 -0300 (-03)
-Date:   Tue, 12 Sep 2023 16:26:45 -0300
+        id C0AE9403F4; Tue, 12 Sep 2023 16:34:13 -0300 (-03)
+Date:   Tue, 12 Sep 2023 16:34:13 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     James Clark <james.clark@arm.com>
-Cc:     linux-perf-users@vger.kernel.org, irogers@google.com,
+Cc:     linux-perf-users@vger.kernel.org,
         John Garry <john.g.garry@oracle.com>,
         Will Deacon <will@kernel.org>,
         Mike Leach <mike.leach@linaro.org>,
@@ -44,79 +44,82 @@ Cc:     linux-perf-users@vger.kernel.org, irogers@google.com,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Haixin Yu <yuhaixin.yhx@linux.alibaba.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        Chen Zhongjin <chenzhongjin@huawei.com>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Liam Howlett <liam.howlett@oracle.com>,
+        Nick Forrington <nick.forrington@arm.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 5/7] perf pmu: Move pmu__find_core_pmu() to pmus.c
-Message-ID: <ZQC7da2AM9ih8RMz@kernel.org>
-References: <20230831151632.124985-1-james.clark@arm.com>
- <20230831151632.124985-6-james.clark@arm.com>
+Subject: Re: [PATCH 0/2] perf vendor events arm64: Update V1 events using Arm
+ telemetry repo
+Message-ID: <ZQC9NXlqVxMcmw0G@kernel.org>
+References: <20230831161618.134738-1-james.clark@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230831151632.124985-6-james.clark@arm.com>
+In-Reply-To: <20230831161618.134738-1-james.clark@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Aug 31, 2023 at 04:16:16PM +0100, James Clark escreveu:
-> pmu__find_core_pmu() more logically belongs in pmus.c because it
-> iterates over all PMUs, so move it to pmus.c
+Em Thu, Aug 31, 2023 at 05:15:30PM +0100, James Clark escreveu:
+> This is the last set of JSON updates using the Arm telemetry repo. Perf
+> now has an up to date copy of everything that is currently published
+> there. Future updates will be done as new data becomes available.
+ 
+
+Thanks, applied.
+
+- Arnaldo
+
+> James Clark (2):
+>   perf vendor events arm64: Update V1 events using Arm telemetry repo
+>   perf vendor events arm64: Add V1 metrics using Arm telemetry repo
 > 
-> At the same time rename it to perf_pmus__find_core_pmu() to match the
-> naming convention in this file.
+>  .../arch/arm64/arm/neoverse-v1/branch.json    |   8 -
+>  .../arch/arm64/arm/neoverse-v1/bus.json       |  18 +-
+>  .../arch/arm64/arm/neoverse-v1/cache.json     | 155 ------------
+>  .../arch/arm64/arm/neoverse-v1/exception.json |  45 ++--
+>  .../arm64/arm/neoverse-v1/fp_operation.json   |  10 +
+>  .../arch/arm64/arm/neoverse-v1/general.json   |  10 +
+>  .../arm64/arm/neoverse-v1/instruction.json    | 119 ---------
+>  .../arch/arm64/arm/neoverse-v1/l1d_cache.json |  54 ++++
+>  .../arch/arm64/arm/neoverse-v1/l1i_cache.json |  14 ++
+>  .../arch/arm64/arm/neoverse-v1/l2_cache.json  |  50 ++++
+>  .../arch/arm64/arm/neoverse-v1/l3_cache.json  |  22 ++
+>  .../arch/arm64/arm/neoverse-v1/ll_cache.json  |  10 +
+>  .../arch/arm64/arm/neoverse-v1/memory.json    |  21 +-
+>  .../arch/arm64/arm/neoverse-v1/metrics.json   | 233 ++++++++++++++++++
+>  .../arch/arm64/arm/neoverse-v1/pipeline.json  |  23 --
+>  .../arch/arm64/arm/neoverse-v1/retired.json   |  30 +++
+>  .../arch/arm64/arm/neoverse-v1/spe.json       |  18 ++
+>  .../arm64/arm/neoverse-v1/spec_operation.json | 110 +++++++++
+>  .../arch/arm64/arm/neoverse-v1/stall.json     |  30 +++
+>  .../arch/arm64/arm/neoverse-v1/sve.json       |  30 +++
+>  .../arch/arm64/arm/neoverse-v1/tlb.json       |  66 +++++
+>  21 files changed, 735 insertions(+), 341 deletions(-)
+>  delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/branch.json
+>  delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/cache.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/fp_operation.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/general.json
+>  delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/instruction.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/l1d_cache.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/l1i_cache.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/l2_cache.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/l3_cache.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/ll_cache.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/metrics.json
+>  delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/pipeline.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/retired.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/spe.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/spec_operation.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/stall.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/sve.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/tlb.json
 > 
-> Signed-off-by: James Clark <james.clark@arm.com>
+> -- 
+> 2.34.1
+> 
 
-So, this one is hitting this:
-
-  CC      /tmp/build/perf-tools-next/util/expr.o
-In file included from /var/home/acme/git/perf-tools-next/tools/include/linux/list.h:7,
-                 from util/pmus.c:2:
-In function ‘perf_pmus__scan_core’,
-    inlined from ‘perf_pmus__find_core_pmu’ at util/pmus.c:601:16:
-/var/home/acme/git/perf-tools-next/tools/include/linux/kernel.h:36:45: error: array subscript 0 is outside array bounds of ‘struct list_head[1]’ [-Werror=array-bounds]
-   36 |         const typeof(((type *)0)->member) * __mptr = (ptr);     \
-      |                                             ^~~~~~
-/var/home/acme/git/perf-tools-next/tools/include/linux/list.h:352:9: note: in expansion of macro ‘container_of’
-  352 |         container_of(ptr, type, member)
-      |         ^~~~~~~~~~~~
-/var/home/acme/git/perf-tools-next/tools/include/linux/list.h:404:9: note: in expansion of macro ‘list_entry’
-  404 |         list_entry((pos)->member.next, typeof(*(pos)), member)
-      |         ^~~~~~~~~~
-/var/home/acme/git/perf-tools-next/tools/include/linux/list.h:494:20: note: in expansion of macro ‘list_next_entry’
-  494 |         for (pos = list_next_entry(pos, member);                        \
-      |                    ^~~~~~~~~~~~~~~
-util/pmus.c:274:9: note: in expansion of macro ‘list_for_each_entry_continue’
-  274 |         list_for_each_entry_continue(pmu, &core_pmus, list)
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-util/pmus.c: In function ‘perf_pmus__find_core_pmu’:
-util/pmus.c:35:18: note: at offset -128 into object ‘core_pmus’ of size 16
-   35 | static LIST_HEAD(core_pmus);
-      |                  ^~~~~~~~~
-/var/home/acme/git/perf-tools-next/tools/include/linux/list.h:23:26: note: in definition of macro ‘LIST_HEAD’
-   23 |         struct list_head name = LIST_HEAD_INIT(name)
-      |                          ^~~~
-cc1: all warnings being treated as errors
-make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/util/pmus.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-  LD      /tmp/build/perf-tools-next/ui/browsers/perf-in.o
-
-
-So I applied up to 4/7
-
-Please continue from what will be in tmp.perf-tools-next in some
-jiffies.
+-- 
 
 - Arnaldo
