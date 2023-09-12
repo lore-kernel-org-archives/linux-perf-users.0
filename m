@@ -2,132 +2,136 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A574CA0EEB
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Sep 2023 15:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B069EEE3F00
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Sep 2023 17:53:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236496AbjILPeI (ORCPT
+        id S237234AbjILRx7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Sep 2023 11:34:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58156 "EHLO
+        Tue, 12 Sep 2023 13:53:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236374AbjILPeB (ORCPT
+        with ESMTP id S236893AbjILRxh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Sep 2023 11:34:01 -0400
-Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A61810EF
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Sep 2023 08:33:57 -0700 (PDT)
-Received: by mail-qv1-xf2a.google.com with SMTP id 6a1803df08f44-6535b9caa1eso31871786d6.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Sep 2023 08:33:57 -0700 (PDT)
+        Tue, 12 Sep 2023 13:53:37 -0400
+Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF57B1708
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Sep 2023 10:53:31 -0700 (PDT)
+Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-414ba610766so34471cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Sep 2023 10:53:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694532836; x=1695137636; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1694541211; x=1695146011; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jn3gYV6z0mHJzWuz6G6eyUwdrkRbzHbTqw/XH7fEH4s=;
-        b=jXSW4sr0/V0TjTygldTr884ibK6jtHHyYxRV6nM1uAsrYMhRGlPYT5IV8wxSASiQt3
-         etjGNSVMhu9OE3YJ6Taca3oX5YOEBO8AH1muDseBgwvJBZPgGW7wvFhhovPvA2VVvYvi
-         7cIYUxtFUbsyGMxzcfNUGm8QCKQfdVFW8dIzAKgcEcy3bStwurtLo3txAKaYJWHG2/Ds
-         jDpI9FyiEYuT9LF5bnbNrhBt4GdREQlewD7YDtkaJEYJ0Fmaw3Owsb0Y09JGEnu1fZqU
-         mkx7I0agpaYsSJFNrXWo8vL7ZONfceEepwrEp7sAQ5mlMZZf6vJC1p+akXVskBatrkUx
-         IFZA==
+        bh=teQTF4kOu+EBEnO4U103r77jmPI7i82xWX4kX0n2Qr4=;
+        b=DdSJwJ9tmDAOZoPr+BshZsQoRwzjyemC+GGchoZOuVDPz8x47sDbiKLAQpWUFSqMe+
+         7VVVvIgtT2pk7kjBe/bEx1tFeZ5n2dErN4lWiPOjKxC0d4A14CDJzc+D9x/QT9aicL/0
+         9WxgPvPOaZ6V7qPgzP2BmUs+UW4TdDslmhTF9CbxSrtSwsk9pS/e5IN+g0hff9YQrA5K
+         LCJg2+ZRFqor/MQRc6G3FEEzXE1j19t44hAgFm9v5g2aYSVG7X9a4rc45oIoIaedmcR4
+         GKBota6Jq6MuQkntpCYs/d8grd1/4SUpY+iJJIlK6Sg4J8WK2zlWjCuAHyEWN36y+elc
+         n1VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694532836; x=1695137636;
+        d=1e100.net; s=20230601; t=1694541211; x=1695146011;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jn3gYV6z0mHJzWuz6G6eyUwdrkRbzHbTqw/XH7fEH4s=;
-        b=RYXaxZPiRvcDAz4kUlKl8WDr5rrcvQAFkiYUQXEJm4MAA324LY6PMuXOEs9sgcNGNN
-         xB73f8MktSUL0Qd4HWQf521ruNsoAo3ke3Qn6ftb6HS5+3XHg2Tj87oTw0i/zP0j2XyO
-         06Xg/HaAdB+379QzL9zuAncxD+DIiLDclsGLCxhFIkS6MPzJVl9k2vutW11Q58e5c+j2
-         dk16bRMjZqcSDR31mrK/cpq93mXFU6WvDjzPxXGywy9DVTzzwlyT/4ZEpHYOmbgxgKY1
-         yyQ9nLf8LKNQlemQst3z9Dg/fzpiuP6GVBlA+MPw/Mr6AekH0IyIax1sX7Ui6MOn3vwS
-         lnIg==
-X-Gm-Message-State: AOJu0Yx0yA62g9Dg649omXhW7IUwUh1s7nu3MzGOaeeiAdvNaRf1YsGj
-        fwIKcVz1x/ECGY3Zfj2weYsB2eGezwsaALs8sgsjbw==
-X-Google-Smtp-Source: AGHT+IE0Ca2qfQkE6enrGukSoNDCb1OXtuL9IDZszmjiWUcu3f+9cYN/mXNgIzl2i4wDmR90/hv9yYRTETUzcz21Ipg=
-X-Received: by 2002:ad4:5d4b:0:b0:635:da80:e53a with SMTP id
- jk11-20020ad45d4b000000b00635da80e53amr4483115qvb.12.1694532836379; Tue, 12
- Sep 2023 08:33:56 -0700 (PDT)
+        bh=teQTF4kOu+EBEnO4U103r77jmPI7i82xWX4kX0n2Qr4=;
+        b=ioPJfhdeI8vg/nk3JKqdnYs3uhu+2st7h5C9xjcy8nM8AHDz/AVdBSXhM0TU4CcCj7
+         v9rZqGCOaXFNUln26uLWSj7UtruBcC8f+WkPbdPkWKPpbOANJt1lz1UbSHS91KeDL1NK
+         ntJPli6CuuVoI9jHAycuM9m2DsB9sSUkohN5C1k38rA10ipb5pVmeUVDp126Pr4dzb/O
+         wR0QxTD+nUUmAITth9fAdzK2uRAIub7j83m+79V5t+3ndTZ6WYwCXF7dMqnKv2rdiYOP
+         huAemR2yG/4D+ZCOyddyWZ/K4WzJHqGyC/0f4JheNt59pLdnE3lklfUrwFS+HJ7gIKNH
+         BPkw==
+X-Gm-Message-State: AOJu0Yw4QNlNeACySBlMOT58suP8bmNuuG3j6YVK7ARk06cQY2IFd2mO
+        9rhfeL8xrTFwfuaorU2C5M6pF4jUl5aEwwTyNgwt5A==
+X-Google-Smtp-Source: AGHT+IE7D9FXAEWA42mKg/EyM5QdanIqKuoAZfYeqVQ8yKNbbOa4UOn7Fc/6SHhsuCknZhdbyHqlWQJMQDGHu2u1MEQ=
+X-Received: by 2002:ac8:5802:0:b0:410:385c:d1e0 with SMTP id
+ g2-20020ac85802000000b00410385cd1e0mr785qtg.25.1694541210743; Tue, 12 Sep
+ 2023 10:53:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230912060801.95533-1-bgray@linux.ibm.com> <20230912060801.95533-2-bgray@linux.ibm.com>
-In-Reply-To: <20230912060801.95533-2-bgray@linux.ibm.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 12 Sep 2023 08:33:42 -0700
-Message-ID: <CAKwvOdkP1uwU0Cq9541zf309tudfFdbu-10Xo3h+g07-k=Fg4A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/7] ia64: fix Python string escapes
-To:     Benjamin Gray <bgray@linux.ibm.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, llvm@lists.linux.dev,
-        linux-pm@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Tom Rix <trix@redhat.com>, Jan Kiszka <jan.kiszka@siemens.com>,
-        Kieran Bingham <kbingham@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Todd E Brandt <todd.e.brandt@linux.intel.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>
+References: <20230912133318.18103-1-mpetlan@redhat.com>
+In-Reply-To: <20230912133318.18103-1-mpetlan@redhat.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 12 Sep 2023 10:53:18 -0700
+Message-ID: <CAP-5=fU5aofaXOtR=5JU2BocrjZVDRkm9uSqe_fyjOeoQRmQYQ@mail.gmail.com>
+Subject: Re: [PATCH] perf/x86/amd/core: Rename branch-brs event to not break
+ the parser
+To:     Michael Petlan <mpetlan@redhat.com>
+Cc:     linux-perf-users@vger.kernel.org, acme@redhat.com,
+        ravi.bangoria@amd.com, peterz@infradead.org, namhyung@kernel.org,
+        sandipan.das@amd.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 11:08=E2=80=AFPM Benjamin Gray <bgray@linux.ibm.com=
-> wrote:
+On Tue, Sep 12, 2023 at 6:35=E2=80=AFAM Michael Petlan <mpetlan@redhat.com>=
+ wrote:
 >
-> Python 3.6 introduced a DeprecationWarning for invalid escape sequences.
-> This is upgraded to a SyntaxWarning in Python 3.12, and will eventually
-> be a syntax error.
+> The problem is described in detail in 146edff3d7ed ("perf test: Parse
+> events workaround for dash/minus"). In short, although perf-list offers
+> "branch-brs" event to be used, when used with "-e" switch, the parser
+> does not accept it and needs to be enclosed to "cpu//", such as:
 >
-> Fix these now to get ahead of it before it's an error.
+> ```
+>   $ perf stat -e branch-brs true
+>   event syntax error: 'branch-brs'
+>                              \___ parser error
 >
-> Signed-off-by: Benjamin Gray <bgray@linux.ibm.com>
+>   $ perf stat -e cpu/branch-brs/ true
+>
+>    Performance counter stats for 'true':
+>
+>               46,179      cpu/branch-brs/
+> ```
+>
+> This is confusing for the users.
+>
+> Rename the event using underscore instead of dash to avoid the problem.
+>
+> Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+
+I rewrote the event parsing and this was fixed in 70c90e4a6b2f ("perf
+parse-events: Avoid scanning PMUs before parsing"):
+https://lore.kernel.org/r/20230502223851.2234828-19-irogers@google.com
+which was included in the perf tool in Linux 6.5.
+
+Thanks,
+Ian
+
 > ---
->  arch/ia64/scripts/unwcheck.py | 2 +-
-
-Ard is proposing removing this script, along with the rest of the architect=
-ure:
-https://lore.kernel.org/linux-arch/20230911163129.3777603-2-ardb@google.com=
-/
-
-So this change can be dropped.
-
+>  arch/x86/events/amd/core.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/arch/ia64/scripts/unwcheck.py b/arch/ia64/scripts/unwcheck.p=
-y
-> index 9581742f0db2..adc24152d3b9 100644
-> --- a/arch/ia64/scripts/unwcheck.py
-> +++ b/arch/ia64/scripts/unwcheck.py
-> @@ -21,7 +21,7 @@ if len(sys.argv) !=3D 2:
+> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+> index abadd5f23425..f4c5d4100035 100644
+> --- a/arch/x86/events/amd/core.c
+> +++ b/arch/x86/events/amd/core.c
+> @@ -1286,21 +1286,21 @@ amd_branches_is_visible(struct kobject *kobj, str=
+uct attribute *attr, int i)
+>  }
 >
->  readelf =3D os.getenv("READELF", "readelf")
+>  static struct attribute_group group_caps_amd_branches =3D {
+>         .name  =3D "caps",
+>         .attrs =3D amd_pmu_branches_attrs,
+>         .is_visible =3D amd_branches_is_visible,
+>  };
 >
-> -start_pattern =3D re.compile("<([^>]*)>: \[0x([0-9a-f]+)-0x([0-9a-f]+)\]=
-")
-> +start_pattern =3D re.compile(r"<([^>]*)>: \[0x([0-9a-f]+)-0x([0-9a-f]+)\=
-]")
->  rlen_pattern  =3D re.compile(".*rlen=3D([0-9]+)")
+>  #ifdef CONFIG_PERF_EVENTS_AMD_BRS
 >
->  def check_func (func, slots, rlen_sum):
+> -EVENT_ATTR_STR(branch-brs, amd_branch_brs,
+> +EVENT_ATTR_STR(branch_brs, amd_branch_brs,
+>                "event=3D" __stringify(AMD_FAM19H_BRS_EVENT)"\n");
+>
+>  static struct attribute *amd_brs_events_attrs[] =3D {
+>         EVENT_PTR(amd_branch_brs),
+>         NULL,
+>  };
+>
+>  static umode_t
+>  amd_brs_is_visible(struct kobject *kobj, struct attribute *attr, int i)
+>  {
 > --
-> 2.41.0
+> 2.18.4
 >
-
-
---=20
-Thanks,
-~Nick Desaulniers
