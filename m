@@ -2,142 +2,132 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E83ECA0EEB
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Sep 2023 14:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A574CA0EEB
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Sep 2023 15:34:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232759AbjILOzK (ORCPT
+        id S236496AbjILPeI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Sep 2023 10:55:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39526 "EHLO
+        Tue, 12 Sep 2023 11:34:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229835AbjILOzJ (ORCPT
+        with ESMTP id S236374AbjILPeB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Sep 2023 10:55:09 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2082B115;
-        Tue, 12 Sep 2023 07:55:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694530506; x=1726066506;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=+08KNNthxi3J1Jr0M7Xfm3cEncr3LYOQUYNu2NOJbqg=;
-  b=YsKcXtx/zECe20wJ2s/1js8SmhHVGXRZ1OGE12a+Qxot2Pfr1K1x3qLr
-   lNvW9SbyyVPeM2uWCSzUaywqL7L02I5b0WuzX1l/Km7Eswy6oob4w6LNh
-   GXobuKPtkDieCuh2kXx2SLHaNWWJin07runAY0y0byfCk3IXFvuolVn6f
-   x/02v9S2ARxpDQA+YJyGYA5xROOFxVLCK6TG1pRbIx0BEekH7F6uhjR3d
-   YT/7q0t1XkG2APrgNyHgE3e7mr08G4DFeisfzCV5pZ8dM39JKNJjrk6xp
-   GBSKOhj/7FymEwpZy61LSYeq+dJv+TFjIS8tTbsZVswKF/BpdLIKfDEJ8
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="381099274"
-X-IronPort-AV: E=Sophos;i="6.02,139,1688454000"; 
-   d="scan'208";a="381099274"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 07:55:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="1074576894"
-X-IronPort-AV: E=Sophos;i="6.02,139,1688454000"; 
-   d="scan'208";a="1074576894"
-Received: from srosalim-mobl1.ger.corp.intel.com (HELO [10.251.217.51]) ([10.251.217.51])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 07:55:01 -0700
-Message-ID: <d248ec69-9bde-d57d-5175-a413c6c94f5c@linux.intel.com>
-Date:   Tue, 12 Sep 2023 17:54:59 +0300
+        Tue, 12 Sep 2023 11:34:01 -0400
+Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A61810EF
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Sep 2023 08:33:57 -0700 (PDT)
+Received: by mail-qv1-xf2a.google.com with SMTP id 6a1803df08f44-6535b9caa1eso31871786d6.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Sep 2023 08:33:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1694532836; x=1695137636; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jn3gYV6z0mHJzWuz6G6eyUwdrkRbzHbTqw/XH7fEH4s=;
+        b=jXSW4sr0/V0TjTygldTr884ibK6jtHHyYxRV6nM1uAsrYMhRGlPYT5IV8wxSASiQt3
+         etjGNSVMhu9OE3YJ6Taca3oX5YOEBO8AH1muDseBgwvJBZPgGW7wvFhhovPvA2VVvYvi
+         7cIYUxtFUbsyGMxzcfNUGm8QCKQfdVFW8dIzAKgcEcy3bStwurtLo3txAKaYJWHG2/Ds
+         jDpI9FyiEYuT9LF5bnbNrhBt4GdREQlewD7YDtkaJEYJ0Fmaw3Owsb0Y09JGEnu1fZqU
+         mkx7I0agpaYsSJFNrXWo8vL7ZONfceEepwrEp7sAQ5mlMZZf6vJC1p+akXVskBatrkUx
+         IFZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694532836; x=1695137636;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jn3gYV6z0mHJzWuz6G6eyUwdrkRbzHbTqw/XH7fEH4s=;
+        b=RYXaxZPiRvcDAz4kUlKl8WDr5rrcvQAFkiYUQXEJm4MAA324LY6PMuXOEs9sgcNGNN
+         xB73f8MktSUL0Qd4HWQf521ruNsoAo3ke3Qn6ftb6HS5+3XHg2Tj87oTw0i/zP0j2XyO
+         06Xg/HaAdB+379QzL9zuAncxD+DIiLDclsGLCxhFIkS6MPzJVl9k2vutW11Q58e5c+j2
+         dk16bRMjZqcSDR31mrK/cpq93mXFU6WvDjzPxXGywy9DVTzzwlyT/4ZEpHYOmbgxgKY1
+         yyQ9nLf8LKNQlemQst3z9Dg/fzpiuP6GVBlA+MPw/Mr6AekH0IyIax1sX7Ui6MOn3vwS
+         lnIg==
+X-Gm-Message-State: AOJu0Yx0yA62g9Dg649omXhW7IUwUh1s7nu3MzGOaeeiAdvNaRf1YsGj
+        fwIKcVz1x/ECGY3Zfj2weYsB2eGezwsaALs8sgsjbw==
+X-Google-Smtp-Source: AGHT+IE0Ca2qfQkE6enrGukSoNDCb1OXtuL9IDZszmjiWUcu3f+9cYN/mXNgIzl2i4wDmR90/hv9yYRTETUzcz21Ipg=
+X-Received: by 2002:ad4:5d4b:0:b0:635:da80:e53a with SMTP id
+ jk11-20020ad45d4b000000b00635da80e53amr4483115qvb.12.1694532836379; Tue, 12
+ Sep 2023 08:33:56 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [RESEND PATCH 2/2] perf/core: Allow reading package events from
- perf_event_read_local
-Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        dave.hansen@linux.intel.com, irogers@google.com,
-        mark.rutland@arm.com, linux-perf-users@vger.kernel.org,
-        hpa@zytor.com, mingo@redhat.com, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, adrian.hunter@intel.com,
-        namhyung@kernel.org, jolsa@kernel.org
-References: <20230912124432.3616761-1-tero.kristo@linux.intel.com>
- <20230912124432.3616761-3-tero.kristo@linux.intel.com>
- <20230912140434.GB22127@noisy.programming.kicks-ass.net>
-From:   Tero Kristo <tero.kristo@linux.intel.com>
-In-Reply-To: <20230912140434.GB22127@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20230912060801.95533-1-bgray@linux.ibm.com> <20230912060801.95533-2-bgray@linux.ibm.com>
+In-Reply-To: <20230912060801.95533-2-bgray@linux.ibm.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 12 Sep 2023 08:33:42 -0700
+Message-ID: <CAKwvOdkP1uwU0Cq9541zf309tudfFdbu-10Xo3h+g07-k=Fg4A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] ia64: fix Python string escapes
+To:     Benjamin Gray <bgray@linux.ibm.com>,
+        Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, llvm@lists.linux.dev,
+        linux-pm@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Tom Rix <trix@redhat.com>, Jan Kiszka <jan.kiszka@siemens.com>,
+        Kieran Bingham <kbingham@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Todd E Brandt <todd.e.brandt@linux.intel.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-On 12/09/2023 17:04, Peter Zijlstra wrote:
-> On Tue, Sep 12, 2023 at 03:44:32PM +0300, Tero Kristo wrote:
->> Per-package perf events are typically registered with a single CPU only,
->> however they can be read across all the CPUs within the package.
->> Currently perf_event_read maps the event CPU according to the topology
->> information to avoid an unnecessary SMP call, however
->> perf_event_read_local deals with hard values and rejects a read with a
->> failure if the CPU is not the one exactly registered. Allow similar
->> mapping within the perf_event_read_local if the perf event in question
->> can support this.
->>
->> This allows users like BPF code to read the package perf events properly
->> across different CPUs within a package.
->>
->> Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
->> ---
->>   kernel/events/core.c | 10 +++++++---
->>   1 file changed, 7 insertions(+), 3 deletions(-)
->>
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 4c72a41f11af..780dde646e8a 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -4528,6 +4528,7 @@ int perf_event_read_local(struct perf_event *event, u64 *value,
->>   {
->>   	unsigned long flags;
->>   	int ret = 0;
->> +	int event_cpu;
->>   
->>   	/*
->>   	 * Disabling interrupts avoids all counter scheduling (context
->> @@ -4551,15 +4552,18 @@ int perf_event_read_local(struct perf_event *event, u64 *value,
->>   		goto out;
->>   	}
->>   
->> +	event_cpu = READ_ONCE(event->oncpu);
->> +	event_cpu = __perf_event_read_cpu(event, event_cpu);
-> What happens with __perf_event_read_cpu() when event_cpu == -1 ?
-
-Good question. It looks like I need to add a check against that. Will 
-update and send v2 out.
-
--Tero
-
-
+On Mon, Sep 11, 2023 at 11:08=E2=80=AFPM Benjamin Gray <bgray@linux.ibm.com=
+> wrote:
 >
->> +
->>   	/* If this is a per-CPU event, it must be for this CPU */
->>   	if (!(event->attach_state & PERF_ATTACH_TASK) &&
->> -	    event->cpu != smp_processor_id()) {
->> +	    event_cpu != smp_processor_id()) {
->>   		ret = -EINVAL;
->>   		goto out;
->>   	}
->>   
->>   	/* If this is a pinned event it must be running on this CPU */
->> -	if (event->attr.pinned && event->oncpu != smp_processor_id()) {
->> +	if (event->attr.pinned && event_cpu != smp_processor_id()) {
->>   		ret = -EBUSY;
->>   		goto out;
->>   	}
->> @@ -4569,7 +4573,7 @@ int perf_event_read_local(struct perf_event *event, u64 *value,
->>   	 * or local to this CPU. Furthermore it means its ACTIVE (otherwise
->>   	 * oncpu == -1).
->>   	 */
->> -	if (event->oncpu == smp_processor_id())
->> +	if (event_cpu == smp_processor_id())
->>   		event->pmu->read(event);
->>   
->>   	*value = local64_read(&event->count);
->> -- 
->> 2.40.1
->>
+> Python 3.6 introduced a DeprecationWarning for invalid escape sequences.
+> This is upgraded to a SyntaxWarning in Python 3.12, and will eventually
+> be a syntax error.
+>
+> Fix these now to get ahead of it before it's an error.
+>
+> Signed-off-by: Benjamin Gray <bgray@linux.ibm.com>
+> ---
+>  arch/ia64/scripts/unwcheck.py | 2 +-
+
+Ard is proposing removing this script, along with the rest of the architect=
+ure:
+https://lore.kernel.org/linux-arch/20230911163129.3777603-2-ardb@google.com=
+/
+
+So this change can be dropped.
+
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/ia64/scripts/unwcheck.py b/arch/ia64/scripts/unwcheck.p=
+y
+> index 9581742f0db2..adc24152d3b9 100644
+> --- a/arch/ia64/scripts/unwcheck.py
+> +++ b/arch/ia64/scripts/unwcheck.py
+> @@ -21,7 +21,7 @@ if len(sys.argv) !=3D 2:
+>
+>  readelf =3D os.getenv("READELF", "readelf")
+>
+> -start_pattern =3D re.compile("<([^>]*)>: \[0x([0-9a-f]+)-0x([0-9a-f]+)\]=
+")
+> +start_pattern =3D re.compile(r"<([^>]*)>: \[0x([0-9a-f]+)-0x([0-9a-f]+)\=
+]")
+>  rlen_pattern  =3D re.compile(".*rlen=3D([0-9]+)")
+>
+>  def check_func (func, slots, rlen_sum):
+> --
+> 2.41.0
+>
+
+
+--=20
+Thanks,
+~Nick Desaulniers
