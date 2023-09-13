@@ -2,143 +2,83 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6549FEDEC4D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Sep 2023 13:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F376AEDEC50
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Sep 2023 13:31:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236260AbjIMNAJ (ORCPT
+        id S240913AbjIMNbX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Sep 2023 09:00:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33034 "EHLO
+        Wed, 13 Sep 2023 09:31:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240671AbjIMNAI (ORCPT
+        with ESMTP id S235880AbjIMNbT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Sep 2023 09:00:08 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6882A1989;
-        Wed, 13 Sep 2023 06:00:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694610004; x=1726146004;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=SS5UdfEd5/aGjW95PuR1Hrc1ehfo5reasMr5Jb91wy0=;
-  b=abDz9kzUWQ2kSs78Eu+X4vtTDYKdewXwQ4f83lRCbdq0qzG5xo74sORm
-   JU//2HDLl7s1TqO7EhQyhKK8RrT3jIGNiijTSuaDL6NZVNf2M0EBsXVp0
-   bbt0+TkIvbFDfpHM5zQHaiIQK4lv7/jB1ooIwWiPTz8kp/ZvDcvYIFDwi
-   u8/+rFdawT4wQH7oxpk9qQJjL3CdF64BivVoUFelVwhOSolMJEc4xUI1Z
-   tqgWr9kZ/TIGWi+Zvhv+wc1WM0twa55iPY4tyOKeTXabswx6l2E3wryZS
-   0dL99OnYx9Ep7Q94vIYE6Akqrd6mFQcfdJjvy7UKe/tJ5Pzzvd+LNQPgQ
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="375983355"
-X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="375983355"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 06:00:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="990908097"
-X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="990908097"
-Received: from asjackso-mobl2.amr.corp.intel.com (HELO tkristo-desk.intel.com) ([10.249.45.219])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 05:59:59 -0700
-From:   Tero Kristo <tero.kristo@linux.intel.com>
-To:     x86@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
-        tglx@linutronix.de
-Cc:     hpa@zytor.com, irogers@google.com, jolsa@kernel.org,
-        namhyung@kernel.org, adrian.hunter@intel.com, acme@kernel.org,
-        mingo@redhat.com, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
-        linux-perf-users@vger.kernel.org, peterz@infradead.org,
-        mark.rutland@arm.com
-Subject: [PATCHv2 2/2] perf/core: Allow reading package events from perf_event_read_local
-Date:   Wed, 13 Sep 2023 15:59:56 +0300
-Message-Id: <20230913125956.3652667-1-tero.kristo@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230912124432.3616761-2-tero.kristo@linux.intel.com>
-References: <20230912124432.3616761-2-tero.kristo@linux.intel.com>
+        Wed, 13 Sep 2023 09:31:19 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 559F919B1
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Sep 2023 06:31:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=J02MLXhFSfuoyeCLtw6xtYkQzGZj8lJYYE1pS362z8A=; b=duYyjGYKubyex3PQdSScxDz1aF
+        il/Q8YmExU9Mzldgx7QIP0lxDZPqy6BKP2nfpqXXo4on92wG7lMYwXtnn/cdM8QisxCBFT6/YVZp7
+        zdZfdOVIGgZYiQ9OQzxzORBxaxYqIY2Aqu8zF9zRCoYsD3BLzfCPTTHyQmMbqdpEVR9JQxjyXAhR7
+        V1G7uemUZylGxIk7FJGyeu6zb4o2kRARWmF7dEVgjF7IDvjpQqEQ3ErQbHcI0mZ8u7k7DZk7O9N3U
+        JNkA5wdNK4IrPbz1xMZsZPwbhxk5Crk3YyatBBCP6invFKI4GX7UPE+Y1kUHz/EXIGQ6mQJiy/mwb
+        ddkr3tGw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qgPxR-00E5zI-Sx; Wed, 13 Sep 2023 13:31:05 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8BA83300321; Wed, 13 Sep 2023 15:31:05 +0200 (CEST)
+Date:   Wed, 13 Sep 2023 15:31:05 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Lorenzo Stoakes <lstoakes@gmail.com>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        mingo@redhat.com, acme@kernel.org, urezki@gmail.com,
+        hch@infradead.org
+Subject: Re: [RFC PATCH 1/4] perf: Convert perf_mmap_(alloc,free)_page to
+ folios
+Message-ID: <20230913133105.GF22758@noisy.programming.kicks-ass.net>
+References: <20230821202016.2910321-1-willy@infradead.org>
+ <20230821202016.2910321-2-willy@infradead.org>
+ <78cc53f6-3828-4802-afc5-abb71dc59627@lucifer.local>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <78cc53f6-3828-4802-afc5-abb71dc59627@lucifer.local>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Per-package perf events are typically registered with a single CPU only,
-however they can be read across all the CPUs within the package.
-Currently perf_event_read maps the event CPU according to the topology
-information to avoid an unnecessary SMP call, however
-perf_event_read_local deals with hard values and rejects a read with a
-failure if the CPU is not the one exactly registered. Allow similar
-mapping within the perf_event_read_local if the perf event in question
-can support this.
+On Sun, Aug 27, 2023 at 08:33:39AM +0100, Lorenzo Stoakes wrote:
 
-This allows users like BPF code to read the package perf events properly
-across different CPUs within a package.
+> > @@ -785,25 +785,23 @@ __perf_mmap_to_page(struct perf_buffer *rb, unsigned long pgoff)
+> >  	return virt_to_page(rb->data_pages[pgoff - 1]);
+> >  }
+> >
+> > -static void *perf_mmap_alloc_page(int cpu)
+> > +static void *perf_mmap_alloc_page(int node)
+> 
+> Nitty point but since we're dealing with folios here maybe rename to
+> perf_mmap_alloc_folio()?
 
-Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
----
-v2:
-  * prevent illegal array access in case event->oncpu == -1
-  * split the event->cpu / event->oncpu handling to their own variables
+Since it's an explicit order-0 allocation, does that really make sense?
 
- kernel/events/core.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 4c72a41f11af..6b343bac0a71 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4425,6 +4425,9 @@ static int __perf_event_read_cpu(struct perf_event *event, int event_cpu)
- {
- 	u16 local_pkg, event_pkg;
- 
-+	if (event_cpu < 0 || event_cpu >= nr_cpu_ids)
-+		return event_cpu;
-+
- 	if (event->group_caps & PERF_EV_CAP_READ_ACTIVE_PKG) {
- 		int local_cpu = smp_processor_id();
- 
-@@ -4528,6 +4531,8 @@ int perf_event_read_local(struct perf_event *event, u64 *value,
- {
- 	unsigned long flags;
- 	int ret = 0;
-+	int event_cpu;
-+	int event_oncpu;
- 
- 	/*
- 	 * Disabling interrupts avoids all counter scheduling (context
-@@ -4551,15 +4556,22 @@ int perf_event_read_local(struct perf_event *event, u64 *value,
- 		goto out;
- 	}
- 
-+	/*
-+	 * Get the event CPU numbers, and adjust them to local if the event is
-+	 * a per-package event that can be read locally
-+	 */
-+	event_oncpu = __perf_event_read_cpu(event, event->oncpu);
-+	event_cpu = __perf_event_read_cpu(event, event->cpu);
-+
- 	/* If this is a per-CPU event, it must be for this CPU */
- 	if (!(event->attach_state & PERF_ATTACH_TASK) &&
--	    event->cpu != smp_processor_id()) {
-+	    event_cpu != smp_processor_id()) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
- 
- 	/* If this is a pinned event it must be running on this CPU */
--	if (event->attr.pinned && event->oncpu != smp_processor_id()) {
-+	if (event->attr.pinned && event_oncpu != smp_processor_id()) {
- 		ret = -EBUSY;
- 		goto out;
- 	}
-@@ -4569,7 +4581,7 @@ int perf_event_read_local(struct perf_event *event, u64 *value,
- 	 * or local to this CPU. Furthermore it means its ACTIVE (otherwise
- 	 * oncpu == -1).
- 	 */
--	if (event->oncpu == smp_processor_id())
-+	if (event_oncpu == smp_processor_id())
- 		event->pmu->read(event);
- 
- 	*value = local64_read(&event->count);
--- 
-2.40.1
+> >  {
+> > -	struct page *page;
+> > -	int node;
+> > +	struct folio *folio;
+> >
+> > -	node = (cpu == -1) ? cpu : cpu_to_node(cpu);
+> > -	page = alloc_pages_node(node, GFP_KERNEL | __GFP_ZERO, 0);
+> > -	if (!page)
+> > +	folio = __folio_alloc_node(GFP_KERNEL | __GFP_ZERO, 0, node);
+> > +	if (!folio)
+> >  		return NULL;
+> >
+> > -	return page_address(page);
+> > +	return folio_address(folio);
+> >  }
 
