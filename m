@@ -2,156 +2,97 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F73EE0211
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Sep 2023 23:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2713EE0212
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Sep 2023 00:21:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233156AbjIMXYX (ORCPT
+        id S233172AbjINAVv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Sep 2023 19:24:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51322 "EHLO
+        Wed, 13 Sep 2023 20:21:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233161AbjIMXYW (ORCPT
+        with ESMTP id S232828AbjINAVu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Sep 2023 19:24:22 -0400
-Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 705AE1BCC
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Sep 2023 16:24:18 -0700 (PDT)
-Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-41761e9181eso10251cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Sep 2023 16:24:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694647457; x=1695252257; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a4L2DCL/mifd2+VI52Ilf7k2pafo1lSl/LHLgMOO83Q=;
-        b=d9ppuansxCkeaqWdlOyVzh919PqnbFRP7j5RmlwgAHfqaJIdVS5/T9pUUF+jzd0xSa
-         u9Q3mEl1hGF6b0Q8CA6Mui4YtZO0mRHCmpOYUEpUuRTmK5aVokH7OOtszusuVkdlwx7H
-         1yoKpY+swupBtep2mJWDnrGVkYVJn1qoPpVVBu6qkzYzHjFQ6gE6eVXpIwgmmTciAQ6B
-         ZSmwdkpejBG+JSdS754GxCKt6d/m0bwFCfkTvWTnHVIQ+o7967zpEM80D1WL993gdi69
-         rNrBSoWdyXHIgtb4mWwUCKAgEzK5ah9zzudSlJoTONW1gmg/0WY2K5+0rWa3K4wxY+JW
-         hIiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694647457; x=1695252257;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a4L2DCL/mifd2+VI52Ilf7k2pafo1lSl/LHLgMOO83Q=;
-        b=W2U4LNxNotyx+3eRnaOp/a/bQvbHKtRX0TQW9sbGXajlzxHtYeZjeca34RB5xN1OGd
-         ZrlCmqoNvwjFWfb/Dca13Ilnh6VMAYPmwE2lJqbQzf1inJH1fSsKa3Bg4LKFKS/za0H0
-         rNoMI54ZMd9Jt7YDv7JjernJ86bGC5BcX8XaaJdvvmIgpQmt4WH+HaaJbaB/if3qTNSa
-         +gp+sBVo0qC4rkTTrHpCceRCAfw6Bad2I0udE0fNqdP3hKVfZxnTTkH4hAGGlmnTHS2X
-         DYCUiTkKNN5b7sPZPGfqPWip9misRnSWZY9dWyFhNQz0eCP9UKhvAltZzO3aCOLecHGN
-         4cRg==
-X-Gm-Message-State: AOJu0YwsxB7tkpxjfbBQG+XvUqChkfSjh+0DEMjYenzBmzh4UDtJQA3A
-        ZSTvJJEbvTrymCb7iV5ydmF91asy4wPiVNDU0Dlvtg==
-X-Google-Smtp-Source: AGHT+IHltBTmYGbmbGfCXqJncsLjjkdbQXd1v3vr+uIrhuxi7JXc9CH2r7XXbJGJ0qUORK5lID309eZycS6JJ+RwxnQ=
-X-Received: by 2002:ac8:7d56:0:b0:410:9af1:f9b4 with SMTP id
- h22-20020ac87d56000000b004109af1f9b4mr474796qtb.10.1694647457361; Wed, 13 Sep
- 2023 16:24:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230908052216.566148-1-namhyung@kernel.org> <CAP-5=fUtEvW9h7N=w3vvYBB3vytnTXJsXrHDD6zLA2DzYFOBHQ@mail.gmail.com>
- <CAM9d7cj1rEjGy0QM2tkJhBn=hac-9Jya+ZJ4SNhBmB29u5KVMg@mail.gmail.com>
- <ad8a8d46151142a883d2d259c884acc0@AcuMS.aculab.com> <CAM9d7ciB-Rmsi4eTOU7n=mcEP2-JjDycL6f_8cKnKGKtqVT3UQ@mail.gmail.com>
-In-Reply-To: <CAM9d7ciB-Rmsi4eTOU7n=mcEP2-JjDycL6f_8cKnKGKtqVT3UQ@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 13 Sep 2023 16:24:01 -0700
-Message-ID: <CAP-5=fU=8RwHsd=nP6evT2oxCeOvXF4dfNF9MhBVk3y2WvH3MQ@mail.gmail.com>
-Subject: Re: [PATCH] perf annotate: Add more x86 mov instruction cases
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 13 Sep 2023 20:21:50 -0400
+X-Greylist: delayed 1854 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 13 Sep 2023 17:21:46 PDT
+Received: from mx0b-00190b01.pphosted.com (mx0b-00190b01.pphosted.com [IPv6:2620:100:9005:57f::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BD991713
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Sep 2023 17:21:46 -0700 (PDT)
+Received: from pps.filterd (m0122330.ppops.net [127.0.0.1])
+        by mx0b-00190b01.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 38DLGUXK011909
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 00:50:52 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=
+        from:to:subject:date:message-id:content-type
+        :content-transfer-encoding:mime-version; s=jan2016.eng; bh=duL6C
+        BNGJAdo9BdZiR0/EzBBS5MCdam/J7lXeC0MBUE=; b=T7zGd8pXQfl67snJntDNR
+        ptUw4wYD76Y60hkrHOUUEHnyNyfHCnie4lZt8AkwHxVvTLIfmM4bxnb3lI6/yRxq
+        cK/XGE+Mbn5lh6gm1dRNnCgnerQcmTFT0tsEf/G4doJzKCnUFMqU8DFQn9ywiNwA
+        3z/7yEXnpzlgp2FaaxCB30g2IgZYr4tm9vFdBwvIobqeJbiuJ5kDsK6gdhfGOpRy
+        LaIKkX8k/5+t25cb67OWyezrqtF3YMcEisEPTakCwW2OVEiaN+PEiAvpWEW5US1J
+        cqyQGFmTvp2tPCVk61o2SNFgeJSMFl6GcMKkN59Ot4RmoOm63n8s/hZvPXkbhEPa
+        A==
+Received: from prod-mail-ppoint1 (prod-mail-ppoint1.akamai.com [184.51.33.18] (may be forged))
+        by mx0b-00190b01.pphosted.com (PPS) with ESMTPS id 3t0gbxcm7s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 00:50:51 +0100 (BST)
+Received: from pps.filterd (prod-mail-ppoint1.akamai.com [127.0.0.1])
+        by prod-mail-ppoint1.akamai.com (8.17.1.19/8.17.1.19) with ESMTP id 38DL3Hvl021073
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Sep 2023 19:50:50 -0400
+Received: from email.msg.corp.akamai.com ([172.27.91.25])
+        by prod-mail-ppoint1.akamai.com (PPS) with ESMTPS id 3t0m1xhse6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Sep 2023 19:50:42 -0400
+Received: from usma1ex-dag4mb8.msg.corp.akamai.com (172.27.91.27) by
+ usma1ex-dag4mb6.msg.corp.akamai.com (172.27.91.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.25; Wed, 13 Sep 2023 19:50:42 -0400
+Received: from usma1ex-dag4mb8.msg.corp.akamai.com ([172.27.91.27]) by
+ usma1ex-dag4mb8.msg.corp.akamai.com ([172.27.91.27]) with mapi id
+ 15.02.1258.025; Wed, 13 Sep 2023 19:50:42 -0400
+From:   "Jayaramappa, Srilakshmi" <sjayaram@akamai.com>
+To:     "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Subject: Symbol resolution when text in hugepages
+Thread-Topic: Symbol resolution when text in hugepages
+Thread-Index: AQHZ5ptoJXbmX9KFXk+orVacilbbkg==
+Date:   Wed, 13 Sep 2023 23:50:42 +0000
+Message-ID: <2fb5c263fce545b0a5b745e6122fa88e@akamai.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.27.164.27]
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-13_18,2023-09-13_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 spamscore=0
+ malwarescore=0 mlxlogscore=609 adultscore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
+ definitions=main-2309130195
+X-Proofpoint-GUID: 0phVr9xSGV2Eq_XNzVP83W6GaUS4c8e1
+X-Proofpoint-ORIG-GUID: 0phVr9xSGV2Eq_XNzVP83W6GaUS4c8e1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-13_19,2023-09-13_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 lowpriorityscore=0
+ clxscore=1011 malwarescore=0 mlxlogscore=589 suspectscore=0 phishscore=0
+ impostorscore=0 mlxscore=0 adultscore=0 spamscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2308100000
+ definitions=main-2309130198
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 13, 2023 at 2:14=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Mon, Sep 11, 2023 at 1:12=E2=80=AFAM David Laight <David.Laight@aculab=
-.com> wrote:
-> >
-> > From: Namhyung Kim
-> > > Sent: 09 September 2023 00:56
-> > >
-> > > Hi Ian,
-> > >
-> > > On Thu, Sep 7, 2023 at 11:24=E2=80=AFPM Ian Rogers <irogers@google.co=
-m> wrote:
-> > > >
-> > > > On Thu, Sep 7, 2023 at 10:22=E2=80=AFPM Namhyung Kim <namhyung@kern=
-el.org> wrote:
-> > > > >
-> > > > > Instructions with sign- and zero- extention like movsbl and movzw=
-q were
-> > > > > not handled properly.  As it can check different size suffix (-b,=
- -w, -l
-> > > > > or -q) we can omit that and add the common parts even though some
-> > > > > combinations are not possible.
-> > > > >
-> > > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > > > ---
-> > > > >  tools/perf/arch/x86/annotate/instructions.c | 9 ++++++---
-> > > > >  1 file changed, 6 insertions(+), 3 deletions(-)
-> > > > >
-> > > > > diff --git a/tools/perf/arch/x86/annotate/instructions.c
-> > > b/tools/perf/arch/x86/annotate/instructions.c
-> > > > > index 5f4ac4fc7fcf..5cdf457f5cbe 100644
-> > > > > --- a/tools/perf/arch/x86/annotate/instructions.c
-> > > > > +++ b/tools/perf/arch/x86/annotate/instructions.c
-> > > > > @@ -74,12 +74,15 @@ static struct ins x86__instructions[] =3D {
-> > > > >         { .name =3D "movdqa",     .ops =3D &mov_ops,  },
-> > > > >         { .name =3D "movdqu",     .ops =3D &mov_ops,  },
-> > > > >         { .name =3D "movsd",      .ops =3D &mov_ops,  },
-> > > > > -       { .name =3D "movslq",     .ops =3D &mov_ops,  },
-> > > > >         { .name =3D "movss",      .ops =3D &mov_ops,  },
-> > > > > +       { .name =3D "movsb",      .ops =3D &mov_ops,  },
-> > > > > +       { .name =3D "movsw",      .ops =3D &mov_ops,  },
-> > > > > +       { .name =3D "movsl",      .ops =3D &mov_ops,  },
-> > > >
-> > > > In Intel's manual some of these names are "Move Data From String to
-> > > > String" operations, movsb and movsw in particular. These instructio=
-ns
-> > > > can be used to make simple memcpy loops. Could it be the past omiss=
-ion
-> > > > was deliberate due to the different way the addressing works in the
-> > > > instructions?
-> > >
-> > > I don't know but in terms of instruction parsing, they are the same
-> > > "MOVE" with two operands.  I'm not aware of anything in perf with
-> > > the operands of these instructions.  So I guess it'd be fine to add
-> > > these instructions even if they have different underlying behaviors.
-> >
-> > I'm pretty sure that 'rep movs[bwlq]' (aka while (cx--) *di++ =3D *si++=
-)
-> > is likely to be missing the memory argument parameters.
-> > There is also 'fun and games' with one variant - iirc 'rep movsd'
-> > what has been used for 64bit, but got hijacked by one of the SIMD sets.
->
-> It seems perf annotate don't process the rep prefix yet.
-> So I think there should be no functional change now.
+Hi all,=A0
 
-Reading the code, I also think it should be okay. Doing:
-```
-$ objdump -d /usr/lib/x86_64-linux-gnu/libc.so.6 |grep rep
-   2650a:       f3 ab                   rep stos %eax,%es:(%rdi)
-   33b76:       f3 48 a5                rep movsq %ds:(%rsi),%es:(%rdi)
-...
-```
-The mov parsing logic doesn't appear to care about src and dest, and
-the formatting above matches other mov cases.
+We have an application that has its text section backed by hugepages. In ou=
+r new build environment the text section of the binary is split up into rea=
+d and read/execute sections with offsets into the segment. This is breaking=
+ the perf symbol resolution. Previously, everything was in one segment and =
+there was no offset, so perf functioned fine. I know we can dump the symbol=
+s from readelf into /tmp/perf-PID.map file. I was wondering if anyone has a=
+ cleaner solution? I'd appreciate any pointers you have.=20
 
-Reviewed-by: Ian Rogers <irogers@google.com>
-
-Thanks,
-Ian
-
-> Thanks,
-> Namhyung
+Thanks
+Sri=
