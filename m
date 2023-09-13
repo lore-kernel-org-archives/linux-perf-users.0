@@ -2,216 +2,177 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2016FEEB58C
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Sep 2023 03:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D356DEEB593
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Sep 2023 05:36:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238204AbjIMDMk (ORCPT
+        id S234301AbjIMFge (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Sep 2023 23:12:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57452 "EHLO
+        Wed, 13 Sep 2023 01:36:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229948AbjIMDMj (ORCPT
+        with ESMTP id S231809AbjIMFge (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Sep 2023 23:12:39 -0400
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B1AD1719;
-        Tue, 12 Sep 2023 20:12:34 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VrymIl3_1694574747;
-Received: from 30.221.149.124(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VrymIl3_1694574747)
-          by smtp.aliyun-inc.com;
-          Wed, 13 Sep 2023 11:12:29 +0800
-Message-ID: <f044563b-2a32-c617-df60-dcd14be73265@linux.alibaba.com>
-Date:   Wed, 13 Sep 2023 11:12:24 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.14.0
-Subject: Re: [PATCH v8 1/8] perf pmu: "Compat" supports matching multiple
- identifiers
-To:     Ian Rogers <irogers@google.com>
-Cc:     John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Wed, 13 Sep 2023 01:36:34 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C7A3172A
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Sep 2023 22:36:30 -0700 (PDT)
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38D5YHWj010193;
+        Wed, 13 Sep 2023 05:36:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
+ from : in-reply-to : date : cc : message-id : references : to :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=XhyGhKxyi29jlVidFJz+Bs9lMjUotgYM8fo8K0ho2xA=;
+ b=rKOln3IDnLi3CTkooBGaKJ5a9rzS+FpaYQf5XxbwRUkq44C6fFIw4XBsdZ8/eup23wCd
+ m0QTOvrfLh1t0kfj47Ia8btjx45S9guiwS+U0H+Ui0axDGDm7PQ75IGUq7i9SwCRArEt
+ moNAO3/iCvCw7NXjoO2pbpB7GYS3KN3UEHF305n5op3krrfZiLfp7ne2ADuS2QrR3Mwi
+ gN4Aay0iQ4DoWmp1UPkltRSQL+kqcNkIMPq7QegClZbrolJKY0eVZo0Z6jvbM3igadRp
+ JMpHXNclaaZDIeNXq5s+0qf1SJ5yOi1OBwD3D1uuzhwHaXM/sD4Hub15x6BO2AorkoHY JQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t36wv8a90-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 Sep 2023 05:36:22 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38D5Phoa020462;
+        Wed, 13 Sep 2023 05:36:03 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t36wv89v8-7
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 Sep 2023 05:36:03 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38D40Lmh012169;
+        Wed, 13 Sep 2023 05:02:38 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+        by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3t13dyruru-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 Sep 2023 05:02:38 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38D52Z8E19202804
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Sep 2023 05:02:35 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4C5822004D;
+        Wed, 13 Sep 2023 05:02:35 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 799DA20043;
+        Wed, 13 Sep 2023 05:02:33 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.17.124])
+        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Wed, 13 Sep 2023 05:02:33 +0000 (GMT)
+Content-Type: text/plain;
+        charset=utf-8
+Subject: Re: [PATCH 0/3] Fix for shellcheck issues with version "0.6"
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <67DF02AD-62FD-4E7B-9F85-A14166BD18AD@linux.vnet.ibm.com>
+Date:   Wed, 13 Sep 2023 10:32:22 +0530
+Cc:     Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>
-References: <1694087913-46144-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1694087913-46144-2-git-send-email-renyu.zj@linux.alibaba.com>
- <CAP-5=fVWcQrqLeuc-k4HRNrNdb_=9CbqTSOAX=HDR7f=j8b0Hg@mail.gmail.com>
- <8bab7404-8e24-8606-558c-db3495429f2f@linux.alibaba.com>
- <CAP-5=fU4jWHnbt8BirMZHa7cuLhkAAMAfD28AdRc23zx-e3EyQ@mail.gmail.com>
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <CAP-5=fU4jWHnbt8BirMZHa7cuLhkAAMAfD28AdRc23zx-e3EyQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>
+Message-Id: <210B2506-3CC5-4544-A2D5-22E779CD1E47@linux.vnet.ibm.com>
+References: <20230907171540.36736-1-atrajeev@linux.vnet.ibm.com>
+ <CAP-5=fXVSh0q6cQwQdGR-jxTTec_s43geZ02gEekrFbSvCKnZw@mail.gmail.com>
+ <67DF02AD-62FD-4E7B-9F85-A14166BD18AD@linux.vnet.ibm.com>
+To:     Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+X-Mailer: Apple Mail (2.3731.700.6)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: TuwZxSYrdvUls-73jyzQe14MBjDdTOYh
+X-Proofpoint-GUID: rlVSZ9iI-xFH1gfcHf4PxsTWLx2OVW11
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-12_24,2023-09-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
+ priorityscore=1501 bulkscore=0 mlxscore=0 spamscore=0 suspectscore=0
+ mlxlogscore=999 impostorscore=0 adultscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309130046
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-在 2023/9/12 上午1:32, Ian Rogers 写道:
-> On Sun, Sep 10, 2023 at 7:32 PM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
->>
->>
->>
->> 在 2023/9/9 上午5:33, Ian Rogers 写道:
->>> On Thu, Sep 7, 2023 at 4:58 AM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
->>>>
->>>> The jevent "Compat" is used for uncore PMU alias or metric definitions.
->>>>
->>>> The same PMU driver has different PMU identifiers due to different
->>>> hardware versions and types, but they may have some common PMU event.
->>>> Since a Compat value can only match one identifier, when adding the
->>>> same event alias to PMUs with different identifiers, each identifier
->>>> needs to be defined once, which is not streamlined enough.
->>>>
->>>> So let "Compat" supports matching multiple identifiers for uncore PMU
->>>> alias. For example, the Compat value {43401;436*} can match the PMU
->>>> identifier "43401", that is, CMN600_r0p0, and the PMU identifier with
->>>> the prefix "436", that is, all CMN650, where "*" is a wildcard.
->>>> Tokens in Unit field are delimited by ';' with no spaces.
->>>>
->>>> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
->>>> Reviewed-by: John Garry <john.g.garry@oracle.com>
->>>> ---
->>>>  tools/perf/util/pmu.c | 28 ++++++++++++++++++++++++++--
->>>>  tools/perf/util/pmu.h |  1 +
->>>>  2 files changed, 27 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
->>>> index e215985..c3c3818 100644
->>>> --- a/tools/perf/util/pmu.c
->>>> +++ b/tools/perf/util/pmu.c
->>>> @@ -875,6 +875,30 @@ static bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
->>>>         return res;
->>>>  }
->>>>
->>>> +bool pmu_uncore_identifier_match(const char *id, const char *compat)
->>>> +{
->>>> +       char *tmp = NULL, *tok, *str;
->>>> +       bool res = false;
->>>> +
->>>> +       /*
->>>> +        * The strdup() call is necessary here because "compat" is a const str*
->>>> +        * type and cannot be used as an argument to strtok_r().
->>>> +        */
->>>> +       str = strdup(compat);
->>>> +       if (!str)
->>>> +               return false;
->>>> +
->>>> +       tok = strtok_r(str, ";", &tmp);
->>>
->>> Did the comma vs semicolon difference get explained? It seems to add
->>> inconsistency to use a semicolon.
->>>
->>
->> Hi Ian,
->>
->> Yes, I explained the reason for using semicolons instead of commas in v7.
->>
->> I use a semicolon instead of a comma because I want to distinguish it from the function
->> of the comma in "Unit" and avoid confusion between the use of commas in "Unit" and "Compat".
->> Because in Unit, commas act as wildcards, and in “Compat”, the semicolon means “or”. So
->> I think semicolons are more appropriate.
->>
->> John also raised this issue earlier, and we finally agreed to use semicolons.
->> What do you think?
-> 
-> I'm okay with it, but thanks for capturing the why of this. I'd like
-> at some point to make the wildcarding of things less ad hoc. For
-> example, on x86 we use regular expressions to match cpuid:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/pmu-events/arch/x86/mapfile.csv?h=perf-tools-next
-
-Thank you for the example. I was not aware that regular expressions were
-already being used for matching in tools/perf.
-
-> but file name style matching for pmus:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/pmu.c?h=perf-tools-next#n1974
-> Given that we're okay with regular expressions then I don't see why
-> everything shouldn't be a regular expression. This could, for example,
-> make matching PMUs more specific than just adding a star and doing a
-> file name match. For an example of why this is weird, on my laptop:
-> ```
-> $ perf stat -e i/actual-frequency/ true
-> 
-> Performance counter stats for 'system wide':
-> 
->                 0      i/actual-frequency/
-> 
->       0.001168195 seconds time elapsed
-> ```
-> The PMU I used here as 'i' is /sys/devices/i915 as we allow arbitrary
-> numbers after a PMU name for cases of multiple uncore PMUs.
-> 
-> My feeling longer term is that the matching distinction of Unit and
-> Compat, comma and semi-colon, would be better captured with regular
-> expressions as I think they show the intent in the matching more
-> clearly.
-> 
-
-Yes, using regular expressions is indeed a better choice for consistency and clarity,
-and I will try using regular expressions for Compat matching in the next version.
-
-Thanks,
-Jing
-
-> Thanks,
-> Ian
-> 
-> 
+> On 08-Sep-2023, at 7:47 PM, Athira Rajeev <atrajeev@linux.vnet.ibm.com> w=
+rote:
+>=20
+>=20
+>=20
+>> On 08-Sep-2023, at 5:20 AM, Ian Rogers <irogers@google.com> wrote:
+>>=20
+>> On Thu, Sep 7, 2023 at 10:17=E2=80=AFAM Athira Rajeev
+>> <atrajeev@linux.vnet.ibm.com> wrote:
+>>>=20
+>>> From: root <root@ltcden13-lp4.aus.stglabs.ibm.com>
+>>>=20
+>>> shellcheck was run on perf tool shell scripts s a pre-requisite
+>>> to include a build option for shellcheck discussed here:
+>>> https://www.spinics.net/lists/linux-perf-users/msg25553.html
+>>>=20
+>>> And fixes were added for the coding/formatting issues in
+>>> two patchsets:
+>>> https://lore.kernel.org/linux-perf-users/20230613164145.50488-1-atrajee=
+v@linux.vnet.ibm.com/
+>>> https://lore.kernel.org/linux-perf-users/20230709182800.53002-1-atrajee=
+v@linux.vnet.ibm.com/
+>>>=20
+>>> Three additional issues are observed with shellcheck "0.6" and
+>>> this patchset covers those. With this patchset,
+>>>=20
+>>> # for F in $(find tests/shell/ -perm -o=3Dx -name '*.sh'); do shellchec=
+k -S warning $F; done
+>>> # echo $?
+>>> 0
+>>>=20
+>>> Athira Rajeev (3):
+>>> tests/shell: Fix shellcheck SC1090 to handle the location of sourced
+>>>   files
+>>> tests/shell: Fix shellcheck issues in tests/shell/stat+shadow_stat.sh
+>>>   tetscase
+>>> tests/shell: Fix shellcheck warnings for SC2153 in multiple scripts
+>>=20
+>> Series:
+>> Tested-by: Ian Rogers <irogers@google.com>
+>>=20
 >> Thanks,
->> Jing
->>
->>> Thanks,
->>> Ian
->>>
->>>> +       for (; tok; tok = strtok_r(NULL, ";", &tmp)) {
->>>> +               if (!fnmatch(tok, id, FNM_CASEFOLD)) {
->>>> +                       res = true;
->>>> +                       break;
->>>> +               }
->>>> +       }
->>>> +       free(str);
->>>> +       return res;
->>>> +}
->>>> +
->>>>  static int pmu_add_cpu_aliases_map_callback(const struct pmu_event *pe,
->>>>                                         const struct pmu_events_table *table __maybe_unused,
->>>>                                         void *vdata)
->>>> @@ -915,8 +939,8 @@ static int pmu_add_sys_aliases_iter_fn(const struct pmu_event *pe,
->>>>         if (!pe->compat || !pe->pmu)
->>>>                 return 0;
->>>>
->>>> -       if (!strcmp(pmu->id, pe->compat) &&
->>>> -           pmu_uncore_alias_match(pe->pmu, pmu->name)) {
->>>> +       if (pmu_uncore_alias_match(pe->pmu, pmu->name) &&
->>>> +                       pmu_uncore_identifier_match(pmu->id, pe->compat)) {
->>>>                 perf_pmu__new_alias(pmu,
->>>>                                 pe->name,
->>>>                                 pe->desc,
->>>> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
->>>> index bd5d804..1bf5cf1 100644
->>>> --- a/tools/perf/util/pmu.h
->>>> +++ b/tools/perf/util/pmu.h
->>>> @@ -240,6 +240,7 @@ void pmu_add_cpu_aliases_table(struct perf_pmu *pmu,
->>>>  char *perf_pmu__getcpuid(struct perf_pmu *pmu);
->>>>  const struct pmu_events_table *pmu_events_table__find(void);
->>>>  const struct pmu_metrics_table *pmu_metrics_table__find(void);
->>>> +bool pmu_uncore_identifier_match(const char *id, const char *compat);
->>>>
->>>>  int perf_pmu__convert_scale(const char *scale, char **end, double *sval);
->>>>
->>>> --
->>>> 1.8.3.1
->>>>
+>> Ian
+>=20
+> Thanks Ian for checking the patch series
+>=20
+> Athira
+
+Hi Arnaldo
+
+Can you please check and pull this if it looks good to go .
+
+Thanks
+Athira
+
+>>=20
+>>> tools/perf/tests/shell/coresight/asm_pure_loop.sh            | 4 ++++
+>>> tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh     | 4 ++++
+>>> tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh | 4 ++++
+>>> tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh  | 4 ++++
+>>> tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh    | 4 ++++
+>>> tools/perf/tests/shell/probe_vfs_getname.sh                  | 2 ++
+>>> tools/perf/tests/shell/record+probe_libc_inet_pton.sh        | 2 ++
+>>> tools/perf/tests/shell/record+script_probe_vfs_getname.sh    | 2 ++
+>>> tools/perf/tests/shell/record.sh                             | 1 +
+>>> tools/perf/tests/shell/stat+csv_output.sh                    | 1 +
+>>> tools/perf/tests/shell/stat+csv_summary.sh                   | 4 ++--
+>>> tools/perf/tests/shell/stat+shadow_stat.sh                   | 4 ++--
+>>> tools/perf/tests/shell/stat+std_output.sh                    | 1 +
+>>> tools/perf/tests/shell/test_intel_pt.sh                      | 1 +
+>>> tools/perf/tests/shell/trace+probe_vfs_getname.sh            | 1 +
+>>> 15 files changed, 35 insertions(+), 4 deletions(-)
+>>>=20
+>>> --
+>>> 2.31.1
+
+
