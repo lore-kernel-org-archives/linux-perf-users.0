@@ -2,213 +2,277 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D67F4CA553C
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Sep 2023 16:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D16CA553B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Sep 2023 16:34:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229489AbjIMQbt (ORCPT
+        id S230020AbjIMQeb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Sep 2023 12:31:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58028 "EHLO
+        Wed, 13 Sep 2023 12:34:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbjIMQbs (ORCPT
+        with ESMTP id S229472AbjIMQeb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Sep 2023 12:31:48 -0400
-Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC0119A7
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Sep 2023 09:31:44 -0700 (PDT)
-Received: by mail-il1-x12a.google.com with SMTP id e9e14a558f8ab-34bf0b97811so113865ab.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Sep 2023 09:31:44 -0700 (PDT)
+        Wed, 13 Sep 2023 12:34:31 -0400
+Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E480E19B6
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Sep 2023 09:34:26 -0700 (PDT)
+Received: by mail-il1-x12d.google.com with SMTP id e9e14a558f8ab-34df0f0a5beso1135ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Sep 2023 09:34:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694622704; x=1695227504; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1694622866; x=1695227666; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DpztZBQJl10oqU07wK0IFzN+LLamje8BENXZn/FkHvA=;
-        b=eFlf0VfguD9/Yi2hXCPcn0IBj01XvuunXpGNEwPrk5EYZyVlO7JdFWaBhJhEE/R0q0
-         cspg+EPQZUX9ZyNxQCcYe0IUJ/+GKVW7WaALLOLWs0wSYqiNMrL0rfYH5MrFDjt8ygiz
-         A8yWOlNwo666KO9DdA0tn23DrjVFX9nyPVa5l8gMVBnPkSgS4m22cMym8LHA75ywVoE4
-         w5EjZvARORDKG2v77Grm1g/iP0beNj/a02LgyTvXpEhdWF5voAxFE13omWUY3r1jPRTy
-         wEBI9cZe5nujr/ZjJoqtnSLR6hIPWFSrcOfaJAyQ1fp1D9Q+ZAZJLlQAuLPcGFFPSJ9U
-         Hydw==
+        bh=fWFFHFQX+xYywYbbSeTK3OfCUdymYd0gdqigI2aRV9M=;
+        b=olZSaljD7gc3EvQKp6lTos7gCt9aMJEWG2JHdlkz/SEWg9Ai3zVCs6xXP9RvLVbgKe
+         xAuYOWZBhMB40MGL2/C40FUF5UGEXvhHQ4Ha8fomYli2YWdimrItgsbkrUVL/sbnP4zv
+         vbirh+CRf7oa0jAqAXRYLXthSCqzctj0KZ8bmsoftxyYaKy4dYNklfBl9fbGFUYajLW/
+         9Wv0++X2xp79w8zyNnQ2PU3mmmnvr+ydBUKMDcRVzr44MiN89Sf9rTT1pdaKyQ/HD5vq
+         9tCi0d5CcAL/tcTV4P6B5h6ij+S9sOR6wC35hkLQg0LYW1xb+NIJ59CsZEKaaAOv1oKa
+         yPyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694622704; x=1695227504;
+        d=1e100.net; s=20230601; t=1694622866; x=1695227666;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DpztZBQJl10oqU07wK0IFzN+LLamje8BENXZn/FkHvA=;
-        b=a5dNXsXyepPYqPRf3V6iR/l3PM9Xeni//zBG5R5iYAX4kSwOSMKOeDqqkoWNamu7BP
-         ed6DMklFkNty6/1k/q7huvOJ0PHCdRHXFPNLM+9lW3U43ZjchhZ9gm8ViQU9cnKWTwAV
-         fnLpnpjn79sGhtIZw8Xq9dCFFvdCL4FYg94DWl4aFQqCiisl2F0bDumG5Kl8kRN+81KP
-         PiczU7LjnlM5SeMiusI+iKyyNBSBJdGQyWoduF9kTg8XLiw95hfbSK4a/jCAjOp41+z3
-         2R5ysrtPCYqYtan7cefSe/5pM/tloBum7fzf+IgaY+lAUClwRLdTjerHru7/rI728VvC
-         OwGQ==
-X-Gm-Message-State: AOJu0Yz7Ui8+0eRfBu7utvxJsFziNPOQ6IZmFBOK+xpFCpXZAOfwI2wF
-        p9ooY5o0g2TybH5USy/p/JyPi9TkIIMK3j5X9PQgjw==
-X-Google-Smtp-Source: AGHT+IGuPWoe04ycLchJdkh7wvembyi6qnEngJiQFtN2crYzRc0IPOXpa69VDDgEUH+ZMtq1ZYIRzXLuOnRGiErGM/c=
-X-Received: by 2002:a05:6e02:12cd:b0:349:3dd2:3cf1 with SMTP id
- i13-20020a056e0212cd00b003493dd23cf1mr207318ilm.23.1694622704010; Wed, 13 Sep
- 2023 09:31:44 -0700 (PDT)
+        bh=fWFFHFQX+xYywYbbSeTK3OfCUdymYd0gdqigI2aRV9M=;
+        b=dBDYV70kx/O5PFzgEYc3f5JdCX2dilr+E7fdjHJT4XXTYfT/8rD+IC+3kbRw9ymdoj
+         98Gc5q0sdOuxwahkJ+27xzriG3YlAcS+FwJyyJ5HYs6NRybsvDMxb9nSgyOAvOkonPfW
+         OydutFXIWBvBIMjnGJLT8ZWeXFwMJmhOF8UDYVi9lRCXADAXKDlNHjomfJYlZGXdLapr
+         JF75aiSS+sVpY2VFg5BBsh3ZVnv6Mm2nxA8Le/O438WpGUJTgXvxcGlf/3jZGaypC03b
+         PSiuUdy2F2l776Y4zIelI94xnIzlKDhKYeDqoypFTQirFSPoqTFY0alTKr48iAZcsrun
+         +GWA==
+X-Gm-Message-State: AOJu0Yxl/ahS5hl7ktq/NtZJhaRFkoSG5dQYAsOpp0gl1PUfMvHoLG4a
+        bZhTLjj1VV5NeoeqXfoC3P/iVnrscLOEpLPCskNZLA==
+X-Google-Smtp-Source: AGHT+IEKS208SWdQd9dgGwQPG6bVOOpc6SEiQ5B15krpRmG4Yc1z+XAUux8EP1cxOaOUmixUwGrwEN7aKblkLl9v/UU=
+X-Received: by 2002:a92:c263:0:b0:34d:ff4c:5e3a with SMTP id
+ h3-20020a92c263000000b0034dff4c5e3amr289482ild.10.1694622866155; Wed, 13 Sep
+ 2023 09:34:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230913125157.2790375-1-tmricht@linux.ibm.com>
-In-Reply-To: <20230913125157.2790375-1-tmricht@linux.ibm.com>
+References: <20230913153355.138331-1-james.clark@arm.com> <20230913153355.138331-2-james.clark@arm.com>
+In-Reply-To: <20230913153355.138331-2-james.clark@arm.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 13 Sep 2023 09:31:29 -0700
-Message-ID: <CAP-5=fUiHMRPVYhbQv-YM+EMKyBF6TEopea=PPX2thbtdmhGsg@mail.gmail.com>
-Subject: Re: [PATCH] perf jevent: fix core dump on software events on s390
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, sumanthk@linux.ibm.com, dengler@linux.ibm.com,
-        svens@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com
+Date:   Wed, 13 Sep 2023 09:34:13 -0700
+Message-ID: <CAP-5=fWt650UXifUDvVLacqsKOEU4V1P2XdabZy5UrDVaPqPiw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] perf pmu: Move pmu__find_core_pmu() to pmus.c
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-perf-users@vger.kernel.org, acme@kernel.org,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Haixin Yu <yuhaixin.yhx@linux.alibaba.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 13, 2023 at 5:52=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
-om> wrote:
+On Wed, Sep 13, 2023 at 8:34=E2=80=AFAM James Clark <james.clark@arm.com> w=
+rote:
 >
-> Running commands such as
->  # ./perf stat -e cs -- true
->  Segmentation fault (core dumped)
->  # ./perf stat -e cpu-clock-- true
->  Segmentation fault (core dumped)
->  #
+> pmu__find_core_pmu() more logically belongs in pmus.c because it
+> iterates over all PMUs, so move it to pmus.c
 >
-> dump core. This should not happen as these events are defined
-> even when no hardware PMU is available.
-> Debugging this reveals this call chain:
+> At the same time rename it to perf_pmus__find_core_pmu() to match the
+> naming convention in this file.
 >
->   perf_pmus__find_by_type(type=3D1)
->   +--> pmu_read_sysfs(core_only=3Dfalse)
->        +--> perf_pmu__find2(dirfd=3D3, name=3D0x152a113 "software")
->             +--> perf_pmu__lookup(pmus=3D0x14f0568 <other_pmus>, dirfd=3D=
-3,
->                                   lookup_name=3D0x152a113 "software")
->                  +--> perf_pmu__find_events_table (pmu=3D0x1532130)
+> list_prepare_entry() can't be used in perf_pmus__scan_core() anymore now
+> that it's called from the same compilation unit. This is with -O2
+> (specifically -O1 -ftree-vrp -finline-functions
+> -finline-small-functions) which allow the bounds of the array
+> access to be determined at compile time. list_prepare_entry() subtracts
+> the offset of the 'list' member in struct perf_pmu from &core_pmus,
+> which isn't a struct perf_pmu. The compiler sees that pmu results in
+> &core_pmus - 8 and refuses to compile. At runtime this works because
+> list_for_each_entry_continue() always adds the offset back again before
+> dereferencing ->next, but it's technically undefined behavior. With
+> -fsanitize=3Dundefined an additional warning is generated.
 >
-> Now the pmu is "software" and it tries to find a proper table
-> generated by the pmu-event generation process for s390:
+> Using list_first_entry_or_null() to get the first entry here avoids
+> doing &core_pmus - 8 but has the same result and fixes both the compile
+> warning and the undefined behavior warning. There are other uses of
+> list_prepare_entry() in pmus.c, but the compiler doesn't seem to be
+> able to see that they can also be called with &core_pmus, so I won't
+> change any at this time.
 >
->  # cd pmu-events/
->  # ./jevents.py  s390 all /root/linux/tools/perf/pmu-events/arch |\
->         grep -E '^const struct pmu_table_entry'
->  const struct pmu_table_entry pmu_events__cf_z10[] =3D {
->  const struct pmu_table_entry pmu_events__cf_z13[] =3D {
->  const struct pmu_table_entry pmu_metrics__cf_z13[] =3D {
->  const struct pmu_table_entry pmu_events__cf_z14[] =3D {
->  const struct pmu_table_entry pmu_metrics__cf_z14[] =3D {
->  const struct pmu_table_entry pmu_events__cf_z15[] =3D {
->  const struct pmu_table_entry pmu_metrics__cf_z15[] =3D {
->  const struct pmu_table_entry pmu_events__cf_z16[] =3D {
->  const struct pmu_table_entry pmu_metrics__cf_z16[] =3D {
->  const struct pmu_table_entry pmu_events__cf_z196[] =3D {
->  const struct pmu_table_entry pmu_events__cf_zec12[] =3D {
->  const struct pmu_table_entry pmu_metrics__cf_zec12[] =3D {
->  const struct pmu_table_entry pmu_events__test_soc_cpu[] =3D {
->  const struct pmu_table_entry pmu_metrics__test_soc_cpu[] =3D {
->  const struct pmu_table_entry pmu_events__test_soc_sys[] =3D {
->  #
->
-> However event "software" is not listed, as can be seen in the
-> generated const struct pmu_events_map pmu_events_map[].
-> So in function perf_pmu__find_events_table(), the variable
-> table is initialized to NULL, but never set to a proper
-> value. The function scans all generated &pmu_events_map[]
-> tables, but no table matches, because the tables are
-> s390 CPU Measurement unit specific:
->
->   i =3D 0;
->   for (;;) {
->       const struct pmu_events_map *map =3D &pmu_events_map[i++];
->       if (!map->arch)
->            break;
->
->       --> the maps are there because the build generated them
->
->            if (!strcmp_cpuid_str(map->cpuid, cpuid)) {
->                 table =3D &map->event_table;
->                 break;
->            }
->       --> Since no matching CPU string the table var remains 0x0
->       }
->       free(cpuid);
->       if (!pmu)
->            return table;
->
->       --> The pmu is "software" so it exists and no return
->
->       --> and here perf dies because table is 0x0
->       for (i =3D 0; i < table->num_pmus; i++) {
->               ...
->       }
->       return NULL;
->
-> Fix this and do not access the table variable. Instead return 0x0
-> which is the same return code when the for-loop was not successful.
->
-> Output after:
->  # ./perf stat -e cs -- true
->
->  Performance counter stats for 'true':
->
->                  0      cs
->
->        0.000853105 seconds time elapsed
->
->        0.000061000 seconds user
->        0.000827000 seconds sys
->
->  # ./perf stat -e cpu-clock -- true
->
->  Performance counter stats for 'true':
->
->               0.25 msec cpu-clock #    0.341 CPUs utilized
->
->        0.000728383 seconds time elapsed
->
->        0.000055000 seconds user
->        0.000706000 seconds sys
->
->  # ./perf stat -e cycles -- true
->
->  Performance counter stats for 'true':
->
->    <not supported>      cycles
->
->        0.000767298 seconds time elapsed
->
->        0.000055000 seconds user
->        0.000739000 seconds sys
->
->  #
->
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Signed-off-by: James Clark <james.clark@arm.com>
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 
-Thanks!
+Thanks,
 Ian
 
 > ---
->  tools/perf/pmu-events/jevents.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  tools/perf/arch/arm64/util/pmu.c |  6 +++---
+>  tools/perf/tests/expr.c          |  2 +-
+>  tools/perf/util/expr.c           |  2 +-
+>  tools/perf/util/pmu.c            | 17 -----------------
+>  tools/perf/util/pmu.h            |  2 +-
+>  tools/perf/util/pmus.c           | 20 +++++++++++++++++++-
+>  6 files changed, 25 insertions(+), 24 deletions(-)
 >
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
-ents.py
-> index a7e88332276d..72ba4a9239c6 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-> @@ -991,7 +991,7 @@ const struct pmu_events_table *perf_pmu__find_events_=
-table(struct perf_pmu *pmu)
->                  }
->          }
->          free(cpuid);
-> -        if (!pmu)
-> +        if (!pmu || !table)
->                  return table;
+> diff --git a/tools/perf/arch/arm64/util/pmu.c b/tools/perf/arch/arm64/uti=
+l/pmu.c
+> index 615084eb88d8..3d9330feebd2 100644
+> --- a/tools/perf/arch/arm64/util/pmu.c
+> +++ b/tools/perf/arch/arm64/util/pmu.c
+> @@ -10,7 +10,7 @@
 >
->          for (i =3D 0; i < table->num_pmus; i++) {
+>  const struct pmu_metrics_table *pmu_metrics_table__find(void)
+>  {
+> -       struct perf_pmu *pmu =3D pmu__find_core_pmu();
+> +       struct perf_pmu *pmu =3D perf_pmus__find_core_pmu();
+>
+>         if (pmu)
+>                 return perf_pmu__find_metrics_table(pmu);
+> @@ -20,7 +20,7 @@ const struct pmu_metrics_table *pmu_metrics_table__find=
+(void)
+>
+>  const struct pmu_events_table *pmu_events_table__find(void)
+>  {
+> -       struct perf_pmu *pmu =3D pmu__find_core_pmu();
+> +       struct perf_pmu *pmu =3D perf_pmus__find_core_pmu();
+>
+>         if (pmu)
+>                 return perf_pmu__find_events_table(pmu);
+> @@ -32,7 +32,7 @@ double perf_pmu__cpu_slots_per_cycle(void)
+>  {
+>         char path[PATH_MAX];
+>         unsigned long long slots =3D 0;
+> -       struct perf_pmu *pmu =3D pmu__find_core_pmu();
+> +       struct perf_pmu *pmu =3D perf_pmus__find_core_pmu();
+>
+>         if (pmu) {
+>                 perf_pmu__pathname_scnprintf(path, sizeof(path),
+> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+> index 78544092ef0c..e3aa9d4fcf3a 100644
+> --- a/tools/perf/tests/expr.c
+> +++ b/tools/perf/tests/expr.c
+> @@ -76,7 +76,7 @@ static int test__expr(struct test_suite *t __maybe_unus=
+ed, int subtest __maybe_u
+>         struct expr_parse_ctx *ctx;
+>         bool is_intel =3D false;
+>         char strcmp_cpuid_buf[256];
+> -       struct perf_pmu *pmu =3D pmu__find_core_pmu();
+> +       struct perf_pmu *pmu =3D perf_pmus__find_core_pmu();
+>         char *cpuid =3D perf_pmu__getcpuid(pmu);
+>         char *escaped_cpuid1, *escaped_cpuid2;
+>
+> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+> index 4488f306de78..7be23b3ac082 100644
+> --- a/tools/perf/util/expr.c
+> +++ b/tools/perf/util/expr.c
+> @@ -509,7 +509,7 @@ double expr__strcmp_cpuid_str(const struct expr_parse=
+_ctx *ctx __maybe_unused,
+>                        bool compute_ids __maybe_unused, const char *test_=
+id)
+>  {
+>         double ret;
+> -       struct perf_pmu *pmu =3D pmu__find_core_pmu();
+> +       struct perf_pmu *pmu =3D perf_pmus__find_core_pmu();
+>         char *cpuid =3D perf_pmu__getcpuid(pmu);
+>
+>         if (!cpuid)
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index e2159854ab26..f50a5636633f 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -2050,20 +2050,3 @@ void perf_pmu__delete(struct perf_pmu *pmu)
+>         zfree(&pmu->id);
+>         free(pmu);
+>  }
+> -
+> -struct perf_pmu *pmu__find_core_pmu(void)
+> -{
+> -       struct perf_pmu *pmu =3D NULL;
+> -
+> -       while ((pmu =3D perf_pmus__scan_core(pmu))) {
+> -               /*
+> -                * The cpumap should cover all CPUs. Otherwise, some CPUs=
+ may
+> -                * not support some events or have different event IDs.
+> -                */
+> -               if (RC_CHK_ACCESS(pmu->cpus)->nr !=3D cpu__max_cpu().cpu)
+> -                       return NULL;
+> -
+> -               return pmu;
+> -       }
+> -       return NULL;
+> -}
+> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> index bd5d804a6736..d7b46085642d 100644
+> --- a/tools/perf/util/pmu.h
+> +++ b/tools/perf/util/pmu.h
+> @@ -264,6 +264,6 @@ int perf_pmu__pathname_fd(int dirfd, const char *pmu_=
+name, const char *filename,
+>  struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, con=
+st char *lookup_name);
+>  struct perf_pmu *perf_pmu__create_placeholder_core_pmu(struct list_head =
+*core_pmus);
+>  void perf_pmu__delete(struct perf_pmu *pmu);
+> -struct perf_pmu *pmu__find_core_pmu(void);
+> +struct perf_pmu *perf_pmus__find_core_pmu(void);
+>
+>  #endif /* __PMU_H */
+> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> index 6631367c756f..cec869cbe163 100644
+> --- a/tools/perf/util/pmus.c
+> +++ b/tools/perf/util/pmus.c
+> @@ -10,6 +10,7 @@
+>  #include <pthread.h>
+>  #include <string.h>
+>  #include <unistd.h>
+> +#include "cpumap.h"
+>  #include "debug.h"
+>  #include "evsel.h"
+>  #include "pmus.h"
+> @@ -268,7 +269,7 @@ struct perf_pmu *perf_pmus__scan_core(struct perf_pmu=
+ *pmu)
+>  {
+>         if (!pmu) {
+>                 pmu_read_sysfs(/*core_only=3D*/true);
+> -               pmu =3D list_prepare_entry(pmu, &core_pmus, list);
+> +               return list_first_entry_or_null(&core_pmus, typeof(*pmu),=
+ list);
+>         }
+>         list_for_each_entry_continue(pmu, &core_pmus, list)
+>                 return pmu;
+> @@ -592,3 +593,20 @@ struct perf_pmu *evsel__find_pmu(const struct evsel =
+*evsel)
+>         }
+>         return pmu;
+>  }
+> +
+> +struct perf_pmu *perf_pmus__find_core_pmu(void)
+> +{
+> +       struct perf_pmu *pmu =3D NULL;
+> +
+> +       while ((pmu =3D perf_pmus__scan_core(pmu))) {
+> +               /*
+> +                * The cpumap should cover all CPUs. Otherwise, some CPUs=
+ may
+> +                * not support some events or have different event IDs.
+> +                */
+> +               if (RC_CHK_ACCESS(pmu->cpus)->nr !=3D cpu__max_cpu().cpu)
+> +                       return NULL;
+> +
+> +               return pmu;
+> +       }
+> +       return NULL;
+> +}
 > --
-> 2.41.0
+> 2.34.1
 >
