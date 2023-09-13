@@ -2,111 +2,213 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF5FCA553A
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Sep 2023 16:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D67F4CA553C
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Sep 2023 16:31:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229527AbjIMQYQ (ORCPT
+        id S229489AbjIMQbt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Sep 2023 12:24:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51306 "EHLO
+        Wed, 13 Sep 2023 12:31:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjIMQYQ (ORCPT
+        with ESMTP id S229468AbjIMQbs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Sep 2023 12:24:16 -0400
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A381CB7;
-        Wed, 13 Sep 2023 09:24:11 -0700 (PDT)
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2bcfdadd149so122280831fa.0;
-        Wed, 13 Sep 2023 09:24:11 -0700 (PDT)
+        Wed, 13 Sep 2023 12:31:48 -0400
+Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC0119A7
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Sep 2023 09:31:44 -0700 (PDT)
+Received: by mail-il1-x12a.google.com with SMTP id e9e14a558f8ab-34bf0b97811so113865ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Sep 2023 09:31:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1694622704; x=1695227504; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DpztZBQJl10oqU07wK0IFzN+LLamje8BENXZn/FkHvA=;
+        b=eFlf0VfguD9/Yi2hXCPcn0IBj01XvuunXpGNEwPrk5EYZyVlO7JdFWaBhJhEE/R0q0
+         cspg+EPQZUX9ZyNxQCcYe0IUJ/+GKVW7WaALLOLWs0wSYqiNMrL0rfYH5MrFDjt8ygiz
+         A8yWOlNwo666KO9DdA0tn23DrjVFX9nyPVa5l8gMVBnPkSgS4m22cMym8LHA75ywVoE4
+         w5EjZvARORDKG2v77Grm1g/iP0beNj/a02LgyTvXpEhdWF5voAxFE13omWUY3r1jPRTy
+         wEBI9cZe5nujr/ZjJoqtnSLR6hIPWFSrcOfaJAyQ1fp1D9Q+ZAZJLlQAuLPcGFFPSJ9U
+         Hydw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694622250; x=1695227050;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x3ECGprZP4G16RGe+qK7GG+eKrejw2q8snMfK2wTP5I=;
-        b=QeMMBU+S4obMebTMJcHgvMXpBsmJZ1tucPtQgFbL/NPKIRrpPYCW95ah7EJvG4y4Pt
-         7PggYk5nH6ZIObBljKsK449/+pD5981WVbVEaXUmvHveK9lpUOB/shHMThC/kttQgtSZ
-         CHZzCUBvHKJ7W4Ytpgt2+GnwrYRcnBzEtwCTuRe5jIH0FwwQnvF2gJ1SROGLDrdhG/Km
-         3LnBFN9FpGqpU/PWa2cHU+8tP/BN9lfUNYLHDCXp1w2mnS0BocvHCZkUJMewwViFcIiG
-         gkNdeaB9B79rsZ3TZkGaXLNdU7tM8Ai15YgoTqSCPVaHeSrT88hiw+hkZWdJL0CNNdli
-         nbNA==
-X-Gm-Message-State: AOJu0YzKZuUkHY0r0oam5c55+t1NBsPArGFpvuyf6PgBx0NVrjYkFCdk
-        3r7/DRAHQRt2sblTqcjBXp0=
-X-Google-Smtp-Source: AGHT+IHO5Kq5jnlqD456UUl2gN6+Shv9hSaOmkEwYv9JE6WU+wHrHGCw09hJY98aUmnyFSMf89EOLQ==
-X-Received: by 2002:a05:651c:451:b0:2bc:b8f5:aaf1 with SMTP id g17-20020a05651c045100b002bcb8f5aaf1mr2578881ljg.35.1694622249757;
-        Wed, 13 Sep 2023 09:24:09 -0700 (PDT)
-Received: from gmail.com (fwdproxy-cln-112.fbsv.net. [2a03:2880:31ff:70::face:b00c])
-        by smtp.gmail.com with ESMTPSA id kj13-20020a170907764d00b009a1b857e3a5sm8630869ejc.54.2023.09.13.09.24.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Sep 2023 09:24:09 -0700 (PDT)
-Date:   Wed, 13 Sep 2023 09:24:07 -0700
-From:   Breno Leitao <leitao@debian.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sandipan Das <sandipan.das@amd.com>, leit@fb.com,
-        dcostantino@meta.com,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-kernel@vger.kernel.org>, Jirka Hladky <jhladky@redhat.com>
-Subject: Re: [PATCH] perf/x86/amd: Do not WARN on every IRQ
-Message-ID: <ZQHiJxHSSGNk+ul5@gmail.com>
-References: <20230616115316.3652155-1-leitao@debian.org>
- <20230616132954.GG4253@hirez.programming.kicks-ass.net>
+        d=1e100.net; s=20230601; t=1694622704; x=1695227504;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DpztZBQJl10oqU07wK0IFzN+LLamje8BENXZn/FkHvA=;
+        b=a5dNXsXyepPYqPRf3V6iR/l3PM9Xeni//zBG5R5iYAX4kSwOSMKOeDqqkoWNamu7BP
+         ed6DMklFkNty6/1k/q7huvOJ0PHCdRHXFPNLM+9lW3U43ZjchhZ9gm8ViQU9cnKWTwAV
+         fnLpnpjn79sGhtIZw8Xq9dCFFvdCL4FYg94DWl4aFQqCiisl2F0bDumG5Kl8kRN+81KP
+         PiczU7LjnlM5SeMiusI+iKyyNBSBJdGQyWoduF9kTg8XLiw95hfbSK4a/jCAjOp41+z3
+         2R5ysrtPCYqYtan7cefSe/5pM/tloBum7fzf+IgaY+lAUClwRLdTjerHru7/rI728VvC
+         OwGQ==
+X-Gm-Message-State: AOJu0Yz7Ui8+0eRfBu7utvxJsFziNPOQ6IZmFBOK+xpFCpXZAOfwI2wF
+        p9ooY5o0g2TybH5USy/p/JyPi9TkIIMK3j5X9PQgjw==
+X-Google-Smtp-Source: AGHT+IGuPWoe04ycLchJdkh7wvembyi6qnEngJiQFtN2crYzRc0IPOXpa69VDDgEUH+ZMtq1ZYIRzXLuOnRGiErGM/c=
+X-Received: by 2002:a05:6e02:12cd:b0:349:3dd2:3cf1 with SMTP id
+ i13-20020a056e0212cd00b003493dd23cf1mr207318ilm.23.1694622704010; Wed, 13 Sep
+ 2023 09:31:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230616132954.GG4253@hirez.programming.kicks-ass.net>
+References: <20230913125157.2790375-1-tmricht@linux.ibm.com>
+In-Reply-To: <20230913125157.2790375-1-tmricht@linux.ibm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 13 Sep 2023 09:31:29 -0700
+Message-ID: <CAP-5=fUiHMRPVYhbQv-YM+EMKyBF6TEopea=PPX2thbtdmhGsg@mail.gmail.com>
+Subject: Re: [PATCH] perf jevent: fix core dump on software events on s390
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, sumanthk@linux.ibm.com, dengler@linux.ibm.com,
+        svens@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Peter,
+On Wed, Sep 13, 2023 at 5:52=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
+om> wrote:
+>
+> Running commands such as
+>  # ./perf stat -e cs -- true
+>  Segmentation fault (core dumped)
+>  # ./perf stat -e cpu-clock-- true
+>  Segmentation fault (core dumped)
+>  #
+>
+> dump core. This should not happen as these events are defined
+> even when no hardware PMU is available.
+> Debugging this reveals this call chain:
+>
+>   perf_pmus__find_by_type(type=3D1)
+>   +--> pmu_read_sysfs(core_only=3Dfalse)
+>        +--> perf_pmu__find2(dirfd=3D3, name=3D0x152a113 "software")
+>             +--> perf_pmu__lookup(pmus=3D0x14f0568 <other_pmus>, dirfd=3D=
+3,
+>                                   lookup_name=3D0x152a113 "software")
+>                  +--> perf_pmu__find_events_table (pmu=3D0x1532130)
+>
+> Now the pmu is "software" and it tries to find a proper table
+> generated by the pmu-event generation process for s390:
+>
+>  # cd pmu-events/
+>  # ./jevents.py  s390 all /root/linux/tools/perf/pmu-events/arch |\
+>         grep -E '^const struct pmu_table_entry'
+>  const struct pmu_table_entry pmu_events__cf_z10[] =3D {
+>  const struct pmu_table_entry pmu_events__cf_z13[] =3D {
+>  const struct pmu_table_entry pmu_metrics__cf_z13[] =3D {
+>  const struct pmu_table_entry pmu_events__cf_z14[] =3D {
+>  const struct pmu_table_entry pmu_metrics__cf_z14[] =3D {
+>  const struct pmu_table_entry pmu_events__cf_z15[] =3D {
+>  const struct pmu_table_entry pmu_metrics__cf_z15[] =3D {
+>  const struct pmu_table_entry pmu_events__cf_z16[] =3D {
+>  const struct pmu_table_entry pmu_metrics__cf_z16[] =3D {
+>  const struct pmu_table_entry pmu_events__cf_z196[] =3D {
+>  const struct pmu_table_entry pmu_events__cf_zec12[] =3D {
+>  const struct pmu_table_entry pmu_metrics__cf_zec12[] =3D {
+>  const struct pmu_table_entry pmu_events__test_soc_cpu[] =3D {
+>  const struct pmu_table_entry pmu_metrics__test_soc_cpu[] =3D {
+>  const struct pmu_table_entry pmu_events__test_soc_sys[] =3D {
+>  #
+>
+> However event "software" is not listed, as can be seen in the
+> generated const struct pmu_events_map pmu_events_map[].
+> So in function perf_pmu__find_events_table(), the variable
+> table is initialized to NULL, but never set to a proper
+> value. The function scans all generated &pmu_events_map[]
+> tables, but no table matches, because the tables are
+> s390 CPU Measurement unit specific:
+>
+>   i =3D 0;
+>   for (;;) {
+>       const struct pmu_events_map *map =3D &pmu_events_map[i++];
+>       if (!map->arch)
+>            break;
+>
+>       --> the maps are there because the build generated them
+>
+>            if (!strcmp_cpuid_str(map->cpuid, cpuid)) {
+>                 table =3D &map->event_table;
+>                 break;
+>            }
+>       --> Since no matching CPU string the table var remains 0x0
+>       }
+>       free(cpuid);
+>       if (!pmu)
+>            return table;
+>
+>       --> The pmu is "software" so it exists and no return
+>
+>       --> and here perf dies because table is 0x0
+>       for (i =3D 0; i < table->num_pmus; i++) {
+>               ...
+>       }
+>       return NULL;
+>
+> Fix this and do not access the table variable. Instead return 0x0
+> which is the same return code when the for-loop was not successful.
+>
+> Output after:
+>  # ./perf stat -e cs -- true
+>
+>  Performance counter stats for 'true':
+>
+>                  0      cs
+>
+>        0.000853105 seconds time elapsed
+>
+>        0.000061000 seconds user
+>        0.000827000 seconds sys
+>
+>  # ./perf stat -e cpu-clock -- true
+>
+>  Performance counter stats for 'true':
+>
+>               0.25 msec cpu-clock #    0.341 CPUs utilized
+>
+>        0.000728383 seconds time elapsed
+>
+>        0.000055000 seconds user
+>        0.000706000 seconds sys
+>
+>  # ./perf stat -e cycles -- true
+>
+>  Performance counter stats for 'true':
+>
+>    <not supported>      cycles
+>
+>        0.000767298 seconds time elapsed
+>
+>        0.000055000 seconds user
+>        0.000739000 seconds sys
+>
+>  #
+>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 
-On Fri, Jun 16, 2023 at 03:29:54PM +0200, Peter Zijlstra wrote:
-> On Fri, Jun 16, 2023 at 04:53:15AM -0700, Breno Leitao wrote:
-> > On some systems, the Performance Counter Global Status Register is
-> > coming with reserved bits set, which causes the system to be unusable
-> > if a simple `perf top` runs. The system hits the WARN() thousands times
-> > while perf runs.
-> > 
-> > WARNING: CPU: 18 PID: 20608 at arch/x86/events/amd/core.c:944 amd_pmu_v2_handle_irq+0x1be/0x2b0
-> > 
-> > This happens because the "Performance Counter Global Status Register"
-> > (PerfCntGlobalStatus) MSR has bit 7 set. Bit 7 should be reserved according
-> > to the documentation (Figure 13-12 from "AMD64 Architecture Programmer’s
-> > Manual, Volume 2: System Programming, 24593"[1]
-> 
-> Would it then not make more sense to mask out bit7 before:
-> 
-> +	status &= ~AMD_PMU_V2_GLOBAL_STATUS_RESERVED;
-> 	if (!status)
-> 		goto done;
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-Instead of masking `status` against AMD_PMU_V2_GLOBAL_STATUS_RESERVED
-(AMD64_NUM_COUNTERS?), I opted for using the `amd_pmu_global_cntr_mask`
-global variable because it seems to represent what the loop below is
-iterating over:
+Thanks!
+Ian
 
-	/* PMC Enable and Overflow bits for PerfCntrGlobal* registers */
-	static u64 amd_pmu_global_cntr_mask __read_mostly;
-
-Also, I think we want to WARN_ON_ONCE() if we see this problem. Right
-now, it warns at every time we call this function, which makes the
-machine unusable, but, warning it once could be helpful to figure out
-there is something wrong with the machine/firmware.
-
-Anyway, please let me know whatever is your preferred way and I will
-submit a v2.
+> ---
+>  tools/perf/pmu-events/jevents.py | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
+ents.py
+> index a7e88332276d..72ba4a9239c6 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+> @@ -991,7 +991,7 @@ const struct pmu_events_table *perf_pmu__find_events_=
+table(struct perf_pmu *pmu)
+>                  }
+>          }
+>          free(cpuid);
+> -        if (!pmu)
+> +        if (!pmu || !table)
+>                  return table;
+>
+>          for (i =3D 0; i < table->num_pmus; i++) {
+> --
+> 2.41.0
+>
