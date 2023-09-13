@@ -2,221 +2,143 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD867EDEC49
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Sep 2023 12:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6549FEDEC4D
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Sep 2023 13:00:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240686AbjIMMwZ (ORCPT
+        id S236260AbjIMNAJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Sep 2023 08:52:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35592 "EHLO
+        Wed, 13 Sep 2023 09:00:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240675AbjIMMwT (ORCPT
+        with ESMTP id S240671AbjIMNAI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Sep 2023 08:52:19 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 438701BC9;
-        Wed, 13 Sep 2023 05:52:15 -0700 (PDT)
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38DCnSN7018886;
-        Wed, 13 Sep 2023 12:52:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=E0zARhDZbaDg3CggwhVYRBWdci5AOK6H4f5dxa6OpLk=;
- b=GeXWhSnHLh69CbaFh+9RBFn36gB60vOFRuY77+89zfgyfMB4wNjW4NNhJMKnCEPSVPnX
- CjrKDjVQ3B2jRmtuZeOWRmqGdS+TXwFQJpeel5HDFxeTbfR3wxpx2vM4lWWJ/4k2phtG
- C1pvbI0rAF/7bt607S/KArkQ+3+6/B6vSdnP2uJ6zABzTb6RgpalnwtwCvfj8Pa5Z6IB
- bKXxTsl2IbnNa1ffIraB4CoL0rJ+YP57yjMPdVmVShlparyfFXqRwIvGsSIqc6RoJmz4
- n9U0U38jtepvSFe4FnreqTUnrwX77N8c2nyK4XdRbJ4+ScQyD98ZQVH0lLq3EJTyy7z3 Mw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t3dasrcje-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 Sep 2023 12:52:12 +0000
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38DCh1mc030324;
-        Wed, 13 Sep 2023 12:52:12 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t3dasrchy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 Sep 2023 12:52:12 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38DBJgDm002410;
-        Wed, 13 Sep 2023 12:52:11 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-        by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3t158karsu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 Sep 2023 12:52:11 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38DCq8rf40043130
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Sep 2023 12:52:08 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 683212004B;
-        Wed, 13 Sep 2023 12:52:08 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 082A220040;
-        Wed, 13 Sep 2023 12:52:08 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Wed, 13 Sep 2023 12:52:07 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, sumanthk@linux.ibm.com, irogers@google.com,
-        dengler@linux.ibm.com
-Cc:     svens@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf jevent: fix core dump on software events on s390
-Date:   Wed, 13 Sep 2023 14:51:57 +0200
-Message-Id: <20230913125157.2790375-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.39.2
+        Wed, 13 Sep 2023 09:00:08 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6882A1989;
+        Wed, 13 Sep 2023 06:00:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694610004; x=1726146004;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=SS5UdfEd5/aGjW95PuR1Hrc1ehfo5reasMr5Jb91wy0=;
+  b=abDz9kzUWQ2kSs78Eu+X4vtTDYKdewXwQ4f83lRCbdq0qzG5xo74sORm
+   JU//2HDLl7s1TqO7EhQyhKK8RrT3jIGNiijTSuaDL6NZVNf2M0EBsXVp0
+   bbt0+TkIvbFDfpHM5zQHaiIQK4lv7/jB1ooIwWiPTz8kp/ZvDcvYIFDwi
+   u8/+rFdawT4wQH7oxpk9qQJjL3CdF64BivVoUFelVwhOSolMJEc4xUI1Z
+   tqgWr9kZ/TIGWi+Zvhv+wc1WM0twa55iPY4tyOKeTXabswx6l2E3wryZS
+   0dL99OnYx9Ep7Q94vIYE6Akqrd6mFQcfdJjvy7UKe/tJ5Pzzvd+LNQPgQ
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="375983355"
+X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
+   d="scan'208";a="375983355"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 06:00:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="990908097"
+X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
+   d="scan'208";a="990908097"
+Received: from asjackso-mobl2.amr.corp.intel.com (HELO tkristo-desk.intel.com) ([10.249.45.219])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 05:59:59 -0700
+From:   Tero Kristo <tero.kristo@linux.intel.com>
+To:     x86@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
+        tglx@linutronix.de
+Cc:     hpa@zytor.com, irogers@google.com, jolsa@kernel.org,
+        namhyung@kernel.org, adrian.hunter@intel.com, acme@kernel.org,
+        mingo@redhat.com, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
+        linux-perf-users@vger.kernel.org, peterz@infradead.org,
+        mark.rutland@arm.com
+Subject: [PATCHv2 2/2] perf/core: Allow reading package events from perf_event_read_local
+Date:   Wed, 13 Sep 2023 15:59:56 +0300
+Message-Id: <20230913125956.3652667-1-tero.kristo@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230912124432.3616761-2-tero.kristo@linux.intel.com>
+References: <20230912124432.3616761-2-tero.kristo@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: SKDvXtND-Dl8lnfG6fbqUxQe1xpIb_fQ
-X-Proofpoint-ORIG-GUID: 4kgzq8EjvkxZTv_oqssvd1laGMOHsN-h
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-13_06,2023-09-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- mlxlogscore=999 clxscore=1011 suspectscore=0 spamscore=0 bulkscore=0
- phishscore=0 mlxscore=0 malwarescore=0 priorityscore=1501
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2309130101
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Running commands such as
- # ./perf stat -e cs -- true
- Segmentation fault (core dumped)
- # ./perf stat -e cpu-clock-- true
- Segmentation fault (core dumped)
- #
+Per-package perf events are typically registered with a single CPU only,
+however they can be read across all the CPUs within the package.
+Currently perf_event_read maps the event CPU according to the topology
+information to avoid an unnecessary SMP call, however
+perf_event_read_local deals with hard values and rejects a read with a
+failure if the CPU is not the one exactly registered. Allow similar
+mapping within the perf_event_read_local if the perf event in question
+can support this.
 
-dump core. This should not happen as these events are defined
-even when no hardware PMU is available.
-Debugging this reveals this call chain:
+This allows users like BPF code to read the package perf events properly
+across different CPUs within a package.
 
-  perf_pmus__find_by_type(type=1)
-  +--> pmu_read_sysfs(core_only=false)
-       +--> perf_pmu__find2(dirfd=3, name=0x152a113 "software")
-            +--> perf_pmu__lookup(pmus=0x14f0568 <other_pmus>, dirfd=3,
-                                  lookup_name=0x152a113 "software")
-                 +--> perf_pmu__find_events_table (pmu=0x1532130)
-
-Now the pmu is "software" and it tries to find a proper table
-generated by the pmu-event generation process for s390:
-
- # cd pmu-events/
- # ./jevents.py  s390 all /root/linux/tools/perf/pmu-events/arch |\
-        grep -E '^const struct pmu_table_entry'
- const struct pmu_table_entry pmu_events__cf_z10[] = {
- const struct pmu_table_entry pmu_events__cf_z13[] = {
- const struct pmu_table_entry pmu_metrics__cf_z13[] = {
- const struct pmu_table_entry pmu_events__cf_z14[] = {
- const struct pmu_table_entry pmu_metrics__cf_z14[] = {
- const struct pmu_table_entry pmu_events__cf_z15[] = {
- const struct pmu_table_entry pmu_metrics__cf_z15[] = {
- const struct pmu_table_entry pmu_events__cf_z16[] = {
- const struct pmu_table_entry pmu_metrics__cf_z16[] = {
- const struct pmu_table_entry pmu_events__cf_z196[] = {
- const struct pmu_table_entry pmu_events__cf_zec12[] = {
- const struct pmu_table_entry pmu_metrics__cf_zec12[] = {
- const struct pmu_table_entry pmu_events__test_soc_cpu[] = {
- const struct pmu_table_entry pmu_metrics__test_soc_cpu[] = {
- const struct pmu_table_entry pmu_events__test_soc_sys[] = {
- #
-
-However event "software" is not listed, as can be seen in the
-generated const struct pmu_events_map pmu_events_map[].
-So in function perf_pmu__find_events_table(), the variable
-table is initialized to NULL, but never set to a proper
-value. The function scans all generated &pmu_events_map[]
-tables, but no table matches, because the tables are
-s390 CPU Measurement unit specific:
-
-  i = 0;
-  for (;;) {
-      const struct pmu_events_map *map = &pmu_events_map[i++];
-      if (!map->arch)
-           break;
-
-      --> the maps are there because the build generated them
-
-           if (!strcmp_cpuid_str(map->cpuid, cpuid)) {
-                table = &map->event_table;
-                break;
-           }
-      --> Since no matching CPU string the table var remains 0x0
-      }
-      free(cpuid);
-      if (!pmu)
-           return table;
-
-      --> The pmu is "software" so it exists and no return
-
-      --> and here perf dies because table is 0x0
-      for (i = 0; i < table->num_pmus; i++) {
-	      ...
-      }
-      return NULL;
-
-Fix this and do not access the table variable. Instead return 0x0
-which is the same return code when the for-loop was not successful.
-
-Output after:
- # ./perf stat -e cs -- true
-
- Performance counter stats for 'true':
-
-                 0      cs
-
-       0.000853105 seconds time elapsed
-
-       0.000061000 seconds user
-       0.000827000 seconds sys
-
- # ./perf stat -e cpu-clock -- true
-
- Performance counter stats for 'true':
-
-              0.25 msec cpu-clock #    0.341 CPUs utilized
-
-       0.000728383 seconds time elapsed
-
-       0.000055000 seconds user
-       0.000706000 seconds sys
-
- # ./perf stat -e cycles -- true
-
- Performance counter stats for 'true':
-
-   <not supported>      cycles
-
-       0.000767298 seconds time elapsed
-
-       0.000055000 seconds user
-       0.000739000 seconds sys
-
- #
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
 ---
- tools/perf/pmu-events/jevents.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2:
+  * prevent illegal array access in case event->oncpu == -1
+  * split the event->cpu / event->oncpu handling to their own variables
 
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index a7e88332276d..72ba4a9239c6 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -991,7 +991,7 @@ const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
-                 }
-         }
-         free(cpuid);
--        if (!pmu)
-+        if (!pmu || !table)
-                 return table;
+ kernel/events/core.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 4c72a41f11af..6b343bac0a71 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -4425,6 +4425,9 @@ static int __perf_event_read_cpu(struct perf_event *event, int event_cpu)
+ {
+ 	u16 local_pkg, event_pkg;
  
-         for (i = 0; i < table->num_pmus; i++) {
++	if (event_cpu < 0 || event_cpu >= nr_cpu_ids)
++		return event_cpu;
++
+ 	if (event->group_caps & PERF_EV_CAP_READ_ACTIVE_PKG) {
+ 		int local_cpu = smp_processor_id();
+ 
+@@ -4528,6 +4531,8 @@ int perf_event_read_local(struct perf_event *event, u64 *value,
+ {
+ 	unsigned long flags;
+ 	int ret = 0;
++	int event_cpu;
++	int event_oncpu;
+ 
+ 	/*
+ 	 * Disabling interrupts avoids all counter scheduling (context
+@@ -4551,15 +4556,22 @@ int perf_event_read_local(struct perf_event *event, u64 *value,
+ 		goto out;
+ 	}
+ 
++	/*
++	 * Get the event CPU numbers, and adjust them to local if the event is
++	 * a per-package event that can be read locally
++	 */
++	event_oncpu = __perf_event_read_cpu(event, event->oncpu);
++	event_cpu = __perf_event_read_cpu(event, event->cpu);
++
+ 	/* If this is a per-CPU event, it must be for this CPU */
+ 	if (!(event->attach_state & PERF_ATTACH_TASK) &&
+-	    event->cpu != smp_processor_id()) {
++	    event_cpu != smp_processor_id()) {
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+ 
+ 	/* If this is a pinned event it must be running on this CPU */
+-	if (event->attr.pinned && event->oncpu != smp_processor_id()) {
++	if (event->attr.pinned && event_oncpu != smp_processor_id()) {
+ 		ret = -EBUSY;
+ 		goto out;
+ 	}
+@@ -4569,7 +4581,7 @@ int perf_event_read_local(struct perf_event *event, u64 *value,
+ 	 * or local to this CPU. Furthermore it means its ACTIVE (otherwise
+ 	 * oncpu == -1).
+ 	 */
+-	if (event->oncpu == smp_processor_id())
++	if (event_oncpu == smp_processor_id())
+ 		event->pmu->read(event);
+ 
+ 	*value = local64_read(&event->count);
 -- 
-2.41.0
+2.40.1
 
