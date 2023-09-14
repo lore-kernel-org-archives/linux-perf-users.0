@@ -2,40 +2,47 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4E7EDE9A8
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Sep 2023 11:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8997EDE9B8
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Sep 2023 12:21:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238364AbjINL2L (ORCPT
+        id S235871AbjINMWC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 14 Sep 2023 07:28:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34734 "EHLO
+        Thu, 14 Sep 2023 08:22:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237779AbjINL2A (ORCPT
+        with ESMTP id S234522AbjINMWB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 14 Sep 2023 07:28:00 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2D45269F;
-        Thu, 14 Sep 2023 04:27:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=qKsiGLcP8XdXXDc7ibwaXIyN8m4wv6e0IIyRIdjUx9c=; b=qrc7yR62CX+hvbwgE/klJkbFiW
-        sCh78HYtrk1q9rJ3Hva3lz6hvI0Bghsm5SJ458RXfW5Wu6AffvK+MfSu03otsrWtvlYsLJ5VOEkiy
-        kABF6cmuGBeWgzRAaUxoxsgJBR1qrI9pOf3RRevgH8NsRB4umWBlxXtr2PAjrwVNSDf9QHhlcTBfl
-        rJhep8JwnX7WALMJXbZPR+u+iK9uxex+xH+nhgu1WMrZ60lL/PzHdlTdiBq9JqmXqLroQ94KiDhc1
-        1a9G94f5nXNVOxJuczsnatpGNBIGcUuyUpzO7ZpRqjOzURYEfdxQzr/xNAz/terAAn8+zmf+huAiX
-        4BRWt9cQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qgkVC-007pLm-1p;
-        Thu, 14 Sep 2023 11:27:21 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A6CB4300422; Thu, 14 Sep 2023 13:27:19 +0200 (CEST)
-Date:   Thu, 14 Sep 2023 13:27:19 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
+        Thu, 14 Sep 2023 08:22:01 -0400
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 894241FC0;
+        Thu, 14 Sep 2023 05:21:57 -0700 (PDT)
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-99bcf2de59cso126164866b.0;
+        Thu, 14 Sep 2023 05:21:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694694116; x=1695298916;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t7IZyQdVtdbZHBl3wbHmMmV0IyMQ1PCAgLkaTrOg3sE=;
+        b=sQNhs10XLk5p7xw2N0jdYXI6FFrcn2Y5yE4X7M1MbUjUiVO1jVGMsDLu9mI9W+cYii
+         xObKAEoRzdMJA+ZrkcUrILIKe0iczsZNx/2f5GLmaFmMZ3xlt3nrt9GIsgmUfGjhVaKA
+         CEtJcJE40usjloteabY9gHvvli6tZRLKozgyA1+XHUDJjySrooyaaAiccU1WQiybsVwv
+         NtxrjydZ26HYD0+OTdyHIX/9emblrK9z6hvSVFk/VS1qkae8zy3OKT6d2ivhrMpN3CZL
+         b6kI+x1mXF2yBFW9s7x0ZuOlXBZgD+dSuP81ZttTdtle3qddjyAxeE2X5wJoH0yBiQHy
+         YEIw==
+X-Gm-Message-State: AOJu0Yw5zjOPRcP6xKp6/ri2Ri6RKU8IAaZ8Di7737N3bC/FsFaQMREt
+        SzS2uOAHNsPV9WEZSwslzyk=
+X-Google-Smtp-Source: AGHT+IG0bnHHFEZfZ7GHwVT4Ornajhheg2FbtdodFZ113wx0S64+lBqLosjcparSy/cI7k0DIT+Mgw==
+X-Received: by 2002:a17:907:7742:b0:9a5:d657:47ee with SMTP id kx2-20020a170907774200b009a5d65747eemr4753065ejc.58.1694694115763;
+        Thu, 14 Sep 2023 05:21:55 -0700 (PDT)
+Received: from gmail.com (fwdproxy-cln-012.fbsv.net. [2a03:2880:31ff:c::face:b00c])
+        by smtp.gmail.com with ESMTPSA id t25-20020a1709064f1900b009ad8084e08asm947925eju.0.2023.09.14.05.21.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Sep 2023 05:21:55 -0700 (PDT)
+Date:   Thu, 14 Sep 2023 05:21:53 -0700
+From:   Breno Leitao <leitao@debian.org>
 To:     Sandipan Das <sandipan.das@amd.com>
-Cc:     Breno Leitao <leitao@debian.org>,
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Jirka Hladky <jhladky@redhat.com>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -55,7 +62,7 @@ Cc:     Breno Leitao <leitao@debian.org>,
         "open list:PERFORMANCE EVENTS SUBSYSTEM" 
         <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH] perf/x86/amd: Do not WARN on every IRQ
-Message-ID: <20230914112719.GB18948@noisy.programming.kicks-ass.net>
+Message-ID: <ZQL64dX+5lfK4rOh@gmail.com>
 References: <20230616115316.3652155-1-leitao@debian.org>
  <20230616132954.GG4253@hirez.programming.kicks-ass.net>
  <ZQHiJxHSSGNk+ul5@gmail.com>
@@ -97,35 +104,5 @@ On Thu, Sep 14, 2023 at 04:52:13PM +0530, Sandipan Das wrote:
 > different Zen 4 variants and steppings use different microcode.
 > 
 > Here's what I plan to send.
-> 
-> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-> index abadd5f23425..186a124bb3c0 100644
-> --- a/arch/x86/events/amd/core.c
-> +++ b/arch/x86/events/amd/core.c
-> @@ -909,6 +909,13 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
->                 status &= ~GLOBAL_STATUS_LBRS_FROZEN;
->         }
-> 
-> +       if (status & ~amd_pmu_global_cntr_mask)
-> +               pr_warn_once("Unknown status bits are set (0x%llx), please consider updating microcode\n",
-> +                            status);
-> +
-> +       /* Clear any reserved bits set by buggy microcode */
-> +       status &= amd_pmu_global_cntr_mask;
-> +
->         for (idx = 0; idx < x86_pmu.num_counters; idx++) {
->                 if (!test_bit(idx, cpuc->active_mask))
->                         continue;
-> 
-> --
-> 
-> Hi Peter,
-> 
-> There is another case where users will see warnings but the patch
-> to fix it (link below) is yet to be reviewed. May I rebase and
-> resend it along with the above?
-> 
-> https://lore.kernel.org/all/20230613105809.524535-1-sandipan.das@amd.com/
-> 
 
-Sure, sorry I seem to have missed that :-(
+Awesome. Thanks for addressing it.
