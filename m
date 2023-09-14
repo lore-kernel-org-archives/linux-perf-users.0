@@ -2,132 +2,83 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2D7EDE9A1
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Sep 2023 10:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0B8EDE9A4
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Sep 2023 11:19:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230141AbjINKji (ORCPT
+        id S237579AbjINLTm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 14 Sep 2023 06:39:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40394 "EHLO
+        Thu, 14 Sep 2023 07:19:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230444AbjINKjh (ORCPT
+        with ESMTP id S237808AbjINLTj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 14 Sep 2023 06:39:37 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A1A201BF0;
-        Thu, 14 Sep 2023 03:39:32 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 80A351FB;
-        Thu, 14 Sep 2023 03:40:09 -0700 (PDT)
-Received: from [10.1.29.46] (unknown [10.1.29.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73FD23F738;
-        Thu, 14 Sep 2023 03:39:27 -0700 (PDT)
-Message-ID: <dec666f0-82dd-5ea2-81b4-09c01402bba0@arm.com>
-Date:   Thu, 14 Sep 2023 11:39:25 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v3 3/3] perf pmu: Remove unused function
-To:     John Garry <john.g.garry@oracle.com>,
-        linux-perf-users@vger.kernel.org, irogers@google.com,
-        acme@kernel.org
-Cc:     Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Thu, 14 Sep 2023 07:19:39 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A081A1FD8;
+        Thu, 14 Sep 2023 04:19:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=bP7pzfeUpJz9asN9tXvS10GhtxvzQ63pGCX9Yrps4Y0=; b=HIQCOqMk7942AVdN9TC+eaQi7B
+        jyuziITi+xzvQ6nVyW0DW900ITossuZf3g6NeKAao3MqfXoOOgEdcafydOWGBjPrM9bz2RfAPL1R0
+        Asjp12e5vQZuylFsjbKuirbZLwwCgItbVTOZqtTk765lXWKKIuh2s+NNdAO2dTZvuR/FA37rA5gkM
+        za7willjNcjK8oSZeilBvs5q90cWKChW429W+ZHl3gNMJBlbgvD/3918Cx694BOUffuVxYxkN7WS6
+        mM7mWIvtXjZYGyFhdV8CNBF1nmEkZvBfjBrPxnk1g2UEAmn9uGRK5h/WFXtmLYZRVvcltOhW++KIA
+        mYkqMOEw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qgkMw-002aGq-Dk; Thu, 14 Sep 2023 11:18:46 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1C65B30036C; Thu, 14 Sep 2023 13:18:46 +0200 (CEST)
+Date:   Thu, 14 Sep 2023 13:18:45 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Breno Leitao <leitao@debian.org>
+Cc:     Sandipan Das <sandipan.das@amd.com>,
+        Jirka Hladky <jhladky@redhat.com>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Haixin Yu <yuhaixin.yhx@linux.alibaba.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20230913153355.138331-1-james.clark@arm.com>
- <20230913153355.138331-4-james.clark@arm.com>
- <5976613f-8c7b-81a8-3200-9f0603f90743@oracle.com>
-Content-Language: en-US
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <5976613f-8c7b-81a8-3200-9f0603f90743@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, leit@fb.com,
+        dcostantino@meta.com,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-perf-users@vger.kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf/x86/amd: Do not WARN on every IRQ
+Message-ID: <20230914111845.GF16631@noisy.programming.kicks-ass.net>
+References: <20230616115316.3652155-1-leitao@debian.org>
+ <20230616132954.GG4253@hirez.programming.kicks-ass.net>
+ <ZQHiJxHSSGNk+ul5@gmail.com>
+ <CAE4VaGBXO5Joynan_o13XpT=mNrwt4D84NTZF6H62GXJjpMbBA@mail.gmail.com>
+ <f06ef3dd-dd71-4ba4-a4fa-18a08788c035@amd.com>
+ <20230914091234.GE16631@noisy.programming.kicks-ass.net>
+ <ZQLSw6PeUbV+p2gH@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZQLSw6PeUbV+p2gH@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 14/09/2023 07:41, John Garry wrote:
-> On 13/09/2023 16:33, James Clark wrote:
->> pmu_events_table__find() is no longer used so remove it and its Arm
->> specific version.
->>
->> Reviewed-by: Ian Rogers <irogers@google.com>
->> Signed-off-by: James Clark <james.clark@arm.com>
->> ---
+On Thu, Sep 14, 2023 at 02:30:43AM -0700, Breno Leitao wrote:
+> On Thu, Sep 14, 2023 at 11:12:34AM +0200, Peter Zijlstra wrote:
+> > On Thu, Sep 14, 2023 at 02:25:40PM +0530, Sandipan Das wrote:
 > 
-> You really should put the name of the function in the subject. Apart
-> from that:
+> > > I agree with using WARN_ON_ONCE() to make this less intrusive.
+> > 
+> > Could you send a patch that AMD is happy with?
 > 
-> Reviewed-by: John Garry <john.g.garry@oracle.com>
-> 
+> Why the current patch is not good enough?
 
-Noted, will do next time. Thanks for the reviews.
-
->>   tools/perf/arch/arm64/util/pmu.c | 10 ----------
->>   tools/perf/util/pmu.c            |  5 -----
->>   tools/perf/util/pmu.h            |  1 -
->>   3 files changed, 16 deletions(-)
->>
->> diff --git a/tools/perf/arch/arm64/util/pmu.c
->> b/tools/perf/arch/arm64/util/pmu.c
->> index 3099f5f448ba..2a4eab2d160e 100644
->> --- a/tools/perf/arch/arm64/util/pmu.c
->> +++ b/tools/perf/arch/arm64/util/pmu.c
->> @@ -24,16 +24,6 @@ const struct pmu_metrics_table
->> *pmu_metrics_table__find(void)
->>       return NULL;
->>   }
->>   -const struct pmu_events_table *pmu_events_table__find(void)
->> -{
->> -    struct perf_pmu *pmu = perf_pmus__find_core_pmu();
->> -
->> -    if (pmu)
->> -        return perf_pmu__find_events_table(pmu);
->> -
->> -    return NULL;
->> -}
->> -
->>   double perf_pmu__cpu_slots_per_cycle(void)
->>   {
->>       char path[PATH_MAX];
->> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
->> index f50a5636633f..0d81c059c91c 100644
->> --- a/tools/perf/util/pmu.c
->> +++ b/tools/perf/util/pmu.c
->> @@ -776,11 +776,6 @@ char *perf_pmu__getcpuid(struct perf_pmu *pmu)
->>       return cpuid;
->>   }
->>   -__weak const struct pmu_events_table *pmu_events_table__find(void)
->> -{
->> -    return perf_pmu__find_events_table(NULL);
->> -}
->> -
->>   __weak const struct pmu_metrics_table *pmu_metrics_table__find(void)
->>   {
->>       return perf_pmu__find_metrics_table(NULL);
->> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
->> index d7b46085642d..04b317b17d66 100644
->> --- a/tools/perf/util/pmu.h
->> +++ b/tools/perf/util/pmu.h
->> @@ -238,7 +238,6 @@ void pmu_add_cpu_aliases_table(struct perf_pmu *pmu,
->>                      const struct pmu_events_table *table);
->>     char *perf_pmu__getcpuid(struct perf_pmu *pmu);
->> -const struct pmu_events_table *pmu_events_table__find(void);
->>   const struct pmu_metrics_table *pmu_metrics_table__find(void);
->>     int perf_pmu__convert_scale(const char *scale, char **end, double
->> *sval);
-> 
+Sandipan, can you answer this? I don't tihnk I'm qualified to speak for
+the AMD pmu and certainly I don't have insight into their design future.
