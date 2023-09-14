@@ -2,71 +2,68 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CBAEDE995
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Sep 2023 08:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A24EDE990
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Sep 2023 08:46:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236342AbjINIpb (ORCPT
+        id S230234AbjINIqd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 14 Sep 2023 04:45:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42832 "EHLO
+        Thu, 14 Sep 2023 04:46:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236468AbjINIpb (ORCPT
+        with ESMTP id S236413AbjINIqa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 14 Sep 2023 04:45:31 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7D52D106
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 01:44:40 -0700 (PDT)
+        Thu, 14 Sep 2023 04:46:30 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4C5DF1FC2
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 01:45:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694681079;
+        s=mimecast20190719; t=1694681140;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=aZw6hbxq/embQ47llYIzPMH7DMweT5RR/fyzZ/IaAeE=;
-        b=UR3emsxJh13krOgqRavuw8HluBUD35miLG+FM5kb90NNLve9JcNuscM1GQsAOPfaeK24L7
-        npHLzH6Vt6EAJUXM0YYWRcqMLUDgNlwKaN8sV4dtzRCaJ/+pXk1WEkyvDaomv4lXfA8WID
-        gkoZQQ90Drk+4kep8ATujBz0s+CAZkI=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=ZPWUJt9WZ2RKYjC2FfyDRPBLoDD7vPyZdjkHVLwZxgA=;
+        b=JnTXJuu6O0U7hDKOeaI/fGpQLKVlSDPsf3fxsg/cI/lCDwtv5CL8pTjWoCp4WMqucrgVih
+        YIRMYfVXJBQh3anANPZJrKQ+HVEXDNd/j90bIzAR4DXgWTWXDzgX7VJqzbEc04T5PHKhx0
+        9KruOyS2LXpb4e5j4ylJ/WoixNPXAcI=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-173-AULQj4DsNFeokZ7YZDlwew-1; Thu, 14 Sep 2023 04:44:38 -0400
-X-MC-Unique: AULQj4DsNFeokZ7YZDlwew-1
-Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2bcfdad9d56so5984951fa.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 01:44:37 -0700 (PDT)
+ us-mta-602-MYHPmwzYPqmAmx1uvN_lCw-1; Thu, 14 Sep 2023 04:45:39 -0400
+X-MC-Unique: MYHPmwzYPqmAmx1uvN_lCw-1
+Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2bfb9db0397so9257961fa.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 01:45:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694681077; x=1695285877;
+        d=1e100.net; s=20230601; t=1694681137; x=1695285937;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aZw6hbxq/embQ47llYIzPMH7DMweT5RR/fyzZ/IaAeE=;
-        b=mBMFWwrFzoI5lqh6U0UgcPhFTrlMYxxCgK3ONQ2T9xMzih3zlmJRpOX79HUm6N1R43
-         LzOTn6yr6qKGTmdKzuh+TiU0Zo5kSx0THmnEOX+0KIMrOMMKUxsNSEAWPJ/ZQ8F7QjjW
-         T7y+8fqjxBg0UqoLO+HR5FttrIVSQ3+xQSWEY2mrwtIdu3lly4K4XZMdj2VyonjtMTXI
-         fv7dQYU5Ep08xH7NHwPBJ6G2mtL/n9A2tFL3iaEXylTlGs3nPmrhgT+BBG/jP+Gzsm2x
-         DmSlNSqOs2eh4Rya062nUQlI3tIvkMVgOUO53eao33YK8ho+X2Pqf2KkK4LOo2QWFDtU
-         1YCQ==
-X-Gm-Message-State: AOJu0Yx8QE9v4LDrN9k8AkmfsMAAbCVzcYp4qZDyqfalUmi2voTyO3Jw
-        GFrj36B2EekowrWWcFJtj6oIKobDRXXsfbxevKyOsq5r/TeAKpJPon9D98fMfoigop4zi4+rleH
-        3zoyiKmg+o1I9b8xe+FjisX4SMLWudbPGnGN7+IZJguCXHQ==
-X-Received: by 2002:a05:651c:222:b0:2bd:21ea:bf0a with SMTP id z2-20020a05651c022200b002bd21eabf0amr451710ljn.2.1694681076823;
-        Thu, 14 Sep 2023 01:44:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGXqn21JqRoVZAD9wyDGrdj8us8mB1oFCjJnoTd+pLrivjCjNMTde5cowMo0QmOqovM5UnTzu5V+YMsAf2QB/w=
-X-Received: by 2002:a05:651c:222:b0:2bd:21ea:bf0a with SMTP id
- z2-20020a05651c022200b002bd21eabf0amr451699ljn.2.1694681076529; Thu, 14 Sep
- 2023 01:44:36 -0700 (PDT)
+        bh=ZPWUJt9WZ2RKYjC2FfyDRPBLoDD7vPyZdjkHVLwZxgA=;
+        b=fKZtCxa7mz1jCjMDSJqLBNKJcHxuXwBLrZMz+ARDbblINzY//hHKsneSgWBUS7nYTw
+         Kmt2XhPn6USts/Q1R8ItVYQBsGG0V+LpDaoR7egGE58EzWhHVn8LzUCM1FxvsBAB50It
+         aTMHfzCefjQ3S4cTSQwnf9jtRpJOFLKkMAx1N4bGHgvIn1lmecEe+yIFO5GvNVTjfTZ5
+         LTfiOqQmcah5bVvuq5L1w4K2ZsJXWbI9tHCxXunA1nS4kXr9hi+hCox2hO898VTlErXO
+         mv+XZWVEgc3YQdgBiaqOissBbmkP8cMuJlWYo7wWq7l+mlyaOW3BHtm+6ME8jMaE/+GY
+         7clg==
+X-Gm-Message-State: AOJu0Yzl9RQHnaj7xJpHlmbVC2OebV4cTmx04RAiwvIDQoEAoZz0m6JW
+        QGFOLN5tgyjf7b6uBpE4Gxaykdvtr6MU9jJ0pdmlbZEk3uwCwbx8z/GUBD13enFF/ii5mc1BMEW
+        u0Z5T/dwthkITFVihkMISLzePtkVEUYZ1BTpDQdmwm0A3SQ==
+X-Received: by 2002:a2e:8557:0:b0:2ba:18e5:1063 with SMTP id u23-20020a2e8557000000b002ba18e51063mr4133156ljj.50.1694681137679;
+        Thu, 14 Sep 2023 01:45:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEl3iGxG9z9pzSVoj1U53hPDZT0x51orYLzvDfs6x7agdKCrNDqRvP0Eb3gKLCiKIk4fXxQBbe7PBIylDs+3T8=
+X-Received: by 2002:a2e:8557:0:b0:2ba:18e5:1063 with SMTP id
+ u23-20020a2e8557000000b002ba18e51063mr4133140ljj.50.1694681137323; Thu, 14
+ Sep 2023 01:45:37 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230616115316.3652155-1-leitao@debian.org> <20230616132954.GG4253@hirez.programming.kicks-ass.net>
- <ZIxrxpYtffT0FtEx@gmail.com> <100041d0-f2fe-331b-13a7-ad09082aeb7d@gmail.com>
- <20230616153221.GI4253@hirez.programming.kicks-ass.net> <CAE4VaGBbKC+KgX-drhnc-nHsBo_DfcX4yZWBsNvrULiV3+Li1A@mail.gmail.com>
- <ada0da4e-4260-47c0-897f-09e3e1e1658e@amd.com>
-In-Reply-To: <ada0da4e-4260-47c0-897f-09e3e1e1658e@amd.com>
+ <ZQHiJxHSSGNk+ul5@gmail.com>
+In-Reply-To: <ZQHiJxHSSGNk+ul5@gmail.com>
 From:   Jirka Hladky <jhladky@redhat.com>
-Date:   Thu, 14 Sep 2023 10:44:25 +0200
-Message-ID: <CAE4VaGA7kjMw8rWk3cvktGmwjjkwwrHPSrY80Ozjsc=7TvQmAg@mail.gmail.com>
+Date:   Thu, 14 Sep 2023 10:45:26 +0200
+Message-ID: <CAE4VaGBXO5Joynan_o13XpT=mNrwt4D84NTZF6H62GXJjpMbBA@mail.gmail.com>
 Subject: Re: [PATCH] perf/x86/amd: Do not WARN on every IRQ
-To:     Sandipan Das <sandipan.das@amd.com>
+To:     Breno Leitao <leitao@debian.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Breno Leitao <leitao@debian.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -78,72 +75,77 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Borislav Petkov <bp@alien8.de>,
         Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, leit@fb.com,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sandipan Das <sandipan.das@amd.com>, leit@fb.com,
         dcostantino@meta.com,
         "open list:PERFORMANCE EVENTS SUBSYSTEM" 
         <linux-perf-users@vger.kernel.org>,
         "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-kernel@vger.kernel.org>, ananth.narayan@amd.com,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Michael Petlan <mpetlan@redhat.com>
+        <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Sandipan,
+Hi Breno,
 
-here is the info from /proc/cpuinfo
+I'm definitively voting for using WARN_ON_ONCE - in the current
+implementation, we are getting thousands of the same warnings and Call
+Traces, causing the system to become unusable.
 
-vendor_id       : AuthenticAMD
-cpu family      : 25
-model           : 160
-model name      : AMD EPYC 9754 128-Core Processor
-stepping        : 2
-microcode       : 0xaa0020f
+>Anyway, please let me know whatever is your preferred way and I will submi=
+t a v2.
+@Peter Zijlstra and @Sandipan - could you please comment on the
+preferred implementation of the patch?
 
->2. Microcode patch level
-Is it the microcode string from cpuinfo provided above, or are you
-looking for something else?
-
-Thanks!
+THANK YOU
 Jirka
 
-
-On Wed, Sep 13, 2023 at 6:19=E2=80=AFPM Sandipan Das <sandipan.das@amd.com>=
- wrote:
+On Wed, Sep 13, 2023 at 6:24=E2=80=AFPM Breno Leitao <leitao@debian.org> wr=
+ote:
 >
-> Hi Jirka,
+> Hi Peter,
 >
-> Can you please share the following?
+> On Fri, Jun 16, 2023 at 03:29:54PM +0200, Peter Zijlstra wrote:
+> > On Fri, Jun 16, 2023 at 04:53:15AM -0700, Breno Leitao wrote:
+> > > On some systems, the Performance Counter Global Status Register is
+> > > coming with reserved bits set, which causes the system to be unusable
+> > > if a simple `perf top` runs. The system hits the WARN() thousands tim=
+es
+> > > while perf runs.
+> > >
+> > > WARNING: CPU: 18 PID: 20608 at arch/x86/events/amd/core.c:944 amd_pmu=
+_v2_handle_irq+0x1be/0x2b0
+> > >
+> > > This happens because the "Performance Counter Global Status Register"
+> > > (PerfCntGlobalStatus) MSR has bit 7 set. Bit 7 should be reserved acc=
+ording
+> > > to the documentation (Figure 13-12 from "AMD64 Architecture Programme=
+r=E2=80=99s
+> > > Manual, Volume 2: System Programming, 24593"[1]
+> >
+> > Would it then not make more sense to mask out bit7 before:
+> >
+> > +     status &=3D ~AMD_PMU_V2_GLOBAL_STATUS_RESERVED;
+> >       if (!status)
+> >               goto done;
 >
-> 1. Family, Model and Stepping of the processor
-> 2. Microcode patch level
-> On 9/13/2023 8:00 PM, Jirka Hladky wrote:
-> > Hi Sandipan,
-> >
-> > Is there any update on this issue? We have hit the issue, and it makes
-> > the server pretty unusable due to the thousands of Call Traces being
-> > logged.
-> >
-> > Thanks a lot!
-> > Jirka
-> >
-> >
-> > On Fri, Jun 16, 2023 at 5:34=E2=80=AFPM Peter Zijlstra <peterz@infradea=
-d.org> wrote:
-> >>
-> >> On Fri, Jun 16, 2023 at 08:13:22PM +0530, Sandipan Das (AMD) wrote:
-> >>> The reserved bits should never be set. The purpose of the WARN_ON() i=
-s to catch such anomalies.
-> >>> I am working out the details with Breno and will report back with a r=
-esolution.
-> >>
-> >> Thanks!
-> >>
-> >
-> >
+> Instead of masking `status` against AMD_PMU_V2_GLOBAL_STATUS_RESERVED
+> (AMD64_NUM_COUNTERS?), I opted for using the `amd_pmu_global_cntr_mask`
+> global variable because it seems to represent what the loop below is
+> iterating over:
+>
+>         /* PMC Enable and Overflow bits for PerfCntrGlobal* registers */
+>         static u64 amd_pmu_global_cntr_mask __read_mostly;
+>
+> Also, I think we want to WARN_ON_ONCE() if we see this problem. Right
+> now, it warns at every time we call this function, which makes the
+> machine unusable, but, warning it once could be helpful to figure out
+> there is something wrong with the machine/firmware.
+>
+> Anyway, please let me know whatever is your preferred way and I will
+> submit a v2.
 >
 
 
