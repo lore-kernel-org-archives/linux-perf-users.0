@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADAAEE0212
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Sep 2023 02:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F74EE0213
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Sep 2023 02:22:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233648AbjINCQh (ORCPT
+        id S233701AbjINCWN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Sep 2023 22:16:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33876 "EHLO
+        Wed, 13 Sep 2023 22:22:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233609AbjINCQg (ORCPT
+        with ESMTP id S232351AbjINCWM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Sep 2023 22:16:36 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FDD3198
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Sep 2023 19:16:32 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-58f9db8bc1dso6776517b3.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Sep 2023 19:16:32 -0700 (PDT)
+        Wed, 13 Sep 2023 22:22:12 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7B671AD
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Sep 2023 19:22:08 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59beb3a8291so4246667b3.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Sep 2023 19:22:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694657792; x=1695262592; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1694658128; x=1695262928; darn=vger.kernel.org;
         h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=YPKWPHjjLgKJy2fs1wzoXbOYUhtcDdJLgwEmq5NtHvM=;
-        b=fAijsZ7WkIUEPTw63mkQ1ELlBsgin4u3ACUgLY+yyRhRp5u3GKN3QxHBmvfUlPKsLY
-         /YwQYP9emhfzuQGtBYk0K+R4g3QcuEtpD7NTbZzIJXeFyhlHlfQLf9qM9LfzZHgVaWVj
-         ni2om8qr+ye9mB4MmVBwxtMQ5VLLwcb9gfmzCxGK/94EZFWjFXPzrEcLgmKYcgjWkqfC
-         PPCVctWK2emnFxtOmcePWUY64f447PbwOHrjWZqn9G/L7UzzzXd5suNkQygbEfhvdXz5
-         IyIwxOTgRdywtCmFMhWRsTLAL/6GjLG682px8xGbpfJY3vukbSHrPbCzNZkxHBQ7p2Jy
-         hB5g==
+        bh=HlEcmDja1ZIoCrnt8HbZ+hkvBpXdTmxF97ewUnwPOAQ=;
+        b=WX0imZaN5CxKDVSlCgy83ocZjlPBL0dU+5rAn+1w5S6zBs1YQ4Psccd9fGd9YTbpeI
+         2F0hQqadDBj7wSfntqMNta2h9ai2hm+M2Do+8LAUy54fEes3ULEI80XmGlcgjdXFvP3k
+         Kn9IAk3DuRlT2qzDAOJYmLSpQPf8mbsPaQS361i0dVOObJhBbuW06AglD2PTtnewO7E2
+         dU2eAeFmyEO8HB9Fv02bNSR+b4oSytvbrbhnbMnNIlRd1yz9LWBua6HYsWXq34f2wHfz
+         JOBs022IJdgJN6bG188/ldJYlj48Ov3QSK6ozbgQaJiasnPiCfqo2CZ1Yt8XVobc/3PC
+         75lA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694657792; x=1695262592;
+        d=1e100.net; s=20230601; t=1694658128; x=1695262928;
         h=to:from:subject:mime-version:message-id:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=YPKWPHjjLgKJy2fs1wzoXbOYUhtcDdJLgwEmq5NtHvM=;
-        b=agyy0nVkeF6F9W2F296EW1ya8uotNU2V+VY9BRRPcfA5Ov3MEHfkCYZEirsWo4Jz3d
-         wmWdh/IBPM1Jl9Y7wEn7L4X+QiecbvyHDLmUNVni7t5phMknUmxmTbvncGKFwU98uFOr
-         3f93oaOOEo7J76ednR+iLM7PuMbOvptLV+0XdpqDMoHWnMdAyv3DqbPkRXRYTdTcshKW
-         C4x8RRArYUV+rsRMqTjw788DHJs4GekF7KstEUFTBVItzpGlqKKTvqlzy9EJPsZC6a9N
-         /0dTJLoBz4qCaV1NafKGFXqpne+62MhpmeukKjVOYiNVjGA1ORpJA02VpDeUNVE3KE4e
-         EoTw==
-X-Gm-Message-State: AOJu0Yyr/UcZh3ZK4sCKaWcQT06EuxZQ+5N4nneY8qwCiczm3o7bIx1Y
-        mbOCPUXUlmuJCA+oyS1QyoAy0AfqT9Ip
-X-Google-Smtp-Source: AGHT+IHgct12NXo2j/VT5NrnoFte0xgNrJBRPi8H7VZfSRZDlrbNYrNjODsaGwt//fsFVylXssLPAh57Rn5g
+        bh=HlEcmDja1ZIoCrnt8HbZ+hkvBpXdTmxF97ewUnwPOAQ=;
+        b=HqM67bEq3xoF8sAzT0hKZRiMjGeH1qFK0DVO964BFtEfGqpgB1nXtKeE3xGInjyRq5
+         l8iVDN7xxxfiUF/qDKU1oII+0bUhNPRqOeT3WheuR73kHn/eRZRQhmEluwRVZ//3/4EZ
+         9vy/PSdDyYdEZsj1kqhcdO4zK3Mk9bK8IU/NawZ0SyU+uq9vvf0I6dZRMdq2sRzWMNpy
+         g+Sx7c1Usfsdk5uIxSmuxEPaq8Kf/f+eToKHX4+RkfVt7soaauE0/zfwlF0yJt2DaLBd
+         iIp6c2NAPoUvb2CCLn/SeNaBYp01DV7oiXSzTj/JwTHlcPfk8yrCWBnjtEBSnyzxLru1
+         f1TA==
+X-Gm-Message-State: AOJu0YxpqoUz75OAXH91hNoM4mqoKyFK4uWjTxalDGFDzvt0fv0k8Ym3
+        LOBjimLprAw3K2PWexv7UxHaBdEn7m2Q
+X-Google-Smtp-Source: AGHT+IHL67rMwo9L1rXI7bpaX/pikOGXx7rhRBJDWRhrPs3ofYlloK6TCu0x5DgtmS9hby0YB8vdfeTTLXQ9
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:7612:4bb6:bcf1:779c])
- (user=irogers job=sendgmr) by 2002:a05:690c:4683:b0:59b:f3a2:cd79 with SMTP
- id gx3-20020a05690c468300b0059bf3a2cd79mr933ywb.8.1694657791802; Wed, 13 Sep
- 2023 19:16:31 -0700 (PDT)
-Date:   Wed, 13 Sep 2023 19:16:27 -0700
-Message-Id: <20230914021627.1475054-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a81:ac20:0:b0:58c:6ddd:d27c with SMTP id
+ k32-20020a81ac20000000b0058c6dddd27cmr105722ywh.6.1694658128069; Wed, 13 Sep
+ 2023 19:22:08 -0700 (PDT)
+Date:   Wed, 13 Sep 2023 19:22:04 -0700
+Message-Id: <20230914022204.1488383-1-irogers@google.com>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.42.0.459.ge4e396fd5e-goog
 Subject: [PATCH v1] perf jevents metric: Fix type of strcmp_cpuid_str
@@ -74,6 +74,9 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 The parser wraps all strings as Events, so the input is an
 Event. Using a string would be bad as functions like Simplify are
 called on the arguments, which wouldn't be present on a string.
+
+Fixes: 9d5da30e4ae9 ("perf jevents: Add a new expression builtin
+strcmp_cpuid_str()")
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
