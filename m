@@ -2,105 +2,164 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B77D7EEAA71
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Sep 2023 21:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FC0EEAA78
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Sep 2023 21:54:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230133AbjINVUV (ORCPT
+        id S229723AbjINVys (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 14 Sep 2023 17:20:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46118 "EHLO
+        Thu, 14 Sep 2023 17:54:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229995AbjINVUN (ORCPT
+        with ESMTP id S229472AbjINVys (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 14 Sep 2023 17:20:13 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 353812724
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 14:20:09 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-594e8207103so19873727b3.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 14:20:09 -0700 (PDT)
+        Thu, 14 Sep 2023 17:54:48 -0400
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F37551BFA
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 14:54:43 -0700 (PDT)
+Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-41761e9181eso50821cf.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 14:54:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694726408; x=1695331208; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YO3ZTyHFm+00gT95r949gZji8+XYvbCsq+dhsmDC+Ok=;
-        b=E2tqCAxPd3bvCjWpCu1Mdk81qd7sNmUQscYrFGIN4qeq1ugNv5edtqC0V+gUnG2fpl
-         OguXR94Cg1gct+QfZy2nG6MO5lGlZiygLIuJ+Wp4R04WhrShZRFyGi4Zz3y3jh34gbnH
-         QYyrRBbQp6YRVXaL7cjm28TvkQcTnFk6Qovm6GL7LTEChcgyygRulO0m0AYF/wAAgXL9
-         r6xF1iur7uNSFI7cBbSI8qhlDDYkrtXmDH61YJ6sOUdoGuhe8bAvXVStv6UYQHlXoEHN
-         P6kUnKPUoAAoOLC4dnauYDG0DpxxB0VSJj/fIEb1z8BbaoN4+t7cfbw5x7+YaJiBpl87
-         J2oA==
+        d=google.com; s=20230601; t=1694728483; x=1695333283; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TWifFkh7uyX7E3FA970wycjrJ/Mq5BVRB3q9a/8zjds=;
+        b=u75QzEQnxR3F8bElmSrKPoxPL/d6Zn2LU8Ehxbo6szNeddjCNkMc32DJMnO2H1EOkZ
+         FusTcBwa/hLCFK3KeFlkkD03nyr/jt8+Po6Hc+uwN0P7Ld65+HdOgcUKGrTZYchN9PBu
+         6GzZdQb63EBW40Ku8nKW94Ch76EgO1VWe5j1g4IG+Nu7AV1KDOe/FlUBiwYB1uXNgB4g
+         nvnBJPHN4vSgRo3Xle4bmaCxlP9qa2HyHeXt/Yga5NdlluSEFifuFB/ikmCZ5kIzeyBn
+         euu5uCAmhxesinuO90GRHHaS81nWdMHIe9bYUBDwZXsctgpmjMXVBS97zjhe+y4sL5Hp
+         g85w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694726408; x=1695331208;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YO3ZTyHFm+00gT95r949gZji8+XYvbCsq+dhsmDC+Ok=;
-        b=ls1ojEZSehWFtbdNec1jxtm3MYqIqAS9PGHH258FM9zg1LtzpIvDUR/ORTbCZjmKB3
-         s6rMVYLsXemQ7sSQC1uqEhtxLSjwQu14BQ6fhSelzwOOCb8lgrq6weChjf4Uax3yC3CB
-         DFH3AMOs+hqB6jsnE25r0GFpOAlb47XeLmF+FA+b5qjdV3ADDpODAPmJF4TzofhqrEDj
-         SlRCc6PKQOaC9Z1pAYm+i+nJLfd2LanmfyAMPVfXyj+FSyLsibHRRKvUXqaDn5Yj+7aE
-         nacCdqyZKEWXrdJfSNU05Z26dsP7fkV7VWMpp8Z6iVmFDWyaQQNLaux3oNFLdaLbKUCM
-         Nzzg==
-X-Gm-Message-State: AOJu0YyCZKYmOTztrMmNWkQSsT2v717/JWOudJe4jkdzvInK3osp78BR
-        6MH+VEyW5662QLRTYMy6HBVrGFDTOy2y
-X-Google-Smtp-Source: AGHT+IGCEX/KOyc+NQTtFfPYAWgFXG6kDLqyIKgl2lhi89WqTIgea5kl72TnA6Q8vTJoreHIXz9tXTcmvDM3
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:5357:1d03:3084:aacb])
- (user=irogers job=sendgmr) by 2002:a81:af11:0:b0:589:a5c6:4a8e with SMTP id
- n17-20020a81af11000000b00589a5c64a8emr175716ywh.1.1694726408395; Thu, 14 Sep
- 2023 14:20:08 -0700 (PDT)
-Date:   Thu, 14 Sep 2023 14:19:48 -0700
-In-Reply-To: <20230914211948.814999-1-irogers@google.com>
-Message-Id: <20230914211948.814999-6-irogers@google.com>
-Mime-Version: 1.0
-References: <20230914211948.814999-1-irogers@google.com>
-X-Mailer: git-send-email 2.42.0.459.ge4e396fd5e-goog
-Subject: [PATCH v1 5/5] perf test: Detect off-cpu support from build options
+        d=1e100.net; s=20230601; t=1694728483; x=1695333283;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TWifFkh7uyX7E3FA970wycjrJ/Mq5BVRB3q9a/8zjds=;
+        b=KUoW1jxeTupnRVhJFx4djUP43PULKMtfdkg03CwPXQEArw8goXIPjAffTQ4kTKFYty
+         6hr+TX0kfB2eVe5rSXyDiVI/slD7vhYBiqUPBxHjfCUkHMNVmFovlZSmi3Rq/nD/qFXy
+         dHFcxBEZ9y3u2l51+mNvX4rgcXU43duYG24JN3dT17b2CQy/PfkC6wS8EQQbYVhuRMdj
+         69lbci2mZHUknoHq28CQIdQexPDoeU01e91vjBhqnK7TkiXaUNEu2ULsub5tKgKtTSsK
+         bdfxymRjJiK4et+4T9BNcGGnfOUShvvgZ2VCk7tCzP06sB4VXff+OTVEYgpzjl6PTs4v
+         kFGQ==
+X-Gm-Message-State: AOJu0YyHU5+JlYnRTB72EfHFGBbbn7N1vunRI0gaf0aA1nEVGJOy8mPB
+        L/bvAJNN5dzpQJA+sng+ejluCoaWhfcDivmEfvyplw==
+X-Google-Smtp-Source: AGHT+IHHyhzqxkcKQGjhi4l8skCqBQSD/w275tcDWgwOk1AcdgDAP7LS+/t1owjqr6gAO0TvS/vl+IHBgGrs61s/pyA=
+X-Received: by 2002:a05:622a:15c9:b0:412:16f:c44f with SMTP id
+ d9-20020a05622a15c900b00412016fc44fmr111564qty.6.1694728483005; Thu, 14 Sep
+ 2023 14:54:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <ab865e6d-06c5-078e-e404-7f90686db50d@amd.com> <CAEf4BzZK=zm9PkUwzJRgeQ=KXjKOK9TENUMTz+_FmU6kPjab7Q@mail.gmail.com>
+ <78044efc-98d7-cd49-d2b5-4c2abb16d6c9@amd.com> <CAEf4BzZCrDftNdNicuMS7NoF+hNiQEQwsH_-RMBh3Xxg+AQwiw@mail.gmail.com>
+ <146e00be-98c8-873d-081f-252647b71b12@amd.com> <ZK7JMjN9LXTFEOvT@kernel.org>
+ <CAADnVQLpfmJ7yg-QtwfOFATJb=JcSDDxo11JG32KOQ6K=sNp4Q@mail.gmail.com>
+ <ZLBlUXDxRqzNRup3@kernel.org> <87FAA9FD-C64E-4199-9F77-8671FF19EEE1@fb.com> <SA1PR15MB46099ABDC08009096019B5B4CBF7A@SA1PR15MB4609.namprd15.prod.outlook.com>
+In-Reply-To: <SA1PR15MB46099ABDC08009096019B5B4CBF7A@SA1PR15MB4609.namprd15.prod.outlook.com>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+Date:   Thu, 14 Sep 2023 14:54:31 -0700
+Message-ID: <CAP-5=fX5Jk=37gr-hpe-RizDsVkOw1UZmC7hU5gTEU6KLvR1aA@mail.gmail.com>
+Subject: Re: [BUG] perf test: Regression because of d6e6286a12e7
+To:     Manu Bretelle <chantra@meta.com>
+Cc:     Mykola Lysenko <mykolal@meta.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Nick Terrell <terrelln@fb.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, Andrii Nakryiko <andrii@kernel.org>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        James Clark <james.clark@arm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Patrice Duroux <patrice.duroux@gmail.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        =?UTF-8?Q?Daniel_M=C3=BCller?= <deso@posteo.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Use perf version to detect whether BPF skeletons were enabled in a
-build rather than a failing perf record.
+On Thu, Sep 14, 2023 at 2:43=E2=80=AFPM Manu Bretelle <chantra@meta.com> wr=
+ote:
+>
+> Hi Arnaldo,
+>
+>
+>
+> Checking back here to see if there is anything you need help in order to =
+add perf support to BPF CI. Were you able to make progress and are hitting =
+some issues along the way?
+>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/shell/record_offcpu.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Separate from the CI issue there were some updates on perf:
+ - we're looking to re-enable BPF skeletons by default for 6.7:
+https://lore.kernel.org/lkml/20230914211948.814999-1-irogers@google.com/
+ - Ravi's original failure can no longer fail as we removed the BPF
+filter events in favor of a BPF skeleton based --filter option:
+https://lore.kernel.org/lkml/20230810184853.2860737-1-irogers@google.com/
+As such these tests no longer exist. Other tests like kernel lock
+contention analysis implicitly use BPF and so we are still testing
+BPF.
 
-diff --git a/tools/perf/tests/shell/record_offcpu.sh b/tools/perf/tests/shell/record_offcpu.sh
-index a0d14cd0aa79..a1ef8f0d2b5c 100755
---- a/tools/perf/tests/shell/record_offcpu.sh
-+++ b/tools/perf/tests/shell/record_offcpu.sh
-@@ -28,7 +28,7 @@ test_offcpu_priv() {
-     err=2
-     return
-   fi
--  if perf record --off-cpu -o /dev/null --quiet true 2>&1 | grep BUILD_BPF_SKEL
-+  if perf version --build-options 2>&1 | grep HAVE_BPF_SKEL | grep -q OFF
-   then
-     echo "off-cpu test [Skipped missing BPF support]"
-     err=2
--- 
-2.42.0.459.ge4e396fd5e-goog
+Thanks,
+Ian
 
+>
+> Thanks,
+>
+>
+>
+> Manu
+>
+>
+>
+> From: Mykola Lysenko <mykolal@meta.com>
+> Date: Friday, July 14, 2023 at 11:15 AM
+> To: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mykola Lysenko <mykolal@meta.com>, Alexei Starovoitov <alexei.starovo=
+itov@gmail.com>, Ravi Bangoria <ravi.bangoria@amd.com>, Andrii Nakryiko <an=
+drii.nakryiko@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Jiri Olsa <j=
+olsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@g=
+oogle.com>, linux-perf-users <linux-perf-users@vger.kernel.org>, bpf <bpf@v=
+ger.kernel.org>, Manu Bretelle <chantra@meta.com>, Daniel M=C3=BCller <deso=
+@posteo.net>, Mykola Lysenko <mykolal@meta.com>
+> Subject: Re: [BUG] perf test: Regression because of d6e6286a12e7
+>
+> Hey Arnaldo,
+>
+> > On Jul 13, 2023, at 1:57 PM, Arnaldo Carvalho de Melo <acme@kernel.org>=
+ wrote:
+> >
+> >
+> >
+> > Em Wed, Jul 12, 2023 at 11:20:27AM -0700, Alexei Starovoitov escreveu:
+> >> On Wed, Jul 12, 2023 at 8:39=E2=80=AFAM Arnaldo Carvalho de Melo
+> >> <acme@kernel.org> wrote:
+> >>>
+> >>> Right, perhaps the libbpf CI could try building perf, preferably with
+> >>> BUILD_BPF_SKEL=3D1, to enable these tools:
+> >>
+> >>
+> >> That would be great.
+> >> perf experts probably should do pull-req to bpf CI to enable that.
+> >> See slides:
+> >> http://vger.kernel.org/bpfconf2022_material/lsfmmbpf2022-bpf-ci.pdf
+> >>
+> >> "How to contribute?
+> >> Depending on what part of CI you are changing, you can create a pull r=
+equest to
+> >> https://github.com/kernel-patches/vmtest/
+> >> https://github.com/libbpf/ci
+> >> "
+> >
+> > Sure, I still recall Quentin's talk about CI, etc in Dublin, will come
+> > up with something and submit.
+>
+> Thanks for looking at this!
+>
+> If you will have any questions on how CI works, do not hesitate to join B=
+PF office hours and we will do our best to answer.
+>
+> Mykola
+>
+> >
+> > - Arnaldo
+>
