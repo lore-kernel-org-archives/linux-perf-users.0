@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70EFEEAA77
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Sep 2023 21:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B77D7EEAA71
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Sep 2023 21:20:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230028AbjINVUO (ORCPT
+        id S230133AbjINVUV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 14 Sep 2023 17:20:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46110 "EHLO
+        Thu, 14 Sep 2023 17:20:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229836AbjINVUL (ORCPT
+        with ESMTP id S229995AbjINVUN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 14 Sep 2023 17:20:11 -0400
+        Thu, 14 Sep 2023 17:20:13 -0400
 Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AC8F270D
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 14:20:06 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59bee08c13aso14856717b3.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 14:20:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 353812724
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 14:20:09 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-594e8207103so19873727b3.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 14:20:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694726406; x=1695331206; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1694726408; x=1695331208; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=qEBLCnDyHWS5IuPY851bB1uYjpvWDCqujKcJXiny/1I=;
-        b=bzu+DbleT9wrOxJdJLp2RsnQvzhNTflsREXKrwLaHgs/Z2cJe4Rhy8WE9eGIXgSjSS
-         iLsHeNuNq6H5xL/L2yLTiLGIJVD+jNFVRbzPJ374oInXRktPUrT9AO0lVgpdr+RV+xqE
-         iEHJil3xwUhvn8+SJP+U5D34p9DUc0nkj506Y7YAfKSiKXqN6EQntS/THNBTHfh35XT7
-         dIRD7eYEvNNyk77GrE5KPWjl3bXBaKcinepszOcu9KZeGYFKktzsb1x070gS02XZ/2yn
-         6plBlb2i+KZpHgePtRH4PuVwEu6Nnt3kxhU609zKkvM/RgqlJwklqbsSSzVP+LLq0I69
-         IEzg==
+        bh=YO3ZTyHFm+00gT95r949gZji8+XYvbCsq+dhsmDC+Ok=;
+        b=E2tqCAxPd3bvCjWpCu1Mdk81qd7sNmUQscYrFGIN4qeq1ugNv5edtqC0V+gUnG2fpl
+         OguXR94Cg1gct+QfZy2nG6MO5lGlZiygLIuJ+Wp4R04WhrShZRFyGi4Zz3y3jh34gbnH
+         QYyrRBbQp6YRVXaL7cjm28TvkQcTnFk6Qovm6GL7LTEChcgyygRulO0m0AYF/wAAgXL9
+         r6xF1iur7uNSFI7cBbSI8qhlDDYkrtXmDH61YJ6sOUdoGuhe8bAvXVStv6UYQHlXoEHN
+         P6kUnKPUoAAoOLC4dnauYDG0DpxxB0VSJj/fIEb1z8BbaoN4+t7cfbw5x7+YaJiBpl87
+         J2oA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694726406; x=1695331206;
+        d=1e100.net; s=20230601; t=1694726408; x=1695331208;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qEBLCnDyHWS5IuPY851bB1uYjpvWDCqujKcJXiny/1I=;
-        b=gRfxhtUOdRMrsWGTfwRm89EY0YFYwsPtEY3LPAij9qcom3fyhH/fJscb9b2R6T9B9t
-         fRZYcrgnNJd4dl8xO5uFb7hyf1v4mPaJw7eL8zDltPnsbgG8h2epFKqYvPnz78qofPtx
-         8M1SN6lfXnMCXx0MBn+UJkVRrypDOWg91Chazrr7Z/o4XcZWyPck0J1wTL4EPTOYKvw2
-         RTdxym4NFKn0eDBg301FDV54L2oWdhB6bEU1uKseq4sPuNcI/Gf9mKbUH8L3GzBn9G7I
-         DYE6MVFugeY+nM089fjvdekSPgk8RbaPJaa5jyhVaCX5uh0qcOdIVHnvYCRqeeVu1WHA
-         9jMw==
-X-Gm-Message-State: AOJu0YzCDyMoltw5AbiHj9N/W4NrxsGhzpJVW4+A+xdrGFWQX4sR4sTQ
-        6X22aYWSsJnvb7fTKiEUv97NcQCfJBk/
-X-Google-Smtp-Source: AGHT+IFjNitaNwEgv3EEZ6iXNRaR95WvUU1GpXUYm1fAho7ynBUmSGSSBv8y18SlBKTVkWFYTJLjScNmdKn2
+        bh=YO3ZTyHFm+00gT95r949gZji8+XYvbCsq+dhsmDC+Ok=;
+        b=ls1ojEZSehWFtbdNec1jxtm3MYqIqAS9PGHH258FM9zg1LtzpIvDUR/ORTbCZjmKB3
+         s6rMVYLsXemQ7sSQC1uqEhtxLSjwQu14BQ6fhSelzwOOCb8lgrq6weChjf4Uax3yC3CB
+         DFH3AMOs+hqB6jsnE25r0GFpOAlb47XeLmF+FA+b5qjdV3ADDpODAPmJF4TzofhqrEDj
+         SlRCc6PKQOaC9Z1pAYm+i+nJLfd2LanmfyAMPVfXyj+FSyLsibHRRKvUXqaDn5Yj+7aE
+         nacCdqyZKEWXrdJfSNU05Z26dsP7fkV7VWMpp8Z6iVmFDWyaQQNLaux3oNFLdaLbKUCM
+         Nzzg==
+X-Gm-Message-State: AOJu0YyCZKYmOTztrMmNWkQSsT2v717/JWOudJe4jkdzvInK3osp78BR
+        6MH+VEyW5662QLRTYMy6HBVrGFDTOy2y
+X-Google-Smtp-Source: AGHT+IGCEX/KOyc+NQTtFfPYAWgFXG6kDLqyIKgl2lhi89WqTIgea5kl72TnA6Q8vTJoreHIXz9tXTcmvDM3
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:5357:1d03:3084:aacb])
- (user=irogers job=sendgmr) by 2002:a5b:bc6:0:b0:d7e:a025:2672 with SMTP id
- c6-20020a5b0bc6000000b00d7ea0252672mr153772ybr.9.1694726405869; Thu, 14 Sep
- 2023 14:20:05 -0700 (PDT)
-Date:   Thu, 14 Sep 2023 14:19:47 -0700
+ (user=irogers job=sendgmr) by 2002:a81:af11:0:b0:589:a5c6:4a8e with SMTP id
+ n17-20020a81af11000000b00589a5c64a8emr175716ywh.1.1694726408395; Thu, 14 Sep
+ 2023 14:20:08 -0700 (PDT)
+Date:   Thu, 14 Sep 2023 14:19:48 -0700
 In-Reply-To: <20230914211948.814999-1-irogers@google.com>
-Message-Id: <20230914211948.814999-5-irogers@google.com>
+Message-Id: <20230914211948.814999-6-irogers@google.com>
 Mime-Version: 1.0
 References: <20230914211948.814999-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.459.ge4e396fd5e-goog
-Subject: [PATCH v1 4/5] perf test: Ensure EXTRA_TESTS is covered in build test
+Subject: [PATCH v1 5/5] perf test: Detect off-cpu support from build options
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -80,25 +80,27 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add to run variable.
+Use perf version to detect whether BPF skeletons were enabled in a
+build rather than a failing perf record.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/make | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/tests/shell/record_offcpu.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-index a3a0f2a8bba0..d9945ed25bc5 100644
---- a/tools/perf/tests/make
-+++ b/tools/perf/tests/make
-@@ -138,6 +138,7 @@ endif
- run += make_python_perf_so
- run += make_debug
- run += make_nondistro
-+run += make_extra_tests
- run += make_no_bpf_skel
- run += make_gen_vmlinux_h
- run += make_no_libperl
+diff --git a/tools/perf/tests/shell/record_offcpu.sh b/tools/perf/tests/shell/record_offcpu.sh
+index a0d14cd0aa79..a1ef8f0d2b5c 100755
+--- a/tools/perf/tests/shell/record_offcpu.sh
++++ b/tools/perf/tests/shell/record_offcpu.sh
+@@ -28,7 +28,7 @@ test_offcpu_priv() {
+     err=2
+     return
+   fi
+-  if perf record --off-cpu -o /dev/null --quiet true 2>&1 | grep BUILD_BPF_SKEL
++  if perf version --build-options 2>&1 | grep HAVE_BPF_SKEL | grep -q OFF
+   then
+     echo "off-cpu test [Skipped missing BPF support]"
+     err=2
 -- 
 2.42.0.459.ge4e396fd5e-goog
 
