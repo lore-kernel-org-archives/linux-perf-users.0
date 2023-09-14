@@ -2,145 +2,180 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5990EEAA41
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Sep 2023 13:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E49EEAA40
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Sep 2023 14:06:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239287AbjINNwD (ORCPT
+        id S239493AbjINOGe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 14 Sep 2023 09:52:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55742 "EHLO
+        Thu, 14 Sep 2023 10:06:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239257AbjINNwD (ORCPT
+        with ESMTP id S239455AbjINOGe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 14 Sep 2023 09:52:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6343310C7
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 06:51:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694699472;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=K1aANZQtwFDU4g/VWeNDGent7e6hMjtrdWucBBS3aak=;
-        b=UQayGSK0b+mo+8T73EKI4aswLlWNmA+SCTxy60guCh+txhUtztqv/9QdZlWT/WDSMkZ+dU
-        Ezwo5wdKzderosmHKpLX5sUu+NHWzoTTbkUHh+1lmiAyeo8LMqq0f8uZg7YW0n4h8pz/0U
-        3jxdxfrux3UahoECUgVa93amRt92SRo=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-241-QbHkFOy_NtaqCk3dSxQHhw-1; Thu, 14 Sep 2023 09:51:10 -0400
-X-MC-Unique: QbHkFOy_NtaqCk3dSxQHhw-1
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2bcec24e8f8so12504821fa.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 06:51:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694699469; x=1695304269;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K1aANZQtwFDU4g/VWeNDGent7e6hMjtrdWucBBS3aak=;
-        b=vWEQvA+joLhx/FLvSnFaW6fEaEuJhQRthRsRcnQ+H6QQnNK71AdOwvjnoUxkPhfEMg
-         MYTk2hK7iWf3uPqMJfpj+0SWW+wVodyJ+w8VBKkwV1BAuh+SO7eE7jbcLEx+2ExOrGQn
-         skR0LUssFFD+eHS72dd5NHsQVQ9GxiceNed/wNejEBfKK6V7Oaz0BxURSDXPz1GYhnnC
-         Pz0o3y5nBmXa04q0BSlhBIE9mgMVzxs7j1HiMfBCCiMQyn/+hMO2K7+3je1SEwhRvvBf
-         u59PVCMqVXeQrgJz5YBbYZNzreC+KHXNWMa4sWaGQpbCze/YiWWA5ymD8znRzz7oB3vE
-         Z4+g==
-X-Gm-Message-State: AOJu0Yzos7K3wLO7I6MaeBtz411pldQrK/ZTtBwoYfmz8Yqf6wARhx/d
-        bUqbCuisfW3j+LV8cO9itXsEsTB3Ff4oG0BDuaXnI6zeA3abZPyfX9WtQQ/bQfTD7xRY7ysieyq
-        eDw7uzTIKVI6VxryyXsWK0mIPG2oSxn2yXrRYC3G1NvfnYQ==
-X-Received: by 2002:a2e:924d:0:b0:2bc:bf29:18d3 with SMTP id v13-20020a2e924d000000b002bcbf2918d3mr4921025ljg.31.1694699469464;
-        Thu, 14 Sep 2023 06:51:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGK7INPPlpWH23+iLmgrvRbIbOe157ZE8DmeGxtMRrlh2im4vwq15gUMK1Q785CMuTKK3cW1Ha9IbpSxNndAO8=
-X-Received: by 2002:a2e:924d:0:b0:2bc:bf29:18d3 with SMTP id
- v13-20020a2e924d000000b002bcbf2918d3mr4921011ljg.31.1694699469086; Thu, 14
- Sep 2023 06:51:09 -0700 (PDT)
+        Thu, 14 Sep 2023 10:06:34 -0400
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2043.outbound.protection.outlook.com [40.107.100.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5F36DF;
+        Thu, 14 Sep 2023 07:06:29 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e9WyXbe9qQnM+h4JWTamiH+xlAUQ0B/eHV5F+MgAG5jZvd51I2Y+I4CZkw3BxVGrUVTMGvWuQSv1bTHTyDxKP/iXdHsA9lfq+/qikLE0QSYvKUJs/Rq4t/xtYJ7pQTXYxPYzlU/102VVuUxmuIaFfQ+C7BSqDPSsKr6NYf6qlNGbIrp/eG4INIL6REEcBSeHL/nTYsxuqY1F+1kCf4VEwIpjEcgGGGzKv1xLCzvSXYRhulps3aVJTjavNTHl/KL9W+I+04qae0urCy+Km1AYvHmeE6kTd+hC4Gp+owAS6kCdR6cMzAV0mZuXkA9X79uCEsqCK30A5XuBPVAcyHumAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nZgE92FxSI6CdmJ3uDQcJ1f/CA0xCp7hvNvwN175yQY=;
+ b=ecQ5BCHN7TuZP+vC3fqWJSVC4BQ1FsayI3nXoxojsioeQkJJUFBPk8bMpof0NdhOT2i6Tp4WyOlhHI5sOL6IxrKn0gIlbX29V2Qw3/LZJ+6OqWU/JvcDeXcPxzXJvI4lp4LcxghUQ1MFzxaibQ6FuLfvTC5oCV9RTshSaLpmTe4nQgmfSV6W49RORBtHG/2KPNLKNM8fj5sWqKS+Srvn1OHKfgOMnQj939x7k+IYCeW0V0ks9xefyQmCKA7jWsvsfMKpPptmb3M/VYb3Y+JvxPPKcXJlHlQKiMF6Eh07cBPlpH+1DxgQfsxlpU+UsLyfrd+aFAMTO/qBfe3C10DqnQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nZgE92FxSI6CdmJ3uDQcJ1f/CA0xCp7hvNvwN175yQY=;
+ b=ffOr6IV5Oyb7rwcBHumgeFqVJD5wt/m0LL5Gkw0pCT/7AueZjvAOaFEQrzbjd8ppwnSWJJhNCQKnOPOlD/fz21NvaP4YBDETdV+YMnLpOuyvKuMRKMMunqqQrVy1Fhg944+bx4ZwU0S5YTZMSKxHWBCIybOkIu/xckHMqrtDs18=
+Received: from BYAPR07CA0019.namprd07.prod.outlook.com (2603:10b6:a02:bc::32)
+ by SA1PR12MB7103.namprd12.prod.outlook.com (2603:10b6:806:2b0::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.38; Thu, 14 Sep
+ 2023 14:06:26 +0000
+Received: from CO1PEPF000044F3.namprd05.prod.outlook.com
+ (2603:10b6:a02:bc:cafe::b5) by BYAPR07CA0019.outlook.office365.com
+ (2603:10b6:a02:bc::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.20 via Frontend
+ Transport; Thu, 14 Sep 2023 14:06:26 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000044F3.mail.protection.outlook.com (10.167.241.73) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6792.19 via Frontend Transport; Thu, 14 Sep 2023 14:06:25 +0000
+Received: from sindhu.amdval.net (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 14 Sep
+ 2023 09:06:18 -0500
+From:   Sandipan Das <sandipan.das@amd.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+CC:     <x86@kernel.org>, <peterz@infradead.org>, <leitao@debian.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <tglx@linutronix.de>, <bp@alien8.de>,
+        <dave.hansen@linux.intel.com>, <hpa@zytor.com>, <leit@fb.com>,
+        <dcostantino@meta.com>, <jhladky@redhat.com>, <eranian@google.com>,
+        <ananth.narayan@amd.com>, <ravi.bangoria@amd.com>,
+        <santosh.shukla@amd.com>, <sandipan.das@amd.com>
+Subject: rom 3540f985652f41041e54ee82aa53e7dbd55739ae Mon Sep 17 00:00:00 2001
+Date:   Thu, 14 Sep 2023 19:36:03 +0530
+Message-ID: <20230914140604.267672-1-sandipan.das@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20230616115316.3652155-1-leitao@debian.org> <20230616132954.GG4253@hirez.programming.kicks-ass.net>
- <ZQHiJxHSSGNk+ul5@gmail.com> <CAE4VaGBXO5Joynan_o13XpT=mNrwt4D84NTZF6H62GXJjpMbBA@mail.gmail.com>
- <f06ef3dd-dd71-4ba4-a4fa-18a08788c035@amd.com> <20230914091234.GE16631@noisy.programming.kicks-ass.net>
- <ZQLSw6PeUbV+p2gH@gmail.com> <20230914111845.GF16631@noisy.programming.kicks-ass.net>
- <b1cf5990-1019-49ea-a1e8-e22410922801@amd.com> <ZQL64dX+5lfK4rOh@gmail.com>
-In-Reply-To: <ZQL64dX+5lfK4rOh@gmail.com>
-From:   Jirka Hladky <jhladky@redhat.com>
-Date:   Thu, 14 Sep 2023 15:50:57 +0200
-Message-ID: <CAE4VaGDkAcs8v8ReT3ZhimWmMY0MGH0Rsi5GX1C4=-B-81vSYA@mail.gmail.com>
-Subject: Re: [PATCH] perf/x86/amd: Do not WARN on every IRQ
-To:     Breno Leitao <leitao@debian.org>
-Cc:     Sandipan Das <sandipan.das@amd.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, leit@fb.com,
-        dcostantino@meta.com,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044F3:EE_|SA1PR12MB7103:EE_
+X-MS-Office365-Filtering-Correlation-Id: 370f1951-f801-4dd1-4ca7-08dbb52bc8dc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: cczQuWTnQOw8oFpUt7wd+Pha5B1ouqVVgGZiyUifhWewv5QA7kfZt/SY0xNJRLcKpQhgoskLcVL+qwVMtdTu9r9ZsBF8aivO8ilcgZbevxv9etycOQGygPdU+8EvsC6BLdxLOebsdi66MD6Jd5ZHrDn7aUZFmuGZlJYf/AeYCiuRQSTR+MrhAHTBMvhwOQiqPoJJUAvIvnBPYATUBthpBPhIcmqt+iMLnXzIDeOuhfO6dLNhRbSU8q2EIMDGxSaO2qQd9ZjfcGet/PweZGrvb/x2u14T2Vx+us65f41Fc8julR+k81tTHNWqE3V9NjbMxeqPidferC9GNaaV4DFDgVAH+r3Zk6uUPR9VvzlzMkPZJKoDNyPFbU+qqWCGAu1ke6LQiV1Or1GlOtkvCZdb6rEMKOqoBzpN5vwV8Su72KTYj6C8n6Lc8okRdaFJce6hHpzP6h2chmWEmHRo0m5c6kMh/z/S/LulBsPbehv8sXtgxjqXc1F5RYbRQ/FKvaArUzMH8HWi2mIyAyRWWOaEKF9fJNv/p+Hh83e6kYpq2i5Thp9eqZopF0O3kmO2vd5LvnGcwEBL/+i+7x0kPDSQ79VCdSSIQ9iFgkxKfSl7UoSXmNnzj2LCevfuYazOBQUJeMRMQXkQXRRlJ1AvJhkwFkeKHi8lrbV7DVfb0CH/w7kJHmpxqF7IPhiCUQITlDbH8x9t2dsA+PW8DU6IWU7I6zwRtJxLy3l3z95lb3P67DePXVhGp4JmrT+GfEvbr68BFCqbfHhlXvaqTiwj2/IvO49OaIUWuLrYNTkuULMX4Kc=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(396003)(346002)(136003)(376002)(186009)(1800799009)(82310400011)(451199024)(40470700004)(36840700001)(46966006)(83380400001)(336012)(82740400003)(6666004)(356005)(81166007)(16526019)(2616005)(36756003)(36860700001)(41300700001)(426003)(26005)(1076003)(478600001)(54906003)(47076005)(70206006)(110136005)(70586007)(316002)(966005)(7416002)(5660300002)(4326008)(44832011)(8676002)(8936002)(86362001)(40480700001)(40460700003)(2906002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Sep 2023 14:06:25.9752
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 370f1951-f801-4dd1-4ca7-08dbb52bc8dc
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1PEPF000044F3.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7103
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Thank you, all!
+Zen 4 systems running buggy microcode can hit a WARN_ON() in the PMI
+handler, as shown below, several times while perf runs. A simple
+`perf top` run is enough to render the system unusable.
 
-I have confirmed that the latest microcode fixes the issue.
+WARNING: CPU: 18 PID: 20608 at arch/x86/events/amd/core.c:944 amd_pmu_v2_handle_irq+0x1be/0x2b0
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-cat /proc/cpuinfo
-microcode       : 0xaa00212
+This happens because the Performance Counter Global Status Register
+(PerfCntGlobalStatus) has one or more bits set which are considered
+reserved according to the "AMD64 Architecture Programmer’s Manual,
+Volume 2: System Programming, 24593". The document can be found at
+https://www.amd.com/system/files/TechDocs/24593.pdf
 
-perf top runs fine, without any kernel warnings
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+To make this less intrusive, warn just once if any reserved bit is set
+and prompt the user to update the microcode. Also sanitize the value to
+what the code is handling, so that the overflow events continue to be
+handled for the number of counters that are known to be sane.
 
-Jirka
+Going forward, the following microcode patch levels are recommended
+for Zen 4 processors in order to avoid such issues with reserved bits.
 
+  Family=0x19 Model=0x11 Stepping=0x01: Patch=0x0a10113e
+  Family=0x19 Model=0x11 Stepping=0x02: Patch=0x0a10123e
+  Family=0x19 Model=0xa0 Stepping=0x01: Patch=0x0aa00116
+  Family=0x19 Model=0xa0 Stepping=0x02: Patch=0x0aa00212
 
-On Thu, Sep 14, 2023 at 2:22=E2=80=AFPM Breno Leitao <leitao@debian.org> wr=
-ote:
->
-> On Thu, Sep 14, 2023 at 04:52:13PM +0530, Sandipan Das wrote:
-> > On 9/14/2023 4:48 PM, Peter Zijlstra wrote:
-> > > On Thu, Sep 14, 2023 at 02:30:43AM -0700, Breno Leitao wrote:
-> > >> On Thu, Sep 14, 2023 at 11:12:34AM +0200, Peter Zijlstra wrote:
-> > >>> On Thu, Sep 14, 2023 at 02:25:40PM +0530, Sandipan Das wrote:
-> > >>
-> > >>>> I agree with using WARN_ON_ONCE() to make this less intrusive.
-> > >>>
-> > >>> Could you send a patch that AMD is happy with?
-> > >>
-> > >> Why the current patch is not good enough?
-> > >
-> > > Sandipan, can you answer this? I don't tihnk I'm qualified to speak f=
-or
-> > > the AMD pmu and certainly I don't have insight into their design futu=
-re.
-> >
-> > Hi Breno,
-> >
-> > Functionally, the patch looks good to me and I will be reusing it
-> > without any change to the authorship. However, as Peter suggested, I
-> > wanted to add a message to prompt users to update the microcode and
-> > also call out the required patch levels in the commit message since
-> > different Zen 4 variants and steppings use different microcode.
-> >
-> > Here's what I plan to send.
->
-> Awesome. Thanks for addressing it.
->
+Commit f2eb058afc57 ("linux-firmware: Update AMD cpu microcode") from
+the linux-firmware tree has binaries that meet the minimum required
+patch levels.
 
+Fixes: 7685665c390d ("perf/x86/amd/core: Add PerfMonV2 overflow handling")
+Reported-by: Jirka Hladky <jhladky@redhat.com>
+Signed-off-by: Breno Leitao <leitao@debian.org>
+[sandipan: add message to prompt users to update microcode]
+[sandipan: rework commit message and call out required microcode levels]
+Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+---
 
---=20
--Jirka
+v1: https://lore.kernel.org/all/20230616115316.3652155-1-leitao@debian.org/
+
+v2:
+ - Use pr_warn_once() instead of WARN_ON_ONCE() to prompt users to
+   update microcode
+ - Rework commit message and add details of minimum required microcode
+   patch levels.
+
+---
+ arch/x86/events/amd/core.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index abadd5f23425..b04956cbd085 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -884,7 +884,7 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
+ 	struct hw_perf_event *hwc;
+ 	struct perf_event *event;
+ 	int handled = 0, idx;
+-	u64 status, mask;
++	u64 reserved, status, mask;
+ 	bool pmu_enabled;
+ 
+ 	/*
+@@ -909,6 +909,14 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
+ 		status &= ~GLOBAL_STATUS_LBRS_FROZEN;
+ 	}
+ 
++	reserved = status & ~amd_pmu_global_cntr_mask;
++	if (reserved)
++		pr_warn_once("Reserved PerfCntrGlobalStatus bits are set (0x%llx), please consider updating microcode\n",
++			     reserved);
++
++	/* Clear any reserved bits set by buggy microcode */
++	status &= amd_pmu_global_cntr_mask;
++
+ 	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
+ 		if (!test_bit(idx, cpuc->active_mask))
+ 			continue;
+-- 
+2.34.1
 
