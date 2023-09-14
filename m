@@ -2,128 +2,192 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6065BEEAA56
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Sep 2023 16:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D54FEEEAA59
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Sep 2023 17:18:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231243AbjINQki (ORCPT
+        id S239222AbjINRSt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 14 Sep 2023 12:40:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33480 "EHLO
+        Thu, 14 Sep 2023 13:18:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229485AbjINQki (ORCPT
+        with ESMTP id S239048AbjINRSt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 14 Sep 2023 12:40:38 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AF3CCA
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 09:40:34 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59b56dab74bso16678837b3.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 09:40:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694709633; x=1695314433; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=QYmpNCIo7S1JbJ44ilEiXHeDDJlt6tcG5Ns5Jhd3XZM=;
-        b=t6E2bWAbD6/mIrBbqqzKCmGLfD32VYf/of3Uvrzh4rHsKLZ5iXmtkLduOvQU1LvuIT
-         wI61AqQTIgXRr9vNVY+K/8uLKWUeTWWT1bLq6A4klhodTg43LhWOFSCIlY+mka0Os6JM
-         xPCAgj5PbOSevGuQ5rxo5iKDTNAVEy6nHSxr9L85iZyvA0pyi3rarn5V9qcyKebYoqov
-         W8ifisgC+NJWeQ4rb6J7Zru9JrCVn9LUpbz/AdD/dhbux193dVetHs1EdcwD3Teb8iYJ
-         yKiYTQPCVehPD/asUx2fGUZTEMxkKW/jDNwDAGI8iIc26GhbrtQnbiRXJLuUQYy7mCF3
-         a+BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694709633; x=1695314433;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QYmpNCIo7S1JbJ44ilEiXHeDDJlt6tcG5Ns5Jhd3XZM=;
-        b=tOHNExT2tcE7uuFVi6QbLOjqCKP6bHCjmg+ZCl9GNWQBuVv+v/H5Q3cL85GUHER/5n
-         iEDLCrIaqIKUt+JQcxThXMooILtQ3pFLFLqwLnvE6djYmDJtrS9qt4m+fN8Ag4C3sfX9
-         9l+DbNlbZRcivEni39EBssoVh/ixkuEmoodZmt0mp+d4WzP2Wkak2NIcd3aFUDpRQeC4
-         mAhjnxt16AzotUTYR/2u5m7k/Cd8awtebuHGZX3FE+lfA+0OPWk3TpYIQYlCflEqJBMr
-         Cvpe3mOQBfE21bpsQpAjuzkXtYd1UG3RpjsBarjZ6FmXZpMlEAaUkgsHqVMv2wgFpZSD
-         FuNA==
-X-Gm-Message-State: AOJu0Yyb9/Kcaf5AUWvu0zyD2PBD5gsgAYudK21u8xX5I638vWiTrFlk
-        y4uZlwS+B+lJz9k9I+2waM8oVrjMY6gd
-X-Google-Smtp-Source: AGHT+IF4R14T/+uUnZmMx+CGqiHrXqIWyNyHBK0SZp+FnnnCxwWbAN2jr+wYDbqyPBPL12biGairh8K/y6cD
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:5357:1d03:3084:aacb])
- (user=irogers job=sendgmr) by 2002:a05:6902:1447:b0:d7b:6e08:b432 with SMTP
- id a7-20020a056902144700b00d7b6e08b432mr145533ybv.10.1694709633363; Thu, 14
- Sep 2023 09:40:33 -0700 (PDT)
-Date:   Thu, 14 Sep 2023 09:40:28 -0700
-Message-Id: <20230914164028.363220-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
-Subject: [PATCH v1] perf parse-events: Fix tracepoint name memory leak
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        He Kuang <hekuang@huawei.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 14 Sep 2023 13:18:49 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FEF5CC
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 10:18:45 -0700 (PDT)
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38EHCbFL006063;
+        Thu, 14 Sep 2023 17:18:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=hyyxXXbJP8MbsVwznRijL34vXkWY9+6BSa40pgKnS+8=;
+ b=McuORjNe3RElPrFJIwpkViLlk7r1BVwpCLQdA3zlfVbFhc8EkjpTrxdElTXSxuWmV7MY
+ gFB48p5dfJPAraOMQb3d7eNDKafE+8whOrlms4mXuYQrNVvv5Afkhv/rYxaVZRj9Hp7p
+ OScBqNc4rpi1h3r74l57TAomJFG+JYUy2eISIpSFKzIAoGA/CnE0y2YqTHKB/eWWIbj9
+ Mi7PhoChpiN2i6ufaOIFLX5g6JEKVVSZpme5dbcGyQN4/iLonK6ZgS8MlJEXqa5R6Qi3
+ HR5NccghZ35CzR0Ol+ltCnLqbh4BqWwuTpyG7edrdnPtxPbsEJDt/Bv8wtsowr+fRAX4 rQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t46c8866j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 Sep 2023 17:18:37 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38EHCnLQ006750;
+        Thu, 14 Sep 2023 17:18:36 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t46c88669-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 Sep 2023 17:18:36 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38EGpRnC002401;
+        Thu, 14 Sep 2023 17:18:35 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+        by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3t158km69h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 Sep 2023 17:18:35 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38EHIWE942926374
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Sep 2023 17:18:33 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CF50D2004F;
+        Thu, 14 Sep 2023 17:18:32 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B77A320040;
+        Thu, 14 Sep 2023 17:18:30 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.35.47])
+        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Thu, 14 Sep 2023 17:18:30 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Subject: [PATCH 1/2] tools/perf: Add new CONFIG_SHELLCHECK for detecting shellcheck binary
+Date:   Thu, 14 Sep 2023 22:48:26 +0530
+Message-Id: <20230914171827.98507-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: pti8Nkyvjrkhp9Z-WKwpJCuuSyV93run
+X-Proofpoint-GUID: qNcwQHt-4xsSaaBsbdprtA3T63GgBEaK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-14_09,2023-09-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
+ bulkscore=0 clxscore=1015 malwarescore=0 suspectscore=0 lowpriorityscore=0
+ spamscore=0 impostorscore=0 priorityscore=1501 adultscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
+ definitions=main-2309140148
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Fuzzing found that an invalid tracepoint name would create a memory
-leak with an address sanitizer build:
-```
-$ perf stat -e '*:o/' true
-event syntax error: '*:o/'
-                       \___ parser error
-Run 'perf list' for a list of valid events
+shellcheck tool can detect coding/formatting issues on
+shell scripts. In perf directory "tests/shell", there are lot
+of shell test scripts and this tool can detect coding/formatting
+issues on these scripts.
 
- Usage: perf stat [<options>] [<command>]
+Example to use shellcheck for severity level for
+errors and warnings, below command is used:
 
-    -e, --event <event>   event selector. use 'perf list' to list available events
+   # for F in $(find tests/shell/ -perm -o=x -name '*.sh'); do shellcheck -S warning $F; done
+   # echo $?
+     0
 
-=================================================================
-==59380==ERROR: LeakSanitizer: detected memory leaks
+This testing needs to be automated into the build so that it
+can avoid regressions and also run the check for newly added
+during build test itself. Add a new feature check to detect
+presence of shellcheck. Add CONFIG_SHELLCHECK feature check in
+the build to avoid not having shellcheck breaking the build.
 
-Direct leak of 4 byte(s) in 2 object(s) allocated from:
-    #0 0x7f38ac07077b in __interceptor_strdup ../../../../src/libsanitizer/asan/asan_interceptors.cpp:439
-    #1 0x55f2f41be73b in str util/parse-events.l:49
-    #2 0x55f2f41d08e8 in parse_events_lex util/parse-events.l:338
-    #3 0x55f2f41dc3b1 in parse_events_parse util/parse-events-bison.c:1464
-    #4 0x55f2f410b8b3 in parse_events__scanner util/parse-events.c:1822
-    #5 0x55f2f410d1b9 in __parse_events util/parse-events.c:2094
-    #6 0x55f2f410e57f in parse_events_option util/parse-events.c:2279
-    #7 0x55f2f4427b56 in get_value tools/lib/subcmd/parse-options.c:251
-    #8 0x55f2f4428d98 in parse_short_opt tools/lib/subcmd/parse-options.c:351
-    #9 0x55f2f4429d80 in parse_options_step tools/lib/subcmd/parse-options.c:539
-    #10 0x55f2f442acb9 in parse_options_subcommand tools/lib/subcmd/parse-options.c:654
-    #11 0x55f2f3ec99fc in cmd_stat tools/perf/builtin-stat.c:2501
-    #12 0x55f2f4093289 in run_builtin tools/perf/perf.c:322
-    #13 0x55f2f40937f5 in handle_internal_command tools/perf/perf.c:375
-    #14 0x55f2f4093bbd in run_argv tools/perf/perf.c:419
-    #15 0x55f2f409412b in main tools/perf/perf.c:535
-
-SUMMARY: AddressSanitizer: 4 byte(s) leaked in 2 allocation(s).
-```
-Fix by adding the missing destructor.
-
-Fixes: 865582c3f48e ("perf tools: Adds the tracepoint name parsing support")
-Signed-off-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 ---
- tools/perf/util/parse-events.y | 1 +
- 1 file changed, 1 insertion(+)
+ tools/build/Makefile.feature |  6 ++++--
+ tools/build/feature/Makefile |  8 +++++++-
+ tools/perf/Makefile.config   | 10 ++++++++++
+ 3 files changed, 21 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 786393106ae6..a41c5d265d8e 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -103,6 +103,7 @@ static void free_list_evsel(struct list_head* list_evsel)
- %type <list_evsel> groups
- %destructor { free_list_evsel ($$); } <list_evsel>
- %type <tracepoint_name> tracepoint_name
-+%destructor { free ($$.sys); free ($$.event); } <tracepoint_name>
- %type <hardware_term> PE_TERM_HW
- %destructor { free ($$.str); } <hardware_term>
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 934e2777a2db..23f56b95babf 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -72,7 +72,8 @@ FEATURE_TESTS_BASIC :=                  \
+         libzstd				\
+         disassembler-four-args		\
+         disassembler-init-styled	\
+-        file-handle
++        file-handle			\
++        shellcheck
  
+ # FEATURE_TESTS_BASIC + FEATURE_TESTS_EXTRA is the complete list
+ # of all feature tests
+@@ -138,7 +139,8 @@ FEATURE_DISPLAY ?=              \
+          get_cpuid              \
+          bpf			\
+          libaio			\
+-         libzstd
++         libzstd		\
++         shellcheck
+ 
+ #
+ # Declare group members of a feature to display the logical OR of the detection
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 3184f387990a..44ba6d0c98d0 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -76,7 +76,8 @@ FILES=                                          \
+          test-libzstd.bin			\
+          test-clang-bpf-co-re.bin		\
+          test-file-handle.bin			\
+-         test-libpfm4.bin
++         test-libpfm4.bin			\
++         test-shellcheck.bin
+ 
+ FILES := $(addprefix $(OUTPUT),$(FILES))
+ 
+@@ -92,6 +93,8 @@ __BUILD = $(CC) $(CFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.c,$(@F)) $(
+ __BUILDXX = $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.cpp,$(@F)) $(LDFLAGS)
+   BUILDXX = $(__BUILDXX) > $(@:.bin=.make.output) 2>&1
+ 
++  BUILD_BINARY = sh -c $1 > $(@:.bin=.make.output) 2>&1
++
+ ###############################
+ 
+ $(OUTPUT)test-all.bin:
+@@ -207,6 +210,9 @@ $(OUTPUT)test-libslang-include-subdir.bin:
+ $(OUTPUT)test-libtraceevent.bin:
+ 	$(BUILD) -ltraceevent
+ 
++$(OUTPUT)test-shellcheck.bin:
++	$(BUILD_BINARY) "shellcheck --version"
++
+ $(OUTPUT)test-libtracefs.bin:
+ 	 $(BUILD) $(shell $(PKG_CONFIG) --cflags libtraceevent 2>/dev/null) -ltracefs
+ 
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index d66b52407e19..e71fe95ad865 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -779,6 +779,16 @@ ifndef NO_SLANG
+   endif
+ endif
+ 
++ifneq ($(NO_SHELLCHECK),1)
++  $(call feature_check,shellcheck)
++  ifneq ($(feature-shellcheck), 1)
++    msg := $(warning No shellcheck found. please install ShellCheck);
++  else
++    $(call detected,CONFIG_SHELLCHECK)
++    NO_SHELLCHECK := 0
++  endif
++endif
++
+ ifdef GTK2
+   FLAGS_GTK2=$(CFLAGS) $(LDFLAGS) $(EXTLIBS) $(shell $(PKG_CONFIG) --libs --cflags gtk+-2.0 2>/dev/null)
+   $(call feature_check,gtk2)
 -- 
-2.42.0.283.g2d96d420d3-goog
+2.31.1
 
