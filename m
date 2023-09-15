@@ -2,92 +2,129 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BDFEEAA7B
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Sep 2023 23:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0230EE3F2E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Sep 2023 03:24:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230331AbjINX1Q (ORCPT
+        id S231680AbjIODYK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 14 Sep 2023 19:27:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34346 "EHLO
+        Thu, 14 Sep 2023 23:24:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230325AbjINX1J (ORCPT
+        with ESMTP id S229767AbjIODYJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 14 Sep 2023 19:27:09 -0400
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0470F271B
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 16:27:05 -0700 (PDT)
-Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-41513d2cca7so134461cf.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 16:27:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694734024; x=1695338824; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pW0EzSFjr21HAS1xyRMcomxYaM7qO8QFRhUu1mpdGn4=;
-        b=JXiZ79OPlZTBrtLkKL4okiz3H34BuZ8BAEsRtxf48IOrL1XLqOfEZJv586ABO+jY+M
-         Q4sDV6XCxBzmlAxdGSf3UwZ+IrdcTRdkb/acklhEM3mgDyqglIk4PWaC9Gosm7Z3VD+P
-         74AnpYbjAGzKsaX0iAwoDTrseUA5u/WXpOddDqj/pLoYEK/PWwZp8gvA678qt1CQrOTZ
-         u/zrkKDHxSRQxftEBSe+r01Vd/AlfzOoU6nQnwo0FYhY9V57wO7VOZkxd/rJ7wJV/Xet
-         HwMuNrYNuXbnXHsEgPBDE4mkCwEec36RiR45C1noTEBIVxQAUaK3j5kOI4A6eWSaiHFS
-         MXTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694734024; x=1695338824;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pW0EzSFjr21HAS1xyRMcomxYaM7qO8QFRhUu1mpdGn4=;
-        b=DyK5AfiNgX6Ei9xlBWmmO6SmniA0UP8mIZ3kdP2BN/9kOWiybsD1EsLODbNNfdf84y
-         mDxHGGPPyUF1AF4llMyMzLKXQx+/ecDNuh4/o9h3eCWcUi1natf4S9TteRxSF0HvQR0/
-         XhG4hsvhpbMGQrTCOQ21qzLRLP7z4JOzJm9xJs6NpMKFW0IaCz8en+5OETQTxDKuF++r
-         kM5YDItkWvP2zGU+giHqsl/aJnbBFEl1CjoBpTCubN9mp2I27APXkeGvJ8LsuGQN5Tj+
-         DcUl1MZAb6ohSTV2YEO0XL5rM2qEz6KZagEQ/xYrHQXpluqYtOCJhMlGbWWg5BcUgZGg
-         SxgA==
-X-Gm-Message-State: AOJu0Yx5hAwGiXoSB5IuzdEE/36KzaNifYS1EXcxY5jSbORE2YTzuq1A
-        LU3PYidvqsZIRUj9Ln8fv6ONQwyloxxAFQyRA2b+nmuLhlZKDxv+zT26cJYQ
-X-Google-Smtp-Source: AGHT+IGomaOkFpXvQ6DCt1NTlJh2nMjw8uP/9HOy5OlWTDNI3/K8CS/USjqV5uLGh7ZH4hraaNQZ5qma3hjsZ8mduuc=
-X-Received: by 2002:a05:622a:13c7:b0:410:8ba3:21c7 with SMTP id
- p7-20020a05622a13c700b004108ba321c7mr135118qtk.18.1694734024050; Thu, 14 Sep
- 2023 16:27:04 -0700 (PDT)
+        Thu, 14 Sep 2023 23:24:09 -0400
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1F14270C;
+        Thu, 14 Sep 2023 20:24:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+        s=201909; t=1694748242;
+        bh=6XG3B0FzXsmvZoKkkhm5wOJHB7Zd1TpS1JWjBGpTusE=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=PKpIyJXfdhJr2Sk2XiFpR9ouUJal5nD2tBGYvkTi+yQRsa9ZIvCgirZ5+6besrqBL
+         UlCTRNeIti/3HlXKC5s/hNh/zWDyp0CAj38ooZCtURDec0zV29n1q0vvHWP8LzC/8u
+         j+BMCh8sirKL/ZLOdFgRYAJwTicvGuLLCgCMve6s4NNE6G+YTeu3xI1X+6WSPiiUmJ
+         53dID1WgSubZVw/xkbEC18yiNd+dsH+sCiTIMfNZ4C0SAAbyPBEWD+PT1gDHirRJ7I
+         e1Oe/pJXxiN5V+sroGp3Ed6zutx8sxe3J/0iaG/Wx6C4lA/ghdRZcbu2waY0Piauup
+         ceLVj/+K8GSVw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Rn0045DDWz4wxR;
+        Fri, 15 Sep 2023 13:23:48 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Sohil Mehta <sohil.mehta@intel.com>, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Cc:     Sohil Mehta <sohil.mehta@intel.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Sergei Trofimovich <slyich@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rohan McLure <rmclure@linux.ibm.com>,
+        Andreas Schwab <schwab@linux-m68k.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Deepak Gupta <debug@rivosinc.com>, linux-alpha@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2] arch: Reserve map_shadow_stack() syscall number for
+ all architectures
+In-Reply-To: <20230914185804.2000497-1-sohil.mehta@intel.com>
+References: <20230914185804.2000497-1-sohil.mehta@intel.com>
+Date:   Fri, 15 Sep 2023 13:23:43 +1000
+Message-ID: <878r986rwg.fsf@mail.lhotse>
 MIME-Version: 1.0
-References: <2fb5c263fce545b0a5b745e6122fa88e@akamai.com>
-In-Reply-To: <2fb5c263fce545b0a5b745e6122fa88e@akamai.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 14 Sep 2023 16:26:52 -0700
-Message-ID: <CAP-5=fX-wPy11iVZyc7HRXr_rK3GVwU_7gRtLKFsZH5=i=jWTA@mail.gmail.com>
-Subject: Re: Symbol resolution when text in hugepages
-To:     "Jayaramappa, Srilakshmi" <sjayaram@akamai.com>
-Cc:     "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 13, 2023 at 5:21=E2=80=AFPM Jayaramappa, Srilakshmi
-<sjayaram@akamai.com> wrote:
+Sohil Mehta <sohil.mehta@intel.com> writes:
+> commit c35559f94ebc ("x86/shstk: Introduce map_shadow_stack syscall")
+> recently added support for map_shadow_stack() but it is limited to x86
+> only for now. There is a possibility that other architectures (namely,
+> arm64 and RISC-V), that are implementing equivalent support for shadow
+> stacks, might need to add support for it.
 >
-> Hi all,
+> Independent of that, reserving arch-specific syscall numbers in the
+> syscall tables of all architectures is good practice and would help
+> avoid future conflicts. map_shadow_stack() is marked as a conditional
+> syscall in sys_ni.c. Adding it to the syscall tables of other
+> architectures is harmless and would return ENOSYS when exercised.
 >
-> We have an application that has its text section backed by hugepages. In =
-our new build environment the text section of the binary is split up into r=
-ead and read/execute sections with offsets into the segment. This is breaki=
-ng the perf symbol resolution. Previously, everything was in one segment an=
-d there was no offset, so perf functioned fine. I know we can dump the symb=
-ols from readelf into /tmp/perf-PID.map file. I was wondering if anyone has=
- a cleaner solution? I'd appreciate any pointers you have.
+> Note, map_shadow_stack() was assigned #453 during the merge process
+> since #452 was taken by fchmodat2().
+>
+> For Powerpc, map it to sys_ni_syscall() as is the norm for Powerpc
+> syscall tables.
 
-Hi Sri,
+Mapping it to sys_map_shadow_stack() would work fine, but I'm happy with
+sys_ni_syscall as I don't see powerpc implementing map_shadow_stack()
+any time soon.
 
-Since Linux 5.4 you can use MADV_HUGEPAGE with madvise for file backed
-pages. It can still be profitable to use other sources of huge pages
-so that you don't wait for the hugepage to be formed, in that case if
-there is a file/memfd_create you can embed the information in the
-filename. For anonymous pages you can merge them when scanning the
-executable in perf_event__synthesize_mmap_events, but it can be
-problematic if the program header is on an anonymous page.
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
-Thanks,
-Ian
-
-> Thanks
-> Sri
+cheers
