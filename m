@@ -2,129 +2,222 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0230EE3F2E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Sep 2023 03:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFB9EE021D
+	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Sep 2023 05:18:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231680AbjIODYK (ORCPT
+        id S232003AbjIOFSr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 14 Sep 2023 23:24:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48770 "EHLO
+        Fri, 15 Sep 2023 01:18:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229767AbjIODYJ (ORCPT
+        with ESMTP id S229943AbjIOFSq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 14 Sep 2023 23:24:09 -0400
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1F14270C;
-        Thu, 14 Sep 2023 20:24:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-        s=201909; t=1694748242;
-        bh=6XG3B0FzXsmvZoKkkhm5wOJHB7Zd1TpS1JWjBGpTusE=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=PKpIyJXfdhJr2Sk2XiFpR9ouUJal5nD2tBGYvkTi+yQRsa9ZIvCgirZ5+6besrqBL
-         UlCTRNeIti/3HlXKC5s/hNh/zWDyp0CAj38ooZCtURDec0zV29n1q0vvHWP8LzC/8u
-         j+BMCh8sirKL/ZLOdFgRYAJwTicvGuLLCgCMve6s4NNE6G+YTeu3xI1X+6WSPiiUmJ
-         53dID1WgSubZVw/xkbEC18yiNd+dsH+sCiTIMfNZ4C0SAAbyPBEWD+PT1gDHirRJ7I
-         e1Oe/pJXxiN5V+sroGp3Ed6zutx8sxe3J/0iaG/Wx6C4lA/ghdRZcbu2waY0Piauup
-         ceLVj/+K8GSVw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Rn0045DDWz4wxR;
-        Fri, 15 Sep 2023 13:23:48 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Sohil Mehta <sohil.mehta@intel.com>, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Cc:     Sohil Mehta <sohil.mehta@intel.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Fri, 15 Sep 2023 01:18:46 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DDFD2711
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 Sep 2023 22:18:41 -0700 (PDT)
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38F5C1fp002847;
+        Fri, 15 Sep 2023 05:18:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=qjBLmxXh2CNl4fzeaMD1SlhQrXnevEk8zQPkZABxJL8=;
+ b=NN1a6gtFpS5g36ahK/Nhw4TO5OchjwchShbeQochVfGB6JG+4A5IJcinNNl88U87fNV/
+ 7hsPinWrQXc+P0zpj1Y14SY7fiXdYSjWsenPWeMDU0Ddvp/R0C7NTfemJADR+YUrkPGI
+ 4zt5+9mzidiOevxUJRhL2uFor3ZI9ugNyAAPwt0r6Ke6IP3afTv+lK4pfAbs4ieZFQlc
+ p3eIgE06kYeN6n/U4u+AsmJHA16Oe5IwqK5pfPMPgAkwpQmo+wCzxKQyhqJd3V3I8KM9
+ W+3VGNbZGaKUsx2RPOjoCaIayVYmuy3EfcP9Z/9CjiRdcdARH1KXhTsPYfg9ZUktnvZE wQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t4gwk05u5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 Sep 2023 05:18:27 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38F5Dc1o009983;
+        Fri, 15 Sep 2023 05:18:26 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t4gwk05tq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 Sep 2023 05:18:26 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38F409fk024061;
+        Fri, 15 Sep 2023 05:18:25 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+        by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3t131trv0u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 Sep 2023 05:18:25 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38F5IMFV62193990
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 Sep 2023 05:18:22 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7DC962004D;
+        Fri, 15 Sep 2023 05:18:22 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7BB7E20040;
+        Fri, 15 Sep 2023 05:18:20 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.67.213])
+        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Fri, 15 Sep 2023 05:18:20 +0000 (GMT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
+Subject: Re: [V2 1/2] tools/perf: Add text_end to "struct dso" to save .text
+ section size
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <3a03f694-ab6a-3985-9386-203e7137ae7f@intel.com>
+Date:   Fri, 15 Sep 2023 10:48:08 +0530
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Sergei Trofimovich <slyich@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rohan McLure <rmclure@linux.ibm.com>,
-        Andreas Schwab <schwab@linux-m68k.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Deepak Gupta <debug@rivosinc.com>, linux-alpha@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2] arch: Reserve map_shadow_stack() syscall number for
- all architectures
-In-Reply-To: <20230914185804.2000497-1-sohil.mehta@intel.com>
-References: <20230914185804.2000497-1-sohil.mehta@intel.com>
-Date:   Fri, 15 Sep 2023 13:23:43 +1000
-Message-ID: <878r986rwg.fsf@mail.lhotse>
-MIME-Version: 1.0
-Content-Type: text/plain
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>,
+        Disha Goel <disgoel@linux.ibm.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7427EEAF-2E67-47CE-953D-55ED87329752@linux.vnet.ibm.com>
+References: <20230907164529.36222-1-atrajeev@linux.vnet.ibm.com>
+ <3a03f694-ab6a-3985-9386-203e7137ae7f@intel.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+X-Mailer: Apple Mail (2.3731.700.6)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: LS_ESXEXGUyHwB2Ce2j7Ww2YfByyOTAQ
+X-Proofpoint-ORIG-GUID: PV4QzvjAntXRGFSJRF34ZHQxKKz5VYza
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-15_04,2023-09-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ impostorscore=0 adultscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 suspectscore=0 lowpriorityscore=0 priorityscore=1501
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309150044
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Sohil Mehta <sohil.mehta@intel.com> writes:
-> commit c35559f94ebc ("x86/shstk: Introduce map_shadow_stack syscall")
-> recently added support for map_shadow_stack() but it is limited to x86
-> only for now. There is a possibility that other architectures (namely,
-> arm64 and RISC-V), that are implementing equivalent support for shadow
-> stacks, might need to add support for it.
->
-> Independent of that, reserving arch-specific syscall numbers in the
-> syscall tables of all architectures is good practice and would help
-> avoid future conflicts. map_shadow_stack() is marked as a conditional
-> syscall in sys_ni.c. Adding it to the syscall tables of other
-> architectures is harmless and would return ENOSYS when exercised.
->
-> Note, map_shadow_stack() was assigned #453 during the merge process
-> since #452 was taken by fchmodat2().
->
-> For Powerpc, map it to sys_ni_syscall() as is the norm for Powerpc
-> syscall tables.
 
-Mapping it to sys_map_shadow_stack() would work fine, but I'm happy with
-sys_ni_syscall as I don't see powerpc implementing map_shadow_stack()
-any time soon.
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+> On 14-Sep-2023, at 11:49 PM, Adrian Hunter <adrian.hunter@intel.com> =
+wrote:
+>=20
+> On 7/09/23 19:45, Athira Rajeev wrote:
+>> Update "struct dso" to include new member "text_end".
+>> This new field will represent the offset for end of text
+>> section for a dso. For elf, this value is derived as:
+>> sh_size (Size of section in byes) + sh_offset (Section file
+>> offst) of the elf header for text.
+>>=20
+>> For bfd, this value is derived as:
+>> 1. For PE file,
+>> section->size + ( section->vma - dso->text_offset)
+>> 2. Other cases:
+>> section->filepos (file position) + section->size (size of
+>> section)
+>>=20
+>> To resolve the address from a sample, perf looks at the
+>> DSO maps. In case of address from a kernel module, there
+>> were some address found to be not resolved. This was
+>> observed while running perf test for "Object code reading".
+>> Though the ip falls beteen the start address of the loaded
+>> module (perf map->start ) and end address ( perf map->end),
+>> it was unresolved.
+>>=20
+>> Example:
+>>=20
+>>    Reading object code for memory address: 0xc008000007f0142c
+>>    File is: /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
+>>    On file address is: 0x1114cc
+>>    Objdump command is: objdump -z -d --start-address=3D0x11142c =
+--stop-address=3D0x1114ac /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
+>>    objdump read too few bytes: 128
+>>    test child finished with -1
+>>=20
+>> Here, module is loaded at:
+>>    # cat /proc/modules | grep xfs
+>>    xfs 2228224 3 - Live 0xc008000007d00000
+>>=20
+>> =46rom objdump for xfs module, text section is:
+>>    text 0010f7bc  0000000000000000 0000000000000000 000000a0 2**4
+>>=20
+>> Here the offset for 0xc008000007f0142c ie  0x112074 falls out
+>> .text section which is up to 0x10f7bc.
+>>=20
+>> In this case for module, the address 0xc008000007e11fd4 is pointing
+>> to stub instructions. This address range represents the module stubs
+>> which is allocated on module load and hence is not part of DSO =
+offset.
+>>=20
+>> To identify such  address, which falls out of text
+>> section and within module end, added the new field "text_end" to
+>> "struct dso".
+>>=20
+>> Reported-by: Disha Goel <disgoel@linux.ibm.com>
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>=20
+> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-cheers
+Hi Adrian
+
+Thanks for the review
+
+>=20
+>> ---
+>> Changelog:
+>> v1 -> v2:
+>> Added text_end for bfd also by updating dso__load_bfd_symbols
+>> as suggested by Adrian.
+>>=20
+>> tools/perf/util/dso.h        | 1 +
+>> tools/perf/util/symbol-elf.c | 4 +++-
+>> tools/perf/util/symbol.c     | 2 ++
+>> 3 files changed, 6 insertions(+), 1 deletion(-)
+>>=20
+>> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+>> index b41c9782c754..70fe0fe69bef 100644
+>> --- a/tools/perf/util/dso.h
+>> +++ b/tools/perf/util/dso.h
+>> @@ -181,6 +181,7 @@ struct dso {
+>> u8  rel;
+>> struct build_id  bid;
+>> u64  text_offset;
+>> + u64  text_end;
+>> const char  *short_name;
+>> const char  *long_name;
+>> u16  long_name_len;
+>> diff --git a/tools/perf/util/symbol-elf.c =
+b/tools/perf/util/symbol-elf.c
+>> index 95e99c332d7e..9e7eeaf616b8 100644
+>> --- a/tools/perf/util/symbol-elf.c
+>> +++ b/tools/perf/util/symbol-elf.c
+>> @@ -1514,8 +1514,10 @@ dso__load_sym_internal(struct dso *dso, struct =
+map *map, struct symsrc *syms_ss,
+>> }
+>>=20
+>> if (elf_section_by_name(runtime_ss->elf, &runtime_ss->ehdr, &tshdr,
+>> - ".text", NULL))
+>> + ".text", NULL)) {
+>> dso->text_offset =3D tshdr.sh_addr - tshdr.sh_offset;
+>> + dso->text_end =3D tshdr.sh_offset + tshdr.sh_size;
+>> + }
+>>=20
+>> if (runtime_ss->opdsec)
+>> opddata =3D elf_rawdata(runtime_ss->opdsec, NULL);
+>> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+>> index 3f36675b7c8f..f25e4e62cf25 100644
+>> --- a/tools/perf/util/symbol.c
+>> +++ b/tools/perf/util/symbol.c
+>> @@ -1733,8 +1733,10 @@ int dso__load_bfd_symbols(struct dso *dso, =
+const char *debugfile)
+>> /* PE symbols can only have 4 bytes, so use .text high bits */
+>> dso->text_offset =3D section->vma - (u32)section->vma;
+>> dso->text_offset +=3D (u32)bfd_asymbol_value(symbols[i]);
+>> + dso->text_end =3D (section->vma - dso->text_offset) + =
+section->size;
+>> } else {
+>> dso->text_offset =3D section->vma - section->filepos;
+>> + dso->text_end =3D section->filepos + section->size;
+>> }
+>> }
+
+
