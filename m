@@ -2,200 +2,207 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B83CD37B0
-	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Sep 2023 23:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 699E5CD37AF
+	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Sep 2023 00:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231819AbjIOXlA (ORCPT
+        id S232867AbjIPAWI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 15 Sep 2023 19:41:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53880 "EHLO
+        Fri, 15 Sep 2023 20:22:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238162AbjIOXk6 (ORCPT
+        with ESMTP id S238200AbjIPAVt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 15 Sep 2023 19:40:58 -0400
-Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 302F1211E;
-        Fri, 15 Sep 2023 16:40:53 -0700 (PDT)
-Received: by mail-io1-xd32.google.com with SMTP id ca18e2360f4ac-79ac0d271b4so44607539f.1;
-        Fri, 15 Sep 2023 16:40:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1694821252; x=1695426052; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DO9FWXF4sW0O2zZEyRretZrMgBHOH2O0kUFn014rSMs=;
-        b=C8b6KSmazj+mCDqrEE5RFaOC4Z8DmD45Sr5XdYAbO/hfDbxpvh55PO/p4jYte5Rrbp
-         CAWPNLbT7OX49e+h3FVZzLx5m5m8c/wrukxGCQbnMVN0u4UPwaxjKTJZKmenhueoVR1k
-         Jv4E5OEzKy9n+ZAzBv8htHxpoQHHCwB0UHPJz9rkbw30C/T5d3JLPOdqRchOqIRIC/mJ
-         tZm8Zqx6X7JVYO18q+0NmB3H+ey3/Trojgd4OJkZjol4sW+Hgk+WGrUMSQE34ex9kvlA
-         61dHreuLqA00Gdqy0qntHFbcY1YpR6WmtGgGWn2nNJWnCEhZUCUzHu6Q0euNlx7T9ai4
-         kB2Q==
+        Fri, 15 Sep 2023 20:21:49 -0400
+Received: from mail-io1-xd2a.google.com (mail-io1-xd2a.google.com [IPv6:2607:f8b0:4864:20::d2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A65143AB5;
+        Fri, 15 Sep 2023 17:17:26 -0700 (PDT)
+Received: by mail-io1-xd2a.google.com with SMTP id ca18e2360f4ac-77ac14ff51bso89735339f.3;
+        Fri, 15 Sep 2023 17:17:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694821252; x=1695426052;
+        d=1e100.net; s=20230601; t=1694823261; x=1695428061;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DO9FWXF4sW0O2zZEyRretZrMgBHOH2O0kUFn014rSMs=;
-        b=QYFF4DG+eadZNPGviPcPquXSekBQ5zNPlS3vcBpUK4b/Crx8zlGwu9EENT/P1giZDE
-         Dn/rY/UN5m37y1ZLpywgPydTw83kkchZACEE9JTimbixYVIsUh1UKvZ2ANQlUz0R0APn
-         UetutL9Ad6PXm9ErK3Lez3/4PiE63TwdhJ1g3SzaOLuVaavaVeWZNS/B5SSNOoVE++7j
-         WRjX60BNMKVCU14VOUeomlHOp7nLdZE24MB52YNfaUUab9tA7CBI4JFTQuGL73hzoazL
-         J39are9Z1ma9uttH8798j7EWbmY4Snnw4OxRk84WCxpHX1Is3KDcRhjLCd8CJBQvdwdX
-         /VWw==
-X-Gm-Message-State: AOJu0YztJr5mbaD4v5W/e68bjZQ+DcEfmzKMCJJ6M5A4zxTDhmNATsAc
-        aLNXal0SuHOQHuUSti27t5YtGoKFkS5uq+EcNsU=
-X-Google-Smtp-Source: AGHT+IF12SUvYWI+8jdWScsnqk4oXrhiTK4VkFBJRTWeEpkNAI0ZRDiJaAFILrXncaT4cn0S3KdvsfsNaHFa0k9zLN8=
-X-Received: by 2002:a6b:4001:0:b0:794:ed2b:2520 with SMTP id
- k1-20020a6b4001000000b00794ed2b2520mr3049414ioa.15.1694821252316; Fri, 15 Sep
- 2023 16:40:52 -0700 (PDT)
+        bh=mg+2dCrd8UTwfK+HAOc17X5FOQTPFeCWzvxdUscOZgU=;
+        b=DTlwS6CxIg2qK8ZRwHlGZ6Ia0BhPhdBqHKUtb3haTAtOlZ39RBc/Fr064/TvVMIE8f
+         oMriKAJA5XpfnjZ80snDe2JpaGxTpIQWRs1ZdVvkXl4BnhJDDExWlYMqMItMD6N5r6KN
+         I+h58DPVmioeWdpcekKd/GjzTpAHLxqJTWraBJWMtHhQQCdMsQ0+WwylyQOuLzmVvXQg
+         qomeH33I6bR7QC/8tKgnODdGhQNvRAt7hB6G3Ghx9ojRpdZV0yqvfZBY+kTe6WKKWSHg
+         mlAWSgTfO5br6QXDe6LgsvSl37ILxWkctImXu6pp9/o3xIhmL2CEUqkvLBsSZu+OgEHd
+         LCQA==
+X-Gm-Message-State: AOJu0YxP30y7jr5IvrX9IpGpB/cPE6++2wJ5xgYGAWYVFb1iwTMpOCYT
+        f4S0l0U0/dFOiKuZHHyMNEifpDP6vG2xZNvRShzb5XfBy4g=
+X-Google-Smtp-Source: AGHT+IFIZ6gQXt/jo/6ORQjPMRep/mYCOtnjiQF+55Lhva85OmID1+3tz8ye/WhfUe1m4yrXl1+0fsAJPZeww5BJQ3o=
+X-Received: by 2002:a6b:5809:0:b0:791:1739:d525 with SMTP id
+ m9-20020a6b5809000000b007911739d525mr2515952iob.20.1694823260628; Fri, 15 Sep
+ 2023 17:14:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230913125157.2790375-1-tmricht@linux.ibm.com> <CAP-5=fUiHMRPVYhbQv-YM+EMKyBF6TEopea=PPX2thbtdmhGsg@mail.gmail.com>
-In-Reply-To: <CAP-5=fUiHMRPVYhbQv-YM+EMKyBF6TEopea=PPX2thbtdmhGsg@mail.gmail.com>
-From:   Namhyung Kim <namhyung@gmail.com>
-Date:   Fri, 15 Sep 2023 16:40:41 -0700
-Message-ID: <CAM9d7cgbMZzJea_TJJ46AEhLentykmy8r6twC8bkkgXTNAMqgw@mail.gmail.com>
-Subject: Re: [PATCH] perf jevent: fix core dump on software events on s390
-To:     Ian Rogers <irogers@google.com>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, sumanthk@linux.ibm.com, dengler@linux.ibm.com,
-        svens@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com
+References: <20230904023340.12707-1-yangjihong1@huawei.com>
+ <453bd95c-932d-c60a-bd7b-96f87bc7779a@amd.com> <ZQDK4kZhwyZL/8tx@kernel.org>
+In-Reply-To: <ZQDK4kZhwyZL/8tx@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 15 Sep 2023 17:14:09 -0700
+Message-ID: <CAM9d7cgNH2+zhSAmA3en_6as915UsF25MoLbfjE350tAP43Bog@mail.gmail.com>
+Subject: Re: [PATCH v8 0/6] perf record: Track sideband events for all CPUs
+ when tracing selected CPUs
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ravi Bangoria <ravi.bangoria@amd.com>,
+        Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com,
+        kan.liang@linux.intel.com, james.clark@arm.com,
+        tmricht@linux.ibm.com, ak@linux.intel.com,
+        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hello,
 
-On Thu, Sep 14, 2023 at 6:14=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
+On Tue, Sep 12, 2023 at 1:32 PM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> On Wed, Sep 13, 2023 at 5:52=E2=80=AFAM Thomas Richter <tmricht@linux.ibm=
-.com> wrote:
+> Em Tue, Sep 12, 2023 at 02:41:56PM +0530, Ravi Bangoria escreveu:
+> > On 04-Sep-23 8:03 AM, Yang Jihong wrote:
+> > > User space tasks can migrate between CPUs, track sideband events for all
+> > > CPUs.
+> > >
+> > > The specific scenarios are as follows:
+> > >
+> > >          CPU0                                 CPU1
+> > >   perf record -C 0 start
+> > >                               taskA starts to be created and executed
+> > >                                 -> PERF_RECORD_COMM and PERF_RECORD_MMAP
+> > >                                    events only deliver to CPU1
+> > >                               ......
+> > >                                 |
+> > >                           migrate to CPU0
+> > >                                 |
+> > >   Running on CPU0    <----------/
+> > >   ...
+> > >
+> > >   perf record -C 0 stop
+> > >
+> > > Now perf samples the PC of taskA. However, perf does not record the
+> > > PERF_RECORD_COMM and PERF_RECORD_COMM events of taskA.
+> > > Therefore, the comm and symbols of taskA cannot be parsed.
+> > >
+> > > The sys_perf_event_open invoked is as follows:
+> > >
+> > >   # perf --debug verbose=3 record -e cpu-clock -C 1 true
+> > >   <SNIP>
+> > >   Opening: cpu-clock
+> > >   ------------------------------------------------------------
+> > >   perf_event_attr:
+> > >     type                             1 (PERF_TYPE_SOFTWARE)
+> > >     size                             136
+> > >     config                           0 (PERF_COUNT_SW_CPU_CLOCK)
+> > >     { sample_period, sample_freq }   4000
+> > >     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+> > >     read_format                      ID|LOST
+> > >     disabled                         1
+> > >     inherit                          1
+> > >     freq                             1
+> > >     sample_id_all                    1
+> > >     exclude_guest                    1
+> > >   ------------------------------------------------------------
+> > >   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
+> > >   Opening: dummy:u
+> > >   ------------------------------------------------------------
+> > >   perf_event_attr:
+> > >     type                             1 (PERF_TYPE_SOFTWARE)
+> > >     size                             136
+> > >     config                           0x9 (PERF_COUNT_SW_DUMMY)
+> > >     { sample_period, sample_freq }   1
+> > >     sample_type                      IP|TID|TIME|CPU|IDENTIFIER
+> > >     read_format                      ID|LOST
+> > >     inherit                          1
+> > >     exclude_kernel                   1
+> > >     exclude_hv                       1
+> > >     mmap                             1
+> > >     comm                             1
+> > >     task                             1
+> > >     sample_id_all                    1
+> > >     exclude_guest                    1
+> > >     mmap2                            1
+> > >     comm_exec                        1
+> > >     ksymbol                          1
+> > >     bpf_event                        1
+> > >   ------------------------------------------------------------
+> > >   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
+> > >   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 7
+> > >   sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 9
+> > >   sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 10
+> > >   sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 11
+> > >   sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 12
+> > >   sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 13
+> > >   sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
+> > >   <SNIP>
+> > >
+> > > Changes since_v7:
+> > >  - The condition for requiring system_wide sideband is changed to
+> > >    "as long as a non-dummy event exists" (patch4).
+> > >  - Modify the corresponding test case to record only dummy event (patch6).
+> > >  - Thanks to tested-by tag from Ravi, but because the solution is modified,
+> > >    the tested-by tag of Ravi is not added to this version.
 > >
-> > Running commands such as
-> >  # ./perf stat -e cs -- true
-> >  Segmentation fault (core dumped)
-> >  # ./perf stat -e cpu-clock-- true
-> >  Segmentation fault (core dumped)
-> >  #
+> > I've re-tested v8 with my simple test.
 > >
-> > dump core. This should not happen as these events are defined
-> > even when no hardware PMU is available.
-> > Debugging this reveals this call chain:
-> >
-> >   perf_pmus__find_by_type(type=3D1)
-> >   +--> pmu_read_sysfs(core_only=3Dfalse)
-> >        +--> perf_pmu__find2(dirfd=3D3, name=3D0x152a113 "software")
-> >             +--> perf_pmu__lookup(pmus=3D0x14f0568 <other_pmus>, dirfd=
-=3D3,
-> >                                   lookup_name=3D0x152a113 "software")
-> >                  +--> perf_pmu__find_events_table (pmu=3D0x1532130)
-> >
-> > Now the pmu is "software" and it tries to find a proper table
-> > generated by the pmu-event generation process for s390:
-> >
-> >  # cd pmu-events/
-> >  # ./jevents.py  s390 all /root/linux/tools/perf/pmu-events/arch |\
-> >         grep -E '^const struct pmu_table_entry'
-> >  const struct pmu_table_entry pmu_events__cf_z10[] =3D {
-> >  const struct pmu_table_entry pmu_events__cf_z13[] =3D {
-> >  const struct pmu_table_entry pmu_metrics__cf_z13[] =3D {
-> >  const struct pmu_table_entry pmu_events__cf_z14[] =3D {
-> >  const struct pmu_table_entry pmu_metrics__cf_z14[] =3D {
-> >  const struct pmu_table_entry pmu_events__cf_z15[] =3D {
-> >  const struct pmu_table_entry pmu_metrics__cf_z15[] =3D {
-> >  const struct pmu_table_entry pmu_events__cf_z16[] =3D {
-> >  const struct pmu_table_entry pmu_metrics__cf_z16[] =3D {
-> >  const struct pmu_table_entry pmu_events__cf_z196[] =3D {
-> >  const struct pmu_table_entry pmu_events__cf_zec12[] =3D {
-> >  const struct pmu_table_entry pmu_metrics__cf_zec12[] =3D {
-> >  const struct pmu_table_entry pmu_events__test_soc_cpu[] =3D {
-> >  const struct pmu_table_entry pmu_metrics__test_soc_cpu[] =3D {
-> >  const struct pmu_table_entry pmu_events__test_soc_sys[] =3D {
-> >  #
-> >
-> > However event "software" is not listed, as can be seen in the
-> > generated const struct pmu_events_map pmu_events_map[].
-> > So in function perf_pmu__find_events_table(), the variable
-> > table is initialized to NULL, but never set to a proper
-> > value. The function scans all generated &pmu_events_map[]
-> > tables, but no table matches, because the tables are
-> > s390 CPU Measurement unit specific:
-> >
-> >   i =3D 0;
-> >   for (;;) {
-> >       const struct pmu_events_map *map =3D &pmu_events_map[i++];
-> >       if (!map->arch)
-> >            break;
-> >
-> >       --> the maps are there because the build generated them
-> >
-> >            if (!strcmp_cpuid_str(map->cpuid, cpuid)) {
-> >                 table =3D &map->event_table;
-> >                 break;
-> >            }
-> >       --> Since no matching CPU string the table var remains 0x0
-> >       }
-> >       free(cpuid);
-> >       if (!pmu)
-> >            return table;
-> >
-> >       --> The pmu is "software" so it exists and no return
-> >
-> >       --> and here perf dies because table is 0x0
-> >       for (i =3D 0; i < table->num_pmus; i++) {
-> >               ...
-> >       }
-> >       return NULL;
-> >
-> > Fix this and do not access the table variable. Instead return 0x0
-> > which is the same return code when the for-loop was not successful.
-> >
-> > Output after:
-> >  # ./perf stat -e cs -- true
-> >
-> >  Performance counter stats for 'true':
-> >
-> >                  0      cs
-> >
-> >        0.000853105 seconds time elapsed
-> >
-> >        0.000061000 seconds user
-> >        0.000827000 seconds sys
-> >
-> >  # ./perf stat -e cpu-clock -- true
-> >
-> >  Performance counter stats for 'true':
-> >
-> >               0.25 msec cpu-clock #    0.341 CPUs utilized
-> >
-> >        0.000728383 seconds time elapsed
-> >
-> >        0.000055000 seconds user
-> >        0.000706000 seconds sys
-> >
-> >  # ./perf stat -e cycles -- true
-> >
-> >  Performance counter stats for 'true':
-> >
-> >    <not supported>      cycles
-> >
-> >        0.000767298 seconds time elapsed
-> >
-> >        0.000055000 seconds user
-> >        0.000739000 seconds sys
-> >
-> >  #
-> >
-> > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> > Tested-by: Ravi Bangoria <ravi.bangoria@amd.com>
 >
-> Reviewed-by: Ian Rogers <irogers@google.com>
+>
+> Thanks, applied to the csets that were still sitting in an umpublished
+> perf-tools-next local branch, soon public.
 
-I'll add this too, ok?
+Now I'm seeing a perf test failure on perf-tools-next.
 
-Fixes: 7c52f10c0d4d8 ("perf pmu: Cache JSON events table")
 
-Thanks,
-Namhyung
+$ sudo ./perf test -v 17
+ 17: Setup struct perf_event_attr                                    :
+--- start ---
+test child forked, pid 1616372
+Using CPUID GenuineIntel-6-8C-1
+running './tests/attr/test-record-branch-filter-k'
+running './tests/attr/test-record-period'
+running './tests/attr/test-record-graph-default'
+test limitation '!aarch64'
+excluded architecture list ['aarch64']
+running './tests/attr/test-record-branch-filter-any'
+running './tests/attr/test-record-data'
+running './tests/attr/test-stat-detailed-1'
+running './tests/attr/test-record-branch-filter-hv'
+running './tests/attr/test-record-graph-fp'
+test limitation '!aarch64'
+excluded architecture list ['aarch64']
+running './tests/attr/test-record-basic'
+running './tests/attr/test-record-group2'
+running './tests/attr/test-stat-detailed-3'
+running './tests/attr/test-record-branch-any'
+running './tests/attr/test-record-branch-filter-ind_call'
+running './tests/attr/test-stat-detailed-2'
+running './tests/attr/test-record-group1'
+running './tests/attr/test-record-count'
+running './tests/attr/test-record-no-samples'
+running './tests/attr/test-record-graph-dwarf'
+running './tests/attr/test-record-spe-period'
+test limitation 'aarch64'
+skipped [x86_64] './tests/attr/test-record-spe-period'
+running './tests/attr/test-record-graph-fp-aarch64'
+test limitation 'aarch64'
+skipped [x86_64] './tests/attr/test-record-graph-fp-aarch64'
+running './tests/attr/test-record-freq'
+running './tests/attr/test-record-pfm-period'
+running './tests/attr/test-record-no-buffering'
+running './tests/attr/test-record-no-inherit'
+running './tests/attr/test-record-branch-filter-any_ret'
+running './tests/attr/test-record-raw'
+running './tests/attr/test-record-dummy-C0'
+expected read_format=4, got 20
+FAILED './tests/attr/test-record-dummy-C0' - match failure
+test child finished with -1
+---- end ----
+Setup struct perf_event_attr: FAILED!
