@@ -2,207 +2,234 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 699E5CD37AF
-	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Sep 2023 00:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFCBCD37AF
+	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Sep 2023 00:32:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232867AbjIPAWI convert rfc822-to-8bit (ORCPT
+        id S238341AbjIPAcS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 15 Sep 2023 20:22:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57716 "EHLO
+        Fri, 15 Sep 2023 20:32:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238200AbjIPAVt (ORCPT
+        with ESMTP id S238644AbjIPAcN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 15 Sep 2023 20:21:49 -0400
-Received: from mail-io1-xd2a.google.com (mail-io1-xd2a.google.com [IPv6:2607:f8b0:4864:20::d2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A65143AB5;
-        Fri, 15 Sep 2023 17:17:26 -0700 (PDT)
-Received: by mail-io1-xd2a.google.com with SMTP id ca18e2360f4ac-77ac14ff51bso89735339f.3;
-        Fri, 15 Sep 2023 17:17:26 -0700 (PDT)
+        Fri, 15 Sep 2023 20:32:13 -0400
+Received: from mail-oi1-x24a.google.com (mail-oi1-x24a.google.com [IPv6:2607:f8b0:4864:20::24a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 658151FDF
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:31:25 -0700 (PDT)
+Received: by mail-oi1-x24a.google.com with SMTP id 5614622812f47-3ab7fb11711so4347081b6e.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:31:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1694824284; x=1695429084; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=NdOAPx70WjWtTXOKtIxgwEtN+XJRELer/ruyZoFwPzQ=;
+        b=RlXJm+mZvrxm3TdH7rqHIPrlVvTo4KquPvK8UVq3NN5veuJB/mi9ryJHvFeKMAtnPp
+         hPxgp34Yh6rJ5lm+4syv8SCZe+7xA7Fv6c1FljwvDQiy3j2D5SfDPLC4LvU4LK+f0Hnd
+         XzPGLz6ybxyOrNbEJSaoUgSEsV9nduzwqd8vi1CA4uDfumU39XR/gEIesx64Hi95yPKN
+         7OdYcCV1Sv/tEKMWY6ex/Wwd6o1RSVZW3lb5oOgf0+xs2BvFq4c43x+2pmamAn+AbBR8
+         aeZDJ4jC0Gn6tEare6UsiV0E76tCnR9I5p3lITfJ2MvZSPAoe7bUb/PsN2uzYgSF4MPp
+         Dh+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694823261; x=1695428061;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mg+2dCrd8UTwfK+HAOc17X5FOQTPFeCWzvxdUscOZgU=;
-        b=DTlwS6CxIg2qK8ZRwHlGZ6Ia0BhPhdBqHKUtb3haTAtOlZ39RBc/Fr064/TvVMIE8f
-         oMriKAJA5XpfnjZ80snDe2JpaGxTpIQWRs1ZdVvkXl4BnhJDDExWlYMqMItMD6N5r6KN
-         I+h58DPVmioeWdpcekKd/GjzTpAHLxqJTWraBJWMtHhQQCdMsQ0+WwylyQOuLzmVvXQg
-         qomeH33I6bR7QC/8tKgnODdGhQNvRAt7hB6G3Ghx9ojRpdZV0yqvfZBY+kTe6WKKWSHg
-         mlAWSgTfO5br6QXDe6LgsvSl37ILxWkctImXu6pp9/o3xIhmL2CEUqkvLBsSZu+OgEHd
-         LCQA==
-X-Gm-Message-State: AOJu0YxP30y7jr5IvrX9IpGpB/cPE6++2wJ5xgYGAWYVFb1iwTMpOCYT
-        f4S0l0U0/dFOiKuZHHyMNEifpDP6vG2xZNvRShzb5XfBy4g=
-X-Google-Smtp-Source: AGHT+IFIZ6gQXt/jo/6ORQjPMRep/mYCOtnjiQF+55Lhva85OmID1+3tz8ye/WhfUe1m4yrXl1+0fsAJPZeww5BJQ3o=
-X-Received: by 2002:a6b:5809:0:b0:791:1739:d525 with SMTP id
- m9-20020a6b5809000000b007911739d525mr2515952iob.20.1694823260628; Fri, 15 Sep
- 2023 17:14:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230904023340.12707-1-yangjihong1@huawei.com>
- <453bd95c-932d-c60a-bd7b-96f87bc7779a@amd.com> <ZQDK4kZhwyZL/8tx@kernel.org>
-In-Reply-To: <ZQDK4kZhwyZL/8tx@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 15 Sep 2023 17:14:09 -0700
-Message-ID: <CAM9d7cgNH2+zhSAmA3en_6as915UsF25MoLbfjE350tAP43Bog@mail.gmail.com>
-Subject: Re: [PATCH v8 0/6] perf record: Track sideband events for all CPUs
- when tracing selected CPUs
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ravi Bangoria <ravi.bangoria@amd.com>,
-        Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com,
-        kan.liang@linux.intel.com, james.clark@arm.com,
-        tmricht@linux.ibm.com, ak@linux.intel.com,
-        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
+        d=1e100.net; s=20230601; t=1694824284; x=1695429084;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NdOAPx70WjWtTXOKtIxgwEtN+XJRELer/ruyZoFwPzQ=;
+        b=aywup0W8GT0DGOMOjVmZemQl9dIodB7HwcllpoG1hyKgMRzOiJvTHoKvsI+SN19eYo
+         BN4O8T2Rcv/kXkeIAgRTYghklC3lOK4mdxN3rGkF+3r4U6/cbHTpiUSJJi6w5C67e7ml
+         uyZGPFfaGnG6reUK4i5qQwS/LXRTFmNufUmLhcmNs6XwNGCEeTp8Uyp460LxJ9gO9+fi
+         hiXNhNYRntwihn6k7JNTv3/5Ebp8yAFs++jtzdpPHKzI5Hplkbzka8lepD8qsK5QqQpB
+         zKLIfKkfrJEH/5ZJ3oHu9HJ8kmVMflTLM8CDN7uy4BYi3rntk7XJzfovr1TCxwoxwkyN
+         V4MA==
+X-Gm-Message-State: AOJu0Yxqo14jGQb9XDVA+46eM90UJ3CEZykmUI0gAWjMP6Am2usR4Xgy
+        V5Y2ma2WCDg6CqlxuEdqd7I6iOGXEXA=
+X-Google-Smtp-Source: AGHT+IFjfayrLbVmI/uUcITF7riix4t2p7LQSznFwYgaB2xPw0hEc6MrZUjOPPPKeYuL02E3L+TxPOZWHW4=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6870:b7ad:b0:1d6:4da3:ae2d with SMTP id
+ ed45-20020a056870b7ad00b001d64da3ae2dmr1068876oab.7.1694824284654; Fri, 15
+ Sep 2023 17:31:24 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date:   Fri, 15 Sep 2023 17:30:54 -0700
+In-Reply-To: <20230916003118.2540661-1-seanjc@google.com>
+Mime-Version: 1.0
+References: <20230916003118.2540661-1-seanjc@google.com>
+X-Mailer: git-send-email 2.42.0.459.ge4e396fd5e-goog
+Message-ID: <20230916003118.2540661-3-seanjc@google.com>
+Subject: [PATCH 02/26] vfio: Move KVM get/put helpers to colocate it with
+ other KVM related code
+From:   Sean Christopherson <seanjc@google.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Anup Patel <anup@brainfault.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Sean Christopherson <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Anish Ghulati <aghulati@google.com>,
+        Venkatesh Srinivas <venkateshs@chromium.org>,
+        Andrew Thornton <andrewth@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Move the definitions of vfio_device_get_kvm_safe() and vfio_device_put_kvm()
+down in vfio_main.c to colocate them with other KVM-specific functions,
+e.g. to allow wrapping them all with a single CONFIG_KVM check.
 
-On Tue, Sep 12, 2023 at 1:32 PM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Tue, Sep 12, 2023 at 02:41:56PM +0530, Ravi Bangoria escreveu:
-> > On 04-Sep-23 8:03 AM, Yang Jihong wrote:
-> > > User space tasks can migrate between CPUs, track sideband events for all
-> > > CPUs.
-> > >
-> > > The specific scenarios are as follows:
-> > >
-> > >          CPU0                                 CPU1
-> > >   perf record -C 0 start
-> > >                               taskA starts to be created and executed
-> > >                                 -> PERF_RECORD_COMM and PERF_RECORD_MMAP
-> > >                                    events only deliver to CPU1
-> > >                               ......
-> > >                                 |
-> > >                           migrate to CPU0
-> > >                                 |
-> > >   Running on CPU0    <----------/
-> > >   ...
-> > >
-> > >   perf record -C 0 stop
-> > >
-> > > Now perf samples the PC of taskA. However, perf does not record the
-> > > PERF_RECORD_COMM and PERF_RECORD_COMM events of taskA.
-> > > Therefore, the comm and symbols of taskA cannot be parsed.
-> > >
-> > > The sys_perf_event_open invoked is as follows:
-> > >
-> > >   # perf --debug verbose=3 record -e cpu-clock -C 1 true
-> > >   <SNIP>
-> > >   Opening: cpu-clock
-> > >   ------------------------------------------------------------
-> > >   perf_event_attr:
-> > >     type                             1 (PERF_TYPE_SOFTWARE)
-> > >     size                             136
-> > >     config                           0 (PERF_COUNT_SW_CPU_CLOCK)
-> > >     { sample_period, sample_freq }   4000
-> > >     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
-> > >     read_format                      ID|LOST
-> > >     disabled                         1
-> > >     inherit                          1
-> > >     freq                             1
-> > >     sample_id_all                    1
-> > >     exclude_guest                    1
-> > >   ------------------------------------------------------------
-> > >   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
-> > >   Opening: dummy:u
-> > >   ------------------------------------------------------------
-> > >   perf_event_attr:
-> > >     type                             1 (PERF_TYPE_SOFTWARE)
-> > >     size                             136
-> > >     config                           0x9 (PERF_COUNT_SW_DUMMY)
-> > >     { sample_period, sample_freq }   1
-> > >     sample_type                      IP|TID|TIME|CPU|IDENTIFIER
-> > >     read_format                      ID|LOST
-> > >     inherit                          1
-> > >     exclude_kernel                   1
-> > >     exclude_hv                       1
-> > >     mmap                             1
-> > >     comm                             1
-> > >     task                             1
-> > >     sample_id_all                    1
-> > >     exclude_guest                    1
-> > >     mmap2                            1
-> > >     comm_exec                        1
-> > >     ksymbol                          1
-> > >     bpf_event                        1
-> > >   ------------------------------------------------------------
-> > >   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
-> > >   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 7
-> > >   sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 9
-> > >   sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 10
-> > >   sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 11
-> > >   sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 12
-> > >   sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 13
-> > >   sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
-> > >   <SNIP>
-> > >
-> > > Changes since_v7:
-> > >  - The condition for requiring system_wide sideband is changed to
-> > >    "as long as a non-dummy event exists" (patch4).
-> > >  - Modify the corresponding test case to record only dummy event (patch6).
-> > >  - Thanks to tested-by tag from Ravi, but because the solution is modified,
-> > >    the tested-by tag of Ravi is not added to this version.
-> >
-> > I've re-tested v8 with my simple test.
-> >
-> > Tested-by: Ravi Bangoria <ravi.bangoria@amd.com>
->
->
-> Thanks, applied to the csets that were still sitting in an umpublished
-> perf-tools-next local branch, soon public.
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ drivers/vfio/vfio_main.c | 104 +++++++++++++++++++--------------------
+ 1 file changed, 52 insertions(+), 52 deletions(-)
 
-Now I'm seeing a perf test failure on perf-tools-next.
+diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
+index 80e39f7a6d8f..6368eed7b7b2 100644
+--- a/drivers/vfio/vfio_main.c
++++ b/drivers/vfio/vfio_main.c
+@@ -381,58 +381,6 @@ void vfio_unregister_group_dev(struct vfio_device *device)
+ }
+ EXPORT_SYMBOL_GPL(vfio_unregister_group_dev);
+ 
+-#if IS_ENABLED(CONFIG_KVM)
+-void vfio_device_get_kvm_safe(struct vfio_device *device, struct kvm *kvm)
+-{
+-	void (*pfn)(struct kvm *kvm);
+-	bool (*fn)(struct kvm *kvm);
+-	bool ret;
+-
+-	lockdep_assert_held(&device->dev_set->lock);
+-
+-	if (!kvm)
+-		return;
+-
+-	pfn = symbol_get(kvm_put_kvm);
+-	if (WARN_ON(!pfn))
+-		return;
+-
+-	fn = symbol_get(kvm_get_kvm_safe);
+-	if (WARN_ON(!fn)) {
+-		symbol_put(kvm_put_kvm);
+-		return;
+-	}
+-
+-	ret = fn(kvm);
+-	symbol_put(kvm_get_kvm_safe);
+-	if (!ret) {
+-		symbol_put(kvm_put_kvm);
+-		return;
+-	}
+-
+-	device->put_kvm = pfn;
+-	device->kvm = kvm;
+-}
+-
+-void vfio_device_put_kvm(struct vfio_device *device)
+-{
+-	lockdep_assert_held(&device->dev_set->lock);
+-
+-	if (!device->kvm)
+-		return;
+-
+-	if (WARN_ON(!device->put_kvm))
+-		goto clear;
+-
+-	device->put_kvm(device->kvm);
+-	device->put_kvm = NULL;
+-	symbol_put(kvm_put_kvm);
+-
+-clear:
+-	device->kvm = NULL;
+-}
+-#endif
+-
+ /* true if the vfio_device has open_device() called but not close_device() */
+ static bool vfio_assert_device_open(struct vfio_device *device)
+ {
+@@ -1354,6 +1302,58 @@ bool vfio_file_enforced_coherent(struct file *file)
+ }
+ EXPORT_SYMBOL_GPL(vfio_file_enforced_coherent);
+ 
++#if IS_ENABLED(CONFIG_KVM)
++void vfio_device_get_kvm_safe(struct vfio_device *device, struct kvm *kvm)
++{
++	void (*pfn)(struct kvm *kvm);
++	bool (*fn)(struct kvm *kvm);
++	bool ret;
++
++	lockdep_assert_held(&device->dev_set->lock);
++
++	if (!kvm)
++		return;
++
++	pfn = symbol_get(kvm_put_kvm);
++	if (WARN_ON(!pfn))
++		return;
++
++	fn = symbol_get(kvm_get_kvm_safe);
++	if (WARN_ON(!fn)) {
++		symbol_put(kvm_put_kvm);
++		return;
++	}
++
++	ret = fn(kvm);
++	symbol_put(kvm_get_kvm_safe);
++	if (!ret) {
++		symbol_put(kvm_put_kvm);
++		return;
++	}
++
++	device->put_kvm = pfn;
++	device->kvm = kvm;
++}
++
++void vfio_device_put_kvm(struct vfio_device *device)
++{
++	lockdep_assert_held(&device->dev_set->lock);
++
++	if (!device->kvm)
++		return;
++
++	if (WARN_ON(!device->put_kvm))
++		goto clear;
++
++	device->put_kvm(device->kvm);
++	device->put_kvm = NULL;
++	symbol_put(kvm_put_kvm);
++
++clear:
++	device->kvm = NULL;
++}
++#endif
++
+ static void vfio_device_file_set_kvm(struct file *file, struct kvm *kvm)
+ {
+ 	struct vfio_device_file *df = file->private_data;
+-- 
+2.42.0.459.ge4e396fd5e-goog
 
-
-$ sudo ./perf test -v 17
- 17: Setup struct perf_event_attr                                    :
---- start ---
-test child forked, pid 1616372
-Using CPUID GenuineIntel-6-8C-1
-running './tests/attr/test-record-branch-filter-k'
-running './tests/attr/test-record-period'
-running './tests/attr/test-record-graph-default'
-test limitation '!aarch64'
-excluded architecture list ['aarch64']
-running './tests/attr/test-record-branch-filter-any'
-running './tests/attr/test-record-data'
-running './tests/attr/test-stat-detailed-1'
-running './tests/attr/test-record-branch-filter-hv'
-running './tests/attr/test-record-graph-fp'
-test limitation '!aarch64'
-excluded architecture list ['aarch64']
-running './tests/attr/test-record-basic'
-running './tests/attr/test-record-group2'
-running './tests/attr/test-stat-detailed-3'
-running './tests/attr/test-record-branch-any'
-running './tests/attr/test-record-branch-filter-ind_call'
-running './tests/attr/test-stat-detailed-2'
-running './tests/attr/test-record-group1'
-running './tests/attr/test-record-count'
-running './tests/attr/test-record-no-samples'
-running './tests/attr/test-record-graph-dwarf'
-running './tests/attr/test-record-spe-period'
-test limitation 'aarch64'
-skipped [x86_64] './tests/attr/test-record-spe-period'
-running './tests/attr/test-record-graph-fp-aarch64'
-test limitation 'aarch64'
-skipped [x86_64] './tests/attr/test-record-graph-fp-aarch64'
-running './tests/attr/test-record-freq'
-running './tests/attr/test-record-pfm-period'
-running './tests/attr/test-record-no-buffering'
-running './tests/attr/test-record-no-inherit'
-running './tests/attr/test-record-branch-filter-any_ret'
-running './tests/attr/test-record-raw'
-running './tests/attr/test-record-dummy-C0'
-expected read_format=4, got 20
-FAILED './tests/attr/test-record-dummy-C0' - match failure
-test child finished with -1
----- end ----
-Setup struct perf_event_attr: FAILED!
