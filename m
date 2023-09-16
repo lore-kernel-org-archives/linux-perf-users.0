@@ -2,61 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A24A1C2BA18
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7101C2BA1B
 	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Sep 2023 00:33:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238705AbjIPAcz (ORCPT
+        id S238707AbjIPAcz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Fri, 15 Sep 2023 20:32:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60640 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238761AbjIPAcm (ORCPT
+        with ESMTP id S238776AbjIPAcn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 15 Sep 2023 20:32:42 -0400
-Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 699B7CD0
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:32:01 -0700 (PDT)
-Received: by mail-pg1-x549.google.com with SMTP id 41be03b00d2f7-573fdb618eeso2550163a12.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:32:01 -0700 (PDT)
+        Fri, 15 Sep 2023 20:32:43 -0400
+Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5452E58
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:31:46 -0700 (PDT)
+Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-1c08a15fcf4so25899535ad.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:31:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694824321; x=1695429121; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1694824306; x=1695429106; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=B1dRB8XO+KspaRMyC7zp9UYo9xj54whk7JRM1+EstQc=;
-        b=b2Q8m1ZZ+34ugEzoopce/wVvpJwHju3GZM8AMZM9sfiFIRHsiUc4YnjWTu2lgU1M13
-         0ZPaHi67Xz5Q5XfQY8mBegk7faF59l/FgDguEHLxX4HLFdyLB6UNeTbswYJV/NIRVpVC
-         FNJiEjVMLd/xexsSsF3ExC9yQQ3IkUDVRnMf/7TG6QfuXDJCZmwbSJX1hX0NlAYKPeoQ
-         cspGVS68nnyEMyVSwkZvx/pt0G/45k/GuIWJPwJqmAfSOUyZquCtLOUPU1YlWSlDRn/h
-         0A6qh/ZPDSli2T+i025H0KYTRrn7+jzEYGSNazClftofMavBWBaA3uYfpeqYC8yzLpMm
-         r0Zw==
+        bh=HQNUEYOJ/ozgdrFnqx+YRCy2I1exOHPHuH58RF8SFNA=;
+        b=M0gIO6eCoTEr3GyvSoSXqbffxgpKcvL2iExYuoC1k1A0QMa49lgLHRLuf83fPt2EER
+         p0/XkGy+aPVxOCMzm4qhlUVO/7ZRz0RX4ZihqJ7KPu43EhRaqjry7XDN6ggrYCUt1c6b
+         tNceeQyuPYGXl4IN20FmDkP3TIvgnbd0ghe2QEmzk2zQrTObxyL31Qo9CebNV3oLQKZb
+         kIih2H1Er1Y0nc45248g1TcaTDnKgzorYoWeRLQ5BxFSK6YQE/mY03l0aSYr+g4n556e
+         tHJg3zYqqP9MZgotM5PRIhgFbRicKza8GjnFEYqjmqSe8gktBCVv50aAB1P1pWIB4r3Q
+         +TmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694824321; x=1695429121;
+        d=1e100.net; s=20230601; t=1694824306; x=1695429106;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=B1dRB8XO+KspaRMyC7zp9UYo9xj54whk7JRM1+EstQc=;
-        b=UfABMnkurAoZUbK9SZRO84IfKHPml8IOVgZ6Q9PWgqN4/XyVJkekk27lvr/WUr8JFs
-         j2EHlXs1hFpPfOPdN2gL7IzzwjCXmmOu611kJb3V8KfwdyFq0O+i90MS8tRJwR425iK1
-         Qj1x61kWVzam2aRJHkkSTyKTXqJCrm/V8YyH8PQ88VAMVqm3geVY3eSFoXtP+93rMu3d
-         +VAP8c2TfTbF16BRaDMIX4XXCSxyEmDc0LTqc7WVu6lQuXlNRbPhjscXzfyoBIsclMTt
-         ZpIY0duPY7Y/zf3L3Wl9beSDgcqPaqBwfEkeFANQqY4F8RMo+4SritT9VTMaerHjI69c
-         9krg==
-X-Gm-Message-State: AOJu0Yz8hjHIFmddS2FKCMFwFPC5hyF7hpnLghkyy/qkyY5F7QTwioVX
-        Pjfyzcvd0rQrs4dNY6K34WjyLodvm74=
-X-Google-Smtp-Source: AGHT+IEG3geNQyBEinQ/Gc8L0qGg6gjLTemmwswG1GJ9AY1G6CN5uqCE+2kqm1oXbdjIn4d5e6QeKtFd3X4=
+        bh=HQNUEYOJ/ozgdrFnqx+YRCy2I1exOHPHuH58RF8SFNA=;
+        b=ENkI+nAeMXpdAugat2yKMPnaC9o2mc1xX5EJzpeffyrWAGM8ERLsLn2gPuSgNwgm09
+         zGQKKueE325iXEpOAW1Sj6FWn8npZsIoHG3G0j75YXfvWEP9Ga4/E79yZAGMehbeqd+n
+         bFVO+DgCZWa3Resp5NeWunoUs5FZA3Nn8ePwvFKGnok6aINOHwxLeL8SCP5z2X2sf0zB
+         CuKI3bjdx3JjlGIL2JzIQPT1f7uL5grm+F+HtZ8ZrqaNwmkJpBO6pGbT6uSQOb2ZxuUd
+         S292Tpvzr7+c3gjVuj4zzUnm8MnFYBd2mxbDfqFtTSUqVYhxN82JGp70UqPsyDrAGZef
+         b60w==
+X-Gm-Message-State: AOJu0Yzwzr5/TJF6pJu4lyrKWmnPa2D6HinNFO75w+RRRLx/WoYLzluT
+        yP6FylNnEO0ARPaIFvBAUl2xRjIEl0E=
+X-Google-Smtp-Source: AGHT+IHwZjKrwGdEWszMvnFwhRAkOaZ4ZXt/sllxoteViYwmhz1Ar6ouDJgF8x4FFhszG2C3n1vTw2Lw6BE=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a63:7057:0:b0:574:535:60f with SMTP id
- a23-20020a637057000000b005740535060fmr69376pgn.11.1694824320845; Fri, 15 Sep
- 2023 17:32:00 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a17:903:32ca:b0:1b8:8c7:31e6 with SMTP id
+ i10-20020a17090332ca00b001b808c731e6mr93755plr.1.1694824306427; Fri, 15 Sep
+ 2023 17:31:46 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Fri, 15 Sep 2023 17:31:12 -0700
+Date:   Fri, 15 Sep 2023 17:31:05 -0700
 In-Reply-To: <20230916003118.2540661-1-seanjc@google.com>
 Mime-Version: 1.0
 References: <20230916003118.2540661-1-seanjc@google.com>
 X-Mailer: git-send-email 2.42.0.459.ge4e396fd5e-goog
-Message-ID: <20230916003118.2540661-21-seanjc@google.com>
-Subject: [PATCH 20/26] perf/x86: KVM: Have perf define a dedicated struct for
- getting guest PEBS data
+Message-ID: <20230916003118.2540661-14-seanjc@google.com>
+Subject: [PATCH 13/26] KVM: arm64: Include KVM headers to get forward declarations
 From:   Sean Christopherson <seanjc@google.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
@@ -99,249 +98,49 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Have perf define a struct for getting guest PEBS data from KVM instead of
-poking into the kvm_pmu structure.  Passing in an entire "struct kvm_pmu"
-_as an opaque pointer_ to get at three fields is silly, especially since
-one of the fields exists purely to convey information to perf, i.e. isn't
-used by KVM.
+Include include/uapi/linux/kvm.h and include/linux/kvm_types.h in ARM's
+public arm_arch_timer.h and arm_pmu.h headers to get forward declarations
+of things like "struct kvm_vcpu" and "struct kvm_device_attr", which are
+referenced but never declared (neither file includes *any* KVM headers).
 
-Perf should also own its APIs, i.e. define what fields/data it needs, not
-rely on KVM to throw fields into data structures that effectively hold
-KVM-internal state.
+The missing includes don't currently cause problems because of the order
+of includes in parent files, but that order is largely arbitrary and is
+subject to change, e.g. a future commit will move the ARM specific headers
+to arch/arm64/include/asm and reorder parent includes to maintain
+alphabetic ordering.
 
+Reported-by: kernel test robot <lkp@intel.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/events/core.c            |  5 +++--
- arch/x86/events/intel/core.c      | 18 +++++++++---------
- arch/x86/events/perf_event.h      |  3 ++-
- arch/x86/include/asm/kvm_host.h   |  9 ---------
- arch/x86/include/asm/perf_event.h | 12 ++++++++++--
- arch/x86/kvm/vmx/pmu_intel.c      | 16 +++++++++++++---
- arch/x86/kvm/vmx/vmx.c            | 10 ++++++----
- arch/x86/kvm/vmx/vmx.h            |  2 +-
- 8 files changed, 44 insertions(+), 31 deletions(-)
+ include/kvm/arm_arch_timer.h | 2 ++
+ include/kvm/arm_pmu.h        | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 185f902e5f28..3b015cfcf41d 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -695,9 +695,10 @@ void x86_pmu_disable_all(void)
- 	}
- }
+diff --git a/include/kvm/arm_arch_timer.h b/include/kvm/arm_arch_timer.h
+index bb3cb005873e..e22a15c66288 100644
+--- a/include/kvm/arm_arch_timer.h
++++ b/include/kvm/arm_arch_timer.h
+@@ -7,6 +7,8 @@
+ #ifndef __ASM_ARM_KVM_ARCH_TIMER_H
+ #define __ASM_ARM_KVM_ARCH_TIMER_H
  
--struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data)
-+struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr,
-+						  struct x86_guest_pebs *guest_pebs)
- {
--	return static_call(x86_pmu_guest_get_msrs)(nr, data);
-+	return static_call(x86_pmu_guest_get_msrs)(nr, guest_pebs);
- }
- EXPORT_SYMBOL_GPL(perf_guest_get_msrs);
++#include <linux/kvm.h>
++#include <linux/kvm_types.h>
+ #include <linux/clocksource.h>
+ #include <linux/hrtimer.h>
  
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index fa355d3658a6..9b848d7ebaaf 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -14,7 +14,6 @@
- #include <linux/slab.h>
- #include <linux/export.h>
- #include <linux/nmi.h>
--#include <linux/kvm_host.h>
+diff --git a/include/kvm/arm_pmu.h b/include/kvm/arm_pmu.h
+index 31029f4f7be8..e80f1d090579 100644
+--- a/include/kvm/arm_pmu.h
++++ b/include/kvm/arm_pmu.h
+@@ -7,6 +7,8 @@
+ #ifndef __ASM_ARM_KVM_PMU_H
+ #define __ASM_ARM_KVM_PMU_H
  
- #include <asm/cpufeature.h>
- #include <asm/hardirq.h>
-@@ -4053,11 +4052,11 @@ static int intel_pmu_hw_config(struct perf_event *event)
-  * when it uses {RD,WR}MSR, which should be handled by the KVM context,
-  * specifically in the intel_pmu_{get,set}_msr().
-  */
--static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
-+static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr,
-+							  struct x86_guest_pebs *guest_pebs)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct perf_guest_switch_msr *arr = cpuc->guest_switch_msrs;
--	struct kvm_pmu *kvm_pmu = (struct kvm_pmu *)data;
- 	u64 intel_ctrl = hybrid(cpuc->pmu, intel_ctrl);
- 	u64 pebs_mask = cpuc->pebs_enabled & x86_pmu.pebs_capable;
- 	int global_ctrl, pebs_enable;
-@@ -4090,20 +4089,20 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
- 		return arr;
- 	}
- 
--	if (!kvm_pmu || !x86_pmu.pebs_ept)
-+	if (!guest_pebs || !x86_pmu.pebs_ept)
- 		return arr;
- 
- 	arr[(*nr)++] = (struct perf_guest_switch_msr){
- 		.msr = MSR_IA32_DS_AREA,
- 		.host = (unsigned long)cpuc->ds,
--		.guest = kvm_pmu->ds_area,
-+		.guest = guest_pebs->ds_area,
- 	};
- 
- 	if (x86_pmu.intel_cap.pebs_baseline) {
- 		arr[(*nr)++] = (struct perf_guest_switch_msr){
- 			.msr = MSR_PEBS_DATA_CFG,
- 			.host = cpuc->active_pebs_data_cfg,
--			.guest = kvm_pmu->pebs_data_cfg,
-+			.guest = guest_pebs->data_cfg,
- 		};
- 	}
- 
-@@ -4119,8 +4118,8 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
- 		arr[pebs_enable].guest = 0;
- 	} else {
- 		/* Disable guest PEBS thoroughly for cross-mapped PEBS counters. */
--		arr[pebs_enable].guest &= ~kvm_pmu->host_cross_mapped_mask;
--		arr[global_ctrl].guest &= ~kvm_pmu->host_cross_mapped_mask;
-+		arr[pebs_enable].guest &= ~guest_pebs->cross_mapped_mask;
-+		arr[global_ctrl].guest &= ~guest_pebs->cross_mapped_mask;
- 		/* Set hw GLOBAL_CTRL bits for PEBS counter when it runs for guest */
- 		arr[global_ctrl].guest |= arr[pebs_enable].guest;
- 	}
-@@ -4128,7 +4127,8 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
- 	return arr;
- }
- 
--static struct perf_guest_switch_msr *core_guest_get_msrs(int *nr, void *data)
-+static struct perf_guest_switch_msr *core_guest_get_msrs(int *nr,
-+							 struct x86_guest_pebs *guest_pebs)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct perf_guest_switch_msr *arr = cpuc->guest_switch_msrs;
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index c8ba2be7585d..d805c9007e35 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -920,7 +920,8 @@ struct x86_pmu {
- 	/*
- 	 * Intel host/guest support (KVM)
- 	 */
--	struct perf_guest_switch_msr *(*guest_get_msrs)(int *nr, void *data);
-+	struct perf_guest_switch_msr *(*guest_get_msrs)(int *nr,
-+							struct x86_guest_pebs *guest_pebs);
- 
- 	/*
- 	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 1a4def36d5bb..29db870dbaae 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -548,15 +548,6 @@ struct kvm_pmu {
- 	u64 pebs_data_cfg;
- 	u64 pebs_data_cfg_mask;
- 
--	/*
--	 * If a guest counter is cross-mapped to host counter with different
--	 * index, its PEBS capability will be temporarily disabled.
--	 *
--	 * The user should make sure that this mask is updated
--	 * after disabling interrupts and before perf_guest_get_msrs();
--	 */
--	u64 host_cross_mapped_mask;
--
- 	/*
- 	 * The gate to release perf_events not marked in
- 	 * pmc_in_use only once in a vcpu time slice.
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 85a9fd5a3ec3..34c2c9a0b02b 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -564,11 +564,19 @@ static inline void perf_events_lapic_init(void)	{ }
- static inline void perf_check_microcode(void) { }
- #endif
- 
-+struct x86_guest_pebs {
-+	u64	ds_area;
-+	u64	data_cfg;
-+	u64	cross_mapped_mask;
-+};
-+
- #if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_INTEL)
--extern struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data);
-+extern struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr,
-+							 struct x86_guest_pebs *guest_pebs);
- extern void x86_perf_get_lbr(struct x86_pmu_lbr *lbr);
- #else
--struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data);
-+struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr,
-+						  struct x86_guest_pebs *guest_pebs);
- static inline void x86_perf_get_lbr(struct x86_pmu_lbr *lbr)
- {
- 	memset(lbr, 0, sizeof(*lbr));
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index f2efa0bf7ae8..3b3929871f7e 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -765,11 +765,20 @@ static void intel_pmu_cleanup(struct kvm_vcpu *vcpu)
- 		intel_pmu_release_guest_lbr_event(vcpu);
- }
- 
--void intel_pmu_cross_mapped_check(struct kvm_pmu *pmu)
-+u64 intel_pmu_get_cross_mapped_mask(struct kvm_pmu *pmu)
- {
--	struct kvm_pmc *pmc = NULL;
-+	u64 host_cross_mapped_mask;
-+	struct kvm_pmc *pmc;
- 	int bit, hw_idx;
- 
-+	if (!(pmu->pebs_enable & pmu->global_ctrl))
-+		return 0;
-+
-+	/*
-+	 * If a guest counter is cross-mapped to host counter with different
-+	 * index, its PEBS capability will be temporarily disabled.
-+	 */
-+	host_cross_mapped_mask = 0;
- 	for_each_set_bit(bit, (unsigned long *)&pmu->global_ctrl,
- 			 X86_PMC_IDX_MAX) {
- 		pmc = intel_pmc_idx_to_pmc(pmu, bit);
-@@ -784,8 +793,9 @@ void intel_pmu_cross_mapped_check(struct kvm_pmu *pmu)
- 		 */
- 		hw_idx = pmc->perf_event->hw.idx;
- 		if (hw_idx != pmc->idx && hw_idx > -1)
--			pmu->host_cross_mapped_mask |= BIT_ULL(hw_idx);
-+			host_cross_mapped_mask |= BIT_ULL(hw_idx);
- 	}
-+	return host_cross_mapped_mask;
- }
- 
- struct kvm_pmu_ops intel_pmu_ops __initdata = {
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 72e3943f3693..faf0071566ef 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7131,12 +7131,14 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
- 	struct perf_guest_switch_msr *msrs;
- 	struct kvm_pmu *pmu = vcpu_to_pmu(&vmx->vcpu);
- 
--	pmu->host_cross_mapped_mask = 0;
--	if (pmu->pebs_enable & pmu->global_ctrl)
--		intel_pmu_cross_mapped_check(pmu);
-+	struct x86_guest_pebs guest_pebs = {
-+		.ds_area = pmu->ds_area,
-+		.data_cfg = pmu->pebs_data_cfg,
-+		.cross_mapped_mask = intel_pmu_get_cross_mapped_mask(pmu),
-+	};
- 
- 	/* Note, nr_msrs may be garbage if perf_guest_get_msrs() returns NULL. */
--	msrs = perf_guest_get_msrs(&nr_msrs, (void *)pmu);
-+	msrs = perf_guest_get_msrs(&nr_msrs, &guest_pebs);
- 	if (!msrs)
- 		return;
- 
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index c2130d2c8e24..476119670d82 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -670,7 +670,7 @@ static inline bool intel_pmu_lbr_is_enabled(struct kvm_vcpu *vcpu)
- 	return !!vcpu_to_lbr_records(vcpu)->nr;
- }
- 
--void intel_pmu_cross_mapped_check(struct kvm_pmu *pmu);
-+u64 intel_pmu_get_cross_mapped_mask(struct kvm_pmu *pmu);
- int intel_pmu_create_guest_lbr_event(struct kvm_vcpu *vcpu);
- void vmx_passthrough_lbr_msrs(struct kvm_vcpu *vcpu);
++#include <linux/kvm.h>
++#include <linux/kvm_types.h>
+ #include <linux/perf_event.h>
+ #include <linux/perf/arm_pmuv3.h>
  
 -- 
 2.42.0.459.ge4e396fd5e-goog
