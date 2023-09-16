@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF513CD37B2
-	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Sep 2023 03:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74AEDCD37B1
+	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Sep 2023 04:10:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234416AbjIPD47 (ORCPT
+        id S238107AbjIPEJt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 15 Sep 2023 23:56:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57106 "EHLO
+        Sat, 16 Sep 2023 00:09:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231312AbjIPD4v (ORCPT
+        with ESMTP id S231942AbjIPEJZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 15 Sep 2023 23:56:51 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 838931BC5
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 20:56:45 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d8191a1d5acso2980548276.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 20:56:45 -0700 (PDT)
+        Sat, 16 Sep 2023 00:09:25 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 076991BD0
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 21:09:20 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59c0327b75dso23340347b3.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 21:09:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694836605; x=1695441405; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1694837359; x=1695442159; darn=vger.kernel.org;
         h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=bzQLVbdICvR0anuI1LoACUXsVUlI7kEOUbUElnKpCyc=;
-        b=kde0jXwFzS3mRaxWJym0JxLBJs84Di/zLD5SNDxY/ZPHWRtk7yzWueAWNDoJZa1UtZ
-         WoYAXlFj5uONXU73v46gOsjH3DdoYZyPsXxn3MnadvOuxW4xurf5oj4uKrS9c5q9PArQ
-         hDD0uqr9rfp7N5cBeI6rcL4CPg1x+ot6DEVHtjeZ5wrJDmlTsLRUA+rdlMaB7Y+XSYHg
-         INCTHAlXEtI/PU+/ENu73wxuO1dkKllr3t2XG/77YO+qizqPu54yCpYrvoSeu+Od6Bn9
-         nmk69yTbZNImmf4Gfa3WGLBKmmQO8BTDLRPRczeT+FEPWPduXO5UfeswtJaXiSoYMwyt
-         J05g==
+        bh=zipWfEEsnum9dauMSnXBQTgBSpY3twUkBA45BcLxABI=;
+        b=idKeyoRr24pRaWecrAw7DJ7O9deBaDjKus4zQYhZ9wDfziiLGXTkkEEyR1UTiuwbL4
+         dyQWK0hFXLkmTtNYLEGAL1zunC0pg2o/4bpzGYZnFFemnXi8v6FzVuI+XqdK5F5qvz4c
+         uRkSBDmavtyTe3CQINeKdB9+sbwzFFQhjqgegufmE/50U3B8qAdB1y6HL6OUQPEEfm5h
+         ECoMKeMO8t122ofA247EgWpRt8bNcMlGqclnRKDDMvJqozDsJNCoMOsNP/EVzdzXaXKM
+         ++fVWTEa4Tlw5QrMra9BcjsWyzQBPK2IUi6qhouRKFgc6KwPU19xK0WyfawPQZtmCnRT
+         sbEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694836605; x=1695441405;
+        d=1e100.net; s=20230601; t=1694837359; x=1695442159;
         h=to:from:subject:mime-version:message-id:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=bzQLVbdICvR0anuI1LoACUXsVUlI7kEOUbUElnKpCyc=;
-        b=rq1slkTVToWAnIQvlC1Xjr1O8JtVAa8YZ8CGw9cyqAOwZNmqWQKqRa7cjVJGH8p3sW
-         rwtpCw4qmYK2rVAG1r2HW+FHTLYYbn6+KgJS+/RSYJqpM957UJQN0lt7dCQSUyROd4i2
-         orMwrd3LRk6S7wP/T0/vMlyieqYLltwe98/TdD13IbwoV4w3hAaAALaEv7foceKTi37i
-         lQkbJXjPINAvSD0mSY7FAQqQb7CWwX2zzplfAQCaD2fDIeDjKInzok1nhiCz3gHIy90C
-         ze9ZS+mxvqDJwDgH21WfEOzVt+EFXdt0hR5HJK+SL6AOMl7kiQu8tAEsTgdvf04O7uMA
-         LT6Q==
-X-Gm-Message-State: AOJu0YxJGs1sCVNcVTVyyfIOVzQfXxlaYhsqTQBkf4LUVjVct2tPcPM6
-        PjJqXuzGggz4qFg548oj0gOARM/M2JR0
-X-Google-Smtp-Source: AGHT+IHPl2mfI2FXOQHCNG1ebyKKkDV0rSTCXZae55BeQ1YbUjz4gqpnWaVzSdtYUzwE5EG9x/odWUcTn9JV
+        bh=zipWfEEsnum9dauMSnXBQTgBSpY3twUkBA45BcLxABI=;
+        b=sEVORISMDGdA+LXsQ5VG6l0gdxCsEuswpjrzIz27WwN1+e3HZaLhvUzHdDYaVdq146
+         Qt6+jyo8JnBOOuk3ZtAMXZSY1IrT8xmcJAhdGYrnmplX8k7Ss+gmYEFCPH281kC96QGd
+         1Ck7WnbXLldPef4wK+GJF+9UE44rFwlyfbFcI50VxWeFlSjwuuaOVowFAZUf06kES0xp
+         ZdYnEn817D9Dy4ejSUY3BiJFlxLIhwTBMRCEiB28e2v1U7TYf8Xgq8y/TEgcO5NIIPTS
+         WHd/jGl/ubDhvv+MtPXcVlzpdnrWr3CR269S90eO9oj0/tLD8mid4AfyIaYWU4pum5Ik
+         kplg==
+X-Gm-Message-State: AOJu0YxoCH8O83bC4e/kCrgoQWeMaqRVbc4DZ7xWvQM9E42YiRiFY0ys
+        mKa5aZ4eTEiggeGPTgNFfaAYV6M7taXM
+X-Google-Smtp-Source: AGHT+IFCMvRhEqBZ5w3q2IXMRP5+eviNQUZ+p7MKuvjjo68Vr2FD7mxfcCmn3VsoAaiTr1ZuqeKTJZYfjMnZ
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:de72:1a43:1938:6165])
- (user=irogers job=sendgmr) by 2002:a05:6902:118a:b0:d80:183c:92b9 with SMTP
- id m10-20020a056902118a00b00d80183c92b9mr90954ybu.4.1694836604799; Fri, 15
- Sep 2023 20:56:44 -0700 (PDT)
-Date:   Fri, 15 Sep 2023 20:56:40 -0700
-Message-Id: <20230916035640.1074422-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a81:ac60:0:b0:59b:e669:c940 with SMTP id
+ z32-20020a81ac60000000b0059be669c940mr96303ywj.5.1694837359199; Fri, 15 Sep
+ 2023 21:09:19 -0700 (PDT)
+Date:   Fri, 15 Sep 2023 21:09:15 -0700
+Message-Id: <20230916040915.1075620-1-irogers@google.com>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.42.0.459.ge4e396fd5e-goog
 Subject: [PATCH v1] perf evlist: Avoid frequency mode for the dummy event
@@ -82,6 +82,29 @@ period to 1 for dummy events.
 evlist__add_aux_dummy calls evlist__add_dummy then sets freq=0 and
 period=1. This isn't necessary after this change and so the setting is
 removed.
+
+From Stephane:
+
+The dummy event is not counting anything. It is used to collect mmap
+records and avoid a race condition during the synthesize mmap phase of
+perf record. As such, it should not cause any overhead during active
+profiling. Yet, it did. Because of a bug the dummy event was
+programmed as a sampling event in frequency mode. Events in that mode
+incur more kernel overheads because on timer tick, the kernel has to
+look at the number of samples for each event and potentially adjust
+the sampling period to achieve the desired frequency. The dummy event
+was therefore adding a frequency event to task and ctx contexts we may
+otherwise not have any, e.g., perf record -a -e
+cpu/event=0x3c,period=10000000/. On each timer tick the
+perf_adjust_freq_unthr_context() is invoked and if ctx->nr_freq is
+non-zero, then the kernel will loop over ALL the events of the context
+looking for frequency mode ones. In doing, so it locks the context,
+and enable/disable the PMU of each hw event. If all the events of the
+context are in period mode, the kernel will have to traverse the list for
+nothing incurring overhead. The overhead is multiplied by a very large
+factor when this happens in a guest kernel. There is no need for the
+dummy event to be in frequency mode, it does not count anything and
+therefore should not cause extra overhead for no reason.
 
 Fixes: 5bae0250237f ("perf evlist: Introduce perf_evlist__new_dummy constructor")
 Reported-by: Stephane Eranian <eranian@google.com>
