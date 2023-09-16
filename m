@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4202DCD37B6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CC8CD37BA
 	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Sep 2023 00:33:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238415AbjIPAdY (ORCPT
+        id S238501AbjIPAdX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 15 Sep 2023 20:33:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57176 "EHLO
+        Fri, 15 Sep 2023 20:33:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238568AbjIPAcu (ORCPT
+        with ESMTP id S238415AbjIPAct (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 15 Sep 2023 20:32:50 -0400
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 430E11FD0
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:31:59 -0700 (PDT)
-Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-1bf6e47b5efso25507845ad.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:31:59 -0700 (PDT)
+        Fri, 15 Sep 2023 20:32:49 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99B1A30D2
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:31:55 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d8186d705a9so3253664276.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:31:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694824319; x=1695429119; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1694824315; x=1695429115; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=I1k7UlFLK1e3KB496SGnrZE1fwTPdTtkvkYnZUVfXtU=;
-        b=IWC0OkgWuATSfuo1F1dQCwyIx+b/WZpIdXnlA2378o7EYl9hFcmP717IG0O306dLn0
-         foehRodde+VX2DfIEUjgrrM1Eon0688x7Uc1rZpXhaW922hWaAU9WZkTYLnrtkjDyItx
-         bWgsoMv8If1qO23dFbpQ+FjPuBVLHkuowtKkRVWhhg+n500FUE0kmhHAToObw2Sgbi7m
-         jXvF4n/9DAADe5Lxbp2YyBI42mXIjiAhYJz0rOplK0JxxxJDFjW2LvwCm8ep+6tGZo66
-         kUp3ad0vQQCdrix+Yt2Z/spbVBivm71cUo/+LgEVVK4um4SkpAsjPoALFSActnL5+a0Z
-         oLbw==
+        bh=PzobvpQc4vWfR42iy4RjYEgAb/kHLuzC5INLwcS+RqY=;
+        b=YxihMmMOwAJDc/bohM/izVntYK4R7FAAA53ohMstPpD0qgnNu65NkYu2rM60V2XRl7
+         SoSsFkx83Rdd2lw/hJ1tVX2Qd8mELlpNHREfNHu3j46tDd05Z9mzKhU6rlK0NCLUNPJk
+         u0wHDKMdqWe6q8hJLnKIYgmtI0x/evwMYUsYMj1jZsB04PYfON5z6J7440wSOhZcr6U/
+         I4Yw9GPYIayu+Y4uIafMn0jxhTMGSOmzI7AshUDpcZj9QzmP3AfH7ybM9cR4WGZ7qH9c
+         6+XbKkh1B/ns7LBaT8q4OYPlxGDqOAoZVtWPDp1Dfc8mwumFYq9Sg/WjhDSTNnkdA9do
+         vdhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694824319; x=1695429119;
+        d=1e100.net; s=20230601; t=1694824315; x=1695429115;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=I1k7UlFLK1e3KB496SGnrZE1fwTPdTtkvkYnZUVfXtU=;
-        b=B+KwwFuVGLoM2Rks+YZpU53XpSlOficrAgw7nkfW14sA5qFgzNS6Ts7M7WsrpxUSud
-         DXi1tLSopO6FJc1VKqt8JtIfOoTYQnBrz8tAm+CFCIM11raPiCaxjAwi7KzKph3HZeia
-         CmkwFTvz5Z13esaPxOsqqKYvA1SceS4O6XlhxLBW6q65FfGmrjuU+KWo6rSX+r3QbZTc
-         k09cRpw7aWitFj2vTKr5jAHanHekNlserkqqhkRerN9cu62tCl/PaTjwI7VmSPZawM82
-         SeU0bizMLEFoIkYQssdzeLxjIEIuzq8ECAk2Y0zMcW2pP+bsDSVN9iWRej5pFNP36gIV
-         etJw==
-X-Gm-Message-State: AOJu0YyI5oKkh7mxZ9BGixJCwZ5NaRxkJEjSXfWLp6+Fe6qok8upXfjh
-        E/nQysaD8OC8wamPEoO5scHdpeP4dA4=
-X-Google-Smtp-Source: AGHT+IFCF5MUMD869yhPhgA85k1sz5CoJq/QTd908FyvX67dvIc3xBcuRDs8mX3N7g5mT6MCs9yGRfwK12c=
+        bh=PzobvpQc4vWfR42iy4RjYEgAb/kHLuzC5INLwcS+RqY=;
+        b=UPzX1mBG6C/J4pKKQAAQpbcaErQEdoHk2L2JZLHONHUSrfns0xngGBooqVuUNbIUu/
+         TKbkepdSN+W/plyHjqjpmvehdgFB964yc6KfoX9FL4reWcuhYo1Br+QXeyEaZnbovHyA
+         GbURbpTUHm5Io1vmARltKovKKbKSgsfws0uEQvRrrytCSlejWAoG1fCx5pTavVd/ireW
+         OLOzyzzeVgPI64UMPFvdFixg15rALxaXJ6xnPMPnVAA0RyGY4uuTVUn0Tz1DFKxdStol
+         fxxxgLPuGfreOkmQc37AyBTdnV0Mmrn+sRuMICOqpw0dEyc0NjfJcFc3A30Vt5jtXWhV
+         cBxg==
+X-Gm-Message-State: AOJu0Yx4puDnN6ap52LcjQWpMdWy42bssqxbW8BwwHWm5weNXcc7ix1l
+        rWhj1HJhC/2Pl0fjE966fdRLfwCxGv8=
+X-Google-Smtp-Source: AGHT+IEHyBaVn0yDFSDy5XyxKJ2PGYyocUtrZpuSTqYnDVflp7SqStNr9ZpB4/OYXqxtlzASuEez5Ye4vGU=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:ec8b:b0:1bf:cc5:7b53 with SMTP id
- x11-20020a170902ec8b00b001bf0cc57b53mr68748plg.1.1694824318653; Fri, 15 Sep
- 2023 17:31:58 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a25:2e06:0:b0:d77:fb4e:d85e with SMTP id
+ u6-20020a252e06000000b00d77fb4ed85emr78448ybu.6.1694824314795; Fri, 15 Sep
+ 2023 17:31:54 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Fri, 15 Sep 2023 17:31:11 -0700
+Date:   Fri, 15 Sep 2023 17:31:09 -0700
 In-Reply-To: <20230916003118.2540661-1-seanjc@google.com>
 Mime-Version: 1.0
 References: <20230916003118.2540661-1-seanjc@google.com>
 X-Mailer: git-send-email 2.42.0.459.ge4e396fd5e-goog
-Message-ID: <20230916003118.2540661-20-seanjc@google.com>
-Subject: [PATCH 19/26] KVM: Standardize include paths across all architectures
+Message-ID: <20230916003118.2540661-18-seanjc@google.com>
+Subject: [PATCH 17/26] KVM: PPC: Stop adding virt/kvm to the arch include path
 From:   Sean Christopherson <seanjc@google.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
@@ -98,124 +98,30 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Standardize KVM's include paths across all architectures by declaring
-the KVM-specific includes in the common Makefile.kvm.  Having common KVM
-"own" the included paths reduces the temptation to unnecessarily add
-virt/kvm to arch include paths, and conversely if allowing arch code to
-grab headers from virt/kvm becomes desirable, virt/kvm can be added to
-all architecture's include path with a single line update.
-
-Having the common KVM makefile append to ccflags also provides a
-convenient location to append other things, e.g. KVM-specific #defines.
-
-Note, this changes the behavior of s390 and PPC, as s390 and PPC
-previously overwrote ccflags-y instead of adding on.  There is no evidence
-that overwriting ccflags-y was necessary or even deliberate, as both s390
-and PPC switched to the overwrite behavior without so much as a passing
-mention when EXTRA_CFLAGS was replaced with ccflags-y (commit c73028a02887
-("s390: change to new flag variable") and commit 4108d9ba9091
-("powerpc/Makefiles: Change to new flag variables")).
+Don't add virt/kvm to KVM PPC's include path, the headers in virt/kvm are
+intended to be used only by other code in virt/kvm, i.e. are "private" to
+the core KVM code.  It's not clear that PPC *ever* included a header from
+virt/kvm, i.e. odds are good the "-Ivirt/kvm" was copied from a different
+architecture's Makefile when PPC support was first added.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/arm64/kvm/Makefile   | 2 --
- arch/mips/kvm/Makefile    | 2 --
- arch/powerpc/kvm/Makefile | 2 --
- arch/riscv/kvm/Makefile   | 2 --
- arch/s390/kvm/Makefile    | 2 --
- arch/x86/kvm/Makefile     | 1 -
- virt/kvm/Makefile.kvm     | 2 ++
- 7 files changed, 2 insertions(+), 11 deletions(-)
+ arch/powerpc/kvm/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
-index c0c050e53157..3996489baeef 100644
---- a/arch/arm64/kvm/Makefile
-+++ b/arch/arm64/kvm/Makefile
-@@ -3,8 +3,6 @@
- # Makefile for Kernel-based Virtual Machine module
- #
- 
--ccflags-y += -I $(srctree)/$(src)
--
- include $(srctree)/virt/kvm/Makefile.kvm
- 
- obj-$(CONFIG_KVM) += kvm.o
-diff --git a/arch/mips/kvm/Makefile b/arch/mips/kvm/Makefile
-index 96a7cd21b140..d198e1addea7 100644
---- a/arch/mips/kvm/Makefile
-+++ b/arch/mips/kvm/Makefile
-@@ -4,8 +4,6 @@
- 
- include $(srctree)/virt/kvm/Makefile.kvm
- 
--ccflags-y += -Iarch/mips/kvm
--
- kvm-$(CONFIG_CPU_HAS_MSA) += msa.o
- 
- kvm-y +=    mips.o emulate.o entry.o \
 diff --git a/arch/powerpc/kvm/Makefile b/arch/powerpc/kvm/Makefile
-index 08a0e53d58c7..d6c6678ddf65 100644
+index 5319d889b184..08a0e53d58c7 100644
 --- a/arch/powerpc/kvm/Makefile
 +++ b/arch/powerpc/kvm/Makefile
-@@ -3,8 +3,6 @@
+@@ -3,7 +3,7 @@
  # Makefile for Kernel-based Virtual Machine module
  #
  
--ccflags-y := -Iarch/powerpc/kvm
--
- include $(srctree)/virt/kvm/Makefile.kvm
- 
- common-objs-y += powerpc.o emulate_loadstore.o
-diff --git a/arch/riscv/kvm/Makefile b/arch/riscv/kvm/Makefile
-index 4c2067fc59fc..ff7d5f67e229 100644
---- a/arch/riscv/kvm/Makefile
-+++ b/arch/riscv/kvm/Makefile
-@@ -3,8 +3,6 @@
- # Makefile for RISC-V KVM support
- #
- 
--ccflags-y += -I $(srctree)/$(src)
--
- include $(srctree)/virt/kvm/Makefile.kvm
- 
- obj-$(CONFIG_KVM) += kvm.o
-diff --git a/arch/s390/kvm/Makefile b/arch/s390/kvm/Makefile
-index f17249ab2a72..f8153189e003 100644
---- a/arch/s390/kvm/Makefile
-+++ b/arch/s390/kvm/Makefile
-@@ -5,8 +5,6 @@
+-ccflags-y := -Ivirt/kvm -Iarch/powerpc/kvm
++ccflags-y := -Iarch/powerpc/kvm
  
  include $(srctree)/virt/kvm/Makefile.kvm
  
--ccflags-y := -Iarch/s390/kvm
--
- kvm-y += kvm-s390.o intercept.o interrupt.o priv.o sigp.o
- kvm-y += diag.o gaccess.o guestdbg.o vsie.o pv.o
- 
-diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
-index 80e3fe184d17..d13f1a7b7b3d 100644
---- a/arch/x86/kvm/Makefile
-+++ b/arch/x86/kvm/Makefile
-@@ -1,6 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
- 
--ccflags-y += -I $(srctree)/arch/x86/kvm
- ccflags-$(CONFIG_KVM_WERROR) += -Werror
- 
- ifeq ($(CONFIG_FRAME_POINTER),y)
-diff --git a/virt/kvm/Makefile.kvm b/virt/kvm/Makefile.kvm
-index 29373b59d89a..e85079ad245d 100644
---- a/virt/kvm/Makefile.kvm
-+++ b/virt/kvm/Makefile.kvm
-@@ -3,6 +3,8 @@
- # Makefile for Kernel-based Virtual Machine module
- #
- 
-+ccflags-y += -I$(srctree)/$(src)
-+
- KVM ?= ../../../virt/kvm
- 
- kvm-y := $(KVM)/kvm_main.o $(KVM)/eventfd.o $(KVM)/binary_stats.o
 -- 
 2.42.0.459.ge4e396fd5e-goog
 
