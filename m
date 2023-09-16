@@ -2,61 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C7CCD37B4
-	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Sep 2023 00:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 392DACD37B0
+	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Sep 2023 00:35:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238766AbjIPAdy (ORCPT
+        id S238666AbjIPAe4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 15 Sep 2023 20:33:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37852 "EHLO
+        Fri, 15 Sep 2023 20:34:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238798AbjIPAd0 (ORCPT
+        with ESMTP id S239097AbjIPAeY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 15 Sep 2023 20:33:26 -0400
-Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 774BECF8
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:32:11 -0700 (PDT)
-Received: by mail-pl1-x649.google.com with SMTP id d9443c01a7336-1c4375c1406so10019495ad.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:32:11 -0700 (PDT)
+        Fri, 15 Sep 2023 20:34:24 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0062B1BB
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:32:03 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59bdb9fe821so35133387b3.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:32:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694824331; x=1695429131; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1694824323; x=1695429123; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=XQKt9ip81eNaA/ioPgL3dH9e9vr3TzqljSeTBinzyVo=;
-        b=qTUH+rPJ82ZzGmakmrKXjz+AdBPQXQHVHn6pul2lIrDcJ2uf+VXwGcYkUofQ0rO4MM
-         pDaNCycrLUR6KKJJpbeDTUqp7TrlKNc8TdiFyj4KRMWzwvK9OmIqrlf+HzQ78n9hKIgf
-         bMdwI3W5Ot4qzWt++LoyITxe7gg7PDoJOCqXXvbThFljY9XBvq0R/aY1QmRJ4IwArxzR
-         C1mV+8lHw2GslON+5XJkFFZO3rc1tNyKcZJ4uruFJhs2HFIuOSZAn0GPiSqDhThNRtlj
-         3ZPuHFakDoMGUSBcOVxmdrDVEz6Y2g0O4gRAT2PidTN/+OTazANYWtmlSNT6mSMcwCqm
-         Pcxg==
+        bh=kZSgVl8Q+hmlGcu9E42B+6nCYbsSFCH4k+E/cwlLEa8=;
+        b=bPv1OfhNBPdU0sr0XJk80Rkg5EW4P1gXiI2In4zbIY41ZlOFQYLOnz6HKhuHcRDqZH
+         h0A0HVwECGR4XrRSThDKFML+RxobkgH0LoQLA3xy2rM/pEa/0gq/BQLNU+NqcpWWg33x
+         8VIc1BFq9LgZv3B+EJD5EdoLiJ+4ulr0g9J6prUugANFkmRo+CDgD0zynjLtm1t24GY0
+         xkDMUF55KabBZNnKiaK/9uoOcHm5/3lbOPXGA3a98soE/v3dJuZksD5HaUcOjAC/JwVh
+         mLCLc5erjSCqqYTXKP6YaxPdzN4vsytcejG5rjU2sdPLHjLw45d/3OhXWuB52uGzMTbJ
+         D1sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694824331; x=1695429131;
+        d=1e100.net; s=20230601; t=1694824323; x=1695429123;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=XQKt9ip81eNaA/ioPgL3dH9e9vr3TzqljSeTBinzyVo=;
-        b=V35JE4Fuf9bDY+O6/h2NxlQ5gUw5E4LWGn2FIt3H5/lxt9R1XMDLSYKkSfcJ9ri18I
-         uIipADRzS4ZEevWGXPRh+s551xp1bDkSg2J6gyj69ipYY4XkCkWc5t8mYae1pN/X+Rmx
-         J5QIicNccjPCOeJUKCAM5vXgOQyleNzaO4DkvrWmYIRo3v2E1CE9dxzaJV2U/Ep5dZ58
-         Pee0n4qcqF5/x3CjyuFrJZ1O1Gqd3o4uo0uuRvMEdRe0vCJZaooDOS6IhdW2vZ2ycDZl
-         nefcCGAbkNIuYCflnPoNLZGXGU0AuT3cwJxT4uMh6jysOI9YPqWLIK6ZOTZS7weqa4hy
-         L0mw==
-X-Gm-Message-State: AOJu0YxAUZOVYlkmSiGoAxMHLcuTEjnpxl/OWMxl4CjupbEJSRCUwwgl
-        6DD52YrouMyEGL0J566h21CAl9OwKNk=
-X-Google-Smtp-Source: AGHT+IGF/tpivhdzzMxCzu4p2COJ/tsujORVDRvqtMyofX9ypz/OjlCrOXRz/aOj6KmZJ7FZTcTX3ecEuUc=
+        bh=kZSgVl8Q+hmlGcu9E42B+6nCYbsSFCH4k+E/cwlLEa8=;
+        b=LUc6uHFlsa3l5wfdlpgMbNnHFuthCGfw0bRcfRwul2cmOC8gELZF3eZvYuD+kTvxRY
+         wY79OjU/BZlcyWimA5z4rP+swIZmWuAKc7Qlkn4mKihTHi5rpTmpgmJVjWZyRPNNU3xM
+         U8H6wDxOKN3UI22oLKMMogjGNfwTbBmqNnCKRgkoapxN8m8W0Kr03q6BaLMzLmnquubE
+         EJfbuN8/7TJY+dHp7j6ZVbRYC4yiZhW51uiPfMUA8scEl2cYlkPYrE66Bkx23LqHa4qT
+         lEFI+sOUp9J6Fur3PMEklwkCQFi68jreoHlmL0JMldTgVWZS5eb4I92y21Ue9R1gEzVx
+         xnxg==
+X-Gm-Message-State: AOJu0Yx3qy4ZrMUEdA5XiqMP8jEC/jKG02qKTCRpFESawziJyw71l+Eb
+        QEew9TYXtNtxDBorGY+8LZmaKMSHB8g=
+X-Google-Smtp-Source: AGHT+IGvK90kPH1o5bQH0EPib2Mktorl92L52Xc3vYMLm3HoBq+aka+3/3i87f2Q/TuhX6d+6vnq3Y1BBZw=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:d4c7:b0:1bc:5182:1de2 with SMTP id
- o7-20020a170902d4c700b001bc51821de2mr81466plg.1.1694824330917; Fri, 15 Sep
- 2023 17:32:10 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a81:b60c:0:b0:586:a58d:2e24 with SMTP id
+ u12-20020a81b60c000000b00586a58d2e24mr95790ywh.5.1694824323076; Fri, 15 Sep
+ 2023 17:32:03 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Fri, 15 Sep 2023 17:31:17 -0700
+Date:   Fri, 15 Sep 2023 17:31:13 -0700
 In-Reply-To: <20230916003118.2540661-1-seanjc@google.com>
 Mime-Version: 1.0
 References: <20230916003118.2540661-1-seanjc@google.com>
 X-Mailer: git-send-email 2.42.0.459.ge4e396fd5e-goog
-Message-ID: <20230916003118.2540661-26-seanjc@google.com>
-Subject: [PATCH 25/26] KVM: PPC: Rearrange code in kvm_ppc.h to isolate
- "public" information
+Message-ID: <20230916003118.2540661-22-seanjc@google.com>
+Subject: [PATCH 21/26] entry/kvm: Drop @vcpu param from arch_xfer_to_guest_mode_handle_work()
 From:   Sean Christopherson <seanjc@google.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
@@ -99,356 +98,54 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Move all declarations and definitions in kvm_ppc.h that are consumed by
-things other than KVM to the top of the file.  This will allow wrapping
-the parts of kvm_ppc.h that are intended only for KVM, i.e. are intended
-to be "private" to KVM, with an #ifdef to hide KVM's internal details from
-the kernel at-large.
+Drop the "struct kvm_vcpu" parameter from
+arch_xfer_to_guest_mode_handle_work() as a preparatory step towards
+removing the vCPU parameter from xfer_to_guest_mode_work() as well.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/powerpc/include/asm/kvm_ppc.h | 302 +++++++++++++++--------------
- 1 file changed, 153 insertions(+), 149 deletions(-)
+ include/linux/entry-kvm.h | 7 ++-----
+ kernel/entry/kvm.c        | 2 +-
+ 2 files changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/kvm_ppc.h b/arch/powerpc/include/asm/kvm_ppc.h
-index 72fee202d3ec..ead2ad892ebc 100644
---- a/arch/powerpc/include/asm/kvm_ppc.h
-+++ b/arch/powerpc/include/asm/kvm_ppc.h
-@@ -30,6 +30,159 @@
- #endif
- #include <asm/inst.h>
+diff --git a/include/linux/entry-kvm.h b/include/linux/entry-kvm.h
+index 6813171afccb..e7d90d06e566 100644
+--- a/include/linux/entry-kvm.h
++++ b/include/linux/entry-kvm.h
+@@ -25,18 +25,15 @@ struct kvm_vcpu;
+ /**
+  * arch_xfer_to_guest_mode_handle_work - Architecture specific xfer to guest
+  *					 mode work handling function.
+- * @vcpu:	Pointer to current's VCPU data
+  * @ti_work:	Cached TIF flags gathered in xfer_to_guest_mode_handle_work()
+  *
+  * Invoked from xfer_to_guest_mode_handle_work(). Defaults to NOOP. Can be
+  * replaced by architecture specific code.
+  */
+-static inline int arch_xfer_to_guest_mode_handle_work(struct kvm_vcpu *vcpu,
+-						      unsigned long ti_work);
++static inline int arch_xfer_to_guest_mode_handle_work(unsigned long ti_work);
  
-+struct openpic;
-+
-+#ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
-+extern void kvm_cma_reserve(void) __init;
-+static inline void kvmppc_set_xics_phys(int cpu, unsigned long addr)
-+{
-+	paca_ptrs[cpu]->kvm_hstate.xics_phys = (void __iomem *)addr;
-+}
-+
-+static inline void kvmppc_set_xive_tima(int cpu,
-+					unsigned long phys_addr,
-+					void __iomem *virt_addr)
-+{
-+	paca_ptrs[cpu]->kvm_hstate.xive_tima_phys = (void __iomem *)phys_addr;
-+	paca_ptrs[cpu]->kvm_hstate.xive_tima_virt = virt_addr;
-+}
-+
-+static inline u32 kvmppc_get_xics_latch(void)
-+{
-+	u32 xirr;
-+
-+	xirr = get_paca()->kvm_hstate.saved_xirr;
-+	get_paca()->kvm_hstate.saved_xirr = 0;
-+	return xirr;
-+}
-+
-+/*
-+ * To avoid the need to unnecessarily exit fully to the host kernel, an IPI to
-+ * a CPU thread that's running/napping inside of a guest is by default regarded
-+ * as a request to wake the CPU (if needed) and continue execution within the
-+ * guest, potentially to process new state like externally-generated
-+ * interrupts or IPIs sent from within the guest itself (e.g. H_PROD/H_IPI).
-+ *
-+ * To force an exit to the host kernel, kvmppc_set_host_ipi() must be called
-+ * prior to issuing the IPI to set the corresponding 'host_ipi' flag in the
-+ * target CPU's PACA. To avoid unnecessary exits to the host, this flag should
-+ * be immediately cleared via kvmppc_clear_host_ipi() by the IPI handler on
-+ * the receiving side prior to processing the IPI work.
-+ *
-+ * NOTE:
-+ *
-+ * We currently issue an smp_mb() at the beginning of kvmppc_set_host_ipi().
-+ * This is to guard against sequences such as the following:
-+ *
-+ *      CPU
-+ *        X: smp_muxed_ipi_set_message():
-+ *        X:   smp_mb()
-+ *        X:   message[RESCHEDULE] = 1
-+ *        X: doorbell_global_ipi(42):
-+ *        X:   kvmppc_set_host_ipi(42)
-+ *        X:   ppc_msgsnd_sync()/smp_mb()
-+ *        X:   ppc_msgsnd() -> 42
-+ *       42: doorbell_exception(): // from CPU X
-+ *       42:   ppc_msgsync()
-+ *      105: smp_muxed_ipi_set_message():
-+ *      105:   smb_mb()
-+ *           // STORE DEFERRED DUE TO RE-ORDERING
-+ *    --105:   message[CALL_FUNCTION] = 1
-+ *    | 105: doorbell_global_ipi(42):
-+ *    | 105:   kvmppc_set_host_ipi(42)
-+ *    |  42:   kvmppc_clear_host_ipi(42)
-+ *    |  42: smp_ipi_demux_relaxed()
-+ *    |  42: // returns to executing guest
-+ *    |      // RE-ORDERED STORE COMPLETES
-+ *    ->105:   message[CALL_FUNCTION] = 1
-+ *      105:   ppc_msgsnd_sync()/smp_mb()
-+ *      105:   ppc_msgsnd() -> 42
-+ *       42: local_paca->kvm_hstate.host_ipi == 0 // IPI ignored
-+ *      105: // hangs waiting on 42 to process messages/call_single_queue
-+ *
-+ * We also issue an smp_mb() at the end of kvmppc_clear_host_ipi(). This is
-+ * to guard against sequences such as the following (as well as to create
-+ * a read-side pairing with the barrier in kvmppc_set_host_ipi()):
-+ *
-+ *      CPU
-+ *        X: smp_muxed_ipi_set_message():
-+ *        X:   smp_mb()
-+ *        X:   message[RESCHEDULE] = 1
-+ *        X: doorbell_global_ipi(42):
-+ *        X:   kvmppc_set_host_ipi(42)
-+ *        X:   ppc_msgsnd_sync()/smp_mb()
-+ *        X:   ppc_msgsnd() -> 42
-+ *       42: doorbell_exception(): // from CPU X
-+ *       42:   ppc_msgsync()
-+ *           // STORE DEFERRED DUE TO RE-ORDERING
-+ *    -- 42:   kvmppc_clear_host_ipi(42)
-+ *    |  42: smp_ipi_demux_relaxed()
-+ *    | 105: smp_muxed_ipi_set_message():
-+ *    | 105:   smb_mb()
-+ *    | 105:   message[CALL_FUNCTION] = 1
-+ *    | 105: doorbell_global_ipi(42):
-+ *    | 105:   kvmppc_set_host_ipi(42)
-+ *    |      // RE-ORDERED STORE COMPLETES
-+ *    -> 42:   kvmppc_clear_host_ipi(42)
-+ *       42: // returns to executing guest
-+ *      105:   ppc_msgsnd_sync()/smp_mb()
-+ *      105:   ppc_msgsnd() -> 42
-+ *       42: local_paca->kvm_hstate.host_ipi == 0 // IPI ignored
-+ *      105: // hangs waiting on 42 to process messages/call_single_queue
-+ */
-+static inline void kvmppc_set_host_ipi(int cpu)
-+{
-+	/*
-+	 * order stores of IPI messages vs. setting of host_ipi flag
-+	 *
-+	 * pairs with the barrier in kvmppc_clear_host_ipi()
-+	 */
-+	smp_mb();
-+	WRITE_ONCE(paca_ptrs[cpu]->kvm_hstate.host_ipi, 1);
-+}
-+
-+static inline void kvmppc_clear_host_ipi(int cpu)
-+{
-+	WRITE_ONCE(paca_ptrs[cpu]->kvm_hstate.host_ipi, 0);
-+	/*
-+	 * order clearing of host_ipi flag vs. processing of IPI messages
-+	 *
-+	 * pairs with the barrier in kvmppc_set_host_ipi()
-+	 */
-+	smp_mb();
-+}
-+
-+extern void kvmppc_xics_ipi_action(void);
-+
-+extern void kvm_hv_vm_activated(void);
-+extern void kvm_hv_vm_deactivated(void);
-+extern bool kvm_hv_mode_active(void);
-+#else
-+static inline void __init kvm_cma_reserve(void)
-+{}
-+
-+static inline void kvmppc_set_xics_phys(int cpu, unsigned long addr)
-+{}
-+
-+static inline void kvmppc_set_xive_tima(int cpu,
-+					unsigned long phys_addr,
-+					void __iomem *virt_addr)
-+{}
-+
-+static inline u32 kvmppc_get_xics_latch(void)
-+{
-+	return 0;
-+}
-+
-+static inline void kvmppc_set_host_ipi(int cpu)
-+{}
-+
-+static inline void kvmppc_clear_host_ipi(int cpu)
-+{}
-+
-+static inline bool kvm_hv_mode_active(void)		{ return false; }
-+#endif
-+
- /*
-  * KVMPPC_INST_SW_BREAKPOINT is debug Instruction
-  * for supporting software breakpoint.
-@@ -443,166 +596,18 @@ void kvmppc_set_pid(struct kvm_vcpu *vcpu, u32 pid);
- struct openpic;
- 
- #ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
--extern void kvm_cma_reserve(void) __init;
--static inline void kvmppc_set_xics_phys(int cpu, unsigned long addr)
--{
--	paca_ptrs[cpu]->kvm_hstate.xics_phys = (void __iomem *)addr;
--}
--
--static inline void kvmppc_set_xive_tima(int cpu,
--					unsigned long phys_addr,
--					void __iomem *virt_addr)
--{
--	paca_ptrs[cpu]->kvm_hstate.xive_tima_phys = (void __iomem *)phys_addr;
--	paca_ptrs[cpu]->kvm_hstate.xive_tima_virt = virt_addr;
--}
--
--static inline u32 kvmppc_get_xics_latch(void)
--{
--	u32 xirr;
--
--	xirr = get_paca()->kvm_hstate.saved_xirr;
--	get_paca()->kvm_hstate.saved_xirr = 0;
--	return xirr;
--}
--
--/*
-- * To avoid the need to unnecessarily exit fully to the host kernel, an IPI to
-- * a CPU thread that's running/napping inside of a guest is by default regarded
-- * as a request to wake the CPU (if needed) and continue execution within the
-- * guest, potentially to process new state like externally-generated
-- * interrupts or IPIs sent from within the guest itself (e.g. H_PROD/H_IPI).
-- *
-- * To force an exit to the host kernel, kvmppc_set_host_ipi() must be called
-- * prior to issuing the IPI to set the corresponding 'host_ipi' flag in the
-- * target CPU's PACA. To avoid unnecessary exits to the host, this flag should
-- * be immediately cleared via kvmppc_clear_host_ipi() by the IPI handler on
-- * the receiving side prior to processing the IPI work.
-- *
-- * NOTE:
-- *
-- * We currently issue an smp_mb() at the beginning of kvmppc_set_host_ipi().
-- * This is to guard against sequences such as the following:
-- *
-- *      CPU
-- *        X: smp_muxed_ipi_set_message():
-- *        X:   smp_mb()
-- *        X:   message[RESCHEDULE] = 1
-- *        X: doorbell_global_ipi(42):
-- *        X:   kvmppc_set_host_ipi(42)
-- *        X:   ppc_msgsnd_sync()/smp_mb()
-- *        X:   ppc_msgsnd() -> 42
-- *       42: doorbell_exception(): // from CPU X
-- *       42:   ppc_msgsync()
-- *      105: smp_muxed_ipi_set_message():
-- *      105:   smb_mb()
-- *           // STORE DEFERRED DUE TO RE-ORDERING
-- *    --105:   message[CALL_FUNCTION] = 1
-- *    | 105: doorbell_global_ipi(42):
-- *    | 105:   kvmppc_set_host_ipi(42)
-- *    |  42:   kvmppc_clear_host_ipi(42)
-- *    |  42: smp_ipi_demux_relaxed()
-- *    |  42: // returns to executing guest
-- *    |      // RE-ORDERED STORE COMPLETES
-- *    ->105:   message[CALL_FUNCTION] = 1
-- *      105:   ppc_msgsnd_sync()/smp_mb()
-- *      105:   ppc_msgsnd() -> 42
-- *       42: local_paca->kvm_hstate.host_ipi == 0 // IPI ignored
-- *      105: // hangs waiting on 42 to process messages/call_single_queue
-- *
-- * We also issue an smp_mb() at the end of kvmppc_clear_host_ipi(). This is
-- * to guard against sequences such as the following (as well as to create
-- * a read-side pairing with the barrier in kvmppc_set_host_ipi()):
-- *
-- *      CPU
-- *        X: smp_muxed_ipi_set_message():
-- *        X:   smp_mb()
-- *        X:   message[RESCHEDULE] = 1
-- *        X: doorbell_global_ipi(42):
-- *        X:   kvmppc_set_host_ipi(42)
-- *        X:   ppc_msgsnd_sync()/smp_mb()
-- *        X:   ppc_msgsnd() -> 42
-- *       42: doorbell_exception(): // from CPU X
-- *       42:   ppc_msgsync()
-- *           // STORE DEFERRED DUE TO RE-ORDERING
-- *    -- 42:   kvmppc_clear_host_ipi(42)
-- *    |  42: smp_ipi_demux_relaxed()
-- *    | 105: smp_muxed_ipi_set_message():
-- *    | 105:   smb_mb()
-- *    | 105:   message[CALL_FUNCTION] = 1
-- *    | 105: doorbell_global_ipi(42):
-- *    | 105:   kvmppc_set_host_ipi(42)
-- *    |      // RE-ORDERED STORE COMPLETES
-- *    -> 42:   kvmppc_clear_host_ipi(42)
-- *       42: // returns to executing guest
-- *      105:   ppc_msgsnd_sync()/smp_mb()
-- *      105:   ppc_msgsnd() -> 42
-- *       42: local_paca->kvm_hstate.host_ipi == 0 // IPI ignored
-- *      105: // hangs waiting on 42 to process messages/call_single_queue
-- */
--static inline void kvmppc_set_host_ipi(int cpu)
--{
--	/*
--	 * order stores of IPI messages vs. setting of host_ipi flag
--	 *
--	 * pairs with the barrier in kvmppc_clear_host_ipi()
--	 */
--	smp_mb();
--	WRITE_ONCE(paca_ptrs[cpu]->kvm_hstate.host_ipi, 1);
--}
--
--static inline void kvmppc_clear_host_ipi(int cpu)
--{
--	WRITE_ONCE(paca_ptrs[cpu]->kvm_hstate.host_ipi, 0);
--	/*
--	 * order clearing of host_ipi flag vs. processing of IPI messages
--	 *
--	 * pairs with the barrier in kvmppc_set_host_ipi()
--	 */
--	smp_mb();
--}
--
- static inline void kvmppc_fast_vcpu_kick(struct kvm_vcpu *vcpu)
+ #ifndef arch_xfer_to_guest_mode_work
+-static inline int arch_xfer_to_guest_mode_handle_work(struct kvm_vcpu *vcpu,
+-						      unsigned long ti_work)
++static inline int arch_xfer_to_guest_mode_handle_work(unsigned long ti_work)
  {
- 	vcpu->kvm->arch.kvm_ops->fast_vcpu_kick(vcpu);
+ 	return 0;
  }
+diff --git a/kernel/entry/kvm.c b/kernel/entry/kvm.c
+index 2e0f75bcb7fd..c2fc39824157 100644
+--- a/kernel/entry/kvm.c
++++ b/kernel/entry/kvm.c
+@@ -19,7 +19,7 @@ static int xfer_to_guest_mode_work(struct kvm_vcpu *vcpu, unsigned long ti_work)
+ 		if (ti_work & _TIF_NOTIFY_RESUME)
+ 			resume_user_mode_work(NULL);
  
--extern void kvm_hv_vm_activated(void);
--extern void kvm_hv_vm_deactivated(void);
--extern bool kvm_hv_mode_active(void);
--
- extern void kvmppc_check_need_tlb_flush(struct kvm *kvm, int pcpu);
+-		ret = arch_xfer_to_guest_mode_handle_work(vcpu, ti_work);
++		ret = arch_xfer_to_guest_mode_handle_work(ti_work);
+ 		if (ret)
+ 			return ret;
  
- #else
--static inline void __init kvm_cma_reserve(void)
--{}
--
--static inline void kvmppc_set_xics_phys(int cpu, unsigned long addr)
--{}
--
--static inline void kvmppc_set_xive_tima(int cpu,
--					unsigned long phys_addr,
--					void __iomem *virt_addr)
--{}
--
--static inline u32 kvmppc_get_xics_latch(void)
--{
--	return 0;
--}
--
--static inline void kvmppc_set_host_ipi(int cpu)
--{}
--
--static inline void kvmppc_clear_host_ipi(int cpu)
--{}
--
- static inline void kvmppc_fast_vcpu_kick(struct kvm_vcpu *vcpu)
- {
- 	kvm_vcpu_kick(vcpu);
- }
--
--static inline bool kvm_hv_mode_active(void)		{ return false; }
--
- #endif
- 
- #ifdef CONFIG_PPC_PSERIES
-@@ -642,7 +647,6 @@ extern u64 kvmppc_xics_get_icp(struct kvm_vcpu *vcpu);
- extern int kvmppc_xics_set_icp(struct kvm_vcpu *vcpu, u64 icpval);
- extern int kvmppc_xics_connect_vcpu(struct kvm_device *dev,
- 			struct kvm_vcpu *vcpu, u32 cpu);
--extern void kvmppc_xics_ipi_action(void);
- extern void kvmppc_xics_set_mapped(struct kvm *kvm, unsigned long guest_irq,
- 				   unsigned long host_irq);
- extern void kvmppc_xics_clr_mapped(struct kvm *kvm, unsigned long guest_irq,
 -- 
 2.42.0.459.ge4e396fd5e-goog
 
