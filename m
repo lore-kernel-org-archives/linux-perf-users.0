@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C713CC2BA12
-	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Sep 2023 00:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 563A0CD37B3
+	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Sep 2023 00:33:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238607AbjIPAcy (ORCPT
+        id S238632AbjIPAcw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 15 Sep 2023 20:32:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46114 "EHLO
+        Fri, 15 Sep 2023 20:32:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238672AbjIPAc1 (ORCPT
+        with ESMTP id S238658AbjIPAc0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 15 Sep 2023 20:32:27 -0400
+        Fri, 15 Sep 2023 20:32:26 -0400
 Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC5FC273A
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:31:57 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d81d85aae7cso2236573276.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:31:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2D5A30C1
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:31:53 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d815354ea7fso3116292276.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:31:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694824317; x=1695429117; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1694824313; x=1695429113; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fxp/wpw1LF0d8Fhe/2GDyJ/jS0kdkc80zXgNVrZkdeA=;
-        b=2fbwrzwwcwMEdCJUr8RGBaUnDngKNB070PXZtyq30zQwjcm8IolGOgCF1XZmW1ompj
-         IDBGVk8mkCcHAD4KXWzTkNV7Ai4zcL9LFKOqVR+Xrn3ZzRBGASphXPfjCS42L/CbasYL
-         K1P6sVitcJCmYaiSyf0RbihIqVp7G7lJrQayuNjQMGiY9xwnVGQUE2V4qezFwn8FLTtm
-         rsZHajwCTZ4KS+RQcnK4ZdWQULiNEGoZBZaSj6x/FhDkfbEN78LHV7ARbwSZ6RVVX/WF
-         6/fbeE2lkm75SHXs7lvSMGcOS3cXdtqsvcFNQCwpmLq8JB9OpLH8mxuNlMEnGJT5l7kM
-         UoIg==
+        bh=pl7bBxxWVXjTf9iTQwKV6iNN5dTCLVhIVjlh92R6IC4=;
+        b=zOLzyvf9Xh9Oyip0BwJ83PeBHCS/GkeIkYW7amwKWpbVRBulRSs+M2ewlVHSYEk8Y1
+         fZi/rLeXSktTS8MyrHSb7oSjjoji3mP8DLBFys3HTkweHkzNEjUj/MYjO6bhCObLf6WI
+         C4epHaQCDHjamTfPTIFUVJo9uV7rJeD8D3Ev5VTy1GaRUXNCbP9vUakULPRry3f2UmYw
+         gyw5WDenpiA4SZAJNYLZ4b5c/W6CHbsXfPj0GoeSA/wcWsneuM9gT86MPn9Q/cBxCCsq
+         e6qXt7/vwX6T3FspiyVRjD7e2hTXM1HQsLlpY6p8Z4vdzbokFmWoStzOeNzcENym+vhB
+         +SRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694824317; x=1695429117;
+        d=1e100.net; s=20230601; t=1694824313; x=1695429113;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Fxp/wpw1LF0d8Fhe/2GDyJ/jS0kdkc80zXgNVrZkdeA=;
-        b=aZtimHgNx1UmkPyBJYALbksZ0EEGQPjjiSuNAkVvnj2fl9iiSwVhuLdDHHT3u9fdiU
-         ULX0yqqpshXQ7OGg47ogmaEW/hQbSUG8q1S8UClR9t6MbgpcwvZWGmR4V8DZuHRj9ffl
-         439WR3aze6F7VkyeKH4B8zhv52c9sftkxe6cTPVwJWS9ikhE4WJUpff7rDPLKamXPg2o
-         oKFvxOtA24SxumxEIGdcfNruvae2Zxa44ZF9GwdnEEiWfRjKxW+gikh/9fjMLRKjpvaU
-         WJTgMML0PmCOYahXQPxRz5eDe2gLqOu0maqNnrzief4GSLa+sNUimMsvHgN5wHwZsPTq
-         uknw==
-X-Gm-Message-State: AOJu0YyjuklijR8i9A0Pu75FehuWizV6yQhydDH85y0vMJuFyo7H6wkJ
-        bIE4hWORNFeLwsmzSwaPcogfh9xwFSY=
-X-Google-Smtp-Source: AGHT+IEqdj0NaTPFhwcZwboCYWpv5WyTfAkaUyiX867J7n21mAe+KnDvjijo+FbZ8yrF1vPesmLGFCOD+Os=
+        bh=pl7bBxxWVXjTf9iTQwKV6iNN5dTCLVhIVjlh92R6IC4=;
+        b=WaP29C09QNsTaBNPhbKTM3/FXmmtLDElSo7gNUBgYB5I5X7hleYpCCwdxJra5Dewdr
+         uWfxummNya3HZZASufYnhGN0XZT0e5d4Hfa89FwTDC5jqjPdOSdvGWO4gYkBSc2N84np
+         50VNEO8doMcJgk7BE9k5cxF3zUhGr4S+TxKl8ZRSrUNVoNP+WhH4tcePeFGNF1YIjZTd
+         Pkgxgt5QX7Kl76UzHuOV8biyS4qDadGrD4Ki53uGE4+96/pfGLssNaOE4udjCChv3MhQ
+         mzvqf8SbzBRmrwDG+F0LVLeH+25E6t3kIHyqStRSD1OqOFgmKqZa80QmuJMnw5OxC+nh
+         XrLA==
+X-Gm-Message-State: AOJu0YxYDlBAh6icm7ULHAR85nKQTHFrBWlLlcZkn4eHmdsYXvcn2y4G
+        HLh71dV06e+AM2/oEjkSAK7PlAea9Uw=
+X-Google-Smtp-Source: AGHT+IHIEoJ5Qp0cT7058FSDnFlcgu0NfKZ+k2cnwo0UQE0i+ifeNt8ssvIZEJlieWuqLdMggeWcLX6T9W4=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:4444:0:b0:d80:8aa6:5ac0 with SMTP id
- r65-20020a254444000000b00d808aa65ac0mr190245yba.4.1694824316815; Fri, 15 Sep
- 2023 17:31:56 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a05:6902:4cf:b0:d7b:92d7:5629 with SMTP id
+ v15-20020a05690204cf00b00d7b92d75629mr82335ybs.8.1694824312956; Fri, 15 Sep
+ 2023 17:31:52 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Fri, 15 Sep 2023 17:31:10 -0700
+Date:   Fri, 15 Sep 2023 17:31:08 -0700
 In-Reply-To: <20230916003118.2540661-1-seanjc@google.com>
 Mime-Version: 1.0
 References: <20230916003118.2540661-1-seanjc@google.com>
 X-Mailer: git-send-email 2.42.0.459.ge4e396fd5e-goog
-Message-ID: <20230916003118.2540661-19-seanjc@google.com>
-Subject: [PATCH 18/26] KVM: s390: Stop adding virt/kvm to the arch include path
+Message-ID: <20230916003118.2540661-17-seanjc@google.com>
+Subject: [PATCH 16/26] KVM: MIPS: Stop adding virt/kvm to the arch include path
 From:   Sean Christopherson <seanjc@google.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
@@ -98,34 +98,30 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Don't add virt/kvm to KVM s390's include path, the headers in virt/kvm are
+Don't add virt/kvm to KVM MIPS' include path, the headers in virt/kvm are
 intended to be used only by other code in virt/kvm, i.e. are "private" to
-the core KVM code.  It's not clear that s390 *ever* included a header from
-virt/kvm, i.e. odds are good the "-Ivirt/kvm" was copied from a x86's
-Makefile when s390 support was first added.
-
-The only headers in virt/kvm at the time were the x86 specific ioapic.h,
-and iodev.h, neither of which shows up as an #include in the diff for the
-commit range 37817f2982d0f..e976a2b997fc4.
+the core KVM code.  It's not clear that MIPS *ever* included a header from
+virt/kvm, i.e. odds are good the "-Ivirt/kvm" was copied from a different
+architecture's Makefile when MIPS support was first added.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/s390/kvm/Makefile | 2 +-
+ arch/mips/kvm/Makefile | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/kvm/Makefile b/arch/s390/kvm/Makefile
-index 02217fb4ae10..f17249ab2a72 100644
---- a/arch/s390/kvm/Makefile
-+++ b/arch/s390/kvm/Makefile
-@@ -5,7 +5,7 @@
+diff --git a/arch/mips/kvm/Makefile b/arch/mips/kvm/Makefile
+index 805aeea2166e..96a7cd21b140 100644
+--- a/arch/mips/kvm/Makefile
++++ b/arch/mips/kvm/Makefile
+@@ -4,7 +4,7 @@
  
  include $(srctree)/virt/kvm/Makefile.kvm
  
--ccflags-y := -Ivirt/kvm -Iarch/s390/kvm
-+ccflags-y := -Iarch/s390/kvm
+-ccflags-y += -Ivirt/kvm -Iarch/mips/kvm
++ccflags-y += -Iarch/mips/kvm
  
- kvm-y += kvm-s390.o intercept.o interrupt.o priv.o sigp.o
- kvm-y += diag.o gaccess.o guestdbg.o vsie.o pv.o
+ kvm-$(CONFIG_CPU_HAS_MSA) += msa.o
+ 
 -- 
 2.42.0.459.ge4e396fd5e-goog
 
