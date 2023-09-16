@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08629C46CA1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E12ACD37B9
 	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Sep 2023 05:15:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231889AbjIPFOu (ORCPT
+        id S234025AbjIPFPV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 16 Sep 2023 01:14:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48416 "EHLO
+        Sat, 16 Sep 2023 01:15:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234025AbjIPFOp (ORCPT
+        with ESMTP id S237236AbjIPFOw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 16 Sep 2023 01:14:45 -0400
+        Sat, 16 Sep 2023 01:14:52 -0400
 Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BA371BC9
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 22:14:38 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59bdae1ef38so61956437b3.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 22:14:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16C1C1BCA
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 22:14:43 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-58d9e327d3aso36022717b3.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 22:14:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694841277; x=1695446077; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1694841282; x=1695446082; darn=vger.kernel.org;
         h=content-transfer-encoding:to:from:subject:references:mime-version
          :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hJPJalVXB3ccWklvdReomglDkZtncFficiY7Em4HUkI=;
-        b=qOcloub3iAe1Bw1l/iK2jm8JkyfbiptUtUpz+SM+HHg2wdt5XJaJxmCyz5kBnW09si
-         JfawVlKNyyDY1tqQkD9nNdgigVceCM/7MIQklhxZCv7fG2iC/e3PDtHqsvjTeHlOL3CL
-         WDBcX/2tzr7pU+nkx7pM6jZwbOGhZEaLRkZAF+s268lnvhmTYh9s04ml/SB6B4lHe0WI
-         F284E/NkB07yyzSMsCIK5xqynylVN9ZVnLvo6h5i/nZksSRhhW19AYpA/at8Oe7j2vaJ
-         4RKCfbmI8QeTd0BptY7V9t/wR4eVqCXriROor9PQuWBO6ZXAm+emWovqtcMcgZ3B22JZ
-         wisA==
+        bh=DijWxYsxp0ZMmqN/9jzMvriXmGdGGs0CqMSgli1IDx4=;
+        b=UbTLVLIwo1djednm8mI0MK6L9ggpiOx0opR3/dvQcVqe+rfu9h19qICmPHnlZfRuvY
+         zk68Aw3C8IV0x75S3Ap72JOkP8dzyjASdvY0cQfNMH874I7AbDpApZCwTq5ltkSYi0PQ
+         uAmw8J7HeThae2FLP6kmGFnCf3fi6lMgnJNpl+kOn6icBN86LUVxD/VudKJdlgkGtBtI
+         XfF6Lqx0WY5/eREsLFX8YNF3RtStEPk4xjcEW19cnr+OOZ+xz2D9pjf64y9KTpdHmOXr
+         ju/FeDiXCH8lkPoTMP99YRh2ao6+y1yr8B6N1yL+naVgWv97tlZJjgIIVF0eNDEAYnIt
+         RY7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694841277; x=1695446077;
+        d=1e100.net; s=20230601; t=1694841282; x=1695446082;
         h=content-transfer-encoding:to:from:subject:references:mime-version
          :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=hJPJalVXB3ccWklvdReomglDkZtncFficiY7Em4HUkI=;
-        b=fJAgxQ3gH30+v875+aLBziS4qpCy/OTGOyJTtxaPeFpzM3nTmZVUG2dFSvK35Oof0L
-         /s3ZD8rEVdwnFUATtqJq9skEDN2SSm6nwX394ObQPzSL98O478h//cKojuVdg/0KLhdP
-         HgZ0/MbXIgormx7CbRTbCgP0oh/BXwhmqVtSsNvyZB37wWmd6v+041ll2CxkAtesr80N
-         tBjhqoep+pTQcymkcqOoad9+r2xzu5bZcbgxfCMDxBTBZF84+Ugq1//68p0w1UWJ31AX
-         4dQqQa/6U1/nVnE5L4wi0Pu+a/cBo/pWvZJ2v3ydxqEdcP08VSV3rTmqq6TdW1YqUhS4
-         VunQ==
-X-Gm-Message-State: AOJu0YwXrv3LI2/1/TBF7Pdv7OWh26+pVbWrCVSZcw0z9P8+IjRBOQrT
-        f/aHWl3wwzByEo+VS1NX1T9yNaGA1kSd
-X-Google-Smtp-Source: AGHT+IELVF2cpLYpiVZGvb04HYZDHQCynWK05M12baZjjFqjCXPeE/AYHDXKD0onYYpHCae8lwl8fnrkK2q+
+        bh=DijWxYsxp0ZMmqN/9jzMvriXmGdGGs0CqMSgli1IDx4=;
+        b=Vnbd2R5kboSFSuatxzx2EuUh9Lh0mIb6P4FGvf8QO9jy9r0a5sweKaQz1IU0EebfRQ
+         UKYHFULBYGEZPLOZqeWEIGktWHc2N/odI0Zf2RYEyutOSDH+coXHmfhn0+n9LPboIQY4
+         S0X3dRIkGKwoT7549rO05CQoYPDBLKM8LCH4Mxd5F8tlmwYtVMIeZBKiMi+UgHRgJ02d
+         vQ3jfOe9TB3jzSW6CFCbIySPFqxL2FYN3WInRPQpD+/1jrXyQPH0oZDxeMqunyD2PLkb
+         GwtxgnoRpgkldnAD+JyFvYifOkNKRtfU/XFOlM81kclEX9b0upTdk61MyO78+a/w+3mR
+         vHZQ==
+X-Gm-Message-State: AOJu0Yx1bu61yaalKdJ+tGjn8N+mkqpWscEtK5N2ZT1zPHTGC7Kj8mFY
+        fPgq5bqTd3L4YSMx1zn4523Cu9qproh7
+X-Google-Smtp-Source: AGHT+IHwDAcaG+vPypldlZ0YjslrAJdtjJ7sZmoMhdABOmf7ZNlFEeOw2qD3JjYmRgEqeGhFAQcSpj+zC/oV
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:de72:1a43:1938:6165])
- (user=irogers job=sendgmr) by 2002:a25:40a:0:b0:d81:f70e:1e1a with SMTP id
- 10-20020a25040a000000b00d81f70e1e1amr75067ybe.0.1694841277377; Fri, 15 Sep
- 2023 22:14:37 -0700 (PDT)
-Date:   Fri, 15 Sep 2023 22:13:08 -0700
+ (user=irogers job=sendgmr) by 2002:a81:8b49:0:b0:59b:c811:a709 with SMTP id
+ e9-20020a818b49000000b0059bc811a709mr93194ywk.0.1694841282174; Fri, 15 Sep
+ 2023 22:14:42 -0700 (PDT)
+Date:   Fri, 15 Sep 2023 22:13:10 -0700
 In-Reply-To: <20230916051310.1124098-1-irogers@google.com>
-Message-Id: <20230916051310.1124098-2-irogers@google.com>
+Message-Id: <20230916051310.1124098-4-irogers@google.com>
 Mime-Version: 1.0
 References: <20230916051310.1124098-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.459.ge4e396fd5e-goog
-Subject: [PATCH v1 2/4] perf vendor events intel: Update alderlake events to v1.22
+Subject: [PATCH v1 4/4] perf vendor events intel: Update meteorlake events to v1.05
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -78,47 +78,116 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-v1.22 was released in:
-https://github.com/intel/perfmon/commit/846bd247c6e04acc572ca56c992e9e65852=
-bbe63
+v1.05 was released in:
+https://github.com/intel/perfmon/commit/405d3ee987d756b5b5d9a64d8a8fa775598=
+22ecf
 
 Update created using:
 https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../arch/x86/alderlake/frontend.json          | 42 ++++++++++--
- .../pmu-events/arch/x86/alderlake/memory.json |  4 +-
- .../x86/alderlake/uncore-interconnect.json    |  2 +
- .../arch/x86/alderlaken/memory.json           |  4 +-
- .../x86/alderlaken/uncore-interconnect.json   | 66 +++++++++++++++++++
- tools/perf/pmu-events/arch/x86/mapfile.csv    |  4 +-
- 6 files changed, 110 insertions(+), 12 deletions(-)
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
+ .../pmu-events/arch/x86/meteorlake/cache.json | 30 ++++++++++
+ .../arch/x86/meteorlake/frontend.json         | 29 ++++++++--
+ .../arch/x86/meteorlake/memory.json           | 28 +++++++++
+ .../pmu-events/arch/x86/meteorlake/other.json | 40 +++++++++++++
+ .../arch/x86/meteorlake/pipeline.json         | 57 +++++++++++++++++++
+ 6 files changed, 181 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/alderlake/frontend.json b/tools=
-/perf/pmu-events/arch/x86/alderlake/frontend.json
-index 81349100fe32..542ba4a81996 100644
---- a/tools/perf/pmu-events/arch/x86/alderlake/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlake/frontend.json
-@@ -394,31 +394,61 @@
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
+ents/arch/x86/mapfile.csv
+index a97f0734099a..e57fde489425 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -21,7 +21,7 @@ GenuineIntel-6-3E,v24,ivytown,core
+ GenuineIntel-6-2D,v24,jaketown,core
+ GenuineIntel-6-(57|85),v16,knightslanding,core
+ GenuineIntel-6-BD,v1.00,lunarlake,core
+-GenuineIntel-6-A[AC],v1.04,meteorlake,core
++GenuineIntel-6-A[AC],v1.05,meteorlake,core
+ GenuineIntel-6-1[AEF],v4,nehalemep,core
+ GenuineIntel-6-2E,v4,nehalemex,core
+ GenuineIntel-6-A7,v1.01,rocketlake,core
+diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/cache.json b/tools/p=
+erf/pmu-events/arch/x86/meteorlake/cache.json
+index 1de0200b32f6..5fef87502d4b 100644
+--- a/tools/perf/pmu-events/arch/x86/meteorlake/cache.json
++++ b/tools/perf/pmu-events/arch/x86/meteorlake/cache.json
+@@ -966,6 +966,16 @@
+         "UMask": "0x3",
          "Unit": "cpu_core"
      },
-     {
--        "BriefDescription": "Uops not delivered by IDQ when backend of the=
- machine is not stalled",
-+        "BriefDescription": "Uops not delivered by IDQ when backend of the=
- machine is not stalled [This event is alias to IDQ_UOPS_NOT_DELIVERED.CORE=
-]",
-+        "EventCode": "0x9c",
-+        "EventName": "IDQ_BUBBLES.CORE",
-+        "PublicDescription": "Counts the number of uops not delivered to b=
-y the Instruction Decode Queue (IDQ) to the back-end of the pipeline when t=
-here was no back-end stalls. This event counts for one SMT thread in a give=
-n cycle. [This event is alias to IDQ_UOPS_NOT_DELIVERED.CORE]",
-+        "SampleAfterValue": "1000003",
++    {
++        "BriefDescription": "Counts demand data reads that were supplied b=
+y the L3 cache where a snoop was sent, the snoop hit, and modified data was=
+ forwarded.",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HITM",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x10003C0001",
++        "SampleAfterValue": "100003",
 +        "UMask": "0x1",
-+        "Unit": "cpu_core"
++        "Unit": "cpu_atom"
 +    },
+     {
+         "BriefDescription": "Counts demand data reads that resulted in a s=
+noop hit in another cores caches, data forwarding is required as the data i=
+s modified.",
+         "EventCode": "0x2A,0x2B",
+@@ -976,6 +986,16 @@
+         "UMask": "0x1",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts demand data reads that were supplied b=
+y the L3 cache where a snoop was sent, the snoop hit, and non-modified data=
+ was forwarded.",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_WITH_FWD",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x8003C0001",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts demand data reads that resulted in a s=
+noop hit in another cores caches which forwarded the unmodified data to the=
+ requesting core.",
+         "EventCode": "0x2A,0x2B",
+@@ -986,6 +1006,16 @@
+         "UMask": "0x1",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
+oftware prefetches for exclusive ownership (PREFETCHW) that were supplied b=
+y the L3 cache where a snoop was sent, the snoop hit, and modified data was=
+ forwarded.",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_RFO.L3_HIT.SNOOP_HITM",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x10003C0002",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts demand read for ownership (RFO) reques=
+ts and software prefetches for exclusive ownership (PREFETCHW) that resulte=
+d in a snoop hit in another cores caches, data forwarding is required as th=
+e data is modified.",
+         "EventCode": "0x2A,0x2B",
+diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/frontend.json b/tool=
+s/perf/pmu-events/arch/x86/meteorlake/frontend.json
+index 8264419500a5..9da8689eda81 100644
+--- a/tools/perf/pmu-events/arch/x86/meteorlake/frontend.json
++++ b/tools/perf/pmu-events/arch/x86/meteorlake/frontend.json
+@@ -460,6 +460,27 @@
+         "UMask": "0x1",
+         "Unit": "cpu_core"
+     },
 +    {
 +        "BriefDescription": "Cycles when no uops are not delivered by the =
 IDQ when backend of the machine is not stalled [This event is alias to IDQ_=
@@ -152,21 +221,11 @@ OT_DELIVERED.CYCLES_FE_WAS_OK]",
 +        "UMask": "0x1",
 +        "Unit": "cpu_core"
 +    },
-+    {
-+        "BriefDescription": "Uops not delivered by IDQ when backend of the=
- machine is not stalled [This event is alias to IDQ_BUBBLES.CORE]",
+     {
+         "BriefDescription": "Uops not delivered by IDQ when backend of the=
+ machine is not stalled",
          "EventCode": "0x9c",
-         "EventName": "IDQ_UOPS_NOT_DELIVERED.CORE",
--        "PublicDescription": "Counts the number of uops not delivered to b=
-y the Instruction Decode Queue (IDQ) to the back-end of the pipeline when t=
-here was no back-end stalls. This event counts for one SMT thread in a give=
-n cycle.",
-+        "PublicDescription": "Counts the number of uops not delivered to b=
-y the Instruction Decode Queue (IDQ) to the back-end of the pipeline when t=
-here was no back-end stalls. This event counts for one SMT thread in a give=
-n cycle. [This event is alias to IDQ_BUBBLES.CORE]",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x1",
+@@ -470,22 +491,22 @@
          "Unit": "cpu_core"
      },
      {
@@ -213,208 +272,241 @@ S.CYCLES_FE_WAS_OK]",
          "SampleAfterValue": "1000003",
          "UMask": "0x1",
          "Unit": "cpu_core"
-diff --git a/tools/perf/pmu-events/arch/x86/alderlake/memory.json b/tools/p=
-erf/pmu-events/arch/x86/alderlake/memory.json
-index 73d92d5c9f9d..23d36164433f 100644
---- a/tools/perf/pmu-events/arch/x86/alderlake/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlake/memory.json
-@@ -248,7 +248,7 @@
+diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/memory.json b/tools/=
+perf/pmu-events/arch/x86/meteorlake/memory.json
+index 2605e1d0ba9f..1c1a2cf8d9ac 100644
+--- a/tools/perf/pmu-events/arch/x86/meteorlake/memory.json
++++ b/tools/perf/pmu-events/arch/x86/meteorlake/memory.json
+@@ -66,6 +66,14 @@
+         "UMask": "0x84",
+         "Unit": "cpu_atom"
+     },
++    {
++        "BriefDescription": "Counts the number of machine clears due to me=
+mory ordering caused by a snoop from an external agent. Does not count inte=
+rnally generated machine clears such as those due to memory disambiguation.=
+",
++        "EventCode": "0xc3",
++        "EventName": "MACHINE_CLEARS.MEMORY_ORDERING",
++        "SampleAfterValue": "20003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Number of machine clears due to memory orderi=
+ng conflicts.",
+         "EventCode": "0xc3",
+@@ -279,6 +287,26 @@
+         "UMask": "0x4",
+         "Unit": "cpu_atom"
+     },
++    {
++        "BriefDescription": "Counts demand data reads that were not suppli=
+ed by the L3 cache.",
++        "EventCode": "0x2A,0x2B",
++        "EventName": "OCR.DEMAND_DATA_RD.L3_MISS",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x3FBFC00001",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts demand read for ownership (RFO) reques=
+ts and software prefetches for exclusive ownership (PREFETCHW) that were no=
+t supplied by the L3 cache.",
++        "EventCode": "0x2A,0x2B",
++        "EventName": "OCR.DEMAND_RFO.L3_MISS",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x3FBFC00002",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
+     {
+         "BriefDescription": "Counts demand data read requests that miss th=
+e L3 cache.",
+         "EventCode": "0x21",
+diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/other.json b/tools/p=
+erf/pmu-events/arch/x86/meteorlake/other.json
+index f4c603599df4..d55e792c0c43 100644
+--- a/tools/perf/pmu-events/arch/x86/meteorlake/other.json
++++ b/tools/perf/pmu-events/arch/x86/meteorlake/other.json
+@@ -7,6 +7,46 @@
+         "UMask": "0x8",
          "Unit": "cpu_core"
      },
++    {
++        "BriefDescription": "Counts demand data reads that have any type o=
+f response.",
++        "EventCode": "0x2A,0x2B",
++        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x10001",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts demand data reads that were supplied b=
+y DRAM.",
++        "EventCode": "0x2A,0x2B",
++        "EventName": "OCR.DEMAND_DATA_RD.DRAM",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x184000001",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts demand read for ownership (RFO) reques=
+ts and software prefetches for exclusive ownership (PREFETCHW) that have an=
+y type of response.",
++        "EventCode": "0x2A,0x2B",
++        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x10002",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts streaming stores that have any type of=
+ response.",
++        "EventCode": "0xB7",
++        "EventName": "OCR.STREAMING_WR.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x10800",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
      {
--        "BriefDescription": "Counts demand data reads that were not suppli=
-ed by the L3 cache.",
-+        "BriefDescription": "Counts demand data reads that were not suppli=
-ed by the L3 cache. [L3_MISS_LOCAL is alias to L3_MISS]",
-         "EventCode": "0xB7",
-         "EventName": "OCR.DEMAND_DATA_RD.L3_MISS_LOCAL",
-         "MSRIndex": "0x1a6,0x1a7",
-@@ -278,7 +278,7 @@
+         "BriefDescription": "Counts streaming stores that have any type of=
+ response.",
+         "EventCode": "0x2A,0x2B",
+diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/pipeline.json b/tool=
+s/perf/pmu-events/arch/x86/meteorlake/pipeline.json
+index 352c5efafc06..85a92baa004a 100644
+--- a/tools/perf/pmu-events/arch/x86/meteorlake/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/meteorlake/pipeline.json
+@@ -217,6 +217,15 @@
+         "UMask": "0x50",
          "Unit": "cpu_core"
      },
++    {
++        "BriefDescription": "Counts the number of mispredicted taken JCC (=
+Jump on Conditional Code) branch instructions retired.",
++        "EventCode": "0xc5",
++        "EventName": "BR_MISP_RETIRED.COND_TAKEN",
++        "PEBS": "1",
++        "SampleAfterValue": "200003",
++        "UMask": "0xfe",
++        "Unit": "cpu_atom"
++    },
      {
--        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that were not suppli=
-ed by the L3 cache.",
-+        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that were not suppli=
-ed by the L3 cache. [L3_MISS_LOCAL is alias to L3_MISS]",
-         "EventCode": "0xB7",
-         "EventName": "OCR.DEMAND_RFO.L3_MISS_LOCAL",
-         "MSRIndex": "0x1a6,0x1a7",
-diff --git a/tools/perf/pmu-events/arch/x86/alderlake/uncore-interconnect.j=
-son b/tools/perf/pmu-events/arch/x86/alderlake/uncore-interconnect.json
-index 34fc052d00e4..8bf020a9dfa8 100644
---- a/tools/perf/pmu-events/arch/x86/alderlake/uncore-interconnect.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlake/uncore-interconnect.json
-@@ -25,6 +25,7 @@
+         "BriefDescription": "number of branch instructions retired that we=
+re mispredicted and taken.",
+         "EventCode": "0xc5",
+@@ -1045,6 +1054,14 @@
+         "UMask": "0x3",
+         "Unit": "cpu_atom"
      },
++    {
++        "BriefDescription": "Counts the number of issue slots every cycle =
+that were not consumed by the backend due to Branch Mispredict",
++        "EventCode": "0x73",
++        "EventName": "TOPDOWN_BAD_SPECULATION.MISPREDICT",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x4",
++        "Unit": "cpu_atom"
++    },
      {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-UNC_ARB_REQ_TRK_REQUEST.DRD",
-+        "Deprecated": "1",
-         "EventCode": "0x81",
-         "EventName": "UNC_ARB_DAT_REQUESTS.RD",
-         "PerPkg": "1",
-@@ -33,6 +34,7 @@
-     },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-UNC_ARB_DAT_OCCUPANCY.ALL",
-+        "Deprecated": "1",
-         "EventCode": "0x85",
-         "EventName": "UNC_ARB_IFA_OCCUPANCY.ALL",
-         "PerPkg": "1",
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/memory.json b/tools/=
-perf/pmu-events/arch/x86/alderlaken/memory.json
-index 37259d38a222..863a3ba2b4b2 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/memory.json
-@@ -59,7 +59,7 @@
-         "UMask": "0x1"
-     },
-     {
--        "BriefDescription": "Counts demand data reads that were not suppli=
-ed by the L3 cache.",
-+        "BriefDescription": "Counts demand data reads that were not suppli=
-ed by the L3 cache. [L3_MISS_LOCAL is alias to L3_MISS]",
-         "EventCode": "0xB7",
-         "EventName": "OCR.DEMAND_DATA_RD.L3_MISS_LOCAL",
-         "MSRIndex": "0x1a6,0x1a7",
-@@ -77,7 +77,7 @@
-         "UMask": "0x1"
-     },
-     {
--        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that were not suppli=
-ed by the L3 cache.",
-+        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that were not suppli=
-ed by the L3 cache. [L3_MISS_LOCAL is alias to L3_MISS]",
-         "EventCode": "0xB7",
-         "EventName": "OCR.DEMAND_RFO.L3_MISS_LOCAL",
-         "MSRIndex": "0x1a6,0x1a7",
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/uncore-interconnect.=
-json b/tools/perf/pmu-events/arch/x86/alderlaken/uncore-interconnect.json
-index 4af695a5e755..8bf020a9dfa8 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/uncore-interconnect.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/uncore-interconnect.json
-@@ -7,6 +7,56 @@
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not consumed by the backend due to a machine clear (nuke).",
+         "EventCode": "0x73",
+@@ -1068,6 +1085,22 @@
          "UMask": "0x1",
-         "Unit": "ARB"
+         "Unit": "cpu_atom"
      },
 +    {
-+        "BriefDescription": "Each cycle counts number of any coherent requ=
-est at memory controller that were issued by any core.",
-+        "EventCode": "0x85",
-+        "EventName": "UNC_ARB_DAT_OCCUPANCY.ALL",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "Each cycle counts number of coherent reads pe=
-nding on data return from memory controller that were issued by any core.",
-+        "EventCode": "0x85",
-+        "EventName": "UNC_ARB_DAT_OCCUPANCY.RD",
-+        "PerPkg": "1",
++        "BriefDescription": "Counts the number of issue slots every cycle =
+that were not consumed by the backend due to memory reservation stall (sche=
+duler not being able to accept another uop).  This could be caused by RSV f=
+ull or load/store buffer block.",
++        "EventCode": "0x74",
++        "EventName": "TOPDOWN_BE_BOUND.MEM_SCHEDULER",
++        "SampleAfterValue": "1000003",
 +        "UMask": "0x2",
-+        "Unit": "ARB"
++        "Unit": "cpu_atom"
 +    },
 +    {
-+        "BriefDescription": "This event is deprecated. Refer to new event =
-UNC_ARB_REQ_TRK_REQUEST.DRD",
-+        "Deprecated": "1",
-+        "EventCode": "0x81",
-+        "EventName": "UNC_ARB_DAT_REQUESTS.RD",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "This event is deprecated. Refer to new event =
-UNC_ARB_DAT_OCCUPANCY.ALL",
-+        "Deprecated": "1",
-+        "EventCode": "0x85",
-+        "EventName": "UNC_ARB_IFA_OCCUPANCY.ALL",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "Each cycle count number of 'valid' coherent D=
-ata Read entries . Such entry is defined as valid when it is allocated till=
- deallocation. Doesn't include prefetches [This event is alias to UNC_ARB_T=
-RK_OCCUPANCY.RD]",
-+        "EventCode": "0x80",
-+        "EventName": "UNC_ARB_REQ_TRK_OCCUPANCY.DRD",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "Number of all coherent Data Read entries. Doe=
-sn't include prefetches [This event is alias to UNC_ARB_TRK_REQUESTS.RD]",
-+        "EventCode": "0x81",
-+        "EventName": "UNC_ARB_REQ_TRK_REQUEST.DRD",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "ARB"
++        "BriefDescription": "Counts the number of issue slots every cycle =
+that were not consumed by the backend due to IEC and FPC RAT stalls - which=
+ can be due to the FIQ and IEC reservation station stall (integer, FP and S=
+IMD scheduler not being able to accept another uop. )",
++        "EventCode": "0x74",
++        "EventName": "TOPDOWN_BE_BOUND.NON_MEM_SCHEDULER",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x8",
++        "Unit": "cpu_atom"
 +    },
      {
-         "BriefDescription": "Each cycle counts number of all outgoing vali=
-d entries in ReqTrk. Such entry is defined as valid from its allocation in =
-ReqTrk till deallocation. Accounts for Coherent and non-coherent traffic.",
-         "EventCode": "0x80",
-@@ -15,6 +65,14 @@
-         "UMask": "0x1",
-         "Unit": "ARB"
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not consumed by the backend due to mrbl stall.  A 'marble' refers=
+ to a physical register file entry, also known as the physical destination =
+(PDST).",
+         "EventCode": "0x74",
+@@ -1076,6 +1109,14 @@
+         "UMask": "0x20",
+         "Unit": "cpu_atom"
      },
 +    {
-+        "BriefDescription": "Each cycle count number of 'valid' coherent D=
-ata Read entries . Such entry is defined as valid when it is allocated till=
- deallocation. Doesn't include prefetches [This event is alias to UNC_ARB_R=
-EQ_TRK_OCCUPANCY.DRD]",
-+        "EventCode": "0x80",
-+        "EventName": "UNC_ARB_TRK_OCCUPANCY.RD",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "ARB"
++        "BriefDescription": "Counts the number of issue slots every cycle =
+that were not consumed by the backend due to ROB full",
++        "EventCode": "0x74",
++        "EventName": "TOPDOWN_BE_BOUND.REORDER_BUFFER",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x40",
++        "Unit": "cpu_atom"
 +    },
      {
-         "BriefDescription": "Counts the number of coherent and in-coherent=
- requests initiated by IA cores, processor graphic units, or LLC.",
-         "EventCode": "0x81",
-@@ -22,5 +80,13 @@
-         "PerPkg": "1",
-         "UMask": "0x1",
-         "Unit": "ARB"
-+    },
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not consumed by the backend due to iq/jeu scoreboards or ms scb",
+         "EventCode": "0x74",
+@@ -1156,6 +1197,14 @@
+         "UMask": "0x10",
+         "Unit": "cpu_atom"
+     },
 +    {
-+        "BriefDescription": "Number of all coherent Data Read entries. Doe=
-sn't include prefetches [This event is alias to UNC_ARB_REQ_TRK_REQUEST.DRD=
-]",
-+        "EventCode": "0x81",
-+        "EventName": "UNC_ARB_TRK_REQUESTS.RD",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "ARB"
-     }
- ]
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
-ents/arch/x86/mapfile.csv
-index 51c64ac2b9f7..24f03cd804f6 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -1,6 +1,6 @@
- Family-model,Version,Filename,EventType
--GenuineIntel-6-(97|9A|B7|BA|BF),v1.21,alderlake,core
--GenuineIntel-6-BE,v1.21,alderlaken,core
-+GenuineIntel-6-(97|9A|B7|BA|BF),v1.22,alderlake,core
-+GenuineIntel-6-BE,v1.22,alderlaken,core
- GenuineIntel-6-(1C|26|27|35|36),v5,bonnell,core
- GenuineIntel-6-(3D|47),v28,broadwell,core
- GenuineIntel-6-56,v11,broadwellde,core
++        "BriefDescription": "Counts the number of issue slots every cycle =
+that were not delivered by the frontend that do not categorize into any oth=
+er common frontend stall",
++        "EventCode": "0x71",
++        "EventName": "TOPDOWN_FE_BOUND.OTHER",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x80",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not delivered by the frontend due to predecode wrong",
+         "EventCode": "0x71",
+@@ -1398,6 +1447,14 @@
+         "UMask": "0x1",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the total number of uops retired.",
++        "EventCode": "0xc2",
++        "EventName": "UOPS_RETIRED.ALL",
++        "PEBS": "1",
++        "SampleAfterValue": "2000003",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Cycles with retired uop(s).",
+         "CounterMask": "1",
 --=20
 2.42.0.459.ge4e396fd5e-goog
 
