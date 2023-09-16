@@ -2,61 +2,56 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1739CD37B1
-	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Sep 2023 05:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EAF2CD37B5
+	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Sep 2023 05:15:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238294AbjIPFPV (ORCPT
+        id S230304AbjIPFOt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 16 Sep 2023 01:15:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48432 "EHLO
+        Sat, 16 Sep 2023 01:14:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234025AbjIPFOv (ORCPT
+        with ESMTP id S231889AbjIPFOl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 16 Sep 2023 01:14:51 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B26F1BCB
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 22:14:40 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59c0dd156e5so16909537b3.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 22:14:40 -0700 (PDT)
+        Sat, 16 Sep 2023 01:14:41 -0400
+Received: from mail-oo1-xc4a.google.com (mail-oo1-xc4a.google.com [IPv6:2607:f8b0:4864:20::c4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5536E1BC9
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 22:14:35 -0700 (PDT)
+Received: by mail-oo1-xc4a.google.com with SMTP id 006d021491bc7-576925c8921so4159257eaf.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 22:14:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694841279; x=1695446079; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=N9gT+id9HpGa7hlwSrx59pF2ZkcY0xuaZZ1dNKrG9J8=;
-        b=VFhGZmf85ea+7D5BnQutxuSTh/WcDSHUTKrVrZ6oggjELiaWB6RL5qYbrvzd/5L8DQ
-         4kPEHlfldmCd/rkZlJb5x//SKNIBNjBOKARqPkVL+WeLXrjjwBPf4GxT+tA03xC2Yd+1
-         2LLpWm/DKa7SJ2UfDR50jWIKjXfS+dfB9zIl1hkGVZArIoP7WuY0Dy4u8D59eE8d61cG
-         vMkE8SRk08HlqkzYdDRxrvF4EUYL1nGWgdWmHiV6FKNzxslPDo8YndpH6nIBASS+VQsi
-         pyF2GxfF6Nq1/5Ck1TBAqTEHWuKOS8Pumy15cTrXk72bqSVlmoxsZ6Ldqu7GnMbKB3a2
-         YmxA==
+        d=google.com; s=20230601; t=1694841274; x=1695446074; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:from:subject:mime-version:message-id
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4tXRHlI9ZNBzJbKyCCf208PmLY3dd58UGrNzpu6NmY0=;
+        b=NiQG10C8k1juBa9jxoLwOchuucPwNOvNFGx7J3o7Y1LJpkTVHp09+Xu7HGZnpi1rei
+         xn4pK6554HZvwpJInsCBGK1eD+05ygLiWYtwUXNKxiQPE6U40tyPbemihioJyNaPDJcc
+         gTD9WLk4EYYBZ2KpqmtVPrWYCMmhIckr2NxPRPBnXIwdolSfOANaT8tvGVivplSTeYKP
+         gY8tOeSyuX5j+LhmiJ6T/uU5c7ohqDxe9qPHWC8WHVa6eNUQLWCDi8HGBA09NC/3lxKx
+         2oZeWuME//0Ngb1eFXIut/woNO4JFNL3ofGrYQa7nhHtNrZreLuC5WpM7t6wl/Qrb5GI
+         01mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694841279; x=1695446079;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=N9gT+id9HpGa7hlwSrx59pF2ZkcY0xuaZZ1dNKrG9J8=;
-        b=J5hRwVlRwDsal851VfSwu1Kna26QI+S7J9UjJXOladScEchFKKheM2fK3Pt/fPNQ9P
-         qjNBo1bcf3cNIfqR+zD7FJDZEY0Smtom+kpITo3oBx+oa4eN9PgXNP9tzzqD/8WzUdh6
-         bD0ekqvGcRrK47PkLCSaiJSgm12tIAxrxYi4kg3he8a4xxYPwOqXqXSLWqfxJTxeh4lq
-         acf5cIMP9InOh/shCHPogkdKyhs9GJRRrOFPG5P5LmW5c6oN0+qitOyLIrbkZbTbv/Rd
-         Ps8vg6XxObplqkdNsqPjPUHB6i+s0wumfP8/1AKsFjhYwOt4jSSTM815KxfktLuRBxgz
-         J2SA==
-X-Gm-Message-State: AOJu0YygiTvKSlPO0btkFXg/1ogKvRbLx3ZTZhDv8hUjSdkD+JMtdkya
-        Bb3IqdABA3mbZeTwxwjNXkcD7qOaymma
-X-Google-Smtp-Source: AGHT+IH59Z/HiHNWhaNPl/DGyNd31Vd1dbWMOTj+CVIRNDZcdiCxMDdGDrEcLmdVsgGnTNdWZPA421rv7ho5
+        d=1e100.net; s=20230601; t=1694841274; x=1695446074;
+        h=content-transfer-encoding:to:from:subject:mime-version:message-id
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4tXRHlI9ZNBzJbKyCCf208PmLY3dd58UGrNzpu6NmY0=;
+        b=IgALsqL1kd1B22uG9eJcTaSC9+xlDIUn2tVm7S86dK++5QH76jFawtypshbqkF+ejz
+         J40VprX2yRcQR5GmRhJxogUKiwG6Jp0YMm3nqlPCj+5c9JllmVIEBmUwWDP4ujuGhFPU
+         FRxiGcmEuqK6InY9tEDdgPXyMle36EOKc1C4gcw04/v0TDKWqmt9KOChYxCTYIqg+XgS
+         757SQwHwse0LJXgVClN7RqyYcHFnHvL9TwnMBnx6s96u1nKA8foVjocLTVtpQaHcoQk4
+         iZAL/uwdo9RhoLiCvJ/uOiVZ1fF/fYMub0wY81KMmhi3z9O0KPida2vMlBotci3L3OWh
+         n1pQ==
+X-Gm-Message-State: AOJu0Yydzey6UBuPblg7quDVfr9IXXb7nBEuX2Cyf9LWSh9CgV7pm2om
+        1iZTZKofPo8CYmKUroZMVlOgdf2qn3CJ
+X-Google-Smtp-Source: AGHT+IHR9OdEbydME9iJBJUyTI1j0yW4Mp+g3xizv9xOlxgWrGnKb+Ry9J023mWmE+A0LJFbxJwhyN0RG1cZ
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:de72:1a43:1938:6165])
- (user=irogers job=sendgmr) by 2002:a05:6902:a8a:b0:d7b:3917:4606 with SMTP id
- cd10-20020a0569020a8a00b00d7b39174606mr75649ybb.11.1694841279637; Fri, 15 Sep
- 2023 22:14:39 -0700 (PDT)
-Date:   Fri, 15 Sep 2023 22:13:09 -0700
-In-Reply-To: <20230916051310.1124098-1-irogers@google.com>
-Message-Id: <20230916051310.1124098-3-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a4a:3749:0:b0:571:2c40:e2a5 with SMTP id
+ r70-20020a4a3749000000b005712c40e2a5mr1441863oor.0.1694841274663; Fri, 15 Sep
+ 2023 22:14:34 -0700 (PDT)
+Date:   Fri, 15 Sep 2023 22:13:07 -0700
+Message-Id: <20230916051310.1124098-1-irogers@google.com>
 Mime-Version: 1.0
-References: <20230916051310.1124098-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.459.ge4e396fd5e-goog
-Subject: [PATCH v1 3/4] perf vendor events intel: Update knightslanding events
- to v16
+Subject: [PATCH v1 1/4] perf vendor events intel: Keep json in sync
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -79,665 +74,127 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-v16 was released in:
-https://github.com/intel/perfmon/commit/b22ca587ec8b5ac20471ea2f14924f63e63=
-afe9d
+Upstream is using the spelling "inflight" rather than
+"in-flight". Update to keep in sync.
+Fix typo on ivybridge.
+Bonnell version is v5 with typo fixes.
+Westmereex typo fix and version bump.
 
 Update created using:
 https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../arch/x86/knightslanding/cache.json        | 39 ++++++++-----
- .../x86/knightslanding/floating-point.json    |  8 +--
- .../arch/x86/knightslanding/pipeline.json     | 55 +++++++++++--------
- .../arch/x86/knightslanding/uncore-cache.json | 26 ++++-----
- .../x86/knightslanding/virtual-memory.json    |  2 +-
- tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
- 6 files changed, 75 insertions(+), 57 deletions(-)
+ tools/perf/pmu-events/arch/x86/haswell/memory.json           | 2 +-
+ tools/perf/pmu-events/arch/x86/haswellx/memory.json          | 2 +-
+ tools/perf/pmu-events/arch/x86/ivybridge/floating-point.json | 2 +-
+ tools/perf/pmu-events/arch/x86/mapfile.csv                   | 4 ++--
+ tools/perf/pmu-events/arch/x86/westmereex/pipeline.json      | 2 +-
+ 5 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/knightslanding/cache.json b/too=
-ls/perf/pmu-events/arch/x86/knightslanding/cache.json
-index d9876cb06b08..8da3a5a7be73 100644
---- a/tools/perf/pmu-events/arch/x86/knightslanding/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/knightslanding/cache.json
-@@ -6,13 +6,19 @@
-         "SampleAfterValue": "200003"
-     },
-     {
--        "BriefDescription": "Counts the number of core cycles the fetch st=
-alls because of an icache miss. This is a cumulative count of core cycles t=
-he fetch stalled for all icache misses.",
-+        "BriefDescription": "This event counts the number of core cycles t=
-he fetch stalls because of an icache miss. This is a cumulative count of cy=
-cles the NIP stalled for all icache misses.",
-         "EventCode": "0x86",
-         "EventName": "FETCH_STALL.ICACHE_FILL_PENDING_CYCLES",
--        "PublicDescription": "This event counts the number of core cycles =
-the fetch stalls because of an icache miss. This is a cumulative count of c=
-ycles the NIP stalled for all icache misses.",
-         "SampleAfterValue": "200003",
-         "UMask": "0x4"
-     },
-+    {
-+        "BriefDescription": "Counts the number of L2HWP allocated into XQ =
-GP",
-+        "EventCode": "0x3E",
-+        "EventName": "L2_PREFETCHER.ALLOC_XQ",
-+        "SampleAfterValue": "100007",
-+        "UMask": "0x4"
-+    },
-     {
-         "BriefDescription": "Counts the number of L2 cache misses",
-         "EventCode": "0x2E",
-@@ -28,7 +34,7 @@
-         "UMask": "0x4f"
-     },
-     {
--        "BriefDescription": "Counts the number of MEC requests from the L2=
-Q that reference a cache line (cacheable requests) excluding SW prefetches =
-filling only to L2 cache and L1 evictions (automatically exlcudes L2HWP, UC=
-, WC) that were rejected - Multiple repeated rejects should be counted mult=
-iple times",
-+        "BriefDescription": "Counts the number of MEC requests from the L2=
-Q that reference a cache line (cacheable requests) excluding SW prefetches =
-filling only to L2 cache and L1 evictions (automatically excludes L2HWP, UC=
-, WC) that were rejected - Multiple repeated rejects should be counted mult=
-iple times",
-         "EventCode": "0x30",
-         "EventName": "L2_REQUESTS_REJECT.ALL",
-         "SampleAfterValue": "200003"
-@@ -50,11 +56,12 @@
-         "UMask": "0x80"
-     },
-     {
--        "BriefDescription": "Counts the loads retired that get the data fr=
-om the other core in the same tile in M state",
-+        "BriefDescription": "Counts the loads retired that get the data fr=
-om the other core in the same tile in M state (Precise Event)",
-         "Data_LA": "1",
-         "EventCode": "0x04",
-         "EventName": "MEM_UOPS_RETIRED.HITM",
-         "PEBS": "1",
-+        "PublicDescription": "This event counts the number of load micro-o=
-ps retired that got data from another core's cache. (Precise Event).",
-         "SampleAfterValue": "200003",
-         "UMask": "0x20"
-     },
-@@ -67,20 +74,22 @@
-         "UMask": "0x1"
-     },
-     {
--        "BriefDescription": "Counts the number of load micro-ops retired t=
-hat hit in the L2",
-+        "BriefDescription": "Counts the number of load micro-ops retired t=
-hat hit in the L2 (Precise Event)",
-         "Data_LA": "1",
-         "EventCode": "0x04",
-         "EventName": "MEM_UOPS_RETIRED.L2_HIT_LOADS",
-         "PEBS": "1",
-+        "PublicDescription": "This event counts the number of load micro-u=
-ops retired that hit in the L2 (Precise Event)",
-         "SampleAfterValue": "200003",
-         "UMask": "0x2"
-     },
-     {
--        "BriefDescription": "Counts the number of load micro-ops retired t=
-hat miss in the L2",
-+        "BriefDescription": "Counts the number of load micro-ops retired t=
-hat miss in the L2 (Precise Event)",
-         "Data_LA": "1",
-         "EventCode": "0x04",
-         "EventName": "MEM_UOPS_RETIRED.L2_MISS_LOADS",
-         "PEBS": "1",
-+        "PublicDescription": "This event counts the number of load micro-o=
-ps retired that miss in the L2 (Precise Event)",
-         "SampleAfterValue": "100007",
-         "UMask": "0x4"
-     },
-@@ -620,6 +629,15 @@
-         "SampleAfterValue": "100007",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Accounts for responses which miss its own til=
-e's L2.",
-+        "EventCode": "0xB7",
-+        "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.L2_MISS",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x18001981F8",
-+        "SampleAfterValue": "100007",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts any request that are outstanding, per =
-weighted cycle, from the time of the request to when any response is receiv=
-ed. The outstanding response should be programmed only on PMC0.",
-         "EventCode": "0xB7",
-@@ -1664,15 +1682,6 @@
-         "SampleAfterValue": "100007",
-         "UMask": "0x1"
-     },
--    {
--        "BriefDescription": "Counts L2 data RFO prefetches (includes PREFE=
-TCHW instruction) that provides no supplier details",
--        "EventCode": "0xB7",
--        "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.SUPPLIER_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x0000020020",
--        "SampleAfterValue": "100007",
--        "UMask": "0x1"
--    },
-     {
-         "BriefDescription": "Counts Software Prefetches that accounts for =
-any response",
-         "EventCode": "0xB7",
-diff --git a/tools/perf/pmu-events/arch/x86/knightslanding/floating-point.j=
-son b/tools/perf/pmu-events/arch/x86/knightslanding/floating-point.json
-index ecc96f32f167..089aa3ef345d 100644
---- a/tools/perf/pmu-events/arch/x86/knightslanding/floating-point.json
-+++ b/tools/perf/pmu-events/arch/x86/knightslanding/floating-point.json
-@@ -8,18 +8,18 @@
-         "UMask": "0x4"
-     },
-     {
--        "BriefDescription": "Counts the number of vector SSE, AVX, AVX2, A=
-VX-512 micro-ops retired. More specifically, it counts packed SSE, AVX, AVX=
-2, AVX-512 micro-ops (both floating point and integer) except for loads (me=
-mory-to-register mov-type micro-ops), packed byte and word multiplies.",
-+        "BriefDescription": "Counts the number of packed SSE, AVX, AVX2, A=
-VX-512 micro-ops (both floating point and integer) except for loads (memory=
--to-register mov-type micro-ops), packed byte and word multiplies.",
-         "EventCode": "0xC2",
-         "EventName": "UOPS_RETIRED.PACKED_SIMD",
--        "PublicDescription": "This event counts the number of packed vecto=
-r SSE, AVX, AVX2, and AVX-512 micro-ops retired (floating point, integer an=
-d store) except for loads (memory-to-register mov-type micro-ops), packed b=
-yte and word multiplies.",
-+        "PublicDescription": "The length of the packed operation (128bits,=
- 256bits or 512bits) is not taken into account when updating the counter; a=
-ll count the same (+1). \r\nMask (k) registers are ignored. For example: a =
-micro-op operating with a mask that only enables one element or even zero e=
-lements will still trigger this counter (+1)\r\nThis event is defined at th=
-e micro-op level and not instruction level. Most instructions are implement=
-ed with one micro-op but not all.",
-         "SampleAfterValue": "200003",
-         "UMask": "0x40"
-     },
-     {
--        "BriefDescription": "Counts the number of scalar SSE, AVX, AVX2, A=
-VX-512 micro-ops retired. More specifically, it counts scalar SSE, AVX, AVX=
-2, AVX-512 micro-ops except for loads (memory-to-register mov-type micro op=
-s), division, sqrt.",
-+        "BriefDescription": "Counts the number of scalar SSE, AVX, AVX2, A=
-VX-512 micro-ops except for loads (memory-to-register mov-type micro ops), =
-division, sqrt.",
-         "EventCode": "0xC2",
-         "EventName": "UOPS_RETIRED.SCALAR_SIMD",
--        "PublicDescription": "This event counts the number of scalar SSE, =
-AVX, AVX2, AVX-512 micro-ops retired (floating point, integer and store) ex=
-cept for loads (memory-to-register mov-type micro ops), division, sqrt.",
-+        "PublicDescription": "This event is defined at the micro-op level =
-and not instruction level. Most instructions are implemented with one micro=
--op but not all.",
-         "SampleAfterValue": "200003",
-         "UMask": "0x20"
-     }
-diff --git a/tools/perf/pmu-events/arch/x86/knightslanding/pipeline.json b/=
-tools/perf/pmu-events/arch/x86/knightslanding/pipeline.json
-index 3dc532107ead..5b2e71750976 100644
---- a/tools/perf/pmu-events/arch/x86/knightslanding/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/knightslanding/pipeline.json
-@@ -1,13 +1,13 @@
- [
-     {
--        "BriefDescription": "Counts the number of branch instructions reti=
-red",
-+        "BriefDescription": "Counts the number of branch instructions reti=
-red (Precise Event)",
-         "EventCode": "0xC4",
-         "EventName": "BR_INST_RETIRED.ALL_BRANCHES",
-         "PEBS": "1",
-         "SampleAfterValue": "200003"
-     },
-     {
--        "BriefDescription": "Counts the number of near CALL branch instruc=
-tions retired.",
-+        "BriefDescription": "Counts the number of near CALL branch instruc=
-tions retired. (Precise Event)",
-         "EventCode": "0xC4",
-         "EventName": "BR_INST_RETIRED.CALL",
-         "PEBS": "1",
-@@ -15,7 +15,7 @@
-         "UMask": "0xf9"
-     },
-     {
--        "BriefDescription": "Counts the number of far branch instructions =
-retired.",
-+        "BriefDescription": "Counts the number of far branch instructions =
-retired. (Precise Event)",
-         "EventCode": "0xC4",
-         "EventName": "BR_INST_RETIRED.FAR_BRANCH",
-         "PEBS": "1",
-@@ -23,7 +23,7 @@
-         "UMask": "0xbf"
-     },
-     {
--        "BriefDescription": "Counts the number of near indirect CALL branc=
-h instructions retired.",
-+        "BriefDescription": "Counts the number of near indirect CALL branc=
-h instructions retired. (Precise Event)",
-         "EventCode": "0xC4",
-         "EventName": "BR_INST_RETIRED.IND_CALL",
-         "PEBS": "1",
-@@ -31,7 +31,7 @@
-         "UMask": "0xfb"
-     },
-     {
--        "BriefDescription": "Counts the number of branch instructions reti=
-red that were conditional jumps.",
-+        "BriefDescription": "Counts the number of branch instructions reti=
-red that were conditional jumps. (Precise Event)",
-         "EventCode": "0xC4",
-         "EventName": "BR_INST_RETIRED.JCC",
-         "PEBS": "1",
-@@ -39,7 +39,7 @@
-         "UMask": "0x7e"
-     },
-     {
--        "BriefDescription": "Counts the number of branch instructions reti=
-red that were near indirect CALL or near indirect JMP.",
-+        "BriefDescription": "Counts the number of branch instructions reti=
-red that were near indirect CALL or near indirect JMP. (Precise Event)",
-         "EventCode": "0xC4",
-         "EventName": "BR_INST_RETIRED.NON_RETURN_IND",
-         "PEBS": "1",
-@@ -47,7 +47,7 @@
-         "UMask": "0xeb"
-     },
-     {
--        "BriefDescription": "Counts the number of near relative CALL branc=
-h instructions retired.",
-+        "BriefDescription": "Counts the number of near relative CALL branc=
-h instructions retired. (Precise Event)",
-         "EventCode": "0xC4",
-         "EventName": "BR_INST_RETIRED.REL_CALL",
-         "PEBS": "1",
-@@ -55,7 +55,7 @@
-         "UMask": "0xfd"
-     },
-     {
--        "BriefDescription": "Counts the number of near RET branch instruct=
-ions retired.",
-+        "BriefDescription": "Counts the number of near RET branch instruct=
-ions retired. (Precise Event)",
-         "EventCode": "0xC4",
-         "EventName": "BR_INST_RETIRED.RETURN",
-         "PEBS": "1",
-@@ -63,7 +63,7 @@
-         "UMask": "0xf7"
-     },
-     {
--        "BriefDescription": "Counts the number of branch instructions reti=
-red that were conditional jumps and predicted taken.",
-+        "BriefDescription": "Counts the number of branch instructions reti=
-red that were conditional jumps and predicted taken. (Precise Event)",
-         "EventCode": "0xC4",
-         "EventName": "BR_INST_RETIRED.TAKEN_JCC",
-         "PEBS": "1",
-@@ -71,14 +71,14 @@
-         "UMask": "0xfe"
-     },
-     {
--        "BriefDescription": "Counts the number of mispredicted branch inst=
-ructions retired",
-+        "BriefDescription": "Counts the number of mispredicted branch inst=
-ructions retired (Precise Event)",
-         "EventCode": "0xC5",
-         "EventName": "BR_MISP_RETIRED.ALL_BRANCHES",
-         "PEBS": "1",
-         "SampleAfterValue": "200003"
-     },
-     {
--        "BriefDescription": "Counts the number of mispredicted near CALL b=
-ranch instructions retired.",
-+        "BriefDescription": "Counts the number of mispredicted near CALL b=
-ranch instructions retired. (Precise Event)",
-         "EventCode": "0xC5",
-         "EventName": "BR_MISP_RETIRED.CALL",
-         "PEBS": "1",
-@@ -86,7 +86,7 @@
-         "UMask": "0xf9"
-     },
-     {
--        "BriefDescription": "Counts the number of mispredicted far branch =
-instructions retired.",
-+        "BriefDescription": "Counts the number of mispredicted far branch =
-instructions retired. (Precise Event)",
-         "EventCode": "0xC5",
-         "EventName": "BR_MISP_RETIRED.FAR_BRANCH",
-         "PEBS": "1",
-@@ -94,7 +94,7 @@
-         "UMask": "0xbf"
-     },
-     {
--        "BriefDescription": "Counts the number of mispredicted near indire=
-ct CALL branch instructions retired.",
-+        "BriefDescription": "Counts the number of mispredicted near indire=
-ct CALL branch instructions retired. (Precise Event)",
-         "EventCode": "0xC5",
-         "EventName": "BR_MISP_RETIRED.IND_CALL",
-         "PEBS": "1",
-@@ -102,7 +102,7 @@
-         "UMask": "0xfb"
-     },
-     {
--        "BriefDescription": "Counts the number of mispredicted branch inst=
-ructions retired that were conditional jumps.",
-+        "BriefDescription": "Counts the number of mispredicted branch inst=
-ructions retired that were conditional jumps. (Precise Event)",
-         "EventCode": "0xC5",
-         "EventName": "BR_MISP_RETIRED.JCC",
-         "PEBS": "1",
-@@ -110,7 +110,7 @@
-         "UMask": "0x7e"
-     },
-     {
--        "BriefDescription": "Counts the number of mispredicted branch inst=
-ructions retired that were near indirect CALL or near indirect JMP.",
-+        "BriefDescription": "Counts the number of mispredicted branch inst=
-ructions retired that were near indirect CALL or near indirect JMP. (Precis=
-e Event)",
-         "EventCode": "0xC5",
-         "EventName": "BR_MISP_RETIRED.NON_RETURN_IND",
-         "PEBS": "1",
-@@ -118,7 +118,7 @@
-         "UMask": "0xeb"
-     },
-     {
--        "BriefDescription": "Counts the number of mispredicted near relati=
-ve CALL branch instructions retired.",
-+        "BriefDescription": "Counts the number of mispredicted near relati=
-ve CALL branch instructions retired. (Precise Event)",
-         "EventCode": "0xC5",
-         "EventName": "BR_MISP_RETIRED.REL_CALL",
-         "PEBS": "1",
-@@ -126,7 +126,7 @@
-         "UMask": "0xfd"
-     },
-     {
--        "BriefDescription": "Counts the number of mispredicted near RET br=
-anch instructions retired.",
-+        "BriefDescription": "Counts the number of mispredicted near RET br=
-anch instructions retired. (Precise Event)",
-         "EventCode": "0xC5",
-         "EventName": "BR_MISP_RETIRED.RETURN",
-         "PEBS": "1",
-@@ -134,7 +134,7 @@
-         "UMask": "0xf7"
-     },
-     {
--        "BriefDescription": "Counts the number of mispredicted branch inst=
-ructions retired that were conditional jumps and predicted taken.",
-+        "BriefDescription": "Counts the number of mispredicted branch inst=
-ructions retired that were conditional jumps and predicted taken. (Precise =
-Event)",
-         "EventCode": "0xC5",
-         "EventName": "BR_MISP_RETIRED.TAKEN_JCC",
-         "PEBS": "1",
-@@ -189,7 +189,14 @@
-         "SampleAfterValue": "2000003"
-     },
-     {
--        "BriefDescription": "Counts all nukes",
-+        "BriefDescription": "Counts the number of instructions retired (Pr=
-ecise Event)",
-+        "EventCode": "0xC0",
-+        "EventName": "INST_RETIRED.ANY_PS",
-+        "PEBS": "2",
-+        "SampleAfterValue": "2000003"
-+    },
-+    {
-+        "BriefDescription": "Counts all machine clears",
+diff --git a/tools/perf/pmu-events/arch/x86/haswell/memory.json b/tools/per=
+f/pmu-events/arch/x86/haswell/memory.json
+index df44c28efeeb..2fc25e22a42a 100644
+--- a/tools/perf/pmu-events/arch/x86/haswell/memory.json
++++ b/tools/perf/pmu-events/arch/x86/haswell/memory.json
+@@ -62,7 +62,7 @@
+         "BriefDescription": "Counts the number of machine clears due to me=
+mory order conflicts.",
          "EventCode": "0xC3",
-         "EventName": "MACHINE_CLEARS.ALL",
-         "SampleAfterValue": "200003",
-@@ -261,20 +268,22 @@
+         "EventName": "MACHINE_CLEARS.MEMORY_ORDERING",
+-        "PublicDescription": "This event counts the number of memory order=
+ing machine clears detected. Memory ordering machine clears can result from=
+ memory address aliasing or snoops from another hardware thread or core to =
+data in-flight in the pipeline.  Machine clears can have a significant perf=
+ormance impact if they are happening frequently.",
++        "PublicDescription": "This event counts the number of memory order=
+ing machine clears detected. Memory ordering machine clears can result from=
+ memory address aliasing or snoops from another hardware thread or core to =
+data inflight in the pipeline.  Machine clears can have a significant perfo=
+rmance impact if they are happening frequently.",
+         "SampleAfterValue": "100003",
          "UMask": "0x2"
      },
-     {
--        "BriefDescription": "Counts the number of occurrences a retired lo=
-ad gets blocked because its address partially overlaps with a store",
-+        "BriefDescription": "Counts the number of occurrences a retired lo=
-ad gets blocked because its address partially overlaps with a store  (Preci=
-se Event)",
-         "Data_LA": "1",
-         "EventCode": "0x03",
-         "EventName": "RECYCLEQ.LD_BLOCK_ST_FORWARD",
-         "PEBS": "1",
-+        "PublicDescription": "This event counts the number of retired load=
-s that were prohibited from receiving forwarded data from a previous store =
-because of address mismatch.",
-         "SampleAfterValue": "200003",
-         "UMask": "0x1"
+diff --git a/tools/perf/pmu-events/arch/x86/haswellx/memory.json b/tools/pe=
+rf/pmu-events/arch/x86/haswellx/memory.json
+index d66e465ce41a..2d212cf59e92 100644
+--- a/tools/perf/pmu-events/arch/x86/haswellx/memory.json
++++ b/tools/perf/pmu-events/arch/x86/haswellx/memory.json
+@@ -62,7 +62,7 @@
+         "BriefDescription": "Counts the number of machine clears due to me=
+mory order conflicts.",
+         "EventCode": "0xC3",
+         "EventName": "MACHINE_CLEARS.MEMORY_ORDERING",
+-        "PublicDescription": "This event counts the number of memory order=
+ing machine clears detected. Memory ordering machine clears can result from=
+ memory address aliasing or snoops from another hardware thread or core to =
+data in-flight in the pipeline.  Machine clears can have a significant perf=
+ormance impact if they are happening frequently.",
++        "PublicDescription": "This event counts the number of memory order=
+ing machine clears detected. Memory ordering machine clears can result from=
+ memory address aliasing or snoops from another hardware thread or core to =
+data inflight in the pipeline.  Machine clears can have a significant perfo=
+rmance impact if they are happening frequently.",
+         "SampleAfterValue": "100003",
+         "UMask": "0x2"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/ivybridge/floating-point.json b=
+/tools/perf/pmu-events/arch/x86/ivybridge/floating-point.json
+index 87c958213c7a..89c6d47cc077 100644
+--- a/tools/perf/pmu-events/arch/x86/ivybridge/floating-point.json
++++ b/tools/perf/pmu-events/arch/x86/ivybridge/floating-point.json
+@@ -73,7 +73,7 @@
+         "UMask": "0x20"
      },
      {
--        "BriefDescription": "Counts the number of occurrences a retired lo=
-ad that is a cache line split. Each split should be counted only once.",
-+        "BriefDescription": "Counts the number of occurrences a retired lo=
-ad was pushed into the rehab queue because it sees a cache line split. Each=
- split should be counted only once. (Precise Event)",
-         "Data_LA": "1",
-         "EventCode": "0x03",
-         "EventName": "RECYCLEQ.LD_SPLITS",
-         "PEBS": "1",
-+        "PublicDescription": "This event counts the number of retired load=
-s which was pushed into the recycled queue that experienced cache line boun=
-dary splits (Precise event). Not that each split should be counted only onc=
-e.",
-         "SampleAfterValue": "200003",
-         "UMask": "0x8"
-     },
-@@ -286,7 +295,7 @@
-         "UMask": "0x10"
-     },
-     {
--        "BriefDescription": "Counts the store micro-ops retired that were =
-pushed in the rehad queue because the store address buffer is full",
-+        "BriefDescription": "Counts the store micro-ops retired that were =
-pushed in the rehab queue because the store address buffer is full",
-         "EventCode": "0x03",
-         "EventName": "RECYCLEQ.STA_FULL",
-         "SampleAfterValue": "200003",
-@@ -301,7 +310,7 @@
-         "UMask": "0x4"
-     },
-     {
--        "BriefDescription": "Counts the total number of core cycles the Al=
-loc pipeline is stalled when any one of the reservation stations is full.",
-+        "BriefDescription": "Counts the total number of core cycles alloca=
-tion pipeline is stalled when any one of the reservation stations is full."=
-,
-         "EventCode": "0xCB",
-         "EventName": "RS_FULL_STALL.ALL",
-         "SampleAfterValue": "200003",
-diff --git a/tools/perf/pmu-events/arch/x86/knightslanding/uncore-cache.jso=
-n b/tools/perf/pmu-events/arch/x86/knightslanding/uncore-cache.json
-index 1b8dcfa5461c..120e4813d82a 100644
---- a/tools/perf/pmu-events/arch/x86/knightslanding/uncore-cache.json
-+++ b/tools/perf/pmu-events/arch/x86/knightslanding/uncore-cache.json
-@@ -2558,7 +2558,7 @@
-         "Unit": "CHA"
-     },
-     {
--        "BriefDescription": "REQUESTQ'' includes:  IRQ, PRQ, IPQ, RRQ, WBQ=
- (everything except for ISMQ)",
-+        "BriefDescription": "REQUESTQ includes:  IRQ, PRQ, IPQ, RRQ, WBQ (=
-everything except for ISMQ)",
-         "EventCode": "0x2A",
-         "EventName": "UNC_H_INGRESS_RETRY_REQ_Q0_RETRY.AD_REQ_VN0",
-         "PerPkg": "1",
-@@ -2566,7 +2566,7 @@
-         "Unit": "CHA"
-     },
-     {
--        "BriefDescription": "REQUESTQ'' includes:  IRQ, PRQ, IPQ, RRQ, WBQ=
- (everything except for ISMQ)",
-+        "BriefDescription": "REQUESTQ includes:  IRQ, PRQ, IPQ, RRQ, WBQ (=
-everything except for ISMQ)",
-         "EventCode": "0x2A",
-         "EventName": "UNC_H_INGRESS_RETRY_REQ_Q0_RETRY.AD_RSP_VN0",
-         "PerPkg": "1",
-@@ -2574,7 +2574,7 @@
-         "Unit": "CHA"
-     },
-     {
--        "BriefDescription": "REQUESTQ'' includes:  IRQ, PRQ, IPQ, RRQ, WBQ=
- (everything except for ISMQ)",
-+        "BriefDescription": "REQUESTQ includes:  IRQ, PRQ, IPQ, RRQ, WBQ (=
-everything except for ISMQ)",
-         "EventCode": "0x2A",
-         "EventName": "UNC_H_INGRESS_RETRY_REQ_Q0_RETRY.AK_NON_UPI",
-         "PerPkg": "1",
-@@ -2582,7 +2582,7 @@
-         "Unit": "CHA"
-     },
-     {
--        "BriefDescription": "REQUESTQ'' includes:  IRQ, PRQ, IPQ, RRQ, WBQ=
- (everything except for ISMQ)",
-+        "BriefDescription": "REQUESTQ includes:  IRQ, PRQ, IPQ, RRQ, WBQ (=
-everything except for ISMQ)",
-         "EventCode": "0x2A",
-         "EventName": "UNC_H_INGRESS_RETRY_REQ_Q0_RETRY.BL_NCB_VN0",
-         "PerPkg": "1",
-@@ -2590,7 +2590,7 @@
-         "Unit": "CHA"
-     },
-     {
--        "BriefDescription": "REQUESTQ'' includes:  IRQ, PRQ, IPQ, RRQ, WBQ=
- (everything except for ISMQ)",
-+        "BriefDescription": "REQUESTQ includes:  IRQ, PRQ, IPQ, RRQ, WBQ (=
-everything except for ISMQ)",
-         "EventCode": "0x2A",
-         "EventName": "UNC_H_INGRESS_RETRY_REQ_Q0_RETRY.BL_NCS_VN0",
-         "PerPkg": "1",
-@@ -2598,7 +2598,7 @@
-         "Unit": "CHA"
-     },
-     {
--        "BriefDescription": "REQUESTQ'' includes:  IRQ, PRQ, IPQ, RRQ, WBQ=
- (everything except for ISMQ)",
-+        "BriefDescription": "REQUESTQ includes:  IRQ, PRQ, IPQ, RRQ, WBQ (=
-everything except for ISMQ)",
-         "EventCode": "0x2A",
-         "EventName": "UNC_H_INGRESS_RETRY_REQ_Q0_RETRY.BL_RSP_VN0",
-         "PerPkg": "1",
-@@ -2606,7 +2606,7 @@
-         "Unit": "CHA"
-     },
-     {
--        "BriefDescription": "REQUESTQ'' includes:  IRQ, PRQ, IPQ, RRQ, WBQ=
- (everything except for ISMQ)",
-+        "BriefDescription": "REQUESTQ includes:  IRQ, PRQ, IPQ, RRQ, WBQ (=
-everything except for ISMQ)",
-         "EventCode": "0x2A",
-         "EventName": "UNC_H_INGRESS_RETRY_REQ_Q0_RETRY.BL_WB_VN0",
-         "PerPkg": "1",
-@@ -2614,7 +2614,7 @@
-         "Unit": "CHA"
-     },
-     {
--        "BriefDescription": "REQUESTQ'' includes:  IRQ, PRQ, IPQ, RRQ, WBQ=
- (everything except for ISMQ)",
-+        "BriefDescription": "REQUESTQ includes:  IRQ, PRQ, IPQ, RRQ, WBQ (=
-everything except for ISMQ)",
-         "EventCode": "0x2A",
-         "EventName": "UNC_H_INGRESS_RETRY_REQ_Q0_RETRY.IV_NON_UPI",
-         "PerPkg": "1",
-@@ -2622,7 +2622,7 @@
-         "Unit": "CHA"
-     },
-     {
--        "BriefDescription": "REQUESTQ'' includes:  IRQ, PRQ, IPQ, RRQ, WBQ=
- (everything except for ISMQ)",
-+        "BriefDescription": "REQUESTQ includes:  IRQ, PRQ, IPQ, RRQ, WBQ (=
-everything except for ISMQ)",
-         "EventCode": "0x2B",
-         "EventName": "UNC_H_INGRESS_RETRY_REQ_Q1_RETRY.ALLOW_SNP",
-         "PerPkg": "1",
-@@ -2630,7 +2630,7 @@
-         "Unit": "CHA"
-     },
-     {
--        "BriefDescription": "REQUESTQ'' includes:  IRQ, PRQ, IPQ, RRQ, WBQ=
- (everything except for ISMQ)",
-+        "BriefDescription": "REQUESTQ includes:  IRQ, PRQ, IPQ, RRQ, WBQ (=
-everything except for ISMQ)",
-         "EventCode": "0x2B",
-         "EventName": "UNC_H_INGRESS_RETRY_REQ_Q1_RETRY.ANY_REJECT_IRQ0",
-         "PerPkg": "1",
-@@ -2638,7 +2638,7 @@
-         "Unit": "CHA"
-     },
-     {
--        "BriefDescription": "REQUESTQ'' includes:  IRQ, PRQ, IPQ, RRQ, WBQ=
- (everything except for ISMQ)",
-+        "BriefDescription": "REQUESTQ includes:  IRQ, PRQ, IPQ, RRQ, WBQ (=
-everything except for ISMQ)",
-         "EventCode": "0x2B",
-         "EventName": "UNC_H_INGRESS_RETRY_REQ_Q1_RETRY.PA_MATCH",
-         "PerPkg": "1",
-@@ -2646,7 +2646,7 @@
-         "Unit": "CHA"
-     },
-     {
--        "BriefDescription": "REQUESTQ'' includes:  IRQ, PRQ, IPQ, RRQ, WBQ=
- (everything except for ISMQ)",
-+        "BriefDescription": "REQUESTQ includes:  IRQ, PRQ, IPQ, RRQ, WBQ (=
-everything except for ISMQ)",
-         "EventCode": "0x2B",
-         "EventName": "UNC_H_INGRESS_RETRY_REQ_Q1_RETRY.SF_VICTIM",
-         "PerPkg": "1",
-@@ -2654,7 +2654,7 @@
-         "Unit": "CHA"
-     },
-     {
--        "BriefDescription": "REQUESTQ'' includes:  IRQ, PRQ, IPQ, RRQ, WBQ=
- (everything except for ISMQ)",
-+        "BriefDescription": "REQUESTQ includes:  IRQ, PRQ, IPQ, RRQ, WBQ (=
-everything except for ISMQ)",
-         "EventCode": "0x2B",
-         "EventName": "UNC_H_INGRESS_RETRY_REQ_Q1_RETRY.SF_WAY",
-         "PerPkg": "1",
-diff --git a/tools/perf/pmu-events/arch/x86/knightslanding/virtual-memory.j=
-son b/tools/perf/pmu-events/arch/x86/knightslanding/virtual-memory.json
-index 99a8fa8f19cc..9be30a33b43b 100644
---- a/tools/perf/pmu-events/arch/x86/knightslanding/virtual-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/knightslanding/virtual-memory.json
-@@ -1,6 +1,6 @@
- [
-     {
--        "BriefDescription": "Counts the number of load micro-ops retired t=
-hat cause a DTLB miss",
-+        "BriefDescription": "Counts the number of load micro-ops retired t=
-hat cause a DTLB miss (Precise Event)",
-         "Data_LA": "1",
-         "EventCode": "0x04",
-         "EventName": "MEM_UOPS_RETIRED.DTLB_MISS_LOADS",
+-        "BriefDescription": "Number of FP Computational Uops Executed this=
+ cycle. The number of FADD, FSUB, FCOM, FMULs, integer MULsand IMULs, FDIVs=
+, FPREMs, FSQRTS, integer DIVs, and IDIVs. This event does not distinguish =
+an FADD used in the middle of a transcendental flow from a s",
++        "BriefDescription": "Number of FP Computational Uops Executed this=
+ cycle. The number of FADD, FSUB, FCOM, FMULs, integer MULs and IMULs, FDIV=
+s, FPREMs, FSQRTS, integer DIVs, and IDIVs. This event does not distinguish=
+ an FADD used in the middle of a transcendental flow from a s",
+         "EventCode": "0x10",
+         "EventName": "FP_COMP_OPS_EXE.X87",
+         "PublicDescription": "Counts number of X87 uops executed.",
 diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
 ents/arch/x86/mapfile.csv
-index 24f03cd804f6..a97f0734099a 100644
+index 57ba7e814563..51c64ac2b9f7 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -19,7 +19,7 @@ GenuineIntel-6-6[AC],v1.21,icelakex,core
- GenuineIntel-6-3A,v24,ivybridge,core
- GenuineIntel-6-3E,v24,ivytown,core
- GenuineIntel-6-2D,v24,jaketown,core
--GenuineIntel-6-(57|85),v10,knightslanding,core
-+GenuineIntel-6-(57|85),v16,knightslanding,core
- GenuineIntel-6-BD,v1.00,lunarlake,core
- GenuineIntel-6-A[AC],v1.04,meteorlake,core
- GenuineIntel-6-1[AEF],v4,nehalemep,core
+@@ -1,7 +1,7 @@
+ Family-model,Version,Filename,EventType
+ GenuineIntel-6-(97|9A|B7|BA|BF),v1.21,alderlake,core
+ GenuineIntel-6-BE,v1.21,alderlaken,core
+-GenuineIntel-6-(1C|26|27|35|36),v4,bonnell,core
++GenuineIntel-6-(1C|26|27|35|36),v5,bonnell,core
+ GenuineIntel-6-(3D|47),v28,broadwell,core
+ GenuineIntel-6-56,v11,broadwellde,core
+ GenuineIntel-6-4F,v22,broadwellx,core
+@@ -35,7 +35,7 @@ GenuineIntel-6-86,v1.21,snowridgex,core
+ GenuineIntel-6-8[CD],v1.13,tigerlake,core
+ GenuineIntel-6-2C,v5,westmereep-dp,core
+ GenuineIntel-6-25,v4,westmereep-sp,core
+-GenuineIntel-6-2F,v3,westmereex,core
++GenuineIntel-6-2F,v4,westmereex,core
+ AuthenticAMD-23-([12][0-9A-F]|[0-9A-F]),v2,amdzen1,core
+ AuthenticAMD-23-[[:xdigit:]]+,v1,amdzen2,core
+ AuthenticAMD-25-([245][[:xdigit:]]|[[:xdigit:]]),v1,amdzen3,core
+diff --git a/tools/perf/pmu-events/arch/x86/westmereex/pipeline.json b/tool=
+s/perf/pmu-events/arch/x86/westmereex/pipeline.json
+index 1c61d18a4b5f..026236558d05 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereex/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/westmereex/pipeline.json
+@@ -45,7 +45,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Early Branch Prediciton Unit clears",
++        "BriefDescription": "Early Branch Prediction Unit clears",
+         "EventCode": "0xE8",
+         "EventName": "BPU_CLEARS.EARLY",
+         "SampleAfterValue": "2000000",
 --=20
 2.42.0.459.ge4e396fd5e-goog
 
