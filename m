@@ -2,60 +2,61 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23510CD37B5
-	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Sep 2023 00:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C7DC46CA1
+	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Sep 2023 00:33:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238181AbjIPAdV (ORCPT
+        id S239026AbjIPAdU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 15 Sep 2023 20:33:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57074 "EHLO
+        Fri, 15 Sep 2023 20:33:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238501AbjIPAcu (ORCPT
+        with ESMTP id S238530AbjIPAcu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Fri, 15 Sep 2023 20:32:50 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 149052D4A
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:31:39 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-cf4cb742715so3251784276.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:31:39 -0700 (PDT)
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B39A62134
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:32:09 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-58c9d29588aso33549437b3.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:32:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694824298; x=1695429098; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1694824329; x=1695429129; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=OjnVLG9a9LJLqorH8Rj1ZnrY26noTE5ZeEoscx0wCrE=;
-        b=3iwsnBBg9U9rpDKqYhVnwIOmDRQRmg6VPUkonz/huNUXNLJwhQBvwByqsEaueNfXsG
-         3FRR/r+a38kQBwhJqk8rnRXZ6B25yca5VIiPhk/HlCGmCwQFo7S0Jy7SCZt7mDqcRtaS
-         WNfLsZPOSBNhaWmq59Gx9VrL5De2F0OpOU9uoEPEnntmkk/j5pSN5+lhF0SoyvbSmLGg
-         0jdpYz2TnQgNkxXIhgUFs6rHAycucPVycDEZ+eIzigDEm96Ewq8OuxMO0cFbbQVTYRzG
-         ZS4R7RSd4dPGC/Kbd5b65d+sV1BBGAKwQ167T0oAG8kRxOWlmFQSICPuARM7hNT4eYFs
-         w2Ow==
+        bh=0VtgUtus3LRehL4neqp1OYPW/02VDjf+LHA0REetHQw=;
+        b=4AI9NYwOs7Qxw+F4NZFoKEvkF/ZhJhsoOqPm3pP+SBcEGD4pphMfgvr2oo2Sdm3PGX
+         JfCT6509S/I71oH8ban7uIF5Td8ynYv4sED2o/8WRpjFyyJkWaj14lYJRPq+LiB0L/hv
+         PJkh+NgRmVQME5EKzrxILu5YSGUY8j9n2/yjotBC6TLm7nXXUuL7ZE+vPdBE7KvfuMUR
+         8Kz2aXpwhnjFkqDktr4zIpXAVG+YentMA68hD+Kk/flY5i4QXqwc360B3xdG3OY8Q60z
+         wnOrzJWg7kW8JHZLv4A2zNYDQxxYdoKzYA4qQWREXcEWHnXvb1aQqABFI5LPbgTy1ypd
+         thSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694824298; x=1695429098;
+        d=1e100.net; s=20230601; t=1694824329; x=1695429129;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=OjnVLG9a9LJLqorH8Rj1ZnrY26noTE5ZeEoscx0wCrE=;
-        b=JNh/V8XVLbrdif0fX8UVZHkYNZfH4ZEhljvc1r1WN1ticXrdOzSwZwkFKbvB6MVawZ
-         lTBOW5/A5fXTleIGMM9zeHQWl7O1tRfExyMpQimHN4NmGIuHF5xhkNi8Jlg9vEtFYiYO
-         v3krSbFWiZaBASI9d4PmciaVI4sqvFlqD9Fsu/3COLuvSjhcQaQhfrL/HpVFtX9XQtrw
-         zi+hPPNMnAnS+tHXcaBOay7YU3zOeFcdPdk0nGxMktvZLom2Jm+bR0z9KsIeMiTRSptZ
-         j7WSXIu3j0ujY/hAeR0Cvrgt10HWSab8bZySnXU34BgURtmcQa7ejgiD+nuB25itFTGn
-         Wu/A==
-X-Gm-Message-State: AOJu0YyTfXPA9WsBVLpFCVtlvLWaCftrOHvdQhJDlgRiRSjurec56S4c
-        8681DMX8Y9Z59A1SsGEdhdRD5Y2ioiM=
-X-Google-Smtp-Source: AGHT+IEejUplN0yThqJglSyf2PAl899GMvDcyB4OaKD9HL7AL2P8QSuIFDWAjhltJc72cwzADimsWD5lopA=
+        bh=0VtgUtus3LRehL4neqp1OYPW/02VDjf+LHA0REetHQw=;
+        b=pUGgLX6yaAQcIYnObr88WepLkUmwGjLvG00oi8QhQo/BomE0hn/abK38WBwICMYWus
+         TaNFDWdyyoNPIjkNZQhfb1Uq2sebpObHwwrIooSZTDXWXyGBxhGxARdPuIqeCBoVg/+L
+         NkSrBjaeXwxWfgCXB75ibPElUittRWDmzhMIH2luej9VLn74DsZpQMj1JnUL05jWbCuH
+         d66yB2sZdoQ3cBFZ/Hi9r8E5UUT71lkHGr+leskOBjZHQhC62kChrZusR3UtdYCk2kgx
+         v1ysefmAdeGgZYXg+YbzZr4EcxHCvhFFUwIgw8IxfbEqV9iFRvC5lXx5SakiP5WtAtdb
+         X8xw==
+X-Gm-Message-State: AOJu0YzSGYHxWenGKGKMgSIP2N7dXHNPOMQs/q918fsSi8+JNq8OuZVr
+        rBoqoDB5V7T3HYo3jZ5A1GqGL8lgvKc=
+X-Google-Smtp-Source: AGHT+IGS7sQUeRqIzboGgj+JmfOv6SrnKFoWg2KC/khh+vzWzgZdEe9LRtHGjdK8tkWZSSHoGr6LIc8WFow=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:138e:b0:d78:245a:aac4 with SMTP id
- x14-20020a056902138e00b00d78245aaac4mr82623ybu.1.1694824298283; Fri, 15 Sep
- 2023 17:31:38 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a81:b620:0:b0:58c:a9b4:a64c with SMTP id
+ u32-20020a81b620000000b0058ca9b4a64cmr86672ywh.1.1694824328926; Fri, 15 Sep
+ 2023 17:32:08 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Fri, 15 Sep 2023 17:31:01 -0700
+Date:   Fri, 15 Sep 2023 17:31:16 -0700
 In-Reply-To: <20230916003118.2540661-1-seanjc@google.com>
 Mime-Version: 1.0
 References: <20230916003118.2540661-1-seanjc@google.com>
 X-Mailer: git-send-email 2.42.0.459.ge4e396fd5e-goog
-Message-ID: <20230916003118.2540661-10-seanjc@google.com>
-Subject: [PATCH 09/26] KVM: arm64: Stop selecting and depending on HAVE_KVM
+Message-ID: <20230916003118.2540661-25-seanjc@google.com>
+Subject: [PATCH 24/26] powerpc/xics: Move declaration of xics_wake_cpu() out
+ of kvm_ppc.h
 From:   Sean Christopherson <seanjc@google.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
@@ -98,40 +99,40 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Now that nothing in arm64 or architecture agnostic code consumes HAVE_KVM,
-stop selecting it in arm64.  This is one of several steps towards deleting
-HAVE_KVM from the common KVM Kconfig.
+xics_wake_cpu() is provided by core PPC code, not by KVM.  Move its
+declaration out of kvm_ppc.h and into xics.h.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/arm64/Kconfig     | 1 -
- arch/arm64/kvm/Kconfig | 1 -
- 2 files changed, 2 deletions(-)
+ arch/powerpc/include/asm/kvm_ppc.h | 2 --
+ arch/powerpc/include/asm/xics.h    | 3 +++
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index b10515c0200b..7d99f132e57c 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -214,7 +214,6 @@ config ARM64
- 	select HAVE_HW_BREAKPOINT if PERF_EVENTS
- 	select HAVE_IOREMAP_PROT
- 	select HAVE_IRQ_TIME_ACCOUNTING
--	select HAVE_KVM
- 	select HAVE_MOD_ARCH_SPECIFIC
- 	select HAVE_NMI
- 	select HAVE_PERF_EVENTS
-diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-index 2b5c332f157d..c76af1973315 100644
---- a/arch/arm64/kvm/Kconfig
-+++ b/arch/arm64/kvm/Kconfig
-@@ -20,7 +20,6 @@ if VIRTUALIZATION
+diff --git a/arch/powerpc/include/asm/kvm_ppc.h b/arch/powerpc/include/asm/kvm_ppc.h
+index b4da8514af43..72fee202d3ec 100644
+--- a/arch/powerpc/include/asm/kvm_ppc.h
++++ b/arch/powerpc/include/asm/kvm_ppc.h
+@@ -1072,6 +1072,4 @@ static inline ulong kvmppc_get_ea_indexed(struct kvm_vcpu *vcpu, int ra, int rb)
+ 	return ea;
+ }
  
- menuconfig KVM
- 	bool "Kernel-based Virtual Machine (KVM) support"
--	depends on HAVE_KVM
- 	select KVM_GENERIC_HARDWARE_ENABLING
- 	select MMU_NOTIFIER
- 	select PREEMPT_NOTIFIERS
+-extern void xics_wake_cpu(int cpu);
+-
+ #endif /* __POWERPC_KVM_PPC_H__ */
+diff --git a/arch/powerpc/include/asm/xics.h b/arch/powerpc/include/asm/xics.h
+index 89090485bec1..17a45c022bd9 100644
+--- a/arch/powerpc/include/asm/xics.h
++++ b/arch/powerpc/include/asm/xics.h
+@@ -32,6 +32,9 @@
+ extern int icp_native_init(void);
+ extern void icp_native_flush_interrupt(void);
+ extern void icp_native_cause_ipi_rm(int cpu);
++#ifdef CONFIG_SMP
++extern void xics_wake_cpu(int cpu);
++#endif
+ #else
+ static inline int icp_native_init(void) { return -ENODEV; }
+ #endif
 -- 
 2.42.0.459.ge4e396fd5e-goog
 
