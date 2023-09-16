@@ -2,280 +2,117 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB47CD37B5
-	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Sep 2023 00:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF513CD37B2
+	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Sep 2023 03:57:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238967AbjIPAe6 (ORCPT
+        id S234416AbjIPD47 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 15 Sep 2023 20:34:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56742 "EHLO
+        Fri, 15 Sep 2023 23:56:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239111AbjIPAeY (ORCPT
+        with ESMTP id S231312AbjIPD4v (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 15 Sep 2023 20:34:24 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC0D519A0
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:32:05 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59285f1e267so71333867b3.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 17:32:05 -0700 (PDT)
+        Fri, 15 Sep 2023 23:56:51 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 838931BC5
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 20:56:45 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d8191a1d5acso2980548276.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2023 20:56:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694824325; x=1695429125; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=xxhu5mShS80K2/3vPmWMk/nseLaV4p5fitYU0fke5+k=;
-        b=I0twIbH0JWDnve96saXAKVyhd09K4ELG8M0LyS636cxkXlCdGwfc8cMH/2napwy6L6
-         kwxP8eYF66+YeOwkMvIAfRGMqc+Idqqzof6dupRSi7LsejOODbUYP43KPeQzeITwE5pu
-         Rq442nYS09zx/bwnt9NFvBkQ7bJ8b8rZhUNM99sGT3cE1Vmu0I6QA0ngcoF/0AFqt/3g
-         abOA5+iG7SRrFJKspHTWyb0K7zSMVzmVb0QhxUtsK7vEsDBABuS9q7jnsYrmVP9PTar4
-         aa3kYKL8Rxgh2n+rtckXA9FfTVW3KksoNht9J/SSkTQlGfbIUf4Quy9U9kfsgwP4Zc14
-         fgBg==
+        d=google.com; s=20230601; t=1694836605; x=1695441405; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bzQLVbdICvR0anuI1LoACUXsVUlI7kEOUbUElnKpCyc=;
+        b=kde0jXwFzS3mRaxWJym0JxLBJs84Di/zLD5SNDxY/ZPHWRtk7yzWueAWNDoJZa1UtZ
+         WoYAXlFj5uONXU73v46gOsjH3DdoYZyPsXxn3MnadvOuxW4xurf5oj4uKrS9c5q9PArQ
+         hDD0uqr9rfp7N5cBeI6rcL4CPg1x+ot6DEVHtjeZ5wrJDmlTsLRUA+rdlMaB7Y+XSYHg
+         INCTHAlXEtI/PU+/ENu73wxuO1dkKllr3t2XG/77YO+qizqPu54yCpYrvoSeu+Od6Bn9
+         nmk69yTbZNImmf4Gfa3WGLBKmmQO8BTDLRPRczeT+FEPWPduXO5UfeswtJaXiSoYMwyt
+         J05g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694824325; x=1695429125;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xxhu5mShS80K2/3vPmWMk/nseLaV4p5fitYU0fke5+k=;
-        b=uxDOFcgNQmBHP2R5V5kgZJtcXtY4AJ3oQslJvvgC9Ur8mQCU9VQ3OYjDA72/FwY8Jk
-         xTI8ZTpJ904c9AJ1S0bxjj6XHrvOFXfpslXLrxcPh4NrTFGq7hsc4vZgSGMlTnrs+Hr4
-         mpx96nnOc+KrXuOkWXr5dVptG+vMO58lZ+BgkR0YfrJbDBS+pUprl3ZOvE4Px4xXbuxi
-         rWmdpW32VCB3IMhWVo2TQqrizFZUyxY1BsM+IcUbBmmoU3m5M97LZnDlSviHu68VSMeq
-         ZmzOvIXZw60Nho4qg4FJDVTLBM9dLoBLXEk3HzSeZb6+p2zCl7UqVArgKqOXb1di3VWZ
-         exfw==
-X-Gm-Message-State: AOJu0Yyv9/Vsdp/3xCKtyIymCZdlOZsQfpIZz6/ZTwvhBFn+wufmTftq
-        uNRw2v1Qv++NyvO6GFZGjqI1ySMQGTc=
-X-Google-Smtp-Source: AGHT+IFivAqBzULaKYZ+rdlM5WV3p7FxezM4z6b9SH0+UFxp1erLN5VtiAhqE4c7vi4i2igDi9x6k3utDco=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:690c:2f05:b0:589:a533:405b with SMTP id
- ev5-20020a05690c2f0500b00589a533405bmr205315ywb.3.1694824325035; Fri, 15 Sep
- 2023 17:32:05 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Fri, 15 Sep 2023 17:31:14 -0700
-In-Reply-To: <20230916003118.2540661-1-seanjc@google.com>
+        d=1e100.net; s=20230601; t=1694836605; x=1695441405;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bzQLVbdICvR0anuI1LoACUXsVUlI7kEOUbUElnKpCyc=;
+        b=rq1slkTVToWAnIQvlC1Xjr1O8JtVAa8YZ8CGw9cyqAOwZNmqWQKqRa7cjVJGH8p3sW
+         rwtpCw4qmYK2rVAG1r2HW+FHTLYYbn6+KgJS+/RSYJqpM957UJQN0lt7dCQSUyROd4i2
+         orMwrd3LRk6S7wP/T0/vMlyieqYLltwe98/TdD13IbwoV4w3hAaAALaEv7foceKTi37i
+         lQkbJXjPINAvSD0mSY7FAQqQb7CWwX2zzplfAQCaD2fDIeDjKInzok1nhiCz3gHIy90C
+         ze9ZS+mxvqDJwDgH21WfEOzVt+EFXdt0hR5HJK+SL6AOMl7kiQu8tAEsTgdvf04O7uMA
+         LT6Q==
+X-Gm-Message-State: AOJu0YxJGs1sCVNcVTVyyfIOVzQfXxlaYhsqTQBkf4LUVjVct2tPcPM6
+        PjJqXuzGggz4qFg548oj0gOARM/M2JR0
+X-Google-Smtp-Source: AGHT+IHPl2mfI2FXOQHCNG1ebyKKkDV0rSTCXZae55BeQ1YbUjz4gqpnWaVzSdtYUzwE5EG9x/odWUcTn9JV
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:de72:1a43:1938:6165])
+ (user=irogers job=sendgmr) by 2002:a05:6902:118a:b0:d80:183c:92b9 with SMTP
+ id m10-20020a056902118a00b00d80183c92b9mr90954ybu.4.1694836604799; Fri, 15
+ Sep 2023 20:56:44 -0700 (PDT)
+Date:   Fri, 15 Sep 2023 20:56:40 -0700
+Message-Id: <20230916035640.1074422-1-irogers@google.com>
 Mime-Version: 1.0
-References: <20230916003118.2540661-1-seanjc@google.com>
 X-Mailer: git-send-email 2.42.0.459.ge4e396fd5e-goog
-Message-ID: <20230916003118.2540661-23-seanjc@google.com>
-Subject: [PATCH 22/26] entry/kvm: KVM: Move KVM details related to
- signal/-EINTR into KVM proper
-From:   Sean Christopherson <seanjc@google.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Anup Patel <anup@brainfault.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
+Subject: [PATCH v1] perf evlist: Avoid frequency mode for the dummy event
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Sean Christopherson <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Jason Herne <jjherne@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Anish Ghulati <aghulati@google.com>,
-        Venkatesh Srinivas <venkateshs@chromium.org>,
-        Andrew Thornton <andrewth@google.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Move KVM's morphing of pending signals into exits to userspace into KVM
-proper, and drop the @vcpu param from xfer_to_guest_mode_handle_work().
-How KVM responds to -EINTR is a detail that really belongs in KVM itself,
-and removing the non-KVM call to kvm_handle_signal_exit() will allow
-hiding said API and the definition of "struct kvm_vcpu" from the kernel.
+Dummy events are created with an attribute where the period and freq
+are zero. evsel__config will then see the uninitialized values and
+initialize them in evsel__default_freq_period. As fequency mode is
+used by default the dummy event would be set to use frequency
+mode. However, this has no effect on the dummy event but does cause
+unnecessary timers/interrupts. Avoid this overhead by setting the
+period to 1 for dummy events.
 
-Alternatively, entry/kvm.c could be treated as part of KVM, i.e. be given
-access to KVM internals, but that's not obviously better than having KVM
-react to -EINTR (though it's not obviously worse either).
+evlist__add_aux_dummy calls evlist__add_dummy then sets freq=0 and
+period=1. This isn't necessary after this change and so the setting is
+removed.
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
+Fixes: 5bae0250237f ("perf evlist: Introduce perf_evlist__new_dummy constructor")
+Reported-by: Stephane Eranian <eranian@google.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- arch/arm64/kvm/arm.c      |  3 +--
- arch/riscv/kvm/vcpu.c     |  2 +-
- arch/x86/kvm/vmx/vmx.c    |  1 -
- arch/x86/kvm/x86.c        |  3 +--
- include/linux/entry-kvm.h |  3 +--
- include/linux/kvm_host.h  | 13 ++++++++++++-
- kernel/entry/kvm.c        | 11 ++++-------
- 7 files changed, 20 insertions(+), 16 deletions(-)
+ tools/perf/util/evlist.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-index 6480628197b4..641df091e46b 100644
---- a/arch/arm64/kvm/arm.c
-+++ b/arch/arm64/kvm/arm.c
-@@ -6,7 +6,6 @@
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 25c3ebe2c2f5..e36da58522ef 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -251,6 +251,9 @@ static struct evsel *evlist__dummy_event(struct evlist *evlist)
+ 		.type	= PERF_TYPE_SOFTWARE,
+ 		.config = PERF_COUNT_SW_DUMMY,
+ 		.size	= sizeof(attr), /* to capture ABI version */
++		/* Avoid frequency mode for dummy events to avoid associated timers. */
++		.freq = 0,
++		.sample_period = 1,
+ 	};
  
- #include <linux/bug.h>
- #include <linux/cpu_pm.h>
--#include <linux/entry-kvm.h>
- #include <linux/errno.h>
- #include <linux/err.h>
- #include <linux/kvm_host.h>
-@@ -929,7 +928,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
- 		/*
- 		 * Check conditions before entering the guest
- 		 */
--		ret = xfer_to_guest_mode_handle_work(vcpu);
-+		ret = kvm_xfer_to_guest_mode_handle_work(vcpu);
- 		if (!ret)
- 			ret = 1;
- 
-diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-index 82229db1ce73..c313f4e90e70 100644
---- a/arch/riscv/kvm/vcpu.c
-+++ b/arch/riscv/kvm/vcpu.c
-@@ -667,7 +667,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
- 	run->exit_reason = KVM_EXIT_UNKNOWN;
- 	while (ret > 0) {
- 		/* Check conditions before entering the guest */
--		ret = xfer_to_guest_mode_handle_work(vcpu);
-+		ret = kvm_xfer_to_guest_mode_handle_work(vcpu);
- 		if (ret)
- 			continue;
- 		ret = 1;
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index faf0071566ef..43b87ad5fde8 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -28,7 +28,6 @@
- #include <linux/slab.h>
- #include <linux/tboot.h>
- #include <linux/trace_events.h>
--#include <linux/entry-kvm.h>
- 
- #include <asm/apic.h>
- #include <asm/asm.h>
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 6c9c81e82e65..aab095f89d9e 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -59,7 +59,6 @@
- #include <linux/sched/stat.h>
- #include <linux/sched/isolation.h>
- #include <linux/mem_encrypt.h>
--#include <linux/entry-kvm.h>
- #include <linux/suspend.h>
- #include <linux/smp.h>
- 
-@@ -10987,7 +10986,7 @@ static int vcpu_run(struct kvm_vcpu *vcpu)
- 
- 		if (__xfer_to_guest_mode_work_pending()) {
- 			kvm_vcpu_srcu_read_unlock(vcpu);
--			r = xfer_to_guest_mode_handle_work(vcpu);
-+			r = kvm_xfer_to_guest_mode_handle_work(vcpu);
- 			kvm_vcpu_srcu_read_lock(vcpu);
- 			if (r)
- 				return r;
-diff --git a/include/linux/entry-kvm.h b/include/linux/entry-kvm.h
-index e7d90d06e566..e235a91d28fc 100644
---- a/include/linux/entry-kvm.h
-+++ b/include/linux/entry-kvm.h
-@@ -42,11 +42,10 @@ static inline int arch_xfer_to_guest_mode_handle_work(unsigned long ti_work)
- /**
-  * xfer_to_guest_mode_handle_work - Check and handle pending work which needs
-  *				    to be handled before going to guest mode
-- * @vcpu:	Pointer to current's VCPU data
-  *
-  * Returns: 0 or an error code
-  */
--int xfer_to_guest_mode_handle_work(struct kvm_vcpu *vcpu);
-+int xfer_to_guest_mode_handle_work(void);
- 
- /**
-  * xfer_to_guest_mode_prepare - Perform last minute preparation work that
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index fb6c6109fdca..d520d6801070 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -2,7 +2,7 @@
- #ifndef __KVM_HOST_H
- #define __KVM_HOST_H
- 
--
-+#include <linux/entry-kvm.h>
- #include <linux/types.h>
- #include <linux/hardirq.h>
- #include <linux/list.h>
-@@ -2293,6 +2293,17 @@ static inline void kvm_handle_signal_exit(struct kvm_vcpu *vcpu)
- 	vcpu->run->exit_reason = KVM_EXIT_INTR;
- 	vcpu->stat.signal_exits++;
- }
-+
-+static inline int kvm_xfer_to_guest_mode_handle_work(struct kvm_vcpu *vcpu)
-+{
-+	int r = xfer_to_guest_mode_handle_work();
-+
-+	if (r) {
-+		WARN_ON_ONCE(r != -EINTR);
-+		kvm_handle_signal_exit(vcpu);
-+	}
-+	return r;
-+}
- #endif /* CONFIG_KVM_XFER_TO_GUEST_WORK */
- 
- /*
-diff --git a/kernel/entry/kvm.c b/kernel/entry/kvm.c
-index c2fc39824157..872617468b4a 100644
---- a/kernel/entry/kvm.c
-+++ b/kernel/entry/kvm.c
-@@ -1,17 +1,14 @@
- // SPDX-License-Identifier: GPL-2.0
- 
- #include <linux/entry-kvm.h>
--#include <linux/kvm_host.h>
- 
--static int xfer_to_guest_mode_work(struct kvm_vcpu *vcpu, unsigned long ti_work)
-+static int xfer_to_guest_mode_work(unsigned long ti_work)
- {
- 	do {
- 		int ret;
- 
--		if (ti_work & (_TIF_SIGPENDING | _TIF_NOTIFY_SIGNAL)) {
--			kvm_handle_signal_exit(vcpu);
-+		if (ti_work & (_TIF_SIGPENDING | _TIF_NOTIFY_SIGNAL))
- 			return -EINTR;
--		}
- 
- 		if (ti_work & _TIF_NEED_RESCHED)
- 			schedule();
-@@ -28,7 +25,7 @@ static int xfer_to_guest_mode_work(struct kvm_vcpu *vcpu, unsigned long ti_work)
- 	return 0;
- }
- 
--int xfer_to_guest_mode_handle_work(struct kvm_vcpu *vcpu)
-+int xfer_to_guest_mode_handle_work(void)
- {
- 	unsigned long ti_work;
- 
-@@ -44,6 +41,6 @@ int xfer_to_guest_mode_handle_work(struct kvm_vcpu *vcpu)
- 	if (!(ti_work & XFER_TO_GUEST_MODE_WORK))
- 		return 0;
- 
--	return xfer_to_guest_mode_work(vcpu, ti_work);
-+	return xfer_to_guest_mode_work(ti_work);
- }
- EXPORT_SYMBOL_GPL(xfer_to_guest_mode_handle_work);
+ 	return evsel__new_idx(&attr, evlist->core.nr_entries);
+@@ -277,8 +280,6 @@ struct evsel *evlist__add_aux_dummy(struct evlist *evlist, bool system_wide)
+ 	evsel->core.attr.exclude_kernel = 1;
+ 	evsel->core.attr.exclude_guest = 1;
+ 	evsel->core.attr.exclude_hv = 1;
+-	evsel->core.attr.freq = 0;
+-	evsel->core.attr.sample_period = 1;
+ 	evsel->core.system_wide = system_wide;
+ 	evsel->no_aux_samples = true;
+ 	evsel->name = strdup("dummy:u");
 -- 
 2.42.0.459.ge4e396fd5e-goog
 
