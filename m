@@ -2,127 +2,160 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC6DCD37B4
-	for <linux-perf-users@archiver.kernel.org>; Sun, 17 Sep 2023 05:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E2ACD37B4
+	for <linux-perf-users@archiver.kernel.org>; Sun, 17 Sep 2023 09:23:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230303AbjIQFhG convert rfc822-to-8bit (ORCPT
+        id S233103AbjIQJWh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 17 Sep 2023 01:37:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46142 "EHLO
+        Sun, 17 Sep 2023 05:22:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231886AbjIQFgh (ORCPT
+        with ESMTP id S235181AbjIQJWJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 17 Sep 2023 01:36:37 -0400
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61A73122;
-        Sat, 16 Sep 2023 22:36:32 -0700 (PDT)
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-795547f055fso122314539f.0;
-        Sat, 16 Sep 2023 22:36:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694928991; x=1695533791;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ob5I9kRynnPkG9uzPUBKYceGRS1WlW3gs9wY88hmXBo=;
-        b=SMnkOhlj95Qn9QgkSf9UTABynzLDMxasbNRKO/iyHEjqOQAlcXf3xUxM4ciIEEAtwq
-         TYRd+/ykbRii/YzmAQmxPeT5ZLmFKSAQK6mLok+2A/KP29tvTreOzQoqi1EKa+ty9eLa
-         xizQBybmpAlPoyJKjlbU/jzru6oTMuj4dfRHzHZYwfSLIpw9wsBi2cvQjmScMb3BTvC9
-         Sr+9hf7u/Yr9J6gKufkMoOVZjHQrZJ6uBgS0NdqUiphKcsnUs+8YyjTz4LrgXDsr/Pbu
-         PQBv84xHoTy0ZaJS6r83WmSBFKrT7nVECawCsYB/qpeHpdvjzyR+AyMGzpYYCfOOGYJe
-         2hZQ==
-X-Gm-Message-State: AOJu0YyFplv4T2d6a2Wv0NwQV3a0BzhOuzrS0iP+HK/CZ96/Kxk4JqPc
-        qwR9yoz7+efQkEUnLCOsJxUNifWSXxYosy+X59A=
-X-Google-Smtp-Source: AGHT+IGevGllGlavsi60Gh+mtGRF4n7+sIpm+WMuCJtFjE5jgsWo5g686gDcN6aMmbiBcOMUCozzumKKBN+5x/JH/8Y=
-X-Received: by 2002:a5e:8e08:0:b0:785:ff35:f340 with SMTP id
- a8-20020a5e8e08000000b00785ff35f340mr7170401ion.14.1694928991623; Sat, 16 Sep
- 2023 22:36:31 -0700 (PDT)
+        Sun, 17 Sep 2023 05:22:09 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC76C188
+        for <linux-perf-users@vger.kernel.org>; Sun, 17 Sep 2023 02:22:03 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 235F3C433C7;
+        Sun, 17 Sep 2023 09:22:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694942523;
+        bh=/j4DWIsQgtSFEy5JH+6kgx9JVQPPEwKacezaH14fxjw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=J+DAL0AY2EA5aqVORmPxjz7DYGAZACn/9pSe/lHG2uQBukVs5eVTUxe/3ZLHfJKFX
+         15ioFzCDgghCVUx3CS3VowHiRqEs2NODXiN+8o22mzEYT41/19zAXNuhoiNGQwNV1T
+         FtVfai2PDf+tnT+Rer9TFX7TMRaI4UnVl/XrhDMZUeniABbWzFJr39CGFAGy/GtYLs
+         nNSi0tl63I56huAawdabSzM4KL7bw8wXl9pJSXIvhXtcN6pWPjRYwn/ZF7/Ugr6BBt
+         zOW8Qj1iM+pow6K8OmXBkAd8LHCeZLGpUwWQZN4/jftj5zGpmbj3TDXnVKvy4mG3n5
+         TKZzruGch+Hbw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id AA31C403F4; Sun, 17 Sep 2023 11:22:00 +0200 (CEST)
+Date:   Sun, 17 Sep 2023 11:22:00 +0200
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Manu Bretelle <chantra@meta.com>
+Cc:     Mykola Lysenko <mykolal@meta.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        Daniel =?iso-8859-1?Q?M=FCller?= <deso@posteo.net>
+Subject: Re: [BUG] perf test: Regression because of d6e6286a12e7
+Message-ID: <ZQbFOHecUI+baoz8@kernel.org>
+References: <ab865e6d-06c5-078e-e404-7f90686db50d@amd.com>
+ <CAEf4BzZK=zm9PkUwzJRgeQ=KXjKOK9TENUMTz+_FmU6kPjab7Q@mail.gmail.com>
+ <78044efc-98d7-cd49-d2b5-4c2abb16d6c9@amd.com>
+ <CAEf4BzZCrDftNdNicuMS7NoF+hNiQEQwsH_-RMBh3Xxg+AQwiw@mail.gmail.com>
+ <146e00be-98c8-873d-081f-252647b71b12@amd.com>
+ <ZK7JMjN9LXTFEOvT@kernel.org>
+ <CAADnVQLpfmJ7yg-QtwfOFATJb=JcSDDxo11JG32KOQ6K=sNp4Q@mail.gmail.com>
+ <ZLBlUXDxRqzNRup3@kernel.org>
+ <87FAA9FD-C64E-4199-9F77-8671FF19EEE1@fb.com>
+ <SA1PR15MB46099ABDC08009096019B5B4CBF7A@SA1PR15MB4609.namprd15.prod.outlook.com>
 MIME-Version: 1.0
-References: <20230916091641.776031-1-yangjihong1@huawei.com>
-In-Reply-To: <20230916091641.776031-1-yangjihong1@huawei.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Sat, 16 Sep 2023 22:36:19 -0700
-Message-ID: <CAM9d7ciuLiYRT0tyhXSrZLqe9uhLNw=zGK4Tj6-GG5WQALP3-Q@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Fix test-record-dummy-C0 failure for supported
- PERF_FORMAT_LOST feature kernel
-To:     Yang Jihong <yangjihong1@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <SA1PR15MB46099ABDC08009096019B5B4CBF7A@SA1PR15MB4609.namprd15.prod.outlook.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Sep 16, 2023 at 2:18 AM Yang Jihong <yangjihong1@huawei.com> wrote:
->
-> For kernel that supports PERF_FORMAT_LOST, attr->read_format has
-> PERF_FORMAT_LOST bit. Update expected value of
-> attr->read_format of test-record-dummy-C0 for this scenario.
->
-> Before:
->
->   # ./perf test 17 -vv
->    17: Setup struct perf_event_attr                                    :
->   --- start ---
->   test child forked, pid 1609441
->   <SNIP>
->   running './tests/attr/test-record-dummy-C0'
->     'PERF_TEST_ATTR=/tmp/tmpm3s60aji ./perf record -o /tmp/tmpm3s60aji/perf.data --no-bpf-event -e dummy -C 0 kill >/dev/null 2>&1' ret '1', expected '1'
->   expected read_format=4, got 20
->   FAILED './tests/attr/test-record-dummy-C0' - match failure
->   test child finished with -1
->   ---- end ----
->   Setup struct perf_event_attr: FAILED!
->
-> After:
->
->   # ./perf test 17 -vv
->    17: Setup struct perf_event_attr                                    :
->   --- start ---
->   test child forked, pid 1609441
->   <SNIP>
->   running './tests/attr/test-record-dummy-C0'
->     'PERF_TEST_ATTR=/tmp/tmppa9vxcb7 ./perf record -o /tmp/tmppa9vxcb7/perf.data --no-bpf-event -e dummy -C 0 kill >/dev/null 2>&1' ret '1', expected '1'
->   <SNIP>
->   test child finished with 0
->   ---- end ----
->   Setup struct perf_event_attr: Ok
->
-> Reported-by: Namhyung Kim <namhyung@kernel.org>
-> Closes: https://lore.kernel.org/all/CAM9d7cgNH2+zhSAmA3en_6as915UsF25MoLbfjE350tAP43Bog@mail.gmail.com/
+Em Thu, Sep 14, 2023 at 09:43:41PM +0000, Manu Bretelle escreveu:
+> Hi Arnaldo,
+ 
+> Checking back here to see if there is anything you need help in order
+> to add perf support to BPF CI. Were you able to make progress and are
+> hitting some issues along the way?
 
-I'll change it to follow the existing style like
+I'm travelling now, but I saw that Ian replied.
 
-Fixes: d50ad02cb39a ("perf test: Add perf_event_attr test for record
-dummy event")
+No progress on my part, but I would start with a simple:
 
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+Build perf from the same kernel source tree used in the
+current CI tests, then run 'perf test'. It would test more than just the
+BPF part, but would be a good start.
 
-Tested-by: Namhyung Kim <namhyung@kernel.org>
+A second step would be just disabling the tests that are failing and
+that are not BPF specific, using the --skip arg to 'perf test':
 
-Thanks,
-Namhyung
+[root@quaco test]# perf test -h skip
 
+ Usage: perf test [<options>] [{list <test-name-fragment>|[<test-name-fragments>|<test-numbers>]}]
 
-> ---
->  tools/perf/tests/attr/test-record-dummy-C0 | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/tests/attr/test-record-dummy-C0 b/tools/perf/tests/attr/test-record-dummy-C0
-> index 83ca4e373acd..576ec48b3aaf 100644
-> --- a/tools/perf/tests/attr/test-record-dummy-C0
-> +++ b/tools/perf/tests/attr/test-record-dummy-C0
-> @@ -17,7 +17,7 @@ sample_period=4000
->  # PERF_SAMPLE_PERIOD
->  # + PERF_SAMPLE_CPU added by -C 0
->  sample_type=391
-> -read_format=4
-> +read_format=4|20
->  disabled=0
->  inherit=1
->  pinned=0
-> --
-> 2.34.1
->
+    -s, --skip <tests>    tests to skip
+
+[root@quaco test]#
+
+So something like:
+
+-----------------
+make -C tools/perf
+perf test --skip list,of,tests,failing,that,are,not,BPF,specific
+-----------------
+
+The perf build dependencies should be similar to the ones needed to
+build libbpf or close to it, so the above would be a great first stab at
+it.
+
+- Arnaldo
+ 
+> 
+> Thanks,
+> 
+> Manu
+> 
+> From: Mykola Lysenko <mykolal@meta.com>
+> Date: Friday, July 14, 2023 at 11:15 AM
+> To: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mykola Lysenko <mykolal@meta.com>, Alexei Starovoitov <alexei.starovoitov@gmail.com>, Ravi Bangoria <ravi.bangoria@amd.com>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, linux-perf-users <linux-perf-users@vger.kernel.org>, bpf <bpf@vger.kernel.org>, Manu Bretelle <chantra@meta.com>, Daniel Müller <deso@posteo.net>, Mykola Lysenko <mykolal@meta.com>
+> Subject: Re: [BUG] perf test: Regression because of d6e6286a12e7
+> Hey Arnaldo,
+> 
+> > On Jul 13, 2023, at 1:57 PM, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >
+> > !-------------------------------------------------------------------|
+> >  This Message Is From an External Sender
+> >
+> > |-------------------------------------------------------------------!
+> >
+> > Em Wed, Jul 12, 2023 at 11:20:27AM -0700, Alexei Starovoitov escreveu:
+> >> On Wed, Jul 12, 2023 at 8:39 AM Arnaldo Carvalho de Melo
+> >> <acme@kernel.org> wrote:
+> >>>
+> >>> Right, perhaps the libbpf CI could try building perf, preferably with
+> >>> BUILD_BPF_SKEL=1, to enable these tools:
+> >>
+> >>
+> >> That would be great.
+> >> perf experts probably should do pull-req to bpf CI to enable that.
+> >> See slides:
+> >> http://vger.kernel.org/bpfconf2022_material/lsfmmbpf2022-bpf-ci.pdf
+> >>
+> >> "How to contribute?
+> >> Depending on what part of CI you are changing, you can create a pull request to
+> >> https://github.com/kernel-patches/vmtest/
+> >> https://github.com/libbpf/ci
+> >> "
+> >
+> > Sure, I still recall Quentin's talk about CI, etc in Dublin, will come
+> > up with something and submit.
+> 
+> Thanks for looking at this!
+> 
+> If you will have any questions on how CI works, do not hesitate to join BPF office hours and we will do our best to answer.
+> 
+> Mykola
+> 
+> >
+> > - Arnaldo
+> 
+
+-- 
+
+- Arnaldo
