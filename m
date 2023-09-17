@@ -2,168 +2,159 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD9DCD37B7
-	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Sep 2023 09:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D56BC46CA1
+	for <linux-perf-users@archiver.kernel.org>; Sun, 17 Sep 2023 00:53:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238836AbjIPJYT (ORCPT
+        id S229523AbjIQAqr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 16 Sep 2023 05:24:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38176 "EHLO
+        Sat, 16 Sep 2023 20:46:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238872AbjIPJYG (ORCPT
+        with ESMTP id S229650AbjIQAq0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 16 Sep 2023 05:24:06 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1A801985;
-        Sat, 16 Sep 2023 02:24:00 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RnlrN3dXmztSRG;
-        Sat, 16 Sep 2023 17:19:48 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Sat, 16 Sep 2023 17:23:57 +0800
-Subject: Re: [PATCH v8 0/6] perf record: Track sideband events for all CPUs
- when tracing selected CPUs
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-CC:     Ravi Bangoria <ravi.bangoria@amd.com>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <irogers@google.com>, <adrian.hunter@intel.com>,
-        <kan.liang@linux.intel.com>, <james.clark@arm.com>,
-        <tmricht@linux.ibm.com>, <ak@linux.intel.com>,
-        <anshuman.khandual@arm.com>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>
-References: <20230904023340.12707-1-yangjihong1@huawei.com>
- <453bd95c-932d-c60a-bd7b-96f87bc7779a@amd.com> <ZQDK4kZhwyZL/8tx@kernel.org>
- <CAM9d7cgNH2+zhSAmA3en_6as915UsF25MoLbfjE350tAP43Bog@mail.gmail.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <c9f60c53-191c-e323-e641-bcdcd5b61c38@huawei.com>
-Date:   Sat, 16 Sep 2023 17:23:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Sat, 16 Sep 2023 20:46:26 -0400
+Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6045E1BB
+        for <linux-perf-users@vger.kernel.org>; Sat, 16 Sep 2023 17:46:21 -0700 (PDT)
+Received: by mail-qt1-x836.google.com with SMTP id d75a77b69052e-414e78cdc11so21935301cf.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 16 Sep 2023 17:46:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1694911580; x=1695516380; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+aEmj8XWPxbuE/jyhPT5yboCcWyurniEilj0tCFF0PI=;
+        b=DMp7dGH4GGfWNou7gCP45SjRrWWBALgSzZThsA0xkwryQH/wrpmG2p7/8BagKe272g
+         7/gJL9eDA3vWV/R0dzGs55asGC+rzBBx6ilXgHg+LDwg/irY10VisVvppKO3TpV5RSN5
+         ul2E8hui/0akRfGMO4YfyMRk7E+3QOA2l6O1Mln7rLPvnjwCUGSVib5dJt4oQC4JemcA
+         4HRlabfQ09elEYYZkeN0jLZSZ6NAOhQwwR3KOKucM3Okb+xUCl8T3knqtUlvxSPfyMpg
+         HP035POcAIGAxh5qZ8kegiC8dEq9DBqs5kltQ/gkpgCJN6/WwFe4DVREoF3LPBNMjcq3
+         lAtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694911580; x=1695516380;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+aEmj8XWPxbuE/jyhPT5yboCcWyurniEilj0tCFF0PI=;
+        b=KU74we9NeUBHVFubFcN4kkFaZt6SWiiOoEbseFXx2WYLAMrSnxetTg/jshtedFOlX5
+         E2i/hDShXtrq0O2pgEdHWJWlARPjfE4f3p6GzZDp6XoT6l238u6JU9Yz867/LXdndQQl
+         /2wERF/2hvRe8biqipSALkxnHVQM1W0z+jWulYcnBDYnCB6YGY5YOHmVhRJ9woutHjQK
+         t4rHkVT0IkbMQQCrnGnL01oPlkvW8hLTsu7OSNzFkGAzUo/HHhgWujtAnNI3/XRS5QrG
+         J/KCr34k7HEvqwV4wqFITJ5PstGkhvWik4RQ/eL1BFpylgNmxP6C0b7891HXrPHYxU3A
+         crJg==
+X-Gm-Message-State: AOJu0YzdG5rfv7pCCYh/79t81j6VHHnqfUDndfpIWRfrrLufIllu7o/p
+        rMf1AWfCNiEFrFuGAamJSWblwvJtsKyLcPH2/p8cWA==
+X-Google-Smtp-Source: AGHT+IFsZYGuexoTW0OQeG2A8TdgpZEVd1UokZV9+/98bP6+pbBPkbQg5dNIdOX17qidz7/cHW6YvPiw7z6T/+ogfjQ=
+X-Received: by 2002:a0c:e34c:0:b0:656:3f9f:349d with SMTP id
+ a12-20020a0ce34c000000b006563f9f349dmr3963490qvm.52.1694911580338; Sat, 16
+ Sep 2023 17:46:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAM9d7cgNH2+zhSAmA3en_6as915UsF25MoLbfjE350tAP43Bog@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+References: <20230916040915.1075620-1-irogers@google.com>
+In-Reply-To: <20230916040915.1075620-1-irogers@google.com>
+From:   Mingwei Zhang <mizhang@google.com>
+Date:   Sat, 16 Sep 2023 17:45:44 -0700
+Message-ID: <CAL715WJxmMbXkZSE3p_+ODGxabgrXREsBo9aFu9G9=qkYZeH9A@mail.gmail.com>
+Subject: Re: [PATCH v1] perf evlist: Avoid frequency mode for the dummy event
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On Fri, Sep 15, 2023 at 9:10=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> Dummy events are created with an attribute where the period and freq
+> are zero. evsel__config will then see the uninitialized values and
+> initialize them in evsel__default_freq_period. As fequency mode is
+> used by default the dummy event would be set to use frequency
+> mode. However, this has no effect on the dummy event but does cause
+> unnecessary timers/interrupts. Avoid this overhead by setting the
+> period to 1 for dummy events.
+>
+> evlist__add_aux_dummy calls evlist__add_dummy then sets freq=3D0 and
+> period=3D1. This isn't necessary after this change and so the setting is
+> removed.
+>
+> From Stephane:
+>
+> The dummy event is not counting anything. It is used to collect mmap
+> records and avoid a race condition during the synthesize mmap phase of
+> perf record. As such, it should not cause any overhead during active
+> profiling. Yet, it did. Because of a bug the dummy event was
+> programmed as a sampling event in frequency mode. Events in that mode
+> incur more kernel overheads because on timer tick, the kernel has to
+> look at the number of samples for each event and potentially adjust
+> the sampling period to achieve the desired frequency. The dummy event
+> was therefore adding a frequency event to task and ctx contexts we may
+> otherwise not have any, e.g., perf record -a -e
+> cpu/event=3D0x3c,period=3D10000000/. On each timer tick the
+> perf_adjust_freq_unthr_context() is invoked and if ctx->nr_freq is
+> non-zero, then the kernel will loop over ALL the events of the context
+> looking for frequency mode ones. In doing, so it locks the context,
+> and enable/disable the PMU of each hw event. If all the events of the
+> context are in period mode, the kernel will have to traverse the list for
+> nothing incurring overhead. The overhead is multiplied by a very large
+> factor when this happens in a guest kernel. There is no need for the
+> dummy event to be in frequency mode, it does not count anything and
+> therefore should not cause extra overhead for no reason.
+>
+> Fixes: 5bae0250237f ("perf evlist: Introduce perf_evlist__new_dummy const=
+ructor")
+> Reported-by: Stephane Eranian <eranian@google.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/evlist.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index 25c3ebe2c2f5..e36da58522ef 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -251,6 +251,9 @@ static struct evsel *evlist__dummy_event(struct evlis=
+t *evlist)
+>                 .type   =3D PERF_TYPE_SOFTWARE,
+>                 .config =3D PERF_COUNT_SW_DUMMY,
+>                 .size   =3D sizeof(attr), /* to capture ABI version */
+> +               /* Avoid frequency mode for dummy events to avoid associa=
+ted timers. */
+> +               .freq =3D 0,
+> +               .sample_period =3D 1,
+>         };
+>
+>         return evsel__new_idx(&attr, evlist->core.nr_entries);
+> @@ -277,8 +280,6 @@ struct evsel *evlist__add_aux_dummy(struct evlist *ev=
+list, bool system_wide)
+>         evsel->core.attr.exclude_kernel =3D 1;
+>         evsel->core.attr.exclude_guest =3D 1;
+>         evsel->core.attr.exclude_hv =3D 1;
+> -       evsel->core.attr.freq =3D 0;
+> -       evsel->core.attr.sample_period =3D 1;
+>         evsel->core.system_wide =3D system_wide;
+>         evsel->no_aux_samples =3D true;
+>         evsel->name =3D strdup("dummy:u");
+> --
+> 2.42.0.459.ge4e396fd5e-goog
+>
 
-On 2023/9/16 8:14, Namhyung Kim wrote:
-> Hello,
-> 
-> On Tue, Sep 12, 2023 at 1:32 PM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
->>
->> Em Tue, Sep 12, 2023 at 02:41:56PM +0530, Ravi Bangoria escreveu:
->>> On 04-Sep-23 8:03 AM, Yang Jihong wrote:
->>>> User space tasks can migrate between CPUs, track sideband events for all
->>>> CPUs.
->>>>
->>>> The specific scenarios are as follows:
->>>>
->>>>           CPU0                                 CPU1
->>>>    perf record -C 0 start
->>>>                                taskA starts to be created and executed
->>>>                                  -> PERF_RECORD_COMM and PERF_RECORD_MMAP
->>>>                                     events only deliver to CPU1
->>>>                                ......
->>>>                                  |
->>>>                            migrate to CPU0
->>>>                                  |
->>>>    Running on CPU0    <----------/
->>>>    ...
->>>>
->>>>    perf record -C 0 stop
->>>>
->>>> Now perf samples the PC of taskA. However, perf does not record the
->>>> PERF_RECORD_COMM and PERF_RECORD_COMM events of taskA.
->>>> Therefore, the comm and symbols of taskA cannot be parsed.
->>>>
->>>> The sys_perf_event_open invoked is as follows:
->>>>
->>>>    # perf --debug verbose=3 record -e cpu-clock -C 1 true
->>>>    <SNIP>
->>>>    Opening: cpu-clock
->>>>    ------------------------------------------------------------
->>>>    perf_event_attr:
->>>>      type                             1 (PERF_TYPE_SOFTWARE)
->>>>      size                             136
->>>>      config                           0 (PERF_COUNT_SW_CPU_CLOCK)
->>>>      { sample_period, sample_freq }   4000
->>>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>>>      read_format                      ID|LOST
->>>>      disabled                         1
->>>>      inherit                          1
->>>>      freq                             1
->>>>      sample_id_all                    1
->>>>      exclude_guest                    1
->>>>    ------------------------------------------------------------
->>>>    sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
->>>>    Opening: dummy:u
->>>>    ------------------------------------------------------------
->>>>    perf_event_attr:
->>>>      type                             1 (PERF_TYPE_SOFTWARE)
->>>>      size                             136
->>>>      config                           0x9 (PERF_COUNT_SW_DUMMY)
->>>>      { sample_period, sample_freq }   1
->>>>      sample_type                      IP|TID|TIME|CPU|IDENTIFIER
->>>>      read_format                      ID|LOST
->>>>      inherit                          1
->>>>      exclude_kernel                   1
->>>>      exclude_hv                       1
->>>>      mmap                             1
->>>>      comm                             1
->>>>      task                             1
->>>>      sample_id_all                    1
->>>>      exclude_guest                    1
->>>>      mmap2                            1
->>>>      comm_exec                        1
->>>>      ksymbol                          1
->>>>      bpf_event                        1
->>>>    ------------------------------------------------------------
->>>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
->>>>    sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 7
->>>>    sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 9
->>>>    sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 10
->>>>    sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 11
->>>>    sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 12
->>>>    sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 13
->>>>    sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 14
->>>>    <SNIP>
->>>>
->>>> Changes since_v7:
->>>>   - The condition for requiring system_wide sideband is changed to
->>>>     "as long as a non-dummy event exists" (patch4).
->>>>   - Modify the corresponding test case to record only dummy event (patch6).
->>>>   - Thanks to tested-by tag from Ravi, but because the solution is modified,
->>>>     the tested-by tag of Ravi is not added to this version.
->>>
->>> I've re-tested v8 with my simple test.
->>>
->>> Tested-by: Ravi Bangoria <ravi.bangoria@amd.com>
->>
->>
->> Thanks, applied to the csets that were still sitting in an umpublished
->> perf-tools-next local branch, soon public.
-> 
-> Now I'm seeing a perf test failure on perf-tools-next.
+Thank you very much for the change. I have one quick question about
+the PMU unthrottling logic. When I am looking into the function
+perf_adjust_freq_unthr_context(), I see the loop with PMU stop and
+start in each iteration. Is there a good way to avoid this PMU reset
+operation while quickly figuring out the event in frequency mode?
 
-Uh.. the kernel I was using before didn't support PERF_FORMAT_LOST, so 
-forget about supporting PERF_FORMAT_LOST. I've updated the kernel and 
-retested it.
-
-The link to the fixed patch is as follows:
-https://lore.kernel.org/all/20230916091641.776031-1-yangjihong1@huawei.com/
-
-Thanks,
-Yang
+Thanks.
+-Mingwei
