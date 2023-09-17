@@ -2,159 +2,99 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D56BC46CA1
-	for <linux-perf-users@archiver.kernel.org>; Sun, 17 Sep 2023 00:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5E1CD37B4
+	for <linux-perf-users@archiver.kernel.org>; Sun, 17 Sep 2023 05:25:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229523AbjIQAqr (ORCPT
+        id S230166AbjIQFZN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 16 Sep 2023 20:46:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51340 "EHLO
+        Sun, 17 Sep 2023 01:25:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229650AbjIQAq0 (ORCPT
+        with ESMTP id S230010AbjIQFY4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 16 Sep 2023 20:46:26 -0400
-Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6045E1BB
-        for <linux-perf-users@vger.kernel.org>; Sat, 16 Sep 2023 17:46:21 -0700 (PDT)
-Received: by mail-qt1-x836.google.com with SMTP id d75a77b69052e-414e78cdc11so21935301cf.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 16 Sep 2023 17:46:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694911580; x=1695516380; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+aEmj8XWPxbuE/jyhPT5yboCcWyurniEilj0tCFF0PI=;
-        b=DMp7dGH4GGfWNou7gCP45SjRrWWBALgSzZThsA0xkwryQH/wrpmG2p7/8BagKe272g
-         7/gJL9eDA3vWV/R0dzGs55asGC+rzBBx6ilXgHg+LDwg/irY10VisVvppKO3TpV5RSN5
-         ul2E8hui/0akRfGMO4YfyMRk7E+3QOA2l6O1Mln7rLPvnjwCUGSVib5dJt4oQC4JemcA
-         4HRlabfQ09elEYYZkeN0jLZSZ6NAOhQwwR3KOKucM3Okb+xUCl8T3knqtUlvxSPfyMpg
-         HP035POcAIGAxh5qZ8kegiC8dEq9DBqs5kltQ/gkpgCJN6/WwFe4DVREoF3LPBNMjcq3
-         lAtA==
+        Sun, 17 Sep 2023 01:24:56 -0400
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEC5A19F;
+        Sat, 16 Sep 2023 22:24:51 -0700 (PDT)
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-79275d86bc3so132230739f.0;
+        Sat, 16 Sep 2023 22:24:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694911580; x=1695516380;
+        d=1e100.net; s=20230601; t=1694928291; x=1695533091;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+aEmj8XWPxbuE/jyhPT5yboCcWyurniEilj0tCFF0PI=;
-        b=KU74we9NeUBHVFubFcN4kkFaZt6SWiiOoEbseFXx2WYLAMrSnxetTg/jshtedFOlX5
-         E2i/hDShXtrq0O2pgEdHWJWlARPjfE4f3p6GzZDp6XoT6l238u6JU9Yz867/LXdndQQl
-         /2wERF/2hvRe8biqipSALkxnHVQM1W0z+jWulYcnBDYnCB6YGY5YOHmVhRJ9woutHjQK
-         t4rHkVT0IkbMQQCrnGnL01oPlkvW8hLTsu7OSNzFkGAzUo/HHhgWujtAnNI3/XRS5QrG
-         J/KCr34k7HEvqwV4wqFITJ5PstGkhvWik4RQ/eL1BFpylgNmxP6C0b7891HXrPHYxU3A
-         crJg==
-X-Gm-Message-State: AOJu0YzdG5rfv7pCCYh/79t81j6VHHnqfUDndfpIWRfrrLufIllu7o/p
-        rMf1AWfCNiEFrFuGAamJSWblwvJtsKyLcPH2/p8cWA==
-X-Google-Smtp-Source: AGHT+IFsZYGuexoTW0OQeG2A8TdgpZEVd1UokZV9+/98bP6+pbBPkbQg5dNIdOX17qidz7/cHW6YvPiw7z6T/+ogfjQ=
-X-Received: by 2002:a0c:e34c:0:b0:656:3f9f:349d with SMTP id
- a12-20020a0ce34c000000b006563f9f349dmr3963490qvm.52.1694911580338; Sat, 16
- Sep 2023 17:46:20 -0700 (PDT)
+        bh=L2PEWOCH3Oi47G+B9Ydh9wql/Nmm8hAKIK7292mMif4=;
+        b=PseFOhamYPY86kP2wWePbglRydbtQMdzzblGs66pb134GlmjMXGDA7w/s/fHMRnWh7
+         WBTHCxpqzrGoY2VA1n1Ge4WcEUX8ObDyksep/ZDWKqkIk4tqOm6XZk5cfIaNjxwYqX0P
+         rtAa/SJi5yxKEPJSvheCVxqgjM1xvLFd/4N8OOl2FhPIWvRMzZIzfwb2ojJolp8R8vxK
+         AolfCx2qclkHhs6dzPcDMgnufG9E1HoMq8CQGu0kJl93SF0rT19sMFQ/3kAU09JQA6y5
+         /hpjdDpuWCybblHiAITaUw0ASHVBVnvzv/jKGTRvDRy2ZopwJUI84jk9BlViN9t6CRbE
+         RivA==
+X-Gm-Message-State: AOJu0YwFqfnJNFNmalYAFqALdGTGlae9ZwaeNCJydPyguHGubhPpyH81
+        C8AiijRVEZFNJHYQ8B17pAf8YAgsrEM3fAlcOTw=
+X-Google-Smtp-Source: AGHT+IEUc1ta25FnPXE/IAqubi2VacL2DsWca0BHvbo26FJ/O+/4pWBKEh3PYoKjqTm0RfRsj7RHteFcoc3tNRSa3vQ=
+X-Received: by 2002:a6b:7319:0:b0:776:fd07:3c96 with SMTP id
+ e25-20020a6b7319000000b00776fd073c96mr6420841ioh.7.1694928290868; Sat, 16 Sep
+ 2023 22:24:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230916040915.1075620-1-irogers@google.com>
-In-Reply-To: <20230916040915.1075620-1-irogers@google.com>
-From:   Mingwei Zhang <mizhang@google.com>
-Date:   Sat, 16 Sep 2023 17:45:44 -0700
-Message-ID: <CAL715WJxmMbXkZSE3p_+ODGxabgrXREsBo9aFu9G9=qkYZeH9A@mail.gmail.com>
-Subject: Re: [PATCH v1] perf evlist: Avoid frequency mode for the dummy event
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+References: <20230913153355.138331-1-james.clark@arm.com>
+In-Reply-To: <20230913153355.138331-1-james.clark@arm.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Sat, 16 Sep 2023 22:24:38 -0700
+Message-ID: <CAM9d7ciKDBz8k6bvtyVcr-FUkXjqNYZ=8GAuObfPhcBn4whzrg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] perf: strcmp_cpuid_str() expression fixups
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-perf-users@vger.kernel.org, irogers@google.com,
+        acme@kernel.org, John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Stephane Eranian <eranian@google.com>
+        Haixin Yu <yuhaixin.yhx@linux.alibaba.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Sep 15, 2023 at 9:10=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+Hello,
+
+On Wed, Sep 13, 2023 at 8:34 AM James Clark <james.clark@arm.com> wrote:
 >
-> Dummy events are created with an attribute where the period and freq
-> are zero. evsel__config will then see the uninitialized values and
-> initialize them in evsel__default_freq_period. As fequency mode is
-> used by default the dummy event would be set to use frequency
-> mode. However, this has no effect on the dummy event but does cause
-> unnecessary timers/interrupts. Avoid this overhead by setting the
-> period to 1 for dummy events.
+> Set of fixes related to the comments here [1]. Mainly cleanups,
+> additional tests and refactoring since adding the new strcmp_cpuid_str()
+> metric expression.
 >
-> evlist__add_aux_dummy calls evlist__add_dummy then sets freq=3D0 and
-> period=3D1. This isn't necessary after this change and so the setting is
-> removed.
+> I added the string replace function to the perf utils
+> rather than tools/lib/string.c because it didn't seem
+> easy to add tests for tools/lib.
 >
-> From Stephane:
+> [1]: https://lore.kernel.org/linux-arm-kernel/CAP-5=fVnUx0BnJC7X1rrm42OD7Bk=ZsHWNwAZMBYyB7yWhBfhQ@mail.gmail.com/
+> [2]: https://lore.kernel.org/linux-perf-users/ZQC7da2AM9ih8RMz@kernel.org/
 >
-> The dummy event is not counting anything. It is used to collect mmap
-> records and avoid a race condition during the synthesize mmap phase of
-> perf record. As such, it should not cause any overhead during active
-> profiling. Yet, it did. Because of a bug the dummy event was
-> programmed as a sampling event in frequency mode. Events in that mode
-> incur more kernel overheads because on timer tick, the kernel has to
-> look at the number of samples for each event and potentially adjust
-> the sampling period to achieve the desired frequency. The dummy event
-> was therefore adding a frequency event to task and ctx contexts we may
-> otherwise not have any, e.g., perf record -a -e
-> cpu/event=3D0x3c,period=3D10000000/. On each timer tick the
-> perf_adjust_freq_unthr_context() is invoked and if ctx->nr_freq is
-> non-zero, then the kernel will loop over ALL the events of the context
-> looking for frequency mode ones. In doing, so it locks the context,
-> and enable/disable the PMU of each hw event. If all the events of the
-> context are in period mode, the kernel will have to traverse the list for
-> nothing incurring overhead. The overhead is multiplied by a very large
-> factor when this happens in a guest kernel. There is no need for the
-> dummy event to be in frequency mode, it does not count anything and
-> therefore should not cause extra overhead for no reason.
->
-> Fixes: 5bae0250237f ("perf evlist: Introduce perf_evlist__new_dummy const=
-ructor")
-> Reported-by: Stephane Eranian <eranian@google.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/evlist.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> Changes since v2:
+>   * Drop patches that were already applied (which makes the cover letter
+>     mostly redundant)
+>   * Avoid generating the compiler warning reported here [2]
 >
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index 25c3ebe2c2f5..e36da58522ef 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -251,6 +251,9 @@ static struct evsel *evlist__dummy_event(struct evlis=
-t *evlist)
->                 .type   =3D PERF_TYPE_SOFTWARE,
->                 .config =3D PERF_COUNT_SW_DUMMY,
->                 .size   =3D sizeof(attr), /* to capture ABI version */
-> +               /* Avoid frequency mode for dummy events to avoid associa=
-ted timers. */
-> +               .freq =3D 0,
-> +               .sample_period =3D 1,
->         };
+> Changes since v1:
+>   * s -> haystack
+>   * find -> needle
 >
->         return evsel__new_idx(&attr, evlist->core.nr_entries);
-> @@ -277,8 +280,6 @@ struct evsel *evlist__add_aux_dummy(struct evlist *ev=
-list, bool system_wide)
->         evsel->core.attr.exclude_kernel =3D 1;
->         evsel->core.attr.exclude_guest =3D 1;
->         evsel->core.attr.exclude_hv =3D 1;
-> -       evsel->core.attr.freq =3D 0;
-> -       evsel->core.attr.sample_period =3D 1;
->         evsel->core.system_wide =3D system_wide;
->         evsel->no_aux_samples =3D true;
->         evsel->name =3D strdup("dummy:u");
-> --
-> 2.42.0.459.ge4e396fd5e-goog
->
+> James Clark (3):
+>   perf pmu: Move pmu__find_core_pmu() to pmus.c
+>   perf pmus: Simplify perf_pmus__find_core_pmu()
+>   perf pmu: Remove unused function
 
-Thank you very much for the change. I have one quick question about
-the PMU unthrottling logic. When I am looking into the function
-perf_adjust_freq_unthr_context(), I see the loop with PMU stop and
-start in each iteration. Is there a good way to avoid this PMU reset
-operation while quickly figuring out the event in frequency mode?
-
-Thanks.
--Mingwei
+Applied to perf-tools-next, thanks!
