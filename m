@@ -2,47 +2,47 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 884FBCD13D1
-	for <linux-perf-users@archiver.kernel.org>; Sun, 17 Sep 2023 05:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DC3CD37B3
+	for <linux-perf-users@archiver.kernel.org>; Sun, 17 Sep 2023 05:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231886AbjIQF0u convert rfc822-to-8bit (ORCPT
+        id S233101AbjIQF1y convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 17 Sep 2023 01:26:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45398 "EHLO
+        Sun, 17 Sep 2023 01:27:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235832AbjIQF0O (ORCPT
+        with ESMTP id S234810AbjIQF1h (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 17 Sep 2023 01:26:14 -0400
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55B811A1;
-        Sat, 16 Sep 2023 22:26:08 -0700 (PDT)
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-77acb04309dso120844339f.2;
-        Sat, 16 Sep 2023 22:26:08 -0700 (PDT)
+        Sun, 17 Sep 2023 01:27:37 -0400
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F8F31AD;
+        Sat, 16 Sep 2023 22:27:28 -0700 (PDT)
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7926b7f8636so86506039f.1;
+        Sat, 16 Sep 2023 22:27:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694928367; x=1695533167;
+        d=1e100.net; s=20230601; t=1694928448; x=1695533248;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=w8OMLePdBQiCZVj6JV7z+xTlIDlELNPKMdSpZjXipN8=;
-        b=k70YohqaB9R2wq+1hF6/0/+ZtCU7clWB34z55P9JzZ6IxuLLttEcN1uQ/njOoIZ2zQ
-         mw1rrZTcUu16tv9qUSXBdyPSapHn0sH/NXDJXlM/0Qf8/3QSRBvIxOAkTHTI1eqP2k9B
-         gbBEXrVi706olGKWBR7xTy4tFhK8/gQM3ehsrmL0xZFg8Ur1SBw/WMbBInNpEv6Nhx0j
-         MaC/DF8wmfBNlupoXgpmJWtoEUMNJGNxIiLuI6UrbwFkHjVfLQpFoojmDURsIQ+qIirv
-         vhN1JJor5gIdGdR3p3EODt++sO59GvUZTk2Yzqpez5HqWhHAfG5iJv+A3AiripwGBdjG
-         8aYQ==
-X-Gm-Message-State: AOJu0YzTtX74blnVt7GE4hW7teta9UcwyJ9WHuvc+cYmzFf/VQLoc9Ys
-        jkH0SoinqvUawXp995GnpfgYwyM58VBSxcdvnfM=
-X-Google-Smtp-Source: AGHT+IE2dPUBZ4V875an1HcA/LtfQ+rfbROd2YPDaB6eCG4vmPZ/u1QkZNCgNdjTSWxCDyBeVqOs/xYuUdoA0BMZ/qg=
-X-Received: by 2002:a6b:510a:0:b0:794:eddf:daad with SMTP id
- f10-20020a6b510a000000b00794eddfdaadmr6953575iob.15.1694928367552; Sat, 16
- Sep 2023 22:26:07 -0700 (PDT)
+        bh=TzRftMfR+qB5FSzonRS1Mmq5OWomLaO6LI1sl+SH1Lw=;
+        b=RqQZqHAkrCtjb8z6FNZmp/dCR78/Xcknju9+DzsvLwZtQi+KcYooVGY50H8updOQ3M
+         JTmqY9d2vDanxSxWPGXaEkd0c9oSWQhWXfs0y/iSHmggp7NJCXUXpN8WZnVWQZdwvCcn
+         /NYXbkavzdQaeRPthmbY03PiDmsf+Xeq28ppuAbzJUtuWHJAs3ZU3v0bnIT1nc+1XxOb
+         SspK6LvZlGEZPR6EAZnoD2hI3FDdtYu9BF33l81gSzeHm13c18FFRu6oQE8KBW+Mg4Mj
+         CMvOjzFCKdiGzbXxR9A6gEEc5xoCZpTn+Mg+JnLnaVwWdRJS0FHxY1Rz1TzFXAnDoxfc
+         j+VA==
+X-Gm-Message-State: AOJu0YxbqRaaEXXzFEiFTB+vnx8YipE+aaHjPVwp/BfxLLd7pNZnGxy8
+        DTcUIDEm06bIEaZIKK9J3Y5V8VQHXhsi0go5ugE=
+X-Google-Smtp-Source: AGHT+IFv586Np5Rd7lqzI1XUDf/FEYjv1lh76oFG0h5hLyaZBU1EhWP4hFvHwN+h+3L5YBKoqfA0cTmnUeRlL42qKko=
+X-Received: by 2002:a5e:a808:0:b0:794:eb37:b0da with SMTP id
+ c8-20020a5ea808000000b00794eb37b0damr5660549ioa.2.1694928447734; Sat, 16 Sep
+ 2023 22:27:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230913184957.230076-1-irogers@google.com>
-In-Reply-To: <20230913184957.230076-1-irogers@google.com>
+References: <20230914022425.1489035-1-irogers@google.com>
+In-Reply-To: <20230914022425.1489035-1-irogers@google.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Sat, 16 Sep 2023 22:25:55 -0700
-Message-ID: <CAM9d7cg7oETR=ecaqrag13abpOmBKOextAEw=kRA_gZqVMGGDg@mail.gmail.com>
-Subject: Re: [PATCH v1] perf trace: Avoid compile error wrt redefining bool
+Date:   Sat, 16 Sep 2023 22:27:15 -0700
+Message-ID: <CAM9d7ci_jHVEU2PStMHudOYGnx9aLdhYT=_5vCJiyjc_YyrtVw@mail.gmail.com>
+Subject: Re: [PATCH v1] perf pmu: Ensure all alias variables are initialized
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -51,30 +51,42 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+        Kan Liang <kan.liang@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 13, 2023 at 11:50 AM Ian Rogers <irogers@google.com> wrote:
+On Wed, Sep 13, 2023 at 7:24 PM Ian Rogers <irogers@google.com> wrote:
 >
-> Make part of an existing TODO conditional to avoid the following build
-> error:
+> Fix an error detected by memory sanitizer:
 > ```
-> tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c:26:14: error: cannot combine with previous 'char' declaration specifier
->    26 | typedef char bool;
->       |              ^
-> include/stdbool.h:20:14: note: expanded from macro 'bool'
->    20 | #define bool _Bool
->       |              ^
-> tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c:26:1: error: typedef requires a name [-Werror,-Wmissing-declarations]
->    26 | typedef char bool;
->       | ^~~~~~~~~~~~~~~~~
-> 2 errors generated.
+> ==4033==WARNING: MemorySanitizer: use-of-uninitialized-value
+>     #0 0x55fb0fbedfc7 in read_alias_info tools/perf/util/pmu.c:457:6
+>     #1 0x55fb0fbea339 in check_info_data tools/perf/util/pmu.c:1434:2
+>     #2 0x55fb0fbea339 in perf_pmu__check_alias tools/perf/util/pmu.c:1504:9
+>     #3 0x55fb0fbdca85 in parse_events_add_pmu tools/perf/util/parse-events.c:1429:32
+>     #4 0x55fb0f965230 in parse_events_parse tools/perf/util/parse-events.y:299:6
+>     #5 0x55fb0fbdf6b2 in parse_events__scanner tools/perf/util/parse-events.c:1822:8
+>     #6 0x55fb0fbdf8c1 in __parse_events tools/perf/util/parse-events.c:2094:8
+>     #7 0x55fb0fa8ffa9 in parse_events tools/perf/util/parse-events.h:41:9
+>     #8 0x55fb0fa8ffa9 in test_event tools/perf/tests/parse-events.c:2393:8
+>     #9 0x55fb0fa8f458 in test__pmu_events tools/perf/tests/parse-events.c:2551:15
+>     #10 0x55fb0fa6d93f in run_test tools/perf/tests/builtin-test.c:242:9
+>     #11 0x55fb0fa6d93f in test_and_print tools/perf/tests/builtin-test.c:271:8
+>     #12 0x55fb0fa6d082 in __cmd_test tools/perf/tests/builtin-test.c:442:5
+>     #13 0x55fb0fa6d082 in cmd_test tools/perf/tests/builtin-test.c:564:9
+>     #14 0x55fb0f942720 in run_builtin tools/perf/perf.c:322:11
+>     #15 0x55fb0f942486 in handle_internal_command tools/perf/perf.c:375:8
+>     #16 0x55fb0f941dab in run_argv tools/perf/perf.c:419:2
+>     #17 0x55fb0f941dab in main tools/perf/perf.c:535:3
 > ```
+>
+> Fixes: 7b723dbb96e8 ("perf pmu: Be lazy about loading event info files
+> from sysfs")
 >
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
