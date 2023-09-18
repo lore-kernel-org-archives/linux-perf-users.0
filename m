@@ -2,144 +2,234 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E68C46CA1
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Sep 2023 08:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01294CD37B0
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Sep 2023 08:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240724AbjIRIW1 (ORCPT
+        id S240724AbjIRI3Z (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Sep 2023 04:22:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40936 "EHLO
+        Mon, 18 Sep 2023 04:29:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240644AbjIRIPx (ORCPT
+        with ESMTP id S240687AbjIRI3G (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Sep 2023 04:15:53 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ACA019A6;
-        Mon, 18 Sep 2023 01:14:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695024885; x=1726560885;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=UPb2e7T2NdnaKHr1MlH9VTFl3BDKTI9rhpg34SQOZRg=;
-  b=WwDwa4/yOZHBHHlerMW2Q/H/F9sjonDuV7aPlTR3xdLG+wTA9OcVqvdO
-   BBAwjTbwBssPwmYo8f0gSD+xzyo1dVsbK8X2tUD1mxgtRaLyx34atHMxh
-   knlvjIFl2UBKd7hJDy3d+SeY7Lb5fiBuBzJVijOv7OtE8NLTg0Yq6AYY/
-   GyqYvVujoeLd8ZZXtMyv4NnIhDQ2yoGnVuzbk7UyDWrg+zPLNMaIh6YPf
-   1cmaiqBah04V9VTY9lqOkH/Ttu+9KUgU3tAmBjmnSAd8mdgXmteL7zFFW
-   /gw5RUH3up5gsWvVRFz1mEUJFaRdo1JyUYvZRaNsgbGQTP6YslTmYJpUl
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10836"; a="359848728"
-X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
-   d="scan'208";a="359848728"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 01:14:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10836"; a="869472377"
-X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
-   d="scan'208";a="869472377"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.218.42])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 01:14:39 -0700
-Message-ID: <08995efc-d5af-6ba6-831b-1a483daabef4@intel.com>
-Date:   Mon, 18 Sep 2023 11:14:35 +0300
+        Mon, 18 Sep 2023 04:29:06 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F32AA99;
+        Mon, 18 Sep 2023 01:28:59 -0700 (PDT)
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38I86P6P025592;
+        Mon, 18 Sep 2023 08:28:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=UL1+8gmPxouyw6k8cAgdpAHbmNWJPGN1+BZ4gjPiZpA=;
+ b=sYLMg5JHs5EFXgqekGUxybwRBYFQPi8Fh0sR/wAcGKzqmSjmAP9rKyyrIoZlSd/8asX5
+ U0nHCwi8Z9oSoOPQVLoOWyuIG1gpqMa6QF8j83SuDHvxgWJeqcOZcenyd6VAMXwMI7rk
+ 8pD3zSA+lSAHzB3Di0ZT2ZYAPTd/rwFJtUuGH1E901ju6D+WZ7NPe/dPeYlleB581X3p
+ bPQdqWjpuGbgG+mA/z1qrKcCgMWf3PuPhWPPBOwj92C8VMBQ6DTQbTUTQcXjAZRpQ8Ku
+ 8eHl3vQVBYWg7YrEAslSeecLAPfKT0R81RWdS0jD3ePDEcseDgPT9E1tJ/6KL6srtCHy ig== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t6h6dj4s5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 Sep 2023 08:28:51 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38I86ct1027355;
+        Mon, 18 Sep 2023 08:28:50 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t6h6dj4rm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 Sep 2023 08:28:50 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38I6vJIM016841;
+        Mon, 18 Sep 2023 08:28:49 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3t5sd1ggjw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 Sep 2023 08:28:49 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38I8SkWK28508768
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Sep 2023 08:28:46 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 753D020049;
+        Mon, 18 Sep 2023 08:28:46 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F348520040;
+        Mon, 18 Sep 2023 08:28:45 +0000 (GMT)
+Received: from [9.171.25.42] (unknown [9.171.25.42])
+        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Mon, 18 Sep 2023 08:28:45 +0000 (GMT)
+Message-ID: <521bbe73-ba4d-7f2f-fce5-3799ef78e603@linux.ibm.com>
+Date:   Mon, 18 Sep 2023 10:28:45 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.15.1
-Subject: Re: [PATCH v1] perf evlist: Avoid frequency mode for the dummy event
+ Thunderbird/102.14.0
+Subject: Re: [PATCH] perf jevent: fix core dump on software events on s390
+To:     Namhyung Kim <namhyung@gmail.com>, Ian Rogers <irogers@google.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, sumanthk@linux.ibm.com, dengler@linux.ibm.com,
+        svens@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com
+References: <20230913125157.2790375-1-tmricht@linux.ibm.com>
+ <CAP-5=fUiHMRPVYhbQv-YM+EMKyBF6TEopea=PPX2thbtdmhGsg@mail.gmail.com>
+ <CAM9d7cgbMZzJea_TJJ46AEhLentykmy8r6twC8bkkgXTNAMqgw@mail.gmail.com>
 Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Stephane Eranian <eranian@google.com>
-References: <20230916040915.1075620-1-irogers@google.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230916040915.1075620-1-irogers@google.com>
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <CAM9d7cgbMZzJea_TJJ46AEhLentykmy8r6twC8bkkgXTNAMqgw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: B5dGEdPcC1PCOts2svazHlwe83enfxYZ
+X-Proofpoint-GUID: 7g4Q99XSlOHi5VLNVqxxtzlTAt6wSrsV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-18_01,2023-09-15_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ bulkscore=0 priorityscore=1501 mlxlogscore=999 phishscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 suspectscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
+ definitions=main-2309180070
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 16/09/23 07:09, Ian Rogers wrote:
-> Dummy events are created with an attribute where the period and freq
-> are zero. evsel__config will then see the uninitialized values and
-> initialize them in evsel__default_freq_period. As fequency mode is
-> used by default the dummy event would be set to use frequency
-> mode. However, this has no effect on the dummy event but does cause
-> unnecessary timers/interrupts. Avoid this overhead by setting the
-> period to 1 for dummy events.
+On 9/16/23 01:40, Namhyung Kim wrote:
+> Hello,
 > 
-> evlist__add_aux_dummy calls evlist__add_dummy then sets freq=0 and
-> period=1. This isn't necessary after this change and so the setting is
-> removed.
+> On Thu, Sep 14, 2023 at 6:14 AM Ian Rogers <irogers@google.com> wrote:
+>>
+>> On Wed, Sep 13, 2023 at 5:52 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+>>>
+>>> Running commands such as
+>>>  # ./perf stat -e cs -- true
+>>>  Segmentation fault (core dumped)
+>>>  # ./perf stat -e cpu-clock-- true
+>>>  Segmentation fault (core dumped)
+>>>  #
+>>>
+>>> dump core. This should not happen as these events are defined
+>>> even when no hardware PMU is available.
+>>> Debugging this reveals this call chain:
+>>>
+>>>   perf_pmus__find_by_type(type=1)
+>>>   +--> pmu_read_sysfs(core_only=false)
+>>>        +--> perf_pmu__find2(dirfd=3, name=0x152a113 "software")
+>>>             +--> perf_pmu__lookup(pmus=0x14f0568 <other_pmus>, dirfd=3,
+>>>                                   lookup_name=0x152a113 "software")
+>>>                  +--> perf_pmu__find_events_table (pmu=0x1532130)
+>>>
+>>> Now the pmu is "software" and it tries to find a proper table
+>>> generated by the pmu-event generation process for s390:
+>>>
+>>>  # cd pmu-events/
+>>>  # ./jevents.py  s390 all /root/linux/tools/perf/pmu-events/arch |\
+>>>         grep -E '^const struct pmu_table_entry'
+>>>  const struct pmu_table_entry pmu_events__cf_z10[] = {
+>>>  const struct pmu_table_entry pmu_events__cf_z13[] = {
+>>>  const struct pmu_table_entry pmu_metrics__cf_z13[] = {
+>>>  const struct pmu_table_entry pmu_events__cf_z14[] = {
+>>>  const struct pmu_table_entry pmu_metrics__cf_z14[] = {
+>>>  const struct pmu_table_entry pmu_events__cf_z15[] = {
+>>>  const struct pmu_table_entry pmu_metrics__cf_z15[] = {
+>>>  const struct pmu_table_entry pmu_events__cf_z16[] = {
+>>>  const struct pmu_table_entry pmu_metrics__cf_z16[] = {
+>>>  const struct pmu_table_entry pmu_events__cf_z196[] = {
+>>>  const struct pmu_table_entry pmu_events__cf_zec12[] = {
+>>>  const struct pmu_table_entry pmu_metrics__cf_zec12[] = {
+>>>  const struct pmu_table_entry pmu_events__test_soc_cpu[] = {
+>>>  const struct pmu_table_entry pmu_metrics__test_soc_cpu[] = {
+>>>  const struct pmu_table_entry pmu_events__test_soc_sys[] = {
+>>>  #
+>>>
+>>> However event "software" is not listed, as can be seen in the
+>>> generated const struct pmu_events_map pmu_events_map[].
+>>> So in function perf_pmu__find_events_table(), the variable
+>>> table is initialized to NULL, but never set to a proper
+>>> value. The function scans all generated &pmu_events_map[]
+>>> tables, but no table matches, because the tables are
+>>> s390 CPU Measurement unit specific:
+>>>
+>>>   i = 0;
+>>>   for (;;) {
+>>>       const struct pmu_events_map *map = &pmu_events_map[i++];
+>>>       if (!map->arch)
+>>>            break;
+>>>
+>>>       --> the maps are there because the build generated them
+>>>
+>>>            if (!strcmp_cpuid_str(map->cpuid, cpuid)) {
+>>>                 table = &map->event_table;
+>>>                 break;
+>>>            }
+>>>       --> Since no matching CPU string the table var remains 0x0
+>>>       }
+>>>       free(cpuid);
+>>>       if (!pmu)
+>>>            return table;
+>>>
+>>>       --> The pmu is "software" so it exists and no return
+>>>
+>>>       --> and here perf dies because table is 0x0
+>>>       for (i = 0; i < table->num_pmus; i++) {
+>>>               ...
+>>>       }
+>>>       return NULL;
+>>>
+>>> Fix this and do not access the table variable. Instead return 0x0
+>>> which is the same return code when the for-loop was not successful.
+>>>
+>>> Output after:
+>>>  # ./perf stat -e cs -- true
+>>>
+>>>  Performance counter stats for 'true':
+>>>
+>>>                  0      cs
+>>>
+>>>        0.000853105 seconds time elapsed
+>>>
+>>>        0.000061000 seconds user
+>>>        0.000827000 seconds sys
+>>>
+>>>  # ./perf stat -e cpu-clock -- true
+>>>
+>>>  Performance counter stats for 'true':
+>>>
+>>>               0.25 msec cpu-clock #    0.341 CPUs utilized
+>>>
+>>>        0.000728383 seconds time elapsed
+>>>
+>>>        0.000055000 seconds user
+>>>        0.000706000 seconds sys
+>>>
+>>>  # ./perf stat -e cycles -- true
+>>>
+>>>  Performance counter stats for 'true':
+>>>
+>>>    <not supported>      cycles
+>>>
+>>>        0.000767298 seconds time elapsed
+>>>
+>>>        0.000055000 seconds user
+>>>        0.000739000 seconds sys
+>>>
+>>>  #
+>>>
+>>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+>>
+>> Reviewed-by: Ian Rogers <irogers@google.com>
 > 
-> From Stephane:
+> I'll add this too, ok?
 > 
-> The dummy event is not counting anything. It is used to collect mmap
-> records and avoid a race condition during the synthesize mmap phase of
-> perf record. As such, it should not cause any overhead during active
-> profiling. Yet, it did. Because of a bug the dummy event was
-> programmed as a sampling event in frequency mode. Events in that mode
-> incur more kernel overheads because on timer tick, the kernel has to
-> look at the number of samples for each event and potentially adjust
-> the sampling period to achieve the desired frequency. The dummy event
-> was therefore adding a frequency event to task and ctx contexts we may
-> otherwise not have any, e.g., perf record -a -e
-> cpu/event=0x3c,period=10000000/. On each timer tick the
-> perf_adjust_freq_unthr_context() is invoked and if ctx->nr_freq is
-> non-zero, then the kernel will loop over ALL the events of the context
-> looking for frequency mode ones. In doing, so it locks the context,
-> and enable/disable the PMU of each hw event. If all the events of the
-> context are in period mode, the kernel will have to traverse the list for
-> nothing incurring overhead. The overhead is multiplied by a very large
-> factor when this happens in a guest kernel. There is no need for the
-> dummy event to be in frequency mode, it does not count anything and
-> therefore should not cause extra overhead for no reason.
+> Fixes: 7c52f10c0d4d8 ("perf pmu: Cache JSON events table")
 > 
-> Fixes: 5bae0250237f ("perf evlist: Introduce perf_evlist__new_dummy constructor")
-> Reported-by: Stephane Eranian <eranian@google.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/evlist.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index 25c3ebe2c2f5..e36da58522ef 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -251,6 +251,9 @@ static struct evsel *evlist__dummy_event(struct evlist *evlist)
->  		.type	= PERF_TYPE_SOFTWARE,
->  		.config = PERF_COUNT_SW_DUMMY,
->  		.size	= sizeof(attr), /* to capture ABI version */
-> +		/* Avoid frequency mode for dummy events to avoid associated timers. */
-> +		.freq = 0,
-> +		.sample_period = 1,
->  	};
->  
->  	return evsel__new_idx(&attr, evlist->core.nr_entries);
-> @@ -277,8 +280,6 @@ struct evsel *evlist__add_aux_dummy(struct evlist *evlist, bool system_wide)
->  	evsel->core.attr.exclude_kernel = 1;
->  	evsel->core.attr.exclude_guest = 1;
->  	evsel->core.attr.exclude_hv = 1;
-> -	evsel->core.attr.freq = 0;
-> -	evsel->core.attr.sample_period = 1;
->  	evsel->core.system_wide = system_wide;
->  	evsel->no_aux_samples = true;
->  	evsel->name = strdup("dummy:u");
+> Thanks,
+> Namhyung
 
-Note that evsel__config() will put it back to freq if -F is used.
-
-Nevertheless:
-
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Yep fine with me.
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: David Faller
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
 
