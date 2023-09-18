@@ -2,89 +2,102 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAADCD13CF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Sep 2023 03:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A242DC46CA1
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Sep 2023 03:40:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237014AbjIRDFY (ORCPT
+        id S233858AbjIRDiH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 17 Sep 2023 23:05:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56208 "EHLO
+        Sun, 17 Sep 2023 23:38:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238169AbjIRDFD (ORCPT
+        with ESMTP id S238352AbjIRDhw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 17 Sep 2023 23:05:03 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49F10127;
-        Sun, 17 Sep 2023 20:04:56 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RpqKf1S4cztSWF;
-        Mon, 18 Sep 2023 11:00:22 +0800 (CST)
-Received: from ubuntu2204.huawei.com (10.67.174.22) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Mon, 18 Sep 2023 11:04:33 +0800
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        Sun, 17 Sep 2023 23:37:52 -0400
+X-Greylist: delayed 66 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 17 Sep 2023 20:37:46 PDT
+Received: from unicom145.biz-email.net (unicom145.biz-email.net [210.51.26.145])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 129B711C;
+        Sun, 17 Sep 2023 20:37:45 -0700 (PDT)
+Received: from unicom145.biz-email.net
+        by unicom145.biz-email.net ((D)) with ASMTP (SSL) id NCC00132;
+        Mon, 18 Sep 2023 11:36:32 +0800
+Received: from localhost.localdomain.com (10.73.42.143) by
+ jtjnmail201604.home.langchao.com (10.100.2.4) with Microsoft SMTP Server id
+ 15.1.2507.32; Mon, 18 Sep 2023 11:36:31 +0800
+From:   Charles Han <hanchunchao@inspur.com>
+To:     <john.g.garry@oracle.com>, <james.clark@arm.com>,
+        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
+        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <yangjihong1@huawei.com>
-Subject: [PATCH] perf jevents: Fix segfault in perf_pmu__find_events_table
-Date:   Mon, 18 Sep 2023 03:03:04 +0000
-Message-ID: <20230918030304.24832-1-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.34.1
+        <jolsa@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <nick.forrington@arm.com>,
+        <ilkka@os.amperecomputing.com>
+CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Charles Han <hanchunchao@inspur.com>
+Subject: [PATCH] perf vendors events: Remove repeated word in comments
+Date:   Mon, 18 Sep 2023 11:36:23 +0800
+Message-ID: <20230918033623.159213-1-hanchunchao@inspur.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.22]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+X-Originating-IP: [10.73.42.143]
+tUid:   202391811363267176553b2cf039225ba15baa6f02be2
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Before caching the JSON events table, perf_pmu__find_events_table() need
-to check whether table is empty.
+Remove the repeated word "of" in comments.
 
-For example, AuthenticAMD-15-6B-1 is used. The matching events table cannot
-be found. As a result, a null pointer is accessed when caching JSON events
-table, causing segfault.
-
-Before:
-  # perf record -vv true
-  DEBUGINFOD_URLS=
-  Using CPUID AuthenticAMD-15-6B-1
-  Segmentation fault (core dumped)
-
-After:
-  # perf record -vv true
-  DEBUGINFOD_URLS=
-  Using CPUID AuthenticAMD-15-6B-1
-  <SNIP>
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.005 MB perf.data ]
-
-Fixes: 7c52f10c0d4d ("perf pmu: Cache JSON events table")
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+Signed-off-by: Charles Han <hanchunchao@inspur.com>
 ---
- tools/perf/pmu-events/jevents.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/pmu-events/arch/arm64/mapfile.csv   | 2 +-
+ tools/perf/pmu-events/arch/nds32/mapfile.csv   | 2 +-
+ tools/perf/pmu-events/arch/powerpc/mapfile.csv | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index a7e88332276d..72ba4a9239c6 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -991,7 +991,7 @@ const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
-                 }
-         }
-         free(cpuid);
--        if (!pmu)
-+        if (!pmu || !table)
-                 return table;
- 
-         for (i = 0; i < table->num_pmus; i++) {
+diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+index 32674ddd2b63..5b58db5032c1 100644
+--- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
++++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+@@ -4,7 +4,7 @@
+ # where
+ #	MIDR	Processor version
+ #		Variant[23:20] and Revision [3:0] should be zero.
+-#	Version could be used to track version of of JSON file
++#	Version could be used to track version of JSON file
+ #		but currently unused.
+ #	JSON/file/pathname is the path to JSON file, relative
+ #		to tools/perf/pmu-events/arch/arm64/.
+diff --git a/tools/perf/pmu-events/arch/nds32/mapfile.csv b/tools/perf/pmu-events/arch/nds32/mapfile.csv
+index efb395f26883..c76e5fbdac23 100644
+--- a/tools/perf/pmu-events/arch/nds32/mapfile.csv
++++ b/tools/perf/pmu-events/arch/nds32/mapfile.csv
+@@ -4,7 +4,7 @@
+ # where
+ #	MIDR	Processor version
+ #		Variant[23:20] and Revision [3:0] should be zero.
+-#	Version could be used to track version of of JSON file
++#	Version could be used to track version of JSON file
+ #		but currently unused.
+ #	JSON/file/pathname is the path to JSON file, relative
+ #		to tools/perf/pmu-events/arch/arm64/.
+diff --git a/tools/perf/pmu-events/arch/powerpc/mapfile.csv b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
+index 4abdfc3f9692..a534ff6db14b 100644
+--- a/tools/perf/pmu-events/arch/powerpc/mapfile.csv
++++ b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
+@@ -3,7 +3,7 @@
+ #
+ # where
+ # 	PVR	Processor version
+-# 	Version could be used to track version of of JSON file
++# 	Version could be used to track version of JSON file
+ # 		but currently unused.
+ # 	JSON/file/pathname is the path to JSON file, relative
+ # 		to tools/perf/pmu-events/arch/powerpc/.
 -- 
-2.34.1
+2.31.1
 
