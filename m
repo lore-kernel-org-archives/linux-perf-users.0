@@ -2,160 +2,89 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E2ACD37B4
-	for <linux-perf-users@archiver.kernel.org>; Sun, 17 Sep 2023 09:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAADCD13CF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Sep 2023 03:05:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233103AbjIQJWh (ORCPT
+        id S237014AbjIRDFY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 17 Sep 2023 05:22:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58824 "EHLO
+        Sun, 17 Sep 2023 23:05:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235181AbjIQJWJ (ORCPT
+        with ESMTP id S238169AbjIRDFD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 17 Sep 2023 05:22:09 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC76C188
-        for <linux-perf-users@vger.kernel.org>; Sun, 17 Sep 2023 02:22:03 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 235F3C433C7;
-        Sun, 17 Sep 2023 09:22:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694942523;
-        bh=/j4DWIsQgtSFEy5JH+6kgx9JVQPPEwKacezaH14fxjw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J+DAL0AY2EA5aqVORmPxjz7DYGAZACn/9pSe/lHG2uQBukVs5eVTUxe/3ZLHfJKFX
-         15ioFzCDgghCVUx3CS3VowHiRqEs2NODXiN+8o22mzEYT41/19zAXNuhoiNGQwNV1T
-         FtVfai2PDf+tnT+Rer9TFX7TMRaI4UnVl/XrhDMZUeniABbWzFJr39CGFAGy/GtYLs
-         nNSi0tl63I56huAawdabSzM4KL7bw8wXl9pJSXIvhXtcN6pWPjRYwn/ZF7/Ugr6BBt
-         zOW8Qj1iM+pow6K8OmXBkAd8LHCeZLGpUwWQZN4/jftj5zGpmbj3TDXnVKvy4mG3n5
-         TKZzruGch+Hbw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AA31C403F4; Sun, 17 Sep 2023 11:22:00 +0200 (CEST)
-Date:   Sun, 17 Sep 2023 11:22:00 +0200
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Manu Bretelle <chantra@meta.com>
-Cc:     Mykola Lysenko <mykolal@meta.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        Daniel =?iso-8859-1?Q?M=FCller?= <deso@posteo.net>
-Subject: Re: [BUG] perf test: Regression because of d6e6286a12e7
-Message-ID: <ZQbFOHecUI+baoz8@kernel.org>
-References: <ab865e6d-06c5-078e-e404-7f90686db50d@amd.com>
- <CAEf4BzZK=zm9PkUwzJRgeQ=KXjKOK9TENUMTz+_FmU6kPjab7Q@mail.gmail.com>
- <78044efc-98d7-cd49-d2b5-4c2abb16d6c9@amd.com>
- <CAEf4BzZCrDftNdNicuMS7NoF+hNiQEQwsH_-RMBh3Xxg+AQwiw@mail.gmail.com>
- <146e00be-98c8-873d-081f-252647b71b12@amd.com>
- <ZK7JMjN9LXTFEOvT@kernel.org>
- <CAADnVQLpfmJ7yg-QtwfOFATJb=JcSDDxo11JG32KOQ6K=sNp4Q@mail.gmail.com>
- <ZLBlUXDxRqzNRup3@kernel.org>
- <87FAA9FD-C64E-4199-9F77-8671FF19EEE1@fb.com>
- <SA1PR15MB46099ABDC08009096019B5B4CBF7A@SA1PR15MB4609.namprd15.prod.outlook.com>
+        Sun, 17 Sep 2023 23:05:03 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49F10127;
+        Sun, 17 Sep 2023 20:04:56 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RpqKf1S4cztSWF;
+        Mon, 18 Sep 2023 11:00:22 +0800 (CST)
+Received: from ubuntu2204.huawei.com (10.67.174.22) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Mon, 18 Sep 2023 11:04:33 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH] perf jevents: Fix segfault in perf_pmu__find_events_table
+Date:   Mon, 18 Sep 2023 03:03:04 +0000
+Message-ID: <20230918030304.24832-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <SA1PR15MB46099ABDC08009096019B5B4CBF7A@SA1PR15MB4609.namprd15.prod.outlook.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.22]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Sep 14, 2023 at 09:43:41PM +0000, Manu Bretelle escreveu:
-> Hi Arnaldo,
+Before caching the JSON events table, perf_pmu__find_events_table() need
+to check whether table is empty.
+
+For example, AuthenticAMD-15-6B-1 is used. The matching events table cannot
+be found. As a result, a null pointer is accessed when caching JSON events
+table, causing segfault.
+
+Before:
+  # perf record -vv true
+  DEBUGINFOD_URLS=
+  Using CPUID AuthenticAMD-15-6B-1
+  Segmentation fault (core dumped)
+
+After:
+  # perf record -vv true
+  DEBUGINFOD_URLS=
+  Using CPUID AuthenticAMD-15-6B-1
+  <SNIP>
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.005 MB perf.data ]
+
+Fixes: 7c52f10c0d4d ("perf pmu: Cache JSON events table")
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/perf/pmu-events/jevents.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index a7e88332276d..72ba4a9239c6 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -991,7 +991,7 @@ const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
+                 }
+         }
+         free(cpuid);
+-        if (!pmu)
++        if (!pmu || !table)
+                 return table;
  
-> Checking back here to see if there is anything you need help in order
-> to add perf support to BPF CI. Were you able to make progress and are
-> hitting some issues along the way?
-
-I'm travelling now, but I saw that Ian replied.
-
-No progress on my part, but I would start with a simple:
-
-Build perf from the same kernel source tree used in the
-current CI tests, then run 'perf test'. It would test more than just the
-BPF part, but would be a good start.
-
-A second step would be just disabling the tests that are failing and
-that are not BPF specific, using the --skip arg to 'perf test':
-
-[root@quaco test]# perf test -h skip
-
- Usage: perf test [<options>] [{list <test-name-fragment>|[<test-name-fragments>|<test-numbers>]}]
-
-    -s, --skip <tests>    tests to skip
-
-[root@quaco test]#
-
-So something like:
-
------------------
-make -C tools/perf
-perf test --skip list,of,tests,failing,that,are,not,BPF,specific
------------------
-
-The perf build dependencies should be similar to the ones needed to
-build libbpf or close to it, so the above would be a great first stab at
-it.
-
-- Arnaldo
- 
-> 
-> Thanks,
-> 
-> Manu
-> 
-> From: Mykola Lysenko <mykolal@meta.com>
-> Date: Friday, July 14, 2023 at 11:15 AM
-> To: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Mykola Lysenko <mykolal@meta.com>, Alexei Starovoitov <alexei.starovoitov@gmail.com>, Ravi Bangoria <ravi.bangoria@amd.com>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, linux-perf-users <linux-perf-users@vger.kernel.org>, bpf <bpf@vger.kernel.org>, Manu Bretelle <chantra@meta.com>, Daniel Müller <deso@posteo.net>, Mykola Lysenko <mykolal@meta.com>
-> Subject: Re: [BUG] perf test: Regression because of d6e6286a12e7
-> Hey Arnaldo,
-> 
-> > On Jul 13, 2023, at 1:57 PM, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >
-> > !-------------------------------------------------------------------|
-> >  This Message Is From an External Sender
-> >
-> > |-------------------------------------------------------------------!
-> >
-> > Em Wed, Jul 12, 2023 at 11:20:27AM -0700, Alexei Starovoitov escreveu:
-> >> On Wed, Jul 12, 2023 at 8:39 AM Arnaldo Carvalho de Melo
-> >> <acme@kernel.org> wrote:
-> >>>
-> >>> Right, perhaps the libbpf CI could try building perf, preferably with
-> >>> BUILD_BPF_SKEL=1, to enable these tools:
-> >>
-> >>
-> >> That would be great.
-> >> perf experts probably should do pull-req to bpf CI to enable that.
-> >> See slides:
-> >> http://vger.kernel.org/bpfconf2022_material/lsfmmbpf2022-bpf-ci.pdf
-> >>
-> >> "How to contribute?
-> >> Depending on what part of CI you are changing, you can create a pull request to
-> >> https://github.com/kernel-patches/vmtest/
-> >> https://github.com/libbpf/ci
-> >> "
-> >
-> > Sure, I still recall Quentin's talk about CI, etc in Dublin, will come
-> > up with something and submit.
-> 
-> Thanks for looking at this!
-> 
-> If you will have any questions on how CI works, do not hesitate to join BPF office hours and we will do our best to answer.
-> 
-> Mykola
-> 
-> >
-> > - Arnaldo
-> 
-
+         for (i = 0; i < table->num_pmus; i++) {
 -- 
+2.34.1
 
-- Arnaldo
