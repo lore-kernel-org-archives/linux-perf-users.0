@@ -2,24 +2,24 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E457CD3427
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDF3CD342B
 	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Sep 2023 11:53:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241781AbjIRLxL (ORCPT
+        id S241790AbjIRLxO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Sep 2023 07:53:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53276 "EHLO
+        Mon, 18 Sep 2023 07:53:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241760AbjIRLw7 (ORCPT
+        with ESMTP id S241769AbjIRLxD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Sep 2023 07:52:59 -0400
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5151AE7;
-        Mon, 18 Sep 2023 04:52:53 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R781e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VsMQsku_1695037968;
-Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VsMQsku_1695037968)
+        Mon, 18 Sep 2023 07:53:03 -0400
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67AE7E7;
+        Mon, 18 Sep 2023 04:52:57 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VsMQsmE_1695037971;
+Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VsMQsmE_1695037971)
           by smtp.aliyun-inc.com;
-          Mon, 18 Sep 2023 19:52:48 +0800
+          Mon, 18 Sep 2023 19:52:51 +0800
 From:   Jing Zhang <renyu.zj@linux.alibaba.com>
 To:     John Garry <john.g.garry@oracle.com>,
         Ian Rogers <irogers@google.com>
@@ -39,9 +39,9 @@ Cc:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
         Zhuo Song <zhuo.song@linux.alibaba.com>,
         Jing Zhang <renyu.zj@linux.alibaba.com>,
         Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: [PATCH v9 4/7] perf test: Make matching_pmu effective
-Date:   Mon, 18 Sep 2023 19:52:32 +0800
-Message-Id: <1695037955-107983-5-git-send-email-renyu.zj@linux.alibaba.com>
+Subject: [PATCH v9 7/7] perf vendor events: Add JSON metrics for Arm CMN
+Date:   Mon, 18 Sep 2023 19:52:35 +0800
+Message-Id: <1695037955-107983-8-git-send-email-renyu.zj@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1695037955-107983-1-git-send-email-renyu.zj@linux.alibaba.com>
 References: <1695037955-107983-1-git-send-email-renyu.zj@linux.alibaba.com>
@@ -49,51 +49,96 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The perf_pmu_test_event.matching_pmu didn't work. No matter what its
-value is, it does not affect the test results. So let matching_pmu be
-used for matching perf_pmu_test_pmu.pmu.name.
+Add JSON metrics for Arm CMN. Currently just add part of CMN PMU
+metrics which are general and compatible for any SoC with CMN-ANY.
 
 Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
 Reviewed-by: John Garry <john.g.garry@oracle.com>
 ---
- tools/perf/tests/pmu-events.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ .../pmu-events/arch/arm64/arm/cmn/sys/metric.json  | 74 ++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json
 
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index f5321fb..0cf572f 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -245,7 +245,7 @@ struct perf_pmu_test_pmu {
- 	},
- 	.alias_str = "event=0x2b",
- 	.alias_long_desc = "ddr write-cycles event",
--	.matching_pmu = "uncore_sys_ddr_pmu",
-+	.matching_pmu = "uncore_sys_ddr_pmu0",
- };
- 
- static const struct perf_pmu_test_event sys_ccn_pmu_read_cycles = {
-@@ -259,7 +259,7 @@ struct perf_pmu_test_pmu {
- 	},
- 	.alias_str = "config=0x2c",
- 	.alias_long_desc = "ccn read-cycles event",
--	.matching_pmu = "uncore_sys_ccn_pmu",
-+	.matching_pmu = "uncore_sys_ccn_pmu4",
- };
- 
- static const struct perf_pmu_test_event *sys_events[] = {
-@@ -615,6 +615,12 @@ static int __test_uncore_pmu_event_aliases(struct perf_pmu_test_pmu *test_pmu)
- 			.count = &matched_count,
- 		};
- 
-+		if (strcmp(pmu_name, test_event.matching_pmu)) {
-+			pr_debug("testing aliases uncore PMU %s: mismatched matching_pmu, %s vs %s\n",
-+					pmu_name, test_event.matching_pmu, pmu_name);
-+			return -1;
-+		}
-+
- 		err = perf_pmu__find_event(pmu, event->name, &args,
- 					   test_core_pmu_event_aliases_cb);
- 		if (err) {
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json
+new file mode 100644
+index 0000000..0e30026
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json
+@@ -0,0 +1,74 @@
++[
++	{
++		"MetricName": "slc_miss_rate",
++		"BriefDescription": "The system level cache miss rate.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "hnf_cache_miss / hnf_slc_sf_cache_access",
++		"ScaleUnit": "100%",
++		"Unit": "arm_cmn",
++		"Compat": "^(434|436|43c|43a)"
++	},
++	{
++		"MetricName": "hnf_message_retry_rate",
++		"BriefDescription": "HN-F message retry rate indicates whether a lack of credits is causing the bottlenecks.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "hnf_pocq_retry / hnf_pocq_reqs_recvd",
++		"ScaleUnit": "100%",
++		"Unit": "arm_cmn",
++		"Compat": "^(434|436|43c|43a)"
++	},
++	{
++		"MetricName": "sf_hit_rate",
++		"BriefDescription": "Snoop filter hit rate can be used to measure the snoop filter efficiency.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "hnf_sf_hit / hnf_slc_sf_cache_access",
++		"ScaleUnit": "100%",
++		"Unit": "arm_cmn",
++		"Compat": "^(434|436|43c|43a)"
++	},
++	{
++		"MetricName": "mc_message_retry_rate",
++		"BriefDescription": "The memory controller request retries rate indicates whether the memory controller is the bottleneck.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "hnf_mc_retries / hnf_mc_reqs",
++		"ScaleUnit": "100%",
++		"Unit": "arm_cmn",
++		"Compat": "^(434|436|43c|43a)"
++	},
++	{
++		"MetricName": "rni_actual_read_bandwidth.all",
++		"BriefDescription": "This event measure the actual bandwidth that RN-I bridge sends to the interconnect.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "rnid_rxdat_flits * 32 / 1e6 / duration_time",
++		"ScaleUnit": "1MB/s",
++		"Unit": "arm_cmn",
++		"Compat": "^(434|436|43c|43a)"
++	},
++	{
++		"MetricName": "rni_actual_write_bandwidth.all",
++		"BriefDescription": "This event measures the actual write bandwidth at RN-I bridges.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "rnid_txdat_flits * 32 / 1e6 / duration_time",
++		"ScaleUnit": "1MB/s",
++		"Unit": "arm_cmn",
++		"Compat": "^(434|436|43c|43a)"
++	},
++	{
++		"MetricName": "rni_retry_rate",
++		"BriefDescription": "RN-I bridge retry rate indicates whether the memory controller is the bottleneck.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "rnid_txreq_flits_retried / rnid_txreq_flits_total",
++		"ScaleUnit": "100%",
++		"Unit": "arm_cmn",
++		"Compat": "^(434|436|43c|43a)"
++	},
++	{
++		"MetricName": "sbsx_actual_write_bandwidth.all",
++		"BriefDescription": "sbsx actual write bandwidth.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "sbsx_txdat_flitv * 32 / 1e6 / duration_time",
++		"ScaleUnit": "1MB/s",
++		"Unit": "arm_cmn",
++		"Compat": "^(434|436|43c|43a)"
++	}
++]
 -- 
 1.8.3.1
 
