@@ -2,139 +2,193 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B98CD37B0
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Sep 2023 16:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26242CD37B0
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Sep 2023 21:49:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229992AbjIRQc6 (ORCPT
+        id S229772AbjIRVtP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Sep 2023 12:32:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52718 "EHLO
+        Mon, 18 Sep 2023 17:49:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230190AbjIRQce (ORCPT
+        with ESMTP id S229478AbjIRVtO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Sep 2023 12:32:34 -0400
-Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A9C52723
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Sep 2023 09:17:52 -0700 (PDT)
-Received: by mail-oi1-x229.google.com with SMTP id 5614622812f47-3a9b41ffe12so3304371b6e.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Sep 2023 09:17:52 -0700 (PDT)
+        Mon, 18 Sep 2023 17:49:14 -0400
+Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ECC090
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Sep 2023 14:49:08 -0700 (PDT)
+Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-41761e9181eso49611cf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Sep 2023 14:49:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1695053871; x=1695658671; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2rBowV5k7lk2ieUe+gHPEvDWhBOkpthR4x1/BaQpS1E=;
-        b=ESaHyDhWEulbPo6HdTI8dpbxc78878phm1n7MTeZWOcJ1glIlDFB+xvREUCeBiF31u
-         ZYoc0Y3VCiJBk3x9AGNvfPKdY6FrH3bCOSEb3Dkrph1fbhg7zAcPSd4b98mHfLlmIU1W
-         2gVeR2PNdPG73CAz326pM8+sBULieLySXErI9f5dK7lNSKRQDHQdKNBbzoO8GIklD3UH
-         +uWySu2PI4Ybv6+cMxQY1GICAc+7ucSB98SwS7NY1Gqbv3dyv3hB4XVYdFQ19qZBiW+r
-         6bYXjKAzpFVHw2ZVlCKyVEp/WmOpzMI6ILOFjCSc2Io0PvFM+pGfYmSh4HQ+nSvLqAld
-         vitw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695053871; x=1695658671;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1695073747; x=1695678547; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2rBowV5k7lk2ieUe+gHPEvDWhBOkpthR4x1/BaQpS1E=;
-        b=b0KbP+GYM2IHiy8QVQzOSRmFd4nPbkfj6HA0QqWrwhpDAV85Q05Bx47FW1yG8PnnBb
-         9CauGcX+YjcJM+xLNt0IUyYFiZvfDGuKMyPp/HkxC8EMBE/JLiKT9mjCbQSg+OxIQops
-         7hY4bfHt+UvEwMHLz5c3xGNTgquZYh5kdruBUwvwuzZdYB8hRm3+KvT5npT68hn2tmnr
-         wBqmfT/yKvy/b21gAP78lj2CWSA3+jmPB4TxHdjSLtnD2qwzqBJ9xXC6LtFwHETODr/L
-         WsWUorsRpid+nAe40gsr8XPjOQqqmBlQunTc6rHptl0+9/pPAXEU1hqNmAj5QTfWaGJi
-         k1+g==
-X-Gm-Message-State: AOJu0Yyq3VZbfl6b0WnSghf1nkCPevdFxh1v6EyD1r9bEgw8Ew4/7/G3
-        MSxxEbTZEXeU14X5F3x27Eys2A==
-X-Google-Smtp-Source: AGHT+IEIIPi01LMzDkzmjlUBhug1qKaxU6nRjVuZ+XGbMUgkxm1Qfw0TLzJDUPnbwFfEuT1QKajmag==
-X-Received: by 2002:a05:6358:7207:b0:13f:411:c1a9 with SMTP id h7-20020a056358720700b0013f0411c1a9mr13490229rwa.17.1695053871422;
-        Mon, 18 Sep 2023 09:17:51 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-26-201.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.26.201])
-        by smtp.gmail.com with ESMTPSA id pz10-20020ad4550a000000b00656260e67afsm3340834qvb.115.2023.09.18.09.17.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Sep 2023 09:17:50 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1qiGwY-0005mj-Ao;
-        Mon, 18 Sep 2023 13:17:50 -0300
-Date:   Mon, 18 Sep 2023 13:17:50 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Sean Christopherson <seanjc@google.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Anup Patel <anup@brainfault.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Jason Herne <jjherne@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Anish Ghulati <aghulati@google.com>,
-        Venkatesh Srinivas <venkateshs@chromium.org>,
-        Andrew Thornton <andrewth@google.com>
-Subject: Re: [PATCH 06/26] KVM: Drop CONFIG_KVM_VFIO and just look at KVM+VFIO
-Message-ID: <20230918161750.GM13795@ziepe.ca>
-References: <20230916003118.2540661-1-seanjc@google.com>
- <20230916003118.2540661-7-seanjc@google.com>
- <20230918152946.GJ13795@ziepe.ca>
- <ZQhySMjmuyW2Czas@google.com>
+        bh=8zYf5Q5sA5+dYH8oLYRTVYeJXJa7Ls+rcJEO7yIFQy4=;
+        b=B+7bG9xW1mtzHgjQCWW/l61NuF2mD03xpg0Fbfx6axS6dy0hQPbmILky0ZFLqASSxN
+         vtZmaBFfNss3dSvP1ktvAQp71HUjl4Gm/yOMfql80BXkfADxxoZXBp+yAKclncT/zLD2
+         GkH93rqJpzGwd/Ii5uXvcT0+m5nEu9VOFdw/BUiJdvJM1oqR3HntdIEHNZ65C31zWO/a
+         uDHN5axvkW2mxzf37aZoL7ynJPB1J58SusPYHhMObib0KgJV2mFgudCwR4B5X5gn1kOF
+         KPNv/OKTsEYloZ1BaG2NTN0XdaFayHlzEIq9qzzRdkSRCoyl0klWWVqLX2+iCetIvguW
+         0X2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695073747; x=1695678547;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8zYf5Q5sA5+dYH8oLYRTVYeJXJa7Ls+rcJEO7yIFQy4=;
+        b=mJr2bnZhrKrpUACO7eCFgQqwUGoQwGmQCbD7x70vH0u9OS2ZT2kL8UCMMUBAj1Vq9D
+         Is7nUfIANrdmW4m1MA407FGrS5Jnv5GGiaRjkClSJcnVqKcidKXCL4be9EzVw/JyLecW
+         eqjvvkEF4DRJYHN0GYNPOKbj8iCpBrrzfRu3+U9wnR65hWpHi+O1dfolIP4HihO9yEs0
+         XMLGGmPQ1FEEi6T77bkfuQXGIbfj5iiyXP6XiTJTjPMIuLJ8uDO5ddmsShREBvT8r34R
+         lT5Act5U7Ogkyp5wBs1ivfhUmwazulrgYkp8E6j3zyqYA44YAnK0CbYM7IsS/vR3ZgGQ
+         1CVQ==
+X-Gm-Message-State: AOJu0YyixS/KAnN0SByFporVS1e7sRe99azSdpa3MAEY+S5/O+gMONz3
+        y11AzndDYqH/DNYk3e+LxZ7SXnB2BWjbjfd346rUwA==
+X-Google-Smtp-Source: AGHT+IE10rzvOB/ERZdoxlK53woYPSxvB0+KfpOUhwgdi+wRByiaqlDPuDWAwqhIWvuXZK3FoyBUjVrmdJBEg3zPFNo=
+X-Received: by 2002:ac8:5bcd:0:b0:410:839d:941d with SMTP id
+ b13-20020ac85bcd000000b00410839d941dmr94006qtb.20.1695073747449; Mon, 18 Sep
+ 2023 14:49:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZQhySMjmuyW2Czas@google.com>
+References: <20230916040915.1075620-1-irogers@google.com> <08995efc-d5af-6ba6-831b-1a483daabef4@intel.com>
+In-Reply-To: <08995efc-d5af-6ba6-831b-1a483daabef4@intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 18 Sep 2023 14:48:55 -0700
+Message-ID: <CAP-5=fW783G9fUEHrmzUu7UmvOm65Fp6vAQybCcNz2C0QRz26w@mail.gmail.com>
+Subject: Re: [PATCH v1] perf evlist: Avoid frequency mode for the dummy event
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Sep 18, 2023 at 08:52:40AM -0700, Sean Christopherson wrote:
+On Mon, Sep 18, 2023 at 1:14=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
+com> wrote:
+>
+> On 16/09/23 07:09, Ian Rogers wrote:
+> > Dummy events are created with an attribute where the period and freq
+> > are zero. evsel__config will then see the uninitialized values and
+> > initialize them in evsel__default_freq_period. As fequency mode is
+> > used by default the dummy event would be set to use frequency
+> > mode. However, this has no effect on the dummy event but does cause
+> > unnecessary timers/interrupts. Avoid this overhead by setting the
+> > period to 1 for dummy events.
+> >
+> > evlist__add_aux_dummy calls evlist__add_dummy then sets freq=3D0 and
+> > period=3D1. This isn't necessary after this change and so the setting i=
+s
+> > removed.
+> >
+> > From Stephane:
+> >
+> > The dummy event is not counting anything. It is used to collect mmap
+> > records and avoid a race condition during the synthesize mmap phase of
+> > perf record. As such, it should not cause any overhead during active
+> > profiling. Yet, it did. Because of a bug the dummy event was
+> > programmed as a sampling event in frequency mode. Events in that mode
+> > incur more kernel overheads because on timer tick, the kernel has to
+> > look at the number of samples for each event and potentially adjust
+> > the sampling period to achieve the desired frequency. The dummy event
+> > was therefore adding a frequency event to task and ctx contexts we may
+> > otherwise not have any, e.g., perf record -a -e
+> > cpu/event=3D0x3c,period=3D10000000/. On each timer tick the
+> > perf_adjust_freq_unthr_context() is invoked and if ctx->nr_freq is
+> > non-zero, then the kernel will loop over ALL the events of the context
+> > looking for frequency mode ones. In doing, so it locks the context,
+> > and enable/disable the PMU of each hw event. If all the events of the
+> > context are in period mode, the kernel will have to traverse the list f=
+or
+> > nothing incurring overhead. The overhead is multiplied by a very large
+> > factor when this happens in a guest kernel. There is no need for the
+> > dummy event to be in frequency mode, it does not count anything and
+> > therefore should not cause extra overhead for no reason.
+> >
+> > Fixes: 5bae0250237f ("perf evlist: Introduce perf_evlist__new_dummy con=
+structor")
+> > Reported-by: Stephane Eranian <eranian@google.com>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/evlist.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> > index 25c3ebe2c2f5..e36da58522ef 100644
+> > --- a/tools/perf/util/evlist.c
+> > +++ b/tools/perf/util/evlist.c
+> > @@ -251,6 +251,9 @@ static struct evsel *evlist__dummy_event(struct evl=
+ist *evlist)
+> >               .type   =3D PERF_TYPE_SOFTWARE,
+> >               .config =3D PERF_COUNT_SW_DUMMY,
+> >               .size   =3D sizeof(attr), /* to capture ABI version */
+> > +             /* Avoid frequency mode for dummy events to avoid associa=
+ted timers. */
+> > +             .freq =3D 0,
+> > +             .sample_period =3D 1,
+> >       };
+> >
+> >       return evsel__new_idx(&attr, evlist->core.nr_entries);
+> > @@ -277,8 +280,6 @@ struct evsel *evlist__add_aux_dummy(struct evlist *=
+evlist, bool system_wide)
+> >       evsel->core.attr.exclude_kernel =3D 1;
+> >       evsel->core.attr.exclude_guest =3D 1;
+> >       evsel->core.attr.exclude_hv =3D 1;
+> > -     evsel->core.attr.freq =3D 0;
+> > -     evsel->core.attr.sample_period =3D 1;
+> >       evsel->core.system_wide =3D system_wide;
+> >       evsel->no_aux_samples =3D true;
+> >       evsel->name =3D strdup("dummy:u");
+>
+> Note that evsel__config() will put it back to freq if -F is used.
 
-> > I wonder if we should be making the VFIO drivers that need the kvm to
-> > ask for it? 'select CONFIG_NEED_VFIO_KVM' or something?
-> 
-> I wondered the same thing, if only to make it easier to track which
-> drivers actually end up interacting directly with KVM.
+Right, I was looking for a minimal fix in part for the sake of back
+porting. For the -F we could do:
 
-There are two usages I've seen..
+```
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index d5363d23f5d3..806185a39e17 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1083,11 +1083,15 @@ void __weak arch__post_evsel_config(struct
+evsel *evsel __maybe_unused,
+static void evsel__set_default_freq_period(struct record_opts *opts,
+                                          struct perf_event_attr *attr)
+{
+-       if (opts->freq) {
++       bool is_dummy =3D attr->type =3D=3D PERF_TYPE_SOFTWARE &&
++               attr->config =3D=3D PERF_COUNT_SW_DUMMY;
++
++       if (opts->freq && !is_dummy) {
+               attr->freq =3D 1;
+               attr->sample_freq =3D opts->freq;
+       } else {
+-               attr->sample_period =3D opts->default_interval;
++               attr->freq =3D 0;
++               attr->sample_period =3D is_dummy ? 1 : opts->default_interv=
+al;
+       }
+}
+```
 
-GVT's uage is just totally broken:
+But this felt like it could potentially have other side-effects.
+Software events like page faults have a period, but the
+dummy/side-band events appear never to check the period - but I could
+be wrong. We can add the patch above but perhaps without a fixes tag.
 
-https://lore.kernel.org/kvm/661447fd-b041-c08d-cedc-341b31c405f8@intel.com/
+Thanks,
+Ian
 
-It is trying to use KVM to write protect IOVA DMA memory, and it just
-doesn't work. If we want to do something like this the core vfio code
-should provide this service and it should be wired into KVM
-properly.
-
-power and s390 have actual architectural "virtual machines" and they
-need actual arch operations to install VFIO devices into those
-things. In this regard having the arch opt into the integration would
-make some sense. I expect this will get worse in our CC future where
-VFIO devices will need to be passed into arch specific CC code
-somehow.
-
-This arch stuff isn't cleanly done, the code is sprinkled all over the
-place. Some in mdevs, some in PCI arch code, some in #ifdefs..
-
-Maybe the CC people will clean it up instead of making the mess bigger :)
-
-Jason
+> Nevertheless:
+>
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+>
