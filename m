@@ -2,361 +2,305 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4031ACD3428
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Sep 2023 11:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2401BC46CA1
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Sep 2023 12:28:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241749AbjIRLxM (ORCPT
+        id S241926AbjIRM16 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Sep 2023 07:53:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53312 "EHLO
+        Mon, 18 Sep 2023 08:27:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240483AbjIRLxC (ORCPT
+        with ESMTP id S241999AbjIRM10 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Sep 2023 07:53:02 -0400
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F60AE6;
-        Mon, 18 Sep 2023 04:52:54 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R491e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VsMQsll_1695037970;
-Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VsMQsll_1695037970)
-          by smtp.aliyun-inc.com;
-          Mon, 18 Sep 2023 19:52:50 +0800
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-To:     John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>
-Cc:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: [PATCH v9 6/7] perf jevents: Add support for Arm CMN PMU aliasing
-Date:   Mon, 18 Sep 2023 19:52:34 +0800
-Message-Id: <1695037955-107983-7-git-send-email-renyu.zj@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1695037955-107983-1-git-send-email-renyu.zj@linux.alibaba.com>
-References: <1695037955-107983-1-git-send-email-renyu.zj@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 18 Sep 2023 08:27:26 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC27619B
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Sep 2023 05:26:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1695039963;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=xHDYR+wGQEASAiKM2fgv+T4YO3Rxcm4SsNxf49p4pIw=;
+        b=VdZ2zoaC/XScUoaWcq9PvyzNHPXv19KtL7g2KcDDOCCuSM5AExBU13wWg+G/9UkGaqnH31
+        4TdyKimTVksXzBKe2C6xeOloGtzo+GwZ6Up5racC3N5cQITWy3/4rYmxoAPj3OflCZd63O
+        gEW2q4y+S29oEI3nikK+gaskdcL3YAw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-540-J1MPjFXUOHuwsF474-w_5w-1; Mon, 18 Sep 2023 08:26:00 -0400
+X-MC-Unique: J1MPjFXUOHuwsF474-w_5w-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 24AB2802E5A;
+        Mon, 18 Sep 2023 12:26:00 +0000 (UTC)
+Received: from Diego.redhat.com (unknown [10.39.208.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3A777492B16;
+        Mon, 18 Sep 2023 12:25:57 +0000 (UTC)
+From:   Michael Petlan <mpetlan@redhat.com>
+To:     linux-perf-users@vger.kernel.org, acme@redhat.com,
+        ravi.bangoria@amd.com
+Cc:     peterz@infradead.org, vmolnaro@redhat.com, irogers@google.com,
+        kan.liang@linux.intel.com, maddy@linux.ibm.com,
+        adrian.hunter@intel.com
+Subject: [PATCH] perf test: Remove event_group test for events in multiple PMUs
+Date:   Mon, 18 Sep 2023 14:25:52 +0200
+Message-Id: <20230918122552.15217-1-mpetlan@redhat.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Currently just add aliases for part of Arm CMN PMU events which
-are general and compatible for any SoC and CMN-ANY.
+The test fails on various environments, since not all the combinations
+of events in a group work. Based on fact, that perf contains code that
+re-organizes events in groups (and also removes groups when it does not
+make sense), I assume that there is no rule an arbitrary combination of
+arbitrary events *should* be supported.
 
-"Compat" value "^(434|436|43c|43a)" means it is compatible with
-all CMN600/CMN650/CMN700/Ci700, which can be obtained from
-commit 7819e05a0dce ("perf/arm-cmn: Revamp model detection").
+When an uncore event is grouped together with cycles and cs (a sw event):
+    # perf stat -e '{uncore_cbox_0/clockticks/,cs,cycles}'
+ >  WARNING: events were regrouped to match PMUs
+ >  WARNING: grouped events cpus do not match.
+ >  Events with CPUs not matching the leader will be removed from the group.
+    anon group { uncore_cbox_0/clockticks/, cs }
+    ^C
+(the CPU used is Haswell (Intel, family 6, model 60)
 
-The arm-cmn PMU events got from:
-[0] https://developer.arm.com/documentation/100180/0302/?lang=en
-[1] https://developer.arm.com/documentation/101408/0100/?lang=en
-[2] https://developer.arm.com/documentation/102308/0302/?lang=en
-[3] https://developer.arm.com/documentation/101569/0300/?lang=en
+The test uses perf_event_open() syscall and bypasses the algorithms
+perf tool uses to prevent scheduling invalid groups.
 
-Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
-Reviewed-by: John Garry <john.g.garry@oracle.com>
+Remove the test-case then.
+
+Fixes: 9d9b22bedad1 ("perf test: Add event group test for events in multiple PMUs")
+
+Signed-off-by: Michael Petlan <mpetlan@redhat.com>
 ---
- .../pmu-events/arch/arm64/arm/cmn/sys/cmn.json     | 266 +++++++++++++++++++++
- tools/perf/pmu-events/jevents.py                   |   1 +
- 2 files changed, 267 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
+ tools/perf/tests/Build          |   1 -
+ tools/perf/tests/builtin-test.c |   1 -
+ tools/perf/tests/event_groups.c | 136 --------------------------------
+ tools/perf/tests/tests.h        |   1 -
+ 4 files changed, 139 deletions(-)
+ delete mode 100644 tools/perf/tests/event_groups.c
 
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
-new file mode 100644
-index 0000000..dd5d4ec
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
-@@ -0,0 +1,266 @@
-+[
-+	{
-+		"EventName": "hnf_cache_miss",
-+		"EventidCode": "0x1",
-+		"NodeType": "0x5",
-+		"BriefDescription": "Counts total cache misses in first lookup result (high priority).",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "hnf_slc_sf_cache_access",
-+		"EventidCode": "0x2",
-+		"NodeType": "0x5",
-+		"BriefDescription": "Counts number of cache accesses in first access (high priority).",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "hnf_cache_fill",
-+		"EventidCode": "0x3",
-+		"NodeType": "0x5",
-+		"BriefDescription": "Counts total allocations in HN SLC (all cache line allocations to SLC).",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "hnf_pocq_retry",
-+		"EventidCode": "0x4",
-+		"NodeType": "0x5",
-+		"BriefDescription": "Counts number of retried requests.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "hnf_pocq_reqs_recvd",
-+		"EventidCode": "0x5",
-+		"NodeType": "0x5",
-+		"BriefDescription": "Counts number of requests that HN receives.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "hnf_sf_hit",
-+		"EventidCode": "0x6",
-+		"NodeType": "0x5",
-+		"BriefDescription": "Counts number of SF hits.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "hnf_sf_evictions",
-+		"EventidCode": "0x7",
-+		"NodeType": "0x5",
-+		"BriefDescription": "Counts number of SF eviction cache invalidations initiated.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "hnf_dir_snoops_sent",
-+		"EventidCode": "0x8",
-+		"NodeType": "0x5",
-+		"BriefDescription": "Counts number of directed snoops sent (not including SF back invalidation).",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "hnf_brd_snoops_sent",
-+		"EventidCode": "0x9",
-+		"NodeType": "0x5",
-+		"BriefDescription": "Counts number of multicast snoops sent (not including SF back invalidation).",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "hnf_slc_eviction",
-+		"EventidCode": "0xa",
-+		"NodeType": "0x5",
-+		"BriefDescription": "Counts number of SLC evictions (dirty only).",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "hnf_slc_fill_invalid_way",
-+		"EventidCode": "0xb",
-+		"NodeType": "0x5",
-+		"BriefDescription": "Counts number of SLC fills to an invalid way.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "hnf_mc_retries",
-+		"EventidCode": "0xc",
-+		"NodeType": "0x5",
-+		"BriefDescription": "Counts number of retried transactions by the MC.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "hnf_mc_reqs",
-+		"EventidCode": "0xd",
-+		"NodeType": "0x5",
-+		"BriefDescription": "Counts number of requests that are sent to MC.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "hnf_qos_hh_retry",
-+		"EventidCode": "0xe",
-+		"NodeType": "0x5",
-+		"BriefDescription": "Counts number of times a HighHigh priority request is protocolretried at the HN‑F.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "rnid_s0_rdata_beats",
-+		"EventidCode": "0x1",
-+		"NodeType": "0xa",
-+		"BriefDescription": "Number of RData beats (RVALID and RREADY) dispatched on port 0. This event measures the read bandwidth, including CMO responses.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "rnid_s1_rdata_beats",
-+		"EventidCode": "0x2",
-+		"NodeType": "0xa",
-+		"BriefDescription": "Number of RData beats (RVALID and RREADY) dispatched on port 1. This event measures the read bandwidth, including CMO responses.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "rnid_s2_rdata_beats",
-+		"EventidCode": "0x3",
-+		"NodeType": "0xa",
-+		"BriefDescription": "Number of RData beats (RVALID and RREADY) dispatched on port 2. This event measures the read bandwidth, including CMO responses.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "rnid_rxdat_flits",
-+		"EventidCode": "0x4",
-+		"NodeType": "0xa",
-+		"BriefDescription": "Number of RXDAT flits received. This event measures the true read data bandwidth, excluding CMOs.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "rnid_txdat_flits",
-+		"EventidCode": "0x5",
-+		"NodeType": "0xa",
-+		"BriefDescription": "Number of TXDAT flits dispatched. This event measures the write bandwidth.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "rnid_txreq_flits_total",
-+		"EventidCode": "0x6",
-+		"NodeType": "0xa",
-+		"BriefDescription": "Number of TXREQ flits dispatched. This event measures the total request bandwidth.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "rnid_txreq_flits_retried",
-+		"EventidCode": "0x7",
-+		"NodeType": "0xa",
-+		"BriefDescription": "Number of retried TXREQ flits dispatched. This event measures the retry rate.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "sbsx_txrsp_retryack",
-+		"EventidCode": "0x4",
-+		"NodeType": "0x7",
-+		"BriefDescription": "Number of RXREQ flits dispatched. This event is a measure of the retry rate.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "sbsx_txdat_flitv",
-+		"EventidCode": "0x5",
-+		"NodeType": "0x7",
-+		"BriefDescription": "Number of TXDAT flits dispatched from XP to SBSX. This event is a measure of the write bandwidth.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "sbsx_arvalid_no_arready",
-+		"EventidCode": "0x21",
-+		"NodeType": "0x7",
-+		"BriefDescription": "Number of cycles the SBSX bridge is stalled because of backpressure on AR channel.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "sbsx_awvalid_no_awready",
-+		"EventidCode": "0x22",
-+		"NodeType": "0x7",
-+		"BriefDescription": "Number of cycles the SBSX bridge is stalled because of backpressure on AW channel.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "sbsx_wvalid_no_wready",
-+		"EventidCode": "0x23",
-+		"NodeType": "0x7",
-+		"BriefDescription": "Number of cycles the SBSX bridge is stalled because of backpressure on W channel.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "hni_txrsp_retryack",
-+		"EventidCode": "0x2a",
-+		"NodeType": "0x4",
-+		"BriefDescription": "Number of RXREQ flits dispatched. This event is a measure of the retry rate.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "hni_arvalid_no_arready",
-+		"EventidCode": "0x2b",
-+		"NodeType": "0x4",
-+		"BriefDescription": "Number of cycles the HN-I bridge is stalled because of backpressure on AR channel.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "hni_arready_no_arvalid",
-+		"EventidCode": "0x2c",
-+		"NodeType": "0x4",
-+		"BriefDescription": "Number of cycles the AR channel is waiting for new requests from HN-I bridge.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "hni_awvalid_no_awready",
-+		"EventidCode": "0x2d",
-+		"NodeType": "0x4",
-+		"BriefDescription": "Number of cycles the HN-I bridge is stalled because of backpressure on AW channel.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "hni_awready_no_awvalid",
-+		"EventidCode": "0x2e",
-+		"NodeType": "0x4",
-+		"BriefDescription": "Number of cycles the AW channel is waiting for new requests from HN-I bridge.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "hni_wvalid_no_wready",
-+		"EventidCode": "0x2f",
-+		"NodeType": "0x4",
-+		"BriefDescription": "Number of cycles the HN-I bridge is stalled because of backpressure on W channel.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	},
-+	{
-+		"EventName": "hni_txdat_stall",
-+		"EventidCode": "0x30",
-+		"NodeType": "0x4",
-+		"BriefDescription": "TXDAT valid but no link credit available.",
-+		"Unit": "arm_cmn",
-+		"Compat": "^(434|436|43c|43a)"
-+	}
-+]
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index 057d51aa..b1ab412 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -289,6 +289,7 @@ class JsonEvent:
-           'cpu_core': 'cpu_core',
-           'cpu_atom': 'cpu_atom',
-           'ali_drw': 'ali_drw',
-+          'arm_cmn': 'arm_cmn',
-       }
-       return table[unit] if unit in table else f'uncore_{unit.lower()}'
+diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+index 63d5e6d5f165..4244837eb210 100644
+--- a/tools/perf/tests/Build
++++ b/tools/perf/tests/Build
+@@ -57,21 +57,20 @@ perf-y += genelf.o
+ perf-y += api-io.o
+ perf-y += demangle-java-test.o
+ perf-y += demangle-ocaml-test.o
+ perf-y += pfm.o
+ perf-y += parse-metric.o
+ perf-y += pe-file-parsing.o
+ perf-y += expand-cgroup.o
+ perf-y += perf-time-to-tsc.o
+ perf-y += dlfilter-test.o
+ perf-y += sigtrap.o
+-perf-y += event_groups.o
+ perf-y += symbols.o
  
+ ifeq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc))
+ perf-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
+ endif
+ 
+ CFLAGS_attr.o         += -DBINDIR="BUILD_STR($(bindir_SQ))" -DPYTHON="BUILD_STR($(PYTHON_WORD))"
+ CFLAGS_python-use.o   += -DPYTHONPATH="BUILD_STR($(OUTPUT)python)" -DPYTHON="BUILD_STR($(PYTHON_WORD))"
+ CFLAGS_dwarf-unwind.o += -fno-optimize-sibling-calls
+ 
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 0ad18cf6dd22..cab1f5c00c88 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -114,21 +114,20 @@ static struct test_suite *generic_tests[] = {
+ 	&suite__api_io,
+ 	&suite__maps__merge_in,
+ 	&suite__demangle_java,
+ 	&suite__demangle_ocaml,
+ 	&suite__parse_metric,
+ 	&suite__pe_file_parsing,
+ 	&suite__expand_cgroup_events,
+ 	&suite__perf_time_to_tsc,
+ 	&suite__dlfilter,
+ 	&suite__sigtrap,
+-	&suite__event_groups,
+ 	&suite__symbols,
+ 	NULL,
+ };
+ 
+ static struct test_suite **tests[] = {
+ 	generic_tests,
+ 	arch_tests,
+ };
+ 
+ static struct test_workload *workloads[] = {
+diff --git a/tools/perf/tests/event_groups.c b/tools/perf/tests/event_groups.c
+deleted file mode 100644
+index ccd9d8b2903f..000000000000
+--- a/tools/perf/tests/event_groups.c
++++ /dev/null
+@@ -1,136 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-#include <string.h>
+-#include <unistd.h>
+-#include <stdio.h>
+-#include "linux/perf_event.h"
+-#include "tests.h"
+-#include "debug.h"
+-#include "pmu.h"
+-#include "pmus.h"
+-#include "header.h"
+-#include "../perf-sys.h"
+-
+-/* hw: cycles, sw: context-switch, uncore: [arch dependent] */
+-static int types[] = {0, 1, -1};
+-static unsigned long configs[] = {0, 3, 0};
+-
+-#define NR_UNCORE_PMUS 5
+-
+-/* Uncore pmus that support more than 3 counters */
+-static struct uncore_pmus {
+-	const char *name;
+-	__u64 config;
+-} uncore_pmus[NR_UNCORE_PMUS] = {
+-	{ "amd_l3", 0x0 },
+-	{ "amd_df", 0x0 },
+-	{ "uncore_imc_0", 0x1 },         /* Intel */
+-	{ "core_imc", 0x318 },           /* PowerPC: core_imc/CPM_STCX_FIN/ */
+-	{ "hv_24x7", 0x22000000003 },    /* PowerPC: hv_24x7/CPM_STCX_FIN/ */
+-};
+-
+-static int event_open(int type, unsigned long config, int group_fd)
+-{
+-	struct perf_event_attr attr;
+-
+-	memset(&attr, 0, sizeof(struct perf_event_attr));
+-	attr.type = type;
+-	attr.size = sizeof(struct perf_event_attr);
+-	attr.config = config;
+-	/*
+-	 * When creating an event group, typically the group leader is
+-	 * initialized with disabled set to 1 and any child events are
+-	 * initialized with disabled set to 0. Despite disabled being 0,
+-	 * the child events will not start until the group leader is
+-	 * enabled.
+-	 */
+-	attr.disabled = group_fd == -1 ? 1 : 0;
+-
+-	return sys_perf_event_open(&attr, -1, 0, group_fd, 0);
+-}
+-
+-static int setup_uncore_event(void)
+-{
+-	struct perf_pmu *pmu = NULL;
+-	int i, fd;
+-
+-	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
+-		for (i = 0; i < NR_UNCORE_PMUS; i++) {
+-			if (!strcmp(uncore_pmus[i].name, pmu->name)) {
+-				pr_debug("Using %s for uncore pmu event\n", pmu->name);
+-				types[2] = pmu->type;
+-				configs[2] = uncore_pmus[i].config;
+-				/*
+-				 * Check if the chosen uncore pmu event can be
+-				 * used in the test. For example, incase of accessing
+-				 * hv_24x7 pmu counters, partition should have
+-				 * additional permissions. If not, event open will
+-				 * fail. So check if the event open succeeds
+-				 * before proceeding.
+-				 */
+-				fd = event_open(types[2], configs[2], -1);
+-				if (fd < 0)
+-					return -1;
+-				close(fd);
+-				return 0;
+-			}
+-		}
+-	}
+-	return -1;
+-}
+-
+-static int run_test(int i, int j, int k)
+-{
+-	int erroneous = ((((1 << i) | (1 << j) | (1 << k)) & 5) == 5);
+-	int group_fd, sibling_fd1, sibling_fd2;
+-
+-	group_fd = event_open(types[i], configs[i], -1);
+-	if (group_fd == -1)
+-		return -1;
+-
+-	sibling_fd1 = event_open(types[j], configs[j], group_fd);
+-	if (sibling_fd1 == -1) {
+-		close(group_fd);
+-		return erroneous ? 0 : -1;
+-	}
+-
+-	sibling_fd2 = event_open(types[k], configs[k], group_fd);
+-	if (sibling_fd2 == -1) {
+-		close(sibling_fd1);
+-		close(group_fd);
+-		return erroneous ? 0 : -1;
+-	}
+-
+-	close(sibling_fd2);
+-	close(sibling_fd1);
+-	close(group_fd);
+-	return erroneous ? -1 : 0;
+-}
+-
+-static int test__event_groups(struct test_suite *text __maybe_unused, int subtest __maybe_unused)
+-{
+-	int i, j, k;
+-	int ret;
+-	int r;
+-
+-	ret = setup_uncore_event();
+-	if (ret || types[2] == -1)
+-		return TEST_SKIP;
+-
+-	ret = TEST_OK;
+-	for (i = 0; i < 3; i++) {
+-		for (j = 0; j < 3; j++) {
+-			for (k = 0; k < 3; k++) {
+-				r = run_test(i, j, k);
+-				if (r)
+-					ret = TEST_FAIL;
+-
+-				pr_debug("0x%x 0x%lx, 0x%x 0x%lx, 0x%x 0x%lx: %s\n",
+-					 types[i], configs[i], types[j], configs[j],
+-					 types[k], configs[k], r ? "Fail" : "Pass");
+-			}
+-		}
+-	}
+-	return ret;
+-}
+-
+-DEFINE_SUITE("Event groups", event_groups);
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index f33cfc3c19a4..d30a99d60ba5 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -136,21 +136,20 @@ DECLARE_SUITE(jit_write_elf);
+ DECLARE_SUITE(api_io);
+ DECLARE_SUITE(demangle_java);
+ DECLARE_SUITE(demangle_ocaml);
+ DECLARE_SUITE(pfm);
+ DECLARE_SUITE(parse_metric);
+ DECLARE_SUITE(pe_file_parsing);
+ DECLARE_SUITE(expand_cgroup_events);
+ DECLARE_SUITE(perf_time_to_tsc);
+ DECLARE_SUITE(dlfilter);
+ DECLARE_SUITE(sigtrap);
+-DECLARE_SUITE(event_groups);
+ DECLARE_SUITE(symbols);
+ 
+ /*
+  * PowerPC and S390 do not support creation of instruction breakpoints using the
+  * perf_event interface.
+  *
+  * ARM requires explicit rounding down of the instruction pointer in Thumb mode,
+  * and then requires the single-step to be handled explicitly in the overflow
+  * handler to avoid stepping into the SIGIO handler and getting stuck on the
+  * breakpointed instruction.
 -- 
-1.8.3.1
+2.18.4
 
