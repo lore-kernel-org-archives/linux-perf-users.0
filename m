@@ -2,144 +2,144 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 031D3C46CA1
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Sep 2023 06:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E68C46CA1
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Sep 2023 08:22:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231575AbjIRG5p (ORCPT
+        id S240724AbjIRIW1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Sep 2023 02:57:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53380 "EHLO
+        Mon, 18 Sep 2023 04:22:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239965AbjIRG5S (ORCPT
+        with ESMTP id S240644AbjIRIPx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Sep 2023 02:57:18 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 084D2F1
-        for <linux-perf-users@vger.kernel.org>; Sun, 17 Sep 2023 23:56:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1695020187;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=h2mcwAczqQrH8FC4T+/52u6VelTTkFaOGAGOTHdcUPg=;
-        b=btSiCXzc4XvRQXMNFDuMVdtqYQCBlO4xNT4lw7bkefwzo5ThQQPVzdxyzDZYmwiSKSpiOr
-        qQFpuC/i1qeJ1+sqyyg9FTfelwYBl+roZH5r8DP0xrXOt7jAcd4eMoLKvbvoknwPthodWz
-        TpyG9fJoTV+cou7fpIY7uv4UDV9y53c=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-453-FR4mArrwPu6KzbkyTeswJg-1; Mon, 18 Sep 2023 02:56:13 -0400
-X-MC-Unique: FR4mArrwPu6KzbkyTeswJg-1
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3172a94b274so2811244f8f.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 17 Sep 2023 23:56:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695020172; x=1695624972;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h2mcwAczqQrH8FC4T+/52u6VelTTkFaOGAGOTHdcUPg=;
-        b=DsaFA3X7WSU2PzZ0LRy6hppmy3HV2516L77aIsyA3+Ic6PcrjwlyZ2Fd9252K2omQ+
-         3pgqd5wAi0PLuUw2XNYb0dSsbcLRfijDV+npjHbu5yL9Gnew8dSy/yc9Cnww/OdeWXgT
-         /EcT1Uw4EGLabj2yU8s2oXeuynx4Nl5wa7NSurj78oWI8FsDKYedFD5n8O0iCQ8yvUjM
-         hkiSb2vvFaY5VDkGW4cu7WQUDnTbFAu/QrnYlt/nmD2Phcj86EA+DSXo8Q5ZPgxBRkMh
-         cZm1cA/fX0qlJhZCPfQj6cMXcjUF8khhrDLg5jhCgmdNavPBGVu5lXxDbQh08qXqh33u
-         fgjQ==
-X-Gm-Message-State: AOJu0YycgeSE2V+H+xWzjZ1xTFDXk0nMIbgTpa5tXW3hci63WFahwMdp
-        oCKuNqWNtEpNAFQtfNFwE9nJABi5kN6j6ZvrE/m3oREzOzpt5jbAIf9xk0Q8mKt0T78i7KTKCTS
-        AR6WCbBjH3CTkA3Lc0X+2VIFAqJUyYA==
-X-Received: by 2002:a5d:4c4a:0:b0:31f:8999:c409 with SMTP id n10-20020a5d4c4a000000b0031f8999c409mr6947592wrt.66.1695020172210;
-        Sun, 17 Sep 2023 23:56:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG6F/Z9q4tB58E26+mCTcb2TpjD2EEslfwOYb0HqPPBuG0zLaR6K3OsqOUHedxMDM3AqkpDEA==
-X-Received: by 2002:a5d:4c4a:0:b0:31f:8999:c409 with SMTP id n10-20020a5d4c4a000000b0031f8999c409mr6947581wrt.66.1695020171900;
-        Sun, 17 Sep 2023 23:56:11 -0700 (PDT)
-Received: from [10.33.192.205] (nat-pool-str-t.redhat.com. [149.14.88.106])
-        by smtp.gmail.com with ESMTPSA id t3-20020a05600001c300b003143b14848dsm11523936wrx.102.2023.09.17.23.56.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 17 Sep 2023 23:56:11 -0700 (PDT)
-Message-ID: <a6a77718-219f-30f6-b8de-acd7aadf3b0c@redhat.com>
-Date:   Mon, 18 Sep 2023 08:56:09 +0200
+        Mon, 18 Sep 2023 04:15:53 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ACA019A6;
+        Mon, 18 Sep 2023 01:14:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695024885; x=1726560885;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=UPb2e7T2NdnaKHr1MlH9VTFl3BDKTI9rhpg34SQOZRg=;
+  b=WwDwa4/yOZHBHHlerMW2Q/H/F9sjonDuV7aPlTR3xdLG+wTA9OcVqvdO
+   BBAwjTbwBssPwmYo8f0gSD+xzyo1dVsbK8X2tUD1mxgtRaLyx34atHMxh
+   knlvjIFl2UBKd7hJDy3d+SeY7Lb5fiBuBzJVijOv7OtE8NLTg0Yq6AYY/
+   GyqYvVujoeLd8ZZXtMyv4NnIhDQ2yoGnVuzbk7UyDWrg+zPLNMaIh6YPf
+   1cmaiqBah04V9VTY9lqOkH/Ttu+9KUgU3tAmBjmnSAd8mdgXmteL7zFFW
+   /gw5RUH3up5gsWvVRFz1mEUJFaRdo1JyUYvZRaNsgbGQTP6YslTmYJpUl
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10836"; a="359848728"
+X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
+   d="scan'208";a="359848728"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 01:14:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10836"; a="869472377"
+X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
+   d="scan'208";a="869472377"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.218.42])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 01:14:39 -0700
+Message-ID: <08995efc-d5af-6ba6-831b-1a483daabef4@intel.com>
+Date:   Mon, 18 Sep 2023 11:14:35 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 18/26] KVM: s390: Stop adding virt/kvm to the arch include
- path
+ Firefox/102.0 Thunderbird/102.15.1
+Subject: Re: [PATCH v1] perf evlist: Avoid frequency mode for the dummy event
 Content-Language: en-US
-To:     Sean Christopherson <seanjc@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Anup Patel <anup@brainfault.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+To:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Jason Herne <jjherne@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Anish Ghulati <aghulati@google.com>,
-        Venkatesh Srinivas <venkateshs@chromium.org>,
-        Andrew Thornton <andrewth@google.com>
-References: <20230916003118.2540661-1-seanjc@google.com>
- <20230916003118.2540661-19-seanjc@google.com>
-From:   Thomas Huth <thuth@redhat.com>
-In-Reply-To: <20230916003118.2540661-19-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Stephane Eranian <eranian@google.com>
+References: <20230916040915.1075620-1-irogers@google.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20230916040915.1075620-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 16/09/2023 02.31, Sean Christopherson wrote:
-> Don't add virt/kvm to KVM s390's include path, the headers in virt/kvm are
-> intended to be used only by other code in virt/kvm, i.e. are "private" to
-> the core KVM code.  It's not clear that s390 *ever* included a header from
-> virt/kvm, i.e. odds are good the "-Ivirt/kvm" was copied from a x86's
-> Makefile when s390 support was first added.
+On 16/09/23 07:09, Ian Rogers wrote:
+> Dummy events are created with an attribute where the period and freq
+> are zero. evsel__config will then see the uninitialized values and
+> initialize them in evsel__default_freq_period. As fequency mode is
+> used by default the dummy event would be set to use frequency
+> mode. However, this has no effect on the dummy event but does cause
+> unnecessary timers/interrupts. Avoid this overhead by setting the
+> period to 1 for dummy events.
 > 
-> The only headers in virt/kvm at the time were the x86 specific ioapic.h,
-> and iodev.h, neither of which shows up as an #include in the diff for the
-> commit range 37817f2982d0f..e976a2b997fc4.
+> evlist__add_aux_dummy calls evlist__add_dummy then sets freq=0 and
+> period=1. This isn't necessary after this change and so the setting is
+> removed.
 > 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> From Stephane:
+> 
+> The dummy event is not counting anything. It is used to collect mmap
+> records and avoid a race condition during the synthesize mmap phase of
+> perf record. As such, it should not cause any overhead during active
+> profiling. Yet, it did. Because of a bug the dummy event was
+> programmed as a sampling event in frequency mode. Events in that mode
+> incur more kernel overheads because on timer tick, the kernel has to
+> look at the number of samples for each event and potentially adjust
+> the sampling period to achieve the desired frequency. The dummy event
+> was therefore adding a frequency event to task and ctx contexts we may
+> otherwise not have any, e.g., perf record -a -e
+> cpu/event=0x3c,period=10000000/. On each timer tick the
+> perf_adjust_freq_unthr_context() is invoked and if ctx->nr_freq is
+> non-zero, then the kernel will loop over ALL the events of the context
+> looking for frequency mode ones. In doing, so it locks the context,
+> and enable/disable the PMU of each hw event. If all the events of the
+> context are in period mode, the kernel will have to traverse the list for
+> nothing incurring overhead. The overhead is multiplied by a very large
+> factor when this happens in a guest kernel. There is no need for the
+> dummy event to be in frequency mode, it does not count anything and
+> therefore should not cause extra overhead for no reason.
+> 
+> Fixes: 5bae0250237f ("perf evlist: Introduce perf_evlist__new_dummy constructor")
+> Reported-by: Stephane Eranian <eranian@google.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->   arch/s390/kvm/Makefile | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>  tools/perf/util/evlist.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/s390/kvm/Makefile b/arch/s390/kvm/Makefile
-> index 02217fb4ae10..f17249ab2a72 100644
-> --- a/arch/s390/kvm/Makefile
-> +++ b/arch/s390/kvm/Makefile
-> @@ -5,7 +5,7 @@
->   
->   include $(srctree)/virt/kvm/Makefile.kvm
->   
-> -ccflags-y := -Ivirt/kvm -Iarch/s390/kvm
-> +ccflags-y := -Iarch/s390/kvm
->   
->   kvm-y += kvm-s390.o intercept.o interrupt.o priv.o sigp.o
->   kvm-y += diag.o gaccess.o guestdbg.o vsie.o pv.o
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index 25c3ebe2c2f5..e36da58522ef 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -251,6 +251,9 @@ static struct evsel *evlist__dummy_event(struct evlist *evlist)
+>  		.type	= PERF_TYPE_SOFTWARE,
+>  		.config = PERF_COUNT_SW_DUMMY,
+>  		.size	= sizeof(attr), /* to capture ABI version */
+> +		/* Avoid frequency mode for dummy events to avoid associated timers. */
+> +		.freq = 0,
+> +		.sample_period = 1,
+>  	};
+>  
+>  	return evsel__new_idx(&attr, evlist->core.nr_entries);
+> @@ -277,8 +280,6 @@ struct evsel *evlist__add_aux_dummy(struct evlist *evlist, bool system_wide)
+>  	evsel->core.attr.exclude_kernel = 1;
+>  	evsel->core.attr.exclude_guest = 1;
+>  	evsel->core.attr.exclude_hv = 1;
+> -	evsel->core.attr.freq = 0;
+> -	evsel->core.attr.sample_period = 1;
+>  	evsel->core.system_wide = system_wide;
+>  	evsel->no_aux_samples = true;
+>  	evsel->name = strdup("dummy:u");
 
-Reviewed-by: Thomas Huth <thuth@redhat.com>
+Note that evsel__config() will put it back to freq if -F is used.
+
+Nevertheless:
+
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
