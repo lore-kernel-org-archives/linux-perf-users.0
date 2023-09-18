@@ -2,237 +2,144 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7981CD37B0
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Sep 2023 03:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 031D3C46CA1
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Sep 2023 06:58:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229841AbjIRDkP (ORCPT
+        id S231575AbjIRG5p (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 17 Sep 2023 23:40:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54880 "EHLO
+        Mon, 18 Sep 2023 02:57:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231373AbjIRDjy (ORCPT
+        with ESMTP id S239965AbjIRG5S (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 17 Sep 2023 23:39:54 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 281ED11C;
-        Sun, 17 Sep 2023 20:39:48 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-68fac346f6aso3727945b3a.3;
-        Sun, 17 Sep 2023 20:39:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695008387; x=1695613187; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DDSlcJo5rIfEnCIjkrrQvFleAfDylgIEYNugls+9aRk=;
-        b=BlzUPca9COjN60j4q/pLhkM0DtOhfnuiXDu61gAu/bOV2zoQJrf2L2dBg0fm7sFAn/
-         FOtxh6yXJzQVzi9BUtgWhgfpDTzrDGeHz466bsL0l7TorQFKNl30dbRRa1yNn86iCI5p
-         ROE/Tgs56tFM5owadGqQUBjIQnRIFigcx2eQIDwiZfqYA0YBT13xuSqa3TOhF+w8SmiB
-         EOcBzFfVFt0O3lB6m43ZEFm2LKAolCj13w0RorguGUVONqA2L69AKMglYpQ0aJi11dpx
-         XUJCPvzFBt1sQY66mDgKhRXucJA6+PhpvctpxRmicmH+mm5is+xM3wUeOPTZx/ULPGZC
-         1msQ==
+        Mon, 18 Sep 2023 02:57:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 084D2F1
+        for <linux-perf-users@vger.kernel.org>; Sun, 17 Sep 2023 23:56:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1695020187;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=h2mcwAczqQrH8FC4T+/52u6VelTTkFaOGAGOTHdcUPg=;
+        b=btSiCXzc4XvRQXMNFDuMVdtqYQCBlO4xNT4lw7bkefwzo5ThQQPVzdxyzDZYmwiSKSpiOr
+        qQFpuC/i1qeJ1+sqyyg9FTfelwYBl+roZH5r8DP0xrXOt7jAcd4eMoLKvbvoknwPthodWz
+        TpyG9fJoTV+cou7fpIY7uv4UDV9y53c=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-453-FR4mArrwPu6KzbkyTeswJg-1; Mon, 18 Sep 2023 02:56:13 -0400
+X-MC-Unique: FR4mArrwPu6KzbkyTeswJg-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3172a94b274so2811244f8f.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 17 Sep 2023 23:56:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695008387; x=1695613187;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DDSlcJo5rIfEnCIjkrrQvFleAfDylgIEYNugls+9aRk=;
-        b=N0hNU8br4YwgN4qIfGkzJp8USUH6LYcqFcGiNdutelN8PnnUc9awtPxq5r8l8JLHi1
-         CJJGmiq40PEnE2Dl33dAhsavrt5BUIkklSHSzDwuvQ+kK6yCW+OnrkxrOm557KlKGo8e
-         ewk4zdPA7HBFJ83f8t4+pM6eDg5+gcEjwSLTEfCZ8NfykLgLRPRBESfyIFCq8I9vqPKa
-         SbZ8+V8q5H/STQlGzb+qhZ+mF06RLIq7lRgL0ynmQREBv77xl7JFI0ngfOT0oLoBGdp+
-         Rvoeo4ZYxiTnEPKEt6XtVBVs2/YBv/n3bgXRUzYuR2rwW4aZVCSOFD4b499uGzaoujBg
-         1mJg==
-X-Gm-Message-State: AOJu0YzmpvuwaqzhKtQ74b7/AgRXVyXNGMuQ2hWCP6hcoOe05EL3Ed0C
-        7Cq4G5plhrJll9RHlLpVi18=
-X-Google-Smtp-Source: AGHT+IHp7iYi+9MFG5k8kbiYk37XGilifye9fC086/lr4YaWfbkuM+w0hlC2YHu5AuecTKcAxEd/FA==
-X-Received: by 2002:a05:6a20:8e19:b0:10f:be0:4dce with SMTP id y25-20020a056a208e1900b0010f0be04dcemr8569764pzj.8.1695008387190;
-        Sun, 17 Sep 2023 20:39:47 -0700 (PDT)
-Received: from yoga ([2409:40e6:1:3b7d:8e2e:1958:4e7b:d9ef])
-        by smtp.gmail.com with ESMTPSA id bb18-20020a17090b009200b00274bbfc34c8sm2897898pjb.16.2023.09.17.20.39.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Sep 2023 20:39:46 -0700 (PDT)
-From:   Anup Sharma <anupnewsmail@gmail.com>
-X-Google-Original-From: Anup Sharma <AnupSharma>
-Date:   Mon, 18 Sep 2023 09:09:38 +0530
-To:     Anup Sharma <anupnewsmail@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] Adding Support for Firefox's Gecko Profile Format
-Message-ID: <ZQfGejxpeJa1D7j+@yoga>
-References: <ZJyT8bt0LFLw6hKV@yoga>
- <CAM9d7ch7TdagV+dzj6MCp4fY15Vc4oGJjKAoQDyc=BXqy7qi+A@mail.gmail.com>
- <287bf3c8-fa0e-8c36-df14-7d728c63c265@intel.com>
- <ZKQu00bJZwO+Fc6m@yoga>
- <ZKRcTqAsKxF/Q3fQ@yoga>
- <ZMFgIekihhoGFBpn@yoga>
- <ZMFyi5S4JlFeZ/9c@kernel.org>
- <ZMqnp1kBv1ACIiGS@yoga>
- <ZNPwhctOgd0RdtwO@yoga>
- <ZN0C7yXk/aORpsI1@yoga>
+        d=1e100.net; s=20230601; t=1695020172; x=1695624972;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h2mcwAczqQrH8FC4T+/52u6VelTTkFaOGAGOTHdcUPg=;
+        b=DsaFA3X7WSU2PzZ0LRy6hppmy3HV2516L77aIsyA3+Ic6PcrjwlyZ2Fd9252K2omQ+
+         3pgqd5wAi0PLuUw2XNYb0dSsbcLRfijDV+npjHbu5yL9Gnew8dSy/yc9Cnww/OdeWXgT
+         /EcT1Uw4EGLabj2yU8s2oXeuynx4Nl5wa7NSurj78oWI8FsDKYedFD5n8O0iCQ8yvUjM
+         hkiSb2vvFaY5VDkGW4cu7WQUDnTbFAu/QrnYlt/nmD2Phcj86EA+DSXo8Q5ZPgxBRkMh
+         cZm1cA/fX0qlJhZCPfQj6cMXcjUF8khhrDLg5jhCgmdNavPBGVu5lXxDbQh08qXqh33u
+         fgjQ==
+X-Gm-Message-State: AOJu0YycgeSE2V+H+xWzjZ1xTFDXk0nMIbgTpa5tXW3hci63WFahwMdp
+        oCKuNqWNtEpNAFQtfNFwE9nJABi5kN6j6ZvrE/m3oREzOzpt5jbAIf9xk0Q8mKt0T78i7KTKCTS
+        AR6WCbBjH3CTkA3Lc0X+2VIFAqJUyYA==
+X-Received: by 2002:a5d:4c4a:0:b0:31f:8999:c409 with SMTP id n10-20020a5d4c4a000000b0031f8999c409mr6947592wrt.66.1695020172210;
+        Sun, 17 Sep 2023 23:56:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG6F/Z9q4tB58E26+mCTcb2TpjD2EEslfwOYb0HqPPBuG0zLaR6K3OsqOUHedxMDM3AqkpDEA==
+X-Received: by 2002:a5d:4c4a:0:b0:31f:8999:c409 with SMTP id n10-20020a5d4c4a000000b0031f8999c409mr6947581wrt.66.1695020171900;
+        Sun, 17 Sep 2023 23:56:11 -0700 (PDT)
+Received: from [10.33.192.205] (nat-pool-str-t.redhat.com. [149.14.88.106])
+        by smtp.gmail.com with ESMTPSA id t3-20020a05600001c300b003143b14848dsm11523936wrx.102.2023.09.17.23.56.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 17 Sep 2023 23:56:11 -0700 (PDT)
+Message-ID: <a6a77718-219f-30f6-b8de-acd7aadf3b0c@redhat.com>
+Date:   Mon, 18 Sep 2023 08:56:09 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZN0C7yXk/aORpsI1@yoga>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 18/26] KVM: s390: Stop adding virt/kvm to the arch include
+ path
+Content-Language: en-US
+To:     Sean Christopherson <seanjc@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Anup Patel <anup@brainfault.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Anish Ghulati <aghulati@google.com>,
+        Venkatesh Srinivas <venkateshs@chromium.org>,
+        Andrew Thornton <andrewth@google.com>
+References: <20230916003118.2540661-1-seanjc@google.com>
+ <20230916003118.2540661-19-seanjc@google.com>
+From:   Thomas Huth <thuth@redhat.com>
+In-Reply-To: <20230916003118.2540661-19-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Aug 16, 2023 at 10:40:07PM +0530, Anup Sharma wrote:
-> On Thu, Aug 10, 2023 at 01:31:09AM +0530, Anup Sharma wrote:
-> > On Thu, Aug 03, 2023 at 12:29:51AM +0530, Anup Sharma wrote:
-> > > On Wed, Jul 26, 2023 at 04:22:51PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > Em Wed, Jul 26, 2023 at 11:34:17PM +0530, Anup Sharma escreveu:
-> > > > > Dear all,
-> > > > > 
-> > > > > I want to share a recent development in our project that
-> > > > > I have been working on this week. I have successfully
-> > > > > implemented a new feature that allows users to directly
-> > > > > open the browser and visualize the output of perf.data
-> > > > > on Firefox Profiler.
-> > > > 
-> > > > Excellent news!
-> > > >  
-> > > > > To enhance user experience, I have made sure this option
-> > > > > is enabled by default. Additionally, I've also added a
-> > > > > handy command line argument, "--save-only," which allows
-> > > > > users to save the output file as needed. This enhancement
-> > > > > replaces the previous standard output method, providing a
-> > > > > much-improved experience.
-> > > > > 
-> > > > > Moreover, Everything is processed locally, and no data is
-> > > > > sent to any server.
-> > > > 
-> > > > That addresses the worry about sending possibly sensitive data over the
-> > > > network by default, great.
-> > > >  
-> > > > > During this implementation, I had the opportunity to delve
-> > > > > into several exciting topics, including threading, HTTP server,
-> > > > > and CORS mechanisms. The learning process has been both
-> > > > > challenging and rewarding.
-> > > > 
-> > > > Cool that you're so excited learning all this.
-> > > >  
-> > > > > Currently, I am in the process of performing some clean-up tasks.
-> > > > > Once that is complete, I will be sharing the next version of the
-> > > > > series, which includes this fantastic new feature, with all of
-> > > > > you very soon.
-> > > > > 
-> > > > > Thank you for your ongoing support and encouragement.
-> > > > 
-> > > > Keep it up!
-> > > 
-> > > This week, I'm working on documenting the gecko converter for our wiki.
-> > > I've dedicated a significant amount of time to think about the content
-> > > and how to approach it. So far, I've written sections covering the
-> > > introduction to Firefox Profiler and the formatting guidelines(not
-> > > published yet).
-> > > 
-> > > However, I've left the usage part blank because I'm uncertain about how
-> > > to enable gecko.py arguments when executing the "perf script gecko" command.
-> > > I've looked at examples like flamegraph-report and sctop-report, but I'm
-> > > still confused. I attempted to enable the script to take the gecko.py
-> > > command example "perf script report gecko --save-only=profiler.json,"
-> > > but this caused issues when running "perf script gecko -a sleep 3" again.
-> > > This has left me feeling rather puzzled, and I would appreciate discussing
-> > > this during our office hour, or any help here.
-> > > 
-> > > Due to this blocker, I haven't been able to send the updated patch
-> > > for test_gecko yet. However, I hope I'll find a solution soon and overcome
-> > > this obstacle.
-> > 
-> > Hello All,
-> > As discussed during last office hour, I was little occupied this week, so
-> > I haven't been able to make much progress on my TODO list. Nonetheless,
-> > I've resent a server patch and test script patch for your review. If I can
-> > get it reviewed it would be great to make further progress.
-> > 
-> > I'm also working on writing documentation for our wiki. I've already written a
-> > bit, and you can see it here: https://perf.wiki.kernel.org/index.php/Tutorial#Firefox_Profiler.
-> > If you have any thoughts or suggestions, I'd appreciate hearing them. I'll add
-> > more details once I've sorted out some issues I'm having with certain commands.
-> > 
-> > This week, I do not have a specific agenda. Hence, if we opt to skip this week's
-> > office hour, it wouldn't pose any inconvenience. Nevertheless, I am available if
-> > there are matters you wish to discuss.
-> > 
-> > Here's what I have in mind to work on next:
-> > 
-> > 1. Making sure that gecko script args work with commands, like
-> > (perf script gecko --save-only=profile.json) or (perf script gecko --kernel-color=green),which
-> > aren't working right now.
+On 16/09/2023 02.31, Sean Christopherson wrote:
+> Don't add virt/kvm to KVM s390's include path, the headers in virt/kvm are
+> intended to be used only by other code in virt/kvm, i.e. are "private" to
+> the core KVM code.  It's not clear that s390 *ever* included a header from
+> virt/kvm, i.e. odds are good the "-Ivirt/kvm" was copied from a x86's
+> Makefile when s390 support was first added.
 > 
-> I have done this part and sent the patch for review.
-> https://lore.kernel.org/all/ZNf7W+EIrrCSHZN0@yoga/
+> The only headers in virt/kvm at the time were the x86 specific ioapic.h,
+> and iodev.h, neither of which shows up as an #include in the diff for the
+> commit range 37817f2982d0f..e976a2b997fc4.
 > 
-> > 2. Trying out "perf record -p firefox" or using it with a specific process ID to
-> > see if the current script supports these recording commands.
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   arch/s390/kvm/Makefile | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> This is working with the existing script. I've tested it and documented it as well.
-> https://perf.wiki.kernel.org/index.php/Tutorial#Firefox_Profiler
-> 
-> > 3. Adding page fault and one more event in stackTable in gecko script.
-> 
-> I have few doubt regarding this will discuss in office hour.
-> 
-> > 4. Making the documentation better.
-> 
-> I am trying to make it better, but I'm not sure if it's good enough. Here's the link:
-> https://perf.wiki.kernel.org/index.php/Tutorial#Firefox_Profiler
-> 
-> I also need to understand on how to prepare the final report for GSoC and
-> planning to record a 5 min tutorial video on how to use the script.
-> 
-> Moreover, I need to make the script run as a root user.
-> 
-> This are few TODOs I have in mind. Please let me know if you have any suggestions.
+> diff --git a/arch/s390/kvm/Makefile b/arch/s390/kvm/Makefile
+> index 02217fb4ae10..f17249ab2a72 100644
+> --- a/arch/s390/kvm/Makefile
+> +++ b/arch/s390/kvm/Makefile
+> @@ -5,7 +5,7 @@
+>   
+>   include $(srctree)/virt/kvm/Makefile.kvm
+>   
+> -ccflags-y := -Ivirt/kvm -Iarch/s390/kvm
+> +ccflags-y := -Iarch/s390/kvm
+>   
+>   kvm-y += kvm-s390.o intercept.o interrupt.o priv.o sigp.o
+>   kvm-y += diag.o gaccess.o guestdbg.o vsie.o pv.o
 
-I'm thrilled to share that I've received an offer from Nutanix Technologies for the
-MTS-1 Kernel Development role, and I couldn't be more excited about it. I want to
-express my gratitude for all your support. I'm currently on vacation, but I'll be
-back in a few days to continue making contributions.
+Reviewed-by: Thomas Huth <thuth@redhat.com>
 
-> > Thanks,
-> > Anup
-> > 
-> > > > - Arnaldo
-> > > > 
-> > > > > Thanks,
-> > > > > Anup
-> > > > > 
-> > > > > > > Regards,
-> > > > > > > Anup
-> > > > > > > > > 
-> > > > > > > > >>
-> > > > > > > > >> The second challenge revolved around the usage of event hooks provided with the perf script
-> > > > > > > > >> python event handlers. I found myself deliberating between two approaches. The first
-> > > > > > > > >> approach involved creating custom functions that would be called using the event
-> > > > > > > > >> handlers. These functions would then save the data in an organized format within
-> > > > > > > > >> globally created data structures. The alternative approach was to write the entire
-> > > > > > > > >> logic inside the event handlers themselves.
-> > > > > > > > >>
-> > > > > > > > >> Additionally, I contemplated whether it would be more suitable to handle the creation of
-> > > > > > > > >> a Gecko format for JSON and the profile format within the same script or to separate
-> > > > > > > > >> them into different scripts.
-> > > > > > > > >>
-> > > > > > > > >> I will discuss this points during tomorrow's office hour.
-> > > > > > > > >>
-> > > > > > > > >> However, I have gained a deeper understanding of the problem at hand and will use this
-> > > > > > > > >> knowledge to make more informed decisions and progress more effectively in the coming weeks.
-> > > > > > > > > 
-> > > > > > > > > Sounds like you did a good amount of research on how perf script
-> > > > > > > > > works.  We can talk about the details in the meeting.
-> > > > > > > > > 
-> > > > > > > > > Thanks,
-> > > > > > > > > Namhyung
-> > > > > > > > 
-> > > > 
-> > > > -- 
-> > > > 
-> > > > - Arnaldo
