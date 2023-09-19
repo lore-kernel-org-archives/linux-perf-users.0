@@ -2,91 +2,127 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CB9CD3430
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Sep 2023 01:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B60C9CD342E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Sep 2023 02:15:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230379AbjISBuT (ORCPT
+        id S230511AbjISCPZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Sep 2023 21:50:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37608 "EHLO
+        Mon, 18 Sep 2023 22:15:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbjISBuT (ORCPT
+        with ESMTP id S230518AbjISCPY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Sep 2023 21:50:19 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90BEE94;
-        Mon, 18 Sep 2023 18:50:13 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RqPfp3ClfzVk0r;
-        Tue, 19 Sep 2023 09:47:14 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Tue, 19 Sep 2023 09:50:09 +0800
-Subject: Re: [PATCH] perf jevents: Fix segfault in perf_pmu__find_events_table
-To:     Namhyung Kim <namhyung@kernel.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20230918030304.24832-1-yangjihong1@huawei.com>
- <CAM9d7cjCwykJ+9oB_u1cP+qgLNbwUCFhR31iK9rfjfSFxs13fg@mail.gmail.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <10d67fbc-49b2-25ff-6d02-e13d6a22bced@huawei.com>
-Date:   Tue, 19 Sep 2023 09:50:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Mon, 18 Sep 2023 22:15:24 -0400
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4055C128
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Sep 2023 19:15:17 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-414ba610766so210501cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Sep 2023 19:15:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1695089716; x=1695694516; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=quPggTFwi0XTpntnGHPGihRCg7HVdEcvKNxZf56FGgw=;
+        b=vxEIIpYrug5u43l70R8bkYvN7SMAwxQWtYO2OAcRY7uL4wXC/njoqWpRWh1Y2pmyfS
+         ZlGN44YPisgptekSL3/HOtnPyBqQoNII0YpXxtOo2en7//043svnsFjAfo/jkqDQRfVS
+         JevOYEV9conmfyD4a7wXNUCIyWOUIW2fmBuv8DIirCcsxS5kqkZFpTK+n3ULLqgBSPNl
+         ii6wYq1vyYXPa6DwgaLl+KVqngwxeMta/7v/bLqz7HmyYH4ZCIveutFGgZfa4o00LP+3
+         4YCwkNZtpyyVm0ZSbyv2ZPbq/4b6m1oz0v0kxgaHZz4JOo2hHXIkWzW/yAWUimuJbYfT
+         4oDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695089716; x=1695694516;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=quPggTFwi0XTpntnGHPGihRCg7HVdEcvKNxZf56FGgw=;
+        b=ByNOCTCHyqhzocK0PoFeWPgK4iyYBuHJRAjJ+jhGcG3wNz8hZ+tXqLKRTWeuOyfY4k
+         O0Fgp+avDRGZcvFbkbp1o30trkAnCSRkyoq3wfprXIcH2Bysa9ZJ+yp07OR4TXJurzOT
+         ohoFKa+9kVlxkye8HH3sbTCs3khHBC9jy4lsXqKL0h4EppZk7bV/11VGqE4YkaN4adtI
+         qSdFqxDXDbFu5mSXgtApuYtNsavOIN/xTpnUTBWGmcbedfC17seK3TIbc3ez+Z02Di4o
+         3osmo0GHK8MfgVSLhflV1s3AwnwN3mGztYQo1RuLrUFXKKf27ZyRxHr9GZY+2goafNod
+         /U9Q==
+X-Gm-Message-State: AOJu0YxUwY/l303qHFByP6OGW9BVY9OFe1nOrtirXIOyO1I6fUML1vwi
+        ufp2ierqE/L+bxQJqxaTojlBLtVgz8gRk/6bgqDqcA==
+X-Google-Smtp-Source: AGHT+IHoBSJFRxW0g2Vvg66ZyOabyfndhAOtH+QMKpyq3zzNhS3e3yt+3MKN21XQ9/koIthaqFEP3eTmXB3B3rh2hQg=
+X-Received: by 2002:a05:622a:188d:b0:3f2:1441:3c11 with SMTP id
+ v13-20020a05622a188d00b003f214413c11mr145770qtc.2.1695089716163; Mon, 18 Sep
+ 2023 19:15:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAM9d7cjCwykJ+9oB_u1cP+qgLNbwUCFhR31iK9rfjfSFxs13fg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+References: <20230914211948.814999-1-irogers@google.com> <20230914211948.814999-5-irogers@google.com>
+ <CAM9d7ci3JPZ8ABamXUCRrAEV3jE=twPLSByOU_LC8LdzPedP2w@mail.gmail.com>
+In-Reply-To: <CAM9d7ci3JPZ8ABamXUCRrAEV3jE=twPLSByOU_LC8LdzPedP2w@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 18 Sep 2023 19:15:04 -0700
+Message-ID: <CAP-5=fWTr9f79k=AqGtE0BtwtXBygp6PKtqJGu8dH2W8p0Gs2A@mail.gmail.com>
+Subject: Re: [PATCH v1 4/5] perf test: Ensure EXTRA_TESTS is covered in build test
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Nick Terrell <terrelln@fb.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, Andrii Nakryiko <andrii@kernel.org>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        James Clark <james.clark@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Patrice Duroux <patrice.duroux@gmail.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On Mon, Sep 18, 2023 at 4:34=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> Hi Ian,
+>
+> On Thu, Sep 14, 2023 at 2:20=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > Add to run variable.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/tests/make | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+> > index a3a0f2a8bba0..d9945ed25bc5 100644
+> > --- a/tools/perf/tests/make
+> > +++ b/tools/perf/tests/make
+> > @@ -138,6 +138,7 @@ endif
+> >  run +=3D make_python_perf_so
+> >  run +=3D make_debug
+> >  run +=3D make_nondistro
+> > +run +=3D make_extra_tests
+>
+> I'm curious why it's missed.. I couldn't find a commit to delete it.
+> Maybe due to an incorrect resolution of a merge conflict?
 
-On 2023/9/19 7:55, Namhyung Kim wrote:
-> Hello,
-> 
-> On Sun, Sep 17, 2023 at 8:05 PM Yang Jihong <yangjihong1@huawei.com> wrote:
->>
->> Before caching the JSON events table, perf_pmu__find_events_table() need
->> to check whether table is empty.
->>
->> For example, AuthenticAMD-15-6B-1 is used. The matching events table cannot
->> be found. As a result, a null pointer is accessed when caching JSON events
->> table, causing segfault.
->>
->> Before:
->>    # perf record -vv true
->>    DEBUGINFOD_URLS=
->>    Using CPUID AuthenticAMD-15-6B-1
->>    Segmentation fault (core dumped)
->>
->> After:
->>    # perf record -vv true
->>    DEBUGINFOD_URLS=
->>    Using CPUID AuthenticAMD-15-6B-1
->>    <SNIP>
->>    [ perf record: Woken up 1 times to write data ]
->>    [ perf record: Captured and wrote 0.005 MB perf.data ]
->>
->> Fixes: 7c52f10c0d4d ("perf pmu: Cache JSON events table")
->> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> 
-> Thanks for the fix but please see
-> 
-> https://lore.kernel.org/all/20230913125157.2790375-1-tmricht@linux.ibm.com/
-> 
-
-Uh.. no notice that there is already a fix, please ignore it.
+I think it was just a mistake in the original patch:
+https://lore.kernel.org/lkml/683fea7c-f5e9-fa20-f96b-f6233ed5d2a7@intel.com=
+/
 
 Thanks,
-Yang
+Ian
+
+> Thanks,
+> Namhyung
+>
+>
+> >  run +=3D make_no_bpf_skel
+> >  run +=3D make_gen_vmlinux_h
+> >  run +=3D make_no_libperl
+> > --
+> > 2.42.0.459.ge4e396fd5e-goog
+> >
