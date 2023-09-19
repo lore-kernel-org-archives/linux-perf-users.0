@@ -2,123 +2,106 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F209ACD54AC
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Sep 2023 09:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5B6CD5BBA
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Sep 2023 13:16:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231768AbjISJwb (ORCPT
+        id S232004AbjISNQt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Sep 2023 05:52:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49944 "EHLO
+        Tue, 19 Sep 2023 09:16:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231654AbjISJwZ (ORCPT
+        with ESMTP id S229648AbjISNQs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Sep 2023 05:52:25 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B5B6DF5;
-        Tue, 19 Sep 2023 02:52:16 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D19891FB;
-        Tue, 19 Sep 2023 02:52:53 -0700 (PDT)
-Received: from e127643.broadband (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id ED23F3F67D;
-        Tue, 19 Sep 2023 02:52:14 -0700 (PDT)
-From:   James Clark <james.clark@arm.com>
-To:     linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org
-Cc:     James Clark <james.clark@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
+        Tue, 19 Sep 2023 09:16:48 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21B7AF1;
+        Tue, 19 Sep 2023 06:16:43 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 738B3C433C8;
+        Tue, 19 Sep 2023 13:16:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695129402;
+        bh=Tgx947AMX984xnlu4hGkPuGi+cgC/mGGmoaAgMZ9kF8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MoNVqpVQs/KdLWOrd11QjiNg3qHmz+zOP7mH9PZruHvJCBC65jY8f25Y8XdI7SB2j
+         J33K++/dgnu/J+4jCKcqQz1Tbv9RTE0KdbXHaklBl3g/GydG3MjDlbgXp2IP80jyUe
+         XAaybnL0twZ/IHlgZAXlruZJ6uXFrZtBstrYR1X4/uK39hFpbVRzh7ygJWqiEWgRW6
+         CzO3PJuI0JfonjDC5pPaJ9v8a8jmhAYjn0KxuwVAtbyPDek3uSAhl3FRrSdOf7Rypn
+         MdloMtXODd4nYcT6QAD+pb+TFqL42J6QYZEe+ZUJwiNuNCKYSo0GORdXQ0fPzsaknh
+         02fhScU/Brbuw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2AEC0406D9; Tue, 19 Sep 2023 15:16:40 +0200 (CEST)
+Date:   Tue, 19 Sep 2023 15:16:40 +0200
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Zaid Al-Bassam <zalbassam@google.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] Documentation: arm64: Document the PMU event counting threshold feature
-Date:   Tue, 19 Sep 2023 10:51:29 +0100
-Message-Id: <20230919095137.360963-3-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230919095137.360963-1-james.clark@arm.com>
-References: <20230919095137.360963-1-james.clark@arm.com>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Nick Terrell <terrelln@fb.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, Andrii Nakryiko <andrii@kernel.org>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        James Clark <james.clark@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Patrice Duroux <patrice.duroux@gmail.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v1 0/5] Enable BPF skeletons by default
+Message-ID: <ZQmfOO0tt9FuIkrj@kernel.org>
+References: <20230914211948.814999-1-irogers@google.com>
+ <CAM9d7cgNbRs3LJh_AjqAnRkJzsTxrGr_yqVK-urtoS-B2k1S=w@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7cgNbRs3LJh_AjqAnRkJzsTxrGr_yqVK-urtoS-B2k1S=w@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add documentation for the two new Perf event open parameters and
-the threshold_max capability file.
+Em Mon, Sep 18, 2023 at 04:40:15PM -0700, Namhyung Kim escreveu:
+> On Thu, Sep 14, 2023 at 2:20 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > Enable BPF skeletons by default but warn don't fail if they can't be
+> > supported. This was the intended behavior for Linux 6.4 but it caused
+> > an issue captured in this thread:
+> > https://lore.kernel.org/lkml/20230503211801.897735-1-acme@kernel.org/
+> >
+> > This issue isn't repeated here as the previous issue related to
+> > generating vmlinux.h, which is no longer performed by default as a
+> > checked-in vmlinux.h is used instead.
+> >
+> > Unlike with those changes, the BUILD_BPF_SKEL is kept and setting it
+> > to 0 disables BPF skeletons. Also, rather than fail the build due to a
+> > missed dependency, dependencies are checked and BPF skeletons disabled
+> > if they aren't present.
+> >
+> > Some related commits:
+> > b7a2d774c9c5 perf build: Add ability to build with a generated vmlinux.h
+> > a887466562b4 perf bpf skels: Stop using vmlinux.h generated from BTF, use subset of used structs + CO-RE
+> > a2af0f6b8ef7 perf build: Add system include paths to BPF builds
+> > 5be6cecda080 perf bpf skels: Make vmlinux.h use bpf.h and perf_event.h in source directory
+> > 9a2d5178b9d5 Revert "perf build: Make BUILD_BPF_SKEL default, rename to NO_BPF_SKEL"
+> > a887466562b4 perf bpf skels: Stop using vmlinux.h generated from BTF, use subset of used structs + CO-RE
+> > 1d7966547e11 perf build: Add warning for when vmlinux.h generation fails
+> > a980755beb5a perf build: Make BUILD_BPF_SKEL default, rename to NO_BPF_SKEL
+> >
+> > Ian Rogers (5):
+> >   perf version: Add status of bpf skeletons
+> >   perf build: Default BUILD_BPF_SKEL, warn/disable for missing deps
+> >   perf test: Update build test for changed BPF skeleton defaults
+> >   perf test: Ensure EXTRA_TESTS is covered in build test
+> >   perf test: Detect off-cpu support from build options
+> 
+> Tested-by: Namhyung Kim <namhyung@kernel.org>
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- Documentation/arch/arm64/perf.rst | 58 +++++++++++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
+Is this verbose by default now? Maybe its something on my side, but I
+noticed a higher level of verbosity, can you check?
 
-diff --git a/Documentation/arch/arm64/perf.rst b/Documentation/arch/arm64/perf.rst
-index 1f87b57c2332..122a12607f37 100644
---- a/Documentation/arch/arm64/perf.rst
-+++ b/Documentation/arch/arm64/perf.rst
-@@ -164,3 +164,61 @@ and should be used to mask the upper bits as needed.
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/arch/arm64/tests/user-events.c
- .. _tools/lib/perf/tests/test-evsel.c:
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/lib/perf/tests/test-evsel.c
-+
-+Event Counting Threshold
-+==========================================
-+
-+Overview
-+--------
-+
-+FEAT_PMUv3_TH (Armv8.8) permits a PMU counter to increment only on
-+events whose count meets a specified threshold condition. For example if
-+threshold_control is set to 5 ('Greater than or equal, count'), and
-+the threshold is set to 2, then the PMU counter will now only increment
-+by 1 when an event would have previously incremented the PMU counter by
-+2 or more on a single processor cycle.
-+
-+To increment by the value of the event instead of 1, use the non 'count'
-+comparisons, in this case 4 ('Greater than or equal'). Each comparison
-+has a count and non count version, where the 'count' version always
-+increments the PMU counter by 1 instead of the value of the event.
-+
-+How-to
-+------
-+
-+The threshold and threshold control values can be provided per event:
-+
-+.. code-block:: sh
-+
-+  perf stat -e stall_slot/threshold=2,threshold_control=5/ \
-+            -e dtlb_walk/threshold=10,threshold_control=4/
-+
-+And the following control values are supported:
-+
-+.. code-block::
-+
-+  0: Not-equal
-+  1: Not-equal, count
-+  2: Equals
-+  3: Equals, count
-+  4: Greater-than-or-equal
-+  5: Greater-than-or-equal, count
-+  6: Less-than
-+  7: Less-than, count
-+
-+The maximum supported threshold value can be read from the caps of each
-+PMU, for example:
-+
-+.. code-block:: sh
-+
-+  cat /sys/bus/event_source/devices/armv8_pmuv3/caps/threshold_max
-+
-+  0x000000ff
-+
-+If a value higher than this is given, then it will be silently clamped
-+to the maximum. The highest possible maximum is 4095, as the config
-+field for threshold is limited to 12 bits, and the Perf tool will refuse
-+to parse higher values.
-+
-+If the PMU doesn't support FEAT_PMUv3_TH, then threshold_max will read
-+0, and both threshold and threshold_control will be silently ignored.
--- 
-2.34.1
-
+- Arnaldo
