@@ -2,106 +2,132 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5B6CD5BBA
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Sep 2023 13:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFC4CD5BCD
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Sep 2023 15:05:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232004AbjISNQt (ORCPT
+        id S232660AbjISPFS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Sep 2023 09:16:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51302 "EHLO
+        Tue, 19 Sep 2023 11:05:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229648AbjISNQs (ORCPT
+        with ESMTP id S232542AbjISPFR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Sep 2023 09:16:48 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21B7AF1;
-        Tue, 19 Sep 2023 06:16:43 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 738B3C433C8;
-        Tue, 19 Sep 2023 13:16:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695129402;
-        bh=Tgx947AMX984xnlu4hGkPuGi+cgC/mGGmoaAgMZ9kF8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MoNVqpVQs/KdLWOrd11QjiNg3qHmz+zOP7mH9PZruHvJCBC65jY8f25Y8XdI7SB2j
-         J33K++/dgnu/J+4jCKcqQz1Tbv9RTE0KdbXHaklBl3g/GydG3MjDlbgXp2IP80jyUe
-         XAaybnL0twZ/IHlgZAXlruZJ6uXFrZtBstrYR1X4/uK39hFpbVRzh7ygJWqiEWgRW6
-         CzO3PJuI0JfonjDC5pPaJ9v8a8jmhAYjn0KxuwVAtbyPDek3uSAhl3FRrSdOf7Rypn
-         MdloMtXODd4nYcT6QAD+pb+TFqL42J6QYZEe+ZUJwiNuNCKYSo0GORdXQ0fPzsaknh
-         02fhScU/Brbuw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2AEC0406D9; Tue, 19 Sep 2023 15:16:40 +0200 (CEST)
-Date:   Tue, 19 Sep 2023 15:16:40 +0200
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Nick Terrell <terrelln@fb.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, Andrii Nakryiko <andrii@kernel.org>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        James Clark <james.clark@arm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Patrice Duroux <patrice.duroux@gmail.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v1 0/5] Enable BPF skeletons by default
-Message-ID: <ZQmfOO0tt9FuIkrj@kernel.org>
-References: <20230914211948.814999-1-irogers@google.com>
- <CAM9d7cgNbRs3LJh_AjqAnRkJzsTxrGr_yqVK-urtoS-B2k1S=w@mail.gmail.com>
+        Tue, 19 Sep 2023 11:05:17 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 626E992
+        for <linux-perf-users@vger.kernel.org>; Tue, 19 Sep 2023 08:04:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1695135865;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=2mOJtqNjM2BgyD4KPBQ+Og95EOKGNsoMxxpZLLYYP18=;
+        b=dLtwmO8YE3lD11oZ5AqU/BJnZMpxHs2WPbnseIGpHGhsBHruJt+KV9iVwdLrBScJ1hzipS
+        cFQRAtQm4R9k9yDHdKnIn7N1ftA6fRyTwVXCrAXAxhqFIp6o1ECW4AH5XpgXajaU4jzSMo
+        odMgAmASlbAIHw/q6KinZRA/KXvVoHQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-649-JFPVI7UROTuTTBCzdw367A-1; Tue, 19 Sep 2023 11:04:22 -0400
+X-MC-Unique: JFPVI7UROTuTTBCzdw367A-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 853CF858286;
+        Tue, 19 Sep 2023 15:04:21 +0000 (UTC)
+Received: from fedora.brq.redhat.com (unknown [10.43.17.220])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AFA2510EE859;
+        Tue, 19 Sep 2023 15:04:20 +0000 (UTC)
+From:   vmolnaro@redhat.com
+To:     vmolnaro@redhat.com, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, acme@redhat.com
+Cc:     mpetlan@redhat.com
+Subject: [PATCH 1/2] perf test stat+shadow_stat.sh: Add threshold for rounding errors
+Date:   Tue, 19 Sep 2023 17:02:42 +0200
+Message-ID: <20230919150419.23193-1-vmolnaro@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7cgNbRs3LJh_AjqAnRkJzsTxrGr_yqVK-urtoS-B2k1S=w@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Sep 18, 2023 at 04:40:15PM -0700, Namhyung Kim escreveu:
-> On Thu, Sep 14, 2023 at 2:20 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > Enable BPF skeletons by default but warn don't fail if they can't be
-> > supported. This was the intended behavior for Linux 6.4 but it caused
-> > an issue captured in this thread:
-> > https://lore.kernel.org/lkml/20230503211801.897735-1-acme@kernel.org/
-> >
-> > This issue isn't repeated here as the previous issue related to
-> > generating vmlinux.h, which is no longer performed by default as a
-> > checked-in vmlinux.h is used instead.
-> >
-> > Unlike with those changes, the BUILD_BPF_SKEL is kept and setting it
-> > to 0 disables BPF skeletons. Also, rather than fail the build due to a
-> > missed dependency, dependencies are checked and BPF skeletons disabled
-> > if they aren't present.
-> >
-> > Some related commits:
-> > b7a2d774c9c5 perf build: Add ability to build with a generated vmlinux.h
-> > a887466562b4 perf bpf skels: Stop using vmlinux.h generated from BTF, use subset of used structs + CO-RE
-> > a2af0f6b8ef7 perf build: Add system include paths to BPF builds
-> > 5be6cecda080 perf bpf skels: Make vmlinux.h use bpf.h and perf_event.h in source directory
-> > 9a2d5178b9d5 Revert "perf build: Make BUILD_BPF_SKEL default, rename to NO_BPF_SKEL"
-> > a887466562b4 perf bpf skels: Stop using vmlinux.h generated from BTF, use subset of used structs + CO-RE
-> > 1d7966547e11 perf build: Add warning for when vmlinux.h generation fails
-> > a980755beb5a perf build: Make BUILD_BPF_SKEL default, rename to NO_BPF_SKEL
-> >
-> > Ian Rogers (5):
-> >   perf version: Add status of bpf skeletons
-> >   perf build: Default BUILD_BPF_SKEL, warn/disable for missing deps
-> >   perf test: Update build test for changed BPF skeleton defaults
-> >   perf test: Ensure EXTRA_TESTS is covered in build test
-> >   perf test: Detect off-cpu support from build options
-> 
-> Tested-by: Namhyung Kim <namhyung@kernel.org>
+From: Veronika Molnarova <vmolnaro@redhat.com>
 
-Is this verbose by default now? Maybe its something on my side, but I
-noticed a higher level of verbosity, can you check?
+The test was failing in specific scenarios due to imperfection of FP
+arithmetics. The `bc` command wasn't correctly rounding the result of
+division causing the failure.
 
-- Arnaldo
+Replace the `bc` with `awk` which should work with more decimal places
+and add a threshold to catch any possible rounding errors.  The
+acceptable rounding error is set to 0.01 when the test passes with a
+warning message.
+
+Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
+---
+Resending the patches with sign-off as it didn't go through last time,
+also tried to fix the found issues.
+
+ tools/perf/tests/shell/stat+shadow_stat.sh | 30 +++++++++++++++++-----
+ 1 file changed, 24 insertions(+), 6 deletions(-)
+
+diff --git a/tools/perf/tests/shell/stat+shadow_stat.sh b/tools/perf/tests/shell/stat+shadow_stat.sh
+index 0e9cba84e75..6be3b4f80e5 100755
+--- a/tools/perf/tests/shell/stat+shadow_stat.sh
++++ b/tools/perf/tests/shell/stat+shadow_stat.sh
+@@ -4,6 +4,8 @@
+ 
+ set -e
+ 
++THRESHOLD=0.015
++
+ # skip if system-wide mode is forbidden
+ perf stat -a true > /dev/null 2>&1 || exit 2
+ 
+@@ -33,10 +35,18 @@ test_global_aggr()
+ 		fi
+ 
+ 		# use printf for rounding and a leading zero
+-		res=`printf "%.2f" "$(echo "scale=6; $num / $cyc" | bc -q)"`
++		res=`echo $num $cyc | awk '{printf "%.2f", $1 / $2}'`
+ 		if [ "$ipc" != "$res" ]; then
+-			echo "IPC is different: $res != $ipc  ($num / $cyc)"
+-			exit 1
++			# check the difference from the real result for FP imperfections
++			diff=`echo $ipc $res $THRESHOLD | \
++			awk '{x = ($1 - $2) < 0 ? ($2 - $1) : ($1 - $2); print (x > $3)}'`
++
++			if [ $diff -eq 1 ]; then
++				echo "IPC is different: $res != $ipc  ($num / $cyc)"
++				exit 1
++			fi
++
++			echo "Warning: Difference of IPC is under the threshold"
+ 		fi
+ 	done
+ }
+@@ -67,10 +77,18 @@ test_no_aggr()
+ 		fi
+ 
+ 		# use printf for rounding and a leading zero
+-		res=`printf "%.2f" "$(echo "scale=6; $num / $cyc" | bc -q)"`
++		res=`echo $num $cyc | awk '{printf "%.2f", $1 / $2}'`
+ 		if [ "$ipc" != "$res" ]; then
+-			echo "IPC is different for $cpu: $res != $ipc  ($num / $cyc)"
+-			exit 1
++			# check difference from the real result for FP imperfections
++			diff=`echo $ipc $res $THRESHOLD | \
++			awk '{x = ($1 - $2) < 0 ? ($2 - $1) : ($1 - $2); print (x > $3)}'`
++
++			if [ $diff -eq 1 ]; then
++				echo "IPC is different: $res != $ipc  ($num / $cyc)"
++				exit 1
++			fi
++
++			echo "Warning: Difference of IPC is under the threshold"
+ 		fi
+ 	done
+ }
+-- 
+2.41.0
+
