@@ -2,120 +2,117 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FD6CE79AD
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Sep 2023 04:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E4ECE79AC
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Sep 2023 04:16:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231936AbjITEMF convert rfc822-to-8bit (ORCPT
+        id S231948AbjITEQl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Sep 2023 00:12:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52296 "EHLO
+        Wed, 20 Sep 2023 00:16:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232602AbjITEME (ORCPT
+        with ESMTP id S229534AbjITEQk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Sep 2023 00:12:04 -0400
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E845ACE;
-        Tue, 19 Sep 2023 21:11:56 -0700 (PDT)
-Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7927611c54bso254941739f.2;
-        Tue, 19 Sep 2023 21:11:56 -0700 (PDT)
+        Wed, 20 Sep 2023 00:16:40 -0400
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9CC5AC;
+        Tue, 19 Sep 2023 21:16:34 -0700 (PDT)
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-795547f055fso225984839f.0;
+        Tue, 19 Sep 2023 21:16:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695183116; x=1695787916;
+        d=1e100.net; s=20230601; t=1695183394; x=1695788194;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5kQQlbHlUxfvLP9JSHJJYqYxl0q48pw7jR99N+jK2zs=;
-        b=V5z09hhD1CTGAvIF/v+7P3D35K0D6v01R1PaKG95T/SvtLBmo4taqvPvvxcEspvurV
-         Qh2Kd2wT39f0+2upYDelW0SrH4a3iy4Ibl0pMifk7u1z6CCfG/2R1mht8oXSPorue2/+
-         dw7sZCGIgLeEN35FKvdczwIAr8GtE8UAztSgnoRXwO7oJ9VJ8Cn9TJFtARC09xb4JSvR
-         wB4fGYBNSPBF1kkk7/bLKdAq6xGo5EtQysR20Ms1Y5fNKxgCGK+5g8Ea03Sjooy3nzHn
-         lITZ2qivVoIJcheBqYPcHpOzDpzxD8En0B8Qw7Hi+iZ96z9u88lo4bqAIf9ro3n/6xcM
-         GL0w==
-X-Gm-Message-State: AOJu0Yz3+Db+/mlbh3pHMEKSQySAjAu6E1I1Y7MPPJ4E4u+bpg2GFAzy
-        Acf53mF6bXrt3pCceaCnov+/CU8TWnGgdrDcALSpUwIb
-X-Google-Smtp-Source: AGHT+IEpMvZa4NkKWo18Kgj65yVW8DYWPW8hqDW98NyY095dxfD7Q0TysgmIaqYcrl+hWzzHImFiUB0bFJZPYFtkKkw=
-X-Received: by 2002:a5d:9e0f:0:b0:792:6963:df30 with SMTP id
- h15-20020a5d9e0f000000b007926963df30mr1606515ioh.0.1695183115828; Tue, 19 Sep
- 2023 21:11:55 -0700 (PDT)
+        bh=TByPd9bJxyXIOoM/l5SEaA4+xKnA5Fi2G8S6RG6nvLw=;
+        b=Cka1xYt7SD58HKLzlu7N4+2+7cgYrCVGQTrkCl5+wPSm36K1ArLE3e4NyIPhnpJExG
+         JItGMktwLY7JAeOoS+PJ/NfdlQLbP2+ZsIIidPfsuWINSDeid3HltTEz4N/yEnMgtX/E
+         B6coKvVrTAt8Ed/yGlNSrCf7Ikm6trhpgSuzvDPCK75Ok6bhjSqq6T7vnBVGnZWfNO6n
+         3gx4Hfke3XVNHPPZkWtyVo7d5jhaRmhY7Wm+80Lkbn7QL3myv2RauvRjbZRYQSLk05LG
+         AYisy72y0euslaBv52GvzOXJ36TFdOt1wngQ+GWHXiPON8ySQCVVfM1VLieEG28XEoKH
+         S4+A==
+X-Gm-Message-State: AOJu0YyUaURFnjAMm8+iX1BeyYYART8Wai5ScKayTv1YlYgPl8cT2PKo
+        BJDGyQVlmCYZJzf7idlNb2lS9i84xA2rienzaqc=
+X-Google-Smtp-Source: AGHT+IGJvDTyDwqDXaSxojHGI3tNfZnSPUprUxpgJRnVtkygmR99Dw8cwT2RNSpCsPmaoDGGH7y2cnkV0hB+pf3Ap7k=
+X-Received: by 2002:a05:6602:24cf:b0:791:2db5:c779 with SMTP id
+ h15-20020a05660224cf00b007912db5c779mr1969074ioe.10.1695183394112; Tue, 19
+ Sep 2023 21:16:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230914211948.814999-1-irogers@google.com> <CAM9d7cgNbRs3LJh_AjqAnRkJzsTxrGr_yqVK-urtoS-B2k1S=w@mail.gmail.com>
- <ZQmfOO0tt9FuIkrj@kernel.org> <CAP-5=fXn=5SXqHKxaSAxs3bwQifUTVQWnrQb5A6D=3CHygfHLg@mail.gmail.com>
-In-Reply-To: <CAP-5=fXn=5SXqHKxaSAxs3bwQifUTVQWnrQb5A6D=3CHygfHLg@mail.gmail.com>
+References: <20230919080929.3807123-1-xu.yang_2@nxp.com> <CAP-5=fX46xYdE2bheU+LhW2Joce+De42=d-XqBuFS9F-CPsQsg@mail.gmail.com>
+ <DB7PR04MB450509DB2DBE1FAEF5F06CCD8CF9A@DB7PR04MB4505.eurprd04.prod.outlook.com>
+In-Reply-To: <DB7PR04MB450509DB2DBE1FAEF5F06CCD8CF9A@DB7PR04MB4505.eurprd04.prod.outlook.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 19 Sep 2023 21:11:44 -0700
-Message-ID: <CAM9d7cgTAQ9pQfC7pNHPy1UdZr+5zD0T76EYkosV72-P7HPQjg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/5] Enable BPF skeletons by default
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Nick Terrell <terrelln@fb.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, Andrii Nakryiko <andrii@kernel.org>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        James Clark <james.clark@arm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Patrice Duroux <patrice.duroux@gmail.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev
+Date:   Tue, 19 Sep 2023 21:16:23 -0700
+Message-ID: <CAM9d7chjjYqLrsE7+_GYJ7B5aSJtESi_0dSmahHKOGjwMYPN+w@mail.gmail.com>
+Subject: Re: [EXT] Re: [PATCH] perf jevents: fix no member named 'entries' issue
+To:     Xu Yang <xu.yang_2@nxp.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@kernel.org" <jolsa@kernel.org>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Sep 19, 2023 at 8:40 AM Ian Rogers <irogers@google.com> wrote:
->
-> On Tue, Sep 19, 2023 at 6:16 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > Em Mon, Sep 18, 2023 at 04:40:15PM -0700, Namhyung Kim escreveu:
-> > > On Thu, Sep 14, 2023 at 2:20 PM Ian Rogers <irogers@google.com> wrote:
-> > > >
-> > > > Enable BPF skeletons by default but warn don't fail if they can't be
-> > > > supported. This was the intended behavior for Linux 6.4 but it caused
-> > > > an issue captured in this thread:
-> > > > https://lore.kernel.org/lkml/20230503211801.897735-1-acme@kernel.org/
-> > > >
-> > > > This issue isn't repeated here as the previous issue related to
-> > > > generating vmlinux.h, which is no longer performed by default as a
-> > > > checked-in vmlinux.h is used instead.
-> > > >
-> > > > Unlike with those changes, the BUILD_BPF_SKEL is kept and setting it
-> > > > to 0 disables BPF skeletons. Also, rather than fail the build due to a
-> > > > missed dependency, dependencies are checked and BPF skeletons disabled
-> > > > if they aren't present.
-> > > >
-> > > > Some related commits:
-> > > > b7a2d774c9c5 perf build: Add ability to build with a generated vmlinux.h
-> > > > a887466562b4 perf bpf skels: Stop using vmlinux.h generated from BTF, use subset of used structs + CO-RE
-> > > > a2af0f6b8ef7 perf build: Add system include paths to BPF builds
-> > > > 5be6cecda080 perf bpf skels: Make vmlinux.h use bpf.h and perf_event.h in source directory
-> > > > 9a2d5178b9d5 Revert "perf build: Make BUILD_BPF_SKEL default, rename to NO_BPF_SKEL"
-> > > > a887466562b4 perf bpf skels: Stop using vmlinux.h generated from BTF, use subset of used structs + CO-RE
-> > > > 1d7966547e11 perf build: Add warning for when vmlinux.h generation fails
-> > > > a980755beb5a perf build: Make BUILD_BPF_SKEL default, rename to NO_BPF_SKEL
-> > > >
-> > > > Ian Rogers (5):
-> > > >   perf version: Add status of bpf skeletons
-> > > >   perf build: Default BUILD_BPF_SKEL, warn/disable for missing deps
-> > > >   perf test: Update build test for changed BPF skeleton defaults
-> > > >   perf test: Ensure EXTRA_TESTS is covered in build test
-> > > >   perf test: Detect off-cpu support from build options
-> > >
-> > > Tested-by: Namhyung Kim <namhyung@kernel.org>
-> >
-> > Is this verbose by default now? Maybe its something on my side, but I
-> > noticed a higher level of verbosity, can you check?
->
-> I don't see more verbosity. Logs below.
+Hello,
 
-I don't see it either.
+On Tue, Sep 19, 2023 at 7:07 PM Xu Yang <xu.yang_2@nxp.com> wrote:
+>
+> Hi Lan,
+>
+> > On Tue, Sep 19, 2023 at 1:04 AM Xu Yang <xu.yang_2@nxp.com> wrote:
+> > >
+> > > The struct "pmu_events_table" has been changed after commit
+> > > 2e255b4f9f41 (perf jevents: Group events by PMU, 2023-08-23).
+> > > So there doesn't exist 'entries' in pmu_events_table anymore.
+> > > This will align the members with that commit. Othewise, below
+> > > errors will be printed when run jevent.py:
+> > >
+> > > pmu-events/pmu-events.c:5485:26: error: ‘struct pmu_metrics_table’ has no member named ‘entries’
+> > >  5485 |                         .entries = pmu_metrics__freescale_imx8dxl_sys,
+> > >
+> > > Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
+> >
+> > Reviewed-by: Ian Rogers <irogers@google.com>
+> >
+> > Thanks Xu! I wasn't able to repeat the failure but the fix looks good
+> > to me. Is the failure caused by adding new imx8dxl metrics? I'd like
+>
+> Yes.
+>
+> > to make sure we have testing coverage so this doesn't happen again.
+> > I'm trying:
+> > $ make -C tools/perf O=/tmp/perf JEVENTS_ARCH=all
+> > Could you confirm that this make command was broken without your fix
+> > plus the metric changes you've done?
+>
+> Below steps will repeat the failure.
+>
+> $ cd tools/
+> $ rm perf/pmu-events/arch/arm64/freescale/imx8mm/sys/ddrc.json
+> $ make clean
+> $ make JEVENTS_ARCH=all perf
+>
+> pmu-events/pmu-events.c:76586:26: error: ‘struct pmu_metrics_table’ has no member named ‘entries’
+> 76586 |                         .entries = pmu_metrics__freescale_imx8mm_sys,
+>       |                          ^~~~~~~
+> pmu-events/pmu-events.c:76587:26: error: ‘struct pmu_metrics_table’ has no member named ‘length’
+> 76587 |                         .length = ARRAY_SIZE(pmu_metrics__freescale_imx8mm_sys)
+>       |                          ^~~~~~
+>
+> If only metric table exists, then this error may occur.
+
+I can reproduce the error and confirm it fixed.
+
+Tested-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
