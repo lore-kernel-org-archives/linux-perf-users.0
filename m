@@ -2,165 +2,120 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A85CE79A8
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Sep 2023 02:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FD6CE79AD
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Sep 2023 04:12:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229641AbjITCHr (ORCPT
+        id S231936AbjITEMF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Sep 2023 22:07:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47202 "EHLO
+        Wed, 20 Sep 2023 00:12:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229521AbjITCHq (ORCPT
+        with ESMTP id S232602AbjITEME (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Sep 2023 22:07:46 -0400
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2087.outbound.protection.outlook.com [40.107.249.87])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31C40BE;
-        Tue, 19 Sep 2023 19:07:40 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KTlDRVe0sUMPkUWsP/TCVVnRENrb0purR++vigTQcuFJZJw4SQaUt0URU9VVC92ne+KRrJieu9uZMfcJ1Ldr8k6ELWmehZdklAoC4/YE0R50JTuym1ST90fltNrd6hGdscQOYd9y8vePpSpKS2RBDmusm85VVw9C1J4E8Ey3aLz3hvNbve8Hjhmg5IUT4QFZioRxK6aQaY8PSzgmo198gi1xLUXP7REQWif5TACizX1VeAGX+8ptkercRGFH6wq7szF5PibyC23KNf3LsSQSz6jJiQM21e+NLu66YPA2DcaQZK11UmjHENnYPbnXv7PIBZmMXO7vFjHkDUzvm0EPvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VehUoVtnpI2wIMq9U80KxYvQe9KkfjJg+IanEms74Pw=;
- b=ZDpqmf2+B9x6FnXYea24VHPAucIlIjJnHKD+CjgDmBWjFwmBqrhlgO0EWGvirPoF0anVMx2bFNJhVyvjLvPu7yQrzxfO2+WTIVnhWaVSePk8qC6VYMYGoDriPLtA2xdI4vi1LtzT6ZCkdAcpd7dT1gaf4d91FGymoeoo6oV/XRhANAEKe9I+CNWmdJMvARzv4QF0wymdmBJvBGJ+A4LCHNpp/roXYhUeVeBcpi8sppgJuwLpP4Yya3F+jr2foBsgAxwHvua675Bb2Nq/NNaOYpLG26joDUQZUPsNBFxaDDyD7lCXxbr2pX7C8MKso5M6yQa7NYNEnGSlJIpQaIqJmA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VehUoVtnpI2wIMq9U80KxYvQe9KkfjJg+IanEms74Pw=;
- b=KZsThOKp4bK29xLes6li/zr7n8Dtiv5b/cTJiJXF5zkmZtCa+1i+l0Gp/1XU2BL+aO7GG/RwM8J7K30RkojZtgtxfhZeaZf7SXFsDjF/Gw2uSvcNUvw0OerKJmAOuEOFjuJKbDAiQZESBff7yOCTPhdD1SrgHVFSCKa2gy8mpIg=
-Received: from DB7PR04MB4505.eurprd04.prod.outlook.com (2603:10a6:5:39::26) by
- AS4PR04MB9573.eurprd04.prod.outlook.com (2603:10a6:20b:4fb::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.26; Wed, 20 Sep
- 2023 02:07:37 +0000
-Received: from DB7PR04MB4505.eurprd04.prod.outlook.com
- ([fe80::6444:e07a:e7f7:3923]) by DB7PR04MB4505.eurprd04.prod.outlook.com
- ([fe80::6444:e07a:e7f7:3923%7]) with mapi id 15.20.6792.026; Wed, 20 Sep 2023
- 02:07:37 +0000
-From:   Xu Yang <xu.yang_2@nxp.com>
-To:     Ian Rogers <irogers@google.com>
-CC:     "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@kernel.org" <jolsa@kernel.org>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH] perf jevents: fix no member named 'entries'
- issue
-Thread-Topic: [EXT] Re: [PATCH] perf jevents: fix no member named 'entries'
- issue
-Thread-Index: AQHZ6s/3JFwCL+WAsEqlzRMMHng7dbAiTQuAgACpjLA=
-Date:   Wed, 20 Sep 2023 02:07:37 +0000
-Message-ID: <DB7PR04MB450509DB2DBE1FAEF5F06CCD8CF9A@DB7PR04MB4505.eurprd04.prod.outlook.com>
-References: <20230919080929.3807123-1-xu.yang_2@nxp.com>
- <CAP-5=fX46xYdE2bheU+LhW2Joce+De42=d-XqBuFS9F-CPsQsg@mail.gmail.com>
-In-Reply-To: <CAP-5=fX46xYdE2bheU+LhW2Joce+De42=d-XqBuFS9F-CPsQsg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DB7PR04MB4505:EE_|AS4PR04MB9573:EE_
-x-ms-office365-filtering-correlation-id: 270cfad1-00b8-44a5-9e6e-08dbb97e5caa
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GJIj7knQ6UalKK19KPXxhbEVuyjoPpi35VdGjqgmD9s3mBHhpXg0bkAuzULA6ytoOKJTWa78G5pXZkoMnaHDSV5VsW4u8hSCxpI8SDdi6FOA4eAlBm1tIgjO2Q6QJEpZu/I0xLMbUIhmhBnpeQ3ct3VFatdBwZmm4r7x/YwuSf4eGc+lkYf48EgfXm8hcPv0RDTgm51/qAiGf/ivOX9r6yWCnwBT6yr2PfYiffOc5zOMrUQZrbKoN1HSmxKEBnrXs2pGTJ2AMjS+8PkEHEwm5JtFbCdCHQkUTHX2g9gImuoFgkaMnAy5xP31iPuqEOik7ZvAS5a24MkEYGIrm9pn9YPO/kquQjBgoYVf9xF3y86tIXIR2mm/VC+5mPrZ8/VjI9jzey/zPYMVxATHpyViNQIZmjaU0RAwO0Zq+mvHv2hNSnb4laHjOJVoZL4YYGR/mESORPHvx6j2DZdF+UlVzgwmT+ty10IbDa50fBnBNPjvZhNZ7FcJ0Lj6r7+C2rOwBR1quYyU6MU9Su8XMgHItJHA7HmZ6wZyr0PqDvmZIimKdnT09F6GhHWu6/57rbstatq6LihqEYjh1S1UW3h2GjUB8Iql4HsAeAdcUnRYESqPOsHURpTiF8LDYoP7OVgS
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB4505.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(346002)(396003)(376002)(136003)(39860400002)(1800799009)(186009)(451199024)(6506007)(53546011)(7696005)(83380400001)(9686003)(71200400001)(478600001)(2906002)(7416002)(54906003)(66446008)(66476007)(76116006)(64756008)(66556008)(66946007)(4326008)(316002)(5660300002)(52536014)(6916009)(8936002)(41300700001)(8676002)(33656002)(26005)(86362001)(38100700002)(55016003)(122000001)(38070700005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?YU5VbXkyZHpOSlVLQXVoQUtvdWhiSk9Cb3V2eE1LNWFrbFVmbDd3QzlDNVM0?=
- =?utf-8?B?VEVvUGRHMXRRalBGT0NVMnIzNGhnQzZZWnlGY3pzMjkrTTBMV0pQSUhwQ293?=
- =?utf-8?B?ay9TZkk0bFI1MWw0Y1JFZmEvRXlDQjlQTGhkeHNiNWFZMkJYMENTWmRQaUMv?=
- =?utf-8?B?VktMeFNPNTVXMmpzWW1SekFxR0kvTG1NUnh4M2JtdUVOL2NvZy9CZHlYYy9H?=
- =?utf-8?B?Z0Z4UlBneG9CRitlc09HTHRxcEgrTWd6SGJXVU9seDdSUFJpUmE5Vi80My9r?=
- =?utf-8?B?MHNQMEdBamtiMlpuT21QaStoRSt2OTZTYkNRTkcxZlZzK0lBeFdhYzhFcFdr?=
- =?utf-8?B?YmxSU0c4anFtVTE5bVJDblAzUjBzVmFmbzEwNUt5VFNoU0wxUFN1UFZZSjdK?=
- =?utf-8?B?WkVmQUM1NC8xc0orRUs1NjcxMWd4QW42YURJbTF5M3NhK3N4L0ZhOTVVK1Y0?=
- =?utf-8?B?TGRTbnF4c1p4RFF0dk1jeGhoeDNlYlBrNXhjOTdIbVpnaUJ5MzVZSmNaQWcv?=
- =?utf-8?B?M0RiY3hGZ3J3Ylo0cEtsZzlsd0RwT3F2cnVQWGhoNzJCRjVXT3FNcUdwQldn?=
- =?utf-8?B?WEIzZTRDVytsK2ZFL1VRZnd6eG1aeWprcGN5dnBPdTg2VXJIVlRaRnlSR1hJ?=
- =?utf-8?B?QSszLzY3azZITnJZcTQwbUQxTDN2alhPaDlzZFVIa01YWnRmOUJ1d09yK1dE?=
- =?utf-8?B?a21NUHRpUmJIdGZzdXc2Mmg0SHN6T1JFei90RlYyZDM3VkRZZlRTUmZEdmZP?=
- =?utf-8?B?Q0NRMFBkT1B5WWhUeHpRYmUwR2hmQ3czMUZSRnlLYnBIQVkyRDhUQTZqQ0Rw?=
- =?utf-8?B?ZDMvN1pXTS9UdVNtRzVYNTdHZkFRY3Z6aHgzdEtZNDl2eFVCYi9TeFRiL2xI?=
- =?utf-8?B?aDhkNVUxU1NMRmYzeUo5dW5YMmovZ0d2Rjh4T3l5WWJiWWh0M04vSEdIR0lD?=
- =?utf-8?B?dTVOcUhQUmdsZ0wzVm81eXA2SFdqVktmYzh0SDU2NUNrWnFraU1jdDRDSUVJ?=
- =?utf-8?B?Yy9uUmV5cVQ0dE12MmZaSTYrK3RSY1FqMTRSdHhvWEl6M2ZpUEV1N3M1ei96?=
- =?utf-8?B?dHpaYndrWUJsT0M2MTFhOVRSTEF5NTVGSDkrMHI5ZGlFbXRKQzU1WklTbitU?=
- =?utf-8?B?MnJLTlE1elRKZFVsMWczMzMwUzhDSWc5RkVhczJjVmlwZEN2QXc2by9Cc01t?=
- =?utf-8?B?UUUycGpXOFdRVTJXRFJPQXkvMmNZOFhsV3g3dEJUdmJpV2dKT3NLdlpHa0lk?=
- =?utf-8?B?b1dlSGU2Z0M1MC94WXc2QnEzd3pCaWVBMnR3RFNNYUhzam9TR2NkT2R6ZEhE?=
- =?utf-8?B?ZnpzSzZTZWxwaU5vamNoMTROT2dVMEErVSt2MjMxUU1Nc1lVczdlOUhyRnRT?=
- =?utf-8?B?QTM1NlAwYnNXd3J0Q2pyMkhCSlpVOEdLdXVLelRjUmRwWlM4YUdlT2ZSQlQ3?=
- =?utf-8?B?cUF6clBkUTNVSjBrWVJ5TS9BbWpvMXAzS3dYZmFLaGp2dmpveUNzeW5VRTdK?=
- =?utf-8?B?Z0J3SEQwQWxzVWlYV3BxL252YUtzTmVySFJaUTJ6dHhsK1AycmZFK2tKemZD?=
- =?utf-8?B?bVFHK3JLc1NOQVJ3M0RmZjNhZUl2aWpleHhhWENWK0Q3USs3dW5WODBYUUx3?=
- =?utf-8?B?a3dkY3JtMTBCMnorU0xhS2hpdEFHeWN5QUhjWDJJeDZ1VjQyeUVuNlllRW12?=
- =?utf-8?B?YXBMTEhNN0c4WXkwNDU1L2N0cGZEK1AvYmxSRDFTVVcrMFliTlNHUnBaL3Yz?=
- =?utf-8?B?OVBHbFR5SU1zTVFaZlhJMlM1SVRrd0lXY3lvdnhKbFUveFJoWmdlRVIzNzR0?=
- =?utf-8?B?OVpzd3lmTmo3Q2RnTlkzTTJEQXg0NHR1T3lYWEZ3TURNSnh0VEs5MlAwaFd5?=
- =?utf-8?B?RFBGUkFVQlBOM0lwRkhVTHluNDMybm84YTJYU3pCVkE4N3Q3dTg4ejNWR09P?=
- =?utf-8?B?cE5iNmw3OWl6RW10SnhaRC9sNDlKZE1aRHU0ODg3MGJ5RnM4TGNOUll3SnRD?=
- =?utf-8?B?R2RKZzZtaXFoV1FmK2Q4N0U4ZUFHRm5pdk5LMVVOS0J0SEVTcmNUZU5haDFj?=
- =?utf-8?B?YnN1YURZNytKRHNhbVhpQ21NbnhmdzNjRkRxTGFHTlhrRlBJRk1seURPM1V2?=
- =?utf-8?Q?+No0=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 20 Sep 2023 00:12:04 -0400
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E845ACE;
+        Tue, 19 Sep 2023 21:11:56 -0700 (PDT)
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7927611c54bso254941739f.2;
+        Tue, 19 Sep 2023 21:11:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695183116; x=1695787916;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5kQQlbHlUxfvLP9JSHJJYqYxl0q48pw7jR99N+jK2zs=;
+        b=V5z09hhD1CTGAvIF/v+7P3D35K0D6v01R1PaKG95T/SvtLBmo4taqvPvvxcEspvurV
+         Qh2Kd2wT39f0+2upYDelW0SrH4a3iy4Ibl0pMifk7u1z6CCfG/2R1mht8oXSPorue2/+
+         dw7sZCGIgLeEN35FKvdczwIAr8GtE8UAztSgnoRXwO7oJ9VJ8Cn9TJFtARC09xb4JSvR
+         wB4fGYBNSPBF1kkk7/bLKdAq6xGo5EtQysR20Ms1Y5fNKxgCGK+5g8Ea03Sjooy3nzHn
+         lITZ2qivVoIJcheBqYPcHpOzDpzxD8En0B8Qw7Hi+iZ96z9u88lo4bqAIf9ro3n/6xcM
+         GL0w==
+X-Gm-Message-State: AOJu0Yz3+Db+/mlbh3pHMEKSQySAjAu6E1I1Y7MPPJ4E4u+bpg2GFAzy
+        Acf53mF6bXrt3pCceaCnov+/CU8TWnGgdrDcALSpUwIb
+X-Google-Smtp-Source: AGHT+IEpMvZa4NkKWo18Kgj65yVW8DYWPW8hqDW98NyY095dxfD7Q0TysgmIaqYcrl+hWzzHImFiUB0bFJZPYFtkKkw=
+X-Received: by 2002:a5d:9e0f:0:b0:792:6963:df30 with SMTP id
+ h15-20020a5d9e0f000000b007926963df30mr1606515ioh.0.1695183115828; Tue, 19 Sep
+ 2023 21:11:55 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB4505.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 270cfad1-00b8-44a5-9e6e-08dbb97e5caa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Sep 2023 02:07:37.4661
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XYBFwv8/X/F2nFdJDvz80i300GAaTBeQByESzxoItICpimCMfn4sshF09tWNCzdu+Ur01TFFMeZ/+vWZy+jRbw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR04MB9573
+References: <20230914211948.814999-1-irogers@google.com> <CAM9d7cgNbRs3LJh_AjqAnRkJzsTxrGr_yqVK-urtoS-B2k1S=w@mail.gmail.com>
+ <ZQmfOO0tt9FuIkrj@kernel.org> <CAP-5=fXn=5SXqHKxaSAxs3bwQifUTVQWnrQb5A6D=3CHygfHLg@mail.gmail.com>
+In-Reply-To: <CAP-5=fXn=5SXqHKxaSAxs3bwQifUTVQWnrQb5A6D=3CHygfHLg@mail.gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 19 Sep 2023 21:11:44 -0700
+Message-ID: <CAM9d7cgTAQ9pQfC7pNHPy1UdZr+5zD0T76EYkosV72-P7HPQjg@mail.gmail.com>
+Subject: Re: [PATCH v1 0/5] Enable BPF skeletons by default
+To:     Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Nick Terrell <terrelln@fb.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, Andrii Nakryiko <andrii@kernel.org>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        James Clark <james.clark@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Patrice Duroux <patrice.duroux@gmail.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-SGkgTGFuLA0KDQo+IE9uIFR1ZSwgU2VwIDE5LCAyMDIzIGF0IDE6MDTigK9BTSBYdSBZYW5nIDx4
-dS55YW5nXzJAbnhwLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBUaGUgc3RydWN0ICJwbXVfZXZlbnRz
-X3RhYmxlIiBoYXMgYmVlbiBjaGFuZ2VkIGFmdGVyIGNvbW1pdA0KPiA+IDJlMjU1YjRmOWY0MSAo
-cGVyZiBqZXZlbnRzOiBHcm91cCBldmVudHMgYnkgUE1VLCAyMDIzLTA4LTIzKS4NCj4gPiBTbyB0
-aGVyZSBkb2Vzbid0IGV4aXN0ICdlbnRyaWVzJyBpbiBwbXVfZXZlbnRzX3RhYmxlIGFueW1vcmUu
-DQo+ID4gVGhpcyB3aWxsIGFsaWduIHRoZSBtZW1iZXJzIHdpdGggdGhhdCBjb21taXQuIE90aGV3
-aXNlLCBiZWxvdw0KPiA+IGVycm9ycyB3aWxsIGJlIHByaW50ZWQgd2hlbiBydW4gamV2ZW50LnB5
-Og0KPiA+DQo+ID4gcG11LWV2ZW50cy9wbXUtZXZlbnRzLmM6NTQ4NToyNjogZXJyb3I6IOKAmHN0
-cnVjdCBwbXVfbWV0cmljc190YWJsZeKAmSBoYXMgbm8gbWVtYmVyIG5hbWVkIOKAmGVudHJpZXPi
-gJkNCj4gPiAgNTQ4NSB8ICAgICAgICAgICAgICAgICAgICAgICAgIC5lbnRyaWVzID0gcG11X21l
-dHJpY3NfX2ZyZWVzY2FsZV9pbXg4ZHhsX3N5cywNCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFh1
-IFlhbmcgPHh1LnlhbmdfMkBueHAuY29tPg0KPiANCj4gUmV2aWV3ZWQtYnk6IElhbiBSb2dlcnMg
-PGlyb2dlcnNAZ29vZ2xlLmNvbT4NCj4gDQo+IFRoYW5rcyBYdSEgSSB3YXNuJ3QgYWJsZSB0byBy
-ZXBlYXQgdGhlIGZhaWx1cmUgYnV0IHRoZSBmaXggbG9va3MgZ29vZA0KPiB0byBtZS4gSXMgdGhl
-IGZhaWx1cmUgY2F1c2VkIGJ5IGFkZGluZyBuZXcgaW14OGR4bCBtZXRyaWNzPyBJJ2QgbGlrZQ0K
-DQpZZXMuDQoNCj4gdG8gbWFrZSBzdXJlIHdlIGhhdmUgdGVzdGluZyBjb3ZlcmFnZSBzbyB0aGlz
-IGRvZXNuJ3QgaGFwcGVuIGFnYWluLg0KPiBJJ20gdHJ5aW5nOg0KPiAkIG1ha2UgLUMgdG9vbHMv
-cGVyZiBPPS90bXAvcGVyZiBKRVZFTlRTX0FSQ0g9YWxsDQo+IENvdWxkIHlvdSBjb25maXJtIHRo
-YXQgdGhpcyBtYWtlIGNvbW1hbmQgd2FzIGJyb2tlbiB3aXRob3V0IHlvdXIgZml4DQo+IHBsdXMg
-dGhlIG1ldHJpYyBjaGFuZ2VzIHlvdSd2ZSBkb25lPw0KDQpCZWxvdyBzdGVwcyB3aWxsIHJlcGVh
-dCB0aGUgZmFpbHVyZS4NCg0KJCBjZCB0b29scy8NCiQgcm0gcGVyZi9wbXUtZXZlbnRzL2FyY2gv
-YXJtNjQvZnJlZXNjYWxlL2lteDhtbS9zeXMvZGRyYy5qc29uDQokIG1ha2UgY2xlYW4NCiQgbWFr
-ZSBKRVZFTlRTX0FSQ0g9YWxsIHBlcmYNCg0KcG11LWV2ZW50cy9wbXUtZXZlbnRzLmM6NzY1ODY6
-MjY6IGVycm9yOiDigJhzdHJ1Y3QgcG11X21ldHJpY3NfdGFibGXigJkgaGFzIG5vIG1lbWJlciBu
-YW1lZCDigJhlbnRyaWVz4oCZDQo3NjU4NiB8ICAgICAgICAgICAgICAgICAgICAgICAgIC5lbnRy
-aWVzID0gcG11X21ldHJpY3NfX2ZyZWVzY2FsZV9pbXg4bW1fc3lzLA0KICAgICAgfCAgICAgICAg
-ICAgICAgICAgICAgICAgICAgXn5+fn5+fg0KcG11LWV2ZW50cy9wbXUtZXZlbnRzLmM6NzY1ODc6
-MjY6IGVycm9yOiDigJhzdHJ1Y3QgcG11X21ldHJpY3NfdGFibGXigJkgaGFzIG5vIG1lbWJlciBu
-YW1lZCDigJhsZW5ndGjigJkNCjc2NTg3IHwgICAgICAgICAgICAgICAgICAgICAgICAgLmxlbmd0
-aCA9IEFSUkFZX1NJWkUocG11X21ldHJpY3NfX2ZyZWVzY2FsZV9pbXg4bW1fc3lzKQ0KICAgICAg
-fCAgICAgICAgICAgICAgICAgICAgICAgICAgXn5+fn5+DQoNCklmIG9ubHkgbWV0cmljIHRhYmxl
-IGV4aXN0cywgdGhlbiB0aGlzIGVycm9yIG1heSBvY2N1ci4NCg0KVGhhbmtzLA0KWHUgWWFuZw0K
-DQo=
+On Tue, Sep 19, 2023 at 8:40 AM Ian Rogers <irogers@google.com> wrote:
+>
+> On Tue, Sep 19, 2023 at 6:16 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > Em Mon, Sep 18, 2023 at 04:40:15PM -0700, Namhyung Kim escreveu:
+> > > On Thu, Sep 14, 2023 at 2:20 PM Ian Rogers <irogers@google.com> wrote:
+> > > >
+> > > > Enable BPF skeletons by default but warn don't fail if they can't be
+> > > > supported. This was the intended behavior for Linux 6.4 but it caused
+> > > > an issue captured in this thread:
+> > > > https://lore.kernel.org/lkml/20230503211801.897735-1-acme@kernel.org/
+> > > >
+> > > > This issue isn't repeated here as the previous issue related to
+> > > > generating vmlinux.h, which is no longer performed by default as a
+> > > > checked-in vmlinux.h is used instead.
+> > > >
+> > > > Unlike with those changes, the BUILD_BPF_SKEL is kept and setting it
+> > > > to 0 disables BPF skeletons. Also, rather than fail the build due to a
+> > > > missed dependency, dependencies are checked and BPF skeletons disabled
+> > > > if they aren't present.
+> > > >
+> > > > Some related commits:
+> > > > b7a2d774c9c5 perf build: Add ability to build with a generated vmlinux.h
+> > > > a887466562b4 perf bpf skels: Stop using vmlinux.h generated from BTF, use subset of used structs + CO-RE
+> > > > a2af0f6b8ef7 perf build: Add system include paths to BPF builds
+> > > > 5be6cecda080 perf bpf skels: Make vmlinux.h use bpf.h and perf_event.h in source directory
+> > > > 9a2d5178b9d5 Revert "perf build: Make BUILD_BPF_SKEL default, rename to NO_BPF_SKEL"
+> > > > a887466562b4 perf bpf skels: Stop using vmlinux.h generated from BTF, use subset of used structs + CO-RE
+> > > > 1d7966547e11 perf build: Add warning for when vmlinux.h generation fails
+> > > > a980755beb5a perf build: Make BUILD_BPF_SKEL default, rename to NO_BPF_SKEL
+> > > >
+> > > > Ian Rogers (5):
+> > > >   perf version: Add status of bpf skeletons
+> > > >   perf build: Default BUILD_BPF_SKEL, warn/disable for missing deps
+> > > >   perf test: Update build test for changed BPF skeleton defaults
+> > > >   perf test: Ensure EXTRA_TESTS is covered in build test
+> > > >   perf test: Detect off-cpu support from build options
+> > >
+> > > Tested-by: Namhyung Kim <namhyung@kernel.org>
+> >
+> > Is this verbose by default now? Maybe its something on my side, but I
+> > noticed a higher level of verbosity, can you check?
+>
+> I don't see more verbosity. Logs below.
+
+I don't see it either.
+
+Thanks,
+Namhyung
