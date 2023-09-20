@@ -1,64 +1,50 @@
-Return-Path: <linux-perf-users+bounces-1-linux-perf-users=archiver.kernel.org@vger.kernel.org>
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0009CC04FF7
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Sep 2023 19:52:32 +0000 (UTC)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0CDBE1C2084C
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Sep 2023 19:52:32 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9183C450C6;
-	Wed, 20 Sep 2023 19:52:18 +0000 (UTC)
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5B43FB0B
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 Sep 2023 19:52:16 +0000 (UTC)
-Received: from mail-yw1-x1132.google.com (mail-yw1-x1132.google.com [IPv6:2607:f8b0:4864:20::1132])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 851C1D6
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 Sep 2023 12:52:15 -0700 (PDT)
-Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-59c0442a359so2836847b3.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Sep 2023 12:52:15 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E5941225
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 Sep 2023 20:15:41 +0000 (UTC)
+Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8A03C9
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 Sep 2023 13:15:39 -0700 (PDT)
+Received: by mail-qk1-x72d.google.com with SMTP id af79cd13be357-76ef80a503fso10086285a.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Sep 2023 13:15:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1695239534; x=1695844334; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=i6XY8wIMD7LjGNpegRcCUKrZA0w1gq5GxQRY7mj2AIc=;
-        b=IBfe9QuYzIjLJoMieQ9UClN+pIjHMly/FiZINK7vZf8eX2tHxCJ/6Rb2NF4SAKW+hU
-         FpJ8BvtJWozoQfGKaFS2QpgBqZLNwutXOUeKjWt4xr2vzw1WXDbdzqEkOi9oFob2/miU
-         UjpHeeGdsXA+BfvdR9BaHw248Y7AGuZcMebM4=
+        d=linuxfoundation.org; s=google; t=1695240939; x=1695845739; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KjiggUyQYaXdrX5h9h6CEmaZNsBN7wNveaVEjl3faww=;
+        b=gzcneh+E/b39WZFZXupKfrJrFkgyKJK9LLcVsVadvicyjNcx3Oqe/r5Ae8yqn1Sqf6
+         aUlogDFXfVuZkuF13TiSBw9uZGqlk69veUO4L6dG75tVnFfk7zpzik86CadtK7IbzHO5
+         LWUP49N5s65Z48Fyi6pNFIOpU0lXEfIaWhOxc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695239534; x=1695844334;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i6XY8wIMD7LjGNpegRcCUKrZA0w1gq5GxQRY7mj2AIc=;
-        b=KdPzsRP/cgKZsiiu4Ts6cTm82C1kP+4HjQxwL77HqGS3L8TuehfkR8ND7x/j3oar4e
-         h7/aod9+lDXR6ihd3WfEufaMorQbtEDqCK3iSJxJbatRr4HnoJ/fHnQUHSJ3sPOoy41o
-         g7+ERJOQehxiDRCrtIaR8eXe2/Io3TCHOED4PrHy211JDPj303hMbLlFYgcvMM2UcrFd
-         QxJx8Bk7bptqxsp5ab1dlgUsENoY7aUg1Ux+A70zcfEe+oSNtqgmwYD5uxi5QCu/fBeR
-         NU3jb1PczdDh2UOceeE5XbpNDJ22NALeWqcPfVCufxgO1ineBI6bm5rof0+PjAK3y/y+
-         Ulfw==
-X-Gm-Message-State: AOJu0Yzn9vai18YkxxmJnalcYK77DD05B7LYBUfWpJ9L8WQEXqjSgij8
-	R3Bs2NAp4vH9m74D6ymFMvvV2bYOtknsrkuqvPg=
-X-Google-Smtp-Source: AGHT+IE34WLE4Cfpn3/mrrUYZ+NVqbx/9khGu7tOlXbwDv4JWUwVQmIsGV3ZOglYnX/uY5dff3oc1Q==
-X-Received: by 2002:a81:a087:0:b0:561:c5d4:ee31 with SMTP id x129-20020a81a087000000b00561c5d4ee31mr3955439ywg.38.1695239534737;
-        Wed, 20 Sep 2023 12:52:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1695240939; x=1695845739;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KjiggUyQYaXdrX5h9h6CEmaZNsBN7wNveaVEjl3faww=;
+        b=na8tp1sWvce8JPzYLF0VRp+8iR1J53l36g6gD7edHBvw871KcP/EROPVgsou360rvF
+         9cF/meyPS1Pmc0dZcGj0bc01GO6lVz3I51lNne2+ILru3j8tCyq0zASXKU1QBOjdRB/R
+         MXYzCiNtfg5VSC0tONJFwIPUr61BLwPIgqjnMwabH6hFho3p2lgmm1CPDPZksnMzD80K
+         L3pvyVZlIZFpPFkMd6wPszDGp+z8J2DqZSX2T1eKrS0hQnC+ae1sk2M13HcubBlnLPNr
+         HlfOEXQJD2aYPQNJ9H1d5lPHbthXojDzFotZA901msEvBl6dcbH7P/9nNvRzPMVWHCVQ
+         ucqw==
+X-Gm-Message-State: AOJu0YwroX6x+rPftQu0Xcvu9BV7ttV74XiOgVUBeGna17t+3gyUXwKm
+	iD2gnuYzTUUWhwVXoFID9eiGlw==
+X-Google-Smtp-Source: AGHT+IGzk01VxcNRtiMCm3IRpOiOofgFrIbB2ochwvXCEJnvd8LLC832yOxk2yPa78lhoBtatxrQnA==
+X-Received: by 2002:a05:620a:2943:b0:772:6419:89ab with SMTP id n3-20020a05620a294300b00772641989abmr4647613qkp.55.1695240938672;
+        Wed, 20 Sep 2023 13:15:38 -0700 (PDT)
 Received: from meerkat.local ([209.226.106.110])
-        by smtp.gmail.com with ESMTPSA id t6-20020a05620a034600b0076ce061f44dsm5062450qkm.25.2023.09.20.12.52.14
+        by smtp.gmail.com with ESMTPSA id t2-20020a05620a034200b0076ce061f44dsm5369qkm.25.2023.09.20.13.15.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Sep 2023 12:52:14 -0700 (PDT)
-Date: Wed, 20 Sep 2023 15:52:05 -0400
+        Wed, 20 Sep 2023 13:15:38 -0700 (PDT)
+Date: Wed, 20 Sep 2023 16:15:29 -0400
 From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
 To: dwarves@vger.kernel.org, linux-perf-users@vger.kernel.org, 
 	linux-rt-users@vger.kernel.org, linux-rtc@vger.kernel.org, linux-trace-devel@vger.kernel.org, 
 	linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Subject: This list is being migrated to new infrastructure
-Message-ID: <20230920-uncouple-grime-729f33@meerkat>
+Subject: Re: This list is being migrated to new infrastructure
+Message-ID: <20230920-ligament-cortex-6344a0@meerkat>
+References: <20230920-uncouple-grime-729f33@meerkat>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,16 +53,29 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <20230920-uncouple-grime-729f33@meerkat>
+X-Spam-Status: No, score=2.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SORTED_RECIPS,SPF_HELO_NONE,SPF_PASS,
+	SUSPICIOUS_RECIPS autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: **
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-Hello, all:
+On Wed, Sep 20, 2023 at 03:52:05PM -0400, Konstantin Ryabitsev wrote:
+> Hello, all:
+> 
+> This list is being migrated to the new vger infrastructure. This should be a
+> fully transparent process and you don't need to change anything about how you
+> participate with the list or how you receive mail.
+> 
+> There will be a brief 20-minute delay with archives on lore.kernel.org. I will
+> follow up once the archive migration has been completed.
 
-This list is being migrated to the new vger infrastructure. This should be a
-fully transparent process and you don't need to change anything about how you
-participate with the list or how you receive mail.
+This work is now completed. I will monitor the performance to make
+sure that the new infrastructure is still successfully coping with the
+email traffic.
 
-There will be a brief 20-minute delay with archives on lore.kernel.org. I will
-follow up once the archive migration has been completed.
+If you notice any problems, please report them to helpdesk at kernel.org.
 
-Best regards,
-Konstantin
-
+-K
