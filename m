@@ -2,192 +2,174 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08687C04FE7
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Sep 2023 18:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD100C04FF1
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Sep 2023 19:29:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229645AbjITShO (ORCPT
+        id S230213AbjITT3c (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Sep 2023 14:37:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45474 "EHLO
+        Wed, 20 Sep 2023 15:29:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229587AbjITShN (ORCPT
+        with ESMTP id S230216AbjITT3T (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Sep 2023 14:37:13 -0400
-Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1494CA
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Sep 2023 11:37:07 -0700 (PDT)
-Received: by mail-qt1-x836.google.com with SMTP id d75a77b69052e-41513d2cca7so65821cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Sep 2023 11:37:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695235027; x=1695839827; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0O+D8ee7zVjlDA63SdSMbPU/xhmCnjuF2y/9Wte3IZU=;
-        b=NQJOdJ8WxdL54Ou233drNw7O9zKHOOoHyyW6zSoT/ZS08d2yM70cmDN+pncETN+dwe
-         b4wWDGIaPwHx2Dh5p/m9z7mQmHxRZ6nsLELHK7+R2NozymYYfX74airpiEkj9xc/afvr
-         SXwtqySL/KV1AsMsxSJ6FT9gOr9Tr9eL1kglQL8uI9BtAKxP57f/7/bjLZZ7qUPwyovw
-         IUzQrn+YCrlSrPIeLMraAPUuakiOTyhPLjXoeVJ5srGkYJllT2ed8ZUom/RZ9YP8o2cT
-         uQNjJAb9UjZqkEaVDJCdZR9fBiRzGoR2EBmfmyeXdSZtEr/Zq0Z7KYPc0oc4O/sWklo5
-         8bHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695235027; x=1695839827;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0O+D8ee7zVjlDA63SdSMbPU/xhmCnjuF2y/9Wte3IZU=;
-        b=PF8BFSeO5H8AiaRYicy3PlP97win4XYzQd0HDuaiFrafFBAx0MSAza6GP6CCNGTht0
-         JySxlLSsv0oL2j07CN3OTjQNFtV3xaB/7A4okD6jdv0Ks42cNIcqFVwN+RLJoXVEJRb1
-         XOXu09YXDtg0XCq1YGtifFvJtQaqCvJ8rQbgf/9sIqIxK6A5Vpe8KRnCMfwdlI21ZLHX
-         lKcmZjZU1SBsgOE3s2vTfiXtY8FdZbBRKOB8BCke3O4VLG5jE+xO0mmmUenGjICAk4Z2
-         bW/mOtu8t5yRfjv9fVh6Z+KKzOAhBoducy0TTxd0go6Chrh7yRLlkdxPpNOIQ6Pibzom
-         0ZeA==
-X-Gm-Message-State: AOJu0Yz6cOLxQemc/F9uj7SFtVQaZ3q8yMoiU4KYMvQwYHze/6ZaAKHh
-        zyNp8aIGSQFG3n/z7TNT15B2jXmRcgzTHfdU0NV5ig==
-X-Google-Smtp-Source: AGHT+IHH8trGn6FixfU9iGVDAVjtavlrf27fE86uW31DiR0c3+ziEee+4De0deb9fORimQ1w5hztZnp/3gkgd72l680=
-X-Received: by 2002:ac8:4e4a:0:b0:416:ea40:6e8c with SMTP id
- e10-20020ac84e4a000000b00416ea406e8cmr21592qtw.6.1695235026683; Wed, 20 Sep
- 2023 11:37:06 -0700 (PDT)
+        Wed, 20 Sep 2023 15:29:19 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BBC6CC8
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Sep 2023 12:29:00 -0700 (PDT)
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38KJGmfU015235;
+        Wed, 20 Sep 2023 19:28:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=Ln1O9xCXJfSgbdvWPQ6PmKZ6H1Jl9jEWSq/Kxv55ao8=;
+ b=QOwsi8zYzHhRXbaT7okBbiC1xueb12Vqb1KcJ4FwlxdvF/uTHN9MBQFX/Mcn7fNbVKsa
+ ciUuA2Drp/k9ZhbhybiIxScpLJj2u99zGKbcaEBSnAU0LUVcEATLP2GyPy2795qJHgD2
+ JR4zudviN4RAHhstvXeYeB6rU2OJa6AzRRgbLOzxo+xju1wibNvY43YrrmmJ48fsluxF
+ kMzWgDtzjnvpqm9bxhSx1qarSjPidq1VjqgeiijjfWgm7UOYFpsjxG8tIE2UsMO0ohos
+ eolqJZU5AN7togxp7VZdLC1dXgR2gzOK+XMut/XUBcJ4Gn88BjdchqzpKRrNR5A0Bcon XA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t84pxc1ph-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 Sep 2023 19:28:56 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38KJHHnE018616;
+        Wed, 20 Sep 2023 19:28:55 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t84pxc1p5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 Sep 2023 19:28:55 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38KHKwGj010122;
+        Wed, 20 Sep 2023 19:28:54 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+        by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3t5rwkge8y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 Sep 2023 19:28:54 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38KJSpef27722412
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Sep 2023 19:28:51 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C1A9E20043;
+        Wed, 20 Sep 2023 19:28:51 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ACAD820040;
+        Wed, 20 Sep 2023 19:28:49 +0000 (GMT)
+Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com.com (unknown [9.171.61.45])
+        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Wed, 20 Sep 2023 19:28:49 +0000 (GMT)
+From:   Aditya Gupta <adityag@linux.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
+        namhyung@kernel.org
+Cc:     linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+Subject: [PATCH v2 0/4] Introduce perf check subcommand
+Date:   Thu, 21 Sep 2023 00:58:43 +0530
+Message-ID: <20230920192847.975897-1-adityag@linux.ibm.com>
+X-Mailer: git-send-email 2.41.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: EUY6XAjOoIbj78hTXQoyHgIgmIIpANfm
+X-Proofpoint-GUID: 0GFk_Ygo33uHjxNSkc1KMo0Rk98buUMY
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-References: <1695037955-107983-1-git-send-email-renyu.zj@linux.alibaba.com> <1695037955-107983-2-git-send-email-renyu.zj@linux.alibaba.com>
-In-Reply-To: <1695037955-107983-2-git-send-email-renyu.zj@linux.alibaba.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 20 Sep 2023 11:36:55 -0700
-Message-ID: <CAP-5=fUxfJT-gxKB+Ls3drUeQ0sy55uydi8Y36gumUnaFSYeqA@mail.gmail.com>
-Subject: Re: [PATCH v9 1/7] perf pmu: "Compat" supports regular expression
- matching identifiers
-To:     Jing Zhang <renyu.zj@linux.alibaba.com>
-Cc:     John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-20_09,2023-09-20_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 priorityscore=1501 impostorscore=0 mlxlogscore=999
+ suspectscore=0 clxscore=1011 adultscore=0 malwarescore=0 mlxscore=0
+ spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309200158
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Sep 18, 2023 at 4:52=E2=80=AFAM Jing Zhang <renyu.zj@linux.alibaba.=
-com> wrote:
->
-> The jevent "Compat" is used for uncore PMU alias or metric definitions.
->
-> The same PMU driver has different PMU identifiers due to different
-> hardware versions and types, but they may have some common PMU event.
-> Since a Compat value can only match one identifier, when adding the
-> same event alias to PMUs with different identifiers, each identifier
-> needs to be defined once, which is not streamlined enough.
->
-> So let "Compat" support using regular expression to match identifiers
-> for uncore PMU alias. For example, if the "Compat" value is set to
-> "43401|43c01", it would be able to match PMU identifiers such as "43401"
-> or "43c01", which correspond to CMN600_r0p0 or CMN700_r0p0.
->
-> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
-> ---
->  tools/perf/util/pmu.c | 23 +++++++++++++++++++++--
->  tools/perf/util/pmu.h |  1 +
->  2 files changed, 22 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index e215985..7e2242f 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -28,6 +28,7 @@
->  #include "strbuf.h"
->  #include "fncache.h"
->  #include "util/evsel_config.h"
-> +#include <regex.h>
->
->  struct perf_pmu perf_pmu__fake =3D {
->         .name =3D "fake",
-> @@ -875,6 +876,24 @@ static bool pmu_uncore_alias_match(const char *pmu_n=
-ame, const char *name)
->         return res;
->  }
->
-> +bool pmu_uncore_identifier_match(const char *compat, const char *id)
-> +{
-> +       regex_t re;
-> +       regmatch_t pmatch[1];
-> +       int match;
-> +
-> +       if (regcomp(&re, compat, REG_EXTENDED) !=3D 0) {
-> +               /* Warn unable to generate match particular string. */
-> +               pr_info("Invalid regular expression %s\n", compat);
-> +               return false;
-> +       }
-> +
-> +       match =3D !regexec(&re, id, 1, pmatch, 0);
+The Problem
+===========
 
-I wonder if we can make the regular expressions like
-"^(434|436|43c|43a)" more like "(434|436|43c|43a).*", so that we fully
-match the id string, by here doing:
+Currently the presence of a feature is checked with a combination of
+perf version --build-options and greps, such as:
 
-if (match) {
-  /* Ensure a full match. */
-  match =3D pmatch[0].rm_so =3D=3D 0 && pmatch[0].rm_eo =3D=3D strlen(id);
-}
+    perf version --build-options | grep " on .* HAVE_FEATURE"
 
-I think longer term we can use jevents.py to generate a pmu-events.l,
-which would have a contents something like:
+Proposed solution
+=================
 
-(434|436|43c|43a).*  { return PMU_....;}
+As suggested by contributors in:
+https://lore.kernel.org/linux-perf-users/ZMPWk5K63tadmDlU@kernel.org/
 
-That should make the matching faster but may add some restrictions
-onto the regular expression.
+Introduce a subcommand "perf check --feature", with which
+scripts can test for presence of a feature, such as:
 
-Thanks,
-Ian
+    perf check --feature HAVE_LIBTRACEEVENT
 
-> +       regfree(&re);
-> +
-> +       return match;
-> +}
-> +
->  static int pmu_add_cpu_aliases_map_callback(const struct pmu_event *pe,
->                                         const struct pmu_events_table *ta=
-ble __maybe_unused,
->                                         void *vdata)
-> @@ -915,8 +934,8 @@ static int pmu_add_sys_aliases_iter_fn(const struct p=
-mu_event *pe,
->         if (!pe->compat || !pe->pmu)
->                 return 0;
->
-> -       if (!strcmp(pmu->id, pe->compat) &&
-> -           pmu_uncore_alias_match(pe->pmu, pmu->name)) {
-> +       if (pmu_uncore_alias_match(pe->pmu, pmu->name) &&
-> +                       pmu_uncore_identifier_match(pe->compat, pmu->id))=
- {
->                 perf_pmu__new_alias(pmu,
->                                 pe->name,
->                                 pe->desc,
-> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> index bd5d804..fc155ce 100644
-> --- a/tools/perf/util/pmu.h
-> +++ b/tools/perf/util/pmu.h
-> @@ -240,6 +240,7 @@ void pmu_add_cpu_aliases_table(struct perf_pmu *pmu,
->  char *perf_pmu__getcpuid(struct perf_pmu *pmu);
->  const struct pmu_events_table *pmu_events_table__find(void);
->  const struct pmu_metrics_table *pmu_metrics_table__find(void);
-> +bool pmu_uncore_identifier_match(const char *compat, const char *id);
->
->  int perf_pmu__convert_scale(const char *scale, char **end, double *sval)=
-;
->
-> --
-> 1.8.3.1
->
+    or
+
+    perf check --feature libtraceevent
+
+The usage of "perf version --build-options | grep" has been replaced in two
+tests, with "perf check --feature" command
+
+Also, to not duplicate the same feature list at multiple places, a new global
+'supported_features' array has been introduced in builtin.h, so both commands
+'perf check --feature' and 'perf version --build-options' use the same array
+
+'supported_features' feature is an array of 'struct feature_support', which
+also has the name of the feature, macro used to test it's presence, and a
+is_builtin member, which will be 0 if feature not built-in, and 1 if built-in
+
+Architectures Tested
+====================
+* x86_64
+* ppc64le
+
+Git tree
+========
+
+Git tree with this patch series applied for testing:
+https://github.com/adi-g15-ibm/linux/tree/perf-check-feature-v2
+
+Changelog
+=========
+V2
++ improved the patch series with suggestions from Namhyung
++ fix incorrect return value, added -q option, and moved array definition to
+  perf-check.c
+V1
++ changed subcommand name to 'perf check --feature'
++ added documentation for perf check
++ support both macro (eg. HAVE_LIBTRACEEVENT), and name (eg. libtraceevent) as
+  input to 'perf check --feature'
++ change subject and descriptions of all patch mentioning perf check instead of
+  perf build
+
+V0: Previous patch series: https://lore.kernel.org/linux-perf-users/20230825061125.24312-1-adityag@linux.ibm.com/
+
+Aditya Gupta (3):
+  perf check: introduce check subcommand
+  perf version: update --build-options to use 'supported_features' array
+  perf tests task_analyzer: use perf check for libtraceevent support
+
+Athira Rajeev (1):
+  tools/perf/tests: Update probe_vfs_getname.sh script to use perf check
+    --feature
+
+ tools/perf/Build                              |   1 +
+ tools/perf/Documentation/perf-check.txt       |  56 ++++++++
+ tools/perf/builtin-check.c                    | 128 ++++++++++++++++++
+ tools/perf/builtin-version.c                  |  39 ++----
+ tools/perf/builtin.h                          |  18 +++
+ tools/perf/perf.c                             |   1 +
+ .../perf/tests/shell/lib/probe_vfs_getname.sh |   4 +-
+ .../shell/record+probe_libc_inet_pton.sh      |   5 +-
+ .../shell/record+script_probe_vfs_getname.sh  |   5 +-
+ tools/perf/tests/shell/test_task_analyzer.sh  |   4 +-
+ 10 files changed, 224 insertions(+), 37 deletions(-)
+ create mode 100644 tools/perf/Documentation/perf-check.txt
+ create mode 100644 tools/perf/builtin-check.c
+
+-- 
+2.41.0
+
