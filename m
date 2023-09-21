@@ -1,51 +1,63 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A771803C
-	for <linux-perf-users@vger.kernel.org>; Thu, 21 Sep 2023 17:49:26 +0000 (UTC)
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FFBB89208;
-	Thu, 21 Sep 2023 10:39:36 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4RrqlK455Tz4xNq;
-	Thu, 21 Sep 2023 19:26:05 +1000 (AEST)
-From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: Kajol Jain <kjain@linux.ibm.com>
-Cc: atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, maddy@linux.ibm.com, disgoel@linux.ibm.com, linuxppc-dev@lists.ozlabs.org, Krishan Gopal Sarawast <krishang@linux.vnet.ibm.com>
-In-Reply-To: <20230825055601.360083-1-kjain@linux.ibm.com>
-References: <20230825055601.360083-1-kjain@linux.ibm.com>
-Subject: Re: [PATCH] powerpc/perf/hv-24x7: Update domain value check
-Message-Id: <169528828843.872767.14831793424287961680.b4-ty@ellerman.id.au>
-Date: Thu, 21 Sep 2023 19:24:48 +1000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E31E9CA4C;
+	Thu, 21 Sep 2023 18:49:49 +0000 (UTC)
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67B15EE5BE;
+	Thu, 21 Sep 2023 11:49:48 -0700 (PDT)
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-79565370aa3so51091039f.0;
+        Thu, 21 Sep 2023 11:49:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695322187; x=1695926987;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q9aPA22jkwf0s+X4hBxdI+HlXauXpRGb+zHkR7JR09A=;
+        b=bEHtBw2PIi4UhXLjr9ZonsUHhI+nCF2M8Wo4XP5UKYZQHURL4olx8iaBckLNOlyaIP
+         xeuztsW/0oiuI2ilBQ/keowS9sXinzKPnHn4MLEtAjh3cqQuCCQrMX8Ll/18JerBrqN8
+         LXWcEh/nNRN4GfKCOjqFTwWgc42OFfLo2/xV6+3YptNPEmy/rh5ZQcBAD6butejSlQM/
+         iV9EVYILu3w4/VPN87k7IlDM3WLzlvFi2Ub7qXD6ZvvMoC4E2FJ1zX6dg4dwZ8S1nAv8
+         jU2r4tuqmGzmnWrqQ0Y0UO6vAC/ADGkjA7r/apTnHsxqutmDZEWLXjCe4o7Npj2eNVYB
+         hgWQ==
+X-Gm-Message-State: AOJu0YwV9kliy1jQmSJHni8u8m+MMdEvGzjwi9FTLt3VU9JlfqZ4hVba
+	jFJPmT2BAnHHhZbURvZiAnBEkSmv0pj8jvAeCn0=
+X-Google-Smtp-Source: AGHT+IEtTCDejNODZhsZ2X7z/2452seSw/T6NaqPLdu41+a1a5s1QReNgnuBARF9Zw1Jwdg8lTAJtKR+bUqMpEFLOBo=
+X-Received: by 2002:a05:6602:1592:b0:798:2665:8939 with SMTP id
+ e18-20020a056602159200b0079826658939mr8176511iow.20.1695322187550; Thu, 21
+ Sep 2023 11:49:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20230915063832.120274-1-yang.lee@linux.alibaba.com>
+In-Reply-To: <20230915063832.120274-1-yang.lee@linux.alibaba.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 21 Sep 2023 11:49:36 -0700
+Message-ID: <CAM9d7cgFCHHucHKdtsfn5qDwd80etXPtkKv+0-jE_do6uXo+gg@mail.gmail.com>
+Subject: Re: [PATCH -next] perf kwork top: Simplify bool conversion
+To: Yang Li <yang.lee@linux.alibaba.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, 25 Aug 2023 11:26:01 +0530, Kajol Jain wrote:
-> Valid domain value is in range 1 to HV_PERF_DOMAIN_MAX.
-> Current code has check for domain value greater than or
-> equal to HV_PERF_DOMAIN_MAX. But the check for domain value 0
-> is missing.
-> Fix this issue by adding check for domain value 0.
-> 
-> 
-> [...]
+On Thu, Sep 14, 2023 at 11:38=E2=80=AFPM Yang Li <yang.lee@linux.alibaba.co=
+m> wrote:
+>
+> ./tools/perf/util/bpf_kwork_top.c:120:53-58: WARNING: conversion to bool =
+not needed here
+>
+> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
 
-Applied to powerpc/fixes.
-
-[1/1] powerpc/perf/hv-24x7: Update domain value check
-      https://git.kernel.org/powerpc/c/4ff3ba4db5943cac1045e3e4a3c0463ea10f6930
-
-cheers
+Applied to perf-tools-next, thanks!
