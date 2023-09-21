@@ -1,108 +1,123 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024EF171D4
-	for <linux-perf-users@vger.kernel.org>; Thu, 21 Sep 2023 18:51:20 +0000 (UTC)
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D53090A5C;
-	Thu, 21 Sep 2023 11:51:13 -0700 (PDT)
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7927f24140eso50866239f.2;
-        Thu, 21 Sep 2023 11:51:13 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17462171D4
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 Sep 2023 18:52:14 +0000 (UTC)
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BFDCD255C;
+	Thu, 21 Sep 2023 11:51:53 -0700 (PDT)
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-7926a450a0aso52351139f.3;
+        Thu, 21 Sep 2023 11:51:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695322272; x=1695927072;
+        d=1e100.net; s=20230601; t=1695322312; x=1695927112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=927YGkKs9cOI0OBx9K68ikts5Bj4cqpKV/mGal0pmf4=;
-        b=hR0zUi1pNquD4AVwOfoUVjQ+SyXNPmDCMazVz1sWHXHskNJYOZf3F3g4L203DSlnN8
-         R72fDPZdffWQx8ulPRzVZP4oHP1n3HDyyJIIdPi23U4L+V8abapzDwId9Kkgeeacezgq
-         RvX1flR0EA0LgvLtNCwh9urvZ80YLTwyjCjtYG0UdZmON5Tu2VuZjPb4z6e0Nv6rBdrc
-         AnRqv11IEkWbUBtDVaQq8V22nK0UFoDdxGO6gUQPg42PPuJ36oatnYlA9PAM2HfuM3kA
-         S1HXr8LCpT6T4+Jes+S0KnLuhAPc7w+jG4cBTutzxJdpaKag0hPy19R9oIb47WMSrUq1
-         m7RA==
-X-Gm-Message-State: AOJu0Yz28kcmXHxK4+BBS1MmVWKsvuawVZorAnwI5TFsIHYrw26UbS9o
-	QuRbPVryYWL6A66kcrcZQdWnNGzt5sgRxGc+8T8=
-X-Google-Smtp-Source: AGHT+IFCRnmb9RFnnNv//e1c/N4sP5uRW/BEm+8kn2RCvmvtaqtXUD+Oi5HDT9gVhD0DAQum+voPrIJXpasczwc/R14=
-X-Received: by 2002:a5d:8b93:0:b0:786:fff8:13c2 with SMTP id
- p19-20020a5d8b93000000b00786fff813c2mr7163981iol.11.1695322272169; Thu, 21
- Sep 2023 11:51:12 -0700 (PDT)
+        bh=rchX4DRYXaRpeH35NMA7XmzyCNvbFmAvUCyV3Dy7kro=;
+        b=EAgSLHMY7ebbySOPs8wzAA61oBqb5X4bmrWyHpzVmUmmVn5AG+tKYlgv+mpXc8wJGO
+         BdhWpjoK40OgljnZgJcVelVy2LXidJ07h8gJtDChTEkP/0XGX41lUD1AOfWpswR6jNb4
+         y8eqHdTxijY5rnSIqoLyfbzFSevF5Jg35Z8rNZnYyWe83jYZmZsrreUv407gq3AyVCQC
+         z9xMbDornIUS3bZLWj86x543ZI1QJlIhmJEtdGUNuj/ZtsZHgLQcw69IzTzPOZrXZuvV
+         xWsGLx2yFXVR6ayt3qJ0ppsqqjqYfZnpqVndtwNRNfjfNHbJ2Fxm5/LBwidSzfrjRRyK
+         w+iQ==
+X-Gm-Message-State: AOJu0YxEvQfVBKdvGrgzMHUiCXYMw5md/SAyaR1HHC5uaki92eoVnfeE
+	4OoWCTaw24QiKh9SfPWZ8Qw3kX1Rkf4Fqse/08I=
+X-Google-Smtp-Source: AGHT+IGi2TUCiRCAaXRQw0xByOB3K1/tKIxEqPzBI1Y8i69hqsRmky+0j8LAafFwfOTSt3roH60z+9v0nyqUTtI0FnY=
+X-Received: by 2002:a6b:f404:0:b0:792:881d:c6ab with SMTP id
+ i4-20020a6bf404000000b00792881dc6abmr7125847iog.18.1695322311775; Thu, 21 Sep
+ 2023 11:51:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230914164028.363220-1-irogers@google.com>
-In-Reply-To: <20230914164028.363220-1-irogers@google.com>
+References: <20230919080929.3807123-1-xu.yang_2@nxp.com> <CAP-5=fX46xYdE2bheU+LhW2Joce+De42=d-XqBuFS9F-CPsQsg@mail.gmail.com>
+ <DB7PR04MB450509DB2DBE1FAEF5F06CCD8CF9A@DB7PR04MB4505.eurprd04.prod.outlook.com>
+ <CAM9d7chjjYqLrsE7+_GYJ7B5aSJtESi_0dSmahHKOGjwMYPN+w@mail.gmail.com>
+In-Reply-To: <CAM9d7chjjYqLrsE7+_GYJ7B5aSJtESi_0dSmahHKOGjwMYPN+w@mail.gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 21 Sep 2023 11:51:01 -0700
-Message-ID: <CAM9d7cigt0ELQVkrrfZJ6ctNRZcTZqzbnnOwNpoMz9V=oQ5j2Q@mail.gmail.com>
-Subject: Re: [PATCH v1] perf parse-events: Fix tracepoint name memory leak
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, He Kuang <hekuang@huawei.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 21 Sep 2023 11:51:40 -0700
+Message-ID: <CAM9d7cheaFnAX_iA2je1f+P-JKwGHmbkYZ9rH_k_icCawQZgqA@mail.gmail.com>
+Subject: Re: [EXT] Re: [PATCH] perf jevents: fix no member named 'entries' issue
+To: Xu Yang <xu.yang_2@nxp.com>
+Cc: Ian Rogers <irogers@google.com>, "peterz@infradead.org" <peterz@infradead.org>, 
+	"mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>, 
+	"mark.rutland@arm.com" <mark.rutland@arm.com>, 
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "jolsa@kernel.org" <jolsa@kernel.org>, 
+	"adrian.hunter@intel.com" <adrian.hunter@intel.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
 	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Sep 14, 2023 at 9:40=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
+On Tue, Sep 19, 2023 at 9:16=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> Fuzzing found that an invalid tracepoint name would create a memory
-> leak with an address sanitizer build:
-> ```
-> $ perf stat -e '*:o/' true
-> event syntax error: '*:o/'
->                        \___ parser error
-> Run 'perf list' for a list of valid events
+> Hello,
 >
->  Usage: perf stat [<options>] [<command>]
+> On Tue, Sep 19, 2023 at 7:07=E2=80=AFPM Xu Yang <xu.yang_2@nxp.com> wrote=
+:
+> >
+> > Hi Lan,
+> >
+> > > On Tue, Sep 19, 2023 at 1:04=E2=80=AFAM Xu Yang <xu.yang_2@nxp.com> w=
+rote:
+> > > >
+> > > > The struct "pmu_events_table" has been changed after commit
+> > > > 2e255b4f9f41 (perf jevents: Group events by PMU, 2023-08-23).
+> > > > So there doesn't exist 'entries' in pmu_events_table anymore.
+> > > > This will align the members with that commit. Othewise, below
+> > > > errors will be printed when run jevent.py:
+> > > >
+> > > > pmu-events/pmu-events.c:5485:26: error: =E2=80=98struct pmu_metrics=
+_table=E2=80=99 has no member named =E2=80=98entries=E2=80=99
+> > > >  5485 |                         .entries =3D pmu_metrics__freescale=
+_imx8dxl_sys,
+> > > >
+> > > > Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
+> > >
+> > > Reviewed-by: Ian Rogers <irogers@google.com>
+> > >
+> > > Thanks Xu! I wasn't able to repeat the failure but the fix looks good
+> > > to me. Is the failure caused by adding new imx8dxl metrics? I'd like
+> >
+> > Yes.
+> >
+> > > to make sure we have testing coverage so this doesn't happen again.
+> > > I'm trying:
+> > > $ make -C tools/perf O=3D/tmp/perf JEVENTS_ARCH=3Dall
+> > > Could you confirm that this make command was broken without your fix
+> > > plus the metric changes you've done?
+> >
+> > Below steps will repeat the failure.
+> >
+> > $ cd tools/
+> > $ rm perf/pmu-events/arch/arm64/freescale/imx8mm/sys/ddrc.json
+> > $ make clean
+> > $ make JEVENTS_ARCH=3Dall perf
+> >
+> > pmu-events/pmu-events.c:76586:26: error: =E2=80=98struct pmu_metrics_ta=
+ble=E2=80=99 has no member named =E2=80=98entries=E2=80=99
+> > 76586 |                         .entries =3D pmu_metrics__freescale_imx=
+8mm_sys,
+> >       |                          ^~~~~~~
+> > pmu-events/pmu-events.c:76587:26: error: =E2=80=98struct pmu_metrics_ta=
+ble=E2=80=99 has no member named =E2=80=98length=E2=80=99
+> > 76587 |                         .length =3D ARRAY_SIZE(pmu_metrics__fre=
+escale_imx8mm_sys)
+> >       |                          ^~~~~~
+> >
+> > If only metric table exists, then this error may occur.
 >
->     -e, --event <event>   event selector. use 'perf list' to list availab=
-le events
+> I can reproduce the error and confirm it fixed.
 >
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> =3D=3D59380=3D=3DERROR: LeakSanitizer: detected memory leaks
->
-> Direct leak of 4 byte(s) in 2 object(s) allocated from:
->     #0 0x7f38ac07077b in __interceptor_strdup ../../../../src/libsanitize=
-r/asan/asan_interceptors.cpp:439
->     #1 0x55f2f41be73b in str util/parse-events.l:49
->     #2 0x55f2f41d08e8 in parse_events_lex util/parse-events.l:338
->     #3 0x55f2f41dc3b1 in parse_events_parse util/parse-events-bison.c:146=
-4
->     #4 0x55f2f410b8b3 in parse_events__scanner util/parse-events.c:1822
->     #5 0x55f2f410d1b9 in __parse_events util/parse-events.c:2094
->     #6 0x55f2f410e57f in parse_events_option util/parse-events.c:2279
->     #7 0x55f2f4427b56 in get_value tools/lib/subcmd/parse-options.c:251
->     #8 0x55f2f4428d98 in parse_short_opt tools/lib/subcmd/parse-options.c=
-:351
->     #9 0x55f2f4429d80 in parse_options_step tools/lib/subcmd/parse-option=
-s.c:539
->     #10 0x55f2f442acb9 in parse_options_subcommand tools/lib/subcmd/parse=
--options.c:654
->     #11 0x55f2f3ec99fc in cmd_stat tools/perf/builtin-stat.c:2501
->     #12 0x55f2f4093289 in run_builtin tools/perf/perf.c:322
->     #13 0x55f2f40937f5 in handle_internal_command tools/perf/perf.c:375
->     #14 0x55f2f4093bbd in run_argv tools/perf/perf.c:419
->     #15 0x55f2f409412b in main tools/perf/perf.c:535
->
-> SUMMARY: AddressSanitizer: 4 byte(s) leaked in 2 allocation(s).
-> ```
-> Fix by adding the missing destructor.
->
-> Fixes: 865582c3f48e ("perf tools: Adds the tracepoint name parsing suppor=
-t")
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Tested-by: Namhyung Kim <namhyung@kernel.org>
 
 Applied to perf-tools-next, thanks!
