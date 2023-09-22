@@ -1,200 +1,222 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01004171B9
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 10:23:41 +0000 (UTC)
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2052.outbound.protection.outlook.com [40.107.220.52])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EB11CE;
-	Fri, 22 Sep 2023 03:23:40 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m3QmW4VDHadpDtY/JvvGUyMBN40Sp0zZ/mfeWFTTpmvFpcwpxuBe9KkYK73WpVmz32l4mHIq+Iec+zbMDw7KG1I5wbrBhL5aXFVyIdtQncIpuVfm6/f5sTlJvS5mmURtt1+v3KLUPk6gJNJ5ydHzQ/wWrSj0rJbgBCWrHIVGIUmvsAQe9ouiwcnpL/kiZCoHe2k8Q+dczYFRz+3kyekeQ7bVWM+7emWw5XblNX8SWXGX8EIIR7X9U6b+VQuF56gU3zsdA1DaDvk0NgIh85MRO5/hMWh3JU4XclpTBPqtZ76BdaYuRmunm65NXrEws94f+pxPEFO692J5VViE6/R7tg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=X+5L9GGwtex3HVLIen2scRqjmkvW0WBUfR10o9bLMpY=;
- b=a6bKef3V2jPl7fpNqOCccr9d/gvxk+e61lUbabLYq2JTEtH1wyxwMyRHfWtn4tvcKaRW6zpU3XUGQ4sXJ2IY+Tg/b/GWCMTTfGSxz2MPuHTml7j9gSbkfKc4rYerMz+VB1F/zky79zRV2jYO8v+ynSioi4mmS0seDwUqshggKFcghuJPaQ2KljX6ZskML/2PpnzNQBxTSK5q4N7ONoufwx0Yj86lH1S3vQLssr76Mz9aWz7yRvBgJ7r0J9o4alPlc4Lt39Uyd2FK44okwA/4eRmSSaLRSSfo5MoWEM/dbOCOqnqsPGby1/E7y4MM68AEtJNdotmNH4kDKEqSRQRjtQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X+5L9GGwtex3HVLIen2scRqjmkvW0WBUfR10o9bLMpY=;
- b=aUIqXirUbDo8I+bF2+NREh9sIW45OatiReWU55252vs4HbV6N/pi45hKQxXoclwg9nbTSLeRAAQPLY1Ill6UclTmTq3m4qDirskHXiq4+FO59XaU8hWpmirbFjQbTYFiIjzyJS6EPfEG862ILFo7XDuyD30GKlhbswrm9h/4q9o=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
- by DM4PR12MB5310.namprd12.prod.outlook.com (2603:10b6:5:39e::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.20; Fri, 22 Sep
- 2023 10:23:38 +0000
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::a285:eb6e:8fc:7cd7]) by PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::a285:eb6e:8fc:7cd7%4]) with mapi id 15.20.6813.017; Fri, 22 Sep 2023
- 10:23:37 +0000
-Message-ID: <641d0bc9-94ba-478b-9626-b5acef4ef892@amd.com>
-Date: Fri, 22 Sep 2023 15:53:31 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: rom 3540f985652f41041e54ee82aa53e7dbd55739ae Mon Sep 17 00:00:00
- 2001
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- x86@kernel.org, peterz@infradead.org, leitao@debian.org, mingo@redhat.com,
- acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
- jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, tglx@linutronix.de, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, leit@fb.com,
- dcostantino@meta.com, jhladky@redhat.com, eranian@google.com,
- ananth.narayan@amd.com, ravi.bangoria@amd.com, santosh.shukla@amd.com
-References: <20230914140604.267672-1-sandipan.das@amd.com>
- <ZQ1mdoMBJd4PCvZa@gmail.com>
-Content-Language: en-US
-From: Sandipan Das <sandipan.das@amd.com>
-In-Reply-To: <ZQ1mdoMBJd4PCvZa@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0104.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:9b::6) To PH7PR12MB5712.namprd12.prod.outlook.com
- (2603:10b6:510:1e3::13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8614200AB
+	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 14:58:50 +0000 (UTC)
+Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E71BC6
+	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 07:58:49 -0700 (PDT)
+Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-414ba610766so392641cf.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 07:58:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1695394728; x=1695999528; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zgDKgKLNOq5UPjSMrvVQpqlAFLCGyJRKW8sSQYfce5A=;
+        b=KW1foPL4LoxlqJ4kP58yEZ52r9JbHSW+br9xWL0P8bA3pyaY6C24K54rDUa4hN0kQ1
+         ifS3cPIxFkufgO4KP3Y9qj7Dzsy1DQl1JLeu3skymEQY35VW49riqe2mpxQmqmcm/yTg
+         UWZe/29O6v1OO8NsnSA+YPpxG+qIObk1Q2SNhUVNmUpFThrUVippYPqmpfC1rJjtRF+a
+         nzL21JcnODfpBreHCInR6BYywqOmcs5dJ5tFCL2lX1nNiL/WfGhkIY/gB/MdZ1u7ytIG
+         6BYU8+DRHNP/f1vFdA1lT+y7LK4uuilQOg+5PrIvWCLk2W0f9+lHiNP+mjQnw4x8RKs6
+         XN1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695394728; x=1695999528;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zgDKgKLNOq5UPjSMrvVQpqlAFLCGyJRKW8sSQYfce5A=;
+        b=huBdd9NUkM2hIanxdHVO+E+ieT2ggFEmwm12x2s9nbO1jPAWn62tzjt940bQEbKLiy
+         JiznGjUy9SbBHk4ivHZnr5etPw6fodGG48S06ptNfrsnSYHbNN6verpaCFvH6B7BePvu
+         O365YRlDug4Yy73is4hu7Nlseoex48I+3Vcd13ASDOCXjUVtaNySgjHY5VeurU8ENLkR
+         aNpX526V4kBwgEGLAsmxz5iFbp2BGbE6iNR/aIGL8+h/0jwSAYWC0v/lz4+SkVjOqEH8
+         U6f0mVfNzRdvgZagyOwM7L6VB1aUWVxP3B7D8Nq5bk7XNgR5t7cbvAisPh0J/MRXvhSp
+         RJsg==
+X-Gm-Message-State: AOJu0YzaYi5LlorIyKuRKc+jxWBQL7608GCP/vfL4Uz/seAW2zokfNSZ
+	tOnbn2fk+RW36MADtk3SaYBMfMK3xa4UW9zdEnT/KQ==
+X-Google-Smtp-Source: AGHT+IESNWFRg+y2TuWvd89RoJ6GBBUMt3OgVqWMs842fYNtOygOfCHPUJtJDdiPRplbsgSlGB6en+tQOrS+AeANsys=
+X-Received: by 2002:a05:622a:1191:b0:403:eeb9:a76 with SMTP id
+ m17-20020a05622a119100b00403eeb90a76mr181867qtk.17.1695394728023; Fri, 22 Sep
+ 2023 07:58:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|DM4PR12MB5310:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9b1f564b-656e-4725-9f2a-08dbbb55fba3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	BMIqgOar+BA9+Y69P5O58X842NE0aiG8n2DUdacPHJPypF7Y71O6IEDymk2o3TckpunX9BDy8urOXGYbWkNT6/3WcGhY+Nuo5x6LdzaivINWbPE5DINwDq86cuJaG1uTy8i8T6FzEX3eA5FWD7f6LQ7wLEzOcJ4GCSzvRRVM2RnqMHYygH4WsOwS2gEtezbFR7zZqhI+RdRtakTpUt8f2rRUdV3ncgCJBQQ4xzffe2+UkU0Kn3VZJ8oJ8Q1LDz/MnkPQJCbrhSlwcDKi1cRfU2ZsBxnxn3PXhWtwTSr5aG5pCIz8y9stuvekCUyyVCwuGoHrHQD3U1CEGPApLzKpVhXj5IF5fAHXILSK/JGhWwXsAkaZYtS/1aiB1AINFyKoAiMF99l/R8fBtrYHzsUbpO4hR4VjGSOUg7wYyGpHeVz6QlYWoGSpF9NW3G5yBWNlq5HB/eZN2DbhaPVHO/+G3Wl6JobwRoQKFMZKKmpAsVYQeGXMad/5B14GhpuRwwcBWNE/SO8N0nVvjiQX9pNhPNSljlUa0Tmh/G+1pojB9U+21LfWkXBasDO6TApr+20R8UyYB219z6KwRtSJzCblgfCf4IjmTWrBKsuvJkxiTiHe7DBZp18eAtAomWo8LhNjMQuV/gL6NNllkx7uUyPHoEAHxlL25jOBI1DUu3eZfFA=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(396003)(376002)(136003)(39860400002)(366004)(186009)(451199024)(1800799009)(83380400001)(31686004)(53546011)(6512007)(6666004)(6506007)(6486002)(38100700002)(86362001)(31696002)(36756003)(2616005)(7416002)(2906002)(44832011)(8936002)(966005)(478600001)(26005)(5660300002)(8676002)(6916009)(316002)(41300700001)(66476007)(66556008)(66946007)(4326008)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NU9OcGxBZitYVW02OGxvajMwVFJLUXhQWjVITStOeFZHcmZGaDRWQTc3T2RO?=
- =?utf-8?B?YzNkbld0ckZwL1hxdjcySnJsc3RiaE1hRmNORVYrMjBESEV4akVKY1U1ZThC?=
- =?utf-8?B?Y1VCWll3M29IVFZFL3VtMjFDbGtmQWJPOWp1QVR3Zzl4SlpCM3E1MzhLR3VG?=
- =?utf-8?B?WlpvTDZSZG1BUHZMamRNOHgyR3VPTlFic29za1Z5UXE4czFhVGpYODVlYlRB?=
- =?utf-8?B?Q0FuQ1RPV2pjaWhXUFBPb0liWFE1QmNsdGpZR3RTbkxaMStNZTlEQklMaXVw?=
- =?utf-8?B?N0VHSlNhNW9MTzRJNzlCaVZ3am80S2lVNnhva0NuVjB2QXNvenF2NEhtdlV5?=
- =?utf-8?B?N2pwUmxwQjNueCthRzdPS0tJOTRobFp5dVVabGEyOEpSVTl0VGxiUlNubGtU?=
- =?utf-8?B?bmZCTjVwVi9PV3NjV0cvQTRZR242VUZZSGpvckZZYjFQbmNaTjA5aUpaeWIw?=
- =?utf-8?B?WVlHTC9iOFBUaTBzSWVSWHlzUURDNmdQTTFoZkE0SDlrdUVHcmxnVWk0aDQ1?=
- =?utf-8?B?ditBZGR6ZTdkZ3NhaHlMUTIzbFAvRjlmR1ZVVVQvWGVQNXZPYXNZZW10bUdH?=
- =?utf-8?B?TTZYN0lhOWhlU3RxdG9GSGk3anl2MkQ2YWdhSlJEU2gyYWwrSVhrbUFqNjdu?=
- =?utf-8?B?c1dnWEJEaUY2aTdGQStXdE95ekxVbkZSU1hLMUd4ZnNHWXZEMS9yR3ZOYjI3?=
- =?utf-8?B?Vnd0V2IzNnIrMFRhcVh6a3JITnBrOW9GTWs5VU9kL1Vrb2NnR3M5all2ejcw?=
- =?utf-8?B?TU1maWNBUzhlZDZqZ2ZQTjZTNlROUTFaLzRGTWxwajF0ZGdDcDlWSUtJOTV0?=
- =?utf-8?B?T3R3Q2FjRlNZQURnalVGUkk2b2lrZzE3US85ZExrN1dRVi9oeDhjcXFFMEVw?=
- =?utf-8?B?amM4U3dscGg4N01Ed1lQNW1waTIrUFdabjdNVTVZZytLOGp5UXVNZHI0NHNw?=
- =?utf-8?B?RUNsRm1qYkgzQzdGNEtSZmF3d2lPSVRHdHlMVDVOVXE2cGFtQ3U1dlFQZm83?=
- =?utf-8?B?VVczKzFIbkluL0YwSkh0Ym90RkY5LzFKZkNUeWN4aVJaUnA4dXd0SGx4ekZJ?=
- =?utf-8?B?bEl5MTZnUHh1QXhKanlsTzBhQTJPZVB5NTVmcVhEdW9JSFJaU0pCL3U4WFkr?=
- =?utf-8?B?TE85K2swY2dMTzkrczc1NXBDR21sSkpyS0FacmRiY0svUmhzWFl4Nmp1b3NI?=
- =?utf-8?B?dmExY2x3cGhISDVaWFRpbC9nZitXV0ZEZ1ZvSkpXeE83SmFXcGpLR25QRGdW?=
- =?utf-8?B?cFBsOGFBTnNFQXg3VWc1MytzUm5OUWZXWVQrRUJTZTJGa3RHYlFCRFFOMllC?=
- =?utf-8?B?WDAvK1k2QjNHS2srR3hkbG50bGZvcEdoTU9zWjBwMFBkVS9EWmorZDhwMUpL?=
- =?utf-8?B?WEh5SEJZUGtmVHNoMjllcFNNbHpWS081Qjl2cXZ6cnVidUhISEl0NHRlNXZR?=
- =?utf-8?B?ek5iKzJSNEFsdElVOHJHSzRRcHI2ajQvNGZuaFBBZk83RTlmUmdaVmg3dEZw?=
- =?utf-8?B?NmJDTWVpbUU1aldrcmpVVjVyN2lMbStsQS9rbDFSRSsxSjJhLzlRNEJHQUdi?=
- =?utf-8?B?eGZTcXpvWVBYS2NDZVBxTXZhWXNwUjhZMi9NMU9CUHEzd1JTWC8rZDRCTlls?=
- =?utf-8?B?TVQxb0N4VHBCck5iNDlLWGRMN0RMSGhBZTBxVGZ6WmhBSHcwa2pGWEFtYUVa?=
- =?utf-8?B?QmZMZXNvTisyZGJreFVOM1pKY1JsRkIzZWpJbkQwQVFScjFPOFU2RWpuMDZw?=
- =?utf-8?B?MFdLNVN3RVd1d08wa1dNOGJyUEVBUVcvZnhWOGxCYU9QbXo2SmYrRjBEZDE5?=
- =?utf-8?B?eXdTVE5MN0JUeit2RHhTMlM4aUE0ZDNSc01BZS8xOU1UN2pzZGJCUTRKOHRR?=
- =?utf-8?B?QXN5c0RWVEpuTkU5UUREOCs4UW12d2FzenVSYWNKeXRZQ3B1QldqUC90MzBJ?=
- =?utf-8?B?SkZLdURpUVpKb1R4NE5paTZMWVpwL3ROK2dqMFl4TDJ2dTYvb2F5dFdKcVhK?=
- =?utf-8?B?eEJFVUgrU3UrTWdwYVBwU3M0TkRQMVRrRTVZVTdXZFNMZW5EREVLR1VudVdu?=
- =?utf-8?B?T1lXcFpTZmJocDMwUWN4emI2bVMyUnAyaC82Zng1SnloVkp5YWlqSUZrVGhX?=
- =?utf-8?Q?HOBWlsFeN51MlYasuYremXXs4?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b1f564b-656e-4725-9f2a-08dbbb55fba3
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Sep 2023 10:23:37.5469
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9Wsw/FynxVcpuT1bDnxUzJfkR2XBT5knifBzIU6V1ylhs0bdHc4mOMbPy8t6g8u+nAvSCNE+r3eFJ7u04qZjHg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5310
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+References: <1695037955-107983-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1695037955-107983-2-git-send-email-renyu.zj@linux.alibaba.com>
+ <CAP-5=fUxfJT-gxKB+Ls3drUeQ0sy55uydi8Y36gumUnaFSYeqA@mail.gmail.com> <0f5bbe93-1875-ff9b-a1d8-8518a8cf3e84@linux.alibaba.com>
+In-Reply-To: <0f5bbe93-1875-ff9b-a1d8-8518a8cf3e84@linux.alibaba.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 22 Sep 2023 07:58:35 -0700
+Message-ID: <CAP-5=fW8HSuQ2kZDrMeyhpZbiqagANs=_W+RWNJw21u-UhixrQ@mail.gmail.com>
+Subject: Re: [PATCH v9 1/7] perf pmu: "Compat" supports regular expression
+ matching identifiers
+To: Jing Zhang <renyu.zj@linux.alibaba.com>
+Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	James Clark <james.clark@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mike Leach <mike.leach@linaro.org>, 
+	Leo Yan <leo.yan@linaro.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+	linux-doc@vger.kernel.org, Zhuo Song <zhuo.song@linux.alibaba.com>, 
+	Shuai Xue <xueshuai@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On 9/22/2023 3:33 PM, Ingo Molnar wrote:
-> 
-> * Sandipan Das <sandipan.das@amd.com> wrote:
-> 
->> Zen 4 systems running buggy microcode can hit a WARN_ON() in the PMI
->> handler, as shown below, several times while perf runs. A simple
->> `perf top` run is enough to render the system unusable.
->>
->> WARNING: CPU: 18 PID: 20608 at arch/x86/events/amd/core.c:944 amd_pmu_v2_handle_irq+0x1be/0x2b0
->>
->> This happens because the Performance Counter Global Status Register
->> (PerfCntGlobalStatus) has one or more bits set which are considered
->> reserved according to the "AMD64 Architecture Programmer???s Manual,
->> Volume 2: System Programming, 24593". The document can be found at
->> https://www.amd.com/system/files/TechDocs/24593.pdf
->>
->> To make this less intrusive, warn just once if any reserved bit is set
->> and prompt the user to update the microcode. Also sanitize the value to
->> what the code is handling, so that the overflow events continue to be
->> handled for the number of counters that are known to be sane.
->>
->> Going forward, the following microcode patch levels are recommended
->> for Zen 4 processors in order to avoid such issues with reserved bits.
->>
->>   Family=0x19 Model=0x11 Stepping=0x01: Patch=0x0a10113e
->>   Family=0x19 Model=0x11 Stepping=0x02: Patch=0x0a10123e
->>   Family=0x19 Model=0xa0 Stepping=0x01: Patch=0x0aa00116
->>   Family=0x19 Model=0xa0 Stepping=0x02: Patch=0x0aa00212
->>
->> Commit f2eb058afc57 ("linux-firmware: Update AMD cpu microcode") from
->> the linux-firmware tree has binaries that meet the minimum required
->> patch levels.
->>
->> Fixes: 7685665c390d ("perf/x86/amd/core: Add PerfMonV2 overflow handling")
->> Reported-by: Jirka Hladky <jhladky@redhat.com>
->> Signed-off-by: Breno Leitao <leitao@debian.org>
->> [sandipan: add message to prompt users to update microcode]
->> [sandipan: rework commit message and call out required microcode levels]
->> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> 
->> v2:
->>  - Use pr_warn_once() instead of WARN_ON_ONCE() to prompt users to
->>    update microcode
->>  - Rework commit message and add details of minimum required microcode
->>    patch levels.
-> 
-> 1)
-> 
-> I don't think you ever re-sent this patch with the correct subject line.
-> ( Or at least it's not in my mbox. )
-> 
-> 2)
-> 
-> So if the fix is from Breno Leitao originally, then there should be a:
-> 
->    From: Breno Leitao <leitao@debian.org>
-> 
-> at the beginning of the patch to make authorship clear.
-> 
-> You might also want to add:
-> 
->   Co-developed-by: Sandipan Das <sandipan.das@amd.com>
-> 
-> to make your contributions clear.
-> 
+On Fri, Sep 22, 2023 at 1:19=E2=80=AFAM Jing Zhang <renyu.zj@linux.alibaba.=
+com> wrote:
+>
+>
+>
+> =E5=9C=A8 2023/9/21 =E4=B8=8A=E5=8D=882:36, Ian Rogers =E5=86=99=E9=81=93=
+:
+> > On Mon, Sep 18, 2023 at 4:52=E2=80=AFAM Jing Zhang <renyu.zj@linux.alib=
+aba.com> wrote:
+> >>
+> >> The jevent "Compat" is used for uncore PMU alias or metric definitions=
+.
+> >>
+> >> The same PMU driver has different PMU identifiers due to different
+> >> hardware versions and types, but they may have some common PMU event.
+> >> Since a Compat value can only match one identifier, when adding the
+> >> same event alias to PMUs with different identifiers, each identifier
+> >> needs to be defined once, which is not streamlined enough.
+> >>
+> >> So let "Compat" support using regular expression to match identifiers
+> >> for uncore PMU alias. For example, if the "Compat" value is set to
+> >> "43401|43c01", it would be able to match PMU identifiers such as "4340=
+1"
+> >> or "43c01", which correspond to CMN600_r0p0 or CMN700_r0p0.
+> >>
+> >> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+> >> ---
+> >>  tools/perf/util/pmu.c | 23 +++++++++++++++++++++--
+> >>  tools/perf/util/pmu.h |  1 +
+> >>  2 files changed, 22 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> >> index e215985..7e2242f 100644
+> >> --- a/tools/perf/util/pmu.c
+> >> +++ b/tools/perf/util/pmu.c
+> >> @@ -28,6 +28,7 @@
+> >>  #include "strbuf.h"
+> >>  #include "fncache.h"
+> >>  #include "util/evsel_config.h"
+> >> +#include <regex.h>
+> >>
+> >>  struct perf_pmu perf_pmu__fake =3D {
+> >>         .name =3D "fake",
+> >> @@ -875,6 +876,24 @@ static bool pmu_uncore_alias_match(const char *pm=
+u_name, const char *name)
+> >>         return res;
+> >>  }
+> >>
+> >> +bool pmu_uncore_identifier_match(const char *compat, const char *id)
+> >> +{
+> >> +       regex_t re;
+> >> +       regmatch_t pmatch[1];
+> >> +       int match;
+> >> +
+> >> +       if (regcomp(&re, compat, REG_EXTENDED) !=3D 0) {
+> >> +               /* Warn unable to generate match particular string. */
+> >> +               pr_info("Invalid regular expression %s\n", compat);
+> >> +               return false;
+> >> +       }
+> >> +
+> >> +       match =3D !regexec(&re, id, 1, pmatch, 0);
+> >
+> > I wonder if we can make the regular expressions like
+> > "^(434|436|43c|43a)" more like "(434|436|43c|43a).*", so that we fully
+> > match the id string, by here doing:
+> >
+> > if (match) {
+> >   /* Ensure a full match. */
+> >   match =3D pmatch[0].rm_so =3D=3D 0 && pmatch[0].rm_eo =3D=3D strlen(i=
+d);
+> > }
+> >
+>
+> Ok, will do.
+>
+>
+> > I think longer term we can use jevents.py to generate a pmu-events.l,
+> > which would have a contents something like:
+> >
+> > (434|436|43c|43a).*  { return PMU_....;}
+> >
+> > That should make the matching faster but may add some restrictions
+> > onto the regular expression.
+>
+> Could you please describe the function of pmu-event.l in more detail? I m=
+ay not fully understand it.
 
-Sorry for the confusion. I did resend this patch with the correct authorship
-and it can be found here:
+So for now there's no need for a pmu-event.l, I'm fine with the code
+as-is. The issue for using regular expressions is that we need to
+compile (regcomp) then use them (regexec), and in this new code the
+result of the parsing is discarded - perhaps we can save on some
+compiling with a 1 element cache, let's wait to see performance data
+saying it is an issue. If we were to compile the regular expressions
+at build time with flex then the runtime cost, any caching, etc. is
+unnecessary.
 
-https://lore.kernel.org/all/3540f985652f41041e54ee82aa53e7dbd55739ae.1694696888.git.sandipan.das@amd.com/
+Hope this makes sense. Thanks,
+Ian
 
+> Thanks,
+> Jing
+>
+> >
+> > Thanks,
+> > Ian
+> >
+> >> +       regfree(&re);
+> >> +
+> >> +       return match;
+> >> +}
+> >> +
+> >>  static int pmu_add_cpu_aliases_map_callback(const struct pmu_event *p=
+e,
+> >>                                         const struct pmu_events_table =
+*table __maybe_unused,
+> >>                                         void *vdata)
+> >> @@ -915,8 +934,8 @@ static int pmu_add_sys_aliases_iter_fn(const struc=
+t pmu_event *pe,
+> >>         if (!pe->compat || !pe->pmu)
+> >>                 return 0;
+> >>
+> >> -       if (!strcmp(pmu->id, pe->compat) &&
+> >> -           pmu_uncore_alias_match(pe->pmu, pmu->name)) {
+> >> +       if (pmu_uncore_alias_match(pe->pmu, pmu->name) &&
+> >> +                       pmu_uncore_identifier_match(pe->compat, pmu->i=
+d)) {
+> >>                 perf_pmu__new_alias(pmu,
+> >>                                 pe->name,
+> >>                                 pe->desc,
+> >> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> >> index bd5d804..fc155ce 100644
+> >> --- a/tools/perf/util/pmu.h
+> >> +++ b/tools/perf/util/pmu.h
+> >> @@ -240,6 +240,7 @@ void pmu_add_cpu_aliases_table(struct perf_pmu *pm=
+u,
+> >>  char *perf_pmu__getcpuid(struct perf_pmu *pmu);
+> >>  const struct pmu_events_table *pmu_events_table__find(void);
+> >>  const struct pmu_metrics_table *pmu_metrics_table__find(void);
+> >> +bool pmu_uncore_identifier_match(const char *compat, const char *id);
+> >>
+> >>  int perf_pmu__convert_scale(const char *scale, char **end, double *sv=
+al);
+> >>
+> >> --
+> >> 1.8.3.1
+> >>
