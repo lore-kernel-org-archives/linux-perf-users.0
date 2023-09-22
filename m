@@ -1,170 +1,143 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9231DA43
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 08:19:25 +0000 (UTC)
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B18EF7;
-	Fri, 22 Sep 2023 01:19:22 -0700 (PDT)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R641e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VscqxyT_1695370757;
-Received: from 30.221.145.107(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VscqxyT_1695370757)
-          by smtp.aliyun-inc.com;
-          Fri, 22 Sep 2023 16:19:19 +0800
-Message-ID: <0f5bbe93-1875-ff9b-a1d8-8518a8cf3e84@linux.alibaba.com>
-Date: Fri, 22 Sep 2023 16:19:17 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4DCC1E52C
+	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 10:03:40 +0000 (UTC)
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E53288F;
+	Fri, 22 Sep 2023 03:03:38 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-321530de76eso1719744f8f.0;
+        Fri, 22 Sep 2023 03:03:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695377017; x=1695981817; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KBcsfPRS8DaMT9oS6VIAEGSvywjj27gVzR+KeQ+aIHQ=;
+        b=Wx8KCIzGjxkVaSbAoPKUhs4C7lez8kc5/HRVazgKt8c05a9YvsK/Hk1vCTChCJTnkk
+         m6nil4RFbPOuv9usuw/M+5+oibCooXi5XgbNeKk243IvKPSjBxR0RzZILzyrhjtUGRrF
+         AXBMEYGUD25eQ480Pxm5iJTWC2KPXI3Qd0qgh8PM8jCXOZWLivrtbBv6azN4WS4x8+IW
+         NMVFgtB6DT5PlE5yZen7PfTzYu0DH0vXvAa8c31AhbXQ2KButpKmelVd88Z3QCzTSUJx
+         1iVHI7AdmammtvvsIQlgDg7LT+1p1yLMR+SXmwwZsckrTbo3qwE7FNgX7IPpBgiNOxle
+         4qng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695377017; x=1695981817;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KBcsfPRS8DaMT9oS6VIAEGSvywjj27gVzR+KeQ+aIHQ=;
+        b=uB9DEeVuWUVNgdsjfT1YEm55Leh0HjylLhf9Wq1DM+YOjpV/5oVJv4qpGrVcMmS1CD
+         nmK40knZ1A2C0Gs4evTJ6tM42taU1btU9ZTLOvI+t9qpS7bWRkE3KOzDdWmG1cwkJ9NK
+         9UI/UAW6ghJFXogqhVHy73J0UnthDOTlL2+3S7Nxz8xjIv1IjpoNh+KEWCJi9AtWv5Jm
+         BVbuz/vYUYW/07HSIfL92ry5SAROrD8WR5P5bK7m5d8BnW+7SPDJWxFJf8AotdfY/HN9
+         9W/ZiYmTauWpp0+7p27sjPu7JL2UumRfIcsgiM1VXsmEtnwweXWnJpGcbve9tM7/xMtm
+         jyqA==
+X-Gm-Message-State: AOJu0YyObUfLs5f+Vy14XDy85luhv6uQK5Dtq7ZxKR3j3lvDE0Ji1DJy
+	lPE93DDylapshNONHrf5VAHe4baBTws=
+X-Google-Smtp-Source: AGHT+IHXNhCOVDN22ezuRhafl1JdUeYEasSvslBktkV+8XLJPt5Xn0a/NOQMNgS1lkaRklCIO6julg==
+X-Received: by 2002:a5d:59c3:0:b0:322:dbc6:8cf7 with SMTP id v3-20020a5d59c3000000b00322dbc68cf7mr2196407wry.16.1695377017142;
+        Fri, 22 Sep 2023 03:03:37 -0700 (PDT)
+Received: from gmail.com (1F2EF49C.nat.pool.telekom.hu. [31.46.244.156])
+        by smtp.gmail.com with ESMTPSA id x14-20020a05600c21ce00b003fefcbe7fa8sm4217852wmj.28.2023.09.22.03.03.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Sep 2023 03:03:36 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Fri, 22 Sep 2023 12:03:34 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Sandipan Das <sandipan.das@amd.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	x86@kernel.org, peterz@infradead.org, leitao@debian.org,
+	mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, leit@fb.com, dcostantino@meta.com,
+	jhladky@redhat.com, eranian@google.com, ananth.narayan@amd.com,
+	ravi.bangoria@amd.com, santosh.shukla@amd.com
+Subject: Re: rom 3540f985652f41041e54ee82aa53e7dbd55739ae Mon Sep 17 00:00:00
+ 2001
+Message-ID: <ZQ1mdoMBJd4PCvZa@gmail.com>
+References: <20230914140604.267672-1-sandipan.das@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.0
-Subject: Re: [PATCH v9 1/7] perf pmu: "Compat" supports regular expression
- matching identifiers
-To: Ian Rogers <irogers@google.com>
-Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- James Clark <james.clark@arm.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
- Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
- Zhuo Song <zhuo.song@linux.alibaba.com>,
- Shuai Xue <xueshuai@linux.alibaba.com>
-References: <1695037955-107983-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1695037955-107983-2-git-send-email-renyu.zj@linux.alibaba.com>
- <CAP-5=fUxfJT-gxKB+Ls3drUeQ0sy55uydi8Y36gumUnaFSYeqA@mail.gmail.com>
-From: Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <CAP-5=fUxfJT-gxKB+Ls3drUeQ0sy55uydi8Y36gumUnaFSYeqA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-11.4 required=5.0 tests=BAYES_00,
-	ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,
-	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
-	version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230914140604.267672-1-sandipan.das@amd.com>
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
 
+* Sandipan Das <sandipan.das@amd.com> wrote:
 
-在 2023/9/21 上午2:36, Ian Rogers 写道:
-> On Mon, Sep 18, 2023 at 4:52 AM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
->>
->> The jevent "Compat" is used for uncore PMU alias or metric definitions.
->>
->> The same PMU driver has different PMU identifiers due to different
->> hardware versions and types, but they may have some common PMU event.
->> Since a Compat value can only match one identifier, when adding the
->> same event alias to PMUs with different identifiers, each identifier
->> needs to be defined once, which is not streamlined enough.
->>
->> So let "Compat" support using regular expression to match identifiers
->> for uncore PMU alias. For example, if the "Compat" value is set to
->> "43401|43c01", it would be able to match PMU identifiers such as "43401"
->> or "43c01", which correspond to CMN600_r0p0 or CMN700_r0p0.
->>
->> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
->> ---
->>  tools/perf/util/pmu.c | 23 +++++++++++++++++++++--
->>  tools/perf/util/pmu.h |  1 +
->>  2 files changed, 22 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
->> index e215985..7e2242f 100644
->> --- a/tools/perf/util/pmu.c
->> +++ b/tools/perf/util/pmu.c
->> @@ -28,6 +28,7 @@
->>  #include "strbuf.h"
->>  #include "fncache.h"
->>  #include "util/evsel_config.h"
->> +#include <regex.h>
->>
->>  struct perf_pmu perf_pmu__fake = {
->>         .name = "fake",
->> @@ -875,6 +876,24 @@ static bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
->>         return res;
->>  }
->>
->> +bool pmu_uncore_identifier_match(const char *compat, const char *id)
->> +{
->> +       regex_t re;
->> +       regmatch_t pmatch[1];
->> +       int match;
->> +
->> +       if (regcomp(&re, compat, REG_EXTENDED) != 0) {
->> +               /* Warn unable to generate match particular string. */
->> +               pr_info("Invalid regular expression %s\n", compat);
->> +               return false;
->> +       }
->> +
->> +       match = !regexec(&re, id, 1, pmatch, 0);
+> Zen 4 systems running buggy microcode can hit a WARN_ON() in the PMI
+> handler, as shown below, several times while perf runs. A simple
+> `perf top` run is enough to render the system unusable.
 > 
-> I wonder if we can make the regular expressions like
-> "^(434|436|43c|43a)" more like "(434|436|43c|43a).*", so that we fully
-> match the id string, by here doing:
+> WARNING: CPU: 18 PID: 20608 at arch/x86/events/amd/core.c:944 amd_pmu_v2_handle_irq+0x1be/0x2b0
 > 
-> if (match) {
->   /* Ensure a full match. */
->   match = pmatch[0].rm_so == 0 && pmatch[0].rm_eo == strlen(id);
-> }
+> This happens because the Performance Counter Global Status Register
+> (PerfCntGlobalStatus) has one or more bits set which are considered
+> reserved according to the "AMD64 Architecture Programmer???s Manual,
+> Volume 2: System Programming, 24593". The document can be found at
+> https://www.amd.com/system/files/TechDocs/24593.pdf
 > 
+> To make this less intrusive, warn just once if any reserved bit is set
+> and prompt the user to update the microcode. Also sanitize the value to
+> what the code is handling, so that the overflow events continue to be
+> handled for the number of counters that are known to be sane.
+> 
+> Going forward, the following microcode patch levels are recommended
+> for Zen 4 processors in order to avoid such issues with reserved bits.
+> 
+>   Family=0x19 Model=0x11 Stepping=0x01: Patch=0x0a10113e
+>   Family=0x19 Model=0x11 Stepping=0x02: Patch=0x0a10123e
+>   Family=0x19 Model=0xa0 Stepping=0x01: Patch=0x0aa00116
+>   Family=0x19 Model=0xa0 Stepping=0x02: Patch=0x0aa00212
+> 
+> Commit f2eb058afc57 ("linux-firmware: Update AMD cpu microcode") from
+> the linux-firmware tree has binaries that meet the minimum required
+> patch levels.
+> 
+> Fixes: 7685665c390d ("perf/x86/amd/core: Add PerfMonV2 overflow handling")
+> Reported-by: Jirka Hladky <jhladky@redhat.com>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> [sandipan: add message to prompt users to update microcode]
+> [sandipan: rework commit message and call out required microcode levels]
+> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
 
-Ok, will do.
+> v2:
+>  - Use pr_warn_once() instead of WARN_ON_ONCE() to prompt users to
+>    update microcode
+>  - Rework commit message and add details of minimum required microcode
+>    patch levels.
 
+1)
 
-> I think longer term we can use jevents.py to generate a pmu-events.l,
-> which would have a contents something like:
-> 
-> (434|436|43c|43a).*  { return PMU_....;}
-> 
-> That should make the matching faster but may add some restrictions
-> onto the regular expression.
+I don't think you ever re-sent this patch with the correct subject line.
+( Or at least it's not in my mbox. )
 
-Could you please describe the function of pmu-event.l in more detail? I may not fully understand it.
+2)
+
+So if the fix is from Breno Leitao originally, then there should be a:
+
+   From: Breno Leitao <leitao@debian.org>
+
+at the beginning of the patch to make authorship clear.
+
+You might also want to add:
+
+  Co-developed-by: Sandipan Das <sandipan.das@amd.com>
+
+to make your contributions clear.
 
 Thanks,
-Jing
 
-> 
-> Thanks,
-> Ian
-> 
->> +       regfree(&re);
->> +
->> +       return match;
->> +}
->> +
->>  static int pmu_add_cpu_aliases_map_callback(const struct pmu_event *pe,
->>                                         const struct pmu_events_table *table __maybe_unused,
->>                                         void *vdata)
->> @@ -915,8 +934,8 @@ static int pmu_add_sys_aliases_iter_fn(const struct pmu_event *pe,
->>         if (!pe->compat || !pe->pmu)
->>                 return 0;
->>
->> -       if (!strcmp(pmu->id, pe->compat) &&
->> -           pmu_uncore_alias_match(pe->pmu, pmu->name)) {
->> +       if (pmu_uncore_alias_match(pe->pmu, pmu->name) &&
->> +                       pmu_uncore_identifier_match(pe->compat, pmu->id)) {
->>                 perf_pmu__new_alias(pmu,
->>                                 pe->name,
->>                                 pe->desc,
->> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
->> index bd5d804..fc155ce 100644
->> --- a/tools/perf/util/pmu.h
->> +++ b/tools/perf/util/pmu.h
->> @@ -240,6 +240,7 @@ void pmu_add_cpu_aliases_table(struct perf_pmu *pmu,
->>  char *perf_pmu__getcpuid(struct perf_pmu *pmu);
->>  const struct pmu_events_table *pmu_events_table__find(void);
->>  const struct pmu_metrics_table *pmu_metrics_table__find(void);
->> +bool pmu_uncore_identifier_match(const char *compat, const char *id);
->>
->>  int perf_pmu__convert_scale(const char *scale, char **end, double *sval);
->>
->> --
->> 1.8.3.1
->>
+	Ingo
