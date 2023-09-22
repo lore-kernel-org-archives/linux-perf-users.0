@@ -1,262 +1,107 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99131171AA
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 15:05:36 +0000 (UTC)
-Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05230CE
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 08:05:34 -0700 (PDT)
-Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-414ba610766so395731cf.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 08:05:33 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9EF45F73
+	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 20:19:48 +0000 (UTC)
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19CB619E
+	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 13:19:47 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-40531812168so27832095e9.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 13:19:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695395133; x=1695999933; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LcyhHe0w7Sbcegi0kd6uPadSKLO2Cun8OwrGqBJxXQE=;
-        b=kLGz2SzLQdLn5sRl9l58H5hcqPL4u3+9BIrrwt8dL9hZoY/S0SZsX3Vum6r08PKhTk
-         wWZYFOOl1yIbE9qemn8KkNLqCZcThDpvCzP/EqNpA7YWNTLBwcgE+2+ErzJrAt4kcaBx
-         JeoN0pkXENvYtITpjjJwv8O3bNzGVJaEw63AP7err3GFpy+AxmajPkm6PrgAxfeGA9kX
-         w2QzSDMfQMqSPpC7zVkhhrqYnH5GU/aFx1JfKaw4vLB9d3bkjzOFAAvlYB81/IKyP+x9
-         Re29TRfjOgweNI2y038/D2Yrqj+KCmw4CviD/6UUg9FrZLrBYrdrO8Fm4MSXr08R+IbN
-         tluw==
+        d=gmail.com; s=20230601; t=1695413985; x=1696018785; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=koDz7uR4JuD5CtafYggyuJ5hDx6OJdYJKuUjsBOIOJw=;
+        b=mis/QC8uCwhPdOMwk35Wn6dSlHJsv3PycAqv2H2GD9PLVovKqX4ATyMErdbekVfO7+
+         dHrcbN+wKLrP7uB/U9psWKyeX5BLLYN0crqP1sxWUwjPCx1qbAJW0l4SoplkvZdbhdL8
+         245+YrW2WxTnHdqrg0YNYN7t5T4EZueoGRwIMnbB+Rrrj6BDlLCctNvVBLR0R3Psdxco
+         B0KOB+2NrVkRFjc7ZWFzErh0+6i72zGUoEc14ao8R722pk+Lyq91gYN2Nsy3jVKo2nJy
+         WZRIrsARrJWgpZkFJaG8UcRVMS3dcI0a11GZruP8JRmLPiC3++00ZS7V6TS3i/QK+4X/
+         8qHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695395133; x=1695999933;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LcyhHe0w7Sbcegi0kd6uPadSKLO2Cun8OwrGqBJxXQE=;
-        b=WIItouLioXFXJ9WSCHNP4luOwPP5VLyogWXGcx/ZwQWhyezcC65kGqACVmg9L/vAuA
-         6EpBVhFDPY00TiMNxre9kU3Sjf9/VBYcIBneMveoQ8jwccx9e+H32hG70SStjECMYrKX
-         QVMdGueNAceTxLrHvHDsJP93wE9xuzoDbkCLNHylaTFvnxMYwwKFl1y7aiePwZi6WWLg
-         c6qcYAqNf2DEaboOI9miQ5mqVG7rwJqoO6n+kPOskxnznJ5SOl9EpDpq5VgTbcYoylpL
-         fwkAONi0z+eF+DQy+qaEDBkRhGB1mzLkFRQ0qi08APEB1P1xXf1xs/mi6eVxo3/UhPMW
-         m0Ew==
-X-Gm-Message-State: AOJu0YxLIARTvaOYhwpukGxRl0q6DO80vD3OQADWo9iEw3ua9JaVxSkd
-	KdiqghVNUOrhoZtGEQU2G52BNVzau2DZFdODoQti7Q==
-X-Google-Smtp-Source: AGHT+IGsppoxkydfRnq+WRxAx37ICAESNT7n0HKsIqMY8xmaXdZvCG9jyD5B074HsDzgCzdiRg/BlmsDJlRoGllpphA=
-X-Received: by 2002:a05:622a:1191:b0:403:eeb9:a76 with SMTP id
- m17-20020a05622a119100b00403eeb90a76mr183776qtk.17.1695395132835; Fri, 22 Sep
- 2023 08:05:32 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1695413985; x=1696018785;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=koDz7uR4JuD5CtafYggyuJ5hDx6OJdYJKuUjsBOIOJw=;
+        b=Z5GY7NC7upQjFb3l48g6DlUhzmK7IZq2CEBKcQb0PoZjTwhGDlogZlERBvvNzz07YY
+         T5aH+z2MwQ95BEH/8PQuRoHXMudqCw02lo/w+2M1OPswVGK7SqFmTNRXYT3XVgj0G1Yl
+         UR8QtLhTKZdBeiVoA/LswFBdxFZHf5OvXBX1/uMPqlmeLFtx6pxoCeWPR6d17T4OpDYy
+         KgZzFP/OOGkbRzUMMoQYkgaYol+WI8OCYxpgWYKfb0f/kj8gh/kxSzT6cJW28GWF6a+6
+         NMWP/4/eizGmyF5jpeLt7bK/iMGZjU6mp8jqcec9DT0eVy6bT5alXHwp6sauMkQ5AsoC
+         WLug==
+X-Gm-Message-State: AOJu0YxKmdmjAoIrypnxvqBA5c5YhByPv58ZiE26YBB9MPeyvuyueljW
+	DEcnZxq6RQEyi8ODfmZnM0U=
+X-Google-Smtp-Source: AGHT+IHF2VxgMhTbLhU8jECNFsONsbRaa3casHYCM1ms7rtOSYqYmRW0rTVLX/PPVIoZjZiCUeQnfw==
+X-Received: by 2002:a7b:c3cc:0:b0:400:419c:bbde with SMTP id t12-20020a7bc3cc000000b00400419cbbdemr320765wmj.18.1695413985146;
+        Fri, 22 Sep 2023 13:19:45 -0700 (PDT)
+Received: from localhost ([2a00:23c5:dc8c:8701:1663:9a35:5a7b:1d76])
+        by smtp.gmail.com with ESMTPSA id r5-20020a05600c320500b003fc0505be19sm259460wmp.37.2023.09.22.13.19.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Sep 2023 13:19:44 -0700 (PDT)
+Date: Fri, 22 Sep 2023 21:19:43 +0100
+From: Lorenzo Stoakes <lstoakes@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>, linux-mm@kvack.org,
+	linux-perf-users@vger.kernel.org, mingo@redhat.com, acme@kernel.org,
+	urezki@gmail.com, hch@infradead.org
+Subject: Re: [RFC PATCH 1/4] perf: Convert perf_mmap_(alloc,free)_page to
+ folios
+Message-ID: <0d8c508d-91c5-435e-9880-7eedebce2219@lucifer.local>
+References: <20230821202016.2910321-1-willy@infradead.org>
+ <20230821202016.2910321-2-willy@infradead.org>
+ <78cc53f6-3828-4802-afc5-abb71dc59627@lucifer.local>
+ <20230913133105.GF22758@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230916040915.1075620-1-irogers@google.com> <08995efc-d5af-6ba6-831b-1a483daabef4@intel.com>
- <CAP-5=fW783G9fUEHrmzUu7UmvOm65Fp6vAQybCcNz2C0QRz26w@mail.gmail.com>
- <8086150e-3c6d-4001-b3cc-bb12ebe15928@intel.com> <CAM9d7chtVQqySGOGQrA065Fr8M2Y6jg9JJccYtMycQFvaheU+Q@mail.gmail.com>
- <f64c4283-6ced-411a-b69f-8c4375fb91f7@intel.com>
-In-Reply-To: <f64c4283-6ced-411a-b69f-8c4375fb91f7@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 22 Sep 2023 08:05:21 -0700
-Message-ID: <CAP-5=fWJzpQ14CQk+Lf5EY4CwJ4ACPsYT49XJwCnC_qEpS-DAA@mail.gmail.com>
-Subject: Re: [PATCH v1] perf evlist: Avoid frequency mode for the dummy event
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Yang Jihong <yangjihong1@huawei.com>, 
-	Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230913133105.GF22758@noisy.programming.kicks-ass.net>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Sep 21, 2023 at 10:36=E2=80=AFPM Adrian Hunter <adrian.hunter@intel=
-.com> wrote:
+On Wed, Sep 13, 2023 at 03:31:05PM +0200, Peter Zijlstra wrote:
+> On Sun, Aug 27, 2023 at 08:33:39AM +0100, Lorenzo Stoakes wrote:
 >
-> On 21/09/23 22:26, Namhyung Kim wrote:
-> > Hi,
+> > > @@ -785,25 +785,23 @@ __perf_mmap_to_page(struct perf_buffer *rb, unsigned long pgoff)
+> > >  	return virt_to_page(rb->data_pages[pgoff - 1]);
+> > >  }
+> > >
+> > > -static void *perf_mmap_alloc_page(int cpu)
+> > > +static void *perf_mmap_alloc_page(int node)
 > >
-> > On Mon, Sep 18, 2023 at 11:00=E2=80=AFPM Adrian Hunter <adrian.hunter@i=
-ntel.com> wrote:
-> >>
-> >> On 19/09/23 00:48, Ian Rogers wrote:
-> >>> On Mon, Sep 18, 2023 at 1:14=E2=80=AFAM Adrian Hunter <adrian.hunter@=
-intel.com> wrote:
-> >>>>
-> >>>> On 16/09/23 07:09, Ian Rogers wrote:
-> >>>>> Dummy events are created with an attribute where the period and fre=
-q
-> >>>>> are zero. evsel__config will then see the uninitialized values and
-> >>>>> initialize them in evsel__default_freq_period. As fequency mode is
-> >>>>> used by default the dummy event would be set to use frequency
-> >>>>> mode. However, this has no effect on the dummy event but does cause
-> >>>>> unnecessary timers/interrupts. Avoid this overhead by setting the
-> >>>>> period to 1 for dummy events.
-> >>>>>
-> >>>>> evlist__add_aux_dummy calls evlist__add_dummy then sets freq=3D0 an=
-d
-> >>>>> period=3D1. This isn't necessary after this change and so the setti=
-ng is
-> >>>>> removed.
-> >>>>>
-> >>>>> From Stephane:
-> >>>>>
-> >>>>> The dummy event is not counting anything. It is used to collect mma=
-p
-> >>>>> records and avoid a race condition during the synthesize mmap phase=
- of
-> >>>>> perf record. As such, it should not cause any overhead during activ=
-e
-> >>>>> profiling. Yet, it did. Because of a bug the dummy event was
-> >>>>> programmed as a sampling event in frequency mode. Events in that mo=
-de
-> >>>>> incur more kernel overheads because on timer tick, the kernel has t=
-o
-> >>>>> look at the number of samples for each event and potentially adjust
-> >>>>> the sampling period to achieve the desired frequency. The dummy eve=
-nt
-> >>>>> was therefore adding a frequency event to task and ctx contexts we =
-may
-> >>>>> otherwise not have any, e.g., perf record -a -e
-> >>>>> cpu/event=3D0x3c,period=3D10000000/. On each timer tick the
-> >>>>> perf_adjust_freq_unthr_context() is invoked and if ctx->nr_freq is
-> >>>>> non-zero, then the kernel will loop over ALL the events of the cont=
-ext
-> >>>>> looking for frequency mode ones. In doing, so it locks the context,
-> >>>>> and enable/disable the PMU of each hw event. If all the events of t=
-he
-> >>>>> context are in period mode, the kernel will have to traverse the li=
-st for
-> >>>>> nothing incurring overhead. The overhead is multiplied by a very la=
-rge
-> >>>>> factor when this happens in a guest kernel. There is no need for th=
-e
-> >>>>> dummy event to be in frequency mode, it does not count anything and
-> >>>>> therefore should not cause extra overhead for no reason.
-> >>>>>
-> >>>>> Fixes: 5bae0250237f ("perf evlist: Introduce perf_evlist__new_dummy=
- constructor")
-> >>>>> Reported-by: Stephane Eranian <eranian@google.com>
-> >>>>> Signed-off-by: Ian Rogers <irogers@google.com>
-> >
-> > I'll take the original patch first.
-> >
-> >
-> >>>>> ---
-> >>>>>  tools/perf/util/evlist.c | 5 +++--
-> >>>>>  1 file changed, 3 insertions(+), 2 deletions(-)
-> >>>>>
-> >>>>> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> >>>>> index 25c3ebe2c2f5..e36da58522ef 100644
-> >>>>> --- a/tools/perf/util/evlist.c
-> >>>>> +++ b/tools/perf/util/evlist.c
-> >>>>> @@ -251,6 +251,9 @@ static struct evsel *evlist__dummy_event(struct=
- evlist *evlist)
-> >>>>>               .type   =3D PERF_TYPE_SOFTWARE,
-> >>>>>               .config =3D PERF_COUNT_SW_DUMMY,
-> >>>>>               .size   =3D sizeof(attr), /* to capture ABI version *=
-/
-> >>>>> +             /* Avoid frequency mode for dummy events to avoid ass=
-ociated timers. */
-> >>>>> +             .freq =3D 0,
-> >>>>> +             .sample_period =3D 1,
-> >>>>>       };
-> >>>>>
-> >>>>>       return evsel__new_idx(&attr, evlist->core.nr_entries);
-> >>>>> @@ -277,8 +280,6 @@ struct evsel *evlist__add_aux_dummy(struct evli=
-st *evlist, bool system_wide)
-> >>>>>       evsel->core.attr.exclude_kernel =3D 1;
-> >>>>>       evsel->core.attr.exclude_guest =3D 1;
-> >>>>>       evsel->core.attr.exclude_hv =3D 1;
-> >>>>> -     evsel->core.attr.freq =3D 0;
-> >>>>> -     evsel->core.attr.sample_period =3D 1;
-> >>>>>       evsel->core.system_wide =3D system_wide;
-> >>>>>       evsel->no_aux_samples =3D true;
-> >>>>>       evsel->name =3D strdup("dummy:u");
-> >>>>
-> >>>> Note that evsel__config() will put it back to freq if -F is used.
-> >>>
-> >>> Right, I was looking for a minimal fix in part for the sake of back
-> >>> porting. For the -F we could do:
-> >>>
-> >>> ```
-> >>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> >>> index d5363d23f5d3..806185a39e17 100644
-> >>> --- a/tools/perf/util/evsel.c
-> >>> +++ b/tools/perf/util/evsel.c
-> >>> @@ -1083,11 +1083,15 @@ void __weak arch__post_evsel_config(struct
-> >>> evsel *evsel __maybe_unused,
-> >>> static void evsel__set_default_freq_period(struct record_opts *opts,
-> >>>                                           struct perf_event_attr *att=
-r)
-> >>> {
-> >>> -       if (opts->freq) {
-> >>> +       bool is_dummy =3D attr->type =3D=3D PERF_TYPE_SOFTWARE &&
-> >>> +               attr->config =3D=3D PERF_COUNT_SW_DUMMY;
-> >>> +
-> >>> +       if (opts->freq && !is_dummy) {
-> >>>                attr->freq =3D 1;
-> >>>                attr->sample_freq =3D opts->freq;
-> >>>        } else {
-> >>> -               attr->sample_period =3D opts->default_interval;
-> >>> +               attr->freq =3D 0;
-> >>> +               attr->sample_period =3D is_dummy ? 1 : opts->default_=
-interval;
-> >>>        }
-> >>> }
-> >>> ```
-> >>>
-> >>> But this felt like it could potentially have other side-effects.
-> >>
-> >> Perhaps leave it alone, if the period has already been defined:
-> >>
-> >> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> >> index d5363d23f5d3..ad3e12f5ec88 100644
-> >> --- a/tools/perf/util/evsel.c
-> >> +++ b/tools/perf/util/evsel.c
-> >> @@ -1166,7 +1166,8 @@ void evsel__config(struct evsel *evsel, struct r=
-ecord_opts *opts,
-> >>         if ((evsel->is_libpfm_event && !attr->sample_period) ||
-> >>             (!evsel->is_libpfm_event && (!attr->sample_period ||
-> >>                                          opts->user_freq !=3D UINT_MAX=
- ||
-> >> -                                        opts->user_interval !=3D ULLO=
-NG_MAX)))
-> >> +                                        opts->user_interval !=3D ULLO=
-NG_MAX) &&
-> >> +            !(is_dummy && attr->sample_period)))
-> >>                 evsel__set_default_freq_period(opts, attr);
-> >>
-> >>         /*
-> >
-> > Or simply like this?
-> >
-> >
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index d5363d23f5d3..6ce832ce62f1 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -1169,6 +1169,9 @@ void evsel__config(struct evsel *evsel, struct
-> > record_opts *opts,
-> >                                          opts->user_interval !=3D ULLON=
-G_MAX)))
-> >                 evsel__set_default_freq_period(opts, attr);
-> >
-> > +       if (evsel__is_dummy_event(evsel))
-> > +               attr->freq =3D 0;
-> > +
-> >         /*
-> >          * If attr->freq was set (here or earlier), ask for period
-> >          * to be sampled.
+> > Nitty point but since we're dealing with folios here maybe rename to
+> > perf_mmap_alloc_folio()?
 >
-> I thought there might be corner cases where it made a difference,
-> but I can't find any, so that should do.
+> Since it's an explicit order-0 allocation, does that really make sense?
 >
 
-It seemed more intention revealing to do it at creation/initialization
-than on a later not obviously executed code path - I'm thinking of
-future me trying to understand the code. My priority is the clearing
-of the flag, so I'm easy.
+True, it does ultimately yield a single page and doesn't reference its
+metadata so it's not the end of the world to keep it as-is (it was very
+nitty after all!)
 
-Thanks,
-Ian
+> > >  {
+> > > -	struct page *page;
+> > > -	int node;
+> > > +	struct folio *folio;
+> > >
+> > > -	node = (cpu == -1) ? cpu : cpu_to_node(cpu);
+> > > -	page = alloc_pages_node(node, GFP_KERNEL | __GFP_ZERO, 0);
+> > > -	if (!page)
+> > > +	folio = __folio_alloc_node(GFP_KERNEL | __GFP_ZERO, 0, node);
+> > > +	if (!folio)
+> > >  		return NULL;
+> > >
+> > > -	return page_address(page);
+> > > +	return folio_address(folio);
+> > >  }
+>
