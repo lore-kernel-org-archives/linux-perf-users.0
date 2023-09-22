@@ -1,222 +1,262 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8614200AB
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 14:58:50 +0000 (UTC)
-Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E71BC6
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 07:58:49 -0700 (PDT)
-Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-414ba610766so392641cf.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 07:58:49 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99131171AA
+	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 15:05:36 +0000 (UTC)
+Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05230CE
+	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 08:05:34 -0700 (PDT)
+Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-414ba610766so395731cf.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 08:05:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695394728; x=1695999528; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1695395133; x=1695999933; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zgDKgKLNOq5UPjSMrvVQpqlAFLCGyJRKW8sSQYfce5A=;
-        b=KW1foPL4LoxlqJ4kP58yEZ52r9JbHSW+br9xWL0P8bA3pyaY6C24K54rDUa4hN0kQ1
-         ifS3cPIxFkufgO4KP3Y9qj7Dzsy1DQl1JLeu3skymEQY35VW49riqe2mpxQmqmcm/yTg
-         UWZe/29O6v1OO8NsnSA+YPpxG+qIObk1Q2SNhUVNmUpFThrUVippYPqmpfC1rJjtRF+a
-         nzL21JcnODfpBreHCInR6BYywqOmcs5dJ5tFCL2lX1nNiL/WfGhkIY/gB/MdZ1u7ytIG
-         6BYU8+DRHNP/f1vFdA1lT+y7LK4uuilQOg+5PrIvWCLk2W0f9+lHiNP+mjQnw4x8RKs6
-         XN1g==
+        bh=LcyhHe0w7Sbcegi0kd6uPadSKLO2Cun8OwrGqBJxXQE=;
+        b=kLGz2SzLQdLn5sRl9l58H5hcqPL4u3+9BIrrwt8dL9hZoY/S0SZsX3Vum6r08PKhTk
+         wWZYFOOl1yIbE9qemn8KkNLqCZcThDpvCzP/EqNpA7YWNTLBwcgE+2+ErzJrAt4kcaBx
+         JeoN0pkXENvYtITpjjJwv8O3bNzGVJaEw63AP7err3GFpy+AxmajPkm6PrgAxfeGA9kX
+         w2QzSDMfQMqSPpC7zVkhhrqYnH5GU/aFx1JfKaw4vLB9d3bkjzOFAAvlYB81/IKyP+x9
+         Re29TRfjOgweNI2y038/D2Yrqj+KCmw4CviD/6UUg9FrZLrBYrdrO8Fm4MSXr08R+IbN
+         tluw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695394728; x=1695999528;
+        d=1e100.net; s=20230601; t=1695395133; x=1695999933;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zgDKgKLNOq5UPjSMrvVQpqlAFLCGyJRKW8sSQYfce5A=;
-        b=huBdd9NUkM2hIanxdHVO+E+ieT2ggFEmwm12x2s9nbO1jPAWn62tzjt940bQEbKLiy
-         JiznGjUy9SbBHk4ivHZnr5etPw6fodGG48S06ptNfrsnSYHbNN6verpaCFvH6B7BePvu
-         O365YRlDug4Yy73is4hu7Nlseoex48I+3Vcd13ASDOCXjUVtaNySgjHY5VeurU8ENLkR
-         aNpX526V4kBwgEGLAsmxz5iFbp2BGbE6iNR/aIGL8+h/0jwSAYWC0v/lz4+SkVjOqEH8
-         U6f0mVfNzRdvgZagyOwM7L6VB1aUWVxP3B7D8Nq5bk7XNgR5t7cbvAisPh0J/MRXvhSp
-         RJsg==
-X-Gm-Message-State: AOJu0YzaYi5LlorIyKuRKc+jxWBQL7608GCP/vfL4Uz/seAW2zokfNSZ
-	tOnbn2fk+RW36MADtk3SaYBMfMK3xa4UW9zdEnT/KQ==
-X-Google-Smtp-Source: AGHT+IESNWFRg+y2TuWvd89RoJ6GBBUMt3OgVqWMs842fYNtOygOfCHPUJtJDdiPRplbsgSlGB6en+tQOrS+AeANsys=
+        bh=LcyhHe0w7Sbcegi0kd6uPadSKLO2Cun8OwrGqBJxXQE=;
+        b=WIItouLioXFXJ9WSCHNP4luOwPP5VLyogWXGcx/ZwQWhyezcC65kGqACVmg9L/vAuA
+         6EpBVhFDPY00TiMNxre9kU3Sjf9/VBYcIBneMveoQ8jwccx9e+H32hG70SStjECMYrKX
+         QVMdGueNAceTxLrHvHDsJP93wE9xuzoDbkCLNHylaTFvnxMYwwKFl1y7aiePwZi6WWLg
+         c6qcYAqNf2DEaboOI9miQ5mqVG7rwJqoO6n+kPOskxnznJ5SOl9EpDpq5VgTbcYoylpL
+         fwkAONi0z+eF+DQy+qaEDBkRhGB1mzLkFRQ0qi08APEB1P1xXf1xs/mi6eVxo3/UhPMW
+         m0Ew==
+X-Gm-Message-State: AOJu0YxLIARTvaOYhwpukGxRl0q6DO80vD3OQADWo9iEw3ua9JaVxSkd
+	KdiqghVNUOrhoZtGEQU2G52BNVzau2DZFdODoQti7Q==
+X-Google-Smtp-Source: AGHT+IGsppoxkydfRnq+WRxAx37ICAESNT7n0HKsIqMY8xmaXdZvCG9jyD5B074HsDzgCzdiRg/BlmsDJlRoGllpphA=
 X-Received: by 2002:a05:622a:1191:b0:403:eeb9:a76 with SMTP id
- m17-20020a05622a119100b00403eeb90a76mr181867qtk.17.1695394728023; Fri, 22 Sep
- 2023 07:58:48 -0700 (PDT)
+ m17-20020a05622a119100b00403eeb90a76mr183776qtk.17.1695395132835; Fri, 22 Sep
+ 2023 08:05:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1695037955-107983-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1695037955-107983-2-git-send-email-renyu.zj@linux.alibaba.com>
- <CAP-5=fUxfJT-gxKB+Ls3drUeQ0sy55uydi8Y36gumUnaFSYeqA@mail.gmail.com> <0f5bbe93-1875-ff9b-a1d8-8518a8cf3e84@linux.alibaba.com>
-In-Reply-To: <0f5bbe93-1875-ff9b-a1d8-8518a8cf3e84@linux.alibaba.com>
+References: <20230916040915.1075620-1-irogers@google.com> <08995efc-d5af-6ba6-831b-1a483daabef4@intel.com>
+ <CAP-5=fW783G9fUEHrmzUu7UmvOm65Fp6vAQybCcNz2C0QRz26w@mail.gmail.com>
+ <8086150e-3c6d-4001-b3cc-bb12ebe15928@intel.com> <CAM9d7chtVQqySGOGQrA065Fr8M2Y6jg9JJccYtMycQFvaheU+Q@mail.gmail.com>
+ <f64c4283-6ced-411a-b69f-8c4375fb91f7@intel.com>
+In-Reply-To: <f64c4283-6ced-411a-b69f-8c4375fb91f7@intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 22 Sep 2023 07:58:35 -0700
-Message-ID: <CAP-5=fW8HSuQ2kZDrMeyhpZbiqagANs=_W+RWNJw21u-UhixrQ@mail.gmail.com>
-Subject: Re: [PATCH v9 1/7] perf pmu: "Compat" supports regular expression
- matching identifiers
-To: Jing Zhang <renyu.zj@linux.alibaba.com>
-Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linaro.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+Date: Fri, 22 Sep 2023 08:05:21 -0700
+Message-ID: <CAP-5=fWJzpQ14CQk+Lf5EY4CwJ4ACPsYT49XJwCnC_qEpS-DAA@mail.gmail.com>
+Subject: Re: [PATCH v1] perf evlist: Avoid frequency mode for the dummy event
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-	linux-doc@vger.kernel.org, Zhuo Song <zhuo.song@linux.alibaba.com>, 
-	Shuai Xue <xueshuai@linux.alibaba.com>
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Yang Jihong <yangjihong1@huawei.com>, 
+	Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, Sep 22, 2023 at 1:19=E2=80=AFAM Jing Zhang <renyu.zj@linux.alibaba.=
-com> wrote:
+On Thu, Sep 21, 2023 at 10:36=E2=80=AFPM Adrian Hunter <adrian.hunter@intel=
+.com> wrote:
 >
->
->
-> =E5=9C=A8 2023/9/21 =E4=B8=8A=E5=8D=882:36, Ian Rogers =E5=86=99=E9=81=93=
-:
-> > On Mon, Sep 18, 2023 at 4:52=E2=80=AFAM Jing Zhang <renyu.zj@linux.alib=
-aba.com> wrote:
-> >>
-> >> The jevent "Compat" is used for uncore PMU alias or metric definitions=
-.
-> >>
-> >> The same PMU driver has different PMU identifiers due to different
-> >> hardware versions and types, but they may have some common PMU event.
-> >> Since a Compat value can only match one identifier, when adding the
-> >> same event alias to PMUs with different identifiers, each identifier
-> >> needs to be defined once, which is not streamlined enough.
-> >>
-> >> So let "Compat" support using regular expression to match identifiers
-> >> for uncore PMU alias. For example, if the "Compat" value is set to
-> >> "43401|43c01", it would be able to match PMU identifiers such as "4340=
-1"
-> >> or "43c01", which correspond to CMN600_r0p0 or CMN700_r0p0.
-> >>
-> >> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
-> >> ---
-> >>  tools/perf/util/pmu.c | 23 +++++++++++++++++++++--
-> >>  tools/perf/util/pmu.h |  1 +
-> >>  2 files changed, 22 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> >> index e215985..7e2242f 100644
-> >> --- a/tools/perf/util/pmu.c
-> >> +++ b/tools/perf/util/pmu.c
-> >> @@ -28,6 +28,7 @@
-> >>  #include "strbuf.h"
-> >>  #include "fncache.h"
-> >>  #include "util/evsel_config.h"
-> >> +#include <regex.h>
-> >>
-> >>  struct perf_pmu perf_pmu__fake =3D {
-> >>         .name =3D "fake",
-> >> @@ -875,6 +876,24 @@ static bool pmu_uncore_alias_match(const char *pm=
-u_name, const char *name)
-> >>         return res;
-> >>  }
-> >>
-> >> +bool pmu_uncore_identifier_match(const char *compat, const char *id)
-> >> +{
-> >> +       regex_t re;
-> >> +       regmatch_t pmatch[1];
-> >> +       int match;
-> >> +
-> >> +       if (regcomp(&re, compat, REG_EXTENDED) !=3D 0) {
-> >> +               /* Warn unable to generate match particular string. */
-> >> +               pr_info("Invalid regular expression %s\n", compat);
-> >> +               return false;
-> >> +       }
-> >> +
-> >> +       match =3D !regexec(&re, id, 1, pmatch, 0);
+> On 21/09/23 22:26, Namhyung Kim wrote:
+> > Hi,
 > >
-> > I wonder if we can make the regular expressions like
-> > "^(434|436|43c|43a)" more like "(434|436|43c|43a).*", so that we fully
-> > match the id string, by here doing:
+> > On Mon, Sep 18, 2023 at 11:00=E2=80=AFPM Adrian Hunter <adrian.hunter@i=
+ntel.com> wrote:
+> >>
+> >> On 19/09/23 00:48, Ian Rogers wrote:
+> >>> On Mon, Sep 18, 2023 at 1:14=E2=80=AFAM Adrian Hunter <adrian.hunter@=
+intel.com> wrote:
+> >>>>
+> >>>> On 16/09/23 07:09, Ian Rogers wrote:
+> >>>>> Dummy events are created with an attribute where the period and fre=
+q
+> >>>>> are zero. evsel__config will then see the uninitialized values and
+> >>>>> initialize them in evsel__default_freq_period. As fequency mode is
+> >>>>> used by default the dummy event would be set to use frequency
+> >>>>> mode. However, this has no effect on the dummy event but does cause
+> >>>>> unnecessary timers/interrupts. Avoid this overhead by setting the
+> >>>>> period to 1 for dummy events.
+> >>>>>
+> >>>>> evlist__add_aux_dummy calls evlist__add_dummy then sets freq=3D0 an=
+d
+> >>>>> period=3D1. This isn't necessary after this change and so the setti=
+ng is
+> >>>>> removed.
+> >>>>>
+> >>>>> From Stephane:
+> >>>>>
+> >>>>> The dummy event is not counting anything. It is used to collect mma=
+p
+> >>>>> records and avoid a race condition during the synthesize mmap phase=
+ of
+> >>>>> perf record. As such, it should not cause any overhead during activ=
+e
+> >>>>> profiling. Yet, it did. Because of a bug the dummy event was
+> >>>>> programmed as a sampling event in frequency mode. Events in that mo=
+de
+> >>>>> incur more kernel overheads because on timer tick, the kernel has t=
+o
+> >>>>> look at the number of samples for each event and potentially adjust
+> >>>>> the sampling period to achieve the desired frequency. The dummy eve=
+nt
+> >>>>> was therefore adding a frequency event to task and ctx contexts we =
+may
+> >>>>> otherwise not have any, e.g., perf record -a -e
+> >>>>> cpu/event=3D0x3c,period=3D10000000/. On each timer tick the
+> >>>>> perf_adjust_freq_unthr_context() is invoked and if ctx->nr_freq is
+> >>>>> non-zero, then the kernel will loop over ALL the events of the cont=
+ext
+> >>>>> looking for frequency mode ones. In doing, so it locks the context,
+> >>>>> and enable/disable the PMU of each hw event. If all the events of t=
+he
+> >>>>> context are in period mode, the kernel will have to traverse the li=
+st for
+> >>>>> nothing incurring overhead. The overhead is multiplied by a very la=
+rge
+> >>>>> factor when this happens in a guest kernel. There is no need for th=
+e
+> >>>>> dummy event to be in frequency mode, it does not count anything and
+> >>>>> therefore should not cause extra overhead for no reason.
+> >>>>>
+> >>>>> Fixes: 5bae0250237f ("perf evlist: Introduce perf_evlist__new_dummy=
+ constructor")
+> >>>>> Reported-by: Stephane Eranian <eranian@google.com>
+> >>>>> Signed-off-by: Ian Rogers <irogers@google.com>
 > >
-> > if (match) {
-> >   /* Ensure a full match. */
-> >   match =3D pmatch[0].rm_so =3D=3D 0 && pmatch[0].rm_eo =3D=3D strlen(i=
-d);
-> > }
+> > I'll take the original patch first.
 > >
->
-> Ok, will do.
->
->
-> > I think longer term we can use jevents.py to generate a pmu-events.l,
-> > which would have a contents something like:
 > >
-> > (434|436|43c|43a).*  { return PMU_....;}
+> >>>>> ---
+> >>>>>  tools/perf/util/evlist.c | 5 +++--
+> >>>>>  1 file changed, 3 insertions(+), 2 deletions(-)
+> >>>>>
+> >>>>> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> >>>>> index 25c3ebe2c2f5..e36da58522ef 100644
+> >>>>> --- a/tools/perf/util/evlist.c
+> >>>>> +++ b/tools/perf/util/evlist.c
+> >>>>> @@ -251,6 +251,9 @@ static struct evsel *evlist__dummy_event(struct=
+ evlist *evlist)
+> >>>>>               .type   =3D PERF_TYPE_SOFTWARE,
+> >>>>>               .config =3D PERF_COUNT_SW_DUMMY,
+> >>>>>               .size   =3D sizeof(attr), /* to capture ABI version *=
+/
+> >>>>> +             /* Avoid frequency mode for dummy events to avoid ass=
+ociated timers. */
+> >>>>> +             .freq =3D 0,
+> >>>>> +             .sample_period =3D 1,
+> >>>>>       };
+> >>>>>
+> >>>>>       return evsel__new_idx(&attr, evlist->core.nr_entries);
+> >>>>> @@ -277,8 +280,6 @@ struct evsel *evlist__add_aux_dummy(struct evli=
+st *evlist, bool system_wide)
+> >>>>>       evsel->core.attr.exclude_kernel =3D 1;
+> >>>>>       evsel->core.attr.exclude_guest =3D 1;
+> >>>>>       evsel->core.attr.exclude_hv =3D 1;
+> >>>>> -     evsel->core.attr.freq =3D 0;
+> >>>>> -     evsel->core.attr.sample_period =3D 1;
+> >>>>>       evsel->core.system_wide =3D system_wide;
+> >>>>>       evsel->no_aux_samples =3D true;
+> >>>>>       evsel->name =3D strdup("dummy:u");
+> >>>>
+> >>>> Note that evsel__config() will put it back to freq if -F is used.
+> >>>
+> >>> Right, I was looking for a minimal fix in part for the sake of back
+> >>> porting. For the -F we could do:
+> >>>
+> >>> ```
+> >>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> >>> index d5363d23f5d3..806185a39e17 100644
+> >>> --- a/tools/perf/util/evsel.c
+> >>> +++ b/tools/perf/util/evsel.c
+> >>> @@ -1083,11 +1083,15 @@ void __weak arch__post_evsel_config(struct
+> >>> evsel *evsel __maybe_unused,
+> >>> static void evsel__set_default_freq_period(struct record_opts *opts,
+> >>>                                           struct perf_event_attr *att=
+r)
+> >>> {
+> >>> -       if (opts->freq) {
+> >>> +       bool is_dummy =3D attr->type =3D=3D PERF_TYPE_SOFTWARE &&
+> >>> +               attr->config =3D=3D PERF_COUNT_SW_DUMMY;
+> >>> +
+> >>> +       if (opts->freq && !is_dummy) {
+> >>>                attr->freq =3D 1;
+> >>>                attr->sample_freq =3D opts->freq;
+> >>>        } else {
+> >>> -               attr->sample_period =3D opts->default_interval;
+> >>> +               attr->freq =3D 0;
+> >>> +               attr->sample_period =3D is_dummy ? 1 : opts->default_=
+interval;
+> >>>        }
+> >>> }
+> >>> ```
+> >>>
+> >>> But this felt like it could potentially have other side-effects.
+> >>
+> >> Perhaps leave it alone, if the period has already been defined:
+> >>
+> >> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> >> index d5363d23f5d3..ad3e12f5ec88 100644
+> >> --- a/tools/perf/util/evsel.c
+> >> +++ b/tools/perf/util/evsel.c
+> >> @@ -1166,7 +1166,8 @@ void evsel__config(struct evsel *evsel, struct r=
+ecord_opts *opts,
+> >>         if ((evsel->is_libpfm_event && !attr->sample_period) ||
+> >>             (!evsel->is_libpfm_event && (!attr->sample_period ||
+> >>                                          opts->user_freq !=3D UINT_MAX=
+ ||
+> >> -                                        opts->user_interval !=3D ULLO=
+NG_MAX)))
+> >> +                                        opts->user_interval !=3D ULLO=
+NG_MAX) &&
+> >> +            !(is_dummy && attr->sample_period)))
+> >>                 evsel__set_default_freq_period(opts, attr);
+> >>
+> >>         /*
 > >
-> > That should make the matching faster but may add some restrictions
-> > onto the regular expression.
+> > Or simply like this?
+> >
+> >
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index d5363d23f5d3..6ce832ce62f1 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -1169,6 +1169,9 @@ void evsel__config(struct evsel *evsel, struct
+> > record_opts *opts,
+> >                                          opts->user_interval !=3D ULLON=
+G_MAX)))
+> >                 evsel__set_default_freq_period(opts, attr);
+> >
+> > +       if (evsel__is_dummy_event(evsel))
+> > +               attr->freq =3D 0;
+> > +
+> >         /*
+> >          * If attr->freq was set (here or earlier), ask for period
+> >          * to be sampled.
 >
-> Could you please describe the function of pmu-event.l in more detail? I m=
-ay not fully understand it.
+> I thought there might be corner cases where it made a difference,
+> but I can't find any, so that should do.
+>
 
-So for now there's no need for a pmu-event.l, I'm fine with the code
-as-is. The issue for using regular expressions is that we need to
-compile (regcomp) then use them (regexec), and in this new code the
-result of the parsing is discarded - perhaps we can save on some
-compiling with a 1 element cache, let's wait to see performance data
-saying it is an issue. If we were to compile the regular expressions
-at build time with flex then the runtime cost, any caching, etc. is
-unnecessary.
+It seemed more intention revealing to do it at creation/initialization
+than on a later not obviously executed code path - I'm thinking of
+future me trying to understand the code. My priority is the clearing
+of the flag, so I'm easy.
 
-Hope this makes sense. Thanks,
+Thanks,
 Ian
-
-> Thanks,
-> Jing
->
-> >
-> > Thanks,
-> > Ian
-> >
-> >> +       regfree(&re);
-> >> +
-> >> +       return match;
-> >> +}
-> >> +
-> >>  static int pmu_add_cpu_aliases_map_callback(const struct pmu_event *p=
-e,
-> >>                                         const struct pmu_events_table =
-*table __maybe_unused,
-> >>                                         void *vdata)
-> >> @@ -915,8 +934,8 @@ static int pmu_add_sys_aliases_iter_fn(const struc=
-t pmu_event *pe,
-> >>         if (!pe->compat || !pe->pmu)
-> >>                 return 0;
-> >>
-> >> -       if (!strcmp(pmu->id, pe->compat) &&
-> >> -           pmu_uncore_alias_match(pe->pmu, pmu->name)) {
-> >> +       if (pmu_uncore_alias_match(pe->pmu, pmu->name) &&
-> >> +                       pmu_uncore_identifier_match(pe->compat, pmu->i=
-d)) {
-> >>                 perf_pmu__new_alias(pmu,
-> >>                                 pe->name,
-> >>                                 pe->desc,
-> >> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> >> index bd5d804..fc155ce 100644
-> >> --- a/tools/perf/util/pmu.h
-> >> +++ b/tools/perf/util/pmu.h
-> >> @@ -240,6 +240,7 @@ void pmu_add_cpu_aliases_table(struct perf_pmu *pm=
-u,
-> >>  char *perf_pmu__getcpuid(struct perf_pmu *pmu);
-> >>  const struct pmu_events_table *pmu_events_table__find(void);
-> >>  const struct pmu_metrics_table *pmu_metrics_table__find(void);
-> >> +bool pmu_uncore_identifier_match(const char *compat, const char *id);
-> >>
-> >>  int perf_pmu__convert_scale(const char *scale, char **end, double *sv=
-al);
-> >>
-> >> --
-> >> 1.8.3.1
-> >>
