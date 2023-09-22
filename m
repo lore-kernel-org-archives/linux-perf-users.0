@@ -1,107 +1,120 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9EF45F73
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 20:19:48 +0000 (UTC)
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19CB619E
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 13:19:47 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-40531812168so27832095e9.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 13:19:47 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6B3171D2;
+	Fri, 22 Sep 2023 23:44:49 +0000 (UTC)
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 345DE1A2;
+	Fri, 22 Sep 2023 16:44:48 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1c328b53aeaso27243215ad.2;
+        Fri, 22 Sep 2023 16:44:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695413985; x=1696018785; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=koDz7uR4JuD5CtafYggyuJ5hDx6OJdYJKuUjsBOIOJw=;
-        b=mis/QC8uCwhPdOMwk35Wn6dSlHJsv3PycAqv2H2GD9PLVovKqX4ATyMErdbekVfO7+
-         dHrcbN+wKLrP7uB/U9psWKyeX5BLLYN0crqP1sxWUwjPCx1qbAJW0l4SoplkvZdbhdL8
-         245+YrW2WxTnHdqrg0YNYN7t5T4EZueoGRwIMnbB+Rrrj6BDlLCctNvVBLR0R3Psdxco
-         B0KOB+2NrVkRFjc7ZWFzErh0+6i72zGUoEc14ao8R722pk+Lyq91gYN2Nsy3jVKo2nJy
-         WZRIrsARrJWgpZkFJaG8UcRVMS3dcI0a11GZruP8JRmLPiC3++00ZS7V6TS3i/QK+4X/
-         8qHA==
+        d=gmail.com; s=20230601; t=1695426287; x=1696031087; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=MZpY1IZ4bUrCy8aga9AziYMkBusuoXKm+AQsy7SMzlw=;
+        b=I7qHZ9FGWnL1tI9P5bkbztyAZgioK+j4J0gCHGbOsoaH+8+JD0ZE1fRwRbKZVoWHSx
+         +jjoDB42lb/HZHYQk4WZu+FsCWpV9itrI/UeyMtpsQKCSCOQNHu/q/MG2haYr6lHqPib
+         q57qW/x5l8vOw0InM0lD3JZeCm4lsRBD/uelVV/GqDDxdDO74z+18fsoLo16Xs57y5XM
+         8efU7SDOjXI+nb9khHcC2JpaQLA1cDvcHl4kuXztrYXPTGll/ve5Qjd1WcJ8R/+x8N7U
+         VKp1MPWqbyRMFnnEKyWs2AWBoRYe3HwbjXwD3yYyRI9BAGlXHEEU8R9BHcoxDo2/g0OR
+         wdyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695413985; x=1696018785;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1695426287; x=1696031087;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=koDz7uR4JuD5CtafYggyuJ5hDx6OJdYJKuUjsBOIOJw=;
-        b=Z5GY7NC7upQjFb3l48g6DlUhzmK7IZq2CEBKcQb0PoZjTwhGDlogZlERBvvNzz07YY
-         T5aH+z2MwQ95BEH/8PQuRoHXMudqCw02lo/w+2M1OPswVGK7SqFmTNRXYT3XVgj0G1Yl
-         UR8QtLhTKZdBeiVoA/LswFBdxFZHf5OvXBX1/uMPqlmeLFtx6pxoCeWPR6d17T4OpDYy
-         KgZzFP/OOGkbRzUMMoQYkgaYol+WI8OCYxpgWYKfb0f/kj8gh/kxSzT6cJW28GWF6a+6
-         NMWP/4/eizGmyF5jpeLt7bK/iMGZjU6mp8jqcec9DT0eVy6bT5alXHwp6sauMkQ5AsoC
-         WLug==
-X-Gm-Message-State: AOJu0YxKmdmjAoIrypnxvqBA5c5YhByPv58ZiE26YBB9MPeyvuyueljW
-	DEcnZxq6RQEyi8ODfmZnM0U=
-X-Google-Smtp-Source: AGHT+IHF2VxgMhTbLhU8jECNFsONsbRaa3casHYCM1ms7rtOSYqYmRW0rTVLX/PPVIoZjZiCUeQnfw==
-X-Received: by 2002:a7b:c3cc:0:b0:400:419c:bbde with SMTP id t12-20020a7bc3cc000000b00400419cbbdemr320765wmj.18.1695413985146;
-        Fri, 22 Sep 2023 13:19:45 -0700 (PDT)
-Received: from localhost ([2a00:23c5:dc8c:8701:1663:9a35:5a7b:1d76])
-        by smtp.gmail.com with ESMTPSA id r5-20020a05600c320500b003fc0505be19sm259460wmp.37.2023.09.22.13.19.43
+        bh=MZpY1IZ4bUrCy8aga9AziYMkBusuoXKm+AQsy7SMzlw=;
+        b=ETSpG2vvgIS12V7H20jnw7Z63xi/SYYP312uWc3EN0CHoK7DUD1lTJQGBCgntUbFQ3
+         oHoYS4wFZaYChd0I8RMr0eEhxTxaHJER7HfNf3wMs5MU1l/NbGhMy5cPVqXuiKsskbqM
+         dN6uphzzWw/i7A3NfkhIT91xwJWRkPqtimCZEmonvyzQMYnK8Wx+/urisQYMxCifACrw
+         EY1Jx8A7AKYmItXs5tTV4Lwnmtl0xuQWaxVRUfEqI9Cyk/PuDKowg3iJbOx1EiwpNu3q
+         vziyHrzzfTeVQyoigT9C/PLK505//4Sy7l7WGgsmbFAVxkhUEj30HVpOzP+aMwc+C/E4
+         PJLQ==
+X-Gm-Message-State: AOJu0Yx+qbIrJpTk5gJGlASL1Og7BXYf3m/ARdLLbBpg4ub4WLs4gstZ
+	pKobyFGG9C+j76Ie9ne6LPY=
+X-Google-Smtp-Source: AGHT+IHPZg/jEObdNDGRmdgw7+V6Y5CcHs7Cn0XPXcjakXuhni912sY281xDPaXUI/vI2QikxYCUEQ==
+X-Received: by 2002:a17:902:ab01:b0:1b8:66f6:87a3 with SMTP id ik1-20020a170902ab0100b001b866f687a3mr802257plb.52.1695426287474;
+        Fri, 22 Sep 2023 16:44:47 -0700 (PDT)
+Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:32b8:255a:115:8538])
+        by smtp.gmail.com with ESMTPSA id l19-20020a170902d35300b001bf5e24b2a8sm4076519plk.174.2023.09.22.16.44.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 13:19:44 -0700 (PDT)
-Date: Fri, 22 Sep 2023 21:19:43 +0100
-From: Lorenzo Stoakes <lstoakes@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>, linux-mm@kvack.org,
-	linux-perf-users@vger.kernel.org, mingo@redhat.com, acme@kernel.org,
-	urezki@gmail.com, hch@infradead.org
-Subject: Re: [RFC PATCH 1/4] perf: Convert perf_mmap_(alloc,free)_page to
- folios
-Message-ID: <0d8c508d-91c5-435e-9880-7eedebce2219@lucifer.local>
-References: <20230821202016.2910321-1-willy@infradead.org>
- <20230821202016.2910321-2-willy@infradead.org>
- <78cc53f6-3828-4802-afc5-abb71dc59627@lucifer.local>
- <20230913133105.GF22758@noisy.programming.kicks-ass.net>
+        Fri, 22 Sep 2023 16:44:46 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Song Liu <song@kernel.org>,
+	Hao Luo <haoluo@google.com>,
+	bpf@vger.kernel.org
+Subject: [PATCH] perf record: Fix BTF type checks in the off-cpu profiling
+Date: Fri, 22 Sep 2023 16:44:44 -0700
+Message-ID: <20230922234444.3115821-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.42.0.515.g380fc7ccd1-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230913133105.GF22758@noisy.programming.kicks-ass.net>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Wed, Sep 13, 2023 at 03:31:05PM +0200, Peter Zijlstra wrote:
-> On Sun, Aug 27, 2023 at 08:33:39AM +0100, Lorenzo Stoakes wrote:
->
-> > > @@ -785,25 +785,23 @@ __perf_mmap_to_page(struct perf_buffer *rb, unsigned long pgoff)
-> > >  	return virt_to_page(rb->data_pages[pgoff - 1]);
-> > >  }
-> > >
-> > > -static void *perf_mmap_alloc_page(int cpu)
-> > > +static void *perf_mmap_alloc_page(int node)
-> >
-> > Nitty point but since we're dealing with folios here maybe rename to
-> > perf_mmap_alloc_folio()?
->
-> Since it's an explicit order-0 allocation, does that really make sense?
->
+The BTF func proto for a tracepoint has one more argument than the
+actual tracepoint function since it has a context argument at the
+begining.  So it should compare to 5 when the tracepoint has 4
+arguments.
 
-True, it does ultimately yield a single page and doesn't reference its
-metadata so it's not the end of the world to keep it as-is (it was very
-nitty after all!)
+  typedef void (*btf_trace_sched_switch)(void *, bool, struct task_struct *, struct task_struct *, unsigned int);
 
-> > >  {
-> > > -	struct page *page;
-> > > -	int node;
-> > > +	struct folio *folio;
-> > >
-> > > -	node = (cpu == -1) ? cpu : cpu_to_node(cpu);
-> > > -	page = alloc_pages_node(node, GFP_KERNEL | __GFP_ZERO, 0);
-> > > -	if (!page)
-> > > +	folio = __folio_alloc_node(GFP_KERNEL | __GFP_ZERO, 0, node);
-> > > +	if (!folio)
-> > >  		return NULL;
-> > >
-> > > -	return page_address(page);
-> > > +	return folio_address(folio);
-> > >  }
->
+Also, recent change in the perf tool would use a hand-written minimal
+vmlinux.h to generate BTF in the skeleton.  So it won't have the info
+of the tracepoint.  Anyway it should use the kernel's vmlinux BTF to
+check the type in the kernel.
+
+Fixes: b36888f71c85 ("perf record: Handle argument change in sched_switch")
+Cc: Song Liu <song@kernel.org>
+Cc: Hao Luo <haoluo@google.com>
+CC: bpf@vger.kernel.org
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/bpf_off_cpu.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
+index 01f70b8e705a..21f4d9ba023d 100644
+--- a/tools/perf/util/bpf_off_cpu.c
++++ b/tools/perf/util/bpf_off_cpu.c
+@@ -98,7 +98,7 @@ static void off_cpu_finish(void *arg __maybe_unused)
+ /* v5.18 kernel added prev_state arg, so it needs to check the signature */
+ static void check_sched_switch_args(void)
+ {
+-	const struct btf *btf = bpf_object__btf(skel->obj);
++	const struct btf *btf = btf__load_vmlinux_btf();
+ 	const struct btf_type *t1, *t2, *t3;
+ 	u32 type_id;
+ 
+@@ -116,7 +116,8 @@ static void check_sched_switch_args(void)
+ 		return;
+ 
+ 	t3 = btf__type_by_id(btf, t2->type);
+-	if (t3 && btf_is_func_proto(t3) && btf_vlen(t3) == 4) {
++	/* btf_trace func proto has one more argument for the context */
++	if (t3 && btf_is_func_proto(t3) && btf_vlen(t3) == 5) {
+ 		/* new format: pass prev_state as 4th arg */
+ 		skel->rodata->has_prev_state = true;
+ 	}
+-- 
+2.42.0.515.g380fc7ccd1-goog
+
