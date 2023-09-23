@@ -1,45 +1,45 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22F11C2D
-	for <linux-perf-users@vger.kernel.org>; Sat, 23 Sep 2023 05:36:22 +0000 (UTC)
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1887C1701
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 22:36:07 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59c2ca3bcf9so52539547b3.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 146E6819
+	for <linux-perf-users@vger.kernel.org>; Sat, 23 Sep 2023 05:36:26 +0000 (UTC)
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1F02170E
+	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 22:36:08 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d816fa2404aso4959726276.0
         for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 22:36:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695447364; x=1696052164; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1695447366; x=1696052166; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=a5vqIfXNWliDocU8tzStcp+r+OU5EjvAXvx9gVnGgcs=;
-        b=GhGHPD2qvlwf6DPEFJ+9yvS+OHNHzTKjhuNdApz5z/GoqKX68u3AFI4wayELNU/30Y
-         uqWwzPKCLls98voX1c3ZEoR0IIWdaw2l2YKBbZL5/bOb67lRDSQjuiuinpGDQJIzZ1Xe
-         +zEwKIC34AdfWybCaqoHYKlTD/fTkn+g9M/dmHawF+giGaLFT+8zlSm6plTrql/TlRD9
-         QcwWV4t4QCd+tQTvo4iH3BTJLd8lTcKOdP8liGHVFmVCQ1HqzArTeiRLonqw+oSZMy+K
-         rvpNNmXWQSX1PB6aOznwwoP5ooJJ0m81SD4y2DYhB2cvAyDxfpkHTcdgzl6tRNNCubf/
-         wK5A==
+        bh=lP0CZzDRsMehpIV0W6qVRwyai9STrfRNe8AVt5V6Hgk=;
+        b=idybEtf6E9zqATWwOS3c4cWkW0lURrMrDuD/rX+I8fp3cJWjLPO2CkfrguM8a+uk3C
+         IQjor63Wj63pgny1pbWYcvtP9qAjknFXLBG8yDKNPhqWwSYPO1qeR/JhILzKzFzmJX2/
+         slTEu72lGHJOm4AVZxdw3LA00ARizD2ZrAhA54YFHTnKzgmw8+MwGa6reNqiKpQa/KL8
+         wO8MVJufRINlovSmzKP5pcNCS1/jjQJxASIDwe6ZB8Q0ICl880Lr8K2HMjs6IX20+DZh
+         3ohd5H4290LLl0PNzdcmkjtOIzG6b0j7gyWGkc4x/KIxVcrBl3+JKNb7MqQkk8Cc9GwQ
+         9qaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695447364; x=1696052164;
+        d=1e100.net; s=20230601; t=1695447366; x=1696052166;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a5vqIfXNWliDocU8tzStcp+r+OU5EjvAXvx9gVnGgcs=;
-        b=Htxe6PuxgcSBQYatUHBauksDUUqzt5qC7w6nAnpSVZ6h7x63tVIXUaZ4Ed7vK42CYp
-         1MyN7hRyqPbkgryYj4HfEOh7jZkey/uq+jB77t9UzkGrB8TZk8f/29vNVDEfi/X5J7Kh
-         ddEqFmMLZQQMiR5gHQv935wbxTKLY98wWefcRfPCEA8K7z0pfVf23giQV6bmbH6oT+T3
-         j4cvNxz+yQqHq77OVV9M3Gx9rXK/l9n1DqxfPV1OiCOqeb6Tc+tbndBUroGJDgDTIOI3
-         BZqg6Cg2+56GuACgJ/nIWLbAI/bak4gOa8H62Twgk0Dqcy5uSRWsPLA/nBwveJAKDnA2
-         5Juw==
-X-Gm-Message-State: AOJu0YzFdFvgAvC4A7IdnO9DMfYcwRFv1rU8+GwtCSQE9mU/vRFtCtQG
-	aYo4yWU6rR+fqyghhysZEJnFMZ+5pKkF
-X-Google-Smtp-Source: AGHT+IEsgOcl2A0UL8zGlp3FXRaWIZMQmNaQRl2Uoy/Z9jK5/KtmB2FVYeGP9zN3vSGo3xTtN8wODP+0jzxj
+        bh=lP0CZzDRsMehpIV0W6qVRwyai9STrfRNe8AVt5V6Hgk=;
+        b=ln+pzGzDhhadP86h0vG1fSk6LYXET15AuJpeWFGq7DLZHckq2Y29dXEGtVfm65Sm/N
+         ovlWZzAZZ0kNzFwR3VSa1QWn2AIfcBB/yjdNS5jv5rd8oNEemhY0Yae6Gn2xVcBm8e4B
+         I4HRF+6QhubJkOjwD6g9vqZx+QTyGsm1VxbmqJmk4giAxfYWk1MYJ8X92KS5Yz6plFyq
+         xytUqsvGd/Z8sSD2AU1GRMCIoKWpSJ9AhU4xCqNigBEST11K+RPArlVe/Su7D6CYbw9Y
+         V20IB6bh1Ui6Hh9Kv8ZUhHncWdMaWc6jA/G+swfpuKXlOavYXoYC8gaUyermJDr1wQLp
+         oFuw==
+X-Gm-Message-State: AOJu0YzPMcHPI5X/ATUpPGrzRE2e6n5jXMkd37J+FB2Q3JkKUaUuGxXD
+	xlbEWkJDsDzbxZvOv2sSgZBX6bzt2GYu
+X-Google-Smtp-Source: AGHT+IGdqprUHXLHeZlwQEnyqkBR7ouFdtc/hDEKXB+YundtzyRDtuNFuTKtwqpwNev1VOexHXen0ztDFEGv
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a376:2908:1c75:ff78])
- (user=irogers job=sendgmr) by 2002:a25:264b:0:b0:d7f:8e0a:4b3f with SMTP id
- m72-20020a25264b000000b00d7f8e0a4b3fmr12822ybm.3.1695447363914; Fri, 22 Sep
- 2023 22:36:03 -0700 (PDT)
-Date: Fri, 22 Sep 2023 22:35:09 -0700
+ (user=irogers job=sendgmr) by 2002:a25:403:0:b0:d7a:bfcf:2d7 with SMTP id
+ 3-20020a250403000000b00d7abfcf02d7mr11997ybe.6.1695447366091; Fri, 22 Sep
+ 2023 22:36:06 -0700 (PDT)
+Date: Fri, 22 Sep 2023 22:35:10 -0700
 In-Reply-To: <20230923053515.535607-1-irogers@google.com>
-Message-Id: <20230923053515.535607-13-irogers@google.com>
+Message-Id: <20230923053515.535607-14-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,7 +48,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20230923053515.535607-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.515.g380fc7ccd1-goog
-Subject: [PATCH v1 12/18] perf hists browser: Avoid potential NULL dereference
+Subject: [PATCH v1 13/18] perf svghelper: Avoid memory leak
 From: Ian Rogers <irogers@google.com>
 To: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
 	Tom Rix <trix@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -72,27 +72,53 @@ X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On other code paths browser->he_selection is NULL checked, add a
-missing case reported by clang-tidy.
+On success path the sib_core and sib_thr values weren't being
+freed. Detected by clang-tidy.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/ui/browsers/hists.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-lock.c   | 1 +
+ tools/perf/util/svghelper.c | 5 +++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index f02ee605bbce..f4812b226818 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -3302,7 +3302,7 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
- 							&options[nr_options],
- 							&bi->to.ms,
- 							bi->to.al_addr);
--		} else {
-+		} else if (browser->he_selection) {
- 			nr_options += add_annotate_opt(browser,
- 						       &actions[nr_options],
- 						       &options[nr_options],
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index d4b22313e5fc..1b40b00c9563 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -2463,6 +2463,7 @@ static int parse_call_stack(const struct option *opt __maybe_unused, const char
+ 		entry = malloc(sizeof(*entry) + strlen(tok) + 1);
+ 		if (entry == NULL) {
+ 			pr_err("Memory allocation failure\n");
++			free(s);
+ 			return -1;
+ 		}
+ 
+diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
+index 0e4dc31c6c9c..1892e9b6aa7f 100644
+--- a/tools/perf/util/svghelper.c
++++ b/tools/perf/util/svghelper.c
+@@ -754,6 +754,7 @@ int svg_build_topology_map(struct perf_env *env)
+ 	int i, nr_cpus;
+ 	struct topology t;
+ 	char *sib_core, *sib_thr;
++	int ret = -1;
+ 
+ 	nr_cpus = min(env->nr_cpus_online, MAX_NR_CPUS);
+ 
+@@ -799,11 +800,11 @@ int svg_build_topology_map(struct perf_env *env)
+ 
+ 	scan_core_topology(topology_map, &t, nr_cpus);
+ 
+-	return 0;
++	ret = 0;
+ 
+ exit:
+ 	zfree(&t.sib_core);
+ 	zfree(&t.sib_thr);
+ 
+-	return -1;
++	return ret;
+ }
 -- 
 2.42.0.515.g380fc7ccd1-goog
 
