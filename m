@@ -1,120 +1,152 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6B3171D2;
-	Fri, 22 Sep 2023 23:44:49 +0000 (UTC)
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 345DE1A2;
-	Fri, 22 Sep 2023 16:44:48 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1c328b53aeaso27243215ad.2;
-        Fri, 22 Sep 2023 16:44:48 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57561819
+	for <linux-perf-users@vger.kernel.org>; Sat, 23 Sep 2023 05:35:39 +0000 (UTC)
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDECF1A5
+	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 22:35:37 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59e9a08f882so51255957b3.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 22:35:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695426287; x=1696031087; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=MZpY1IZ4bUrCy8aga9AziYMkBusuoXKm+AQsy7SMzlw=;
-        b=I7qHZ9FGWnL1tI9P5bkbztyAZgioK+j4J0gCHGbOsoaH+8+JD0ZE1fRwRbKZVoWHSx
-         +jjoDB42lb/HZHYQk4WZu+FsCWpV9itrI/UeyMtpsQKCSCOQNHu/q/MG2haYr6lHqPib
-         q57qW/x5l8vOw0InM0lD3JZeCm4lsRBD/uelVV/GqDDxdDO74z+18fsoLo16Xs57y5XM
-         8efU7SDOjXI+nb9khHcC2JpaQLA1cDvcHl4kuXztrYXPTGll/ve5Qjd1WcJ8R/+x8N7U
-         VKp1MPWqbyRMFnnEKyWs2AWBoRYe3HwbjXwD3yYyRI9BAGlXHEEU8R9BHcoxDo2/g0OR
-         wdyQ==
+        d=google.com; s=20230601; t=1695447337; x=1696052137; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=nz52NPo/ldRCO4SlmJCa/5s+fqete8nkApWr4O0tYXg=;
+        b=v0gr7cPWUEjzrH4M9hCXYqtzyhLDUn1sNxRtXxDiaxOYA5gR/Sr45yji+/H2KK9bnC
+         4+K2JcPBOJ4VSa6yc2Vb+GxyKeVwd0N/LGZfJFoFCq8YArrcFm0XmvMPB2uf7zAWBYTb
+         cX+QM/e7bKKSxztbBLDj3VVAGYkn7jCq2YBYY58wx4NLl7fiaNm9IaAaJpGz2Pe8ajBV
+         +b4SDwiEBXaZ2EFzfKWzqpNhdK7QzsIDavFva7bRBXAtZXU5nnCejVv2646bNUmOxNYA
+         WFfAkjQbdhmVNVZAtYymBUpO7T2YKP/qc14GUu1t+HAnVowxM88tilYYYOqnBtNNyu4O
+         BJdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695426287; x=1696031087;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MZpY1IZ4bUrCy8aga9AziYMkBusuoXKm+AQsy7SMzlw=;
-        b=ETSpG2vvgIS12V7H20jnw7Z63xi/SYYP312uWc3EN0CHoK7DUD1lTJQGBCgntUbFQ3
-         oHoYS4wFZaYChd0I8RMr0eEhxTxaHJER7HfNf3wMs5MU1l/NbGhMy5cPVqXuiKsskbqM
-         dN6uphzzWw/i7A3NfkhIT91xwJWRkPqtimCZEmonvyzQMYnK8Wx+/urisQYMxCifACrw
-         EY1Jx8A7AKYmItXs5tTV4Lwnmtl0xuQWaxVRUfEqI9Cyk/PuDKowg3iJbOx1EiwpNu3q
-         vziyHrzzfTeVQyoigT9C/PLK505//4Sy7l7WGgsmbFAVxkhUEj30HVpOzP+aMwc+C/E4
-         PJLQ==
-X-Gm-Message-State: AOJu0Yx+qbIrJpTk5gJGlASL1Og7BXYf3m/ARdLLbBpg4ub4WLs4gstZ
-	pKobyFGG9C+j76Ie9ne6LPY=
-X-Google-Smtp-Source: AGHT+IHPZg/jEObdNDGRmdgw7+V6Y5CcHs7Cn0XPXcjakXuhni912sY281xDPaXUI/vI2QikxYCUEQ==
-X-Received: by 2002:a17:902:ab01:b0:1b8:66f6:87a3 with SMTP id ik1-20020a170902ab0100b001b866f687a3mr802257plb.52.1695426287474;
-        Fri, 22 Sep 2023 16:44:47 -0700 (PDT)
-Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:32b8:255a:115:8538])
-        by smtp.gmail.com with ESMTPSA id l19-20020a170902d35300b001bf5e24b2a8sm4076519plk.174.2023.09.22.16.44.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 16:44:46 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Song Liu <song@kernel.org>,
-	Hao Luo <haoluo@google.com>,
-	bpf@vger.kernel.org
-Subject: [PATCH] perf record: Fix BTF type checks in the off-cpu profiling
-Date: Fri, 22 Sep 2023 16:44:44 -0700
-Message-ID: <20230922234444.3115821-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.42.0.515.g380fc7ccd1-goog
+        d=1e100.net; s=20230601; t=1695447337; x=1696052137;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nz52NPo/ldRCO4SlmJCa/5s+fqete8nkApWr4O0tYXg=;
+        b=czJxYI0aE/dNo8RoYJEscDY7HFnHpRcyankIFlO2RAjcsueeRLv3o/7bcVQwIrYF9L
+         qPjkc0W1IrLSaP75rfWiFjk0qAJsTgjP5ErMEC1Oho61reSOCDXLGVOTFo9YcOcfpSOh
+         naLE/sRZV4IlWvcFga1MJNCk6xWoDpUpnsc/mFMfKX/iObUL5mAPpX3KXhZ5avBYKNGe
+         Z8nVv/7Lgv9V48ZVQ+/wm4g3O8ZGnEgQA49aTwdgNLH4pFJyDQ7yYzm9ZNAAGOx0Hfv5
+         aG3Mzc8PawONd8FrsZ0J1KmSecJGx4hx+kZ+woqF6HRbX4/AQBIKUoBVgpZoC+1eJrk2
+         BALg==
+X-Gm-Message-State: AOJu0YyQA2S3p5shdnrnXlt3M9babb4ESEMn5NRWFF66BuPEMN50itHs
+	ltsHc0CZ+QD2h3FI6TpPfWhAtLB3R2HZ
+X-Google-Smtp-Source: AGHT+IFCqnNJv73Q/yXR30wTlheSaQlr3r+LpivpJ1x8n3rk2tghT2eny4ehycX34rqpiIXzwwawLsihbDb2
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a376:2908:1c75:ff78])
+ (user=irogers job=sendgmr) by 2002:a81:4417:0:b0:59b:db15:a088 with SMTP id
+ r23-20020a814417000000b0059bdb15a088mr21169ywa.3.1695447336863; Fri, 22 Sep
+ 2023 22:35:36 -0700 (PDT)
+Date: Fri, 22 Sep 2023 22:34:57 -0700
+Message-Id: <20230923053515.535607-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.42.0.515.g380fc7ccd1-goog
+Subject: [PATCH v1 00/18] clang-tools support in tools
+From: Ian Rogers <irogers@google.com>
+To: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Tom Rix <trix@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Yang Jihong <yangjihong1@huawei.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Ming Wang <wangming01@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Sean Christopherson <seanjc@google.com>, 
+	K Prateek Nayak <kprateek.nayak@amd.com>, Yanteng Si <siyanteng@loongson.cn>, 
+	Yuan Can <yuancan@huawei.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	James Clark <james.clark@arm.com>, Paolo Bonzini <pbonzini@redhat.com>, llvm@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-The BTF func proto for a tracepoint has one more argument than the
-actual tracepoint function since it has a context argument at the
-begining.  So it should compare to 5 when the tracepoint has 4
-arguments.
+Allow the clang-tools scripts to work with builds in tools such as
+tools/perf and tools/lib/perf. An example use looks like:
 
-  typedef void (*btf_trace_sched_switch)(void *, bool, struct task_struct *, struct task_struct *, unsigned int);
+```
+$ cd tools/perf
+$ make CC=clang CXX=clang++
+$ ../../scripts/clang-tools/gen_compile_commands.py
+$ ../../scripts/clang-tools/run-clang-tools.py clang-tidy compile_commands.json -checks=-*,readability-named-parameter
+Skipping non-C file: 'tools/perf/bench/mem-memcpy-x86-64-asm.S'
+Skipping non-C file: 'tools/perf/bench/mem-memset-x86-64-asm.S'
+Skipping non-C file: 'tools/perf/arch/x86/tests/regs_load.S'
+8 warnings generated.
+Suppressed 8 warnings (8 in non-user code).
+Use -header-filter=.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.
+2 warnings generated.
+4 warnings generated.
+Suppressed 4 warnings (4 in non-user code).
+Use -header-filter=.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.
+2 warnings generated.
+4 warnings generated.
+Suppressed 4 warnings (4 in non-user code).
+Use -header-filter=.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.
+3 warnings generated.
+tools/perf/util/parse-events-flex.c:546:27: warning: all parameters should be named in a function [readability-named-parameter]
+void *yyalloc ( yy_size_t , yyscan_t yyscanner );
+                          ^
+                           /*size*/
+...
+```
 
-Also, recent change in the perf tool would use a hand-written minimal
-vmlinux.h to generate BTF in the skeleton.  So it won't have the info
-of the tracepoint.  Anyway it should use the kernel's vmlinux BTF to
-check the type in the kernel.
+Fix a number of the more serious low-hanging issues in perf found by
+clang-tidy.
 
-Fixes: b36888f71c85 ("perf record: Handle argument change in sched_switch")
-Cc: Song Liu <song@kernel.org>
-Cc: Hao Luo <haoluo@google.com>
-CC: bpf@vger.kernel.org
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/bpf_off_cpu.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+This support isn't complete, in particular it doesn't support output
+directories properly and so fails for tools/lib/bpf, tools/bpf/bpftool
+and if an output directory is used.
 
-diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
-index 01f70b8e705a..21f4d9ba023d 100644
---- a/tools/perf/util/bpf_off_cpu.c
-+++ b/tools/perf/util/bpf_off_cpu.c
-@@ -98,7 +98,7 @@ static void off_cpu_finish(void *arg __maybe_unused)
- /* v5.18 kernel added prev_state arg, so it needs to check the signature */
- static void check_sched_switch_args(void)
- {
--	const struct btf *btf = bpf_object__btf(skel->obj);
-+	const struct btf *btf = btf__load_vmlinux_btf();
- 	const struct btf_type *t1, *t2, *t3;
- 	u32 type_id;
- 
-@@ -116,7 +116,8 @@ static void check_sched_switch_args(void)
- 		return;
- 
- 	t3 = btf__type_by_id(btf, t2->type);
--	if (t3 && btf_is_func_proto(t3) && btf_vlen(t3) == 4) {
-+	/* btf_trace func proto has one more argument for the context */
-+	if (t3 && btf_is_func_proto(t3) && btf_vlen(t3) == 5) {
- 		/* new format: pass prev_state as 4th arg */
- 		skel->rodata->has_prev_state = true;
- 	}
+Ian Rogers (18):
+  gen_compile_commands: Allow the line prefix to still be cmd_
+  gen_compile_commands: Sort output compile commands by file name
+  run-clang-tools: Add pass through checks and and header-filter
+    arguments
+  perf hisi-ptt: Fix potential memory leak
+  perf bench uprobe: Fix potential use of memory after free
+  perf buildid-cache: Fix use of uninitialized value
+  perf env: Remove unnecessary NULL tests
+  perf jitdump: Avoid memory leak
+  perf mem-events: Avoid uninitialized read
+  perf dlfilter: Be defensive against potential NULL dereference
+  perf hists browser: Reorder variables to reduce padding
+  perf hists browser: Avoid potential NULL dereference
+  perf svghelper: Avoid memory leak
+  perf parse-events: Fix unlikely memory leak when cloning terms
+  tools api: Avoid potential double free
+  perf trace-event-info: Avoid passing NULL value to closedir
+  perf header: Fix various error path memory leaks
+  perf bpf_counter: Fix a few memory leaks
+
+ scripts/clang-tools/gen_compile_commands.py |  8 +--
+ scripts/clang-tools/run-clang-tools.py      | 34 ++++++++---
+ tools/lib/api/io.h                          |  1 +
+ tools/perf/bench/uprobe.c                   |  1 +
+ tools/perf/builtin-buildid-cache.c          |  6 +-
+ tools/perf/builtin-lock.c                   |  1 +
+ tools/perf/ui/browsers/hists.c              |  6 +-
+ tools/perf/util/bpf_counter.c               |  5 +-
+ tools/perf/util/dlfilter.c                  |  4 +-
+ tools/perf/util/env.c                       |  6 +-
+ tools/perf/util/header.c                    | 63 +++++++++++++--------
+ tools/perf/util/hisi-ptt.c                  | 12 ++--
+ tools/perf/util/jitdump.c                   |  1 +
+ tools/perf/util/mem-events.c                |  3 +-
+ tools/perf/util/parse-events.c              |  4 +-
+ tools/perf/util/svghelper.c                 |  5 +-
+ tools/perf/util/trace-event-info.c          |  3 +-
+ 17 files changed, 106 insertions(+), 57 deletions(-)
+
 -- 
 2.42.0.515.g380fc7ccd1-goog
 
