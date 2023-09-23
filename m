@@ -1,45 +1,45 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 146E6819
-	for <linux-perf-users@vger.kernel.org>; Sat, 23 Sep 2023 05:36:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ECE17F9
+	for <linux-perf-users@vger.kernel.org>; Sat, 23 Sep 2023 05:36:27 +0000 (UTC)
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1F02170E
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 22:36:08 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d816fa2404aso4959726276.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 22:36:07 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 919CA171C
+	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 22:36:09 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d852a6749baso4571137276.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 22:36:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695447366; x=1696052166; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1695447368; x=1696052168; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=lP0CZzDRsMehpIV0W6qVRwyai9STrfRNe8AVt5V6Hgk=;
-        b=idybEtf6E9zqATWwOS3c4cWkW0lURrMrDuD/rX+I8fp3cJWjLPO2CkfrguM8a+uk3C
-         IQjor63Wj63pgny1pbWYcvtP9qAjknFXLBG8yDKNPhqWwSYPO1qeR/JhILzKzFzmJX2/
-         slTEu72lGHJOm4AVZxdw3LA00ARizD2ZrAhA54YFHTnKzgmw8+MwGa6reNqiKpQa/KL8
-         wO8MVJufRINlovSmzKP5pcNCS1/jjQJxASIDwe6ZB8Q0ICl880Lr8K2HMjs6IX20+DZh
-         3ohd5H4290LLl0PNzdcmkjtOIzG6b0j7gyWGkc4x/KIxVcrBl3+JKNb7MqQkk8Cc9GwQ
-         9qaw==
+        bh=U3pdNCB2LsormKDmRgRav6emuDoIUkf2JUNU+RA747k=;
+        b=w9HGH3d1H4ueLvkTYf/V9zbKX8Yc6tSYtDN5zllmhvEKeshrQTVkvtl/b7xy+XuVNa
+         EJCvipKcLdQkPyDrotUG0VTu1ggww/WhaQipU9ZZZ8Bz/EV9+D2iZW+6jReCjjnbvx9f
+         UA0ocNNVEnxrHnOyE9w/BOVyR6+1BNAtmLFIFOvUX+9Qm3g+EyoEhl6xBnvzR369qaxL
+         FHm5ahOwiFYaBAn83VQGLZDqsKTmPwgKFd4sfxQK88SedFMU+g03ND7S2fvbHqSBuzNx
+         GnrH54bhndTuHF0X2zlooC/fb63utPwq6EPUXgeanq/bi104A4q4bobpPQkgwMYWxeX0
+         0goQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695447366; x=1696052166;
+        d=1e100.net; s=20230601; t=1695447368; x=1696052168;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lP0CZzDRsMehpIV0W6qVRwyai9STrfRNe8AVt5V6Hgk=;
-        b=ln+pzGzDhhadP86h0vG1fSk6LYXET15AuJpeWFGq7DLZHckq2Y29dXEGtVfm65Sm/N
-         ovlWZzAZZ0kNzFwR3VSa1QWn2AIfcBB/yjdNS5jv5rd8oNEemhY0Yae6Gn2xVcBm8e4B
-         I4HRF+6QhubJkOjwD6g9vqZx+QTyGsm1VxbmqJmk4giAxfYWk1MYJ8X92KS5Yz6plFyq
-         xytUqsvGd/Z8sSD2AU1GRMCIoKWpSJ9AhU4xCqNigBEST11K+RPArlVe/Su7D6CYbw9Y
-         V20IB6bh1Ui6Hh9Kv8ZUhHncWdMaWc6jA/G+swfpuKXlOavYXoYC8gaUyermJDr1wQLp
-         oFuw==
-X-Gm-Message-State: AOJu0YzPMcHPI5X/ATUpPGrzRE2e6n5jXMkd37J+FB2Q3JkKUaUuGxXD
-	xlbEWkJDsDzbxZvOv2sSgZBX6bzt2GYu
-X-Google-Smtp-Source: AGHT+IGdqprUHXLHeZlwQEnyqkBR7ouFdtc/hDEKXB+YundtzyRDtuNFuTKtwqpwNev1VOexHXen0ztDFEGv
+        bh=U3pdNCB2LsormKDmRgRav6emuDoIUkf2JUNU+RA747k=;
+        b=UDskPR6gntOOe86ipKN4A52Acwl1heipmZDE3FPqNlahBInzqbPhlm9WTTUinSnUJD
+         hc99RwBHqWgfqGLjmdDi3vh7yRPU9A0M2NmUcjVkQ7BlRDBTNSBtCMJT1zT23cv65hNg
+         wk/n214ZGrqEO8Krw00NI9Xc15IFkYjxtu0DQMPZFtUltncMxCYKoK/AfsGtqrKKvcf3
+         CiSG/AocpxX4YTMILMA5otuiu4aDmChTM4fxuyyKkE1CGM1O87i3n+F1NGHG5jzfhBon
+         umq95k83KCNiijfp9zSDw1r4SLr9XxVm5/FRTs1WxZmtA7XKo/anpGbSyfowExtQCz/p
+         V0kg==
+X-Gm-Message-State: AOJu0YwwIUSqeFGHqsAXTSz7U1rjzZIAIhCvBDgiFHt8CfOqwc7Tsqwp
+	itucR7bTWXPVrCbuRdS1fP8LAgdhS3YT
+X-Google-Smtp-Source: AGHT+IHCnNmAl4FHX9SRP9LKagjgjeFuwIZsOgArdKHwnwaZmzbMv4PHYCjxCbJouwmMwwuksIiI1+0lADIr
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a376:2908:1c75:ff78])
- (user=irogers job=sendgmr) by 2002:a25:403:0:b0:d7a:bfcf:2d7 with SMTP id
- 3-20020a250403000000b00d7abfcf02d7mr11997ybe.6.1695447366091; Fri, 22 Sep
- 2023 22:36:06 -0700 (PDT)
-Date: Fri, 22 Sep 2023 22:35:10 -0700
+ (user=irogers job=sendgmr) by 2002:a25:238d:0:b0:d78:3c2e:b186 with SMTP id
+ j135-20020a25238d000000b00d783c2eb186mr10894ybj.5.1695447368466; Fri, 22 Sep
+ 2023 22:36:08 -0700 (PDT)
+Date: Fri, 22 Sep 2023 22:35:11 -0700
 In-Reply-To: <20230923053515.535607-1-irogers@google.com>
-Message-Id: <20230923053515.535607-14-irogers@google.com>
+Message-Id: <20230923053515.535607-15-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,7 +48,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20230923053515.535607-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.515.g380fc7ccd1-goog
-Subject: [PATCH v1 13/18] perf svghelper: Avoid memory leak
+Subject: [PATCH v1 14/18] perf parse-events: Fix unlikely memory leak when
+ cloning terms
 From: Ian Rogers <irogers@google.com>
 To: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
 	Tom Rix <trix@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -68,57 +69,33 @@ Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.6
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On success path the sib_core and sib_thr values weren't being
-freed. Detected by clang-tidy.
+Add missing free on an error path as detected by clang-tidy.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-lock.c   | 1 +
- tools/perf/util/svghelper.c | 5 +++--
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/util/parse-events.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index d4b22313e5fc..1b40b00c9563 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -2463,6 +2463,7 @@ static int parse_call_stack(const struct option *opt __maybe_unused, const char
- 		entry = malloc(sizeof(*entry) + strlen(tok) + 1);
- 		if (entry == NULL) {
- 			pr_err("Memory allocation failure\n");
-+			free(s);
- 			return -1;
- 		}
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index c56e07bd7dd6..23c027cf20ae 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -2549,8 +2549,10 @@ int parse_events_term__clone(struct parse_events_term **new,
+ 		return new_term(new, &temp, /*str=*/NULL, term->val.num);
  
-diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
-index 0e4dc31c6c9c..1892e9b6aa7f 100644
---- a/tools/perf/util/svghelper.c
-+++ b/tools/perf/util/svghelper.c
-@@ -754,6 +754,7 @@ int svg_build_topology_map(struct perf_env *env)
- 	int i, nr_cpus;
- 	struct topology t;
- 	char *sib_core, *sib_thr;
-+	int ret = -1;
- 
- 	nr_cpus = min(env->nr_cpus_online, MAX_NR_CPUS);
- 
-@@ -799,11 +800,11 @@ int svg_build_topology_map(struct perf_env *env)
- 
- 	scan_core_topology(topology_map, &t, nr_cpus);
- 
--	return 0;
-+	ret = 0;
- 
- exit:
- 	zfree(&t.sib_core);
- 	zfree(&t.sib_thr);
- 
--	return -1;
-+	return ret;
+ 	str = strdup(term->val.str);
+-	if (!str)
++	if (!str) {
++		zfree(&temp.config);
+ 		return -ENOMEM;
++	}
+ 	return new_term(new, &temp, str, /*num=*/0);
  }
+ 
 -- 
 2.42.0.515.g380fc7ccd1-goog
 
