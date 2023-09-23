@@ -1,45 +1,45 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44131A5D
-	for <linux-perf-users@vger.kernel.org>; Sat, 23 Sep 2023 05:35:51 +0000 (UTC)
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13C941B5
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 22:35:49 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d81c39acfd9so4415120276.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 22:35:48 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B7A81B
+	for <linux-perf-users@vger.kernel.org>; Sat, 23 Sep 2023 05:35:52 +0000 (UTC)
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1820CCC4
+	for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 22:35:51 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59e78032ef9so54065137b3.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 22 Sep 2023 22:35:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695447348; x=1696052148; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1695447350; x=1696052150; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=2TUsgHG34tvRYixG1937P5Fi9+1duOaYRJoYEfUpa7o=;
-        b=ac7U+/zovsVy7j2SNYIovLA3UTVgWwKkggpmvZy5N/ZOenXtldGk0iq5BsUEhfUvJh
-         +QrxL21ZnLKxKmFLPi8WbF0mNVlKeOAVdbTybYw9jWt8IEakEV8CbXhtzt88E3WmZexb
-         Z1L5hY210/5+lW2ZJHO9/Rd97HqpGf4XdAaXVrXMJU1HAxjwI6rwjh0pB49Y2APrsbjE
-         DdNpJ95UeYLHgQEnTpK8frdOaIMZ8BqNfjq69W7adGekJUzDIJiZOFwF20gp5OyovTxU
-         3YiItascMr1zE6XJqAdItnyiSJKWtZdM/ngBLPQZXKvLEahBcZH7FlEAH/2jgH50LK+j
-         DmJA==
+        bh=/AfDeYd3y4U8gp4T1+0CLrDpr9vwqimMAiCox+i0+u8=;
+        b=Hn3VBRTiMJEEBkI6gwTaSqQTAD7HGnv4E8RQCSUkonv6Wpnfi1vjgTaAW6uoAQeAwx
+         7263ONpjq795I8fZFMhSeZBCwpB9owiYfrWyHIiLIY/feIPcVB9rMqGhbl3Vc4VYc7Rm
+         DNTiamzYd454hl0FqI4a8vp6hc85d9eBjYKpcjGfBz74U4hAYMoiY98fxeZZ4/vbThGH
+         8PYqAr7bFnGktPi75mKyuUtmrEyyiMyuhg0MhE+JSyYoJfByQh7V0nv8oGvxXeHubo1E
+         10H9A1sMzCjHb733vIxDNbmZxXlM1AoIulRLEKc0MwYh4EoIXnUAkPZGuv7XK2qeijVH
+         AUIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695447348; x=1696052148;
+        d=1e100.net; s=20230601; t=1695447350; x=1696052150;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2TUsgHG34tvRYixG1937P5Fi9+1duOaYRJoYEfUpa7o=;
-        b=vxvEOFZdVp6OwGQCt9HWY7sRFsbeRFO5naEH1uWV8rw+zUpA4xdD/qz1u6s9JgMWOL
-         n4yfsT+Og1Qic6Rb/g+p58RfuKMUFmGRDMPdsyizb+ysnGk9zItZNYp9ODtbRdq1zXFv
-         yk50DmYN8jpy3sguX5Ye6ynqRROpX0ME3tOHlXi9oasuVmJLj/tIPLLYi2zyeH4G5rkS
-         jXAg3HGJZd/T27JE1wUL+jagRwbC6y3KDxmu3mOQxTM2bU0eq1JeTdyfSnEWpvtcBZ66
-         dzPeb9N5NQX0OKPAWAtcW3IqjJtqixe9phSFBN7/F3hDk21g+ylaAop+S3wMem4BDzQb
-         WE1Q==
-X-Gm-Message-State: AOJu0YwXIMH8wk+GQbCLPrCw/6dX0T2ner14XRuJXfOKIM29JyRc73uI
-	5P6cY/Jf+P0gAD6+8dkTEg5PRL3IQ0+X
-X-Google-Smtp-Source: AGHT+IEp4kbeLYXnxxqvZKp5O2vhys9x017pPzfHBmcwh+n5Yk8hZwya6+TOe1kFu1OjvjZAFx6MM0x3TpT1
+        bh=/AfDeYd3y4U8gp4T1+0CLrDpr9vwqimMAiCox+i0+u8=;
+        b=MXAf3XmZiMlyxefmnY9bNM/XN4q5dc/Pif/KE+nAa1aRwv9u5h6NbYKal99rYbfeFk
+         0zyU3GgrEfmh8eOaOIQP2T1Q2fjQ+r/3ppFeJefleJwEACvDwEY14oruc+ddzi7y3MK8
+         blwZjO2+iTcOiYXA0wvr9rimRxkj//+lNi11w0w6Rv3bRLUDNHcRf6yQrSPgzuUxizko
+         WtTO3ZEl6EZDTFcMCzBvOBGd6X4MLCFfJvqnky0PU0/zXycS2Mld2iljZRadE4v+o68J
+         vCQfmZcS9gcZC8HM4GQR27kDw7r8v01o4m4WZM7VYZbisxBYSWHBk0i0sTH/EvmFBdMC
+         u50A==
+X-Gm-Message-State: AOJu0YwW0Iv35gTEyPHOUkkDnoEsaq1vr7dVSMQTwKiwp6RYL/UrY0Da
+	Ca0MIK0u0r5jmVAbhno6yr/g2joJMrdc
+X-Google-Smtp-Source: AGHT+IFEnjvrFYTzzkb1dI9/2klEiZwWev3gToYu5hzr8ovZWNcWhYoEwlz8DIZQ9Lino1g7YG2kJaYO8amj
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a376:2908:1c75:ff78])
- (user=irogers job=sendgmr) by 2002:a05:6902:a8c:b0:d80:6110:835e with SMTP id
- cd12-20020a0569020a8c00b00d806110835emr12073ybb.3.1695447348106; Fri, 22 Sep
- 2023 22:35:48 -0700 (PDT)
-Date: Fri, 22 Sep 2023 22:35:02 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:72c:b0:59b:d33b:5ddc with SMTP id
+ bt12-20020a05690c072c00b0059bd33b5ddcmr20810ywb.4.1695447350168; Fri, 22 Sep
+ 2023 22:35:50 -0700 (PDT)
+Date: Fri, 22 Sep 2023 22:35:03 -0700
 In-Reply-To: <20230923053515.535607-1-irogers@google.com>
-Message-Id: <20230923053515.535607-6-irogers@google.com>
+Message-Id: <20230923053515.535607-7-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,7 +48,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20230923053515.535607-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.515.g380fc7ccd1-goog
-Subject: [PATCH v1 05/18] perf bench uprobe: Fix potential use of memory after free
+Subject: [PATCH v1 06/18] perf buildid-cache: Fix use of uninitialized value
 From: Ian Rogers <irogers@google.com>
 To: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
 	Tom Rix <trix@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -68,32 +68,35 @@ Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.6
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Found by clang-tidy:
-```
-bench/uprobe.c:98:3: warning: Use of memory after it is freed [clang-analyzer-unix.Malloc]
-                bench_uprobe_bpf__destroy(skel);
-```
+The buildid filename is first determined and then from this the
+buildid read. If getting the filename fails then the buildid will be
+used for a later memcmp uninitialized. Detected by clang-tidy.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/bench/uprobe.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/builtin-buildid-cache.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/bench/uprobe.c b/tools/perf/bench/uprobe.c
-index 914c0817fe8a..5c71fdc419dd 100644
---- a/tools/perf/bench/uprobe.c
-+++ b/tools/perf/bench/uprobe.c
-@@ -89,6 +89,7 @@ static int bench_uprobe__setup_bpf_skel(enum bench_uprobe bench)
- 	return err;
- cleanup:
- 	bench_uprobe_bpf__destroy(skel);
-+	skel = NULL;
- 	return err;
- }
+diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
+index cd381693658b..e2a40f1d9225 100644
+--- a/tools/perf/builtin-buildid-cache.c
++++ b/tools/perf/builtin-buildid-cache.c
+@@ -277,8 +277,10 @@ static bool dso__missing_buildid_cache(struct dso *dso, int parm __maybe_unused)
+ 	char filename[PATH_MAX];
+ 	struct build_id bid;
+ 
+-	if (dso__build_id_filename(dso, filename, sizeof(filename), false) &&
+-	    filename__read_build_id(filename, &bid) == -1) {
++	if (!dso__build_id_filename(dso, filename, sizeof(filename), false))
++		return true;
++
++	if (filename__read_build_id(filename, &bid) == -1) {
+ 		if (errno == ENOENT)
+ 			return false;
  
 -- 
 2.42.0.515.g380fc7ccd1-goog
