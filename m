@@ -1,91 +1,128 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6349CA5C
-	for <linux-perf-users@vger.kernel.org>; Sat, 23 Sep 2023 13:01:46 +0000 (UTC)
-Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.217])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6C9D3198
-	for <linux-perf-users@vger.kernel.org>; Sat, 23 Sep 2023 06:01:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=iKOLR1/abyyRLoIbTu
-	kWraoFan/mPbLAuASXHOWx8XU=; b=YM5SawHGFnUF/x/LXNWE7n1/cG9n8EDvcO
-	H6hhxcytedjFyCRsui7uzj3BQwZMQYKTA28SB0TecezfJWiVPx8wDygroQsIht7q
-	JaXI6pu1iT/jYaAv66L+dtifPi3cAbt7o9Mfi4zkVQHfrz1n+eLzJ0BGeHOheC7G
-	4hXCltrrs=
-Received: from localhost.localdomain (unknown [223.104.131.178])
-	by zwqz-smtp-mta-g5-0 (Coremail) with SMTP id _____wAnhJ5q4Q5lT5VxCw--.50880S2;
-	Sat, 23 Sep 2023 21:00:28 +0800 (CST)
-From: liuhaoran <liuhaoran14@163.com>
-To: ysato@users.sourceforge.jp
-Cc: dalias@libc.org,
-	glaubitz@physik.fu-berlin.de,
-	linux-perf-users@vger.kernel.org,
-	liuhaoran <liuhaoran14@163.com>
-Subject: [PATCH] sh: perf_event: Add error handling in register_sh_pmu()
-Date: Sat, 23 Sep 2023 21:00:14 +0800
-Message-Id: <20230923130014.35490-1-liuhaoran14@163.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wAnhJ5q4Q5lT5VxCw--.50880S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Gr15CF1UAry3XFyrCF1kAFb_yoWkCrc_Gw
-	1xt3ykWrs8Ka9IgF9rur40q34kZanY93W3uFyqkFZxGw1kX345Aw1kZ345JrykXr4xAF4D
-	KryUWFnavrW29jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUjS_MDUUUUU==
-X-Originating-IP: [223.104.131.178]
-X-CM-SenderInfo: xolxxtxrud0iqu6rljoofrz/1tbibAfzgmNfuLIHSgACsj
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-	FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_BL,
-	RCVD_IN_MSPIKE_L4,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FDDCDDB1
+	for <linux-perf-users@vger.kernel.org>; Sun, 24 Sep 2023 18:03:37 +0000 (UTC)
+Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C52AFE
+	for <linux-perf-users@vger.kernel.org>; Sun, 24 Sep 2023 11:03:34 -0700 (PDT)
+Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-41513d2cca7so316661cf.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 24 Sep 2023 11:03:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1695578613; x=1696183413; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sFnymHRtoiSLSE6xlXlPfUo1MSdkdwnizEDkqFjEp5M=;
+        b=0N12PufIVMADzpR5JvZrVR1zBlw3XeOS0LiFKjxachJfNLZIhXtRQzCDpapBxqeN/N
+         KOc1wyj3fz/Ng9libyDmqF6fKVTpgF0ldnPHb18GIKQM16jZZNFrlfv3OeSGIOETR1z9
+         z92OZJSBn9IweU/o5n5BizcPtqgTRoFKwvVaRp7S1Bt2dDx4rjb9wijBUs8QF0E6IILx
+         F138fTwNd1RBoe8crEm1bo7VibmUQmvqR4u+WTZwDdCNgQ6UW2KOVJqpR0Z8CvqBbWWw
+         gFyjKrPTbPDIdHj9cBQ7wvqW3ADh+w10ULYMN3MDx3EAo0ciOjqkkUQtHO62iCSSSgOn
+         Vaqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695578613; x=1696183413;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sFnymHRtoiSLSE6xlXlPfUo1MSdkdwnizEDkqFjEp5M=;
+        b=b1FV5NkSvFcdK0HDqCTXNtGZe8+Ixlbn5grogxZaY69yjmonQJnHZFdX9nosB9wp2V
+         IDC+8RGyB3Uv7lBtoL7fOALeR2MDCFZY+sXVTHELFLWMrmxr+Bx3ChByxesd8CDulB2x
+         VUkos4YB1RQ3+pGmWxuRGXYslYSSZJTGHzzHftUvo3QQ+2D87q/68x+2K523YdftaGti
+         YS148Xi7CNyqHNkP5h2dnNPror13oY2sZBkBYWpkq3uWrwT1k80cadp/XGrVONbdXxIa
+         OMLmeZK0ifZZqXZlW1jJresO+BKULQqJgp5MgcSdrBTQlb3xVhRGScVIfzC4mf5/GkTB
+         IT+A==
+X-Gm-Message-State: AOJu0Yyp0JqEuDotVZ7AV+qTw4BAyM9U6ieOR9RF4x1AQCa5scyL2uDP
+	UlUob7QlClQimuiS8AY8s57pu5RHPOqyYMhIXt+y8w==
+X-Google-Smtp-Source: AGHT+IF1Z2oLq9smh2qhEPC193F5fqkRC6B/tsHivKcbUv1O+Mhj/WxhnsnegPuh58Fu+zugRoFHFRSC8frjQTSIMog=
+X-Received: by 2002:a05:622a:111:b0:3f0:af20:1a37 with SMTP id
+ u17-20020a05622a011100b003f0af201a37mr308189qtw.15.1695578613246; Sun, 24 Sep
+ 2023 11:03:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20230922234444.3115821-1-namhyung@kernel.org>
+In-Reply-To: <20230922234444.3115821-1-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Sun, 24 Sep 2023 11:03:20 -0700
+Message-ID: <CAP-5=fVMdX+vLPNBSe-8arKGvAGcdgHGt7ypEX-J-SZpUi2PGg@mail.gmail.com>
+Subject: Re: [PATCH] perf record: Fix BTF type checks in the off-cpu profiling
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>, 
+	Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-This patch adds error-handling for the perf_pmu_register()
-and cpuhp_setup_state() inside the register_sh_pmu().
+On Fri, Sep 22, 2023 at 4:44=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> The BTF func proto for a tracepoint has one more argument than the
+> actual tracepoint function since it has a context argument at the
+> begining.  So it should compare to 5 when the tracepoint has 4
+> arguments.
+>
+>   typedef void (*btf_trace_sched_switch)(void *, bool, struct task_struct=
+ *, struct task_struct *, unsigned int);
+>
+> Also, recent change in the perf tool would use a hand-written minimal
+> vmlinux.h to generate BTF in the skeleton.  So it won't have the info
+> of the tracepoint.  Anyway it should use the kernel's vmlinux BTF to
+> check the type in the kernel.
+>
+> Fixes: b36888f71c85 ("perf record: Handle argument change in sched_switch=
+")
+> Cc: Song Liu <song@kernel.org>
+> Cc: Hao Luo <haoluo@google.com>
+> CC: bpf@vger.kernel.org
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Signed-off-by: liuhaoran <liuhaoran14@163.com>
----
- arch/sh/kernel/perf_event.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-diff --git a/arch/sh/kernel/perf_event.c b/arch/sh/kernel/perf_event.c
-index 1d2507f22437..36a1f04afab8 100644
---- a/arch/sh/kernel/perf_event.c
-+++ b/arch/sh/kernel/perf_event.c
-@@ -341,6 +341,8 @@ static int sh_pmu_prepare_cpu(unsigned int cpu)
- 
- int register_sh_pmu(struct sh_pmu *_pmu)
- {
-+	int ret;
-+
- 	if (sh_pmu)
- 		return -EBUSY;
- 	sh_pmu = _pmu;
-@@ -356,8 +358,16 @@ int register_sh_pmu(struct sh_pmu *_pmu)
- 
- 	WARN_ON(_pmu->num_events > MAX_HWEVENTS);
- 
--	perf_pmu_register(&pmu, "cpu", PERF_TYPE_RAW);
--	cpuhp_setup_state(CPUHP_PERF_SUPERH, "PERF_SUPERH", sh_pmu_prepare_cpu,
--			  NULL);
-+	ret = perf_pmu_register(&pmu, "cpu", PERF_TYPE_RAW);
-+
-+	if (ret)
-+		return ret;
-+
-+	ret = cpuhp_setup_state(CPUHP_PERF_SUPERH, "PERF_SUPERH", sh_pmu_prepare_cpu,
-+				NULL);
-+
-+	if (ret < 0)
-+		return ret;
-+
- 	return 0;
- }
--- 
-2.17.1
+> ---
+>  tools/perf/util/bpf_off_cpu.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.=
+c
+> index 01f70b8e705a..21f4d9ba023d 100644
+> --- a/tools/perf/util/bpf_off_cpu.c
+> +++ b/tools/perf/util/bpf_off_cpu.c
+> @@ -98,7 +98,7 @@ static void off_cpu_finish(void *arg __maybe_unused)
+>  /* v5.18 kernel added prev_state arg, so it needs to check the signature=
+ */
+>  static void check_sched_switch_args(void)
+>  {
+> -       const struct btf *btf =3D bpf_object__btf(skel->obj);
+> +       const struct btf *btf =3D btf__load_vmlinux_btf();
+>         const struct btf_type *t1, *t2, *t3;
+>         u32 type_id;
+>
+> @@ -116,7 +116,8 @@ static void check_sched_switch_args(void)
+>                 return;
+>
+>         t3 =3D btf__type_by_id(btf, t2->type);
+> -       if (t3 && btf_is_func_proto(t3) && btf_vlen(t3) =3D=3D 4) {
+> +       /* btf_trace func proto has one more argument for the context */
+> +       if (t3 && btf_is_func_proto(t3) && btf_vlen(t3) =3D=3D 5) {
+>                 /* new format: pass prev_state as 4th arg */
 
+nit: does this comment need updating?
+
+>                 skel->rodata->has_prev_state =3D true;
+>         }
+> --
+> 2.42.0.515.g380fc7ccd1-goog
+>
