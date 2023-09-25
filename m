@@ -1,15 +1,15 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D722CDDB0
-	for <linux-perf-users@vger.kernel.org>; Mon, 25 Sep 2023 05:58:32 +0000 (UTC)
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB4B2E8;
-	Sun, 24 Sep 2023 22:58:30 -0700 (PDT)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R671e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0Vsl7J2J_1695621506;
-Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0Vsl7J2J_1695621506)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B016FDE
+	for <linux-perf-users@vger.kernel.org>; Mon, 25 Sep 2023 05:58:34 +0000 (UTC)
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2008783;
+	Sun, 24 Sep 2023 22:58:31 -0700 (PDT)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R961e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0Vsl7J2k_1695621508;
+Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0Vsl7J2k_1695621508)
           by smtp.aliyun-inc.com;
-          Mon, 25 Sep 2023 13:58:26 +0800
+          Mon, 25 Sep 2023 13:58:28 +0800
 From: Jing Zhang <renyu.zj@linux.alibaba.com>
 To: John Garry <john.g.garry@oracle.com>,
 	Ian Rogers <irogers@google.com>
@@ -32,16 +32,16 @@ Cc: Will Deacon <will@kernel.org>,
 	Zhuo Song <zhuo.song@linux.alibaba.com>,
 	Jing Zhang <renyu.zj@linux.alibaba.com>,
 	Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: [PATCH v10 3/7] perf jevents: Support EventidCode and NodeType
-Date: Mon, 25 Sep 2023 13:57:20 +0800
-Message-Id: <1695621444-56530-4-git-send-email-renyu.zj@linux.alibaba.com>
+Subject: [PATCH v10 5/7] perf test: Add pmu-event test for "Compat" and new event_field.
+Date: Mon, 25 Sep 2023 13:57:22 +0800
+Message-Id: <1695621444-56530-6-git-send-email-renyu.zj@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1695621444-56530-1-git-send-email-renyu.zj@linux.alibaba.com>
 References: <1695621444-56530-1-git-send-email-renyu.zj@linux.alibaba.com>
 X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
-	autolearn=ham autolearn_force=no version=3.4.6
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 Precedence: bulk
@@ -50,55 +50,130 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-The previous code assumes an event has either an "event=" or "config"
-field at the beginning. For CMN neither of these may be present, as an
-event is typically "type=xx,eventid=xxx".
-
-So add EventidCode and NodeType to support CMN event description.
-
-I compared pmu_event.c before and after compiling with JEVENT_ARCH=all,
-they are consistent.
+Add new event test for uncore system event which is used to verify the
+functionality of "Compat" matching multiple identifiers and the new event
+fields "EventidCode" and "NodeType".
 
 Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
 ---
- tools/perf/pmu-events/jevents.py | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ .../pmu-events/arch/test/test_soc/sys/uncore.json  |  8 ++++
+ tools/perf/pmu-events/empty-pmu-events.c           |  8 ++++
+ tools/perf/tests/pmu-events.c                      | 55 ++++++++++++++++++++++
+ 3 files changed, 71 insertions(+)
 
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index a7e8833..057d51aa 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -298,6 +298,7 @@ class JsonEvent:
-     if 'ExtSel' in jd:
-       eventcode |= int(jd['ExtSel']) << 8
-     configcode = int(jd['ConfigCode'], 0) if 'ConfigCode' in jd else None
-+    eventidcode = int(jd['EventidCode'], 0) if 'EventidCode' in jd else None
-     self.name = jd['EventName'].lower() if 'EventName' in jd else None
-     self.topic = ''
-     self.compat = jd.get('Compat')
-@@ -335,7 +336,13 @@ class JsonEvent:
-     if precise and self.desc and '(Precise Event)' not in self.desc:
-       extra_desc += ' (Must be precise)' if precise == '2' else (' (Precise '
-                                                                  'event)')
--    event = f'config={llx(configcode)}' if configcode is not None else f'event={llx(eventcode)}'
-+    event = None
-+    if configcode is not None:
-+      event = f'config={llx(configcode)}'
-+    elif eventidcode is not None:
-+      event = f'eventid={llx(eventidcode)}'
-+    else:
-+      event = f'event={llx(eventcode)}'
-     event_fields = [
-         ('AnyThread', 'any='),
-         ('PortMask', 'ch_mask='),
-@@ -345,6 +352,7 @@ class JsonEvent:
-         ('Invert', 'inv='),
-         ('SampleAfterValue', 'period='),
-         ('UMask', 'umask='),
-+        ('NodeType', 'type='),
-     ]
-     for key, value in event_fields:
-       if key in jd and jd[key] != '0':
+diff --git a/tools/perf/pmu-events/arch/test/test_soc/sys/uncore.json b/tools/perf/pmu-events/arch/test/test_soc/sys/uncore.json
+index c7e7528..4d423b1 100644
+--- a/tools/perf/pmu-events/arch/test/test_soc/sys/uncore.json
++++ b/tools/perf/pmu-events/arch/test/test_soc/sys/uncore.json
+@@ -12,5 +12,13 @@
+            "EventName": "sys_ccn_pmu.read_cycles",
+            "Unit": "sys_ccn_pmu",
+            "Compat": "0x01"
++   },
++   {
++           "BriefDescription": "Counts total cache misses in first lookup result (high priority)",
++           "EventidCode": "0x1",
++           "NodeType": "0x5",
++           "EventName": "sys_cmn_pmu.hnf_cache_miss",
++           "Unit": "sys_cmn_pmu",
++           "Compat": "(434|436|43c|43a).*"
+    }
+ ]
+diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
+index 12bd043..1372742 100644
+--- a/tools/perf/pmu-events/empty-pmu-events.c
++++ b/tools/perf/pmu-events/empty-pmu-events.c
+@@ -245,6 +245,14 @@ struct pmu_events_map {
+ 		.pmu = "uncore_sys_ccn_pmu",
+ 	},
+ 	{
++		.name = "sys_cmn_pmu.hnf_cache_miss",
++		.event = "eventid=0x1,type=0x5",
++		.desc = "Counts total cache misses in first lookup result (high priority). Unit: uncore_sys_cmn_pmu ",
++		.compat = "(434|436|43c|43a).*",
++		.topic = "uncore",
++		.pmu = "uncore_sys_cmn_pmu",
++	},
++	{
+ 		.name = 0,
+ 		.event = 0,
+ 		.desc = 0,
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index 0cf572f..a56d329 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -262,9 +262,24 @@ struct perf_pmu_test_pmu {
+ 	.matching_pmu = "uncore_sys_ccn_pmu4",
+ };
+ 
++static const struct perf_pmu_test_event sys_cmn_pmu_hnf_cache_miss = {
++	.event = {
++		.name = "sys_cmn_pmu.hnf_cache_miss",
++		.event = "eventid=0x1,type=0x5",
++		.desc = "Counts total cache misses in first lookup result (high priority)",
++		.topic = "uncore",
++		.pmu = "uncore_sys_cmn_pmu",
++		.compat = "(434|436|43c|43a).*",
++	},
++	.alias_str = "eventid=0x1,type=0x5",
++	.alias_long_desc = "Counts total cache misses in first lookup result (high priority)",
++	.matching_pmu = "uncore_sys_cmn_pmu0",
++};
++
+ static const struct perf_pmu_test_event *sys_events[] = {
+ 	&sys_ddr_pmu_write_cycles,
+ 	&sys_ccn_pmu_read_cycles,
++	&sys_cmn_pmu_hnf_cache_miss,
+ 	NULL
+ };
+ 
+@@ -707,6 +722,46 @@ static int __test_uncore_pmu_event_aliases(struct perf_pmu_test_pmu *test_pmu)
+ 			&sys_ccn_pmu_read_cycles,
+ 		},
+ 	},
++	{
++		.pmu = {
++			.name = (char *)"uncore_sys_cmn_pmu0",
++			.is_uncore = 1,
++			.id = (char *)"43401",
++		},
++		.aliases = {
++			&sys_cmn_pmu_hnf_cache_miss,
++		},
++	},
++	{
++		.pmu = {
++			.name = (char *)"uncore_sys_cmn_pmu0",
++			.is_uncore = 1,
++			.id = (char *)"43602",
++		},
++		.aliases = {
++			&sys_cmn_pmu_hnf_cache_miss,
++		},
++	},
++	{
++		.pmu = {
++			.name = (char *)"uncore_sys_cmn_pmu0",
++			.is_uncore = 1,
++			.id = (char *)"43c03",
++		},
++		.aliases = {
++			&sys_cmn_pmu_hnf_cache_miss,
++		},
++	},
++	{
++		.pmu = {
++			.name = (char *)"uncore_sys_cmn_pmu0",
++			.is_uncore = 1,
++			.id = (char *)"43a01",
++		},
++		.aliases = {
++			&sys_cmn_pmu_hnf_cache_miss,
++		},
++	}
+ };
+ 
+ /* Test that aliases generated are as expected */
 -- 
 1.8.3.1
 
