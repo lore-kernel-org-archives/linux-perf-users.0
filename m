@@ -1,35 +1,35 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73AD4FC08
-	for <linux-perf-users@vger.kernel.org>; Mon, 25 Sep 2023 06:20:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795F6101E2
+	for <linux-perf-users@vger.kernel.org>; Mon, 25 Sep 2023 06:20:12 +0000 (UTC)
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E29E120;
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6BA513A;
 	Sun, 24 Sep 2023 23:20:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1695622809; x=1727158809;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=efXWrTzJnuX21IoXyjVBzf+uIVRK9N90p2tyWHMS/Os=;
-  b=eJ0Gylxg0otU+RQzpzaa+7fKdgvAqs2zhMpKXbjXqQaLSC6eCp0d7Ttr
-   Ldo8wm7do9SWGzAe3xTslEgQo/y14vtzx7CchKylYAmmLEiFqtT4KtIhj
-   Z4lBGT0F5mqCGDICv6Wn0OjKTeGBp3uSgejCgs/09q/aPdJPWLFba0fpr
-   UbqJGx9xAu2ILj9bVek4gluZ5rq3GMnvp4fa8OchyZP2KrVB4n8yrltSJ
-   MzVrhkgBRMn10tvZMaaRISEhZ9VBgA9Hao+/dklVptePunPw9U78lYa1c
-   QlLJueX3Mw22pLhzcWWDpB8lZQ7xmlf0R5O1dAak3Ip+Q5r3IXMcAsz8E
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="445279545"
+  bh=I5V/buEAfvb6fu9N9WAFdvgwgtWYdT9HlyKiL8iOkic=;
+  b=VpRD9ZYSFyZkzkQcpFUBxsTNixSB18VhhyuH/V0tpoL/VXMRwcYJU7Qq
+   NX/UjXDAOySymQs2NaBt/Z9mqfpSDTxMpF/4oEVO3/bmizmS7vNl8oXM5
+   cPc+04CNNfirckRap8j4iuG0UKsMuCYd1SvNV/5JfVB5DPOd8kJZdMicX
+   YyL54Ky1h/HcmhQNj91pwUkC2Q512uRdysYWw6g6tMwADO+gRKAu/e8wE
+   r2UGz+twgfEIFaEjdRji8cJ7tCYfkHafBo/TDJRFIJeKmWyVa2Hm83/bH
+   eBsh091sIPWqqZEHPcU9OWJRmVGLvjcpFwHpVYsgbEZCgqBbaUcnBULN5
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="445279563"
 X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
-   d="scan'208";a="445279545"
+   d="scan'208";a="445279563"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2023 23:19:24 -0700
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2023 23:19:27 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="818494414"
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="818494442"
 X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
-   d="scan'208";a="818494414"
+   d="scan'208";a="818494442"
 Received: from b49691a75598.jf.intel.com ([10.54.34.22])
-  by fmsmga004.fm.intel.com with ESMTP; 24 Sep 2023 23:19:22 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 24 Sep 2023 23:19:24 -0700
 From: weilin.wang@intel.com
 To: weilin.wang@intel.com,
 	Ian Rogers <irogers@google.com>,
@@ -47,9 +47,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	Samantha Alt <samantha.alt@intel.com>,
 	Caleb Biggers <caleb.biggers@intel.com>,
 	Mark Rutland <mark.rutland@arm.com>
-Subject: [RFC PATCH 20/25] perf stat: Code refactoring in hardware-grouping
-Date: Sun, 24 Sep 2023 23:18:19 -0700
-Message-Id: <20230925061824.3818631-21-weilin.wang@intel.com>
+Subject: [RFC PATCH 23/25] perf stat: Fix a return error issue in hardware-grouping
+Date: Sun, 24 Sep 2023 23:18:22 -0700
+Message-Id: <20230925061824.3818631-24-weilin.wang@intel.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20230925061824.3818631-1-weilin.wang@intel.com>
 References: <20230925061824.3818631-1-weilin.wang@intel.com>
@@ -68,138 +68,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 
 From: Weilin Wang <weilin.wang@intel.com>
 
-Decouple the step to generate final grouping strings out from the
-build_grouping step so that we could do single metric grouping and then merge
-groups if needed later.
+Update the hw_aware_parse_ids() goto to improve error handling.
 
 Signed-off-by: Weilin Wang <weilin.wang@intel.com>
 ---
- tools/perf/util/metricgroup.c | 49 +++++++++++++++++------------------
- 1 file changed, 24 insertions(+), 25 deletions(-)
+ tools/perf/util/metricgroup.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index c027c0351..3c569d838 100644
+index 07a82fa21..6a4404226 100644
 --- a/tools/perf/util/metricgroup.c
 +++ b/tools/perf/util/metricgroup.c
-@@ -1799,9 +1799,10 @@ static int find_and_set_counters(struct metricgroup__event_info *e,
- {
- 	int ret;
- 	unsigned long find_bit = 0;
--
--	if (e->taken_alone && current_group->taken_alone)
-+	if (e->taken_alone && current_group->taken_alone) {
-+		pr_debug("current group with taken alone event already\n");
- 		return -ENOSPC;
-+	}
- 	if (e->free_counter)
- 		return 0;
- 	if (e->fixed_counter) {
-@@ -1919,7 +1920,8 @@ static int assign_event_grouping(struct metricgroup__event_info *e,
- 
- 	list_for_each_entry(g, groups, nd) {
- 		if (!strcasecmp(g->pmu_name, e->pmu_name)) {
--			pr_debug("found group for event %s in pmu %s\n", e->name, g->pmu_name);
-+			pr_debug("found group header for event %s in pmu %s\n",
-+				e->name, g->pmu_name);
- 			pmu_group_head = g;
- 			break;
- 		}
-@@ -2046,26 +2048,22 @@ static int hw_aware_metricgroup__build_event_string(struct list_head *group_strs
-  */
- static int create_grouping(struct list_head *pmu_info_list,
- 			  struct list_head *event_info_list,
--			  struct list_head *groupings,
--			  const char *modifier)
-+			  struct list_head *grouping)
- {
- 	int ret = 0;
- 	struct metricgroup__event_info *e;
--	LIST_HEAD(groups);
- 	char *bit_buf = malloc(NR_COUNTERS);
- 
--	//TODO: for each new core group, we could consider to add events that uses fixed counters
-+	//TODO: for each new core group, we could consider to add events that
-+	//uses fixed counters
- 	list_for_each_entry(e, event_info_list, nd) {
- 		bitmap_scnprintf(e->counters, NR_COUNTERS, bit_buf, NR_COUNTERS);
- 		pr_debug("Event name %s, [pmu]=%s, [counters]=%s, [taken_alone]=%d\n",
- 			e->name, e->pmu_name, bit_buf, e->taken_alone);
--		ret = assign_event_grouping(e, pmu_info_list, &groups);
-+		ret = assign_event_grouping(e, pmu_info_list, grouping);
- 		if (ret)
--			goto out;
-+			return ret;
- 	}
--	ret = hw_aware_metricgroup__build_event_string(groupings, modifier, &groups);
--out:
--	metricgroup__free_group_list(&groups);
- 	return ret;
- };
- 
-@@ -2077,9 +2075,8 @@ static int create_grouping(struct list_head *pmu_info_list,
-  * @groupings: header to the list of final event grouping.
-  * @modifier: any modifiers added to the events.
-  */
--static int hw_aware_build_grouping(struct expr_parse_ctx *ctx __maybe_unused,
--				  struct list_head *groupings __maybe_unused,
--				  const char *modifier __maybe_unused)
-+static int hw_aware_build_grouping(struct expr_parse_ctx *ctx,
-+				   struct list_head *grouping)
- {
- 	int ret = 0;
- 	struct hashmap_entry *cur;
-@@ -2112,8 +2109,7 @@ static int hw_aware_build_grouping(struct expr_parse_ctx *ctx __maybe_unused,
- 	ret = get_pmu_counter_layouts(&pmu_info_list, ltable);
- 	if (ret)
- 		goto err_out;
--	ret = create_grouping(&pmu_info_list, &event_info_list, groupings,
--			     modifier);
-+	ret = create_grouping(&pmu_info_list, &event_info_list, grouping);
- 
- err_out:
- 	metricgroup__free_event_info(&event_info_list);
-@@ -2159,23 +2155,25 @@ static int hw_aware_parse_ids(struct perf_pmu *fake_pmu,
- {
- 	struct parse_events_error parse_error;
- 	struct evlist *parsed_evlist;
--	LIST_HEAD(groupings);
-+	LIST_HEAD(grouping_str);
-+	LIST_HEAD(grouping);
- 	struct metricgroup__group_strs *group;
- 	int ret;
- 
+@@ -2196,11 +2196,11 @@ static int hw_aware_parse_ids(struct perf_pmu *fake_pmu,
  	*out_evlist = NULL;
--	ret = hw_aware_build_grouping(ids, &groupings, modifier);
--	if (ret) {
--		metricgroup__free_grouping_strs(&groupings);
--		return ret;
--	}
-+	ret = hw_aware_build_grouping(ids, &grouping);
-+	if (ret)
-+		goto err_out;
-+	ret = hw_aware_metricgroup__build_event_string(&grouping_str, modifier, &grouping);
-+	if (ret)
-+		goto err_out;
+ 	ret = hw_aware_build_grouping(ids, &grouping);
+ 	if (ret)
+-		goto err_out;
++		goto out;
+ 	ret = hw_aware_metricgroup__build_event_string(&grouping_str, modifier,
+ 						      tool_events, &grouping);
+ 	if (ret)
+-		goto err_out;
++		goto out;
  
  	parsed_evlist = evlist__new();
  	if (!parsed_evlist) {
- 		ret = -ENOMEM;
- 		goto err_out;
- 	}
--	list_for_each_entry(group, &groupings, nd) {
-+	list_for_each_entry(group, &grouping_str, nd) {
- 		struct strbuf *events = &group->grouping_str;
- 
- 		pr_debug("Parsing metric events '%s'\n", events->buf);
-@@ -2193,9 +2191,10 @@ static int hw_aware_parse_ids(struct perf_pmu *fake_pmu,
+@@ -2225,10 +2225,11 @@ static int hw_aware_parse_ids(struct perf_pmu *fake_pmu,
  	*out_evlist = parsed_evlist;
  	parsed_evlist = NULL;
  err_out:
-+	metricgroup__free_group_list(&grouping);
-+	metricgroup__free_grouping_strs(&grouping_str);
+-	metricgroup__free_group_list(&grouping);
+-	metricgroup__free_grouping_strs(&grouping_str);
  	parse_events_error__exit(&parse_error);
  	evlist__delete(parsed_evlist);
--	metricgroup__free_grouping_strs(&groupings);
++out:
++	metricgroup__free_group_list(&grouping);
++	metricgroup__free_grouping_strs(&grouping_str);
  	return ret;
  }
  
