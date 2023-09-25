@@ -1,15 +1,15 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBB46FDE
-	for <linux-perf-users@vger.kernel.org>; Mon, 25 Sep 2023 05:58:30 +0000 (UTC)
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 029CAE3;
-	Sun, 24 Sep 2023 22:58:28 -0700 (PDT)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R901e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0Vsl7J1w_1695621505;
-Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0Vsl7J1w_1695621505)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7BCBD524
+	for <linux-perf-users@vger.kernel.org>; Mon, 25 Sep 2023 05:58:32 +0000 (UTC)
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CF32EE;
+	Sun, 24 Sep 2023 22:58:30 -0700 (PDT)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R331e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0Vsl7J2W_1695621507;
+Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0Vsl7J2W_1695621507)
           by smtp.aliyun-inc.com;
-          Mon, 25 Sep 2023 13:58:25 +0800
+          Mon, 25 Sep 2023 13:58:27 +0800
 From: Jing Zhang <renyu.zj@linux.alibaba.com>
 To: John Garry <john.g.garry@oracle.com>,
 	Ian Rogers <irogers@google.com>
@@ -32,9 +32,9 @@ Cc: Will Deacon <will@kernel.org>,
 	Zhuo Song <zhuo.song@linux.alibaba.com>,
 	Jing Zhang <renyu.zj@linux.alibaba.com>,
 	Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: [PATCH v10 2/7] perf metric: "Compat" supports regular expression matching identifiers
-Date: Mon, 25 Sep 2023 13:57:19 +0800
-Message-Id: <1695621444-56530-3-git-send-email-renyu.zj@linux.alibaba.com>
+Subject: [PATCH v10 4/7] perf test: Make matching_pmu effective
+Date: Mon, 25 Sep 2023 13:57:21 +0800
+Message-Id: <1695621444-56530-5-git-send-email-renyu.zj@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1695621444-56530-1-git-send-email-renyu.zj@linux.alibaba.com>
 References: <1695621444-56530-1-git-send-email-renyu.zj@linux.alibaba.com>
@@ -50,37 +50,51 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-The jevent "Compat" is used for uncore PMU alias or metric definitions.
-
-The same PMU driver has different PMU identifiers due to different
-hardware versions and types, but they may have some common PMU metric.
-Since a Compat value can only match one identifier, when adding the
-same metric to PMUs with different identifiers, each identifier needs
-to be defined once, which is not streamlined enough.
-
-So let "Compat" support using regular expression to match multiple
-identifiers for uncore PMU metric.
+The perf_pmu_test_event.matching_pmu didn't work. No matter what its
+value is, it does not affect the test results. So let matching_pmu be
+used for matching perf_pmu_test_pmu.pmu.name.
 
 Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
 Reviewed-by: John Garry <john.g.garry@oracle.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/metricgroup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/tests/pmu-events.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 6231044..0484736 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -498,7 +498,7 @@ static int metricgroup__sys_event_iter(const struct pmu_metric *pm,
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index f5321fb..0cf572f 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -245,7 +245,7 @@ struct perf_pmu_test_pmu {
+ 	},
+ 	.alias_str = "event=0x2b",
+ 	.alias_long_desc = "ddr write-cycles event",
+-	.matching_pmu = "uncore_sys_ddr_pmu",
++	.matching_pmu = "uncore_sys_ddr_pmu0",
+ };
  
- 	while ((pmu = perf_pmus__scan(pmu))) {
+ static const struct perf_pmu_test_event sys_ccn_pmu_read_cycles = {
+@@ -259,7 +259,7 @@ struct perf_pmu_test_pmu {
+ 	},
+ 	.alias_str = "config=0x2c",
+ 	.alias_long_desc = "ccn read-cycles event",
+-	.matching_pmu = "uncore_sys_ccn_pmu",
++	.matching_pmu = "uncore_sys_ccn_pmu4",
+ };
  
--		if (!pmu->id || strcmp(pmu->id, pm->compat))
-+		if (!pmu->id || !pmu_uncore_identifier_match(pm->compat, pmu->id))
- 			continue;
+ static const struct perf_pmu_test_event *sys_events[] = {
+@@ -615,6 +615,12 @@ static int __test_uncore_pmu_event_aliases(struct perf_pmu_test_pmu *test_pmu)
+ 			.count = &matched_count,
+ 		};
  
- 		return d->fn(pm, table, d->data);
++		if (strcmp(pmu_name, test_event.matching_pmu)) {
++			pr_debug("testing aliases uncore PMU %s: mismatched matching_pmu, %s vs %s\n",
++					pmu_name, test_event.matching_pmu, pmu_name);
++			return -1;
++		}
++
+ 		err = perf_pmu__find_event(pmu, event->name, &args,
+ 					   test_core_pmu_event_aliases_cb);
+ 		if (err) {
 -- 
 1.8.3.1
 
