@@ -1,363 +1,196 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4397633E5
-	for <linux-perf-users@vger.kernel.org>; Mon, 25 Sep 2023 06:24:32 +0000 (UTC)
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFABCE5B
-	for <linux-perf-users@vger.kernel.org>; Sun, 24 Sep 2023 23:24:29 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59b5a586da6so163388917b3.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 24 Sep 2023 23:24:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695623068; x=1696227868; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=66Z0VZtyUYys0PdxQ7OWuDfLkowOhrBXRt1ENvc5Q34=;
-        b=jB3XHqWs6yBx5WFm/ZvWhL3vJyZ1RrstswS1CHBYQVjA+5yQleA1IiP+oAmzBPQSL2
-         7xD4uw80BXZGQgLJcxx9rIGZSU+SQZSzzH4ODoMx4WwCI5YSs2c+bSHUbtOPU6lgz97r
-         +VEiygMmgyY+sIEOkVBXK+piu9eAoY0UVApJF8AnDzsDgRx5kY3SnpKNBsqzziszXEoo
-         p41MadR22mNGWgqUUvIHLAXSF8xbyGK3q38etf++L7EyOxPAxaWRHwel0as+IL5K7nlp
-         C1MngSYx50qnvyzCSAPl8gJNIlhygFOL5yO8kB10lTaVjTAbUattbnOIJbkDWH0W6/be
-         /L5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695623068; x=1696227868;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=66Z0VZtyUYys0PdxQ7OWuDfLkowOhrBXRt1ENvc5Q34=;
-        b=k8UboujCLi9p10wQmgLHEXy9GkLTiLb31GiaTbGU0UEDsFKXFnTLgXU1xtSXQ17upc
-         7qXdw7Z7s4JmacgeUr8AB9597xgdtGuBYkwXHLy4ZSqP5xre0EeHP1X2SNytIv4iFPVh
-         UzQ9cY7YTHb6dtnTN1mLZmAPLVKhhdiQV6cvo7KPnuuIKkq5g+CpXd3GgrW62wPWoDN2
-         9SepKWqo9+gME+Qd7QsB7cMNp7m3EUXWFg0pgjGgT5xbfhTr8M0JX5gaWS8CiKMyNd4O
-         IjMWtlGrWG2MEZryaGpmLHBhPN32wO7RctbuRyU+VGRve9Vmsxan0U+uzb3wj/8KbL+M
-         Gv0Q==
-X-Gm-Message-State: AOJu0YxorAWKwfgevBuI1npW+f+fdP0FxIeRrDxGOzdqvCX+VijKED2U
-	lN6n8gJA0O/EV8LFp/U8NK+pMrUoG3Dm
-X-Google-Smtp-Source: AGHT+IFRzYD0MmvHuqoLSZgcjVTtth3pN3U1O0gxgnvc+hmvYLHm63JgsQnLUn8tN4x1rYF1tgr5YJW0Dle/
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a8a5:e1ea:d5a4:5980])
- (user=irogers job=sendgmr) by 2002:a81:4c90:0:b0:59e:8f97:27ed with SMTP id
- z138-20020a814c90000000b0059e8f9727edmr156885ywa.1.1695623068705; Sun, 24 Sep
- 2023 23:24:28 -0700 (PDT)
-Date: Sun, 24 Sep 2023 23:23:23 -0700
-Message-Id: <20230925062323.840799-1-irogers@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C8D6FCF
+	for <linux-perf-users@vger.kernel.org>; Mon, 25 Sep 2023 08:03:34 +0000 (UTC)
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64099DA
+	for <linux-perf-users@vger.kernel.org>; Mon, 25 Sep 2023 01:03:33 -0700 (PDT)
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38P7Zqqj002988;
+	Mon, 25 Sep 2023 08:03:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=oYZW7bO467/gec31GHRBzDNg711vancXLK2jnRRqlYs=;
+ b=DGgkNh54S1F2DTlZzUDBrENDz3tSF1VAl+2cUJXuruECc8DcYH4X8kHrggIBN76jBO6s
+ +2pBvgG82x9yidOBZpCgQT/O23ZkZ6qxjL6dfLXazUDdWoEH4SPxCrbQ0TqGkmVfDYAm
+ gCoHunO+AJKRzoaByUPXRphkh6Qksi4MX5U5ncEgjZxPdR6maHtgIf7H/rlK+WypK90r
+ 74Xrp7WH5UlV0KztyzXznKIe3hO8luAI94Fr3P/rYRfoepdncoK5w3sHp0UHf5tpo2Wm
+ jgpDl3v0+TqiiNj6NJj9oeGMlOMF4srWEqSO1OA34H/qFPLBiMzt2v2O4kwJqKi0wIB8 +Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ta6unmtnw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Sep 2023 08:03:19 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38P7ZuMg003779;
+	Mon, 25 Sep 2023 08:03:19 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ta6unmtnf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Sep 2023 08:03:19 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38P7UuJW030409;
+	Mon, 25 Sep 2023 08:03:18 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tad2180sm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Sep 2023 08:03:18 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38P83GoM26608360
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 25 Sep 2023 08:03:16 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 680222004F;
+	Mon, 25 Sep 2023 08:03:16 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9F0DF20043;
+	Mon, 25 Sep 2023 08:03:13 +0000 (GMT)
+Received: from [9.43.77.183] (unknown [9.43.77.183])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 25 Sep 2023 08:03:13 +0000 (GMT)
+Message-ID: <999336eb-8323-1718-12d1-ac61a200bc6e@linux.ibm.com>
+Date: Mon, 25 Sep 2023 13:33:12 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.42.0.515.g380fc7ccd1-goog
-Subject: [PATCH v1] perf pmus: Make PMU alias name loading lazy
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@linaro.org>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, James Clark <james.clark@arm.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH V2] perf test: Fix parse-events tests to skip parametrized
+ events
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
+        jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
+        namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, disgoel@linux.vnet.ibm.com
+References: <20230907165933.36442-1-atrajeev@linux.vnet.ibm.com>
+Content-Language: en-US
+From: kajoljain <kjain@linux.ibm.com>
+In-Reply-To: <20230907165933.36442-1-atrajeev@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: YW5vyfc2ShnnvGxiNnZkgvPDg_-WGPk2
+X-Proofpoint-GUID: _4mKYQpsoHH2hJnw-_IQ0IhQjY8oyIX0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-09-25_04,2023-09-21_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ bulkscore=0 adultscore=0 impostorscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 suspectscore=0 lowpriorityscore=0 priorityscore=1501
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2309250057
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H4,
+	RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-PMU alias names were computed when the first perf_pmu is created,
-scanning all PMUs in event sources for a file called alias that
-generally doesn't exist. Switch to trying to load the file when all
-PMU related files are loaded in lookup. This would cause a PMU name
-lookup of an alias name to fail if no PMUs were loaded, so in that
-case all PMUs are loaded and the find repeated. The overhead is
-similar but in the (very) general case not all PMUs are scanned for
-the alias file.
 
-As the overhead occurs once per invocation it doesn't show in perf
-bench internals pmu-scan. On a tigerlake machine, the number of openat
-system calls for an event of cpu/cycles/ with perf stat reduces from
-94 to 69 (ie 25 fewer openat calls).
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/arch/x86/util/pmu.c | 139 ---------------------------------
- tools/perf/util/pmu.c          |  39 ++++-----
- tools/perf/util/pmu.h          |   2 -
- tools/perf/util/pmus.c         |  10 +++
- 4 files changed, 31 insertions(+), 159 deletions(-)
+On 9/7/23 22:29, Athira Rajeev wrote:
+> Testcase "Parsing of all PMU events from sysfs" parse events for
+> all PMUs, and not just cpu. In case of powerpc, the PowerVM
+> environment supports events from hv_24x7 and hv_gpci PMU which
+> is of example format like below:
+> 
+> - hv_24x7/CPM_ADJUNCT_INST,domain=?,core=?/
+> - hv_gpci/event,partition_id=?/
+> 
+> The value for "?" needs to be filled in depending on system
+> configuration. It is better to skip these parametrized events
+> in this test as it is done in:
+> 'commit b50d691e50e6 ("perf test: Fix "all PMU test" to skip
+> parametrized events")' which handled a simialr instance with
+> "all PMU test".
+> 
+> Fix parse-events test to skip parametrized events since
+> it needs proper setup of the parameters.
 
-diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
-index f428cffb0378..8b53ca468a50 100644
---- a/tools/perf/arch/x86/util/pmu.c
-+++ b/tools/perf/arch/x86/util/pmu.c
-@@ -17,15 +17,6 @@
- #include "../../../util/pmus.h"
- #include "env.h"
- 
--struct pmu_alias {
--	char *name;
--	char *alias;
--	struct list_head list;
--};
--
--static LIST_HEAD(pmu_alias_name_list);
--static bool cached_list;
--
- struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
- {
- #ifdef HAVE_AUXTRACE_SUPPORT
-@@ -41,136 +32,6 @@ struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu __mayb
- 	return NULL;
- }
- 
--static void pmu_alias__delete(struct pmu_alias *pmu_alias)
--{
--	if (!pmu_alias)
--		return;
--
--	zfree(&pmu_alias->name);
--	zfree(&pmu_alias->alias);
--	free(pmu_alias);
--}
--
--static struct pmu_alias *pmu_alias__new(char *name, char *alias)
--{
--	struct pmu_alias *pmu_alias = zalloc(sizeof(*pmu_alias));
--
--	if (pmu_alias) {
--		pmu_alias->name = strdup(name);
--		if (!pmu_alias->name)
--			goto out_delete;
--
--		pmu_alias->alias = strdup(alias);
--		if (!pmu_alias->alias)
--			goto out_delete;
--	}
--	return pmu_alias;
--
--out_delete:
--	pmu_alias__delete(pmu_alias);
--	return NULL;
--}
--
--static int setup_pmu_alias_list(void)
--{
--	int fd, dirfd;
--	DIR *dir;
--	struct dirent *dent;
--	struct pmu_alias *pmu_alias;
--	char buf[MAX_PMU_NAME_LEN];
--	FILE *file;
--	int ret = -ENOMEM;
--
--	dirfd = perf_pmu__event_source_devices_fd();
--	if (dirfd < 0)
--		return -1;
--
--	dir = fdopendir(dirfd);
--	if (!dir)
--		return -errno;
--
--	while ((dent = readdir(dir))) {
--		if (!strcmp(dent->d_name, ".") ||
--		    !strcmp(dent->d_name, ".."))
--			continue;
--
--		fd = perf_pmu__pathname_fd(dirfd, dent->d_name, "alias", O_RDONLY);
--		if (fd < 0)
--			continue;
--
--		file = fdopen(fd, "r");
--		if (!file)
--			continue;
--
--		if (!fgets(buf, sizeof(buf), file)) {
--			fclose(file);
--			continue;
--		}
--
--		fclose(file);
--
--		/* Remove the last '\n' */
--		buf[strlen(buf) - 1] = 0;
--
--		pmu_alias = pmu_alias__new(dent->d_name, buf);
--		if (!pmu_alias)
--			goto close_dir;
--
--		list_add_tail(&pmu_alias->list, &pmu_alias_name_list);
--	}
--
--	ret = 0;
--
--close_dir:
--	closedir(dir);
--	return ret;
--}
--
--static const char *__pmu_find_real_name(const char *name)
--{
--	struct pmu_alias *pmu_alias;
--
--	list_for_each_entry(pmu_alias, &pmu_alias_name_list, list) {
--		if (!strcmp(name, pmu_alias->alias))
--			return pmu_alias->name;
--	}
--
--	return name;
--}
--
--const char *pmu_find_real_name(const char *name)
--{
--	if (cached_list)
--		return __pmu_find_real_name(name);
--
--	setup_pmu_alias_list();
--	cached_list = true;
--
--	return __pmu_find_real_name(name);
--}
--
--static const char *__pmu_find_alias_name(const char *name)
--{
--	struct pmu_alias *pmu_alias;
--
--	list_for_each_entry(pmu_alias, &pmu_alias_name_list, list) {
--		if (!strcmp(name, pmu_alias->name))
--			return pmu_alias->alias;
--	}
--	return NULL;
--}
--
--const char *pmu_find_alias_name(const char *name)
--{
--	if (cached_list)
--		return __pmu_find_alias_name(name);
--
--	setup_pmu_alias_list();
--	cached_list = true;
--
--	return __pmu_find_alias_name(name);
--}
--
- int perf_pmus__num_mem_pmus(void)
- {
- 	/* AMD uses IBS OP pmu and not a core PMU for perf mem/c2c */
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 0d81c059c91c..0f5c6ed257a8 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -937,16 +937,27 @@ perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
- 	return NULL;
- }
- 
--const char * __weak
--pmu_find_real_name(const char *name)
-+static char *pmu_find_alias_name(struct perf_pmu *pmu, int dirfd)
- {
--	return name;
--}
-+	FILE *file = perf_pmu__open_file_at(pmu, dirfd, "alias");
-+	char *line = NULL;
-+	size_t line_len = 0;
-+	ssize_t ret;
- 
--const char * __weak
--pmu_find_alias_name(const char *name __maybe_unused)
--{
--	return NULL;
-+	if (!file)
-+		return NULL;
-+
-+	ret = getline(&line, &line_len, file);
-+	if (ret < 0) {
-+		fclose(file);
-+		return NULL;
-+	}
-+	/* Remove trailing newline. */
-+	if (ret > 0 && line[ret - 1] == '\n')
-+		line[--ret] = '\0';
-+
-+	fclose(file);
-+	return line;
- }
- 
- static int pmu_max_precise(int dirfd, struct perf_pmu *pmu)
-@@ -957,12 +968,10 @@ static int pmu_max_precise(int dirfd, struct perf_pmu *pmu)
- 	return max_precise;
- }
- 
--struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char *lookup_name)
-+struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char *name)
- {
- 	struct perf_pmu *pmu;
- 	__u32 type;
--	const char *name = pmu_find_real_name(lookup_name);
--	const char *alias_name;
- 
- 	pmu = zalloc(sizeof(*pmu));
- 	if (!pmu)
-@@ -995,18 +1004,12 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char
- 	pmu->is_core = is_pmu_core(name);
- 	pmu->cpus = pmu_cpumask(dirfd, name, pmu->is_core);
- 
--	alias_name = pmu_find_alias_name(name);
--	if (alias_name) {
--		pmu->alias_name = strdup(alias_name);
--		if (!pmu->alias_name)
--			goto err;
--	}
--
- 	pmu->type = type;
- 	pmu->is_uncore = pmu_is_uncore(dirfd, name);
- 	if (pmu->is_uncore)
- 		pmu->id = pmu_id(name);
- 	pmu->max_precise = pmu_max_precise(dirfd, pmu);
-+	pmu->alias_name = pmu_find_alias_name(pmu, dirfd);
- 	pmu->events_table = perf_pmu__find_events_table(pmu);
- 	pmu_add_sys_aliases(pmu);
- 	list_add_tail(&pmu->list, pmus);
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 04b317b17d66..bc807729a7cd 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -251,8 +251,6 @@ void perf_pmu__warn_invalid_formats(struct perf_pmu *pmu);
- 
- int perf_pmu__match(const char *pattern, const char *name, const char *tok);
- 
--const char *pmu_find_real_name(const char *name);
--const char *pmu_find_alias_name(const char *name);
- double perf_pmu__cpu_slots_per_cycle(void);
- int perf_pmu__event_source_devices_scnprintf(char *pathname, size_t size);
- int perf_pmu__pathname_scnprintf(char *buf, size_t size,
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index 64e798e68a2d..ce4931461741 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -37,6 +37,8 @@ static LIST_HEAD(other_pmus);
- static bool read_sysfs_core_pmus;
- static bool read_sysfs_all_pmus;
- 
-+static void pmu_read_sysfs(bool core_only);
-+
- int pmu_name_len_no_suffix(const char *str, unsigned long *num)
- {
- 	int orig_len, len;
-@@ -124,6 +126,14 @@ struct perf_pmu *perf_pmus__find(const char *name)
- 	pmu = perf_pmu__lookup(core_pmu ? &core_pmus : &other_pmus, dirfd, name);
- 	close(dirfd);
- 
-+	if (!pmu) {
-+		/*
-+		 * Looking up an inidividual PMU failed. This may mean name is
-+		 * an alias, so read the PMUs from sysfs and try to find again.
-+		 */
-+		pmu_read_sysfs(core_pmu);
-+		pmu = pmu_find(name);
-+	}
- 	return pmu;
- }
- 
--- 
-2.42.0.515.g380fc7ccd1-goog
+Patch looks good to me.
 
+Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
+
+Thanks,
+Kajol Jain
+
+> 
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> ---
+> Changelog:
+> v1 -> v2:
+>  Addressed review comments from Ian. Updated size of
+>  pmu event name variable and changed bool name which is
+>  used to skip the test.
+> 
+>  tools/perf/tests/parse-events.c | 38 +++++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+> index 658fb9599d95..1ecaeceb69f8 100644
+> --- a/tools/perf/tests/parse-events.c
+> +++ b/tools/perf/tests/parse-events.c
+> @@ -2514,9 +2514,14 @@ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest
+>  	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
+>  		struct stat st;
+>  		char path[PATH_MAX];
+> +		char pmu_event[PATH_MAX];
+> +		char *buf = NULL;
+> +		FILE *file;
+>  		struct dirent *ent;
+> +		size_t len = 0;
+>  		DIR *dir;
+>  		int err;
+> +		int n;
+>  
+>  		snprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/events/",
+>  			sysfs__mountpoint(), pmu->name);
+> @@ -2538,11 +2543,44 @@ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest
+>  			struct evlist_test e = { .name = NULL, };
+>  			char name[2 * NAME_MAX + 1 + 12 + 3];
+>  			int test_ret;
+> +			bool is_event_parameterized = 0;
+>  
+>  			/* Names containing . are special and cannot be used directly */
+>  			if (strchr(ent->d_name, '.'))
+>  				continue;
+>  
+> +			/* exclude parametrized ones (name contains '?') */
+> +			n = snprintf(pmu_event, sizeof(pmu_event), "%s%s", path, ent->d_name);
+> +			if (n >= PATH_MAX) {
+> +				pr_err("pmu event name crossed PATH_MAX(%d) size\n", PATH_MAX);
+> +				continue;
+> +			}
+> +
+> +			file = fopen(pmu_event, "r");
+> +			if (!file) {
+> +				pr_debug("can't open pmu event file for '%s'\n", ent->d_name);
+> +				ret = combine_test_results(ret, TEST_FAIL);
+> +				continue;
+> +			}
+> +
+> +			if (getline(&buf, &len, file) < 0) {
+> +				pr_debug(" pmu event: %s is a null event\n", ent->d_name);
+> +				ret = combine_test_results(ret, TEST_FAIL);
+> +				continue;
+> +			}
+> +
+> +			if (strchr(buf, '?'))
+> +				is_event_parameterized = 1;
+> +
+> +			free(buf);
+> +			buf = NULL;
+> +			fclose(file);
+> +
+> +			if (is_event_parameterized == 1) {
+> +				pr_debug("skipping parametrized PMU event: %s which contains ?\n", pmu_event);
+> +				continue;
+> +			}
+> +
+>  			snprintf(name, sizeof(name), "%s/event=%s/u", pmu->name, ent->d_name);
+>  
+>  			e.name  = name;
