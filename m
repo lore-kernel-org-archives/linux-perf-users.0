@@ -1,102 +1,118 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154B4101D7
-	for <linux-perf-users@vger.kernel.org>; Mon, 25 Sep 2023 16:08:32 +0000 (UTC)
-Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ECDBBE
-	for <linux-perf-users@vger.kernel.org>; Mon, 25 Sep 2023 09:08:31 -0700 (PDT)
-Received: by mail-qt1-x82a.google.com with SMTP id d75a77b69052e-414ba610766so1130501cf.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 Sep 2023 09:08:31 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3182F1B270
+	for <linux-perf-users@vger.kernel.org>; Mon, 25 Sep 2023 16:37:25 +0000 (UTC)
+Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66BCBFB
+	for <linux-perf-users@vger.kernel.org>; Mon, 25 Sep 2023 09:37:24 -0700 (PDT)
+Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-418157e979eso882371cf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 25 Sep 2023 09:37:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695658110; x=1696262910; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1695659843; x=1696264643; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7T1sBdR6OeHgqVg4dg484hQ9QDIMGYEZTIFKkUFht1Y=;
-        b=nqnMzs4+uEQiQyOaWz6ky7Qc9qtJlOW2rfuBk1DxPZh5bAFn6kaSl+aQXTkc6Ma5RO
-         uq0ORfoRzrENYbh248ja6onnhcl1dD/wW0hoNTZx3F2oaSvZR2fcJT19W3ilvaosdhIp
-         G0kZ46h9HtN4buXaye9hZab1qLTcQi3bMSC8BYdLPOV0QzjXNrYwTp8U6ln2TcoRIcTo
-         v8lVWZExKqlejTQdrKlnNlx7GvAFv328Q+AxJ++pISBnuq3lLSmUvXxWPJwOBwRjwd0t
-         Px/Lm+VE+Hi1cAEKn3NxAweBor6u+UC9mzDfYsmcYhuFw76Rla6CYSpeeistgY6OvsgG
-         /RQA==
+        bh=nw3qGH7/FH4+ugIgrXtTnsAMMytm41mtZb4PZdUTaRw=;
+        b=deNy7dVMO/XkwcpI8t5Nl8gMWPlSH5qVSuO7TfyzQM4wuGFlUVj0NM4u9CILwvAUA7
+         Z2bqcImSO60IEKCIQsMcbUPO1Q7Fe/F8OkN3sIjFjYTSHj26LjFS/IKaQx61GgQcQaJH
+         Ya3r0JF6sUxgObPwWaKc36Sca4fQvxYo7tgupW203KxLGSB7l/2gxBiKMl9osEfyi4ZS
+         jXysf8vyL71CrYhVeOhm/z9Fijbl6P5J+c7BuwEJz74bdhXy4m6KJvuGSWEv9CEDxEXe
+         qU0pnI9vGKd3RzaBT3bDsDWjzagdjB7mcMgofKULHV5m8794rOnrz/rGrciBsnJSAlNB
+         j/Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695658110; x=1696262910;
+        d=1e100.net; s=20230601; t=1695659843; x=1696264643;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7T1sBdR6OeHgqVg4dg484hQ9QDIMGYEZTIFKkUFht1Y=;
-        b=ZweeGwuwZUbnTn1J9rBjMjCnpMHiuI7n2Q3A5DzRMc85WHuE//sHsLCYSQVLnz2YUx
-         vBtfqBslf2Mf/cI2a/u3Wh2DAs1klKsnnAhPtMno+9eIZmrf5CASqHXvB6Ey+q4dNm7C
-         TQQfe+uMa7TDTTToCDSjUxLzmeGlaMkhpP6DtRYPnnzj9pgmmNuXhUNNbKUdYHRAKOn5
-         NGdoaGQCJeqnxPd2mofUDvfEiIZR5u4yPRwppWmE8nKp1JtD7rZqT4bAn+CmFuRH1gkD
-         OZ+Mi+Yh8DU4WXwDSRu0QhI2sGUdB4GCFX8aaMY63gFbr4qBE+DwSH/F3RCGP5mTH3Vh
-         Nz6g==
-X-Gm-Message-State: AOJu0Yz9Kt9lismKkM/QeIHSTbx0k4Nmb8FwJPaa32zwxxQIMsRc8ja7
-	c1pSZOCtfJXOBNisANyaGqihW+9OcRn8Lszq5EUtxA==
-X-Google-Smtp-Source: AGHT+IHf7UuFayo3F+VD205zs38dEtCVXb8YrCI5u2r3xxNxGUjqSV7Er5yoE7d0xht7EghGHRkMoXRMAHJAfAq4yu4=
-X-Received: by 2002:a05:622a:1aa6:b0:3ef:5f97:258f with SMTP id
- s38-20020a05622a1aa600b003ef5f97258fmr450110qtc.16.1695658109976; Mon, 25 Sep
- 2023 09:08:29 -0700 (PDT)
+        bh=nw3qGH7/FH4+ugIgrXtTnsAMMytm41mtZb4PZdUTaRw=;
+        b=jq55MLBrPWKgYfPZYwk2SyREXA8PCKjlxk8oJO+LVrH//V4iFl+NdpGwCMlXtScHs/
+         uGM+k8q+air+c4HDtYf2j2OUWSGMA45igYc7Z1fCkldHku3k1d2pggVAy0aIXc0Faj0C
+         Br5bxIywm6IzzQ3rcTQ1iQM9I01ehuNF6QsfgpB+1ytERt5sAhYCOWVpQo4n0ue86ozq
+         h2HuDZh+2GtDv1ufSOtVE52XHFY0ijMVKn/pTdzp+qIAfWJwvE71z96+PiPQv9yXGiuQ
+         96rQYkU1PxDs11sWvXvfE3ngW2uqWJL5B7bQBrj9tgQKe7J0cs1yNbFa8hiL+fvaP20x
+         8MOg==
+X-Gm-Message-State: AOJu0YxaKOaWUwhIcenW3PiGP36ksVqHMxCF1XlfPYn0ti/SQ35LzHuI
+	5Qg2eIVxtLtMOsIcZdWUQJhByn66wv7tFSczbV6TSA==
+X-Google-Smtp-Source: AGHT+IEpFLyWgsAMelNpNzaMRYsI3j6SSl0z4t5xEdS9MXupyK7d8uiE37U+7R531wVcVXlZgpjczs5rfs2FdRJ9o6s=
+X-Received: by 2002:a05:622a:1353:b0:403:aa88:cf7e with SMTP id
+ w19-20020a05622a135300b00403aa88cf7emr307507qtk.29.1695659843315; Mon, 25 Sep
+ 2023 09:37:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230925055037.18089-1-colin.i.king@gmail.com>
-In-Reply-To: <20230925055037.18089-1-colin.i.king@gmail.com>
+References: <1695621444-56530-1-git-send-email-renyu.zj@linux.alibaba.com>
+In-Reply-To: <1695621444-56530-1-git-send-email-renyu.zj@linux.alibaba.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 25 Sep 2023 09:08:18 -0700
-Message-ID: <CAP-5=fUht_JQKW8ekDCpHyRbdVe168nmLGrWU21aZDYSyDeMQQ@mail.gmail.com>
-Subject: Re: [PATCH][next] perf kwork: Fix spelling mistake "Captuer" -> "Capture"
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+Date: Mon, 25 Sep 2023 09:37:08 -0700
+Message-ID: <CAP-5=fWuaii1rOOvN7rJDo3UoQvkEtiJv3QiBhLRhYk1_Se7ew@mail.gmail.com>
+Subject: Re: [PATCH v10 0/7] Add metrics for Arm CMN
+To: Jing Zhang <renyu.zj@linux.alibaba.com>
+Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	James Clark <james.clark@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mike Leach <mike.leach@linaro.org>, 
+	Leo Yan <leo.yan@linaro.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, kernel-janitors@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+	linux-doc@vger.kernel.org, Zhuo Song <zhuo.song@linux.alibaba.com>, 
+	Shuai Xue <xueshuai@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
 	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Sun, Sep 24, 2023 at 10:50=E2=80=AFPM Colin Ian King <colin.i.king@gmail=
+On Sun, Sep 24, 2023 at 10:58=E2=80=AFPM Jing Zhang <renyu.zj@linux.alibaba=
 .com> wrote:
 >
-> There is a spelling mistake in a pr_debug message. Fix it.
-> (I didn't see this one in the first spell check scan I ran).
+> Changes since v8:
+> - Add fully match identifier check as suggested by Ian.
+> - Link: https://lore.kernel.org/lkml/1695037955-107983-1-git-send-email-r=
+enyu.zj@linux.alibaba.com/
 >
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> Jing Zhang (7):
+>   perf pmu: "Compat" supports regular expression matching identifiers
+>   perf metric: "Compat" supports regular expression matching identifiers
+>   perf jevents: Support EventidCode and NodeType
+>   perf test: Make matching_pmu effective
+>   perf test: Add pmu-event test for "Compat" and new event_field.
+>   perf jevents: Add support for Arm CMN PMU aliasing
+>   perf vendor events: Add JSON metrics for Arm CMN
+
+Thanks for the patience with all the to and fro. I was able to test
+the series with "git am -3" to get around a merge issue on
+perf-tools-next.
 
 Reviewed-by: Ian Rogers <irogers@google.com>
+Tested-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/builtin-kwork.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../pmu-events/arch/arm64/arm/cmn/sys/cmn.json     | 266 +++++++++++++++=
+++++++
+>  .../pmu-events/arch/arm64/arm/cmn/sys/metric.json  |  74 ++++++
+>  .../pmu-events/arch/test/test_soc/sys/uncore.json  |   8 +
+>  tools/perf/pmu-events/empty-pmu-events.c           |   8 +
+>  tools/perf/pmu-events/jevents.py                   |  11 +-
+>  tools/perf/tests/pmu-events.c                      |  65 ++++-
+>  tools/perf/util/metricgroup.c                      |   2 +-
+>  tools/perf/util/pmu.c                              |  27 ++-
+>  tools/perf/util/pmu.h                              |   1 +
+>  9 files changed, 456 insertions(+), 6 deletions(-)
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.j=
+son
 >
-> diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-> index 7e8dd35d764b..f007a9b27065 100644
-> --- a/tools/perf/builtin-kwork.c
-> +++ b/tools/perf/builtin-kwork.c
-> @@ -1866,7 +1866,7 @@ static void sig_handler(int sig)
->          * Simply capture termination signal so that
->          * the program can continue after pause returns
->          */
-> -       pr_debug("Captuer signal %d\n", sig);
-> +       pr_debug("Capture signal %d\n", sig);
->  }
->
->  static int perf_kwork__report_bpf(struct perf_kwork *kwork)
 > --
-> 2.39.2
+> 1.8.3.1
 >
