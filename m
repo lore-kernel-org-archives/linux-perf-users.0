@@ -1,440 +1,127 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B38B187B
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 04:30:03 +0000 (UTC)
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10F92EC;
-	Mon, 25 Sep 2023 21:30:01 -0700 (PDT)
-Received: from kwepemd200002.china.huawei.com (unknown [172.30.72.57])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RvmrL49dgztSPy;
-	Tue, 26 Sep 2023 12:25:38 +0800 (CST)
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemd200002.china.huawei.com (7.221.188.186) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.23; Tue, 26 Sep 2023 12:29:58 +0800
-From: Changbin Du <changbin.du@huawei.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <changbin.du@gmail.com>, Changbin Du
-	<changbin.du@huawei.com>, kernel test robot <yujie.liu@intel.com>
-Subject: [PATCH v5 3/5] perf: add new option '--workload-config' to set workload sched_policy/prio/cpumask
-Date: Tue, 26 Sep 2023 12:29:36 +0800
-Message-ID: <20230926042938.509234-4-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230926042938.509234-1-changbin.du@huawei.com>
-References: <20230926042938.509234-1-changbin.du@huawei.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1609B125BA
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 08:21:20 +0000 (UTC)
+Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2112.outbound.protection.outlook.com [40.107.241.112])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB4CB97
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 01:21:18 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Rp10jbK6PjWI3H1DLHoJBFfvDR4bzHkkH/syPTFuMsLETodmR4VBmSeItiat5Gmdf6zQRhIbCEzUJ/qjYfynr0wZALdMZDENpbFJQPLqsKQdUUQwSo89dEluFbSoZ6qMD1JM+ErVVi6JkGWyBwF+5/aIu/O6XIYQz+3XDgYX5Vn0p2m7QKbNZzQhkjarRvj5Wn1buUiEp02YrAeFg98jAop3Hw2bhaI0Z/XLrnRhlz8y4Cr01AqcUyt0uX39UahiDxyx6OLH6jgPOIG3wDKuoTAwEnVBLNeVFMCdmllTC0OwglFOlNea3dFq6sQQTHi3K9fcTDV6X8zlATTrsrrm1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jeHb04We0yRpImq7sukQt0yqQXOPezkLDHcZTkHAxC0=;
+ b=mQT7dbTX4YWaR+r20nualIAbSi2kUnykSmKQuIexeOX28HTpCd8FDKUW5oTxCQPyR/IOzJX94JXJYna/2XffEKWr4ZBaiUCDe0dQSgLEaC6PmIMd0sHoSLWIwcPZlLryXEfj2zsp+gTh4IVje6TMgEOQ2BpjO1K9FItIJ51OpmvK43aV3GGIhD5PVMm5a6tC6hil+3qeraLD4dg9gyhXt9HoufoAAKgW2AP8cEbNiGN5j2DU6JZHHbydTEHUMXdzCuhkoqCGA+SGuewY9j1MM1vdtMrVgN7+fsOhoX6ZgrHcGucA+bRORrlCU5NLJVEheO4sYVQm1wbZJb8hsWl2oQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=criteo.com; dmarc=pass action=none header.from=criteo.com;
+ dkim=pass header.d=criteo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=criteo.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jeHb04We0yRpImq7sukQt0yqQXOPezkLDHcZTkHAxC0=;
+ b=X32DYqQ/jD8WDhZxc5HcHGk7uYGe81cnf1TfTXcRwZaHUGPFYNw5voUrNTOzWIBQeFm8b82JvLEEN9mTvyE+SSdTANKCU3fDXQ3vSYB4iM9VeVJubbf5uKh+29AecqhIAkvKGwElNI5lob1abgAvWHAtQyF2KyA2QR3+RBVR+j4=
+Received: from PAWPR04MB9765.eurprd04.prod.outlook.com (2603:10a6:102:389::6)
+ by DU2PR04MB8983.eurprd04.prod.outlook.com (2603:10a6:10:2e2::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.28; Tue, 26 Sep
+ 2023 08:21:16 +0000
+Received: from PAWPR04MB9765.eurprd04.prod.outlook.com
+ ([fe80::1d55:1a06:a523:7f15]) by PAWPR04MB9765.eurprd04.prod.outlook.com
+ ([fe80::1d55:1a06:a523:7f15%6]) with mapi id 15.20.6813.027; Tue, 26 Sep 2023
+ 08:21:16 +0000
+From: Pierre Cheynier <p.cheynier@criteo.com>
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+CC: "irogers@google.com" <irogers@google.com>
+Subject: [6.5.4] perf: bison min. requirements
+Thread-Topic: [6.5.4] perf: bison min. requirements
+Thread-Index: AQHZ8Eu7lsFOZxzLTEu2ll5o5fOx3A==
+Date: Tue, 26 Sep 2023 08:21:16 +0000
+Message-ID:
+ <PAWPR04MB97658DD9546C6D0A141C0766EAC3A@PAWPR04MB9765.eurprd04.prod.outlook.com>
+Accept-Language: fr-FR, en-US
+Content-Language: fr-FR
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=criteo.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAWPR04MB9765:EE_|DU2PR04MB8983:EE_
+x-ms-office365-filtering-correlation-id: 8575cd62-d937-4957-a329-08dbbe698daf
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ sE4OuMjQjPZY4EwvhcPV5//ZYSyqWuSXbFpAWOv+ktbqtXQMWd1ce/bbJMs1m1VmoG6bLi2BKujVgNeZvenUHVUIaC5BWTZhqr8b0mpj4lN56TqQximf6hoVsBSk2n+BXe6Anca0WzlCFhdjQCOFHnIXYl555K5oBMKW9RKRdpWn+iTu6C0EkcKUsIZK3Rd5IbPFE5/Qss07X45nVZJuSDuzK2SSnpU7poQVnu0fl9krA8WSuQmmLNTeuTbE1gJdZ50KHTo643rNuCzpO1MEVpUZ5j3P/FGjzvmIzBwCTA/obsn63DWjECFZy0Tx3JOfBeRjpW020PDgJtq4mlc1hgnfgewCxQqwbeOv9GOZiNT/3q5Y3s73nSyHzIvNHXrdSUKYMRH8nIxfvXCwADWWzQ42hmo7IBmGprKHOuEVoAcml8rv4v3qqrm7A+5V6+cdNpgqZOtzr/mDCeoEECsYCX7oNK8vultAArwcVHehQscsBQPzLg0Fr5AoB9pgGTteXeuRPxxbbBJHgI8zGAkrUNcs+rRC3/m2RwGR+OFxDV0Mo+SoaUdb0NK2u/Vc1CVc+tbudujY8HzFeL9VFRtBYHtzw+oz6Jkws37ZG3ns7/g=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAWPR04MB9765.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(346002)(396003)(39860400002)(136003)(230922051799003)(451199024)(1800799009)(186009)(8936002)(4326008)(8676002)(55016003)(26005)(52536014)(2906002)(4744005)(478600001)(966005)(66476007)(41300700001)(76116006)(316002)(6916009)(66446008)(66556008)(66946007)(5660300002)(64756008)(6506007)(7696005)(71200400001)(9686003)(83380400001)(33656002)(38070700005)(122000001)(86362001)(38100700002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?CCa5aU3Zdp/dfvOm+zXlBsWJnob6nX0KZbETVrxkuQg2aAYzc1EX3kKska?=
+ =?iso-8859-1?Q?4QSXqdzuOeEkHd0Ef/Okvbwpxvo8P/aZLea1D93YnhuLQB9tHXIsmR5/CW?=
+ =?iso-8859-1?Q?CsKq0AfF3CTMoa6VkIjO3tv6tf3TWV9qoc+rmqjkQNwjSaq5esvwR08Ljs?=
+ =?iso-8859-1?Q?NNKrTSfNpk7AYBDWL2aucuzp7pEDVeJmT31LZZJX9wzEtnDPcopMD0Ybps?=
+ =?iso-8859-1?Q?eaaZIS5xtGLdp65dOJviv0R3jIEsmrIbva6g7U15y1JTwmFWNm5s7KwmRc?=
+ =?iso-8859-1?Q?Wersk5YIgdIXcMtUmLW1ssXewI4Um4kqkEaRhh3WQQF+STqyUG74MsUmsH?=
+ =?iso-8859-1?Q?4BupYzhRMi+HjP9cedhJsjInO+EmYyan9fAoIn5Qq+xVySzb2fFQ/VIumM?=
+ =?iso-8859-1?Q?hfq/F40paxvl4slKYCKKUe09MFpn784REUnCMR+daRWFcz0k/Q3GpFe8Ls?=
+ =?iso-8859-1?Q?lpA8Lr0YEia2FxLeJM9HDxEwCzxFIJSpKzrkYKwavRtHrEuzKGGp1fWjrg?=
+ =?iso-8859-1?Q?vF+c43w+IhVlM0mnTLfbeaRk5CAkf9Cx6EVfS8mhO2B43w3FW3Wgt9iJk4?=
+ =?iso-8859-1?Q?US9Hw3CmQZz17u2QlvffVScgXoT7yrAUT6x0zco75wqTBL6bInjppn5RM6?=
+ =?iso-8859-1?Q?C19zl8PQ2d4C3IsZ19EtT4iTVPDr3+kCJ7C8+lFAoQI9n3E8/4NP5hmYPp?=
+ =?iso-8859-1?Q?Lxwc6khpGvw9Q6biZFIrxrMuGyRqFAWxUkmfDayyumBXkuzXFJLFEoq2IV?=
+ =?iso-8859-1?Q?8V3Oc8DKspgb2DB4PmO3owzJIBdK2HlEeWGvp0r5OXEeZx1qOuh0fI/Nq9?=
+ =?iso-8859-1?Q?nlJV0L+rgnAnpAR1jcab6ANiwCclyfMx6Yvd1mIyUi+XDid3mjn6HKLVXd?=
+ =?iso-8859-1?Q?yTPctoKqLGK7K6GqCBPUzGrwJvh6RHSKlz8uBbkylQms0hAhxltACxe0B2?=
+ =?iso-8859-1?Q?XSD4DGShTyr0lSiFNJgFG5CAqxkfPc/W33sFUhayE+7S0AbY29A9ewUdsA?=
+ =?iso-8859-1?Q?5kK+i5bVGmbLX5hBCA/wipUqMTyEx3Yw3UZVwXgGHACnocULhxLsMldlk+?=
+ =?iso-8859-1?Q?nOEidqa8QcGGgkyELlyny/aYyqq4/D4QTx4tNozc2Qex63qQpKloZ74vhB?=
+ =?iso-8859-1?Q?3yxABCASMVuik5eMWFRC5gfvDpP1cG8G/8KZ3FIdhsQq5IUme6NnbGbJ4U?=
+ =?iso-8859-1?Q?t42pKLSZOVgoSfXp4z9Rc1R4ZLeRETX2Y3NdEnvqFkbP8CGRwkYOwNwOsq?=
+ =?iso-8859-1?Q?+Sebblu62A03We6KrOHQEA8a2ymahUjSkmodfDzVvZWQFarlJQh0LHA6o2?=
+ =?iso-8859-1?Q?L0TsACJN4rt26T3/V5+gbXOyu3CBv5JN7roCcehcwKT05dj3cFnauUsEO/?=
+ =?iso-8859-1?Q?Sqin2AhodK6AIPskeOFltxWYq7GsSu6uAb75ST1NtUn95vw2vR2Su+7Cxu?=
+ =?iso-8859-1?Q?c+6272gd9qwS5KTp6BDijK0V8GHICZBYSeidHKTStokLSWaGpq1tQbEzjg?=
+ =?iso-8859-1?Q?o0iAg7fPzW6iCFBpBR6W1NPkTQaopiUmIFG7vnaBDlIQFjf9JKrWjxAL5f?=
+ =?iso-8859-1?Q?pQ/Lzc71gQ6V5G3Lqg8shRrlOQel1t5drMljia+9ej6FKpyKOLGNuL5MYf?=
+ =?iso-8859-1?Q?IukvB2chjnoZc=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.110.54.157]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemd200002.china.huawei.com (7.221.188.186)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: criteo.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAWPR04MB9765.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8575cd62-d937-4957-a329-08dbbe698daf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Sep 2023 08:21:16.0438
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 2a35d8fd-574d-48e3-927c-8c398e225a01
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hVbpOzTirBsrU1f5PFCWYsgb4Tq/epOaqWwQ538ys2wjX9bAH16KVFmTkovX/VmPzLkVwi9Ns3FFZrvf6/BYpw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8983
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+	autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-To get consistent benchmarking results, sometimes we need to set the
-sched_policy/priority/cpumask of the workload to reduce system noise.
-
-For example, CPU binding is required on big.little system.
-
-  $ perf stat -- taskset -c 0 ls
-
-However, the events of 'taskset' itself are also counted here. To get more
-accurate result, this should be avoided.
-
-To get away of the middleman, this adds a new option '--workload-config' to
-do the same jobs for stat and record commands.
-
-  --workload-config <[sched_policy=policy][,sched_prio=priority][,cpu-list=list]>
-        setup target workload (the <command>) attributes:
-
-		sched_policy: other|fifo|rr|batch|idle
-                sched_prio: scheduling priority for fifo|rr, nice value for other
-                cpu-list: CPU affinity. e.g. 1-3:5 is processors #1, #2, #3 and #5
-
-For example,
-
-  $ sudo perf stat --workload-config sched_policy=fifo,sched_prio=40,cpu-list=0-3:7 -- ls
-
-Above command will make 'ls' run on CPU #0-#3 and #7 with fifo scheduler and
-realtime priority is 40.
-
-Cc: kernel test robot <yujie.liu@intel.com>
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
-
----
-v2: Use cpu list spec instead of cpu mask number.
-v3:
-  o rename '--workload-attr' as '--workload-config'
-  o transform to key-value style option
----
- tools/perf/Documentation/perf-record.txt |   7 ++
- tools/perf/Documentation/perf-stat.txt   |   6 ++
- tools/perf/builtin-record.c              |  27 ++++++
- tools/perf/builtin-stat.c                |  19 ++++
- tools/perf/util/evlist.c                 | 108 +++++++++++++++++++++++
- tools/perf/util/evlist.h                 |   3 +
- tools/perf/util/target.h                 |   9 ++
- 7 files changed, 179 insertions(+)
-
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index d5217be012d7..da4692751e17 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -821,6 +821,13 @@ filtered through the mask provided by -C option.
- 	only, as of now.  So the applications built without the frame
- 	pointer might see bogus addresses.
- 
-+--workload-config <[sched_policy=policy][,sched_prio=priority][,cpu-list=list]>::
-+	setup target workload (the <command>) attributes:
-+
-+	  sched_policy: other|fifo|rr|batch|idle
-+	  sched_prio: scheduling priority for fifo|rr, nice value for other
-+	  cpu-list: CPU affinity. e.g. 1-3:5 is processors #1, #2, #3 and #5
-+
- include::intel-hybrid.txt[]
- 
- SEE ALSO
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 8f789fa1242e..b2038f7e236a 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -262,6 +262,12 @@ disable events during measurements:
-  wait -n ${perf_pid}
-  exit $?
- 
-+--workload-config <[sched_policy=policy][,sched_prio=priority][,cpu-list=list]>::
-+	setup target workload (the <command>) attributes:
-+
-+	  sched_policy: other|fifo|rr|batch|idle
-+	  sched_prio: scheduling priority for fifo|rr, nice value for other
-+	  cpu-list: CPU affinity. e.g. 1-3:5 is processors #1, #2, #3 and #5
- 
- --pre::
- --post::
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 34bb31f08bb5..20799a1e60f6 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -3277,6 +3277,17 @@ static int parse_record_synth_option(const struct option *opt,
- 	return 0;
- }
- 
-+static int record_parse_workload_attr_opt(const struct option *opt,
-+					  const char *arg,
-+					  int unset __maybe_unused)
-+{
-+	struct record_opts *opts = opt->value;
-+
-+	return evlist__parse_workload_config(arg, &opts->target.workload.sched_policy,
-+					     &opts->target.workload.sched_priority,
-+					     &opts->target.workload.cpu_map);
-+}
-+
- /*
-  * XXX Ideally would be local to cmd_record() and passed to a record__new
-  * because we need to have access to it in record__exit, that is called
-@@ -3297,6 +3308,8 @@ static struct record record = {
- 		.target		     = {
- 			.uses_mmap   = true,
- 			.default_per_cpu = true,
-+			.workload.sched_policy = -1,
-+			.workload.sched_priority = 0,
- 		},
- 		.mmap_flush          = MMAP_FLUSH_DEFAULT,
- 		.nr_threads_synthesize = 1,
-@@ -3321,6 +3334,12 @@ static struct record record = {
- const char record_callchain_help[] = CALLCHAIN_RECORD_HELP
- 	"\n\t\t\t\tDefault: fp";
- 
-+const char record_workload_config_help[] =
-+	"setup target workload (the <command>) attributes:\n\n"
-+	HELP_PAD "sched_policy: other|fifo|rr|batch|idle\n"
-+	HELP_PAD "sched_prio: scheduling priority for fifo|rr, nice value for other\n"
-+	HELP_PAD "cpu-list: CPU affinity. e.g. 1-3:5 is processors #1, #2, #3 and #5";
-+
- static bool dry_run;
- 
- static struct parse_events_option_args parse_events_option_args = {
-@@ -3535,6 +3554,10 @@ static struct option __record_options[] = {
- 			    "write collected trace data into several data files using parallel threads",
- 			    record__parse_threads),
- 	OPT_BOOLEAN(0, "off-cpu", &record.off_cpu, "Enable off-cpu analysis"),
-+	OPT_CALLBACK(0, "workload-config", &record.opts,
-+		     "[sched_policy=policy][,sched_prio=priority][,cpu-list=list]",
-+		     record_workload_config_help,
-+		     &record_parse_workload_attr_opt),
- 	OPT_END()
- };
- 
-@@ -4221,6 +4244,10 @@ int cmd_record(int argc, const char **argv)
- 	record__free_thread_masks(rec, rec->nr_threads);
- 	rec->nr_threads = 0;
- 	evlist__close_control(rec->opts.ctl_fd, rec->opts.ctl_fd_ack, &rec->opts.ctl_fd_close);
-+	if (rec->opts.target.workload.cpu_map) {
-+		perf_cpu_map__put(rec->opts.target.workload.cpu_map);
-+		rec->opts.target.workload.cpu_map = NULL;
-+	}
- 	return err;
- }
- 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 07b48f6df48e..a7a3a788e7d9 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -108,6 +108,8 @@ static bool all_counters_use_bpf = true;
- 
- static struct target target = {
- 	.uid	= UINT_MAX,
-+	.workload.sched_policy = -1,
-+	.workload.sched_priority = 0,
- };
- 
- #define METRIC_ONLY_LEN 20
-@@ -1160,6 +1162,14 @@ static int parse_cache_level(const struct option *opt,
- 	return 0;
- }
- 
-+static int parse_workload_attr_opt(const struct option *opt __maybe_unused, const char *arg,
-+				   int unset __maybe_unused)
-+{
-+	return evlist__parse_workload_config(arg, &target.workload.sched_policy,
-+					     &target.workload.sched_priority,
-+					     &target.workload.cpu_map);
-+}
-+
- static struct option stat_options[] = {
- 	OPT_BOOLEAN('T', "transaction", &transaction_run,
- 		    "hardware transaction statistics"),
-@@ -1220,6 +1230,10 @@ static struct option stat_options[] = {
- 	OPT_BOOLEAN(0, "append", &append_file, "append to the output file"),
- 	OPT_INTEGER(0, "log-fd", &output_fd,
- 		    "log output to fd, instead of stderr"),
-+	OPT_CALLBACK(0, "workload-config", &stat_config,
-+		     "[sched_policy=policy][,sched_prio=priority][,cpu-list=list]",
-+		     record_workload_config_help,
-+		     &parse_workload_attr_opt),
- 	OPT_STRING(0, "pre", &pre_cmd, "command",
- 			"command to run prior to the measured command"),
- 	OPT_STRING(0, "post", &post_cmd, "command",
-@@ -2893,5 +2907,10 @@ int cmd_stat(int argc, const char **argv)
- 	metricgroup__rblist_exit(&stat_config.metric_events);
- 	evlist__close_control(stat_config.ctl_fd, stat_config.ctl_fd_ack, &stat_config.ctl_fd_close);
- 
-+	if (target.workload.cpu_map) {
-+		perf_cpu_map__put(target.workload.cpu_map);
-+		target.workload.cpu_map = NULL;
-+	}
-+
- 	return status;
- }
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 7ef43f72098e..7ad7a4fed282 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -33,6 +33,7 @@
- #include "util/bpf-filter.h"
- #include "util/stat.h"
- #include "util/util.h"
-+#include "util/parse-sublevel-options.h"
- #include <signal.h>
- #include <unistd.h>
- #include <sched.h>
-@@ -46,6 +47,7 @@
- #include <sys/mman.h>
- #include <sys/prctl.h>
- #include <sys/timerfd.h>
-+#include <sys/resource.h>
- 
- #include <linux/bitops.h>
- #include <linux/hash.h>
-@@ -1398,6 +1400,109 @@ int evlist__open(struct evlist *evlist)
- 	return err;
- }
- 
-+int evlist__parse_workload_config(const char *str, int *sched_policy, int *sched_priority,
-+				  struct perf_cpu_map **cpu_map)
-+{
-+	char *policy_str = NULL;
-+	int priority = -1;
-+	char *cpu_list = NULL;
-+	int ret;
-+	struct sublevel_option workload_conf_opts[] = {
-+		{ .name = "sched_policy",	.str_ptr = &policy_str},
-+		{ .name = "sched_prio",		.value_ptr = &priority},
-+		{ .name = "cpu-list",		.str_ptr = &cpu_list},
-+		{ .name = NULL, }
-+	};
-+
-+	ret = perf_parse_sublevel_options(str, workload_conf_opts);
-+	if (ret)
-+		return ret;
-+
-+	/* sched policy, default to 'other'. */
-+	if (!policy_str || !strncmp(policy_str, "other", sizeof("other")))
-+		*sched_policy = SCHED_OTHER;
-+	else if (!strncmp(policy_str, "fifo", sizeof("fifo")))
-+		*sched_policy = SCHED_FIFO;
-+	else if (!strncmp(policy_str, "rr", sizeof("rr")))
-+		*sched_policy = SCHED_RR;
-+	else if (!strncmp(policy_str, "batch", sizeof("batch")))
-+		*sched_policy = SCHED_BATCH;
-+	else if (!strncmp(policy_str, "idle", sizeof("idle")))
-+		*sched_policy = SCHED_IDLE;
-+	else {
-+		pr_err("workload_attr: unknown sched policy %s\n", policy_str);
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	/* check sched priority and set default value */
-+	if (*sched_policy == SCHED_FIFO || *sched_policy == SCHED_RR) {
-+		if (priority == -1)
-+			priority = 99; /* default to lowest priority */
-+		else if (priority < 1 || priority > 99) {
-+			pr_err("workload_attr: invalid priority %d for fifo and rr, allowed [1,99]\n",
-+				priority);
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+	} else if (*sched_policy == SCHED_OTHER && priority == -1)
-+		priority = 0;
-+	*sched_priority = priority;
-+
-+	/* allowed cpu list */
-+	*cpu_map = __perf_cpu_map__new(cpu_list, ':');
-+	if (!*cpu_map) {
-+		pr_err("workload_attr: failed to get cpus map from %s\n", cpu_list);
-+		ret = -EINVAL;
-+	}
-+
-+out:
-+	free(policy_str);
-+	free(cpu_list);
-+	return ret;
-+}
-+
-+static int configurate_workload(struct target *target)
-+{
-+	struct sched_param param;
-+	int policy = target->workload.sched_policy;
-+	int priority = target->workload.sched_priority;
-+
-+	if (policy >= 0) {
-+		param.sched_priority = (policy == SCHED_FIFO || policy == SCHED_RR) ?
-+					priority : 0;
-+		if (sched_setscheduler(0, policy, &param) != 0) {
-+			pr_err("failed to set the sched policy %d: %s\n", policy, strerror(errno));
-+			return -1;
-+		}
-+
-+		if (policy == SCHED_OTHER) {
-+			if (setpriority(PRIO_PROCESS, 0, priority) != 0) {
-+				pr_err("failed to set the nice value %d: %s\n", priority, strerror(errno));
-+				return -1;
-+			}
-+		}
-+	}
-+
-+	if (target->workload.cpu_map) {
-+		size_t cpuset_size = -1;
-+		cpu_set_t *cpu_set;
-+
-+		cpu_set = perf_cpu_map__2_cpuset(target->workload.cpu_map, &cpuset_size);
-+		if (!cpu_set)
-+			return -1;
-+
-+		if (sched_setaffinity(0, cpuset_size, cpu_set) != 0) {
-+			pr_err("failed to set the sched affinity: %s\n", strerror(errno));
-+			CPU_FREE(cpu_set);
-+			return -1;
-+		}
-+		CPU_FREE(cpu_set);
-+	}
-+
-+	return 0;
-+}
-+
- int evlist__prepare_workload(struct evlist *evlist, struct target *target, const char *argv[],
- 			     bool pipe_output, void (*exec_error)(int signo, siginfo_t *info, void *ucontext))
- {
-@@ -1464,6 +1569,9 @@ int evlist__prepare_workload(struct evlist *evlist, struct target *target, const
- 			exit(ret);
- 		}
- 
-+		if (configurate_workload(target) != 0)
-+			exit(-1);
-+
- 		execvp(argv[0], (char **)argv);
- 
- 		if (exec_error) {
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 664c6bf7b3e0..540e17d0d9fe 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -15,6 +15,7 @@
- #include <pthread.h>
- #include <signal.h>
- #include <unistd.h>
-+#include <sched.h>
- 
- struct pollfd;
- struct thread_map;
-@@ -180,6 +181,8 @@ void evlist__set_id_pos(struct evlist *evlist);
- void evlist__config(struct evlist *evlist, struct record_opts *opts, struct callchain_param *callchain);
- int record_opts__config(struct record_opts *opts);
- 
-+int evlist__parse_workload_config(const char *str, int *sched_policy, int *sched_priority,
-+				  struct perf_cpu_map **cpu_set);
- int evlist__prepare_workload(struct evlist *evlist, struct target *target,
- 			     const char *argv[], bool pipe_output,
- 			     void (*exec_error)(int signo, siginfo_t *info, void *ucontext));
-diff --git a/tools/perf/util/target.h b/tools/perf/util/target.h
-index d582cae8e105..78b7e7ab1c7b 100644
---- a/tools/perf/util/target.h
-+++ b/tools/perf/util/target.h
-@@ -4,6 +4,7 @@
- 
- #include <stdbool.h>
- #include <sys/types.h>
-+#include <sched.h>
- 
- struct target {
- 	const char   *pid;
-@@ -19,6 +20,12 @@ struct target {
- 	bool	     use_bpf;
- 	int	     initial_delay;
- 	const char   *attr_map;
-+
-+	struct {
-+		int	 sched_policy;
-+		int	 sched_priority;
-+		struct perf_cpu_map *cpu_map;
-+	} workload;
- };
- 
- enum target_errno {
-@@ -103,4 +110,6 @@ static inline bool target__uses_dummy_map(struct target *target)
- 	return use_dummy;
- }
- 
-+extern const char record_workload_config_help[];
-+
- #endif /* _PERF_TARGET_H */
--- 
-2.25.1
-
+Dear list,=0A=
+At compiling 6.5.4 it seemed to me that this specific patch [1] added an im=
+plicit dependency to bison >=3D 3.7.4, due to usage of YYNOMEM.=0A=
+Shouldn't this be part of Documentation/process/changes.rst?=0A=
+=0A=
+[1] https://www.spinics.net/lists/linux-perf-users/msg30885.html "perf pars=
+e-events: Separate YYABORT and YYNOMEM cases"=0A=
+=0A=
+Sorry for the noise, and thanks for inputs if ever I'm totally wrong here.=
+=0A=
+=0A=
+--=0A=
+Pierre=
