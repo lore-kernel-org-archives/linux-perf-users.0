@@ -1,110 +1,89 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27FE347D2
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 21:00:05 +0000 (UTC)
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59D0E1BE4
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 14:00:04 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d865f1447a2so11990758276.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 14:00:04 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CBF84B201
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 21:29:03 +0000 (UTC)
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5D53A278
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 14:29:02 -0700 (PDT)
+Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-414ba610766so130241cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 14:29:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695762003; x=1696366803; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CQnaArfhDPSVH9QeRtaNpT5HTPg1FQF78B6YuJbQa7A=;
-        b=gSkkc104VizNnjW7bbR2P4+uiT2fDribqeMwhcb17tAyJHqNJcNtGsFAW927g3pk+L
-         9ZfzfFsYKigkH1yWUKhaN0gF19jaP8IT+Dp5gYOz20p2lhVWE+2pDcb11Ex4Zzhsgqou
-         U4/v6WglRt/MaGTxzdOuJAno+xeJXqjNAbb/8RLm6N7+RqcHAOZEqy3ChfaoSrZj4K/Y
-         YhK5kNvxuoHD5ScXyyHaJKtmScaYf5IwzQhPSwpeb5HIlirB8NAUwQJjk5P9PiY9Hacf
-         3U9cKfXim1PmQuWq5Z5PCReFMS4kz241GRSoqV6VtQkYahXnBAh6U5MoPkqTndzyeOBQ
-         HZnQ==
+        d=google.com; s=20230601; t=1695763742; x=1696368542; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3abD7iQzIMI/zplhS+FMTtuLo16s/fzBh1urRcorsU0=;
+        b=4Z4Imk+wWDxLBUYRBttDuyCip5FoMBN5rV5uR4NK8vHjxAm96ecTas3k5vFPNfk2Bf
+         5xhv0qAe6qOyxyCR9MhnQev51ZRnLdjEVfP7q/RnDFAnDrSH34rkZEdTpb6K/ypC2umy
+         XvLST/W4yBXP/K6il1TEXNx+TZlzbT/SsyyTvuE9I0bA/vTtFa3spl8DXU83dN5Tjxl6
+         yhg46g5rXs2tpi/YqdUh2T01hFR182OiKp6YfA1hNqsiZVGtxOaTJt+kZ4z8A/4HCtyU
+         u+wlGnmGE0wnHwX5n2FsIs5m+5tjWRb+dO5mkX7u0Qe/0z3GNrn+aiUIoq+1L4ceB7u9
+         qveg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695762003; x=1696366803;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CQnaArfhDPSVH9QeRtaNpT5HTPg1FQF78B6YuJbQa7A=;
-        b=CQMoKVsb5Rjt/kttku9YvqjhuJ9Y+q24bZPYraJs/bv5Qx5Q/v3bIfMNonLQd58Y4l
-         J0u+yY4FpGKg4Dl+jP54GeR4kBsf29+kt51i/SKuuICN60eUFlaRa82m/9xRFphsP1eA
-         bXP0QlFRH2iQTIAtWTfMiO3o6bQy6huKLTjknolJZ9nmedOMkAi0pJ3g4CDa61gcX+B0
-         /FgDCtZIux6scXnWVnCktv/960Lp9R5itSXeGn9FiRf1WY9jc/j16lT+FTtmgZ4cQh20
-         yOaV4fJY8LclifdO3dGNXTyMiCXybeqDkLAFDVmus0HKIzLlxc8Tx0kJ8cyYCjbPvjWF
-         HsBA==
-X-Gm-Message-State: AOJu0Yx8ysTA75E/7FdtzIhvwLEOUW7/2GBtKUmsObQiJyGGuXrF48wM
-	sckHH4m3tsz78NH8xX7XZEmYrVxrh+iN
-X-Google-Smtp-Source: AGHT+IGDMGsj7bvYX+HaDo/Jk4a72DZDjqyms95T200s2QqHgm5zxFUMwPbDl8e3FtXNmIEOLGtgWQj55zOq
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:8ff0:2e1:80b2:e4a])
- (user=irogers job=sendgmr) by 2002:a5b:c83:0:b0:d7f:2cb6:7d8a with SMTP id
- i3-20020a5b0c83000000b00d7f2cb67d8amr366ybq.11.1695762003614; Tue, 26 Sep
- 2023 14:00:03 -0700 (PDT)
-Date: Tue, 26 Sep 2023 13:59:48 -0700
-In-Reply-To: <20230926205948.1399594-1-irogers@google.com>
-Message-Id: <20230926205948.1399594-3-irogers@google.com>
+        d=1e100.net; s=20230601; t=1695763742; x=1696368542;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3abD7iQzIMI/zplhS+FMTtuLo16s/fzBh1urRcorsU0=;
+        b=d60Nf8sCax/26ZKGBuwD7SZEww5GiUiC/ztb/s+xHG7P0Zyq3eeW96+cZPEwKk5PCt
+         5zOG23B7ElIkm09y7XifLBugWDKLc1R4irxR6vdm7ItyPKlMRJx84wsEhloPLuLTTe8Y
+         MJ1gzzakU3jrkH/qpB6XCqXu6+LyWw1prPxVV68xRaJnDGIO+e0v/UyW0etO8TwI7XSJ
+         8ImaHlnjWNBly3Wv4jZ3XJaIhKqpjbzUYJ2/WwyUZah0kqJTb/kZUKXoLIb3EeY8Arff
+         ln6tXrJTuBMhYGeQ4gZEsaRnM/0ZM4stLr0VV3SfYCDgorMTdNf16FD5LAPCbidDWgtT
+         3GqQ==
+X-Gm-Message-State: AOJu0YzwdhZATFAVClR4siJazIlGQLO6QZ/yrK7bl27DxZCkLw2782Nq
+	wYDAN+DYQh69603hRyq3GMfpQYIxHQeaT3IsYqMvy8WryGxuZk48HqNLPpQi
+X-Google-Smtp-Source: AGHT+IFvdD+qVFf+fOCdWmSIUAvxNfOQqqfxPLNzzFor4BTk5dc7YMfCYSBrsbAoAETPqg+c0mX+puL8M6Wvi71F8h0=
+X-Received: by 2002:ac8:5b44:0:b0:403:eeb9:a76 with SMTP id
+ n4-20020ac85b44000000b00403eeb90a76mr355357qtw.17.1695763741863; Tue, 26 Sep
+ 2023 14:29:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20230926205948.1399594-1-irogers@google.com>
-X-Mailer: git-send-email 2.42.0.515.g380fc7ccd1-goog
-Subject: [PATCH v2 3/3] perf vendor events intel: Add tigerlake two metrics
+MIME-Version: 1.0
+References: <PAWPR04MB97658DD9546C6D0A141C0766EAC3A@PAWPR04MB9765.eurprd04.prod.outlook.com>
+In-Reply-To: <PAWPR04MB97658DD9546C6D0A141C0766EAC3A@PAWPR04MB9765.eurprd04.prod.outlook.com>
 From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Caleb Biggers <caleb.biggers@intel.com>
+Date: Tue, 26 Sep 2023 14:28:50 -0700
+Message-ID: <CAP-5=fVPVodcSkOHnJOrgkUO1QOnNTcsPMsfeEKvzjTvqA2K+w@mail.gmail.com>
+Subject: Re: [6.5.4] perf: bison min. requirements
+To: Pierre Cheynier <p.cheynier@criteo.com>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.6
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Add tma_info_system_socket_clks and uncore_freq metrics.
+On Tue, Sep 26, 2023 at 1:21=E2=80=AFAM Pierre Cheynier <p.cheynier@criteo.=
+com> wrote:
+>
+> Dear list,
+> At compiling 6.5.4 it seemed to me that this specific patch [1] added an =
+implicit dependency to bison >=3D 3.7.4, due to usage of YYNOMEM.
+> Shouldn't this be part of Documentation/process/changes.rst?
+>
+> [1] https://www.spinics.net/lists/linux-perf-users/msg30885.html "perf pa=
+rse-events: Separate YYABORT and YYNOMEM cases"
+>
+> Sorry for the noise, and thanks for inputs if ever I'm totally wrong here=
+.
 
-The associated converter script fix is in:
-https://github.com/intel/perfmon/pull/112
+We have a workaround to #define YYNOMEM to YYABORT when Bison is
+less-than 3.8.1:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/Build?h=3Dperf-tools-next#n323
+Perhaps you can help debug why this build logic isn't working for you?
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- .../pmu-events/arch/x86/tigerlake/tgl-metrics.json   | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Thanks,
+Ian
 
-diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/tgl-metrics.json b/tools/perf/pmu-events/arch/x86/tigerlake/tgl-metrics.json
-index fab084e1bc69..820d85c2933b 100644
---- a/tools/perf/pmu-events/arch/x86/tigerlake/tgl-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/tigerlake/tgl-metrics.json
-@@ -62,6 +62,12 @@
-         "MetricName": "C9_Pkg_Residency",
-         "ScaleUnit": "100%"
-     },
-+    {
-+        "BriefDescription": "Uncore frequency per die [GHZ]",
-+        "MetricExpr": "tma_info_system_socket_clks / #num_dies / duration_time / 1e9",
-+        "MetricGroup": "SoC",
-+        "MetricName": "UNCORE_FREQ"
-+    },
-     {
-         "BriefDescription": "Percentage of cycles spent in System Management Interrupts.",
-         "MetricExpr": "((msr@aperf@ - cycles) / msr@aperf@ if msr@smi@ > 0 else 0)",
-@@ -1026,6 +1032,12 @@
-         "MetricGroup": "SMT",
-         "MetricName": "tma_info_system_smt_2t_utilization"
-     },
-+    {
-+        "BriefDescription": "Socket actual clocks when any core is active on that socket",
-+        "MetricExpr": "UNC_CLOCK.SOCKET",
-+        "MetricGroup": "SoC",
-+        "MetricName": "tma_info_system_socket_clks"
-+    },
-     {
-         "BriefDescription": "Average Frequency Utilization relative nominal frequency",
-         "MetricExpr": "tma_info_thread_clks / CPU_CLK_UNHALTED.REF_TSC",
--- 
-2.42.0.515.g380fc7ccd1-goog
-
+> --
+> Pierre
