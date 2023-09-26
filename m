@@ -1,99 +1,136 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2937F
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 03:15:27 +0000 (UTC)
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19AB59F;
-	Mon, 25 Sep 2023 20:15:24 -0700 (PDT)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VsvBD6V_1695698120;
-Received: from 30.221.149.38(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VsvBD6V_1695698120)
-          by smtp.aliyun-inc.com;
-          Tue, 26 Sep 2023 11:15:22 +0800
-Message-ID: <f4812cce-14d2-9771-233f-b0db5af449be@linux.alibaba.com>
-Date: Tue, 26 Sep 2023 11:15:19 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6117F
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 03:37:41 +0000 (UTC)
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E805C9;
+	Mon, 25 Sep 2023 20:37:35 -0700 (PDT)
+Received: from kwepemm000003.china.huawei.com (unknown [172.30.72.53])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RvlhN3yXnzNnqX;
+	Tue, 26 Sep 2023 11:33:40 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm000003.china.huawei.com (7.193.23.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Tue, 26 Sep 2023 11:37:29 +0800
+Subject: Re: [RFC PATCH 09/25] perf stat: Add helper functions for
+ hardware-grouping method
+To: <weilin.wang@intel.com>, Ian Rogers <irogers@google.com>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung
+ Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Kan Liang
+	<kan.liang@linux.intel.com>
+CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Perry
+ Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, Caleb
+ Biggers <caleb.biggers@intel.com>, Mark Rutland <mark.rutland@arm.com>
+References: <20230925061824.3818631-1-weilin.wang@intel.com>
+ <20230925061824.3818631-10-weilin.wang@intel.com>
+From: Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <c57ca700-887b-c445-55c3-a3e34745f210@huawei.com>
+Date: Tue, 26 Sep 2023 11:37:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.0
-Subject: Re: [PATCH v10 0/7] Add metrics for Arm CMN
-To: Ian Rogers <irogers@google.com>
-Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- James Clark <james.clark@arm.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
- Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
- Zhuo Song <zhuo.song@linux.alibaba.com>,
- Shuai Xue <xueshuai@linux.alibaba.com>
-References: <1695621444-56530-1-git-send-email-renyu.zj@linux.alibaba.com>
- <CAP-5=fWuaii1rOOvN7rJDo3UoQvkEtiJv3QiBhLRhYk1_Se7ew@mail.gmail.com>
-From: Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <CAP-5=fWuaii1rOOvN7rJDo3UoQvkEtiJv3QiBhLRhYk1_Se7ew@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-11.4 required=5.0 tests=BAYES_00,
-	ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,
-	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230925061824.3818631-10-weilin.wang@intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm000003.china.huawei.com (7.193.23.66)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-5.7 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+	RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
+Hello,
 
+On 2023/9/25 14:18, weilin.wang@intel.com wrote:
+> From: Weilin Wang <weilin.wang@intel.com>
+> 
+> Add functions to free pmu_info_list and event_info_list before exit
+> grouping
+> 
+> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> ---
+>   tools/perf/util/metricgroup.c | 32 ++++++++++++++++++++++++++++----
+>   1 file changed, 28 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index feb5dab26..0ca885a42 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -1507,6 +1507,27 @@ static int parse_counter(const char *counter,
+>   	return 0;
+>   }
+>   
+> +static void metricgroup__free_event_info(struct list_head
+> +					*event_info_list)
+> +{
+> +	struct metricgroup__event_info *e, *tmp;
+> +
+> +	list_for_each_entry_safe(e, tmp, event_info_list, nd) {
+> +		list_del_init(&e->nd);
+> +		free(e);
+> +	}
+> +}
+> +
+> +static void metricgroup__free_pmu_info(struct list_head *pmu_info_list)
+> +{
+> +	struct metricgroup__pmu_counters *p, *tmp;
+> +
+> +	list_for_each_entry_safe(p, tmp, pmu_info_list, nd) {
+> +		list_del_init(&p->nd);
+> +		free(p);
+> +	}
+> +}
+> +
+>   static struct metricgroup__event_info *event_info__new(const char *name,
+>   						      const char *pmu_name,
+>   						      const char *counter,
+> @@ -1524,7 +1545,8 @@ static struct metricgroup__event_info *event_info__new(const char *name,
+>   	}
+>   	e->name = name;
+>   	e->free_counter = free_counter;
+> -	e->pmu_name = strdup(pmu_name);
+> +	//e->pmu_name = strdup(pmu_name);
+Can the commented-out code be deleted?
 
-在 2023/9/26 上午12:37, Ian Rogers 写道:
-> On Sun, Sep 24, 2023 at 10:58 PM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
->>
->> Changes since v8:
->> - Add fully match identifier check as suggested by Ian.
->> - Link: https://lore.kernel.org/lkml/1695037955-107983-1-git-send-email-renyu.zj@linux.alibaba.com/
->>
->> Jing Zhang (7):
->>   perf pmu: "Compat" supports regular expression matching identifiers
->>   perf metric: "Compat" supports regular expression matching identifiers
->>   perf jevents: Support EventidCode and NodeType
->>   perf test: Make matching_pmu effective
->>   perf test: Add pmu-event test for "Compat" and new event_field.
->>   perf jevents: Add support for Arm CMN PMU aliasing
->>   perf vendor events: Add JSON metrics for Arm CMN
-> 
-> Thanks for the patience with all the to and fro. I was able to test
-> the series with "git am -3" to get around a merge issue on
-> perf-tools-next.
-> 
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Tested-by: Ian Rogers <irogers@google.com>
+> +	e->pmu_name = pmu_name;
+>   	if (free_counter) {
+>   		ret = set_counter_bitmap(0, e->counters);
+>   		if (ret)
+> @@ -1687,13 +1709,15 @@ static int hw_aware_build_grouping(struct expr_parse_ctx *ctx __maybe_unused,
+>   
+>   		ret = get_metricgroup_events(id, etable, &event_info_list);
+>   		if (ret)
+> -			return ret;
+> +			goto err_out;
+>   	}
+>   	ret = get_pmu_counter_layouts(&pmu_info_list, ltable);
+>   	if (ret)
+> -		return ret;
+> -
+> +		goto err_out;
+There seems to be no need for "goto err_out" here.
+
+>   
+> +err_out:
+> +	metricgroup__free_event_info(&event_info_list);
+> +	metricgroup__free_pmu_info(&pmu_info_list);
+>   	return ret;
+>   #undef RETURN_IF_NON_ZERO
+>   }
 > 
 
-Thank you for following this series and providing many valuable suggestions.
 
 Thanks,
-Jing
-
-> Thanks,
-> Ian
-> 
->>  .../pmu-events/arch/arm64/arm/cmn/sys/cmn.json     | 266 +++++++++++++++++++++
->>  .../pmu-events/arch/arm64/arm/cmn/sys/metric.json  |  74 ++++++
->>  .../pmu-events/arch/test/test_soc/sys/uncore.json  |   8 +
->>  tools/perf/pmu-events/empty-pmu-events.c           |   8 +
->>  tools/perf/pmu-events/jevents.py                   |  11 +-
->>  tools/perf/tests/pmu-events.c                      |  65 ++++-
->>  tools/perf/util/metricgroup.c                      |   2 +-
->>  tools/perf/util/pmu.c                              |  27 ++-
->>  tools/perf/util/pmu.h                              |   1 +
->>  9 files changed, 456 insertions(+), 6 deletions(-)
->>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
->>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json
->>
->> --
->> 1.8.3.1
->>
+Yang
