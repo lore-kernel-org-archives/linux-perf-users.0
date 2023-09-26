@@ -1,19 +1,19 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6117F
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 03:37:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03ADC7F
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 03:45:01 +0000 (UTC)
 Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E805C9;
-	Mon, 25 Sep 2023 20:37:35 -0700 (PDT)
-Received: from kwepemm000003.china.huawei.com (unknown [172.30.72.53])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RvlhN3yXnzNnqX;
-	Tue, 26 Sep 2023 11:33:40 +0800 (CST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9006D7;
+	Mon, 25 Sep 2023 20:44:59 -0700 (PDT)
+Received: from kwepemm000003.china.huawei.com (unknown [172.30.72.54])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Rvlsp4Z09zTm2F;
+	Tue, 26 Sep 2023 11:41:50 +0800 (CST)
 Received: from [10.67.111.205] (10.67.111.205) by
  kwepemm000003.china.huawei.com (7.193.23.66) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Tue, 26 Sep 2023 11:37:29 +0800
-Subject: Re: [RFC PATCH 09/25] perf stat: Add helper functions for
+ 15.1.2507.31; Tue, 26 Sep 2023 11:44:56 +0800
+Subject: Re: [RFC PATCH 10/25] perf stat: Add helper functions to
  hardware-grouping method
 To: <weilin.wang@intel.com>, Ian Rogers <irogers@google.com>, Peter Zijlstra
 	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
@@ -25,10 +25,10 @@ CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Perry
  Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, Caleb
  Biggers <caleb.biggers@intel.com>, Mark Rutland <mark.rutland@arm.com>
 References: <20230925061824.3818631-1-weilin.wang@intel.com>
- <20230925061824.3818631-10-weilin.wang@intel.com>
+ <20230925061824.3818631-11-weilin.wang@intel.com>
 From: Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <c57ca700-887b-c445-55c3-a3e34745f210@huawei.com>
-Date: Tue, 26 Sep 2023 11:37:28 +0800
+Message-ID: <7751b63e-d8cf-85b0-b64e-5f656244a2c9@huawei.com>
+Date: Tue, 26 Sep 2023 11:44:56 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.1
 Precedence: bulk
@@ -37,7 +37,7 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20230925061824.3818631-10-weilin.wang@intel.com>
+In-Reply-To: <20230925061824.3818631-11-weilin.wang@intel.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -56,81 +56,95 @@ Hello,
 On 2023/9/25 14:18, weilin.wang@intel.com wrote:
 > From: Weilin Wang <weilin.wang@intel.com>
 > 
-> Add functions to free pmu_info_list and event_info_list before exit
-> grouping
+> Add struct metricgroup__pmu_group_list to hold the lists of groups from
+> different PMUs. Each PMU has one separate list.
+> 
+> Add struct metricgroup__group as one node (one group in the grouping
+> result) of the metricgroup__pmu_group_list. It uses two bitmaps to log
+> counter availabilities(gp counters and fixed counters).
+> 
+> Add functions to create group and assign event into the groups based on the
+> event restrictions (struct metricgroup__event_info) and counter
+> availability (pmu_info_list and bitmaps). New group is inserted into the
+> list groups.
 > 
 > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
 > ---
->   tools/perf/util/metricgroup.c | 32 ++++++++++++++++++++++++++++----
->   1 file changed, 28 insertions(+), 4 deletions(-)
+>   tools/perf/util/metricgroup.c | 72 +++++++++++++++++++++++++++++++++++
+>   tools/perf/util/metricgroup.h | 37 ++++++++++++++++++
+>   2 files changed, 109 insertions(+)
 > 
 > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index feb5dab26..0ca885a42 100644
+> index 0ca885a42..de6a6a1d7 100644
 > --- a/tools/perf/util/metricgroup.c
 > +++ b/tools/perf/util/metricgroup.c
-> @@ -1507,6 +1507,27 @@ static int parse_counter(const char *counter,
->   	return 0;
->   }
->   
-> +static void metricgroup__free_event_info(struct list_head
-> +					*event_info_list)
-> +{
-> +	struct metricgroup__event_info *e, *tmp;
-> +
-> +	list_for_each_entry_safe(e, tmp, event_info_list, nd) {
-> +		list_del_init(&e->nd);
-> +		free(e);
-> +	}
-> +}
-> +
-> +static void metricgroup__free_pmu_info(struct list_head *pmu_info_list)
-> +{
-> +	struct metricgroup__pmu_counters *p, *tmp;
-> +
-> +	list_for_each_entry_safe(p, tmp, pmu_info_list, nd) {
-> +		list_del_init(&p->nd);
-> +		free(p);
-> +	}
-> +}
-> +
->   static struct metricgroup__event_info *event_info__new(const char *name,
->   						      const char *pmu_name,
->   						      const char *counter,
-> @@ -1524,7 +1545,8 @@ static struct metricgroup__event_info *event_info__new(const char *name,
->   	}
->   	e->name = name;
->   	e->free_counter = free_counter;
-> -	e->pmu_name = strdup(pmu_name);
-> +	//e->pmu_name = strdup(pmu_name);
-Can the commented-out code be deleted?
-
-> +	e->pmu_name = pmu_name;
->   	if (free_counter) {
->   		ret = set_counter_bitmap(0, e->counters);
->   		if (ret)
-> @@ -1687,13 +1709,15 @@ static int hw_aware_build_grouping(struct expr_parse_ctx *ctx __maybe_unused,
->   
->   		ret = get_metricgroup_events(id, etable, &event_info_list);
->   		if (ret)
-> -			return ret;
-> +			goto err_out;
->   	}
->   	ret = get_pmu_counter_layouts(&pmu_info_list, ltable);
->   	if (ret)
-> -		return ret;
-> -
-> +		goto err_out;
-There seems to be no need for "goto err_out" here.
-
->   
-> +err_out:
-> +	metricgroup__free_event_info(&event_info_list);
-> +	metricgroup__free_pmu_info(&pmu_info_list);
+> @@ -1681,6 +1681,76 @@ static int get_pmu_counter_layouts(struct list_head *pmu_info_list,
 >   	return ret;
->   #undef RETURN_IF_NON_ZERO
 >   }
-> 
+>   
+> +/**
+> + * assign_event_grouping - Assign an event into a group. If existing group
+> + * cannot include it, create a new group and insert the event to it.
+> + */
+> +static int assign_event_grouping(struct metricgroup__event_info *e,
+> +				struct list_head *pmu_info_list __maybe_unused,
+> +				struct list_head *groups)
+> +{
+> +	int ret = 0;
+> +
+> +	struct metricgroup__pmu_group_list *g = NULL;
+> +	struct metricgroup__pmu_group_list *pmu_group_head = NULL;
+> +
+> +	list_for_each_entry(g, groups, nd) {
+> +		if (!strcasecmp(g->pmu_name, e->pmu_name)) {
+> +			pr_debug("found group for event %s in pmu %s\n", e->name, g->pmu_name);
+> +			pmu_group_head = g;
+> +			break;
+> +		}
+> +	}
+> +	if (!pmu_group_head) {
+> +		struct metricgroup__pmu_counters *p;
+> +
+> +		pmu_group_head = malloc(sizeof(struct metricgroup__pmu_group_list));
+Here may need to check the return value of malloc.
 
+> +		INIT_LIST_HEAD(&pmu_group_head->group_head);
+> +		pr_debug("create new group for event %s in pmu %s ", e->name, e->pmu_name);
+> +		pmu_group_head->pmu_name = e->pmu_name;
+> +		list_for_each_entry(p, pmu_info_list, nd) {
+> +			if (!strcasecmp(p->name, e->pmu_name)) {
+> +				pmu_group_head->size = p->size;
+> +				pmu_group_head->fixed_size = p->fixed_size;
+> +			}
+> +		}
+> +		list_add_tail(&pmu_group_head->nd, groups);
+> +	}
+> +
+> +	//ret = insert_event_to_group(e, pmu_group_head, pmu_info_list);
+This is also the commented out code. Can it delete?
+
+> +	return ret;
+> +}
+> +
+> +/**
+> + * create_grouping - Create a list of groups and place all the events of
+> + * event_info_list into these groups.
+> + * @pmu_info_list: the list of PMU units info based on pmu-events data, used for
+> + * creating new groups.
+> + * @event_info_list: the list of events to be grouped.
+> + * @groupings: the list of groups with events placed in.
+> + * @modifier: any modifiers added to the events.
+> + */
+> +static int create_grouping(struct list_head *pmu_info_list,
+> +			  struct list_head *event_info_list,
+> +			  struct list_head *groupings __maybe_unused,
+> +			  const char *modifier __maybe_unused)
+> +{
+> +	int ret = 0;
+> +	struct metricgroup__event_info *e;
+> +	LIST_HEAD(groups);
+> +	char *bit_buf = malloc(NR_COUNTERS);
+Similar to the above, may need to check the malloc return value.
 
 Thanks,
 Yang
