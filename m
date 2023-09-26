@@ -1,109 +1,96 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31D01104
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 00:39:48 +0000 (UTC)
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67348109
-	for <linux-perf-users@vger.kernel.org>; Mon, 25 Sep 2023 17:39:47 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id 2adb3069b0e04-5041d6d8b10so12732159e87.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 Sep 2023 17:39:47 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E3D7F
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 03:10:40 +0000 (UTC)
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD5B6B4
+	for <linux-perf-users@vger.kernel.org>; Mon, 25 Sep 2023 20:10:38 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59f8134eb83so58021817b3.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 25 Sep 2023 20:10:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695688785; x=1696293585; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZnEgEKAhGM5JWN8y/Tiqur2/djSzZqgbL2OPyciIbQ0=;
-        b=hQkZt1rk8MZluX4MVZDRRQvsOTqYR+EuCWTEoIzLB9RG64Ar6RMPhWEwF/LHG2cZZl
-         1eBgXRo7sFnZAMOenmld9xZZ+XXH746huXsAA32euUVzzfhtoMde8hMkFW/K8RQM4CCS
-         92wQzJkvGXJ1iQJ3jcBS/QHjw8EA3p6842oMI=
+        d=google.com; s=20230601; t=1695697838; x=1696302638; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qgojMLtTPS7ALj3bYas//tFq8eo4J8/6f82zm1IrmKo=;
+        b=YaRZ+521cZY+Hg12Te953aAn4ryWTswlg2S/qICNnNHLAY6SYlo/VmiLGdv8dt5xcS
+         PNq5PSFl49UNUsFEUUtB8trZYZBNCyD9LtFuLD3SpaUpODyfpLnUs51rUy3BJYpNgt0I
+         BXYry7TNZDsll8VeQlKrF3Ch/cjhPM4HgAKJf+Ez0f8nUKeOkpRSBAFaOPwUnUjGRFvP
+         nNShgxa59uNFO2mLQCMM63TxWnIY3Aho5GEQcRvyzWAd4+ePAD1Tg9QLlPLH3IU/uZUP
+         q/cywqhwRevUhaSMvVZOHI0OOQ1bv12HMbCN6KQxZDroBaLAUpht2sH8VziGiWz2PaHr
+         sVIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695688785; x=1696293585;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZnEgEKAhGM5JWN8y/Tiqur2/djSzZqgbL2OPyciIbQ0=;
-        b=g1mr/YvtMD8tB6z/eaA+sAaAu6sfsy3PmHoSILZG4PrglJYEON086dFwnIpSQPQGvj
-         vT3MZ/qwt3krlLYc3hFAzLUKyrBBvD/leN0swHUCc081I1Lo8VHDkQtvOXEX6gdOHLpQ
-         DgHT93c/SrTMeg1RDxJrO8FNjKEIxOw5wYB8lj0ncpqwDwOwDl875BK/ZKeekyJxpZ4Y
-         +6WzO1HcR8dyMHOGvQeHJknuSdgcudRZ0+dYr2P/HiRq1nxFu8ii/yJOUpnDnMI/fwiD
-         bZxtjdn44n95NTOm2snrJDhrqENe7FMzeYqFoU51gVoe9art7pxdPl5hga3saMI5Z5XU
-         P8kQ==
-X-Gm-Message-State: AOJu0YxqhLs2rDNay0VnhmVXNT9xvG6+f9fRItqlSCZFeyCTaaq1+SG/
-	UhN9T34OPmA5nnFJt0Gh92a43T6LACvpXAWLbho85bwi
-X-Google-Smtp-Source: AGHT+IGobJNSQuD7ai3jxY6QBAutW+n6PCXzBPWkOq3usJh6l1qqveXLz/rZTOSGzyphsOYC2dXnMA==
-X-Received: by 2002:a19:6710:0:b0:500:9a15:9054 with SMTP id b16-20020a196710000000b005009a159054mr6236969lfc.20.1695688785697;
-        Mon, 25 Sep 2023 17:39:45 -0700 (PDT)
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com. [209.85.128.46])
-        by smtp.gmail.com with ESMTPSA id q19-20020a056402041300b005330e1e7da0sm6023391edv.92.2023.09.25.17.39.45
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Sep 2023 17:39:45 -0700 (PDT)
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4063c2ed5ebso2325e9.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 Sep 2023 17:39:45 -0700 (PDT)
-X-Received: by 2002:a05:600c:3b90:b0:405:35bf:7362 with SMTP id
- n16-20020a05600c3b9000b0040535bf7362mr54102wms.0.1695688785170; Mon, 25 Sep
- 2023 17:39:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1695697838; x=1696302638;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qgojMLtTPS7ALj3bYas//tFq8eo4J8/6f82zm1IrmKo=;
+        b=ZH4UgN5wVJzrFzoErpbFENl7E9uKupgnTNc1MrlhoRq5D82157Rn1PanP2h1QOgQi9
+         I85PW2YP4IOy3BlA9GCqT1pXX4MGkCTy6Z65DFUGXL4QmeEZek5AmDL1gkdNdjIHGqRE
+         PLQkb4y0gGb5Ce0kKoKGO6x9lv2ZjvAgH+llIQ3gs+Z+3FivJECKWGYn0Jo8BQt2HHAA
+         7fQOmUvhQMSbrNbVP7YVsRORoLDOWUiG+1HYcyEK1VKy6lubPr1unQDIjBg1fPpX/ABO
+         hg1lFpZOPtIfh4BD2xdTxf1AV3fswKEwh1EnTNTWWenFCpAH0Htm5IjkvnoRwqj3sNFk
+         4NQA==
+X-Gm-Message-State: AOJu0YzckmJp2+8l1cQTW6JKgEkvhEr95aflROgLWnWD6k4RmpuOn6XN
+	0J1sYMo8O49yvNhXHj1HtvaMzIKTD6xl
+X-Google-Smtp-Source: AGHT+IHxZckfVhFdCEU9eZntTCWfkRDlN6iE5MYOyucP3Lj0GJr7OMGaCQ9kes65z2V5oznPcfvM37kKJJGG
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:12aa:898c:dbdf:d8b6])
+ (user=irogers job=sendgmr) by 2002:a81:b148:0:b0:59b:f3a2:cd79 with SMTP id
+ p69-20020a81b148000000b0059bf3a2cd79mr110510ywh.8.1695697837883; Mon, 25 Sep
+ 2023 20:10:37 -0700 (PDT)
+Date: Mon, 25 Sep 2023 20:10:34 -0700
+Message-Id: <20230926031034.1201145-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20230906160505.2431857-1-dianders@chromium.org> <20230906090246.v13.3.I7209db47ef8ec151d3de61f59005bbc59fe8f113@changeid>
-In-Reply-To: <20230906090246.v13.3.I7209db47ef8ec151d3de61f59005bbc59fe8f113@changeid>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 25 Sep 2023 17:39:32 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UBw1-9=LPUydewyOg8oL2WMG+ZCQ=PBpe0CiCs-ToWSg@mail.gmail.com>
-Message-ID: <CAD=FV=UBw1-9=LPUydewyOg8oL2WMG+ZCQ=PBpe0CiCs-ToWSg@mail.gmail.com>
-Subject: Re: [PATCH v13 3/7] arm64: smp: Remove dedicated wakeup IPI
-To: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Sumit Garg <sumit.garg@linaro.org>, 
-	Daniel Thompson <daniel.thompson@linaro.org>, Marc Zyngier <maz@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, 
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Lecopzer Chen <lecopzer.chen@mediatek.com>, 
-	Chen-Yu Tsai <wens@csie.org>, Tomohiro Misono <misono.tomohiro@fujitsu.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Masayoshi Mizuma <msys.mizuma@gmail.com>, 
-	Stephane Eranian <eranian@google.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	kgdb-bugreport@lists.sourceforge.net, Stephen Boyd <swboyd@chromium.org>, 
-	linux-perf-users@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
-	ito-yuichi@fujitsu.com, Chen-Yu Tsai <wenst@chromium.org>, jpoimboe@kernel.org, 
-	keescook@chromium.org, linux-kernel@vger.kernel.org, philmd@linaro.org, 
-	samitolvanen@google.com, scott@os.amperecomputing.com, vschneid@redhat.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.42.0.515.g380fc7ccd1-goog
+Subject: [PATCH v1] perf vendor events intel: Fix broadwellde
+ tma_info_system_dram_bw_use metric
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Caleb Biggers <caleb.biggers@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Mark,
+Broadwell-de has a consumer core and server uncore. The uncore_arb PMU
+isn't present and the broadwellx style cbox PMU should be used
+instead. Fix the tma_info_system_dram_bw_use metric to use the server
+metric rather than client.
 
-On Wed, Sep 6, 2023 at 9:06=E2=80=AFAM Douglas Anderson <dianders@chromium.=
-org> wrote:
->
-> +#ifdef CONFIG_ARM64_ACPI_PARKING_PROTOCOL
-> +void arch_send_wakeup_ipi(unsigned int cpu)
-> +{
-> +       /*
-> +        * We use a scheduler IPI to wake the CPU as this avoids the need=
- for a
-> +        * dedicated IPI and we can safely handle spurious scheduler IPIs=
-.
-> +        */
-> +       arch_smp_send_reschedule(cpu);
+The associated converter script fix is in:
+https://github.com/intel/perfmon/pull/111
 
-I was backporting this to our ChromeOS kernels and our build test bot
-noticed that arch_smp_send_reschedule() didn't exist in older kernels.
-That's fine--I can always adjust this patch when backporting or
-cherry-pick extra patches, but it made me wonder. Is there a reason
-you chose to use arch_smp_send_reschedule() directly here instead of
-smp_send_reschedule()? I guess the only difference is that you're
-bypassing the tracing. Is that on purpose? Should we add a comment
-about it, or change this to smp_send_reschedule()?
+Fixes: 7d124303d620 ("perf vendor events intel: Update broadwell variant events/metrics")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks!
+diff --git a/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
+index 8fc62b8f667d..d0ef46c9bb61 100644
+--- a/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
+@@ -652,7 +652,7 @@
+     },
+     {
+         "BriefDescription": "Average external Memory Bandwidth Use for reads and writes [GB / sec]",
+-        "MetricExpr": "64 * (arb@event\\=0x81\\,umask\\=0x1@ + arb@event\\=0x84\\,umask\\=0x1@) / 1e6 / duration_time / 1e3",
++        "MetricExpr": "64 * (UNC_M_CAS_COUNT.RD + UNC_M_CAS_COUNT.WR) / 1e9 / duration_time",
+         "MetricGroup": "HPC;Mem;MemoryBW;SoC;tma_issueBW",
+         "MetricName": "tma_info_system_dram_bw_use",
+         "PublicDescription": "Average external Memory Bandwidth Use for reads and writes [GB / sec]. Related metrics: tma_fb_full, tma_mem_bandwidth, tma_sq_full"
+-- 
+2.42.0.515.g380fc7ccd1-goog
 
--Doug
