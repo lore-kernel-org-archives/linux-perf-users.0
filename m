@@ -1,104 +1,75 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD079156F5
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 06:06:34 +0000 (UTC)
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5010DD;
-	Tue, 26 Sep 2023 23:06:31 -0700 (PDT)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R631e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VszD1U6_1695794786;
-Received: from 30.39.241.218(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VszD1U6_1695794786)
-          by smtp.aliyun-inc.com;
-          Wed, 27 Sep 2023 14:06:29 +0800
-Message-ID: <3ce74666-7db9-f043-8004-b1cec050188a@linux.alibaba.com>
-Date: Wed, 27 Sep 2023 14:06:23 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3D451FD1
+	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 08:37:10 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9D4EFCFD;
+	Wed, 27 Sep 2023 01:37:08 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C8E41FB;
+	Wed, 27 Sep 2023 01:37:46 -0700 (PDT)
+Received: from [10.162.41.8] (a077893.blr.arm.com [10.162.41.8])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 082A83F59C;
+	Wed, 27 Sep 2023 01:37:03 -0700 (PDT)
+Message-ID: <240f888a-1394-8624-7315-8d4a198d20dd@arm.com>
+Date: Wed, 27 Sep 2023 14:07:00 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.0
-Subject: Re: [PATCH v10 0/7] Add metrics for Arm CMN
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, John Garry <john.g.garry@oracle.com>,
- Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Mike Leach <mike.leach@linaro.org>,
- Leo Yan <leo.yan@linaro.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
- Zhuo Song <zhuo.song@linux.alibaba.com>,
- Shuai Xue <xueshuai@linux.alibaba.com>
-References: <1695621444-56530-1-git-send-email-renyu.zj@linux.alibaba.com>
- <CAP-5=fWuaii1rOOvN7rJDo3UoQvkEtiJv3QiBhLRhYk1_Se7ew@mail.gmail.com>
- <f4812cce-14d2-9771-233f-b0db5af449be@linux.alibaba.com>
- <CAM9d7cjjSJybJEbSdBkVH3qx7RDqriv4tqBCNw1Yi9bAeUf3Yw@mail.gmail.com>
-From: Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <CAM9d7cjjSJybJEbSdBkVH3qx7RDqriv4tqBCNw1Yi9bAeUf3Yw@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Subject: Re: [PATCH V13 - RESEND 00/10] arm64/perf: Enable branch stack
+ sampling
+Content-Language: en-US
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
+Cc: Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
+ Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+ Suzuki Poulose <suzuki.poulose@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users@vger.kernel.org
+References: <20230711082455.215983-1-anshuman.khandual@arm.com>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20230711082455.215983-1-anshuman.khandual@arm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-11.4 required=5.0 tests=BAYES_00,
-	ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
 
-
-在 2023/9/27 上午9:00, Namhyung Kim 写道:
-> Hello,
+On 7/11/23 13:54, Anshuman Khandual wrote:
+> This series enables perf branch stack sampling support on arm64 platform
+> via a new arch feature called Branch Record Buffer Extension (BRBE). All
+> relevant register definitions could be accessed here.
 > 
-> On Mon, Sep 25, 2023 at 8:15 PM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
->>
->>
->>
->> 在 2023/9/26 上午12:37, Ian Rogers 写道:
->>> On Sun, Sep 24, 2023 at 10:58 PM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
->>>>
->>>> Changes since v8:
->>>> - Add fully match identifier check as suggested by Ian.
->>>> - Link: https://lore.kernel.org/lkml/1695037955-107983-1-git-send-email-renyu.zj@linux.alibaba.com/
->>>>
->>>> Jing Zhang (7):
->>>>   perf pmu: "Compat" supports regular expression matching identifiers
->>>>   perf metric: "Compat" supports regular expression matching identifiers
->>>>   perf jevents: Support EventidCode and NodeType
->>>>   perf test: Make matching_pmu effective
->>>>   perf test: Add pmu-event test for "Compat" and new event_field.
->>>>   perf jevents: Add support for Arm CMN PMU aliasing
->>>>   perf vendor events: Add JSON metrics for Arm CMN
->>>
->>> Thanks for the patience with all the to and fro. I was able to test
->>> the series with "git am -3" to get around a merge issue on
->>> perf-tools-next.
->>>
->>> Reviewed-by: Ian Rogers <irogers@google.com>
->>> Tested-by: Ian Rogers <irogers@google.com>
->>>
->>
->> Thank you for following this series and providing many valuable suggestions.
+> https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
 > 
-> It's not applied cleanly.  Can you please rebase onto the current
-> tmp.perf-tools-next branch in the following tree?
+> This series applies on 6.5-rc1.
 > 
->   git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git
+> Changes in V13:
 > 
+> https://lore.kernel.org/all/20230622065351.1092893-1-anshuman.khandual@arm.com/
+> 
+> - Added branch callback stubs for aarch32 pmuv3 based platforms
+> - Updated the comments for capture_brbe_regset()
+> - Deleted the comments in __read_brbe_regset()
+> - Reversed the arguments order in capture_brbe_regset() and brbe_branch_save()
+> - Fixed BRBE_BANK[0|1]_IDX_MAX indices comparison in armv8pmu_branch_read()
+> - Fixed BRBE_BANK[0|1]_IDX_MAX indices comparison in capture_brbe_regset()
 
-Hi Namhyung,
+Hello All,
 
-I have sent v11[1] which rebase onto latest tmp.perf-tools-next branch. Please help to apply it, thanks.
+Upcoming V14 series is still being worked out, and might take some more time. But
+meanwhile please find its corresponding development branch for experimentation
+purpose, if required. Thank you.
 
-[1] https://lore.kernel.org/all/1695794391-34817-1-git-send-email-renyu.zj@linux.alibaba.com/
+https://git.gitlab.arm.com/linux-arm/linux-anshuman.git (brbe_v14_rc3)
 
-
-Thanks,
-Jing
-
-> Thanks,
-> Namhyung
+- Anshuman
