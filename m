@@ -1,49 +1,49 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6DF11731
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 23:55:17 +0000 (UTC)
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1467861A1
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 16:55:16 -0700 (PDT)
-Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-79fe8986355so46664139f.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 16:55:16 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485C0620
+	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 00:16:09 +0000 (UTC)
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B6B11F31
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 17:16:07 -0700 (PDT)
+Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-79faba5fe12so261760939f.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 17:16:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695772515; x=1696377315;
+        d=1e100.net; s=20230601; t=1695773766; x=1696378566;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=f9fuw7vlBW33aEkoq31xbJWBTUGJNFSeBY2qgqsAAOM=;
-        b=WGBMPTteaUDFa8TyrO8Rsao76CtuGaKcbzoocDU+xiMiqyPzDtBZ1a5qsiK/ryechF
-         u5JCL+sozxiIpNRe4q7IOLuSiF/40PJOMXJaagJ5hQLDljIIDiqD+Fh/z5LiFZ8vYU00
-         wxHFjPvUx8wkhwuyCE/0T+lQcdDt36LPtbPsZ0w7phXmrIDp9ajJKGAMRLaFcaEMTJXF
-         pThkcfAJEKXu3GGDZA3DeAGXplpWfrPtLe4V6wAgLit2+mQn3wx/ofHi7Hlkov3wzV0I
-         4xwUxmulurOL5ZnP5I2Xqji3OeCJ9byU31OzFCzyz26sXGqBJOGDUNZLxm2yORBV2fXf
-         /4yA==
-X-Gm-Message-State: AOJu0YwDtdmfWq25uHbFsF0061zLBwEEtiIj/O1d2Gkgwd52j0s2BDVJ
-	x7wXxNcFcrIvsFpWBboNk1Va7d/aaTJh755i8rI=
-X-Google-Smtp-Source: AGHT+IF9iPwgGfSkymfXxlcH6A295migBELQK8vAzkdBIsbJ4h9w+6ovIhi4e+fgg6HSMT1LeiIJllBn8i3zehO7xfA=
-X-Received: by 2002:a5e:8306:0:b0:783:63d6:4c5 with SMTP id
- x6-20020a5e8306000000b0078363d604c5mr328990iom.12.1695772515257; Tue, 26 Sep
- 2023 16:55:15 -0700 (PDT)
+        bh=q1iZ4LU82UOG96j2VBk+9ry3Jk5SAeQvNprBdriKjWE=;
+        b=w0yDG7IxzbHSoyPjx3QT2YwpwmPBhaK7pcjnN+YXcKjPG/w1JxnSeOLn0riuKmLkQ0
+         M8/qmidmFEjD6qp0q3H7LRPUDocuzI4hVThLWDimJc4BcMNoe5hLpibEKmSY3G/oGQtz
+         BiAG4mtxn3+Orxd7SwhcZainRD1IoeLEL1nKQ19FTJBiommWkeCEh5OOjSHFkKkz98si
+         ZteJckxi2vBAbkm4NpwAkl0HWK0MqW2nfMwNEcuZr/xcbzpvM2qGWJXNo7WEKJVrJg5x
+         AncAAnE6UeWRxR69UNjg5hnIxfNqoIGcKWY3qxj6JSn0PGa+3+abeGFirMwkBHDjBMGq
+         g7cQ==
+X-Gm-Message-State: AOJu0YyMZ3M7JwXoyrxamMuRO3rNPWS8mVCccLgA7w3fp4mYpdI0d57p
+	zlOE1loFpHeA9b5A1HqVoMwgtoaLs0tuHA8Z+P4=
+X-Google-Smtp-Source: AGHT+IHjC5UMNeuTMvB33Sbl+4uRFJJxkKraQqgF0oif/NziwbXElCwaGRmlMkcuh/j1vmapPbBvGvFi6qT5WD8VFXQ=
+X-Received: by 2002:a6b:e211:0:b0:78b:b892:e334 with SMTP id
+ z17-20020a6be211000000b0078bb892e334mr441916ioc.11.1695773766267; Tue, 26 Sep
+ 2023 17:16:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230914171827.98507-1-atrajeev@linux.vnet.ibm.com> <20230914171827.98507-2-atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20230914171827.98507-2-atrajeev@linux.vnet.ibm.com>
+References: <20230915053752.3012-1-atrajeev@linux.vnet.ibm.com> <20230915053752.3012-2-atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20230915053752.3012-2-atrajeev@linux.vnet.ibm.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 26 Sep 2023 16:55:04 -0700
-Message-ID: <CAM9d7ciBmHrjB98E6SoVrcULgeviYa=K8ONk1KAP3T5nqnYU4w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] tools/perf: Add perf binary dependent rule for
- shellcheck log in Makefile.perf
+Date: Tue, 26 Sep 2023 17:15:54 -0700
+Message-ID: <CAM9d7cg+RcpXnhB7ZBzsUXKuXXd_nTfnFNMf9L_+LNm8i1d47g@mail.gmail.com>
+Subject: Re: [PATCH V4 2/2] tools/perf/tests: Fix object code reading to skip
+ address that falls out of text section
 To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com, 
 	irogers@google.com, linux-perf-users@vger.kernel.org, 
 	linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com, kjain@linux.ibm.com, 
-	disgoel@linux.vnet.ibm.com
+	disgoel@linux.vnet.ibm.com, Disha Goel <disgoel@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
@@ -53,118 +53,120 @@ X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Sep 14, 2023 at 10:18=E2=80=AFAM Athira Rajeev
+On Thu, Sep 14, 2023 at 10:40=E2=80=AFPM Athira Rajeev
 <atrajeev@linux.vnet.ibm.com> wrote:
 >
-> Add rule in new Makefile "tests/Makefile.tests" for running
-> shellcheck on shell test scripts. This automates below shellcheck
-> into the build.
+> The testcase "Object code reading" fails in somecases
+> for "fs_something" sub test as below:
 >
->         $ for F in $(find tests/shell/ -perm -o=3Dx -name '*.sh'); do she=
-llcheck -S warning $F; done
-
-I think you can do it if $(shell command -v shellcheck) returns
-non-empty string (the path to the shellcheck).  Then the feature
-test logic can be gone.
-
+>     Reading object code for memory address: 0xc008000007f0142c
+>     File is: /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
+>     On file address is: 0x1114cc
+>     Objdump command is: objdump -z -d --start-address=3D0x11142c --stop-a=
+ddress=3D0x1114ac /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
+>     objdump read too few bytes: 128
+>     test child finished with -1
 >
-> CONFIG_SHELLCHECK check is added to avoid build breakage in
-> the absence of shellcheck binary. Update Makefile.perf to contain
-> new rule for "SHELLCHECK_TEST" which is for making shellcheck
-> test as a dependency on perf binary. Added "tests/Makefile.tests"
-> to run shellcheck on shellscripts in tests/shell. The make rule
-> "SHLLCHECK_RUN" ensures that, every time during make, shellcheck
-> will be run only on modified files during subsequent invocations.
-> By this, if any newly added shell scripts or fixes in existing
-> scripts breaks coding/formatting style, it will get captured
-> during the perf build.
-
-Can you show me the example output?
-
+> This can alo be reproduced when running perf record with
+> workload that exercises fs_something() code. In the test
+> setup, this is exercising xfs code since root is xfs.
 >
+>     # perf record ./a.out
+>     # perf report -v |grep "xfs.ko"
+>       0.76% a.out /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko  0xc008000=
+007de5efc B [k] xlog_cil_commit
+>       0.74% a.out  /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko  0xc00800=
+0007d5ae18 B [k] xfs_btree_key_offset
+>       0.74% a.out  /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko  0xc00800=
+0007e11fd4 B [k] 0x0000000000112074
+>
+> Here addr "0xc008000007e11fd4" is not resolved. since this is a
+> kernel module, its offset is from the DSO. Xfs module is loaded
+> at 0xc008000007d00000
+>
+>    # cat /proc/modules | grep xfs
+>     xfs 2228224 3 - Live 0xc008000007d00000
+>
+> And size is 0x220000. So its loaded between  0xc008000007d00000
+> and 0xc008000007f20000. From objdump, text section is:
+>     text 0010f7bc  0000000000000000 0000000000000000 000000a0 2**4
+>
+> Hence perf captured ip maps to 0x112074 which is:
+> ( ip - start of module ) + a0
+>
+> This offset 0x112074 falls out .text section which is up to 0x10f7bc
+> In this case for module, the address 0xc008000007e11fd4 is pointing
+> to stub instructions. This address range represents the module stubs
+> which is allocated on module load and hence is not part of DSO offset.
+>
+> To address this issue in "object code reading", skip the sample if
+> address falls out of text section and is within the module end.
+> Use the "text_end" member of "struct dso" to do this check.
+>
+> To address this issue in "perf report", exploring an option of
+> having stubs range as part of the /proc/kallsyms, so that perf
+> report can resolve addresses in stubs range
+>
+> However this patch uses text_end to skip the stub range for
+> Object code reading testcase.
+>
+> Reported-by: Disha Goel <disgoel@linux.ibm.com>
 > Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Tested-by: Disha Goel<disgoel@linux.ibm.com>
+> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 > ---
->  tools/perf/Makefile.perf        | 12 +++++++++++-
->  tools/perf/tests/Makefile.tests | 24 ++++++++++++++++++++++++
->  2 files changed, 35 insertions(+), 1 deletion(-)
->  create mode 100644 tools/perf/tests/Makefile.tests
+> Changelog:
+>  v3 -> v4:
+>  Fixed indent in V3
 >
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index f6fdc2d5a92f..c27f54771e90 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -667,7 +667,16 @@ $(PERF_IN): prepare FORCE
->  $(PMU_EVENTS_IN): FORCE prepare
->         $(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=3Dpmu-ev=
-ents obj=3Dpmu-events
+>  v2 -> v3:
+>  Used strtailcmp in comparison for module check and added Reviewed-by
+>  from Adrian, Tested-by from Disha.
 >
-> -$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN)
-> +# Runs shellcheck on perf test shell scripts
-> +ifeq ($(CONFIG_SHELLCHECK),y)
-> +SHELLCHECK_TEST: FORCE prepare
-> +       $(Q)$(MAKE) -f $(srctree)/tools/perf/tests/Makefile.tests
-> +else
-> +SHELLCHECK_TEST:
-> +       @:
-> +endif
-> +
-> +$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN) SHELLCHECK_TEST
->         $(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) \
->                 $(PERF_IN) $(PMU_EVENTS_IN) $(LIBS) -o $@
+>  v1 -> v2:
+>  Updated comment to add description on which arch has stub and
+>  reason for skipping as suggested by Adrian
 >
-> @@ -1129,6 +1138,7 @@ bpf-skel-clean:
->         $(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETON=
-S)
+>  tools/perf/tests/code-reading.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 >
->  clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-=
-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-cores=
-ight-targets-clean
-> +       $(Q)$(MAKE) -f $(srctree)/tools/perf/tests/Makefile.tests clean
->         $(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-=
-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
->         $(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd'=
- -delete -o -name '\.*.d' -delete
->         $(Q)$(RM) $(OUTPUT).config-detected
-> diff --git a/tools/perf/tests/Makefile.tests b/tools/perf/tests/Makefile.=
-tests
-> new file mode 100644
-> index 000000000000..e74575559e83
-> --- /dev/null
-> +++ b/tools/perf/tests/Makefile.tests
-> @@ -0,0 +1,24 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 2023
-> +-include $(OUTPUT).config-detected
-> +
-> +log_file =3D $(OUTPUT)shellcheck_test.log
-> +PROGS =3D $(subst ./,,$(shell find tests/shell -perm -o=3Dx -type f -nam=
-e '*.sh'))
-> +DEPS =3D $(addprefix output/,$(addsuffix .dep,$(basename $(PROGS))))
-> +DIRS =3D $(shell echo $(dir $(DEPS)) | xargs -n1 | sort -u | xargs)
-> +
-> +.PHONY: all
-> +all: SHELLCHECK_RUN
-> +       @:
-> +
-> +SHELLCHECK_RUN: $(DEPS) $(DIRS)
-> +
-> +output/%.dep: %.sh | $(DIRS)
-> +       $(call rule_mkdir)
-> +       $(Q)$(call frecho-cmd,test)@touch $@
-> +       $(Q)$(call frecho-cmd,test)@shellcheck -S warning $(subst output/=
-,./,$(patsubst %.dep, %.sh, $@)) 1> ${log_file} && ([[ ! -s ${log_file} ]])
+> diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-read=
+ing.c
+> index ed3815163d1b..9e6e6c985840 100644
+> --- a/tools/perf/tests/code-reading.c
+> +++ b/tools/perf/tests/code-reading.c
+> @@ -269,6 +269,16 @@ static int read_object_code(u64 addr, size_t len, u8=
+ cpumode,
+>         if (addr + len > map__end(al.map))
+>                 len =3D map__end(al.map) - addr;
+>
+> +       /*
+> +        * Some architectures (ex: powerpc) have stubs (trampolines) in k=
+ernel
+> +        * modules to manage long jumps. Check if the ip offset falls in =
+stubs
+> +        * sections for kernel modules. And skip module address after tex=
+t end
+> +        */
+> +       if (!strtailcmp(dso->long_name, ".ko") && al.addr > dso->text_end=
+) {
 
-This line is too long, please wrap it with some backslashes.
+There's a is_kernel_module() that can check compressed modules
+too but I think we need a simpler way to check it like dso->kernel.
 
 Thanks,
 Namhyung
 
 
-> +$(DIRS):
-> +       @mkdir -p $@
+> +               pr_debug("skipping the module address %#"PRIx64" after te=
+xt end\n", al.addr);
+> +               goto out;
+> +       }
 > +
-> +clean:
-> +       @rm -rf $(log_file) output
+>         /* Read the object code using perf */
+>         ret_len =3D dso__data_read_offset(dso, maps__machine(thread__maps=
+(thread)),
+>                                         al.addr, buf1, len);
 > --
 > 2.31.1
 >
