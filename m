@@ -1,190 +1,117 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C4084428
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 04:29:47 +0000 (UTC)
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B12D12522
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 21:29:46 -0700 (PDT)
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38R3sw1X016566;
-	Wed, 27 Sep 2023 04:29:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=r48xeO6qHSbESuFokBSF5mwqU5R1jf7NgWwHbLi5xEQ=;
- b=I98WehrEyKmNz6KbsEqSUtUBVpDzCl6lzC0ZecO9n2Xs0Xa7Xj22/gj0lFZvuVb8kU/a
- 6tE4fsBk/5dDsfsVIAADBwZoXhiyyYQ0908ywCYpsTMB7hiIgybZMLEqGOnZJIs7gDb+
- CNkVuM3AZgcDOihknGHeemeVb7OQITIOECM4sUnpugqSiga6CpAYzSKpi24apkEYZVlX
- Pzxd0JaRxY9ouDAPK6yUPm2ZucuoDPZjg96PH0zZo3Y9UBfS2TqAdGjtF/tPVtDIRH3c
- ye2l6WSwYlP4Zt/kO/qapRXFh3saCklB1RUOPv4NrmjB7iYF/3WFSFHBwp9DLKq7I6++ zg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tccqb8y1c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 27 Sep 2023 04:29:40 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38R3pX0u007308;
-	Wed, 27 Sep 2023 04:29:39 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tccqb8y0y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 27 Sep 2023 04:29:39 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38R20t0K008154;
-	Wed, 27 Sep 2023 04:29:38 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3taaqygxcx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 27 Sep 2023 04:29:38 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38R4TYL814025326
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 27 Sep 2023 04:29:34 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4105620040;
-	Wed, 27 Sep 2023 04:29:34 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E4E9720049;
-	Wed, 27 Sep 2023 04:29:30 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.105.243])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 27 Sep 2023 04:29:30 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0581118
+	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 04:39:25 +0000 (UTC)
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2433C1FFC;
+	Tue, 26 Sep 2023 21:39:24 -0700 (PDT)
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-79fa891b645so283373939f.0;
+        Tue, 26 Sep 2023 21:39:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695789563; x=1696394363;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=45TovMKJ+2sZ/qf9Tf9B5Lm13NVNzRdDeG0tap29jvY=;
+        b=b1kPI8ib0kqNQUNsS+v/08wbeeuQsdzrscg9u0QdL0SWNyheTzlAEfqeJh3pXcXW6S
+         w67oOio8RwzkyuqLRIgKGfnRNGg5L00FKEfu2hI8Mczi22hzJIorCTMa2UWc2969bd7s
+         0xujBc0vLRTx2a3nBmMiN/+K6Ch/VpbIO2xyxByEJE9XC9T2HC9/xMmgadHwwid8x07v
+         0XSUOS17oF5v9Qcptkqm5Lt9mtTk/cPlexBo502vf8u4W+2O6BoM5ibh6Q+Vxd7I8c+S
+         c7vB+q6dv6Fg+pWxyGRs79bbbU3U5u+P/+XSnaJyAMKDpTPSm+0PZXcQrYZWPFQEi1f7
+         OV6Q==
+X-Gm-Message-State: AOJu0Yxn9nvbrLp8Cz64IlRqJf9R0UBjrHV5H+64++d4l52f5KAOty/P
+	Q+Xs3M3nOOzAmKxpW1r8DpwSMCw8wmmvLx83LLu7eScP
+X-Google-Smtp-Source: AGHT+IESJPGH4c1MijpOR3/7FVfPcaAnzWVHrEYn2jQP1Nka5jrAX0XhSMO48c92F3PxAh7AYyWYzLAVdeBfasNA688=
+X-Received: by 2002:a05:6602:39a:b0:791:1b1c:b758 with SMTP id
+ f26-20020a056602039a00b007911b1cb758mr1142220iov.19.1695789563357; Tue, 26
+ Sep 2023 21:39:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
-Subject: Re: [PATCH V2] perf test: Fix parse-events tests to skip parametrized
- events
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <CAM9d7cj=h=8omHwerjXPaWJbNFOpaiogjw8gsTdvwS7mTschsg@mail.gmail.com>
-Date: Wed, 27 Sep 2023 09:59:18 +0530
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Sachin Sant <sachinp@linux.ibm.com>, Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+MIME-Version: 1.0
+References: <20230920122349.418673-1-wyes.karny@amd.com> <CAP-5=fUe-972h3+Cwegb6u8ZOxo2k_jHQ3i5gNPoUq_TR_AWDQ@mail.gmail.com>
+ <CAM9d7cjH_YR9W_Ab-AuJR983GYn3s+ScwexCWid3Q6a+GzWDVg@mail.gmail.com> <CAP-5=fW7dsMw0i7N-oQ7dcz9sFx1hAtZCpsxuH=NqMz+h+i3ZQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fW7dsMw0i7N-oQ7dcz9sFx1hAtZCpsxuH=NqMz+h+i3ZQ@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 26 Sep 2023 21:39:11 -0700
+Message-ID: <CAM9d7cgC8qZ=rN-0qAg0mNOV-XKCLzgJ1E530aexUnsytmrjfw@mail.gmail.com>
+Subject: Re: [PATCH] perf pmu: Fix perf stat output with correct scale and unit
+To: Ian Rogers <irogers@google.com>
+Cc: Wyes Karny <wyes.karny@amd.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	james.clark@arm.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, sandipan.das@amd.com, ravi.bangoria@amd.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <1C9A62C1-6FAD-490E-89D2-3E5D36F52F3E@linux.vnet.ibm.com>
-References: <20230907165933.36442-1-atrajeev@linux.vnet.ibm.com>
- <1F3D650F-91B5-4570-85D2-A925320BE7AE@linux.ibm.com>
- <298307AE-8AB5-40B6-A9CC-C1DBE720450C@linux.vnet.ibm.com>
- <2C5606DF-4532-4263-9482-50D5668C09AF@linux.vnet.ibm.com>
- <CA+JHD90aQ5OM3PLrrt2nnBDL1b6-Hx7EsRjpnzawzYY3VSYi3Q@mail.gmail.com>
- <CAM9d7cj=h=8omHwerjXPaWJbNFOpaiogjw8gsTdvwS7mTschsg@mail.gmail.com>
-To: Namhyung Kim <namhyung@kernel.org>
-X-Mailer: Apple Mail (2.3731.700.6)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: iX9jFCgHZ6qd6xPEPqn6upUljK6UMba0
-X-Proofpoint-GUID: nOgjLVKdX27ArY1DmzuH-3nfR02iJ-Y9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-09-26_19,2023-09-26_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- suspectscore=0 mlxlogscore=999 impostorscore=0 mlxscore=0 bulkscore=0
- phishscore=0 adultscore=0 priorityscore=1501 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2309270032
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,
-	RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE autolearn=ham
-	autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
+Hi Ian,
 
+On Tue, Sep 26, 2023 at 9:07=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Tue, Sep 26, 2023 at 3:51=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
+> wrote:
+> >
+> > On Wed, Sep 20, 2023 at 9:02=E2=80=AFAM Ian Rogers <irogers@google.com>=
+ wrote:
+> > >
+> > > On Wed, Sep 20, 2023 at 5:24=E2=80=AFAM Wyes Karny <wyes.karny@amd.co=
+m> wrote:
+> > > >
+> > > > The perf_pmu__parse_* functions for the sysfs files of pmu event=E2=
+=80=99s
+> > > > scale, unit, per-pkg and snapshot were updated in commit 7b723dbb96=
+e8
+> > > > ("perf pmu: Be lazy about loading event info files from sysfs").
+> > > > However, the paths for these sysfs files were incorrect. This resul=
+ted
+> > > > in perf stat reporting values with wrong scaling and missing units.=
+ This
+> > > > is fixed by correcting the paths for these sysfs files.
+> > > >
+> > > > Before this fix:
+> > > >
+> > > >  $sudo perf stat -e power/energy-pkg/ -- sleep 2
+> > > >
+> > > >  Performance counter stats for 'system wide':
+> > > >
+> > > >    351,217,188,864      power/energy-pkg/
+> > > >
+> > > >           2.004127961 seconds time elapsed
+> > > >
+> > > > After this fix:
+> > > >
+> > > >  $sudo perf stat -e power/energy-pkg/ -- sleep 2
+> > > >
+> > > >  Performance counter stats for 'system wide':
+> > > >
+> > > >              80.58 Joules power/energy-pkg/
+> > > >
+> > > >              2.004009749 seconds time elapsed
+> > > >
+> > > > Fixes: 7b723dbb96e8 ("perf pmu: Be lazy about loading event info fi=
+les from sysfs")
+> > > > Signed-off-by: Wyes Karny <wyes.karny@amd.com>
+> > >
+> > > Reviewed-by: Ian Rogers <irogers@google.com>
+> >
+> > Applied to perf-tools-next, thanks!
+>
+> Thanks Namhyung, I think this should be a candidate for perf-tools so
+> that 6.6 doesn't regress for sysfs events.
 
-> On 27-Sep-2023, at 4:07 AM, Namhyung Kim <namhyung@kernel.org> wrote:
->=20
-> Hello,
->=20
-> On Mon, Sep 25, 2023 at 10:37=E2=80=AFAM Arnaldo Carvalho de Melo
-> <arnaldo.melo@gmail.com> wrote:
->>=20
->>=20
->>=20
->> On Wed, Sep 13, 2023, 7:40 AM Athira Rajeev =
-<atrajeev@linux.vnet.ibm.com> wrote:
->>>=20
->>>=20
->>>=20
->>>> On 08-Sep-2023, at 7:48 PM, Athira Rajeev =
-<atrajeev@linux.vnet.ibm.com> wrote:
->>>>=20
->>>>=20
->>>>=20
->>>>> On 08-Sep-2023, at 11:04 AM, Sachin Sant <sachinp@linux.ibm.com> =
-wrote:
->>>>>=20
->>>>>=20
->>>>>=20
->>>>>> On 07-Sep-2023, at 10:29 PM, Athira Rajeev =
-<atrajeev@linux.vnet.ibm.com> wrote:
->>>>>>=20
->>>>>> Testcase "Parsing of all PMU events from sysfs" parse events for
->>>>>> all PMUs, and not just cpu. In case of powerpc, the PowerVM
->>>>>> environment supports events from hv_24x7 and hv_gpci PMU which
->>>>>> is of example format like below:
->>>>>>=20
->>>>>> - hv_24x7/CPM_ADJUNCT_INST,domain=3D?,core=3D?/
->>>>>> - hv_gpci/event,partition_id=3D?/
->>>>>>=20
->>>>>> The value for "?" needs to be filled in depending on system
->>>>>> configuration. It is better to skip these parametrized events
->>>>>> in this test as it is done in:
->>>>>> 'commit b50d691e50e6 ("perf test: Fix "all PMU test" to skip
->>>>>> parametrized events")' which handled a simialr instance with
->>>>>> "all PMU test".
->>>>>>=20
->>>>>> Fix parse-events test to skip parametrized events since
->>>>>> it needs proper setup of the parameters.
->>>>>>=20
->>>>>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->>>>>> ---
->>>>>> Changelog:
->>>>>> v1 -> v2:
->>>>>> Addressed review comments from Ian. Updated size of
->>>>>> pmu event name variable and changed bool name which is
->>>>>> used to skip the test.
->>>>>>=20
->>>>>=20
->>>>> The patch fixes the reported issue.
->>>>>=20
->>>>> 6.2: Parsing of all PMU events from sysfs                          =
-: Ok
->>>>> 6.3: Parsing of given PMU events from sysfs                        =
-: Ok
->>>>>=20
->>>>> Tested-by: Sachin Sant <sachinp@linux.ibm.com>
->>>>>=20
->>>>> - Sachin
->>>>=20
->>>> Hi Sachin, Ian
->>>>=20
->>>> Thanks for testing the patch
->>>=20
->>> Hi Arnaldo
->>>=20
->>> Can you please check and pull this if it looks good to go .
->>=20
->>=20
->> Namhyung, can you please take a look?
->=20
-> Yep sure.  I think it needs to close the file when getline() fails.
->=20
-> Athira, can you please send v3 with that?
+I see, I overlooked that it's for the current cycle.
+I'll move it to perf-tools.
 
-Sure, I will post V3 with this change
-
-Athira
->=20
-> Thanks,
-> Namhyung
-
+Thanks,
+Namhyung
