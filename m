@@ -1,314 +1,135 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79195262AD
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 17:06:55 +0000 (UTC)
-Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43A4892;
-	Wed, 27 Sep 2023 10:06:51 -0700 (PDT)
-Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
-	by fd01.gateway.ufhost.com (Postfix) with ESMTP id 71C8524DFDE;
-	Thu, 28 Sep 2023 01:06:43 +0800 (CST)
-Received: from EXMBX172.cuchost.com (172.16.6.92) by EXMBX166.cuchost.com
- (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 28 Sep
- 2023 01:06:43 +0800
-Received: from localhost.localdomain (202.188.176.82) by EXMBX172.cuchost.com
- (172.16.6.92) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 28 Sep
- 2023 01:06:37 +0800
-From: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Namhyung
- Kim" <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Palmer
- Dabbelt" <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, "Nikita
- Shubin" <n.shubin@yadro.com>
-CC: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-riscv@lists.infradead.org>
-Subject: [PATCH] perf vendor events riscv: add Starfive Dubhe JSON file
-Date: Thu, 28 Sep 2023 01:05:43 +0800
-Message-ID: <20230927170543.802056-1-jisheng.teoh@starfivetech.com>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F6A111AB
+	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 17:27:12 +0000 (UTC)
+Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 370AFF4
+	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 10:27:10 -0700 (PDT)
+Received: by mail-pg1-x54a.google.com with SMTP id 41be03b00d2f7-56fb25fdf06so10952435a12.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 10:27:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1695835629; x=1696440429; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=45/FQrKeL8Udcs0UjyYMLebUZXfqqT6VPGukdHqASBY=;
+        b=pxkIsUL/CYKNNtXcZ54jqEaRWNI1bRSTOtQ6roFCrUvxWV9z+gRVpfk81GbCzvJNUH
+         gUqzv6OJdS1w6EKg5cP8ZnFGhFoU7A0uvR3Ok/cnerZmRjIwkJb58MY+qAbUZvjzPB9q
+         ha5MUQUXsSfXOdj/dt9aoAUtuEuPCxxrnxBlj62vaq6X+W46VbEaQ1nE7AXyaTAN6+P+
+         m7gD3ZK/P4XZsF71AgkhcU1DjgEzLC6Eq9Y3teJ7l2fOvaH7TKFJbSZEnEhc1lxhOeQc
+         zdIPFIGEM0fm5UMD93MU6o2kBdyIv5klLMPtsXBxYP8OQVZ1i+Rc9MjcXOEnA0yaXDr6
+         MiJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695835629; x=1696440429;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=45/FQrKeL8Udcs0UjyYMLebUZXfqqT6VPGukdHqASBY=;
+        b=JNn+xXlqjK6Ozw8C+DAgwUEs3vlkILcUKMy6Gz3b/LNVTtSoCCB221qwVMw3yqTloh
+         DEEVU0BQXChM3IlyOqxiALQ/mgZ89oT9LF1CiZ8JNv4JbwesDwwVwiwbmoBcaw80xkjU
+         TPNBZM1TTOW2g7qH8gawmEGnfQ5k1RM55U5m1+iuoxKN06WR3do07XSFYaWzpT1yXURF
+         mdpN6pn678Om8Y3Rb/WxMRYciKOh9HFmjvReycB81kY95V8Ys45hiy2+HAlcBXc5SLI6
+         c1lBAnvQ3vTUt5WvuQ/rve4pNcrwMZ7A24bVWzL5fwCckapZA3JaSQ118ymm1qUB0y6m
+         j5VA==
+X-Gm-Message-State: AOJu0Yzo2+EOLdacr+GMg31RsaOui5dnpNVDwyTKmJs/b4BOUYFff7Wn
+	JlFdXpxLoF9dtLRxSNZoPV2CiydyGhM=
+X-Google-Smtp-Source: AGHT+IEo/l8kLAGFPglCwVwc5Xc6q19FVQ0XSzm/QsHADwvKgtDSKq0Zssqfo5n0svX+VvLt6XNOBeajUM0=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:902:d501:b0:1c7:217c:3e4b with SMTP id
+ b1-20020a170902d50100b001c7217c3e4bmr37979plg.5.1695835629656; Wed, 27 Sep
+ 2023 10:27:09 -0700 (PDT)
+Date: Wed, 27 Sep 2023 10:27:07 -0700
+In-Reply-To: <20230927113312.GD21810@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [202.188.176.82]
-X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX172.cuchost.com
- (172.16.6.92)
-X-YovoleRuleAgent: yovoleflag
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Mime-Version: 1.0
+References: <20230927033124.1226509-1-dapeng1.mi@linux.intel.com>
+ <20230927033124.1226509-8-dapeng1.mi@linux.intel.com> <20230927113312.GD21810@noisy.programming.kicks-ass.net>
+Message-ID: <ZRRl6y1GL-7RM63x@google.com>
+Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics event
+From: Sean Christopherson <seanjc@google.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Like Xu <likexu@tencent.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Zhenyu Wang <zhenyuw@linux.intel.com>, Zhang Xiong <xiong.y.zhang@intel.com>, 
+	Lv Zhiyuan <zhiyuan.lv@intel.com>, Yang Weijiang <weijiang.yang@intel.com>, 
+	Dapeng Mi <dapeng1.mi@intel.com>, Jim Mattson <jmattson@google.com>, 
+	David Dunn <daviddunn@google.com>, Mingwei Zhang <mizhang@google.com>
+Content-Type: text/plain; charset="us-ascii"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Starfive Dubhe supports raw event id 0x00 - 0x22.
-The raw events are enabled through PMU node of the DT binding.
++Jim, David, and Mingwei
 
-PMU DT node:
-pmu {
-	compatible =3D "riscv,pmu";
-	riscv,raw-event-to-mhpmcounters =3D
-		/* Event ID 1-31 */
-		<0x00 0x00 0xFFFFFFFF 0xFFFFFFE0 0x00007FF8>,
-		/* Event ID 32-33 */
-		<0x00 0x20 0xFFFFFFFF 0xFFFFFFFE 0x00007FF8>,
-		/* Event ID 34 */
-		<0x00 0x22 0xFFFFFFFF 0xFFFFFF22 0x00007FF8>;
-};
+On Wed, Sep 27, 2023, Peter Zijlstra wrote:
+> On Wed, Sep 27, 2023 at 11:31:18AM +0800, Dapeng Mi wrote:
+> > When guest wants to use PERF_METRICS MSR, a virtual metrics event needs
+> > to be created in the perf subsystem so that the guest can have exclusive
+> > ownership of the PERF_METRICS MSR.
+> 
+> Urgh, can someone please remind me how all that is supposed to work
+> again? The guest is just a task that wants the event. If the
+> host creates a CPU event, then that gets scheduled with higher priority
+> and the task looses out, no joy.
+> 
+> So you cannot guarantee the guest gets anything.
+> 
+> That is, I remember we've had this exact problem before, but I keep
+> forgetting how this all is supposed to work. I don't use this virt stuff
+> (and every time I try qemu arguments defeat me and I give up in
+> disgust).
 
-Perf stat output:
-[root@user]# perf stat -a \
-	-e access_mmu_stlb \
-	-e miss_mmu_stlb \
-	-e access_mmu_pte_c \
-	-e rob_flush \
-	-e btb_prediction_miss \
-	-e itlb_miss \
-	-e sync_del_fetch_g \
-	-e icache_miss \
-	-e bpu_br_retire \
-	-e bpu_br_miss \
-	-e ret_ins_retire
-	-e ret_ins_miss \
-	-- openssl speed rsa2048
-Doing 2048 bits private rsa's for 10s: 39 2048 bits private RSA's in
-10.03s
-Doing 2048 bits public rsa's for 10s: 1469 2048 bits public RSA's in
-9.47s
-version: 3.0.10
-built on: Tue Aug  1 13:47:24 2023 UTC
-options: bn(64,64)
-CPUINFO: N/A
-                  sign    verify    sign/s verify/s
-rsa 2048 bits 0.257179s 0.006447s      3.9    155.1
+I don't think it does work, at least not without a very, very carefully crafted
+setup and a host userspace that knows it must not use certain aspects of perf.
+E.g. for PEBS, if the guest virtual counters don't map 1:1 to the "real" counters
+in hardware, KVM+perf simply disables the counter.
 
- Performance counter stats for 'system wide':
+And for top-down slots, getting anything remotely accurate requires pinning vCPUs
+1:1 with pCPUs and enumerating an accurate toplogy to the guest:
 
-           3112882      access_mmu_stlb
-             10550      miss_mmu_stlb
-             18251      access_mmu_pte_c
-            274765      rob_flush
-          22470560      btb_prediction_miss
-           3035839      itlb_miss
-         643549060      sync_del_fetch_g
-            133013      icache_miss
-          62982796      bpu_br_retire
-            287548      bpu_br_miss
-           8935910      ret_ins_retire
-              8308      ret_ins_miss
+  The count is distributed among unhalted logical processors (hyper-threads) who
+  share the same physical core, in processors that support Intel Hyper-Threading
+  Technology.
 
-      20.656182600 seconds time elapsed
+Jumping the gun a bit (we're in the *super* early stages of scraping together a
+rough PoC), but I think we should effectively put KVM's current vPMU support into
+maintenance-only mode, i.e. stop adding new features unless they are *very* simple
+to enable, and instead pursue an implementation that (a) lets userspace (and/or
+the kernel builder) completely disable host perf (or possibly just host perf usage
+of the hardware PMU) and (b) let KVM passthrough the entire hardware PMU when it
+has been turned off in the host.
 
-Signed-off-by: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
----
- tools/perf/pmu-events/arch/riscv/mapfile.csv  |   1 +
- .../arch/riscv/starfive/dubhe/common.json     | 172 ++++++++++++++++++
- 2 files changed, 173 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/riscv/starfive/dubhe/commo=
-n.json
+I.e. keep KVM's existing best-offset vPMU support, e.g. for setups where the
+platform owner is also the VM ueer (running a Windows VM on a Linux box, hosting
+a Linux VM in ChromeOS, etc...).  But for anything advanced and for hard guarantees,
+e.g. cloud providers that want to expose fully featured vPMU to customers, force
+the platform owner to choose between using perf (or again, perf with hardware PMU)
+in the host, and exposing the hardware PMU to the guest.
 
-diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pm=
-u-events/arch/riscv/mapfile.csv
-index c61b3d6ef616..a7d9abc5669a 100644
---- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
-@@ -15,3 +15,4 @@
- #
- #MVENDORID-MARCHID-MIMPID,Version,Filename,EventType
- 0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
-+0x67e-0x80000000db010500-0x[[:xdigit:]]+,v1,starfive/dubhe,core
-diff --git a/tools/perf/pmu-events/arch/riscv/starfive/dubhe/common.json =
-b/tools/perf/pmu-events/arch/riscv/starfive/dubhe/common.json
-new file mode 100644
-index 000000000000..fbffcacb2ace
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/starfive/dubhe/common.json
-@@ -0,0 +1,172 @@
-+[
-+  {
-+    "EventName": "ACCESS_MMU_STLB",
-+    "EventCode": "0x1",
-+    "BriefDescription": "access MMU STLB"
-+  },
-+  {
-+    "EventName": "MISS_MMU_STLB",
-+    "EventCode": "0x2",
-+    "BriefDescription": "miss MMU STLB"
-+  },
-+  {
-+    "EventName": "ACCESS_MMU_PTE_C",
-+    "EventCode": "0x3",
-+    "BriefDescription": "access MMU PTE-Cache"
-+  },
-+  {
-+    "EventName": "MISS_MMU_PTE_C",
-+    "EventCode": "0x4",
-+    "BriefDescription": "miss MMU PTE-Cache"
-+  },
-+  {
-+    "EventName": "ROB_FLUSH",
-+    "EventCode": "0x5",
-+    "BriefDescription": "ROB flush (all kinds of exceptions)"
-+  },
-+  {
-+    "EventName": "BTB_PREDICTION_MISS",
-+    "EventCode": "0x6",
-+    "BriefDescription": "BTB prediction miss"
-+  },
-+  {
-+    "EventName": "ITLB_MISS",
-+    "EventCode": "0x7",
-+    "BriefDescription": "ITLB miss"
-+  },
-+  {
-+    "EventName": "SYNC_DEL_FETCH_G",
-+    "EventCode": "0x8",
-+    "BriefDescription": "SYNC delivery a fetch-group"
-+  },
-+  {
-+    "EventName": "ICACHE_MISS",
-+    "EventCode": "0x9",
-+    "BriefDescription": "ICache miss"
-+  },
-+  {
-+    "EventName": "BPU_BR_RETIRE",
-+    "EventCode": "0xA",
-+    "BriefDescription": "condition branch instruction retire"
-+  },
-+  {
-+    "EventName": "BPU_BR_MISS",
-+    "EventCode": "0xB",
-+    "BriefDescription": "condition branch instruction miss"
-+  },
-+  {
-+    "EventName": "RET_INS_RETIRE",
-+    "EventCode": "0xC",
-+    "BriefDescription": "return instruction retire"
-+  },
-+  {
-+    "EventName": "RET_INS_MISS",
-+    "EventCode": "0xD",
-+    "BriefDescription": "return instruction miss"
-+  },
-+  {
-+    "EventName": "INDIRECT_JR_MISS",
-+    "EventCode": "0xE",
-+    "BriefDescription": "indirect JR instruction miss (inlcude without t=
-arget)"
-+  },
-+  {
-+    "EventName": "IBUF_VAL_ID_NORDY",
-+    "EventCode": "0xF",
-+    "BriefDescription": "IBUF valid while ID not ready"
-+  },
-+  {
-+    "EventName": "IBUF_NOVAL_ID_RDY",
-+    "EventCode": "0x10",
-+    "BriefDescription": "IBUF not valid while ID ready"
-+  },
-+  {
-+    "EventName": "REN_INT_PHY_REG_NORDY",
-+    "EventCode": "0x11",
-+    "BriefDescription": "REN integer physical register file is not ready=
-"
-+  },
-+  {
-+    "EventName": "REN_FP_PHY_REG_NORDY",
-+    "EventCode": "0x12",
-+    "BriefDescription": "REN floating point physical register file is no=
-t ready"
-+  },
-+  {
-+    "EventName": "REN_CP_NORDY",
-+    "EventCode": "0x13",
-+    "BriefDescription": "REN checkpoint is not ready"
-+  },
-+  {
-+    "EventName": "DEC_VAL_ROB_NORDY",
-+    "EventCode": "0x14",
-+    "BriefDescription": "DEC is valid and ROB is not ready"
-+  },
-+  {
-+    "EventName": "OOD_FLUSH_LS_DEP",
-+    "EventCode": "0x15",
-+    "BriefDescription": "out of order flush due to load/store dependency=
-"
-+  },
-+  {
-+    "EventName": "BRU_RET_IJR_INS",
-+    "EventCode": "0x16",
-+    "BriefDescription": "BRU retire an IJR instruction"
-+  },
-+  {
-+    "EventName": "ACCESS_DTLB",
-+    "EventCode": "0x17",
-+    "BriefDescription": "access DTLB"
-+  },
-+  {
-+    "EventName": "MISS_DTLB",
-+    "EventCode": "0x18",
-+    "BriefDescription": "miss DTLB"
-+  },
-+  {
-+    "EventName": "LOAD_INS_DCACHE",
-+    "EventCode": "0x19",
-+    "BriefDescription": "load instruction access DCache"
-+  },
-+  {
-+    "EventName": "LOAD_INS_MISS_DCACHE",
-+    "EventCode": "0x1A",
-+    "BriefDescription": "load instruction miss DCache"
-+  },
-+  {
-+    "EventName": "STORE_INS_DCACHE",
-+    "EventCode": "0x1B",
-+    "BriefDescription": "store/amo instruction access DCache"
-+  },
-+  {
-+    "EventName": "STORE_INS_MISS_DCACHE",
-+    "EventCode": "0x1C",
-+    "BriefDescription": "store/amo instruction miss DCache"
-+  },
-+  {
-+    "EventName": "LOAD_SCACHE",
-+    "EventCode": "0x1D",
-+    "BriefDescription": "load access SCache"
-+  },
-+  {
-+    "EventName": "STORE_SCACHE",
-+    "EventCode": "0x1E",
-+    "BriefDescription": "store access SCache"
-+  },
-+  {
-+    "EventName": "LOAD_MISS_SCACHE",
-+    "EventCode": "0x1F",
-+    "BriefDescription": "load miss SCache"
-+  },
-+  {
-+    "EventName": "STORE_MISS_SCACHE",
-+    "EventCode": "0x20",
-+    "BriefDescription": "store miss SCache"
-+  },
-+  {
-+    "EventName": "L2C_PF_REQ",
-+    "EventCode": "0x21",
-+    "BriefDescription": "L2C data-prefetcher request"
-+  },
-+  {
-+    "EventName": "L2C_PF_HIT",
-+    "EventCode": "0x22",
-+    "BriefDescription": "L2C data-prefetcher hit"
-+  }
-+]
---=20
-2.25.1
+Hardware vendors are pushing us in the direction whether we like it or not, e.g.
+SNP and TDX want to disallow profiling the guest from the host, ARM has an
+upcoming PMU model where (IIUC) it can't be virtualized without a passthrough
+approach, Intel's hybrid CPUs are a complete trainwreck unless vCPUs are pinned,
+and virtualizing things like top-down slots, PEBS, and LBRs in the shared model
+requires an absurd amount of complexity throughout the kernel and userspace.
 
+Note, a similar idea was floated and rejected in the past[*], but that failed
+proposal tried to retain host perf+PMU functionality by making the behavior dynamic,
+which I agree would create an awful ABI for the host.  If we make the "knob" a
+Kconfig or kernel param, i.e. require the platform owner to opt-out of using perf
+no later than at boot time, then I think we can provide a sane ABI, keep the
+implementation simple, all without breaking existing users that utilize perf in
+the host to profile guests.
+
+[*] https://lore.kernel.org/all/CALMp9eRBOmwz=mspp0m5Q093K3rMUeAsF3vEL39MGV5Br9wEQQ@mail.gmail.com
