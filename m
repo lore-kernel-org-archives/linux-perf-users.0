@@ -1,15 +1,15 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D649D14F68
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 06:00:06 +0000 (UTC)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0472DD;
-	Tue, 26 Sep 2023 23:00:04 -0700 (PDT)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R821e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VszCdMf_1695794401;
-Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VszCdMf_1695794401)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6E214AB8
+	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 06:00:08 +0000 (UTC)
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDF7192;
+	Tue, 26 Sep 2023 23:00:05 -0700 (PDT)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R601e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VszCdNB_1695794402;
+Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VszCdNB_1695794402)
           by smtp.aliyun-inc.com;
-          Wed, 27 Sep 2023 14:00:01 +0800
+          Wed, 27 Sep 2023 14:00:02 +0800
 From: Jing Zhang <renyu.zj@linux.alibaba.com>
 To: John Garry <john.g.garry@oracle.com>,
 	Ian Rogers <irogers@google.com>
@@ -32,9 +32,9 @@ Cc: Will Deacon <will@kernel.org>,
 	Zhuo Song <zhuo.song@linux.alibaba.com>,
 	Jing Zhang <renyu.zj@linux.alibaba.com>,
 	Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: [PATCH v11 2/7] perf metric: "Compat" supports regular expression matching identifiers
-Date: Wed, 27 Sep 2023 13:59:46 +0800
-Message-Id: <1695794391-34817-3-git-send-email-renyu.zj@linux.alibaba.com>
+Subject: [PATCH v11 3/7] perf jevents: Support EventidCode and NodeType
+Date: Wed, 27 Sep 2023 13:59:47 +0800
+Message-Id: <1695794391-34817-4-git-send-email-renyu.zj@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1695794391-34817-1-git-send-email-renyu.zj@linux.alibaba.com>
 References: <1695794391-34817-1-git-send-email-renyu.zj@linux.alibaba.com>
@@ -50,38 +50,57 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-The jevent "Compat" is used for uncore PMU alias or metric definitions.
+The previous code assumes an event has either an "event=" or "config"
+field at the beginning. For CMN neither of these may be present, as an
+event is typically "type=xx,eventid=xxx".
 
-The same PMU driver has different PMU identifiers due to different
-hardware versions and types, but they may have some common PMU metric.
-Since a Compat value can only match one identifier, when adding the
-same metric to PMUs with different identifiers, each identifier needs
-to be defined once, which is not streamlined enough.
+So add EventidCode and NodeType to support CMN event description.
 
-So let "Compat" support using regular expression to match multiple
-identifiers for uncore PMU metric.
+I compared pmu_event.c before and after compiling with JEVENT_ARCH=all,
+they are consistent.
 
 Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
-Reviewed-by: John Garry <john.g.garry@oracle.com>
 Reviewed-by: Ian Rogers <irogers@google.com>
 Tested-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/metricgroup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/pmu-events/jevents.py | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 6231044..0484736 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -498,7 +498,7 @@ static int metricgroup__sys_event_iter(const struct pmu_metric *pm,
- 
- 	while ((pmu = perf_pmus__scan(pmu))) {
- 
--		if (!pmu->id || strcmp(pmu->id, pm->compat))
-+		if (!pmu->id || !pmu_uncore_identifier_match(pm->compat, pmu->id))
- 			continue;
- 
- 		return d->fn(pm, table, d->data);
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index af15fa2..f863aec 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -298,6 +298,7 @@ class JsonEvent:
+     if 'ExtSel' in jd:
+       eventcode |= int(jd['ExtSel']) << 8
+     configcode = int(jd['ConfigCode'], 0) if 'ConfigCode' in jd else None
++    eventidcode = int(jd['EventidCode'], 0) if 'EventidCode' in jd else None
+     self.name = jd['EventName'].lower() if 'EventName' in jd else None
+     self.topic = ''
+     self.compat = jd.get('Compat')
+@@ -335,7 +336,13 @@ class JsonEvent:
+     if precise and self.desc and '(Precise Event)' not in self.desc:
+       extra_desc += ' (Must be precise)' if precise == '2' else (' (Precise '
+                                                                  'event)')
+-    event = f'config={llx(configcode)}' if configcode is not None else f'event={llx(eventcode)}'
++    event = None
++    if configcode is not None:
++      event = f'config={llx(configcode)}'
++    elif eventidcode is not None:
++      event = f'eventid={llx(eventidcode)}'
++    else:
++      event = f'event={llx(eventcode)}'
+     event_fields = [
+         ('AnyThread', 'any='),
+         ('PortMask', 'ch_mask='),
+@@ -345,6 +352,7 @@ class JsonEvent:
+         ('Invert', 'inv='),
+         ('SampleAfterValue', 'period='),
+         ('UMask', 'umask='),
++        ('NodeType', 'type='),
+     ]
+     for key, value in event_fields:
+       if key in jd and jd[key] != '0':
 -- 
 1.8.3.1
 
