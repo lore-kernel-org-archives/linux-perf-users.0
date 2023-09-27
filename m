@@ -1,15 +1,15 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA8BD154A0
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 06:00:09 +0000 (UTC)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8AA497;
-	Tue, 26 Sep 2023 23:00:07 -0700 (PDT)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VszCdOO_1695794404;
-Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VszCdOO_1695794404)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83F115492
+	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 06:00:12 +0000 (UTC)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8D9592;
+	Tue, 26 Sep 2023 23:00:10 -0700 (PDT)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R751e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VszCdPo_1695794406;
+Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VszCdPo_1695794406)
           by smtp.aliyun-inc.com;
-          Wed, 27 Sep 2023 14:00:05 +0800
+          Wed, 27 Sep 2023 14:00:07 +0800
 From: Jing Zhang <renyu.zj@linux.alibaba.com>
 To: John Garry <john.g.garry@oracle.com>,
 	Ian Rogers <irogers@google.com>
@@ -32,14 +32,14 @@ Cc: Will Deacon <will@kernel.org>,
 	Zhuo Song <zhuo.song@linux.alibaba.com>,
 	Jing Zhang <renyu.zj@linux.alibaba.com>,
 	Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: [PATCH v11 5/7] perf test: Add pmu-event test for "Compat" and new event_field.
-Date: Wed, 27 Sep 2023 13:59:49 +0800
-Message-Id: <1695794391-34817-6-git-send-email-renyu.zj@linux.alibaba.com>
+Subject: [PATCH v11 7/7] perf vendor events: Add JSON metrics for Arm CMN
+Date: Wed, 27 Sep 2023 13:59:51 +0800
+Message-Id: <1695794391-34817-8-git-send-email-renyu.zj@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1695794391-34817-1-git-send-email-renyu.zj@linux.alibaba.com>
 References: <1695794391-34817-1-git-send-email-renyu.zj@linux.alibaba.com>
 X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
 	UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
 	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -50,132 +50,98 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Add new event test for uncore system event which is used to verify the
-functionality of "Compat" matching multiple identifiers and the new event
-fields "EventidCode" and "NodeType".
+Add JSON metrics for Arm CMN. Currently just add part of CMN PMU
+metrics which are general and compatible for any SoC with CMN-ANY.
 
 Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+Reviewed-by: John Garry <john.g.garry@oracle.com>
 Reviewed-by: Ian Rogers <irogers@google.com>
 Tested-by: Ian Rogers <irogers@google.com>
 ---
- .../pmu-events/arch/test/test_soc/sys/uncore.json  |  8 ++++
- tools/perf/pmu-events/empty-pmu-events.c           |  8 ++++
- tools/perf/tests/pmu-events.c                      | 55 ++++++++++++++++++++++
- 3 files changed, 71 insertions(+)
+ .../pmu-events/arch/arm64/arm/cmn/sys/metric.json  | 74 ++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json
 
-diff --git a/tools/perf/pmu-events/arch/test/test_soc/sys/uncore.json b/tools/perf/pmu-events/arch/test/test_soc/sys/uncore.json
-index c7e7528..4d423b1 100644
---- a/tools/perf/pmu-events/arch/test/test_soc/sys/uncore.json
-+++ b/tools/perf/pmu-events/arch/test/test_soc/sys/uncore.json
-@@ -12,5 +12,13 @@
-            "EventName": "sys_ccn_pmu.read_cycles",
-            "Unit": "sys_ccn_pmu",
-            "Compat": "0x01"
-+   },
-+   {
-+           "BriefDescription": "Counts total cache misses in first lookup result (high priority)",
-+           "EventidCode": "0x1",
-+           "NodeType": "0x5",
-+           "EventName": "sys_cmn_pmu.hnf_cache_miss",
-+           "Unit": "sys_cmn_pmu",
-+           "Compat": "(434|436|43c|43a).*"
-    }
- ]
-diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
-index 12bd043..1372742 100644
---- a/tools/perf/pmu-events/empty-pmu-events.c
-+++ b/tools/perf/pmu-events/empty-pmu-events.c
-@@ -245,6 +245,14 @@ struct pmu_events_map {
- 		.pmu = "uncore_sys_ccn_pmu",
- 	},
- 	{
-+		.name = "sys_cmn_pmu.hnf_cache_miss",
-+		.event = "eventid=0x1,type=0x5",
-+		.desc = "Counts total cache misses in first lookup result (high priority). Unit: uncore_sys_cmn_pmu ",
-+		.compat = "(434|436|43c|43a).*",
-+		.topic = "uncore",
-+		.pmu = "uncore_sys_cmn_pmu",
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json
+new file mode 100644
+index 0000000..f7823bd
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.json
+@@ -0,0 +1,74 @@
++[
++	{
++		"MetricName": "slc_miss_rate",
++		"BriefDescription": "The system level cache miss rate.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "hnf_cache_miss / hnf_slc_sf_cache_access",
++		"ScaleUnit": "100%",
++		"Unit": "arm_cmn",
++		"Compat": "(434|436|43c|43a).*"
 +	},
 +	{
- 		.name = 0,
- 		.event = 0,
- 		.desc = 0,
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index 0cf572f..a56d329 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -262,9 +262,24 @@ struct perf_pmu_test_pmu {
- 	.matching_pmu = "uncore_sys_ccn_pmu4",
- };
- 
-+static const struct perf_pmu_test_event sys_cmn_pmu_hnf_cache_miss = {
-+	.event = {
-+		.name = "sys_cmn_pmu.hnf_cache_miss",
-+		.event = "eventid=0x1,type=0x5",
-+		.desc = "Counts total cache misses in first lookup result (high priority)",
-+		.topic = "uncore",
-+		.pmu = "uncore_sys_cmn_pmu",
-+		.compat = "(434|436|43c|43a).*",
-+	},
-+	.alias_str = "eventid=0x1,type=0x5",
-+	.alias_long_desc = "Counts total cache misses in first lookup result (high priority)",
-+	.matching_pmu = "uncore_sys_cmn_pmu0",
-+};
-+
- static const struct perf_pmu_test_event *sys_events[] = {
- 	&sys_ddr_pmu_write_cycles,
- 	&sys_ccn_pmu_read_cycles,
-+	&sys_cmn_pmu_hnf_cache_miss,
- 	NULL
- };
- 
-@@ -707,6 +722,46 @@ static int __test_uncore_pmu_event_aliases(struct perf_pmu_test_pmu *test_pmu)
- 			&sys_ccn_pmu_read_cycles,
- 		},
- 	},
-+	{
-+		.pmu = {
-+			.name = (char *)"uncore_sys_cmn_pmu0",
-+			.is_uncore = 1,
-+			.id = (char *)"43401",
-+		},
-+		.aliases = {
-+			&sys_cmn_pmu_hnf_cache_miss,
-+		},
++		"MetricName": "hnf_message_retry_rate",
++		"BriefDescription": "HN-F message retry rate indicates whether a lack of credits is causing the bottlenecks.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "hnf_pocq_retry / hnf_pocq_reqs_recvd",
++		"ScaleUnit": "100%",
++		"Unit": "arm_cmn",
++		"Compat": "(434|436|43c|43a).*"
 +	},
 +	{
-+		.pmu = {
-+			.name = (char *)"uncore_sys_cmn_pmu0",
-+			.is_uncore = 1,
-+			.id = (char *)"43602",
-+		},
-+		.aliases = {
-+			&sys_cmn_pmu_hnf_cache_miss,
-+		},
++		"MetricName": "sf_hit_rate",
++		"BriefDescription": "Snoop filter hit rate can be used to measure the snoop filter efficiency.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "hnf_sf_hit / hnf_slc_sf_cache_access",
++		"ScaleUnit": "100%",
++		"Unit": "arm_cmn",
++		"Compat": "(434|436|43c|43a).*"
 +	},
 +	{
-+		.pmu = {
-+			.name = (char *)"uncore_sys_cmn_pmu0",
-+			.is_uncore = 1,
-+			.id = (char *)"43c03",
-+		},
-+		.aliases = {
-+			&sys_cmn_pmu_hnf_cache_miss,
-+		},
++		"MetricName": "mc_message_retry_rate",
++		"BriefDescription": "The memory controller request retries rate indicates whether the memory controller is the bottleneck.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "hnf_mc_retries / hnf_mc_reqs",
++		"ScaleUnit": "100%",
++		"Unit": "arm_cmn",
++		"Compat": "(434|436|43c|43a).*"
 +	},
 +	{
-+		.pmu = {
-+			.name = (char *)"uncore_sys_cmn_pmu0",
-+			.is_uncore = 1,
-+			.id = (char *)"43a01",
-+		},
-+		.aliases = {
-+			&sys_cmn_pmu_hnf_cache_miss,
-+		},
++		"MetricName": "rni_actual_read_bandwidth.all",
++		"BriefDescription": "This event measure the actual bandwidth that RN-I bridge sends to the interconnect.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "rnid_rxdat_flits * 32 / 1e6 / duration_time",
++		"ScaleUnit": "1MB/s",
++		"Unit": "arm_cmn",
++		"Compat": "(434|436|43c|43a).*"
++	},
++	{
++		"MetricName": "rni_actual_write_bandwidth.all",
++		"BriefDescription": "This event measures the actual write bandwidth at RN-I bridges.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "rnid_txdat_flits * 32 / 1e6 / duration_time",
++		"ScaleUnit": "1MB/s",
++		"Unit": "arm_cmn",
++		"Compat": "(434|436|43c|43a).*"
++	},
++	{
++		"MetricName": "rni_retry_rate",
++		"BriefDescription": "RN-I bridge retry rate indicates whether the memory controller is the bottleneck.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "rnid_txreq_flits_retried / rnid_txreq_flits_total",
++		"ScaleUnit": "100%",
++		"Unit": "arm_cmn",
++		"Compat": "(434|436|43c|43a).*"
++	},
++	{
++		"MetricName": "sbsx_actual_write_bandwidth.all",
++		"BriefDescription": "sbsx actual write bandwidth.",
++		"MetricGroup": "cmn",
++		"MetricExpr": "sbsx_txdat_flitv * 32 / 1e6 / duration_time",
++		"ScaleUnit": "1MB/s",
++		"Unit": "arm_cmn",
++		"Compat": "(434|436|43c|43a).*"
 +	}
- };
- 
- /* Test that aliases generated are as expected */
++]
 -- 
 1.8.3.1
 
