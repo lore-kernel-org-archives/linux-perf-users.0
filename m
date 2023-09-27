@@ -1,135 +1,188 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F6A111AB
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 17:27:12 +0000 (UTC)
-Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 370AFF4
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 10:27:10 -0700 (PDT)
-Received: by mail-pg1-x54a.google.com with SMTP id 41be03b00d2f7-56fb25fdf06so10952435a12.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 10:27:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695835629; x=1696440429; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=45/FQrKeL8Udcs0UjyYMLebUZXfqqT6VPGukdHqASBY=;
-        b=pxkIsUL/CYKNNtXcZ54jqEaRWNI1bRSTOtQ6roFCrUvxWV9z+gRVpfk81GbCzvJNUH
-         gUqzv6OJdS1w6EKg5cP8ZnFGhFoU7A0uvR3Ok/cnerZmRjIwkJb58MY+qAbUZvjzPB9q
-         ha5MUQUXsSfXOdj/dt9aoAUtuEuPCxxrnxBlj62vaq6X+W46VbEaQ1nE7AXyaTAN6+P+
-         m7gD3ZK/P4XZsF71AgkhcU1DjgEzLC6Eq9Y3teJ7l2fOvaH7TKFJbSZEnEhc1lxhOeQc
-         zdIPFIGEM0fm5UMD93MU6o2kBdyIv5klLMPtsXBxYP8OQVZ1i+Rc9MjcXOEnA0yaXDr6
-         MiJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695835629; x=1696440429;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=45/FQrKeL8Udcs0UjyYMLebUZXfqqT6VPGukdHqASBY=;
-        b=JNn+xXlqjK6Ozw8C+DAgwUEs3vlkILcUKMy6Gz3b/LNVTtSoCCB221qwVMw3yqTloh
-         DEEVU0BQXChM3IlyOqxiALQ/mgZ89oT9LF1CiZ8JNv4JbwesDwwVwiwbmoBcaw80xkjU
-         TPNBZM1TTOW2g7qH8gawmEGnfQ5k1RM55U5m1+iuoxKN06WR3do07XSFYaWzpT1yXURF
-         mdpN6pn678Om8Y3Rb/WxMRYciKOh9HFmjvReycB81kY95V8Ys45hiy2+HAlcBXc5SLI6
-         c1lBAnvQ3vTUt5WvuQ/rve4pNcrwMZ7A24bVWzL5fwCckapZA3JaSQ118ymm1qUB0y6m
-         j5VA==
-X-Gm-Message-State: AOJu0Yzo2+EOLdacr+GMg31RsaOui5dnpNVDwyTKmJs/b4BOUYFff7Wn
-	JlFdXpxLoF9dtLRxSNZoPV2CiydyGhM=
-X-Google-Smtp-Source: AGHT+IEo/l8kLAGFPglCwVwc5Xc6q19FVQ0XSzm/QsHADwvKgtDSKq0Zssqfo5n0svX+VvLt6XNOBeajUM0=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:d501:b0:1c7:217c:3e4b with SMTP id
- b1-20020a170902d50100b001c7217c3e4bmr37979plg.5.1695835629656; Wed, 27 Sep
- 2023 10:27:09 -0700 (PDT)
-Date: Wed, 27 Sep 2023 10:27:07 -0700
-In-Reply-To: <20230927113312.GD21810@noisy.programming.kicks-ass.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B31D262AD
+	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 18:17:56 +0000 (UTC)
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA5B9A1
+	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 11:17:54 -0700 (PDT)
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38RIANYa001382;
+	Wed, 27 Sep 2023 18:17:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=kSwKiwUYHbqjEgX+sjVkBtWjvfKx/29ZbBovFv8fmH0=;
+ b=DPnk7YUPU+PgYwBLzeSwVkK9aZoAyRpOQLcvlo3lXcrnSvMCEyW4JJb4XAg56xlIRJpX
+ L9/Ea5D2WduuOqXzHimnUxD59/mxcLrIZZqRDgs7cflbSvR9IofpFUxjeO1iUNo7nkmS
+ +fwQnCIODOdivzQT50casH/P0iDd6sLxxoYtwXZxkgTMZ3nJ4ys8T7JCkvQLdzyWBXu7
+ Qap5FgSKd1f/7WKpzHUrXRbueVt4hFfmU5MI4M9yLLw2Iy9NYqoGV9yl5Hd8qVIyN3lz
+ 04+v6lEBevJvFusWLs9QnQ5Ow577owb+8riTRTuGu6d5WjgdmmZRfu2LMTnNkpxVbZ/r UA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tcp13713a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 27 Sep 2023 18:17:44 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38RI5MWi018070;
+	Wed, 27 Sep 2023 18:17:43 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tcp137135-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 27 Sep 2023 18:17:43 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38RGFRWE008253;
+	Wed, 27 Sep 2023 18:17:43 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tabbndhb2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 27 Sep 2023 18:17:43 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38RIHd3u13107960
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 27 Sep 2023 18:17:39 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BB8502004B;
+	Wed, 27 Sep 2023 18:17:39 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A472920040;
+	Wed, 27 Sep 2023 18:17:37 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.55.139])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 27 Sep 2023 18:17:37 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com, Sachin Sant <sachinp@linux.ibm.com>
+Subject: [PATCH V3] perf test: Fix parse-events tests to skip parametrized events
+Date: Wed, 27 Sep 2023 23:47:03 +0530
+Message-Id: <20230927181703.80936-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20230927033124.1226509-1-dapeng1.mi@linux.intel.com>
- <20230927033124.1226509-8-dapeng1.mi@linux.intel.com> <20230927113312.GD21810@noisy.programming.kicks-ass.net>
-Message-ID: <ZRRl6y1GL-7RM63x@google.com>
-Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics event
-From: Sean Christopherson <seanjc@google.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Like Xu <likexu@tencent.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Zhenyu Wang <zhenyuw@linux.intel.com>, Zhang Xiong <xiong.y.zhang@intel.com>, 
-	Lv Zhiyuan <zhiyuan.lv@intel.com>, Yang Weijiang <weijiang.yang@intel.com>, 
-	Dapeng Mi <dapeng1.mi@intel.com>, Jim Mattson <jmattson@google.com>, 
-	David Dunn <daviddunn@google.com>, Mingwei Zhang <mizhang@google.com>
-Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.6
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: f_l6ErRZjKCXTAVPKsGm00Lw442ZSR91
+X-Proofpoint-ORIG-GUID: yqpvBD3IFwCY7tFAAP9vgQRt1SgZcD6E
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-09-27_12,2023-09-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
+ malwarescore=0 adultscore=0 spamscore=0 mlxscore=0 clxscore=1015
+ bulkscore=0 suspectscore=0 lowpriorityscore=0 impostorscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2309270152
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-+Jim, David, and Mingwei
+Testcase "Parsing of all PMU events from sysfs" parse events for
+all PMUs, and not just cpu. In case of powerpc, the PowerVM
+environment supports events from hv_24x7 and hv_gpci PMU which
+is of example format like below:
 
-On Wed, Sep 27, 2023, Peter Zijlstra wrote:
-> On Wed, Sep 27, 2023 at 11:31:18AM +0800, Dapeng Mi wrote:
-> > When guest wants to use PERF_METRICS MSR, a virtual metrics event needs
-> > to be created in the perf subsystem so that the guest can have exclusive
-> > ownership of the PERF_METRICS MSR.
-> 
-> Urgh, can someone please remind me how all that is supposed to work
-> again? The guest is just a task that wants the event. If the
-> host creates a CPU event, then that gets scheduled with higher priority
-> and the task looses out, no joy.
-> 
-> So you cannot guarantee the guest gets anything.
-> 
-> That is, I remember we've had this exact problem before, but I keep
-> forgetting how this all is supposed to work. I don't use this virt stuff
-> (and every time I try qemu arguments defeat me and I give up in
-> disgust).
+- hv_24x7/CPM_ADJUNCT_INST,domain=?,core=?/
+- hv_gpci/event,partition_id=?/
 
-I don't think it does work, at least not without a very, very carefully crafted
-setup and a host userspace that knows it must not use certain aspects of perf.
-E.g. for PEBS, if the guest virtual counters don't map 1:1 to the "real" counters
-in hardware, KVM+perf simply disables the counter.
+The value for "?" needs to be filled in depending on system
+configuration. It is better to skip these parametrized events
+in this test as it is done in:
+'commit b50d691e50e6 ("perf test: Fix "all PMU test" to skip
+parametrized events")' which handled a simialr instance with
+"all PMU test".
 
-And for top-down slots, getting anything remotely accurate requires pinning vCPUs
-1:1 with pCPUs and enumerating an accurate toplogy to the guest:
+Fix parse-events test to skip parametrized events since
+it needs proper setup of the parameters.
 
-  The count is distributed among unhalted logical processors (hyper-threads) who
-  share the same physical core, in processors that support Intel Hyper-Threading
-  Technology.
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Tested-by: Ian Rogers <irogers@google.com>
+Tested-by: Sachin Sant <sachinp@linux.ibm.com>
+Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
+---
+Changelog:
+v2 -> v3:
+ Addressed review comments from Namhyung by closing the
+ file if getline fails.
 
-Jumping the gun a bit (we're in the *super* early stages of scraping together a
-rough PoC), but I think we should effectively put KVM's current vPMU support into
-maintenance-only mode, i.e. stop adding new features unless they are *very* simple
-to enable, and instead pursue an implementation that (a) lets userspace (and/or
-the kernel builder) completely disable host perf (or possibly just host perf usage
-of the hardware PMU) and (b) let KVM passthrough the entire hardware PMU when it
-has been turned off in the host.
+v1 -> v2:
+ Addressed review comments from Ian. Updated size of
+ pmu event name variable and changed bool name which is
+ used to skip the test.
 
-I.e. keep KVM's existing best-offset vPMU support, e.g. for setups where the
-platform owner is also the VM ueer (running a Windows VM on a Linux box, hosting
-a Linux VM in ChromeOS, etc...).  But for anything advanced and for hard guarantees,
-e.g. cloud providers that want to expose fully featured vPMU to customers, force
-the platform owner to choose between using perf (or again, perf with hardware PMU)
-in the host, and exposing the hardware PMU to the guest.
+ tools/perf/tests/parse-events.c | 39 +++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-Hardware vendors are pushing us in the direction whether we like it or not, e.g.
-SNP and TDX want to disallow profiling the guest from the host, ARM has an
-upcoming PMU model where (IIUC) it can't be virtualized without a passthrough
-approach, Intel's hybrid CPUs are a complete trainwreck unless vCPUs are pinned,
-and virtualizing things like top-down slots, PEBS, and LBRs in the shared model
-requires an absurd amount of complexity throughout the kernel and userspace.
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index d47f1f871164..2b66ffba3bb0 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -2514,9 +2514,14 @@ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest
+ 	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
+ 		struct stat st;
+ 		char path[PATH_MAX];
++		char pmu_event[PATH_MAX];
++		char *buf = NULL;
++		FILE *file;
+ 		struct dirent *ent;
++		size_t len = 0;
+ 		DIR *dir;
+ 		int err;
++		int n;
+ 
+ 		snprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/events/",
+ 			sysfs__mountpoint(), pmu->name);
+@@ -2538,11 +2543,45 @@ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest
+ 			struct evlist_test e = { .name = NULL, };
+ 			char name[2 * NAME_MAX + 1 + 12 + 3];
+ 			int test_ret;
++			bool is_event_parameterized = 0;
+ 
+ 			/* Names containing . are special and cannot be used directly */
+ 			if (strchr(ent->d_name, '.'))
+ 				continue;
+ 
++			/* exclude parametrized ones (name contains '?') */
++			n = snprintf(pmu_event, sizeof(pmu_event), "%s%s", path, ent->d_name);
++			if (n >= PATH_MAX) {
++				pr_err("pmu event name crossed PATH_MAX(%d) size\n", PATH_MAX);
++				continue;
++			}
++
++			file = fopen(pmu_event, "r");
++			if (!file) {
++				pr_debug("can't open pmu event file for '%s'\n", ent->d_name);
++				ret = combine_test_results(ret, TEST_FAIL);
++				continue;
++			}
++
++			if (getline(&buf, &len, file) < 0) {
++				pr_debug(" pmu event: %s is a null event\n", ent->d_name);
++				ret = combine_test_results(ret, TEST_FAIL);
++				fclose(file);
++				continue;
++			}
++
++			if (strchr(buf, '?'))
++				is_event_parameterized = 1;
++
++			free(buf);
++			buf = NULL;
++			fclose(file);
++
++			if (is_event_parameterized == 1) {
++				pr_debug("skipping parametrized PMU event: %s which contains ?\n", pmu_event);
++				continue;
++			}
++
+ 			snprintf(name, sizeof(name), "%s/event=%s/u", pmu->name, ent->d_name);
+ 
+ 			e.name  = name;
+-- 
+2.31.1
 
-Note, a similar idea was floated and rejected in the past[*], but that failed
-proposal tried to retain host perf+PMU functionality by making the behavior dynamic,
-which I agree would create an awful ABI for the host.  If we make the "knob" a
-Kconfig or kernel param, i.e. require the platform owner to opt-out of using perf
-no later than at boot time, then I think we can provide a sane ABI, keep the
-implementation simple, all without breaking existing users that utilize perf in
-the host to profile guests.
-
-[*] https://lore.kernel.org/all/CALMp9eRBOmwz=mspp0m5Q093K3rMUeAsF3vEL39MGV5Br9wEQQ@mail.gmail.com
