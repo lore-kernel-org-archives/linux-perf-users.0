@@ -1,49 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485C0620
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 00:16:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55DA310F6
+	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 00:29:49 +0000 (UTC)
 Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B6B11F31
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 17:16:07 -0700 (PDT)
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-79faba5fe12so261760939f.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 17:16:07 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD95D1987
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 17:29:47 -0700 (PDT)
+Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-79fb78e297bso240555739f.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 17:29:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695773766; x=1696378566;
+        d=1e100.net; s=20230601; t=1695774587; x=1696379387;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=q1iZ4LU82UOG96j2VBk+9ry3Jk5SAeQvNprBdriKjWE=;
-        b=w0yDG7IxzbHSoyPjx3QT2YwpwmPBhaK7pcjnN+YXcKjPG/w1JxnSeOLn0riuKmLkQ0
-         M8/qmidmFEjD6qp0q3H7LRPUDocuzI4hVThLWDimJc4BcMNoe5hLpibEKmSY3G/oGQtz
-         BiAG4mtxn3+Orxd7SwhcZainRD1IoeLEL1nKQ19FTJBiommWkeCEh5OOjSHFkKkz98si
-         ZteJckxi2vBAbkm4NpwAkl0HWK0MqW2nfMwNEcuZr/xcbzpvM2qGWJXNo7WEKJVrJg5x
-         AncAAnE6UeWRxR69UNjg5hnIxfNqoIGcKWY3qxj6JSn0PGa+3+abeGFirMwkBHDjBMGq
-         g7cQ==
-X-Gm-Message-State: AOJu0YyMZ3M7JwXoyrxamMuRO3rNPWS8mVCccLgA7w3fp4mYpdI0d57p
-	zlOE1loFpHeA9b5A1HqVoMwgtoaLs0tuHA8Z+P4=
-X-Google-Smtp-Source: AGHT+IHjC5UMNeuTMvB33Sbl+4uRFJJxkKraQqgF0oif/NziwbXElCwaGRmlMkcuh/j1vmapPbBvGvFi6qT5WD8VFXQ=
-X-Received: by 2002:a6b:e211:0:b0:78b:b892:e334 with SMTP id
- z17-20020a6be211000000b0078bb892e334mr441916ioc.11.1695773766267; Tue, 26 Sep
- 2023 17:16:06 -0700 (PDT)
+        bh=UWH0z533esqpAC5VNc1MXkkMGiZG7WIhuL7G4xndyOw=;
+        b=IPitUc1kAy0h0iR0TC0SyUZg0hcj4SyDuzamSyZ8Xhgzr42PwlM5+vJU08I9LAH7Ll
+         YYPw5Q0wOvapWIIus6RX/C0Hdk9NyeikLbk+pNrzVgz72HqKhS6uxG68qzgm8OBEkGIx
+         n22Fk7u90ogmEvtWRnGisW/ZCquO8ShxE1RTRHptwJjsT7QuO5grSmBXYOFd95re2pnn
+         LUAf4KylUSA3yml6eLgXH0RNjrri8F0KlpjzRaw/iVcWpoUm7PG6h5RstbthbkVGds8p
+         k+3uXdb/JQo2Mm/3Ki+E8w90orVhKWPUQipaIOatTzOI/mxrYKVF/am8tEuW9Smltwne
+         EfYg==
+X-Gm-Message-State: AOJu0YyyZ/vc72SuI7u7RRBqMl0peydXQ4kHR6RKDb4jgx6VLIVRCfmG
+	CG7CMLY02Zpbo31NQdrnsRfmWeSctMduhJhNuSE=
+X-Google-Smtp-Source: AGHT+IEKBOIRfeX+82zX1Q3yNZC0+5Lc8p8FgD5oG3u0a/EQJbmAorZ7NPITOJCAGJRS7EAgoaefjB3Vsvh3pssW5as=
+X-Received: by 2002:a6b:da15:0:b0:794:e11c:d8c3 with SMTP id
+ x21-20020a6bda15000000b00794e11cd8c3mr369986iob.16.1695774586629; Tue, 26 Sep
+ 2023 17:29:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230915053752.3012-1-atrajeev@linux.vnet.ibm.com> <20230915053752.3012-2-atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20230915053752.3012-2-atrajeev@linux.vnet.ibm.com>
+References: <20230920192847.975897-1-adityag@linux.ibm.com> <20230920192847.975897-2-adityag@linux.ibm.com>
+In-Reply-To: <20230920192847.975897-2-adityag@linux.ibm.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 26 Sep 2023 17:15:54 -0700
-Message-ID: <CAM9d7cg+RcpXnhB7ZBzsUXKuXXd_nTfnFNMf9L_+LNm8i1d47g@mail.gmail.com>
-Subject: Re: [PATCH V4 2/2] tools/perf/tests: Fix object code reading to skip
- address that falls out of text section
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com, 
-	irogers@google.com, linux-perf-users@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com, kjain@linux.ibm.com, 
-	disgoel@linux.vnet.ibm.com, Disha Goel <disgoel@linux.ibm.com>
+Date: Tue, 26 Sep 2023 17:29:35 -0700
+Message-ID: <CAM9d7cihonpzY7pW1o9V1q5Ja2SAD+frcjVESBw=073LpuokLA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] perf check: introduce check subcommand
+To: Aditya Gupta <adityag@linux.ibm.com>
+Cc: acme@kernel.org, jolsa@kernel.org, irogers@google.com, 
+	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com, 
+	atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
@@ -53,120 +51,150 @@ X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Sep 14, 2023 at 10:40=E2=80=AFPM Athira Rajeev
-<atrajeev@linux.vnet.ibm.com> wrote:
->
-> The testcase "Object code reading" fails in somecases
-> for "fs_something" sub test as below:
->
->     Reading object code for memory address: 0xc008000007f0142c
->     File is: /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
->     On file address is: 0x1114cc
->     Objdump command is: objdump -z -d --start-address=3D0x11142c --stop-a=
-ddress=3D0x1114ac /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
->     objdump read too few bytes: 128
->     test child finished with -1
->
-> This can alo be reproduced when running perf record with
-> workload that exercises fs_something() code. In the test
-> setup, this is exercising xfs code since root is xfs.
->
->     # perf record ./a.out
->     # perf report -v |grep "xfs.ko"
->       0.76% a.out /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko  0xc008000=
-007de5efc B [k] xlog_cil_commit
->       0.74% a.out  /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko  0xc00800=
-0007d5ae18 B [k] xfs_btree_key_offset
->       0.74% a.out  /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko  0xc00800=
-0007e11fd4 B [k] 0x0000000000112074
->
-> Here addr "0xc008000007e11fd4" is not resolved. since this is a
-> kernel module, its offset is from the DSO. Xfs module is loaded
-> at 0xc008000007d00000
->
->    # cat /proc/modules | grep xfs
->     xfs 2228224 3 - Live 0xc008000007d00000
->
-> And size is 0x220000. So its loaded between  0xc008000007d00000
-> and 0xc008000007f20000. From objdump, text section is:
->     text 0010f7bc  0000000000000000 0000000000000000 000000a0 2**4
->
-> Hence perf captured ip maps to 0x112074 which is:
-> ( ip - start of module ) + a0
->
-> This offset 0x112074 falls out .text section which is up to 0x10f7bc
-> In this case for module, the address 0xc008000007e11fd4 is pointing
-> to stub instructions. This address range represents the module stubs
-> which is allocated on module load and hence is not part of DSO offset.
->
-> To address this issue in "object code reading", skip the sample if
-> address falls out of text section and is within the module end.
-> Use the "text_end" member of "struct dso" to do this check.
->
-> To address this issue in "perf report", exploring an option of
-> having stubs range as part of the /proc/kallsyms, so that perf
-> report can resolve addresses in stubs range
->
-> However this patch uses text_end to skip the stub range for
-> Object code reading testcase.
->
-> Reported-by: Disha Goel <disgoel@linux.ibm.com>
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Tested-by: Disha Goel<disgoel@linux.ibm.com>
-> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
-> Changelog:
->  v3 -> v4:
->  Fixed indent in V3
->
->  v2 -> v3:
->  Used strtailcmp in comparison for module check and added Reviewed-by
->  from Adrian, Tested-by from Disha.
->
->  v1 -> v2:
->  Updated comment to add description on which arch has stub and
->  reason for skipping as suggested by Adrian
->
->  tools/perf/tests/code-reading.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-read=
-ing.c
-> index ed3815163d1b..9e6e6c985840 100644
-> --- a/tools/perf/tests/code-reading.c
-> +++ b/tools/perf/tests/code-reading.c
-> @@ -269,6 +269,16 @@ static int read_object_code(u64 addr, size_t len, u8=
- cpumode,
->         if (addr + len > map__end(al.map))
->                 len =3D map__end(al.map) - addr;
->
-> +       /*
-> +        * Some architectures (ex: powerpc) have stubs (trampolines) in k=
-ernel
-> +        * modules to manage long jumps. Check if the ip offset falls in =
-stubs
-> +        * sections for kernel modules. And skip module address after tex=
-t end
-> +        */
-> +       if (!strtailcmp(dso->long_name, ".ko") && al.addr > dso->text_end=
-) {
+Hello,
 
-There's a is_kernel_module() that can check compressed modules
-too but I think we need a simpler way to check it like dso->kernel.
+On Wed, Sep 20, 2023 at 12:29=E2=80=AFPM Aditya Gupta <adityag@linux.ibm.co=
+m> wrote:
+>
+> Currently the presence of a feature is checked with a combination of
+> perf version --build-options and greps, such as:
+>
+>     perf version --build-options | grep " on .* HAVE_FEATURE"
+>
+> Instead of this, introduce a subcommand "perf check --feature", with whic=
+h
+> scripts can test for presence of a feature, such as:
+>
+>     perf check --feature HAVE_FEATURE
+>
+> 'perf check --feature' command is expected to have exit status of 1 if fe=
+ature is
+> built-in, and 0 if not, -2 if feature is not known.
+>
+> An array 'supported_features' has also been introduced that can be
+> used by other commands like 'perf version --build-options', so that
+> new features can be added in one place, with the array
+>
+> Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
+> ---
+
+[SNIP]
+> +/**
+> + * check whether "feature" is built-in with perf
+> + * returns:
+> + *   -1: Feature not known
+> + *    0: Built-in
+> + *    1: NOT Built in
+
+It seems not intuitive.  I'd return 1 if it's builtin.
+Maybe we can return 0 for unknown ones too.
+
+> + */
+> +static int has_support(const char *feature)
+> +{
+> +       int res =3D -1;
+> +
+> +       for (int i =3D 0; supported_features[i].name; ++i) {
+> +               if ((strcmp(feature, supported_features[i].name) =3D=3D 0=
+) ||
+> +                       (strcmp(feature, supported_features[i].macro) =3D=
+=3D 0)) {
+
+Please align it to the previous strcmp().
+
+
+> +                       res =3D supported_features[i].is_builtin;
+> +                       if (!quiet)
+> +                               STATUS(supported_features[i]);
+> +                       break;
+
+Why not return right here?
+
+
+> +               }
+> +       }
+> +
+> +       if (res =3D=3D -1) {
+> +               if (!quiet)
+> +                       color_fprintf(stdout, PERF_COLOR_RED, "Feature no=
+t known: %s", feature);
+> +               return -1;
+> +       }
+
+Then you don't even need the 'res' variable.
+
+> +
+> +       return !res;
+> +}
+> +
+> +int cmd_check(int argc, const char **argv)
+> +{
+> +       argc =3D parse_options(argc, argv, check_options, check_usage,
+> +                            PARSE_OPT_STOP_AT_NON_OPTION);
+> +
+> +       if (!quiet)
+> +               printf("perf check %s\n", perf_version_string);
+> +
+> +       if (check.feature)
+> +               return has_support(check.feature);
+> +
+> +       return 0;
+> +}
+> diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
+> index f2ab5bae2150..9f895981bc9e 100644
+> --- a/tools/perf/builtin.h
+> +++ b/tools/perf/builtin.h
+> @@ -2,6 +2,23 @@
+>  #ifndef BUILTIN_H
+>  #define BUILTIN_H
+>
+> +#include <stddef.h>
+> +#include <linux/compiler.h>
+> +#include <tools/config.h>
+> +
+> +struct feature_support {
+> +       const char *name;
+> +       const char *macro;
+> +       int is_builtin;
+> +};
+> +
+> +#define FEATURE_SUPPORT(name_, macro_) { \
+> +       .name =3D name_,                       \
+> +       .macro =3D #macro_,                    \
+> +       .is_builtin =3D IS_BUILTIN(macro_) }
+> +
+> +extern struct feature_support supported_features[];
+> +
+>  void list_common_cmds_help(void);
+>  const char *help_unknown_cmd(const char *cmd);
+>
+> @@ -9,6 +26,7 @@ int cmd_annotate(int argc, const char **argv);
+>  int cmd_bench(int argc, const char **argv);
+>  int cmd_buildid_cache(int argc, const char **argv);
+>  int cmd_buildid_list(int argc, const char **argv);
+> +int cmd_check(int argc, const char **argv);
+>  int cmd_config(int argc, const char **argv);
+>  int cmd_c2c(int argc, const char **argv);
+>  int cmd_diff(int argc, const char **argv);
+> diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+> index d3fc8090413c..83dc0ac42fdb 100644
+> --- a/tools/perf/perf.c
+> +++ b/tools/perf/perf.c
+> @@ -50,6 +50,7 @@ static struct cmd_struct commands[] =3D {
+>         { "archive",    NULL,   0 },
+>         { "buildid-cache", cmd_buildid_cache, 0 },
+>         { "buildid-list", cmd_buildid_list, 0 },
+> +       { "check", cmd_check, 0 },
+
+Please align this.
 
 Thanks,
 Namhyung
 
 
-> +               pr_debug("skipping the module address %#"PRIx64" after te=
-xt end\n", al.addr);
-> +               goto out;
-> +       }
-> +
->         /* Read the object code using perf */
->         ret_len =3D dso__data_read_offset(dso, maps__machine(thread__maps=
-(thread)),
->                                         al.addr, buf1, len);
+>         { "config",     cmd_config,     0 },
+>         { "c2c",        cmd_c2c,        0 },
+>         { "diff",       cmd_diff,       0 },
 > --
-> 2.31.1
+> 2.41.0
 >
