@@ -1,49 +1,55 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38864EA8;
-	Wed, 27 Sep 2023 00:50:43 +0000 (UTC)
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 658D13C21;
-	Tue, 26 Sep 2023 17:50:41 -0700 (PDT)
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-79f989480e0so314028139f.3;
-        Tue, 26 Sep 2023 17:50:41 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2959195
+	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 01:00:59 +0000 (UTC)
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B5C416EBE;
+	Tue, 26 Sep 2023 18:00:58 -0700 (PDT)
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-79fe6da0049so61656739f.1;
+        Tue, 26 Sep 2023 18:00:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695775840; x=1696380640;
+        d=1e100.net; s=20230601; t=1695776457; x=1696381257;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=49VLLRdtyvTR9zrUZJfnDfe9+Yw6E25El1lehQytcPs=;
-        b=mM77ZXb39cItcCMSR6Vg7Yska+rnHCXT8ffib6LbemqdyTUEFR96NbIhNjAjJSoD0f
-         nMmnxjz0uMzD3GL675fYRPekQwRqWaEc8XULgTWV/09XyrDjYOGdZwRCZvNCa4LFBCXY
-         31b9p3S3eUhpAYaK1Ke+cw6hBCtE+ZzDlQO1bbcjyXgvifmluK0FdV86xE/jXXMO17sT
-         gz5W6cbAi2tOwy9nvgefLIV1Hlt4lZoOc+BHtDzNMRF9/d1c3acNk+xOAMmH5836NLXa
-         VKke8Unq5H6xfyi5JKEHMf6GPx7zTj7o8bT92Yz3IdrZ36KSLz3qoEgkmBkIDfTJ+EUu
-         Hpyg==
-X-Gm-Message-State: AOJu0YzCI7mC4IfjvxGxd/DTW4vljDoa+o2RFpV7UB7meHTpQdBui3C/
-	QvZ9fQMPhR/CI5RT38DkcFVNtcUatz1YwA6aMuo=
-X-Google-Smtp-Source: AGHT+IHfqddDhz0mWHuZuybn15arEe1k1jWr2QNcgQQvttagjCshwasBMO6deSBz8icSk4kdZ667J4Lr+E8uYwj9LoA=
-X-Received: by 2002:a6b:6806:0:b0:79f:b6b3:9dde with SMTP id
- d6-20020a6b6806000000b0079fb6b39ddemr481066ioc.9.1695775840642; Tue, 26 Sep
- 2023 17:50:40 -0700 (PDT)
+        bh=u9+1nCO1D5B1eQeTJpZBJNL5I9g9vcwJsTUle11cEt4=;
+        b=d2yf7qEBXKdRMjn3OB74W2qaJJkGfJPfZoK+LJZ5HHA2AYP9GzluioRWR1mebY3bbo
+         fePW676RyRDBFLmWvEGvFshZoQR76VoKOMWYU5DgIH72Ez4Qj1UgGopRxn9TxWA22rXQ
+         Bl+xyZIST1Kr9Xlal7EvOfPFErBDL+Wbk0K7rrWtttOuvAF2gGdaKbIfJtyL3Stj9hh+
+         cDPhTTZP/ytmw3g1jco6IZLysjKGf4/p6Pr7U/HHxlYAiFgBkRbjfl+Y3KaOr1XDY4IN
+         Ttj/aXZtxzgRrEmqwrZbdH2AaLv3V1bUOSox5iHuS7szaMg5uFgIpw6hySzZbkgkA9XP
+         LrOQ==
+X-Gm-Message-State: AOJu0YyszUI5rfkJm5pHDMSQdaLT9JUtJqODia6ZCnsb7N9/9nHiGNnc
+	DN6fayIk2k1ZPuthZrpclPw1RB5fAIPREyr5wqE=
+X-Google-Smtp-Source: AGHT+IGrl4MvN8IhXVvSTCRxo5yTkv3C8H24KaiHt8IC+9n0I5mzVpGiPcV2RurPqp45DxByroWLG3YOtKSUkbfKQmA=
+X-Received: by 2002:a6b:916:0:b0:792:6fb7:5d8f with SMTP id
+ t22-20020a6b0916000000b007926fb75d8fmr493590ioi.18.1695776457212; Tue, 26 Sep
+ 2023 18:00:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230922234444.3115821-1-namhyung@kernel.org> <CAP-5=fVMdX+vLPNBSe-8arKGvAGcdgHGt7ypEX-J-SZpUi2PGg@mail.gmail.com>
-In-Reply-To: <CAP-5=fVMdX+vLPNBSe-8arKGvAGcdgHGt7ypEX-J-SZpUi2PGg@mail.gmail.com>
+References: <1695621444-56530-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <CAP-5=fWuaii1rOOvN7rJDo3UoQvkEtiJv3QiBhLRhYk1_Se7ew@mail.gmail.com> <f4812cce-14d2-9771-233f-b0db5af449be@linux.alibaba.com>
+In-Reply-To: <f4812cce-14d2-9771-233f-b0db5af449be@linux.alibaba.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 26 Sep 2023 17:50:29 -0700
-Message-ID: <CAM9d7cg0ZoGHJ1hMBFviEg4hSmx0V8nBZyTAP+hkiDzEQUZAKw@mail.gmail.com>
-Subject: Re: [PATCH] perf record: Fix BTF type checks in the off-cpu profiling
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>, 
-	Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
+Date: Tue, 26 Sep 2023 18:00:46 -0700
+Message-ID: <CAM9d7cjjSJybJEbSdBkVH3qx7RDqriv4tqBCNw1Yi9bAeUf3Yw@mail.gmail.com>
+Subject: Re: [PATCH v10 0/7] Add metrics for Arm CMN
+To: Jing Zhang <renyu.zj@linux.alibaba.com>
+Cc: Ian Rogers <irogers@google.com>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+	linux-doc@vger.kernel.org, Zhuo Song <zhuo.song@linux.alibaba.com>, 
+	Shuai Xue <xueshuai@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
@@ -53,74 +59,48 @@ X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hi Ian,
+Hello,
 
-On Sun, Sep 24, 2023 at 11:03=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
+On Mon, Sep 25, 2023 at 8:15=E2=80=AFPM Jing Zhang <renyu.zj@linux.alibaba.=
+com> wrote:
 >
-> On Fri, Sep 22, 2023 at 4:44=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
-> wrote:
-> >
-> > The BTF func proto for a tracepoint has one more argument than the
-> > actual tracepoint function since it has a context argument at the
-> > begining.  So it should compare to 5 when the tracepoint has 4
-> > arguments.
-> >
-> >   typedef void (*btf_trace_sched_switch)(void *, bool, struct task_stru=
-ct *, struct task_struct *, unsigned int);
-> >
-> > Also, recent change in the perf tool would use a hand-written minimal
-> > vmlinux.h to generate BTF in the skeleton.  So it won't have the info
-> > of the tracepoint.  Anyway it should use the kernel's vmlinux BTF to
-> > check the type in the kernel.
-> >
-> > Fixes: b36888f71c85 ("perf record: Handle argument change in sched_swit=
-ch")
-> > Cc: Song Liu <song@kernel.org>
-> > Cc: Hao Luo <haoluo@google.com>
-> > CC: bpf@vger.kernel.org
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 >
-> Reviewed-by: Ian Rogers <irogers@google.com>
-
-Thanks for the review!
-
 >
-> > ---
-> >  tools/perf/util/bpf_off_cpu.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> =E5=9C=A8 2023/9/26 =E4=B8=8A=E5=8D=8812:37, Ian Rogers =E5=86=99=E9=81=
+=93:
+> > On Sun, Sep 24, 2023 at 10:58=E2=80=AFPM Jing Zhang <renyu.zj@linux.ali=
+baba.com> wrote:
+> >>
+> >> Changes since v8:
+> >> - Add fully match identifier check as suggested by Ian.
+> >> - Link: https://lore.kernel.org/lkml/1695037955-107983-1-git-send-emai=
+l-renyu.zj@linux.alibaba.com/
+> >>
+> >> Jing Zhang (7):
+> >>   perf pmu: "Compat" supports regular expression matching identifiers
+> >>   perf metric: "Compat" supports regular expression matching identifie=
+rs
+> >>   perf jevents: Support EventidCode and NodeType
+> >>   perf test: Make matching_pmu effective
+> >>   perf test: Add pmu-event test for "Compat" and new event_field.
+> >>   perf jevents: Add support for Arm CMN PMU aliasing
+> >>   perf vendor events: Add JSON metrics for Arm CMN
 > >
-> > diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cp=
-u.c
-> > index 01f70b8e705a..21f4d9ba023d 100644
-> > --- a/tools/perf/util/bpf_off_cpu.c
-> > +++ b/tools/perf/util/bpf_off_cpu.c
-> > @@ -98,7 +98,7 @@ static void off_cpu_finish(void *arg __maybe_unused)
-> >  /* v5.18 kernel added prev_state arg, so it needs to check the signatu=
-re */
-> >  static void check_sched_switch_args(void)
-> >  {
-> > -       const struct btf *btf =3D bpf_object__btf(skel->obj);
-> > +       const struct btf *btf =3D btf__load_vmlinux_btf();
-> >         const struct btf_type *t1, *t2, *t3;
-> >         u32 type_id;
+> > Thanks for the patience with all the to and fro. I was able to test
+> > the series with "git am -3" to get around a merge issue on
+> > perf-tools-next.
 > >
-> > @@ -116,7 +116,8 @@ static void check_sched_switch_args(void)
-> >                 return;
+> > Reviewed-by: Ian Rogers <irogers@google.com>
+> > Tested-by: Ian Rogers <irogers@google.com>
 > >
-> >         t3 =3D btf__type_by_id(btf, t2->type);
-> > -       if (t3 && btf_is_func_proto(t3) && btf_vlen(t3) =3D=3D 4) {
-> > +       /* btf_trace func proto has one more argument for the context *=
-/
-> > +       if (t3 && btf_is_func_proto(t3) && btf_vlen(t3) =3D=3D 5) {
-> >                 /* new format: pass prev_state as 4th arg */
 >
-> nit: does this comment need updating?
+> Thank you for following this series and providing many valuable suggestio=
+ns.
 
-No, it's the 4th arg and the sched_switch is called like.
+It's not applied cleanly.  Can you please rebase onto the current
+tmp.perf-tools-next branch in the following tree?
 
-        trace_sched_switch(sched_mode & SM_MASK_PREEMPT, prev, next,
-prev_state);
+  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git
 
 Thanks,
 Namhyung
