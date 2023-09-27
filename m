@@ -1,120 +1,235 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2274128FE
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 04:07:11 +0000 (UTC)
-Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34E921BB83
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 21:07:09 -0700 (PDT)
-Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-4195fe5cf73so36301cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 21:07:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695787628; x=1696392428; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O0nMoCs35unZfclTu3DKp3uZsoT22xTXBwaLiGdkdWQ=;
-        b=GmrGZwQOhEVqm+OG9/SbQUKxe/HC3FGo0BMMHGQDUJUicFFi6E7LLg49haja2g7jR0
-         GH7AIzWgxZgaKiCgEqcbMpiIuteR2fXKdx5V7a6vl7u5V7wRkBoD81BQhUdAI1SBSHFW
-         E9BvHRjDotaAohAfYpaDEj0a1BAdFP3qNyy8msx5pdwMBUw0t+zy/NiRCh0NQCXFVuND
-         Ff4R6Eee2C3F+EGpBjkSBgLYHFeoKrT0pXeLO8eVUFrZ2JsblxTpiF0jvBSG1LLw3RWN
-         ldmY3324yh5Zfbn+h6AU39p3QYDWBn1VmVY5ByHmmZ8sHWcdE/6DR2fkCnGjRh1Dip3C
-         bHyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695787628; x=1696392428;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=O0nMoCs35unZfclTu3DKp3uZsoT22xTXBwaLiGdkdWQ=;
-        b=j6s3uxUu2v0VzNqv3AAog1XXd1yZkbFbQL8In+kn1uhdvrfso2uHY3lNDMwPDgLbrb
-         LXciPcjjEdixXy735nf2W1Uf+turZ0tdE+JepM1YSgPzreC4Ty11eoHHb3TBHo7gjjyn
-         PEZ3lniO5noLXLMawKL52ZuuwXMK8GDxK6o63MZIDiV15kbMnH2SV70ZqezfWp9JpsUP
-         k08BRcbMnE5N49zE0/JC/ZirA1jifjTvy/JIKtOXFPIdmYCPKeQPZU0hbQqsr6DJBL57
-         8DJbnL1ocAuNOQiLQ6v1IqC8tAlVRMuDcnQrNi+2VZr8rseZaRRbdm7FVvHMUFhp6DHT
-         M6AQ==
-X-Gm-Message-State: AOJu0YyqNDJwqmiLkoFtNsULKC0t4aibgewxhJl5AuZBwAyxQv1oglMA
-	+VWuruOsH+p2E2lVG5UhWvYVd0AWMlEzzlAk10ZVNw==
-X-Google-Smtp-Source: AGHT+IFCXgdLLs1mW7I4BlBzVeMEB6FdpuzGm3k488f4N7W5WLbOWSAiS2RMjWpKOJAXI6lI/9CZr5elbMW47291M04=
-X-Received: by 2002:a05:622a:188c:b0:410:9855:acd with SMTP id
- v12-20020a05622a188c00b0041098550acdmr483377qtc.14.1695787627958; Tue, 26 Sep
- 2023 21:07:07 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A2417EE
+	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 04:23:56 +0000 (UTC)
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D1DC16EB8
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 21:23:54 -0700 (PDT)
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38R4CACm009650;
+	Wed, 27 Sep 2023 04:23:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=96kntCIhU0ieiIvyjO4Yq8fdY2jKAFVRR8HUypWX/Hw=;
+ b=ZK16hjTb9I5iXxH2T/XbGkePHkiJ2APoKsVEovnaLpNMkAj+vxa0yW2es/kftxfaM2NH
+ 3QjxGmi4yUwGmXMXLXSYVJKSvNWEvT0jWETFXPkWLjCC9EaFIISxsujlTZ4wv9l59tvU
+ ZGYGOE20WT0YNJ2Ou++LdlVfLVwEnD6bVn1RX7gYIzhJkiafrSmHBcKOnKkMdhERLOu9
+ ZQ84wH2QmWmXbnLCfj2nNjZourM6JFUHB7xyTaKCvTh+6Dzl/Ew+xbUfX/Z5gs/4Fg3q
+ 6jOwKRQaCVDAvYHaE0FaxhbB0P6SKIJrCEvKfNm0kCzLd2r3s7vktIautrEq+Kp1otJc jg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tcd5bg6m4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 27 Sep 2023 04:23:41 +0000
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38R4E71w014040;
+	Wed, 27 Sep 2023 04:23:41 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tcd5bg6ky-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 27 Sep 2023 04:23:41 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38R3sP9T010995;
+	Wed, 27 Sep 2023 04:23:40 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tabukgf3y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 27 Sep 2023 04:23:40 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38R4Nb1C22545040
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 27 Sep 2023 04:23:37 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0A0CD20043;
+	Wed, 27 Sep 2023 04:23:37 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 43EA320040;
+	Wed, 27 Sep 2023 04:23:31 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.105.243])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 27 Sep 2023 04:23:30 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20230920122349.418673-1-wyes.karny@amd.com> <CAP-5=fUe-972h3+Cwegb6u8ZOxo2k_jHQ3i5gNPoUq_TR_AWDQ@mail.gmail.com>
- <CAM9d7cjH_YR9W_Ab-AuJR983GYn3s+ScwexCWid3Q6a+GzWDVg@mail.gmail.com>
-In-Reply-To: <CAM9d7cjH_YR9W_Ab-AuJR983GYn3s+ScwexCWid3Q6a+GzWDVg@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 26 Sep 2023 21:06:56 -0700
-Message-ID: <CAP-5=fW7dsMw0i7N-oQ7dcz9sFx1hAtZCpsxuH=NqMz+h+i3ZQ@mail.gmail.com>
-Subject: Re: [PATCH] perf pmu: Fix perf stat output with correct scale and unit
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Wyes Karny <wyes.karny@amd.com>, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	james.clark@arm.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, sandipan.das@amd.com, ravi.bangoria@amd.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
+Subject: Re: [PATCH 1/2] tools/perf: Add new CONFIG_SHELLCHECK for detecting
+ shellcheck binary
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <CAM9d7chpQ-t72+wsv0qrLsLK9yJ5x77qapqN3+9tKHqT8246Ew@mail.gmail.com>
+Date: Wed, 27 Sep 2023 09:53:17 +0530
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
-	autolearn_force=no version=3.4.6
+Message-Id: <51AB9EEE-6A09-460E-8812-5698FC1300D4@linux.vnet.ibm.com>
+References: <20230914171827.98507-1-atrajeev@linux.vnet.ibm.com>
+ <CAM9d7chpQ-t72+wsv0qrLsLK9yJ5x77qapqN3+9tKHqT8246Ew@mail.gmail.com>
+To: Namhyung Kim <namhyung@kernel.org>
+X-Mailer: Apple Mail (2.3731.700.6)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: fZB-Ca4XwYY-hbCrp0cX2pnZWMellasy
+X-Proofpoint-ORIG-GUID: JpfHDvc5Dt6rkd58CTO66yvZFlLQ0-8x
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-09-26_19,2023-09-26_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ clxscore=1011 mlxscore=0 suspectscore=0 lowpriorityscore=0
+ priorityscore=1501 impostorscore=0 mlxlogscore=999 phishscore=0
+ adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2309270032
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, Sep 26, 2023 at 3:51=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Wed, Sep 20, 2023 at 9:02=E2=80=AFAM Ian Rogers <irogers@google.com> w=
-rote:
-> >
-> > On Wed, Sep 20, 2023 at 5:24=E2=80=AFAM Wyes Karny <wyes.karny@amd.com>=
- wrote:
-> > >
-> > > The perf_pmu__parse_* functions for the sysfs files of pmu event=E2=
-=80=99s
-> > > scale, unit, per-pkg and snapshot were updated in commit 7b723dbb96e8
-> > > ("perf pmu: Be lazy about loading event info files from sysfs").
-> > > However, the paths for these sysfs files were incorrect. This resulte=
-d
-> > > in perf stat reporting values with wrong scaling and missing units. T=
-his
-> > > is fixed by correcting the paths for these sysfs files.
-> > >
-> > > Before this fix:
-> > >
-> > >  $sudo perf stat -e power/energy-pkg/ -- sleep 2
-> > >
-> > >  Performance counter stats for 'system wide':
-> > >
-> > >    351,217,188,864      power/energy-pkg/
-> > >
-> > >           2.004127961 seconds time elapsed
-> > >
-> > > After this fix:
-> > >
-> > >  $sudo perf stat -e power/energy-pkg/ -- sleep 2
-> > >
-> > >  Performance counter stats for 'system wide':
-> > >
-> > >              80.58 Joules power/energy-pkg/
-> > >
-> > >              2.004009749 seconds time elapsed
-> > >
-> > > Fixes: 7b723dbb96e8 ("perf pmu: Be lazy about loading event info file=
-s from sysfs")
-> > > Signed-off-by: Wyes Karny <wyes.karny@amd.com>
-> >
-> > Reviewed-by: Ian Rogers <irogers@google.com>
->
-> Applied to perf-tools-next, thanks!
 
-Thanks Namhyung, I think this should be a candidate for perf-tools so
-that 6.6 doesn't regress for sysfs events.
 
-Ian
+> On 27-Sep-2023, at 5:21 AM, Namhyung Kim <namhyung@kernel.org> wrote:
+>=20
+> Hello,
+>=20
+> On Thu, Sep 14, 2023 at 10:18=E2=80=AFAM Athira Rajeev
+> <atrajeev@linux.vnet.ibm.com> wrote:
+>>=20
+>> shellcheck tool can detect coding/formatting issues on
+>> shell scripts. In perf directory "tests/shell", there are lot
+>> of shell test scripts and this tool can detect coding/formatting
+>> issues on these scripts.
+>>=20
+>> Example to use shellcheck for severity level for
+>> errors and warnings, below command is used:
+>>=20
+>>   # for F in $(find tests/shell/ -perm -o=3Dx -name '*.sh'); do =
+shellcheck -S warning $F; done
+>>   # echo $?
+>>     0
+>>=20
+>> This testing needs to be automated into the build so that it
+>> can avoid regressions and also run the check for newly added
+>> during build test itself. Add a new feature check to detect
+>> presence of shellcheck. Add CONFIG_SHELLCHECK feature check in
+>> the build to avoid not having shellcheck breaking the build.
+>>=20
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>> ---
+>> tools/build/Makefile.feature |  6 ++++--
+>> tools/build/feature/Makefile |  8 +++++++-
+>> tools/perf/Makefile.config   | 10 ++++++++++
+>> 3 files changed, 21 insertions(+), 3 deletions(-)
+>>=20
+>> diff --git a/tools/build/Makefile.feature =
+b/tools/build/Makefile.feature
+>> index 934e2777a2db..23f56b95babf 100644
+>> --- a/tools/build/Makefile.feature
+>> +++ b/tools/build/Makefile.feature
+>> @@ -72,7 +72,8 @@ FEATURE_TESTS_BASIC :=3D                  \
+>>         libzstd                                \
+>>         disassembler-four-args         \
+>>         disassembler-init-styled       \
+>> -        file-handle
+>> +        file-handle                    \
+>> +        shellcheck
+>>=20
+>> # FEATURE_TESTS_BASIC + FEATURE_TESTS_EXTRA is the complete list
+>> # of all feature tests
+>> @@ -138,7 +139,8 @@ FEATURE_DISPLAY ?=3D              \
+>>          get_cpuid              \
+>>          bpf                   \
+>>          libaio                        \
+>> -         libzstd
+>> +         libzstd               \
+>> +         shellcheck
+>>=20
+>> #
+>> # Declare group members of a feature to display the logical OR of the =
+detection
+>> diff --git a/tools/build/feature/Makefile =
+b/tools/build/feature/Makefile
+>> index 3184f387990a..44ba6d0c98d0 100644
+>> --- a/tools/build/feature/Makefile
+>> +++ b/tools/build/feature/Makefile
+>> @@ -76,7 +76,8 @@ FILES=3D                                          \
+>>          test-libzstd.bin                      \
+>>          test-clang-bpf-co-re.bin              \
+>>          test-file-handle.bin                  \
+>> -         test-libpfm4.bin
+>> +         test-libpfm4.bin                      \
+>> +         test-shellcheck.bin
+>>=20
+>> FILES :=3D $(addprefix $(OUTPUT),$(FILES))
+>>=20
+>> @@ -92,6 +93,8 @@ __BUILD =3D $(CC) $(CFLAGS) -MD -Wall -Werror -o $@ =
+$(patsubst %.bin,%.c,$(@F)) $(
+>> __BUILDXX =3D $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst =
+%.bin,%.cpp,$(@F)) $(LDFLAGS)
+>>   BUILDXX =3D $(__BUILDXX) > $(@:.bin=3D.make.output) 2>&1
+>>=20
+>> +  BUILD_BINARY =3D sh -c $1 > $(@:.bin=3D.make.output) 2>&1
+>> +
+>> ###############################
+>>=20
+>> $(OUTPUT)test-all.bin:
+>> @@ -207,6 +210,9 @@ $(OUTPUT)test-libslang-include-subdir.bin:
+>> $(OUTPUT)test-libtraceevent.bin:
+>>        $(BUILD) -ltraceevent
+>>=20
+>> +$(OUTPUT)test-shellcheck.bin:
+>> +       $(BUILD_BINARY) "shellcheck --version"
+>=20
+> I don't think it'd generate the .bin file.
+>=20
+> Anyway, it's a binary file already.  Can we check it with
+> `command -v` and get rid of the feature test?
+>=20
+> Thanks,
+> Namhyung
+
+Hi Namhyung,
+
+Thanks for the review. Sure, I will check on this
+
+Athira
+>=20
+>=20
+>> +
+>> $(OUTPUT)test-libtracefs.bin:
+>>         $(BUILD) $(shell $(PKG_CONFIG) --cflags libtraceevent =
+2>/dev/null) -ltracefs
+>>=20
+>> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+>> index d66b52407e19..e71fe95ad865 100644
+>> --- a/tools/perf/Makefile.config
+>> +++ b/tools/perf/Makefile.config
+>> @@ -779,6 +779,16 @@ ifndef NO_SLANG
+>>   endif
+>> endif
+>>=20
+>> +ifneq ($(NO_SHELLCHECK),1)
+>> +  $(call feature_check,shellcheck)
+>> +  ifneq ($(feature-shellcheck), 1)
+>> +    msg :=3D $(warning No shellcheck found. please install =
+ShellCheck);
+>> +  else
+>> +    $(call detected,CONFIG_SHELLCHECK)
+>> +    NO_SHELLCHECK :=3D 0
+>> +  endif
+>> +endif
+>> +
+>> ifdef GTK2
+>>   FLAGS_GTK2=3D$(CFLAGS) $(LDFLAGS) $(EXTLIBS) $(shell $(PKG_CONFIG) =
+--libs --cflags gtk+-2.0 2>/dev/null)
+>>   $(call feature_check,gtk2)
+>> --
+>> 2.31.1
+
+
