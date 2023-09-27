@@ -1,47 +1,49 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55DA310F6
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 00:29:49 +0000 (UTC)
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD95D1987
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 17:29:47 -0700 (PDT)
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-79fb78e297bso240555739f.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 26 Sep 2023 17:29:47 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38864EA8;
+	Wed, 27 Sep 2023 00:50:43 +0000 (UTC)
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 658D13C21;
+	Tue, 26 Sep 2023 17:50:41 -0700 (PDT)
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-79f989480e0so314028139f.3;
+        Tue, 26 Sep 2023 17:50:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695774587; x=1696379387;
+        d=1e100.net; s=20230601; t=1695775840; x=1696380640;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UWH0z533esqpAC5VNc1MXkkMGiZG7WIhuL7G4xndyOw=;
-        b=IPitUc1kAy0h0iR0TC0SyUZg0hcj4SyDuzamSyZ8Xhgzr42PwlM5+vJU08I9LAH7Ll
-         YYPw5Q0wOvapWIIus6RX/C0Hdk9NyeikLbk+pNrzVgz72HqKhS6uxG68qzgm8OBEkGIx
-         n22Fk7u90ogmEvtWRnGisW/ZCquO8ShxE1RTRHptwJjsT7QuO5grSmBXYOFd95re2pnn
-         LUAf4KylUSA3yml6eLgXH0RNjrri8F0KlpjzRaw/iVcWpoUm7PG6h5RstbthbkVGds8p
-         k+3uXdb/JQo2Mm/3Ki+E8w90orVhKWPUQipaIOatTzOI/mxrYKVF/am8tEuW9Smltwne
-         EfYg==
-X-Gm-Message-State: AOJu0YyyZ/vc72SuI7u7RRBqMl0peydXQ4kHR6RKDb4jgx6VLIVRCfmG
-	CG7CMLY02Zpbo31NQdrnsRfmWeSctMduhJhNuSE=
-X-Google-Smtp-Source: AGHT+IEKBOIRfeX+82zX1Q3yNZC0+5Lc8p8FgD5oG3u0a/EQJbmAorZ7NPITOJCAGJRS7EAgoaefjB3Vsvh3pssW5as=
-X-Received: by 2002:a6b:da15:0:b0:794:e11c:d8c3 with SMTP id
- x21-20020a6bda15000000b00794e11cd8c3mr369986iob.16.1695774586629; Tue, 26 Sep
- 2023 17:29:46 -0700 (PDT)
+        bh=49VLLRdtyvTR9zrUZJfnDfe9+Yw6E25El1lehQytcPs=;
+        b=mM77ZXb39cItcCMSR6Vg7Yska+rnHCXT8ffib6LbemqdyTUEFR96NbIhNjAjJSoD0f
+         nMmnxjz0uMzD3GL675fYRPekQwRqWaEc8XULgTWV/09XyrDjYOGdZwRCZvNCa4LFBCXY
+         31b9p3S3eUhpAYaK1Ke+cw6hBCtE+ZzDlQO1bbcjyXgvifmluK0FdV86xE/jXXMO17sT
+         gz5W6cbAi2tOwy9nvgefLIV1Hlt4lZoOc+BHtDzNMRF9/d1c3acNk+xOAMmH5836NLXa
+         VKke8Unq5H6xfyi5JKEHMf6GPx7zTj7o8bT92Yz3IdrZ36KSLz3qoEgkmBkIDfTJ+EUu
+         Hpyg==
+X-Gm-Message-State: AOJu0YzCI7mC4IfjvxGxd/DTW4vljDoa+o2RFpV7UB7meHTpQdBui3C/
+	QvZ9fQMPhR/CI5RT38DkcFVNtcUatz1YwA6aMuo=
+X-Google-Smtp-Source: AGHT+IHfqddDhz0mWHuZuybn15arEe1k1jWr2QNcgQQvttagjCshwasBMO6deSBz8icSk4kdZ667J4Lr+E8uYwj9LoA=
+X-Received: by 2002:a6b:6806:0:b0:79f:b6b3:9dde with SMTP id
+ d6-20020a6b6806000000b0079fb6b39ddemr481066ioc.9.1695775840642; Tue, 26 Sep
+ 2023 17:50:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230920192847.975897-1-adityag@linux.ibm.com> <20230920192847.975897-2-adityag@linux.ibm.com>
-In-Reply-To: <20230920192847.975897-2-adityag@linux.ibm.com>
+References: <20230922234444.3115821-1-namhyung@kernel.org> <CAP-5=fVMdX+vLPNBSe-8arKGvAGcdgHGt7ypEX-J-SZpUi2PGg@mail.gmail.com>
+In-Reply-To: <CAP-5=fVMdX+vLPNBSe-8arKGvAGcdgHGt7ypEX-J-SZpUi2PGg@mail.gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 26 Sep 2023 17:29:35 -0700
-Message-ID: <CAM9d7cihonpzY7pW1o9V1q5Ja2SAD+frcjVESBw=073LpuokLA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] perf check: introduce check subcommand
-To: Aditya Gupta <adityag@linux.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, irogers@google.com, 
-	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com, 
-	atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Date: Tue, 26 Sep 2023 17:50:29 -0700
+Message-ID: <CAM9d7cg0ZoGHJ1hMBFviEg4hSmx0V8nBZyTAP+hkiDzEQUZAKw@mail.gmail.com>
+Subject: Re: [PATCH] perf record: Fix BTF type checks in the off-cpu profiling
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>, 
+	Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
@@ -51,150 +53,74 @@ X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hello,
+Hi Ian,
 
-On Wed, Sep 20, 2023 at 12:29=E2=80=AFPM Aditya Gupta <adityag@linux.ibm.co=
-m> wrote:
+On Sun, Sep 24, 2023 at 11:03=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
+ote:
 >
-> Currently the presence of a feature is checked with a combination of
-> perf version --build-options and greps, such as:
+> On Fri, Sep 22, 2023 at 4:44=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
+> wrote:
+> >
+> > The BTF func proto for a tracepoint has one more argument than the
+> > actual tracepoint function since it has a context argument at the
+> > begining.  So it should compare to 5 when the tracepoint has 4
+> > arguments.
+> >
+> >   typedef void (*btf_trace_sched_switch)(void *, bool, struct task_stru=
+ct *, struct task_struct *, unsigned int);
+> >
+> > Also, recent change in the perf tool would use a hand-written minimal
+> > vmlinux.h to generate BTF in the skeleton.  So it won't have the info
+> > of the tracepoint.  Anyway it should use the kernel's vmlinux BTF to
+> > check the type in the kernel.
+> >
+> > Fixes: b36888f71c85 ("perf record: Handle argument change in sched_swit=
+ch")
+> > Cc: Song Liu <song@kernel.org>
+> > Cc: Hao Luo <haoluo@google.com>
+> > CC: bpf@vger.kernel.org
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 >
->     perf version --build-options | grep " on .* HAVE_FEATURE"
+> Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks for the review!
+
 >
-> Instead of this, introduce a subcommand "perf check --feature", with whic=
-h
-> scripts can test for presence of a feature, such as:
+> > ---
+> >  tools/perf/util/bpf_off_cpu.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cp=
+u.c
+> > index 01f70b8e705a..21f4d9ba023d 100644
+> > --- a/tools/perf/util/bpf_off_cpu.c
+> > +++ b/tools/perf/util/bpf_off_cpu.c
+> > @@ -98,7 +98,7 @@ static void off_cpu_finish(void *arg __maybe_unused)
+> >  /* v5.18 kernel added prev_state arg, so it needs to check the signatu=
+re */
+> >  static void check_sched_switch_args(void)
+> >  {
+> > -       const struct btf *btf =3D bpf_object__btf(skel->obj);
+> > +       const struct btf *btf =3D btf__load_vmlinux_btf();
+> >         const struct btf_type *t1, *t2, *t3;
+> >         u32 type_id;
+> >
+> > @@ -116,7 +116,8 @@ static void check_sched_switch_args(void)
+> >                 return;
+> >
+> >         t3 =3D btf__type_by_id(btf, t2->type);
+> > -       if (t3 && btf_is_func_proto(t3) && btf_vlen(t3) =3D=3D 4) {
+> > +       /* btf_trace func proto has one more argument for the context *=
+/
+> > +       if (t3 && btf_is_func_proto(t3) && btf_vlen(t3) =3D=3D 5) {
+> >                 /* new format: pass prev_state as 4th arg */
 >
->     perf check --feature HAVE_FEATURE
->
-> 'perf check --feature' command is expected to have exit status of 1 if fe=
-ature is
-> built-in, and 0 if not, -2 if feature is not known.
->
-> An array 'supported_features' has also been introduced that can be
-> used by other commands like 'perf version --build-options', so that
-> new features can be added in one place, with the array
->
-> Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
-> ---
+> nit: does this comment need updating?
 
-[SNIP]
-> +/**
-> + * check whether "feature" is built-in with perf
-> + * returns:
-> + *   -1: Feature not known
-> + *    0: Built-in
-> + *    1: NOT Built in
+No, it's the 4th arg and the sched_switch is called like.
 
-It seems not intuitive.  I'd return 1 if it's builtin.
-Maybe we can return 0 for unknown ones too.
-
-> + */
-> +static int has_support(const char *feature)
-> +{
-> +       int res =3D -1;
-> +
-> +       for (int i =3D 0; supported_features[i].name; ++i) {
-> +               if ((strcmp(feature, supported_features[i].name) =3D=3D 0=
-) ||
-> +                       (strcmp(feature, supported_features[i].macro) =3D=
-=3D 0)) {
-
-Please align it to the previous strcmp().
-
-
-> +                       res =3D supported_features[i].is_builtin;
-> +                       if (!quiet)
-> +                               STATUS(supported_features[i]);
-> +                       break;
-
-Why not return right here?
-
-
-> +               }
-> +       }
-> +
-> +       if (res =3D=3D -1) {
-> +               if (!quiet)
-> +                       color_fprintf(stdout, PERF_COLOR_RED, "Feature no=
-t known: %s", feature);
-> +               return -1;
-> +       }
-
-Then you don't even need the 'res' variable.
-
-> +
-> +       return !res;
-> +}
-> +
-> +int cmd_check(int argc, const char **argv)
-> +{
-> +       argc =3D parse_options(argc, argv, check_options, check_usage,
-> +                            PARSE_OPT_STOP_AT_NON_OPTION);
-> +
-> +       if (!quiet)
-> +               printf("perf check %s\n", perf_version_string);
-> +
-> +       if (check.feature)
-> +               return has_support(check.feature);
-> +
-> +       return 0;
-> +}
-> diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
-> index f2ab5bae2150..9f895981bc9e 100644
-> --- a/tools/perf/builtin.h
-> +++ b/tools/perf/builtin.h
-> @@ -2,6 +2,23 @@
->  #ifndef BUILTIN_H
->  #define BUILTIN_H
->
-> +#include <stddef.h>
-> +#include <linux/compiler.h>
-> +#include <tools/config.h>
-> +
-> +struct feature_support {
-> +       const char *name;
-> +       const char *macro;
-> +       int is_builtin;
-> +};
-> +
-> +#define FEATURE_SUPPORT(name_, macro_) { \
-> +       .name =3D name_,                       \
-> +       .macro =3D #macro_,                    \
-> +       .is_builtin =3D IS_BUILTIN(macro_) }
-> +
-> +extern struct feature_support supported_features[];
-> +
->  void list_common_cmds_help(void);
->  const char *help_unknown_cmd(const char *cmd);
->
-> @@ -9,6 +26,7 @@ int cmd_annotate(int argc, const char **argv);
->  int cmd_bench(int argc, const char **argv);
->  int cmd_buildid_cache(int argc, const char **argv);
->  int cmd_buildid_list(int argc, const char **argv);
-> +int cmd_check(int argc, const char **argv);
->  int cmd_config(int argc, const char **argv);
->  int cmd_c2c(int argc, const char **argv);
->  int cmd_diff(int argc, const char **argv);
-> diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-> index d3fc8090413c..83dc0ac42fdb 100644
-> --- a/tools/perf/perf.c
-> +++ b/tools/perf/perf.c
-> @@ -50,6 +50,7 @@ static struct cmd_struct commands[] =3D {
->         { "archive",    NULL,   0 },
->         { "buildid-cache", cmd_buildid_cache, 0 },
->         { "buildid-list", cmd_buildid_list, 0 },
-> +       { "check", cmd_check, 0 },
-
-Please align this.
+        trace_sched_switch(sched_mode & SM_MASK_PREEMPT, prev, next,
+prev_state);
 
 Thanks,
 Namhyung
-
-
->         { "config",     cmd_config,     0 },
->         { "c2c",        cmd_c2c,        0 },
->         { "diff",       cmd_diff,       0 },
-> --
-> 2.41.0
->
