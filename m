@@ -1,79 +1,108 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F5FC8E2
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 11:33:41 +0000 (UTC)
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E23D199;
-	Wed, 27 Sep 2023 04:33:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ELXRd2+VoCH1I99QYOA/3TEPv4nC2Y881FhqGK/auxc=; b=YWKDH/YiyjT5Dq/JDiSk6c7qUD
-	c5/JkA5GFfOxYnB/+9sbB9SGxVf8M24jp0utbGyNIKU852uCoZS5CqxpPznaCBrWe1luDFC68fBlw
-	RJQ4M2K6sG6UhKeGNtNRKdMVH/5DuYyGcK4TxtDcLP4NwAig5vy69nnNMWbIVt/PtDs8souYj8kwD
-	fXDliBfzL66rBFFMwPDc6/lw7zhkrL/X604/DSIW3Oz3cXE5vjWd0XknfxKYTcDx/Gx8HwKivqpCY
-	Rm2TISRgyw6nOXPc0Tc8ePBGGsGUHUkeO47+sr0R2E5ljQgWgLG+0e7XhbdjEZqKAIC1u57yzITAv
-	6Ch4WpgA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qlSn3-00DcAy-8o; Wed, 27 Sep 2023 11:33:13 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E8AF3300473; Wed, 27 Sep 2023 13:33:12 +0200 (CEST)
-Date: Wed, 27 Sep 2023 13:33:12 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Like Xu <likexu@tencent.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>, kvm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Zhenyu Wang <zhenyuw@linux.intel.com>,
-	Zhang Xiong <xiong.y.zhang@intel.com>,
-	Lv Zhiyuan <zhiyuan.lv@intel.com>,
-	Yang Weijiang <weijiang.yang@intel.com>,
-	Dapeng Mi <dapeng1.mi@intel.com>
-Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics
- event
-Message-ID: <20230927113312.GD21810@noisy.programming.kicks-ass.net>
-References: <20230927033124.1226509-1-dapeng1.mi@linux.intel.com>
- <20230927033124.1226509-8-dapeng1.mi@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7A3107BE
+	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 13:47:36 +0000 (UTC)
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 141E9126;
+	Wed, 27 Sep 2023 06:47:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695822455; x=1727358455;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=rckWQBH09ux7UItuMOh4cqx0HvWKbyWH8NUeUGHWWJA=;
+  b=UEPeYWjAu6a/e6SLyqv1l+EbhzJztlpkZyrewag9fwQBcS+JH3w4ZUhG
+   2Mc0rLb5yc9KSvmJ7gctfQqAZGkTgzoqJhVnQQ0jJlip4R+luoAGX7ac0
+   Q9sNSxYUA3q4N6/lN68okxO32k4gGN3d3dTA/jwnaOVyGHcXGAZ6lM9sQ
+   xdJSnzOr/HiT5x2xqzUu+f6LiQt9/n9LFAqYYQDigBFGweQ267zZyTliq
+   Yv+oMBw2hRc3NFlYFoadFAMGHONObsd3ihY9D0lbVALCOnWlJ8v7qhltj
+   bXYKLoXwll9gwsm80Rd5TQ7VRgsiHP+iGhcW55IXm75t0JfWtRCjBgXKb
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="448319069"
+X-IronPort-AV: E=Sophos;i="6.03,181,1694761200"; 
+   d="scan'208";a="448319069"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 06:47:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="698888049"
+X-IronPort-AV: E=Sophos;i="6.03,181,1694761200"; 
+   d="scan'208";a="698888049"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 06:47:34 -0700
+Received: from [10.209.178.226] (kliang2-mobl1.ccr.corp.intel.com [10.209.178.226])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id A8EA058068A;
+	Wed, 27 Sep 2023 06:47:32 -0700 (PDT)
+Message-ID: <8a6b9556-c82c-4253-a4c1-74d696ad26df@linux.intel.com>
+Date: Wed, 27 Sep 2023 09:47:31 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230927033124.1226509-8-dapeng1.mi@linux.intel.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2 1/3] perf vendor events intel: Fix broadwellde
+ tma_info_system_dram_bw_use metric
+Content-Language: en-US
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>,
+ Caleb Biggers <caleb.biggers@intel.com>
+References: <20230926205948.1399594-1-irogers@google.com>
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20230926205948.1399594-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Wed, Sep 27, 2023 at 11:31:18AM +0800, Dapeng Mi wrote:
-> When guest wants to use PERF_METRICS MSR, a virtual metrics event needs
-> to be created in the perf subsystem so that the guest can have exclusive
-> ownership of the PERF_METRICS MSR.
-
-Urgh, can someone please remind me how all that is supposed to work
-again? The guest is just a task that wants the event. If the
-host creates a CPU event, then that gets scheduled with higher priority
-and the task looses out, no joy.
-
-So you cannot guarantee the guest gets anything.
-
-That is, I remember we've had this exact problem before, but I keep
-forgetting how this all is supposed to work. I don't use this virt stuff
-(and every time I try qemu arguments defeat me and I give up in
-disgust).
 
 
+On 2023-09-26 4:59 p.m., Ian Rogers wrote:
+> Broadwell-de has a consumer core and server uncore. The uncore_arb PMU
+> isn't present and the broadwellx style cbox PMU should be used
+> instead. Fix the tma_info_system_dram_bw_use metric to use the server
+> metric rather than client.
+> 
+> The associated converter script fix is in:
+> https://github.com/intel/perfmon/pull/111
+> 
+> Fixes: 7d124303d620 ("perf vendor events intel: Update broadwell variant events/metrics")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+
+Thanks Ian. The whole patch series looks good to me.
+
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+
+Thanks,
+Kan
+
+>  tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
+> index 8fc62b8f667d..d0ef46c9bb61 100644
+> --- a/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
+> +++ b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
+> @@ -652,7 +652,7 @@
+>      },
+>      {
+>          "BriefDescription": "Average external Memory Bandwidth Use for reads and writes [GB / sec]",
+> -        "MetricExpr": "64 * (arb@event\\=0x81\\,umask\\=0x1@ + arb@event\\=0x84\\,umask\\=0x1@) / 1e6 / duration_time / 1e3",
+> +        "MetricExpr": "64 * (UNC_M_CAS_COUNT.RD + UNC_M_CAS_COUNT.WR) / 1e9 / duration_time",
+>          "MetricGroup": "HPC;Mem;MemoryBW;SoC;tma_issueBW",
+>          "MetricName": "tma_info_system_dram_bw_use",
+>          "PublicDescription": "Average external Memory Bandwidth Use for reads and writes [GB / sec]. Related metrics: tma_fb_full, tma_mem_bandwidth, tma_sq_full"
