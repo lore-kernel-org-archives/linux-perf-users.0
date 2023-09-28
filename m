@@ -1,236 +1,132 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9F9347A8
-	for <linux-perf-users@vger.kernel.org>; Thu, 28 Sep 2023 22:21:48 +0000 (UTC)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CB551BC
-	for <linux-perf-users@vger.kernel.org>; Thu, 28 Sep 2023 15:21:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1695939706;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yJlZv5KfytnzZmRqZMI7mLTWvvegYQeNtr0CrdJHxrc=;
-	b=Ez/Uh1kmKg7MrjRNPCLulA36pOVjQ5gy+yOz1Jj2F1p7YDVNjgYUbnohzK5m8M6UMihyZI
-	5Nir5HLf1gp7t9/HQZBBB6HClzl4nxU3aSfeXGRqbjnDrAU/ebPMJyYLmqfB83zPhdfkUg
-	YN8894ftLye1JsVY6MxPTN61qhGbvyI=
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
- [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-678-5IEaeJ_iPeysUTDoBCXb2g-1; Thu, 28 Sep 2023 18:21:45 -0400
-X-MC-Unique: 5IEaeJ_iPeysUTDoBCXb2g-1
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-790d3e93a25so1700383739f.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Sep 2023 15:21:44 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4329518C0F;
+	Thu, 28 Sep 2023 23:50:24 +0000 (UTC)
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2688E195;
+	Thu, 28 Sep 2023 16:50:23 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-69101022969so12171605b3a.3;
+        Thu, 28 Sep 2023 16:50:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695945022; x=1696549822; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZMt+zIF+jw6oNrS3fj8y+UDRx1fAa1Xaxe11egraIX0=;
+        b=F/L+H3te0DOa1zgkD/6EoFeFcmW+jPQoU8wsdBX6a05Yiv3ptIk+595w4ay+fqx65c
+         AssjbP2gtw0v7ltH96He38aEqCuvm2Oz8LJnHlgxP7BIThxOsMxclGnj4RCICXFpMVdD
+         niB10JeLnM6577xagb/uDcxKsc8JThM3SE0ggFmdPQ3xrnDrNaghKeRR6rBxYRJdBiQ+
+         1pp6WT9AfN40+X5jYVcBNaVhTqXE2HN1NHpJHuLomvI6lv5ZjmPUt9y1cmkuTtJ9bwZp
+         CGaDPX8TpR62q7NWJRJo6O2j3LZvoDi2HUSzWlliOdJjOofG6Tj1PEmYL9NKA1p1y0zW
+         YCVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695939704; x=1696544504;
-        h=content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yJlZv5KfytnzZmRqZMI7mLTWvvegYQeNtr0CrdJHxrc=;
-        b=G3ebs/ZFXt+pfbtd9pnZBpScp3IJKp1KLTn7aN8pp2nrWEZn6aX1HgMz7ZjzZoB/gu
-         GXs3WliRMZco7xEkiPWymMkK8xcrVhn06fA9bDZttFm9cAu+LJ0ZpZmRTClM79Oaequa
-         HumV/MioDR7oi6w6MCnsLoNS1HhlzATH7rKNVTRQWg+7qu1AzKSYZznVnrOgETJrTueC
-         B8GLnnWDakIE8iY8vOEQID3VeR7tdDEUiuwjb4aiHx71P9qTVkP3ikypCmJFokmxjhIM
-         83TdU+iopyidNkgcwigsa8JcdSR9EmqI7lZBdb79vrSGg/68Sa2f7FKhaKi2Mng+QP+5
-         b2fw==
-X-Gm-Message-State: AOJu0Yxk5Lc28OfSMsqAp+BXPUqOY9jjoev5ZO3Evng6UaNXa5NTKdff
-	lfab+6vLchiZayoOR8wyDFjGgdEUnds/zd+jbLhTabloyG33hRq4NORl2qgQri2X/mz2ej2VE50
-	nFi4AD3fevNxjK12bx8k7DsDz4rCOXg==
-X-Received: by 2002:a5e:9e09:0:b0:795:8805:1378 with SMTP id i9-20020a5e9e09000000b0079588051378mr2451924ioq.9.1695939704272;
-        Thu, 28 Sep 2023 15:21:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGAEb9IDAtgYjj6uLy0BK3ZEot+uDPg45XlWdcKZXMCg89/F3JSTuwB2CMQYAcH0oVDsnNUFw==
-X-Received: by 2002:a5e:9e09:0:b0:795:8805:1378 with SMTP id i9-20020a5e9e09000000b0079588051378mr2451906ioq.9.1695939703976;
-        Thu, 28 Sep 2023 15:21:43 -0700 (PDT)
-Received: from redhat.com ([38.15.60.12])
-        by smtp.gmail.com with ESMTPSA id t23-20020a02c497000000b0042b10d42c90sm4610172jam.113.2023.09.28.15.21.41
+        d=1e100.net; s=20230601; t=1695945022; x=1696549822;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZMt+zIF+jw6oNrS3fj8y+UDRx1fAa1Xaxe11egraIX0=;
+        b=lHTD89W859J/SbUXi/XK0J8LTnpe0ePBKux5B3Bk+gUVvkWNPsDzHX1Kc2x7U2GAJT
+         8PtaAbJ++5IVtZ5YJ/RgMOpTwKUKVJ6FW6Z45w/qpiTtilyBV+nLxgUSsIwoahwviVTE
+         FNRdyDp/I+rCoydg2NT7Axk71hb7F5alJO93aGIA9j4g0F7JHrBLWnsR3rSTPeYnsijK
+         QnBw3q3dKvKcjHWdPdYLf6XyDIL/6XhA6dUs81zmxolDbmWf11xIi0097YA7U1DeJbpN
+         Pa2k/oNoRj4MLPZDTscKalgsIDPTx3FLlS79JVBZjaQj5hoHrnThgbMg5WpIqR3sArYE
+         KrVA==
+X-Gm-Message-State: AOJu0YwIKa9/5gMWSXkpEzEXEy+BRKTC7REd+HD//pFfWTHImCcro1mU
+	IKHKASreyYuTZcb91Q9QF9g=
+X-Google-Smtp-Source: AGHT+IGRDnRwQiG9v//BKw6nb7aCS4Jw4ppLdPdWJMf6lz4GXoevHprt6clbVpV4VVbMAoD4XT0Q9g==
+X-Received: by 2002:a05:6a00:c92:b0:68c:3f2:5ff7 with SMTP id a18-20020a056a000c9200b0068c03f25ff7mr2821852pfv.1.1695945022550;
+        Thu, 28 Sep 2023 16:50:22 -0700 (PDT)
+Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:819e:1876:98c3:2f15])
+        by smtp.gmail.com with ESMTPSA id q9-20020a639809000000b00573f82bb00esm13383482pgd.2.2023.09.28.16.50.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Sep 2023 15:21:42 -0700 (PDT)
-Date: Thu, 28 Sep 2023 16:21:05 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
- <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton
- <oliver.upton@linux.dev>, Huacai Chen <chenhuacai@kernel.org>, Michael
- Ellerman <mpe@ellerman.id.au>, Anup Patel <anup@brainfault.org>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, Claudio
- Imbrenda <imbrenda@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, Peter Zijlstra
- <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Paolo
- Bonzini <pbonzini@redhat.com>, Tony Krowiak <akrowiak@linux.ibm.com>, Halil
- Pasic <pasic@linux.ibm.com>, Jason Herne <jjherne@linux.ibm.com>, Harald
- Freudenberger <freude@linux.ibm.com>, Andy Lutomirski <luto@kernel.org>,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- linux-mips@vger.kernel.org, kvm@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Anish
- Ghulati <aghulati@google.com>, Venkatesh Srinivas
- <venkateshs@chromium.org>, Andrew Thornton <andrewth@google.com>
-Subject: Re: [PATCH 02/26] vfio: Move KVM get/put helpers to colocate it
- with other KVM related code
-Message-ID: <20230928162105.2e347cd5.alex.williamson@redhat.com>
-In-Reply-To: <20230916003118.2540661-3-seanjc@google.com>
-References: <20230916003118.2540661-1-seanjc@google.com>
-	<20230916003118.2540661-3-seanjc@google.com>
-Organization: Red Hat
+        Thu, 28 Sep 2023 16:50:22 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Song Liu <song@kernel.org>,
+	Hao Luo <haoluo@google.com>,
+	bpf@vger.kernel.org
+Subject: [PATCH] perf lock contention: Clear lock addr after use
+Date: Thu, 28 Sep 2023 16:50:18 -0700
+Message-ID: <20230928235018.2136-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.42.0.582.g8ccd20d70d-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, 15 Sep 2023 17:30:54 -0700
-Sean Christopherson <seanjc@google.com> wrote:
+It checks the current lock to calculated the delta of contention time.
+The address is saved in the tstamp map which is allocated at begining of
+contention and released at end of contention.
 
-> Move the definitions of vfio_device_get_kvm_safe() and vfio_device_put_kvm()
-> down in vfio_main.c to colocate them with other KVM-specific functions,
-> e.g. to allow wrapping them all with a single CONFIG_KVM check.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  drivers/vfio/vfio_main.c | 104 +++++++++++++++++++--------------------
->  1 file changed, 52 insertions(+), 52 deletions(-)
+But it's possible for bpf_map_delete_elem() to fail.  In that case, the
+element in the tstamp map kept for the current lock and it makes the
+next contention for the same lock tracked incorrectly.  Specificially
+the next contention begin will see the existing element for the task and
+it'd just return.  Then the next contention end will see the element and
+calculate the time using the timestamp for the previous begin.
 
+This can result in a large value for two small contentions happened from
+time to time.  Let's clear the lock address so that it can be updated
+next time even if the bpf_map_delete_elem() failed.
 
-Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/bpf_skel/lock_contention.bpf.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
+diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+index 4900a5dfb4a4..b11179452e19 100644
+--- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
++++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+@@ -389,6 +389,7 @@ int contention_end(u64 *ctx)
  
-> diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
-> index 80e39f7a6d8f..6368eed7b7b2 100644
-> --- a/drivers/vfio/vfio_main.c
-> +++ b/drivers/vfio/vfio_main.c
-> @@ -381,58 +381,6 @@ void vfio_unregister_group_dev(struct vfio_device *device)
->  }
->  EXPORT_SYMBOL_GPL(vfio_unregister_group_dev);
->  
-> -#if IS_ENABLED(CONFIG_KVM)
-> -void vfio_device_get_kvm_safe(struct vfio_device *device, struct kvm *kvm)
-> -{
-> -	void (*pfn)(struct kvm *kvm);
-> -	bool (*fn)(struct kvm *kvm);
-> -	bool ret;
-> -
-> -	lockdep_assert_held(&device->dev_set->lock);
-> -
-> -	if (!kvm)
-> -		return;
-> -
-> -	pfn = symbol_get(kvm_put_kvm);
-> -	if (WARN_ON(!pfn))
-> -		return;
-> -
-> -	fn = symbol_get(kvm_get_kvm_safe);
-> -	if (WARN_ON(!fn)) {
-> -		symbol_put(kvm_put_kvm);
-> -		return;
-> -	}
-> -
-> -	ret = fn(kvm);
-> -	symbol_put(kvm_get_kvm_safe);
-> -	if (!ret) {
-> -		symbol_put(kvm_put_kvm);
-> -		return;
-> -	}
-> -
-> -	device->put_kvm = pfn;
-> -	device->kvm = kvm;
-> -}
-> -
-> -void vfio_device_put_kvm(struct vfio_device *device)
-> -{
-> -	lockdep_assert_held(&device->dev_set->lock);
-> -
-> -	if (!device->kvm)
-> -		return;
-> -
-> -	if (WARN_ON(!device->put_kvm))
-> -		goto clear;
-> -
-> -	device->put_kvm(device->kvm);
-> -	device->put_kvm = NULL;
-> -	symbol_put(kvm_put_kvm);
-> -
-> -clear:
-> -	device->kvm = NULL;
-> -}
-> -#endif
-> -
->  /* true if the vfio_device has open_device() called but not close_device() */
->  static bool vfio_assert_device_open(struct vfio_device *device)
->  {
-> @@ -1354,6 +1302,58 @@ bool vfio_file_enforced_coherent(struct file *file)
->  }
->  EXPORT_SYMBOL_GPL(vfio_file_enforced_coherent);
->  
-> +#if IS_ENABLED(CONFIG_KVM)
-> +void vfio_device_get_kvm_safe(struct vfio_device *device, struct kvm *kvm)
-> +{
-> +	void (*pfn)(struct kvm *kvm);
-> +	bool (*fn)(struct kvm *kvm);
-> +	bool ret;
-> +
-> +	lockdep_assert_held(&device->dev_set->lock);
-> +
-> +	if (!kvm)
-> +		return;
-> +
-> +	pfn = symbol_get(kvm_put_kvm);
-> +	if (WARN_ON(!pfn))
-> +		return;
-> +
-> +	fn = symbol_get(kvm_get_kvm_safe);
-> +	if (WARN_ON(!fn)) {
-> +		symbol_put(kvm_put_kvm);
-> +		return;
-> +	}
-> +
-> +	ret = fn(kvm);
-> +	symbol_put(kvm_get_kvm_safe);
-> +	if (!ret) {
-> +		symbol_put(kvm_put_kvm);
-> +		return;
-> +	}
-> +
-> +	device->put_kvm = pfn;
-> +	device->kvm = kvm;
-> +}
-> +
-> +void vfio_device_put_kvm(struct vfio_device *device)
-> +{
-> +	lockdep_assert_held(&device->dev_set->lock);
-> +
-> +	if (!device->kvm)
-> +		return;
-> +
-> +	if (WARN_ON(!device->put_kvm))
-> +		goto clear;
-> +
-> +	device->put_kvm(device->kvm);
-> +	device->put_kvm = NULL;
-> +	symbol_put(kvm_put_kvm);
-> +
-> +clear:
-> +	device->kvm = NULL;
-> +}
-> +#endif
-> +
->  static void vfio_device_file_set_kvm(struct file *file, struct kvm *kvm)
->  {
->  	struct vfio_device_file *df = file->private_data;
+ 	duration = bpf_ktime_get_ns() - pelem->timestamp;
+ 	if ((__s64)duration < 0) {
++		pelem->lock = 0;
+ 		bpf_map_delete_elem(&tstamp, &pid);
+ 		__sync_fetch_and_add(&time_fail, 1);
+ 		return 0;
+@@ -422,6 +423,7 @@ int contention_end(u64 *ctx)
+ 	data = bpf_map_lookup_elem(&lock_stat, &key);
+ 	if (!data) {
+ 		if (data_map_full) {
++			pelem->lock = 0;
+ 			bpf_map_delete_elem(&tstamp, &pid);
+ 			__sync_fetch_and_add(&data_fail, 1);
+ 			return 0;
+@@ -445,6 +447,7 @@ int contention_end(u64 *ctx)
+ 				data_map_full = 1;
+ 			__sync_fetch_and_add(&data_fail, 1);
+ 		}
++		pelem->lock = 0;
+ 		bpf_map_delete_elem(&tstamp, &pid);
+ 		return 0;
+ 	}
+@@ -458,6 +461,7 @@ int contention_end(u64 *ctx)
+ 	if (data->min_time > duration)
+ 		data->min_time = duration;
+ 
++	pelem->lock = 0;
+ 	bpf_map_delete_elem(&tstamp, &pid);
+ 	return 0;
+ }
+-- 
+2.42.0.582.g8ccd20d70d-goog
 
