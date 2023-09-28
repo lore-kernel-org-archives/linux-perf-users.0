@@ -1,50 +1,49 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFC0749D
-	for <linux-perf-users@vger.kernel.org>; Thu, 28 Sep 2023 03:54:26 +0000 (UTC)
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D7C610A
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 20:54:24 -0700 (PDT)
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-79f8e4108c3so417386439f.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 20:54:24 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51945397
+	for <linux-perf-users@vger.kernel.org>; Thu, 28 Sep 2023 03:55:42 +0000 (UTC)
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C07811F;
+	Wed, 27 Sep 2023 20:55:40 -0700 (PDT)
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-79fc3d32a2fso287766239f.1;
+        Wed, 27 Sep 2023 20:55:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695873264; x=1696478064;
+        d=1e100.net; s=20230601; t=1695873339; x=1696478139;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6ffh5AuBADYvsfT7a3KQemhZt061Q+/YJzr1xF3hsJY=;
-        b=aY1hXLRkR7K+UVuoLnjiLQZKebU766FQvsMWnq4FJsM8iXF6/de+BXhiq+GmLhCV56
-         Hv4gk51kwy4A8IwRciMxCQ0Hfyysxa2gUmLkI8PccMWzO/M6ADD797rLujOvI/X/XWjy
-         kdcWClCET2eP0bWqb6ndxkIaAj1bKvaRnWQeqtQY/oKY2rVs38sJLZQ5kM6zSEcBTjcZ
-         Q687IinAdY2AsobzEAXvggh88NLlQhO1nvJOLwwV9FCEM3abifnSUF0FxIzXmnwFIZSg
-         Kr28FFlAvFtzwrEcfq7dGLxJ+ifLSmKGtwvcJV+Xb7hTjDNpniyo5/YbvH4jap0Lhj5I
-         oyOA==
-X-Gm-Message-State: AOJu0YzWaBrCgu1PgIiVXl/t01GE4twd/qtDGGiPtX00khI3SJlp0bwI
-	KbjELHiJgrkrqZmmJr2PG9Q+fDVGLHGEaDvunGkB66MVee0=
-X-Google-Smtp-Source: AGHT+IHejStbeE558odE76K+o5Iv15QNsvtUJIfzQ0Z7pMMjVunz5I/JAr4eiOxxtAhfmjJ1B52foGpUDGi3P1LgrkU=
-X-Received: by 2002:a5e:8804:0:b0:791:1e87:b47e with SMTP id
- l4-20020a5e8804000000b007911e87b47emr49195ioj.15.1695873263829; Wed, 27 Sep
- 2023 20:54:23 -0700 (PDT)
+        bh=u/OzhfHVlcZiP/xhGzt+v7586DoOfydkysKYz+Cs7o8=;
+        b=prg0cy6LQocL6FFKPT+tvyDgBlCCjkxqVrgg/8zqyV9DlWzPnKePjgk9RrVs1Vwbtl
+         7rego5xExyWUqcVMA9prftiGE9P/bG7lDr55FTviXID1zWDPU1DmxnvRkZvdtMlsi1yE
+         H07WMgl+3lqg1DPBFDEzIYLiqGCe0bk23Wugt64BPYJ9XpjHtc2yoh7ybTgq+hx50JMK
+         yV4aGBtwZ4dSdPStmR5lMs/GDhrXJMZrmSd+2opQpmhI5rj3/nqw1FiviXfFH0qyphsP
+         VQK6PjCOkv1HxLWDE5G11OCH7VD2Htiav2UKa3GQyqcNgrRg7aw3Yk4oB9cyu73rZifX
+         lTyA==
+X-Gm-Message-State: AOJu0Yyas8dk4Wh4X5T6eVX9VBEoMpdFqTbYFeMtpNQ3slQYf0RmO8Dt
+	qQzr+/XOhQW+jKVVfwBctrbpTY8nqPOj4YZPX4s=
+X-Google-Smtp-Source: AGHT+IHz2z4mAy3XZ/WHE+p4e5VJp2T67Qc4ze7etKKMzX3Fz8Q7faUdl5T5Y8mdepAIlpnqG2n+YM48IDOJ+0ztBaQ=
+X-Received: by 2002:a6b:fe18:0:b0:792:9a1a:228b with SMTP id
+ x24-20020a6bfe18000000b007929a1a228bmr107318ioh.2.1695873339289; Wed, 27 Sep
+ 2023 20:55:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230907171540.36736-1-atrajeev@linux.vnet.ibm.com>
- <e5e806c3-da4a-8672-9c8e-6c341c6bd27d@linux.ibm.com> <11B32809-962E-4632-95FD-EAF07EE04D1D@linux.vnet.ibm.com>
-In-Reply-To: <11B32809-962E-4632-95FD-EAF07EE04D1D@linux.vnet.ibm.com>
+References: <20230923093037.961232-1-yangjihong1@huawei.com>
+In-Reply-To: <20230923093037.961232-1-yangjihong1@huawei.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 27 Sep 2023 20:54:12 -0700
-Message-ID: <CAM9d7cgtBCHZWt1h8jZj1k1VuJUvGXjmXuXBmE-4sZXW_inzPA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Fix for shellcheck issues with version "0.6"
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: kajoljain <kjain@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>, 
-	linux-perf-users@vger.kernel.org, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	linuxppc-dev@lists.ozlabs.org, root <root@ltcden13-lp4.aus.stglabs.ibm.com>, 
-	disgoel@linux.vnet.ibm.com
+Date: Wed, 27 Sep 2023 20:55:28 -0700
+Message-ID: <CAM9d7cg=k4sLLgA-EODxxRCg1EQjvWWaNOpm=VMRWokmqxiuew@mail.gmail.com>
+Subject: Re: [PATCH 0/4] perf bench messaging: Kill child processes when exit
+ abnormally in process mode
+To: Yang Jihong <yangjihong1@huawei.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
@@ -54,48 +53,91 @@ X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, Sep 26, 2023 at 9:29=E2=80=AFPM Athira Rajeev
-<atrajeev@linux.vnet.ibm.com> wrote:
+On Sat, Sep 23, 2023 at 2:32=E2=80=AFAM Yang Jihong <yangjihong1@huawei.com=
+> wrote:
 >
+> If perf bench messaging in process mode exits abnormally, the forked chil=
+d
+> processes does not exit.
 >
+> The test result is as follows:
 >
-> > On 25-Sep-2023, at 1:34 PM, kajoljain <kjain@linux.ibm.com> wrote:
-> >
-> >
-> >
-> > On 9/7/23 22:45, Athira Rajeev wrote:
-> >> From: root <root@ltcden13-lp4.aus.stglabs.ibm.com>
-> >>
-> >> shellcheck was run on perf tool shell scripts s a pre-requisite
-> >> to include a build option for shellcheck discussed here:
-> >> https://www.spinics.net/lists/linux-perf-users/msg25553.html
-> >>
-> >> And fixes were added for the coding/formatting issues in
-> >> two patchsets:
-> >> https://lore.kernel.org/linux-perf-users/20230613164145.50488-1-atraje=
-ev@linux.vnet.ibm.com/
-> >> https://lore.kernel.org/linux-perf-users/20230709182800.53002-1-atraje=
-ev@linux.vnet.ibm.com/
-> >>
-> >> Three additional issues are observed with shellcheck "0.6" and
-> >> this patchset covers those. With this patchset,
-> >>
-> >> # for F in $(find tests/shell/ -perm -o=3Dx -name '*.sh'); do shellche=
-ck -S warning $F; done
-> >> # echo $?
-> >> 0
-> >>
-> >
-> > Patchset looks good to me.
-> >
-> > Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
-> >
-> > Thanks,
-> > Kajol Jain
-> >
+>   # perf bench sched messaging -l 1000000 -g 1 &
+>   [4] 553
+>   # Running 'sched/messaging' benchmark:
+>   # kill -15 533
+>   # ps -ef | grep perf
+>   root         425     371  0 09:11 pts/0    00:00:00 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         426     425 17 09:11 pts/0    00:01:56 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         427     425 17 09:11 pts/0    00:01:55 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         428     425 17 09:11 pts/0    00:01:55 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         429     425 17 09:11 pts/0    00:01:55 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         430     425 17 09:11 pts/0    00:01:55 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         431     425 17 09:11 pts/0    00:01:56 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         432     425 17 09:11 pts/0    00:01:55 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         433     425 17 09:11 pts/0    00:01:55 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         434     425 17 09:11 pts/0    00:01:55 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         435     425 17 09:11 pts/0    00:01:55 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         436     425 17 09:11 pts/0    00:01:55 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         437     425 17 09:11 pts/0    00:01:55 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         438     425 17 09:11 pts/0    00:01:55 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         439     425 17 09:11 pts/0    00:01:55 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         440     425 17 09:11 pts/0    00:01:55 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         441     425 17 09:11 pts/0    00:01:55 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         442     425 17 09:11 pts/0    00:01:55 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         443     425 17 09:11 pts/0    00:01:55 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         444     425 17 09:11 pts/0    00:01:54 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         445     425 17 09:11 pts/0    00:01:55 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         446     425 16 09:11 pts/0    00:01:50 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         447     425 16 09:11 pts/0    00:01:49 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         448     425 16 09:11 pts/0    00:01:50 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         449     425 16 09:11 pts/0    00:01:49 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         450     425 16 09:11 pts/0    00:01:50 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         451     425 16 09:11 pts/0    00:01:50 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         452     425 16 09:11 pts/0    00:01:50 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         453     425 16 09:11 pts/0    00:01:49 perf bench sched me=
+ssaging -l 1000000 -g 1
+>   root         454     425 16 09:11 pts/0    00:01:49 perf bench sched me=
+ssaging -l 1000000 -g 1
+> <SNIP>
 >
-> Hi Namhyunbg,
+> Capture signals SIGINT and SIGTERM to kill child processes in signal hand=
+ler
 >
-> Can you please check for this patchset also
+> Yang Jihong (4):
+>   perf bench messaging: Fix coding style issues for sched-messaging
+>   perf bench messaging: Factor out create_worker()
+>   perf bench messaging: Store chlid process pid when creating worker for
+>     process mode
+>   perf bench messaging: Kill child processes when exit abnormally in
+>     process mode
 
-Sure, it's applied to perf-tools-next, thanks!
+Applied to perf-tools-next, thanks!
