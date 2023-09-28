@@ -1,49 +1,50 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B96B1FD1
-	for <linux-perf-users@vger.kernel.org>; Thu, 28 Sep 2023 03:53:04 +0000 (UTC)
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C360EBF;
-	Wed, 27 Sep 2023 20:53:01 -0700 (PDT)
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-79f82b26abfso433092339f.1;
-        Wed, 27 Sep 2023 20:53:01 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFC0749D
+	for <linux-perf-users@vger.kernel.org>; Thu, 28 Sep 2023 03:54:26 +0000 (UTC)
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D7C610A
+	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 20:54:24 -0700 (PDT)
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-79f8e4108c3so417386439f.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 20:54:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695873181; x=1696477981;
+        d=1e100.net; s=20230601; t=1695873264; x=1696478064;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xvXKDHU8dCgQlyr4ZtKhvdlZrarpGOogxwwhdFc0rsA=;
-        b=sMJYqP0sQCi2t3L/i6aR5nNyw1+VWiPFUN5njQLiXD7lzsIYOx5vFyNChRYyauueRN
-         NDw5zFQXlkzg3tPI68EAW7AJmw4DiBrAqYPVyE3koiiqrGdOOqilyVuDsv/2Bo33IGQA
-         jeTDNzUdHI26B2y5RzMu92iW6DDOZLRfmzeOVEUWvxQ5UG8pswx4PJRq4r/HGEco3N9i
-         /GqiTIsc/tzgDQaw3SFuFu+j8pFiK9shbLCXInp573j3h8bAFt4frXJR+tag9b7tge5n
-         VmbrwZo16LuoNWysK3QCB2mHd8JJFnY8U3+i+luAMMlNl3qQDZJtgqkdubyGDbm+suXw
-         HL6w==
-X-Gm-Message-State: AOJu0YzJuqZoh/ynpJNJ6NsBsx+ZOhPVlXLIrtF0zBBIjyluVdPCv0pd
-	gl1uorsDXn5wv010CDrUUYL6OhzCjQzKe+IV3jU=
-X-Google-Smtp-Source: AGHT+IHm/6FbTRZxUekuz1SoZ9JXtxWU427MpHMHLiPLHvV2T/i2EQyHvDFH7Jma8+vt3/KH+az9tJ1hBVikMUuS+UI=
-X-Received: by 2002:a6b:a12:0:b0:792:792e:6619 with SMTP id
- z18-20020a6b0a12000000b00792792e6619mr107225ioi.2.1695873180930; Wed, 27 Sep
- 2023 20:53:00 -0700 (PDT)
+        bh=6ffh5AuBADYvsfT7a3KQemhZt061Q+/YJzr1xF3hsJY=;
+        b=aY1hXLRkR7K+UVuoLnjiLQZKebU766FQvsMWnq4FJsM8iXF6/de+BXhiq+GmLhCV56
+         Hv4gk51kwy4A8IwRciMxCQ0Hfyysxa2gUmLkI8PccMWzO/M6ADD797rLujOvI/X/XWjy
+         kdcWClCET2eP0bWqb6ndxkIaAj1bKvaRnWQeqtQY/oKY2rVs38sJLZQ5kM6zSEcBTjcZ
+         Q687IinAdY2AsobzEAXvggh88NLlQhO1nvJOLwwV9FCEM3abifnSUF0FxIzXmnwFIZSg
+         Kr28FFlAvFtzwrEcfq7dGLxJ+ifLSmKGtwvcJV+Xb7hTjDNpniyo5/YbvH4jap0Lhj5I
+         oyOA==
+X-Gm-Message-State: AOJu0YzWaBrCgu1PgIiVXl/t01GE4twd/qtDGGiPtX00khI3SJlp0bwI
+	KbjELHiJgrkrqZmmJr2PG9Q+fDVGLHGEaDvunGkB66MVee0=
+X-Google-Smtp-Source: AGHT+IHejStbeE558odE76K+o5Iv15QNsvtUJIfzQ0Z7pMMjVunz5I/JAr4eiOxxtAhfmjJ1B52foGpUDGi3P1LgrkU=
+X-Received: by 2002:a5e:8804:0:b0:791:1e87:b47e with SMTP id
+ l4-20020a5e8804000000b007911e87b47emr49195ioj.15.1695873263829; Wed, 27 Sep
+ 2023 20:54:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230925055037.18089-1-colin.i.king@gmail.com> <CAP-5=fUht_JQKW8ekDCpHyRbdVe168nmLGrWU21aZDYSyDeMQQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fUht_JQKW8ekDCpHyRbdVe168nmLGrWU21aZDYSyDeMQQ@mail.gmail.com>
+References: <20230907171540.36736-1-atrajeev@linux.vnet.ibm.com>
+ <e5e806c3-da4a-8672-9c8e-6c341c6bd27d@linux.ibm.com> <11B32809-962E-4632-95FD-EAF07EE04D1D@linux.vnet.ibm.com>
+In-Reply-To: <11B32809-962E-4632-95FD-EAF07EE04D1D@linux.vnet.ibm.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 27 Sep 2023 20:52:49 -0700
-Message-ID: <CAM9d7cg59xYzHt-tMQ3C8hohn4710rxAhpAu1c88pb=MJu1tXw@mail.gmail.com>
-Subject: Re: [PATCH][next] perf kwork: Fix spelling mistake "Captuer" -> "Capture"
-To: Ian Rogers <irogers@google.com>
-Cc: Colin Ian King <colin.i.king@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 27 Sep 2023 20:54:12 -0700
+Message-ID: <CAM9d7cgtBCHZWt1h8jZj1k1VuJUvGXjmXuXBmE-4sZXW_inzPA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Fix for shellcheck issues with version "0.6"
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: kajoljain <kjain@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>, 
+	linux-perf-users@vger.kernel.org, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	linuxppc-dev@lists.ozlabs.org, root <root@ltcden13-lp4.aus.stglabs.ibm.com>, 
+	disgoel@linux.vnet.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
@@ -53,17 +54,48 @@ X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Sep 25, 2023 at 9:08=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
+On Tue, Sep 26, 2023 at 9:29=E2=80=AFPM Athira Rajeev
+<atrajeev@linux.vnet.ibm.com> wrote:
 >
-> On Sun, Sep 24, 2023 at 10:50=E2=80=AFPM Colin Ian King <colin.i.king@gma=
-il.com> wrote:
-> >
-> > There is a spelling mistake in a pr_debug message. Fix it.
-> > (I didn't see this one in the first spell check scan I ran).
-> >
-> > Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 >
-> Reviewed-by: Ian Rogers <irogers@google.com>
+>
+> > On 25-Sep-2023, at 1:34 PM, kajoljain <kjain@linux.ibm.com> wrote:
+> >
+> >
+> >
+> > On 9/7/23 22:45, Athira Rajeev wrote:
+> >> From: root <root@ltcden13-lp4.aus.stglabs.ibm.com>
+> >>
+> >> shellcheck was run on perf tool shell scripts s a pre-requisite
+> >> to include a build option for shellcheck discussed here:
+> >> https://www.spinics.net/lists/linux-perf-users/msg25553.html
+> >>
+> >> And fixes were added for the coding/formatting issues in
+> >> two patchsets:
+> >> https://lore.kernel.org/linux-perf-users/20230613164145.50488-1-atraje=
+ev@linux.vnet.ibm.com/
+> >> https://lore.kernel.org/linux-perf-users/20230709182800.53002-1-atraje=
+ev@linux.vnet.ibm.com/
+> >>
+> >> Three additional issues are observed with shellcheck "0.6" and
+> >> this patchset covers those. With this patchset,
+> >>
+> >> # for F in $(find tests/shell/ -perm -o=3Dx -name '*.sh'); do shellche=
+ck -S warning $F; done
+> >> # echo $?
+> >> 0
+> >>
+> >
+> > Patchset looks good to me.
+> >
+> > Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
+> >
+> > Thanks,
+> > Kajol Jain
+> >
+>
+> Hi Namhyunbg,
+>
+> Can you please check for this patchset also
 
-Applied to perf-tools-next, thanks!
+Sure, it's applied to perf-tools-next, thanks!
