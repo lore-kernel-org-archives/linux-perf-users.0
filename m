@@ -1,186 +1,129 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879AA31A95
-	for <linux-perf-users@vger.kernel.org>; Thu, 28 Sep 2023 07:52:46 +0000 (UTC)
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB7CD9F
-	for <linux-perf-users@vger.kernel.org>; Thu, 28 Sep 2023 00:52:44 -0700 (PDT)
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38S7i9q1011423;
-	Thu, 28 Sep 2023 07:52:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=e8Hz7UWbWaKuoXTH4MeXfR4xYVOgjcr7WSKPmCzhnAQ=;
- b=NHoOJw8+o7Klcfy0ibXbDp2yvI2NN1AQWt1sj5xAojNPChdVucT2y4pU/wD65gSDnYyw
- vXECqjwAApyOlPaIPvJVKwQ7mk4KgcbOQDSV01h+RiDtNw/EJBB0z9D3ejTJNqFSINzg
- tCsV9lQaAPAcIkNpedMg1lreOS8YjZKV/cYsQu2acvNnTjZDPw/EaTgbI8hRWS6BDf0G
- qatBJkplL2rjAdVxvRSY38LF5J4i0k7H9auT3KhdjGwcF0NJyLSVle0xk0qksE/gdPGY
- OTRZ0cApQgMH4q6gN4+jzSYe1NTKCBzmN3ThfEyA540SmurYVQJ1ajAwv4ZuByA7IAyx 2A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3td53x0ech-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 28 Sep 2023 07:52:30 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38S7dqNh023388;
-	Thu, 28 Sep 2023 07:52:30 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3td53x0ec5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 28 Sep 2023 07:52:30 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38S5Uxtn008386;
-	Thu, 28 Sep 2023 07:52:29 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3taabt2sk5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 28 Sep 2023 07:52:29 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38S7qPpk21103126
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 28 Sep 2023 07:52:25 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7644920043;
-	Thu, 28 Sep 2023 07:52:25 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0D47F20040;
-	Thu, 28 Sep 2023 07:52:23 +0000 (GMT)
-Received: from athiras-mbp.in.ibm.com (unknown [9.109.214.47])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 28 Sep 2023 07:52:22 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        irogers@google.com, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, Disha Goel <disgoel@linux.ibm.com>
-Subject: [PATCH V5 3/3] tools/perf/tests: Fix object code reading to skip address that falls out of text section
-Date: Thu, 28 Sep 2023 13:22:13 +0530
-Message-Id: <20230928075213.84392-3-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20230928075213.84392-1-atrajeev@linux.vnet.ibm.com>
-References: <20230928075213.84392-1-atrajeev@linux.vnet.ibm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F6B31A8B
+	for <linux-perf-users@vger.kernel.org>; Thu, 28 Sep 2023 09:10:48 +0000 (UTC)
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9DEC194;
+	Thu, 28 Sep 2023 02:10:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695892248; x=1727428248;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=3DmYCdj9rDpzb950+X8flSrseHZqV9/9+OWeCGl4lCo=;
+  b=ayAqwZBLwc3nuaYIx3qwfN/0s2UXPo4uKlfuW/nGEpcFEUe7EV5hmu84
+   FuUQIJ9ttqy2bpLLVAJEGlyMambx5At0MEAEqXttLtCFGXCrOfcq6l/rP
+   S6SlDFd6pLVAouTgGhdtDPEiP/YDnWmd09Y0XUyh562Kde+QjD5C+YCYs
+   ZTadMA/FXrniU7F82GZcI1oP62Y6OEJ2MvAwla+xXPPJEVKoD4+YcVu6Q
+   XsOMhkSJtEQsuEuTap8wPAhBCBpulLNn05HvE5ABjuXg/F88vwasxJRNa
+   pxr2Blfu8vfV3E+AXSoJAfSWk3Fd4Mjw1ViE3Uzw1nWTsGCXR9jMU2E+H
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="625001"
+X-IronPort-AV: E=Sophos;i="6.03,183,1694761200"; 
+   d="scan'208";a="625001"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2023 02:10:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="726166133"
+X-IronPort-AV: E=Sophos;i="6.03,183,1694761200"; 
+   d="scan'208";a="726166133"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.53.62])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2023 02:10:44 -0700
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf dlfilter: Add a test for object_code()
+Date: Thu, 28 Sep 2023 12:10:33 +0300
+Message-Id: <20230928091033.33998-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: wgbyg34hm3OqkNHnm1md2aJFWbW93Yql
-X-Proofpoint-ORIG-GUID: gAavJ63z19yfsEeH1CwHEWfONFAhUqvK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-09-28_04,2023-09-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- lowpriorityscore=0 impostorscore=0 spamscore=0 clxscore=1015 adultscore=0
- phishscore=0 malwarescore=0 priorityscore=1501 mlxscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2309180000
- definitions=main-2309280063
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+	SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-The testcase "Object code reading" fails in somecases
-for "fs_something" sub test as below:
+Extend the "dlfilter C API" test to test
+perf_dlfilter_fns.object_code().
 
-    Reading object code for memory address: 0xc008000007f0142c
-    File is: /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
-    On file address is: 0x1114cc
-    Objdump command is: objdump -z -d --start-address=0x11142c --stop-address=0x1114ac /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
-    objdump read too few bytes: 128
-    test child finished with -1
-
-This can alo be reproduced when running perf record with
-workload that exercises fs_something() code. In the test
-setup, this is exercising xfs code since root is xfs.
-
-    # perf record ./a.out
-    # perf report -v |grep "xfs.ko"
-      0.76% a.out /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko  0xc008000007de5efc B [k] xlog_cil_commit
-      0.74% a.out  /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko  0xc008000007d5ae18 B [k] xfs_btree_key_offset
-      0.74% a.out  /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko  0xc008000007e11fd4 B [k] 0x0000000000112074
-
-Here addr "0xc008000007e11fd4" is not resolved. since this is a
-kernel module, its offset is from the DSO. Xfs module is loaded
-at 0xc008000007d00000
-
-   # cat /proc/modules | grep xfs
-    xfs 2228224 3 - Live 0xc008000007d00000
-
-And size is 0x220000. So its loaded between  0xc008000007d00000
-and 0xc008000007f20000. From objdump, text section is:
-    text 0010f7bc  0000000000000000 0000000000000000 000000a0 2**4
-
-Hence perf captured ip maps to 0x112074 which is:
-( ip - start of module ) + a0
-
-This offset 0x112074 falls out .text section which is up to 0x10f7bc
-In this case for module, the address 0xc008000007e11fd4 is pointing
-to stub instructions. This address range represents the module stubs
-which is allocated on module load and hence is not part of DSO offset.
-
-To address this issue in "object code reading", skip the sample if
-address falls out of text section and is within the module end.
-Use the "text_end" member of "struct dso" to do this check.
-
-To address this issue in "perf report", exploring an option of
-having stubs range as part of the /proc/kallsyms, so that perf
-report can resolve addresses in stubs range
-
-However this patch uses text_end to skip the stub range for
-Object code reading testcase.
-
-Reported-by: Disha Goel <disgoel@linux.ibm.com>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Tested-by: Disha Goel<disgoel@linux.ibm.com>
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
-Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
-Changelog:
- v4 -> v5:
- Used dso->is_kmod to check if the dso is a kernel module
+ tools/perf/dlfilters/dlfilter-test-api-v0.c | 12 +++++++++++-
+ tools/perf/dlfilters/dlfilter-test-api-v2.c | 12 +++++++++++-
+ 2 files changed, 22 insertions(+), 2 deletions(-)
 
- v3 -> v4:
- Fixed indent in V3
-
- v2 -> v3:
- Used strtailcmp in comparison for module check and added Reviewed-by
- from Adrian, Tested-by from Disha.
-
- v1 -> v2:
- Updated comment to add description on which arch has stub and
- reason for skipping as suggested by Adrian
-
- tools/perf/tests/code-reading.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-index ed3815163d1b..3af81012014e 100644
---- a/tools/perf/tests/code-reading.c
-+++ b/tools/perf/tests/code-reading.c
-@@ -269,6 +269,16 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
- 	if (addr + len > map__end(al.map))
- 		len = map__end(al.map) - addr;
+diff --git a/tools/perf/dlfilters/dlfilter-test-api-v0.c b/tools/perf/dlfilters/dlfilter-test-api-v0.c
+index 72f263d49121..4083b1abeaab 100644
+--- a/tools/perf/dlfilters/dlfilter-test-api-v0.c
++++ b/tools/perf/dlfilters/dlfilter-test-api-v0.c
+@@ -289,6 +289,15 @@ static int check_attr(void *ctx)
+ 	return 0;
+ }
  
-+	/*
-+	 * Some architectures (ex: powerpc) have stubs (trampolines) in kernel
-+	 * modules to manage long jumps. Check if the ip offset falls in stubs
-+	 * sections for kernel modules. And skip module address after text end
-+	 */
-+	if (dso->is_kmod && al.addr > dso->text_end) {
-+		pr_debug("skipping the module address %#"PRIx64" after text end\n", al.addr);
-+		goto out;
-+	}
++static int check_object_code(void *ctx, const struct perf_dlfilter_sample *sample)
++{
++	__u8 buf[15];
 +
- 	/* Read the object code using perf */
- 	ret_len = dso__data_read_offset(dso, maps__machine(thread__maps(thread)),
- 					al.addr, buf1, len);
++	CHECK(perf_dlfilter_fns.object_code(ctx, sample->ip, buf, sizeof(buf)) > 0);
++
++	return 0;
++}
++
+ static int do_checks(void *data, const struct perf_dlfilter_sample *sample, void *ctx, bool early)
+ {
+ 	struct filter_data *d = data;
+@@ -314,7 +323,8 @@ static int do_checks(void *data, const struct perf_dlfilter_sample *sample, void
+ 	if (early && !d->do_early)
+ 		return 0;
+ 
+-	if (check_al(ctx) || check_addr_al(ctx) || check_address_al(ctx, sample))
++	if (check_al(ctx) || check_addr_al(ctx) || check_address_al(ctx, sample) ||
++	    check_object_code(ctx, sample))
+ 		return -1;
+ 
+ 	if (early)
+diff --git a/tools/perf/dlfilters/dlfilter-test-api-v2.c b/tools/perf/dlfilters/dlfilter-test-api-v2.c
+index 38e593d92920..32ff619e881c 100644
+--- a/tools/perf/dlfilters/dlfilter-test-api-v2.c
++++ b/tools/perf/dlfilters/dlfilter-test-api-v2.c
+@@ -308,6 +308,15 @@ static int check_attr(void *ctx)
+ 	return 0;
+ }
+ 
++static int check_object_code(void *ctx, const struct perf_dlfilter_sample *sample)
++{
++	__u8 buf[15];
++
++	CHECK(perf_dlfilter_fns.object_code(ctx, sample->ip, buf, sizeof(buf)) > 0);
++
++	return 0;
++}
++
+ static int do_checks(void *data, const struct perf_dlfilter_sample *sample, void *ctx, bool early)
+ {
+ 	struct filter_data *d = data;
+@@ -333,7 +342,8 @@ static int do_checks(void *data, const struct perf_dlfilter_sample *sample, void
+ 	if (early && !d->do_early)
+ 		return 0;
+ 
+-	if (check_al(ctx) || check_addr_al(ctx) || check_address_al(ctx, sample))
++	if (check_al(ctx) || check_addr_al(ctx) || check_address_al(ctx, sample) ||
++	    check_object_code(ctx, sample))
+ 		return -1;
+ 
+ 	if (early)
 -- 
-2.31.1
+2.34.1
 
