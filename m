@@ -1,66 +1,63 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F301C3E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F6531A72
 	for <linux-perf-users@vger.kernel.org>; Thu, 28 Sep 2023 07:52:44 +0000 (UTC)
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8580395
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60C8992
 	for <linux-perf-users@vger.kernel.org>; Thu, 28 Sep 2023 00:52:41 -0700 (PDT)
 Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38S77JvZ008653;
-	Thu, 28 Sep 2023 07:52:30 GMT
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38S77HST008631;
+	Thu, 28 Sep 2023 07:52:26 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=H4uAvREpv0H0UPvfVs51xB+GBB6VVMiJ2za41fNKKdM=;
- b=OtqbYSxflbWAeHK8BVBSgo8QvbfTf4wiGnx7/y7TC5vJ7zqrW5rM33StipvCxauhJzWz
- YvEk9p1NwwUrcQvZ2tSJlb7djhfijQzJ/mAoCnYcFIbP6Nz8FikjawWYmyXp6ob6EUjt
- T6hvykmy7hXlLczZQoFGyDgBcrquEVouYI5dpTEtpgRyUQ86VO9u0N0Tt8GGO2kVlgfd
- UvbuM6G1fa5TP6jfSdh10VfMFW4Q0zyZUhENUQY9Sb+3z4TqS0xjQcsQks9wjxwWdz9V
- IcDWTBYlNj1eJ9eqBgCqboW118bAktrHTkgg/J9T9DhffUv17dTStR7sn+CVS8hJj8YE Hg== 
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=hXT4xZm1jvUHyZQdtE3I7Kn686PANKE4tDKwTqWhck0=;
+ b=VAXnmjyJ2PZ456LqIy5jXH/E+uzexym+azXnkRI3RWCLFHByhlwjxxw9pQ44utVJM20D
+ AvGJGPeNeDNFSQclEz6ZBFF93VQg76JrMzK9VxCIsQYraJwI4A/rBeuYSfhv1VDXiPOo
+ VrnkkTZiuCq2L2l9qUX6OMHwH9lNsrxCCvI6c3AMeJPLAhDI2NW4FBh6dg54itvpMD1L
+ 0asYxjTnJujRUdB3cS5kw7NybivfZJZQwBFV1X1X/MkH8ckFeV2IyG5LExGyrCkRArgi
+ 2URxFFwlpUMIH3Br5qt9DTMgLJAZaKFMRAIkh8CQZ/q+zb/RUqutbijMcZl/v27WGkne 9g== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tcvmdmygw-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tcvmdmydb-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 28 Sep 2023 07:52:30 +0000
+	Thu, 28 Sep 2023 07:52:25 +0000
 Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38S7jjpa021308;
-	Thu, 28 Sep 2023 07:52:29 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38S78GAO014190;
+	Thu, 28 Sep 2023 07:52:24 GMT
 Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tcvmdmyfs-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tcvmdmycm-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 28 Sep 2023 07:52:29 +0000
+	Thu, 28 Sep 2023 07:52:24 +0000
 Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38S7kv8F030409;
-	Thu, 28 Sep 2023 07:52:28 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tad221vjj-1
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38S5NVTI030404;
+	Thu, 28 Sep 2023 07:52:23 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tad221vja-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 28 Sep 2023 07:52:28 +0000
+	Thu, 28 Sep 2023 07:52:23 +0000
 Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38S7qMrg47317266
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38S7qK4R14025386
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 28 Sep 2023 07:52:22 GMT
+	Thu, 28 Sep 2023 07:52:20 GMT
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B213020043;
-	Thu, 28 Sep 2023 07:52:22 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id DD17920043;
+	Thu, 28 Sep 2023 07:52:19 +0000 (GMT)
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3A38A20040;
-	Thu, 28 Sep 2023 07:52:20 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 48C7220040;
+	Thu, 28 Sep 2023 07:52:17 +0000 (GMT)
 Received: from athiras-mbp.in.ibm.com (unknown [9.109.214.47])
 	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 28 Sep 2023 07:52:20 +0000 (GMT)
+	Thu, 28 Sep 2023 07:52:17 +0000 (GMT)
 From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
         irogers@google.com, namhyung@kernel.org
 Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
         disgoel@linux.vnet.ibm.com, Disha Goel <disgoel@linux.ibm.com>
-Subject: [PATCH V5 2/3] tools/perf: Add "is_kmod" to struct dso to check if it is kernel module
-Date: Thu, 28 Sep 2023 13:22:12 +0530
-Message-Id: <20230928075213.84392-2-atrajeev@linux.vnet.ibm.com>
+Subject: [PATCH V5 1/3] tools/perf: Add text_end to "struct dso" to save .text section size
+Date: Thu, 28 Sep 2023 13:22:11 +0530
+Message-Id: <20230928075213.84392-1-atrajeev@linux.vnet.ibm.com>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20230928075213.84392-1-atrajeev@linux.vnet.ibm.com>
-References: <20230928075213.84392-1-atrajeev@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,8 +66,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Ox8cOUWDt8mszB-CZHBJUU2npDbGvGrp
-X-Proofpoint-GUID: c2qbXnNBzNQl00ivocuq59RASnmcYVTO
+X-Proofpoint-ORIG-GUID: qjgpvgTGZ90ellpTI5hyb6wLL-ziDsSJ
+X-Proofpoint-GUID: FzXBlAs1NuWg_oj8eLxKLwouNkYblOdq
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-09-28_04,2023-09-27_01,2023-05-22_02
@@ -85,9 +82,18 @@ X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Update "struct dso" to include new member "is_kmod".
-This new field will determine if the file is a kernel
-module or not.
+Update "struct dso" to include new member "text_end".
+This new field will represent the offset for end of text
+section for a dso. For elf, this value is derived as:
+sh_size (Size of section in byes) + sh_offset (Section file
+offst) of the elf header for text.
+
+For bfd, this value is derived as:
+1. For PE file,
+section->size + ( section->vma - dso->text_offset)
+2. Other cases:
+section->filepos (file position) + section->size (size of
+section)
 
 To resolve the address from a sample, perf looks at the
 DSO maps. In case of address from a kernel module, there
@@ -97,55 +103,94 @@ Though the ip falls beteen the start address of the loaded
 module (perf map->start ) and end address ( perf map->end),
 it was unresolved.
 
-This was happening because in some cases for kernel
-modules, address from sample points to stub instructions.
-To identify if the DSO is a kernel module, the new field
-"is_kmod" is added to "struct dso".
+Example:
+
+    Reading object code for memory address: 0xc008000007f0142c
+    File is: /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
+    On file address is: 0x1114cc
+    Objdump command is: objdump -z -d --start-address=0x11142c --stop-address=0x1114ac /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
+    objdump read too few bytes: 128
+    test child finished with -1
+
+Here, module is loaded at:
+    # cat /proc/modules | grep xfs
+    xfs 2228224 3 - Live 0xc008000007d00000
+
+From objdump for xfs module, text section is:
+    text 0010f7bc  0000000000000000 0000000000000000 000000a0 2**4
+
+Here the offset for 0xc008000007f0142c ie  0x112074 falls out
+.text section which is up to 0x10f7bc.
+
+In this case for module, the address 0xc008000007e11fd4 is pointing
+to stub instructions. This address range represents the module stubs
+which is allocated on module load and hence is not part of DSO offset.
+
+To identify such  address, which falls out of text
+section and within module end, added the new field "text_end" to
+"struct dso".
 
 Reported-by: Disha Goel <disgoel@linux.ibm.com>
 Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
 ---
 Changelog:
- v5:
- This patch adds is_kmod field to dso to detect if
- the dso is a kernel module
+v2 -> v3:
+ Added Reviewed-by from Adrian
 
- tools/perf/util/dso.c | 2 ++
- tools/perf/util/dso.h | 1 +
- 2 files changed, 3 insertions(+)
+ v1 -> v2:
+ Added text_end for bfd also by updating dso__load_bfd_symbols
+ as suggested by Adrian.
 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index bdfead36b83a..1f629b6fb7cf 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -477,6 +477,7 @@ void dso__set_module_info(struct dso *dso, struct kmod_path *m,
- 		dso->comp = m->comp;
- 	}
- 
-+	dso->is_kmod = 1;
- 	dso__set_short_name(dso, strdup(m->name), true);
- }
- 
-@@ -1338,6 +1339,7 @@ struct dso *dso__new_id(const char *name, struct dso_id *id)
- 		dso->has_srcline = 1;
- 		dso->a2l_fails = 1;
- 		dso->kernel = DSO_SPACE__USER;
-+		dso->is_kmod = 0;
- 		dso->needs_swap = DSO_SWAP__UNSET;
- 		dso->comp = COMP_ID__NONE;
- 		RB_CLEAR_NODE(&dso->rb_node);
+ tools/perf/util/dso.h        | 1 +
+ tools/perf/util/symbol-elf.c | 4 +++-
+ tools/perf/util/symbol.c     | 2 ++
+ 3 files changed, 6 insertions(+), 1 deletion(-)
+
 diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index 70fe0fe69bef..3759de8c2267 100644
+index b41c9782c754..70fe0fe69bef 100644
 --- a/tools/perf/util/dso.h
 +++ b/tools/perf/util/dso.h
-@@ -162,6 +162,7 @@ struct dso {
- 	char		 *symsrc_filename;
- 	unsigned int	 a2l_fails;
- 	enum dso_space_type	kernel;
-+	bool			is_kmod;
- 	enum dso_swap_type	needs_swap;
- 	enum dso_binary_type	symtab_type;
- 	enum dso_binary_type	binary_type;
+@@ -181,6 +181,7 @@ struct dso {
+ 	u8		 rel;
+ 	struct build_id	 bid;
+ 	u64		 text_offset;
++	u64		 text_end;
+ 	const char	 *short_name;
+ 	const char	 *long_name;
+ 	u16		 long_name_len;
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 95e99c332d7e..9e7eeaf616b8 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -1514,8 +1514,10 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 	}
+ 
+ 	if (elf_section_by_name(runtime_ss->elf, &runtime_ss->ehdr, &tshdr,
+-				".text", NULL))
++				".text", NULL)) {
+ 		dso->text_offset = tshdr.sh_addr - tshdr.sh_offset;
++		dso->text_end = tshdr.sh_offset + tshdr.sh_size;
++	}
+ 
+ 	if (runtime_ss->opdsec)
+ 		opddata = elf_rawdata(runtime_ss->opdsec, NULL);
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 3f36675b7c8f..f25e4e62cf25 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1733,8 +1733,10 @@ int dso__load_bfd_symbols(struct dso *dso, const char *debugfile)
+ 			/* PE symbols can only have 4 bytes, so use .text high bits */
+ 			dso->text_offset = section->vma - (u32)section->vma;
+ 			dso->text_offset += (u32)bfd_asymbol_value(symbols[i]);
++			dso->text_end = (section->vma - dso->text_offset) + section->size;
+ 		} else {
+ 			dso->text_offset = section->vma - section->filepos;
++			dso->text_end = section->filepos + section->size;
+ 		}
+ 	}
+ 
 -- 
 2.31.1
 
