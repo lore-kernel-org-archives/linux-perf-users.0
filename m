@@ -1,138 +1,69 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26006368
-	for <linux-perf-users@vger.kernel.org>; Thu, 28 Sep 2023 00:44:40 +0000 (UTC)
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8F00F9
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 17:44:38 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d814634fe4bso19278950276.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 17:44:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695861878; x=1696466678; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=xLEFyFxvD6KViNnGR9L0+5bNYA79A2gbOhmLgb+y/zY=;
-        b=pFNf16Xp/YoRQvtzvCZXz7csn9MGJUPsacWcqOFvWa/RSSqOT3s//u+lffhHgbYwtm
-         /zCuLKG/rxbynKYMoR7XU/xyU9evjemZ/76sIWKuaQyQE2nl5JV4JWsT10Xo0DHVioeg
-         DIEWQ0RmVJTYGVcLMr+aurfIufYRg05fNbpkVS6BckrHNXd4DMJ0mHrucW5PIX8UTo2i
-         8XZmHzSEo+9b2YnWztouOQjwCUW+DUURYEuvRWDupGrTc06MZfj3qM2zTlg21qJ44UmS
-         /0w6EQvwCsxkSFvaiyPZbwU6Gc4Ck0LgOrFPm/m+nue3EMIu11TFr5VCtuyPubsAg83E
-         mObQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B96B1FD1
+	for <linux-perf-users@vger.kernel.org>; Thu, 28 Sep 2023 03:53:04 +0000 (UTC)
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C360EBF;
+	Wed, 27 Sep 2023 20:53:01 -0700 (PDT)
+Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-79f82b26abfso433092339f.1;
+        Wed, 27 Sep 2023 20:53:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695861878; x=1696466678;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xLEFyFxvD6KViNnGR9L0+5bNYA79A2gbOhmLgb+y/zY=;
-        b=Z7iJae1wfX1FoMQDJCcP2D2x3UPlDFeZmnRI1oawoxVToNePB2zldYXeCIaHAm0Lv8
-         aZoboZjdBOeyUYLGy4hTy43olqgDUWU8CBj1KOE89+UVswdHYmvE6mqzqMsyBlzS4+8P
-         RQl6lIHb7KgvmMSKuYQ5vTA4myKnN/VWCJyRxzwv3mkuo8TJiFg8ZOVZYYcDOcrc7s4k
-         nNTd7AwepSQSwhGncizxSf/jBli82vqCk/1mP3peKsjlIRW7SSL+9iI6mvQfcvP625hn
-         PU3IphiLtP3scWblaGpgReS+iNe5qFmZ+V4KF0VYIXeYgURyOpqLF/+QnnaMJU0P6CKH
-         Nm2A==
-X-Gm-Message-State: AOJu0Yyk7pYx/EFsbOCtThyuQROOh2BRr3Bd5xOVSntaTMhGg9BoryYi
-	/4kY+/8ofNLDLM8lxpFwsHqWPFPXt6kw
-X-Google-Smtp-Source: AGHT+IF9m+PpMz88SWFoJ1fVhJvIy1VH7aI+4+IJsEAbzOp43eRkOnoLWjAKaqPXO87Yj68vgFbDuMEaPDau
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:247a:7324:7470:3619])
- (user=irogers job=sendgmr) by 2002:a05:6902:4b2:b0:d7e:8dee:7813 with SMTP id
- r18-20020a05690204b200b00d7e8dee7813mr56449ybs.8.1695861878129; Wed, 27 Sep
- 2023 17:44:38 -0700 (PDT)
-Date: Wed, 27 Sep 2023 17:44:31 -0700
-Message-Id: <20230928004431.1926969-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1695873181; x=1696477981;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xvXKDHU8dCgQlyr4ZtKhvdlZrarpGOogxwwhdFc0rsA=;
+        b=sMJYqP0sQCi2t3L/i6aR5nNyw1+VWiPFUN5njQLiXD7lzsIYOx5vFyNChRYyauueRN
+         NDw5zFQXlkzg3tPI68EAW7AJmw4DiBrAqYPVyE3koiiqrGdOOqilyVuDsv/2Bo33IGQA
+         jeTDNzUdHI26B2y5RzMu92iW6DDOZLRfmzeOVEUWvxQ5UG8pswx4PJRq4r/HGEco3N9i
+         /GqiTIsc/tzgDQaw3SFuFu+j8pFiK9shbLCXInp573j3h8bAFt4frXJR+tag9b7tge5n
+         VmbrwZo16LuoNWysK3QCB2mHd8JJFnY8U3+i+luAMMlNl3qQDZJtgqkdubyGDbm+suXw
+         HL6w==
+X-Gm-Message-State: AOJu0YzJuqZoh/ynpJNJ6NsBsx+ZOhPVlXLIrtF0zBBIjyluVdPCv0pd
+	gl1uorsDXn5wv010CDrUUYL6OhzCjQzKe+IV3jU=
+X-Google-Smtp-Source: AGHT+IHm/6FbTRZxUekuz1SoZ9JXtxWU427MpHMHLiPLHvV2T/i2EQyHvDFH7Jma8+vt3/KH+az9tJ1hBVikMUuS+UI=
+X-Received: by 2002:a6b:a12:0:b0:792:792e:6619 with SMTP id
+ z18-20020a6b0a12000000b00792792e6619mr107225ioi.2.1695873180930; Wed, 27 Sep
+ 2023 20:53:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.42.0.515.g380fc7ccd1-goog
-Subject: [PATCH v1] perf parse-events: Fix for term values that are raw events
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+MIME-Version: 1.0
+References: <20230925055037.18089-1-colin.i.king@gmail.com> <CAP-5=fUht_JQKW8ekDCpHyRbdVe168nmLGrWU21aZDYSyDeMQQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fUht_JQKW8ekDCpHyRbdVe168nmLGrWU21aZDYSyDeMQQ@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 27 Sep 2023 20:52:49 -0700
+Message-ID: <CAM9d7cg59xYzHt-tMQ3C8hohn4710rxAhpAu1c88pb=MJu1tXw@mail.gmail.com>
+Subject: Re: [PATCH][next] perf kwork: Fix spelling mistake "Captuer" -> "Capture"
+To: Ian Rogers <irogers@google.com>
+Cc: Colin Ian King <colin.i.king@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@arm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Kan Liang <kan.liang@linux.intel.com>
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Raw events can be strings like 'r0xead' but the 0x is optional so they
-can also be 'read'. On IcelakeX uncore_imc_free_running has an event
-called 'read' which may be programmed as:
-```
-$ perf stat -e 'uncore_imc_free_running/event=read/' -a sleep 1
-```
-However, the PE_RAW type isn't allowed on the right of a term, even
-though in this case we just want to interpret it as a string. This
-leads to the following error on IcelakeX:
-```
-$ perf stat -e 'uncore_imc_free_running/event=read/' -a sleep 1
-event syntax error: '..nning/event=read/'
-                                  \___ parser error
-Run 'perf list' for a list of valid events
+On Mon, Sep 25, 2023 at 9:08=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Sun, Sep 24, 2023 at 10:50=E2=80=AFPM Colin Ian King <colin.i.king@gma=
+il.com> wrote:
+> >
+> > There is a spelling mistake in a pr_debug message. Fix it.
+> > (I didn't see this one in the first spell check scan I ran).
+> >
+> > Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+>
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
- Usage: perf stat [<options>] [<command>]
-
-    -e, --event <event> event selector. use 'perf list' to list available events
-```
-Fix this by allowing raw types on the right of terms and treat them as
-strings, just as is already done for PE_LEGACY_CACHE. Make this
-consistent by just entirely removing name_or_legacy and always using
-name_or_raw that covers all three cases.
-
-Fixes: 6fd1e5191591 ("perf parse-events: Support PMUs for legacy cache events")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/parse-events.y | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 4d9f3922a33d..de098caf0c1c 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -78,7 +78,7 @@ static void free_list_evsel(struct list_head* list_evsel)
- %type <str> PE_MODIFIER_BP
- %type <str> PE_EVENT_NAME
- %type <str> PE_DRV_CFG_TERM
--%type <str> name_or_raw name_or_legacy
-+%type <str> name_or_raw
- %destructor { free ($$); } <str>
- %type <term> event_term
- %destructor { parse_events_term__delete ($$); } <term>
-@@ -669,8 +669,6 @@ event_term
- 
- name_or_raw: PE_RAW | PE_NAME | PE_LEGACY_CACHE
- 
--name_or_legacy: PE_NAME | PE_LEGACY_CACHE
--
- event_term:
- PE_RAW
- {
-@@ -685,7 +683,7 @@ PE_RAW
- 	$$ = term;
- }
- |
--name_or_raw '=' name_or_legacy
-+name_or_raw '=' name_or_raw
- {
- 	struct parse_events_term *term;
- 	int err = parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE_USER, $1, $3, &@1, &@3);
-@@ -765,7 +763,7 @@ PE_TERM_HW
- 	$$ = term;
- }
- |
--PE_TERM '=' name_or_legacy
-+PE_TERM '=' name_or_raw
- {
- 	struct parse_events_term *term;
- 	int err = parse_events_term__str(&term, $1, /*config=*/NULL, $3, &@1, &@3);
--- 
-2.42.0.515.g380fc7ccd1-goog
-
+Applied to perf-tools-next, thanks!
