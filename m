@@ -1,188 +1,138 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B31D262AD
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 18:17:56 +0000 (UTC)
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA5B9A1
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 11:17:54 -0700 (PDT)
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38RIANYa001382;
-	Wed, 27 Sep 2023 18:17:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=kSwKiwUYHbqjEgX+sjVkBtWjvfKx/29ZbBovFv8fmH0=;
- b=DPnk7YUPU+PgYwBLzeSwVkK9aZoAyRpOQLcvlo3lXcrnSvMCEyW4JJb4XAg56xlIRJpX
- L9/Ea5D2WduuOqXzHimnUxD59/mxcLrIZZqRDgs7cflbSvR9IofpFUxjeO1iUNo7nkmS
- +fwQnCIODOdivzQT50casH/P0iDd6sLxxoYtwXZxkgTMZ3nJ4ys8T7JCkvQLdzyWBXu7
- Qap5FgSKd1f/7WKpzHUrXRbueVt4hFfmU5MI4M9yLLw2Iy9NYqoGV9yl5Hd8qVIyN3lz
- 04+v6lEBevJvFusWLs9QnQ5Ow577owb+8riTRTuGu6d5WjgdmmZRfu2LMTnNkpxVbZ/r UA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tcp13713a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 27 Sep 2023 18:17:44 +0000
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38RI5MWi018070;
-	Wed, 27 Sep 2023 18:17:43 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tcp137135-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 27 Sep 2023 18:17:43 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38RGFRWE008253;
-	Wed, 27 Sep 2023 18:17:43 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tabbndhb2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 27 Sep 2023 18:17:43 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38RIHd3u13107960
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 27 Sep 2023 18:17:39 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BB8502004B;
-	Wed, 27 Sep 2023 18:17:39 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A472920040;
-	Wed, 27 Sep 2023 18:17:37 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.55.139])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 27 Sep 2023 18:17:37 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        irogers@google.com, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, Sachin Sant <sachinp@linux.ibm.com>
-Subject: [PATCH V3] perf test: Fix parse-events tests to skip parametrized events
-Date: Wed, 27 Sep 2023 23:47:03 +0530
-Message-Id: <20230927181703.80936-1-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26006368
+	for <linux-perf-users@vger.kernel.org>; Thu, 28 Sep 2023 00:44:40 +0000 (UTC)
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8F00F9
+	for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 17:44:38 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d814634fe4bso19278950276.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 27 Sep 2023 17:44:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1695861878; x=1696466678; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xLEFyFxvD6KViNnGR9L0+5bNYA79A2gbOhmLgb+y/zY=;
+        b=pFNf16Xp/YoRQvtzvCZXz7csn9MGJUPsacWcqOFvWa/RSSqOT3s//u+lffhHgbYwtm
+         /zCuLKG/rxbynKYMoR7XU/xyU9evjemZ/76sIWKuaQyQE2nl5JV4JWsT10Xo0DHVioeg
+         DIEWQ0RmVJTYGVcLMr+aurfIufYRg05fNbpkVS6BckrHNXd4DMJ0mHrucW5PIX8UTo2i
+         8XZmHzSEo+9b2YnWztouOQjwCUW+DUURYEuvRWDupGrTc06MZfj3qM2zTlg21qJ44UmS
+         /0w6EQvwCsxkSFvaiyPZbwU6Gc4Ck0LgOrFPm/m+nue3EMIu11TFr5VCtuyPubsAg83E
+         mObQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695861878; x=1696466678;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xLEFyFxvD6KViNnGR9L0+5bNYA79A2gbOhmLgb+y/zY=;
+        b=Z7iJae1wfX1FoMQDJCcP2D2x3UPlDFeZmnRI1oawoxVToNePB2zldYXeCIaHAm0Lv8
+         aZoboZjdBOeyUYLGy4hTy43olqgDUWU8CBj1KOE89+UVswdHYmvE6mqzqMsyBlzS4+8P
+         RQl6lIHb7KgvmMSKuYQ5vTA4myKnN/VWCJyRxzwv3mkuo8TJiFg8ZOVZYYcDOcrc7s4k
+         nNTd7AwepSQSwhGncizxSf/jBli82vqCk/1mP3peKsjlIRW7SSL+9iI6mvQfcvP625hn
+         PU3IphiLtP3scWblaGpgReS+iNe5qFmZ+V4KF0VYIXeYgURyOpqLF/+QnnaMJU0P6CKH
+         Nm2A==
+X-Gm-Message-State: AOJu0Yyk7pYx/EFsbOCtThyuQROOh2BRr3Bd5xOVSntaTMhGg9BoryYi
+	/4kY+/8ofNLDLM8lxpFwsHqWPFPXt6kw
+X-Google-Smtp-Source: AGHT+IF9m+PpMz88SWFoJ1fVhJvIy1VH7aI+4+IJsEAbzOp43eRkOnoLWjAKaqPXO87Yj68vgFbDuMEaPDau
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:247a:7324:7470:3619])
+ (user=irogers job=sendgmr) by 2002:a05:6902:4b2:b0:d7e:8dee:7813 with SMTP id
+ r18-20020a05690204b200b00d7e8dee7813mr56449ybs.8.1695861878129; Wed, 27 Sep
+ 2023 17:44:38 -0700 (PDT)
+Date: Wed, 27 Sep 2023 17:44:31 -0700
+Message-Id: <20230928004431.1926969-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: f_l6ErRZjKCXTAVPKsGm00Lw442ZSR91
-X-Proofpoint-ORIG-GUID: yqpvBD3IFwCY7tFAAP9vgQRt1SgZcD6E
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-09-27_12,2023-09-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- malwarescore=0 adultscore=0 spamscore=0 mlxscore=0 clxscore=1015
- bulkscore=0 suspectscore=0 lowpriorityscore=0 impostorscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2309270152
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.42.0.515.g380fc7ccd1-goog
+Subject: [PATCH v1] perf parse-events: Fix for term values that are raw events
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@arm.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Kan Liang <kan.liang@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Testcase "Parsing of all PMU events from sysfs" parse events for
-all PMUs, and not just cpu. In case of powerpc, the PowerVM
-environment supports events from hv_24x7 and hv_gpci PMU which
-is of example format like below:
+Raw events can be strings like 'r0xead' but the 0x is optional so they
+can also be 'read'. On IcelakeX uncore_imc_free_running has an event
+called 'read' which may be programmed as:
+```
+$ perf stat -e 'uncore_imc_free_running/event=read/' -a sleep 1
+```
+However, the PE_RAW type isn't allowed on the right of a term, even
+though in this case we just want to interpret it as a string. This
+leads to the following error on IcelakeX:
+```
+$ perf stat -e 'uncore_imc_free_running/event=read/' -a sleep 1
+event syntax error: '..nning/event=read/'
+                                  \___ parser error
+Run 'perf list' for a list of valid events
 
-- hv_24x7/CPM_ADJUNCT_INST,domain=?,core=?/
-- hv_gpci/event,partition_id=?/
+ Usage: perf stat [<options>] [<command>]
 
-The value for "?" needs to be filled in depending on system
-configuration. It is better to skip these parametrized events
-in this test as it is done in:
-'commit b50d691e50e6 ("perf test: Fix "all PMU test" to skip
-parametrized events")' which handled a simialr instance with
-"all PMU test".
+    -e, --event <event> event selector. use 'perf list' to list available events
+```
+Fix this by allowing raw types on the right of terms and treat them as
+strings, just as is already done for PE_LEGACY_CACHE. Make this
+consistent by just entirely removing name_or_legacy and always using
+name_or_raw that covers all three cases.
 
-Fix parse-events test to skip parametrized events since
-it needs proper setup of the parameters.
-
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Tested-by: Ian Rogers <irogers@google.com>
-Tested-by: Sachin Sant <sachinp@linux.ibm.com>
-Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
+Fixes: 6fd1e5191591 ("perf parse-events: Support PMUs for legacy cache events")
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
-Changelog:
-v2 -> v3:
- Addressed review comments from Namhyung by closing the
- file if getline fails.
+ tools/perf/util/parse-events.y | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-v1 -> v2:
- Addressed review comments from Ian. Updated size of
- pmu event name variable and changed bool name which is
- used to skip the test.
-
- tools/perf/tests/parse-events.c | 39 +++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
-
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index d47f1f871164..2b66ffba3bb0 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -2514,9 +2514,14 @@ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest
- 	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
- 		struct stat st;
- 		char path[PATH_MAX];
-+		char pmu_event[PATH_MAX];
-+		char *buf = NULL;
-+		FILE *file;
- 		struct dirent *ent;
-+		size_t len = 0;
- 		DIR *dir;
- 		int err;
-+		int n;
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index 4d9f3922a33d..de098caf0c1c 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -78,7 +78,7 @@ static void free_list_evsel(struct list_head* list_evsel)
+ %type <str> PE_MODIFIER_BP
+ %type <str> PE_EVENT_NAME
+ %type <str> PE_DRV_CFG_TERM
+-%type <str> name_or_raw name_or_legacy
++%type <str> name_or_raw
+ %destructor { free ($$); } <str>
+ %type <term> event_term
+ %destructor { parse_events_term__delete ($$); } <term>
+@@ -669,8 +669,6 @@ event_term
  
- 		snprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/events/",
- 			sysfs__mountpoint(), pmu->name);
-@@ -2538,11 +2543,45 @@ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest
- 			struct evlist_test e = { .name = NULL, };
- 			char name[2 * NAME_MAX + 1 + 12 + 3];
- 			int test_ret;
-+			bool is_event_parameterized = 0;
+ name_or_raw: PE_RAW | PE_NAME | PE_LEGACY_CACHE
  
- 			/* Names containing . are special and cannot be used directly */
- 			if (strchr(ent->d_name, '.'))
- 				continue;
- 
-+			/* exclude parametrized ones (name contains '?') */
-+			n = snprintf(pmu_event, sizeof(pmu_event), "%s%s", path, ent->d_name);
-+			if (n >= PATH_MAX) {
-+				pr_err("pmu event name crossed PATH_MAX(%d) size\n", PATH_MAX);
-+				continue;
-+			}
-+
-+			file = fopen(pmu_event, "r");
-+			if (!file) {
-+				pr_debug("can't open pmu event file for '%s'\n", ent->d_name);
-+				ret = combine_test_results(ret, TEST_FAIL);
-+				continue;
-+			}
-+
-+			if (getline(&buf, &len, file) < 0) {
-+				pr_debug(" pmu event: %s is a null event\n", ent->d_name);
-+				ret = combine_test_results(ret, TEST_FAIL);
-+				fclose(file);
-+				continue;
-+			}
-+
-+			if (strchr(buf, '?'))
-+				is_event_parameterized = 1;
-+
-+			free(buf);
-+			buf = NULL;
-+			fclose(file);
-+
-+			if (is_event_parameterized == 1) {
-+				pr_debug("skipping parametrized PMU event: %s which contains ?\n", pmu_event);
-+				continue;
-+			}
-+
- 			snprintf(name, sizeof(name), "%s/event=%s/u", pmu->name, ent->d_name);
- 
- 			e.name  = name;
+-name_or_legacy: PE_NAME | PE_LEGACY_CACHE
+-
+ event_term:
+ PE_RAW
+ {
+@@ -685,7 +683,7 @@ PE_RAW
+ 	$$ = term;
+ }
+ |
+-name_or_raw '=' name_or_legacy
++name_or_raw '=' name_or_raw
+ {
+ 	struct parse_events_term *term;
+ 	int err = parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE_USER, $1, $3, &@1, &@3);
+@@ -765,7 +763,7 @@ PE_TERM_HW
+ 	$$ = term;
+ }
+ |
+-PE_TERM '=' name_or_legacy
++PE_TERM '=' name_or_raw
+ {
+ 	struct parse_events_term *term;
+ 	int err = parse_events_term__str(&term, $1, /*config=*/NULL, $3, &@1, &@3);
 -- 
-2.31.1
+2.42.0.515.g380fc7ccd1-goog
 
