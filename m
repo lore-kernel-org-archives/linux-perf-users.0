@@ -1,62 +1,62 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04FBD8C00
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 05:58:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73320882E
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 05:58:19 +0000 (UTC)
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4468E199
-	for <linux-perf-users@vger.kernel.org>; Thu, 28 Sep 2023 22:58:16 -0700 (PDT)
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38T5glIY022726;
-	Fri, 29 Sep 2023 05:58:14 GMT
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C407019F
+	for <linux-perf-users@vger.kernel.org>; Thu, 28 Sep 2023 22:58:17 -0700 (PDT)
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38T5o2bX022745;
+	Fri, 29 Sep 2023 05:58:16 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=xHviIjSIGtAjHbY83gxmWUsuMOT6BxdHNIbHYoS1Z48=;
- b=tInLou7bqFmd55IMTmCCjMPYhnaGOLld5VR1PUnvmXRHcUBEhDJ+zR8l0yh114n7FpcV
- k9qYFzJ/Y+dFtvewyrrIquFvXVeechLo8DmMPClnz+FeHJzQcmnXOs0QS2CLY43pGAWj
- u/Je6tEqEx+ezcCWZURj2D5pPGm1URdBYjf3m1wIlwP5LE7XlXF4QSu9iPVfvwpR5M4J
- 0hqxFB2dXyG8XCUmPq/VlMy6mGFHooyfETaZ/C1IWXc78nY4sk29a6+/TOBWpUjbpjd5
- ObBq9g76yiCqEQTDcSK3ccpkBbQ1Tz/bJqcDhEQ3atxGg1Orndno8jNmPO0eMgYTqcYM Ww== 
+ bh=d0okuctRoZ6hoCvDv3Vhgbr5qiuCE4qdnqxCw5JZJQs=;
+ b=GZ5nYYV4BV7hZak0FmGr5zs32B6hBItM3CnSjMvpySpWjptl7WlWIrbEN/HPTYI3tBU2
+ rXNXSgNK6bi2CdOCoDIC+7sNb/XcLgMst8CXnEWKctjAQWiW8IsoyuHAjuUtJG0eM2vr
+ A1pPno80WmxyocrOlJ78bE6r6clnz7fvPzTPP7/c9UIUhAEAjZRGyKaArRicE9YJz4tW
+ GfatJOIW/VAfwtsD3xBEgdL6BnMWo/+XFcAGFVlwzU/4zgTvk4RAio06TD0X0aA7av5h
+ TmxIprcTK5S4sXb/bYexurD1l+eirNkFcAt6RSbvfWgyEJZ5Ofi/8SQyawgJcusgR6GG +Q== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tdrnxra1t-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tdrs9g3ua-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Sep 2023 05:58:13 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38T5hARm024659;
-	Fri, 29 Sep 2023 05:58:13 GMT
+	Fri, 29 Sep 2023 05:58:15 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38T5s2GP000366;
+	Fri, 29 Sep 2023 05:58:15 GMT
 Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tdrnxra1e-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tdrs9g3u0-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Sep 2023 05:58:13 +0000
+	Fri, 29 Sep 2023 05:58:15 +0000
 Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38T5o9gI008126;
-	Fri, 29 Sep 2023 05:58:11 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3taar02ruy-1
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38T3FiNl008150;
+	Fri, 29 Sep 2023 05:58:14 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3taar02rv5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Sep 2023 05:58:11 +0000
+	Fri, 29 Sep 2023 05:58:14 +0000
 Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38T5w8QX21299822
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38T5wB5b787164
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 29 Sep 2023 05:58:08 GMT
+	Fri, 29 Sep 2023 05:58:11 GMT
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 631BA20040;
+	by IMSVA (Postfix) with ESMTP id E829D20040;
+	Fri, 29 Sep 2023 05:58:10 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B6B0820043;
 	Fri, 29 Sep 2023 05:58:08 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 48C3520043;
-	Fri, 29 Sep 2023 05:58:06 +0000 (GMT)
 Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com.com (unknown [9.171.40.117])
 	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 29 Sep 2023 05:58:06 +0000 (GMT)
+	Fri, 29 Sep 2023 05:58:08 +0000 (GMT)
 From: Aditya Gupta <adityag@linux.ibm.com>
 To: acme@kernel.org, jolsa@kernel.org, irogers@google.com, namhyung@kernel.org
 Cc: linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
         atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
         disgoel@linux.vnet.ibm.com
-Subject: [PATCH v3 2/4] perf version: update --build-options to use 'supported_features' array
-Date: Fri, 29 Sep 2023 11:27:55 +0530
-Message-ID: <20230929055757.83174-3-adityag@linux.ibm.com>
+Subject: [PATCH v3 3/4] perf tests task_analyzer: use perf check for libtraceevent support
+Date: Fri, 29 Sep 2023 11:27:56 +0530
+Message-ID: <20230929055757.83174-4-adityag@linux.ibm.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20230929055757.83174-1-adityag@linux.ibm.com>
 References: <20230929055757.83174-1-adityag@linux.ibm.com>
@@ -68,15 +68,15 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Jqt6gYHF_SqgVIHWLmdLl3S97-jksZTJ
-X-Proofpoint-GUID: xF5HexFvyfLEqlNh_xdSmGQY1Pu-pKBe
+X-Proofpoint-GUID: ku0lLzISuCqIBtnOb1Y9tcM9KqaD22ey
+X-Proofpoint-ORIG-GUID: RyUHbRWE_P0VCniMbrMqSp4z-agPbW2p
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-09-29_04,2023-09-28_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- spamscore=0 adultscore=0 suspectscore=0 bulkscore=0 impostorscore=0
- mlxlogscore=969 priorityscore=1501 clxscore=1015 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 adultscore=0 mlxlogscore=936 suspectscore=0 malwarescore=0
+ priorityscore=1501 impostorscore=0 phishscore=0 bulkscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2309180000 definitions=main-2309290047
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,
@@ -85,73 +85,30 @@ X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Now that the feature list has been duplicated in a global
-'supported_features' array, use that array instead of manually checking
-status of built-in features.
+Currently we use output of 'perf version --build-options', to check
+whether perf was built with libtraceevent support.
 
-This helps in being consistent with commands such as 'perf check --feature',
-so commands can use the same array, and any new feature can be added at
-one place, in the 'supported_features' array
+Instead, use 'perf check --feature libtraceevent' to check for
+libtraceevent support.
 
 Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
 ---
- tools/perf/builtin-version.c | 39 ++++++++----------------------------
- 1 file changed, 8 insertions(+), 31 deletions(-)
+ tools/perf/tests/shell/test_task_analyzer.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
-index e5859c70e195..e149d96c6dc5 100644
---- a/tools/perf/builtin-version.c
-+++ b/tools/perf/builtin-version.c
-@@ -46,41 +46,18 @@ static void status_print(const char *name, const char *macro,
- 	printf("  # %s\n", macro);
+diff --git a/tools/perf/tests/shell/test_task_analyzer.sh b/tools/perf/tests/shell/test_task_analyzer.sh
+index 92d15154ba79..4e3b35d01513 100755
+--- a/tools/perf/tests/shell/test_task_analyzer.sh
++++ b/tools/perf/tests/shell/test_task_analyzer.sh
+@@ -52,7 +52,7 @@ find_str_or_fail() {
+ 
+ # check if perf is compiled with libtraceevent support
+ skip_no_probe_record_support() {
+-	perf version --build-options | grep -q " OFF .* HAVE_LIBTRACEEVENT" && return 2
++	perf check -q --feature libtraceevent && return 2
+ 	return 0
  }
  
--#define STATUS(__d, __m)				\
--do {							\
--	if (IS_BUILTIN(__d))				\
--		status_print(#__m, #__d, "on");		\
--	else						\
--		status_print(#__m, #__d, "OFF");	\
-+#define STATUS(feature)                                   \
-+do {                                                      \
-+	if (feature.is_builtin)                               \
-+		status_print(feature.name, feature.macro, "on");  \
-+	else                                                  \
-+		status_print(feature.name, feature.macro, "OFF"); \
- } while (0)
- 
- static void library_status(void)
- {
--	STATUS(HAVE_DWARF_SUPPORT, dwarf);
--	STATUS(HAVE_DWARF_GETLOCATIONS_SUPPORT, dwarf_getlocations);
--#ifndef HAVE_SYSCALL_TABLE_SUPPORT
--	STATUS(HAVE_LIBAUDIT_SUPPORT, libaudit);
--#endif
--	STATUS(HAVE_SYSCALL_TABLE_SUPPORT, syscall_table);
--	STATUS(HAVE_LIBBFD_SUPPORT, libbfd);
--	STATUS(HAVE_DEBUGINFOD_SUPPORT, debuginfod);
--	STATUS(HAVE_LIBELF_SUPPORT, libelf);
--	STATUS(HAVE_LIBNUMA_SUPPORT, libnuma);
--	STATUS(HAVE_LIBNUMA_SUPPORT, numa_num_possible_cpus);
--	STATUS(HAVE_LIBPERL_SUPPORT, libperl);
--	STATUS(HAVE_LIBPYTHON_SUPPORT, libpython);
--	STATUS(HAVE_SLANG_SUPPORT, libslang);
--	STATUS(HAVE_LIBCRYPTO_SUPPORT, libcrypto);
--	STATUS(HAVE_LIBUNWIND_SUPPORT, libunwind);
--	STATUS(HAVE_DWARF_SUPPORT, libdw-dwarf-unwind);
--	STATUS(HAVE_ZLIB_SUPPORT, zlib);
--	STATUS(HAVE_LZMA_SUPPORT, lzma);
--	STATUS(HAVE_AUXTRACE_SUPPORT, get_cpuid);
--	STATUS(HAVE_LIBBPF_SUPPORT, bpf);
--	STATUS(HAVE_AIO_SUPPORT, aio);
--	STATUS(HAVE_ZSTD_SUPPORT, zstd);
--	STATUS(HAVE_LIBPFM, libpfm4);
--	STATUS(HAVE_LIBTRACEEVENT, libtraceevent);
-+	for (int i = 0; supported_features[i].name; ++i)
-+		STATUS(supported_features[i]);
- }
- 
- int cmd_version(int argc, const char **argv)
 -- 
 2.41.0
 
