@@ -1,137 +1,115 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BCF51BB8
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 15:47:01 +0000 (UTC)
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96A15DB
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 08:46:58 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d8671837a86so18210314276.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 08:46:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696002418; x=1696607218; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=G8/Q+35NLYw9HySOsQs1oSfJaoZjiMzWGb8dDgdqnZo=;
-        b=CMfTzHFv2fEO3S5qnDTlDkhWaPzP28RauafiXFYIFwQjUfcQDPw2bxz+w/Zs20T/fX
-         Z7pIIDTFsWdhTEWZ5hEaqdagW9vF1NDT/KkoPH3DUujBlAgCUqdnbVrm2yO9TCxGt7zv
-         nrAChKn1UHLk3KBu1bgnCIp/I30ug/Ma2OfwvJOtOgjOq0DszX9gJ+VAAdG9eSzXMOE7
-         f0JwQKxhRCGM7L6xNggeoalIeyfqqgnvJZsqh6IxA9qpjOci61UQPuiazGp5/d7M6WtD
-         rW4jBEKSffhea1fVXzAeM2wXWKYIniP5vM+mbUWIUzQ1UoVhu7B2b+8VuBYY1GRZ25TB
-         bv1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696002418; x=1696607218;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=G8/Q+35NLYw9HySOsQs1oSfJaoZjiMzWGb8dDgdqnZo=;
-        b=kZZ5pknAzm6szQeNOpgl2zoTULTa8KAJ/NZlx8lk6pSPat18yvSUrm9w84x2QFFYRH
-         4VsykFQEBoUmjf6DxHHeQyHqzGsIDLTl076TanK5hDUWE/g9qpFLsuk7u9wlS5JUoyAR
-         QhcMUBdg0VgqYl4WEggoWHxE1FiZegzjQrHWurW6SVq3QvwwEsdCsFzx/aKLABcAILll
-         PegI5LYYUM7/eXkcjnk4I2deCaAW8IBz4J2575UwlYRSC4LRq8wa3zimaZFAKZzavRsM
-         /EI2oSQfr47X7jkdULNL0R5QhaSDI+p05xHbwaUsopzn1bGM+utsXlEL85Mm/pCcLask
-         IMaQ==
-X-Gm-Message-State: AOJu0YyLvn1Z6GI0zT//kfz7P4YRSOnRzmFAA28EzgB/yyTE0eAEdwPO
-	8b03Co3R//lun7FLPcysCeuRz1/CZy8=
-X-Google-Smtp-Source: AGHT+IHDh7IMtzu+1PO3dzsxkepM97Irjo5ZMB5bFahEOwFsP/VFLFg0ZqcwQb0X5RS1iM09MPGH9tHQKXQ=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:730d:0:b0:d85:ac12:aadb with SMTP id
- o13-20020a25730d000000b00d85ac12aadbmr71182ybc.9.1696002417694; Fri, 29 Sep
- 2023 08:46:57 -0700 (PDT)
-Date: Fri, 29 Sep 2023 15:46:55 +0000
-In-Reply-To: <20230929115344.GE6282@noisy.programming.kicks-ass.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B20C15C3
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 16:42:58 +0000 (UTC)
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12BDE199
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 09:42:55 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.nyi.internal (Postfix) with ESMTP id 2CBEE5C0212;
+	Fri, 29 Sep 2023 12:42:55 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Fri, 29 Sep 2023 12:42:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=astier.eu; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm2; t=1696005775; x=1696092175; bh=GO
+	7Crkz9eikT2baGgiq9fmbMz1/3hGWKTVGxkoXWalA=; b=fj18Zdh0WErRYTaWkJ
+	BhV+qwNdV6xUv20AjgbpCvMc1oSRTrxZoFKUWzElbw4E0Ry4x/i4zAHjSmCqp1ef
+	aPgB7j2gzOxTfzhkV8EKPm1Havy+owYR/BLTU7O2wpNF6RDc4SJIsW0gLVfWgr9m
+	meP7IZVhV75A4D7qj327uiSCCq9FtBK7pd4ZzG7G2PR3GKw16+UVHyEl5EB85BsQ
+	U6p6ldcbKGRBfEzhBoQSvE2jvBZlcW9nv8ppG+V4D6cyTqaTINeM3xcwsRcoK2fa
+	tMtQkL6WjYZgxyza/7qKBAtElucaHpqVnrEzRLsCIaN58XWMR0VCApJInwyzrhiC
+	eAYg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm2; t=1696005775; x=1696092175; bh=GO7Crkz9eikT2
+	baGgiq9fmbMz1/3hGWKTVGxkoXWalA=; b=I03XV3mCSbJMqyuvunaD6QTFSsJpR
+	a3uRvqzsZYlV/QkQcmu4dRdnJWDi47o70AmfAXr9mKdGVOwyw1YX6HN/YGtuLN2i
+	XRVGY8gE3DhcHSCzzJT8Hm94gRODxMNQfMYyLR2lHQB9a1cLfM/eSzVb7rMFG0pB
+	IPiCyold/31CalrUNjbnnC0xOYwCrWXOf3AD0FO4hS9uqfltt1LB5bINozghurnA
+	jK2Frpd5B4ZkBSC1C6VMs98/1R32+y9UWTm977QiPEXt7UwcqakOldc0moNYkDIG
+	qptKGetIRE3w1409ticmoFzK48eDIGEHqqn7iPMmLA0AsedAvlGzivlrg==
+X-ME-Sender: <xms:jv4WZUwZPN9N6F9DKdwncJvnTaQRKq2tJZzrr7cyW-xfOO9pc3RJZA>
+    <xme:jv4WZYQpV42o0ibtSx9U7tqvc0J1ubFkFE_DPHSlkaE6ABh7lBkntuAYe-kcS0F0L
+    oPg-ogNhU9OeVLRVBU>
+X-ME-Received: <xmr:jv4WZWWdeTKl9ziKtwbfww6wwOQbjmIlkygqdtD9fk9Om_rlONTmrdsH-wtG35NX3B1zAyc444l7Qz9yqTrgKsWpvsEe6Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrtddvgddutdefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehnihhs
+    shgvucetshhtihgvrhcuoegrnhhishhsvgesrghsthhivghrrdgvuheqnecuggftrfgrth
+    htvghrnhepleefgeeiieeitdejffejgfffieejhedthfdtieelveffgfdvtdffhfeutdfh
+    feeinecuffhomhgrihhnpehsphhinhhitghsrdhnvghtpdhkvghrnhgvlhdrohhrghenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhhishhs
+    vgesrghsthhivghrrdgvuh
+X-ME-Proxy: <xmx:jv4WZSguMLWXXTpniPO_LK3Ghegla4XTz6rQGCrL9e6yPUwJbZlyIA>
+    <xmx:jv4WZWBbH-jjRBDqn85txj3zkpq2qUl2dil54SEO0yKe_r79gjzimg>
+    <xmx:jv4WZTLE2P7RoKib2ORfU9HvQog9rQ41cKBT7FGEhwWi0wVDZumWWA>
+    <xmx:j_4WZRO-rsqrcjldvPksgW7Pzbx-Vj79dBkIp6LXEtWfiP3oC6l0Ag>
+Feedback-ID: iccec46d4:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 29 Sep 2023 12:42:53 -0400 (EDT)
+Date: Fri, 29 Sep 2023 18:42:50 +0200
+From: Anisse Astier <anisse@astier.eu>
+To: Ian Rogers <irogers@google.com>
+Cc: Pierre Cheynier <p.cheynier@criteo.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Namhyung Kim <namhyung@gmail.com>
+Subject: Re: [6.5.4] perf: bison min. requirements
+Message-ID: <ZRb+ijwAImHsrSnv@anisse-laptop>
+References: <PAWPR04MB97658DD9546C6D0A141C0766EAC3A@PAWPR04MB9765.eurprd04.prod.outlook.com>
+ <CAP-5=fVPVodcSkOHnJOrgkUO1QOnNTcsPMsfeEKvzjTvqA2K+w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20230927033124.1226509-1-dapeng1.mi@linux.intel.com>
- <20230927033124.1226509-8-dapeng1.mi@linux.intel.com> <20230927113312.GD21810@noisy.programming.kicks-ass.net>
- <ZRRl6y1GL-7RM63x@google.com> <20230929115344.GE6282@noisy.programming.kicks-ass.net>
-Message-ID: <ZRbxb15Opa2_AusF@google.com>
-Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics event
-From: Sean Christopherson <seanjc@google.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Like Xu <likexu@tencent.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Zhenyu Wang <zhenyuw@linux.intel.com>, Zhang Xiong <xiong.y.zhang@intel.com>, 
-	Lv Zhiyuan <zhiyuan.lv@intel.com>, Yang Weijiang <weijiang.yang@intel.com>, 
-	Dapeng Mi <dapeng1.mi@intel.com>, Jim Mattson <jmattson@google.com>, 
-	David Dunn <daviddunn@google.com>, Mingwei Zhang <mizhang@google.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fVPVodcSkOHnJOrgkUO1QOnNTcsPMsfeEKvzjTvqA2K+w@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, Sep 29, 2023, Peter Zijlstra wrote:
-> On Wed, Sep 27, 2023 at 10:27:07AM -0700, Sean Christopherson wrote:
-> > Jumping the gun a bit (we're in the *super* early stages of scraping together a
-> > rough PoC), but I think we should effectively put KVM's current vPMU support into
-> > maintenance-only mode, i.e. stop adding new features unless they are *very* simple
-> > to enable, and instead pursue an implementation that (a) lets userspace (and/or
-> > the kernel builder) completely disable host perf (or possibly just host perf usage
-> > of the hardware PMU) and (b) let KVM passthrough the entire hardware PMU when it
-> > has been turned off in the host.
-> 
-> I don't think you need to go that far, host can use PMU just fine as
-> long as it doesn't overlap with a vCPU. Basically, if you force
-> perf_attr::exclude_guest on everything your vCPU can haz the full thing.
+Hi Ian,
 
-Complexity aside, my understanding is that the overhead of trapping and emulating
-all of the guest counter and MSR accesses results in unacceptably degraded functionality
-for the guest.  And we haven't even gotten to things like arch LBRs where context
-switching MSRs between the guest and host is going to be quite costly.
-
-> > Note, a similar idea was floated and rejected in the past[*], but that failed
-> > proposal tried to retain host perf+PMU functionality by making the behavior dynamic,
-> > which I agree would create an awful ABI for the host.  If we make the "knob" a
-> > Kconfig 
+On Tue, Sep 26, 2023 at 02:28:50PM -0700, Ian Rogers wrote:
+> On Tue, Sep 26, 2023 at 1:21???AM Pierre Cheynier <p.cheynier@criteo.com> wrote:
+> >
+> > Dear list,
+> > At compiling 6.5.4 it seemed to me that this specific patch [1] added an implicit dependency to bison >= 3.7.4, due to usage of YYNOMEM.
+> > Shouldn't this be part of Documentation/process/changes.rst?
+> >
+> > [1] https://www.spinics.net/lists/linux-perf-users/msg30885.html "perf parse-events: Separate YYABORT and YYNOMEM cases"
+> >
+> > Sorry for the noise, and thanks for inputs if ever I'm totally wrong here.
 > 
-> Must not be Kconfig, distros would have no sane choice.
+> We have a workaround to #define YYNOMEM to YYABORT when Bison is
+> less-than 3.8.1:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/Build?h=perf-tools-next#n323
+> Perhaps you can help debug why this build logic isn't working for you?
 
-Or not only a Kconfig?  E.g. similar to how the kernel has
-CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS and nopku.
+This fix (commit 88cc47e245979 in perf-tools-next) has reached Linus'
+tree, but not yet stable.
 
-> > or kernel param, i.e. require the platform owner to opt-out of using perf
-> > no later than at boot time, then I think we can provide a sane ABI, keep the
-> > implementation simple, all without breaking existing users that utilize perf in
-> > the host to profile guests.
-> 
-> It's a shit choice to have to make. At the same time I'm not sure I have
-> a better proposal.
-> 
-> It does mean a host cannot profile one guest and have pass-through on the
-> other. Eg. have a development and production guest on the same box. This
-> is pretty crap.
-> 
-> Making it a guest-boot-option would allow that, but then the host gets
-> complicated again. I think I can make it trivially work for per-task
-> events, simply error the creation of events without exclude_guest for
-> affected vCPU tasks. But the CPU events are tricky.
-> 
-> 
-> I will firmly reject anything that takes the PMU away from the host
-> entirely through.
+But code using a more recent Bison is now backported to v6.5.4 (stable
+commit 0e8501c8a936e0b2ff4ffdff2c4866ba74969189, upstream commit
+77cdd787fc45e3426b8e0b5038b85c276540dfb4), which is what causes the
+build regression on older bison that Pierre reported.
 
-Why?  What is so wrong with supporting use cases where the platform owner *wants*
-to give up host PMU and NMI watchdog functionality?  If disabling host PMU usage
-were complex, highly invasive, and/or difficult to maintain, then I can understand
-the pushback.  
+Someone else noticed and already asked for a backport:
+https://lore.kernel.org/all/CAM9d7cggeTaXR5VBD1BoPr9TLPoE7s9YSS2y0w-PGzTMAGsFWA@mail.gmail.com/
 
-But if we simply allow hiding hardware PMU support, then isn't the cost to perf
-just a few lines in init_hw_perf_events()?  And if we put a stake in the ground
-and say that exposing "advanced" PMU features to KVM guests requires a passthrough
-PMU, i.e. the PMU to be hidden from the host, that will significantly reduce our
-maintenance and complexity.
+Kind regards,
 
-The kernel allows disabling almost literally every other feature that is even
-remotely optional, I don't understand why the hardware PMU is special.
+Anisse
