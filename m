@@ -1,62 +1,66 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4329518C0F;
-	Thu, 28 Sep 2023 23:50:24 +0000 (UTC)
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2688E195;
-	Thu, 28 Sep 2023 16:50:23 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-69101022969so12171605b3a.3;
-        Thu, 28 Sep 2023 16:50:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695945022; x=1696549822; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZMt+zIF+jw6oNrS3fj8y+UDRx1fAa1Xaxe11egraIX0=;
-        b=F/L+H3te0DOa1zgkD/6EoFeFcmW+jPQoU8wsdBX6a05Yiv3ptIk+595w4ay+fqx65c
-         AssjbP2gtw0v7ltH96He38aEqCuvm2Oz8LJnHlgxP7BIThxOsMxclGnj4RCICXFpMVdD
-         niB10JeLnM6577xagb/uDcxKsc8JThM3SE0ggFmdPQ3xrnDrNaghKeRR6rBxYRJdBiQ+
-         1pp6WT9AfN40+X5jYVcBNaVhTqXE2HN1NHpJHuLomvI6lv5ZjmPUt9y1cmkuTtJ9bwZp
-         CGaDPX8TpR62q7NWJRJo6O2j3LZvoDi2HUSzWlliOdJjOofG6Tj1PEmYL9NKA1p1y0zW
-         YCVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695945022; x=1696549822;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZMt+zIF+jw6oNrS3fj8y+UDRx1fAa1Xaxe11egraIX0=;
-        b=lHTD89W859J/SbUXi/XK0J8LTnpe0ePBKux5B3Bk+gUVvkWNPsDzHX1Kc2x7U2GAJT
-         8PtaAbJ++5IVtZ5YJ/RgMOpTwKUKVJ6FW6Z45w/qpiTtilyBV+nLxgUSsIwoahwviVTE
-         FNRdyDp/I+rCoydg2NT7Axk71hb7F5alJO93aGIA9j4g0F7JHrBLWnsR3rSTPeYnsijK
-         QnBw3q3dKvKcjHWdPdYLf6XyDIL/6XhA6dUs81zmxolDbmWf11xIi0097YA7U1DeJbpN
-         Pa2k/oNoRj4MLPZDTscKalgsIDPTx3FLlS79JVBZjaQj5hoHrnThgbMg5WpIqR3sArYE
-         KrVA==
-X-Gm-Message-State: AOJu0YwIKa9/5gMWSXkpEzEXEy+BRKTC7REd+HD//pFfWTHImCcro1mU
-	IKHKASreyYuTZcb91Q9QF9g=
-X-Google-Smtp-Source: AGHT+IGRDnRwQiG9v//BKw6nb7aCS4Jw4ppLdPdWJMf6lz4GXoevHprt6clbVpV4VVbMAoD4XT0Q9g==
-X-Received: by 2002:a05:6a00:c92:b0:68c:3f2:5ff7 with SMTP id a18-20020a056a000c9200b0068c03f25ff7mr2821852pfv.1.1695945022550;
-        Thu, 28 Sep 2023 16:50:22 -0700 (PDT)
-Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:819e:1876:98c3:2f15])
-        by smtp.gmail.com with ESMTPSA id q9-20020a639809000000b00573f82bb00esm13383482pgd.2.2023.09.28.16.50.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Sep 2023 16:50:22 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Song Liu <song@kernel.org>,
-	Hao Luo <haoluo@google.com>,
-	bpf@vger.kernel.org
-Subject: [PATCH] perf lock contention: Clear lock addr after use
-Date: Thu, 28 Sep 2023 16:50:18 -0700
-Message-ID: <20230928235018.2136-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.42.0.582.g8ccd20d70d-goog
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 006F35674
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 04:11:52 +0000 (UTC)
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CF621A1
+	for <linux-perf-users@vger.kernel.org>; Thu, 28 Sep 2023 21:11:51 -0700 (PDT)
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38T3uA2h028799;
+	Fri, 29 Sep 2023 04:11:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=8Ax1gl/JIAW04qmf4Gd6c2Rq8twKWJwpAAmFum6DjXo=;
+ b=JPIWAKmiw+e5OL5GlByy1gOsTOLfATZ1T69bIrtjuzvp+VjhZbkT+VU2Yo+Z7UgLQrzV
+ Dqdk4OJd+LfWLggJntY9bfdT6VtyOBzIax6BRe9yokPmUEdWtXJpegF0mv1q8U/6NydC
+ a9rHUp164AcQpNf27MNDqkZBGk/ydaDKVieJ5mcCdwdKHfq2cb2125Vs9ERZwW/lp3bm
+ 8EQ3Kf08G5+2lMA6BUaWXE3blLpGWCVWbNsjUquKrmkYryQbhGnAKU51AAx+DsKNGwl9
+ MC61HOSaL13nHzzqlWWWVRGICSjpDRcjy5K7VyKx1A0JuUbhYNA3V58c0aOEf7c6xDAx jw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tdq3y0e9p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 29 Sep 2023 04:11:45 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38T49MIV013588;
+	Fri, 29 Sep 2023 04:11:45 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tdq3y0e9a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 29 Sep 2023 04:11:45 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38T3aEB4008233;
+	Fri, 29 Sep 2023 04:11:43 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tabbnsyp5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 29 Sep 2023 04:11:43 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38T4BetA26739428
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 29 Sep 2023 04:11:40 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B478220043;
+	Fri, 29 Sep 2023 04:11:40 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BB9F520040;
+	Fri, 29 Sep 2023 04:11:38 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.86.96])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 29 Sep 2023 04:11:38 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+Subject: [PATCH 1/3] perf tests test_arm_coresight: Fix the shellcheck warning in latest test_arm_coresight.sh
+Date: Fri, 29 Sep 2023 09:41:31 +0530
+Message-Id: <20230929041133.95355-2-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20230929041133.95355-1-atrajeev@linux.vnet.ibm.com>
+References: <20230929041133.95355-1-atrajeev@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -64,69 +68,66 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 5gVPHXbDO6uZZCRr2NUBiSjQdqpsaM7A
+X-Proofpoint-ORIG-GUID: QpO7f2YqD17LG0k9CIsYiW0XIuo2ZM6c
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-09-29_01,2023-09-28_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 mlxscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
+ clxscore=1015 phishscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2309290034
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,
+	RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-It checks the current lock to calculated the delta of contention time.
-The address is saved in the tstamp map which is allocated at begining of
-contention and released at end of contention.
+Running shellcheck on tests/shell/test_arm_coresight.sh
+throws below warnings:
 
-But it's possible for bpf_map_delete_elem() to fail.  In that case, the
-element in the tstamp map kept for the current lock and it makes the
-next contention for the same lock tracked incorrectly.  Specificially
-the next contention begin will see the existing element for the task and
-it'd just return.  Then the next contention end will see the element and
-calculate the time using the timestamp for the previous begin.
+	In tests/shell/test_arm_coresight.sh line 15:
+	cs_etm_path=$(find  /sys/bus/event_source/devices/cs_etm/ -name cpu* -print -quit)
+                  ^--^ SC2061: Quote the parameter to -name so the shell won't interpret it.
 
-This can result in a large value for two small contentions happened from
-time to time.  Let's clear the lock address so that it can be updated
-next time even if the bpf_map_delete_elem() failed.
+	In tests/shell/test_arm_coresight.sh line 20:
+		if [ $archhver -eq 5 -a "$(printf "0x%X\n" $archpart)" = "0xA13" ] ; then
+                	             ^-- SC2166: Prefer [ p ] && [ q ] as [ p -a q ] is not well defined
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+This warning is observed after commit:
+"commit bb350847965d ("perf test: Update cs_etm testcase for Arm ETE")"
+
+Fixed this issue by using quoting 'cpu*' for SC2061 and
+using "&&" in line number 20 for SC2166 warning
+
+Fixes: bb350847965d ("perf test: Update cs_etm testcase for Arm ETE")
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 ---
- tools/perf/util/bpf_skel/lock_contention.bpf.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/tests/shell/test_arm_coresight.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index 4900a5dfb4a4..b11179452e19 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -389,6 +389,7 @@ int contention_end(u64 *ctx)
+diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
+index fe78c4626e45..f2115dfa24a5 100755
+--- a/tools/perf/tests/shell/test_arm_coresight.sh
++++ b/tools/perf/tests/shell/test_arm_coresight.sh
+@@ -12,12 +12,12 @@
+ glb_err=0
  
- 	duration = bpf_ktime_get_ns() - pelem->timestamp;
- 	if ((__s64)duration < 0) {
-+		pelem->lock = 0;
- 		bpf_map_delete_elem(&tstamp, &pid);
- 		__sync_fetch_and_add(&time_fail, 1);
- 		return 0;
-@@ -422,6 +423,7 @@ int contention_end(u64 *ctx)
- 	data = bpf_map_lookup_elem(&lock_stat, &key);
- 	if (!data) {
- 		if (data_map_full) {
-+			pelem->lock = 0;
- 			bpf_map_delete_elem(&tstamp, &pid);
- 			__sync_fetch_and_add(&data_fail, 1);
- 			return 0;
-@@ -445,6 +447,7 @@ int contention_end(u64 *ctx)
- 				data_map_full = 1;
- 			__sync_fetch_and_add(&data_fail, 1);
- 		}
-+		pelem->lock = 0;
- 		bpf_map_delete_elem(&tstamp, &pid);
- 		return 0;
- 	}
-@@ -458,6 +461,7 @@ int contention_end(u64 *ctx)
- 	if (data->min_time > duration)
- 		data->min_time = duration;
+ cs_etm_dev_name() {
+-	cs_etm_path=$(find  /sys/bus/event_source/devices/cs_etm/ -name cpu* -print -quit)
++	cs_etm_path=$(find  /sys/bus/event_source/devices/cs_etm/ -name 'cpu*' -print -quit)
+ 	trcdevarch=$(cat ${cs_etm_path}/mgmt/trcdevarch)
+ 	archhver=$((($trcdevarch >> 12) & 0xf))
+ 	archpart=$(($trcdevarch & 0xfff))
  
-+	pelem->lock = 0;
- 	bpf_map_delete_elem(&tstamp, &pid);
- 	return 0;
- }
+-	if [ $archhver -eq 5 -a "$(printf "0x%X\n" $archpart)" = "0xA13" ] ; then
++	if [ $archhver -eq 5 ] && [ "$(printf "0x%X\n" $archpart)" = "0xA13" ] ; then
+ 		echo "ete"
+ 	else
+ 		echo "etm"
 -- 
-2.42.0.582.g8ccd20d70d-goog
+2.31.1
 
