@@ -1,168 +1,167 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF341125AB
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 09:56:36 +0000 (UTC)
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF6AE199
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 02:56:34 -0700 (PDT)
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38T9h37N025825
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 09:56:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : to : from : subject : content-type :
- content-transfer-encoding; s=pp1;
- bh=HmxmGZ3Hg+4RdfjhaYTObhs1gq2ZKYp8UnX0vEpEvFs=;
- b=WQyWg/Jrmag8Z6Q11MgRzvSyfO/NeAx51qntQy0XrkN4g55TDinKwifmgPL7pXFS9hUz
- gwYCs44YJ3/ijPLo8agoj9QjNY154jp05ucjGOeq0STJvj3QaJoe8YhJClLnY/fI6OEB
- +fTD+mpJSgkYpFswM361mBL6vR+Osw4nY/Z0kKrbbJD3E2RWRCc4kdjHRDpbRmv4IE/e
- TcFKXEP4SRzjoumk2Dk3seJUrPljIhycQnskFRT3cRjU91eXiGvPufRwsWcAhVnd6dwc
- wSZMqNuaM3R9EI0gonFE+AzRv39+Lx4pJoQdoTtT2tblozdCZ1/wpqsmrgag2IGzD2el VQ== 
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tdv6j89gc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 09:56:33 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38T9oemY008228
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 09:56:33 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tabbnurqv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 09:56:33 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38T9uVZ414549644
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 09:56:31 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4566620049
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 09:56:31 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 24CB520040
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 09:56:31 +0000 (GMT)
-Received: from [9.171.8.252] (unknown [9.171.8.252])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 09:56:31 +0000 (GMT)
-Message-ID: <3a212e80-b00b-f44b-3d2c-6e221d8cc1ac@linux.ibm.com>
-Date: Fri, 29 Sep 2023 11:56:30 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A2A1864
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 11:54:28 +0000 (UTC)
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 161341B5;
+	Fri, 29 Sep 2023 04:54:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=qKq2NzIPOMbXiw7EuwrhFYULUyJIGa2dMNFAahKM20Q=; b=BOJ60tkND/iuUdClWCA0nH3gUS
+	q9vz1KHPtQ2+lkb3uSJrd/2nvBwEy4M+CQky0AG+X/mANa/2ocLCW1PlYTOhcgVr2qJcY4FBxwjB1
+	pdkjp2wdi2eGh+Qhtrq+5MKYqhE80PZYuQHg0v6tyuCCCdWV2usaWsgClJx6E2ltMWXB6gFEAhwtq
+	AA/1O45BPaHv9C+bHsgVFBKrXV1MOJnJGlvVpjxi8bcD2h45g2j/847Qq7cTqNLoQtEyHVYd2yD7v
+	sRn9tMGvMoZCBRUpo9cfq1oZ73x+QY1kXfTLMxFrbMVBJFVi49UhMz8Fcf4vtbOUOU9HVwkEozM+/
+	8ozEJVFQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1qmC3z-0067fO-31;
+	Fri, 29 Sep 2023 11:53:46 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 0DFD930030F; Fri, 29 Sep 2023 13:53:45 +0200 (CEST)
+Date: Fri, 29 Sep 2023 13:53:44 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>, Like Xu <likexu@tencent.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, kvm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Zhenyu Wang <zhenyuw@linux.intel.com>,
+	Zhang Xiong <xiong.y.zhang@intel.com>,
+	Lv Zhiyuan <zhiyuan.lv@intel.com>,
+	Yang Weijiang <weijiang.yang@intel.com>,
+	Dapeng Mi <dapeng1.mi@intel.com>, Jim Mattson <jmattson@google.com>,
+	David Dunn <daviddunn@google.com>,
+	Mingwei Zhang <mizhang@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics
+ event
+Message-ID: <20230929115344.GE6282@noisy.programming.kicks-ass.net>
+References: <20230927033124.1226509-1-dapeng1.mi@linux.intel.com>
+ <20230927033124.1226509-8-dapeng1.mi@linux.intel.com>
+ <20230927113312.GD21810@noisy.programming.kicks-ass.net>
+ <ZRRl6y1GL-7RM63x@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Content-Language: en-US
-To: "linux-perf-use." <linux-perf-users@vger.kernel.org>
-From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: Question to perf record command
-Organization: IBM
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: UZFumGCGNmI2PYpQn3YB6GDUhicGHdWn
-X-Proofpoint-ORIG-GUID: UZFumGCGNmI2PYpQn3YB6GDUhicGHdWn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-09-29_07,2023-09-28_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- spamscore=0 impostorscore=0 lowpriorityscore=0 clxscore=1015 phishscore=0
- priorityscore=1501 mlxlogscore=999 adultscore=0 mlxscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2309180000
- definitions=main-2309290082
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZRRl6y1GL-7RM63x@google.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-I have a question regarding command perf record.
+On Wed, Sep 27, 2023 at 10:27:07AM -0700, Sean Christopherson wrote:
 
-Command ./perf record -R -e cycles -vvv -C0 -- true
-sets up perf_event_open system call with CPU == 0 and PID == -1.
+> I don't think it does work, at least not without a very, very carefully crafted
+> setup and a host userspace that knows it must not use certain aspects of perf.
+> E.g. for PEBS, if the guest virtual counters don't map 1:1 to the "real" counters
+> in hardware, KVM+perf simply disables the counter.
 
-According to the documentation, this applies to all processes on CPU 0
-and not just the process named true.
+I have distinct memories of there being patches to rewrite the PEBS
+buffer, but I really can't remember what we ended up doing. Like I said,
+I can't operate KVM in any meaningful way -- it's a monster :-(
 
-Is this indended? I thought process true should be traced when running on 
-CPU 0. Shouldn't the perf_event_open() system call in called with
-CPU set to 0 and PID set to PID of process true?
+> And for top-down slots, getting anything remotely accurate requires pinning vCPUs
+> 1:1 with pCPUs and enumerating an accurate toplogy to the guest:
+> 
+>   The count is distributed among unhalted logical processors (hyper-threads) who
+>   share the same physical core, in processors that support Intel Hyper-Threading
+>   Technology.
 
-Tracing output:
-# ./perf record -R -e cycles -vvv -C0 -- true
-DEBUGINFOD_URLS=
-nr_cblocks: 0
-affinity: SYS
-mmap flush: 1
-comp level: 0
-perf record opening and mmapping events
-Opening: cycles
-------------------------------------------------------------
-perf_event_attr:
-  type                             0 (PERF_TYPE_HARDWARE)
-  size                             136
-  config                           0 (PERF_COUNT_HW_CPU_CYCLES)
-  { sample_period, sample_freq }   4000
-  sample_type                      IP|TID|TIME|ID|CPU|PERIOD|RAW
-  read_format                      ID|LOST
-  disabled                         1
-  inherit                          1
-  freq                             1
-  sample_id_all                    1
-  exclude_guest                    1
-------------------------------------------------------------
-sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
-....
+So IIRC slots is per logical CPU, it counts the actual pipeline stages
+going towards that logical CPU, this is required to make it work on SMT
+at all -- even for native.
+
+But it's been a long while since that was explained -- and because it
+was a call, I can't very well read it back, god how I hate calls :-(
+
+> Jumping the gun a bit (we're in the *super* early stages of scraping together a
+> rough PoC), but I think we should effectively put KVM's current vPMU support into
+> maintenance-only mode, i.e. stop adding new features unless they are *very* simple
+> to enable, and instead pursue an implementation that (a) lets userspace (and/or
+> the kernel builder) completely disable host perf (or possibly just host perf usage
+> of the hardware PMU) and (b) let KVM passthrough the entire hardware PMU when it
+> has been turned off in the host.
+
+I don't think you need to go that far, host can use PMU just fine as
+long as it doesn't overlap with a vCPU. Basically, if you force
+perf_attr::exclude_guest on everything your vCPU can haz the full thing.
+
+> Hardware vendors are pushing us in the direction whether we like it or not, e.g.
+> SNP and TDX want to disallow profiling the guest from the host, 
+
+Yeah, sekjoerity model etc.. bah.
+
+> ARM has an upcoming PMU model where (IIUC) it can't be virtualized
+> without a passthrough approach,
+
+:-(
+
+> Intel's hybrid CPUs are a complete trainwreck unless vCPUs are pinned,
+
+Anybodies hybrid things are a clusterfuck, hybrid vs virt doesn't work
+sanely on ARM either AFAIU.
+
+I intensely dislike hybrid (and virt ofc), but alas we get to live with
+that mess :/ And it's only going to get worse I fear..
+
+At least (for now) AMD hybrid is committed to identical ISA, including
+PMUs with their Zen4+Zen4c things. We'll have to wait and see how
+that'll end up.
+
+> and virtualizing things like top-down slots, PEBS, and LBRs in the shared model
+> requires an absurd amount of complexity throughout the kernel and userspace.
+
+I'm not sure about top-down, the other two, for sure.
+
+My main beef with top-down is the ludicrously bad hardware interface we
+have on big cores, I like the atom interface a *ton* better.
+
+> Note, a similar idea was floated and rejected in the past[*], but that failed
+> proposal tried to retain host perf+PMU functionality by making the behavior dynamic,
+> which I agree would create an awful ABI for the host.  If we make the "knob" a
+> Kconfig 
+
+Must not be Kconfig, distros would have no sane choice.
+
+> or kernel param, i.e. require the platform owner to opt-out of using perf
+> no later than at boot time, then I think we can provide a sane ABI, keep the
+> implementation simple, all without breaking existing users that utilize perf in
+> the host to profile guests.
+
+It's a shit choice to have to make. At the same time I'm not sure I have
+a better proposal.
+
+It does mean a host cannot profile one guest and have pass-through on the
+other. Eg. have a development and production guest on the same box. This
+is pretty crap.
+
+Making it a guest-boot-option would allow that, but then the host gets
+complicated again. I think I can make it trivially work for per-task
+events, simply error the creation of events without exclude_guest for
+affected vCPU tasks. But the CPU events are tricky.
 
 
-When command invocation is
-# ./perf record -R -e cycles -vvv -- true
+I will firmly reject anything that takes the PMU away from the host
+entirely through.
 
-the forked process named true (PID 13092) is traced on all CPUs:
-[root@a35lp67 perf]# ./perf record -R -e cycles -vvv  -- true
-DEBUGINFOD_URLS=
-nr_cblocks: 0
-affinity: SYS
-mmap flush: 1
-comp level: 0
-perf record opening and mmapping events
-Opening: cycles
-------------------------------------------------------------
-perf_event_attr:
-  type                             0 (PERF_TYPE_HARDWARE)
-  size                             136
-  config                           0 (PERF_COUNT_HW_CPU_CYCLES)
-  { sample_period, sample_freq }   4000
-  sample_type                      IP|TID|TIME|CPU|PERIOD|RAW
-  read_format                      ID|LOST
-  disabled                         1
-  inherit                          1
-  mmap                             1
-  comm                             1
-  freq                             1
-  enable_on_exec                   1
-  task                             1
-  sample_id_all                    1
-  exclude_guest                    1
-  mmap2                            1
-  comm_exec                        1
-  ksymbol                          1
-  bpf_event                        1
-------------------------------------------------------------
-sys_perf_event_open: pid 13092  cpu 0  group_fd -1  flags 0x8 = 5
-sys_perf_event_open: pid 13092  cpu 1  group_fd -1  flags 0x8 = 6
-sys_perf_event_open: pid 13092  cpu 2  group_fd -1  flags 0x8 = 7
-sys_perf_event_open: pid 13092  cpu 3  group_fd -1  flags 0x8 = 9
-sys_perf_event_open: pid 13092  cpu 4  group_fd -1  flags 0x8 = 10
-sys_perf_event_open: pid 13092  cpu 5  group_fd -1  flags 0x8 = 11
-sys_perf_event_open: pid 13092  cpu 6  group_fd -1  flags 0x8 = 12
-sys_perf_event_open: pid 13092  cpu 7  group_fd -1  flags 0x8 = 13
-mmap size 528384B
-....
+Also, NMI watchdog needs a solution.. Ideally hardware grows a second
+per-CPU timer we can program to NMI.
 
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Gregor Pillen
-Geschäftsführung: David Faller
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+
