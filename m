@@ -1,47 +1,45 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E9F9CA5D
-	for <linux-perf-users@vger.kernel.org>; Sat, 30 Sep 2023 06:19:12 +0000 (UTC)
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A215F1AB
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 23:19:10 -0700 (PDT)
-Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-7a26fd82847so49587739f.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 23:19:10 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE1717EF
+	for <linux-perf-users@vger.kernel.org>; Sat, 30 Sep 2023 06:32:13 +0000 (UTC)
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 576311A7
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 23:32:12 -0700 (PDT)
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-79faf4210b2so412174639f.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 23:32:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696054750; x=1696659550;
+        d=1e100.net; s=20230601; t=1696055531; x=1696660331;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=l1MkJy7Wb/T3B4h0JC+qhG5J2ExdnVU7HQXNJjtkmVk=;
-        b=pDlmXW/NADMVRNqFw3iCp4Q++niL9gHEHNmcmglNsrIMJifG5Z/ArXStadEGPfOteJ
-         n9BBf8L0rJ1lGr7e+Cbaa8irBCTaa/Jmp5cyogHEHsnwmlmThyEJmYoHpoUxdRHcw4pu
-         v3as39o6X84Yx7iwb/oRsGf+mgMGc6Dc9J/JkiDT4MNKmPQvaI2F1RgMwU/Ju9QLJhaO
-         2o6VQZk8tAXOy1t+kAU3wyz48t7tfWmk/M1bJahSpWxj/AXGIPQRDQUkKz1KW5CqhBQK
-         ihPsIBeHfj4M2Hd3y59y0lIaYC1ANaiicVKM6+rik8KLPKWlr/nTbHPldNVzGaRm7utY
-         MULA==
-X-Gm-Message-State: AOJu0YzFR0I2cSo61oo9mtwMVIhiCfT5Oiq/WpFV1BoXXWfTKKWTgAXe
-	Z2cq5hjogXZQ83+Zu0t5XQujIz3nPii+rR0JaNM=
-X-Google-Smtp-Source: AGHT+IEqDOVT6xBi87Pj7SFKTyw5+Vm3GNsYkQshly9C/ayyXDTZe6FiQuf7gGpK21wg4VlOmMj58ww9MBEf2kMoANM=
-X-Received: by 2002:a6b:fd0b:0:b0:79f:a36e:bd1f with SMTP id
- c11-20020a6bfd0b000000b0079fa36ebd1fmr6889766ioi.5.1696054749639; Fri, 29 Sep
- 2023 23:19:09 -0700 (PDT)
+        bh=L5ipF69/Ebwaux7stRusr0oeQfM271w9vxjAqkqGNbE=;
+        b=X8mU+XkOWuwEUc6/vjKTq57/fKPPzJ9c/M8kXolZHLzCjij/6nmO4vcaeQz+2oZ1K8
+         oXjnHSyQMfjpKHOyvmMncAkcTwB6ZmkHrOajH3AX6zvyaucW2TMtc/eVcEkfwPADRjwA
+         QnrpLPJLK68i5E9SQjInF7tAe668B7cmQ8LJ5pNEVPeZm7ZMwm3MEhwBU0HUcF0J+Q/3
+         b9eWs6v23V/SlDF313pUZ7NbRcT1mMBPyAOUJKKiveUdDfIfAY30QpJl9VaUCVj0x5T4
+         SioueL0QOZPQeO6E+XuEfjxUN6YjpwjcDgFNIqz+eLFYnR0F8B02FUkiZeWzi1pcaanu
+         HmyQ==
+X-Gm-Message-State: AOJu0YxiWSKQNu+9o4OUeZGhWsuOawokTM57Frr+MD8YF2UDS0VOkZAv
+	u2Gi164JS9J7edtPcFCL1Isf0c2LB4UxbqPnYGWpKcj4
+X-Google-Smtp-Source: AGHT+IEZfAJjmj5nsemRVOcDlaLRPIkm1WSKlw4p0D/pIQUlaOsPKYYHPjSCjo7eahXh+fGcaVgjgyiHZMSxooAk17U=
+X-Received: by 2002:a6b:db08:0:b0:79d:8708:4d24 with SMTP id
+ t8-20020a6bdb08000000b0079d87084d24mr6434797ioc.15.1696055531466; Fri, 29 Sep
+ 2023 23:32:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230929055757.83174-1-adityag@linux.ibm.com> <20230929055757.83174-2-adityag@linux.ibm.com>
-In-Reply-To: <20230929055757.83174-2-adityag@linux.ibm.com>
+References: <3a212e80-b00b-f44b-3d2c-6e221d8cc1ac@linux.ibm.com>
+In-Reply-To: <3a212e80-b00b-f44b-3d2c-6e221d8cc1ac@linux.ibm.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 29 Sep 2023 23:18:57 -0700
-Message-ID: <CAM9d7ciYngXfyVdPfnknkQLy-7oi0H=1Ufn9yKgp3h_MuAEb_A@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] perf check: introduce check subcommand
-To: Aditya Gupta <adityag@linux.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, irogers@google.com, 
-	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com, 
-	atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Date: Fri, 29 Sep 2023 23:32:00 -0700
+Message-ID: <CAM9d7cjTRE6D8hHfCrmFWE3fDfds+RAMYevuCNM2t_c3S5-T3A@mail.gmail.com>
+Subject: Re: Question to perf record command
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,
@@ -53,314 +51,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 
 Hello,
 
-On Thu, Sep 28, 2023 at 10:58=E2=80=AFPM Aditya Gupta <adityag@linux.ibm.co=
-m> wrote:
+On Fri, Sep 29, 2023 at 2:56=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
+om> wrote:
 >
-> Currently the presence of a feature is checked with a combination of
-> perf version --build-options and greps, such as:
+> I have a question regarding command perf record.
 >
->     perf version --build-options | grep " on .* HAVE_FEATURE"
+> Command ./perf record -R -e cycles -vvv -C0 -- true
+> sets up perf_event_open system call with CPU =3D=3D 0 and PID =3D=3D -1.
 >
-> Instead of this, introduce a subcommand "perf check --feature", with whic=
-h
-> scripts can test for presence of a feature, such as:
+> According to the documentation, this applies to all processes on CPU 0
+> and not just the process named true.
 >
->     perf check --feature HAVE_FEATURE
->
-> 'perf check --feature' command is expected to have exit status of 1 if
-> feature is built-in, and 0 if it's not built-in or if feature is not know=
-n.
->
-> An array 'supported_features' has also been introduced that can be used b=
-y
-> other commands like 'perf version --build-options', so that new features
-> can be added in one place, with the array
->
-> Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
-> ---
->  tools/perf/Build                        |   1 +
->  tools/perf/Documentation/perf-check.txt |  56 +++++++++++
->  tools/perf/builtin-check.c              | 122 ++++++++++++++++++++++++
->  tools/perf/builtin.h                    |  18 ++++
->  tools/perf/perf.c                       |   1 +
->  5 files changed, 198 insertions(+)
->  create mode 100644 tools/perf/Documentation/perf-check.txt
->  create mode 100644 tools/perf/builtin-check.c
->
-> diff --git a/tools/perf/Build b/tools/perf/Build
-> index aa7623622834..a55a797c1b5f 100644
-> --- a/tools/perf/Build
-> +++ b/tools/perf/Build
-> @@ -1,5 +1,6 @@
->  perf-y +=3D builtin-bench.o
->  perf-y +=3D builtin-annotate.o
-> +perf-y +=3D builtin-check.o
->  perf-y +=3D builtin-config.o
->  perf-y +=3D builtin-diff.o
->  perf-y +=3D builtin-evlist.o
-> diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documen=
-tation/perf-check.txt
-> new file mode 100644
-> index 000000000000..5cf6ab7df8c3
-> --- /dev/null
-> +++ b/tools/perf/Documentation/perf-check.txt
-> @@ -0,0 +1,56 @@
-> +perf-check(1)
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +NAME
-> +----
-> +perf-check - check features in perf
-> +
-> +SYNOPSIS
-> +--------
-> +'perf check' [-q] [--feature]
+> Is this indended? I thought process true should be traced when running on
+> CPU 0. Shouldn't the perf_event_open() system call in called with
+> CPU set to 0 and PID set to PID of process true?
 
-I think it's better to say like below for later changes.
+It's intended.  When you specify CPU targets (-a or -C options),
+it'd profile ALL processes on those CPUs.  The command line
+task just controls when it terminates the sampling.  For example,
+we often use sleep command to profile all processes for the
+specified time.
 
-'perf check' [<options>]
-
-> +
-> +DESCRIPTION
-> +-----------
-> +With no options given, the 'perf check' just prints the perf version
-> +on the standard output.
-> +
-> +If the option '--feature' is given, then status of feature is printed
-> +on the standard output, ie. whether it is compiled-in/built-in or not
-> +
-> +OPTIONS
-> +-------
-> +-q::
-> +               Do not print any messages or warnings
-> +
-> +--feature::
-> +        Print whether a feature is compiled-in or not. A feature name/ma=
-cro is
-> +        required to be passed after this flag
-> +
-> +        Example Usage:
-> +                perf check --feature libtraceevent
-> +                perf check --feature HAVE_LIBTRACEEVENT
-> +
-> +        Supported feature names/macro:
-> +                dwarf      /  HAVE_DWARF_SUPPORT
-> +                dwarf_getlocations  /  HAVE_DWARF_GETLOCATIONS_SUPPORT
-> +                libaudit   /  HAVE_LIBAUDIT_SUPPORT
-> +                syscall_table       /  HAVE_SYSCALL_TABLE_SUPPORT
-> +                libbfd     /  HAVE_LIBBFD_SUPPORT
-> +                debuginfod /  HAVE_DEBUGINFOD_SUPPORT
-> +                libelf     /  HAVE_LIBELF_SUPPORT
-> +                libnuma    /  HAVE_LIBNUMA_SUPPORT
-> +                numa_num_possible_cpus  /  HAVE_LIBNUMA_SUPPORT
-> +                libperl    /  HAVE_LIBPERL_SUPPORT
-> +                libpython  /  HAVE_LIBPYTHON_SUPPORT
-> +                libslang   /  HAVE_SLANG_SUPPORT
-> +                libcrypto  /  HAVE_LIBCRYPTO_SUPPORT
-> +                libunwind  /  HAVE_LIBUNWIND_SUPPORT
-> +                libdw-dwarf-unwind  /  HAVE_DWARF_SUPPORT
-> +                zlib       /  HAVE_ZLIB_SUPPORT
-> +                lzma       /  HAVE_LZMA_SUPPORT
-> +                get_cpuid  /  HAVE_AUXTRACE_SUPPORT
-> +                bpf        /  HAVE_LIBBPF_SUPPORT
-> +                aio        /  HAVE_AIO_SUPPORT
-> +                zstd       /  HAVE_ZSTD_SUPPORT
-> +                libpfm4    /  HAVE_LIBPFM
-> +                libtraceevent      /  HAVE_LIBTRACEEVENT
-> diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
-> new file mode 100644
-> index 000000000000..da7ee93bbbf5
-> --- /dev/null
-> +++ b/tools/perf/builtin-check.c
-> @@ -0,0 +1,122 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include "builtin.h"
-> +#include "color.h"
-> +#include "util/debug.h"
-> +#include "util/header.h"
-> +#include <tools/config.h>
-> +#include <stdbool.h>
-> +#include <stdio.h>
-> +#include <string.h>
-> +#include <subcmd/parse-options.h>
-> +
-> +struct check {
-> +       const char *feature;
-> +};
-> +
-> +static struct check check;
-> +
-> +static struct option check_options[] =3D {
-> +       OPT_STRING(0, "feature", &check.feature, NULL, "check if a featur=
-e is built in"),
-> +       OPT_BOOLEAN('q', "quiet", &quiet, "do not show any warnings or me=
-ssages"),
-> +       OPT_END(),
-> +};
-> +
-> +static const char * const check_usage[] =3D {
-> +       "perf check [<options>]",
-> +       NULL
-> +};
-> +
-> +struct feature_support supported_features[] =3D {
-> +       FEATURE_SUPPORT("dwarf", HAVE_DWARF_SUPPORT),
-> +       FEATURE_SUPPORT("dwarf_getlocations", HAVE_DWARF_GETLOCATIONS_SUP=
-PORT),
-> +       FEATURE_SUPPORT("libaudit", HAVE_LIBAUDIT_SUPPORT),
-> +       FEATURE_SUPPORT("syscall_table", HAVE_SYSCALL_TABLE_SUPPORT),
-> +       FEATURE_SUPPORT("libbfd", HAVE_LIBBFD_SUPPORT),
-> +       FEATURE_SUPPORT("debuginfod", HAVE_DEBUGINFOD_SUPPORT),
-> +       FEATURE_SUPPORT("libelf", HAVE_LIBELF_SUPPORT),
-> +       FEATURE_SUPPORT("libnuma", HAVE_LIBNUMA_SUPPORT),
-> +       FEATURE_SUPPORT("numa_num_possible_cpus", HAVE_LIBNUMA_SUPPORT),
-> +       FEATURE_SUPPORT("libperl", HAVE_LIBPERL_SUPPORT),
-> +       FEATURE_SUPPORT("libpython", HAVE_LIBPYTHON_SUPPORT),
-> +       FEATURE_SUPPORT("libslang", HAVE_SLANG_SUPPORT),
-> +       FEATURE_SUPPORT("libcrypto", HAVE_LIBCRYPTO_SUPPORT),
-> +       FEATURE_SUPPORT("libunwind", HAVE_LIBUNWIND_SUPPORT),
-> +       FEATURE_SUPPORT("libdw-dwarf-unwind", HAVE_DWARF_SUPPORT),
-> +       FEATURE_SUPPORT("zlib", HAVE_ZLIB_SUPPORT),
-> +       FEATURE_SUPPORT("lzma", HAVE_LZMA_SUPPORT),
-> +       FEATURE_SUPPORT("get_cpuid", HAVE_AUXTRACE_SUPPORT),
-> +       FEATURE_SUPPORT("bpf", HAVE_LIBBPF_SUPPORT),
-> +       FEATURE_SUPPORT("aio", HAVE_AIO_SUPPORT),
-> +       FEATURE_SUPPORT("zstd", HAVE_ZSTD_SUPPORT),
-> +       FEATURE_SUPPORT("libpfm4", HAVE_LIBPFM),
-> +       FEATURE_SUPPORT("libtraceevent", HAVE_LIBTRACEEVENT),
-> +
-> +       // this should remain at end, to know the array end
-
-We prefer C-style comments using /* ... */.
-
-> +       FEATURE_SUPPORT(NULL, _)
-> +};
-> +
-> +static void on_off_print(const char *status)
-> +{
-> +       printf("[ ");
-> +
-> +       if (!strcmp(status, "OFF"))
-> +               color_fprintf(stdout, PERF_COLOR_RED, "%-3s", status);
-> +       else
-> +               color_fprintf(stdout, PERF_COLOR_GREEN, "%-3s", status);
-> +
-> +       printf(" ]");
-> +}
-> +
-> +static void status_print(const char *name, const char *macro,
-> +                        const char *status)
-> +{
-> +       printf("%22s: ", name);
-> +       on_off_print(status);
-> +       printf("  # %s\n", macro);
-> +}
-> +
-> +#define STATUS(feature)                                   \
-> +do {                                                      \
-> +       if (feature.is_builtin)                               \
-> +               status_print(feature.name, feature.macro, "on");  \
-> +       else                                                  \
-> +               status_print(feature.name, feature.macro, "OFF"); \
-> +} while (0)
-> +
-> +/**
-> + * check whether "feature" is built-in with perf
-> + *
-> + * returns:
-> + *    0: NOT built-in or Feature not known
-> + *    1: Built-in
-> + */
-> +static int has_support(const char *feature)
-> +{
-> +       for (int i =3D 0; supported_features[i].name; ++i) {
-> +               if ((strcmp(feature, supported_features[i].name) =3D=3D 0=
-) ||
-> +                   (strcmp(feature, supported_features[i].macro) =3D=3D =
-0)) {
-> +                       if (!quiet)
-> +                               STATUS(supported_features[i]);
-> +                       return supported_features[i].is_builtin;
-> +               }
-> +       }
-> +
-> +       if (!quiet)
-> +               color_fprintf(stdout, PERF_COLOR_RED, "Feature not known:=
- %s", feature);
-> +
-> +       return 0;
-> +}
-> +
-> +int cmd_check(int argc, const char **argv)
-> +{
-> +       argc =3D parse_options(argc, argv, check_options, check_usage,
-> +                            PARSE_OPT_STOP_AT_NON_OPTION);
-> +
-> +       if (!quiet)
-> +               printf("perf check %s\n", perf_version_string);
-> +
-> +       if (check.feature)
-> +               return has_support(check.feature);
-
-Oh, sorry for making you confused.  I think it'd be better to exit with 0
-for success and 1 (or other) for failure to conform to the shell
-convention.  You may invert the return value from the function.
+  $ perf record -a -- sleep 1
 
 Thanks,
 Namhyung
 
-
-> +
-> +       return 0;
-> +}
-> diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
-> index f2ab5bae2150..9f895981bc9e 100644
-> --- a/tools/perf/builtin.h
-> +++ b/tools/perf/builtin.h
-> @@ -2,6 +2,23 @@
->  #ifndef BUILTIN_H
->  #define BUILTIN_H
 >
-> +#include <stddef.h>
-> +#include <linux/compiler.h>
-> +#include <tools/config.h>
-> +
-> +struct feature_support {
-> +       const char *name;
-> +       const char *macro;
-> +       int is_builtin;
-> +};
-> +
-> +#define FEATURE_SUPPORT(name_, macro_) { \
-> +       .name =3D name_,                       \
-> +       .macro =3D #macro_,                    \
-> +       .is_builtin =3D IS_BUILTIN(macro_) }
-> +
-> +extern struct feature_support supported_features[];
-> +
->  void list_common_cmds_help(void);
->  const char *help_unknown_cmd(const char *cmd);
+> Tracing output:
+> # ./perf record -R -e cycles -vvv -C0 -- true
+> DEBUGINFOD_URLS=3D
+> nr_cblocks: 0
+> affinity: SYS
+> mmap flush: 1
+> comp level: 0
+> perf record opening and mmapping events
+> Opening: cycles
+> ------------------------------------------------------------
+> perf_event_attr:
+>   type                             0 (PERF_TYPE_HARDWARE)
+>   size                             136
+>   config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+>   { sample_period, sample_freq }   4000
+>   sample_type                      IP|TID|TIME|ID|CPU|PERIOD|RAW
+>   read_format                      ID|LOST
+>   disabled                         1
+>   inherit                          1
+>   freq                             1
+>   sample_id_all                    1
+>   exclude_guest                    1
+> ------------------------------------------------------------
+> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 =3D 5
+> ....
 >
-> @@ -9,6 +26,7 @@ int cmd_annotate(int argc, const char **argv);
->  int cmd_bench(int argc, const char **argv);
->  int cmd_buildid_cache(int argc, const char **argv);
->  int cmd_buildid_list(int argc, const char **argv);
-> +int cmd_check(int argc, const char **argv);
->  int cmd_config(int argc, const char **argv);
->  int cmd_c2c(int argc, const char **argv);
->  int cmd_diff(int argc, const char **argv);
-> diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-> index d3fc8090413c..6514f4121c49 100644
-> --- a/tools/perf/perf.c
-> +++ b/tools/perf/perf.c
-> @@ -50,6 +50,7 @@ static struct cmd_struct commands[] =3D {
->         { "archive",    NULL,   0 },
->         { "buildid-cache", cmd_buildid_cache, 0 },
->         { "buildid-list", cmd_buildid_list, 0 },
-> +       { "check",      cmd_check,      0 },
->         { "config",     cmd_config,     0 },
->         { "c2c",        cmd_c2c,        0 },
->         { "diff",       cmd_diff,       0 },
+>
+> When command invocation is
+> # ./perf record -R -e cycles -vvv -- true
+>
+> the forked process named true (PID 13092) is traced on all CPUs:
+> [root@a35lp67 perf]# ./perf record -R -e cycles -vvv  -- true
+> DEBUGINFOD_URLS=3D
+> nr_cblocks: 0
+> affinity: SYS
+> mmap flush: 1
+> comp level: 0
+> perf record opening and mmapping events
+> Opening: cycles
+> ------------------------------------------------------------
+> perf_event_attr:
+>   type                             0 (PERF_TYPE_HARDWARE)
+>   size                             136
+>   config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+>   { sample_period, sample_freq }   4000
+>   sample_type                      IP|TID|TIME|CPU|PERIOD|RAW
+>   read_format                      ID|LOST
+>   disabled                         1
+>   inherit                          1
+>   mmap                             1
+>   comm                             1
+>   freq                             1
+>   enable_on_exec                   1
+>   task                             1
+>   sample_id_all                    1
+>   exclude_guest                    1
+>   mmap2                            1
+>   comm_exec                        1
+>   ksymbol                          1
+>   bpf_event                        1
+> ------------------------------------------------------------
+> sys_perf_event_open: pid 13092  cpu 0  group_fd -1  flags 0x8 =3D 5
+> sys_perf_event_open: pid 13092  cpu 1  group_fd -1  flags 0x8 =3D 6
+> sys_perf_event_open: pid 13092  cpu 2  group_fd -1  flags 0x8 =3D 7
+> sys_perf_event_open: pid 13092  cpu 3  group_fd -1  flags 0x8 =3D 9
+> sys_perf_event_open: pid 13092  cpu 4  group_fd -1  flags 0x8 =3D 10
+> sys_perf_event_open: pid 13092  cpu 5  group_fd -1  flags 0x8 =3D 11
+> sys_perf_event_open: pid 13092  cpu 6  group_fd -1  flags 0x8 =3D 12
+> sys_perf_event_open: pid 13092  cpu 7  group_fd -1  flags 0x8 =3D 13
+> mmap size 528384B
+> ....
+>
 > --
-> 2.41.0
+> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, German=
+y
+> --
+> Vorsitzender des Aufsichtsrats: Gregor Pillen
+> Gesch=C3=A4ftsf=C3=BChrung: David Faller
+> Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht Stut=
+tgart, HRB 243294
 >
