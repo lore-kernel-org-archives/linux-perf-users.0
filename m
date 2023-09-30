@@ -1,104 +1,132 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DAFB1FA8
-	for <linux-perf-users@vger.kernel.org>; Sat, 30 Sep 2023 06:02:11 +0000 (UTC)
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D50CD1AB
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 23:02:10 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d814634fe4bso22102558276.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 23:02:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696053730; x=1696658530; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=cU4DkRhMMObnbg1TBpXu9txqpW0yzEXEW8Tp/xyl+oo=;
-        b=bpXV+zYvE2cxvvl/1gaUgMyixQrwB9VJf9L/hMb/ZCrF3qId+BcBMnPxwHno/uMte0
-         xln6OCBfwF48UVrNn8kcTQcdnfJb2F+VGcukTjgB6WMsymSwrVg8hgs+JJiPo3N+0LC2
-         qFys8HXBhqU8d+WMC9aFrLQn5crc2JeG6jbjYo852TLTU+A+JLt7Q79hBpN9Ceg8TPMq
-         749eJrUWTKAQb4KdsJ6oNE5xK/TkBhDyrndjmTngDInxu18fB+q9l0KxvEqJbu8l/UlH
-         8o9Y90auqIpqdLUkucz4O0+wMPQcwW/1epwFnV0yb7pksGpGAJ+GOkAa/CIMg1NtFE9E
-         Rn+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696053730; x=1696658530;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cU4DkRhMMObnbg1TBpXu9txqpW0yzEXEW8Tp/xyl+oo=;
-        b=MszFQcdPsbQ3xr5Juj/1DEhW7I+zyqtnai1E/7RjJot01YJqv6y2cP3oblFOgHlMHI
-         kcUO7fTavC8+aZxzcr445hIU0jQa9RsT4cJloDVQhC8CAHzWAnMKagkAStIUW7H37uZX
-         mz0degJ8grGtD3YfFh2scC1KThfME73X5LCAwQJ5u/Ncik+BhUX5U2fUBgSB04YnNWoV
-         ILmv2gLTK7OwMXvU8ZHZZiSQIDjNYmc8rYvy8nhJ1VnmD0ERZ+droUYaKtoavLMcsYrY
-         fyDhkzmGeGOeR98omOlKNENSOcPAWGZFbVjbq6B6sgKT/ze53gAGpxnQHDNR6qilcvBY
-         9chA==
-X-Gm-Message-State: AOJu0YzI183/nmhoMaSYqDjKOliqz5TJrz/RjkHijNBjvDueTCPyitRe
-	5SIwneJEMFEx/k+nNGnh3RzOD1oQQozp
-X-Google-Smtp-Source: AGHT+IFf3OtArKfBaf8atKyaUGrFAb5gugXFkNmnFJO8fikSHGT4eNwBXflHB1gAdsfB0dSo9TvNFXcxs5hB
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:fdf7:6873:7ca4:e9e5])
- (user=irogers job=sendgmr) by 2002:a25:d0a:0:b0:d35:bf85:5aa0 with SMTP id
- 10-20020a250d0a000000b00d35bf855aa0mr88172ybn.4.1696053729995; Fri, 29 Sep
- 2023 23:02:09 -0700 (PDT)
-Date: Fri, 29 Sep 2023 23:02:06 -0700
-Message-Id: <20230930060206.2353141-1-irogers@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8C51FA8
+	for <linux-perf-users@vger.kernel.org>; Sat, 30 Sep 2023 06:02:52 +0000 (UTC)
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3E311A7
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 23:02:49 -0700 (PDT)
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38U5BL1M021854;
+	Sat, 30 Sep 2023 06:02:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=/q+Yt1gwlDGfoo77DfjiZsIwixQ5EIAb5kLFFfYjAUQ=;
+ b=sN22dCf4TWjFuUQ2EpHJy2HDYHTL7HvP3mgm4NL0FKoaKyn0UISyoKZ9XUGx109COx6m
+ K3kojJFMQhJe1a5F95JEImJl6eKKa3kP9w/0QHc5XmJ2JlGlv5Bq5vkAAEbKWYlNXbOv
+ QqbHiVnOTqpBWfaNbNO1wrzGH+q7r3Q1TupyrQOdlXmzxh88eZNVejycBA3tYCmEzaGz
+ muHex0m49m/CQqhJhWidd5OhbQH+iwiS8Bx0oj4Znmh4CdPYsqS+ac2leJI7kTv2mJQs
+ P9HPB5WLmGpsAii3CfJzJF8vCCGGUAtsGSMLm9rzTSTSPB27oXatXFq2fKCf7y9UqS58 kQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3techf9j17-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 30 Sep 2023 06:02:36 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38U5ud4N005940;
+	Sat, 30 Sep 2023 06:02:36 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3techf9j11-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 30 Sep 2023 06:02:36 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38U3EaBe008427;
+	Sat, 30 Sep 2023 06:02:35 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3taabtjntf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 30 Sep 2023 06:02:35 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38U62Wwb21562034
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 30 Sep 2023 06:02:32 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E54452007A;
+	Sat, 30 Sep 2023 06:02:31 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A9CDF2010F;
+	Sat, 30 Sep 2023 06:02:03 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.118.116])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Sat, 30 Sep 2023 06:02:03 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.42.0.582.g8ccd20d70d-goog
-Subject: [PATCH v1] perf test: Avoid system wide when not privileged
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.6
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
+Subject: Re: [PATCH V3] perf test: Fix parse-events tests to skip parametrized
+ events
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <CAM9d7ciNutXBM1LHMfkjLPKiT=8b0TMfiTRkn9w4=Tw53ACUNw@mail.gmail.com>
+Date: Sat, 30 Sep 2023 11:31:51 +0530
+Cc: Ian Rogers <irogers@google.com>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Sachin Sant <sachinp@linux.ibm.com>, Kajol Jain <kjain@linux.ibm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Disha Goel <disgoel@linux.vnet.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <00BF2AA1-F414-47A6-AAC4-2FB2CECA563B@linux.vnet.ibm.com>
+References: <20230927181703.80936-1-atrajeev@linux.vnet.ibm.com>
+ <CAM9d7ciNutXBM1LHMfkjLPKiT=8b0TMfiTRkn9w4=Tw53ACUNw@mail.gmail.com>
+To: Namhyung Kim <namhyung@kernel.org>
+X-Mailer: Apple Mail (2.3731.700.6)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: W-FEkDnY3EsnkSVDdOFMSb7XKQ4bPppz
+X-Proofpoint-ORIG-GUID: kdE4cJu6jz6WYbMA_oqmIVq3VplAc_bf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-09-30_04,2023-09-28_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 suspectscore=0 impostorscore=0 mlxscore=0 phishscore=0
+ spamscore=0 clxscore=1015 mlxlogscore=999 bulkscore=0 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2309300048
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,
+	RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Switch the test program to sleep that makes more sense for system wide
-events. Only enable system wide when root or not paranoid. This avoids
-failures under some testing conditions like ARM cloud.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/shell/stat_all_metricgroups.sh | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/perf/tests/shell/stat_all_metricgroups.sh
-index cb35e488809a..f3e305649e2c 100755
---- a/tools/perf/tests/shell/stat_all_metricgroups.sh
-+++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
-@@ -4,9 +4,21 @@
- 
- set -e
- 
--for m in $(perf list --raw-dump metricgroups); do
-+function ParanoidAndNotRoot()
-+{
-+  [ "$(id -u)" != 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid)" -gt $1 ]
-+}
-+
-+system_wide_flag="-a"
-+if ParanoidAndNotRoot 0
-+then
-+  system_wide_flag=""
-+fi
-+
-+for m in $(perf list --raw-dump metricgroups)
-+do
-   echo "Testing $m"
--  perf stat -M "$m" -a true
-+  perf stat -M "$m" $system_wide_flag sleep 0.01
- done
- 
- exit 0
--- 
-2.42.0.582.g8ccd20d70d-goog
+> On 30-Sep-2023, at 11:23 AM, Namhyung Kim <namhyung@kernel.org> wrote:
+>=20
+> On Wed, Sep 27, 2023 at 11:17=E2=80=AFAM Athira Rajeev
+> <atrajeev@linux.vnet.ibm.com> wrote:
+>>=20
+>> Testcase "Parsing of all PMU events from sysfs" parse events for
+>> all PMUs, and not just cpu. In case of powerpc, the PowerVM
+>> environment supports events from hv_24x7 and hv_gpci PMU which
+>> is of example format like below:
+>>=20
+>> - hv_24x7/CPM_ADJUNCT_INST,domain=3D?,core=3D?/
+>> - hv_gpci/event,partition_id=3D?/
+>>=20
+>> The value for "?" needs to be filled in depending on system
+>> configuration. It is better to skip these parametrized events
+>> in this test as it is done in:
+>> 'commit b50d691e50e6 ("perf test: Fix "all PMU test" to skip
+>> parametrized events")' which handled a simialr instance with
+>> "all PMU test".
+>>=20
+>> Fix parse-events test to skip parametrized events since
+>> it needs proper setup of the parameters.
+>>=20
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>> Tested-by: Ian Rogers <irogers@google.com>
+>> Tested-by: Sachin Sant <sachinp@linux.ibm.com>
+>> Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
+>=20
+> Applied to perf-tools-next, thanks!
+
+Thanks Namhyung,
+
+Athira
+
 
