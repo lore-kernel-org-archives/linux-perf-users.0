@@ -1,201 +1,203 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61AA451B88
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 17:24:03 +0000 (UTC)
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A56D01A7;
-	Fri, 29 Sep 2023 10:24:01 -0700 (PDT)
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38TGhnsC012554;
-	Fri, 29 Sep 2023 17:23:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=Gk4ZHt3MTuWoi7y6+C5IwawFLRF+6dy1zufE7xwekcE=;
- b=UXaK8yjfA3iNytPHPOE6F9MeZ287l2Jj/bI0QVL1cYeV3evFEn+yaZepB31rJEY5F8AH
- uC5Tb7u7SJIQeZKxfmqkO/h/jH0wF3pCArcxh4ECw2dpM4LjBDH9aDUalSxzlHZqjGXp
- UifDUpUVDxqIJDx3ifuky9aFCyzQC9qDD3/FvAlojVzt53D7C7ciBG9M1Hw2/qjJ99OW
- vuD5lGNFYI9S5XjKNZNMmqrlggJNM9GI1omX2lDIMcMfGbrwSq/ZJ6mmF+O9D5T9iQt5
- pF6Dl4FObyFr3tCkqreZ/rk8+Xaf7eGVHiJSsoM2q8FBLVx327zm+FGtAJYlpxFx/Q3R QQ== 
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3te1mja89k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Sep 2023 17:23:48 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38TFQeac008253;
-	Fri, 29 Sep 2023 17:23:47 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tabbnxb3c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Sep 2023 17:23:47 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38THNipg17302100
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 29 Sep 2023 17:23:44 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 700AB2004B;
-	Fri, 29 Sep 2023 17:23:44 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BD0C820040;
-	Fri, 29 Sep 2023 17:23:42 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.101.140])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 29 Sep 2023 17:23:42 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To: mpe@ellerman.id.au
-Cc: linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org,
-        maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.ibm.com,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>, stable@vger.kernel.org,
-        Naveen N Rao <naveen@kernel.org>
-Subject: [PATCH 1/2] powerpc/platforms/pseries: Fix STK_PARAM access in the hcall tracing code
-Date: Fri, 29 Sep 2023 22:53:36 +0530
-Message-Id: <20230929172337.7906-1-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B841388
+	for <linux-perf-users@vger.kernel.org>; Sat, 30 Sep 2023 03:29:48 +0000 (UTC)
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD9E3DB
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 20:29:45 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id 5b1f17b1804b1-4053f24c900so17925e9.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 20:29:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1696044584; x=1696649384; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j4M3VEzSVTHjyM3bYp0Tou9eIxp0wzmUOjm6ql/7oYQ=;
+        b=By0EB+p3BGv87hJrhsjP4gLJjjzRtMASI5WNRn2z/NQbJ0HTLfiHxbMVPJN+U/Qkzq
+         ofg4AerATQjfSSn82R67n7/VDqsK5aT+E3yDFPdCukCxkES5lWZbDKrUd1LDPlueNttn
+         4zEEb9AJM1DiYARiYdg2X57DdBewjaV4Lgcn12Wy5hL4D8ki5kYukycy0XA4bGVZSbph
+         w58LwYS2pzNin9quh3Esu0pK+VPC39W9aJE9Wp2l6IVRvRWUV9Odu5/Ow5pMwxzh/Vgw
+         ljMbwOUUY3wcz1i9gbI2REU6ep3qEg3zhMWmvsdAwuxKSjFUVZXw25Ik6TRB78d1B0Yp
+         jxrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696044584; x=1696649384;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j4M3VEzSVTHjyM3bYp0Tou9eIxp0wzmUOjm6ql/7oYQ=;
+        b=p6dlOGr2BYhtC8eKwivdCmA0ymAZ7zaj/YtesLcg99I2fSyiuHp/L6LEns6UkoHuq7
+         akCR+fTdK/O+unHSUWHYxB/zIVmX/LRggvJ5S77JJnJ0gINJAGp6dj2blXodXfvUQTT0
+         h+vkVh2mZeRaoJuNp6+4X48zh2OhThQoznWmQ6jDnIbqEUJB1pEpu68NhKhJcd6+NZeY
+         A5j5Fts7XzigMTu/Qd9hPHg1jKqluXyy4o5ya+27p2jW3PoN3g6bYvUS/03GjYGuMPTg
+         eWPOty6e/9Wvu+xAYFDqxjdzuo0F52KS94mC7VtBcVJ5ulmq0WduazmW9kTN0KParlTP
+         fpyQ==
+X-Gm-Message-State: AOJu0YwXrNq1novhq2XpJcTbcP6UQY84cz6rErbL7JmzP2Fad4TxA/cc
+	RCR9+usjH4osZRZBxWVhqHRzby8daEmKLTtrvdZ4hw==
+X-Google-Smtp-Source: AGHT+IFw5iUrxH5guEM1BQla9TxWiZWlkJlQMD0ic7K3OQnFjcVC/Y3GoEG8BpeLQksdY8m4kRATgBmMD7jpqX69RuY=
+X-Received: by 2002:a05:600c:35d3:b0:3f6:f4b:d4a6 with SMTP id
+ r19-20020a05600c35d300b003f60f4bd4a6mr5790wmq.7.1696044583977; Fri, 29 Sep
+ 2023 20:29:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: M_IRifdDBn4KIkhlzVdycDshh6X8jSox
-X-Proofpoint-ORIG-GUID: M_IRifdDBn4KIkhlzVdycDshh6X8jSox
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-09-29_15,2023-09-28_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- impostorscore=0 mlxlogscore=999 lowpriorityscore=0 mlxscore=0 bulkscore=0
- spamscore=0 priorityscore=1501 adultscore=0 clxscore=1011 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2309180000
- definitions=main-2309290147
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20230927033124.1226509-1-dapeng1.mi@linux.intel.com>
+ <20230927033124.1226509-8-dapeng1.mi@linux.intel.com> <20230927113312.GD21810@noisy.programming.kicks-ass.net>
+ <ZRRl6y1GL-7RM63x@google.com> <20230929115344.GE6282@noisy.programming.kicks-ass.net>
+ <ZRbxb15Opa2_AusF@google.com>
+In-Reply-To: <ZRbxb15Opa2_AusF@google.com>
+From: Jim Mattson <jmattson@google.com>
+Date: Fri, 29 Sep 2023 20:29:31 -0700
+Message-ID: <CALMp9eQvCLJCQYHfZ5K3nZ8jK14dUMmfEsSvkdteE2OUtg=8+g@mail.gmail.com>
+Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics event
+To: Sean Christopherson <seanjc@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Kan Liang <kan.liang@linux.intel.com>, Like Xu <likexu@tencent.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Zhenyu Wang <zhenyuw@linux.intel.com>, Zhang Xiong <xiong.y.zhang@intel.com>, 
+	Lv Zhiyuan <zhiyuan.lv@intel.com>, Yang Weijiang <weijiang.yang@intel.com>, 
+	Dapeng Mi <dapeng1.mi@intel.com>, David Dunn <daviddunn@google.com>, 
+	Mingwei Zhang <mizhang@google.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-In powerpc pseries system, below behaviour is observed while
-enabling tracing on hcall:
-	# cd /sys/kernel/debug/tracing/
-	# cat events/powerpc/hcall_exit/enable
-	0
-	# echo 1 > events/powerpc/hcall_exit/enable
+On Fri, Sep 29, 2023 at 8:46=E2=80=AFAM Sean Christopherson <seanjc@google.=
+com> wrote:
+>
+> On Fri, Sep 29, 2023, Peter Zijlstra wrote:
+> > On Wed, Sep 27, 2023 at 10:27:07AM -0700, Sean Christopherson wrote:
+> > > Jumping the gun a bit (we're in the *super* early stages of scraping =
+together a
+> > > rough PoC), but I think we should effectively put KVM's current vPMU =
+support into
+> > > maintenance-only mode, i.e. stop adding new features unless they are =
+*very* simple
+> > > to enable, and instead pursue an implementation that (a) lets userspa=
+ce (and/or
+> > > the kernel builder) completely disable host perf (or possibly just ho=
+st perf usage
+> > > of the hardware PMU) and (b) let KVM passthrough the entire hardware =
+PMU when it
+> > > has been turned off in the host.
+> >
+> > I don't think you need to go that far, host can use PMU just fine as
+> > long as it doesn't overlap with a vCPU. Basically, if you force
+> > perf_attr::exclude_guest on everything your vCPU can haz the full thing=
+.
+>
+> Complexity aside, my understanding is that the overhead of trapping and e=
+mulating
+> all of the guest counter and MSR accesses results in unacceptably degrade=
+d functionality
+> for the guest.  And we haven't even gotten to things like arch LBRs where=
+ context
+> switching MSRs between the guest and host is going to be quite costly.
 
-	# ls
-	-bash: fork: Bad address
+Trapping and emulating all of the PMU MSR accesses is ludicrously
+slow, especially when the guest is multiplexing events.
 
-Above is from power9 lpar with latest kernel. Past this, softlockup
-is observed. Initially while attempting via perf_event_open to
-use "PERF_TYPE_TRACEPOINT", kernel panic was observed.
+Also, the current scheme of implicitly tying together usage mode and
+priority means that KVM's "task pinned" perf_events always lose to
+someone else's "CPU pinned" perf_events. Even if those "CPU pinned"
+perf events are tagged "exclude_guest," the counters they occupy are
+not available for KVM's "exclude_host" events, because host perf won't
+multiplex a counter between an "exclude_host" event and an
+"exclude_guest" event, even though the two events don't overlap.
+Frankly, we wouldn't want it to, because that would introduce
+egregious overheads at VM-entry and VM-exit. What we would need would
+be a mechanism for allocating KVM's "task pinned" perf_events at the
+highest priority, so they always win.
 
-perf config used:
-================
-	memset(&pe[1],0,sizeof(struct perf_event_attr));
-	pe[1].type=PERF_TYPE_TRACEPOINT;
-	pe[1].size=96;
-	pe[1].config=0x26ULL; /* 38 raw_syscalls/sys_exit */
-	pe[1].sample_type=0; /* 0 */
-	pe[1].read_format=PERF_FORMAT_TOTAL_TIME_ENABLED|PERF_FORMAT_TOTAL_TIME_RUNNING|PERF_FORMAT_ID|PERF_FORMAT_GROUP|0x10ULL; /* 1f */
-	pe[1].inherit=1;
-	pe[1].precise_ip=0; /* arbitrary skid */
-	pe[1].wakeup_events=0;
-	pe[1].bp_type=HW_BREAKPOINT_EMPTY;
-	pe[1].config1=0x1ULL;
+For things to work well in the "vPMU as a client of host perf" world,
+we need to have the following at a minimum:
+1) Guaranteed identity mapping of guest PMCs to host PMCs, so that we
+don't have to intercept accesses to IA32_PERF_GLOBAL_CTRL.
+2) Exclusive ownership of the PMU MSRs while in the KVM_RUN loop, so
+that we don't have to switch any PMU MSRs on VM-entry/VM-exit (with
+the exception of IA32_PERF_GLOBAL_CTRL, which has guest and host
+fields in the VMCS).
 
-Kernel panic logs:
-==================
+There are other issues with the current implementation, like the
+ridiculous overhead of bumping a counter in software to account for an
+emulated instruction. That should just be a RDMSR, an increment, a
+WRMSR, and the conditional synthesis of a guest PMI on overflow.
+Instead, we have to pause a perf_event and reprogram it before
+continuing. Putting a high-level abstraction between the guest PMU and
+the host PMU does not yield the most efficient implementation.
 
-	Kernel attempted to read user page (8) - exploit attempt? (uid: 0)
-	 BUG: Kernel NULL pointer dereference on read at 0x00000008
-	 Faulting instruction address: 0xc0000000004c2814
-	 Oops: Kernel access of bad area, sig: 11 [#1]
-	 LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
- 	Modules linked in: nfnetlink bonding tls rfkill sunrpc dm_service_time dm_multipath pseries_rng xts vmx_crypto xfs libcrc32c sd_mod t10_pi crc64_rocksoft crc64 sg ibmvfc scsi_transport_fc ibmveth dm_mirror dm_region_hash dm_log dm_mod fuse
- 	CPU: 0 PID: 1431 Comm: login Not tainted 6.4.0+ #1
- 	Hardware name: IBM,8375-42A POWER9 (raw) 0x4e0202 0xf000005 of:IBM,FW950.30 (VL950_892) hv:phyp pSeries
- 	NIP [c0000000004c2814] page_remove_rmap+0x44/0x320
-	LR [c00000000049c2a4] wp_page_copy+0x384/0xec0
-	Call Trace:
-	[c0000000098c7ad0] [c00000001416e400] 0xc00000001416e400 (unreliable)
-	[c0000000098c7b20] [c00000000049c2a4] wp_page_copy+0x384/0xec0
-	[c0000000098c7bf0] [c0000000004a4f64] __handle_mm_fault+0x9d4/0xfb0
-	[c0000000098c7cf0] [c0000000004a5630] handle_mm_fault+0xf0/0x350
-	[c0000000098c7d40] [c000000000094e8c] ___do_page_fault+0x48c/0xc90
-	[c0000000098c7df0] [c0000000000958a0] hash__do_page_fault+0x30/0x70
-	[c0000000098c7e20] [c00000000009e244] do_hash_fault+0x1a4/0x330
-	[c0000000098c7e50] [c000000000008918] data_access_common_virt+0x198/0x1f0
-	 --- interrupt: 300 at 0x7fffae971abc
-
-git bisect tracked this down to below commit:
-'commit baa49d81a94b ("powerpc/pseries: hvcall stack frame overhead")'
-
-This commit changed STACK_FRAME_OVERHEAD (112 ) to
-STACK_FRAME_MIN_SIZE (32 ) since 32 bytes is the minimum size
-for ELFv2 stack. With the latest kernel, when running on ELFv2,
-STACK_FRAME_MIN_SIZE is used to allocate stack size.
-
-During plpar_hcall_trace, first call is made to HCALL_INST_PRECALL
-which saves the registers and allocates new stack frame. In the
-plpar_hcall_trace code, STK_PARAM is accessed at two places.
-	1. To save r4: std     r4,STK_PARAM(R4)(r1)
-	2. To access r4 back: ld      r12,STK_PARAM(R4)(r1)
-
-HCALL_INST_PRECALL precall allocates a new stack frame. So all
-the stack parameter access after the precall, needs to be accessed
-with +STACK_FRAME_MIN_SIZE. So the store instruction should be:
-	std     r4,STACK_FRAME_MIN_SIZE+STK_PARAM(R4)(r1)
-
-If the "std" is not updated with STACK_FRAME_MIN_SIZE, we will
-end up with overwriting stack contents and cause corruption.
-But instead of updating 'std', we can instead remove it since
-HCALL_INST_PRECALL already saves it to the correct location.
-
-similarly load instruction should be:
-	ld      r12,STACK_FRAME_MIN_SIZE+STK_PARAM(R4)(r1)
-
-Fix the load instruction to correctly access the stack parameter
-with +STACK_FRAME_MIN_SIZE and remove the store of r4 since the
-precall saves it correctly.
-
-Cc: stable@vger.kernel.org
-Fixes: baa49d81a94b ("powerpc/pseries: hvcall stack frame overhead")
-Co-developed-by: Naveen N Rao <naveen@kernel.org>
-Signed-off-by: Naveen N Rao <naveen@kernel.org>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- arch/powerpc/platforms/pseries/hvCall.S | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/arch/powerpc/platforms/pseries/hvCall.S b/arch/powerpc/platforms/pseries/hvCall.S
-index bae45b358a09..2addf2ea03f0 100644
---- a/arch/powerpc/platforms/pseries/hvCall.S
-+++ b/arch/powerpc/platforms/pseries/hvCall.S
-@@ -184,7 +184,6 @@ _GLOBAL_TOC(plpar_hcall)
- plpar_hcall_trace:
- 	HCALL_INST_PRECALL(R5)
- 
--	std	r4,STK_PARAM(R4)(r1)
- 	mr	r0,r4
- 
- 	mr	r4,r5
-@@ -196,7 +195,7 @@ plpar_hcall_trace:
- 
- 	HVSC
- 
--	ld	r12,STK_PARAM(R4)(r1)
-+	ld	r12,STACK_FRAME_MIN_SIZE+STK_PARAM(R4)(r1)
- 	std	r4,0(r12)
- 	std	r5,8(r12)
- 	std	r6,16(r12)
-@@ -296,7 +295,6 @@ _GLOBAL_TOC(plpar_hcall9)
- plpar_hcall9_trace:
- 	HCALL_INST_PRECALL(R5)
- 
--	std	r4,STK_PARAM(R4)(r1)
- 	mr	r0,r4
- 
- 	mr	r4,r5
--- 
-2.39.3
-
+> > > Note, a similar idea was floated and rejected in the past[*], but tha=
+t failed
+> > > proposal tried to retain host perf+PMU functionality by making the be=
+havior dynamic,
+> > > which I agree would create an awful ABI for the host.  If we make the=
+ "knob" a
+> > > Kconfig
+> >
+> > Must not be Kconfig, distros would have no sane choice.
+>
+> Or not only a Kconfig?  E.g. similar to how the kernel has
+> CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS and nopku.
+>
+> > > or kernel param, i.e. require the platform owner to opt-out of using =
+perf
+> > > no later than at boot time, then I think we can provide a sane ABI, k=
+eep the
+> > > implementation simple, all without breaking existing users that utili=
+ze perf in
+> > > the host to profile guests.
+> >
+> > It's a shit choice to have to make. At the same time I'm not sure I hav=
+e
+> > a better proposal.
+> >
+> > It does mean a host cannot profile one guest and have pass-through on t=
+he
+> > other. Eg. have a development and production guest on the same box. Thi=
+s
+> > is pretty crap.
+> >
+> > Making it a guest-boot-option would allow that, but then the host gets
+> > complicated again. I think I can make it trivially work for per-task
+> > events, simply error the creation of events without exclude_guest for
+> > affected vCPU tasks. But the CPU events are tricky.
+> >
+> >
+> > I will firmly reject anything that takes the PMU away from the host
+> > entirely through.
+>
+> Why?  What is so wrong with supporting use cases where the platform owner=
+ *wants*
+> to give up host PMU and NMI watchdog functionality?  If disabling host PM=
+U usage
+> were complex, highly invasive, and/or difficult to maintain, then I can u=
+nderstand
+> the pushback.
+>
+> But if we simply allow hiding hardware PMU support, then isn't the cost t=
+o perf
+> just a few lines in init_hw_perf_events()?  And if we put a stake in the =
+ground
+> and say that exposing "advanced" PMU features to KVM guests requires a pa=
+ssthrough
+> PMU, i.e. the PMU to be hidden from the host, that will significantly red=
+uce our
+> maintenance and complexity.
+>
+> The kernel allows disabling almost literally every other feature that is =
+even
+> remotely optional, I don't understand why the hardware PMU is special.
