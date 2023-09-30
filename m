@@ -1,54 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048381FA8
-	for <linux-perf-users@vger.kernel.org>; Sat, 30 Sep 2023 06:07:02 +0000 (UTC)
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A16801A7;
-	Fri, 29 Sep 2023 23:07:00 -0700 (PDT)
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-79faba5fe12so426217639f.3;
-        Fri, 29 Sep 2023 23:07:00 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E9F9CA5D
+	for <linux-perf-users@vger.kernel.org>; Sat, 30 Sep 2023 06:19:12 +0000 (UTC)
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A215F1AB
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 23:19:10 -0700 (PDT)
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-7a26fd82847so49587739f.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 23:19:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696054020; x=1696658820;
+        d=1e100.net; s=20230601; t=1696054750; x=1696659550;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=f8r+eyE1cDH7W0IrAebQLv3eT/FSFxqOwJlUdbnBaDM=;
-        b=f8DqzAaKJZGdhjElf2yljHFj27XjWFAwJPheKRIWWIK/NOp85Cs9PfS5iZdb88hjH0
-         lG6Jb4V1SHHHujwmOvA+nkX/oKYOdEqR04yoWJeOUBesfv9W53zM6N4WM6iKyYfZGHh5
-         suzahcx4IMVVBasqG33hkDTr26lFOCeVNEksNydlqPDi1vDfa73UvwlwRc0IqASQ9ajw
-         YQZMfyHpX8c0aP3CAhQSfvM5Md7BnWk6JCSuiN6mr3WJmp2dcskUFwgcaQliXTh6ULZI
-         9kxGop8+ROtozuOcH+1ll53b/LLBaE9foFl+gamiSDIn4bG4EZ9QONdr5ehR2YBovOhl
-         Pmew==
-X-Gm-Message-State: AOJu0Yx9nVERnA0rq+agI0dVABqt9g/xVt8DRkIAkJQGYw/4YdC7xttt
-	aKGcgLWLckznLFM627OTA8jfKWp4tFllSU1dshg=
-X-Google-Smtp-Source: AGHT+IFFw3ARdzVQGy74K4CamP+VvGFPwsckfcF2AcUjT5z4lAivPZRanNNygXeMUQYL0rQwLOzFrRG2tcifSy0VW58=
-X-Received: by 2002:a6b:510c:0:b0:77a:e86a:c24b with SMTP id
- f12-20020a6b510c000000b0077ae86ac24bmr6364961iob.6.1696054019747; Fri, 29 Sep
- 2023 23:06:59 -0700 (PDT)
+        bh=l1MkJy7Wb/T3B4h0JC+qhG5J2ExdnVU7HQXNJjtkmVk=;
+        b=pDlmXW/NADMVRNqFw3iCp4Q++niL9gHEHNmcmglNsrIMJifG5Z/ArXStadEGPfOteJ
+         n9BBf8L0rJ1lGr7e+Cbaa8irBCTaa/Jmp5cyogHEHsnwmlmThyEJmYoHpoUxdRHcw4pu
+         v3as39o6X84Yx7iwb/oRsGf+mgMGc6Dc9J/JkiDT4MNKmPQvaI2F1RgMwU/Ju9QLJhaO
+         2o6VQZk8tAXOy1t+kAU3wyz48t7tfWmk/M1bJahSpWxj/AXGIPQRDQUkKz1KW5CqhBQK
+         ihPsIBeHfj4M2Hd3y59y0lIaYC1ANaiicVKM6+rik8KLPKWlr/nTbHPldNVzGaRm7utY
+         MULA==
+X-Gm-Message-State: AOJu0YzFR0I2cSo61oo9mtwMVIhiCfT5Oiq/WpFV1BoXXWfTKKWTgAXe
+	Z2cq5hjogXZQ83+Zu0t5XQujIz3nPii+rR0JaNM=
+X-Google-Smtp-Source: AGHT+IEqDOVT6xBi87Pj7SFKTyw5+Vm3GNsYkQshly9C/ayyXDTZe6FiQuf7gGpK21wg4VlOmMj58ww9MBEf2kMoANM=
+X-Received: by 2002:a6b:fd0b:0:b0:79f:a36e:bd1f with SMTP id
+ c11-20020a6bfd0b000000b0079fa36ebd1fmr6889766ioi.5.1696054749639; Fri, 29 Sep
+ 2023 23:19:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230916040915.1075620-1-irogers@google.com> <08995efc-d5af-6ba6-831b-1a483daabef4@intel.com>
- <CAP-5=fW783G9fUEHrmzUu7UmvOm65Fp6vAQybCcNz2C0QRz26w@mail.gmail.com>
- <8086150e-3c6d-4001-b3cc-bb12ebe15928@intel.com> <CAM9d7chtVQqySGOGQrA065Fr8M2Y6jg9JJccYtMycQFvaheU+Q@mail.gmail.com>
- <f64c4283-6ced-411a-b69f-8c4375fb91f7@intel.com> <CAP-5=fWJzpQ14CQk+Lf5EY4CwJ4ACPsYT49XJwCnC_qEpS-DAA@mail.gmail.com>
- <9759e3d4-703d-30a6-5334-b33a6e5a38d7@huawei.com> <CABPqkBRroYfif-R+_cxim57M2rAxRCPuuZo7J0S=-Jp2jWE0bg@mail.gmail.com>
-In-Reply-To: <CABPqkBRroYfif-R+_cxim57M2rAxRCPuuZo7J0S=-Jp2jWE0bg@mail.gmail.com>
+References: <20230929055757.83174-1-adityag@linux.ibm.com> <20230929055757.83174-2-adityag@linux.ibm.com>
+In-Reply-To: <20230929055757.83174-2-adityag@linux.ibm.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 29 Sep 2023 23:06:48 -0700
-Message-ID: <CAM9d7cg3BkvFKNw6Vu9GTsLSf7BTZ4ELvraBOq3yTpLu8fX6Og@mail.gmail.com>
-Subject: Re: [PATCH v1] perf evlist: Avoid frequency mode for the dummy event
-To: Stephane Eranian <eranian@google.com>
-Cc: Yang Jihong <yangjihong1@huawei.com>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Fri, 29 Sep 2023 23:18:57 -0700
+Message-ID: <CAM9d7ciYngXfyVdPfnknkQLy-7oi0H=1Ufn9yKgp3h_MuAEb_A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] perf check: introduce check subcommand
+To: Aditya Gupta <adityag@linux.ibm.com>
+Cc: acme@kernel.org, jolsa@kernel.org, irogers@google.com, 
+	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com, 
+	atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,
@@ -60,288 +53,314 @@ X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 
 Hello,
 
-On Mon, Sep 25, 2023 at 10:37=E2=80=AFAM Stephane Eranian <eranian@google.c=
-om> wrote:
+On Thu, Sep 28, 2023 at 10:58=E2=80=AFPM Aditya Gupta <adityag@linux.ibm.co=
+m> wrote:
 >
-> On Sun, Sep 24, 2023 at 8:35=E2=80=AFPM Yang Jihong <yangjihong1@huawei.c=
-om> wrote:
-> >
-> > Hello,
-> >
-> > On 2023/9/22 23:05, Ian Rogers wrote:
-> > > On Thu, Sep 21, 2023 at 10:36=E2=80=AFPM Adrian Hunter <adrian.hunter=
-@intel.com> wrote:
-> > >>
-> > >> On 21/09/23 22:26, Namhyung Kim wrote:
-> > >>> Hi,
-> > >>>
-> > >>> On Mon, Sep 18, 2023 at 11:00=E2=80=AFPM Adrian Hunter <adrian.hunt=
-er@intel.com> wrote:
-> > >>>>
-> > >>>> On 19/09/23 00:48, Ian Rogers wrote:
-> > >>>>> On Mon, Sep 18, 2023 at 1:14=E2=80=AFAM Adrian Hunter <adrian.hun=
-ter@intel.com> wrote:
-> > >>>>>>
-> > >>>>>> On 16/09/23 07:09, Ian Rogers wrote:
-> > >>>>>>> Dummy events are created with an attribute where the period and=
- freq
-> > >>>>>>> are zero. evsel__config will then see the uninitialized values =
-and
-> > >>>>>>> initialize them in evsel__default_freq_period. As fequency mode=
- is
-> > >>>>>>> used by default the dummy event would be set to use frequency
-> > >>>>>>> mode. However, this has no effect on the dummy event but does c=
-ause
-> > >>>>>>> unnecessary timers/interrupts. Avoid this overhead by setting t=
-he
-> > >>>>>>> period to 1 for dummy events.
-> > >>>>>>>
-> > >>>>>>> evlist__add_aux_dummy calls evlist__add_dummy then sets freq=3D=
-0 and
-> > >>>>>>> period=3D1. This isn't necessary after this change and so the s=
-etting is
-> > >>>>>>> removed.
-> > >>>>>>>
-> > >>>>>>>  From Stephane:
-> > >>>>>>>
-> > >>>>>>> The dummy event is not counting anything. It is used to collect=
- mmap
-> > >>>>>>> records and avoid a race condition during the synthesize mmap p=
-hase of
-> > >>>>>>> perf record. As such, it should not cause any overhead during a=
-ctive
-> > >>>>>>> profiling. Yet, it did. Because of a bug the dummy event was
-> > >>>>>>> programmed as a sampling event in frequency mode. Events in tha=
-t mode
-> > >>>>>>> incur more kernel overheads because on timer tick, the kernel h=
-as to
-> > >>>>>>> look at the number of samples for each event and potentially ad=
-just
-> > >>>>>>> the sampling period to achieve the desired frequency. The dummy=
- event
-> > >>>>>>> was therefore adding a frequency event to task and ctx contexts=
- we may
-> > >>>>>>> otherwise not have any, e.g., perf record -a -e
-> > >>>>>>> cpu/event=3D0x3c,period=3D10000000/. On each timer tick the
-> > >>>>>>> perf_adjust_freq_unthr_context() is invoked and if ctx->nr_freq=
- is
-> > >>>>>>> non-zero, then the kernel will loop over ALL the events of the =
-context
-> > >>>>>>> looking for frequency mode ones. In doing, so it locks the cont=
-ext,
-> > >>>>>>> and enable/disable the PMU of each hw event. If all the events =
-of the
-> > >>>>>>> context are in period mode, the kernel will have to traverse th=
-e list for
-> > >>>>>>> nothing incurring overhead. The overhead is multiplied by a ver=
-y large
-> > >>>>>>> factor when this happens in a guest kernel. There is no need fo=
-r the
-> > >>>>>>> dummy event to be in frequency mode, it does not count anything=
- and
-> > >>>>>>> therefore should not cause extra overhead for no reason.
-> > >>>>>>>
-> > >>>>>>> Fixes: 5bae0250237f ("perf evlist: Introduce perf_evlist__new_d=
-ummy constructor")
-> > >>>>>>> Reported-by: Stephane Eranian <eranian@google.com>
-> > >>>>>>> Signed-off-by: Ian Rogers <irogers@google.com>
-> > >>>
-> > >>> I'll take the original patch first.
-
-It's in the perf-tools-next.
-
-> > >>>
-> > >>>
-> > >>>>>>> ---
-> > >>>>>>>   tools/perf/util/evlist.c | 5 +++--
-> > >>>>>>>   1 file changed, 3 insertions(+), 2 deletions(-)
-> > >>>>>>>
-> > >>>>>>> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.=
-c
-> > >>>>>>> index 25c3ebe2c2f5..e36da58522ef 100644
-> > >>>>>>> --- a/tools/perf/util/evlist.c
-> > >>>>>>> +++ b/tools/perf/util/evlist.c
-> > >>>>>>> @@ -251,6 +251,9 @@ static struct evsel *evlist__dummy_event(st=
-ruct evlist *evlist)
-> > >>>>>>>                .type   =3D PERF_TYPE_SOFTWARE,
-> > >>>>>>>                .config =3D PERF_COUNT_SW_DUMMY,
-> > >>>>>>>                .size   =3D sizeof(attr), /* to capture ABI vers=
-ion */
-> > >>>>>>> +             /* Avoid frequency mode for dummy events to avoid=
- associated timers. */
-> > >>>>>>> +             .freq =3D 0,
-> > >>>>>>> +             .sample_period =3D 1,
-> > >>>>>>>        };
-> > >>>>>>>
-> > >>>>>>>        return evsel__new_idx(&attr, evlist->core.nr_entries);
-> > >>>>>>> @@ -277,8 +280,6 @@ struct evsel *evlist__add_aux_dummy(struct =
-evlist *evlist, bool system_wide)
-> > >>>>>>>        evsel->core.attr.exclude_kernel =3D 1;
-> > >>>>>>>        evsel->core.attr.exclude_guest =3D 1;
-> > >>>>>>>        evsel->core.attr.exclude_hv =3D 1;
-> > >>>>>>> -     evsel->core.attr.freq =3D 0;
-> > >>>>>>> -     evsel->core.attr.sample_period =3D 1;
-> > >>>>>>>        evsel->core.system_wide =3D system_wide;
-> > >>>>>>>        evsel->no_aux_samples =3D true;
-> > >>>>>>>        evsel->name =3D strdup("dummy:u");
-> > >>>>>>
-> > >>>>>> Note that evsel__config() will put it back to freq if -F is used=
-.
-> > >>>>>
-> > >>>>> Right, I was looking for a minimal fix in part for the sake of ba=
-ck
-> > >>>>> porting. For the -F we could do:
-> > >>>>>
-> > >>>>> ```
-> > >>>>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > >>>>> index d5363d23f5d3..806185a39e17 100644
-> > >>>>> --- a/tools/perf/util/evsel.c
-> > >>>>> +++ b/tools/perf/util/evsel.c
-> > >>>>> @@ -1083,11 +1083,15 @@ void __weak arch__post_evsel_config(struc=
-t
-> > >>>>> evsel *evsel __maybe_unused,
-> > >>>>> static void evsel__set_default_freq_period(struct record_opts *op=
-ts,
-> > >>>>>                                            struct perf_event_attr=
- *attr)
-> > >>>>> {
-> > >>>>> -       if (opts->freq) {
-> > >>>>> +       bool is_dummy =3D attr->type =3D=3D PERF_TYPE_SOFTWARE &&
-> > >>>>> +               attr->config =3D=3D PERF_COUNT_SW_DUMMY;
-> > >>>>> +
-> > >>>>> +       if (opts->freq && !is_dummy) {
-> > >>>>>                 attr->freq =3D 1;
-> > >>>>>                 attr->sample_freq =3D opts->freq;
-> > >>>>>         } else {
-> > >>>>> -               attr->sample_period =3D opts->default_interval;
-> > >>>>> +               attr->freq =3D 0;
-> > >>>>> +               attr->sample_period =3D is_dummy ? 1 : opts->defa=
-ult_interval;
-> > >>>>>         }
-> > >>>>> }
-> > >>>>> ```
-> > >>>>>
-> > >>>>> But this felt like it could potentially have other side-effects.
-> > >>>>
-> > >>>> Perhaps leave it alone, if the period has already been defined:
-> > >>>>
-> > >>>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > >>>> index d5363d23f5d3..ad3e12f5ec88 100644
-> > >>>> --- a/tools/perf/util/evsel.c
-> > >>>> +++ b/tools/perf/util/evsel.c
-> > >>>> @@ -1166,7 +1166,8 @@ void evsel__config(struct evsel *evsel, stru=
-ct record_opts *opts,
-> > >>>>          if ((evsel->is_libpfm_event && !attr->sample_period) ||
-> > >>>>              (!evsel->is_libpfm_event && (!attr->sample_period ||
-> > >>>>                                           opts->user_freq !=3D UIN=
-T_MAX ||
-> > >>>> -                                        opts->user_interval !=3D =
-ULLONG_MAX)))
-> > >>>> +                                        opts->user_interval !=3D =
-ULLONG_MAX) &&
-> > >>>> +            !(is_dummy && attr->sample_period)))
-> > >>>>                  evsel__set_default_freq_period(opts, attr);
-> > >>>>
-> > >>>>          /*
-> > >>>
-> > >>> Or simply like this?
-> > >>>
-> > >>>
-> > >>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > >>> index d5363d23f5d3..6ce832ce62f1 100644
-> > >>> --- a/tools/perf/util/evsel.c
-> > >>> +++ b/tools/perf/util/evsel.c
-> > >>> @@ -1169,6 +1169,9 @@ void evsel__config(struct evsel *evsel, struc=
-t
-> > >>> record_opts *opts,
-> > >>>                                           opts->user_interval !=3D =
-ULLONG_MAX)))
-> > >>>                  evsel__set_default_freq_period(opts, attr);
-> > >>>
-> > >>> +       if (evsel__is_dummy_event(evsel))
-> > >>> +               attr->freq =3D 0;
-> > >>> +
-> > >>>          /*
-> > >>>           * If attr->freq was set (here or earlier), ask for period
-> > >>>           * to be sampled.
-> > >>
-> > >> I thought there might be corner cases where it made a difference,
-> > >> but I can't find any, so that should do.
-> > >>
-> > >
-> > > It seemed more intention revealing to do it at creation/initializatio=
-n
-> > > than on a later not obviously executed code path - I'm thinking of
-> > > future me trying to understand the code. My priority is the clearing
-> > > of the flag, so I'm easy.
-
-Yeah I meant to keep the initialization and to prevent updating
-it for -F later.  I can add a comment in this code like
-
-/*
- * The kernel counts events with freq=3D1 separately to update
- * the sample frequency in the timer tick handler.  Do not
- * confuse the kernel since the dummy event never fires and
- * no need to update the frequency.
- */
-if (evsel__is_dummy_event(evsel))
-    attr->freq =3D 0;
-
-ok?
-
-> > >
-> > evsel__apply_config_terms() also sets freq. For example:
-> >
-> > # perf record -vv -e dummy/freq=3D100/ true
+> Currently the presence of a feature is checked with a combination of
+> perf version --build-options and greps, such as:
 >
-> This example is NOT relevant to the issue.
-> Of course, if you want to explicitly use the dummy event with
-> frequency mode, you should be allowed to do so.
-
-Agreed.
-
-> The problem we are solving here is different. We are preventing perf
-> record internal use of the dummy event
-> from using frequency mode for no good reason as any frequency mode
-> event adds additional overhead.
-> The perf record internal dummy event is used for one goal: to capture
-> MMAP records to avoid a race condition
-> between synthesize phase and processes being created and not captured
-> by synthesize. In that mode, it acts
-> as an aggregator of all MMAP records during the entire run of the
-> tool. This does not require any frequency mode.
+>     perf version --build-options | grep " on .* HAVE_FEATURE"
 >
+> Instead of this, introduce a subcommand "perf check --feature", with whic=
+h
+> scripts can test for presence of a feature, such as:
 >
-> > <SNIP>
-> > ------------------------------------------------------------
-> > perf_event_attr:
-> >    type                             1 (PERF_TYPE_SOFTWARE)
-> >    size                             136
-> >    config                           0x9 (PERF_COUNT_SW_DUMMY)
-> >    { sample_period, sample_freq }   100
-> >    sample_type                      IP|TID|TIME|PERIOD
-> >    read_format                      ID|LOST
-> >    disabled                         1
-> >    inherit                          1
-> >    mmap                             1
-> >    comm                             1
-> >    freq                             1
-> >    enable_on_exec                   1
-> >    task                             1
-> >    sample_id_all                    1
-> >    exclude_guest                    1
-> >    mmap2                            1
-> >    comm_exec                        1
-> >    ksymbol                          1
-> >    bpf_event                        1
-> > ------------------------------------------------------------
-> > <SNIP>
-> >
-> > Therefore, do we need to perform special processing on dummy events in
-> > evsel__apply_config_terms?
+>     perf check --feature HAVE_FEATURE
+>
+> 'perf check --feature' command is expected to have exit status of 1 if
+> feature is built-in, and 0 if it's not built-in or if feature is not know=
+n.
+>
+> An array 'supported_features' has also been introduced that can be used b=
+y
+> other commands like 'perf version --build-options', so that new features
+> can be added in one place, with the array
+>
+> Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
+> ---
+>  tools/perf/Build                        |   1 +
+>  tools/perf/Documentation/perf-check.txt |  56 +++++++++++
+>  tools/perf/builtin-check.c              | 122 ++++++++++++++++++++++++
+>  tools/perf/builtin.h                    |  18 ++++
+>  tools/perf/perf.c                       |   1 +
+>  5 files changed, 198 insertions(+)
+>  create mode 100644 tools/perf/Documentation/perf-check.txt
+>  create mode 100644 tools/perf/builtin-check.c
+>
+> diff --git a/tools/perf/Build b/tools/perf/Build
+> index aa7623622834..a55a797c1b5f 100644
+> --- a/tools/perf/Build
+> +++ b/tools/perf/Build
+> @@ -1,5 +1,6 @@
+>  perf-y +=3D builtin-bench.o
+>  perf-y +=3D builtin-annotate.o
+> +perf-y +=3D builtin-check.o
+>  perf-y +=3D builtin-config.o
+>  perf-y +=3D builtin-diff.o
+>  perf-y +=3D builtin-evlist.o
+> diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documen=
+tation/perf-check.txt
+> new file mode 100644
+> index 000000000000..5cf6ab7df8c3
+> --- /dev/null
+> +++ b/tools/perf/Documentation/perf-check.txt
+> @@ -0,0 +1,56 @@
+> +perf-check(1)
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +NAME
+> +----
+> +perf-check - check features in perf
+> +
+> +SYNOPSIS
+> +--------
+> +'perf check' [-q] [--feature]
 
-As Stephane said, I don't worry about the case as it's explicitly
-requested by the user.
+I think it's better to say like below for later changes.
+
+'perf check' [<options>]
+
+> +
+> +DESCRIPTION
+> +-----------
+> +With no options given, the 'perf check' just prints the perf version
+> +on the standard output.
+> +
+> +If the option '--feature' is given, then status of feature is printed
+> +on the standard output, ie. whether it is compiled-in/built-in or not
+> +
+> +OPTIONS
+> +-------
+> +-q::
+> +               Do not print any messages or warnings
+> +
+> +--feature::
+> +        Print whether a feature is compiled-in or not. A feature name/ma=
+cro is
+> +        required to be passed after this flag
+> +
+> +        Example Usage:
+> +                perf check --feature libtraceevent
+> +                perf check --feature HAVE_LIBTRACEEVENT
+> +
+> +        Supported feature names/macro:
+> +                dwarf      /  HAVE_DWARF_SUPPORT
+> +                dwarf_getlocations  /  HAVE_DWARF_GETLOCATIONS_SUPPORT
+> +                libaudit   /  HAVE_LIBAUDIT_SUPPORT
+> +                syscall_table       /  HAVE_SYSCALL_TABLE_SUPPORT
+> +                libbfd     /  HAVE_LIBBFD_SUPPORT
+> +                debuginfod /  HAVE_DEBUGINFOD_SUPPORT
+> +                libelf     /  HAVE_LIBELF_SUPPORT
+> +                libnuma    /  HAVE_LIBNUMA_SUPPORT
+> +                numa_num_possible_cpus  /  HAVE_LIBNUMA_SUPPORT
+> +                libperl    /  HAVE_LIBPERL_SUPPORT
+> +                libpython  /  HAVE_LIBPYTHON_SUPPORT
+> +                libslang   /  HAVE_SLANG_SUPPORT
+> +                libcrypto  /  HAVE_LIBCRYPTO_SUPPORT
+> +                libunwind  /  HAVE_LIBUNWIND_SUPPORT
+> +                libdw-dwarf-unwind  /  HAVE_DWARF_SUPPORT
+> +                zlib       /  HAVE_ZLIB_SUPPORT
+> +                lzma       /  HAVE_LZMA_SUPPORT
+> +                get_cpuid  /  HAVE_AUXTRACE_SUPPORT
+> +                bpf        /  HAVE_LIBBPF_SUPPORT
+> +                aio        /  HAVE_AIO_SUPPORT
+> +                zstd       /  HAVE_ZSTD_SUPPORT
+> +                libpfm4    /  HAVE_LIBPFM
+> +                libtraceevent      /  HAVE_LIBTRACEEVENT
+> diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
+> new file mode 100644
+> index 000000000000..da7ee93bbbf5
+> --- /dev/null
+> +++ b/tools/perf/builtin-check.c
+> @@ -0,0 +1,122 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include "builtin.h"
+> +#include "color.h"
+> +#include "util/debug.h"
+> +#include "util/header.h"
+> +#include <tools/config.h>
+> +#include <stdbool.h>
+> +#include <stdio.h>
+> +#include <string.h>
+> +#include <subcmd/parse-options.h>
+> +
+> +struct check {
+> +       const char *feature;
+> +};
+> +
+> +static struct check check;
+> +
+> +static struct option check_options[] =3D {
+> +       OPT_STRING(0, "feature", &check.feature, NULL, "check if a featur=
+e is built in"),
+> +       OPT_BOOLEAN('q', "quiet", &quiet, "do not show any warnings or me=
+ssages"),
+> +       OPT_END(),
+> +};
+> +
+> +static const char * const check_usage[] =3D {
+> +       "perf check [<options>]",
+> +       NULL
+> +};
+> +
+> +struct feature_support supported_features[] =3D {
+> +       FEATURE_SUPPORT("dwarf", HAVE_DWARF_SUPPORT),
+> +       FEATURE_SUPPORT("dwarf_getlocations", HAVE_DWARF_GETLOCATIONS_SUP=
+PORT),
+> +       FEATURE_SUPPORT("libaudit", HAVE_LIBAUDIT_SUPPORT),
+> +       FEATURE_SUPPORT("syscall_table", HAVE_SYSCALL_TABLE_SUPPORT),
+> +       FEATURE_SUPPORT("libbfd", HAVE_LIBBFD_SUPPORT),
+> +       FEATURE_SUPPORT("debuginfod", HAVE_DEBUGINFOD_SUPPORT),
+> +       FEATURE_SUPPORT("libelf", HAVE_LIBELF_SUPPORT),
+> +       FEATURE_SUPPORT("libnuma", HAVE_LIBNUMA_SUPPORT),
+> +       FEATURE_SUPPORT("numa_num_possible_cpus", HAVE_LIBNUMA_SUPPORT),
+> +       FEATURE_SUPPORT("libperl", HAVE_LIBPERL_SUPPORT),
+> +       FEATURE_SUPPORT("libpython", HAVE_LIBPYTHON_SUPPORT),
+> +       FEATURE_SUPPORT("libslang", HAVE_SLANG_SUPPORT),
+> +       FEATURE_SUPPORT("libcrypto", HAVE_LIBCRYPTO_SUPPORT),
+> +       FEATURE_SUPPORT("libunwind", HAVE_LIBUNWIND_SUPPORT),
+> +       FEATURE_SUPPORT("libdw-dwarf-unwind", HAVE_DWARF_SUPPORT),
+> +       FEATURE_SUPPORT("zlib", HAVE_ZLIB_SUPPORT),
+> +       FEATURE_SUPPORT("lzma", HAVE_LZMA_SUPPORT),
+> +       FEATURE_SUPPORT("get_cpuid", HAVE_AUXTRACE_SUPPORT),
+> +       FEATURE_SUPPORT("bpf", HAVE_LIBBPF_SUPPORT),
+> +       FEATURE_SUPPORT("aio", HAVE_AIO_SUPPORT),
+> +       FEATURE_SUPPORT("zstd", HAVE_ZSTD_SUPPORT),
+> +       FEATURE_SUPPORT("libpfm4", HAVE_LIBPFM),
+> +       FEATURE_SUPPORT("libtraceevent", HAVE_LIBTRACEEVENT),
+> +
+> +       // this should remain at end, to know the array end
+
+We prefer C-style comments using /* ... */.
+
+> +       FEATURE_SUPPORT(NULL, _)
+> +};
+> +
+> +static void on_off_print(const char *status)
+> +{
+> +       printf("[ ");
+> +
+> +       if (!strcmp(status, "OFF"))
+> +               color_fprintf(stdout, PERF_COLOR_RED, "%-3s", status);
+> +       else
+> +               color_fprintf(stdout, PERF_COLOR_GREEN, "%-3s", status);
+> +
+> +       printf(" ]");
+> +}
+> +
+> +static void status_print(const char *name, const char *macro,
+> +                        const char *status)
+> +{
+> +       printf("%22s: ", name);
+> +       on_off_print(status);
+> +       printf("  # %s\n", macro);
+> +}
+> +
+> +#define STATUS(feature)                                   \
+> +do {                                                      \
+> +       if (feature.is_builtin)                               \
+> +               status_print(feature.name, feature.macro, "on");  \
+> +       else                                                  \
+> +               status_print(feature.name, feature.macro, "OFF"); \
+> +} while (0)
+> +
+> +/**
+> + * check whether "feature" is built-in with perf
+> + *
+> + * returns:
+> + *    0: NOT built-in or Feature not known
+> + *    1: Built-in
+> + */
+> +static int has_support(const char *feature)
+> +{
+> +       for (int i =3D 0; supported_features[i].name; ++i) {
+> +               if ((strcmp(feature, supported_features[i].name) =3D=3D 0=
+) ||
+> +                   (strcmp(feature, supported_features[i].macro) =3D=3D =
+0)) {
+> +                       if (!quiet)
+> +                               STATUS(supported_features[i]);
+> +                       return supported_features[i].is_builtin;
+> +               }
+> +       }
+> +
+> +       if (!quiet)
+> +               color_fprintf(stdout, PERF_COLOR_RED, "Feature not known:=
+ %s", feature);
+> +
+> +       return 0;
+> +}
+> +
+> +int cmd_check(int argc, const char **argv)
+> +{
+> +       argc =3D parse_options(argc, argv, check_options, check_usage,
+> +                            PARSE_OPT_STOP_AT_NON_OPTION);
+> +
+> +       if (!quiet)
+> +               printf("perf check %s\n", perf_version_string);
+> +
+> +       if (check.feature)
+> +               return has_support(check.feature);
+
+Oh, sorry for making you confused.  I think it'd be better to exit with 0
+for success and 1 (or other) for failure to conform to the shell
+convention.  You may invert the return value from the function.
 
 Thanks,
 Namhyung
+
+
+> +
+> +       return 0;
+> +}
+> diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
+> index f2ab5bae2150..9f895981bc9e 100644
+> --- a/tools/perf/builtin.h
+> +++ b/tools/perf/builtin.h
+> @@ -2,6 +2,23 @@
+>  #ifndef BUILTIN_H
+>  #define BUILTIN_H
+>
+> +#include <stddef.h>
+> +#include <linux/compiler.h>
+> +#include <tools/config.h>
+> +
+> +struct feature_support {
+> +       const char *name;
+> +       const char *macro;
+> +       int is_builtin;
+> +};
+> +
+> +#define FEATURE_SUPPORT(name_, macro_) { \
+> +       .name =3D name_,                       \
+> +       .macro =3D #macro_,                    \
+> +       .is_builtin =3D IS_BUILTIN(macro_) }
+> +
+> +extern struct feature_support supported_features[];
+> +
+>  void list_common_cmds_help(void);
+>  const char *help_unknown_cmd(const char *cmd);
+>
+> @@ -9,6 +26,7 @@ int cmd_annotate(int argc, const char **argv);
+>  int cmd_bench(int argc, const char **argv);
+>  int cmd_buildid_cache(int argc, const char **argv);
+>  int cmd_buildid_list(int argc, const char **argv);
+> +int cmd_check(int argc, const char **argv);
+>  int cmd_config(int argc, const char **argv);
+>  int cmd_c2c(int argc, const char **argv);
+>  int cmd_diff(int argc, const char **argv);
+> diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+> index d3fc8090413c..6514f4121c49 100644
+> --- a/tools/perf/perf.c
+> +++ b/tools/perf/perf.c
+> @@ -50,6 +50,7 @@ static struct cmd_struct commands[] =3D {
+>         { "archive",    NULL,   0 },
+>         { "buildid-cache", cmd_buildid_cache, 0 },
+>         { "buildid-list", cmd_buildid_list, 0 },
+> +       { "check",      cmd_check,      0 },
+>         { "config",     cmd_config,     0 },
+>         { "c2c",        cmd_c2c,        0 },
+>         { "diff",       cmd_diff,       0 },
+> --
+> 2.41.0
+>
