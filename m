@@ -1,161 +1,146 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE1717EF
-	for <linux-perf-users@vger.kernel.org>; Sat, 30 Sep 2023 06:32:13 +0000 (UTC)
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 576311A7
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 23:32:12 -0700 (PDT)
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-79faf4210b2so412174639f.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 23:32:12 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87CE01857
+	for <linux-perf-users@vger.kernel.org>; Sat, 30 Sep 2023 06:40:14 +0000 (UTC)
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CD761B3;
+	Fri, 29 Sep 2023 23:40:12 -0700 (PDT)
+Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-79fe6da0049so232738839f.1;
+        Fri, 29 Sep 2023 23:40:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696055531; x=1696660331;
+        d=1e100.net; s=20230601; t=1696056012; x=1696660812;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=L5ipF69/Ebwaux7stRusr0oeQfM271w9vxjAqkqGNbE=;
-        b=X8mU+XkOWuwEUc6/vjKTq57/fKPPzJ9c/M8kXolZHLzCjij/6nmO4vcaeQz+2oZ1K8
-         oXjnHSyQMfjpKHOyvmMncAkcTwB6ZmkHrOajH3AX6zvyaucW2TMtc/eVcEkfwPADRjwA
-         QnrpLPJLK68i5E9SQjInF7tAe668B7cmQ8LJ5pNEVPeZm7ZMwm3MEhwBU0HUcF0J+Q/3
-         b9eWs6v23V/SlDF313pUZ7NbRcT1mMBPyAOUJKKiveUdDfIfAY30QpJl9VaUCVj0x5T4
-         SioueL0QOZPQeO6E+XuEfjxUN6YjpwjcDgFNIqz+eLFYnR0F8B02FUkiZeWzi1pcaanu
-         HmyQ==
-X-Gm-Message-State: AOJu0YxiWSKQNu+9o4OUeZGhWsuOawokTM57Frr+MD8YF2UDS0VOkZAv
-	u2Gi164JS9J7edtPcFCL1Isf0c2LB4UxbqPnYGWpKcj4
-X-Google-Smtp-Source: AGHT+IEZfAJjmj5nsemRVOcDlaLRPIkm1WSKlw4p0D/pIQUlaOsPKYYHPjSCjo7eahXh+fGcaVgjgyiHZMSxooAk17U=
-X-Received: by 2002:a6b:db08:0:b0:79d:8708:4d24 with SMTP id
- t8-20020a6bdb08000000b0079d87084d24mr6434797ioc.15.1696055531466; Fri, 29 Sep
- 2023 23:32:11 -0700 (PDT)
+        bh=PgPppTpqKHjIbGMNvaSNbWXYlqW19K3ehBgJFQ3TzbI=;
+        b=jRji9rgcUM9DdvkhPeHlVX4V2Un5V5NfIRiN5sM1Do7ynsFY9WdTZgmpu4DfBKV7VG
+         EpNJLcGDnK8C/6yxniv4yWhUOsOttMea1uTa5j8oLIvxtBdwT+jTZcwZLIgIPcRs16MK
+         4+pzVT4VLNtb3XE7ImxHvsU6nS0uhSFcy7nk7MMOU6ZIuACOqkTsqWFk+lQVl4WxQsyv
+         54j2Kq1bBbQoWHyX1tECadV2o6r8QWqSZ/pmnCAq/3ziVGEpcimGwNC6KZXDAfNS/xag
+         Wuj0hzLGPMuj3WV1ykJXQeTAzbVvcLsschjyWGnR0u3wxLkIlFWC7x4aZ9zK9E39Ub4i
+         tuCw==
+X-Gm-Message-State: AOJu0YwETtDi/9tbIXepagbMuLSxHXzg/dcCJJHu2vUCULdlvs1CuT7W
+	/xhO7ZgqS8X6bdH11GlmOmmEr5vTfmYzZvsE0Ds=
+X-Google-Smtp-Source: AGHT+IF7wmfHaApQNhYzN1c6ToWbIKSdWNBZMSrat/9ydm0q45dEjYEwRxSZzqXVo4WkLlKUYv1mGABLJbdavS8gVt0=
+X-Received: by 2002:a6b:f207:0:b0:79f:9eb4:3ea1 with SMTP id
+ q7-20020a6bf207000000b0079f9eb43ea1mr7041475ioh.3.1696056011798; Fri, 29 Sep
+ 2023 23:40:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <3a212e80-b00b-f44b-3d2c-6e221d8cc1ac@linux.ibm.com>
-In-Reply-To: <3a212e80-b00b-f44b-3d2c-6e221d8cc1ac@linux.ibm.com>
+References: <20230928071605.17624-1-adrian.hunter@intel.com>
+In-Reply-To: <20230928071605.17624-1-adrian.hunter@intel.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 29 Sep 2023 23:32:00 -0700
-Message-ID: <CAM9d7cjTRE6D8hHfCrmFWE3fDfds+RAMYevuCNM2t_c3S5-T3A@mail.gmail.com>
-Subject: Re: Question to perf record command
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>
+Date: Fri, 29 Sep 2023 23:40:00 -0700
+Message-ID: <CAM9d7ch5yZZU_bY=d+5wkvQDJKCuctabBu3AMuyp4UYRO0upYA@mail.gmail.com>
+Subject: Re: [PATCH] perf dlfilter: Fix use of addr_location__exit() in dlfilter__object_code()
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,
 	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hello,
+Hi Adrian,
 
-On Fri, Sep 29, 2023 at 2:56=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
-om> wrote:
+On Thu, Sep 28, 2023 at 12:16=E2=80=AFAM Adrian Hunter <adrian.hunter@intel=
+.com> wrote:
 >
-> I have a question regarding command perf record.
+> Stop calling addr_location__exit() when addr_location__init() was not
+> called.
 >
-> Command ./perf record -R -e cycles -vvv -C0 -- true
-> sets up perf_event_open system call with CPU =3D=3D 0 and PID =3D=3D -1.
->
-> According to the documentation, this applies to all processes on CPU 0
-> and not just the process named true.
->
-> Is this indended? I thought process true should be traced when running on
-> CPU 0. Shouldn't the perf_event_open() system call in called with
-> CPU set to 0 and PID set to PID of process true?
+> Fixes: 0dd5041c9a0e ("perf addr_location: Add init/exit/copy functions")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 
-It's intended.  When you specify CPU targets (-a or -C options),
-it'd profile ALL processes on those CPUs.  The command line
-task just controls when it terminates the sampling.  For example,
-we often use sleep command to profile all processes for the
-specified time.
-
-  $ perf record -a -- sleep 1
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
+
+> ---
+>  tools/perf/util/dlfilter.c | 32 +++++++++++++++-----------------
+>  1 file changed, 15 insertions(+), 17 deletions(-)
 >
-> Tracing output:
-> # ./perf record -R -e cycles -vvv -C0 -- true
-> DEBUGINFOD_URLS=3D
-> nr_cblocks: 0
-> affinity: SYS
-> mmap flush: 1
-> comp level: 0
-> perf record opening and mmapping events
-> Opening: cycles
-> ------------------------------------------------------------
-> perf_event_attr:
->   type                             0 (PERF_TYPE_HARDWARE)
->   size                             136
->   config                           0 (PERF_COUNT_HW_CPU_CYCLES)
->   { sample_period, sample_freq }   4000
->   sample_type                      IP|TID|TIME|ID|CPU|PERIOD|RAW
->   read_format                      ID|LOST
->   disabled                         1
->   inherit                          1
->   freq                             1
->   sample_id_all                    1
->   exclude_guest                    1
-> ------------------------------------------------------------
-> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 =3D 5
-> ....
+> diff --git a/tools/perf/util/dlfilter.c b/tools/perf/util/dlfilter.c
+> index 1dbf27822ee2..4a1dc21b0450 100644
+> --- a/tools/perf/util/dlfilter.c
+> +++ b/tools/perf/util/dlfilter.c
+> @@ -282,13 +282,21 @@ static struct perf_event_attr *dlfilter__attr(void =
+*ctx)
+>         return &d->evsel->core.attr;
+>  }
 >
+> +static __s32 code_read(__u64 ip, struct map *map, struct machine *machin=
+e, void *buf, __u32 len)
+> +{
+> +       u64 offset =3D map__map_ip(map, ip);
+> +
+> +       if (ip + len >=3D map__end(map))
+> +               len =3D map__end(map) - ip;
+> +
+> +       return dso__data_read_offset(map__dso(map), machine, offset, buf,=
+ len);
+> +}
+> +
+>  static __s32 dlfilter__object_code(void *ctx, __u64 ip, void *buf, __u32=
+ len)
+>  {
+>         struct dlfilter *d =3D (struct dlfilter *)ctx;
+>         struct addr_location *al;
+>         struct addr_location a;
+> -       struct map *map;
+> -       u64 offset;
+>         __s32 ret;
 >
-> When command invocation is
-> # ./perf record -R -e cycles -vvv -- true
+>         if (!d->ctx_valid)
+> @@ -298,27 +306,17 @@ static __s32 dlfilter__object_code(void *ctx, __u64=
+ ip, void *buf, __u32 len)
+>         if (!al)
+>                 return -1;
 >
-> the forked process named true (PID 13092) is traced on all CPUs:
-> [root@a35lp67 perf]# ./perf record -R -e cycles -vvv  -- true
-> DEBUGINFOD_URLS=3D
-> nr_cblocks: 0
-> affinity: SYS
-> mmap flush: 1
-> comp level: 0
-> perf record opening and mmapping events
-> Opening: cycles
-> ------------------------------------------------------------
-> perf_event_attr:
->   type                             0 (PERF_TYPE_HARDWARE)
->   size                             136
->   config                           0 (PERF_COUNT_HW_CPU_CYCLES)
->   { sample_period, sample_freq }   4000
->   sample_type                      IP|TID|TIME|CPU|PERIOD|RAW
->   read_format                      ID|LOST
->   disabled                         1
->   inherit                          1
->   mmap                             1
->   comm                             1
->   freq                             1
->   enable_on_exec                   1
->   task                             1
->   sample_id_all                    1
->   exclude_guest                    1
->   mmap2                            1
->   comm_exec                        1
->   ksymbol                          1
->   bpf_event                        1
-> ------------------------------------------------------------
-> sys_perf_event_open: pid 13092  cpu 0  group_fd -1  flags 0x8 =3D 5
-> sys_perf_event_open: pid 13092  cpu 1  group_fd -1  flags 0x8 =3D 6
-> sys_perf_event_open: pid 13092  cpu 2  group_fd -1  flags 0x8 =3D 7
-> sys_perf_event_open: pid 13092  cpu 3  group_fd -1  flags 0x8 =3D 9
-> sys_perf_event_open: pid 13092  cpu 4  group_fd -1  flags 0x8 =3D 10
-> sys_perf_event_open: pid 13092  cpu 5  group_fd -1  flags 0x8 =3D 11
-> sys_perf_event_open: pid 13092  cpu 6  group_fd -1  flags 0x8 =3D 12
-> sys_perf_event_open: pid 13092  cpu 7  group_fd -1  flags 0x8 =3D 13
-> mmap size 528384B
-> ....
+> -       map =3D al->map;
+> -
+> -       if (map && ip >=3D map__start(map) && ip < map__end(map) &&
+> +       if (al->map && ip >=3D map__start(al->map) && ip < map__end(al->m=
+ap) &&
+>             machine__kernel_ip(d->machine, ip) =3D=3D machine__kernel_ip(=
+d->machine, d->sample->ip))
+> -               goto have_map;
+> +               return code_read(ip, al->map, d->machine, buf, len);
+>
+>         addr_location__init(&a);
+> +
+>         thread__find_map_fb(al->thread, d->sample->cpumode, ip, &a);
+> -       if (!a.map) {
+> -               ret =3D -1;
+> -               goto out;
+> -       }
+> +       ret =3D a.map ? code_read(ip, a.map, d->machine, buf, len) : -1;
+>
+> -       map =3D a.map;
+> -have_map:
+> -       offset =3D map__map_ip(map, ip);
+> -       if (ip + len >=3D map__end(map))
+> -               len =3D map__end(map) - ip;
+> -       ret =3D dso__data_read_offset(map__dso(map), d->machine, offset, =
+buf, len);
+> -out:
+>         addr_location__exit(&a);
+> +
+>         return ret;
+>  }
 >
 > --
-> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, German=
-y
-> --
-> Vorsitzender des Aufsichtsrats: Gregor Pillen
-> Gesch=C3=A4ftsf=C3=BChrung: David Faller
-> Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht Stut=
-tgart, HRB 243294
+> 2.34.1
 >
