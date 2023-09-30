@@ -1,153 +1,347 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4BF1FA8
-	for <linux-perf-users@vger.kernel.org>; Sat, 30 Sep 2023 06:04:19 +0000 (UTC)
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 159EA1AE
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Sep 2023 23:04:18 -0700 (PDT)
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38U5HbvW007809;
-	Sat, 30 Sep 2023 06:04:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
- from : in-reply-to : date : cc : message-id : references : to :
- content-transfer-encoding : mime-version; s=pp1;
- bh=LRyiDaOSj9T42Z5Yf3CPckOsk9KqcULp1tuqimTRsMQ=;
- b=FBvHYcQrGh14mCpxfxitsX6svGU1PBe5x7pMte1DrvhHVHRanyd+SebmQpsZhi84AWMC
- K65hJ/WPD3Shi8MeueIAzhxbYsbFZ4cN4pz7HsG/STxeOoXosPeLMfyrUT5Sa136G+WZ
- l6HIb4otZrJiS8dXsI4M7FDCihtdDQDeQmepucmyBWmGxjCK3Uw+XF53PM9qtSMq4js1
- /689GrO57tsK/nFo0fO00SxjWPIYG6GZKPtox5rMBGvoAAZo6mzyVHGnqNN7Ts2rRnaS
- RyrjlTXfvn/4KWeyo2aCirjESgQ6MK+v7ZCFdXAzR96/dD6LraFfFEcmpGd9FQGw+1pu bg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tedd90qps-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 30 Sep 2023 06:04:09 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38U5qwfZ025492;
-	Sat, 30 Sep 2023 06:04:09 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tedd90qp3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 30 Sep 2023 06:04:09 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38U4Unsw008130;
-	Sat, 30 Sep 2023 06:04:08 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3taar0ajn0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 30 Sep 2023 06:04:07 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38U62nVu21889724
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 30 Sep 2023 06:02:50 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D795020043;
-	Sat, 30 Sep 2023 06:02:49 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1878A20040;
-	Sat, 30 Sep 2023 06:02:47 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.118.116])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Sat, 30 Sep 2023 06:02:46 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
-Subject: Re: [PATCH 0/3] Fix for shellcheck issues with version "0.6"
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <CAM9d7cgtBCHZWt1h8jZj1k1VuJUvGXjmXuXBmE-4sZXW_inzPA@mail.gmail.com>
-Date: Sat, 30 Sep 2023 11:32:36 +0530
-Cc: Ian Rogers <irogers@google.com>, Madhavan Srinivasan <maddy@linux.ibm.com>,
-        kajoljain <kjain@linux.ibm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Disha Goel <disgoel@linux.vnet.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        root <root@ltcden13-lp4.aus.stglabs.ibm.com>
-Message-Id: <19515993-8065-412A-BBD8-75F6A9EF2EA5@linux.vnet.ibm.com>
-References: <20230907171540.36736-1-atrajeev@linux.vnet.ibm.com>
- <e5e806c3-da4a-8672-9c8e-6c341c6bd27d@linux.ibm.com>
- <11B32809-962E-4632-95FD-EAF07EE04D1D@linux.vnet.ibm.com>
- <CAM9d7cgtBCHZWt1h8jZj1k1VuJUvGXjmXuXBmE-4sZXW_inzPA@mail.gmail.com>
-To: Namhyung Kim <namhyung@kernel.org>
-X-Mailer: Apple Mail (2.3731.700.6)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: D-8-FGUrXmHePizSImFoIL5qKf6hGO1s
-X-Proofpoint-GUID: J11NZVQ7VczxpHof5I2chjietUaOQePq
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048381FA8
+	for <linux-perf-users@vger.kernel.org>; Sat, 30 Sep 2023 06:07:02 +0000 (UTC)
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A16801A7;
+	Fri, 29 Sep 2023 23:07:00 -0700 (PDT)
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-79faba5fe12so426217639f.3;
+        Fri, 29 Sep 2023 23:07:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696054020; x=1696658820;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f8r+eyE1cDH7W0IrAebQLv3eT/FSFxqOwJlUdbnBaDM=;
+        b=f8DqzAaKJZGdhjElf2yljHFj27XjWFAwJPheKRIWWIK/NOp85Cs9PfS5iZdb88hjH0
+         lG6Jb4V1SHHHujwmOvA+nkX/oKYOdEqR04yoWJeOUBesfv9W53zM6N4WM6iKyYfZGHh5
+         suzahcx4IMVVBasqG33hkDTr26lFOCeVNEksNydlqPDi1vDfa73UvwlwRc0IqASQ9ajw
+         YQZMfyHpX8c0aP3CAhQSfvM5Md7BnWk6JCSuiN6mr3WJmp2dcskUFwgcaQliXTh6ULZI
+         9kxGop8+ROtozuOcH+1ll53b/LLBaE9foFl+gamiSDIn4bG4EZ9QONdr5ehR2YBovOhl
+         Pmew==
+X-Gm-Message-State: AOJu0Yx9nVERnA0rq+agI0dVABqt9g/xVt8DRkIAkJQGYw/4YdC7xttt
+	aKGcgLWLckznLFM627OTA8jfKWp4tFllSU1dshg=
+X-Google-Smtp-Source: AGHT+IFFw3ARdzVQGy74K4CamP+VvGFPwsckfcF2AcUjT5z4lAivPZRanNNygXeMUQYL0rQwLOzFrRG2tcifSy0VW58=
+X-Received: by 2002:a6b:510c:0:b0:77a:e86a:c24b with SMTP id
+ f12-20020a6b510c000000b0077ae86ac24bmr6364961iob.6.1696054019747; Fri, 29 Sep
+ 2023 23:06:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-09-30_04,2023-09-28_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- adultscore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
- malwarescore=0 mlxscore=0 bulkscore=0 lowpriorityscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2309180000
- definitions=main-2309300048
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,
-	RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE autolearn=ham
-	autolearn_force=no version=3.4.6
+References: <20230916040915.1075620-1-irogers@google.com> <08995efc-d5af-6ba6-831b-1a483daabef4@intel.com>
+ <CAP-5=fW783G9fUEHrmzUu7UmvOm65Fp6vAQybCcNz2C0QRz26w@mail.gmail.com>
+ <8086150e-3c6d-4001-b3cc-bb12ebe15928@intel.com> <CAM9d7chtVQqySGOGQrA065Fr8M2Y6jg9JJccYtMycQFvaheU+Q@mail.gmail.com>
+ <f64c4283-6ced-411a-b69f-8c4375fb91f7@intel.com> <CAP-5=fWJzpQ14CQk+Lf5EY4CwJ4ACPsYT49XJwCnC_qEpS-DAA@mail.gmail.com>
+ <9759e3d4-703d-30a6-5334-b33a6e5a38d7@huawei.com> <CABPqkBRroYfif-R+_cxim57M2rAxRCPuuZo7J0S=-Jp2jWE0bg@mail.gmail.com>
+In-Reply-To: <CABPqkBRroYfif-R+_cxim57M2rAxRCPuuZo7J0S=-Jp2jWE0bg@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 29 Sep 2023 23:06:48 -0700
+Message-ID: <CAM9d7cg3BkvFKNw6Vu9GTsLSf7BTZ4ELvraBOq3yTpLu8fX6Og@mail.gmail.com>
+Subject: Re: [PATCH v1] perf evlist: Avoid frequency mode for the dummy event
+To: Stephane Eranian <eranian@google.com>
+Cc: Yang Jihong <yangjihong1@huawei.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
+Hello,
 
+On Mon, Sep 25, 2023 at 10:37=E2=80=AFAM Stephane Eranian <eranian@google.c=
+om> wrote:
+>
+> On Sun, Sep 24, 2023 at 8:35=E2=80=AFPM Yang Jihong <yangjihong1@huawei.c=
+om> wrote:
+> >
+> > Hello,
+> >
+> > On 2023/9/22 23:05, Ian Rogers wrote:
+> > > On Thu, Sep 21, 2023 at 10:36=E2=80=AFPM Adrian Hunter <adrian.hunter=
+@intel.com> wrote:
+> > >>
+> > >> On 21/09/23 22:26, Namhyung Kim wrote:
+> > >>> Hi,
+> > >>>
+> > >>> On Mon, Sep 18, 2023 at 11:00=E2=80=AFPM Adrian Hunter <adrian.hunt=
+er@intel.com> wrote:
+> > >>>>
+> > >>>> On 19/09/23 00:48, Ian Rogers wrote:
+> > >>>>> On Mon, Sep 18, 2023 at 1:14=E2=80=AFAM Adrian Hunter <adrian.hun=
+ter@intel.com> wrote:
+> > >>>>>>
+> > >>>>>> On 16/09/23 07:09, Ian Rogers wrote:
+> > >>>>>>> Dummy events are created with an attribute where the period and=
+ freq
+> > >>>>>>> are zero. evsel__config will then see the uninitialized values =
+and
+> > >>>>>>> initialize them in evsel__default_freq_period. As fequency mode=
+ is
+> > >>>>>>> used by default the dummy event would be set to use frequency
+> > >>>>>>> mode. However, this has no effect on the dummy event but does c=
+ause
+> > >>>>>>> unnecessary timers/interrupts. Avoid this overhead by setting t=
+he
+> > >>>>>>> period to 1 for dummy events.
+> > >>>>>>>
+> > >>>>>>> evlist__add_aux_dummy calls evlist__add_dummy then sets freq=3D=
+0 and
+> > >>>>>>> period=3D1. This isn't necessary after this change and so the s=
+etting is
+> > >>>>>>> removed.
+> > >>>>>>>
+> > >>>>>>>  From Stephane:
+> > >>>>>>>
+> > >>>>>>> The dummy event is not counting anything. It is used to collect=
+ mmap
+> > >>>>>>> records and avoid a race condition during the synthesize mmap p=
+hase of
+> > >>>>>>> perf record. As such, it should not cause any overhead during a=
+ctive
+> > >>>>>>> profiling. Yet, it did. Because of a bug the dummy event was
+> > >>>>>>> programmed as a sampling event in frequency mode. Events in tha=
+t mode
+> > >>>>>>> incur more kernel overheads because on timer tick, the kernel h=
+as to
+> > >>>>>>> look at the number of samples for each event and potentially ad=
+just
+> > >>>>>>> the sampling period to achieve the desired frequency. The dummy=
+ event
+> > >>>>>>> was therefore adding a frequency event to task and ctx contexts=
+ we may
+> > >>>>>>> otherwise not have any, e.g., perf record -a -e
+> > >>>>>>> cpu/event=3D0x3c,period=3D10000000/. On each timer tick the
+> > >>>>>>> perf_adjust_freq_unthr_context() is invoked and if ctx->nr_freq=
+ is
+> > >>>>>>> non-zero, then the kernel will loop over ALL the events of the =
+context
+> > >>>>>>> looking for frequency mode ones. In doing, so it locks the cont=
+ext,
+> > >>>>>>> and enable/disable the PMU of each hw event. If all the events =
+of the
+> > >>>>>>> context are in period mode, the kernel will have to traverse th=
+e list for
+> > >>>>>>> nothing incurring overhead. The overhead is multiplied by a ver=
+y large
+> > >>>>>>> factor when this happens in a guest kernel. There is no need fo=
+r the
+> > >>>>>>> dummy event to be in frequency mode, it does not count anything=
+ and
+> > >>>>>>> therefore should not cause extra overhead for no reason.
+> > >>>>>>>
+> > >>>>>>> Fixes: 5bae0250237f ("perf evlist: Introduce perf_evlist__new_d=
+ummy constructor")
+> > >>>>>>> Reported-by: Stephane Eranian <eranian@google.com>
+> > >>>>>>> Signed-off-by: Ian Rogers <irogers@google.com>
+> > >>>
+> > >>> I'll take the original patch first.
 
-> On 28-Sep-2023, at 9:24 AM, Namhyung Kim <namhyung@kernel.org> wrote:
->=20
-> On Tue, Sep 26, 2023 at 9:29=E2=80=AFPM Athira Rajeev
-> <atrajeev@linux.vnet.ibm.com> wrote:
->>=20
->>=20
->>=20
->>> On 25-Sep-2023, at 1:34 PM, kajoljain <kjain@linux.ibm.com> wrote:
->>>=20
->>>=20
->>>=20
->>> On 9/7/23 22:45, Athira Rajeev wrote:
->>>> From: root <root@ltcden13-lp4.aus.stglabs.ibm.com>
->>>>=20
->>>> shellcheck was run on perf tool shell scripts s a pre-requisite
->>>> to include a build option for shellcheck discussed here:
->>>> https://www.spinics.net/lists/linux-perf-users/msg25553.html
->>>>=20
->>>> And fixes were added for the coding/formatting issues in
->>>> two patchsets:
->>>> https://lore.kernel.org/linux-perf-users/20230613164145.50488-1-atraje=
-ev@linux.vnet.ibm.com/
->>>> https://lore.kernel.org/linux-perf-users/20230709182800.53002-1-atraje=
-ev@linux.vnet.ibm.com/
->>>>=20
->>>> Three additional issues are observed with shellcheck "0.6" and
->>>> this patchset covers those. With this patchset,
->>>>=20
->>>> # for F in $(find tests/shell/ -perm -o=3Dx -name '*.sh'); do shellche=
-ck -S warning $F; done
->>>> # echo $?
->>>> 0
->>>>=20
->>>=20
->>> Patchset looks good to me.
->>>=20
->>> Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
->>>=20
->>> Thanks,
->>> Kajol Jain
->>>=20
->>=20
->> Hi Namhyunbg,
->>=20
->> Can you please check for this patchset also
->=20
-> Sure, it's applied to perf-tools-next, thanks!
+It's in the perf-tools-next.
 
-Thanks Namhyung
+> > >>>
+> > >>>
+> > >>>>>>> ---
+> > >>>>>>>   tools/perf/util/evlist.c | 5 +++--
+> > >>>>>>>   1 file changed, 3 insertions(+), 2 deletions(-)
+> > >>>>>>>
+> > >>>>>>> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.=
+c
+> > >>>>>>> index 25c3ebe2c2f5..e36da58522ef 100644
+> > >>>>>>> --- a/tools/perf/util/evlist.c
+> > >>>>>>> +++ b/tools/perf/util/evlist.c
+> > >>>>>>> @@ -251,6 +251,9 @@ static struct evsel *evlist__dummy_event(st=
+ruct evlist *evlist)
+> > >>>>>>>                .type   =3D PERF_TYPE_SOFTWARE,
+> > >>>>>>>                .config =3D PERF_COUNT_SW_DUMMY,
+> > >>>>>>>                .size   =3D sizeof(attr), /* to capture ABI vers=
+ion */
+> > >>>>>>> +             /* Avoid frequency mode for dummy events to avoid=
+ associated timers. */
+> > >>>>>>> +             .freq =3D 0,
+> > >>>>>>> +             .sample_period =3D 1,
+> > >>>>>>>        };
+> > >>>>>>>
+> > >>>>>>>        return evsel__new_idx(&attr, evlist->core.nr_entries);
+> > >>>>>>> @@ -277,8 +280,6 @@ struct evsel *evlist__add_aux_dummy(struct =
+evlist *evlist, bool system_wide)
+> > >>>>>>>        evsel->core.attr.exclude_kernel =3D 1;
+> > >>>>>>>        evsel->core.attr.exclude_guest =3D 1;
+> > >>>>>>>        evsel->core.attr.exclude_hv =3D 1;
+> > >>>>>>> -     evsel->core.attr.freq =3D 0;
+> > >>>>>>> -     evsel->core.attr.sample_period =3D 1;
+> > >>>>>>>        evsel->core.system_wide =3D system_wide;
+> > >>>>>>>        evsel->no_aux_samples =3D true;
+> > >>>>>>>        evsel->name =3D strdup("dummy:u");
+> > >>>>>>
+> > >>>>>> Note that evsel__config() will put it back to freq if -F is used=
+.
+> > >>>>>
+> > >>>>> Right, I was looking for a minimal fix in part for the sake of ba=
+ck
+> > >>>>> porting. For the -F we could do:
+> > >>>>>
+> > >>>>> ```
+> > >>>>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > >>>>> index d5363d23f5d3..806185a39e17 100644
+> > >>>>> --- a/tools/perf/util/evsel.c
+> > >>>>> +++ b/tools/perf/util/evsel.c
+> > >>>>> @@ -1083,11 +1083,15 @@ void __weak arch__post_evsel_config(struc=
+t
+> > >>>>> evsel *evsel __maybe_unused,
+> > >>>>> static void evsel__set_default_freq_period(struct record_opts *op=
+ts,
+> > >>>>>                                            struct perf_event_attr=
+ *attr)
+> > >>>>> {
+> > >>>>> -       if (opts->freq) {
+> > >>>>> +       bool is_dummy =3D attr->type =3D=3D PERF_TYPE_SOFTWARE &&
+> > >>>>> +               attr->config =3D=3D PERF_COUNT_SW_DUMMY;
+> > >>>>> +
+> > >>>>> +       if (opts->freq && !is_dummy) {
+> > >>>>>                 attr->freq =3D 1;
+> > >>>>>                 attr->sample_freq =3D opts->freq;
+> > >>>>>         } else {
+> > >>>>> -               attr->sample_period =3D opts->default_interval;
+> > >>>>> +               attr->freq =3D 0;
+> > >>>>> +               attr->sample_period =3D is_dummy ? 1 : opts->defa=
+ult_interval;
+> > >>>>>         }
+> > >>>>> }
+> > >>>>> ```
+> > >>>>>
+> > >>>>> But this felt like it could potentially have other side-effects.
+> > >>>>
+> > >>>> Perhaps leave it alone, if the period has already been defined:
+> > >>>>
+> > >>>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > >>>> index d5363d23f5d3..ad3e12f5ec88 100644
+> > >>>> --- a/tools/perf/util/evsel.c
+> > >>>> +++ b/tools/perf/util/evsel.c
+> > >>>> @@ -1166,7 +1166,8 @@ void evsel__config(struct evsel *evsel, stru=
+ct record_opts *opts,
+> > >>>>          if ((evsel->is_libpfm_event && !attr->sample_period) ||
+> > >>>>              (!evsel->is_libpfm_event && (!attr->sample_period ||
+> > >>>>                                           opts->user_freq !=3D UIN=
+T_MAX ||
+> > >>>> -                                        opts->user_interval !=3D =
+ULLONG_MAX)))
+> > >>>> +                                        opts->user_interval !=3D =
+ULLONG_MAX) &&
+> > >>>> +            !(is_dummy && attr->sample_period)))
+> > >>>>                  evsel__set_default_freq_period(opts, attr);
+> > >>>>
+> > >>>>          /*
+> > >>>
+> > >>> Or simply like this?
+> > >>>
+> > >>>
+> > >>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > >>> index d5363d23f5d3..6ce832ce62f1 100644
+> > >>> --- a/tools/perf/util/evsel.c
+> > >>> +++ b/tools/perf/util/evsel.c
+> > >>> @@ -1169,6 +1169,9 @@ void evsel__config(struct evsel *evsel, struc=
+t
+> > >>> record_opts *opts,
+> > >>>                                           opts->user_interval !=3D =
+ULLONG_MAX)))
+> > >>>                  evsel__set_default_freq_period(opts, attr);
+> > >>>
+> > >>> +       if (evsel__is_dummy_event(evsel))
+> > >>> +               attr->freq =3D 0;
+> > >>> +
+> > >>>          /*
+> > >>>           * If attr->freq was set (here or earlier), ask for period
+> > >>>           * to be sampled.
+> > >>
+> > >> I thought there might be corner cases where it made a difference,
+> > >> but I can't find any, so that should do.
+> > >>
+> > >
+> > > It seemed more intention revealing to do it at creation/initializatio=
+n
+> > > than on a later not obviously executed code path - I'm thinking of
+> > > future me trying to understand the code. My priority is the clearing
+> > > of the flag, so I'm easy.
 
-Athira
+Yeah I meant to keep the initialization and to prevent updating
+it for -F later.  I can add a comment in this code like
 
+/*
+ * The kernel counts events with freq=3D1 separately to update
+ * the sample frequency in the timer tick handler.  Do not
+ * confuse the kernel since the dummy event never fires and
+ * no need to update the frequency.
+ */
+if (evsel__is_dummy_event(evsel))
+    attr->freq =3D 0;
 
+ok?
+
+> > >
+> > evsel__apply_config_terms() also sets freq. For example:
+> >
+> > # perf record -vv -e dummy/freq=3D100/ true
+>
+> This example is NOT relevant to the issue.
+> Of course, if you want to explicitly use the dummy event with
+> frequency mode, you should be allowed to do so.
+
+Agreed.
+
+> The problem we are solving here is different. We are preventing perf
+> record internal use of the dummy event
+> from using frequency mode for no good reason as any frequency mode
+> event adds additional overhead.
+> The perf record internal dummy event is used for one goal: to capture
+> MMAP records to avoid a race condition
+> between synthesize phase and processes being created and not captured
+> by synthesize. In that mode, it acts
+> as an aggregator of all MMAP records during the entire run of the
+> tool. This does not require any frequency mode.
+>
+>
+> > <SNIP>
+> > ------------------------------------------------------------
+> > perf_event_attr:
+> >    type                             1 (PERF_TYPE_SOFTWARE)
+> >    size                             136
+> >    config                           0x9 (PERF_COUNT_SW_DUMMY)
+> >    { sample_period, sample_freq }   100
+> >    sample_type                      IP|TID|TIME|PERIOD
+> >    read_format                      ID|LOST
+> >    disabled                         1
+> >    inherit                          1
+> >    mmap                             1
+> >    comm                             1
+> >    freq                             1
+> >    enable_on_exec                   1
+> >    task                             1
+> >    sample_id_all                    1
+> >    exclude_guest                    1
+> >    mmap2                            1
+> >    comm_exec                        1
+> >    ksymbol                          1
+> >    bpf_event                        1
+> > ------------------------------------------------------------
+> > <SNIP>
+> >
+> > Therefore, do we need to perform special processing on dummy events in
+> > evsel__apply_config_terms?
+
+As Stephane said, I don't worry about the case as it's explicitly
+requested by the user.
+
+Thanks,
+Namhyung
