@@ -1,105 +1,83 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC1A89CA67
-	for <linux-perf-users@vger.kernel.org>; Sat, 30 Sep 2023 07:27:29 +0000 (UTC)
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32E74C5;
-	Sat, 30 Sep 2023 00:27:28 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id 41be03b00d2f7-55b5a37acb6so2456239a12.0;
-        Sat, 30 Sep 2023 00:27:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696058847; x=1696663647; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UzQbe3xqikAXp9OvaPgwc5fcgw/0yjo9zmm5YHRYu8k=;
-        b=YJyffz8aIDJbks+jmSLd/aVrGK+049feH/RZp2dgNi/YlZZRUoxzNIVNH1AjW3uEwH
-         d0zB59pGvQbHNKwCbtus58R6HP1ognyc+5+KDa177HftUWsLq7/9pnnDL35MpO1oh1iQ
-         DF6YnmyAc1x16d53RGVQQSfdPGMIg+pPuvH+cm38sZT1NT/44MvWb9pRKp48H1Zed1tP
-         120544DokQx3aOpdJ7TS/CtJLQm6hn0/toeUcmiLVcr5Fn0SmPZ5DvlWIx7hUE5szLB1
-         0czqmSlihPWl33pV2yVx0d8xBVic9PQGs4KHCuc2gMGYwhguqtkS1T01kyN/S9Sy1lGG
-         zWVA==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A2A37D
+	for <linux-perf-users@vger.kernel.org>; Sun,  1 Oct 2023 00:31:53 +0000 (UTC)
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A52DDCA;
+	Sat, 30 Sep 2023 17:31:51 -0700 (PDT)
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-79f82b26abfso535713739f.1;
+        Sat, 30 Sep 2023 17:31:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696058847; x=1696663647;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UzQbe3xqikAXp9OvaPgwc5fcgw/0yjo9zmm5YHRYu8k=;
-        b=OQZgVblbphoHi0cSctlx0FAGL6MP5yArv1eau72GWcl0hM0kcgiM8fzstbkWwVaMGg
-         CulE776fKdwRmDuJIkuGbQtz9jqlZOQ7fSzWvys/Nn+lhdY9hBndqxJKzukddp3ykBZd
-         3WODvqmvrsk2YEW5tKc5Nu5pjR2NJjYEgtmmPfKOwenQbXYjXW9HTnDaZC0FscctAZ56
-         4l4rIjxeVHTlkavmVA6qbaPlbDiNwINilYR1EHgL98qNPK174INUxgXXoctkJ1nDlonp
-         hCK3lbA4+ZIyfUku3QrzkvAlWusuFzwnEqXmvH0+MdU9UA4IS5Sm+nnsOAINMrb27OwA
-         T4xQ==
-X-Gm-Message-State: AOJu0YwFqsIRVqWCuqOj4fc5Gdx4T3Y12u/mifPsuDDU2UbxAuX8Vieq
-	aIFjSZwXGc6CKemeFinfWug=
-X-Google-Smtp-Source: AGHT+IFqLpF0bbPNUywr+lAB8eUGEusBLfO5jBZnb1OO8Mj3Ij6/EM4uF4pbX6hLiqySsom0Lwojnw==
-X-Received: by 2002:a17:902:f54b:b0:1c3:a4f2:7cc1 with SMTP id h11-20020a170902f54b00b001c3a4f27cc1mr6793684plf.5.1696058847485;
-        Sat, 30 Sep 2023 00:27:27 -0700 (PDT)
-Received: from localhost.localdomain ([140.116.154.65])
-        by smtp.gmail.com with ESMTPSA id h19-20020a170902f7d300b001acae9734c0sm800627plw.266.2023.09.30.00.27.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 Sep 2023 00:27:26 -0700 (PDT)
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: yangyicong@hisilicon.com,
-	jonathan.cameron@huawei.com
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Kuan-Wei Chiu <visitorckw@gmail.com>
-Subject: [PATCH] perf hisi-ptt: Fix memory leak in lseek failure handling
-Date: Sat, 30 Sep 2023 15:27:19 +0800
-Message-Id: <20230930072719.1267784-1-visitorckw@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        d=1e100.net; s=20230601; t=1696120311; x=1696725111;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6AchQhtz3Is06siYaW/kQahKNyjQihWPGVqucswhxyA=;
+        b=ppAKVSi1Cw9A6DkzkD+q2HLS+JObvee0vZCvRdiB/9V3n9GSGBnixtwRizS4ABjiO/
+         Xvh/1CogDnKQVVwiVSwFQxgbhPbbhui/QI6YVDhe4BxUzbHD7ZNaoz/KMPADDlc10/v/
+         QY4m9h/qsDd4Y2o5zrfnqXmkG150NvlaD+Ol4Nd3pNyLYUudbCdFesSESJkqfIlD159H
+         +NFl61KvzSzBISZAFOuqd0nr1RUzI9XkO7N1GdSnjq53PgzX3sX98dx6r9WK7Wu+Obfl
+         Tf7m+Ij5RjHRhDqY0M6nLqgS89NkVQWcR9tZuA7xqDdPXUP5SkoASq1g5J9EHew+K5gK
+         umSg==
+X-Gm-Message-State: AOJu0YwQD/KIU1v6n+io5eFnyHLuX35i50PqVHTrDKRHcavcaXBOLV0n
+	0K4FtpHPmwA9xKx3pUKhncRNA5gHZcGkE+E6YFI=
+X-Google-Smtp-Source: AGHT+IEIuyCUmgl8NoW7qHnN40o6vLbYUrnuavgpMVki/1orj3aUsiFGyagAFy3NRnmXZA2QMl/So1fOPYUh8MBoVBQ=
+X-Received: by 2002:a6b:5b15:0:b0:79f:99f5:fadd with SMTP id
+ v21-20020a6b5b15000000b0079f99f5faddmr8947813ioh.6.1696120310760; Sat, 30 Sep
+ 2023 17:31:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+References: <20230927033124.1226509-1-dapeng1.mi@linux.intel.com>
+ <20230927033124.1226509-8-dapeng1.mi@linux.intel.com> <20230927113312.GD21810@noisy.programming.kicks-ass.net>
+ <ZRRl6y1GL-7RM63x@google.com> <20230929115344.GE6282@noisy.programming.kicks-ass.net>
+ <ZRbxb15Opa2_AusF@google.com> <CALMp9eQvCLJCQYHfZ5K3nZ8jK14dUMmfEsSvkdteE2OUtg=8+g@mail.gmail.com>
+In-Reply-To: <CALMp9eQvCLJCQYHfZ5K3nZ8jK14dUMmfEsSvkdteE2OUtg=8+g@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Sat, 30 Sep 2023 17:31:39 -0700
+Message-ID: <CAM9d7ciksqA7KGgc07HJAdE0TMpe1YCoS+NhzNEvdygh8T=PPA@mail.gmail.com>
+Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics event
+To: Jim Mattson <jmattson@google.com>
+Cc: Sean Christopherson <seanjc@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Like Xu <likexu@tencent.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Zhenyu Wang <zhenyuw@linux.intel.com>, Zhang Xiong <xiong.y.zhang@intel.com>, 
+	Lv Zhiyuan <zhiyuan.lv@intel.com>, Yang Weijiang <weijiang.yang@intel.com>, 
+	Dapeng Mi <dapeng1.mi@intel.com>, David Dunn <daviddunn@google.com>, 
+	Mingwei Zhang <mizhang@google.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-In the previous code, there was a memory leak issue where the previously
-allocated memory was not freed upon a failed lseek operation. This patch
-addresses the problem by releasing the old memory before returning -errno
-in case of a lseek failure. This ensures that memory is properly managed
-and avoids potential memory leaks.
+Hello,
 
-Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
----
- tools/perf/util/hisi-ptt.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On Fri, Sep 29, 2023 at 8:29=E2=80=AFPM Jim Mattson <jmattson@google.com> w=
+rote:
+> For things to work well in the "vPMU as a client of host perf" world,
+> we need to have the following at a minimum:
+> 1) Guaranteed identity mapping of guest PMCs to host PMCs, so that we
+> don't have to intercept accesses to IA32_PERF_GLOBAL_CTRL.
+> 2) Exclusive ownership of the PMU MSRs while in the KVM_RUN loop, so
+> that we don't have to switch any PMU MSRs on VM-entry/VM-exit (with
+> the exception of IA32_PERF_GLOBAL_CTRL, which has guest and host
+> fields in the VMCS).
 
-diff --git a/tools/perf/util/hisi-ptt.c b/tools/perf/util/hisi-ptt.c
-index 45b614bb73bf..43bd1ca62d58 100644
---- a/tools/perf/util/hisi-ptt.c
-+++ b/tools/perf/util/hisi-ptt.c
-@@ -108,8 +108,10 @@ static int hisi_ptt_process_auxtrace_event(struct perf_session *session,
- 		data_offset = 0;
- 	} else {
- 		data_offset = lseek(fd, 0, SEEK_CUR);
--		if (data_offset == -1)
-+		if (data_offset == -1) {
-+			free(data);
- 			return -errno;
-+		}
- 	}
- 
- 	err = readn(fd, data, size);
--- 
-2.25.1
+IIUC that means multiplexing should be handled in the guest.
+Not sure it can support mixing host and guest events at the
+same time.
 
+Thanks,
+Namhyung
