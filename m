@@ -1,83 +1,178 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A2A37D
-	for <linux-perf-users@vger.kernel.org>; Sun,  1 Oct 2023 00:31:53 +0000 (UTC)
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A52DDCA;
-	Sat, 30 Sep 2023 17:31:51 -0700 (PDT)
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-79f82b26abfso535713739f.1;
-        Sat, 30 Sep 2023 17:31:51 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE75B17C2
+	for <linux-perf-users@vger.kernel.org>; Sun,  1 Oct 2023 08:35:48 +0000 (UTC)
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49951A9;
+	Sun,  1 Oct 2023 01:35:47 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-9b27bc8b65eso1515540966b.0;
+        Sun, 01 Oct 2023 01:35:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696149346; x=1696754146; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=0L/mHBlIgGc4satRCNpr7UON8xxJCcVUo/QQgDPnABw=;
+        b=TnCOsYqwwG3uBBt+T9SInnULUbsyJeXF88tiOCdzNA8QQmkYKY8Oq6X8fj1LA8xaR8
+         Pt8eZyFrQd6Y/vwUtYJ6hKYDyyc0TW3INHk4v8wvZdELhv18MxiviWXUjsxpB6jOQvn9
+         IWBUiAUY/+n7t79ptgAJSVX/lvMnCTCR7X76a2FGO3bxLeuq59H2q8BJclhx1yhIZV6Z
+         MXkEdKsiZyP8yHHOnZ7vA0y9m5jnhB/3OLU+NvBBUIKQeOpAFFVcSmNbrWkTy1wLUTxQ
+         TVDDU9pT0EOLvQhuPKaRAH3mtv1+0gxVOxkHLu/ozwCjbwqnWMwI4svBJsBbGHlVh3dy
+         HwRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696120311; x=1696725111;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6AchQhtz3Is06siYaW/kQahKNyjQihWPGVqucswhxyA=;
-        b=ppAKVSi1Cw9A6DkzkD+q2HLS+JObvee0vZCvRdiB/9V3n9GSGBnixtwRizS4ABjiO/
-         Xvh/1CogDnKQVVwiVSwFQxgbhPbbhui/QI6YVDhe4BxUzbHD7ZNaoz/KMPADDlc10/v/
-         QY4m9h/qsDd4Y2o5zrfnqXmkG150NvlaD+Ol4Nd3pNyLYUudbCdFesSESJkqfIlD159H
-         +NFl61KvzSzBISZAFOuqd0nr1RUzI9XkO7N1GdSnjq53PgzX3sX98dx6r9WK7Wu+Obfl
-         Tf7m+Ij5RjHRhDqY0M6nLqgS89NkVQWcR9tZuA7xqDdPXUP5SkoASq1g5J9EHew+K5gK
-         umSg==
-X-Gm-Message-State: AOJu0YwQD/KIU1v6n+io5eFnyHLuX35i50PqVHTrDKRHcavcaXBOLV0n
-	0K4FtpHPmwA9xKx3pUKhncRNA5gHZcGkE+E6YFI=
-X-Google-Smtp-Source: AGHT+IEIuyCUmgl8NoW7qHnN40o6vLbYUrnuavgpMVki/1orj3aUsiFGyagAFy3NRnmXZA2QMl/So1fOPYUh8MBoVBQ=
-X-Received: by 2002:a6b:5b15:0:b0:79f:99f5:fadd with SMTP id
- v21-20020a6b5b15000000b0079f99f5faddmr8947813ioh.6.1696120310760; Sat, 30 Sep
- 2023 17:31:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1696149346; x=1696754146;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0L/mHBlIgGc4satRCNpr7UON8xxJCcVUo/QQgDPnABw=;
+        b=SNempHmMhfcwi3xD3tGywKBKftZbe076jpa7HdjGfx973KNFZheQDo9zZhCB2dVTTg
+         mLH/wtRcAAiwTNCkk5T5bUMxNofYkQSA6yNjEEK1tm5gXWL2N6tv57radIrf5HOuj+Da
+         cFe+EShihg/5QyY8+1JeUMMkLZO+7N6B+1Ijh+Vffv4m8Wo+rna+GIvb6rOiDpqeiXQV
+         WrxUOL2T8ppA89A3bfgQPQZoByK9I2UsoivFdngM9Xw0+dDbBzRR3oOypCOFuSv8UOfC
+         qjWOUumr1Q7A2rvPE/fK2VupbHoyw2BhEM8SBCGEyMcnSlybaLQpItKv2LTtMQmz9UaK
+         7S7w==
+X-Gm-Message-State: AOJu0YzhJVnKQDpyGMprzalbMBTksLRp65dQZOKZVd4Os8nvALkFbXQg
+	SGdHZ0bjfLYDtzv3t6MxhEo=
+X-Google-Smtp-Source: AGHT+IE3dD9qG4fwRxqaxw2CkMokYSazdpGU7egf/gKbwRO51ZOgC5oxWtzf3QMy4GrT5KQVU7m0Nw==
+X-Received: by 2002:a17:906:73dc:b0:9ae:696c:2c47 with SMTP id n28-20020a17090673dc00b009ae696c2c47mr8343992ejl.28.1696149345399;
+        Sun, 01 Oct 2023 01:35:45 -0700 (PDT)
+Received: from gmail.com (84-236-113-123.pool.digikabel.hu. [84.236.113.123])
+        by smtp.gmail.com with ESMTPSA id z15-20020a170906944f00b00993928e4d1bsm15053657ejx.24.2023.10.01.01.35.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Oct 2023 01:35:44 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Sun, 1 Oct 2023 10:35:42 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] perf events fixes
+Message-ID: <ZRkvXkyEXYfoAPiA@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230927033124.1226509-1-dapeng1.mi@linux.intel.com>
- <20230927033124.1226509-8-dapeng1.mi@linux.intel.com> <20230927113312.GD21810@noisy.programming.kicks-ass.net>
- <ZRRl6y1GL-7RM63x@google.com> <20230929115344.GE6282@noisy.programming.kicks-ass.net>
- <ZRbxb15Opa2_AusF@google.com> <CALMp9eQvCLJCQYHfZ5K3nZ8jK14dUMmfEsSvkdteE2OUtg=8+g@mail.gmail.com>
-In-Reply-To: <CALMp9eQvCLJCQYHfZ5K3nZ8jK14dUMmfEsSvkdteE2OUtg=8+g@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Sat, 30 Sep 2023 17:31:39 -0700
-Message-ID: <CAM9d7ciksqA7KGgc07HJAdE0TMpe1YCoS+NhzNEvdygh8T=PPA@mail.gmail.com>
-Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics event
-To: Jim Mattson <jmattson@google.com>
-Cc: Sean Christopherson <seanjc@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Like Xu <likexu@tencent.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Zhenyu Wang <zhenyuw@linux.intel.com>, Zhang Xiong <xiong.y.zhang@intel.com>, 
-	Lv Zhiyuan <zhiyuan.lv@intel.com>, Yang Weijiang <weijiang.yang@intel.com>, 
-	Dapeng Mi <dapeng1.mi@intel.com>, David Dunn <daviddunn@google.com>, 
-	Mingwei Zhang <mizhang@google.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hello,
 
-On Fri, Sep 29, 2023 at 8:29=E2=80=AFPM Jim Mattson <jmattson@google.com> w=
-rote:
-> For things to work well in the "vPMU as a client of host perf" world,
-> we need to have the following at a minimum:
-> 1) Guaranteed identity mapping of guest PMCs to host PMCs, so that we
-> don't have to intercept accesses to IA32_PERF_GLOBAL_CTRL.
-> 2) Exclusive ownership of the PMU MSRs while in the KVM_RUN loop, so
-> that we don't have to switch any PMU MSRs on VM-entry/VM-exit (with
-> the exception of IA32_PERF_GLOBAL_CTRL, which has guest and host
-> fields in the VMCS).
+Linus,
 
-IIUC that means multiplexing should be handled in the guest.
-Not sure it can support mixing host and guest events at the
-same time.
+Please pull the latest perf/urgent git tree from:
 
-Thanks,
-Namhyung
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2023-10-01
+
+   # HEAD: 599522d9d2e19d6240e4312577f1c5f3ffca22f6 perf/x86/amd: Do not WARN() on every IRQ
+
+Misc fixes: work around an AMD microcode bug on certain models,
+and fix kexec kernel PMI handlers on AMD systems that get loaded
+on older kernels that have an unexpected register state.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Breno Leitao (1):
+      perf/x86/amd: Do not WARN() on every IRQ
+
+Sandipan Das (1):
+      perf/x86/amd/core: Fix overflow reset on hotplug
+
+
+ arch/x86/events/amd/core.c | 24 +++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
+
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index abadd5f23425..e24976593a29 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -534,8 +534,12 @@ static void amd_pmu_cpu_reset(int cpu)
+ 	/* Clear enable bits i.e. PerfCntrGlobalCtl.PerfCntrEn */
+ 	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_CTL, 0);
+ 
+-	/* Clear overflow bits i.e. PerfCntrGLobalStatus.PerfCntrOvfl */
+-	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR, amd_pmu_global_cntr_mask);
++	/*
++	 * Clear freeze and overflow bits i.e. PerfCntrGLobalStatus.LbrFreeze
++	 * and PerfCntrGLobalStatus.PerfCntrOvfl
++	 */
++	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR,
++	       GLOBAL_STATUS_LBRS_FROZEN | amd_pmu_global_cntr_mask);
+ }
+ 
+ static int amd_pmu_cpu_prepare(int cpu)
+@@ -570,6 +574,7 @@ static void amd_pmu_cpu_starting(int cpu)
+ 	int i, nb_id;
+ 
+ 	cpuc->perf_ctr_virt_mask = AMD64_EVENTSEL_HOSTONLY;
++	amd_pmu_cpu_reset(cpu);
+ 
+ 	if (!x86_pmu.amd_nb_constraints)
+ 		return;
+@@ -591,8 +596,6 @@ static void amd_pmu_cpu_starting(int cpu)
+ 
+ 	cpuc->amd_nb->nb_id = nb_id;
+ 	cpuc->amd_nb->refcnt++;
+-
+-	amd_pmu_cpu_reset(cpu);
+ }
+ 
+ static void amd_pmu_cpu_dead(int cpu)
+@@ -601,6 +604,7 @@ static void amd_pmu_cpu_dead(int cpu)
+ 
+ 	kfree(cpuhw->lbr_sel);
+ 	cpuhw->lbr_sel = NULL;
++	amd_pmu_cpu_reset(cpu);
+ 
+ 	if (!x86_pmu.amd_nb_constraints)
+ 		return;
+@@ -613,8 +617,6 @@ static void amd_pmu_cpu_dead(int cpu)
+ 
+ 		cpuhw->amd_nb = NULL;
+ 	}
+-
+-	amd_pmu_cpu_reset(cpu);
+ }
+ 
+ static inline void amd_pmu_set_global_ctl(u64 ctl)
+@@ -884,7 +886,7 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
+ 	struct hw_perf_event *hwc;
+ 	struct perf_event *event;
+ 	int handled = 0, idx;
+-	u64 status, mask;
++	u64 reserved, status, mask;
+ 	bool pmu_enabled;
+ 
+ 	/*
+@@ -909,6 +911,14 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
+ 		status &= ~GLOBAL_STATUS_LBRS_FROZEN;
+ 	}
+ 
++	reserved = status & ~amd_pmu_global_cntr_mask;
++	if (reserved)
++		pr_warn_once("Reserved PerfCntrGlobalStatus bits are set (0x%llx), please consider updating microcode\n",
++			     reserved);
++
++	/* Clear any reserved bits set by buggy microcode */
++	status &= amd_pmu_global_cntr_mask;
++
+ 	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
+ 		if (!test_bit(idx, cpuc->active_mask))
+ 			continue;
