@@ -1,83 +1,53 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D80A156F4
-	for <linux-perf-users@vger.kernel.org>; Sun,  1 Oct 2023 13:10:54 +0000 (UTC)
-Received: from mail.sakamoto.pl (mail.sakamoto.pl [185.236.240.130])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 685469C;
-	Sun,  1 Oct 2023 06:10:52 -0700 (PDT)
-Authentication-Results: mail.sakamoto.pl;
-	auth=pass (plain)
-From: April John <april@acab.dev>
-To: linux-kernel@vger.kernel.org
-Cc: April John <april@acab.dev>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM)
-Subject: [PATCH] /bin/dmesg to dmesg Path
-Date: Sun,  1 Oct 2023 15:09:41 +0200
-Message-ID: <20231001131047.15176-1-april@acab.dev>
-X-Mailer: git-send-email 2.42.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BCBCD290
+	for <linux-perf-users@vger.kernel.org>; Sun,  1 Oct 2023 17:08:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B5CBCC433C7;
+	Sun,  1 Oct 2023 17:08:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696180098;
+	bh=rIxOYjI3GOdZg9X/m/2x92ZThBipc49IsicSCL9XT2g=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=ehhSlzS2UBj97C3+Q9jH5Xj4RpOdJh2yraxeubLfjvVmtOPn+iCHipo3syf3xH4/R
+	 KraoC3a68jzoPO6XvSl37djjtGwOIrX/r+ZF+kc3dhF1q/OBJVdzuvIkzjDENswK/F
+	 NoSWVdm1tWzZYxMzTUWW/LNkiPNblS2smrFLbZggLHP4LiKCKUQ32LUSEKQWoXqDqx
+	 RbHEjUYdF5ySgHxf44gowwRIdhRhQ7GAzyr/LarJldr/MQ4k8tgPlguq9Y7LlwTboM
+	 0mlAa3okJ933lRoo57bIT/nyLefbjw9bym6s2W1/oIqcBi3d7Uy891FtfH/W649PE7
+	 TWNT5ReBGSHcA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9F36BE29AFE;
+	Sun,  1 Oct 2023 17:08:18 +0000 (UTC)
+Subject: Re: [GIT PULL] perf events fixes
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <ZRkvXkyEXYfoAPiA@gmail.com>
+References: <ZRkvXkyEXYfoAPiA@gmail.com>
+X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
+X-PR-Tracked-Message-Id: <ZRkvXkyEXYfoAPiA@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2023-10-01
+X-PR-Tracked-Commit-Id: 599522d9d2e19d6240e4312577f1c5f3ffca22f6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 3a38c57a87aeb5c6d71a1b6dd572569112dbce38
+Message-Id: <169618009864.11241.5479391659294189712.pr-tracker-bot@kernel.org>
+Date: Sun, 01 Oct 2023 17:08:18 +0000
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Haraka-GeoIP: DE
-X-Haraka-GeoIP-Received: 2a0f:5382:acab:1403:df7a:1afe:5a62:f4ea:DE
-Received: from localhost (Unknown [127.0.0.1])
-	by mail.sakamoto.pl (Haraka/2.8.28) with ESMTPSA id 8C646383-7EE1-448C-9701-59BAC68A05B4.1
-	envelope-from <april@acab.dev>
-	tls TLS_AES_256_GCM_SHA384 (authenticated bits=0);
-	Sun, 01 Oct 2023 15:10:50 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=acab.dev; s=s20220914329;
-	h=from:subject:date:message-id:to:cc:mime-version;
-	bh=dQOO+1RTlukVncTxCKOmVSa3gYvhD7rVj00JNhlBlAI=;
-	b=imIyghrhK2UIPXFk8w3ldexzXY9jozTIYM/4zX4m08i4F3ReRHaSOkj/z6YaC/mQxjy35EPAnN
-	Jw8mco13GS/QZnj+0aJcJNdUt5KtmXgUJNCAYkm+NFEJOrvsEf9wS0nAHzXr+MPeGH+juilkPba9
-	NWvluyWhdXeREVB+kO9MrPM5TB8et41AIauJwPg+QGytxAChui/tkrwhw35I8TZK+EbKgXf8I5Wf
-	1tuvFz3Yc2UAWrVMO5LUKSQ7HAZkzuwtLoihjXhFML/tV9cfKqMWS66I+NHg96POe/nSaA6b+NEQ
-	G8a8NVymsDkTw+xmo0PCl+2XKULcnhYPhwEUT3qg==
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
 
-Dmesg is not in every distro at /bin/dmesg, in NixOS for example, this fails,
-but the path should in most cases contain dmesg.
-This follows the example of replacing /bin/bash with bash Path in the codebase.
+The pull request you sent on Sun, 1 Oct 2023 10:35:42 +0200:
 
----
-tools/perf/util/evsel.c | 2 +-
-1 file changed, 1 insertion(+), 1 deletion(-)
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2023-10-01
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index a8a5ff87c..aa602aae6 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -3053,7 +3053,7 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/3a38c57a87aeb5c6d71a1b6dd572569112dbce38
 
-return scnprintf(msg, size,
-"The sys_perf_event_open() syscall returned with %d (%s) for event (%s).\n"
-- "/bin/dmesg | grep -i perf may provide additional information.\n",
-+ "dmesg | grep -i perf may provide additional information.\n",
-err, str_error_r(err, sbuf, sizeof(sbuf)), evsel__name(evsel));
-}
+Thank you!
 
---
-2.42.0
-
-Signed-off-by: April John <april@acab.dev>
-
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
