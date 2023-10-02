@@ -1,150 +1,153 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 296CE1E50B
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 17:33:15 +0000 (UTC)
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E71F8B4
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 10:33:13 -0700 (PDT)
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 392HK1Vu019686;
-	Mon, 2 Oct 2023 17:33:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=YRCygDs2IUHEaFnKwno3tMzXT5DPA//+v3CLd3Y9P9Q=;
- b=XYkXLurpMPKCwFmSiuSiobL8/0s5+del5fmXjOZlQ2B7Mm5fsq0QHDum70sw6fG/obmE
- C3wIAYS96WX+4wDx6giTaydHI6Grfif5S5Ck66uNwqqUNP4j8NEoMSVRpREUWemvW4c0
- UclaJucJ/oEpyJMv1NYtlwL1ubt0qnulLkPHI+Q4oHXjz2PKcFS1smUK0TtX0PopU3Qs
- WrLpIt7wntNCORplGDNNmL2FQHbrL0k0virfvt47tLVUWrLY1rUUePKnUYf/XegQ9ByQ
- hLLmI4b2IytzILtYcKnOX8p0dhSWMNwJj36dFEUlEVp0MvoD+ySef/J4oRADxz3qBfOH Ww== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tg25nraak-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 02 Oct 2023 17:33:11 +0000
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 392HWfv0024349;
-	Mon, 2 Oct 2023 17:33:11 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tg25nraaa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 02 Oct 2023 17:33:11 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 392Gtu7m005869;
-	Mon, 2 Oct 2023 17:33:10 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tex0sbjyy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 02 Oct 2023 17:33:10 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 392HX72Z22217386
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 2 Oct 2023 17:33:07 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8AD4320043;
-	Mon,  2 Oct 2023 17:33:07 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7EF5720040;
-	Mon,  2 Oct 2023 17:33:05 +0000 (GMT)
-Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com.com (unknown [9.171.16.145])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  2 Oct 2023 17:33:05 +0000 (GMT)
-From: Aditya Gupta <adityag@linux.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, irogers@google.com, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com
-Subject: [PATCH v4 4/4] tools/perf/tests: Update probe_vfs_getname.sh script to use perf check --feature
-Date: Mon,  2 Oct 2023 23:02:53 +0530
-Message-ID: <20231002173253.70891-5-adityag@linux.ibm.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20231002173253.70891-1-adityag@linux.ibm.com>
-References: <20231002173253.70891-1-adityag@linux.ibm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2F81DA29
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 19:03:27 +0000 (UTC)
+Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EA6BC6
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 12:03:25 -0700 (PDT)
+Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-5a1ec43870cso1628757b3.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Oct 2023 12:03:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1696273404; x=1696878204; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3He/PUj1SuAa2JXabRDuVg056s7G52ETnxzH3dmdWOg=;
+        b=OPt6mP8S+PTAA1io3oSX62PkRFFRMQai47lm+csYxbnU/hk3TOjsl8UkXN5mYvfxCb
+         00hmO/F/w1BhhNahHTaONXilcHlVACvejg34jHMR9BV50BZKxr7hqbdHaB/UzbqMH8I+
+         hxdGNQCtra/OsmPTGZ4Al5EzQLPrtYYei6jzdocuVLQ+JrL/D0oEORbTKoeUI5XeMIim
+         0C1dMnN2Abc0OSDQpM7wCxMi4tVgjaAnAZWOQmwn6AFDAcNbHqGP3QqdCvu3qMm1A3c2
+         g06qAxrA8nZ6BslyWONYQyWGHmzLhkQIZkBD0oj9QHDxAFvbodZEwak7aTX9VD8dVfTt
+         WN1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696273404; x=1696878204;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3He/PUj1SuAa2JXabRDuVg056s7G52ETnxzH3dmdWOg=;
+        b=AEPu2M+mi6jR67bqqtMxQw6IETWtkLlsm+c2Bat1+s8I63NKPfeKScQdTz6EvxMVk+
+         dthNGzeBEbZgpyxk6+G8qUYjsxPYUs9lYGjoQwlnoHEgPUmlMIpRCcytaAn4oGC1ow3k
+         cfyBp+ZjCsWKve7VM5ANJTGHXExOFil4uhCsl+WC1wmPOt9RuxKlvb9atzoD/ohWqbvu
+         tjFdXFf7Y2nWAeldpYqX1Gyc/gG0XSxAHhR0wZe3wihGrHL6JnqcBZQhef8dJZB/MyuQ
+         eSmgqQY1Ln7ZYsW19VSIY2hAxXk/GOvNitszvISr2H6zIkVDAWxAsSuszXxtJn89/eQ0
+         F+4g==
+X-Gm-Message-State: AOJu0YxYp6R12QZbmZjtMrWOGMAqE8unLISxeu0/gCx3sVkURxXdv8xc
+	Y4vZLwLK8TejwhurRUQn8hK7VvT5TFd4z/5n8sIPAg==
+X-Google-Smtp-Source: AGHT+IEA4dDmQIWRpX6+dlkx4q9Ijn6B2IOnk5daMYuSLEH8f9r1rw9SVKRq62PuHfbXPuIVJgNXE2DhJjYf4yhOlSQ=
+X-Received: by 2002:a25:874e:0:b0:d81:83f6:99cb with SMTP id
+ e14-20020a25874e000000b00d8183f699cbmr11987198ybn.42.1696273404469; Mon, 02
+ Oct 2023 12:03:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: _8uHf0zkUG-rju84EcDvGbcoFf7HTBkO
-X-Proofpoint-GUID: 1OMtxtpq03m29UAe5uj80ANF9CmHpPbu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-02_12,2023-10-02_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- spamscore=0 mlxlogscore=999 mlxscore=0 clxscore=1015 bulkscore=0
- priorityscore=1501 impostorscore=0 phishscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2310020136
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,
-	RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=ham
+References: <20230927033124.1226509-1-dapeng1.mi@linux.intel.com>
+ <20230927033124.1226509-8-dapeng1.mi@linux.intel.com> <20230927113312.GD21810@noisy.programming.kicks-ass.net>
+ <ZRRl6y1GL-7RM63x@google.com> <20230929115344.GE6282@noisy.programming.kicks-ass.net>
+ <ZRbxb15Opa2_AusF@google.com> <20231002115718.GB13957@noisy.programming.kicks-ass.net>
+ <ZRrF38RGllA04R8o@gmail.com> <CABOYuvYNZd63mNjAsZUckguYbcq4KDvy1Q9Zwzh1DgFfiFb=HQ@mail.gmail.com>
+In-Reply-To: <CABOYuvYNZd63mNjAsZUckguYbcq4KDvy1Q9Zwzh1DgFfiFb=HQ@mail.gmail.com>
+From: Mingwei Zhang <mizhang@google.com>
+Date: Mon, 2 Oct 2023 12:02:47 -0700
+Message-ID: <CAL715WJyrb7-cj=p78WwDWvv_gwBjAFSOch0M8C02iNfSVuOaw@mail.gmail.com>
+Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics event
+To: David Dunn <daviddunn@google.com>
+Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Sean Christopherson <seanjc@google.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Kan Liang <kan.liang@linux.intel.com>, Like Xu <likexu@tencent.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Zhenyu Wang <zhenyuw@linux.intel.com>, Zhang Xiong <xiong.y.zhang@intel.com>, 
+	Lv Zhiyuan <zhiyuan.lv@intel.com>, Yang Weijiang <weijiang.yang@intel.com>, 
+	Dapeng Mi <dapeng1.mi@intel.com>, Jim Mattson <jmattson@google.com>, 
+	Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+On Mon, Oct 2, 2023 at 8:23=E2=80=AFAM David Dunn <daviddunn@google.com> wr=
+ote:
+>
+> On Mon, Oct 2, 2023 at 6:30=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wro=
+te:
+> >
+> >
+> > The host OS shouldn't offer facilities that severely limit its own capa=
+bilities,
+> > when there's a better solution. We don't give the FPU to apps exclusive=
+ly either,
+> > it would be insanely stupid for a platform to do that.
+> >
+>
+> If you think of the guest VM as a usermode application (which it
+> effectively is), the analogous situation is that there is no way to
+> tell the usermode application which portions of the FPU state might be
+> used by the kernel without context switching.  Although the kernel can
+> and does use FPU state, it doesn't zero out a portion of that state
+> whenever the kernel needs to use the FPU.
+>
+> Today there is no way for a guest to dynamically adjust which PMU
+> state is valid or invalid.  And this changes based on usage by other
+> commands run on the host.  As observed by perf subsystem running in
+> the guest kernel, this looks like counters that simply zero out and
+> stop counting at random.
+>
+> I think the request here is that there be a way for KVM to be able to
+> tell the guest kernel (running the perf subsystem) that it has a
+> functional HW PMU.  And for that to be true.  This doesn't mean taking
+> away the use of the PMU any more than exposing the FPU to usermode
+> applications means taking away the FPU from the kernel.  But it does
+> mean that when entering the KVM run loop, the host perf system needs
+> to context switch away the host PMU state and allow KVM to load the
+> guest PMU state.  And much like the FPU situation, the portion of the
+> host kernel that runs between the context switch to the KVM thread and
+> VMENTER to the guest cannot use the PMU.
+>
+> This obviously should be a policy set by the host owner.  They are
+> deliberately giving up the ability to profile that small portion of
+> the host (KVM VCPU thread cannot be profiled) in return to providing a
+> full set of perf functionality to the guest kernel.
+>
 
-In probe_vfs_getname.sh, current we use "perf record --dry-run"
-to check for libtraceevent and skip the test if perf is not
-build with libtraceevent. Change the check to use "perf check --feature"
-option
++1
 
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- tools/perf/tests/shell/lib/probe_vfs_getname.sh           | 4 ++--
- tools/perf/tests/shell/record+probe_libc_inet_pton.sh     | 5 ++++-
- tools/perf/tests/shell/record+script_probe_vfs_getname.sh | 5 ++++-
- 3 files changed, 10 insertions(+), 4 deletions(-)
+I was pretty confused until I read this one. Pass-through vPMU for the
+guest VM does not conflict with the host PMU software. All we need is
+to accept the feasibility that host PMU software (perf subsystem in
+Linux) can co-exist with pass-through vPMU in KVM. They could both
+work directly on the hardware PMU, operating the registers etc...
 
-diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-index bf4c1fb71c4b..368a55c02134 100644
---- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-@@ -27,7 +27,7 @@ skip_if_no_debuginfo() {
- # check if perf is compiled with libtraceevent support
- skip_no_probe_record_support() {
- 	if [ $had_vfs_getname -eq 1 ] ; then
--		perf record --dry-run -e $1 2>&1 | grep "libtraceevent is necessary for tracepoint support" && return 2
--		return 1
-+		perf check -q --feature libtraceevent && return 1
-+		return 2
- 	fi
- }
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index 89214a6d9951..0c00e94b83ff 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -58,7 +58,10 @@ trace_libc_inet_pton_backtrace() {
- 
- 	# Check presence of libtraceevent support to run perf record
- 	skip_no_probe_record_support "$event_name/$eventattr/"
--	[ $? -eq 2 ] && return 2
-+	if [ $? -eq 2 ]; then
-+		echo "WARN: Skipping test trace_libc_inet_pton_backtrace. No libtraceevent support."
-+		return 2
-+	fi
- 
- 	perf record -e $event_name/$eventattr/ -o $perf_data ping -6 -c 1 ::1 > /dev/null 2>&1
- 	# check if perf data file got created in above step.
-diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-index 7f664f1889d9..c7416d21fc92 100755
---- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-@@ -19,7 +19,10 @@ record_open_file() {
- 	echo "Recording open file:"
- 	# Check presence of libtraceevent support to run perf record
- 	skip_no_probe_record_support "probe:vfs_getname*"
--	[ $? -eq 2 ] && return 2
-+	if [ $? -eq 2 ]; then
-+		echo "WARN: Skipping test record_open_file. No libtraceevent support"
-+		return 2
-+	fi
- 	perf record -o ${perfdata} -e probe:vfs_getname\* touch $file
- }
- 
--- 
-2.41.0
+To achieve this, I think what we really ask for the perf subsystem in
+Linux are two things:
+ - full context switch for hardware PMU. Currently, perf subsystem is
+the exclusive owner of this piece of hardware. So this code is missing
+ - NMI sharing or NMI control transfer. Either KVM could raise its own
+NMI handler and get control transferred or Linux promotes the existing
+NMI handler to serve two entities in the kernel.
 
+Once the above is achieved, KVM and perf subsystem in Linux could
+harmoniously share the hardware PMU as I believe, instead of forcing
+the former as a client of the latter.
+
+To step back a little bit, we are not asking about the feasibility,
+since KVM and perf subsystem sharing hardware PMU is a reality because
+of TDX/SEV-SNP. So, I think all that is just a draft proposal to make
+the sharing clean and efficient.
+
+Thanks.
+-Mingwei
+
+> Dave Dunn
