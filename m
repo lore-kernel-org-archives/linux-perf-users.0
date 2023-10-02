@@ -1,89 +1,161 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3986FB8
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 20:53:06 +0000 (UTC)
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2F07CC;
-	Mon,  2 Oct 2023 13:53:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=NJ3mkZai2rRb7fHwiHbH42pQCrq+/XPwIYX9xlpeNjA=; b=TwmFmK+cbs5K6/l/UHgdF7kfWz
-	Q35hPPXix6s7N45u2WlTUkS4H8EG03QSJVLL91iPFWFU7NIkcLbWj1Vr+MMfiNnj983knf2LSCVxz
-	m46udwv48pFhoUSncX70ZlQGNdZ561hTCKzHDIqCYntbjZSbdTBCR+NamMYT43hC0nXOi3IE7m+y7
-	+ggzmi7+LtD8E5VTp1Rdz/J1W9Rll6tZqQodKIHUxbegBFmMmGBWAOfunyt5qGqdH941GbFWR7xZ5
-	FKValdgHOo5zwPp7gMAoVyg47366brN0SUMSMYJjm4Q/dQeh55uurMQCuf5eFLQnnNbUtv17cR/Og
-	Dg2Ad+FA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qnPuF-00B7zd-1t; Mon, 02 Oct 2023 20:52:43 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B08AC300454; Mon,  2 Oct 2023 22:52:42 +0200 (CEST)
-Date: Mon, 2 Oct 2023 22:52:42 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Sean Christopherson <seanjc@google.com>, Ingo Molnar <mingo@kernel.org>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Like Xu <likexu@tencent.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>, kvm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Zhenyu Wang <zhenyuw@linux.intel.com>,
-	Zhang Xiong <xiong.y.zhang@intel.com>,
-	Lv Zhiyuan <zhiyuan.lv@intel.com>,
-	Yang Weijiang <weijiang.yang@intel.com>,
-	Dapeng Mi <dapeng1.mi@intel.com>, Jim Mattson <jmattson@google.com>,
-	David Dunn <daviddunn@google.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics
- event
-Message-ID: <20231002205242.GC27267@noisy.programming.kicks-ass.net>
-References: <20230927033124.1226509-1-dapeng1.mi@linux.intel.com>
- <20230927033124.1226509-8-dapeng1.mi@linux.intel.com>
- <20230927113312.GD21810@noisy.programming.kicks-ass.net>
- <ZRRl6y1GL-7RM63x@google.com>
- <20230929115344.GE6282@noisy.programming.kicks-ass.net>
- <ZRbxb15Opa2_AusF@google.com>
- <20231002115718.GB13957@noisy.programming.kicks-ass.net>
- <ZRrF38RGllA04R8o@gmail.com>
- <ZRroQg6flyGBtZTG@google.com>
- <f6b295f2-966c-f566-14c0-dbe02cad2bd2@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2963D200AA
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 22:19:21 +0000 (UTC)
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C5EAD9
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 15:19:19 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d7fd4c23315so425228276.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Oct 2023 15:19:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1696285159; x=1696889959; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2wUAnWIW9zJ3ana8E0TCfI1tH00XkwJZJ8WQ0fILTKw=;
+        b=D7xS4a7cH+/QlWEkA9n0Ma3QsEgRYbIL6v5Gmnw+hdYm43759vG75oLNfuaSggtTUT
+         TX9Tl+SqGpLzNvjLycveD0mmvv76BBJI7YVAxr0XSTgF4zUZnT2jCgI/R6+HH8IDOHC+
+         8YUKzDWog1EL1/BVWuvauAyi1jXpnjsFWjKObvXiDgxF/gKLuZaHVHyTw/ov31ptEtkK
+         Vrg+9vYG0fHFjBhN0uPp3l8KQDVscWEWmt3ylpxozqpeb+vMuGAZ1Zqfm2GMnLMnkgs1
+         oC5074M3kAO6hy4Pnj+/pK3YFgwY66+F2Wf5U34mWBWWYLAaFfad16Y94vNw+Z7K/dS1
+         Gp2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696285159; x=1696889959;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2wUAnWIW9zJ3ana8E0TCfI1tH00XkwJZJ8WQ0fILTKw=;
+        b=VQSC0ThdVa6wKPpi1ZXIUX/XPOASiG/ThR3wpNYRoLbuU+7JP5wemdq9s5JjR9jDnz
+         xJZiu6aRhn9rjuxL+75gNyz2Dxv7XowyXWMsRQqgLQGr87PkbNwwHXDA1ClQ/HETHdCk
+         WeFE98orfNBxaIJ3Y57K2grNv+s00Fz+mFwk0hSmGUaDQZANSsstZaS8L6doTjKyE39h
+         0UPk7WoL54D/UEt8GxuZEtqVvI0uWjiFhL9zn1QHtSVLKQpeI2R6OAk7xDcg/W0xEDC5
+         P+9Og47S9dWW21FksNMnOsj5eW9QCBCRbZ1nGnY3IgA5NbK6ldkgO49l+3n41izx8wll
+         VEMQ==
+X-Gm-Message-State: AOJu0Yw3oX/IvqDjfvT1TmB6G2HNooinH9MQy46FTXUfkiwlMAq7tbXy
+	fow+Bq9wTf2DNnFLP75XSymdvP6bByqu
+X-Google-Smtp-Source: AGHT+IE7kbxKDvfHnds4/doK3Cau9kRtjJ3LDIBLfnaDBoWUcsfv2KpGW/h4t+5F9T8WD5mnxQgtfaxZtLwA
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a907:e439:3a86:b259])
+ (user=irogers job=sendgmr) by 2002:a25:7606:0:b0:d84:2619:56df with SMTP id
+ r6-20020a257606000000b00d84261956dfmr215174ybc.13.1696285158714; Mon, 02 Oct
+ 2023 15:19:18 -0700 (PDT)
+Date: Mon,  2 Oct 2023 15:19:09 -0700
+Message-Id: <20231002221909.2958708-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f6b295f2-966c-f566-14c0-dbe02cad2bd2@linux.intel.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.42.0.582.g8ccd20d70d-goog
+Subject: [PATCH v1] perf intel-pt: pkt-decoder: Fix alignment issues
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Liam Howlett <liam.howlett@oracle.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 02, 2023 at 03:50:24PM -0400, Liang, Kan wrote:
+The byte aligned buffer is cast to large types and dereferenced
+causing misaligned pointer warnings from undefined behavior sanitizer.
+Fix the alignment issues with memcpy which may require the
+introduction of temporaries.
 
-> Now, the NMI watchdog is using a "CPU-pinned" event. But I think it can
-> be replaced by the buddy system, commit 1f423c905a6b
-> ("watchdog/hardlockup: detect hard lockups using secondary (buddy) CPUs")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ .../intel-pt-decoder/intel-pt-pkt-decoder.c   | 21 ++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-For some simple cases. I've had plenty experience with situations where
-that thing would be completely useless.
+diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
+index af9710622a1f..28659874d84e 100644
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
+@@ -83,7 +83,7 @@ static int intel_pt_get_long_tnt(const unsigned char *buf, size_t len,
+ 	if (len < 8)
+ 		return INTEL_PT_NEED_MORE_BYTES;
+ 
+-	payload = le64_to_cpu(*(uint64_t *)buf);
++	memcpy_le64(&payload, buf, sizeof(payload));
+ 
+ 	for (count = 47; count; count--) {
+ 		if (payload & BIT63)
+@@ -220,6 +220,8 @@ static int intel_pt_get_3byte(const unsigned char *buf, size_t len,
+ static int intel_pt_get_ptwrite(const unsigned char *buf, size_t len,
+ 				struct intel_pt_pkt *packet)
+ {
++	uint32_t tmp;
++
+ 	packet->count = (buf[1] >> 5) & 0x3;
+ 	packet->type = buf[1] & BIT(7) ? INTEL_PT_PTWRITE_IP :
+ 					 INTEL_PT_PTWRITE;
+@@ -228,12 +230,13 @@ static int intel_pt_get_ptwrite(const unsigned char *buf, size_t len,
+ 	case 0:
+ 		if (len < 6)
+ 			return INTEL_PT_NEED_MORE_BYTES;
+-		packet->payload = le32_to_cpu(*(uint32_t *)(buf + 2));
++		memcpy(&tmp, buf + 2, sizeof(tmp));
++		packet->payload = le32_to_cpu(tmp);
+ 		return 6;
+ 	case 1:
+ 		if (len < 10)
+ 			return INTEL_PT_NEED_MORE_BYTES;
+-		packet->payload = le64_to_cpu(*(uint64_t *)(buf + 2));
++		memcpy_le64(&packet->payload, buf + 2, sizeof(packet->payload));
+ 		return 10;
+ 	default:
+ 		return INTEL_PT_BAD_PACKET;
+@@ -258,7 +261,7 @@ static int intel_pt_get_mwait(const unsigned char *buf, size_t len,
+ 	if (len < 10)
+ 		return INTEL_PT_NEED_MORE_BYTES;
+ 	packet->type = INTEL_PT_MWAIT;
+-	packet->payload = le64_to_cpu(*(uint64_t *)(buf + 2));
++	memcpy_le64(&packet->payload, buf + 2, sizeof(packet->payload));
+ 	return 10;
+ }
+ 
+@@ -454,6 +457,8 @@ static int intel_pt_get_ip(enum intel_pt_pkt_type type, unsigned int byte,
+ 			   struct intel_pt_pkt *packet)
+ {
+ 	int ip_len;
++	uint16_t tmp16;
++	uint32_t tmp32;
+ 
+ 	packet->count = byte >> 5;
+ 
+@@ -465,13 +470,15 @@ static int intel_pt_get_ip(enum intel_pt_pkt_type type, unsigned int byte,
+ 		if (len < 3)
+ 			return INTEL_PT_NEED_MORE_BYTES;
+ 		ip_len = 2;
+-		packet->payload = le16_to_cpu(*(uint16_t *)(buf + 1));
++		memcpy(&tmp16, buf + 1, sizeof(tmp16));
++		packet->payload = le16_to_cpu(tmp16);
+ 		break;
+ 	case 2:
+ 		if (len < 5)
+ 			return INTEL_PT_NEED_MORE_BYTES;
+ 		ip_len = 4;
+-		packet->payload = le32_to_cpu(*(uint32_t *)(buf + 1));
++		memcpy(&tmp32, buf + 1, sizeof(tmp32));
++		packet->payload = le32_to_cpu(tmp32);
+ 		break;
+ 	case 3:
+ 	case 4:
+@@ -484,7 +491,7 @@ static int intel_pt_get_ip(enum intel_pt_pkt_type type, unsigned int byte,
+ 		if (len < 9)
+ 			return INTEL_PT_NEED_MORE_BYTES;
+ 		ip_len = 8;
+-		packet->payload = le64_to_cpu(*(uint64_t *)(buf + 1));
++		memcpy_le64(&packet->payload, buf + 1, sizeof(packet->payload));
+ 		break;
+ 	default:
+ 		return INTEL_PT_BAD_PACKET;
+-- 
+2.42.0.582.g8ccd20d70d-goog
 
-That is, at some point the 'all CPUs hard locked up' scenario was
-something I ran into a lot (although I can't for the life of me remember
-wtf I was doing at the time). All that needs is a single
-spin_lock_irqsave() on a common lock (or group of locks, like the
-rq->lock). Before you know it, the whole machine is a brick.
-
-That said; if you augment this thing with a bunch of CPUs that have
-HPET-NMI and IPI-NMI for backtraces, it might actually be useful.
