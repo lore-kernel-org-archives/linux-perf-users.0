@@ -1,161 +1,117 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855721CFAA
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 15:56:56 +0000 (UTC)
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45E91B8
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 08:56:53 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d852a6749baso24116786276.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 02 Oct 2023 08:56:53 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18F31A5BE
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 16:48:28 +0000 (UTC)
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34EB8B3
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 09:48:27 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-9ae7383b7ecso743747266b.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Oct 2023 09:48:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696262212; x=1696867012; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cpsMPjbR1WNgJ/uUktgfbNndpX69oDvkpl70xKylEH8=;
-        b=QDU9RwJW0u50FcNZZxExPPEv4dK3Fr1p/MZuwCn1Awwcr6dwkCmF0GzdiDn6X1Ls1a
-         9FrOsfkXc/UMWpC7ayqGFvQnaS8UDsjnVVwkOGcf1alqLj78ib1LLFC2o5xA//oQWnbi
-         teMNTWoAuEveJJfFz9WD49zQ7krILJAHmJFFwxLp30zoy5rSScSyJe7OUnSsUhAfYm20
-         ktMpYDPOWmB+xkNZ7zs4ZiCGEFTthxIijuehMK3QCAMgBiqpUdK+4s2c1Pfj4kLUeMOR
-         RvOpZvC46JEkr590M7niku2AG8CEn/Pcp7jf/SzqgpDmgEEjRUtKCy8kmmI4qzwXGyC5
-         stiA==
+        d=chromium.org; s=google; t=1696265304; x=1696870104; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/tGIS2d4IoBhPIJormO2ARUKb4WPqFJw4stm8Ff0wEc=;
+        b=kW7Y8sfD4fGa6l95GeAvpt1zDa7CZyv6NyX1vSf1/2n3/DKWsBRMch6bEzCZ9z5QUI
+         A45wvcWWbJ47eiVvEoXyvGDGAMoeY71E+5Rei5fXVlL+//r10U6R7Mjg3HHLuKGVSEwX
+         52wTh8RGDSRXZgkuEiLoH+QZXLYbLKDjOralM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696262212; x=1696867012;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cpsMPjbR1WNgJ/uUktgfbNndpX69oDvkpl70xKylEH8=;
-        b=CraV8fZYK/PozwnE9l5/isGZQ/nU22dNwneccrYIkJRsEu8aS8u9aOCRhSi4W0+L7u
-         DpuGQKYPLZG3ra9kl0zOsUkdLO028uEtIetjnI27wo5NhNkcwHQ304hSVaaW66QUDQlP
-         o6gpaiMXm5AO/6Njglfbx78xf8kuOlhFs8Url+pYa513L7nastgALB+aFachpsdiPAbc
-         06HqcPRkR4gAf1Mviesa0EbDT4sZehLKJJFs2av2m8gW0gbjc2EcIYoJtiiZViw+FnCC
-         nBQ4CluPej7xOaSNu/fxigqnyZ8E0Y9kCvKHYiCPLPqzZf16x5sHMMRqYnQRhMz77S6s
-         njXQ==
-X-Gm-Message-State: AOJu0YxRZl5j8cpetTF1Q7D2+Z+WGaKebog5lYZBVfenLmKZDR/rrxFc
-	9m8lFp/Nc88Lbhjv2chiDyAzVduVFUE=
-X-Google-Smtp-Source: AGHT+IFU0Rp0ypciSYbq9+jHt9tXgKHuu0bXBd5z/jIOuiXJuVh5Iwgc1+UaORfJnN9j0OiqnnlHuGl3o/U=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:abe9:0:b0:d80:19e5:76c8 with SMTP id
- v96-20020a25abe9000000b00d8019e576c8mr178348ybi.12.1696262212083; Mon, 02 Oct
- 2023 08:56:52 -0700 (PDT)
-Date: Mon, 2 Oct 2023 08:56:50 -0700
-In-Reply-To: <ZRrF38RGllA04R8o@gmail.com>
+        d=1e100.net; s=20230601; t=1696265304; x=1696870104;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/tGIS2d4IoBhPIJormO2ARUKb4WPqFJw4stm8Ff0wEc=;
+        b=uW/DuMBNJ9YYPJ8La+oplFpdqZJ7KYD0q16kHehagGvfbo+qdLDDy/ZhZ0CZx8aqu+
+         WxkfiUmjSl1UAmA3zAiyPN5XLS+mlGiXXDUMz7Y8rd+vk+4MZCii6uXUoqOSORzYQuu6
+         pYB6G4Cz35bCUSgCxFpsDUeidzz0asSgeFvIWrPo/XLSHHfbIb2q/LAanv/DDOfTVDC3
+         sQOA24mZL8IXPxnzBZYjI0Dc17haIzUG8vg5iN/7Y4bxbmM3gRlr2hJBMIHDNf20kFqv
+         COJzTntURgRC7ohq5W6G6y3UkAyOPWc456fjxKY0VzdTqJrALjAuuE53S+djTzHcz21O
+         8akg==
+X-Gm-Message-State: AOJu0Yz79I1OlAjatQOYZrVyUI0bOfyGhcM1iOdV7tz2pOlcnwgf8fPR
+	z0i4euoTYYUzAk5u8Cms+/Tp20NK/4f3Ona/jD0T4D3L
+X-Google-Smtp-Source: AGHT+IEksvOQFTquaYp0cw2zfix+vUZMery65HMd0nRx/Vn1jFMP91llPxFwR411ldpGKetMmtfBIg==
+X-Received: by 2002:a17:906:5391:b0:9ae:5513:e475 with SMTP id g17-20020a170906539100b009ae5513e475mr218314ejo.9.1696265304414;
+        Mon, 02 Oct 2023 09:48:24 -0700 (PDT)
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com. [209.85.208.51])
+        by smtp.gmail.com with ESMTPSA id l9-20020a170906230900b00993004239a4sm17144621eja.215.2023.10.02.09.48.23
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Oct 2023 09:48:23 -0700 (PDT)
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-536ef8a7dcdso292a12.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Oct 2023 09:48:23 -0700 (PDT)
+X-Received: by 2002:a50:96d1:0:b0:522:4741:d992 with SMTP id
+ z17-20020a5096d1000000b005224741d992mr2415eda.4.1696265303058; Mon, 02 Oct
+ 2023 09:48:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20230927033124.1226509-1-dapeng1.mi@linux.intel.com>
- <20230927033124.1226509-8-dapeng1.mi@linux.intel.com> <20230927113312.GD21810@noisy.programming.kicks-ass.net>
- <ZRRl6y1GL-7RM63x@google.com> <20230929115344.GE6282@noisy.programming.kicks-ass.net>
- <ZRbxb15Opa2_AusF@google.com> <20231002115718.GB13957@noisy.programming.kicks-ass.net>
- <ZRrF38RGllA04R8o@gmail.com>
-Message-ID: <ZRroQg6flyGBtZTG@google.com>
-Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics event
-From: Sean Christopherson <seanjc@google.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, Like Xu <likexu@tencent.com>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Zhenyu Wang <zhenyuw@linux.intel.com>, Zhang Xiong <xiong.y.zhang@intel.com>, 
-	Lv Zhiyuan <zhiyuan.lv@intel.com>, Yang Weijiang <weijiang.yang@intel.com>, 
-	Dapeng Mi <dapeng1.mi@intel.com>, Jim Mattson <jmattson@google.com>, 
-	David Dunn <daviddunn@google.com>, Mingwei Zhang <mizhang@google.com>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+MIME-Version: 1.0
+References: <20230906160505.2431857-1-dianders@chromium.org>
+ <20230906090246.v13.3.I7209db47ef8ec151d3de61f59005bbc59fe8f113@changeid> <CAD=FV=UBw1-9=LPUydewyOg8oL2WMG+ZCQ=PBpe0CiCs-ToWSg@mail.gmail.com>
+In-Reply-To: <CAD=FV=UBw1-9=LPUydewyOg8oL2WMG+ZCQ=PBpe0CiCs-ToWSg@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 2 Oct 2023 09:48:08 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WCcwc71hSMQVQN4AYi7XhKpOwbOZnt8b9iGUgqmvzuKw@mail.gmail.com>
+Message-ID: <CAD=FV=WCcwc71hSMQVQN4AYi7XhKpOwbOZnt8b9iGUgqmvzuKw@mail.gmail.com>
+Subject: Re: [PATCH v13 3/7] arm64: smp: Remove dedicated wakeup IPI
+To: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Sumit Garg <sumit.garg@linaro.org>, 
+	Daniel Thompson <daniel.thompson@linaro.org>, Marc Zyngier <maz@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, 
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Lecopzer Chen <lecopzer.chen@mediatek.com>, 
+	Chen-Yu Tsai <wens@csie.org>, Tomohiro Misono <misono.tomohiro@fujitsu.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Masayoshi Mizuma <msys.mizuma@gmail.com>, 
+	Stephane Eranian <eranian@google.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	kgdb-bugreport@lists.sourceforge.net, Stephen Boyd <swboyd@chromium.org>, 
+	linux-perf-users@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
+	ito-yuichi@fujitsu.com, Chen-Yu Tsai <wenst@chromium.org>, jpoimboe@kernel.org, 
+	keescook@chromium.org, linux-kernel@vger.kernel.org, philmd@linaro.org, 
+	samitolvanen@google.com, scott@os.amperecomputing.com, vschneid@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 02, 2023, Ingo Molnar wrote:
-> 
-> * Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > On Fri, Sep 29, 2023 at 03:46:55PM +0000, Sean Christopherson wrote:
-> > 
-> > > > I will firmly reject anything that takes the PMU away from the host
-> > > > entirely through.
-> > > 
-> > > Why?  What is so wrong with supporting use cases where the platform owner *wants*
-> > > to give up host PMU and NMI watchdog functionality?  If disabling host PMU usage
-> > > were complex, highly invasive, and/or difficult to maintain, then I can understand
-> > > the pushback.  
-> > 
-> > Because it sucks.
+Hi,
+
+On Mon, Sep 25, 2023 at 5:39=E2=80=AFPM Doug Anderson <dianders@chromium.or=
+g> wrote:
 >
-> > You're forcing people to choose between no host PMU or a slow guest PMU.
+> Mark,
+>
+> On Wed, Sep 6, 2023 at 9:06=E2=80=AFAM Douglas Anderson <dianders@chromiu=
+m.org> wrote:
+> >
+> > +#ifdef CONFIG_ARM64_ACPI_PARKING_PROTOCOL
+> > +void arch_send_wakeup_ipi(unsigned int cpu)
+> > +{
+> > +       /*
+> > +        * We use a scheduler IPI to wake the CPU as this avoids the ne=
+ed for a
+> > +        * dedicated IPI and we can safely handle spurious scheduler IP=
+Is.
+> > +        */
+> > +       arch_smp_send_reschedule(cpu);
+>
+> I was backporting this to our ChromeOS kernels and our build test bot
+> noticed that arch_smp_send_reschedule() didn't exist in older kernels.
+> That's fine--I can always adjust this patch when backporting or
+> cherry-pick extra patches, but it made me wonder. Is there a reason
+> you chose to use arch_smp_send_reschedule() directly here instead of
+> smp_send_reschedule()? I guess the only difference is that you're
+> bypassing the tracing. Is that on purpose? Should we add a comment
+> about it, or change this to smp_send_reschedule()?
 
-Nowhere did I say that we wouldn't take patches to improve the existing vPMU
-support.  But that's largely a moot point because I don't think it's possible to
-improve the current approach to the point where it would provide a performant,
-functional guest PMU.
+FWIW, I posted a patch changing this to smp_send_reschedule(). Please
+yell if this is incorrect.
 
-> > And that's simply not a sane choice for most people --
-
-It's better than the status quo, which is that no one gets to choose, everyone
-gets a slow guest PMU.
-
-> > worse it's not a choice based in technical reality.
-
-The technical reality is that context switching the PMU between host and guest
-requires reading and writing far too many MSRs for KVM to be able to context
-switch at every VM-Enter and every VM-Exit.  And PMIs skidding past VM-Exit adds
-another layer of complexity to deal with.
-
-> > It's a choice out of lazyness, disabling host PMU is not a requirement
-> > for pass-through.
-
-The requirement isn't passthrough access, the requirements are that the guest's
-PMU has accuracy that is on par with bare metal, and that exposing a PMU to the
-guest doesn't have a meaningful impact on guest performance.
-
-> Not just a choice of laziness, but it will clearly be forced upon users
-> by external entities:
-> 
->    "Pass ownership of the PMU to the guest and have no host PMU, or you
->     won't have sane guest PMU support at all. If you disagree, please open
->     a support ticket, which we'll ignore."
-
-We don't have sane guest PMU support today.  In the 12+ years since commit
-f5132b01386b ("KVM: Expose a version 2 architectural PMU to a guests"), KVM has
-never provided anything remotely close to a sane vPMU.  It *mostly* works if host
-perf is quiesced, but that "good enough" approach doesn't suffice for any form of
-PMU usage that requires a high level of accuracy and precision.
-
-> The host OS shouldn't offer facilities that severely limit its own capabilities,
-> when there's a better solution. We don't give the FPU to apps exclusively either,
-> it would be insanely stupid for a platform to do that.
-
-The FPU can be effeciently context switched, guest state remains resident in
-hardware so long as the vCPU task is scheduled in (ignoring infrequrent FPU usage
-from IRQ context), and guest usage of the FPU doesn't require trap-and-emulate
-behavior in KVM.
-
-As David said, ceding the hardware PMU for all of kvm_arch_vcpu_ioctl_run()
-(module the vCPU task being scheduled out) is likely a viable alternative.
-
- : But it does mean that when entering the KVM run loop, the host perf system 
- : needs to context switch away the host PMU state and allow KVM to load the guest
- : PMU state.  And much like the FPU situation, the portion of the host kernel
- : that runs between the context switch to the KVM thread and VMENTER to the guest
- : cannot use the PMU.
-
-If y'all are willing to let KVM redefined exclude_guest to be KVM's outer run
-loop, then I'm all for exploring that option.  But that idea got shot down over
-a year ago[*].  Or at least, that was my reading of things.  Maybe it was just a
-misunderstanding because we didn't do a good job of defining the behavior.
-
-I am completely ok with either approach, but I am not ok with being nak'd on both.
-Because unless there's a magical third option lurking, those two options are the
-only ways for KVM to provide a vPMU that meets the requirements for slice-of-hardware
-use cases.
-
-[*] https://lore.kernel.org/all/YgPCm1WIt9dHuoEo@hirez.programming.kicks-ass.net
+https://lore.kernel.org/r/20231002094526.2.I2e6d22fc42ccbf6b26465a28a10e36e=
+05ccf3075@changeid
