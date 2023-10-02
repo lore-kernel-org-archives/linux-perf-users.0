@@ -1,62 +1,62 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEBA51E50B
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 17:33:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7AB1A711
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 17:33:11 +0000 (UTC)
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA88794
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 10:33:07 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1DEFB4
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 10:33:10 -0700 (PDT)
 Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 392HO7Ad011453;
-	Mon, 2 Oct 2023 17:33:04 GMT
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 392HOBOj011600;
+	Mon, 2 Oct 2023 17:33:07 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=wrpeBBJyZRSSiacyBALQ4oIoXXu1bXxjlJhYUzi5sJw=;
- b=fiBHbIRvhuHrBZxughOK604/G0KDSWnsVJWDMywoMGd2f5msG+YkGue+sCuGY+/d1Snr
- kQFXKI1mb3Xkqebf2QiNoem4U3Gao+Wz6zu7FpnTZLclgHwxQiJgFHgFkQiaqe2ZsENF
- iJL6gc7aXLNZJCSk2sDyksXnfxRE67nxlusIXJUj3PM+mOZSCgb51cXpLNQL6bFp1txX
- W/zQ1xKaGqzARktHnHjPujJ9M6s08xd4xe2A+DYw7o/h5esCS2FCxSZlFLAKZOxbuwqM
- idktSsBxHP15/CpMq0Snfh6ZO2+JPFaIxqG4sLjSXhAcjqNK4zzM4zkQICufVhJWH47W Pw== 
+ bh=xHviIjSIGtAjHbY83gxmWUsuMOT6BxdHNIbHYoS1Z48=;
+ b=l1r1XZ5Uskl4m0YVugdbQQTpJ4E1irddzE05z0qF4MOZhYicig2Od5L04NsBDEjYEHkz
+ yJUg8IrNy+3kGPn/Kq1Hi7rMMT/bLmDG1n3/YYtzSyDtu69uQS4MID5u274b4iR2/EVC
+ CSz/aox81OJB7Rp2g7s9g8AjdhIiTH39EkVjDsxXa+9VbUulDIH5mR5M6+O0ce3HUP9Q
+ MX4HdK+RvUNX5IjMAul3xLp6hGJ7k/lrvBjUbt3Z+dRt2rum+nV27QXb1p1mjO7jJzva
+ vN5Ii+Kl8uNXBPO+2o8XW1/rYZIbX/eaJircqxxLT9XR+Ry7o60Uq4Z1yE/y2HCHdUaz tw== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tg27m07jj-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tg27m07kp-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 02 Oct 2023 17:33:04 +0000
+	Mon, 02 Oct 2023 17:33:07 +0000
 Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 392HO9cb011491;
-	Mon, 2 Oct 2023 17:33:03 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tg27m07j6-1
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 392HPikp015611;
+	Mon, 2 Oct 2023 17:33:06 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tg27m07kd-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 02 Oct 2023 17:33:03 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 392H432m005863;
-	Mon, 2 Oct 2023 17:33:03 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tex0sbjya-1
+	Mon, 02 Oct 2023 17:33:06 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 392FrGC7007467;
+	Mon, 2 Oct 2023 17:33:05 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3teygk32xn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 02 Oct 2023 17:33:03 +0000
+	Mon, 02 Oct 2023 17:33:05 +0000
 Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 392HX0fO11010678
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 392HX2ma13042276
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 2 Oct 2023 17:33:00 GMT
+	Mon, 2 Oct 2023 17:33:02 GMT
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4446E20040;
+	by IMSVA (Postfix) with ESMTP id A79E92004B;
+	Mon,  2 Oct 2023 17:33:02 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9625720040;
 	Mon,  2 Oct 2023 17:33:00 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 33C4420043;
-	Mon,  2 Oct 2023 17:32:58 +0000 (GMT)
 Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com.com (unknown [9.171.16.145])
 	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  2 Oct 2023 17:32:58 +0000 (GMT)
+	Mon,  2 Oct 2023 17:33:00 +0000 (GMT)
 From: Aditya Gupta <adityag@linux.ibm.com>
 To: acme@kernel.org, jolsa@kernel.org, irogers@google.com, namhyung@kernel.org
 Cc: linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
         atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
         disgoel@linux.vnet.ibm.com
-Subject: [PATCH v4 1/4] perf check: introduce check subcommand
-Date: Mon,  2 Oct 2023 23:02:50 +0530
-Message-ID: <20231002173253.70891-2-adityag@linux.ibm.com>
+Subject: [PATCH v4 2/4] perf version: update --build-options to use 'supported_features' array
+Date: Mon,  2 Oct 2023 23:02:51 +0530
+Message-ID: <20231002173253.70891-3-adityag@linux.ibm.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20231002173253.70891-1-adityag@linux.ibm.com>
 References: <20231002173253.70891-1-adityag@linux.ibm.com>
@@ -68,14 +68,14 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: HWrCZYrmk4r2NNFlzUaNx2REhNDba934
-X-Proofpoint-ORIG-GUID: GqL8ZrdXJaAiZXnBWlvpD5bLnOp-8wFd
+X-Proofpoint-GUID: 1wsiDnSowll24ySLbDJvX-TPr9FMlRME
+X-Proofpoint-ORIG-GUID: PXoFvooVdfx0_r4Z5ou20pkzLSykhfG9
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-10-02_12,2023-10-02_01,2023-05-22_02
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
  malwarescore=0 phishscore=0 adultscore=0 priorityscore=1501 bulkscore=0
- impostorscore=0 mlxlogscore=999 lowpriorityscore=0 clxscore=1015
+ impostorscore=0 mlxlogscore=966 lowpriorityscore=0 clxscore=1015
  suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2309180000 definitions=main-2310020136
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -84,286 +84,73 @@ X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Currently the presence of a feature is checked with a combination of
-perf version --build-options and greps, such as:
+Now that the feature list has been duplicated in a global
+'supported_features' array, use that array instead of manually checking
+status of built-in features.
 
-    perf version --build-options | grep " on .* HAVE_FEATURE"
-
-Instead of this, introduce a subcommand "perf check --feature", with which
-scripts can test for presence of a feature, such as:
-
-    perf check --feature HAVE_FEATURE
-
-'perf check --feature' command is expected to have exit status of 0 if
-feature is built-in, and 1 if it's not built-in or if feature is not known.
-
-An array 'supported_features' has also been introduced that can be used by
-other commands like 'perf version --build-options', so that new features
-can be added in one place, with the array
+This helps in being consistent with commands such as 'perf check --feature',
+so commands can use the same array, and any new feature can be added at
+one place, in the 'supported_features' array
 
 Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
 ---
- tools/perf/Build                        |   1 +
- tools/perf/Documentation/perf-check.txt |  59 ++++++++++++
- tools/perf/builtin-check.c              | 122 ++++++++++++++++++++++++
- tools/perf/builtin.h                    |  18 ++++
- tools/perf/perf.c                       |   1 +
- 5 files changed, 201 insertions(+)
- create mode 100644 tools/perf/Documentation/perf-check.txt
- create mode 100644 tools/perf/builtin-check.c
+ tools/perf/builtin-version.c | 39 ++++++++----------------------------
+ 1 file changed, 8 insertions(+), 31 deletions(-)
 
-diff --git a/tools/perf/Build b/tools/perf/Build
-index aa7623622834..a55a797c1b5f 100644
---- a/tools/perf/Build
-+++ b/tools/perf/Build
-@@ -1,5 +1,6 @@
- perf-y += builtin-bench.o
- perf-y += builtin-annotate.o
-+perf-y += builtin-check.o
- perf-y += builtin-config.o
- perf-y += builtin-diff.o
- perf-y += builtin-evlist.o
-diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documentation/perf-check.txt
-new file mode 100644
-index 000000000000..78feff24cf1e
---- /dev/null
-+++ b/tools/perf/Documentation/perf-check.txt
-@@ -0,0 +1,59 @@
-+perf-check(1)
-+===============
-+
-+NAME
-+----
-+perf-check - check features in perf
-+
-+SYNOPSIS
-+--------
-+'perf check' [<options>]
-+
-+DESCRIPTION
-+-----------
-+With no options given, the 'perf check' just prints the perf version
-+on the standard output.
-+
-+If the option '--feature' is given, then status of feature is printed
-+on the standard output (unless '-q' is also passed), ie. whether it is
-+compiled-in/built-in or not.
-+Also, 'perf check --feature' returns with exit status 0 if the feature
-+is built-in, otherwise returns with exit status 1.
-+
-+OPTIONS
-+-------
-+-q::
-+		Do not print any messages or warnings
-+
-+--feature::
-+        Print whether a feature is compiled-in or not. A feature name/macro is
-+        required to be passed after this flag
-+
-+        Example Usage:
-+                perf check --feature libtraceevent
-+                perf check --feature HAVE_LIBTRACEEVENT
-+
-+        Supported feature names/macro:
-+                dwarf      /  HAVE_DWARF_SUPPORT
-+                dwarf_getlocations  /  HAVE_DWARF_GETLOCATIONS_SUPPORT
-+                libaudit   /  HAVE_LIBAUDIT_SUPPORT
-+                syscall_table       /  HAVE_SYSCALL_TABLE_SUPPORT
-+                libbfd     /  HAVE_LIBBFD_SUPPORT
-+                debuginfod /  HAVE_DEBUGINFOD_SUPPORT
-+                libelf     /  HAVE_LIBELF_SUPPORT
-+                libnuma    /  HAVE_LIBNUMA_SUPPORT
-+                numa_num_possible_cpus  /  HAVE_LIBNUMA_SUPPORT
-+                libperl    /  HAVE_LIBPERL_SUPPORT
-+                libpython  /  HAVE_LIBPYTHON_SUPPORT
-+                libslang   /  HAVE_SLANG_SUPPORT
-+                libcrypto  /  HAVE_LIBCRYPTO_SUPPORT
-+                libunwind  /  HAVE_LIBUNWIND_SUPPORT
-+                libdw-dwarf-unwind  /  HAVE_DWARF_SUPPORT
-+                zlib       /  HAVE_ZLIB_SUPPORT
-+                lzma       /  HAVE_LZMA_SUPPORT
-+                get_cpuid  /  HAVE_AUXTRACE_SUPPORT
-+                bpf        /  HAVE_LIBBPF_SUPPORT
-+                aio        /  HAVE_AIO_SUPPORT
-+                zstd       /  HAVE_ZSTD_SUPPORT
-+                libpfm4    /  HAVE_LIBPFM
-+                libtraceevent      /  HAVE_LIBTRACEEVENT
-diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
-new file mode 100644
-index 000000000000..32fe9d4fa374
---- /dev/null
-+++ b/tools/perf/builtin-check.c
-@@ -0,0 +1,122 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "builtin.h"
-+#include "color.h"
-+#include "util/debug.h"
-+#include "util/header.h"
-+#include <tools/config.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <string.h>
-+#include <subcmd/parse-options.h>
-+
-+struct check {
-+	const char *feature;
-+};
-+
-+static struct check check;
-+
-+static struct option check_options[] = {
-+	OPT_STRING(0, "feature", &check.feature, NULL, "check if a feature is built in"),
-+	OPT_BOOLEAN('q', "quiet", &quiet, "do not show any warnings or messages"),
-+	OPT_END(),
-+};
-+
-+static const char * const check_usage[] = {
-+	"perf check [<options>]",
-+	NULL
-+};
-+
-+struct feature_support supported_features[] = {
-+	FEATURE_SUPPORT("dwarf", HAVE_DWARF_SUPPORT),
-+	FEATURE_SUPPORT("dwarf_getlocations", HAVE_DWARF_GETLOCATIONS_SUPPORT),
-+	FEATURE_SUPPORT("libaudit", HAVE_LIBAUDIT_SUPPORT),
-+	FEATURE_SUPPORT("syscall_table", HAVE_SYSCALL_TABLE_SUPPORT),
-+	FEATURE_SUPPORT("libbfd", HAVE_LIBBFD_SUPPORT),
-+	FEATURE_SUPPORT("debuginfod", HAVE_DEBUGINFOD_SUPPORT),
-+	FEATURE_SUPPORT("libelf", HAVE_LIBELF_SUPPORT),
-+	FEATURE_SUPPORT("libnuma", HAVE_LIBNUMA_SUPPORT),
-+	FEATURE_SUPPORT("numa_num_possible_cpus", HAVE_LIBNUMA_SUPPORT),
-+	FEATURE_SUPPORT("libperl", HAVE_LIBPERL_SUPPORT),
-+	FEATURE_SUPPORT("libpython", HAVE_LIBPYTHON_SUPPORT),
-+	FEATURE_SUPPORT("libslang", HAVE_SLANG_SUPPORT),
-+	FEATURE_SUPPORT("libcrypto", HAVE_LIBCRYPTO_SUPPORT),
-+	FEATURE_SUPPORT("libunwind", HAVE_LIBUNWIND_SUPPORT),
-+	FEATURE_SUPPORT("libdw-dwarf-unwind", HAVE_DWARF_SUPPORT),
-+	FEATURE_SUPPORT("zlib", HAVE_ZLIB_SUPPORT),
-+	FEATURE_SUPPORT("lzma", HAVE_LZMA_SUPPORT),
-+	FEATURE_SUPPORT("get_cpuid", HAVE_AUXTRACE_SUPPORT),
-+	FEATURE_SUPPORT("bpf", HAVE_LIBBPF_SUPPORT),
-+	FEATURE_SUPPORT("aio", HAVE_AIO_SUPPORT),
-+	FEATURE_SUPPORT("zstd", HAVE_ZSTD_SUPPORT),
-+	FEATURE_SUPPORT("libpfm4", HAVE_LIBPFM),
-+	FEATURE_SUPPORT("libtraceevent", HAVE_LIBTRACEEVENT),
-+
-+	/* this should remain at end, to know the array end */
-+	FEATURE_SUPPORT(NULL, _)
-+};
-+
-+static void on_off_print(const char *status)
-+{
-+	printf("[ ");
-+
-+	if (!strcmp(status, "OFF"))
-+		color_fprintf(stdout, PERF_COLOR_RED, "%-3s", status);
-+	else
-+		color_fprintf(stdout, PERF_COLOR_GREEN, "%-3s", status);
-+
-+	printf(" ]");
-+}
-+
-+static void status_print(const char *name, const char *macro,
-+			 const char *status)
-+{
-+	printf("%22s: ", name);
-+	on_off_print(status);
-+	printf("  # %s\n", macro);
-+}
-+
+diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
+index e5859c70e195..e149d96c6dc5 100644
+--- a/tools/perf/builtin-version.c
++++ b/tools/perf/builtin-version.c
+@@ -46,41 +46,18 @@ static void status_print(const char *name, const char *macro,
+ 	printf("  # %s\n", macro);
+ }
+ 
+-#define STATUS(__d, __m)				\
+-do {							\
+-	if (IS_BUILTIN(__d))				\
+-		status_print(#__m, #__d, "on");		\
+-	else						\
+-		status_print(#__m, #__d, "OFF");	\
 +#define STATUS(feature)                                   \
 +do {                                                      \
 +	if (feature.is_builtin)                               \
 +		status_print(feature.name, feature.macro, "on");  \
 +	else                                                  \
 +		status_print(feature.name, feature.macro, "OFF"); \
-+} while (0)
-+
-+/**
-+ * check whether "feature" is built-in with perf
-+ *
-+ * returns:
-+ *    0: Built-in
-+ *    1: NOT built-in or Feature not known
-+ */
-+static int has_support(const char *feature)
-+{
-+	for (int i = 0; supported_features[i].name; ++i) {
-+		if ((strcmp(feature, supported_features[i].name) == 0) ||
-+		    (strcmp(feature, supported_features[i].macro) == 0)) {
-+			if (!quiet)
-+				STATUS(supported_features[i]);
-+			return !supported_features[i].is_builtin;
-+		}
-+	}
-+
-+	if (!quiet)
-+		color_fprintf(stdout, PERF_COLOR_RED, "Feature not known: %s", feature);
-+
-+	return 1;
-+}
-+
-+int cmd_check(int argc, const char **argv)
-+{
-+	argc = parse_options(argc, argv, check_options, check_usage,
-+			     PARSE_OPT_STOP_AT_NON_OPTION);
-+
-+	if (!quiet)
-+		printf("perf check %s\n", perf_version_string);
-+
-+	if (check.feature)
-+		return has_support(check.feature);
-+
-+	return 0;
-+}
-diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
-index f2ab5bae2150..9f895981bc9e 100644
---- a/tools/perf/builtin.h
-+++ b/tools/perf/builtin.h
-@@ -2,6 +2,23 @@
- #ifndef BUILTIN_H
- #define BUILTIN_H
+ } while (0)
  
-+#include <stddef.h>
-+#include <linux/compiler.h>
-+#include <tools/config.h>
-+
-+struct feature_support {
-+	const char *name;
-+	const char *macro;
-+	int is_builtin;
-+};
-+
-+#define FEATURE_SUPPORT(name_, macro_) { \
-+	.name = name_,                       \
-+	.macro = #macro_,                    \
-+	.is_builtin = IS_BUILTIN(macro_) }
-+
-+extern struct feature_support supported_features[];
-+
- void list_common_cmds_help(void);
- const char *help_unknown_cmd(const char *cmd);
+ static void library_status(void)
+ {
+-	STATUS(HAVE_DWARF_SUPPORT, dwarf);
+-	STATUS(HAVE_DWARF_GETLOCATIONS_SUPPORT, dwarf_getlocations);
+-#ifndef HAVE_SYSCALL_TABLE_SUPPORT
+-	STATUS(HAVE_LIBAUDIT_SUPPORT, libaudit);
+-#endif
+-	STATUS(HAVE_SYSCALL_TABLE_SUPPORT, syscall_table);
+-	STATUS(HAVE_LIBBFD_SUPPORT, libbfd);
+-	STATUS(HAVE_DEBUGINFOD_SUPPORT, debuginfod);
+-	STATUS(HAVE_LIBELF_SUPPORT, libelf);
+-	STATUS(HAVE_LIBNUMA_SUPPORT, libnuma);
+-	STATUS(HAVE_LIBNUMA_SUPPORT, numa_num_possible_cpus);
+-	STATUS(HAVE_LIBPERL_SUPPORT, libperl);
+-	STATUS(HAVE_LIBPYTHON_SUPPORT, libpython);
+-	STATUS(HAVE_SLANG_SUPPORT, libslang);
+-	STATUS(HAVE_LIBCRYPTO_SUPPORT, libcrypto);
+-	STATUS(HAVE_LIBUNWIND_SUPPORT, libunwind);
+-	STATUS(HAVE_DWARF_SUPPORT, libdw-dwarf-unwind);
+-	STATUS(HAVE_ZLIB_SUPPORT, zlib);
+-	STATUS(HAVE_LZMA_SUPPORT, lzma);
+-	STATUS(HAVE_AUXTRACE_SUPPORT, get_cpuid);
+-	STATUS(HAVE_LIBBPF_SUPPORT, bpf);
+-	STATUS(HAVE_AIO_SUPPORT, aio);
+-	STATUS(HAVE_ZSTD_SUPPORT, zstd);
+-	STATUS(HAVE_LIBPFM, libpfm4);
+-	STATUS(HAVE_LIBTRACEEVENT, libtraceevent);
++	for (int i = 0; supported_features[i].name; ++i)
++		STATUS(supported_features[i]);
+ }
  
-@@ -9,6 +26,7 @@ int cmd_annotate(int argc, const char **argv);
- int cmd_bench(int argc, const char **argv);
- int cmd_buildid_cache(int argc, const char **argv);
- int cmd_buildid_list(int argc, const char **argv);
-+int cmd_check(int argc, const char **argv);
- int cmd_config(int argc, const char **argv);
- int cmd_c2c(int argc, const char **argv);
- int cmd_diff(int argc, const char **argv);
-diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-index d3fc8090413c..6514f4121c49 100644
---- a/tools/perf/perf.c
-+++ b/tools/perf/perf.c
-@@ -50,6 +50,7 @@ static struct cmd_struct commands[] = {
- 	{ "archive",	NULL,	0 },
- 	{ "buildid-cache", cmd_buildid_cache, 0 },
- 	{ "buildid-list", cmd_buildid_list, 0 },
-+	{ "check",	cmd_check,	0 },
- 	{ "config",	cmd_config,	0 },
- 	{ "c2c",	cmd_c2c,	0 },
- 	{ "diff",	cmd_diff,	0 },
+ int cmd_version(int argc, const char **argv)
 -- 
 2.41.0
 
