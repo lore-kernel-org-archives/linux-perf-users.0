@@ -1,151 +1,174 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 608664681
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 05:55:00 +0000 (UTC)
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A99CB4
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 22:54:59 -0700 (PDT)
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3935HKPo002132;
-	Tue, 3 Oct 2023 05:54:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=n5ETztYm3DlDZu1NMb2yOZCBaBwhJGm8z9Fum4O1sDU=;
- b=HXD4T/D98BqtvmxsWC9yao5D5rppvHibvWl2qX+x7QPZazt4ffyB/1mgleNbLKBUQbyg
- VPjvOoqLCXCz7ggyv8FNHYqyYp+6TPQJQpVt5NbYBopRreeS313kTB9PJv0T02v7OOcJ
- YGaIXAuldmeYKI2d9OmfkMOdxZMDm1XVuBBme/lalQUz9/T23eaZqfLA+yMXgMVWtJJo
- Wl7Ldguzf0e+l6k3XvfpXM73WcOwxN0bDDYu8rgQilvEI0MkpVgtsc3LNtKw/hGgjVBM
- 9LhK+X5GaBo8H+Ik5jTedBGleojsXu0qgJpjAQIcf4InMnYbhfNbJXQorAuQuORSrO5Y Fw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tgcp0h3hm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Oct 2023 05:54:57 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3935oj4s020639;
-	Tue, 3 Oct 2023 05:54:56 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tgcp0h3h6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Oct 2023 05:54:56 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3935Em6h017676;
-	Tue, 3 Oct 2023 05:54:55 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tey0my5mr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Oct 2023 05:54:55 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3935sqDa23986776
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 3 Oct 2023 05:54:52 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2A69220040;
-	Tue,  3 Oct 2023 05:54:52 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 56AEB20067;
-	Tue,  3 Oct 2023 05:54:50 +0000 (GMT)
-Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.in.ibm.com (unknown [9.109.199.72])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  3 Oct 2023 05:54:50 +0000 (GMT)
-From: Aditya Gupta <adityag@linux.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, irogers@google.com, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com
-Subject: [PATCH v5 4/4] tools/perf/tests: Update probe_vfs_getname.sh script to use perf check --feature
-Date: Tue,  3 Oct 2023 11:24:40 +0530
-Message-ID: <20231003055440.111907-5-adityag@linux.ibm.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20231003055440.111907-1-adityag@linux.ibm.com>
-References: <20231003055440.111907-1-adityag@linux.ibm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADB010FC
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 06:36:41 +0000 (UTC)
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2057.outbound.protection.outlook.com [40.107.102.57])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B00C58E;
+	Mon,  2 Oct 2023 23:36:40 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kt9W3h5zvQo9Bu7fsL3L+GIDO727eU9pigJJhBjoQQLjjh6/oFRw3ucmP6z/u/hL0vHa/OrJa4Y3NV6J+WyKHyoXGIg5eYAZPsPO+59h1Q58u5tb1HqVOeRpBG2AiPtoT7qapVqKN3MT5Nxb5cLalkuZD13u7szAUAXoL13IEakkmJ5IUKP1RAPi0y6IgcA/mUakS1tkb4DMq5zM/KPu7UhQZukV4QA049Tf9+C5vRrJ+7D1fCIjs4Q9gBjnQA5JKYYpnauBzjKPmDHs6ktZJuAVdkmRJAi/7i+y7Zxw8aaf0hEhi8DAciRyTWftkxQlzJOOLEmRRdHWRJmM978G8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3xxKAg0PIb61KY+HwHmXrOVRDacwz6BPcVGu1O/vqco=;
+ b=JEgXrEUe3jBK5RZj7ClAyqV+3mgkdPnQ8invEhFE9Qrk/RIXvE/vfARPgpSe3jjFfQ7C769VCjteWyLQy28Dh29xfScrveavUseh6hNvbamXMILwnKtELiqPF+Q0JXkZgIbQaDW0CBqrrsc49qQY5mLQvJFX4xlcAHu9Ix1lXbbTlSbVOxoccGYaYpQXe9j055ReJUpm9Wk4p8uHSiQtBpjM1vdbqmw8spZMzvQenfGOVyw+lEUOM7MP9B1pZ4cyLl/Nu5XzLE+1mXGvL9zjLFsvkpvjFwC4GFdvC3IcMM1bRt+OhEbMCGrnRPZb+EY60+oGYRnNOb4h6hJ/v3+6aQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3xxKAg0PIb61KY+HwHmXrOVRDacwz6BPcVGu1O/vqco=;
+ b=xT1aDz6FYNO/m4gAENlfwzmxO+oWwrlAxl0toVgnYOUXAifrJZNqEmM0X1fJeZGlD0Ct6atIoyNxWRpFWejs/NyYhPzPR4nBcWSIEL5Lbt9d98dl+xxOu6t5ob4t4vwuCeuOhSJKhNws2xdiJ4mU10mqg/Ci4ab8KVdMI6HGaoc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by CH3PR12MB8969.namprd12.prod.outlook.com (2603:10b6:610:17c::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.31; Tue, 3 Oct
+ 2023 06:36:38 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::a4ed:10a6:876a:10d7]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::a4ed:10a6:876a:10d7%3]) with mapi id 15.20.6838.024; Tue, 3 Oct 2023
+ 06:36:38 +0000
+Message-ID: <a34053f8-233f-3ea3-0f74-863f8de2e7b2@amd.com>
+Date: Tue, 3 Oct 2023 12:06:12 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics
+ event
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Sean Christopherson <seanjc@google.com>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Kan Liang <kan.liang@linux.intel.com>, Like Xu <likexu@tencent.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Zhenyu Wang <zhenyuw@linux.intel.com>,
+ Zhang Xiong <xiong.y.zhang@intel.com>, Lv Zhiyuan <zhiyuan.lv@intel.com>,
+ Yang Weijiang <weijiang.yang@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
+ Jim Mattson <jmattson@google.com>, David Dunn <daviddunn@google.com>,
+ Mingwei Zhang <mizhang@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@kernel.org>, Manali Shukla <manali.shukla@amd.com>,
+ Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20230927033124.1226509-1-dapeng1.mi@linux.intel.com>
+ <20230927033124.1226509-8-dapeng1.mi@linux.intel.com>
+ <20230927113312.GD21810@noisy.programming.kicks-ass.net>
+ <ZRRl6y1GL-7RM63x@google.com>
+ <20230929115344.GE6282@noisy.programming.kicks-ass.net>
+ <957d37c8-c833-e1d3-2afb-45e5ef695b22@amd.com>
+ <20231002122909.GC13957@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+In-Reply-To: <20231002122909.GC13957@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0153.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:26::8) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: uoWKyCBcExvTgMSqRNh0pYdfZHM4Eit4
-X-Proofpoint-ORIG-GUID: 6rDGmGXCAb7fQ9wI0A4X7Urbg4Safc-o
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-03_03,2023-10-02_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- malwarescore=0 priorityscore=1501 impostorscore=0 suspectscore=0
- bulkscore=0 mlxlogscore=999 mlxscore=0 phishscore=0 lowpriorityscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2310030044
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,
-	RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|CH3PR12MB8969:EE_
+X-MS-Office365-Filtering-Correlation-Id: ddb88878-350b-4370-06d1-08dbc3db0d16
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	dNjXJHkegZ6ozQOd2QgzTozwGaECYoLyZe3MFYL6MCMvX/vxqx1InnT2hFkROi2J65HBpf6qxQbc9V3DP0rj3poMz/YrylkqjO7GM9oxe7GHLv3iX1zgKAzSaBjxHh0+6ttKKZF4YuwroEwnYpdAGkRTipWUNx5TfrDshr02HAuVKFpSRB5xt/dTOEDoukgjzyWSYo3R11GMuDTah4wEbJlqm3he2MIfni92OEa0JrXOjz9o/ylKloYKiqBuZw1mpXPjFJxm09MRtRI3ibVgH0VnSwWJkR0XSiMXcuQEIwclBVoCfQMzoZ+LebjVQ/7LdJw8B7quhGCvXPtzi95K8ZtvTDOngBHEqG3vFFuC471vkPeNa/t5hYQ3Zb5BhuTAowg+oSr4PZsLN01L1kqudrugj0Omr5/vNoeAPR6Z/If1Eo5IrNJaRAQD+RbRcTHFF5A7Hkc+fzbExBA2dEJg/aQxyvDoy6/RCVPDw1CBbzofiNa5rSOfHmY2mHY/n4D1LnfoSJtNhuh1mqdN7v8q06gJ9soP58t8+3cfZroe3i9Y4d/cFPJ5u30zuZKBmBG062jnbNLR+iGidDCJArpNQH3bxZZ1449py0XHPE5UDil2wze+qrTFoK03w8tiaXlnNYuHlBYnjlyL/9izo9GhsQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(376002)(39860400002)(346002)(396003)(136003)(230922051799003)(186009)(1800799009)(451199024)(64100799003)(31686004)(53546011)(2616005)(6486002)(6512007)(6506007)(31696002)(38100700002)(36756003)(86362001)(478600001)(7416002)(26005)(2906002)(966005)(6666004)(4326008)(8676002)(316002)(8936002)(41300700001)(66476007)(5660300002)(54906003)(44832011)(66946007)(6916009)(66556008)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TDlOeWNLNGl3Ylh3eWhRQmlvRjY0MFVuUXdDYlQvbWNEbEowVW5kOHc4M1dq?=
+ =?utf-8?B?WEVpRW8yaEdRdW5RcmdtTDJGdW94UkZjUGUvRXF4Mk5kTzlmdk9Jd0RYZVBl?=
+ =?utf-8?B?dTFwRDdZbWx0ZzJzU29OV201T3lobm10WFN4OWt3akJxU2haWm1adG1kMnVM?=
+ =?utf-8?B?MEt5TndXa2RVWUNwV0R1d3J2L3lOUEJlMkU1VU1RNkh0YWhKRzRGaUpUUGZp?=
+ =?utf-8?B?a2dwOHFWNCtWdnRtYytHaXJVMmttL3p6SVg3bEhjWGRYK2c5Q01SMG8zNFZJ?=
+ =?utf-8?B?M1lrdzdmd2NMM0txZHh1aHc3NGNGU0tMdU9pa0dBemkzaE5HZDNwVHM5ZWwx?=
+ =?utf-8?B?Z0ZKZUJKS25HM0FFZDQ3cm04eldCajRmTDVBVlQwRndkZG41WHo4dVM4SHB6?=
+ =?utf-8?B?bXpBalBsZE1ZaFF4TXVvem0yQXdDWk1keDFPS0ZKR29kb2lYQmxUWmdycUV2?=
+ =?utf-8?B?NFhnQmZUOFYzQlpNenhMWVlsNDk2ZXZzUG53ck1TSkZ1eGMzdG1ndW1xbDJ5?=
+ =?utf-8?B?aDE0SkkwOW9WQ0VHa1NYYnNRd3JDcS9TRmRGQjZnTFA4TCtpUWQ2TDNFa01h?=
+ =?utf-8?B?VDFyY3JVM2Y0bm5oOGl4TG9nRzZJbjcrMCtVMXpjYnB6eHdKaFVJOFFTaUxI?=
+ =?utf-8?B?WEpDUkQvUFBSMi96dGdoS2NJazdBL1VsWWdMUjlwVXVCakphTTl4VDRiRW56?=
+ =?utf-8?B?c0RsMUNOS2hYMGt6dW5LdWxDbWpNQUpYNGpnVTZreExJTmJiblZKRjNwRXhn?=
+ =?utf-8?B?SnBoc0poT1d4aE1pYTYxK1cvVkIxZzV6T2w5SVRGeEpDVXNLdDZnM1M2MUdU?=
+ =?utf-8?B?dmdzZlR5OWdzQU54cVl5WW1JWXdMZ0hWNU9BVTQ2bWwvaU5KZmZLd1VsaThE?=
+ =?utf-8?B?eFBLVjAxYS9Mb3RhL1BTckNMUVVlclhhQWZ5cmE5Y1RUNUxPR29IaHlzbTRX?=
+ =?utf-8?B?LzJaWW45eExoTHQwN2xIR3o3WmhvMTJWTnRGWURMTjV4OTN3d1o3Y2pJaUgr?=
+ =?utf-8?B?bitOaFdoUGcraGZzanUwQnhTakZyRkhXUXVEN3R2SnF4OVIrcjltSVU0VXhl?=
+ =?utf-8?B?QlhjajEwQ05HNU9pcGZvZmZhYkN0bTFCUjVabXpGNnZXZ3gvSEk1TDNpbzVa?=
+ =?utf-8?B?ZUc1UnlLVVJKenFQeWd6ZXJ3SnZLUU9IOC9IbFJpaExFMTllTHYvVjFLOEts?=
+ =?utf-8?B?Y0hHWGdrYUpOeHk0OUlaclRzWTA0U3d2clp2amNjdW1tVmZGZ2V2aitxUG9s?=
+ =?utf-8?B?NVJ0ZkFwVnY3T0hydHVBZlNodllBWHJFMFFXUGhJSlEvMHRzRlMxSlhEN3Ja?=
+ =?utf-8?B?cFBkQnJVMktPVDBheEJnYzIrRDJicnFJVEc1bVRsdDJzZTQwUnJmUEFxd29C?=
+ =?utf-8?B?RzBTa2htK01Gd1hBU1BobkIxWUp0ZGtmZnNLZjE0Qi9kK1ptK0VoNU9wcXVR?=
+ =?utf-8?B?RkVtKzZkYVRJUmx1UlozaUJjUzhjdVlPangxTmRUTys5dWZxWHd0SEZmbTNG?=
+ =?utf-8?B?WGNJRXFxT1VTT2U0a1pLaUpPVVhKRDNLZjFSQ3BvbTlhSHA3aVRzY2RjRzFZ?=
+ =?utf-8?B?MFI3MWFKY0RIZGk3Z2RXZDZIM3R4V3ZHd2lTU0Y2MzJ1U1JQZkoveVpwaWxI?=
+ =?utf-8?B?N0dQSjNlVS9WeUgwZmtNMXNwTUVKaUErSlhvQ0k2TktVaXlvWDFtMDZoK3VD?=
+ =?utf-8?B?SG1wZFVXUlp5NVMzV1RQRk90eHlTb293RDRUKytyZXdod3ZvSDRjc0NXU3dv?=
+ =?utf-8?B?c3NGZmdoTmczZ284THBFY2FnM0ExWmpNWVJpZU5KbjJjUmtlbTdNSzE4ZTJN?=
+ =?utf-8?B?OUFybjFkOFVjY2FVSkNmcGlYNXBmUlZZRGpSUDNsUU82T0taNktYalJDRnFn?=
+ =?utf-8?B?UG1OK0l3VXJ5bldrVHBxN1R0d29Qd0ttaGFOdzlVSWJDdjFTVk1xUmh2dHBn?=
+ =?utf-8?B?OXV1eFd6MEdDUndrRG5YeWI2TU8wa2gvTDZjc2dsSmNFOGpQZEp0S1JicFk1?=
+ =?utf-8?B?aEVXTmxKMGcyWFpMTXUremNOMllBclduTng2SHZMVk5kSlFWUGJNT2d0SlpB?=
+ =?utf-8?B?Y3Y4bms1dXR4djZxWE02NGJRNHpnb0QyaTZpekdZZmU0VVhsQ2k2Tk81aHFM?=
+ =?utf-8?Q?5xJSr2yVrN8dlePQNZ28MRuzs?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ddb88878-350b-4370-06d1-08dbc3db0d16
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Oct 2023 06:36:19.1407
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: W0qNnjrZ1fLW53Bayv42D0WkQVaALQJVRzfA7S7s6l0dBsoJS9+5yWrAkgRE+DVcteoaTs2fqc86WqkH14T5eQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8969
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+	NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+	SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+On 02-Oct-23 5:59 PM, Peter Zijlstra wrote:
+> On Fri, Sep 29, 2023 at 08:50:07PM +0530, Ravi Bangoria wrote:
+>> On 29-Sep-23 5:23 PM, Peter Zijlstra wrote:
+> 
+>>> I don't think you need to go that far, host can use PMU just fine as
+>>> long as it doesn't overlap with a vCPU. Basically, if you force
+>>> perf_attr::exclude_guest on everything your vCPU can haz the full thing.
+> 
+> ^ this..
+> 
+>> How about keying off based on PMU specific KVM module parameter? Something
+>> like what Manali has proposed for AMD VIBS? Please see solution 1.1:
+>>
+>> https://lore.kernel.org/r/3a6c693e-1ef4-6542-bc90-d4468773b97d@amd.com
+> 
+> So I hadn't read that, but isn't that more or less what I proposed
+> above?
 
-In probe_vfs_getname.sh, current we use "perf record --dry-run"
-to check for libtraceevent and skip the test if perf is not
-build with libtraceevent. Change the check to use "perf check --feature"
-option
+Yes, it's pretty much same as:
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- tools/perf/tests/shell/lib/probe_vfs_getname.sh           | 4 ++--
- tools/perf/tests/shell/record+probe_libc_inet_pton.sh     | 5 ++++-
- tools/perf/tests/shell/record+script_probe_vfs_getname.sh | 5 ++++-
- 3 files changed, 10 insertions(+), 4 deletions(-)
+   "Like I wrote, all we need to do is ensure vCPU tasks will never have a
+   perf-event scheduled that covers guest mode. Currently this would be
+   achievable by having event creation for both:
 
-diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-index bf4c1fb71c4b..368a55c02134 100644
---- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-@@ -27,7 +27,7 @@ skip_if_no_debuginfo() {
- # check if perf is compiled with libtraceevent support
- skip_no_probe_record_support() {
- 	if [ $had_vfs_getname -eq 1 ] ; then
--		perf record --dry-run -e $1 2>&1 | grep "libtraceevent is necessary for tracepoint support" && return 2
--		return 1
-+		perf check -q --feature libtraceevent && return 1
-+		return 2
- 	fi
- }
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index 89214a6d9951..0c00e94b83ff 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -58,7 +58,10 @@ trace_libc_inet_pton_backtrace() {
- 
- 	# Check presence of libtraceevent support to run perf record
- 	skip_no_probe_record_support "$event_name/$eventattr/"
--	[ $? -eq 2 ] && return 2
-+	if [ $? -eq 2 ]; then
-+		echo "WARN: Skipping test trace_libc_inet_pton_backtrace. No libtraceevent support."
-+		return 2
-+	fi
- 
- 	perf record -e $event_name/$eventattr/ -o $perf_data ping -6 -c 1 ::1 > /dev/null 2>&1
- 	# check if perf data file got created in above step.
-diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-index 7f664f1889d9..c7416d21fc92 100755
---- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-@@ -19,7 +19,10 @@ record_open_file() {
- 	echo "Recording open file:"
- 	# Check presence of libtraceevent support to run perf record
- 	skip_no_probe_record_support "probe:vfs_getname*"
--	[ $? -eq 2 ] && return 2
-+	if [ $? -eq 2 ]; then
-+		echo "WARN: Skipping test record_open_file. No libtraceevent support"
-+		return 2
-+	fi
- 	perf record -o ${perfdata} -e probe:vfs_getname\* touch $file
- }
- 
--- 
-2.41.0
+    - CPU events without attr::exclude_guest=1, and
+    - task events for vCPU task of interest without attr::exclude_guest=1
 
+   error with -EBUSY or something."
+
+Thanks,
+Ravi
