@@ -1,139 +1,118 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D3ACA61
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 07:47:59 +0000 (UTC)
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4410DAC
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 00:47:57 -0700 (PDT)
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3937fxJi013819;
-	Tue, 3 Oct 2023 07:47:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=dFT5PqHWVBVRgRf1w7hkI2DyIK0y1miyGJCr9AYihaM=;
- b=PuxNGo/0rOHG5msgNhaX2+DI15PhMGqGKnrgvJAarLnr/HAi6OTeK6PduPQM5c5FDc3p
- VEKug1MrxexWLPy6YvSKsOl7s2Euo0SnIdVscKDIHJkGAxCCWtthju89O+r6zPH2vSKs
- pbYvo8TNJDosv8gRO0OLPeUSjtdLMI5uEddkZXqQ1zM6+TS44fbigu/fTy5Lmeh2KjoV
- JvhBmWABWOpA8o/RlqIXkMieh3+0eHYaLLlteS80aZqZrdDe8Z6wc9dI+n8qFkbrfz/5
- JmRGO4Q45hkAX6edXQT7fV7IAt9FM5qjdJdANQrqstobLl1+HwLAPDCGLbbKSftjK22d wQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tgesy860b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Oct 2023 07:47:42 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3937gwoD017317;
-	Tue, 3 Oct 2023 07:47:41 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tgesy8603-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Oct 2023 07:47:41 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3937SsYa017644;
-	Tue, 3 Oct 2023 07:47:41 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tey0myvns-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Oct 2023 07:47:41 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3937ldZR11535032
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 3 Oct 2023 07:47:39 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0F10120040;
-	Tue,  3 Oct 2023 07:47:39 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6EB8C20043;
-	Tue,  3 Oct 2023 07:47:36 +0000 (GMT)
-Received: from [9.171.39.117] (unknown [9.171.39.117])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  3 Oct 2023 07:47:36 +0000 (GMT)
-Message-ID: <3fb9bd59-afaf-a651-16b7-d62f45ca472a@linux.ibm.com>
-Date: Tue, 3 Oct 2023 13:17:35 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH 0/3] Fix for shellcheck issues with latest scripts in
- tests/shell
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
-        jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
-        namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, disgoel@linux.vnet.ibm.com
-References: <20230929041133.95355-1-atrajeev@linux.vnet.ibm.com>
-Content-Language: en-US
-From: kajoljain <kjain@linux.ibm.com>
-In-Reply-To: <20230929041133.95355-1-atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: S7WI6bn567ncmGnHGV17pwArAObB0rhs
-X-Proofpoint-GUID: PQT5uEn6mq69yuCAalyMGXOsajv0R765
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702B96126
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 07:49:17 +0000 (UTC)
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 491A6A9;
+	Tue,  3 Oct 2023 00:49:15 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-406618d080eso6031655e9.2;
+        Tue, 03 Oct 2023 00:49:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696319354; x=1696924154; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=F4uGm4UsgcR7Wz0vCxNV3ZjfJf/Okbz0Af+MHqDGOL8=;
+        b=IFiy0DvNGYoUPT0kPDi3wkqhtzdv2pzpiv+QRdtxfBYLzfTlsqzZVPQPgZ7KCl9f4k
+         p2KfqyfTeeIUWI1CenznUqbS8c5uGFMw1fy3DYr48duH5+K6Z5CXds+2q81cGBoBngVy
+         sQb25vUbmgoyBsjvbK0VYpKyogJjkPgEI3UpywXBC6JkjyjzaFVUdD5r/QAkuf8bCf+n
+         mXzqtfhQlWMoY6DH8Phh8t0iOzLaQnMdNZoNlLgnN8b8no67gkrMe9GhqSEDOnfA60ad
+         4pwxfBanC2q/BIepcyewElXWVKJxJyw0OaijWh8TTWq/oTy6Vqf6xoKT0XZFfc6czZhA
+         S6+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696319354; x=1696924154;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=F4uGm4UsgcR7Wz0vCxNV3ZjfJf/Okbz0Af+MHqDGOL8=;
+        b=w0XDqdp7Ukidjl0uzDbEH/RsOHY3uWGgZFgnjo+TMFt88nLn+tUqtORXzYKQ75eTR3
+         KpFDXqeuNgqOfOS7XGywEimq4T52Oc/kFxCLC3zuzFKBSIDyGFCfO+06ElwERojPLYV9
+         a5uXGvYiq/pGSF9MT4ZsZij4h+SZ3YZbfskcz8enWu92XQB3B9e05hKE6BUpARQY1W6T
+         xalavDjvipeDl1Qj6DsOJsNbscRnRgPgzaBhDDa6fNK2d/aUeqG420phe1cz0JCWWvwb
+         hkPhsgvGhAGg8YALhpotAkWAxE5YdSeDWb7VpxWZydfkAIyuar/krMmjpQZmYdgEVC2w
+         FxKQ==
+X-Gm-Message-State: AOJu0Yyo7pekdLFZwSFZImbBj4EqJlQYN0zHLAUCsUAbierqVLg4hWpG
+	CSOrbWuWyCOhzrxYRqGUJ7KqLmq7QZou0Q==
+X-Google-Smtp-Source: AGHT+IGM0toQ5phS7q3cqK/tEymfpWpGNUL/kuRaKervb++r8PKGOM+/7BfeUmkMJOrBrfRpZkpSOw==
+X-Received: by 2002:a7b:ce16:0:b0:405:3803:5588 with SMTP id m22-20020a7bce16000000b0040538035588mr11036440wmc.22.1696319353524;
+        Tue, 03 Oct 2023 00:49:13 -0700 (PDT)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id n9-20020a05600c294900b00401c595fcc7sm8766499wmd.11.2023.10.03.00.49.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Oct 2023 00:49:13 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	linux-perf-users@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] perf: fix spelling mistake "parametrized" -> "parameterized"
+Date: Tue,  3 Oct 2023 08:49:11 +0100
+Message-Id: <20231003074911.220216-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-03_04,2023-10-02_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=936
- malwarescore=0 clxscore=1011 adultscore=0 impostorscore=0 mlxscore=0
- lowpriorityscore=0 phishscore=0 bulkscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2310030056
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,
-	RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Patchset looks fine to me.
+There are spelling mistakes in comments and a pr_debug message. Fix them.
 
-Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ tools/perf/tests/parse-events.c        | 4 ++--
+ tools/perf/tests/shell/stat_all_pmu.sh | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-thanks,
-Kajol Jain
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index f78be21a5999..e52f45c7c3d1 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -2549,7 +2549,7 @@ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest
+ 			if (strchr(ent->d_name, '.'))
+ 				continue;
+ 
+-			/* exclude parametrized ones (name contains '?') */
++			/* exclude parameterized ones (name contains '?') */
+ 			n = snprintf(pmu_event, sizeof(pmu_event), "%s%s", path, ent->d_name);
+ 			if (n >= PATH_MAX) {
+ 				pr_err("pmu event name crossed PATH_MAX(%d) size\n", PATH_MAX);
+@@ -2578,7 +2578,7 @@ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest
+ 			fclose(file);
+ 
+ 			if (is_event_parameterized == 1) {
+-				pr_debug("skipping parametrized PMU event: %s which contains ?\n", pmu_event);
++				pr_debug("skipping parameterized PMU event: %s which contains ?\n", pmu_event);
+ 				continue;
+ 			}
+ 
+diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
+index c77955419173..d2a3506e0d19 100755
+--- a/tools/perf/tests/shell/stat_all_pmu.sh
++++ b/tools/perf/tests/shell/stat_all_pmu.sh
+@@ -4,7 +4,7 @@
+ 
+ set -e
+ 
+-# Test all PMU events; however exclude parametrized ones (name contains '?')
++# Test all PMU events; however exclude parameterized ones (name contains '?')
+ for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph:]]\+[[:space:]]//g'); do
+   echo "Testing $p"
+   result=$(perf stat -e "$p" true 2>&1)
+-- 
+2.39.2
 
-On 9/29/23 09:41, Athira Rajeev wrote:
-> shellcheck was run on perf tool shell scripts as a pre-requisite
-> to include a build option for shellcheck discussed here:
-> https://www.spinics.net/lists/linux-perf-users/msg25553.html
-> 
-> And fixes were added for the coding/formatting issues in
-> two patchsets:
-> https://lore.kernel.org/linux-perf-users/20230613164145.50488-1-atrajeev@linux.vnet.ibm.com/
-> https://lore.kernel.org/linux-perf-users/20230709182800.53002-1-atrajeev@linux.vnet.ibm.com/
-> 
-> Three additional issues were observed and fixes are part of:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/log/?h=perf-tools-next
-> 
-> With recent commits in perf, other three issues are observed.
-> shellcheck version: 0.6.0
-> 
-> With this patchset:
-> 
-> for F in $(find tests/shell/ -perm -o=x -name '*.sh'); do shellcheck -S warning $F; done
-> echo $?
-> 0
-> 
-> The changes are with recent commits ( which is mentioned in each patch)
-> for ock_contention, record_sideband and test_arm_coresight testcases.
-> The changes are made on top of:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/log/?h=perf-tools-next
-> 
-> Athira Rajeev (3):
->   perf tests test_arm_coresight: Fix the shellcheck warning in latest
->     test_arm_coresight.sh
->   tools/perf/tests Ignore the shellcheck SC2046 warning in
->     lock_contentio
->   tools/perf/tests: Fix shellcheck warning in record_sideband.sh test
-> 
->  tools/perf/tests/shell/lock_contention.sh    | 1 +
->  tools/perf/tests/shell/record_sideband.sh    | 2 +-
->  tools/perf/tests/shell/test_arm_coresight.sh | 4 ++--
->  3 files changed, 4 insertions(+), 3 deletions(-)
-> 
