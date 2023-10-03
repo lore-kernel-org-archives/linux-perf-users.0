@@ -1,134 +1,230 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43E5D1391
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 05:10:02 +0000 (UTC)
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D1AAE4
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 22:10:00 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-50302e8fca8so3562e87.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 02 Oct 2023 22:10:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696309799; x=1696914599; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nuCQrq07t28e/w8SE3k84A5e3jrsGC5/Njzxci1gOnM=;
-        b=vImCd6G1Y+pKOMGE2CajqhHxMzgQHmJugXVu3fvu0SAGfc+M0NFkn7DcVlJpSjYuFU
-         vM2EZkN7CNWLF/LIH1az4Gsz5u8F28APE6mfkCwKPpzRff3NWeWlwsxR2ZDh5lejsDCj
-         Pl0bPQyJV7X46dAeb5TOfPiLy3tKrT/IvtY95XZaX9+j/eJvRK/5tBemBHms5a6h2TT8
-         TZkQkGoRooRxg6L2CU7Fycy4iBUCW8GQ/6Kdn7/jmm8hmzCohTz8PTUkZzgeLec2Yzbc
-         Pe6VaRp3rZyPluUirJXpj6EaU3+F8U9WTK6pPzzT72lcrQpzMpaIpnADeD4G72675Syx
-         DT6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696309799; x=1696914599;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nuCQrq07t28e/w8SE3k84A5e3jrsGC5/Njzxci1gOnM=;
-        b=Iy8Xg5f1y4YPzTA3yo6+DmxbFvMhnJyaZ08jYBiscXPXBfdOGhwGmeLc3j3HFOHH6B
-         hX7q9TwXniLpq/0UUszaX1st//IVTlKFk4Hu5/jrRQqf2URBltE7RJ/moWRxVBJm/mcz
-         tiHKo4HsJsGmxstIBn4+5nloUxWJ8qCfJRYt+x8UFIbaWQmb9P0Duvp+kKfR/W0xtk2y
-         hAPAuzt5RqjkU9tfhQ0ZSwFZgpMbJwDezoIjw/htxVExgS4ljQRUVbzURnrzTln0aV4i
-         q86nARgX6G2y/LshV6s+fZvvxTsGBL37Jcp+pgsbwqBAOdwWiQxl2tyl86Gkx0JdGhVK
-         exfA==
-X-Gm-Message-State: AOJu0YwS1wpiwKV6kyu4U8gro22ZvlxxHCXUjlPPCriT9nQ6V5v580N0
-	B5dKPXaYf7f/qBudTNuhWX1UCZfKUfZHQ0/LJI04jQ==
-X-Google-Smtp-Source: AGHT+IFyKRAs1nSnT7gvq2u//Gg7pZ51XcU9iClk/bEw0hlTaiaSYD7AI5ZrfWX42ndTU40I/DwZlI/gmpWW64Pxa7A=
-X-Received: by 2002:ac2:4ade:0:b0:505:7c88:9e45 with SMTP id
- m30-20020ac24ade000000b005057c889e45mr57996lfp.0.1696309798688; Mon, 02 Oct
- 2023 22:09:58 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2432916
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 05:49:35 +0000 (UTC)
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7032BB4
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 22:49:34 -0700 (PDT)
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3935kDaN026371;
+	Tue, 3 Oct 2023 05:49:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=pp1;
+ bh=2fSfbAVxlBQN+M501ObjJ2ZT7cKGIthdcAlyKazz4XI=;
+ b=F5EvC/7Dt7C5wrQWiNs/p6WaVhJgOY2cMQYcESHFkybl2R5DxsRlu1f8mJk0vVqAU6Ok
+ 2jb6i2CRz6qB03hE/oov9Flw1L7cEz6xyB47Iml0H0BlJdpeUc41RzlYBvzusa3hA9NN
+ DcdBBR7ofjQbRDvH2EkpkJ2cThxudHgeyN5XD6sc26Ds8W9XAW0MT4d6kYZ06Co+f8BH
+ EyTUuq5ltMPw7U3fKB/r+/Q7zGRoYbsIymb5EEahfGSdcREMaxLlVSr9ear2F+n5lsvN
+ EWsTu0K3YfmJY7rPVEj3zfwMk1KO8Ml5yFJ/vWWn6ZnOYtViZnL83RmWIpeW4b4/X/DO ug== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tgd39r1cn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Oct 2023 05:49:31 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3935nVKS000997;
+	Tue, 3 Oct 2023 05:49:31 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tgd39r1cc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Oct 2023 05:49:31 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39344QJI010931;
+	Tue, 3 Oct 2023 05:49:30 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tf0q1en2b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Oct 2023 05:49:30 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3935nRjg13370088
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 3 Oct 2023 05:49:27 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 862F82004D;
+	Tue,  3 Oct 2023 05:49:27 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ADBF620049;
+	Tue,  3 Oct 2023 05:49:25 +0000 (GMT)
+Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com (unknown [9.109.199.72])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  3 Oct 2023 05:49:25 +0000 (GMT)
+Date: Tue, 3 Oct 2023 11:19:17 +0530
+From: Aditya Gupta <adityag@linux.ibm.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, jolsa@kernel.org, irogers@google.com,
+        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+Subject: Re: [PATCH v4 1/4] perf check: introduce check subcommand
+Message-ID: <5mglaqezgyyjw4hpjxdlhpcs5hud4owjvuhz6fqajffcitthys@hx7er5wvpbmd>
+References: <20231002173253.70891-1-adityag@linux.ibm.com>
+ <20231002173253.70891-2-adityag@linux.ibm.com>
+ <CAM9d7chMvBZgwFyRnax+=2Dg=dSb015qEer4t+hWes_uDhHMzQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230930060206.2353141-1-irogers@google.com> <CAM9d7chAvXoU90uCNAqr6DxH1-pUYqd82_BAdoZjjs1Uscm8Vw@mail.gmail.com>
-In-Reply-To: <CAM9d7chAvXoU90uCNAqr6DxH1-pUYqd82_BAdoZjjs1Uscm8Vw@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 2 Oct 2023 22:09:47 -0700
-Message-ID: <CAP-5=fWDzjtkf7cSZVgSYUzFohH0tp81A7muke_+bH7rgnGJxw@mail.gmail.com>
-Subject: Re: [PATCH v1] perf test: Avoid system wide when not privileged
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7chMvBZgwFyRnax+=2Dg=dSb015qEer4t+hWes_uDhHMzQ@mail.gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: nkr0Zdz-hJAu_IYDnNOgWF3Ra3vf3JKA
+X-Proofpoint-GUID: _fhfgtPn8VTBuSBwNYsUaQIQkZqXn9l6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-03_03,2023-10-02_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ suspectscore=0 spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0
+ adultscore=0 malwarescore=0 lowpriorityscore=0 phishscore=0
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310030044
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,
+	RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 2, 2023 at 9:47=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> Hi Ian,
->
-> On Fri, Sep 29, 2023 at 11:02=E2=80=AFPM Ian Rogers <irogers@google.com> =
-wrote:
+On Mon, Oct 02, 2023 at 09:35:37PM -0700, Namhyung Kim wrote:
+> Hello,
+> 
+> On Mon, Oct 2, 2023 at 10:33 AM Aditya Gupta <adityag@linux.ibm.com> wrote:
 > >
-> > Switch the test program to sleep that makes more sense for system wide
-> > events. Only enable system wide when root or not paranoid. This avoids
-> > failures under some testing conditions like ARM cloud.
+> > Currently the presence of a feature is checked with a combination of
+> > perf version --build-options and greps, such as:
 > >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
->
-> While I'm ok with the change, I wonder why it doesn't have the same
-> code structure as in the stat_all_metrics.sh which checks the actual resu=
-lt.
->
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
-
-The metric group isn't printed when we print the metrics within it.
-This could be changed.
-
-Thanks,
-Ian
-
-> Thanks,
-> Namhyung
->
+> >     perf version --build-options | grep " on .* HAVE_FEATURE"
+> >
+> > Instead of this, introduce a subcommand "perf check --feature", with which
+> > scripts can test for presence of a feature, such as:
+> >
+> >     perf check --feature HAVE_FEATURE
+> >
+> > 'perf check --feature' command is expected to have exit status of 0 if
+> > feature is built-in, and 1 if it's not built-in or if feature is not known.
+> >
+> > An array 'supported_features' has also been introduced that can be used by
+> > other commands like 'perf version --build-options', so that new features
+> > can be added in one place, with the array
+> >
+> > Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
 > > ---
-> >  tools/perf/tests/shell/stat_all_metricgroups.sh | 16 ++++++++++++++--
-> >  1 file changed, 14 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/pe=
-rf/tests/shell/stat_all_metricgroups.sh
-> > index cb35e488809a..f3e305649e2c 100755
-> > --- a/tools/perf/tests/shell/stat_all_metricgroups.sh
-> > +++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
-> > @@ -4,9 +4,21 @@
-> >
-> >  set -e
-> >
-> > -for m in $(perf list --raw-dump metricgroups); do
-> > +function ParanoidAndNotRoot()
+> 
+> [SNIP]
+> > +/**
+> > + * check whether "feature" is built-in with perf
+> > + *
+> > + * returns:
+> > + *    0: Built-in
+> > + *    1: NOT built-in or Feature not known
+> > + */
+> 
+> There's a miscommunication here (again)..
+> I'm ok that has_support() return 1 for builtin features.
+> 
+> > +static int has_support(const char *feature)
 > > +{
-> > +  [ "$(id -u)" !=3D 0 ] && [ "$(cat /proc/sys/kernel/perf_event_parano=
-id)" -gt $1 ]
+> > +       for (int i = 0; supported_features[i].name; ++i) {
+> > +               if ((strcmp(feature, supported_features[i].name) == 0) ||
+> > +                   (strcmp(feature, supported_features[i].macro) == 0)) {
+> > +                       if (!quiet)
+> > +                               STATUS(supported_features[i]);
+> > +                       return !supported_features[i].is_builtin;
+> > +               }
+> > +       }
+> > +
+> > +       if (!quiet)
+> > +               color_fprintf(stdout, PERF_COLOR_RED, "Feature not known: %s", feature);
+> > +
+> > +       return 1;
 > > +}
 > > +
-> > +system_wide_flag=3D"-a"
-> > +if ParanoidAndNotRoot 0
-> > +then
-> > +  system_wide_flag=3D""
-> > +fi
+> > +int cmd_check(int argc, const char **argv)
+> > +{
+> > +       argc = parse_options(argc, argv, check_options, check_usage,
+> > +                            PARSE_OPT_STOP_AT_NON_OPTION);
 > > +
-> > +for m in $(perf list --raw-dump metricgroups)
-> > +do
-> >    echo "Testing $m"
-> > -  perf stat -M "$m" -a true
-> > +  perf stat -M "$m" $system_wide_flag sleep 0.01
-> >  done
+> > +       if (!quiet)
+> > +               printf("perf check %s\n", perf_version_string);
+> > +
+> > +       if (check.feature)
+> > +               return has_support(check.feature);
+> 
+> And you can just change this part to confirm the shell standard.
+> 
+>     if (check.feature)
+>         return !has_supporf(check.feature);
+
+Oh, okay. Got it, thanks for including this diff, it made it clear :)
+
+> 
+> With that change, you can add my s-o-b to the series,
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+Thanks for the tag, will include the Acked by in V5.
+
+Thanks,
+- Aditya Gupta
+
+> 
+> Thanks,
+> Namhyung
+> 
+> > +
+> > +       return 0;
+> > +}
+> > diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
+> > index f2ab5bae2150..9f895981bc9e 100644
+> > --- a/tools/perf/builtin.h
+> > +++ b/tools/perf/builtin.h
+> > @@ -2,6 +2,23 @@
+> >  #ifndef BUILTIN_H
+> >  #define BUILTIN_H
 > >
-> >  exit 0
+> > +#include <stddef.h>
+> > +#include <linux/compiler.h>
+> > +#include <tools/config.h>
+> > +
+> > +struct feature_support {
+> > +       const char *name;
+> > +       const char *macro;
+> > +       int is_builtin;
+> > +};
+> > +
+> > +#define FEATURE_SUPPORT(name_, macro_) { \
+> > +       .name = name_,                       \
+> > +       .macro = #macro_,                    \
+> > +       .is_builtin = IS_BUILTIN(macro_) }
+> > +
+> > +extern struct feature_support supported_features[];
+> > +
+> >  void list_common_cmds_help(void);
+> >  const char *help_unknown_cmd(const char *cmd);
+> >
+> > @@ -9,6 +26,7 @@ int cmd_annotate(int argc, const char **argv);
+> >  int cmd_bench(int argc, const char **argv);
+> >  int cmd_buildid_cache(int argc, const char **argv);
+> >  int cmd_buildid_list(int argc, const char **argv);
+> > +int cmd_check(int argc, const char **argv);
+> >  int cmd_config(int argc, const char **argv);
+> >  int cmd_c2c(int argc, const char **argv);
+> >  int cmd_diff(int argc, const char **argv);
+> > diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+> > index d3fc8090413c..6514f4121c49 100644
+> > --- a/tools/perf/perf.c
+> > +++ b/tools/perf/perf.c
+> > @@ -50,6 +50,7 @@ static struct cmd_struct commands[] = {
+> >         { "archive",    NULL,   0 },
+> >         { "buildid-cache", cmd_buildid_cache, 0 },
+> >         { "buildid-list", cmd_buildid_list, 0 },
+> > +       { "check",      cmd_check,      0 },
+> >         { "config",     cmd_config,     0 },
+> >         { "c2c",        cmd_c2c,        0 },
+> >         { "diff",       cmd_diff,       0 },
 > > --
-> > 2.42.0.582.g8ccd20d70d-goog
+> > 2.41.0
 > >
