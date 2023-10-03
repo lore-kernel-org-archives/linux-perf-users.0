@@ -1,47 +1,49 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9446537B
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 04:35:52 +0000 (UTC)
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D79FBBD
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 21:35:50 -0700 (PDT)
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2774f6943b1so351532a91.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 02 Oct 2023 21:35:50 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816FE1375
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 04:47:05 +0000 (UTC)
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E0E9D3;
+	Mon,  2 Oct 2023 21:47:04 -0700 (PDT)
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-27734d76e1bso316273a91.2;
+        Mon, 02 Oct 2023 21:47:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696307750; x=1696912550;
+        d=1e100.net; s=20230601; t=1696308424; x=1696913224;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8i83OeoEuNKd/xo417X1ZYjZnl4arPiLZyOUVOW7/sg=;
-        b=A4OqtnFdoA88gcfUi1N1DUcNWx3wtX/PxopJaSgg1cwPsuI3dXgDbkLEzhclSR1P8I
-         0MHuoXwKgoVAzQbI0zQHMVsGh4fetz+HONdihiuaQCAjcRSCez606p1pZhvpAHw9KMRF
-         gikJkC6FOyE0cAAs8Nc6E+VQxNeYQ0N93VwU5dSxqy7ZN7Al25I0fl2tZfqRhebtfUy+
-         XHN/9NnnivBkRjXBVCE5CcIpRIlXmNUqQit+jSuW5xXxP/GX1OO4cIg54VmSE4uQvuT9
-         FGJzuYFgRQCqaP7flxOD5607oRT+BFZ0KMcYIHjnJb36IRGl/Z/p27wk2Tcgj8Z6ZiMy
-         FYjQ==
-X-Gm-Message-State: AOJu0YwRbZuTcjEK6EgIg641AMQuxR4T2g62ns/iqI/bPGhsaUEBFtVg
-	Mb3dwAD5f2Hsjt1yMRnr+wAkCAQ7Jz1u6lKnnGA=
-X-Google-Smtp-Source: AGHT+IHY8Z+yeCe1I72F91kWffcIzZ6G1y1agATYbH9/hlh6seDUogALeKW6L5XcgEQiftgyQ/koKUhVxC3XTevIilY=
-X-Received: by 2002:a17:90a:5d18:b0:26b:4a9e:3c7e with SMTP id
- s24-20020a17090a5d1800b0026b4a9e3c7emr12573847pji.4.1696307750170; Mon, 02
- Oct 2023 21:35:50 -0700 (PDT)
+        bh=SAqDrWh5okAg7A4rwUqEIqw966pHJE6DnlfG9T172Og=;
+        b=C3kbFTb2LPG45VemVUALv9/iRhcnt4KufMK50bYhhkB1i6IUqCNuaFrb2H3Sa58q19
+         zvtqIhXSxD1CcGr7uk/4QBIxrNUhlKMQ5sxFcpKweyuhUDFjTbY3d/BKAjtHmw5UeL0k
+         suX/epbIuRzSsv0x3MZgNoJPb1+Iw4fWpZwJXXizha9SASzuvJlehoUPR9MD0Q1/QS7w
+         puaL518lsGJyW2ozwjesaHa/y4EkJqv1mbb0EEuf5I5vHuTke5owYqQbNfpLsM+95yYY
+         KsGGQkygm2FBNdFJs8SXdKhygh0N+WD/aLij3swnbZ9I1fvkaHFs8K4X9aL3qS7eoCTP
+         aR/Q==
+X-Gm-Message-State: AOJu0YxLUYGHtyIpYMZWcjMR+Dh0v38fjYufNXBZjS8hQT+ny5+9Fuva
+	u8htxVQU+q62JjHaFZ9J+cNqHk2as4mIaw4Sv3A=
+X-Google-Smtp-Source: AGHT+IERzbYaWyQbhR+nShIBM4jHt1nNh96uFF52D5YOmaclsP8HnUboUKfBMQ9IF8frZVoiDMCY/uHbsOB6iavotQY=
+X-Received: by 2002:a17:90a:6c41:b0:268:15dd:c5c7 with SMTP id
+ x59-20020a17090a6c4100b0026815ddc5c7mr10411882pjj.40.1696308423944; Mon, 02
+ Oct 2023 21:47:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231002173253.70891-1-adityag@linux.ibm.com> <20231002173253.70891-2-adityag@linux.ibm.com>
-In-Reply-To: <20231002173253.70891-2-adityag@linux.ibm.com>
+References: <20230930060206.2353141-1-irogers@google.com>
+In-Reply-To: <20230930060206.2353141-1-irogers@google.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 2 Oct 2023 21:35:37 -0700
-Message-ID: <CAM9d7chMvBZgwFyRnax+=2Dg=dSb015qEer4t+hWes_uDhHMzQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] perf check: introduce check subcommand
-To: Aditya Gupta <adityag@linux.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, irogers@google.com, 
-	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com, 
-	atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Date: Mon, 2 Oct 2023 21:46:52 -0700
+Message-ID: <CAM9d7chAvXoU90uCNAqr6DxH1-pUYqd82_BAdoZjjs1Uscm8Vw@mail.gmail.com>
+Subject: Re: [PATCH v1] perf test: Avoid system wide when not privileged
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
@@ -51,139 +53,60 @@ X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hello,
+Hi Ian,
 
-On Mon, Oct 2, 2023 at 10:33=E2=80=AFAM Aditya Gupta <adityag@linux.ibm.com=
-> wrote:
+On Fri, Sep 29, 2023 at 11:02=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
 >
-> Currently the presence of a feature is checked with a combination of
-> perf version --build-options and greps, such as:
+> Switch the test program to sleep that makes more sense for system wide
+> events. Only enable system wide when root or not paranoid. This avoids
+> failures under some testing conditions like ARM cloud.
 >
->     perf version --build-options | grep " on .* HAVE_FEATURE"
->
-> Instead of this, introduce a subcommand "perf check --feature", with whic=
-h
-> scripts can test for presence of a feature, such as:
->
->     perf check --feature HAVE_FEATURE
->
-> 'perf check --feature' command is expected to have exit status of 0 if
-> feature is built-in, and 1 if it's not built-in or if feature is not know=
-n.
->
-> An array 'supported_features' has also been introduced that can be used b=
-y
-> other commands like 'perf version --build-options', so that new features
-> can be added in one place, with the array
->
-> Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
-> ---
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-[SNIP]
-> +/**
-> + * check whether "feature" is built-in with perf
-> + *
-> + * returns:
-> + *    0: Built-in
-> + *    1: NOT built-in or Feature not known
-> + */
+While I'm ok with the change, I wonder why it doesn't have the same
+code structure as in the stat_all_metrics.sh which checks the actual result=
+.
 
-There's a miscommunication here (again)..
-I'm ok that has_support() return 1 for builtin features.
-
-> +static int has_support(const char *feature)
-> +{
-> +       for (int i =3D 0; supported_features[i].name; ++i) {
-> +               if ((strcmp(feature, supported_features[i].name) =3D=3D 0=
-) ||
-> +                   (strcmp(feature, supported_features[i].macro) =3D=3D =
-0)) {
-> +                       if (!quiet)
-> +                               STATUS(supported_features[i]);
-> +                       return !supported_features[i].is_builtin;
-> +               }
-> +       }
-> +
-> +       if (!quiet)
-> +               color_fprintf(stdout, PERF_COLOR_RED, "Feature not known:=
- %s", feature);
-> +
-> +       return 1;
-> +}
-> +
-> +int cmd_check(int argc, const char **argv)
-> +{
-> +       argc =3D parse_options(argc, argv, check_options, check_usage,
-> +                            PARSE_OPT_STOP_AT_NON_OPTION);
-> +
-> +       if (!quiet)
-> +               printf("perf check %s\n", perf_version_string);
-> +
-> +       if (check.feature)
-> +               return has_support(check.feature);
-
-And you can just change this part to confirm the shell standard.
-
-    if (check.feature)
-        return !has_supporf(check.feature);
-
-With that change, you can add my s-o-b to the series,
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
-> +
-> +       return 0;
+> ---
+>  tools/perf/tests/shell/stat_all_metricgroups.sh | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/perf=
+/tests/shell/stat_all_metricgroups.sh
+> index cb35e488809a..f3e305649e2c 100755
+> --- a/tools/perf/tests/shell/stat_all_metricgroups.sh
+> +++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
+> @@ -4,9 +4,21 @@
+>
+>  set -e
+>
+> -for m in $(perf list --raw-dump metricgroups); do
+> +function ParanoidAndNotRoot()
+> +{
+> +  [ "$(id -u)" !=3D 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid=
+)" -gt $1 ]
 > +}
-> diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
-> index f2ab5bae2150..9f895981bc9e 100644
-> --- a/tools/perf/builtin.h
-> +++ b/tools/perf/builtin.h
-> @@ -2,6 +2,23 @@
->  #ifndef BUILTIN_H
->  #define BUILTIN_H
+> +
+> +system_wide_flag=3D"-a"
+> +if ParanoidAndNotRoot 0
+> +then
+> +  system_wide_flag=3D""
+> +fi
+> +
+> +for m in $(perf list --raw-dump metricgroups)
+> +do
+>    echo "Testing $m"
+> -  perf stat -M "$m" -a true
+> +  perf stat -M "$m" $system_wide_flag sleep 0.01
+>  done
 >
-> +#include <stddef.h>
-> +#include <linux/compiler.h>
-> +#include <tools/config.h>
-> +
-> +struct feature_support {
-> +       const char *name;
-> +       const char *macro;
-> +       int is_builtin;
-> +};
-> +
-> +#define FEATURE_SUPPORT(name_, macro_) { \
-> +       .name =3D name_,                       \
-> +       .macro =3D #macro_,                    \
-> +       .is_builtin =3D IS_BUILTIN(macro_) }
-> +
-> +extern struct feature_support supported_features[];
-> +
->  void list_common_cmds_help(void);
->  const char *help_unknown_cmd(const char *cmd);
->
-> @@ -9,6 +26,7 @@ int cmd_annotate(int argc, const char **argv);
->  int cmd_bench(int argc, const char **argv);
->  int cmd_buildid_cache(int argc, const char **argv);
->  int cmd_buildid_list(int argc, const char **argv);
-> +int cmd_check(int argc, const char **argv);
->  int cmd_config(int argc, const char **argv);
->  int cmd_c2c(int argc, const char **argv);
->  int cmd_diff(int argc, const char **argv);
-> diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-> index d3fc8090413c..6514f4121c49 100644
-> --- a/tools/perf/perf.c
-> +++ b/tools/perf/perf.c
-> @@ -50,6 +50,7 @@ static struct cmd_struct commands[] =3D {
->         { "archive",    NULL,   0 },
->         { "buildid-cache", cmd_buildid_cache, 0 },
->         { "buildid-list", cmd_buildid_list, 0 },
-> +       { "check",      cmd_check,      0 },
->         { "config",     cmd_config,     0 },
->         { "c2c",        cmd_c2c,        0 },
->         { "diff",       cmd_diff,       0 },
+>  exit 0
 > --
-> 2.41.0
+> 2.42.0.582.g8ccd20d70d-goog
 >
