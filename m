@@ -1,114 +1,105 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F045E1548D
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 13:52:48 +0000 (UTC)
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F555A9;
-	Tue,  3 Oct 2023 06:52:43 -0700 (PDT)
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5230a22cfd1so1607257a12.1;
-        Tue, 03 Oct 2023 06:52:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696341161; x=1696945961;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qbhD19S6zLeOtT2FNUeshWF95fV8Y1/bPKyfIl12gP0=;
-        b=YT0XI35Z4m+v3MsnQ+bYMJfWA8a9DJJw56nZcLT23qRV0p1ldrx7nAap67AvoZCGQt
-         sun3MVpvWCCnVAOSrYZu0af0Jsoq92WT4QQJle692N+1YAjvUoJ+EoyNjw0HdddlfBSp
-         +yjQwdex+RmhMg9cu/dp6oADfa4sjNsT+IU7a2QIBZOreU1hv4iMVgj7BNq5eXBgY62+
-         bJVRcaf2YRRUCcTKc6J1/kvgfNFbYKZ7n0/UBHYaAjt16qNEuUrZxzrZ0RL6UWCfj9b2
-         sgVQsAYPGXBNLArENQiWgX+jH/2NDfiXdt2kbXlwwTkCo7xOqVCzywGTVJT4SqHuKfH5
-         WS9w==
-X-Gm-Message-State: AOJu0YyxQp7Wp+7bKIOwk4Dq9giyYzp34n9jQQZ8zplwTcxieKldO0Q9
-	B1JhdYwAtisJei1KT21uGvhOEWg9VTU=
-X-Google-Smtp-Source: AGHT+IFAGpUa7LltnP297SnJgjG9wRsCbtvps1bDOeBiWN2XiNo4p9pu/ruLocu0YnYfIcTd2D2GJg==
-X-Received: by 2002:a17:906:5393:b0:9ae:3fdd:4dd with SMTP id g19-20020a170906539300b009ae3fdd04ddmr12445147ejo.24.1696341160973;
-        Tue, 03 Oct 2023 06:52:40 -0700 (PDT)
-Received: from gmail.com (fwdproxy-cln-120.fbsv.net. [2a03:2880:31ff:78::face:b00c])
-        by smtp.gmail.com with ESMTPSA id d10-20020a170906344a00b00992b71d8f19sm1100772ejb.133.2023.10.03.06.52.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Oct 2023 06:52:40 -0700 (PDT)
-Date: Tue, 3 Oct 2023 06:52:38 -0700
-From: Breno Leitao <leitao@debian.org>
-To: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: rcu@vger.kernel.org, rbc@meta.com
-Subject: kvm/x86: perf: Softlockup issue
-Message-ID: <ZRwcpki67uhpAUKi@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A2B328C5;
+	Tue,  3 Oct 2023 14:31:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 346B1C433AB;
+	Tue,  3 Oct 2023 14:31:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696343515;
+	bh=lXhzkTduNuZuLROT+iBijIF0A95RJ4ufla0K1M+opJU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=XWN4Rh+E9PDsO4VJBGGuVKpVRJYentIfOH5cUNSV4YsQXcxcfh+5TOv+KDW4/F2lX
+	 GqyZ3M9cwIlXcaVvfnRmSsVr1jE95FEf4gmxD+5T3wMNlXxm7lGn0vXfOO7BA9OWai
+	 nzhIKizki4ZClwnaUR9mWn983p4DbniY5CBrYQ9unOLpCcBF5vqTIBMHBsRqi5srM6
+	 I73TD0/hZ75Elw4NNXIWRx5bOCQEJN5Nu7dhqLdqeuWjnVPgrLICR3WE+Bm/FJW+F0
+	 CgM4x4BcujSNtF8YPbAq56KVmRw69vvzH9PiNnUWOxSA5Bp2n191ZC5Vf7/J2UpW03
+	 dBShZRWhHputA==
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-1dd78b46995so573512fac.3;
+        Tue, 03 Oct 2023 07:31:55 -0700 (PDT)
+X-Gm-Message-State: AOJu0YxKDmBiLzM6XUAX5IeIEX/EBpifsXltFP7tG+pRMXCYmupMtiqT
+	mG51/LKxcDsNPWIcZmT1pv8kWNQcPBxAiX5VtNM=
+X-Google-Smtp-Source: AGHT+IHvgi3RUwAtU8o2TSnqWVl6ZIGHcXUxqTE98xQ5+4sN2wMbW6gAQ7JaGuG4c0k+cTUDcFcXo0d6wlrEHUEuV4A=
+X-Received: by 2002:a05:6870:2314:b0:1c8:bfd1:ecc0 with SMTP id
+ w20-20020a056870231400b001c8bfd1ecc0mr14691547oao.0.1696343514186; Tue, 03
+ Oct 2023 07:31:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+References: <20230923053515.535607-1-irogers@google.com> <20230923053515.535607-2-irogers@google.com>
+ <CAKwvOdmHg_43z_dTZrOLGubuBBvmHdPxSFjOWa3oWkbOp2qWWg@mail.gmail.com>
+ <CAP-5=fV6c1tWAd2GjMwn4PQN=3BXNQGz=vbonHSjRjQ3fbEL+g@mail.gmail.com> <ZRWMWcNKvZMgiAMR@bergen.fjasle.eu>
+In-Reply-To: <ZRWMWcNKvZMgiAMR@bergen.fjasle.eu>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Tue, 3 Oct 2023 23:31:17 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASuOWtd-iv2C3HLWr1oq9gD8BiP4B=8wRUo81CSK=g5Yw@mail.gmail.com>
+Message-ID: <CAK7LNASuOWtd-iv2C3HLWr1oq9gD8BiP4B=8wRUo81CSK=g5Yw@mail.gmail.com>
+Subject: Re: [PATCH v1 01/18] gen_compile_commands: Allow the line prefix to
+ still be cmd_
+To: Nicolas Schier <nicolas@fjasle.eu>
+Cc: Ian Rogers <irogers@google.com>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Tom Rix <trix@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Ming Wang <wangming01@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Sean Christopherson <seanjc@google.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Yanteng Si <siyanteng@loongson.cn>, Yuan Can <yuancan@huawei.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, James Clark <james.clark@arm.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, llvm@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I've been pursuing a bug in a virtual machine (KVM) that I would like to share
-in here. The VM gets stuck when running perf in a VM and getting soft lockups.
-
-The bug happens upstream (Linux 6.6-rc4 - 8a749fd1a8720d461). The same kernel
-is being used in the host and in the guest.
-
-The problem only happens in a very specific circumstances:
-
-1) PMU needs to be enabled in the guest
-
-2) Libvirt/QEMU needs to use a custom CPU:
-	* Here is the qemu line:
-		-cpu Skylake-Server,kvm-pv-eoi=on,pmu=on
-	* Any other CPU seems to hit the problem
-		* Even using Skylake-Server on a Skylake server
-	* Using CPU passthrough workaround the problem
-
-3) You need to use 6 or more events in perf.
-	* This is a line that reproduces the problem:
-	  # perf stat -e cpu-clock -e context-switches -e cpu-migrations  -e page-faults -e cycles -e instructions  -e branches ls
-	* Removing any of these events (totaling 5 events) makes `perf` work again
-
-4) This problem happens on upstream, 6.4 and 5.19
-	* This problem doesn't seem to happen on 5.12
-
-Problem
-========
-
-When running perf in the circumstances above, the VM is stuck, with a lot of
-stack traces. This is some messages:
-
-	 kernel:[  400.314381] watchdog: BUG: soft lockup - CPU#3 stuck for 26s! [kworker/u68:11:6853]
-	 kernel:[  400.324380] watchdog: BUG: soft lockup - CPU#8 stuck for 26s! [dynoKernelMon:9781]
-	 kernel:[  404.368380] watchdog: BUG: soft lockup - CPU#30 stuck for 22s! [kworker/30:2:1326]
-
-Here is part of the stack. The full stack is in the pastebin below:
-
-	 nmi_cpu_backtrace (lib/nmi_backtrace.c:115)
-	 nmi_cpu_backtrace_handler (arch/x86/kernel/apic/hw_nmi.c:47)
-	 nmi_handle (arch/x86/kernel/nmi.c:149)
-	 __intel_pmu_enable_all (arch/x86/include/asm/jump_label.h:27 include/linux/jump_label.h:207 arch/x86/include/asm/msr.h:147 arch/x86/include/asm/msr.h:262 arch/x86/events/intel/core.c:2239)
-	 __intel_pmu_enable_all (arch/x86/include/asm/jump_label.h:27 include/linux/jump_label.h:207 arch/x86/include/asm/msr.h:147 arch/x86/include/asm/msr.h:262 arch/x86/events/intel/core.c:2239)
-	 default_do_nmi (arch/x86/kernel/nmi.c:347)
-	 exc_nmi (arch/x86/kernel/nmi.c:543)
-	 end_repeat_nmi (arch/x86/entry/entry_64.S:1471)
-	 __intel_pmu_enable_all (arch/x86/include/asm/jump_label.h:27 include/linux/jump_label.h:207 arch/x86/include/asm/msr.h:147 arch/x86/include/asm/msr.h:262 arch/x86/events/intel/core.c:2239)
-	 __intel_pmu_enable_all (arch/x86/include/asm/jump_label.h:27 include/linux/jump_label.h:207 arch/x86/include/asm/msr.h:147 arch/x86/include/asm/msr.h:262 arch/x86/events/intel/core.c:2239)
-	 __intel_pmu_enable_all (arch/x86/include/asm/jump_label.h:27 include/linux/jump_label.h:207 arch/x86/include/asm/msr.h:147 arch/x86/include/asm/msr.h:262 arch/x86/events/intel/core.c:2239)
+On Thu, Sep 28, 2023 at 11:26=E2=80=AFPM Nicolas Schier <nicolas@fjasle.eu>=
+ wrote:
+>
+> On Mon, 25 Sep 2023 09:06:11 -0700, Ian Rogers wrote:
+> > On Mon, Sep 25, 2023 at 8:49=E2=80=AFAM Nick Desaulniers
+> > <ndesaulniers@google.com> wrote:
+> > >
+> > > On Fri, Sep 22, 2023 at 10:35=E2=80=AFPM Ian Rogers <irogers@google.c=
+om> wrote:
+> > > >
+> > > > Builds in tools still use the cmd_ prefix in .cmd files, so don't
+> > > > require the saved part. Name the groups in the line pattern match s=
+o
+> > >
+> > > Is that something that can be changed in the tools/ Makefiles?
+> > >
+> > > I'm fine with this change, just curious where the difference comes
+> > > from precisely.
+> > > Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> >
+> > I agree. The savedcmd_ change came from Masahiro in:
+> > https://lore.kernel.org/lkml/20221229091501.916296-1-masahiroy@kernel.o=
+rg/
+> > I was reluctant to change the build logic in tools/ because of the
+> > potential to break things. Maybe Masahiro/Nicolas know of issues?
+>
+> I haven't seen any issues related to the introduction of savedcmd_; and
+> roughly searching through tools/ I cannot find a rule that matches the
+> pattern Masahiro described in commit 92215e7a801d ("kbuild: rename
+> cmd_$@ to savedcmd_$@ in *.cmd files", 2022-12-29).  For consistency,
+> I'd like to see the build rules in tools/ re-use the ones from scripts/
+> but as of now I don't see any necessity to introduce savedcmd in
+> tools/, yet.
+>
+> Kind regards,
+> Nicolas
 
 
+tools/build/Build.include mimics scripts/Kbuild.include
 
-More info
-=========
+That should be changed in the same way.
 
-Soft lockup messages in the guest:
-	https://paste.debian.net/1293888/
-Full log from the guest:
-	https://paste.debian.net/1293891/
-vCPU stacks dumped from the host (cat /proc/<vcpu>/stack):
-	https://paste.debian.net/1293887/
-Qemu (version 7.1.0) command line
-	https://paste.debian.net/1293894/
+
+--=20
+Best Regards
+Masahiro Yamada
