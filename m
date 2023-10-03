@@ -1,40 +1,40 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436E9208D7;
-	Tue,  3 Oct 2023 11:00:38 +0000 (UTC)
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC2B8AC;
-	Tue,  3 Oct 2023 04:00:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=934M3M5cJg5fSPGaIg7428I8uQBQncWaQiT8PHBnuSE=; b=E7a738Qf1E4DMNUqfeslJzFl/i
-	WOWmTL94prinRHALF/qMyMN09I9RpJ7x8T7Xdypumf8nd85DI68BeVaeIbFQMWYY0QIA0hP54VVOU
-	rLzlieEhIW4OD55KsQwYalA84ZCe/Poq/H3Xvj0rcY8QHD5wfNeprAkQMoP2qV8lYhgpXiTDartTi
-	OZax6sqtjgVS9ZNFFqXdDoy77t80atP/Rt6RD5Vpa/Bb2bE2V39NbtcJ+c+vZF1PywRqu4W1jluuW
-	bOCKowaJEQDGQiWk9uMEy5M+AjkTf/sOepm2xvr+adHjkQSi0NybO1hKCi6KjtUhwM3VGgTPIFtj1
-	K0tomjag==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qnd8U-00Ec4p-IJ; Tue, 03 Oct 2023 11:00:18 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 30FA6300665; Tue,  3 Oct 2023 13:00:18 +0200 (CEST)
-Date: Tue, 3 Oct 2023 13:00:18 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Tero Kristo <tero.kristo@linux.intel.com>
-Cc: x86@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
-	tglx@linutronix.de, hpa@zytor.com, irogers@google.com,
-	jolsa@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com,
-	acme@kernel.org, mingo@redhat.com, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
-	linux-perf-users@vger.kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCHv2 2/2] perf/core: Allow reading package events from
- perf_event_read_local
-Message-ID: <20231003110018.GG27267@noisy.programming.kicks-ass.net>
-References: <20230912124432.3616761-2-tero.kristo@linux.intel.com>
- <20230913125956.3652667-1-tero.kristo@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F045E1548D
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 13:52:48 +0000 (UTC)
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F555A9;
+	Tue,  3 Oct 2023 06:52:43 -0700 (PDT)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5230a22cfd1so1607257a12.1;
+        Tue, 03 Oct 2023 06:52:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696341161; x=1696945961;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qbhD19S6zLeOtT2FNUeshWF95fV8Y1/bPKyfIl12gP0=;
+        b=YT0XI35Z4m+v3MsnQ+bYMJfWA8a9DJJw56nZcLT23qRV0p1ldrx7nAap67AvoZCGQt
+         sun3MVpvWCCnVAOSrYZu0af0Jsoq92WT4QQJle692N+1YAjvUoJ+EoyNjw0HdddlfBSp
+         +yjQwdex+RmhMg9cu/dp6oADfa4sjNsT+IU7a2QIBZOreU1hv4iMVgj7BNq5eXBgY62+
+         bJVRcaf2YRRUCcTKc6J1/kvgfNFbYKZ7n0/UBHYaAjt16qNEuUrZxzrZ0RL6UWCfj9b2
+         sgVQsAYPGXBNLArENQiWgX+jH/2NDfiXdt2kbXlwwTkCo7xOqVCzywGTVJT4SqHuKfH5
+         WS9w==
+X-Gm-Message-State: AOJu0YyxQp7Wp+7bKIOwk4Dq9giyYzp34n9jQQZ8zplwTcxieKldO0Q9
+	B1JhdYwAtisJei1KT21uGvhOEWg9VTU=
+X-Google-Smtp-Source: AGHT+IFAGpUa7LltnP297SnJgjG9wRsCbtvps1bDOeBiWN2XiNo4p9pu/ruLocu0YnYfIcTd2D2GJg==
+X-Received: by 2002:a17:906:5393:b0:9ae:3fdd:4dd with SMTP id g19-20020a170906539300b009ae3fdd04ddmr12445147ejo.24.1696341160973;
+        Tue, 03 Oct 2023 06:52:40 -0700 (PDT)
+Received: from gmail.com (fwdproxy-cln-120.fbsv.net. [2a03:2880:31ff:78::face:b00c])
+        by smtp.gmail.com with ESMTPSA id d10-20020a170906344a00b00992b71d8f19sm1100772ejb.133.2023.10.03.06.52.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Oct 2023 06:52:40 -0700 (PDT)
+Date: Tue, 3 Oct 2023 06:52:38 -0700
+From: Breno Leitao <leitao@debian.org>
+To: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: rcu@vger.kernel.org, rbc@meta.com
+Subject: kvm/x86: perf: Softlockup issue
+Message-ID: <ZRwcpki67uhpAUKi@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -43,64 +43,72 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230913125956.3652667-1-tero.kristo@linux.intel.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Wed, Sep 13, 2023 at 03:59:56PM +0300, Tero Kristo wrote:
-> Per-package perf events are typically registered with a single CPU only,
-> however they can be read across all the CPUs within the package.
-> Currently perf_event_read maps the event CPU according to the topology
-> information to avoid an unnecessary SMP call, however
-> perf_event_read_local deals with hard values and rejects a read with a
-> failure if the CPU is not the one exactly registered. Allow similar
-> mapping within the perf_event_read_local if the perf event in question
-> can support this.
-> 
-> This allows users like BPF code to read the package perf events properly
-> across different CPUs within a package.
-> 
-> Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
-> ---
-> v2:
->   * prevent illegal array access in case event->oncpu == -1
->   * split the event->cpu / event->oncpu handling to their own variables
-> 
->  kernel/events/core.c | 18 +++++++++++++++---
->  1 file changed, 15 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 4c72a41f11af..6b343bac0a71 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -4425,6 +4425,9 @@ static int __perf_event_read_cpu(struct perf_event *event, int event_cpu)
->  {
->  	u16 local_pkg, event_pkg;
->  
-> +	if (event_cpu < 0 || event_cpu >= nr_cpu_ids)
-> +		return event_cpu;
+I've been pursuing a bug in a virtual machine (KVM) that I would like to share
+in here. The VM gets stuck when running perf in a VM and getting soft lockups.
 
-	if ((unsigned)event_cpu >= nr_cpu_ids)
-		return event_cpu;
+The bug happens upstream (Linux 6.6-rc4 - 8a749fd1a8720d461). The same kernel
+is being used in the host and in the guest.
 
-As you could also find at the current __perf_event_read_cpu() callsite.
+The problem only happens in a very specific circumstances:
 
-> +
->  	if (event->group_caps & PERF_EV_CAP_READ_ACTIVE_PKG) {
->  		int local_cpu = smp_processor_id();
->  
-> @@ -4528,6 +4531,8 @@ int perf_event_read_local(struct perf_event *event, u64 *value,
->  {
->  	unsigned long flags;
->  	int ret = 0;
-> +	int event_cpu;
-> +	int event_oncpu;
+1) PMU needs to be enabled in the guest
 
-You wrecked the x-mas tree :-)
+2) Libvirt/QEMU needs to use a custom CPU:
+	* Here is the qemu line:
+		-cpu Skylake-Server,kvm-pv-eoi=on,pmu=on
+	* Any other CPU seems to hit the problem
+		* Even using Skylake-Server on a Skylake server
+	* Using CPU passthrough workaround the problem
 
-I'll fix both up.
+3) You need to use 6 or more events in perf.
+	* This is a line that reproduces the problem:
+	  # perf stat -e cpu-clock -e context-switches -e cpu-migrations  -e page-faults -e cycles -e instructions  -e branches ls
+	* Removing any of these events (totaling 5 events) makes `perf` work again
 
-Thanks!
+4) This problem happens on upstream, 6.4 and 5.19
+	* This problem doesn't seem to happen on 5.12
+
+Problem
+========
+
+When running perf in the circumstances above, the VM is stuck, with a lot of
+stack traces. This is some messages:
+
+	 kernel:[  400.314381] watchdog: BUG: soft lockup - CPU#3 stuck for 26s! [kworker/u68:11:6853]
+	 kernel:[  400.324380] watchdog: BUG: soft lockup - CPU#8 stuck for 26s! [dynoKernelMon:9781]
+	 kernel:[  404.368380] watchdog: BUG: soft lockup - CPU#30 stuck for 22s! [kworker/30:2:1326]
+
+Here is part of the stack. The full stack is in the pastebin below:
+
+	 nmi_cpu_backtrace (lib/nmi_backtrace.c:115)
+	 nmi_cpu_backtrace_handler (arch/x86/kernel/apic/hw_nmi.c:47)
+	 nmi_handle (arch/x86/kernel/nmi.c:149)
+	 __intel_pmu_enable_all (arch/x86/include/asm/jump_label.h:27 include/linux/jump_label.h:207 arch/x86/include/asm/msr.h:147 arch/x86/include/asm/msr.h:262 arch/x86/events/intel/core.c:2239)
+	 __intel_pmu_enable_all (arch/x86/include/asm/jump_label.h:27 include/linux/jump_label.h:207 arch/x86/include/asm/msr.h:147 arch/x86/include/asm/msr.h:262 arch/x86/events/intel/core.c:2239)
+	 default_do_nmi (arch/x86/kernel/nmi.c:347)
+	 exc_nmi (arch/x86/kernel/nmi.c:543)
+	 end_repeat_nmi (arch/x86/entry/entry_64.S:1471)
+	 __intel_pmu_enable_all (arch/x86/include/asm/jump_label.h:27 include/linux/jump_label.h:207 arch/x86/include/asm/msr.h:147 arch/x86/include/asm/msr.h:262 arch/x86/events/intel/core.c:2239)
+	 __intel_pmu_enable_all (arch/x86/include/asm/jump_label.h:27 include/linux/jump_label.h:207 arch/x86/include/asm/msr.h:147 arch/x86/include/asm/msr.h:262 arch/x86/events/intel/core.c:2239)
+	 __intel_pmu_enable_all (arch/x86/include/asm/jump_label.h:27 include/linux/jump_label.h:207 arch/x86/include/asm/msr.h:147 arch/x86/include/asm/msr.h:262 arch/x86/events/intel/core.c:2239)
+
+
+
+More info
+=========
+
+Soft lockup messages in the guest:
+	https://paste.debian.net/1293888/
+Full log from the guest:
+	https://paste.debian.net/1293891/
+vCPU stacks dumped from the host (cat /proc/<vcpu>/stack):
+	https://paste.debian.net/1293887/
+Qemu (version 7.1.0) command line
+	https://paste.debian.net/1293894/
