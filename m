@@ -1,63 +1,40 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 493A5D278
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 09:48:03 +0000 (UTC)
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93C9EAB;
-	Tue,  3 Oct 2023 02:48:01 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-9ae7383b7ecso906865966b.0;
-        Tue, 03 Oct 2023 02:48:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696326480; x=1696931280; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fSO0bN4wxCWQoR1ffLDq1SwoPvsZiN1HuMrXKXx4kYs=;
-        b=LPDrvq6LQodPlTaidG9rx7MK6i4od4lNdtNHfW4s9uVnOjCOc1cQUbUHoR8BgR80Su
-         uiznrVB3+OHWJuI2idrzKUciihKxpUuj0VQWz16L16+8YyUGe7EFcOCP0/3uGsvXQYC7
-         NSi+pEf2hUJgCLuX+wQbnaiDY/M9egHDa0UoAH09zr7G7l5kxs2Jn35M/voIFi11aqDS
-         vFEcK9AJ84HYrO217bX6G3cbVN8gywpCn+yLZpOz55YK9UV4fNor3A69UfFOwuyUOlw2
-         6Itbf0r0+wn69d77iHWitXyPE7QDgu5bshzdAikW7GrpJ3WLf370sTIZ4BX/O10P+PyO
-         7vXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696326480; x=1696931280;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fSO0bN4wxCWQoR1ffLDq1SwoPvsZiN1HuMrXKXx4kYs=;
-        b=EKJ3roTexaa313Hbtfoxy0HfJr1Cdn4XcBZF1erJUjFJrkEHC254E3r361WgsCyOth
-         DUQY9bH5GQnpgnkLJhNcAUMGvl7WRtqYZB59hnSAGe/iDOlqY4+eIJBvkcec3fIET2uI
-         DOAO/k+qyzB3yzHdrkz2QtjYtpxumdt1jJmxs1w35hm+CYmwkbUQK0o4Gjmq4T5+YZyt
-         f8xFHavo/5zeeH/mfiSdqD1xTsfFQ+1LzsN/+Ms0WKCI1TJA4m2mERQ7dfMq3697i4eb
-         T6VIsEp+HbdZWPg3IbusgxCnaIqQgj+E2A/kHCfUQMuxiAujTu6Kk9kZ6raEduzq7c1n
-         fMEQ==
-X-Gm-Message-State: AOJu0YzEummC44M35bSnz1EE3Z/rgTwhPGxSrCGxG0T9tmKPAejRor1X
-	andkhL0ynxeUJTihg6huTUc=
-X-Google-Smtp-Source: AGHT+IEN69vXY6H/V81B5pwO5LsN5OeXTGJm5dn5NQmdMicTNk7eguebs0y066OCE8Zz0MKL8YE3Ng==
-X-Received: by 2002:a17:906:13:b0:9ad:8a9e:23ee with SMTP id 19-20020a170906001300b009ad8a9e23eemr2112990eja.13.1696326479613;
-        Tue, 03 Oct 2023 02:47:59 -0700 (PDT)
-Received: from gmail.com (1F2EF530.nat.pool.telekom.hu. [31.46.245.48])
-        by smtp.gmail.com with ESMTPSA id rn4-20020a170906d92400b009b2cc87b8c3sm760511ejb.52.2023.10.03.02.47.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Oct 2023 02:47:59 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Tue, 3 Oct 2023 11:47:57 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Leo Yan <leo.yan@linaro.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v3] perf doc: Document ring buffer mechanism
-Message-ID: <ZRvjTW4PACGaU2h+@gmail.com>
-References: <20230803114613.1786849-1-leo.yan@linaro.org>
- <ZRvda2QwdFYCp1F1@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436E9208D7;
+	Tue,  3 Oct 2023 11:00:38 +0000 (UTC)
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC2B8AC;
+	Tue,  3 Oct 2023 04:00:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=934M3M5cJg5fSPGaIg7428I8uQBQncWaQiT8PHBnuSE=; b=E7a738Qf1E4DMNUqfeslJzFl/i
+	WOWmTL94prinRHALF/qMyMN09I9RpJ7x8T7Xdypumf8nd85DI68BeVaeIbFQMWYY0QIA0hP54VVOU
+	rLzlieEhIW4OD55KsQwYalA84ZCe/Poq/H3Xvj0rcY8QHD5wfNeprAkQMoP2qV8lYhgpXiTDartTi
+	OZax6sqtjgVS9ZNFFqXdDoy77t80atP/Rt6RD5Vpa/Bb2bE2V39NbtcJ+c+vZF1PywRqu4W1jluuW
+	bOCKowaJEQDGQiWk9uMEy5M+AjkTf/sOepm2xvr+adHjkQSi0NybO1hKCi6KjtUhwM3VGgTPIFtj1
+	K0tomjag==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1qnd8U-00Ec4p-IJ; Tue, 03 Oct 2023 11:00:18 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 30FA6300665; Tue,  3 Oct 2023 13:00:18 +0200 (CEST)
+Date: Tue, 3 Oct 2023 13:00:18 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Tero Kristo <tero.kristo@linux.intel.com>
+Cc: x86@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
+	tglx@linutronix.de, hpa@zytor.com, irogers@google.com,
+	jolsa@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com,
+	acme@kernel.org, mingo@redhat.com, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com
+Subject: Re: [PATCHv2 2/2] perf/core: Allow reading package events from
+ perf_event_read_local
+Message-ID: <20231003110018.GG27267@noisy.programming.kicks-ass.net>
+References: <20230912124432.3616761-2-tero.kristo@linux.intel.com>
+ <20230913125956.3652667-1-tero.kristo@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -66,58 +43,64 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZRvda2QwdFYCp1F1@gmail.com>
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <20230913125956.3652667-1-tero.kristo@linux.intel.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-
-* Ingo Molnar <mingo@kernel.org> wrote:
-
+On Wed, Sep 13, 2023 at 03:59:56PM +0300, Tero Kristo wrote:
+> Per-package perf events are typically registered with a single CPU only,
+> however they can be read across all the CPUs within the package.
+> Currently perf_event_read maps the event CPU according to the topology
+> information to avoid an unnecessary SMP call, however
+> perf_event_read_local deals with hard values and rejects a read with a
+> failure if the CPU is not the one exactly registered. Allow similar
+> mapping within the perf_event_read_local if the perf event in question
+> can support this.
 > 
-> * Leo Yan <leo.yan@linaro.org> wrote:
+> This allows users like BPF code to read the package perf events properly
+> across different CPUs within a package.
 > 
-> > In the Linux perf tool, the ring buffer serves not only as a medium for
-> > transferring PMU event data but also as a vital mechanism for hardware
-> > tracing using technologies like Intel PT and Arm CoreSight, etc.
-> > 
-> > Consequently, the ring buffer mechanism plays a crucial role by ensuring
-> > high throughput for data transfer between the kernel and user space
-> > while avoiding excessive overhead caused by the ring buffer itself.
-> > 
-> > This commit documents the ring buffer mechanism in detail.  It provides
-> > an in-depth explanation of the implementation of both the generic ring
-> > buffer and the AUX ring buffer.  Additionally, it covers how these ring
-> > buffers support various tracing modes and explains the synchronization
-> > with memory barriers.
-> > 
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > ---
-> > 
-> > Changes from v2:
-> > - Refined doc for Thomas's suggestions (Thomas Richter).
-> > 
-> > Changes from v1:
-> > - Addressed Ian's comments and suggestions (Ian Rogers).
-> > 
-> > 
-> >  tools/perf/Documentation/perf-ring-buffer.txt | 762 ++++++++++++++++++
-> >  1 file changed, 762 insertions(+)
-> >  create mode 100644 tools/perf/Documentation/perf-ring-buffer.txt
+> Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
+> ---
+> v2:
+>   * prevent illegal array access in case event->oncpu == -1
+>   * split the event->cpu / event->oncpu handling to their own variables
 > 
-> Nice addition!
+>  kernel/events/core.c | 18 +++++++++++++++---
+>  1 file changed, 15 insertions(+), 3 deletions(-)
 > 
-> If it hasn't been picked up yet:
-> 
->   Acked-by: Ingo Molnar <mingo@kernel.org>
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 4c72a41f11af..6b343bac0a71 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -4425,6 +4425,9 @@ static int __perf_event_read_cpu(struct perf_event *event, int event_cpu)
+>  {
+>  	u16 local_pkg, event_pkg;
+>  
+> +	if (event_cpu < 0 || event_cpu >= nr_cpu_ids)
+> +		return event_cpu;
 
-Note that my ack is conditional on the conversion to RST and moving to 
-Documentation/ - this documents an important aspect of the primary perf 
-ABI, it deserves to be on the kernel side.
+	if ((unsigned)event_cpu >= nr_cpu_ids)
+		return event_cpu;
 
-Thanks,
+As you could also find at the current __perf_event_read_cpu() callsite.
 
-	Ingo
+> +
+>  	if (event->group_caps & PERF_EV_CAP_READ_ACTIVE_PKG) {
+>  		int local_cpu = smp_processor_id();
+>  
+> @@ -4528,6 +4531,8 @@ int perf_event_read_local(struct perf_event *event, u64 *value,
+>  {
+>  	unsigned long flags;
+>  	int ret = 0;
+> +	int event_cpu;
+> +	int event_oncpu;
+
+You wrecked the x-mas tree :-)
+
+I'll fix both up.
+
+Thanks!
