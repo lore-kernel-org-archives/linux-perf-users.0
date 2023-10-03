@@ -1,193 +1,71 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E150365
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 00:56:32 +0000 (UTC)
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FB82B4
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 17:56:30 -0700 (PDT)
-Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-1c61aafab45so3765465ad.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 02 Oct 2023 17:56:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696294590; x=1696899390; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yj2LydfbYuVN73T9ynH1N69l8bJp0s1/U19rUmj6vQM=;
-        b=iWDfm2bKG71c0O570jcKvoWTYt317X39rgjXONpDQGV2FMdyhDol8T2Q8+IzKNB6NC
-         b0RQ0gIsiB5YIeJ9/ibF0x8AkQaatu7aafAa9KmOD5nC8VPUyxaDBWQA5rl/FPpYJ9U3
-         lT+9gxgDr6NWb7hpglwXaPyOgeEoCa5dr3TUluYPiwG1c8JwdYh7SSoRlljM2YFavU8v
-         BBZjRkgd+kXjW1PuBRpiZ6xA2D4aWHVGSZldjciHJBkUqS/LyVRy2gZdTLKBKAUpDRIs
-         M5z/b5aUY11hROtjsmr8/EQpMEJDCXkIFmGrpfkPg9s0/8qTvQ6S+7u5ImLsQEs3hqrb
-         p4Ug==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 911CCEC8
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 04:08:18 +0000 (UTC)
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40EBABB;
+	Mon,  2 Oct 2023 21:08:17 -0700 (PDT)
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-7ab8696d047so227128241.1;
+        Mon, 02 Oct 2023 21:08:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696294590; x=1696899390;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yj2LydfbYuVN73T9ynH1N69l8bJp0s1/U19rUmj6vQM=;
-        b=KBhLVt9ULswfvs1d2FuETbca9acx3O8L6ZaMZc0UoaXBHYjpE4S+emEITZfIbcPK/h
-         EqwueKCdg0WctcNa2BG5Ufckyi9dvmRVU7UcgZn6itquXTR3bppFtwNdIvK19+OlgxC6
-         SON4sa/qnHq2JMcUdvix8x1axhXOnc5cqwlE6T9z11KyIBhQHD0ytQbwaY2rJnfU/yBt
-         1uralOOaXu/Rx6y/R0ApxDq1Bm1z13QAntoDgsk5g14p7bS0JvozT+vv5rjbmbwHqouv
-         oARKEq3EdNeQPYw43KSijVxYwp+8aOugS2gCD96jzm47IhBtMwGIk9XnfIrzvunxVtK3
-         P3Ww==
-X-Gm-Message-State: AOJu0Yxh4aSnBP2y4McE8QLvpPTVJzER6vuhmVyUDE8si1YDZUsWA9WE
-	MJy0ELi9amdzLbhSUr8dR+D3hmtk2xQ=
-X-Google-Smtp-Source: AGHT+IFcguWqUhm6JFgKYW6t/nQZcIErhbpBsBan76uqxUkigrtIbXoKbtCxAfZWBlGGFPKw7JX2utPfTss=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:db04:b0:1bc:5182:1de2 with SMTP id
- m4-20020a170902db0400b001bc51821de2mr226409plx.1.1696294589834; Mon, 02 Oct
- 2023 17:56:29 -0700 (PDT)
-Date: Mon, 2 Oct 2023 17:56:28 -0700
-In-Reply-To: <20231002204017.GB27267@noisy.programming.kicks-ass.net>
+        d=1e100.net; s=20230601; t=1696306096; x=1696910896;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sVF5dM/rD7LrEJ/cCejTv0aLhKjQq20c8kLgg4F7Lyc=;
+        b=ZEDcwIn3bsATz4z6y65NQvBNdmzvX8LWfrP6NiCuxyDbVfcJsbU6ONntB0MmGi2nmJ
+         YjYxUR5ziiqyDLNSSeX7Yc0H3SLF/CyB7l876Exho8UKHZWCLt9mB3emKHNzrB8PH8KO
+         mfcBiaV5EeS3tYNuc/fa4u9gfjf5RHj/Gm5/lyufhN467MJJr3OVUTtJckTVZYv9Q2Kz
+         P68WW8Lgn+2v8APrDirixNAheVAU0u2Zst5Ap/m1SaqY3WMzAb0h/28UrallAfNE93KB
+         E/iaeF5je8Qc5GDrzoZdZmigapbd2sLuqDkMgA5poXcd95aJqcN7AwsK4TOAGfCVbzS8
+         3cPQ==
+X-Gm-Message-State: AOJu0YwswbECQeDRXJ1ZhF4IvN3+jpJX2FwerLpuZqp/Gar/JiJINQUz
+	QyEejs+ii1hSUBSzKncYRHSjy+TBglZeTCCrTvMWeNrF
+X-Google-Smtp-Source: AGHT+IF3E/i3i9D9ywq9im0ZC5Eg+bu/jlvkAsmHW0QM7gZBVjjrCtSpzOB7r5P7ik2CvXhXSW94GKqR3DqwwvZ+BGY=
+X-Received: by 2002:a1f:de43:0:b0:49a:7a5b:dab2 with SMTP id
+ v64-20020a1fde43000000b0049a7a5bdab2mr10173027vkg.16.1696306096177; Mon, 02
+ Oct 2023 21:08:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20230927033124.1226509-1-dapeng1.mi@linux.intel.com>
- <20230927033124.1226509-8-dapeng1.mi@linux.intel.com> <20230927113312.GD21810@noisy.programming.kicks-ass.net>
- <ZRRl6y1GL-7RM63x@google.com> <20230929115344.GE6282@noisy.programming.kicks-ass.net>
- <ZRbxb15Opa2_AusF@google.com> <20231002115718.GB13957@noisy.programming.kicks-ass.net>
- <ZRrF38RGllA04R8o@gmail.com> <ZRroQg6flyGBtZTG@google.com> <20231002204017.GB27267@noisy.programming.kicks-ass.net>
-Message-ID: <ZRtmvLJFGfjcusQW@google.com>
-Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics event
-From: Sean Christopherson <seanjc@google.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, Like Xu <likexu@tencent.com>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Zhenyu Wang <zhenyuw@linux.intel.com>, Zhang Xiong <xiong.y.zhang@intel.com>, 
-	Lv Zhiyuan <zhiyuan.lv@intel.com>, Yang Weijiang <weijiang.yang@intel.com>, 
-	Dapeng Mi <dapeng1.mi@intel.com>, Jim Mattson <jmattson@google.com>, 
-	David Dunn <daviddunn@google.com>, Mingwei Zhang <mizhang@google.com>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.6
+MIME-Version: 1.0
+References: <20230928071605.17624-1-adrian.hunter@intel.com> <CAM9d7ch5yZZU_bY=d+5wkvQDJKCuctabBu3AMuyp4UYRO0upYA@mail.gmail.com>
+In-Reply-To: <CAM9d7ch5yZZU_bY=d+5wkvQDJKCuctabBu3AMuyp4UYRO0upYA@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Mon, 2 Oct 2023 21:08:04 -0700
+Message-ID: <CAM9d7cix+H0dddFJ-cy-+pf_SXy4prrGywDc6rj9-iCxpOm_gw@mail.gmail.com>
+Subject: Re: [PATCH] perf dlfilter: Fix use of addr_location__exit() in dlfilter__object_code()
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 02, 2023, Peter Zijlstra wrote:
-> On Mon, Oct 02, 2023 at 08:56:50AM -0700, Sean Christopherson wrote:
-> > > > worse it's not a choice based in technical reality.
-> > 
-> > The technical reality is that context switching the PMU between host and guest
-> > requires reading and writing far too many MSRs for KVM to be able to context
-> > switch at every VM-Enter and every VM-Exit.  And PMIs skidding past VM-Exit adds
-> > another layer of complexity to deal with.
-> 
-> I'm not sure what you're suggesting here. It will have to save/restore
-> all those MSRs anyway. Suppose it switches between vCPUs.
-
-The "when" is what's important.   If KVM took a literal interpretation of
-"exclude guest" for pass-through MSRs, then KVM would context switch all those
-MSRs twice for every VM-Exit=>VM-Enter roundtrip, even when the VM-Exit isn't a
-reschedule IRQ to schedule in a different task (or vCPU).  The overhead to save
-all the host/guest MSRs and load all of the guest/host MSRs *twice* for every
-VM-Exit would be a non-starter.  E.g. simple VM-Exits are completely handled in
-<1500 cycles, and "fastpath" exits are something like half that.  Switching all
-the MSRs is likely 1000+ cycles, if not double that.
-
-FWIW, the primary use case we care about is for slice-of-hardware VMs, where each
-vCPU is pinned 1:1 with a host pCPU.  I suspect it's a similar story for the other
-CSPs that are trying to provide accurate PMUs to guests.  If a vCPU is scheduled
-out, then yes, a bunch of context switching will need to happen.  But for the
-types of VMs that are the target audience, their vCPUs will rarely be scheduled
-out.
-
-> > > > It's a choice out of lazyness, disabling host PMU is not a requirement
-> > > > for pass-through.
-> > 
-> > The requirement isn't passthrough access, the requirements are that the guest's
-> > PMU has accuracy that is on par with bare metal, and that exposing a PMU to the
-> > guest doesn't have a meaningful impact on guest performance.
-> 
-> Given you don't think that trapping MSR accesses is viable, what else
-> besides pass-through did you have in mind?
-
-Sorry, I didn't mean to imply that we don't want pass-through of MSRs.  What I was
-trying to say is that *just* passthrough MSRs doesn't solve the problem, because
-again I thought the whole "context switch PMU state less often" approach had been
-firmly nak'd.
-
-> > > Not just a choice of laziness, but it will clearly be forced upon users
-> > > by external entities:
-> > > 
-> > >    "Pass ownership of the PMU to the guest and have no host PMU, or you
-> > >     won't have sane guest PMU support at all. If you disagree, please open
-> > >     a support ticket, which we'll ignore."
-> > 
-> > We don't have sane guest PMU support today.
-> 
-> Because KVM is too damn hard to use, rebooting a machine is *sooo* much
-> easier -- and I'm really not kidding here.
-> 
-> Anyway, you want pass-through, but that doesn't mean host cannot use
-> PMU when vCPU thread is not running.
-> 
-> > If y'all are willing to let KVM redefined exclude_guest to be KVM's outer run
-> > loop, then I'm all for exploring that option.  But that idea got shot down over
-> > a year ago[*]. 
-> 
-> I never saw that idea in that thread. You virt people keep talking like
-> I know how KVM works -- I'm not joking when I say I have no clue about
-> virt.
-> 
-> Sometimes I get a little clue after y'all keep bashing me over the head,
-> but it quickly erases itself.
+On Fri, Sep 29, 2023 at 11:40=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
 >
-> > Or at least, that was my reading of things.  Maybe it was just a
-> > misunderstanding because we didn't do a good job of defining the behavior.
-> 
-> This might be the case. I don't particularly care where the guest
-> boundary lies -- somewhere in the vCPU thread. Once the thread is gone,
-> PMU is usable again etc..
+> Hi Adrian,
+>
+> On Thu, Sep 28, 2023 at 12:16=E2=80=AFAM Adrian Hunter <adrian.hunter@int=
+el.com> wrote:
+> >
+> > Stop calling addr_location__exit() when addr_location__init() was not
+> > called.
+> >
+> > Fixes: 0dd5041c9a0e ("perf addr_location: Add init/exit/copy functions"=
+)
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+>
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-Well drat, that there would have saved a wee bit of frustration.  Better late
-than never though, that's for sure.
-
-Just to double confirm: keeping guest PMU state loaded until the vCPU is scheduled
-out or KVM exits to userspace, would mean that host perf events won't be active
-for potentially large swaths of non-KVM code.  Any function calls or event/exception
-handlers that occur within the context of ioctl(KVM_RUN) would run with host
-perf events disabled.
-
-Are you ok with that approach?  Assuming we don't completely botch things, the
-interfaces are sane, we can come up with a clean solution for handling NMIs, etc.
-
-> Re-reading parts of that linked thread, I see mention of
-> PT_MODE_HOST_GUEST -- see I knew we had something there, but I can never
-> remember all that nonsense. Worst part is that I can't find the relevant
-> perf code when I grep for that string :/
-
-The PT stuff is actually an example of what we don't want, at least not exactly.
-The concept of a hard switch between guest and host is ok, but as-is, KVM's PT
-code does a big pile of MSR reads and writes on every VM-Enter and VM-Exit.
-
-> Anyway, what I don't like is KVM silently changing all events to
-> ::exclude_guest=1. I would like all (pre-existing) ::exclude_guest=0
-> events to hard error when they run into a vCPU with pass-through on
-> (PERF_EVENT_STATE_ERROR). I would like event-creation to error out on
-> ::exclude_guest=0 events when a vCPU with pass-through exists -- with
-> minimal scope (this probably means all CPU events, but only relevant
-> vCPU events).
-
-Agreed, I am definitely against KVM silently doing anything.  And the more that
-is surfaced to the user, the better.
-
-> It also means ::exclude_guest should actually work -- it often does not
-> today -- the IBS thing for example totally ignores it.
-
-Is that already an in-tree, or are you talking about Manali's proposed series to
-support virtualizing IBS?
-
-> Anyway, none of this means host cannot use PMU because virt muck wants
-> it.
+Applied this and the test code to perf-tools, thanks!
