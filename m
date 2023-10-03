@@ -1,86 +1,80 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2432916
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 05:49:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD8DB4429
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 05:54:52 +0000 (UTC)
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7032BB4
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 22:49:34 -0700 (PDT)
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3935kDaN026371;
-	Tue, 3 Oct 2023 05:49:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=pp1;
- bh=2fSfbAVxlBQN+M501ObjJ2ZT7cKGIthdcAlyKazz4XI=;
- b=F5EvC/7Dt7C5wrQWiNs/p6WaVhJgOY2cMQYcESHFkybl2R5DxsRlu1f8mJk0vVqAU6Ok
- 2jb6i2CRz6qB03hE/oov9Flw1L7cEz6xyB47Iml0H0BlJdpeUc41RzlYBvzusa3hA9NN
- DcdBBR7ofjQbRDvH2EkpkJ2cThxudHgeyN5XD6sc26Ds8W9XAW0MT4d6kYZ06Co+f8BH
- EyTUuq5ltMPw7U3fKB/r+/Q7zGRoYbsIymb5EEahfGSdcREMaxLlVSr9ear2F+n5lsvN
- EWsTu0K3YfmJY7rPVEj3zfwMk1KO8Ml5yFJ/vWWn6ZnOYtViZnL83RmWIpeW4b4/X/DO ug== 
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23200B3
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 22:54:51 -0700 (PDT)
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3935HMmL002279;
+	Tue, 3 Oct 2023 05:54:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=YQ2dCorvtE8OwNqM9YgvMQKX7g5+Cro4o1kBzezqzLA=;
+ b=Eoh+HjoCGW6EJCkgV1Gb7yHCr2meFm0PsMDlV0qegeitXxYbpZADtjhhDJvcLZZ4urSv
+ Ib4V9iAml1wqUWze+41httKHzMnZOqpJRVUgRGKHbVyAW5I9je3XCuVGWO2arE8JVxmD
+ 7emUJ1zvroDezc3ZyikiDLIny+aQXfVvLOg039TeF9PYkeW+Z20MoXB4YQtW9YCoy5Ke
+ wSi6r7BOHEuoxGves8ZNOJo/cY/sl2ljvwYB4AZrTgwCxB2lMxYl7FUTOfnbFKuUuMzf
+ Yq8VIpZEwBDZUwx3RILLXEELhdpwMwB2ypG1HudVLTGMGTDjAvYyL29fYi7tN22WDKV0 yw== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tgd39r1cn-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tgcp0h3f9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Oct 2023 05:49:31 +0000
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3935nVKS000997;
-	Tue, 3 Oct 2023 05:49:31 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tgd39r1cc-1
+	Tue, 03 Oct 2023 05:54:48 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3935K346007120;
+	Tue, 3 Oct 2023 05:54:48 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tgcp0h3ex-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Oct 2023 05:49:31 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39344QJI010931;
-	Tue, 3 Oct 2023 05:49:30 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tf0q1en2b-1
+	Tue, 03 Oct 2023 05:54:48 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3935NuhY007467;
+	Tue, 3 Oct 2023 05:54:46 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3teygk726r-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Oct 2023 05:49:30 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3935nRjg13370088
+	Tue, 03 Oct 2023 05:54:46 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3935shfg44433952
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 3 Oct 2023 05:49:27 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 862F82004D;
-	Tue,  3 Oct 2023 05:49:27 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id ADBF620049;
-	Tue,  3 Oct 2023 05:49:25 +0000 (GMT)
-Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com (unknown [9.109.199.72])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue,  3 Oct 2023 05:49:25 +0000 (GMT)
-Date: Tue, 3 Oct 2023 11:19:17 +0530
+	Tue, 3 Oct 2023 05:54:43 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 955CF20040;
+	Tue,  3 Oct 2023 05:54:43 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C4B4F2004B;
+	Tue,  3 Oct 2023 05:54:41 +0000 (GMT)
+Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.in.ibm.com (unknown [9.109.199.72])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  3 Oct 2023 05:54:41 +0000 (GMT)
 From: Aditya Gupta <adityag@linux.ibm.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: acme@kernel.org, jolsa@kernel.org, irogers@google.com,
-        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+To: acme@kernel.org, jolsa@kernel.org, irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
         atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
         disgoel@linux.vnet.ibm.com
-Subject: Re: [PATCH v4 1/4] perf check: introduce check subcommand
-Message-ID: <5mglaqezgyyjw4hpjxdlhpcs5hud4owjvuhz6fqajffcitthys@hx7er5wvpbmd>
-References: <20231002173253.70891-1-adityag@linux.ibm.com>
- <20231002173253.70891-2-adityag@linux.ibm.com>
- <CAM9d7chMvBZgwFyRnax+=2Dg=dSb015qEer4t+hWes_uDhHMzQ@mail.gmail.com>
+Subject: [PATCH v5 0/4] Introduce perf check subcommand
+Date: Tue,  3 Oct 2023 11:24:36 +0530
+Message-ID: <20231003055440.111907-1-adityag@linux.ibm.com>
+X-Mailer: git-send-email 2.41.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: _YJwE029Sn6Rfc1Z80wSssWebHkKtWhN
+X-Proofpoint-ORIG-GUID: dDoX3P-4QP1mabGcpiSWEX4WbvxLelGM
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7chMvBZgwFyRnax+=2Dg=dSb015qEer4t+hWes_uDhHMzQ@mail.gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: nkr0Zdz-hJAu_IYDnNOgWF3Ra3vf3JKA
-X-Proofpoint-GUID: _fhfgtPn8VTBuSBwNYsUaQIQkZqXn9l6
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-10-03_03,2023-10-02_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0
- adultscore=0 malwarescore=0 lowpriorityscore=0 phishscore=0
- impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ malwarescore=0 priorityscore=1501 impostorscore=0 suspectscore=0
+ bulkscore=0 mlxlogscore=999 mlxscore=0 phishscore=0 lowpriorityscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2309180000 definitions=main-2310030044
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,
@@ -89,142 +83,102 @@ X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 02, 2023 at 09:35:37PM -0700, Namhyung Kim wrote:
-> Hello,
-> 
-> On Mon, Oct 2, 2023 at 10:33 AM Aditya Gupta <adityag@linux.ibm.com> wrote:
-> >
-> > Currently the presence of a feature is checked with a combination of
-> > perf version --build-options and greps, such as:
-> >
-> >     perf version --build-options | grep " on .* HAVE_FEATURE"
-> >
-> > Instead of this, introduce a subcommand "perf check --feature", with which
-> > scripts can test for presence of a feature, such as:
-> >
-> >     perf check --feature HAVE_FEATURE
-> >
-> > 'perf check --feature' command is expected to have exit status of 0 if
-> > feature is built-in, and 1 if it's not built-in or if feature is not known.
-> >
-> > An array 'supported_features' has also been introduced that can be used by
-> > other commands like 'perf version --build-options', so that new features
-> > can be added in one place, with the array
-> >
-> > Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
-> > ---
-> 
-> [SNIP]
-> > +/**
-> > + * check whether "feature" is built-in with perf
-> > + *
-> > + * returns:
-> > + *    0: Built-in
-> > + *    1: NOT built-in or Feature not known
-> > + */
-> 
-> There's a miscommunication here (again)..
-> I'm ok that has_support() return 1 for builtin features.
-> 
-> > +static int has_support(const char *feature)
-> > +{
-> > +       for (int i = 0; supported_features[i].name; ++i) {
-> > +               if ((strcmp(feature, supported_features[i].name) == 0) ||
-> > +                   (strcmp(feature, supported_features[i].macro) == 0)) {
-> > +                       if (!quiet)
-> > +                               STATUS(supported_features[i]);
-> > +                       return !supported_features[i].is_builtin;
-> > +               }
-> > +       }
-> > +
-> > +       if (!quiet)
-> > +               color_fprintf(stdout, PERF_COLOR_RED, "Feature not known: %s", feature);
-> > +
-> > +       return 1;
-> > +}
-> > +
-> > +int cmd_check(int argc, const char **argv)
-> > +{
-> > +       argc = parse_options(argc, argv, check_options, check_usage,
-> > +                            PARSE_OPT_STOP_AT_NON_OPTION);
-> > +
-> > +       if (!quiet)
-> > +               printf("perf check %s\n", perf_version_string);
-> > +
-> > +       if (check.feature)
-> > +               return has_support(check.feature);
-> 
-> And you can just change this part to confirm the shell standard.
-> 
->     if (check.feature)
->         return !has_supporf(check.feature);
+The Problem
+===========
 
-Oh, okay. Got it, thanks for including this diff, it made it clear :)
+Currently the presence of a feature is checked with a combination of
+perf version --build-options and greps, such as:
 
-> 
-> With that change, you can add my s-o-b to the series,
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+    perf version --build-options | grep " on .* HAVE_FEATURE"
 
-Thanks for the tag, will include the Acked by in V5.
+Proposed solution
+=================
 
-Thanks,
-- Aditya Gupta
+As suggested by contributors in:
+https://lore.kernel.org/linux-perf-users/ZMPWk5K63tadmDlU@kernel.org/
 
-> 
-> Thanks,
-> Namhyung
-> 
-> > +
-> > +       return 0;
-> > +}
-> > diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
-> > index f2ab5bae2150..9f895981bc9e 100644
-> > --- a/tools/perf/builtin.h
-> > +++ b/tools/perf/builtin.h
-> > @@ -2,6 +2,23 @@
-> >  #ifndef BUILTIN_H
-> >  #define BUILTIN_H
-> >
-> > +#include <stddef.h>
-> > +#include <linux/compiler.h>
-> > +#include <tools/config.h>
-> > +
-> > +struct feature_support {
-> > +       const char *name;
-> > +       const char *macro;
-> > +       int is_builtin;
-> > +};
-> > +
-> > +#define FEATURE_SUPPORT(name_, macro_) { \
-> > +       .name = name_,                       \
-> > +       .macro = #macro_,                    \
-> > +       .is_builtin = IS_BUILTIN(macro_) }
-> > +
-> > +extern struct feature_support supported_features[];
-> > +
-> >  void list_common_cmds_help(void);
-> >  const char *help_unknown_cmd(const char *cmd);
-> >
-> > @@ -9,6 +26,7 @@ int cmd_annotate(int argc, const char **argv);
-> >  int cmd_bench(int argc, const char **argv);
-> >  int cmd_buildid_cache(int argc, const char **argv);
-> >  int cmd_buildid_list(int argc, const char **argv);
-> > +int cmd_check(int argc, const char **argv);
-> >  int cmd_config(int argc, const char **argv);
-> >  int cmd_c2c(int argc, const char **argv);
-> >  int cmd_diff(int argc, const char **argv);
-> > diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-> > index d3fc8090413c..6514f4121c49 100644
-> > --- a/tools/perf/perf.c
-> > +++ b/tools/perf/perf.c
-> > @@ -50,6 +50,7 @@ static struct cmd_struct commands[] = {
-> >         { "archive",    NULL,   0 },
-> >         { "buildid-cache", cmd_buildid_cache, 0 },
-> >         { "buildid-list", cmd_buildid_list, 0 },
-> > +       { "check",      cmd_check,      0 },
-> >         { "config",     cmd_config,     0 },
-> >         { "c2c",        cmd_c2c,        0 },
-> >         { "diff",       cmd_diff,       0 },
-> > --
-> > 2.41.0
-> >
+Introduce a subcommand "perf check --feature", with which
+scripts can test for presence of a feature, such as:
+
+    perf check --feature HAVE_LIBTRACEEVENT
+
+    or
+
+    perf check --feature libtraceevent
+
+The usage of "perf version --build-options | grep" has been replaced in two
+tests, with "perf check --feature" command
+
+Also, to not duplicate the same feature list at multiple places, a new global
+'supported_features' array has been introduced in builtin.h, so both commands
+'perf check --feature' and 'perf version --build-options' use the same array
+
+'supported_features' feature is an array of 'struct feature_support', which
+also has the name of the feature, macro used to test it's presence, and a
+is_builtin member, which will be 0 if feature not built-in, and 1 if built-in
+
+Architectures Tested
+====================
+* x86_64
+* ppc64le
+
+Git tree
+========
+
+Git tree with this patch series applied for testing:
+https://github.com/adi-g15-ibm/linux/tree/perf-check-feature-v5
+
+Changelog
+=========
+V5
++ invert return value of 'has_support', but return value of perf check --feature
+according to shell convention
+
+V4
++ invert return value of perf check --feature
+
+V3
++ simplified has_support code in builtin-check.c (patch #1)
++ modified patch #3 and patch #4 according to change in return value in patch #1
+
+V2
++ improved the patch series with suggestions from Namhyung
++ fix incorrect return value, added -q option, and moved array definition to
+  perf-check.c
+
+V1
++ changed subcommand name to 'perf check --feature'
++ added documentation for perf check
++ support both macro (eg. HAVE_LIBTRACEEVENT), and name (eg. libtraceevent) as
+  input to 'perf check --feature'
++ change subject and descriptions of all patch mentioning perf check instead of
+  perf build
+
+V0: Previous patch series: https://lore.kernel.org/linux-perf-users/20230825061125.24312-1-adityag@linux.ibm.com/
+
+Aditya Gupta (3):
+  perf check: introduce check subcommand
+  perf version: update --build-options to use 'supported_features' array
+  perf tests task_analyzer: use perf check for libtraceevent support
+
+Athira Rajeev (1):
+  tools/perf/tests: Update probe_vfs_getname.sh script to use perf check
+    --feature
+
+ tools/perf/Build                              |   1 +
+ tools/perf/Documentation/perf-check.txt       |  59 +++++++++
+ tools/perf/builtin-check.c                    | 122 ++++++++++++++++++
+ tools/perf/builtin-version.c                  |  39 ++----
+ tools/perf/builtin.h                          |  18 +++
+ tools/perf/perf.c                             |   1 +
+ .../perf/tests/shell/lib/probe_vfs_getname.sh |   4 +-
+ .../shell/record+probe_libc_inet_pton.sh      |   5 +-
+ .../shell/record+script_probe_vfs_getname.sh  |   5 +-
+ tools/perf/tests/shell/test_task_analyzer.sh  |   4 +-
+ 10 files changed, 221 insertions(+), 37 deletions(-)
+ create mode 100644 tools/perf/Documentation/perf-check.txt
+ create mode 100644 tools/perf/builtin-check.c
+
+-- 
+2.41.0
+
