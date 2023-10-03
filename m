@@ -1,153 +1,209 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3136119
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 08:16:46 +0000 (UTC)
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E62B1DC;
-	Tue,  3 Oct 2023 01:16:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=P9UQwUtX+gLOqFK5NmarCgjIZeBtBENgaGmXHWLN+/Q=; b=kLgLvz3Khu87+ZceWZ8FFN4txS
-	RZriYnGghADsEKmQVDdO5wuSbE3UDmFwNjGjVML7auiE4PgMpFCDqwrswslt8kXbwGcQZO6o7KD74
-	AAp5q95TyffMx9+kyLv6L+SX9VD2TKSRgzv2YrPqF2Q3TOa+fdb0x1uYCIp7e/kFoGeRMEHLZqSFs
-	eXgVGzmPV0aYmdMq2MoEZChFg2M8AyB/WX11JBS9prB+q84nsxsJL/4wUInOLl3NnkmAUO0lj/j+y
-	OdYV5gbCbutq5trM5xwmMrwfj77Pyd5e3H02zZ5ZDS90inOHvJLG6fJlBZK1kipKFEhRMRoUlVEgM
-	/8vI1bUg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qnaZl-00Dwrv-8l; Tue, 03 Oct 2023 08:16:17 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E854330036C; Tue,  3 Oct 2023 10:16:16 +0200 (CEST)
-Date: Tue, 3 Oct 2023 10:16:16 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Ingo Molnar <mingo@kernel.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Like Xu <likexu@tencent.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>, kvm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Zhenyu Wang <zhenyuw@linux.intel.com>,
-	Zhang Xiong <xiong.y.zhang@intel.com>,
-	Lv Zhiyuan <zhiyuan.lv@intel.com>,
-	Yang Weijiang <weijiang.yang@intel.com>,
-	Dapeng Mi <dapeng1.mi@intel.com>, Jim Mattson <jmattson@google.com>,
-	David Dunn <daviddunn@google.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics
- event
-Message-ID: <20231003081616.GE27267@noisy.programming.kicks-ass.net>
-References: <20230927033124.1226509-8-dapeng1.mi@linux.intel.com>
- <20230927113312.GD21810@noisy.programming.kicks-ass.net>
- <ZRRl6y1GL-7RM63x@google.com>
- <20230929115344.GE6282@noisy.programming.kicks-ass.net>
- <ZRbxb15Opa2_AusF@google.com>
- <20231002115718.GB13957@noisy.programming.kicks-ass.net>
- <ZRrF38RGllA04R8o@gmail.com>
- <ZRroQg6flyGBtZTG@google.com>
- <20231002204017.GB27267@noisy.programming.kicks-ass.net>
- <ZRtmvLJFGfjcusQW@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4724CDDAC
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 09:21:45 +0000 (UTC)
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F77AA9
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 02:21:39 -0700 (PDT)
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3939Cng2010458;
+	Tue, 3 Oct 2023 09:21:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=ojWVqqCanbWIGjBqj/6z6jpt30YBiwx6HH/W2OdozDU=;
+ b=SwyHo+YPQx1hV33CQov7QaWSPURpyNZtpbCr6Ya4LxSkD7aHOzAS6Me4uge8NaL6c8gR
+ TvdUCJpdiAr0eb7MzIwBmUi2fNRmXfMvHZSlVhaXOsWm0Iys+BPGYRKVzpcHpgyGj1aG
+ OLqzyrYmki5e393fjAVJCIAGlCRhMeEH49hB5MvZyzWi7eZ66qB6RezR7ti1hUEkSCQx
+ 0m4fg/rpcuzd6HOZLRQoZL/xgFwDq5TRWdixLyMVE4UcdnfeZQ7K1joYDdtaweOE4Cx0
+ iJ3zVpYv38HNkIw96SD72Ok6VKkIxpoRIWMSay83q2lSeCjGvN0lEHZprRjcunwTgsgV 2w== 
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tgg49r6sw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Oct 2023 09:21:36 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3938tMvU010941;
+	Tue, 3 Oct 2023 09:21:35 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tf0q1g0be-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Oct 2023 09:21:35 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3939LWRC30015764
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 3 Oct 2023 09:21:32 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7F67E20043;
+	Tue,  3 Oct 2023 09:21:32 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 55BE82004B;
+	Tue,  3 Oct 2023 09:21:30 +0000 (GMT)
+Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com.com (unknown [9.171.39.117])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  3 Oct 2023 09:21:30 +0000 (GMT)
+From: Kajol Jain <kjain@linux.ibm.com>
+To: acme@kernel.org
+Cc: maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, disgoel@linux.ibm.com,
+        kjain@linux.ibm.com, linux-perf-users@vger.kernel.org,
+        namhyung@kernel.org, Disha Goel <disgoel@linux.vnet.ibm.com>
+Subject: [PATCH] tools/perf: Update call stack check in builtin-lock.c
+Date: Tue,  3 Oct 2023 14:51:13 +0530
+Message-Id: <20231003092113.252380-1-kjain@linux.ibm.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZRtmvLJFGfjcusQW@google.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: PZVq9_28fDphR-wzA-3Qr4MVpA225fnh
+X-Proofpoint-ORIG-GUID: PZVq9_28fDphR-wzA-3Qr4MVpA225fnh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-03_06,2023-10-02_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 clxscore=1015
+ suspectscore=0 bulkscore=0 spamscore=0 impostorscore=0 mlxscore=0
+ adultscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310030056
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 02, 2023 at 05:56:28PM -0700, Sean Christopherson wrote:
-> On Mon, Oct 02, 2023, Peter Zijlstra wrote:
+The perf test named "kernel lock contention analysis test"
+fails in powerpc system with below error:
 
-> > I'm not sure what you're suggesting here. It will have to save/restore
-> > all those MSRs anyway. Suppose it switches between vCPUs.
-> 
-> The "when" is what's important.   If KVM took a literal interpretation of
-> "exclude guest" for pass-through MSRs, then KVM would context switch all those
-> MSRs twice for every VM-Exit=>VM-Enter roundtrip, even when the VM-Exit isn't a
-> reschedule IRQ to schedule in a different task (or vCPU).  The overhead to save
-> all the host/guest MSRs and load all of the guest/host MSRs *twice* for every
-> VM-Exit would be a non-starter.  E.g. simple VM-Exits are completely handled in
-> <1500 cycles, and "fastpath" exits are something like half that.  Switching all
-> the MSRs is likely 1000+ cycles, if not double that.
+[command]# ./perf test 81 -vv
+ 81: kernel lock contention analysis test                            :
+ --- start ---
+test child forked, pid 2140
+Testing perf lock record and perf lock contention
+Testing perf lock contention --use-bpf
+[Skip] No BPF support
+Testing perf lock record and perf lock contention at the same time
+Testing perf lock contention --threads
+Testing perf lock contention --lock-addr
+Testing perf lock contention --type-filter (w/ spinlock)
+Testing perf lock contention --lock-filter (w/ tasklist_lock)
+Testing perf lock contention --callstack-filter (w/ unix_stream)
+[Fail] Recorded result should have a lock from unix_stream:
+test child finished with -1
+ ---- end ----
+kernel lock contention analysis test: FAILED!
 
-See, you're the virt-nerd and I'm sure you know what you're talking
-about, but I have no clue :-) I didn't know there were different levels
-of vm-exit.
+The test is failing because we get an address entry with 0 in
+perf lock samples for powerpc, and code for lock contention
+option "--callstack-filter" will not check further entries after
+address 0.
 
-> FWIW, the primary use case we care about is for slice-of-hardware VMs, where each
-> vCPU is pinned 1:1 with a host pCPU.
+Below are some of the samples from test generated perf.data file, which
+have 0 address in the 2nd entry of callstack:
+ --------
+sched-messaging    3409 [001]  7152.904029: lock:contention_begin: 0xc00000c80904ef00 (flags=SPIN)
+        c0000000001e926c __traceiter_contention_begin+0x6c ([kernel.kallsyms])
+                       0 [unknown] ([unknown])
+        c000000000f8a178 native_queued_spin_lock_slowpath+0x1f8 ([kernel.kallsyms])
+        c000000000f89f44 _raw_spin_lock_irqsave+0x84 ([kernel.kallsyms])
+        c0000000001d9fd0 prepare_to_wait+0x50 ([kernel.kallsyms])
+        c000000000c80f50 sock_alloc_send_pskb+0x1b0 ([kernel.kallsyms])
+        c000000000e82298 unix_stream_sendmsg+0x2b8 ([kernel.kallsyms])
+        c000000000c78980 sock_sendmsg+0x80 ([kernel.kallsyms])
 
-I've been given to understand that vm-exit is a bad word in this
-scenario, any exit is a fail. They get MWAIT and all the other crap and
-more or less pretend to be real hardware.
+sched-messaging    3408 [005]  7152.904036: lock:contention_begin: 0xc00000c80904ef00 (flags=SPIN)
+        c0000000001e926c __traceiter_contention_begin+0x6c ([kernel.kallsyms])
+                       0 [unknown] ([unknown])
+        c000000000f8a178 native_queued_spin_lock_slowpath+0x1f8 ([kernel.kallsyms])
+        c000000000f89f44 _raw_spin_lock_irqsave+0x84 ([kernel.kallsyms])
+        c0000000001d9fd0 prepare_to_wait+0x50 ([kernel.kallsyms])
+        c000000000c80f50 sock_alloc_send_pskb+0x1b0 ([kernel.kallsyms])
+        c000000000e82298 unix_stream_sendmsg+0x2b8 ([kernel.kallsyms])
+        c000000000c78980 sock_sendmsg+0x80 ([kernel.kallsyms])
+ --------
 
-So why do you care about those MSRs so much? That should 'never' happen
-in this scenario.
+Based on commit 20002ded4d93 ("perf_counter: powerpc: Add callchain support"),
+incase of powerpc, the callchain saved by kernel always includes first
+three entries as the NIP (next instruction pointer), LR (link register), and
+the contents of LR save area in the second stack frame. In certain scenarios
+its possible to have invalid kernel instruction addresses in either of LR or the
+second stack frame's LR. In that case, kernel will store the address as zer0.
+Hence, its possible to have 2nd or 3rd callstack entry as 0.
 
-> > > Or at least, that was my reading of things.  Maybe it was just a
-> > > misunderstanding because we didn't do a good job of defining the behavior.
-> > 
-> > This might be the case. I don't particularly care where the guest
-> > boundary lies -- somewhere in the vCPU thread. Once the thread is gone,
-> > PMU is usable again etc..
-> 
-> Well drat, that there would have saved a wee bit of frustration.  Better late
-> than never though, that's for sure.
-> 
-> Just to double confirm: keeping guest PMU state loaded until the vCPU is scheduled
-> out or KVM exits to userspace, would mean that host perf events won't be active
-> for potentially large swaths of non-KVM code.  Any function calls or event/exception
-> handlers that occur within the context of ioctl(KVM_RUN) would run with host
-> perf events disabled.
+As per the current code in match_callstack_filter function, we skip the callstack
+check incase we get 0 address. And hence the test case is failing in powerpc.
 
-Hurmph, that sounds sub-optimal, earlier you said <1500 cycles, this all
-sounds like a ton more.
+Fix this issue by updating the check in match_callstack_filter function,
+to not skip callstack check if the 2nd or 3rd entry have 0 address
+for powerpc.
 
-/me frobs around the kvm code some...
+Result in powerpc after patch changes:
 
-Are we talking about exit_fastpath loop in vcpu_enter_guest() ? That
-seems to run with IRQs disabled, so at most you can trigger a #PF or
-something, which will then trip an exception fixup because you can't run
-#PF with IRQs disabled etc..
+[command]# ./perf test 81 -vv
+ 81: kernel lock contention analysis test                            :
+ --- start ---
+test child forked, pid 4570
+Testing perf lock record and perf lock contention
+Testing perf lock contention --use-bpf
+[Skip] No BPF support
+Testing perf lock record and perf lock contention at the same time
+Testing perf lock contention --threads
+Testing perf lock contention --lock-addr
+Testing perf lock contention --type-filter (w/ spinlock)
+Testing perf lock contention --lock-filter (w/ tasklist_lock)
+[Skip] Could not find 'tasklist_lock'
+Testing perf lock contention --callstack-filter (w/ unix_stream)
+Testing perf lock contention --callstack-filter with task aggregation
+Testing perf lock contention CSV output
+[Skip] No BPF support
+test child finished with 0
+ ---- end ----
+kernel lock contention analysis test: Ok
 
-That seems fine. That is, a theoretical kvm_x86_handle_enter_irqoff()
-coupled with the existing kvm_x86_handle_exit_irqoff() seems like
-reasonable solution from where I'm sitting. That also more or less
-matches the FPU state save/restore AFAICT.
+Fixes: ebab291641be ("perf lock contention: Support filters for different aggregation")
+Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+---
+ tools/perf/builtin-lock.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-Or are you talking about the whole of vcpu_run() ? That seems like a
-massive amount of code, and doesn't look like anything I'd call a
-fast-path. Also, much of that loop has preemption enabled...
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index b141f2134274..e47cf524d3bb 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -524,6 +524,7 @@ bool match_callstack_filter(struct machine *machine, u64 *callstack)
+ 	struct map *kmap;
+ 	struct symbol *sym;
+ 	u64 ip;
++	const char *arch = perf_env__arch(machine->env);
+ 
+ 	if (list_empty(&callstack_filters))
+ 		return true;
+@@ -531,7 +532,21 @@ bool match_callstack_filter(struct machine *machine, u64 *callstack)
+ 	for (int i = 0; i < max_stack_depth; i++) {
+ 		struct callstack_filter *filter;
+ 
+-		if (!callstack || !callstack[i])
++		/*
++		 * In powerpc, the callchain saved by kernel always includes
++		 * first three entries as the NIP (next instruction pointer),
++		 * LR (link register), and the contents of LR save area in the
++		 * second stack frame. In certain scenarios its possible to have
++		 * invalid kernel instruction addresses in either LR or the second
++		 * stack frame's LR. In that case, kernel will store that address as
++		 * zero.
++		 *
++		 * The below check will continue to look into callstack,
++		 * incase first or second callstack index entry has 0
++		 * address for powerpc.
++		 */
++		if (!callstack || (!callstack[i] && (strcmp(arch, "powerpc") ||
++						(i != 1 && i != 2))))
+ 			break;
+ 
+ 		ip = callstack[i];
+-- 
+2.39.3
 
-> Are you ok with that approach?  Assuming we don't completely botch things, the
-> interfaces are sane, we can come up with a clean solution for handling NMIs, etc.
-
-Since you steal the whole PMU, can't you re-route the PMI to something
-that's virt friendly too?
-
-> > It also means ::exclude_guest should actually work -- it often does not
-> > today -- the IBS thing for example totally ignores it.
-> 
-> Is that already an in-tree, or are you talking about Manali's proposed series to
-> support virtualizing IBS?
-
-The IBS code as is, it totally ignores ::exclude_guest. Manali was going
-to add some of it. But I'm not at all sure about the state of the other
-PMU drivers we have.
-
-Just for giggles, P4 has VMX support... /me runs like crazy
