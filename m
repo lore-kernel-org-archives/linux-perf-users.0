@@ -1,190 +1,189 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5C710FE
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 04:28:44 +0000 (UTC)
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0929AA4
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 21:28:43 -0700 (PDT)
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-565e54cb93aso237160a12.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 02 Oct 2023 21:28:43 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9446537B
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 04:35:52 +0000 (UTC)
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D79FBBD
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Oct 2023 21:35:50 -0700 (PDT)
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2774f6943b1so351532a91.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Oct 2023 21:35:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696307322; x=1696912122;
+        d=1e100.net; s=20230601; t=1696307750; x=1696912550;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ui5vQUghw0mUmrDD+JeX4I/UKJ+qz0BegH6zc5Qe3i4=;
-        b=fbP2JA5MzKFsqBvuzGpqFPfy26/KScwOeHltLCqLw8uitwrkvw51bmMase4TCX31fA
-         bfSkjCas53StxsDBtRYHSFeyBVLCdkjbI6IfxQOaOmTWQNDiYF5tJg97RVuPY9FpFKd7
-         ++fzovHnhg6s9EHr0i0icOTtq2sLsmYOVpUXZWHaJBGm6jrh0zn1BXnU/MrXRbaz4gZD
-         IQMrvgQTGx9SzaEElv9M4hPbzkrKGlBzbOKNHFdSzfPY145oF1xopxCpZuJtKWjVJ+xZ
-         EKJRzciujeRWxQY8Ki6fvkkKR7x3gA6E3jVf5FZKkeK68lg6/YH+tKkAl56UHW8Q2iLg
-         Sflw==
-X-Gm-Message-State: AOJu0YzIEMA2xnumwHWZw3Ofku2aTxgNvoZHiId8APsqSGCpdj6ssiug
-	iz53kjeeVq8rswhxzBXYoQs2lAF/oDdFuZgh3oE=
-X-Google-Smtp-Source: AGHT+IGAYn6urh4QQpEb1WP35HB4W0615OWmzQRgcXzZodqLzIRl8jDxQ089v8BXwy2w3l14Af6R0W0fKNMmKkKUGXQ=
-X-Received: by 2002:a17:90a:e503:b0:26b:56fa:87d3 with SMTP id
- t3-20020a17090ae50300b0026b56fa87d3mr11514638pjy.31.1696307322223; Mon, 02
- Oct 2023 21:28:42 -0700 (PDT)
+        bh=8i83OeoEuNKd/xo417X1ZYjZnl4arPiLZyOUVOW7/sg=;
+        b=A4OqtnFdoA88gcfUi1N1DUcNWx3wtX/PxopJaSgg1cwPsuI3dXgDbkLEzhclSR1P8I
+         0MHuoXwKgoVAzQbI0zQHMVsGh4fetz+HONdihiuaQCAjcRSCez606p1pZhvpAHw9KMRF
+         gikJkC6FOyE0cAAs8Nc6E+VQxNeYQ0N93VwU5dSxqy7ZN7Al25I0fl2tZfqRhebtfUy+
+         XHN/9NnnivBkRjXBVCE5CcIpRIlXmNUqQit+jSuW5xXxP/GX1OO4cIg54VmSE4uQvuT9
+         FGJzuYFgRQCqaP7flxOD5607oRT+BFZ0KMcYIHjnJb36IRGl/Z/p27wk2Tcgj8Z6ZiMy
+         FYjQ==
+X-Gm-Message-State: AOJu0YwRbZuTcjEK6EgIg641AMQuxR4T2g62ns/iqI/bPGhsaUEBFtVg
+	Mb3dwAD5f2Hsjt1yMRnr+wAkCAQ7Jz1u6lKnnGA=
+X-Google-Smtp-Source: AGHT+IHY8Z+yeCe1I72F91kWffcIzZ6G1y1agATYbH9/hlh6seDUogALeKW6L5XcgEQiftgyQ/koKUhVxC3XTevIilY=
+X-Received: by 2002:a17:90a:5d18:b0:26b:4a9e:3c7e with SMTP id
+ s24-20020a17090a5d1800b0026b4a9e3c7emr12573847pji.4.1696307750170; Mon, 02
+ Oct 2023 21:35:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230928075213.84392-1-atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20230928075213.84392-1-atrajeev@linux.vnet.ibm.com>
+References: <20231002173253.70891-1-adityag@linux.ibm.com> <20231002173253.70891-2-adityag@linux.ibm.com>
+In-Reply-To: <20231002173253.70891-2-adityag@linux.ibm.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 2 Oct 2023 21:28:30 -0700
-Message-ID: <CAM9d7cj0iLdrV6EYmo_oC9M_32fuRVv_geBPz4GJv41jZR5WNQ@mail.gmail.com>
-Subject: Re: [PATCH V5 1/3] tools/perf: Add text_end to "struct dso" to save
- .text section size
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com, 
-	irogers@google.com, linux-perf-users@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com, kjain@linux.ibm.com, 
-	disgoel@linux.vnet.ibm.com, Disha Goel <disgoel@linux.ibm.com>
+Date: Mon, 2 Oct 2023 21:35:37 -0700
+Message-ID: <CAM9d7chMvBZgwFyRnax+=2Dg=dSb015qEer4t+hWes_uDhHMzQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] perf check: introduce check subcommand
+To: Aditya Gupta <adityag@linux.ibm.com>
+Cc: acme@kernel.org, jolsa@kernel.org, irogers@google.com, 
+	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com, 
+	atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
 	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.6
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
 Hello,
 
-On Thu, Sep 28, 2023 at 12:52=E2=80=AFAM Athira Rajeev
-<atrajeev@linux.vnet.ibm.com> wrote:
+On Mon, Oct 2, 2023 at 10:33=E2=80=AFAM Aditya Gupta <adityag@linux.ibm.com=
+> wrote:
 >
-> Update "struct dso" to include new member "text_end".
-> This new field will represent the offset for end of text
-> section for a dso. For elf, this value is derived as:
-> sh_size (Size of section in byes) + sh_offset (Section file
-> offst) of the elf header for text.
+> Currently the presence of a feature is checked with a combination of
+> perf version --build-options and greps, such as:
 >
-> For bfd, this value is derived as:
-> 1. For PE file,
-> section->size + ( section->vma - dso->text_offset)
-> 2. Other cases:
-> section->filepos (file position) + section->size (size of
-> section)
+>     perf version --build-options | grep " on .* HAVE_FEATURE"
 >
-> To resolve the address from a sample, perf looks at the
-> DSO maps. In case of address from a kernel module, there
-> were some address found to be not resolved. This was
-> observed while running perf test for "Object code reading".
-> Though the ip falls beteen the start address of the loaded
-> module (perf map->start ) and end address ( perf map->end),
-> it was unresolved.
+> Instead of this, introduce a subcommand "perf check --feature", with whic=
+h
+> scripts can test for presence of a feature, such as:
 >
-> Example:
+>     perf check --feature HAVE_FEATURE
 >
->     Reading object code for memory address: 0xc008000007f0142c
->     File is: /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
->     On file address is: 0x1114cc
->     Objdump command is: objdump -z -d --start-address=3D0x11142c --stop-a=
-ddress=3D0x1114ac /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
->     objdump read too few bytes: 128
->     test child finished with -1
+> 'perf check --feature' command is expected to have exit status of 0 if
+> feature is built-in, and 1 if it's not built-in or if feature is not know=
+n.
 >
-> Here, module is loaded at:
->     # cat /proc/modules | grep xfs
->     xfs 2228224 3 - Live 0xc008000007d00000
+> An array 'supported_features' has also been introduced that can be used b=
+y
+> other commands like 'perf version --build-options', so that new features
+> can be added in one place, with the array
 >
-> From objdump for xfs module, text section is:
->     text 0010f7bc  0000000000000000 0000000000000000 000000a0 2**4
->
-> Here the offset for 0xc008000007f0142c ie  0x112074 falls out
-> .text section which is up to 0x10f7bc.
->
-> In this case for module, the address 0xc008000007e11fd4 is pointing
-> to stub instructions. This address range represents the module stubs
-> which is allocated on module load and hence is not part of DSO offset.
->
-> To identify such  address, which falls out of text
-> section and within module end, added the new field "text_end" to
-> "struct dso".
->
-> Reported-by: Disha Goel <disgoel@linux.ibm.com>
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
-> Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
+> Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
+> ---
 
-For the series,
+[SNIP]
+> +/**
+> + * check whether "feature" is built-in with perf
+> + *
+> + * returns:
+> + *    0: Built-in
+> + *    1: NOT built-in or Feature not known
+> + */
+
+There's a miscommunication here (again)..
+I'm ok that has_support() return 1 for builtin features.
+
+> +static int has_support(const char *feature)
+> +{
+> +       for (int i =3D 0; supported_features[i].name; ++i) {
+> +               if ((strcmp(feature, supported_features[i].name) =3D=3D 0=
+) ||
+> +                   (strcmp(feature, supported_features[i].macro) =3D=3D =
+0)) {
+> +                       if (!quiet)
+> +                               STATUS(supported_features[i]);
+> +                       return !supported_features[i].is_builtin;
+> +               }
+> +       }
+> +
+> +       if (!quiet)
+> +               color_fprintf(stdout, PERF_COLOR_RED, "Feature not known:=
+ %s", feature);
+> +
+> +       return 1;
+> +}
+> +
+> +int cmd_check(int argc, const char **argv)
+> +{
+> +       argc =3D parse_options(argc, argv, check_options, check_usage,
+> +                            PARSE_OPT_STOP_AT_NON_OPTION);
+> +
+> +       if (!quiet)
+> +               printf("perf check %s\n", perf_version_string);
+> +
+> +       if (check.feature)
+> +               return has_support(check.feature);
+
+And you can just change this part to confirm the shell standard.
+
+    if (check.feature)
+        return !has_supporf(check.feature);
+
+With that change, you can add my s-o-b to the series,
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
-
-> ---
-> Changelog:
-> v2 -> v3:
->  Added Reviewed-by from Adrian
+> +
+> +       return 0;
+> +}
+> diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
+> index f2ab5bae2150..9f895981bc9e 100644
+> --- a/tools/perf/builtin.h
+> +++ b/tools/perf/builtin.h
+> @@ -2,6 +2,23 @@
+>  #ifndef BUILTIN_H
+>  #define BUILTIN_H
 >
->  v1 -> v2:
->  Added text_end for bfd also by updating dso__load_bfd_symbols
->  as suggested by Adrian.
+> +#include <stddef.h>
+> +#include <linux/compiler.h>
+> +#include <tools/config.h>
+> +
+> +struct feature_support {
+> +       const char *name;
+> +       const char *macro;
+> +       int is_builtin;
+> +};
+> +
+> +#define FEATURE_SUPPORT(name_, macro_) { \
+> +       .name =3D name_,                       \
+> +       .macro =3D #macro_,                    \
+> +       .is_builtin =3D IS_BUILTIN(macro_) }
+> +
+> +extern struct feature_support supported_features[];
+> +
+>  void list_common_cmds_help(void);
+>  const char *help_unknown_cmd(const char *cmd);
 >
->  tools/perf/util/dso.h        | 1 +
->  tools/perf/util/symbol-elf.c | 4 +++-
->  tools/perf/util/symbol.c     | 2 ++
->  3 files changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-> index b41c9782c754..70fe0fe69bef 100644
-> --- a/tools/perf/util/dso.h
-> +++ b/tools/perf/util/dso.h
-> @@ -181,6 +181,7 @@ struct dso {
->         u8               rel;
->         struct build_id  bid;
->         u64              text_offset;
-> +       u64              text_end;
->         const char       *short_name;
->         const char       *long_name;
->         u16              long_name_len;
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index 95e99c332d7e..9e7eeaf616b8 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -1514,8 +1514,10 @@ dso__load_sym_internal(struct dso *dso, struct map=
- *map, struct symsrc *syms_ss,
->         }
->
->         if (elf_section_by_name(runtime_ss->elf, &runtime_ss->ehdr, &tshd=
-r,
-> -                               ".text", NULL))
-> +                               ".text", NULL)) {
->                 dso->text_offset =3D tshdr.sh_addr - tshdr.sh_offset;
-> +               dso->text_end =3D tshdr.sh_offset + tshdr.sh_size;
-> +       }
->
->         if (runtime_ss->opdsec)
->                 opddata =3D elf_rawdata(runtime_ss->opdsec, NULL);
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 3f36675b7c8f..f25e4e62cf25 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -1733,8 +1733,10 @@ int dso__load_bfd_symbols(struct dso *dso, const c=
-har *debugfile)
->                         /* PE symbols can only have 4 bytes, so use .text=
- high bits */
->                         dso->text_offset =3D section->vma - (u32)section-=
->vma;
->                         dso->text_offset +=3D (u32)bfd_asymbol_value(symb=
-ols[i]);
-> +                       dso->text_end =3D (section->vma - dso->text_offse=
-t) + section->size;
->                 } else {
->                         dso->text_offset =3D section->vma - section->file=
-pos;
-> +                       dso->text_end =3D section->filepos + section->siz=
-e;
->                 }
->         }
->
+> @@ -9,6 +26,7 @@ int cmd_annotate(int argc, const char **argv);
+>  int cmd_bench(int argc, const char **argv);
+>  int cmd_buildid_cache(int argc, const char **argv);
+>  int cmd_buildid_list(int argc, const char **argv);
+> +int cmd_check(int argc, const char **argv);
+>  int cmd_config(int argc, const char **argv);
+>  int cmd_c2c(int argc, const char **argv);
+>  int cmd_diff(int argc, const char **argv);
+> diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+> index d3fc8090413c..6514f4121c49 100644
+> --- a/tools/perf/perf.c
+> +++ b/tools/perf/perf.c
+> @@ -50,6 +50,7 @@ static struct cmd_struct commands[] =3D {
+>         { "archive",    NULL,   0 },
+>         { "buildid-cache", cmd_buildid_cache, 0 },
+>         { "buildid-list", cmd_buildid_list, 0 },
+> +       { "check",      cmd_check,      0 },
+>         { "config",     cmd_config,     0 },
+>         { "c2c",        cmd_c2c,        0 },
+>         { "diff",       cmd_diff,       0 },
 > --
-> 2.31.1
+> 2.41.0
 >
