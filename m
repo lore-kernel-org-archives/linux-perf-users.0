@@ -1,49 +1,49 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816FE1375
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 04:47:05 +0000 (UTC)
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E0E9D3;
-	Mon,  2 Oct 2023 21:47:04 -0700 (PDT)
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-27734d76e1bso316273a91.2;
-        Mon, 02 Oct 2023 21:47:04 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D911375
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Oct 2023 04:48:27 +0000 (UTC)
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DAFDA4;
+	Mon,  2 Oct 2023 21:48:26 -0700 (PDT)
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-27752a1e184so357257a91.3;
+        Mon, 02 Oct 2023 21:48:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696308424; x=1696913224;
+        d=1e100.net; s=20230601; t=1696308505; x=1696913305;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SAqDrWh5okAg7A4rwUqEIqw966pHJE6DnlfG9T172Og=;
-        b=C3kbFTb2LPG45VemVUALv9/iRhcnt4KufMK50bYhhkB1i6IUqCNuaFrb2H3Sa58q19
-         zvtqIhXSxD1CcGr7uk/4QBIxrNUhlKMQ5sxFcpKweyuhUDFjTbY3d/BKAjtHmw5UeL0k
-         suX/epbIuRzSsv0x3MZgNoJPb1+Iw4fWpZwJXXizha9SASzuvJlehoUPR9MD0Q1/QS7w
-         puaL518lsGJyW2ozwjesaHa/y4EkJqv1mbb0EEuf5I5vHuTke5owYqQbNfpLsM+95yYY
-         KsGGQkygm2FBNdFJs8SXdKhygh0N+WD/aLij3swnbZ9I1fvkaHFs8K4X9aL3qS7eoCTP
-         aR/Q==
-X-Gm-Message-State: AOJu0YxLUYGHtyIpYMZWcjMR+Dh0v38fjYufNXBZjS8hQT+ny5+9Fuva
-	u8htxVQU+q62JjHaFZ9J+cNqHk2as4mIaw4Sv3A=
-X-Google-Smtp-Source: AGHT+IERzbYaWyQbhR+nShIBM4jHt1nNh96uFF52D5YOmaclsP8HnUboUKfBMQ9IF8frZVoiDMCY/uHbsOB6iavotQY=
-X-Received: by 2002:a17:90a:6c41:b0:268:15dd:c5c7 with SMTP id
- x59-20020a17090a6c4100b0026815ddc5c7mr10411882pjj.40.1696308423944; Mon, 02
- Oct 2023 21:47:03 -0700 (PDT)
+        bh=uHjgW31Cb5JX+I43pXyDF3Bh+g0Rd3vo+Stu0+l1IzE=;
+        b=vyDby3qmsaQugR9NXzsvtOo8haQgnyz0tjdKGeuugANVoGnvz6G2crObx8WnrkclHN
+         bvR1CdMZ+7Tpk72ryr6mNyIxkxQFubvgCQAJgbhJ7/5u1zi26mJr9apOa9QY0pXYuPP0
+         Ow/37Z01TQwBga455GGUnwAXRf5xu9JNptSB5z+MWAvLOk1qrcS35m8WB05nED/af/Dj
+         oTJE1J+1h5r2QdrYir8c0/kLeSmABn1vzZFjs6KVK1Vkz5mu14heJdP1ULOiviYNwDNc
+         GHQPTBys02UjkCvlE2+oCsCV4eM3tIGQ+m0OdRtA1FO+HxENBF/hbNcjfVifBuK0cIuD
+         1dkA==
+X-Gm-Message-State: AOJu0Yx1Rrz9BqoxRQkHfIQyAj/ACRYEv3EUDaSczu3nZ0pDxb8cKj0q
+	QGJ/xhu3nxJW24ix/gJQ9yS/EXUZRUTRt6dxKnM=
+X-Google-Smtp-Source: AGHT+IEV4t6wvfg22C/Cso+AWQw5qEu1JJCBuW+otkjfmIJCi4YdUqo3IdZaxvCHUAEuE7sA1po+pHhgXxotpSYaSOA=
+X-Received: by 2002:a17:90a:68ce:b0:25e:a8ab:9157 with SMTP id
+ q14-20020a17090a68ce00b0025ea8ab9157mr11756381pjj.22.1696308505450; Mon, 02
+ Oct 2023 21:48:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230930060206.2353141-1-irogers@google.com>
-In-Reply-To: <20230930060206.2353141-1-irogers@google.com>
+References: <20230930072719.1267784-1-visitorckw@gmail.com>
+In-Reply-To: <20230930072719.1267784-1-visitorckw@gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 2 Oct 2023 21:46:52 -0700
-Message-ID: <CAM9d7chAvXoU90uCNAqr6DxH1-pUYqd82_BAdoZjjs1Uscm8Vw@mail.gmail.com>
-Subject: Re: [PATCH v1] perf test: Avoid system wide when not privileged
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Mon, 2 Oct 2023 21:48:14 -0700
+Message-ID: <CAM9d7ciJZsCaVo6m_VtJ=QKNGAtBkAncidQjHzwexd3H8+3Usw@mail.gmail.com>
+Subject: Re: [PATCH] perf hisi-ptt: Fix memory leak in lseek failure handling
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: yangyicong@hisilicon.com, jonathan.cameron@huawei.com, 
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
@@ -53,60 +53,46 @@ X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hi Ian,
+Hello,
 
-On Fri, Sep 29, 2023 at 11:02=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
+On Sat, Sep 30, 2023 at 12:27=E2=80=AFAM Kuan-Wei Chiu <visitorckw@gmail.co=
+m> wrote:
 >
-> Switch the test program to sleep that makes more sense for system wide
-> events. Only enable system wide when root or not paranoid. This avoids
-> failures under some testing conditions like ARM cloud.
+> In the previous code, there was a memory leak issue where the previously
+> allocated memory was not freed upon a failed lseek operation. This patch
+> addresses the problem by releasing the old memory before returning -errno
+> in case of a lseek failure. This ensures that memory is properly managed
+> and avoids potential memory leaks.
 >
-> Signed-off-by: Ian Rogers <irogers@google.com>
-
-While I'm ok with the change, I wonder why it doesn't have the same
-code structure as in the stat_all_metrics.sh which checks the actual result=
-.
+> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
 
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
+
 > ---
->  tools/perf/tests/shell/stat_all_metricgroups.sh | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
+>  tools/perf/util/hisi-ptt.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 >
-> diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/perf=
-/tests/shell/stat_all_metricgroups.sh
-> index cb35e488809a..f3e305649e2c 100755
-> --- a/tools/perf/tests/shell/stat_all_metricgroups.sh
-> +++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
-> @@ -4,9 +4,21 @@
+> diff --git a/tools/perf/util/hisi-ptt.c b/tools/perf/util/hisi-ptt.c
+> index 45b614bb73bf..43bd1ca62d58 100644
+> --- a/tools/perf/util/hisi-ptt.c
+> +++ b/tools/perf/util/hisi-ptt.c
+> @@ -108,8 +108,10 @@ static int hisi_ptt_process_auxtrace_event(struct pe=
+rf_session *session,
+>                 data_offset =3D 0;
+>         } else {
+>                 data_offset =3D lseek(fd, 0, SEEK_CUR);
+> -               if (data_offset =3D=3D -1)
+> +               if (data_offset =3D=3D -1) {
+> +                       free(data);
+>                         return -errno;
+> +               }
+>         }
 >
->  set -e
->
-> -for m in $(perf list --raw-dump metricgroups); do
-> +function ParanoidAndNotRoot()
-> +{
-> +  [ "$(id -u)" !=3D 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid=
-)" -gt $1 ]
-> +}
-> +
-> +system_wide_flag=3D"-a"
-> +if ParanoidAndNotRoot 0
-> +then
-> +  system_wide_flag=3D""
-> +fi
-> +
-> +for m in $(perf list --raw-dump metricgroups)
-> +do
->    echo "Testing $m"
-> -  perf stat -M "$m" -a true
-> +  perf stat -M "$m" $system_wide_flag sleep 0.01
->  done
->
->  exit 0
+>         err =3D readn(fd, data, size);
 > --
-> 2.42.0.582.g8ccd20d70d-goog
+> 2.25.1
 >
