@@ -1,88 +1,217 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72DD3FF1;
-	Wed,  4 Oct 2023 14:00:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0377BC433C8;
-	Wed,  4 Oct 2023 14:00:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696428006;
-	bh=JkCPUsuUI3/3l9L6acemPj6CRuOU0mfuQCrxMIBBSag=;
-	h=From:To:Cc:Subject:Date:From;
-	b=RVWUozDKYLmqLmtB9ewVdKCS98Z5J9W8/4mez/LppskXXm+JuV9FT2FKLhDvgYW3v
-	 Osysc9ZAHRrfHw9PRcyUbV93S3c4vhap9kdti4w3/+BOaxXBdqMRqD//ffSO+cu6Zz
-	 K5vI1QG/is19xUbLfEH80VNrxpd2B/at91m1VULfCxak0AwBcAp/T7/NCBq8ci4Mtl
-	 LxJKeXBmoABgN2zmR7gHpGypo2maq7umGjsW1wDBid03gObx/ZXDbEClUmR8AtO64f
-	 4AVV/410BO3T3rIEmQW4q/O7YAR7dOrifJMQIvyZvQTh0uwBbAP3XI57cYWKKE85e8
-	 uebONMAHtHTQw==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Quentin Monnet <quentin@isovalent.com>
-Cc: Dmitry Goncharov <dgoncharov@users.sf.net>,
-	linux-perf-users@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Martin KaFai Lau <kafai@fb.com>,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Ian Rogers <irogers@google.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: [PATCH] tools/build: Fix -s detection code for new make
-Date: Wed,  4 Oct 2023 15:59:56 +0200
-Message-ID: <20231004135956.987903-1-jolsa@kernel.org>
-X-Mailer: git-send-email 2.41.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33161B29D
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Oct 2023 19:52:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3M0L3PIY"
+Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AB2EC0
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Oct 2023 12:52:16 -0700 (PDT)
+Received: by mail-qv1-xf29.google.com with SMTP id 6a1803df08f44-65cff6a6878so847296d6.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 Oct 2023 12:52:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1696449135; x=1697053935; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3gZi2ZOT0/NwNNMK0bLNpJXByeH26vbZhIwZdTT4NO8=;
+        b=3M0L3PIYrMzUqHkxWsOQwpQ+upp/YX0EgqX61tQLtTHsovZv3+KnVcBI74h00zmAUn
+         MR1TDO6zEhnbrNKhLSC4k8DZZRNQw8i5s7zpP4mx5g7A4Jrai6VcB+Z5fdkFS4Re6Re4
+         bX4OPebVkLG/TZPf+8/ii+EaZVUBEalbiJqNe0JXwZQe55YH48iKdrUXhag5M5WnAnXu
+         SdRJfjk/W3RfnI0THf5BgZmpR/1otJgBgyo/7Fi6x80m3iwqZdVL9Iz3+aFuGVwf9Kq9
+         4gjHcQ8p66IPPtim81z1bZ360uqXkZYeX7uUG3ylfJe6BZL0uYsFXNSHuIrSnoaJCkKV
+         6HZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696449135; x=1697053935;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3gZi2ZOT0/NwNNMK0bLNpJXByeH26vbZhIwZdTT4NO8=;
+        b=LJ/wNnT3x/7HA8r0aiYFbooRHLD20/G2nKq0Tr6cfTDfbMrfYT+7cODDr8LA3HAXA7
+         JZIbSbIFnq6o1bGqqGvpaX6cD4rwRi4xED4+ByUrCHGJQON2DVbxrT4YvA+9M7JuoZGn
+         ltnNrjwyt78QyFlroygdGrznfExFDQpNK8MsDC+BC0y/ffvBpMLrP7mSgi5WzyfkbgYD
+         6EkCSyAYcP7WRszIXiL80bym5PDEqa984t929dLdExK1GopJZE9ZPuQk6NH02UpRmrE3
+         esc8zd5N46uueyOVaaCz5d6996OKGpOfenYWiWbkT4t3Yx396gh9KPOeywFeuOajmgbA
+         NRXQ==
+X-Gm-Message-State: AOJu0YxAgAI7EJhXoEK/q4oP2TldB/vkhKqrRHVT+dSVi5Yp2m+Pl8j4
+	qehfQKZBWUojiRTTq3lftDSzFKuao1aUDCu1JJU8wQ==
+X-Google-Smtp-Source: AGHT+IEt+Xdag0I75gqVyQP7uCJ8LKCpq5edlCsZiVtt+OzGNFKVcDn72QWLExmI+hwVkBRer/pZKNsSbifUyQquWbk=
+X-Received: by 2002:a0c:e34c:0:b0:64f:3bec:9b29 with SMTP id
+ a12-20020a0ce34c000000b0064f3bec9b29mr3446437qvm.39.1696449135216; Wed, 04
+ Oct 2023 12:52:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <ZRRl6y1GL-7RM63x@google.com> <20230929115344.GE6282@noisy.programming.kicks-ass.net>
+ <ZRbxb15Opa2_AusF@google.com> <20231002115718.GB13957@noisy.programming.kicks-ass.net>
+ <ZRrF38RGllA04R8o@gmail.com> <ZRroQg6flyGBtZTG@google.com>
+ <20231002204017.GB27267@noisy.programming.kicks-ass.net> <ZRtmvLJFGfjcusQW@google.com>
+ <20231003081616.GE27267@noisy.programming.kicks-ass.net> <ZRwx7gcY7x1x3a5y@google.com>
+ <20231004112152.GA5947@noisy.programming.kicks-ass.net>
+In-Reply-To: <20231004112152.GA5947@noisy.programming.kicks-ass.net>
+From: Mingwei Zhang <mizhang@google.com>
+Date: Wed, 4 Oct 2023 12:51:38 -0700
+Message-ID: <CAL715W+RgX2JfeRsenNoU4TuTWwLS5H=P+vrZK_GQVQmMkyraw@mail.gmail.com>
+Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics event
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Sean Christopherson <seanjc@google.com>, Ingo Molnar <mingo@kernel.org>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Like Xu <likexu@tencent.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Zhenyu Wang <zhenyuw@linux.intel.com>, Zhang Xiong <xiong.y.zhang@intel.com>, 
+	Lv Zhiyuan <zhiyuan.lv@intel.com>, Yang Weijiang <weijiang.yang@intel.com>, 
+	Dapeng Mi <dapeng1.mi@intel.com>, Jim Mattson <jmattson@google.com>, 
+	David Dunn <daviddunn@google.com>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-As Dmitry described in [1] changelog the current way of detecting
--s option is broken for new make.
+On Wed, Oct 4, 2023 at 4:22=E2=80=AFAM Peter Zijlstra <peterz@infradead.org=
+> wrote:
+>
+> On Tue, Oct 03, 2023 at 08:23:26AM -0700, Sean Christopherson wrote:
+> > On Tue, Oct 03, 2023, Peter Zijlstra wrote:
+> > > On Mon, Oct 02, 2023 at 05:56:28PM -0700, Sean Christopherson wrote:
+>
+> > > > Well drat, that there would have saved a wee bit of frustration.  B=
+etter late
+> > > > than never though, that's for sure.
+> > > >
+> > > > Just to double confirm: keeping guest PMU state loaded until the vC=
+PU is scheduled
+> > > > out or KVM exits to userspace, would mean that host perf events won=
+'t be active
+> > > > for potentially large swaths of non-KVM code.  Any function calls o=
+r event/exception
+> > > > handlers that occur within the context of ioctl(KVM_RUN) would run =
+with host
+> > > > perf events disabled.
+> > >
+> > > Hurmph, that sounds sub-optimal, earlier you said <1500 cycles, this =
+all
+> > > sounds like a ton more.
+> > >
+> > > /me frobs around the kvm code some...
+> > >
+> > > Are we talking about exit_fastpath loop in vcpu_enter_guest() ? That
+> > > seems to run with IRQs disabled, so at most you can trigger a #PF or
+> > > something, which will then trip an exception fixup because you can't =
+run
+> > > #PF with IRQs disabled etc..
+> > >
+> > > That seems fine. That is, a theoretical kvm_x86_handle_enter_irqoff()
+> > > coupled with the existing kvm_x86_handle_exit_irqoff() seems like
+> > > reasonable solution from where I'm sitting. That also more or less
+> > > matches the FPU state save/restore AFAICT.
+> > >
+> > > Or are you talking about the whole of vcpu_run() ? That seems like a
+> > > massive amount of code, and doesn't look like anything I'd call a
+> > > fast-path. Also, much of that loop has preemption enabled...
+> >
+> > The whole of vcpu_run().  And yes, much of it runs with preemption enab=
+led.  KVM
+> > uses preempt notifiers to context switch state if the vCPU task is sche=
+duled
+> > out/in, we'd use those hooks to swap PMU state.
+> >
+> > Jumping back to the exception analogy, not all exits are equal.  For "s=
+imple" exits
+> > that KVM can handle internally, the roundtrip is <1500.   The exit_fast=
+path loop is
+> > roughly half that.
+> >
+> > But for exits that are more complex, e.g. if the guest hits the equival=
+ent of a
+> > page fault, the cost of handling the page fault can vary significantly.=
+  It might
+> > be <1500, but it might also be 10x that if handling the page fault requ=
+ires faulting
+> > in a new page in the host.
+> >
+> > We don't want to get too aggressive with moving stuff into the exit_fas=
+tpath loop,
+> > because doing too much work with IRQs disabled can cause latency proble=
+ms for the
+> > host.  This isn't much of a concern for slice-of-hardware setups, but w=
+ould be
+> > quite problematic for other use cases.
+> >
+> > And except for obviously slow paths (from the guest's perspective), ext=
+ra latency
+> > on any exit can be problematic.  E.g. even if we got to the point where=
+ KVM handles
+> > 99% of exits the fastpath (may or may not be feasible), a not-fastpath =
+exit at an
+> > inopportune time could throw off the guest's profiling results, introdu=
+ce unacceptable
+> > jitter, etc.
+>
+> I'm confused... the PMU must not be running after vm-exit. It must not
+> be able to profile the host. So what jitter are you talking about?
+>
+> Even if we persist the MSR contents, the PMU itself must be disabled on
+> vm-exit and enabled on vm-enter. If not by hardware then by software
+> poking at the global ctrl msr.
+>
+> I also don't buy the latency argument, we already do full and complete
+> PMU rewrites with IRQs disabled in the context switch path. And as
+> mentioned elsewhere, the whole AMX thing has an 8k copy stuck in the FPU
+> save/restore.
+>
+> I would much prefer we keep the PMU swizzle inside the IRQ disabled
+> region of vcpu_enter_guest(). That's already a ton better than you have
+> today.
 
-Changing the tools/build -s option detection the same way as it was
-fixed for root Makefile in [1].
+Peter, I think the jitter Sean was talking about is the potential
+issue in pass-through implementation. If KVM follows the perf
+subsystem requirement, then after VMEXIT, any perf_event with
+exclude_guest=3D1 (and higher priority ?) should start counting. Because
+the guest VM exclusively owns the PMU with all counters at that point,
+the gigantic msr save/restore is needed which requires a whole bunch
+of wrmsrs. That will be a performance disaster since VMEXIT could
+happen at a very high frequency.
 
-[1] 4bf73588165b ("kbuild: Port silent mode detection to future gnu make.")
+In comparison, if we are talking about the existing non-pass-through
+implementation, then the PMU context switch immediately becomes
+simple: only global ctrl tweak is needed at VM boundary (to stop
+exclude_host events and start exclude_guest events in one shot), since
+the guest VM and host perf subsystem share the hardware PMU counters.
 
-Cc: Dmitry Goncharov <dgoncharov@users.sf.net>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/build/Makefile.build | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+Peter, that latency argument in pass-through implementation is
+something that we hope you could buy. This should be relatively easy
+to prove. I can provide some data if you need.
 
-diff --git a/tools/build/Makefile.build b/tools/build/Makefile.build
-index fac42486a8cf..5fb3fb3d97e0 100644
---- a/tools/build/Makefile.build
-+++ b/tools/build/Makefile.build
-@@ -20,7 +20,15 @@ else
-   Q=@
- endif
- 
--ifneq ($(findstring s,$(filter-out --%,$(MAKEFLAGS))),)
-+# If the user is running make -s (silent mode), suppress echoing of commands
-+# make-4.0 (and later) keep single letter options in the 1st word of MAKEFLAGS.
-+ifeq ($(filter 3.%,$(MAKE_VERSION)),)
-+short-opts := $(firstword -$(MAKEFLAGS))
-+else
-+short-opts := $(filter-out --%,$(MAKEFLAGS))
-+endif
-+
-+ifneq ($(findstring s,$(short-opts)),)
-   quiet=silent_
- endif
- 
--- 
-2.41.0
+To cope with that, KVM might need to defer that msr save/restore for
+PMU to a later point in pass-through implementation. But that will be
+conflicting with the support of the perf_event with exclude_guest=3D1.
+So, I guess that's why Sean mentioned this: "If y'all are willing to
+let KVM redefined exclude_guest to be KVM's outer run loop, then I'm
+all for exploring that option."
 
+Note that the situation is similar to AMX, i.e., when guest VMEXIT to
+host, the FPU should be switched to the host FPU as well, but because
+AMX is too big and thus too slow, KVM defers that to a very late
+point.
+
+Hope this explains a little bit and sorry if this might be an
+injection of noise.
+
+Thanks.
+-Mingwei
+
+
+>
