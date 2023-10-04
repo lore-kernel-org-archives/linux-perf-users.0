@@ -1,64 +1,65 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33161B29D
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Oct 2023 19:52:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7FC723DE
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Oct 2023 20:43:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3M0L3PIY"
-Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AB2EC0
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Oct 2023 12:52:16 -0700 (PDT)
-Received: by mail-qv1-xf29.google.com with SMTP id 6a1803df08f44-65cff6a6878so847296d6.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 04 Oct 2023 12:52:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H3oNnDSb"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 188E5BF
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Oct 2023 13:43:53 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59f61a639b9so3516267b3.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 Oct 2023 13:43:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696449135; x=1697053935; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3gZi2ZOT0/NwNNMK0bLNpJXByeH26vbZhIwZdTT4NO8=;
-        b=3M0L3PIYrMzUqHkxWsOQwpQ+upp/YX0EgqX61tQLtTHsovZv3+KnVcBI74h00zmAUn
-         MR1TDO6zEhnbrNKhLSC4k8DZZRNQw8i5s7zpP4mx5g7A4Jrai6VcB+Z5fdkFS4Re6Re4
-         bX4OPebVkLG/TZPf+8/ii+EaZVUBEalbiJqNe0JXwZQe55YH48iKdrUXhag5M5WnAnXu
-         SdRJfjk/W3RfnI0THf5BgZmpR/1otJgBgyo/7Fi6x80m3iwqZdVL9Iz3+aFuGVwf9Kq9
-         4gjHcQ8p66IPPtim81z1bZ360uqXkZYeX7uUG3ylfJe6BZL0uYsFXNSHuIrSnoaJCkKV
-         6HZg==
+        d=google.com; s=20230601; t=1696452232; x=1697057032; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wlxMyVNfjSoRd0rBi0mcIrA81XFNXKxdXgwPCPKKi+c=;
+        b=H3oNnDSb1ptmSWlR1eGP4UzY4jKXo+IhvD8pqUNFPMBByPe825qdI2i05focHY1HCk
+         9YNkeCO6VtciiEAzWZ+peisMwXCu3jUWThy8DExH6SWBzRMp8SBXFI36LDjvJL04Ux6P
+         efXOsdwcfN4WhgeLvvZVmBqMGZFHqrp5cu2YlWn9lh3b3GxfRxvRHRNucaD9AcyhqvrC
+         F2zzubenazDDfJfdi3sPi4NtFZQdYFEYvMKjPNAN5T+uGqOXgeyu5ssEH8/mssUPEftM
+         O78pk3a8gXvcrKmrwX9KAetSYBk3JknJakBY55EAXzHBhIG9jc1bPX9unQxSvsfQmdQ6
+         WfmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696449135; x=1697053935;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3gZi2ZOT0/NwNNMK0bLNpJXByeH26vbZhIwZdTT4NO8=;
-        b=LJ/wNnT3x/7HA8r0aiYFbooRHLD20/G2nKq0Tr6cfTDfbMrfYT+7cODDr8LA3HAXA7
-         JZIbSbIFnq6o1bGqqGvpaX6cD4rwRi4xED4+ByUrCHGJQON2DVbxrT4YvA+9M7JuoZGn
-         ltnNrjwyt78QyFlroygdGrznfExFDQpNK8MsDC+BC0y/ffvBpMLrP7mSgi5WzyfkbgYD
-         6EkCSyAYcP7WRszIXiL80bym5PDEqa984t929dLdExK1GopJZE9ZPuQk6NH02UpRmrE3
-         esc8zd5N46uueyOVaaCz5d6996OKGpOfenYWiWbkT4t3Yx396gh9KPOeywFeuOajmgbA
-         NRXQ==
-X-Gm-Message-State: AOJu0YxAgAI7EJhXoEK/q4oP2TldB/vkhKqrRHVT+dSVi5Yp2m+Pl8j4
-	qehfQKZBWUojiRTTq3lftDSzFKuao1aUDCu1JJU8wQ==
-X-Google-Smtp-Source: AGHT+IEt+Xdag0I75gqVyQP7uCJ8LKCpq5edlCsZiVtt+OzGNFKVcDn72QWLExmI+hwVkBRer/pZKNsSbifUyQquWbk=
-X-Received: by 2002:a0c:e34c:0:b0:64f:3bec:9b29 with SMTP id
- a12-20020a0ce34c000000b0064f3bec9b29mr3446437qvm.39.1696449135216; Wed, 04
- Oct 2023 12:52:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1696452232; x=1697057032;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wlxMyVNfjSoRd0rBi0mcIrA81XFNXKxdXgwPCPKKi+c=;
+        b=L5qhN8ksLSvccSKOqs/0UJJzfB4qTRCxwdSJgKrcmn4uUotE8GGH7szqTBz2KioGRU
+         8wlqtC/IJMbfSOVBRpbLzpkca+fOEGCp7IqL1zmc9TvioEiYmftrI8ZHSOHYJ7dlfq7T
+         0I044KlFhvMNKSD2BHgWRU6zM38i5dEEhQwU0h7Cc6DB4TSfOEApypdMSHYAeTTuMluh
+         yFabvlkhmBHzhHPVe1pyc1I7E1QkO5lKls1Ey6a9TPpTjg1Ro3PIZAm7p5eIWLTSf/CN
+         Y0gATs6M6+5POhBWwvgPP0xAlPtkK07SqO+MuaM1KV2BL+2qaoCSqELYwSjlC5Dd4SaB
+         cG4A==
+X-Gm-Message-State: AOJu0YzfpkfXSyI7IPdFuYpmSOmswDnJlKx4b2vNkzFk8ojexEljmYWg
+	5fauC7VT8okB0q2GtNZVmqP7VNdnapA=
+X-Google-Smtp-Source: AGHT+IG2BxIFzc18lhT+t5otGKsS7OX2vGezvKCEpmxGtv1UbKYti1bZa4/a2NuIvrXiOGhPcEgq5gnEBhw=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a81:a909:0:b0:59b:e97e:f7e3 with SMTP id
+ g9-20020a81a909000000b0059be97ef7e3mr63909ywh.2.1696452232294; Wed, 04 Oct
+ 2023 13:43:52 -0700 (PDT)
+Date: Wed, 4 Oct 2023 13:43:50 -0700
+In-Reply-To: <CAL715WLbAnnGUiTdHPO0L7v2FHGa5qmTnWJDi8k9qVkGry5GGQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <ZRRl6y1GL-7RM63x@google.com> <20230929115344.GE6282@noisy.programming.kicks-ass.net>
+Mime-Version: 1.0
+References: <20230927113312.GD21810@noisy.programming.kicks-ass.net>
+ <ZRRl6y1GL-7RM63x@google.com> <20230929115344.GE6282@noisy.programming.kicks-ass.net>
  <ZRbxb15Opa2_AusF@google.com> <20231002115718.GB13957@noisy.programming.kicks-ass.net>
  <ZRrF38RGllA04R8o@gmail.com> <ZRroQg6flyGBtZTG@google.com>
  <20231002204017.GB27267@noisy.programming.kicks-ass.net> <ZRtmvLJFGfjcusQW@google.com>
- <20231003081616.GE27267@noisy.programming.kicks-ass.net> <ZRwx7gcY7x1x3a5y@google.com>
- <20231004112152.GA5947@noisy.programming.kicks-ass.net>
-In-Reply-To: <20231004112152.GA5947@noisy.programming.kicks-ass.net>
-From: Mingwei Zhang <mizhang@google.com>
-Date: Wed, 4 Oct 2023 12:51:38 -0700
-Message-ID: <CAL715W+RgX2JfeRsenNoU4TuTWwLS5H=P+vrZK_GQVQmMkyraw@mail.gmail.com>
+ <CAL715WLbAnnGUiTdHPO0L7v2FHGa5qmTnWJDi8k9qVkGry5GGQ@mail.gmail.com>
+Message-ID: <ZR3Ohk50rSofAnSL@google.com>
 Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics event
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Sean Christopherson <seanjc@google.com>, Ingo Molnar <mingo@kernel.org>, 
+From: Sean Christopherson <seanjc@google.com>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
 	Dapeng Mi <dapeng1.mi@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
 	Like Xu <likexu@tencent.com>, Mark Rutland <mark.rutland@arm.com>, 
@@ -70,148 +71,85 @@ Cc: Sean Christopherson <seanjc@google.com>, Ingo Molnar <mingo@kernel.org>,
 	Lv Zhiyuan <zhiyuan.lv@intel.com>, Yang Weijiang <weijiang.yang@intel.com>, 
 	Dapeng Mi <dapeng1.mi@intel.com>, Jim Mattson <jmattson@google.com>, 
 	David Dunn <daviddunn@google.com>, Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Wed, Oct 4, 2023 at 4:22=E2=80=AFAM Peter Zijlstra <peterz@infradead.org=
-> wrote:
->
-> On Tue, Oct 03, 2023 at 08:23:26AM -0700, Sean Christopherson wrote:
-> > On Tue, Oct 03, 2023, Peter Zijlstra wrote:
-> > > On Mon, Oct 02, 2023 at 05:56:28PM -0700, Sean Christopherson wrote:
->
-> > > > Well drat, that there would have saved a wee bit of frustration.  B=
-etter late
-> > > > than never though, that's for sure.
-> > > >
-> > > > Just to double confirm: keeping guest PMU state loaded until the vC=
-PU is scheduled
-> > > > out or KVM exits to userspace, would mean that host perf events won=
-'t be active
-> > > > for potentially large swaths of non-KVM code.  Any function calls o=
-r event/exception
-> > > > handlers that occur within the context of ioctl(KVM_RUN) would run =
-with host
-> > > > perf events disabled.
-> > >
-> > > Hurmph, that sounds sub-optimal, earlier you said <1500 cycles, this =
-all
-> > > sounds like a ton more.
-> > >
-> > > /me frobs around the kvm code some...
-> > >
-> > > Are we talking about exit_fastpath loop in vcpu_enter_guest() ? That
-> > > seems to run with IRQs disabled, so at most you can trigger a #PF or
-> > > something, which will then trip an exception fixup because you can't =
-run
-> > > #PF with IRQs disabled etc..
-> > >
-> > > That seems fine. That is, a theoretical kvm_x86_handle_enter_irqoff()
-> > > coupled with the existing kvm_x86_handle_exit_irqoff() seems like
-> > > reasonable solution from where I'm sitting. That also more or less
-> > > matches the FPU state save/restore AFAICT.
-> > >
-> > > Or are you talking about the whole of vcpu_run() ? That seems like a
-> > > massive amount of code, and doesn't look like anything I'd call a
-> > > fast-path. Also, much of that loop has preemption enabled...
-> >
-> > The whole of vcpu_run().  And yes, much of it runs with preemption enab=
-led.  KVM
-> > uses preempt notifiers to context switch state if the vCPU task is sche=
-duled
-> > out/in, we'd use those hooks to swap PMU state.
-> >
-> > Jumping back to the exception analogy, not all exits are equal.  For "s=
-imple" exits
-> > that KVM can handle internally, the roundtrip is <1500.   The exit_fast=
-path loop is
-> > roughly half that.
-> >
-> > But for exits that are more complex, e.g. if the guest hits the equival=
-ent of a
-> > page fault, the cost of handling the page fault can vary significantly.=
-  It might
-> > be <1500, but it might also be 10x that if handling the page fault requ=
-ires faulting
-> > in a new page in the host.
-> >
-> > We don't want to get too aggressive with moving stuff into the exit_fas=
-tpath loop,
-> > because doing too much work with IRQs disabled can cause latency proble=
-ms for the
-> > host.  This isn't much of a concern for slice-of-hardware setups, but w=
-ould be
-> > quite problematic for other use cases.
-> >
-> > And except for obviously slow paths (from the guest's perspective), ext=
-ra latency
-> > on any exit can be problematic.  E.g. even if we got to the point where=
- KVM handles
-> > 99% of exits the fastpath (may or may not be feasible), a not-fastpath =
-exit at an
-> > inopportune time could throw off the guest's profiling results, introdu=
-ce unacceptable
-> > jitter, etc.
->
-> I'm confused... the PMU must not be running after vm-exit. It must not
-> be able to profile the host. So what jitter are you talking about?
->
-> Even if we persist the MSR contents, the PMU itself must be disabled on
-> vm-exit and enabled on vm-enter. If not by hardware then by software
-> poking at the global ctrl msr.
->
-> I also don't buy the latency argument, we already do full and complete
-> PMU rewrites with IRQs disabled in the context switch path. And as
-> mentioned elsewhere, the whole AMX thing has an 8k copy stuck in the FPU
-> save/restore.
->
-> I would much prefer we keep the PMU swizzle inside the IRQ disabled
-> region of vcpu_enter_guest(). That's already a ton better than you have
-> today.
+On Tue, Oct 03, 2023, Mingwei Zhang wrote:
+> On Mon, Oct 2, 2023 at 5:56=E2=80=AFPM Sean Christopherson <seanjc@google=
+.com> wrote:
+> > The "when" is what's important.   If KVM took a literal interpretation =
+of
+> > "exclude guest" for pass-through MSRs, then KVM would context switch al=
+l those
+> > MSRs twice for every VM-Exit=3D>VM-Enter roundtrip, even when the VM-Ex=
+it isn't a
+> > reschedule IRQ to schedule in a different task (or vCPU).  The overhead=
+ to save
+> > all the host/guest MSRs and load all of the guest/host MSRs *twice* for=
+ every
+> > VM-Exit would be a non-starter.  E.g. simple VM-Exits are completely ha=
+ndled in
+> > <1500 cycles, and "fastpath" exits are something like half that.  Switc=
+hing all
+> > the MSRs is likely 1000+ cycles, if not double that.
+>=20
+> Hi Sean,
+>=20
+> Sorry, I have no intention to interrupt the conversation, but this is
+> slightly confusing to me.
+>=20
+> I remember when doing AMX, we added gigantic 8KB memory in the FPU
+> context switch. That works well in Linux today. Why can't we do the
+> same for PMU? Assuming we context switch all counters, selectors and
+> global stuff there?
 
-Peter, I think the jitter Sean was talking about is the potential
-issue in pass-through implementation. If KVM follows the perf
-subsystem requirement, then after VMEXIT, any perf_event with
-exclude_guest=3D1 (and higher priority ?) should start counting. Because
-the guest VM exclusively owns the PMU with all counters at that point,
-the gigantic msr save/restore is needed which requires a whole bunch
-of wrmsrs. That will be a performance disaster since VMEXIT could
-happen at a very high frequency.
+That's what we (Google folks) are proposing.  However, there are significan=
+t
+side effects if KVM context switches PMU outside of vcpu_run(), whereas the=
+ FPU
+doesn't suffer the same problems.
 
-In comparison, if we are talking about the existing non-pass-through
-implementation, then the PMU context switch immediately becomes
-simple: only global ctrl tweak is needed at VM boundary (to stop
-exclude_host events and start exclude_guest events in one shot), since
-the guest VM and host perf subsystem share the hardware PMU counters.
+Keeping the guest FPU resident for the duration of vcpu_run() is, in terms =
+of
+functionality, completely transparent to the rest of the kernel.  From the =
+kernel's
+perspective, the guest FPU is just a variation of a userspace FPU, and the =
+kernel
+is already designed to save/restore userspace/guest FPU state when the kern=
+el wants
+to use the FPU for whatever reason.  And crucially, kernel FPU usage is exp=
+licit
+and contained, e.g. see kernel_fpu_{begin,end}(), and comes with mechanisms=
+ for
+KVM to detect when the guest FPU needs to be reloaded (see TIF_NEED_FPU_LOA=
+D).
 
-Peter, that latency argument in pass-through implementation is
-something that we hope you could buy. This should be relatively easy
-to prove. I can provide some data if you need.
+The PMU is a completely different story.  PMU usage, a.k.a. perf, by design=
+ is
+"always running".  KVM can't transparently stop host usage of the PMU, as d=
+isabling
+host PMU usage stops perf events from counting/profiling whatever it is the=
+y're
+supposed to profile.
 
-To cope with that, KVM might need to defer that msr save/restore for
-PMU to a later point in pass-through implementation. But that will be
-conflicting with the support of the perf_event with exclude_guest=3D1.
-So, I guess that's why Sean mentioned this: "If y'all are willing to
-let KVM redefined exclude_guest to be KVM's outer run loop, then I'm
-all for exploring that option."
+Today, KVM minimizes the "downtime" of host PMU usage by context switching =
+PMU
+state at VM-Enter and VM-Exit, or at least as close as possible, e.g. for L=
+BRs
+and Intel PT.
 
-Note that the situation is similar to AMX, i.e., when guest VMEXIT to
-host, the FPU should be switched to the host FPU as well, but because
-AMX is too big and thus too slow, KVM defers that to a very late
-point.
-
-Hope this explains a little bit and sorry if this might be an
-injection of noise.
-
-Thanks.
--Mingwei
-
-
->
+What we are proposing would *significantly* increase the downtime, to the p=
+oint
+where it would almost be unbounded in some paths, e.g. if KVM faults in a p=
+age,
+gup() could go swap in memory from disk, install PTEs, and so on and so for=
+th.
+If the host is trying to profile something related to swap or memory manage=
+ment,
+they're out of luck.
