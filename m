@@ -1,100 +1,88 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D07111AF
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Oct 2023 11:33:14 +0000 (UTC)
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47ED2A7;
-	Wed,  4 Oct 2023 04:33:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=LgTiEbkbWU/3dLeZ3ndl5aQ62XZwVSgJEp3sPp3BvRc=; b=IRxNn1UqLy+vTJM/bW1VgjMao3
-	NvMCUspVk2mwGp0Ab0bQosB3DQJivBzggsXhKjIaiH871I0oHLkonKlLszjs14ZxPliBceljl4Z42
-	xeb1Qyka3GIacctWSZmYGdK5PaCP94P2P2xFfatjLAeOAv8v8du001Uu1u8za51Fm/6BvEVUarV7p
-	JtYfXvEwkTjvYnGPpOLM/bt9B68DXWSgVZqZUNGf83+Tfv6/hfwS4OiHlP7vY3S8tiJOL6WLLll70
-	l0fwyN3Wrs5xttrnqrH0z3t/J95bWKm0x6G8GbrjxjMhDLdrvgLpCAy60o76REIr5uaM8Z0kPIRqS
-	+4hI4UYA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qo07W-0037n5-SQ; Wed, 04 Oct 2023 11:32:50 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 5CE08300392; Wed,  4 Oct 2023 13:32:50 +0200 (CEST)
-Date: Wed, 4 Oct 2023 13:32:50 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Jim Mattson <jmattson@google.com>
-Cc: Sean Christopherson <seanjc@google.com>, Ingo Molnar <mingo@kernel.org>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Like Xu <likexu@tencent.com>,
-	Mark Rutland <mark.rutland@arm.com>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72DD3FF1;
+	Wed,  4 Oct 2023 14:00:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0377BC433C8;
+	Wed,  4 Oct 2023 14:00:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696428006;
+	bh=JkCPUsuUI3/3l9L6acemPj6CRuOU0mfuQCrxMIBBSag=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RVWUozDKYLmqLmtB9ewVdKCS98Z5J9W8/4mez/LppskXXm+JuV9FT2FKLhDvgYW3v
+	 Osysc9ZAHRrfHw9PRcyUbV93S3c4vhap9kdti4w3/+BOaxXBdqMRqD//ffSO+cu6Zz
+	 K5vI1QG/is19xUbLfEH80VNrxpd2B/at91m1VULfCxak0AwBcAp/T7/NCBq8ci4Mtl
+	 LxJKeXBmoABgN2zmR7gHpGypo2maq7umGjsW1wDBid03gObx/ZXDbEClUmR8AtO64f
+	 4AVV/410BO3T3rIEmQW4q/O7YAR7dOrifJMQIvyZvQTh0uwBbAP3XI57cYWKKE85e8
+	 uebONMAHtHTQw==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Quentin Monnet <quentin@isovalent.com>
+Cc: Dmitry Goncharov <dgoncharov@users.sf.net>,
+	linux-perf-users@vger.kernel.org,
+	bpf@vger.kernel.org,
+	Namhyung Kim <namhyung@kernel.org>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Martin KaFai Lau <kafai@fb.com>,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
 	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>, kvm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Zhenyu Wang <zhenyuw@linux.intel.com>,
-	Zhang Xiong <xiong.y.zhang@intel.com>,
-	Lv Zhiyuan <zhiyuan.lv@intel.com>,
-	Yang Weijiang <weijiang.yang@intel.com>,
-	Dapeng Mi <dapeng1.mi@intel.com>, David Dunn <daviddunn@google.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics
- event
-Message-ID: <20231004113250.GB5947@noisy.programming.kicks-ass.net>
-References: <20230929115344.GE6282@noisy.programming.kicks-ass.net>
- <ZRbxb15Opa2_AusF@google.com>
- <20231002115718.GB13957@noisy.programming.kicks-ass.net>
- <ZRrF38RGllA04R8o@gmail.com>
- <ZRroQg6flyGBtZTG@google.com>
- <20231002204017.GB27267@noisy.programming.kicks-ass.net>
- <ZRtmvLJFGfjcusQW@google.com>
- <20231003081616.GE27267@noisy.programming.kicks-ass.net>
- <ZRwx7gcY7x1x3a5y@google.com>
- <CALMp9eRew1+-gDy36m3qWy9D9TQP+mkzPQg=xowKcaG+NpbX0w@mail.gmail.com>
+	KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Peter Zijlstra <a.p.zijlstra@chello.nl>
+Subject: [PATCH] tools/build: Fix -s detection code for new make
+Date: Wed,  4 Oct 2023 15:59:56 +0200
+Message-ID: <20231004135956.987903-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALMp9eRew1+-gDy36m3qWy9D9TQP+mkzPQg=xowKcaG+NpbX0w@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
 
-On Tue, Oct 03, 2023 at 11:21:46AM -0700, Jim Mattson wrote:
-> On Tue, Oct 3, 2023 at 8:23 AM Sean Christopherson <seanjc@google.com> wrote:
+As Dmitry described in [1] changelog the current way of detecting
+-s option is broken for new make.
 
-> > > Since you steal the whole PMU, can't you re-route the PMI to something
-> > > that's virt friendly too?
-> >
-> > Hmm, actually, we probably could.  It would require modifying the host's APIC_LVTPC
-> > entry when context switching the PMU, e.g. to replace the NMI with a dedicated IRQ
-> > vector.  As gross as that sounds, it might actually be cleaner overall than
-> > deciphering whether an NMI belongs to the host or guest, and it would almost
-> > certainly yield lower latency for guest PMIs.
-> 
-> Ugh.  Can't KVM just install its own NMI handler? Either way, it's
-> possible for late PMIs to arrive in the wrong context.
+Changing the tools/build -s option detection the same way as it was
+fixed for root Makefile in [1].
 
-I don't think you realize what a horrible trainwreck the NMI handler is.
-Every handler has to be able to determine if the NMI is theirs to
-handle.
+[1] 4bf73588165b ("kbuild: Port silent mode detection to future gnu make.")
 
-If we go do this whole swizzle thing we must find a sequence of PMU
-'instructions' that syncs against the PMI, because otherwise we're going
-to loose PMIs and that's going to be a *TON* of pain.
+Cc: Dmitry Goncharov <dgoncharov@users.sf.net>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/build/Makefile.build | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-I'll put it on the agenda for the next time I talk with the hardware
-folks. But IIRC the AMD thing is *much* worse in this regards than the
-Intel one.
+diff --git a/tools/build/Makefile.build b/tools/build/Makefile.build
+index fac42486a8cf..5fb3fb3d97e0 100644
+--- a/tools/build/Makefile.build
++++ b/tools/build/Makefile.build
+@@ -20,7 +20,15 @@ else
+   Q=@
+ endif
+ 
+-ifneq ($(findstring s,$(filter-out --%,$(MAKEFLAGS))),)
++# If the user is running make -s (silent mode), suppress echoing of commands
++# make-4.0 (and later) keep single letter options in the 1st word of MAKEFLAGS.
++ifeq ($(filter 3.%,$(MAKE_VERSION)),)
++short-opts := $(firstword -$(MAKEFLAGS))
++else
++short-opts := $(filter-out --%,$(MAKEFLAGS))
++endif
++
++ifneq ($(findstring s,$(short-opts)),)
+   quiet=silent_
+ endif
+ 
+-- 
+2.41.0
+
