@@ -1,290 +1,333 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D02E21A10
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Oct 2023 20:47:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D48922EE9
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Oct 2023 21:50:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="je6Ilf2K"
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1DCF9B;
-	Wed,  4 Oct 2023 13:47:43 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-692d2e8c003so1096891b3a.1;
-        Wed, 04 Oct 2023 13:47:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rCkLhUPD"
+Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 416C1C0
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Oct 2023 14:50:48 -0700 (PDT)
+Received: by mail-pg1-x549.google.com with SMTP id 41be03b00d2f7-5803b6fadceso233562a12.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 Oct 2023 14:50:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696452463; x=1697057263; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qe7AYgbbCr6h7nPpRbjMws5d7g3FTU6k23yCXjc41mQ=;
-        b=je6Ilf2KnFZ4xyDmYyBYESmE7B/dLksrNTD6hTA408+Qbx611zJeWSvL4/AkG3u6PS
-         4l4x8eyF6AnPAIZ9xXdbo7Yvtb24n98y4ysE6KtV1dNuHZ6KRqFe9yVIcGFtB/OoVKO0
-         Tz4+nvH7FDOvLI8LoqCcMQu/IOxifxZ+OD4MqeuTBzKlsq49ZpqO3Xe2slPTSPXvJBXT
-         RIsvG2NsU1aLZHkQ3xD/eKYG+ACPoLTjHFLq+1OsDauWf54Blg5hxXDPTKOxdZAOmtKC
-         NModpyyIRCLt80iQ9vZS0NRsDybQICM60BpqCiSQMMXdSHDOcioSZfnumKo1El5htjr/
-         Mxtw==
+        d=google.com; s=20230601; t=1696456247; x=1697061047; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kiSgfZM7ECGdOQlszNQDUnAmB/N1bBj0T6OcTzs1AbE=;
+        b=rCkLhUPDkLNBdANwdb7ts4sZCV+YYhPq4xEDFcDYK9DiAWLG8XZI2fv9av19JKXoUQ
+         2TcUTqsqZ2reaYtXaf7h6hX2iGQY1/xrsjMof0cElbubv+T9wgiESlvlV82IG1VXyeFN
+         vUVoGupTdOiHQhTL9CD/mcdWiuqFw8yphrkx34E92qi6l3pf4qgZMeDzbMqkTIwlp2DR
+         VXYuC1Ypp08F/eLDrpPbFBwpH0v42OP05m8Dh5c/79950fpx6DhQ48y6iOVElyOPdB0U
+         VY2n5mA5nUOHGVzyp9OzAOu8ym3/2pv3Amnivtvx5M+kAr+HH5DE/AT/xLMiWLXF6Qjn
+         6M+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696452463; x=1697057263;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qe7AYgbbCr6h7nPpRbjMws5d7g3FTU6k23yCXjc41mQ=;
-        b=wnp3KFFCdPOBzlNVI+WxCBdcsMEFqfuhxFXJlXfLS3z7uZSk4ZoiIgjk3ST0xbMWe0
-         x1VkSoeYgGZROC8I4Ki9w44PhvbGBBAKqLrn7iX0/jqtwvH75/2zvE37tSnPeOjWKqIi
-         U/rs2Ro0TxB9eCud/SL9HU9jCqDXuhyosPFS/ImwF5Iu7cz/IbAzCDI6f8KCUKE5tTq8
-         /KS9sfS/du38lYThzjPq5veLVTpkn8f5V8Tgufj5hnz2/NI0zBo2BTDTNB/YADrzCcbC
-         Ek4k8c+7cFI1zYjSBlHU5xXpt6ka6uM8yLgHbzDK0YAfaEsIOA8sisOEbdUfdhOC4sL3
-         Veow==
-X-Gm-Message-State: AOJu0YwaWr2PCo9uwMWi+WM5vxd3zzaxkLTxRXu8D2ruN1VJYoUxGw19
-	/Z1GBqZvmbI2m6jeEx6KfRw=
-X-Google-Smtp-Source: AGHT+IE+Sh4y+Vgw4K099B0kmwjW51RSzabx95V9+meTncqsjlspCxUjB13TaVl5Vk7q5jfQpYSZaA==
-X-Received: by 2002:a05:6a20:1456:b0:134:73f6:5832 with SMTP id a22-20020a056a20145600b0013473f65832mr1044930pzi.16.1696452463269;
-        Wed, 04 Oct 2023 13:47:43 -0700 (PDT)
-Received: from bangji.corp.google.com ([2620:15c:2c0:5:2489:7e4:8212:9753])
-        by smtp.gmail.com with ESMTPSA id a24-20020aa78658000000b00694f14a7851sm3622061pfo.43.2023.10.04.13.47.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Oct 2023 13:47:42 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf bench sched pipe: Add -G/--cgroups option
-Date: Wed,  4 Oct 2023 13:47:41 -0700
-Message-ID: <20231004204741.985422-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.42.0.609.gbb76f46606-goog
+        d=1e100.net; s=20230601; t=1696456247; x=1697061047;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kiSgfZM7ECGdOQlszNQDUnAmB/N1bBj0T6OcTzs1AbE=;
+        b=LxjpF22x+XKPSXWkKSkbmYcqn+o1vEKHgdfcNyTZpBcLbmfPAlKxe3zWjQfmSwcBOD
+         4LFOQM7NxQE9SjjY+QX0413paoibIby4YvTVA1BGb/TVTqRnRXuAUK5w8i45y5DNIzOJ
+         Bb+zEUpDj6hywcWxw1ZUG/yU32POZkFOxEAAJRNYhZCvgBf819/lP7WYhq8zYPzA0sH2
+         ZUCZAY6lOkHwsHzPTshmf3dY+bBxMMrKVWZI3IbO2l3xCdzJvjTRdF79phIcz46kSEpO
+         +nzFHhiLciBEUfNMYSM+jO7G1qRQu3luHk0FxqLZwKCbDxegiQVhf5VMczftIsUeMtCB
+         4jlQ==
+X-Gm-Message-State: AOJu0Yz9MDu2/WeFUIDZyKw0fRlWGJ6IaOQ9rb3FccnrS5XKMJOuGpJt
+	dxJvqTumVz1KRlzDdGYPIwdrYCS8L+4=
+X-Google-Smtp-Source: AGHT+IHvX+GcIWTwOfpy+LfFgXqBWlgRQ102fPNel0QDAdjIf8o+RQzBWAS9/U++GVyXjfT6IAXRlyalq8k=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:90b:894:b0:277:78c:ae8c with SMTP id
+ bj20-20020a17090b089400b00277078cae8cmr57505pjb.6.1696456247624; Wed, 04 Oct
+ 2023 14:50:47 -0700 (PDT)
+Date: Wed, 4 Oct 2023 14:50:46 -0700
+In-Reply-To: <CAL715W+RgX2JfeRsenNoU4TuTWwLS5H=P+vrZK_GQVQmMkyraw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Mime-Version: 1.0
+References: <ZRbxb15Opa2_AusF@google.com> <20231002115718.GB13957@noisy.programming.kicks-ass.net>
+ <ZRrF38RGllA04R8o@gmail.com> <ZRroQg6flyGBtZTG@google.com>
+ <20231002204017.GB27267@noisy.programming.kicks-ass.net> <ZRtmvLJFGfjcusQW@google.com>
+ <20231003081616.GE27267@noisy.programming.kicks-ass.net> <ZRwx7gcY7x1x3a5y@google.com>
+ <20231004112152.GA5947@noisy.programming.kicks-ass.net> <CAL715W+RgX2JfeRsenNoU4TuTWwLS5H=P+vrZK_GQVQmMkyraw@mail.gmail.com>
+Message-ID: <ZR3eNtP5IVAHeFNC@google.com>
+Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics event
+From: Sean Christopherson <seanjc@google.com>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Like Xu <likexu@tencent.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Zhenyu Wang <zhenyuw@linux.intel.com>, Zhang Xiong <xiong.y.zhang@intel.com>, 
+	Lv Zhiyuan <zhiyuan.lv@intel.com>, Yang Weijiang <weijiang.yang@intel.com>, 
+	Dapeng Mi <dapeng1.mi@intel.com>, Jim Mattson <jmattson@google.com>, 
+	David Dunn <daviddunn@google.com>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-The -G/--cgroups option is to put sender and receiver in different
-cgroups in order to measure cgroup context switch overheads.
+On Wed, Oct 04, 2023, Mingwei Zhang wrote:
+> On Wed, Oct 4, 2023 at 4:22=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
+rg> wrote:
+> > > > Or are you talking about the whole of vcpu_run() ? That seems like =
+a
+> > > > massive amount of code, and doesn't look like anything I'd call a
+> > > > fast-path. Also, much of that loop has preemption enabled...
+> > >
+> > > The whole of vcpu_run().  And yes, much of it runs with preemption en=
+abled.  KVM
+> > > uses preempt notifiers to context switch state if the vCPU task is sc=
+heduled
+> > > out/in, we'd use those hooks to swap PMU state.
+> > >
+> > > Jumping back to the exception analogy, not all exits are equal.  For =
+"simple" exits
+> > > that KVM can handle internally, the roundtrip is <1500.   The exit_fa=
+stpath loop is
+> > > roughly half that.
+> > >
+> > > But for exits that are more complex, e.g. if the guest hits the equiv=
+alent of a
+> > > page fault, the cost of handling the page fault can vary significantl=
+y.  It might
+> > > be <1500, but it might also be 10x that if handling the page fault re=
+quires faulting
+> > > in a new page in the host.
+> > >
+> > > We don't want to get too aggressive with moving stuff into the exit_f=
+astpath loop,
+> > > because doing too much work with IRQs disabled can cause latency prob=
+lems for the
+> > > host.  This isn't much of a concern for slice-of-hardware setups, but=
+ would be
+> > > quite problematic for other use cases.
+> > >
+> > > And except for obviously slow paths (from the guest's perspective), e=
+xtra latency
+> > > on any exit can be problematic.  E.g. even if we got to the point whe=
+re KVM handles
+> > > 99% of exits the fastpath (may or may not be feasible), a not-fastpat=
+h exit at an
+> > > inopportune time could throw off the guest's profiling results, intro=
+duce unacceptable
+> > > jitter, etc.
+> >
+> > I'm confused... the PMU must not be running after vm-exit. It must not
+> > be able to profile the host. So what jitter are you talking about?
+> >
+> > Even if we persist the MSR contents, the PMU itself must be disabled on
+> > vm-exit and enabled on vm-enter. If not by hardware then by software
+> > poking at the global ctrl msr.
+> >
+> > I also don't buy the latency argument, we already do full and complete
+> > PMU rewrites with IRQs disabled in the context switch path. And as
+> > mentioned elsewhere, the whole AMX thing has an 8k copy stuck in the FP=
+U
+> > save/restore.
+> >
+> > I would much prefer we keep the PMU swizzle inside the IRQ disabled
+> > region of vcpu_enter_guest(). That's already a ton better than you have
+> > today.
 
-Users need to make sure the cgroups exist and accessible.
+...
 
-  # perf stat -e context-switches,cgroup-switches \
-  > taskset -c 0 perf bench sched pipe -l 10000 > /dev/null
+> Peter, that latency argument in pass-through implementation is
+> something that we hope you could buy. This should be relatively easy
+> to prove. I can provide some data if you need.
 
-   Performance counter stats for 'taskset -c 0 perf bench sched pipe -l 10000':
+You and Peter are talking about is two different latencies.  Or rather, how=
+ the
+latency impacts two different things.
 
-              20,001      context-switches
-                   2      cgroup-switches
+Peter is talking about is the latency impact on the host, specifically how =
+much
+work is done with IRQs disabled.
 
-         0.053449651 seconds time elapsed
+You are talking about is the latency impact on the guest, i.e. how much gue=
+st
+performance is affected if KVM swaps MSRs on every exit.=20
 
-         0.011286000 seconds user
-         0.041869000 seconds sys
+Peter is contending that swapping PMU MSRs with IRQs disabled isn't a big d=
+eal,
+because the kernel already does as much during a context switch.  I agree, =
+*if*
+we're talking about only adding the PMU MSRs.
 
-  # perf stat -e context-switches,cgroup-switches \
-  > taskset -c 0 perf bench sched pipe -l 10000 -G AAA,BBB > /dev/null
+You (and I) are contending that the latency impact on the guest will be too=
+ high
+if KVM swaps in the inner VM-Exit loop.  This is not analogous to host cont=
+ext
+switches, as VM-Exits can occur at a much higher frequency than context swi=
+tches,
+and can be triggered by events that have nothing to do with the guest.
 
-   Performance counter stats for 'taskset -c 0 perf bench sched pipe -l 10000 -G AAA,BBB':
+There's some confusion here though because of what I said earlier:
 
-              20,001      context-switches
-              20,001      cgroup-switches
+  We don't want to get too aggressive with moving stuff into the exit_fastp=
+ath
+  loop, because doing too much work with IRQs disabled can cause latency pr=
+oblems
+  for the host.=20
 
-         0.052768627 seconds time elapsed
+By "stuff" I wasn't talking about PMU MSRs, I was referring to all exit han=
+dling
+that KVM *could* move into the IRQs disabled section in order to mitigate t=
+he
+concerns that we have about the latency impacts on the guest.  E.g. if most=
+ exits
+are handled in the IRQs disabled section, then KVM could handle most exits =
+without
+swapping PMU state and thus limit the impact on guest performance, and not =
+cause
+to much host perf "downtime" that I mentioned in the other thread[*].
 
-         0.006284000 seconds user
-         0.046266000 seconds sys
+However, my concern is that handling most exits with IRQs disabled would re=
+sult
+in KVM doing too much work with IRQs disabled, i.e. would impact the host l=
+atency
+that Peter is talking about.  And I'm more than a bit terrified of calling =
+into
+code that doesn't expect to be called with IRQs disabled.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/Documentation/perf-bench.txt | 19 +++++
- tools/perf/bench/sched-pipe.c           | 93 +++++++++++++++++++++++++
- 2 files changed, 112 insertions(+)
+Thinking about this more, what if we do a blend of KVM's FPU swapping and d=
+ebug
+register swapping?
 
-diff --git a/tools/perf/Documentation/perf-bench.txt b/tools/perf/Documentation/perf-bench.txt
-index ca5789625cd2..8331bd28b10e 100644
---- a/tools/perf/Documentation/perf-bench.txt
-+++ b/tools/perf/Documentation/perf-bench.txt
-@@ -124,6 +124,14 @@ Options of *pipe*
- --loop=::
- Specify number of loops.
- 
-+-G::
-+--cgroups=::
-+Names of cgroups for sender and receiver, separated by a comma.
-+This is useful to check cgroup context switching overhead.
-+Note that perf doesn't create nor delete the cgroups, so users should
-+make sure that the cgroups exist and are accessible before use.
-+
-+
- Example of *pipe*
- ^^^^^^^^^^^^^^^^^
- 
-@@ -141,6 +149,17 @@ Example of *pipe*
-         Total time:0.016 sec
-                 16.948000 usecs/op
-                 59004 ops/sec
-+
-+% perf bench sched pipe -G AAA,BBB
-+(executing 1000000 pipe operations between cgroups)
-+# Running 'sched/pipe' benchmark:
-+# Executed 1000000 pipe operations between two processes
-+
-+     Total time: 6.886 [sec]
-+
-+       6.886208 usecs/op
-+         145217 ops/sec
-+
- ---------------------
- 
- SUITES FOR 'syscall'
-diff --git a/tools/perf/bench/sched-pipe.c b/tools/perf/bench/sched-pipe.c
-index a960e7a93aec..1103fd658d5d 100644
---- a/tools/perf/bench/sched-pipe.c
-+++ b/tools/perf/bench/sched-pipe.c
-@@ -11,6 +11,7 @@
-  */
- #include <subcmd/parse-options.h>
- #include "bench.h"
-+#include "util/cgroup.h"
- 
- #include <unistd.h>
- #include <stdio.h>
-@@ -19,6 +20,7 @@
- #include <sys/wait.h>
- #include <string.h>
- #include <errno.h>
-+#include <fcntl.h>
- #include <assert.h>
- #include <sys/time.h>
- #include <sys/types.h>
-@@ -40,9 +42,55 @@ static	int			loops = LOOPS_DEFAULT;
- /* Use processes by default: */
- static bool			threaded;
- 
-+static struct cgroup *cgrp_send = NULL;
-+static struct cgroup *cgrp_recv = NULL;
-+
-+static int parse_two_cgroups(const struct option *opt __maybe_unused,
-+			     const char *str, int unset __maybe_unused)
+  A. Load guest PMU state in vcpu_enter_guest() after IRQs are disabled
+  B. Put guest PMU state (and load host state) in vcpu_enter_guest() before=
+ IRQs
+     are enabled, *if and only if* the current CPU has one or perf events t=
+hat
+     wants to use the hardware PMU
+  C. Put guest PMU state at vcpu_put()
+  D. Add a perf callback that is invoked from IRQ context when perf wants t=
+o
+     configure a new PMU-based events, *before* actually programming the MS=
+Rs,
+     and have KVM's callback put the guest PMU state
+
+If there are host perf events that want to use the PMU, then KVM will swap =
+fairly
+aggressively and the "downtime" of the host perf events will be limited to =
+the
+small window around VM-Enter/VM-Exit.
+
+If there are no such host events, KVM will swap on the first entry to the g=
+uest,
+and keep the guest PMU loaded until the vCPU is put.
+
+The perf callback in (D) would allow perf to program system-wide events on =
+all
+CPUs without clobbering guest PMU state.
+
+I think that would make everyone happy.  As long as our hosts don't create =
+perf
+events, then we get the "swap as little as possible" behavior without signi=
+ficantly
+impacting the host's ability to utilize perf.  If our host screws up and cr=
+eates
+perf events on CPUs that are running vCPUs, then the degraded vCPU performa=
+nce is
+on us.
+
+Rough sketch below, minus the perf callback or any of actual swapping logic=
+.
+
+[*] https://lore.kernel.org/all/ZR3Ohk50rSofAnSL@google.com
+
+diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+index 7d9ba301c090..86699d310224 100644
+--- a/arch/x86/kvm/pmu.h
++++ b/arch/x86/kvm/pmu.h
+@@ -41,6 +41,30 @@ struct kvm_pmu_ops {
+=20
+ void kvm_pmu_ops_update(const struct kvm_pmu_ops *pmu_ops);
+=20
++static inline void kvm_load_guest_pmu(struct kvm_vcpu *vcpu)
 +{
-+	char *p = strdup(str);
-+	char *q;
-+	int ret = -1;
++       struct kvm_pmu *pmu =3D vcpu_to_pmu(vcpu);
 +
-+	if (p == NULL) {
-+		fprintf(stderr, "memory allocation failure");
-+		return -1;
-+	}
++       lockdep_assert_irqs_disabled();
 +
-+	q = strchr(p, ',');
-+	if (q == NULL) {
-+		fprintf(stderr, "it should have two cgroup names: %s", p);
-+		goto out;
-+	}
-+	*q = '\0';
++       if (vcpu->pmu->guest_state_loaded)
++               return;
 +
-+	cgrp_send = cgroup__new(p, /*do_open=*/true);
-+	if (cgrp_send == NULL) {
-+		fprintf(stderr, "cannot open sender cgroup: %s", p);
-+		goto out;
-+	}
-+
-+	/* skip ',' */
-+	q++;
-+
-+	cgrp_recv = cgroup__new(q, /*do_open=*/true);
-+	if (cgrp_recv == NULL) {
-+		fprintf(stderr, "cannot open receiver cgroup: %s", q);
-+		goto out;
-+	}
-+	ret = 0;
-+
-+out:
-+	free(p);
-+	return ret;
++       <swap state>
++       vcpu->pmu->guest_state_loaded =3D true;
 +}
 +
- static const struct option options[] = {
- 	OPT_INTEGER('l', "loop",	&loops,		"Specify number of loops"),
- 	OPT_BOOLEAN('T', "threaded",	&threaded,	"Specify threads/process based task setup"),
-+	OPT_CALLBACK('G', "cgroups", NULL, "SEND,RECV",
-+		     "Put sender and receivers in given cgroups",
-+		     parse_two_cgroups),
- 	OPT_END()
- };
- 
-@@ -51,12 +99,54 @@ static const char * const bench_sched_pipe_usage[] = {
- 	NULL
- };
- 
-+static void enter_cgroup(struct cgroup *cgrp)
++static inline void kvm_put_guest_pmu(struct kvm_vcpu *vcpu)
 +{
-+	char buf[32];
-+	int fd, len;
-+	pid_t pid;
++       lockdep_assert_irqs_disabled();
 +
-+	if (cgrp == NULL)
-+		return;
++       if (!vcpu->pmu->guest_state_loaded)
++               return;
 +
-+	if (threaded)
-+		pid = syscall(__NR_gettid);
-+	else
-+		pid = getpid();
-+
-+	snprintf(buf, sizeof(buf), "%d\n", pid);
-+	len = strlen(buf);
-+
-+	/* try cgroup v2 interface first */
-+	if (threaded)
-+		fd = openat(cgrp->fd, "cgroup.procs", O_WRONLY);
-+	else
-+		fd = openat(cgrp->fd, "cgroup.threads", O_WRONLY);
-+
-+	/* try cgroup v1 if failed */
-+	if (fd < 0)
-+		fd = openat(cgrp->fd, "tasks", O_WRONLY);
-+
-+	if (fd < 0) {
-+		printf("failed to open cgroup file in %s\n", cgrp->name);
-+		return;
-+	}
-+
-+	if (write(fd, buf, len) != len)
-+		printf("cannot enter to cgroup: %s\n", cgrp->name);
-+	close(fd);
++       <swap state>
++       vcpu->pmu->guest_state_loaded =3D false;
 +}
 +
- static void *worker_thread(void *__tdata)
+ static inline bool kvm_pmu_has_perf_global_ctrl(struct kvm_pmu *pmu)
  {
- 	struct thread_data *td = __tdata;
- 	int m = 0, i;
- 	int ret;
- 
-+	if (td->nr)
-+		enter_cgroup(cgrp_send);
-+	else
-+		enter_cgroup(cgrp_recv);
+        /*
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 1e645f5b1e2c..93a8f268c37b 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -4903,8 +4903,20 @@ static void kvm_steal_time_set_preempted(struct kvm_=
+vcpu *vcpu)
+=20
+ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
+ {
++       unsigned long flags;
+        int idx;
+=20
++       /*
++        * This can get false positives, but not false negatives, i.e. KVM =
+will
++        * never fail to put the PMU, but may unnecessarily disable IRQs to
++        * safely check if the PMU is still loaded.
++        */
++       if (kvm_is_guest_pmu_loaded(vcpu)) {
++               local_irq_save(flags);
++               kvm_put_guest_pmu(vcpu);
++               local_irq_restore(flags);
++       }
 +
- 	for (i = 0; i < loops; i++) {
- 		if (!td->nr) {
- 			ret = read(td->pipe_read, &m, sizeof(int));
-@@ -147,6 +237,9 @@ int bench_sched_pipe(int argc, const char **argv)
- 	gettimeofday(&stop, NULL);
- 	timersub(&stop, &start, &diff);
- 
-+	cgroup__put(cgrp_send);
-+	cgroup__put(cgrp_recv);
+        if (vcpu->preempted) {
+                if (!vcpu->arch.guest_state_protected)
+                        vcpu->arch.preempted_in_kernel =3D !static_call(kvm=
+_x86_get_cpl)(vcpu);
+@@ -10759,6 +10771,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+                set_debugreg(0, 7);
+        }
+=20
++       kvm_load_guest_pmu(vcpu);
 +
- 	switch (bench_format) {
- 	case BENCH_FORMAT_DEFAULT:
- 		printf("# Executed %d pipe operations between two %s\n\n",
--- 
-2.42.0.609.gbb76f46606-goog
+        guest_timing_enter_irqoff();
+=20
+        for (;;) {
+@@ -10810,6 +10824,9 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+        if (hw_breakpoint_active())
+                hw_breakpoint_restore();
+=20
++       if (perf_has_hw_events())
++               kvm_put_guest_pmu(vcpu);
++
+        vcpu->arch.last_vmentry_cpu =3D vcpu->cpu;
+        vcpu->arch.last_guest_tsc =3D kvm_read_l1_tsc(vcpu, rdtsc());
+=20
 
