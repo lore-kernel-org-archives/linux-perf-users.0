@@ -1,155 +1,155 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1CFC28DD7
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Oct 2023 14:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QHLBaL9G"
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FFA8A5DD
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Oct 2023 07:18:41 -0700 (PDT)
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39596Nqq011211;
-	Thu, 5 Oct 2023 09:07:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=Grf+04K4KmQG0j0DL9GUzHxA+oovzw2UPAPICVoes/Y=;
- b=QHLBaL9GPXir7qQoeCyVEXi7C2TWZCz4Fc9kbBOLNC/wfDaJAjyR2QQLpjo3oiTtHACh
- P5fhioNA2kzIPazk2dXzf1RBtrODeA3Hj02KO74n5k6lAo/Kgujzl19g6nfTI382agIc
- M+6Y9k6/JAAsMVVOUsablDVcLO2kKbcUeofTQEP7x+9LycIVUYuKSNauhDBLERKWgAhX
- ybiBzkhVi5OYM00gqwTuhJirC6Lc+M5p7h4Y1F2P6MrEE/ybcqjSqOtnI+Vf2parOGtH
- 1hMN2wYb2pkMXtS1E5+T0cxLPhANPqTv8WbjOiv1ZD905g+qXQFN4MLDJEYioIE+a6ad sg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tht0ggkj3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Oct 2023 09:07:18 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 395904B8026975;
-	Thu, 5 Oct 2023 09:02:18 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tht0gg9cs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Oct 2023 09:02:15 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39565FVq007512;
-	Thu, 5 Oct 2023 08:55:30 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3teygm25sr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Oct 2023 08:55:30 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3958tRrg20906638
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 5 Oct 2023 08:55:27 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F144920043;
-	Thu,  5 Oct 2023 08:55:26 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3ED9120040;
-	Thu,  5 Oct 2023 08:55:25 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.109.214.47])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu,  5 Oct 2023 08:55:25 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3679E286A6
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Oct 2023 14:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 95E782B8AD
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Oct 2023 07:23:17 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37DB41516;
+	Thu,  5 Oct 2023 02:37:03 -0700 (PDT)
+Received: from [10.57.2.226] (unknown [10.57.2.226])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA9223F5A1;
+	Thu,  5 Oct 2023 02:36:22 -0700 (PDT)
+Message-ID: <c59c586e-08ab-df66-7bcd-5249d2481298@arm.com>
+Date: Thu, 5 Oct 2023 10:36:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
-Subject: Re: [PATCH 3/3] tools/perf/tests: Fix shellcheck warning in
- record_sideband.sh test
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <CAM9d7cjr0TDjrMkgu3TJ-JTDbi17SAVfeE0_2=ZCjLJ8_uS=Pw@mail.gmail.com>
-Date: Thu, 5 Oct 2023 14:25:14 +0530
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>, irogers@google.com,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D0806824-6468-4765-A08E-DD7A4DA10F9A@linux.vnet.ibm.com>
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.15.1
+Subject: Re: [PATCH 1/3] perf tests test_arm_coresight: Fix the shellcheck
+ warning in latest test_arm_coresight.sh
+To: Namhyung Kim <namhyung@kernel.org>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
+ Leo Yan <leo.yan@linaro.org>
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+ irogers@google.com, linux-perf-users@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com, kjain@linux.ibm.com,
+ disgoel@linux.vnet.ibm.com, Ruidong Tian <tianruidong@linux.alibaba.com>
 References: <20230929041133.95355-1-atrajeev@linux.vnet.ibm.com>
- <20230929041133.95355-4-atrajeev@linux.vnet.ibm.com>
- <CAM9d7cjr0TDjrMkgu3TJ-JTDbi17SAVfeE0_2=ZCjLJ8_uS=Pw@mail.gmail.com>
-To: Namhyung Kim <namhyung@kernel.org>
-X-Mailer: Apple Mail (2.3731.700.6)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: McLIvj3uJnJyGtW60dDCyzZC2iCMew9S
-X-Proofpoint-GUID: R-w7WApHr9jgka9BBXRt5ey6jPMFH0hs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-05_06,2023-10-02_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- suspectscore=0 lowpriorityscore=0 malwarescore=0 mlxlogscore=999
- mlxscore=0 clxscore=1015 priorityscore=1501 spamscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2310050069
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+ <20230929041133.95355-2-atrajeev@linux.vnet.ibm.com>
+ <CAM9d7cj26Dpit3igZjybsbnotBiv_F8mEu62Aor+9bBhwVh55g@mail.gmail.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <CAM9d7cj26Dpit3igZjybsbnotBiv_F8mEu62Aor+9bBhwVh55g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-8.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+	RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-
-
-> On 05-Oct-2023, at 10:34 AM, Namhyung Kim <namhyung@kernel.org> wrote:
->=20
-> On Thu, Sep 28, 2023 at 9:11=E2=80=AFPM Athira Rajeev
+On 05/10/2023 06:02, Namhyung Kim wrote:
+> On Thu, Sep 28, 2023 at 9:11 PM Athira Rajeev
 > <atrajeev@linux.vnet.ibm.com> wrote:
->>=20
->> Running shellcheck on record_sideband.sh throws below
->> warning:
->>=20
->>        In tests/shell/record_sideband.sh line 25:
->>          if ! perf record -o ${perfdata} -BN --no-bpf-event -C $1 =
-true 2>&1 >/dev/null
->>            ^--^ SC2069: To redirect stdout+stderr, 2>&1 must be last =
-(or use '{ cmd > file; } 2>&1' to clarify).
->>=20
->> This shows shellcheck warning SC2069 where the redirection
->> order needs to be fixed. Use { cmd > file; } 2>&1 to fix the
->> redirection of perf record output
->>=20
->> Fixes: 23b97c7ee963 ("perf test: Add test case for record sideband =
-events")
+>>
+>> Running shellcheck on tests/shell/test_arm_coresight.sh
+>> throws below warnings:
+>>
+>>          In tests/shell/test_arm_coresight.sh line 15:
+>>          cs_etm_path=$(find  /sys/bus/event_source/devices/cs_etm/ -name cpu* -print -quit)
+>>                    ^--^ SC2061: Quote the parameter to -name so the shell won't interpret it.
+>>
+>>          In tests/shell/test_arm_coresight.sh line 20:
+>>                  if [ $archhver -eq 5 -a "$(printf "0x%X\n" $archpart)" = "0xA13" ] ; then
+>>                                       ^-- SC2166: Prefer [ p ] && [ q ] as [ p -a q ] is not well defined
+>>
+>> This warning is observed after commit:
+>> "commit bb350847965d ("perf test: Update cs_etm testcase for Arm ETE")"
+>>
+>> Fixed this issue by using quoting 'cpu*' for SC2061 and
+>> using "&&" in line number 20 for SC2166 warning
+>>
+>> Fixes: bb350847965d ("perf test: Update cs_etm testcase for Arm ETE")
 >> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> ---
->> tools/perf/tests/shell/record_sideband.sh | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->>=20
->> diff --git a/tools/perf/tests/shell/record_sideband.sh =
-b/tools/perf/tests/shell/record_sideband.sh
->> index 5024a7ce0c51..7e036763a43c 100755
->> --- a/tools/perf/tests/shell/record_sideband.sh
->> +++ b/tools/perf/tests/shell/record_sideband.sh
->> @@ -22,7 +22,7 @@ trap trap_cleanup EXIT TERM INT
->>=20
->> can_cpu_wide()
->> {
->> -    if ! perf record -o ${perfdata} -BN --no-bpf-event -C $1 true =
-2>&1 >/dev/null
->> +    if ! { perf record -o ${perfdata} -BN --no-bpf-event -C $1 true =
-> /dev/null; } 2>&1
->=20
-> I think we usually go without braces.
 
-Hi Namhyung
+Thanks for the fix.
 
-Thanks for reviving.I will fix this in V2
+Nothing to do with this patch, but I am wondering if the original patch
+is over engineered and may not be future proof.
 
-Thanks
-Athira
->=20
+e.g.,
+
+cs_etm_dev_name() {
++	cs_etm_path=$(find  /sys/bus/event_source/devices/cs_etm/ -name cpu* 
+-print -quit)
+
+Right there you got the device name and we can easily deduce the name of
+the "ETM" node.
+
+e.g,:
+	etm=$(basename $(readlink cs_etm_path) | sed "s/[0-9]\+$//")
+
+And practically, nobody prevents an ETE mixed with an ETM on a "hybrid"
+system (hopefully, no one builds it ;-))
+
+Also, instead of hardcoding "ete" and "etm" prefixes from the arch part,
+we should simply use the cpu nodes from :
+
+/sys/bus/event_source/devices/cs_etm/
+
+e.g.,
+
+arm_cs_etm_traverse_path_test() {
+	# Iterate for every ETM device
+	for c in /sys/bus/event_source/devices/cs_etm/cpu*; do
+		# Read the link to be on the safer side
+		dev=`readlink $c`
+		
+		# Find the ETM device belonging to which CPU
+		cpu=`cat $dev/cpu`
+
+		# Use depth-first search (DFS) to iterate outputs
+		arm_cs_iterate_devices $dev $cpu
+	done;
+}
+
+
+
+> 
+> You'd better add Coresight folks on this.
+> Maybe this file was missing in the MAINTAINERS file.
+
+And the original author of the commit, that introduced the issue too.
+
+Suzuki
+
+> 
 > Thanks,
 > Namhyung
->=20
->=20
->>     then
->>         echo "record sideband test [Skipped cannot record cpu$1]"
->>         err=3D2
+> 
+> 
+>> ---
+>>   tools/perf/tests/shell/test_arm_coresight.sh | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
+>> index fe78c4626e45..f2115dfa24a5 100755
+>> --- a/tools/perf/tests/shell/test_arm_coresight.sh
+>> +++ b/tools/perf/tests/shell/test_arm_coresight.sh
+>> @@ -12,12 +12,12 @@
+>>   glb_err=0
+>>
+>>   cs_etm_dev_name() {
+>> -       cs_etm_path=$(find  /sys/bus/event_source/devices/cs_etm/ -name cpu* -print -quit)
+>> +       cs_etm_path=$(find  /sys/bus/event_source/devices/cs_etm/ -name 'cpu*' -print -quit)
+>>          trcdevarch=$(cat ${cs_etm_path}/mgmt/trcdevarch)
+>>          archhver=$((($trcdevarch >> 12) & 0xf))
+>>          archpart=$(($trcdevarch & 0xfff))
+>>
+>> -       if [ $archhver -eq 5 -a "$(printf "0x%X\n" $archpart)" = "0xA13" ] ; then
+>> +       if [ $archhver -eq 5 ] && [ "$(printf "0x%X\n" $archpart)" = "0xA13" ] ; then
+>>                  echo "ete"
+>>          else
+>>                  echo "etm"
 >> --
 >> 2.31.1
-
+>>
 
