@@ -1,287 +1,139 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E584927722
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Oct 2023 14:03:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B5A28DD7
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Oct 2023 14:18:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4968983F6;
-	Thu,  5 Oct 2023 07:03:18 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFC57150C;
-	Thu,  5 Oct 2023 02:15:49 -0700 (PDT)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A82223F5A1;
-	Thu,  5 Oct 2023 02:15:09 -0700 (PDT)
-Message-ID: <762f44d3-5dff-21c1-720c-3b5d43eb1fd4@arm.com>
-Date: Thu, 5 Oct 2023 10:15:09 +0100
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E664609E
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Oct 2023 07:18:08 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-2-GM7lnwnRNXe6RSBHU-iNMQ-1; Thu, 05 Oct 2023 11:15:33 +0100
+X-MC-Unique: GM7lnwnRNXe6RSBHU-iNMQ-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 5 Oct
+ 2023 11:15:32 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Thu, 5 Oct 2023 11:15:32 +0100
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Athira Rajeev' <atrajeev@linux.vnet.ibm.com>, "acme@kernel.org"
+	<acme@kernel.org>, "jolsa@kernel.org" <jolsa@kernel.org>,
+	"adrian.hunter@intel.com" <adrian.hunter@intel.com>, "irogers@google.com"
+	<irogers@google.com>, "namhyung@kernel.org" <namhyung@kernel.org>
+CC: "kjain@linux.ibm.com" <kjain@linux.ibm.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"maddy@linux.ibm.com" <maddy@linux.ibm.com>, "disgoel@linux.vnet.ibm.com"
+	<disgoel@linux.vnet.ibm.com>, "linuxppc-dev@lists.ozlabs.org"
+	<linuxppc-dev@lists.ozlabs.org>
+Subject: RE: [PATCH 1/3] perf tests test_arm_coresight: Fix the shellcheck
+ warning in latest test_arm_coresight.sh
+Thread-Topic: [PATCH 1/3] perf tests test_arm_coresight: Fix the shellcheck
+ warning in latest test_arm_coresight.sh
+Thread-Index: AQHZ8otO1Cm02Mw9rEODc38+gtl1Z7A7ApdA
+Date: Thu, 5 Oct 2023 10:15:31 +0000
+Message-ID: <3b7b34e74bdb4b05b6b21edd81af59d0@AcuMS.aculab.com>
+References: <20230929041133.95355-1-atrajeev@linux.vnet.ibm.com>
+ <20230929041133.95355-2-atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20230929041133.95355-2-atrajeev@linux.vnet.ibm.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2] perf cs-etm: Fix incorrect or missing decoder for raw
- trace
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
 Content-Language: en-US
-To: Besar Wicaksono <bwicaksono@nvidia.com>, mike.leach@linaro.org,
- suzuki.poulose@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- coresight@lists.linaro.org, linux-tegra@vger.kernel.org, treding@nvidia.com,
- jonathanh@nvidia.com, vsethi@nvidia.com, rwiley@nvidia.com, ywan@nvidia.com,
- "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-References: <20231004003212.31554-1-bwicaksono@nvidia.com>
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <20231004003212.31554-1-bwicaksono@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-8.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-	RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-	autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-
-
-On 04/10/2023 01:32, Besar Wicaksono wrote:
-> The decoder creation for raw trace uses metadata from the first CPU.
-> On per-cpu mode, this metadata is incorrectly used for every decoder.
-> On per-process/per-thread traces, the first CPU is CPU0. If CPU0 trace
-> is not enabled, its metadata will be marked unused and the decoder is
-> not created. Perf report dump skips the decoding part because the
-> decoder is missing.
-> 
-> To fix this, use metadata of the CPU associated with sample object.
-> 
-> Signed-off-by: Besar Wicaksono <bwicaksono@nvidia.com>
+From: Athira Rajeev
+> Sent: 29 September 2023 05:12
+>=20
+> Running shellcheck on tests/shell/test_arm_coresight.sh
+> throws below warnings:
+>=20
+> =09In tests/shell/test_arm_coresight.sh line 15:
+> =09cs_etm_path=3D$(find  /sys/bus/event_source/devices/cs_etm/ -name cpu*=
+ -print -quit)
+>                   ^--^ SC2061: Quote the parameter to -name so the shell =
+won't interpret it.
+>=20
+> =09In tests/shell/test_arm_coresight.sh line 20:
+> =09=09if [ $archhver -eq 5 -a "$(printf "0x%X\n" $archpart)" =3D "0xA13" =
+] ; then
+>                 =09             ^-- SC2166: Prefer [ p ] && [ q ] as [ p =
+-a q ] is not well defined
+>=20
+> This warning is observed after commit:
+> "commit bb350847965d ("perf test: Update cs_etm testcase for Arm ETE")"
+>=20
+> Fixed this issue by using quoting 'cpu*' for SC2061 and
+> using "&&" in line number 20 for SC2166 warning
+>=20
+> Fixes: bb350847965d ("perf test: Update cs_etm testcase for Arm ETE")
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 > ---
-> 
-> Changes from v1:
->  * Update commit message
->  * Add fallback to CPU-0 metadata if sample CPU id is not available
->  * Preserve cs_etm__set_trace_param_* arguments and just breakdown the index
->    parameter into trace-param and metadata indexes
-> Thanks to Mike and James for the feedback.
-> v1: https://lore.kernel.org/lkml/20230919224553.1658-1-bwicaksono@nvidia.com/T/#u
-> 
-> ---
->  tools/perf/util/cs-etm.c | 106 ++++++++++++++++++++++++---------------
->  1 file changed, 65 insertions(+), 41 deletions(-)
-> 
+>  tools/perf/tests/shell/test_arm_coresight.sh | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/tools/perf/tests/shell/test_arm_coresight.sh
+> b/tools/perf/tests/shell/test_arm_coresight.sh
+> index fe78c4626e45..f2115dfa24a5 100755
+> --- a/tools/perf/tests/shell/test_arm_coresight.sh
+> +++ b/tools/perf/tests/shell/test_arm_coresight.sh
+> @@ -12,12 +12,12 @@
+>  glb_err=3D0
+>=20
+>  cs_etm_dev_name() {
+> -=09cs_etm_path=3D$(find  /sys/bus/event_source/devices/cs_etm/ -name cpu=
+* -print -quit)
+> +=09cs_etm_path=3D$(find  /sys/bus/event_source/devices/cs_etm/ -name 'cp=
+u*' -print -quit)
 
-There is a trivial conflict on the perf-tools-next repo that it's
-probably worth rebasing for, otherwise:
+Isn't the intention to get the shell to expand "cpu* ?
+So quoting it completely breaks the script.
 
-Reviewed-by: James Clark <james.clark@arm.com>
+>  =09trcdevarch=3D$(cat ${cs_etm_path}/mgmt/trcdevarch)
+>  =09archhver=3D$((($trcdevarch >> 12) & 0xf))
+>  =09archpart=3D$(($trcdevarch & 0xfff))
+>=20
+> -=09if [ $archhver -eq 5 -a "$(printf "0x%X\n" $archpart)" =3D "0xA13" ] =
+; then
+> +=09if [ $archhver -eq 5 ] && [ "$(printf "0x%X\n" $archpart)" =3D "0xA13=
+" ] ; then
 
-Also should probably include linux-perf-users@vger.kernel.org as tools
-changes actually go through the perf tree rather than the coresight one.
+The only issue I see there is that $archhver could be in "".
+IIRC test is required to parse the 5 part expression "a op b -a c op d"
+in the 'expected' manner even if any of a/b/c/d look like operators.
+In any case '(' and ')' can be used to force the ordering.
+Or, more usually, prepend an x as in:
 
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 1419b40dfbe8..3abe68a9981e 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -293,22 +293,31 @@ static int cs_etm__metadata_set_trace_id(u8 trace_chan_id, u64 *cpu_metadata)
->  	})
->  
->  /*
-> - * Get a metadata for a specific cpu from an array.
-> + * Get a metadata index for a specific cpu from an array.
->   *
->   */
-> -static u64 *get_cpu_data(struct cs_etm_auxtrace *etm, int cpu)
-> +static int get_cpu_data_idx(struct cs_etm_auxtrace *etm, int cpu)
->  {
->  	int i;
-> -	u64 *metadata = NULL;
->  
->  	for (i = 0; i < etm->num_cpu; i++) {
->  		if (etm->metadata[i][CS_ETM_CPU] == (u64)cpu) {
-> -			metadata = etm->metadata[i];
-> -			break;
-> +			return i;
->  		}
->  	}
->  
-> -	return metadata;
-> +	return -1;
-> +}
-> +
-> +/*
-> + * Get a metadata for a specific cpu from an array.
-> + *
-> + */
-> +static u64 *get_cpu_data(struct cs_etm_auxtrace *etm, int cpu)
-> +{
-> +	int idx = get_cpu_data_idx(etm, cpu);
-> +
-> +	return (idx != -1) ? etm->metadata[idx] : NULL;
->  }
->  
->  /*
-> @@ -651,66 +660,80 @@ static void cs_etm__packet_dump(const char *pkt_string)
->  }
->  
->  static void cs_etm__set_trace_param_etmv3(struct cs_etm_trace_params *t_params,
-> -					  struct cs_etm_auxtrace *etm, int idx,
-> -					  u32 etmidr)
-> +					  struct cs_etm_auxtrace *etm, int t_idx,
-> +					  int m_idx, u32 etmidr)
->  {
->  	u64 **metadata = etm->metadata;
->  
-> -	t_params[idx].protocol = cs_etm__get_v7_protocol_version(etmidr);
-> -	t_params[idx].etmv3.reg_ctrl = metadata[idx][CS_ETM_ETMCR];
-> -	t_params[idx].etmv3.reg_trc_id = metadata[idx][CS_ETM_ETMTRACEIDR];
-> +	t_params[t_idx].protocol = cs_etm__get_v7_protocol_version(etmidr);
-> +	t_params[t_idx].etmv3.reg_ctrl = metadata[m_idx][CS_ETM_ETMCR];
-> +	t_params[t_idx].etmv3.reg_trc_id = metadata[m_idx][CS_ETM_ETMTRACEIDR];
->  }
->  
->  static void cs_etm__set_trace_param_etmv4(struct cs_etm_trace_params *t_params,
-> -					  struct cs_etm_auxtrace *etm, int idx)
-> +					  struct cs_etm_auxtrace *etm, int t_idx,
-> +					  int m_idx)
->  {
->  	u64 **metadata = etm->metadata;
->  
-> -	t_params[idx].protocol = CS_ETM_PROTO_ETMV4i;
-> -	t_params[idx].etmv4.reg_idr0 = metadata[idx][CS_ETMV4_TRCIDR0];
-> -	t_params[idx].etmv4.reg_idr1 = metadata[idx][CS_ETMV4_TRCIDR1];
-> -	t_params[idx].etmv4.reg_idr2 = metadata[idx][CS_ETMV4_TRCIDR2];
-> -	t_params[idx].etmv4.reg_idr8 = metadata[idx][CS_ETMV4_TRCIDR8];
-> -	t_params[idx].etmv4.reg_configr = metadata[idx][CS_ETMV4_TRCCONFIGR];
-> -	t_params[idx].etmv4.reg_traceidr = metadata[idx][CS_ETMV4_TRCTRACEIDR];
-> +	t_params[t_idx].protocol = CS_ETM_PROTO_ETMV4i;
-> +	t_params[t_idx].etmv4.reg_idr0 = metadata[m_idx][CS_ETMV4_TRCIDR0];
-> +	t_params[t_idx].etmv4.reg_idr1 = metadata[m_idx][CS_ETMV4_TRCIDR1];
-> +	t_params[t_idx].etmv4.reg_idr2 = metadata[m_idx][CS_ETMV4_TRCIDR2];
-> +	t_params[t_idx].etmv4.reg_idr8 = metadata[m_idx][CS_ETMV4_TRCIDR8];
-> +	t_params[t_idx].etmv4.reg_configr = metadata[m_idx][CS_ETMV4_TRCCONFIGR];
-> +	t_params[t_idx].etmv4.reg_traceidr = metadata[m_idx][CS_ETMV4_TRCTRACEIDR];
->  }
->  
->  static void cs_etm__set_trace_param_ete(struct cs_etm_trace_params *t_params,
-> -					  struct cs_etm_auxtrace *etm, int idx)
-> +					  struct cs_etm_auxtrace *etm, int t_idx,
-> +					  int m_idx)
->  {
->  	u64 **metadata = etm->metadata;
->  
-> -	t_params[idx].protocol = CS_ETM_PROTO_ETE;
-> -	t_params[idx].ete.reg_idr0 = metadata[idx][CS_ETE_TRCIDR0];
-> -	t_params[idx].ete.reg_idr1 = metadata[idx][CS_ETE_TRCIDR1];
-> -	t_params[idx].ete.reg_idr2 = metadata[idx][CS_ETE_TRCIDR2];
-> -	t_params[idx].ete.reg_idr8 = metadata[idx][CS_ETE_TRCIDR8];
-> -	t_params[idx].ete.reg_configr = metadata[idx][CS_ETE_TRCCONFIGR];
-> -	t_params[idx].ete.reg_traceidr = metadata[idx][CS_ETE_TRCTRACEIDR];
-> -	t_params[idx].ete.reg_devarch = metadata[idx][CS_ETE_TRCDEVARCH];
-> +	t_params[t_idx].protocol = CS_ETM_PROTO_ETE;
-> +	t_params[t_idx].ete.reg_idr0 = metadata[m_idx][CS_ETE_TRCIDR0];
-> +	t_params[t_idx].ete.reg_idr1 = metadata[m_idx][CS_ETE_TRCIDR1];
-> +	t_params[t_idx].ete.reg_idr2 = metadata[m_idx][CS_ETE_TRCIDR2];
-> +	t_params[t_idx].ete.reg_idr8 = metadata[m_idx][CS_ETE_TRCIDR8];
-> +	t_params[t_idx].ete.reg_configr = metadata[m_idx][CS_ETE_TRCCONFIGR];
-> +	t_params[t_idx].ete.reg_traceidr = metadata[m_idx][CS_ETE_TRCTRACEIDR];
-> +	t_params[t_idx].ete.reg_devarch = metadata[m_idx][CS_ETE_TRCDEVARCH];
->  }
->  
->  static int cs_etm__init_trace_params(struct cs_etm_trace_params *t_params,
->  				     struct cs_etm_auxtrace *etm,
-> +				     bool formatted,
-> +				     int sample_cpu,
->  				     int decoders)
->  {
-> -	int i;
-> +	int t_idx, m_idx;
->  	u32 etmidr;
->  	u64 architecture;
->  
-> -	for (i = 0; i < decoders; i++) {
-> -		architecture = etm->metadata[i][CS_ETM_MAGIC];
-> +	for (t_idx = 0; t_idx < decoders; t_idx++) {
-> +		if (formatted)
-> +			m_idx = t_idx;
-> +		else {
-> +			m_idx = get_cpu_data_idx(etm, sample_cpu);
-> +			if (m_idx == -1) {
-> +				pr_warning("CS_ETM: unknown CPU, falling back to first metadata\n");
-> +				m_idx = 0;
-> +			}
-> +		}
-> +
-> +		architecture = etm->metadata[m_idx][CS_ETM_MAGIC];
->  
->  		switch (architecture) {
->  		case __perf_cs_etmv3_magic:
-> -			etmidr = etm->metadata[i][CS_ETM_ETMIDR];
-> -			cs_etm__set_trace_param_etmv3(t_params, etm, i, etmidr);
-> +			etmidr = etm->metadata[m_idx][CS_ETM_ETMIDR];
-> +			cs_etm__set_trace_param_etmv3(t_params, etm, t_idx, m_idx, etmidr);
->  			break;
->  		case __perf_cs_etmv4_magic:
-> -			cs_etm__set_trace_param_etmv4(t_params, etm, i);
-> +			cs_etm__set_trace_param_etmv4(t_params, etm, t_idx, m_idx);
->  			break;
->  		case __perf_cs_ete_magic:
-> -			cs_etm__set_trace_param_ete(t_params, etm, i);
-> +			cs_etm__set_trace_param_ete(t_params, etm, t_idx, m_idx);
->  			break;
->  		default:
->  			return -EINVAL;
-> @@ -1026,7 +1049,7 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
->  }
->  
->  static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm,
-> -						bool formatted)
-> +						bool formatted, int sample_cpu)
->  {
->  	struct cs_etm_decoder_params d_params;
->  	struct cs_etm_trace_params  *t_params = NULL;
-> @@ -1051,7 +1074,7 @@ static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm,
->  	if (!t_params)
->  		goto out_free;
->  
-> -	if (cs_etm__init_trace_params(t_params, etm, decoders))
-> +	if (cs_etm__init_trace_params(t_params, etm, formatted, sample_cpu, decoders))
->  		goto out_free;
->  
->  	/* Set decoder parameters to decode trace packets */
-> @@ -1091,14 +1114,15 @@ static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm,
->  static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
->  			       struct auxtrace_queue *queue,
->  			       unsigned int queue_nr,
-> -			       bool formatted)
-> +			       bool formatted,
-> +			       int sample_cpu)
->  {
->  	struct cs_etm_queue *etmq = queue->priv;
->  
->  	if (list_empty(&queue->head) || etmq)
->  		return 0;
->  
-> -	etmq = cs_etm__alloc_queue(etm, formatted);
-> +	etmq = cs_etm__alloc_queue(etm, formatted, sample_cpu);
->  
->  	if (!etmq)
->  		return -ENOMEM;
-> @@ -2826,7 +2850,7 @@ static int cs_etm__process_auxtrace_event(struct perf_session *session,
->  		 * formatted in piped mode (true).
->  		 */
->  		err = cs_etm__setup_queue(etm, &etm->queues.queue_array[idx],
-> -					  idx, true);
-> +					  idx, true, -1);
->  		if (err)
->  			return err;
->  
-> @@ -3032,7 +3056,7 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
->  		idx = auxtrace_event->idx;
->  		formatted = !(aux_event->flags & PERF_AUX_FLAG_CORESIGHT_FORMAT_RAW);
->  		return cs_etm__setup_queue(etm, &etm->queues.queue_array[idx],
-> -					   idx, formatted);
-> +					   idx, formatted, sample->cpu);
->  	}
->  
->  	/* Wasn't inside this buffer, but there were no parse errors. 1 == 'not found' */
+if [ "x$archhver" =3D x5 -a "$(printf "0x%X\n" $archpart)" =3D "0xA13" ] ; =
+then
+
+=09David
+
+>  =09=09echo "ete"
+>  =09else
+>  =09=09echo "etm"
+> --
+> 2.31.1
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
+
