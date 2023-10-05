@@ -1,50 +1,48 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1185A7E6
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Oct 2023 04:44:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10EA07FA
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Oct 2023 04:49:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 542864490;
-	Wed,  4 Oct 2023 21:44:51 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id 98e67ed59e1d1-27734d76e1bso398184a91.2;
-        Wed, 04 Oct 2023 21:44:51 -0700 (PDT)
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C8E044AF
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Oct 2023 21:49:04 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id 98e67ed59e1d1-278f0f565e2so368320a91.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 Oct 2023 21:49:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696481087; x=1697085887;
+        d=1e100.net; s=20230601; t=1696481342; x=1697086142;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NSXc66j6KPSxT44QaA3/43T0mBt/pQC0vRdLVYS87ZM=;
-        b=JEGDMaZCoUeoSEqDgVJiEYfwWpINFse1OnRuAHKlWqqieYnFrKCYyNJnmR0NuvyhXa
-         6Bx8ou6gh4AkE7F4nwBUxVyyACB5WDTRu/Kl+AvtC18V1RrEdWY6ukwQs2yXkGFBPO0a
-         RRckQc5yzmsg9/TaluEh1l00E4KZtdWGo/e40IUljH8pPKrbyPya8JViUQ/1Ou52X3hb
-         PsQ9LLJDryd4H1+HCPRl/9SX1ULo/HYlee9zV7/C+9aYW9CyPlfLZ7bwKe4EJirfrINl
-         wLRkHokco7KlzzoLmIPuAHmv0Qt9i1xR0ZW75np81tIUlEah+nbTcI6esi4BnprmTPjp
-         yrhw==
-X-Gm-Message-State: AOJu0YzUrYv4HuyPE7J2rjvCFBdyVUY4et+ysJVxo9vsoMcU/Zapc0WS
-	xpuUAW09RefeQhZyOjlnP0eijcGSTN/eUvj031Q=
-X-Google-Smtp-Source: AGHT+IGo2QtMWpHs+yNK54aIUDzWc4jm4grLLdU6ExjvuYKDCoZf14FvBPctqJn3elwrMGkHvJHDFerV2y0FEiVshrM=
-X-Received: by 2002:a17:90a:9101:b0:273:f584:40ca with SMTP id
- k1-20020a17090a910100b00273f58440camr3999328pjo.16.1696481087457; Wed, 04 Oct
- 2023 21:44:47 -0700 (PDT)
+        bh=G/0elhVnHuH4JwxYChH6LofsDVjpWks/dg3K2e8HBW8=;
+        b=MZjC+kloe8ffInHTZZ66AAp/0v172/8vnT6cWspKSfetUSj6wpAeAOwWkIyPviWQtc
+         vtngGBsGIFGN/bVzCdifJ9LYXnYRb+GDqSVByKhTxgbSR1H6ICS4nKlf/jyNomw3ptQR
+         IfFBsxfjkloVIObct6DpEmCHh3mvH8kSRJvk/4dnjefSHD7NCl920hljc/YrbEY2iUTP
+         0YMf6oEh78dV6XYWqwgWKXO/ZTZXJxb+wq7NrBC5GOcgHDUGiAiQ4J3TnQ8+orv40quT
+         rA9bLOryIYnru77IXVvnLdur1+W3Nfk107y+hV9GPK+thTP/nWq+P7bZC4PHCKJSZAnw
+         71+g==
+X-Gm-Message-State: AOJu0YwpHMIPmnAkspfYFUQgPtn6WSzN4AniXX7Yl1pImrh0QzVJsNKU
+	0NWZkBn4SqPjONPKY3QxtYAFmxg8OMes2x+dWG4=
+X-Google-Smtp-Source: AGHT+IEz8lmgBXcMfjcNd1UsWF5kADnaxxKl4dV1186CcohRUDKjwVoPAZfcDz8EDFk4qdFZbj0D1k3T3LdG/SxGgqM=
+X-Received: by 2002:a17:90b:1997:b0:26d:54de:b0d6 with SMTP id
+ mv23-20020a17090b199700b0026d54deb0d6mr3979170pjb.20.1696481342132; Wed, 04
+ Oct 2023 21:49:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231001131047.15176-1-april@acab.dev> <CAM9d7cgB6GfJSQhWJwmi=FodKwsYdVy_FnRJ+jzt1DpmO-J3cg@mail.gmail.com>
-In-Reply-To: <CAM9d7cgB6GfJSQhWJwmi=FodKwsYdVy_FnRJ+jzt1DpmO-J3cg@mail.gmail.com>
+References: <20231003055440.111907-1-adityag@linux.ibm.com>
+In-Reply-To: <20231003055440.111907-1-adityag@linux.ibm.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 4 Oct 2023 21:44:34 -0700
-Message-ID: <CAM9d7cjRxp7zSZ0PFCW6xWvcdJhDHynu-eFkfwYXLPXWRqcthA@mail.gmail.com>
-Subject: Re: [PATCH] /bin/dmesg to dmesg Path
-To: April John <april@acab.dev>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>
+Date: Wed, 4 Oct 2023 21:48:49 -0700
+Message-ID: <CAM9d7cghSKFMOCSNb0NYEAp6ts_gvxqg4_R4ppnXbzwrApuXSw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/4] Introduce perf check subcommand
+To: acme@kernel.org, irogers@google.com
+Cc: Aditya Gupta <adityag@linux.ibm.com>, jolsa@kernel.org, 
+	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com, 
+	atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
@@ -54,55 +52,125 @@ X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 2, 2023 at 9:16=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> Hello,
->
-> On Sun, Oct 1, 2023 at 6:10=E2=80=AFAM April John <april@acab.dev> wrote:
-> >
-> > Dmesg is not in every distro at /bin/dmesg, in NixOS for example, this =
-fails,
-> > but the path should in most cases contain dmesg.
-> > This follows the example of replacing /bin/bash with bash Path in the c=
-odebase.
-> >
-> > ---
-> > tools/perf/util/evsel.c | 2 +-
-> > 1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index a8a5ff87c..aa602aae6 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -3053,7 +3053,7 @@ int evsel__open_strerror(struct evsel *evsel, str=
-uct target *target,
-> >
-> > return scnprintf(msg, size,
-> > "The sys_perf_event_open() syscall returned with %d (%s) for event (%s)=
-.\n"
-> > - "/bin/dmesg | grep -i perf may provide additional information.\n",
-> > + "dmesg | grep -i perf may provide additional information.\n",
-> > err, str_error_r(err, sbuf, sizeof(sbuf)), evsel__name(evsel));
-> > }
-> >
-> > --
-> > 2.42.0
-> >
-> > Signed-off-by: April John <april@acab.dev>
->
-> It is usual to put a tag after the patch, it should be at the end of the
-> commit message.  With that,
->
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+Arnaldo, Ian and others,
 
-I've tried to apply the patch but it failed.  It looks broken.
-Have you generated it using git format-patch ?
+Are you ok with this?
 
 Thanks,
 Namhyung
 
 
-  Applying: /bin/dmesg to dmesg Path
-  error: corrupt patch at line 11
-  Patch failed at 0001 /bin/dmesg to dmesg Path
+On Mon, Oct 2, 2023 at 10:54=E2=80=AFPM Aditya Gupta <adityag@linux.ibm.com=
+> wrote:
+>
+> The Problem
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> Currently the presence of a feature is checked with a combination of
+> perf version --build-options and greps, such as:
+>
+>     perf version --build-options | grep " on .* HAVE_FEATURE"
+>
+> Proposed solution
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> As suggested by contributors in:
+> https://lore.kernel.org/linux-perf-users/ZMPWk5K63tadmDlU@kernel.org/
+>
+> Introduce a subcommand "perf check --feature", with which
+> scripts can test for presence of a feature, such as:
+>
+>     perf check --feature HAVE_LIBTRACEEVENT
+>
+>     or
+>
+>     perf check --feature libtraceevent
+>
+> The usage of "perf version --build-options | grep" has been replaced in t=
+wo
+> tests, with "perf check --feature" command
+>
+> Also, to not duplicate the same feature list at multiple places, a new gl=
+obal
+> 'supported_features' array has been introduced in builtin.h, so both comm=
+ands
+> 'perf check --feature' and 'perf version --build-options' use the same ar=
+ray
+>
+> 'supported_features' feature is an array of 'struct feature_support', whi=
+ch
+> also has the name of the feature, macro used to test it's presence, and a
+> is_builtin member, which will be 0 if feature not built-in, and 1 if buil=
+t-in
+>
+> Architectures Tested
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> * x86_64
+> * ppc64le
+>
+> Git tree
+> =3D=3D=3D=3D=3D=3D=3D=3D
+>
+> Git tree with this patch series applied for testing:
+> https://github.com/adi-g15-ibm/linux/tree/perf-check-feature-v5
+>
+> Changelog
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D
+> V5
+> + invert return value of 'has_support', but return value of perf check --=
+feature
+> according to shell convention
+>
+> V4
+> + invert return value of perf check --feature
+>
+> V3
+> + simplified has_support code in builtin-check.c (patch #1)
+> + modified patch #3 and patch #4 according to change in return value in p=
+atch #1
+>
+> V2
+> + improved the patch series with suggestions from Namhyung
+> + fix incorrect return value, added -q option, and moved array definition=
+ to
+>   perf-check.c
+>
+> V1
+> + changed subcommand name to 'perf check --feature'
+> + added documentation for perf check
+> + support both macro (eg. HAVE_LIBTRACEEVENT), and name (eg. libtraceeven=
+t) as
+>   input to 'perf check --feature'
+> + change subject and descriptions of all patch mentioning perf check inst=
+ead of
+>   perf build
+>
+> V0: Previous patch series: https://lore.kernel.org/linux-perf-users/20230=
+825061125.24312-1-adityag@linux.ibm.com/
+>
+> Aditya Gupta (3):
+>   perf check: introduce check subcommand
+>   perf version: update --build-options to use 'supported_features' array
+>   perf tests task_analyzer: use perf check for libtraceevent support
+>
+> Athira Rajeev (1):
+>   tools/perf/tests: Update probe_vfs_getname.sh script to use perf check
+>     --feature
+>
+>  tools/perf/Build                              |   1 +
+>  tools/perf/Documentation/perf-check.txt       |  59 +++++++++
+>  tools/perf/builtin-check.c                    | 122 ++++++++++++++++++
+>  tools/perf/builtin-version.c                  |  39 ++----
+>  tools/perf/builtin.h                          |  18 +++
+>  tools/perf/perf.c                             |   1 +
+>  .../perf/tests/shell/lib/probe_vfs_getname.sh |   4 +-
+>  .../shell/record+probe_libc_inet_pton.sh      |   5 +-
+>  .../shell/record+script_probe_vfs_getname.sh  |   5 +-
+>  tools/perf/tests/shell/test_task_analyzer.sh  |   4 +-
+>  10 files changed, 221 insertions(+), 37 deletions(-)
+>  create mode 100644 tools/perf/Documentation/perf-check.txt
+>  create mode 100644 tools/perf/builtin-check.c
+>
+> --
+> 2.41.0
+>
