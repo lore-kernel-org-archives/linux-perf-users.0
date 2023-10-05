@@ -1,102 +1,210 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A498F262A7
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Oct 2023 19:38:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA5E3B2B9
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Oct 2023 21:24:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xt6O4S8w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05119C433C7;
-	Thu,  5 Oct 2023 19:38:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696534689;
-	bh=wCkgJNiv1NgzfO5wNG4eTiNqnwm45TDHUoeqPO7QiYo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xt6O4S8w1dZ4xED9rkInAY2s9ejjZxpg0oYRNu1dK7EWsU7ElKUSLDoWND3et/XEB
-	 JKo3wv8KTYeOVJtFRfu3QBxrLJ5eA9Zykez/iOS2+Uyv6Y9eLYo8Q1E09vRhcKYlPh
-	 OryVQntHhR1ejpZNTKjryNW5N+X+DwX/oufBOotYwZJzLiIAVCCivynIuSZl7rzQCC
-	 RKrvIBiOq+9KzwJI54WSVZ0qeMRWBGWV3/1n1U3nnd0NM4CshMiDwP047/gE28zkWW
-	 EysLq3LzyKAl3kkMjQ9KZn8qKPmv+DPhqgyYM0yL8KEnhqZ3HtEkB2yfY0Kdxmv7cK
-	 rcP8JpiPmKWpg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 0EAA340508; Thu,  5 Oct 2023 16:38:06 -0300 (-03)
-Date: Thu, 5 Oct 2023 16:38:05 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/5] perf tools: Add get_unaligned_leNN()
-Message-ID: <ZR8QnasisGEsaaDR@kernel.org>
-References: <20231005190451.175568-1-adrian.hunter@intel.com>
- <20231005190451.175568-2-adrian.hunter@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="icj7FDcO"
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E8495
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Oct 2023 14:24:43 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-50348c54439so612e87.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 Oct 2023 14:24:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1696541081; x=1697145881; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HaepO8t9qhUeaSKJc3bNMlDRkxaen46XWRceHQFUez0=;
+        b=icj7FDcOeaHdhirjHfO7ZwX7gRjJf7EQTND5WZRPahPXtBwfEYNyfVVB+LSI/Dh9HL
+         ihl348LIcgkUeMeyIdH4+J8ieGZNOfdZjUkcv8BIfL4ZHIvkFMFneJo9jFzWjq3CvvRF
+         NJJ3t6Rx8B3PtlE+zO/dv/oIthYui2BN0lVSe3wFnAgeG/hFm94aD15xN6HQrw8VwJFR
+         CFk+uKJbO/FEHZoh9pMFlGKX8C21uAW2XzBdY175SP4fUM/0/7xnDneLlpBADqoVwmxY
+         djaqeEx8n63NGe2YwdeujoVjzDFgzajyUTr/1tImWw7PF0AKVX+jQolucpS6EdR/oyUR
+         U5Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696541081; x=1697145881;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HaepO8t9qhUeaSKJc3bNMlDRkxaen46XWRceHQFUez0=;
+        b=BoiUDx3as3UdkkKrx8f1bdYIknM7dPUpgi48g+q5RIfmQjOSGdMsX9yx10F3xs/LEF
+         NpdtwadFY0h7yCSZTmiCMVrN9RjnkwIVwtFtz+gkGcHsV0QiyQ3FV1gOGucL0YobT5ae
+         31GY3sObeW91UawENqNx1Q1TRm/LUqmFFQmhoFOreAa+KBOGXJlI5hnNyuUCfADm+I6j
+         d6WkygwXvFdiwUSuXvfUuRdXlS73xl3Y7VXAbN9HBJgshUgD79ufdbnj+k5gchMCotP+
+         RNYweJwdtEgoVLR6tEVRGCjP5MK9sdO0CY0TnWjE4X7t6XjPMDknMjH6h04aB9k87zW3
+         wLfA==
+X-Gm-Message-State: AOJu0Yx5gbm9n7CI7oLpY11+HkhQrnXS7JHkgu8y+Y4Ol0SO1/4e2TB0
+	eP1WnepvFCWpkmgm0pjBewW0RJbFqYsO56k2CPhWnw==
+X-Google-Smtp-Source: AGHT+IGwjAsToi5gc7RhWC+svZLqKDlBw6l4RJI3YmEmmql4x5V+8FrGIUxzcWz0M1odhb6QMuJtaotLYnION36T/kM=
+X-Received: by 2002:a19:f014:0:b0:502:c615:99b0 with SMTP id
+ p20-20020a19f014000000b00502c61599b0mr66809lfc.4.1696541081106; Thu, 05 Oct
+ 2023 14:24:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231005190451.175568-2-adrian.hunter@intel.com>
-X-Url: http://acmel.wordpress.com
+References: <20231002221909.2958708-1-irogers@google.com> <CAP-5=fX-VOeCkOJY5xeW67x0+A0tGAHM4VYBBz46L-g2eRCR+w@mail.gmail.com>
+ <93afcf44-5f8b-49c1-abc5-5304cba5f991@intel.com>
+In-Reply-To: <93afcf44-5f8b-49c1-abc5-5304cba5f991@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 5 Oct 2023 14:24:29 -0700
+Message-ID: <CAP-5=fXzcR6QKKhFG5PS1pFYi5JsO4AOUoH_-Bv0O+11YzEkkw@mail.gmail.com>
+Subject: Re: [PATCH v1] perf intel-pt: pkt-decoder: Fix alignment issues
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Liam Howlett <liam.howlett@oracle.com>, 
+	Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-Em Thu, Oct 05, 2023 at 10:04:47PM +0300, Adrian Hunter escreveu:
-> Add get_unaligned_le16(), get_unaligned_le32 and get_unaligned_le64, same
-> as include/asm-generic/unaligned.h.
-> 
-> Use diagnostic pragmas to ignore -Wpacked used by perf build.
+On Thu, Oct 5, 2023 at 12:06=E2=80=AFPM Adrian Hunter <adrian.hunter@intel.=
+com> wrote:
+>
+> On 5/10/23 18:48, Ian Rogers wrote:
+> > On Mon, Oct 2, 2023 at 3:19=E2=80=AFPM Ian Rogers <irogers@google.com> =
+wrote:
+> >>
+> >> The byte aligned buffer is cast to large types and dereferenced
+> >> causing misaligned pointer warnings from undefined behavior sanitizer.
+> >> Fix the alignment issues with memcpy which may require the
+> >> introduction of temporaries.
+> >>
+> >> Signed-off-by: Ian Rogers <irogers@google.com>
+> >> ---
+> >
+> > This is a relatively small change that fixes building with
+> > -fsanitize=3Dalignment -fsanitize-undefined-trap-on-error. Adrian, as
+> > this is Intel-PT could you take a look?
+>
+> Thanks! This has been down my list of things to do for ages,
+> but using get_unaligned_le16() etc seems nicer.  I sent a patch
+> set for that.
 
-Can we get the tools copy of include/asm-generic/unaligned.h closer and
-have it in check-headers.sh?
+Thanks Adrian! Your patch set looks good and I think after Arnaldo's
+comment is addressed we should go with it.
 
-- Arnaldo
- 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
->  tools/include/asm-generic/unaligned.h | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/tools/include/asm-generic/unaligned.h b/tools/include/asm-generic/unaligned.h
-> index 47387c607035..9140bb4e16c6 100644
-> --- a/tools/include/asm-generic/unaligned.h
-> +++ b/tools/include/asm-generic/unaligned.h
-> @@ -6,6 +6,9 @@
->  #ifndef __TOOLS_LINUX_ASM_GENERIC_UNALIGNED_H
->  #define __TOOLS_LINUX_ASM_GENERIC_UNALIGNED_H
->  
-> +#pragma GCC diagnostic push
-> +#pragma GCC diagnostic ignored "-Wpacked"
-> +
->  #define __get_unaligned_t(type, ptr) ({						\
->  	const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);	\
->  	__pptr->x;								\
-> @@ -19,5 +22,22 @@
->  #define get_unaligned(ptr)	__get_unaligned_t(typeof(*(ptr)), (ptr))
->  #define put_unaligned(val, ptr) __put_unaligned_t(typeof(*(ptr)), (val), (ptr))
->  
-> +static inline u16 get_unaligned_le16(const void *p)
-> +{
-> +	return le16_to_cpu(__get_unaligned_t(__le16, p));
-> +}
-> +
-> +static inline u32 get_unaligned_le32(const void *p)
-> +{
-> +	return le32_to_cpu(__get_unaligned_t(__le32, p));
-> +}
-> +
-> +static inline u64 get_unaligned_le64(const void *p)
-> +{
-> +	return le64_to_cpu(__get_unaligned_t(__le64, p));
-> +}
-> +
-> +#pragma GCC diagnostic pop
-> +
->  #endif /* __TOOLS_LINUX_ASM_GENERIC_UNALIGNED_H */
->  
-> -- 
-> 2.34.1
-> 
+Ian
 
--- 
-
-- Arnaldo
+> >
+> > Thanks,
+> > Ian
+> >
+> >>  .../intel-pt-decoder/intel-pt-pkt-decoder.c   | 21 ++++++++++++------=
+-
+> >>  1 file changed, 14 insertions(+), 7 deletions(-)
+> >>
+> >> diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c b=
+/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
+> >> index af9710622a1f..28659874d84e 100644
+> >> --- a/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
+> >> +++ b/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
+> >> @@ -83,7 +83,7 @@ static int intel_pt_get_long_tnt(const unsigned char=
+ *buf, size_t len,
+> >>         if (len < 8)
+> >>                 return INTEL_PT_NEED_MORE_BYTES;
+> >>
+> >> -       payload =3D le64_to_cpu(*(uint64_t *)buf);
+> >> +       memcpy_le64(&payload, buf, sizeof(payload));
+> >>
+> >>         for (count =3D 47; count; count--) {
+> >>                 if (payload & BIT63)
+> >> @@ -220,6 +220,8 @@ static int intel_pt_get_3byte(const unsigned char =
+*buf, size_t len,
+> >>  static int intel_pt_get_ptwrite(const unsigned char *buf, size_t len,
+> >>                                 struct intel_pt_pkt *packet)
+> >>  {
+> >> +       uint32_t tmp;
+> >> +
+> >>         packet->count =3D (buf[1] >> 5) & 0x3;
+> >>         packet->type =3D buf[1] & BIT(7) ? INTEL_PT_PTWRITE_IP :
+> >>                                          INTEL_PT_PTWRITE;
+> >> @@ -228,12 +230,13 @@ static int intel_pt_get_ptwrite(const unsigned c=
+har *buf, size_t len,
+> >>         case 0:
+> >>                 if (len < 6)
+> >>                         return INTEL_PT_NEED_MORE_BYTES;
+> >> -               packet->payload =3D le32_to_cpu(*(uint32_t *)(buf + 2)=
+);
+> >> +               memcpy(&tmp, buf + 2, sizeof(tmp));
+> >> +               packet->payload =3D le32_to_cpu(tmp);
+> >>                 return 6;
+> >>         case 1:
+> >>                 if (len < 10)
+> >>                         return INTEL_PT_NEED_MORE_BYTES;
+> >> -               packet->payload =3D le64_to_cpu(*(uint64_t *)(buf + 2)=
+);
+> >> +               memcpy_le64(&packet->payload, buf + 2, sizeof(packet->=
+payload));
+> >>                 return 10;
+> >>         default:
+> >>                 return INTEL_PT_BAD_PACKET;
+> >> @@ -258,7 +261,7 @@ static int intel_pt_get_mwait(const unsigned char =
+*buf, size_t len,
+> >>         if (len < 10)
+> >>                 return INTEL_PT_NEED_MORE_BYTES;
+> >>         packet->type =3D INTEL_PT_MWAIT;
+> >> -       packet->payload =3D le64_to_cpu(*(uint64_t *)(buf + 2));
+> >> +       memcpy_le64(&packet->payload, buf + 2, sizeof(packet->payload)=
+);
+> >>         return 10;
+> >>  }
+> >>
+> >> @@ -454,6 +457,8 @@ static int intel_pt_get_ip(enum intel_pt_pkt_type =
+type, unsigned int byte,
+> >>                            struct intel_pt_pkt *packet)
+> >>  {
+> >>         int ip_len;
+> >> +       uint16_t tmp16;
+> >> +       uint32_t tmp32;
+> >>
+> >>         packet->count =3D byte >> 5;
+> >>
+> >> @@ -465,13 +470,15 @@ static int intel_pt_get_ip(enum intel_pt_pkt_typ=
+e type, unsigned int byte,
+> >>                 if (len < 3)
+> >>                         return INTEL_PT_NEED_MORE_BYTES;
+> >>                 ip_len =3D 2;
+> >> -               packet->payload =3D le16_to_cpu(*(uint16_t *)(buf + 1)=
+);
+> >> +               memcpy(&tmp16, buf + 1, sizeof(tmp16));
+> >> +               packet->payload =3D le16_to_cpu(tmp16);
+> >>                 break;
+> >>         case 2:
+> >>                 if (len < 5)
+> >>                         return INTEL_PT_NEED_MORE_BYTES;
+> >>                 ip_len =3D 4;
+> >> -               packet->payload =3D le32_to_cpu(*(uint32_t *)(buf + 1)=
+);
+> >> +               memcpy(&tmp32, buf + 1, sizeof(tmp32));
+> >> +               packet->payload =3D le32_to_cpu(tmp32);
+> >>                 break;
+> >>         case 3:
+> >>         case 4:
+> >> @@ -484,7 +491,7 @@ static int intel_pt_get_ip(enum intel_pt_pkt_type =
+type, unsigned int byte,
+> >>                 if (len < 9)
+> >>                         return INTEL_PT_NEED_MORE_BYTES;
+> >>                 ip_len =3D 8;
+> >> -               packet->payload =3D le64_to_cpu(*(uint64_t *)(buf + 1)=
+);
+> >> +               memcpy_le64(&packet->payload, buf + 1, sizeof(packet->=
+payload));
+> >>                 break;
+> >>         default:
+> >>                 return INTEL_PT_BAD_PACKET;
+> >> --
+> >> 2.42.0.582.g8ccd20d70d-goog
+> >>
+>
