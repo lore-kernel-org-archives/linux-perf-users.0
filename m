@@ -1,64 +1,65 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D020A12B74
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Oct 2023 22:13:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90AE41E5B
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Oct 2023 22:16:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sCLwAeaz"
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F4FC95
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Oct 2023 15:13:51 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-502f29ed596so2289e87.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Oct 2023 15:13:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T364UsNn"
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEB4A95
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Oct 2023 15:16:49 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-4053f24c900so15825e9.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 Oct 2023 15:16:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696544029; x=1697148829; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1696544208; x=1697149008; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+b693Y1Dasdqb+Bvft8PNzQSfqB0Z0L3RovrSOC+5XI=;
-        b=sCLwAeaz0t9ZjGeS6R9zkR2xjglgBaa07fBOA3jdnfyFwNwfMs9N3rp8DTF0+3ITwe
-         tP8W3cwBEW2vY95SCt6k5nkC+5mEkN+yGLuokbLLNbqxvyk+fTo81/bCePqTZ1Dgvof0
-         AbJm7Lc98b7upM8f7FCp4SXHlGEk00bHJe5lUcpMUtw7jEZ1doUgWKz9u/6RHnIJrFze
-         b5ApZ1zBWVD3OHw8J2x/WB2LiUm2bPCa4wpvlAa/WZsBxWvRkrBAyLNmcBao6w5eNmo0
-         pNhFvLehK9Qfqsid+9ApsLKr89jASI4BBI781BqZzLfzoEACtdMQq4G0/bFPo3Z+xRVT
-         bBcg==
+        bh=0bay8cunWQ05UAT3X4nRQGJsULFuIk9d15GtcH157QY=;
+        b=T364UsNnb7nVogvMpdNXn/bH76TAXh5Y8/IWxIy7NMo+VuS4zz8GAy8WzqbDO0GhUl
+         XTlahc36FQeAM1/tOQSZCgPEbe5EOSqNKXoiVzq27f4Vz31oEjJ/kIPTyMlTVKYwT7hD
+         FOHT1vxEu3HRlcHQVMyUEKolli1tgD4Yawvdb2qhQ3EbwCuh/F/SmrBT9CS6XujYBLQ5
+         p+zpSEGdp0Fs0W4s2/s7AoNGoOu0po4fAzhuOehWCSx7TQsAipl/m4C4EIxUTLBqwKpU
+         cdYMj0fMKYCxK9GmJlFEGrGqL3T+kZVVyPpzsC7i+ba4dcIEePgoP2IH7rz4sskmlXgk
+         4p/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696544029; x=1697148829;
+        d=1e100.net; s=20230601; t=1696544208; x=1697149008;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+b693Y1Dasdqb+Bvft8PNzQSfqB0Z0L3RovrSOC+5XI=;
-        b=oG182n+p4ueQv1iQPLopCFtrArDwgwoIIE/O7aT7AAqIbBkOhzXMPtGGNPt1YjdeZO
-         s72t4G5e3NBn5W4nU9otX3sPoekkmgFLDmDgFSIzQI2q+9Gir2iSPhs4WVc52ye2D3wk
-         9PQzN5ICvsVdRB0UJV2aoJGgjVP14XIC8p/lCyRUvs6Hx9W3dskAHkmFM8vWs4y01fPG
-         JbXXAFY78Ot+2xsfYxZhnqmOhMNzquyJYwuyzcuhC3AmBLNLngnPgP9HbWCJi7vpKjMa
-         5mOE5V2C4X2VD4vmo7zhtIyPj7GaLXkCz2eRdwq/JEygCPqZP3gQob5juWa2zW1uA1+Z
-         80kg==
-X-Gm-Message-State: AOJu0Yzhm+5gutQLBttnxMA89AnnVdm5pc3GuQqpTKOEq1A0i+3AOtcO
-	JiWNwPjcbwPRnQLtExzkxlR+o6i3K0fFo/GufPOcgg==
-X-Google-Smtp-Source: AGHT+IG8HhLz8amGBqIHMMBtl0b/29dYhbEuhdIISKcNvI4MG0ZYoDVF8mHIW7OiuKwFk+16uSpRmWRSqtNc5nTXsEI=
-X-Received: by 2002:ac2:59c2:0:b0:501:b029:1a47 with SMTP id
- x2-20020ac259c2000000b00501b0291a47mr84104lfn.1.1696544029164; Thu, 05 Oct
- 2023 15:13:49 -0700 (PDT)
+        bh=0bay8cunWQ05UAT3X4nRQGJsULFuIk9d15GtcH157QY=;
+        b=eLadKtdI2sF3VABPZgH/FSEQgWsd/cXmVgp3AGa3PfR1KQVwBLshEbmScA/4Eatak9
+         UF/Pq2VR7xu51m3SPUO6IFl7jyIsMq3L3no8sIcGXI2MI71FJfFo6w4lVDsvO1zsBeqT
+         xcEHUFLHVqJqftR/ai9IJNAJnYYcmZlbaegjblQ4CzmiaMeLAxYsCnNw9EF/7VfwPPbr
+         VgGof/7AOayuHJJ5yHVes67tQOfQrV5/9kmHDRv6Z8WG0OuaVvrS5apq2ViS7xBcE8VX
+         Qznalv665jaawm2iHuUrs9DdhveZd4ghvtI/lmVuYKutsqu+h8zlbvHGw7qu4Tw2D2DW
+         eJqw==
+X-Gm-Message-State: AOJu0Yxxp14ynEBO1b0+vaXYyIy6gw7+GH5EOKNpz67X4U5JL2XylBTO
+	Dhri9/KueVb1FnhwLgxsbR3+URzdF2PR54z1CKENeA==
+X-Google-Smtp-Source: AGHT+IHWi11t7vguwOrZMBTZWkQmHmfbxGoF4jE9spm56iseKmLMzmy4X7cgsF8O8H115MZbCjeA3dhxC0ryCXXsYKU=
+X-Received: by 2002:a05:600c:1884:b0:3f6:f4b:d4a6 with SMTP id
+ x4-20020a05600c188400b003f60f4bd4a6mr110415wmp.7.1696544208096; Thu, 05 Oct
+ 2023 15:16:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230928004431.1926969-1-irogers@google.com>
-In-Reply-To: <20230928004431.1926969-1-irogers@google.com>
+References: <20230926205948.1399594-1-irogers@google.com> <8a6b9556-c82c-4253-a4c1-74d696ad26df@linux.intel.com>
+In-Reply-To: <8a6b9556-c82c-4253-a4c1-74d696ad26df@linux.intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 5 Oct 2023 15:13:37 -0700
-Message-ID: <CAP-5=fW6dBQQ7XnDm+Ye7R2bksNrWWwZJ+X33QnDvcjqjgtU5Q@mail.gmail.com>
-Subject: Re: [PATCH v1] perf parse-events: Fix for term values that are raw events
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Namhyung Kim <namhyung@kernel.org>
-Cc: James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, 
+Date: Thu, 5 Oct 2023 15:16:36 -0700
+Message-ID: <CAP-5=fWk12jKjVmV+aJ_U5A=ao7L1ha-wOHaM+ytO9oF0nP9zA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] perf vendor events intel: Fix broadwellde
+ tma_info_system_dram_bw_use metric
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Peter Zijlstra <peterz@infradead.org>
+	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Caleb Biggers <caleb.biggers@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
@@ -69,91 +70,56 @@ X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Wed, Sep 27, 2023 at 5:44=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On Wed, Sep 27, 2023 at 6:47=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
+om> wrote:
 >
-> Raw events can be strings like 'r0xead' but the 0x is optional so they
-> can also be 'read'. On IcelakeX uncore_imc_free_running has an event
-> called 'read' which may be programmed as:
-> ```
-> $ perf stat -e 'uncore_imc_free_running/event=3Dread/' -a sleep 1
-> ```
-> However, the PE_RAW type isn't allowed on the right of a term, even
-> though in this case we just want to interpret it as a string. This
-> leads to the following error on IcelakeX:
-> ```
-> $ perf stat -e 'uncore_imc_free_running/event=3Dread/' -a sleep 1
-> event syntax error: '..nning/event=3Dread/'
->                                   \___ parser error
-> Run 'perf list' for a list of valid events
 >
->  Usage: perf stat [<options>] [<command>]
 >
->     -e, --event <event> event selector. use 'perf list' to list available=
- events
-> ```
-> Fix this by allowing raw types on the right of terms and treat them as
-> strings, just as is already done for PE_LEGACY_CACHE. Make this
-> consistent by just entirely removing name_or_legacy and always using
-> name_or_raw that covers all three cases.
+> On 2023-09-26 4:59 p.m., Ian Rogers wrote:
+> > Broadwell-de has a consumer core and server uncore. The uncore_arb PMU
+> > isn't present and the broadwellx style cbox PMU should be used
+> > instead. Fix the tma_info_system_dram_bw_use metric to use the server
+> > metric rather than client.
+> >
+> > The associated converter script fix is in:
+> > https://github.com/intel/perfmon/pull/111
+> >
+> > Fixes: 7d124303d620 ("perf vendor events intel: Update broadwell varian=
+t events/metrics")
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
 >
-> Fixes: 6fd1e5191591 ("perf parse-events: Support PMUs for legacy cache ev=
-ents")
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Thanks Ian. The whole patch series looks good to me.
+>
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-Ping. As this is affecting IcelakeX, Kan?
+Would be good to pick this up in perf-tools-next.
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/util/parse-events.y | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
+> Thanks,
+> Kan
 >
-> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-event=
-s.y
-> index 4d9f3922a33d..de098caf0c1c 100644
-> --- a/tools/perf/util/parse-events.y
-> +++ b/tools/perf/util/parse-events.y
-> @@ -78,7 +78,7 @@ static void free_list_evsel(struct list_head* list_evse=
-l)
->  %type <str> PE_MODIFIER_BP
->  %type <str> PE_EVENT_NAME
->  %type <str> PE_DRV_CFG_TERM
-> -%type <str> name_or_raw name_or_legacy
-> +%type <str> name_or_raw
->  %destructor { free ($$); } <str>
->  %type <term> event_term
->  %destructor { parse_events_term__delete ($$); } <term>
-> @@ -669,8 +669,6 @@ event_term
->
->  name_or_raw: PE_RAW | PE_NAME | PE_LEGACY_CACHE
->
-> -name_or_legacy: PE_NAME | PE_LEGACY_CACHE
-> -
->  event_term:
->  PE_RAW
->  {
-> @@ -685,7 +683,7 @@ PE_RAW
->         $$ =3D term;
->  }
->  |
-> -name_or_raw '=3D' name_or_legacy
-> +name_or_raw '=3D' name_or_raw
->  {
->         struct parse_events_term *term;
->         int err =3D parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE=
-_USER, $1, $3, &@1, &@3);
-> @@ -765,7 +763,7 @@ PE_TERM_HW
->         $$ =3D term;
->  }
->  |
-> -PE_TERM '=3D' name_or_legacy
-> +PE_TERM '=3D' name_or_raw
->  {
->         struct parse_events_term *term;
->         int err =3D parse_events_term__str(&term, $1, /*config=3D*/NULL, =
-$3, &@1, &@3);
-> --
-> 2.42.0.515.g380fc7ccd1-goog
->
+> >  tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.j=
+son b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
+> > index 8fc62b8f667d..d0ef46c9bb61 100644
+> > --- a/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
+> > +++ b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
+> > @@ -652,7 +652,7 @@
+> >      },
+> >      {
+> >          "BriefDescription": "Average external Memory Bandwidth Use for=
+ reads and writes [GB / sec]",
+> > -        "MetricExpr": "64 * (arb@event\\=3D0x81\\,umask\\=3D0x1@ + arb=
+@event\\=3D0x84\\,umask\\=3D0x1@) / 1e6 / duration_time / 1e3",
+> > +        "MetricExpr": "64 * (UNC_M_CAS_COUNT.RD + UNC_M_CAS_COUNT.WR) =
+/ 1e9 / duration_time",
+> >          "MetricGroup": "HPC;Mem;MemoryBW;SoC;tma_issueBW",
+> >          "MetricName": "tma_info_system_dram_bw_use",
+> >          "PublicDescription": "Average external Memory Bandwidth Use fo=
+r reads and writes [GB / sec]. Related metrics: tma_fb_full, tma_mem_bandwi=
+dth, tma_sq_full"
