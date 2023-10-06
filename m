@@ -1,154 +1,175 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0632841744
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Oct 2023 20:46:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A0444486
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Oct 2023 21:22:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="CsG2smek"
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 950FFBF
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Oct 2023 13:46:49 -0700 (PDT)
-Received: from eig-obgw-5005a.ext.cloudfilter.net ([10.0.29.234])
-	by cmsmtp with ESMTP
-	id opc8qWgjvnGhUorihqOW5L; Fri, 06 Oct 2023 20:46:48 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id orihqnyhYsFqtorihqOvWD; Fri, 06 Oct 2023 20:46:47 +0000
-X-Authority-Analysis: v=2.4 cv=CYgbWZnl c=1 sm=1 tr=0 ts=65207237
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=Dx1Zrv+1i3YEdDUMOX3koA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10 a=JfrnYn6hAAAA:8
- a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8 a=7CQSdrXTAAAA:8 a=QyXUC8HyAAAA:8
- a=1XWaLZrsAAAA:8 a=oGMlB6cnAAAA:8 a=NEAV23lmAAAA:8 a=cm27Pg_UAAAA:8
- a=Ept5xCBCDW7Vsq_-JocA:9 a=QEXdDO2ut3YA:10 a=1CNFftbPRP8L7MoqJWF3:22
- a=AjGcO6oz07-iQ99wixmX:22 a=a-qgeE7W1pNrGK8U0ZQC:22 a=NdAtdrkLVvyUPsUoGJp4:22
- a=xmb-EsYY8bH0VWELuYED:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Qm71vIH8l6GmDG5pJ/nbitu7tnl1liUv4COLKheS+YY=; b=CsG2smektTqOWZ0UIsfO0TtZx2
-	RhVhMcDOQR3Re101Jz6zkfPPwRxgmffXTxpd3LJHnJprYroiRdKz6Nom4jM0fYdf+Akb5uoQDOIk9
-	AdTNdoOlLKk23UVU10O+Sm+HvlyTZ43IM7h6BWl3+dY7jPGgf9sKX3R7ZpgO+0mDj5SY75JXf2h4j
-	J0zf0jXGC3qySoJmNt/1WHloYYrkabJxU7ScuRPQCJ5kgP4Ona6yIucZBlr9RY7szbIlUCkCyGK7p
-	urWB3A75orMIkYHWJzfQXYgD79L/lFxzzDuJ8OQi6oPxVx4x9hPpgjUJWVVsY8VenpOT/42RDqOOd
-	i6qF4Otw==;
-Received: from 94-238-9-39.abo.bbox.fr ([94.238.9.39]:47408 helo=[192.168.1.98])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1qorid-001Bge-32;
-	Fri, 06 Oct 2023 15:46:44 -0500
-Message-ID: <853ad308-1863-43a0-ad39-f706b2b7761d@embeddedor.com>
-Date: Fri, 6 Oct 2023 22:46:39 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n+vSk99W"
+Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBC03C5
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Oct 2023 14:22:55 -0700 (PDT)
+Received: by mail-vs1-xe2a.google.com with SMTP id ada2fe7eead31-4527d7f7305so1172917137.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Oct 2023 14:22:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1696627375; x=1697232175; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sGVNTkTuEhOSEasSh+f06Vtoy0x55i2wMcWJNOvGy7A=;
+        b=n+vSk99Wvz8Oz3Kyk9WWynpVMiPaVTPCVsqkZMCw5u8CJK+6xmawQaOuADpFN+l8Sj
+         IIv5da45u/CM93dMRQcyjfgJb6WAUArzGxHy5Ibw6dBH493lLbWHh89Gxriv7696X29H
+         lHqnY0xHLMySMusxJDGkpoMFnFrJ7PGPNI6UqUhgf0ypADHxwqEaa3Df6jAJOOXSZe6d
+         y3t/pnxjUT/9zhbaPiN4UzFsyL72YXnVV8jDk0ln1cjpkyuR8DG78mMz2PlZ3l37a+JY
+         Sx+hzPG6SHzbV/dcJLN3E6dNe0RePyhhkrJB2Q1KiPPZ4XgA5ZWP1uKY6FusDeMfmGbp
+         mYFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696627375; x=1697232175;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sGVNTkTuEhOSEasSh+f06Vtoy0x55i2wMcWJNOvGy7A=;
+        b=X0Qc/0f36XV7yWeDFjnI1ZS1F6nW9ktMEROrkvZ0uRtdfnBp0d02k4gHp7PZ3MEIPm
+         7Z/x7nRPT+KcED2lTF7wufJm2Y4ejeFvkWFAOYkqCH0shp3cm/wLZmIdn/ZGfdD/pqbR
+         18oZ3RPxVNf7ylFnxkXdKIkTHMfwyT65Dp3Y53pqMieL8ml8YM383m9MIdQPv4/dKkKx
+         RPJ0IJz7hpnrHbkksWFANSNyyLKsacFAp+3cFSFll54iwHFvDRBCq/rnsu7BqjIuCse6
+         55VKHaA71n28i/T8c2MjCcte/X7xQr9ixXlQz7My/XbTNWh3KyrY+UaoaO/qPZXpngNY
+         4ivQ==
+X-Gm-Message-State: AOJu0Yw6iy5LLEW2qApIOHrSZTCLCEQSSIa+ApZDsf6faDdvRno2CRbS
+	41zBQuRsY4yhiY4dpkU4X+jgbXEzWdUTwwzuA6/McA==
+X-Google-Smtp-Source: AGHT+IHnX81YT51zxIXl1qmhGCbeGEzay4hR/OGqRxoTUMH7ud/FezhnE2gFVlk4Zt9S1a9t+vYObTEVG+pZ/4S4UyE=
+X-Received: by 2002:a67:fe58:0:b0:44d:4c28:55ca with SMTP id
+ m24-20020a67fe58000000b0044d4c2855camr9318168vsr.16.1696627374720; Fri, 06
+ Oct 2023 14:22:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/rapl: Annotate struct rapl_pmus with
- __counted_by
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>, linux-perf-users@vger.kernel.org,
- linux-hardening@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-References: <20231006201754.work.473-kees@kernel.org>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20231006201754.work.473-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 94.238.9.39
-X-Source-L: No
-X-Exim-ID: 1qorid-001Bge-32
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 94-238-9-39.abo.bbox.fr ([192.168.1.98]) [94.238.9.39]:47408
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 17
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfEloCGJiJ1QZxnGY74Mi/Ou2H3y5rSGs/VSd08ibaowS65n1/HZHoZJLI84ePSQRFkm+E58t2DsY3Q6oFcSR7BJAx7Kj+uNZof+nhc1CBvxdfOd4JIaS
- nvrKEF7BGumhyGLa2Sn1W1k+KHiYjBiZuME7TL9SITHgF2/BW7/eeD6b2+J2zAr0n2/VQ0klefdEaZqWg+fJGMJchA0Qokfkuf0hHH/8HCo8ICBk/mj5FYK8
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+References: <20231005230851.3666908-1-irogers@google.com> <20231005230851.3666908-4-irogers@google.com>
+In-Reply-To: <20231005230851.3666908-4-irogers@google.com>
+From: Nick Desaulniers <ndesaulniers@google.com>
+Date: Fri, 6 Oct 2023 14:22:42 -0700
+Message-ID: <CAKwvOd=7r9v72UadbTqk1EK=kMEH3-JybkmarToCs1_ohRC1sw@mail.gmail.com>
+Subject: Re: [PATCH v2 03/18] run-clang-tools: Add pass through checks and and
+ header-filter arguments
+To: Ian Rogers <irogers@google.com>
+Cc: Nathan Chancellor <nathan@kernel.org>, Tom Rix <trix@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Ming Wang <wangming01@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Sean Christopherson <seanjc@google.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Yanteng Si <siyanteng@loongson.cn>, Yuan Can <yuancan@huawei.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, James Clark <james.clark@arm.com>, llvm@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
+On Thu, Oct 5, 2023 at 4:09=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> Add a -checks argument to allow the checks passed to the clang-tool to
+> be set on the command line.
+>
+> Add a pass through -header-filter option.
+>
+> Don't run analysis on non-C or CPP files.
 
+Three distinct changes; I wouldn't have minded that as three distinct patch=
+es.
 
-On 10/6/23 22:17, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
-> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct rapl_pmus.
-> 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: x86@kernel.org
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-hardening@vger.kernel.org
-> Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks!
--- 
-Gustavo
-
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->   arch/x86/events/rapl.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-> index c2c37fb0a228..8d98d468b976 100644
-> --- a/arch/x86/events/rapl.c
-> +++ b/arch/x86/events/rapl.c
-> @@ -115,7 +115,7 @@ struct rapl_pmu {
->   struct rapl_pmus {
->   	struct pmu		pmu;
->   	unsigned int		maxdie;
-> -	struct rapl_pmu		*pmus[];
-> +	struct rapl_pmu		*pmus[] __counted_by(maxdie);
->   };
->   
->   enum rapl_unit_quirk {
+>  scripts/clang-tools/run-clang-tools.py | 32 ++++++++++++++++++++------
+>  1 file changed, 25 insertions(+), 7 deletions(-)
+>
+> diff --git a/scripts/clang-tools/run-clang-tools.py b/scripts/clang-tools=
+/run-clang-tools.py
+> index 3266708a8658..f31ffd09e1ea 100755
+> --- a/scripts/clang-tools/run-clang-tools.py
+> +++ b/scripts/clang-tools/run-clang-tools.py
+> @@ -33,6 +33,11 @@ def parse_arguments():
+>      path_help =3D "Path to the compilation database to parse"
+>      parser.add_argument("path", type=3Dstr, help=3Dpath_help)
+>
+> +    checks_help =3D "Checks to pass to the analysis"
+> +    parser.add_argument("-checks", type=3Dstr, default=3DNone, help=3Dch=
+ecks_help)
+> +    header_filter_help =3D "Pass the -header-filter value to the tool"
+> +    parser.add_argument("-header-filter", type=3Dstr, default=3DNone, he=
+lp=3Dheader_filter_help)
+> +
+>      return parser.parse_args()
+>
+>
+> @@ -45,14 +50,27 @@ def init(l, a):
+>
+>  def run_analysis(entry):
+>      # Disable all checks, then re-enable the ones we want
+> -    checks =3D []
+> -    checks.append("-checks=3D-*")
+> -    if args.type =3D=3D "clang-tidy":
+> -        checks.append("linuxkernel-*")
+> +    global args
+> +    checks =3D None
+> +    if args.checks:
+> +        checks =3D args.checks.split(',')
+>      else:
+> -        checks.append("clang-analyzer-*")
+> -        checks.append("-clang-analyzer-security.insecureAPI.DeprecatedOr=
+UnsafeBufferHandling")
+> -    p =3D subprocess.run(["clang-tidy", "-p", args.path, ",".join(checks=
+), entry["file"]],
+> +        checks =3D ["-*"]
+> +        if args.type =3D=3D "clang-tidy":
+> +            checks.append("linuxkernel-*")
+> +        else:
+> +            checks.append("clang-analyzer-*")
+> +            checks.append("-clang-analyzer-security.insecureAPI.Deprecat=
+edOrUnsafeBufferHandling")
+> +    file =3D entry["file"]
+> +    if not file.endswith(".c") and not file.endswith(".cpp"):
+> +        with lock:
+> +            print(f"Skipping non-C file: '{file}'", file=3Dsys.stderr)
+> +        return
+
+^ perhaps worth returning earlier if this guard fails? i.e.
+
+rather than do a bunch of work, then do a guard that may return early
+that doesn't depend on the earlier work, instead guard first then do
+all work.
+
+I don't mind that as a follow up rather than a whole v3 for the series.
+
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+> +    pargs =3D ["clang-tidy", "-p", args.path, "-checks=3D" + ",".join(ch=
+ecks)]
+> +    if args.header_filter:
+> +        pargs.append("-header-filter=3D" + args.header_filter)
+> +    pargs.append(file)
+> +    p =3D subprocess.run(pargs,
+>                         stdout=3Dsubprocess.PIPE,
+>                         stderr=3Dsubprocess.STDOUT,
+>                         cwd=3Dentry["directory"])
+> --
+> 2.42.0.609.gbb76f46606-goog
+>
+
+
+--=20
+Thanks,
+~Nick Desaulniers
