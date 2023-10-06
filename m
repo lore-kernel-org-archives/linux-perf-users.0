@@ -1,168 +1,107 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E79B38FAE
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Oct 2023 18:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aOZTJBM5"
-Received: from mail-oo1-xc35.google.com (mail-oo1-xc35.google.com [IPv6:2607:f8b0:4864:20::c35])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42943CF
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Oct 2023 11:58:00 -0700 (PDT)
-Received: by mail-oo1-xc35.google.com with SMTP id 006d021491bc7-57b6a7e0deeso1429662eaf.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Oct 2023 11:58:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696618679; x=1697223479; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fH8sBNRx2fIy/cr7x3xLOPUSQ51+JC0fFgoMH/eJTHg=;
-        b=aOZTJBM5DSkXbXD4XK+ZaxzqooM3OjUm2qHDia48lmcI6J96f9X0ci7xNebdYzgz/5
-         q8UCUbdQL1GQqobn89WXC3eK5x17vLFaaF/22xosLINIfvSKIFq7ecCVWm3AJqcGpsx7
-         E7wyJvkZsXYcJzRgt9pOSN7Iam51e5+yyVihCrvlb01AjDziRsEtH3mhoqq1IZf74wyT
-         kp12kZG+ZE6oGLqDwnzlTuBH+EzUYUDzgdtWPu5ABoKjfdXq3sVI1onShrE9Tpd5Q//t
-         Xs4Za46ghJ4gSQOWxoEX1/2BzDFhT6tqB9esHXhiG5HJin4ONSLAEHYrxq0JKXmjdrAm
-         yHHg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B2238F98
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Oct 2023 19:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 251ABCA;
+	Fri,  6 Oct 2023 12:05:39 -0700 (PDT)
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-57b8cebf57dso1344084eaf.0;
+        Fri, 06 Oct 2023 12:05:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696618679; x=1697223479;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fH8sBNRx2fIy/cr7x3xLOPUSQ51+JC0fFgoMH/eJTHg=;
-        b=wqzijlQfoKb61CNPPuY8Yr2x3GYS6sCI5EO9NrlatbRjTMGFb37o1L90eqU/ZMhfop
-         2klD9gb/qDCQGYNGGz6anvAyZg1jOyX/eRYSnCGcpPspbNNuW5pjMw5knlodK4bzY478
-         3RNu7vFZ+v/RW+wHaA7UbtH7trvyHxPSXnVjApXKvRAx/J3PFAI7+xZBOudBy1KtkmeK
-         iAkgCVq6kd1scQG52soxDp1LFHV4yNiSgZqPTMgV7CPeDkOZEzrlWt8Q63W2imIOziO0
-         XBt9eQf7jmj+yuaJXp5gywOwCtRUu9k1h5AGvPcMalbHf4hZ9vAA0AMq7CJDeGfuZfWj
-         qJNg==
-X-Gm-Message-State: AOJu0Yzy5ZLtSnEEqK6vpFtbEsqB67DNDqCo8lvvRUoqa+spCVJGwHQX
-	VRPlCtEWj3ChL9KsE8vGQYo=
-X-Google-Smtp-Source: AGHT+IHnonBxv+zOm/+XowjrI1AllD2F9Bg2Hk+xtT7dRLELZsfDk2MBzzp4kiHTBamvc3MrLIRVug==
-X-Received: by 2002:a05:6358:4291:b0:143:8601:54d with SMTP id s17-20020a056358429100b001438601054dmr8327995rwc.2.1696618679360;
-        Fri, 06 Oct 2023 11:57:59 -0700 (PDT)
-Received: from saturn.lan ([2601:648:8900:1ba9:7fee:84d2:5412:6733])
-        by smtp.gmail.com with ESMTPSA id cp13-20020a17090afb8d00b002684b837d88sm3898026pjb.14.2023.10.06.11.57.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Oct 2023 11:57:58 -0700 (PDT)
-From: JP Kobryn <inwardvessel@gmail.com>
-To: x86@kernel.org
-Cc: peterz@infradead.org,
-	rostedt@goodmis.org,
-	linux-perf-users@vger.kernel.org,
-	Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH] LBR: filter vsyscall addresses
-Date: Fri,  6 Oct 2023 11:57:26 -0700
-Message-ID: <20231006185726.6300-1-inwardvessel@gmail.com>
-X-Mailer: git-send-email 2.41.0
+        d=1e100.net; s=20230601; t=1696619138; x=1697223938;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rTVoeVfMOxsjEM7ujAVqwzrstYR+YNmGmlAo8xZUyMo=;
+        b=ahx8z5uV0WL9ctIOMDegl9omLN+95Edtqz+etGLiAsFZIie1bF/UTV4q4BYDZCHhmA
+         aa86+UGsPL4yuSGQ7Qij/98biA28SLq/oAaB8WPE407eoQ6QauIZzVw3jKbeMaRMIPhU
+         dvD1DW5QdamR+TXGf5jp8gqMaDNNr84fIv5zoh35/qxn76eHWOkUiM2ADWvEll+DsdSK
+         +Lw/f7BhRlQTLH8XyCGnbsjc6q/6tkRIcZsCrjr94qh6rkAZR+pkcc3k4TNHhesKEAvi
+         hx+e25rRCc+yzkZdZTl4tPBC70c/2YqK0lQYuSiFEwb3insOB2XI6Wb5Pe6r0xsyCtnj
+         zyiw==
+X-Gm-Message-State: AOJu0YwEmV0XZzr9vQ25XdUfs73Pv+/1jsgZHuBCh62esO5U3sDJXyXu
+	wUvGQfpkHECvZGTYvENxnrO+9/MktBmzdcnIZ6w=
+X-Google-Smtp-Source: AGHT+IHYPEjnvWDeT4zLtq3cc/leWn1Uoy2fLkCUMXkmWJbiIU6zZFunk+iDI3YM2AB8kvMEy+wZiuEeMV1OW/zFQ1A=
+X-Received: by 2002:a05:6358:938f:b0:140:ecf2:4c69 with SMTP id
+ h15-20020a056358938f00b00140ecf24c69mr9234027rwb.3.1696619137983; Fri, 06 Oct
+ 2023 12:05:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+References: <20230907210533.3712979-1-irogers@google.com> <CAP-5=fVaK2hhBTX4=zKX5Dft36RurctYEtGzsdUp6XKsjHguMw@mail.gmail.com>
+In-Reply-To: <CAP-5=fVaK2hhBTX4=zKX5Dft36RurctYEtGzsdUp6XKsjHguMw@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 6 Oct 2023 12:05:26 -0700
+Message-ID: <CAM9d7cjDmX=k1aEYGZAf5NJ-j6_q55BOOaMofABHE52KWD3jjA@mail.gmail.com>
+Subject: Re: [PATCH v1] perf parse-events: Avoid erange from hex numbers
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh@kernel.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-We found that a panic can occur when a vsyscall is made while LBR sampling
-is active. If the vsyscall is interrupted (nmi) for perf sampling this
-call sequence can occur (most recent at top):
+Hi Ian,
 
-    0 __insn_get_emulate_prefix
-    1 insn_get_emulate_prefix
-    2 insn_get_prefixes
-    3 insn_get_opcode
-    4 decode_branch_type
-    5 get_branch_type
-    6 intel_pmu_lbr_filter
-    7 intel_pmu_handle_irq
-    8 perf_event_nmi_handler
+On Fri, Oct 6, 2023 at 8:30=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> On Thu, Sep 7, 2023 at 2:05=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+> >
+> > We specify that a "num_hex" comprises 1 or more digits, however, that
+> > allows strtoull to fail with ERANGE. Limit the number of hex digits to
+> > being between 1 and 16.
+> >
+> > Before:
+> > ```
+> > $ perf stat -e 'cpu/rE7574c47490475745/' true
+> > perf: util/parse-events.c:215: fix_raw: Assertion `errno =3D=3D 0' fail=
+ed.
+> > Aborted (core dumped)
+> > ```
+> >
+> > After:
+> > ```
+> > $ perf stat -e 'cpu/rE7574c47490475745/' true
+> > event syntax error: 'cpu/rE7574c47490475745/'
+> >                          \___ Bad event or PMU
+> >
+> > Unable to find PMU or event on a PMU of 'cpu'
+> >
+> > Initial error:
+> > event syntax error: 'cpu/rE7574c47490475745/'
+> >                          \___ unknown term 'rE7574c47490475745' for pmu=
+ 'cpu'
+> >
+> > valid terms: event,pc,edge,offcore_rsp,ldlat,inv,umask,frontend,cmask,c=
+onfig,config1,config2,config3,name,period,percore,metric-id
+> > Run 'perf list' for a list of valid events
+> >
+> >  Usage: perf stat [<options>] [<command>]
+> >
+> >     -e, --event <event>   event selector. use 'perf list' to list avail=
+able events
+> > ```
+> >
+> > Issue found through fuzz testing.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
 
-Within __insn_get_emulate_prefix at frame 0, a macro is called:
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-    peek_nbyte_next(insn_byte_t, insn, i)
-
-Within this macro, this dereference occurs:
-
-    (insn)->next_byte
-
-Inspecting registers at this point, the value of the next_byte field is the
-address of the vsyscall made, for example the location of the vsyscall
-version of gettimeofday() at 0xffffffffff600000. The access to an address
-in the vsyscall region will trigger an oops due to an unhandled page fault.
-
-The test program below can be used to run the vsyscall version of
-gettimeofday() repeatedly. In order to repro the panic, run this program
-with the perf command:
-
-    perf record --branch-filter any_call ./a.out
-
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/time.h>
-
-int vsyscall_gettimeofday(struct timeval *tv)
-{
-	register int64_t rax __asm__("rax") = 0xffffffffff600000;
-	register void *rdi __asm__("rdi") = tv;
-
-	__asm__ volatile (
-		"callq *%%rax \n\t"
-		: "+r" (rax)
-		: "r" (rdi)
-	);
-
-	return rax;
-}
-
-int main()
-{
-	struct timeval tv;
-
-	for (;;) {
-		memset(&tv, 0, sizeof(tv));
-		vsyscall_gettimeofday(&tv);
-		printf("sec:%ld, usec:%ld\n", tv.tv_sec, tv.tv_usec);
-	}
-}
-
-To prevent the problem, filtering for vsyscalls can be done when
-determining the branch type. This patch will return a "none" branch if a
-kernel address if found to lie in the vsyscall region.
-
-Signed-off-by: JP Kobryn <inwardvessel@gmail.com>
-Suggested-by: Alexei Starovoitov <ast@kernel.org>
-
----
- arch/x86/events/utils.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/events/utils.c b/arch/x86/events/utils.c
-index 76b1f8bb0fd5..dab4ed199227 100644
---- a/arch/x86/events/utils.c
-+++ b/arch/x86/events/utils.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <asm/insn.h>
-+#include <linux/mm.h>
- 
- #include "perf_event.h"
- 
-@@ -132,9 +133,9 @@ static int get_branch_type(unsigned long from, unsigned long to, int abort,
- 		 * The LBR logs any address in the IP, even if the IP just
- 		 * faulted. This means userspace can control the from address.
- 		 * Ensure we don't blindly read any address by validating it is
--		 * a known text address.
-+		 * a known text address and not a vsyscall address.
- 		 */
--		if (kernel_text_address(from)) {
-+		if (kernel_text_address(from) && !in_gate_area_no_mm(from)) {
- 			addr = (void *)from;
- 			/*
- 			 * Assume we can get the maximum possible size
--- 
-2.41.0
-
+Thanks,
+Namhyung
