@@ -1,56 +1,32 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C92C42C13;
-	Fri,  6 Oct 2023 21:27:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B059450F1;
+	Fri,  6 Oct 2023 22:15:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6SYoa2Y"
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FF34BD;
-	Fri,  6 Oct 2023 14:27:28 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id ffacd0b85a97d-317c3ac7339so2270409f8f.0;
-        Fri, 06 Oct 2023 14:27:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696627647; x=1697232447; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2LOMLFTaNBQx5qytUiXEAPk+GRgb6gB7gLtxh/K3vXk=;
-        b=f6SYoa2Y6B4l7ij2EVjFyxrnHBrdvOP99XSqx2WwyPKZkz6YdLsz8Q1WaDkoj2HEMm
-         sapsjYbHm6rvc/+s7FbK8cRhkzCkcta28BrsT8Lzy0JmRfl13nCIHUcVy1eIBMCwZN84
-         ZuHsQr6hEZ3dltTvpNImncrL0w2DUB6QcmRKoWXwBlusSJWn/Bj3D8jLoqL4glQvh1FT
-         v7+2Mq31XZb5vPQT28Wx/1Gkks+4utqqPXBCmBv0fScyUzmDmPUZr0kIb+6x4da4lepv
-         x0Y9QjmDw15PkSN5gcHA9HdlwihD2p0RYy2h/GeLMc0cZlMEc6gp9bJuVHyOCfR0lWwl
-         +kyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696627647; x=1697232447;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2LOMLFTaNBQx5qytUiXEAPk+GRgb6gB7gLtxh/K3vXk=;
-        b=uktGU8HwEv1VC2T4Ozj4AbzQEMc8/Wsu+nDjQorHfkp8hHSIcLhVYZ/wmw/sdPmAgc
-         +QtZ8WC2MyQt8DoFLDDOXIaUMdxBgVZmksnHMLLJQw8ZpmuHrX2uUwGgLwpf543dLt5i
-         03lyuBtAtKmiznTS4k5LBiXEwFbFrvA09YVOwpmm4uzV68tFpD3sCblqEta4as0iPoLt
-         bNGOEd/L3sSSWJA/epzT7d5v7JLvs00kvQyq+ONpsXmnVX2oHshYC91U42NTzC1HXQ8P
-         eQtgHrkbGTImWQOAfXkKUmO4pVE9jkHM09d4K46Hprd/OGnFl98sny3EBUm+f1iNh7cM
-         xwZg==
-X-Gm-Message-State: AOJu0YxW62n3YSYZ/UbUnVx49p8vZe68y/dDBiVj2QPufWaNNZxztuuM
-	iNe6EC0jnqGkv/LjJnY+uyI=
-X-Google-Smtp-Source: AGHT+IEcGEWB6ShYFg/G7LTKWR1VOCfl2Qbc9+Er22OsxHRH9DDfdbbl3YUFckQA4fimPKUEVdw2nQ==
-X-Received: by 2002:adf:f585:0:b0:322:7174:7d28 with SMTP id f5-20020adff585000000b0032271747d28mr8058998wro.55.1696627646496;
-        Fri, 06 Oct 2023 14:27:26 -0700 (PDT)
-Received: from krava ([83.240.63.40])
-        by smtp.gmail.com with ESMTPSA id 12-20020a05600c024c00b0040531f5c51asm4556377wmj.5.2023.10.06.14.27.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Oct 2023 14:27:25 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Fri, 6 Oct 2023 23:27:23 +0200
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mLlPCG7t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C96C7C433C7;
+	Fri,  6 Oct 2023 22:15:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696630524;
+	bh=0BUzPj2R6rhBxuxPOAubyeE0wFpEvMqOXYzo32IT/IQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mLlPCG7tJvIh9P63mjGpfZ5BAcT2/1UNcfpWvqiaESULZIr24RmhR6YqoVkVt33Rp
+	 Fi1GWmfnTwyjTl7BvczApCZBwntDMuXJbYYOuEy1p9FAgQjzdCUNZ9fjRBbAxhbtiq
+	 BP8+I6DMxEMfqgtAP/zhAEwiaJowg7zUAJokMGXtDuaYePCimmhwmZDvkf06qQ/xDW
+	 p/LqO0IcgJiEP/9SiPYoOeTwTFYQY3X8EVi6BWDTHj350FM4hoPuYIqEiCECB4E6Ol
+	 7cbb6B4WcTYJGVNT748xXtQohZNGM2CzGrbumRychJtrxa/F7AnzRk0Wa2URbIXc7k
+	 /xI3kJw50YtYg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 460FF40508; Fri,  6 Oct 2023 19:15:21 -0300 (-03)
+Date: Fri, 6 Oct 2023 19:15:21 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
 	Daniel Borkmann <daniel@iogearbox.net>,
 	Andrii Nakryiko <andrii@kernel.org>,
-	Quentin Monnet <quentin@isovalent.com>
-Cc: Dmitry Goncharov <dgoncharov@users.sf.net>,
+	Quentin Monnet <quentin@isovalent.com>,
+	Dmitry Goncharov <dgoncharov@users.sf.net>,
 	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
 	Namhyung Kim <namhyung@kernel.org>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -62,8 +38,9 @@ Cc: Dmitry Goncharov <dgoncharov@users.sf.net>,
 	Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <a.p.zijlstra@chello.nl>
 Subject: Re: [PATCH] tools/build: Fix -s detection code for new make
-Message-ID: <ZSB7u/jmxpjGSrVt@krava>
+Message-ID: <ZSCG+UsvhEv6rUz+@kernel.org>
 References: <20231004135956.987903-1-jolsa@kernel.org>
+ <ZSB7u/jmxpjGSrVt@krava>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -72,56 +49,66 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231004135956.987903-1-jolsa@kernel.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+In-Reply-To: <ZSB7u/jmxpjGSrVt@krava>
+X-Url: http://acmel.wordpress.com
 
-On Wed, Oct 04, 2023 at 03:59:56PM +0200, Jiri Olsa wrote:
-> As Dmitry described in [1] changelog the current way of detecting
-> -s option is broken for new make.
+Em Fri, Oct 06, 2023 at 11:27:23PM +0200, Jiri Olsa escreveu:
+> On Wed, Oct 04, 2023 at 03:59:56PM +0200, Jiri Olsa wrote:
+> > As Dmitry described in [1] changelog the current way of detecting
+> > -s option is broken for new make.
+> > 
+> > Changing the tools/build -s option detection the same way as it was
+> > fixed for root Makefile in [1].
+> > 
+> > [1] 4bf73588165b ("kbuild: Port silent mode detection to future gnu make.")
+> > 
+> > Cc: Dmitry Goncharov <dgoncharov@users.sf.net>
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > 
-> Changing the tools/build -s option detection the same way as it was
-> fixed for root Makefile in [1].
-> 
-> [1] 4bf73588165b ("kbuild: Port silent mode detection to future gnu make.")
-> 
-> Cc: Dmitry Goncharov <dgoncharov@users.sf.net>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> we actually need same change in tools/scripts/Makefile.include as well,
+> I'll resend v2
 
-we actually need same change in tools/scripts/Makefile.include as well,
-I'll resend v2
+Thanks, I noticed the change in behaviour and was gegoing thru other
+grep/sed, egrep, NO_LIBTRACEEVENT, binutils not being installed leading
+to -1 error in annotation, etc before getting to this, on the way to
+judiciously test the new default to BUILD_BPF_SKEL=1.
 
-jirka
+I did a quick test and got a familiar output when building perf, please
+submit v2, v1 is great for me so far :)
 
-> ---
->  tools/build/Makefile.build | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
+- Arnaldo
+ 
+> jirka
 > 
-> diff --git a/tools/build/Makefile.build b/tools/build/Makefile.build
-> index fac42486a8cf..5fb3fb3d97e0 100644
-> --- a/tools/build/Makefile.build
-> +++ b/tools/build/Makefile.build
-> @@ -20,7 +20,15 @@ else
->    Q=@
->  endif
->  
-> -ifneq ($(findstring s,$(filter-out --%,$(MAKEFLAGS))),)
-> +# If the user is running make -s (silent mode), suppress echoing of commands
-> +# make-4.0 (and later) keep single letter options in the 1st word of MAKEFLAGS.
-> +ifeq ($(filter 3.%,$(MAKE_VERSION)),)
-> +short-opts := $(firstword -$(MAKEFLAGS))
-> +else
-> +short-opts := $(filter-out --%,$(MAKEFLAGS))
-> +endif
-> +
-> +ifneq ($(findstring s,$(short-opts)),)
->    quiet=silent_
->  endif
->  
-> -- 
-> 2.41.0
-> 
+> > ---
+> >  tools/build/Makefile.build | 10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/build/Makefile.build b/tools/build/Makefile.build
+> > index fac42486a8cf..5fb3fb3d97e0 100644
+> > --- a/tools/build/Makefile.build
+> > +++ b/tools/build/Makefile.build
+> > @@ -20,7 +20,15 @@ else
+> >    Q=@
+> >  endif
+> >  
+> > -ifneq ($(findstring s,$(filter-out --%,$(MAKEFLAGS))),)
+> > +# If the user is running make -s (silent mode), suppress echoing of commands
+> > +# make-4.0 (and later) keep single letter options in the 1st word of MAKEFLAGS.
+> > +ifeq ($(filter 3.%,$(MAKE_VERSION)),)
+> > +short-opts := $(firstword -$(MAKEFLAGS))
+> > +else
+> > +short-opts := $(filter-out --%,$(MAKEFLAGS))
+> > +endif
+> > +
+> > +ifneq ($(findstring s,$(short-opts)),)
+> >    quiet=silent_
+> >  endif
+> >  
+> > -- 
+> > 2.41.0
+> > 
+
+-- 
+
+- Arnaldo
