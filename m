@@ -1,114 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B059450F1;
-	Fri,  6 Oct 2023 22:15:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208D01377
+	for <linux-perf-users@vger.kernel.org>; Sat,  7 Oct 2023 02:13:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mLlPCG7t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C96C7C433C7;
-	Fri,  6 Oct 2023 22:15:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696630524;
-	bh=0BUzPj2R6rhBxuxPOAubyeE0wFpEvMqOXYzo32IT/IQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mLlPCG7tJvIh9P63mjGpfZ5BAcT2/1UNcfpWvqiaESULZIr24RmhR6YqoVkVt33Rp
-	 Fi1GWmfnTwyjTl7BvczApCZBwntDMuXJbYYOuEy1p9FAgQjzdCUNZ9fjRBbAxhbtiq
-	 BP8+I6DMxEMfqgtAP/zhAEwiaJowg7zUAJokMGXtDuaYePCimmhwmZDvkf06qQ/xDW
-	 p/LqO0IcgJiEP/9SiPYoOeTwTFYQY3X8EVi6BWDTHj350FM4hoPuYIqEiCECB4E6Ol
-	 7cbb6B4WcTYJGVNT748xXtQohZNGM2CzGrbumRychJtrxa/F7AnzRk0Wa2URbIXc7k
-	 /xI3kJw50YtYg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 460FF40508; Fri,  6 Oct 2023 19:15:21 -0300 (-03)
-Date: Fri, 6 Oct 2023 19:15:21 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Quentin Monnet <quentin@isovalent.com>,
-	Dmitry Goncharov <dgoncharov@users.sf.net>,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Ian Rogers <irogers@google.com>, KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: Re: [PATCH] tools/build: Fix -s detection code for new make
-Message-ID: <ZSCG+UsvhEv6rUz+@kernel.org>
-References: <20231004135956.987903-1-jolsa@kernel.org>
- <ZSB7u/jmxpjGSrVt@krava>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sh7Z5eAO"
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45190BE
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Oct 2023 19:13:46 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d81841ef79bso3720745276.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Oct 2023 19:13:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1696644825; x=1697249625; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=JEVjZ6N3og+gW+xMTkpMzQJ6pQd4TOr0IjDXaW6Z93M=;
+        b=Sh7Z5eAOKDlJFvMF4do3ce2itXjTZsOeGNFBKEnY0eQPyChXiauARjZ6JFGYkgNthA
+         wVYwiNHVh/rievmGACu4lHjj4o9+b0/N5a97/pT5lFGJFmzA5v7Rj2wuKOFcal2BI9qI
+         ZmFq3Nzxltnhm58fNGdiMzMdgl0JHt3/M/7vt4vEDxMin9/qNPAmIZWzC7TutGFaRIk1
+         tX8MHvMgdhTUFzJlnt0YOetRiVO1yUOkkeN1NAWJCxTSM5iq6yWKotEP8biwyaOwy38X
+         lsSRhto77rhVOIF1F3DwX/Ds+UYYkr1BANyxj7fu0KgCbt2eTlRYaJgldPHcTCT5VSRf
+         fEYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696644825; x=1697249625;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JEVjZ6N3og+gW+xMTkpMzQJ6pQd4TOr0IjDXaW6Z93M=;
+        b=u8c2YtUowknpGrEf4c1kKqRWUkg46619N5K+WSz48ZWoljCHiNaxB3qW1AUzXdN2U/
+         zydg12gYvNQAC5G3rsKD1sjpDC1niJPfB2vxYkUnX1jb8aajmgygCKznC/xGHAYgyWRl
+         DvmTVyaeZSGl1XSfGJ80C2m8ko63xyrkMF7sD9ao9PyDR5AVC7J41iLCTm44n5Mwr8Y7
+         ltkVVWVa4Z0fxt69UcMfFawRjELI/utZI615pRvOKs2qgMQk8y1HLj1piSt+1iw+P85j
+         Nf3zl1z0/NiGlnYpuCfkSThrI14VLmVbmhBfDOJqvf/klKNST5baOksbNMinZlQFZWr2
+         0tPw==
+X-Gm-Message-State: AOJu0YwgGXvCcsmadfrIMpwDDBsVevsWb8rto2tPH+hkT3QYykLUFWQE
+	RDEg7m1W8UQpq5sUOthbxexbupyO7QWP
+X-Google-Smtp-Source: AGHT+IF2EWY4ixpkApTIlh/URgj2hH2/ff+8VAS2lTt0A8xa82u8MZbVhfUp9TQhyImXiXti7n+Pv8SxiS2H
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:7031:b36b:6c77:bfd0])
+ (user=irogers job=sendgmr) by 2002:a25:2513:0:b0:d0f:a0a6:8e87 with SMTP id
+ l19-20020a252513000000b00d0fa0a68e87mr142757ybl.2.1696644825394; Fri, 06 Oct
+ 2023 19:13:45 -0700 (PDT)
+Date: Fri,  6 Oct 2023 19:13:19 -0700
+Message-Id: <20231007021326.4156714-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZSB7u/jmxpjGSrVt@krava>
-X-Url: http://acmel.wordpress.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.42.0.609.gbb76f46606-goog
+Subject: [PATCH v1 0/7] PMU performance improvements
+From: Ian Rogers <irogers@google.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
+	James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Kajol Jain <kjain@linux.ibm.com>, 
+	Jing Zhang <renyu.zj@linux.alibaba.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, coresight@lists.linaro.org, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-Em Fri, Oct 06, 2023 at 11:27:23PM +0200, Jiri Olsa escreveu:
-> On Wed, Oct 04, 2023 at 03:59:56PM +0200, Jiri Olsa wrote:
-> > As Dmitry described in [1] changelog the current way of detecting
-> > -s option is broken for new make.
-> > 
-> > Changing the tools/build -s option detection the same way as it was
-> > fixed for root Makefile in [1].
-> > 
-> > [1] 4bf73588165b ("kbuild: Port silent mode detection to future gnu make.")
-> > 
-> > Cc: Dmitry Goncharov <dgoncharov@users.sf.net>
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> 
-> we actually need same change in tools/scripts/Makefile.include as well,
-> I'll resend v2
+Performance improvements to pmu scanning by holding onto the
+event/metric tables for a cpuid (avoid regular expression comparisons)
+and by lazily computing the default perf_event_attr for a PMU.
 
-Thanks, I noticed the change in behaviour and was gegoing thru other
-grep/sed, egrep, NO_LIBTRACEEVENT, binutils not being installed leading
-to -1 error in annotation, etc before getting to this, on the way to
-judiciously test the new default to BUILD_BPF_SKEL=1.
+Before
+% Running 'internals/pmu-scan' benchmark:
+Computing performance of sysfs PMU event scan for 100 times
+  Average core PMU scanning took: 251.990 usec (+- 4.009 usec)
+  Average PMU scanning took: 3222.460 usec (+- 211.234 usec)
+% Running 'internals/pmu-scan' benchmark:
+Computing performance of sysfs PMU event scan for 100 times
+  Average core PMU scanning took: 260.120 usec (+- 7.905 usec)
+  Average PMU scanning took: 3228.995 usec (+- 211.196 usec)
+% Running 'internals/pmu-scan' benchmark:
+Computing performance of sysfs PMU event scan for 100 times
+  Average core PMU scanning took: 252.310 usec (+- 3.980 usec)
+  Average PMU scanning took: 3220.675 usec (+- 210.844 usec)
 
-I did a quick test and got a familiar output when building perf, please
-submit v2, v1 is great for me so far :)
 
-- Arnaldo
- 
-> jirka
-> 
-> > ---
-> >  tools/build/Makefile.build | 10 +++++++++-
-> >  1 file changed, 9 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/build/Makefile.build b/tools/build/Makefile.build
-> > index fac42486a8cf..5fb3fb3d97e0 100644
-> > --- a/tools/build/Makefile.build
-> > +++ b/tools/build/Makefile.build
-> > @@ -20,7 +20,15 @@ else
-> >    Q=@
-> >  endif
-> >  
-> > -ifneq ($(findstring s,$(filter-out --%,$(MAKEFLAGS))),)
-> > +# If the user is running make -s (silent mode), suppress echoing of commands
-> > +# make-4.0 (and later) keep single letter options in the 1st word of MAKEFLAGS.
-> > +ifeq ($(filter 3.%,$(MAKE_VERSION)),)
-> > +short-opts := $(firstword -$(MAKEFLAGS))
-> > +else
-> > +short-opts := $(filter-out --%,$(MAKEFLAGS))
-> > +endif
-> > +
-> > +ifneq ($(findstring s,$(short-opts)),)
-> >    quiet=silent_
-> >  endif
-> >  
-> > -- 
-> > 2.41.0
-> > 
+After:
+% Running 'internals/pmu-scan' benchmark:
+Computing performance of sysfs PMU event scan for 100 times
+  Average core PMU scanning took: 28.530 usec (+- 0.602 usec)
+  Average PMU scanning took: 275.725 usec (+- 18.253 usec)
+% Running 'internals/pmu-scan' benchmark:
+Computing performance of sysfs PMU event scan for 100 times
+  Average core PMU scanning took: 28.720 usec (+- 0.446 usec)
+  Average PMU scanning took: 271.015 usec (+- 18.762 usec)
+% Running 'internals/pmu-scan' benchmark:
+Computing performance of sysfs PMU event scan for 100 times
+  Average core PMU scanning took: 31.040 usec (+- 0.612 usec)
+  Average PMU scanning took: 267.340 usec (+- 17.209 usec)
+
+Measuring the pmu-scan benchmark on a Tigerlake laptop: core PMU
+scanning is reduced to 11.5% of the previous execution time, all PMU
+scanning is reduced to 8.4% of the previous execution time. There is a
+4.3% reduction in openat system calls.
+
+Ian Rogers (7):
+  perf pmu: Rename perf_pmu__get_default_config to perf_pmu__arch_init
+  perf intel-pt: Move PMU initialization from default config code
+  perf arm-spe: Move PMU initialization from default config code
+  perf pmu: Const-ify file APIs
+  perf pmu: Const-ify perf_pmu__config_terms
+  perf pmu-events: Remember the events and metrics table
+  perf pmu: Lazily compute default config
+
+ tools/perf/arch/arm/util/cs-etm.c    | 13 ++------
+ tools/perf/arch/arm/util/pmu.c       | 10 +++---
+ tools/perf/arch/arm64/util/arm-spe.c | 48 +++++++++++++---------------
+ tools/perf/arch/s390/util/pmu.c      |  3 +-
+ tools/perf/arch/x86/util/intel-pt.c  | 27 +++++++---------
+ tools/perf/arch/x86/util/pmu.c       |  6 ++--
+ tools/perf/pmu-events/jevents.py     | 48 ++++++++++++++++------------
+ tools/perf/util/arm-spe.h            |  4 ++-
+ tools/perf/util/cs-etm.h             |  2 +-
+ tools/perf/util/intel-pt.h           |  3 +-
+ tools/perf/util/parse-events.c       | 12 +++----
+ tools/perf/util/pmu.c                | 39 +++++++++++-----------
+ tools/perf/util/pmu.h                | 18 ++++++-----
+ tools/perf/util/python.c             |  2 +-
+ 14 files changed, 117 insertions(+), 118 deletions(-)
 
 -- 
+2.42.0.609.gbb76f46606-goog
 
-- Arnaldo
