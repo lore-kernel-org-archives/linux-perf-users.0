@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467961872
-	for <linux-perf-users@vger.kernel.org>; Sat,  7 Oct 2023 02:14:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F172187C
+	for <linux-perf-users@vger.kernel.org>; Sat,  7 Oct 2023 02:14:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XxnTRAx7"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1D43FF
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Oct 2023 19:13:59 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d865f1447a2so3891681276.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Oct 2023 19:13:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KVt12koF"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 243FD110
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Oct 2023 19:14:02 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5a2318df875so42255097b3.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Oct 2023 19:14:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696644839; x=1697249639; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1696644841; x=1697249641; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=FLkv57fF17zqRfpQp8SmIixiH1bpbCUPMZ8JZj8EM2M=;
-        b=XxnTRAx7E6ffCQwPnXQtUjxD3n/quOBWFowClBnMNVB8xFJmrZkGoqUMRWh4YjX0lc
-         5fa2hX0oXn0rLgfRVB9OkliYXPdgsoFv5cdlHlRa2oCzOpa/iJV1KjhSa9kSRJHL0+YH
-         uMVAqUmzMFdErRvDpXBF/o81g2y3QRAhh8i25ugp9/lMmw+dLXu+xgIjztFJBEF3tz2d
-         s+0l7x/ZmGjhWHuBuE5lfAiPvg/dyzf9kplzthdsoGcVPZBIlOFRD48JdFjfZuLLsVFR
-         /QgqSmo495FbSXdq5Q085/1PtCdKwSNHUD22dRk6s9NjIBLbkIgzzaorQoL0ubdFpPxn
-         MF3g==
+        bh=2nlT7Ayc6FK2ENh5HApqpyv4FDoAbHTS/CAmbKpgFgU=;
+        b=KVt12koF9lOZAI4EXiciPQ4EuRna0sLnyltatR2YMMKhwQEeVEA18EGT2GtRpTDURy
+         oM+iqas1pxCdAC6QRhFCe7zAxO/AXftg1pX2PczCTYOyeVO7Wbz7S3JNpXWPmVHefxfT
+         j2YCWQSEMbKFkz0ai3b7qINURgbw+OrulMx7rHCwJMzge6/v30pOq2JYwo8SksJI5yiU
+         kE391MoYlPVZxkjv7+45FB3F33bY5mvtyOZzeZg9tsB0FQN1+4iGjW2lv90ujPRBJPAd
+         5rLq+7G8dG/IUtUkLeeeT5yvEsg1CQ9hOBN/usMjo8GR8OIjPB0FR7zwzH3GzCPDvxN3
+         9dgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696644839; x=1697249639;
+        d=1e100.net; s=20230601; t=1696644841; x=1697249641;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FLkv57fF17zqRfpQp8SmIixiH1bpbCUPMZ8JZj8EM2M=;
-        b=oGOwY2LY9DnkxKKG51kYQuBXiz4Yk92om6ZdYUQtKyX6zYwwC/AREH+FnFJG5CQJ26
-         VpzLlEhJF3iC6EVGBmQfky2mnCOkOMi7UQFR7kujPnhnxvVA+oUf3GS8LmvKMy9HyLw0
-         5V5ipPVeFTO5Yc/7UWPpoOtLg/kHaKKeK1wZex6/MGmdv1qpZ8eqrGTEn6vB21WodWbz
-         lXy4vMj+JbSXZrB/MTyXmGKbVxy2a+sXlb/9llIXQMmHNf2PF2dAso5cKUJAXprv1kZI
-         f7MQ8QlvkqG+PZU6jk37RfNJRPlCRXny3LnyzPD8EvC3krMwdQXL873/GAEYKsRuTZAH
-         xO/w==
-X-Gm-Message-State: AOJu0Yy+QLfx2+3gLmdWFDsU9GzRGbVCu64inF2KjEO/BS35dU8u/9Zr
-	oSQhom0xfBpK+FSrgA+maLBEbEkokGI1
-X-Google-Smtp-Source: AGHT+IFr63rp55RKJkbeuU4YrN+J9/EmAeZNALLBr+pqjB3TOHVhYPLvtNbiiLUo+VeXGDG6Gu0mRui9MaHH
+        bh=2nlT7Ayc6FK2ENh5HApqpyv4FDoAbHTS/CAmbKpgFgU=;
+        b=k0OuDJeFj6za43ABRqF11z2E28WbtCRDbsDQLykfkWf/S6CGvaTeFLKc6vp37jn1Sq
+         E/VY5qBeRvLO1UDYMb9u5TI+XelenaIXzuSn+a6Fv75rI/AYYiCJnnthGtXFBVvDwogi
+         PWul/8dG8o6vVQOpTgCYCECoqCTHEbcXu7P2vawtPgDJ/XW3R5QUxSCjJTH7q7hBLX+R
+         BUCObwZxUFdB1cjN3TF08wJVgvTqjKRdvRqo02hzkEFLkHFofi9iZi9j2gInQPn7Dx+1
+         ZxOR1tMIK6bVk7FAUkzvWBcjv7RHofZWDXlYxAC3W13rW/7jyWsYLM8Go819vlp+0NNf
+         53OQ==
+X-Gm-Message-State: AOJu0YyhLFDtlBdUyE6drfLlObKEXcsrmuhXDiazBU9BzEHM+X0WrFSt
+	Ookox/chstHgrNUIDofkM2CsSIzD3ofY
+X-Google-Smtp-Source: AGHT+IHKgnAs25/YJ43kvuHhiiWC2cjxg2u8JYxG3dDXPATXMZW8zvYw7dr0dQFaibX0XwBeXqVh6XfAHREW
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:7031:b36b:6c77:bfd0])
- (user=irogers job=sendgmr) by 2002:a05:6902:990:b0:d89:4382:6d14 with SMTP id
- bv16-20020a056902099000b00d8943826d14mr156266ybb.6.1696644838851; Fri, 06 Oct
- 2023 19:13:58 -0700 (PDT)
-Date: Fri,  6 Oct 2023 19:13:24 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:180e:b0:d77:984e:c770 with SMTP
+ id cf14-20020a056902180e00b00d77984ec770mr169264ybb.5.1696644841134; Fri, 06
+ Oct 2023 19:14:01 -0700 (PDT)
+Date: Fri,  6 Oct 2023 19:13:25 -0700
 In-Reply-To: <20231007021326.4156714-1-irogers@google.com>
-Message-Id: <20231007021326.4156714-6-irogers@google.com>
+Message-Id: <20231007021326.4156714-7-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231007021326.4156714-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.609.gbb76f46606-goog
-Subject: [PATCH v1 5/7] perf pmu: Const-ify perf_pmu__config_terms
+Subject: [PATCH v1 6/7] perf pmu-events: Remember the events and metrics table
 From: Ian Rogers <irogers@google.com>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
 	James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>, 
@@ -73,77 +73,90 @@ X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Add const to related APIs, this is so they can be used to default
-initialize a perf_event_attr from a const pmu.
+strcmp_cpuid_str performs regular expression comparisons. Avoid
+repeated computation of the table by remembering the table in a
+static.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/pmu.c | 10 +++++-----
- tools/perf/util/pmu.h |  2 +-
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ tools/perf/pmu-events/jevents.py | 48 +++++++++++++++++++-------------
+ 1 file changed, 28 insertions(+), 20 deletions(-)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index e11901c923d7..eb17f00bd0d2 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -156,7 +156,7 @@ static void __perf_pmu_format__load(struct perf_pmu_format *format, FILE *file)
- 	format->loaded = true;
- }
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index fd009752b427..8d8d5088c53c 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -978,28 +978,32 @@ int pmu_metrics_table__for_each_metric(const struct pmu_metrics_table *table,
  
--static void perf_pmu_format__load(struct perf_pmu *pmu, struct perf_pmu_format *format)
-+static void perf_pmu_format__load(const struct perf_pmu *pmu, struct perf_pmu_format *format)
+ const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
  {
- 	char path[PATH_MAX];
- 	FILE *file = NULL;
-@@ -1132,7 +1132,7 @@ void evsel__set_config_if_unset(struct perf_pmu *pmu, struct evsel *evsel,
- }
+-        const struct pmu_events_table *table = NULL;
+-        char *cpuid = perf_pmu__getcpuid(pmu);
++        static const struct pmu_events_table *table;
+         size_t i;
  
- static struct perf_pmu_format *
--pmu_find_format(struct list_head *formats, const char *name)
-+pmu_find_format(const struct list_head *formats, const char *name)
+-        /* on some platforms which uses cpus map, cpuid can be NULL for
+-         * PMUs other than CORE PMUs.
+-         */
+-        if (!cpuid)
+-                return NULL;
+-
+-        i = 0;
+-        for (;;) {
+-                const struct pmu_events_map *map = &pmu_events_map[i++];
+-                if (!map->arch)
+-                        break;
+-
+-                if (!strcmp_cpuid_str(map->cpuid, cpuid)) {
+-                        table = &map->event_table;
+-                        break;
++        if (!table) {
++                char *cpuid = perf_pmu__getcpuid(pmu);
++
++                /*
++                 * On some platforms which uses cpus map, cpuid can be NULL for
++                 * PMUs other than CORE PMUs.
++                 */
++                if (!cpuid)
++                        return NULL;
++
++                i = 0;
++                for (;;) {
++                        const struct pmu_events_map *map = &pmu_events_map[i++];
++                        if (!map->arch)
++                                break;
++
++                        if (!strcmp_cpuid_str(map->cpuid, cpuid)) {
++                                table = &map->event_table;
++                                break;
++                        }
+                 }
++                free(cpuid);
+         }
+-        free(cpuid);
+         if (!pmu)
+                 return table;
+ 
+@@ -1015,13 +1019,17 @@ const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
+ 
+ const struct pmu_metrics_table *perf_pmu__find_metrics_table(struct perf_pmu *pmu)
  {
- 	struct perf_pmu_format *format;
+-        const struct pmu_metrics_table *table = NULL;
+-        char *cpuid = perf_pmu__getcpuid(pmu);
++        static const struct pmu_metrics_table *table;
++        char *cpuid;
+         int i;
  
-@@ -1230,7 +1230,7 @@ static int pmu_resolve_param_term(struct parse_events_term *term,
- 	return -1;
- }
++        if (table)
++                return table;
++
+         /* on some platforms which uses cpus map, cpuid can be NULL for
+          * PMUs other than CORE PMUs.
+          */
++        cpuid = perf_pmu__getcpuid(pmu);
+         if (!cpuid)
+                 return NULL;
  
--static char *pmu_formats_string(struct list_head *formats)
-+static char *pmu_formats_string(const struct list_head *formats)
- {
- 	struct perf_pmu_format *format;
- 	char *str = NULL;
-@@ -1256,7 +1256,7 @@ static char *pmu_formats_string(struct list_head *formats)
-  * Setup one of config[12] attr members based on the
-  * user input data - term parameter.
-  */
--static int pmu_config_term(struct perf_pmu *pmu,
-+static int pmu_config_term(const struct perf_pmu *pmu,
- 			   struct perf_event_attr *attr,
- 			   struct parse_events_term *term,
- 			   struct parse_events_terms *head_terms,
-@@ -1379,7 +1379,7 @@ static int pmu_config_term(struct perf_pmu *pmu,
- 	return 0;
- }
- 
--int perf_pmu__config_terms(struct perf_pmu *pmu,
-+int perf_pmu__config_terms(const struct perf_pmu *pmu,
- 			   struct perf_event_attr *attr,
- 			   struct parse_events_terms *terms,
- 			   bool zero, struct parse_events_error *err)
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 24af7297b522..5a05131aa4ce 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -193,7 +193,7 @@ void pmu_add_sys_aliases(struct perf_pmu *pmu);
- int perf_pmu__config(struct perf_pmu *pmu, struct perf_event_attr *attr,
- 		     struct parse_events_terms *head_terms,
- 		     struct parse_events_error *error);
--int perf_pmu__config_terms(struct perf_pmu *pmu,
-+int perf_pmu__config_terms(const struct perf_pmu *pmu,
- 			   struct perf_event_attr *attr,
- 			   struct parse_events_terms *terms,
- 			   bool zero, struct parse_events_error *error);
 -- 
 2.42.0.609.gbb76f46606-goog
 
