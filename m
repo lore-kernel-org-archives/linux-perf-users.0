@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50AF21389
-	for <linux-perf-users@vger.kernel.org>; Sat,  7 Oct 2023 02:13:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0B017EA
+	for <linux-perf-users@vger.kernel.org>; Sat,  7 Oct 2023 02:13:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PZCHYazk"
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 403EEC5
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Oct 2023 19:13:49 -0700 (PDT)
-Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-1c6181dacf6so26192855ad.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Oct 2023 19:13:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zJgDK0rZ"
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07F5BBE
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Oct 2023 19:13:52 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d865a8a7819so3831879276.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Oct 2023 19:13:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696644829; x=1697249629; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1696644831; x=1697249631; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=i5RKZfGZL5ZN24K59cxhmD3rtiYGzQzY3XxKePQ3ZgM=;
-        b=PZCHYazkJSBPB3vomDtueKCVn6riQXW3jReQ2aLLN2jN8Okt+M5tCvynD2bSOPt2oJ
-         hyjvow9RXNGrVHl17EC4bV0M9NfQw200vLGJURYYEwFcFZbw7uRAnQvwMIBdgJZ1+xc9
-         xNxQTy/yhti1NttJ0YBADgae4F74+i3gyWf3IIjLi0W+F7U0uHBny/bK8Ny+6hXRhzqT
-         w1OjtJ/oqneDg6Lxzsb/CSqhKjTbeC1L6I71B589wYxTOqU8PrSdumNFG09mol5FeSwS
-         Ddyu0/PaC7ktsyiAbpHrxz2lhEZZHA7iTcjMQro39K7nYKiQHyhYdVmpEaZ+VHcShmHq
-         /wIw==
+        bh=8fc7EI+IqMoK5GVnqlsLaiP62BnjpCmFT/Si/B7nJZs=;
+        b=zJgDK0rZ1nQdVyYd+zr+B9/D9pYts8s5cn8NxT4eo6cErsMSnxIZSgwdaWfnfFDJF9
+         qAajyn8qFg6g2Bbq5qRlhKoj0BIUQm1JqwNMeraEjjZW5ks0dYNyU2JJkv2LTyS2Y30Q
+         Sq/LNG2/3+e7E8P6NqDp0zH7tEkoPOmTAFhvXj4GLz5YLWsyCsYG2S8CHmbOjtpz1Pyu
+         Hn/vRMWAlfnFJK7tqgu02dDExQV0fWZ/Flv6lH+byB7BG8ADP+aVFgcfYyHwWAZ0PVqh
+         PpFSTVE2CL3CB/tZSVNoTFZctRrDajpMUOSaGoO/5vszaIIpskzWjLXCDrFdR6uQdKrl
+         F2wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696644829; x=1697249629;
+        d=1e100.net; s=20230601; t=1696644831; x=1697249631;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i5RKZfGZL5ZN24K59cxhmD3rtiYGzQzY3XxKePQ3ZgM=;
-        b=OV/CSbH/ThQcceDa6BNGcpWVAgE17suFY5v3MEoSEFBr/ZveZSHZj4cv6kEpLm6+By
-         tvxVvVVB2the2GeC9cKIwjSw0niGfTJfOehcBQJsNPCzzo0dXVWpCEG0UKhCTXbtYFxH
-         WqLOVz/trFhLETTImYBf49EcWNekDe5MsXxZHLw1jUXXUfLRR6aKYcLfsWwcJl99L9Bj
-         4cGubF250KOY82a13GxoxJZstXaqgZ+lVXatKa89nHxrQQhOL7ZSZdneT9OJNyJFlHbi
-         hUzDlR25O8lxUovQ5ORNbT+umPdz68KhwOEhQvZMBRBMQEb/1nHSmEz+Mshl2Gy5Ssr8
-         leNw==
-X-Gm-Message-State: AOJu0YyNTgzlrn2gLpDrILTgC5aHcP84QW6fr4ZADGp+GufoAaAufUuh
-	9pZkaa5Wyg52PGNcYRAoxpZ45Yxh/Hys
-X-Google-Smtp-Source: AGHT+IFEQHBXRzXKr3+91VRDR8irSgTTsHC729rDg2CcgCqsveTA/8HbK0apOoOyJBuf0flmH7tBJuB9l3t9
+        bh=8fc7EI+IqMoK5GVnqlsLaiP62BnjpCmFT/Si/B7nJZs=;
+        b=Lw8gd+yi/grz6+uAGeguNgkmxFEHrxa2aCYt9oZlCltvRAyckWAgust6E/5Lu5fGy0
+         Vg7cioZl9GFITy/QTS8gt3ccU2jZt+cDNyvNAdGVtyfoHOjXS5OUqoaYCLmH8B5bmJBV
+         yrhGrEdWq/p/0V8wggumhJ1SSwmiaIzzOEgN+VsuNsQyz7KWOsX6QU0+oApwplGUNfrb
+         4DmsFjjSSFOCPhxowszFcpXEcoBsTWpKD9hhKiKj/Tpll7TfQwZ//OxplyWfImA5qChA
+         1m5JXfubknHZSrSNKbmjPY7pLzkZDRKnepG4x09K5HHyasNajtGPVZU1PooIdil8UX23
+         yasg==
+X-Gm-Message-State: AOJu0Ywc0b2Iw8LiJN5aQAbb5WnYnMfx0SgC6RFHY+3ZnKvgKTy8Ww65
+	97ZQ76G3yYv/JTnNol4r7iySjoJdpsOW
+X-Google-Smtp-Source: AGHT+IHrCzJat+rz/BJ6g8m43IhpNWgcQXVdsawjas52P79D5OWVnwHwRJxeKmFFr5isb0ADzqHoPQ82uORz
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:7031:b36b:6c77:bfd0])
- (user=irogers job=sendgmr) by 2002:a17:902:c949:b0:1c8:9a60:3885 with SMTP id
- i9-20020a170902c94900b001c89a603885mr17899pla.13.1696644827821; Fri, 06 Oct
- 2023 19:13:47 -0700 (PDT)
-Date: Fri,  6 Oct 2023 19:13:20 -0700
+ (user=irogers job=sendgmr) by 2002:a25:e20b:0:b0:d81:817c:582 with SMTP id
+ h11-20020a25e20b000000b00d81817c0582mr155263ybe.7.1696644831137; Fri, 06 Oct
+ 2023 19:13:51 -0700 (PDT)
+Date: Fri,  6 Oct 2023 19:13:21 -0700
 In-Reply-To: <20231007021326.4156714-1-irogers@google.com>
-Message-Id: <20231007021326.4156714-2-irogers@google.com>
+Message-Id: <20231007021326.4156714-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231007021326.4156714-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.609.gbb76f46606-goog
-Subject: [PATCH v1 1/7] perf pmu: Rename perf_pmu__get_default_config to perf_pmu__arch_init
+Subject: [PATCH v1 2/7] perf intel-pt: Move PMU initialization from default
+ config code
 From: Ian Rogers <irogers@google.com>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
 	James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>, 
@@ -69,149 +70,44 @@ Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.6
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Assign default_config as part of the
-init. perf_pmu__get_default_config was doing more than just getting
-the default config and so this is intended to better align with the
-code.
+Avoid setting PMU values in intel_pt_pmu_default_config, move to
+perf_pmu__arch_init.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/arm/util/pmu.c  |  8 +++-----
- tools/perf/arch/s390/util/pmu.c |  3 +--
- tools/perf/arch/x86/util/pmu.c  |  5 ++---
- tools/perf/util/pmu.c           | 14 +++++++-------
- tools/perf/util/pmu.h           |  2 +-
- 5 files changed, 14 insertions(+), 18 deletions(-)
+ tools/perf/arch/x86/util/intel-pt.c | 2 --
+ tools/perf/arch/x86/util/pmu.c      | 1 +
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/perf/arch/arm/util/pmu.c b/tools/perf/arch/arm/util/pmu.c
-index a9623b128ece..d55d2b15f2e6 100644
---- a/tools/perf/arch/arm/util/pmu.c
-+++ b/tools/perf/arch/arm/util/pmu.c
-@@ -14,22 +14,20 @@
- #include "../../../util/pmu.h"
- #include "../../../util/cs-etm.h"
+diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
+index b923bca939d9..6d6cd8f9133c 100644
+--- a/tools/perf/arch/x86/util/intel-pt.c
++++ b/tools/perf/arch/x86/util/intel-pt.c
+@@ -267,8 +267,6 @@ intel_pt_pmu_default_config(struct perf_pmu *intel_pt_pmu)
  
--struct perf_event_attr
--*perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
-+void perf_pmu__arch_init(struct perf_pmu *pmu __maybe_unused)
- {
- #ifdef HAVE_AUXTRACE_SUPPORT
- 	if (!strcmp(pmu->name, CORESIGHT_ETM_PMU_NAME)) {
- 		/* add ETM default config here */
- 		pmu->selectable = true;
--		return cs_etm_get_default_config(pmu);
-+		pmu->default_config = cs_etm_get_default_config(pmu);
- #if defined(__aarch64__)
- 	} else if (strstarts(pmu->name, ARM_SPE_PMU_NAME)) {
--		return arm_spe_pmu_default_config(pmu);
-+		pmu->default_config = arm_spe_pmu_default_config(pmu);
- 	} else if (strstarts(pmu->name, HISI_PTT_PMU_NAME)) {
- 		pmu->selectable = true;
- #endif
- 	}
+ 	attr->config = intel_pt_default_config(intel_pt_pmu);
  
- #endif
--	return NULL;
+-	intel_pt_pmu->selectable = true;
+-
+ 	return attr;
  }
-diff --git a/tools/perf/arch/s390/util/pmu.c b/tools/perf/arch/s390/util/pmu.c
-index 11f03f32e3fd..886c30e001fa 100644
---- a/tools/perf/arch/s390/util/pmu.c
-+++ b/tools/perf/arch/s390/util/pmu.c
-@@ -13,11 +13,10 @@
- #define	S390_PMUPAI_EXT		"pai_ext"
- #define	S390_PMUCPUM_CF		"cpum_cf"
  
--struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu)
-+void perf_pmu__arch_init(struct perf_pmu *pmu)
- {
- 	if (!strcmp(pmu->name, S390_PMUPAI_CRYPTO) ||
- 	    !strcmp(pmu->name, S390_PMUPAI_EXT) ||
- 	    !strcmp(pmu->name, S390_PMUCPUM_CF))
- 		pmu->selectable = true;
--	return NULL;
- }
 diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
-index 8b53ca468a50..811e2377d2d5 100644
+index 811e2377d2d5..949b3e2c67bd 100644
 --- a/tools/perf/arch/x86/util/pmu.c
 +++ b/tools/perf/arch/x86/util/pmu.c
-@@ -17,19 +17,18 @@
- #include "../../../util/pmus.h"
- #include "env.h"
- 
--struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
-+void perf_pmu__arch_init(struct perf_pmu *pmu __maybe_unused)
- {
+@@ -22,6 +22,7 @@ void perf_pmu__arch_init(struct perf_pmu *pmu __maybe_unused)
  #ifdef HAVE_AUXTRACE_SUPPORT
  	if (!strcmp(pmu->name, INTEL_PT_PMU_NAME)) {
  		pmu->auxtrace = true;
--		return intel_pt_pmu_default_config(pmu);
-+		pmu->default_config = intel_pt_pmu_default_config(pmu);
++		pmu->selectable = true;
+ 		pmu->default_config = intel_pt_pmu_default_config(pmu);
  	}
  	if (!strcmp(pmu->name, INTEL_BTS_PMU_NAME)) {
- 		pmu->auxtrace = true;
- 		pmu->selectable = true;
- 	}
- #endif
--	return NULL;
- }
- 
- int perf_pmus__num_mem_pmus(void)
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 6b1b7f8f00fa..6e95b3d2c2e3 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -954,12 +954,6 @@ void pmu_add_sys_aliases(struct perf_pmu *pmu)
- 	pmu_for_each_sys_event(pmu_add_sys_aliases_iter_fn, pmu);
- }
- 
--struct perf_event_attr * __weak
--perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
--{
--	return NULL;
--}
--
- static char *pmu_find_alias_name(struct perf_pmu *pmu, int dirfd)
- {
- 	FILE *file = perf_pmu__open_file_at(pmu, dirfd, "alias");
-@@ -991,6 +985,12 @@ static int pmu_max_precise(int dirfd, struct perf_pmu *pmu)
- 	return max_precise;
- }
- 
-+
-+void __weak
-+perf_pmu__arch_init(struct perf_pmu *pmu __maybe_unused)
-+{
-+}
-+
- struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char *name)
- {
- 	struct perf_pmu *pmu;
-@@ -1037,7 +1037,7 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char
- 	pmu_add_sys_aliases(pmu);
- 	list_add_tail(&pmu->list, pmus);
- 
--	pmu->default_config = perf_pmu__get_default_config(pmu);
-+	perf_pmu__arch_init(pmu);
- 
- 	return pmu;
- err:
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 85190d058852..588c64e38d6b 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -233,7 +233,7 @@ bool perf_pmu__file_exists(struct perf_pmu *pmu, const char *name);
- 
- int perf_pmu__test(void);
- 
--struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu);
-+void perf_pmu__arch_init(struct perf_pmu *pmu);
- void pmu_add_cpu_aliases_table(struct perf_pmu *pmu,
- 			       const struct pmu_events_table *table);
- 
 -- 
 2.42.0.609.gbb76f46606-goog
 
