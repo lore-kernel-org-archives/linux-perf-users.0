@@ -1,92 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4285E156C6;
-	Sun,  8 Oct 2023 21:23:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957A51401D
+	for <linux-perf-users@vger.kernel.org>; Sun,  8 Oct 2023 21:33:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X0whpVD0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1A62C433C8;
-	Sun,  8 Oct 2023 21:23:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696800202;
-	bh=kUN7VH/mH2WUv7jSqF4ucLmh8i+ZTs7Lf4THQj/ZSOo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=X0whpVD0SwElL0dKx+tCa/WI2UTaaCs9usakGfM6asVdnvQdOzVpyaRJQVXT30rM1
-	 Z97G5ZJ3RvQYD9G0nGosUEEzGcX15yUJVbhu4u8AV3byzKdbGfrjh6pCeCstJmLpty
-	 nnjIHxj3ptwZ5X3UUUwNTtEYOZAD8IzYnJp0FFpgktrOO9ah1iDuFOz4Rrl0Gj7fEy
-	 EkxiPViOMAn2v34jQyuldQwHQKmKHy7PncKp2TlUT0SyWQeAYgUYQ8BB9em4WojQ4E
-	 okGg7rsPLhJ47XwqOZQKT52QAc8EgrwmZXJeCl9pK33JPD87ccF4X9pPET6qYiXBlZ
-	 gpYREb4KzOpjw==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Quentin Monnet <quentin@isovalent.com>
-Cc: Dmitry Goncharov <dgoncharov@users.sf.net>,
-	linux-perf-users@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Martin KaFai Lau <kafai@fb.com>,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Ian Rogers <irogers@google.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: [PATCHv2 2/2] tools/build: Fix -s detection code in tools/scripts/Makefile.include
-Date: Sun,  8 Oct 2023 23:22:51 +0200
-Message-ID: <20231008212251.236023-3-jolsa@kernel.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20231008212251.236023-1-jolsa@kernel.org>
-References: <20231008212251.236023-1-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P2bHOeHi"
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC7D69D;
+	Sun,  8 Oct 2023 14:33:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696800803; x=1728336803;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=QjUYd7D8jxKwhfKDBMGlUwHrcS+k4UsbgJEgqAWVww8=;
+  b=P2bHOeHixqQultUazxx9JCgR+5Kcz0QAWqZXWXB2RdpmzU3yqlcvDZz0
+   8G8EvLsoZVac/Mx9KLYTQxm0UZH++fZWa5Tu4wQvBEE+LKDKH7gMXLiEb
+   I20cK5M7ittyHlGJ1nAl/JqIYaIdenJZFCA3nXPOotl0hf0hKJtMKe/2H
+   NwsoATemZXqxLySiW0leo7kP+8TO+WdG6SF3CYUuX0cACBOt8aX+HNj9x
+   571+fJDt07dmnaNzFqMKrv2OhIYN0cmtcB2Y8oDr2TIuTH4KHCtc+rMIA
+   iKNWspPX6IMCgG+6Z0VcxfML9t2UetnIuRZlMyf14+34k0eaRpbCBcR1x
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10857"; a="5580185"
+X-IronPort-AV: E=Sophos;i="6.03,207,1694761200"; 
+   d="scan'208";a="5580185"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2023 14:33:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10857"; a="787968390"
+X-IronPort-AV: E=Sophos;i="6.03,207,1694761200"; 
+   d="scan'208";a="787968390"
+Received: from lkp-server01.sh.intel.com (HELO 8a3a91ad4240) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 08 Oct 2023 14:33:17 -0700
+Received: from kbuild by 8a3a91ad4240 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qpbOl-0005mD-1l;
+	Sun, 08 Oct 2023 21:33:15 +0000
+Date: Mon, 9 Oct 2023 05:32:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tianyi Liu <i.pear@outlook.com>, seanjc@google.com, pbonzini@redhat.com,
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
+	x86@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	Tianyi Liu <i.pear@outlook.com>
+Subject: Re: [PATCH v2 1/5] KVM: Add arch specific interfaces for sampling
+ guest callchains
+Message-ID: <202310090559.wzrojQni-lkp@intel.com>
+References: <SY4P282MB10840154D4F09917D6528BC69DCFA@SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SY4P282MB10840154D4F09917D6528BC69DCFA@SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-As Dmitry described in [1] changelog the current way of detecting
--s option is broken for new make.
+Hi Tianyi,
 
-Changing the tools/build -s option detection the same way as it was
-fixed for root Makefile in [1].
+kernel test robot noticed the following build warnings:
 
-[1] 4bf73588165b ("kbuild: Port silent mode detection to future gnu make.")
+[auto build test WARNING on 8a749fd1a8720d4619c91c8b6e7528c0a355c0aa]
 
-Cc: Dmitry Goncharov <dgoncharov@users.sf.net>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/scripts/Makefile.include | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Tianyi-Liu/KVM-Add-arch-specific-interfaces-for-sampling-guest-callchains/20231008-230042
+base:   8a749fd1a8720d4619c91c8b6e7528c0a355c0aa
+patch link:    https://lore.kernel.org/r/SY4P282MB10840154D4F09917D6528BC69DCFA%40SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM
+patch subject: [PATCH v2 1/5] KVM: Add arch specific interfaces for sampling guest callchains
+config: x86_64-defconfig (https://download.01.org/0day-ci/archive/20231009/202310090559.wzrojQni-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231009/202310090559.wzrojQni-lkp@intel.com/reproduce)
 
-diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
-index ff527ac065cf..6fba29f3222d 100644
---- a/tools/scripts/Makefile.include
-+++ b/tools/scripts/Makefile.include
-@@ -136,7 +136,15 @@ else
- NO_SUBDIR = :
- endif
- 
--ifneq ($(findstring s,$(filter-out --%,$(MAKEFLAGS))),)
-+# If the user is running make -s (silent mode), suppress echoing of commands
-+# make-4.0 (and later) keep single letter options in the 1st word of MAKEFLAGS.
-+ifeq ($(filter 3.%,$(MAKE_VERSION)),)
-+short-opts := $(firstword -$(MAKEFLAGS))
-+else
-+short-opts := $(filter-out --%,$(MAKEFLAGS))
-+endif
-+
-+ifneq ($(findstring s,$(short-opts)),)
-   silent=1
- endif
- 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202310090559.wzrojQni-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   arch/x86/kvm/x86.c: In function 'kvm_arch_vcpu_read_virt':
+>> arch/x86/kvm/x86.c:12917:42: warning: passing argument 2 of 'kvm_read_guest_virt' makes integer from pointer without a cast [-Wint-conversion]
+   12917 |         return kvm_read_guest_virt(vcpu, addr, dest, length, &e) == X86EMUL_CONTINUE;
+         |                                          ^~~~
+         |                                          |
+         |                                          void *
+   arch/x86/kvm/x86.c:7388:38: note: expected 'gva_t' {aka 'long unsigned int'} but argument is of type 'void *'
+    7388 |                                gva_t addr, void *val, unsigned int bytes,
+         |                                ~~~~~~^~~~
+
+
+vim +/kvm_read_guest_virt +12917 arch/x86/kvm/x86.c
+
+ 12911	
+ 12912	bool kvm_arch_vcpu_read_virt(struct kvm_vcpu *vcpu, void *addr, void *dest, unsigned int length)
+ 12913	{
+ 12914		struct x86_exception e;
+ 12915	
+ 12916		/* Return true on success */
+ 12917		return kvm_read_guest_virt(vcpu, addr, dest, length, &e) == X86EMUL_CONTINUE;
+ 12918	}
+ 12919	
+
 -- 
-2.41.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
