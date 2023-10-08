@@ -1,85 +1,107 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE4E256A
-	for <linux-perf-users@vger.kernel.org>; Sat,  7 Oct 2023 20:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hkNzELmr"
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EEAD93;
-	Sat,  7 Oct 2023 13:35:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=P0XjgGcwROeVVGyQzp4eM0gt2uiSNUTYGxKdqCX9ND8=; b=hkNzELmrNfiMGUcaxH+u8YbfpY
-	qnkF3Jy1w8uNeNbEmmnHdSF20DY/Tg6WDSFh7VuNTkDFmuxKPk1lUXh62Z3kYUCeVVdNU3cwDI1jd
-	PB3be/MQLikguwYykHf0d0qQpzJ9nd9UXcKz5X5+JONUa4tG0OquU/vyKWGfjRQPhJ9GpfFwVhOjq
-	ohVjIfGkMDhiP0m4eyG5Wm7E+iV6/F9JzCYzhdSQ8AXl68IlfRCXsfHk/OMuHyAOuIlwf0L8BSJNM
-	12XLPwMwoJPj4qTFcW/3XlqGHssDxFtELdeQ4kX/SWrhoIuUwYu//DBUBR/+++GdwBuZmNg05PVLY
-	VVtkmQJw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1qpE04-00DzC5-2C;
-	Sat, 07 Oct 2023 20:34:16 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 66AA4300388; Sat,  7 Oct 2023 22:34:11 +0200 (CEST)
-Date: Sat, 7 Oct 2023 22:34:11 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Lucy Mielke <lucymielke@icloud.com>
-Cc: mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/x86/p4: Fix "Wunused-but-set-variable" warning
-Message-ID: <20231007203411.GA8085@noisy.programming.kicks-ass.net>
-References: <ZSGpl_hT23B6ix0M@mainframe>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C117B15D1
+	for <linux-perf-users@vger.kernel.org>; Sun,  8 Oct 2023 03:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A534AB9;
+	Sat,  7 Oct 2023 20:39:26 -0700 (PDT)
+Received: from kwepemm000003.china.huawei.com (unknown [172.30.72.54])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4S379T3S4JzTmNK;
+	Sun,  8 Oct 2023 11:35:57 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm000003.china.huawei.com (7.193.23.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Sun, 8 Oct 2023 11:39:21 +0800
+Subject: Re: [PATCH v1 6/7] perf pmu-events: Remember the events and metrics
+ table
+To: Ian Rogers <irogers@google.com>, Suzuki K Poulose
+	<suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, James Clark
+	<james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>, John Garry
+	<john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>, Ravi Bangoria
+	<ravi.bangoria@amd.com>, Kajol Jain <kjain@linux.ibm.com>, Jing Zhang
+	<renyu.zj@linux.alibaba.com>, Kan Liang <kan.liang@linux.intel.com>,
+	<coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20231007021326.4156714-1-irogers@google.com>
+ <20231007021326.4156714-7-irogers@google.com>
+From: Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <39b28ad5-8086-76ed-a4c6-bfc8271d226b@huawei.com>
+Date: Sun, 8 Oct 2023 11:39:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZSGpl_hT23B6ix0M@mainframe>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20231007021326.4156714-7-irogers@google.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm000003.china.huawei.com (7.193.23.66)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+	RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Sat, Oct 07, 2023 at 08:55:19PM +0200, Lucy Mielke wrote:
-> This fixes a compiler warning when compiling an allyesconfig with W=1:
-> warning: variable ´high´ set but not used [-Wunused-but-set-variable]
+Hello,
 
-What compiler and what .config?
-
-> Signed-off-by: Lucy Mielke <lucymielke@icloud.com>
-> ---
->  arch/x86/events/intel/p4.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On 2023/10/7 10:13, Ian Rogers wrote:
+> strcmp_cpuid_str performs regular expression comparisons. Avoid
+> repeated computation of the table by remembering the table in a
+> static.
 > 
-> diff --git a/arch/x86/events/intel/p4.c b/arch/x86/events/intel/p4.c
-> index 35936188db01..69aaf7c0f340 100644
-> --- a/arch/x86/events/intel/p4.c
-> +++ b/arch/x86/events/intel/p4.c
-> @@ -1366,7 +1366,7 @@ static __initconst const struct x86_pmu p4_pmu = {
->  
->  __init int p4_pmu_init(void)
->  {
-> -	unsigned int low, high;
-> +	unsigned int low, __maybe_unused high;
->  	int i, reg;
->  
->  	/* If we get stripped -- indexing fails */
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>   tools/perf/pmu-events/jevents.py | 48 +++++++++++++++++++-------------
+>   1 file changed, 28 insertions(+), 20 deletions(-)
+> 
+> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+> index fd009752b427..8d8d5088c53c 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+> @@ -978,28 +978,32 @@ int pmu_metrics_table__for_each_metric(const struct pmu_metrics_table *table,
+>   
+>   const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
+>   {
+> -        const struct pmu_events_table *table = NULL;
+> -        char *cpuid = perf_pmu__getcpuid(pmu);
+> +        static const struct pmu_events_table *table;
+>           size_t i;
+>   
+> -        /* on some platforms which uses cpus map, cpuid can be NULL for
+> -         * PMUs other than CORE PMUs.
+> -         */
+> -        if (!cpuid)
+> -                return NULL;
+> -
+> -        i = 0;
+> -        for (;;) {
+> -                const struct pmu_events_map *map = &pmu_events_map[i++];
+> -                if (!map->arch)
+> -                        break;
+> -
+> -                if (!strcmp_cpuid_str(map->cpuid, cpuid)) {
+> -                        table = &map->event_table;
+> -                        break;
+> +        if (!table) {
+If there is no matched table in pmu_events_map, 
+perf_pmu__find_events_table() will enter this branch for repeated search 
+each time.
+Or do we need to use another variable to indicate whether the search has 
+been performed?
 
-Right after this we have:
-
-	rdmsr(MSR_IA32_MISC_ENABLE, low, high);
-
-which should get high unconditionally used. If there's a problem then
-it's probably inside that rdmsr macro.
+Thanks,
+Yang
