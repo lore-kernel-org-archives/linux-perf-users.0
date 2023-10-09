@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F1A374E2
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 18:40:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A8E38DE5
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 18:40:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RMvnKqDB"
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CEDCD6B
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 11:40:05 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d9a528c2c8bso40554276.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Oct 2023 11:40:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zzs8LgYx"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B825D75
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 11:40:06 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5a7a6fd18abso9985557b3.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Oct 2023 11:40:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696876804; x=1697481604; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1696876806; x=1697481606; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=XtYWHIWRia4V/bq2E7J5Z+6HzWlGjlCMeDuedPRX49U=;
-        b=RMvnKqDB/mjYDkfacXxiTR+Rw/13XcLoTBlVP4B9oNuwIR2cYbmI2ne56PbG0IMdvH
-         Qku7WW5VExHXN5VbMd7kEDJgwPFaADs+48N1rgxbrhy4UVxn59V/m+xRl8Q1ACyy+ld6
-         g/6hDK5HvTa6kcw4i768EL0ONXdRAhajquXngY60hq9U9wa8ibQ3xj7FEY4o5yvuYBHd
-         9JTEHdK0adN4K1QVPrTtbq3GtevCqZW0x7MVJkWdOajuXOE/1CoobjrGFw5vJCjGQfYT
-         5v4Ymogh5w9Q3gQ7j4nQw3h5Yh3sqB3H8woDJQBxMQ/GX+reFiy/dw5ys72be3UUiS07
-         N3gA==
+        bh=oxVOZd3C3ppqYjNmukwrdUncP0WHK7JyRq4ciQhpawI=;
+        b=Zzs8LgYxJ9L34/UUsH7V6H7bLUTX23gvXUy7Mis7bsgEZ1NHQFm7Xqx5y1ColHjZmU
+         C5XoV/I7JmmKjC8RHUgdjBJF4jz11xylRZuMCUxRrIjLk0aM9jQp0mu5lZuoxzGwfMUH
+         CTkWcQDEyc4/7GTBB/xlNduPGC5VzbIfZKILSA1Co9c6Vlb2bczlCQ5sDNgX4Xrp6jed
+         xssAASOpyGbH4IkmXmfMNO6xc7upBOnVq4T/GwgWkDa6Vs1G8eDLpdcFq2qkiB0D6ip+
+         yKNhbpiGaK6J5rBJnhLOihTl/TUyZuzmHj5j1BbDJVf0pcQ5uszG9XaTkEmMqUDv/aZ8
+         bJSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696876804; x=1697481604;
+        d=1e100.net; s=20230601; t=1696876806; x=1697481606;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XtYWHIWRia4V/bq2E7J5Z+6HzWlGjlCMeDuedPRX49U=;
-        b=UGagpaMp+cVktdkzhkvOfCcRJ/fLfNasT9CE/ozhh+9LrEV0W86X8HkYquV2f7mRzw
-         KJfAjNcoU+kYvsumjdjL00Kyg/Xk3D6RhVjjninMp7Qh8z/eke7dLxbLT2Jfp81XYQ6K
-         gl2vK0MyDq/334op1blq83SspGtoOHOszN2XFHh+fQxOjHw0SaLTZEodpJCp15aPvG9S
-         812ZFXAuBFgndD7Q6Er9T7js5fl9oIe8CfLtumhiMrqW5q4+1lNQ3f+FtYBbkY7yqQlk
-         C+zs/8vtPaaR1bNoz49fIXxBf+1r7cPwK5FFSHOy+oUFQ2yyDs1f3T5WkJvv1xKiOFZx
-         q7cw==
-X-Gm-Message-State: AOJu0Yz3zZeqxLJfJJ3h/AcpOLt0cmHNho7jK2396lvETKl5au2GOFvH
-	xCTl/1+UyqvQ2mNL6fpPDwCIVYNG7O5z
-X-Google-Smtp-Source: AGHT+IHj2trO5X4U/SUmxlgPq73m36ZDVXtEdZOb0YxcbPMhp9sufjSs2X3h92EpXqMkEkqGWjW3ZR1z54If
+        bh=oxVOZd3C3ppqYjNmukwrdUncP0WHK7JyRq4ciQhpawI=;
+        b=NHC+Rdui2Olhuc+YhbjZupq5Q1FiKvMKaQfzXZih0sx4j5nDaXnve603RrVAeHmR3f
+         WQ/FZtGWyX0V0XsFOuT6sfZ87ClX2hu1VBSOKoLvMeF34OFYOGFptu8jwVYU35SqKaXc
+         Z9fUiYKxKtVIz54yScS2HK9+Vbf3p5ofCnz0PEPDUTODHecO2rkcA3l9YTyWvxUHYIxd
+         VHW3lhLly3FOGqS6liXh1k85FkwnuZfKuA7kRCVWEUnNA9VtqRION5v8WpF3jAnLhlB8
+         gqWTFU58IN39W9qbYokqkSnVbeu1BlAUdoKzQ3IRkAk4WAGZqLaNrEQtV6ysNOelrtyB
+         gwSQ==
+X-Gm-Message-State: AOJu0YxFpIcFMc0a1jGeJZEykRUTxZ/T48Ns+/cHM4DaUcv9B4UGuAJZ
+	YQV8Ty4tbzJsNLLKqPPjMN+Khg6jQ6Gg
+X-Google-Smtp-Source: AGHT+IFMZAJGeAEJwTa3L5Oxs6LsX8RfIY0fXdSBO9/RQSc7uGeMWt0HmEUSALq3ek1DTJsNNu1coZWFWJ50
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:ac4a:9b94:7158:3f4e])
- (user=irogers job=sendgmr) by 2002:a25:ace5:0:b0:d81:90b6:cedc with SMTP id
- x37-20020a25ace5000000b00d8190b6cedcmr248454ybd.3.1696876804016; Mon, 09 Oct
- 2023 11:40:04 -0700 (PDT)
-Date: Mon,  9 Oct 2023 11:39:17 -0700
+ (user=irogers job=sendgmr) by 2002:a81:4c4b:0:b0:5a7:b496:5983 with SMTP id
+ z72-20020a814c4b000000b005a7b4965983mr17187ywa.9.1696876806075; Mon, 09 Oct
+ 2023 11:40:06 -0700 (PDT)
+Date: Mon,  9 Oct 2023 11:39:18 -0700
 In-Reply-To: <20231009183920.200859-1-irogers@google.com>
-Message-Id: <20231009183920.200859-17-irogers@google.com>
+Message-Id: <20231009183920.200859-18-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231009183920.200859-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.609.gbb76f46606-goog
-Subject: [PATCH v3 15/18] tools api: Avoid potential double free
+Subject: [PATCH v3 16/18] perf trace-event-info: Avoid passing NULL value to closedir
 From: Ian Rogers <irogers@google.com>
 To: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
 	Tom Rix <trix@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -64,33 +64,34 @@ To: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google
 	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-io__getline will free the line on error but it doesn't clear the out
-argument. This may lead to the line being freed twice, like in
-tools/perf/util/srcline.c as detected by clang-tidy.
+If opendir failed then closedir was passed NULL which is
+erroneous. Caught by clang-tidy.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/api/io.h | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/trace-event-info.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
-index 9fc429d2852d..a77b74c5fb65 100644
---- a/tools/lib/api/io.h
-+++ b/tools/lib/api/io.h
-@@ -180,6 +180,7 @@ static inline ssize_t io__getline(struct io *io, char **line_out, size_t *line_l
- 	return line_len;
- err_out:
- 	free(line);
-+	*line_out = NULL;
- 	return -ENOMEM;
- }
+diff --git a/tools/perf/util/trace-event-info.c b/tools/perf/util/trace-event-info.c
+index 319ccf09a435..c8755679281e 100644
+--- a/tools/perf/util/trace-event-info.c
++++ b/tools/perf/util/trace-event-info.c
+@@ -313,7 +313,8 @@ static int record_event_files(struct tracepoint_path *tps)
+ 	}
+ 	err = 0;
+ out:
+-	closedir(dir);
++	if (dir)
++		closedir(dir);
+ 	put_tracing_file(path);
  
+ 	return err;
 -- 
 2.42.0.609.gbb76f46606-goog
 
