@@ -1,134 +1,165 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF9B8F57
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 03:20:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A2E9CA4D
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 05:01:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="OK1uwD50"
-Received: from AUS01-SY4-obe.outbound.protection.outlook.com (mail-sy4aus01olkn2162.outbound.protection.outlook.com [40.92.62.162])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 618BAA6;
-	Sun,  8 Oct 2023 20:20:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YxK1le7cgBP8DclGA3FYVd7NwvcAjQmQ1PXoFQ4S/H7oKay6CVZN5Vpvvlxj/lwX/YpF7xEPggEPgFbETEuFKPBb43HojwOeetRZwVrY0M1aqWmnZRkwPvm5EZFLietWUzqbrFV+X3GYyb/ym62vn1gaHLO9seYuNUQ+ixNvFKKZxheatUD51o372tz8H72uBkmKMZIlGCXPMee2r+5XP6+QA4Vc6+pAuo5Ey+AK0LoX1mOYYpe9KeUv5UdDX93VLsgKqFMhAKk2LaafJV4pmBDQaXQVWmTRVgODuDwUy9Z8M5YxHNu8q3Z9vgI0zgZJ9v4CQPeVRjijouae6NlUGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bP174MRXsKg75uCVcUBGkPpb9klkKIrMdFUTLbBM4L8=;
- b=WLLqT4eenT8Yt44K9GgyjlWEWJVOkCvPXglhKznqGnWuT8fwhDTUQ57T/5PHI68uYYxNo0hPgg6p4BadsixqXIneIpfpsXv78NadW+iCi+YsFzcwCdn18l3ZOwve97RAUDpv1Lh9VS+n7q0a9uSxFG0imJW2trGyqnBRhOW3aBWeW3bTHHIWZe7Ue+GP8djU6sHIFn5Hv8oAB7FkIl4ygEci4C4N9PcgBt9N+2Y5G3UnA0DRA+8P0hlpO3wQD0gPuBjdNTGoKjhrF6P8dKmYFe70/UpgFn4moAOBRxZ1FdFWn5pmLVYhvtT3eGgRscZbz2rJ14ZLIZS9hkHY2tRj4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bP174MRXsKg75uCVcUBGkPpb9klkKIrMdFUTLbBM4L8=;
- b=OK1uwD50vcpH2qvyyHwBwBHC83rz4e1NOKFLsVrOP4wTrZ4CTC+9xBbw3Lymo3Z4QtgNmY01qpcj5oVzoo6QY9kFfVPrTjo+K2jqXgjeUFeXT3fcpPnpmEDvIECZd9uvJyi1oLyeR+h0PZKft3+USjuAgdMK1VJObmIbNACnue22Li2fXRZSn21et4FDH7aHo8hERUSlMT/XJBqEg/xHV2oMaFsckctIe2EFkh/OD0kZXltGufE80mMVMYdlG0L4ebHj7p9wBTzwJ2dpU0WIaGG8aCm/UgAYBY8DvuJpwOlIp9ysJZxxoOLsYuc8cHySXjqohC7ip2XxokAD+og8og==
-Received: from SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:ac::13) by
- SYZP282MB3332.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:16d::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6838.43; Mon, 9 Oct 2023 03:20:29 +0000
-Received: from SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM
- ([fe80::e39e:17fc:36d8:1ea8]) by SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM
- ([fe80::e39e:17fc:36d8:1ea8%3]) with mapi id 15.20.6838.040; Mon, 9 Oct 2023
- 03:20:29 +0000
-From: Tianyi Liu <i.pear@outlook.com>
-To: i.pear@outlook.com
-Cc: acme@kernel.org,
-	adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com,
-	irogers@google.com,
-	jolsa@kernel.org,
-	kvm@vger.kernel.org,
-	kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	mark.rutland@arm.com,
-	mingo@redhat.com,
-	namhyung@kernel.org,
-	pbonzini@redhat.com,
-	peterz@infradead.org,
-	seanjc@google.com,
-	x86@kernel.org
-Subject: Re: [PATCH v2 1/5] KVM: Add arch specific interfaces for sampling guest callchains
-Date: Mon,  9 Oct 2023 11:17:51 +0800
-Message-ID:
- <SY4P282MB1084FD036E733BBBE4D476FF9DCEA@SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <SY4P282MB10840154D4F09917D6528BC69DCFA@SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM>
-References: <SY4P282MB10840154D4F09917D6528BC69DCFA@SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [fZ6jKpMVpMREBgPTFIRAkP8nV6804dbjmsKjbX/fT2pASNeEM7lkDQ==]
-X-ClientProxiedBy: SG2PR04CA0155.apcprd04.prod.outlook.com (2603:1096:4::17)
- To SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:ac::13)
-X-Microsoft-Original-Message-ID: <20231009031751.15378-1-i.pear@outlook.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lCKrDAxm"
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6080A4
+	for <linux-perf-users@vger.kernel.org>; Sun,  8 Oct 2023 22:01:14 -0700 (PDT)
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3994qvY7008922;
+	Mon, 9 Oct 2023 05:01:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=sDUoyabGWzxEWBrtwJTyKu0PQ2CG1WGLjVTsX0Hb108=;
+ b=lCKrDAxmlgWaAMMXP4YMGzR0tMXqWquN+yhpolWkznncXEtoEdBuC6HSMEXIWpGwELLX
+ IWN0uqLLN+wNfKhm4oDVuh0TiECD3Pm1qb2PKukPub4AH0uyI7CScWWGrWzlHmoxdXl6
+ WJim4wSDFvc5w4AV4vrfjX3JWgnQ/v4VHKL/eTlDOIrhPgpdOjGAKkukxi/cC3nHYIVh
+ DQvS/FR+s0Kd5eHmf52HeSo7OJ4OYZJ7LmOyM6sqZra/Kvgasbm/5lRQumXmsIFsy5kA
+ t4uwBiwGukacMYi4PumC2z6vUkj+ncAn2UXwltRxnWxTypVW0M2U5ISMMTNL0HFpSGzr qA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tmaver4pp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 09 Oct 2023 05:01:01 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3994tMpw015101;
+	Mon, 9 Oct 2023 05:01:01 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tmaver4p9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 09 Oct 2023 05:01:01 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3994wjgK024461;
+	Mon, 9 Oct 2023 05:01:00 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tkhns71w8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 09 Oct 2023 05:01:00 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39950vJC19202608
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 9 Oct 2023 05:00:57 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 623A420040;
+	Mon,  9 Oct 2023 05:00:57 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7811820043;
+	Mon,  9 Oct 2023 05:00:55 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.22.224])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  9 Oct 2023 05:00:55 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+Subject: [PATCH] tools/perf/arch/powerpc: Fix the CPU ID const char* value by adding 0x prefix
+Date: Mon,  9 Oct 2023 10:30:52 +0530
+Message-Id: <20231009050052.64935-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SY4P282MB1084:EE_|SYZP282MB3332:EE_
-X-MS-Office365-Filtering-Correlation-Id: 61188962-8834-4754-09c2-08dbc876af6b
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	yRRkY5fZ0TK9tsijbxuha8+MdE1FGYHZoK4OWDO2uxLAQi6FGnMVkE488bLSOgkD2Sh+zkmzPmuNHxVMqGSWtChJvvi3U/R2ui1+WHIq1pYKxfGcQNnXA9blGK0mkkjA5VSvUXRf1wU2ZhYn/dSbygWwj6YoDVa6QIrELmrADH+Tied/9NzotbnOmQP2VMBREqGBF8Ei+7+wxfhdfOKLTsebGuUNXugA3hKKSTv54agec4Qud6G4MFIcQFceUFi/D9JdT2/YWOpHDbLgNOyf9kyc3TrGGP80DLlHnBF5uFSykHQ+vcrrq3VwC9tg1e/fpGqn39vVw/zBMwPYuOh+CLMDaLEiwSZ/iFfAiSu4tmM+ICYWINXKdBypmUa7tGumGWye5qgbA8Y0RQRdRIaO9rn99TVXIKzHJYsc999YBzZsc71lno5Jn2C2cWDE8OrJ2J5z5GRUTSlUlW/jrMqLB9zsZotiU3xLlQFDNos6ZWMF5XaY580S7ajkG+7dtwiD3oo21YED8PoqcClo8qjoG6xAaAQgWmNFKhN5g+CKE0immFF8M6i8awZl06UDd7tvyJ3q3c9GzlwvTCNBXE6C1+Wr4qNyVdco859bsTTcxV4=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ZSJNkYO58PcKPWcUlqFU80uRG9NLIYVoEz5Q9DJUo60FMx7t8akE0aN35xdr?=
- =?us-ascii?Q?JLH/LbrKcUs6sVFLRsJQgJzIf3EkWqK46tOHxZE0SFjomJ0jdmyvCGYOJbZy?=
- =?us-ascii?Q?BvlHvM+rsGFS73O921dknJribiz1Zax0fon9XkRKR9bTG+j2WJQHjQMPOX16?=
- =?us-ascii?Q?NVR+ns4jp0iiotH2hahdHe8C6IA7BTx1s/JLPP0Ncn2ku/NuYtkiw3SEzeN7?=
- =?us-ascii?Q?0/Vynu601MI5tyMlQSixpplT7LbuUXzc5pTsUWOiZTsUX5Dn/dZ+2jNuXxiz?=
- =?us-ascii?Q?OAmQsUpxcArkHf0lfe+dNuSg6jFJSYlX/R/1u2bVbuD+hPfUECfL3KfwAmX7?=
- =?us-ascii?Q?nRITXQd7/v2SKbRs3be69YnQ+kW4uCshc6QHtaYPanCFl7K3HiS1ZTeruEIJ?=
- =?us-ascii?Q?/DCO92+giGOqnt1z1SHd2ZFPNrfqOPQ17iMcpsmC4eyF7Nb0gZXAXxF/nj78?=
- =?us-ascii?Q?SWKaG/KOOTW3yJbny5ClcKVXTxecetqEJ+2+N563m0CY/M6y6Hd0M/VyeYj4?=
- =?us-ascii?Q?okNae/hQCdCH7Ri5y50tGkq/3QuC9lCwoj4TwUOxpqjrl/Wq+WaO9afDuGDB?=
- =?us-ascii?Q?oEXZWFr7hIyY8+8tE9URfy3Wzs/FASYTeoJuB1iOrccBuwjfIkADbRV7xdOB?=
- =?us-ascii?Q?4rqDiuRxrTH6T7RtY6mYqzLWeN9j0RV8JqG2WQUR9o+k5AYo2UDABz0j4KNW?=
- =?us-ascii?Q?1zt+ZBHbID/UAa5Pj6uSwYR7ls/luaMWqhq7r2tap6xyxsP96uqBjpqaZwiZ?=
- =?us-ascii?Q?5So3zFJn+GQM3kDf7Zdg00l3eMiiTLmUOrPz8hKglWBAcyjDdSkeMZ9lFMN0?=
- =?us-ascii?Q?bfzLpfVFY18+qmum9iBuwkychPwXLW9zoqbSXz5nYs+hr4yzRY11GTYrhkyv?=
- =?us-ascii?Q?gATF76Bz4JTkApcyTQo93u/CE0bwEeGEw51UcZPoIz0IECR00W33fAqxJYTs?=
- =?us-ascii?Q?mtxq7msyJkoCcQcUzv4P0JBYh9GkAZpSQ4Vm/DWmRRnK6MHKvnDC40dD3iRS?=
- =?us-ascii?Q?ZP/zHKo3mz6wdwQO+FwgmKBPW9mReBXGE51yMpO2kEpbeL5sdp5KgGQy1N2W?=
- =?us-ascii?Q?O0a7vRD8Sh3flkcErVsLsGytZG4rLYN41TzVxhzg3Qn6eU7eOguz9G7y63H4?=
- =?us-ascii?Q?dF8Io80kYaiqsaEaeoum61SrXOXtT56KMH1Mu62XGubunER18yJyMkh7wBun?=
- =?us-ascii?Q?g2ZRsvUcCyHtgHxO0HlJ3iLeEXVZflHiGJGG9O2ZlQnA2VAcbnsx64dIL+FO?=
- =?us-ascii?Q?M/Om2+9DyYuTDD0SIzg9?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 61188962-8834-4754-09c2-08dbc876af6b
-X-MS-Exchange-CrossTenant-AuthSource: SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2023 03:20:29.1280
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SYZP282MB3332
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: zm9QGSD8uTZJVnfacC3qvDdtG0ng-aa0
+X-Proofpoint-ORIG-GUID: ggYt-NiK_jrT3pR80EwT1n7kmFRIU31H
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-09_03,2023-10-06_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 suspectscore=0 mlxlogscore=999 clxscore=1015 phishscore=0
+ impostorscore=0 adultscore=0 mlxscore=0 bulkscore=0 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310090043
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-> All warnings (new ones prefixed by >>):
-> 
->    arch/x86/kvm/x86.c: In function 'kvm_arch_vcpu_read_virt':
-> >> arch/x86/kvm/x86.c:12917:42: warning: passing argument 2 of 'kvm_read_guest_virt' makes integer from pointer without a cast [-Wint-conversion]
->    12917 |         return kvm_read_guest_virt(vcpu, addr, dest, length, &e) == X86EMUL_CONTINUE;
->          |                                          ^~~~
->          |                                          |
->          |                                          void *
->    arch/x86/kvm/x86.c:7388:38: note: expected 'gva_t' {aka 'long unsigned int'} but argument is of type 'void *'
->     7388 |                                gva_t addr, void *val, unsigned int bytes,
->          |                                ~~~~~~^~~~
-> 
+Simple expression parser test fails in powerpc as below:
 
-Terribly sorry for the build warnings, which is caused by type casting.
-Will be fixed in the next version.
+    4: Simple expression parser
+    test child forked, pid 170385
+    Using CPUID 004e2102
+    division by zero
+    syntax error
+    syntax error
+    FAILED tests/expr.c:65 parse test failed
+    test child finished with -1
+    Simple expression parser: FAILED!
+
+This is observed after commit:
+'commit 9d5da30e4ae9 ("perf jevents: Add a new expression builtin strcmp_cpuid_str()")'
+
+With this commit, a new expression builtin strcmp_cpuid_str
+got added. This function takes an 'ID' type value, which is
+a string. So expression parse for strcmp_cpuid_str expects
+const char * as cpuid value type. In case of powerpc, CPU IDs
+are numbers. Hence it doesn't get interpreted correctly by
+bison parser. Example in case of power9, cpuid string returns
+as: 004e2102
+
+cpuid of string type is expected in two cases:
+1. char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused);
+
+   Testcase "tests/expr.c" uses "perf_pmu__getcpuid" which calls
+   get_cpuid_str to get the cpuid string.
+
+2. cpuid field in  :struct pmu_events_map
+
+   struct pmu_events_map {
+           const char *arch;
+	   const char *cpuid;
+
+   Here cpuid field is used in "perf_pmu__find_events_table"
+   function as "strcmp_cpuid_str(map->cpuid, cpuid)". The
+   value for cpuid field is picked from mapfile.csv.
+
+Fix the mapfile.csv and get_cpuid_str function to prefix
+cpuid with 0x so that it gets correctly interpreted by
+the bison parser
+
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+ tools/perf/arch/powerpc/util/header.c          | 2 +-
+ tools/perf/pmu-events/arch/powerpc/mapfile.csv | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
+index c8d0dc775e5d..6b00efd53638 100644
+--- a/tools/perf/arch/powerpc/util/header.c
++++ b/tools/perf/arch/powerpc/util/header.c
+@@ -34,7 +34,7 @@ get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
+ {
+ 	char *bufp;
+ 
+-	if (asprintf(&bufp, "%.8lx", mfspr(SPRN_PVR)) < 0)
++	if (asprintf(&bufp, "0x%.8lx", mfspr(SPRN_PVR)) < 0)
+ 		bufp = NULL;
+ 
+ 	return bufp;
+diff --git a/tools/perf/pmu-events/arch/powerpc/mapfile.csv b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
+index a534ff6db14b..f4908af7ad66 100644
+--- a/tools/perf/pmu-events/arch/powerpc/mapfile.csv
++++ b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
+@@ -13,6 +13,6 @@
+ #
+ 
+ # Power8 entries
+-004[bcd][[:xdigit:]]{4},1,power8,core
+-004e[[:xdigit:]]{4},1,power9,core
+-0080[[:xdigit:]]{4},1,power10,core
++0x004[bcd][[:xdigit:]]{4},1,power8,core
++0x004e[[:xdigit:]]{4},1,power9,core
++0x0080[[:xdigit:]]{4},1,power10,core
+-- 
+2.39.3
+
