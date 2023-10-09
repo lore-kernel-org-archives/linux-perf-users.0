@@ -1,50 +1,53 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44F42C9E
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 05:22:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303242C9E
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 05:22:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D6949F;
-	Sun,  8 Oct 2023 22:22:04 -0700 (PDT)
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-27751ac0653so2455902a91.3;
-        Sun, 08 Oct 2023 22:22:04 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 204A2A4
+	for <linux-perf-users@vger.kernel.org>; Sun,  8 Oct 2023 22:22:33 -0700 (PDT)
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-278eaffd81dso2243891a91.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 08 Oct 2023 22:22:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696828921; x=1697433721;
+        d=1e100.net; s=20230601; t=1696828952; x=1697433752;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1wRMA6PdEYAejXUpWE7rJpLSvGQxKHe3y2Xu2hibcMI=;
-        b=QheQefglbCA3yqHcrXn9ZvFEj7TWj8v2+iyTT80Q66ZiXRe17SUck5di5Z73FTX0eM
-         mUT6Bt/VzeIUH+20R5gxoo1d7QFUEs2QLdQFce7+0wKqsnh4CZEMEegduLs4i5JDm9nr
-         0Ukb/2qIZM1oLWucQddzJS/w79Zl+IsMC9FQcHhtywtuBev+PSCY4EdvtrmmOq7hdGof
-         Mk3AdlPUk4t+Lu1xZ/MMackmtzu2N4NEfJhoYZtwqw/MNP3Aa8ChALA5TXW7wr2v2sJq
-         grtea6RN7VX5c62WVMnLFOcxmRbNw1Q53OMvsmWxA1rgNE3virJmXw+xloKPw4+WgCsJ
-         k8/w==
-X-Gm-Message-State: AOJu0YybXfNKHdVyQ52Kls42JzJ4jIJcvffLrP07/A2NKMi857t9XZ1r
-	impUNOTmPs3G2sgPsZbsBJO5GJe6ie0Unm6jsXQ=
-X-Google-Smtp-Source: AGHT+IHny9G0BkYZhdEZRUkV5fXGLMjI0ADOVu2CKmR60BomZXSEfg9+mgWGqdU34gmaBTkwRD5RPGhpEuhj2gGHRz4=
-X-Received: by 2002:a17:90a:73c6:b0:26d:287f:a545 with SMTP id
- n6-20020a17090a73c600b0026d287fa545mr10816633pjk.29.1696828920719; Sun, 08
- Oct 2023 22:22:00 -0700 (PDT)
+        bh=KKDjDbJ7FjBDQQgX7EI5ljX+mPg09NnPyujEusdUD2c=;
+        b=tvx3ONcqVTf3uEaDJMQCmWQ+YxUKqDEfmcgFjD0ES04nnwtjtqblU9TD2b5Z4SjSnC
+         CjhH2PLD240FljW8lP19Q9dX1n2OmMVdi6bkXNZVdAsYuz/XT7fVUIgNyGn074CwVIh5
+         AMRe7spSi6IkpJl8tIKIArwLuShST1dWwhDy8X0aZ65iu8jWnfHwTu8GAEsEr9LH5WYD
+         GObWH+ygSNy+sfbnLNGLdiwj/bozDkILBKVU9lQtfF5aOtVr/Mj0RF0zgMww5C8PMkdG
+         XGzLmxG2ifUB3QD1HS3qP0GhZ7Bl3y0dKUQS5z+W6YV/zJNAEC0noazw5QHACQ10arS6
+         cVaQ==
+X-Gm-Message-State: AOJu0YzzrW+VdqiPzCOwUC5PnyPzXyBg4PCtjAnU6dw1+u5LZOu1u9ik
+	QbgCIPQe+jtnDEcJKJsicWdfCBItPcnh0/hmNUE=
+X-Google-Smtp-Source: AGHT+IENZzLxeNSXadpD69/vTTWQ9pE2S1iKF8DEI/1CBQYLuymTXAKGnyb44p79qCUIi+AxalU9sd7YfmeRpKOzu4w=
+X-Received: by 2002:a17:90b:1c83:b0:274:616e:3fc4 with SMTP id
+ oo3-20020a17090b1c8300b00274616e3fc4mr11154380pjb.34.1696828952468; Sun, 08
+ Oct 2023 22:22:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230930072719.1267784-1-visitorckw@gmail.com> <CAM9d7ciJZsCaVo6m_VtJ=QKNGAtBkAncidQjHzwexd3H8+3Usw@mail.gmail.com>
-In-Reply-To: <CAM9d7ciJZsCaVo6m_VtJ=QKNGAtBkAncidQjHzwexd3H8+3Usw@mail.gmail.com>
+References: <20230928075213.84392-1-atrajeev@linux.vnet.ibm.com>
+ <CAM9d7cj0iLdrV6EYmo_oC9M_32fuRVv_geBPz4GJv41jZR5WNQ@mail.gmail.com> <63F6D59C-3C40-4E39-BC63-4CB2DDAD0F47@linux.vnet.ibm.com>
+In-Reply-To: <63F6D59C-3C40-4E39-BC63-4CB2DDAD0F47@linux.vnet.ibm.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Sun, 8 Oct 2023 22:21:49 -0700
-Message-ID: <CAM9d7cjx04RFjE6x+09mh7SjVWRiB46czYGWenVzf=LaKCrqSA@mail.gmail.com>
-Subject: Re: [PATCH] perf hisi-ptt: Fix memory leak in lseek failure handling
-To: Kuan-Wei Chiu <visitorckw@gmail.com>
-Cc: yangyicong@hisilicon.com, jonathan.cameron@huawei.com, 
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+Date: Sun, 8 Oct 2023 22:22:21 -0700
+Message-ID: <CAM9d7cjRD5TwgTCxb+Nc3xM6QJbHBu8=M-QMh=MkH+k1jOeLvg@mail.gmail.com>
+Subject: Re: [PATCH V5 1/3] tools/perf: Add text_end to "struct dso" to save
+ .text section size
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>, 
+	linux-perf-users <linux-perf-users@vger.kernel.org>, 
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Disha Goel <disgoel@linux.vnet.ibm.com>, 
+	Disha Goel <disgoel@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
@@ -54,26 +57,78 @@ X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 2, 2023 at 9:48=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
+On Mon, Oct 2, 2023 at 11:47=E2=80=AFPM Athira Rajeev
+<atrajeev@linux.vnet.ibm.com> wrote:
 >
-> Hello,
 >
-> On Sat, Sep 30, 2023 at 12:27=E2=80=AFAM Kuan-Wei Chiu <visitorckw@gmail.=
-com> wrote:
+>
+> > On 03-Oct-2023, at 9:58 AM, Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > In the previous code, there was a memory leak issue where the previousl=
-y
-> > allocated memory was not freed upon a failed lseek operation. This patc=
-h
-> > addresses the problem by releasing the old memory before returning -err=
-no
-> > in case of a lseek failure. This ensures that memory is properly manage=
-d
-> > and avoids potential memory leaks.
+> > Hello,
 > >
-> > Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+> > On Thu, Sep 28, 2023 at 12:52=E2=80=AFAM Athira Rajeev
+> > <atrajeev@linux.vnet.ibm.com> wrote:
+> >>
+> >> Update "struct dso" to include new member "text_end".
+> >> This new field will represent the offset for end of text
+> >> section for a dso. For elf, this value is derived as:
+> >> sh_size (Size of section in byes) + sh_offset (Section file
+> >> offst) of the elf header for text.
+> >>
+> >> For bfd, this value is derived as:
+> >> 1. For PE file,
+> >> section->size + ( section->vma - dso->text_offset)
+> >> 2. Other cases:
+> >> section->filepos (file position) + section->size (size of
+> >> section)
+> >>
+> >> To resolve the address from a sample, perf looks at the
+> >> DSO maps. In case of address from a kernel module, there
+> >> were some address found to be not resolved. This was
+> >> observed while running perf test for "Object code reading".
+> >> Though the ip falls beteen the start address of the loaded
+> >> module (perf map->start ) and end address ( perf map->end),
+> >> it was unresolved.
+> >>
+> >> Example:
+> >>
+> >>    Reading object code for memory address: 0xc008000007f0142c
+> >>    File is: /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
+> >>    On file address is: 0x1114cc
+> >>    Objdump command is: objdump -z -d --start-address=3D0x11142c --stop=
+-address=3D0x1114ac /lib/modules/6.5.0-rc3+/kernel/fs/xfs/xfs.ko
+> >>    objdump read too few bytes: 128
+> >>    test child finished with -1
+> >>
+> >> Here, module is loaded at:
+> >>    # cat /proc/modules | grep xfs
+> >>    xfs 2228224 3 - Live 0xc008000007d00000
+> >>
+> >> From objdump for xfs module, text section is:
+> >>    text 0010f7bc  0000000000000000 0000000000000000 000000a0 2**4
+> >>
+> >> Here the offset for 0xc008000007f0142c ie  0x112074 falls out
+> >> .text section which is up to 0x10f7bc.
+> >>
+> >> In this case for module, the address 0xc008000007e11fd4 is pointing
+> >> to stub instructions. This address range represents the module stubs
+> >> which is allocated on module load and hence is not part of DSO offset.
+> >>
+> >> To identify such  address, which falls out of text
+> >> section and within module end, added the new field "text_end" to
+> >> "struct dso".
+> >>
+> >> Reported-by: Disha Goel <disgoel@linux.ibm.com>
+> >> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> >> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+> >> Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
+> >
+> > For the series,
+> > Acked-by: Namhyung Kim <namhyung@kernel.org>
+> >
+> > Thanks,
+> > Namhyung
 >
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> Thanks for checking Namhyung,
 
 Applied to perf-tools-next, thanks!
