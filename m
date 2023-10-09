@@ -1,166 +1,249 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B2F63D5
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 12:37:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dhRPmYjD"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A26AAC;
-	Mon,  9 Oct 2023 05:37:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696855033; x=1728391033;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Rw32ScfJPeLaNgNAcjsRTBfEMkPu9/ApTs6pmxzg8bI=;
-  b=dhRPmYjDj43O4ywCR4QUu1VAevDFJphpU+nH+zyhNIDTHf6popbJ+zRI
-   2m374XTKcDD8Exhx8TvT8GfFnhKGeGF+2T/2JKgNkNorddGw0Vt2RdQdp
-   Af5b9hMIis07Lh3XjuQhANy/NTDh2zEVu1mvY/VogJqM86BjdqCc9drEG
-   pl1E21PeZ+410UNNhkSh5KZWcWyIWfGhbK8osgQwwP74FsYc1fvnLkOS6
-   m0BNG9O0RGARlHLeFYuk2M6ZtmgV9wbuOwrTkt/0ghuevOfk0Hr0nJxWE
-   kdg2PQj1s0KC+h95886/aHcCKpEAHDc/BeyGpg3QnNwTORwFMHgaFxchD
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10858"; a="450631022"
-X-IronPort-AV: E=Sophos;i="6.03,210,1694761200"; 
-   d="scan'208";a="450631022"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2023 05:37:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10858"; a="753003189"
-X-IronPort-AV: E=Sophos;i="6.03,210,1694761200"; 
-   d="scan'208";a="753003189"
-Received: from lkp-server02.sh.intel.com (HELO 4ed589823ba4) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 09 Oct 2023 05:37:07 -0700
-Received: from kbuild by 4ed589823ba4 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qppVQ-0000Cu-2E;
-	Mon, 09 Oct 2023 12:37:04 +0000
-Date: Mon, 9 Oct 2023 20:36:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sandipan Das <sandipan.das@amd.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, x86@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
-	hpa@zytor.com, eranian@google.com, ananth.narayan@amd.com,
-	ravi.bangoria@amd.com, santosh.shukla@amd.com, sandipan.das@amd.com
-Subject: Re: [PATCH v2 2/6] perf/x86/amd/uncore: Move discovery and
- registration
-Message-ID: <202310092019.yMh3nlyD-lkp@intel.com>
-References: <e6c447e48872fcab8452e0dd81b1c9cb09f39eb4.1696425185.git.sandipan.das@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33611118C
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 12:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 59A16AC;
+	Mon,  9 Oct 2023 05:50:21 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B82751FB;
+	Mon,  9 Oct 2023 05:51:01 -0700 (PDT)
+Received: from [10.57.3.51] (unknown [10.57.3.51])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9BE863F762;
+	Mon,  9 Oct 2023 05:50:19 -0700 (PDT)
+Message-ID: <b72d321f-0cea-1049-3bbb-224d38a94749@arm.com>
+Date: Mon, 9 Oct 2023 13:50:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e6c447e48872fcab8452e0dd81b1c9cb09f39eb4.1696425185.git.sandipan.das@amd.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.15.1
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v1 1/2] arm64: perf: Add support for event counting
+ threshold
+To: James Clark <james.clark@arm.com>, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>,
+ Marc Zyngier <maz@kernel.org>, Zaid Al-Bassam <zalbassam@google.com>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230919095137.360963-1-james.clark@arm.com>
+ <20230919095137.360963-2-james.clark@arm.com>
+In-Reply-To: <20230919095137.360963-2-james.clark@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hi Sandipan,
+Hi James
 
-kernel test robot noticed the following build warnings:
+On 19/09/2023 10:51, James Clark wrote:
+> FEAT_PMUv3_TH (Armv8.8) permits a PMU counter to increment only on
+> events whose count meets a specified threshold condition. For example if
+> PMEVTYPERn.TC (Threshold Control) is set to 0b101 (Greater than or
+> equal, count), and the threshold is set to 2, then the PMU counter will
+> now only increment by 1 when an event would have previously incremented
+> the PMU counter by 2 or more on a single processor cycle.
+> 
+> Two new Perf event config fields, 'threshold' and 'threshold_control'
+> have been added for controlling the feature:
+> 
+>    $ perf stat -e stall_slot/threshold=2,threshold_control=5/
+> 
+> A new capability for reading out the maximum supported threshold value
+> has also been added:
+> 
+>    $ cat /sys/bus/event_source/devices/armv8_pmuv3/caps/threshold_max
+> 
+>    0x000000ff
+> 
+> If a threshold higher than threshold_max is provided, then no error is
+> generated but the threshold is clamped to the max value. If
+> FEAT_PMUv3_TH isn't implemented, then threshold_max reads zero, and
+> neither the 'threshold' nor 'threshold_control' parameters will be used.
+> 
+> The threshold is per PMU counter, and there are potentially different
+> threshold_max values per PMU type on heterogeneous systems.
+> 
+> Bits higher than 32 now need to be written into PMEVTYPER, so
+> armv8pmu_write_evtype() has to be updated to take a u64 value rather
+> than u32.
 
-[auto build test WARNING on tip/perf/core]
-[also build test WARNING on perf-tools/perf-tools acme/perf/core linus/master v6.6-rc5 next-20231009]
-[cannot apply to perf-tools-next/perf-tools-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Is this supported in the Aarch32 state ? If so, do we need to change
+the arch specific register read/write "helpers" ?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Sandipan-Das/perf-x86-amd-uncore-Move-discovery-and-registration/20231006-005053
-base:   tip/perf/core
-patch link:    https://lore.kernel.org/r/e6c447e48872fcab8452e0dd81b1c9cb09f39eb4.1696425185.git.sandipan.das%40amd.com
-patch subject: [PATCH v2 2/6] perf/x86/amd/uncore: Move discovery and registration
-config: i386-randconfig-061-20231009 (https://download.01.org/0day-ci/archive/20231009/202310092019.yMh3nlyD-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231009/202310092019.yMh3nlyD-lkp@intel.com/reproduce)
+> 
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>   drivers/perf/arm_pmuv3.c       | 59 +++++++++++++++++++++++++++++++++-
+>   include/linux/perf/arm_pmuv3.h |  7 +++-
+>   2 files changed, 64 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+> index e5a2ac4155f6..ad6574b2bdab 100644
+> --- a/drivers/perf/arm_pmuv3.c
+> +++ b/drivers/perf/arm_pmuv3.c
+> @@ -294,9 +294,16 @@ static const struct attribute_group armv8_pmuv3_events_attr_group = {
+>   	.is_visible = armv8pmu_event_attr_is_visible,
+>   };
+>   
+> +#define TH_LO	2
+> +#define TH_HI	13
+> +#define TH_CNTL_LO	14
+> +#define TH_CNTL_HI	16
+> +
+>   PMU_FORMAT_ATTR(event, "config:0-15");
+>   PMU_FORMAT_ATTR(long, "config1:0");
+>   PMU_FORMAT_ATTR(rdpmc, "config1:1");
+> +PMU_FORMAT_ATTR(threshold, "config1:" __stringify(TH_LO) "-" __stringify(TH_HI));
+> +PMU_FORMAT_ATTR(threshold_control, "config1:" __stringify(TH_CNTL_LO) "-" __stringify(TH_CNTL_HI));
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202310092019.yMh3nlyD-lkp@intel.com/
+The perf core doesn't yet support adding aliases for
+fields other than "events". May be we could add
+some support for that in the future and use it
+to provide meaningful aliases for the threshold
+control.
 
-sparse warnings: (new ones prefixed by >>)
->> arch/x86/events/amd/uncore.c:601:10: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got union amd_uncore_info * @@
-   arch/x86/events/amd/uncore.c:601:10: sparse:     expected void const [noderef] __percpu *__vpp_verify
-   arch/x86/events/amd/uncore.c:601:10: sparse:     got union amd_uncore_info *
-   arch/x86/events/amd/uncore.c:730:10: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got union amd_uncore_info * @@
-   arch/x86/events/amd/uncore.c:730:10: sparse:     expected void const [noderef] __percpu *__vpp_verify
-   arch/x86/events/amd/uncore.c:730:10: sparse:     got union amd_uncore_info *
->> arch/x86/events/amd/uncore.c:847:30: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected union amd_uncore_info *[noderef] info @@     got union amd_uncore_info [noderef] __percpu * @@
-   arch/x86/events/amd/uncore.c:847:30: sparse:     expected union amd_uncore_info *[noderef] info
-   arch/x86/events/amd/uncore.c:847:30: sparse:     got union amd_uncore_info [noderef] __percpu *
->> arch/x86/events/amd/uncore.c:881:43: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void [noderef] __percpu *__pdata @@     got union amd_uncore_info *[noderef] info @@
-   arch/x86/events/amd/uncore.c:881:43: sparse:     expected void [noderef] __percpu *__pdata
-   arch/x86/events/amd/uncore.c:881:43: sparse:     got union amd_uncore_info *[noderef] info
-   arch/x86/events/amd/uncore.c:904:35: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void [noderef] __percpu *__pdata @@     got union amd_uncore_info *[noderef] info @@
-   arch/x86/events/amd/uncore.c:904:35: sparse:     expected void [noderef] __percpu *__pdata
-   arch/x86/events/amd/uncore.c:904:35: sparse:     got union amd_uncore_info *[noderef] info
-   arch/x86/events/amd/uncore.c:358:39: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got union amd_uncore_info * @@
-   arch/x86/events/amd/uncore.c:358:39: sparse:     expected void const [noderef] __percpu *__vpp_verify
-   arch/x86/events/amd/uncore.c:358:39: sparse:     got union amd_uncore_info *
->> arch/x86/events/amd/uncore.c:358:39: sparse: sparse: dereference of noderef expression
-   arch/x86/events/amd/uncore.c:358:39: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got union amd_uncore_info * @@
-   arch/x86/events/amd/uncore.c:358:39: sparse:     expected void const [noderef] __percpu *__vpp_verify
-   arch/x86/events/amd/uncore.c:358:39: sparse:     got union amd_uncore_info *
->> arch/x86/events/amd/uncore.c:358:39: sparse: sparse: dereference of noderef expression
-   arch/x86/events/amd/uncore.c:601:10: sparse: sparse: dereference of noderef expression
->> arch/x86/events/amd/uncore.c:593:31: sparse: sparse: invalid access past the end of 'info' (4 8)
-   arch/x86/events/amd/uncore.c:598:48: sparse: sparse: invalid access past the end of 'info' (4 8)
-   arch/x86/events/amd/uncore.c:365:39: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got union amd_uncore_info * @@
-   arch/x86/events/amd/uncore.c:365:39: sparse:     expected void const [noderef] __percpu *__vpp_verify
-   arch/x86/events/amd/uncore.c:365:39: sparse:     got union amd_uncore_info *
-   arch/x86/events/amd/uncore.c:365:39: sparse: sparse: dereference of noderef expression
-   arch/x86/events/amd/uncore.c:730:10: sparse: sparse: dereference of noderef expression
-   arch/x86/events/amd/uncore.c:724:31: sparse: sparse: invalid access past the end of 'info' (4 8)
-   arch/x86/events/amd/uncore.c:365:39: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got union amd_uncore_info * @@
-   arch/x86/events/amd/uncore.c:365:39: sparse:     expected void const [noderef] __percpu *__vpp_verify
-   arch/x86/events/amd/uncore.c:365:39: sparse:     got union amd_uncore_info *
-   arch/x86/events/amd/uncore.c:365:39: sparse: sparse: dereference of noderef expression
-   arch/x86/events/amd/uncore.c:848:22: sparse: sparse: dereference of noderef expression
-   arch/x86/events/amd/uncore.c:880:21: sparse: sparse: dereference of noderef expression
-   arch/x86/events/amd/uncore.c:881:37: sparse: sparse: dereference of noderef expression
-   arch/x86/events/amd/uncore.c:882:25: sparse: sparse: dereference of noderef expression
-   arch/x86/events/amd/uncore.c:901:22: sparse: sparse: dereference of noderef expression
-   arch/x86/events/amd/uncore.c:904:29: sparse: sparse: dereference of noderef expression
-   arch/x86/events/amd/uncore.c:905:17: sparse: sparse: dereference of noderef expression
+Not sure if we can extrapolate threshold_control[0]
+to be another config field => "counting_mode"
+We would need to check with the architecture folks
+to confirm that the meaning wouldn't change though.
 
-vim +601 arch/x86/events/amd/uncore.c
+>   
+>   static int sysctl_perf_user_access __read_mostly;
+>   
+> @@ -310,10 +317,22 @@ static inline bool armv8pmu_event_want_user_access(struct perf_event *event)
+>   	return event->attr.config1 & 0x2;
+>   }
+>   
+> +static inline u32 armv8pmu_event_threshold(struct perf_event_attr *attr)
+> +{
+> +	return FIELD_GET(GENMASK(TH_HI, TH_LO), attr->config1);
+> +}
+> +
+> +static inline u8 armv8pmu_event_threshold_control(struct perf_event_attr *attr)
+> +{
+> +	return FIELD_GET(GENMASK(TH_CNTL_HI, TH_CNTL_LO), attr->config1);
+> +}
+> +
+>   static struct attribute *armv8_pmuv3_format_attrs[] = {
+>   	&format_attr_event.attr,
+>   	&format_attr_long.attr,
+>   	&format_attr_rdpmc.attr,
+> +	&format_attr_threshold.attr,
+> +	&format_attr_threshold_control.attr,
+>   	NULL,
+>   };
+>   
+> @@ -365,10 +384,31 @@ static ssize_t bus_width_show(struct device *dev, struct device_attribute *attr,
+>   
+>   static DEVICE_ATTR_RO(bus_width);
+>   
+> +static u32 threshold_max(struct arm_pmu *cpu_pmu)
+> +{
+> +	/*
+> +	 * The largest value that can be written to PMEVTYPER<n>_EL0.TH is
+> +	 * (2 ^ PMMIR.THWIDTH) - 1
+> +	 */
+> +	return (1 << FIELD_GET(ARMV8_PMU_THWIDTH, cpu_pmu->reg_pmmir)) - 1;
+> +}
+> +
+> +static ssize_t threshold_max_show(struct device *dev,
+> +				  struct device_attribute *attr, char *page)
+> +{
+> +	struct pmu *pmu = dev_get_drvdata(dev);
+> +	struct arm_pmu *cpu_pmu = container_of(pmu, struct arm_pmu, pmu);
+> +
+> +	return sysfs_emit(page, "0x%08x\n", threshold_max(cpu_pmu));
+> +}
+> +
+> +static DEVICE_ATTR_RO(threshold_max);
+> +
+>   static struct attribute *armv8_pmuv3_caps_attrs[] = {
+>   	&dev_attr_slots.attr,
+>   	&dev_attr_bus_slots.attr,
+>   	&dev_attr_bus_width.attr,
+> +	&dev_attr_threshold_max.attr,
+>   	NULL,
+>   };
+>   
+> @@ -552,7 +592,7 @@ static void armv8pmu_write_counter(struct perf_event *event, u64 value)
+>   		armv8pmu_write_hw_counter(event, value);
+>   }
+>   
+> -static inline void armv8pmu_write_evtype(int idx, u32 val)
+> +static inline void armv8pmu_write_evtype(int idx, u64 val)
+>   {
+>   	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
+>   
+> @@ -912,6 +952,10 @@ static int armv8pmu_set_event_filter(struct hw_perf_event *event,
+>   				     struct perf_event_attr *attr)
+>   {
+>   	unsigned long config_base = 0;
+> +	struct perf_event *perf_event = container_of(attr, struct perf_event,
+> +						     attr);
+> +	struct arm_pmu *cpu_pmu = to_arm_pmu(perf_event->pmu);
+> +	u32 th, th_max;
+>   
+>   	if (attr->exclude_idle)
+>   		return -EPERM;
+> @@ -943,6 +987,19 @@ static int armv8pmu_set_event_filter(struct hw_perf_event *event,
+>   	if (attr->exclude_user)
+>   		config_base |= ARMV8_PMU_EXCLUDE_EL0;
+>   
+> +	/*
+> +	 * Insert event counting threshold (FEAT_PMUv3_TH) values. If
+> +	 * FEAT_PMUv3_TH isn't implemented, then THWIDTH (threshold_max) will be
+> +	 * 0 and no values will be written.
+> +	 */
+> +	th_max = threshold_max(cpu_pmu);
+> +	if (th_max) {
+> +		th = min(armv8pmu_event_threshold(attr), th_max);
+> +		config_base |= FIELD_PREP(ARMV8_PMU_EVTYPE_TH, th);
+> +		config_base |= FIELD_PREP(ARMV8_PMU_EVTYPE_TC,
+> +					  armv8pmu_event_threshold_control(attr));
+> +	}
+> +
+>   	/*
+>   	 * Install the filter into config_base as this is used to
+>   	 * construct the event type.
+> diff --git a/include/linux/perf/arm_pmuv3.h b/include/linux/perf/arm_pmuv3.h
+> index e3899bd77f5c..0e2a3c927150 100644
+> --- a/include/linux/perf/arm_pmuv3.h
+> +++ b/include/linux/perf/arm_pmuv3.h
+> @@ -228,7 +228,11 @@
+>   /*
+>    * PMXEVTYPER: Event selection reg
+>    */
+> -#define ARMV8_PMU_EVTYPE_MASK	0xc800ffff	/* Mask for writable bits */
+> +#define ARMV8_PMU_EVTYPE_TH	GENMASK(43, 32)
+> +#define ARMV8_PMU_EVTYPE_TC	GENMASK(63, 61)
+> +/* Mask for writable bits */
+> +#define ARMV8_PMU_EVTYPE_MASK	(0xc800ffff | ARMV8_PMU_EVTYPE_TH | \
+> +				ARMV8_PMU_EVTYPE_TC)
 
-   582	
-   583	static
-   584	void amd_uncore_df_ctx_scan(struct amd_uncore *uncore, unsigned int cpu)
-   585	{
-   586		union cpuid_0x80000022_ebx ebx;
-   587		union amd_uncore_info info;
-   588	
-   589		if (!boot_cpu_has(X86_FEATURE_PERFCTR_NB))
-   590			return;
-   591	
-   592		info.split.aux_data = 0;
- > 593		info.split.num_pmcs = NUM_COUNTERS_NB;
-   594		info.split.cid = topology_die_id(cpu);
-   595	
-   596		if (pmu_version >= 2) {
-   597			ebx.full = cpuid_ebx(EXT_PERFMON_DEBUG_FEATURES);
-   598			info.split.num_pmcs = ebx.split.num_df_pmc;
-   599		}
-   600	
- > 601		*per_cpu_ptr(uncore->info, cpu) = info;
-   602	}
-   603	
+May need to be UL suffixed for safety ?
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+Suzuki
+
+>   #define ARMV8_PMU_EVTYPE_EVENT	0xffff		/* Mask for EVENT bits */
+>   
+>   /*
+> @@ -254,6 +258,7 @@
+>   #define ARMV8_PMU_BUS_SLOTS_MASK 0xff
+>   #define ARMV8_PMU_BUS_WIDTH_SHIFT 16
+>   #define ARMV8_PMU_BUS_WIDTH_MASK 0xf
+> +#define ARMV8_PMU_THWIDTH GENMASK(23, 20)
+>   
+>   /*
+>    * This code is really good
+
