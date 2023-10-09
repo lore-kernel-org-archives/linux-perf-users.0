@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317C736B0E
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 18:39:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16313358AF
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 18:39:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HPZgNN8l"
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F4154FA
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 11:39:47 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5a7b53a48e5so4704977b3.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Oct 2023 11:39:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SRdA35YG"
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51ED118F
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 11:39:50 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5a7a6fd18abso9982317b3.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Oct 2023 11:39:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696876787; x=1697481587; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1696876789; x=1697481589; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=JGGlE54ge9XxgsvPeqIZ7isbDlHsMUv/MJYLVA09opo=;
-        b=HPZgNN8loVefaOMfnRHnLVQVv2af1+7RIMbdemt0ihqTnrd+eC09lwm75mFfpYfoK8
-         VuM7z5hvPEqcV4xKoabEexIrQXkuMOBoXOzdovVPUOYM7Co1+/FnIRdDj13p3os/Rw7s
-         NI8p7mPr7mM5ZF4uZ1mpG8YUhvyXuFinhqEKXJ+MQu3lrzW6kz4bJP3lMkttN6Hqxorz
-         mHe7KnritTalDR6fFTBGMfrTMXulwEzrUJ6mji+Y2of/4EV33s2AeShAbwxSMRJ+d02t
-         dZitQgZz34BI/Fy+TBjVTcAzYr64CsOm6jp1TlVN3L0JNxAf97JGub/g2KK4QBxJEYCZ
-         lAGg==
+        bh=Btc8+OmE4IzA7UOP/eGTa4MmLZMG3XazqMQBeE66ZYs=;
+        b=SRdA35YGOoLAZL9O7PKWBNf2JQLBzTaG1UsHWDN0YNJOyeWnXFklTqJ8LfGovInDPq
+         S1OCCbjXHolGeHnjnsHfSXHjwWsWYKFaev8MFgJoOMqVdc7w5Eeoxrxg7RYFhnvHkjSk
+         4h2Qdn4hFlf38ZRwAxN6WIoUBZvxHGlnUMkD5TiJpTAbjDJinzlN+vp51u0Q8nom8aSy
+         eGDGjaOQxExOs8pJrvIqbKaSc5GTt+PZtW9QWv3xdfAfsQywBsmHezeLcnZhmn8s8mSu
+         CZyIYAWyiaGBDXGW+rjm+XBx5D6Vbf/Z5kCyVWWrjpYzQa0ZfhQQJmls6rbALsQGqB+x
+         SaWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696876787; x=1697481587;
+        d=1e100.net; s=20230601; t=1696876789; x=1697481589;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JGGlE54ge9XxgsvPeqIZ7isbDlHsMUv/MJYLVA09opo=;
-        b=EErIhoRvIr1I2qlIlHei9mrHUOEwAvoB4/lGPZIr7YVkAkGSDq8TnCB6h/GgJWukD1
-         5ZwYHs2CyI5OSoSQJOSoct59MJEfKZFsS5dgwPnrQW/1o0TNPbe2nq9qF01UhP29w54p
-         sUBtHGJPPZ3CgZDlY4Z5xWXL2wpusqWhlvGxxfN0BbVqhNEMlDtaVQ9fumBl09063wLn
-         IKE0eZquXWWQCayr8n3XoGDNa2oxGApaKTizrUf+hjD5LlTD/yFX5TtqMe8kVmhR3oql
-         uo8neUx9rC52ohCZT757p57rDwDSk3t/GfrL2GCXFEDHzKhXGb58UbTriVoetDEOQTpd
-         4N/A==
-X-Gm-Message-State: AOJu0YwzpqgG/ViHoA8RmAC3pgdCPAucnd0eOMOFacKezXBsWsJcFXHx
-	4BkKhwBKB5COeQua1//Fewt8SFvpd98D
-X-Google-Smtp-Source: AGHT+IGpysIorYdi8kbri+eoNngVpsBmCut1uHA899pI7BzlPq5MUUHT7YyMhz0NTaD8xsX1mPms8KyxGvsu
+        bh=Btc8+OmE4IzA7UOP/eGTa4MmLZMG3XazqMQBeE66ZYs=;
+        b=GAYOz7jhmA2YahuoKx7RjogVD28rNcJYPst2/lCnnSoa8RoRgnFu9nwTotRgUdVpx+
+         TRJqFbZqhHhh60GLN4sRgTDNlpzzoIAO0U+oHyxMZoMNxLMNs8b+sdhMjV9vC8xyJnQX
+         e6ZsJgI1IGuva+kJ5ZIe+70zadCiK3f5ZEtGFtmCRS9lPd6jrpwcolwdlmsq6gukH8o7
+         QB9NvJOPQIr2Hlexu1+efN/zJ2WFQ4i+Qm50wgvrXuBwopycc4PrPJ58gRLXUStczPDo
+         p/jr2NH2YTmqhUyr/GZ4RzXD+WCv1NV26brH4TmUTshbAJXlhn8pP/NPGngYEakQcNgV
+         JJcg==
+X-Gm-Message-State: AOJu0YzZ+T4jfsKl3SrxMnG8QKwfB7pNgj2sydRAavP2LHmxqh/cf5Bj
+	nYY+tTflfFRP+FDcvnnHnoJ8Ttniif2X
+X-Google-Smtp-Source: AGHT+IEx3Hxc/LpzCERzTEobvjg4svKw6js0XFbWqMEIgj61DG4507hSvRf9frx3x/Ew/SETU4UYqOBaGS51
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:ac4a:9b94:7158:3f4e])
- (user=irogers job=sendgmr) by 2002:a25:c243:0:b0:d89:4d2c:d846 with SMTP id
- s64-20020a25c243000000b00d894d2cd846mr246744ybf.12.1696876787012; Mon, 09 Oct
- 2023 11:39:47 -0700 (PDT)
-Date: Mon,  9 Oct 2023 11:39:10 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:70b:b0:565:9bee:22e0 with SMTP id
+ bs11-20020a05690c070b00b005659bee22e0mr297980ywb.0.1696876789191; Mon, 09 Oct
+ 2023 11:39:49 -0700 (PDT)
+Date: Mon,  9 Oct 2023 11:39:11 -0700
 In-Reply-To: <20231009183920.200859-1-irogers@google.com>
-Message-Id: <20231009183920.200859-10-irogers@google.com>
+Message-Id: <20231009183920.200859-11-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231009183920.200859-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.609.gbb76f46606-goog
-Subject: [PATCH v3 08/18] perf mem-events: Avoid uninitialized read
+Subject: [PATCH v3 09/18] perf dlfilter: Be defensive against potential NULL dereference
 From: Ian Rogers <irogers@google.com>
 To: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
 	Tom Rix <trix@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -64,42 +64,36 @@ To: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google
 	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-pmu should be initialized to NULL before perf_pmus__scan loop. Fix and
-shrink the scope of pmu at the same time. Issue detected by clang-tidy.
+In the unlikely case of having a symbol without a mapping, avoid a
+NULL dereference that clang-tidy warns about.
 
-Fixes: 5752c20f3787 ("perf mem: Scan all PMUs instead of just core ones")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/mem-events.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/dlfilter.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index 39ffe8ceb380..954b235e12e5 100644
---- a/tools/perf/util/mem-events.c
-+++ b/tools/perf/util/mem-events.c
-@@ -185,7 +185,6 @@ int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
- {
- 	int i = *argv_nr, k = 0;
- 	struct perf_mem_event *e;
--	struct perf_pmu *pmu;
- 
- 	for (int j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
- 		e = perf_mem_events__ptr(j);
-@@ -202,6 +201,8 @@ int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
- 			rec_argv[i++] = "-e";
- 			rec_argv[i++] = perf_mem_events__name(j, NULL);
- 		} else {
-+			struct perf_pmu *pmu = NULL;
-+
- 			if (!e->supported) {
- 				perf_mem_events__print_unsupport_hybrid(e, j);
- 				return -1;
+diff --git a/tools/perf/util/dlfilter.c b/tools/perf/util/dlfilter.c
+index 1dbf27822ee2..5e54832137a9 100644
+--- a/tools/perf/util/dlfilter.c
++++ b/tools/perf/util/dlfilter.c
+@@ -52,8 +52,10 @@ static void al_to_d_al(struct addr_location *al, struct perf_dlfilter_al *d_al)
+ 		d_al->sym_end = sym->end;
+ 		if (al->addr < sym->end)
+ 			d_al->symoff = al->addr - sym->start;
+-		else
++		else if (al->map)
+ 			d_al->symoff = al->addr - map__start(al->map) - sym->start;
++		else
++			d_al->symoff = 0;
+ 		d_al->sym_binding = sym->binding;
+ 	} else {
+ 		d_al->sym = NULL;
 -- 
 2.42.0.609.gbb76f46606-goog
 
