@@ -1,296 +1,152 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4007C1A703
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 16:30:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5BAD1B9;
-	Mon,  9 Oct 2023 09:30:13 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A43C41FB;
-	Mon,  9 Oct 2023 09:30:53 -0700 (PDT)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8315A3F762;
-	Mon,  9 Oct 2023 09:30:11 -0700 (PDT)
-Message-ID: <f24a78d3-0cf2-5be4-c4bd-2552e6b69ef1@arm.com>
-Date: Mon, 9 Oct 2023 17:30:11 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B8B1A715
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 16:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UYHqckFZ"
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1DFE92
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 09:33:45 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-50348c54439so7216e87.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Oct 2023 09:33:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1696869224; x=1697474024; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZgAUhHJmbAWVKMj/qj7uBpSpsL5yIQNcIBFI1M3KUrE=;
+        b=UYHqckFZjMRtNKJc9ZHT+a9mD9KooKG2TR+i3KjqXu6ent+qp2MQFs2toi5zQigWMz
+         z+ENkt0r0w4pbxkUyZdzSR09ESntGcyYuM1y1aoI3rg0nZgQO0MWX8mHPMp3yuhzPIUX
+         tzGxXgP4cXYLgiq2H1unVbupMm84Ih3cLBKjo7tvKyVZ+2xyj1SyIe+cFgHQ6i7/x6jK
+         zsT+cXdifKsTAS3hssZJ6YWzjdGaZKx2vAfeTsMJPWWquWOiWMVK1OpI+iSf971SZz6d
+         G3+JiH0YTxmmCWfwZbPosjpia6PeOgry6R6PkqYKn74KXKm4fw5siJGdpwPpRDaIwqgW
+         gEoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696869224; x=1697474024;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZgAUhHJmbAWVKMj/qj7uBpSpsL5yIQNcIBFI1M3KUrE=;
+        b=W/AY3rjIP3RiBhGRKbPG//om/u6BcRkFlI4DqH36SfvHzbWQG0Z9FXdn0FuG3OKIv2
+         K8cGX+vVSheCbKA+1Lxk5Dsp0DveiTy8MbFOXWbNW3w15bz9Pg//8rlmpPM9emcdy4cG
+         Yme5Rv75RTJfkWIlLs1DYcbSTfVNPUCxeznzoO3+ged2qgJX7WG2N8sbsCrAJJ+6w6Oc
+         GGngqi/+pI3u4F3dBzNNYfHwgdkwDh7NS1yWuhv1Tj56qyZasiClInyMvcW3e4I+KYZq
+         6/IeKdxPipJlrh4X3i6weJ031Sc3dA2UYrHs14MJUTU8bBqrg2IKeF5IUtuTpgFA6S6D
+         YHig==
+X-Gm-Message-State: AOJu0YxF9YTHPEDkrZ0v2Kpv9Uw59Izh5Ne/YPwZHjPL6+z6P0fM003a
+	lcC1VBPEZYuNKm7CxxpDSmB2A6QiwN9SH6Vs0QdVWQ==
+X-Google-Smtp-Source: AGHT+IGXiscr4EwxJpJQCI+XewTXiBNpPjwzDfqPDNFwxJs+1vHuH0y0A/ysZtYnjJFzd+aiIxPaVy3GoJQMOtBy2aw=
+X-Received: by 2002:ac2:44db:0:b0:505:7c88:9e45 with SMTP id
+ d27-20020ac244db000000b005057c889e45mr230791lfm.0.1696869223703; Mon, 09 Oct
+ 2023 09:33:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v1 1/2] arm64: perf: Add support for event counting
- threshold
-Content-Language: en-US
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>,
- Marc Zyngier <maz@kernel.org>, Zaid Al-Bassam <zalbassam@google.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230919095137.360963-1-james.clark@arm.com>
- <20230919095137.360963-2-james.clark@arm.com>
- <b72d321f-0cea-1049-3bbb-224d38a94749@arm.com>
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <b72d321f-0cea-1049-3bbb-224d38a94749@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-	RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+References: <20231005230851.3666908-1-irogers@google.com> <20231005230851.3666908-8-irogers@google.com>
+ <CAM9d7cjcJKjUnpYEjGap=d1fuukpsDyWCOk2_UKrepXmagceZA@mail.gmail.com>
+In-Reply-To: <CAM9d7cjcJKjUnpYEjGap=d1fuukpsDyWCOk2_UKrepXmagceZA@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 9 Oct 2023 09:33:32 -0700
+Message-ID: <CAP-5=fX1f022Z052mOxgJODg_jOPCqHScjZam2_3YwUXqriO4A@mail.gmail.com>
+Subject: Re: [PATCH v2 07/18] perf env: Remove unnecessary NULL tests
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Tom Rix <trix@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Yang Jihong <yangjihong1@huawei.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Ming Wang <wangming01@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Sean Christopherson <seanjc@google.com>, 
+	K Prateek Nayak <kprateek.nayak@amd.com>, Yanteng Si <siyanteng@loongson.cn>, 
+	Yuan Can <yuancan@huawei.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	James Clark <james.clark@arm.com>, llvm@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
+On Sun, Oct 8, 2023 at 11:14=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Thu, Oct 5, 2023 at 4:09=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+> >
+> > clang-tidy was warning:
+> > ```
+> > util/env.c:334:23: warning: Access to field 'nr_pmu_mappings' results i=
+n a dereference of a null pointer (loaded from variable 'env') [clang-analy=
+zer-core.NullDereference]
+> >         env->nr_pmu_mappings =3D pmu_num;
+> > ```
+> >
+> > As functions are called potentially when !env was true. This condition
+> > could never be true as it would produce a segv, so remove the
+> > unnecessary NULL tests and silence clang-tidy.
+>
+> IIRC !env was to handle live sessions like perf top
+> or when it doesn't have a perf data file.  Anyway,
+> it doesn't seem to work anymore.
 
+I trust the analyzer here and it would be better to crash earlier,
+from env being NULL, than in a particular conditional branch. Like
+you, I wasn't able to find a failure from removing the checks.
 
-On 09/10/2023 13:50, Suzuki K Poulose wrote:
-> Hi James
-> 
-> On 19/09/2023 10:51, James Clark wrote:
->> FEAT_PMUv3_TH (Armv8.8) permits a PMU counter to increment only on
->> events whose count meets a specified threshold condition. For example if
->> PMEVTYPERn.TC (Threshold Control) is set to 0b101 (Greater than or
->> equal, count), and the threshold is set to 2, then the PMU counter will
->> now only increment by 1 when an event would have previously incremented
->> the PMU counter by 2 or more on a single processor cycle.
->>
->> Two new Perf event config fields, 'threshold' and 'threshold_control'
->> have been added for controlling the feature:
->>
->>    $ perf stat -e stall_slot/threshold=2,threshold_control=5/
->>
->> A new capability for reading out the maximum supported threshold value
->> has also been added:
->>
->>    $ cat /sys/bus/event_source/devices/armv8_pmuv3/caps/threshold_max
->>
->>    0x000000ff
->>
->> If a threshold higher than threshold_max is provided, then no error is
->> generated but the threshold is clamped to the max value. If
->> FEAT_PMUv3_TH isn't implemented, then threshold_max reads zero, and
->> neither the 'threshold' nor 'threshold_control' parameters will be used.
->>
->> The threshold is per PMU counter, and there are potentially different
->> threshold_max values per PMU type on heterogeneous systems.
->>
->> Bits higher than 32 now need to be written into PMEVTYPER, so
->> armv8pmu_write_evtype() has to be updated to take a u64 value rather
->> than u32.
-> 
-> Is this supported in the Aarch32 state ? If so, do we need to change
-> the arch specific register read/write "helpers" ?
-> 
+Thanks,
+Ian
 
-It's half supported. PMMIR.THWIDTH is readable and non-zero in aarch32,
-but the threshold value can't be written because it's in the high part
-of the event type register. Thresholding does affect aarch32 guests when
-enabled from the host, but that doesn't really concern the code.
-
-But yes you're right, it isn't building on aarch32 at the moment so I
-need to do a V2. I'm going to make it so the max width is reported as 0
-in sysfs for aarch32, and then don't ever try to write to the high part
-of the event type (which was part of the compilation error anyway). No
-change will be needed to the read/write helpers though, they already
-handle 32/64 bits for the right platforms.
-
->>
->> Signed-off-by: James Clark <james.clark@arm.com>
->> ---
->>   drivers/perf/arm_pmuv3.c       | 59 +++++++++++++++++++++++++++++++++-
->>   include/linux/perf/arm_pmuv3.h |  7 +++-
->>   2 files changed, 64 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
->> index e5a2ac4155f6..ad6574b2bdab 100644
->> --- a/drivers/perf/arm_pmuv3.c
->> +++ b/drivers/perf/arm_pmuv3.c
->> @@ -294,9 +294,16 @@ static const struct attribute_group
->> armv8_pmuv3_events_attr_group = {
->>       .is_visible = armv8pmu_event_attr_is_visible,
->>   };
->>   +#define TH_LO    2
->> +#define TH_HI    13
->> +#define TH_CNTL_LO    14
->> +#define TH_CNTL_HI    16
->> +
->>   PMU_FORMAT_ATTR(event, "config:0-15");
->>   PMU_FORMAT_ATTR(long, "config1:0");
->>   PMU_FORMAT_ATTR(rdpmc, "config1:1");
->> +PMU_FORMAT_ATTR(threshold, "config1:" __stringify(TH_LO) "-"
->> __stringify(TH_HI));
->> +PMU_FORMAT_ATTR(threshold_control, "config1:" __stringify(TH_CNTL_LO)
->> "-" __stringify(TH_CNTL_HI));
-> 
-> The perf core doesn't yet support adding aliases for
-> fields other than "events". May be we could add
-> some support for that in the future and use it
-> to provide meaningful aliases for the threshold
-> control.
-> 
-
-I think it could be useful, but I'm wondering about the use case. To
-make use of this feature you would probably need to have the docs or
-reference manual open anyway, and that gives you the names of the
-control values. Any tool could trivially hold the list of names too.
-
-But I suppose you could say the same about event names, and we go
-through some effort to report those.
-
-> Not sure if we can extrapolate threshold_control[0]
-> to be another config field => "counting_mode"
-> We would need to check with the architecture folks
-> to confirm that the meaning wouldn't change though.
-> 
-
-I think if was planned to be fixed in that way it would have already
-been written that way? And I doubt they would agree to promise to not
-re-use another value that didn't fit the pattern in the future. Then
-we'd be in a big mess because we deviated from the reference manual and
-it would be hard to re-map around whatever new value was introduced.
-
->>     static int sysctl_perf_user_access __read_mostly;
->>   @@ -310,10 +317,22 @@ static inline bool
->> armv8pmu_event_want_user_access(struct perf_event *event)
->>       return event->attr.config1 & 0x2;
->>   }
->>   +static inline u32 armv8pmu_event_threshold(struct perf_event_attr
->> *attr)
->> +{
->> +    return FIELD_GET(GENMASK(TH_HI, TH_LO), attr->config1);
->> +}
->> +
->> +static inline u8 armv8pmu_event_threshold_control(struct
->> perf_event_attr *attr)
->> +{
->> +    return FIELD_GET(GENMASK(TH_CNTL_HI, TH_CNTL_LO), attr->config1);
->> +}
->> +
->>   static struct attribute *armv8_pmuv3_format_attrs[] = {
->>       &format_attr_event.attr,
->>       &format_attr_long.attr,
->>       &format_attr_rdpmc.attr,
->> +    &format_attr_threshold.attr,
->> +    &format_attr_threshold_control.attr,
->>       NULL,
->>   };
->>   @@ -365,10 +384,31 @@ static ssize_t bus_width_show(struct device
->> *dev, struct device_attribute *attr,
->>     static DEVICE_ATTR_RO(bus_width);
->>   +static u32 threshold_max(struct arm_pmu *cpu_pmu)
->> +{
->> +    /*
->> +     * The largest value that can be written to PMEVTYPER<n>_EL0.TH is
->> +     * (2 ^ PMMIR.THWIDTH) - 1
->> +     */
->> +    return (1 << FIELD_GET(ARMV8_PMU_THWIDTH, cpu_pmu->reg_pmmir)) - 1;
->> +}
->> +
->> +static ssize_t threshold_max_show(struct device *dev,
->> +                  struct device_attribute *attr, char *page)
->> +{
->> +    struct pmu *pmu = dev_get_drvdata(dev);
->> +    struct arm_pmu *cpu_pmu = container_of(pmu, struct arm_pmu, pmu);
->> +
->> +    return sysfs_emit(page, "0x%08x\n", threshold_max(cpu_pmu));
->> +}
->> +
->> +static DEVICE_ATTR_RO(threshold_max);
->> +
->>   static struct attribute *armv8_pmuv3_caps_attrs[] = {
->>       &dev_attr_slots.attr,
->>       &dev_attr_bus_slots.attr,
->>       &dev_attr_bus_width.attr,
->> +    &dev_attr_threshold_max.attr,
->>       NULL,
->>   };
->>   @@ -552,7 +592,7 @@ static void armv8pmu_write_counter(struct
->> perf_event *event, u64 value)
->>           armv8pmu_write_hw_counter(event, value);
->>   }
->>   -static inline void armv8pmu_write_evtype(int idx, u32 val)
->> +static inline void armv8pmu_write_evtype(int idx, u64 val)>>   {
->>       u32 counter = ARMV8_IDX_TO_COUNTER(idx);
->>   @@ -912,6 +952,10 @@ static int armv8pmu_set_event_filter(struct
->> hw_perf_event *event,
->>                        struct perf_event_attr *attr)
->>   {
->>       unsigned long config_base = 0;
->> +    struct perf_event *perf_event = container_of(attr, struct
->> perf_event,
->> +                             attr);
->> +    struct arm_pmu *cpu_pmu = to_arm_pmu(perf_event->pmu);
->> +    u32 th, th_max;
->>         if (attr->exclude_idle)
->>           return -EPERM;
->> @@ -943,6 +987,19 @@ static int armv8pmu_set_event_filter(struct
->> hw_perf_event *event,
->>       if (attr->exclude_user)
->>           config_base |= ARMV8_PMU_EXCLUDE_EL0;
->>   +    /*
->> +     * Insert event counting threshold (FEAT_PMUv3_TH) values. If
->> +     * FEAT_PMUv3_TH isn't implemented, then THWIDTH (threshold_max)
->> will be
->> +     * 0 and no values will be written.
->> +     */
->> +    th_max = threshold_max(cpu_pmu);
->> +    if (th_max) {
->> +        th = min(armv8pmu_event_threshold(attr), th_max);
->> +        config_base |= FIELD_PREP(ARMV8_PMU_EVTYPE_TH, th);
->> +        config_base |= FIELD_PREP(ARMV8_PMU_EVTYPE_TC,
->> +                      armv8pmu_event_threshold_control(attr));
->> +    }
->> +
->>       /*
->>        * Install the filter into config_base as this is used to
->>        * construct the event type.
->> diff --git a/include/linux/perf/arm_pmuv3.h
->> b/include/linux/perf/arm_pmuv3.h
->> index e3899bd77f5c..0e2a3c927150 100644
->> --- a/include/linux/perf/arm_pmuv3.h
->> +++ b/include/linux/perf/arm_pmuv3.h
->> @@ -228,7 +228,11 @@
->>   /*
->>    * PMXEVTYPER: Event selection reg
->>    */
->> -#define ARMV8_PMU_EVTYPE_MASK    0xc800ffff    /* Mask for writable
->> bits */
->> +#define ARMV8_PMU_EVTYPE_TH    GENMASK(43, 32)
->> +#define ARMV8_PMU_EVTYPE_TC    GENMASK(63, 61)
->> +/* Mask for writable bits */
->> +#define ARMV8_PMU_EVTYPE_MASK    (0xc800ffff | ARMV8_PMU_EVTYPE_TH | \
->> +                ARMV8_PMU_EVTYPE_TC)
-> 
-> May need to be UL suffixed for safety ?
-> 
-
-I don't think it's strictly needed because GENMASK makes a UL so the
-whole expression is auto promoted anyway. But I can add it for
-completeness.
-
-Also these will be split across the two asm/arm_pmuv3.h files in v2
-because I need to keep the original mask for aarch32, so it will look a
-little bit different.
-
-Thanks
-James
-
-> 
-> Suzuki
-> 
->>   #define ARMV8_PMU_EVTYPE_EVENT    0xffff        /* Mask for EVENT
->> bits */
->>     /*
->> @@ -254,6 +258,7 @@
->>   #define ARMV8_PMU_BUS_SLOTS_MASK 0xff
->>   #define ARMV8_PMU_BUS_WIDTH_SHIFT 16
->>   #define ARMV8_PMU_BUS_WIDTH_MASK 0xf
->> +#define ARMV8_PMU_THWIDTH GENMASK(23, 20)
->>     /*
->>    * This code is really good
-> 
-> 
+> Thanks,
+> Namhyung
+>
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/env.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+> > index a164164001fb..44140b7f596a 100644
+> > --- a/tools/perf/util/env.c
+> > +++ b/tools/perf/util/env.c
+> > @@ -457,7 +457,7 @@ const char *perf_env__cpuid(struct perf_env *env)
+> >  {
+> >         int status;
+> >
+> > -       if (!env || !env->cpuid) { /* Assume local operation */
+> > +       if (!env->cpuid) { /* Assume local operation */
+> >                 status =3D perf_env__read_cpuid(env);
+> >                 if (status)
+> >                         return NULL;
+> > @@ -470,7 +470,7 @@ int perf_env__nr_pmu_mappings(struct perf_env *env)
+> >  {
+> >         int status;
+> >
+> > -       if (!env || !env->nr_pmu_mappings) { /* Assume local operation =
+*/
+> > +       if (!env->nr_pmu_mappings) { /* Assume local operation */
+> >                 status =3D perf_env__read_pmu_mappings(env);
+> >                 if (status)
+> >                         return 0;
+> > @@ -483,7 +483,7 @@ const char *perf_env__pmu_mappings(struct perf_env =
+*env)
+> >  {
+> >         int status;
+> >
+> > -       if (!env || !env->pmu_mappings) { /* Assume local operation */
+> > +       if (!env->pmu_mappings) { /* Assume local operation */
+> >                 status =3D perf_env__read_pmu_mappings(env);
+> >                 if (status)
+> >                         return NULL;
+> > --
+> > 2.42.0.609.gbb76f46606-goog
+> >
