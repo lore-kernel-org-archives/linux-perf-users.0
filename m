@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B249734CFA
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 18:39:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317C736B0E
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 18:39:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hdiUtupS"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAFCC127
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 11:39:45 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59f7d4bbfc7so77501307b3.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Oct 2023 11:39:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HPZgNN8l"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F4154FA
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 11:39:47 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5a7b53a48e5so4704977b3.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Oct 2023 11:39:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696876784; x=1697481584; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1696876787; x=1697481587; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=GouG30KZVQtjqm6aov/swqA2g+y6OD5o5DKI6J9/hJA=;
-        b=hdiUtupSykpW0XElbBBe/4kSZCj8u8m+VgHsIC9uBIpw2OeCQntgd2Or4zBdEbuTgf
-         o8Fl8dvqTdKCPzb9QQ96OYyO2jocXYnCk7YsfGy8OWlPlSvLYmUYK7xngvymGis72dz6
-         6LRwWnfhjVkVcmisRxN8zyXC2n1o0GxOilWeOHGjM3s8STxdCs7zVv0B0q7vfWrX66Pd
-         BRPIVRof0u2JM8YFLWlrPnXtKmI+k0r1Boai3dUA/VLl7sqiApH+sYQYeqTYFBH98LUy
-         QSVrUuknZsdVaXQr1MgaowmkngG6z61yOUBTPU4j9wB9/3mw6Zg7DTl5AGhsgYFlyOEx
-         Pdjg==
+        bh=JGGlE54ge9XxgsvPeqIZ7isbDlHsMUv/MJYLVA09opo=;
+        b=HPZgNN8loVefaOMfnRHnLVQVv2af1+7RIMbdemt0ihqTnrd+eC09lwm75mFfpYfoK8
+         VuM7z5hvPEqcV4xKoabEexIrQXkuMOBoXOzdovVPUOYM7Co1+/FnIRdDj13p3os/Rw7s
+         NI8p7mPr7mM5ZF4uZ1mpG8YUhvyXuFinhqEKXJ+MQu3lrzW6kz4bJP3lMkttN6Hqxorz
+         mHe7KnritTalDR6fFTBGMfrTMXulwEzrUJ6mji+Y2of/4EV33s2AeShAbwxSMRJ+d02t
+         dZitQgZz34BI/Fy+TBjVTcAzYr64CsOm6jp1TlVN3L0JNxAf97JGub/g2KK4QBxJEYCZ
+         lAGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696876784; x=1697481584;
+        d=1e100.net; s=20230601; t=1696876787; x=1697481587;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GouG30KZVQtjqm6aov/swqA2g+y6OD5o5DKI6J9/hJA=;
-        b=dY5AQTR0HrcOnVhpDh89xeuRMIt2TJilLKqwncLzHwv67D+Bb7ai/Fr7Hk5xOyiOoN
-         l/i+XmotSIJ2GfXR9edNOsZh3Mxusq8jBaFvqJgo4dNT1uR5aAqjzKTarCVL36sb9Irp
-         k/4ZGXYoBZfWQmE7sOMgXThbvE2AM8Peb8KHOia4Rt+lwY6nVM7s2d58le5Q5hjxX8XR
-         PexkFbY8i8MUlwp3EE2oHW1NvgdTNF61hptRQONRNZVvLpga8a5LgpnAVw9uQKiFGDjd
-         ezbQZt+SJoVv5Vu/w8zXorlE8gGWzTEPy4KEpIwfEgSAiNCUToQZeqsPjjzZ9ZpHY0iN
-         3UuQ==
-X-Gm-Message-State: AOJu0YzoPDi+zCXFQC7S5NO5RTBvqHjLK1hVETnwmhUDoUgo01jHJl4L
-	+FlTKbnLkLV82cHmmh9Zt1+S7PQeLk/M
-X-Google-Smtp-Source: AGHT+IFoEQ7Dzv18PcmdjnpaSDsoWF/VAum2oAmj8wWzPzLIX73XPP1Ukf1ru5WFK6DwCtdvNWmpgT87L/bK
+        bh=JGGlE54ge9XxgsvPeqIZ7isbDlHsMUv/MJYLVA09opo=;
+        b=EErIhoRvIr1I2qlIlHei9mrHUOEwAvoB4/lGPZIr7YVkAkGSDq8TnCB6h/GgJWukD1
+         5ZwYHs2CyI5OSoSQJOSoct59MJEfKZFsS5dgwPnrQW/1o0TNPbe2nq9qF01UhP29w54p
+         sUBtHGJPPZ3CgZDlY4Z5xWXL2wpusqWhlvGxxfN0BbVqhNEMlDtaVQ9fumBl09063wLn
+         IKE0eZquXWWQCayr8n3XoGDNa2oxGApaKTizrUf+hjD5LlTD/yFX5TtqMe8kVmhR3oql
+         uo8neUx9rC52ohCZT757p57rDwDSk3t/GfrL2GCXFEDHzKhXGb58UbTriVoetDEOQTpd
+         4N/A==
+X-Gm-Message-State: AOJu0YwzpqgG/ViHoA8RmAC3pgdCPAucnd0eOMOFacKezXBsWsJcFXHx
+	4BkKhwBKB5COeQua1//Fewt8SFvpd98D
+X-Google-Smtp-Source: AGHT+IGpysIorYdi8kbri+eoNngVpsBmCut1uHA899pI7BzlPq5MUUHT7YyMhz0NTaD8xsX1mPms8KyxGvsu
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:ac4a:9b94:7158:3f4e])
- (user=irogers job=sendgmr) by 2002:a25:d12:0:b0:d9a:3bee:255c with SMTP id
- 18-20020a250d12000000b00d9a3bee255cmr25038ybn.7.1696876784641; Mon, 09 Oct
- 2023 11:39:44 -0700 (PDT)
-Date: Mon,  9 Oct 2023 11:39:09 -0700
+ (user=irogers job=sendgmr) by 2002:a25:c243:0:b0:d89:4d2c:d846 with SMTP id
+ s64-20020a25c243000000b00d894d2cd846mr246744ybf.12.1696876787012; Mon, 09 Oct
+ 2023 11:39:47 -0700 (PDT)
+Date: Mon,  9 Oct 2023 11:39:10 -0700
 In-Reply-To: <20231009183920.200859-1-irogers@google.com>
-Message-Id: <20231009183920.200859-9-irogers@google.com>
+Message-Id: <20231009183920.200859-10-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231009183920.200859-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.609.gbb76f46606-goog
-Subject: [PATCH v3 07/18] perf jitdump: Avoid memory leak
+Subject: [PATCH v3 08/18] perf mem-events: Avoid uninitialized read
 From: Ian Rogers <irogers@google.com>
 To: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
 	Tom Rix <trix@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -64,33 +64,42 @@ To: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google
 	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-jit_repipe_unwinding_info is called in a loop by jit_process_dump,
-avoid leaking unwinding_data by free-ing before overwriting. Error
-detected by clang-tidy.
+pmu should be initialized to NULL before perf_pmus__scan loop. Fix and
+shrink the scope of pmu at the same time. Issue detected by clang-tidy.
 
+Fixes: 5752c20f3787 ("perf mem: Scan all PMUs instead of just core ones")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/jitdump.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/mem-events.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-index 6b2b96c16ccd..1f657ef8975f 100644
---- a/tools/perf/util/jitdump.c
-+++ b/tools/perf/util/jitdump.c
-@@ -675,6 +675,7 @@ jit_repipe_unwinding_info(struct jit_buf_desc *jd, union jr_entry *jr)
- 	jd->eh_frame_hdr_size = jr->unwinding.eh_frame_hdr_size;
- 	jd->unwinding_size = jr->unwinding.unwinding_size;
- 	jd->unwinding_mapped_size = jr->unwinding.mapped_size;
-+	free(jd->unwinding_data);
- 	jd->unwinding_data = unwinding_data;
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index 39ffe8ceb380..954b235e12e5 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -185,7 +185,6 @@ int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
+ {
+ 	int i = *argv_nr, k = 0;
+ 	struct perf_mem_event *e;
+-	struct perf_pmu *pmu;
  
- 	return 0;
+ 	for (int j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
+ 		e = perf_mem_events__ptr(j);
+@@ -202,6 +201,8 @@ int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
+ 			rec_argv[i++] = "-e";
+ 			rec_argv[i++] = perf_mem_events__name(j, NULL);
+ 		} else {
++			struct perf_pmu *pmu = NULL;
++
+ 			if (!e->supported) {
+ 				perf_mem_events__print_unsupport_hybrid(e, j);
+ 				return -1;
 -- 
 2.42.0.609.gbb76f46606-goog
 
