@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B467358B0
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 18:40:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A72637158
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 18:40:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dK8xBnOo"
-Received: from mail-oo1-xc49.google.com (mail-oo1-xc49.google.com [IPv6:2607:f8b0:4864:20::c49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4D64128
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 11:39:57 -0700 (PDT)
-Received: by mail-oo1-xc49.google.com with SMTP id 006d021491bc7-57b6cd1a584so6572059eaf.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Oct 2023 11:39:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rXsOoCOi"
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A99A1B6
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 11:40:00 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d9a45e7e0f9so427660276.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Oct 2023 11:40:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696876797; x=1697481597; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1696876799; x=1697481599; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=49ZawQt+7SlBsoWKownV7zVOA634acLMIh7oRlSswNg=;
-        b=dK8xBnOoIO9PY75AnOE4rIYgmL4p62wsbAdA7DfZFtY6H+eeCIfzfIyLtFSxZIgtTE
-         fTYV70F1erQqiuylGJWheixlo8jAsHDTaaZz3ekJzfxnLhpbM438SCkyiwNrRpZYl+En
-         BaZ+kYT1gip/D41srBrzQBjcQUx7wGqRxtPuXXKF5RKFeChmf/6wd2+JoL4TrVEgLLwm
-         Wo0U08kEkCjWGbUXkkofAYrZKvJMNg5wUCosR+f4vHDDkXsqNhEH5PTvDiBhI2w3PZbY
-         E/yZgTJVuHjnlVUgFb5g49pVkctTzfFk+eB7J2PYExNF52p4Ll2VA6pdBrjjaOFODJVO
-         hKXA==
+        bh=niI1DS8q+ZbexmAiDdLr0rnTr4377R73icOoozlTydQ=;
+        b=rXsOoCOi9IoLNymI/T09YYIpQk2fwalh+/sjgLoOz68oak642mvan2IHzdQ4lFkG9C
+         qTDkmTDdRFdiOi/tIuqRosf8PTUh4R/3RDUMvBsPVFwqKrcElx4eB4/KGcZ4ugGHhR4q
+         6+UdrZ7knDyTRPrVQY5TysvxoGbDYKxYPyGtKLW7srpiDu8nTMdEH2p+ZHfgSkxck40k
+         Q7QhWMoWIg1JlRT1FdvDOtxBJGgPOstnjpNtOD2cTbk8vRRZNFCw/x88Anev4FS7hmnI
+         URIV8lpxbzse82ysu662VNHxzQnipW52Xfr2GyeANJmk93kdWXZjdBrMuq2jb91uxRjd
+         g8Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696876797; x=1697481597;
+        d=1e100.net; s=20230601; t=1696876799; x=1697481599;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=49ZawQt+7SlBsoWKownV7zVOA634acLMIh7oRlSswNg=;
-        b=QRlDpTwJ8ItIdLHBp8/G87+tagCV1wO1y/CQxfQKWtxixfzCbBS1gqAmriduYKs69v
-         kMz4YSztsZTvt5MMq1GEvFBHf+JvSOlPvBTinjqwSkUisq1WaMzCggLsOYuhyWMCLapM
-         MjYgW5N+c7EeegOlsEqbEV7RhFuZPJdv/1w21haTLSZFFnCx4DGitgBUTSrVbWlTrnua
-         ZhzpfKfE5rhv0Y2ta+Ad3CbqsG4RAQ8FZHzUEYmXvK2wElMVVhNDDcpZN3DEYFoS436s
-         RwfolH0NQ/TkBmQ8uBsPzEMYtA8zG3Iit3hkNHxGzhTO+LIVHH7Iduacu9GM6NvwwbEH
-         W3Lg==
-X-Gm-Message-State: AOJu0YwdhMWQwJVhBWObWX+shNTZwTHDD+Pils4/vVLnPfIa8eRTByxX
-	TjT8a+5K5GlXD74nubVzOXaxGHmqobe3
-X-Google-Smtp-Source: AGHT+IEQO/YSLvuW5lkkNTKqekhHTTuwM6kivSrFg1QMVwNQ4jbE84siI8dfYQbP2HOz0jg1yFaPHkpxB9tv
+        bh=niI1DS8q+ZbexmAiDdLr0rnTr4377R73icOoozlTydQ=;
+        b=JqJCJj9Omdv5ThDWdtLbtEzItygMcjvqLzyn7wmdyNKrTw19Q/FBtrPGZtHDSQcBz+
+         YjRU5s209S5/tKyyoAPQCUbMHxadw9k118Hj0GalcxyToaSjroyuo2WIdt1CPM1yCaOA
+         LWhE1KIJoeTG1tStUN+0f+mHM5Bc2mb9VADytY0bdNR3xV04WseLcm9lywC2DpR1xdlm
+         BsK0MTYVArBEhIK3m1uDGJF/qjgUW/vCDT2eHLIUqZxp7KnAF07+/i3XIi5LjLC+oahj
+         BK+p0K17857JKR/G940iQ6Lml77DmZyX/hCgbax/ZMiASpno+DLa9jM+nbeev+v8aIcK
+         KnhA==
+X-Gm-Message-State: AOJu0YzjdsuXX/NgwfiocC7pEDbdWC3QNL22Amg1CA3xITzNPJQmPYR+
+	WMmnUIzE8BjoSuSGTSjjhPSejSjG+eQj
+X-Google-Smtp-Source: AGHT+IHVauHFJJ6dURYCURIsUyMaH8uHK9E3Vkz92KCp4HMULUMevSk/Te5SUgiu4nvqqGfnHApJa8igvKfI
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:ac4a:9b94:7158:3f4e])
- (user=irogers job=sendgmr) by 2002:a05:6820:100d:b0:57f:10cb:516b with SMTP
- id v13-20020a056820100d00b0057f10cb516bmr3087810oor.0.1696876797162; Mon, 09
- Oct 2023 11:39:57 -0700 (PDT)
-Date: Mon,  9 Oct 2023 11:39:14 -0700
+ (user=irogers job=sendgmr) by 2002:a25:bcd:0:b0:d7f:2cb6:7d8c with SMTP id
+ 196-20020a250bcd000000b00d7f2cb67d8cmr247211ybl.13.1696876799415; Mon, 09 Oct
+ 2023 11:39:59 -0700 (PDT)
+Date: Mon,  9 Oct 2023 11:39:15 -0700
 In-Reply-To: <20231009183920.200859-1-irogers@google.com>
-Message-Id: <20231009183920.200859-14-irogers@google.com>
+Message-Id: <20231009183920.200859-15-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231009183920.200859-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.609.gbb76f46606-goog
-Subject: [PATCH v3 12/18] perf svghelper: Avoid memory leak
+Subject: [PATCH v3 13/18] perf lock: Fix a memory leak on an error path
 From: Ian Rogers <irogers@google.com>
 To: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
 	Tom Rix <trix@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -66,44 +66,30 @@ Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.6
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On success path the sib_core and sib_thr values weren't being
-freed. Detected by clang-tidy.
+If a memory allocation fails then the strdup-ed string needs
+freeing. Detected by clang-tidy.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/svghelper.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/builtin-lock.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
-index 0e4dc31c6c9c..1892e9b6aa7f 100644
---- a/tools/perf/util/svghelper.c
-+++ b/tools/perf/util/svghelper.c
-@@ -754,6 +754,7 @@ int svg_build_topology_map(struct perf_env *env)
- 	int i, nr_cpus;
- 	struct topology t;
- 	char *sib_core, *sib_thr;
-+	int ret = -1;
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index fa7419978353..a3ff2f4edbaa 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -2478,6 +2478,7 @@ static int parse_call_stack(const struct option *opt __maybe_unused, const char
+ 		entry = malloc(sizeof(*entry) + strlen(tok) + 1);
+ 		if (entry == NULL) {
+ 			pr_err("Memory allocation failure\n");
++			free(s);
+ 			return -1;
+ 		}
  
- 	nr_cpus = min(env->nr_cpus_online, MAX_NR_CPUS);
- 
-@@ -799,11 +800,11 @@ int svg_build_topology_map(struct perf_env *env)
- 
- 	scan_core_topology(topology_map, &t, nr_cpus);
- 
--	return 0;
-+	ret = 0;
- 
- exit:
- 	zfree(&t.sib_core);
- 	zfree(&t.sib_thr);
- 
--	return -1;
-+	return ret;
- }
 -- 
 2.42.0.609.gbb76f46606-goog
 
