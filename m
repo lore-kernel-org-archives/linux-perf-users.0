@@ -1,51 +1,57 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6860533E5
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 05:29:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571F9A952;
+	Mon,  9 Oct 2023 05:41:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DC909E;
-	Sun,  8 Oct 2023 22:29:15 -0700 (PDT)
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-27740ce6c76so2364672a91.0;
-        Sun, 08 Oct 2023 22:29:15 -0700 (PDT)
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00216A4;
+	Sun,  8 Oct 2023 22:41:51 -0700 (PDT)
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-27b0d0c0ba0so3182964a91.1;
+        Sun, 08 Oct 2023 22:41:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696829354; x=1697434154;
+        d=1e100.net; s=20230601; t=1696830111; x=1697434911;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Vr/F+bCfSklSZ5y08IwzckZb9rJ4zF5BksIsHEdUNU0=;
-        b=Kyv0YlLheoIHRnDjd2PNm7dCqBaPzaOui7gze85f9jri92YobwdneYrJbupminq12k
-         xSjDTed65cNUxshugxdntBdInoz4fRg2c6UvYoYmAXIUh+j/nTtW4AGoWYTsECBoLE1I
-         aECH7RCoK0uewvAdgmQBt2GsaJaCyR6IMKlBnL3PQAnH6SnkoOFTPcMwR6YbKdyGTfOZ
-         X+yyN3bH7o3Gqqi3z98aVYEYiv+BQWVTeKqqwgKYdaDaoHe4P4otUuF0G2DhHaAjK2ud
-         tsV4CHzs4hvlduozbwUaiKJDJLiqMljh/N2V1WZMKpeR0LDz42c1RIIQvExWuz4HoenG
-         JzXQ==
-X-Gm-Message-State: AOJu0YxZfFJWS7M42jH4wMsP5v21GpBScDMDa0WoFLFkgEWgjPlZW7ZQ
-	FJT0BV6G6R6Ui1exGlXogYiOg1vrpPSz4n1Aelw=
-X-Google-Smtp-Source: AGHT+IFjuFOwAwgsbfljMcjBSoN7dfnQTS3qqskI6Sm1oinsBVThEl8w00q+fWuQEJaIjhJW6PRA73xKJHQDET5JRro=
-X-Received: by 2002:a17:90b:4c87:b0:26d:416a:d9d0 with SMTP id
- my7-20020a17090b4c8700b0026d416ad9d0mr11350450pjb.21.1696829354575; Sun, 08
- Oct 2023 22:29:14 -0700 (PDT)
+        bh=2RX7tLaR5cxlZGvCt5yVuBVmtnOHN5nH9geYt6ELosk=;
+        b=RbIkAhdpuztmdKVcGKcTgLthZGnxPL+FRcI0hUinWt9wr4eseRCbUXHPwmxBfJnbJm
+         APbrSyZNxyFpVNvjfJA7sjyfeX7N39m6ZkG9tLgQDQDEpMlL1J7CVGVuRh76+/S9kU+C
+         c/Y7k4cYW5DULmDssO8L7FpAPJ2tfJLdkH2CK6KeX8dm/Z6yR1i/xCTDuQHqH1tTPO8x
+         Hj3sA5CirILXI2vBP1D+ze4eD81nzIdjvQYLJYZgca7o5UP0So95pvHeS/j64+Qu93og
+         XvlfkNnlxCzneSILTpmCCxscXGPmUTnTSRG9svx/2zzrEicsGX25/3DfdAHLWcHTVPw3
+         gEhQ==
+X-Gm-Message-State: AOJu0YyC9H2Yv2J/tDcQm9wsy5oIeZOFOD7Q8Lr9fIfxFifXoXb/HYqV
+	JypJSwxYnOhnfbr4qbRqIlB3XiNnaVkffYLF2Pc=
+X-Google-Smtp-Source: AGHT+IGE0tedBFfLbmKhVN5DwRDxqT1mpIyYE7VWdPjl5uPqunimpunTgmJdNT28U9fMQdA+O0b56HxncBIqBMuQf5M=
+X-Received: by 2002:a17:90b:3e87:b0:274:755b:63b8 with SMTP id
+ rj7-20020a17090b3e8700b00274755b63b8mr14069468pjb.43.1696830111351; Sun, 08
+ Oct 2023 22:41:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231002221909.2958708-1-irogers@google.com> <CAP-5=fX-VOeCkOJY5xeW67x0+A0tGAHM4VYBBz46L-g2eRCR+w@mail.gmail.com>
- <93afcf44-5f8b-49c1-abc5-5304cba5f991@intel.com> <CAP-5=fXzcR6QKKhFG5PS1pFYi5JsO4AOUoH_-Bv0O+11YzEkkw@mail.gmail.com>
-In-Reply-To: <CAP-5=fXzcR6QKKhFG5PS1pFYi5JsO4AOUoH_-Bv0O+11YzEkkw@mail.gmail.com>
+References: <20231005230851.3666908-1-irogers@google.com> <20231005230851.3666908-5-irogers@google.com>
+In-Reply-To: <20231005230851.3666908-5-irogers@google.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Sun, 8 Oct 2023 22:29:03 -0700
-Message-ID: <CAM9d7cjQZvZm+Vyrx9PTUYMFN5RjE+i-Kq1kbffyVp2hGKF6sg@mail.gmail.com>
-Subject: Re: [PATCH v1] perf intel-pt: pkt-decoder: Fix alignment issues
+Date: Sun, 8 Oct 2023 22:41:40 -0700
+Message-ID: <CAM9d7ch4SLLbORdhkanCoPQZX=f-p-HxsYX2YWYbtLR4beD4wg@mail.gmail.com>
+Subject: Re: [PATCH v2 04/18] perf hisi-ptt: Fix potential memory leak
 To: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Liam Howlett <liam.howlett@oracle.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+Cc: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Tom Rix <trix@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Yang Jihong <yangjihong1@huawei.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Ming Wang <wangming01@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Sean Christopherson <seanjc@google.com>, 
+	K Prateek Nayak <kprateek.nayak@amd.com>, Yanteng Si <siyanteng@loongson.cn>, 
+	Yuan Can <yuancan@huawei.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	James Clark <james.clark@arm.com>, llvm@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
@@ -55,38 +61,97 @@ X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Oct 5, 2023 at 2:24=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+On Thu, Oct 5, 2023 at 4:09=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
 e:
 >
-> On Thu, Oct 5, 2023 at 12:06=E2=80=AFPM Adrian Hunter <adrian.hunter@inte=
-l.com> wrote:
-> >
-> > On 5/10/23 18:48, Ian Rogers wrote:
-> > > On Mon, Oct 2, 2023 at 3:19=E2=80=AFPM Ian Rogers <irogers@google.com=
-> wrote:
-> > >>
-> > >> The byte aligned buffer is cast to large types and dereferenced
-> > >> causing misaligned pointer warnings from undefined behavior sanitize=
-r.
-> > >> Fix the alignment issues with memcpy which may require the
-> > >> introduction of temporaries.
-> > >>
-> > >> Signed-off-by: Ian Rogers <irogers@google.com>
-> > >> ---
-> > >
-> > > This is a relatively small change that fixes building with
-> > > -fsanitize=3Dalignment -fsanitize-undefined-trap-on-error. Adrian, as
-> > > this is Intel-PT could you take a look?
-> >
-> > Thanks! This has been down my list of things to do for ages,
-> > but using get_unaligned_le16() etc seems nicer.  I sent a patch
-> > set for that.
->
-> Thanks Adrian! Your patch set looks good and I think after Arnaldo's
-> comment is addressed we should go with it.
+> Fix clang-tidy found potential memory leak and unread value:
+> ```
+> tools/perf/util/hisi-ptt.c:108:3: warning: Value stored to 'data_offset' =
+is never read [clang-analyzer-deadcode.DeadStores]
+>                 data_offset =3D 0;
+>                 ^             ~
+> tools/perf/util/hisi-ptt.c:108:3: note: Value stored to 'data_offset' is =
+never read
+>                 data_offset =3D 0;
+>                 ^             ~
+> tools/perf/util/hisi-ptt.c:112:12: warning: Potential leak of memory poin=
+ted to by 'data' [clang-analyzer-unix.Malloc]
+>                         return -errno;
+>                                 ^
+> /usr/include/errno.h:38:18: note: expanded from macro 'errno'
+>                  ^
+> tools/perf/util/hisi-ptt.c:100:15: note: Memory is allocated
+>         void *data =3D malloc(size);
+>                      ^~~~~~~~~~~~
+> tools/perf/util/hisi-ptt.c:104:6: note: Assuming 'data' is non-null
+>         if (!data)
+>             ^~~~~
+> tools/perf/util/hisi-ptt.c:104:2: note: Taking false branch
+>         if (!data)
+>         ^
+> tools/perf/util/hisi-ptt.c:107:6: note: Assuming the condition is false
+>         if (perf_data__is_pipe(session->data)) {
+>             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> tools/perf/util/hisi-ptt.c:107:2: note: Taking false branch
+>         if (perf_data__is_pipe(session->data)) {
+>         ^
+> tools/perf/util/hisi-ptt.c:111:7: note: Assuming the condition is true
+>                 if (data_offset =3D=3D -1)
+>                     ^~~~~~~~~~~~~~~~~
+> tools/perf/util/hisi-ptt.c:111:3: note: Taking true branch
+>                 if (data_offset =3D=3D -1)
+>                 ^
+> tools/perf/util/hisi-ptt.c:112:12: note: Potential leak of memory pointed=
+ to by 'data'
+>                         return -errno;
+>                                 ^
+> /usr/include/errno.h:38:18: note: expanded from macro 'errno'
+> ```
 
-I think it can be done as a later step as long as the interface is the
-same.  Can I add your Ack's to the Adrian's patchset?
+We already have
+
+  https://lore.kernel.org/r/20230930072719.1267784-1-visitorckw@gmail.com
 
 Thanks,
 Namhyung
+
+
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/hisi-ptt.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/tools/perf/util/hisi-ptt.c b/tools/perf/util/hisi-ptt.c
+> index 45b614bb73bf..ea297329c526 100644
+> --- a/tools/perf/util/hisi-ptt.c
+> +++ b/tools/perf/util/hisi-ptt.c
+> @@ -98,18 +98,18 @@ static int hisi_ptt_process_auxtrace_event(struct per=
+f_session *session,
+>         int fd =3D perf_data__fd(session->data);
+>         int size =3D event->auxtrace.size;
+>         void *data =3D malloc(size);
+> -       off_t data_offset;
+>         int err;
+>
+>         if (!data)
+>                 return -errno;
+>
+> -       if (perf_data__is_pipe(session->data)) {
+> -               data_offset =3D 0;
+> -       } else {
+> -               data_offset =3D lseek(fd, 0, SEEK_CUR);
+> -               if (data_offset =3D=3D -1)
+> +       if (!perf_data__is_pipe(session->data)) {
+> +               off_t data_offset =3D lseek(fd, 0, SEEK_CUR);
+> +
+> +               if (data_offset =3D=3D -1) {
+> +                       free(data);
+>                         return -errno;
+> +               }
+>         }
+>
+>         err =3D readn(fd, data, size);
+> --
+> 2.42.0.609.gbb76f46606-goog
+>
