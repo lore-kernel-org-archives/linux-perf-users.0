@@ -1,92 +1,166 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862FF1171E;
-	Mon,  9 Oct 2023 11:11:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E6B1ED;
-	Mon,  9 Oct 2023 04:11:17 -0700 (PDT)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R671e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0Vtn6Z4K_1696849872;
-Received: from 30.240.114.194(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vtn6Z4K_1696849872)
-          by smtp.aliyun-inc.com;
-          Mon, 09 Oct 2023 19:11:14 +0800
-Message-ID: <54601861-bd02-d4c9-6d78-34901807a001@linux.alibaba.com>
-Date: Mon, 9 Oct 2023 19:11:11 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B2F63D5
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 12:37:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dhRPmYjD"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A26AAC;
+	Mon,  9 Oct 2023 05:37:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696855033; x=1728391033;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Rw32ScfJPeLaNgNAcjsRTBfEMkPu9/ApTs6pmxzg8bI=;
+  b=dhRPmYjDj43O4ywCR4QUu1VAevDFJphpU+nH+zyhNIDTHf6popbJ+zRI
+   2m374XTKcDD8Exhx8TvT8GfFnhKGeGF+2T/2JKgNkNorddGw0Vt2RdQdp
+   Af5b9hMIis07Lh3XjuQhANy/NTDh2zEVu1mvY/VogJqM86BjdqCc9drEG
+   pl1E21PeZ+410UNNhkSh5KZWcWyIWfGhbK8osgQwwP74FsYc1fvnLkOS6
+   m0BNG9O0RGARlHLeFYuk2M6ZtmgV9wbuOwrTkt/0ghuevOfk0Hr0nJxWE
+   kdg2PQj1s0KC+h95886/aHcCKpEAHDc/BeyGpg3QnNwTORwFMHgaFxchD
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10858"; a="450631022"
+X-IronPort-AV: E=Sophos;i="6.03,210,1694761200"; 
+   d="scan'208";a="450631022"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2023 05:37:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10858"; a="753003189"
+X-IronPort-AV: E=Sophos;i="6.03,210,1694761200"; 
+   d="scan'208";a="753003189"
+Received: from lkp-server02.sh.intel.com (HELO 4ed589823ba4) ([10.239.97.151])
+  by orsmga002.jf.intel.com with ESMTP; 09 Oct 2023 05:37:07 -0700
+Received: from kbuild by 4ed589823ba4 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qppVQ-0000Cu-2E;
+	Mon, 09 Oct 2023 12:37:04 +0000
+Date: Mon, 9 Oct 2023 20:36:16 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sandipan Das <sandipan.das@amd.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, x86@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, peterz@infradead.org, mingo@redhat.com,
+	acme@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, eranian@google.com, ananth.narayan@amd.com,
+	ravi.bangoria@amd.com, santosh.shukla@amd.com, sandipan.das@amd.com
+Subject: Re: [PATCH v2 2/6] perf/x86/amd/uncore: Move discovery and
+ registration
+Message-ID: <202310092019.yMh3nlyD-lkp@intel.com>
+References: <e6c447e48872fcab8452e0dd81b1c9cb09f39eb4.1696425185.git.sandipan.das@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.1
-Subject: Re: [PATCH v5 2/2] perf record: Update docs regarding the maximum
- limitation of AUX area
-Content-Language: en-US
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: mingo@redhat.com, baolin.wang@linux.alibaba.com, acme@kernel.org,
- mark.rutland@arm.com, jolsa@kernel.org, namhyung@kernel.org,
- irogers@google.com, adrian.hunter@intel.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- nathan@kernel.org, bpf@vger.kernel.org, alexander.shishkin@linux.intel.com,
- peterz@infradead.org, james.clark@arm.com, leo.yan@linaro.org
-References: <20230907004308.25874-1-xueshuai@linux.alibaba.com>
- <20230907004308.25874-3-xueshuai@linux.alibaba.com>
-In-Reply-To: <20230907004308.25874-3-xueshuai@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-13.2 required=5.0 tests=BAYES_00,
-	ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e6c447e48872fcab8452e0dd81b1c9cb09f39eb4.1696425185.git.sandipan.das@amd.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
+Hi Sandipan,
 
+kernel test robot noticed the following build warnings:
 
-On 2023/9/7 08:43, Shuai Xue wrote:
-> The maximum AUX area is limited by the page size of the system. Update
-> the documentation to reflect this.
-> 
-> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-> ---
->  tools/perf/Documentation/perf-record.txt | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-> index 680396c56bd1..dfc322d6f1f1 100644
-> --- a/tools/perf/Documentation/perf-record.txt
-> +++ b/tools/perf/Documentation/perf-record.txt
-> @@ -292,6 +292,17 @@ OPTIONS
->  	Also, by adding a comma, the number of mmap pages for AUX
->  	area tracing can be specified.
->  
-> +	The maximum AUX area is limited by the maximum physically contiguous
-> +	memory allocated from slab/slub. It can be calculated with following
-> +	formula:
-> +
-> +	  PAGE_SIZE << MAX_ORDER
-> +	( ---------------------- ) * PAGE_SIZE
-> +	   sizeof(page_pointer)
-> +
-> +	For example with 4K pages and MAX_ORDER=10 configured, the maximum AUX
-> +	area is 2GiB.
-> +
->  -g::
->  	Enables call-graph (stack chain/backtrace) recording for both
->  	kernel space and user space.
+[auto build test WARNING on tip/perf/core]
+[also build test WARNING on perf-tools/perf-tools acme/perf/core linus/master v6.6-rc5 next-20231009]
+[cannot apply to perf-tools-next/perf-tools-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Sandipan-Das/perf-x86-amd-uncore-Move-discovery-and-registration/20231006-005053
+base:   tip/perf/core
+patch link:    https://lore.kernel.org/r/e6c447e48872fcab8452e0dd81b1c9cb09f39eb4.1696425185.git.sandipan.das%40amd.com
+patch subject: [PATCH v2 2/6] perf/x86/amd/uncore: Move discovery and registration
+config: i386-randconfig-061-20231009 (https://download.01.org/0day-ci/archive/20231009/202310092019.yMh3nlyD-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231009/202310092019.yMh3nlyD-lkp@intel.com/reproduce)
 
-Hi, Namhyung,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202310092019.yMh3nlyD-lkp@intel.com/
 
-Since PATCH [1/2] of this series has been merge into perf/core[1], are you happy to
-pick this part [2/2] into perf-tools-next?
+sparse warnings: (new ones prefixed by >>)
+>> arch/x86/events/amd/uncore.c:601:10: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got union amd_uncore_info * @@
+   arch/x86/events/amd/uncore.c:601:10: sparse:     expected void const [noderef] __percpu *__vpp_verify
+   arch/x86/events/amd/uncore.c:601:10: sparse:     got union amd_uncore_info *
+   arch/x86/events/amd/uncore.c:730:10: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got union amd_uncore_info * @@
+   arch/x86/events/amd/uncore.c:730:10: sparse:     expected void const [noderef] __percpu *__vpp_verify
+   arch/x86/events/amd/uncore.c:730:10: sparse:     got union amd_uncore_info *
+>> arch/x86/events/amd/uncore.c:847:30: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected union amd_uncore_info *[noderef] info @@     got union amd_uncore_info [noderef] __percpu * @@
+   arch/x86/events/amd/uncore.c:847:30: sparse:     expected union amd_uncore_info *[noderef] info
+   arch/x86/events/amd/uncore.c:847:30: sparse:     got union amd_uncore_info [noderef] __percpu *
+>> arch/x86/events/amd/uncore.c:881:43: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void [noderef] __percpu *__pdata @@     got union amd_uncore_info *[noderef] info @@
+   arch/x86/events/amd/uncore.c:881:43: sparse:     expected void [noderef] __percpu *__pdata
+   arch/x86/events/amd/uncore.c:881:43: sparse:     got union amd_uncore_info *[noderef] info
+   arch/x86/events/amd/uncore.c:904:35: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void [noderef] __percpu *__pdata @@     got union amd_uncore_info *[noderef] info @@
+   arch/x86/events/amd/uncore.c:904:35: sparse:     expected void [noderef] __percpu *__pdata
+   arch/x86/events/amd/uncore.c:904:35: sparse:     got union amd_uncore_info *[noderef] info
+   arch/x86/events/amd/uncore.c:358:39: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got union amd_uncore_info * @@
+   arch/x86/events/amd/uncore.c:358:39: sparse:     expected void const [noderef] __percpu *__vpp_verify
+   arch/x86/events/amd/uncore.c:358:39: sparse:     got union amd_uncore_info *
+>> arch/x86/events/amd/uncore.c:358:39: sparse: sparse: dereference of noderef expression
+   arch/x86/events/amd/uncore.c:358:39: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got union amd_uncore_info * @@
+   arch/x86/events/amd/uncore.c:358:39: sparse:     expected void const [noderef] __percpu *__vpp_verify
+   arch/x86/events/amd/uncore.c:358:39: sparse:     got union amd_uncore_info *
+>> arch/x86/events/amd/uncore.c:358:39: sparse: sparse: dereference of noderef expression
+   arch/x86/events/amd/uncore.c:601:10: sparse: sparse: dereference of noderef expression
+>> arch/x86/events/amd/uncore.c:593:31: sparse: sparse: invalid access past the end of 'info' (4 8)
+   arch/x86/events/amd/uncore.c:598:48: sparse: sparse: invalid access past the end of 'info' (4 8)
+   arch/x86/events/amd/uncore.c:365:39: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got union amd_uncore_info * @@
+   arch/x86/events/amd/uncore.c:365:39: sparse:     expected void const [noderef] __percpu *__vpp_verify
+   arch/x86/events/amd/uncore.c:365:39: sparse:     got union amd_uncore_info *
+   arch/x86/events/amd/uncore.c:365:39: sparse: sparse: dereference of noderef expression
+   arch/x86/events/amd/uncore.c:730:10: sparse: sparse: dereference of noderef expression
+   arch/x86/events/amd/uncore.c:724:31: sparse: sparse: invalid access past the end of 'info' (4 8)
+   arch/x86/events/amd/uncore.c:365:39: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got union amd_uncore_info * @@
+   arch/x86/events/amd/uncore.c:365:39: sparse:     expected void const [noderef] __percpu *__vpp_verify
+   arch/x86/events/amd/uncore.c:365:39: sparse:     got union amd_uncore_info *
+   arch/x86/events/amd/uncore.c:365:39: sparse: sparse: dereference of noderef expression
+   arch/x86/events/amd/uncore.c:848:22: sparse: sparse: dereference of noderef expression
+   arch/x86/events/amd/uncore.c:880:21: sparse: sparse: dereference of noderef expression
+   arch/x86/events/amd/uncore.c:881:37: sparse: sparse: dereference of noderef expression
+   arch/x86/events/amd/uncore.c:882:25: sparse: sparse: dereference of noderef expression
+   arch/x86/events/amd/uncore.c:901:22: sparse: sparse: dereference of noderef expression
+   arch/x86/events/amd/uncore.c:904:29: sparse: sparse: dereference of noderef expression
+   arch/x86/events/amd/uncore.c:905:17: sparse: sparse: dereference of noderef expression
 
-Thank you.
+vim +601 arch/x86/events/amd/uncore.c
 
-Best Regards,
-Shuai
+   582	
+   583	static
+   584	void amd_uncore_df_ctx_scan(struct amd_uncore *uncore, unsigned int cpu)
+   585	{
+   586		union cpuid_0x80000022_ebx ebx;
+   587		union amd_uncore_info info;
+   588	
+   589		if (!boot_cpu_has(X86_FEATURE_PERFCTR_NB))
+   590			return;
+   591	
+   592		info.split.aux_data = 0;
+ > 593		info.split.num_pmcs = NUM_COUNTERS_NB;
+   594		info.split.cid = topology_die_id(cpu);
+   595	
+   596		if (pmu_version >= 2) {
+   597			ebx.full = cpuid_ebx(EXT_PERFMON_DEBUG_FEATURES);
+   598			info.split.num_pmcs = ebx.split.num_df_pmc;
+   599		}
+   600	
+ > 601		*per_cpu_ptr(uncore->info, cpu) = info;
+   602	}
+   603	
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=perf/core&id=54aee5f15b83437f23b2b2469bcf21bdd9823916
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
