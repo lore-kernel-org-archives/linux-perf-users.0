@@ -1,249 +1,92 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33611118C
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 12:50:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5F717745
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 14:54:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 59A16AC;
-	Mon,  9 Oct 2023 05:50:21 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B82751FB;
-	Mon,  9 Oct 2023 05:51:01 -0700 (PDT)
-Received: from [10.57.3.51] (unknown [10.57.3.51])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9BE863F762;
-	Mon,  9 Oct 2023 05:50:19 -0700 (PDT)
-Message-ID: <b72d321f-0cea-1049-3bbb-224d38a94749@arm.com>
-Date: Mon, 9 Oct 2023 13:50:18 +0100
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8C639E;
+	Mon,  9 Oct 2023 07:53:59 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.55])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4S426Q5Zzhz1M8sM;
+	Mon,  9 Oct 2023 22:51:26 +0800 (CST)
+Received: from [10.67.121.177] (10.67.121.177) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Mon, 9 Oct 2023 22:53:57 +0800
+CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
+	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH] perf hisi-ptt: Fix memory leak in lseek failure handling
+To: Kuan-Wei Chiu <visitorckw@gmail.com>, <yangyicong@hisilicon.com>,
+	<jonathan.cameron@huawei.com>, <namhyung@kernel.org>
+References: <20230930072719.1267784-1-visitorckw@gmail.com>
+From: Yicong Yang <yangyicong@huawei.com>
+Message-ID: <7e27ac27-c53e-0039-d195-5cd787d9df43@huawei.com>
+Date: Mon, 9 Oct 2023 22:53:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.1
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v1 1/2] arm64: perf: Add support for event counting
- threshold
-To: James Clark <james.clark@arm.com>, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>,
- Marc Zyngier <maz@kernel.org>, Zaid Al-Bassam <zalbassam@google.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230919095137.360963-1-james.clark@arm.com>
- <20230919095137.360963-2-james.clark@arm.com>
-In-Reply-To: <20230919095137.360963-2-james.clark@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <20230930072719.1267784-1-visitorckw@gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.121.177]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hi James
-
-On 19/09/2023 10:51, James Clark wrote:
-> FEAT_PMUv3_TH (Armv8.8) permits a PMU counter to increment only on
-> events whose count meets a specified threshold condition. For example if
-> PMEVTYPERn.TC (Threshold Control) is set to 0b101 (Greater than or
-> equal, count), and the threshold is set to 2, then the PMU counter will
-> now only increment by 1 when an event would have previously incremented
-> the PMU counter by 2 or more on a single processor cycle.
+On 2023/9/30 15:27, Kuan-Wei Chiu wrote:
+> In the previous code, there was a memory leak issue where the previously
+> allocated memory was not freed upon a failed lseek operation. This patch
+> addresses the problem by releasing the old memory before returning -errno
+> in case of a lseek failure. This ensures that memory is properly managed
+> and avoids potential memory leaks.
 > 
-> Two new Perf event config fields, 'threshold' and 'threshold_control'
-> have been added for controlling the feature:
-> 
->    $ perf stat -e stall_slot/threshold=2,threshold_control=5/
-> 
-> A new capability for reading out the maximum supported threshold value
-> has also been added:
-> 
->    $ cat /sys/bus/event_source/devices/armv8_pmuv3/caps/threshold_max
-> 
->    0x000000ff
-> 
-> If a threshold higher than threshold_max is provided, then no error is
-> generated but the threshold is clamped to the max value. If
-> FEAT_PMUv3_TH isn't implemented, then threshold_max reads zero, and
-> neither the 'threshold' nor 'threshold_control' parameters will be used.
-> 
-> The threshold is per PMU counter, and there are potentially different
-> threshold_max values per PMU type on heterogeneous systems.
-> 
-> Bits higher than 32 now need to be written into PMEVTYPER, so
-> armv8pmu_write_evtype() has to be updated to take a u64 value rather
-> than u32.
-
-Is this supported in the Aarch32 state ? If so, do we need to change
-the arch specific register read/write "helpers" ?
-
-> 
-> Signed-off-by: James Clark <james.clark@arm.com>
+> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
 > ---
->   drivers/perf/arm_pmuv3.c       | 59 +++++++++++++++++++++++++++++++++-
->   include/linux/perf/arm_pmuv3.h |  7 +++-
->   2 files changed, 64 insertions(+), 2 deletions(-)
+>  tools/perf/util/hisi-ptt.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-> index e5a2ac4155f6..ad6574b2bdab 100644
-> --- a/drivers/perf/arm_pmuv3.c
-> +++ b/drivers/perf/arm_pmuv3.c
-> @@ -294,9 +294,16 @@ static const struct attribute_group armv8_pmuv3_events_attr_group = {
->   	.is_visible = armv8pmu_event_attr_is_visible,
->   };
->   
-> +#define TH_LO	2
-> +#define TH_HI	13
-> +#define TH_CNTL_LO	14
-> +#define TH_CNTL_HI	16
-> +
->   PMU_FORMAT_ATTR(event, "config:0-15");
->   PMU_FORMAT_ATTR(long, "config1:0");
->   PMU_FORMAT_ATTR(rdpmc, "config1:1");
-> +PMU_FORMAT_ATTR(threshold, "config1:" __stringify(TH_LO) "-" __stringify(TH_HI));
-> +PMU_FORMAT_ATTR(threshold_control, "config1:" __stringify(TH_CNTL_LO) "-" __stringify(TH_CNTL_HI));
+> diff --git a/tools/perf/util/hisi-ptt.c b/tools/perf/util/hisi-ptt.c
+> index 45b614bb73bf..43bd1ca62d58 100644
+> --- a/tools/perf/util/hisi-ptt.c
+> +++ b/tools/perf/util/hisi-ptt.c
+> @@ -108,8 +108,10 @@ static int hisi_ptt_process_auxtrace_event(struct perf_session *session,
+>  		data_offset = 0;
+>  	} else {
+>  		data_offset = lseek(fd, 0, SEEK_CUR);
+> -		if (data_offset == -1)
+> +		if (data_offset == -1) {
+> +			free(data);
+>  			return -errno;
+> +		}
 
-The perf core doesn't yet support adding aliases for
-fields other than "events". May be we could add
-some support for that in the future and use it
-to provide meaningful aliases for the threshold
-control.
+Sorry for the late reply, this looks correct to me:
 
-Not sure if we can extrapolate threshold_control[0]
-to be another config field => "counting_mode"
-We would need to check with the architecture folks
-to confirm that the meaning wouldn't change though.
+Acked-by: Yicong Yang <yangyicong@hisilicon.com>
 
->   
->   static int sysctl_perf_user_access __read_mostly;
->   
-> @@ -310,10 +317,22 @@ static inline bool armv8pmu_event_want_user_access(struct perf_event *event)
->   	return event->attr.config1 & 0x2;
->   }
->   
-> +static inline u32 armv8pmu_event_threshold(struct perf_event_attr *attr)
-> +{
-> +	return FIELD_GET(GENMASK(TH_HI, TH_LO), attr->config1);
-> +}
-> +
-> +static inline u8 armv8pmu_event_threshold_control(struct perf_event_attr *attr)
-> +{
-> +	return FIELD_GET(GENMASK(TH_CNTL_HI, TH_CNTL_LO), attr->config1);
-> +}
-> +
->   static struct attribute *armv8_pmuv3_format_attrs[] = {
->   	&format_attr_event.attr,
->   	&format_attr_long.attr,
->   	&format_attr_rdpmc.attr,
-> +	&format_attr_threshold.attr,
-> +	&format_attr_threshold_control.attr,
->   	NULL,
->   };
->   
-> @@ -365,10 +384,31 @@ static ssize_t bus_width_show(struct device *dev, struct device_attribute *attr,
->   
->   static DEVICE_ATTR_RO(bus_width);
->   
-> +static u32 threshold_max(struct arm_pmu *cpu_pmu)
-> +{
-> +	/*
-> +	 * The largest value that can be written to PMEVTYPER<n>_EL0.TH is
-> +	 * (2 ^ PMMIR.THWIDTH) - 1
-> +	 */
-> +	return (1 << FIELD_GET(ARMV8_PMU_THWIDTH, cpu_pmu->reg_pmmir)) - 1;
-> +}
-> +
-> +static ssize_t threshold_max_show(struct device *dev,
-> +				  struct device_attribute *attr, char *page)
-> +{
-> +	struct pmu *pmu = dev_get_drvdata(dev);
-> +	struct arm_pmu *cpu_pmu = container_of(pmu, struct arm_pmu, pmu);
-> +
-> +	return sysfs_emit(page, "0x%08x\n", threshold_max(cpu_pmu));
-> +}
-> +
-> +static DEVICE_ATTR_RO(threshold_max);
-> +
->   static struct attribute *armv8_pmuv3_caps_attrs[] = {
->   	&dev_attr_slots.attr,
->   	&dev_attr_bus_slots.attr,
->   	&dev_attr_bus_width.attr,
-> +	&dev_attr_threshold_max.attr,
->   	NULL,
->   };
->   
-> @@ -552,7 +592,7 @@ static void armv8pmu_write_counter(struct perf_event *event, u64 value)
->   		armv8pmu_write_hw_counter(event, value);
->   }
->   
-> -static inline void armv8pmu_write_evtype(int idx, u32 val)
-> +static inline void armv8pmu_write_evtype(int idx, u64 val)
->   {
->   	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
->   
-> @@ -912,6 +952,10 @@ static int armv8pmu_set_event_filter(struct hw_perf_event *event,
->   				     struct perf_event_attr *attr)
->   {
->   	unsigned long config_base = 0;
-> +	struct perf_event *perf_event = container_of(attr, struct perf_event,
-> +						     attr);
-> +	struct arm_pmu *cpu_pmu = to_arm_pmu(perf_event->pmu);
-> +	u32 th, th_max;
->   
->   	if (attr->exclude_idle)
->   		return -EPERM;
-> @@ -943,6 +987,19 @@ static int armv8pmu_set_event_filter(struct hw_perf_event *event,
->   	if (attr->exclude_user)
->   		config_base |= ARMV8_PMU_EXCLUDE_EL0;
->   
-> +	/*
-> +	 * Insert event counting threshold (FEAT_PMUv3_TH) values. If
-> +	 * FEAT_PMUv3_TH isn't implemented, then THWIDTH (threshold_max) will be
-> +	 * 0 and no values will be written.
-> +	 */
-> +	th_max = threshold_max(cpu_pmu);
-> +	if (th_max) {
-> +		th = min(armv8pmu_event_threshold(attr), th_max);
-> +		config_base |= FIELD_PREP(ARMV8_PMU_EVTYPE_TH, th);
-> +		config_base |= FIELD_PREP(ARMV8_PMU_EVTYPE_TC,
-> +					  armv8pmu_event_threshold_control(attr));
-> +	}
-> +
->   	/*
->   	 * Install the filter into config_base as this is used to
->   	 * construct the event type.
-> diff --git a/include/linux/perf/arm_pmuv3.h b/include/linux/perf/arm_pmuv3.h
-> index e3899bd77f5c..0e2a3c927150 100644
-> --- a/include/linux/perf/arm_pmuv3.h
-> +++ b/include/linux/perf/arm_pmuv3.h
-> @@ -228,7 +228,11 @@
->   /*
->    * PMXEVTYPER: Event selection reg
->    */
-> -#define ARMV8_PMU_EVTYPE_MASK	0xc800ffff	/* Mask for writable bits */
-> +#define ARMV8_PMU_EVTYPE_TH	GENMASK(43, 32)
-> +#define ARMV8_PMU_EVTYPE_TC	GENMASK(63, 61)
-> +/* Mask for writable bits */
-> +#define ARMV8_PMU_EVTYPE_MASK	(0xc800ffff | ARMV8_PMU_EVTYPE_TH | \
-> +				ARMV8_PMU_EVTYPE_TC)
+This patch makes me think whether data_offset is necessary for PTT.
+The PTT only supports dump raw trace data and since this is an
+uncore PMU we only have one single data source so we are not using
+the auxtrace_queues for sorting or ordering the buffers. It seems
+there's no need to record the data_offset for later mmap(),
+just read trace data out and dump them is enough. I'll further check
+and have some tests on this.
 
-May need to be UL suffixed for safety ?
+I see Namhyung has already taken this. Thanks for the fix.
 
-
-Suzuki
-
->   #define ARMV8_PMU_EVTYPE_EVENT	0xffff		/* Mask for EVENT bits */
->   
->   /*
-> @@ -254,6 +258,7 @@
->   #define ARMV8_PMU_BUS_SLOTS_MASK 0xff
->   #define ARMV8_PMU_BUS_WIDTH_SHIFT 16
->   #define ARMV8_PMU_BUS_WIDTH_MASK 0xf
-> +#define ARMV8_PMU_THWIDTH GENMASK(23, 20)
->   
->   /*
->    * This code is really good
-
+>  	}
+>  
+>  	err = readn(fd, data, size);
+> 
