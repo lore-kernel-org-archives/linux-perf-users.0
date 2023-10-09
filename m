@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6B6358B0
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 18:39:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E986818E24
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 18:40:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MXbm260r"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B310AF7
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 11:39:52 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d9a509861acso84549276.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Oct 2023 11:39:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nXL+qmAY"
+Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCAF111A
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 11:39:54 -0700 (PDT)
+Received: by mail-pg1-x549.google.com with SMTP id 41be03b00d2f7-5784ef4be4fso4372536a12.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Oct 2023 11:39:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696876791; x=1697481591; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1696876794; x=1697481594; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=a3F7gnNpkmZUAErgbCdtUAHzB9Tx2qchcvlKXuBK3uQ=;
-        b=MXbm260rnEHiPY2SYzvEO0hTE+cAPwD+GczDzsavIBFpHbm2YQEyW2nX/ki7WncJ10
-         iFEkSHmUcPRnLm2YslotbhED70wdwyqrIsq7GiH10NnheniS8sQGeVW3CIxWppTru+Gh
-         4m+6+yOVx3XkfNRGnmzyrtu5GVEf9HI19fwaDzcmYLwaEbLw3EEVbSr729cHApib/TwH
-         Enr8jpEBhxZkFxQSsaieQ7ZdOYa0Ni2X2LuDX3dPNTaIRbxzu3b2aAPsWqhH6djUx3VQ
-         4+OFeOffjtGYRMCmJy+ZxB/ZMI0l5J5d5vureUVF+5XsiloLhO4Uji8FLnaNNDNdljcG
-         Q9Kg==
+        bh=uSqAvWdBbUtQxC7pnyJJtR4WVxr7hcg6OVnTaxh+F6M=;
+        b=nXL+qmAYa1mUdOquFhy+XA/PWm93Ug1IW4cRgHg+EqS00GRLOom2nBJGffgxekuDXV
+         wbrE1PmxDKYLYPPiT8kuXB2rEVLLXt/DZxHCItIPQ4PNJOTKSpTEDUswFBtWZma1i0BY
+         7KYRrcsDRVikprlCDbpKoctnizhnSStoR7IoKOYjNZAjz6iKIN3z82prctEov4KWfVtO
+         HADyYWdsJctr2SoudMqgxo9DL9CrlN97HTGEKFUfyuLjB5nCovyZ6PznLrZYcc61x+g0
+         5L9e+C2vBdTcD44dUiDnoTG7dryyPmQ2gXGapHoSTv5mqU4L8r0GuakCTvSjh/h0conU
+         4rZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696876791; x=1697481591;
+        d=1e100.net; s=20230601; t=1696876794; x=1697481594;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a3F7gnNpkmZUAErgbCdtUAHzB9Tx2qchcvlKXuBK3uQ=;
-        b=ozwZwLSgsKIiakk7UvoL+Uik7FaNZY2+NW3TV/MyFBNXMzGYW9KJU8tJKJXn+SjpqV
-         +ie/G3JSG73GakpEFLSyv0I6QTcMtbFbwSPr19dhF5GJOY0Kaw0EWNoeAS1n+06KiVaa
-         tp7id0b42GGn1J1zuCHrVzTTSjcpf4uh6su2r9rSx53CfF2iqYleC61gFtk0gPFgsr9q
-         yvdC8TmvIDjQCqdJmmuBoigB4YCzBaMsqjXwQdohSmWFnPiEsDQGvQj9rEvrSNSrUfvW
-         bzeeUzPpJoyPuEurMfKDWaAxDj3n0OwdaAZw7ZLNVChLoqYKhXpbC+xYBbyzJo1GGSzc
-         YMpg==
-X-Gm-Message-State: AOJu0YwUHSH6j1p5y7cBEzfmPA3xHhKJQYth+4V3fuXglbdvxWYSVUgr
-	FrjlVc/rVTka+adktK6ZRkFZaxdEFuP6
-X-Google-Smtp-Source: AGHT+IFJYyKzaVJZa6OL3+dH3Iw7A/PwN/dNbmHDZ9SeFI6LX4XiAP/rf39SS/umzU7lUH+6FV2vZLeRvyST
+        bh=uSqAvWdBbUtQxC7pnyJJtR4WVxr7hcg6OVnTaxh+F6M=;
+        b=snzBibVr1fDyzZ34Vms+wqHHGAeFJwmruXESDXW1sE+XxmKFL6Ze+r5Yj37YPyFgLc
+         EJ0/wxgmRREjNU2syupO3LONYDLejWv9Z8kI0j4SUWf1fCL6reS4otTYLQZjs1jdLDd+
+         qmlxDXO9M2NHzP15spBroXnISz77q3N5S8cI7w70WZVSGDpv1SfNG88ivMZ9/hTBVVZq
+         /oqsYx/2ihNDrwAy8R1nCGKfxA+/6trpR2t9OpvxLhCpYmvckK9LFCZW45zVz+/dp+qW
+         QshdTpyRqAu8zNT7B1ZSq/nVRUf9POw6QNIlnj38cT5tF9pPd00FSi4k57TdHaXemgQ0
+         Z4Pw==
+X-Gm-Message-State: AOJu0Yyb9b2G7yfSJSReGJeOpHI+B8KQIWmItG+RlQZvCYzG1ndlYP/A
+	7rIwanPU7dUKcUVryzLKyaG++xBX4frg
+X-Google-Smtp-Source: AGHT+IGswY8IBRO4qisurfCsmW1G2owhcv59h934/6N9kUBhkSh8az8mizPfb84iHYV8EZ8p3euRKpw5IRrs
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:ac4a:9b94:7158:3f4e])
- (user=irogers job=sendgmr) by 2002:a25:f816:0:b0:d84:e73f:6f8c with SMTP id
- u22-20020a25f816000000b00d84e73f6f8cmr234275ybd.6.1696876791493; Mon, 09 Oct
- 2023 11:39:51 -0700 (PDT)
-Date: Mon,  9 Oct 2023 11:39:12 -0700
+ (user=irogers job=sendgmr) by 2002:a17:90a:bc48:b0:277:d8:abd9 with SMTP id
+ t8-20020a17090abc4800b0027700d8abd9mr318272pjv.0.1696876794049; Mon, 09 Oct
+ 2023 11:39:54 -0700 (PDT)
+Date: Mon,  9 Oct 2023 11:39:13 -0700
 In-Reply-To: <20231009183920.200859-1-irogers@google.com>
-Message-Id: <20231009183920.200859-12-irogers@google.com>
+Message-Id: <20231009183920.200859-13-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231009183920.200859-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.609.gbb76f46606-goog
-Subject: [PATCH v3 10/18] perf hists browser: Reorder variables to reduce padding
+Subject: [PATCH v3 11/18] perf hists browser: Avoid potential NULL dereference
 From: Ian Rogers <irogers@google.com>
 To: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
 	Tom Rix <trix@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -64,49 +64,33 @@ To: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google
 	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Address clang-tidy warning:
-```
-tools/perf/ui/browsers/hists.c:2416:8: warning: Excessive padding in 'struct popup_action' (8 padding bytes, where 0 is optimal).
-Optimal fields order:
-time,
-thread,
-evsel,
-fn,
-ms,
-socket,
-rstype,
-```
+On other code paths browser->he_selection is NULL checked, add a
+missing case reported by clang-tidy.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/ui/browsers/hists.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/ui/browsers/hists.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 70db5a717905..f02ee605bbce 100644
+index f02ee605bbce..f4812b226818 100644
 --- a/tools/perf/ui/browsers/hists.c
 +++ b/tools/perf/ui/browsers/hists.c
-@@ -2416,12 +2416,12 @@ static int switch_data_file(void)
- struct popup_action {
- 	unsigned long		time;
- 	struct thread 		*thread;
-+	struct evsel	*evsel;
-+	int (*fn)(struct hist_browser *browser, struct popup_action *act);
- 	struct map_symbol 	ms;
- 	int			socket;
--	struct evsel	*evsel;
- 	enum rstype		rstype;
- 
--	int (*fn)(struct hist_browser *browser, struct popup_action *act);
- };
- 
- static int
+@@ -3302,7 +3302,7 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
+ 							&options[nr_options],
+ 							&bi->to.ms,
+ 							bi->to.al_addr);
+-		} else {
++		} else if (browser->he_selection) {
+ 			nr_options += add_annotate_opt(browser,
+ 						       &actions[nr_options],
+ 						       &options[nr_options],
 -- 
 2.42.0.609.gbb76f46606-goog
 
