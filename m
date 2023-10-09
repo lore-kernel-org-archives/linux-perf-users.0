@@ -1,116 +1,116 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E4AB374FF
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 18:40:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 727C73D982
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 20:06:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YsxlfECd"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E420910D4
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 11:40:11 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d9299cac11aso5588483276.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Oct 2023 11:40:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="BFuMz3FM"
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5950D8
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 13:06:08 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id 38308e7fff4ca-2c3e23a818bso17849941fa.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Oct 2023 13:06:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696876811; x=1697481611; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wfL4FLU++s9CKjil59t6XdpqiER2jatUC+zl7nbhx6Q=;
-        b=YsxlfECdt177X4UMflQL0j0/eiiJ163V49F/TKWFkTlFW+aY45ZLUbU8f6NDVQQigD
-         BtRPIKXxexi76R+oVTm1GCgmpGzx9NSFdWZVepRouWnYHynBJuF78cTALiIizRVnr+Ug
-         7DFkxBdCvyLYUU6dzWqKmIrjj1k+Bj7M8v5yM7GLYQWHwV6LBCjZEKYGsV6hdXaTETYY
-         73ANscnYgCjASWj7H2Mpu5TlecYA/5dlHkVSVO57N1VHBI2ObMLd0xYloJy6U6+Dv642
-         Dg3ao67NHSRXvIcx6F+FW5mpUs9l6giCn1/D4ppTJh+jBkCv8ZEb5aaEJYWUejPZuVk0
-         o5yw==
+        d=ionos.com; s=google; t=1696881966; x=1697486766; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vntWR/EJpWFamZ/9NMXVbCLlV4xDhJbERcnlqbMN6Xk=;
+        b=BFuMz3FMbhLgkIJi/HkkmJ1VkLf2I7vqp4svyIwG2+yDE+U4S96EGEikgUcb8O02Uo
+         8j8iLlfo7vmxsfcwVcs/qIKkl99xa5dmEeJRo1cSF6V+ygbEal7iO3+v912NQA+dawBz
+         Soy5yco9XA4Rbc4rDCwVGkioAfXZalXRitmVvyF0C2rWZ0Ewe2//XA3FBEsbn52apGZL
+         aRFt/c7Wzbg6QpYPQ0dm8EJR8fe2x3S+duZuFSIP/H5VlRW/FVRYn5HxOETlTJKz3xcb
+         BMDmJLPjWEXQ8IaDm9bc5q/71Ibv+h4ffhs1BXiaAk1KUwUk/S2rUW6zLyroy1Lm1kJC
+         OAGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696876811; x=1697481611;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wfL4FLU++s9CKjil59t6XdpqiER2jatUC+zl7nbhx6Q=;
-        b=vWv+dwwyEm2EG/k3Hmm13iy2JldSyjNSGF+cUaMAbeSCGjGkWx88sa1F80XD0OyBvN
-         BwrfYHMHZfc3JNKekCgCmcYpCIBKupjNdYU4rQHFbhdzpHCrereUzKKhoV8fSimRtey7
-         J33Oe9sHvpXz31Do8VW6o7KU7toKTgR2cfDNiZgpBBhbj2g5q+dcqAeogXed1JuyM1HN
-         DO0z9h+7V/56/jYBxxXLjCMuI7ODXTIUxn7r2tYAVc4VbuGAY7/w/xFh7gCLnG1TVHjQ
-         8MvXyKslODt0j/LI0MuzMSgiX2OoqhNWBT/XorlFbHE7LTK6GMIoxdNsbrmh7xkkKE33
-         o+tQ==
-X-Gm-Message-State: AOJu0YzViT3PDFxhugK3oAoc3yaKRBw7JBoyyOCuU60NE5rhSUS3Xf5D
-	kDK/XY9zbl1yQG0JoTwCaQtg/vKGVt3U
-X-Google-Smtp-Source: AGHT+IEgB0ixdKNlygdhv4h59H76SFd7CewMHkUz7uO+EUvepYTGPVZ0JlyDFpg5Eeb38pxoje/eR8ZZskOD
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:ac4a:9b94:7158:3f4e])
- (user=irogers job=sendgmr) by 2002:a25:e74f:0:b0:d9a:43eb:4391 with SMTP id
- e76-20020a25e74f000000b00d9a43eb4391mr17704ybh.9.1696876810948; Mon, 09 Oct
- 2023 11:40:10 -0700 (PDT)
-Date: Mon,  9 Oct 2023 11:39:20 -0700
-In-Reply-To: <20231009183920.200859-1-irogers@google.com>
-Message-Id: <20231009183920.200859-20-irogers@google.com>
+        d=1e100.net; s=20230601; t=1696881966; x=1697486766;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vntWR/EJpWFamZ/9NMXVbCLlV4xDhJbERcnlqbMN6Xk=;
+        b=aTu9gIJZ68//oLdcPt2i2G6fCZ5gYWFSDhzlGCaoaLQkz0m/JJv5tBCfmL8MXRNjhO
+         iB4dfHtXOZt5qP8r6VKo7KDV5/EF6R4dgcL9BZhhrA6zXFi25sZdtiO5AfPqswDx1wY5
+         rpzO+n5n93/Y/icLs+NtJAvgLqPc7sWWT4pVT1zoJqgrEUPqTXuBsSqW6t9VXID3nNFi
+         lkSSL5Yv9MxEz+RtTYO46zsQyBphpgv5mfDDxplHC4+voxf1TZqAgmvz26k7rO+3x/iT
+         kXZXHiizZNHGzzld2KyYAWdaf2VVhGJj1AYPgTAJdxcMd6MUg+oFnTFBTbHtTcwZtzIJ
+         gCTw==
+X-Gm-Message-State: AOJu0YzyvRxX4PTbtxyZhAS/GcnVdqYPCsVBnsea1ZQIxOn2TvvcBDz0
+	K57pYQ+yOVAl3UrWFaH2gcatgt2FK0DN/IeIoYdBeg==
+X-Google-Smtp-Source: AGHT+IFghqg7b3VfDVvZ+soPEwEaIfxhrwarlOcz2b03PC3KagC0O9BH1UGRNCP79pJ8yT5JMzxC/VoYSKvtKG/y1ws=
+X-Received: by 2002:a2e:870c:0:b0:2b6:cbdb:790c with SMTP id
+ m12-20020a2e870c000000b002b6cbdb790cmr11535962lji.1.1696881966432; Mon, 09
+ Oct 2023 13:06:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20231009183920.200859-1-irogers@google.com>
-X-Mailer: git-send-email 2.42.0.609.gbb76f46606-goog
-Subject: [PATCH v3 18/18] perf bpf_counter: Fix a few memory leaks
-From: Ian Rogers <irogers@google.com>
-To: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Tom Rix <trix@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+MIME-Version: 1.0
+References: <20231009165741.746184-1-max.kellermann@ionos.com>
+ <20231009165741.746184-6-max.kellermann@ionos.com> <264fa39d-aed6-4a54-a085-107997078f8d@roeck-us.net>
+In-Reply-To: <264fa39d-aed6-4a54-a085-107997078f8d@roeck-us.net>
+From: Max Kellermann <max.kellermann@ionos.com>
+Date: Mon, 9 Oct 2023 22:05:55 +0200
+Message-ID: <CAKPOu+8k2x1CucWSzoouts0AfMJk+srJXWWf3iWVOeY+fWkOpQ@mail.gmail.com>
+Subject: Re: [PATCH 6/7] fs/sysfs/group: make attribute_group pointers const
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Jens Axboe <axboe@kernel.dk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>, 
+	James Morse <james.morse@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Robert Richter <rric@kernel.org>, Jean Delvare <jdelvare@suse.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Leon Romanovsky <leon@kernel.org>, Bart Van Assche <bvanassche@acm.org>, Joerg Roedel <joro@8bytes.org>, 
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	Jiri Slaby <jirislaby@kernel.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@arm.com>, 
+	Leo Yan <leo.yan@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Peter Zijlstra <peterz@infradead.org>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Yang Jihong <yangjihong1@huawei.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Ming Wang <wangming01@loongson.cn>, 
-	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, llvm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	bpf@vger.kernel.org
+	Adrian Hunter <adrian.hunter@intel.com>, Sebastian Reichel <sre@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
+	"James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, iommu@lists.linux.dev, nvdimm@lists.linux.dev, 
+	linux-nvme@lists.infradead.org, linux-rtc@vger.kernel.org, 
+	linux-serial@vger.kernel.org, coresight@lists.linaro.org, 
+	linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-scsi@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Memory leaks were detected by clang-tidy.
+On Mon, Oct 9, 2023 at 7:24=E2=80=AFPM Guenter Roeck <linux@roeck-us.net> w=
+rote:
+> Also, I don't know why checkpatch is happy with all the
+>
+>         const struct attribute_group *const*groups;
+>
+> instead of
+>
+>         const struct attribute_group *const *groups;
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/bpf_counter.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+I found out that checkpatch has no check for this at all; it does
+complain about such lines, but only for local variables. But that
+warning is actually a bug, because this is a check for unary
+operators: it thinks the asterisk is a dereference operator, not a
+pointer declaration, and complains that the unary operator must be
+preceded by a space. Thus warnings on local variable are only correct
+by coincidence, not by design.
 
-diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
-index 6732cbbcf9b3..7f9b0e46e008 100644
---- a/tools/perf/util/bpf_counter.c
-+++ b/tools/perf/util/bpf_counter.c
-@@ -104,7 +104,7 @@ static int bpf_program_profiler_load_one(struct evsel *evsel, u32 prog_id)
- 	struct bpf_prog_profiler_bpf *skel;
- 	struct bpf_counter *counter;
- 	struct bpf_program *prog;
--	char *prog_name;
-+	char *prog_name = NULL;
- 	int prog_fd;
- 	int err;
- 
-@@ -155,10 +155,12 @@ static int bpf_program_profiler_load_one(struct evsel *evsel, u32 prog_id)
- 	assert(skel != NULL);
- 	counter->skel = skel;
- 	list_add(&counter->list, &evsel->bpf_counter_list);
-+	free(prog_name);
- 	close(prog_fd);
- 	return 0;
- err_out:
- 	bpf_prog_profiler_bpf__destroy(skel);
-+	free(prog_name);
- 	free(counter);
- 	close(prog_fd);
- 	return -1;
-@@ -180,6 +182,7 @@ static int bpf_program_profiler__load(struct evsel *evsel, struct target *target
- 		    (*p != '\0' && *p != ',')) {
- 			pr_err("Failed to parse bpf prog ids %s\n",
- 			       target->bpf_str);
-+			free(bpf_str_);
- 			return -1;
- 		}
- 
--- 
-2.42.0.609.gbb76f46606-goog
-
+Inside structs or parameters (where my coding style violations can be
+found), it's a different context and thus checkpatch doesn't apply the
+rules for unary operators.
